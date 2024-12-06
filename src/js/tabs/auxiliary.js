@@ -1,5 +1,5 @@
-import { i18n } from '../localization';
-import GUI from '../gui';
+import { i18n, getCurrentLocaleISO } from "../localization";
+import GUI from '../../js/gui';
 import { get as getConfig, set as setConfig } from '../ConfigStorage';
 import { bit_check } from '../bit';
 import { mspHelper } from '../msp/MSPHelper';
@@ -13,8 +13,221 @@ import inflection from "inflection";
 
 const auxiliary = {};
 
+// BF build Options mapped to buildKey.
+const buildMap = [
+    { buildKey: 'cam',       buildOption: ['USE_CAMERA_CONTROL']},
+    { buildKey: 'div',       buildOption: ['USE_ARCO_TRAINER', 'USE_DASHBOARD', 'USE_PINIO']},
+    { buildKey: 'dshot',     buildOption: ['USE_DSHOT']},
+    { buildKey: 'gps_mag',   buildOption: ['USE_GPS', 'USE_GPS_PLUS_CODES', 'USE_MAG']},
+    { buildKey: 'led_strip', buildOption: ['USE_LED_STRIP', 'USE_LED_STRIP_64']},
+    { buildKey: 'osd',       buildOption: ['USE_OSD', 'USE_OSD_SD', 'USE_OSD_HD', 'USE_FRSKYOSD']},
+    { buildKey: 'serial',    buildOption: ['USE_SERIALRX', 'USE_SERIALRX_FPORT']},
+    { buildKey: 'servos',    buildOption: ['USE_SERVOS']},
+    { buildKey: 'telemetry', buildOption: ['USE_TELEMETRY', 'USE_TELEMETRY_SMARTPORT']},
+    { buildKey: 'vtx',       buildOption: ['USE_VTX']},
+];
+
+const flightControl = ['ARM', 'ANGLE', 'HORIZON', 'ANTI GRAVITY', 'HEADFREE', 'HEADADJ', 'FAILSAFE', 'AIR MODE', 'FPV ANGLE MIX', 'ACRO TRAINER', 'LAUNCH CONTROL'];
+
+// Categories to be mapped with buildMap. Category 'all' are virtuel and always included
+const categoryTable = [
+    { name: 'BEEP',           buildKey: ['all'],       modes: ['BEEPERON', 'BEEPER', 'BEEPER MUTE', 'GPS BEEP SATELLITE COUNT']},
+    { name: 'BLACKBOX',       buildKey: ['all'],       modes: ['BLACKBOX', 'BLACKBOX ERASE']},
+    { name: 'CAM',            buildKey: ['cam'],       modes: ['CAMERA CONTROL 1', 'CAMERA CONTROL 2', 'CAMERA CONTROL 3']},
+    { name: 'DSHOT / 3D',     buildKey: ['dshot'],     modes: ['3D', '3D DISABLE / SWITCH', 'FLIP OVER AFTER CRASH']},
+    { name: 'FLIGHT CONTROL', buildKey: ['all'],       modes: flightControl},
+    { name: 'GPS / MAG',      buildKey: ['gps_mag'],   modes: ['GPS BEEP SATELLITE COUNT', 'GPS RESCUE', 'MAG']},
+    { name: 'LED',            buildKey: ['led_strip'], modes: ['LEDLOW']},
+    { name: 'OSD',            buildKey: ['osd'],       modes: ['OSD DISABLE']},
+    { name: 'OTHER',          buildKey: ['all'],       modes: ['CALIB', 'MSP OVERRIDE', 'LAP TIMER RESET', 'PASSTHRU', 'PARALYZE', 'PID AUDIO', 'PREARM', 'READY']},
+    { name: 'SERVO',          buildKey: ['servos'],    modes: ['SERVO1', 'SERVO2', 'SERVO3']},
+    { name: 'TELEMETRY',      buildKey: ['telemetry'], modes: ['TELEMETRY']},
+    { name: 'USER',           buildKey: ['all'],       modes: ['USER1', 'USER2', 'USER3', 'USER4']},
+    { name: 'VTX',            buildKey: ['vtx'],       modes: ['STICK COMMANDS DISABLE', 'VTX CONTROL DISABLE', 'VTX PIT MODE']},
+];
+
+let hideUnusedModes = false;
+let modeList = [];
+
+function inBuildMap(map, name) {
+    if (name == 'all') {
+        return true;
+    }
+    for (let value of map) {
+        if (name.includes(value.buildKey)) {
+            for (let option of value.buildOption) {
+                if (FC.CONFIG.buildOptions.includes(option)) {
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
+
+function isSelectedMode(mList, modeName) {
+    for (let i = 0; i < mList.length; i++) {        //    for (let value of mList) don't break on first hit
+        if (mList[i].includes(modeName)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+function resolveCategoryName(category, choise) {
+    let mList = [];
+    for (let value of choise) {
+        for (let elm of category) {
+            if (value.includes(elm.name)) {
+                mList.push(elm.modes);
+            }
+        }
+    }
+    return mList;
+}
+
+function updateSearchResults() {
+    let categorySelect = $('select.auxiliary_category_select');
+
+    const categoryNameList = categorySelect.multipleSelect("getSelects", "text");
+    setConfig({ auxiliaryCategoryNameList: categoryNameList });         // save as users choise
+    modeList = resolveCategoryName(categoryTable, categoryNameList);
+    updateModes();                                                      // update UI
+}
+
+function getCategoryChoise(buildKey) {
+    // return names for buildKey category
+    let categoryChoise = [];
+    for (let value of categoryTable) {
+        if (value.name == buildKey) {
+            categoryChoise.push(value.name);
+        }
+    }
+    return categoryChoise;
+}
+
+function generateDefaultList(categoryTable) {
+    let list = [];
+    for (const item of categoryTable) {
+        list.push(item.name);
+    }
+    return list;
+}
+
+function createCategorySelect(map) {
+    let categorySelect = $('select.auxiliary_category_select');
+    const allCat = generateDefaultList(categoryTable);
+
+    const categoryNameObj = getConfig('auxiliaryCategoryNameList', allCat); // read user pre selected categories, if empty default to complete list
+    let categoryNameList = categoryNameObj.auxiliaryCategoryNameList;
+    if (categoryNameList.length == 0) {
+        categoryNameList = getCategoryChoise('all');                  // empty choise -> select names from 'all' category
+        setConfig({ auxiliaryCategoryNameList: categoryNameList });
+    }
+
+    for (let value of categoryTable) {
+        if (inBuildMap(map, value.buildKey) || FC.CONFIG.buildOptions.length == 0) {
+            // selected build option or local build
+            if (categoryNameList.includes(value.name)) {
+                categorySelect.append(`<option value="${value.name}" selected="selected">${value.name}</option>`);
+            } else {
+                categorySelect.append(`<option value="${value.name}">${value.name}</option>`);
+            }
+        }
+    }
+
+    const modeWidth = 125;
+    const heightUnit = categoryTable.length;
+
+    categorySelect.sortSelect().multipleSelect({
+        width: modeWidth + 50,
+        dropWidth: modeWidth + 63,
+        minimumCountSelected: 2,                    // number before we use xx of yy
+        maxHeight: heightUnit * 30,                 // in px
+        maxHeightUnit: heightUnit,                  // show all categories
+        locale: getCurrentLocaleISO(),
+        filter: false,
+        showClear: true,
+        ellipsis: true,
+        openOnHover: true,                          // open when muse over
+        placeholder: i18n.getMessage("dropDownFilterDisabled"),
+        onClear: () => { updateSearchResults(); },
+        onClick: () => { updateSearchResults(); },
+        onFilter: () => { updateSearchResults(); },
+        onCheckAll: () => { updateSearchResults(); },
+        onUncheckAll: () => { updateSearchResults(); },
+        formatSelectAll() { return i18n.getMessage("dropDownSelectAll"); },
+        formatAllSelected() { return i18n.getMessage("dropDownAll"); },
+    });
+}
+
+function updateModes() {
+    let hasUsedMode = false;
+
+    for (let i = 0; i < FC.AUX_CONFIG.length; i++) {
+        let modeElement = $(`#mode-${i}`);
+
+        if (modeElement.find(' .range').length == 0 && modeElement.find(' .link').length == 0) {
+            // if the mode is unused, skip it
+            modeElement.removeClass('off').removeClass('on').removeClass('disabled');
+            continue;
+        }
+
+        if (bit_check(FC.CONFIG.mode, i)) {
+            $('.mode .name').eq(i).data('modeElement').addClass('on').removeClass('off').removeClass('disabled');
+
+            // ARM mode is a special case
+            if (i == 0) {
+                $('.mode .name').eq(i).html(FC.AUX_CONFIG[i]);
+            }
+        } else {
+            // ARM mode is a special case
+            if (i == 0) {
+                let armSwitchActive = false;
+
+                if (FC.CONFIG.armingDisableCount > 0) {
+                    // check the highest bit of the armingDisableFlags. This will be the ARMING_DISABLED_ARMSWITCH flag.
+                    const armSwitchMask = 1 << (FC.CONFIG.armingDisableCount - 1);
+                    if ((FC.CONFIG.armingDisableFlags & armSwitchMask) > 0) {
+                        armSwitchActive = true;
+                    }
+                }
+
+                // If the ARMING_DISABLED_ARMSWITCH flag is set then that means that arming is disabled
+                // and the arm switch is in a valid arming range. Highlight the mode in red to indicate
+                // that arming is disabled.
+                if (armSwitchActive) {
+                    $('.mode .name').eq(i).data('modeElement').removeClass('on').removeClass('off').addClass('disabled');
+                    $('.mode .name').eq(i).html(`${FC.AUX_CONFIG[i]}<br>${i18n.getMessage('auxiliaryDisabled')}`);
+                } else {
+                    $('.mode .name').eq(i).data('modeElement').removeClass('on').removeClass('disabled').addClass('off');
+                    $('.mode .name').eq(i).html(FC.AUX_CONFIG[i]);
+                }
+            } else {
+                $('.mode .name').eq(i).data('modeElement').removeClass('on').removeClass('disabled').addClass('off');
+            }
+        }
+        hasUsedMode = true;
+    }
+
+    let hideUnused = hideUnusedModes && hasUsedMode;
+
+    for (let i = 1; i < FC.AUX_CONFIG.length; i++) {    // ARM has index 0
+        let modeElement = $(`#mode-${i}`);
+
+        if (! isSelectedMode(modeList, FC.AUX_CONFIG[i])) {
+            modeElement.toggle(false);
+        }
+        else {
+            modeElement.toggle(true);
+            if ( modeElement.find(' .range').length == 0 && modeElement.find(' .link').length == 0) {
+                modeElement.toggle(!hideUnused);        // unused mode
+            }
+        }
+    }
+}
+
 auxiliary.initialize = function (callback) {
-    GUI.active_tab_ref = this;
     GUI.active_tab = 'auxiliary';
     let prevChannelsValues = null;
     let hasDirtyUnusedModes = true;
@@ -274,9 +487,9 @@ auxiliary.initialize = function (callback) {
 
         const modeTableBodyElement = $('.tab-auxiliary .modes');
         for (let modeIndex = 0; modeIndex < FC.AUX_CONFIG.length; modeIndex++) {
-
             const modeId = FC.AUX_CONFIG_IDS[modeIndex];
             const newMode = createMode(modeIndex, modeId);
+
             modeTableBodyElement.append(newMode);
 
             // generate ranges from the supplied AUX names and MODE_RANGES[_EXTRA] data
@@ -294,14 +507,15 @@ auxiliary.initialize = function (callback) {
                     if (range.start >= range.end) {
                         continue; // invalid!
                     }
-
                     addRangeToMode(newMode, modeRange.auxChannelIndex, modeRangeExtra.modeLogic, range);
-
                 } else {
                     addLinkedToMode(newMode, modeRangeExtra.modeLogic, modeRangeExtra.linkedTo);
                 }
             }
         }
+
+        // translate to user-selected language
+        i18n.localizePage();
 
         const length = Math.max(...(FC.AUX_CONFIG.map(el => el.length)));
         $('.tab-auxiliary .mode .info').css('min-width', `${Math.round(length * getTextWidth('A'))}px`);
@@ -318,8 +532,8 @@ auxiliary.initialize = function (callback) {
             addLinkedToMode(modeElement, 0, 0);
         });
 
-        // translate to user-selected language
-        i18n.localizePage();
+        // create category multiple select
+        createCategorySelect(buildMap);
 
         // UI Hooks
         $('a.save').click(function () {
@@ -411,7 +625,6 @@ auxiliary.initialize = function (callback) {
             }
         });
 
-
         function limit_channel(channelPosition) {
             if (channelPosition < 900) {
                 channelPosition = 900;
@@ -440,63 +653,7 @@ auxiliary.initialize = function (callback) {
         }
 
         function update_ui() {
-            let hasUsedMode = false;
-            for (let i = 0; i < FC.AUX_CONFIG.length; i++) {
-                let modeElement = $(`#mode-${i}`);
-                if (modeElement.find(' .range').length == 0 && modeElement.find(' .link').length == 0) {
-                    // if the mode is unused, skip it
-                    modeElement.removeClass('off').removeClass('on').removeClass('disabled');
-                    continue;
-                }
-
-                if (bit_check(FC.CONFIG.mode, i)) {
-                    $('.mode .name').eq(i).data('modeElement').addClass('on').removeClass('off').removeClass('disabled');
-
-                    // ARM mode is a special case
-                    if (i == 0) {
-                        $('.mode .name').eq(i).html(FC.AUX_CONFIG[i]);
-                    }
-                } else {
-
-                    //ARM mode is a special case
-                    if (i == 0) {
-                        let armSwitchActive = false;
-
-                        if (FC.CONFIG.armingDisableCount > 0) {
-                            // check the highest bit of the armingDisableFlags. This will be the ARMING_DISABLED_ARMSWITCH flag.
-                            const armSwitchMask = 1 << (FC.CONFIG.armingDisableCount - 1);
-                            if ((FC.CONFIG.armingDisableFlags & armSwitchMask) > 0) {
-                                armSwitchActive = true;
-                            }
-                        }
-
-                        // If the ARMING_DISABLED_ARMSWITCH flag is set then that means that arming is disabled
-                        // and the arm switch is in a valid arming range. Highlight the mode in red to indicate
-                        // that arming is disabled.
-                        if (armSwitchActive) {
-                            $('.mode .name').eq(i).data('modeElement').removeClass('on').removeClass('off').addClass('disabled');
-                            $('.mode .name').eq(i).html(`${FC.AUX_CONFIG[i]}<br>${i18n.getMessage('auxiliaryDisabled')}`);
-                        } else {
-                            $('.mode .name').eq(i).data('modeElement').removeClass('on').removeClass('disabled').addClass('off');
-                            $('.mode .name').eq(i).html(FC.AUX_CONFIG[i]);
-                        }
-                    } else {
-                        $('.mode .name').eq(i).data('modeElement').removeClass('on').removeClass('disabled').addClass('off');
-                    }
-                }
-                hasUsedMode = true;
-            }
-
-            if (hasDirtyUnusedModes) {
-                hasDirtyUnusedModes = false;
-                let hideUnused = hideUnusedModes && hasUsedMode;
-                for (let i = 0; i < FC.AUX_CONFIG.length; i++) {
-                    let modeElement = $(`#mode-${i}`);
-                    if (!modeElement.find(' .range').length && !modeElement.find(' .link').length) {
-                        modeElement.toggle(!hideUnused);
-                    }
-                }
-            }
+            updateSearchResults();      // setup categoryList and show selected Modes
 
             auto_select_channel(FC.RC.channels, FC.RC.active_channels, FC.RSSI_CONFIG.channel);
 
@@ -540,23 +697,20 @@ auxiliary.initialize = function (callback) {
             if (largest < 100) return fillPrevChannelsValues();
 
             const indexOfMaxValue = diff_array.indexOf(largest);
-            if (indexOfMaxValue >= 4 && indexOfMaxValue != RSSI_channel - 1){ //set channel
-                auto_option.parent().val(indexOfMaxValue - 4);
+            if (indexOfMaxValue >= 4 && indexOfMaxValue != RSSI_channel - 1) {
+                auto_option.parent().val(indexOfMaxValue - 4); //set channel
             }
 
             return fillPrevChannelsValues();
         }
 
-        let hideUnusedModes = false;
-        const result = getConfig('hideUnusedModes');
-        $("input#switch-toggle-unused")
-            .change(function() {
-                hideUnusedModes = $(this).prop("checked");
-                hasDirtyUnusedModes = true;
-                setConfig({ hideUnusedModes: hideUnusedModes });
-                update_ui();
-            })
-            .prop("checked", !!result.hideUnusedModes)
+        // get or save hide unused modes
+        const configUnusedModes = getConfig('hideUnusedModes');
+        $("input#switch-toggle-unused").change(function() {
+                                               hideUnusedModes = $(this).prop("checked");
+                                               setConfig({ hideUnusedModes: hideUnusedModes });
+                                               update_ui();})
+            .prop("checked", !!configUnusedModes.hideUnusedModes)
             .change();
 
         // update ui instantly on first load

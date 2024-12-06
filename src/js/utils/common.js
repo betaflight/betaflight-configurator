@@ -101,20 +101,19 @@ export function urlExists(url) {
 }
 
 /**
- * Returns jquery sorted option list with optional value staying on top of the list.
+ * Returns jquery sorted option list with optional value topText staying on top of the list.
  *
  * @param {string} optional value staying on top of the list.
  * @return {object} sorted option list.
  */
-
-$.fn.sortSelect = function(text = "") {
+$.fn.sortSelect = function(topText = "") {
     const op = this.children("option");
 
     op.sort((a, b) => {
-        if (a.text === text) {
+        if (a.text === topText) {
             return -1;
         }
-        if (b.text === text) {
+        if (b.text === topText) {
             return 1;
         }
         return a.text.localeCompare(b.text, window.navigator.language, { ignorePunctuation: true });
