@@ -48,7 +48,7 @@ i18next.on('initialized', function() {
 
     if (process.env.NODE_ENV === 'development') {
         console.log("Development mode enabled, installing Vue tools");
-        // Vue.config.devtools = true;
+        // TODO Vue.config.devtools = true;
         app.config.performance = true;
     }
 });
