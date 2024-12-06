@@ -4370,9 +4370,9 @@ balanced-match@^1.0.0:
   integrity sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==
 
 bare-events@^2.2.0:
-  version "2.5.1"
-  resolved "https://registry.yarnpkg.com/bare-events/-/bare-events-2.5.1.tgz#052a96e3fc0e87cd9f226199d7f8a80cd87b6d21"
-  integrity sha512-Bw2PgKSrZ3uCuSV9WQ998c/GTJTd+9bWj97n7aDQMP8dP/exAZQlJeswPty0ISy+HZD+9Ex+C7CCnc9Q5QJFmQ==
+  version "2.5.3"
+  resolved "https://registry.yarnpkg.com/bare-events/-/bare-events-2.5.3.tgz#899d7e4b2598a7978ef7ca315ce67eff0a16a727"
+  integrity sha512-pCO3aoRJ0MBiRMu8B7vUga0qL3L7gO1+SW7ku6qlSsMLwuhaawnuvZDyzJY/kyC63Un0XAB0OPUcfF1eTO/V+Q==
 
 base64-js@^1.0.2, base64-js@^1.3.1, base64-js@^1.5.1:
   version "1.5.1"
@@ -6692,9 +6692,9 @@ ejs@^3.1.6:
     jake "^10.8.5"
 
 electron-to-chromium@^1.5.73:
-  version "1.5.76"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.76.tgz#db20295c5061b68f07c8ea4dfcbd701485d94a3d"
-  integrity sha512-CjVQyG7n7Sr+eBXE86HIulnL5N8xZY1sgmOPGuq/F0Rr0FJq63lg0kEtOIDfZBk44FnDLf6FUJ+dsJcuiUDdDQ==
+  version "1.5.78"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.78.tgz#223cdc76a5d15ac731136e68430e92cb8d612d13"
+  integrity sha512-UmwIt7HRKN1rsJfddG5UG7rCTCTAKoS9JeOy/R0zSenAyaZ8SU3RuXlwcratxhdxGRNpk03iq8O7BA3W7ibLVw==
 
 elementtree@^0.1.7:
   version "0.1.7"
@@ -7525,15 +7525,15 @@ fast-glob@^2.2.6:
     micromatch "^3.1.10"
 
 fast-glob@^3.0.3, fast-glob@^3.2.2, fast-glob@^3.2.9, fast-glob@^3.3.2:
-  version "3.3.2"
-  resolved "https://registry.yarnpkg.com/fast-glob/-/fast-glob-3.3.2.tgz#a904501e57cfdd2ffcded45e99a54fef55e46129"
-  integrity sha512-oX2ruAFQwf/Orj8m737Y5adxDQO0LAB7/S5MnxCdTNDd4p6BsyIVsv9JQsATbTSq8KHRpLwIHbVlUNatxd+1Ow==
+  version "3.3.3"
+  resolved "https://registry.yarnpkg.com/fast-glob/-/fast-glob-3.3.3.tgz#d06d585ce8dba90a16b0505c543c3ccfb3aeb818"
+  integrity sha512-7MptL8U0cqcFdzIzwOTHoilX9x5BrNqye7Z/LuC7kCMRio1EMSyqRK3BEAUD7sXRq4iT4AzTVuZdhgQ2TCvYLg==
   dependencies:
     "@nodelib/fs.stat" "^2.0.2"
     "@nodelib/fs.walk" "^1.2.3"
     glob-parent "^5.1.2"
     merge2 "^1.3.0"
-    micromatch "^4.0.4"
+    micromatch "^4.0.8"
 
 fast-json-parse@^1.0.3:
   version "1.0.3"
@@ -7556,9 +7556,9 @@ fast-levenshtein@^2.0.6:
   integrity sha512-DCXu6Ifhqcks7TZKY3Hxp3y6qphY5SJZmrWMDrKcERSOXWQdMhU9Ig/PYrzyw/ul9jOIyh0N4M0tbC5hodg8dw==
 
 fast-uri@^3.0.1:
-  version "3.0.3"
-  resolved "https://registry.yarnpkg.com/fast-uri/-/fast-uri-3.0.3.tgz#892a1c91802d5d7860de728f18608a0573142241"
-  integrity sha512-aLrHthzCjH5He4Z2H9YZ+v6Ujb9ocRuW6ZzkJQOrTxleEijANq4v1TsaPaVG1PZcuurEzrLcWRyYBYXD5cEiaw==
+  version "3.0.5"
+  resolved "https://registry.yarnpkg.com/fast-uri/-/fast-uri-3.0.5.tgz#19f5f9691d0dab9b85861a7bb5d98fca961da9cd"
+  integrity sha512-5JnBCWpFlMo0a3ciDy/JckMzzv1U9coZrIhedq+HXxxUfDTAiS0LA8OKVao4G9BxmCVck/jtA5r3KAtRWEyD8Q==
 
 fastparse@^1.1.2:
   version "1.1.2"
@@ -11162,7 +11162,7 @@ micromatch@^3.0.4, micromatch@^3.1.10, micromatch@^3.1.4:
     snapdragon "^0.8.1"
     to-regex "^3.0.2"
 
-micromatch@^4.0.0, micromatch@^4.0.2, micromatch@^4.0.4, micromatch@^4.0.5:
+micromatch@^4.0.0, micromatch@^4.0.2, micromatch@^4.0.5, micromatch@^4.0.8:
   version "4.0.8"
   resolved "https://registry.yarnpkg.com/micromatch/-/micromatch-4.0.8.tgz#d66fa18f3a47076789320b9b1af32bd86d9fa202"
   integrity sha512-PXwfBhYu0hBCPw8Dn0E+WDYb7af3dSLVWKi3HGv84IdF4TyFoC0ysxFd0Goxw7nSv4T/PzEJQxsYsEiFCKo2BA==
@@ -13392,9 +13392,9 @@ read@1, read@~1.0.1:
     util-deprecate "^1.0.1"
 
 readable-stream@^4.0.0:
-  version "4.6.0"
-  resolved "https://registry.yarnpkg.com/readable-stream/-/readable-stream-4.6.0.tgz#ce412dfb19c04efde1c5936d99c27f37a1ff94c9"
-  integrity sha512-cbAdYt0VcnpN2Bekq7PU+k363ZRsPwJoEEJOEtSJQlJXzwaxt3FIo/uL+KeDSGIjJqtkwyge4KQgD2S2kd+CQw==
+  version "4.7.0"
+  resolved "https://registry.yarnpkg.com/readable-stream/-/readable-stream-4.7.0.tgz#cedbd8a1146c13dfff8dab14068028d58c15ac91"
+  integrity sha512-oIGGmcpTLwPga8Bn6/Z75SVaH1z5dUut2ibSyAMVhmUggWpmDn2dapB0n7f8nwaSiRtepAsfJyfXIO5DCVAODg==
   dependencies:
     abort-controller "^3.0.0"
     buffer "^6.0.3"
@@ -14099,9 +14099,9 @@ sane@^4.0.3:
     walker "~1.0.5"
 
 sass@^1.18.0:
-  version "1.83.0"
-  resolved "https://registry.yarnpkg.com/sass/-/sass-1.83.0.tgz#e36842c0b88a94ed336fd16249b878a0541d536f"
-  integrity sha512-qsSxlayzoOjdvXMVLkzF84DJFc2HZEL/rFyGIKbbilYtAvlCxyuzUeff9LawTn4btVnLKg75Z8MMr1lxU1lfGw==
+  version "1.83.1"
+  resolved "https://registry.yarnpkg.com/sass/-/sass-1.83.1.tgz#dee1ab94b47a6f9993d3195d36f556bcbda64846"
+  integrity sha512-EVJbDaEs4Rr3F0glJzFSOvtg2/oy2V/YrGFPqPY24UqcLDWcI9ZY5sN+qyO3c/QCZwzgfirvhXvINiJCE/OLcA==
   dependencies:
     chokidar "^4.0.0"
     immutable "^5.0.2"
@@ -17184,11 +17184,6 @@ yargs@^7.1.0:
     which-module "^1.0.0"
     y18n "^3.2.1"
     yargs-parser "^5.0.1"
-
-yarn.lock@^0.0.1-security:
-  version "0.0.1-security"
-  resolved "https://registry.yarnpkg.com/yarn.lock/-/yarn.lock-0.0.1-security.tgz#8e7117924bfe916671b21f14212ba1bb49dfe0c7"
-  integrity sha512-ZRX6v5zGCJMI1T2aO+BQxJggy1vvorXEwonQhWXIC+brO7lkDB3zWelVNAti183ddH6FmJP8z4UDCJnJlioK4Q==
 
 yarn@^1.22.22:
   version "1.22.22"
