@@ -1,3 +1,26 @@
+<script setup>
+import { defineProps } from 'vue';
+
+defineProps({
+  configuratorVersion: {
+    type: String,
+    required: true,
+  },
+  firmwareVersion: {
+    type: String,
+    default: '',
+  },
+  firmwareId: {
+    type: String,
+    default: '',
+  },
+  hardwareId: {
+    type: String,
+    default: '',
+  },
+});
+</script>
+
 <template>
   <div class="logo">
     <div class="logo_text">
@@ -14,29 +37,6 @@
     </div>
   </div>
 </template>
-
-<script>
-export default {
-  props: {
-    configuratorVersion: {
-      type: String,
-      required: true,
-    },
-    firmwareVersion: {
-      type: String,
-      default: '',
-    },
-    firmwareId: {
-      type: String,
-      default: '',
-    },
-    hardwareId: {
-      type: String,
-      default: '',
-    },
-  },
-};
-</script>
 
 <style>
 .logo {
@@ -116,3 +116,9 @@ export default {
   }
 }
 </style>
+
+export default {
+  components: {
+    BetaflightLogo
+  }
+}

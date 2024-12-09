@@ -11,8 +11,14 @@
 </template>
 <script>
 const NO_BATTERY_VOLTAGE_MAXIMUM = 1.8;
-export default {
+import { defineComponent } from 'vue';
+
+export default defineComponent({
   props: {
+    batteryState: {
+      type: String,
+      default: '',
+    },
     voltage: {
       type: Number,
       default: 0,
@@ -30,6 +36,7 @@ export default {
       default: 1,
     },
   },
+
   computed: {
     nbCells() {
       let nbCells = Math.floor(this.voltage / this.vbatmaxcellvoltage) + 1;
@@ -73,7 +80,7 @@ export default {
         : ((this.voltage - this.min) / (this.max - this.min)) * 100;
     },
   },
-};
+});
 </script>
 
 <style>

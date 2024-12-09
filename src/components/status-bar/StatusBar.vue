@@ -6,19 +6,19 @@
     />
     <ReadingStat
       message="statusbar_packet_error"
-      :value="packetError"
+      :model-value="packetError"
     />
     <ReadingStat
       message="statusbar_i2c_error"
-      :value="i2cError"
+      :model-value="i2cError"
     />
     <ReadingStat
       message="statusbar_cycle_time"
-      :value="cycleTime"
+      :model-value="cycleTime"
     />
     <ReadingStat
       message="statusbar_cpu_load"
-      :value="cpuLoad"
+      :model-value="cpuLoad"
       unit="%"
     />
     <StatusBarVersion
@@ -31,11 +31,12 @@
 </template>
 
 <script>
+import { defineComponent } from 'vue';
 import StatusBarVersion from "./StatusBarVersion.vue";
 import ReadingStat from "./ReadingStat.vue";
 import PortUtilization from "./PortUtilization.vue";
 
-export default {
+export default defineComponent({
   components: {
     PortUtilization,
     ReadingStat,
@@ -84,7 +85,7 @@ export default {
       default: "",
     },
   },
-};
+});
 </script>
 
 <style lang="less">
