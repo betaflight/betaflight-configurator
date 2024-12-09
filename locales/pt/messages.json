@@ -1018,6 +1018,10 @@
         "message": "Não há nenhum protocolo de saída de motor selecionado",
         "description": "Message that pops up to describe the MOTOR_PROTO arming disable flag"
     },
+    "initialSetupArmingDisableFlagsTooltipCRASHFLIP": {
+        "message": "O Switch Crash Flip está ativo",
+        "description": "Message that pops to describe the CRASHFLIP arming disable flag"
+    },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "Um dos outros indicadores de desarme está ativo quando arma",
         "description": "Message that pops up to describe the ARM_SWITCH arming disable flag"
@@ -1809,10 +1813,6 @@
         "message": "D Max D aumenta o D durante movimentos mais rápidos do gyro e\/ou dos sticks.<br><br>O fator 'Ganho' aumenta o D quando o quad vira rapidamente ou está a tremer em propwash. Geralmente, apenas 'Ganho' é necessário. <br><br>O fator 'Avanço' aumenta o D na direção de D Max durante inputs de sticks. Normalmente não é necessário e deve ser definido como zero. Avanço pode ser útil para quads com baixa autoridade que tendem a ter muito overshoot.<br><br>Valores maiores de Ganho (por exemplo, 40) podem ser mais adequados para o estilo livre, levantando o D mais prontamente.<br><br>AVISO: Um dos valores de Ganho ou Avanço deve ser definido acima de cerca de 20 ou o D não aumentará como deveria. Definir para zero irá bloquear o D no valor base.",
         "description": "D Max feature helpicon message"
     },
-    "pidTuningDerivativeHelp": {
-        "message": "Controla a força de amortecimento de QUALQUER movimento do aparelho. Para movimentos dos sticks, o D-term amortece o comando. Para uma influência externa (propwash ou rajada de vento) o D-term amortece a sua influência.<br><br>Ganhos mais altos asseguram mais amortecimento e overshoot reduzido do P-term e FF.<br>No entanto, o D-term é MUITO sensível a vibrações de alta frequência do gyro (ruído | ampliado 10x a 100x).<br><br>Ruído de alta frequência pode causar aquecimento dos motores ou avarias, se os D-gains forem muito altos ou o ruído no gyro não for bem filtrado (ver aba Filtros).<br><br>Pense no D-term como um amortecedor do seu carro, mas com a propriedade inerente negativa de amplificar o ruído de alta frequência no gyro.",
-        "description": "Derivative Term helpicon message on PID table titlebar"
-    },
     "pidTuningPidSettings": {
         "message": "Definições do controlador PID"
     },
@@ -1977,6 +1977,10 @@
     "pidTuningDMaxHelp": {
         "message": "Fornece um amortecimento mais forte para manobras rápidas que, de outra forma, podem causar overshoot. <br><br>Permite um menor valor básico de D min do que o normal, mantendo os motores mais frios, e viragens mais rápidas, mas levanta o D para controlar o overshoot em flips ou reversões rápidas. <br><br>Mais útil para racers, builds com ruído ou máquinas com baixa autoridade.",
         "description": "D Max Term helpicon message on PID table titlebar"
+    },
+    "pidTuningDerivativeHelp": {
+        "message": "Controla a força de amortecimento de QUALQUER movimento do aparelho. Para movimentos dos sticks, o D-term amortece o comando. Para uma influência externa (propwash ou rajada de vento) o D-term amortece a sua influência.<br><br>Ganhos mais altos asseguram mais amortecimento e overshoot reduzido do P-term e FF.<br>No entanto, o D-term é MUITO sensível a vibrações de alta frequência do gyro (ruído | ampliado 10x a 100x).<br><br>Ruído de alta frequência pode causar aquecimento dos motores ou avarias, se os D-gains forem muito altos ou o ruído no gyro não for bem filtrado (ver aba Filtros).<br><br>Pense no D-term como um amortecedor do seu carro, mas com a propriedade inerente negativa de amplificar o ruído de alta frequência no gyro.",
+        "description": "Derivative Term helpicon message on PID table titlebar"
     },
     "pidTuningFeedforward": {
         "message": "<b>F<\/b>eedforward"
@@ -2438,6 +2442,10 @@
     "auxiliaryHelpMode_PIDAUDIO": {
         "message": "Use para alternar o PIDAUDIO",
         "description": "Help text to PIDAUDIO mode"
+    },
+    "auxiliaryHelpMode_POSHOLD": {
+        "message": "Modo Position Hold",
+        "description": "Help text to POSHOLD mode"
     },
     "auxiliaryHelpMode_PREARM": {
         "message": "Quando armar, espere que este switch seja ativado antes de efetivamente armar",
@@ -6624,6 +6632,10 @@
         "message": "Número de bandas",
         "description": "Text of one of the fields of the VTX Table element in the VTX tab"
     },
+    "vtxTableBandsHelp": {
+        "message": "Define o número de bandas necessárias para o VTX",
+        "description": "Help for the number of bands field of the VTX Table element in the VTX tab"
+    },
     "vtxTableChannels": {
         "message": "Número de canais por banda",
         "description": "Text of one of the fields of the VTX Table element in the VTX tab"
@@ -7313,6 +7325,9 @@
     "firmwareFlasherBuildMotorProtocols": {
         "message": "Protocolo do Motor"
     },
+    "firmwareFlasherBuildOsdProtocols": {
+        "message": "Protocolo OSD"
+    },
     "firmwareFlasherConfigurationFile": {
         "message": "Nome do ficheiro de Configuração:"
     },
@@ -7330,6 +7345,9 @@
     },
     "firmwareFlasherMotorProtocolDescription": {
         "message": "Selecione o protocolo (ESC) do motor que gostaria de incluir nesta compilação. Note que isto é uma lista de seleção, mas apenas um item pode ser selecionado."
+    },
+    "firmwareFlasherOsdProtocolDescription": {
+        "message": "Selecione o protocolo OSD que quer incluir nesta compilação. Note que isto é uma lista de seleção, mas apenas um item pode ser selecionado."
     },
     "firmwareFlasherBranchDescription": {
         "message": "Especialmente útil para desenvolvedores, pode selecionar uma versão PR, especificar uma commit sha, ou especificar um PR 'ainda a ser mesclado' digitando um # seguido pelo número do PR. ex. #1234 (abreviatura para o branch 'pull\/1234\/head')."
