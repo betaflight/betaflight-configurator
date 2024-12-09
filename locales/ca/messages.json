@@ -1817,10 +1817,6 @@
         "message": "D Max augmenta D durant moviments més ràpids del giroscopi i\/o del stick.<br><br>El factor \"Guany\" augmenta D quan el dron gira ràpidament o tremola en el propwash. Normalment només es necessita \"Guany\". <br><br>El factor \"Avançament\" augmenta D cap a D Max durant les entrades del stick. Normalment no és necessari i s'ha de posar a zero. L'avançament pot ser útil per a drons de baixa autoritat que tendeixen a sobrepassar-se molt.<br><br>Els valors de guany més alts (p. ex. 40) poden ser més adequats per a l'estil lliure aixecant D més fàcilment.<br><br>ADVERTIMENT: un dels guanys. o L'avançament s'ha de posar per sobre d'uns 20 o D no augmentarà com hauria de ser. Si poseu tots dos a zero, es bloquejarà D al valor base.",
         "description": "D Max feature helpicon message"
     },
-    "pidTuningDerivativeHelp": {
-        "message": "Controla la força d’amortiment a qualsevol moviment del dron. Per a desplaçaments dels sticks, D Term amortitza la comanda. Per a una influència externa (propwash o ràfega de vent), el D term amortitza la influència.<br><br> Els beneficis més alts proporcionen un major amortiment i redueixen la superació per terme P i FF.<br>No obstant això, el D term és MOLT sensible a les vibracions de alta freqüència de giroscopi (el soroll | es magnifica de 10x a 100x).<br><br> El soroll d’alta freqüència pot causar calor del motor i cremar motors si els guanys en D són massa alts o el soroll no es filtra bé (consulteu la pestanya Filtres).<br><br> Penseu en el D term com a amortidor del cotxe, però amb la propietat inherent negativa d’augmentar el soroll d’alta freqüència del giro.",
-        "description": "Derivative Term helpicon message on PID table titlebar"
-    },
     "pidTuningPidSettings": {
         "message": "Ajustament del Controlador de PIDs"
     },
@@ -1985,6 +1981,10 @@
     "pidTuningDMaxHelp": {
         "message": "Proporciona un amortiment més fort per a maniobres ràpides que, d'una altra manera, podrien provocar un desbordament. <br><br>Permet un valor mínim bàsic de D més baix de l'habitual, mantenint els motors més freds i engegat més ràpid, però aixeca D per controlar la superació en voltes o inversions ràpides. <br><br>Més útil per a curses, construccions sorolloses o màquines de poca autoritat.",
         "description": "D Max Term helpicon message on PID table titlebar"
+    },
+    "pidTuningDerivativeHelp": {
+        "message": "Controla la força d’amortiment a qualsevol moviment del dron. Per a desplaçaments dels sticks, D Term amortitza la comanda. Per a una influència externa (propwash o ràfega de vent), el D term amortitza la influència.<br><br> Els beneficis més alts proporcionen un major amortiment i redueixen la superació per terme P i FF.<br>No obstant això, el D term és MOLT sensible a les vibracions de alta freqüència de giroscopi (el soroll | es magnifica de 10x a 100x).<br><br> El soroll d’alta freqüència pot causar calor del motor i cremar motors si els guanys en D són massa alts o el soroll no es filtra bé (consulteu la pestanya Filtres).<br><br> Penseu en el D term com a amortidor del cotxe, però amb la propietat inherent negativa d’augmentar el soroll d’alta freqüència del giro.",
+        "description": "Derivative Term helpicon message on PID table titlebar"
     },
     "pidTuningFeedforward": {
         "message": "<b>F<\/b>eedforward"
