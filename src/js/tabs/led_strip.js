@@ -20,7 +20,7 @@ led_strip.initialize = function (callback, scrollPosition) {
 
     TABS.led_strip.functions = ['i', 'w', 'f', 'a', 't', 'r', 'c', 'g', 's', 'b', 'l', 'o', 'y'];
     TABS.led_strip.baseFuncs = ['c', 'f', 'a', 'l', 's', 'g', 'r', 'p', 'e', 'u'];
-    TABS.led_strip.overlays =  ['t', 'y', 'o', 'b', 'v', 'i', 'w'];
+    TABS.led_strip.overlays =  ['t', 'y', 'o', 'x', 'b', 'v', 'i', 'w'];
 
     if (semver.lt(FC.CONFIG.apiVersion,API_VERSION_1_46)) {
         TABS.led_strip.overlays = TABS.led_strip.overlays.filter(x => x !== 'y');
@@ -456,6 +456,7 @@ led_strip.initialize = function (callback, scrollPosition) {
                                 case 't':
                                 case 'y':
                                 case 'o':
+                                case 'x':
                                 case 's':
                                     if (areModifiersActive(`function-${f}`))
                                         p.addClass(`function-${letter}`);
@@ -489,28 +490,46 @@ led_strip.initialize = function (callback, scrollPosition) {
             return $(that).is(':checked');
         }
 
+        // Disable all other functions except the one being activated
+        function disableOtherFunctions(activeFunction) {
+            const functions = ['.function-o', '.function-b', '.function-x'];
+
+            functions.forEach(func => {
+                if (!activeFunction.is(func)) {
+                    const checkbox = $(`.checkbox ${func}`);
+                    if (checkbox.is(':checked')) {
+                        checkbox.prop('checked', false);
+                        checkbox.trigger('change');
+                        toggleSwitch(checkbox, func.slice(-1)); // Pass the last character as the identifier
+                    }
+                }
+            });
+        }
+
         // UI: check-box toggle
         $('.checkbox').on('change', function(e) {
             if (e.originalEvent) {
                 // user-triggered event
                 const that = $(this).find('input');
 
-                //disable Blink always or Larson scanner, both functions are not working properly at the same time
-                if (that.is('.function-o')) {
-                    const blink = $('.checkbox .function-b');
-                    if (blink.is(':checked')) {
-                        blink.prop('checked', false);
-                        blink.trigger('change');
-                        toggleSwitch(blink, 'b');
+                // Event handlers for each function
+                $('.checkbox .function-o').on('change', function () {
+                    if ($(this).is(':checked')) {
+                        disableOtherFunctions($(this));
                     }
-                } else if (that.is('.function-b')) {
-                    const larson = $('.checkbox .function-o');
-                    if ($('.checkbox .function-o').is(':checked')) {
-                        larson.prop('checked', false);
-                        larson.trigger('change');
-                        toggleSwitch(larson, 'o');
+                });
+
+                $('.checkbox .function-b').on('change', function () {
+                    if ($(this).is(':checked')) {
+                        disableOtherFunctions($(this));
                     }
-                }
+                });
+
+                $('.checkbox .function-x').on('change', function () {
+                    if ($(this).is(':checked')) {
+                        disableOtherFunctions($(this));
+                    }
+                });
 
                 //Change Rainbow slider visibility
                 if (that.is('.function-y')) {
@@ -827,6 +846,7 @@ led_strip.initialize = function (callback, scrollPosition) {
             case "function-r":
             case "function-y":
             case "function-o":
+            case "function-x":
             case "function-b":
             case "function-g":
                 return true;
