@@ -2390,7 +2390,7 @@
     "auxiliaryModeLogicAND": {
       "message": "AND"
     },
-    "auxiliaryHelpMode_3D": {
+    "auxiliaryHelpMode_3DDISABLE": {
         "message": "Enables reversible motor direction to provide negative thrust and allow inverted flight. Throttle becomes -100 to +100 instead of 0 to 100",
         "description": "Help text to 3D mode"
     },
