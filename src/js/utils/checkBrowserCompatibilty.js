@@ -1,3 +1,5 @@
+import { serial as serialPolyfill } from './web-serial-polyfill/serial.ts';
+
 export function isChromium() {
     // https://developer.mozilla.org/en-US/docs/Web/HTTP/Browser_detection_using_the_user_agent
     if (!navigator.userAgentData) {
@@ -13,7 +15,12 @@ export function isChromium() {
 }
 
 export function checkBrowserCompatibility() {
-    const compatible = "serial" in navigator;
+    let compatible = "serial" in navigator;
+
+    if (!compatible && 'usb' in navigator && !('brave' in navigator)) {
+        navigator.serial = serialPolyfill;
+        compatible = true;
+    }
 
     if (isChromium() && compatible) {
         return true;
