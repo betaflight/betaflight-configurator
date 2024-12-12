@@ -172,7 +172,7 @@
         "message": "Wybierz język domyślny"
     },
     "language_default": {
-        "message": "Domyślne ustawienie systemowe"
+        "message": "Domyślny systemowy"
     },
     "language_default_pretty": {
         "message": "Domyślny systemowy ($t(detectedLanguage))"
@@ -1022,6 +1022,10 @@
         "message": "Nie ma wybranego protokołu sterowania silnika",
         "description": "Message that pops up to describe the MOTOR_PROTO arming disable flag"
     },
+    "initialSetupArmingDisableFlagsTooltipCRASHFLIP": {
+        "message": "Przełącznik Crash Flip jest aktywny",
+        "description": "Message that pops to describe the CRASHFLIP arming disable flag"
+    },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "Jedna z pozostałych flag rozbrojenia jest aktywna podczas uzbrajania",
         "description": "Message that pops up to describe the ARM_SWITCH arming disable flag"
@@ -1813,10 +1817,6 @@
         "message": "D Max zwiększa D podczas szybszych ruchów żyroskopu oraz drążków w nadajniku RC.<br><br>Współczynnik „Wzmocnienie” zwiększa D, gdy quad obraca się szybko lub podczas efektu propwash. Zwykle potrzebne jest tylko „Wzmocnienie”. <br><br>Współczynnik „Wyprzedzenie” zwiększa D w kierunku D Max podczas wychylania drążka. Zwykle nie jest potrzebny i powinien być ustawiony na zero. \"Wyprzedzenie\" może być przydatne w przypadku quadów o niskim autorytecie, które mają tendencję do silnego przestrzeliwania.<br><br>Wyższe wartości \"Wzmocnienia\" (np. 40) mogą być bardziej odpowiednie do freestyle'u, ponieważ łatwiej podnoszą D.<br><br>OSTRZEŻENIE: Jeden ze współczynników \"Wzmocnienie\" lub \"Wyprzedzenie\" musi być ustawiony wyżej o około 20, w przeciwnym razie D nie wzrośnie tak, jak powinno. Ustawienie obu na zero zablokuje D na wartości podstawowej.",
         "description": "D Max feature helpicon message"
     },
-    "pidTuningDerivativeHelp": {
-        "message": "Kontroluje z jaką siłą odbywać ma się korekta ruch drona przy KAŻDEJ zmianie kierunku. Kiedy drążki są poruszane, D-term tłumi polecenie. W przypadku wpływu zewnętrznego ( dryfowanie  lub porywy wiatru) D-term tłumi wpływ. <br> <br> Wyższe wzmocnienie zapewnia większe tłumienie i zmniejsza nadmiar P-term i FF. <br> D-term jest BARDZO wrażliwy na wibracje wysokiej częstotliwości które zakłócają  pracę żyroskopu  (zakłócenia zwiększają się od 10 do 100x). <br> <br> Wibracje o wysokiej częstotliwości mogą powodować grzanie się silników co może doprowadzić do ich zniszczenia, jeśli wzmocnienie D jest zbyt wysokie lub wibracje żyroskopowe  nie są dobrze filtrowane (patrz w zakładce Filtr). <br> <br> D-term jest podobny do amortyzatora, ale ma negatywną właściwość wzmacniania szumu żyroskopowego wysokiej częstotliwości.",
-        "description": "Derivative Term helpicon message on PID table titlebar"
-    },
     "pidTuningPidSettings": {
         "message": "Ustawienia regulatora PID"
     },
@@ -1981,6 +1981,10 @@
     "pidTuningDMaxHelp": {
         "message": "Zapewnia silniejsze tłumienie dla szybkich manewrów, które w przeciwnym razie mogłyby spowodować przekroczenie. <br><br>Pozwala na niższą podstawową wartość D min. niż zwykle, zachowując chłodnicę silników, i obracanie się szybciej, ale podnosi D w celu kontrolowania przekroczenia w flipach lub szybkich cofnięciach. <br><br>Najbardziej użyteczne dla wyścigów, hałaśliwych budowli lub maszyn niskiego autorytetu.",
         "description": "D Max Term helpicon message on PID table titlebar"
+    },
+    "pidTuningDerivativeHelp": {
+        "message": "Kontroluje z jaką siłą odbywać ma się korekta ruch drona przy KAŻDEJ zmianie kierunku. Kiedy drążki są poruszane, D-term tłumi polecenie. W przypadku wpływu zewnętrznego ( dryfowanie  lub porywy wiatru) D-term tłumi wpływ. <br> <br> Wyższe wzmocnienie zapewnia większe tłumienie i zmniejsza nadmiar P-term i FF. <br> D-term jest BARDZO wrażliwy na wibracje wysokiej częstotliwości które zakłócają  pracę żyroskopu  (zakłócenia zwiększają się od 10 do 100x). <br> <br> Wibracje o wysokiej częstotliwości mogą powodować grzanie się silników co może doprowadzić do ich zniszczenia, jeśli wzmocnienie D jest zbyt wysokie lub wibracje żyroskopowe  nie są dobrze filtrowane (patrz w zakładce Filtr). <br> <br> D-term jest podobny do amortyzatora, ale ma negatywną właściwość wzmacniania szumu żyroskopowego wysokiej częstotliwości.",
+        "description": "Derivative Term helpicon message on PID table titlebar"
     },
     "pidTuningFeedforward": {
         "message": "<b>F<\/b>eedforward"
@@ -2442,6 +2446,10 @@
     "auxiliaryHelpMode_PIDAUDIO": {
         "message": "Użyj aby przełączyć PIDAUDIO",
         "description": "Help text to PIDAUDIO mode"
+    },
+    "auxiliaryHelpMode_POSHOLD": {
+        "message": "Tryb utrzymywania pozycji",
+        "description": "Help text to POSHOLD mode"
     },
     "auxiliaryHelpMode_PREARM": {
         "message": "Dodatkowe zabezpieczenie - Podczas uzbrajania potrzebna jest aktywacja tego przełącznika przed faktycznym uzbrojeniem",
@@ -5154,6 +5162,9 @@
     "osdSetupVtxTitle": {
         "message": "Ustawienia VTX"
     },
+    "osdSetupCraftNameTitle": {
+        "message": "Nazwa Modelu"
+    },
     "osdSetupWarningsTitle": {
         "message": "Ostrzeżenia"
     },
@@ -5449,6 +5460,13 @@
     "osdDescElementLapTimeBest3": {
         "message": "Najlepsze 3 czasy okrążania GPS"
     },
+    "osdTextElementCraftName": {
+        "message": "Nazwa modelu",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementCraftName": {
+        "message": "Nazwa modelu wpisana w zakładce Konfiguracja.<\/br>Można ją również ustawić z pomocą zmiennej \"craft_name\" w Wierszu Poleceń CLI."
+    },
     "osdTextElementAltitude": {
         "message": "Wysokość",
         "description": "One of the elements of the OSD"
@@ -5475,6 +5493,9 @@
     "osdTextElementOnTime": {
         "message": "Na czas",
         "description": "One of the elements of the OSD"
+    },
+    "osdDescElementOnTime": {
+        "message": "Całkowity czas, w którym model był pod zasilaniem"
     },
     "osdTextElementFlyTime": {
         "message": "Czas lotu",
@@ -5635,6 +5656,9 @@
         "message": "Licznik: czas uzbrojenia",
         "description": "One of the elements of the OSD"
     },
+    "osdDescElementArmedTime": {
+        "message": "Czas od ostatniego uzbrojenia modelu"
+    },
     "osdTextElementHomeDirection": {
         "message": "Kierunek do domu",
         "description": "One of the elements of the OSD"
@@ -5743,6 +5767,9 @@
     "osdTextGForce": {
         "message": "Siła G",
         "description": "One of the elements of the OSD"
+    },
+    "osdDescGForce": {
+        "message": "Pokazuje siłę przyciągania ziemskiego, jakiej doświadczył model"
     },
     "osdTextElementMotorDiag": {
         "message": "Diagnostyka silnika",
@@ -5972,6 +5999,9 @@
         "message": "Całkowity czas lotu",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
+    "osdDescStatFlyTime": {
+        "message": "Całkowity czas uzbrojenia modelu w bieżącym zasileniu akumulatorem"
+    },
     "osdTextStatArmedTime": {
         "message": "Czas lotu w ostatnim uzbrojeniu",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
@@ -6021,6 +6051,9 @@
     "osdTextStatGForce": {
         "message": "Max przeciążenie grawitacyjne",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatGForce": {
+        "message": "Maksymalna siła przyciągania ziemskiego, jakiej doświadczył model"
     },
     "osdTextStatEscTemperature": {
         "message": "Maksymalna temperatura ESC",
@@ -6571,6 +6604,10 @@
         "message": "Liczba pasm",
         "description": "Text of one of the fields of the VTX Table element in the VTX tab"
     },
+    "vtxTableBandsHelp": {
+        "message": "Określa liczbę pasm wymaganych dla VTX",
+        "description": "Help for the number of bands field of the VTX Table element in the VTX tab"
+    },
     "vtxTableChannels": {
         "message": "Liczba kanałów w paśmie",
         "description": "Text of one of the fields of the VTX Table element in the VTX tab"
@@ -6801,6 +6838,9 @@
     "configurationPersonalization": {
         "message": "Personalizacja"
     },
+    "craftName": {
+        "message": "Nazwa modelu"
+    },
     "configurationCraftNameHelp": {
         "message": "Będzie widoczna w dziennikach, nazwach plików kopii zapasowych oraz na OSD.<\/br> Może być edytowana z pomocą zmiennej <b>craft_name<\/b> w Wierszu Poleceń CLI."
     },
@@ -6877,7 +6917,7 @@
         "message": "Aktualizuj Firmware"
     },
     "cliAutoComplete": {
-        "message": "Automatyczne podpowiadanie komend w Wierszu Poleceń CLI"
+        "message": "Automatycznie podpowiadaj komendy w Wierszu Poleceń CLI"
     },
     "darkTheme": {
         "message": "Włącz ciemny motyw"
@@ -7250,6 +7290,9 @@
     "firmwareFlasherBuildMotorProtocols": {
         "message": "Protokół Silnika"
     },
+    "firmwareFlasherBuildOsdProtocols": {
+        "message": "Protokół OSD"
+    },
     "firmwareFlasherConfigurationFile": {
         "message": "Nazwa pliku konfiguracyjnego:"
     },
@@ -7267,6 +7310,9 @@
     },
     "firmwareFlasherMotorProtocolDescription": {
         "message": "Wybierz protokół silnika (ESC), który chcesz uwzględnić w tej kompilacji. Uwaga: jest to lista rozwijana, ale można wybrać tylko jeden element."
+    },
+    "firmwareFlasherOsdProtocolDescription": {
+        "message": "Wybierz protokół OSD, który chciałbyś dołączyć do tej kompilacji. Zauważ, że jest to lista rozwijana, ale tylko jeden element może zostać wybrany."
     },
     "firmwareFlasherBranchDescription": {
         "message": "Szczególnie przydatne dla programistów, możesz wybrać scalone PR, określić sha zatwierdzenia lub określić PR „jeszcze do scalenia”, wpisując #, po którym następuje numer PR, np. #1234 (jest to skrót dla gałęzi „pull\/1234\/head”)."

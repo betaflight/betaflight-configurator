@@ -1809,10 +1809,6 @@
         "message": "D Max incrementa D durante movimientos rápidos de giro y\/o mando.<br><br>El factor de Ganancia incrementa D cuando la aeronave gira rápidamente o se agita en turbulencias. Habitualmente sólo la Ganancia es necesaria.<br><br>El factor Avance incrementa D hacia D Max con los movimientos de los mandos. Normalmente no se necesita y deber ser cero. Puede ser útil para aeronaves con baja autoridad que tienden a sobregirar fuertemente.<br><br>Valores de Ganancia altos (por ejemplo 40) se adaptan mejor al estilo freestyle elevando D más rápidamente.<br><br>ADVERTENCIA: El valor de Ganancia o el Avance, deben establecerse por encima de 20, o D no aumentará como debería. Establecer ambos a cero bloqueará D en el valor base.",
         "description": "D Max feature helpicon message"
     },
-    "pidTuningDerivativeHelp": {
-        "message": "Controla la fuerza del amortiguado de CUALQUIER movimiento de la aeronave. Para movimientos de mandos, el Término D amortigua la orden. Para influencias externas (turbulencias o ráfagas de viento) el Término D amortigua la influencia.<br><br>Valores más altos proporcionan amortiguado y reducen sobre giros producidos el Término P y FF.<br>Lamentablemente, el Término D es MUY sensible a vibraciones de alta frecuencia (amplifica el ruido de 10x a 100x).<br><br>El ruido de alta frecuencia puede causar calentamiento de los motores e incluso quemados de los mismos si el valor de D es demasiado alto o el ruido del giro no está bien filtrado (ver pestaña Filtros).<br><br>Piensa en el Término D como el amortiguador de tu coche, pero con la propiedad negativa inherente de amplificar el ruido de alta frecuencia.",
-        "description": "Derivative Term helpicon message on PID table titlebar"
-    },
     "pidTuningPidSettings": {
         "message": "Ajustes del Controlador PID"
     },
@@ -1977,6 +1973,10 @@
     "pidTuningDMaxHelp": {
         "message": "Proporciona una amortiguación más intensa para maniobras rápidas que de otro modo podrían causar un sobregiro excesivo. <br><br>Permite un valor de D min menor de lo usual, manteniendo los motores más frios, y giros más rápidos, pero eleva D para controlar el sobregiro en flips o cambios rápidos. <br><br>Más útil para carreras, construcciones ruidosas o máquinas de baja autoridad.",
         "description": "D Max Term helpicon message on PID table titlebar"
+    },
+    "pidTuningDerivativeHelp": {
+        "message": "Controla la fuerza del amortiguado de CUALQUIER movimiento de la aeronave. Para movimientos de mandos, el Término D amortigua la orden. Para influencias externas (turbulencias o ráfagas de viento) el Término D amortigua la influencia.<br><br>Valores más altos proporcionan amortiguado y reducen sobre giros producidos el Término P y FF.<br>Lamentablemente, el Término D es MUY sensible a vibraciones de alta frecuencia (amplifica el ruido de 10x a 100x).<br><br>El ruido de alta frecuencia puede causar calentamiento de los motores e incluso quemados de los mismos si el valor de D es demasiado alto o el ruido del giro no está bien filtrado (ver pestaña Filtros).<br><br>Piensa en el Término D como el amortiguador de tu coche, pero con la propiedad negativa inherente de amplificar el ruido de alta frecuencia.",
+        "description": "Derivative Term helpicon message on PID table titlebar"
     },
     "pidTuningFeedforward": {
         "message": "Prealimentación (F)"

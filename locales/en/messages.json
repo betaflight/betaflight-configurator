@@ -1101,6 +1101,10 @@
         "message": "There is no motor output protocol selected",
         "description": "Message that pops up to describe the MOTOR_PROTO arming disable flag"
     },
+    "initialSetupArmingDisableFlagsTooltipCRASHFLIP": {
+        "message": "Crash Flip Switch is active",
+        "description": "Message that pops to describe the CRASHFLIP arming disable flag"
+    },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "One of the others disarm flags is active when arming",
         "description": "Message that pops up to describe the ARM_SWITCH arming disable flag"
@@ -1896,10 +1900,6 @@
         "message": "D Max increases D during quicker gyro and/or stick movements.<br><br>The 'Gain' factor increases D when the aircraft turns quickly or is shaking in propwash. Usually only 'Gain' is needed. <br><br>The 'Advance' factor increases D towards D Max during stick inputs. Usually it is not needed and should be set to zero.  Advance can be useful for low authority aircraft that tend to overshoot heavily.<br><br>Higher Gain values (eg 40) may be more suitable for freestyle by lifting D more readily.<br><br>WARNING: One of Gain or Advance must be set above about 20 or D will not increase as it should. Setting both to zero will lock D at the base value.",
         "description": "D Max feature helpicon message"
     },
-    "pidTuningDerivativeHelp": {
-        "message": "Baseline damping of ANY motion of the aircraft. <br /><br />Opposes movement whether caused by stick inputs or external influences (e.g. prop-wash or wind gusts)<br /><br />Higher D gains provide more stability and reduce overshoot.<br /><br />D amplifies noise (magnifies by 10x to 100x).  This can burn out motors if gains are too high or D isn't filtered well.<br /><br />D-term is a bit like the shock absorber on your car.",
-        "description": "Derivative helpicon message on PID table titlebar"
-    },
     "pidTuningPidSettings": {
         "message": "PID Controller Settings"
     },
@@ -2390,7 +2390,7 @@
     "auxiliaryModeLogicAND": {
       "message": "AND"
     },
-    "auxiliaryHelpMode_3D": {
+    "auxiliaryHelpMode_3DDISABLE": {
         "message": "Enables reversible motor direction to provide negative thrust and allow inverted flight. Throttle becomes -100 to +100 instead of 0 to 100",
         "description": "Help text to 3D mode"
     },
@@ -2529,6 +2529,10 @@
     "auxiliaryHelpMode_PIDAUDIO": {
         "message": "Use to toggle PIDAUDIO",
         "description": "Help text to PIDAUDIO mode"
+    },
+    "auxiliaryHelpMode_POSHOLD": {
+        "message": "Position hold mode",
+        "description": "Help text to POSHOLD mode"
     },
     "auxiliaryHelpMode_PREARM": {
         "message": "When arming, wait for this switch to be activated before actually arming",
@@ -6719,6 +6723,10 @@
     "vtxTableBands": {
         "message": "Number of bands",
         "description": "Text of one of the fields of the VTX Table element in the VTX tab"
+    },
+    "vtxTableBandsHelp": {
+        "message": "This defines the number of bands required for the VTX",
+        "description": "Help for the number of bands field of the VTX Table element in the VTX tab"
     },
     "vtxTableChannels": {
         "message": "Number of channels by band",

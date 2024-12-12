@@ -46,10 +46,14 @@ export default {
             }
             const kilobytes = bytes / 1024;
             if (kilobytes < 1024) {
-                return `${Math.round(kilobytes)}kB`;
+                return `${Math.round(kilobytes)}KB`;
             }
             const megabytes = kilobytes / 1024;
-            return `${megabytes.toFixed(1)}MB`;
+            if (megabytes < 1024) {
+                return `${megabytes.toFixed(1)}MB`;
+            }
+            const gigabytes = megabytes / 1024;
+            return `${gigabytes.toFixed(1)}GB`;
         },
         indicatorWidth() {
             if (!this.supportDataflash) return;

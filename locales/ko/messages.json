@@ -1813,10 +1813,6 @@
         "message": "D 최대는 더 빠른 자이로 및\/또는 스틱 이동 중에 D를 증가시킵니다.<br><br>기체가 빠르게 회전하거나 프롭워시에서 흔들릴 때 '게인' 계수는 D를 증가시킵니다. 보통 '게인'만 있으면 됩니다. <br><br>스틱 입력 중에 '진전' 계수는 D를 D 최대쪽으로 증가시킵니다. 일반적으로 필요하지 않으며 0으로 설정해야 합니다.  진전은 오버슈팅이 심한 낮은 권위의 기체에 유용할 수 있습니다.<br><br>더 높은 게인 값 (예: 40) 은 D를 더 쉽게 들어올려 프리스타일에 더 적합할 수 있습니다.<br><br>경고: 게인 또는 진전 중 하나를 약 20보다 높게 설정해야 합니다. 그렇지 않으면 D가 증가하지 않습니다. 둘 다 0으로 설정하면 D가 기준값으로 고정됩니다.",
         "description": "D Max feature helpicon message"
     },
-    "pidTuningDerivativeHelp": {
-        "message": "기체의 어떤 움직임에도 감쇠의 강도를 제어합니다. 스틱이 움직일 때, D-텀은 명령을 감쇠시킵니다. 외부 영향(프롭위시 또는 풍력) 의 경우 D-텀은 그러한 영향을 감쇠합니다.<br><br>높은 게인은 더 많은 감쇠를 제공하고 P-텀과 FF에 의한 오버슈트를 감소시킵니다.<br>단, D-텀은 자이로 고주파 진동(노이즈 | 10배에서 100배까지 확대) 에 민감합니다.<br><br>D-게인이 너무 높거나 자이로 노이즈가 잘 필터링되지 않을 경우 고주파 노이즈로 모터 열과 소실 현상이 발생할 수 있습니다(필터 탭 참조).<br><br>D-텀을 당신의 자동차에서 쇼크 업소버로 생각하되, 고주파 자이로 노이즈 확대라는 부정적 고유 속성으로 생각해 보십시오.",
-        "description": "Derivative Term helpicon message on PID table titlebar"
-    },
     "pidTuningPidSettings": {
         "message": "PID 컨트롤러 설정"
     },
@@ -1981,6 +1977,10 @@
     "pidTuningDMaxHelp": {
         "message": "오버슈트를 유발할 수 있는 빠른 조작을 위해 더 강력한 댐핑을 제공합니다. <br><br>평상시보다 낮은 기본 D 최소 값은 모터를 더 시원하게 유지하고, 더 빠르게 턴인할 수 있게 하지만, D를 올리는 것은 플립 또는 빠른 리버스에서의 오버슈트를 제어합니다. <br><br>레이서, 시끄러운 빌드 또는 낮은 권한의 기계에 가장 유용합니다.",
         "description": "D Max Term helpicon message on PID table titlebar"
+    },
+    "pidTuningDerivativeHelp": {
+        "message": "기체의 어떤 움직임에도 감쇠의 강도를 제어합니다. 스틱이 움직일 때, D-텀은 명령을 감쇠시킵니다. 외부 영향(프롭위시 또는 풍력) 의 경우 D-텀은 그러한 영향을 감쇠합니다.<br><br>높은 게인은 더 많은 감쇠를 제공하고 P-텀과 FF에 의한 오버슈트를 감소시킵니다.<br>단, D-텀은 자이로 고주파 진동(노이즈 | 10배에서 100배까지 확대) 에 민감합니다.<br><br>D-게인이 너무 높거나 자이로 노이즈가 잘 필터링되지 않을 경우 고주파 노이즈로 모터 열과 소실 현상이 발생할 수 있습니다(필터 탭 참조).<br><br>D-텀을 당신의 자동차에서 쇼크 업소버로 생각하되, 고주파 자이로 노이즈 확대라는 부정적 고유 속성으로 생각해 보십시오.",
+        "description": "Derivative Term helpicon message on PID table titlebar"
     },
     "pidTuningFeedforward": {
         "message": "<b>F<\/b>피드포워드"
@@ -7317,6 +7317,9 @@
     "firmwareFlasherBuildMotorProtocols": {
         "message": "모터 프로토콜"
     },
+    "firmwareFlasherBuildOsdProtocols": {
+        "message": "OSD 프로토콜"
+    },
     "firmwareFlasherConfigurationFile": {
         "message": "설정 파일이름:"
     },
@@ -7334,6 +7337,9 @@
     },
     "firmwareFlasherMotorProtocolDescription": {
         "message": "이 빌드에 포함할 모터(ESC) 프로토콜을 선택하십시오. 이것은 드롭다운으로 오직 하나의 항목을 선택할 수 있습니다."
+    },
+    "firmwareFlasherOsdProtocolDescription": {
+        "message": "이 빌드에 포함할 OSD 프로토콜을 선택하십시오. 이것은 드롭다운으로 오직 하나의 항목을 선택할 수 있습니다."
     },
     "firmwareFlasherBranchDescription": {
         "message": "개발자에게 특히 유용한 것은 병합된 PR을 선택하거나 커밋 sha를 지정하거나 # 뒤에 PR 번호 예: #1234(이것은 'pull\/1234\/head'의 줄임말)를 입력하여 '아직 병합되지 않은' PR을 지정할 수 있습니다."

@@ -39,6 +39,11 @@ Changes to the security model used in the latest versions of MacOS X 10.14 (Moja
 
 #### Linux users
 
+First step is to download the installer and keep it in your working directory, which can be done with the following command:
+```
+wget https://github.com/betaflight/betaflight-configurator/releases/download/10.10.0/betaflight-configurator_10.10.0_amd64.deb
+```
+
 In most Linux distributions your user won't have access to serial interfaces by default. To add this access right type the following command in a terminal, log out your user and log in again:
 
 ```
@@ -62,6 +67,17 @@ On Ubuntu 23.10 please follow these alternative steps for installation:
 ```
 sudo echo "deb http://archive.ubuntu.com/ubuntu/ lunar universe" > /etc/apt/sources.list.d/lunar-repos-old.list
 sudo apt update
+sudo dpkg -i betaflight-configurator_10.10.0_amd64.deb
+sudo apt-get -f install
+```
+
+On Ubuntu 24.10 and above, please follow these steps, as some deprecated modules are no longer available through apt on this distro:
+```
+sudo apt update
+wget http://archive.ubuntu.com/ubuntu/pool/universe/g/gconf/libgconf-2-4_3.2.6-4ubuntu1_amd64.deb
+wget http://archive.ubuntu.com/ubuntu/pool/universe/g/gconf/gconf2-common_3.2.6-4ubuntu1_all.deb
+sudo dpkg -i gconf2-common_3.2.6-4ubuntu1_all.deb
+sudo dpkg -i libgconf-2-4_3.2.6-4ubuntu1_amd64.deb
 sudo dpkg -i betaflight-configurator_10.10.0_amd64.deb
 sudo apt-get -f install
 ```
