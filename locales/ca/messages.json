@@ -1026,6 +1026,10 @@
         "message": "No s'ha seleccionat cap protocol de sortida del motor",
         "description": "Message that pops up to describe the MOTOR_PROTO arming disable flag"
     },
+    "initialSetupArmingDisableFlagsTooltipCRASHFLIP": {
+        "message": "L'interruptor de Crash Flip está actiu",
+        "description": "Message that pops to describe the CRASHFLIP arming disable flag"
+    },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "Un dels altres desarmar banderes està actiu quan es fa armament",
         "description": "Message that pops up to describe the ARM_SWITCH arming disable flag"
@@ -2307,8 +2311,8 @@
     "auxiliaryModeLogicAND": {
         "message": "AND"
     },
-    "auxiliaryHelpMode_3D": {
-        "message": "Permet la direcció reversible del motor per proporcionar una empenta negativa i permetre el vol invertit. L'accelerador es converteix en -100 a +100 en lloc de 0 a 100",
+    "auxiliaryHelpMode_3DDISABLE": {
+        "message": "Permet el gir reversible del motor per proporcionar una empenta negativa i permetre el vol invertit. L'accelerador es converteix en -100 a +100 en lloc de 0 a 100",
         "description": "Help text to 3D mode"
     },
     "auxiliaryHelpMode_ACROTRAINER": {
@@ -2446,6 +2450,10 @@
     "auxiliaryHelpMode_PIDAUDIO": {
         "message": "Utilitzeu-lo per canviar PIDAUDIO",
         "description": "Help text to PIDAUDIO mode"
+    },
+    "auxiliaryHelpMode_POSHOLD": {
+        "message": "Mode de manteniment de posició",
+        "description": "Help text to POSHOLD mode"
     },
     "auxiliaryHelpMode_PREARM": {
         "message": "Quan s'arma, espereu que aquest interruptor s'activi abans d'armar-lo",
@@ -6631,6 +6639,10 @@
     "vtxTableBands": {
         "message": "Nombre de bandes",
         "description": "Text of one of the fields of the VTX Table element in the VTX tab"
+    },
+    "vtxTableBandsHelp": {
+        "message": "Defineix el nombre de bandes requerit pel VTX",
+        "description": "Help for the number of bands field of the VTX Table element in the VTX tab"
     },
     "vtxTableChannels": {
         "message": "Nombre de canals per banda",

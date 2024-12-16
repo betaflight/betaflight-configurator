@@ -2214,10 +2214,6 @@
     "auxiliaryModeLogicAND": {
         "message": "UND"
     },
-    "auxiliaryHelpMode_3D": {
-        "message": "Ermöglicht die Umkehrung der Motorrichtung, um negativen Schub zu erzeugen und Rückenflug zu ermöglichen. Gashebel wird -100 bis +100 statt 0 bis 100",
-        "description": "Help text to 3D mode"
-    },
     "auxiliaryHelpMode_ARM": {
         "message": "Aktiviert die Motoransteuerung und ermöglicht das Fliegen des Copters",
         "description": "Help text to ARM mode"

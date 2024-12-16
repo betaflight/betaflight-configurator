@@ -2299,10 +2299,6 @@
     "auxiliaryModeLogicAND": {
         "message": "Y"
     },
-    "auxiliaryHelpMode_3D": {
-        "message": "Activa la dirección del motor reversible para proporcionar acelerador negativo y permitir el vuelo invertido. El acelerador se convierte en -100 a +100 en lugar de 0 a 100",
-        "description": "Help text to 3D mode"
-    },
     "auxiliaryHelpMode_ACROTRAINER": {
         "message": "Modo de vuelo que limita el ángulo de la aeronave al volar en modo acro",
         "description": "Help text to ACRO TRAINER mode"
