@@ -2113,10 +2113,6 @@
     "auxiliaryModeLogicAND": {
         "message": "E"
     },
-    "auxiliaryHelpMode_3D": {
-        "message": "Permite a dirección reversible do motor para proporcionar un empuxe negativo e permitir o voo invertido. O acelerador pasa a ser de -100 a +100 en lugar de 0 a 100",
-        "description": "Help text to 3D mode"
-    },
     "auxiliaryHelpMode_ANGLE": {
         "message": "Neste modo de nivelación automática, as canles de roll e pitch controlan o ángulo entre o eixe relevante e o vertical, logrando un voo nivelado só deixando os sticks centrados",
         "description": "Help text to ANGLE mode"

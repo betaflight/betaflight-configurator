@@ -2220,10 +2220,6 @@
     "auxiliaryModeLogicAND": {
         "message": "OG"
     },
-    "auxiliaryHelpMode_3D": {
-        "message": "Muliggør reversibel motorretning for at give negativ gas og tillade omvendt flyvning. Gassen bliver -100 til +100 i stedet for 0 til 100.\nAnvendes til at flyve et fartøj, som er endt på 'ryggen'",
-        "description": "Help text to 3D mode"
-    },
     "auxiliaryHelpMode_ANGLE": {
         "message": "I denne auto-nivelleret tilstand styrer krængror og højderor vinklen mellem den relevante akse og den lodrette akse, for at udjævne flyning ved blot at lade pindende være centreret",
         "description": "Help text to ANGLE mode"

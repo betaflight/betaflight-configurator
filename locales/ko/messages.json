@@ -1022,6 +1022,10 @@
         "message": "선택된 모터 출력 프로토콜이 없습니다",
         "description": "Message that pops up to describe the MOTOR_PROTO arming disable flag"
     },
+    "initialSetupArmingDisableFlagsTooltipCRASHFLIP": {
+        "message": "크래쉬 플립 스위치가 활성화됨",
+        "description": "Message that pops to describe the CRASHFLIP arming disable flag"
+    },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "다른 디스암 플래그 중 하나가 아밍시 활성화 중입니다",
         "description": "Message that pops up to describe the ARM_SWITCH arming disable flag"
@@ -2303,7 +2307,7 @@
     "auxiliaryModeLogicAND": {
         "message": "AND"
     },
-    "auxiliaryHelpMode_3D": {
+    "auxiliaryHelpMode_3DDISABLE": {
         "message": "가역적 모터 방향이 음의 추력을 제공하고 배면비행을 허용합니다. 스로틀은 0~100이 아닌 -100~+100이 됩니다",
         "description": "Help text to 3D mode"
     },
@@ -2442,6 +2446,10 @@
     "auxiliaryHelpMode_PIDAUDIO": {
         "message": "PIDAUDIO을 전환할 때 사용",
         "description": "Help text to PIDAUDIO mode"
+    },
+    "auxiliaryHelpMode_POSHOLD": {
+        "message": "포지션 홀드 모드",
+        "description": "Help text to POSHOLD mode"
     },
     "auxiliaryHelpMode_PREARM": {
         "message": "아밍을 실행할 때, 실제 아밍하기 전에 이 스위치가 활성화될 때까지 기다립니다",
@@ -6627,6 +6635,10 @@
     "vtxTableBands": {
         "message": "밴드 수",
         "description": "Text of one of the fields of the VTX Table element in the VTX tab"
+    },
+    "vtxTableBandsHelp": {
+        "message": "VTX에 필요한 밴드 수를 정의합니다",
+        "description": "Help for the number of bands field of the VTX Table element in the VTX tab"
     },
     "vtxTableChannels": {
         "message": "밴드의 채널 수",
