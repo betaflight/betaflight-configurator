@@ -981,7 +981,7 @@ pid_tuning.initialize = function (callback) {
     }
 
     function drawAxes(curveContext, width, height) {
-        curveContext.strokeStyle = '#000000';
+        curveContext.strokeStyle = '#888888';
         curveContext.lineWidth = 4;
 
         // Horizontal
@@ -1512,7 +1512,7 @@ pid_tuning.initialize = function (callback) {
                 thrlabel = `${Math.round(thrPercent <= 0 ? 0 : realthr)}%` +
                     ` = ${Math.round(thrPercent <= 0 ? 0 : expothr)}%`,
                 textWidth = context.measureText(thrlabel);
-            context.fillStyle = '#000';
+            context.fillStyle = '#888888';
             context.scale(textWidth / throttleCurve.clientWidth, 1);
             context.fillText(thrlabel, 5, 5 + fontSize);
             context.restore();
@@ -2071,7 +2071,7 @@ pid_tuning.updateRatesLabels = function() {
 
         const drawAxisLabel = function(context, axisLabel, x, y, align, color) {
 
-            context.fillStyle = color || '#000000' ;
+            context.fillStyle = color || '#888888' ;
             context.textAlign = align || 'center';
             context.fillText(axisLabel, x, y);
         };
