@@ -747,10 +747,10 @@
         "message": "Kalibracja..."
     },
     "initialSetupButtonReset": {
-        "message": "Resetuj ustawienia"
+        "message": "Resetuj wszystkie ustawienia"
     },
     "initialSetupResetText": {
-        "message": "Zresetuj kontroler lotu do stanu <strong>nieskonfigurowanego.<\/strong>"
+        "message": "Nastąpi zresetowanie ustawień kontrolera lotu do <strong>stanu bez konfiguracji.<\/strong>"
     },
     "initialSetupButtonBackup": {
         "message": "Utwórz kopie"
@@ -1786,7 +1786,7 @@
         "message": "Anti Gravity zwiększa na chwilę parametr I (oraz parametr P od wersji betaflight 4.3) podczas szybkich ruchów przepustnicą, zwiększając stabilność lotu podczas gwałtownego wznoszenia.<br><br>Wyższe wartości mogą poprawić stabilność w jednostkach latających o niskim autorytecie lub tych z przesuniętym środkiem ciężkości."
     },
     "pidTuningDerivative": {
-        "message": "<b>D<\/b>erivative",
+        "message": "<b>D<\/b> - Różniczkujący",
         "description": "Table header of the Derivative feature in the PIDs tab"
     },
     "pidTuningDMaxFeatureTitle": {
@@ -1851,7 +1851,7 @@
         "message": "Typ odcięcia kanału"
     },
     "receiverRcSetpointTypeSelect": {
-        "message": "Typ odcięcia wejściowego"
+        "message": "Typ odcięcia Wartości zadanej"
     },
     "receiverRcSmoothingInterpolation": {
         "message": "Interpolacja"
@@ -1875,7 +1875,7 @@
         "message": "Wybiera, czy częstotliwość odcięcia filtra wejściowego jest automatycznie obliczana (zalecane) czy wybierana ręcznie przez użytkownika. Używanie \"Ręcznego\" nie jest zalecane dla protokołów odbiorników, takich jak Crossfire które mogą zmieniać się w locie."
     },
     "receiverRcSmoothingSetpointHz": {
-        "message": "Wejściowa częstotliwość odcięcia"
+        "message": "Częstotliwość odcięcia Wartości zadanej"
     },
     "receiverRcSmoothingFeedforwardCutoff": {
         "message": "Częstotliwość odcięcia kanału"
@@ -1887,7 +1887,7 @@
         "message": "Auto"
     },
     "receiverRcSmoothingMode": {
-        "message": "Typ wygładzania"
+        "message": "Tryb wygładzania"
     },
     "pidTuningDtermSetpointTransition": {
         "message": "D przejście do wartości zadanej"
@@ -1905,7 +1905,7 @@
         "message": "<span class = \"message-negative\"> <strong> $t(warningTitle.message): <\/strong> Odradza się stosowania wartości zadanej D większej niż 0 i mniejszej niż 0,1. Takie postępowanie może prowadzić do niestabilności i zmniejszenia reakcji drążka, gdy drążki przekroczą punkt środkowy. <\/span>"
     },
     "pidTuningFeedforwardGroup": {
-        "message": "Kanał<br>do przodu"
+        "message": "Wyprze-<br>dzający"
     },
     "pidTuningFeedforwardGroupHelp": {
         "message": "Feedforward dostosowuje reakcję drążka.<br \/><br \/> Te opcje pozwalają dostosować go, aby zapewnić wszystko, od wyraźnych, natychmiastowych reakcji drążka podczas wyścigów po miękkie, płynne reakcje w zastosowaniach kinowych\/HD."
@@ -1962,14 +1962,14 @@
         "message": "Liniowo zmniejsza Feedforward, gdy drążki są blisko środka. <br><br>W wersji betaflight 4.2 i wcześniejszych przejścia mogą być używane do zapewnienia płynniejszych reakcji drążka blisko środkowej pozycji drążka.<br><br>W wersji betaflight 4.3 przejście nie jest zalecane, ponieważ zostało „zastąpione” redukcją jittera funkcja.<br><br>Wartość 0 wyłącza przejście. Wartość 0,3 zmniejsza sprzężenie do przodu do zera, gdy drążki znajdują się w martwym punkcie, ale zwiększa się do pełnej wartości normalnej, gdy drążki są >30% poza środkiem."
     },
     "pidTuningProportional": {
-        "message": "<b>P<\/b>roporcjonalny"
+        "message": "<b>P<\/b> - Proporcjonalny"
     },
     "pidTuningProportionalHelp": {
         "message": "Kontroluje siłę tego, jak ściśle maszyna śledzi drążki (wartość zadana). <br \/> <br \/> Wyższa wartość (zyski) zapewnia dokładniejsze śledzenie, ale może powodować przeregulowanie, jeśli jest zbyt wysokie w stosunku do pochodnej (D-term). Pomyśl o P-termie jak o sprężynie w samochodzie.",
         "description": "Proportional Term helpicon message on PID table titlebar"
     },
     "pidTuningIntegral": {
-        "message": "<b>I<\/b>ntegral"
+        "message": "<b>I<\/b> - Całkujący"
     },
     "pidTuningIntegralHelp": {
         "message": "Kontroluje utrzymujące się małe przesunięcia.<br><br>Podobne do P, ale kumuluje się stopniowo i powoli, aż błąd wyniesie zero. Ważne dla długoterminowych odchyleń, takich jak przesunięcie środka ciężkości lub utrzymujące się wpływy zewnętrzne, takie jak wiatr.<br \/><br \/>Wyższe wzmocnienia zapewniają dokładniejsze śledzenie, zwłaszcza na zakrętach, ale mogą sprawić, że jednostka latająca będzie sztywna.<br> <br>Może powodować powolne oscylacje w kompilacjach o niskim autorytecie lub jeśli jest wysoki proporcjonalnie do P.",
@@ -1987,7 +1987,7 @@
         "description": "Derivative Term helpicon message on PID table titlebar"
     },
     "pidTuningFeedforward": {
-        "message": "<b>F<\/b>eedforward"
+        "message": "<b>FF<\/b> - Wyprzedzający"
     },
     "pidTuningFeedforwardHelp": {
         "message": "Dodatkowy czynnik napędowy, pochodzący wyłącznie z sygnału wejściowego drążka, który pomaga szybko poruszać jednostką latającą za pomocą szybkich ruchów drążkiem.<br><br>FF nie może powodować oscylacji, pozwala na niższe P dla podobnych reakcji drążka i kompensuje naturalną opozycję D względem danych wejściowych.<br><br>Niskie lub zerowe wartości spowodują płynniejszą, ale bardziej opóźnioną reakcję na sygnały wejściowe drążka.",
@@ -2306,10 +2306,6 @@
     },
     "auxiliaryModeLogicAND": {
         "message": "Oraz"
-    },
-    "auxiliaryHelpMode_3D": {
-        "message": "Umożliwia odwracalny kierunek silnika, aby zapewnić ujemny ciąg i umożliwić odwrócenie lotu. Przepustnica staje się od -100 do +100 zamiast od 0 do 100",
-        "description": "Help text to 3D mode"
     },
     "auxiliaryHelpMode_ACROTRAINER": {
         "message": "Tryb lotu, który ogranicza kąt pochylenia jednostki podczas lotu w trybie Akro",
@@ -4041,7 +4037,7 @@
         "message": "Nawigacja GPS"
     },
     "pidTuningStrength": {
-        "message": "Siła"
+        "message": "Moc"
     },
     "pidTuningTransition": {
         "message": "Przejście"
@@ -4196,15 +4192,15 @@
         "description": "Slider expert settings detected while in non-expert mode"
     },
     "pidTuningSliderLow": {
-        "message": "Niski",
+        "message": "Słaby",
         "description": "Tuning Slider Low header"
     },
     "pidTuningSliderDefault": {
-        "message": "Domyślne",
+        "message": "Domyślny",
         "description": "Tuning Slider Default header"
     },
     "pidTuningSliderHigh": {
-        "message": "Wysoki",
+        "message": "Silny",
         "description": "Tuning Slider High header"
     },
     "pidTuningMasterSlider": {
@@ -4256,7 +4252,7 @@
         "description": "D Max slider helpicon message"
     },
     "pidTuningRollPitchRatioSlider": {
-        "message": "Pitch Damping:<br \/><i><small>Pitch:Roll D<\/small><\/i>",
+        "message": "Tłumienie osi Pitch:<br \/><i><small>oś Pitch: podkręca parametr D<\/small><\/i>",
         "description": "Pitch-Roll Ratio slider label"
     },
     "pidTuningRollPitchRatioSliderHelp": {
@@ -4264,7 +4260,7 @@
         "description": "Pitch-Roll Ratio tuning slider helpicon message"
     },
     "pidTuningPitchPIGainSlider": {
-        "message": "Śledzenie osi Pitch:<br><i><small>Pitch: Wzmacnia parametry P, I oraz FF w osi Roll<\/small><\/i>",
+        "message": "Śledzenie osi Pitch:<br><i><small>oś Pitch: podkręca parametry P, I oraz FF<\/small><\/i>",
         "description": "Pitch P & I slider label"
     },
     "pidTuningPitchPIGainSliderHelp": {
@@ -4648,7 +4644,7 @@
         "message": "LĄDOWANIE"
     },
     "failsafeProcedureItemSelect2": {
-        "message": "UPADEK"
+        "message": "SPADNIĘCIE"
     },
     "failsafeProcedureItemSelect4": {
         "message": "GPS  RATUNKOWY"
@@ -4683,6 +4679,9 @@
     "failsafeGpsRescueItemAngle": {
         "message": "Maksymalny kąt pochylenia"
     },
+    "failsafeGpsRescueAngleHelp": {
+        "message": "Maksymalny kąt pochylenia ustawiony zbyt wysoko powoduje bardziej agresywne powroty oraz większe prędkości latania. Ta opcja jest za to pomocna w przypadku ciężkich modeli o dużym oporze powietrza lub małej mocy, a także gdy wieje silny wiatr. OSTRZEŻENIE: Zwiększając maksymalny kąt pochylenia zwykle należy zwiększyć wartość ratunkowej przepustnicy! W przeciwnym razie model może stracić wysokość i rozbić się!"
+    },
     "failsafeGpsRescueItemDescentDistance": {
         "message": "Długość zniżania (metry)"
     },
@@ -4693,10 +4692,13 @@
         "message": "Początkowa prędkość opadania jest ustawiana na 3-krotność tej wartości i zmniejsza się do ustawionej wartości na wysokości lądowania."
     },
     "failsafeGpsRescueItemThrottleMin": {
-        "message": "Przepustnica minimum"
+        "message": "Minimalna wartość przepustnicy"
     },
     "failsafeGpsRescueItemThrottleMax": {
-        "message": "Przepustnica w pozycji max"
+        "message": "Maksymalna wartość przepustnicy"
+    },
+    "failsafeGpsRescueThrottleMaxHelp": {
+        "message": "Należy zwiększyć w przypadku cięższych modeli o większym oporze powietrza lub małej mocy, jeśli możliwy jest powrót przy silnym wietrze albo gdy zwiększony został maksymalny kąt pochylenia."
     },
     "failsafeGpsRescueItemThrottleHover": {
         "message": "Moc przepustnicy - <span class=\"message-negative\">WAŻNE: USTAW TĘ WARTOŚĆ DOKŁADNIE<\/span>"

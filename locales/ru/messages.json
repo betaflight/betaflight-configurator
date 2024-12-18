@@ -1018,6 +1018,10 @@
         "message": "Протокол управления двигателями не выбран",
         "description": "Message that pops up to describe the MOTOR_PROTO arming disable flag"
     },
+    "initialSetupArmingDisableFlagsTooltipCRASHFLIP": {
+        "message": "Активен режим Crash Flip",
+        "description": "Message that pops to describe the CRASHFLIP arming disable flag"
+    },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "Один из других флагов дизарм активен при арминге",
         "description": "Message that pops up to describe the ARM_SWITCH arming disable flag"
@@ -1409,11 +1413,17 @@
     "configurationThrottleMinimum": {
         "message": "Минимальное значение газа (Минимальное значение, посылаемое к ESC при арминге)"
     },
+    "configurationThrottleMinimumHelp": {
+        "message": "Это минимальное значение, посылаемое регуляторам оборотов моторов во время арминга при нулевом значении газа. Чем больше это значение, тем больше минимальная скорость моторов (холостой ход). Можно увеличить это значение при возникновении рассинхронизации!"
+    },
     "configurationThrottleMaximum": {
         "message": "Максимальный газ (Максимальное значение, которое можно послать на ESC во время арминга)"
     },
     "configurationThrottleMinimumCommand": {
         "message": "Minimum Command (Значение, посылаемое к ESC во время дизарминга)"
+    },
+    "configurationThrottleMinimumCommandHelp": {
+        "message": "Это значение, которое отправляется на регуляторы оборотов во время дизарминга. Установите его в такое значение, при котором перестают крутиться моторы (для большинства регуляторов оборотов это значение равно 1000)."
     },
     "configurationEscProtocolDisabled": {
         "message": "Пожалуйста, выберите протокол управления двигателями, подходящий для вашего ESC. $t(escProtocolDisabledMessage.message)"
@@ -1765,6 +1775,10 @@
         "message": "<b>D<\/b>erivative",
         "description": "Table header of the Derivative feature in the PIDs tab"
     },
+    "pidTuningDMaxFeatureTitle": {
+        "message": "Динамическое демпфирование \/ настройки D Max",
+        "description": "Title for the options panel for the D Max feature"
+    },
     "pidTuningDMaxSettingTitle": {
         "message": "Динамическое<br>Демпфирование",
         "description": "Sidebar title for the options panel for the D Max feature"
@@ -2086,6 +2100,9 @@
         "message": "Для настройки фильтров используйте ползунки. Для того, чтобы иметь возможность вносить изменения вручную ползунки необходимо отключить.<br>Перемещение ползунков вправо дает более высокие частоты среза у фильтров, чем может улучшить реакцию на prop-wash, но при этом пропускает больше шума к моторам, что сделает их горячими.<br>Наиболее чистые сборки с RPM фильтрацией ведут себя хорошо, когда ползунок множителя фильтра gyro находится сильно правее, или если активен только второй lowpass фильтр, а ползунки расположены по центру.<br><strong>ВНИМАНИЕ:<\/strong> При перемещении множителя фильтра D-term вправо будьте ПРЕДЕЛЬНО ОСТОРОЖНЫ! После каждого смещения ползунка проверяйте тепературу моторов!<br><strong>Примечание:<\/strong> При изменении профилей изменения вносятся только в параметры настройки фильтра D-term. Настройки фильтрции гироскопа остаются неизменными для всех профилей.",
         "description": "Filter tuning subtab note"
     },
+    "filterWarning": {
+        "message": "<span class=\"message-negative\"><b>Предупреждение:<\/b><\/span> Вы используете слишком мало фильтрации, это очень опасно. Вероятно, это приведет к трудностям в управлении воздушным судном и возможно к неконтролируемому полету. Настоятельно рекомендуется <b>включить хотя бы один динамический фильтр Gyro НЧ или Gyro НЧ 1, и по крайней мере, один динамический D-Term НЧ или D-Term НЧ 1<\/b>."
+    },
     "pidTuningSliderPidsMode": {
         "message": "Режим:",
         "description": "Pidtuning slider mode can be OFF, RP or RPY"
@@ -2249,9 +2266,13 @@
     "auxiliaryModeLogicAND": {
         "message": "И"
     },
-    "auxiliaryHelpMode_3D": {
-        "message": "Включает реверсивное направление вращения двигателя для создания отрицательной тяги и возможности летать в перевёрнутом состоянии. Стик газа работает в диапазоне значений от -100 до +100 вместо диапазона от 0 до +100",
-        "description": "Help text to 3D mode"
+    "auxiliaryHelpMode_ACROTRAINER": {
+        "message": "Режим полета, ограничивающий угол наклона модели при полете в режиме акро",
+        "description": "Help text to ACRO TRAINER mode"
+    },
+    "auxiliaryHelpMode_ARM": {
+        "message": "Запускает двигатели, и позволяет модели лететь",
+        "description": "Help text to ARM mode"
     },
     "auxiliaryHelpMode_ANGLE": {
         "message": "В этом режиме автовыравнивания каналы крена и тангажа контролируют угол между соответствующей осью и вертикалью, что позволяет добиться ровного полета, просто оставляя стики в центральном положении",
@@ -2260,6 +2281,14 @@
     "auxiliaryHelpMode_ANTIGRAVITY": {
         "message": "Режим полета увеличивает P и I во время быстрых движений газа для улучшения отслеживания стика и предотвращения носового дрейфа при быстрых изменениях газа.",
         "description": "Help text to ANTIGRAVITY mode"
+    },
+    "auxiliaryHelpMode_AIRMODE": {
+        "message": "AirMode позволяет поддерживать стабильность летательного аппарата при низком уровне газа. Для получения дополнительной информации обратитесь к <a href=\"https:\/\/betaflight.com\/docs\/development\/modes#airmode\" target=\"_blank\" rel=\"noopener noreferrer\">AirMode<\/a> на Betaflight.com.",
+        "description": "Help text to AIRMODE mode"
+    },
+    "auxiliaryHelpMode_ALTHOLD": {
+        "message": "Режим удержания высоты — это самый безопасный не-GPS ручной режим для новичков. Он аналогичен режиму стабилизации, но дополнительно фиксирует высоту летательного аппарата, когда стики управления отпущены",
+        "description": "Help text for ALTITUDE HOLD mode"
     },
     "auxiliaryHelpMode_BEEPER": {
         "message": "Включает звуковой сигнал - полезно для определения местоположения упавшего воздушного судна",
@@ -2321,6 +2350,10 @@
         "message": "Используйте, чтобы указать количество найденых спутников GPS,  путем подачи звукового сигнала равному количеству найденых спутников",
         "description": "Help text to GPS BEEP SATELLITE COUNT mode"
     },
+    "auxiliaryHelpMode_GPSRESCUE": {
+        "message": "Включите функцию 'GPS Rescue', чтобы вернуть борт в место, где он был заармлен последний раз",
+        "description": "Help text to GPS RESCUE mode"
+    },
     "auxiliaryHelpMode_HEADADJ": {
         "message": "Heading Adjust (Смена курса) -  задает новое направление рысканья для режима HEADFREE",
         "description": "Help text to HEAD ADJ mode"
@@ -2342,7 +2375,7 @@
         "description": "Help text to MAG mode"
     },
     "auxiliaryHelpMode_MSPOVERRIDE": {
-        "message": "Включите режим MAP Override",
+        "message": "Включите режим MSP Override",
         "description": "Help text to MSP OVERRIDE mode"
     },
     "auxiliaryHelpMode_OSDDISABLE": {
@@ -2356,6 +2389,10 @@
     "auxiliaryHelpMode_PIDAUDIO": {
         "message": "Используйте для переключения PIDAUDIO",
         "description": "Help text to PIDAUDIO mode"
+    },
+    "auxiliaryHelpMode_POSHOLD": {
+        "message": "Режим удерживания позиции (hold mode)",
+        "description": "Help text to POSHOLD mode"
     },
     "auxiliaryHelpMode_PREARM": {
         "message": "При включении двигателей, они не будут запущены пока не будет включен этот переключатель",
@@ -3051,7 +3088,7 @@
         "message": "<strong>Прим.:<\/strong> Выход из вкладки CLI или нажатие Отключить <strong>автоматически<\/strong> пошлёт команду \"<strong>выход<\/strong>\" в полетный контроллер. С последней прошивкой это вызовет его <strong>перезагрузку<\/strong> и сохраненные изменения будут <strong>потеряны<\/strong>.<p><strong><span class=\"message-negative\">Предупреждение:<\/span><\/strong> Некоторые команды в CLI могут привести к отправке произвольных сигналов на двигатели. И может привести к их запуску, если подключена батарея. Поэтому настоятельно рекомендуется убедиться, что <strong>батарея не подключена, прежде чем вводить команды в CLI<\/strong>."
     },
     "cliInputPlaceholder": {
-        "message": "Напишите вашу команду здесь. Нажмите Tab для АвтоДополнения."
+        "message": "Пишите вашу команду здесь. Нажмите Tab для автодополнения."
     },
     "cliInputPlaceholderBuilding": {
         "message": "Пожалуйста подождите пока идет построение кэша АвтоДополнения ..."
@@ -3088,6 +3125,12 @@
     },
     "cliConfirmSnippetBtn": {
         "message": "Выполнить"
+    },
+    "cliPanelTitle": {
+        "message": "Командная строка"
+    },
+    "cliCommand": {
+        "message": "Введите команду здесь"
     },
     "loggingNote": {
         "message": "Информация будет логироваться <span class=\"message-negative\">только<\/span> в этой вкладке, покидание этой вкладки <span class=\"message-negative\">отменит<\/span> логирование и приложение вернется в нормальное <strong>\"конфигуратор\"<\/strong> состояние.<br \/> Вы вольны выбрать глобальный период обновления, информация будет записана в лог файл раз в <strong>1<\/strong> секунду по соображениям производительности."
@@ -4005,6 +4048,10 @@
     "pidTuningNonProfileFilterSettings": {
         "message": "Настройки фильтра вне зависимости от выбранного профиля"
     },
+    "pidTuningFilterSlidersHelp": {
+        "message": "Эти слайдеры изменяют значения фильтров сигнала от гироскопа (Gyro) и Dterm.<br \/><br \/> Для увелечения фильтрации:<br \/> - Слайдеры влево<br \/> - Более низкие частоты среза у фильтров.<br \/><br \/> Более сильная фильтрация поддерживает двигатели в более холодном состоянии за счет удаления большего количества шумов, но вносит задержку в сигнал гироскопа и может усугубить эффект от propwash или вызвать резонансные колебания. Менее отзывчивые аппараты, например, X-класса, лучше всего работают с более сильной фильтрацией. <br \/><br \/> Для более слабой фильтрации:<br \/> - Слайдеры вправо<br \/> - Более высокие частоты среза <br \/><br \/>Слабая фильтрация снижает задержку сигнала гироскопа и часто улучшает обработку propwash-а. Обычно перемещение фильтра нижних частот гироскопа вправо допустимо, но перемещение D-фильтра вправо обычно не требуется и может быстро привести к перегреву двигателей.",
+        "description": "Overall helpicon message for filter tuning sliders"
+    },
     "pidTuningSliderLowFiltering": {
         "message": "Меньше фильтрации",
         "description": "Filter tuning slider low header"
@@ -4033,9 +4080,17 @@
         "message": "Множитель фильтра D-Term:",
         "description": "D Term filter tuning slider label"
     },
+    "pidTuningDTermFilterSliderHelp": {
+        "message": "Изменяет частоты среза НЧ-фильтров D-term.<br \/><br \/>Перемещение слайдера влево дает более сильную фильтрацию D-term (низкие частоты среза).<br \/><br \/>Перемещение слайдера вправо дает меньше фильтрации (более высокие частоты среза).<br \/><br \/>D составлюящая - это наиболее чувствительный элемент PID  к шуму и резонансу. Он может усиливать высокочастотный шум в 10 - 100 раз. Поэтому частоты среза фильтров D намного ниже фильтров сигнала гироскопа.<br \/><br \/>Фильтрация D применяется после и в дополнение к фильтрации гироскопа. По умолчанию D фильтрация оптимальна для большинства бортов и редко требует изменения.<br \/><br \/>Перемещение этого ползунка влево уменьшает нагрев двигателей в шумных сборках и при высоких значения 'D' в ПИД регуляторе, но мы можем заметить усиление негативных последствий от propwash и низкчастотный D резонанс.<br \/><br \/>Перемещение слайдера вправо не рекомендуется, но может улучшить обработку propwash при чистых сборках. Так же, это может привести к скрежету двигателей, внезапному резонансу в полете и серьезному перегреву двигателей.",
+        "description": "D Term filter tuning slider helpicon message"
+    },
     "pidTuningDTermSliderEnabled": {
         "message": "Использовать слайдер для настройки D-Term",
         "description": "Disable or enable D Term Filter Tuning Slider"
+    },
+    "pidTuningSliderWarning": {
+        "message": "<span class=\"message-negative\">ВНИМАНИЕ<\/span>: Текущие позиции слайдеров могут быть причиной \nнеконтролируемого поведения (flyaway), повреждения моторов и другого небезопасного поведения борта. Пожалуйста, продолжайте с осторожностью.",
+        "description": "Warning shown when tuning slider are above safe limits"
     },
     "pidTuningSlidersDisabled": {
         "message": "<strong>Примечание:<\/strong> Слайдеры отключены, потому что значения были изменены вручную. Нажатие на кнопку '$t(pidTuningSliderEnableButton.message)' активирует их снова. Это сбросит значения и любые несохраненные изменения будут потеряны.",
@@ -4046,7 +4101,7 @@
         "description": "Gyro Tuning sliders disabled note when manual changes are detected"
     },
     "pidTuningDTermSliderDisabled": {
-        "message": "<strong>Примечание:<\/strong> DTerm Слайдер отключен, потому что значения были изменены вручную. Нажатие на кнопку '$t(pidTuningDTermSliderEnableButton.message)' активирует их снова. Это сбросит значения и любые несохраненные изменения будут потеряны.",
+        "message": "<strong>Примечание:<\/strong> DTerm слайдер отключен, потому что значения были изменены вручную. Нажатие на кнопку '$t(pidTuningDTermSliderEnableButton.message)' активирует их снова. Это сбросит значения и любые несохраненные изменения будут потеряны.",
         "description": "DTerm Tuning sliders disabled note when manual changes are detected"
     },
     "pidTuningPidSlidersDisabled": {
@@ -4070,7 +4125,7 @@
         "description": "Firmware filter sliders restricted message"
     },
     "pidTuningSlidersExpertSettingsDetectedNote": {
-        "message": "<strong>Примечание:<\/strong> Ползунки отключены из-за того, что текущие значения находятся вне основного диапазона настроек режима Basic. Переключитесь в Режим Expert для внесения изменений",
+        "message": "<strong>Примечание:<\/strong> Слайдеры отключены из-за того, что текущие значения находятся вне основного диапазона настроек режима Basic. Переключитесь в Режим Expert для внесения изменений",
         "description": "Slider expert settings detected while in non-expert mode"
     },
     "pidTuningSliderLow": {
@@ -4112,6 +4167,10 @@
     "pidTuningDMaxGainSlider": {
         "message": "Динамическое демпфирование:<br \/><i><small>D Max<\/small><\/i>",
         "description": "D Max slider label"
+    },
+    "pidTuningDMaxGainSliderHelp": {
+        "message": "Увеличивает D max, максимальное значение, до которого D может увеличиваться при более быстрых движениях.<br \/><br \/>Для гоночных летательных аппаратов, где основной слайдер D (демпфирования) имеет низкое значение, чтобы свести к минимуму перегрев моторов, перемещение этого ползунка вправо улучшит контроль над перерегулированием при быстрых изменениях направления движения.<br \/><br \/>Для HD или синематик моделей, нестабильность в прямом полете лучше всего устраняется перемещением D Gains слайдера (не Динамического демпфирования) вправо. Проверяйте температуру двигателей и прислушивайтесь к странным шумам во время быстрых движений при перемещении этого слайдера вправо.<br \/><br \/>Для фристайл сборок, особенно более тяжелых, перемещение этого слайдера вправо может помочь снизить перескок при ролах и флипах.<br \/><br \/><strong>Примечание:<\/strong><br \/>Обычно перескок при ролах и флипах возникает из-за недостаточного 'Ослабление I', или десинхронизации моторов или недостаточного контроля (также известного как насыщение электродвигателя). Если вы обнаружите, что перемещение ползунка вправо не улучшает проблемы с перескоком при ролах или флипах, верните его в нормальное положение и найдите причину перерегулирования или дрожания.",
+        "description": "D Max slider helpicon message"
     },
     "pidTuningRollPitchRatioSlider": {
         "message": "Демпфирование по крену: <i><small>Pitch:Roll D<\/small><\/i>",
@@ -4162,6 +4221,14 @@
     "pidTuningGyroLowpass2Help": {
         "message": "Второй из двух фильтров низких частот гироскопа.<br \/><br \/>Этот фильтр работает в цикле гироскопа, фильтруя сигнал перед тем, как он попадает в цикл PID. Он всегда находится в статическом режиме (с фиксированной частотой среза).<br \/><br \/>Если частота PID цикла меньше частоты цикла гироскопа, например, цикл PID 4кГц с циклом гироскопа 8кГц, то такой фильтр следует оставить, дабы предотвратить проблемы с алиасингом из-за уменьшения частоты 8кГц -> 4кГц.<br \/><br \/>Использование только одного низкочастотного фильтра гироскопа 2, настроенного где-то между 500-1000 Гц, хорошо работает для Betaflight 4.3 или выше, для чистых сборок с активным фильтром RPM и минимальной фильтрацией D по умолчанию.",
         "description": "Gyro lowpass filter helpicon message"
+    },
+    "pidTuningGyroLowpassFilterHelp": {
+        "message": "Фильтры низких частот гироскопа ослабляют высокочастотные шумы, чтобы исключить их из PID-цикла. Существуют два фильтра гироскопа с независимой настройкой; по умолчанию оба активны.<br \/><br \/>При включеной Gyro RPM фильтрации, обычно слайдер \"Можитель фильтра Gyro\" можно сдвинуть вправо, или возможно будет достаточно оставить включенным один статический Gyro НЧ-фильтр на 500 Гц.<br \/><br \/>Борт будет испытывать меньше негативных последствий от propwash при низкой задержке от фильтра гироскопа.<br \/><br \/>Всегда следите за температурой моторов, когда перемещаете ползунки вправо. При минимальной фильтрации гироскопа крайне важно обеспечить достаточную фильтрацию D! Будьте осторожны!",
+        "description": "Gyro lowpass filter helpicon message"
+    },
+    "pidTuningDTermLowpassFilterHelp": {
+        "message": "Низкочастотные фильтры D-term ослабляют высокочастотный шум и резонанс, которые в противном случае усиливались бы состовляющей D.<br \/><br \/>\nЕсть два фильтра D и их эффекты складываются. Оба типа необходимы почти во всех сборках, хотя вместо использования двух фильтров PT1 можно использовать один PT2.<br \/><br \/>В целом, борт будет летать лучше и иметь минимальный propwsh при минимальной задержки от фильтров (слайдеры вправо, более высокие частоты среза). Однако, смещение слайдеров в право может значительно увеличить шансы на перегрев двигателей, особенно это касается D-term фильтров.<br \/><br \/>Очень легко спалить двигатели, если у вас не достаточно D-term фильтрации - будте осторожны!",
+        "description": "D-term lowpass filter helpicon message"
     },
     "pidTuningGyroNotchFiltersGroup": {
         "message": "Gyro режекторные фильтры"
@@ -4217,6 +4284,9 @@
     },
     "pidTuningDynamicNotchCount": {
         "message": "Количество режекторных фильтров"
+    },
+    "pidTuningDynamicNotchRangeHelp": {
+        "message": "Динамическая нотка имеет три диапазона частот, в которых она может работать: LOW(80-330hz) для более низких реверсивных самолетов типа 6+ дюймов, СРЕДНИЙ (140-550гц) для обычного самолета на 5 дюймов (HIGH(230-800гц) для очень высокой рентабельности 2. Авиакомпания AUTO выбирает диапазон в зависимости от значения максимальной частоты динамического нижнего пасса 1 фильтра Gyro Dynamic Lowpass 1."
     },
     "pidTuningDynamicNotchQHelp": {
         "message": "Коэффициент Q регулирует, на сколько узкими или широкими будут динамические режекторные фильтры. Более высокое значение делает их более точным и узким, а более низкие - шире и менее точным. При достаточно низком значении значительно увеличится задержка фильтра."
@@ -4996,7 +5066,7 @@
         "description": "Option for the units system used in the OSD"
     },
     "osdSetupUnitsOptionBritish": {
-        "message": "British",
+        "message": "Британские",
         "description": "Option for the units system used in the OSD"
     },
     "osdSetupTimersTitle": {
@@ -5499,6 +5569,9 @@
         "message": "Таймер: время работы",
         "description": "One of the elements of the OSD"
     },
+    "osdDescElementArmedTime": {
+        "message": "Время с момента последнего арма борта"
+    },
     "osdTextElementHomeDirection": {
         "message": "Направление домой",
         "description": "One of the elements of the OSD"
@@ -5835,6 +5908,9 @@
     "osdTextStatFlyTime": {
         "message": "Полное время полёта",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatFlyTime": {
+        "message": "Общее время арма в рамках текущего цикла питания."
     },
     "osdTextStatArmedTime": {
         "message": "Время полета с последнего включения",
@@ -6444,6 +6520,10 @@
     "vtxTableBands": {
         "message": "Количество сеток",
         "description": "Text of one of the fields of the VTX Table element in the VTX tab"
+    },
+    "vtxTableBandsHelp": {
+        "message": "Определяет количество сеток (band), необходимых для VTX",
+        "description": "Help for the number of bands field of the VTX Table element in the VTX tab"
     },
     "vtxTableChannels": {
         "message": "Количество каналов в сетке частот",

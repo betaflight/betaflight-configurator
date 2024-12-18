@@ -2299,10 +2299,6 @@
     "auxiliaryModeLogicAND": {
         "message": "ТА"
     },
-    "auxiliaryHelpMode_3D": {
-        "message": "Включає реверсивний напрямок обертання моторів, щоб забезпечити негативну тягу та дозволити перевернутий політ. Тяга стає від -100 до +100 замість 0 до 100",
-        "description": "Help text to 3D mode"
-    },
     "auxiliaryHelpMode_ACROTRAINER": {
         "message": "Режим польоту, який обмежує кут нахилу повітряного судна під час польоту в акро режимі",
         "description": "Help text to ACRO TRAINER mode"

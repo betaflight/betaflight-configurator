@@ -2236,10 +2236,6 @@
     "auxiliaryModeLogicAND": {
         "message": "AND"
     },
-    "auxiliaryHelpMode_3D": {
-        "message": "Habilita a direção inversa dos motores, fornecendo forças negativas e permite o voo invertido. O acelerador, então, terá um alcance de -100 a +100 em vez de 0 a 100",
-        "description": "Help text to 3D mode"
-    },
     "auxiliaryHelpMode_ANGLE": {
         "message": "Neste modo de nivelamento automático, os canais de roll e pitch controlam o ângulo entre o eixo relevante e o vertical, alcançando um vôo nivelado ao deixar os sticks centralizados",
         "description": "Help text to ANGLE mode"

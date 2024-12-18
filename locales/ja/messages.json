@@ -1018,6 +1018,10 @@
         "message": "モーター出力プロトコルが選択されていません",
         "description": "Message that pops up to describe the MOTOR_PROTO arming disable flag"
     },
+    "initialSetupArmingDisableFlagsTooltipCRASHFLIP": {
+        "message": "クラッシュフリップスイッチが有効です",
+        "description": "Message that pops to describe the CRASHFLIP arming disable flag"
+    },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "他のフラグの1つはアーム時にフラグを解除します",
         "description": "Message that pops up to describe the ARM_SWITCH arming disable flag"
@@ -2299,7 +2303,7 @@
     "auxiliaryModeLogicAND": {
         "message": "AND"
     },
-    "auxiliaryHelpMode_3D": {
+    "auxiliaryHelpMode_3DDISABLE": {
         "message": "モーターを反転させることで、マイナス推力を発生させ、倒立飛行を可能にします。スロットルは 0 ～ +100 ではなく -100 ～ +100 となります。",
         "description": "Help text to 3D mode"
     },
@@ -2438,6 +2442,10 @@
     "auxiliaryHelpMode_PIDAUDIO": {
         "message": "PIDAUDIOを切り替えます",
         "description": "Help text to PIDAUDIO mode"
+    },
+    "auxiliaryHelpMode_POSHOLD": {
+        "message": "ポジションホールドモード",
+        "description": "Help text to POSHOLD mode"
     },
     "auxiliaryHelpMode_PREARM": {
         "message": "アーミング時、実際にこのスイッチが有効になるのを待ってからアームします",
@@ -6623,6 +6631,10 @@
     "vtxTableBands": {
         "message": "バンド数",
         "description": "Text of one of the fields of the VTX Table element in the VTX tab"
+    },
+    "vtxTableBandsHelp": {
+        "message": "VTXに必要なバンド数を定義します",
+        "description": "Help for the number of bands field of the VTX Table element in the VTX tab"
     },
     "vtxTableChannels": {
         "message": "バンド別チャンネル数",
