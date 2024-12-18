@@ -1,15 +1,15 @@
 /// <reference types="vitest" />
 import { defineConfig } from "vite";
-import vue from "@vitejs/plugin-vue2";
+import vue from "@vitejs/plugin-vue";
 import path from "node:path";
 import { readFileSync } from "node:fs";
 import copy from "rollup-plugin-copy";
-import pkg from './package.json';
-import * as child from 'child_process';
+import pkg from "./package.json";
+import * as child from "child_process";
 import { VitePWA } from "vite-plugin-pwa";
-import { resolve } from 'path';
+import { resolve } from "path";
 
-const commitHash = child.execSync('git rev-parse --short HEAD').toString();
+const commitHash = child.execSync("git rev-parse --short HEAD").toString();
 
 function serveFileFromDirectory(directory) {
     return (req, res, next) => {
@@ -53,15 +53,15 @@ function serveLocalesPlugin() {
 
 export default defineConfig({
     define: {
-        '__APP_VERSION__': JSON.stringify(pkg.version),
-        '__APP_PRODUCTNAME__': JSON.stringify(pkg.productName),
-        '__APP_REVISION__': JSON.stringify(commitHash),
+        __APP_VERSION__: JSON.stringify(pkg.version),
+        __APP_PRODUCTNAME__: JSON.stringify(pkg.productName),
+        __APP_REVISION__: JSON.stringify(commitHash),
     },
     build: {
         rollupOptions: {
             input: {
-                main: resolve(__dirname, 'src/index.html'),
-                receiver_msp: resolve(__dirname, 'src/receiver_msp/receiver_msp.html'),
+                main: resolve(__dirname, "src/index.html"),
+                receiver_msp: resolve(__dirname, "src/receiver_msp/receiver_msp.html"),
             },
         },
     },
@@ -115,7 +115,7 @@ export default defineConfig({
     resolve: {
         alias: {
             "/src": path.resolve(process.cwd(), "src"),
-            "vue": path.resolve(__dirname, "node_modules/vue/dist/vue.esm.js"),
+            "vue": path.resolve(__dirname, "node_modules/vue/dist/vue.esm-bundler.js"),
         },
     },
     server: {
