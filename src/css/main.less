@@ -1295,6 +1295,12 @@ dialog {
     &:hover {
         background-color: var(--primary-400);
     }
+    &.disabled {
+        background-color: var(--surface-500);
+        border: 1px solid var(--surface-400);
+        color: var(--surface-900);
+        cursor: default;
+    }
 }
 .regular-button.pushed {
     background-color: var(--primary-transparent-3);
