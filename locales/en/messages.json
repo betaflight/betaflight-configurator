@@ -2246,6 +2246,9 @@
     "receiverThrottleExpo": {
         "message": "Throttle EXPO"
     },
+    "receiverThrottleHover": {
+        "message": "Hover Point"
+    },
     "receiverStickMin": {
         "message": "'Stick Low' Threshold"
     },
