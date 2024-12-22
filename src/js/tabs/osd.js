@@ -1522,6 +1522,42 @@ OSD.loadDisplayFields = function() {
             positionable: true,
             preview: 'DBG2     0     0     0     0',
         },
+        CUSTOM_MSG0: {
+            name: 'CUSTOM_MSG1',
+            text: 'osdTextElementCustomMsg0',
+            desc: 'osdDescElementCustomMsg0',
+            defaultPosition: -1,
+            draw_order: 570,
+            positionable: true,
+            preview: 'CUSTOM MSG1',
+        },
+        CUSTOM_MSG1: {
+            name: 'CUSTOM_MSG2',
+            text: 'osdTextElementCustomMsg1',
+            desc: 'osdDescElementCustomMsg1',
+            defaultPosition: -1,
+            draw_order: 580,
+            positionable: true,
+            preview: 'CUSTOM MSG2',
+        },
+        CUSTOM_MSG2: {
+            name: 'CUSTOM_MSG3',
+            text: 'osdTextElementCustomMsg2',
+            desc: 'osdDescElementCustomMsg2',
+            defaultPosition: -1,
+            draw_order: 590,
+            positionable: true,
+            preview: 'CUSTOM MSG3',
+        },
+        CUSTOM_MSG3: {
+            name: 'CUSTOM_MSG4',
+            text: 'osdTextElementCustomMsg3',
+            desc: 'osdDescElementCustomMsg3',
+            defaultPosition: -1,
+            draw_order: 600,
+            positionable: true,
+            preview: 'CUSTOM MSG4',
+        },
     };
 
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47) && have_sensor(FC.CONFIG.activeSensors, 'gps')) {
@@ -1972,6 +2008,10 @@ OSD.chooseFields = function() {
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
         OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
             F.DEBUG2,
+            F.CUSTOM_MSG0,
+            F.CUSTOM_MSG1,
+            F.CUSTOM_MSG2,
+            F.CUSTOM_MSG3,
         ]);
     }
     // Choose statistic fields
