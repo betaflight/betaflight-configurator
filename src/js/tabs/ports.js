@@ -112,20 +112,21 @@ ports.initialize = function (callback) {
         const VCP_PORT_IDENTIFIER = 20;
 
         const portIdentifierToNameMapping = {
-           0: 'UART1',
-           1: 'UART2',
-           2: 'UART3',
-           3: 'UART4',
-           4: 'UART5',
-           5: 'UART6',
-           6: 'UART7',
-           7: 'UART8',
-           8: 'UART9',
-           9: 'UART10',
            20: 'USB VCP',
            30: 'SOFTSERIAL1',
            31: 'SOFTSERIAL2',
            40: 'LPUART1',
+           50: 'UART0',
+           51: 'UART1',
+           52: 'UART2',
+           53: 'UART3',
+           54: 'UART4',
+           55: 'UART5',
+           56: 'UART6',
+           57: 'UART7',
+           58: 'UART8',
+           59: 'UART9',
+           60: 'UART10',
         };
 
         let gpsBaudrateElement = $('select.gps_baudrate');

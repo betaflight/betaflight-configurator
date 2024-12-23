@@ -8,7 +8,7 @@ import semver from 'semver';
 import vtxDeviceStatusFactory from "../utils/VtxDeviceStatus/VtxDeviceStatusFactory";
 import MSP from "../msp";
 import MSPCodes from "./MSPCodes";
-import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from '../data_storage';
+import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47, API_VERSION_1_48 } from '../data_storage';
 import EscProtocols from "../utils/EscProtocols";
 import huffmanDecodeBuf from "../huffman";
 import { defaultHuffmanTree, defaultHuffmanLenIndex } from "../default_huffman_tree";
@@ -92,6 +92,33 @@ function MspHelper() {
         }
 
         return str;
+    };
+
+    const LEGACY_SERIAL_PORT_START_IDENTIFIER = 0;
+    const LEGACY_SERIAL_PORT_END_IDENTIFIER   = 20;
+    const SERIAL_PORT_UART1_IDENTIFIER        = 51;
+    const SERIAL_PORT_UART_COUNT              = 10;
+
+    self.toSerialPortIdentifier = function(identifier) {
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_48)) {
+            return identifier;
+        }
+
+        if (identifier >= LEGACY_SERIAL_PORT_START_IDENTIFIER && identifier < LEGACY_SERIAL_PORT_END_IDENTIFIER) {
+            return identifier + SERIAL_PORT_UART1_IDENTIFIER;
+        }
+        return identifier;
+    };
+
+    self.fromSerialPortIdentifier = function(identifier) {
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_48)) {
+            return identifier;
+        }
+
+        if (identifier >= SERIAL_PORT_UART1_IDENTIFIER && identifier < SERIAL_PORT_UART1_IDENTIFIER + SERIAL_PORT_UART_COUNT) {
+            return identifier - SERIAL_PORT_UART1_IDENTIFIER;
+        }
+        return identifier;
     };
 }
 
@@ -887,7 +914,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 const serialPortCount = data.byteLength / bytesPerPort;
                 for (let i = 0; i < serialPortCount; i++) {
                     const serialPort = {
-                        identifier: data.readU8(),
+                        identifier: self.toSerialPortIdentifier(data.readU8()),
                         functions: self.serialPortFunctionMaskToFunctions(data.readU16()),
                         msp_baudrate: self.BAUD_RATES[data.readU8()],
                         gps_baudrate: self.BAUD_RATES[data.readU8()],
@@ -906,7 +933,7 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 for (let ii = 0; ii < count; ii++) {
                     const start = data.remaining();
                     const serialPort = {
-                        identifier: data.readU8(),
+                        identifier: self.toSerialPortIdentifier(data.readU8()),
                         functions: self.serialPortFunctionMaskToFunctions(data.readU32()),
                         msp_baudrate: self.BAUD_RATES[data.readU8()],
                         gps_baudrate: self.BAUD_RATES[data.readU8()],
@@ -1948,7 +1975,7 @@ MspHelper.prototype.crunch = function(code, modifierCode = undefined) {
             for (let i = 0; i < FC.SERIAL_CONFIG.ports.length; i++) {
                 const serialPort = FC.SERIAL_CONFIG.ports[i];
 
-                buffer.push8(serialPort.identifier);
+                buffer.push8(self.fromSerialPortIdentifier(serialPort.identifier));
 
                 const functionMask = self.serialPortFunctionsToMask(serialPort.functions);
                 buffer.push16(functionMask)
@@ -1965,7 +1992,7 @@ MspHelper.prototype.crunch = function(code, modifierCode = undefined) {
             for (let i = 0; i < FC.SERIAL_CONFIG.ports.length; i++) {
                 const serialPort = FC.SERIAL_CONFIG.ports[i];
 
-                buffer.push8(serialPort.identifier);
+                buffer.push8(self.fromSerialPortIdentifier(serialPort.identifier));
 
                 const functionMask = self.serialPortFunctionsToMask(serialPort.functions);
                 buffer.push32(functionMask)
