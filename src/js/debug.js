@@ -860,6 +860,28 @@ function update() {
             'debug[5]': 'TPA Argument (Wing)',
         };
 
+        DEBUG.fieldNames.OPTICALFLOW = {
+            'debug[all]': 'Debug OPTICALFLOW',
+            'debug[0]': 'Quality',
+            'debug[1]': 'Raw flow rates X',
+            'debug[2]': 'Raw flow rates Y',
+            'debug[3]': 'Processed flow rates X',
+            'debug[4]': 'Processed flow rates Y',
+            'debug[5]': 'Delta time',
+        };
+        
+        DEBUG.fieldNames.AUTOPILOT_POSITION = {
+            'debug[all]': 'Autopilot Position',
+            'debug[0]': 'Distance',
+            'debug[1]': 'GPS Distance',
+            'debug[2]': 'PID Sum EF',
+            'debug[3]': 'Autopilot Angle',
+            'debug[4]': 'pidP',
+            'debug[5]': 'pidI',
+            'debug[6]': 'pidD',
+            'debug[7]': 'pidA',
+        };
+
         DEBUG.enableFields.splice(DEBUG.enableFields.indexOf("Gyro") + 1, 0, "Attitude");
         DEBUG.enableFields.push("Servo");
     }
