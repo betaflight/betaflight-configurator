@@ -875,7 +875,7 @@ function update() {
             'debug[0]': 'Distance',
             'debug[1]': 'GPS Distance',
             'debug[2]': 'PID Sum EF',
-            'debug[3]': 'Autopilot Angle',
+            'debug[3]': 'Angle',
             'debug[4]': 'pidP',
             'debug[5]': 'pidI',
             'debug[6]': 'pidD',
