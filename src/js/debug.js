@@ -861,7 +861,7 @@ function update() {
         };
 
         DEBUG.fieldNames.OPTICALFLOW = {
-            'debug[all]': 'Debug OPTICALFLOW',
+            'debug[all]': 'Optical Flow',
             'debug[0]': 'Quality',
             'debug[1]': 'Raw flow rates X',
             'debug[2]': 'Raw flow rates Y',
