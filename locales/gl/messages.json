@@ -4151,9 +4151,6 @@
     "pidTuningVbatSagCompensation": {
         "message": "Compensación da caída de tensión"
     },
-    "pidTuningVbatSagCompensationHelp": {
-        "message": "Ofrece un acelerador e un rendemento PID consistentes no intervalo de tensión útil da batería aumentando a saída do motor a medida que cae a tensión da batería.<br \/><br \/>A cantidade de compensación pode variar entre 0 e 100 %. Recoméndase unha compensación total (100 %).<br \/><br \/>Visita o obxectivo de <a href=\"https:\/\/betaflight.com\/docs\/tuning\/4.2-Tuning-Notes#dynamic-battery-sag-compensation\" =\"_blank\" rel=\"noopener noreferrer\">esta entrada do wiki<\/a> para obter máis información."
-    },
     "pidTuningVbatSagValue": {
         "message": "%"
     },

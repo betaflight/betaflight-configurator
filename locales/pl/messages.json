@@ -802,10 +802,10 @@
         "message": "Akumulator"
     },
     "initialSetupMinCellV": {
-        "message": "Minimalne napięcie celi:"
+        "message": "Minimalne napięcie ogniwa:"
     },
     "initialSetupMaxCellV": {
-        "message": "Maksymalne napięcie celi:"
+        "message": "Maksymalne napięcie ogniwa:"
     },
     "initialSetupVoltageScale": {
         "message": "Skala napięcia:"
@@ -1363,10 +1363,10 @@
         "message": "Dostrajanie akcelerometru"
     },
     "configurationAccelTrimRoll": {
-        "message": "Roll"
+        "message": "Dostrajanie w osi Roll"
     },
     "configurationAccelTrimPitch": {
-        "message": "Pitch"
+        "message": "Dostrajanie w osi Pitch"
     },
     "configurationArming": {
         "message": "Uzbrajanie"
@@ -2306,6 +2306,10 @@
     },
     "auxiliaryModeLogicAND": {
         "message": "Oraz"
+    },
+    "auxiliaryHelpMode_3DDISABLE": {
+        "message": "Umożliwia odwracalny kierunek obrotu silnika, aby zapewnić ujemny ciąg i umożliwić lot do góry nogami. Przepustnica pracuje w zakresie od -100 do +100 zamiast od 0 do 100",
+        "description": "Help text to 3D mode"
     },
     "auxiliaryHelpMode_ACROTRAINER": {
         "message": "Tryb lotu, który ogranicza kąt pochylenia jednostki podczas lotu w trybie Akro",
@@ -4067,7 +4071,7 @@
         "message": "Procentowa redukcja napięcia dostarczanego do silnika.<br><br>Zmniejsza prąd ESC oraz ciepło silnika podczas korzystania z akumulatorów o większej liczbie ogniw w silnikach o wysokim KV.<br><br>W przypadku korzystania z akumulatora 6S w jednostce wyposażonej w silniki oraz śmigła dostosowane do napięcia 4S, spróbuj 66%; jeśli używasz baterii 4S na jednostce dostosowanej do 3S, spróbuj 75%.<br><br>Upewnij się, że wszystkie komponenty mogą wytrzymać napięcie używanej baterii."
     },
     "pidTuningCellCount": {
-        "message": "Liczba ogniw baterii — dla funkcji automatycznej zmiany profilu"
+        "message": "Ilość ogniw w akumulatorze — dla funkcji automatycznej zmiany profilu"
     },
     "pidTuningCellCountHelp": {
         "message": "Automatycznie aktywuje pierwszy profil, który ma liczbę ogniw równą liczbie podłączonych baterii.<br><br><ul><li><b>Przełącz<\/b>: Zawsze przełączaj na profil o zgodnej liczbie cell w baterii, jeśli wynosi jeden.<\/li><li><b>Wyłącz<\/b>: Wyłącz automatyczne przełączanie profili<\/li><b>1S-8S<\/b>: Wybierz liczbę cell baterii, która ma być używana dla tego profilu<\/li><\/ul>"
@@ -4464,7 +4468,7 @@
         "message": "Kompensacja spadku napięcia baterii"
     },
     "pidTuningVbatSagCompensationHelp": {
-        "message": "Zapewnia stałą wydajność przepustnicy, zwiększając moc silnika w miarę spadku napięcia akumulatora.<br \/><br \/>Wielkość kompensacji można zmieniać w zakresie od 0 do 100%. Zalecana jest pełna rekompensacja (100%).<br \/><br \/>Odwiedź <a href=\"https:\/\/github.com\/betaflight\/betaflight\/wiki\/4.2-Tuning-Notes#dynamic-battery-sag-compensation \"target=\"_blank\" rel=\"noopener noreferrer\">ten wpis wiki<\/a>, aby uzyskać więcej informacji."
+        "message": "Zapewnia stałą wydajność przepustnicy, zwiększając moc silnika w miarę spadku napięcia akumulatora.<br \/><br \/>Wielkość kompensacji można zmieniać w zakresie od 0 do 100%. Zalecana jest pełna rekompensacja (100%).<br \/><br \/>Odwiedź <a href=\"https:\/\/betaflight.com\/docs\/wiki\/tuning\/4-2-tuning-notes#dynamic-battery-sag-compensation\" target=\"_blank\" rel=\"noopener noreferrer\">ten wpis wiki<\/a>, aby uzyskać więcej informacji."
     },
     "pidTuningVbatSagValue": {
         "message": "%"
@@ -4691,6 +4695,10 @@
     "failsafeGpsRescueDescendRateHelp": {
         "message": "Początkowa prędkość opadania jest ustawiana na 3-krotność tej wartości i zmniejsza się do ustawionej wartości na wysokości lądowania."
     },
+    "failsafeGpsRescueItemMinStartDistHelp": {
+        "message": "Jeżeli utrata sygnału nastąpi zbyt blisko miejsca startu (bliżej niż wynosi wybrana minimalna odległość), model odleci zgodnie z bieżącym kursem, aż osiągnie tę odległość, a następnie rozpocznie normalne zachowanie ratownicze w procedurze failsafe",
+        "description": "Updated help text for the minimum start distance needed for GPS rescue to activate"
+    },
     "failsafeGpsRescueItemThrottleMin": {
         "message": "Minimalna wartość przepustnicy"
     },
@@ -4701,7 +4709,10 @@
         "message": "Należy zwiększyć w przypadku cięższych modeli o większym oporze powietrza lub małej mocy, jeśli możliwy jest powrót przy silnym wietrze albo gdy zwiększony został maksymalny kąt pochylenia."
     },
     "failsafeGpsRescueItemThrottleHover": {
-        "message": "Moc przepustnicy - <span class=\"message-negative\">WAŻNE: USTAW TĘ WARTOŚĆ DOKŁADNIE<\/span>"
+        "message": "Przepustnica w zawisie - <span class=\"message-negative\">WAŻNE: ustaw tę wartość dokładnie<\/span>"
+    },
+    "failsafeGpsRescueThrottleHoverHelp": {
+        "message": "Aby znaleźć właściwą wartość, ustaw działanie Przełącznika Failsafe na Etap 2, ustaw procedurę Failsafe Etap 2 na Lądowanie i dostosuj wartość przepustnicy używaną podczas lądowania, aby model zawisnął w miejscu, bądź zaczynał powoli opadać. Następnie ustaw wartość Przepustnicy w zawisie w GPS Ratunkowym i dokładnie tę samą wartość dla Throttle w Etapie 1 - Ustawieniach Kanału zastępczego."
     },
     "failsafeGpsRescueItemMinDth": {
         "message": "Minimalna odległość do domu (metry)"
@@ -4785,19 +4796,19 @@
         "message": "Sensor MSP\/ OSD"
     },
     "powerBatteryMinimum": {
-        "message": "Minimalne napięcie Celi"
+        "message": "Minimalne Napięcie Ogniwa"
     },
     "powerBatteryMaximum": {
-        "message": "Maksymalne napięcie Celi"
+        "message": "Maksymalne Napięcie Ogniwa"
     },
     "powerBatteryWarning": {
-        "message": "Ostrzeżenie o napięciu Celi"
+        "message": "Napięcie Ostrzegawcze Ogniwa"
     },
     "powerBatteryMinimumHelp": {
-        "message": "Napięcie uznawane za krytycznie niskie, powodujące wyświetlenie odpowiednich ostrzeżeń.  Ostrzeżenie „Wyląduj TERAZ” w menu OSD i sygnał dźwiękowy w przypadku zastosowania buzzera generującego dzwięk. Pomaga także w obliczaniu liczby cell bateri."
+        "message": "Napięcie uznawane za krytycznie niskie, powodujące wyświetlenie odpowiednich ostrzeżeń.  Ostrzeżenie „LAND NOW” w OSD i sygnał dźwiękowy w przypadku zastosowania buzzera generującego dźwięk. Pomaga także w obliczaniu liczby ogniw akumulatora."
     },
     "powerBatteryMaximumHelp": {
-        "message": "Napięcie w pełni naładowanej celli bateri. Pomaga w obliczeniu liczby celli bateri."
+        "message": "Napięcie w pełni naładowanego ogniwa. Pomaga w obliczeniu liczby ogniw."
     },
     "powerBatteryWarningHelp": {
         "message": "Napięcie uznawane za niskie, powodujące wyświetlenie odpowiednich ostrzeżeń. Ostrzeżenie „Niski poziom baterii” w menu OSD."
@@ -4807,6 +4818,9 @@
     },
     "powerCalibrationManagerTitle": {
         "message": "Menedżer Kalibracji"
+    },
+    "powerCalibrationManagerHelp": {
+        "message": "W celu kalibracji użyj multimetru, by zmierzyć rzeczywiste napięcie \/ prąd pobierany przez model (z podłączonym akumulatorem) i wprowadź wartości poniżej. Następnie naciśnij przycisk [Kalibracja] zwracając uwagę, by mierzony akumulator nadal był podłączony."
     },
     "powerCalibrationManagerNote": {
         "message": "<strong>Uwaga:<\/strong> Przed kalibracją skali upewnij się, że dzielnik i mnożnik napięcia oraz przesunięcie dla amperażu są ustawione prawidłowo.<br>    Pozostawienie wartości na 0 nie spowoduje kalibracji.<\/br><strong> Pamiętaj, aby zdjąć śmigła przed podłączeniem  baterii!<\/strong>"
@@ -4899,22 +4913,22 @@
         "message": "ESC Silnik 12"
     },
     "powerVoltageId80": {
-        "message": "Cela 1"
+        "message": "Ogniwo 1"
     },
     "powerVoltageId81": {
-        "message": "Cela 2"
+        "message": "Ogniwo 2"
     },
     "powerVoltageId82": {
-        "message": "Cela 3"
+        "message": "Ogniwo 3"
     },
     "powerVoltageId83": {
-        "message": "Cela 4"
+        "message": "Ogniwo 4"
     },
     "powerVoltageId84": {
-        "message": "Cela 5"
+        "message": "Ogniwo 5"
     },
     "powerVoltageId85": {
-        "message": "Cela 6"
+        "message": "Ogniwo 6"
     },
     "powerVoltageScale": {
         "message": "Skala"
@@ -5248,14 +5262,14 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementMainBattVoltage": {
-        "message": "Napięcie baterii (miga gdy jest poniżej ustawionego limitu)"
+        "message": "Chwilowe napięcie głównego akumulatora (miga, gdy jest poniżej progu alarmowego)"
     },
     "osdTextElementRssiValue": {
         "message": "Wartość RSSI",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementRssiValue": {
-        "message": "Moc RSSI (miga gdy jest poniżej ustawionego limitu)"
+        "message": "Chwilowa wartość RSSI (miga, gdy jest poniżej progu alarmowego)"
     },
     "osdTextElementTimer": {
         "message": "Zegar",
@@ -5492,6 +5506,18 @@
         "message": "ASL bez miejsc po przecinku",
         "description": "One of the variants of the altitude element of the OSD"
     },
+    "osdTextElementCustomMsg0": {
+        "message": "Niestandardowy komunikat 1",
+        "description": "One of the elements of the OSD"
+    },
+    "osdTextElementCustomMsg1": {
+        "message": "Niestandardowy komunikat 2",
+        "description": "One of the elements of the OSD"
+    },
+    "osdTextElementCustomMsg2": {
+        "message": "Niestandardowy komunikat 3",
+        "description": "One of the elements of the OSD"
+    },
     "osdTextElementOnTime": {
         "message": "Na czas",
         "description": "One of the elements of the OSD"
@@ -5502,6 +5528,9 @@
     "osdTextElementFlyTime": {
         "message": "Czas lotu",
         "description": "One of the elements of the OSD"
+    },
+    "osdDescElementFlyTime": {
+        "message": "Całkowity czas uzbrojenia modelu w bieżącym cyklu zasilania (mruga, gdy przekroczy próg alarmowy)"
     },
     "osdTextElementFlyMode": {
         "message": "Tryb lotu",
@@ -6007,6 +6036,9 @@
     "osdTextStatArmedTime": {
         "message": "Czas lotu w ostatnim uzbrojeniu",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatArmedTime": {
+        "message": "Czas od ostatniego uzbrojenia modelu"
     },
     "osdTextStatMaxDistance": {
         "message": "Maksymalna odległość do domu",
@@ -6550,6 +6582,10 @@
         "message": "Pit Mode",
         "description": "Text of one of the fields of the VTX tab"
     },
+    "vtxPitModeHelp": {
+        "message": "Po włączeniu tej funkcji nadajnik wideo wejdzie w tryb bardzo niskiej mocy, aby możliwe było trzymać na biurku zasilony model nie zakłócając wizji innym pilotom. Zazwyczaj zakres tego trybu jest mniejszy niż 5m.<br \/><br \/>UWAGA: Poprzez to oprogramowanie po podłączeniu zasilania nie jest możliwe włączenie Pit Mode w niektórych protokołach, np. w SmartAudio.",
+        "description": "Help text for the pit mode field of the VTX tab"
+    },
     "vtxPitModeFrequency": {
         "message": "Częstotliwość Pit Mode",
         "description": "Text of one of the fields of the VTX tab"
@@ -6758,6 +6794,9 @@
     "configurationSmallAngle": {
         "message": "Maksymalny kąt trybu ARM [Stopnie]"
     },
+    "configurationSmallAngleHelp": {
+        "message": "Model nie uzbroi się, jeśli jest pochylony pod większym kątem niż ustalony. Działa tylko, gdy akcelerometr jest włączony. Ustawienie kąta 180 efektywnie wyłączy zabezpieczenie przed uzbrojeniem"
+    },
     "configurationBatteryVoltage": {
         "message": "Napięcie akumulatora"
     },
@@ -6768,10 +6807,10 @@
         "message": "Typ miernika baterii"
     },
     "configurationBatteryMinimum": {
-        "message": "Minimalne napięcie celi"
+        "message": "Minimalne napięcie ogniwa"
     },
     "configurationBatteryMaximum": {
-        "message": "Maksymalne napięcie celi"
+        "message": "Maksymalne napięcie ogniwa"
     },
     "configurationBatteryWarning": {
         "message": "Ostrzeżenie o napięciu ogniwa"
@@ -7094,7 +7133,7 @@
         "description": "Hint text in the presets detailed dialog indication preset is official"
     },
     "presetsCommunity": {
-        "message": "Społeczności",
+        "message": "Społeczność",
         "description": "Hint text in the presets detailed dialog indication preset is not official but community"
     },
     "presetsExperimental": {
@@ -7206,11 +7245,11 @@
         "description": "Message appears on presets tab when saving current diff all into a file has failed"
     },
     "presetSources": {
-        "message": "Predefiniowane źródła...",
+        "message": "Źródła szablonów...",
         "description": "A button to show preset sources dialog"
     },
     "presetsSourcesDialogTitle": {
-        "message": "Predefiniowane źródła",
+        "message": "Źródła szablonów",
         "description": "A button to show preset sources dialog"
     },
     "presetsSourcesDialogAddNew": {
@@ -7252,6 +7291,10 @@
     "presetsWarningBackup": {
         "message": "Upewnij się, że wykonałeś kopię zapasową bieżącej konfiguracji (przyciskiem '$t(presetsBackupSave.message)' lub za pośrednictwem Wiersza Poleceń CLI, jeśli przycisk jest wyłączony) <strong>przed<\/strong> wybraniem i zastosowaniem ustawień z szablonu. W przeciwnym razie, po zastosowaniu zmian, nie będzie możliwości powrotu do poprzedniej konfiguracji.",
         "description": "Warning message that shows up at the top of the presets tab"
+    },
+    "presets_sources_dialog_warning": {
+        "message": "<span class=\"message-negative\">OSTRZEŻENIE!<\/span> Korzystanie z szablonów od osób trzecich może być niebezpieczne.<br\/>Upewnij się, że dodajesz tu oraz używasz wyłącznie szablony z zaufanych źródeł. Złośliwe lub złe źródła zrujnują konfigurację modelu i potencjalnie mogą uszkodzić urządzenia pokładowe.",
+        "description": "Warning message that shows up at the top of the preset sources dialog"
     },
     "presetsWarningWrongVersionConfirmation": {
         "message": "Wybrane ustawienie wstępne wymaga wersji oprogramowania układowego $1<br\/> Aktualna wersja oprogramowania układowego to $2",

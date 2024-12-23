@@ -4279,9 +4279,6 @@
     "pidTuningVbatSagCompensation": {
         "message": "Vbat Sag Compensation"
     },
-    "pidTuningVbatSagCompensationHelp": {
-        "message": "Giver stabil gas og PID ydeevne i hele batteris spændingsområde ved at øge motoren output som kompensation for fald i batteri spænding.<br \/><br \/>Kompensationen kan variere mellem 0 og 100%. Fuld kompensation (100%) anbefales.<br \/><br \/>Besøg <a href=\"https:\/\/betaflight.com\/docs\/tuning\/4.2-Tuning-Notes#dynamic-battery-sag-compensation\" target=\"_blank\" rel=\"noopener noreferrer\">denne wiki-post<\/a> for mere info."
-    },
     "pidTuningVbatSagValue": {
         "message": "%"
     },

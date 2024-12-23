@@ -4451,9 +4451,6 @@
     "pidTuningVbatSagCompensation": {
         "message": "Компенсація падіння напруги батареї"
     },
-    "pidTuningVbatSagCompensationHelp": {
-        "message": "Забезпечує стабільність тяги та характеристик PID у діапазоні корисної напруги батареї, збільшуючи потужність моторів, коли напруга батареї падає.<br \/><br \/>Ступінь компенсації може варіюватися від 0 до 100%. Рекомендується повна компенсація (100%).<br \/><br \/>Відвідайте <a href=\"https:\/\/betaflight.com\/docs\/tuning\/4.2-Tuning-Notes#dynamic-battery-sag-compensation\" target=\"_blank\" rel=\"noopener noreferrer\">цей вікі-запис<\/a>, щоб дізнатися більше."
-    },
     "pidTuningVbatSagValue": {
         "message": "%"
     },

@@ -4464,7 +4464,7 @@
         "message": "Vbat サグ値補正"
     },
     "pidTuningVbatSagCompensationHelp": {
-        "message": "バッテリー電圧の低下に応じてモーター出力を増加させることで、使用可能なバッテリー電圧範囲にて一貫したスロットルとPIDパフォーマンスを提供します。<br \/><br \/>補正量は0～100%の間で変更でき、完全な補正 (100%) を推奨します。<br \/><br \/>詳しくは<a href=\"https:\/\/betaflight.com\/docs\/tuning\/4.2-Tuning-Notes#dynamic-battery-sag-compensation\" target=\"_blank\" rel=\"noopener noreferrer\">このWikiエントリ<\/a>をご覧ください。"
+        "message": "バッテリー電圧の低下に応じてモーター出力を増加させることで、使用可能なバッテリー電圧範囲内で一定したスロットルおよびPID性能を提供します。<br \/><br \/>補正量は 0 ～ 100% の間で調整可能です。完全な補正 (100%) が推奨されます。<br \/><br \/>詳しくは<a href=\"https:\/\/betaflight.com\/docs\/wiki\/tuning\/4-2-tuning-notes#dynamic-battery-sag-compensation\" target=\"_blank\" rel=\"noopener noreferrer\">このWikiエントリ<\/a>をご覧ください。"
     },
     "pidTuningVbatSagValue": {
         "message": "%"
