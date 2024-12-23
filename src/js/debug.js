@@ -821,7 +821,8 @@ function update() {
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
         DEBUG.modes.splice(DEBUG.modes.indexOf('GPS_RESCUE_THROTTLE_PID'), 1, 'AUTOPILOT_ALTITUDE');
         DEBUG.modes.splice(DEBUG.modes.indexOf('GYRO_SCALED'), 1);
-
+        DEBUG.modes.splice(DEBUG.modes.indexOf('RANGEFINDER_QUALITY') + 1, 0, 'OPTICALFLOW');
+        DEBUG.modes.push('AUTOPILOT_POSITION');
         delete DEBUG.fieldNames.GPS_RESCUE_THROTTLE_PID;
         delete DEBUG.fieldNames.GYRO_SCALED;
 
@@ -857,6 +858,28 @@ function update() {
             'debug[3]': 'TPA Calculated Throttle (Wing)',
             'debug[4]': 'TPA Speed (Wing)',
             'debug[5]': 'TPA Argument (Wing)',
+        };
+
+        DEBUG.fieldNames.OPTICALFLOW = {
+            'debug[all]': 'Optical Flow',
+            'debug[0]': 'Quality',
+            'debug[1]': 'Raw flow rates X',
+            'debug[2]': 'Raw flow rates Y',
+            'debug[3]': 'Processed flow rates X',
+            'debug[4]': 'Processed flow rates Y',
+            'debug[5]': 'Delta time',
+        };
+        
+        DEBUG.fieldNames.AUTOPILOT_POSITION = {
+            'debug[all]': 'Autopilot Position',
+            'debug[0]': 'Distance',
+            'debug[1]': 'GPS Distance',
+            'debug[2]': 'PID Sum EF',
+            'debug[3]': 'Angle',
+            'debug[4]': 'pidP',
+            'debug[5]': 'pidI',
+            'debug[6]': 'pidD',
+            'debug[7]': 'pidA',
         };
 
         DEBUG.enableFields.splice(DEBUG.enableFields.indexOf("Gyro") + 1, 0, "Attitude");
