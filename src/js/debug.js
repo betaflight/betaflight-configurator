@@ -821,7 +821,8 @@ function update() {
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
         DEBUG.modes.splice(DEBUG.modes.indexOf('GPS_RESCUE_THROTTLE_PID'), 1, 'AUTOPILOT_ALTITUDE');
         DEBUG.modes.splice(DEBUG.modes.indexOf('GYRO_SCALED'), 1);
-
+        DEBUG.modes.splice(DEBUG.modes.indexOf('RANGEFINDER_QUALITY') + 1, 0, 'OPTICALFLOW');
+        DEBUG.modes.push('AUTOPILOT_POSITION');
         delete DEBUG.fieldNames.GPS_RESCUE_THROTTLE_PID;
         delete DEBUG.fieldNames.GYRO_SCALED;
 
