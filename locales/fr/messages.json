@@ -3630,9 +3630,6 @@
     "pidTuningVbatSagCompensation": {
         "message": "Compensation de l'affaiblissement du vbat"
     },
-    "pidTuningVbatSagCompensationHelp": {
-        "message": "Donne des performances constantes de gaz et de PID sur la plage de tension de la batterie utilisable en augmentant la sortie du moteur à mesure que la tension de la batterie chute.<br \/><br \/>La quantité de compensation peut varier entre 0 et 100%. La compensation totale (100%) est recommandée.<br \/><br \/>Visitez <a href=\"https:\/\/betaflight.com\/docs\/tuning\/4.2-Tuning-Notes#dynamic-battery-sag-compensation\" target=\"_blank\" rel=\"noopener noreferrer\">cette page du wiki<\/a> pour plus d'informations."
-    },
     "pidTuningVbatSagValue": {
         "message": "%"
     },

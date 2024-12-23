@@ -1018,6 +1018,10 @@
         "message": "Nessun protocollo di output dei motori selezionato",
         "description": "Message that pops up to describe the MOTOR_PROTO arming disable flag"
     },
+    "initialSetupArmingDisableFlagsTooltipCRASHFLIP": {
+        "message": "L'interruttore Crash Flip è attivo",
+        "description": "Message that pops to describe the CRASHFLIP arming disable flag"
+    },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "Uno dei flag di disarmo è attivo mentre si arma",
         "description": "Message that pops up to describe the ARM_SWITCH arming disable flag"
@@ -2299,6 +2303,10 @@
     "auxiliaryModeLogicAND": {
         "message": "E"
     },
+    "auxiliaryHelpMode_3DDISABLE": {
+        "message": "Abilita il cambio di direzione del motore per fornire spinta negativa nel volo invertito. L'acceleratore diventa da -100 a +100 anziché da 0 a 100",
+        "description": "Help text to 3D mode"
+    },
     "auxiliaryHelpMode_ACROTRAINER": {
         "message": "Modalità di volo che limita l'angolo del modello quando si vola in modalità acro",
         "description": "Help text to ACRO TRAINER mode"
@@ -2434,6 +2442,10 @@
     "auxiliaryHelpMode_PIDAUDIO": {
         "message": "Usa per attivare\/disattivare PIDAUDIO",
         "description": "Help text to PIDAUDIO mode"
+    },
+    "auxiliaryHelpMode_POSHOLD": {
+        "message": "Modalità per mantenere la Posizione",
+        "description": "Help text to POSHOLD mode"
     },
     "auxiliaryHelpMode_PREARM": {
         "message": "Durante l'armamento, aspetta che questo interruttore sia attivato prima dell'effettivo armamento",
@@ -4450,9 +4462,6 @@
     },
     "pidTuningVbatSagCompensation": {
         "message": "Compensazione calo Vbat"
-    },
-    "pidTuningVbatSagCompensationHelp": {
-        "message": "Dà prestazioni costanti del gas e del PID nell'intervallo di tensione della batteria utilizzabile aumentando la potenza del motore al diminuire della tensione della batteria.<br \/><br \/>Il valore della compensazione può variare tra 0 e 100%. Si raccomanda una compensazione completa (100%).<br \/><br \/>Visita <a href=\"https:\/\/betaflight.com\/docs\/tuning\/4.2-Tuning-Notes#dynamic-battery-sag-compensation\" target=\"_blank\" rel=\"noopener noreferrer\">questa voce wiki<\/a> per ulteriori informazioni."
     },
     "pidTuningVbatSagValue": {
         "message": "%"
@@ -6619,6 +6628,10 @@
     "vtxTableBands": {
         "message": "Numero di bande",
         "description": "Text of one of the fields of the VTX Table element in the VTX tab"
+    },
+    "vtxTableBandsHelp": {
+        "message": "Definisce il numero di bande richieste per il VTX",
+        "description": "Help for the number of bands field of the VTX Table element in the VTX tab"
     },
     "vtxTableChannels": {
         "message": "Numero di canali per banda",

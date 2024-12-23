@@ -4251,9 +4251,6 @@
     "pidTuningVbatSagCompensation": {
         "message": "Kompensation des Spannungseinbruches am Akku"
     },
-    "pidTuningVbatSagCompensationHelp": {
-        "message": "Erzeugt eine konstante Gas-und PID-Performance über den benutzbaren Batteriespannungsbereich durch Erhöhung der Motor-Leistungsvorgabe bei sinkender Batteriespannung. <br \/><br \/>Die Höhe der Kompensation kann zwischen 0 und 100% variiert werden. Vollständige Kompensation (100%) wird empfohlen.<br \/><br \/>Mehr Infos: <a href=\"https:\/\/betaflight.com\/docs\/tuning\/4.2-Tuning-Notes#dynamic-battery-sag-compensation\" target=\"_blank\" rel=\"noopener noreferrer\">diesen Wiki-Eintrag<\/a> für weitere Informationen."
-    },
     "pidTuningVbatSagValue": {
         "message": "%"
     },

@@ -4299,9 +4299,6 @@
     "pidTuningVbatSagCompensation": {
         "message": "Compensar Bateria Fraca"
     },
-    "pidTuningVbatSagCompensationHelp": {
-        "message": "Proporciona uma aceleração e desempenho do PID consistente enquanto estiver com a voltagem da bateria acima do valor minimo, aumentando o potência de saída do motor de conforme a voltagem da bateria diminui.<br \/><br \/>O valor de compensação pode variar entre 0% a 100% - É recomendada a compensação total de 100%.<br \/><br \/>Visite <a href=\"https:\/\/betaflight.com\/docs\/tuning\/4.2-Tuning-Notes#dynamic-battery-sag-compensation\" target=\"_blank\" rel=\"noopener noreferrer\">esta pagina do wiki<\/a> para mais informações."
-    },
     "pidTuningVbatSagValue": {
         "message": "%"
     },
