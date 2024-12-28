@@ -26,7 +26,7 @@
   "author": "The Betaflight open source project.",
   "license": "GPL-3.0",
   "engines": {
-    "node": "22.12.0"
+    "node": "20.x"
   },
   "dependencies": {
     "@capacitor/android": "^6.0.0",
