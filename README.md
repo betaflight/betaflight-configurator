@@ -1,3 +1,39 @@
+# How to 
+
+### Prepare your environment
+
+1. Install [node.js](https://nodejs.org/) (refer to [.nvmrc](./.nvmrc) for minimum required version)
+2. Install yarn: `npm install yarn -g`
+
+### PWA version
+
+#### Run development version
+
+1. Change to project folder and run `yarn install`.
+
+2. Run web application
+```
+yarn dev
+yarn dev --port 5761
+```
+
+The web app will be available at http://localhost:8000 with full HMR.
+
+#### Run production version
+
+1. Change to project folder and run `yarn install`.
+2. Run `yarn build`.
+3. Run `yarn preview` after build has finished.
+
+Alternatively you can run `yarn review` to build and preview in one step.
+
+The web app should behave directly as in production, available at http://localhost:8080.
+
+# Betaflight online
+
+```
+git clone git@github.com:novnc/websockify-other.git
+```
 # Betaflight Configurator
 
 ![Betaflight](http://static.rcgroups.net/forums/attachments/6/1/0/3/7/6/a9088900-228-bf_logo.jpg)

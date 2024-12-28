@@ -21,12 +21,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "github.com/betaflight/betaflight-configurator"
+    "url": "github.com/Uginchus/BetaflightConfigurator"
   },
   "author": "The Betaflight open source project.",
   "license": "GPL-3.0",
   "engines": {
-    "node": "20.x"
+    "node": "22.12.0"
   },
   "dependencies": {
     "@capacitor/android": "^6.0.0",
@@ -38,6 +38,7 @@
     "d3": "^7.9.0",
     "djv": "^2.1.4",
     "dompurify": "^2.5.5",
+    "express": "^4.21.2",
     "i18next": "^19.9.2",
     "i18next-xhr-backend": "^3.2.2",
     "inflection": "^1.13.4",
@@ -56,7 +57,7 @@
     "semver-min": "^0.7.2",
     "short-unique-id": "^4.4.4",
     "switchery-latest": "^0.8.2",
-    "three": "~0.97.0",
+    "three": "^0.171.0",
     "vite-plugin-pwa": "^0.17.5",
     "vue": "^2.7.16"
   },
@@ -64,30 +65,26 @@
     "@babel/core": "^7.24.4",
     "@capacitor/cli": "^6.0.0",
     "@storybook/addon-actions": "^6.5.16",
-    "@storybook/addon-essentials": "^6.5.16",
+    "@storybook/addon-essentials": "^8.4.7",
     "@storybook/addon-links": "^6.5.16",
-    "@storybook/vue": "^6.5.16",
+    "@storybook/vue": "^7.6.20",
     "babel-loader": "^8.3.0",
     "eslint": "^8.57.0",
     "eslint-plugin-vue": "^7.20.0",
     "husky": "^4.3.8",
     "inquirer": "^9.3.1",
     "less": "^4.2.0",
+    "nodemon": "^3.1.9",
     "rollup-plugin-copy": "^3.5.0",
     "run-script-os": "^1.1.6",
     "vite": "^4.5.3",
     "vitest": "^0.27.3",
-    "vue-loader": "^15.11.1",
-    "vue-template-compiler": "^2.7.16",
+    "vue-loader": "^17.4.2",
+    "vue-template-compiler": "^0.1.0",
     "yarn": "^1.22.22"
   },
   "resolutions": {
     "jquery": "3.6.3",
     "libxmljs2": "0.32.0"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "yarn lint"
-    }
   }
 }
