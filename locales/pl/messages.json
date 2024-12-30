@@ -2635,6 +2635,9 @@
     "adjustmentsFunction30": {
         "message": "Wybór profilu LED"
     },
+    "adjustmentsFunction31": {
+        "message": "Regulacja jasności LED"
+    },
     "adjustmentsSave": {
         "message": "Zapisz"
     },

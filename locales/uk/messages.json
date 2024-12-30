@@ -1018,6 +1018,10 @@
         "message": "Не вибрано протокол виводу для моторів",
         "description": "Message that pops up to describe the MOTOR_PROTO arming disable flag"
     },
+    "initialSetupArmingDisableFlagsTooltipCRASHFLIP": {
+        "message": "Перемикач аварійного перевертання активний",
+        "description": "Message that pops to describe the CRASHFLIP arming disable flag"
+    },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "Одна з інших позначок охлощення активна під час взведення",
         "description": "Message that pops up to describe the ARM_SWITCH arming disable flag"
@@ -2299,6 +2303,10 @@
     "auxiliaryModeLogicAND": {
         "message": "ТА"
     },
+    "auxiliaryHelpMode_3DDISABLE": {
+        "message": "Включає реверсивний напрямок обертання моторів, щоб забезпечити негативну тягу та дозволити перевернутий політ. Тяга стає від -100 до +100 замість 0 до 100",
+        "description": "Help text to 3D mode"
+    },
     "auxiliaryHelpMode_ACROTRAINER": {
         "message": "Режим польоту, який обмежує кут нахилу повітряного судна під час польоту в акро режимі",
         "description": "Help text to ACRO TRAINER mode"
@@ -2434,6 +2442,10 @@
     "auxiliaryHelpMode_PIDAUDIO": {
         "message": "Використовуйте для перемикання PIDAUDIO",
         "description": "Help text to PIDAUDIO mode"
+    },
+    "auxiliaryHelpMode_POSHOLD": {
+        "message": "Режим утримання позиції",
+        "description": "Help text to POSHOLD mode"
     },
     "auxiliaryHelpMode_PREARM": {
         "message": "При взведенні, очікувати активацію цього перемикача перед фактичним взведенням",
@@ -2618,6 +2630,9 @@
     },
     "adjustmentsFunction30": {
         "message": "Вибір профілю LED"
+    },
+    "adjustmentsFunction31": {
+        "message": "Регулювання яскравості світлодіодів"
     },
     "adjustmentsSave": {
         "message": "Зберегти"
@@ -4451,6 +4466,9 @@
     "pidTuningVbatSagCompensation": {
         "message": "Компенсація падіння напруги батареї"
     },
+    "pidTuningVbatSagCompensationHelp": {
+        "message": "Забезпечує стабільність тяги та характеристик ПІД у діапазоні корисної напруги батареї, збільшуючи потужність моторів, коли напруга батареї падає.<br \/><br \/>Ступінь компенсації може варіюватися від 0 до 100%. Рекомендується повна компенсація (100%).<br \/><br \/>Відвідайте <a href=\"https:\/\/betaflight.com\/docs\/wiki\/tuning\/4-2-tuning-notes#dynamic-battery-sag-compensation\" target=\"_blank\" rel=\"noopener noreferrer\">цей вікі-запис<\/a>, щоб дізнатися більше."
+    },
     "pidTuningVbatSagValue": {
         "message": "%"
     },
@@ -5492,6 +5510,38 @@
     "osdTextElementAltitudeVariantNoDecimalASL": {
         "message": "Висота над морем без десяткових знаків",
         "description": "One of the variants of the altitude element of the OSD"
+    },
+    "osdTextElementCustomMsg0": {
+        "message": "Користувацьке повідомлення 1",
+        "description": "One of the elements of the OSD"
+    },
+    "osdTextElementCustomMsg1": {
+        "message": "Користувацьке повідомлення 2",
+        "description": "One of the elements of the OSD"
+    },
+    "osdTextElementCustomMsg2": {
+        "message": "Користувацьке повідомлення 3",
+        "description": "One of the elements of the OSD"
+    },
+    "osdTextElementCustomMsg3": {
+        "message": "Користувацьке повідомлення 4",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementCustomMsg0": {
+        "message": "Користувацьке повідомлення 1 від зовнішнього пристрою",
+        "description": "Description of the custom message 1 element of the OSD"
+    },
+    "osdDescElementCustomMsg1": {
+        "message": "Користувацьке повідомлення 2 від зовнішнього пристрою",
+        "description": "Description of the custom message 2 element of the OSD"
+    },
+    "osdDescElementCustomMsg2": {
+        "message": "Користувацьке повідомлення 3 від зовнішнього пристрою",
+        "description": "Description of the custom message 3 element of the OSD"
+    },
+    "osdDescElementCustomMsg3": {
+        "message": "Користувацьке повідомлення 4 від зовнішнього пристрою",
+        "description": "Description of the custom message 4 element of the OSD"
     },
     "osdTextElementOnTime": {
         "message": "Від підключення батареї",
@@ -6616,6 +6666,10 @@
     "vtxTableBands": {
         "message": "Кількість діапазонів",
         "description": "Text of one of the fields of the VTX Table element in the VTX tab"
+    },
+    "vtxTableBandsHelp": {
+        "message": "Це задає кількість діапазонів, необхідних для відеопередавача",
+        "description": "Help for the number of bands field of the VTX Table element in the VTX tab"
     },
     "vtxTableChannels": {
         "message": "Кількість каналів на діапазон",

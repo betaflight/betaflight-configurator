@@ -4346,7 +4346,7 @@
         "message": "Настройки фильтра в зависимости от выбранного профиля"
     },
     "pidTuningDTermLowpass": {
-        "message": "D-term фильтр низких частот -2 \"Lowpass\""
+        "message": "D-term фильтр низких частот - 1 \"Lowpass\""
     },
     "pidTuningDTermLowpassHelp": {
         "message": "Первый из двух фильтров низких частот для D-term.<br \/><br \/>В динамическом режиме фильтрация будет сильнее на низком газе, и слабеть при увеличении газа. Это помогает контролировать скрежет двигателей и неожиданные взлёты при арме, а так же уменьшая задержку и prop-wash после взлета. По мере увеличения газа переход от низкой частоты среза к высокой произойдет будет происходить раньше, с более высокими значениями экспоненты низких частот D-term.<br \/><br \/>В статическом режиме частота среза фиксирована. Это не рекомендуется для фильтрации D-term.<br \/><br \/>Тип фильтра по умолчанию - PT1, хотя некоторые пользователи используют здесь только один динамический фильтр Biquad без второго PT1.<br \/><br \/>Изменения, приводящие к уменьшению фильтрации D, могут привести к серьезному перегреву двигателей или непредсказуемым взлетам при арме.",
@@ -5424,6 +5424,38 @@
     "osdTextElementAltitudeVariantNoDecimalASL": {
         "message": "Высота над уровнем моря (ASL) без десятичных знаков",
         "description": "One of the variants of the altitude element of the OSD"
+    },
+    "osdTextElementCustomMsg0": {
+        "message": "Пользовательское сообщение 1",
+        "description": "One of the elements of the OSD"
+    },
+    "osdTextElementCustomMsg1": {
+        "message": "Пользовательское сообщение 2",
+        "description": "One of the elements of the OSD"
+    },
+    "osdTextElementCustomMsg2": {
+        "message": "Пользовательское сообщение 3",
+        "description": "One of the elements of the OSD"
+    },
+    "osdTextElementCustomMsg3": {
+        "message": "Пользовательское сообщение 4",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementCustomMsg0": {
+        "message": "Пользовательское сообщение 1 с внешнего устройства",
+        "description": "Description of the custom message 1 element of the OSD"
+    },
+    "osdDescElementCustomMsg1": {
+        "message": "Пользовательское сообщение 2 с внешнего устройства",
+        "description": "Description of the custom message 2 element of the OSD"
+    },
+    "osdDescElementCustomMsg2": {
+        "message": "Пользовательское сообщение 3 с внешнего устройства",
+        "description": "Description of the custom message 3 element of the OSD"
+    },
+    "osdDescElementCustomMsg3": {
+        "message": "Пользовательское сообщение 4 с внешнего устройства",
+        "description": "Description of the custom message 4 element of the OSD"
     },
     "osdTextElementOnTime": {
         "message": "Время работы",

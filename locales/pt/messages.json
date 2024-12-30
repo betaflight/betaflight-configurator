@@ -2631,6 +2631,9 @@
     "adjustmentsFunction30": {
         "message": "Seleção do Perfil de LED"
     },
+    "adjustmentsFunction31": {
+        "message": "Ajuste do brilho do LED"
+    },
     "adjustmentsSave": {
         "message": "Gravar"
     },
@@ -5507,6 +5510,38 @@
     "osdTextElementAltitudeVariantNoDecimalASL": {
         "message": "ASL sem casas decimais",
         "description": "One of the variants of the altitude element of the OSD"
+    },
+    "osdTextElementCustomMsg0": {
+        "message": "Mensagem personalizada 1",
+        "description": "One of the elements of the OSD"
+    },
+    "osdTextElementCustomMsg1": {
+        "message": "Mensagem personalizada 2",
+        "description": "One of the elements of the OSD"
+    },
+    "osdTextElementCustomMsg2": {
+        "message": "Mensagem personalizada 3",
+        "description": "One of the elements of the OSD"
+    },
+    "osdTextElementCustomMsg3": {
+        "message": "Mensagem personalizada 4",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementCustomMsg0": {
+        "message": "Mensagem personalizada 1 do dispositivo externo",
+        "description": "Description of the custom message 1 element of the OSD"
+    },
+    "osdDescElementCustomMsg1": {
+        "message": "Mensagem personalizada 2 do dispositivo externo",
+        "description": "Description of the custom message 2 element of the OSD"
+    },
+    "osdDescElementCustomMsg2": {
+        "message": "Mensagem personalizada 3 do dispositivo externo",
+        "description": "Description of the custom message 3 element of the OSD"
+    },
+    "osdDescElementCustomMsg3": {
+        "message": "Mensagem personalizada 4 do dispositivo externo",
+        "description": "Description of the custom message 4 element of the OSD"
     },
     "osdTextElementOnTime": {
         "message": "Tempo total ligado",

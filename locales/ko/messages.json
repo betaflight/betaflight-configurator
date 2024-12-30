@@ -2635,6 +2635,9 @@
     "adjustmentsFunction30": {
         "message": "LED 프로필 선택"
     },
+    "adjustmentsFunction31": {
+        "message": "LED 밝기 조절"
+    },
     "adjustmentsSave": {
         "message": "저장"
     },

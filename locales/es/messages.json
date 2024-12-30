@@ -1018,6 +1018,10 @@
         "message": "No hay ningún protocolo de salida para los motores seleccionado",
         "description": "Message that pops up to describe the MOTOR_PROTO arming disable flag"
     },
+    "initialSetupArmingDisableFlagsTooltipCRASHFLIP": {
+        "message": "Interruptor boca abajo después de choque está activado",
+        "description": "Message that pops to describe the CRASHFLIP arming disable flag"
+    },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "Una de las otras banderas de desarmado estaba activa al armar",
         "description": "Message that pops up to describe the ARM_SWITCH arming disable flag"
@@ -2299,6 +2303,10 @@
     "auxiliaryModeLogicAND": {
         "message": "Y"
     },
+    "auxiliaryHelpMode_3DDISABLE": {
+        "message": "Activa la dirección del motor reversible para proporcionar acelerador negativo y permitir el vuelo invertido. El acelerador se convierte en -100 a +100 en lugar de 0 a 100",
+        "description": "Help text to 3D mode"
+    },
     "auxiliaryHelpMode_ACROTRAINER": {
         "message": "Modo de vuelo que limita el ángulo de la aeronave al volar en modo acro",
         "description": "Help text to ACRO TRAINER mode"
@@ -2434,6 +2442,10 @@
     "auxiliaryHelpMode_PIDAUDIO": {
         "message": "Usar para activar PIDAUDIO",
         "description": "Help text to PIDAUDIO mode"
+    },
+    "auxiliaryHelpMode_POSHOLD": {
+        "message": "Modo mantener posición",
+        "description": "Help text to POSHOLD mode"
     },
     "auxiliaryHelpMode_PREARM": {
         "message": "Al intentar armar, se necesita que este interruptor esté activado antes de armar. Se suele asignar a un interruptor temporal del mando",
@@ -2618,6 +2630,9 @@
     },
     "adjustmentsFunction30": {
         "message": "Selección de Perfil LED"
+    },
+    "adjustmentsFunction31": {
+        "message": "Ajustar brillo de LED"
     },
     "adjustmentsSave": {
         "message": "Guardar"
@@ -4451,6 +4466,9 @@
     "pidTuningVbatSagCompensation": {
         "message": "Compensación de Caída de Tensión"
     },
+    "pidTuningVbatSagCompensationHelp": {
+        "message": "Proporciona un rendimiento consistente del acelerador y del PID sobre el rango de voltaje de la batería utilizable incrementando la salida del motor según el voltaje de la batería va cayendo.<br \/><br \/> La cantidad de compensación puede variar entre el 0 y el 100 %. Se recomienda compensación completa (100%).<br \/><br \/>Visita <a href=\"https:\/\/betaflight.com\/docs\/wiki\/tuning\/4-2-tuning-notes#dynamic-battery-sag-compensation\" target=\"_blank\" rel=\"noopener noreferrer\">esta entrada de la wiki<\/a> para más información."
+    },
     "pidTuningVbatSagValue": {
         "message": "%"
     },
@@ -5492,6 +5510,38 @@
     "osdTextElementAltitudeVariantNoDecimalASL": {
         "message": "ASL (sobre el nivel del mar, sin decimales)",
         "description": "One of the variants of the altitude element of the OSD"
+    },
+    "osdTextElementCustomMsg0": {
+        "message": "Mensaje personalizado 1",
+        "description": "One of the elements of the OSD"
+    },
+    "osdTextElementCustomMsg1": {
+        "message": "Mensaje personalizado 2",
+        "description": "One of the elements of the OSD"
+    },
+    "osdTextElementCustomMsg2": {
+        "message": "Mensaje personalizado 3",
+        "description": "One of the elements of the OSD"
+    },
+    "osdTextElementCustomMsg3": {
+        "message": "Mensaje personalizado 4",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementCustomMsg0": {
+        "message": "Mensaje personalizado 1 desde dispositivo externo",
+        "description": "Description of the custom message 1 element of the OSD"
+    },
+    "osdDescElementCustomMsg1": {
+        "message": "Mensaje personalizado 2 desde dispositivo externo",
+        "description": "Description of the custom message 2 element of the OSD"
+    },
+    "osdDescElementCustomMsg2": {
+        "message": "Mensaje personalizado 3 desde dispositivo externo",
+        "description": "Description of the custom message 3 element of the OSD"
+    },
+    "osdDescElementCustomMsg3": {
+        "message": "Mensaje personalizado 4 desde dispositivo externo",
+        "description": "Description of the custom message 4 element of the OSD"
     },
     "osdTextElementOnTime": {
         "message": "Tiempo encendido",
@@ -6617,6 +6667,10 @@
         "message": "Número de bandas",
         "description": "Text of one of the fields of the VTX Table element in the VTX tab"
     },
+    "vtxTableBandsHelp": {
+        "message": "Esto define el número de bandas necesarias para el VTX",
+        "description": "Help for the number of bands field of the VTX Table element in the VTX tab"
+    },
     "vtxTableChannels": {
         "message": "Número de canales por banda",
         "description": "Text of one of the fields of the VTX Table element in the VTX tab"
@@ -7306,6 +7360,9 @@
     "firmwareFlasherBuildMotorProtocols": {
         "message": "Protocolo de motor"
     },
+    "firmwareFlasherBuildOsdProtocols": {
+        "message": "Protocolo OSD"
+    },
     "firmwareFlasherConfigurationFile": {
         "message": "Nombre de archivo de configuración:"
     },
@@ -7323,6 +7380,9 @@
     },
     "firmwareFlasherMotorProtocolDescription": {
         "message": "Selecciona el protocolo de motor (ESC) que deseas incluir en esta compilación. Ten en cuenta que esto es un desplegable, pero sólo se puede seleccionar un elemento."
+    },
+    "firmwareFlasherOsdProtocolDescription": {
+        "message": "Selecciona el protocolo OSD que quieres incluir en esta compilación. Ten en cuenta que esto es un menú desplegable, únicamente puedes seleccionar un elemento."
     },
     "firmwareFlasherBranchDescription": {
         "message": "Especialmente útil para desarrolladores, puedes seleccionar un PR incluido en el código, especificar el sha de un commit, o especificar un PR 'todavía no incluido' escribiendo una # seguida por el número de PR por eje. #1234 (esto es una abreviatura para la rama 'pull\/1234\/head')."
