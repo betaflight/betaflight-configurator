@@ -2631,6 +2631,9 @@
     "adjustmentsFunction30": {
         "message": "LED Profileの選択"
     },
+    "adjustmentsFunction31": {
+        "message": "LED 明るさ調整"
+    },
     "adjustmentsSave": {
         "message": "保存"
     },
@@ -5507,6 +5510,38 @@
     "osdTextElementAltitudeVariantNoDecimalASL": {
         "message": "ASL (小数点なし)",
         "description": "One of the variants of the altitude element of the OSD"
+    },
+    "osdTextElementCustomMsg0": {
+        "message": "カスタムメッセージ 1",
+        "description": "One of the elements of the OSD"
+    },
+    "osdTextElementCustomMsg1": {
+        "message": "カスタムメッセージ 2",
+        "description": "One of the elements of the OSD"
+    },
+    "osdTextElementCustomMsg2": {
+        "message": "カスタムメッセージ 3",
+        "description": "One of the elements of the OSD"
+    },
+    "osdTextElementCustomMsg3": {
+        "message": "カスタムメッセージ 4",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementCustomMsg0": {
+        "message": "外部デバイスからのカスタムメッセージ 1",
+        "description": "Description of the custom message 1 element of the OSD"
+    },
+    "osdDescElementCustomMsg1": {
+        "message": "外部デバイスからのカスタムメッセージ 2",
+        "description": "Description of the custom message 2 element of the OSD"
+    },
+    "osdDescElementCustomMsg2": {
+        "message": "外部デバイスからのカスタムメッセージ 3",
+        "description": "Description of the custom message 3 element of the OSD"
+    },
+    "osdDescElementCustomMsg3": {
+        "message": "外部デバイスからのカスタムメッセージ 4",
+        "description": "Description of the custom message 4 element of the OSD"
     },
     "osdTextElementOnTime": {
         "message": "On time",

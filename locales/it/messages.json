@@ -2631,6 +2631,9 @@
     "adjustmentsFunction30": {
         "message": "Selezione profilo LED"
     },
+    "adjustmentsFunction31": {
+        "message": "Regola Luminosità Led"
+    },
     "adjustmentsSave": {
         "message": "Salva"
     },
@@ -4463,6 +4466,9 @@
     "pidTuningVbatSagCompensation": {
         "message": "Compensazione calo Vbat"
     },
+    "pidTuningVbatSagCompensationHelp": {
+        "message": "Dà prestazioni costanti di gas e PID sulla tensione utilizzabile della batteria aumentando l'output di motori al calo della tensione della batteria.<br \/><br \/>Il valore della compensazione può variare tra 0 e 100%. Si raccomanda una compensazione completa (100%).<br \/><br \/>Visita <a href=\"https:\/\/betaflight.com\/docs\/wiki\/tuning\/4-2-tuning-notes#dynamic-battery-sag-compensation\" target=\"_blank\" rel=\"noopener noreferrer\">questa voce wiki<\/a> per ulteriori informazioni."
+    },
     "pidTuningVbatSagValue": {
         "message": "%"
     },
@@ -5504,6 +5510,38 @@
     "osdTextElementAltitudeVariantNoDecimalASL": {
         "message": "ASL senza decimali",
         "description": "One of the variants of the altitude element of the OSD"
+    },
+    "osdTextElementCustomMsg0": {
+        "message": "Messaggio personalizzato 1",
+        "description": "One of the elements of the OSD"
+    },
+    "osdTextElementCustomMsg1": {
+        "message": "Messaggio personalizzato 2",
+        "description": "One of the elements of the OSD"
+    },
+    "osdTextElementCustomMsg2": {
+        "message": "Messaggio personalizzato 3",
+        "description": "One of the elements of the OSD"
+    },
+    "osdTextElementCustomMsg3": {
+        "message": "Messaggio personalizzato 4",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementCustomMsg0": {
+        "message": "Messaggio personalizzato 1 dal dispositivo esterno",
+        "description": "Description of the custom message 1 element of the OSD"
+    },
+    "osdDescElementCustomMsg1": {
+        "message": "Messaggio personalizzato 2 dal dispositivo esterno",
+        "description": "Description of the custom message 2 element of the OSD"
+    },
+    "osdDescElementCustomMsg2": {
+        "message": "Messaggio personalizzato 3 dal dispositivo esterno",
+        "description": "Description of the custom message 3 element of the OSD"
+    },
+    "osdDescElementCustomMsg3": {
+        "message": "Messaggio personalizzato 4 dal dispositivo esterno",
+        "description": "Description of the custom message 4 element of the OSD"
     },
     "osdTextElementOnTime": {
         "message": "Tempo accensione",

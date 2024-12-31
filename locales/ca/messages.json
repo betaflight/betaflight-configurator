@@ -2639,6 +2639,9 @@
     "adjustmentsFunction30": {
         "message": "Selecció del perfil de LED"
     },
+    "adjustmentsFunction31": {
+        "message": "Ajust de la intensitat LED"
+    },
     "adjustmentsSave": {
         "message": "Desa"
     },
