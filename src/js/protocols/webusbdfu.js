@@ -439,7 +439,7 @@ class WEBUSBDFU_protocol extends EventTarget {
 
                     switch (unit) {
                         case "M":
-                            page_size *= 1024; //  fall through to K as well
+                        //  fall through to K as well
                         case "K":
                             page_size *= 1024;
                             break;
@@ -891,7 +891,9 @@ class WEBUSBDFU_protocol extends EventTarget {
                                     const idx = erase_pages.findIndex((element, index, array) => {
                                         return element.sector === i && element.page === j;
                                     });
-                                    if (idx === -1) erase_pages.push({ sector: i, page: j });
+                                    if (idx === -1) {
+                                        erase_pages.push({ sector: i, page: j });
+                                    }
                                 }
                             }
                         }

@@ -783,10 +783,7 @@ vtx.initialize = function (callback) {
             }
 
             if (save_vtx_powerlevels.counter < FC.VTX_CONFIG.vtx_table_powerlevels) {
-                FC.VTXTABLE_POWERLEVEL = Object.assign(
-                    {},
-                    TABS.vtx.VTXTABLE_POWERLEVEL_LIST[save_vtx_powerlevels.counter],
-                );
+                FC.VTXTABLE_POWERLEVEL = { ...TABS.vtx.VTXTABLE_POWERLEVEL_LIST[save_vtx_powerlevels.counter] };
                 MSP.send_message(
                     MSPCodes.MSP_SET_VTXTABLE_POWERLEVEL,
                     mspHelper.crunch(MSPCodes.MSP_SET_VTXTABLE_POWERLEVEL),

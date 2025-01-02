@@ -1019,13 +1019,11 @@ motors.initialize = async function (callback) {
                 if (FC.MOTOR_DATA[i] > zeroThrottleValue) {
                     motorsRunning = true;
                 }
-            } else {
-                if (
-                    FC.MOTOR_DATA[i] < FC.MOTOR_3D_CONFIG.deadband3d_low ||
-                    FC.MOTOR_DATA[i] > FC.MOTOR_3D_CONFIG.deadband3d_high
-                ) {
-                    motorsRunning = true;
-                }
+            } else if (
+                FC.MOTOR_DATA[i] < FC.MOTOR_3D_CONFIG.deadband3d_low ||
+                FC.MOTOR_DATA[i] > FC.MOTOR_3D_CONFIG.deadband3d_high
+            ) {
+                motorsRunning = true;
             }
         }
 

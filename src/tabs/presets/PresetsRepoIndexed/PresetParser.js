@@ -195,7 +195,7 @@ export default class PresetParser {
     }
 
     _escapeRegex(string) {
-        return string.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&");
+        return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     }
 
     removeUncheckedOptions(strings, checkedOptions) {

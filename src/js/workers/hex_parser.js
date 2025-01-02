@@ -34,7 +34,8 @@ export default async function read_hex_file(data) {
         const checksum = parseInt(data[i].substr(9 + byte_count * 2, 2), 16); // (this is a 2's complement value)
 
         switch (record_type) {
-            case 0x00: // data record
+            case 0x00: {
+                // data record
                 if (address !== next_address || next_address === 0) {
                     result.data.push({ address: extended_linear_address + address, bytes: 0, data: [] });
                 }
@@ -65,6 +66,7 @@ export default async function read_hex_file(data) {
                     hexfile_valid = false;
                 }
                 break;
+            }
             case 0x01: // end of file record
                 result.end_of_file = true;
                 break;

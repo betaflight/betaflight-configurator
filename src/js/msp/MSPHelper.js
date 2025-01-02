@@ -199,7 +199,7 @@ MspHelper.prototype.process_data = function (dataHandler) {
     let flags = 0;
 
     if (!crcError) {
-        if (!dataHandler.unsupported)
+        if (!dataHandler.unsupported) {
             switch (code) {
                 case MSPCodes.MSP_STATUS:
                     FC.CONFIG.cycleTime = data.readU16();
@@ -773,13 +773,14 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     FC.CONFIG.apiVersion = `${data.readU8()}.${data.readU8()}.0`;
                     break;
 
-                case MSPCodes.MSP_FC_VARIANT:
+                case MSPCodes.MSP_FC_VARIANT: {
                     let fcVariantIdentifier = "";
                     for (let i = 0; i < 4; i++) {
                         fcVariantIdentifier += String.fromCharCode(data.readU8());
                     }
                     FC.CONFIG.flightControllerIdentifier = fcVariantIdentifier;
                     break;
+                }
 
                 case MSPCodes.MSP_FC_VERSION:
                     FC.CONFIG.flightControllerVersion = `${data.readU8()}.${data.readU8()}.${data.readU8()}`;
@@ -898,7 +899,7 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     console.log("Channel forwarding saved");
                     break;
 
-                case MSPCodes.MSP_CF_SERIAL_CONFIG:
+                case MSPCodes.MSP_CF_SERIAL_CONFIG: {
                     FC.SERIAL_CONFIG.ports = [];
                     const bytesPerPort = 1 + 2 + 1 * 4;
 
@@ -916,6 +917,7 @@ MspHelper.prototype.process_data = function (dataHandler) {
                         FC.SERIAL_CONFIG.ports.push(serialPort);
                     }
                     break;
+                }
 
                 case MSPCodes.MSP2_COMMON_SERIAL_CONFIG:
                     FC.SERIAL_CONFIG.ports = [];
@@ -1701,7 +1703,7 @@ MspHelper.prototype.process_data = function (dataHandler) {
                 default:
                     console.log(`Unknown code detected: ${code} (${getMSPCodeName(code)})`);
             }
-        else {
+        } else {
             console.log(`FC reports unsupported message error: ${code} (${getMSPCodeName(code)})`);
 
             if (code === MSPCodes.MSP_SET_REBOOT) {
@@ -1726,7 +1728,9 @@ MspHelper.prototype.process_data = function (dataHandler) {
             dataHandler.callbacks.splice(i, 1);
             if (!crcError || callbackOnError) {
                 // fire callback
-                if (callback) callback({ command: code, data: data, length: data.byteLength, crcError: crcError });
+                if (callback) {
+                    callback({ command: code, data: data, length: data.byteLength, crcError: crcError });
+                }
             } else {
                 console.warn(`code: ${code} - crc failed. No callback`);
             }
