@@ -20,7 +20,7 @@ function readSerialAdapter(e) {
 
 function disconnectAndCleanup() {
     serial.disconnect((result) => {
-        console.log('Disconnected', result);
+        console.log("Disconnected", result);
 
         MSP.clearListeners();
 
@@ -44,16 +44,20 @@ class MSPConnectorImpl {
             FC.resetState();
 
             // disconnect after 10 seconds with error if we don't get IDENT data
-            GUI.timeout_add('msp_connector', function () {
-                if (!CONFIGURATOR.connectionValid) {
-                    gui_log(i18n.getMessage('noConfigurationReceived'));
+            GUI.timeout_add(
+                "msp_connector",
+                function () {
+                    if (!CONFIGURATOR.connectionValid) {
+                        gui_log(i18n.getMessage("noConfigurationReceived"));
 
-                    disconnectAndCleanup();
-                }
-            }, 10000);
+                        disconnectAndCleanup();
+                    }
+                },
+                10000,
+            );
 
-            serial.removeEventListener('receive', readSerialAdapter);
-            serial.addEventListener('receive', readSerialAdapter);
+            serial.removeEventListener("receive", readSerialAdapter);
+            serial.addEventListener("receive", readSerialAdapter);
 
             const mspHelper = new MspHelper();
             MSP.listen(mspHelper.process_data.bind(mspHelper));
@@ -61,43 +65,42 @@ class MSPConnectorImpl {
             MSP.send_message(MSPCodes.MSP_API_VERSION, false, false, () => {
                 CONFIGURATOR.connectionValid = true;
 
-                GUI.timeout_remove('msp_connector');
-                console.log('Connected');
+                GUI.timeout_remove("msp_connector");
+                console.log("Connected");
 
                 this.onConnectCallback();
             });
         } else {
-            gui_log(i18n.getMessage('serialPortOpenFail'));
+            gui_log(i18n.getMessage("serialPortOpenFail"));
             this.onFailureCallback();
         }
     }
 
-    handleDisconnect (detail) {
-        console.log('Disconnected', detail);
+    handleDisconnect(detail) {
+        console.log("Disconnected", detail);
 
-        serial.removeEventListener('receive', readSerialAdapter);
+        serial.removeEventListener("receive", readSerialAdapter);
 
         // Calling in case event listeners were not removed
-        serial.removeEventListener('connect', (e) => this.handleConnect(e.detail));
-        serial.removeEventListener('disconnect', (e) => this.handleDisconnect(e));
+        serial.removeEventListener("connect", (e) => this.handleConnect(e.detail));
+        serial.removeEventListener("disconnect", (e) => this.handleDisconnect(e));
 
         MSP.clearListeners();
         MSP.disconnect_cleanup();
     }
 
     connect(port, baud, onConnectCallback, onTimeoutCallback, onFailureCallback) {
-
         this.port = port;
         this.baud = baud;
         this.onConnectCallback = onConnectCallback;
         this.onTimeoutCallback = onTimeoutCallback;
         this.onFailureCallback = onFailureCallback;
 
-        serial.removeEventListener('connect', (e) => this.handleConnect(e.detail));
-        serial.addEventListener('connect', (e) => this.handleConnect(e.detail), { once: true });
+        serial.removeEventListener("connect", (e) => this.handleConnect(e.detail));
+        serial.addEventListener("connect", (e) => this.handleConnect(e.detail), { once: true });
 
-        serial.removeEventListener('disconnect', (e) => this.handleDisconnect(e));
-        serial.addEventListener('disconnect', (e) => this.handleDisconnect(e), { once: true });
+        serial.removeEventListener("disconnect", (e) => this.handleDisconnect(e));
+        serial.addEventListener("disconnect", (e) => this.handleDisconnect(e), { once: true });
 
         serial.connect(this.port, { baudRate: this.baud });
     }
@@ -107,7 +110,7 @@ class MSPConnectorImpl {
 
         serial.disconnect((result) => {
             MSP.clearListeners();
-            console.log('Disconnected', result);
+            console.log("Disconnected", result);
 
             this.onDisconnectCallback(result);
         });

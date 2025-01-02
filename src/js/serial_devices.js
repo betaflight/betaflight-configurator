@@ -3,7 +3,7 @@ export const vendorIdNames = {
     1155: "STM Electronics",
     4292: "Silicon Labs",
     0x2e3c: "AT32",
-    0x314B: "Geehy Semiconductor",
+    0x314b: "Geehy Semiconductor",
 };
 
 export const serialDevices = [
@@ -18,9 +18,7 @@ export const serialDevices = [
     { vendorId: 12619, productId: 22336 }, // APM32 VCP
 ];
 
-export const webSerialDevices = serialDevices.map(
-    ({ vendorId, productId }) => ({
-        usbVendorId: vendorId,
-        usbProductId: productId,
-    }),
-);
+export const webSerialDevices = serialDevices.map(({ vendorId, productId }) => ({
+    usbVendorId: vendorId,
+    usbProductId: productId,
+}));

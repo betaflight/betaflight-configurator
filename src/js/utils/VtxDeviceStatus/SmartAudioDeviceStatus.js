@@ -2,8 +2,7 @@ import VtxDeviceStatus, { VtxDeviceTypes } from "./VtxDeviceStatus";
 import { i18n } from "../../localization";
 
 class VtxDeviceStatusSmartAudio extends VtxDeviceStatus {
-    constructor(dataView)
-    {
+    constructor(dataView) {
         super(dataView);
 
         dataView.readU8(); // custom device status size
@@ -14,8 +13,7 @@ class VtxDeviceStatusSmartAudio extends VtxDeviceStatus {
         this._willBootIntoPitMode = Boolean(dataView.readU8());
     }
 
-    get smartAudioVersion()
-    {
+    get smartAudioVersion() {
         const sa = this._version * 100 + this._mode;
         let result = "";
 
@@ -35,14 +33,13 @@ class VtxDeviceStatusSmartAudio extends VtxDeviceStatus {
         }
 
         if (16 == this._mode) {
-            result = i18n.getMessage("vtxSmartAudioUnlocked", {"version": result});
+            result = i18n.getMessage("vtxSmartAudioUnlocked", { version: result });
         }
 
         return result;
     }
 
-    static get staticDeviceStatusType()
-    {
+    static get staticDeviceStatusType() {
         return VtxDeviceTypes.VTXDEV_SMARTAUDIO;
     }
 }

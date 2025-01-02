@@ -1,6 +1,7 @@
-class DshotCommand
-{
-    static get ALL_MOTORS() { return 255; }
+class DshotCommand {
+    static get ALL_MOTORS() {
+        return 255;
+    }
 }
 
 DshotCommand.dshotCommands_e = {
@@ -33,8 +34,8 @@ DshotCommand.dshotCommands_e = {
 };
 
 DshotCommand.dshotCommandType_e = {
-    DSHOT_CMD_TYPE_INLINE: 0,    // dshot commands sent inline with motor signal (motors must be enabled)
-    DSHOT_CMD_TYPE_BLOCKING: 1,  // dshot commands sent in blocking method (motors must be disabled)
+    DSHOT_CMD_TYPE_INLINE: 0, // dshot commands sent inline with motor signal (motors must be enabled)
+    DSHOT_CMD_TYPE_BLOCKING: 1, // dshot commands sent in blocking method (motors must be disabled)
 };
 
 export default DshotCommand;

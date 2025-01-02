@@ -1,10 +1,13 @@
-
 const CUSTOM_DEFAULTS_POINTER_ADDRESS = 0x08002800;
 const BLOCK_SIZE = 16384;
 
 function seek(firmware, address) {
     let index = 0;
-    for (; index < firmware.data.length && address >= firmware.data[index].address + firmware.data[index].bytes; index++) {
+    for (
+        ;
+        index < firmware.data.length && address >= firmware.data[index].address + firmware.data[index].bytes;
+        index++
+    ) {
         // empty for loop to increment index
     }
 
@@ -53,7 +56,7 @@ function generateData(firmware, input, startAddress) {
     const index = seek(firmware, address);
 
     if (index.byteIndex !== undefined) {
-        throw new Error('Configuration area in firmware not free.');
+        throw new Error("Configuration area in firmware not free.");
     }
 
     let inputIndex = 0;
@@ -65,7 +68,7 @@ function generateData(firmware, input, startAddress) {
             data: [],
         };
 
-        if (firmware.data[index.lineIndex] && (line.address + line.bytes) > firmware.data[index.lineIndex].address) {
+        if (firmware.data[index.lineIndex] && line.address + line.bytes > firmware.data[index.lineIndex].address) {
             throw new Error("Aborting data generation, free area too small.");
         }
 
@@ -84,7 +87,6 @@ function generateData(firmware, input, startAddress) {
 const CONFIG_LABEL = `Custom defaults inserted in`;
 
 export default class ConfigInserter {
-
     insertConfig(firmware, config) {
         console.time(CONFIG_LABEL);
 
@@ -94,7 +96,11 @@ export default class ConfigInserter {
         if (!customDefaultsArea || customDefaultsArea.endAddress - customDefaultsArea.startAddress === 0) {
             return false;
         } else if (input.length >= customDefaultsArea.endAddress - customDefaultsArea.startAddress) {
-            throw new Error(`Custom defaults area too small (${customDefaultsArea.endAddress - customDefaultsArea.startAddress} bytes), ${input.length + 1} bytes needed.`);
+            throw new Error(
+                `Custom defaults area too small (${
+                    customDefaultsArea.endAddress - customDefaultsArea.startAddress
+                } bytes), ${input.length + 1} bytes needed.`,
+            );
         }
 
         generateData(firmware, input, customDefaultsArea.startAddress);

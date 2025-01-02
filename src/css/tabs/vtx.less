@@ -1,15 +1,15 @@
 .tab-vtx {
-	.cf_table {
-		-webkit-border-horizontal-spacing: 1px;
-	}
-	.require-support {
-		display: none;
-	}
-	.require-upgrade {
-		display: block;
-	}
-	.select_mode {
-		.field {
+    .cf_table {
+        -webkit-border-horizontal-spacing: 1px;
+    }
+    .require-support {
+        display: none;
+    }
+    .require-upgrade {
+        display: block;
+    }
+    .select_mode {
+        .field {
             display: flex;
             gap: 0.5rem;
             margin-bottom: 0 !important;
@@ -19,16 +19,16 @@
                 margin-top: 0;
                 margin-right: 0;
             }
-			>span {
-				display: inline-block;
-				min-width: 9rem;
-                &+span {
+            > span {
+                display: inline-block;
+                min-width: 9rem;
+                & + span {
                     margin-right: auto;
                 }
-			}
+            }
             .label {
                 width: 100%;
-                >span {
+                > span {
                     margin-right: auto;
                 }
             }
@@ -42,17 +42,17 @@
                 display: flex;
                 align-items: center;
             }
-		}
-	}
-	input.one_digit_input {
-		width: 28px;
-	}
-	input.frequency_input {
-		width: 64px;
-	}
-	.vtx_table_box {
-		min-width: 750px;
-	}
+        }
+    }
+    input.one_digit_input {
+        width: 28px;
+    }
+    input.frequency_input {
+        width: 64px;
+    }
+    .vtx_table_box {
+        min-width: 750px;
+    }
     .VTX_info {
         table {
             td {
@@ -64,40 +64,40 @@
             }
         }
     }
-	.table_vtx_bands {
-		tr {
-			&:first-child {
-				td {
-					text-align: center;
-				}
-			}
-		}
-		td {
-			padding: 0.25rem;
-			text-align: center;
-		}
+    .table_vtx_bands {
+        tr {
+            &:first-child {
+                td {
+                    text-align: center;
+                }
+            }
+        }
+        td {
+            padding: 0.25rem;
+            text-align: center;
+        }
         input {
             min-width: 0;
             padding-right: 0.25rem;
         }
-	}
-	.table_vtx_powerlevels {
-		tr {
-			&:first-child {
-				td {
-					text-align: center;
-				}
-			}
-		}
-		td {
+    }
+    .table_vtx_powerlevels {
+        tr {
+            &:first-child {
+                td {
+                    text-align: center;
+                }
+            }
+        }
+        td {
             padding: 0.25rem;
             text-align: center;
-		}
-		input {
-			display: block;
+        }
+        input {
+            display: block;
             min-width: 5rem;
         }
-	}
+    }
     @media all and (max-width: 575px) {
         .tab-vtx {
             .columnsWrapper {
@@ -132,12 +132,14 @@
                 }
             }
         }
-        .content_toolbar{
-            .save_lua_btn, .save_file_btn {
+        .content_toolbar {
+            .save_lua_btn,
+            .save_file_btn {
                 display: none;
             }
             &.expanded {
-                .save_lua_btn, .save_file_btn {
+                .save_lua_btn,
+                .save_file_btn {
                     display: block;
                 }
             }
@@ -145,13 +147,13 @@
     }
 }
 .tab-vtx.supported {
-	.require-support {
-		display: block;
-	}
-	.require-upgrade {
-		display: none;
-	}
+    .require-support {
+        display: block;
+    }
+    .require-upgrade {
+        display: none;
+    }
 }
 #tab-vtx-templates {
-	display: none;
+    display: none;
 }

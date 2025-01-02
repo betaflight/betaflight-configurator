@@ -1,0 +1,6 @@
+# This file allows ignoring commits in git blame view on Github.
+# For more info, see here:
+# https://docs.github.com/en/repositories/working-with-files/using-files/viewing-a-file#ignore-commits-in-the-blame-view
+
+# Execute prettier
+335719b7b7d90676d76b516f67589a0389adceaa

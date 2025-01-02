@@ -1,25 +1,24 @@
 import { i18n } from "../localization";
-import GUI, { TABS } from '../gui';
-import { get as getConfig, set as setConfig } from '../ConfigStorage';
+import GUI, { TABS } from "../gui";
+import { get as getConfig, set as setConfig } from "../ConfigStorage";
 import { have_sensor } from "../sensor_helpers";
 import FC from "../fc";
 import MSP from "../msp";
 import MSPCodes from "../msp/MSPCodes";
-import * as d3 from 'd3';
-import $ from 'jquery';
-import semver from 'semver';
+import * as d3 from "d3";
+import $ from "jquery";
+import semver from "semver";
 import { API_VERSION_1_46 } from "../data_storage";
 import DEBUG from "../debug";
 
 const sensors = {};
 
 sensors.initialize = function (callback) {
-
-    if (GUI.active_tab != 'sensors') {
-        GUI.active_tab = 'sensors';
+    if (GUI.active_tab != "sensors") {
+        GUI.active_tab = "sensors";
     }
 
-    function initSensorData(){
+    function initSensorData() {
         for (let i = 0; i < 3; i++) {
             FC.SENSOR_DATA.accelerometer[i] = 0;
             FC.SENSOR_DATA.gyroscope[i] = 0;
@@ -62,7 +61,7 @@ sensors.initialize = function (callback) {
         return sampleNumber + 1;
     }
 
-    const margin = {top: 20, right: 10, bottom: 10, left: 40};
+    const margin = { top: 20, right: 10, bottom: 10, left: 40 };
     function updateGraphHelperSize(helpers) {
         helpers.width = helpers.targetElement.width() - margin.left - margin.right;
         helpers.height = helpers.targetElement.height() - margin.top - margin.bottom;
@@ -75,13 +74,15 @@ sensors.initialize = function (callback) {
     }
 
     function initGraphHelpers(selector, sampleNumber, heightDomain) {
-        const helpers = {selector: selector, targetElement: $(selector), dynamicHeightDomain: !heightDomain};
+        const helpers = { selector: selector, targetElement: $(selector), dynamicHeightDomain: !heightDomain };
 
-        helpers.widthScale = d3.scaleLinear()
+        helpers.widthScale = d3
+            .scaleLinear()
             .clamp(true)
-            .domain([(sampleNumber - 299), sampleNumber]);
+            .domain([sampleNumber - 299, sampleNumber]);
 
-        helpers.heightScale = d3.scaleLinear()
+        helpers.heightScale = d3
+            .scaleLinear()
             .clamp(true)
             .domain(heightDomain || [1, -1]);
 
@@ -90,32 +91,36 @@ sensors.initialize = function (callback) {
 
         updateGraphHelperSize(helpers);
 
-        helpers.xGrid
+        helpers.xGrid.scale(helpers.widthScale).ticks(5).tickFormat("");
+
+        helpers.yGrid.scale(helpers.heightScale).ticks(5).tickFormat("");
+
+        helpers.xAxis = d3
+            .axisBottom()
             .scale(helpers.widthScale)
             .ticks(5)
-            .tickFormat("");
+            .tickFormat(function (d) {
+                return d;
+            });
 
-        helpers.yGrid
+        helpers.yAxis = d3
+            .axisLeft()
             .scale(helpers.heightScale)
             .ticks(5)
-            .tickFormat("");
+            .tickFormat(function (d) {
+                return d;
+            });
 
-        helpers.xAxis = d3.axisBottom()
-            .scale(helpers.widthScale)
-            .ticks(5)
-            .tickFormat(function (d) {return d;});
-
-        helpers.yAxis = d3.axisLeft()
-            .scale(helpers.heightScale)
-            .ticks(5)
-            .tickFormat(function (d) {return d;});
-
-        helpers.line = d3.line()
-            .x(function (d) {return helpers.widthScale(d[0]);})
-            .y(function (d) {return helpers.heightScale(d[1]);});
+        helpers.line = d3
+            .line()
+            .x(function (d) {
+                return helpers.widthScale(d[0]);
+            })
+            .y(function (d) {
+                return helpers.heightScale(d[1]);
+            });
 
         return helpers;
-
     }
 
     function drawGraph(graphHelpers, data, sampleNumber) {
@@ -129,7 +134,7 @@ sensors.initialize = function (callback) {
             });
             graphHelpers.heightScale.domain(d3.extent(limits));
         }
-        graphHelpers.widthScale.domain([(sampleNumber - 299), sampleNumber]);
+        graphHelpers.widthScale.domain([sampleNumber - 299, sampleNumber]);
 
         svg.select(".x.grid").call(graphHelpers.xGrid);
         svg.select(".y.grid").call(graphHelpers.yGrid);
@@ -137,56 +142,58 @@ sensors.initialize = function (callback) {
         svg.select(".y.axis").call(graphHelpers.yAxis);
 
         const group = svg.select("g.data");
-        const lines = group.selectAll("path").data(data, function (d, i) {return i;});
+        const lines = group.selectAll("path").data(data, function (d, i) {
+            return i;
+        });
         lines.enter().append("path").attr("class", "line");
-        lines.attr('d', graphHelpers.line);
+        lines.attr("d", graphHelpers.line);
     }
 
     function plot_gyro(enable) {
         if (enable) {
-            $('.wrapper.gyro').show();
+            $(".wrapper.gyro").show();
         } else {
-            $('.wrapper.gyro').hide();
+            $(".wrapper.gyro").hide();
         }
     }
 
     function plot_accel(enable) {
         if (enable) {
-            $('.wrapper.accel').show();
+            $(".wrapper.accel").show();
         } else {
-            $('.wrapper.accel').hide();
+            $(".wrapper.accel").hide();
         }
     }
 
     function plot_mag(enable) {
         if (enable) {
-            $('.wrapper.mag').show();
+            $(".wrapper.mag").show();
         } else {
-            $('.wrapper.mag').hide();
+            $(".wrapper.mag").hide();
         }
     }
 
     function plot_altitude(enable) {
         if (enable) {
-            $('.wrapper.altitude').show();
+            $(".wrapper.altitude").show();
         } else {
-            $('.wrapper.altitude').hide();
+            $(".wrapper.altitude").hide();
         }
     }
 
     function plot_sonar(enable) {
         if (enable) {
-            $('.wrapper.sonar').show();
+            $(".wrapper.sonar").show();
         } else {
-            $('.wrapper.sonar').hide();
+            $(".wrapper.sonar").hide();
         }
     }
 
     function plot_debug(enable) {
         if (enable) {
-            $('.wrapper.debug').show();
+            $(".wrapper.debug").show();
         } else {
-            $('.wrapper.debug').hide();
+            $(".wrapper.debug").hide();
         }
     }
 
@@ -200,42 +207,40 @@ sensors.initialize = function (callback) {
                 msg = debugFields[`debug[${i}]`] ?? `Debug ${i} not used`;
             }
 
-            $(`.plot_control.debug${i}`)
-            .children('.title')
-            .text(msg);
+            $(`.plot_control.debug${i}`).children(".title").text(msg);
         }
     }
 
-    $('#content').load("./tabs/sensors.html", function load_html() {
+    $("#content").load("./tabs/sensors.html", function load_html() {
         // translate to user-selected language
         i18n.localizePage();
 
         // disable graphs for sensors that are missing
-        let checkboxes = $('.tab-sensors .info .checkboxes input');
+        let checkboxes = $(".tab-sensors .info .checkboxes input");
         checkboxes.parent().show();
 
         if (FC.CONFIG.boardType == 0 || FC.CONFIG.boardType == 2) {
-            if (!have_sensor(FC.CONFIG.activeSensors, 'acc')) {
-                checkboxes.eq(1).prop('disabled', true);
+            if (!have_sensor(FC.CONFIG.activeSensors, "acc")) {
+                checkboxes.eq(1).prop("disabled", true);
             }
-            if (!have_sensor(FC.CONFIG.activeSensors, 'mag')) {
-                checkboxes.eq(2).prop('disabled', true);
+            if (!have_sensor(FC.CONFIG.activeSensors, "mag")) {
+                checkboxes.eq(2).prop("disabled", true);
             }
-            if (!(have_sensor(FC.CONFIG.activeSensors, 'baro') || have_sensor(FC.CONFIG.activeSensors, 'gps'))) {
-                checkboxes.eq(3).prop('disabled', true);
+            if (!(have_sensor(FC.CONFIG.activeSensors, "baro") || have_sensor(FC.CONFIG.activeSensors, "gps"))) {
+                checkboxes.eq(3).prop("disabled", true);
             }
-            if (!have_sensor(FC.CONFIG.activeSensors, 'sonar')) {
-                checkboxes.eq(4).prop('disabled', true);
+            if (!have_sensor(FC.CONFIG.activeSensors, "sonar")) {
+                checkboxes.eq(4).prop("disabled", true);
             }
         } else {
             for (let i = 0; i <= 4; i++) {
-                checkboxes.eq(i).prop('disabled', true);
+                checkboxes.eq(i).prop("disabled", true);
                 checkboxes.eq(i).parent().hide();
             }
         }
 
-        $('.tab-sensors .info .checkboxes input').change(function () {
-            const enable = $(this).prop('checked');
+        $(".tab-sensors .info .checkboxes input").change(function () {
+            const enable = $(this).prop("checked");
             const index = $(this).parent().index();
 
             switch (index) {
@@ -260,13 +265,13 @@ sensors.initialize = function (callback) {
             }
 
             const _checkboxes = [];
-            $('.tab-sensors .info .checkboxes input').each(function () {
-                _checkboxes.push($(this).prop('checked'));
+            $(".tab-sensors .info .checkboxes input").each(function () {
+                _checkboxes.push($(this).prop("checked"));
             });
 
-            $('.tab-sensors .rate select:first').change();
+            $(".tab-sensors .rate select:first").change();
 
-            setConfig({'graphs_enabled': _checkboxes});
+            setConfig({ graphs_enabled: _checkboxes });
         });
 
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
@@ -303,11 +308,11 @@ sensors.initialize = function (callback) {
             debug_data.push(initDataArray(1));
         }
 
-        let gyroHelpers = initGraphHelpers('#gyro', samples_gyro_i, [-2000, 2000]);
-        let accelHelpers = initGraphHelpers('#accel', samples_accel_i, [-2, 2]);
-        let magHelpers = initGraphHelpers('#mag', samples_mag_i, [-1, 1]);
-        const altitudeHelpers = initGraphHelpers('#altitude', samples_altitude_i);
-        const sonarHelpers = initGraphHelpers('#sonar', samples_sonar_i);
+        let gyroHelpers = initGraphHelpers("#gyro", samples_gyro_i, [-2000, 2000]);
+        let accelHelpers = initGraphHelpers("#accel", samples_accel_i, [-2, 2]);
+        let magHelpers = initGraphHelpers("#mag", samples_mag_i, [-1, 1]);
+        const altitudeHelpers = initGraphHelpers("#altitude", samples_altitude_i);
+        const sonarHelpers = initGraphHelpers("#sonar", samples_sonar_i);
         const debugHelpers = [];
 
         for (let i = 0; i < sensors.debugColumns; i++) {
@@ -319,33 +324,33 @@ sensors.initialize = function (callback) {
             y: [],
             z: [],
         };
-        $('.plot_control .x, .plot_control .y, .plot_control .z').each(function () {
+        $(".plot_control .x, .plot_control .y, .plot_control .z").each(function () {
             const el = $(this);
-            if (el.hasClass('x')) {
+            if (el.hasClass("x")) {
                 raw_data_text_ements.x.push(el);
-            } else if (el.hasClass('y')) {
+            } else if (el.hasClass("y")) {
                 raw_data_text_ements.y.push(el);
             } else {
                 raw_data_text_ements.z.push(el);
             }
         });
 
-        $('.tab-sensors .rate select, .tab-sensors .scale select').change(function () {
+        $(".tab-sensors .rate select, .tab-sensors .scale select").change(function () {
             // if any of the select fields change value, all of the select values are grabbed
             // and timers are re-initialized with the new settings
             const rates = {
-                'gyro':   parseInt($('.tab-sensors select[name="gyro_refresh_rate"]').val(), 10),
-                'accel':  parseInt($('.tab-sensors select[name="accel_refresh_rate"]').val(), 10),
-                'mag':    parseInt($('.tab-sensors select[name="mag_refresh_rate"]').val(), 10),
-                'altitude':   parseInt($('.tab-sensors select[name="altitude_refresh_rate"]').val(), 10),
-                'sonar':  parseInt($('.tab-sensors select[name="sonar_refresh_rate"]').val(), 10),
-                'debug':  parseInt($('.tab-sensors select[name="debug_refresh_rate"]').val(), 10),
+                gyro: parseInt($('.tab-sensors select[name="gyro_refresh_rate"]').val(), 10),
+                accel: parseInt($('.tab-sensors select[name="accel_refresh_rate"]').val(), 10),
+                mag: parseInt($('.tab-sensors select[name="mag_refresh_rate"]').val(), 10),
+                altitude: parseInt($('.tab-sensors select[name="altitude_refresh_rate"]').val(), 10),
+                sonar: parseInt($('.tab-sensors select[name="sonar_refresh_rate"]').val(), 10),
+                debug: parseInt($('.tab-sensors select[name="debug_refresh_rate"]').val(), 10),
             };
 
             const scales = {
-                'gyro':  parseFloat($('.tab-sensors select[name="gyro_scale"]').val()),
-                'accel': parseFloat($('.tab-sensors select[name="accel_scale"]').val()),
-                'mag':   parseInt($('.tab-sensors select[name="mag_scale"]').val(), 10),
+                gyro: parseFloat($('.tab-sensors select[name="gyro_scale"]').val()),
+                accel: parseFloat($('.tab-sensors select[name="accel_scale"]').val()),
+                mag: parseInt($('.tab-sensors select[name="mag_scale"]').val(), 10),
             };
 
             // handling of "data pulling" is a little bit funky here, as MSP_RAW_IMU contains values for gyro/accel/mag but not altitude
@@ -355,7 +360,7 @@ sensors.initialize = function (callback) {
 
             let fastest;
             // if any of the refresh rates change, we need to re-determine the fastest refresh rate
-            if (['gyro_refresh_rate', 'accel_refresh_rate', 'mag_refresh_rate'].includes($(this).attr('name'))) {
+            if (["gyro_refresh_rate", "accel_refresh_rate", "mag_refresh_rate"].includes($(this).attr("name"))) {
                 fastest = $(this).val();
 
                 $('.tab-sensors select[name="gyro_refresh_rate"]').val(fastest);
@@ -366,45 +371,65 @@ sensors.initialize = function (callback) {
             }
 
             // store current/latest refresh rates in the storage
-            setConfig({'sensor_settings': {'rates': rates, 'scales': scales}});
+            setConfig({ sensor_settings: { rates: rates, scales: scales } });
 
             // re-initialize domains with new scales
-            gyroHelpers = initGraphHelpers('#gyro', samples_gyro_i, [-scales.gyro, scales.gyro]);
-            accelHelpers = initGraphHelpers('#accel', samples_accel_i, [-scales.accel, scales.accel]);
-            magHelpers = initGraphHelpers('#mag', samples_mag_i, [-scales.mag, scales.mag]);
+            gyroHelpers = initGraphHelpers("#gyro", samples_gyro_i, [-scales.gyro, scales.gyro]);
+            accelHelpers = initGraphHelpers("#accel", samples_accel_i, [-scales.accel, scales.accel]);
+            magHelpers = initGraphHelpers("#mag", samples_mag_i, [-scales.mag, scales.mag]);
 
             // fetch currently enabled plots
             checkboxes = [];
-            $('.tab-sensors .info .checkboxes input').each(function () {
-                checkboxes.push($(this).prop('checked'));
+            $(".tab-sensors .info .checkboxes input").each(function () {
+                checkboxes.push($(this).prop("checked"));
             });
 
             // timer initialization
-            GUI.interval_kill_all(['status_pull']);
+            GUI.interval_kill_all(["status_pull"]);
 
             // data pulling timers
             if (checkboxes[0] || checkboxes[1] || checkboxes[2]) {
-                GUI.interval_add('IMU_pull', function imu_data_pull() {
-                    MSP.send_message(MSPCodes.MSP_RAW_IMU, false, false, update_imu_graphs);
-                }, fastest, true);
+                GUI.interval_add(
+                    "IMU_pull",
+                    function imu_data_pull() {
+                        MSP.send_message(MSPCodes.MSP_RAW_IMU, false, false, update_imu_graphs);
+                    },
+                    fastest,
+                    true,
+                );
             }
 
             if (checkboxes[3]) {
-                GUI.interval_add('altitude_pull', function altitude_data_pull() {
-                    MSP.send_message(MSPCodes.MSP_ALTITUDE, false, false, update_altitude_graph);
-                }, rates.altitude, true);
+                GUI.interval_add(
+                    "altitude_pull",
+                    function altitude_data_pull() {
+                        MSP.send_message(MSPCodes.MSP_ALTITUDE, false, false, update_altitude_graph);
+                    },
+                    rates.altitude,
+                    true,
+                );
             }
 
             if (checkboxes[4]) {
-                GUI.interval_add('sonar_pull', function sonar_data_pull() {
-                    MSP.send_message(MSPCodes.MSP_SONAR, false, false, update_sonar_graphs);
-                }, rates.sonar, true);
+                GUI.interval_add(
+                    "sonar_pull",
+                    function sonar_data_pull() {
+                        MSP.send_message(MSPCodes.MSP_SONAR, false, false, update_sonar_graphs);
+                    },
+                    rates.sonar,
+                    true,
+                );
             }
 
             if (checkboxes[5]) {
-                GUI.interval_add('debug_pull', function debug_data_pull() {
-                    MSP.send_message(MSPCodes.MSP_DEBUG, false, false, update_debug_graphs);
-                }, rates.debug, true);
+                GUI.interval_add(
+                    "debug_pull",
+                    function debug_data_pull() {
+                        MSP.send_message(MSPCodes.MSP_DEBUG, false, false, update_debug_graphs);
+                    },
+                    rates.debug,
+                    true,
+                );
             }
 
             function update_imu_graphs() {
@@ -427,8 +452,12 @@ sensors.initialize = function (callback) {
                     const y = FC.SENSOR_DATA.accelerometer[1].toFixed(2);
                     const z = FC.SENSOR_DATA.accelerometer[2].toFixed(2);
                     const pi = Math.PI;
-                    const rollACC = Math.round(Math.atan(y / (Math.sqrt(Math.pow(x, 2)) + (Math.pow(z, 2)))) * (180 / pi));
-                    const pitchACC = Math.round(Math.atan(x / (Math.sqrt(Math.pow(y, 2)) + (Math.pow(z, 2)))) * (180 / pi));
+                    const rollACC = Math.round(
+                        Math.atan(y / (Math.sqrt(Math.pow(x, 2)) + Math.pow(z, 2))) * (180 / pi),
+                    );
+                    const pitchACC = Math.round(
+                        Math.atan(x / (Math.sqrt(Math.pow(y, 2)) + Math.pow(z, 2))) * (180 / pi),
+                    );
                     raw_data_text_ements.x[1].text(`${x} (${rollACC})`);
                     raw_data_text_ements.y[1].text(`${y} (${pitchACC})`);
                     raw_data_text_ements.z[1].text(`${z}`);
@@ -472,7 +501,7 @@ sensors.initialize = function (callback) {
             }
         });
 
-        const result = getConfig('sensor_settings');
+        const result = getConfig("sensor_settings");
         // set refresh speeds according to configuration saved in storage
         if (result.sensor_settings) {
             $('.tab-sensors select[name="gyro_refresh_rate"]').val(result.sensor_settings.rates.gyro);
@@ -490,26 +519,31 @@ sensors.initialize = function (callback) {
             $('.tab-sensors select[name="debug_refresh_rate"]').val(result.sensor_settings.rates.debug);
 
             // start polling data by triggering refresh rate change event
-            $('.tab-sensors .rate select:first').change();
+            $(".tab-sensors .rate select:first").change();
         } else {
             // start polling immediatly (as there is no configuration saved in the storage)
-            $('.tab-sensors .rate select:first').change();
+            $(".tab-sensors .rate select:first").change();
         }
 
-        const resultGraphs = getConfig('graphs_enabled');
+        const resultGraphs = getConfig("graphs_enabled");
         if (resultGraphs.graphs_enabled) {
-            const _checkboxes = $('.tab-sensors .info .checkboxes input');
+            const _checkboxes = $(".tab-sensors .info .checkboxes input");
             for (let i = 0; i < resultGraphs.graphs_enabled.length; i++) {
-                _checkboxes.eq(i).not(':disabled').prop('checked', resultGraphs.graphs_enabled[i]).change();
+                _checkboxes.eq(i).not(":disabled").prop("checked", resultGraphs.graphs_enabled[i]).change();
             }
         } else {
-            $('.tab-sensors .info input:lt(4):not(:disabled)').prop('checked', true).change();
+            $(".tab-sensors .info input:lt(4):not(:disabled)").prop("checked", true).change();
         }
 
         // status data pulled via separate timer with static speed
-        GUI.interval_add('status_pull', function status_pull() {
-            MSP.send_message(MSPCodes.MSP_STATUS);
-        }, 250, true);
+        GUI.interval_add(
+            "status_pull",
+            function status_pull() {
+                MSP.send_message(MSPCodes.MSP_STATUS);
+            },
+            250,
+            true,
+        );
 
         GUI.content_ready(callback);
     });
@@ -520,6 +554,4 @@ sensors.cleanup = function (callback) {
 };
 
 TABS.sensors = sensors;
-export {
-    sensors,
-};
+export { sensors };

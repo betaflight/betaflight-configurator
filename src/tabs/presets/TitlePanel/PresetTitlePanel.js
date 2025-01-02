@@ -1,11 +1,9 @@
 import { i18n } from "../../../js/localization";
-import $ from 'jquery';
+import $ from "jquery";
 
-export default class PresetTitlePanel
-{
-    constructor(parentDiv, preset, presetRepo, clickable, showPresetRepoName, onLoadedCallback, favoritePresets)
-    {
-        PresetTitlePanel.s_panelCounter ++;
+export default class PresetTitlePanel {
+    constructor(parentDiv, preset, presetRepo, clickable, showPresetRepoName, onLoadedCallback, favoritePresets) {
+        PresetTitlePanel.s_panelCounter++;
         this._parentDiv = parentDiv;
         this._onLoadedCallback = onLoadedCallback;
         this._domId = `preset_title_panel_${PresetTitlePanel.s_panelCounter}`;
@@ -33,17 +31,17 @@ export default class PresetTitlePanel
         let starMouseHover = false;
 
         if (this._clickable && this._mouseOnPanel && !this._mouseOnStar) {
-            this._domWrapperDiv.css({"background-color": "var(--surface-500)"});
+            this._domWrapperDiv.css({ "background-color": "var(--surface-500)" });
         } else {
-            this._domWrapperDiv.css({"background-color": "var(--surface-200)"});
+            this._domWrapperDiv.css({ "background-color": "var(--surface-200)" });
         }
 
         if (this._mouseOnStar || (this._mouseOnPanel && this._clickable)) {
-            this._domStar.css({"background-color": "var(--surface-500)"});
+            this._domStar.css({ "background-color": "var(--surface-500)" });
             starMouseHover = true;
         } else {
-            this._domWrapperDiv.css({"background-color": "var(--surface-200)"});
-            this._domStar.css({"background-color": "var(--surface-200)"});
+            this._domWrapperDiv.css({ "background-color": "var(--surface-200)" });
+            this._domStar.css({ "background-color": "var(--surface-200)" });
         }
 
         if (this._preset.lastPickDate) {
@@ -59,8 +57,7 @@ export default class PresetTitlePanel
         this._domWrapperDiv.load("./tabs/presets/TitlePanel/PresetTitlePanelBody.html", () => this._setupHtml());
     }
 
-    subscribeClick(presetsDetailedDialog, presetsRepo)
-    {
+    subscribeClick(presetsDetailedDialog, presetsRepo) {
         this._domWrapperDiv.on("click", () => {
             if (!this._starJustClicked) {
                 this._showPresetsDetailedDialog(presetsDetailedDialog, presetsRepo);
@@ -71,10 +68,10 @@ export default class PresetTitlePanel
     }
 
     _showPresetsDetailedDialog(presetsDetailedDialog, presetsRepo) {
-        presetsDetailedDialog.open(this._preset, presetsRepo, this._showPresetRepoName).then(isPresetPicked => {
+        presetsDetailedDialog.open(this._preset, presetsRepo, this._showPresetRepoName).then((isPresetPicked) => {
             if (isPresetPicked) {
-                const color = this._domWrapperDiv.css( "background-color" );
-                this._domWrapperDiv.css('background-color', 'green');
+                const color = this._domWrapperDiv.css("background-color");
+                this._domWrapperDiv.css("background-color", "green");
                 this._domWrapperDiv.animate({ backgroundColor: color }, 2000);
                 this.setPicked(true);
             }
@@ -91,14 +88,13 @@ export default class PresetTitlePanel
         this._preset.isPicked = isPicked;
 
         if (isPicked) {
-            this._domWrapperDiv.css({"border": "2px solid green"});
+            this._domWrapperDiv.css({ border: "2px solid green" });
         } else {
-            this._domWrapperDiv.css({"border": "1px solid var(--surface-500)"});
+            this._domWrapperDiv.css({ border: "1px solid var(--surface-500)" });
         }
     }
 
-    _setupHtml()
-    {
+    _setupHtml() {
         this._readDom();
 
         this._domCategory.text(this._preset.category);
@@ -119,33 +115,44 @@ export default class PresetTitlePanel
         this.setPicked(this._preset.isPicked);
         this._setupStar();
 
-        this._domWrapperDiv.on("mouseenter", () => { this._mouseOnPanel = true; this._updateHoverEffects(); });
-        this._domWrapperDiv.on("mouseleave", () => { this._mouseOnPanel = false; this._updateHoverEffects(); } );
-        this._domStar.on("mouseenter", () => { this._mouseOnStar = true; this._updateHoverEffects(); });
-        this._domStar.on("mouseleave", () => { this._mouseOnStar = false; this._updateHoverEffects(); });
+        this._domWrapperDiv.on("mouseenter", () => {
+            this._mouseOnPanel = true;
+            this._updateHoverEffects();
+        });
+        this._domWrapperDiv.on("mouseleave", () => {
+            this._mouseOnPanel = false;
+            this._updateHoverEffects();
+        });
+        this._domStar.on("mouseenter", () => {
+            this._mouseOnStar = true;
+            this._updateHoverEffects();
+        });
+        this._domStar.on("mouseleave", () => {
+            this._mouseOnStar = false;
+            this._updateHoverEffects();
+        });
 
         i18n.localizePage();
         this._domWrapperDiv.toggle(true);
 
-        if (typeof this._onLoadedCallback === 'function') {
+        if (typeof this._onLoadedCallback === "function") {
             this._onLoadedCallback();
         }
     }
 
-    _readDom()
-    {
-        this._domTitle = this._domWrapperDiv.find('.preset_title_panel_title');
-        this._domStar = this._domWrapperDiv.find('.preset_title_panel_star');
-        this._domCategory = this._domWrapperDiv.find('.preset_title_panel_category');
-        this._domAuthor = this._domWrapperDiv.find('.preset_title_panel_author_text');
-        this._domKeywords = this._domWrapperDiv.find('.preset_title_panel_keywords_text');
-        this._domSourceRepository = this._domWrapperDiv.find('.preset_title_panel_repository_text');
-        this._domSourceRepositoryRow = this._domWrapperDiv.find('.preset_title_panel_repository_row');
-        this._domVersions = this._domWrapperDiv.find('.preset_title_panel_versions_text');
-        this._domStatusOfficial = this._domWrapperDiv.find('.preset_title_panel_status_official');
-        this._domStatusCommunity = this._domWrapperDiv.find('.preset_title_panel_status_community');
-        this._domStatusExperimental = this._domWrapperDiv.find('.preset_title_panel_status_experimental');
-        this._domOfficialSourceIcon = this._domWrapperDiv.find('.preset_title_panel_betaflight_official');
+    _readDom() {
+        this._domTitle = this._domWrapperDiv.find(".preset_title_panel_title");
+        this._domStar = this._domWrapperDiv.find(".preset_title_panel_star");
+        this._domCategory = this._domWrapperDiv.find(".preset_title_panel_category");
+        this._domAuthor = this._domWrapperDiv.find(".preset_title_panel_author_text");
+        this._domKeywords = this._domWrapperDiv.find(".preset_title_panel_keywords_text");
+        this._domSourceRepository = this._domWrapperDiv.find(".preset_title_panel_repository_text");
+        this._domSourceRepositoryRow = this._domWrapperDiv.find(".preset_title_panel_repository_row");
+        this._domVersions = this._domWrapperDiv.find(".preset_title_panel_versions_text");
+        this._domStatusOfficial = this._domWrapperDiv.find(".preset_title_panel_status_official");
+        this._domStatusCommunity = this._domWrapperDiv.find(".preset_title_panel_status_community");
+        this._domStatusExperimental = this._domWrapperDiv.find(".preset_title_panel_status_experimental");
+        this._domOfficialSourceIcon = this._domWrapperDiv.find(".preset_title_panel_betaflight_official");
     }
 
     _setupStar() {
@@ -168,8 +175,7 @@ export default class PresetTitlePanel
         this._updateHoverEffects();
     }
 
-    remove()
-    {
+    remove() {
         this._domWrapperDiv.remove();
     }
 }

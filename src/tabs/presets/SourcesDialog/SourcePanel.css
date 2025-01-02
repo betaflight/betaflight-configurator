@@ -65,6 +65,8 @@
     vertical-align: middle;
 }
 
-.presets_source_panel_reset, .presets_source_panel_save, .presets_source_panel_delete {
+.presets_source_panel_reset,
+.presets_source_panel_save,
+.presets_source_panel_delete {
     float: right;
 }

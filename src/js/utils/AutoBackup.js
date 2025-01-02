@@ -1,9 +1,9 @@
-import PortHandler from '../port_handler';
-import FileSystem from '../FileSystem';
-import { generateFilename } from './generate_filename';
-import { gui_log } from '../gui_log';
+import PortHandler from "../port_handler";
+import FileSystem from "../FileSystem";
+import { generateFilename } from "./generate_filename";
+import { gui_log } from "../gui_log";
 import { i18n } from "../localization";
-import serial from '../webSerial';
+import serial from "../webSerial";
 
 /**
  *
@@ -13,28 +13,28 @@ import serial from '../webSerial';
 
 class AutoBackup {
     constructor() {
-        this.outputHistory = '';
+        this.outputHistory = "";
         this.callback = null;
     }
 
     handleConnect(openInfo) {
-        console.log('Connected to serial port:', openInfo);
+        console.log("Connected to serial port:", openInfo);
         if (openInfo) {
-            serial.removeEventListener('receive', this.readSerialAdapter);
-            serial.addEventListener('receive', this.readSerialAdapter.bind(this));
+            serial.removeEventListener("receive", this.readSerialAdapter);
+            serial.addEventListener("receive", this.readSerialAdapter.bind(this));
 
             this.run();
         } else {
-            gui_log(i18n.getMessage('serialPortOpenFail'));
+            gui_log(i18n.getMessage("serialPortOpenFail"));
         }
     }
 
     handleDisconnect(event) {
-        gui_log(i18n.getMessage(event.detail ? 'serialPortClosedOk' : 'serialPortClosedFail'));
+        gui_log(i18n.getMessage(event.detail ? "serialPortClosedOk" : "serialPortClosedFail"));
 
-        serial.removeEventListener('receive', this.readSerialAdapter);
-        serial.removeEventListener('connect', this.handleConnect);
-        serial.removeEventListener('disconnect', this.handleDisconnect);
+        serial.removeEventListener("receive", this.readSerialAdapter);
+        serial.removeEventListener("connect", this.handleConnect);
+        serial.removeEventListener("disconnect", this.handleDisconnect);
     }
 
     readSerialAdapter(info) {
@@ -47,33 +47,37 @@ class AutoBackup {
     }
 
     onClose() {
-        serial.addEventListener('disconnect', this.handleDisconnect.bind(this), { once: true });
+        serial.addEventListener("disconnect", this.handleDisconnect.bind(this), { once: true });
         serial.disconnect();
     }
 
     async save(data) {
-        console.log('Saving backup');
-        const prefix = 'cli_backup';
-        const suffix = 'txt';
+        console.log("Saving backup");
+        const prefix = "cli_backup";
+        const suffix = "txt";
         const filename = generateFilename(prefix, suffix);
 
-        FileSystem.pickSaveFile(filename, i18n.getMessage('fileSystemPickerFiles', { types: suffix.toUpperCase() }), `.${suffix}`)
-        .then((file) => {
-            console.log("Saving config to:", file.name);
-            FileSystem.writeFile(file, data);
-        })
-        .catch((error) => {
-            console.error("Error saving config:", error);
-        })
-        .finally(() => {
-            if (this.callback) {
-                this.callback();
-            }
-        });
+        FileSystem.pickSaveFile(
+            filename,
+            i18n.getMessage("fileSystemPickerFiles", { types: suffix.toUpperCase() }),
+            `.${suffix}`,
+        )
+            .then((file) => {
+                console.log("Saving config to:", file.name);
+                FileSystem.writeFile(file, data);
+            })
+            .catch((error) => {
+                console.error("Error saving config:", error);
+            })
+            .finally(() => {
+                if (this.callback) {
+                    this.callback();
+                }
+            });
     }
 
     async run() {
-        console.log('Running backup');
+        console.log("Running backup");
 
         await this.activateCliMode();
         await this.sendCommand("diff all");
@@ -87,7 +91,7 @@ class AutoBackup {
     }
 
     async activateCliMode() {
-        return new Promise(resolve => {
+        return new Promise((resolve) => {
             const bufferOut = new ArrayBuffer(1);
             const bufView = new Uint8Array(bufferOut);
 
@@ -96,7 +100,7 @@ class AutoBackup {
             serial.send(bufferOut);
 
             setTimeout(() => {
-                this.outputHistory = '';
+                this.outputHistory = "";
                 resolve();
             }, 500);
         });
@@ -123,11 +127,11 @@ class AutoBackup {
         const port = PortHandler.portPicker.selectedPort;
         const baud = PortHandler.portPicker.selectedBauds;
 
-        if (port.startsWith('serial')) {
-            serial.addEventListener('connect', this.handleConnect.bind(this), { once: true });
+        if (port.startsWith("serial")) {
+            serial.addEventListener("connect", this.handleConnect.bind(this), { once: true });
             serial.connect(port, { baudRate: baud });
         } else {
-            gui_log(i18n.getMessage('firmwareFlasherNoPortSelected'));
+            gui_log(i18n.getMessage("firmwareFlasherNoPortSelected"));
         }
     }
 }

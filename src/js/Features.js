@@ -1,41 +1,41 @@
 import { bit_check, bit_set, bit_clear } from "./bit";
-import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from './data_storage';
+import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "./data_storage";
 import semver from "semver";
 import { tracking } from "./Analytics";
-import $ from 'jquery';
+import $ from "jquery";
 
 const Features = function (config) {
     const self = this;
 
     const features = [
-        {bit: 0, group: 'rxMode', mode: 'select', name: 'RX_PPM'},
-        {bit: 2, group: 'other', name: 'INFLIGHT_ACC_CAL'},
-        {bit: 3, group: 'rxMode', mode: 'select', name: 'RX_SERIAL'},
-        {bit: 4, group: 'escMotorStop', name: 'MOTOR_STOP'},
-        {bit: 5, group: 'other', name: 'SERVO_TILT', haveTip: true, dependsOn: 'SERVOS'},
-        {bit: 6, group: 'other', name: 'SOFTSERIAL', haveTip: true},
-        {bit: 7, group: 'other', name: 'GPS', haveTip: true, dependsOn: 'GPS'},
-        {bit: 9, group: 'other', name: 'SONAR', haveTip: true, dependsOn: 'RANGEFINDER'},
-        {bit: 10, group: 'telemetry', name: 'TELEMETRY', haveTip: true, dependsOn: 'TELEMETRY'},
-        {bit: 12, group: '3D', name: '3D', haveTip: true},
-        {bit: 13, group: 'rxMode', mode: 'select', name: 'RX_PARALLEL_PWM'},
-        {bit: 14, group: 'rxMode', mode: 'select', name: 'RX_MSP'},
-        {bit: 15, group: 'rssi', name: 'RSSI_ADC'},
-        {bit: 16, group: 'other', name: 'LED_STRIP', haveTip: true, dependsOn: 'LED_STRIP'},
-        {bit: 17, group: 'other', name: 'DISPLAY', haveTip: true, dependsOn: 'DASHBOARD'},
-        {bit: 18, group: 'other', name: 'OSD', haveTip: true, dependsOn: 'OSD'},
-        {bit: 20, group: 'other', name: 'CHANNEL_FORWARDING', dependsOn: 'SERVOS'},
-        {bit: 21, group: 'other', name: 'TRANSPONDER', haveTip: true, dependsOn: 'TRANSPONDER'},
-        {bit: 22, group: 'other', name: 'AIRMODE', haveTip: true},
-        {bit: 25, group: 'rxMode', mode: 'select', name: 'RX_SPI'},
-        {bit: 27, group: 'escSensor', name: 'ESC_SENSOR'},
-        {bit: 28, group: 'antiGravity', name: 'ANTI_GRAVITY', haveTip: true, hideName: true},
+        { bit: 0, group: "rxMode", mode: "select", name: "RX_PPM" },
+        { bit: 2, group: "other", name: "INFLIGHT_ACC_CAL" },
+        { bit: 3, group: "rxMode", mode: "select", name: "RX_SERIAL" },
+        { bit: 4, group: "escMotorStop", name: "MOTOR_STOP" },
+        { bit: 5, group: "other", name: "SERVO_TILT", haveTip: true, dependsOn: "SERVOS" },
+        { bit: 6, group: "other", name: "SOFTSERIAL", haveTip: true },
+        { bit: 7, group: "other", name: "GPS", haveTip: true, dependsOn: "GPS" },
+        { bit: 9, group: "other", name: "SONAR", haveTip: true, dependsOn: "RANGEFINDER" },
+        { bit: 10, group: "telemetry", name: "TELEMETRY", haveTip: true, dependsOn: "TELEMETRY" },
+        { bit: 12, group: "3D", name: "3D", haveTip: true },
+        { bit: 13, group: "rxMode", mode: "select", name: "RX_PARALLEL_PWM" },
+        { bit: 14, group: "rxMode", mode: "select", name: "RX_MSP" },
+        { bit: 15, group: "rssi", name: "RSSI_ADC" },
+        { bit: 16, group: "other", name: "LED_STRIP", haveTip: true, dependsOn: "LED_STRIP" },
+        { bit: 17, group: "other", name: "DISPLAY", haveTip: true, dependsOn: "DASHBOARD" },
+        { bit: 18, group: "other", name: "OSD", haveTip: true, dependsOn: "OSD" },
+        { bit: 20, group: "other", name: "CHANNEL_FORWARDING", dependsOn: "SERVOS" },
+        { bit: 21, group: "other", name: "TRANSPONDER", haveTip: true, dependsOn: "TRANSPONDER" },
+        { bit: 22, group: "other", name: "AIRMODE", haveTip: true },
+        { bit: 25, group: "rxMode", mode: "select", name: "RX_SPI" },
+        { bit: 27, group: "escSensor", name: "ESC_SENSOR" },
+        { bit: 28, group: "antiGravity", name: "ANTI_GRAVITY", haveTip: true, hideName: true },
     ];
 
     self._features = features;
 
     function addFeatureDependsOn(obj, featureName, dependsOn) {
-        obj.forEach(f => {
+        obj.forEach((f) => {
             if (f.name === featureName) {
                 f.dependsOn = dependsOn;
             }
@@ -43,7 +43,7 @@ const Features = function (config) {
     }
 
     if (semver.gte(config.apiVersion, API_VERSION_1_47)) {
-        addFeatureDependsOn(self._features, 'SOFTSERIAL', 'SOFTSERIAL');
+        addFeatureDependsOn(self._features, "SOFTSERIAL", "SOFTSERIAL");
     }
 
     if (config.buildOptions?.length) {
@@ -52,7 +52,10 @@ const Features = function (config) {
             self._features = [];
 
             for (const feature of features) {
-                if (config.buildOptions.some(opt => opt.includes(feature.dependsOn)) || feature.dependsOn === undefined) {
+                if (
+                    config.buildOptions.some((opt) => opt.includes(feature.dependsOn)) ||
+                    feature.dependsOn === undefined
+                ) {
                     self._features.push(feature);
                 }
             }
@@ -61,13 +64,24 @@ const Features = function (config) {
         // Add TELEMETRY feature if any of the following protocols are used: CRSF, GHST, FPORT, JETI
         if (semver.gte(config.apiVersion, API_VERSION_1_46)) {
             let enableTelemetry = false;
-            if (config.buildOptions.some(opt => opt.includes('CRSF') || opt.includes('GHST') || opt.includes('FPORT') || opt.includes('JETI'))) {
+            if (
+                config.buildOptions.some(
+                    (opt) =>
+                        opt.includes("CRSF") || opt.includes("GHST") || opt.includes("FPORT") || opt.includes("JETI"),
+                )
+            ) {
                 enableTelemetry = true;
             }
 
-            const telemetryFeature = self._features.filter(f => f.name === 'TELEMETRY')?.[0];
+            const telemetryFeature = self._features.filter((f) => f.name === "TELEMETRY")?.[0];
             if (enableTelemetry && !telemetryFeature) {
-                self._features.push({bit: 10, group: 'telemetry', name: 'TELEMETRY', haveTip: true, dependsOn: 'TELEMETRY'});
+                self._features.push({
+                    bit: 10,
+                    group: "telemetry",
+                    name: "TELEMETRY",
+                    haveTip: true,
+                    dependsOn: "TELEMETRY",
+                });
             }
         }
     }
@@ -132,7 +146,7 @@ Features.prototype.generateElements = function (featuresElements) {
     const listElements = [];
 
     for (const feature of self._features) {
-        let feature_tip_html = '';
+        let feature_tip_html = "";
         const featureName = feature.name;
         const featureBit = feature.bit;
 
@@ -142,16 +156,18 @@ Features.prototype.generateElements = function (featuresElements) {
 
         const newElements = [];
 
-        if (feature.mode === 'select') {
+        if (feature.mode === "select") {
             if (listElements.length === 0) {
                 newElements.push($('<option class="feature" value="-1" i18n="featureNone" />'));
             }
-            const newElement = $(`<option class="feature" id="feature${featureBit}" name="${featureName}" value="${featureBit}" i18n="feature${featureName}" />`);
+            const newElement = $(
+                `<option class="feature" id="feature${featureBit}" name="${featureName}" value="${featureBit}" i18n="feature${featureName}" />`,
+            );
 
             newElements.push(newElement);
             listElements.push(newElement);
         } else {
-            let newFeatureName = '';
+            let newFeatureName = "";
             if (!feature.hideName) {
                 newFeatureName = `<td><div>${featureName}</div></td>`;
             }
@@ -164,14 +180,14 @@ Features.prototype.generateElements = function (featuresElements) {
             if (feature.haveTip) {
                 element += feature_tip_html;
             }
-            element += '</td></tr>';
+            element += "</td></tr>";
 
             const newElement = $(element);
 
-            const featureElement = newElement.find('input.feature');
+            const featureElement = newElement.find("input.feature");
 
-            featureElement.prop('checked', bit_check(self._featureMask, featureBit));
-            featureElement.data('bit', featureBit);
+            featureElement.prop("checked", bit_check(self._featureMask, featureBit));
+            featureElement.data("bit", featureBit);
 
             newElements.push(newElement);
         }
@@ -184,10 +200,10 @@ Features.prototype.generateElements = function (featuresElements) {
     }
 
     for (const element of listElements) {
-        const bit = parseInt(element.attr('value'));
+        const bit = parseInt(element.attr("value"));
         const state = bit_check(self._featureMask, bit);
 
-        element.prop('selected', state);
+        element.prop("selected", state);
     }
 };
 
@@ -204,19 +220,19 @@ Features.prototype.findFeatureByBit = function (bit) {
 Features.prototype.updateData = function (featureElement) {
     const self = this;
 
-    if (featureElement.attr('type') === 'checkbox') {
-        const bit = featureElement.data('bit');
+    if (featureElement.attr("type") === "checkbox") {
+        const bit = featureElement.data("bit");
         let featureValue;
 
-        if (featureElement.is(':checked')) {
+        if (featureElement.is(":checked")) {
             self._featureMask = bit_set(self._featureMask, bit);
-            featureValue = 'On';
+            featureValue = "On";
         } else {
             self._featureMask = bit_clear(self._featureMask, bit);
-            featureValue = 'Off';
+            featureValue = "Off";
         }
         self._analyticsChanges[`Feature${self.findFeatureByBit(bit).name}`] = featureValue;
-    } else if (featureElement.prop('localName') === 'select') {
+    } else if (featureElement.prop("localName") === "select") {
         const controlElements = featureElement.children();
         const selectedBit = featureElement.val();
         if (selectedBit !== -1) {

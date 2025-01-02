@@ -4,12 +4,11 @@ const s_maxFavoritePresetsCount = 50;
 const s_favoritePresetsListConfigStorageName = "FavoritePresetsList";
 
 class FavoritePreset {
-    constructor(presetPath){
+    constructor(presetPath) {
         this.presetPath = presetPath;
         this.lastPickDate = Date.now();
     }
 }
-
 
 class FavoritePresetsData {
     constructor() {
@@ -17,7 +16,7 @@ class FavoritePresetsData {
     }
 
     _sort() {
-        this._favoritePresetsList.sort((a, b) => (a.lastPickDate - b.lastPickDate));
+        this._favoritePresetsList.sort((a, b) => a.lastPickDate - b.lastPickDate);
     }
 
     _purgeOldPresets() {
@@ -69,7 +68,6 @@ class FavoritePresetsData {
     }
 }
 
-
 class FavoritePresetsClass {
     constructor() {
         this._favoritePresetsData = new FavoritePresetsData();
@@ -103,7 +101,6 @@ class FavoritePresetsClass {
         this._favoritePresetsData.loadFromStorage();
     }
 }
-
 
 let favoritePresets; // for export as singleton
 

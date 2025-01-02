@@ -1,24 +1,13 @@
 <template>
-  <div
-    id="firmware-virtual-option"
-    :style="{ display: isVirtual ? 'block' : 'none' }"
-  >
-    <div class="dropdown dropdown-dark">
-      <select
-        id="firmware-version-dropdown"
-        class="dropdown-select"
-        :title="$t('virtualMSPVersion')"
-      >
-        <option
-          v-for="(version, index) in firmwareVersions"
-          :key="index"
-          :value="version.value"
-        >
-          {{ version.label }}
-        </option>
-      </select>
+    <div id="firmware-virtual-option" :style="{ display: isVirtual ? 'block' : 'none' }">
+        <div class="dropdown dropdown-dark">
+            <select id="firmware-version-dropdown" class="dropdown-select" :title="$t('virtualMSPVersion')">
+                <option v-for="(version, index) in firmwareVersions" :key="index" :value="version.value">
+                    {{ version.label }}
+                </option>
+            </select>
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
