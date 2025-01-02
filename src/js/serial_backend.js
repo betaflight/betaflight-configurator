@@ -274,18 +274,6 @@ function onOpen(openInfo) {
 
         gui_log(i18n.getMessage("serialPortOpened", [PortHandler.portPicker.selectedPort]));
 
-        // save selected port with chrome.storage if the port differs
-        let result = getConfig("last_used_port");
-        if (result.last_used_port) {
-            if (result.last_used_port !== GUI.connected_to) {
-                // last used port doesn't match the one found in local db, we will store the new one
-                setConfig({ last_used_port: GUI.connected_to });
-            }
-        } else {
-            // variable isn't stored yet, saving
-            setConfig({ last_used_port: GUI.connected_to });
-        }
-
         // reset expert mode
         result = getConfig("expertMode")?.expertMode ?? false;
         $('input[name="expertModeCheckbox"]').prop("checked", result).trigger("change");
