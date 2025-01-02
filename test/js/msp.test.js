@@ -1,4 +1,4 @@
-import {describe, expect, it} from "vitest";
+import { describe, expect, it } from "vitest";
 import MSP from "../../src/js/msp";
 
 describe("MSP", () => {
@@ -12,7 +12,7 @@ describe("MSP", () => {
         it("handles non-empty messages correctly", () => {
             let [operationCode, inputDataLengthPadding] = crypto.getRandomValues(new Uint8Array(2));
 
-            let inputData = crypto.getRandomValues(new Uint8Array(100 + inputDataLengthPadding % 100));
+            let inputData = crypto.getRandomValues(new Uint8Array(100 + (inputDataLengthPadding % 100)));
 
             let encodedMessage = new Uint8Array(MSP.encode_message_v1(operationCode, inputData));
 
@@ -39,7 +39,9 @@ describe("MSP", () => {
             for (let codeLowByte = 0; codeLowByte < 256; codeLowByte++) {
                 for (let codeHighByte = 0; codeHighByte < 256; codeHighByte++) {
                     let encodedMessage = MSP.encode_message_v2(codeLowByte + codeHighByte * 256, false).slice(0, -1);
-                    expect(new Uint8Array(encodedMessage)).toEqual(new Uint8Array([36, 88, 60, 0, codeLowByte, codeHighByte, 0, 0]));
+                    expect(new Uint8Array(encodedMessage)).toEqual(
+                        new Uint8Array([36, 88, 60, 0, codeLowByte, codeHighByte, 0, 0]),
+                    );
                 }
             }
         });
@@ -49,7 +51,9 @@ describe("MSP", () => {
             let inputData = crypto.getRandomValues(new Uint8Array(lengthLowByte + lengthHighByte * 256));
             let [operationCodeLowByte, operationCodeHighByte] = crypto.getRandomValues(new Uint8Array(2));
 
-            let encodedMessage = new Uint8Array(MSP.encode_message_v2(operationCodeLowByte + 256 * operationCodeHighByte, inputData));
+            let encodedMessage = new Uint8Array(
+                MSP.encode_message_v2(operationCodeLowByte + 256 * operationCodeHighByte, inputData),
+            );
 
             // check that header is in place
             expect(encodedMessage.slice(0, 3)).toEqual(new Uint8Array([36, 88, 60]));

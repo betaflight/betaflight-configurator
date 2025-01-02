@@ -1,8 +1,8 @@
-import ShortUniqueId from 'short-unique-id';
-import { set as setConfig, get as getConfig } from './ConfigStorage';
-import GUI from './gui';
-import CONFIGURATOR from './data_storage';
-import $ from 'jquery';
+import ShortUniqueId from "short-unique-id";
+import { set as setConfig, get as getConfig } from "./ConfigStorage";
+import GUI from "./gui";
+import CONFIGURATOR from "./data_storage";
+import $ from "jquery";
 
 let tracking = null;
 export { tracking };
@@ -10,7 +10,6 @@ export { tracking };
 export function createAnalytics(settings) {
     tracking = new Analytics(settings);
 }
-
 
 function setupAnalytics(result) {
     const uid = new ShortUniqueId();
@@ -20,7 +19,7 @@ function setupAnalytics(result) {
         userId = result.userId;
     } else {
         userId = uid.randomUUID(13);
-        setConfig({ 'userId': userId });
+        setConfig({ userId: userId });
     }
 
     const optOut = !!result.analyticsOptOut;
@@ -29,7 +28,7 @@ function setupAnalytics(result) {
     const settings = {
         sessionId: uid.randomUUID(16),
         userId: userId,
-        appName:  CONFIGURATOR.productName,
+        appName: CONFIGURATOR.productName,
         appVersion: CONFIGURATOR.version,
         gitRevision: CONFIGURATOR.gitRevision,
         os: GUI.operating_system,
@@ -46,18 +45,18 @@ function setupAnalytics(result) {
     }
 
     if (typeof process === "object") {
-        process.on('uncaughtException', logException);
+        process.on("uncaughtException", logException);
     }
 
-    tracking.sendEvent(tracking.EVENT_CATEGORIES.APPLICATION, 'AppStart', { sessionControl: 'start' });
+    tracking.sendEvent(tracking.EVENT_CATEGORIES.APPLICATION, "AppStart", { sessionControl: "start" });
 
-    $('.connect_b a.connect').removeClass('disabled');
-    $('.firmware_b a.flash').removeClass('disabled');
+    $(".connect_b a.connect").removeClass("disabled");
+    $(".firmware_b a.flash").removeClass("disabled");
 }
 
 export function checkSetupAnalytics(callback) {
     if (!tracking) {
-        const result = getConfig(['userId', 'analyticsOptOut', 'checkForConfiguratorUnstableVersions' ]);
+        const result = getConfig(["userId", "analyticsOptOut", "checkForConfiguratorUnstableVersions"]);
         setupAnalytics(result);
     }
 
@@ -67,18 +66,16 @@ export function checkSetupAnalytics(callback) {
 }
 
 class Analytics {
-
-    constructor (settings) {
-
+    constructor(settings) {
         this.setOptOut(settings.optOut);
 
         this._settings = settings;
-        this._url = 'https://analytics.betaflight.com';
+        this._url = "https://analytics.betaflight.com";
 
         this.EVENT_CATEGORIES = {
-            APPLICATION: 'Application',
-            FLIGHT_CONTROLLER: 'FlightController',
-            FLASHING: 'Flashing',
+            APPLICATION: "Application",
+            FLIGHT_CONTROLLER: "FlightController",
+            FLASHING: "Flashing",
         };
 
         this.sendSettings();
@@ -101,35 +98,34 @@ class Analytics {
             contentType: "application/json",
             dataType: "json",
         });
-
     }
 
     sendSettings() {
-        this.send('settings', this._settings);
+        this.send("settings", this._settings);
     }
 
     sendEvent(category, action, options) {
-        this.send('event', { category: category, action: action, options: options });
+        this.send("event", { category: category, action: action, options: options });
     }
 
     sendChangeEvents(category, changeList) {
-        this.sendEvent(category, 'Change', { changes: changeList });
+        this.sendEvent(category, "Change", { changes: changeList });
     }
 
     sendSaveAndChangeEvents(category, changeList, tabName) {
-        this.sendEvent(category, 'Save', { tab: tabName, changes: changeList });
+        this.sendEvent(category, "Save", { tab: tabName, changes: changeList });
     }
 
     sendAppView(viewName) {
-        this.send('view', viewName);
+        this.send("view", viewName);
     }
 
     sendTiming(category, timing, value) {
-        this.send('timing', { category: category, timing: timing, value: value });
+        this.send("timing", { category: category, timing: timing, value: value });
     }
 
     sendException(message) {
-        this.send('exception', message);
+        this.send("exception", message);
     }
 
     setOptOut(optOut) {

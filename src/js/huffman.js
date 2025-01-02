@@ -14,7 +14,7 @@ function huffmanDecodeBuf(inBuf, inBufCharacterCount, huffmanTree, huffmanLenInd
         }
 
         if (inBuf.byteLength == 0) {
-            throw new Error('unexpected');
+            throw new Error("unexpected");
         }
 
         // get the next bit from the input buffer
@@ -32,7 +32,7 @@ function huffmanDecodeBuf(inBuf, inBufCharacterCount, huffmanTree, huffmanLenInd
         // check if the code is a leaf node or an interior node
         if (huffmanLenIndex[codeLen] != -1) {
             // look for the code in the tree, only leaf nodes are stored in the tree
-            for (let i = huffmanLenIndex[codeLen]; (i < huffmanTree.length) && (huffmanTree[i].codeLen === codeLen); ++i) {
+            for (let i = huffmanLenIndex[codeLen]; i < huffmanTree.length && huffmanTree[i].codeLen === codeLen; ++i) {
                 if (huffmanTree[i].code === code) {
                     // we've found the code, so it is a leaf node
                     const value = huffmanTree[i].value;

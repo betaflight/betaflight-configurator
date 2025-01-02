@@ -1,21 +1,9 @@
 <template>
-  <div class="bottomStatusIcons">
-    <div
-      class="armedicon cf_tip"
-      :title="$t('mainHelpArmed')"
-      :class="{ active: setActiveArmed }"
-    />
-    <div
-      class="failsafeicon cf_tip"
-      :title="$t('mainHelpFailsafe')"
-      :class="{ active: setFailsafeActive }"
-    />
-    <div
-      class="linkicon cf_tip"
-      :title="$t('mainHelpLink')"
-      :class="{ active: setActiveLink }"
-    />
-  </div>
+    <div class="bottomStatusIcons">
+        <div class="armedicon cf_tip" :title="$t('mainHelpArmed')" :class="{ active: setActiveArmed }" />
+        <div class="failsafeicon cf_tip" :title="$t('mainHelpFailsafe')" :class="{ active: setFailsafeActive }" />
+        <div class="linkicon cf_tip" :title="$t('mainHelpLink')" :class="{ active: setActiveLink }" />
+    </div>
 </template>
 
 <script>
@@ -43,7 +31,7 @@ export default {
             );
         },
         setActiveLink() {
-            return (performance.now() - this.lastReceivedTimestamp < 300);
+            return performance.now() - this.lastReceivedTimestamp < 300;
         },
     },
 };

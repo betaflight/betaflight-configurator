@@ -16,7 +16,7 @@ html {
 }
 body {
     height: 100%;
-    font-family: 'Open Sans', 'Segoe UI', Tahoma, sans-serif;
+    font-family: "Open Sans", "Segoe UI", Tahoma, sans-serif;
     font-size: 12px;
     color: var(--text);
     background-color: var(--surface-200);
@@ -43,8 +43,7 @@ a.disabled {
 }
 .background_paper {
     background-color: var(--surface-200);
-    background-image:
-        linear-gradient(var(--surface-300) 2px, transparent 2px),
+    background-image: linear-gradient(var(--surface-300) 2px, transparent 2px),
         linear-gradient(90deg, var(--surface-300) 2px, transparent 2px),
         linear-gradient(var(--surface-300) 1px, transparent 1px),
         linear-gradient(90deg, var(--surface-300) 1px, rgba(0, 0, 0, 0) 1px);
@@ -101,8 +100,10 @@ a.disabled {
         }
     }
 }
-input, select, .select2-selection--single {
-    font-family: 'Open Sans', 'Segoe UI', Tahoma, sans-serif !important;
+input,
+select,
+.select2-selection--single {
+    font-family: "Open Sans", "Segoe UI", Tahoma, sans-serif !important;
     font-size: unset !important;
     background-color: var(--surface-300) !important;
     border: 1px solid var(--surface-500) !important;
@@ -129,7 +130,9 @@ input, select, .select2-selection--single {
         cursor: not-allowed;
         pointer-events: none;
     }
-    &[type="range"], &[type="checkbox"], &[type="radio"] {
+    &[type="range"],
+    &[type="checkbox"],
+    &[type="radio"] {
         min-width: 0;
         accent-color: var(--primary-400);
     }
@@ -145,7 +148,8 @@ input, select, .select2-selection--single {
     font-weight: normal !important;
 }
 
-select, input[type="checkbox"] {
+select,
+input[type="checkbox"] {
     cursor: pointer;
 }
 input[type="number"] {
@@ -177,7 +181,8 @@ input[type="number"] {
         padding-bottom: 0;
         margin-bottom: 0;
     }
-    .helpicon, label {
+    .helpicon,
+    label {
         margin: 0 !important;
     }
 }
@@ -242,7 +247,8 @@ input[type="number"] {
     gap: 1rem;
     background-color: var(--surface-200);
 }
-#menu_btn, #reveal_btn {
+#menu_btn,
+#reveal_btn {
     display: none;
     width: 24px;
     height: 24px;
@@ -286,7 +292,8 @@ input[type="number"] {
     align-items: center;
     gap: 2rem;
 }
-.open_firmware_flasher, .connect_controls {
+.open_firmware_flasher,
+.connect_controls {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -375,7 +382,7 @@ input[type="number"] {
 #sensor-status {
     border-radius: 0.5rem;
     background-color: var(--surface-300);
-    >ul {
+    > ul {
         display: flex;
     }
     li {
@@ -397,7 +404,6 @@ input[type="number"] {
 }
 .baroicon {
     background-image: url(../images/icons/sensor_baro_off.png);
-
 }
 .sonaricon {
     background-image: url(../images/icons/sensor_sonar_off.png);
@@ -430,7 +436,12 @@ input[type="number"] {
     color: var(--text);
     background-image: url(../images/icons/sensor_sonar_on.png);
 }
-.gyroicon, .accicon, .magicon, .gpsicon, .baroicon, .sonaricon {
+.gyroicon,
+.accicon,
+.magicon,
+.gpsicon,
+.baroicon,
+.sonaricon {
     background-repeat: no-repeat;
     height: 30px;
     // margin-top: 3px;
@@ -575,9 +586,9 @@ input[type="number"] {
         padding: 0.5rem;
         position: relative;
         bottom: 0;
-        >* {
+        > * {
             user-select: text;
-            >* {
+            > * {
                 user-select: text;
             }
         }
@@ -603,7 +614,7 @@ input[type="number"] {
     width: 27px;
     background-repeat: no-repeat;
     background-image: url(../images/icons/scroll.svg);
-    opacity: 0.0;
+    opacity: 0;
     transition: all ease 0.2s;
 }
 #scrollicon.active {
@@ -766,8 +777,7 @@ each(@tabIcons, {
         }
     }
 })
-
-#cache {
+    #cache {
     display: none;
 }
 .data-loading {
@@ -817,7 +827,7 @@ dialog {
                 }
                 &:active {
                     background-color: var(--primary-500);
-                    transition: all ease 0.0s;
+                    transition: all ease 0s;
                     box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.35);
                 }
             }
@@ -943,7 +953,6 @@ dialog {
     margin-bottom: 0.5rem;
     border-radius: 0.5rem;
     padding: 0.5rem;
-
 }
 .tab_wrapper {
     padding: 20px 15px 15px 15px;
@@ -953,7 +962,7 @@ dialog {
     padding-bottom: 4rem;
     height: 100%;
     position: relative;
-    >.note {
+    > .note {
         margin-bottom: 1rem;
     }
 }
@@ -970,7 +979,7 @@ dialog {
     &::before {
         width: 1.5rem;
         aspect-ratio: 1;
-        content: '';
+        content: "";
         mask: url(../images/corner.svg);
         background-color: var(--surface-300);
         position: absolute;
@@ -1023,7 +1032,7 @@ dialog {
             }
             &:active {
                 background-color: var(--primary-500);
-                transition: all ease 0.0s;
+                transition: all ease 0s;
                 box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.35);
             }
             .helpicon {
@@ -1174,7 +1183,30 @@ dialog {
     border: 1px solid var(--error-500);
     .gui_box_titlebar {
         background-color: #dc0000;
-        background-image: linear-gradient(-45deg, rgba(255, 255, 255, .3) 10%, transparent 10%, transparent 20%, rgba(255, 255, 255, .3) 20%, rgba(255, 255, 255, .3) 30%, transparent 30%, transparent 40%, rgba(255, 255, 255, .3) 40%, rgba(255, 255, 255, .3) 50%, transparent 50%, transparent 60%, rgba(255, 255, 255, .3) 60%, rgba(255, 255, 255, .3) 70%, transparent 70%, transparent 80%, rgba(255, 255, 255, .3) 80%, rgba(255, 255, 255, .3) 90%, transparent 90%, transparent 100%, rgba(255, 255, 255, .4) 100%, transparent);
+        background-image: linear-gradient(
+            -45deg,
+            rgba(255, 255, 255, 0.3) 10%,
+            transparent 10%,
+            transparent 20%,
+            rgba(255, 255, 255, 0.3) 20%,
+            rgba(255, 255, 255, 0.3) 30%,
+            transparent 30%,
+            transparent 40%,
+            rgba(255, 255, 255, 0.3) 40%,
+            rgba(255, 255, 255, 0.3) 50%,
+            transparent 50%,
+            transparent 60%,
+            rgba(255, 255, 255, 0.3) 60%,
+            rgba(255, 255, 255, 0.3) 70%,
+            transparent 70%,
+            transparent 80%,
+            rgba(255, 255, 255, 0.3) 80%,
+            rgba(255, 255, 255, 0.3) 90%,
+            transparent 90%,
+            transparent 100%,
+            rgba(255, 255, 255, 0.4) 100%,
+            transparent
+        );
         color: var(--text);
     }
 }
@@ -1183,7 +1215,30 @@ dialog {
     border: 1px solid var(--primary-500);
     .gui_box_titlebar {
         background-color: var(--primary-500);
-        background-image: linear-gradient(-45deg, rgba(255, 255, 255, .3) 10%, transparent 10%, transparent 20%, rgba(255, 255, 255, .3) 20%, rgba(255, 255, 255, .3) 30%, transparent 30%, transparent 40%, rgba(255, 255, 255, .3) 40%, rgba(255, 255, 255, .3) 50%, transparent 50%, transparent 60%, rgba(255, 255, 255, .3) 60%, rgba(255, 255, 255, .3) 70%, transparent 70%, transparent 80%, rgba(255, 255, 255, .3) 80%, rgba(255, 255, 255, .3) 90%, transparent 90%, transparent 100%, rgba(255, 255, 255, .4) 100%, transparent);
+        background-image: linear-gradient(
+            -45deg,
+            rgba(255, 255, 255, 0.3) 10%,
+            transparent 10%,
+            transparent 20%,
+            rgba(255, 255, 255, 0.3) 20%,
+            rgba(255, 255, 255, 0.3) 30%,
+            transparent 30%,
+            transparent 40%,
+            rgba(255, 255, 255, 0.3) 40%,
+            rgba(255, 255, 255, 0.3) 50%,
+            transparent 50%,
+            transparent 60%,
+            rgba(255, 255, 255, 0.3) 60%,
+            rgba(255, 255, 255, 0.3) 70%,
+            transparent 70%,
+            transparent 80%,
+            rgba(255, 255, 255, 0.3) 80%,
+            rgba(255, 255, 255, 0.3) 90%,
+            transparent 90%,
+            transparent 100%,
+            rgba(255, 255, 255, 0.4) 100%,
+            transparent
+        );
         color: black;
     }
 }
@@ -1207,7 +1262,7 @@ dialog {
     background-color: #e4e4e4;
     width: calc(100% + 40px);
     margin-left: -20px;
-    box-shadow: rgba(0, 0, 0, 0.00) 0 -3px 8px;
+    box-shadow: rgba(0, 0, 0, 0) 0 -3px 8px;
     bottom: 0;
     margin-bottom: 0;
     .save_btn {
@@ -1262,7 +1317,7 @@ dialog {
         }
         &:active {
             background-color: var(--primary-400);
-            transition: all ease 0.0s;
+            transition: all ease 0s;
             box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.35);
         }
     }
@@ -1357,7 +1412,7 @@ dialog {
         }
         &:active {
             background-color: var(--primary-600);
-            transition: all ease 0.0s;
+            transition: all ease 0s;
             box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.35);
         }
     }
@@ -1393,7 +1448,7 @@ table {
     background-color: var(--error-500);
     padding: 1px 7px 2px 7px;
     border-radius: 3px;
-    color: #FFFFFF;
+    color: #ffffff;
     font-size: 11px;
     margin-left: 3px;
 }
@@ -1401,7 +1456,7 @@ table {
     background-color: var(--primary-500);
     padding: 1px 7px 2px 7px;
     border-radius: 3px;
-    color: #FFFFFF;
+    color: #ffffff;
     font-size: 11px;
     margin-left: 3px;
 }
@@ -1484,7 +1539,7 @@ table {
         }
         &:active {
             background-color: var(--primary-400);
-            transition: all ease 0.0s;
+            transition: all ease 0s;
             box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.35);
         }
     }
@@ -1517,7 +1572,7 @@ table {
     border-bottom-right-radius: 5px;
 }
 button {
-    padding: .5em .75em;
+    padding: 0.5em 0.75em;
     border-radius: 4px;
     background-color: #ccc;
     color: #666;
@@ -1668,8 +1723,7 @@ each(range(12), {
         }
     }
 })
-
-.grid-box {
+    .grid-box {
     display: grid;
     gap: 1rem;
     each(range(12), {
@@ -1705,7 +1759,9 @@ each(range(12), {
     .z {
         background-color: #e24761;
     }
-    .x, .y, .z {
+    .x,
+    .y,
+    .z {
         color: black;
     }
 }
@@ -1734,7 +1790,8 @@ each(range(12), {
     }
 }
 .axis {
-    path, line {
+    path,
+    line {
         fill: none;
         stroke: var(--text);
         stroke-width: 1px;
@@ -2003,7 +2060,8 @@ each(range(12), {
         order: 3;
         gap: 1rem;
     }
-    .firmware_b, .connect_b {
+    .firmware_b,
+    .connect_b {
         height: fit-content !important;
         width: fit-content !important;
         a {
@@ -2102,7 +2160,10 @@ each(range(12), {
     .toolbar_expand_btn {
         display: block;
     }
-    .sm, .md, .lg, .xl {
+    .sm,
+    .md,
+    .lg,
+    .xl {
         display: none !important;
     }
 
@@ -2112,26 +2173,37 @@ each(range(12), {
             margin-left: 0 !important;
             margin-right: 0 !important;
         }
-    })
-
+    });
 }
 @media all and (min-width: 576px) and (max-width: 767px) {
-    .xs, .md, .lg, .xl {
+    .xs,
+    .md,
+    .lg,
+    .xl {
         display: none !important;
     }
 }
 @media all and (min-width: 768px) and (max-width: 991px) {
-    .xs, .sm, .lg, .xl {
+    .xs,
+    .sm,
+    .lg,
+    .xl {
         display: none !important;
     }
 }
 @media all and (min-width: 992px) and (max-width: 1139px) {
-    .xs, .sm, .md, .xl {
+    .xs,
+    .sm,
+    .md,
+    .xl {
         display: none !important;
     }
 }
 @media all and (min-width: 1140px) {
-    .xs, .sm, .md, .lg {
+    .xs,
+    .sm,
+    .md,
+    .lg {
         display: none !important;
     }
 }
