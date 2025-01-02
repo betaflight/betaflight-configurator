@@ -16,7 +16,7 @@ import { sensor_status, have_sensor } from "./sensor_helpers";
 import { update_dataflash_global } from "./update_dataflash_global";
 import { gui_log } from "./gui_log";
 import { updateTabList } from "./utils/updateTabList";
-import { get as getConfig, set as setConfig } from "./ConfigStorage";
+import { get as getConfig } from "./ConfigStorage";
 import { tracking } from "./Analytics";
 import semver from "semver";
 import CryptoES from "crypto-es";
@@ -275,7 +275,7 @@ function onOpen(openInfo) {
         gui_log(i18n.getMessage("serialPortOpened", [PortHandler.portPicker.selectedPort]));
 
         // reset expert mode
-        result = getConfig("expertMode")?.expertMode ?? false;
+        const result = getConfig("expertMode")?.expertMode ?? false;
         $('input[name="expertModeCheckbox"]').prop("checked", result).trigger("change");
 
         // serialShim adds event listener for selected connection type
