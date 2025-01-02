@@ -2344,8 +2344,11 @@ pid_tuning.updateRatesLabels = function () {
             // adjust the coordinates for determine where the balloon background should be drawn
             x += (align == "right" ? -(width + DEFAULT_OFFSET) : 0) + (align == "left" ? DEFAULT_OFFSET : 0);
             y -= height / 2;
-            if (y < 0) y = 0;
-            else if (y > context.height) y = context.height; // prevent balloon from going out of canvas
+            if (y < 0) {
+                y = 0;
+            } else if (y > context.height) {
+                y = context.height; // prevent balloon from going out of canvas
+            }
 
             // check that the balloon does not already overlap
             for (let i = 0; i < dirty.length; i++) {

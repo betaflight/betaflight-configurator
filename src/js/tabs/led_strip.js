@@ -232,11 +232,15 @@ led_strip.initialize = function (callback, scrollPosition) {
 
             for (let colorIndex = 0; colorIndex < 16; colorIndex++) {
                 colorButtons.removeClass("btnOn");
-                if (selectedModeColor == undefined) $(".ui-selected").removeClass(`color-${colorIndex}`);
+                if (selectedModeColor == undefined) {
+                    $(".ui-selected").removeClass(`color-${colorIndex}`);
+                }
 
                 if ($(that).is(`.color-${colorIndex}`)) {
                     selectedColorIndex = colorIndex;
-                    if (selectedModeColor == undefined) $(".ui-selected").addClass(`color-${colorIndex}`);
+                    if (selectedModeColor == undefined) {
+                        $(".ui-selected").addClass(`color-${colorIndex}`);
+                    }
                 }
             }
 
@@ -480,22 +484,32 @@ led_strip.initialize = function (callback, scrollPosition) {
                                         case "y":
                                         case "o":
                                         case "s":
-                                            if (areModifiersActive(`function-${f}`)) p.addClass(`function-${letter}`);
+                                            if (areModifiersActive(`function-${f}`)) {
+                                                p.addClass(`function-${letter}`);
+                                            }
                                             break;
                                         case "b":
                                         case "i":
                                         case "p":
                                         case "e":
                                         case "u":
-                                            if (areOverlaysActive(`function-${f}`)) p.addClass(`function-${letter}`);
+                                            if (areOverlaysActive(`function-${f}`)) {
+                                                p.addClass(`function-${letter}`);
+                                            }
                                             break;
                                         case "w":
-                                            if (areOverlaysActive(`function-${f}`))
-                                                if (isWarningActive(`function-${f}`)) p.addClass(`function-${letter}`);
+                                            if (areOverlaysActive(`function-${f}`)) {
+                                                if (isWarningActive(`function-${f}`)) {
+                                                    p.addClass(`function-${letter}`);
+                                                }
+                                            }
                                             break;
                                         case "v":
-                                            if (areOverlaysActive(`function-${f}`))
-                                                if (isVtxActive(`function-${f}`)) p.addClass(`function-${letter}`);
+                                            if (areOverlaysActive(`function-${f}`)) {
+                                                if (isVtxActive(`function-${f}`)) {
+                                                    p.addClass(`function-${letter}`);
+                                                }
+                                            }
                                             break;
                                     }
                                 }
@@ -982,7 +996,9 @@ led_strip.initialize = function (callback, scrollPosition) {
                 $(".ui-selected")
                     .find(".wire")
                     .each(function () {
-                        if ($(this).text() != "") $(this).parent().addClass(`function-${letter}`);
+                        if ($(this).text() != "") {
+                            $(this).parent().addClass(`function-${letter}`);
+                        }
                     });
 
                 unselectOverlays(letter);
@@ -1074,7 +1090,9 @@ led_strip.initialize = function (callback, scrollPosition) {
             setModeBackgroundColor($(this));
         });
 
-        if (change) updateBulkCmd();
+        if (change) {
+            updateBulkCmd();
+        }
     }
 
     function drawColorBoxesInColorLedPoints() {
@@ -1092,9 +1110,8 @@ led_strip.initialize = function (callback, scrollPosition) {
                     if ($(this).is(`.${className}`)) {
                         $(this).find(".overlay-color").addClass(className);
                         $(this).find(".overlay-color").css("background-color", HsvToColor(FC.LED_COLORS[colorIndex]));
-                    } else {
-                        if ($(this).find(".overlay-color").is(`.${className}`))
-                            $(this).find(".overlay-color").removeClass(className);
+                    } else if ($(this).find(".overlay-color").is(`.${className}`)) {
+                        $(this).find(".overlay-color").removeClass(className);
                     }
                 }
             } else {
@@ -1107,7 +1124,9 @@ led_strip.initialize = function (callback, scrollPosition) {
         const sliders = $("div.colorDefineSliders input");
         let change = false;
 
-        if (!FC.LED_COLORS[colorIndex]) return;
+        if (!FC.LED_COLORS[colorIndex]) {
+            return;
+        }
 
         if (FC.LED_COLORS[colorIndex].h != Number(sliders.eq(0).val())) {
             sliders.eq(0).val(FC.LED_COLORS[colorIndex].h);
@@ -1128,22 +1147,35 @@ led_strip.initialize = function (callback, scrollPosition) {
         }
 
         // only fire events when all values are set
-        if (change) sliders.trigger("input");
+        if (change) {
+            sliders.trigger("input");
+        }
     }
 
     function HsvToColor(input) {
-        if (input == undefined) return "";
+        if (input == undefined) {
+            return "";
+        }
 
         let HSV = { h: Number(input.h), s: Number(input.s), v: Number(input.v) };
 
-        if (HSV.s == 0 && HSV.v == 0) return "";
+        if (HSV.s == 0 && HSV.v == 0) {
+            return "";
+        }
 
         HSV = { h: HSV.h, s: 1 - HSV.s / 255, v: HSV.v / 255 };
 
         const HSL = { h: 0, s: 0, v: 0 };
         HSL.h = HSV.h;
         HSL.l = ((2 - HSV.s) * HSV.v) / 2;
-        HSL.s = HSL.l && HSL.l < 1 ? (HSV.s * HSV.v) / (HSL.l < 0.5 ? HSL.l * 2 : 2 - HSL.l * 2) : HSL.s;
+
+        if (HSL.l && HSL.l < 1) {
+            if (HSL.l < 0.5) {
+                HSL.s = (HSV.s * HSV.v) / (HSL.l * 2);
+            } else {
+                HSL.s = (HSV.s * HSV.v) / (2 - HSL.l * 2);
+            }
+        }
 
         return `hsl(${HSL.h},${HSL.s * 100}%,${HSL.l * 100}%)`;
     }

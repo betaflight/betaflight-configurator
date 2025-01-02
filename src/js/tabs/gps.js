@@ -284,11 +284,10 @@ gps.initialize = async function (callback) {
                         const used = i18n.getMessage(usedArray[(FC.GPS_DATA.quality[i] & 0x8) >> 3]);
 
                         // Add color to the text
+                        const lockedOrLow = quality.startsWith(i18n.getMessage("gnssQualityLocked")) ? "locked" : "low";
                         const qualityColor = quality.startsWith(i18n.getMessage("gnssQualityFullyLocked"))
                             ? "ready"
-                            : quality.startsWith(i18n.getMessage("gnssQualityLocked"))
-                                ? "locked"
-                                : "low";
+                            : lockedOrLow;
                         const qualityHtml = `<span class="colorToggle ${qualityColor}">${quality}</span>`;
 
                         const usedColor = used.startsWith(i18n.getMessage("gnssUsedUsed")) ? "ready" : "low";
