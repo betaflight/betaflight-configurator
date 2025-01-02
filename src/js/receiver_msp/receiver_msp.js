@@ -1,22 +1,20 @@
-import '../jqueryPlugins.js';
+import "../jqueryPlugins.js";
 import windowWatcherUtil from "../utils/window_watchers.js";
-import DarkTheme from '../DarkTheme.js';
+import DarkTheme from "../DarkTheme.js";
 import { isWeb } from "../utils/isWeb.js";
-import $ from 'jquery';
+import $ from "jquery";
 
 // This is a hack to get the i18n var of the parent, but the i18n.localizePage not works
 // It seems than when node opens a new window, the module "context" is different, so the i18n var is not initialized
 const i18n = opener.i18n;
 
-const css_dark = [
-    '/css/dark-theme.css',
-];
+const css_dark = ["/css/dark-theme.css"];
 
 const CHANNEL_MIN_VALUE = 1000;
 const CHANNEL_MID_VALUE = 1500;
 const CHANNEL_MAX_VALUE = 2000;
 
-    // What's the index of each channel in the MSP channel list?
+// What's the index of each channel in the MSP channel list?
 const channelMSPIndexes = {
     Roll: 0,
     Pitch: 1,
@@ -28,7 +26,7 @@ const channelMSPIndexes = {
     Aux4: 7,
 };
 
-    // Set reasonable initial stick positions (Mode 2)
+// Set reasonable initial stick positions (Mode 2)
 const stickValues = {
     Throttle: CHANNEL_MIN_VALUE,
     Pitch: CHANNEL_MID_VALUE,
@@ -40,7 +38,7 @@ const stickValues = {
     Aux4: CHANNEL_MIN_VALUE,
 };
 
-    // First the vertical axis, then the horizontal:
+// First the vertical axis, then the horizontal:
 const gimbals = [
     ["Throttle", "Yaw"],
     ["Pitch", "Roll"],
@@ -96,10 +94,10 @@ function updateControlPositions() {
                 stickElem = $(".control-stick", gimbalElem);
 
             if (gimbal[0] === stickName) {
-                stickElem.css('top', `${(1.0 - channelValueToStickPortion(stickValue)) * gimbalSize}px`);
+                stickElem.css("top", `${(1.0 - channelValueToStickPortion(stickValue)) * gimbalSize}px`);
                 break;
             } else if (gimbal[1] === stickName) {
-                stickElem.css('left', `${channelValueToStickPortion(stickValue) * gimbalSize}px`);
+                stickElem.css("left", `${channelValueToStickPortion(stickValue) * gimbalSize}px`);
                 break;
             }
         }
@@ -111,18 +109,22 @@ function handleGimbalMouseDrag(e) {
         gimbalOffset = gimbal.offset(),
         gimbalSize = gimbal.width();
 
-    stickValues[gimbals[e.data.gimbalIndex][0]] = stickPortionToChannelValue(1.0 - (e.pageY - gimbalOffset.top) / gimbalSize);
-    stickValues[gimbals[e.data.gimbalIndex][1]] = stickPortionToChannelValue((e.pageX - gimbalOffset.left) / gimbalSize);
+    stickValues[gimbals[e.data.gimbalIndex][0]] = stickPortionToChannelValue(
+        1.0 - (e.pageY - gimbalOffset.top) / gimbalSize,
+    );
+    stickValues[gimbals[e.data.gimbalIndex][1]] = stickPortionToChannelValue(
+        (e.pageX - gimbalOffset.left) / gimbalSize,
+    );
 
     updateControlPositions();
 }
 
 function localizePage() {
-    $('[i18n]:not(.i18n-replaced)').each(function() {
+    $("[i18n]:not(.i18n-replaced)").each(function () {
         const element = $(this);
 
-        element.html(i18n.getMessage(element.attr('i18n')));
-        element.addClass('i18n-replaced');
+        element.html(i18n.getMessage(element.attr("i18n")));
+        element.addClass("i18n-replaced");
     });
 }
 
@@ -139,10 +141,10 @@ function localizeAxisNames() {
     }
 }
 
-$(".button-enable .btn").on("click", function() {
+$(".button-enable .btn").on("click", function () {
     const shrinkHeight = $(".warning").height();
 
-    $(".warning").slideUp("short", function() {
+    $(".warning").slideUp("short", function () {
         if (isWeb()) {
             resizeTo(outerWidth, outerHeight - shrinkHeight);
         } else {
@@ -158,17 +160,18 @@ $(".button-enable .btn").on("click", function() {
 gimbalElems = $(".control-gimbal");
 sliderElems = $(".control-slider");
 
-gimbalElems.each(function(gimbalIndex) {
-    $(this).on('mousedown', {gimbalIndex: gimbalIndex}, function(e) {
-        if (e.button === 0) { // Only move sticks on left mouse button
+gimbalElems.each(function (gimbalIndex) {
+    $(this).on("mousedown", { gimbalIndex: gimbalIndex }, function (e) {
+        if (e.button === 0) {
+            // Only move sticks on left mouse button
             handleGimbalMouseDrag(e);
 
-            $(window).on('mousemove', {gimbalIndex: gimbalIndex}, handleGimbalMouseDrag);
+            $(window).on("mousemove", { gimbalIndex: gimbalIndex }, handleGimbalMouseDrag);
         }
     });
 });
 
-$(".slider", sliderElems).each(function(sliderIndex) {
+$(".slider", sliderElems).each(function (sliderIndex) {
     const initialValue = stickValues[`Aux${sliderIndex + 1}`];
 
     $(this)
@@ -178,10 +181,11 @@ $(".slider", sliderElems).each(function(sliderIndex) {
                 min: CHANNEL_MIN_VALUE,
                 max: CHANNEL_MAX_VALUE,
             },
-        }).on('slide change set', function(e, value) {
+        })
+        .on("slide change set", function (e, value) {
             value = Math.round(parseFloat(value));
 
-            stickValues[`Aux${(sliderIndex + 1)}`] = value;
+            stickValues[`Aux${sliderIndex + 1}`] = value;
 
             $(".tooltip", this).text(value);
         });
@@ -194,8 +198,8 @@ $(".slider", sliderElems).each(function(sliderIndex) {
 /*
  * Mouseup handler needs to be bound to the window in order to receive mouseup if mouse leaves window.
  */
-$(window).on("mouseup", function(e) {
-    $(this).off('mousemove', handleGimbalMouseDrag);
+$(window).on("mouseup", function (e) {
+    $(this).off("mousemove", handleGimbalMouseDrag);
 });
 
 windowWatcherUtil.bindWatchers(window, watchers);

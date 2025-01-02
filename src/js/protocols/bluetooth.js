@@ -10,13 +10,48 @@ import { gui_log } from "../gui_log";
  */
 
 const bluetoothDevices = [
-    { name: "CC2541",       serviceUuid: '0000ffe0-0000-1000-8000-00805f9b34fb', writeCharacteristic: '0000ffe1-0000-1000-8000-00805f9b34fb', readCharacteristic: '0000ffe1-0000-1000-8000-00805f9b34fb' },
-    { name: "HC-05",        serviceUuid: '00001101-0000-1000-8000-00805f9b34fb', writeCharacteristic: '00001101-0000-1000-8000-00805f9b34fb', readCharacteristic: '00001101-0000-1000-8000-00805f9b34fb' },
-    { name: "HM-10",        serviceUuid: '0000ffe1-0000-1000-8000-00805f9b34fb', writeCharacteristic: '0000ffe1-0000-1000-8000-00805f9b34fb', readCharacteristic: '0000ffe1-0000-1000-8000-00805f9b34fb' },
-    { name: "HM-11",        serviceUuid: '6e400001-b5a3-f393-e0a9-e50e24dcca9e', writeCharacteristic: '6e400003-b5a3-f393-e0a9-e50e24dcca9e', readCharacteristic: '6e400002-b5a3-f393-e0a9-e50e24dcca9e' },
-    { name: "Nordic NRF",   serviceUuid: '6e400001-b5a3-f393-e0a9-e50e24dcca9e', writeCharacteristic: '6e400003-b5a3-f393-e0a9-e50e24dcca9e', readCharacteristic: '6e400002-b5a3-f393-e0a9-e50e24dcca9e' },
-    { name: "SpeedyBee V1", serviceUuid: '00001000-0000-1000-8000-00805f9b34fb', writeCharacteristic: '00001001-0000-1000-8000-00805f9b34fb', readCharacteristic: '00001002-0000-1000-8000-00805f9b34fb' },
-    { name: "SpeedyBee V2", serviceUuid: '0000abf0-0000-1000-8000-00805f9b34fb', writeCharacteristic: '0000abf1-0000-1000-8000-00805f9b34fb', readCharacteristic: '0000abf2-0000-1000-8000-00805f9b34fb' },
+    {
+        name: "CC2541",
+        serviceUuid: "0000ffe0-0000-1000-8000-00805f9b34fb",
+        writeCharacteristic: "0000ffe1-0000-1000-8000-00805f9b34fb",
+        readCharacteristic: "0000ffe1-0000-1000-8000-00805f9b34fb",
+    },
+    {
+        name: "HC-05",
+        serviceUuid: "00001101-0000-1000-8000-00805f9b34fb",
+        writeCharacteristic: "00001101-0000-1000-8000-00805f9b34fb",
+        readCharacteristic: "00001101-0000-1000-8000-00805f9b34fb",
+    },
+    {
+        name: "HM-10",
+        serviceUuid: "0000ffe1-0000-1000-8000-00805f9b34fb",
+        writeCharacteristic: "0000ffe1-0000-1000-8000-00805f9b34fb",
+        readCharacteristic: "0000ffe1-0000-1000-8000-00805f9b34fb",
+    },
+    {
+        name: "HM-11",
+        serviceUuid: "6e400001-b5a3-f393-e0a9-e50e24dcca9e",
+        writeCharacteristic: "6e400003-b5a3-f393-e0a9-e50e24dcca9e",
+        readCharacteristic: "6e400002-b5a3-f393-e0a9-e50e24dcca9e",
+    },
+    {
+        name: "Nordic NRF",
+        serviceUuid: "6e400001-b5a3-f393-e0a9-e50e24dcca9e",
+        writeCharacteristic: "6e400003-b5a3-f393-e0a9-e50e24dcca9e",
+        readCharacteristic: "6e400002-b5a3-f393-e0a9-e50e24dcca9e",
+    },
+    {
+        name: "SpeedyBee V1",
+        serviceUuid: "00001000-0000-1000-8000-00805f9b34fb",
+        writeCharacteristic: "00001001-0000-1000-8000-00805f9b34fb",
+        readCharacteristic: "00001002-0000-1000-8000-00805f9b34fb",
+    },
+    {
+        name: "SpeedyBee V2",
+        serviceUuid: "0000abf0-0000-1000-8000-00805f9b34fb",
+        writeCharacteristic: "0000abf1-0000-1000-8000-00805f9b34fb",
+        readCharacteristic: "0000abf2-0000-1000-8000-00805f9b34fb",
+    },
 ];
 
 class BT extends EventTarget {
@@ -50,15 +85,14 @@ class BT extends EventTarget {
 
         this.connect = this.connect.bind(this);
 
-        this.bluetooth.addEventListener("connect", e => this.handleNewDevice(e.target));
-        this.bluetooth.addEventListener("disconnect", e => this.handleRemovedDevice(e.target));
-        this.bluetooth.addEventListener("gatserverdisconnected", e => this.handleRemovedDevice(e.target));
+        this.bluetooth.addEventListener("connect", (e) => this.handleNewDevice(e.target));
+        this.bluetooth.addEventListener("disconnect", (e) => this.handleRemovedDevice(e.target));
+        this.bluetooth.addEventListener("gatserverdisconnected", (e) => this.handleRemovedDevice(e.target));
 
         this.loadDevices();
     }
 
     handleNewDevice(device) {
-
         const added = this.createPort(device);
         this.devices.push(added);
         this.dispatchEvent(new CustomEvent("addedDevice", { detail: added }));
@@ -67,8 +101,8 @@ class BT extends EventTarget {
     }
 
     handleRemovedDevice(device) {
-        const removed = this.devices.find(port => port.port === device);
-        this.devices = this.devices.filter(port => port.port !== device);
+        const removed = this.devices.find((port) => port.port === device);
+        this.devices = this.devices.filter((port) => port.port !== device);
         this.dispatchEvent(new CustomEvent("removedDevice", { detail: removed }));
     }
 
@@ -99,14 +133,14 @@ class BT extends EventTarget {
         const devices = await this.getDevices();
 
         this.portCounter = 1;
-        this.devices = devices.map(device => this.createPort(device));
+        this.devices = devices.map((device) => this.createPort(device));
     }
 
     async requestPermissionDevice() {
         let newPermissionPort = null;
 
         const uuids = [];
-        bluetoothDevices.forEach(device => {
+        bluetoothDevices.forEach((device) => {
             uuids.push(device.serviceUuid);
         });
 
@@ -114,7 +148,7 @@ class BT extends EventTarget {
 
         try {
             const userSelectedPort = await this.bluetooth.requestDevice(options);
-            newPermissionPort = this.devices.find(port => port.port === userSelectedPort);
+            newPermissionPort = this.devices.find((port) => port.port === userSelectedPort);
             if (!newPermissionPort) {
                 newPermissionPort = this.handleNewDevice(userSelectedPort);
             }
@@ -141,24 +175,24 @@ class BT extends EventTarget {
         this.openRequested = true;
         this.closeRequested = false;
 
-        this.device = this.devices.find(device => device.path === path).port;
+        this.device = this.devices.find((device) => device.path === path).port;
 
         console.log(`${this.logHead} Opening connection with ID: ${path}, Baud: ${options.baudRate}`);
 
-        this.device.addEventListener('gattserverdisconnected', this.handleDisconnect.bind(this));
+        this.device.addEventListener("gattserverdisconnected", this.handleDisconnect.bind(this));
 
         try {
             console.log(`${this.logHead} Connecting to GATT Server`);
 
             await this.gattConnect();
 
-            gui_log(i18n.getMessage('bluetoothConnected', [this.device.name]));
+            gui_log(i18n.getMessage("bluetoothConnected", [this.device.name]));
 
             await this.getServices();
             await this.getCharacteristics();
             await this.startNotifications();
         } catch (error) {
-            gui_log(i18n.getMessage('bluetoothConnectionError', [error]));
+            gui_log(i18n.getMessage("bluetoothConnectionError", [error]));
         }
 
         // Bluetooth API doesn't provide a way for getInfo() or similar to get the connection info
@@ -176,13 +210,9 @@ class BT extends EventTarget {
             this.device.addEventListener("disconnect", this.handleDisconnect.bind(this));
             this.addEventListener("receive", this.handleReceiveBytes);
 
-            console.log(
-                `${this.logHead} Connection opened with ID: ${this.connectionId}, Baud: ${options.baudRate}`,
-            );
+            console.log(`${this.logHead} Connection opened with ID: ${this.connectionId}, Baud: ${options.baudRate}`);
 
-            this.dispatchEvent(
-                new CustomEvent("connect", { detail: connectionInfo }),
-            );
+            this.dispatchEvent(new CustomEvent("connect", { detail: connectionInfo }));
         } else if (connectionInfo && this.openCanceled) {
             this.connectionId = this.device.port;
 
@@ -198,9 +228,7 @@ class BT extends EventTarget {
                 });
             }, 150);
         } else if (this.openCanceled) {
-            console.log(
-                `${this.logHead} Connection didn't open and request was canceled`,
-            );
+            console.log(`${this.logHead} Connection didn't open and request was canceled`);
             this.openRequested = false;
             this.openCanceled = false;
             this.dispatchEvent(new CustomEvent("connect", { detail: false }));
@@ -220,8 +248,8 @@ class BT extends EventTarget {
 
         this.services = await this.server.getPrimaryServices();
 
-        this.service = this.services.find(service => {
-            this.deviceDescription = bluetoothDevices.find(device => device.serviceUuid == service.uuid);
+        this.service = this.services.find((service) => {
+            this.deviceDescription = bluetoothDevices.find((device) => device.serviceUuid == service.uuid);
             return this.deviceDescription;
         });
 
@@ -229,7 +257,7 @@ class BT extends EventTarget {
             throw new Error("Unsupported device");
         }
 
-        gui_log(i18n.getMessage('bluetoothConnectionType', [this.deviceDescription.name]));
+        gui_log(i18n.getMessage("bluetoothConnectionType", [this.deviceDescription.name]));
 
         console.log(`${this.logHead} Connected to service:`, this.service.uuid);
 
@@ -239,7 +267,7 @@ class BT extends EventTarget {
     async getCharacteristics() {
         const characteristics = await this.service.getCharacteristics();
 
-        characteristics.forEach(characteristic => {
+        characteristics.forEach((characteristic) => {
             // console.log("Characteristic: ", characteristic);
             if (characteristic.uuid == this.deviceDescription.writeCharacteristic) {
                 this.writeCharacteristic = characteristic;
@@ -252,14 +280,20 @@ class BT extends EventTarget {
         });
 
         if (!this.writeCharacteristic) {
-            throw new Error("Unexpected write characteristic found - should be", this.deviceDescription.writeCharacteristic);
+            throw new Error(
+                "Unexpected write characteristic found - should be",
+                this.deviceDescription.writeCharacteristic,
+            );
         }
 
         if (!this.readCharacteristic) {
-            throw new Error("Unexpected read characteristic found - should be", this.deviceDescription.readCharacteristic);
+            throw new Error(
+                "Unexpected read characteristic found - should be",
+                this.deviceDescription.readCharacteristic,
+            );
         }
 
-        this.readCharacteristic.addEventListener('characteristicvaluechanged', this.handleNotification.bind(this));
+        this.readCharacteristic.addEventListener("characteristicvaluechanged", this.handleNotification.bind(this));
 
         return await this.readCharacteristic.readValue();
     }
@@ -298,12 +332,15 @@ class BT extends EventTarget {
         }
 
         const doCleanup = async () => {
-            this.removeEventListener('receive', this.handleReceiveBytes);
+            this.removeEventListener("receive", this.handleReceiveBytes);
 
             if (this.device) {
                 this.device.removeEventListener("disconnect", this.handleDisconnect.bind(this));
-                this.device.removeEventListener('gattserverdisconnected', this.handleDisconnect);
-                this.readCharacteristic.removeEventListener('characteristicvaluechanged', this.handleNotification.bind(this));
+                this.device.removeEventListener("gattserverdisconnected", this.handleDisconnect);
+                this.readCharacteristic.removeEventListener(
+                    "characteristicvaluechanged",
+                    this.handleNotification.bind(this),
+                );
 
                 if (this.device.gatt.connected) {
                     this.device.gatt.disconnect();

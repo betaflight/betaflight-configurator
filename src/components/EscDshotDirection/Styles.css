@@ -4,7 +4,7 @@
     flex-flow: column;
 }
 
-.escDshotDirection-Component .regular-button{
+.escDshotDirection-Component .regular-button {
     -webkit-user-select: none;
     -webkit-tap-highlight-color: transparent;
     outline-style: none;
@@ -49,7 +49,7 @@
 }
 
 .escDshotDirectionDialogInformationNotice {
-    font-size: 1.0em;
+    font-size: 1em;
     margin-bottom: 1.5em;
     margin-top: 1.5em;
 }
@@ -78,23 +78,28 @@
 }
 
 #escDshotDirectionDialog-MainContent .red-text {
-    color: #EE0000;
+    color: #ee0000;
 }
 
-#escDshotDirectionDialog-ActionHint, #escDshotDirectionDialog-SecondHint, #escDshotDirectionDialog-WizardActionHint {
+#escDshotDirectionDialog-ActionHint,
+#escDshotDirectionDialog-SecondHint,
+#escDshotDirectionDialog-WizardActionHint {
     margin-top: 10px;
 }
 
-#escDshotDirectionDialog-ActionHintSafety, #escDshotDirectionDialog-SecondHintSafety {
+#escDshotDirectionDialog-ActionHintSafety,
+#escDshotDirectionDialog-SecondHintSafety {
     margin-top: 0px;
 }
 
-#escDshotDirectionDialog-SelectMotorButtonsWrapper, #escDshotDirectionDialog-WizardMotorButtons {
+#escDshotDirectionDialog-SelectMotorButtonsWrapper,
+#escDshotDirectionDialog-WizardMotorButtons {
     margin-left: auto;
     margin-right: auto;
 }
 
-#escDshotDirectionDialog-SelectMotorButtonsWrapper .regular-button, #escDshotDirectionDialog-WizardMotorButtons .regular-button {
+#escDshotDirectionDialog-SelectMotorButtonsWrapper .regular-button,
+#escDshotDirectionDialog-WizardMotorButtons .regular-button {
     font-size: 15px;
     line-height: 34px;
     padding: 0px;
@@ -140,7 +145,6 @@
     margin-right: 5px;
 }
 
-
 .escDshotDirectionErrorTextBlock {
     margin-top: 12px;
     font-weight: 500;
@@ -150,7 +154,8 @@
     display: contents;
 }
 
-#escDshotDirectionDialog-SpinWizard, #escDshotDirectionDialog-StopWizard {
+#escDshotDirectionDialog-SpinWizard,
+#escDshotDirectionDialog-StopWizard {
     margin-left: auto;
     margin-right: auto;
     width: 160px;

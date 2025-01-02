@@ -1,45 +1,45 @@
 .tab-firmware_flasher {
     min-height: 100%;
-	.build-options-wrapper {
-		.select2-container {
-			width: calc(100% - 2rem)!important;
-		}
-		.helpicon {
-			margin-top: 8px;
-		}
-	}
-	.info {
-		position: relative;
-		flex-grow: 100;
-		.progressLabel.valid {
-			background-color: var(--success-500);
-			border-radius: 5px;
-		}
-		.progressLabel.invalid {
-			background-color: var(--error-500);
-			border-radius: 5px;
-		}
-		.progressLabel.actionRequired {
-			background-color: var(--warning-500);
-			border-radius: 5px;
-		}
-		.progress {
-			width: 100%;
-			height: 26px;
-			border-radius: 5px;
-			border: 1px solid var(--surface-500);
-			-webkit-appearance: none;
-			&::-webkit-progress-bar {
-				background-color: var(--text);
-				border-radius: 4px;
-				box-shadow: inset 0px 0px 5px #2f2f2f;
-			}
-			&::-webkit-progress-value {
-				background-color: #F86008;
-				border-radius: 4px;
-			}
-		}
-	}
+    .build-options-wrapper {
+        .select2-container {
+            width: calc(100% - 2rem) !important;
+        }
+        .helpicon {
+            margin-top: 8px;
+        }
+    }
+    .info {
+        position: relative;
+        flex-grow: 100;
+        .progressLabel.valid {
+            background-color: var(--success-500);
+            border-radius: 5px;
+        }
+        .progressLabel.invalid {
+            background-color: var(--error-500);
+            border-radius: 5px;
+        }
+        .progressLabel.actionRequired {
+            background-color: var(--warning-500);
+            border-radius: 5px;
+        }
+        .progress {
+            width: 100%;
+            height: 26px;
+            border-radius: 5px;
+            border: 1px solid var(--surface-500);
+            -webkit-appearance: none;
+            &::-webkit-progress-bar {
+                background-color: var(--text);
+                border-radius: 4px;
+                box-shadow: inset 0px 0px 5px #2f2f2f;
+            }
+            &::-webkit-progress-value {
+                background-color: #f86008;
+                border-radius: 4px;
+            }
+        }
+    }
     .buildProgress {
         border-radius: 4px;
         appearance: none;
@@ -53,32 +53,34 @@
             border-radius: 0 4px 4px 0;
         }
     }
-	ul {
-		li {
-			list-style: initial;
-			list-style-type: circle;
-			margin-left: 30px;
-		}
-	}
-	.options {
-		position: relative;
-		line-height: 18px;
-		text-align: left;
-		select {
-			option.cached {
-				font-weight: bold;
-			}
-		}
-		.flash_on_connect_wrapper {
-			display: none;
-		}
-	}
-	.cf_table {
-		td {
+    ul {
+        li {
+            list-style: initial;
+            list-style-type: circle;
+            margin-left: 30px;
+        }
+    }
+    .options {
+        position: relative;
+        line-height: 18px;
+        text-align: left;
+        select {
+            option.cached {
+                font-weight: bold;
+            }
+        }
+        .flash_on_connect_wrapper {
+            display: none;
+        }
+    }
+    .cf_table {
+        td {
             height: 2rem;
-		}
-	}
-    select[name="firmware_version"], select[name="build_type"], .board-select .select2-container {
+        }
+    }
+    select[name="firmware_version"],
+    select[name="build_type"],
+    .board-select .select2-container {
         width: calc(100% - 2rem) !important;
         max-width: 24rem !important;
     }
@@ -139,17 +141,18 @@
             gap: 1rem;
         }
     }
-    .release_info, .build_configuration {
-		display: none;
-	}
-	.default_btn {
-		width: fit-content;
+    .release_info,
+    .build_configuration {
+        display: none;
+    }
+    .default_btn {
+        width: fit-content;
         padding-top: 0.25rem;
         padding-right: 0.25rem;
-		a {
-			padding: 0.15rem 0.5rem;
-		}
-	}
+        a {
+            padding: 0.15rem 0.5rem;
+        }
+    }
     @media all and (max-width: 1455px) {
         .grid-box {
             &.col3 {
@@ -170,7 +173,7 @@
             }
         }
     }
-    &+.content_toolbar {
+    & + .content_toolbar {
         width: calc(100% - 3.5rem) !important;
     }
     @media all and (max-width: 575px) {
@@ -183,7 +186,7 @@
             span {
                 height: 18px;
                 padding: 0 1rem !important;
-                &>div {
+                & > div {
                     display: none;
                 }
             }
@@ -191,7 +194,7 @@
     }
 }
 #customDefines {
-    width: calc(100% - 2rem)!important;
+    width: calc(100% - 2rem) !important;
 }
 #flash_manual_baud_rate {
     margin-left: 0.5rem;

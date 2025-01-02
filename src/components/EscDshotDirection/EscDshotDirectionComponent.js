@@ -6,16 +6,17 @@ import FC from "../../js/fc.js";
 import { getMixerImageSrc } from "../../js/utils/common.js";
 import $ from "jquery";
 
-class EscDshotDirectionComponent
-{
-    constructor(contentDiv, onLoadedCallback, motorConfig)
-    {
+class EscDshotDirectionComponent {
+    constructor(contentDiv, onLoadedCallback, motorConfig) {
         this._buttonTimeoutMs = 400;
         const motorDriverQueueIntervalMs = 100;
         const motorDriverStopMotorsPauseMs = 400;
 
-        this._motorDriver = new EscDshotDirectionMotorDriver(motorConfig,
-            motorDriverQueueIntervalMs, motorDriverStopMotorsPauseMs);
+        this._motorDriver = new EscDshotDirectionMotorDriver(
+            motorConfig,
+            motorDriverQueueIntervalMs,
+            motorDriverStopMotorsPauseMs,
+        );
         this._escProtocolIsDshot = motorConfig.escProtocolIsDshot;
         this._numberOfMotors = motorConfig.numberOfMotors;
         this._contentDiv = contentDiv;
@@ -27,28 +28,30 @@ class EscDshotDirectionComponent
         this._spinDirectionToggleIsActive = true;
         this._activationButtonTimeoutId = null;
 
-        this._contentDiv.load("./components/EscDshotDirection/Body.html", () =>
-        {
+        this._contentDiv.load("./components/EscDshotDirection/Body.html", () => {
             this._initializeDialog();
         });
     }
 
-    static get PUSHED_BUTTON_CLASS() { return "pushed"; }
-    static get HIGHLIGHTED_BUTTON_CLASS() { return "highlighted"; }
-    static get RED_TEXT_CLASS() { return "red-text"; }
+    static get PUSHED_BUTTON_CLASS() {
+        return "pushed";
+    }
+    static get HIGHLIGHTED_BUTTON_CLASS() {
+        return "highlighted";
+    }
+    static get RED_TEXT_CLASS() {
+        return "red-text";
+    }
 
-    static get _BUTTON_PUSH_DOWN_EVENT_TYPE()
-    {
+    static get _BUTTON_PUSH_DOWN_EVENT_TYPE() {
         return "mousedown";
     }
 
-    static get _BUTTON_RELEASE_EVENT_TYPE()
-    {
+    static get _BUTTON_RELEASE_EVENT_TYPE() {
         return "mouseup mouseout";
     }
 
-    _readDom()
-    {
+    _readDom() {
         this._domAgreeSafetyCheckBox = $("#escDshotDirectionDialog-safetyCheckbox");
         this._domStartButton = $("#escDshotDirectionDialog-Start");
         this._domStartWizardButton = $("#escDshotDirectionDialog-StartWizard");
@@ -83,8 +86,7 @@ class EscDshotDirectionComponent
         this._secondHintText = i18n.getMessage("escDshotDirectionDialog-SetDirectionHint");
     }
 
-    _initializeDialog()
-    {
+    _initializeDialog() {
         this._readDom();
         this._createMotorButtons();
         this._createWizardMotorButtons();
@@ -94,7 +96,7 @@ class EscDshotDirectionComponent
         this._resetGui();
 
         this._domAgreeSafetyCheckBox.on("change", () => {
-            const enabled = this._domAgreeSafetyCheckBox.is(':checked');
+            const enabled = this._domAgreeSafetyCheckBox.is(":checked");
             this._domStartNormalBlock.toggle(enabled);
             this._domStartWizardBlock.toggle(enabled);
         });
@@ -116,23 +118,27 @@ class EscDshotDirectionComponent
         });
 
         const imgSrc = getMixerImageSrc(FC.MIXER_CONFIG.mixer, FC.MIXER_CONFIG.reverseMotorDir, FC.CONFIG.apiVersion);
-        this._domMixerImg.attr('src', imgSrc);
+        this._domMixerImg.attr("src", imgSrc);
 
         this._onLoadedCallback();
     }
 
-    _activateNormalReverseButtons(timeoutMs)
-    {
+    _activateNormalReverseButtons(timeoutMs) {
         this._activationButtonTimeoutId = setTimeout(() => {
-            this._subscribeDirectionSpinButton(this._domSpinNormalButton,
-                DshotCommand.dshotCommands_e.DSHOT_CMD_SPIN_DIRECTION_1, this._normalText);
-            this._subscribeDirectionSpinButton(this._domSpinReverseButton,
-                DshotCommand.dshotCommands_e.DSHOT_CMD_SPIN_DIRECTION_2, this._reverseText);
+            this._subscribeDirectionSpinButton(
+                this._domSpinNormalButton,
+                DshotCommand.dshotCommands_e.DSHOT_CMD_SPIN_DIRECTION_1,
+                this._normalText,
+            );
+            this._subscribeDirectionSpinButton(
+                this._domSpinReverseButton,
+                DshotCommand.dshotCommands_e.DSHOT_CMD_SPIN_DIRECTION_2,
+                this._reverseText,
+            );
         }, timeoutMs);
     }
 
-    _deactivateNormalReverseButtons()
-    {
+    _deactivateNormalReverseButtons() {
         if (null !== this._activationButtonTimeoutId) {
             clearTimeout(this._activationButtonTimeoutId);
         }
@@ -141,8 +147,7 @@ class EscDshotDirectionComponent
         this._domSpinReverseButton.off();
     }
 
-    _subscribeDirectionSpinButton(button, direction, buttonText)
-    {
+    _subscribeDirectionSpinButton(button, direction, buttonText) {
         button.on(EscDshotDirectionComponent._BUTTON_PUSH_DOWN_EVENT_TYPE, () => {
             this._sendCurrentEscSpinDirection(direction);
             this._motorIsSpinning = true;
@@ -168,13 +173,11 @@ class EscDshotDirectionComponent
         });
     }
 
-    _sendCurrentEscSpinDirection(direction)
-    {
+    _sendCurrentEscSpinDirection(direction) {
         this._motorDriver.setEscSpinDirection(this._selectedMotor, direction);
     }
 
-    _createMotorButtons()
-    {
+    _createMotorButtons() {
         this._motorButtons = {};
 
         for (let i = 0; i < this._numberOfMotors; i++) {
@@ -184,9 +187,10 @@ class EscDshotDirectionComponent
         this._addMotorButton("All", DshotCommand.ALL_MOTORS);
     }
 
-    _addMotorButton(buttonText, motorIndex)
-    {
-        const button = $(`<a href="#" class="regular-button ${EscDshotDirectionComponent.PUSHED_BUTTON_CLASS}"></a>`).text(buttonText);
+    _addMotorButton(buttonText, motorIndex) {
+        const button = $(
+            `<a href="#" class="regular-button ${EscDshotDirectionComponent.PUSHED_BUTTON_CLASS}"></a>`,
+        ).text(buttonText);
         this._domMotorButtonsBlock.append(button);
         this._motorButtons[motorIndex] = button;
 
@@ -214,8 +218,7 @@ class EscDshotDirectionComponent
         });
     }
 
-    _createWizardMotorButtons()
-    {
+    _createWizardMotorButtons() {
         this._wizardMotorButtons = {};
 
         for (let i = 0; i < this._numberOfMotors; i++) {
@@ -223,8 +226,7 @@ class EscDshotDirectionComponent
         }
     }
 
-    _activateWizardMotorButtons(timeoutMs)
-    {
+    _activateWizardMotorButtons(timeoutMs) {
         this._activationButtonTimeoutId = setTimeout(() => {
             for (let i = 0; i < this._numberOfMotors; i++) {
                 this._activateWizardMotorButton(i);
@@ -232,37 +234,32 @@ class EscDshotDirectionComponent
         }, timeoutMs);
     }
 
-    _deactivateWizardMotorButtons()
-    {
-        if (null !== this._activationButtonTimeoutId)
-        {
+    _deactivateWizardMotorButtons() {
+        if (null !== this._activationButtonTimeoutId) {
             clearTimeout(this._activationButtonTimeoutId);
         }
 
         for (let i = 0; i < this._numberOfMotors; i++) {
-            const button =  this._wizardMotorButtons[i];
+            const button = this._wizardMotorButtons[i];
             button.off();
         }
     }
 
-    _addWizardMotorButton(buttonText, motorIndex)
-    {
+    _addWizardMotorButton(buttonText, motorIndex) {
         const button = $(`<a href="#" class="regular-button"></a>`).text(buttonText);
         this._domWizardMotorButtonsBlock.append(button);
         this._wizardMotorButtons[motorIndex] = button;
     }
 
-    _activateWizardMotorButton(motorIndex)
-    {
-        const button =  this._wizardMotorButtons[motorIndex];
+    _activateWizardMotorButton(motorIndex) {
+        const button = this._wizardMotorButtons[motorIndex];
 
         button.on("click", () => {
             this._wizardMotorButtonClick(button, motorIndex);
         });
     }
 
-    _wizardMotorButtonClick(button, motorIndex)
-    {
+    _wizardMotorButtonClick(button, motorIndex) {
         this._deactivateWizardMotorButtons();
         const currentlyDown = button.hasClass(EscDshotDirectionComponent.PUSHED_BUTTON_CLASS);
 
@@ -277,8 +274,7 @@ class EscDshotDirectionComponent
         this._activateWizardMotorButtons(this._buttonTimeoutMs);
     }
 
-    _changeSelectedMotor(newIndex)
-    {
+    _changeSelectedMotor(newIndex) {
         if (this._selectedMotor >= 0) {
             this._motorButtons[this._selectedMotor].addClass(EscDshotDirectionComponent.PUSHED_BUTTON_CLASS);
         }
@@ -290,29 +286,26 @@ class EscDshotDirectionComponent
         }
     }
 
-    close()
-    {
+    close() {
         this._motorDriver.stopAllMotorsNow();
         this._motorDriver.deactivate();
         this._resetGui();
     }
 
-    _resetGui()
-    {
+    _resetGui() {
         this._toggleMainContent(false);
         this._domStartNormalBlock.hide();
         this._domStartWizardBlock.hide();
 
-        this._domAgreeSafetyCheckBox.prop('checked', false);
-        this._domAgreeSafetyCheckBox.trigger('change');
+        this._domAgreeSafetyCheckBox.prop("checked", false);
+        this._domAgreeSafetyCheckBox.trigger("change");
         this._domSecondActionDiv.toggle(false);
         this._changeSelectedMotor(-1);
 
         this._checkForConfigurationErrors();
     }
 
-    _checkForConfigurationErrors()
-    {
+    _checkForConfigurationErrors() {
         let anyError = false;
 
         this._domWrongProtocolMessage.hide();
@@ -340,17 +333,14 @@ class EscDshotDirectionComponent
         }
     }
 
-
-    _onStartButtonClicked()
-    {
+    _onStartButtonClicked() {
         this._toggleMainContent(true);
         this._domWizardBlock.toggle(false);
         this._domNormalDialogBlock.toggle(true);
         this._motorDriver.activate();
     }
 
-    _onStartWizardButtonClicked()
-    {
+    _onStartWizardButtonClicked() {
         this._domSpinningWizard.toggle(false);
         this._domSpinWizardButton.toggle(true);
         this._toggleMainContent(true);
@@ -359,13 +349,15 @@ class EscDshotDirectionComponent
         this._motorDriver.activate();
     }
 
-    _onSpinWizardButtonClicked()
-    {
+    _onSpinWizardButtonClicked() {
         for (let i = 0; i < this._numberOfMotors; i++) {
             this._wizardMotorButtons[i].removeClass(EscDshotDirectionComponent.PUSHED_BUTTON_CLASS);
         }
 
-        this._motorDriver.setEscSpinDirection(DshotCommand.ALL_MOTORS, DshotCommand.dshotCommands_e.DSHOT_CMD_SPIN_DIRECTION_1);
+        this._motorDriver.setEscSpinDirection(
+            DshotCommand.ALL_MOTORS,
+            DshotCommand.dshotCommands_e.DSHOT_CMD_SPIN_DIRECTION_1,
+        );
 
         this._domSpinWizardButton.toggle(false);
         this._domSpinningWizard.toggle(true);
@@ -374,21 +366,18 @@ class EscDshotDirectionComponent
         this._activateWizardMotorButtons(0);
     }
 
-    _onStopWizardButtonClicked()
-    {
+    _onStopWizardButtonClicked() {
         this._domSpinWizardButton.toggle(true);
         this._domSpinningWizard.toggle(false);
         this._motorDriver.stopAllMotorsNow();
         this._deactivateWizardMotorButtons();
     }
 
-    _toggleMainContent(value)
-    {
+    _toggleMainContent(value) {
         this._domWarningContentBlock.toggle(!value);
         this._domMainContentBlock.toggle(value);
         this._domConfigErrors.toggle(false);
     }
-
 }
 
 export default EscDshotDirectionComponent;

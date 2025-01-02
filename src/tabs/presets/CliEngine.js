@@ -7,8 +7,7 @@ import { serialShim } from "../../js/serial_shim";
 
 const serial = serialShim();
 
-export default class CliEngine
-{
+export default class CliEngine {
     constructor(currentTab) {
         this._currentTab = currentTab;
         this._lineDelayMs = 15;
@@ -29,7 +28,9 @@ export default class CliEngine
         this._setTextareaListen(textarea);
     }
 
-    get errorsCount() { return this._cliErrorsCount; }
+    get errorsCount() {
+        return this._cliErrorsCount;
+    }
 
     setProgressCallback(sendCommandsProgressCallBack) {
         this._onSendCommandsProgressChange = sendCommandsProgressCallBack;
@@ -53,19 +54,19 @@ export default class CliEngine
     _setTextareaListen(textarea) {
         // Tab key detection must be on keydown,
         // `keypress`/`keyup` happens too late, as `textarea` will have already lost focus.
-        textarea.keydown(event => {
+        textarea.keydown((event) => {
             if (event.which === CliEngine.s_tabCode) {
                 // prevent default tabbing behaviour
                 event.preventDefault();
             }
         });
 
-        textarea.keypress(event => {
+        textarea.keypress((event) => {
             if (event.which === CliEngine.s_enterKeyCode) {
                 event.preventDefault(); // prevent the adding of new line
                 const outString = textarea.val();
                 this.executeCommands(outString);
-                textarea.val('');
+                textarea.val("");
             }
         });
 
@@ -74,7 +75,8 @@ export default class CliEngine
     }
 
     close(callback) {
-        this.send(this.getCliCommand('exit\r', ""), function () { //this.cliBuffer
+        this.send(this.getCliCommand("exit\r", ""), function () {
+            //this.cliBuffer
             if (callback) {
                 callback();
             }
@@ -90,38 +92,52 @@ export default class CliEngine
         this._reportSendCommandsProgress(0);
         const totalCommandsCount = strings.length;
 
-        return strings.reduce((p, line, index) =>
-            p.then((delay) =>
-                new Promise((resolve) => {
-                    GUI.timeout_add('CLI_send_slowly', () => {
-                        let processingDelay = this.lineDelayMs;
-                        line = line.trim();
+        return strings
+            .reduce(
+                (p, line, index) =>
+                    p.then(
+                        (delay) =>
+                            new Promise((resolve) => {
+                                GUI.timeout_add(
+                                    "CLI_send_slowly",
+                                    () => {
+                                        let processingDelay = this.lineDelayMs;
+                                        line = line.trim();
 
-                        if (line.toLowerCase().startsWith('profile')) {
-                            processingDelay = this.profileSwitchDelayMs;
-                        }
+                                        if (line.toLowerCase().startsWith("profile")) {
+                                            processingDelay = this.profileSwitchDelayMs;
+                                        }
 
-                        const isLastCommand = totalCommandsCount === index + 1;
+                                        const isLastCommand = totalCommandsCount === index + 1;
 
-                        if (isLastCommand && this.cliBuffer) {
-                            line = this.getCliCommand(line, this.cliBuffer);
-                        }
+                                        if (isLastCommand && this.cliBuffer) {
+                                            line = this.getCliCommand(line, this.cliBuffer);
+                                        }
 
-                        this.sendLine(line, () => { /* empty on-send callback */ }, () => {
-                            resolve(processingDelay);
-                            this._reportSendCommandsProgress(100.0 * index / totalCommandsCount);
-                        });
-                    }, delay);
-                }),
-            ),
-            Promise.resolve(0),
-        ).then(() => {
-            this._reportSendCommandsProgress(100);
-        });
+                                        this.sendLine(
+                                            line,
+                                            () => {
+                                                /* empty on-send callback */
+                                            },
+                                            () => {
+                                                resolve(processingDelay);
+                                                this._reportSendCommandsProgress((100.0 * index) / totalCommandsCount);
+                                            },
+                                        );
+                                    },
+                                    delay,
+                                );
+                            }),
+                    ),
+                Promise.resolve(0),
+            )
+            .then(() => {
+                this._reportSendCommandsProgress(100);
+            });
     }
 
     removePromptHash(promptText) {
-        return promptText.replace(/^# /, '');
+        return promptText.replace(/^# /, "");
     }
 
     cliBufferCharsToDelete(command, buffer) {
@@ -138,15 +154,17 @@ export default class CliEngine
 
     commandWithBackSpaces(command, buffer, noOfCharsToDelete) {
         const backspace = String.fromCharCode(127);
-        return backspace.repeat(noOfCharsToDelete) + command.substring(buffer.length - noOfCharsToDelete, command.length);
+        return (
+            backspace.repeat(noOfCharsToDelete) + command.substring(buffer.length - noOfCharsToDelete, command.length)
+        );
     }
 
     getCliCommand(command, cliBuffer) {
         const buffer = this.removePromptHash(cliBuffer);
-        const bufferRegex = new RegExp(`^${buffer}`, 'g');
+        const bufferRegex = new RegExp(`^${buffer}`, "g");
 
         if (command.match(bufferRegex)) {
-            return command.replace(bufferRegex, '');
+            return command.replace(bufferRegex, "");
         }
 
         const noOfCharsToDelete = this.cliBufferCharsToDelete(command, buffer);
@@ -203,7 +221,8 @@ export default class CliEngine
 
             const escapeSequenceCode = 27;
             const escapeSequenceCharLength = 3;
-            if (charCode === escapeSequenceCode && !sequenceCharsToSkip) { // ESC + other
+            if (charCode === escapeSequenceCode && !sequenceCharsToSkip) {
+                // ESC + other
                 sequenceCharsToSkip = escapeSequenceCharLength;
             }
 
@@ -214,16 +233,16 @@ export default class CliEngine
 
             this._adjustCliBuffer(charCode);
 
-            if (this.cliBuffer === 'Rebooting' && CliEngine.s_backspaceCode !== charCode) {
+            if (this.cliBuffer === "Rebooting" && CliEngine.s_backspaceCode !== charCode) {
                 CONFIGURATOR.cliEngineActive = false;
                 CONFIGURATOR.cliEngineValid = false;
-                gui_log(i18n.getMessage('cliReboot'));
+                gui_log(i18n.getMessage("cliReboot"));
                 reinitializeConnection(this._currentTab);
             }
         }
 
-        if (!CONFIGURATOR.cliEngineValid && validateText.indexOf('CLI') !== -1) {
-            gui_log(i18n.getMessage('cliEnter'));
+        if (!CONFIGURATOR.cliEngineValid && validateText.indexOf("CLI") !== -1) {
+            gui_log(i18n.getMessage("cliEnter"));
             CONFIGURATOR.cliEngineValid = true;
         }
     }
@@ -260,10 +279,10 @@ export default class CliEngine
                 }
                 break;
             case 60:
-                this.cliBuffer += '&lt';
+                this.cliBuffer += "&lt";
                 break;
             case 62:
-                this.cliBuffer += '&gt';
+                this.cliBuffer += "&gt";
                 break;
             case CliEngine.s_backspaceCode:
                 this.cliBuffer = this.cliBuffer.slice(0, -1);

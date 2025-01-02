@@ -1,28 +1,22 @@
 <template>
-  <div class="data-flash">
-    <div
-      v-if="!supportDataflash"
-      class="noflash_global"
-    >
-      {{ $t("sensorDataFlashNotFound") }}
+    <div class="data-flash">
+        <div v-if="!supportDataflash" class="noflash_global">
+            {{ $t("sensorDataFlashNotFound") }}
+        </div>
+        <div v-if="supportDataflash" class="dataflash-contents_global">
+            <div
+                class="dataflash-free_global"
+                :style="{
+                    width: indicatorWidth,
+                }"
+            >
+                <span>
+                    {{ $t("sensorDataFlashFreeSpace") }}
+                    {{ freeSpace }}
+                </span>
+            </div>
+        </div>
     </div>
-    <div
-      v-if="supportDataflash"
-      class="dataflash-contents_global"
-    >
-      <div
-        class="dataflash-free_global"
-        :style="{
-          width: indicatorWidth,
-        }"
-      >
-        <span>
-          {{ $t("sensorDataFlashFreeSpace") }}
-          {{ freeSpace }}
-        </span>
-      </div>
-    </div>
-  </div>
 </template>
 <script>
 export default {
@@ -57,10 +51,7 @@ export default {
         },
         indicatorWidth() {
             if (!this.supportDataflash) return;
-            return `${Math.min(
-                (this.fcUsedSize / this.fcTotalSize) * 100,
-                100,
-            )}%`;
+            return `${Math.min((this.fcUsedSize / this.fcTotalSize) * 100, 100)}%`;
         },
     },
 };
@@ -76,11 +67,7 @@ export default {
     border: 1px solid #272727;
     box-shadow: 0 1px 0 rgb(92 92 92 / 50%);
     background-color: #434343;
-    background-image: -webkit-linear-gradient(
-        top,
-        transparent,
-        rgba(0, 0, 0, 0.55)
-    );
+    background-image: -webkit-linear-gradient(top, transparent, rgba(0, 0, 0, 0.55));
     padding-top: 5px;
 }
 .noflash_global {

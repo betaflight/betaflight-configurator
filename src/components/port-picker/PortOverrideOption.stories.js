@@ -6,7 +6,7 @@ export default {
     component: PortOverrideOption,
 };
 
-const Template = (_args, {argTypes}) => ({
+const Template = (_args, { argTypes }) => ({
     props: Object.keys(argTypes),
     components: { PortOverrideOption },
     template: '<port-override-option v-bind="$props" />',

@@ -101,7 +101,7 @@
     border-collapse: collapse;
 }
 
-.presets_title_panel_table td{
+.presets_title_panel_table td {
     overflow: hidden;
     height: 24px;
     width: auto;
@@ -109,7 +109,7 @@
     white-space: nowrap;
 }
 
-.presets_title_panel_table td:nth-child(1){
+.presets_title_panel_table td:nth-child(1) {
     width: 100px;
 }
 

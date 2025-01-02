@@ -4,27 +4,27 @@
  * @returns {object}
  */
 export function get(key) {
-  let result = {};
-  if (Array.isArray(key)) {
-    key.forEach(function (element) {
-      try {
-        result = { ...result, ...JSON.parse(sessionStorage.getItem(element)) };
-      } catch (e) {
-        console.error(e);
-      }
-    });
-  } else {
-    const keyValue = sessionStorage.getItem(key);
-    if (keyValue) {
-      try {
-        result = JSON.parse(keyValue);
-      } catch (e) {
-        console.error(e);
-      }
+    let result = {};
+    if (Array.isArray(key)) {
+        key.forEach(function (element) {
+            try {
+                result = { ...result, ...JSON.parse(sessionStorage.getItem(element)) };
+            } catch (e) {
+                console.error(e);
+            }
+        });
+    } else {
+        const keyValue = sessionStorage.getItem(key);
+        if (keyValue) {
+            try {
+                result = JSON.parse(keyValue);
+            } catch (e) {
+                console.error(e);
+            }
+        }
     }
-  }
 
-  return result;
+    return result;
 }
 
 /**
@@ -32,15 +32,15 @@ export function get(key) {
  * @param {object} input object which keys are strings and values are serializable objects
  */
 export function set(input) {
-  Object.keys(input).forEach(function (element) {
-    const tmpObj = {};
-    tmpObj[element] = input[element];
-    try {
-      sessionStorage.setItem(element, JSON.stringify(tmpObj));
-    } catch (e) {
-      console.error(e);
-    }
-  });
+    Object.keys(input).forEach(function (element) {
+        const tmpObj = {};
+        tmpObj[element] = input[element];
+        try {
+            sessionStorage.setItem(element, JSON.stringify(tmpObj));
+        } catch (e) {
+            console.error(e);
+        }
+    });
 }
 
 /**
@@ -48,12 +48,12 @@ export function set(input) {
  * @param {string} item key to remove from storage
  */
 export function remove(item) {
-  sessionStorage.removeItem(item);
+    sessionStorage.removeItem(item);
 }
 
 /**
  * Clear sessionStorage
  */
 export function clear() {
-  sessionStorage.clear();
+    sessionStorage.clear();
 }

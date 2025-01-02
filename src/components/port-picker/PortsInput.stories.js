@@ -6,7 +6,7 @@ export default {
     component: PortsInput,
 };
 
-const Template = (_args, {argTypes}) => ({
+const Template = (_args, { argTypes }) => ({
     props: Object.keys(argTypes),
     components: { PortsInput },
     template: '<ports-input v-bind="$props" />',
