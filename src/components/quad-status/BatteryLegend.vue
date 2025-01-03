@@ -5,7 +5,9 @@
 </template>
 <script>
 const NO_BATTERY_VOLTAGE_MAXIMUM = 1.8;
-export default {
+import { defineComponent } from 'vue';
+
+export default defineComponent({
   props: {
     voltage: {
       type: Number,
@@ -22,11 +24,11 @@ export default {
       if (this.voltage === 0) {
         nbCells = 1;
       }
-      const cellsText = this.voltage > NO_BATTERY_VOLTAGE_MAXIMUM ? `${nbCells}S` : "USB";
+      const cellsText = this.voltage > NO_BATTERY_VOLTAGE_MAXIMUM ? `${nbCells}S` : 'USB';
       return `${this.voltage.toFixed(2)}V (${cellsText})`;
     },
   },
-};
+});
 </script>
 
 <style>

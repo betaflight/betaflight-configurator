@@ -1,7 +1,7 @@
 <template>
   <span>
     <span class="message">{{ $t(message) }}</span>
-    <span class="value">{{ value }}</span>
+    <span class="value">{{ modelValue }}</span>
     <span
       v-if="unit"
       class="unit"
@@ -12,13 +12,15 @@
 </template>
 
 <script>
-export default {
+import { defineComponent } from 'vue';
+
+export default defineComponent({
   props: {
     message: {
       type: String,
       default: "",
     },
-    value: {
+    modelValue: {
       type: Number,
       default: 0,
     },
@@ -27,5 +29,5 @@ export default {
       default: "",
     },
   },
-};
+});
 </script>

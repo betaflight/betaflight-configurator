@@ -236,6 +236,11 @@ PortHandler.selectActivePort = function(suggestedDevice) {
     this.portPicker.selectedPort = selectedPort || DEFAULT_PORT;
 
     console.log(`[PORTHANDLER] automatically selected device is '${this.portPicker.selectedPort}'`);
+
+    // hack to update Vue component
+    const p = document.getElementById('port');
+    p.value = this.portPicker.selectedPort;
+
     return selectedPort;
 };
 
