@@ -413,7 +413,6 @@
     "tabAuxiliary": {
         "message": "Modes"
     },
-
     "logActionHide": {
         "message": "Hide Log"
     },
@@ -430,7 +429,6 @@
     "serialErrorParityError": {
         "message": "Serial connection error: bad parity"
     },
-
     "serialPortOpened": {
         "message": "Serial port <span class=\"message-positive\">successfully</span> opened with ID: $1"
     },
@@ -2357,7 +2355,7 @@
         "message": "Enable controls"
     },
     "auxiliaryHelp": {
-        "message": "Configure modes here using a combination of ranges and/or links to other modes (links supported on BF 4.0 and later). Use <strong>ranges</strong> to define the switches on your transmitter and corresponding mode assignments. A receiver channel that gives a reading between a range min/max will activate the mode. Use a <strong>link</strong> to activate a mode when another mode is activated. <strong>Exceptions:</strong> ARM cannot be linked to or from another mode, modes cannot be linked to other modes that are configured with a link (chained links). Multiple ranges/links can be used to activate any mode. If there is more than one range/link defined for a mode, each of them can be set to <strong>AND</strong> or <strong>OR</strong>. A mode will be activated when:<br />- ALL <strong>AND</strong> ranges/links are active; OR<br />- at least one <strong>OR</strong> range/link is active.<br /><br />Remember to save your settings using the Save button."
+        "message": "Configure modes here using a combination of ranges and/or links to other modes. The Category arrange modes in groups, at Cloud build only groups defined in Build are enabled. At local build all groups are enabled.<br />Use <strong>ranges</strong> to define the switches on your transmitter and corresponding mode assignments. A receiver channel that gives a reading between a range min/max will activate the mode. Use a <strong>link</strong> to activate a mode when another mode is activated. Multiple ranges/links can be used to activate any mode.<br />If there is more than one range/link defined for a mode, each of them can be set to <strong>AND</strong> or <strong>OR</strong>. A mode will be activated when: ALL <strong>AND</strong> ranges/links are active; OR at least one <strong>OR</strong> range/link is active.<br /><strong>Exceptions:</strong> ARM cannot be linked to or from another mode, modes cannot be linked to other modes that are configured with a link (chained links).<br /><strong>Notice:</strong> 'Hide unused modes' need minimum one configured mode to really work.<br />Remember to save your settings using the Save button."
     },
     "auxiliaryToggleUnused": {
         "message": "Hide unused modes"
@@ -2514,7 +2512,7 @@
         "message": "Enable MSP Override mode",
         "description": "Help text to MSP OVERRIDE mode"
     },
-    "auxiliaryHelpMode_OSDDISABLE": {
+    "auxiliaryHelpMode_OSD": {
         "message": "Enable/Disable On-Screen-Display",
         "description": "Help text to OSD mode"
     },
@@ -2578,7 +2576,7 @@
         "message": "Use to toggle customized USER4. Controls arbitrary output via PINIO",
         "description": "Help text to customized USER4 mode"
     },
-    "auxiliaryHelpMode_VTXCONTROLDISABLE": {
+    "auxiliaryHelpMode_DISABLEVTXCONTROL": {
         "message": "Disable the control of VTX settings through the OSD",
         "description": "Help text to VTX CONTROL DISABLE mode"
     },
