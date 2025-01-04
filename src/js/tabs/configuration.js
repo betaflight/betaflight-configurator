@@ -6,7 +6,7 @@ import { mspHelper } from "../msp/MSPHelper";
 import FC from "../fc";
 import MSP from "../msp";
 import MSPCodes from "../msp/MSPCodes";
-import { API_VERSION_1_45, API_VERSION_1_46 } from "../data_storage";
+import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "../data_storage";
 import { updateTabList } from "../utils/updateTabList";
 import $ from "jquery";
 
@@ -127,6 +127,22 @@ configuration.initialize = function (callback) {
         const orientation_gyro_to_use_e = $("select.gyro_to_use");
         const orientation_gyro_1_align_e = $("select.gyro_1_align");
         const orientation_gyro_2_align_e = $("select.gyro_2_align");
+
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+            $(".tab-configuration .gyro_align_custom").show();
+            $(".tab-configuration .mag_align_custom").show();
+
+            $('input[name="gyro_align_roll"]').val(FC.SENSOR_ALIGNMENT.gyro_align_roll);
+            $('input[name="gyro_align_pitch"]').val(FC.SENSOR_ALIGNMENT.gyro_align_pitch);
+            $('input[name="gyro_align_yaw"]').val(FC.SENSOR_ALIGNMENT.gyro_align_yaw);
+
+            $('input[name="mag_align_roll"]').val(FC.SENSOR_ALIGNMENT.mag_align_roll);
+            $('input[name="mag_align_pitch"]').val(FC.SENSOR_ALIGNMENT.mag_align_pitch);
+            $('input[name="mag_align_yaw"]').val(FC.SENSOR_ALIGNMENT.mag_align_yaw);
+        } else {
+            $(".tab-configuration .gyro_align_custom").hide();
+            $(".tab-configuration .mag_align_custom").hide();
+        }
 
         gyro_align_content_e.hide(); // default value
         for (let i = 0; i < alignments.length; i++) {
@@ -394,6 +410,16 @@ configuration.initialize = function (callback) {
             FC.BOARD_ALIGNMENT_CONFIG.roll = parseInt($('input[name="board_align_roll"]').val());
             FC.BOARD_ALIGNMENT_CONFIG.pitch = parseInt($('input[name="board_align_pitch"]').val());
             FC.BOARD_ALIGNMENT_CONFIG.yaw = parseInt($('input[name="board_align_yaw"]').val());
+
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+                FC.SENSOR_ALIGNMENT.gyro_align_roll = parseInt($('input[name="gyro_align_roll"]').val());
+                FC.SENSOR_ALIGNMENT.gyro_align_pitch = parseInt($('input[name="gyro_align_pitch"]').val());
+                FC.SENSOR_ALIGNMENT.gyro_align_yaw = parseInt($('input[name="gyro_align_yaw"]').val());
+
+                FC.SENSOR_ALIGNMENT.mag_align_roll = parseInt($('input[name="mag_align_roll"]').val());
+                FC.SENSOR_ALIGNMENT.mag_align_pitch = parseInt($('input[name="mag_align_pitch"]').val());
+                FC.SENSOR_ALIGNMENT.mag_align_yaw = parseInt($('input[name="mag_align_yaw"]').val());
+            }
 
             FC.CONFIG.accelerometerTrims[1] = parseInt($('input[name="roll"]').val());
             FC.CONFIG.accelerometerTrims[0] = parseInt($('input[name="pitch"]').val());
