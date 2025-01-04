@@ -1,93 +1,93 @@
 #tab-adjustments-templates {
-	display: none;
+    display: none;
 }
 .tab-adjustments {
-	.range {
-		.marker {
-			background: var(--primary-200);
-		}
-		&:first-child {
-			border-top: 0px;
-		}
-		&:last-child {
-			border-bottom: 0px;
-		}
-	}
-	.channel-slider {
-		.noUi-connect {
-			background: var(--primary-500);
-		}
-	}
+    .range {
+        .marker {
+            background: var(--primary-200);
+        }
+        &:first-child {
+            border-top: 0px;
+        }
+        &:last-child {
+            border-bottom: 0px;
+        }
+    }
+    .channel-slider {
+        .noUi-connect {
+            background: var(--primary-500);
+        }
+    }
     table {
         border-radius: 0.5rem;
         overflow: hidden;
     }
-	.adjustments {
-		width: 100%;
-		border-spacing: 0px;
-		thead {
-			td {
-				text-align: center;
-				white-space: nowrap;
-				padding: 10px 10px;
-				background-color: var(--surface-300);
-				color: var(--text);
-			}
-		}
-	}
-	td {
-		border-top: 1px solid var(--surface-500);
-		border-bottom: 1px solid var(--surface-500);
+    .adjustments {
+        width: 100%;
+        border-spacing: 0px;
+        thead {
+            td {
+                text-align: center;
+                white-space: nowrap;
+                padding: 10px 10px;
+                background-color: var(--surface-300);
+                color: var(--text);
+            }
+        }
+    }
+    td {
+        border-top: 1px solid var(--surface-500);
+        border-bottom: 1px solid var(--surface-500);
         padding: 0 0.5rem;
-	}
-	.adjustment {
+    }
+    .adjustment {
         background-color: var(--surface-300);
-		&:nth-child(odd) {
-			background-color: var(--surface-200);
-		}
-		td {
-			text-align: center;
-		}
-		.info {
-			height: 6.5rem;
-			.enabling {
-				white-space: nowrap;
-			}
-		}
-		.channelInfo {
-			.limits {
-				padding: 0.5rem 0;
-			}
-		}
-		.range {
-			width: 100%;
-			padding: 0 1rem;
-			.channel-slider {
-				margin-top: -2rem;
-			}
-			.marker {
-				position: absolute;
-				left: 50%;
-				top: 27px;
-				height: 13px;
-				width: 6px;
-				margin-left: -3px;
-				border-radius: 3px;
-				z-index: 1000;
-			}
-		}
-	}
+        &:nth-child(odd) {
+            background-color: var(--surface-200);
+        }
+        td {
+            text-align: center;
+        }
+        .info {
+            height: 6.5rem;
+            .enabling {
+                white-space: nowrap;
+            }
+        }
+        .channelInfo {
+            .limits {
+                padding: 0.5rem 0;
+            }
+        }
+        .range {
+            width: 100%;
+            padding: 0 1rem;
+            .channel-slider {
+                margin-top: -2rem;
+            }
+            .marker {
+                position: absolute;
+                left: 50%;
+                top: 27px;
+                height: 13px;
+                width: 6px;
+                margin-left: -3px;
+                border-radius: 3px;
+                z-index: 1000;
+            }
+        }
+    }
 }
 .noUi-target {
-	border-radius: 0.5rem;
+    border-radius: 0.5rem;
 }
 @media all and (max-width: 575px) {
-	.tab-adjustments {
-		.overflow {
-			overflow: auto;
-		}
-		.range {
-			min-width: 300px;
-		}
-	}
+    .tab-adjustments {
+        .overflow {
+            overflow: auto;
+        }
+        .range {
+            min-width: 300px;
+        }
+    }
 }

@@ -1,8 +1,8 @@
-import { get as getConfig } from './ConfigStorage';
-import MSP from './msp';
-import Switchery from 'switchery-latest';
-import jBox from 'jbox';
-import $ from 'jquery';
+import { get as getConfig } from "./ConfigStorage";
+import MSP from "./msp";
+import Switchery from "switchery-latest";
+import jBox from "jbox";
+import $ from "jquery";
 
 const TABS = {};
 
@@ -24,43 +24,31 @@ class GuiControl {
         this.timeout_array = [];
         this.buttonDisabledClass = "disabled";
 
-        this.defaultAllowedTabsWhenDisconnected = [
-            'landing',
-            'firmware_flasher',
-            'privacy_policy',
-            'options',
-            'help',
-        ];
+        this.defaultAllowedTabsWhenDisconnected = ["landing", "firmware_flasher", "privacy_policy", "options", "help"];
 
         this.defaultAllowedTabs = [
-            'setup',
-            'failsafe',
-            'power',
-            'adjustments',
-            'auxiliary',
-            'presets',
-            'cli',
-            'configuration',
-            'logging',
-            'onboard_logging',
-            'modes',
-            'motors',
-            'pid_tuning',
-            'ports',
-            'receiver',
-            'sensors',
-            'vtx',
+            "setup",
+            "failsafe",
+            "power",
+            "adjustments",
+            "auxiliary",
+            "presets",
+            "cli",
+            "configuration",
+            "logging",
+            "onboard_logging",
+            "modes",
+            "motors",
+            "pid_tuning",
+            "ports",
+            "receiver",
+            "sensors",
+            "vtx",
         ];
 
-        this.defaultCloudBuildTabOptions = [
-            'gps',
-            'led_strip',
-            'osd',
-            'servos',
-            'transponder',
-        ];
+        this.defaultCloudBuildTabOptions = ["gps", "led_strip", "osd", "servos", "transponder"];
 
-        this.defaultAllowedFCTabsWhenConnected = [ ...this.defaultAllowedTabs, ...this.defaultCloudBuildTabOptions];
+        this.defaultAllowedFCTabsWhenConnected = [...this.defaultAllowedTabs, ...this.defaultCloudBuildTabOptions];
 
         this.allowedTabs = this.defaultAllowedTabsWhenDisconnected;
 
@@ -76,7 +64,7 @@ class GuiControl {
     // interval = time interval in miliseconds
     // first = true/false if code should be ran initially before next timer interval hits
     interval_add(name, code, interval, first) {
-        const data = { 'name': name, 'timer': null, 'code': code, 'interval': interval, 'fired': 0, 'paused': false };
+        const data = { name: name, timer: null, code: code, interval: interval, fired: 0, paused: false };
 
         if (this.interval_array.find((element) => element.name === name)) {
             this.interval_remove(name);
@@ -104,13 +92,18 @@ class GuiControl {
     // first = true/false if code should be ran initially before next timer interval hits
     // condition = function reference with true/false result, a condition to be checked before every interval code execution
     interval_add_condition(name, code, interval, first, condition) {
-        this.interval_add(name, () => {
-            if (condition()) {
-                code();
-            } else {
-                this.interval_remove(name);
-            }
-        }, interval, first);
+        this.interval_add(
+            name,
+            () => {
+                if (condition()) {
+                    code();
+                } else {
+                    this.interval_remove(name);
+                }
+            },
+            interval,
+            first,
+        );
     }
     // name = string
     interval_remove(name) {
@@ -141,7 +134,6 @@ class GuiControl {
     }
     // name = string
     interval_resume(name) {
-
         function executeCode(obj) {
             obj.code(); // execute code
             obj.fired++; // increment counter
@@ -167,9 +159,11 @@ class GuiControl {
         const self = this;
         let timersKilled = 0;
 
-        for (let i = (this.interval_array.length - 1); i >= 0; i--) { // reverse iteration
+        for (let i = this.interval_array.length - 1; i >= 0; i--) {
+            // reverse iteration
             let keep = false;
-            if (keepArray) { // only run through the array if it exists
+            if (keepArray) {
+                // only run through the array if it exists
                 keepArray.forEach(function (name) {
                     if (self.interval_array[i].name === name) {
                         keep = true;
@@ -194,15 +188,14 @@ class GuiControl {
     timeout_add(name, code, timeout) {
         const self = this;
         const data = {
-            'name': name,
-            'timer': null,
-            'timeout': timeout,
+            name: name,
+            timer: null,
+            timeout: timeout,
         };
 
         // start timer with "cleaning" callback
         data.timer = setTimeout(function () {
             code(); // execute code
-
 
             // remove object from array
             const index = self.timeout_array.indexOf(data);
@@ -259,23 +252,22 @@ class GuiControl {
         }
     }
     switchery() {
+        const COLOR_ACCENT = "var(--primary-500)";
+        const COLOR_SWITCHERY_SECOND = "var(--switcherysecond)";
 
-        const COLOR_ACCENT = 'var(--primary-500)';
-        const COLOR_SWITCHERY_SECOND = 'var(--switcherysecond)';
-
-        $('.togglesmall').each(function (index, elem) {
+        $(".togglesmall").each(function (index, elem) {
             const switchery = new Switchery(elem, {
-                size: 'small',
+                size: "small",
                 color: COLOR_ACCENT,
                 secondaryColor: COLOR_SWITCHERY_SECOND,
             });
             $(elem).on("change", function () {
                 switchery.setPosition();
             });
-            $(elem).removeClass('togglesmall');
+            $(elem).removeClass("togglesmall");
         });
 
-        $('.toggle').each(function (index, elem) {
+        $(".toggle").each(function (index, elem) {
             const switchery = new Switchery(elem, {
                 color: COLOR_ACCENT,
                 secondaryColor: COLOR_SWITCHERY_SECOND,
@@ -283,61 +275,59 @@ class GuiControl {
             $(elem).on("change", function () {
                 switchery.setPosition();
             });
-            $(elem).removeClass('toggle');
+            $(elem).removeClass("toggle");
         });
 
-        $('.togglemedium').each(function (index, elem) {
+        $(".togglemedium").each(function (index, elem) {
             const switchery = new Switchery(elem, {
-                className: 'switcherymid',
+                className: "switcherymid",
                 color: COLOR_ACCENT,
                 secondaryColor: COLOR_SWITCHERY_SECOND,
             });
             $(elem).on("change", function () {
                 switchery.setPosition();
             });
-            $(elem).removeClass('togglemedium');
+            $(elem).removeClass("togglemedium");
         });
     }
     content_ready(callback) {
-
         this.switchery();
 
-        const tRex = GUI.active_tab.replaceAll('_', '-').toLowerCase();
+        const tRex = GUI.active_tab.replaceAll("_", "-").toLowerCase();
 
-        $('div#content #button-documentation')
-        .html(i18n.getMessage('betaflightSupportButton'))
-        .attr("href", `https://betaflight.com/docs/wiki/configurator/${tRex}-tab`);
+        $("div#content #button-documentation")
+            .html(i18n.getMessage("betaflightSupportButton"))
+            .attr("href", `https://betaflight.com/docs/wiki/configurator/${tRex}-tab`);
 
         // loading tooltip
         $(function () {
-
-            new jBox('Tooltip', {
-                attach: '.cf_tip',
-                trigger: 'mouseenter',
+            new jBox("Tooltip", {
+                attach: ".cf_tip",
+                trigger: "mouseenter",
                 closeOnMouseleave: true,
-                closeOnClick: 'body',
+                closeOnClick: "body",
                 delayOpen: 100,
                 delayClose: 100,
                 position: {
-                    x: 'right',
-                    y: 'center',
+                    x: "right",
+                    y: "center",
                 },
-                outside: 'x',
+                outside: "x",
             });
 
-            new jBox('Tooltip', {
-                theme: 'Widetip',
-                attach: '.cf_tip_wide',
-                trigger: 'mouseenter',
+            new jBox("Tooltip", {
+                theme: "Widetip",
+                attach: ".cf_tip_wide",
+                trigger: "mouseenter",
                 closeOnMouseleave: true,
-                closeOnClick: 'body',
+                closeOnClick: "body",
                 delayOpen: 100,
                 delayClose: 100,
                 position: {
-                    x: 'right',
-                    y: 'center',
+                    x: "right",
+                    y: "center",
                 },
-                outside: 'x',
+                outside: "x",
             });
         });
 
@@ -346,10 +336,13 @@ class GuiControl {
         }
     }
     selectDefaultTabWhenConnected() {
-        const result = getConfig(['rememberLastTab', 'lastTab']);
-        const tab = result.rememberLastTab && result.lastTab && this.allowedTabs.includes(result.lastTab.substring(4)) ? result.lastTab : 'tab_setup';
+        const result = getConfig(["rememberLastTab", "lastTab"]);
+        const tab =
+            result.rememberLastTab && result.lastTab && this.allowedTabs.includes(result.lastTab.substring(4))
+                ? result.lastTab
+                : "tab_setup";
 
-        $(`#tabs ul.mode-connected .${tab} a`).trigger('click');
+        $(`#tabs ul.mode-connected .${tab} a`).trigger("click");
     }
     isOther() {
         return this.Mode === GUI_MODES.Other;
@@ -406,7 +399,7 @@ class GuiControl {
     showInformationDialog(informationDialogSettings) {
         // informationDialogSettings:
         // title, text, buttonConfirmText
-        return new Promise(resolve => {
+        return new Promise((resolve) => {
             const dialog = $(".dialogInformation");
             const title = dialog.find(".dialogInformationTitle");
             const content = dialog.find(".dialogInformationContent");
@@ -429,7 +422,7 @@ class GuiControl {
     showInteractiveDialog(interactiveDialogSettings) {
         // interactiveDialogSettings:
         // title, text, buttonCloseText
-        return new Promise(resolve => {
+        return new Promise((resolve) => {
             const dialog = $(".dialogInteractive");
             const title = dialog.find(".dialogInteractiveTitle");
             const content = dialog.find(".dialogInteractiveContent");
@@ -458,24 +451,24 @@ class GuiControl {
             .replace(/'/g, "&#039;");
     }
     addLinksTargetBlank(element) {
-        element.find('a').each(function () {
-            $(this).attr('target', '_blank');
+        element.find("a").each(function () {
+            $(this).attr("target", "_blank");
         });
     }
     showCliPanel() {
         function set_cli_response(response) {
-            const eol = '\n';
+            const eol = "\n";
             let output = `${eol}`;
             for (const line of response) {
                 output += `${line}${eol}`;
             }
             // gui_log(output.split(eol).join('<br>'));
-            $("#cli-command").val('');
-            $('#cli-response').text(output);
+            $("#cli-command").val("");
+            $("#cli-response").text(output);
         }
 
         // cli-command button hook
-        $('input#cli-command').change(function () {
+        $("input#cli-command").change(function () {
             const _self = $(this);
             const command = _self.val();
             if (!command) {
@@ -487,20 +480,20 @@ class GuiControl {
         });
 
         const cliPanelDialog = {
-            title : i18n.getMessage("cliPanelTitle"),
+            title: i18n.getMessage("cliPanelTitle"),
             buttonCloseText: i18n.getMessage("Close"),
         };
 
         // clear any text leftovers from previous session
-        $('#cli-command').val('');
-        $('#cli-response').text('');
+        $("#cli-command").val("");
+        $("#cli-response").text("");
 
         this.showInteractiveDialog(cliPanelDialog);
     }
 }
 
 function GUI_checkOperatingSystem() {
-    return navigator?.userAgentData?.platform || 'Android';
+    return navigator?.userAgentData?.platform || "Android";
 }
 
 const GUI = new GuiControl();

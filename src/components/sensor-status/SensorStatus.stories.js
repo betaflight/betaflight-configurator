@@ -6,7 +6,7 @@ export default {
     component: SensorStatus,
 };
 
-const Template = (_args, {argTypes}) => ({
+const Template = (_args, { argTypes }) => ({
     props: Object.keys(argTypes),
     components: { SensorStatus },
     template: '<sensor-status v-bind="$props" />',

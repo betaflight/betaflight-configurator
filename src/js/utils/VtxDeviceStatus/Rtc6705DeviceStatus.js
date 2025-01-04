@@ -1,8 +1,7 @@
-import VtxDeviceStatus, { VtxDeviceTypes } from './VtxDeviceStatus';
+import VtxDeviceStatus, { VtxDeviceTypes } from "./VtxDeviceStatus";
 
 class VtxDeviceStatusRtc6705 extends VtxDeviceStatus {
-    constructor(dataView)
-    {
+    constructor(dataView) {
         super(dataView);
 
         dataView.readU8(); // custom device status size
@@ -10,8 +9,7 @@ class VtxDeviceStatusRtc6705 extends VtxDeviceStatus {
         // Read other Tramp VTX device parameters here
     }
 
-    static get staticDeviceStatusType()
-    {
+    static get staticDeviceStatusType() {
         return VtxDeviceTypes.VTXDEV_RTC6705;
     }
 }

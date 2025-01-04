@@ -17,19 +17,18 @@ function isPeripheralSelected(peripheralName) {
 function adjustBoxNameIfPeripheralWithModeID(modeId, defaultName) {
     if (isPeripheralSelected("RUNCAM_DEVICE_CONTROL")) {
         switch (modeId) {
-        case 32: // BOXCAMERA1
-            return i18n.getMessage('modeCameraWifi');
-        case 33: // BOXCAMERA2
-            return i18n.getMessage('modeCameraPower');
-        case 34: // BOXCAMERA3
-            return i18n.getMessage('modeCameraChangeMode');
-        default:
-            return defaultName;
+            case 32: // BOXCAMERA1
+                return i18n.getMessage("modeCameraWifi");
+            case 33: // BOXCAMERA2
+                return i18n.getMessage("modeCameraPower");
+            case 34: // BOXCAMERA3
+                return i18n.getMessage("modeCameraChangeMode");
+            default:
+                return defaultName;
         }
     }
 
     return defaultName;
-
 }
 
 export default adjustBoxNameIfPeripheralWithModeID;

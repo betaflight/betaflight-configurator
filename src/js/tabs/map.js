@@ -26,23 +26,19 @@ export function initMap() {
 
     const googleSatLayer = new Tile({
         source: new XYZ({
-            url: 'https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',
+            url: "https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}",
         }),
     });
 
     const googleHybridLayer = new Tile({
         source: new XYZ({
-            url: 'https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}',
+            url: "https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}",
         }),
     });
 
     const map = new Map({
         target: "map",
-        layers: [
-            osmLayer,
-            googleSatLayer,
-            googleHybridLayer,
-        ],
+        layers: [osmLayer, googleSatLayer, googleHybridLayer],
         view: mapView,
         controls: [],
     });
@@ -102,7 +98,7 @@ export function initMap() {
     osmLayer.setVisible(false);
     googleHybridLayer.setVisible(false);
 
-    $('#Hybrid').on('click', function () {
+    $("#Hybrid").on("click", function () {
         if (!googleHybridLayer.isVisible()) {
             osmLayer.setVisible(false);
             googleSatLayer.setVisible(false);
@@ -110,7 +106,7 @@ export function initMap() {
         }
     });
 
-    $('#Satellite').on('click', function () {
+    $("#Satellite").on("click", function () {
         if (!googleSatLayer.isVisible()) {
             osmLayer.setVisible(false);
             googleSatLayer.setVisible(true);
@@ -118,7 +114,7 @@ export function initMap() {
         }
     });
 
-    $('#Street').on('click', function () {
+    $("#Street").on("click", function () {
         if (!osmLayer.isVisible()) {
             osmLayer.setVisible(true);
             googleSatLayer.setVisible(false);

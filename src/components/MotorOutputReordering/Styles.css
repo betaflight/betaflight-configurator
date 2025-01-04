@@ -1,7 +1,7 @@
 .motorOutputReorderComponent {
-    display:flex;
-    height:100%;
-    flex-flow:column;
+    display: flex;
+    height: 100%;
+    flex-flow: column;
 }
 
 .motorOutputReorderComponentHeader {
@@ -9,19 +9,19 @@
 }
 
 #dialogMotorOutputReorderMainContent {
-    display:flex;
-    height:100%;
-    flex-flow:column;
+    display: flex;
+    height: 100%;
+    flex-flow: column;
 }
 
 #dialogMotorOutputReorderWarning {
-    display:flex;
-    height:100%;
-    flex-flow:column;
+    display: flex;
+    height: 100%;
+    flex-flow: column;
 }
 
 #motorOutputReorderCanvas {
-    width:100%;
+    width: 100%;
     flex-grow: 1;
 }
 
@@ -40,7 +40,7 @@
 }
 
 #motorOutputReorderActionHint {
-    margin-top: 1.0em;
+    margin-top: 1em;
     display: inline-block;
 }
 
@@ -59,7 +59,7 @@
 }
 
 .motorsRemapDialogRExplanationText {
-    font-size: 1.0em;
+    font-size: 1em;
     margin-bottom: 1.5em;
     margin-top: 1.5em;
 }

@@ -1,4 +1,4 @@
-import '../js/jqueryPlugins';
+import "../js/jqueryPlugins";
 import "jbox/dist/jBox.min.css";
 import "../../libraries/jquery.nouislider.min.css";
 import "../../libraries/jquery.nouislider.pips.min.css";
@@ -49,8 +49,8 @@ import "../components/EscDshotDirection/Styles.css";
 import "../css/dark-theme.less";
 import "./main";
 
-import GUI from './gui';
-import { registerSW } from 'virtual:pwa-register';
+import GUI from "./gui";
+import { registerSW } from "virtual:pwa-register";
 
 const updateSW = registerSW({
     onNeedRefresh() {
@@ -67,7 +67,7 @@ const updateSW = registerSW({
     onOfflineReady() {
         console.log("Detected onOfflineReady");
         GUI.showInformationDialog({
-            title : i18n.getMessage("pwaOnOffilenReadyTitle"),
+            title: i18n.getMessage("pwaOnOffilenReadyTitle"),
             text: i18n.getMessage("pwaOnOffilenReadyText"),
             buttonConfirmText: i18n.getMessage("OK"),
         });

@@ -5,13 +5,11 @@ export const VtxDeviceTypes = {
     VTXDEV_SMARTAUDIO: 3,
     VTXDEV_TRAMP: 4,
     VTXDEV_MSP: 5,
-    VTXDEV_UNKNOWN:  0xFF,
+    VTXDEV_UNKNOWN: 0xff,
 };
 
-class VtxDeviceStatus
-{
-    constructor(dataView)
-    {
+class VtxDeviceStatus {
+    constructor(dataView) {
         this._deviceIsReady = dataView.readU8();
         const bandAndChannelAvailable = Boolean(dataView.readU8());
         this._band = dataView.readU8();
@@ -46,32 +44,27 @@ class VtxDeviceStatus
         this._readPowerLevels(dataView);
     }
 
-    _readPowerLevels(dataView)
-    {
+    _readPowerLevels(dataView) {
         this._levels = [];
         this._powers = [];
         const powerLevelCount = dataView.readU8();
 
-        for (let i = 0; i < powerLevelCount; i++)
-        {
+        for (let i = 0; i < powerLevelCount; i++) {
             this._levels.push(dataView.readU16());
             this._powers.push(dataView.readU16());
         }
     }
 
-    get deviceIsReady()
-    {
+    get deviceIsReady() {
         return this._deviceIsReady;
     }
 
     // overload this function in subclasses
-    static get staticDeviceStatusType()
-    {
+    static get staticDeviceStatusType() {
         return VtxDeviceTypes.VTXDEV_UNKNOWN;
     }
 
-    get deviceStatusType()
-    {
+    get deviceStatusType() {
         // returns result of overloaded static function "staticDeviceStatusType"
         return this.constructor.staticDeviceStatusType;
     }

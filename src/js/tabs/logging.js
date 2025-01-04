@@ -1,14 +1,14 @@
-import { millitime } from '../utils/common.js';
-import GUI, { TABS } from '../gui';
-import { generateFilename } from '../utils/generate_filename.js';
-import { i18n } from '../localization';
-import FC from '../fc.js';
-import FileSystem from '../FileSystem';
-import MSP from '../msp.js';
-import MSPCodes from '../msp/MSPCodes.js';
-import CONFIGURATOR from '../data_storage.js';
-import { gui_log } from '../gui_log.js';
-import $ from 'jquery';
+import { millitime } from "../utils/common.js";
+import GUI, { TABS } from "../gui";
+import { generateFilename } from "../utils/generate_filename.js";
+import { i18n } from "../localization";
+import FC from "../fc.js";
+import FileSystem from "../FileSystem";
+import MSP from "../msp.js";
+import MSPCodes from "../msp/MSPCodes.js";
+import CONFIGURATOR from "../data_storage.js";
+import { gui_log } from "../gui_log.js";
+import $ from "jquery";
 
 const logging = {
     fileEntry: null,
@@ -16,10 +16,8 @@ const logging = {
 };
 
 logging.initialize = function (callback) {
-
-
-    if (GUI.active_tab != 'logging') {
-        GUI.active_tab = 'logging';
+    if (GUI.active_tab != "logging") {
+        GUI.active_tab = "logging";
     }
 
     let requestedProperties = [];
@@ -33,7 +31,7 @@ logging.initialize = function (callback) {
         };
 
         const loadHtml = function () {
-            $('#content').load("./tabs/logging.html", process_html);
+            $("#content").load("./tabs/logging.html", process_html);
         };
 
         MSP.send_message(MSPCodes.MSP_RC, false, false, getMotorData);
@@ -44,12 +42,12 @@ logging.initialize = function (callback) {
         i18n.localizePage();
 
         // UI hooks
-        $('a.log_file').click(prepare_file);
+        $("a.log_file").click(prepare_file);
 
-        $('a.logging').click(function () {
+        $("a.logging").click(function () {
             if (GUI.connected_to) {
                 if (logging.fileEntry != null) {
-                    const clicks = $(this).data('clicks');
+                    const clicks = $(this).data("clicks");
 
                     if (!clicks) {
                         // reset some variables before start
@@ -58,12 +56,11 @@ logging.initialize = function (callback) {
                         logBuffer = [];
                         requestedProperties = [];
 
-                        $('.properties input:checked').each(function () {
-                            requestedProperties.push($(this).prop('name'));
+                        $(".properties input:checked").each(function () {
+                            requestedProperties.push($(this).prop("name"));
                         });
 
                         if (requestedProperties.length) {
-
                             const logDataPoll = function () {
                                 if (requests) {
                                     // save current data (only after everything is initialized)
@@ -77,10 +74,11 @@ logging.initialize = function (callback) {
                             };
 
                             function writeData() {
-                                if (logBuffer.length) { // only execute when there is actual data to write
-                                    append_to_file(logBuffer.join('\n').concat('\n'));
-
-                                    $('.samples').text(samples += logBuffer.length);
+                                if (logBuffer.length) {
+                                    // only execute when there is actual data to write
+                                    append_to_file(logBuffer.join("\n").concat("\n"));
+                                    samples += logBuffer.length;
+                                    $(".samples").text(samples);
 
                                     logBuffer = [];
                                 }
@@ -92,34 +90,33 @@ logging.initialize = function (callback) {
                                 // print header for the csv file
                                 print_head();
 
-                                GUI.interval_add('log_data_poll', logDataPoll, parseInt($('select.speed').val()), true); // refresh rate goes here
-                                GUI.interval_add('write_data', writeData, 1000);
+                                GUI.interval_add("log_data_poll", logDataPoll, parseInt($("select.speed").val()), true); // refresh rate goes here
+                                GUI.interval_add("write_data", writeData, 1000);
 
-                                $('.speed').prop('disabled', true);
-                                $(this).text(i18n.getMessage('loggingStop'));
+                                $(".speed").prop("disabled", true);
+                                $(this).text(i18n.getMessage("loggingStop"));
                                 $(this).data("clicks", clicks !== true);
                             });
                         } else {
-                            gui_log(i18n.getMessage('loggingErrorOneProperty'));
+                            gui_log(i18n.getMessage("loggingErrorOneProperty"));
                         }
                     } else {
                         GUI.interval_kill_all();
 
                         console.log("Closing file: ", logging.fileEntry.name);
-                        FileSystem.closeFile(logging.fileWriter)
-                        .catch((error) => {
+                        FileSystem.closeFile(logging.fileWriter).catch((error) => {
                             console.error("Error closing file: ", error);
                         });
 
-                        $('.speed').prop('disabled', false);
-                        $(this).text(i18n.getMessage('loggingStart'));
+                        $(".speed").prop("disabled", false);
+                        $(this).text(i18n.getMessage("loggingStart"));
                         $(this).data("clicks", !clicks);
                     }
                 } else {
-                    gui_log(i18n.getMessage('loggingErrorLogFile'));
+                    gui_log(i18n.getMessage("loggingErrorLogFile"));
                 }
             } else {
-                gui_log(i18n.getMessage('loggingErrorNotConnected'));
+                gui_log(i18n.getMessage("loggingErrorNotConnected"));
             }
         });
 
@@ -131,60 +128,60 @@ logging.initialize = function (callback) {
 
         for (let i = 0; i < requestedProperties.length; i++) {
             switch (requestedProperties[i]) {
-                case 'MSP_RAW_IMU':
-                    head += ',' + 'gyroscopeX';
-                    head += ',' + 'gyroscopeY';
-                    head += ',' + 'gyroscopeZ';
+                case "MSP_RAW_IMU":
+                    head += "," + "gyroscopeX";
+                    head += "," + "gyroscopeY";
+                    head += "," + "gyroscopeZ";
 
-                    head += ',' + 'accelerometerX';
-                    head += ',' + 'accelerometerY';
-                    head += ',' + 'accelerometerZ';
+                    head += "," + "accelerometerX";
+                    head += "," + "accelerometerY";
+                    head += "," + "accelerometerZ";
 
-                    head += ',' + 'magnetometerX';
-                    head += ',' + 'magnetometerY';
-                    head += ',' + 'magnetometerZ';
+                    head += "," + "magnetometerX";
+                    head += "," + "magnetometerY";
+                    head += "," + "magnetometerZ";
                     break;
-                case 'MSP_ATTITUDE':
-                    head += ',' + 'kinematicsX';
-                    head += ',' + 'kinematicsY';
-                    head += ',' + 'kinematicsZ';
+                case "MSP_ATTITUDE":
+                    head += "," + "kinematicsX";
+                    head += "," + "kinematicsY";
+                    head += "," + "kinematicsZ";
                     break;
-                case 'MSP_ALTITUDE':
-                    head += ',' + 'altitude';
+                case "MSP_ALTITUDE":
+                    head += "," + "altitude";
                     break;
-                case 'MSP_RAW_GPS':
-                    head += ',' + 'gpsFix';
-                    head += ',' + 'gpsNumSat';
-                    head += ',' + 'gpsLat';
-                    head += ',' + 'gpsLon';
-                    head += ',' + 'gpsAlt';
-                    head += ',' + 'gpsSpeed';
-                    head += ',' + 'gpsGroundCourse';
+                case "MSP_RAW_GPS":
+                    head += "," + "gpsFix";
+                    head += "," + "gpsNumSat";
+                    head += "," + "gpsLat";
+                    head += "," + "gpsLon";
+                    head += "," + "gpsAlt";
+                    head += "," + "gpsSpeed";
+                    head += "," + "gpsGroundCourse";
                     break;
-                case 'MSP_ANALOG':
-                    head += ',' + 'voltage';
-                    head += ',' + 'amperage';
-                    head += ',' + 'mAhdrawn';
-                    head += ',' + 'rssi';
+                case "MSP_ANALOG":
+                    head += "," + "voltage";
+                    head += "," + "amperage";
+                    head += "," + "mAhdrawn";
+                    head += "," + "rssi";
                     break;
-                case 'MSP_RC':
+                case "MSP_RC":
                     for (let chan = 0; chan < FC.RC.active_channels; chan++) {
-                        head += `${',' + 'RC'}${chan}`;
+                        head += `${"," + "RC"}${chan}`;
                     }
                     break;
-                case 'MSP_MOTOR':
+                case "MSP_MOTOR":
                     for (let motor = 0; motor < FC.MOTOR_DATA.length; motor++) {
-                        head += `${',' + 'Motor'}${motor}`;
+                        head += `${"," + "Motor"}${motor}`;
                     }
                     break;
-                case 'MSP_DEBUG':
+                case "MSP_DEBUG":
                     for (let debug = 0; debug < FC.SENSOR_DATA.debug.length; debug++) {
-                        head += `${',' + 'Debug'}${debug}`;
+                        head += `${"," + "Debug"}${debug}`;
                     }
                     break;
             }
         }
-        head += '\n';
+        head += "\n";
 
         append_to_file(head);
     }
@@ -194,20 +191,20 @@ logging.initialize = function (callback) {
 
         for (let i = 0; i < requestedProperties.length; i++) {
             switch (requestedProperties[i]) {
-                case 'MSP_RAW_IMU':
+                case "MSP_RAW_IMU":
                     sample += `,${FC.SENSOR_DATA.gyroscope}`;
                     sample += `,${FC.SENSOR_DATA.accelerometer}`;
                     sample += `,${FC.SENSOR_DATA.magnetometer}`;
                     break;
-                case 'MSP_ATTITUDE':
+                case "MSP_ATTITUDE":
                     sample += `,${FC.SENSOR_DATA.kinematics[0]}`;
                     sample += `,${FC.SENSOR_DATA.kinematics[1]}`;
                     sample += `,${FC.SENSOR_DATA.kinematics[2]}`;
                     break;
-                case 'MSP_ALTITUDE':
+                case "MSP_ALTITUDE":
                     sample += `,${FC.SENSOR_DATA.altitude}`;
                     break;
-                case 'MSP_RAW_GPS':
+                case "MSP_RAW_GPS":
                     sample += `,${FC.GPS_DATA.fix}`;
                     sample += `,${FC.GPS_DATA.numSat}`;
                     sample += `,${FC.GPS_DATA.lat / 10000000}`;
@@ -216,21 +213,21 @@ logging.initialize = function (callback) {
                     sample += `,${FC.GPS_DATA.speed}`;
                     sample += `,${FC.GPS_DATA.ground_course}`;
                     break;
-                case 'MSP_ANALOG':
+                case "MSP_ANALOG":
                     sample += `,${FC.ANALOG.voltage}`;
                     sample += `,${FC.ANALOG.amperage}`;
                     sample += `,${FC.ANALOG.mAhdrawn}`;
                     sample += `,${FC.ANALOG.rssi}`;
                     break;
-                case 'MSP_RC':
+                case "MSP_RC":
                     for (let chan = 0; chan < FC.RC.active_channels; chan++) {
                         sample += `,${FC.RC.channels[chan]}`;
                     }
                     break;
-                case 'MSP_MOTOR':
+                case "MSP_MOTOR":
                     sample += `,${FC.MOTOR_DATA}`;
                     break;
-                case 'MSP_DEBUG':
+                case "MSP_DEBUG":
                     sample += `,${FC.SENSOR_DATA.debug}`;
                     break;
             }
@@ -239,27 +236,28 @@ logging.initialize = function (callback) {
         logBuffer.push(sample);
     }
 
-
     // IO related methods
     function prepare_file() {
-        const prefix = 'log';
-        const suffix = 'csv';
+        const prefix = "log";
+        const suffix = "csv";
 
         const filename = generateFilename(prefix, suffix);
 
         // create or load the file
-        FileSystem.pickSaveFile(filename, i18n.getMessage('fileSystemPickerFiles', {typeof: suffix.toUpperCase}), `.${suffix}`).then((file) => {
+        FileSystem.pickSaveFile(
+            filename,
+            i18n.getMessage("fileSystemPickerFiles", { typeof: suffix.toUpperCase }),
+            `.${suffix}`,
+        ).then((file) => {
             logging.fileEntry = file;
             console.log("Log file path: ", file.name);
 
-            $('a.logging').removeClass('disabled');
+            $("a.logging").removeClass("disabled");
         });
     }
 
     function append_to_file(data) {
-
-        FileSystem.writeChunck(logging.fileWriter, new Blob([data], {type: 'text/plain'}))
-        .catch((error) => {
+        FileSystem.writeChunck(logging.fileWriter, new Blob([data], { type: "text/plain" })).catch((error) => {
             console.error("Error appending to file: ", error);
         });
     }
@@ -272,6 +270,4 @@ logging.cleanup = function (callback) {
 // TODO: only for transition to modules, drop this eventually
 TABS.logging = logging;
 
-export {
-    logging,
-};
+export { logging };

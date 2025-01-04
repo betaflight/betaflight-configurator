@@ -1,17 +1,16 @@
 import { i18n } from "../localization";
-import GUI, { TABS } from '../gui';
+import GUI, { TABS } from "../gui";
 import { mspHelper } from "../msp/MSPHelper";
 import FC from "../fc";
 import MSP from "../msp";
 import MSPCodes from "../msp/MSPCodes";
 import { gui_log } from "../gui_log";
-import $ from 'jquery';
+import $ from "jquery";
 
 const servos = {};
 servos.initialize = function (callback) {
-
-    if (GUI.active_tab !== 'servos') {
-        GUI.active_tab = 'servos';
+    if (GUI.active_tab !== "servos") {
+        GUI.active_tab = "servos";
     }
 
     function get_servo_configurations() {
@@ -31,24 +30,22 @@ servos.initialize = function (callback) {
     }
 
     function load_html() {
-        $('#content').load("./tabs/servos.html", process_html);
+        $("#content").load("./tabs/servos.html", process_html);
     }
     get_servo_configurations();
 
     function update_ui() {
-
         if (FC.SERVO_CONFIG.length === 0) {
-
             $(".tab-servos").removeClass("supported");
             return;
         }
 
         $(".tab-servos").addClass("supported");
 
-        let servoCheckbox = '';
-        let servoHeader = '';
-        for (let i = 0; i < FC.RC.active_channels-4; i++) {
-            servoHeader += `<th>A${(i+1)}</th>`;
+        let servoCheckbox = "";
+        let servoHeader = "";
+        for (let i = 0; i < FC.RC.active_channels - 4; i++) {
+            servoHeader += `<th>A${i + 1}</th>`;
         }
         servoHeader += '<th style="width: 110px" i18n="servosRateAndDirection"></th>';
 
@@ -56,15 +53,14 @@ servos.initialize = function (callback) {
             servoCheckbox += `<td class="channel"><input type="checkbox"/></td>`;
         }
 
-        $('div.tab-servos table.fields tr.main').append(servoHeader);
+        $("div.tab-servos table.fields tr.main").append(servoHeader);
 
         /*
-        *  function: void process_servos(string, object)
-        */
+         *  function: void process_servos(string, object)
+         */
 
         function process_servos(name, obj) {
-
-            $('div.supported_wrapper').show();
+            $("div.supported_wrapper").show();
 
             const subElement = `<input type="number" min="500" max="2500" value="`;
 
@@ -74,18 +70,20 @@ servos.initialize = function (callback) {
             element += `<td class="max">${subElement}${FC.SERVO_CONFIG[obj].max}" /></td>`;
             element += `${servoCheckbox}<td class="direction"></td></tr>`;
 
-            $('div.tab-servos table.fields').append(element);
+            $("div.tab-servos table.fields").append(element);
 
             if (FC.SERVO_CONFIG[obj].indexOfChannelToForward >= 0) {
-                $('div.tab-servos table.fields tr:last td.channel input').eq(FC.SERVO_CONFIG[obj].indexOfChannelToForward).prop('checked', true);
+                $("div.tab-servos table.fields tr:last td.channel input")
+                    .eq(FC.SERVO_CONFIG[obj].indexOfChannelToForward)
+                    .prop("checked", true);
             }
 
             // adding select box and generating options
-            $('div.tab-servos table.fields tr:last td.direction').append('<select class="rate" name="rate"></select>');
+            $("div.tab-servos table.fields tr:last td.direction").append('<select class="rate" name="rate"></select>');
 
-            const select = $('div.tab-servos table.fields tr:last td.direction select');
+            const select = $("div.tab-servos table.fields tr:last td.direction select");
 
-            let rateLabel = i18n.getMessage('servosRate');
+            let rateLabel = i18n.getMessage("servosRate");
             for (let i = 100; i > -101; i--) {
                 select.append(`<option value="${i}">${rateLabel} ${i}%</option>`);
             }
@@ -93,40 +91,39 @@ servos.initialize = function (callback) {
             // select current rate
             select.val(FC.SERVO_CONFIG[obj].rate);
 
-            $('div.tab-servos table.fields tr:last').data('info', {'obj': obj});
+            $("div.tab-servos table.fields tr:last").data("info", { obj: obj });
 
             // UI hooks
 
             // only one checkbox for indicating a channel to forward can be selected at a time, perhaps a radio group would be best here.
-            $('div.tab-servos table.fields tr:last td.channel input').click(function () {
-                if($(this).is(':checked')) {
-                    $(this).parent().parent().find('.channel input').not($(this)).prop('checked', false);
+            $("div.tab-servos table.fields tr:last td.channel input").click(function () {
+                if ($(this).is(":checked")) {
+                    $(this).parent().parent().find(".channel input").not($(this)).prop("checked", false);
                 }
             });
         }
 
         /*
-        *  function: void servos_update(boolean)
-        */
+         *  function: void servos_update(boolean)
+         */
 
         function servos_update(save_configuration_to_eeprom) {
             $('div.tab-servos table.fields tr:not(".main")').each(function () {
-                const info = $(this).data('info');
-                const selection = $('.channel input', this);
+                const info = $(this).data("info");
+                const selection = $(".channel input", this);
 
-                let channelIndex = parseInt(selection.index(selection.filter(':checked')));
+                let channelIndex = parseInt(selection.index(selection.filter(":checked")));
                 if (channelIndex === -1) {
                     channelIndex = undefined;
                 }
 
                 FC.SERVO_CONFIG[info.obj].indexOfChannelToForward = channelIndex;
 
+                FC.SERVO_CONFIG[info.obj].middle = parseInt($(".middle input", this).val());
+                FC.SERVO_CONFIG[info.obj].min = parseInt($(".min input", this).val());
+                FC.SERVO_CONFIG[info.obj].max = parseInt($(".max input", this).val());
 
-                FC.SERVO_CONFIG[info.obj].middle = parseInt($('.middle input', this).val());
-                FC.SERVO_CONFIG[info.obj].min = parseInt($('.min input', this).val());
-                FC.SERVO_CONFIG[info.obj].max = parseInt($('.max input', this).val());
-
-                const val = parseInt($('.direction select', this).val());
+                const val = parseInt($(".direction select", this).val());
                 FC.SERVO_CONFIG[info.obj].rate = val;
             });
 
@@ -142,26 +139,25 @@ servos.initialize = function (callback) {
             function save_to_eeprom() {
                 if (save_configuration_to_eeprom) {
                     mspHelper.writeConfiguration(function () {
-                        gui_log(i18n.getMessage('servosEepromSave'));
+                        gui_log(i18n.getMessage("servosEepromSave"));
                     });
                 }
             }
-
         }
 
         // drop previous table
-        $('div.tab-servos table.fields tr:not(:first)').remove();
+        $("div.tab-servos table.fields tr:not(:first)").remove();
 
         // let's reflect CLI here to number servo's 1-8 instead of 0-7
         for (let servoIndex = 0; servoIndex < 8; servoIndex++) {
-            process_servos(`Servo ${servoIndex+1}`, servoIndex);
+            process_servos(`Servo ${servoIndex + 1}`, servoIndex);
         }
 
-        const servosWrapper = $('.servos .bar-wrapper');
+        const servosWrapper = $(".servos .bar-wrapper");
 
         for (let i = 0; i < 8; i++) {
             servosWrapper.append(`\
-                    <div class="m-block servo-${(7 - i)}">\
+                    <div class="m-block servo-${7 - i}">\
                     <div class="meter-bar">\
                     <div class="label"></div>\
                     <div class="indicator">\
@@ -177,19 +173,17 @@ servos.initialize = function (callback) {
         const rangeMin = 1000;
         const rangeMax = 2000;
 
-        $('div.values li:not(:last)').text(rangeMin);
+        $("div.values li:not(:last)").text(rangeMin);
 
         /*
-        *  void test_update(void);
-        */
+         *  void test_update(void);
+         */
 
         function test_update() {
-
             const blockHeight = 100;
             const fullBlockScale = rangeMax - rangeMin;
 
             for (let i = 0; i < FC.SERVO_DATA.length; i++) {
-
                 const servoValue = FC.SERVO_DATA[i];
                 const barHeight = servoValue - rangeMin;
                 const marginTop = blockHeight - (barHeight * (blockHeight / fullBlockScale)).clamp(0, blockHeight);
@@ -198,9 +192,9 @@ servos.initialize = function (callback) {
 
                 $(`.servo-${i} .label`, servosWrapper).text(servoValue);
                 $(`.servo-${i} .indicator`, servosWrapper).css({
-                    'margin-top' : `${marginTop}px`,
-                    'height' : `${height}px`,
-                    'background-color' : `rgba(255,187,0,1${color})`,
+                    "margin-top": `${marginTop}px`,
+                    height: `${height}px`,
+                    "background-color": `rgba(255,187,0,1${color})`,
                 });
             }
         }
@@ -210,32 +204,37 @@ servos.initialize = function (callback) {
         }
 
         // UI hooks for dynamically generated elements
-        GUI.interval_add('servo_data_pull_and_test_update', get_servo_data, 50);
+        GUI.interval_add("servo_data_pull_and_test_update", get_servo_data, 50);
 
-        $('table.directions select, table.directions input, table.fields select, table.fields input').change(function () {
-            if ($('div.live input').is(':checked')) {
-                // apply small delay as there seems to be some funky update business going wrong
-                GUI.timeout_add('servos_update', servos_update, 10);
-            }
-        });
+        $("table.directions select, table.directions input, table.fields select, table.fields input").change(
+            function () {
+                if ($("div.live input").is(":checked")) {
+                    // apply small delay as there seems to be some funky update business going wrong
+                    GUI.timeout_add("servos_update", servos_update, 10);
+                }
+            },
+        );
 
-        $('a.update').click(function () {
+        $("a.update").click(function () {
             servos_update(true);
         });
-
     }
 
     function process_html() {
-
         update_ui();
 
         // translate to user-selected language
         i18n.localizePage();
 
         // status data pulled via separate timer with static speed
-        GUI.interval_add('status_pull', function () {
-            MSP.send_message(MSPCodes.MSP_STATUS);
-        }, 250, true);
+        GUI.interval_add(
+            "status_pull",
+            function () {
+                MSP.send_message(MSPCodes.MSP_STATUS);
+            },
+            250,
+            true,
+        );
 
         GUI.content_ready(callback);
     }
@@ -248,6 +247,4 @@ servos.cleanup = function (callback) {
 };
 
 TABS.servos = servos;
-export {
-    servos,
-};
+export { servos };

@@ -1,11 +1,9 @@
 import GUI from "./gui";
 import windowWatcherUtil from "./utils/window_watchers";
 import { checkSetupAnalytics } from "./Analytics";
-import $ from 'jquery';
+import $ from "jquery";
 
-const css_dark = [
-    './css/dark-theme.css',
-];
+const css_dark = ["./css/dark-theme.css"];
 
 const DarkTheme = {
     configSetting: undefined,
@@ -16,16 +14,16 @@ DarkTheme.isDarkThemeEnabled = function (callback) {
     if (this.configSetting === 0) {
         callback(true);
     } else if (this.configSetting === 2) {
-        const isEnabled = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const isEnabled = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
         callback(isEnabled);
     } else {
         callback(false);
     }
 };
 
-DarkTheme.apply = function() {
+DarkTheme.apply = function () {
     const self = this;
-    this.isDarkThemeEnabled(function(isEnabled) {
+    this.isDarkThemeEnabled(function (isEnabled) {
         if (isEnabled) {
             self.applyDark();
         } else {
@@ -33,12 +31,12 @@ DarkTheme.apply = function() {
         }
 
         if (chrome.app.window !== undefined) {
-            windowWatcherUtil.passValue(chrome.app.window.get("receiver_msp"), 'darkTheme', isEnabled);
+            windowWatcherUtil.passValue(chrome.app.window.get("receiver_msp"), "darkTheme", isEnabled);
         }
     });
 };
 
-DarkTheme.autoSet = function() {
+DarkTheme.autoSet = function () {
     if (this.configSetting === 2) {
         this.apply();
     }
@@ -52,12 +50,12 @@ DarkTheme.setConfig = function (result) {
 };
 
 DarkTheme.applyDark = function () {
-    $('body').addClass('dark-theme');
+    $("body").addClass("dark-theme");
     this.enabled = true;
 };
 
 DarkTheme.applyNormal = function () {
-    $('body').removeClass('dark-theme');
+    $("body").removeClass("dark-theme");
     this.enabled = false;
 };
 
@@ -65,7 +63,7 @@ export function setDarkTheme(enabled) {
     DarkTheme.setConfig(enabled);
 
     checkSetupAnalytics(function (analyticsService) {
-        analyticsService.sendEvent(analyticsService.EVENT_CATEGORIES.APPLICATION, 'DarkTheme', { enabled: enabled });
+        analyticsService.sendEvent(analyticsService.EVENT_CATEGORIES.APPLICATION, "DarkTheme", { enabled: enabled });
     });
 }
 

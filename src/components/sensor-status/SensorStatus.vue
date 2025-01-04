@@ -1,87 +1,44 @@
 <template>
-  <div
-    id="sensor-status"
-    class="sensor_state mode-connected"
-    style="display: block"
-  >
-    <ul>
-      <li
-        class="gyro"
-        :title="$t('sensorStatusGyro')"
-        :class="{ on: setGyroActive }"
-      >
-        <div
-          class="gyroicon"
-          :class="{ active: setGyroActive }"
-        >
-          {{ $t('sensorStatusGyroShort') }}
-        </div>
-      </li>
-      <li
-        class="accel"
-        :title="$t('sensorStatusAccel')"
-        :class="{ on: setAccActive }"
-      >
-        <div
-          class="accicon"
-          :class="{ active: setAccActive }"
-        >
-          {{ $t('sensorStatusAccelShort') }}
-        </div>
-      </li>
-      <li
-        class="mag"
-        :title="$t('sensorStatusMag')"
-        :class="{ on: setMagActive }"
-      >
-        <div
-          class="magicon"
-          :class="{ active: setMagActive }"
-        >
-          {{ $t('sensorStatusMagShort') }}
-        </div>
-      </li>
-      <li
-        class="baro"
-        :title="$t('sensorStatusBaro')"
-        :class="{ on: setBaroActive }"
-      >
-        <div
-          class="baroicon"
-          :class="{ active: setBaroActive }"
-        >
-          {{ $t('sensorStatusBaroShort') }}
-        </div>
-      </li>
-      <li
-        class="gps"
-        :class="{ on: setGpsActive }"
-        :title="$t('sensorStatusGPS')"
-      >
-        <div
-          class="gpsicon"
-          :class="{
-            active: setGpsFixState && setGpsActive,
-            active_fix: !setGpsFixState && setGpsActive,
-          }"
-        >
-          {{ $t('sensorStatusGPSShort') }}
-        </div>
-      </li>
-      <li
-        class="sonar"
-        :title="$t('sensorStatusSonar')"
-        :class="{ on: setSonarActive }"
-      >
-        <div
-          class="sonaricon"
-          :class="{ active: setSonarActive }"
-        >
-          {{ $t('sensorStatusSonarShort') }}
-        </div>
-      </li>
-    </ul>
-  </div>
+    <div id="sensor-status" class="sensor_state mode-connected" style="display: block">
+        <ul>
+            <li class="gyro" :title="$t('sensorStatusGyro')" :class="{ on: setGyroActive }">
+                <div class="gyroicon" :class="{ active: setGyroActive }">
+                    {{ $t("sensorStatusGyroShort") }}
+                </div>
+            </li>
+            <li class="accel" :title="$t('sensorStatusAccel')" :class="{ on: setAccActive }">
+                <div class="accicon" :class="{ active: setAccActive }">
+                    {{ $t("sensorStatusAccelShort") }}
+                </div>
+            </li>
+            <li class="mag" :title="$t('sensorStatusMag')" :class="{ on: setMagActive }">
+                <div class="magicon" :class="{ active: setMagActive }">
+                    {{ $t("sensorStatusMagShort") }}
+                </div>
+            </li>
+            <li class="baro" :title="$t('sensorStatusBaro')" :class="{ on: setBaroActive }">
+                <div class="baroicon" :class="{ active: setBaroActive }">
+                    {{ $t("sensorStatusBaroShort") }}
+                </div>
+            </li>
+            <li class="gps" :class="{ on: setGpsActive }" :title="$t('sensorStatusGPS')">
+                <div
+                    class="gpsicon"
+                    :class="{
+                        active: setGpsFixState && setGpsActive,
+                        active_fix: !setGpsFixState && setGpsActive,
+                    }"
+                >
+                    {{ $t("sensorStatusGPSShort") }}
+                </div>
+            </li>
+            <li class="sonar" :title="$t('sensorStatusSonar')" :class="{ on: setSonarActive }">
+                <div class="sonaricon" :class="{ active: setSonarActive }">
+                    {{ $t("sensorStatusSonarShort") }}
+                </div>
+            </li>
+        </ul>
+    </div>
 </template>
 
 <script>
@@ -161,11 +118,7 @@ li {
     border-left: 1px solid #373737;
     border-right: 1px solid #222222;
     background-color: #434343;
-    background-image: -webkit-linear-gradient(
-        top,
-        transparent,
-        rgba(0, 0, 0, 0.45)
-    );
+    background-image: -webkit-linear-gradient(top, transparent, rgba(0, 0, 0, 0.45));
     padding-left: 5px;
     padding-right: 5px;
     &:last-child {
@@ -185,11 +138,7 @@ div {
 }
 .on {
     background-color: #434343;
-    background-image: -webkit-linear-gradient(
-        top,
-        transparent,
-        rgba(0, 0, 0, 0.45)
-    );
+    background-image: -webkit-linear-gradient(top, transparent, rgba(0, 0, 0, 0.45));
 }
 
 .gyroicon {

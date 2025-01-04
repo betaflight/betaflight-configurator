@@ -1,22 +1,18 @@
-import MSP from '../../js/msp.js';
+import MSP from "../../js/msp.js";
 
-class EscDshotCommandQueue
-{
-    constructor (intervalMs)
-    {
+class EscDshotCommandQueue {
+    constructor(intervalMs) {
         this._intervalId = null;
         this._interval = intervalMs;
         this._queue = [];
         this._purging = false;
     }
 
-    pushCommand(command, buffer)
-    {
+    pushCommand(command, buffer) {
         this._queue.push([command, buffer]);
     }
 
-    pushPause(milliseconds)
-    {
+    pushPause(milliseconds) {
         const counter = Math.ceil(milliseconds / this._interval);
 
         for (let i = 0; i < counter; i++) {
@@ -24,35 +20,30 @@ class EscDshotCommandQueue
         }
     }
 
-    start()
-    {
+    start() {
         if (null === this._intervalId) {
-            this._intervalId = setInterval(
-                () => { this._checkQueue(); },
-                this._interval);
+            this._intervalId = setInterval(() => {
+                this._checkQueue();
+            }, this._interval);
         }
     }
 
-    stop()
-    {
-        if(null !== this._intervalId) {
+    stop() {
+        if (null !== this._intervalId) {
             clearInterval(this._intervalId);
             this._intervalId = null;
         }
     }
 
-    stopWhenEmpty()
-    {
+    stopWhenEmpty() {
         this._purging = true;
     }
 
-    clear()
-    {
+    clear() {
         this._queue = [];
     }
 
-    _checkQueue()
-    {
+    _checkQueue() {
         if (0 !== this._queue.length) {
             const command = this._queue.shift();
 
