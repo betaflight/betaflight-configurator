@@ -1396,6 +1396,15 @@
     "configurationMagAlignmentHelp": {
         "message": "The magnetometer alignment is the orientation of the magnetometer sensor on the flight controller board. The default is usually correct, but if you have a custom build or a flight controller with a different magnetometer orientation, you may need to adjust this setting."
     },
+    "configurationMagDeclination": {
+        "message": "Magnetometer Declination"
+    },
+    "configurationMagDeclinationInput": {
+        "message": "Declination Degrees"
+    },
+    "configurationMagDeclinationHelp": {
+        "message": "The magnetic declination is the angle between magnetic north and true north. It is different for every location on earth. You can find the declination for your location on the internet"
+    },
     "configurationBoardAlignment": {
         "message": "Board Alignment"
     },
@@ -1424,7 +1433,7 @@
         "message": "$t(configurationBoardAlignmentYaw.message)"
     },
     "configurationMagAlignment": {
-        "message": "Mag Alignment"
+        "message": "Magnetometer Alignment"
     },
     "configurationBoardAlignmentHelp": {
         "message": "Arbitrary board rotation in degrees, to allow mounting it sideways / upside down / rotated etc. When running external sensors, use the sensor alignments (Gyro, Acc, Mag) to define sensor position independent from board orientation. "
@@ -1468,9 +1477,6 @@
     "configurationSensorAlignmentAcc": {
         "message": "ACCEL Alignment"
     },
-    "configurationSensorAlignmentMag": {
-        "message": "Alignment"
-    },
     "configurationSensorAlignmentDefaultOption": {
        "message": "Default"
     },
@@ -1488,9 +1494,6 @@
     },
     "configurationArmingHelp": {
         "message": "Some Arming options may require accelerometer be enabled"
-    },
-    "configurationMagDeclination": {
-        "message": "Magnetometer Declination [deg]"
     },
     "configurationReverseMotorSwitch": {
         "message": "Motor direction is reversed"

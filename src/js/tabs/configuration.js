@@ -9,6 +9,7 @@ import MSPCodes from "../msp/MSPCodes";
 import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "../data_storage";
 import { updateTabList } from "../utils/updateTabList";
 import $ from "jquery";
+import { have_sensor } from "../sensor_helpers";
 
 const configuration = {
     analyticsChanges: {},
@@ -53,6 +54,11 @@ configuration.initialize = function (callback) {
                     : Promise.resolve(true),
             )
             .then(() => MSP.promise(MSPCodes.MSP_ADVANCED_CONFIG))
+            .then(() =>
+                semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)
+                    ? MSP.promise(MSPCodes.MSP_COMPASS_CONFIG)
+                    : Promise.resolve(true),
+            )
             .then(() => load_html());
     }
 
@@ -128,14 +134,22 @@ configuration.initialize = function (callback) {
         const orientation_gyro_1_align_e = $("select.gyro_1_align");
         const orientation_gyro_2_align_e = $("select.gyro_2_align");
 
+        const hasMag =
+            have_sensor(FC.CONFIG.activeSensors, "mag") && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46);
+
+        if (hasMag) {
+            $('input[name="mag_declination"]').val(FC.COMPASS_CONFIG.mag_declination.toFixed(1));
+        } else {
+            $("div.mag_declination").parent().parent().hide();
+        }
+
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
             $(".tab-configuration .gyro_align_custom").show();
-            $(".tab-configuration .mag_align_custom").show();
-
             $('input[name="gyro_align_roll"]').val(FC.SENSOR_ALIGNMENT.gyro_align_roll);
             $('input[name="gyro_align_pitch"]').val(FC.SENSOR_ALIGNMENT.gyro_align_pitch);
             $('input[name="gyro_align_yaw"]').val(FC.SENSOR_ALIGNMENT.gyro_align_yaw);
 
+            $(".tab-configuration .mag_align_custom").show();
             $('input[name="mag_align_roll"]').val(FC.SENSOR_ALIGNMENT.mag_align_roll);
             $('input[name="mag_align_pitch"]').val(FC.SENSOR_ALIGNMENT.mag_align_pitch);
             $('input[name="mag_align_yaw"]').val(FC.SENSOR_ALIGNMENT.mag_align_yaw);
@@ -433,6 +447,12 @@ configuration.initialize = function (callback) {
                     FC.ARMING_CONFIG.auto_disarm_delay = parseInt($('input[id="configurationAutoDisarmDelay"]').val());
                 }
             }
+
+            // declination added first in #3676
+            if (hasMag) {
+                FC.COMPASS_CONFIG.mag_declination = $('input[name="mag_declination"]').val();
+            }
+
             FC.ARMING_CONFIG.small_angle = parseInt($('input[id="configurationSmallAngle"]').val());
 
             FC.SENSOR_ALIGNMENT.gyro_to_use = parseInt(orientation_gyro_to_use_e.val());
@@ -524,6 +544,14 @@ configuration.initialize = function (callback) {
                             : Promise.resolve(true),
                     )
                     .then(() => MSP.promise(MSPCodes.MSP_SET_RX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_RX_CONFIG)))
+                    .then(() =>
+                        semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)
+                            ? MSP.promise(
+                                MSPCodes.MSP_SET_COMPASS_CONFIG,
+                                mspHelper.crunch(MSPCodes.MSP_SET_COMPASS_CONFIG),
+                            )
+                            : Promise.resolve(true),
+                    )
                     .then(() => mspHelper.writeConfiguration(true));
             }
 

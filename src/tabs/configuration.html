@@ -284,7 +284,6 @@
                     <div class="spacer_box">
                         <div class="select">
                             <label>
-                                <span i18n="configurationSensorAlignmentMag"></span>
                                 <select class="magalign">
                                     <option value="0" i18n="configurationSensorAlignmentDefaultOption"></option>
                                     <!-- list generated here -->
@@ -322,6 +321,22 @@
                     </div>
                 </div>
                 <!-- END MAGNETOMETER ALIGNMENT -->
+
+                <!-- MAGNETIC DECLINATION -->
+                <div class="gui_box grey">
+                    <div class="gui_box_titlebar">
+                        <div class="spacer_box_title" i18n="configurationMagDeclination"></div>
+                        <div class="helpicon cf_tip" i18n_title="configurationMagDeclinationHelp"></div>
+                    </div>
+                    <div class="spacer_box">
+                        <div class="number mag_declination">
+                            <label> <input type="number" name="mag_declination" step="0.1" min="-30.0" max="30.0" />
+                            <span i18n="configurationMagDeclinationInput"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <!-- END MAGNETIC DECLINATION -->
 
                 <!-- ACCELEROMETER TRIM -->
                 <div class="gui_box grey accelNeeded">

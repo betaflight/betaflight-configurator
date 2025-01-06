@@ -636,13 +636,13 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     FC.SENSOR_ALIGNMENT.gyro_1_align = data.readU8();
                     FC.SENSOR_ALIGNMENT.gyro_2_align = data.readU8();
                     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
-                        FC.SENSOR_ALIGNMENT.gyro_align_roll = data.readU16() / 10;
-                        FC.SENSOR_ALIGNMENT.gyro_align_pitch = data.readU16() / 10;
-                        FC.SENSOR_ALIGNMENT.gyro_align_yaw = data.readU16() / 10;
+                        FC.SENSOR_ALIGNMENT.gyro_align_roll = data.read16() / 10;
+                        FC.SENSOR_ALIGNMENT.gyro_align_pitch = data.read16() / 10;
+                        FC.SENSOR_ALIGNMENT.gyro_align_yaw = data.read16() / 10;
 
-                        FC.SENSOR_ALIGNMENT.mag_align_roll = data.readU16() / 10;
-                        FC.SENSOR_ALIGNMENT.mag_align_pitch = data.readU16() / 10;
-                        FC.SENSOR_ALIGNMENT.mag_align_yaw = data.readU16() / 10;
+                        FC.SENSOR_ALIGNMENT.mag_align_roll = data.read16() / 10;
+                        FC.SENSOR_ALIGNMENT.mag_align_pitch = data.read16() / 10;
+                        FC.SENSOR_ALIGNMENT.mag_align_yaw = data.read16() / 10;
                     }
                     break;
                 case MSPCodes.MSP_DISPLAYPORT:
@@ -2057,8 +2057,6 @@ MspHelper.prototype.crunch = function (code, modifierCode = undefined) {
                 .push8(FC.SENSOR_ALIGNMENT.gyro_1_align)
                 .push8(FC.SENSOR_ALIGNMENT.gyro_2_align);
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
-                // // Use gyro_2_align[RPY] when GYRO_CONFIG_USE_GYRO_2 = 1
-                // if (FC.SENSOR_ALIGNMENT.gyro_to_use === 1) {
                 buffer.push16(FC.SENSOR_ALIGNMENT.gyro_align_roll * 10);
                 buffer.push16(FC.SENSOR_ALIGNMENT.gyro_align_pitch * 10);
                 buffer.push16(FC.SENSOR_ALIGNMENT.gyro_align_yaw * 10);
