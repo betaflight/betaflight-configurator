@@ -123,7 +123,6 @@ configuration.initialize = function (callback) {
         ];
 
         const orientation_gyro_e = $("select.gyroalign");
-        const orientation_acc_e = $("select.accalign");
         const orientation_mag_e = $("select.magalign");
 
         const orientation_gyro_to_use_e = $("select.gyro_to_use");
@@ -156,12 +155,10 @@ configuration.initialize = function (callback) {
 
         for (let i = 0; i < alignments.length; i++) {
             orientation_gyro_e.append(`<option value="${i + 1}">${alignments[i]}</option>`);
-            orientation_acc_e.append(`<option value="${i + 1}">${alignments[i]}</option>`);
             orientation_mag_e.append(`<option value="${i + 1}">${alignments[i]}</option>`);
         }
 
         orientation_gyro_e.val(FC.SENSOR_ALIGNMENT.align_gyro);
-        orientation_acc_e.val(FC.SENSOR_ALIGNMENT.align_acc);
         orientation_mag_e.val(FC.SENSOR_ALIGNMENT.align_mag);
 
         orientation_gyro_e.change(function () {
@@ -174,18 +171,6 @@ configuration.initialize = function (callback) {
             self.analyticsChanges["GyroAlignment"] = newValue;
 
             FC.SENSOR_ALIGNMENT.align_gyro = value;
-        });
-
-        orientation_acc_e.change(function () {
-            let value = parseInt($(this).val());
-
-            let newValue = undefined;
-            if (value !== FC.SENSOR_ALIGNMENT.align_acc) {
-                newValue = $(this).find("option:selected").text();
-            }
-            self.analyticsChanges["AccAlignment"] = newValue;
-
-            FC.SENSOR_ALIGNMENT.align_acc = value;
         });
 
         orientation_mag_e.change(function () {
