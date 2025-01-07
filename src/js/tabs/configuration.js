@@ -122,8 +122,6 @@ configuration.initialize = function (callback) {
             "Custom",
         ];
 
-        const gyro_align_content_e = $(".tab-configuration .gyro_align_content");
-
         const orientation_gyro_e = $("select.gyroalign");
         const orientation_acc_e = $("select.accalign");
         const orientation_mag_e = $("select.magalign");
@@ -156,7 +154,6 @@ configuration.initialize = function (callback) {
             $(".tab-configuration .mag_align_custom").hide();
         }
 
-        gyro_align_content_e.hide(); // default value
         for (let i = 0; i < alignments.length; i++) {
             orientation_gyro_e.append(`<option value="${i + 1}">${alignments[i]}</option>`);
             orientation_acc_e.append(`<option value="${i + 1}">${alignments[i]}</option>`);
@@ -204,8 +201,6 @@ configuration.initialize = function (callback) {
         });
 
         // Multi gyro config
-
-        gyro_align_content_e.show();
 
         const GYRO_DETECTION_FLAGS = {
             DETECTED_GYRO_1: 1 << 0,
