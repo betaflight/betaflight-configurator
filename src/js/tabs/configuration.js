@@ -123,7 +123,6 @@ configuration.initialize = function (callback) {
         ];
 
         const gyro_align_content_e = $(".tab-configuration .gyro_align_content");
-        const legacy_gyro_alignment_e = $(".tab-configuration .legacy_gyro_alignment");
         const legacy_accel_alignment_e = $(".tab-configuration .legacy_accel_alignment");
 
         const orientation_gyro_e = $("select.gyroalign");
@@ -208,7 +207,6 @@ configuration.initialize = function (callback) {
         // Multi gyro config
 
         gyro_align_content_e.show();
-        legacy_gyro_alignment_e.hide();
         legacy_accel_alignment_e.hide();
 
         const GYRO_DETECTION_FLAGS = {
