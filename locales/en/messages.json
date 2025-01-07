@@ -1438,9 +1438,6 @@
     "configurationBoardAlignmentHelp": {
         "message": "Arbitrary board rotation in degrees, to allow mounting it sideways / upside down / rotated etc. When running external sensors, use the sensor alignments (Gyro, Acc, Mag) to define sensor position independent from board orientation. "
     },
-    "configurationMagAlignmentDefault": {
-        "message": "Default"
-    },
     "configurationMagAlignmentRoll": {
         "message": "$t(configurationBoardAlignmentRoll.message)"
     },
