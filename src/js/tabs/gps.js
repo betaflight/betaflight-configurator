@@ -1,6 +1,6 @@
 import { i18n } from "../localization";
 import semver from "semver";
-import { API_VERSION_1_46 } from "../data_storage";
+import { API_VERSION_1_46, API_VERSION_1_47 } from "../data_storage";
 import GUI, { TABS } from "../gui";
 import FC from "../fc";
 import MSP from "../msp";
@@ -134,12 +134,17 @@ gps.initialize = async function (callback) {
             gpsAutoBaudElement.prop("checked", FC.GPS_CONFIG.auto_baud === 1);
         }
 
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+            gpsProtocols.push("VIRTUAL");
+        }
+
         gpsAutoConfigElement
             .on("change", function () {
                 const checked = $(this).is(":checked");
 
                 const ubloxSelected = FC.GPS_CONFIG.provider === gpsProtocols.indexOf("UBLOX");
                 const mspSelected = FC.GPS_CONFIG.provider === gpsProtocols.indexOf("MSP");
+                const virtualSelected = FC.GPS_CONFIG.provider === gpsProtocols.indexOf("VIRTUAL");
 
                 const enableGalileoVisible = checked && ubloxSelected;
                 gpsUbloxGalileoGroup.toggle(enableGalileoVisible);
@@ -150,7 +155,7 @@ gps.initialize = async function (callback) {
                 gpsAutoBaudGroup.toggle(
                     (ubloxSelected || mspSelected) && semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_46),
                 );
-                gpsAutoConfigGroup.toggle(ubloxSelected || mspSelected);
+                gpsAutoConfigGroup.toggle(ubloxSelected || mspSelected || virtualSelected);
             })
             .prop("checked", FC.GPS_CONFIG.auto_config === 1)
             .trigger("change");
