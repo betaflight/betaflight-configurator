@@ -90,6 +90,10 @@ gps.initialize = async function (callback) {
         // generate GPS
         const gpsProtocols = ["NMEA", "UBLOX", "MSP"];
 
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+            gpsProtocols.push("VIRTUAL");
+        }
+
         const gpsBaudRates = ["115200", "57600", "38400", "19200", "9600"];
 
         const gpsSbas = [
@@ -132,10 +136,6 @@ gps.initialize = async function (callback) {
         // auto_baud is no longer used in API 1.46
         if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
             gpsAutoBaudElement.prop("checked", FC.GPS_CONFIG.auto_baud === 1);
-        }
-
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
-            gpsProtocols.push("VIRTUAL");
         }
 
         gpsAutoConfigElement
