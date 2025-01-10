@@ -514,7 +514,9 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     FC.MOTOR_CONFIG.use_esc_sensor = data.readU8() != 0;
                     break;
                 case MSPCodes.MSP_COMPASS_CONFIG:
-                    FC.COMPASS_CONFIG.mag_declination = data.read16() / 10;
+                    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+                        FC.COMPASS_CONFIG.mag_declination = data.read16() / 10;
+                    }
                     break;
                 case MSPCodes.MSP_GPS_CONFIG:
                     FC.GPS_CONFIG.provider = data.readU8();
@@ -633,6 +635,15 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     FC.SENSOR_ALIGNMENT.gyro_to_use = data.readU8();
                     FC.SENSOR_ALIGNMENT.gyro_1_align = data.readU8();
                     FC.SENSOR_ALIGNMENT.gyro_2_align = data.readU8();
+                    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+                        FC.SENSOR_ALIGNMENT.gyro_align_roll = data.read16() / 10;
+                        FC.SENSOR_ALIGNMENT.gyro_align_pitch = data.read16() / 10;
+                        FC.SENSOR_ALIGNMENT.gyro_align_yaw = data.read16() / 10;
+
+                        FC.SENSOR_ALIGNMENT.mag_align_roll = data.read16() / 10;
+                        FC.SENSOR_ALIGNMENT.mag_align_pitch = data.read16() / 10;
+                        FC.SENSOR_ALIGNMENT.mag_align_yaw = data.read16() / 10;
+                    }
                     break;
                 case MSPCodes.MSP_DISPLAYPORT:
                     break;
@@ -773,14 +784,13 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     FC.CONFIG.apiVersion = `${data.readU8()}.${data.readU8()}.0`;
                     break;
 
-                case MSPCodes.MSP_FC_VARIANT: {
+                case MSPCodes.MSP_FC_VARIANT:
                     let fcVariantIdentifier = "";
                     for (let i = 0; i < 4; i++) {
                         fcVariantIdentifier += String.fromCharCode(data.readU8());
                     }
                     FC.CONFIG.flightControllerIdentifier = fcVariantIdentifier;
                     break;
-                }
 
                 case MSPCodes.MSP_FC_VERSION:
                     FC.CONFIG.flightControllerVersion = `${data.readU8()}.${data.readU8()}.${data.readU8()}`;
@@ -899,7 +909,7 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     console.log("Channel forwarding saved");
                     break;
 
-                case MSPCodes.MSP_CF_SERIAL_CONFIG: {
+                case MSPCodes.MSP_CF_SERIAL_CONFIG:
                     FC.SERIAL_CONFIG.ports = [];
                     const bytesPerPort = 1 + 2 + 1 * 4;
 
@@ -917,7 +927,6 @@ MspHelper.prototype.process_data = function (dataHandler) {
                         FC.SERIAL_CONFIG.ports.push(serialPort);
                     }
                     break;
-                }
 
                 case MSPCodes.MSP2_COMMON_SERIAL_CONFIG:
                     FC.SERIAL_CONFIG.ports = [];
@@ -1897,7 +1906,9 @@ MspHelper.prototype.crunch = function (code, modifierCode = undefined) {
             buffer.push16(FC.GPS_RESCUE.initialClimbM);
             break;
         case MSPCodes.MSP_SET_COMPASS_CONFIG:
-            buffer.push16(Math.round(10.0 * parseFloat(FC.COMPASS_CONFIG.mag_declination)));
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+                buffer.push16(Math.round(10.0 * parseFloat(FC.COMPASS_CONFIG.mag_declination)));
+            }
             break;
         case MSPCodes.MSP_SET_RSSI_CONFIG:
             buffer.push8(FC.RSSI_CONFIG.channel);
@@ -2045,6 +2056,15 @@ MspHelper.prototype.crunch = function (code, modifierCode = undefined) {
                 .push8(FC.SENSOR_ALIGNMENT.gyro_to_use)
                 .push8(FC.SENSOR_ALIGNMENT.gyro_1_align)
                 .push8(FC.SENSOR_ALIGNMENT.gyro_2_align);
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+                buffer.push16(FC.SENSOR_ALIGNMENT.gyro_align_roll * 10);
+                buffer.push16(FC.SENSOR_ALIGNMENT.gyro_align_pitch * 10);
+                buffer.push16(FC.SENSOR_ALIGNMENT.gyro_align_yaw * 10);
+
+                buffer.push16(FC.SENSOR_ALIGNMENT.mag_align_roll * 10);
+                buffer.push16(FC.SENSOR_ALIGNMENT.mag_align_pitch * 10);
+                buffer.push16(FC.SENSOR_ALIGNMENT.mag_align_yaw * 10);
+            }
             break;
         case MSPCodes.MSP_SET_ADVANCED_CONFIG:
             buffer

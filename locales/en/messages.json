@@ -1393,8 +1393,20 @@
     "configurationOtherFeaturesHelp": {
         "message": "<strong>Note:</strong> Not all features are supported by all flight controllers. If you enable a specific feature, and it is disabled after you hit 'Save and Reboot', it means that this feature is not supported on your board."
     },
+    "configurationMagAlignmentHelp": {
+        "message": "The magnetometer alignment is the orientation of the magnetometer sensor on the flight controller board. The default is usually correct, but if you have a custom build or a flight controller with a different magnetometer orientation, you may need to adjust this setting."
+    },
+    "configurationMagDeclination": {
+        "message": "Magnetometer Declination"
+    },
+    "configurationMagDeclinationInput": {
+        "message": "Declination Degrees"
+    },
+    "configurationMagDeclinationHelp": {
+        "message": "The magnetic declination is the angle between magnetic north and true north. It is different for every location on earth. You can find the declination for your location on the internet"
+    },
     "configurationBoardAlignment": {
-        "message": "Board and Sensor Alignment"
+        "message": "Board Alignment"
     },
     "configurationBoardAlignmentRoll": {
         "message": "Roll Degrees"
@@ -1404,6 +1416,36 @@
     },
     "configurationBoardAlignmentYaw": {
         "message": "Yaw Degrees"
+    },
+    "configurationGyroAlignment": {
+        "message": "Gyro Alignment"
+    },
+    "configurationGyroAlignmentHelp": {
+        "message": "The gyro alignment is the orientation of the gyro sensor on the flight controller board. The default is usually correct, but if you have a custom build or a flight controller with a different gyro orientation, you may need to adjust this setting."
+    },
+    "configurationGyroAlignmentRoll": {
+        "message": "$t(configurationBoardAlignmentRoll.message)"
+    },
+    "configurationGyroAlignmentPitch": {
+        "message": "$t(configurationBoardAlignmentPitch.message)"
+    },
+    "configurationGyroAlignmentYaw": {
+        "message": "$t(configurationBoardAlignmentYaw.message)"
+    },
+    "configurationMagAlignment": {
+        "message": "Magnetometer Alignment"
+    },
+    "configurationBoardAlignmentHelp": {
+        "message": "Arbitrary board rotation in degrees, to allow mounting it sideways / upside down / rotated etc. When running external sensors, use the sensor alignments (Gyro, Acc, Mag) to define sensor position independent from board orientation. "
+    },
+    "configurationMagAlignmentRoll": {
+        "message": "$t(configurationBoardAlignmentRoll.message)"
+    },
+    "configurationMagAlignmentPitch": {
+        "message": "$t(configurationBoardAlignmentPitch.message)"
+    },
+    "configurationMagAlignmentYaw": {
+        "message": "$t(configurationBoardAlignmentYaw.message)"
     },
     "configurationSensorAlignmentGyro": {
         "message": "GYRO Alignment"
@@ -1432,9 +1474,6 @@
     "configurationSensorAlignmentAcc": {
         "message": "ACCEL Alignment"
     },
-    "configurationSensorAlignmentMag": {
-        "message": "MAG Alignment"
-    },
     "configurationSensorAlignmentDefaultOption": {
        "message": "Default"
     },
@@ -1452,9 +1491,6 @@
     },
     "configurationArmingHelp": {
         "message": "Some Arming options may require accelerometer be enabled"
-    },
-    "configurationMagDeclination": {
-        "message": "Magnetometer Declination [deg]"
     },
     "configurationReverseMotorSwitch": {
         "message": "Motor direction is reversed"
@@ -4654,9 +4690,6 @@
     },
     "pidTuningIntegratedYawHelp": {
         "message": "Integrated Yaw integrates yaw P, I and D values, allowing yaw P, I and D to be tuned a bit like you'd tune pitch and roll.<br><br>Very little I is required, because the integrated P acts like I, and integrated D acts like P.<br><br>NOTE: Integrated Yaw requires use of Absolute Control, since no I is needed with Integrated Yaw."
-    },
-    "configHelp2": {
-        "message": "Arbitrary board rotation in degrees, to allow mounting it sideways / upside down / rotated etc. When running external sensors, use the sensor alignments (Gyro, Acc, Mag) to define sensor position independent from board orientation. "
     },
     "failsafeFeaturesHelpOld": {
         "message": "Failsafe configuration has changed considerably. Use Betaflight <strong>v1.12.0+</strong> to enable the improved configuration panel."

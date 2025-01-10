@@ -6,9 +6,10 @@ import { mspHelper } from "../msp/MSPHelper";
 import FC from "../fc";
 import MSP from "../msp";
 import MSPCodes from "../msp/MSPCodes";
-import { API_VERSION_1_45, API_VERSION_1_46 } from "../data_storage";
+import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "../data_storage";
 import { updateTabList } from "../utils/updateTabList";
 import $ from "jquery";
+import { have_sensor } from "../sensor_helpers";
 
 const configuration = {
     analyticsChanges: {},
@@ -53,6 +54,11 @@ configuration.initialize = function (callback) {
                     : Promise.resolve(true),
             )
             .then(() => MSP.promise(MSPCodes.MSP_ADVANCED_CONFIG))
+            .then(() =>
+                semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)
+                    ? MSP.promise(MSPCodes.MSP_COMPASS_CONFIG)
+                    : Promise.resolve(true),
+            )
             .then(() => load_html());
     }
 
@@ -116,52 +122,26 @@ configuration.initialize = function (callback) {
             "Custom",
         ];
 
-        const gyro_align_content_e = $(".tab-configuration .gyro_align_content");
-        const legacy_gyro_alignment_e = $(".tab-configuration .legacy_gyro_alignment");
-        const legacy_accel_alignment_e = $(".tab-configuration .legacy_accel_alignment");
-
-        const orientation_gyro_e = $("select.gyroalign");
-        const orientation_acc_e = $("select.accalign");
         const orientation_mag_e = $("select.magalign");
 
         const orientation_gyro_to_use_e = $("select.gyro_to_use");
         const orientation_gyro_1_align_e = $("select.gyro_1_align");
         const orientation_gyro_2_align_e = $("select.gyro_2_align");
 
-        gyro_align_content_e.hide(); // default value
+        const hasMag =
+            have_sensor(FC.CONFIG.activeSensors, "mag") && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46);
+
+        if (hasMag) {
+            $('input[name="mag_declination"]').val(FC.COMPASS_CONFIG.mag_declination.toFixed(1));
+        } else {
+            $("div.mag_declination").parent().parent().hide();
+        }
+
         for (let i = 0; i < alignments.length; i++) {
-            orientation_gyro_e.append(`<option value="${i + 1}">${alignments[i]}</option>`);
-            orientation_acc_e.append(`<option value="${i + 1}">${alignments[i]}</option>`);
             orientation_mag_e.append(`<option value="${i + 1}">${alignments[i]}</option>`);
         }
 
-        orientation_gyro_e.val(FC.SENSOR_ALIGNMENT.align_gyro);
-        orientation_acc_e.val(FC.SENSOR_ALIGNMENT.align_acc);
         orientation_mag_e.val(FC.SENSOR_ALIGNMENT.align_mag);
-
-        orientation_gyro_e.change(function () {
-            let value = parseInt($(this).val());
-
-            let newValue = undefined;
-            if (value !== FC.SENSOR_ALIGNMENT.align_gyro) {
-                newValue = $(this).find("option:selected").text();
-            }
-            self.analyticsChanges["GyroAlignment"] = newValue;
-
-            FC.SENSOR_ALIGNMENT.align_gyro = value;
-        });
-
-        orientation_acc_e.change(function () {
-            let value = parseInt($(this).val());
-
-            let newValue = undefined;
-            if (value !== FC.SENSOR_ALIGNMENT.align_acc) {
-                newValue = $(this).find("option:selected").text();
-            }
-            self.analyticsChanges["AccAlignment"] = newValue;
-
-            FC.SENSOR_ALIGNMENT.align_acc = value;
-        });
 
         orientation_mag_e.change(function () {
             let value = parseInt($(this).val());
@@ -173,13 +153,11 @@ configuration.initialize = function (callback) {
             self.analyticsChanges["MagAlignment"] = newValue;
 
             FC.SENSOR_ALIGNMENT.align_mag = value;
+
+            toggleMagCustomAlignmentInputs();
         });
 
         // Multi gyro config
-
-        gyro_align_content_e.show();
-        legacy_gyro_alignment_e.hide();
-        legacy_accel_alignment_e.hide();
 
         const GYRO_DETECTION_FLAGS = {
             DETECTED_GYRO_1: 1 << 0,
@@ -217,6 +195,45 @@ configuration.initialize = function (callback) {
         orientation_gyro_1_align_e.val(FC.SENSOR_ALIGNMENT.gyro_1_align);
         orientation_gyro_2_align_e.val(FC.SENSOR_ALIGNMENT.gyro_2_align);
 
+        function toggleGyroCustomAlignmentInputs() {
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+                const customEnabled =
+                    orientation_gyro_to_use_e.val() === "1" // 0 = gyro 1, 1 = gyro 2, 2 = both
+                        ? FC.SENSOR_ALIGNMENT.gyro_2_align !== 9
+                        : FC.SENSOR_ALIGNMENT.gyro_1_align !== 9;
+
+                $('input[name="gyro_align_roll"]').attr("disabled", customEnabled);
+                $('input[name="gyro_align_pitch"]').attr("disabled", customEnabled);
+                $('input[name="gyro_align_yaw"]').attr("disabled", customEnabled);
+            }
+        }
+
+        function toggleMagCustomAlignmentInputs() {
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+                $('input[name="mag_align_roll"]').attr("disabled", FC.SENSOR_ALIGNMENT.align_mag !== 9);
+                $('input[name="mag_align_pitch"]').attr("disabled", FC.SENSOR_ALIGNMENT.align_mag !== 9);
+                $('input[name="mag_align_yaw"]').attr("disabled", FC.SENSOR_ALIGNMENT.align_mag !== 9);
+            }
+        }
+
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+            $(".tab-configuration .gyro_align_custom").show();
+            $('input[name="gyro_align_roll"]').val(FC.SENSOR_ALIGNMENT.gyro_align_roll);
+            $('input[name="gyro_align_pitch"]').val(FC.SENSOR_ALIGNMENT.gyro_align_pitch);
+            $('input[name="gyro_align_yaw"]').val(FC.SENSOR_ALIGNMENT.gyro_align_yaw);
+
+            $(".tab-configuration .mag_align_custom").show();
+            $('input[name="mag_align_roll"]').val(FC.SENSOR_ALIGNMENT.mag_align_roll);
+            $('input[name="mag_align_pitch"]').val(FC.SENSOR_ALIGNMENT.mag_align_pitch);
+            $('input[name="mag_align_yaw"]').val(FC.SENSOR_ALIGNMENT.mag_align_yaw);
+
+            toggleGyroCustomAlignmentInputs();
+            toggleMagCustomAlignmentInputs();
+        } else {
+            $(".tab-configuration .gyro_align_custom").hide();
+            $(".tab-configuration .mag_align_custom").hide();
+        }
+
         $(".gyro_alignment_inputs_first").toggle(detected_gyro_1);
         $(".gyro_alignment_inputs_second").toggle(detected_gyro_2);
         $(".gyro_alignment_inputs_selection").toggle(detected_gyro_1 || detected_gyro_2);
@@ -230,8 +247,9 @@ configuration.initialize = function (callback) {
                 newValue = $(this).find("option:selected").text();
             }
             self.analyticsChanges["Gyro1Alignment"] = newValue;
-
             FC.SENSOR_ALIGNMENT.gyro_1_align = value;
+
+            toggleGyroCustomAlignmentInputs();
         });
 
         orientation_gyro_2_align_e.change(function () {
@@ -242,8 +260,9 @@ configuration.initialize = function (callback) {
                 newValue = $(this).find("option:selected").text();
             }
             self.analyticsChanges["Gyro2Alignment"] = newValue;
-
             FC.SENSOR_ALIGNMENT.gyro_2_align = value;
+
+            toggleGyroCustomAlignmentInputs();
         });
 
         // Gyro and PID update
@@ -395,6 +414,16 @@ configuration.initialize = function (callback) {
             FC.BOARD_ALIGNMENT_CONFIG.pitch = parseInt($('input[name="board_align_pitch"]').val());
             FC.BOARD_ALIGNMENT_CONFIG.yaw = parseInt($('input[name="board_align_yaw"]').val());
 
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+                FC.SENSOR_ALIGNMENT.gyro_align_roll = parseInt($('input[name="gyro_align_roll"]').val());
+                FC.SENSOR_ALIGNMENT.gyro_align_pitch = parseInt($('input[name="gyro_align_pitch"]').val());
+                FC.SENSOR_ALIGNMENT.gyro_align_yaw = parseInt($('input[name="gyro_align_yaw"]').val());
+
+                FC.SENSOR_ALIGNMENT.mag_align_roll = parseInt($('input[name="mag_align_roll"]').val());
+                FC.SENSOR_ALIGNMENT.mag_align_pitch = parseInt($('input[name="mag_align_pitch"]').val());
+                FC.SENSOR_ALIGNMENT.mag_align_yaw = parseInt($('input[name="mag_align_yaw"]').val());
+            }
+
             FC.CONFIG.accelerometerTrims[1] = parseInt($('input[name="roll"]').val());
             FC.CONFIG.accelerometerTrims[0] = parseInt($('input[name="pitch"]').val());
 
@@ -407,6 +436,12 @@ configuration.initialize = function (callback) {
                     FC.ARMING_CONFIG.auto_disarm_delay = parseInt($('input[id="configurationAutoDisarmDelay"]').val());
                 }
             }
+
+            // declination added first in #3676
+            if (hasMag) {
+                FC.COMPASS_CONFIG.mag_declination = $('input[name="mag_declination"]').val();
+            }
+
             FC.ARMING_CONFIG.small_angle = parseInt($('input[id="configurationSmallAngle"]').val());
 
             FC.SENSOR_ALIGNMENT.gyro_to_use = parseInt(orientation_gyro_to_use_e.val());
@@ -498,6 +533,14 @@ configuration.initialize = function (callback) {
                             : Promise.resolve(true),
                     )
                     .then(() => MSP.promise(MSPCodes.MSP_SET_RX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_RX_CONFIG)))
+                    .then(() =>
+                        semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)
+                            ? MSP.promise(
+                                MSPCodes.MSP_SET_COMPASS_CONFIG,
+                                mspHelper.crunch(MSPCodes.MSP_SET_COMPASS_CONFIG),
+                            )
+                            : Promise.resolve(true),
+                    )
                     .then(() => mspHelper.writeConfiguration(true));
             }
 
