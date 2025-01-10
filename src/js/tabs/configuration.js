@@ -122,7 +122,6 @@ configuration.initialize = function (callback) {
             "Custom",
         ];
 
-        const orientation_gyro_e = $("select.gyroalign");
         const orientation_mag_e = $("select.magalign");
 
         const orientation_gyro_to_use_e = $("select.gyro_to_use");
@@ -139,24 +138,10 @@ configuration.initialize = function (callback) {
         }
 
         for (let i = 0; i < alignments.length; i++) {
-            orientation_gyro_e.append(`<option value="${i + 1}">${alignments[i]}</option>`);
             orientation_mag_e.append(`<option value="${i + 1}">${alignments[i]}</option>`);
         }
 
-        orientation_gyro_e.val(FC.SENSOR_ALIGNMENT.align_gyro);
         orientation_mag_e.val(FC.SENSOR_ALIGNMENT.align_mag);
-
-        orientation_gyro_e.change(function () {
-            let value = parseInt($(this).val());
-
-            let newValue = undefined;
-            if (value !== FC.SENSOR_ALIGNMENT.align_gyro) {
-                newValue = $(this).find("option:selected").text();
-            }
-            self.analyticsChanges["GyroAlignment"] = newValue;
-
-            FC.SENSOR_ALIGNMENT.align_gyro = value;
-        });
 
         orientation_mag_e.change(function () {
             let value = parseInt($(this).val());
