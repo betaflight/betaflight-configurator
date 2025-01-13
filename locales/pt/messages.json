@@ -1310,9 +1310,6 @@
     "configurationOtherFeaturesHelp": {
         "message": "<strong>Nota:<\/strong> Nem todas as funcionalidades são suportadas por todas as controladoras de voo. Se ativar uma funcionalidade específica, e ela for desativada depois de clicar em 'Gravar e Reiniciar', significa que essa funcionalidade não é suportada pela placa."
     },
-    "configurationBoardAlignment": {
-        "message": "Alinhamento da placa e dos sensores"
-    },
     "configurationBoardAlignmentRoll": {
         "message": "Graus do Roll"
     },
@@ -1349,9 +1346,6 @@
     "configurationSensorAlignmentAcc": {
         "message": "Alinhamento ACCEL"
     },
-    "configurationSensorAlignmentMag": {
-        "message": "Alinhamento MAG"
-    },
     "configurationSensorAlignmentDefaultOption": {
         "message": "Padrão"
     },
@@ -1369,9 +1363,6 @@
     },
     "configurationArmingHelp": {
         "message": "Algumas opções de Armar podem necessitar que o acelerómetro esteja ativado"
-    },
-    "configurationMagDeclination": {
-        "message": "Declinação do Magnetómetro [deg]"
     },
     "configurationReverseMotorSwitch": {
         "message": "Direção do motor está invertida"
@@ -4567,9 +4558,6 @@
     },
     "pidTuningIntegratedYawHelp": {
         "message": "Yaw Integrado integra os valores do yaw P, I e D, permitindo aos yaw P, I e D serem afinados um pouco como a afinação do pitch e roll.<br><br>É necessário muito pouco I, porque o P integrado atua como I, e o D integrado atua como P.<br><br>NOTA: O Yaw Integrado requer o uso de Controle Absoluto, uma vez que nenhum I é necessário com Yaw Integrado."
-    },
-    "configHelp2": {
-        "message": "Rotação arbitrária da placa em graus, permite que a placa seja montada de lado, de cabeça para baixo, rodada, etc. Quando usar sensores externos, use o alinhamento dos sensores (Gyro, Accel, Mag) para definir uma posição do sensor independente da orientação da placa. "
     },
     "failsafeFeaturesHelpOld": {
         "message": "As configurações do Failsafe mudaram consideravelmente. Use o Betaflight <strong>v1.12.0+<\/strong> para ativar o painel de configuração melhorado."

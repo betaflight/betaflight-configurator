@@ -1310,8 +1310,20 @@
     "configurationOtherFeaturesHelp": {
         "message": "<strong>Примітка:<\/strong> Не всі функції підтримуються всіма польотними контролерами. Якщо ви включили певну функцію і після натискання кнопки «Зберегти та перезавантажити» вона вимкнулася, це означає, що ця функція не підтримується вашою платою."
     },
+    "configurationMagAlignmentHelp": {
+        "message": "Вирівнювання магнітометра — це орієнтація датчика магнітометра на платі польотного контролера. Значення за замовчуванням зазвичай правильне, але якщо ви маєте користувацьку збірку чи польотний контролер з іншою орієнтацією магнітометра, можливо потрібно буде змінити це налаштування."
+    },
+    "configurationMagDeclination": {
+        "message": "Схилення магнітометра"
+    },
+    "configurationMagDeclinationInput": {
+        "message": "Схилення в градусах"
+    },
+    "configurationMagDeclinationHelp": {
+        "message": "Магнітне схилення — це кут між магнітним і географічним північними полюсами. Воно відрізняється для кожного місця на Землі. Ви можете знайти значення схилення для вашого розташування в інтернеті"
+    },
     "configurationBoardAlignment": {
-        "message": "Вирівнювання плати та датчиків"
+        "message": "Вирівнювання плати"
     },
     "configurationBoardAlignmentRoll": {
         "message": "Крен, градусів"
@@ -1321,6 +1333,36 @@
     },
     "configurationBoardAlignmentYaw": {
         "message": "Рискання, градусів"
+    },
+    "configurationGyroAlignment": {
+        "message": "Вирівнювання гіроскопа"
+    },
+    "configurationGyroAlignmentHelp": {
+        "message": "Вирівнювання гіроскопа — це орієнтація датчика гіроскопа на платі польотного контролера. Значення за замовчуванням зазвичай правильне, але якщо ви маєте користувацьку збірку чи польотний контролер з іншою орієнтацією гіроскопа, можливо потрібно буде змінити це налаштування."
+    },
+    "configurationGyroAlignmentRoll": {
+        "message": "$t(configurationBoardAlignmentRoll.message)"
+    },
+    "configurationGyroAlignmentPitch": {
+        "message": "$t(configurationBoardAlignmentPitch.message)"
+    },
+    "configurationGyroAlignmentYaw": {
+        "message": "$t(configurationBoardAlignmentYaw.message)"
+    },
+    "configurationMagAlignment": {
+        "message": "Вирівнювання магнітометра"
+    },
+    "configurationBoardAlignmentHelp": {
+        "message": "Довільний поворот плати на кут у градусах дозволяє встановити її боком \/ догори дриґом \/ поверненою. При використанні зовнішніх датчиків, використовуйте корекцію датчиків (гіроскоп, акселерометр, компас) для визначення положення датчиків незалежно від орієнтації плати. "
+    },
+    "configurationMagAlignmentRoll": {
+        "message": "$t(configurationBoardAlignmentRoll.message)"
+    },
+    "configurationMagAlignmentPitch": {
+        "message": "$t(configurationBoardAlignmentPitch.message)"
+    },
+    "configurationMagAlignmentYaw": {
+        "message": "$t(configurationBoardAlignmentYaw.message)"
     },
     "configurationSensorAlignmentGyro": {
         "message": "Вирівнювання гіроскопа"
@@ -1349,9 +1391,6 @@
     "configurationSensorAlignmentAcc": {
         "message": "Вирівнювання акселерометра"
     },
-    "configurationSensorAlignmentMag": {
-        "message": "Вирівнювання магнітометра"
-    },
     "configurationSensorAlignmentDefaultOption": {
         "message": "За замовчуванням"
     },
@@ -1369,9 +1408,6 @@
     },
     "configurationArmingHelp": {
         "message": "Для деяких опцій взведення може знадобитися ввімкнений акселерометр"
-    },
-    "configurationMagDeclination": {
-        "message": "Схилення магнітометра [градуси]"
     },
     "configurationReverseMotorSwitch": {
         "message": "Напрямок мотора змінено на протилежний"
@@ -4567,9 +4603,6 @@
     },
     "pidTuningIntegratedYawHelp": {
         "message": "Інтегроване рискання, інтегрує значення P, I та D рискання, дозволяючи налаштовувати значення P, I та D для рискання, подібно до того, як налаштовують тангаж та крен.<br><br>Потрібен дуже малий I, оскільки інтегрований P діє подібно до I, а інтегрований D - до P.<br><br>ПРИМІТКА: для застосування інтегрованого рискання потрібно використовувати Absolute Control, оскільки при інтегрованому рисканні не потрібний I."
-    },
-    "configHelp2": {
-        "message": "Довільний поворот плати на кут у градусах дозволяє встановити її боком \/ догори дригом \/ поверненою. При використанні зовнішніх датчиків, використовуйте корекцію датчиків (гіроскоп, акселерометр, компас) для визначення положення датчиків незалежно від орієнтації плати. "
     },
     "failsafeFeaturesHelpOld": {
         "message": "Конфігурація безаварійності (failsafe) зазнала значних змін. Використовуйте Betaflight <strong>v1.12.0+<\/strong>, щоб увімкнути вдосконалену панель налаштувань."

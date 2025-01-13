@@ -889,9 +889,6 @@
     "configurationOtherFeaturesHelp": {
         "message": "<strong>Oharra:<\/strong> Aukera guztiak ez dira kontrolatzaile guztiek onartzen. Aukera jakin bat gaitzen baduzu eta 'Gorde eta berrabiarazi' sakatu ondoren itzaltzen bada, aukera hau ez da zure kontroladorean onartzen."
     },
-    "configurationBoardAlignment": {
-        "message": "Taula eta sentsoreen lerrokatzea"
-    },
     "configurationBoardAlignmentRoll": {
         "message": "Roll graduak"
     },
@@ -927,9 +924,6 @@
     },
     "configurationSensorAlignmentAcc": {
         "message": "AZEL Lerrokatzea"
-    },
-    "configurationSensorAlignmentMag": {
-        "message": "MAG Lerrokatzea"
     },
     "configurationSensorAlignmentDefaultOption": {
         "message": "Lehenetsia"
@@ -2892,9 +2886,6 @@
     },
     "pidTuningIntegratedYaw": {
         "message": "Yaw Integratua"
-    },
-    "configHelp2": {
-        "message": "Hegaldi kontroladorea edozein angeluan biratu(zutik, atzeraka, biraketa...). Kanpoko sentsoreak erabiltzen dituzunean, sentsoreen lerrokatzea erabili sentsoreen posizioak definitzeko, hegaldi kontroladorearen orientazioa edozein dela ere. "
     },
     "failsafeFeaturesHelpOld": {
         "message": "Segurtasun moduaren konfigurazioa asko aldatu da. Erabili Betaflight <strong>v1.12.0+<\/strong> konfigurazio panela hobetzeko."

@@ -924,9 +924,6 @@
     "configurationOtherFeaturesHelp": {
         "message": "<strong>Opmerking:<\/strong> Niet alle functies worden ondersteund door alle vluchtcontrollers. Als u een specifieke functie inschakelt en deze is uitgeschakeld nadat u op 'Sla op en herstart' klikt, betekent dit dat deze functie niet ondersteund wordt door uw vluchtcontroller."
     },
-    "configurationBoardAlignment": {
-        "message": "Richting van FC en Sensor"
-    },
     "configurationBoardAlignmentRoll": {
         "message": "Roll Graden"
     },
@@ -962,9 +959,6 @@
     },
     "configurationSensorAlignmentAcc": {
         "message": "Uitlijning Versnellingsmeter"
-    },
-    "configurationSensorAlignmentMag": {
-        "message": "Uitlijning Magnetometer"
     },
     "configurationSensorAlignmentDefaultOption": {
         "message": "Standaard"
@@ -3079,9 +3073,6 @@
     },
     "pidTuningIntegratedYaw": {
         "message": "Geïntegreerde Yaw"
-    },
-    "configHelp2": {
-        "message": "Willekeurige rotatie van het bord in graden. Hiermee maak je het mogelijk de vluchtcontroller gedraaid, ondersteboven of in een andere dan gebruikelijke positie te monteren. Gebruik bij externe sensoren de sensoruitlijningen (Gyro, Acc, Mag) om de sensorpositie onafhankelijk van de oriëntatie van het bord te definiëren. "
     },
     "failsafeFeaturesHelpOld": {
         "message": "Failsafe configuratie is aanzienlijk gewijzigd. Gebruik Betaflight <strong>v1.12.0+<\/strong> om het verbeterde configuratiescherm in te schakelen."

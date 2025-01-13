@@ -1310,8 +1310,20 @@
     "configurationOtherFeaturesHelp": {
         "message": "<strong>Nota:<\/strong> Non tutte le funzionalità sono supportate da tutti i controller di volo. Se abiliti una impostazione specifica e risulta disabilitata dopo aver fatto 'Salva e Riavvia', vuol dire che questa impostazione non è supportata dalla tua scheda."
     },
+    "configurationMagAlignmentHelp": {
+        "message": "L'allineamento del magnetometro è l'orientamento del sensore magnetometro sulla scheda del controllore di volo. Il valore predefinito è generalmente corretto, ma se si dispone di una build personalizzata o di un controllore di volo con un diverso orientamento, potrebbe essere necessario modificare questa impostazione."
+    },
+    "configurationMagDeclination": {
+        "message": "Declinazione Magnetometro"
+    },
+    "configurationMagDeclinationInput": {
+        "message": "Gradi Declinazione"
+    },
+    "configurationMagDeclinationHelp": {
+        "message": "La declinazione magnetica è l'angolo tra nord magnetico e nord vero. È diverso per ogni posizione sulla terra. Puoi trovare la declinazione per la tua posizione su internet"
+    },
     "configurationBoardAlignment": {
-        "message": "Allineamento Scheda e Sensori"
+        "message": "Allineamento Scheda"
     },
     "configurationBoardAlignmentRoll": {
         "message": "Gradi Roll"
@@ -1321,6 +1333,36 @@
     },
     "configurationBoardAlignmentYaw": {
         "message": "Gradi Yaw"
+    },
+    "configurationGyroAlignment": {
+        "message": "Allineamento Gyro"
+    },
+    "configurationGyroAlignmentHelp": {
+        "message": "L'allineamento del gyro è l'orientamento del sensore gyro sulla scheda del controllore di volo. Il valore predefinito è generalmente corretto, ma se si dispone di una build personalizzata o di un controllore di volo con un diverso orientamento, potrebbe essere necessario modificare questa impostazione."
+    },
+    "configurationGyroAlignmentRoll": {
+        "message": "$t(configurationBoardAlignmentRoll.message)"
+    },
+    "configurationGyroAlignmentPitch": {
+        "message": "$t(configurationBoardAlignmentPitch.message)"
+    },
+    "configurationGyroAlignmentYaw": {
+        "message": "$t(configurationBoardAlignmentYaw.message)"
+    },
+    "configurationMagAlignment": {
+        "message": "Allineamento Magnetometro"
+    },
+    "configurationBoardAlignmentHelp": {
+        "message": "Rotazione arbitraria del controllore di volo, per consentire di montarlo di lato, sottosopra, ruotato ecc. Quando si utilizzano sensori esterni, usa l'allineamento del sensore (Gyro, Acc, Mag) per definire la posizione del sensore indipendentemente dall'orientamento del controllore di volo. "
+    },
+    "configurationMagAlignmentRoll": {
+        "message": "$t(configurationBoardAlignmentRoll.message)"
+    },
+    "configurationMagAlignmentPitch": {
+        "message": "$t(configurationBoardAlignmentPitch.message)"
+    },
+    "configurationMagAlignmentYaw": {
+        "message": "$t(configurationBoardAlignmentYaw.message)"
     },
     "configurationSensorAlignmentGyro": {
         "message": "Allinea GYRO"
@@ -1349,9 +1391,6 @@
     "configurationSensorAlignmentAcc": {
         "message": "Allinea ACCEL"
     },
-    "configurationSensorAlignmentMag": {
-        "message": "Allinea MAG"
-    },
     "configurationSensorAlignmentDefaultOption": {
         "message": "Predefinito"
     },
@@ -1369,9 +1408,6 @@
     },
     "configurationArmingHelp": {
         "message": "Alcune opzioni di armamento motori possono richiedere l'abilitazione dell'accelerometro"
-    },
-    "configurationMagDeclination": {
-        "message": "Declinazione Magnetometro [gradi]"
     },
     "configurationReverseMotorSwitch": {
         "message": "Direzione motori invertita"
@@ -4567,9 +4603,6 @@
     },
     "pidTuningIntegratedYawHelp": {
         "message": "L'Integrated Yaw integra i valori di P, I e D del yaw, consentendo di impostare P, I e D del yaw un po' come quelle di pitch e roll.<br><br>È richiesta poca I perché la P integrata agisce come una I e la D integrata agisce come una P.<br><br>NOTA: L'integrated Yaw richiede l'uso dell'Absolute Control poiché non è necessaria nessuna I con l'integrated Yaw."
-    },
-    "configHelp2": {
-        "message": "Rotazione arbitraria del controllore di volo, per permettere di montarlo di lato, sottosopra, ruotato ecc.. Quando si utilizzano sensori esterni, usa l'allineamento del sensore (Gyro, Acc, Mag) per definire la posizione del sensore indipendente dall'orientamento del controllore di volo."
     },
     "failsafeFeaturesHelpOld": {
         "message": "La configurazione del Failsafe è cambiata considerevolmente. Usa Betaflight <strong>v1.12.0+<\/strong> per abilitare il pannello di configurazione migliorato."
