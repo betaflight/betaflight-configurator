@@ -1310,9 +1310,6 @@
     "configurationOtherFeaturesHelp": {
         "message": "<strong>注:<\/strong> すべての機能がすべてのフライトコントローラでサポートされている訳ではありません。 特定の機能を有効にして [保存して再起動] した後でも無効になっている場合は、この機能がボード上でサポートされていないことを意味します。"
     },
-    "configurationBoardAlignment": {
-        "message": "FCボード＆センサー アライメント"
-    },
     "configurationBoardAlignmentRoll": {
         "message": "ロール角度"
     },
@@ -1349,9 +1346,6 @@
     "configurationSensorAlignmentAcc": {
         "message": "Accel アライメント"
     },
-    "configurationSensorAlignmentMag": {
-        "message": "コンパス アライメント"
-    },
     "configurationSensorAlignmentDefaultOption": {
         "message": "デフォルト値"
     },
@@ -1369,9 +1363,6 @@
     },
     "configurationArmingHelp": {
         "message": "アーミングオプションによっては、加速度センサーを有効にする必要があります"
-    },
-    "configurationMagDeclination": {
-        "message": "コンパス偏角値 [deg]"
     },
     "configurationReverseMotorSwitch": {
         "message": "モーター回転方向: リバース構成"
@@ -4567,9 +4558,6 @@
     },
     "pidTuningIntegratedYawHelp": {
         "message": "統合ヨー制御は、ヨーP、I、Dの値を統合し、ピッチとロールを調整するのと同じようにヨーのP、I、D値を調整することができます。<br><br>統合されたP値はI値のように、統合されたD値はP値のように作用するため、I値はほとんど必要がなくなります。<br><br>備考: 統合ヨー制御ではI値が必要ないため、アブソリュート コントロールを使用する必要があります。"
-    },
-    "configHelp2": {
-        "message": "横向き \/ 下向き \/ 任意な回転による取付けが可能なFCボードの回転角度です。外部センサーを使用する場合は、センサーのアライメント (Gyro、Accel、コンパス) を使用して、ボードの向きから独立したセンサー位置を定義します。 "
     },
     "failsafeFeaturesHelpOld": {
         "message": "フェイルセーフ設定が大幅に変更されました。 改善された設定パネルを有効にするには、Betaflight <strong>v1.12.0 以上<\/strong> を使用してください。"

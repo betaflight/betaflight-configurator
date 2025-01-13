@@ -1314,9 +1314,6 @@
     "configurationOtherFeaturesHelp": {
         "message": "<strong>참고:<\/strong> 모든 기능이 모든 비행 컨트롤러에 의해 지원되지는 않습니다. 만약 특별한 기능을 활성화하고, '저장 및 재부팅'을 누른 후에 비활성된다면, 이는 이 기능이 당신의 보드에 지원되지 않음을 의미합니다."
     },
-    "configurationBoardAlignment": {
-        "message": "보드 및 센서 정렬"
-    },
     "configurationBoardAlignmentRoll": {
         "message": "롤 각도"
     },
@@ -1353,9 +1350,6 @@
     "configurationSensorAlignmentAcc": {
         "message": "가속도계 정렬"
     },
-    "configurationSensorAlignmentMag": {
-        "message": "자력계 정렬"
-    },
     "configurationSensorAlignmentDefaultOption": {
         "message": "기본값"
     },
@@ -1373,9 +1367,6 @@
     },
     "configurationArmingHelp": {
         "message": "몇몇 아밍 옵션은 가속도계 사용이 필요할 수도 있습니다."
-    },
-    "configurationMagDeclination": {
-        "message": "자력계 기울기 [도]"
     },
     "configurationReverseMotorSwitch": {
         "message": "모터 방향이 반대로 됩니다."
@@ -4571,9 +4562,6 @@
     },
     "pidTuningIntegratedYawHelp": {
         "message": "통합된 요는 요 P, I, D 값을 통합하여 요 P, I, D가 피치와 롤을 튜닝하는 것처럼 튜닝됩니다.<br><br>적분 P는 I처럼 작용하고, 적분 D는 P처럼 작용하기 때문에 I는 거의 필요하지 않습니다.<br><br>참고: 통합 요의 경우 I가 필요하지 않으므로, 통합 요의 경우 절대 제어를 사용해야 합니다."
-    },
-    "configHelp2": {
-        "message": "옆면 \/ 아래로 \/ 회전 등으로 장착 할 수 있는 임의의 보드 회전 각도(°). 외부 센서를 작동할 때 센서 정렬(자이로, 가속도계, 자력계)을 사용하여 보드 방향과 상관없이 센서 위치를 정의합니다."
     },
     "failsafeFeaturesHelpOld": {
         "message": "페일세이프 환경설정이 상당히 변경되었습니다. 개선 된 환경설정 패널을 사용하려면 베타플라이트 <strong>v1.12.0+<\/strong>을 사용하십시오."

@@ -1289,9 +1289,6 @@
     "configurationOtherFeaturesHelp": {
         "message": "<strong>Nota:<\/strong> Nem todas as funcionalidades são suportadas por todos os controladores de voo. Se ativar uma funcionalidade específica, e ela é desativada depois de clicar em 'Salvar e Reiniciar', significa que essa funcionalidade não é suportada pela placa."
     },
-    "configurationBoardAlignment": {
-        "message": "Alinhamento da placa e dos sensores"
-    },
     "configurationBoardAlignmentRoll": {
         "message": "Graus de Rotação (Roll)"
     },
@@ -1328,9 +1325,6 @@
     "configurationSensorAlignmentAcc": {
         "message": "Rotacionar Acelerômetro"
     },
-    "configurationSensorAlignmentMag": {
-        "message": "Rotacionar Magnetômetro"
-    },
     "configurationSensorAlignmentDefaultOption": {
         "message": "Padrão"
     },
@@ -1348,9 +1342,6 @@
     },
     "configurationArmingHelp": {
         "message": "Algumas opções de armar podem necessitar que o acelerômetro esteja ativado"
-    },
-    "configurationMagDeclination": {
-        "message": "Declinação do Magnetômetro [deg]"
     },
     "configurationReverseMotorSwitch": {
         "message": "Direção do motor é invertida"
@@ -4382,9 +4373,6 @@
     },
     "pidTuningIntegratedYawHelp": {
         "message": "Yaw Integrado integra os valores dos termos P, I e D do yaw, permitindo que sejam configurados da mesma maneira de como se configura o PID do pitch e roll.<br><br>É necessário muito pouco I, porque o P integrado atua como I, e o D integrado atua como P.<br><br>NOTA: O Yaw Integrado requer o uso de Controle Absoluto, uma vez que nenhum I é necessário com Yaw Integrado."
-    },
-    "configHelp2": {
-        "message": "Rotação da placa em graus, permite que a placa seja montada de lado, de cabeça para baixo, rotacionada, etc. Quando estiver utilizando sensores externos, use o alinhamento dos sensores (Gyro, Accel, Mag) para definir a posição do sensor independente da orientação da placa. "
     },
     "failsafeFeaturesHelpOld": {
         "message": "As configurações do Failsafe mudaram consideravelmente. Use o Betaflight <strong>v1.12.0+<\/strong> para ativar o painel de configuração aprimorado."

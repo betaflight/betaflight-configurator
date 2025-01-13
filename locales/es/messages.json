@@ -1310,9 +1310,6 @@
     "configurationOtherFeaturesHelp": {
         "message": "<strong>Nota:<\/strong> No todas las funcionalidades están soportadas por todos los controladores de vuelo. Si activas una funcionalidad específica, y se desactiva cuando pulsas 'Guardar y Reiniciar', significa que esa funcionalidad no está soportada por tu placa."
     },
-    "configurationBoardAlignment": {
-        "message": "Alineación de Placa y Sensores"
-    },
     "configurationBoardAlignmentRoll": {
         "message": "Grados Roll"
     },
@@ -1349,9 +1346,6 @@
     "configurationSensorAlignmentAcc": {
         "message": "Alineación ACEL"
     },
-    "configurationSensorAlignmentMag": {
-        "message": "Alineación MAG"
-    },
     "configurationSensorAlignmentDefaultOption": {
         "message": "Predeterminado"
     },
@@ -1369,9 +1363,6 @@
     },
     "configurationArmingHelp": {
         "message": "Algunas opciones de Armado pueden requerir que el acelerómetro esté activado"
-    },
-    "configurationMagDeclination": {
-        "message": "Declinación del magnetómetro [grad]"
     },
     "configurationReverseMotorSwitch": {
         "message": "Dirección de los motores invertida"
@@ -4567,9 +4558,6 @@
     },
     "pidTuningIntegratedYawHelp": {
         "message": "Yaw Integrado integra valores P, I y D del yaw, permitiendo que P, I y D de yaw se ajusten del mismo modo que se hace con el pitch y el roll.<br><br>Se necesita muy poca I, porque la P integrada actúa como I, y la D integrada actúa como P.<br><br>NOTA: Yaw integrado requiere el uso de Control Absoluto, ya que no se necesita I con Yaw Integrado."
-    },
-    "configHelp2": {
-        "message": "Rotación arbitraria de la placa en grados, para permitir montaje de lado \/ boca abajo \/ rotada etc. Al ejecutar sensores externos, usa la alineación del sensor (Giro, Acc, Mag) para definir la posición del sensor independientemente de la orientación de la placa. "
     },
     "failsafeFeaturesHelpOld": {
         "message": "La configuración del Modo de Seguridad ha cambiado considerablemente. Usa Betaflight<strong>v1.12.0+<\/strong> para activar el panel de configuración mejorado."

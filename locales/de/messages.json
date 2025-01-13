@@ -1288,9 +1288,6 @@
     "configurationOtherFeaturesHelp": {
         "message": "<strong>Hinweis:<\/strong> Nicht alle Funktionen werden von allen FC unterstützt. Sollte eine ausgewählte Funktion nach dem Speichern und Neustart wieder deaktiviert sein, so wird diese nicht unterstützt."
     },
-    "configurationBoardAlignment": {
-        "message": "Board- und Sensorausrichtung"
-    },
     "configurationBoardAlignmentRoll": {
         "message": "Roll Grad\/s"
     },
@@ -1327,9 +1324,6 @@
     "configurationSensorAlignmentAcc": {
         "message": "ACCEL Ausrichtung"
     },
-    "configurationSensorAlignmentMag": {
-        "message": "Magnetometer Ausrichtung"
-    },
     "configurationSensorAlignmentDefaultOption": {
         "message": "Standard"
     },
@@ -1347,9 +1341,6 @@
     },
     "configurationArmingHelp": {
         "message": "Manche Arming Optionen könnten einen aktivierten Beschleunigungssensor benötigen"
-    },
-    "configurationMagDeclination": {
-        "message": "Magnetometer Abweichung [Grad]"
     },
     "configurationReverseMotorSwitch": {
         "message": "Motordrehrichtung ist umgekehrt"
@@ -4331,9 +4322,6 @@
     },
     "pidTuningIntegratedYawHelp": {
         "message": "Der 'Integrierter Yaw' Wert integriert die Werte P, I und D und erlaubt Yaw den P, I, D etwas zu verändernt ähnlich wie wenn Du Pitch und Roll tunest.<br><br>I-Werte sind sehr wenig erforderlich, weil das integrierte P wie I wirkt und integrierte D-Werte wirken wie P.<br><br>HINWEIS: Integrierter Yaw erfordert die Verwendung von Absoluter Kontrolle, da I mit dem integrierten Yaw nicht benötigt wird."
-    },
-    "configHelp2": {
-        "message": "Abweichender Winkel (Grad) in dem das Board anders eingebaut wurde als vorgesehen (über Kopf, gedreht, usw.) Falls externe Sensoren (Gyro, Acc, Mag) verwendet werden, bitte diese ebenfalls neu anlernen."
     },
     "failsafeFeaturesHelpOld": {
         "message": "Die Failsafe-Einstellungen haben sich geändert. Benutze Betaflight <strong>V1.12.0+<\/strong>, um auf die verbesserten Einstellungen zuzugreifen."

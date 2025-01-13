@@ -182,7 +182,7 @@
         "description": "Don't translate!!!"
     },
     "sensorDataFlashNotFound": {
-        "message": "Nie znaleziono <br>układu scalonego",
+        "message": "Nie wykryto <br>pamięci flash",
         "description": "Text of the dataflash image in the header of the page."
     },
     "sensorDataFlashFreeSpace": {
@@ -1174,10 +1174,10 @@
         "message": "Nie obracaj śmigłami po uzbrojeniu"
     },
     "featureSERVO_TILT": {
-        "message": "Servo gimbal"
+        "message": "Gimbal z serwomechanizmów"
     },
     "featureSERVO_TILTTip": {
-        "message": "Ta funkcja włącza tryb CAMSTAB, którego można użyć do utrzymania maksymalnie dwóch osi za pomocą akcelerometru"
+        "message": "Funkcja ta włącza tryb CAMSTAB, który może służyć do stabilnego utrzymania nawet do dwóch osi przy użyciu akcelerometru"
     },
     "featureSOFTSERIAL": {
         "message": "Uruchom Serial Porty bazujące na CPU"
@@ -1189,7 +1189,7 @@
         "message": "GPS do nawigacji i telemetrii"
     },
     "featureGPSTip": {
-        "message": "Włącz GPS. Skonfiguruj również  tę opcję w zakładce Porty"
+        "message": "Włącza GPS, lecz wymaga najpierw konfiguracji w zakładce Porty"
     },
     "featureSONAR": {
         "message": "Sonar"
@@ -1231,7 +1231,7 @@
         "message": "Jeżeli ta funkcja jest uruchomiona i nie jest podłączony wyświetlacz (lub nie jest zasilony), każde uruchomienie lub restart kontrolera lotu będzie dłuższe o około 10 sekund."
     },
     "featureOSD": {
-        "message": "OSD"
+        "message": "On Screen Display"
     },
     "featureOSDTip": {
         "message": "Włącz OSD. Skonfiguruj również tę opcję w zakładce OSD"
@@ -1314,8 +1314,20 @@
     "configurationOtherFeaturesHelp": {
         "message": "<strong>Uwaga:<\/strong> Nie każda funkcja jest obsługiwana przez każdy kontroler lotu. Jeśli włączysz daną funkcję a po wciśnięciu 'Zapisz i zrestartuj' nie zostanie ona włączona to oznacza, że funkcja ta jest nieobsługiwana przez twój kontroler lotu."
     },
+    "configurationMagAlignmentHelp": {
+        "message": "Ustawienie magnetometru to orientacja czujnika magnetometru na płycie kontrolera lotu. Wartość domyślna jest zwykle poprawna, ale jeśli masz niestandardową konstrukcję lub kontroler lotu z inną orientacją magnetometru, może być konieczne dostosowanie tego ustawienia."
+    },
+    "configurationMagDeclination": {
+        "message": "Deklinacja magnetometru"
+    },
+    "configurationMagDeclinationInput": {
+        "message": "Deklinacja Stopnie"
+    },
+    "configurationMagDeclinationHelp": {
+        "message": "Deklinacja magnetyczna jest kątem pomiędzy północą geograficzną a magnetyczną. Jest różna dla każdej lokalizacji na ziemi. Deklinację magnetyczną dla swojej lokalizacji możesz znaleźć w Internecie"
+    },
     "configurationBoardAlignment": {
-        "message": "Ułożenie płytki i czujników"
+        "message": "Ułożenie kontrolera lotu"
     },
     "configurationBoardAlignmentRoll": {
         "message": "Roll (stopnie)"
@@ -1325,6 +1337,36 @@
     },
     "configurationBoardAlignmentYaw": {
         "message": "Yaw (stopnie)"
+    },
+    "configurationGyroAlignment": {
+        "message": "Ułożenie żyroskopu"
+    },
+    "configurationGyroAlignmentHelp": {
+        "message": "Ułożenie żyroskopu jest jego orientacją na płycie kontrolera lotu. Domyślna wartość jest zazwyczaj poprawna, ale jeśli masz niestandardową konstrukcję lub kontroler lotu z inną orientacją żyroskopu, może być konieczne dostosowanie tego ustawienia."
+    },
+    "configurationGyroAlignmentRoll": {
+        "message": "$t(configurationBoardAlignmentRoll.message)"
+    },
+    "configurationGyroAlignmentPitch": {
+        "message": "$t(configurationBoardAlignmentPitch.message)"
+    },
+    "configurationGyroAlignmentYaw": {
+        "message": "$t(configurationBoardAlignmentYaw.message)"
+    },
+    "configurationMagAlignment": {
+        "message": "Ułożenie magnetometru"
+    },
+    "configurationBoardAlignmentHelp": {
+        "message": "Dowolny obrót kontrolera lotu wyrażony w stopniach, który umożliwia jego montaż bokiem, do góry nogami itp. W przypadku korzystania z zewnętrznych czujników (Gyro, Akcel, Mag) należy ustawić ich ułożenia, by określić ich niezależne położenie względem orientacji kontrolera lotu."
+    },
+    "configurationMagAlignmentRoll": {
+        "message": "$t(configurationBoardAlignmentRoll.message)"
+    },
+    "configurationMagAlignmentPitch": {
+        "message": "$t(configurationBoardAlignmentPitch.message)"
+    },
+    "configurationMagAlignmentYaw": {
+        "message": "$t(configurationBoardAlignmentYaw.message)"
     },
     "configurationSensorAlignmentGyro": {
         "message": "Ułożenie żyroskopu"
@@ -1353,9 +1395,6 @@
     "configurationSensorAlignmentAcc": {
         "message": "Ułożenie akcelerometru"
     },
-    "configurationSensorAlignmentMag": {
-        "message": "Ułożenie magnetometru"
-    },
     "configurationSensorAlignmentDefaultOption": {
         "message": "Domyślne"
     },
@@ -1373,9 +1412,6 @@
     },
     "configurationArmingHelp": {
         "message": "Niektóre opcje uzbrajania mogą wymagać uruchomionego akcelerometru"
-    },
-    "configurationMagDeclination": {
-        "message": "Deklinacja magnetometru [stopnie]"
     },
     "configurationReverseMotorSwitch": {
         "message": "Kierunek silników jest odwrócony"
@@ -1586,11 +1622,11 @@
         "description": "Help text for the option to use Galileo in the GPS configuration"
     },
     "configurationGPSHomeOnce": {
-        "message": "Ustaw punkt początkowy",
+        "message": "Ustal Miejsce Startu jednorazowo",
         "description": "Option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
     },
     "configurationGPSHomeOnceHelp": {
-        "message": "Jeśli opcja jest włączona, wtedy tylko pierwsze uzbrojenie jednostki latającej po podłączeniu akumulatora ustali punkt początkowy. Jeśli opcja jest wyłączona, to za każdym razem, gdy quad zostanie uzbrojony, punkt początkowy zostanie zaktualizowany.",
+        "message": "Jeśli opcja jest włączona, wtedy tylko pierwsze uzbrojenie silników modelu po podłączeniu akumulatora spowoduje ustalenie Miejsca Startu. Jeśli opcja jest wyłączona, to każde nowe uzbrojenie spowoduje nadpisanie położenia Miejsca Startu.",
         "description": "Help text for the option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
     },
     "configurationSerialRX": {
@@ -2252,7 +2288,7 @@
         "message": "Zapytanie o powiązanie wysłane do kontrolera lotu."
     },
     "receiverButtonBindingPhrase": {
-        "message": "Wiążąca fraza"
+        "message": "Fraza powiązania"
     },
     "receiverButtonSticks": {
         "message": "Emulator radiowy",
@@ -2384,7 +2420,7 @@
         "description": "Help text to CAMSTAB mode"
     },
     "auxiliaryHelpMode_FAILSAFE": {
-        "message": "Wejdź ręcznie w drugi etap Failsafe",
+        "message": "Wywołuje ręcznie Etap 2 procedury Fail-Safe",
         "description": "Help text to FAILSAFE mode"
     },
     "auxiliaryHelpMode_FLIPOVERAFTERCRASH": {
@@ -2432,7 +2468,7 @@
         "description": "Help text to MSP OVERRIDE mode"
     },
     "auxiliaryHelpMode_OSDDISABLE": {
-        "message": "Włącz\/wyłącz wyświetlanie na ekranie",
+        "message": "Włącza\/wyłącza On-Screen-Display",
         "description": "Help text to OSD mode"
     },
     "auxiliaryHelpMode_PASSTHRU": {
@@ -2588,10 +2624,10 @@
         "message": "Roll Rate"
     },
     "adjustmentsFunction15": {
-        "message": "Regulacja skoku P"
+        "message": "Regulacja P w osi Pitch"
     },
     "adjustmentsFunction16": {
-        "message": "Skok i Regulacja"
+        "message": "Regulacja I w osi Pitch"
     },
     "adjustmentsFunction17": {
         "message": "Regulacja Pitch D"
@@ -2732,10 +2768,10 @@
         "message": "Kąt przy max"
     },
     "servosRateAndDirection": {
-        "message": "Stawka i kierunek"
+        "message": "Wychylenie i kierunek"
     },
     "servosRate": {
-        "message": "Stawka:",
+        "message": "Wychylenie:",
         "description": "Label for 'Rate:' direction"
     },
     "servosLiveMode": {
@@ -3133,7 +3169,7 @@
         "message": "Magnetometr"
     },
     "sensorsAltitudeTitle": {
-        "message": "Wysokośc-metry"
+        "message": "Wysokość - metry"
     },
     "sensorsAltitudeHint": {
         "message": "Wysokość jest obliczana za pomocą barometru (jeśli jest dostępny) oraz z pomocą GPS (jeśli jest dostępny). Jeśli GPS jest podłączony i jest w zasięgu kilku satelit to wysokość bezwzględna nad poziomem morza zostanie pokazana po rozbrojeniu. Po uzbrojeniu zostanie wyświetlona wysokość względem pozycji podczas uzbrajania."
@@ -3494,7 +3530,7 @@
         "message": "Wersje stabilne z przedpremierowymi"
     },
     "firmwareFlasherOptionLabelBuildTypeDevelopment": {
-        "message": "Wersje rozbudowane"
+        "message": "Wersje rozwojowe"
     },
     "firmwareFlasherOptionLabelBuildTypeAKK3_3": {
         "message": "3.3 AKK & RDQ VTX Patch"
@@ -4572,9 +4608,6 @@
     "pidTuningIntegratedYawHelp": {
         "message": "Zintegrowany odchylacz integruje wartości P, I i D odchyłu, umożliwiając dostrojenie wartości P, I i D odchyłu w sposób podobny do tego, w jaki dostrajasz nachylenie i przechył.<br><br>Wymagana jest bardzo mała ilość I, ponieważ zintegrowane P działa jak I, a zintegrowane D działa jak P.<br><br>UWAGA: Zintegrowany odchylacz wymaga użycia sterowania absolutnego, ponieważ w przypadku Zintegrowanego odchyłu nie jest potrzebne I."
     },
-    "configHelp2": {
-        "message": "Umożliwia dowolny obrót kontrolera lotu w stopniach. Ma to umożliwić montaż kontrolera: bokiem\/ do góry nogami \/ itp. Podczas uruchamiania zewnętrznych czujników, użyj ustawień czujników (Gyro, Akcel, Mag), aby określić położenie czujnika niezależnie od orientacji kontrolera lotów. "
-    },
     "failsafeFeaturesHelpOld": {
         "message": "Konfiguracja failsafe nie powiodła się. Użyj Betaflight <strong>v1.12.0+<\/strong>, aby włączyć ulepszony panel konfiguracyjny."
     },
@@ -4624,16 +4657,16 @@
         "message": "ETAP 2 - USTAWIENIA"
     },
     "failsafeDelayItem": {
-        "message": "Czas trwania Etapu pierwszego w trybie failsafe po utracie sygnału [sekund]"
+        "message": "Czas trwania Etapu 1 procedury Fail-Safe po utracie sygnału [sekundy]"
     },
     "failsafeDelayHelp": {
         "message": "Ustaw czas opóźnienia zabezpieczenia przed utratą sygnału Etapu pierwszego. Jeżeli czas upłynie, a sygnał nie zostanie odzyskany, rozpocznie się Etap drugi failsafe"
     },
     "failsafeThrottleLowItem": {
-        "message": "Failsafe niskie położenie przepustnicy [sekund]"
+        "message": "Fail-Safe wywołany niskim położeniem przepustnicy [sekundy]"
     },
     "failsafeThrottleLowHelp": {
-        "message": "Wystarczy rozbroić model zamiast wykonać wybraną procedurę awaryjną, aby przepustnica była nieaktywna"
+        "message": "Gdy przez wpisany tutaj czas przepustnica była w pozycji dolnej po prostu rozbrajane są silniki modelu, zamiast wykonywać wybraną procedurę Fail-Safe"
     },
     "failsafeThrottleItem": {
         "message": "Wartość przepustnicy użyta podczas lądowania"
@@ -4645,13 +4678,13 @@
         "message": "Czas pozostawania w trybie lądowania do momentu wyłączenia silników i wyłączenia jednostki"
     },
     "failsafeSubTitle1": {
-        "message": "Etap 2 – Procedura Failsafe"
+        "message": "Etap 2 – Procedura Fail-Safe"
     },
     "failsafeProcedureItemSelect1": {
         "message": "LĄDOWANIE"
     },
     "failsafeProcedureItemSelect2": {
-        "message": "SPADNIĘCIE"
+        "message": "UPADEK"
     },
     "failsafeProcedureItemSelect4": {
         "message": "GPS  RATUNKOWY"
@@ -4669,19 +4702,19 @@
         "message": "Aktualna wysokość"
     },
     "failsafeGpsRescueInitialClimb": {
-        "message": "Początkowa wysokość (metry)"
+        "message": "Wstępne wznoszenie (metry)"
     },
     "failsafeGpsRescueInitialClimbHelp": {
-        "message": "Wysokość, na jaką wzniesienie się jednostka latająca powyżej bieżącej wysokości, po rozpoczęciu procedury ratunkowej failsafe i ustawieniu trybu wysokości. Działa w trybie aktualnej wysokości oraz, maksymalnej wysokości."
+        "message": "Dystans, o jaki powiększy się bieżąca wysokość modelu, gdy rozpocznie się procedura ratunkowa Fail-Safe. Działa w trybach wysokości: Aktualna wysokość oraz Maksymalna wysokość."
     },
     "failsafeGpsRescueItemReturnAltitude": {
         "message": "Wysokość powrotna (w metrach) - <strong>ma zastosowanie tylko w trybie stałej wysokości<\/strong>"
     },
     "failsafeGpsRescueItemAscendRate": {
-        "message": "Prędkość wznoszenia (metry\/sekunde)"
+        "message": "Tempo wznoszenia (metry\/sekundę)"
     },
     "failsafeGpsRescueItemGroundSpeed": {
-        "message": "Prędkość względem ziemi (metry\/sekunde)"
+        "message": "Prędkość względem ziemi (metry\/sekundę)"
     },
     "failsafeGpsRescueItemAngle": {
         "message": "Maksymalny kąt pochylenia"
@@ -4690,13 +4723,13 @@
         "message": "Maksymalny kąt pochylenia ustawiony zbyt wysoko powoduje bardziej agresywne powroty oraz większe prędkości latania. Ta opcja jest za to pomocna w przypadku ciężkich modeli o dużym oporze powietrza lub małej mocy, a także gdy wieje silny wiatr. OSTRZEŻENIE: Zwiększając maksymalny kąt pochylenia zwykle należy zwiększyć wartość ratunkowej przepustnicy! W przeciwnym razie model może stracić wysokość i rozbić się!"
     },
     "failsafeGpsRescueItemDescentDistance": {
-        "message": "Długość zniżania (metry)"
+        "message": "Dystans rozpoczęcia opadania (metry)"
     },
     "failsafeGpsRescueItemDescendRate": {
-        "message": "Prędkość opadania (metry\/sekunde)"
+        "message": "Tempo opadania (metry\/sekundę)"
     },
     "failsafeGpsRescueDescendRateHelp": {
-        "message": "Początkowa prędkość opadania jest ustawiana na 3-krotność tej wartości i zmniejsza się do ustawionej wartości na wysokości lądowania."
+        "message": "Po zainicjowaniu opadania ta wartość jest zwiększona 3-krotnie i będzie dążyć do wartości ustawionej, aż zostanie osiągnięta wysokość lądowania."
     },
     "failsafeGpsRescueItemMinStartDistHelp": {
         "message": "Jeżeli utrata sygnału nastąpi zbyt blisko miejsca startu (bliżej niż wynosi wybrana minimalna odległość), model odleci zgodnie z bieżącym kursem, aż osiągnie tę odległość, a następnie rozpocznie normalne zachowanie ratownicze w procedurze failsafe",
@@ -4729,6 +4762,9 @@
     "failsafeGpsRescueItemAllowArmingWithoutFix": {
         "message": "Zezwalaj na uzbrojenie nawet w przypadku braku poprawnego sygnału GPS - <span class=\"message-negative\">OSTRZEŻENIE: BRAK POPRAWNEGO SYGNAŁU = ROZBROJENIE W TRYBIE AWARYJNYM FAILSASFE!<\/span"
     },
+    "failsafeGpsRescueArmWithoutFixHelp": {
+        "message": "Nie zalecane. Pozwala na uzbrojenie silników modelu, gdy Miejsce Startu nie zostało ustalone, co niesie ryzyko rozbrojenia silników i rozbicia się modelu w wyniku utraty sygnału przez odbiornik RC. W razie testowego wywołania Fail-Safe przełącznikiem, przed rozbrojeniem następuje krótki okres bezczynności."
+    },
     "failsafeGpsRescueItemSanityChecks": {
         "message": "Sprawdzenie kontrolne"
     },
@@ -4752,6 +4788,9 @@
     },
     "failsafeSwitchModeItem": {
         "message": "Wybrany typ Failsafe"
+    },
+    "failsafeSwitchModeHelp": {
+        "message": "Ta opcja określa, co się dzieje, gdy procedura Fail-Safe jest aktywowana przez przełącznik AUX:<br\/><strong>Etap 1<\/strong> aktywuje Etap 1 Fail-Safe. Jest to przydatne, jeśli chcesz symulować właściwe zachowanie w wyniku utraty sygnału.<br\/><strong>Etap 2<\/strong> pomija Etap 1 i natychmiast aktywuje procedurę Etapu 2<br\/><strong>Upadek<\/strong> rozbraja natychmiast (twój model spadnie na ziemię)"
     },
     "failsafeSwitchOptionStage1": {
         "message": "Etap 1"
@@ -5072,7 +5111,7 @@
         "description": "Label of the selector for the OSD Profile in the preview. KEEP IT SHORT!!!"
     },
     "osdSetupPreviewForTitle": {
-        "message": "Zmiana profilu lub czcionki w tym oknie NIE zmieni profilu ani czcionki w kontrolerze lotu, zmiana ma wpływ tylko na okno podglądu. Jeśli chcesz zmienić te ustawienia w kontrolerze, musisz użyć opcji$t(osdSetupSelectedProfileTitle.message)' lub przycisku '$t(osdSetupFontManager.message)'.",
+        "message": "Zmiana profilu lub czcionki w tym miejscu NIE zmieni profilu ani czcionki w ustawieniach kontrolera lotu. Zmiana ma wpływ tylko na poniższe okno podglądu. Jeśli chcesz zmienić te ustawienia w kontrolerze, musisz użyć opcji '$t(osdSetupSelectedProfileTitle.message)' lub przycisku '$t(osdSetupFontManager.message)'.",
         "description": "Help content for the OSD profile and font PREVIEW"
     },
     "osdSetupSelectedProfileTitle": {
@@ -5080,7 +5119,7 @@
         "description": "Title of the box to select the current active OSD profile"
     },
     "osdSetupSelectedProfileLabel": {
-        "message": "Prąd:",
+        "message": "Aktualnie:",
         "description": "Label for the selection of the curren active OSD profile"
     },
     "osdSetupPreviewSelectProfileElement": {
@@ -5092,19 +5131,19 @@
         "description": "Content of the selector for the OSD Font in the preview"
     },
     "osdSetupFontTypeDefault": {
-        "message": "Domyślne",
+        "message": "Default",
         "description": "Font Default"
     },
     "osdSetupFontTypeBold": {
-        "message": "Pogrubiona",
+        "message": "Bold",
         "description": "Font Bold"
     },
     "osdSetupFontTypeLarge": {
-        "message": "Duże",
+        "message": "Large",
         "description": "Font Large"
     },
     "osdSetupFontTypeLargeExtra": {
-        "message": "Extra Duże",
+        "message": "Large Extra",
         "description": "Font Large Extra"
     },
     "osdSetupFontTypeBetaflight": {
@@ -5112,23 +5151,23 @@
         "description": "Font Betaflight"
     },
     "osdSetupFontTypeDigital": {
-        "message": "Cyfrowy",
+        "message": "Digital",
         "description": "Font Digital"
     },
     "osdSetupFontTypeClarity": {
-        "message": "Ostrość",
+        "message": "Clarity",
         "description": "Font Clarity"
     },
     "osdSetupFontTypeVision": {
-        "message": "Wizja",
+        "message": "Vision",
         "description": "Font Vision"
     },
     "osdSetupFontTypeImpact": {
-        "message": "Wpływ",
+        "message": "Impact",
         "description": "Font Impact"
     },
     "osdSetupFontTypeImpactMini": {
-        "message": "Wpływ Mini",
+        "message": "Impact Mini",
         "description": "Font Impact Mini"
     },
     "osdSetupPreviewCheckZoom": {
@@ -5170,7 +5209,7 @@
         "description": "Option for the units system used in the OSD"
     },
     "osdSetupTimersTitle": {
-        "message": "Zegary"
+        "message": "Liczniki"
     },
     "osdSetupAlarmsTitle": {
         "message": "Alarmy"
@@ -5261,7 +5300,7 @@
         "message": "Zresetuj Ustawienia"
     },
     "osdTextElementMainBattVoltage": {
-        "message": "Napięcie baterii",
+        "message": "Napięcie akumulatora",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementMainBattVoltage": {
@@ -5275,7 +5314,7 @@
         "message": "Chwilowa wartość RSSI (miga, gdy jest poniżej progu alarmowego)"
     },
     "osdTextElementTimer": {
-        "message": "Zegar",
+        "message": "Licznik",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementTimer": {
@@ -5520,6 +5559,26 @@
     "osdTextElementCustomMsg2": {
         "message": "Niestandardowy komunikat 3",
         "description": "One of the elements of the OSD"
+    },
+    "osdTextElementCustomMsg3": {
+        "message": "Niestandardowy komunikat nr 4",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementCustomMsg0": {
+        "message": "Niestandardowy komunikat nr 1 z urządzenia zewnętrznego",
+        "description": "Description of the custom message 1 element of the OSD"
+    },
+    "osdDescElementCustomMsg1": {
+        "message": "Niestandardowy komunikat nr 2 z urządzenia zewnętrznego",
+        "description": "Description of the custom message 2 element of the OSD"
+    },
+    "osdDescElementCustomMsg2": {
+        "message": "Niestandardowy komunikat nr 3 z urządzenia zewnętrznego",
+        "description": "Description of the custom message 3 element of the OSD"
+    },
+    "osdDescElementCustomMsg3": {
+        "message": "Niestandardowy komunikat nr 4 z urządzenia zewnętrznego",
+        "description": "Description of the custom message 4 element of the OSD"
     },
     "osdTextElementOnTime": {
         "message": "Na czas",
@@ -5771,18 +5830,18 @@
         "message": "Aktualnie aktywne ustawienie zakresu regulacji i jej wartość"
     },
     "osdTextElementTimer1": {
-        "message": "Zegar 1",
+        "message": "Licznik 1",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementTimer1": {
         "message": "Pokazuje wartość licznika 1"
     },
     "osdTextElementTimer2": {
-        "message": "Zegar 2",
+        "message": "Licznik 2",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementTimer2": {
-        "message": "Licznik 2"
+        "message": "Pokazuje wartość licznika 2"
     },
     "osdTextElementCoreTemperature": {
         "message": "Temperatura rdzenia",
@@ -6058,14 +6117,14 @@
         "message": "Numer rejestru Czarnej Skrzynki dla tego lotu"
     },
     "osdTextStatTimer1": {
-        "message": "Zegar 1",
+        "message": "Licznik 1",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatTimer1": {
         "message": "Wartość licznika 1 w chwili rozbrojenia"
     },
     "osdTextStatTimer2": {
-        "message": "Zegar 2",
+        "message": "Licznik 2",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
     },
     "osdDescStatTimer2": {
@@ -6217,7 +6276,7 @@
         "message": "Źródło:"
     },
     "osdTimerSourceTooltip": {
-        "message": "Wybierz źródło zegara.  Kontroluje czas trwania zdarzenia które mierzy zegar"
+        "message": "Wybierz źródło licznika. Kontroluje to czas trwania\/zdarzenie mierzone przez licznik"
     },
     "osdTimerSourceOptionOnTime": {
         "message": "Uruchomiony od",
@@ -6232,14 +6291,14 @@
         "description": "One of the options for the source timer. This options shows the amount of time the aircraft was armed the latest time"
     },
     "osdTimerSourceOptionOnArmTime": {
-        "message": "Czas włączonego uzbrojenia",
+        "message": "Czas włączenia\/uzbrojenia",
         "description": "One of the options for the source timer. This option shows On time when aircraft is disarmed, and Armed time when armed"
     },
     "osdTimerPrecision": {
         "message": "Dokładność:"
     },
     "osdTimerPrecisionTooltip": {
-        "message": "Wybierz dokładność zegara, kontroluje dokładność pokazywanego czasu"
+        "message": "Wybierz dokładność licznika. Kontroluje to dokładność pokazywanego czasu"
     },
     "osdTimerPrecisionOptionSecond": {
         "message": "Sekundy",
@@ -6967,10 +7026,10 @@
         "message": "Włącz ciemny motyw"
     },
     "pidTuningRatesType": {
-        "message": "Profil szybkości (Rates)"
+        "message": "Rodzaj Rate"
     },
     "pidTuningRatesTypeTip": {
-        "message": "Zmiana typu szybkości zmieni krzywą szybkości i sposób jej ustawienia"
+        "message": "Zmiana rodzaju Rate zmieni krzywą Rate oraz sposób jej ustawiania"
     },
     "pidTuningRcRateRaceflight": {
         "message": "Profil szybkości"

@@ -1301,9 +1301,6 @@
     "configurationOtherFeaturesHelp": {
         "message": "<strong>Bemærk:<\/strong> Ikke alle funktioner understøttes af alle FC \/ flight controllere. Aktiveres en bestemt funktion, og er den alligevel deaktiveret, efter du har trykket \"Gem og genstart\", er funktionen ikke understøttet af din FC."
     },
-    "configurationBoardAlignment": {
-        "message": "FC sensor justering"
-    },
     "configurationBoardAlignmentRoll": {
         "message": "Krængror grader"
     },
@@ -1340,9 +1337,6 @@
     "configurationSensorAlignmentAcc": {
         "message": "ACCEL-justering"
     },
-    "configurationSensorAlignmentMag": {
-        "message": "Justering af Magnetometer \/ kompas"
-    },
     "configurationSensorAlignmentDefaultOption": {
         "message": "Standard"
     },
@@ -1360,9 +1354,6 @@
     },
     "configurationArmingHelp": {
         "message": "Visse Tilkoblingsfunktioner kan kræve aktivt accelerometer"
-    },
-    "configurationMagDeclination": {
-        "message": "Kompas afvigelse [grader]"
     },
     "configurationReverseMotorSwitch": {
         "message": "Motorretning er vendt om"
@@ -4362,9 +4353,6 @@
     },
     "pidTuningIntegratedYawHelp": {
         "message": "Integreret sideror integrerer sideror P, I og D værdier, der tillader at sideror P, I og D kan tunes lidt, som hvis du tuner højderor og krængror.<br><br>Meget lidt I er påkrævet, fordi den integrerede P fungerer som I, og integreret D fungerer som P.<br><br>BEMÆRK: Integreret sideror kræver brug af Absolut kontrol, da der ikke er brug for I med Integreret sideror."
-    },
-    "configHelp2": {
-        "message": "Relativ rotation i grader, for at tillade montering sidelæns \/ på hovedet \/ roteret osv. Når du anvender eksterne sensorer, skal du bruge sensorindstillingerne (Gyro, Acc, Mag) til at definere sensorposition uafhængigt af montering. "
     },
     "failsafeFeaturesHelpOld": {
         "message": "Fejlsikring konfiguration er ændret betydeligt. Brug Betaflight <strong>v1.12.0+<\/strong> for at aktivere det forbedrede konfigurationspanel."

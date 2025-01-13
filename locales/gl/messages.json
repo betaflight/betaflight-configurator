@@ -1206,9 +1206,6 @@
     "configurationOtherFeaturesHelp": {
         "message": "<strong>Nota:<\/strong> Non tódalas opcións son soportadas por tódalas controladoras. Se activa una opción específica, e se desactiva despois de pulsar 'Gardar e Reiniciar', significa que esta opción non está soportada na súa controladora."
     },
-    "configurationBoardAlignment": {
-        "message": "Aliñamento de Placa e Sensor"
-    },
     "configurationBoardAlignmentRoll": {
         "message": "Graos de Roll"
     },
@@ -1245,9 +1242,6 @@
     "configurationSensorAlignmentAcc": {
         "message": "Aliñado do ACELERADOR"
     },
-    "configurationSensorAlignmentMag": {
-        "message": "Aliñado da brúxula"
-    },
     "configurationSensorAlignmentDefaultOption": {
         "message": "Por defecto"
     },
@@ -1265,9 +1259,6 @@
     },
     "configurationArmingHelp": {
         "message": "Algunhas opcións de armado poderían necesitar que actives o acelerómetro"
-    },
-    "configurationMagDeclination": {
-        "message": "Declinación del magnetómetro [deg]"
     },
     "configurationReverseMotorSwitch": {
         "message": "Dirección de motor invertida"
@@ -4234,9 +4225,6 @@
     },
     "pidTuningIntegratedYawHelp": {
         "message": "Yaw integrado integra os valores de Yaw P, I e D, permitindo que estes se axusten do mesmo modo que pich e roll<br><br>Necesítase moi pouca I, porque o P integrado actua como I e a D integrada como P.<br><br>Nota: Yaw integrado require uso do control absoluto, xa que non é necesario I con Yaw integrado."
-    },
-    "configHelp2": {
-        "message": "Rotación arbitraria de taboleiro en graos, para permitir a súa montaxe lateral \/ boca abaixo \/ rotada etc. Ao executar sensores externos, use os aliñamentos do sensor (Xiro, Acc, Mag) para definir a posición do sensor independente da orientación da placa. "
     },
     "failsafeFeaturesHelpOld": {
         "message": "A configuración de Failsafe cambiou considerablemente. Utiliza Betaflight <strong>v1.12.0+<\/strong> para habilitar o panel de configuración mellorado."
