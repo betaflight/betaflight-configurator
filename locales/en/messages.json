@@ -2435,7 +2435,7 @@
         "description": "Help text to ACRO TRAINER mode"
     },
     "auxiliaryHelpMode_ARM": {
-        "message": "Enables motor output and allows the aircraft to fly",
+        "message": "Enables motor output and allows the aircraft to fly.  <span class=\"message-negative\">Attention:</span> Pilot may wish to configure <b>BOXPREARM</b> (2-stage arming) for safety reasons.",
         "description": "Help text to ARM mode"
     },
     "auxiliaryHelpMode_ANGLE": {
