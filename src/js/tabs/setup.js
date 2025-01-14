@@ -365,15 +365,17 @@ setup.initialize = function (callback) {
 
             const sonarElements = ["NONE", "HCSR04", "TFMINI", "TF02"];
 
-            // remove deprecated sensors
+            // remove deprecated sensors or add new ones
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
                 gyroElements.splice(gyroElements.indexOf("L3G4200D"), 1);
                 gyroElements.splice(gyroElements.indexOf("MPU3050"), 1);
+                gyroElements.splice(gyroElements.indexOf("LSM6DSV16X") + 1, 0, "IIM42653");
 
                 accElements.splice(accElements.indexOf("ADXL345"), 1);
                 accElements.splice(accElements.indexOf("MMA8452"), 1);
                 accElements.splice(accElements.indexOf("BMA280"), 1);
                 accElements.splice(accElements.indexOf("LSM303DLHC"), 1);
+                accElements.splice(accElements.indexOf("LSM6DSV16X") + 1, 0, "IIM42653");
             }
 
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
