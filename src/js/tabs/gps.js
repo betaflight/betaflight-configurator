@@ -144,7 +144,6 @@ gps.initialize = async function (callback) {
 
                 const ubloxSelected = FC.GPS_CONFIG.provider === gpsProtocols.indexOf("UBLOX");
                 const mspSelected = FC.GPS_CONFIG.provider === gpsProtocols.indexOf("MSP");
-                const virtualSelected = FC.GPS_CONFIG.provider === gpsProtocols.indexOf("VIRTUAL");
 
                 const enableGalileoVisible = checked && ubloxSelected;
                 gpsUbloxGalileoGroup.toggle(enableGalileoVisible);
@@ -155,7 +154,7 @@ gps.initialize = async function (callback) {
                 gpsAutoBaudGroup.toggle(
                     (ubloxSelected || mspSelected) && semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_46),
                 );
-                gpsAutoConfigGroup.toggle(ubloxSelected || mspSelected || virtualSelected);
+                gpsAutoConfigGroup.toggle(ubloxSelected);
             })
             .prop("checked", FC.GPS_CONFIG.auto_config === 1)
             .trigger("change");
