@@ -1,6 +1,6 @@
 import { i18n } from "../localization";
 import semver from "semver";
-import { API_VERSION_1_46 } from "../data_storage";
+import { API_VERSION_1_46, API_VERSION_1_47 } from "../data_storage";
 import GUI, { TABS } from "../gui";
 import FC from "../fc";
 import MSP from "../msp";
@@ -90,6 +90,10 @@ gps.initialize = async function (callback) {
         // generate GPS
         const gpsProtocols = ["NMEA", "UBLOX", "MSP"];
 
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+            gpsProtocols.push("VIRTUAL");
+        }
+
         const gpsBaudRates = ["115200", "57600", "38400", "19200", "9600"];
 
         const gpsSbas = [
@@ -150,7 +154,7 @@ gps.initialize = async function (callback) {
                 gpsAutoBaudGroup.toggle(
                     (ubloxSelected || mspSelected) && semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_46),
                 );
-                gpsAutoConfigGroup.toggle(ubloxSelected || mspSelected);
+                gpsAutoConfigGroup.toggle(ubloxSelected);
             })
             .prop("checked", FC.GPS_CONFIG.auto_config === 1)
             .trigger("change");
