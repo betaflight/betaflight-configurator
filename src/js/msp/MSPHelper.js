@@ -1219,6 +1219,14 @@ MspHelper.prototype.process_data = function (dataHandler) {
                         FC.SENSOR_CONFIG_ACTIVE.sonar_hardware = data.readU8();
                     }
                     break;
+                case MSPCodes.MSP2_MCU_INFO:
+                    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+                        FC.MCU_INFO = {
+                            id: data.readU8(),
+                            name: self.getText(data),
+                        };
+                    }
+                    break;
 
                 case MSPCodes.MSP_LED_STRIP_CONFIG:
                     FC.LED_STRIP = [];

@@ -595,6 +595,11 @@ const FC = {
 
         this.SENSOR_CONFIG_ACTIVE = { gyro_hardware: 0, ...this.SENSOR_CONFIG };
 
+        this.MCU_INFO = {
+            id: 0,
+            name: 0,
+        };
+
         this.RX_CONFIG = {
             serialrx_provider: 0,
             stick_max: 0,
