@@ -76,20 +76,15 @@ class WebsocketSerial extends EventTarget {
             );
         };
 
-        this.ws.onclose = function (e) {
+        this.ws.onclose = async function (e) {
             console.log(`${socket.logHead} Connection closed: `, e);
 
-            socket.disconnect(() => {
-                socket.dispatchEvent(new CustomEvent("disconnect", this.disconnect.bind(this)));
-            });
+            await socket.disconnect();
+            socket.dispatchEvent(new CustomEvent("disconnect", { detail: { socketId: socket.address } }));
         };
 
         this.ws.onerror = function (e) {
             console.error(`${socket.logHead} Connection error: `, e);
-
-            socket.disconnect(() => {
-                socket.dispatchEvent(new CustomEvent("disconnect", this.disconnect.bind(this)));
-            });
         };
 
         this.ws.onmessage = async function (msg) {

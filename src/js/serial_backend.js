@@ -696,6 +696,12 @@ function onClosed(result) {
     $("#dataflash_wrapper_global").hide();
     $("#quad-status_wrapper").hide();
 
+    console.log("[SERIAL-BACKEND] Connection closed:", result);
+
+    // reset connect / disconnect button
+    $("div#connectbutton div.connect_state").text(i18n.getMessage("connect"));
+    $("div#connectbutton a.connect").removeClass("active");
+
     clearLiveDataRefreshTimer();
 
     MSP.clearListeners();
