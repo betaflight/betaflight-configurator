@@ -61,7 +61,7 @@ class WebsocketSerial extends EventTarget {
         this.address = path;
         console.log(`${this.logHead} Connecting to ${this.address}`);
 
-        this.ws = new WebSocket(this.address, "wsSerial");
+        this.ws = new WebSocket(this.address, ["binary", "wsSerial"]);
         let socket = this;
 
         this.ws.onopen = function (e) {
