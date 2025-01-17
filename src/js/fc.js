@@ -873,36 +873,6 @@ const FC = {
         this.CONFIG.hardwareName = name;
     },
 
-    MCU_TYPES: {
-        0: "SIMULATOR",
-        1: "F40X",
-        2: "F411",
-        3: "F446",
-        4: "F722",
-        5: "F745",
-        6: "F746",
-        7: "F765",
-        8: "H750",
-        9: "H743_REV_UNKNOWN",
-        10: "H743_REV_Y",
-        11: "H743_REV_X",
-        12: "H743_REV_V",
-        13: "H7A3",
-        14: "H723_725",
-        15: "G474",
-        16: "H730",
-        17: "AT32F435G",
-        18: "APM32F405",
-        19: "APM32F407",
-        20: "AT32F435M",
-        21: "RP2350B",
-        255: "Unknown MCU",
-    },
-
-    getMcuType() {
-        return this.MCU_TYPES[this.CONFIG.mcuTypeId];
-    },
-
     CONFIGURATION_STATES: {
         DEFAULTS_BARE: 0,
         DEFAULTS_CUSTOM: 1,

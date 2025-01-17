@@ -443,7 +443,7 @@ function processBoardInfo() {
         apiVersion: FC.CONFIG.apiVersion,
         flightControllerVersion: FC.CONFIG.flightControllerVersion,
         flightControllerIdentifier: FC.CONFIG.flightControllerIdentifier,
-        mcu: FC.getMcuType(),
+        mcu: FC.CONFIG.targetName,
     });
 }
 
