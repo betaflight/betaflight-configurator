@@ -234,6 +234,23 @@ function setConnectionTimeout() {
     );
 }
 
+function resetConnection() {
+    // reset connect / disconnect button
+    $("div#connectbutton div.connect_state").text(i18n.getMessage("connect"));
+    $("div#connectbutton a.connect").removeClass("active");
+
+    CONFIGURATOR.connectionValid = false;
+    CONFIGURATOR.cliValid = false;
+    CONFIGURATOR.cliActive = false;
+    CONFIGURATOR.cliEngineValid = false;
+    CONFIGURATOR.cliEngineActive = false;
+
+    // unlock port select & baud
+    PortHandler.portPickerDisabled = false;
+    // reset data
+    isConnected = false;
+}
+
 function abortConnection() {
     GUI.timeout_remove("connecting"); // kill connecting timer
 
@@ -244,14 +261,7 @@ function abortConnection() {
 
     gui_log(i18n.getMessage("serialPortOpenFail"));
 
-    $("div#connectbutton div.connect_state").text(i18n.getMessage("connect"));
-    $("div#connectbutton a.connect").removeClass("active");
-
-    // unlock port select & baud
-    PortHandler.portPickerDisabled = false;
-
-    // reset data
-    isConnected = false;
+    resetConnection();
 }
 
 /**
@@ -696,6 +706,10 @@ function onClosed(result) {
     $("#dataflash_wrapper_global").hide();
     $("#quad-status_wrapper").hide();
 
+    console.log("[SERIAL-BACKEND] Connection closed:", result);
+
+    resetConnection();
+
     clearLiveDataRefreshTimer();
 
     MSP.clearListeners();
@@ -705,12 +719,6 @@ function onClosed(result) {
         serial.removeEventListener("connect", connectHandler);
         serial.removeEventListener("disconnect", disconnectHandler);
     }
-
-    CONFIGURATOR.connectionValid = false;
-    CONFIGURATOR.cliValid = false;
-    CONFIGURATOR.cliActive = false;
-    CONFIGURATOR.cliEngineValid = false;
-    CONFIGURATOR.cliEngineActive = false;
 }
 
 export function read_serial(info) {
