@@ -956,6 +956,9 @@
     "initialSetupRSSIValue": {
         "message": "$1 dBm"
     },
+    "initialSetupMCU": {
+        "message": "MCU:"
+    },
     "initialSetupSensorHardware": {
         "message": "Sensors:"
     },

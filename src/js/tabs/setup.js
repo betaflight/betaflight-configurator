@@ -25,7 +25,11 @@ setup.initialize = function (callback) {
     }
 
     function load_status() {
-        MSP.send_message(MSPCodes.MSP_STATUS_EX, false, false, load_mixer_config);
+        MSP.send_message(MSPCodes.MSP_STATUS_EX, false, false, mcu_info);
+    }
+
+    function mcu_info() {
+        MSP.send_message(MSPCodes.MSP2_MCU_INFO, false, false, load_mixer_config);
     }
 
     function load_mixer_config() {
@@ -195,6 +199,8 @@ setup.initialize = function (callback) {
             pitch_e = $("dd.pitch"),
             heading_e = $("dd.heading"),
             sonar_e = $(".sonarAltitude"),
+            // MCU info
+            mcu_e = $(".mcu"),
             // Sensor info
             sensor_gyro_e = $(".sensor_gyro_hw"),
             sensor_acc_e = $(".sensor_acc_hw"),
@@ -600,6 +606,12 @@ setup.initialize = function (callback) {
                 cputemp_e.html(`${FC.CONFIG.cpuTemp.toFixed(0)} &#8451;`);
             } else {
                 cputemp_e.text(i18n.getMessage("initialSetupCpuTempNotSupported"));
+            }
+
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+                mcu_e.text(FC.MCU_INFO.name);
+            } else {
+                mcu_e.parent().hide();
             }
 
             // GPS info is acquired in the background using update_live_status() in serial_backend.js

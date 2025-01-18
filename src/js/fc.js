@@ -165,6 +165,7 @@ const FC = {
     LED_MODE_COLORS: null,
     LED_STRIP: null,
     LED_CONFIG_VALUES: [],
+    MCU_INFO: null,
     MISC: null, // DEPRECATED
     MIXER_CONFIG: null,
     MODE_RANGES: null,
@@ -595,6 +596,11 @@ const FC = {
 
         this.SENSOR_CONFIG_ACTIVE = { gyro_hardware: 0, ...this.SENSOR_CONFIG };
 
+        this.MCU_INFO = {
+            id: 0,
+            name: 0,
+        };
+
         this.RX_CONFIG = {
             serialrx_provider: 0,
             stick_max: 0,
@@ -866,36 +872,6 @@ const FC = {
         }
 
         this.CONFIG.hardwareName = name;
-    },
-
-    MCU_TYPES: {
-        0: "SIMULATOR",
-        1: "F40X",
-        2: "F411",
-        3: "F446",
-        4: "F722",
-        5: "F745",
-        6: "F746",
-        7: "F765",
-        8: "H750",
-        9: "H743_REV_UNKNOWN",
-        10: "H743_REV_Y",
-        11: "H743_REV_X",
-        12: "H743_REV_V",
-        13: "H7A3",
-        14: "H723_725",
-        15: "G474",
-        16: "H730",
-        17: "AT32F435G",
-        18: "APM32F405",
-        19: "APM32F407",
-        20: "AT32F435M",
-        21: "RP2350B",
-        255: "Unknown MCU",
-    },
-
-    getMcuType() {
-        return this.MCU_TYPES[this.CONFIG.mcuTypeId];
     },
 
     CONFIGURATION_STATES: {
