@@ -873,6 +873,9 @@
     "initialSetupRSSIValue": {
         "message": "$1 dBm"
     },
+    "initialSetupMCU": {
+        "message": "MCU:"
+    },
     "initialSetupSensorHardware": {
         "message": "Sensores:"
     },
@@ -1310,6 +1313,21 @@
     "configurationOtherFeaturesHelp": {
         "message": "<strong>Nota:<\/strong> No todas las funcionalidades están soportadas por todos los controladores de vuelo. Si activas una funcionalidad específica, y se desactiva cuando pulsas 'Guardar y Reiniciar', significa que esa funcionalidad no está soportada por tu placa."
     },
+    "configurationMagAlignmentHelp": {
+        "message": "La alineación del magnetómetro es la orientación del magnetómetro en la placa del controlador de vuelo. Generalmente el valor por defecto es correcto, pero si tienes una versión personalizada o un controlador de vuelo con una orientación diferente del magnetómetro, puede que necesites ajustar esta configuración."
+    },
+    "configurationMagDeclination": {
+        "message": "Declinación Magnetómetro"
+    },
+    "configurationMagDeclinationInput": {
+        "message": "Grados de declinación"
+    },
+    "configurationMagDeclinationHelp": {
+        "message": "La declinación magnética es el ángulo entre el norte magnético y el norte verdadero. Es diferente para cada ubicación en la Tierra. Puedes encontrar la declinación de tu ubicación en Internet"
+    },
+    "configurationBoardAlignment": {
+        "message": "Alineación de la Placa"
+    },
     "configurationBoardAlignmentRoll": {
         "message": "Grados Roll"
     },
@@ -1318,6 +1336,36 @@
     },
     "configurationBoardAlignmentYaw": {
         "message": "Grados Yaw"
+    },
+    "configurationGyroAlignment": {
+        "message": "Alineación del Giro"
+    },
+    "configurationGyroAlignmentHelp": {
+        "message": "La alineación del giro es la orientación del giro en la placa del controlador de vuelo. Generalmente el valor por defecto es correcto, pero si tienes una versión personalizada o un controlador de vuelo con una orientación diferente del giro, puede que necesites ajustar esta configuración."
+    },
+    "configurationGyroAlignmentRoll": {
+        "message": "$t(configurationBoardAlignmentRoll.message)"
+    },
+    "configurationGyroAlignmentPitch": {
+        "message": "$t(configurationBoardAlignmentPitch.message)"
+    },
+    "configurationGyroAlignmentYaw": {
+        "message": "$t(configurationBoardAlignmentYaw.message)"
+    },
+    "configurationMagAlignment": {
+        "message": "Alineación de Magnetómetro"
+    },
+    "configurationBoardAlignmentHelp": {
+        "message": "Rotación arbitraria de la placa en grados, para permitir montaje de lado \/ boca abajo \/ rotada etc. Al ejecutar sensores externos, usa la alineación del sensor (Giro, Acc, Mag) para definir la posición del sensor independientemente de la orientación de la placa. "
+    },
+    "configurationMagAlignmentRoll": {
+        "message": "$t(configurationBoardAlignmentRoll.message)"
+    },
+    "configurationMagAlignmentPitch": {
+        "message": "$t(configurationBoardAlignmentPitch.message)"
+    },
+    "configurationMagAlignmentYaw": {
+        "message": "$t(configurationBoardAlignmentYaw.message)"
     },
     "configurationSensorAlignmentGyro": {
         "message": "Alineación GIRO"
@@ -2303,7 +2351,7 @@
         "description": "Help text to ACRO TRAINER mode"
     },
     "auxiliaryHelpMode_ARM": {
-        "message": "Activa la salida del motor y permite que la aeronave vuele",
+        "message": "Activa la salida del motor y permite que la aeronave vuele.  <span class=\"message-negative\">Atención:<\/span> se recomienda configurar también <b>BOXPREARM<\/b> (armado en dos etapas) por razones de seguridad.",
         "description": "Help text to ARM mode"
     },
     "auxiliaryHelpMode_ANGLE": {

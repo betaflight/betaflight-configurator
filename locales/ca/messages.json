@@ -881,6 +881,9 @@
     "initialSetupRSSIValue": {
         "message": "$1 dBm"
     },
+    "initialSetupMCU": {
+        "message": "MCU:"
+    },
     "initialSetupSensorHardware": {
         "message": "Sensors:"
     },
@@ -2356,7 +2359,7 @@
         "description": "Help text to ACRO TRAINER mode"
     },
     "auxiliaryHelpMode_ARM": {
-        "message": "Permet la sortida del motor i permet que el dron voli",
+        "message": "Habilita la sortida del motor i permet que el quad voli.  <span class=\"message-negative\">Atenció:<\/span> és possible que el pilot vulgui configurar <b>BOXPREARM<\/b> (armament en 2 etapes) per motius de seguretat.",
         "description": "Help text to ARM mode"
     },
     "auxiliaryHelpMode_ANGLE": {

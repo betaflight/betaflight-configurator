@@ -877,6 +877,9 @@
     "initialSetupRSSIValue": {
         "message": "$1 dBm"
     },
+    "initialSetupMCU": {
+        "message": "MCU:"
+    },
     "initialSetupSensorHardware": {
         "message": "Czujniki:"
     },
@@ -2310,7 +2313,7 @@
         "message": "Włacz kontrolę"
     },
     "auxiliaryHelp": {
-        "message": "Skonfiguruj tutaj tryby lotu, używając kombinacji zakresów lub łącz ze sobą różne tryby (łączenie trybów obsługiwane w BF 4.0 i nowszych). Użyj <strong>zakresów<\/strong>, aby zdefiniować przełączniki na nadajniku i odpowiednie przypisanie trybów lotu. Kanał odbiornika, który daje odczyt pomiędzy zakresem min\/max, aktywuje tryb. Użyj <strong> łączenia<\/strong>, aby aktywować tryb, gdy aktywowany jest inny tryb. <strong>Wyjątki: <\/strong> ARM nie może być łączony z innym trybem. Tryby nie mogą być połączone z innymi trybami skonfigurowanymi za pomocą łączenia trybów (które jest zabezpieczone przed modyfikacją). Do aktywacji dowolnego trybu można użyć wielu zakresów\/łączy. Jeśli dla danego trybu zdefiniowano więcej niż jeden zakres\/łącze, każdy z nich można ustawić na <strong>Oraz<\/strong> albo <strong>LUB<\/strong>. Tryb zostanie aktywowany gdy: <br \/>-WSZYSTKIE zakresy \/ linki są aktywne <strong><\/strong> gdy<br \/> aktywny jest co najmniej jeden <strong><\/strong> zakres \/ link. <br\/><br \/> Pamiętaj, aby zapisać ustawienia za pomocą przycisku Zapisz."
+        "message": "Skonfiguruj tutaj Tryby Lotu, używając kombinacji Zakresów i\/lub Łączników do innych trybów (wsparcie łączenia trybów w BF 4.0 i nowszych). Dodanie <strong>Zakresu<\/strong> służy do zdefiniowania przełączników w aparaturze radiowej i odpowiedniego przypisania trybów. Tryb aktywowany jest, gdy pojawi się odczyt w zaznaczonym zakresie kanału odbiornika. Dodanie <strong>Łącznika<\/strong> umożliwia aktywację trybu, gdy aktywowany jest inny tryb. <strong>Wyjątki:<\/strong> ARM nie posiada Łącznika oraz nie może być łączony z innym trybem. Poza tym nie możliwe jest łączenie łańcuchowe, czyli łączenie do trybu, który już ma połączenie z innym. Każdy tryb można aktywować za pomocą wielu Zakresów lub Łączników. Wtedy istnieje możliwość dodania logiki w postaci <strong>ORAZ<\/strong> albo <strong>LUB<\/strong>. Tryb zostanie aktywowany gdy:<br \/>-WSZYSTKIE <strong>ORAZ<\/strong> Zakresów bądź Łączników są aktywne; albo<br \/> -aktywny jest co najmniej jeden <strong>LUB<\/strong> Zakresów bądź Łączników.<br \/><br \/>Pamiętaj, aby zapisać ustawienia za pomocą przycisku Zapisz."
     },
     "auxiliaryToggleUnused": {
         "message": "Ukryj nieużywane tryby"
@@ -2326,10 +2329,10 @@
         "descripton": "Text to add to the ARM mode (maybe others in the future) in the MODES TAB when it has been disabled for some external reason"
     },
     "auxiliaryAddRange": {
-        "message": "Dodaj zakres"
+        "message": "Dodaj Zakres"
     },
     "auxiliaryAddLink": {
-        "message": "Dodaj Tryb"
+        "message": "Dodaj Łącznik"
     },
     "auxiliaryButtonSave": {
         "message": "Zapisz"
@@ -2338,10 +2341,10 @@
         "message": "AUTO"
     },
     "auxiliaryModeLogicOR": {
-        "message": "Lub"
+        "message": "LUB"
     },
     "auxiliaryModeLogicAND": {
-        "message": "Oraz"
+        "message": "ORAZ"
     },
     "auxiliaryHelpMode_3DDISABLE": {
         "message": "Umożliwia odwracalny kierunek obrotu silnika, aby zapewnić ujemny ciąg i umożliwić lot do góry nogami. Przepustnica pracuje w zakresie od -100 do +100 zamiast od 0 do 100",
@@ -2352,7 +2355,7 @@
         "description": "Help text to ACRO TRAINER mode"
     },
     "auxiliaryHelpMode_ARM": {
-        "message": "Włącza wejścia silników - Pozwala uzbroić silniki",
+        "message": "Uaktywnia silniki i pozwala na latanie modelem. <span class=\"message-negative\">Uwaga:<\/span> Ze względów bezpieczeństwa pilot może chcieć skonfigurować tryb <b>BOXPREARM<\/b> (uzbrojenie dwuetapowe).",
         "description": "Help text to ARM mode"
     },
     "auxiliaryHelpMode_ANGLE": {

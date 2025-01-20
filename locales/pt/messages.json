@@ -873,6 +873,9 @@
     "initialSetupRSSIValue": {
         "message": "$1 dBm"
     },
+    "initialSetupMCU": {
+        "message": "MCU:"
+    },
     "initialSetupSensorHardware": {
         "message": "Sensores:"
     },
@@ -1310,6 +1313,21 @@
     "configurationOtherFeaturesHelp": {
         "message": "<strong>Nota:<\/strong> Nem todas as funcionalidades são suportadas por todas as controladoras de voo. Se ativar uma funcionalidade específica, e ela for desativada depois de clicar em 'Gravar e Reiniciar', significa que essa funcionalidade não é suportada pela placa."
     },
+    "configurationMagAlignmentHelp": {
+        "message": "O alinhamento do magnetómetro é a orientação do sensor do magnetómetro na placa da controladora de voo. O pré-definido está habitualmente, mas se tem uma compilação personalizada ou uma controladora de voo com uma orientação de magnetómetro diferente, pode precisar de ajustar esta configuração."
+    },
+    "configurationMagDeclination": {
+        "message": "Declinação do Magnetómetro"
+    },
+    "configurationMagDeclinationInput": {
+        "message": "Graus de Declinação"
+    },
+    "configurationMagDeclinationHelp": {
+        "message": "A declinação magnética é o ângulo entre o norte magnético e o norte verdadeiro. É diferente em cada local na Terra. Pode encontrar a declinação da sua localização na internet"
+    },
+    "configurationBoardAlignment": {
+        "message": "Alinhamento da Placa"
+    },
     "configurationBoardAlignmentRoll": {
         "message": "Graus do Roll"
     },
@@ -1318,6 +1336,36 @@
     },
     "configurationBoardAlignmentYaw": {
         "message": "Graus do Yaw"
+    },
+    "configurationGyroAlignment": {
+        "message": "Alinhamento do Gyro"
+    },
+    "configurationGyroAlignmentHelp": {
+        "message": "O alinhamento do gyro é a orientação do sensor gyro na placa da controladora de voo. O pré-definido está normalmente correto, mas se tem uma compilação personalizada ou uma controladora de voo com uma orientação gyro diferente, pode precisar de ajustar esta configuração."
+    },
+    "configurationGyroAlignmentRoll": {
+        "message": "$t(configurationBoardAlignmentRoll.message)"
+    },
+    "configurationGyroAlignmentPitch": {
+        "message": "$t(configurationBoardAlignmentPitch.message)"
+    },
+    "configurationGyroAlignmentYaw": {
+        "message": "$t(configurationBoardAlignmentYaw.message)"
+    },
+    "configurationMagAlignment": {
+        "message": "Alinhamento do Magnetómetro"
+    },
+    "configurationBoardAlignmentHelp": {
+        "message": "Rotação arbitrária da placa em graus, para permitir que a placa seja montada de lado \/ de cabeça para baixo \/ rodada, etc. Quando usar sensores externos, use o alinhamento dos sensores (Gyro, Accel, Mag) para definir uma posição do sensor independente da orientação da placa. "
+    },
+    "configurationMagAlignmentRoll": {
+        "message": "$t(configurationBoardAlignmentRoll.message)"
+    },
+    "configurationMagAlignmentPitch": {
+        "message": "$t(configurationBoardAlignmentPitch.message)"
+    },
+    "configurationMagAlignmentYaw": {
+        "message": "$t(configurationBoardAlignmentYaw.message)"
     },
     "configurationSensorAlignmentGyro": {
         "message": "Alinhamento do GYRO"
@@ -2303,7 +2351,7 @@
         "description": "Help text to ACRO TRAINER mode"
     },
     "auxiliaryHelpMode_ARM": {
-        "message": "Ativa a saída do motor e permite que a aeronave voe",
+        "message": "Ativa a saída de motor e permite ao aparelho voar.  <span class=\"message-negative\">Attention:<\/span> Piloto pode querer configurar <b>BOXPREARM<\/b> (2-estágios de armar) por razões de segurança.",
         "description": "Help text to ARM mode"
     },
     "auxiliaryHelpMode_ANGLE": {

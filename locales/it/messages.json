@@ -2347,10 +2347,6 @@
         "message": "Modalità di volo che limita l'angolo del modello quando si vola in modalità acro",
         "description": "Help text to ACRO TRAINER mode"
     },
-    "auxiliaryHelpMode_ARM": {
-        "message": "Abilita i motori e consente al modello di volare",
-        "description": "Help text to ARM mode"
-    },
     "auxiliaryHelpMode_ANGLE": {
         "message": "In questa modalità di livellamento automatico i canali di roll e pitch controllano l'angolo tra i rilevanti assi e la verticale, ottenendo un volo livellato lasciando gli stick centrati",
         "description": "Help text to ANGLE mode"

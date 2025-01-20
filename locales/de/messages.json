@@ -2205,10 +2205,6 @@
     "auxiliaryModeLogicAND": {
         "message": "UND"
     },
-    "auxiliaryHelpMode_ARM": {
-        "message": "Aktiviert die Motoransteuerung und ermöglicht das Fliegen des Copters",
-        "description": "Help text to ARM mode"
-    },
     "auxiliaryHelpMode_ANTIGRAVITY": {
         "message": "Der Flugmodus erhöht P und I bei schnellen Gasbewegungen, um die Knüppelnachführung zu verbessern und ein Abdriften der Nase bei schnellen Gaswechseln zu vermeiden.",
         "description": "Help text to ANTIGRAVITY mode"
