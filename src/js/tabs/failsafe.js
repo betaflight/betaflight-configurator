@@ -314,6 +314,18 @@ failsafe.initialize = function (callback) {
         // Sort the element, if need to group, do it by lexical sort, ie. by naming of (the translated) selection text
         $("#failsafeGpsRescueItemAltitudeSelect").sortSelect();
 
+        // Show the return altitude input if the alt mode equals to FixedAlt
+        function showReturnAlt() {
+            let altitude_number_field = $('input[name="gps_rescue_return_altitude"]').closest(".number");
+            if ($("#failsafeGpsRescueItemAltitudeSelect").val() === "1") {
+                altitude_number_field.show();
+            } else {
+                altitude_number_field.hide();
+            }
+        }
+        showReturnAlt();
+        $("#failsafeGpsRescueItemAltitudeSelect").on("change", showReturnAlt);
+
         // Introduced in 1.43
         $('input[name="gps_rescue_ascend_rate"]').val((FC.GPS_RESCUE.ascendRate / 100).toFixed(1));
         $('input[name="gps_rescue_descend_rate"]').val((FC.GPS_RESCUE.descendRate / 100).toFixed(1));

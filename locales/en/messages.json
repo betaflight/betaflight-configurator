@@ -4794,7 +4794,7 @@
         "message": "The distance the aircraft will climb, above the current altitude, when a rescue is initiated and the altitude mode is set to CURRENT Altitude; also added when in MAX Altitude mode."
     },
     "failsafeGpsRescueItemReturnAltitude": {
-        "message": "Return altitude (meters) - <strong>only applies in Fixed Altitude mode</strong>"
+        "message": "Return altitude (meters)"
     },
     "failsafeGpsRescueItemAscendRate": {
         "message": "Ascend rate (meters/second)"
