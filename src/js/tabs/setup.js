@@ -369,8 +369,16 @@ setup.initialize = function (callback) {
                 "VIRTUAL",
             ];
 
-            const sonarElements = ["NONE", "HCSR04", "TFMINI", "TF02"];
-
+            const sonarElements = [
+                "NONE",
+                "HCSR04",
+                "TFMINI",
+                "TF02",
+                "MTF01",
+                "MTF02",
+                "MTF01P",
+                "MTF02P",
+            ];
             // remove deprecated sensors or add new ones
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
                 gyroElements.splice(gyroElements.indexOf("L3G4200D"), 1);
