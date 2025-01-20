@@ -819,7 +819,7 @@
         "message": "コンパス"
     },
     "initialSetupMagDeclination": {
-        "message": "コンパス偏角値:"
+        "message": "コンパス偏角:"
     },
     "initialSetupInfoHead": {
         "message": "システム情報"
@@ -1310,6 +1310,21 @@
     "configurationOtherFeaturesHelp": {
         "message": "<strong>注:<\/strong> すべての機能がすべてのフライトコントローラでサポートされている訳ではありません。 特定の機能を有効にして [保存して再起動] した後でも無効になっている場合は、この機能がボード上でサポートされていないことを意味します。"
     },
+    "configurationMagAlignmentHelp": {
+        "message": "コンパス アライメントは、FCボード上の磁気センサーの向きを指します。通常はデフォルト設定で正しい場合がほとんどですが、カスタムビルドや異なる向きの磁気センサーを持つフライトコントローラを使用している場合、この設定を調整する必要があるかもしれません。"
+    },
+    "configurationMagDeclination": {
+        "message": "コンパス偏角"
+    },
+    "configurationMagDeclinationInput": {
+        "message": "偏角"
+    },
+    "configurationMagDeclinationHelp": {
+        "message": "コンパス偏角は、磁北 (磁気北極) と真北 (地理的北極) の間の角度を指します。この角度は地球上の場所によって異なります。ご自身の位置での偏角は、インターネットで簡単に確認することができます。"
+    },
+    "configurationBoardAlignment": {
+        "message": "FCボード アライメント"
+    },
     "configurationBoardAlignmentRoll": {
         "message": "ロール角度"
     },
@@ -1319,8 +1334,38 @@
     "configurationBoardAlignmentYaw": {
         "message": "ヨー角度"
     },
+    "configurationGyroAlignment": {
+        "message": "ジャイロ アライメント"
+    },
+    "configurationGyroAlignmentHelp": {
+        "message": "ジャイロ アライメントは、FCボード上のジャイロセンサーの向きを指します。通常はデフォルト設定で正しい場合がほとんどですが、カスタムビルドや異なる向きのジャイロセンサーを持つフライトコントローラを使用している場合、この設定を調整する必要があるかもしれません。"
+    },
+    "configurationGyroAlignmentRoll": {
+        "message": "$t(configurationBoardAlignmentRoll.message)"
+    },
+    "configurationGyroAlignmentPitch": {
+        "message": "$t(configurationBoardAlignmentPitch.message)"
+    },
+    "configurationGyroAlignmentYaw": {
+        "message": "$t(configurationBoardAlignmentYaw.message)"
+    },
+    "configurationMagAlignment": {
+        "message": "コンパス アライメント"
+    },
+    "configurationBoardAlignmentHelp": {
+        "message": "任意のFCボード回転角度は、ボードを横向き \/ 逆さま \/ または回転させた状態で取り付けを可能にします。外部センサーを使用する場合は、センサーの位置をFCボードの向きとは独立して定義するために、センサーアライメント (ジャイロ、加速度センサー、コンパス) を設定してください。 "
+    },
+    "configurationMagAlignmentRoll": {
+        "message": "$t(configurationBoardAlignmentRoll.message)"
+    },
+    "configurationMagAlignmentPitch": {
+        "message": "$t(configurationBoardAlignmentPitch.message)"
+    },
+    "configurationMagAlignmentYaw": {
+        "message": "$t(configurationBoardAlignmentYaw.message)"
+    },
     "configurationSensorAlignmentGyro": {
-        "message": "Gyro アライメント"
+        "message": "ジャイロ アライメント"
     },
     "configurationSensorGyroToUse": {
         "message": "ジャイロ\/加速度"
@@ -2303,7 +2348,7 @@
         "description": "Help text to ACRO TRAINER mode"
     },
     "auxiliaryHelpMode_ARM": {
-        "message": "モーター出力を有効にすることで機体を飛ばすことができます。",
+        "message": "モーター出力を有効にし、機体の飛行を可能にします。<span class=\"message-negative\">注意:<\/span> 安全性を確保するために、パイロットは<b>BOXPREARM<\/b> (2段階アーミング) の設定を行うことを強く推奨します。",
         "description": "Help text to ARM mode"
     },
     "auxiliaryHelpMode_ANGLE": {

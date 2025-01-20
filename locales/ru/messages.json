@@ -2283,10 +2283,6 @@
         "message": "Режим полета, ограничивающий угол наклона модели при полете в режиме акро",
         "description": "Help text to ACRO TRAINER mode"
     },
-    "auxiliaryHelpMode_ARM": {
-        "message": "Запускает двигатели, и позволяет модели лететь",
-        "description": "Help text to ARM mode"
-    },
     "auxiliaryHelpMode_ANGLE": {
         "message": "В этом режиме автовыравнивания каналы крена и тангажа контролируют угол между соответствующей осью и вертикалью, что позволяет добиться ровного полета, просто оставляя стики в центральном положении",
         "description": "Help text to ANGLE mode"

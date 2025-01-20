@@ -877,6 +877,9 @@
     "initialSetupRSSIValue": {
         "message": "$1 dBm"
     },
+    "initialSetupMCU": {
+        "message": "MCU:"
+    },
     "initialSetupSensorHardware": {
         "message": "센서:"
     },
@@ -1314,6 +1317,21 @@
     "configurationOtherFeaturesHelp": {
         "message": "<strong>참고:<\/strong> 모든 기능이 모든 비행 컨트롤러에 의해 지원되지는 않습니다. 만약 특별한 기능을 활성화하고, '저장 및 재부팅'을 누른 후에 비활성된다면, 이는 이 기능이 당신의 보드에 지원되지 않음을 의미합니다."
     },
+    "configurationMagAlignmentHelp": {
+        "message": "자력계 정렬은 비행 컨트롤러 보드에 있는 자력계 센서의 방향입니다. 기본값은 일반적으로 맞지만, 맞춤형 빌드나 자력계 방향이 다른 비행 컨트롤러가 있는 경우 이 설정을 조정해야 할 수도 있습니다."
+    },
+    "configurationMagDeclination": {
+        "message": "자력계 편위"
+    },
+    "configurationMagDeclinationInput": {
+        "message": "편위도"
+    },
+    "configurationMagDeclinationHelp": {
+        "message": "자기 편위는 자기 북쪽과 진 북쪽 사이의 각도입니다. 지구상의 모든 위치에 따라 다릅니다. 인터넷에서 자신의 위치에 대한 편위를 찾을 수 있습니다"
+    },
+    "configurationBoardAlignment": {
+        "message": "보드 정렬"
+    },
     "configurationBoardAlignmentRoll": {
         "message": "롤 각도"
     },
@@ -1322,6 +1340,36 @@
     },
     "configurationBoardAlignmentYaw": {
         "message": "요 각도"
+    },
+    "configurationGyroAlignment": {
+        "message": "자이로 정렬"
+    },
+    "configurationGyroAlignmentHelp": {
+        "message": "자이로 정렬은 비행 컨트롤러 보드에 있는 자이로 센서의 방향입니다. 기본값은 일반적으로 맞지만, 맞춤형 빌드나 자이로 방향이 다른 비행 컨트롤러가 있는 경우 이 설정을 조정해야 할 수도 있습니다."
+    },
+    "configurationGyroAlignmentRoll": {
+        "message": "$t(configurationBoardAlignmentRoll.message)"
+    },
+    "configurationGyroAlignmentPitch": {
+        "message": "$t(configurationBoardAlignmentPitch.message)"
+    },
+    "configurationGyroAlignmentYaw": {
+        "message": "$t(configurationBoardAlignmentYaw.message)"
+    },
+    "configurationMagAlignment": {
+        "message": "자력계 정렬"
+    },
+    "configurationBoardAlignmentHelp": {
+        "message": "임의의 각도로 보드를 회전시켜 옆으로\/뒤로\/회전하여 장착할 수 있습니다. 외부 센서를 실행할 때는 센서 정렬(자이로, Acc, Mag)을 사용하여 보드 방향과 무관하게 센서 위치를 정의합니다."
+    },
+    "configurationMagAlignmentRoll": {
+        "message": "$t(configurationBoardAlignmentRoll.message)"
+    },
+    "configurationMagAlignmentPitch": {
+        "message": "$t(configurationBoardAlignmentPitch.message)"
+    },
+    "configurationMagAlignmentYaw": {
+        "message": "$t(configurationBoardAlignmentYaw.message)"
     },
     "configurationSensorAlignmentGyro": {
         "message": "자이로 정렬"
@@ -2307,7 +2355,7 @@
         "description": "Help text to ACRO TRAINER mode"
     },
     "auxiliaryHelpMode_ARM": {
-        "message": "모터 출력을 활성화하고 기체가 비행할 수 있도록 합니다",
+        "message": "모터 출력을 가능하게 하고 기체가 비행할 수 있도록 합니다. <span class=\"message-negative\">주의:<\/span> 조종사는 안전상의 이유로 <b>BOXPREARM<\/b> (2-단계 아밍)을 설정할 수 있습니다.",
         "description": "Help text to ARM mode"
     },
     "auxiliaryHelpMode_ANGLE": {

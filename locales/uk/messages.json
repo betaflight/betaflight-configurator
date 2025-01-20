@@ -2348,7 +2348,7 @@
         "description": "Help text to ACRO TRAINER mode"
     },
     "auxiliaryHelpMode_ARM": {
-        "message": "Включає подачу потужності на мотори та дозволяє повітряному судну літати",
+        "message": "Приводить в рух мотори та дозволяє літальному апарату злетіти. <span class=\"message-negative\">Увага:<\/span> З міркувань безпеки, пілот може забажати налаштувати <b>BOXPREARM<\/b> (двоетапне взведення).",
         "description": "Help text to ARM mode"
     },
     "auxiliaryHelpMode_ANGLE": {
