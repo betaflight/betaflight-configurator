@@ -1,3 +1,4 @@
+// Import bit manipulation functions for handling beeper states
 import { bit_check, bit_clear, bit_set } from './bit';
 
 class Beepers {
