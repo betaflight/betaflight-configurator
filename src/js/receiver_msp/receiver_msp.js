@@ -4,7 +4,7 @@ import DarkTheme from "../DarkTheme.js";
 import { isWeb } from "../utils/isWeb.js";
 import $ from "jquery";
 
-// This is a hack to get the i18n var of the parent, but the i18n.localizePage not works
+// This is a hack to get the i18n var of the parent, but the i18n.localizePage not work
 // It seems than when node opens a new window, the module "context" is different, so the i18n var is not initialized
 const i18n = opener.i18n;
 
