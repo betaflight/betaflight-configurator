@@ -26,7 +26,7 @@ export const mixerList = [
     { name: "Singlecopter", pos: 20, model: "custom", image: "custom", motors: 1, servos: true },
     { name: "A-tail Quad", pos: 21, model: "quad_atail", image: "atail_quad", motors: 4, servos: false },
     { name: "Custom", pos: 22, model: "custom", image: "custom", motors: 0, servos: false },
-    { name: "Custom Airplane", pos: 23, model: "custom", image: "custom", motors: 2, servos: true },
+    { name: "Custom Airplane", pos: 23, model: "custom", image: "custom", motors: 0, servos: true },
     { name: "Custom Tricopter", pos: 24, model: "custom", image: "custom", motors: 3, servos: true },
     { name: "Quad X 1234", pos: 25, model: "quad_x", image: "quad_x_1234", motors: 4, servos: false },
     { name: "Octo X8 +", pos: 26, model: "custom", image: "custom", motors: 8, servos: false },
