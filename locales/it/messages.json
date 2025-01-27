@@ -873,6 +873,9 @@
     "initialSetupRSSIValue": {
         "message": "$1 dBm"
     },
+    "initialSetupMCU": {
+        "message": "MCU:"
+    },
     "initialSetupSensorHardware": {
         "message": "Sensori:"
     },
@@ -2346,6 +2349,10 @@
     "auxiliaryHelpMode_ACROTRAINER": {
         "message": "Modalità di volo che limita l'angolo del modello quando si vola in modalità acro",
         "description": "Help text to ACRO TRAINER mode"
+    },
+    "auxiliaryHelpMode_ARM": {
+        "message": "Abilita l'uscita del motore e permette al modello di volare.  <span class=\"message-negative\">Attenzione:<\/span> Il pilota può voler configurare <b>BOXPREARM<\/b> (armamento a 2 fasi) per motivi di sicurezza.",
+        "description": "Help text to ARM mode"
     },
     "auxiliaryHelpMode_ANGLE": {
         "message": "In questa modalità di livellamento automatico i canali di roll e pitch controllano l'angolo tra i rilevanti assi e la verticale, ottenendo un volo livellato lasciando gli stick centrati",
@@ -4700,7 +4707,7 @@
         "message": "La distanza dove il modello salirà, al di sopra della corrente altitudine, quando si inizia un recupero e la modalità altitudine è impostata all'altitudine ATTUALE; aggiunta anche in modalità Altitudine MAX."
     },
     "failsafeGpsRescueItemReturnAltitude": {
-        "message": "Altitudine di rientro (metri) - <strong>applicabile solo in modalità Altitudine fissa<\/strong>"
+        "message": "Altitudine di ritorno (metri)"
     },
     "failsafeGpsRescueItemAscendRate": {
         "message": "Velocità di ascesa (metri\/secondo)"

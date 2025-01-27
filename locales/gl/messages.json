@@ -4313,9 +4313,6 @@
     "failsafeGpsRescueInitialClimb": {
         "message": "Ascenso inicial (metros)"
     },
-    "failsafeGpsRescueItemReturnAltitude": {
-        "message": "Altitude de retorno (metros) - <strong>só se aplica no modo Altitude Fixa<\/strong>"
-    },
     "failsafeGpsRescueItemAscendRate": {
         "message": "Velocidade de ascenso (metros\/segundo)"
     },

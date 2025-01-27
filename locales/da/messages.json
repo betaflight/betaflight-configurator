@@ -2355,7 +2355,7 @@
         "description": "Help text to ACRO TRAINER mode"
     },
     "auxiliaryHelpMode_ARM": {
-        "message": "Aktiverer motorudgang og tillader fartøjet at flyve.  <span class=\"message-negative\">Attention:<\/span> Pilot kan vælge at konfigurere (2 faktor aktivering) - <b>BOXPREARM<\/b> - for større sikkerhed.",
+        "message": "Aktiverer motorudgang og tillader fartøjet at flyve.  <span class=\"message-negative\">Bemærk:<\/span> Pilot kan vælge at konfigurere (2 faktor aktivering) - <b>PREARM<\/b> - for større sikkerhed.",
         "description": "Help text to ARM mode"
     },
     "auxiliaryHelpMode_ANGLE": {
@@ -2495,7 +2495,7 @@
         "description": "Help text to PREARM mode"
     },
     "auxiliaryHelpMode_READY": {
-        "message": "Tilføjet i BF4.4, så du kan vise 'KLAR' i OSD ved hjælp af en kontakt. Dette er en forbedring til ræs, hvor alle piloters video vises på en central skærm. Piloten kan vippe en kontakt for at indikere, at han er klar til at flyve, og ordet READY vises på deres OSD. Løbsinstruktøren kan derefter se om alle piloter er klar, ved at se på den centrale skærm. Ved aktivering forsvinder READY teksten",
+        "message": "Viser 'KLAR' i OSD ved hjælp af en kontakt.<br>Anvendes til fx. ræs, hvor alle piloters video vises på en central skærm. Piloten vipper en kontakt for at indikere, at han er klar til at flyve, og ordet KLAR vises på deres OSD. Løbsinstruktøren kan derefter se om alle piloter er klar, ved at se på den centrale skærm. Ved aktivering slettes KLAR teksten",
         "description": "Help text to READY mode"
     },
     "auxiliaryHelpMode_STICKCOMMANDSDISABLE": {
@@ -4711,7 +4711,7 @@
         "message": "Afstanden fartøjet vil stige op over sin aktuelle højde, når en fejlsikring er startet og højde indstilling er sat til Aktuel eller Maximal højde."
     },
     "failsafeGpsRescueItemReturnAltitude": {
-        "message": "Højde ved retur (meter) - <strong>gælder kun i Fast højde indstilling<\/strong>"
+        "message": "Fast højde ved retur (meter)"
     },
     "failsafeGpsRescueItemAscendRate": {
         "message": "Stignings hastighed (meter\/sekund)"
@@ -4919,7 +4919,7 @@
         "message": "12V"
     },
     "powerVoltageId50": {
-        "message": "Kombineret ESC"
+        "message": "ESC kombineret"
     },
     "powerVoltageId60": {
         "message": "ESC Motor 1"
@@ -4997,7 +4997,7 @@
         "message": "Batteri"
     },
     "powerAmperageId50": {
-        "message": "Gennemsnit ESC"
+        "message": "ESC gennemsnit"
     },
     "powerAmperageId60": {
         "message": "ESC Motor 1"
@@ -6860,7 +6860,7 @@
         "message": "Maksimal vinkel [grader] hvorunder fartøj kan aktiveres"
     },
     "configurationSmallAngleHelp": {
-        "message": "Fartøj vil ikke AKTIVERE, hvis det er vippet mere end den anigvne vinkel i grader. Gælder kun, hvis accelerometer er aktivt. Indstilling til 180 vil deaktivere tjek"
+        "message": "Fartøj vil ikke <b>aktiveres<\/b>, hvis det er vippet mere end den angivne vinkel i grader. Gælder kun, hvis accelerometer er aktivt.<br>Indstilling til 180 vil deaktivere tjek"
     },
     "configurationBatteryVoltage": {
         "message": "Batteri spænding"

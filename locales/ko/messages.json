@@ -4711,7 +4711,7 @@
         "message": "레스큐가 시작되고 고도 모드가 현재 고도로 설정되어 있을 때 기체가 현재 고도 이상으로 상승하는 거리; MAX 고도 모드일 때도 추가됩니다."
     },
     "failsafeGpsRescueItemReturnAltitude": {
-        "message": "복귀 고도(미터) - <strong>고정된 고도 모드에서만 적용<\/strong>"
+        "message": "복귀 고도 (미터)"
     },
     "failsafeGpsRescueItemAscendRate": {
         "message": "상승속도 (미터\/초)"

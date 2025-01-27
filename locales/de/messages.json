@@ -4409,9 +4409,6 @@
     "failsafeGpsRescueInitialClimb": {
         "message": "Initialer Aufstieg (Meter)"
     },
-    "failsafeGpsRescueItemReturnAltitude": {
-        "message": "Höhe bei Rückkehr (Meter) - <strong>gilt nur im Feste Höhe Modus<\/strong>"
-    },
     "failsafeGpsRescueItemAscendRate": {
         "message": "Steigrate (Meter\/Sekunde)"
     },
@@ -6968,6 +6965,10 @@
     "presetsWarningBackup": {
         "message": "Bitte sichere Deine aktuelle Konfiguration ('$t(presetsBackupSave.message)'-Button oder über CLI, falls der Button deaktiviert ist) <strong>bevor<\/strong> du Voreinstellungen wählst und anwendest. Es gibt <b>keine Möglichkeit<\/b>, nach der Anwendung der Presets zur vorherigen Konfiguration zurückzukehren.",
         "description": "Warning message that shows up at the top of the presets tab"
+    },
+    "presets_sources_dialog_warning": {
+        "message": "<span class=\"message-negative\">ACHTUNG!<\/span> Die Verwendung von Preset-Quellen von Dritten kann gefährlich sein.<br\/>Stelle sicher, dass du nur vertrauenswürdige Quellen hinzufügst und verwendest. Schädliche oder schlechte Preset-Quellen können deine Konfiguration beschädigen und\/oder negative Auswirkungen auf das Flugverhalten deines Copters haben.",
+        "description": "Warning message that shows up at the top of the preset sources dialog"
     },
     "presetsWarningWrongVersionConfirmation": {
         "message": "Ausgewählte Voreinstellung erfordert Firmware-Version $1<br\/> Aktuelle Firmware-Version ist $2",

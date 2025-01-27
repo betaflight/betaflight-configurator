@@ -4571,9 +4571,6 @@
     "failsafeGpsRescueInitialClimbHelp": {
         "message": "Высота, на которую поднимется квадрокоптер относительно текущей при активном режиме высоты - \"Текущая высота\". Это так же увеличивает высоту в режиме \"Максимальная высота\"."
     },
-    "failsafeGpsRescueItemReturnAltitude": {
-        "message": "Высота возврата (метры) - <strong>применяется только в режиме фиксированной высоты<\/strong>"
-    },
     "failsafeGpsRescueItemAscendRate": {
         "message": "Скорость подъёма (м\/сек)"
     },
