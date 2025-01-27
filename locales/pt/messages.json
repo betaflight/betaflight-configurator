@@ -4707,7 +4707,7 @@
         "message": "A distância que a aeronave irá subir, acima da altitude atual, quando um resgate for iniciado e o modo de altitude for definido para Altitude CORRENTE; também adicionado quando no modo de Altitude MÁX."
     },
     "failsafeGpsRescueItemReturnAltitude": {
-        "message": "Altitude de retorno (metros) - <strong>aplica-se apenas no modo de Altitude Fixa<\/strong>"
+        "message": "Altitude de retorno (metros)"
     },
     "failsafeGpsRescueItemAscendRate": {
         "message": "Ritmo de Subida (metros \/ segundo)"

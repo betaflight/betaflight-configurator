@@ -4707,7 +4707,7 @@
         "message": "La distancia a la que la aeronave ascenderá, sobre la altitud actual, cuando se inicia un rescate y el modo de altitud está configurado como Altitud ACTUAL; también se añade cuando el modo es Altitud MAX."
     },
     "failsafeGpsRescueItemReturnAltitude": {
-        "message": "Altitud de retorno (metros) - <strong>sólo se aplica en modo Altitud Fija<\/strong>"
+        "message": "Altitud de retorno (metros)"
     },
     "failsafeGpsRescueItemAscendRate": {
         "message": "Velocidad de ascenso (metros\/segundo)"

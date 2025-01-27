@@ -4703,9 +4703,6 @@
     "failsafeGpsRescueInitialClimbHelp": {
         "message": "Відстань, на яку повітряне судно підніметься вище поточної висоти, коли ініціюється GPS порятунок і режим висоти встановлено на \"Поточна висота\"; також додається в режимі \"Максимальна висота\"."
     },
-    "failsafeGpsRescueItemReturnAltitude": {
-        "message": "Висота повернення (метри) - <strong>лише у режимі Фіксованої Висоти<\/strong>"
-    },
     "failsafeGpsRescueItemAscendRate": {
         "message": "Швидкість підйому (м\/с)"
     },

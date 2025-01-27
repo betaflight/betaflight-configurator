@@ -1944,7 +1944,7 @@
         "message": "<span class = \"message-negative\"> <strong> $t(warningTitle.message): <\/strong> Odradza się stosowania wartości zadanej D większej niż 0 i mniejszej niż 0,1. Takie postępowanie może prowadzić do niestabilności i zmniejszenia reakcji drążka, gdy drążki przekroczą punkt środkowy. <\/span>"
     },
     "pidTuningFeedforwardGroup": {
-        "message": "Wyprze-<br>dzający"
+        "message": "Feed-<br>forward"
     },
     "pidTuningFeedforwardGroupHelp": {
         "message": "Feedforward dostosowuje reakcję drążka.<br \/><br \/> Te opcje pozwalają dostosować go, aby zapewnić wszystko, od wyraźnych, natychmiastowych reakcji drążka podczas wyścigów po miękkie, płynne reakcje w zastosowaniach kinowych\/HD."
@@ -2026,7 +2026,7 @@
         "description": "Derivative Term helpicon message on PID table titlebar"
     },
     "pidTuningFeedforward": {
-        "message": "<b>FF<\/b> - Wyprzedzający"
+        "message": "<b>FF<\/b> - Feedforward"
     },
     "pidTuningFeedforwardHelp": {
         "message": "Dodatkowy czynnik napędowy, pochodzący wyłącznie z sygnału wejściowego drążka, który pomaga szybko poruszać jednostką latającą za pomocą szybkich ruchów drążkiem.<br><br>FF nie może powodować oscylacji, pozwala na niższe P dla podobnych reakcji drążka i kompensuje naturalną opozycję D względem danych wejściowych.<br><br>Niskie lub zerowe wartości spowodują płynniejszą, ale bardziej opóźnioną reakcję na sygnały wejściowe drążka.",
@@ -2355,7 +2355,7 @@
         "description": "Help text to ACRO TRAINER mode"
     },
     "auxiliaryHelpMode_ARM": {
-        "message": "Uaktywnia silniki i pozwala na latanie modelem. <span class=\"message-negative\">Uwaga:<\/span> Ze względów bezpieczeństwa pilot może chcieć skonfigurować tryb <b>BOXPREARM<\/b> (uzbrojenie dwuetapowe).",
+        "message": "Umożliwia pracę silnika i pozwala na latanie samolotem.  <span class=\"message-negative\">Uwaga:<\/span> Pilot może chcieć skonfigurować <b>BOXPREARM<\/b> (dwuetapowe podbrojenie) ze względów bezpieczeństwa.",
         "description": "Help text to ARM mode"
     },
     "auxiliaryHelpMode_ANGLE": {
@@ -4636,10 +4636,10 @@
         "message": "ETAP 1 – USTAWIENIA KANAŁU ZASTĘPCZEGO"
     },
     "failsafeChannelFallbackSettingsHelp": {
-        "message": "Ustawienia są stosowane do kanałów AUX w których wykryto błąd lub do wszystkich kanałów gdy jest aktywny etap pierwszy. <strong>Uwaga:<\/strong> czas opóźnienia jest zapisywany co 25 usec"
+        "message": "Ustawienia te są stosowane do kanałów AUX w których wykryto błąd lub do wszystkich kanałów gdy jest aktywny etap pierwszy. <strong>Uwaga:<\/strong> czas opóźnienia jest zapisywany co 25 usec"
     },
     "failsafeChannelFallbackSettingsAuto": {
-        "message": "<strong>Auto<\/strong> ustawia Roll, Pitch oraz Yaw w pozcji neutralnej a Throttle na poziomie minimalnym. <strong>Bez zmian<\/strong> to ostatnia poprawna odebranea wartość. <strong>Ustaw<\/strong> oznacza, że zostanie użyta podana przez ciebie wartość."
+        "message": "<strong>Auto<\/strong> ustawia Roll, Pitch oraz Yaw w pozcji neutralnej a Throttle na poziomie minimalnym. <strong>Bez zmian<\/strong> to ostatnia poprawna odebrana wartość. <strong>Ustaw<\/strong> oznacza, że zostanie użyta podana przez ciebie wartość"
     },
     "failsafeChannelFallbackSettingsHold": {
         "message": "<strong>Bez zmian<\/strong> oznacza utrzymanie ostatniej poprawnej wartości. <strong>Ustaw<\/strong> oznacza, że  zostanie użyta  podana przez ciebie wartość."
@@ -4711,7 +4711,7 @@
         "message": "Dystans, o jaki powiększy się bieżąca wysokość modelu, gdy rozpocznie się procedura ratunkowa Fail-Safe. Działa w trybach wysokości: Aktualna wysokość oraz Maksymalna wysokość."
     },
     "failsafeGpsRescueItemReturnAltitude": {
-        "message": "Wysokość powrotna (w metrach) - <strong>ma zastosowanie tylko w trybie stałej wysokości<\/strong>"
+        "message": "Wysokość powrotu (metry)"
     },
     "failsafeGpsRescueItemAscendRate": {
         "message": "Tempo wznoszenia (metry\/sekundę)"
@@ -4751,7 +4751,7 @@
         "message": "Przepustnica w zawisie - <span class=\"message-negative\">WAŻNE: ustaw tę wartość dokładnie<\/span>"
     },
     "failsafeGpsRescueThrottleHoverHelp": {
-        "message": "Aby znaleźć właściwą wartość, ustaw działanie Przełącznika Failsafe na Etap 2, ustaw procedurę Failsafe Etap 2 na Lądowanie i dostosuj wartość przepustnicy używaną podczas lądowania, aby model zawisnął w miejscu, bądź zaczynał powoli opadać. Następnie ustaw wartość Przepustnicy w zawisie w GPS Ratunkowym i dokładnie tę samą wartość dla Throttle w Etapie 1 - Ustawieniach Kanału zastępczego."
+        "message": "Aby znaleźć właściwą wartość, ustaw działanie przełącznika Failsafe na Etap 2, ustaw Procedurę Failsafe Etap 2 na Lądowanie i dostosuj wartość przepustnicy używaną podczas lądowania, aż jednostka latająca zawiśnie w powietrzu lub zacznie powoli opadać. Następnie ustaw taką samą moc przepustnicy w GPS Ratunkowym oraz  Throttle w  Etapie 1 Kanału zastępczego."
     },
     "failsafeGpsRescueItemMinDth": {
         "message": "Minimalna odległość do domu (metry)"
@@ -4766,7 +4766,7 @@
         "message": "Zezwalaj na uzbrojenie nawet w przypadku braku poprawnego sygnału GPS - <span class=\"message-negative\">OSTRZEŻENIE: BRAK POPRAWNEGO SYGNAŁU = ROZBROJENIE W TRYBIE AWARYJNYM FAILSASFE!<\/span"
     },
     "failsafeGpsRescueArmWithoutFixHelp": {
-        "message": "Nie zalecane. Pozwala na uzbrojenie silników modelu, gdy Miejsce Startu nie zostało ustalone, co niesie ryzyko rozbrojenia silników i rozbicia się modelu w wyniku utraty sygnału przez odbiornik RC. W razie testowego wywołania Fail-Safe przełącznikiem, przed rozbrojeniem następuje krótki okres bezczynności."
+        "message": "Nie rekomendowane. Umożliwia uzbrojenie bez poprawnego sygnału GPS, może spowodować, że jednostka latająca rozbroi się i ulegnie awarii z prawdziwym zabezpieczeniem przed utratą sygnału Rx. Jeśli testowano za pomocą przełącznika, przed rozbrojeniem następuje krótki okres bezczynności."
     },
     "failsafeGpsRescueItemSanityChecks": {
         "message": "Sprawdzenie kontrolne"

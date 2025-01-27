@@ -4715,7 +4715,7 @@
         "message": "La distància que pujarà el dron, per sobre de l'altitud actual, quan s'inicia un rescat i el mode d'altitud s'estableix en Altitud ACTUAL; també s'ha afegit quan està en mode d'altitud MAX."
     },
     "failsafeGpsRescueItemReturnAltitude": {
-        "message": "​Altitud de retorn (metres) - <strong>només s'aplica al mode d'altitud fixa<\/strong>"
+        "message": "Altitud retorn (metres)"
     },
     "failsafeGpsRescueItemAscendRate": {
         "message": "Taxa d’ascens (metres\/segon)"
