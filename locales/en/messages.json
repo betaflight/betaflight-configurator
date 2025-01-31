@@ -1748,7 +1748,7 @@
         "message": "Serial Rx"
     },
     "portsSerialRxHelp": {
-        "message": "Enable or disable Remote Controller Receiver (RX) on specified UART. Only one allowed."
+        "message": "Enable or disable Remote Control serial Receiver (RX) on specified UART. Only one allowed."
     },
     "portsSensorIn": {
         "message": "Sensor Input"
