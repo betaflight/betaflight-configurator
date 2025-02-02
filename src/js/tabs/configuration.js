@@ -157,6 +157,38 @@ configuration.initialize = function (callback) {
             toggleMagCustomAlignmentInputs();
         });
 
+        // Range finder
+
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+            const rangeFinderType_e = $("select.rangefinderType");
+
+            const rangeFinderTypes = ["None", "HC-SR04", "TFMini", "TF02", "MTF01", "MTF02", "MTF01P", "MTF02P"];
+
+            for (let i = 0; i < rangeFinderTypes.length; i++) {
+                rangeFinderType_e.append(`<option value="${i}">${rangeFinderTypes[i]}</option>`);
+            }
+
+            rangeFinderType_e.val(FC.SENSOR_CONFIG.sonar_hardware);
+        } else {
+            $(".tab-configuration .rangefinder").parent().hide();
+        }
+
+        // Optical flow sensor
+
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+            const opticalflowType_e = $("select.opticalflowType");
+
+            const opticalflowTypes = ["None", "MT"];
+
+            for (let i = 0; i < opticalflowTypes.length; i++) {
+                opticalflowType_e.append(`<option value="${i}">${opticalflowTypes[i]}</option>`);
+            }
+
+            opticalflowType_e.val(FC.SENSOR_CONFIG.opticalflow_hardware);
+        } else {
+            $(".tab-configuration .opticalflow").parent().hide();
+        }
+
         // Multi gyro config
 
         const GYRO_DETECTION_FLAGS = {
@@ -440,6 +472,11 @@ configuration.initialize = function (callback) {
             // declination added first in #3676
             if (hasMag) {
                 FC.COMPASS_CONFIG.mag_declination = $('input[name="mag_declination"]').val();
+            }
+
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+                FC.SENSOR_CONFIG.sonar_hardware = $("select.rangefinderType").val();
+                FC.SENSOR_CONFIG.opticalflow_hardware = $("select.opticalflowType").val();
             }
 
             FC.ARMING_CONFIG.small_angle = parseInt($('input[id="configurationSmallAngle"]').val());

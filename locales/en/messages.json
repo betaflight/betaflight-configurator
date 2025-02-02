@@ -1408,6 +1408,24 @@
     "configurationMagDeclinationHelp": {
         "message": "The magnetic declination is the angle between magnetic north and true north. It is different for every location on earth. You can find the declination for your location on the internet"
     },
+    "configurationRangefinder": {
+        "message": "Rangefinder"
+    },
+    "configurationRangefinderHelp": {
+        "message": "Enable rangefinder to measure distance to ground in cm"
+    },
+    "configurationRangefinderType": {
+        "message": "Type"
+    },
+    "configurationOpticalflow": {
+        "message": "Optical Flow"
+    },
+    "configurationOpticalflowHelp": {
+        "message": "Enable optical flow sensor"
+    },
+    "configurationOpticalflowType": {
+        "message": "Type"
+    },
     "configurationBoardAlignment": {
         "message": "Board Alignment"
     },

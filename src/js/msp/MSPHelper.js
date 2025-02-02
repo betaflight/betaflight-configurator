@@ -1209,6 +1209,9 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
                         FC.SENSOR_CONFIG.sonar_hardware = data.readU8();
                     }
+                    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+                        FC.SENSOR_CONFIG.opticalflow_hardware = data.readU8();
+                    }
                     break;
                 case MSPCodes.MSP2_SENSOR_CONFIG_ACTIVE:
                     FC.SENSOR_CONFIG_ACTIVE.gyro_hardware = data.readU8();
@@ -2206,10 +2209,13 @@ MspHelper.prototype.crunch = function (code, modifierCode = undefined) {
             buffer.push16(FC.ADVANCED_TUNING.tpaBreakpoint);
             break;
         case MSPCodes.MSP_SET_SENSOR_CONFIG:
-            buffer
-                .push8(FC.SENSOR_CONFIG.acc_hardware)
-                .push8(FC.SENSOR_CONFIG.baro_hardware)
-                .push8(FC.SENSOR_CONFIG.mag_hardware);
+            buffer.push8(FC.SENSOR_CONFIG.acc_hardware);
+            buffer.push8(FC.SENSOR_CONFIG.baro_hardware);
+            buffer.push8(FC.SENSOR_CONFIG.mag_hardware);
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+                buffer.push8(FC.SENSOR_CONFIG.sonar_hardware);
+                buffer.push8(FC.SENSOR_CONFIG.opticalflow_hardware);
+            }
             break;
 
         case MSPCodes.MSP_SET_NAME:
