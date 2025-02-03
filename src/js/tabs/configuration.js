@@ -10,7 +10,7 @@ import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "../data_st
 import { updateTabList } from "../utils/updateTabList";
 import $ from "jquery";
 import { have_sensor } from "../sensor_helpers";
-import { getSensorTypes } from "../sensor_types";
+import { sensorTypes } from "../sensor_types";
 
 const configuration = {
     analyticsChanges: {},
@@ -162,7 +162,7 @@ configuration.initialize = function (callback) {
 
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
             const rangeFinderType_e = $("select.rangefinderType");
-            const sonarElements = getSensorTypes().sonar.elements;
+            const sonarElements = sensorTypes().sonar.elements;
 
             for (let i = 0; i < sonarElements.length; i++) {
                 rangeFinderType_e.append(`<option value="${i}">${sonarElements[i]}</option>`);
@@ -177,7 +177,7 @@ configuration.initialize = function (callback) {
 
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
             const opticalflowType_e = $("select.opticalflowType");
-            const opticalflowElements = getSensorTypes().opticalflow.elements;
+            const opticalflowElements = sensorTypes().opticalflow.elements;
 
             for (let i = 0; i < opticalflowElements.length; i++) {
                 opticalflowType_e.append(`<option value="${i}">${opticalflowElements[i]}</option>`);

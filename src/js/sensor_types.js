@@ -2,7 +2,7 @@ import semver from "semver";
 import FC from "./fc";
 import { API_VERSION_1_47 } from "./data_storage";
 
-export function getSensorTypes() {
+export function sensorTypes() {
     const sensorTypes = {
         acc: {
             name: "Accelerometer",

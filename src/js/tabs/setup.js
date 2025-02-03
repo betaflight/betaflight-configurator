@@ -12,7 +12,7 @@ import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "../data_st
 import { gui_log } from "../gui_log";
 import $ from "jquery";
 import { ispConnected } from "../utils/connection";
-import { getSensorTypes } from "../sensor_types";
+import { sensorTypes } from "../sensor_types";
 
 const setup = {
     yaw_fix: 0.0,
@@ -312,31 +312,31 @@ setup.initialize = function (callback) {
                         FC.SENSOR_CONFIG_ACTIVE.gyro_hardware,
                         sensor_gyro_e,
                         "gyro",
-                        getSensorTypes().gyro.elements,
+                        sensorTypes().gyro.elements,
                     );
                     addSensorInfo(
                         FC.SENSOR_CONFIG_ACTIVE.acc_hardware,
                         sensor_acc_e,
                         "acc",
-                        getSensorTypes().acc.elements,
+                        sensorTypes().acc.elements,
                     );
                     addSensorInfo(
                         FC.SENSOR_CONFIG_ACTIVE.baro_hardware,
                         sensor_baro_e,
                         "baro",
-                        getSensorTypes().baro.elements,
+                        sensorTypes().baro.elements,
                     );
                     addSensorInfo(
                         FC.SENSOR_CONFIG_ACTIVE.mag_hardware,
                         sensor_mag_e,
                         "mag",
-                        getSensorTypes().mag.elements,
+                        sensorTypes().mag.elements,
                     );
                     addSensorInfo(
                         FC.SENSOR_CONFIG_ACTIVE.sonar_hardware,
                         sensor_sonar_e,
                         "sonar",
-                        getSensorTypes().sonar.elements,
+                        sensorTypes().sonar.elements,
                     );
 
                     // opticalflow sensor is available since 1.47
@@ -345,7 +345,7 @@ setup.initialize = function (callback) {
                             FC.SENSOR_CONFIG_ACTIVE.opticalflow_hardware,
                             sensor_opticalflow_e,
                             "opticalflow",
-                            getSensorTypes().opticalflow.elements,
+                            sensorTypes().opticalflow.elements,
                         );
                     }
                 });
