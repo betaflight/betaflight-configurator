@@ -302,7 +302,7 @@ setup.initialize = function (callback) {
                 } else if (have_sensor(FC.CONFIG.activeSensors, sensorType)) {
                     sensorElement.text(sensorElements[sensor]);
                 } else {
-                    sensorElement.text(i18n.getMessage("initialSetupNotActive"));
+                    sensorElement.text(i18n.getMessage("initialSetupNotDetected"));
                 }
             }
 
