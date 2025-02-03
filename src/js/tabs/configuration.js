@@ -10,6 +10,7 @@ import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "../data_st
 import { updateTabList } from "../utils/updateTabList";
 import $ from "jquery";
 import { have_sensor } from "../sensor_helpers";
+import { getSensorTypes } from "../sensor_types";
 
 const configuration = {
     analyticsChanges: {},
@@ -161,11 +162,10 @@ configuration.initialize = function (callback) {
 
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
             const rangeFinderType_e = $("select.rangefinderType");
+            const sonarElements = getSensorTypes().sonar.elements;
 
-            const rangeFinderTypes = ["None", "HC-SR04", "TFMini", "TF02", "MTF01", "MTF02", "MTF01P", "MTF02P"];
-
-            for (let i = 0; i < rangeFinderTypes.length; i++) {
-                rangeFinderType_e.append(`<option value="${i}">${rangeFinderTypes[i]}</option>`);
+            for (let i = 0; i < sonarElements.length; i++) {
+                rangeFinderType_e.append(`<option value="${i}">${sonarElements[i]}</option>`);
             }
 
             rangeFinderType_e.val(FC.SENSOR_CONFIG.sonar_hardware);
@@ -177,11 +177,10 @@ configuration.initialize = function (callback) {
 
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
             const opticalflowType_e = $("select.opticalflowType");
+            const opticalflowElements = getSensorTypes().opticalflow.elements;
 
-            const opticalflowTypes = ["None", "MT"];
-
-            for (let i = 0; i < opticalflowTypes.length; i++) {
-                opticalflowType_e.append(`<option value="${i}">${opticalflowTypes[i]}</option>`);
+            for (let i = 0; i < opticalflowElements.length; i++) {
+                opticalflowType_e.append(`<option value="${i}">${opticalflowElements[i]}</option>`);
             }
 
             opticalflowType_e.val(FC.SENSOR_CONFIG.opticalflow_hardware);

@@ -1221,6 +1221,9 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
                         FC.SENSOR_CONFIG_ACTIVE.sonar_hardware = data.readU8();
                     }
+                    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+                        FC.SENSOR_CONFIG_ACTIVE.opticalflow_hardware = data.readU8();
+                    }
                     break;
                 case MSPCodes.MSP2_MCU_INFO:
                     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {

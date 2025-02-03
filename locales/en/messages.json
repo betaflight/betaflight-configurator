@@ -980,6 +980,9 @@
     "initialSetupSensorSonar": {
         "message": "Sonar:"
     },
+    "initialSetupSensorOpticalflow": {
+        "message": "Optical Flow:"
+    },
     "initialSetupSensorRadar": {
         "message": "Radar:"
     },
