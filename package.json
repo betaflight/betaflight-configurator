@@ -86,7 +86,7 @@
     "cordova-lib": "^11.0.0",
     "del": "^6.1.1",
     "eslint": "^8.57.0",
-    "eslint-config-prettier": "^8.5.0",
+    "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-vue": "^7.20.0",
     "follow-redirects": "^1.15.2",
     "fs-extra": "^10.1.0",
