@@ -2454,7 +2454,7 @@
         "description": "Help text to AIRMODE mode"
     },
     "auxiliaryHelpMode_ALTHOLD": {
-        "message": "Altitude mode is the safest non-GPS manual mode for new fliers. It is just like Stabilized mode but additionally locks the vehicle altitude when the sticks are released",
+        "message": "<a href=\"https://betaflight.com/docs/wiki/guides/current/position-hold-v4-6#altitude-hold\" target=\"_blank\" rel=\"noopener noreferrer\">Altitude Hold</a> actively regulates the aircraft's altitude using external sensors combined with Angle Mode (Stable Mode).",
         "description": "Help text for ALTITUDE HOLD mode"
     },
     "auxiliaryHelpMode_BEEPER": {
