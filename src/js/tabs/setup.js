@@ -295,7 +295,7 @@ setup.initialize = function (callback) {
         };
 
         const showSensorInfo = function () {
-            // add function for better readability
+            // Add sensor info to the sensor info box
             function addSensorInfo(sensor, sensorElement, sensorType, sensorElements) {
                 if (sensor == 0xff) {
                     sensorElement.text(i18n.getMessage("initialSetupNotInBuild"));
