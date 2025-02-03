@@ -10,7 +10,7 @@ import Model from "../model";
 import MSPCodes from "../msp/MSPCodes";
 import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "../data_storage";
 import { gui_log } from "../gui_log";
-import $, { get } from "jquery";
+import $ from "jquery";
 import { ispConnected } from "../utils/connection";
 import { getSensorTypes } from "../sensor_types";
 
