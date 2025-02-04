@@ -90,7 +90,7 @@ export function sensorTypes() {
         },
         gps: {
             name: "GPS",
-            elements: ["UBLOX", "NMEA", "AUTO", "NONE"],
+            elements: ["NMEA", "UBLOX", "MSP"],
         },
         sonar: {
             name: "Sonar",
@@ -101,9 +101,6 @@ export function sensorTypes() {
             elements: ["NONE", "MT"],
         },
     };
-
-    const gyroElements = sensorTypes.gyro.elements;
-    const accElements = sensorTypes.acc.elements;
 
     function removeElement(elements, element) {
         const index = elements.indexOf(element);
@@ -119,6 +116,10 @@ export function sensorTypes() {
         }
     }
 
+    const gyroElements = sensorTypes.gyro.elements;
+    const accElements = sensorTypes.acc.elements;
+    const gpsElements = sensorTypes.gps.elements;
+
     // remove deprecated sensors or add new ones
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
         removeElement(gyroElements, "L3G4200D");
@@ -130,6 +131,8 @@ export function sensorTypes() {
         removeElement(accElements, "BMA280");
         removeElement(accElements, "LSM303DLHC");
         addElement(accElements, "IIM42653", "LSM6DSV16X");
+
+        addElement(gpsElements, "VIRTUAL", "MSP");
     }
 
     return sensorTypes;
