@@ -2375,7 +2375,7 @@
         "description": "Help text to AIRMODE mode"
     },
     "auxiliaryHelpMode_ALTHOLD": {
-        "message": "El mode d'altitud és el mode manual no GPS més segur per als nous pilots. És com el mode estabilitzat, però a més bloqueja l'altitud del quad quan es deixen anar els sticks",
+        "message": "<a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/position-hold-v4-6#altitude-hold\" target=\"_blank\" rel=\"noopener noreferrer\">Altitude Hold<\/a> regula activamente la altitud de la aeronave utilizando sensores externos combinados con el modo de ángulo (modo estable).",
         "description": "Help text for ALTITUDE HOLD mode"
     },
     "auxiliaryHelpMode_BEEPER": {

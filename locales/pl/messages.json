@@ -268,7 +268,7 @@
         "message": "Dokumentacja i Pomoc"
     },
     "tabOptions": {
-        "message": "Opcje Ustawień"
+        "message": "Ustawienia"
     },
     "tabSetup": {
         "message": "Ustawienia"
@@ -942,7 +942,7 @@
         "description": "Message that pops up to describe the CRASH_DETECTED arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipCALIBRATING": {
-        "message": "Jednostka latająca jest obecnie w trakcie kalibracji",
+        "message": "Model jest obecnie w trakcie kalibracji",
         "description": "Message that pops up to describe the CALIBRATING arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipTHROTTLE": {
@@ -950,7 +950,7 @@
         "description": "Message that pops up to describe the THROTTLE arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipANGLE": {
-        "message": "Jednostka latająca nie jest wypoziomowana",
+        "message": "Model nie jest wypoziomowany",
         "description": "Message that pops up to describe the ANGLE arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipBOOT_GRACE_TIME": {
@@ -1300,7 +1300,7 @@
         "message": "RSSI (Siła sygnału)"
     },
     "configurationRSSIHelp": {
-        "message": "Siła sygnału RSSI  jest bardzo pomocna, bo pokazuje, gdy Twoja jednostka latająca traci zasięg lub występują zakłócenia sygnału."
+        "message": "Siła sygnału RSSI jest bardzo pomocna, bo pokazuje, gdy Twój model traci zasięg lub występują zakłócenia sygnału."
     },
     "configurationEscFeatures": {
         "message": "Ustawienia ESC\/Silników"
@@ -1315,7 +1315,7 @@
         "message": "<strong>Uwaga:<\/strong> Odbiornik typu SPI RX będzie działa tylko gdy odbiornik jest zintegrowany z kontrolerem lotu lub jest podłączony do magistrali SPI."
     },
     "configurationOtherFeaturesHelp": {
-        "message": "<strong>Uwaga:<\/strong> Nie każda funkcja jest obsługiwana przez każdy kontroler lotu. Jeśli włączysz daną funkcję a po wciśnięciu 'Zapisz i zrestartuj' nie zostanie ona włączona to oznacza, że funkcja ta jest nieobsługiwana przez twój kontroler lotu."
+        "message": "<strong>Uwaga:<\/strong> Nie każda funkcja jest obsługiwana przez każdy kontroler lotu. Jeśli włączysz daną funkcję a po wciśnięciu 'Zapisz i uruchom ponownie' nie zostanie ona włączona to oznacza, że funkcja ta jest nieobsługiwana przez twój kontroler lotu."
     },
     "configurationMagAlignmentHelp": {
         "message": "Ustawienie magnetometru to orientacja czujnika magnetometru na płycie kontrolera lotu. Wartość domyślna jest zwykle poprawna, ale jeśli masz niestandardową konstrukcję lub kontroler lotu z inną orientacją magnetometru, może być konieczne dostosowanie tego ustawienia."
@@ -1457,7 +1457,7 @@
         "message": "Minimum przepustnicy (Najniższa wartość ESC gdy uzbrojony)"
     },
     "configurationThrottleMinimumHelp": {
-        "message": "Jest to wartość 'bezczynności', która jest wysyłana do ESC, gdy jednostka latająca jest uzbrojona i drążek przepustnicy jest w najniższym położeniu. Zwiększ wartość, aby uzyskać większą prędkość obrotową. Zwiększ wartość w przypadku desynchronizacji!"
+        "message": "Jest to wartość 'bezczynności', która jest wysyłana do ESC, gdy model jest uzbrojony i drążek przepustnicy jest w najniższym położeniu. Zwiększ wartość, aby uzyskać większą prędkość obrotową. Zwiększ wartość w przypadku desynchronizacji!"
     },
     "configurationThrottleMaximum": {
         "message": "Maksymalna wartość przepustnicy (Kiedy ESC jest uzbrojone)"
@@ -1484,7 +1484,7 @@
         "message": "Sygnał dzwiękowy"
     },
     "configurationDshotBeaconHelp": {
-        "message": "Sygnał radiowy Dshot wykorzstuje układy ESC i silniki do generowania dźwięku. Oznacza to, że protokół Dshot nie może być użyty podczas gdy silniki są uruchomione. W Betaflight 3.4 i nowszych, gdy próbuje się uzbroić silniki występuje opóźnienie o 2 sekundy, zanim jednostka zostanie uzbrojona. Ma to zapobiec przed zakłóceniem funkcji sygnału radiowego Dshot podczas wysyłania sygnału<\/strong> wysyłanego podczas uzbrajania. <br\/> <strong> Ostrzeżenie: <\/strong> Ponieważ sygnał Dshot przepływa przez silniki, gdy są aktywne, może to spowodować nadmierne nagrzewanie i uszkodzenie silników lub układów ESC, jeśli siła sygnału ostrzegawczego jest ustawiona zbyt wysoko. Użyj BLHeli Configurator lub BLHeli Suite, aby wyregulować i przetestować siłę sygnału."
+        "message": "Sygnał radiowy Dshot wykorzstuje układy ESC i silniki do generowania dźwięku. Oznacza to, że protokół Dshot nie może być użyty podczas gdy silniki są uruchomione. W Betaflight 3.4 i nowszych, gdy próbuje się uzbroić silniki występuje opóźnienie o 2 sekundy, zanim model zostanie uzbrojony. Ma to zapobiec przed zakłóceniem funkcji sygnału radiowego Dshot podczas wysyłania sygnału<\/strong> wysyłanego podczas uzbrajania. <br\/> <strong> Ostrzeżenie: <\/strong> Ponieważ sygnał Dshot przepływa przez silniki, gdy są aktywne, może to spowodować nadmierne nagrzewanie i uszkodzenie silników lub układów ESC, jeśli siła sygnału ostrzegawczego jest ustawiona zbyt wysoko. Użyj BLHeli Configurator lub BLHeli Suite, aby wyregulować i przetestować siłę sygnału."
     },
     "configurationBeeper": {
         "message": "Ustawienia buzzer'a"
@@ -1822,7 +1822,7 @@
         "description": "Anti Gravity Threshold Parameter"
     },
     "pidTuningAntiGravityHelp": {
-        "message": "Anti Gravity zwiększa na chwilę parametr I (oraz parametr P od wersji betaflight 4.3) podczas szybkich ruchów przepustnicą, zwiększając stabilność lotu podczas gwałtownego wznoszenia.<br><br>Wyższe wartości mogą poprawić stabilność w jednostkach latających o niskim autorytecie lub tych z przesuniętym środkiem ciężkości."
+        "message": "Anti Gravity zwiększa na chwilę parametr I (oraz parametr P od wersji betaflight 4.3) podczas szybkich ruchów przepustnicą, zwiększając stabilność lotu podczas gwałtownego wznoszenia.<br><br>Wyższe wartości mogą poprawić stabilność w modelach o niskim autorytecie lub tych z przesuniętym środkiem ciężkości."
     },
     "pidTuningDerivative": {
         "message": "<b>D<\/b> - Różniczkujący",
@@ -1841,7 +1841,7 @@
         "description": "Gain of the D Max feature"
     },
     "pidTuningDMaxGainHelp": {
-        "message": "D Max Advance dodaje czułość do współczynnika wzmocnienia, gdy drążki poruszają się szybko.<br><br>Advance nie reaguje na żyroskop ani na efekt propwash. Działa wcześniej niż współczynnik wzmocnienia i czasami jest przydatny w przypadku quadów o niskim autorytecie, które mają tendencję do dużego opóźnienia na początku ruchu.<br><br>Ogólnie najlepiej pozostawić go na zero.<br><br>OSTRZEŻENIE: Advance lub Zysk muszą być ustawione powyżej około 20, w przeciwnym razie D nie wzrośnie tak, jak powinno. Ustawienie obu na zero zablokuje D na wartości podstawowej.",
+        "message": "D Max Advance dodaje czułość do współczynnika wzmocnienia, gdy drążki poruszają się szybko.<br><br>Advance nie reaguje na żyroskop ani na efekt propwash. Działa wcześniej niż współczynnik wzmocnienia i czasami jest przydatny w przypadku modeli o niskim autorytecie, które mają tendencję do dużego opóźnienia na początku ruchu.<br><br>Ogólnie najlepiej pozostawić go na zero.<br><br>OSTRZEŻENIE: Advance lub Zysk muszą być ustawione powyżej około 20, w przeciwnym razie D nie wzrośnie tak, jak powinno. Ustawienie obu na zero zablokuje D na wartości podstawowej.",
         "description": "D Max feature helpicon message"
     },
     "pidTuningDMaxAdvance": {
@@ -1849,11 +1849,11 @@
         "description": "Advance of the D Max feature"
     },
     "pidTuningDMaxAdvanceHelp": {
-        "message": "D Max Advance dodaje czułość do współczynnika wzmocnienia, gdy drążki poruszają się szybko.<br><br>Advance nie reaguje na żyroskop ani na efekt propwash. Działa wcześniej niż współczynnik wzmocnienia i czasami jest przydatny w przypadku quadów o niskim autorytecie, które mają tendencję do dużego opóźnienia na początku ruchu.<br><br>Ogólnie najlepiej pozostawić go na zero.<br><br>OSTRZEŻENIE: Advance lub Zysk muszą być ustawione powyżej około 20, w przeciwnym razie D nie wzrośnie tak, jak powinno. Ustawienie obu na zero zablokuje D na wartości podstawowej.",
+        "message": "D Max Advance dodaje czułość do współczynnika wzmocnienia, gdy drążki poruszają się szybko.<br><br>Advance nie reaguje na żyroskop ani na efekt propwash. Działa wcześniej niż współczynnik wzmocnienia i czasami jest przydatny w przypadku modeli o niskim autorytecie, które mają tendencję do dużego opóźnienia na początku ruchu.<br><br>Ogólnie najlepiej pozostawić go na zero.<br><br>OSTRZEŻENIE: Advance lub Zysk muszą być ustawione powyżej około 20, w przeciwnym razie D nie wzrośnie tak, jak powinno. Ustawienie obu na zero zablokuje D na wartości podstawowej.",
         "description": "D Max feature helpicon message"
     },
     "pidTuningDMaxFeatureHelp": {
-        "message": "D Max zwiększa D podczas szybszych ruchów żyroskopu oraz drążków w nadajniku RC.<br><br>Współczynnik „Wzmocnienie” zwiększa D, gdy quad obraca się szybko lub podczas efektu propwash. Zwykle potrzebne jest tylko „Wzmocnienie”. <br><br>Współczynnik „Wyprzedzenie” zwiększa D w kierunku D Max podczas wychylania drążka. Zwykle nie jest potrzebny i powinien być ustawiony na zero. \"Wyprzedzenie\" może być przydatne w przypadku quadów o niskim autorytecie, które mają tendencję do silnego przestrzeliwania.<br><br>Wyższe wartości \"Wzmocnienia\" (np. 40) mogą być bardziej odpowiednie do freestyle'u, ponieważ łatwiej podnoszą D.<br><br>OSTRZEŻENIE: Jeden ze współczynników \"Wzmocnienie\" lub \"Wyprzedzenie\" musi być ustawiony wyżej o około 20, w przeciwnym razie D nie wzrośnie tak, jak powinno. Ustawienie obu na zero zablokuje D na wartości podstawowej.",
+        "message": "D Max zwiększa D podczas szybszych ruchów żyroskopu oraz drążków w nadajniku RC.<br><br>Współczynnik „Wzmocnienie” zwiększa D, gdy model obraca się szybko lub podczas efektu propwash. Zwykle potrzebne jest tylko „Wzmocnienie”. <br><br>Współczynnik „Wyprzedzenie” zwiększa D w kierunku D Max podczas wychylania drążka. Zwykle nie jest potrzebny i powinien być ustawiony na zero. \"Wyprzedzenie\" może być przydatne w przypadku modeli o niskim autorytecie, które mają tendencję do silnego przestrzeliwania.<br><br>Wyższe wartości \"Wzmocnienia\" (np. 40) mogą być bardziej odpowiednie do freestyle'u, ponieważ łatwiej podnoszą D.<br><br>OSTRZEŻENIE: Jeden ze współczynników \"Wzmocnienie\" lub \"Wyprzedzenie\" musi być ustawiony wyżej o około 20, w przeciwnym razie D nie wzrośnie tak, jak powinno. Ustawienie obu na zero zablokuje D na wartości podstawowej.",
         "description": "D Max feature helpicon message"
     },
     "pidTuningPidSettings": {
@@ -2011,7 +2011,7 @@
         "message": "<b>I<\/b> - Całkujący"
     },
     "pidTuningIntegralHelp": {
-        "message": "Kontroluje utrzymujące się małe przesunięcia.<br><br>Podobne do P, ale kumuluje się stopniowo i powoli, aż błąd wyniesie zero. Ważne dla długoterminowych odchyleń, takich jak przesunięcie środka ciężkości lub utrzymujące się wpływy zewnętrzne, takie jak wiatr.<br \/><br \/>Wyższe wzmocnienia zapewniają dokładniejsze śledzenie, zwłaszcza na zakrętach, ale mogą sprawić, że jednostka latająca będzie sztywna.<br> <br>Może powodować powolne oscylacje w kompilacjach o niskim autorytecie lub jeśli jest wysoki proporcjonalnie do P.",
+        "message": "Kontroluje utrzymujące się małe przesunięcia.<br><br>Podobne do P, ale kumuluje się stopniowo i powoli, aż błąd wyniesie zero. Ważne dla długoterminowych odchyleń, takich jak przesunięcie środka ciężkości lub utrzymujące się wpływy zewnętrzne, takie jak wiatr.<br \/><br \/>Wyższe wzmocnienia zapewniają dokładniejsze śledzenie, zwłaszcza na zakrętach, ale mogą sprawić, że model będzie sztywny.<br> <br>Może powodować powolne oscylacje w kompilacjach o niskim autorytecie lub jeśli jest wysoki proporcjonalnie do P.",
         "description": "Integral Term helpicon message on PID table titlebar"
     },
     "pidTuningDMax": {
@@ -2194,7 +2194,7 @@
         "message": "ID zgodności modelu"
     },
     "receiverHelp": {
-        "message": "&#8226;  <b><strong><a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">Zawsze sprawdź, czy Failsafe działa prawidłowo!<\/a><\/strong><\/b> Ustawienia znajdują się w zakładce Failsafe, która wymaga trybu eksperta.<br> &#8226; <b>Użyj najnowszego firmware dla twojego nadajnika Tx!<\/b><br> &#8226; <strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">Wyłącz filtr ADC<\/a><\/strong> w Nadajniku, jeśli używasz OpenTx lub EdgeTx.<br>Podstawowa konfiguracja: poprawnie skonfiguruj ustawienia odbiornika. Wybierz poprawną „Mapę kanałów” dla swojego radia. Sprawdź, czy Roll, Pitch i inne wykresy słupkowe poruszają się poprawnie. Dostosuj wartości punktu końcowego lub zakresu kanału w nadajniku do ~1000 do ~2000 i ustaw punkt środkowy na 1500. Aby uzyskać więcej informacji przeczytaj dokumentację <strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx\" target=\"_blank\" rel=\"noopener noreferrer\"><\/a><\/strong>."
+        "message": "&#8226;  <b><strong><a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">Zawsze sprawdź, czy Failsafe działa prawidłowo!<\/a><\/strong><\/b> Ustawienia znajdują się w zakładce Procedura Fail-safe, która wymaga trybu eksperta.<br> &#8226; <b>Użyj najnowszego firmware dla twojego nadajnika Tx!<\/b><br> &#8226; <strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">Wyłącz filtr ADC<\/a><\/strong> w Nadajniku, jeśli używasz OpenTx lub EdgeTx.<br>Podstawowa konfiguracja: poprawnie skonfiguruj ustawienia odbiornika. Wybierz poprawną „Mapę kanałów” dla swojego radia. Sprawdź, czy Roll, Pitch i inne wykresy słupkowe poruszają się poprawnie. Dostosuj wartości punktu końcowego lub zakresu kanału w nadajniku od ~1000 do ~2000 i ustaw punkt środkowy na 1500. Aby uzyskać więcej informacji przeczytaj dokumentację <strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx\" target=\"_blank\" rel=\"noopener noreferrer\"><\/a><\/strong>."
     },
     "receiverThrottleMid": {
         "message": "Przepustnica MID"
@@ -2313,7 +2313,7 @@
         "message": "Włacz kontrolę"
     },
     "auxiliaryHelp": {
-        "message": "Skonfiguruj tutaj Tryby Lotu, używając kombinacji Zakresów i\/lub Łączników do innych trybów (wsparcie łączenia trybów w BF 4.0 i nowszych). Dodanie <strong>Zakresu<\/strong> służy do zdefiniowania przełączników w aparaturze radiowej i odpowiedniego przypisania trybów. Tryb aktywowany jest, gdy pojawi się odczyt w zaznaczonym zakresie kanału odbiornika. Dodanie <strong>Łącznika<\/strong> umożliwia aktywację trybu, gdy aktywowany jest inny tryb. <strong>Wyjątki:<\/strong> ARM nie posiada Łącznika oraz nie może być łączony z innym trybem. Poza tym nie możliwe jest łączenie łańcuchowe, czyli łączenie do trybu, który już ma połączenie z innym. Każdy tryb można aktywować za pomocą wielu Zakresów lub Łączników. Wtedy istnieje możliwość dodania logiki w postaci <strong>ORAZ<\/strong> albo <strong>LUB<\/strong>. Tryb zostanie aktywowany gdy:<br \/>-WSZYSTKIE <strong>ORAZ<\/strong> Zakresów bądź Łączników są aktywne; albo<br \/> -aktywny jest co najmniej jeden <strong>LUB<\/strong> Zakresów bądź Łączników.<br \/><br \/>Pamiętaj, aby zapisać ustawienia za pomocą przycisku Zapisz."
+        "message": "Skonfiguruj tutaj Tryby Lotu, używając kombinacji Zakresów i\/lub Łączników do innych trybów (wsparcie łączenia trybów w BF 4.0 i nowszych). Dodanie <strong>Zakresu<\/strong> służy do zdefiniowania przełączników w odbiorniku i odpowiedniego przypisania trybów. Tryb aktywowany jest, gdy pojawi się odczyt w zaznaczonym zakresie kanału odbiornika. Dodanie <strong>Łącznika<\/strong> umożliwia aktywację trybu, gdy aktywowany jest inny tryb. <strong>Wyjątki:<\/strong> ARM nie posiada Łącznika oraz nie może być łączony z innym trybem. Poza tym nie możliwe jest łączenie łańcuchowe, czyli łączenie do trybu, który już ma połączenie z innym. Każdy tryb można aktywować za pomocą wielu Zakresów lub Łączników. Wtedy istnieje możliwość dodania logiki w postaci <strong>ORAZ<\/strong> albo <strong>LUB<\/strong>. Tryb zostanie aktywowany gdy:<br \/>-Wszystkie <strong>ORAZ<\/strong> Zakresów bądź Łączników są aktywne <br \/> -Aktywny jest co najmniej jeden <strong>LUB<\/strong> Zakresów bądź Łączników."
     },
     "auxiliaryToggleUnused": {
         "message": "Ukryj nieużywane tryby"
@@ -2355,7 +2355,7 @@
         "description": "Help text to ACRO TRAINER mode"
     },
     "auxiliaryHelpMode_ARM": {
-        "message": "Umożliwia pracę silnika i pozwala na latanie samolotem.  <span class=\"message-negative\">Uwaga:<\/span> Pilot może chcieć skonfigurować <b>BOXPREARM<\/b> (dwuetapowe podbrojenie) ze względów bezpieczeństwa.",
+        "message": "Uaktywnia silniki i pozwala na latanie jednostką latającą. <span class=\"message-negative\">Uwaga:<\/span> Ze względów bezpieczeństwa pilot może chcieć skonfigurować tryb <b>BOXPREARM<\/b> (uzbrojenie dwuetapowe).",
         "description": "Help text to ARM mode"
     },
     "auxiliaryHelpMode_ANGLE": {
@@ -2363,16 +2363,12 @@
         "description": "Help text to ANGLE mode"
     },
     "auxiliaryHelpMode_ANTIGRAVITY": {
-        "message": "Anti Gravity poprzez zwiększenie parametru P oraz I podczas gwałtownego dodania gazu ma spowodować, iż jednostka latająca utrzyma poziom, pochylenie oraz wychylenie w czasie szybkiego wznoszenia ",
+        "message": "Anti Gravity poprzez zwiększenie parametru P oraz I podczas gwałtownego dodania gazu ma spowodować, iż model utrzyma poziom, pochylenie oraz wychylenie w czasie szybkiego wznoszenia",
         "description": "Help text to ANTIGRAVITY mode"
     },
     "auxiliaryHelpMode_AIRMODE": {
         "message": "AirMode pozwala na utrzymanie stabilności drona przy niskiej przepustnicy. Więcej informacji znajdziesz w <a href=\"https:\/\/betaflight.com\/docs\/development\/modes#airmode\" target=\"_blank\" rel=\"noopener noreferrer\">AirMode<\/a> na Betaflight.com.",
         "description": "Help text to AIRMODE mode"
-    },
-    "auxiliaryHelpMode_ALTHOLD": {
-        "message": "Tryb utrzymywania wysokości jest jednym z bezpieczniejszych trybów lotu, dla nowych osób i różni się on od trybu GPS. Działa podobnie jak tryb stabilizowany Angle, ale dodatkowo blokuje wysokość jednostki latającej po zwolnieniu drążków",
-        "description": "Help text for ALTITUDE HOLD mode"
     },
     "auxiliaryHelpMode_BEEPER": {
         "message": "Włącz sygnał dźwiękowy-przydatne do lokalizowania zaginionej jednostki latającej",
@@ -2439,7 +2435,7 @@
         "description": "Help text to GPS BEEP SATELLITE COUNT mode"
     },
     "auxiliaryHelpMode_GPSRESCUE": {
-        "message": "Włącz „GPS Ratunkowy”, aby jednostka latająca wróciła do miejsca, w którym była ostatnio uzbrojona",
+        "message": "Włącz „GPS Ratunkowy”, aby model wrócił do miejsca, w którym by ostatnio uzbrojony",
         "description": "Help text to GPS RESCUE mode"
     },
     "auxiliaryHelpMode_HEADADJ": {
@@ -2447,7 +2443,7 @@
         "description": "Help text to HEAD ADJ mode"
     },
     "auxiliaryHelpMode_HEADFREE": {
-        "message": "Tryb lotu w którym niezależnie, jak usytuowana jest jednostka latająca (którą stroną) w stosunku do pilota – sterowanie w przód zawsze będzie skutkowało lotem drona do przodu. Tak samo do tyłu i w pozostałe kierunki. Przydatne dla początkujących pilotów, którzy mają problemy z orjętacją w przestrzeni podczas lotu",
+        "message": "Tryb lotu w którym niezależnie, jak usytuowany jest model (którą stroną) w stosunku do pilota – sterowanie w przód zawsze będzie skutkowało lotem drona do przodu. Tak samo do tyłu i w pozostałe kierunki. Przydatne dla początkujących pilotów, którzy mają problemy z orjętacją w przestrzeni podczas lotu",
         "description": "Help text to HEADFREE mode"
     },
     "auxiliaryHelpMode_HORIZON": {
@@ -4110,7 +4106,7 @@
         "message": "Współczynnik skali [%]"
     },
     "pidTuningMotorLimitHelp": {
-        "message": "Procentowa redukcja napięcia dostarczanego do silnika.<br><br>Zmniejsza prąd ESC oraz ciepło silnika podczas korzystania z akumulatorów o większej liczbie ogniw w silnikach o wysokim KV.<br><br>W przypadku korzystania z akumulatora 6S w jednostce wyposażonej w silniki oraz śmigła dostosowane do napięcia 4S, spróbuj 66%; jeśli używasz baterii 4S na jednostce dostosowanej do 3S, spróbuj 75%.<br><br>Upewnij się, że wszystkie komponenty mogą wytrzymać napięcie używanej baterii."
+        "message": "Procentowa redukcja napięcia dostarczanego do silnika.<br><br>Zmniejsza prąd ESC oraz ciepło silnika podczas korzystania z akumulatorów o większej liczbie ogniw w silnikach o wysokim KV.<br><br>W przypadku korzystania z akumulatora 6S w modelu wyposażonym w silniki oraz śmigła dostosowane do napięcia 4S, spróbuj 66%; jeśli używasz baterii 4S w modelu dostosowanym do 3S, spróbuj 75%.<br><br>Upewnij się, że wszystkie komponenty mogą wytrzymać napięcie używanej baterii."
     },
     "pidTuningCellCount": {
         "message": "Ilość ogniw w akumulatorze — dla funkcji automatycznej zmiany profilu"
@@ -4186,7 +4182,7 @@
         "description": "D Term filter tuning slider label"
     },
     "pidTuningDTermFilterSliderHelp": {
-        "message": "Zmienia wartości odcięcia filtra dolnoprzepustowego D-term.<br \/><br \/>Przesunięcie suwaka w lewo zapewnia silniejsze filtrowanie D (niższa częstotliwość odcięcia).<br \/><br \/>Przesunięcie suwaka w prawo zmniejsza filtrowanie (wyższa częstotliwość odcięcia).<br \/><br \/>D-term jest najbardziej wrażliwym elementem PID na szum i rezonans. Może wzmocnić hałas o wysokiej częstotliwości od 10x do 100x. Dlatego wartości odcięcia filtra D są znacznie niższe niż filtry żyroskopowe.<br \/><br \/>Filtrowanie D-term jest stosowane po filtrowaniu żyroskopowym i oprócz niego. Domyślne filtrowanie D jest optymalne dla większości quadów i rzadko wymaga zmiany.<br \/><br \/>Przesunięcie tego suwaka w lewo zmniejsza ciepło silnika w hałaśliwych quadach i przy wysokich ustawieniach PID „D”, ale możemy zobaczyć więcej propwash i rezonanse D o niższej częstotliwości.<br \/><br \/>Przesunięcie suwaka w prawo nie jest zalecane, ale może poprawić pranie wstępne na czystych kompilacjach. Może to spowodować zgrzytanie silnika podczas uzbrajania, nagłe rezonanse podczas lotu i poważne przegrzanie silnika.",
+        "message": "Zmienia wartości odcięcia filtra dolnoprzepustowego D-term.<br \/><br \/>Przesunięcie suwaka w lewo zapewnia silniejsze filtrowanie D (niższa częstotliwość odcięcia).<br \/><br \/>Przesunięcie suwaka w prawo zmniejsza filtrowanie (wyższa częstotliwość odcięcia).<br \/><br \/>D-term jest najbardziej wrażliwym elementem PID na szum i rezonans. Może wzmocnić hałas o wysokiej częstotliwości od 10x do 100x. Dlatego wartości odcięcia filtra D są znacznie niższe niż filtry żyroskopowe.<br \/><br \/>Filtrowanie D-term jest stosowane po filtrowaniu żyroskopowym i oprócz niego. Domyślne filtrowanie D jest optymalne dla większości quadów i rzadko wymaga zmiany.<br \/><br \/>Przesunięcie tego suwaka w lewo zmniejsza ciepło silnika w modelach i przy wysokich ustawieniach PID „D”, ale możemy zobaczyć więcej propwash i rezonanse D o niższej częstotliwości.<br \/><br \/>Przesunięcie suwaka w prawo nie jest zalecane, ale może poprawić pranie wstępne na czystych kompilacjach. Może to spowodować zgrzytanie silnika podczas uzbrajania, nagłe rezonanse podczas lotu i poważne przegrzanie silnika.",
         "description": "D Term filter tuning slider helpicon message"
     },
     "pidTuningDTermSliderEnabled": {
@@ -4254,7 +4250,7 @@
         "description": "Master tuning slider label"
     },
     "pidTuningMasterSliderHelp": {
-        "message": "Równomiernie zwiększa wszystkie parametry PID. Nie zmieniaj tego suwaka, chyba że zabraknie regulacji na innych suwakach. Zazwyczaj jest to potrzebne tylko w przypadku quadów o niskim autorytecie lub wysokim momencie bezwładności (MoI), takich jak konstrukcje klasy X lub cinelifter. Zbyt duże wzmocnienie mastera może powodować oscylacje trylujące lub gorące silniki.",
+        "message": "Równomiernie zwiększa wszystkie parametry PID. Nie zmieniaj tego suwaka, chyba że zabraknie regulacji na innych suwakach. Zazwyczaj jest to potrzebne tylko w przypadku modeli o niskim autorytecie lub wysokim momencie bezwładności (MoI), takich jak konstrukcje klasy X lub cinelifter. Zbyt duże wzmocnienie mastera może powodować oscylacje trylujące lub gorące silniki.",
         "description": "Master Gain tuning slider helpicon message"
     },
     "pidTuningDGainSlider": {
@@ -4278,7 +4274,7 @@
         "description": "Response tuning slider label"
     },
     "pidTuningResponseSliderHelp": {
-        "message": "Niższa reakcja drążka zwiększy opóźnienie ruchów quada w odpowiedzi na polecenia i może skutkować powolnym odbiciem pod koniec przewrotu lub przewrotu.<br><br>Wyższa reakcja drążka zapewni szybszą reakcję quada na ostre ruchy drążka. Zbyt duża reakcja drążka może spowodować przeskoki pod koniec przewrotu lub przewrotu.<br \/><br \/><strong>Uwaga:<\/strong><br \/>„I-term Relax” może zmniejszyć odbicie quadów o niskim autorytecie lub jeśli stosowane są niskie wzmocnienia odpowiedzi drążka.",
+        "message": "Niższa reakcja drążka zwiększy opóźnienie ruchów quada w odpowiedzi na polecenia i może skutkować powolnym odbiciem pod koniec przewrotu lub przewrotu.<br><br>Wyższa reakcja drążka zapewni szybszą reakcję quada na ostre ruchy drążka. Zbyt duża reakcja drążka może spowodować przeskoki pod koniec przewrotu lub przewrotu.<br \/><br \/><strong>Uwaga:<\/strong><br \/>„I-term Relax” może zmniejszyć odbicie modeli o niskim autorytecie lub jeśli stosowane są niskie wzmocnienia odpowiedzi drążka.",
         "description": "Stick response gain tuning slider helpicon message"
     },
     "pidTuningIGainSlider": {
@@ -4294,7 +4290,7 @@
         "description": "D Max slider label"
     },
     "pidTuningDMaxGainSliderHelp": {
-        "message": "Zwiększa D max, maksymalną wartość, do której D może wzrosnąć podczas szybszych ruchów.<br \/><br \/>W przypadku quadów wyścigowych, w których główny suwak tłumienia został ustawiony nisko, aby zminimalizować ciepło silnika, przesunięcie tego suwaka w prawo poprawi kontrola przeregulowania dla szybkich zmian kierunku.<br \/><br \/>W przypadku quadów HD lub kinowych niestabilność w locie do przodu najlepiej rozwiązać, przesuwając suwak Tłumienie (nie suwak Tłumienie dynamiczne) w prawo. Sprawdź, czy silnik się nagrzewa i słuchaj dziwnych dźwięków podczas szybkiego wprowadzania danych podczas przesuwania tego suwaka w prawo.<br \/><br \/>W przypadku quadów freestyle, szczególnie cięższych, przesunięcie tego suwaka w prawo może pomóc w kontrolowaniu przerzutów i przewrotów.<br \/><br \/><strong>Uwaga:<\/strong><br \/>Ogólnie przewroty w przewrotach i przewrotach są spowodowane niewystarczającym „i-Term Relax”, desynchronizacją silnika lub nieodpowiednim autorytetem (tzw. Nasycenie). Jeśli okaże się, że przesunięcie suwaka Wzmocnienie tłumienia w prawo nie poprawia przewrotu lub przechylenia, ustaw go z powrotem w normalnej pozycji i poszukaj przyczyny przeregulowania lub chybotania.",
+        "message": "Zwiększa D max, maksymalną wartość, do której D może wzrosnąć podczas szybszych ruchów.<br \/><br \/>W przypadku quadów wyścigowych, w których główny suwak tłumienia został ustawiony nisko, aby zminimalizować ciepło silnika, przesunięcie tego suwaka w prawo poprawi kontrola przeregulowania dla szybkich zmian kierunku.<br \/><br \/>W przypadku modeli HD lub kinowych niestabilność w locie do przodu najlepiej rozwiązać, przesuwając suwak Tłumienie (nie suwak Tłumienie dynamiczne) w prawo. Sprawdź, czy silnik się nagrzewa i słuchaj dziwnych dźwięków podczas szybkiego wprowadzania danych podczas przesuwania tego suwaka w prawo.<br \/><br \/>W przypadku modeli freestyle, szczególnie cięższych, przesunięcie tego suwaka w prawo może pomóc w kontrolowaniu przerzutów i przewrotów.<br \/><br \/><strong>Uwaga:<\/strong><br \/>Ogólnie przewroty w przewrotach i przewrotach są spowodowane niewystarczającym „i-Term Relax”, desynchronizacją silnika lub nieodpowiednim autorytetem (tzw. Nasycenie). Jeśli okaże się, że przesunięcie suwaka Wzmocnienie tłumienia w prawo nie poprawia przewrotu lub przechylenia, ustaw go z powrotem w normalnej pozycji i poszukaj przyczyny przeregulowania lub chybotania.",
         "description": "D Max slider helpicon message"
     },
     "pidTuningRollPitchRatioSlider": {
@@ -4415,7 +4411,7 @@
         "message": "Liczba Notch"
     },
     "pidTuningDynamicNotchRangeHelp": {
-        "message": "Równanie dynamiczne ma trzy zakresy częstotliwości, w których może działać: NISKIE (80-330hz) dla gorzej odwołujących się quadów na śmigłach 6 cali i eięcej, ŚREDNIE (140-550hz) dla normalnego qada o długości śmigieł 5 cali, WYSOKIE (230-800hz) dla bardzo małych 2-3 calowych quadów. Opcja AUTO wybiera zakres w zależności od wartości maksymalnej częstotliwości dolnoprzepustowego filtra żyroskopu."
+        "message": "Równanie dynamiczne ma trzy zakresy częstotliwości, w których może działać: NISKIE (80-330hz) dla gorzej odwołujących się modeli na śmigłach 6 cali i więcej, ŚREDNIE (140-550hz) dla normalnego modelu o długości śmigieł 5 cali, WYSOKIE (230-800hz) dla bardzo małych 2-3 calowych modeli. Opcja AUTO wybiera zakres w zależności od wartości maksymalnej częstotliwości dolnoprzepustowego filtra żyroskopu."
     },
     "pidTuningDynamicNotchQHelp": {
         "message": "Współczynnik Q dostosowuje szerokość charakterystyki filtra dynamicznego. Wyższa wartość sprawia, że pasmo aktywne filtra jest wąskie i dokładniejsze, a niższa wartość daje szerszą strefę aktywną. Używanie naprawdę niskiej wartości znacznie zwiększy opóźnienie filtra (więcej obliczeń)."
@@ -4540,7 +4536,7 @@
         "message": "I Term Relax"
     },
     "pidTuningItermRelaxHelp": {
-        "message": "Eliminuje akumulację I-Term, gdy pojawiają się szybkie ruchy, redukując odbicia na końcu beczek, przewrotów i innych szybkich danych. >Tryb żyroskopowy może być przydatny w przypadku wyjątkowo opóźnionych quadów.<br><br>Zazwyczaj iTerm Relax nie powinien być stosowany do odchylania."
+        "message": "Eliminuje akumulację I-Term, gdy pojawiają się szybkie ruchy, redukując odbicia na końcu beczek, przewrotów i innych szybkich danych. >Tryb żyroskopowy może być przydatny w przypadku wyjątkowo opóźnionych modeli.<br><br>Zazwyczaj iTerm Relax nie powinien być stosowany do odchylania."
     },
     "pidTuningItermRelaxAxes": {
         "message": "Osie",
@@ -4573,7 +4569,7 @@
         "description": "Cutoff value of the I Term Relax"
     },
     "pidTuningItermRelaxCutoffHelp": {
-        "message": "Niższe wartości oznaczają silniejsze tłumienie odbicia po odwróceniach w quadach o niskim autorytecie. Wyższe wartości zwiększają precyzję szybkich skrętów podczas wyścigów.<br><br>Ustaw na 30-40 dla wyścigów, 15 dla responsywnych konstrukcji freestyle, 10 dla cięższych quadów freestyle, 3-5 dla klasy X."
+        "message": "Niższe wartości oznaczają silniejsze tłumienie odbicia po odwróceniach w modelach o niskim autorytecie. Wyższe wartości zwiększają precyzję szybkich skrętów podczas wyścigów.<br><br>Ustaw na 30-40 dla wyścigów, 15 dla responsywnych konstrukcji freestyle, 10 dla cięższych modeli freestyle, 3-5 dla klasy X."
     },
     "pidTuningAbsoluteControlGain": {
         "message": "Kontrola całkowita"
@@ -4600,7 +4596,7 @@
         "message": "Limit kąta trybu treningowego akrobatycznego"
     },
     "pidTuningAcroTrainerAngleLimitHelp": {
-        "message": "Pomaga nauczyć się latać w trybie acro, ograniczając kąt, pod jakim jednostka latająca  może się poruszać. Dopuszczalne wartości graniczne to 10-80 stopni. Tryb musi być aktywowany za pomocą przełącznika w zakładce $t(tabAuxiliary.message)."
+        "message": "Pomaga nauczyć się latać w trybie acro, ograniczając kąt, pod jakim model  może się poruszać. Dopuszczalne wartości graniczne to 10-80 stopni. Tryb musi być aktywowany za pomocą przełącznika w zakładce $t(tabAuxiliary.message)."
     },
     "pidTuningIntegratedYaw": {
         "message": "Zintegrowane odchylenie Yaw"
@@ -4618,13 +4614,13 @@
         "message": "Odbiornik Failsafe"
     },
     "failsafeFeaturesHelpNew": {
-        "message": "Failsafe ma dwa etapy. <strong> Etap 1 <\/strong> jest wprowadzany, gdy kanał lotniczy ma nieprawidłową długość impulsu, odbiornik zgłasza tryb awaryjny lub w ogóle nie ma sygnału z odbiornika, ustawienia cofania kanału są stosowane do <span class = \"message- negatywne \"> wszystkie kanały <\/span> oraz krótki czas na odzyskanie danych. <strong> Etap 2 <\/strong> jest wprowadzany, gdy warunek błędu trwa dłużej niż skonfigurowany czas ochronny, gdy jednostka jest <span class = \"message-negative\"> uzbrojona <\/span>, wszystkie kanały pozostaną na stosowanym kanale ustawienie rezerwowe, chyba że zostanie anulowane przez wybraną procedurę. <br \/> <strong> Uwaga: <\/strong> Przed wejściem do etapu 1 ustawienia zastępowania kanałów są również stosowane do poszczególnych kanałów AUX, które mają nieprawidłowe impulsy."
+        "message": "Failsafe ma dwa etapy. <br><strong> Etap 1 <\/strong> jest aktywowany w stuacjach gdy kanał radiowy ma nieprawidłową długość impulsu oraz w chwili gdy odbiornik zgłasza tryb awaryjny albo wogóle nie ma sygnału z odbiornika. Ustawienia zastępcze kanałów odbiornika są stosowane do <span class = \"message-negative\"> WSZYSTKICH KANAŁÓW. <\/span> Pamiętaj że zarezerwowany jest krótki czas ochrony na powrót trasmisji danych w kanale radiowym. <br><strong> Etap 2 <\/strong> jest aktywowany, gdy utrata sygnału trwa dłużej niż skonfigurowany czas ochronny a model jest <span class = \"message-negative\"> UZBROJONY. <\/span> Wszystkie ustawienia kanału zastępczego zostaną ustawione na podstawie wybranych przez ciebie wartości, chyba że wybrano inną procedurę. <br \/> <span class = \"message-negative\"><strong> UWAGA: <\/strong><\/span> Przed wejściem do etapu 1 ustawienia zastępcze kanałów są również stosowane do poszczególnych kanałów AUX, które mają nieprawidłowe impulsy."
     },
     "failsafePulsrangeTitle": {
         "message": "USTAWIENIA AKCEPTOWALNEGO ZAKRESU IMPULSÓW"
     },
     "failsafePulsrangeHelp": {
-        "message": "Impulsy krótsze od minimum lub dłuższe od maksimum są nieprawidłowe i będą powodowały włączenie się indywidualnych ustawień awaryjnych dla kanałów AUX lub zastosowanie etapu pierwszego trybu \"failsafe\""
+        "message": "Impulsy krótsze od minimum lub dłuższe od maksimum są nieprawidłowe i będą powodowały włączenie się indywidualnych ustawień awaryjnych dla kanałów AUX lub zastosowanie etapu 1 procedury \"fail-safe\""
     },
     "failsafeRxMinUsecItem": {
         "message": "Minimalna długość"
@@ -4639,7 +4635,7 @@
         "message": "Ustawienia te są stosowane do kanałów AUX w których wykryto błąd lub do wszystkich kanałów gdy jest aktywny etap pierwszy. <strong>Uwaga:<\/strong> czas opóźnienia jest zapisywany co 25 usec"
     },
     "failsafeChannelFallbackSettingsAuto": {
-        "message": "<strong>Auto<\/strong> ustawia Roll, Pitch oraz Yaw w pozcji neutralnej a Throttle na poziomie minimalnym. <strong>Bez zmian<\/strong> to ostatnia poprawna odebrana wartość. <strong>Ustaw<\/strong> oznacza, że zostanie użyta podana przez ciebie wartość"
+        "message": "<strong>Auto<\/strong> ustawia Roll, Pitch oraz Yaw w pozcji neutralnej a Throttle na poziomie minimalnym. <br><br><strong>Bez zmian<\/strong> to ostatnia poprawna odebrana wartość. <br><br><strong>Ustaw<\/strong> oznacza, że zostanie użyta podana przez ciebie wartość"
     },
     "failsafeChannelFallbackSettingsHold": {
         "message": "<strong>Bez zmian<\/strong> oznacza utrzymanie ostatniej poprawnej wartości. <strong>Ustaw<\/strong> oznacza, że  zostanie użyta  podana przez ciebie wartość."
@@ -4669,7 +4665,7 @@
         "message": "Fail-Safe wywołany niskim położeniem przepustnicy [sekundy]"
     },
     "failsafeThrottleLowHelp": {
-        "message": "Gdy przez wpisany tutaj czas przepustnica była w pozycji dolnej po prostu rozbrajane są silniki modelu, zamiast wykonywać wybraną procedurę Fail-Safe"
+        "message": "Gdy przez wpisany tutaj czas przepustnica była w pozycji dolnej po prostu rozbrajane są silniki jednostki latającej, zamiast wykonywać wybraną procedurę Fail-Safe"
     },
     "failsafeThrottleItem": {
         "message": "Wartość przepustnicy użyta podczas lądowania"
@@ -4723,7 +4719,7 @@
         "message": "Maksymalny kąt pochylenia"
     },
     "failsafeGpsRescueAngleHelp": {
-        "message": "Maksymalny kąt pochylenia ustawiony zbyt wysoko powoduje bardziej agresywne powroty oraz większe prędkości latania. Ta opcja jest za to pomocna w przypadku ciężkich modeli o dużym oporze powietrza lub małej mocy, a także gdy wieje silny wiatr. OSTRZEŻENIE: Zwiększając maksymalny kąt pochylenia zwykle należy zwiększyć wartość ratunkowej przepustnicy! W przeciwnym razie model może stracić wysokość i rozbić się!"
+        "message": "Wyższe kąty  pochylenia prowadzą do bardziej agresywnych zwrotów i wyższych prędkości podczas lotu. <br><br>Może to być przydatne w przypadku ciężkich modeli o większym oporze powietrza lub małej mocy, lub do stosowania przy silnie wiejącym wietrze. <br><br>OSTRZEŻENIE: W przypadku zwiększenia maksymalnego kąta pochylenia zwykle należy zwiększyć  maksymalną wartość przepustnicy! W przeciwnym razie model  może stracić wysokość i rozbić się!"
     },
     "failsafeGpsRescueItemDescentDistance": {
         "message": "Dystans rozpoczęcia opadania (metry)"
@@ -4745,13 +4741,13 @@
         "message": "Maksymalna wartość przepustnicy"
     },
     "failsafeGpsRescueThrottleMaxHelp": {
-        "message": "Należy zwiększyć w przypadku cięższych modeli o większym oporze powietrza lub małej mocy, jeśli możliwy jest powrót przy silnym wietrze albo gdy zwiększony został maksymalny kąt pochylenia."
+        "message": "Należy zwiększyć w przypadku jednostek cięższych, o większym oporze powietrza lub o małej mocy, jeśli prawdopodobny jest powrót przy silnym wietrze lub jeśli zwiększony został maksymalny kąt pochylenia."
     },
     "failsafeGpsRescueItemThrottleHover": {
-        "message": "Przepustnica w zawisie - <span class=\"message-negative\">WAŻNE: ustaw tę wartość dokładnie<\/span>"
+        "message": "Przepustnica w zawisie - <span class=\"message-negative\">WAŻNE: USTAW TĘ WARTOŚĆ DOKŁADNIE<\/span>"
     },
     "failsafeGpsRescueThrottleHoverHelp": {
-        "message": "Aby znaleźć właściwą wartość, ustaw działanie przełącznika Failsafe na Etap 2, ustaw Procedurę Failsafe Etap 2 na Lądowanie i dostosuj wartość przepustnicy używaną podczas lądowania, aż jednostka latająca zawiśnie w powietrzu lub zacznie powoli opadać. Następnie ustaw taką samą moc przepustnicy w GPS Ratunkowym oraz  Throttle w  Etapie 1 Kanału zastępczego."
+        "message": "Aby znaleźć właściwą wartość, ustaw działanie przełącznika Failsafe na Etap 2. <br><br>Procedurę Failsafe Etap 2 na lądowanie i dostosuj wartość przepustnicy używaną podczas lądowania, aż model zawiśnie w powietrzu lub zacznie powoli opadać. <br><br>Następnie ustaw taką samą wartość przepustnicy w zawisie w GPS Ratunkowym oraz  Throttle w  Etap 1 Kanału zastępczego."
     },
     "failsafeGpsRescueItemMinDth": {
         "message": "Minimalna odległość do domu (metry)"
@@ -4766,7 +4762,7 @@
         "message": "Zezwalaj na uzbrojenie nawet w przypadku braku poprawnego sygnału GPS - <span class=\"message-negative\">OSTRZEŻENIE: BRAK POPRAWNEGO SYGNAŁU = ROZBROJENIE W TRYBIE AWARYJNYM FAILSASFE!<\/span"
     },
     "failsafeGpsRescueArmWithoutFixHelp": {
-        "message": "Nie rekomendowane. Umożliwia uzbrojenie bez poprawnego sygnału GPS, może spowodować, że jednostka latająca rozbroi się i ulegnie awarii z prawdziwym zabezpieczeniem przed utratą sygnału Rx. Jeśli testowano za pomocą przełącznika, przed rozbrojeniem następuje krótki okres bezczynności."
+        "message": "Nie zalecane. Pozwala na uzbrojenie silników modelu, gdy Miejsce Startu nie zostało ustalone.  <br><br>Niesie to ryzyko rozbicia się modelu w wyniku utraty sygnału Rx przez odbiornik Rc.  <br><br>W razie testowego wywołania Fail-Safe przełącznikiem, przed rozbrojeniem następuje krótki okres bezczynności."
     },
     "failsafeGpsRescueItemSanityChecks": {
         "message": "Sprawdzenie kontrolne"

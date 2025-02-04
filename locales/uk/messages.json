@@ -2363,10 +2363,6 @@
         "message": "Режим Air дозволяє підтримувати стабільність повітряного судна на низькій тязі. Для отримання додаткової інформації, будь ласка, відвідайте <a href=\"https:\/\/betaflight.com\/docs\/development\/modes#airmode\" target=\"_blank\" rel=\"noopener noreferrer\">AirMode<\/a> на Betaflight.com.",
         "description": "Help text to AIRMODE mode"
     },
-    "auxiliaryHelpMode_ALTHOLD": {
-        "message": "Режим висоти — це найбезпечніший ручний режим без GPS для новачків. Він схожий на стабілізований режим, але додатково фіксує висоту дрона, коли стіки відпущені",
-        "description": "Help text for ALTITUDE HOLD mode"
-    },
     "auxiliaryHelpMode_BEEPER": {
         "message": "Включити пищання - корисно для пошуку розбитого дрона",
         "description": "Help text to BEEPER mode"

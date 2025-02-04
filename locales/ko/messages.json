@@ -2371,7 +2371,7 @@
         "description": "Help text to AIRMODE mode"
     },
     "auxiliaryHelpMode_ALTHOLD": {
-        "message": "고도 모드는 신규 플라이어에게 가장 안전한 비GPS 수동 모드입니다. 안정화 모드와 비슷하지만 스틱이 풀리면 기체 고도가 추가로 잠깁니다",
+        "message": "<a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/position-hold-v4-6#altitude-hold\" target=\"_blank\" rel=\"noopener noreferrer\">고도 고정<\/a> 외부 센서와 앵글 모드(안정 모드)를 결합하여 기체의 고도를 능동적으로 조절합니다．",
         "description": "Help text for ALTITUDE HOLD mode"
     },
     "auxiliaryHelpMode_BEEPER": {

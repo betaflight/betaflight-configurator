@@ -2370,10 +2370,6 @@
         "message": "AirMode tilstand giver mulighed for at opretholde fartøjets stabilitet ved lav gas. Se venligst <a href=\"https:\/\/betaflight.com\/docs\/development\/modes#airmode\" target=\"_blank\" rel=\"noopener noreferrer\">AirMode<\/a> på Betaflight.com.",
         "description": "Help text to AIRMODE mode"
     },
-    "auxiliaryHelpMode_ALTHOLD": {
-        "message": "Højde tilstand er for nye piloter, den sikreste manuelle tilstand - uden GPS. Det er ligesom Stabil tilstand, men her låses dronens højde når pinde slippes",
-        "description": "Help text for ALTITUDE HOLD mode"
-    },
     "auxiliaryHelpMode_BEEPER": {
         "message": "Aktiver bippen - nyttigt til at lokalisere en styrtet drone",
         "description": "Help text to BEEPER mode"
