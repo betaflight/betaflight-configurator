@@ -2366,10 +2366,6 @@
         "message": "エアーモードでは低いスロットルで機体を安定することができます。詳しい情報はBetaflight.comの<a href=\"https:\/\/betaflight.com\/docs\/development\/modes#airmode\" target=\"_blank\" rel=\"noopener noreferrer\">エアーモード<\/a>を確認してください。",
         "description": "Help text to AIRMODE mode"
     },
-    "auxiliaryHelpMode_ALTHOLD": {
-        "message": "高度維持モードは初心者にとって最も安全な非GPSでの手動モードです。Stabilisedモードと同じですが、スティックを離すと機体の高度が保たれます。",
-        "description": "Help text for ALTITUDE HOLD mode"
-    },
     "auxiliaryHelpMode_BEEPER": {
         "message": "ビープ音を有効にします - 墜落した機体の位置を特定するのに役立ちます",
         "description": "Help text to BEEPER mode"

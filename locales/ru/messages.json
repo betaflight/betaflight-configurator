@@ -2295,10 +2295,6 @@
         "message": "AirMode позволяет поддерживать стабильность летательного аппарата при низком уровне газа. Для получения дополнительной информации обратитесь к <a href=\"https:\/\/betaflight.com\/docs\/development\/modes#airmode\" target=\"_blank\" rel=\"noopener noreferrer\">AirMode<\/a> на Betaflight.com.",
         "description": "Help text to AIRMODE mode"
     },
-    "auxiliaryHelpMode_ALTHOLD": {
-        "message": "Режим удержания высоты — это самый безопасный не-GPS ручной режим для новичков. Он аналогичен режиму стабилизации, но дополнительно фиксирует высоту летательного аппарата, когда стики управления отпущены",
-        "description": "Help text for ALTITUDE HOLD mode"
-    },
     "auxiliaryHelpMode_BEEPER": {
         "message": "Включает звуковой сигнал - полезно для определения местоположения упавшего воздушного судна",
         "description": "Help text to BEEPER mode"

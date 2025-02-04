@@ -2235,10 +2235,6 @@
         "message": "Este modo de voo aumenta os termos P e I durante movimentos rápidos do acelerador, isto melhora a velocidade de resposta dos sticks e evita deslizes quando há alterações rápidas no acelerador",
         "description": "Help text to ANTIGRAVITY mode"
     },
-    "auxiliaryHelpMode_ALTHOLD": {
-        "message": "Modo de altitude é o modo manual não-GPS mais seguro para novos pilotos. É como o modo estabilizado, mas além disso fixa a altitude do veículo quando os controles são liberados",
-        "description": "Help text for ALTITUDE HOLD mode"
-    },
     "auxiliaryHelpMode_BEEPER": {
         "message": "Ativar o beeper - útil para localizar uma aeronave caída",
         "description": "Help text to BEEPER mode"

@@ -2366,10 +2366,6 @@
         "message": "AirMode mantiene il drone stabile a basso acceleratore. Per maggiori informazioni consulta <a href=\"https:\/\/betaflight.com\/docs\/development\/modes#airmode\" target=\"_blank\" rel=\"noopener noreferrer\">AirMode<\/a> su Betaflight.com.",
         "description": "Help text to AIRMODE mode"
     },
-    "auxiliaryHelpMode_ALTHOLD": {
-        "message": "La modalità altitudine è la modalità manuale senza GPS più sicura per i nuovi piloti. E 'proprio come la modalità stabilizzata, ma inoltre blocca l'altitudine del veicolo quando i bastoni vengono rilasciati",
-        "description": "Help text for ALTITUDE HOLD mode"
-    },
     "auxiliaryHelpMode_BEEPER": {
         "message": "Abilita beep - utile per localizzare un aeromobile perso",
         "description": "Help text to BEEPER mode"
@@ -7427,7 +7423,7 @@
         "message": "Per gli sviluppatori, puoi aggiungere qualsiasi define necessaria, separata da uno `spazio`, ma senza il prefisso `USE_`, il quale verrà aggiunto automaticamente."
     },
     "firmwareFlasherBuildCustomDefines": {
-        "message": "Funzioni Personalizzate"
+        "message": "Definizioni Personalizzate"
     },
     "coreBuild": {
         "message": "Solo Core"
