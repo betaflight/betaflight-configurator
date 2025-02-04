@@ -532,7 +532,6 @@ configuration.initialize = function (callback) {
                             )
                             : Promise.resolve(true),
                     )
-                    .then(() => MSP.promise(MSPCodes.MSP_SET_RX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_RX_CONFIG)))
                     .then(() =>
                         semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)
                             ? MSP.promise(
