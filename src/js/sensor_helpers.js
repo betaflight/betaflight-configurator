@@ -15,6 +15,8 @@ export function have_sensor(sensors_detected, sensor_code) {
             return bit_check(sensors_detected, 4);
         case "gyro":
             return bit_check(sensors_detected, 5);
+        case "opticalflow":
+            return bit_check(sensors_detected, 6);
     }
     return false;
 }
