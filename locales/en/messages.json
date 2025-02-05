@@ -947,11 +947,11 @@
     },
     "initialSetupNotInBuild": {
         "message": "Not included in build",
-        "description": "Message that pops up when hardware support not are supported in Build"
+        "description": "Message that pops up when hardware support is not included in build"
     },
     "initialSetupNotDetected": {
-        "message": "Not detected",
-        "description": "Message that pops up when hardware are not detected"
+        "message": "Not detected or disabled",
+        "description": "Message that pops up when hardware is not detected or disabled"
     },
     "initialSetupRSSIValue": {
         "message": "$1 dBm"
@@ -979,6 +979,9 @@
     },
     "initialSetupSensorSonar": {
         "message": "Sonar:"
+    },
+    "initialSetupSensorOpticalflow": {
+        "message": "Optical Flow:"
     },
     "initialSetupSensorRadar": {
         "message": "Radar:"
@@ -1407,6 +1410,24 @@
     },
     "configurationMagDeclinationHelp": {
         "message": "The magnetic declination is the angle between magnetic north and true north. It is different for every location on earth. You can find the declination for your location on the internet"
+    },
+    "configurationRangefinder": {
+        "message": "$t(initialSetupSensorSonar.message)"
+    },
+    "configurationRangefinderHelp": {
+        "message": "Enable rangefinder to measure distance to ground in cm"
+    },
+    "configurationRangefinderType": {
+        "message": "Type"
+    },
+    "configurationOpticalflow": {
+        "message": "$t(initialSetupSensorOpticalflow.message)"
+    },
+    "configurationOpticalflowHelp": {
+        "message": "Enable optical flow sensor"
+    },
+    "configurationOpticalflowType": {
+        "message": "$t(configurationRangefinderType.message)"
     },
     "configurationBoardAlignment": {
         "message": "Board Alignment"

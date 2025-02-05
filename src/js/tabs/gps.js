@@ -1,6 +1,6 @@
 import { i18n } from "../localization";
 import semver from "semver";
-import { API_VERSION_1_46, API_VERSION_1_47 } from "../data_storage";
+import { API_VERSION_1_46 } from "../data_storage";
 import GUI, { TABS } from "../gui";
 import FC from "../fc";
 import MSP from "../msp";
@@ -12,6 +12,7 @@ import { updateTabList } from "../utils/updateTabList";
 import { initMap } from "./map";
 import { fromLonLat } from "ol/proj";
 import { ispConnected } from "../utils/connection";
+import { sensorTypes } from "../sensor_types";
 
 const gps = {};
 
@@ -88,11 +89,7 @@ gps.initialize = async function (callback) {
         checkUpdateGpsControls();
 
         // generate GPS
-        const gpsProtocols = ["NMEA", "UBLOX", "MSP"];
-
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
-            gpsProtocols.push("VIRTUAL");
-        }
+        const gpsProtocols = sensorTypes().gps.elements;
 
         const gpsBaudRates = ["115200", "57600", "38400", "19200", "9600"];
 

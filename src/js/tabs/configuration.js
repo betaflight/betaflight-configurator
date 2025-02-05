@@ -10,6 +10,7 @@ import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "../data_st
 import { updateTabList } from "../utils/updateTabList";
 import $ from "jquery";
 import { have_sensor } from "../sensor_helpers";
+import { sensorTypes } from "../sensor_types";
 
 const configuration = {
     analyticsChanges: {},
@@ -156,6 +157,36 @@ configuration.initialize = function (callback) {
 
             toggleMagCustomAlignmentInputs();
         });
+
+        // Range finder
+
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+            const rangeFinderType_e = $("select.rangefinderType");
+            const sonarElements = sensorTypes().sonar.elements;
+
+            for (let i = 0; i < sonarElements.length; i++) {
+                rangeFinderType_e.append(`<option value="${i}">${sonarElements[i]}</option>`);
+            }
+
+            rangeFinderType_e.val(FC.SENSOR_CONFIG.sonar_hardware);
+        } else {
+            $(".tab-configuration .rangefinder").parent().hide();
+        }
+
+        // Optical flow sensor
+
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+            const opticalflowType_e = $("select.opticalflowType");
+            const opticalflowElements = sensorTypes().opticalflow.elements;
+
+            for (let i = 0; i < opticalflowElements.length; i++) {
+                opticalflowType_e.append(`<option value="${i}">${opticalflowElements[i]}</option>`);
+            }
+
+            opticalflowType_e.val(FC.SENSOR_CONFIG.opticalflow_hardware);
+        } else {
+            $(".tab-configuration .opticalflow").parent().hide();
+        }
 
         // Multi gyro config
 
@@ -440,6 +471,11 @@ configuration.initialize = function (callback) {
             // declination added first in #3676
             if (hasMag) {
                 FC.COMPASS_CONFIG.mag_declination = $('input[name="mag_declination"]').val();
+            }
+
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+                FC.SENSOR_CONFIG.sonar_hardware = $("select.rangefinderType").val();
+                FC.SENSOR_CONFIG.opticalflow_hardware = $("select.opticalflowType").val();
             }
 
             FC.ARMING_CONFIG.small_angle = parseInt($('input[id="configurationSmallAngle"]').val());

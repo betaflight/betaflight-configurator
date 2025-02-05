@@ -592,6 +592,7 @@ const FC = {
             baro_hardware: 0,
             mag_hardware: 0,
             sonar_hardware: 0,
+            opticalflow_hardware: 0,
         };
 
         this.SENSOR_CONFIG_ACTIVE = { gyro_hardware: 0, ...this.SENSOR_CONFIG };

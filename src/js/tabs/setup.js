@@ -12,6 +12,7 @@ import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "../data_st
 import { gui_log } from "../gui_log";
 import $ from "jquery";
 import { ispConnected } from "../utils/connection";
+import { sensorTypes } from "../sensor_types";
 
 const setup = {
     yaw_fix: 0.0,
@@ -207,6 +208,7 @@ setup.initialize = function (callback) {
             sensor_mag_e = $(".sensor_mag_hw"),
             sensor_baro_e = $(".sensor_baro_hw"),
             sensor_sonar_e = $(".sensor_sonar_hw"),
+            sensor_opticalflow_e = $(".sensor_opticalflow_hw"),
             // Firmware info
             msp_api_e = $(".api-version"),
             build_date_e = $(".build-date"),
@@ -293,164 +295,58 @@ setup.initialize = function (callback) {
         };
 
         const showSensorInfo = function () {
-            const gyroElements = [
-                "AUTO",
-                "NONE",
-                "MPU6050",
-                "L3G4200D",
-                "MPU3050",
-                "L3GD20",
-                "MPU6000",
-                "MPU6500",
-                "MPU9250",
-                "ICM20601",
-                "ICM20602",
-                "ICM20608G",
-                "ICM20649",
-                "ICM20689",
-                "ICM42605",
-                "ICM42688P",
-                "BMI160",
-                "BMI270",
-                "LSM6DSO",
-                "LSM6DSV16X",
-                "VIRTUAL",
-            ];
-
-            const accElements = [
-                "AUTO",
-                "NONE",
-                "ADXL345",
-                "MPU6050",
-                "MMA8452",
-                "BMA280",
-                "LSM303DLHC",
-                "MPU6000",
-                "MPU6500",
-                "MPU9250",
-                "ICM20601",
-                "ICM20602",
-                "ICM20608G",
-                "ICM20649",
-                "ICM20689",
-                "ICM42605",
-                "ICM42688P",
-                "BMI160",
-                "BMI270",
-                "LSM6DSO",
-                "LSM6DSV16X",
-                "VIRTUAL",
-            ];
-
-            const magElements = [
-                "DEFAULT",
-                "NONE",
-                "HMC5883",
-                "AK8975",
-                "AK8963",
-                "QMC5883",
-                "LIS2MDL",
-                "LIS3MDL",
-                "MPU925X_AK8963",
-                "IST8310",
-            ];
-
-            const baroElements = [
-                "DEFAULT",
-                "NONE",
-                "BMP085",
-                "MS5611",
-                "BMP280",
-                "LPS",
-                "QMP6988",
-                "BMP388",
-                "DPS310",
-                "2SMPB_02B",
-                "VIRTUAL",
-            ];
-
-            const sonarElements = [
-                "NONE",
-                "HCSR04",
-                "TFMINI",
-                "TF02",
-                "MTF01",
-                "MTF02",
-                "MTF01P",
-                "MTF02P",
-            ];
-            // remove deprecated sensors or add new ones
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
-                gyroElements.splice(gyroElements.indexOf("L3G4200D"), 1);
-                gyroElements.splice(gyroElements.indexOf("MPU3050"), 1);
-                gyroElements.splice(gyroElements.indexOf("LSM6DSV16X") + 1, 0, "IIM42653");
-
-                accElements.splice(accElements.indexOf("ADXL345"), 1);
-                accElements.splice(accElements.indexOf("MMA8452"), 1);
-                accElements.splice(accElements.indexOf("BMA280"), 1);
-                accElements.splice(accElements.indexOf("LSM303DLHC"), 1);
-                accElements.splice(accElements.indexOf("LSM6DSV16X") + 1, 0, "IIM42653");
+            // Add sensor info to the sensor info box
+            function addSensorInfo(sensor, sensorElement, sensorType, sensorElements) {
+                if (sensor == 0xff) {
+                    sensorElement.text(i18n.getMessage("initialSetupNotInBuild"));
+                } else if (have_sensor(FC.CONFIG.activeSensors, sensorType)) {
+                    sensorElement.text(sensorElements[sensor]);
+                } else {
+                    sensorElement.text(i18n.getMessage("initialSetupNotDetected"));
+                }
             }
 
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
                 MSP.send_message(MSPCodes.MSP2_SENSOR_CONFIG_ACTIVE, false, false, function () {
-                    // Sensor info
-                    const textNA = i18n.getMessage("initialSetupNotInBuild");
-                    const textDisabled = i18n.getMessage("initialSetupNotDetected");
+                    addSensorInfo(
+                        FC.SENSOR_CONFIG_ACTIVE.gyro_hardware,
+                        sensor_gyro_e,
+                        "gyro",
+                        sensorTypes().gyro.elements,
+                    );
+                    addSensorInfo(
+                        FC.SENSOR_CONFIG_ACTIVE.acc_hardware,
+                        sensor_acc_e,
+                        "acc",
+                        sensorTypes().acc.elements,
+                    );
+                    addSensorInfo(
+                        FC.SENSOR_CONFIG_ACTIVE.baro_hardware,
+                        sensor_baro_e,
+                        "baro",
+                        sensorTypes().baro.elements,
+                    );
+                    addSensorInfo(
+                        FC.SENSOR_CONFIG_ACTIVE.mag_hardware,
+                        sensor_mag_e,
+                        "mag",
+                        sensorTypes().mag.elements,
+                    );
+                    addSensorInfo(
+                        FC.SENSOR_CONFIG_ACTIVE.sonar_hardware,
+                        sensor_sonar_e,
+                        "sonar",
+                        sensorTypes().sonar.elements,
+                    );
 
-                    if (FC.SENSOR_CONFIG_ACTIVE.gyro_hardware == 0xff) {
-                        sensor_gyro_e.text(textNA);
-                    } else if (
-                        have_sensor(FC.CONFIG.activeSensors, "gyro") &&
-                        FC.SENSOR_CONFIG_ACTIVE.gyro_hardware > 1
-                    ) {
-                        sensor_gyro_e.text(gyroElements[FC.SENSOR_CONFIG_ACTIVE.gyro_hardware]);
-                    } else {
-                        sensor_gyro_e.text(textDisabled);
-                    }
-
-                    if (FC.SENSOR_CONFIG_ACTIVE.acc_hardware == 0xff) {
-                        sensor_acc_e.text(textNA);
-                    } else if (
-                        have_sensor(FC.CONFIG.activeSensors, "acc") &&
-                        FC.SENSOR_CONFIG_ACTIVE.acc_hardware > 1
-                    ) {
-                        sensor_acc_e.text(accElements[FC.SENSOR_CONFIG_ACTIVE.acc_hardware]);
-                    } else {
-                        sensor_acc_e.text(textDisabled);
-                    }
-
-                    if (FC.SENSOR_CONFIG_ACTIVE.baro_hardware == 0xff) {
-                        sensor_baro_e.text(textNA);
-                    } else if (
-                        have_sensor(FC.CONFIG.activeSensors, "baro") &&
-                        FC.SENSOR_CONFIG_ACTIVE.baro_hardware > 1
-                    ) {
-                        sensor_baro_e.text(baroElements[FC.SENSOR_CONFIG_ACTIVE.baro_hardware]);
-                    } else {
-                        sensor_baro_e.text(textDisabled);
-                    }
-
-                    if (FC.SENSOR_CONFIG_ACTIVE.mag_hardware == 0xff) {
-                        sensor_mag_e.text(textNA);
-                    } else if (
-                        have_sensor(FC.CONFIG.activeSensors, "mag") &&
-                        FC.SENSOR_CONFIG_ACTIVE.mag_hardware > 1
-                    ) {
-                        sensor_mag_e.text(magElements[FC.SENSOR_CONFIG_ACTIVE.mag_hardware]);
-                    } else {
-                        sensor_mag_e.text(textDisabled);
-                    }
-
-                    if (FC.SENSOR_CONFIG_ACTIVE.sonar_hardware == 0xff) {
-                        sensor_sonar_e.text(textNA);
-                    } else if (
-                        have_sensor(FC.CONFIG.activeSensors, "sonar") &&
-                        FC.SENSOR_CONFIG_ACTIVE.sonar_hardware > 0
-                    ) {
-                        sensor_sonar_e.text(sonarElements[FC.SENSOR_CONFIG_ACTIVE.sonar_hardware]);
-                    } else {
-                        sensor_sonar_e.text(textDisabled);
+                    // opticalflow sensor is available since 1.47
+                    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+                        addSensorInfo(
+                            FC.SENSOR_CONFIG_ACTIVE.opticalflow_hardware,
+                            sensor_opticalflow_e,
+                            "opticalflow",
+                            sensorTypes().opticalflow.elements,
+                        );
                     }
                 });
             }
