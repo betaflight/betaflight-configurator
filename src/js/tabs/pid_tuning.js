@@ -1186,6 +1186,10 @@ pid_tuning.initialize = function (callback) {
                 numberOfRateProfiles = 4;
             }
 
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+                numberOfRateProfiles = FC.CONFIG.numberOfRateProfiles;
+            }
+
             const rateProfileElements = [];
             for (let i = 0; i < numberOfRateProfiles; i++) {
                 rateProfileElements.push(i18n.getMessage("pidTuningRateProfileOption", [i + 1]));
