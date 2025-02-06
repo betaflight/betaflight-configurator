@@ -889,7 +889,6 @@ function update() {
             "debug[7]": "pidA",
         };
 
-        // DEBUG.enableFields.splice(DEBUG.enableFields.indexOf("Gyro") + 1, 0, "Attitude");
         addArrayElementAfter(DEBUG.enableFields, "Attitude", "Gyro");
         addArrayElement(DEBUG.enableFields, "Servo");
     }
