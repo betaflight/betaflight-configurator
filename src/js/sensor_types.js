@@ -1,7 +1,7 @@
 import semver from "semver";
 import FC from "./fc";
 import { API_VERSION_1_47 } from "./data_storage";
-import { removeArrayElement, addArrayElementAfter } from "./utils/common";
+import { removeArrayElement, addArrayElementAfter } from "./utils/array";
 
 export function sensorTypes() {
     const sensorTypes = {

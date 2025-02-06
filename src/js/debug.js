@@ -1,7 +1,7 @@
 import FC from "./fc.js";
 import { API_VERSION_1_46, API_VERSION_1_47 } from "./data_storage";
 import semver from "semver";
-import { removeArrayElement, addArrayElement, replaceArrayElement, addArrayElementAfter } from "./utils/common.js";
+import { removeArrayElement, addArrayElement, replaceArrayElement, addArrayElementAfter } from "./utils/array";
 
 const DEBUG = {
     modes: [
