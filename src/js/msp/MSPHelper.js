@@ -237,6 +237,9 @@ MspHelper.prototype.process_data = function (dataHandler) {
                         FC.CONFIG.cpuTemp = data.readU16();
                     }
 
+                    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+                        FC.CONFIG.numberOfRateProfiles = data.readU8();
+                    }
                     break;
 
                 case MSPCodes.MSP_RAW_IMU:

@@ -31,6 +31,7 @@ const INITIAL_CONFIG = {
     rateProfileNames: ["", "", "", ""],
     numProfiles: 3,
     rateProfile: 0,
+    numberOfRateProfiles: 0,
     boardType: 0,
     armingDisableCount: 0,
     armingDisableFlags: 0,
