@@ -1,42 +1,44 @@
 <template>
     <div class="web-port-picker">
         <PortOverrideOption
-            v-if="value.selectedPort === 'manual'"
-            :value="value.portOverride"
-            @input="updateValue('portOverride', $event)"
+            v-if="modelValue.selectedPort === 'manual'"
+            :model-value="modelValue.portOverride"
+            @update:modelValue="updateValue('portOverride', $event)"
         />
         <FirmwareVirtualOption
-            v-if="value.selectedPort === 'virtual' && !isConnected"
-            :value="value.virtualMspVersion"
-            @input="updateValue('virtualMspVersion', $event)"
+            v-if="modelValue.selectedPort === 'virtual' && !isConnected"
+            :model-value="modelValue.virtualMspVersion"
+            @update:modelValue="updateValue('virtualMspVersion', $event)"
         />
         <PortsInput
-            :value="value"
+            :model-value="modelValue.selectedPort"
             :connected-bluetooth-devices="connectedBluetoothDevices"
             :connected-serial-devices="connectedSerialDevices"
             :connected-usb-devices="connectedUsbDevices"
             :disabled="disabled"
             :show-virtual-option="showVirtualOption"
             :show-manual-option="showManualOption"
-            @input="updateValue(null, $event)"
+            @update:modelValue="updateValue(null, $event)"
         />
     </div>
 </template>
 
 <script>
+import { defineComponent } from "vue";
 import PortOverrideOption from "./PortOverrideOption.vue";
 import FirmwareVirtualOption from "./FirmwareVirtualOption.vue";
 import PortsInput from "./PortsInput.vue";
 import CONFIGURATOR from "../../js/data_storage";
 
-export default {
+export default defineComponent({
     components: {
         PortOverrideOption,
         FirmwareVirtualOption,
         PortsInput,
     },
+
     props: {
-        value: {
+        modelValue: {
             type: Object,
             default: () => ({
                 selectedPort: "noselection",
@@ -71,21 +73,25 @@ export default {
             default: false,
         },
     },
+
+    emits: ["update:modelValue"],
+
     computed: {
         isConnected() {
             return CONFIGURATOR.connectionValid;
         },
     },
+
     methods: {
         updateValue(key, value) {
             if (key != null) {
-                this.$emit("input", { ...this.value, [key]: value });
+                this.$emit("update:modelValue", { ...this.modelValue, [key]: value });
             } else {
-                this.$emit("input", { ...this.value, ...value });
+                this.$emit("update:modelValue", { ...this.modelValue, ...value });
             }
         },
     },
-};
+});
 </script>
 
 <style scoped>
