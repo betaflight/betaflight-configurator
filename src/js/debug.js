@@ -826,7 +826,7 @@ function update() {
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
         replaceArrayElement(DEBUG.modes, "GPS_RESCUE_THROTTLE_PID", "AUTOPILOT_ALTITUDE");
         removeArrayElement(DEBUG.modes, "GYRO_SCALED");
-        addArrayElementAfter(DEBUG.modes, "RANGEFINDER_QUALITY", "OPTICALFLOW");
+        addArrayElementAfter(DEBUG.modes, "OPTICALFLOW", "RANGEFINDER_QUALITY");
         addArrayElement(DEBUG.modes, "AUTOPILOT_POSITION");
         addArrayElement(DEBUG.modes, "CHIRP");
 
