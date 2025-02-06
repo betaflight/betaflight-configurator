@@ -1,6 +1,7 @@
 import FC from "./fc.js";
 import { API_VERSION_1_46, API_VERSION_1_47 } from "./data_storage";
 import semver from "semver";
+import { removeArrayElement, addArrayElement, replaceArrayElement, addArrayElementAfter } from "./utils/common.js";
 
 const DEBUG = {
     modes: [
@@ -823,11 +824,12 @@ function update() {
     }
 
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
-        DEBUG.modes.splice(DEBUG.modes.indexOf("GPS_RESCUE_THROTTLE_PID"), 1, "AUTOPILOT_ALTITUDE");
-        DEBUG.modes.splice(DEBUG.modes.indexOf("GYRO_SCALED"), 1);
-        DEBUG.modes.splice(DEBUG.modes.indexOf("RANGEFINDER_QUALITY") + 1, 0, "OPTICALFLOW");
-        DEBUG.modes.push("AUTOPILOT_POSITION");
-        DEBUG.modes.push("CHIRP");
+        replaceArrayElement(DEBUG.modes, "GPS_RESCUE_THROTTLE_PID", "AUTOPILOT_ALTITUDE");
+        removeArrayElement(DEBUG.modes, "GYRO_SCALED");
+        addArrayElementAfter(DEBUG.modes, "RANGEFINDER_QUALITY", "OPTICALFLOW");
+        addArrayElement(DEBUG.modes, "AUTOPILOT_POSITION");
+        addArrayElement(DEBUG.modes, "CHIRP");
+
         delete DEBUG.fieldNames.GPS_RESCUE_THROTTLE_PID;
         delete DEBUG.fieldNames.GYRO_SCALED;
 
@@ -887,8 +889,9 @@ function update() {
             "debug[7]": "pidA",
         };
 
-        DEBUG.enableFields.splice(DEBUG.enableFields.indexOf("Gyro") + 1, 0, "Attitude");
-        DEBUG.enableFields.push("Servo");
+        // DEBUG.enableFields.splice(DEBUG.enableFields.indexOf("Gyro") + 1, 0, "Attitude");
+        addArrayElementAfter(DEBUG.enableFields, "Attitude", "Gyro");
+        addArrayElement(DEBUG.enableFields, "Servo");
     }
 }
 

@@ -3,6 +3,7 @@ import { mixerList } from "../model";
 import CONFIGURATOR from "../data_storage";
 import { gui_log } from "../gui_log";
 import $ from "jquery";
+import { exp } from "three/tsl";
 
 export function millitime() {
     return new Date().getTime();
@@ -141,9 +142,29 @@ export function removeArrayElement(elements, element) {
  * @param {*} element - The element to add to the array.
  * @param {*} afterElement - The element after which the new element will be added.
  */
-export function addArrayElement(elements, element, afterElement) {
+export function addArrayElementAfter(elements, element, afterElement) {
     const elementIndex = elements.indexOf(element);
     if (elementIndex === -1) {
         elements.splice(elements.indexOf(afterElement) + 1, 0, element);
+    }
+}
+
+export function addArrayElement(elements, element) {
+    if (!elements.includes(element)) {
+        elements.push(element);
+    }
+}
+
+/**
+ * Replaces an element in an array with a new element.
+ *
+ * @param {Array} elements - The array containing the element to be replaced.
+ * @param {*} element - The element to be replaced.
+ * @param {*} replacement - The new element to replace the old element.
+ */
+export function replaceArrayElement(elements, element, replacement) {
+    const index = elements.indexOf(element);
+    if (index !== -1) {
+        elements[index] = replacement;
     }
 }
