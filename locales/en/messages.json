@@ -1403,7 +1403,7 @@
         "message": "The magnetometer alignment is the orientation of the magnetometer sensor on the flight controller board. The default is usually correct, but if you have a custom build or a flight controller with a different magnetometer orientation, you may need to adjust this setting."
     },
     "configurationMagDeclination": {
-        "message": "Magnetometer Declination"
+        "message": "Magnetic Declination"
     },
     "configurationMagDeclinationInput": {
         "message": "Declination Degrees"
