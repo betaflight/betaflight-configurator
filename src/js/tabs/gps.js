@@ -20,10 +20,6 @@ gps.initialize = async function (callback) {
     GUI.active_tab = "gps";
 
     await MSP.promise(MSPCodes.MSP_FEATURE_CONFIG);
-
-    // mag support added in 1.46
-    const hasMag = have_sensor(FC.CONFIG.activeSensors, "mag") && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46);
-
     await MSP.promise(MSPCodes.MSP_GPS_CONFIG);
 
     load_html();
@@ -47,6 +43,9 @@ gps.initialize = async function (callback) {
     function process_html() {
         // translate to user-selected languageconsole.log('Online');
         i18n.localizePage();
+
+        const hasMag =
+            have_sensor(FC.CONFIG.activeSensors, "mag") && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46);
 
         function get_raw_gps_data() {
             MSP.send_message(MSPCodes.MSP_RAW_GPS, false, false, get_comp_gps_data);
@@ -382,14 +381,7 @@ gps.initialize = async function (callback) {
         }
 
         // enable data pulling
-        GUI.interval_add(
-            "gps_pull",
-            function gps_update() {
-                get_raw_gps_data();
-            },
-            75,
-            true,
-        );
+        GUI.interval_add("gps_pull", get_raw_gps_data, 100, true);
 
         //check for internet connection on load
         if (ispConnected()) {
