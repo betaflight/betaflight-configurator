@@ -864,11 +864,11 @@
     },
     "initialSetupNotInBuild": {
         "message": "Non incluso nella build",
-        "description": "Message that pops up when hardware support not are supported in Build"
+        "description": "Message that pops up when hardware support is not included in build"
     },
     "initialSetupNotDetected": {
-        "message": "Non rilevato",
-        "description": "Message that pops up when hardware are not detected"
+        "message": "Non rilevato o disabilitato",
+        "description": "Message that pops up when hardware is not detected or disabled"
     },
     "initialSetupRSSIValue": {
         "message": "$1 dBm"
@@ -896,6 +896,9 @@
     },
     "initialSetupSensorSonar": {
         "message": "Sonar:"
+    },
+    "initialSetupSensorOpticalflow": {
+        "message": "Optical Flow:"
     },
     "initialSetupSensorRadar": {
         "message": "Radar:"
@@ -1325,6 +1328,24 @@
     "configurationMagDeclinationHelp": {
         "message": "La declinazione magnetica è l'angolo tra nord magnetico e nord vero. È diverso per ogni posizione sulla terra. Puoi trovare la declinazione per la tua posizione su internet"
     },
+    "configurationRangefinder": {
+        "message": "$t(initialSetupSensorSonar.message)"
+    },
+    "configurationRangefinderHelp": {
+        "message": "Abilita il rangefinder per misurare la distanza dal suolo in cm"
+    },
+    "configurationRangefinderType": {
+        "message": "Tipo"
+    },
+    "configurationOpticalflow": {
+        "message": "$t(initialSetupSensorOpticalflow.message)"
+    },
+    "configurationOpticalflowHelp": {
+        "message": "Abilita sensore optical flow"
+    },
+    "configurationOpticalflowType": {
+        "message": "$t(configurationRangefinderType.message)"
+    },
     "configurationBoardAlignment": {
         "message": "Allineamento Scheda"
     },
@@ -1660,6 +1681,9 @@
     },
     "portsSerialRx": {
         "message": "RX Seriale"
+    },
+    "portsSerialRxHelp": {
+        "message": "Abilita o disabilita il ricevitore seriale di controllo remoto (RX) sull'UART specificato. Ne è consentito solo uno."
     },
     "portsSensorIn": {
         "message": "Ingresso Sensore"
@@ -2365,6 +2389,10 @@
     "auxiliaryHelpMode_AIRMODE": {
         "message": "AirMode mantiene il drone stabile a basso acceleratore. Per maggiori informazioni consulta <a href=\"https:\/\/betaflight.com\/docs\/development\/modes#airmode\" target=\"_blank\" rel=\"noopener noreferrer\">AirMode<\/a> su Betaflight.com.",
         "description": "Help text to AIRMODE mode"
+    },
+    "auxiliaryHelpMode_ALTHOLD": {
+        "message": "<a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/position-hold-v4-6#altitude-hold\" target=\"_blank\" rel=\"noopener noreferrer\">Altitude Hold<\/a> regola l'altitudine dell'aeromobile utilizzando sensori esterni combinati con la Modalità Angolo (Modalità Stabile).",
+        "description": "Help text for ALTITUDE HOLD mode"
     },
     "auxiliaryHelpMode_BEEPER": {
         "message": "Abilita beep - utile per localizzare un aeromobile perso",

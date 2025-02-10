@@ -868,11 +868,11 @@
     },
     "initialSetupNotInBuild": {
         "message": "Nie uwzględnione w kompilacji",
-        "description": "Message that pops up when hardware support not are supported in Build"
+        "description": "Message that pops up when hardware support is not included in build"
     },
     "initialSetupNotDetected": {
-        "message": "Nie wykryto",
-        "description": "Message that pops up when hardware are not detected"
+        "message": "Nie wykryto lub wyłączono",
+        "description": "Message that pops up when hardware is not detected or disabled"
     },
     "initialSetupRSSIValue": {
         "message": "$1 dBm"
@@ -900,6 +900,9 @@
     },
     "initialSetupSensorSonar": {
         "message": "Sonar:"
+    },
+    "initialSetupSensorOpticalflow": {
+        "message": "Czujnik optyczny:"
     },
     "initialSetupSensorRadar": {
         "message": "Radar:"
@@ -1328,6 +1331,24 @@
     },
     "configurationMagDeclinationHelp": {
         "message": "Deklinacja magnetyczna jest kątem pomiędzy północą geograficzną a magnetyczną. Jest różna dla każdej lokalizacji na ziemi. Deklinację magnetyczną dla swojej lokalizacji możesz znaleźć w Internecie"
+    },
+    "configurationRangefinder": {
+        "message": "$t(initialSetupSensorSonar.message)"
+    },
+    "configurationRangefinderHelp": {
+        "message": "Włącz dalmierz, aby zmierzyć odległość do ziemi w centymetrach"
+    },
+    "configurationRangefinderType": {
+        "message": "Typ"
+    },
+    "configurationOpticalflow": {
+        "message": "$t(initialSetupSensorOpticalflow.message)"
+    },
+    "configurationOpticalflowHelp": {
+        "message": "Włącz czujnik optyczny"
+    },
+    "configurationOpticalflowType": {
+        "message": "$t(configurationRangefinderType.message)"
     },
     "configurationBoardAlignment": {
         "message": "Ułożenie kontrolera lotu"
@@ -2369,6 +2390,10 @@
     "auxiliaryHelpMode_AIRMODE": {
         "message": "AirMode pozwala na utrzymanie stabilności drona przy niskiej przepustnicy. Więcej informacji znajdziesz w <a href=\"https:\/\/betaflight.com\/docs\/development\/modes#airmode\" target=\"_blank\" rel=\"noopener noreferrer\">AirMode<\/a> na Betaflight.com.",
         "description": "Help text to AIRMODE mode"
+    },
+    "auxiliaryHelpMode_ALTHOLD": {
+        "message": "<a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/position-hold-v4-6#altitude-hold\" target=\"_blank\" rel=\"noopener noreferrer\">Altitude Hold<\/a> Aktywnie utrzymuje wysokość modelu za pomocą zewnętrznych czujników połączonych z trybem stabilizowanym Angle.",
+        "description": "Help text for ALTITUDE HOLD mode"
     },
     "auxiliaryHelpMode_BEEPER": {
         "message": "Włącz sygnał dźwiękowy-przydatne do lokalizowania zaginionej jednostki latającej",

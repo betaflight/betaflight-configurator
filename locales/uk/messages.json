@@ -864,14 +864,17 @@
     },
     "initialSetupNotInBuild": {
         "message": "Не включено до збірки",
-        "description": "Message that pops up when hardware support not are supported in Build"
+        "description": "Message that pops up when hardware support is not included in build"
     },
     "initialSetupNotDetected": {
-        "message": "Не виявлено",
-        "description": "Message that pops up when hardware are not detected"
+        "message": "Не виявлено або відключено",
+        "description": "Message that pops up when hardware is not detected or disabled"
     },
     "initialSetupRSSIValue": {
         "message": "$1 дБм"
+    },
+    "initialSetupMCU": {
+        "message": "Мікроконтролер:"
     },
     "initialSetupSensorHardware": {
         "message": "Датчики:"
@@ -893,6 +896,9 @@
     },
     "initialSetupSensorSonar": {
         "message": "Сонар:"
+    },
+    "initialSetupSensorOpticalflow": {
+        "message": "Оптичний потік:"
     },
     "initialSetupSensorRadar": {
         "message": "Радар:"
@@ -1322,6 +1328,24 @@
     "configurationMagDeclinationHelp": {
         "message": "Магнітне схилення — це кут між магнітним і географічним північними полюсами. Воно відрізняється для кожного місця на Землі. Ви можете знайти значення схилення для вашого розташування в інтернеті"
     },
+    "configurationRangefinder": {
+        "message": "$t(initialSetupSensorSonar.message)"
+    },
+    "configurationRangefinderHelp": {
+        "message": "Увімкнути далекомір для вимірювання відстані до землі в см"
+    },
+    "configurationRangefinderType": {
+        "message": "Тип"
+    },
+    "configurationOpticalflow": {
+        "message": "$t(initialSetupSensorOpticalflow.message)"
+    },
+    "configurationOpticalflowHelp": {
+        "message": "Увімкнути датчик оптичного потоку"
+    },
+    "configurationOpticalflowType": {
+        "message": "$t(configurationRangefinderType.message)"
+    },
     "configurationBoardAlignment": {
         "message": "Вирівнювання плати"
     },
@@ -1657,6 +1681,9 @@
     },
     "portsSerialRx": {
         "message": "Послідовний Rx"
+    },
+    "portsSerialRxHelp": {
+        "message": "Увімкнути або вимкнути послідовний приймач (RX) дистанційного керування на вказаному UART. Дозволено лише один."
     },
     "portsSensorIn": {
         "message": "Вхід датчика"
@@ -2362,6 +2389,10 @@
     "auxiliaryHelpMode_AIRMODE": {
         "message": "Режим Air дозволяє підтримувати стабільність повітряного судна на низькій тязі. Для отримання додаткової інформації, будь ласка, відвідайте <a href=\"https:\/\/betaflight.com\/docs\/development\/modes#airmode\" target=\"_blank\" rel=\"noopener noreferrer\">AirMode<\/a> на Betaflight.com.",
         "description": "Help text to AIRMODE mode"
+    },
+    "auxiliaryHelpMode_ALTHOLD": {
+        "message": "<a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/position-hold-v4-6#altitude-hold\" target=\"_blank\" rel=\"noopener noreferrer\">Утримання висоти<\/a> активно регулює висоту літального апарату, використовуючи зовнішні датчики у поєднанні з режимом Кут (стабільний режим).",
+        "description": "Help text for ALTITUDE HOLD mode"
     },
     "auxiliaryHelpMode_BEEPER": {
         "message": "Включити пищання - корисно для пошуку розбитого дрона",
@@ -4698,6 +4729,9 @@
     },
     "failsafeGpsRescueInitialClimbHelp": {
         "message": "Відстань, на яку повітряне судно підніметься вище поточної висоти, коли ініціюється GPS порятунок і режим висоти встановлено на \"Поточна висота\"; також додається в режимі \"Максимальна висота\"."
+    },
+    "failsafeGpsRescueItemReturnAltitude": {
+        "message": "Висота повернення (метри)"
     },
     "failsafeGpsRescueItemAscendRate": {
         "message": "Швидкість підйому (м\/с)"
