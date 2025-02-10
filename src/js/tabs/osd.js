@@ -84,6 +84,7 @@ SYM.loadSymbols = function () {
     SYM.ROLL = 0x14;
     SYM.KM = 0x7d;
     SYM.MILES = 0x7e;
+    SYM.ANGLE_OF_ATTACK = 0x40;
 };
 
 FONT.initData = function () {
@@ -1578,6 +1579,15 @@ OSD.loadDisplayFields = function () {
             positionable: true,
             preview: "CUSTOM MSG4",
         },
+        ANGLE_OF_ATTACK: {
+            name: "ANGLE_OF_ATTACK",
+            text: "osdTextElementAngleOfAttack",
+            desc: "osdDescElementAngleOfAttack",
+            defaultPosition: -1,
+            draw_order: 610,
+            positionable: true,
+            preview: `${FONT.symbol(SYM.ANGLE_OF_ATTACK)}-00.0`,
+        },
     };
 
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
@@ -2024,6 +2034,7 @@ OSD.chooseFields = function () {
             F.CUSTOM_MSG1,
             F.CUSTOM_MSG2,
             F.CUSTOM_MSG3,
+            F.ANGLE_OF_ATTACK,
         ]);
     }
     // Choose statistic fields

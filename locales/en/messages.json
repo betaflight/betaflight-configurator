@@ -5753,6 +5753,14 @@
         "message": "Custom message 4 from external device",
         "description": "Description of the custom message 4 element of the OSD"
     },
+    "osdTextElementAngleOfAttack": {
+        "message": "Angle of attack",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementAngleOfAttack": {
+        "message": "Angle of attack",
+        "description": "Description of the angle of attack element of the OSD"
+    },
     "osdTextElementOnTime": {
         "message": "On time",
         "description": "One of the elements of the OSD"
