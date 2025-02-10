@@ -815,7 +815,12 @@ motors.initialize = async function (callback) {
             $(".escMotorStop")
                 .toggle(protocolConfigured)
                 .find("input#feature4")
-                .prop("disabled", FC.FEATURE_CONFIG.features.isEnabled("AIRMODE"));
+                .prop(
+                    "checked",
+                    FC.FEATURE_CONFIG.features.isEnabled("MOTOR_STOP") &&
+                        !FC.FEATURE_CONFIG.features.isEnabled("AIRMODE"),
+                )
+                .attr("disabled", FC.FEATURE_CONFIG.features.isEnabled("AIRMODE"));
 
             $("#escProtocolDisabled").toggle(!protocolConfigured);
 
