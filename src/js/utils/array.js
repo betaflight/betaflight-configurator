@@ -12,13 +12,13 @@ export function removeArrayElement(elements, element) {
 }
 
 /**
- * Adds an element to the array after a specified element if it does not already exist in the array.
+ * Adds an element to an array after a specified element if the element is not already present in the array.
  *
  * @param {Array} elements - The array to which the element will be added.
- * @param {*} element - The element to add to the array.
  * @param {*} afterElement - The element after which the new element will be added.
+ * @param {*} element - The element to be added to the array.
  */
-export function addArrayElementAfter(elements, element, afterElement) {
+export function addArrayElementAfter(elements, afterElement, element) {
     const elementIndex = elements.indexOf(element);
     if (elementIndex === -1) {
         elements.splice(elements.indexOf(afterElement) + 1, 0, element);

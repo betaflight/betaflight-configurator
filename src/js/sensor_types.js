@@ -1,7 +1,7 @@
 import semver from "semver";
 import FC from "./fc";
 import { API_VERSION_1_47 } from "./data_storage";
-import { removeArrayElement, addArrayElementAfter } from "./utils/array";
+import { removeArrayElement, addArrayElement, addArrayElementAfter } from "./utils/array";
 
 export function sensorTypes() {
     const sensorTypes = {
@@ -111,15 +111,15 @@ export function sensorTypes() {
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
         removeArrayElement(gyroElements, "L3G4200D");
         removeArrayElement(gyroElements, "MPU3050");
-        addArrayElementAfter(gyroElements, "IIM42653", "LSM6DSV16X");
+        addArrayElementAfter(gyroElements, "LSM6DSV16X", "IIM42653");
 
         removeArrayElement(accElements, "ADXL345");
         removeArrayElement(accElements, "MMA8452");
         removeArrayElement(accElements, "BMA280");
         removeArrayElement(accElements, "LSM303DLHC");
-        addArrayElementAfter(accElements, "IIM42653", "LSM6DSV16X");
+        addArrayElementAfter(accElements, "LSM6DSV16X", "IIM42653");
 
-        addArrayElementAfter(gpsElements, "VIRTUAL", "MSP");
+        addArrayElement(gpsElements, "VIRTUAL");
     }
 
     return sensorTypes;
