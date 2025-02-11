@@ -783,6 +783,10 @@ const DEBUG = {
             "debug[4]": "Current Setpoint [yaw]",
             "debug[5]": "Adjusted Setpoint [yaw]",
         },
+        CHIRP: {
+            "debug[all]": "Chirp",
+            "debug[0]": "Chirp sinarg",
+        },
     },
 
     enableFields: [
@@ -823,6 +827,7 @@ function update() {
         DEBUG.modes.splice(DEBUG.modes.indexOf("GYRO_SCALED"), 1);
         DEBUG.modes.splice(DEBUG.modes.indexOf("RANGEFINDER_QUALITY") + 1, 0, "OPTICALFLOW");
         DEBUG.modes.push("AUTOPILOT_POSITION");
+        DEBUG.modes.push("CHIRP");
         delete DEBUG.fieldNames.GPS_RESCUE_THROTTLE_PID;
         delete DEBUG.fieldNames.GYRO_SCALED;
 
