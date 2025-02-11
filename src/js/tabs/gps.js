@@ -20,10 +20,6 @@ gps.initialize = async function (callback) {
     GUI.active_tab = "gps";
 
     await MSP.promise(MSPCodes.MSP_FEATURE_CONFIG);
-
-    // mag support added in 1.46
-    const hasMag = have_sensor(FC.CONFIG.activeSensors, "mag") && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46);
-
     await MSP.promise(MSPCodes.MSP_GPS_CONFIG);
 
     load_html();
@@ -48,6 +44,9 @@ gps.initialize = async function (callback) {
         // translate to user-selected languageconsole.log('Online');
         i18n.localizePage();
 
+        const hasMag =
+            have_sensor(FC.CONFIG.activeSensors, "mag") && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46);
+
         function get_raw_gps_data() {
             MSP.send_message(MSPCodes.MSP_RAW_GPS, false, false, get_comp_gps_data);
         }
@@ -65,7 +64,15 @@ gps.initialize = async function (callback) {
         }
 
         function get_imu_data() {
-            MSP.send_message(MSPCodes.MSP_RAW_IMU, false, false, update_ui);
+            MSP.send_message(MSPCodes.MSP_RAW_IMU, false, false, get_mag_data);
+        }
+
+        function get_mag_data() {
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+                MSP.send_message(MSPCodes.MSP_COMPASS_CONFIG, false, false, update_ui);
+            } else {
+                update_ui();
+            }
         }
 
         // GPS Configuration
@@ -338,6 +345,13 @@ gps.initialize = async function (callback) {
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
                 const positionalDop = FC.GPS_DATA.positionalDop / 100;
                 $(".GPS_info td.positionalDop").text(`${positionalDop.toFixed(2)}`);
+                if (hasMag) {
+                    $(".GPS_info td.magDeclination").text(
+                        `${FC.COMPASS_CONFIG.mag_declination.toFixed(1)} ${gpsUnitText}`,
+                    );
+                } else {
+                    $(".GPS_info td.magDeclination").parent().hide();
+                }
             }
 
             updateSignalStrengths();
@@ -367,14 +381,7 @@ gps.initialize = async function (callback) {
         }
 
         // enable data pulling
-        GUI.interval_add(
-            "gps_pull",
-            function gps_update() {
-                get_raw_gps_data();
-            },
-            75,
-            true,
-        );
+        GUI.interval_add("gps_pull", get_raw_gps_data, 100, true);
 
         //check for internet connection on load
         if (ispConnected()) {
