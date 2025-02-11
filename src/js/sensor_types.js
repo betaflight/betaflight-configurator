@@ -1,6 +1,7 @@
 import semver from "semver";
 import FC from "./fc";
 import { API_VERSION_1_47 } from "./data_storage";
+import { removeArrayElement, addArrayElement, addArrayElementAfter } from "./utils/array";
 
 export function sensorTypes() {
     const sensorTypes = {
@@ -102,37 +103,23 @@ export function sensorTypes() {
         },
     };
 
-    function removeElement(elements, element) {
-        const index = elements.indexOf(element);
-        if (index !== -1) {
-            elements.splice(index, 1);
-        }
-    }
-
-    function addElement(elements, element, afterElement) {
-        const elementIndex = elements.indexOf(element);
-        if (elementIndex === -1) {
-            elements.splice(elements.indexOf(afterElement) + 1, 0, element);
-        }
-    }
-
     const gyroElements = sensorTypes.gyro.elements;
     const accElements = sensorTypes.acc.elements;
     const gpsElements = sensorTypes.gps.elements;
 
     // remove deprecated sensors or add new ones
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
-        removeElement(gyroElements, "L3G4200D");
-        removeElement(gyroElements, "MPU3050");
-        addElement(gyroElements, "IIM42653", "LSM6DSV16X");
+        removeArrayElement(gyroElements, "L3G4200D");
+        removeArrayElement(gyroElements, "MPU3050");
+        addArrayElementAfter(gyroElements, "LSM6DSV16X", "IIM42653");
 
-        removeElement(accElements, "ADXL345");
-        removeElement(accElements, "MMA8452");
-        removeElement(accElements, "BMA280");
-        removeElement(accElements, "LSM303DLHC");
-        addElement(accElements, "IIM42653", "LSM6DSV16X");
+        removeArrayElement(accElements, "ADXL345");
+        removeArrayElement(accElements, "MMA8452");
+        removeArrayElement(accElements, "BMA280");
+        removeArrayElement(accElements, "LSM303DLHC");
+        addArrayElementAfter(accElements, "LSM6DSV16X", "IIM42653");
 
-        addElement(gpsElements, "VIRTUAL", "MSP");
+        addArrayElement(gpsElements, "VIRTUAL");
     }
 
     return sensorTypes;

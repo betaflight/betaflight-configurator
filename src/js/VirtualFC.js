@@ -5,6 +5,7 @@ import FC from "./fc";
 import CONFIGURATOR, { API_VERSION_1_47 } from "./data_storage";
 import { OSD } from "./tabs/osd";
 import semver from "semver";
+import { addArrayElement, addArrayElementAfter } from "./utils/array";
 
 const VirtualFC = {
     // these values are manufactured to unlock all the functionality of the configurator, they dont represent actual hardware
@@ -224,9 +225,9 @@ const VirtualFC = {
         ];
 
         if (semver.gte(virtualFC.CONFIG.apiVersion, API_VERSION_1_47)) {
-            virtualFC.AUX_CONFIG.splice(virtualFC.AUX_CONFIG.indexOf("HORIZON") + 1, 0, "ALT_HOLD");
-            virtualFC.AUX_CONFIG.splice(virtualFC.AUX_CONFIG.indexOf("CAMSTAB") + 1, 0, "POS_HOLD");
-            virtualFC.AUX_CONFIG.push("CHIRP");
+            addArrayElementAfter(virtualFC.AUX_CONFIG, "HORIZON", "ALT_HOLD");
+            addArrayElementAfter(virtualFC.AUX_CONFIG, "CAMSTAB", "POS_HOLD");
+            addArrayElement(virtualFC.AUX_CONFIG, "CHIRP");
         }
 
         FC.AUX_CONFIG_IDS = [
