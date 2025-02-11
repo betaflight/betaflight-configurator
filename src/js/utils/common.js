@@ -48,12 +48,10 @@ export function checkChromeRuntimeError() {
 }
 
 const majorFirmwareVersions = {
+    1.47: "4.6.*",
     1.46: "4.5.*",
     1.45: "4.4.*",
     1.44: "4.3.*",
-    1.43: "4.2.*",
-    1.42: "4.1.*",
-    1.41: "4.0.*",
 };
 
 export function generateVirtualApiVersions() {

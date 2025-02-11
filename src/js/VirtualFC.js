@@ -2,8 +2,9 @@ import Features from "./Features";
 import { i18n } from "./localization";
 import Beepers from "./Beepers";
 import FC from "./fc";
-import CONFIGURATOR from "./data_storage";
+import CONFIGURATOR, { API_VERSION_1_47 } from "./data_storage";
 import { OSD } from "./tabs/osd";
+import semver from "semver";
 
 const VirtualFC = {
     // these values are manufactured to unlock all the functionality of the configurator, they dont represent actual hardware
@@ -13,7 +14,7 @@ const VirtualFC = {
         virtualFC.resetState();
         virtualFC.CONFIG.deviceIdentifier = 0;
 
-        virtualFC.CONFIG.flightControllerVersion = "4.5.0";
+        virtualFC.CONFIG.flightControllerVersion = "4.6.0";
         virtualFC.CONFIG.apiVersion = CONFIGURATOR.virtualApiVersion;
 
         virtualFC.CONFIG.cpuTemp = 48;
@@ -221,9 +222,16 @@ const VirtualFC = {
             "READY",
             "LAP TIMER RESET",
         ];
+
+        if (semver.gte(virtualFC.CONFIG.apiVersion, API_VERSION_1_47)) {
+            virtualFC.AUX_CONFIG.splice(virtualFC.AUX_CONFIG.indexOf("HORIZON") + 1, 0, "ALT_HOLD");
+            virtualFC.AUX_CONFIG.splice(virtualFC.AUX_CONFIG.indexOf("CAMSTAB") + 1, 0, "POS_HOLD");
+            virtualFC.AUX_CONFIG.push("CHIRP");
+        }
+
         FC.AUX_CONFIG_IDS = [
-            0, 1, 2, 4, 5, 6, 7, 8, 12, 13, 15, 17, 19, 20, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37,
-            39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54,
+            0, 1, 2, 3, 4, 5, 6, 7, 8, 11, 12, 13, 15, 17, 19, 20, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35,
+            36, 37, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55,
         ];
 
         for (let i = 0; i < 16; i++) {
