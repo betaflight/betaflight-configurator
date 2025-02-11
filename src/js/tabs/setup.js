@@ -13,6 +13,7 @@ import { gui_log } from "../gui_log";
 import $ from "jquery";
 import { ispConnected } from "../utils/connection";
 import { sensorTypes } from "../sensor_types";
+import { addArrayElementAfter, replaceArrayElement } from "../utils/array";
 
 const setup = {
     yaw_fix: 0.0,
@@ -252,11 +253,13 @@ setup.initialize = function (callback) {
             ];
 
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
-                disarmFlagElements.splice(disarmFlagElements.indexOf("RPMFILTER"), 1, "DSHOT_TELEM");
+                replaceArrayElement(disarmFlagElements, "RPMFILTER", "DSHOT_TELEM");
             }
 
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
-                disarmFlagElements.splice(disarmFlagElements.indexOf("MOTOR_PROTOCOL"), 0, "CRASHFLIP");
+                addArrayElementAfter(disarmFlagElements, "MOTOR_PROTOCOL", "CRASHFLIP");
+                addArrayElementAfter(disarmFlagElements, "CRASHFLIP", "ALTHOLD");
+                addArrayElementAfter(disarmFlagElements, "ALTHOLD", "POSHOLD");
             }
 
             // Arming allowed flag
