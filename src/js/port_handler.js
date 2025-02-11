@@ -16,7 +16,7 @@ const PortHandler = new (function () {
         selectedPort: DEFAULT_PORT,
         selectedBauds: DEFAULT_BAUDS,
         portOverride: getConfig("portOverride", "/dev/rfcomm0").portOverride,
-        virtualMspVersion: "1.46.0",
+        virtualMspVersion: "1.47.0",
         autoConnect: getConfig("autoConnect", false).autoConnect,
     };
 
