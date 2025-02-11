@@ -862,10 +862,6 @@
     "initialSetupRSSI": {
         "message": "RSSI:"
     },
-    "initialSetupNotDetected": {
-        "message": "Nicht erkannt",
-        "description": "Message that pops up when hardware are not detected"
-    },
     "initialSetupRSSIValue": {
         "message": "$1 dBm"
     },

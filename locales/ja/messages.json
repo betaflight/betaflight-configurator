@@ -864,11 +864,7 @@
     },
     "initialSetupNotInBuild": {
         "message": "ビルドに含まれていません",
-        "description": "Message that pops up when hardware support not are supported in Build"
-    },
-    "initialSetupNotDetected": {
-        "message": "検出されませんでした",
-        "description": "Message that pops up when hardware are not detected"
+        "description": "Message that pops up when hardware support is not included in build"
     },
     "initialSetupRSSIValue": {
         "message": "$1 dBm"
@@ -1661,6 +1657,9 @@
     "portsSerialRx": {
         "message": "シリアル受信"
     },
+    "portsSerialRxHelp": {
+        "message": "指定したUARTでリモートコントロールシリアルレシーバー (RX) の有効化または無効化を行います。1つのみ許可されます。"
+    },
     "portsSensorIn": {
         "message": "センサー入力"
     },
@@ -2365,6 +2364,10 @@
     "auxiliaryHelpMode_AIRMODE": {
         "message": "エアーモードでは低いスロットルで機体を安定することができます。詳しい情報はBetaflight.comの<a href=\"https:\/\/betaflight.com\/docs\/development\/modes#airmode\" target=\"_blank\" rel=\"noopener noreferrer\">エアーモード<\/a>を確認してください。",
         "description": "Help text to AIRMODE mode"
+    },
+    "auxiliaryHelpMode_ALTHOLD": {
+        "message": "<a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/position-hold-v4-6#altitude-hold\" target=\"_blank\" rel=\"noopener noreferrer\">高度ホールド<\/a>は、外部センサーとアングルモード (安定モード) を組み合わせて、機体の高度を積極的に制御します。",
+        "description": "Help text for ALTITUDE HOLD mode"
     },
     "auxiliaryHelpMode_BEEPER": {
         "message": "ビープ音を有効にします - 墜落した機体の位置を特定するのに役立ちます",

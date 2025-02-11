@@ -864,11 +864,7 @@
     },
     "initialSetupNotInBuild": {
         "message": "Не включено в сборку",
-        "description": "Message that pops up when hardware support not are supported in Build"
-    },
-    "initialSetupNotDetected": {
-        "message": "Не обнаружено",
-        "description": "Message that pops up when hardware are not detected"
+        "description": "Message that pops up when hardware support is not included in build"
     },
     "initialSetupRSSIValue": {
         "message": "$1 дБм"

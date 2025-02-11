@@ -864,11 +864,7 @@
     },
     "initialSetupNotInBuild": {
         "message": "No incluido en la compilación",
-        "description": "Message that pops up when hardware support not are supported in Build"
-    },
-    "initialSetupNotDetected": {
-        "message": "No detectado",
-        "description": "Message that pops up when hardware are not detected"
+        "description": "Message that pops up when hardware support is not included in build"
     },
     "initialSetupRSSIValue": {
         "message": "$1 dBm"

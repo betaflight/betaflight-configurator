@@ -872,11 +872,11 @@
     },
     "initialSetupNotInBuild": {
         "message": "No inclòs a la compil-lació",
-        "description": "Message that pops up when hardware support not are supported in Build"
+        "description": "Message that pops up when hardware support is not included in build"
     },
     "initialSetupNotDetected": {
-        "message": "No detectat",
-        "description": "Message that pops up when hardware are not detected"
+        "message": "No detectat ni desactivat",
+        "description": "Message that pops up when hardware is not detected or disabled"
     },
     "initialSetupRSSIValue": {
         "message": "$1 dBm"
@@ -904,6 +904,9 @@
     },
     "initialSetupSensorSonar": {
         "message": "Sonar:"
+    },
+    "initialSetupSensorOpticalflow": {
+        "message": "Flux òptic:"
     },
     "initialSetupSensorRadar": {
         "message": "Radar:"
@@ -1333,6 +1336,24 @@
     "configurationMagDeclinationHelp": {
         "message": "La declinació magnètica és l'angle entre el nord magnètic i el nord veritable. És diferent per a cada lloc de la terra. Podeu trobar la declinació de la vostra ubicació a Internet"
     },
+    "configurationRangefinder": {
+        "message": "$t(initialSetupSensorSonar.message)"
+    },
+    "configurationRangefinderHelp": {
+        "message": "Activa el telèmetre per mesurar la distància a terra en cm"
+    },
+    "configurationRangefinderType": {
+        "message": "Tipus"
+    },
+    "configurationOpticalflow": {
+        "message": "$t(initialSetupSensorOpticalflow.message)"
+    },
+    "configurationOpticalflowHelp": {
+        "message": "Activa el sensor de flux òptic"
+    },
+    "configurationOpticalflowType": {
+        "message": "$t(configurationRangefinderType.message)"
+    },
     "configurationBoardAlignment": {
         "message": "Alineació de la placa"
     },
@@ -1668,6 +1689,9 @@
     },
     "portsSerialRx": {
         "message": "Rx sèrie"
+    },
+    "portsSerialRxHelp": {
+        "message": "Activa o desactiva el receptor sèrie de control remot (RX) a l'UART especificat. Només es permet un."
     },
     "portsSensorIn": {
         "message": "Entrada de Sensor"

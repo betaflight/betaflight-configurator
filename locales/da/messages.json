@@ -868,11 +868,11 @@
     },
     "initialSetupNotInBuild": {
         "message": "Ikke inkluderet i firmware build",
-        "description": "Message that pops up when hardware support not are supported in Build"
+        "description": "Message that pops up when hardware support is not included in build"
     },
     "initialSetupNotDetected": {
-        "message": "Ikke fundet",
-        "description": "Message that pops up when hardware are not detected"
+        "message": "Ikke detekteret eller deaktiveret",
+        "description": "Message that pops up when hardware is not detected or disabled"
     },
     "initialSetupRSSIValue": {
         "message": "$1 dBm"
@@ -900,6 +900,9 @@
     },
     "initialSetupSensorSonar": {
         "message": "Sonar:"
+    },
+    "initialSetupSensorOpticalflow": {
+        "message": "Optisk sensor:"
     },
     "initialSetupSensorRadar": {
         "message": "Radar:"
@@ -1329,6 +1332,24 @@
     "configurationMagDeclinationHelp": {
         "message": "Den magnetiske afvigelse er den lokale afvigelse der er mellem den nordretning, som et magnetkompas udpeger, og retningen til jordens geografiske nordpol eller også sagt som forskellen mellem magnetisk nord og ægte nord. Det er forskelligt for hver placering på jorden. Du kan finde den magnetiske afvigelse for din placering på internettet"
     },
+    "configurationRangefinder": {
+        "message": "$t(initialSetupSensorSonar.message)"
+    },
+    "configurationRangefinderHelp": {
+        "message": "Aktivér afstandsmåler for afstanden til jorden i cm"
+    },
+    "configurationRangefinderType": {
+        "message": "Type"
+    },
+    "configurationOpticalflow": {
+        "message": "$t(initialSetupSensorOpticalflow.message)"
+    },
+    "configurationOpticalflowHelp": {
+        "message": "Aktivering af optisk sensor"
+    },
+    "configurationOpticalflowType": {
+        "message": "$t(configurationRangefinderType.message)"
+    },
     "configurationBoardAlignment": {
         "message": "Gyro justering"
     },
@@ -1664,6 +1685,9 @@
     },
     "portsSerialRx": {
         "message": "Seriel Rx"
+    },
+    "portsSerialRxHelp": {
+        "message": "Aktiver eller deaktiver seriel fjernstyrings modtager (Remote Control \/ RX) på angivne UART. Kun én tilladt."
     },
     "portsSensorIn": {
         "message": "Sensor input protokol"
@@ -2369,6 +2393,10 @@
     "auxiliaryHelpMode_AIRMODE": {
         "message": "AirMode tilstand giver mulighed for at opretholde fartøjets stabilitet ved lav gas. Se venligst <a href=\"https:\/\/betaflight.com\/docs\/development\/modes#airmode\" target=\"_blank\" rel=\"noopener noreferrer\">AirMode<\/a> på Betaflight.com.",
         "description": "Help text to AIRMODE mode"
+    },
+    "auxiliaryHelpMode_ALTHOLD": {
+        "message": "<a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/position-hold-v4-6#altitude-hold\" target=\"_blank\" rel=\"noopener noreferrer\">Højde Hold<\/a> regulerer aktivt flyets højde ved hjælp af eksterne sensorer kombineret med Vinkel Mode (Stabil tilstand).",
+        "description": "Help text for ALTITUDE HOLD mode"
     },
     "auxiliaryHelpMode_BEEPER": {
         "message": "Aktiver bippen - nyttigt til at lokalisere en styrtet drone",

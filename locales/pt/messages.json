@@ -864,11 +864,7 @@
     },
     "initialSetupNotInBuild": {
         "message": "Não incluído na compilação",
-        "description": "Message that pops up when hardware support not are supported in Build"
-    },
-    "initialSetupNotDetected": {
-        "message": "Não detetado",
-        "description": "Message that pops up when hardware are not detected"
+        "description": "Message that pops up when hardware support is not included in build"
     },
     "initialSetupRSSIValue": {
         "message": "$1 dBm"
@@ -1660,6 +1656,9 @@
     },
     "portsSerialRx": {
         "message": "Serial Rx"
+    },
+    "portsSerialRxHelp": {
+        "message": "Ativa ou desativa o Receptor de série de Controlo Remoto (RX) na UART especificada. Apenas um é permitido."
     },
     "portsSensorIn": {
         "message": "Entrada de sensor"
