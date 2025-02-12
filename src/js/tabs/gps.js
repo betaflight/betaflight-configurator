@@ -314,6 +314,33 @@ gps.initialize = async function (callback) {
             }
         }
 
+        function getPositionalDopQuality(positionalDop) {
+            // See https://en.wikipedia.org/wiki/Dilution_of_precision_(navigation)
+            let qualityColor;
+            let stars;
+            if (positionalDop < 1) {
+                qualityColor = "ideal"; // blue
+                stars = "★★★★★";
+            } else if (positionalDop < 2) {
+                qualityColor = "excellent"; // green
+                stars = "★★★★☆";
+            } else if (positionalDop < 5) {
+                qualityColor = "good"; // orange
+                stars = "★★★☆☆";
+            } else if (positionalDop < 10) {
+                qualityColor = "moderate"; // yellow
+                stars = "★★☆☆☆";
+            } else if (positionalDop < 20) {
+                qualityColor = "fair"; // red
+                stars = "★☆☆☆☆";
+            } else {
+                qualityColor = "poor"; // grey
+                stars = "☆☆☆☆☆";
+            }
+
+            return { qualityColor, stars };
+        }
+
         function update_ui() {
             const lat = FC.GPS_DATA.lat / 10000000;
             const lon = FC.GPS_DATA.lon / 10000000;
@@ -343,8 +370,12 @@ gps.initialize = async function (callback) {
             $(".GPS_info td.distToHome").text(`${FC.GPS_DATA.distanceToHome} m`);
 
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
-                const positionalDop = FC.GPS_DATA.positionalDop / 100;
-                $(".GPS_info td.positionalDop").text(`${positionalDop.toFixed(2)}`);
+                const positionalDop = (FC.GPS_DATA.positionalDop / 100).toFixed(2);
+                const { qualityColor, stars } = getPositionalDopQuality(positionalDop);
+                const pdopHtml = `${stars} <span class="colorToggle ${qualityColor}">${positionalDop}</span>`;
+
+                $(".GPS_info td.positionalDop").html(pdopHtml);
+
                 if (hasMag) {
                     $(".GPS_info td.magDeclination").text(
                         `${FC.COMPASS_CONFIG.mag_declination.toFixed(1)} ${gpsUnitText}`,

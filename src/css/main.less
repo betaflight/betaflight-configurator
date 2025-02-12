@@ -1512,6 +1512,31 @@ table {
     &.ready {
         background-color: var(--success-500);
     }
+    &.ideal {
+        // should be blue
+        background-color: blue;
+    }
+    &.excellent {
+        // should be green
+        background-color: var(--success-500);
+    }
+    &.good {
+        // should be orange
+        background-color: var(--warning-500);
+    }
+    &.moderate {
+        // should be yellow
+        background-color: var(--primary-500);
+        color: black;
+    }
+    &.fair {
+        // should be red
+        background-color: var(--error-500);
+    }
+    &.poor {
+        // should be gray
+        background-color: var(--surface-500);
+    }
 }
 .buildInfoBtn {
     position: relative;
