@@ -2962,6 +2962,10 @@
     "gpsPositionalDop": {
         "message": "Positional DOP:"
     },
+    "gpsMagneticDeclination": {
+        "message": "$t(configurationMagDeclination):",
+        "description": "Do not translate"
+    },
     "gpsSignalStrHead": {
         "message": "GPS Signal Strength"
     },
