@@ -812,7 +812,15 @@ motors.initialize = async function (callback) {
             $("div.checkboxDshotBidir").toggle(digitalProtocolConfigured);
             $("div.motorPoles").toggle(protocolConfigured && rpmFeaturesVisible);
 
-            $(".escMotorStop").toggle(protocolConfigured);
+            $(".escMotorStop")
+                .toggle(protocolConfigured)
+                .find("input#feature4")
+                .prop(
+                    "checked",
+                    FC.FEATURE_CONFIG.features.isEnabled("MOTOR_STOP") &&
+                        !FC.FEATURE_CONFIG.features.isEnabled("AIRMODE"),
+                )
+                .attr("disabled", FC.FEATURE_CONFIG.features.isEnabled("AIRMODE"));
 
             $("#escProtocolDisabled").toggle(!protocolConfigured);
 

@@ -11,7 +11,7 @@ const Features = function (config) {
         { bit: 0, group: "rxMode", mode: "select", name: "RX_PPM" },
         { bit: 2, group: "other", name: "INFLIGHT_ACC_CAL" },
         { bit: 3, group: "rxMode", mode: "select", name: "RX_SERIAL" },
-        { bit: 4, group: "escMotorStop", name: "MOTOR_STOP" },
+        { bit: 4, group: "escMotorStop", name: "MOTOR_STOP", haveTip: true },
         { bit: 5, group: "other", name: "SERVO_TILT", haveTip: true, dependsOn: "SERVOS" },
         { bit: 6, group: "other", name: "SOFTSERIAL", haveTip: true },
         { bit: 7, group: "other", name: "GPS", haveTip: true, dependsOn: "GPS" },
