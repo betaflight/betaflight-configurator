@@ -12,7 +12,7 @@ export function updateTabList(features) {
         isExpertModeEnabled && FC.CONFIG?.buildOptions?.includes("USE_SERVOS"),
     );
 
-    $("#tabs ul.mode-connected li.tab_gps").toggle(features.isEnabled("GPS"));
+    $("#tabs ul.mode-connected li.tab_gps").toggle(isExpertModeEnabled && FC.CONFIG?.buildOptions?.includes("USE_GPS"));
     $("#tabs ul.mode-connected li.tab_led_strip").toggle(features.isEnabled("LED_STRIP"));
     $("#tabs ul.mode-connected li.tab_transponder").toggle(features.isEnabled("TRANSPONDER"));
     $("#tabs ul.mode-connected li.tab_osd").toggle(features.isEnabled("OSD"));
