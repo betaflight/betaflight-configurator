@@ -23,9 +23,11 @@ const VirtualFC = {
         virtualFC.CONFIG.buildInfo = "now";
         virtualFC.CONFIG.buildOptions = [
             "USE_ESC_SENSOR",
+            "USE_DASHBOARD",
             "USE_GPS",
             "USE_LED_STRIP",
             "USE_OSD",
+            "USE_SOFTSERIAL",
             "USE_SONAR",
             "USE_TELEMETRY",
             "USE_SERVOS",
