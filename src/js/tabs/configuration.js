@@ -397,23 +397,11 @@ configuration.initialize = function (callback) {
 
         // UI hooks
 
-        function checkUpdateGpsControls() {
-            if (FC.FEATURE_CONFIG.features.isEnabled("GPS")) {
-                $(".gpsSettings").show();
-            } else {
-                $(".gpsSettings").hide();
-            }
-        }
-
         $("input.feature", features_e).change(function () {
             const element = $(this);
 
             FC.FEATURE_CONFIG.features.updateData(element);
             updateTabList(FC.FEATURE_CONFIG.features);
-
-            if (element.attr("name") === "GPS") {
-                checkUpdateGpsControls();
-            }
         });
 
         $('input[id="accHardwareSwitch"]')
@@ -436,8 +424,6 @@ configuration.initialize = function (callback) {
             const element = $(this);
             FC.BEEPER_CONFIG.beepers.updateData(element);
         });
-
-        checkUpdateGpsControls();
 
         $("a.save").on("click", function () {
             // gather data that doesn't have automatic change event bound
