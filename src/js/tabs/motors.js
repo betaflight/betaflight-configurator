@@ -820,7 +820,9 @@ motors.initialize = async function (callback) {
                     FC.FEATURE_CONFIG.features.isEnabled("MOTOR_STOP") &&
                         !FC.FEATURE_CONFIG.features.isEnabled("AIRMODE"),
                 )
-                .attr("disabled", FC.FEATURE_CONFIG.features.isEnabled("AIRMODE"));
+                .attr("disabled", FC.FEATURE_CONFIG.features.isEnabled("AIRMODE"))
+                .parent()
+                .toggleClass("switchery-disabled", FC.FEATURE_CONFIG.features.isEnabled("AIRMODE"));
 
             $("#escProtocolDisabled").toggle(!protocolConfigured);
 
