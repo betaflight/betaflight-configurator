@@ -80,20 +80,12 @@ gps.initialize = async function (callback) {
 
         FC.FEATURE_CONFIG.features.generateElements(features_e);
 
-        const checkUpdateGpsControls = () => $(".gpsSettings").toggle(FC.FEATURE_CONFIG.features.isEnabled("GPS"));
-
         $("input.feature", features_e).on("change", function () {
             const element = $(this);
 
             FC.FEATURE_CONFIG.features.updateData(element);
             updateTabList(FC.FEATURE_CONFIG.features);
-
-            if (element.attr("name") === "GPS") {
-                checkUpdateGpsControls();
-            }
         });
-
-        checkUpdateGpsControls();
 
         // generate GPS
         const gpsProtocols = sensorTypes().gps.elements;

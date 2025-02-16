@@ -14,7 +14,7 @@ const Features = function (config) {
         { bit: 4, group: "escMotorStop", name: "MOTOR_STOP", haveTip: true },
         { bit: 5, group: "other", name: "SERVO_TILT", haveTip: true, dependsOn: "SERVOS" },
         { bit: 6, group: "other", name: "SOFTSERIAL", haveTip: true },
-        { bit: 7, group: "other", name: "GPS", haveTip: true, dependsOn: "GPS" },
+        { bit: 7, group: "gps", name: "GPS", dependsOn: "GPS" },
         { bit: 9, group: "other", name: "SONAR", haveTip: true, dependsOn: "RANGEFINDER" },
         { bit: 10, group: "telemetry", name: "TELEMETRY", haveTip: true, dependsOn: "TELEMETRY" },
         { bit: 12, group: "3D", name: "3D", haveTip: true },
