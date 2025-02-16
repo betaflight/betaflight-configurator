@@ -26,6 +26,7 @@ options.initialize = function (callback) {
         TABS.options.initShowAllSerialDevices();
         TABS.options.initShowVirtualMode();
         TABS.options.initUseManualConnection();
+        TABS.options.initLegacyRendering3DModel();
         TABS.options.initCordovaForceComputerUI();
         TABS.options.initDarkTheme();
         TABS.options.initShowDevToolsOnStartup();
@@ -165,6 +166,15 @@ options.initUseManualConnection = function () {
 
 options.initCordovaForceComputerUI = function () {
     $("div.cordovaForceComputerUI").hide();
+};
+
+options.initLegacyRendering3DModel = function () {
+    const enableLegacyRendering3DModelElement = $("div.useLegacyRenderingModel input");
+    const result = getConfig("useLegacyRenderingModel");
+    enableLegacyRendering3DModelElement.prop("checked", !!result.useLegacyRenderingModel).on("change", () => {
+        const checked = enableLegacyRendering3DModelElement.is(":checked");
+        setConfig({ useLegacyRenderingModel: checked });
+    });
 };
 
 options.initDarkTheme = function () {
