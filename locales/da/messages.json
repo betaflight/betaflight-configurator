@@ -1032,6 +1032,14 @@
         "message": "Crash Flip Switch er aktiv",
         "description": "Message that pops to describe the CRASHFLIP arming disable flag"
     },
+    "initialSetupArmingDisableFlagsTooltipALTHOLD": {
+        "message": "Fast Højde er aktiv",
+        "description": "Message that pops up to describe the ALTHOLD arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipPOSHOLD": {
+        "message": "Fast Højde er aktiv",
+        "description": "Message that pops up to describe the POSHOLD arming disable flag"
+    },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "Et af de øvrige deaktiveringsflag er aktivt under tilkobling",
         "description": "Message that pops up to describe the ARM_SWITCH arming disable flag"
@@ -1179,6 +1187,9 @@
     "featureMOTOR_STOP": {
         "message": "Rotér ikke motorerer, når aktiveret"
     },
+    "featureMOTOR_STOPTip": {
+        "message": "Denne funktion er deaktiveret, når AIRMODE er aktiveret"
+    },
     "featureSERVO_TILT": {
         "message": "Servo-gimbal"
     },
@@ -1195,7 +1206,8 @@
         "message": "Aktiverer GPS til navigation"
     },
     "featureGPSTip": {
-        "message": "Her tilvælges GPS til navigation, men du skal først konfigurere en port til GPS i fanen Porte, før aktiveringen kan gemmes."
+        "message": "Aktiver \/ deaktiver GPS. Hvis GPS ikke kan aktiveres, kontroller at GPS er tildelt en port i fanen Porte",
+        "description": "Message that pops up to describe the GPS feature"
     },
     "featureSONAR": {
         "message": "Sonar afstandsmåler"
@@ -1255,7 +1267,8 @@
         "message": "Aktiver Airmode permanent"
     },
     "featureAIRMODETip": {
-        "message": "$t(auxiliaryHelpMode_AIRMODE.message)"
+        "message": "$t(auxiliaryHelpMode_AIRMODE.message)",
+        "description": "Don't translate!!!"
     },
     "featureRX_SPI": {
         "message": "SPI Rx (f.eks. indbygget Rx)"
@@ -1333,7 +1346,8 @@
         "message": "Den magnetiske afvigelse er den lokale afvigelse der er mellem den nordretning, som et magnetkompas udpeger, og retningen til jordens geografiske nordpol eller også sagt som forskellen mellem magnetisk nord og ægte nord. Det er forskelligt for hver placering på jorden. Du kan finde den magnetiske afvigelse for din placering på internettet"
     },
     "configurationRangefinder": {
-        "message": "$t(initialSetupSensorSonar.message)"
+        "message": "$t(initialSetupSensorSonar.message)",
+        "description": "Don't translate!!!"
     },
     "configurationRangefinderHelp": {
         "message": "Aktivér afstandsmåler for afstanden til jorden i cm"
@@ -1342,13 +1356,15 @@
         "message": "Type"
     },
     "configurationOpticalflow": {
-        "message": "$t(initialSetupSensorOpticalflow.message)"
+        "message": "$t(initialSetupSensorOpticalflow.message)",
+        "description": "Don't translate!!!"
     },
     "configurationOpticalflowHelp": {
         "message": "Aktivering af optisk sensor"
     },
     "configurationOpticalflowType": {
-        "message": "$t(configurationRangefinderType.message)"
+        "message": "$t(configurationRangefinderType.message)",
+        "description": "Don't translate!!!"
     },
     "configurationBoardAlignment": {
         "message": "Gyro justering"
@@ -1369,13 +1385,16 @@
         "message": "Gyro indstilling er orienteringen af gyro retning på FC. Start indstiling er normalt korrekt, men hvis du har en brugerdefineret build eller en FC med en anden gyro retning, det kan være nødvendigt at ændre denne indstilling."
     },
     "configurationGyroAlignmentRoll": {
-        "message": "$t(configurationBoardAlignmentRoll.message)"
+        "message": "$t(configurationBoardAlignmentRoll.message)",
+        "description": "Don't translate!!!"
     },
     "configurationGyroAlignmentPitch": {
-        "message": "$t(configurationBoardAlignmentPitch.message)"
+        "message": "$t(configurationBoardAlignmentPitch.message)",
+        "description": "Don't translate!!!"
     },
     "configurationGyroAlignmentYaw": {
-        "message": "$t(configurationBoardAlignmentYaw.message)"
+        "message": "$t(configurationBoardAlignmentYaw.message)",
+        "description": "Don't translate!!!"
     },
     "configurationMagAlignment": {
         "message": "Kompas justering"
@@ -1384,13 +1403,16 @@
         "message": "Relativ rotation i grader, for at tillade montering sidelæns \/ på hovedet \/ roteret osv. Når du anvender eksterne sensorer, skal du bruge sensorindstillingerne (Gyro, Acc, Mag) til at definere sensorposition uafhængigt af montering. "
     },
     "configurationMagAlignmentRoll": {
-        "message": "$t(configurationBoardAlignmentRoll.message)"
+        "message": "$t(configurationBoardAlignmentRoll.message)",
+        "description": "Don't translate!!!"
     },
     "configurationMagAlignmentPitch": {
-        "message": "$t(configurationBoardAlignmentPitch.message)"
+        "message": "$t(configurationBoardAlignmentPitch.message)",
+        "description": "Don't translate!!!"
     },
     "configurationMagAlignmentYaw": {
-        "message": "$t(configurationBoardAlignmentYaw.message)"
+        "message": "$t(configurationBoardAlignmentYaw.message)",
+        "description": "Don't translate!!!"
     },
     "configurationSensorAlignmentGyro": {
         "message": "GYRO-justering"
@@ -2868,6 +2890,10 @@
     },
     "gpsPositionalDop": {
         "message": "Position DOP:"
+    },
+    "gpsMagneticDeclination": {
+        "message": "$t(configurationMagDeclination):",
+        "description": "Do not translate"
     },
     "gpsSignalStrHead": {
         "message": "GPS signalstyrke"

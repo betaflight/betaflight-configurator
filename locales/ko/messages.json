@@ -1032,6 +1032,14 @@
         "message": "크래쉬 플립 스위치가 활성화됨",
         "description": "Message that pops to describe the CRASHFLIP arming disable flag"
     },
+    "initialSetupArmingDisableFlagsTooltipALTHOLD": {
+        "message": "고도 유지가 활성화됨",
+        "description": "Message that pops up to describe the ALTHOLD arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipPOSHOLD": {
+        "message": "포지션 유지가 활성화됨",
+        "description": "Message that pops up to describe the POSHOLD arming disable flag"
+    },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "다른 디스암 플래그 중 하나가 아밍시 활성화 중입니다",
         "description": "Message that pops up to describe the ARM_SWITCH arming disable flag"
@@ -1179,6 +1187,9 @@
     "featureMOTOR_STOP": {
         "message": "아밍시 모터 회전 안함"
     },
+    "featureMOTOR_STOPTip": {
+        "message": "이 기능은 에어모드가 활성화되면 사용불가합니다"
+    },
     "featureSERVO_TILT": {
         "message": "서보 짐벌"
     },
@@ -1195,7 +1206,8 @@
         "message": "네비게이션과 텔레메트리를 위한 GPS"
     },
     "featureGPSTip": {
-        "message": "먼저 포트 시나리오를 환경설정하십시오."
+        "message": "GPS 데이터 활성 \/ 비활성. GPS를 사용할 수 없다면 포트 탭에서 포트가 GPS에 잘 배정되었는지 확인하세요",
+        "description": "Message that pops up to describe the GPS feature"
     },
     "featureSONAR": {
         "message": "초음파센서"
@@ -1255,7 +1267,8 @@
         "message": "에어모드 영구 사용"
     },
     "featureAIRMODETip": {
-        "message": "$t(auxiliaryHelpMode_AIRMODE.message)"
+        "message": "$t(auxiliaryHelpMode_AIRMODE.message)",
+        "description": "Don't translate!!!"
     },
     "featureRX_SPI": {
         "message": "SPI Rx (예. 빌드인 Rx)"
@@ -1333,7 +1346,8 @@
         "message": "자기 편위는 자기 북쪽과 진 북쪽 사이의 각도입니다. 지구상의 모든 위치에 따라 다릅니다. 인터넷에서 자신의 위치에 대한 편위를 찾을 수 있습니다"
     },
     "configurationRangefinder": {
-        "message": "$t(initialSetupSensorSonar.message)"
+        "message": "$t(initialSetupSensorSonar.message)",
+        "description": "Don't translate!!!"
     },
     "configurationRangefinderHelp": {
         "message": "레인지파인더를 활성화해서 cm 단위로 지면까지의 거리를 측정할 수 있습니다"
@@ -1342,13 +1356,15 @@
         "message": "형식"
     },
     "configurationOpticalflow": {
-        "message": "$t(initialSetupSensorOpticalflow.message)"
+        "message": "$t(initialSetupSensorOpticalflow.message)",
+        "description": "Don't translate!!!"
     },
     "configurationOpticalflowHelp": {
         "message": "옵티컬 플로우 센서 활성화"
     },
     "configurationOpticalflowType": {
-        "message": "$t(configurationRangefinderType.message)"
+        "message": "$t(configurationRangefinderType.message)",
+        "description": "Don't translate!!!"
     },
     "configurationBoardAlignment": {
         "message": "보드 정렬"
@@ -1369,13 +1385,16 @@
         "message": "자이로 정렬은 비행 컨트롤러 보드에 있는 자이로 센서의 방향입니다. 기본값은 일반적으로 맞지만, 맞춤형 빌드나 자이로 방향이 다른 비행 컨트롤러가 있는 경우 이 설정을 조정해야 할 수도 있습니다."
     },
     "configurationGyroAlignmentRoll": {
-        "message": "$t(configurationBoardAlignmentRoll.message)"
+        "message": "$t(configurationBoardAlignmentRoll.message)",
+        "description": "Don't translate!!!"
     },
     "configurationGyroAlignmentPitch": {
-        "message": "$t(configurationBoardAlignmentPitch.message)"
+        "message": "$t(configurationBoardAlignmentPitch.message)",
+        "description": "Don't translate!!!"
     },
     "configurationGyroAlignmentYaw": {
-        "message": "$t(configurationBoardAlignmentYaw.message)"
+        "message": "$t(configurationBoardAlignmentYaw.message)",
+        "description": "Don't translate!!!"
     },
     "configurationMagAlignment": {
         "message": "자력계 정렬"
@@ -1384,13 +1403,16 @@
         "message": "임의의 각도로 보드를 회전시켜 옆으로\/뒤로\/회전하여 장착할 수 있습니다. 외부 센서를 실행할 때는 센서 정렬(자이로, Acc, Mag)을 사용하여 보드 방향과 무관하게 센서 위치를 정의합니다."
     },
     "configurationMagAlignmentRoll": {
-        "message": "$t(configurationBoardAlignmentRoll.message)"
+        "message": "$t(configurationBoardAlignmentRoll.message)",
+        "description": "Don't translate!!!"
     },
     "configurationMagAlignmentPitch": {
-        "message": "$t(configurationBoardAlignmentPitch.message)"
+        "message": "$t(configurationBoardAlignmentPitch.message)",
+        "description": "Don't translate!!!"
     },
     "configurationMagAlignmentYaw": {
-        "message": "$t(configurationBoardAlignmentYaw.message)"
+        "message": "$t(configurationBoardAlignmentYaw.message)",
+        "description": "Don't translate!!!"
     },
     "configurationSensorAlignmentGyro": {
         "message": "자이로 정렬"
@@ -2868,6 +2890,10 @@
     },
     "gpsPositionalDop": {
         "message": "위치 DOP:"
+    },
+    "gpsMagneticDeclination": {
+        "message": "$t(configurationMagDeclination):",
+        "description": "Do not translate"
     },
     "gpsSignalStrHead": {
         "message": "GPS 신호 강도"

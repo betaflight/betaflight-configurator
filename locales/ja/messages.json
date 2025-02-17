@@ -1183,9 +1183,6 @@
     "featureGPS": {
         "message": "ナビゲーションとテレメトリー用のGPS"
     },
-    "featureGPSTip": {
-        "message": "最初にポートの設定をしてください。"
-    },
     "featureSONAR": {
         "message": "ソナー 超音波距離センサー"
     },
@@ -1244,7 +1241,8 @@
         "message": "エアモードの常時有効化"
     },
     "featureAIRMODETip": {
-        "message": "$t(auxiliaryHelpMode_AIRMODE.message)"
+        "message": "$t(auxiliaryHelpMode_AIRMODE.message)",
+        "description": "Don't translate!!!"
     },
     "featureRX_SPI": {
         "message": "SPI受信機 (例: オンボード受信機)"
@@ -1312,9 +1310,6 @@
     "configurationMagAlignmentHelp": {
         "message": "コンパス アライメントは、FCボード上の磁気センサーの向きを指します。通常はデフォルト設定で正しい場合がほとんどですが、カスタムビルドや異なる向きの磁気センサーを持つフライトコントローラを使用している場合、この設定を調整する必要があるかもしれません。"
     },
-    "configurationMagDeclination": {
-        "message": "コンパス偏角"
-    },
     "configurationMagDeclinationInput": {
         "message": "偏角"
     },
@@ -1340,13 +1335,16 @@
         "message": "ジャイロ アライメントは、FCボード上のジャイロセンサーの向きを指します。通常はデフォルト設定で正しい場合がほとんどですが、カスタムビルドや異なる向きのジャイロセンサーを持つフライトコントローラを使用している場合、この設定を調整する必要があるかもしれません。"
     },
     "configurationGyroAlignmentRoll": {
-        "message": "$t(configurationBoardAlignmentRoll.message)"
+        "message": "$t(configurationBoardAlignmentRoll.message)",
+        "description": "Don't translate!!!"
     },
     "configurationGyroAlignmentPitch": {
-        "message": "$t(configurationBoardAlignmentPitch.message)"
+        "message": "$t(configurationBoardAlignmentPitch.message)",
+        "description": "Don't translate!!!"
     },
     "configurationGyroAlignmentYaw": {
-        "message": "$t(configurationBoardAlignmentYaw.message)"
+        "message": "$t(configurationBoardAlignmentYaw.message)",
+        "description": "Don't translate!!!"
     },
     "configurationMagAlignment": {
         "message": "コンパス アライメント"
@@ -1355,13 +1353,16 @@
         "message": "任意のFCボード回転角度は、ボードを横向き \/ 逆さま \/ または回転させた状態で取り付けを可能にします。外部センサーを使用する場合は、センサーの位置をFCボードの向きとは独立して定義するために、センサーアライメント (ジャイロ、加速度センサー、コンパス) を設定してください。 "
     },
     "configurationMagAlignmentRoll": {
-        "message": "$t(configurationBoardAlignmentRoll.message)"
+        "message": "$t(configurationBoardAlignmentRoll.message)",
+        "description": "Don't translate!!!"
     },
     "configurationMagAlignmentPitch": {
-        "message": "$t(configurationBoardAlignmentPitch.message)"
+        "message": "$t(configurationBoardAlignmentPitch.message)",
+        "description": "Don't translate!!!"
     },
     "configurationMagAlignmentYaw": {
-        "message": "$t(configurationBoardAlignmentYaw.message)"
+        "message": "$t(configurationBoardAlignmentYaw.message)",
+        "description": "Don't translate!!!"
     },
     "configurationSensorAlignmentGyro": {
         "message": "ジャイロ アライメント"

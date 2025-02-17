@@ -837,9 +837,6 @@
     "featureGPS": {
         "message": "GPS voor navigatie en telemetrie"
     },
-    "featureGPSTip": {
-        "message": "Port scenario eerst configureren"
-    },
     "featureSONAR": {
         "message": "Sonar"
     },

@@ -866,6 +866,10 @@
         "message": "No incluido en la compilación",
         "description": "Message that pops up when hardware support is not included in build"
     },
+    "initialSetupNotDetected": {
+        "message": "No detectado o desactivado",
+        "description": "Message that pops up when hardware is not detected or disabled"
+    },
     "initialSetupRSSIValue": {
         "message": "$1 dBm"
     },
@@ -892,6 +896,9 @@
     },
     "initialSetupSensorSonar": {
         "message": "Sonar:"
+    },
+    "initialSetupSensorOpticalflow": {
+        "message": "Flujo óptico:"
     },
     "initialSetupSensorRadar": {
         "message": "Radar:"
@@ -1183,9 +1190,6 @@
     "featureGPS": {
         "message": "GPS para navegación y telemetría"
     },
-    "featureGPSTip": {
-        "message": "Configurar primero el escenario de puertos"
-    },
     "featureSONAR": {
         "message": "Sonar"
     },
@@ -1244,7 +1248,8 @@
         "message": "Activar Airmode permanentemente"
     },
     "featureAIRMODETip": {
-        "message": "$t(auxiliaryHelpMode_AIRMODE.message)"
+        "message": "$t(auxiliaryHelpMode_AIRMODE.message)",
+        "description": "Don't translate!!!"
     },
     "featureRX_SPI": {
         "message": "SPI Rx (ej. Rx incorporado)"
@@ -1313,13 +1318,34 @@
         "message": "La alineación del magnetómetro es la orientación del magnetómetro en la placa del controlador de vuelo. Generalmente el valor por defecto es correcto, pero si tienes una versión personalizada o un controlador de vuelo con una orientación diferente del magnetómetro, puede que necesites ajustar esta configuración."
     },
     "configurationMagDeclination": {
-        "message": "Declinación Magnetómetro"
+        "message": "Declinación magnética"
     },
     "configurationMagDeclinationInput": {
         "message": "Grados de declinación"
     },
     "configurationMagDeclinationHelp": {
         "message": "La declinación magnética es el ángulo entre el norte magnético y el norte verdadero. Es diferente para cada ubicación en la Tierra. Puedes encontrar la declinación de tu ubicación en Internet"
+    },
+    "configurationRangefinder": {
+        "message": "$t(initialSetupSensorSonar.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationRangefinderHelp": {
+        "message": "Activa el telémetro para medir distancia al suelo en cm"
+    },
+    "configurationRangefinderType": {
+        "message": "Tipo"
+    },
+    "configurationOpticalflow": {
+        "message": "$t(initialSetupSensorOpticalflow.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationOpticalflowHelp": {
+        "message": "Activar sensor de flujo óptico"
+    },
+    "configurationOpticalflowType": {
+        "message": "$t(configurationRangefinderType.message)",
+        "description": "Don't translate!!!"
     },
     "configurationBoardAlignment": {
         "message": "Alineación de la Placa"
@@ -1340,13 +1366,16 @@
         "message": "La alineación del giro es la orientación del giro en la placa del controlador de vuelo. Generalmente el valor por defecto es correcto, pero si tienes una versión personalizada o un controlador de vuelo con una orientación diferente del giro, puede que necesites ajustar esta configuración."
     },
     "configurationGyroAlignmentRoll": {
-        "message": "$t(configurationBoardAlignmentRoll.message)"
+        "message": "$t(configurationBoardAlignmentRoll.message)",
+        "description": "Don't translate!!!"
     },
     "configurationGyroAlignmentPitch": {
-        "message": "$t(configurationBoardAlignmentPitch.message)"
+        "message": "$t(configurationBoardAlignmentPitch.message)",
+        "description": "Don't translate!!!"
     },
     "configurationGyroAlignmentYaw": {
-        "message": "$t(configurationBoardAlignmentYaw.message)"
+        "message": "$t(configurationBoardAlignmentYaw.message)",
+        "description": "Don't translate!!!"
     },
     "configurationMagAlignment": {
         "message": "Alineación de Magnetómetro"
@@ -1355,13 +1384,16 @@
         "message": "Rotación arbitraria de la placa en grados, para permitir montaje de lado \/ boca abajo \/ rotada etc. Al ejecutar sensores externos, usa la alineación del sensor (Giro, Acc, Mag) para definir la posición del sensor independientemente de la orientación de la placa. "
     },
     "configurationMagAlignmentRoll": {
-        "message": "$t(configurationBoardAlignmentRoll.message)"
+        "message": "$t(configurationBoardAlignmentRoll.message)",
+        "description": "Don't translate!!!"
     },
     "configurationMagAlignmentPitch": {
-        "message": "$t(configurationBoardAlignmentPitch.message)"
+        "message": "$t(configurationBoardAlignmentPitch.message)",
+        "description": "Don't translate!!!"
     },
     "configurationMagAlignmentYaw": {
-        "message": "$t(configurationBoardAlignmentYaw.message)"
+        "message": "$t(configurationBoardAlignmentYaw.message)",
+        "description": "Don't translate!!!"
     },
     "configurationSensorAlignmentGyro": {
         "message": "Alineación GIRO"
@@ -1656,6 +1688,9 @@
     },
     "portsSerialRx": {
         "message": "Rx Serie"
+    },
+    "portsSerialRxHelp": {
+        "message": "Activar o desactivar el receptor serie de control remoto (RX) en el UART especificado. Sólo uno permitido."
     },
     "portsSensorIn": {
         "message": "Entrada de Sensores"
@@ -2836,6 +2871,10 @@
     },
     "gpsPositionalDop": {
         "message": "DOP posicional:"
+    },
+    "gpsMagneticDeclination": {
+        "message": "$t(configurationMagDeclination):",
+        "description": "Do not translate"
     },
     "gpsSignalStrHead": {
         "message": "Fuerza Señal GPS"

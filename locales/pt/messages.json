@@ -866,6 +866,10 @@
         "message": "Não incluído na compilação",
         "description": "Message that pops up when hardware support is not included in build"
     },
+    "initialSetupNotDetected": {
+        "message": "Não detectado ou desativado",
+        "description": "Message that pops up when hardware is not detected or disabled"
+    },
     "initialSetupRSSIValue": {
         "message": "$1 dBm"
     },
@@ -892,6 +896,9 @@
     },
     "initialSetupSensorSonar": {
         "message": "Sonar:"
+    },
+    "initialSetupSensorOpticalflow": {
+        "message": "Fluxo Ótico:"
     },
     "initialSetupSensorRadar": {
         "message": "Radar:"
@@ -1020,6 +1027,14 @@
     "initialSetupArmingDisableFlagsTooltipCRASHFLIP": {
         "message": "O Switch Crash Flip está ativo",
         "description": "Message that pops to describe the CRASHFLIP arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipALTHOLD": {
+        "message": "Manter Altitude está ativo",
+        "description": "Message that pops up to describe the ALTHOLD arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipPOSHOLD": {
+        "message": "Manter Posição está ativo",
+        "description": "Message that pops up to describe the POSHOLD arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "Um dos outros indicadores de desarme está ativo quando arma",
@@ -1168,6 +1183,9 @@
     "featureMOTOR_STOP": {
         "message": "Não rodar os motores quando armado"
     },
+    "featureMOTOR_STOPTip": {
+        "message": "Esta funcionalidade está desativada quando o AIRMODE está ativado"
+    },
     "featureSERVO_TILT": {
         "message": "Gimbal do Servo"
     },
@@ -1184,7 +1202,8 @@
         "message": "GPS para navegação e telemetria"
     },
     "featureGPSTip": {
-        "message": "Configure primeiro o cenário das portas"
+        "message": "Ativar \/ Desativar dados do GPS. Se o GPS não puder ser ativado, verifique que uma porta está atribuída ao GPS na aba Portas",
+        "description": "Message that pops up to describe the GPS feature"
     },
     "featureSONAR": {
         "message": "Sonar"
@@ -1244,7 +1263,8 @@
         "message": "Ativar permanentemente o Airmode"
     },
     "featureAIRMODETip": {
-        "message": "$t(auxiliaryHelpMode_AIRMODE.message)"
+        "message": "$t(auxiliaryHelpMode_AIRMODE.message)",
+        "description": "Don't translate!!!"
     },
     "featureRX_SPI": {
         "message": "SPI Rx (ex: Rx embutido)"
@@ -1313,13 +1333,34 @@
         "message": "O alinhamento do magnetómetro é a orientação do sensor do magnetómetro na placa da controladora de voo. O pré-definido está habitualmente, mas se tem uma compilação personalizada ou uma controladora de voo com uma orientação de magnetómetro diferente, pode precisar de ajustar esta configuração."
     },
     "configurationMagDeclination": {
-        "message": "Declinação do Magnetómetro"
+        "message": "Declinação Magnética"
     },
     "configurationMagDeclinationInput": {
         "message": "Graus de Declinação"
     },
     "configurationMagDeclinationHelp": {
         "message": "A declinação magnética é o ângulo entre o norte magnético e o norte verdadeiro. É diferente em cada local na Terra. Pode encontrar a declinação da sua localização na internet"
+    },
+    "configurationRangefinder": {
+        "message": "$t(initialSetupSensorSonar.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationRangefinderHelp": {
+        "message": "Habilita o sensor a medir a distância ao solo em cm"
+    },
+    "configurationRangefinderType": {
+        "message": "Tipo"
+    },
+    "configurationOpticalflow": {
+        "message": "$t(initialSetupSensorOpticalflow.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationOpticalflowHelp": {
+        "message": "Ativar sensor de fluxo óptico"
+    },
+    "configurationOpticalflowType": {
+        "message": "$t(configurationRangefinderType.message)",
+        "description": "Don't translate!!!"
     },
     "configurationBoardAlignment": {
         "message": "Alinhamento da Placa"
@@ -1340,13 +1381,16 @@
         "message": "O alinhamento do gyro é a orientação do sensor gyro na placa da controladora de voo. O pré-definido está normalmente correto, mas se tem uma compilação personalizada ou uma controladora de voo com uma orientação gyro diferente, pode precisar de ajustar esta configuração."
     },
     "configurationGyroAlignmentRoll": {
-        "message": "$t(configurationBoardAlignmentRoll.message)"
+        "message": "$t(configurationBoardAlignmentRoll.message)",
+        "description": "Don't translate!!!"
     },
     "configurationGyroAlignmentPitch": {
-        "message": "$t(configurationBoardAlignmentPitch.message)"
+        "message": "$t(configurationBoardAlignmentPitch.message)",
+        "description": "Don't translate!!!"
     },
     "configurationGyroAlignmentYaw": {
-        "message": "$t(configurationBoardAlignmentYaw.message)"
+        "message": "$t(configurationBoardAlignmentYaw.message)",
+        "description": "Don't translate!!!"
     },
     "configurationMagAlignment": {
         "message": "Alinhamento do Magnetómetro"
@@ -1355,13 +1399,16 @@
         "message": "Rotação arbitrária da placa em graus, para permitir que a placa seja montada de lado \/ de cabeça para baixo \/ rodada, etc. Quando usar sensores externos, use o alinhamento dos sensores (Gyro, Accel, Mag) para definir uma posição do sensor independente da orientação da placa. "
     },
     "configurationMagAlignmentRoll": {
-        "message": "$t(configurationBoardAlignmentRoll.message)"
+        "message": "$t(configurationBoardAlignmentRoll.message)",
+        "description": "Don't translate!!!"
     },
     "configurationMagAlignmentPitch": {
-        "message": "$t(configurationBoardAlignmentPitch.message)"
+        "message": "$t(configurationBoardAlignmentPitch.message)",
+        "description": "Don't translate!!!"
     },
     "configurationMagAlignmentYaw": {
-        "message": "$t(configurationBoardAlignmentYaw.message)"
+        "message": "$t(configurationBoardAlignmentYaw.message)",
+        "description": "Don't translate!!!"
     },
     "configurationSensorAlignmentGyro": {
         "message": "Alinhamento do GYRO"
@@ -2839,6 +2886,10 @@
     },
     "gpsPositionalDop": {
         "message": "DOP Posicional:"
+    },
+    "gpsMagneticDeclination": {
+        "message": "$t(configurationMagDeclination):",
+        "description": "Do not translate"
     },
     "gpsSignalStrHead": {
         "message": "Força do Sinal GPS"

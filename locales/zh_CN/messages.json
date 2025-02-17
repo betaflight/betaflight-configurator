@@ -853,9 +853,6 @@
     "featureGPS": {
         "message": "启用 GPS 导航"
     },
-    "featureGPSTip": {
-        "message": "请先设置串口"
-    },
     "featureSONAR": {
         "message": "声呐"
     },

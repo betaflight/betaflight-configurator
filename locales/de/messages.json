@@ -1161,9 +1161,6 @@
     "featureGPS": {
         "message": "GPS für Navigation und Telemetrie"
     },
-    "featureGPSTip": {
-        "message": "Konfiguriere die Ports zuerst"
-    },
     "featureSONAR": {
         "message": "Sonar"
     },

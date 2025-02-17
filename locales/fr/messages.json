@@ -929,9 +929,6 @@
     "featureGPS": {
         "message": "GPS pour navigation et télémétrie"
     },
-    "featureGPSTip": {
-        "message": "Configurer le scénario port d'abord"
-    },
     "featureSONAR": {
         "message": "Sonar"
     },

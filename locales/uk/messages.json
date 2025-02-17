@@ -1190,9 +1190,6 @@
     "featureGPS": {
         "message": "GPS для навігації та телеметрії"
     },
-    "featureGPSTip": {
-        "message": "Спочатку налаштуйте порт"
-    },
     "featureSONAR": {
         "message": "Сонар"
     },
@@ -1251,7 +1248,8 @@
         "message": "Увімкнути AIR режим перманентно"
     },
     "featureAIRMODETip": {
-        "message": "$t(auxiliaryHelpMode_AIRMODE.message)"
+        "message": "$t(auxiliaryHelpMode_AIRMODE.message)",
+        "description": "Don't translate!!!"
     },
     "featureRX_SPI": {
         "message": "SPI Rx (напр., вбудований Rx)"
@@ -1319,9 +1317,6 @@
     "configurationMagAlignmentHelp": {
         "message": "Вирівнювання магнітометра — це орієнтація датчика магнітометра на платі польотного контролера. Значення за замовчуванням зазвичай правильне, але якщо ви маєте користувацьку збірку чи польотний контролер з іншою орієнтацією магнітометра, можливо потрібно буде змінити це налаштування."
     },
-    "configurationMagDeclination": {
-        "message": "Схилення магнітометра"
-    },
     "configurationMagDeclinationInput": {
         "message": "Схилення в градусах"
     },
@@ -1329,7 +1324,8 @@
         "message": "Магнітне схилення — це кут між магнітним і географічним північними полюсами. Воно відрізняється для кожного місця на Землі. Ви можете знайти значення схилення для вашого розташування в інтернеті"
     },
     "configurationRangefinder": {
-        "message": "$t(initialSetupSensorSonar.message)"
+        "message": "$t(initialSetupSensorSonar.message)",
+        "description": "Don't translate!!!"
     },
     "configurationRangefinderHelp": {
         "message": "Увімкнути далекомір для вимірювання відстані до землі в см"
@@ -1338,13 +1334,15 @@
         "message": "Тип"
     },
     "configurationOpticalflow": {
-        "message": "$t(initialSetupSensorOpticalflow.message)"
+        "message": "$t(initialSetupSensorOpticalflow.message)",
+        "description": "Don't translate!!!"
     },
     "configurationOpticalflowHelp": {
         "message": "Увімкнути датчик оптичного потоку"
     },
     "configurationOpticalflowType": {
-        "message": "$t(configurationRangefinderType.message)"
+        "message": "$t(configurationRangefinderType.message)",
+        "description": "Don't translate!!!"
     },
     "configurationBoardAlignment": {
         "message": "Вирівнювання плати"
@@ -1365,13 +1363,16 @@
         "message": "Вирівнювання гіроскопа — це орієнтація датчика гіроскопа на платі польотного контролера. Значення за замовчуванням зазвичай правильне, але якщо ви маєте користувацьку збірку чи польотний контролер з іншою орієнтацією гіроскопа, можливо потрібно буде змінити це налаштування."
     },
     "configurationGyroAlignmentRoll": {
-        "message": "$t(configurationBoardAlignmentRoll.message)"
+        "message": "$t(configurationBoardAlignmentRoll.message)",
+        "description": "Don't translate!!!"
     },
     "configurationGyroAlignmentPitch": {
-        "message": "$t(configurationBoardAlignmentPitch.message)"
+        "message": "$t(configurationBoardAlignmentPitch.message)",
+        "description": "Don't translate!!!"
     },
     "configurationGyroAlignmentYaw": {
-        "message": "$t(configurationBoardAlignmentYaw.message)"
+        "message": "$t(configurationBoardAlignmentYaw.message)",
+        "description": "Don't translate!!!"
     },
     "configurationMagAlignment": {
         "message": "Вирівнювання магнітометра"
@@ -1380,13 +1381,16 @@
         "message": "Довільний поворот плати на кут у градусах дозволяє встановити її боком \/ догори дриґом \/ поверненою. При використанні зовнішніх датчиків, використовуйте корекцію датчиків (гіроскоп, акселерометр, компас) для визначення положення датчиків незалежно від орієнтації плати. "
     },
     "configurationMagAlignmentRoll": {
-        "message": "$t(configurationBoardAlignmentRoll.message)"
+        "message": "$t(configurationBoardAlignmentRoll.message)",
+        "description": "Don't translate!!!"
     },
     "configurationMagAlignmentPitch": {
-        "message": "$t(configurationBoardAlignmentPitch.message)"
+        "message": "$t(configurationBoardAlignmentPitch.message)",
+        "description": "Don't translate!!!"
     },
     "configurationMagAlignmentYaw": {
-        "message": "$t(configurationBoardAlignmentYaw.message)"
+        "message": "$t(configurationBoardAlignmentYaw.message)",
+        "description": "Don't translate!!!"
     },
     "configurationSensorAlignmentGyro": {
         "message": "Вирівнювання гіроскопа"
