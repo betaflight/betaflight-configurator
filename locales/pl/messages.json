@@ -1032,6 +1032,14 @@
         "message": "Przełącznik Crash Flip jest aktywny",
         "description": "Message that pops to describe the CRASHFLIP arming disable flag"
     },
+    "initialSetupArmingDisableFlagsTooltipALTHOLD": {
+        "message": "Tryb Wysokości jest aktywny",
+        "description": "Message that pops up to describe the ALTHOLD arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipPOSHOLD": {
+        "message": "Tryb utrzymywania pozycji jest aktywny",
+        "description": "Message that pops up to describe the POSHOLD arming disable flag"
+    },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "Jedna z pozostałych flag rozbrojenia jest aktywna podczas uzbrajania",
         "description": "Message that pops up to describe the ARM_SWITCH arming disable flag"
@@ -1179,6 +1187,9 @@
     "featureMOTOR_STOP": {
         "message": "Nie obracaj śmigłami po uzbrojeniu"
     },
+    "featureMOTOR_STOPTip": {
+        "message": "Ta funkcja jest wyłączona, gdy tryb AIRMODE jest włączony"
+    },
     "featureSERVO_TILT": {
         "message": "Gimbal z serwomechanizmów"
     },
@@ -1195,7 +1206,8 @@
         "message": "GPS do nawigacji i telemetrii"
     },
     "featureGPSTip": {
-        "message": "Włącza GPS, lecz wymaga najpierw konfiguracji w zakładce Porty"
+        "message": "Włącz\/Wyłącz dane GPS. Jeśli GPS nie może być włączony, sprawdź czy port jest przypisany do GPS w zakładce Porty",
+        "description": "Message that pops up to describe the GPS feature"
     },
     "featureSONAR": {
         "message": "Sonar"
@@ -1255,7 +1267,8 @@
         "message": "Uruchom Airmode na stałe."
     },
     "featureAIRMODETip": {
-        "message": "$t(auxiliaryHelpMode_AIRMODE.message)"
+        "message": "$t(auxiliaryHelpMode_AIRMODE.message)",
+        "description": "Don't translate!!!"
     },
     "featureRX_SPI": {
         "message": "SPI Rx (np. wbudowany Rx)"
@@ -1324,7 +1337,7 @@
         "message": "Ustawienie magnetometru to orientacja czujnika magnetometru na płycie kontrolera lotu. Wartość domyślna jest zwykle poprawna, ale jeśli masz niestandardową konstrukcję lub kontroler lotu z inną orientacją magnetometru, może być konieczne dostosowanie tego ustawienia."
     },
     "configurationMagDeclination": {
-        "message": "Deklinacja magnetometru"
+        "message": "Deklinacja magnetyczna"
     },
     "configurationMagDeclinationInput": {
         "message": "Deklinacja Stopnie"
@@ -1333,7 +1346,8 @@
         "message": "Deklinacja magnetyczna jest kątem pomiędzy północą geograficzną a magnetyczną. Jest różna dla każdej lokalizacji na ziemi. Deklinację magnetyczną dla swojej lokalizacji możesz znaleźć w Internecie"
     },
     "configurationRangefinder": {
-        "message": "$t(initialSetupSensorSonar.message)"
+        "message": "$t(initialSetupSensorSonar.message)",
+        "description": "Don't translate!!!"
     },
     "configurationRangefinderHelp": {
         "message": "Włącz dalmierz, aby zmierzyć odległość do ziemi w centymetrach"
@@ -1342,13 +1356,15 @@
         "message": "Typ"
     },
     "configurationOpticalflow": {
-        "message": "$t(initialSetupSensorOpticalflow.message)"
+        "message": "$t(initialSetupSensorOpticalflow.message)",
+        "description": "Don't translate!!!"
     },
     "configurationOpticalflowHelp": {
         "message": "Włącz czujnik optyczny"
     },
     "configurationOpticalflowType": {
-        "message": "$t(configurationRangefinderType.message)"
+        "message": "$t(configurationRangefinderType.message)",
+        "description": "Don't translate!!!"
     },
     "configurationBoardAlignment": {
         "message": "Ułożenie kontrolera lotu"
@@ -1369,13 +1385,16 @@
         "message": "Ułożenie żyroskopu jest jego orientacją na płycie kontrolera lotu. Domyślna wartość jest zazwyczaj poprawna, ale jeśli masz niestandardową konstrukcję lub kontroler lotu z inną orientacją żyroskopu, może być konieczne dostosowanie tego ustawienia."
     },
     "configurationGyroAlignmentRoll": {
-        "message": "$t(configurationBoardAlignmentRoll.message)"
+        "message": "$t(configurationBoardAlignmentRoll.message)",
+        "description": "Don't translate!!!"
     },
     "configurationGyroAlignmentPitch": {
-        "message": "$t(configurationBoardAlignmentPitch.message)"
+        "message": "$t(configurationBoardAlignmentPitch.message)",
+        "description": "Don't translate!!!"
     },
     "configurationGyroAlignmentYaw": {
-        "message": "$t(configurationBoardAlignmentYaw.message)"
+        "message": "$t(configurationBoardAlignmentYaw.message)",
+        "description": "Don't translate!!!"
     },
     "configurationMagAlignment": {
         "message": "Ułożenie magnetometru"
@@ -1384,13 +1403,16 @@
         "message": "Dowolny obrót kontrolera lotu wyrażony w stopniach, który umożliwia jego montaż bokiem, do góry nogami itp. W przypadku korzystania z zewnętrznych czujników (Gyro, Akcel, Mag) należy ustawić ich ułożenia, by określić ich niezależne położenie względem orientacji kontrolera lotu."
     },
     "configurationMagAlignmentRoll": {
-        "message": "$t(configurationBoardAlignmentRoll.message)"
+        "message": "$t(configurationBoardAlignmentRoll.message)",
+        "description": "Don't translate!!!"
     },
     "configurationMagAlignmentPitch": {
-        "message": "$t(configurationBoardAlignmentPitch.message)"
+        "message": "$t(configurationBoardAlignmentPitch.message)",
+        "description": "Don't translate!!!"
     },
     "configurationMagAlignmentYaw": {
-        "message": "$t(configurationBoardAlignmentYaw.message)"
+        "message": "$t(configurationBoardAlignmentYaw.message)",
+        "description": "Don't translate!!!"
     },
     "configurationSensorAlignmentGyro": {
         "message": "Ułożenie żyroskopu"
@@ -1685,6 +1707,9 @@
     },
     "portsSerialRx": {
         "message": "Serial Rx"
+    },
+    "portsSerialRxHelp": {
+        "message": "Włącz lub wyłącz odbiornik szeregowy zdalnego sterowania (RX) na określonym UART. Dozwolony tylko jeden."
     },
     "portsSensorIn": {
         "message": "Wejście czujnika"
@@ -2865,6 +2890,10 @@
     },
     "gpsPositionalDop": {
         "message": "Pozycjonowany DOP:"
+    },
+    "gpsMagneticDeclination": {
+        "message": "$t(configurationMagDeclination):",
+        "description": "Do not translate"
     },
     "gpsSignalStrHead": {
         "message": "Siła sygnału GPS"

@@ -829,7 +829,7 @@
         "description": "Message that pops up to describe the System info section"
     },
     "initialSensorInfoHead": {
-        "message": "Info Sensore"
+        "message": "Info Sensori"
     },
     "initialSensorInfoHeadHelp": {
         "message": "Mostra i sensori hardware",
@@ -1190,9 +1190,6 @@
     "featureGPS": {
         "message": "GPS per navigazione e telemetria"
     },
-    "featureGPSTip": {
-        "message": "Configurare prima le porte"
-    },
     "featureSONAR": {
         "message": "Sonar"
     },
@@ -1251,7 +1248,8 @@
         "message": "Abilita Airmode permanente"
     },
     "featureAIRMODETip": {
-        "message": "$t(auxiliaryHelpMode_AIRMODE.message)"
+        "message": "$t(auxiliaryHelpMode_AIRMODE.message)",
+        "description": "Don't translate!!!"
     },
     "featureRX_SPI": {
         "message": "Rx SPI (es. Rx integrato)"
@@ -1320,7 +1318,7 @@
         "message": "L'allineamento del magnetometro è l'orientamento del sensore magnetometro sulla scheda del controllore di volo. Il valore predefinito è generalmente corretto, ma se si dispone di una build personalizzata o di un controllore di volo con un diverso orientamento, potrebbe essere necessario modificare questa impostazione."
     },
     "configurationMagDeclination": {
-        "message": "Declinazione Magnetometro"
+        "message": "Declinazione Magnetica"
     },
     "configurationMagDeclinationInput": {
         "message": "Gradi Declinazione"
@@ -1329,7 +1327,8 @@
         "message": "La declinazione magnetica è l'angolo tra nord magnetico e nord vero. È diverso per ogni posizione sulla terra. Puoi trovare la declinazione per la tua posizione su internet"
     },
     "configurationRangefinder": {
-        "message": "$t(initialSetupSensorSonar.message)"
+        "message": "$t(initialSetupSensorSonar.message)",
+        "description": "Don't translate!!!"
     },
     "configurationRangefinderHelp": {
         "message": "Abilita il rangefinder per misurare la distanza dal suolo in cm"
@@ -1338,13 +1337,15 @@
         "message": "Tipo"
     },
     "configurationOpticalflow": {
-        "message": "$t(initialSetupSensorOpticalflow.message)"
+        "message": "$t(initialSetupSensorOpticalflow.message)",
+        "description": "Don't translate!!!"
     },
     "configurationOpticalflowHelp": {
         "message": "Abilita sensore optical flow"
     },
     "configurationOpticalflowType": {
-        "message": "$t(configurationRangefinderType.message)"
+        "message": "$t(configurationRangefinderType.message)",
+        "description": "Don't translate!!!"
     },
     "configurationBoardAlignment": {
         "message": "Allineamento Scheda"
@@ -1365,13 +1366,16 @@
         "message": "L'allineamento del gyro è l'orientamento del sensore gyro sulla scheda del controllore di volo. Il valore predefinito è generalmente corretto, ma se si dispone di una build personalizzata o di un controllore di volo con un diverso orientamento, potrebbe essere necessario modificare questa impostazione."
     },
     "configurationGyroAlignmentRoll": {
-        "message": "$t(configurationBoardAlignmentRoll.message)"
+        "message": "$t(configurationBoardAlignmentRoll.message)",
+        "description": "Don't translate!!!"
     },
     "configurationGyroAlignmentPitch": {
-        "message": "$t(configurationBoardAlignmentPitch.message)"
+        "message": "$t(configurationBoardAlignmentPitch.message)",
+        "description": "Don't translate!!!"
     },
     "configurationGyroAlignmentYaw": {
-        "message": "$t(configurationBoardAlignmentYaw.message)"
+        "message": "$t(configurationBoardAlignmentYaw.message)",
+        "description": "Don't translate!!!"
     },
     "configurationMagAlignment": {
         "message": "Allineamento Magnetometro"
@@ -1380,13 +1384,16 @@
         "message": "Rotazione arbitraria del controllore di volo, per consentire di montarlo di lato, sottosopra, ruotato ecc. Quando si utilizzano sensori esterni, usa l'allineamento del sensore (Gyro, Acc, Mag) per definire la posizione del sensore indipendentemente dall'orientamento del controllore di volo. "
     },
     "configurationMagAlignmentRoll": {
-        "message": "$t(configurationBoardAlignmentRoll.message)"
+        "message": "$t(configurationBoardAlignmentRoll.message)",
+        "description": "Don't translate!!!"
     },
     "configurationMagAlignmentPitch": {
-        "message": "$t(configurationBoardAlignmentPitch.message)"
+        "message": "$t(configurationBoardAlignmentPitch.message)",
+        "description": "Don't translate!!!"
     },
     "configurationMagAlignmentYaw": {
-        "message": "$t(configurationBoardAlignmentYaw.message)"
+        "message": "$t(configurationBoardAlignmentYaw.message)",
+        "description": "Don't translate!!!"
     },
     "configurationSensorAlignmentGyro": {
         "message": "Allinea GYRO"
@@ -2845,7 +2852,7 @@
         "message": "Altitudine:"
     },
     "gpsLatLon": {
-        "message": "Latitudine \/ Longitudine Corrente:",
+        "message": "Latitudine \/ Longitudine Correnti:",
         "description": "Show GPS position - Latitude \/ Longitude"
     },
     "gpsHeading": {
@@ -2864,6 +2871,10 @@
     },
     "gpsPositionalDop": {
         "message": "Posizione DOP:"
+    },
+    "gpsMagneticDeclination": {
+        "message": "$t(configurationMagDeclination):",
+        "description": "Do not translate"
     },
     "gpsSignalStrHead": {
         "message": "Potenza del segnale GPS"
@@ -5650,7 +5661,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementGPSLat": {
-        "message": "Coordinata di latitudine GPS"
+        "message": "Coordinate di latitudine GPS"
     },
     "osdTextElementGPSVariant7Decimals": {
         "message": "Con 7 decimali",

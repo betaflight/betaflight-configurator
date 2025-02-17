@@ -784,9 +784,6 @@
     "featureGPS": {
         "message": "啟用 GPS 導航"
     },
-    "featureGPSTip": {
-        "message": "請先設置埠口"
-    },
     "featureSONAR": {
         "message": "聲納"
     },

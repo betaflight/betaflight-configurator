@@ -1036,6 +1036,14 @@
         "message": "L'interruptor de Crash Flip está actiu",
         "description": "Message that pops to describe the CRASHFLIP arming disable flag"
     },
+    "initialSetupArmingDisableFlagsTooltipALTHOLD": {
+        "message": "El manteniment d'altitud està actiu",
+        "description": "Message that pops up to describe the ALTHOLD arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipPOSHOLD": {
+        "message": "El manteniment de posició està actiu",
+        "description": "Message that pops up to describe the POSHOLD arming disable flag"
+    },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "Un dels altres desarmar banderes està actiu quan es fa armament",
         "description": "Message that pops up to describe the ARM_SWITCH arming disable flag"
@@ -1183,6 +1191,9 @@
     "featureMOTOR_STOP": {
         "message": "No girar els motors quan està armat"
     },
+    "featureMOTOR_STOPTip": {
+        "message": "Aquesta funció està desactivada quan s'habilita AIRMODE"
+    },
     "featureSERVO_TILT": {
         "message": "Servo gimbal"
     },
@@ -1199,7 +1210,8 @@
         "message": "GPS per a navegació i telemetria"
     },
     "featureGPSTip": {
-        "message": "Configura els ports primer"
+        "message": "Activa\/Desactiva les dades GPS. Si no es pot activar el GPS, comproveu que hi hagi un port assignat al GPS a la pestanya Ports",
+        "description": "Message that pops up to describe the GPS feature"
     },
     "featureSONAR": {
         "message": "Sónar"
@@ -1259,7 +1271,8 @@
         "message": "Activa Airmode permanentment"
     },
     "featureAIRMODETip": {
-        "message": "$t(auxiliaryHelpMode_AIRMODE.message)"
+        "message": "$t(auxiliaryHelpMode_AIRMODE.message)",
+        "description": "Don't translate!!!"
     },
     "featureRX_SPI": {
         "message": "SPI Rx (p. ex., Rx integrat)"
@@ -1328,7 +1341,7 @@
         "message": "L'alineació del magnetòmetre és l'orientació del sensor del magnetòmetre a la placa del controlador de vol. El valor predeterminat sol ser correcte, però si teniu una construcció personalitzada o un controlador de vol amb una orientació diferent del magnetòmetre, és possible que hàgiu d'ajustar aquesta configuració."
     },
     "configurationMagDeclination": {
-        "message": "Declinació del magnetòmetre"
+        "message": "Declinació Magnètica"
     },
     "configurationMagDeclinationInput": {
         "message": "Graus de declinació"
@@ -1337,7 +1350,8 @@
         "message": "La declinació magnètica és l'angle entre el nord magnètic i el nord veritable. És diferent per a cada lloc de la terra. Podeu trobar la declinació de la vostra ubicació a Internet"
     },
     "configurationRangefinder": {
-        "message": "$t(initialSetupSensorSonar.message)"
+        "message": "$t(initialSetupSensorSonar.message)",
+        "description": "Don't translate!!!"
     },
     "configurationRangefinderHelp": {
         "message": "Activa el telèmetre per mesurar la distància a terra en cm"
@@ -1346,13 +1360,15 @@
         "message": "Tipus"
     },
     "configurationOpticalflow": {
-        "message": "$t(initialSetupSensorOpticalflow.message)"
+        "message": "$t(initialSetupSensorOpticalflow.message)",
+        "description": "Don't translate!!!"
     },
     "configurationOpticalflowHelp": {
         "message": "Activa el sensor de flux òptic"
     },
     "configurationOpticalflowType": {
-        "message": "$t(configurationRangefinderType.message)"
+        "message": "$t(configurationRangefinderType.message)",
+        "description": "Don't translate!!!"
     },
     "configurationBoardAlignment": {
         "message": "Alineació de la placa"
@@ -1373,13 +1389,16 @@
         "message": "L'alineació del giroscopi és l'orientació del sensor del giroscopi a la placa del controlador de vol. El valor predeterminat sol ser correcte, però si teniu una construcció personalitzada o un controlador de vol amb una orientació de giroscopi diferent, és possible que hàgiu d'ajustar aquesta configuració."
     },
     "configurationGyroAlignmentRoll": {
-        "message": "$t(configurationBoardAlignmentRoll.message)"
+        "message": "$t(configurationBoardAlignmentRoll.message)",
+        "description": "Don't translate!!!"
     },
     "configurationGyroAlignmentPitch": {
-        "message": "$t(configurationBoardAlignmentPitch.message)"
+        "message": "$t(configurationBoardAlignmentPitch.message)",
+        "description": "Don't translate!!!"
     },
     "configurationGyroAlignmentYaw": {
-        "message": "$t(configurationBoardAlignmentYaw.message)"
+        "message": "$t(configurationBoardAlignmentYaw.message)",
+        "description": "Don't translate!!!"
     },
     "configurationMagAlignment": {
         "message": "Alineació del magnetòmetre"
@@ -1388,13 +1407,16 @@
         "message": "Rotació arbitrària de la placa en graus, per permetre muntar-la de costat \/ cap per avall \/ girada, etc. Quan utilitzeu sensors externs, utilitzeu les alineacions dels sensors (Giro, Acc, Mag) per definir la posició del sensor independent de l'orientació de la placa. "
     },
     "configurationMagAlignmentRoll": {
-        "message": "$t(configurationBoardAlignmentRoll.message)"
+        "message": "$t(configurationBoardAlignmentRoll.message)",
+        "description": "Don't translate!!!"
     },
     "configurationMagAlignmentPitch": {
-        "message": "$t(configurationBoardAlignmentPitch.message)"
+        "message": "$t(configurationBoardAlignmentPitch.message)",
+        "description": "Don't translate!!!"
     },
     "configurationMagAlignmentYaw": {
-        "message": "$t(configurationBoardAlignmentYaw.message)"
+        "message": "$t(configurationBoardAlignmentYaw.message)",
+        "description": "Don't translate!!!"
     },
     "configurationSensorAlignmentGyro": {
         "message": "Alineament GYRO"
@@ -2872,6 +2894,10 @@
     },
     "gpsPositionalDop": {
         "message": "DOP posicional:"
+    },
+    "gpsMagneticDeclination": {
+        "message": "$t(configurationMagDeclination):",
+        "description": "Do not translate"
     },
     "gpsSignalStrHead": {
         "message": "Potència senyal GPS"

@@ -1180,9 +1180,6 @@
     "featureGPS": {
         "message": "GPS для навигации и телеметрии"
     },
-    "featureGPSTip": {
-        "message": "Сначала настройте порт"
-    },
     "featureSONAR": {
         "message": "Сонар"
     },
@@ -1241,7 +1238,8 @@
         "message": "Включить Airmode по умолчанию"
     },
     "featureAIRMODETip": {
-        "message": "$t(auxiliaryHelpMode_AIRMODE.message)"
+        "message": "$t(auxiliaryHelpMode_AIRMODE.message)",
+        "description": "Don't translate!!!"
     },
     "featureRX_SPI": {
         "message": "SPI Rx (например, встроенный Rx)"

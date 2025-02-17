@@ -1079,9 +1079,6 @@
     "featureGPS": {
         "message": "GPS para navegación e telemetría"
     },
-    "featureGPSTip": {
-        "message": "Configura os portos primeiro"
-    },
     "featureSONAR": {
         "message": "Sonar"
     },

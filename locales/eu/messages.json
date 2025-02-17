@@ -802,9 +802,6 @@
     "featureGPS": {
         "message": "Nabigazioa eta telemetriarako GPSa"
     },
-    "featureGPSTip": {
-        "message": "Lehenik eta behin konfiguratu atakaren agertokia"
-    },
     "featureSONAR": {
         "message": "Sonarra"
     },

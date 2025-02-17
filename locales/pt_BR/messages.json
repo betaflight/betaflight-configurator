@@ -1159,9 +1159,6 @@
     "featureGPS": {
         "message": "GPS para navegação e telemetria"
     },
-    "featureGPSTip": {
-        "message": "Configure primeiro o cenário das portas"
-    },
     "featureSONAR": {
         "message": "Sonar"
     },
@@ -1220,7 +1217,8 @@
         "message": "Ativar permanentemente o Airmode"
     },
     "featureAIRMODETip": {
-        "message": "$t(auxiliaryHelpMode_AIRMODE.message)"
+        "message": "$t(auxiliaryHelpMode_AIRMODE.message)",
+        "description": "Don't translate!!!"
     },
     "featureRX_SPI": {
         "message": "SPI Rx (Rx embutido)"
