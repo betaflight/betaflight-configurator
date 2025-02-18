@@ -353,9 +353,12 @@ gps.initialize = async function (callback) {
 
             const gpsUnitText = i18n.getMessage("gpsPositionUnit");
             $(".GPS_info td.alt").text(`${alt} m`);
-            $(".GPS_info td.latLon a")
+            $(".GPS_info td.Lat a")
                 .prop("href", url)
-                .text(`${lat.toFixed(6)} / ${lon.toFixed(6)} ${gpsUnitText}`);
+                .text(`${lat.toFixed(6)} ${gpsUnitText}`);
+            $(".GPS_info td.Lon a")
+                .prop("href", url)
+                .text(`${lon.toFixed(6)} ${gpsUnitText}`);
             $(".GPS_info td.heading").text(`${imuHeadingDegrees.toFixed(0)} / ${gpsHeading.toFixed(0)} ${gpsUnitText}`);
             $(".GPS_info td.speed").text(`${FC.GPS_DATA.speed} cm/s`);
             $(".GPS_info td.sats").text(FC.GPS_DATA.numSat);
