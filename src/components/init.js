@@ -2,10 +2,10 @@
 // `i18n` helper to window and setting up `i18next`
 // in the future it should be pure. This means it should
 // explicitly export things used by other parts of the app.
-import '../js/localization.js';
-import '../js/injected_methods';
-import i18next from 'i18next';
-import { createApp } from "vue";
+import "../js/localization.js";
+import "../js/injected_methods";
+import i18next from "i18next";
+import { createApp, reactive } from "vue";
 import I18NextVue from "i18next-vue";
 import BatteryLegend from "./quad-status/BatteryLegend.vue";
 import BetaflightLogo from "./betaflight-logo/BetaflightLogo.vue";
@@ -18,35 +18,42 @@ import PortUsage from "../js/port_usage.js";
 import PortPicker from "./port-picker/PortPicker.vue";
 import CONFIGURATOR from "../js/data_storage.js";
 
-// Most of the global objects can go here at first.
-// It's a bit of overkill for simple components,
-// but these instance would eventually have more children
-// which would find the use for those extra properties.
-const betaflightModel = {
+/*
+ Most of the global objects can go here at first.
+ It's a bit of overkill for simple components,
+ but these instance would eventually have more children
+ which would find the use for those extra properties.
+
+ FIXME For some reason, some of them (like PortHandler and FC) 
+ need to be marked as reactive in it's own module, to detect
+ changes in arrays so I added the `reactive` wrapper there too.
+*/
+const betaflightModel = reactive({
     CONFIGURATOR,
     FC,
     MSP,
     PortUsage,
     PortHandler,
-};
+});
 
-i18next.on('initialized', function() {
+i18next.on("initialized", function () {
     console.log("i18n initialized, starting Vue framework");
 
     const app = createApp({
-        data() { return betaflightModel; },
+        setup() {
+            return betaflightModel;
+        },
     });
 
-    app
-    .use(I18NextVue, { i18next })
-    .component('BetaflightLogo', BetaflightLogo)
-    .component('BatteryLegend', BatteryLegend)
-    .component('StatusBar', StatusBar)
-    .component('BatteryIcon', BatteryIcon)
-    .component('PortPicker', PortPicker)
-    .mount('#main-wrapper');
+    app.use(I18NextVue, { i18next })
+        .component("BetaflightLogo", BetaflightLogo)
+        .component("BatteryLegend", BatteryLegend)
+        .component("StatusBar", StatusBar)
+        .component("BatteryIcon", BatteryIcon)
+        .component("PortPicker", PortPicker)
+        .mount("#main-wrapper");
 
-    if (process.env.NODE_ENV === 'development') {
+    if (process.env.NODE_ENV === "development") {
         console.log("Development mode enabled, installing Vue tools");
         // TODO Vue.config.devtools = true;
         app.config.performance = true;

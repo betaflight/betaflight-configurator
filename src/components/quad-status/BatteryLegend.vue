@@ -5,13 +5,28 @@
 </template>
 <script>
 const NO_BATTERY_VOLTAGE_MAXIMUM = 1.8;
-import { defineComponent } from 'vue';
+import { defineComponent } from "vue";
 
 export default defineComponent({
-  props: {
-    voltage: {
-      type: Number,
-      default: 0,
+    props: {
+        voltage: {
+            type: Number,
+            default: 0,
+        },
+        vbatmaxcellvoltage: {
+            type: Number,
+            default: 1,
+        },
+        computed: {
+            reading() {
+                let nbCells = Math.floor(this.voltage / this.vbatmaxcellvoltage) + 1;
+                if (this.voltage === 0) {
+                    nbCells = 1;
+                }
+                const cellsText = this.voltage > NO_BATTERY_VOLTAGE_MAXIMUM ? `${nbCells}S` : "USB";
+                return `${this.voltage.toFixed(2)}V (${cellsText})`;
+            },
+        },
     },
     computed: {
         reading() {
@@ -23,17 +38,6 @@ export default defineComponent({
             return `${this.voltage.toFixed(2)}V (${cellsText})`;
         },
     },
-  },
-  computed: {
-    reading() {
-      let nbCells = Math.floor(this.voltage / this.vbatmaxcellvoltage) + 1;
-      if (this.voltage === 0) {
-        nbCells = 1;
-      }
-      const cellsText = this.voltage > NO_BATTERY_VOLTAGE_MAXIMUM ? `${nbCells}S` : 'USB';
-      return `${this.voltage.toFixed(2)}V (${cellsText})`;
-    },
-  },
 });
 </script>
 

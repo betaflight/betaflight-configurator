@@ -3,28 +3,28 @@
         <PortOverrideOption
             v-if="modelValue.selectedPort === 'manual'"
             :model-value="modelValue.portOverride"
-            @update:modelValue="updateValue('portOverride', $event)"
+            @update:modelValue="updateModelValue('portOverride', $event)"
         />
         <FirmwareVirtualOption
             v-if="modelValue.selectedPort === 'virtual' && !isConnected"
             :model-value="modelValue.virtualMspVersion"
-            @update:modelValue="updateValue('virtualMspVersion', $event)"
+            @update:modelValue="updateModelValue('virtualMspVersion', $event)"
         />
         <PortsInput
-            :model-value="modelValue.selectedPort"
+            :model-value="modelValue"
             :connected-bluetooth-devices="connectedBluetoothDevices"
             :connected-serial-devices="connectedSerialDevices"
             :connected-usb-devices="connectedUsbDevices"
             :disabled="disabled"
             :show-virtual-option="showVirtualOption"
             :show-manual-option="showManualOption"
-            @update:modelValue="updateValue(null, $event)"
+            @update:modelValue="updateModelValue(null, $event)"
         />
     </div>
 </template>
 
 <script>
-import { defineComponent } from "vue";
+import { defineComponent, computed } from "vue";
 import PortOverrideOption from "./PortOverrideOption.vue";
 import FirmwareVirtualOption from "./FirmwareVirtualOption.vue";
 import PortsInput from "./PortsInput.vue";
@@ -40,13 +40,7 @@ export default defineComponent({
     props: {
         modelValue: {
             type: Object,
-            default: () => ({
-                selectedPort: "noselection",
-                selectedBaud: 115200,
-                portOverride: "/dev/rfcomm0",
-                virtualMspVersion: "1.46.0",
-                autoConnect: true,
-            }),
+            required: true,
         },
         connectedBluetoothDevices: {
             type: Array,
@@ -54,7 +48,7 @@ export default defineComponent({
         },
         connectedSerialDevices: {
             type: Array,
-            default: () => [],
+            required: true,
         },
         connectedUsbDevices: {
             type: Array,
@@ -76,20 +70,21 @@ export default defineComponent({
 
     emits: ["update:modelValue"],
 
-    computed: {
-        isConnected() {
-            return CONFIGURATOR.connectionValid;
-        },
-    },
+    setup(props, { emit }) {
+        const isConnected = computed(() => CONFIGURATOR.connectionValid);
 
-    methods: {
-        updateValue(key, value) {
-            if (key != null) {
-                this.$emit("update:modelValue", { ...this.modelValue, [key]: value });
+        const updateModelValue = (key, value) => {
+            if (key) {
+                emit("update:modelValue", { ...props.modelValue, [key]: value });
             } else {
-                this.$emit("update:modelValue", { ...this.modelValue, ...value });
+                emit("update:modelValue", value); // Para el caso de PortsInput
             }
-        },
+        };
+
+        return {
+            isConnected,
+            updateModelValue,
+        };
     },
 });
 </script>

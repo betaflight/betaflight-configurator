@@ -1,44 +1,38 @@
 <template>
-  <div
-    v-if="isManual"
-    id="port-override-option"
-  >
-    <label
-      for="port-override"
-    ><span>{{ $t("portOverrideText") }}</span>
-      <input
-        id="port-override"
-        type="text"
-        :value="value"
-        @change="inputValueChanged($event)"
-      >
-    </label>
-  </div>
+    <div v-if="isManual" id="port-override-option">
+        <label for="port-override">
+            <span>{{ $t("portOverrideText") }}</span>
+            <input id="port-override" type="text" :value="modelValue" @input="inputValueChanged($event.target.value)" />
+        </label>
+    </div>
 </template>
 
 <script>
+import { defineComponent } from "vue";
 import { set as setConfig } from "../../js/ConfigStorage";
-import { defineComponent } from 'vue';
 
 export default defineComponent({
-  props: {
-    value: {
-      type: String,
-      default: '/dev/rfcomm0',
-    },
-    methods: {
-        inputValueChanged(event) {
-            setConfig({ portOverride: event.target.value });
-            this.$emit("input", event.target.value);
+    props: {
+        modelValue: {
+            type: String,
+            default: "/dev/rfcomm0",
+        },
+        isManual: {
+            type: Boolean,
+            default: true,
         },
     },
-  },
-  methods: {
-    inputValueChanged(event) {
-      setConfig({'portOverride': event.target.value});
-      this.$emit('input', event.target.value);
+    emits: ["update:modelValue"],
+    setup(props, { emit }) {
+        const inputValueChanged = (newValue) => {
+            setConfig({ portOverride: newValue });
+            emit("update:modelValue", newValue);
+        };
+
+        return {
+            inputValueChanged,
+        };
     },
-  },
 });
 </script>
 

@@ -71,7 +71,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 /** Status bar **/
 #status-bar {
     display: flex;

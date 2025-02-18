@@ -3,20 +3,19 @@
         <div class="dropdown dropdown-dark">
             <select
                 id="port"
-                :key="modelValue.selectedPort"
-                :model-value="modelValue.selectedPort"
+                :value="modelValue.selectedPort"
+                class="dropdown-select"
                 :title="$t('firmwareFlasherManualPort')"
                 :disabled="disabled"
-                class="dropdown-select"
                 @change="onChangePort"
             >
                 <option value="noselection" disabled>
                     {{ $t("portsSelectNoSelection") }}
                 </option>
-                <option v-show="showManualOption" value="manual">
+                <option v-if="showManualOption" value="manual">
                     {{ $t("portsSelectManual") }}
                 </option>
-                <option v-show="showVirtualOption" value="virtual">
+                <option v-if="showVirtualOption" value="virtual">
                     {{ $t("portsSelectVirtual") }}
                 </option>
                 <option
@@ -53,13 +52,7 @@
                 id="auto-connect-switch"
                 :title="modelValue.autoConnect ? $t('autoConnectEnabled') : $t('autoConnectDisabled')"
             >
-                <input
-                    id="auto-connect"
-                    class="auto_connect togglesmall"
-                    type="checkbox"
-                    :checked="modelValue.autoConnect"
-                    @change="onChangeAutoConnect"
-                />
+                <input id="auto-connect" v-model="autoConnect" class="auto_connect togglesmall" type="checkbox" />
                 <span class="auto_connect">
                     {{ $t("autoConnect") }}
                 </span>
@@ -71,50 +64,13 @@
                 <div class="dropdown dropdown-dark">
                     <select
                         id="baud"
+                        v-model="selectedBauds"
                         class="dropdown-select"
-                        :model-value="modelValue.selectedBauds"
                         :title="$t('firmwareFlasherBaudRate')"
                         :disabled="disabled"
-                        @change="updateValue('selectedBauds', $event.target.value)"
                     >
                         <option v-for="baudRate in baudRates" :key="baudRate.value" :value="baudRate.value">
                             {{ baudRate.label }}
-                        </option>
-                        <option value="noselection" disabled>
-                            {{ $t("portsSelectNoSelection") }}
-                        </option>
-                        <option v-show="showManualOption" value="manual">
-                            {{ $t("portsSelectManual") }}
-                        </option>
-                        <option v-show="showVirtualOption" value="virtual">
-                            {{ $t("portsSelectVirtual") }}
-                        </option>
-                        <option
-                            v-for="connectedBluetoothDevice in connectedBluetoothDevices"
-                            :key="connectedBluetoothDevice.path"
-                            :value="connectedBluetoothDevice.path"
-                        >
-                            {{ connectedBluetoothDevice.displayName }}
-                        </option>
-                        <option
-                            v-for="connectedSerialDevice in connectedSerialDevices"
-                            :key="connectedSerialDevice.path"
-                            :value="connectedSerialDevice.path"
-                        >
-                            {{ connectedSerialDevice.displayName }}
-                        </option>
-                        <option
-                            v-for="connectedUsbDevice in connectedUsbDevices"
-                            :key="connectedUsbDevice.path"
-                            :value="connectedUsbDevice.path"
-                        >
-                            {{ connectedUsbDevice.displayName }}
-                        </option>
-                        <option value="requestpermission">
-                            {{ $t("portsSelectPermission") }}
-                        </option>
-                        <option value="requestpermissionbluetooth">
-                            {{ $t("portsSelectPermissionBluetooth") }}
                         </option>
                     </select>
                 </div>
@@ -124,7 +80,7 @@
 </template>
 
 <script>
-import { defineComponent } from "vue";
+import { defineComponent, ref, watch } from "vue";
 import { set as setConfig } from "../../js/ConfigStorage";
 import { EventBus } from "../eventBus";
 
@@ -138,45 +94,13 @@ export default defineComponent({
                 autoConnect: true,
             }),
         },
-        data() {
-            return {
-                showVirtual: false,
-                baudRates: [
-                    { value: "1000000", label: "1000000" },
-                    { value: "500000", label: "500000" },
-                    { value: "250000", label: "250000" },
-                    { value: "115200", label: "115200" },
-                    { value: "57600", label: "57600" },
-                    { value: "38400", label: "38400" },
-                    { value: "28800", label: "28800" },
-                    { value: "19200", label: "19200" },
-                    { value: "14400", label: "14400" },
-                    { value: "9600", label: "9600" },
-                    { value: "4800", label: "4800" },
-                    { value: "2400", label: "2400" },
-                    { value: "1200", label: "1200" },
-                ],
-            };
+        connectedSerialDevices: {
+            type: Array,
+            default: () => [],
         },
-        methods: {
-            updateValue(key, value) {
-                this.$emit("input", { ...this.value, [key]: value });
-            },
-            onChangePort(event) {
-                if (event.target.value === "requestpermission") {
-                    EventBus.$emit("ports-input:request-permission");
-                } else if (event.target.value === "requestpermissionbluetooth") {
-                    EventBus.$emit("ports-input:request-permission-bluetooth");
-                } else {
-                    EventBus.$emit("ports-input:change", event.target.value);
-                }
-                this.updateValue("selectedPort", event.target.value);
-            },
-            onChangeAutoConnect(event) {
-                setConfig({ autoConnect: event.target.checked });
-                this.updateValue("autoConnect", event.target.checked);
-                return event;
-            },
+        connectedUsbDevices: {
+            type: Array,
+            default: () => [],
         },
         connectedBluetoothDevices: {
             type: Array,
@@ -195,33 +119,58 @@ export default defineComponent({
             default: true,
         },
     },
+    emits: ["update:modelValue"],
+    setup(props, { emit }) {
+        const selectedPort = ref(props.modelValue.selectedPort); // Access through modelValue
+        const selectedBauds = ref(props.modelValue.selectedBauds); // Access through modelValue
+        const autoConnect = ref(props.modelValue.autoConnect); // Access through modelValue
+        const baudRates = ref([
+            { value: "1000000", label: "1000000" },
+            { value: "500000", label: "500000" },
+            { value: "250000", label: "250000" },
+            { value: "115200", label: "115200" },
+            { value: "57600", label: "57600" },
+            { value: "38400", label: "38400" },
+            { value: "28800", label: "28800" },
+            { value: "19200", label: "19200" },
+            { value: "14400", label: "14400" },
+            { value: "9600", label: "9600" },
+            { value: "4800", label: "4800" },
+            { value: "2400", label: "2400" },
+            { value: "1200", label: "1200" },
+        ]);
 
-    emits: [
-        "update:modelValue",
-        "ports-input:request-permission",
-        "ports-input:request-permission-bluetooth",
-        "ports-input:change",
-    ],
+        watch(selectedPort, (newValue) => {
+            emit("update:modelValue", { ...props.modelValue, selectedPort: newValue });
+        });
 
-    methods: {
-        updateValue(key, value) {
-            this.$emit("update:modelValue", { ...this.modelValue, [key]: value });
-        },
-        onChangePort(event) {
-            if (event.target.value === "requestpermission") {
+        watch(selectedBauds, (newValue) => {
+            emit("update:modelValue", { ...props.modelValue, selectedBauds: newValue });
+        });
+
+        watch(autoConnect, (newValue) => {
+            emit("update:modelValue", { ...props.modelValue, autoConnect: newValue });
+            setConfig({ autoConnect: newValue });
+        });
+
+        const onChangePort = (event) => {
+            const value = event.target.value;
+            if (value === "requestpermission") {
                 EventBus.$emit("ports-input:request-permission");
-            } else if (event.target.value === "requestpermissionbluetooth") {
+            } else if (value === "requestpermissionbluetooth") {
                 EventBus.$emit("ports-input:request-permission-bluetooth");
             } else {
-                EventBus.$emit("ports-input:change", event.target.value);
+                EventBus.$emit("ports-input:change", value);
             }
-            this.updateValue("selectedPort", event.target.value);
-        },
-        onChangeAutoConnect(event) {
-            setConfig({ autoConnect: event.target.checked });
-            this.updateValue("autoConnect", event.target.checked);
-            return event;
-        },
+        };
+
+        return {
+            selectedPort,
+            selectedBauds,
+            autoConnect,
+            baudRates,
+            onChangePort,
+        };
     },
 });
 </script>

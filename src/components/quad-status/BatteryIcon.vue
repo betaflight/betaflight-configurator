@@ -5,118 +5,92 @@
         </div>
     </div>
 </template>
+
 <script>
+import { defineComponent, computed } from "vue";
+
 const NO_BATTERY_VOLTAGE_MAXIMUM = 1.8;
-import { defineComponent } from 'vue';
 
 export default defineComponent({
-  props: {
-    batteryState: {
-      type: String,
-      default: '',
+    props: {
+        batteryState: {
+            type: String,
+            default: "",
+        },
+        voltage: {
+            type: Number,
+            default: 0,
+        },
+        vbatmaxcellvoltage: {
+            type: Number,
+            default: 1,
+        },
+        vbatwarningcellvoltage: {
+            type: Number,
+            default: 1,
+        },
     },
-    voltage: {
-      type: Number,
-      default: 0,
-    },
-    computed: {
-        nbCells() {
-            let nbCells = Math.floor(this.voltage / this.vbatmaxcellvoltage) + 1;
-            if (this.voltage === 0) {
-                nbCells = 1;
+    setup(props) {
+        const nbCells = computed(() => {
+            let cells = Math.floor(props.voltage / props.vbatmaxcellvoltage) + 1;
+            if (props.voltage === 0) {
+                cells = 1;
             }
-            return nbCells;
-        },
-        min() {
-            return this.vbatmincellvoltage * this.nbCells;
-        },
-        max() {
-            return this.vbatmaxcellvoltage * this.nbCells;
-        },
-        warn() {
-            return this.vbatwarningcellvoltage * this.nbCells;
-        },
-        isEmpty() {
-            return this.voltage < this.min && this.voltage > NO_BATTERY_VOLTAGE_MAXIMUM;
-        },
-        classes() {
-            if (this.batteryState) {
+            return cells;
+        });
+
+        const min = computed(() => {
+            return props.vbatwarningcellvoltage * nbCells.value;
+        });
+
+        const max = computed(() => {
+            return props.vbatmaxcellvoltage * nbCells.value;
+        });
+
+        const warn = computed(() => {
+            return props.vbatwarningcellvoltage * nbCells.value;
+        });
+
+        const isEmpty = computed(() => {
+            return props.voltage < min.value && props.voltage > NO_BATTERY_VOLTAGE_MAXIMUM;
+        });
+
+        const classes = computed(() => {
+            if (props.batteryState) {
                 return {
-                    "state-ok": this.batteryState === 0,
-                    "state-warning": this.batteryState === 1,
-                    "state-empty": this.batteryState === 2,
+                    "state-ok": props.batteryState === "0",
+                    "state-warning": props.batteryState === "1",
+                    "state-empty": props.batteryState === "2",
                     // TODO: BATTERY_NOT_PRESENT
                     // TODO: BATTERY_INIT
                 };
             }
-            const isWarning = this.voltage < this.warn;
+            const isWarning = props.voltage < warn.value;
             return {
-                "state-empty": this.isEmpty,
+                "state-empty": isEmpty.value,
                 "state-warning": isWarning,
-                "state-ok": !this.isEmpty && !isWarning,
+                "state-ok": !isEmpty.value && !isWarning,
             };
-        },
-        batteryWidth() {
-            return this.isEmpty ? 100 : ((this.voltage - this.min) / (this.max - this.min)) * 100;
-        },
-    },
-    vbatmaxcellvoltage: {
-      type: Number,
-      default: 1,
-    },
-    vbatwarningcellvoltage: {
-      type: Number,
-      default: 1,
-    },
-  },
+        });
 
-  computed: {
-    nbCells() {
-      let nbCells = Math.floor(this.voltage / this.vbatmaxcellvoltage) + 1;
-      if (this.voltage === 0) {
-        nbCells = 1;
-      }
-      return nbCells;
-    },
-    min() {
-      return this.vbatmincellvoltage * this.nbCells;
-    },
-    max() {
-      return this.vbatmaxcellvoltage * this.nbCells;
-    },
-    warn() {
-      return this.vbatwarningcellvoltage * this.nbCells;
-    },
-    isEmpty() {
-      return this.voltage < this.min && this.voltage > NO_BATTERY_VOLTAGE_MAXIMUM;
-    },
-    classes() {
-      if (this.batteryState) {
+        const batteryWidth = computed(() => {
+            return isEmpty.value ? 100 : ((props.voltage - min.value) / (max.value - min.value)) * 100;
+        });
+
         return {
-          "state-ok": this.batteryState === 0,
-          "state-warning": this.batteryState === 1,
-          "state-empty": this.batteryState === 2,
-          // TODO: BATTERY_NOT_PRESENT
-          // TODO: BATTERY_INIT
+            nbCells,
+            min,
+            max,
+            warn,
+            isEmpty,
+            classes,
+            batteryWidth,
         };
-      }
-      const isWarning = this.voltage < this.warn;
-      return {
-        "state-empty": this.isEmpty,
-        "state-warning": isWarning,
-        "state-ok": !this.isEmpty && !isWarning,
-      };
     },
-    batteryWidth() {
-      return this.isEmpty
-        ? 100
-        : ((this.voltage - this.min) / (this.max - this.min)) * 100;
-    },
-  },
 });
 </script>
 
-<style>
+<style scoped>
 .quad-status-contents {
     display: inline-block;
     margin-top: 10px;
