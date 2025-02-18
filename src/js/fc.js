@@ -342,8 +342,8 @@ const FC = {
         this.GPS_DATA = {
             fix: 0,
             numSat: 0,
-            lat: 0,
-            lon: 0,
+            latitude: 0,
+            longitude: 0,
             alt: 0,
             speed: 0,
             ground_course: 0,
