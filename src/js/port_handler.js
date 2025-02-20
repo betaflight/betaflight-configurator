@@ -9,6 +9,7 @@ const DEFAULT_PORT = "noselection";
 const DEFAULT_BAUDS = 115200;
 
 const PortHandler = new (function () {
+    this.logHead = "[PORTHANDLER]";
     this.currentSerialPorts = [];
     this.currentUsbPorts = [];
     this.currentBluetoothPorts = [];
@@ -118,7 +119,9 @@ PortHandler.updateCurrentSerialPortsList = async function () {
     const ports = await serial.getDevices();
     const orderedPorts = this.sortPorts(ports);
     this.portAvailable = orderedPorts.length > 0;
-
+    if (this.portAvailable) {
+        console.log(`${this.logHead} Found serial port`, orderedPorts[0]);
+    }
     this.currentSerialPorts = [...orderedPorts];
 };
 
@@ -126,6 +129,9 @@ PortHandler.updateCurrentUsbPortsList = async function () {
     const ports = await usb.getDevices();
     const orderedPorts = this.sortPorts(ports);
     this.dfuAvailable = orderedPorts.length > 0;
+    if (this.dfuAvailable) {
+        console.log(`${this.logHead} Found DFU port`, orderedPorts[0]);
+    }
 
     this.currentUsbPorts = [...orderedPorts];
 };
@@ -135,6 +141,9 @@ PortHandler.updateCurrentBluetoothPortsList = async function () {
         const ports = await BT.getDevices();
         const orderedPorts = this.sortPorts(ports);
         this.bluetoothAvailable = orderedPorts.length > 0;
+        if (this.bluetoothAvailable) {
+            console.log(`${this.logHead} Found bluetooth port`, orderedPorts[0]);
+        }
 
         this.currentBluetoothPorts = [...orderedPorts];
     }
@@ -236,11 +245,10 @@ PortHandler.selectActivePort = function (suggestedDevice) {
     // Return the default port if no other port was selected
     this.portPicker.selectedPort = selectedPort || DEFAULT_PORT;
 
-    console.log(`[PORTHANDLER] automatically selected device is '${this.portPicker.selectedPort}'`);
-
-    // hack to update Vue component
-    const p = document.getElementById("port");
-    p.value = this.portPicker.selectedPort;
+    console.log(
+        `${this.logHead} Automatically selected device is '${this.portPicker.selectedPort}' - suggested:`,
+        suggestedDevice,
+    );
 
     return selectedPort;
 };

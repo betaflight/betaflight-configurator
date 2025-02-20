@@ -10,7 +10,7 @@ class WebsocketSerial extends EventTarget {
         this.bytesReceived = 0;
         this.failed = 0;
 
-        this.logHead = "[WEBSOCKET] ";
+        this.logHead = "[WEBSOCKET]";
 
         this.address = "ws://localhost:5761";
 
