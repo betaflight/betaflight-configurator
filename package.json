@@ -45,7 +45,7 @@
     "crypto-es": "^2.1.0",
     "d3": "^7.9.0",
     "djv": "^2.1.4",
-    "dompurify": "^2.5.5",
+    "dompurify": "^3.2.4",
     "i18next": "^19.9.2",
     "i18next-vue": "^5.0.0",
     "i18next-xhr-backend": "^3.2.2",
