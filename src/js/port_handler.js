@@ -3,6 +3,7 @@ import { EventBus } from "../components/eventBus";
 import serial from "./webSerial";
 import usb from "./protocols/webusbdfu";
 import BT from "./protocols/bluetooth";
+import { reactive } from "vue";
 
 const DEFAULT_PORT = "noselection";
 const DEFAULT_BAUDS = 115200;
@@ -16,7 +17,7 @@ const PortHandler = new (function () {
         selectedPort: DEFAULT_PORT,
         selectedBauds: DEFAULT_BAUDS,
         portOverride: getConfig("portOverride", "/dev/rfcomm0").portOverride,
-        virtualMspVersion: "1.47.0",
+        virtualMspVersion: "1.46.0",
         autoConnect: getConfig("autoConnect", false).autoConnect,
     };
 
@@ -117,14 +118,16 @@ PortHandler.updateCurrentSerialPortsList = async function () {
     const ports = await serial.getDevices();
     const orderedPorts = this.sortPorts(ports);
     this.portAvailable = orderedPorts.length > 0;
-    this.currentSerialPorts = orderedPorts;
+
+    this.currentSerialPorts = [...orderedPorts];
 };
 
 PortHandler.updateCurrentUsbPortsList = async function () {
     const ports = await usb.getDevices();
     const orderedPorts = this.sortPorts(ports);
     this.dfuAvailable = orderedPorts.length > 0;
-    this.currentUsbPorts = orderedPorts;
+
+    this.currentUsbPorts = [...orderedPorts];
 };
 
 PortHandler.updateCurrentBluetoothPortsList = async function () {
@@ -132,7 +135,8 @@ PortHandler.updateCurrentBluetoothPortsList = async function () {
         const ports = await BT.getDevices();
         const orderedPorts = this.sortPorts(ports);
         this.bluetoothAvailable = orderedPorts.length > 0;
-        this.currentBluetoothPorts = orderedPorts;
+
+        this.currentBluetoothPorts = [...orderedPorts];
     }
 };
 
@@ -233,7 +237,14 @@ PortHandler.selectActivePort = function (suggestedDevice) {
     this.portPicker.selectedPort = selectedPort || DEFAULT_PORT;
 
     console.log(`[PORTHANDLER] automatically selected device is '${this.portPicker.selectedPort}'`);
+
+    // hack to update Vue component
+    const p = document.getElementById("port");
+    p.value = this.portPicker.selectedPort;
+
     return selectedPort;
 };
 
-export default PortHandler;
+// We need to explicit make it reactive. If not, Vue3 does not detect correctly changes in array properties
+// like currentSerialPorts, currentUsbPorts, currentBluetoothPorts
+export default reactive(PortHandler);

@@ -18,19 +18,22 @@
         </div>
     </div>
 </template>
+
 <script>
-export default {
+import { defineComponent } from "vue";
+export default defineComponent({
     props: {
         fcTotalSize: { type: Number, default: 100000 },
         fcUsedSize: { type: Number, default: 82000 },
     },
     computed: {
         supportDataflash() {
-            if (this.fcTotalSize > 0) return true;
-            else return false;
+            return this.fcTotalSize > 0;
         },
         freeSpace() {
-            if (!this.supportDataflash) return;
+            if (!this.supportDataflash) {
+                return;
+            }
             const bytes = this.fcTotalSize - this.fcUsedSize;
             if (this.fcUsedSize >= this.fcTotalSize) {
                 return "0B";
@@ -50,11 +53,10 @@ export default {
             return `${gigabytes.toFixed(1)}GB`;
         },
         indicatorWidth() {
-            if (!this.supportDataflash) return;
-            return `${Math.min((this.fcUsedSize / this.fcTotalSize) * 100, 100)}%`;
+            return this.supportDataflash ? `${Math.min((this.fcUsedSize / this.fcTotalSize) * 100, 100)}%` : "0%";
         },
     },
-};
+});
 </script>
 
 <style scoped>
