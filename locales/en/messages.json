@@ -161,6 +161,10 @@
         "message": "Enable virtual connection mode",
         "description": "Text for the option to enable or disable the virtual FC"
     },
+    "useLegacyRenderingModel": {
+        "message": "Enable legacy rendering for 3D model (for low performance devices)",
+        "description": "Text for the option to enable or disable legacy rendering of the 3D model"
+    },
     "cordovaForceComputerUI": {
         "message": "Use computers interface instead of phones interface"
     },
