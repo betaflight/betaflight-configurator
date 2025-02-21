@@ -807,11 +807,7 @@
     },
     "initialSetupNotInBuild": {
         "message": "Non incluído na compilación",
-        "description": "Message that pops up when hardware support not are supported in Build"
-    },
-    "initialSetupNotDetected": {
-        "message": "Non detectado",
-        "description": "Message that pops up when hardware are not detected"
+        "description": "Message that pops up when hardware support is not included in build"
     },
     "initialSetupRSSIValue": {
         "message": "$1 dBm"
@@ -1083,9 +1079,6 @@
     "featureGPS": {
         "message": "GPS para navegación e telemetría"
     },
-    "featureGPSTip": {
-        "message": "Configura os portos primeiro"
-    },
     "featureSONAR": {
         "message": "Sonar"
     },
@@ -1206,9 +1199,6 @@
     "configurationOtherFeaturesHelp": {
         "message": "<strong>Nota:<\/strong> Non tódalas opcións son soportadas por tódalas controladoras. Se activa una opción específica, e se desactiva despois de pulsar 'Gardar e Reiniciar', significa que esta opción non está soportada na súa controladora."
     },
-    "configurationBoardAlignment": {
-        "message": "Aliñamento de Placa e Sensor"
-    },
     "configurationBoardAlignmentRoll": {
         "message": "Graos de Roll"
     },
@@ -1245,9 +1235,6 @@
     "configurationSensorAlignmentAcc": {
         "message": "Aliñado do ACELERADOR"
     },
-    "configurationSensorAlignmentMag": {
-        "message": "Aliñado da brúxula"
-    },
     "configurationSensorAlignmentDefaultOption": {
         "message": "Por defecto"
     },
@@ -1265,9 +1252,6 @@
     },
     "configurationArmingHelp": {
         "message": "Algunhas opcións de armado poderían necesitar que actives o acelerómetro"
-    },
-    "configurationMagDeclination": {
-        "message": "Declinación del magnetómetro [deg]"
     },
     "configurationReverseMotorSwitch": {
         "message": "Dirección de motor invertida"
@@ -4151,9 +4135,6 @@
     "pidTuningVbatSagCompensation": {
         "message": "Compensación da caída de tensión"
     },
-    "pidTuningVbatSagCompensationHelp": {
-        "message": "Ofrece un acelerador e un rendemento PID consistentes no intervalo de tensión útil da batería aumentando a saída do motor a medida que cae a tensión da batería.<br \/><br \/>A cantidade de compensación pode variar entre 0 e 100 %. Recoméndase unha compensación total (100 %).<br \/><br \/>Visita o obxectivo de <a href=\"https:\/\/betaflight.com\/docs\/tuning\/4.2-Tuning-Notes#dynamic-battery-sag-compensation\" =\"_blank\" rel=\"noopener noreferrer\">esta entrada do wiki<\/a> para obter máis información."
-    },
     "pidTuningVbatSagValue": {
         "message": "%"
     },
@@ -4237,9 +4218,6 @@
     },
     "pidTuningIntegratedYawHelp": {
         "message": "Yaw integrado integra os valores de Yaw P, I e D, permitindo que estes se axusten do mesmo modo que pich e roll<br><br>Necesítase moi pouca I, porque o P integrado actua como I e a D integrada como P.<br><br>Nota: Yaw integrado require uso do control absoluto, xa que non é necesario I con Yaw integrado."
-    },
-    "configHelp2": {
-        "message": "Rotación arbitraria de taboleiro en graos, para permitir a súa montaxe lateral \/ boca abaixo \/ rotada etc. Ao executar sensores externos, use os aliñamentos do sensor (Xiro, Acc, Mag) para definir a posición do sensor independente da orientación da placa. "
     },
     "failsafeFeaturesHelpOld": {
         "message": "A configuración de Failsafe cambiou considerablemente. Utiliza Betaflight <strong>v1.12.0+<\/strong> para habilitar o panel de configuración mellorado."
@@ -4327,9 +4305,6 @@
     },
     "failsafeGpsRescueInitialClimb": {
         "message": "Ascenso inicial (metros)"
-    },
-    "failsafeGpsRescueItemReturnAltitude": {
-        "message": "Altitude de retorno (metros) - <strong>só se aplica no modo Altitude Fixa<\/strong>"
     },
     "failsafeGpsRescueItemAscendRate": {
         "message": "Velocidade de ascenso (metros\/segundo)"

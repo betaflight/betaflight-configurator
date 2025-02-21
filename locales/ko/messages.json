@@ -868,14 +868,17 @@
     },
     "initialSetupNotInBuild": {
         "message": "빌드에 포함되지 않음",
-        "description": "Message that pops up when hardware support not are supported in Build"
+        "description": "Message that pops up when hardware support is not included in build"
     },
     "initialSetupNotDetected": {
-        "message": "발견되지 않음",
-        "description": "Message that pops up when hardware are not detected"
+        "message": "감지되지 않거나 비활성화됨",
+        "description": "Message that pops up when hardware is not detected or disabled"
     },
     "initialSetupRSSIValue": {
         "message": "$1 dBm"
+    },
+    "initialSetupMCU": {
+        "message": "MCU:"
     },
     "initialSetupSensorHardware": {
         "message": "센서:"
@@ -897,6 +900,9 @@
     },
     "initialSetupSensorSonar": {
         "message": "초음파:"
+    },
+    "initialSetupSensorOpticalflow": {
+        "message": "옵티컬 플로우:"
     },
     "initialSetupSensorRadar": {
         "message": "레이더:"
@@ -1025,6 +1031,14 @@
     "initialSetupArmingDisableFlagsTooltipCRASHFLIP": {
         "message": "크래쉬 플립 스위치가 활성화됨",
         "description": "Message that pops to describe the CRASHFLIP arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipALTHOLD": {
+        "message": "고도 유지가 활성화됨",
+        "description": "Message that pops up to describe the ALTHOLD arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipPOSHOLD": {
+        "message": "포지션 유지가 활성화됨",
+        "description": "Message that pops up to describe the POSHOLD arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "다른 디스암 플래그 중 하나가 아밍시 활성화 중입니다",
@@ -1173,6 +1187,9 @@
     "featureMOTOR_STOP": {
         "message": "아밍시 모터 회전 안함"
     },
+    "featureMOTOR_STOPTip": {
+        "message": "이 기능은 에어모드가 활성화되면 사용불가합니다"
+    },
     "featureSERVO_TILT": {
         "message": "서보 짐벌"
     },
@@ -1189,7 +1206,8 @@
         "message": "네비게이션과 텔레메트리를 위한 GPS"
     },
     "featureGPSTip": {
-        "message": "먼저 포트 시나리오를 환경설정하십시오."
+        "message": "GPS 데이터 활성 \/ 비활성. GPS를 사용할 수 없다면 포트 탭에서 포트가 GPS에 잘 배정되었는지 확인하세요",
+        "description": "Message that pops up to describe the GPS feature"
     },
     "featureSONAR": {
         "message": "초음파센서"
@@ -1249,7 +1267,8 @@
         "message": "에어모드 영구 사용"
     },
     "featureAIRMODETip": {
-        "message": "$t(auxiliaryHelpMode_AIRMODE.message)"
+        "message": "$t(auxiliaryHelpMode_AIRMODE.message)",
+        "description": "Don't translate!!!"
     },
     "featureRX_SPI": {
         "message": "SPI Rx (예. 빌드인 Rx)"
@@ -1314,8 +1333,41 @@
     "configurationOtherFeaturesHelp": {
         "message": "<strong>참고:<\/strong> 모든 기능이 모든 비행 컨트롤러에 의해 지원되지는 않습니다. 만약 특별한 기능을 활성화하고, '저장 및 재부팅'을 누른 후에 비활성된다면, 이는 이 기능이 당신의 보드에 지원되지 않음을 의미합니다."
     },
+    "configurationMagAlignmentHelp": {
+        "message": "자력계 정렬은 비행 컨트롤러 보드에 있는 자력계 센서의 방향입니다. 기본값은 일반적으로 맞지만, 맞춤형 빌드나 자력계 방향이 다른 비행 컨트롤러가 있는 경우 이 설정을 조정해야 할 수도 있습니다."
+    },
+    "configurationMagDeclination": {
+        "message": "자력계 편위"
+    },
+    "configurationMagDeclinationInput": {
+        "message": "편위도"
+    },
+    "configurationMagDeclinationHelp": {
+        "message": "자기 편위는 자기 북쪽과 진 북쪽 사이의 각도입니다. 지구상의 모든 위치에 따라 다릅니다. 인터넷에서 자신의 위치에 대한 편위를 찾을 수 있습니다"
+    },
+    "configurationRangefinder": {
+        "message": "$t(initialSetupSensorSonar.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationRangefinderHelp": {
+        "message": "레인지파인더를 활성화해서 cm 단위로 지면까지의 거리를 측정할 수 있습니다"
+    },
+    "configurationRangefinderType": {
+        "message": "형식"
+    },
+    "configurationOpticalflow": {
+        "message": "$t(initialSetupSensorOpticalflow.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationOpticalflowHelp": {
+        "message": "옵티컬 플로우 센서 활성화"
+    },
+    "configurationOpticalflowType": {
+        "message": "$t(configurationRangefinderType.message)",
+        "description": "Don't translate!!!"
+    },
     "configurationBoardAlignment": {
-        "message": "보드 및 센서 정렬"
+        "message": "보드 정렬"
     },
     "configurationBoardAlignmentRoll": {
         "message": "롤 각도"
@@ -1325,6 +1377,42 @@
     },
     "configurationBoardAlignmentYaw": {
         "message": "요 각도"
+    },
+    "configurationGyroAlignment": {
+        "message": "자이로 정렬"
+    },
+    "configurationGyroAlignmentHelp": {
+        "message": "자이로 정렬은 비행 컨트롤러 보드에 있는 자이로 센서의 방향입니다. 기본값은 일반적으로 맞지만, 맞춤형 빌드나 자이로 방향이 다른 비행 컨트롤러가 있는 경우 이 설정을 조정해야 할 수도 있습니다."
+    },
+    "configurationGyroAlignmentRoll": {
+        "message": "$t(configurationBoardAlignmentRoll.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyroAlignmentPitch": {
+        "message": "$t(configurationBoardAlignmentPitch.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyroAlignmentYaw": {
+        "message": "$t(configurationBoardAlignmentYaw.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationMagAlignment": {
+        "message": "자력계 정렬"
+    },
+    "configurationBoardAlignmentHelp": {
+        "message": "임의의 각도로 보드를 회전시켜 옆으로\/뒤로\/회전하여 장착할 수 있습니다. 외부 센서를 실행할 때는 센서 정렬(자이로, Acc, Mag)을 사용하여 보드 방향과 무관하게 센서 위치를 정의합니다."
+    },
+    "configurationMagAlignmentRoll": {
+        "message": "$t(configurationBoardAlignmentRoll.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationMagAlignmentPitch": {
+        "message": "$t(configurationBoardAlignmentPitch.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationMagAlignmentYaw": {
+        "message": "$t(configurationBoardAlignmentYaw.message)",
+        "description": "Don't translate!!!"
     },
     "configurationSensorAlignmentGyro": {
         "message": "자이로 정렬"
@@ -1353,9 +1441,6 @@
     "configurationSensorAlignmentAcc": {
         "message": "가속도계 정렬"
     },
-    "configurationSensorAlignmentMag": {
-        "message": "자력계 정렬"
-    },
     "configurationSensorAlignmentDefaultOption": {
         "message": "기본값"
     },
@@ -1373,9 +1458,6 @@
     },
     "configurationArmingHelp": {
         "message": "몇몇 아밍 옵션은 가속도계 사용이 필요할 수도 있습니다."
-    },
-    "configurationMagDeclination": {
-        "message": "자력계 기울기 [도]"
     },
     "configurationReverseMotorSwitch": {
         "message": "모터 방향이 반대로 됩니다."
@@ -1625,6 +1707,9 @@
     },
     "portsSerialRx": {
         "message": "시리얼 Rx"
+    },
+    "portsSerialRxHelp": {
+        "message": "지정된 UART에서 원격 제어 직렬 수신기(RX)를 활성화하거나 비활성화합니다. 단 하나만 허용됩니다．"
     },
     "portsSensorIn": {
         "message": "센서 입력"
@@ -2316,7 +2401,7 @@
         "description": "Help text to ACRO TRAINER mode"
     },
     "auxiliaryHelpMode_ARM": {
-        "message": "모터 출력을 활성화하고 기체가 비행할 수 있도록 합니다",
+        "message": "모터 출력을 가능하게 하고 기체가 비행할 수 있도록 합니다. <span class=\"message-negative\">주의:<\/span> 조종사는 안전상의 이유로 <b>BOXPREARM<\/b> (2-단계 아밍)을 설정할 수 있습니다.",
         "description": "Help text to ARM mode"
     },
     "auxiliaryHelpMode_ANGLE": {
@@ -2332,7 +2417,7 @@
         "description": "Help text to AIRMODE mode"
     },
     "auxiliaryHelpMode_ALTHOLD": {
-        "message": "고도 모드는 신규 플라이어에게 가장 안전한 비GPS 수동 모드입니다. 안정화 모드와 비슷하지만 스틱이 풀리면 기체 고도가 추가로 잠깁니다",
+        "message": "<a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/position-hold-v4-6#altitude-hold\" target=\"_blank\" rel=\"noopener noreferrer\">고도 고정<\/a> 외부 센서와 앵글 모드(안정 모드)를 결합하여 기체의 고도를 능동적으로 조절합니다．",
         "description": "Help text for ALTITUDE HOLD mode"
     },
     "auxiliaryHelpMode_BEEPER": {
@@ -2635,6 +2720,9 @@
     "adjustmentsFunction30": {
         "message": "LED 프로필 선택"
     },
+    "adjustmentsFunction31": {
+        "message": "LED 밝기 조절"
+    },
     "adjustmentsSave": {
         "message": "저장"
     },
@@ -2802,6 +2890,10 @@
     },
     "gpsPositionalDop": {
         "message": "위치 DOP:"
+    },
+    "gpsMagneticDeclination": {
+        "message": "$t(configurationMagDeclination):",
+        "description": "Do not translate"
     },
     "gpsSignalStrHead": {
         "message": "GPS 신호 강도"
@@ -4468,7 +4560,7 @@
         "message": "Vbat 처짐 보상"
     },
     "pidTuningVbatSagCompensationHelp": {
-        "message": "배터리 전압 강하시 모터 출력을 증가시켜 사용 가능한 배터리 전압 범위에 걸쳐 스로틀 및 PID 성능을 일관되게 제공합니다.<br \/><br \/>보상은 0~100% 사이에서 변동될 수 있습니다. 전체 보상(100%)을 권장합니다.<br \/><br \/>더 많은 정보는 <a href=\"https:\/\/betaflight.com\/docs\/wiki\/tuning\/4-2-Tuning-Notes#dynamic-battery-sag-compensation\" target=\"_blank\" rel=\"noopener noreferrer\">이 위키 엔트리<\/a>를 방문하십시오."
+        "message": "배터리 전압 강하시 모터 출력을 증가시켜 사용 가능한 배터리 전압 범위에 걸쳐 스로틀 및 PID 성능을 일관되게 제공합니다.<br \/><br \/>보상은 0~100% 사이에서 변동될 수 있습니다. 전체 보상(100%)을 권장합니다.<br \/><br \/>더 많은 정보는 <a href=\"https:\/\/betaflight.com\/docs\/wiki\/tuning\/4-2-tuning-notes#dynamic-battery-sag-compensation\" target=\"_blank\" rel=\"noopener noreferrer\">이 위키 엔트리<\/a>를 방문하십시오."
     },
     "pidTuningVbatSagValue": {
         "message": "%"
@@ -4568,9 +4660,6 @@
     },
     "pidTuningIntegratedYawHelp": {
         "message": "통합된 요는 요 P, I, D 값을 통합하여 요 P, I, D가 피치와 롤을 튜닝하는 것처럼 튜닝됩니다.<br><br>적분 P는 I처럼 작용하고, 적분 D는 P처럼 작용하기 때문에 I는 거의 필요하지 않습니다.<br><br>참고: 통합 요의 경우 I가 필요하지 않으므로, 통합 요의 경우 절대 제어를 사용해야 합니다."
-    },
-    "configHelp2": {
-        "message": "옆면 \/ 아래로 \/ 회전 등으로 장착 할 수 있는 임의의 보드 회전 각도(°). 외부 센서를 작동할 때 센서 정렬(자이로, 가속도계, 자력계)을 사용하여 보드 방향과 상관없이 센서 위치를 정의합니다."
     },
     "failsafeFeaturesHelpOld": {
         "message": "페일세이프 환경설정이 상당히 변경되었습니다. 개선 된 환경설정 패널을 사용하려면 베타플라이트 <strong>v1.12.0+<\/strong>을 사용하십시오."
@@ -4672,7 +4761,7 @@
         "message": "레스큐가 시작되고 고도 모드가 현재 고도로 설정되어 있을 때 기체가 현재 고도 이상으로 상승하는 거리; MAX 고도 모드일 때도 추가됩니다."
     },
     "failsafeGpsRescueItemReturnAltitude": {
-        "message": "복귀 고도(미터) - <strong>고정된 고도 모드에서만 적용<\/strong>"
+        "message": "복귀 고도 (미터)"
     },
     "failsafeGpsRescueItemAscendRate": {
         "message": "상승속도 (미터\/초)"
@@ -5511,6 +5600,38 @@
     "osdTextElementAltitudeVariantNoDecimalASL": {
         "message": "ASL(소수점 없이)",
         "description": "One of the variants of the altitude element of the OSD"
+    },
+    "osdTextElementCustomMsg0": {
+        "message": "사용자 지정 메시지 1",
+        "description": "One of the elements of the OSD"
+    },
+    "osdTextElementCustomMsg1": {
+        "message": "사용자 지정 메시지 2",
+        "description": "One of the elements of the OSD"
+    },
+    "osdTextElementCustomMsg2": {
+        "message": "사용자 지정 메시지 3",
+        "description": "One of the elements of the OSD"
+    },
+    "osdTextElementCustomMsg3": {
+        "message": "사용자 지정 메시지 4",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementCustomMsg0": {
+        "message": "외부 장치로부터 사용자 지정 메시지 1",
+        "description": "Description of the custom message 1 element of the OSD"
+    },
+    "osdDescElementCustomMsg1": {
+        "message": "외부 장치로부터 사용자 지정 메시지 2",
+        "description": "Description of the custom message 2 element of the OSD"
+    },
+    "osdDescElementCustomMsg2": {
+        "message": "외부 장치로부터 사용자 지정 메시지 3",
+        "description": "Description of the custom message 3 element of the OSD"
+    },
+    "osdDescElementCustomMsg3": {
+        "message": "외부 장치로부터 사용자 지정 메시지 4",
+        "description": "Description of the custom message 4 element of the OSD"
     },
     "osdTextElementOnTime": {
         "message": "사용 시간",

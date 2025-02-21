@@ -1,13 +1,13 @@
-import semver from 'semver';
+import semver from "semver";
 import { i18n } from "../localization";
-import GUI, { TABS } from '../gui';
+import GUI, { TABS } from "../gui";
 import { tracking } from "../Analytics";
-import { mspHelper } from '../msp/MSPHelper';
-import FC from '../fc';
-import MSP from '../msp';
-import MSPCodes from '../msp/MSPCodes';
-import { API_VERSION_1_45 } from '../data_storage';
-import $ from 'jquery';
+import { mspHelper } from "../msp/MSPHelper";
+import FC from "../fc";
+import MSP from "../msp";
+import MSPCodes from "../msp/MSPCodes";
+import { API_VERSION_1_45, API_VERSION_1_47 } from "../data_storage";
+import $ from "jquery";
 
 const ports = {
     analyticsChanges: {},
@@ -17,90 +17,98 @@ ports.initialize = function (callback) {
     const self = this;
 
     const functionRules = [
-        { name: 'MSP',                  groups: ['configuration', 'msp'], maxPorts: 2 },
-        { name: 'GPS',                  groups: ['sensors'], maxPorts: 1 },
-        { name: 'TELEMETRY_FRSKY',      groups: ['telemetry'], sharableWith: ['msp'], notSharableWith: ['peripherals'], maxPorts: 1 },
-        { name: 'TELEMETRY_HOTT',       groups: ['telemetry'], sharableWith: ['msp'], notSharableWith: ['peripherals'], maxPorts: 1 },
-        { name: 'TELEMETRY_SMARTPORT',  groups: ['telemetry'], maxPorts: 1 },
-        { name: 'RX_SERIAL',            groups: ['rx'], maxPorts: 1 },
-        { name: 'BLACKBOX',             groups: ['peripherals'], sharableWith: ['msp'], notSharableWith: ['telemetry'], maxPorts: 1 },
-        { name: 'TELEMETRY_LTM',        groups: ['telemetry'], sharableWith: ['msp'], notSharableWith: ['peripherals'], maxPorts: 1 },
-        { name: 'TELEMETRY_MAVLINK',    groups: ['telemetry'], sharableWith: ['msp'], notSharableWith: ['peripherals'], maxPorts: 1 },
-        { name: 'IRC_TRAMP',            groups: ['peripherals'], maxPorts: 1 },
-        { name: 'ESC_SENSOR',           groups: ['sensors'], maxPorts: 1 },
-        { name: 'TBS_SMARTAUDIO',       groups: ['peripherals'], maxPorts: 1 },
-        { name: 'TELEMETRY_IBUS',       groups: ['telemetry'], maxPorts: 1 },
-        { name: 'RUNCAM_DEVICE_CONTROL', groups: ['peripherals'], maxPorts: 1 },
-        { name: 'LIDAR_TF',             groups: ['peripherals'], maxPorts: 1 },
-        { name: 'FRSKY_OSD',            groups: ['peripherals'], maxPorts: 1 },
+        { name: "MSP", groups: ["configuration", "msp"], maxPorts: 2 },
+        { name: "GPS", groups: ["sensors"], maxPorts: 1 },
+        {
+            name: "TELEMETRY_FRSKY",
+            groups: ["telemetry"],
+            sharableWith: ["msp"],
+            notSharableWith: ["peripherals"],
+            maxPorts: 1,
+        },
+        {
+            name: "TELEMETRY_HOTT",
+            groups: ["telemetry"],
+            sharableWith: ["msp"],
+            notSharableWith: ["peripherals"],
+            maxPorts: 1,
+        },
+        { name: "TELEMETRY_SMARTPORT", groups: ["telemetry"], maxPorts: 1 },
+        { name: "RX_SERIAL", groups: ["rx"], maxPorts: 1 },
+        {
+            name: "BLACKBOX",
+            groups: ["peripherals"],
+            sharableWith: ["msp"],
+            notSharableWith: ["telemetry"],
+            maxPorts: 1,
+        },
+        {
+            name: "TELEMETRY_LTM",
+            groups: ["telemetry"],
+            sharableWith: ["msp"],
+            notSharableWith: ["peripherals"],
+            maxPorts: 1,
+        },
+        {
+            name: "TELEMETRY_MAVLINK",
+            groups: ["telemetry"],
+            sharableWith: ["msp"],
+            notSharableWith: ["peripherals"],
+            maxPorts: 1,
+        },
+        { name: "IRC_TRAMP", groups: ["peripherals"], maxPorts: 1 },
+        { name: "ESC_SENSOR", groups: ["sensors"], maxPorts: 1 },
+        { name: "TBS_SMARTAUDIO", groups: ["peripherals"], maxPorts: 1 },
+        { name: "TELEMETRY_IBUS", groups: ["telemetry"], maxPorts: 1 },
+        { name: "RUNCAM_DEVICE_CONTROL", groups: ["peripherals"], maxPorts: 1 },
+        { name: "LIDAR_TF", groups: ["peripherals"], maxPorts: 1 },
+        { name: "FRSKY_OSD", groups: ["peripherals"], maxPorts: 1 },
     ];
 
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
-        functionRules.push({ name: 'VTX_MSP', groups: ['peripherals'], sharableWith: ['msp'], maxPorts: 1 });
+        functionRules.push({ name: "VTX_MSP", groups: ["peripherals"], sharableWith: ["msp"], maxPorts: 1 });
     }
 
     for (const rule of functionRules) {
         rule.displayName = i18n.getMessage(`portsFunction_${rule.name}`);
     }
 
-    let mspBaudRates = [
-        '9600',
-        '19200',
-        '38400',
-        '57600',
-        '115200',
-        '230400',
-        '250000',
-        '500000',
-        '1000000',
-    ];
+    let mspBaudRates = ["9600", "19200", "38400", "57600", "115200", "230400", "250000", "500000", "1000000"];
 
-    const gpsBaudRates = [
-        'AUTO',
-        '9600',
-        '19200',
-        '38400',
-        '57600',
-        '115200',
-    ];
+    const gpsBaudRates = ["AUTO", "9600", "19200", "38400", "57600", "115200"];
 
-    const telemetryBaudRates = [
-        'AUTO',
-        '9600',
-        '19200',
-        '38400',
-        '57600',
-        '115200',
-    ];
+    const telemetryBaudRates = ["AUTO", "9600", "19200", "38400", "57600", "115200"];
 
     const blackboxBaudRates = [
-        'AUTO',
-        '19200',
-        '38400',
-        '57600',
-        '115200',
-        '230400',
-        '250000',
-        '1500000',
-        '2000000',
-        '2470000',
+        "AUTO",
+        "19200",
+        "38400",
+        "57600",
+        "115200",
+        "230400",
+        "250000",
+        "1500000",
+        "2000000",
+        "2470000",
     ];
 
-    const columns = ['configuration', 'peripherals', 'sensors', 'telemetry', 'rx'];
+    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+        gpsBaudRates.push("230400");
+    }
 
-    GUI.active_tab = 'ports';
+    const columns = ["configuration", "peripherals", "sensors", "telemetry", "rx"];
+
+    GUI.active_tab = "ports";
 
     load_configuration_from_fc();
 
     function load_configuration_from_fc() {
-        MSP
-        .promise(MSPCodes.MSP_VTX_CONFIG)
-        .then(function() {
+        MSP.promise(MSPCodes.MSP_VTX_CONFIG).then(function () {
             mspHelper.loadSerialConfig(on_configuration_loaded_handler);
         });
 
         function on_configuration_loaded_handler() {
-            $('#content').load("./tabs/ports.html", on_tab_loaded_handler);
+            $("#content").load("./tabs/ports.html", on_tab_loaded_handler);
         }
     }
 
@@ -112,38 +120,49 @@ ports.initialize = function (callback) {
         const VCP_PORT_IDENTIFIER = 20;
 
         const portIdentifierToNameMapping = {
-           0: 'UART1',
-           1: 'UART2',
-           2: 'UART3',
-           3: 'UART4',
-           4: 'UART5',
-           5: 'UART6',
-           6: 'UART7',
-           7: 'UART8',
-           8: 'UART9',
-           9: 'UART10',
-           20: 'USB VCP',
-           30: 'SOFTSERIAL1',
-           31: 'SOFTSERIAL2',
-           40: 'LPUART1',
+            0: "UART1",
+            1: "UART2",
+            2: "UART3",
+            3: "UART4",
+            4: "UART5",
+            5: "UART6",
+            6: "UART7",
+            7: "UART8",
+            8: "UART9",
+            9: "UART10",
+            20: "USB VCP",
+            30: "SOFTSERIAL1",
+            31: "SOFTSERIAL2",
+            40: "LPUART1",
+            50: "UART0",
+            51: "UART1",
+            52: "UART2",
+            53: "UART3",
+            54: "UART4",
+            55: "UART5",
+            56: "UART6",
+            57: "UART7",
+            58: "UART8",
+            59: "UART9",
+            60: "UART10",
         };
 
-        let gpsBaudrateElement = $('select.gps_baudrate');
+        let gpsBaudrateElement = $("select.gps_baudrate");
         for (const baudrate of gpsBaudRates) {
             gpsBaudrateElement.append(`<option value="${baudrate}">${baudrate}</option>`);
         }
 
-        let mspBaudrateElement = $('select.msp_baudrate');
+        let mspBaudrateElement = $("select.msp_baudrate");
         for (const baudrate of mspBaudRates) {
             mspBaudrateElement.append(`<option value="${baudrate}">${baudrate}</option>`);
         }
 
-        let telemetryBaudrateElement = $('select.telemetry_baudrate');
+        let telemetryBaudrateElement = $("select.telemetry_baudrate");
         for (const baudrate of telemetryBaudRates) {
             telemetryBaudrateElement.append(`<option value="${baudrate}">${baudrate}</option>`);
         }
 
-        let blackboxBaudrateElement = $('select.blackbox_baudrate');
+        let blackboxBaudrateElement = $("select.blackbox_baudrate");
         for (const baudrate of blackboxBaudRates) {
             blackboxBaudrateElement.append(`<option value="${baudrate}">${baudrate}</option>`);
         }
@@ -151,46 +170,46 @@ ports.initialize = function (callback) {
         let lastVtxControlSelected;
         let lastMspSelected;
 
-        const portsElement = $('.tab-ports .ports');
-        const portIdentifierTemplateElement = $('#tab-ports-templates .portIdentifier');
-        const portConfigurationTemplateElement = $('#tab-ports-templates .portConfiguration');
+        const portsElement = $(".tab-ports .ports");
+        const portIdentifierTemplateElement = $("#tab-ports-templates .portIdentifier");
+        const portConfigurationTemplateElement = $("#tab-ports-templates .portConfiguration");
 
         for (let portIndex = 0; portIndex < FC.SERIAL_CONFIG.ports.length; portIndex++) {
             const portIdentifierElement = portIdentifierTemplateElement.clone();
             const portConfigurationElement = portConfigurationTemplateElement.clone();
             const serialPort = FC.SERIAL_CONFIG.ports[portIndex];
 
-            portConfigurationElement.data('serialPort', serialPort);
+            portConfigurationElement.data("serialPort", serialPort);
 
-            mspBaudrateElement = portConfigurationElement.find('select.msp_baudrate');
+            mspBaudrateElement = portConfigurationElement.find("select.msp_baudrate");
             mspBaudrateElement.val(serialPort.msp_baudrate);
 
-            telemetryBaudrateElement = portConfigurationElement.find('select.telemetry_baudrate');
+            telemetryBaudrateElement = portConfigurationElement.find("select.telemetry_baudrate");
             telemetryBaudrateElement.val(serialPort.telemetry_baudrate);
 
             let gpsBaudrate;
-            if (serialPort.functions.indexOf('GPS') >= 0) {
+            if (serialPort.functions.indexOf("GPS") >= 0) {
                 gpsBaudrate = serialPort.gps_baudrate;
             } else {
-                gpsBaudrate = 'AUTO';
+                gpsBaudrate = "AUTO";
             }
-            gpsBaudrateElement = portConfigurationElement.find('select.gps_baudrate');
+            gpsBaudrateElement = portConfigurationElement.find("select.gps_baudrate");
             gpsBaudrateElement.val(gpsBaudrate);
 
             let blackboxBaudrate;
-            if (serialPort.functions.indexOf('BLACKBOX') >= 0) {
+            if (serialPort.functions.indexOf("BLACKBOX") >= 0) {
                 blackboxBaudrate = serialPort.blackbox_baudrate;
             } else {
-                blackboxBaudrate = 'AUTO';
+                blackboxBaudrate = "AUTO";
             }
-            blackboxBaudrateElement = portConfigurationElement.find('select.blackbox_baudrate');
+            blackboxBaudrateElement = portConfigurationElement.find("select.blackbox_baudrate");
             blackboxBaudrateElement.val(blackboxBaudrate);
 
-            portIdentifierElement.find('.identifier').text(portIdentifierToNameMapping[serialPort.identifier]);
-            portConfigurationElement.find('.identifier').text(portIdentifierToNameMapping[serialPort.identifier]);
+            portIdentifierElement.find(".identifier").text(portIdentifierToNameMapping[serialPort.identifier]);
+            portConfigurationElement.find(".identifier").text(portIdentifierToNameMapping[serialPort.identifier]);
 
-            portConfigurationElement.data('index', portIndex);
-            portConfigurationElement.data('port', serialPort);
+            portConfigurationElement.data("index", portIndex);
+            portConfigurationElement.data("port", serialPort);
 
             for (let columnIndex = 0; columnIndex < columns.length; columnIndex++) {
                 const column = columns[columnIndex];
@@ -206,7 +225,7 @@ ports.initialize = function (callback) {
                     }
 
                     let selectElement;
-                    if (column !== 'telemetry' && column !== 'sensors' && column !== 'peripherals') {
+                    if (column !== "telemetry" && column !== "sensors" && column !== "peripherals") {
                         const checkboxId = `functionCheckbox-${portIndex}-${columnIndex}-${i}`;
                         let longElement = `<span class="function"><input type="checkbox" class="togglemedium" id=`;
                         longElement += `"${checkboxId}" value="${functionName}" /><label for="${checkboxId}"></label></span>`;
@@ -222,15 +241,16 @@ ports.initialize = function (callback) {
                             checkboxElement.prop("checked", true);
                             checkboxElement.prop("disabled", true);
                         }
-
                     } else {
                         const selectElementName = `function-${column}`;
                         const selectElementSelector = `select[name=${selectElementName}]`;
                         selectElement = functionsElement.find(selectElementSelector);
 
-                        const disabledText = i18n.getMessage('portsTelemetryDisabled');
+                        const disabledText = i18n.getMessage("portsTelemetryDisabled");
                         if (selectElement.length === 0) {
-                            functionsElement.prepend(`<span class="function"><select name="${selectElementName}" /></span>`);
+                            functionsElement.prepend(
+                                `<span class="function"><select name="${selectElementName}" /></span>`,
+                            );
                             selectElement = functionsElement.find(selectElementSelector);
                             selectElement.append(`<option value="">${disabledText}</option>`);
                         }
@@ -241,45 +261,49 @@ ports.initialize = function (callback) {
                         if (serialPort.functions.indexOf(functionName) >= 0) {
                             selectElement.val(functionName);
 
-                            if (column === 'peripherals' && (functionName === "TBS_SMARTAUDIO" || functionName === "IRC_TRAMP")) {
+                            if (
+                                column === "peripherals" &&
+                                (functionName === "TBS_SMARTAUDIO" || functionName === "IRC_TRAMP")
+                            ) {
                                 lastVtxControlSelected = functionName;
                             }
 
-                            if (column === 'peripherals' && functionName.includes("MSP")) {
+                            if (column === "peripherals" && functionName.includes("MSP")) {
                                 lastMspSelected = functionName;
                             }
                         }
 
-                        if (column === 'telemetry') {
+                        if (column === "telemetry") {
                             const initialValue = functionName;
-                            selectElement.on('change', function () {
+                            selectElement.on("change", function () {
                                 const telemetryValue = $(this).val();
 
                                 let newValue;
                                 if (telemetryValue !== initialValue) {
-                                    newValue = $(this).find('option:selected').text();
+                                    newValue = $(this).find("option:selected").text();
                                 }
-                                self.analyticsChanges['Telemetry'] = newValue;
+                                self.analyticsChanges["Telemetry"] = newValue;
                             });
                         }
                     }
                 }
             }
 
-            portsElement.find('tbody').append(portIdentifierElement);
-            portsElement.find('tbody').append(portConfigurationElement);
+            portsElement.find("tbody").append(portIdentifierElement);
+            portsElement.find("tbody").append(portConfigurationElement);
         }
 
-        const vtxTableNotConfigured = FC.VTX_CONFIG.vtx_table_available
-                                        && (FC.VTX_CONFIG.vtx_table_bands === 0
-                                        || FC.VTX_CONFIG.vtx_table_channels === 0
-                                        || FC.VTX_CONFIG.vtx_table_powerlevels === 0);
+        const vtxTableNotConfigured =
+            FC.VTX_CONFIG.vtx_table_available &&
+            (FC.VTX_CONFIG.vtx_table_bands === 0 ||
+                FC.VTX_CONFIG.vtx_table_channels === 0 ||
+                FC.VTX_CONFIG.vtx_table_powerlevels === 0);
 
         const pheripheralsSelectElement = $('select[name="function-peripherals"]');
-        pheripheralsSelectElement.on('change', function() {
+        pheripheralsSelectElement.on("change", function () {
             let vtxControlSelected, mspControlSelected;
 
-            pheripheralsSelectElement.each(function(index, element) {
+            pheripheralsSelectElement.each(function (index, element) {
                 const value = $(element).val();
 
                 if (value === "TBS_SMARTAUDIO" || value === "IRC_TRAMP") {
@@ -290,94 +314,100 @@ ports.initialize = function (callback) {
                     mspControlSelected = value;
 
                     // Enable MSP Configuration for MSP function
-                    $('.tab-ports .portConfiguration').each(function (port, portConfig) {
-                        const peripheralFunction = $(portConfig).find('select[name=function-peripherals]').val();
+                    $(".tab-ports .portConfiguration").each(function (port, portConfig) {
+                        const peripheralFunction = $(portConfig).find("select[name=function-peripherals]").val();
 
                         if (peripheralFunction.includes("MSP") && index === port) {
-                            $(`#functionCheckbox-${port}-0-0`).prop("checked", true).trigger('change');
+                            $(`#functionCheckbox-${port}-0-0`).prop("checked", true).trigger("change");
                         }
                     });
                 }
             });
 
             if (lastVtxControlSelected !== vtxControlSelected) {
-                self.analyticsChanges['VtxControl'] = vtxControlSelected;
+                self.analyticsChanges["VtxControl"] = vtxControlSelected;
 
                 lastVtxControlSelected = vtxControlSelected;
             }
 
             if (lastMspSelected !== mspControlSelected) {
-                self.analyticsChanges['MspControl'] = mspControlSelected;
+                self.analyticsChanges["MspControl"] = mspControlSelected;
 
                 lastMspSelected = mspControlSelected;
             }
 
-            $('.vtxTableNotSet').toggle(vtxControlSelected && vtxTableNotConfigured);
+            $(".vtxTableNotSet").toggle(vtxControlSelected && vtxTableNotConfigured);
         });
 
-        pheripheralsSelectElement.trigger('change');
+        pheripheralsSelectElement.trigger("change");
     }
 
     function on_tab_loaded_handler() {
-
         i18n.localizePage();
 
         update_ui();
 
-        $('a.save').on('click', on_save_handler);
+        $("a.save").on("click", on_save_handler);
 
         // status data pulled via separate timer with static speed
-        GUI.interval_add('status_pull', function status_pull() {
-            MSP.send_message(MSPCodes.MSP_STATUS);
-        }, 250, true);
+        GUI.interval_add(
+            "status_pull",
+            function status_pull() {
+                MSP.send_message(MSPCodes.MSP_STATUS);
+            },
+            250,
+            true,
+        );
 
         GUI.content_ready(callback);
     }
 
     function on_save_handler() {
-        tracking.sendSaveAndChangeEvents(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, self.analyticsChanges, 'ports');
+        tracking.sendSaveAndChangeEvents(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, self.analyticsChanges, "ports");
         self.analyticsChanges = {};
 
         // update configuration based on current ui state
         FC.SERIAL_CONFIG.ports = [];
 
-        $('.tab-ports .portConfiguration').each(function (_port, portConfig) {
+        $(".tab-ports .portConfiguration").each(function (_port, portConfig) {
+            const serialPort = $(portConfig).data("serialPort");
 
-            const serialPort = $(portConfig).data('serialPort');
+            const functions = $(portConfig)
+                .find("input:checkbox:checked")
+                .map(function () {
+                    return this.value;
+                })
+                .get();
 
-            const functions = $(portConfig).find('input:checkbox:checked').map(function() {
-                return this.value;
-            }).get();
-
-            const telemetryFunction = $(portConfig).find('select[name=function-telemetry]').val();
+            const telemetryFunction = $(portConfig).find("select[name=function-telemetry]").val();
             if (telemetryFunction) {
                 functions.push(telemetryFunction);
             }
 
-            const sensorFunction = $(portConfig).find('select[name=function-sensors]').val();
+            const sensorFunction = $(portConfig).find("select[name=function-sensors]").val();
             if (sensorFunction) {
                 functions.push(sensorFunction);
             }
 
-            const peripheralFunction = $(portConfig).find('select[name=function-peripherals]').val();
+            const peripheralFunction = $(portConfig).find("select[name=function-peripherals]").val();
             if (peripheralFunction) {
                 functions.push(peripheralFunction);
             }
 
-            let gpsBaudrate = $(portConfig).find('.gps_baudrate').val();
-            if (gpsBaudrate === 'AUTO') {
-                gpsBaudrate = '57600';
+            let gpsBaudrate = $(portConfig).find(".gps_baudrate").val();
+            if (gpsBaudrate === "AUTO") {
+                gpsBaudrate = "57600";
             }
 
-            let blackboxBaudrate = $(portConfig).find('.blackbox_baudrate').val();
-            if (blackboxBaudrate === 'AUTO') {
-                blackboxBaudrate = '115200';
+            let blackboxBaudrate = $(portConfig).find(".blackbox_baudrate").val();
+            if (blackboxBaudrate === "AUTO") {
+                blackboxBaudrate = "115200";
             }
 
             const serialPortConfig = {
                 functions: functions,
-                msp_baudrate: $(portConfig).find('.msp_baudrate').val(),
-                telemetry_baudrate: $(portConfig).find('.telemetry_baudrate').val(),
+                msp_baudrate: $(portConfig).find(".msp_baudrate").val(),
+                telemetry_baudrate: $(portConfig).find(".telemetry_baudrate").val(),
                 gps_baudrate: gpsBaudrate,
                 blackbox_baudrate: blackboxBaudrate,
                 identifier: serialPort.identifier,
@@ -396,23 +426,23 @@ ports.initialize = function (callback) {
         for (const port of FC.SERIAL_CONFIG.ports) {
             const func = port.functions;
 
-            if (func.includes('RX_SERIAL')) {
+            if (func.includes("RX_SERIAL")) {
                 enableRxSerial = true;
             }
 
-            if (func.some(e => e.startsWith("TELEMETRY"))) {
+            if (func.some((e) => e.startsWith("TELEMETRY"))) {
                 enableTelemetry = true;
             }
 
-            if (func.includes('BLACKBOX')) {
+            if (func.includes("BLACKBOX")) {
                 enableBlackbox = true;
             }
 
-            if (func.includes('ESC_SENSOR')) {
+            if (func.includes("ESC_SENSOR")) {
                 enableEsc = true;
             }
 
-            if (func.includes('GPS')) {
+            if (func.includes("GPS")) {
                 enableGps = true;
             }
         }
@@ -420,37 +450,42 @@ ports.initialize = function (callback) {
         const featureConfig = FC.FEATURE_CONFIG.features;
 
         if (enableRxSerial) {
-            featureConfig.enable('RX_SERIAL');
+            featureConfig.enable("RX_SERIAL");
         } else {
-            featureConfig.disable('RX_SERIAL');
+            featureConfig.disable("RX_SERIAL");
         }
 
         if (enableTelemetry) {
-            featureConfig.enable('TELEMETRY');
+            featureConfig.enable("TELEMETRY");
         }
 
         if (enableBlackbox) {
-            featureConfig.enable('BLACKBOX');
+            featureConfig.enable("BLACKBOX");
         } else {
-            featureConfig.disable('BLACKBOX');
+            featureConfig.disable("BLACKBOX");
         }
 
         if (enableEsc) {
-            featureConfig.enable('ESC_SENSOR');
+            featureConfig.enable("ESC_SENSOR");
         } else {
-            featureConfig.disable('ESC_SENSOR');
+            featureConfig.disable("ESC_SENSOR");
         }
 
         if (enableGps) {
-            featureConfig.enable('GPS');
+            featureConfig.enable("GPS");
         } else {
-            featureConfig.disable('GPS');
+            featureConfig.disable("GPS");
         }
 
         mspHelper.sendSerialConfig(save_features);
 
         function save_features() {
-            MSP.send_message(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG), false, save_to_eeprom);
+            MSP.send_message(
+                MSPCodes.MSP_SET_FEATURE_CONFIG,
+                mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG),
+                false,
+                save_to_eeprom,
+            );
         }
 
         function save_to_eeprom() {

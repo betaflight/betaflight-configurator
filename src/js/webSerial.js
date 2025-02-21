@@ -44,14 +44,13 @@ class WebSerial extends EventTarget {
 
         this.connect = this.connect.bind(this);
 
-        navigator.serial.addEventListener("connect", e => this.handleNewDevice(e.target));
-        navigator.serial.addEventListener("disconnect", e => this.handleRemovedDevice(e.target));
+        navigator.serial.addEventListener("connect", (e) => this.handleNewDevice(e.target));
+        navigator.serial.addEventListener("disconnect", (e) => this.handleRemovedDevice(e.target));
 
         this.loadDevices();
     }
 
     handleNewDevice(device) {
-
         const added = this.createPort(device);
         this.ports.push(added);
         this.dispatchEvent(new CustomEvent("addedDevice", { detail: added }));
@@ -60,8 +59,8 @@ class WebSerial extends EventTarget {
     }
 
     handleRemovedDevice(device) {
-        const removed = this.ports.find(port => port.port === device);
-        this.ports = this.ports.filter(port => port.port !== device);
+        const removed = this.ports.find((port) => port.port === device);
+        this.ports = this.ports.filter((port) => port.port !== device);
         this.dispatchEvent(new CustomEvent("removedDevice", { detail: removed }));
     }
 
@@ -79,7 +78,9 @@ class WebSerial extends EventTarget {
     }
 
     createPort(port) {
-        const displayName = vendorIdNames[port.getInfo().usbVendorId] ? vendorIdNames[port.getInfo().usbVendorId] : `VID:${port.getInfo().usbVendorId} PID:${port.getInfo().usbProductId}`;
+        const displayName = vendorIdNames[port.getInfo().usbVendorId]
+            ? vendorIdNames[port.getInfo().usbVendorId]
+            : `VID:${port.getInfo().usbVendorId} PID:${port.getInfo().usbProductId}`;
         return {
             path: `serial_${this.portCounter++}`,
             displayName: `Betaflight ${displayName}`,
@@ -105,7 +106,7 @@ class WebSerial extends EventTarget {
             const options = showAllSerialDevices ? {} : { filters: webSerialDevices };
             const userSelectedPort = await navigator.serial.requestPort(options);
 
-            newPermissionPort = this.ports.find(port => port.port === userSelectedPort);
+            newPermissionPort = this.ports.find((port) => port.port === userSelectedPort);
 
             if (!newPermissionPort) {
                 newPermissionPort = this.handleNewDevice(userSelectedPort);
@@ -125,7 +126,7 @@ class WebSerial extends EventTarget {
         this.openRequested = true;
         this.closeRequested = false;
 
-        this.port = this.ports.find(device => device.path === path).port;
+        this.port = this.ports.find((device) => device.path === path).port;
 
         await this.port.open(options);
 
@@ -150,19 +151,14 @@ class WebSerial extends EventTarget {
                 `${this.logHead} Connection opened with ID: ${connectionInfo.connectionId}, Baud: ${options.baudRate}`,
             );
 
-            this.dispatchEvent(
-                new CustomEvent("connect", { detail: connectionInfo }),
-            );
+            this.dispatchEvent(new CustomEvent("connect", { detail: connectionInfo }));
             // Check if we need the helper function or could polyfill
             // the stream async iterable interface:
             // https://web.dev/streams/#asynchronous-iteration
 
-
             this.reading = true;
             for await (let value of streamAsyncIterable(this.reader, () => this.reading)) {
-                this.dispatchEvent(
-                    new CustomEvent("receive", { detail: value }),
-                );
+                this.dispatchEvent(new CustomEvent("receive", { detail: value }));
             }
         } else if (connectionInfo && this.openCanceled) {
             this.connectionId = connectionInfo.connectionId;
@@ -179,9 +175,7 @@ class WebSerial extends EventTarget {
                 });
             }, 150);
         } else if (this.openCanceled) {
-            console.log(
-                `${this.logHead} Connection didn't open and request was canceled`,
-            );
+            console.log(`${this.logHead} Connection didn't open and request was canceled`);
             this.openRequested = false;
             this.openCanceled = false;
             this.dispatchEvent(new CustomEvent("connect", { detail: false }));
@@ -205,7 +199,7 @@ class WebSerial extends EventTarget {
         }
 
         const doCleanup = async () => {
-            this.removeEventListener('receive', this.handleReceiveBytes);
+            this.removeEventListener("receive", this.handleReceiveBytes);
             if (this.reader) {
                 this.reader.cancel();
                 this.reader.releaseLock();
@@ -251,9 +245,7 @@ class WebSerial extends EventTarget {
             await this.writer.write(data);
             this.bytesSent += data.byteLength;
         } else {
-            console.error(
-                `${this.logHead}Failed to send data, serial port not open`,
-            );
+            console.error(`${this.logHead}Failed to send data, serial port not open`);
         }
         return {
             bytesSent: data.byteLength,

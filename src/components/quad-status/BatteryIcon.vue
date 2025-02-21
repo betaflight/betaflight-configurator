@@ -1,133 +1,147 @@
 <template>
-  <div class="battery-icon">
-    <div class="quad-status-contents">
-      <div
-        class="battery-status"
-        :class="classes"
-        :style="{ width: batteryWidth + '%' }"
-      />
+    <div class="battery-icon">
+        <div class="quad-status-contents">
+            <div class="battery-status" :class="classes" :style="{ width: batteryWidth + '%' }" />
+        </div>
     </div>
-  </div>
 </template>
+
 <script>
+import { defineComponent, computed } from "vue";
+
 const NO_BATTERY_VOLTAGE_MAXIMUM = 1.8;
-export default {
-  props: {
-    voltage: {
-      type: Number,
-      default: 0,
+
+export default defineComponent({
+    props: {
+        batteryState: {
+            type: String,
+            default: "",
+        },
+        voltage: {
+            type: Number,
+            default: 0,
+        },
+        vbatmaxcellvoltage: {
+            type: Number,
+            default: 1,
+        },
+        vbatwarningcellvoltage: {
+            type: Number,
+            default: 1,
+        },
     },
-    vbatmincellvoltage: {
-      type: Number,
-      default: 1,
-    },
-    vbatmaxcellvoltage: {
-      type: Number,
-      default: 1,
-    },
-    vbatwarningcellvoltage: {
-      type: Number,
-      default: 1,
-    },
-  },
-  computed: {
-    nbCells() {
-      let nbCells = Math.floor(this.voltage / this.vbatmaxcellvoltage) + 1;
-      if (this.voltage === 0) {
-        nbCells = 1;
-      }
-      return nbCells;
-    },
-    min() {
-      return this.vbatmincellvoltage * this.nbCells;
-    },
-    max() {
-      return this.vbatmaxcellvoltage * this.nbCells;
-    },
-    warn() {
-      return this.vbatwarningcellvoltage * this.nbCells;
-    },
-    isEmpty() {
-      return this.voltage < this.min && this.voltage > NO_BATTERY_VOLTAGE_MAXIMUM;
-    },
-    classes() {
-      if (this.batteryState) {
+    setup(props) {
+        const nbCells = computed(() => {
+            let cells = Math.floor(props.voltage / props.vbatmaxcellvoltage) + 1;
+            if (props.voltage === 0) {
+                cells = 1;
+            }
+            return cells;
+        });
+
+        const min = computed(() => {
+            return props.vbatwarningcellvoltage * nbCells.value;
+        });
+
+        const max = computed(() => {
+            return props.vbatmaxcellvoltage * nbCells.value;
+        });
+
+        const warn = computed(() => {
+            return props.vbatwarningcellvoltage * nbCells.value;
+        });
+
+        const isEmpty = computed(() => {
+            return props.voltage < min.value && props.voltage > NO_BATTERY_VOLTAGE_MAXIMUM;
+        });
+
+        const classes = computed(() => {
+            if (props.batteryState) {
+                return {
+                    "state-ok": props.batteryState === "0",
+                    "state-warning": props.batteryState === "1",
+                    "state-empty": props.batteryState === "2",
+                    // TODO: BATTERY_NOT_PRESENT
+                    // TODO: BATTERY_INIT
+                };
+            }
+            const isWarning = props.voltage < warn.value;
+            return {
+                "state-empty": isEmpty.value,
+                "state-warning": isWarning,
+                "state-ok": !isEmpty.value && !isWarning,
+            };
+        });
+
+        const batteryWidth = computed(() => {
+            return isEmpty.value ? 100 : ((props.voltage - min.value) / (max.value - min.value)) * 100;
+        });
+
         return {
-          "state-ok": this.batteryState === 0,
-          "state-warning": this.batteryState === 1,
-          "state-empty": this.batteryState === 2,
-          // TODO: BATTERY_NOT_PRESENT
-          // TODO: BATTERY_INIT
+            nbCells,
+            min,
+            max,
+            warn,
+            isEmpty,
+            classes,
+            batteryWidth,
         };
-      }
-      const isWarning = this.voltage < this.warn;
-      return {
-        "state-empty": this.isEmpty,
-        "state-warning": isWarning,
-        "state-ok": !this.isEmpty && !isWarning,
-      };
     },
-    batteryWidth() {
-      return this.isEmpty
-        ? 100
-        : ((this.voltage - this.min) / (this.max - this.min)) * 100;
-    },
-  },
-};
+});
 </script>
 
-<style>
+<style scoped>
 .quad-status-contents {
-  display: inline-block;
-  margin-top: 10px;
-  margin-left: 14px;
-  height: 10px;
-  width: 31px;
+    display: inline-block;
+    margin-top: 10px;
+    margin-left: 14px;
+    height: 10px;
+    width: 31px;
 }
 
 .quad-status-contents progress::-webkit-progress-bar {
-  height: 12px;
-  background-color: var(--surface-300);
+    height: 12px;
+    background-color: var(--surface-300);
 }
 
 .quad-status-contents progress::-webkit-progress-value {
-  background-color: #bcf;
+    background-color: #bcf;
 }
 
 .battery-icon {
-  background-image: url(../../images/icons/cf_icon_bat_grey.svg);
-  background-size: contain;
-  background-position: center;
-  display: inline-block;
-  height: 30px;
-  width: 60px;
-  transition: none;
-  margin-top: 4px;
-  margin-left: -4px;
-  background-repeat: no-repeat;
+    background-image: url(../../images/icons/cf_icon_bat_grey.svg);
+    background-size: contain;
+    background-position: center;
+    display: inline-block;
+    height: 30px;
+    width: 60px;
+    transition: none;
+    margin-top: 4px;
+    margin-left: -4px;
+    background-repeat: no-repeat;
 }
 
 .battery-status {
-  height: 11px;
+    height: 11px;
 }
 
 @keyframes error-blinker {
-  0% {
-    background-color: transparent;
-  }
-  50% {
-    background-color: var(--error-500);
-  }
+    0% {
+        background-color: transparent;
+    }
+    50% {
+        background-color: var(--error-500);
+    }
 }
 
 .battery-status.state-ok {
-  background-color: #59aa29;
+    background-color: #59aa29;
 }
 .battery-status.state-warning {
-  background-color: var(--error-500);
+    background-color: var(--error-500);
 }
 
 .battery-status.state-empty {
-  animation: error-blinker 1s linear infinite;
+    animation: error-blinker 1s linear infinite;
 }
 </style>

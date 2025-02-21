@@ -1,9 +1,9 @@
-import {beforeEach, describe, expect, it} from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 import MspHelper from "../../../src/js/msp/MSPHelper";
 import MSPCodes from "../../../src/js/msp/MSPCodes";
-import '../../../src/js/injected_methods';
+import "../../../src/js/injected_methods";
 import FC from "../../../src/js/fc";
-import {API_VERSION_1_46} from "../../../src/js/data_storage";
+import { API_VERSION_1_46 } from "../../../src/js/data_storage";
 
 describe("MspHelper", () => {
     const mspHelper = new MspHelper();
@@ -16,20 +16,22 @@ describe("MspHelper", () => {
 
             let callbackFunction = (item) => {
                 callbackCalled = true;
-                expect(item['crcError']).toEqual(true);
-                expect(item['command']).toEqual(MSPCodes.MSP_BOARD_INFO);
-                expect(item['length']).toEqual(0);
+                expect(item["crcError"]).toEqual(true);
+                expect(item["command"]).toEqual(MSPCodes.MSP_BOARD_INFO);
+                expect(item["length"]).toEqual(0);
             };
 
             mspHelper.process_data({
                 code: MSPCodes.MSP_BOARD_INFO,
                 dataView: new DataView(new Uint8Array([]).buffer),
                 crcError: true,
-                callbacks: [{
-                    callback: callbackFunction,
-                    callbackOnError: true,
-                    code: MSPCodes.MSP_BOARD_INFO,
-                }],
+                callbacks: [
+                    {
+                        callback: callbackFunction,
+                        callbackOnError: true,
+                        code: MSPCodes.MSP_BOARD_INFO,
+                    },
+                ],
             });
 
             expect(callbackCalled).toEqual(true);
@@ -49,10 +51,10 @@ describe("MspHelper", () => {
         });
         it("handles MSP_PIDNAMES correctly", () => {
             let pidNamesCount = 1 + crypto.getRandomValues(new Uint8Array(1))[0];
-            let expectedNames = Array.from({length: pidNamesCount}).map(_ => generateRandomString());
+            let expectedNames = Array.from({ length: pidNamesCount }).map((_) => generateRandomString());
 
             let lowLevelData = [];
-            appendStringToArray(lowLevelData, `${expectedNames.join(';')};`);
+            appendStringToArray(lowLevelData, `${expectedNames.join(";")};`);
 
             mspHelper.process_data({
                 code: MSPCodes.MSP_PIDNAMES,
@@ -82,7 +84,7 @@ describe("MspHelper", () => {
 
             const boardIdentifier = appendStringToArray(infoBuffer, generateRandomString(4)); // set board-identifier
 
-            infoBuffer.push16(0xDEAD); // set board version
+            infoBuffer.push16(0xdead); // set board version
             infoBuffer.push8(0x12); // set board type
             infoBuffer.push8(0x32); // set target capabilities
 
@@ -91,11 +93,11 @@ describe("MspHelper", () => {
             const manufacturerId = appendStringToArray(infoBuffer, generateRandomString(), true); // set board name
             const signature = crypto.getRandomValues(new Uint8Array(32));
 
-            signature.forEach(element => infoBuffer.push8(element));
-            infoBuffer.push8(0xFA); // mcu type id
-            infoBuffer.push8(0xBB); // configuration state
-            infoBuffer.push16(0xBAAB); // sample rate
-            infoBuffer.push32(0xDEADBEEF); // configuration problems
+            signature.forEach((element) => infoBuffer.push8(element));
+            infoBuffer.push8(0xfa); // mcu type id
+            infoBuffer.push8(0xbb); // configuration state
+            infoBuffer.push16(0xbaab); // sample rate
+            infoBuffer.push32(0xdeadbeef); // configuration problems
 
             mspHelper.process_data({
                 code: MSPCodes.MSP_BOARD_INFO,
@@ -105,18 +107,18 @@ describe("MspHelper", () => {
             });
 
             expect(FC.CONFIG.boardIdentifier).toEqual(boardIdentifier);
-            expect(FC.CONFIG.boardVersion).toEqual(0xDEAD);
+            expect(FC.CONFIG.boardVersion).toEqual(0xdead);
             expect(FC.CONFIG.boardType).toEqual(0x12);
             expect(FC.CONFIG.targetCapabilities).toEqual(0x32);
             expect(FC.CONFIG.targetName).toEqual(targetName);
             expect(FC.CONFIG.boardName).toEqual(boardName);
             expect(FC.CONFIG.manufacturerId).toEqual(manufacturerId);
             expect(new Uint8Array(FC.CONFIG.signature)).toEqual(signature);
-            expect(FC.CONFIG.mcuTypeId).toEqual(0xFA);
+            expect(FC.CONFIG.mcuTypeId).toEqual(0xfa);
 
-            expect(FC.CONFIG.configurationState).toEqual(0xBB);
-            expect(FC.CONFIG.sampleRateHz).toEqual(0xBAAB);
-            expect(FC.CONFIG.configurationProblems).toEqual(0xDEADBEEF);
+            expect(FC.CONFIG.configurationState).toEqual(0xbb);
+            expect(FC.CONFIG.sampleRateHz).toEqual(0xbaab);
+            expect(FC.CONFIG.configurationProblems).toEqual(0xdeadbeef);
         });
     });
 });
@@ -148,8 +150,8 @@ function appendStringToArray(destination, source, prefixWithLength = false) {
  * @returns {string} random string (composed of letters [A-Za-z0-9])
  */
 function generateRandomString(length = -1) {
-    let result = '';
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = "";
+    const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     const charactersLength = characters.length;
 
     if (length < 0) {

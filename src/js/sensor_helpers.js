@@ -1,20 +1,22 @@
-import { bit_check } from './bit';
-import $ from 'jquery';
+import { bit_check } from "./bit";
+import $ from "jquery";
 
 export function have_sensor(sensors_detected, sensor_code) {
-    switch(sensor_code) {
-        case 'acc':
+    switch (sensor_code) {
+        case "acc":
             return bit_check(sensors_detected, 0);
-        case 'baro':
+        case "baro":
             return bit_check(sensors_detected, 1);
-        case 'mag':
+        case "mag":
             return bit_check(sensors_detected, 2);
-        case 'gps':
+        case "gps":
             return bit_check(sensors_detected, 3);
-        case 'sonar':
+        case "sonar":
             return bit_check(sensors_detected, 4);
-        case 'gyro':
+        case "gyro":
             return bit_check(sensors_detected, 5);
+        case "opticalflow":
+            return bit_check(sensors_detected, 6);
     }
     return false;
 }
@@ -29,7 +31,10 @@ export function sensor_status(sensors_detected = 0, gps_fix_state = 0) {
     }
 
     // update UI (if necessary)
-    if (sensor_status.previous_sensors_detected === sensors_detected && sensor_status.previous_gps_fix_state === gps_fix_state) {
+    if (
+        sensor_status.previous_sensors_detected === sensors_detected &&
+        sensor_status.previous_gps_fix_state === gps_fix_state
+    ) {
         return;
     }
 

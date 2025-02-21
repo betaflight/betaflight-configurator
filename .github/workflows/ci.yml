@@ -16,7 +16,7 @@ on:
 jobs:
   test:
     name: Test
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
@@ -44,11 +44,11 @@ jobs:
       matrix:
         include:
           - name: Android
-            os: ubuntu-22.04
+            os: ubuntu-latest
             releaseArgs: --android
 
           - name: Linux
-            os: ubuntu-22.04
+            os: ubuntu-latest
             releaseArgs: --linux64
 
           - name: macOS

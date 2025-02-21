@@ -3,36 +3,41 @@ import { get as getConfig } from "../ConfigStorage";
 import CONFIGURATOR from "../data_storage";
 import { i18n } from "../localization";
 import { gui_log } from "../gui_log";
-import $ from 'jquery';
+import $ from "jquery";
 import semver from "semver-min";
 
 function notifyOutdatedVersion(data) {
-
     if (data === undefined) {
-        console.log('No releaseData');
+        console.log("No releaseData");
         return false;
     }
 
-    if (data.isCurrent === false && data.updatedVersion !== undefined && semver.gt(data.updatedVersion.version, CONFIGURATOR.version)) {
-
+    if (
+        data.isCurrent === false &&
+        data.updatedVersion !== undefined &&
+        semver.gt(data.updatedVersion.version, CONFIGURATOR.version)
+    ) {
         CONFIGURATOR.latestVersion = data.updatedVersion.version;
         CONFIGURATOR.latestVersionReleaseUrl = data.updatedVersion.url;
 
-        const message = i18n.getMessage('configuratorUpdateNotice', [CONFIGURATOR.latestVersion, CONFIGURATOR.latestVersionReleaseUrl]);
+        const message = i18n.getMessage("configuratorUpdateNotice", [
+            CONFIGURATOR.latestVersion,
+            CONFIGURATOR.latestVersionReleaseUrl,
+        ]);
         gui_log(message);
 
-        const dialog = $('.dialogConfiguratorUpdate')[0];
+        const dialog = $(".dialogConfiguratorUpdate")[0];
 
-        $('.dialogConfiguratorUpdate-content').html(message);
+        $(".dialogConfiguratorUpdate-content").html(message);
 
-        $('.dialogConfiguratorUpdate-closebtn').click(function() {
+        $(".dialogConfiguratorUpdate-closebtn").click(function () {
             dialog.close();
         });
 
-        $('.dialogConfiguratorUpdate-websitebtn').click(function() {
+        $(".dialogConfiguratorUpdate-websitebtn").click(function () {
             dialog.close();
 
-            window.open(CONFIGURATOR.latestVersionReleaseUrl, '_blank');
+            window.open(CONFIGURATOR.latestVersionReleaseUrl, "_blank");
         });
 
         dialog.showModal();
@@ -42,8 +47,7 @@ function notifyOutdatedVersion(data) {
 }
 
 export function checkForConfiguratorUpdates() {
-
-    const result = getConfig('checkForConfiguratorUnstableVersions');
+    const result = getConfig("checkForConfiguratorUnstableVersions");
     let type = "Stable";
     if (result.checkForConfiguratorUnstableVersions) {
         type = "Unstable";

@@ -5,7 +5,7 @@ import PresetTitlePanel from "../TitlePanel/PresetTitlePanel";
 import FC from "../../../js/fc";
 import { marked } from "marked";
 import DOMPurify from "dompurify";
-import $ from 'jquery';
+import $ from "jquery";
 
 export default class PresetsDetailedDialog {
     constructor(domDialog, pickedPresetList, onPresetPickedCallback, favoritePresets) {
@@ -19,7 +19,7 @@ export default class PresetsDetailedDialog {
     }
 
     load() {
-        return new Promise(resolve => {
+        return new Promise((resolve) => {
             this._domDialog.load("./tabs/presets/DetailedDialog/PresetsDetailedDialog.html", () => {
                 this._setupdialog();
                 resolve();
@@ -36,19 +36,20 @@ export default class PresetsDetailedDialog {
         this._optionsShowedAtLeastOnce = false;
         this._isPresetPickedOnClose = false;
 
-        this._presetsRepo.loadPreset(this._preset)
+        this._presetsRepo
+            .loadPreset(this._preset)
             .then(() => {
                 this._loadPresetUi();
                 this._setLoadingState(false);
                 this._setFinalYesNoDialogSettings();
             })
-            .catch(err => {
+            .catch((err) => {
                 console.error(err);
                 const msg = i18n.getMessage("presetsLoadError");
                 this._showError(msg);
             });
 
-        return new Promise(resolve => this._openPromiseResolve = resolve);
+        return new Promise((resolve) => (this._openPromiseResolve = resolve));
     }
 
     _setFinalYesNoDialogSettings() {
@@ -75,13 +76,20 @@ export default class PresetsDetailedDialog {
         if (this._preset.discussion) {
             this._domDiscussionLink.removeClass(GUI.buttonDisabledClass);
             this._domDiscussionLink.attr("href", this._preset.discussion);
-        } else{
+        } else {
             this._domDiscussionLink.addClass(GUI.buttonDisabledClass);
         }
 
         this._titlePanel.empty();
-        const titlePanel = new PresetTitlePanel(this._titlePanel, this._preset, this._presetsRepo, false,
-            this._showPresetRepoName, () => this._setLoadingState(false), this._favoritePresets);
+        const titlePanel = new PresetTitlePanel(
+            this._titlePanel,
+            this._preset,
+            this._presetsRepo,
+            false,
+            this._showPresetRepoName,
+            () => this._setLoadingState(false),
+            this._favoritePresets,
+        );
         titlePanel.load();
         this._loadOptionsSelect();
         this._updateFinalCliText();
@@ -91,7 +99,7 @@ export default class PresetsDetailedDialog {
     _loadDescription() {
         let text = this._preset.description?.join("\n");
 
-        switch(this._preset.parser) {
+        switch (this._preset.parser) {
             case "MARKED":
                 this._isDescriptionHtml = true;
                 text = marked.parse(text);
@@ -131,21 +139,21 @@ export default class PresetsDetailedDialog {
     }
 
     _readDom() {
-        this._domButtonApply = $('#presets_detailed_dialog_applybtn');
-        this._domButtonCancel = $('#presets_detailed_dialog_closebtn');
-        this._domLoading = $('#presets_detailed_dialog_loading');
-        this._domError = $('#presets_detailed_dialog_error');
-        this._domProperties = $('#presets_detailed_dialog_properties');
-        this._titlePanel = $('.preset_detailed_dialog_title_panel');
-        this._domDescriptionText = $('#presets_detailed_dialog_text_description');
-        this._domDescriptionHtml = $('#presets_detailed_dialog_html_description');
-        this._domCliText = $('#presets_detailed_dialog_text_cli');
-        this._domGitHubLink = this._domDialog.find('#presets_open_online');
-        this._domDiscussionLink = this._domDialog.find('#presets_open_discussion');
-        this._domOptionsSelect = $('#presets_options_select');
-        this._domOptionsSelectPanel = $('#presets_options_panel');
-        this._domButtonCliShow = $('#presets_cli_show');
-        this._domButtonCliHide = $('#presets_cli_hide');
+        this._domButtonApply = $("#presets_detailed_dialog_applybtn");
+        this._domButtonCancel = $("#presets_detailed_dialog_closebtn");
+        this._domLoading = $("#presets_detailed_dialog_loading");
+        this._domError = $("#presets_detailed_dialog_error");
+        this._domProperties = $("#presets_detailed_dialog_properties");
+        this._titlePanel = $(".preset_detailed_dialog_title_panel");
+        this._domDescriptionText = $("#presets_detailed_dialog_text_description");
+        this._domDescriptionHtml = $("#presets_detailed_dialog_html_description");
+        this._domCliText = $("#presets_detailed_dialog_text_cli");
+        this._domGitHubLink = this._domDialog.find("#presets_open_online");
+        this._domDiscussionLink = this._domDialog.find("#presets_open_discussion");
+        this._domOptionsSelect = $("#presets_options_select");
+        this._domOptionsSelectPanel = $("#presets_options_panel");
+        this._domButtonCliShow = $("#presets_cli_show");
+        this._domButtonCliHide = $("#presets_cli_hide");
     }
 
     _showCliText(value) {
@@ -157,7 +165,7 @@ export default class PresetsDetailedDialog {
     }
 
     _createOptionsSelect(options) {
-        options.forEach(option => {
+        options.forEach((option) => {
             if (!option.childs) {
                 this._addOption(this._domOptionsSelect, option, false);
             } else {
@@ -167,8 +175,12 @@ export default class PresetsDetailedDialog {
 
         this._domOptionsSelect.multipleSelect({
             placeholder: i18n.getMessage("presetsOptionsPlaceholder"),
-            formatSelectAll () { return i18n.getMessage("dropDownSelectAll"); },
-            formatAllSelected() { return i18n.getMessage("dropDownAll"); },
+            formatSelectAll() {
+                return i18n.getMessage("dropDownSelectAll");
+            },
+            formatAllSelected() {
+                return i18n.getMessage("dropDownAll");
+            },
             onClick: () => this._optionsSelectionChanged(),
             onCheckAll: () => this._optionsSelectionChanged(),
             onUncheckAll: () => this._optionsSelectionChanged(),
@@ -179,10 +191,10 @@ export default class PresetsDetailedDialog {
             selectAll: false,
             styler: function (row) {
                 let style = "";
-                if (row.type === 'optgroup') {
-                    style = 'font-weight: bold;';
+                if (row.type === "optgroup") {
+                    style = "font-weight: bold;";
                 } else if (row.classes.includes("optionHasParent")) {
-                    style = 'padding-left: 22px;';
+                    style = "padding-left: 22px;";
                 }
                 return style;
             },
@@ -196,31 +208,32 @@ export default class PresetsDetailedDialog {
     _ensureMutuallyExclusiveOptions(view) {
         // In this form: option_0_1 where 0_1 is the group and the index within that group.
         const selectedOptionKey = view._key;
-        const firstUnderscoreIndex = selectedOptionKey.indexOf('_');
-        const lastUnderscoreIndex = selectedOptionKey.lastIndexOf('_');
+        const firstUnderscoreIndex = selectedOptionKey.indexOf("_");
+        const lastUnderscoreIndex = selectedOptionKey.lastIndexOf("_");
         const groupIndex = selectedOptionKey.slice(firstUnderscoreIndex + 1, lastUnderscoreIndex);
 
         const group = this._preset.options[groupIndex];
-        if (group.isExclusive) {
+        if (group?.isExclusive) {
             // clear all options within group
-            const valuesWithinGroup = this._domOptionsSelect.find(`optgroup[label="${group.name}"]`)
+            const valuesWithinGroup = this._domOptionsSelect
+                .find(`optgroup[label="${group.name}"]`)
                 .children()
-                .map(function() {
-                    return $(this).attr('value');
+                .map(function () {
+                    return $(this).attr("value");
                 })
                 .get();
 
-            const existingCheckedValues = this._domOptionsSelect.multipleSelect('getSelects');
+            const existingCheckedValues = this._domOptionsSelect.multipleSelect("getSelects");
 
             const optionsBesidesTheGroupsOptions = existingCheckedValues.filter((v) => !valuesWithinGroup.includes(v));
-            this._domOptionsSelect.multipleSelect('setSelects', optionsBesidesTheGroupsOptions);
+            this._domOptionsSelect.multipleSelect("setSelects", optionsBesidesTheGroupsOptions);
         }
     }
 
     _addOptionGroup(parentElement, optionGroup) {
         const optionGroupElement = $(`<optgroup label="${optionGroup.name}"></optgroup>`);
 
-        optionGroup.childs.forEach(option => {
+        optionGroup.childs.forEach((option) => {
             this._addOption(optionGroupElement, option, true, optionGroup.isExclusive);
         });
 
@@ -228,14 +241,14 @@ export default class PresetsDetailedDialog {
     }
 
     _addOption(parentElement, option, hasParent) {
-        let selectedString = "selected=\"selected\"";
+        let selectedString = 'selected="selected"';
         if (!option.checked) {
             selectedString = "";
         }
 
         let classString = "";
         if (hasParent) {
-            classString = "class=\"optionHasParent\"";
+            classString = 'class="optionHasParent"';
         }
 
         parentElement.append(`<option value="${option.name}" ${selectedString} ${classString}>${option.name}</option>`);
@@ -246,11 +259,10 @@ export default class PresetsDetailedDialog {
     }
 
     _destroyOptionsSelect() {
-        this._domOptionsSelect.multipleSelect('destroy');
+        this._domOptionsSelect.multipleSelect("destroy");
     }
 
     _loadOptionsSelect() {
-
         const optionsVisible = 0 !== this._preset.options.length;
         this._domOptionsSelect.empty();
         this._domOptionsSelectPanel.toggle(optionsVisible);
@@ -259,7 +271,7 @@ export default class PresetsDetailedDialog {
             this._createOptionsSelect(this._preset.options);
         }
 
-        this._domOptionsSelect.multipleSelect('refresh');
+        this._domOptionsSelect.multipleSelect("refresh");
     }
 
     _setupdialog() {
@@ -312,7 +324,10 @@ export default class PresetsDetailedDialog {
         } else {
             const dialogSettings = {
                 title: i18n.getMessage("presetsWarningDialogTitle"),
-                text: i18n.getMessage("presetsWarningWrongVersionConfirmation", [this._preset.firmware_version, FC.CONFIG.flightControllerVersion]),
+                text: i18n.getMessage("presetsWarningWrongVersionConfirmation", [
+                    this._preset.firmware_version,
+                    FC.CONFIG.flightControllerVersion,
+                ]),
                 buttonYesText: i18n.getMessage("presetsWarningDialogYesButton"),
                 buttonNoText: i18n.getMessage("presetsWarningDialogNoButton"),
                 buttonYesCallback: () => this._pickPreset(),

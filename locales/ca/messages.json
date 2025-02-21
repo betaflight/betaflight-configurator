@@ -872,14 +872,17 @@
     },
     "initialSetupNotInBuild": {
         "message": "No inclòs a la compil-lació",
-        "description": "Message that pops up when hardware support not are supported in Build"
+        "description": "Message that pops up when hardware support is not included in build"
     },
     "initialSetupNotDetected": {
-        "message": "No detectat",
-        "description": "Message that pops up when hardware are not detected"
+        "message": "No detectat ni desactivat",
+        "description": "Message that pops up when hardware is not detected or disabled"
     },
     "initialSetupRSSIValue": {
         "message": "$1 dBm"
+    },
+    "initialSetupMCU": {
+        "message": "MCU:"
     },
     "initialSetupSensorHardware": {
         "message": "Sensors:"
@@ -901,6 +904,9 @@
     },
     "initialSetupSensorSonar": {
         "message": "Sonar:"
+    },
+    "initialSetupSensorOpticalflow": {
+        "message": "Flux òptic:"
     },
     "initialSetupSensorRadar": {
         "message": "Radar:"
@@ -1029,6 +1035,14 @@
     "initialSetupArmingDisableFlagsTooltipCRASHFLIP": {
         "message": "L'interruptor de Crash Flip está actiu",
         "description": "Message that pops to describe the CRASHFLIP arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipALTHOLD": {
+        "message": "El manteniment d'altitud està actiu",
+        "description": "Message that pops up to describe the ALTHOLD arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipPOSHOLD": {
+        "message": "El manteniment de posició està actiu",
+        "description": "Message that pops up to describe the POSHOLD arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "Un dels altres desarmar banderes està actiu quan es fa armament",
@@ -1177,6 +1191,9 @@
     "featureMOTOR_STOP": {
         "message": "No girar els motors quan està armat"
     },
+    "featureMOTOR_STOPTip": {
+        "message": "Aquesta funció està desactivada quan s'habilita AIRMODE"
+    },
     "featureSERVO_TILT": {
         "message": "Servo gimbal"
     },
@@ -1193,7 +1210,8 @@
         "message": "GPS per a navegació i telemetria"
     },
     "featureGPSTip": {
-        "message": "Configura els ports primer"
+        "message": "Activa\/Desactiva les dades GPS. Si no es pot activar el GPS, comproveu que hi hagi un port assignat al GPS a la pestanya Ports",
+        "description": "Message that pops up to describe the GPS feature"
     },
     "featureSONAR": {
         "message": "Sónar"
@@ -1253,7 +1271,8 @@
         "message": "Activa Airmode permanentment"
     },
     "featureAIRMODETip": {
-        "message": "$t(auxiliaryHelpMode_AIRMODE.message)"
+        "message": "$t(auxiliaryHelpMode_AIRMODE.message)",
+        "description": "Don't translate!!!"
     },
     "featureRX_SPI": {
         "message": "SPI Rx (p. ex., Rx integrat)"
@@ -1318,8 +1337,41 @@
     "configurationOtherFeaturesHelp": {
         "message": "<strong>Nota:<\/strong> No totes les controladores de vol admeten totes les funcions. Si habiliteu una funció específica i es desactiva després de prémer \"Desa i reinicia\", significa que aquesta funció no és compatible amb la vostra FC."
     },
+    "configurationMagAlignmentHelp": {
+        "message": "L'alineació del magnetòmetre és l'orientació del sensor del magnetòmetre a la placa del controlador de vol. El valor predeterminat sol ser correcte, però si teniu una construcció personalitzada o un controlador de vol amb una orientació diferent del magnetòmetre, és possible que hàgiu d'ajustar aquesta configuració."
+    },
+    "configurationMagDeclination": {
+        "message": "Declinació Magnètica"
+    },
+    "configurationMagDeclinationInput": {
+        "message": "Graus de declinació"
+    },
+    "configurationMagDeclinationHelp": {
+        "message": "La declinació magnètica és l'angle entre el nord magnètic i el nord veritable. És diferent per a cada lloc de la terra. Podeu trobar la declinació de la vostra ubicació a Internet"
+    },
+    "configurationRangefinder": {
+        "message": "$t(initialSetupSensorSonar.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationRangefinderHelp": {
+        "message": "Activa el telèmetre per mesurar la distància a terra en cm"
+    },
+    "configurationRangefinderType": {
+        "message": "Tipus"
+    },
+    "configurationOpticalflow": {
+        "message": "$t(initialSetupSensorOpticalflow.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationOpticalflowHelp": {
+        "message": "Activa el sensor de flux òptic"
+    },
+    "configurationOpticalflowType": {
+        "message": "$t(configurationRangefinderType.message)",
+        "description": "Don't translate!!!"
+    },
     "configurationBoardAlignment": {
-        "message": "Aliniació de Placa i Sensor"
+        "message": "Alineació de la placa"
     },
     "configurationBoardAlignmentRoll": {
         "message": "Graus de Roll"
@@ -1329,6 +1381,42 @@
     },
     "configurationBoardAlignmentYaw": {
         "message": "Graus de Yaw"
+    },
+    "configurationGyroAlignment": {
+        "message": "Alineació del giroscopi"
+    },
+    "configurationGyroAlignmentHelp": {
+        "message": "L'alineació del giroscopi és l'orientació del sensor del giroscopi a la placa del controlador de vol. El valor predeterminat sol ser correcte, però si teniu una construcció personalitzada o un controlador de vol amb una orientació de giroscopi diferent, és possible que hàgiu d'ajustar aquesta configuració."
+    },
+    "configurationGyroAlignmentRoll": {
+        "message": "$t(configurationBoardAlignmentRoll.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyroAlignmentPitch": {
+        "message": "$t(configurationBoardAlignmentPitch.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyroAlignmentYaw": {
+        "message": "$t(configurationBoardAlignmentYaw.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationMagAlignment": {
+        "message": "Alineació del magnetòmetre"
+    },
+    "configurationBoardAlignmentHelp": {
+        "message": "Rotació arbitrària de la placa en graus, per permetre muntar-la de costat \/ cap per avall \/ girada, etc. Quan utilitzeu sensors externs, utilitzeu les alineacions dels sensors (Giro, Acc, Mag) per definir la posició del sensor independent de l'orientació de la placa. "
+    },
+    "configurationMagAlignmentRoll": {
+        "message": "$t(configurationBoardAlignmentRoll.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationMagAlignmentPitch": {
+        "message": "$t(configurationBoardAlignmentPitch.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationMagAlignmentYaw": {
+        "message": "$t(configurationBoardAlignmentYaw.message)",
+        "description": "Don't translate!!!"
     },
     "configurationSensorAlignmentGyro": {
         "message": "Alineament GYRO"
@@ -1357,9 +1445,6 @@
     "configurationSensorAlignmentAcc": {
         "message": "Alineament ACCEL"
     },
-    "configurationSensorAlignmentMag": {
-        "message": "Alineament MAG"
-    },
     "configurationSensorAlignmentDefaultOption": {
         "message": "Predeterminat"
     },
@@ -1377,9 +1462,6 @@
     },
     "configurationArmingHelp": {
         "message": "Algunes opcions d'armat requereixen l'acceleròmetre habilitat"
-    },
-    "configurationMagDeclination": {
-        "message": "Declinació del magnetòmetre [graus]"
     },
     "configurationReverseMotorSwitch": {
         "message": "La direcció dels motors és inversa"
@@ -1629,6 +1711,9 @@
     },
     "portsSerialRx": {
         "message": "Rx sèrie"
+    },
+    "portsSerialRxHelp": {
+        "message": "Activa o desactiva el receptor sèrie de control remot (RX) a l'UART especificat. Només es permet un."
     },
     "portsSensorIn": {
         "message": "Entrada de Sensor"
@@ -2320,7 +2405,7 @@
         "description": "Help text to ACRO TRAINER mode"
     },
     "auxiliaryHelpMode_ARM": {
-        "message": "Permet la sortida del motor i permet que el dron voli",
+        "message": "Habilita la sortida del motor i permet que el quad voli.  <span class=\"message-negative\">Atenció:<\/span> és possible que el pilot vulgui configurar <b>BOXPREARM<\/b> (armament en 2 etapes) per motius de seguretat.",
         "description": "Help text to ARM mode"
     },
     "auxiliaryHelpMode_ANGLE": {
@@ -2336,7 +2421,7 @@
         "description": "Help text to AIRMODE mode"
     },
     "auxiliaryHelpMode_ALTHOLD": {
-        "message": "El mode d'altitud és el mode manual no GPS més segur per als nous pilots. És com el mode estabilitzat, però a més bloqueja l'altitud del quad quan es deixen anar els sticks",
+        "message": "<a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/position-hold-v4-6#altitude-hold\" target=\"_blank\" rel=\"noopener noreferrer\">Altitude Hold<\/a> regula activamente la altitud de la aeronave utilizando sensores externos combinados con el modo de ángulo (modo estable).",
         "description": "Help text for ALTITUDE HOLD mode"
     },
     "auxiliaryHelpMode_BEEPER": {
@@ -2639,6 +2724,9 @@
     "adjustmentsFunction30": {
         "message": "Selecció del perfil de LED"
     },
+    "adjustmentsFunction31": {
+        "message": "Ajust de la intensitat LED"
+    },
     "adjustmentsSave": {
         "message": "Desa"
     },
@@ -2806,6 +2894,10 @@
     },
     "gpsPositionalDop": {
         "message": "DOP posicional:"
+    },
+    "gpsMagneticDeclination": {
+        "message": "$t(configurationMagDeclination):",
+        "description": "Do not translate"
     },
     "gpsSignalStrHead": {
         "message": "Potència senyal GPS"
@@ -4472,7 +4564,7 @@
         "message": "Compensació del Battery Sag"
     },
     "pidTuningVbatSagCompensationHelp": {
-        "message": "Ofereix un rendiment constant de l'acceleració i el PID en l'interval de tensió de la bateria utilitzable augmentant la sortida del motor a mesura que cau la tensió de la bateria.<br \/><br \/>La quantitat de compensació es pot variar entre 0 i 100%. Es recomana una compensació total (100%).<br \/><br \/>Visiteu <a href=\"https:\/\/betaflight.com\/docs\/tuning\/4.2-Tuning-Notes#dynamic-battery-sag-compensation\" target=\"_blank\" rel=\"noopener noreferrer\">aquesta entrada wiki<\/a> per a més informació."
+        "message": "Ofereix un rendiment constant de l'acceleració i el PID en l'interval de tensió de la bateria utilitzable augmentant la sortida del motor a mesura que cau la tensió de la bateria.<br \/><br \/>La quantitat de compensació es pot variar entre 0 i 100%. Es recomana una compensació total (100%).<br \/><br \/>Visiteu <a href=\"https:\/\/github.com\/betaflight\/betaflight\/wiki\/4-2-Tuning-Notes#dynamic-battery-sag-compensation \"target=\"_blank\" rel=\"noopener noreferrer\">aquesta entrada wiki<\/a> per a més informació."
     },
     "pidTuningVbatSagValue": {
         "message": "%"
@@ -4572,9 +4664,6 @@
     },
     "pidTuningIntegratedYawHelp": {
         "message": "Integrated Yaw integra els valors de guiñada P, I i D, la qual cosa permet que les guiñades P, I i D s'ajustin una mica com si sintonitzeu el pas i el gir.<br><br>Es requereix molt poca I, perquè la P integrada actua com I i la D integrada actuen com P.<br><br>NOTA: La guiada integrada requereix l'ús del control absolut, ja que no es necessita cap I amb la guiada integrada."
-    },
-    "configHelp2": {
-        "message": "Rotació arbitrària de la controladora en graus, això ajuda a muntar-la de costat \/ al revès \/ etc. Quan fagis servirs sensors externs utilitza l'alineat (Gyro, Acc, Mag) per definir la posició del sensor independent de la controladora."
     },
     "failsafeFeaturesHelpOld": {
         "message": "La configuració de failsafe ha canviat considerablement. Utilitza Betaflight <strong>v1.12.0+<\/strong> per habilitar el panell millorat."
@@ -4676,7 +4765,7 @@
         "message": "La distància que pujarà el dron, per sobre de l'altitud actual, quan s'inicia un rescat i el mode d'altitud s'estableix en Altitud ACTUAL; també s'ha afegit quan està en mode d'altitud MAX."
     },
     "failsafeGpsRescueItemReturnAltitude": {
-        "message": "​Altitud de retorn (metres) - <strong>només s'aplica al mode d'altitud fixa<\/strong>"
+        "message": "Altitud retorn (metres)"
     },
     "failsafeGpsRescueItemAscendRate": {
         "message": "Taxa d’ascens (metres\/segon)"
@@ -5515,6 +5604,38 @@
     "osdTextElementAltitudeVariantNoDecimalASL": {
         "message": "ASL sense decimals",
         "description": "One of the variants of the altitude element of the OSD"
+    },
+    "osdTextElementCustomMsg0": {
+        "message": "Missatge personalitzat 1",
+        "description": "One of the elements of the OSD"
+    },
+    "osdTextElementCustomMsg1": {
+        "message": "Missatge personalitzat 2",
+        "description": "One of the elements of the OSD"
+    },
+    "osdTextElementCustomMsg2": {
+        "message": "Missatge personalitzat 3",
+        "description": "One of the elements of the OSD"
+    },
+    "osdTextElementCustomMsg3": {
+        "message": "Missatge personalitzat 4",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementCustomMsg0": {
+        "message": "Missatge personalitzat 1 des d'un dispositiu extern",
+        "description": "Description of the custom message 1 element of the OSD"
+    },
+    "osdDescElementCustomMsg1": {
+        "message": "Missatge personalitzat 2 des d'un dispositiu extern",
+        "description": "Description of the custom message 2 element of the OSD"
+    },
+    "osdDescElementCustomMsg2": {
+        "message": "Missatge personalitzat 3 des d'un dispositiu extern",
+        "description": "Description of the custom message 3 element of the OSD"
+    },
+    "osdDescElementCustomMsg3": {
+        "message": "Missatge personalitzat 4 des d'un dispositiu extern",
+        "description": "Description of the custom message 4 element of the OSD"
     },
     "osdTextElementOnTime": {
         "message": "A l'hora",

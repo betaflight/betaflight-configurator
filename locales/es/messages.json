@@ -864,14 +864,17 @@
     },
     "initialSetupNotInBuild": {
         "message": "No incluido en la compilación",
-        "description": "Message that pops up when hardware support not are supported in Build"
+        "description": "Message that pops up when hardware support is not included in build"
     },
     "initialSetupNotDetected": {
-        "message": "No detectado",
-        "description": "Message that pops up when hardware are not detected"
+        "message": "No detectado o desactivado",
+        "description": "Message that pops up when hardware is not detected or disabled"
     },
     "initialSetupRSSIValue": {
         "message": "$1 dBm"
+    },
+    "initialSetupMCU": {
+        "message": "MCU:"
     },
     "initialSetupSensorHardware": {
         "message": "Sensores:"
@@ -893,6 +896,9 @@
     },
     "initialSetupSensorSonar": {
         "message": "Sonar:"
+    },
+    "initialSetupSensorOpticalflow": {
+        "message": "Flujo óptico:"
     },
     "initialSetupSensorRadar": {
         "message": "Radar:"
@@ -1017,6 +1023,10 @@
     "initialSetupArmingDisableFlagsTooltipMOTOR_PROTOCOL": {
         "message": "No hay ningún protocolo de salida para los motores seleccionado",
         "description": "Message that pops up to describe the MOTOR_PROTO arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipCRASHFLIP": {
+        "message": "Interruptor boca abajo después de choque está activado",
+        "description": "Message that pops to describe the CRASHFLIP arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "Una de las otras banderas de desarmado estaba activa al armar",
@@ -1180,9 +1190,6 @@
     "featureGPS": {
         "message": "GPS para navegación y telemetría"
     },
-    "featureGPSTip": {
-        "message": "Configurar primero el escenario de puertos"
-    },
     "featureSONAR": {
         "message": "Sonar"
     },
@@ -1241,7 +1248,8 @@
         "message": "Activar Airmode permanentemente"
     },
     "featureAIRMODETip": {
-        "message": "$t(auxiliaryHelpMode_AIRMODE.message)"
+        "message": "$t(auxiliaryHelpMode_AIRMODE.message)",
+        "description": "Don't translate!!!"
     },
     "featureRX_SPI": {
         "message": "SPI Rx (ej. Rx incorporado)"
@@ -1306,8 +1314,41 @@
     "configurationOtherFeaturesHelp": {
         "message": "<strong>Nota:<\/strong> No todas las funcionalidades están soportadas por todos los controladores de vuelo. Si activas una funcionalidad específica, y se desactiva cuando pulsas 'Guardar y Reiniciar', significa que esa funcionalidad no está soportada por tu placa."
     },
+    "configurationMagAlignmentHelp": {
+        "message": "La alineación del magnetómetro es la orientación del magnetómetro en la placa del controlador de vuelo. Generalmente el valor por defecto es correcto, pero si tienes una versión personalizada o un controlador de vuelo con una orientación diferente del magnetómetro, puede que necesites ajustar esta configuración."
+    },
+    "configurationMagDeclination": {
+        "message": "Declinación magnética"
+    },
+    "configurationMagDeclinationInput": {
+        "message": "Grados de declinación"
+    },
+    "configurationMagDeclinationHelp": {
+        "message": "La declinación magnética es el ángulo entre el norte magnético y el norte verdadero. Es diferente para cada ubicación en la Tierra. Puedes encontrar la declinación de tu ubicación en Internet"
+    },
+    "configurationRangefinder": {
+        "message": "$t(initialSetupSensorSonar.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationRangefinderHelp": {
+        "message": "Activa el telémetro para medir distancia al suelo en cm"
+    },
+    "configurationRangefinderType": {
+        "message": "Tipo"
+    },
+    "configurationOpticalflow": {
+        "message": "$t(initialSetupSensorOpticalflow.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationOpticalflowHelp": {
+        "message": "Activar sensor de flujo óptico"
+    },
+    "configurationOpticalflowType": {
+        "message": "$t(configurationRangefinderType.message)",
+        "description": "Don't translate!!!"
+    },
     "configurationBoardAlignment": {
-        "message": "Alineación de Placa y Sensores"
+        "message": "Alineación de la Placa"
     },
     "configurationBoardAlignmentRoll": {
         "message": "Grados Roll"
@@ -1317,6 +1358,42 @@
     },
     "configurationBoardAlignmentYaw": {
         "message": "Grados Yaw"
+    },
+    "configurationGyroAlignment": {
+        "message": "Alineación del Giro"
+    },
+    "configurationGyroAlignmentHelp": {
+        "message": "La alineación del giro es la orientación del giro en la placa del controlador de vuelo. Generalmente el valor por defecto es correcto, pero si tienes una versión personalizada o un controlador de vuelo con una orientación diferente del giro, puede que necesites ajustar esta configuración."
+    },
+    "configurationGyroAlignmentRoll": {
+        "message": "$t(configurationBoardAlignmentRoll.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyroAlignmentPitch": {
+        "message": "$t(configurationBoardAlignmentPitch.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyroAlignmentYaw": {
+        "message": "$t(configurationBoardAlignmentYaw.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationMagAlignment": {
+        "message": "Alineación de Magnetómetro"
+    },
+    "configurationBoardAlignmentHelp": {
+        "message": "Rotación arbitraria de la placa en grados, para permitir montaje de lado \/ boca abajo \/ rotada etc. Al ejecutar sensores externos, usa la alineación del sensor (Giro, Acc, Mag) para definir la posición del sensor independientemente de la orientación de la placa. "
+    },
+    "configurationMagAlignmentRoll": {
+        "message": "$t(configurationBoardAlignmentRoll.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationMagAlignmentPitch": {
+        "message": "$t(configurationBoardAlignmentPitch.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationMagAlignmentYaw": {
+        "message": "$t(configurationBoardAlignmentYaw.message)",
+        "description": "Don't translate!!!"
     },
     "configurationSensorAlignmentGyro": {
         "message": "Alineación GIRO"
@@ -1345,9 +1422,6 @@
     "configurationSensorAlignmentAcc": {
         "message": "Alineación ACEL"
     },
-    "configurationSensorAlignmentMag": {
-        "message": "Alineación MAG"
-    },
     "configurationSensorAlignmentDefaultOption": {
         "message": "Predeterminado"
     },
@@ -1365,9 +1439,6 @@
     },
     "configurationArmingHelp": {
         "message": "Algunas opciones de Armado pueden requerir que el acelerómetro esté activado"
-    },
-    "configurationMagDeclination": {
-        "message": "Declinación del magnetómetro [grad]"
     },
     "configurationReverseMotorSwitch": {
         "message": "Dirección de los motores invertida"
@@ -1617,6 +1688,9 @@
     },
     "portsSerialRx": {
         "message": "Rx Serie"
+    },
+    "portsSerialRxHelp": {
+        "message": "Activar o desactivar el receptor serie de control remoto (RX) en el UART especificado. Sólo uno permitido."
     },
     "portsSensorIn": {
         "message": "Entrada de Sensores"
@@ -2299,12 +2373,16 @@
     "auxiliaryModeLogicAND": {
         "message": "Y"
     },
+    "auxiliaryHelpMode_3DDISABLE": {
+        "message": "Activa la dirección del motor reversible para proporcionar acelerador negativo y permitir el vuelo invertido. El acelerador se convierte en -100 a +100 en lugar de 0 a 100",
+        "description": "Help text to 3D mode"
+    },
     "auxiliaryHelpMode_ACROTRAINER": {
         "message": "Modo de vuelo que limita el ángulo de la aeronave al volar en modo acro",
         "description": "Help text to ACRO TRAINER mode"
     },
     "auxiliaryHelpMode_ARM": {
-        "message": "Activa la salida del motor y permite que la aeronave vuele",
+        "message": "Activa la salida del motor y permite que la aeronave vuele.  <span class=\"message-negative\">Atención:<\/span> se recomienda configurar también <b>BOXPREARM<\/b> (armado en dos etapas) por razones de seguridad.",
         "description": "Help text to ARM mode"
     },
     "auxiliaryHelpMode_ANGLE": {
@@ -2320,7 +2398,7 @@
         "description": "Help text to AIRMODE mode"
     },
     "auxiliaryHelpMode_ALTHOLD": {
-        "message": "El modo Altitud es el modo manual no GPS más seguro para los pilotos novatos. Es parecido al modo estabilizado, pero además bloquea la altitud del vehículo cuando se sueltan los mandos",
+        "message": "<a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/position-hold-v4-6#altitude-hold\" target=\"_blank\" rel=\"noopener noreferrer\">Mantener Altitud<\/a> regula activamente la altitud de la aeronave usando sensores externos combinados con el Modo Angle (Modo Estabilizado).",
         "description": "Help text for ALTITUDE HOLD mode"
     },
     "auxiliaryHelpMode_BEEPER": {
@@ -2434,6 +2512,10 @@
     "auxiliaryHelpMode_PIDAUDIO": {
         "message": "Usar para activar PIDAUDIO",
         "description": "Help text to PIDAUDIO mode"
+    },
+    "auxiliaryHelpMode_POSHOLD": {
+        "message": "Modo mantener posición",
+        "description": "Help text to POSHOLD mode"
     },
     "auxiliaryHelpMode_PREARM": {
         "message": "Al intentar armar, se necesita que este interruptor esté activado antes de armar. Se suele asignar a un interruptor temporal del mando",
@@ -2619,6 +2701,9 @@
     "adjustmentsFunction30": {
         "message": "Selección de Perfil LED"
     },
+    "adjustmentsFunction31": {
+        "message": "Ajustar brillo de LED"
+    },
     "adjustmentsSave": {
         "message": "Guardar"
     },
@@ -2786,6 +2871,10 @@
     },
     "gpsPositionalDop": {
         "message": "DOP posicional:"
+    },
+    "gpsMagneticDeclination": {
+        "message": "$t(configurationMagDeclination):",
+        "description": "Do not translate"
     },
     "gpsSignalStrHead": {
         "message": "Fuerza Señal GPS"
@@ -4452,7 +4541,7 @@
         "message": "Compensación de Caída de Tensión"
     },
     "pidTuningVbatSagCompensationHelp": {
-        "message": "Proporciona un rendimiento consistente del acelerador y del PID sobre el rango de voltaje de la batería utilizable incrementando la salida del motor según el voltaje de la batería va cayendo.<br \/><br \/> La cantidad de compensación puede variar entre el 0 y el 100 %. Se recomienda compensación completa (100%).<br \/><br \/>Visita <a href=\"https:\/\/betaflight.com\/docs\/tuning\/4.2-Tuning-Notes#dynamic-battery-sag-compensation\" target=\"_blank\" rel=\"noopener noreferrer\">esta entrada de la wiki<\/a> para más información."
+        "message": "Proporciona un rendimiento consistente del acelerador y del PID sobre el rango de voltaje de la batería utilizable incrementando la salida del motor según el voltaje de la batería va cayendo.<br \/><br \/> La cantidad de compensación puede variar entre el 0 y el 100 %. Se recomienda compensación completa (100%).<br \/><br \/>Visita <a href=\"https:\/\/betaflight.com\/docs\/wiki\/tuning\/4-2-tuning-notes#dynamic-battery-sag-compensation\" target=\"_blank\" rel=\"noopener noreferrer\">esta entrada de la wiki<\/a> para más información."
     },
     "pidTuningVbatSagValue": {
         "message": "%"
@@ -4552,9 +4641,6 @@
     },
     "pidTuningIntegratedYawHelp": {
         "message": "Yaw Integrado integra valores P, I y D del yaw, permitiendo que P, I y D de yaw se ajusten del mismo modo que se hace con el pitch y el roll.<br><br>Se necesita muy poca I, porque la P integrada actúa como I, y la D integrada actúa como P.<br><br>NOTA: Yaw integrado requiere el uso de Control Absoluto, ya que no se necesita I con Yaw Integrado."
-    },
-    "configHelp2": {
-        "message": "Rotación arbitraria de la placa en grados, para permitir montaje de lado \/ boca abajo \/ rotada etc. Al ejecutar sensores externos, usa la alineación del sensor (Giro, Acc, Mag) para definir la posición del sensor independientemente de la orientación de la placa. "
     },
     "failsafeFeaturesHelpOld": {
         "message": "La configuración del Modo de Seguridad ha cambiado considerablemente. Usa Betaflight<strong>v1.12.0+<\/strong> para activar el panel de configuración mejorado."
@@ -4656,7 +4742,7 @@
         "message": "La distancia a la que la aeronave ascenderá, sobre la altitud actual, cuando se inicia un rescate y el modo de altitud está configurado como Altitud ACTUAL; también se añade cuando el modo es Altitud MAX."
     },
     "failsafeGpsRescueItemReturnAltitude": {
-        "message": "Altitud de retorno (metros) - <strong>sólo se aplica en modo Altitud Fija<\/strong>"
+        "message": "Altitud de retorno (metros)"
     },
     "failsafeGpsRescueItemAscendRate": {
         "message": "Velocidad de ascenso (metros\/segundo)"
@@ -5495,6 +5581,38 @@
     "osdTextElementAltitudeVariantNoDecimalASL": {
         "message": "ASL (sobre el nivel del mar, sin decimales)",
         "description": "One of the variants of the altitude element of the OSD"
+    },
+    "osdTextElementCustomMsg0": {
+        "message": "Mensaje personalizado 1",
+        "description": "One of the elements of the OSD"
+    },
+    "osdTextElementCustomMsg1": {
+        "message": "Mensaje personalizado 2",
+        "description": "One of the elements of the OSD"
+    },
+    "osdTextElementCustomMsg2": {
+        "message": "Mensaje personalizado 3",
+        "description": "One of the elements of the OSD"
+    },
+    "osdTextElementCustomMsg3": {
+        "message": "Mensaje personalizado 4",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementCustomMsg0": {
+        "message": "Mensaje personalizado 1 desde dispositivo externo",
+        "description": "Description of the custom message 1 element of the OSD"
+    },
+    "osdDescElementCustomMsg1": {
+        "message": "Mensaje personalizado 2 desde dispositivo externo",
+        "description": "Description of the custom message 2 element of the OSD"
+    },
+    "osdDescElementCustomMsg2": {
+        "message": "Mensaje personalizado 3 desde dispositivo externo",
+        "description": "Description of the custom message 3 element of the OSD"
+    },
+    "osdDescElementCustomMsg3": {
+        "message": "Mensaje personalizado 4 desde dispositivo externo",
+        "description": "Description of the custom message 4 element of the OSD"
     },
     "osdTextElementOnTime": {
         "message": "Tiempo encendido",
@@ -6620,6 +6738,10 @@
         "message": "Número de bandas",
         "description": "Text of one of the fields of the VTX Table element in the VTX tab"
     },
+    "vtxTableBandsHelp": {
+        "message": "Esto define el número de bandas necesarias para el VTX",
+        "description": "Help for the number of bands field of the VTX Table element in the VTX tab"
+    },
     "vtxTableChannels": {
         "message": "Número de canales por banda",
         "description": "Text of one of the fields of the VTX Table element in the VTX tab"
@@ -7309,6 +7431,9 @@
     "firmwareFlasherBuildMotorProtocols": {
         "message": "Protocolo de motor"
     },
+    "firmwareFlasherBuildOsdProtocols": {
+        "message": "Protocolo OSD"
+    },
     "firmwareFlasherConfigurationFile": {
         "message": "Nombre de archivo de configuración:"
     },
@@ -7326,6 +7451,9 @@
     },
     "firmwareFlasherMotorProtocolDescription": {
         "message": "Selecciona el protocolo de motor (ESC) que deseas incluir en esta compilación. Ten en cuenta que esto es un desplegable, pero sólo se puede seleccionar un elemento."
+    },
+    "firmwareFlasherOsdProtocolDescription": {
+        "message": "Selecciona el protocolo OSD que quieres incluir en esta compilación. Ten en cuenta que esto es un menú desplegable, únicamente puedes seleccionar un elemento."
     },
     "firmwareFlasherBranchDescription": {
         "message": "Especialmente útil para desarrolladores, puedes seleccionar un PR incluido en el código, especificar el sha de un commit, o especificar un PR 'todavía no incluido' escribiendo una # seguida por el número de PR por eje. #1234 (esto es una abreviatura para la rama 'pull\/1234\/head')."

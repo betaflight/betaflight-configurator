@@ -1,17 +1,15 @@
 import { i18n } from "../localization";
-import GUI, { TABS } from '../gui';
+import GUI, { TABS } from "../gui";
 import MSP from "../msp";
 import MSPCodes from "../msp/MSPCodes";
 import { gui_log } from "../gui_log";
-import $ from 'jquery';
+import $ from "jquery";
 
-const setup_osd = {
-};
+const setup_osd = {};
 
 setup_osd.initialize = function (callback) {
-
-    if (GUI.active_tab != 'setup_osd') {
-        GUI.active_tab = 'setup_osd';
+    if (GUI.active_tab != "setup_osd") {
+        GUI.active_tab = "setup_osd";
     }
 
     function load_status() {
@@ -19,15 +17,14 @@ setup_osd.initialize = function (callback) {
     }
 
     function load_html() {
-        $('#content').load("./tabs/setup_osd.html", process_html);
+        $("#content").load("./tabs/setup_osd.html", process_html);
     }
 
     load_status();
 
     function process_html() {
-
-        $('.tab-setup-osd .info').hide(); // requires an MSP update
-/*      Only used by get_slow_data() which is commented out.
+        $(".tab-setup-osd .info").hide(); // requires an MSP update
+        /*      Only used by get_slow_data() which is commented out.
         const osdVideoModes = new Set([
             'AUTO',
             'NTSC',
@@ -37,9 +34,9 @@ setup_osd.initialize = function (callback) {
         // translate to user-selected language
         i18n.localizePage();
 
-        $('a.resetSettings').click(function () {
+        $("a.resetSettings").click(function () {
             MSP.send_message(MSPCodes.MSP_RESET_CONF, false, false, function () {
-                gui_log(i18n.getMessage('initialSetupSettingsRestored'));
+                gui_log(i18n.getMessage("initialSetupSettingsRestored"));
 
                 GUI.tab_switch_cleanup(function () {
                     TABS.setup_osd.initialize();
@@ -60,7 +57,7 @@ setup_osd.initialize = function (callback) {
             */
         }
 
-        GUI.interval_add('setup_data_pull_slow', get_slow_data, 250, true); // 4 fps
+        GUI.interval_add("setup_data_pull_slow", get_slow_data, 250, true); // 4 fps
 
         GUI.content_ready(callback);
     }
@@ -71,6 +68,4 @@ setup_osd.cleanup = function (callback) {
 };
 
 TABS.setup_osd = setup_osd;
-export {
-    setup_osd,
-};
+export { setup_osd };

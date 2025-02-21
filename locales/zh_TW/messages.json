@@ -784,9 +784,6 @@
     "featureGPS": {
         "message": "啟用 GPS 導航"
     },
-    "featureGPSTip": {
-        "message": "請先設置埠口"
-    },
     "featureSONAR": {
         "message": "聲納"
     },
@@ -871,9 +868,6 @@
     "configurationOtherFeaturesHelp": {
         "message": "<strong>注意:<\/strong> 不是所有所有飛控都能支援所有的功能。如果你啟用了某個功能，但在“保存並重啟”以後，該功能被禁用，則說明你的飛控不支援該功能。"
     },
-    "configurationBoardAlignment": {
-        "message": "飛控和傳感器方向"
-    },
     "configurationBoardAlignmentRoll": {
         "message": "橫滾 度"
     },
@@ -909,9 +903,6 @@
     },
     "configurationSensorAlignmentAcc": {
         "message": "加速度計方向"
-    },
-    "configurationSensorAlignmentMag": {
-        "message": "磁力計方向"
     },
     "configurationSensorAlignmentDefaultOption": {
         "message": "默認"
@@ -2823,9 +2814,6 @@
     },
     "pidTuningIntegratedYaw": {
         "message": "整合式偏航"
-    },
-    "configHelp2": {
-        "message": "任意角度（直立，反轉，旋轉等）安裝飛控板。當使用外部傳感器時，請使用傳感器校正設置(陀螺，加速度計，磁場計)來決定獨立於飛控板的傳感器位置。"
     },
     "failsafeFeaturesHelpOld": {
         "message": "失控保護功能被大量重做。請使用Betaflight <strong>v1.12.0+<\/strong> 來啟用增強的失控保護設置頁。"

@@ -1,0 +1,34 @@
+# node.js npm related
+
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Configurator Build process
+cache/
+apps/
+dist/
+dist_cordova/
+debug/
+release/
+testresults/
+.eslintcache
+cordova/bundle.keystore
+
+# OSX
+.DS_store
+
+# artefacts for Visual Studio Code
+/.vscode/
+
+# NetBeans
+nbproject/
+
+# IntelliJ
+.idea
+
+# Eclipse
+.project
+.settings/
+test-results-junit/

@@ -819,7 +819,7 @@
         "message": "コンパス"
     },
     "initialSetupMagDeclination": {
-        "message": "コンパス偏角値:"
+        "message": "コンパス偏角:"
     },
     "initialSetupInfoHead": {
         "message": "システム情報"
@@ -864,14 +864,13 @@
     },
     "initialSetupNotInBuild": {
         "message": "ビルドに含まれていません",
-        "description": "Message that pops up when hardware support not are supported in Build"
-    },
-    "initialSetupNotDetected": {
-        "message": "検出されませんでした",
-        "description": "Message that pops up when hardware are not detected"
+        "description": "Message that pops up when hardware support is not included in build"
     },
     "initialSetupRSSIValue": {
         "message": "$1 dBm"
+    },
+    "initialSetupMCU": {
+        "message": "MCU:"
     },
     "initialSetupSensorHardware": {
         "message": "センサー:"
@@ -1184,9 +1183,6 @@
     "featureGPS": {
         "message": "ナビゲーションとテレメトリー用のGPS"
     },
-    "featureGPSTip": {
-        "message": "最初にポートの設定をしてください。"
-    },
     "featureSONAR": {
         "message": "ソナー 超音波距離センサー"
     },
@@ -1245,7 +1241,8 @@
         "message": "エアモードの常時有効化"
     },
     "featureAIRMODETip": {
-        "message": "$t(auxiliaryHelpMode_AIRMODE.message)"
+        "message": "$t(auxiliaryHelpMode_AIRMODE.message)",
+        "description": "Don't translate!!!"
     },
     "featureRX_SPI": {
         "message": "SPI受信機 (例: オンボード受信機)"
@@ -1310,8 +1307,17 @@
     "configurationOtherFeaturesHelp": {
         "message": "<strong>注:<\/strong> すべての機能がすべてのフライトコントローラでサポートされている訳ではありません。 特定の機能を有効にして [保存して再起動] した後でも無効になっている場合は、この機能がボード上でサポートされていないことを意味します。"
     },
+    "configurationMagAlignmentHelp": {
+        "message": "コンパス アライメントは、FCボード上の磁気センサーの向きを指します。通常はデフォルト設定で正しい場合がほとんどですが、カスタムビルドや異なる向きの磁気センサーを持つフライトコントローラを使用している場合、この設定を調整する必要があるかもしれません。"
+    },
+    "configurationMagDeclinationInput": {
+        "message": "偏角"
+    },
+    "configurationMagDeclinationHelp": {
+        "message": "コンパス偏角は、磁北 (磁気北極) と真北 (地理的北極) の間の角度を指します。この角度は地球上の場所によって異なります。ご自身の位置での偏角は、インターネットで簡単に確認することができます。"
+    },
     "configurationBoardAlignment": {
-        "message": "FCボード＆センサー アライメント"
+        "message": "FCボード アライメント"
     },
     "configurationBoardAlignmentRoll": {
         "message": "ロール角度"
@@ -1322,8 +1328,44 @@
     "configurationBoardAlignmentYaw": {
         "message": "ヨー角度"
     },
+    "configurationGyroAlignment": {
+        "message": "ジャイロ アライメント"
+    },
+    "configurationGyroAlignmentHelp": {
+        "message": "ジャイロ アライメントは、FCボード上のジャイロセンサーの向きを指します。通常はデフォルト設定で正しい場合がほとんどですが、カスタムビルドや異なる向きのジャイロセンサーを持つフライトコントローラを使用している場合、この設定を調整する必要があるかもしれません。"
+    },
+    "configurationGyroAlignmentRoll": {
+        "message": "$t(configurationBoardAlignmentRoll.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyroAlignmentPitch": {
+        "message": "$t(configurationBoardAlignmentPitch.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyroAlignmentYaw": {
+        "message": "$t(configurationBoardAlignmentYaw.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationMagAlignment": {
+        "message": "コンパス アライメント"
+    },
+    "configurationBoardAlignmentHelp": {
+        "message": "任意のFCボード回転角度は、ボードを横向き \/ 逆さま \/ または回転させた状態で取り付けを可能にします。外部センサーを使用する場合は、センサーの位置をFCボードの向きとは独立して定義するために、センサーアライメント (ジャイロ、加速度センサー、コンパス) を設定してください。 "
+    },
+    "configurationMagAlignmentRoll": {
+        "message": "$t(configurationBoardAlignmentRoll.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationMagAlignmentPitch": {
+        "message": "$t(configurationBoardAlignmentPitch.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationMagAlignmentYaw": {
+        "message": "$t(configurationBoardAlignmentYaw.message)",
+        "description": "Don't translate!!!"
+    },
     "configurationSensorAlignmentGyro": {
-        "message": "Gyro アライメント"
+        "message": "ジャイロ アライメント"
     },
     "configurationSensorGyroToUse": {
         "message": "ジャイロ\/加速度"
@@ -1349,9 +1391,6 @@
     "configurationSensorAlignmentAcc": {
         "message": "Accel アライメント"
     },
-    "configurationSensorAlignmentMag": {
-        "message": "コンパス アライメント"
-    },
     "configurationSensorAlignmentDefaultOption": {
         "message": "デフォルト値"
     },
@@ -1369,9 +1408,6 @@
     },
     "configurationArmingHelp": {
         "message": "アーミングオプションによっては、加速度センサーを有効にする必要があります"
-    },
-    "configurationMagDeclination": {
-        "message": "コンパス偏角値 [deg]"
     },
     "configurationReverseMotorSwitch": {
         "message": "モーター回転方向: リバース構成"
@@ -1621,6 +1657,9 @@
     },
     "portsSerialRx": {
         "message": "シリアル受信"
+    },
+    "portsSerialRxHelp": {
+        "message": "指定したUARTでリモートコントロールシリアルレシーバー (RX) の有効化または無効化を行います。1つのみ許可されます。"
     },
     "portsSensorIn": {
         "message": "センサー入力"
@@ -2312,7 +2351,7 @@
         "description": "Help text to ACRO TRAINER mode"
     },
     "auxiliaryHelpMode_ARM": {
-        "message": "モーター出力を有効にすることで機体を飛ばすことができます。",
+        "message": "モーター出力を有効にし、機体の飛行を可能にします。<span class=\"message-negative\">注意:<\/span> 安全性を確保するために、パイロットは<b>BOXPREARM<\/b> (2段階アーミング) の設定を行うことを強く推奨します。",
         "description": "Help text to ARM mode"
     },
     "auxiliaryHelpMode_ANGLE": {
@@ -2328,7 +2367,7 @@
         "description": "Help text to AIRMODE mode"
     },
     "auxiliaryHelpMode_ALTHOLD": {
-        "message": "高度維持モードは初心者にとって最も安全な非GPSでの手動モードです。Stabilisedモードと同じですが、スティックを離すと機体の高度が保たれます。",
+        "message": "<a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/position-hold-v4-6#altitude-hold\" target=\"_blank\" rel=\"noopener noreferrer\">高度ホールド<\/a>は、外部センサーとアングルモード (安定モード) を組み合わせて、機体の高度を積極的に制御します。",
         "description": "Help text for ALTITUDE HOLD mode"
     },
     "auxiliaryHelpMode_BEEPER": {
@@ -2630,6 +2669,9 @@
     },
     "adjustmentsFunction30": {
         "message": "LED Profileの選択"
+    },
+    "adjustmentsFunction31": {
+        "message": "LED 明るさ調整"
     },
     "adjustmentsSave": {
         "message": "保存"
@@ -4464,7 +4506,7 @@
         "message": "Vbat サグ値補正"
     },
     "pidTuningVbatSagCompensationHelp": {
-        "message": "バッテリー電圧の低下に応じてモーター出力を増加させることで、使用可能なバッテリー電圧範囲にて一貫したスロットルとPIDパフォーマンスを提供します。<br \/><br \/>補正量は0～100%の間で変更でき、完全な補正 (100%) を推奨します。<br \/><br \/>詳しくは<a href=\"https:\/\/betaflight.com\/docs\/tuning\/4.2-Tuning-Notes#dynamic-battery-sag-compensation\" target=\"_blank\" rel=\"noopener noreferrer\">このWikiエントリ<\/a>をご覧ください。"
+        "message": "バッテリー電圧の低下に応じてモーター出力を増加させることで、使用可能なバッテリー電圧範囲内で一定したスロットルおよびPID性能を提供します。<br \/><br \/>補正量は 0 ～ 100% の間で調整可能です。完全な補正 (100%) が推奨されます。<br \/><br \/>詳しくは<a href=\"https:\/\/betaflight.com\/docs\/wiki\/tuning\/4-2-tuning-notes#dynamic-battery-sag-compensation\" target=\"_blank\" rel=\"noopener noreferrer\">このWikiエントリ<\/a>をご覧ください。"
     },
     "pidTuningVbatSagValue": {
         "message": "%"
@@ -4564,9 +4606,6 @@
     },
     "pidTuningIntegratedYawHelp": {
         "message": "統合ヨー制御は、ヨーP、I、Dの値を統合し、ピッチとロールを調整するのと同じようにヨーのP、I、D値を調整することができます。<br><br>統合されたP値はI値のように、統合されたD値はP値のように作用するため、I値はほとんど必要がなくなります。<br><br>備考: 統合ヨー制御ではI値が必要ないため、アブソリュート コントロールを使用する必要があります。"
-    },
-    "configHelp2": {
-        "message": "横向き \/ 下向き \/ 任意な回転による取付けが可能なFCボードの回転角度です。外部センサーを使用する場合は、センサーのアライメント (Gyro、Accel、コンパス) を使用して、ボードの向きから独立したセンサー位置を定義します。 "
     },
     "failsafeFeaturesHelpOld": {
         "message": "フェイルセーフ設定が大幅に変更されました。 改善された設定パネルを有効にするには、Betaflight <strong>v1.12.0 以上<\/strong> を使用してください。"
@@ -4668,7 +4707,7 @@
         "message": "GPSレスキューが開始され高度モードが【現在高度】に設定されている時、機体が現在の高度より上昇する距離を示します。また最大高度モードの場合にも追加されました。"
     },
     "failsafeGpsRescueItemReturnAltitude": {
-        "message": "帰還時 高度 (m) - <strong>指定高度モードのみ適用<\/strong>"
+        "message": "帰還時高度 (メートル)"
     },
     "failsafeGpsRescueItemAscendRate": {
         "message": "上昇レート (m\/s)"
@@ -5507,6 +5546,38 @@
     "osdTextElementAltitudeVariantNoDecimalASL": {
         "message": "ASL (小数点なし)",
         "description": "One of the variants of the altitude element of the OSD"
+    },
+    "osdTextElementCustomMsg0": {
+        "message": "カスタムメッセージ 1",
+        "description": "One of the elements of the OSD"
+    },
+    "osdTextElementCustomMsg1": {
+        "message": "カスタムメッセージ 2",
+        "description": "One of the elements of the OSD"
+    },
+    "osdTextElementCustomMsg2": {
+        "message": "カスタムメッセージ 3",
+        "description": "One of the elements of the OSD"
+    },
+    "osdTextElementCustomMsg3": {
+        "message": "カスタムメッセージ 4",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementCustomMsg0": {
+        "message": "外部デバイスからのカスタムメッセージ 1",
+        "description": "Description of the custom message 1 element of the OSD"
+    },
+    "osdDescElementCustomMsg1": {
+        "message": "外部デバイスからのカスタムメッセージ 2",
+        "description": "Description of the custom message 2 element of the OSD"
+    },
+    "osdDescElementCustomMsg2": {
+        "message": "外部デバイスからのカスタムメッセージ 3",
+        "description": "Description of the custom message 3 element of the OSD"
+    },
+    "osdDescElementCustomMsg3": {
+        "message": "外部デバイスからのカスタムメッセージ 4",
+        "description": "Description of the custom message 4 element of the OSD"
     },
     "osdTextElementOnTime": {
         "message": "On time",

@@ -3,7 +3,7 @@ module.exports = {
         ecmaVersion: 2020,
         sourceType: "module",
     },
-    extends: ["plugin:vue/recommended"],
+    extends: ["plugin:vue/recommended", "prettier"],
     env: {
         node: true,
         jquery: true,
@@ -12,16 +12,16 @@ module.exports = {
         webextensions: true,
     },
     rules: {
-        "no-trailing-spaces": "error",
-        "eol-last": "error",
-        semi: "error",
-        "no-extra-semi": "error",
-        "comma-dangle": ["error", "always-multiline"],
         "no-var": "error",
         "prefer-template": "error",
-        "template-curly-spacing": "error",
-        "no-undef": "error",
-        'no-duplicate-imports': 'error',
+        "comma-dangle": ["error", "always-multiline"],
+        indent: [
+            "error",
+            4,
+            {
+                SwitchCase: 1,
+            },
+        ],
     },
     globals: {
         cordova: true,

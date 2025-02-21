@@ -61,40 +61,35 @@ class WebsocketSerial extends EventTarget {
         this.address = path;
         console.log(`${this.logHead} Connecting to ${this.address}`);
 
-        this.ws = new WebSocket(this.address, "wsSerial");
+        this.ws = new WebSocket(this.address, ["binary", "wsSerial"]);
         let socket = this;
 
-        this.ws.onopen = function(e) {
+        this.ws.onopen = function (e) {
             console.log(`${socket.logHead} Connected: `, e);
             socket.connected = true;
             socket.dispatchEvent(
-                new CustomEvent("connect", { detail: {
-                    socketId: socket.address,
-                }}),
+                new CustomEvent("connect", {
+                    detail: {
+                        socketId: socket.address,
+                    },
+                }),
             );
         };
 
-        this.ws.onclose = function(e) {
+        this.ws.onclose = async function (e) {
             console.log(`${socket.logHead} Connection closed: `, e);
 
-            socket.disconnect(() => {
-                socket.dispatchEvent(new CustomEvent("disconnect", this.disconnect.bind(this)));
-            });
+            await socket.disconnect();
+            socket.dispatchEvent(new CustomEvent("disconnect", { detail: { socketId: socket.address } }));
         };
 
-        this.ws.onerror = function(e) {
+        this.ws.onerror = function (e) {
             console.error(`${socket.logHead} Connection error: `, e);
-
-            socket.disconnect(() => {
-                socket.dispatchEvent(new CustomEvent("disconnect", this.disconnect.bind(this)));
-            });
         };
 
-        this.ws.onmessage = async function(msg) {
+        this.ws.onmessage = async function (msg) {
             let uint8Chunk = await socket.blob2uint(msg.data);
-            socket.dispatchEvent(
-                new CustomEvent("receive", { detail: uint8Chunk }),
-            );
+            socket.dispatchEvent(new CustomEvent("receive", { detail: uint8Chunk }));
         };
     }
 
@@ -117,8 +112,7 @@ class WebsocketSerial extends EventTarget {
             try {
                 this.ws.send(data);
                 this.bytesSent += data.byteLength;
-            }
-            catch(e) {
+            } catch (e) {
                 console.error(`${this.logHead}Failed to send data e: ${e}`);
             }
         }

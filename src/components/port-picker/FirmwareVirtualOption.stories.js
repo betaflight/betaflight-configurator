@@ -6,7 +6,7 @@ export default {
     component: FirmwareVirtualOption,
 };
 
-const Template = (_args, {argTypes}) => ({
+const Template = (_args, { argTypes }) => ({
     props: Object.keys(argTypes),
     components: { FirmwareVirtualOption },
     template: '<firmware-virtual-option v-bind="$props" />',

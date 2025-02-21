@@ -864,11 +864,7 @@
     },
     "initialSetupNotInBuild": {
         "message": "Не включено в сборку",
-        "description": "Message that pops up when hardware support not are supported in Build"
-    },
-    "initialSetupNotDetected": {
-        "message": "Не обнаружено",
-        "description": "Message that pops up when hardware are not detected"
+        "description": "Message that pops up when hardware support is not included in build"
     },
     "initialSetupRSSIValue": {
         "message": "$1 дБм"
@@ -1184,9 +1180,6 @@
     "featureGPS": {
         "message": "GPS для навигации и телеметрии"
     },
-    "featureGPSTip": {
-        "message": "Сначала настройте порт"
-    },
     "featureSONAR": {
         "message": "Сонар"
     },
@@ -1245,7 +1238,8 @@
         "message": "Включить Airmode по умолчанию"
     },
     "featureAIRMODETip": {
-        "message": "$t(auxiliaryHelpMode_AIRMODE.message)"
+        "message": "$t(auxiliaryHelpMode_AIRMODE.message)",
+        "description": "Don't translate!!!"
     },
     "featureRX_SPI": {
         "message": "SPI Rx (например, встроенный Rx)"
@@ -1310,9 +1304,6 @@
     "configurationOtherFeaturesHelp": {
         "message": "<strong>Примечание:<\/strong> Не все полётные контроллеры поддерживает все эти настройки. Если Вы включили специфические настройки и они отключились после нажатия \"Сохранить и Перезагрузить\", это означает, что полётный контроллер их не поддерживает."
     },
-    "configurationBoardAlignment": {
-        "message": "Расположение платы и датчиков"
-    },
     "configurationBoardAlignmentRoll": {
         "message": "Roll градусы"
     },
@@ -1349,9 +1340,6 @@
     "configurationSensorAlignmentAcc": {
         "message": "Положение Аксел."
     },
-    "configurationSensorAlignmentMag": {
-        "message": "Положение магнитометра"
-    },
     "configurationSensorAlignmentDefaultOption": {
         "message": "По умолчанию"
     },
@@ -1369,9 +1357,6 @@
     },
     "configurationArmingHelp": {
         "message": "Некоторые опции Arming требуют включения акселерометра"
-    },
-    "configurationMagDeclination": {
-        "message": "Магнитное склонение [град]"
     },
     "configurationReverseMotorSwitch": {
         "message": "Обратное вращение моторов"
@@ -1439,6 +1424,9 @@
     },
     "configurationDshotBeaconTone": {
         "message": "Тон звуковых сигналов моторов"
+    },
+    "configurationDshotBeaconHelp": {
+        "message": "Звуковые сигналы Dshot используют ESC и двигатели для воспроизведения звуков. Это значит, что Dshot сигналы не могут быть использованы когда двигатели вращаются. В Betaflight 3.4 и новее, если попытка арминга происходит во время работающих звуковых сигналов Dshot, то аппарат заармится спустя 2 секунды после последнего Dshot сигнала. Это сделано для того, чтобы функция звуковых сигналов Dshot не мешала командам Dshot, отправляемым при постановке на охрану. <br\/><strong>Внимание:<\/strong> Поскольку звуковые сигналы Dshot пускают напряжение через ваши двигатели, когда они активены, это может привести к чрезмерному перегреву и повреждению ваших двигателей и\/или ESC, если мощность сигнала слишком высока. Используете BLHeli Configurator или BLHeli Suite для регулировки и проверки уровня звуковых сигналов."
     },
     "configurationBeeper": {
         "message": "Настройка звуковых сигналов"
@@ -1582,11 +1570,18 @@
         "message": "Установить точку \"Дом\" один раз",
         "description": "Option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
     },
+    "configurationGPSHomeOnceHelp": {
+        "message": "При включении, только позиция при первом арме после подключения батареи будет использоваться как домашняя точка. Если выключено - домашняя точка будет обновляться при каждом арме.",
+        "description": "Help text for the option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
+    },
     "configurationSerialRX": {
         "message": "Приемник с последовательным выходом"
     },
     "someRXTypesDisabled": {
         "message": "Некоторые типы передатчиков не поддерживаются текущей конфигурацией сборки."
+    },
+    "serialRXNotSupported": {
+        "message": "Выбранный провайдер данных приёмника не поддерживается текущей конфигурацией сборки. Выберите другого провайдера или обновите прошивку с правильным Радиопротоколом, выбранным в Конфигурация сборки."
     },
     "configurationSpiRX": {
         "message": "Приемник с выходом шины SPI"
@@ -1787,6 +1782,10 @@
         "message": "Коэффициент усиления",
         "description": "Gain of the D Max feature"
     },
+    "pidTuningDMaxGainHelp": {
+        "message": "Коэффициент усиления D Max увеличивает чувствительность системы, усиливая D при быстрых маневрах квадрокоптера или в случае вибраций при пропвоше.<br><br>\nБолее высокие значения коэффициент усиления  быстрее поднимают D к D Max, чем низкие, ускоряя процесс увеличения D. Значения 40 или даже 50 могут хорошо работать для чистых Freestyle-сборок.<br><br>\nБолее низкие значения не поднимут D к D Max, за исключением случаев очень быстрых движений, и могут лучше подойти для гоночных настроек, минимизируя задержку D.<br><br>\nПРЕДУПРЕЖДЕНИЕ: Коэффициенты усиления или опережения, должны быть установлены примерно на уровне 20 или более, в противном случае D не увеличится, как это должно быть. Установка обоих коэффицентов на ноль заблокирует D на базовом значении.",
+        "description": "D Max feature helpicon message"
+    },
     "pidTuningDMaxAdvance": {
         "message": "Коэффициент опережения",
         "description": "Advance of the D Max feature"
@@ -1939,11 +1938,15 @@
         "message": "<b>P<\/b>roportional"
     },
     "pidTuningProportionalHelp": {
-        "message": "Насколько точно машина отслеживает стики (Setpoint).<br \/><br \/>Высокие значения обеспечивает более точное отслеживание, но может вызвать перерегулирование, если оно слишком велико по отношению к D, и может вызвать осцилляции при высоких значениях газа.  Воспринимайте P как пружина автомобиля.",
+        "message": "Насколько точно машина отслеживает стики (Setpoint).<br \/><br \/>Высокое значение обеспечивает более точное отслеживание, но может вызвать перескок, если оно слишком велико по отношению к D, и может вызвать осцилляции при высоких значениях газа.  Воспринимайте P как пружина автомобиля.",
         "description": "Proportional Term helpicon message on PID table titlebar"
     },
     "pidTuningIntegral": {
         "message": "<b>I<\/b>ntegral"
+    },
+    "pidTuningIntegralHelp": {
+        "message": "Контроль устойчивости при малых смещениях.<br><br>Аналогично P, но накапливается прогрессивно и медленно до тех пор, пока ошибка разсогласования не станет равной нулю. Важно при продолжительных отклонениях, таких как смещенния центра тяжести или постоянных внешних воздействиях, например, ветера.<br><br>Более высокие коэффициенты обеспечивают более точное отслеживание, особенно при поворотах, но могут делать управление аппаратом жестким.<br><br>Могут вызывать медленные осцилляции при высоком соотношении к P.",
+        "description": "Integral Term helpicon message on PID table titlebar"
     },
     "pidTuningDMax": {
         "message": "<b>D<\/b> Max"
@@ -1951,6 +1954,10 @@
     "pidTuningDMaxHelp": {
         "message": "Обеспечивает более сильное демпфирование для быстрых маневров, которые в противном случае могут привести к перерегулированию. <br><br>Позволяет использовать более низкое базовое значение D, чем обычно, что позволит сохранить моторы более холодными, и вращаться быстрее, но повышает D для контроля перелегурирования при флипах или быстрых разоворотах. <br><br>Наиболее полезно для гонок, шумных сборок или дронов с более низким уровнем управлением.",
         "description": "D Max Term helpicon message on PID table titlebar"
+    },
+    "pidTuningDerivativeHelp": {
+        "message": "Контролирует уровень демпфирования ЛЮБЫХ движений летательного аппарата. D-term так же демпфиует движения стиков. Для внешних воздействий (propwash или порыв ветра) D-term оказывает демпфируещее влияние.<br><br>Более высокие значения D-term обеспечивают большее демпфирование, уменьшают перескок от P-term и Feed Forward.<br>Однако, D-term ОЧЕНЬ чувствительен к высокочастотным вибрациям гироскопа (шум | дребезг | увеличивается в 10-100 раз).<br><br>Высокочастотный шум, при слишком высоком D-term и недостаточной фильтрации, может привести к перегреву моторов и спалить их обмотку (см. вкладку ‘Фильтры’).<br><br>Думайте о D-term как об амортизаторе на автомобиле, побочным эффектом работы которого является усиление высокочастотного шума гироскопа.",
+        "description": "Derivative Term helpicon message on PID table titlebar"
     },
     "pidTuningFeedforward": {
         "message": "<b>F<\/b>eedforward"
@@ -2270,10 +2277,6 @@
         "message": "Режим полета, ограничивающий угол наклона модели при полете в режиме акро",
         "description": "Help text to ACRO TRAINER mode"
     },
-    "auxiliaryHelpMode_ARM": {
-        "message": "Запускает двигатели, и позволяет модели лететь",
-        "description": "Help text to ARM mode"
-    },
     "auxiliaryHelpMode_ANGLE": {
         "message": "В этом режиме автовыравнивания каналы крена и тангажа контролируют угол между соответствующей осью и вертикалью, что позволяет добиться ровного полета, просто оставляя стики в центральном положении",
         "description": "Help text to ANGLE mode"
@@ -2285,10 +2288,6 @@
     "auxiliaryHelpMode_AIRMODE": {
         "message": "AirMode позволяет поддерживать стабильность летательного аппарата при низком уровне газа. Для получения дополнительной информации обратитесь к <a href=\"https:\/\/betaflight.com\/docs\/development\/modes#airmode\" target=\"_blank\" rel=\"noopener noreferrer\">AirMode<\/a> на Betaflight.com.",
         "description": "Help text to AIRMODE mode"
-    },
-    "auxiliaryHelpMode_ALTHOLD": {
-        "message": "Режим удержания высоты — это самый безопасный не-GPS ручной режим для новичков. Он аналогичен режиму стабилизации, но дополнительно фиксирует высоту летательного аппарата, когда стики управления отпущены",
-        "description": "Help text for ALTITUDE HOLD mode"
     },
     "auxiliaryHelpMode_BEEPER": {
         "message": "Включает звуковой сигнал - полезно для определения местоположения упавшего воздушного судна",
@@ -4324,7 +4323,7 @@
         "message": "Настройки фильтра в зависимости от выбранного профиля"
     },
     "pidTuningDTermLowpass": {
-        "message": "D-term фильтр низких частот -2 \"Lowpass\""
+        "message": "D-term фильтр низких частот - 1 \"Lowpass\""
     },
     "pidTuningDTermLowpassHelp": {
         "message": "Первый из двух фильтров низких частот для D-term.<br \/><br \/>В динамическом режиме фильтрация будет сильнее на низком газе, и слабеть при увеличении газа. Это помогает контролировать скрежет двигателей и неожиданные взлёты при арме, а так же уменьшая задержку и prop-wash после взлета. По мере увеличения газа переход от низкой частоты среза к высокой произойдет будет происходить раньше, с более высокими значениями экспоненты низких частот D-term.<br \/><br \/>В статическом режиме частота среза фиксирована. Это не рекомендуется для фильтрации D-term.<br \/><br \/>Тип фильтра по умолчанию - PT1, хотя некоторые пользователи используют здесь только один динамический фильтр Biquad без второго PT1.<br \/><br \/>Изменения, приводящие к уменьшению фильтрации D, могут привести к серьезному перегреву двигателей или непредсказуемым взлетам при арме.",
@@ -4375,9 +4374,6 @@
     },
     "pidTuningVbatSagCompensation": {
         "message": "Компенсация просадки напряжения батареи"
-    },
-    "pidTuningVbatSagCompensationHelp": {
-        "message": "Обеспечивает стабильную работу газа и производительность PID регулятора в пределах рабочего диапазона напряжения аккумулятора путем увеличения мощности двигателя по мере падения напряжения.<br \/><br \/>Компенсация может варьироваться от 0 до 100%. Рекомендуется использовать полную компенсацию (100%).<br \/><br \/>Посетите <a href=\"https:\/\/betaflight.com\/docs\/tuning\/4.2-Tuning-Notes#dynamic-battery-sag-compensation\" target=\"_blank\" rel=\"noopener noreferrer\">эту запись вики<\/a> для получения дополнительной информации."
     },
     "pidTuningVbatSagValue": {
         "message": "%"
@@ -4465,9 +4461,6 @@
     },
     "pidTuningIntegratedYawHelp": {
         "message": "Интегрированный Yaw объединяет значения P, I и D по рысканью, позволяя настраивать P, I и D по рысканью так, как вы бы настраивать Pitch и Roll.<br><br>Нужно очень небольшоем изменение I, потому что интегрированный P действует также как I, и интегрированный D действует как P.<br><br>ПРИМЕЧАНИЕ: Интегрированный Yaw требует использования Абсолютного контроля, поскольку в случае интегрированного крена не требуется компенсирующее воздействие I."
-    },
-    "configHelp2": {
-        "message": "Произвольное вращение платы в градусах, для разрешения установки в другом направлении \/ вверх ногами \/ повернутое и т. д. При работе с внешними датчиками используется выравнивание датчиков (Gyro, Acc, Mag), чтобы определить положение датчика независимо от ориентации платы. "
     },
     "failsafeFeaturesHelpOld": {
         "message": "Failsafe конфигурация изменилась существенно. Используете Betaflight <strong>v1.12.0 +<\/strong> для включения улучшенной конфигурационной панели."
@@ -4567,9 +4560,6 @@
     },
     "failsafeGpsRescueInitialClimbHelp": {
         "message": "Высота, на которую поднимется квадрокоптер относительно текущей при активном режиме высоты - \"Текущая высота\". Это так же увеличивает высоту в режиме \"Максимальная высота\"."
-    },
-    "failsafeGpsRescueItemReturnAltitude": {
-        "message": "Высота возврата (метры) - <strong>применяется только в режиме фиксированной высоты<\/strong>"
     },
     "failsafeGpsRescueItemAscendRate": {
         "message": "Скорость подъёма (м\/сек)"
@@ -5406,6 +5396,38 @@
         "message": "Высота над уровнем моря (ASL) без десятичных знаков",
         "description": "One of the variants of the altitude element of the OSD"
     },
+    "osdTextElementCustomMsg0": {
+        "message": "Пользовательское сообщение 1",
+        "description": "One of the elements of the OSD"
+    },
+    "osdTextElementCustomMsg1": {
+        "message": "Пользовательское сообщение 2",
+        "description": "One of the elements of the OSD"
+    },
+    "osdTextElementCustomMsg2": {
+        "message": "Пользовательское сообщение 3",
+        "description": "One of the elements of the OSD"
+    },
+    "osdTextElementCustomMsg3": {
+        "message": "Пользовательское сообщение 4",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementCustomMsg0": {
+        "message": "Пользовательское сообщение 1 с внешнего устройства",
+        "description": "Description of the custom message 1 element of the OSD"
+    },
+    "osdDescElementCustomMsg1": {
+        "message": "Пользовательское сообщение 2 с внешнего устройства",
+        "description": "Description of the custom message 2 element of the OSD"
+    },
+    "osdDescElementCustomMsg2": {
+        "message": "Пользовательское сообщение 3 с внешнего устройства",
+        "description": "Description of the custom message 3 element of the OSD"
+    },
+    "osdDescElementCustomMsg3": {
+        "message": "Пользовательское сообщение 4 с внешнего устройства",
+        "description": "Description of the custom message 4 element of the OSD"
+    },
     "osdTextElementOnTime": {
         "message": "Время работы",
         "description": "One of the elements of the OSD"
@@ -5680,6 +5702,9 @@
     "osdTextGForce": {
         "message": "Перегрузка",
         "description": "One of the elements of the OSD"
+    },
+    "osdDescGForce": {
+        "message": "Показывает перегрузку, испытываемую судном"
     },
     "osdTextElementMotorDiag": {
         "message": "Диагностика моторов",

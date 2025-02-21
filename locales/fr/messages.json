@@ -929,9 +929,6 @@
     "featureGPS": {
         "message": "GPS pour navigation et télémétrie"
     },
-    "featureGPSTip": {
-        "message": "Configurer le scénario port d'abord"
-    },
     "featureSONAR": {
         "message": "Sonar"
     },
@@ -1037,9 +1034,6 @@
     "configurationOtherFeaturesHelp": {
         "message": "<strong>Note:<\/strong>  toutes les options ne fonctionnent pas sur tous les cartes. Si une fonctionnalité est désactivée aprés avoir cliqué sur 'Sauvegarder puis redémarrer', c'est que votre carte n'est pas compatible."
     },
-    "configurationBoardAlignment": {
-        "message": "Sens de la carte et du capteur"
-    },
     "configurationBoardAlignmentRoll": {
         "message": "Degrés sur le Roll"
     },
@@ -1075,9 +1069,6 @@
     },
     "configurationSensorAlignmentAcc": {
         "message": "Alignement de l'accéléromètre"
-    },
-    "configurationSensorAlignmentMag": {
-        "message": "Alignement du magnétomètre"
     },
     "configurationSensorAlignmentDefaultOption": {
         "message": "Défaut"
@@ -3630,9 +3621,6 @@
     "pidTuningVbatSagCompensation": {
         "message": "Compensation de l'affaiblissement du vbat"
     },
-    "pidTuningVbatSagCompensationHelp": {
-        "message": "Donne des performances constantes de gaz et de PID sur la plage de tension de la batterie utilisable en augmentant la sortie du moteur à mesure que la tension de la batterie chute.<br \/><br \/>La quantité de compensation peut varier entre 0 et 100%. La compensation totale (100%) est recommandée.<br \/><br \/>Visitez <a href=\"https:\/\/betaflight.com\/docs\/tuning\/4.2-Tuning-Notes#dynamic-battery-sag-compensation\" target=\"_blank\" rel=\"noopener noreferrer\">cette page du wiki<\/a> pour plus d'informations."
-    },
     "pidTuningVbatSagValue": {
         "message": "%"
     },
@@ -3707,9 +3695,6 @@
     },
     "pidTuningIntegratedYawHelp": {
         "message": "Yaw intégré intègre les valeurs P, I et D, du yaw, permettant à P, I et D d'être altérés de la même manière que le pitch et le roll.<br><br>Très pe ude I est requis, car le P intégré agit comme I, et D intégré agit comme P.<br><br>REMARQUE : Le Yaw intégré nécessite l'utilisation du contrôle absolu, car I n'est pas nécessaire avec Yaw intégré."
-    },
-    "configHelp2": {
-        "message": "Rotation arbitraire de la carte en degrés permettant un montage latéral \/ à l'envers \/ de côté etc. Si des capteurs externes sont utilisés, servez vous du sensor alignments (Gyro, Acc, Mag) pour définir leur position indépendamment  de l'orientation de la carte. "
     },
     "failsafeFeaturesHelpOld": {
         "message": "La configuration du failsafe a beaucoup changée. Utilisez Betaflight <strong>v1.12.0+<\/strong> pour activer le panneau de configuration avancé."

@@ -1,6 +1,4 @@
-
 class FileSystem {
-
     _createFile(fileHandle) {
         return {
             name: fileHandle.name,
@@ -11,12 +9,14 @@ class FileSystem {
     async pickSaveFile(suggestedName, description, extension) {
         const fileHandle = await window.showSaveFilePicker({
             suggestedName: suggestedName,
-            types: [{
-                description: description,
-                accept: {
-                    "application/unknown": extension,
+            types: [
+                {
+                    description: description,
+                    accept: {
+                        "application/unknown": extension,
+                    },
                 },
-            }],
+            ],
         });
 
         const file = this._createFile(fileHandle);
@@ -29,12 +29,14 @@ class FileSystem {
     async pickOpenFile(description, extension) {
         const fileHandle = await window.showOpenFilePicker({
             multiple: false,
-            types: [{
-                description: description,
-                accept: {
-                    "application/unknown": extension,
+            types: [
+                {
+                    description: description,
+                    accept: {
+                        "application/unknown": extension,
+                    },
                 },
-            }],
+            ],
         });
 
         const file = this._createFile(fileHandle[0]);
@@ -71,7 +73,6 @@ class FileSystem {
         await writable.write(contents);
         await writable.close();
     }
-
 
     async readFile(file) {
         const fileHandle = file._fileHandle;

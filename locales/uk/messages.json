@@ -864,14 +864,17 @@
     },
     "initialSetupNotInBuild": {
         "message": "Не включено до збірки",
-        "description": "Message that pops up when hardware support not are supported in Build"
+        "description": "Message that pops up when hardware support is not included in build"
     },
     "initialSetupNotDetected": {
-        "message": "Не виявлено",
-        "description": "Message that pops up when hardware are not detected"
+        "message": "Не виявлено або відключено",
+        "description": "Message that pops up when hardware is not detected or disabled"
     },
     "initialSetupRSSIValue": {
         "message": "$1 дБм"
+    },
+    "initialSetupMCU": {
+        "message": "Мікроконтролер:"
     },
     "initialSetupSensorHardware": {
         "message": "Датчики:"
@@ -893,6 +896,9 @@
     },
     "initialSetupSensorSonar": {
         "message": "Сонар:"
+    },
+    "initialSetupSensorOpticalflow": {
+        "message": "Оптичний потік:"
     },
     "initialSetupSensorRadar": {
         "message": "Радар:"
@@ -1017,6 +1023,10 @@
     "initialSetupArmingDisableFlagsTooltipMOTOR_PROTOCOL": {
         "message": "Не вибрано протокол виводу для моторів",
         "description": "Message that pops up to describe the MOTOR_PROTO arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipCRASHFLIP": {
+        "message": "Перемикач аварійного перевертання активний",
+        "description": "Message that pops to describe the CRASHFLIP arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "Одна з інших позначок охлощення активна під час взведення",
@@ -1180,9 +1190,6 @@
     "featureGPS": {
         "message": "GPS для навігації та телеметрії"
     },
-    "featureGPSTip": {
-        "message": "Спочатку налаштуйте порт"
-    },
     "featureSONAR": {
         "message": "Сонар"
     },
@@ -1241,7 +1248,8 @@
         "message": "Увімкнути AIR режим перманентно"
     },
     "featureAIRMODETip": {
-        "message": "$t(auxiliaryHelpMode_AIRMODE.message)"
+        "message": "$t(auxiliaryHelpMode_AIRMODE.message)",
+        "description": "Don't translate!!!"
     },
     "featureRX_SPI": {
         "message": "SPI Rx (напр., вбудований Rx)"
@@ -1306,8 +1314,38 @@
     "configurationOtherFeaturesHelp": {
         "message": "<strong>Примітка:<\/strong> Не всі функції підтримуються всіма польотними контролерами. Якщо ви включили певну функцію і після натискання кнопки «Зберегти та перезавантажити» вона вимкнулася, це означає, що ця функція не підтримується вашою платою."
     },
+    "configurationMagAlignmentHelp": {
+        "message": "Вирівнювання магнітометра — це орієнтація датчика магнітометра на платі польотного контролера. Значення за замовчуванням зазвичай правильне, але якщо ви маєте користувацьку збірку чи польотний контролер з іншою орієнтацією магнітометра, можливо потрібно буде змінити це налаштування."
+    },
+    "configurationMagDeclinationInput": {
+        "message": "Схилення в градусах"
+    },
+    "configurationMagDeclinationHelp": {
+        "message": "Магнітне схилення — це кут між магнітним і географічним північними полюсами. Воно відрізняється для кожного місця на Землі. Ви можете знайти значення схилення для вашого розташування в інтернеті"
+    },
+    "configurationRangefinder": {
+        "message": "$t(initialSetupSensorSonar.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationRangefinderHelp": {
+        "message": "Увімкнути далекомір для вимірювання відстані до землі в см"
+    },
+    "configurationRangefinderType": {
+        "message": "Тип"
+    },
+    "configurationOpticalflow": {
+        "message": "$t(initialSetupSensorOpticalflow.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationOpticalflowHelp": {
+        "message": "Увімкнути датчик оптичного потоку"
+    },
+    "configurationOpticalflowType": {
+        "message": "$t(configurationRangefinderType.message)",
+        "description": "Don't translate!!!"
+    },
     "configurationBoardAlignment": {
-        "message": "Вирівнювання плати та датчиків"
+        "message": "Вирівнювання плати"
     },
     "configurationBoardAlignmentRoll": {
         "message": "Крен, градусів"
@@ -1317,6 +1355,42 @@
     },
     "configurationBoardAlignmentYaw": {
         "message": "Рискання, градусів"
+    },
+    "configurationGyroAlignment": {
+        "message": "Вирівнювання гіроскопа"
+    },
+    "configurationGyroAlignmentHelp": {
+        "message": "Вирівнювання гіроскопа — це орієнтація датчика гіроскопа на платі польотного контролера. Значення за замовчуванням зазвичай правильне, але якщо ви маєте користувацьку збірку чи польотний контролер з іншою орієнтацією гіроскопа, можливо потрібно буде змінити це налаштування."
+    },
+    "configurationGyroAlignmentRoll": {
+        "message": "$t(configurationBoardAlignmentRoll.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyroAlignmentPitch": {
+        "message": "$t(configurationBoardAlignmentPitch.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyroAlignmentYaw": {
+        "message": "$t(configurationBoardAlignmentYaw.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationMagAlignment": {
+        "message": "Вирівнювання магнітометра"
+    },
+    "configurationBoardAlignmentHelp": {
+        "message": "Довільний поворот плати на кут у градусах дозволяє встановити її боком \/ догори дриґом \/ поверненою. При використанні зовнішніх датчиків, використовуйте корекцію датчиків (гіроскоп, акселерометр, компас) для визначення положення датчиків незалежно від орієнтації плати. "
+    },
+    "configurationMagAlignmentRoll": {
+        "message": "$t(configurationBoardAlignmentRoll.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationMagAlignmentPitch": {
+        "message": "$t(configurationBoardAlignmentPitch.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationMagAlignmentYaw": {
+        "message": "$t(configurationBoardAlignmentYaw.message)",
+        "description": "Don't translate!!!"
     },
     "configurationSensorAlignmentGyro": {
         "message": "Вирівнювання гіроскопа"
@@ -1345,9 +1419,6 @@
     "configurationSensorAlignmentAcc": {
         "message": "Вирівнювання акселерометра"
     },
-    "configurationSensorAlignmentMag": {
-        "message": "Вирівнювання магнітометра"
-    },
     "configurationSensorAlignmentDefaultOption": {
         "message": "За замовчуванням"
     },
@@ -1365,9 +1436,6 @@
     },
     "configurationArmingHelp": {
         "message": "Для деяких опцій взведення може знадобитися ввімкнений акселерометр"
-    },
-    "configurationMagDeclination": {
-        "message": "Схилення магнітометра [градуси]"
     },
     "configurationReverseMotorSwitch": {
         "message": "Напрямок мотора змінено на протилежний"
@@ -1617,6 +1685,9 @@
     },
     "portsSerialRx": {
         "message": "Послідовний Rx"
+    },
+    "portsSerialRxHelp": {
+        "message": "Увімкнути або вимкнути послідовний приймач (RX) дистанційного керування на вказаному UART. Дозволено лише один."
     },
     "portsSensorIn": {
         "message": "Вхід датчика"
@@ -2299,12 +2370,16 @@
     "auxiliaryModeLogicAND": {
         "message": "ТА"
     },
+    "auxiliaryHelpMode_3DDISABLE": {
+        "message": "Включає реверсивний напрямок обертання моторів, щоб забезпечити негативну тягу та дозволити перевернутий політ. Тяга стає від -100 до +100 замість 0 до 100",
+        "description": "Help text to 3D mode"
+    },
     "auxiliaryHelpMode_ACROTRAINER": {
         "message": "Режим польоту, який обмежує кут нахилу повітряного судна під час польоту в акро режимі",
         "description": "Help text to ACRO TRAINER mode"
     },
     "auxiliaryHelpMode_ARM": {
-        "message": "Включає подачу потужності на мотори та дозволяє повітряному судну літати",
+        "message": "Приводить в рух мотори та дозволяє літальному апарату злетіти. <span class=\"message-negative\">Увага:<\/span> З міркувань безпеки, пілот може забажати налаштувати <b>BOXPREARM<\/b> (двоетапне взведення).",
         "description": "Help text to ARM mode"
     },
     "auxiliaryHelpMode_ANGLE": {
@@ -2320,7 +2395,7 @@
         "description": "Help text to AIRMODE mode"
     },
     "auxiliaryHelpMode_ALTHOLD": {
-        "message": "Режим висоти — це найбезпечніший ручний режим без GPS для новачків. Він схожий на стабілізований режим, але додатково фіксує висоту дрона, коли стіки відпущені",
+        "message": "<a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/position-hold-v4-6#altitude-hold\" target=\"_blank\" rel=\"noopener noreferrer\">Утримання висоти<\/a> активно регулює висоту літального апарату, використовуючи зовнішні датчики у поєднанні з режимом Кут (стабільний режим).",
         "description": "Help text for ALTITUDE HOLD mode"
     },
     "auxiliaryHelpMode_BEEPER": {
@@ -2434,6 +2509,10 @@
     "auxiliaryHelpMode_PIDAUDIO": {
         "message": "Використовуйте для перемикання PIDAUDIO",
         "description": "Help text to PIDAUDIO mode"
+    },
+    "auxiliaryHelpMode_POSHOLD": {
+        "message": "Режим утримання позиції",
+        "description": "Help text to POSHOLD mode"
     },
     "auxiliaryHelpMode_PREARM": {
         "message": "При взведенні, очікувати активацію цього перемикача перед фактичним взведенням",
@@ -2618,6 +2697,9 @@
     },
     "adjustmentsFunction30": {
         "message": "Вибір профілю LED"
+    },
+    "adjustmentsFunction31": {
+        "message": "Регулювання яскравості світлодіодів"
     },
     "adjustmentsSave": {
         "message": "Зберегти"
@@ -4452,7 +4534,7 @@
         "message": "Компенсація падіння напруги батареї"
     },
     "pidTuningVbatSagCompensationHelp": {
-        "message": "Забезпечує стабільність тяги та характеристик PID у діапазоні корисної напруги батареї, збільшуючи потужність моторів, коли напруга батареї падає.<br \/><br \/>Ступінь компенсації може варіюватися від 0 до 100%. Рекомендується повна компенсація (100%).<br \/><br \/>Відвідайте <a href=\"https:\/\/betaflight.com\/docs\/tuning\/4.2-Tuning-Notes#dynamic-battery-sag-compensation\" target=\"_blank\" rel=\"noopener noreferrer\">цей вікі-запис<\/a>, щоб дізнатися більше."
+        "message": "Забезпечує стабільність тяги та характеристик ПІД у діапазоні корисної напруги батареї, збільшуючи потужність моторів, коли напруга батареї падає.<br \/><br \/>Ступінь компенсації може варіюватися від 0 до 100%. Рекомендується повна компенсація (100%).<br \/><br \/>Відвідайте <a href=\"https:\/\/betaflight.com\/docs\/wiki\/tuning\/4-2-tuning-notes#dynamic-battery-sag-compensation\" target=\"_blank\" rel=\"noopener noreferrer\">цей вікі-запис<\/a>, щоб дізнатися більше."
     },
     "pidTuningVbatSagValue": {
         "message": "%"
@@ -4552,9 +4634,6 @@
     },
     "pidTuningIntegratedYawHelp": {
         "message": "Інтегроване рискання, інтегрує значення P, I та D рискання, дозволяючи налаштовувати значення P, I та D для рискання, подібно до того, як налаштовують тангаж та крен.<br><br>Потрібен дуже малий I, оскільки інтегрований P діє подібно до I, а інтегрований D - до P.<br><br>ПРИМІТКА: для застосування інтегрованого рискання потрібно використовувати Absolute Control, оскільки при інтегрованому рисканні не потрібний I."
-    },
-    "configHelp2": {
-        "message": "Довільний поворот плати на кут у градусах дозволяє встановити її боком \/ догори дригом \/ поверненою. При використанні зовнішніх датчиків, використовуйте корекцію датчиків (гіроскоп, акселерометр, компас) для визначення положення датчиків незалежно від орієнтації плати. "
     },
     "failsafeFeaturesHelpOld": {
         "message": "Конфігурація безаварійності (failsafe) зазнала значних змін. Використовуйте Betaflight <strong>v1.12.0+<\/strong>, щоб увімкнути вдосконалену панель налаштувань."
@@ -4656,7 +4735,7 @@
         "message": "Відстань, на яку повітряне судно підніметься вище поточної висоти, коли ініціюється GPS порятунок і режим висоти встановлено на \"Поточна висота\"; також додається в режимі \"Максимальна висота\"."
     },
     "failsafeGpsRescueItemReturnAltitude": {
-        "message": "Висота повернення (метри) - <strong>лише у режимі Фіксованої Висоти<\/strong>"
+        "message": "Висота повернення (метри)"
     },
     "failsafeGpsRescueItemAscendRate": {
         "message": "Швидкість підйому (м\/с)"
@@ -5495,6 +5574,38 @@
     "osdTextElementAltitudeVariantNoDecimalASL": {
         "message": "Висота над морем без десяткових знаків",
         "description": "One of the variants of the altitude element of the OSD"
+    },
+    "osdTextElementCustomMsg0": {
+        "message": "Користувацьке повідомлення 1",
+        "description": "One of the elements of the OSD"
+    },
+    "osdTextElementCustomMsg1": {
+        "message": "Користувацьке повідомлення 2",
+        "description": "One of the elements of the OSD"
+    },
+    "osdTextElementCustomMsg2": {
+        "message": "Користувацьке повідомлення 3",
+        "description": "One of the elements of the OSD"
+    },
+    "osdTextElementCustomMsg3": {
+        "message": "Користувацьке повідомлення 4",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementCustomMsg0": {
+        "message": "Користувацьке повідомлення 1 від зовнішнього пристрою",
+        "description": "Description of the custom message 1 element of the OSD"
+    },
+    "osdDescElementCustomMsg1": {
+        "message": "Користувацьке повідомлення 2 від зовнішнього пристрою",
+        "description": "Description of the custom message 2 element of the OSD"
+    },
+    "osdDescElementCustomMsg2": {
+        "message": "Користувацьке повідомлення 3 від зовнішнього пристрою",
+        "description": "Description of the custom message 3 element of the OSD"
+    },
+    "osdDescElementCustomMsg3": {
+        "message": "Користувацьке повідомлення 4 від зовнішнього пристрою",
+        "description": "Description of the custom message 4 element of the OSD"
     },
     "osdTextElementOnTime": {
         "message": "Від підключення батареї",
@@ -6619,6 +6730,10 @@
     "vtxTableBands": {
         "message": "Кількість діапазонів",
         "description": "Text of one of the fields of the VTX Table element in the VTX tab"
+    },
+    "vtxTableBandsHelp": {
+        "message": "Це задає кількість діапазонів, необхідних для відеопередавача",
+        "description": "Help for the number of bands field of the VTX Table element in the VTX tab"
     },
     "vtxTableChannels": {
         "message": "Кількість каналів на діапазон",

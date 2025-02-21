@@ -48,12 +48,10 @@ export function checkChromeRuntimeError() {
 }
 
 const majorFirmwareVersions = {
-    "1.46": "4.5.*",
-    "1.45": "4.4.*",
-    "1.44": "4.3.*",
-    "1.43": "4.2.*",
-    "1.42": "4.1.*",
-    "1.41": "4.0.*",
+    1.47: "4.6.*",
+    1.46: "4.5.*",
+    1.45: "4.4.*",
+    1.44: "4.3.*",
 };
 
 export function generateVirtualApiVersions() {
@@ -84,8 +82,8 @@ export function getMixerImageSrc(mixerIndex, reverseMotorDir) {
 }
 
 export function getTextWidth(text) {
-    const canvas = document.createElement('canvas');
-    const context = canvas.getContext('2d');
+    const canvas = document.createElement("canvas");
+    const context = canvas.getContext("2d");
 
     context.font = getComputedStyle(document.body).font;
 
@@ -93,9 +91,9 @@ export function getTextWidth(text) {
 }
 
 export function urlExists(url) {
-    let http = new XMLHttpRequest ();
+    let http = new XMLHttpRequest();
 
-    http.open('HEAD', url, false);
+    http.open("HEAD", url, false);
     http.send();
     return http.status !== 404;
 }
@@ -107,7 +105,7 @@ export function urlExists(url) {
  * @return {object} sorted option list.
  */
 
-$.fn.sortSelect = function(text = "") {
+$.fn.sortSelect = function (text = "") {
     const op = this.children("option");
 
     op.sort((a, b) => {

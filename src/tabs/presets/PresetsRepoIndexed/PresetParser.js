@@ -1,15 +1,24 @@
-
 export default class PresetParser {
     constructor(settings) {
         this._settings = settings;
     }
 
     readPresetProperties(preset, strings) {
-        const propertiesToRead = ["description", "discussion", "warning", "disclaimer", "include_warning", "include_disclaimer", "discussion", "force_options_review", "parser"];
+        const propertiesToRead = [
+            "description",
+            "discussion",
+            "warning",
+            "disclaimer",
+            "include_warning",
+            "include_disclaimer",
+            "discussion",
+            "force_options_review",
+            "parser",
+        ];
         const propertiesMetadata = {};
         preset.options = [];
 
-        propertiesToRead.forEach(propertyName => {
+        propertiesToRead.forEach((propertyName) => {
             // metadata of each property, name, type, optional true/false; example:
             // keywords: {type: MetadataTypes.WORDS_ARRAY, optional: true}
             propertiesMetadata[propertyName] = this._settings.presetsFileMetadata[propertyName];
@@ -71,8 +80,14 @@ export default class PresetParser {
         const directiveRemovedLowCase = directiveRemoved.toLowerCase();
         const OptionChecked = this._isOptionChecked(directiveRemovedLowCase);
 
-        const regExpRemoveChecked = new RegExp(this._escapeRegex(this._settings.OptionsDirectives.OPTION_CHECKED), 'gi');
-        const regExpRemoveUnchecked = new RegExp(this._escapeRegex(this._settings.OptionsDirectives.OPTION_UNCHECKED), 'gi');
+        const regExpRemoveChecked = new RegExp(
+            this._escapeRegex(this._settings.OptionsDirectives.OPTION_CHECKED),
+            "gi",
+        );
+        const regExpRemoveUnchecked = new RegExp(
+            this._escapeRegex(this._settings.OptionsDirectives.OPTION_UNCHECKED),
+            "gi",
+        );
         let optionName = directiveRemoved.replace(regExpRemoveChecked, "");
         optionName = optionName.replace(regExpRemoveUnchecked, "").trim();
 
@@ -90,7 +105,9 @@ export default class PresetParser {
         let directiveRemoved;
         if (isExclusiveGroup) {
             const exclusiveDirectiveLength = exlusiveDirective.length;
-            directiveRemoved = line.slice(lowercaseLine.lastIndexOf(exlusiveDirective) + exclusiveDirectiveLength - 1).trim();
+            directiveRemoved = line
+                .slice(lowercaseLine.lastIndexOf(exlusiveDirective) + exclusiveDirectiveLength - 1)
+                .trim();
         } else {
             directiveRemoved = line.slice(this._settings.OptionsDirectives.BEGIN_OPTION_GROUP_DIRECTIVE.length).trim();
         }
@@ -107,7 +124,7 @@ export default class PresetParser {
     }
 
     _parseProperty(preset, line, propertyName) {
-        switch(this._settings.presetsFileMetadata[propertyName].type) {
+        switch (this._settings.presetsFileMetadata[propertyName].type) {
             case this._settings.MetadataTypes.STRING_ARRAY:
                 this._processArrayProperty(preset, line, propertyName);
                 break;
@@ -127,12 +144,13 @@ export default class PresetParser {
                 this._processParserProperty(preset, line, propertyName);
                 break;
             default:
-                this.console.err(`Parcing preset: unknown property type '${this._settings.presetsFileMetadata[propertyName].type}' for the property '${propertyName}'`);
+                this.console.err(
+                    `Parcing preset: unknown property type '${this._settings.presetsFileMetadata[propertyName].type}' for the property '${propertyName}'`,
+                );
         }
     }
 
-    _processParserProperty(preset, line, propertyName)
-    {
+    _processParserProperty(preset, line, propertyName) {
         preset[propertyName] = line;
     }
 
@@ -163,23 +181,29 @@ export default class PresetParser {
 
     _getOptionName(line) {
         const directiveRemoved = line.slice(this._settings.OptionsDirectives.BEGIN_OPTION_DIRECTIVE.length).trim();
-        const regExpRemoveChecked = new RegExp(this._escapeRegex(`${this._settings.OptionsDirectives.OPTION_CHECKED}:`), 'gi');
-        const regExpRemoveUnchecked = new RegExp(this._escapeRegex(`${this._settings.OptionsDirectives.OPTION_UNCHECKED}:`), 'gi');
+        const regExpRemoveChecked = new RegExp(
+            this._escapeRegex(`${this._settings.OptionsDirectives.OPTION_CHECKED}:`),
+            "gi",
+        );
+        const regExpRemoveUnchecked = new RegExp(
+            this._escapeRegex(`${this._settings.OptionsDirectives.OPTION_UNCHECKED}:`),
+            "gi",
+        );
         let optionName = directiveRemoved.replace(regExpRemoveChecked, "");
         optionName = optionName.replace(regExpRemoveUnchecked, "").trim();
         return optionName;
     }
 
     _escapeRegex(string) {
-        return string.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+        return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     }
 
     removeUncheckedOptions(strings, checkedOptions) {
         let resultStrings = [];
         let isCurrentOptionExcluded = false;
-        const lowerCasedCheckedOptions = checkedOptions.map(optionName => optionName.toLowerCase());
+        const lowerCasedCheckedOptions = checkedOptions.map((optionName) => optionName.toLowerCase());
 
-        strings.forEach(str => {
+        strings.forEach((str) => {
             if (this._isLineAttribute(str)) {
                 const line = this._removeAttributeDirective(str);
 
@@ -207,7 +231,7 @@ export default class PresetParser {
         const result = [];
         let lastStringEmpty = false;
 
-        strings.forEach(str => {
+        strings.forEach((str) => {
             if ("" !== str || !lastStringEmpty) {
                 result.push(str);
             }
@@ -251,7 +275,6 @@ export default class PresetParser {
 
         return false;
     }
-
 }
 
 // Reg exp extracts file/path.txt from # include: file/path.txt

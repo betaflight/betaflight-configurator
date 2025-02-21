@@ -161,6 +161,10 @@
         "message": "Enable virtual connection mode",
         "description": "Text for the option to enable or disable the virtual FC"
     },
+    "useLegacyRenderingModel": {
+        "message": "Enable legacy rendering for 3D model (for low performance devices)",
+        "description": "Text for the option to enable or disable legacy rendering of the 3D model"
+    },
     "cordovaForceComputerUI": {
         "message": "Use computers interface instead of phones interface"
     },
@@ -947,14 +951,17 @@
     },
     "initialSetupNotInBuild": {
         "message": "Not included in build",
-        "description": "Message that pops up when hardware support not are supported in Build"
+        "description": "Message that pops up when hardware support is not included in build"
     },
     "initialSetupNotDetected": {
-        "message": "Not detected",
-        "description": "Message that pops up when hardware are not detected"
+        "message": "Not detected or disabled",
+        "description": "Message that pops up when hardware is not detected or disabled"
     },
     "initialSetupRSSIValue": {
         "message": "$1 dBm"
+    },
+    "initialSetupMCU": {
+        "message": "MCU:"
     },
     "initialSetupSensorHardware": {
         "message": "Sensors:"
@@ -976,6 +983,9 @@
     },
     "initialSetupSensorSonar": {
         "message": "Sonar:"
+    },
+    "initialSetupSensorOpticalflow": {
+        "message": "Optical Flow:"
     },
     "initialSetupSensorRadar": {
         "message": "Radar:"
@@ -1104,6 +1114,14 @@
     "initialSetupArmingDisableFlagsTooltipCRASHFLIP": {
         "message": "Crash Flip Switch is active",
         "description": "Message that pops to describe the CRASHFLIP arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipALTHOLD": {
+        "message": "Altitude Hold is active",
+        "description": "Message that pops up to describe the ALTHOLD arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipPOSHOLD": {
+        "message": "Position Hold is active",
+        "description": "Message that pops up to describe the POSHOLD arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "One of the others disarm flags is active when arming",
@@ -1252,6 +1270,9 @@
     "featureMOTOR_STOP": {
         "message": "Don't spin the motors when armed"
     },
+    "featureMOTOR_STOPTip": {
+        "message": "This feature is disabled when AIRMODE is enabled"
+    },
     "featureSERVO_TILT": {
         "message": "Servo gimbal"
     },
@@ -1268,7 +1289,8 @@
         "message": "GPS for navigation and telemetry"
     },
     "featureGPSTip": {
-        "message": "Configure port scenario first"
+        "message": "Enable / Disable GPS data. If GPS cannot be enabled, check that a Port is assigned to GPS in the Ports Tab",
+        "description": "Message that pops up to describe the GPS feature"
     },
     "featureSONAR": {
         "message": "Sonar"
@@ -1328,7 +1350,8 @@
         "message": "Permanently enable Airmode"
     },
     "featureAIRMODETip": {
-        "message": "$t(auxiliaryHelpMode_AIRMODE.message)"
+        "message": "$t(auxiliaryHelpMode_AIRMODE.message)",
+        "description": "Don't translate!!!"
     },
     "featureRX_SPI": {
         "message": "SPI Rx (e.g. built-in Rx)"
@@ -1393,8 +1416,41 @@
     "configurationOtherFeaturesHelp": {
         "message": "<strong>Note:</strong> Not all features are supported by all flight controllers. If you enable a specific feature, and it is disabled after you hit 'Save and Reboot', it means that this feature is not supported on your board."
     },
+    "configurationMagAlignmentHelp": {
+        "message": "The magnetometer alignment is the orientation of the magnetometer sensor on the flight controller board. The default is usually correct, but if you have a custom build or a flight controller with a different magnetometer orientation, you may need to adjust this setting."
+    },
+    "configurationMagDeclination": {
+        "message": "Magnetic Declination"
+    },
+    "configurationMagDeclinationInput": {
+        "message": "Declination Degrees"
+    },
+    "configurationMagDeclinationHelp": {
+        "message": "The magnetic declination is the angle between magnetic north and true north. It is different for every location on earth. You can find the declination for your location on the internet"
+    },
+    "configurationRangefinder": {
+        "message": "$t(initialSetupSensorSonar.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationRangefinderHelp": {
+        "message": "Enable rangefinder to measure distance to ground in cm"
+    },
+    "configurationRangefinderType": {
+        "message": "Type"
+    },
+    "configurationOpticalflow": {
+        "message": "$t(initialSetupSensorOpticalflow.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationOpticalflowHelp": {
+        "message": "Enable optical flow sensor"
+    },
+    "configurationOpticalflowType": {
+        "message": "$t(configurationRangefinderType.message)",
+        "description": "Don't translate!!!"
+    },
     "configurationBoardAlignment": {
-        "message": "Board and Sensor Alignment"
+        "message": "Board Alignment"
     },
     "configurationBoardAlignmentRoll": {
         "message": "Roll Degrees"
@@ -1404,6 +1460,42 @@
     },
     "configurationBoardAlignmentYaw": {
         "message": "Yaw Degrees"
+    },
+    "configurationGyroAlignment": {
+        "message": "Gyro Alignment"
+    },
+    "configurationGyroAlignmentHelp": {
+        "message": "The gyro alignment is the orientation of the gyro sensor on the flight controller board. The default is usually correct, but if you have a custom build or a flight controller with a different gyro orientation, you may need to adjust this setting."
+    },
+    "configurationGyroAlignmentRoll": {
+        "message": "$t(configurationBoardAlignmentRoll.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyroAlignmentPitch": {
+        "message": "$t(configurationBoardAlignmentPitch.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyroAlignmentYaw": {
+        "message": "$t(configurationBoardAlignmentYaw.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationMagAlignment": {
+        "message": "Magnetometer Alignment"
+    },
+    "configurationBoardAlignmentHelp": {
+        "message": "Arbitrary board rotation in degrees, to allow mounting it sideways / upside down / rotated etc. When running external sensors, use the sensor alignments (Gyro, Acc, Mag) to define sensor position independent from board orientation. "
+    },
+    "configurationMagAlignmentRoll": {
+        "message": "$t(configurationBoardAlignmentRoll.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationMagAlignmentPitch": {
+        "message": "$t(configurationBoardAlignmentPitch.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationMagAlignmentYaw": {
+        "message": "$t(configurationBoardAlignmentYaw.message)",
+        "description": "Don't translate!!!"
     },
     "configurationSensorAlignmentGyro": {
         "message": "GYRO Alignment"
@@ -1432,9 +1524,6 @@
     "configurationSensorAlignmentAcc": {
         "message": "ACCEL Alignment"
     },
-    "configurationSensorAlignmentMag": {
-        "message": "MAG Alignment"
-    },
     "configurationSensorAlignmentDefaultOption": {
        "message": "Default"
     },
@@ -1452,9 +1541,6 @@
     },
     "configurationArmingHelp": {
         "message": "Some Arming options may require accelerometer be enabled"
-    },
-    "configurationMagDeclination": {
-        "message": "Magnetometer Declination [deg]"
     },
     "configurationReverseMotorSwitch": {
         "message": "Motor direction is reversed"
@@ -1707,6 +1793,9 @@
     },
     "portsSerialRx": {
         "message": "Serial Rx"
+    },
+    "portsSerialRxHelp": {
+        "message": "Enable or disable Remote Control serial Receiver (RX) on specified UART. Only one allowed."
     },
     "portsSensorIn": {
         "message": "Sensor Input"
@@ -2399,7 +2488,7 @@
         "description": "Help text to ACRO TRAINER mode"
     },
     "auxiliaryHelpMode_ARM": {
-        "message": "Enables motor output and allows the aircraft to fly",
+        "message": "Enables motor output and allows the aircraft to fly.  <span class=\"message-negative\">Attention:</span> Pilot may wish to configure <b>BOXPREARM</b> (2-stage arming) for safety reasons.",
         "description": "Help text to ARM mode"
     },
     "auxiliaryHelpMode_ANGLE": {
@@ -2415,7 +2504,7 @@
         "description": "Help text to AIRMODE mode"
     },
     "auxiliaryHelpMode_ALTHOLD": {
-        "message": "Altitude mode is the safest non-GPS manual mode for new fliers. It is just like Stabilized mode but additionally locks the vehicle altitude when the sticks are released",
+        "message": "<a href=\"https://betaflight.com/docs/wiki/guides/current/position-hold-v4-6#altitude-hold\" target=\"_blank\" rel=\"noopener noreferrer\">Altitude Hold</a> actively regulates the aircraft's altitude using external sensors combined with Angle Mode (Stable Mode).",
         "description": "Help text for ALTITUDE HOLD mode"
     },
     "auxiliaryHelpMode_BEEPER": {
@@ -2718,6 +2807,9 @@
     "adjustmentsFunction30": {
         "message": "LED Profile Selection"
     },
+	"adjustmentsFunction31": {
+        "message": "LED Brightness Adjust"
+    },
     "adjustmentsSave": {
         "message": "Save"
     },
@@ -2885,6 +2977,10 @@
     },
     "gpsPositionalDop": {
         "message": "Positional DOP:"
+    },
+    "gpsMagneticDeclination": {
+        "message": "$t(configurationMagDeclination):",
+        "description": "Do not translate"
     },
     "gpsSignalStrHead": {
         "message": "GPS Signal Strength"
@@ -4551,7 +4647,7 @@
         "message": "Vbat Sag Compensation"
     },
     "pidTuningVbatSagCompensationHelp": {
-        "message": "Gives consistent throttle and PID performance over the usable battery voltage range by increasing motor output as battery voltage falls.<br /><br />The amount of compensation can be varied between 0 and 100%. Full compensation (100%) is recommended.<br /><br />Visit <a href=\"https://betaflight.com/docs/tuning/4.2-Tuning-Notes#dynamic-battery-sag-compensation\" target=\"_blank\" rel=\"noopener noreferrer\">this wiki entry</a> for more info."
+        "message": "Gives consistent throttle and PID performance over the usable battery voltage range by increasing motor output as battery voltage falls.<br /><br />The amount of compensation can be varied between 0 and 100%. Full compensation (100%) is recommended.<br /><br />Visit <a href=\"https://betaflight.com/docs/wiki/tuning/4-2-tuning-notes#dynamic-battery-sag-compensation\" target=\"_blank\" rel=\"noopener noreferrer\">this wiki entry</a> for more info."
     },
     "pidTuningVbatSagValue": {
         "message": "%"
@@ -4651,9 +4747,6 @@
     },
     "pidTuningIntegratedYawHelp": {
         "message": "Integrated Yaw integrates yaw P, I and D values, allowing yaw P, I and D to be tuned a bit like you'd tune pitch and roll.<br><br>Very little I is required, because the integrated P acts like I, and integrated D acts like P.<br><br>NOTE: Integrated Yaw requires use of Absolute Control, since no I is needed with Integrated Yaw."
-    },
-    "configHelp2": {
-        "message": "Arbitrary board rotation in degrees, to allow mounting it sideways / upside down / rotated etc. When running external sensors, use the sensor alignments (Gyro, Acc, Mag) to define sensor position independent from board orientation. "
     },
     "failsafeFeaturesHelpOld": {
         "message": "Failsafe configuration has changed considerably. Use Betaflight <strong>v1.12.0+</strong> to enable the improved configuration panel."
@@ -4755,7 +4848,7 @@
         "message": "The distance the aircraft will climb, above the current altitude, when a rescue is initiated and the altitude mode is set to CURRENT Altitude; also added when in MAX Altitude mode."
     },
     "failsafeGpsRescueItemReturnAltitude": {
-        "message": "Return altitude (meters) - <strong>only applies in Fixed Altitude mode</strong>"
+        "message": "Return altitude (meters)"
     },
     "failsafeGpsRescueItemAscendRate": {
         "message": "Ascend rate (meters/second)"
@@ -5596,7 +5689,38 @@
         "message": "ASL without decimals",
         "description": "One of the variants of the altitude element of the OSD"
     },
-
+    "osdTextElementCustomMsg0": {
+        "message": "Custom message 1",
+        "description": "One of the elements of the OSD"
+    },
+    "osdTextElementCustomMsg1": {
+        "message": "Custom message 2",
+        "description": "One of the elements of the OSD"
+    },
+    "osdTextElementCustomMsg2": {
+        "message": "Custom message 3",
+        "description": "One of the elements of the OSD"
+    },
+    "osdTextElementCustomMsg3": {
+        "message": "Custom message 4",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementCustomMsg0": {
+        "message": "Custom message 1 from external device",
+        "description": "Description of the custom message 1 element of the OSD"
+    },
+    "osdDescElementCustomMsg1": {
+        "message": "Custom message 2 from external device",
+        "description": "Description of the custom message 2 element of the OSD"
+    },
+    "osdDescElementCustomMsg2": {
+        "message": "Custom message 3 from external device",
+        "description": "Description of the custom message 3 element of the OSD"
+    },
+    "osdDescElementCustomMsg3": {
+        "message": "Custom message 4 from external device",
+        "description": "Description of the custom message 4 element of the OSD"
+    },
     "osdTextElementOnTime": {
         "message": "On time",
         "description": "One of the elements of the OSD"

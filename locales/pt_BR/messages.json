@@ -855,11 +855,7 @@
     },
     "initialSetupNotInBuild": {
         "message": "Não incluído na compilação",
-        "description": "Message that pops up when hardware support not are supported in Build"
-    },
-    "initialSetupNotDetected": {
-        "message": "Não encontrado",
-        "description": "Message that pops up when hardware are not detected"
+        "description": "Message that pops up when hardware support is not included in build"
     },
     "initialSetupRSSIValue": {
         "message": "$1 dBm"
@@ -1163,9 +1159,6 @@
     "featureGPS": {
         "message": "GPS para navegação e telemetria"
     },
-    "featureGPSTip": {
-        "message": "Configure primeiro o cenário das portas"
-    },
     "featureSONAR": {
         "message": "Sonar"
     },
@@ -1224,7 +1217,8 @@
         "message": "Ativar permanentemente o Airmode"
     },
     "featureAIRMODETip": {
-        "message": "$t(auxiliaryHelpMode_AIRMODE.message)"
+        "message": "$t(auxiliaryHelpMode_AIRMODE.message)",
+        "description": "Don't translate!!!"
     },
     "featureRX_SPI": {
         "message": "SPI Rx (Rx embutido)"
@@ -1289,9 +1283,6 @@
     "configurationOtherFeaturesHelp": {
         "message": "<strong>Nota:<\/strong> Nem todas as funcionalidades são suportadas por todos os controladores de voo. Se ativar uma funcionalidade específica, e ela é desativada depois de clicar em 'Salvar e Reiniciar', significa que essa funcionalidade não é suportada pela placa."
     },
-    "configurationBoardAlignment": {
-        "message": "Alinhamento da placa e dos sensores"
-    },
     "configurationBoardAlignmentRoll": {
         "message": "Graus de Rotação (Roll)"
     },
@@ -1328,9 +1319,6 @@
     "configurationSensorAlignmentAcc": {
         "message": "Rotacionar Acelerômetro"
     },
-    "configurationSensorAlignmentMag": {
-        "message": "Rotacionar Magnetômetro"
-    },
     "configurationSensorAlignmentDefaultOption": {
         "message": "Padrão"
     },
@@ -1348,9 +1336,6 @@
     },
     "configurationArmingHelp": {
         "message": "Algumas opções de armar podem necessitar que o acelerômetro esteja ativado"
-    },
-    "configurationMagDeclination": {
-        "message": "Declinação do Magnetômetro [deg]"
     },
     "configurationReverseMotorSwitch": {
         "message": "Direção do motor é invertida"
@@ -2243,10 +2228,6 @@
     "auxiliaryHelpMode_ANTIGRAVITY": {
         "message": "Este modo de voo aumenta os termos P e I durante movimentos rápidos do acelerador, isto melhora a velocidade de resposta dos sticks e evita deslizes quando há alterações rápidas no acelerador",
         "description": "Help text to ANTIGRAVITY mode"
-    },
-    "auxiliaryHelpMode_ALTHOLD": {
-        "message": "Modo de altitude é o modo manual não-GPS mais seguro para novos pilotos. É como o modo estabilizado, mas além disso fixa a altitude do veículo quando os controles são liberados",
-        "description": "Help text for ALTITUDE HOLD mode"
     },
     "auxiliaryHelpMode_BEEPER": {
         "message": "Ativar o beeper - útil para localizar uma aeronave caída",
@@ -4299,9 +4280,6 @@
     "pidTuningVbatSagCompensation": {
         "message": "Compensar Bateria Fraca"
     },
-    "pidTuningVbatSagCompensationHelp": {
-        "message": "Proporciona uma aceleração e desempenho do PID consistente enquanto estiver com a voltagem da bateria acima do valor minimo, aumentando o potência de saída do motor de conforme a voltagem da bateria diminui.<br \/><br \/>O valor de compensação pode variar entre 0% a 100% - É recomendada a compensação total de 100%.<br \/><br \/>Visite <a href=\"https:\/\/betaflight.com\/docs\/tuning\/4.2-Tuning-Notes#dynamic-battery-sag-compensation\" target=\"_blank\" rel=\"noopener noreferrer\">esta pagina do wiki<\/a> para mais informações."
-    },
     "pidTuningVbatSagValue": {
         "message": "%"
     },
@@ -4385,9 +4363,6 @@
     },
     "pidTuningIntegratedYawHelp": {
         "message": "Yaw Integrado integra os valores dos termos P, I e D do yaw, permitindo que sejam configurados da mesma maneira de como se configura o PID do pitch e roll.<br><br>É necessário muito pouco I, porque o P integrado atua como I, e o D integrado atua como P.<br><br>NOTA: O Yaw Integrado requer o uso de Controle Absoluto, uma vez que nenhum I é necessário com Yaw Integrado."
-    },
-    "configHelp2": {
-        "message": "Rotação da placa em graus, permite que a placa seja montada de lado, de cabeça para baixo, rotacionada, etc. Quando estiver utilizando sensores externos, use o alinhamento dos sensores (Gyro, Accel, Mag) para definir a posição do sensor independente da orientação da placa. "
     },
     "failsafeFeaturesHelpOld": {
         "message": "As configurações do Failsafe mudaram consideravelmente. Use o Betaflight <strong>v1.12.0+<\/strong> para ativar o painel de configuração aprimorado."
@@ -4475,9 +4450,6 @@
     },
     "failsafeGpsRescueInitialClimb": {
         "message": "Altitude adicional (metros)"
-    },
-    "failsafeGpsRescueItemReturnAltitude": {
-        "message": "Altitude de retorno (metros) - <strong>se aplica apenas no modo de altitude fixa<\/strong>"
     },
     "failsafeGpsRescueItemAscendRate": {
         "message": "Velocidade para subir (metros\/segundo)"

@@ -21,7 +21,7 @@ cordova/bundle.keystore
 
 # artefacts for Visual Studio Code
 .vscode/*
-!.vscode/launch.json
+!.vscode/extensions.json
 
 # NetBeans
 nbproject/

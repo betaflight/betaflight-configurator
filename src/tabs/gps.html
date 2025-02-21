@@ -16,6 +16,14 @@
                         <div class="gps_config">
                             <div>
                                 <div class="select line">
+                                    <table>
+                                        <tbody class="features gps">
+                                            <!-- table generated here -->
+                                        </tbody>
+                                    </table>
+                                    <div class="helpicon cf_tip" i18n_title="featureGPSTip"></div>
+                                </div>
+                                <div class="select line">
                                     <select class="gps_protocol">
                                         <!-- list generated here -->
                                     </select>
@@ -58,11 +66,6 @@
                                         <!-- list generated here -->
                                     </select>
                                     <span i18n="configurationGPSubxSbas"></span>
-                                </div>
-                                <div class="number mag_declination">
-                                    <label> <input type="number" name="mag_declination" step="0.1" min="0" max="359.9" />
-                                    <span i18n="configurationMagDeclination"></span>
-                                    </label>
                                 </div>
                             </div>
                         </div>
@@ -108,7 +111,7 @@
                             </tr>
                             <tr>
                                 <td i18n="gpsHeading"></td>
-                                <td class="heading"><a href="#" target="_blank">0.0000 deg</a></td>
+                                <td class="heading"></td>
                             </tr>
                             <tr>
                                 <td i18n="gpsLatLon"></td>
@@ -121,6 +124,10 @@
                             <tr>
                                 <td i18n="gpsPositionalDop"></td>
                                 <td class="positionalDop"></td>
+                            </tr>
+                            <tr>
+                                <td i18n="gpsMagneticDeclination"></td>
+                                <td class="magDeclination"></td>
                             </tr>
                         </table>
                     </div>
