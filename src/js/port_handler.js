@@ -119,9 +119,7 @@ PortHandler.updateCurrentSerialPortsList = async function () {
     const ports = await serial.getDevices();
     const orderedPorts = this.sortPorts(ports);
     this.portAvailable = orderedPorts.length > 0;
-    if (this.portAvailable) {
-        console.log(`${this.logHead} Found serial port`, orderedPorts[0]);
-    }
+    console.log(`${this.logHead} Found serial port`, orderedPorts);
     this.currentSerialPorts = [...orderedPorts];
 };
 
@@ -129,10 +127,7 @@ PortHandler.updateCurrentUsbPortsList = async function () {
     const ports = await usb.getDevices();
     const orderedPorts = this.sortPorts(ports);
     this.dfuAvailable = orderedPorts.length > 0;
-    if (this.dfuAvailable) {
-        console.log(`${this.logHead} Found DFU port`, orderedPorts[0]);
-    }
-
+    console.log(`${this.logHead} Found DFU port`, orderedPorts);
     this.currentUsbPorts = [...orderedPorts];
 };
 
@@ -141,10 +136,7 @@ PortHandler.updateCurrentBluetoothPortsList = async function () {
         const ports = await BT.getDevices();
         const orderedPorts = this.sortPorts(ports);
         this.bluetoothAvailable = orderedPorts.length > 0;
-        if (this.bluetoothAvailable) {
-            console.log(`${this.logHead} Found bluetooth port`, orderedPorts[0]);
-        }
-
+        console.log(`${this.logHead} Found bluetooth port`, orderedPorts);
         this.currentBluetoothPorts = [...orderedPorts];
     }
 };
