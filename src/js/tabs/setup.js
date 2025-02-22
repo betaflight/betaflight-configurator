@@ -524,13 +524,16 @@ setup.initialize = function (callback) {
             gpsFix_e.toggleClass("ready", FC.GPS_DATA.fix != 0);
             gpsSats_e.text(FC.GPS_DATA.numSat);
 
-            const lat = FC.GPS_DATA.lat / 10000000;
-            const lon = FC.GPS_DATA.lon / 10000000;
-            const url = `https://maps.google.com/?q=${lat},${lon}`;
+            const latitude = FC.GPS_DATA.latitude / 10000000;
+            const longitude = FC.GPS_DATA.longitude / 10000000;
+            const url = `https://maps.google.com/?q=${latitude},${longitude}`;
             const gpsUnitText = i18n.getMessage("gpsPositionUnit");
-            $(".GPS_info td.latLon a")
+            $(".GPS_info td.latitude a")
                 .prop("href", url)
-                .text(`${lat.toFixed(4)} / ${lon.toFixed(4)} ${gpsUnitText}`);
+                .text(`${latitude.toFixed(4)} ${gpsUnitText}`);
+            $(".GPS_info td.longitude a")
+                .prop("href", url)
+                .text(`${longitude.toFixed(4)} ${gpsUnitText}`);
         }
 
         function get_fast_data() {

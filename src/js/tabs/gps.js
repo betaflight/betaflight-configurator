@@ -334,9 +334,9 @@ gps.initialize = async function (callback) {
         }
 
         function update_ui() {
-            const lat = FC.GPS_DATA.lat / 10000000;
-            const lon = FC.GPS_DATA.lon / 10000000;
-            const url = `https://maps.google.com/?q=${lat},${lon}`;
+            const latitude = FC.GPS_DATA.latitude / 10000000;
+            const longitude = FC.GPS_DATA.longitude / 10000000;
+            const url = `https://maps.google.com/?q=${latitude},${longitude}`;
             const imuHeadingDegrees = FC.SENSOR_DATA.kinematics[2];
             // Convert to radians and add 180 degrees to make icon point in the right direction
             const imuHeadingRadians = ((imuHeadingDegrees + 180) * Math.PI) / 180;
@@ -353,9 +353,12 @@ gps.initialize = async function (callback) {
 
             const gpsUnitText = i18n.getMessage("gpsPositionUnit");
             $(".GPS_info td.alt").text(`${alt} m`);
-            $(".GPS_info td.latLon a")
+            $(".GPS_info td.latitude a")
                 .prop("href", url)
-                .text(`${lat.toFixed(6)} / ${lon.toFixed(6)} ${gpsUnitText}`);
+                .text(`${latitude.toFixed(6)} ${gpsUnitText}`);
+            $(".GPS_info td.longitude a")
+                .prop("href", url)
+                .text(`${longitude.toFixed(6)} ${gpsUnitText}`);
             $(".GPS_info td.heading").text(`${imuHeadingDegrees.toFixed(0)} / ${gpsHeading.toFixed(0)} ${gpsUnitText}`);
             $(".GPS_info td.speed").text(`${FC.GPS_DATA.speed} cm/s`);
             $(".GPS_info td.sats").text(FC.GPS_DATA.numSat);
@@ -384,12 +387,12 @@ gps.initialize = async function (callback) {
             if (ispConnected()) {
                 $("#connect").hide();
 
-                gpsFoundPosition = !!(lon && lat);
+                gpsFoundPosition = !!(longitude && latitude);
 
                 if (gpsFoundPosition) {
                     (hasMag ? iconStyleMag : iconStyleGPS).getImage().setRotation(imuHeadingRadians);
                     iconFeature.setStyle(hasMag ? iconStyleMag : iconStyleGPS);
-                    const center = fromLonLat([lon, lat]);
+                    const center = fromLonLat([longitude, latitude]);
                     mapView.setCenter(center);
                     iconGeometry.setCoordinates(center);
                 } else {
