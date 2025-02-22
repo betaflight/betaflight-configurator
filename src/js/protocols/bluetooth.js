@@ -58,6 +58,8 @@ class BT extends EventTarget {
     constructor() {
         super();
 
+        this.logHead = "[BLUETOOTH]";
+
         if (!this.bluetooth && window && window.navigator && window.navigator.bluetooth) {
             this.bluetooth = navigator.bluetooth;
         } else {
@@ -76,8 +78,6 @@ class BT extends EventTarget {
         this.bytesSent = 0;
         this.bytesReceived = 0;
         this.failed = 0;
-
-        this.logHead = "[BLUETOOTH]";
 
         this.portCounter = 0;
         this.devices = [];

@@ -57,6 +57,8 @@ firmware_flasher.initialize = function (callback) {
     self.intel_hex = undefined;
     self.parsed_hex = undefined;
 
+    self.logHead = "[FIRMWARE_FLASHER]";
+
     function onDocumentLoad() {
         function parseHex(str, callback) {
             read_hex_file(str).then((data) => {
@@ -386,7 +388,7 @@ firmware_flasher.initialize = function (callback) {
                 );
                 if (self.parsed_hex && self.parsed_hex.bytes_total) {
                     // Changing the board triggers a version change, so we need only dump it here.
-                    console.log("throw out loaded hex");
+                    console.log(`${self.logHead} throw out loaded hex`);
                     self.intel_hex = undefined;
                     self.parsed_hex = undefined;
                 }
@@ -530,7 +532,7 @@ firmware_flasher.initialize = function (callback) {
 
             if (!GUI.connect_lock) {
                 self.selectedBoard = target;
-                console.log("board changed to", target);
+                console.log(`${self.logHead} board changed to`, target);
 
                 self.flashingMessage(
                     i18n.getMessage("firmwareFlasherLoadFirmwareFile"),
@@ -621,8 +623,8 @@ firmware_flasher.initialize = function (callback) {
         function detectedUsbDevice(device) {
             const isFlashOnConnect = $("input.flash_on_connect").is(":checked");
 
-            console.log("Detected USB device:", device);
-            console.log("Reboot mode: %s, flash on connect", STM32.rebootMode, isFlashOnConnect);
+            console.log(`${self.logHead} Detected USB device:`, device);
+            console.log(`${self.logHead} Reboot mode: %s, flash on connect`, STM32.rebootMode, isFlashOnConnect);
 
             if (STM32.rebootMode || isFlashOnConnect) {
                 STM32.rebootMode = 0;
@@ -647,7 +649,7 @@ firmware_flasher.initialize = function (callback) {
             const isSerial = port.startsWith("serial_");
             const isDFU = port.startsWith("usb_");
 
-            console.log("Selected port:", port);
+            console.log(`${self.logHead} Selected port:`, port);
 
             if (isDFU) {
                 tracking.sendEvent(tracking.EVENT_CATEGORIES.FLASHING, "DFU Flashing", {
@@ -671,7 +673,7 @@ firmware_flasher.initialize = function (callback) {
                 STM32.connect(port, baud, firmware, options);
             } else {
                 // Maybe the board is in DFU mode, but it does not have permissions. Ask for them.
-                console.log("No valid port detected, asking for permissions");
+                console.log(`${self.logHead} No valid port detected, asking for permissions`);
                 DFU.requestPermission().then((device) => {
                     DFU.connect(device.path, firmware, options);
                 });
@@ -770,7 +772,7 @@ firmware_flasher.initialize = function (callback) {
 
             FileSystem.pickOpenFile(i18n.getMessage("fileSystemPickerFiles", { typeof: "HEX" }), ".hex")
                 .then((file) => {
-                    console.log("Saving firmware to:", file.name);
+                    console.log(`${self.logHead} Saving firmware to:`, file.name);
                     FileSystem.readFile(file).then((data) => {
                         if (file.name.split(".").pop() === "hex") {
                             self.intel_hex = data;
@@ -1048,12 +1050,12 @@ firmware_flasher.initialize = function (callback) {
                 // button disabled while flashing is in progress
                 tracking.sendEvent(tracking.EVENT_CATEGORIES.FLASHING, "ExitDfu", null);
                 try {
-                    console.log("Closing DFU");
+                    console.log(`${self.logHead} Closing DFU`);
                     DFU.requestPermission().then((device) => {
                         DFU.connect(device.path, self.parsed_hex, { exitDfu: true });
                     });
                 } catch (e) {
-                    console.log(`Exiting DFU failed: ${e.message}`);
+                    console.log(`${self.logHead} Exiting DFU failed: ${e.message}`);
                 }
             }
         });
@@ -1194,14 +1196,14 @@ firmware_flasher.initialize = function (callback) {
                             if (configInserter.insertConfig(self.parsed_hex, self.config)) {
                                 self.parsed_hex.configInserted = true;
                             } else {
-                                console.log("Firmware does not support custom defaults.");
+                                console.log(`${self.logHead} Firmware does not support custom defaults.`);
                                 clearBoardConfig();
                             }
                         }
 
                         flashFirmware(self.parsed_hex);
                     } catch (e) {
-                        console.log(`Flashing failed: ${e.message}`);
+                        console.log(`${self.logHead} Flashing failed: ${e.message}`);
                     }
                     // Disable flash on connect after flashing to prevent continuous flashing
                     $("input.flash_on_connect").prop("checked", false).change();
@@ -1221,7 +1223,7 @@ firmware_flasher.initialize = function (callback) {
                 ".hex",
             )
                 .then((file) => {
-                    console.log("Saving firmware to:", file.name);
+                    console.log(`${self.logHead} Saving firmware to:`, file.name);
                     FileSystem.writeFile(file, self.intel_hex);
 
                     tracking.sendEvent(tracking.EVENT_CATEGORIES.FLASHING, "SaveFirmware");
@@ -1241,7 +1243,7 @@ firmware_flasher.initialize = function (callback) {
     }
 
     self.buildApi.loadTargets(() => {
-        console.log("Targets loaded");
+        console.log(`${self.logHead} Targets loaded`);
         $("#content").load("./tabs/firmware_flasher.html", onDocumentLoad);
     });
 };
