@@ -27,6 +27,8 @@ import { serialShim } from "./serial_shim.js";
 import { EventBus } from "../components/eventBus";
 import { ispConnected } from "./utils/connection";
 
+const logHead = "[SERIAL-BACKEND]";
+
 let serial = serialShim();
 
 let mspHelper;
@@ -109,7 +111,7 @@ function connectDisconnect() {
                 return;
             }
 
-            console.log(`[SERIAL-BACKEND] Connecting to: ${portName}`);
+            console.log(`${logHead} Connecting to: ${portName}`);
             GUI.connecting_to = portName;
 
             // lock port select & baud while we are connecting / connected
@@ -297,7 +299,7 @@ function onOpen(openInfo) {
         mspHelper = new MspHelper();
         MSP.listen(mspHelper.process_data.bind(mspHelper));
         MSP.timeout = 250;
-        console.log(`[SERIAL-BACKEND] Requesting configuration data`);
+        console.log(`${logHead} Requesting configuration data`);
 
         MSP.send_message(MSPCodes.MSP_API_VERSION, false, false, function () {
             gui_log(i18n.getMessage("apiVersionReceived", FC.CONFIG.apiVersion));
@@ -706,7 +708,7 @@ function onClosed(result) {
     $("#dataflash_wrapper_global").hide();
     $("#quad-status_wrapper").hide();
 
-    console.log("[SERIAL-BACKEND] Connection closed:", result);
+    console.log(`${logHead} Connection closed:`, result);
 
     resetConnection();
 

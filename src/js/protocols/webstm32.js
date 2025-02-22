@@ -27,7 +27,7 @@ function readSerialAdapter(event) {
 
 function onTimeoutHandler() {
     GUI.connect_lock = false;
-    console.log("[STM32] Looking for capabilities via MSP failed");
+    console.log(`${STM32Protocol.logHead} Looking for capabilities via MSP failed`);
 
     TABS.firmware_flasher.flashingMessage(
         i18n.getMessage("stm32RebootingToBootloaderFailed"),
@@ -43,6 +43,7 @@ function onFailureHandler() {
 class STM32Protocol {
     constructor() {
         this.logHead = "[STM32]";
+
         this.baud = null;
         this.options = {};
         this.callback = null;

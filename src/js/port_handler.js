@@ -10,6 +10,7 @@ const DEFAULT_BAUDS = 115200;
 
 const PortHandler = new (function () {
     this.logHead = "[PORTHANDLER]";
+
     this.currentSerialPorts = [];
     this.currentUsbPorts = [];
     this.currentBluetoothPorts = [];

@@ -23,10 +23,12 @@ import { get as getConfig } from "../ConfigStorage";
 class WEBUSBDFU_protocol extends EventTarget {
     constructor() {
         super();
+
+        this.logHead = "[WEBUSB DFU]";
+
         this.callback = null;
         this.hex = null;
         this.verify_hex = [];
-        this.logHead = "[WEBUSB DFU]";
 
         this.request = {
             DETACH: 0x00, // OUT, Requests the device to leave DFU mode and enter the application.
