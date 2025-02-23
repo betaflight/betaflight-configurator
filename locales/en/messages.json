@@ -2957,9 +2957,13 @@
     "gpsAltitude": {
         "message": "Altitude:"
     },
-    "gpsLatLon": {
-        "message": "Current Latitude / Longitude:",
-        "description": "Show GPS position - Latitude / Longitude"
+    "gpsLatitude": {
+        "message": "Latitude:",
+        "description": "Show GPS position - Latitude"
+    },
+    "gpsLongitude": {
+        "message": "Longitude:",
+        "description": "Show GPS position - Longitude"
     },
     "gpsHeading": {
         "message": "Heading IMU / GPS:",

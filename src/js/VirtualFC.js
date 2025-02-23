@@ -321,8 +321,8 @@ const VirtualFC = {
 const sampleGpsData = {
     fix: 2,
     numSat: 10,
-    lat: 474919409,
-    lon: 190539766,
+    latitude: 474919409,
+    longitude: 190539766,
     alt: 0,
     speed: 0,
     ground_course: 1337,

@@ -309,8 +309,8 @@ MspHelper.prototype.process_data = function (dataHandler) {
                 case MSPCodes.MSP_RAW_GPS:
                     FC.GPS_DATA.fix = data.readU8();
                     FC.GPS_DATA.numSat = data.readU8();
-                    FC.GPS_DATA.lat = data.read32();
-                    FC.GPS_DATA.lon = data.read32();
+                    FC.GPS_DATA.latitude = data.read32();
+                    FC.GPS_DATA.longitude = data.read32();
                     FC.GPS_DATA.alt = data.readU16();
                     FC.GPS_DATA.speed = data.readU16();
                     FC.GPS_DATA.ground_course = data.readU16();
