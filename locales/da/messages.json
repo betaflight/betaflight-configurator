@@ -158,6 +158,10 @@
         "message": "Aktiver virtuel forbindelse",
         "description": "Text for the option to enable or disable the virtual FC"
     },
+    "useLegacyRenderingModel": {
+        "message": "Aktiver ældre indstillinger for 3D-model (for enheder med lav ydeevne)",
+        "description": "Text for the option to enable or disable legacy rendering of the 3D model"
+    },
     "cordovaForceComputerUI": {
         "message": "Brug computerens interface i stedet for telefonens interface"
     },
@@ -1031,10 +1035,6 @@
     "initialSetupArmingDisableFlagsTooltipCRASHFLIP": {
         "message": "Crash Flip Switch er aktiv",
         "description": "Message that pops to describe the CRASHFLIP arming disable flag"
-    },
-    "initialSetupArmingDisableFlagsTooltipALTHOLD": {
-        "message": "Fast Højde er aktiv",
-        "description": "Message that pops up to describe the ALTHOLD arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipPOSHOLD": {
         "message": "Fast Højde er aktiv",
@@ -2416,10 +2416,6 @@
         "message": "AirMode tilstand giver mulighed for at opretholde fartøjets stabilitet ved lav gas. Se venligst <a href=\"https:\/\/betaflight.com\/docs\/development\/modes#airmode\" target=\"_blank\" rel=\"noopener noreferrer\">AirMode<\/a> på Betaflight.com.",
         "description": "Help text to AIRMODE mode"
     },
-    "auxiliaryHelpMode_ALTHOLD": {
-        "message": "<a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/position-hold-v4-6#altitude-hold\" target=\"_blank\" rel=\"noopener noreferrer\">Højde Hold<\/a> regulerer aktivt flyets højde ved hjælp af eksterne sensorer kombineret med Vinkel Mode (Stabil tilstand).",
-        "description": "Help text for ALTITUDE HOLD mode"
-    },
     "auxiliaryHelpMode_BEEPER": {
         "message": "Aktiver bippen - nyttigt til at lokalisere en styrtet drone",
         "description": "Help text to BEEPER mode"
@@ -2870,9 +2866,13 @@
     "gpsAltitude": {
         "message": "Højde:"
     },
-    "gpsLatLon": {
-        "message": "Nuværende breddegrad \/ længdegrad:",
-        "description": "Show GPS position - Latitude \/ Longitude"
+    "gpsLatitude": {
+        "message": "Breddegrad:",
+        "description": "Show GPS position - Latitude"
+    },
+    "gpsLongitude": {
+        "message": "Længdegrad:",
+        "description": "Show GPS position - Longitude"
     },
     "gpsHeading": {
         "message": "Retning IMU \/ GPS:",

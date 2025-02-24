@@ -158,6 +158,10 @@
         "message": "Activa el mode de connexió virtual",
         "description": "Text for the option to enable or disable the virtual FC"
     },
+    "useLegacyRenderingModel": {
+        "message": "Habilitar la representació heretada per al model 3D (per dispositius de baix rendiment)",
+        "description": "Text for the option to enable or disable legacy rendering of the 3D model"
+    },
     "cordovaForceComputerUI": {
         "message": "Utilitzeu la interfície dels ordinadors en lloc de la interfície dels telèfons"
     },
@@ -2874,9 +2878,13 @@
     "gpsAltitude": {
         "message": "Altitud:"
     },
-    "gpsLatLon": {
-        "message": "Latitud\/Longitud actuals:",
-        "description": "Show GPS position - Latitude \/ Longitude"
+    "gpsLatitude": {
+        "message": "Latitud:",
+        "description": "Show GPS position - Latitude"
+    },
+    "gpsLongitude": {
+        "message": "Longitud:",
+        "description": "Show GPS position - Longitude"
     },
     "gpsHeading": {
         "message": "Mostra Mag \/ GPS:",

@@ -158,6 +158,10 @@
         "message": "Activar modo de conexión virtual",
         "description": "Text for the option to enable or disable the virtual FC"
     },
+    "useLegacyRenderingModel": {
+        "message": "Habilitar sistema antiguo de renderizado para el modelo 3D (para dispositivos de bajo rendimiento)",
+        "description": "Text for the option to enable or disable legacy rendering of the 3D model"
+    },
     "cordovaForceComputerUI": {
         "message": "Usar interfaz para ordenador en lugar de la de teléfono"
     },
@@ -1028,6 +1032,14 @@
         "message": "Interruptor boca abajo después de choque está activado",
         "description": "Message that pops to describe the CRASHFLIP arming disable flag"
     },
+    "initialSetupArmingDisableFlagsTooltipALTHOLD": {
+        "message": "Mantener altitud está activado",
+        "description": "Message that pops up to describe the ALTHOLD arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipPOSHOLD": {
+        "message": "Mantener posición está activado",
+        "description": "Message that pops up to describe the POSHOLD arming disable flag"
+    },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "Una de las otras banderas de desarmado estaba activa al armar",
         "description": "Message that pops up to describe the ARM_SWITCH arming disable flag"
@@ -1175,6 +1187,9 @@
     "featureMOTOR_STOP": {
         "message": "No girar los motores al armar"
     },
+    "featureMOTOR_STOPTip": {
+        "message": "Esta funcionalidad está desactivada cuando AIRMODE está activado"
+    },
     "featureSERVO_TILT": {
         "message": "Gimbal servo"
     },
@@ -1189,6 +1204,10 @@
     },
     "featureGPS": {
         "message": "GPS para navegación y telemetría"
+    },
+    "featureGPSTip": {
+        "message": "Activar \/ Desactivar el GPS. Si el GPS no se puede activar, comprueba que haya un puerto asignado al GPS en la pestaña Puertos",
+        "description": "Message that pops up to describe the GPS feature"
     },
     "featureSONAR": {
         "message": "Sonar"
@@ -2850,10 +2869,6 @@
     },
     "gpsAltitude": {
         "message": "Altitud:"
-    },
-    "gpsLatLon": {
-        "message": "Latitud \/ Longitud actual:",
-        "description": "Show GPS position - Latitude \/ Longitude"
     },
     "gpsHeading": {
         "message": "Rumbo IMU \/ GPS:",

@@ -2848,10 +2848,6 @@
     "gpsAltitude": {
         "message": "Висота:"
     },
-    "gpsLatLon": {
-        "message": "Поточна широта\/довгота:",
-        "description": "Show GPS position - Latitude \/ Longitude"
-    },
     "gpsHeading": {
         "message": "Курс за ІВП \/ GPS:",
         "description": "Show IMU \/ GPS heading - Attitude \/ GPS course over ground"

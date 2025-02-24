@@ -2532,10 +2532,6 @@
     "gpsAltitude": {
         "message": "Altura:"
     },
-    "gpsLatLon": {
-        "message": "Latitude \/ Lonxitude actual:",
-        "description": "Show GPS position - Latitude \/ Longitude"
-    },
     "gpsHeading": {
         "message": "Rumbo IMU \/ GPS:",
         "description": "Show IMU \/ GPS heading - Attitude \/ GPS course over ground"

@@ -158,6 +158,10 @@
         "message": "バーチャル接続モード 有効",
         "description": "Text for the option to enable or disable the virtual FC"
     },
+    "useLegacyRenderingModel": {
+        "message": "3Dモデル レガシーレンダリング 有効 (低性能デバイス向け)",
+        "description": "Text for the option to enable or disable legacy rendering of the 3D model"
+    },
     "cordovaForceComputerUI": {
         "message": "電話インターフェイスの代わりにコンピュータインターフェイスを使用"
     },
@@ -866,6 +870,10 @@
         "message": "ビルドに含まれていません",
         "description": "Message that pops up when hardware support is not included in build"
     },
+    "initialSetupNotDetected": {
+        "message": "未検出または無効",
+        "description": "Message that pops up when hardware is not detected or disabled"
+    },
     "initialSetupRSSIValue": {
         "message": "$1 dBm"
     },
@@ -892,6 +900,9 @@
     },
     "initialSetupSensorSonar": {
         "message": "ソナー:"
+    },
+    "initialSetupSensorOpticalflow": {
+        "message": "オプティカルフロー:"
     },
     "initialSetupSensorRadar": {
         "message": "レーダー:"
@@ -1020,6 +1031,14 @@
     "initialSetupArmingDisableFlagsTooltipCRASHFLIP": {
         "message": "クラッシュフリップスイッチが有効です",
         "description": "Message that pops to describe the CRASHFLIP arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipALTHOLD": {
+        "message": "高度維持機能が有効",
+        "description": "Message that pops up to describe the ALTHOLD arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipPOSHOLD": {
+        "message": "ポジションホールドが有効",
+        "description": "Message that pops up to describe the POSHOLD arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "他のフラグの1つはアーム時にフラグを解除します",
@@ -1168,6 +1187,9 @@
     "featureMOTOR_STOP": {
         "message": "アーム後にモーターを回転させない"
     },
+    "featureMOTOR_STOPTip": {
+        "message": "エアモードが有効な場合、この機能は無効になります"
+    },
     "featureSERVO_TILT": {
         "message": "サーボジンバル"
     },
@@ -1182,6 +1204,10 @@
     },
     "featureGPS": {
         "message": "ナビゲーションとテレメトリー用のGPS"
+    },
+    "featureGPSTip": {
+        "message": "GPSデータを有効化 \/ 無効化します。GPSを有効にできない場合は、[ポート] タブでGPSにポートが割り当てられていることを確認してください",
+        "description": "Message that pops up to describe the GPS feature"
     },
     "featureSONAR": {
         "message": "ソナー 超音波距離センサー"
@@ -1310,11 +1336,35 @@
     "configurationMagAlignmentHelp": {
         "message": "コンパス アライメントは、FCボード上の磁気センサーの向きを指します。通常はデフォルト設定で正しい場合がほとんどですが、カスタムビルドや異なる向きの磁気センサーを持つフライトコントローラを使用している場合、この設定を調整する必要があるかもしれません。"
     },
+    "configurationMagDeclination": {
+        "message": "コンパス偏角"
+    },
     "configurationMagDeclinationInput": {
         "message": "偏角"
     },
     "configurationMagDeclinationHelp": {
         "message": "コンパス偏角は、磁北 (磁気北極) と真北 (地理的北極) の間の角度を指します。この角度は地球上の場所によって異なります。ご自身の位置での偏角は、インターネットで簡単に確認することができます。"
+    },
+    "configurationRangefinder": {
+        "message": "$t(initialSetupSensorSonar.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationRangefinderHelp": {
+        "message": "距離計 (レンジファインダー) を有効にし、地面までの距離をcm単位で計測"
+    },
+    "configurationRangefinderType": {
+        "message": "タイプ"
+    },
+    "configurationOpticalflow": {
+        "message": "$t(initialSetupSensorOpticalflow.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationOpticalflowHelp": {
+        "message": "オプティカルフローセンサー 有効"
+    },
+    "configurationOpticalflowType": {
+        "message": "$t(configurationRangefinderType.message)",
+        "description": "Don't translate!!!"
     },
     "configurationBoardAlignment": {
         "message": "FCボード アライメント"
@@ -2820,10 +2870,6 @@
     "gpsAltitude": {
         "message": "高度:"
     },
-    "gpsLatLon": {
-        "message": "現在の 緯度 \/ 経度:",
-        "description": "Show GPS position - Latitude \/ Longitude"
-    },
     "gpsHeading": {
         "message": "ヘッディング方位 \/ GPS:",
         "description": "Show IMU \/ GPS heading - Attitude \/ GPS course over ground"
@@ -2840,6 +2886,10 @@
     },
     "gpsPositionalDop": {
         "message": "位置精度低下率:"
+    },
+    "gpsMagneticDeclination": {
+        "message": "$t(configurationMagDeclination):",
+        "description": "Do not translate"
     },
     "gpsSignalStrHead": {
         "message": "GPS強度"
