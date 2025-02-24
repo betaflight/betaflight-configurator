@@ -1921,21 +1921,13 @@ each(range(12), {
     #tabs {
         li {
             a {
-                font-weight: normal;
-                font-size: 12px;
-                padding-left: 60px;
                 padding-top: 6px;
-                padding-bottom: 2px;
-                content: "";
-                transition: none;
-                text-overflow: clip;
-                white-space: nowrap;
-                overflow: hidden;
+                padding-bottom: 6px;
+            }
+            ::before {
+                padding-left: 22px;
             }
         }
-    }
-    .tab_container {
-        width: 42px;
     }
     #content {
         width: calc(100% - 42px);
