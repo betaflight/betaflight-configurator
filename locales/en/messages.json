@@ -830,7 +830,7 @@
         "message": "Calibrating..."
     },
     "initialSetupButtonReset": {
-        "message": "Reset Settings"
+        "message": "Erase Settings"
     },
     "initialSetupResetText": {
         "message": "Reset the flight controller to an <strong>unconfigured state.</strong>"

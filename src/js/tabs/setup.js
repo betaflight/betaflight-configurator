@@ -592,7 +592,7 @@ setup.cleanup = function (callback) {
     if (callback) callback();
 };
 
-setup.expertModeChanged = function (expertModeEnabled) {
+setup.expertModeChanged = function () {
     this.refresh();
 };
 
