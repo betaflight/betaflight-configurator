@@ -73,11 +73,8 @@ setup.initialize = function (callback) {
 
         $("#arming-disable-flag").attr("title", i18n.getMessage("initialSetupArmingDisableFlagsTooltip"));
 
-        if (isExpertModeEnabled()) {
-            $(".initialSetupRebootBootloader").show();
-        } else {
-            $(".initialSetupRebootBootloader").hide();
-        }
+        $(".initialSetupReset").toggle(isExpertModeEnabled());
+        $(".initialSetupRebootBootloader").toggle(isExpertModeEnabled());
 
         $("a.rebootBootloader").click(function () {
             const buffer = [];
@@ -593,6 +590,18 @@ setup.cleanup = function (callback) {
     }
 
     if (callback) callback();
+};
+
+setup.expertModeChanged = function () {
+    this.refresh();
+};
+
+setup.refresh = function () {
+    const self = this;
+
+    GUI.tab_switch_cleanup(function () {
+        self.initialize();
+    });
 };
 
 TABS.setup = setup;
