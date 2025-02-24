@@ -2870,10 +2870,6 @@
     "gpsAltitude": {
         "message": "고도:"
     },
-    "gpsLatLon": {
-        "message": "현재 위도 \/ 경도:",
-        "description": "Show GPS position - Latitude \/ Longitude"
-    },
     "gpsHeading": {
         "message": "IMU \/ GPS 머리방향:",
         "description": "Show IMU \/ GPS heading - Attitude \/ GPS course over ground"

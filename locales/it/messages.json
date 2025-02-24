@@ -158,6 +158,10 @@
         "message": "Abilita modalità di connessione virtuale",
         "description": "Text for the option to enable or disable the virtual FC"
     },
+    "useLegacyRenderingModel": {
+        "message": "Abilita il rendering legacy per il modello 3D (per dispositivi a basse prestazioni)",
+        "description": "Text for the option to enable or disable legacy rendering of the 3D model"
+    },
     "cordovaForceComputerUI": {
         "message": "Usa l'interfaccia computer invece dell'interfaccia telefono"
     },
@@ -1028,6 +1032,14 @@
         "message": "L'interruttore Crash Flip è attivo",
         "description": "Message that pops to describe the CRASHFLIP arming disable flag"
     },
+    "initialSetupArmingDisableFlagsTooltipALTHOLD": {
+        "message": "Mantieni Altitudine attivo",
+        "description": "Message that pops up to describe the ALTHOLD arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipPOSHOLD": {
+        "message": "Mantieni Posizione attivo",
+        "description": "Message that pops up to describe the POSHOLD arming disable flag"
+    },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "Uno dei flag di disarmo è attivo mentre si arma",
         "description": "Message that pops up to describe the ARM_SWITCH arming disable flag"
@@ -1175,6 +1187,9 @@
     "featureMOTOR_STOP": {
         "message": "Non avviare i motori se armato"
     },
+    "featureMOTOR_STOPTip": {
+        "message": "Questa funzione è disabilitata se AIRMODE è abilitato"
+    },
     "featureSERVO_TILT": {
         "message": "Servo gimbal"
     },
@@ -1189,6 +1204,10 @@
     },
     "featureGPS": {
         "message": "GPS per navigazione e telemetria"
+    },
+    "featureGPSTip": {
+        "message": "Abilita \/ Disabilita il GPS. Se il GPS non può essere abilitato, controlla che una porta sia assegnata al GPS nella scheda Porte",
+        "description": "Message that pops up to describe the GPS feature"
     },
     "featureSONAR": {
         "message": "Sonar"
@@ -2850,10 +2869,6 @@
     },
     "gpsAltitude": {
         "message": "Altitudine:"
-    },
-    "gpsLatLon": {
-        "message": "Latitudine \/ Longitudine Correnti:",
-        "description": "Show GPS position - Latitude \/ Longitude"
     },
     "gpsHeading": {
         "message": "Direzione IMU \/ GPS:",

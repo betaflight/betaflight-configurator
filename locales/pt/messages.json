@@ -158,6 +158,10 @@
         "message": "Ativar modo de ligação virtual",
         "description": "Text for the option to enable or disable the virtual FC"
     },
+    "useLegacyRenderingModel": {
+        "message": "Ativar a renderização legada para o modelo 3D (para dispositivos de baixo desempenho)",
+        "description": "Text for the option to enable or disable legacy rendering of the 3D model"
+    },
     "cordovaForceComputerUI": {
         "message": "Usar interface de computadores em vez de interface de telefones"
     },
@@ -2865,10 +2869,6 @@
     },
     "gpsAltitude": {
         "message": "Altitude:"
-    },
-    "gpsLatLon": {
-        "message": "Latitude \/Longitude atual:",
-        "description": "Show GPS position - Latitude \/ Longitude"
     },
     "gpsHeading": {
         "message": "Direção IMU \/ GPS:",
