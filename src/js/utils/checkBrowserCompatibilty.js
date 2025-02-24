@@ -12,8 +12,59 @@ export function isChromium() {
     });
 }
 
+export function isAndroid() {
+    if (navigator.userAgentData) {
+        return navigator.userAgentData.mobile && navigator.userAgentData.platform === "Android";
+    }
+    return /Android/.test(navigator.userAgent);
+}
+
+export function isIOS() {
+    if (navigator.userAgentData) {
+        return navigator.userAgentData.mobile && navigator.userAgentData.platform === "iOS";
+    }
+    return /iPhone|iPad|iPod/.test(navigator.userAgent);
+}
+
+export function isWindows() {
+    if (navigator.userAgentData) {
+        return navigator.userAgentData.platform === "Windows";
+    }
+    return /Windows/.test(navigator.userAgent);
+}
+
+export function isMac() {
+    if (navigator.userAgentData) {
+        return navigator.userAgentData.platform === "Mac";
+    }
+    return /Mac/.test(navigator.userAgent);
+}
+
+export function isLinux() {
+    if (navigator.userAgentData) {
+        return navigator.userAgentData.platform === "Linux";
+    }
+    return /Linux/.test(navigator.userAgent);
+}
+
 export function checkBrowserCompatibility() {
-    const compatible = "serial" in navigator;
+    const androidDevice = isAndroid();
+    const iosDevice = isIOS();
+
+    const linux = isLinux();
+    const mac = isMac();
+    const windows = isWindows();
+
+    const desktop = windows || mac || linux;
+    const compatible = desktop ? "serial" in navigator : androidDevice || iosDevice;
+
+    console.log("Android: ", androidDevice);
+    console.log("iOS: ", iosDevice);
+    console.log("Windows: ", windows);
+    console.log("Mac: ", mac);
+    console.log("Linux: ", linux);
+    console.log("Desktop: ", desktop);
+    console.log("Compatible: ", compatible);
 
     if (isChromium() && compatible) {
         return true;
