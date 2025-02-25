@@ -1,3 +1,5 @@
+import { Capacitor } from "@capacitor/core";
+
 export function isChromium() {
     // https://developer.mozilla.org/en-US/docs/Web/HTTP/Browser_detection_using_the_user_agent
     if (!navigator.userAgentData) {
@@ -12,10 +14,45 @@ export function isChromium() {
     });
 }
 
-export function checkBrowserCompatibility() {
-    const compatible = "serial" in navigator;
+export function isAndroid() {
+    if (Capacitor.isNativePlatform()) {
+        return Capacitor.getPlatform() === "android";
+    }
+    return false;
+}
 
-    if (isChromium() && compatible) {
+export function isIOS() {
+    if (Capacitor.isNativePlatform()) {
+        return Capacitor.getPlatform() === "ios";
+    }
+    return false;
+}
+
+export function isWeb() {
+    if (Capacitor.isNativePlatform()) {
+        return Capacitor.getPlatform() === "web";
+    }
+    if (navigator.userAgentData) {
+        return ["Linux", "Mac", "Windows"].includes(navigator.userAgentData.platform);
+    }
+}
+
+export function checkBrowserCompatibility() {
+    const androidDevice = isAndroid();
+    const iosDevice = isIOS();
+    const web = isWeb();
+    const webSerial = "serial" in navigator;
+    const isNative = Capacitor.isNativePlatform();
+
+    const compatible = isNative || (web && webSerial && isChromium());
+
+    console.log("Android: ", androidDevice);
+    console.log("iOS: ", iosDevice);
+    console.log("Web: ", web);
+    console.log("Web Serial: ", webSerial);
+    console.log("Native: ", isNative);
+
+    if (compatible) {
         return true;
     }
 
@@ -24,7 +61,7 @@ export function checkBrowserCompatibility() {
         errorMessage = "Betaflight app requires a Chromium based browser (Chrome, Chromium, Edge).";
     }
 
-    if (!compatible) {
+    if (!webSerial) {
         errorMessage += " Web Serial API support is disabled.";
     }
 
