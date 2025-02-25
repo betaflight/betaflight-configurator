@@ -655,7 +655,16 @@ input[type="number"] {
     padding: 1rem;
     padding-right: 0.5rem;
     background-color: var(--surface-100);
+
+    &::-webkit-scrollbar {
+        width: 0.3rem;
+        height: 2em;
+    }
+    &::-webkit-scrollbar-thumb {
+        background: var(--surface-600);
+    }
 }
+
 #content {
     transition: all 0.2s;
     overflow-x: hidden;
@@ -760,8 +769,8 @@ each(@tabIcons, {
     .ic_@{key} {
         &::before {
             content: " ";
-            width: 1rem;
-            height: 1rem;
+            min-width: 1rem;
+            min-height: 1rem;
             mask: @value no-repeat center center;
             -webkit-mask: @value no-repeat center center;
             background-color: var(--surface-700);
@@ -1834,13 +1843,13 @@ each(range(12), {
         overflow-y: auto;
     }
 }
-@media only screen and (max-device-height: 750px) {
+@media (max-height: 750px) {
     .tab_container {
         overflow-x: hidden;
         overflow-y: auto;
     }
 }
-@media only screen and (max-width: 1055px) {
+@media (max-width: 1055px) {
     #tabs {
         li {
             a {
@@ -1917,7 +1926,7 @@ each(range(12), {
         }
     }
 }
-@media only screen and (max-device-width: 1055px) {
+@media (max-width: 1055px) {
     #tabs {
         li {
             a {
@@ -1925,7 +1934,7 @@ each(range(12), {
                 padding-bottom: 6px;
             }
             ::before {
-                padding-left: 22px;
+                padding-left: 3px;
             }
         }
     }
