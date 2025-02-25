@@ -1,3 +1,5 @@
+import { Capacitor } from "@capacitor/core";
+
 export function isChromium() {
     // https://developer.mozilla.org/en-US/docs/Web/HTTP/Browser_detection_using_the_user_agent
     if (!navigator.userAgentData) {
@@ -13,60 +15,44 @@ export function isChromium() {
 }
 
 export function isAndroid() {
-    if (navigator.userAgentData) {
-        return navigator.userAgentData.mobile && navigator.userAgentData.platform === "Android";
+    if (Capacitor.isNativePlatform()) {
+        return Capacitor.getPlatform() === "android";
     }
-    return /Android/.test(navigator.userAgent);
+    return false;
 }
 
 export function isIOS() {
-    if (navigator.userAgentData) {
-        return navigator.userAgentData.mobile && navigator.userAgentData.platform === "iOS";
+    if (Capacitor.isNativePlatform()) {
+        return Capacitor.getPlatform() === "ios";
     }
-    return /iPhone|iPad|iPod/.test(navigator.userAgent);
+    return false;
 }
 
-export function isWindows() {
-    if (navigator.userAgentData) {
-        return navigator.userAgentData.platform === "Windows";
+export function isWeb() {
+    if (Capacitor.isNativePlatform()) {
+        return Capacitor.getPlatform() === "web";
     }
-    return /Windows/.test(navigator.userAgent);
-}
-
-export function isMac() {
     if (navigator.userAgentData) {
-        return navigator.userAgentData.platform === "Mac";
+        return ["Linux", "Mac", "Windows"].includes(navigator.userAgentData.platform);
     }
-    return /Mac/.test(navigator.userAgent);
-}
-
-export function isLinux() {
-    if (navigator.userAgentData) {
-        return navigator.userAgentData.platform === "Linux";
-    }
-    return /Linux/.test(navigator.userAgent);
 }
 
 export function checkBrowserCompatibility() {
     const androidDevice = isAndroid();
     const iosDevice = isIOS();
+    const web = isWeb();
+    const webSerial = "serial" in navigator;
+    const isNative = Capacitor.isNativePlatform();
 
-    const linux = isLinux();
-    const mac = isMac();
-    const windows = isWindows();
-
-    const desktop = windows || mac || linux;
-    const compatible = desktop ? "serial" in navigator : androidDevice || iosDevice;
+    const compatible = isNative || (web && webSerial && isChromium());
 
     console.log("Android: ", androidDevice);
     console.log("iOS: ", iosDevice);
-    console.log("Windows: ", windows);
-    console.log("Mac: ", mac);
-    console.log("Linux: ", linux);
-    console.log("Desktop: ", desktop);
-    console.log("Compatible: ", compatible);
+    console.log("Web: ", web);
+    console.log("Web Serial: ", webSerial);
+    console.log("Native: ", isNative);
 
-    if (isChromium() && compatible) {
+    if (compatible) {
         return true;
     }
 
@@ -75,7 +61,7 @@ export function checkBrowserCompatibility() {
         errorMessage = "Betaflight app requires a Chromium based browser (Chrome, Chromium, Edge).";
     }
 
-    if (!compatible) {
+    if (!webSerial) {
         errorMessage += " Web Serial API support is disabled.";
     }
 
