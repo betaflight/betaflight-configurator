@@ -34,6 +34,7 @@ options.initialize = function (callback) {
         TABS.options.initUserLanguage();
         TABS.options.initShowWarnings();
         TABS.options.initMeteredConnection();
+        TABS.options.initBackupOnFlash();
 
         GUI.content_ready(callback);
     });
@@ -252,6 +253,16 @@ options.initMeteredConnection = function () {
             setConfig({ meteredConnection: $(this).is(":checked") });
             // update network status
             ispConnected();
+        })
+        .trigger("change");
+};
+
+options.initBackupOnFlash = function () {
+    const result = getConfig("backupOnFlash", true);
+    $("div.backupOnFlash input")
+        .prop("checked", !!result.backupOnFlash)
+        .on("change", function () {
+            setConfig({ backupOnFlash: $(this).is(":checked") });
         })
         .trigger("change");
 };
