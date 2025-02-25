@@ -497,6 +497,8 @@ setup.initialize = function (callback) {
                 );
             }
 
+            setup.updateGyroStatus(FC.CONFIG.armingDisableFlags);
+
             // System info is acquired in the background using update_live_status() in serial_backend.js
 
             bat_voltage_e.text(i18n.getMessage("initialSetupBatteryValue", [FC.ANALOG.voltage]));
@@ -602,6 +604,34 @@ setup.refresh = function () {
     GUI.tab_switch_cleanup(function () {
         self.initialize();
     });
+};
+
+setup.updateGyroStatus = function (armingDisableFlags) {
+    const NO_GYRO_BIT = 0; // Position of NO_GYRO flag
+    const CALIBRATING_BIT = 12; // Position of CALIBRATING flag
+    const ACC_CALIBRATION_BIT = 23; // Position of ACC_CALIBRATION flag
+
+    const hasNoGyro = armingDisableFlags & (1 << NO_GYRO_BIT);
+    const isCalibrating =
+        armingDisableFlags & (1 << CALIBRATING_BIT) || armingDisableFlags & (1 << ACC_CALIBRATION_BIT);
+
+    const hasGyroIssue = hasNoGyro || isCalibrating;
+
+    if (hasGyroIssue) {
+        // Show appropriate text based on the issue
+        $(".overlay-status .status-message").text(
+            i18n.getMessage(hasNoGyro ? "gyroErroredText" : "accCalibratingMessageText"),
+        );
+        $(".overlay-status .status-description").text(
+            i18n.getMessage(hasNoGyro ? "gyroErroredDescriptionText" : "accCalibratingDescriptionText"),
+        );
+
+        $("#interactive_block").addClass("blur");
+        $(".overlay-status").show();
+    } else {
+        $(".overlay-status").hide();
+        $("#interactive_block").removeClass("blur");
+    }
 };
 
 TABS.setup = setup;

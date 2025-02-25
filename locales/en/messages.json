@@ -7618,5 +7618,17 @@
     "programmingFailedNotification": {
         "message": "FC programming failed",
         "description": "Notification message when programming is unsuccessful"
+    },
+    "accCalibratingMessageText": {
+        "message": "Calibrating accelerometer"
+    },
+    "accCalibratingDescriptionText": {
+        "message": "Place the drone on a flat surface and wait for the calibration to complete."
+    },
+    "gyroErroredText": {
+        "message": "No Gyro"
+    },
+    "gyroErroredDescriptionText": {
+        "message": "Gyro has not been detected."
     }
 }

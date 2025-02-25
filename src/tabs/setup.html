@@ -70,21 +70,29 @@
         <div class="modelwrapper"></div>
         <div class="grid-row grid-box col4">
             <div class="col-span-3 model-and-info">
-                <div id="interactive_block">
-                    <div id="canvas_wrapper" class="background_paper">
-                        <canvas id="canvas"></canvas>
-                        <div class="attitude_info">
-                            <dl>
-                                <dt i18n="initialSetupHeading"></dt>
-                                <dd class="heading">&nbsp;</dd>
-                                <dt i18n="initialSetupPitch"></dt>
-                                <dd class="pitch">&nbsp;</dd>
-                                <dt i18n="initialSetupRoll"></dt>
-                                <dd class="roll">&nbsp;</dd>
-                            </dl>
-                        </div>
+                <div id="model-and-info-container">
+                    <div class="overlay-status">
+                        <p class="status-message"
+                            i18n="accCalibratingMessageText"></p>
+                        <p class="status-description"
+                            i18n="accCalibratingDescriptionText"></p>
                     </div>
-                    <a class="reset sm-min" href="#" i18n="initialSetupButtonResetZaxis"></a>
+                    <div id="interactive_block">
+                        <div id="canvas_wrapper" class="background_paper">
+                            <canvas id="canvas"></canvas>
+                            <div class="attitude_info">
+                                <dl>
+                                    <dt i18n="initialSetupHeading"></dt>
+                                    <dd class="heading">&nbsp;</dd>
+                                    <dt i18n="initialSetupPitch"></dt>
+                                    <dd class="pitch">&nbsp;</dd>
+                                    <dt i18n="initialSetupRoll"></dt>
+                                    <dd class="roll">&nbsp;</dd>
+                                </dl>
+                            </div>
+                        </div>
+                        <a class="reset sm-min" href="#" i18n="initialSetupButtonResetZaxis"></a>
+                    </div>
                 </div>
             </div>
             <div class="col-span-1 grid-box col1">
