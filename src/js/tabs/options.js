@@ -258,7 +258,8 @@ options.initMeteredConnection = function () {
 };
 
 options.initBackupOnFlash = function () {
-    const result = getConfig("backupOnFlash");
+    // default to always backup on flash
+    const result = getConfig("backupOnFlash", 1);
     $("#backupOnFlashSelect").val(result.backupOnFlash);
     $("#backupOnFlashSelect")
         .on("change", function () {

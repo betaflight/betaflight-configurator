@@ -1124,7 +1124,7 @@ firmware_flasher.initialize = function (callback) {
             // 1: backup without dialog
             // 2: backup with dialog
 
-            const backupOnFlash = getConfig("backupOnFlash").backupOnFlash;
+            const backupOnFlash = getConfig("backupOnFlash", 1).backupOnFlash;
 
             switch (backupOnFlash) {
                 case 1:
