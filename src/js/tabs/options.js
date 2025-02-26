@@ -260,8 +260,8 @@ options.initMeteredConnection = function () {
 options.initBackupOnFlash = function () {
     const result = getConfig("backupOnFlash");
     console.log(result.backupOnFlash);
+    $("#backupOnFlashSelect").val(result.backupOnFlash);
     $("#backupOnFlashSelect")
-        .val(result.backupOnFlash)
         .on("change", function () {
             const value = parseInt($(this).val());
 
