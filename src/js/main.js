@@ -62,6 +62,7 @@ function cleanupLocalStorage() {
     }
 
     setConfig({ erase_chip: true }); // force erase chip on first run
+    setConfig({ backupOnFlash: true }); // force backup on flash on first run
 }
 
 function appReady() {
