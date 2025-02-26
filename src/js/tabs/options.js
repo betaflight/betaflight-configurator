@@ -259,10 +259,13 @@ options.initMeteredConnection = function () {
 
 options.initBackupOnFlash = function () {
     const result = getConfig("backupOnFlash");
-    $("div.backupOnFlash input")
-        .prop("checked", !!result.backupOnFlash)
+    console.log(result.backupOnFlash);
+    $("#backupOnFlashSelect")
+        .val(result.backupOnFlash)
         .on("change", function () {
-            setConfig({ backupOnFlash: $(this).is(":checked") });
+            const value = parseInt($(this).val());
+
+            setConfig({ backupOnFlash: value });
         })
         .trigger("change");
 };

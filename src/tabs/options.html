@@ -36,12 +36,6 @@
                     </div>
                     <span class="freelabel" i18n="cliAutoComplete"></span>
                 </div>
-                <div class="backupOnFlash margin-bottom">
-                    <div>
-                        <input type="checkbox" class="toggle" />
-                    </div>
-                    <span class="freelabel" i18n="firmwareBackupOnFlash"></span>
-                </div>
                 <div class="showAllSerialDevices margin-bottom">
                     <div>
                         <input type="checkbox" class="toggle" />
@@ -93,6 +87,14 @@
                         <input type="checkbox" class="toggle" />
                     </div>
                     <span class="freelabel" i18n="showNotifications"></span>
+                </div>
+                <div class="backupOnFlash margin-bottom">
+                    <select id="backupOnFlashSelect">
+                        <option value="0" i18n="firmwareBackupDisabled"></option>
+                        <option value="1" i18n="firmwareBackupEnabled"></option>
+                        <option value="2" i18n="firmwareBackupAsk"></option>
+                    </select>
+                    <span class="freelabel" i18n="firmwareBackupOnFlash"></span>
                 </div>
                 <div class="userLanguage">
                     <span class="dropdown">

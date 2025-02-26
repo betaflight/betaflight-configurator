@@ -1090,35 +1090,72 @@ firmware_flasher.initialize = function (callback) {
         });
 
         $("a.flash_firmware").on("click", function () {
+            if (GUI.connect_lock) {
+                return;
+            }
+
             self.isFlashing = true;
             GUI.interval_pause("sponsor");
-            const isFlashOnConnect = $("input.flash_on_connect").is(":checked");
 
             self.enableFlashButton(false);
             self.enableDfuExitButton(false);
             self.enableLoadRemoteFileButton(false);
             self.enableLoadFileButton(false);
 
+            const isFlashOnConnect = $("input.flash_on_connect").is(":checked");
+
+            if (isFlashOnConnect || !PortHandler.portAvailable) {
+                startFlashing();
+                return;
+            }
+
             function initiateFlashing() {
-                if (self.developmentFirmwareLoaded && !isFlashOnConnect) {
+                if (self.developmentFirmwareLoaded) {
                     checkShowAcknowledgementDialog();
                 } else {
                     startFlashing();
                 }
             }
 
-            // Backup not available in DFU, manual, virtual mode or when using flash on connect            const backupOnFlash = getConfig("backupOnFlash");
-            const noPortOrLock = !PortHandler.portAvailable && !GUI.connect_lock;
+            // Backup not available in DFU, manual, virtual mode or when using flash on connect
+
+            // backupOnFlash:
+            // 0: disabled (default)
+            // 1: backup without dialog
+            // 2: backup with dialog
+
             const backupOnFlash = getConfig("backupOnFlash").backupOnFlash;
-            if (isFlashOnConnect || !backupOnFlash || noPortOrLock) {
-                initiateFlashing();
-            } else {
-                // prevent connection while backup is in progress
-                GUI.connect_lock = true;
-                AutoBackup.execute(() => {
-                    GUI.connect_lock = false;
+
+            switch (backupOnFlash) {
+                case 1:
+                    // prevent connection while backup is in progress
+                    GUI.connect_lock = true;
+                    AutoBackup.execute(() => {
+                        GUI.connect_lock = false;
+                        initiateFlashing();
+                    });
+                    break;
+                case 2:
+                    GUI.showYesNoDialog({
+                        title: i18n.getMessage("firmwareFlasherRemindBackupTitle"),
+                        text: i18n.getMessage("firmwareFlasherRemindBackup"),
+                        buttonYesText: i18n.getMessage("firmwareFlasherBackup"),
+                        buttonNoText: i18n.getMessage("firmwareFlasherBackupIgnore"),
+                        buttonYesCallback: () => {
+                            // prevent connection while backup is in progress
+                            GUI.connect_lock = true;
+                            AutoBackup.execute(() => {
+                                GUI.connect_lock = false;
+                                initiateFlashing();
+                            });
+                        },
+
+                        buttonNoCallback: initiateFlashing,
+                    });
+                    break;
+                default:
                     initiateFlashing();
-                });
+                    break;
             }
         });
 
