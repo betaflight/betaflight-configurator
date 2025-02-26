@@ -1107,26 +1107,17 @@ firmware_flasher.initialize = function (callback) {
                 }
             }
 
-            // Backup not available in DFU, manual or virtual mode.
-            // When flash on connect is enabled, the backup dialog is not shown.
-            if (isFlashOnConnect || !(PortHandler.portAvailable || GUI.connect_lock)) {
+            // Backup not available in DFU, manual, virtual mode or when using flash on connect            const backupOnFlash = getConfig("backupOnFlash");
+            const noPortOrLock = !PortHandler.portAvailable && !GUI.connect_lock;
+            const backupOnFlash = getConfig("backupOnFlash").backupOnFlash;
+            if (isFlashOnConnect || !backupOnFlash || noPortOrLock) {
                 initiateFlashing();
             } else {
-                GUI.showYesNoDialog({
-                    title: i18n.getMessage("firmwareFlasherRemindBackupTitle"),
-                    text: i18n.getMessage("firmwareFlasherRemindBackup"),
-                    buttonYesText: i18n.getMessage("firmwareFlasherBackup"),
-                    buttonNoText: i18n.getMessage("firmwareFlasherBackupIgnore"),
-                    buttonYesCallback: () => {
-                        // prevent connection while backup is in progress
-                        GUI.connect_lock = true;
-                        AutoBackup.execute(() => {
-                            GUI.connect_lock = false;
-                            initiateFlashing();
-                        });
-                    },
-
-                    buttonNoCallback: initiateFlashing,
+                // prevent connection while backup is in progress
+                GUI.connect_lock = true;
+                AutoBackup.execute(() => {
+                    GUI.connect_lock = false;
+                    initiateFlashing();
                 });
             }
         });
