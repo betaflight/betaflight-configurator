@@ -63,7 +63,7 @@ function cleanupLocalStorage() {
 
     setConfig({ erase_chip: true }); // force erase chip on first run
     if (getConfig("backupOnFlash") === undefined) {
-        setConfig({ backupOnFlash: 2 }); // use dialog by default
+        setConfig({ backupOnFlash: 1 }); // no dialog by default
     }
 }
 
