@@ -420,7 +420,7 @@ motors.initialize = async function (callback) {
 
                 for (let i = 0; i < FC.MOTOR_DATA.length; i++) {
                     if (FC.MOTOR_DATA[i] === 0) {
-                        self.numberOfValidOutputs = i;
+                        //self.numberOfValidOutputs = i;
                         if (motorCount > self.numberOfValidOutputs && motorCount > 0) {
                             const msg = i18n.getMessage("motorsDialogMixerReset", {
                                 mixerName: mixerList[mixer - 1].name,
