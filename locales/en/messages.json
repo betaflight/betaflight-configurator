@@ -3824,6 +3824,31 @@
     "unstableFirmwareAcknowledgementFlash": {
         "message": "Flash"
     },
+    "firmwareFlasherRemindBackupTitle": {
+        "message": "Wipe out settings",
+        "description": "Warning message title before actual flashing takes place"
+    },
+    "firmwareFlasherRemindBackup": {
+        "message": "Flashing new firmware will wipe out all settings. We strongly recommend to save a backup before continuing.",
+        "description": "Warning message before actual flashing takes place"
+    },
+    "firmwareFlasherBackup": {
+        "message": "Create Backup",
+        "description": "Create a backup before actual flashing takes place"
+    },
+    "firmwareFlasherBackupIgnore": {
+        "message": "Ignore the risk",
+        "description": "Ignore creating a backup before actual flashing takes place"
+    },
+    "firmwareBackupEnabled": {
+        "message": "Backup enabled"
+    },
+    "firmwareBackupDisabled": {
+        "message": "Backup disabled"
+    },
+    "firmwareBackupAsk": {
+        "message": "Ask before backup"
+    },
     "ledStripHelp": {
         "message": "The flight controller can control colors and effects of individual LEDs on a strip.<br />Configure LEDs on the grid, configure wiring order then attach LEDs on your aircraft according to grid positions. LEDs without wire ordering number will not be saved.<br />Double-click on a color to edit the HSV values."
     },
