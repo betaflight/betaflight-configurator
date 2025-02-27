@@ -794,6 +794,8 @@ motors.initialize = async function (callback) {
             const rpmFeaturesVisible =
                 (digitalProtocol && dshotBidirElement.is(":checked")) || $("input[name='ESC_SENSOR']").is(":checked");
 
+            const dshotTelemetry = FC.MOTOR_CONFIG.use_dshot_telemetry;
+            const idleMinRpm = FC.ADVANCED_TUNING.idleMinRpm;
             $("div.minthrottle").toggle(analogProtocolConfigured && semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_47));
             $("div.maxthrottle").toggle(analogProtocolConfigured);
             $("div.mincommand").toggle(analogProtocolConfigured);
@@ -801,11 +803,10 @@ motors.initialize = async function (callback) {
             divUnsyncedPWMFreq.toggle(analogProtocolConfigured);
 
             $("div.motorIdle").toggle(
-                (protocolConfigured && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) ||
-                    (digitalProtocolConfigured && FC.MOTOR_CONFIG.use_dshot_telemetry && FC.ADVANCED_TUNING.idleMinRpm),
+                protocolConfigured || (digitalProtocolConfigured && dshotTelemetry && idleMinRpm),
             );
 
-            $("div.idleMinRpm").toggle(protocolConfigured && digitalProtocol && FC.MOTOR_CONFIG.use_dshot_telemetry);
+            $("div.idleMinRpm").toggle(protocolConfigured && digitalProtocol && dshotTelemetry);
 
             $(".escSensor").toggle(digitalProtocolConfigured);
 
