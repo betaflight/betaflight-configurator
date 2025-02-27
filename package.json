@@ -17,6 +17,8 @@
     "android:dev": "node capacitor.config.generator.mjs --dev && npx cap run android",
     "android:open": "vite build && node capacitor.config.generator.mjs && npx cap open android",
     "android:run": "vite build && node capacitor.config.generator.mjs && npx cap run android",
+    "android:sync": "vite build && node capacitor.config.generator.mjs && npx cap sync android",
+    "android:release": "vite build && node capacitor.config.generator.mjs && npx cap build android --release",
     "format": "prettier --write {src,test}/**/*.{js,vue,css,less}",
     "storybook": "start-storybook -p 6006",
     "prepare": "husky install"
@@ -38,8 +40,8 @@
     "node": "20.x"
   },
   "dependencies": {
-    "@capacitor/android": "^6.0.0",
-    "@capacitor/core": "^6.0.0",
+    "@capacitor/android": "^7.0.1",
+    "@capacitor/core": "^7.0.1",
     "@fortawesome/fontawesome-free": "^6.5.2",
     "@vitejs/plugin-vue": "^5.1.4",
     "crypto-es": "^2.1.0",
@@ -72,7 +74,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.24.4",
-    "@capacitor/cli": "^6.0.0",
+    "@capacitor/cli": "^7.0.1",
     "@quanle94/innosetup": "^6.0.2",
     "@rollup/plugin-alias": "^4.0.2",
     "@rollup/plugin-commonjs": "^24.0.0",
