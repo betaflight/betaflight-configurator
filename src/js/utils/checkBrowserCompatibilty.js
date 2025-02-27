@@ -33,7 +33,7 @@ export function isWeb() {
         return Capacitor.getPlatform() === "web";
     }
     if (navigator.userAgentData) {
-        return ["Linux", "Mac", "Windows"].includes(navigator.userAgentData.platform);
+        return ["Linux", "macOS", "Windows"].includes(navigator.userAgentData.platform);
     }
 }
 
