@@ -32,8 +32,9 @@ export function isWeb() {
     if (Capacitor.isNativePlatform()) {
         return Capacitor.getPlatform() === "web";
     }
+    const knownPlatforms = ["Android", "Chrome OS", "Linux", "macOS", "Windows"];
     if (navigator.userAgentData) {
-        return ["Linux", "macOS", "Windows"].includes(navigator.userAgentData.platform);
+        return knownPlatforms.includes(navigator.userAgentData.platform);
     }
 }
 
