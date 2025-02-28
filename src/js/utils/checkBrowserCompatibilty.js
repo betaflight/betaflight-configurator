@@ -1,13 +1,12 @@
 import { Capacitor } from "@capacitor/core";
 
-export function isChromium() {
+export function isChromiumBrowser() {
     // https://developer.mozilla.org/en-US/docs/Web/HTTP/Browser_detection_using_the_user_agent
     if (!navigator.userAgentData) {
         console.log(navigator.userAgent);
         return false;
     }
 
-    console.log(navigator.userAgentData);
     // https://learn.microsoft.com/en-us/microsoft-edge/web-platform/user-agent-guidance
     return navigator.userAgentData.brands.some((brand) => {
         return brand.brand == "Chromium";
@@ -28,37 +27,34 @@ export function isIOS() {
     return false;
 }
 
-export function isWeb() {
+export function isCapacitorWeb() {
     if (Capacitor.isNativePlatform()) {
         return Capacitor.getPlatform() === "web";
     }
-    const knownPlatforms = ["Android", "Chrome OS", "Linux", "macOS", "Windows"];
-    if (navigator.userAgentData) {
-        return knownPlatforms.includes(navigator.userAgentData.platform);
-    }
+    return false;
 }
 
 export function checkBrowserCompatibility() {
-    const androidDevice = isAndroid();
-    const iosDevice = isIOS();
-    const web = isWeb();
     const webSerial = "serial" in navigator;
     const isNative = Capacitor.isNativePlatform();
+    const isChromium = isChromiumBrowser();
 
-    const compatible = isNative || (web && webSerial && isChromium());
+    const compatible = isNative || (webSerial && isChromium);
 
-    console.log("Android: ", androidDevice);
-    console.log("iOS: ", iosDevice);
-    console.log("Web: ", web);
-    console.log("Web Serial: ", webSerial);
+    console.log("User Agent: ", navigator.userAgentData);
     console.log("Native: ", isNative);
+    console.log("Chromium: ", isChromium);
+    console.log("Web Serial: ", webSerial);
+    console.log("Android: ", isAndroid());
+    console.log("iOS: ", isIOS());
+    console.log("Capacitor web: ", isCapacitorWeb());
 
     if (compatible) {
         return true;
     }
 
     let errorMessage = "";
-    if (!isChromium()) {
+    if (!isChromium) {
         errorMessage = "Betaflight app requires a Chromium based browser (Chrome, Chromium, Edge).";
     }
 
