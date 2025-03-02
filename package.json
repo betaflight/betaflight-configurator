@@ -86,7 +86,6 @@
     "@storybook/vue3": "^8.6.3",
     "babel-loader": "^10.0.0",
     "command-exists": "^1.2.9",
-    "cordova-lib": "^11.0.0",
     "del": "^6.1.1",
     "eslint": "^9.21.0",
     "eslint-config-prettier": "^10.0.2",
