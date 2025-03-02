@@ -73,7 +73,7 @@
     "vue": "^3.5.13"
   },
   "devDependencies": {
-    "@babel/core": "^7.24.4",
+    "@babel/core": "^7.26.9",
     "@capacitor/cli": "^7.0.1",
     "@quanle94/innosetup": "^6.0.2",
     "@rollup/plugin-alias": "^5.1.1",
@@ -84,7 +84,7 @@
     "@storybook/addon-essentials": "^8.6.3",
     "@storybook/addon-links": "^8.6.3",
     "@storybook/vue3": "^8.6.3",
-    "babel-loader": "^8.3.0",
+    "babel-loader": "^10.0.0",
     "command-exists": "^1.2.9",
     "cordova-lib": "^11.0.0",
     "del": "^6.1.1",
