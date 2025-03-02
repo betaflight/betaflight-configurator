@@ -112,7 +112,7 @@
     "nw-builder": "^3.8.6",
     "os": "^0.1.2",
     "postcss": "^8.5.3",
-    "prettier": "2.8.1",
+    "prettier": "^3.5.2",
     "rollup": "^4.34.9",
     "rollup-plugin-copy": "^3.5.0",
     "rollup-plugin-vue": "^6.0.0",
