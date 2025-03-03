@@ -747,7 +747,7 @@
         "message": "A calibrar..."
     },
     "initialSetupButtonReset": {
-        "message": "Repor Definições"
+        "message": "Apagar Definições"
     },
     "initialSetupResetText": {
         "message": "Redefina o controlador de voo para um estado <strong>não configurado.<\/strong>"
@@ -2869,6 +2869,14 @@
     },
     "gpsAltitude": {
         "message": "Altitude:"
+    },
+    "gpsLatitude": {
+        "message": "Latitude:",
+        "description": "Show GPS position - Latitude"
+    },
+    "gpsLongitude": {
+        "message": "Longitude:",
+        "description": "Show GPS position - Longitude"
     },
     "gpsHeading": {
         "message": "Direção IMU \/ GPS:",

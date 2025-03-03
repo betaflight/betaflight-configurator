@@ -158,6 +158,10 @@
         "message": "Включить режим виртуального подключения",
         "description": "Text for the option to enable or disable the virtual FC"
     },
+    "useLegacyRenderingModel": {
+        "message": "Включить устаревший рендеринг для 3D-модели (для устройств с низкой производительностью)",
+        "description": "Text for the option to enable or disable legacy rendering of the 3D model"
+    },
     "cordovaForceComputerUI": {
         "message": "Использовать интерфейс компьютера вместо интерфейса телефона"
     },
@@ -743,7 +747,7 @@
         "message": "Калибровка..."
     },
     "initialSetupButtonReset": {
-        "message": "Сбросить Настройки"
+        "message": "Сбросить настройки"
     },
     "initialSetupResetText": {
         "message": "Выполните сброс контроллера в <strong>ненастроенное состояние.<\/strong>"
@@ -866,8 +870,15 @@
         "message": "Не включено в сборку",
         "description": "Message that pops up when hardware support is not included in build"
     },
+    "initialSetupNotDetected": {
+        "message": "Не обнаружено или отключено",
+        "description": "Message that pops up when hardware is not detected or disabled"
+    },
     "initialSetupRSSIValue": {
         "message": "$1 дБм"
+    },
+    "initialSetupMCU": {
+        "message": "MCU:"
     },
     "initialSetupSensorHardware": {
         "message": "Сенсоры:"
@@ -889,6 +900,9 @@
     },
     "initialSetupSensorSonar": {
         "message": "Сонар:"
+    },
+    "initialSetupSensorOpticalflow": {
+        "message": "Оптический поток:"
     },
     "initialSetupSensorRadar": {
         "message": "Радар:"
@@ -1017,6 +1031,14 @@
     "initialSetupArmingDisableFlagsTooltipCRASHFLIP": {
         "message": "Активен режим Crash Flip",
         "description": "Message that pops to describe the CRASHFLIP arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipALTHOLD": {
+        "message": "Удерживание высоты включено",
+        "description": "Message that pops up to describe the ALTHOLD arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipPOSHOLD": {
+        "message": "Удерживание позиции включено",
+        "description": "Message that pops up to describe the POSHOLD arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "Один из других флагов дизарм активен при арминге",
@@ -1165,6 +1187,9 @@
     "featureMOTOR_STOP": {
         "message": "Моторы не крутятся, если включён arming"
     },
+    "featureMOTOR_STOPTip": {
+        "message": "Эта функция отключена при включенном AIRMODE"
+    },
     "featureSERVO_TILT": {
         "message": "Серво-подвес"
     },
@@ -1179,6 +1204,10 @@
     },
     "featureGPS": {
         "message": "GPS для навигации и телеметрии"
+    },
+    "featureGPSTip": {
+        "message": "Включить\/выключить GPS. Если GPS не может быть включен, проверьте, что порт GPS устройства назначен во вкладке Порты",
+        "description": "Message that pops up to describe the GPS feature"
     },
     "featureSONAR": {
         "message": "Сонар"
@@ -1304,6 +1333,27 @@
     "configurationOtherFeaturesHelp": {
         "message": "<strong>Примечание:<\/strong> Не все полётные контроллеры поддерживает все эти настройки. Если Вы включили специфические настройки и они отключились после нажатия \"Сохранить и Перезагрузить\", это означает, что полётный контроллер их не поддерживает."
     },
+    "configurationMagDeclination": {
+        "message": "Магнитное склонение"
+    },
+    "configurationMagDeclinationInput": {
+        "message": "Склонение в градусах"
+    },
+    "configurationMagDeclinationHelp": {
+        "message": "Магнитное склонение – это угол между магнитным северным и севером. Он отличается для каждого местоположения на земле. Вы можете найти отклонение для вашего местоположения в интернете"
+    },
+    "configurationRangefinderHelp": {
+        "message": "Включить сонар для измерения расстояния до земли в см"
+    },
+    "configurationRangefinderType": {
+        "message": "Тип"
+    },
+    "configurationOpticalflowHelp": {
+        "message": "Включить датчик оптического потока"
+    },
+    "configurationBoardAlignment": {
+        "message": "Выравнивание платы"
+    },
     "configurationBoardAlignmentRoll": {
         "message": "Roll градусы"
     },
@@ -1312,6 +1362,18 @@
     },
     "configurationBoardAlignmentYaw": {
         "message": "Yaw градусы"
+    },
+    "configurationGyroAlignment": {
+        "message": "Калибровка гироскопа"
+    },
+    "configurationGyroAlignmentHelp": {
+        "message": "Выравнивание гироскопа — ориентация датчика гироскопа на плате полётного контроллера. По умолчанию обычно задано верное значение, но если у вас кастомная сборка или полётный контроллер с другой ориентацией гироскопа, вам может потребоваться изменить этот параметр."
+    },
+    "configurationMagAlignment": {
+        "message": "Калибровка магнитометра"
+    },
+    "configurationBoardAlignmentHelp": {
+        "message": "Произвольный поворот платы в градусах, чтобы сделать возможным установить её боком, вверх ногами или повёрнутой и т. д. При использовании внешних датчиков используйте настройки выравнивания датчиков (гироскоп, акселерометр, магнитометр) для определения положения датчиков независимо от ориентации платы. "
     },
     "configurationSensorAlignmentGyro": {
         "message": "Положение Гиро."
@@ -2577,6 +2639,9 @@
     "adjustmentsFunction30": {
         "message": "Выбор профиля LED"
     },
+    "adjustmentsFunction31": {
+        "message": "Настройка яркости LED"
+    },
     "adjustmentsSave": {
         "message": "Сохранить"
     },
@@ -2723,6 +2788,14 @@
     },
     "gpsAltitude": {
         "message": "Высота:"
+    },
+    "gpsLatitude": {
+        "message": "Широта:",
+        "description": "Show GPS position - Latitude"
+    },
+    "gpsLongitude": {
+        "message": "Долгота:",
+        "description": "Show GPS position - Longitude"
     },
     "gpsHeading": {
         "message": "Направление IMU \/ GPS:",
@@ -4556,6 +4629,9 @@
     },
     "failsafeGpsRescueInitialClimbHelp": {
         "message": "Высота, на которую поднимется квадрокоптер относительно текущей при активном режиме высоты - \"Текущая высота\". Это так же увеличивает высоту в режиме \"Максимальная высота\"."
+    },
+    "failsafeGpsRescueItemReturnAltitude": {
+        "message": "Высота возврата (метры)"
     },
     "failsafeGpsRescueItemAscendRate": {
         "message": "Скорость подъёма (м\/сек)"

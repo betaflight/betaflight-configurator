@@ -742,9 +742,6 @@
     "initialSetupButtonCalibratingText": {
         "message": "Калібрування..."
     },
-    "initialSetupButtonReset": {
-        "message": "Скинути налаштування"
-    },
     "initialSetupResetText": {
         "message": "Скинути польотний контролер до <strong>неналаштованого стану.<\/strong>"
     },

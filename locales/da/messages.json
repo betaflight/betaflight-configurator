@@ -29,14 +29,14 @@
         "message": "Bemærk"
     },
     "dontShowAgain": {
-        "message": "Skjul"
+        "message": "Vis ikke igen"
     },
     "pwaOnNeedRefreshTitle": {
-        "message": "Applikationen har fundet obligatorisk opdatering",
+        "message": "Applikationen kræver opdatering",
         "description": "Title of the window that appears when the app needs to be refreshed to get the latest changes"
     },
     "pwaOnNeedRefreshText": {
-        "message": "Du skal opdatere siden for at få de seneste ændringer. Genopfriskning vil genindlæse siden, og du vil miste alle ikke-gemte ændringer og vil afbryde iganværende operation.<br><br>Vil du opdatere  nu? Du kan også afvise  og opdatere manuelt senere.",
+        "message": "Opdatér siden for at få de seneste ændringer. Genopfriskning vil genindlæse siden, og man mister alle ikke-gemte ændringer og iganværende operationer afbrydes.<br><br>Ønsker du at opdatere nu? Du kan også afvise beskeden og opdatere manuelt senere.",
         "description": "Text of the window that appears when the app needs to be refreshed to get the latest changes"
     },
     "pwaOnOffilenReadyTitle": {
@@ -317,7 +317,7 @@
         "message": "GPS"
     },
     "tabMotorTesting": {
-        "message": "Motorer"
+        "message": "Motor styring"
     },
     "tabLedStrip": {
         "message": "LED-strimmel"
@@ -489,7 +489,7 @@
         "message": "Anvend tilpassede standarder"
     },
     "reportProblemsDialogHeader": {
-        "message": "Følgende <strong>problemer med din konfiguration<\/strong> blev opdaget:"
+        "message": "Følgende <strong>problemer med din konfiguration<\/strong> blev registeret:"
     },
     "reportProblemsDialogFooter": {
         "message": "<span class=\"message-negative\"><strong>Du skal løse problemer med disse indstillinger, før du forsøger at flyve med dit fartøj<\/span><\/strong>."
@@ -921,7 +921,7 @@
         "message": "Liste over flag som angiver, hvorfor indkobling pt. ikke er tilladt. Før markøren over flaget, eller se Wiki'en (siden 'Indkoblingssekvens og Sikkerhed'), for mere info."
     },
     "initialSetupArmingDisableFlagsTooltipNO_GYRO": {
-        "message": "En gyro blev ikke fundet",
+        "message": "En gyro blev ikke registreret",
         "description": "Message that pops up to describe the NO_GYRO arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipFAILSAFE": {
@@ -945,7 +945,7 @@
         "description": "Message that pops up to describe the RUNAWAY_TAKEOFF arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipCRASH_DETECTED": {
-        "message": "Nedstyrtet drone er aktiv",
+        "message": "Nedstyrtet drone tilstand er aktiv",
         "description": "Message that pops up to describe the CRASH_DETECTED arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipCALIBRATING": {
@@ -1036,8 +1036,12 @@
         "message": "Crash Flip Switch er aktiv",
         "description": "Message that pops to describe the CRASHFLIP arming disable flag"
     },
-    "initialSetupArmingDisableFlagsTooltipPOSHOLD": {
+    "initialSetupArmingDisableFlagsTooltipALTHOLD": {
         "message": "Fast Højde er aktiv",
+        "description": "Message that pops up to describe the ALTHOLD arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipPOSHOLD": {
+        "message": "Fast Position er aktiv",
         "description": "Message that pops up to describe the POSHOLD arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
@@ -2416,6 +2420,10 @@
         "message": "AirMode tilstand giver mulighed for at opretholde fartøjets stabilitet ved lav gas. Se venligst <a href=\"https:\/\/betaflight.com\/docs\/development\/modes#airmode\" target=\"_blank\" rel=\"noopener noreferrer\">AirMode<\/a> på Betaflight.com.",
         "description": "Help text to AIRMODE mode"
     },
+    "auxiliaryHelpMode_ALTHOLD": {
+        "message": "<a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/position-hold-v4-6#altitude-hold\" target=\"_blank\" rel=\"noopener noreferrer\">Hold højde<\/a> regulerer fartøjets højde vha. eksterne sensorer kombineret med Vinkeltilstand (Stabil tilstand).",
+        "description": "Help text for ALTITUDE HOLD mode"
+    },
     "auxiliaryHelpMode_BEEPER": {
         "message": "Aktiver bippen - nyttigt til at lokalisere en styrtet drone",
         "description": "Help text to BEEPER mode"
@@ -2441,7 +2449,7 @@
         "description": "Help text to BLACKBOX ERASE mode"
     },
     "auxiliaryHelpMode_BOXPREARM": {
-        "message": "Aktiverer BOXPREARM tilstand",
+        "message": "Aktiverer BOXPREARM tilstand ",
         "description": "Help text to BOXPREARM mode"
     },
     "auxiliaryHelpMode_CALIB": {
@@ -2681,7 +2689,7 @@
         "message": "Krængror P justering"
     },
     "adjustmentsFunction19": {
-        "message": "Krængror I justering"
+        "message": "Krænger I justering"
     },
     "adjustmentsFunction20": {
         "message": "Krængror D justering"
@@ -3694,7 +3702,7 @@
         "message": "Du har ikke <span class=\"message-negative\">skriverettigheder<\/span> til denne fil"
     },
     "firmwareFlasherFlashTrigger": {
-        "message": "Detekteret: <strong>$1<\/strong> - starter brænding ved tilslutning"
+        "message": "Registreret: <strong>$1<\/strong> - starter brænding ved tilslutning"
     },
     "firmwareFlasherVerifyBoard": {
         "message": "<h3>Firmware version passer ikke<\/h3><br \/>Den tilsluttede FC er <strong>{{verified_board}}<\/strong> mens du valgte <strong>{{selected_board}}<\/strong>.<br \/><br \/>Vil du fortsætte med at brænde image?",
@@ -3737,7 +3745,7 @@
         "message": "Brænd firmware"
     },
     "firmwareFlasherPreviousDevice": {
-        "message": "Detekteret: <strong>$1<\/strong> - tidligere enhed flashes stadig, gentilslut og forsøg igen"
+        "message": "Registreret: <strong>$1<\/strong> - tidligere enhed flashes stadig, gentilslut og forsøg igen"
     },
     "firmwareFlasherRemindBackupTitle": {
         "message": "Slet alle indstillinger",
@@ -4052,7 +4060,7 @@
         "message": "Højderor [E]"
     },
     "controlAxisYaw": {
-        "message": "Sideror [R]"
+        "message": "Side [R]"
     },
     "controlAxisThrottle": {
         "message": "Gas [T]"
@@ -6798,7 +6806,7 @@
         "description": "Message in the GUI log when the lua VTX Config file is saved"
     },
     "vtxSavedLuaFileKo": {
-        "message": "<span class=\"message-negative\">Fejl<\/span> ved gemning af lua VTX konfigurations fil",
+        "message": "<span class=\"message-negative\">Fejl<\/span> ved gemning af lua VTX konfigurations fil ",
         "description": "Message in the GUI log when the lua VTX Config file saving has failed"
     },
     "vtxLoadFileOk": {

@@ -733,9 +733,6 @@
     "initialSetupButtonCalibratingText": {
         "message": "Calibrando..."
     },
-    "initialSetupButtonReset": {
-        "message": "Redefinir configurações"
-    },
     "initialSetupResetText": {
         "message": "Redefine o controlador de voo para um estado <strong>não configurado.<\/strong>"
     },

@@ -742,9 +742,6 @@
     "initialSetupButtonCalibratingText": {
         "message": "Kalibriere..."
     },
-    "initialSetupButtonReset": {
-        "message": "Einstellungen zurücksetzen"
-    },
     "initialSetupResetText": {
         "message": "Zurücksetzen des Flugcontrollers in einen <strong>unkonfigurierten Zustand.<\/strong>"
     },

@@ -755,7 +755,7 @@
         "message": "Calibrant..."
     },
     "initialSetupButtonReset": {
-        "message": "Resetejar Ajustos"
+        "message": "Esborrar ajustos"
     },
     "initialSetupResetText": {
         "message": "Restableix el controlador de vol a un <strong>estat sense configurar<\/strong>"
