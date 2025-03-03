@@ -685,9 +685,6 @@
     "initialSetupButtonCalibratingText": {
         "message": "Calibrando..."
     },
-    "initialSetupButtonReset": {
-        "message": "Reiniciar Axustes"
-    },
     "initialSetupResetText": {
         "message": "Restablece o controlador de voo a un <strong>estado sen configurar<\/strong>"
     },

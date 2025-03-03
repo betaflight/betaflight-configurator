@@ -158,6 +158,10 @@
         "message": "가상 연결 모드 활성화",
         "description": "Text for the option to enable or disable the virtual FC"
     },
+    "useLegacyRenderingModel": {
+        "message": "3D 모델(저성능 디바이스용)을 위한 레거시 렌더링 활성화",
+        "description": "Text for the option to enable or disable legacy rendering of the 3D model"
+    },
     "cordovaForceComputerUI": {
         "message": "폰 인터페이스 대신 컴퓨터 인터페이스 사용"
     },
@@ -747,7 +751,7 @@
         "message": "교정 중..."
     },
     "initialSetupButtonReset": {
-        "message": "설정 초기화"
+        "message": "설정값 지우기"
     },
     "initialSetupResetText": {
         "message": "비행 컨트롤러를 <strong>환경설정이 안 된 상태<\/strong>로 재설정합니다."
@@ -2869,6 +2873,14 @@
     },
     "gpsAltitude": {
         "message": "고도:"
+    },
+    "gpsLatitude": {
+        "message": "위도:",
+        "description": "Show GPS position - Latitude"
+    },
+    "gpsLongitude": {
+        "message": "경도:",
+        "description": "Show GPS position - Longitude"
     },
     "gpsHeading": {
         "message": "IMU \/ GPS 머리방향:",

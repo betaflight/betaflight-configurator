@@ -582,9 +582,6 @@
     "initialSetupButtonCalibratingText": {
         "message": "Kalibratzen..."
     },
-    "initialSetupButtonReset": {
-        "message": "Ezarpenak berrezarri"
-    },
     "initialSetupButtonRebootBootloader": {
         "message": "Boot Loader \/ DFU aktibatu"
     },
