@@ -617,9 +617,6 @@
     "initialSetupButtonCalibratingText": {
         "message": "Kalibreren..."
     },
-    "initialSetupButtonReset": {
-        "message": "Instellingen Resetten"
-    },
     "initialSetupButtonRebootBootloader": {
         "message": "Zet Boot Loader \/ DFU aan"
     },

@@ -747,7 +747,7 @@
         "message": "Calibrando..."
     },
     "initialSetupButtonReset": {
-        "message": "Borrar Configuración"
+        "message": "Borrar ajustes"
     },
     "initialSetupResetText": {
         "message": "Reinicia el controlador de vuelo a un <strong>estado sin configuración.<\/strong>"
@@ -2869,6 +2869,14 @@
     },
     "gpsAltitude": {
         "message": "Altitud:"
+    },
+    "gpsLatitude": {
+        "message": "Latitud:",
+        "description": "Show GPS position - Latitude"
+    },
+    "gpsLongitude": {
+        "message": "Longitud:",
+        "description": "Show GPS position - Longitude"
     },
     "gpsHeading": {
         "message": "Rumbo IMU \/ GPS:",

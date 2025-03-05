@@ -666,9 +666,6 @@
     "initialSetupButtonCalibratingText": {
         "message": "Calibrage"
     },
-    "initialSetupButtonReset": {
-        "message": "Réinitialiser les réglages"
-    },
     "initialSetupButtonBackup": {
         "message": "Sauvegarde JSON"
     },

@@ -627,9 +627,6 @@
     "initialSetupButtonCalibratingText": {
         "message": "正在校准…"
     },
-    "initialSetupButtonReset": {
-        "message": "恢复默认设置"
-    },
     "initialSetupButtonRebootBootloader": {
         "message": "激活启动引导程序\/DFU"
     },

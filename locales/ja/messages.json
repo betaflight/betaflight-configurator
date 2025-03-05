@@ -746,9 +746,6 @@
     "initialSetupButtonCalibratingText": {
         "message": "キャリブレーション中..."
     },
-    "initialSetupButtonReset": {
-        "message": "設定をリセット"
-    },
     "initialSetupResetText": {
         "message": "フライトコントローラを<strong>未設定状態にリセット<\/strong>します。"
     },
