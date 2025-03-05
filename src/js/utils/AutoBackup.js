@@ -59,7 +59,7 @@ class AutoBackup {
 
         FileSystem.pickSaveFile(
             filename,
-            i18n.getMessage("fileSystemPickerFiles", { types: suffix.toUpperCase() }),
+            i18n.getMessage("fileSystemPickerFiles", { typeof: suffix.toUpperCase() }),
             `.${suffix}`,
         )
             .then((file) => {
