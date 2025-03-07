@@ -58,6 +58,10 @@ body {
     --warning-600: #e65c00;
 
     --switcherysecond: var(--surface-400);
+
+    --primary-action: var(--success-500);
+    --primary-action-border: var(--success-600);
+    --primary-action-hover: var(--success-400);
 }
 
 body.dark-theme {
