@@ -2576,12 +2576,14 @@ OSD.GUI.preview = {
             return;
         }
         $(`#element-fields .field-${$(this).data("field").index}`).addClass("mouseover");
+        $(`.preview .char.field-${$(this).data("field").index}`).addClass("mouseover");
     },
     onMouseLeave() {
         if (!$(this).data("field")) {
             return;
         }
         $(`#element-fields .field-${$(this).data("field").index}`).removeClass("mouseover");
+        $(`.preview .char.field-${$(this).data("field").index}`).removeClass("mouseover");
     },
     onDragStart(e) {
         const ev = e.originalEvent;
