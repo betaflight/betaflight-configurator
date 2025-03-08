@@ -56,6 +56,7 @@ class AutoBackup {
         const prefix = "cli_backup";
         const suffix = "txt";
         const filename = generateFilename(prefix, suffix);
+        let result = false;
 
         FileSystem.pickSaveFile(
             filename,
@@ -63,15 +64,18 @@ class AutoBackup {
             `.${suffix}`,
         )
             .then((file) => {
-                console.log("Saving config to:", file.name);
-                FileSystem.writeFile(file, data);
+                if (file) {
+                    console.log("Saving config to:", file.name);
+                    FileSystem.writeFile(file, data);
+                    result = true;
+                }
             })
             .catch((error) => {
                 console.error("Error saving config:", error);
             })
             .finally(() => {
                 if (this.callback) {
-                    this.callback();
+                    this.callback(result);
                 }
             });
     }

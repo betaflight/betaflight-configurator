@@ -1119,6 +1119,24 @@ firmware_flasher.initialize = function (callback) {
 
             // Backup not available in DFU, manual, virtual mode or when using flash on connect
 
+            function startBackup(callback) {
+                // prevent connection while backup is in progress
+                GUI.connect_lock = true;
+                AutoBackup.execute((result) => {
+                    GUI.connect_lock = false;
+                    if (result === false) {
+                        self.isFlashing = false;
+                        self.enableFlashButton(true);
+                        self.enableLoadRemoteFileButton(true);
+                        self.enableLoadFileButton(true);
+                        GUI.interval_resume("sponsor");
+                        console.log(`${self.logHead} Backup failed, skipping flashing`);
+                    } else {
+                        callback();
+                    }
+                });
+            }
+
             // backupOnFlash:
             // 0: disabled (default)
             // 1: backup without dialog
@@ -1129,11 +1147,7 @@ firmware_flasher.initialize = function (callback) {
             switch (backupOnFlash) {
                 case 1:
                     // prevent connection while backup is in progress
-                    GUI.connect_lock = true;
-                    AutoBackup.execute(() => {
-                        GUI.connect_lock = false;
-                        initiateFlashing();
-                    });
+                    startBackup(initiateFlashing);
                     break;
                 case 2:
                     GUI.showYesNoDialog({
@@ -1142,14 +1156,8 @@ firmware_flasher.initialize = function (callback) {
                         buttonYesText: i18n.getMessage("firmwareFlasherBackup"),
                         buttonNoText: i18n.getMessage("firmwareFlasherBackupIgnore"),
                         buttonYesCallback: () => {
-                            // prevent connection while backup is in progress
-                            GUI.connect_lock = true;
-                            AutoBackup.execute(() => {
-                                GUI.connect_lock = false;
-                                initiateFlashing();
-                            });
+                            startBackup(initiateFlashing);
                         },
-
                         buttonNoCallback: initiateFlashing,
                     });
                     break;
