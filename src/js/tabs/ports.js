@@ -18,13 +18,14 @@ ports.initialize = function (callback) {
 
     const functionRules = [
         { name: "MSP", groups: ["configuration", "msp"], maxPorts: 2 },
-        { name: "GPS", groups: ["sensors"], maxPorts: 1 },
+        { name: "GPS", groups: ["sensors"], maxPorts: 1, dependsOn: "USE_GPS" },
         {
             name: "TELEMETRY_FRSKY",
             groups: ["telemetry"],
             sharableWith: ["msp"],
             notSharableWith: ["peripherals"],
             maxPorts: 1,
+            dependsOn: "USE_TELEMETRY_FRSKY_HUB",
         },
         {
             name: "TELEMETRY_HOTT",
@@ -32,8 +33,9 @@ ports.initialize = function (callback) {
             sharableWith: ["msp"],
             notSharableWith: ["peripherals"],
             maxPorts: 1,
+            dependsOn: "USE_TELEMETRY_HOTT",
         },
-        { name: "TELEMETRY_SMARTPORT", groups: ["telemetry"], maxPorts: 1 },
+        { name: "TELEMETRY_SMARTPORT", groups: ["telemetry"], maxPorts: 1, dependsOn: "USE_TELEMETRY_SMARTPORT" },
         { name: "RX_SERIAL", groups: ["rx"], maxPorts: 1 },
         {
             name: "BLACKBOX",
@@ -48,6 +50,7 @@ ports.initialize = function (callback) {
             sharableWith: ["msp"],
             notSharableWith: ["peripherals"],
             maxPorts: 1,
+            dependsOn: "USE_TELEMETRY_LTM",
         },
         {
             name: "TELEMETRY_MAVLINK",
@@ -55,14 +58,15 @@ ports.initialize = function (callback) {
             sharableWith: ["msp"],
             notSharableWith: ["peripherals"],
             maxPorts: 1,
+            dependsOn: "USE_TELEMETRY_MAVLINK",
         },
-        { name: "IRC_TRAMP", groups: ["peripherals"], maxPorts: 1 },
+        { name: "IRC_TRAMP", groups: ["peripherals"], maxPorts: 1, dependsOn: "USE_VTX" },
         { name: "ESC_SENSOR", groups: ["sensors"], maxPorts: 1 },
-        { name: "TBS_SMARTAUDIO", groups: ["peripherals"], maxPorts: 1 },
-        { name: "TELEMETRY_IBUS", groups: ["telemetry"], maxPorts: 1 },
-        { name: "RUNCAM_DEVICE_CONTROL", groups: ["peripherals"], maxPorts: 1 },
+        { name: "TBS_SMARTAUDIO", groups: ["peripherals"], maxPorts: 1, dependsOn: "USE_VTX" },
+        { name: "TELEMETRY_IBUS", groups: ["telemetry"], maxPorts: 1, dependsOn: "USE_TELEMETRY_IBUS_EXTENDED" },
+        { name: "RUNCAM_DEVICE_CONTROL", groups: ["peripherals"], maxPorts: 1, dependsOn: "USE_CAMERA_CONTROL" },
         { name: "LIDAR_TF", groups: ["peripherals"], maxPorts: 1 },
-        { name: "FRSKY_OSD", groups: ["peripherals"], maxPorts: 1 },
+        { name: "FRSKY_OSD", groups: ["peripherals"], maxPorts: 1, dependsOn: "USE_FRSKYOSD" },
     ];
 
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
@@ -254,7 +258,8 @@ ports.initialize = function (callback) {
                             selectElement = functionsElement.find(selectElementSelector);
                             selectElement.append(`<option value="">${disabledText}</option>`);
                         }
-                        selectElement.append(`<option value="${functionName}">${functionRule.displayName}</option>`);
+                        const isDisabled = functionRule.dependsOn === undefined || FC.CONFIG?.buildOptions.includes(functionRule.dependsOn) ? "" : "disabled";
+                        selectElement.append(`<option value="${functionName}" ${isDisabled}>${functionRule.displayName}</option>`);
                         // sort telemetry, sensors, peripherals select elements. disabledText on top
                         selectElement.sortSelect(disabledText);
 
