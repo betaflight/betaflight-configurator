@@ -58,26 +58,25 @@ class AutoBackup {
         const filename = generateFilename(prefix, suffix);
         let result = false;
 
-        FileSystem.pickSaveFile(
-            filename,
-            i18n.getMessage("fileSystemPickerFiles", { typeof: suffix.toUpperCase() }),
-            `.${suffix}`,
-        )
-            .then((file) => {
-                if (file) {
-                    console.log("Saving config to:", file.name);
-                    FileSystem.writeFile(file, data);
-                    result = true;
-                }
-            })
-            .catch((error) => {
-                console.error("Error saving config:", error);
-            })
-            .finally(() => {
-                if (this.callback) {
-                    this.callback(result);
-                }
-            });
+        try {
+            const file = await FileSystem.pickSaveFile(
+                filename,
+                i18n.getMessage("fileSystemPickerFiles", { typeof: suffix.toUpperCase() }),
+                `.${suffix}`,
+            );
+
+            if (file) {
+                console.log("Saving config to:", file.name);
+                await FileSystem.writeFile(file, data);
+                result = true;
+            }
+        } catch (error) {
+            console.error("Error saving config:", error);
+        } finally {
+            if (this.callback) {
+                this.callback(result);
+            }
+        }
     }
 
     async run() {
