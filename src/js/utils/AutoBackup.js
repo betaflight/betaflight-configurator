@@ -105,7 +105,7 @@ class AutoBackup {
             setTimeout(() => {
                 this.outputHistory = "";
                 resolve();
-            }, 500);
+            }, 1000);
         });
     }
 
