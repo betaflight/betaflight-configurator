@@ -102,7 +102,7 @@ function startProcess() {
     gui_log(i18n.getMessage("infoVersionOs", { operatingSystem: GUI.operating_system }));
     gui_log(i18n.getMessage("infoVersionConfigurator", { configuratorVersion: CONFIGURATOR.getDisplayVersion() }));
 
-    $(".connect_b a.connect").removeClass("disabled");
+    $("a.connection_button__link").removeClass("disabled");
     // with Vue reactive system we don't need to call these,
     // our view is reactive to model changes
     // updateTopBarVersion();
@@ -131,15 +131,15 @@ function startProcess() {
         }
     });
 
-    $("div.open_firmware_flasher a.flash").on("click", function () {
-        if ($("div#flashbutton a.flash_state").hasClass("active") && $("div#flashbutton a.flash").hasClass("active")) {
-            $("div#flashbutton a.flash_state").removeClass("active");
-            $("div#flashbutton a.flash").removeClass("active");
+    $("a.firmware_flasher_button__link").on("click", function () {
+        if ($("a.firmware_flasher_button__label").hasClass("active") && $("a.firmware_flasher_button__link").hasClass("active")) {
+            $("a.firmware_flasher_button__label").removeClass("active");
+            $("a.firmware_flasher_button__link").removeClass("active");
             $("#tabs ul.mode-disconnected .tab_landing a").click();
         } else {
             $("#tabs ul.mode-disconnected .tab_firmware_flasher a").click();
-            $("div#flashbutton a.flash_state").addClass("active");
-            $("div#flashbutton a.flash").addClass("active");
+            $("a.firmware_flasher_button__label").addClass("active");
+            $("a.firmware_flasher_button__link").addClass("active");
         }
     });
 
@@ -168,10 +168,10 @@ function startProcess() {
 
             if (GUI.allowedTabs.indexOf(tab) < 0 && tab === "firmware_flasher") {
                 if (GUI.connected_to || GUI.connecting_to) {
-                    $("a.connect").click();
+                    $("a.connection_button__link").click();
                 }
                 // this line is required but it triggers opening the firmware flasher tab again
-                $("div.open_firmware_flasher a.flash").click();
+                $("a.firmware_flasher_button__link").click();
             } else if (GUI.allowedTabs.indexOf(tab) < 0) {
                 gui_log(i18n.getMessage("tabSwitchUpgradeRequired", [tabName]));
                 return;
@@ -182,11 +182,11 @@ function startProcess() {
             GUI.tab_switch_cleanup(function () {
                 // disable active firmware flasher if it was active
                 if (
-                    $("div#flashbutton a.flash_state").hasClass("active") &&
-                    $("div#flashbutton a.flash").hasClass("active")
+                    $("a.firmware_flasher_button__label").hasClass("active") &&
+                    $("a.firmware_flasher_button__link").hasClass("active")
                 ) {
-                    $("div#flashbutton a.flash_state").removeClass("active");
-                    $("div#flashbutton a.flash").removeClass("active");
+                    $("a.firmware_flasher_button__label").removeClass("active");
+                    $("a.firmware_flasher_button__link").removeClass("active");
                 }
                 // disable previously active tab highlight
                 $("li", ui_tabs).removeClass("active");

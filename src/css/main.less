@@ -43,12 +43,21 @@ a.disabled {
 }
 .background_paper {
     background-color: var(--surface-200);
-    background-image: linear-gradient(var(--surface-300) 2px, transparent 2px),
+    background-image:
+        linear-gradient(var(--surface-300) 2px, transparent 2px),
         linear-gradient(90deg, var(--surface-300) 2px, transparent 2px),
         linear-gradient(var(--surface-300) 1px, transparent 1px),
         linear-gradient(90deg, var(--surface-300) 1px, rgba(0, 0, 0, 0) 1px);
-    background-size: 75px 75px, 75px 75px, 15px 15px, 15px 15px;
-    background-position: -2px -2px, -2px -2px, -1px -1px, -1px -1px;
+    background-size:
+        75px 75px,
+        75px 75px,
+        15px 15px,
+        15px 15px;
+    background-position:
+        -2px -2px,
+        -2px -2px,
+        -1px -1px,
+        -1px -1px;
 }
 .standard_input {
     padding-left: 3px;
@@ -287,21 +296,20 @@ input[type="number"] {
     width: fit-content;
     display: none;
 }
-#header_btns {
-    display: flex;
-    align-items: center;
-    gap: 2rem;
-}
-.open_firmware_flasher,
-.connect_controls {
+.firmware_flasher_button,
+.connection_button {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
-.firmware_b {
-    width: 52px;
-    height: 52px;
-    a.flash {
+
+#header_buttons {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+
+    a.firmware_flasher_button__link {
+        display: block;
         background-color: var(--primary-500);
         border: 1px solid var(--primary-600);
         background-repeat: no-repeat;
@@ -309,66 +317,62 @@ input[type="number"] {
         width: 50px;
         border-radius: 100px;
         box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
-        float: left;
         transition: none;
-        background-image: url(../images/icons/cf_icon_flasher_white.svg);
+        background-image: url(../images/icons/cf_icon_flasher_black.svg);
         background-size: 30px;
         background-position: center 10px;
         &:hover {
             background-color: var(--primary-400);
         }
     }
-    a.flash.disabled {
+    a.firmware_flasher_button__link.disabled {
         background-color: var(--surface-500);
         pointer-events: none;
         cursor: default;
     }
-    a.flash.active {
+    a.firmware_flasher_button__link.active {
         background-color: var(--error-500);
         border: 1px solid var(--error-600);
         transition: none;
-        background-image: url(../images/icons/cf_icon_flasher_white.svg);
         &:hover {
             background-color: var(--error-400);
         }
     }
-}
-.connect_b {
-    width: 52px;
-    height: 52px;
-    a.connect {
-        background-color: var(--primary-500);
-        border: 1px solid var(--primary-600);
+
+    a.connection_button__link {
+        display: block;
+        background-color: var(--primary-action);
+        border: 1px solid var(--primary-action-border);
         background-repeat: no-repeat;
         height: 50px;
         width: 50px;
         border-radius: 100px;
         box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
-        float: left;
         transition: none;
-        background-image: url(../images/icons/cf_icon_usb2_white.svg);
+        background-image: url(../images/icons/cf_icon_usb2_black.svg);
         background-size: 44px;
         background-position: center 6px;
         &:hover {
-            background-color: var(--primary-400);
+            background-color: var(--primary-action-hover);
         }
     }
-    a.connect.disabled {
+    a.connection_button__link.disabled {
         background-color: var(--surface-500);
         pointer-events: none;
         cursor: default;
     }
-    a.connect.active {
+    a.connection_button__link.active {
         background-color: var(--error-500);
         border: 1px solid var(--error-600);
         transition: none;
-        background-image: url(../images/icons/cf_icon_usb1_white.svg);
+        background-image: url(../images/icons/cf_icon_usb1_black.svg);
         &:hover {
             background-color: var(--error-400);
         }
     }
 }
-.flash_state {
+
+.firmware_flasher_button__label {
     white-space: nowrap;
 }
 .header-wrapper {
@@ -2081,21 +2085,10 @@ each(range(12), {
         display: block;
         order: 4;
     }
-    #header_btns {
+    #header_buttons {
         margin-left: auto;
         order: 3;
         gap: 1rem;
-    }
-    .firmware_b,
-    .connect_b {
-        height: fit-content !important;
-        width: fit-content !important;
-        a {
-            height: 2rem !important;
-            width: 2rem !important;
-            background-size: 1.5rem !important;
-            background-position: center !important;
-        }
     }
     .web-port-picker {
         order: 5;
@@ -2112,10 +2105,10 @@ each(range(12), {
         order: 5;
         justify-content: space-around;
     }
-    .flash_state {
+    .firmware_flasher_button__label {
         display: none !important;
     }
-    .connect_state {
+    .connection_button__label {
         display: none !important;
     }
     #port-picker.reveal {
