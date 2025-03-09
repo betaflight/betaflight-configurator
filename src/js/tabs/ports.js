@@ -258,7 +258,7 @@ ports.initialize = function (callback) {
                             selectElement = functionsElement.find(selectElementSelector);
                             selectElement.append(`<option value="">${disabledText}</option>`);
                         }
-                        const isDisabled = functionRule.dependsOn === undefined || FC.CONFIG?.buildOptions.includes(functionRule.dependsOn) ? "" : "disabled";
+                        const isDisabled = FC.CONFIG.buildOptions.length && functionRule.dependsOn !== undefined && !FC.CONFIG.buildOptions.includes(functionRule.dependsOn) ? "disabled" : "";
                         selectElement.append(`<option value="${functionName}" ${isDisabled}>${functionRule.displayName}</option>`);
                         // sort telemetry, sensors, peripherals select elements. disabledText on top
                         selectElement.sortSelect(disabledText);
