@@ -56,24 +56,27 @@ class AutoBackup {
         const prefix = "cli_backup";
         const suffix = "txt";
         const filename = generateFilename(prefix, suffix);
+        let result = false;
 
-        FileSystem.pickSaveFile(
-            filename,
-            i18n.getMessage("fileSystemPickerFiles", { typeof: suffix.toUpperCase() }),
-            `.${suffix}`,
-        )
-            .then((file) => {
+        try {
+            const file = await FileSystem.pickSaveFile(
+                filename,
+                i18n.getMessage("fileSystemPickerFiles", { typeof: suffix.toUpperCase() }),
+                `.${suffix}`,
+            );
+
+            if (file) {
                 console.log("Saving config to:", file.name);
-                FileSystem.writeFile(file, data);
-            })
-            .catch((error) => {
-                console.error("Error saving config:", error);
-            })
-            .finally(() => {
-                if (this.callback) {
-                    this.callback();
-                }
-            });
+                await FileSystem.writeFile(file, data);
+                result = true;
+            }
+        } catch (error) {
+            console.error("Error saving config:", error);
+        } finally {
+            if (this.callback) {
+                this.callback(result);
+            }
+        }
     }
 
     async run() {
@@ -102,7 +105,7 @@ class AutoBackup {
             setTimeout(() => {
                 this.outputHistory = "";
                 resolve();
-            }, 500);
+            }, 1000);
         });
     }
 
