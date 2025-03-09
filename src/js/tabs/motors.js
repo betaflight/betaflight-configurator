@@ -705,7 +705,7 @@ motors.initialize = async function (callback) {
         const escProtocolElement = $("select.escprotocol");
 
         escProtocols.forEach((protocol, index) => {
-            const isDisabled = protocol !== "DISABLED" && FC.CONFIG.buildOptions && !FC.CONFIG.buildOptions.some(option => protocol.includes(option.substring(4))) ? "disabled" : "";
+            const isDisabled = protocol !== "DISABLED" && FC.CONFIG.buildOptions.length && !FC.CONFIG.buildOptions.some(option => protocol.includes(option.substring(4))) ? "disabled" : "";
             const option = `<option value="${index + 1}" ${isDisabled}>${protocol}</option>`;
             escProtocolElement.append(option);
         });
