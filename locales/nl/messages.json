@@ -34,9 +34,6 @@
     "storageDeviceNotReady": {
         "message": "Het opslagapparaat is niet gereed. Als je een microSD kaart gebruikt, zorg dat je flight controller hem herkent."
     },
-    "options_title": {
-        "message": "Applicatie-instellingen"
-    },
     "connect": {
         "message": "Verbind"
     },
@@ -2541,9 +2538,6 @@
     },
     "firmwareFlasherDetectBoardQuery": {
         "message": "Vraag bordinformatie op om de juiste firmware vooraf te selecteren"
-    },
-    "firmwareFlasherPreviousDevice": {
-        "message": "Gedetecteerd: <strong>$1<\/strong> - vorig apparaat is nog aan het flashen, gelieve opnieuw te koppelen en het opnieuw te proberen"
     },
     "ledStripHelp": {
         "message": "De vluchtcontroller kan de kleuren en effecten van individuele LED's op een strip regelen.<br \/>Configureer allereerst de LED's op het raster. Configureer daarna de bedradingsvolgorde en bevestig vervolgens de LED's op uw quad op basis van de rasterposities. LED's zonder een draadnummer worden niet opgeslagen.<br\/>Dubbelklik op een kleur om de HSV-waarden te bewerken."

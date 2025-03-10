@@ -53,9 +53,6 @@
     "storageDeviceNotReady": {
         "message": "El dispositivo de almacenamiento no está listo. En el caso de una tarjeta MicroSD, asegúrate de que es reconocida correctamente por tu controlador de vuelo."
     },
-    "options_title": {
-        "message": "Opciones"
-    },
     "connect": {
         "message": "Conectar"
     },
@@ -3739,9 +3736,6 @@
     },
     "unstableFirmwareAcknowledgementFlash": {
         "message": "Instalar"
-    },
-    "firmwareFlasherPreviousDevice": {
-        "message": "Detectado: <strong>$1<\/strong> - dispositivo anterior todavía en instalación, por favor vuelve a conectar para volver a intentarlo"
     },
     "firmwareFlasherRemindBackupTitle": {
         "message": "Borrado de configuración",

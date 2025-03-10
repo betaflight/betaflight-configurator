@@ -53,9 +53,6 @@
     "storageDeviceNotReady": {
         "message": "저장 장치가 준비되어 있지 않습니다. 마이크로SD 카드인 경우, 당신의 비행 컨트롤러에 올바르게 인식되는지 확인하세요."
     },
-    "options_title": {
-        "message": "어플리케이션 옵션"
-    },
     "connect": {
         "message": "연결"
     },
@@ -3743,9 +3740,6 @@
     },
     "unstableFirmwareAcknowledgementFlash": {
         "message": "플래시"
-    },
-    "firmwareFlasherPreviousDevice": {
-        "message": "감지됨: <strong>$1<\/strong> - 이전 기기가 여전히 플래시중입니다. 다시 연결하여 재시도하세요."
     },
     "firmwareFlasherRemindBackupTitle": {
         "message": "설정 삭제",

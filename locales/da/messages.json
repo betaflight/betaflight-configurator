@@ -53,9 +53,6 @@
     "storageDeviceNotReady": {
         "message": "Lagerenheden er ikke klar. Ved microSD-kort skal du sørge for, at det er korrekt genkendt af din flight controller."
     },
-    "options_title": {
-        "message": "Program indstillinger"
-    },
     "connect": {
         "message": "Tilslut konfigurering"
     },
@@ -3744,9 +3741,6 @@
     "unstableFirmwareAcknowledgementFlash": {
         "message": "Brænd firmware"
     },
-    "firmwareFlasherPreviousDevice": {
-        "message": "Registreret: <strong>$1<\/strong> - tidligere enhed flashes stadig, gentilslut og forsøg igen"
-    },
     "firmwareFlasherRemindBackupTitle": {
         "message": "Slet alle indstillinger",
         "description": "Warning message title before actual flashing takes place"
@@ -3762,6 +3756,15 @@
     "firmwareFlasherBackupIgnore": {
         "message": "Ignorer risiko",
         "description": "Ignore creating a backup before actual flashing takes place"
+    },
+    "firmwareBackupEnabled": {
+        "message": "Sikkerhedskopiering aktiv"
+    },
+    "firmwareBackupDisabled": {
+        "message": "Sikkerhedskopiering ikke aktiv"
+    },
+    "firmwareBackupAsk": {
+        "message": "Spørg før sikkerhedskopiering"
     },
     "ledStripHelp": {
         "message": "FC kan styre farver og effekter på individuelle LED'er på en strimmel.<br \/>Opsæt LED'er i gitteret, opsæt ledningsrækkefølge og forbnd så LED'erne på dit fartøj jf. gitterpositionerne. LED'er uden ledningsnummer vil ikke blive gemt.<br \/>Dobbeltklik på en farve for at redigere HSV-værdierne."
@@ -7082,6 +7085,9 @@
     },
     "cliAutoComplete": {
         "message": "Avanceret CLI autoudfyld"
+    },
+    "firmwareBackupOnFlash": {
+        "message": "Opret en sikkerhedskopi, før du brænder fc"
     },
     "darkTheme": {
         "message": "Brug mørkt tema for Configuration"

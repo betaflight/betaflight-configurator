@@ -53,9 +53,6 @@
     "storageDeviceNotReady": {
         "message": "O dispositivo de armazenamento não está pronto. No caso de ser um cartão microSD, assegure-se que é corretamente reconhecido pela sua controladora de voo."
     },
-    "options_title": {
-        "message": "Opções da aplicação"
-    },
     "connect": {
         "message": "Conectar"
     },
@@ -3740,9 +3737,6 @@
     "unstableFirmwareAcknowledgementFlash": {
         "message": "Flash"
     },
-    "firmwareFlasherPreviousDevice": {
-        "message": "Detetado: <strong>$1<\/strong> - o dispositivo anterior ainda está a flashar, reconecte para tentar novamente"
-    },
     "firmwareFlasherRemindBackupTitle": {
         "message": "Apagar definições",
         "description": "Warning message title before actual flashing takes place"
@@ -3758,6 +3752,15 @@
     "firmwareFlasherBackupIgnore": {
         "message": "Ignorar o risco",
         "description": "Ignore creating a backup before actual flashing takes place"
+    },
+    "firmwareBackupEnabled": {
+        "message": "Backup ativado"
+    },
+    "firmwareBackupDisabled": {
+        "message": "Backup desativado"
+    },
+    "firmwareBackupAsk": {
+        "message": "Perguntar antes de fazer backup"
     },
     "ledStripHelp": {
         "message": "A controladora de voo pode controlar as cores e efeitos individuais de LEDs numa faixa. <br \/>Configure LEDs na grade, configure a ordem das soldas e depois conecte os LEDs na sua aeronave de acordo com as posições na grade. LEDs configurados em posições sem número não serão gravados.<br \/>Faça duplo clique numa cor para editar os valores HSV."
@@ -7078,6 +7081,9 @@
     },
     "cliAutoComplete": {
         "message": "AutoCompletar CLI avançado"
+    },
+    "firmwareBackupOnFlash": {
+        "message": "Criar um backup antes de flashar novo target"
     },
     "darkTheme": {
         "message": "Ativar tema escuro"

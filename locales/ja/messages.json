@@ -53,9 +53,6 @@
     "storageDeviceNotReady": {
         "message": "ストレージデバイスの準備ができていません。microSDカードを利用する場合は、FCボード側が正常に認識しているかを確認してください。"
     },
-    "options_title": {
-        "message": "オプション設定"
-    },
     "connect": {
         "message": "接続"
     },
@@ -3728,9 +3725,6 @@
     },
     "unstableFirmwareAcknowledgementFlash": {
         "message": "フラッシュ"
-    },
-    "firmwareFlasherPreviousDevice": {
-        "message": "検出: <strong>$1<\/strong> - 以前のデバイスがまだ書き込まれています。再接続してもう一度お試しください。"
     },
     "firmwareFlasherRemindBackupTitle": {
         "message": "設定を消去",

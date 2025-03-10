@@ -37,9 +37,6 @@
     "storageDeviceNotReady": {
         "message": "Le périphérique de stockage n'est pas prêt. S'il s'agit d'une microSD, vérifiez qu'elle soit correctement reconnue par votre contrôleur de vol."
     },
-    "options_title": {
-        "message": "Options de l'application"
-    },
     "connect": {
         "message": "Connexion"
     },
@@ -2922,9 +2919,6 @@
     },
     "unstableFirmwareAcknowledgementFlash": {
         "message": "Flash"
-    },
-    "firmwareFlasherPreviousDevice": {
-        "message": "Détecté: <strong>$1<\/strong> - périphérique toujours en cours de flash, merci de rebrancher pour un nouvel essai"
     },
     "ledStripHelp": {
         "message": "Le contrôleur de vol peut piloter des LEDs RGB.<br \/>Configurez les LEDs sur la grille et câblez les LEDs en fonction de votre grille. Les LEDs sans numéro ne seront pas sauvegardées.<br \/>Double-cliquer sur une couleur pour éditer sa valeur."

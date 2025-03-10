@@ -56,9 +56,6 @@
     "storageDeviceNotReady": {
         "message": "Das Speichermedium ist nicht betriebsbereit. Bei Verwendung einer microSD-Karte sicherstellen, dass diese vom Flugkontroller richtig erkannt wird."
     },
-    "options_title": {
-        "message": "Einstellungen"
-    },
     "connect": {
         "message": "Verbinden"
     },
@@ -3461,9 +3458,6 @@
     },
     "unstableFirmwareAcknowledgementFlash": {
         "message": "Flashen"
-    },
-    "firmwareFlasherPreviousDevice": {
-        "message": "<strong>$1<\/strong> erkannt. Gerät flasht noch, bitte neu anstecken und nochmals versuchen"
     },
     "firmwareFlasherRemindBackupTitle": {
         "message": "Einstellungen löschen",

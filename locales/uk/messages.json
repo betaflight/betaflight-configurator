@@ -53,9 +53,6 @@
     "storageDeviceNotReady": {
         "message": "Пристрій зберігання не готовий. У разі використання мікроSD-карти, переконайтеся, що пристрій правильно розпізнає  польотний контролер"
     },
-    "options_title": {
-        "message": "Параметри додатку"
-    },
     "connect": {
         "message": "Під'єднати"
     },
@@ -157,6 +154,10 @@
     "showVirtualMode": {
         "message": "Включити режим віртуального з'єднання",
         "description": "Text for the option to enable or disable the virtual FC"
+    },
+    "useLegacyRenderingModel": {
+        "message": "Увімкнути застаріле виведення для 3D моделі (для низькопродуктивних пристроїв)",
+        "description": "Text for the option to enable or disable legacy rendering of the 3D model"
     },
     "cordovaForceComputerUI": {
         "message": "Використовуйте інтерфейс комп’ютера замість інтерфейсу телефона"
@@ -742,6 +743,9 @@
     "initialSetupButtonCalibratingText": {
         "message": "Калібрування..."
     },
+    "initialSetupButtonReset": {
+        "message": "Стерти налаштування"
+    },
     "initialSetupResetText": {
         "message": "Скинути польотний контролер до <strong>неналаштованого стану.<\/strong>"
     },
@@ -1025,6 +1029,14 @@
         "message": "Перемикач аварійного перевертання активний",
         "description": "Message that pops to describe the CRASHFLIP arming disable flag"
     },
+    "initialSetupArmingDisableFlagsTooltipALTHOLD": {
+        "message": "Активоване утримання висоти",
+        "description": "Message that pops up to describe the ALTHOLD arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipPOSHOLD": {
+        "message": "Активоване утримання позиції",
+        "description": "Message that pops up to describe the POSHOLD arming disable flag"
+    },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "Одна з інших позначок охлощення активна під час взведення",
         "description": "Message that pops up to describe the ARM_SWITCH arming disable flag"
@@ -1172,6 +1184,9 @@
     "featureMOTOR_STOP": {
         "message": "Не обертати мотори коли взведений"
     },
+    "featureMOTOR_STOPTip": {
+        "message": "Ця функція вимкнена, коли режим Air увімкнений"
+    },
     "featureSERVO_TILT": {
         "message": "Сервоприводний підвіс"
     },
@@ -1186,6 +1201,10 @@
     },
     "featureGPS": {
         "message": "GPS для навігації та телеметрії"
+    },
+    "featureGPSTip": {
+        "message": "Увімкнути \/ Вимкнути дані GPS. Якщо GPS не вмикається, перевірте, чи призначений порт для GPS у вкладці Порти",
+        "description": "Message that pops up to describe the GPS feature"
     },
     "featureSONAR": {
         "message": "Сонар"
@@ -1313,6 +1332,9 @@
     },
     "configurationMagAlignmentHelp": {
         "message": "Вирівнювання магнітометра — це орієнтація датчика магнітометра на платі польотного контролера. Значення за замовчуванням зазвичай правильне, але якщо ви маєте користувацьку збірку чи польотний контролер з іншою орієнтацією магнітометра, можливо потрібно буде змінити це налаштування."
+    },
+    "configurationMagDeclination": {
+        "message": "Магнітне схилення"
     },
     "configurationMagDeclinationInput": {
         "message": "Схилення в градусах"
@@ -2845,6 +2867,14 @@
     "gpsAltitude": {
         "message": "Висота:"
     },
+    "gpsLatitude": {
+        "message": "Широта:",
+        "description": "Show GPS position - Latitude"
+    },
+    "gpsLongitude": {
+        "message": "Довгота:",
+        "description": "Show GPS position - Longitude"
+    },
     "gpsHeading": {
         "message": "Курс за ІВП \/ GPS:",
         "description": "Show IMU \/ GPS heading - Attitude \/ GPS course over ground"
@@ -2861,6 +2891,10 @@
     },
     "gpsPositionalDop": {
         "message": "Погіршення точності позиції:"
+    },
+    "gpsMagneticDeclination": {
+        "message": "$t(configurationMagDeclination):",
+        "description": "Do not translate"
     },
     "gpsSignalStrHead": {
         "message": "Рівень сигналу GPS"
@@ -3702,9 +3736,6 @@
     },
     "unstableFirmwareAcknowledgementFlash": {
         "message": "Прошити"
-    },
-    "firmwareFlasherPreviousDevice": {
-        "message": "Виявлено: <strong>$1<\/strong> - попередній пристрій все ще прошивається, будь ласка, перепідключіться, щоб спробувати знову"
     },
     "firmwareFlasherRemindBackupTitle": {
         "message": "Очистити налаштування",

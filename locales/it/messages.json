@@ -53,9 +53,6 @@
     "storageDeviceNotReady": {
         "message": "La memoria di archiviazione non è pronta. In caso di scheda SD, assicurati che sia riconosciuta correttamente dal controllore di volo."
     },
-    "options_title": {
-        "message": "Opzioni Applicazione"
-    },
     "connect": {
         "message": "Connetti"
     },
@@ -3739,9 +3736,6 @@
     },
     "unstableFirmwareAcknowledgementFlash": {
         "message": "Flash"
-    },
-    "firmwareFlasherPreviousDevice": {
-        "message": "Rilevato: <strong>$1<\/strong> - è ancora in corso il flashing del dispositivo precedente, ti preghiamo di ricollegarlo per riprovare"
     },
     "firmwareFlasherRemindBackupTitle": {
         "message": "Cancella le impostazioni",

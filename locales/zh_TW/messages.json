@@ -34,9 +34,6 @@
     "storageDeviceNotReady": {
         "message": "存儲設備沒有準備就緒。如果是 MicroSD 卡，請確保它已被飛控正確識別。"
     },
-    "options_title": {
-        "message": "應用程式選項"
-    },
     "connect": {
         "message": "連接"
     },
@@ -2298,9 +2295,6 @@
     },
     "firmwareFlasherFlashTrigger": {
         "message": "檢測到飛控：<strong>$1<\/strong> - 正在觸發自動燒錄"
-    },
-    "firmwareFlasherPreviousDevice": {
-        "message": "檢測到：<strong>$1<\/strong> - 仍在燒錄前一個設備，請稍後重新插入再試一次。"
     },
     "ledStripHelp": {
         "message": "飛控可以控制 LED 燈帶上的每一個燈珠的顏色和效果。 <br \/>配置燈珠的位置，連線的順序，然後按位置將燈帶接入。沒有設置過接線順序的燈珠設置不會被保存。 <br \/>在一個顏色上雙擊可編輯 HSV 值。"

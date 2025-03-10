@@ -40,9 +40,6 @@
     "storageDeviceNotReady": {
         "message": "O dispositivo de almacenamento non está preparado. No caso dunha tarxeta microSD, asegúrese de que o controlador de voo a recoñeza correctamente."
     },
-    "options_title": {
-        "message": "Axustes da aplicación"
-    },
     "connect": {
         "message": "Conectar"
     },
@@ -3365,9 +3362,6 @@
     },
     "unstableFirmwareAcknowledgementFlash": {
         "message": "Flash"
-    },
-    "firmwareFlasherPreviousDevice": {
-        "message": "Detectado: <strong>$1<\/strong> - dispositivo anterior todavía en instalación, por favor volva conectalo para volver intentalo"
     },
     "firmwareFlasherRemindBackupTitle": {
         "message": "Borrar a configuración",
