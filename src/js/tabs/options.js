@@ -27,7 +27,6 @@ options.initialize = function (callback) {
         TABS.options.initShowVirtualMode();
         TABS.options.initUseManualConnection();
         TABS.options.initLegacyRendering3DModel();
-        TABS.options.initCordovaForceComputerUI();
         TABS.options.initDarkTheme();
         TABS.options.initShowDevToolsOnStartup();
         TABS.options.initShowNotifications();
@@ -163,10 +162,6 @@ options.initUseManualConnection = function () {
         setConfig({ showManualMode: checked });
         PortHandler.setShowManualMode(checked);
     });
-};
-
-options.initCordovaForceComputerUI = function () {
-    $("div.cordovaForceComputerUI").hide();
 };
 
 options.initLegacyRendering3DModel = function () {

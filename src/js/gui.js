@@ -7,8 +7,6 @@ import $ from "jquery";
 const TABS = {};
 
 const GUI_MODES = {
-    NWJS: "NW.js",
-    Cordova: "Cordova",
     Other: "Other",
 };
 

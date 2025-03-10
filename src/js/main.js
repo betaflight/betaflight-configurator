@@ -27,15 +27,11 @@ if (typeof String.prototype.replaceAll === "undefined") {
 }
 
 $(document).ready(function () {
-    if (typeof cordovaApp === "undefined") {
-        appReady();
-    }
+    appReady();
 });
 
 function readConfiguratorVersionMetadata() {
-    // These are injected by vite. If not checking
-    // for undefined occasionally there is a race
-    // condition where this fails the nwjs and cordova builds
+    // These are injected by vite. Check for undefined is needed to prevent race conditions
     CONFIGURATOR.productName =
         typeof __APP_PRODUCTNAME__ !== "undefined" ? __APP_PRODUCTNAME__ : "Betaflight Configurator";
     CONFIGURATOR.version = typeof __APP_VERSION__ !== "undefined" ? __APP_VERSION__ : "0.0.0";
@@ -132,7 +128,10 @@ function startProcess() {
     });
 
     $("a.firmware_flasher_button__link").on("click", function () {
-        if ($("a.firmware_flasher_button__label").hasClass("active") && $("a.firmware_flasher_button__link").hasClass("active")) {
+        if (
+            $("a.firmware_flasher_button__label").hasClass("active") &&
+            $("a.firmware_flasher_button__link").hasClass("active")
+        ) {
             $("a.firmware_flasher_button__label").removeClass("active");
             $("a.firmware_flasher_button__link").removeClass("active");
             $("#tabs ul.mode-disconnected .tab_landing a").click();
