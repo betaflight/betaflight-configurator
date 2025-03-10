@@ -37,9 +37,6 @@
     "storageDeviceNotReady": {
         "message": "Biltegiratzeko gailua ez dago prest. MikroSD txartelaren kasuan, ziurtatu hegaldi kontroladorea behar bezala aitortzen duela."
     },
-    "options_title": {
-        "message": "Aplikazioaren ezarpenak"
-    },
     "connect": {
         "message": "Konektatu"
     },
@@ -2361,9 +2358,6 @@
     },
     "firmwareFlasherFlashTrigger": {
         "message": "<strong>$1<\/strong> Detektatuta - Konektatzean instalatu exekutatzen ari da"
-    },
-    "firmwareFlasherPreviousDevice": {
-        "message": "<strong>$1<\/strong> - aurreko gailua instalazioan dago. Mesedez berriro konektatu berriro saiatzeko"
     },
     "ledStripHelp": {
         "message": "Hegaldi-kontroladoreak banda bateko LED banakako koloreak eta efektuak kontrolatu ditzake.<br\/> Konfiguratu saretako LEDak, kableatu ordena konfiguratu eta ondoren itsatsi LED hegazkinaren saretako posizioen arabera. Ez dira alanbreak ordenatzen dituzten LEDak gordeko.<br\/> Egin klik bikoitza kolorean HSVren balioak editatzeko."

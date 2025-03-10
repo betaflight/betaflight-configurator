@@ -37,9 +37,6 @@
     "storageDeviceNotReady": {
         "message": "存储设备尚未就绪。如果是 microSD 卡, 请确保它已被飞控正确识别。"
     },
-    "options_title": {
-        "message": "应用程序选项"
-    },
     "connect": {
         "message": "连接"
     },
@@ -2758,9 +2755,6 @@
     },
     "firmwareFlasherDetectBoardQuery": {
         "message": "查询飞控板信息以辅助选择正确固件"
-    },
-    "firmwareFlasherPreviousDevice": {
-        "message": "检测到：<strong>$1<\/strong> - 仍在烧录前一个设备，请稍后重新插入再试一次。"
     },
     "ledStripHelp": {
         "message": "飞控可以控制 LED 灯带上的每一个灯珠的颜色和效果。<br \/>配置灯珠的位置，连线的顺序，然后按位置将灯带接入。没有设置过接线顺序的灯珠设置不会被保存。<br \/>在一个颜色上双击可编辑 HSV 值。"

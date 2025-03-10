@@ -53,9 +53,6 @@
     "storageDeviceNotReady": {
         "message": "El dispositiu d'emmagatzematge no està llest. En cas d'una targeta microSD, assegureu-vos de que és correctament reconegut per la controladora de vol."
     },
-    "options_title": {
-        "message": "Opcions de l'aplicació"
-    },
     "connect": {
         "message": "Connectar"
     },
@@ -3748,9 +3745,6 @@
     "unstableFirmwareAcknowledgementFlash": {
         "message": "Flash"
     },
-    "firmwareFlasherPreviousDevice": {
-        "message": "Detectat: <strong>$1<\/strong> - el dispositiu anterior encara es flasheja, torna a conectar per reintentar"
-    },
     "firmwareFlasherRemindBackupTitle": {
         "message": "Esborrar els ajustos",
         "description": "Warning message title before actual flashing takes place"
@@ -3766,6 +3760,15 @@
     "firmwareFlasherBackupIgnore": {
         "message": "Ignora el risc",
         "description": "Ignore creating a backup before actual flashing takes place"
+    },
+    "firmwareBackupEnabled": {
+        "message": "Còpia de seguretat habilitada"
+    },
+    "firmwareBackupDisabled": {
+        "message": "Còpia de seguretat desactivada"
+    },
+    "firmwareBackupAsk": {
+        "message": "Pregunta abans de fer còpia de seguretat"
     },
     "ledStripHelp": {
         "message": "La controladora pot controlar colors i efectes d'una tira de LEDs individualment.<br \/>Configura els LEDs a la graella i configura l'ordre del cablejat. Els LEDs que no tinguin ordre no es desaran.<br \/>Fes doble clic a un color per editar el valor HSV."
@@ -7086,6 +7089,9 @@
     },
     "cliAutoComplete": {
         "message": "Auto completat avançat del CLI"
+    },
+    "firmwareBackupOnFlash": {
+        "message": "Fes una còpia de seguretat abans de programar un nou model"
     },
     "darkTheme": {
         "message": "Activa el tema fosc"
