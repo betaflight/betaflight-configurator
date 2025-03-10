@@ -6,10 +6,6 @@ import $ from "jquery";
 
 const TABS = {};
 
-const GUI_MODES = {
-    Other: "Other",
-};
-
 class GuiControl {
     constructor() {
         this.connecting_to = false;
@@ -52,9 +48,6 @@ class GuiControl {
 
         // check which operating system is user running
         this.operating_system = GUI_checkOperatingSystem();
-
-        // Check the method of execution
-        this.nwGui = GUI_MODES.Other;
     }
     // Timer managing methods
     // name = string
@@ -341,9 +334,6 @@ class GuiControl {
                 : "tab_setup";
 
         $(`#tabs ul.mode-connected .${tab} a`).trigger("click");
-    }
-    isOther() {
-        return this.Mode === GUI_MODES.Other;
     }
     showYesNoDialog(yesNoDialogSettings) {
         // yesNoDialogSettings:
