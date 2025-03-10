@@ -9,12 +9,10 @@ yarn-error.log*
 cache/
 apps/
 dist/
-dist_cordova/
 debug/
 release/
 testresults/
 .eslintcache
-cordova/bundle.keystore
 
 # OSX
 .DS_store

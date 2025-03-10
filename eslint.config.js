@@ -10,20 +10,9 @@ export default defineConfig([
             ecmaVersion: "latest",
             sourceType: "module",
             globals: {
-                cordova: "readonly",
-                cordovaUI: "readonly",
                 ol: "readonly",
                 wNumb: "readonly",
                 ConfigStorage: "readonly",
-                // start cordova bindings, remove after cordova is removed/replace/modularized
-                cordova_serial: "readonly",
-                fileChooser: "readonly",
-                i18n: "readonly",
-                appReady: "readonly",
-                cordovaChromeapi: "readonly",
-                appAvailability: "readonly",
-                // end cordova bindings
-
                 // globals for vite
                 __APP_PRODUCTNAME__: "readonly",
                 __APP_VERSION__: "readonly",
