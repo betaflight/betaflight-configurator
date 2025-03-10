@@ -4,6 +4,7 @@
   "displayName": "Betaflight - Configuration and management tool",
   "description": "Crossplatform configuration and management tool for the Betaflight flight control firmware.",
   "version": "11.0.0",
+  "type": "module",
   "main": "index.html",
   "scripts": {
     "dev": "vite",
@@ -89,6 +90,8 @@
     "del": "^8.0.0",
     "eslint": "^9.21.0",
     "eslint-config-prettier": "^10.0.2",
+    "eslint-define-config": "^2.1.0",
+    "eslint-plugin-prettier": "^5.2.3",
     "eslint-plugin-vue": "^9.32.0",
     "follow-redirects": "^1.15.9",
     "fs-extra": "^11.3.0",
