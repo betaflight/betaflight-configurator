@@ -1,6 +1,6 @@
 class EscProtocols {
     static get PROTOCOL_PWM() {
-        return "PWM";
+        return "PWM_OUTPUT";
     }
     static get PROTOCOL_ONESHOT125() {
         return "ONESHOT125";

@@ -704,9 +704,11 @@ motors.initialize = async function (callback) {
         const escProtocols = EscProtocols.GetAvailableProtocols(FC.CONFIG.apiVersion);
         const escProtocolElement = $("select.escprotocol");
 
-        for (let j = 0; j < escProtocols.length; j++) {
-            escProtocolElement.append(`<option value="${j + 1}">${escProtocols[j]}</option>`);
-        }
+        escProtocols.forEach((protocol, index) => {
+            const isDisabled = protocol !== "DISABLED" && FC.CONFIG.buildOptions.length && !FC.CONFIG.buildOptions.some(option => protocol.includes(option.substring(4))) ? "disabled" : "";
+            const option = `<option value="${index + 1}" ${isDisabled}>${protocol}</option>`;
+            escProtocolElement.append(option);
+        });
 
         escProtocolElement.sortSelect("DISABLED");
 
