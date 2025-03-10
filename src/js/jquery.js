@@ -7,9 +7,8 @@ import $ from "jquery";
  * all of them have access to the same instance.
  */
 if (typeof globalThis !== "undefined") {
-    // eslint-disable-next-line no-undef
     globalThis.jQuery = $;
-    // eslint-disable-next-line no-undef
+
     globalThis.$ = $;
 }
 

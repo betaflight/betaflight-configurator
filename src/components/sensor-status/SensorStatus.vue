@@ -42,62 +42,62 @@
 </template>
 
 <script>
-import { defineComponent } from 'vue';
+import { defineComponent } from "vue";
 import { bit_check } from "../../js/bit";
 
 export default defineComponent({
-  props: {
-    sensorsDetected: {
-      type: Number,
-      default: 0,
+    props: {
+        sensorsDetected: {
+            type: Number,
+            default: 0,
+        },
+        gpsFixState: {
+            type: Number,
+            default: 0,
+        },
     },
-    gpsFixState: {
-      type: Number,
-      default: 0,
+    computed: {
+        setAccActive() {
+            return this.haveSensor(this.sensorsDetected, "acc");
+        },
+        setGyroActive() {
+            return this.haveSensor(this.sensorsDetected, "gyro");
+        },
+        setBaroActive() {
+            return this.haveSensor(this.sensorsDetected, "baro");
+        },
+        setMagActive() {
+            return this.haveSensor(this.sensorsDetected, "mag");
+        },
+        setGpsActive() {
+            return this.haveSensor(this.sensorsDetected, "gps");
+        },
+        setGpsFixState() {
+            return this.gpsFixState !== 0;
+        },
+        setSonarActive() {
+            return this.haveSensor(this.sensorsDetected, "sonar");
+        },
     },
-  },
-  computed: {
-    setAccActive() {
-      return this.haveSensor(this.sensorsDetected, 'acc');
+    methods: {
+        haveSensor(sensorsDetected, sensorCode) {
+            switch (sensorCode) {
+                case "acc":
+                    return bit_check(sensorsDetected, 0);
+                case "baro":
+                    return bit_check(sensorsDetected, 1);
+                case "mag":
+                    return bit_check(sensorsDetected, 2);
+                case "gps":
+                    return bit_check(sensorsDetected, 3);
+                case "sonar":
+                    return bit_check(sensorsDetected, 4);
+                case "gyro":
+                    return bit_check(sensorsDetected, 5);
+            }
+            return false;
+        },
     },
-    setGyroActive() {
-      return this.haveSensor(this.sensorsDetected, 'gyro');
-    },
-    setBaroActive() {
-      return this.haveSensor(this.sensorsDetected, 'baro');
-    },
-    setMagActive() {
-      return this.haveSensor(this.sensorsDetected, 'mag');
-    },
-    setGpsActive() {
-      return this.haveSensor(this.sensorsDetected, 'gps');
-    },
-    setGpsFixState() {
-      return this.gpsFixState !== 0;
-    },
-    setSonarActive() {
-      return this.haveSensor(this.sensorsDetected, 'sonar');
-    },
-  },
-  methods: {
-    haveSensor(sensorsDetected, sensorCode) {
-      switch (sensorCode) {
-        case 'acc':
-          return bit_check(sensorsDetected, 0);
-        case 'baro':
-          return bit_check(sensorsDetected, 1);
-        case 'mag':
-          return bit_check(sensorsDetected, 2);
-        case 'gps':
-          return bit_check(sensorsDetected, 3);
-        case 'sonar':
-          return bit_check(sensorsDetected, 4);
-        case 'gyro':
-          return bit_check(sensorsDetected, 5);
-      }
-      return false;
-    },
-  },
 });
 </script>
 
