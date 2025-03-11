@@ -1,0 +1,35 @@
+{
+  "productName": "Betaflight Configurator",
+  "version": "11.0.0",
+  "identifier": "com.betaflight.configurator",
+  "build": {
+    "beforeDevCommand": "yarn dev",
+    "beforeBuildCommand": "yarn build",
+    "devUrl": "http://localhost:8000",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "security": {
+      "csp": null
+    },
+    "windows": [
+      {
+        "title": "Betaflight Configurator",
+        "width": 1024,
+        "height": 550,
+        "resizable": true,
+        "fullscreen": false
+      }
+    ]
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["deb", "appimage"],
+    "icon": ["icons/bf_icon_128.png"]
+  },
+  "plugins": {
+    "shell": {
+      "open": true
+    }
+  }
+}
