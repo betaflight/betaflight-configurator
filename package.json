@@ -108,7 +108,7 @@
     "gulp-xml-transformer": "^5.1.1",
     "gulp-yarn": "^3.0.0",
     "gulp-zip": "^5.1.0",
-    "husky": "^8.0.2",
+    "husky": "^9.1.7",
     "inquirer": "^12.4.2",
     "less": "^4.2.2",
     "lint-staged": "^15.4.3",
