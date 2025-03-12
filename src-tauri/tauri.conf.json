@@ -1,7 +1,7 @@
 {
-  "productName": "Betaflight Configurator",
-  "version": "11.0.0",
-  "identifier": "com.betaflight.configurator",
+  "productName": "Betaflight App",
+  "version": "2025.12.0",
+  "identifier": "com.betaflight.app",
   "build": {
     "beforeDevCommand": "yarn dev",
     "beforeBuildCommand": "yarn build",
@@ -14,7 +14,7 @@
     },
     "windows": [
       {
-        "title": "Betaflight Configurator",
+        "title": "Betaflight App",
         "width": 1024,
         "height": 550,
         "resizable": true,
