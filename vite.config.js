@@ -9,7 +9,7 @@ import * as child from "child_process";
 import { VitePWA } from "vite-plugin-pwa";
 import { resolve } from "path";
 
-const commitHash = child.execSync("git rev-parse --short HEAD").toString();
+const commitHash = child.execSync("git rev-parse --short HEAD").toString().trim();
 
 function serveFileFromDirectory(directory) {
     return (req, res, next) => {
@@ -36,17 +36,15 @@ function serveLocalesPlugin() {
     return {
         name: "serve-locales",
         configureServer(server) {
-            return () => {
-                server.middlewares.use((req, res, next) => {
-                    if (req.url.startsWith("/locales/")) {
-                        serveFileFromDirectory("locales")(req, res, next);
-                    } else if (req.url.startsWith("/resources/")) {
-                        serveFileFromDirectory("resources")(req, res, next);
-                    } else {
-                        next();
-                    }
-                });
-            };
+            server.middlewares.use((req, res, next) => {
+                if (req.url.startsWith("/locales/")) {
+                    serveFileFromDirectory("locales")(req, res, next);
+                } else if (req.url.startsWith("/resources/")) {
+                    serveFileFromDirectory("resources")(req, res, next);
+                } else {
+                    next();
+                }
+            });
         },
     };
 }
@@ -66,9 +64,6 @@ export default defineConfig({
         },
     },
     test: {
-        // NOTE: this is a replacement location for karma tests.
-        //       moving forward we should colocate tests with the
-        //       code they test.
         include: ["test/**/*.test.{js,mjs,cjs}"],
         environment: "jsdom",
         setupFiles: ["test/setup.js"],
@@ -78,7 +73,13 @@ export default defineConfig({
         vue(),
         serveLocalesPlugin(),
         copy({
-            targets: [{ src: ["locales", "resources", "src/tabs", "src/images", "src/components"], dest: "src/dist" }],
+            targets: [
+                { src: "locales/**/*", dest: "src/dist/locales" },
+                { src: "resources/**/*", dest: "src/dist/resources" },
+                { src: "src/tabs/**/*", dest: "src/dist/tabs" },
+                { src: "src/images/**/*", dest: "src/dist/images" },
+                { src: "src/components/**/*", dest: "src/dist/components" },
+            ],
             hook: "writeBundle",
         }),
         VitePWA({
@@ -113,7 +114,7 @@ export default defineConfig({
     resolve: {
         alias: {
             "/src": path.resolve(process.cwd(), "src"),
-            "vue": path.resolve(__dirname, "node_modules/vue/dist/vue.esm-bundler.js"),
+            vue: path.resolve(__dirname, "node_modules/vue/dist/vue.esm-bundler.js"),
         },
     },
     server: {
