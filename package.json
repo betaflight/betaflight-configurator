@@ -121,7 +121,7 @@
     "rollup-plugin-vue": "^6.0.0",
     "rpm-builder": "^1.2.1",
     "run-script-os": "^1.1.6",
-    "vite": "^4.5.3",
+    "vite": "^6.2.1",
     "vitest": "^3.0.7",
     "vue-loader": "^17.4.2",
     "vue-template-compiler": "^2.7.16",
