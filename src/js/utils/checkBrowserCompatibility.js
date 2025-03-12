@@ -60,13 +60,17 @@ export function isCapacitorWeb() {
     return false;
 }
 
+export function isTauri() {
+    return "__TAURI_INTERNALS__" in window;
+}
+
 export function checkBrowserCompatibility() {
     const isWebSerial = checkWebSerialSupport();
     const isWebBluetooth = checkWebBluetoothSupport();
     const isWebUSB = checkWebUSBSupport();
     const isChromium = isChromiumBrowser();
 
-    const isNative = Capacitor.isNativePlatform();
+    const isNative = Capacitor.isNativePlatform() || isTauri();
 
     // Check if running in a test environment
     const isTestEnvironment =
