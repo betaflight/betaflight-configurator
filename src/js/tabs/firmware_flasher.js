@@ -861,12 +861,6 @@ firmware_flasher.initialize = function (callback) {
 
         async function enforceOSDSelection() {
             const selectedOSDProtocol = $('select[name="osdProtocols"] option:selected').val();
-            console.log(`${self.logHead} selectedOSDProtocol:`, selectedOSDProtocol);
-
-            // Log the options available in the dropdown
-            $('select[name="osdProtocols"] option').each(function () {
-                console.log(`Option value: ${$(this).val()}, text: ${$(this).text()}`);
-            });
 
             if (selectedOSDProtocol === "") {
                 return new Promise((resolve) => {
