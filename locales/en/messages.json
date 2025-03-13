@@ -7584,6 +7584,18 @@
     "firmwareFlasherBuildCustomDefines": {
         "message": "Custom Defines"
     },
+    "firmwareFlasherOSDProtocolNotSelected": {
+        "message": "OSD Protocol not selected"
+    },
+    "firmwareFlasherOSDProtocolNotSelectedDescription": {
+        "message": "You must select an OSD protocol to build a firmware."
+    },
+    "firmwareFlasherOSDProtocolSelect": {
+        "message": "Select OSD Protocol"
+    },
+    "firmwareFlasherOSDProtocolNotSelectedContinue": {
+        "message": "Continue without OSD Protocol"
+    },
     "coreBuild": {
         "message": "Core Only"
     },
