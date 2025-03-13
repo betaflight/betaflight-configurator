@@ -869,15 +869,8 @@ firmware_flasher.initialize = function (callback) {
                         text: i18n.getMessage("firmwareFlasherOSDProtocolNotSelectedDescription"),
                         buttonYesText: i18n.getMessage("firmwareFlasherOSDProtocolNotSelectedContinue"),
                         buttonNoText: i18n.getMessage("firmwareFlasherOSDProtocolSelect"),
-
-                        buttonYesCallback: () => {
-                            console.log(`${self.logHead} User confirmed no OSD`);
-                            resolve(true);
-                        },
-                        buttonNoCallback: () => {
-                            console.log(`${self.logHead} User wants to select OSD`);
-                            resolve(false);
-                        },
+                        buttonYesCallback: () => resolve(true),
+                        buttonNoCallback: () => resolve(false),
                     });
                 });
             } else {
