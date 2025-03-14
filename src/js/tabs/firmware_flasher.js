@@ -241,6 +241,14 @@ firmware_flasher.initialize = function (callback) {
             }
         }
 
+        function updateOsdProtocolColor() {
+            const osdProtocol = $('select[name="osdProtocols"] option:selected').val();
+            $('select[name="osdProtocols"]')
+                .next(".select2-container")
+                .find(".select2-selection__rendered")
+                .attr("style", osdProtocol === "" ? "color: red !important" : "");
+        }
+
         function buildOptions(data) {
             if (!ispConnected()) {
                 return;
@@ -266,6 +274,12 @@ firmware_flasher.initialize = function (callback) {
             buildOptionsList($('select[name="osdProtocols"]'), data.osdProtocols);
             buildOptionsList($('select[name="options"]'), data.generalOptions);
             buildOptionsList($('select[name="motorProtocols"]'), data.motorProtocols);
+
+            // Using setTimeout to ensure this runs after Select2 has finished initializing/rendering
+            setTimeout(updateOsdProtocolColor, 0);
+
+            // Add change handler to update color when selection changes
+            $('select[name="osdProtocols"]').on("change", updateOsdProtocolColor);
 
             if (!self.validateBuildKey()) {
                 preselectRadioProtocolFromStorage();
@@ -838,8 +852,32 @@ firmware_flasher.initialize = function (callback) {
             self.cancelBuild = true;
         });
 
-        $("a.load_remote_file").on("click", function (evt) {
+        async function enforceOSDSelection() {
+            if ($('select[name="osdProtocols"] option:selected').val() === "") {
+                return new Promise((resolve) => {
+                    GUI.showYesNoDialog({
+                        title: i18n.getMessage("firmwareFlasherOSDProtocolNotSelected"),
+                        text: i18n.getMessage("firmwareFlasherOSDProtocolNotSelectedDescription"),
+                        buttonYesText: i18n.getMessage("firmwareFlasherOSDProtocolNotSelectedContinue"),
+                        buttonNoText: i18n.getMessage("firmwareFlasherOSDProtocolSelect"),
+                        buttonYesCallback: () => resolve(true),
+                        buttonNoCallback: () => resolve(false),
+                    });
+                });
+            } else {
+                return true; // No issue with OSD selection
+            }
+        }
+
+        $("a.load_remote_file").on("click", async function (evt) {
             if (!self.selectedBoard) {
+                return;
+            }
+
+            // Ensure the user has selected an OSD protocol
+            const shouldContinue = await enforceOSDSelection();
+
+            if (!shouldContinue) {
                 return;
             }
 
