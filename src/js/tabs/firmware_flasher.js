@@ -242,18 +242,11 @@ firmware_flasher.initialize = function (callback) {
         }
 
         function updateOsdProtocolColor() {
-            if ($('select[name="osdProtocols"] option:selected').val() === "") {
-                // Apply the color to Select2's rendered element using !important to override Select2's styles
-                $('select[name="osdProtocols"]')
-                    .next(".select2-container")
-                    .find(".select2-selection__rendered")
-                    .attr("style", "color: red !important");
-            } else {
-                $('select[name="osdProtocols"]')
-                    .next(".select2-container")
-                    .find(".select2-selection__rendered")
-                    .attr("style", "");
-            }
+            const osdProtocol = $('select[name="osdProtocols"] option:selected').val();
+            $('select[name="osdProtocols"]')
+                .next(".select2-container")
+                .find(".select2-selection__rendered")
+                .attr("style", osdProtocol === "" ? "color: red !important" : "");
         }
 
         function buildOptions(data) {
@@ -860,9 +853,7 @@ firmware_flasher.initialize = function (callback) {
         });
 
         async function enforceOSDSelection() {
-            const selectedOSDProtocol = $('select[name="osdProtocols"] option:selected').val();
-
-            if (selectedOSDProtocol === "") {
+            if ($('select[name="osdProtocols"] option:selected').val() === "") {
                 return new Promise((resolve) => {
                     GUI.showYesNoDialog({
                         title: i18n.getMessage("firmwareFlasherOSDProtocolNotSelected"),
