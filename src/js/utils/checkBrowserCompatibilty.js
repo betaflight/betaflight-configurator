@@ -34,9 +34,13 @@ export function isCapacitorWeb() {
     return false;
 }
 
+export function isTauri() {
+    return "__TAURI_INTERNALS__" in window;
+}
+
 export function checkBrowserCompatibility() {
     const webSerial = "serial" in navigator;
-    const isNative = Capacitor.isNativePlatform();
+    const isNative = Capacitor.isNativePlatform() || isTauri();
     const isChromium = isChromiumBrowser();
 
     const compatible = isNative || (webSerial && isChromium);
