@@ -48,6 +48,7 @@ servos.initialize = function (callback) {
             servoHeader += `<th>A${i + 1}</th>`;
         }
         servoHeader += '<th style="width: 110px" i18n="servosRateAndDirection"></th>';
+        servoHeader += '<th style="width: 110px" i18n="servosReverse"></th>';
 
         for (let i = 0; i < FC.RC.active_channels; i++) {
             servoCheckbox += `<td class="channel"><input type="checkbox"/></td>`;
@@ -68,7 +69,8 @@ servos.initialize = function (callback) {
             element += `<td class="min">${subElement}${FC.SERVO_CONFIG[obj].min}" /></td>`;
             element += `<td class="middle">${subElement}${FC.SERVO_CONFIG[obj].middle}" /></td>`;
             element += `<td class="max">${subElement}${FC.SERVO_CONFIG[obj].max}" /></td>`;
-            element += `${servoCheckbox}<td class="direction"></td></tr>`;
+            element += `${servoCheckbox}<td class="direction"></td>`;
+            element += `<td class="reverse"></td></tr>`;
 
             $("div.tab-servos table.fields").append(element);
 
@@ -92,6 +94,18 @@ servos.initialize = function (callback) {
             select.val(FC.SERVO_CONFIG[obj].rate);
 
             $("div.tab-servos table.fields tr:last").data("info", { obj: obj });
+
+            // adding select box for servo reverse
+            $("div.tab-servos table.fields tr:last td.reverse").append(
+                '<select class="reverse" name="reverse"></select>',
+            );
+
+            const reverse = $("div.tab-servos table.fields tr:last td.reverse select");
+
+            reverse.append(`<option value="0">${i18n.getMessage("servosNormal")}</option>`);
+            reverse.append(`<option value="1">${i18n.getMessage("servosReverse")}</option>`);
+
+            reverse.val(FC.SERVO_CONFIG[obj].reversedInputSources);
 
             // UI hooks
 
@@ -123,8 +137,8 @@ servos.initialize = function (callback) {
                 FC.SERVO_CONFIG[info.obj].min = parseInt($(".min input", this).val());
                 FC.SERVO_CONFIG[info.obj].max = parseInt($(".max input", this).val());
 
-                const val = parseInt($(".direction select", this).val());
-                FC.SERVO_CONFIG[info.obj].rate = val;
+                FC.SERVO_CONFIG[info.obj].rate = parseInt($(".direction select", this).val());
+                FC.SERVO_CONFIG[info.obj].reversedInputSources = parseInt($(".reverse select", this).val());
             });
 
             //
