@@ -604,6 +604,19 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     }
                     break;
                 case MSPCodes.MSP_SERVO_MIX_RULES:
+                    FC.SERVO_RULES = []; // empty the array as new data is coming in
+                    for (let i = 0; i < 16; i++) {
+                        const array = {
+                            targetChannel: data.readU8(),
+                            inputSource: data.readU8(),
+                            rate: data.readU8(),
+                            speed: data.readU8(),
+                            min: data.readU8(),
+                            max: data.readU8(),
+                            box: data.readU8(),
+                        };
+                        FC.SERVO_RULES.push(array);
+                    }
                     break;
 
                 case MSPCodes.MSP_SERVO_CONFIGURATIONS:
@@ -2521,6 +2534,7 @@ MspHelper.prototype.sendServoConfigurations = function (onCompleteCallback) {
         if (out == undefined) {
             out = 255; // Cleanflight defines "CHANNEL_FORWARDING_DISABLED" as "(uint8_t)0xFF"
         }
+
         buffer.push8(out).push32(servoConfiguration.reversedInputSources);
 
         // prepare for next iteration
