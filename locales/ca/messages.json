@@ -7501,6 +7501,18 @@
     "firmwareFlasherBuildCustomDefines": {
         "message": "Definicions personalitzades"
     },
+    "firmwareFlasherOSDProtocolNotSelected": {
+        "message": "Protocol OSD no seleccionat"
+    },
+    "firmwareFlasherOSDProtocolNotSelectedDescription": {
+        "message": "Heu de seleccionar un protocol OSD per crear un microprogramari."
+    },
+    "firmwareFlasherOSDProtocolSelect": {
+        "message": "Seleccioneu el protocol OSD"
+    },
+    "firmwareFlasherOSDProtocolNotSelectedContinue": {
+        "message": "Continueu sense protocol OSD"
+    },
     "coreBuild": {
         "message": "Només el nucli"
     },

@@ -3753,6 +3753,15 @@
         "message": "Ignora il rischio",
         "description": "Ignore creating a backup before actual flashing takes place"
     },
+    "firmwareBackupEnabled": {
+        "message": "Backup abilitato"
+    },
+    "firmwareBackupDisabled": {
+        "message": "Backup disabilitato"
+    },
+    "firmwareBackupAsk": {
+        "message": "Chiedi prima del backup"
+    },
     "ledStripHelp": {
         "message": "il Controlllore di volo è un grado di controllare il colore e gli effetti di ogni singolo LED su una striscia.<br \/>Configura i LED sulla griglia, configura l'ordine del cablaggio e poi posiziona i LED sul tuo mezzo seguendo la posizione sulla griglia. I LED senza numero di posizione sulla griglia non saranno salvati.<br \/>Fai doppio click su un colore per modificare i valori di HSV"
     },
@@ -7072,6 +7081,9 @@
     },
     "cliAutoComplete": {
         "message": "Autocompletamento avanzato della CLI"
+    },
+    "firmwareBackupOnFlash": {
+        "message": "Crea un backup prima di flashare il nuovo firmware"
     },
     "darkTheme": {
         "message": "Abilita tema scuro"
