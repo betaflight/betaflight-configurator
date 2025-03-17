@@ -2794,7 +2794,7 @@
         "message": "Dane transpondera są <span class=\"message-negative\">nieprawidłowe<\/span>"
     },
     "servosFirmwareUpgradeRequired": {
-        "message": "Serwomechanizmy wymagają oprogramowania wewnętrznego &gt;= 1.10.0. 1.10.0. i wsparcia producenta."
+        "message": "Do działania serwomechanizmów wymagane jest oprogramowanie układowe &gt;= 1.10.0. oraz wsparcie dla urządzenia docelowego."
     },
     "servosChangeDirection": {
         "message": "Zmień kierunek w TX, aby dopasować"
@@ -3440,7 +3440,7 @@
         "message": "Wybierz opcję Żądanie ściągnięcia lub Zatwierdź"
     },
     "firmwareFlasherReleaseSummaryHead": {
-        "message": "Informacje o wydaniu i budowie"
+        "message": "Informacje o wersji i kompilacji"
     },
     "firmwareFlasherReleaseManufacturer": {
         "message": "ID Producenta:"
@@ -3483,7 +3483,7 @@
         "message": "przetwarzanie"
     },
     "firmwareFlasherCloudBuildSuccessCached": {
-        "message": "sukces (buforowany)"
+        "message": "sukces (w buforze)"
     },
     "firmwareFlasherCloudBuildSuccess": {
         "message": "ukończono"
@@ -3585,7 +3585,7 @@
         "message": "Wersje stabilne"
     },
     "firmwareFlasherOptionLabelBuildTypeReleaseCandidate": {
-        "message": "Wersje stabilne z przedpremierowymi"
+        "message": "Wersje stabilne i przedpremierowe"
     },
     "firmwareFlasherOptionLabelBuildTypeDevelopment": {
         "message": "Wersje rozwojowe"
@@ -3762,6 +3762,9 @@
     },
     "firmwareBackupDisabled": {
         "message": "Kopia zapasowa wyłączona"
+    },
+    "firmwareBackupAsk": {
+        "message": "Zapytaj, zanim stworzysz kopię zapasową"
     },
     "ledStripHelp": {
         "message": "Kontroler lotu może kontrolować kolory i efekty poszczególnych diod LED na pasku. <br \/> Konfiguruj diody LED na siatce, skonfiguruj kolejność okablowania, a następnie podłącz diody LED w twoim modelu zgodnie z pozycjami na siatce. Diody LED bez numeru porządkowego nie zostaną zapisane. <br \/> Kliknij dwukrotnie kolor, aby edytować wartości HSV."
@@ -7083,6 +7086,9 @@
     "cliAutoComplete": {
         "message": "Automatycznie podpowiadaj komendy w Wierszu Poleceń CLI"
     },
+    "firmwareBackupOnFlash": {
+        "message": "Zanim wgrasz nowe oprogramowanie, stwórz kopię zapasową"
+    },
     "darkTheme": {
         "message": "Włącz ciemny motyw"
     },
@@ -7490,6 +7496,18 @@
     },
     "firmwareFlasherBuildCustomDefines": {
         "message": "Niestandardowe definicje"
+    },
+    "firmwareFlasherOSDProtocolNotSelected": {
+        "message": "Protokół OSD nie został wybrany"
+    },
+    "firmwareFlasherOSDProtocolNotSelectedDescription": {
+        "message": "Aby skompilować oprogramowanie, należy wybrać protokół OSD."
+    },
+    "firmwareFlasherOSDProtocolSelect": {
+        "message": "Wybierz protokół OSD"
+    },
+    "firmwareFlasherOSDProtocolNotSelectedContinue": {
+        "message": "Kontynuuj bez protokołu OSD"
     },
     "coreBuild": {
         "message": "Tylko rdzeń"

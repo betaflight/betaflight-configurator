@@ -7497,6 +7497,18 @@
     "firmwareFlasherBuildCustomDefines": {
         "message": "Brugertilpasset Defines"
     },
+    "firmwareFlasherOSDProtocolNotSelected": {
+        "message": "OSD protokol ikke valgt"
+    },
+    "firmwareFlasherOSDProtocolNotSelectedDescription": {
+        "message": "Du skal vælge en OSD protokol for at samensætte firmware."
+    },
+    "firmwareFlasherOSDProtocolSelect": {
+        "message": "Vælg OSD protokol"
+    },
+    "firmwareFlasherOSDProtocolNotSelectedContinue": {
+        "message": "Fortsæt uden OSD protokol"
+    },
     "coreBuild": {
         "message": "Kun grund komponenter"
     },
