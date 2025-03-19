@@ -83,14 +83,48 @@ class AutoBackup {
         console.log("Running backup");
 
         await this.activateCliMode();
-        await this.sendCommand("diff all");
+        this.waitForCommandCompletion("diff all");
+    }
 
-        setTimeout(async () => {
-            this.sendCommand("exit", this.onClose);
-            // remove the command from the output
-            const data = this.outputHistory.split("\n").slice(1).join("\n");
-            await this.save(data);
-        }, 1500);
+    waitForCommandCompletion(command) {
+        // Clear previous output
+        this.outputHistory = "";
+
+        // Send the command
+        this.sendCommand(command);
+
+        // Set up a check interval
+        const checkInterval = 100; // Check every 100ms
+        const maxWaitTime = 10000; // Maximum 10 seconds wait
+        let elapsedTime = 0;
+
+        const intervalId = setInterval(() => {
+            elapsedTime += checkInterval;
+
+            // Check if we have received the CLI prompt (#) at the end of a line
+            if (this.outputHistory.includes("\n# ") || this.outputHistory.match(/\r?\n#$/)) {
+                clearInterval(intervalId);
+
+                // Process and save the output
+                // Remove the command from the output and the ending prompt
+                const lines = this.outputHistory.split(/\r?\n/);
+                const filteredLines = lines.slice(1, -1); // Remove first line (command) and last line (prompt)
+                const data = filteredLines.join("\n");
+
+                this.sendCommand("exit", this.onClose.bind(this));
+                this.save(data);
+            }
+            // Check if we've waited too long
+            else if (elapsedTime >= maxWaitTime) {
+                clearInterval(intervalId);
+                console.error("Timeout waiting for command completion");
+
+                // Try to save what we have (partial data is better than none)
+                const data = this.outputHistory.split(/\r?\n/).slice(1).join("\n");
+                this.sendCommand("exit", this.onClose.bind(this));
+                this.save(data);
+            }
+        }, checkInterval);
     }
 
     async activateCliMode() {
