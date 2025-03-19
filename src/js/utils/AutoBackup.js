@@ -102,7 +102,10 @@ class AutoBackup {
             elapsedTime += checkInterval;
 
             // Check if we have received the CLI prompt (#) at the end of a line
-            if (this.outputHistory.includes("\n# ") || this.outputHistory.match(/\r?\n#$/)) {
+            const promptRegex = /\r?\n# ?$/;
+            const match = promptRegex.exec(this.outputHistory);
+
+            if (match) {
                 clearInterval(intervalId);
 
                 // Process and save the output
