@@ -324,6 +324,14 @@ function startProcess() {
         $("#background").hide();
     });
 
+    $(window).on("resize", function () {
+        // 575px is the mobile breakpoint defined in CSS
+        if (window.innerWidth > 575) {
+            $(".tab_container").removeClass("reveal");
+            $("#background").hide();
+        }
+    });
+
     // listen to all input change events and adjust the value within limits if necessary
     $("#content").on("focus", 'input[type="number"]', function () {
         const element = $(this);
