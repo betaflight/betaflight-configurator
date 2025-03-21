@@ -1153,7 +1153,7 @@ firmware_flasher.initialize = function (callback) {
                     console.log(`${self.logHead} Backup failed, skipping flashing`);
                     self.flashingMessage(
                         i18n.getMessage("firmwareFlasherCanceledBackup"),
-                        TABS.firmware_flasher.FLASH_MESSAGE_TYPES.CANCELED,
+                        self.FLASH_MESSAGE_TYPES.INVALID,
                     );
                 }
             });
@@ -1400,7 +1400,6 @@ firmware_flasher.FLASH_MESSAGE_TYPES = {
     VALID: "VALID",
     INVALID: "INVALID",
     ACTION: "ACTION",
-    CANCEL: "CANCELED",
 };
 
 firmware_flasher.flashingMessage = function (message, type) {
