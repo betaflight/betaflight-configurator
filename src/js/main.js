@@ -307,9 +307,22 @@ function startProcess() {
                 }
             });
         }
+
+        $(".tab_container").removeClass("reveal");
+        $("#background").hide();
     });
 
     $("#tabs ul.mode-disconnected li a:first").click();
+
+    $("#menu_btn").on("click", function () {
+        $(".tab_container").toggleClass("reveal");
+        $("#background").toggle();
+    });
+
+    $("#background").on("click", function () {
+        $(".tab_container").removeClass("reveal");
+        $("#background").hide();
+    });
 
     // listen to all input change events and adjust the value within limits if necessary
     $("#content").on("focus", 'input[type="number"]', function () {
