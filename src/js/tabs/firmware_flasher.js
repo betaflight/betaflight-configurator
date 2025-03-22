@@ -1140,17 +1140,38 @@ firmware_flasher.initialize = function (callback) {
         function startBackup(callback) {
             // prevent connection while backup is in progress
             GUI.connect_lock = true;
+
+            const aborted = function (message) {
+                GUI.connect_lock = false;
+                self.isFlashing = false;
+                self.enableFlashButton(true);
+                self.enableLoadRemoteFileButton(true);
+                self.enableLoadFileButton(true);
+                GUI.interval_resume("sponsor");
+                self.flashingMessage(i18n.getMessage(message), self.FLASH_MESSAGE_TYPES.INVALID);
+            };
+
+            const callBackWhenPortAvailable = function () {
+                const startTime = Date.now();
+                const interval = setInterval(() => {
+                    if (PortHandler.portAvailable) {
+                        clearInterval(interval);
+                        callback();
+                    } else if (Date.now() - startTime > 5000) {
+                        clearInterval(interval);
+                        // failed to connect
+                        aborted("portsSelectNone");
+                    }
+                }, 100);
+            };
+
             AutoBackup.execute((result) => {
                 GUI.connect_lock = false;
                 if (result) {
-                    callback();
+                    // wait for the port to be available again - timeout after 5 seconds
+                    callBackWhenPortAvailable();
                 } else {
-                    self.isFlashing = false;
-                    self.enableFlashButton(true);
-                    self.enableLoadRemoteFileButton(true);
-                    self.enableLoadFileButton(true);
-                    GUI.interval_resume("sponsor");
-                    console.log(`${self.logHead} Backup failed, skipping flashing`);
+                    aborted("firmwareFlasherCanceledBackup");
                 }
             });
         }
