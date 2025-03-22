@@ -4,7 +4,6 @@ import { get as getConfig, set as setConfig } from "../ConfigStorage";
 import PortHandler from "../port_handler";
 import CliAutoComplete from "../CliAutoComplete";
 import DarkTheme, { setDarkTheme } from "../DarkTheme";
-import { checkForConfiguratorUpdates } from "../utils/checkForConfiguratorUpdates";
 import { checkSetupAnalytics } from "../Analytics";
 import $ from "jquery";
 import NotificationManager from "../utils/notifications";
@@ -20,7 +19,6 @@ options.initialize = function (callback) {
         i18n.localizePage();
 
         TABS.options.initRememberLastTab();
-        TABS.options.initCheckForConfiguratorUnstableVersions();
         TABS.options.initAnalyticsOptOut();
         TABS.options.initCliAutoComplete();
         TABS.options.initShowAllSerialDevices();
@@ -67,21 +65,6 @@ options.initRememberLastTab = function () {
             setConfig({ rememberLastTab: $(this).is(":checked") });
         })
         .change();
-};
-
-options.initCheckForConfiguratorUnstableVersions = function () {
-    const result = getConfig("checkForConfiguratorUnstableVersions");
-    if (result.checkForConfiguratorUnstableVersions) {
-        $("div.checkForConfiguratorUnstableVersions input").prop("checked", true);
-    }
-
-    $("div.checkForConfiguratorUnstableVersions input").change(function () {
-        const checked = $(this).is(":checked");
-
-        setConfig({ checkForConfiguratorUnstableVersions: checked });
-
-        checkForConfiguratorUpdates();
-    });
 };
 
 options.initAnalyticsOptOut = function () {

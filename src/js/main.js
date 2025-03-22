@@ -16,7 +16,6 @@ import CliAutoComplete from "./CliAutoComplete.js";
 import DarkTheme, { setDarkTheme } from "./DarkTheme.js";
 import { isExpertModeEnabled } from "./utils/isExportModeEnabled.js";
 import { updateTabList } from "./utils/updateTabList.js";
-import { checkForConfiguratorUpdates } from "./utils/checkForConfiguratorUpdates.js";
 import * as THREE from "three";
 import NotificationManager from "./utils/notifications.js";
 
@@ -102,8 +101,6 @@ function startProcess() {
     // with Vue reactive system we don't need to call these,
     // our view is reactive to model changes
     // updateTopBarVersion();
-
-    checkForConfiguratorUpdates();
 
     // log webgl capability
     // it would seem the webgl "enabling" through advanced settings will be ignored in the future
