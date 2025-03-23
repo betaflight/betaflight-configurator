@@ -830,6 +830,8 @@ MspHelper.prototype.process_data = function (dataHandler) {
                             FC.CONFIG.buildOptions.push(option);
                             option = data.readU16();
                         }
+                        // Humanize the build options
+                        FC.processBuildOptions();
                     }
 
                     break;
