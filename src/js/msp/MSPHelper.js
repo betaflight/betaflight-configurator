@@ -825,10 +825,9 @@ MspHelper.prototype.process_data = function (dataHandler) {
 
                     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
                         FC.CONFIG.buildOptions = [];
-                        let option = data.readU16();
-                        while (option) {
+                        let option;
+                        while ((option = data.readU16())) {
                             FC.CONFIG.buildOptions.push(option);
-                            option = data.readU16();
                         }
                         // Humanize the build options
                         FC.processBuildOptions();
