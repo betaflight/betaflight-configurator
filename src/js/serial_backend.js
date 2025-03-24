@@ -122,7 +122,7 @@ function connectDisconnect() {
             CONFIGURATOR.manualMode = selectedPort === "manual";
 
             // Select the appropriate protocol based directly on the port path
-            serial.selectProtocol(portName);
+            serial.selectProtocol(selectedPort);
             console.log("Serial protocol selected:", serial._protocol, "using port", portName);
 
             if (CONFIGURATOR.virtualMode) {
