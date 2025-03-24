@@ -3678,6 +3678,9 @@
     "firmwareFlasherFailedToLoadUnifiedConfig": {
         "message": "Falha a carregar a configuração remota para {{remote_file}}"
     },
+    "firmwareFlasherCanceledBackup": {
+        "message": "Backup cancelado, flash abortado"
+    },
     "firmwareFlasherLegacyLabel": {
         "message": "{{target}} (Legado)",
         "description": "If we have a Unified target and a old style target available, we are labeling the older one"

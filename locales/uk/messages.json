@@ -3753,6 +3753,15 @@
         "message": "Ігнорувати ризик",
         "description": "Ignore creating a backup before actual flashing takes place"
     },
+    "firmwareBackupEnabled": {
+        "message": "Резервне копіювання увімкнено"
+    },
+    "firmwareBackupDisabled": {
+        "message": "Резервне копіювання вимкнено"
+    },
+    "firmwareBackupAsk": {
+        "message": "Запитати перед резервним копіюванням"
+    },
     "ledStripHelp": {
         "message": "Польотний контролер може керувати кольорами та ефектами окремих світлодіодів в смузі.<br \/>Налаштуйте світлодіоди на сітці, налаштуйте порядок підключення дротів, а потім закріпіть світлодіоди на вашому літальному апараті відповідно до позицій на сітці. Світлодіоди без порядового номера не будуть збережені.<br \/>Подвійний клік на кольорі дозволяє редагувати значення HSV - Hue - Saturation - Value."
     },
@@ -7073,6 +7082,9 @@
     "cliAutoComplete": {
         "message": "Просунуте автодоповнення CLI"
     },
+    "firmwareBackupOnFlash": {
+        "message": "Створити резервну копію перед перепрошивкою"
+    },
     "darkTheme": {
         "message": "Увімкнути темну тему"
     },
@@ -7480,6 +7492,18 @@
     },
     "firmwareFlasherBuildCustomDefines": {
         "message": "Користувацькі #define"
+    },
+    "firmwareFlasherOSDProtocolNotSelected": {
+        "message": "Протокол OSD не вибрано"
+    },
+    "firmwareFlasherOSDProtocolNotSelectedDescription": {
+        "message": "Ви маєте вибрати протокол OSD, щоб зібрати прошивку."
+    },
+    "firmwareFlasherOSDProtocolSelect": {
+        "message": "Вибрати протокол OSD"
+    },
+    "firmwareFlasherOSDProtocolNotSelectedContinue": {
+        "message": "Продовжити без протоколу OSD"
     },
     "coreBuild": {
         "message": "Лише ядро"
