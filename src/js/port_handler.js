@@ -1,8 +1,8 @@
 import { get as getConfig } from "./ConfigStorage";
 import { EventBus } from "../components/eventBus";
-import serial from "./webSerial";
-import usb from "./protocols/webusbdfu";
-import BT from "./protocols/bluetooth";
+import { serial } from "./serial.js";
+import WEBUSBDFU from "./protocols/webusbdfu";
+import WebBluetooth from "./protocols/WebBluetooth.js";
 import { reactive } from "vue";
 
 const DEFAULT_PORT = "noselection";
@@ -39,16 +39,41 @@ PortHandler.initialize = function () {
     EventBus.$on("ports-input:request-permission", this.askSerialPermissionPort.bind(this));
     EventBus.$on("ports-input:change", this.onChangeSelectedPort.bind(this));
 
-    BT.addEventListener("addedDevice", (event) => this.addedBluetoothDevice(event.detail));
-    BT.addEventListener("removedDevice", (event) => this.addedBluetoothDevice(event.detail));
+    // Use serial for all protocol events
+    serial.addEventListener("addedDevice", (event) => {
+        // Extract the real detail, handling the new structure
+        const detail = event.detail.value !== undefined ? event.detail.value : event.detail;
 
-    serial.addEventListener("addedDevice", (event) => this.addedSerialDevice(event.detail));
-    serial.addEventListener("removedDevice", (event) => this.removedSerialDevice(event.detail));
+        // Determine the device type based on its properties
+        if (detail?.path?.startsWith("bluetooth")) {
+            this.addedBluetoothDevice(detail);
+        } else if (detail?.path?.startsWith("usb_")) {
+            this.addedUsbDevice(detail);
+        } else {
+            this.addedSerialDevice(detail);
+        }
+    });
 
-    usb.addEventListener("addedDevice", (event) => this.addedUsbDevice(event.detail));
+    serial.addEventListener("removedDevice", (event) => {
+        // Extract the real detail, handling the new structure
+        const detail = event.detail.value !== undefined ? event.detail.value : event.detail;
 
-    this.addedBluetoothDevice();
+        // Determine the device type based on its properties
+        if (detail?.path?.startsWith("bluetooth")) {
+            this.removedBluetoothDevice(detail);
+        } else if (detail?.path?.startsWith("usb_")) {
+            // Handle USB device removal if needed
+        } else {
+            this.removedSerialDevice(detail);
+        }
+    });
+
+    // Keep USB listener separate as it's not part of the serial protocols
+    WEBUSBDFU.addEventListener("addedDevice", (event) => this.addedUsbDevice(event.detail));
+
+    // Initial device discovery
     this.addedSerialDevice();
+    this.addedBluetoothDevice();
     this.addedUsbDevice();
 };
 
@@ -125,7 +150,7 @@ PortHandler.updateCurrentSerialPortsList = async function () {
 };
 
 PortHandler.updateCurrentUsbPortsList = async function () {
-    const ports = await usb.getDevices();
+    const ports = await WEBUSBDFU.getDevices();
     const orderedPorts = this.sortPorts(ports);
     this.dfuAvailable = orderedPorts.length > 0;
     console.log(`${this.logHead} Found DFU port`, orderedPorts);
@@ -133,8 +158,8 @@ PortHandler.updateCurrentUsbPortsList = async function () {
 };
 
 PortHandler.updateCurrentBluetoothPortsList = async function () {
-    if (BT.bluetooth) {
-        const ports = await BT.getDevices();
+    if (WebBluetooth.bluetooth) {
+        const ports = await WebBluetooth.getDevices();
         const orderedPorts = this.sortPorts(ports);
         this.bluetoothAvailable = orderedPorts.length > 0;
         console.log(`${this.logHead} Found bluetooth port`, orderedPorts);
@@ -152,8 +177,8 @@ PortHandler.sortPorts = function (ports) {
 };
 
 PortHandler.askBluetoothPermissionPort = function () {
-    if (BT.bluetooth) {
-        BT.requestPermissionDevice().then((port) => {
+    if (WebBluetooth.bluetooth) {
+        WebBluetooth.requestPermissionDevice().then((port) => {
             // When giving permission to a new device, the port is selected in the handleNewDevice method, but if the user
             // selects a device that had already permission, or cancels the permission request, we need to select the port
             // so do it here too
@@ -180,14 +205,14 @@ PortHandler.selectActivePort = function (suggestedDevice) {
         selectedPort = this.currentSerialPorts.find((device) => device === serial.getConnectedPort());
     }
 
-    // Return the same that is connected to usb (dfu mode)
-    if (usb.usbDevice) {
-        selectedPort = this.currentUsbPorts.find((device) => device === usb.getConnectedPort());
+    // Return the same that is connected to WEBUSBDFU (dfu mode)
+    if (WEBUSBDFU.usbDevice) {
+        selectedPort = this.currentUsbPorts.find((device) => device === WEBUSBDFU.getConnectedPort());
     }
 
     // Return the same that is connected to bluetooth
-    if (BT.device) {
-        selectedPort = this.currentBluetoothPorts.find((device) => device === BT.getConnectedPort());
+    if (WebBluetooth.device) {
+        selectedPort = this.currentBluetoothPorts.find((device) => device === WebBluetooth.getConnectedPort());
     }
 
     // Return the suggested device (the new device that has been detected)

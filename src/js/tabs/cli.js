@@ -10,11 +10,9 @@ import CliAutoComplete from "../CliAutoComplete";
 import { gui_log } from "../gui_log";
 import jBox from "jbox";
 import $ from "jquery";
-import { serialShim } from "../serial_shim";
+import { serial } from "../serial";
 import FileSystem from "../FileSystem";
 import { ispConnected } from "../utils/connection";
-
-const serial = serialShim();
 
 const cli = {
     lineDelayMs: 5,

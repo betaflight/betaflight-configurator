@@ -16,7 +16,7 @@
 import GUI, { TABS } from "../gui";
 import { i18n } from "../localization";
 import { gui_log } from "../gui_log";
-import { usbDevices } from "../usb_devices";
+import { usbDevices } from "./devices";
 import NotificationManager from "../utils/notifications";
 import { get as getConfig } from "../ConfigStorage";
 

@@ -3,7 +3,7 @@ import FileSystem from "../FileSystem";
 import { generateFilename } from "./generate_filename";
 import { gui_log } from "../gui_log";
 import { i18n } from "../localization";
-import serial from "../webSerial";
+import { serial } from "../serial";
 
 /**
  *
@@ -62,7 +62,7 @@ class AutoBackup {
     }
 
     readSerialAdapter(info) {
-        const data = new Uint8Array(info.detail.buffer);
+        const data = new Uint8Array(info.detail.data);
 
         for (const charCode of data) {
             const currentChar = String.fromCharCode(charCode);

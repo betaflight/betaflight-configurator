@@ -1,4 +1,4 @@
-class WebsocketSerial extends EventTarget {
+class Websocket extends EventTarget {
     constructor() {
         super();
 
@@ -123,4 +123,4 @@ class WebsocketSerial extends EventTarget {
     }
 }
 
-export default new WebsocketSerial();
+export default Websocket;

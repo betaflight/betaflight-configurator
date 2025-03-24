@@ -15,7 +15,7 @@ import { gui_log } from "../gui_log";
 import MSPCodes from "../msp/MSPCodes";
 import PortUsage from "../port_usage";
 import $ from "jquery";
-import serial from "../webSerial";
+import { serial } from "../serial";
 import DFU from "../protocols/webusbdfu";
 import { read_serial } from "../serial_backend";
 import NotificationManager from "../utils/notifications";
