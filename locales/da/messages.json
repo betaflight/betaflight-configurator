@@ -3682,6 +3682,9 @@
     "firmwareFlasherFailedToLoadUnifiedConfig": {
         "message": "Kunne ikke indlæse fjernkonfiguration for {{remote_file}}"
     },
+    "firmwareFlasherCanceledBackup": {
+        "message": "Sikkerhedskopiering annulleret, brænding afbrudt"
+    },
     "firmwareFlasherLegacyLabel": {
         "message": "{{target}} (Legacy)",
         "description": "If we have a Unified target and a old style target available, we are labeling the older one"

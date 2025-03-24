@@ -3686,6 +3686,9 @@
     "firmwareFlasherFailedToLoadUnifiedConfig": {
         "message": "Fallo al carregar configuració remota per {{remote_file}}"
     },
+    "firmwareFlasherCanceledBackup": {
+        "message": "S'ha cancel·lat la còpia de seguretat, s'ha avortat l'actualització"
+    },
     "firmwareFlasherLegacyLabel": {
         "message": "{{target}} (Heretat)",
         "description": "If we have a Unified target and a old style target available, we are labeling the older one"
