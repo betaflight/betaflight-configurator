@@ -103,7 +103,7 @@ function connectDisconnect() {
 
         const baudRate = PortHandler.portPicker.selectedBauds;
 
-        if (!serial.connected) {
+        if (!isConnected) {
             // prevent connection when we do not have permission
             if (selectedPort.startsWith("requestpermission")) {
                 return;
