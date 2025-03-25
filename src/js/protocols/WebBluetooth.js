@@ -14,15 +14,6 @@ class WebBluetooth extends EventTarget {
     constructor() {
         super();
 
-        this.logHead = "[BLUETOOTH]";
-
-        if (!this.bluetooth && window && window.navigator && window.navigator.bluetooth) {
-            this.bluetooth = navigator.bluetooth;
-        } else {
-            console.error(`${this.logHead} Bluetooth API not available`);
-            return;
-        }
-
         this.connected = false;
         this.openRequested = false;
         this.openCanceled = false;
@@ -38,6 +29,15 @@ class WebBluetooth extends EventTarget {
         this.portCounter = 0;
         this.devices = [];
         this.device = null;
+
+        this.logHead = "[BLUETOOTH]";
+
+        if (!this.bluetooth && window && window.navigator && window.navigator.bluetooth) {
+            this.bluetooth = navigator.bluetooth;
+        } else {
+            console.error(`${this.logHead} Bluetooth API not available`);
+            return;
+        }
 
         this.connect = this.connect.bind(this);
 
