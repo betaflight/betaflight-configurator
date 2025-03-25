@@ -41,8 +41,7 @@ PortHandler.initialize = function () {
 
     // Use serial for all protocol events
     serial.addEventListener("addedDevice", (event) => {
-        // Extract the real detail, handling the new structure
-        const detail = event.detail.value !== undefined ? event.detail.value : event.detail;
+        const detail = event.detail;
 
         // Determine the device type based on its properties
         if (detail?.path?.startsWith("bluetooth")) {
@@ -55,8 +54,7 @@ PortHandler.initialize = function () {
     });
 
     serial.addEventListener("removedDevice", (event) => {
-        // Extract the real detail, handling the new structure
-        const detail = event.detail.value !== undefined ? event.detail.value : event.detail;
+        const detail = event.detail;
 
         // Determine the device type based on its properties
         if (detail?.path?.startsWith("bluetooth")) {
