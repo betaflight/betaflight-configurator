@@ -243,8 +243,6 @@ function resetConnection() {
 
     // unlock port select & baud
     PortHandler.portPickerDisabled = false;
-    // reset data
-    isConnected = false;
 }
 
 function abortConnection() {
