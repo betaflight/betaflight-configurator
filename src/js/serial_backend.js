@@ -323,11 +323,6 @@ function onOpen(openInfo) {
                             MSP.send_message(MSPCodes.MSP_BUILD_INFO, false, false, function () {
                                 gui_log(i18n.getMessage("buildInfoReceived", [FC.CONFIG.buildInfo]));
 
-                                // retrieve build options from the flight controller
-                                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
-                                    FC.processBuildOptions();
-                                }
-
                                 MSP.send_message(MSPCodes.MSP_BOARD_INFO, false, false, processBoardInfo);
                             });
                         });
@@ -634,7 +629,10 @@ function connectCli() {
 }
 
 function onConnect() {
-    if ($("a.firmware_flasher_button__label").hasClass("active") || $("a.firmware_flasher_button__link").hasClass("active")) {
+    if (
+        $("a.firmware_flasher_button__label").hasClass("active") ||
+        $("a.firmware_flasher_button__link").hasClass("active")
+    ) {
         $("a.firmware_flasher_button__label").removeClass("active");
         $("a.firmware_flasher_button__link").removeClass("active");
     }
