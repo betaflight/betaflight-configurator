@@ -1,7 +1,7 @@
 const VIRTUAL = "virtual";
 
 /**
- * Stripped down version of our nwjs based serial port implementation
+ * Stripped down version of previous nwjs based serial port implementation
  * which is required to still have virtual serial port support in the
  * browser.
  */
@@ -38,6 +38,14 @@ class VirtualSerial {
             }
         }
     }
+    getConnectedPort() {
+        return this.connectionId;
+    }
+    getDevices() {
+        return new Promise((resolve) => {
+            resolve([{ path: VIRTUAL }]);
+        });
+    }
 }
 
-export default new VirtualSerial();
+export default VirtualSerial;

@@ -1,8 +1,6 @@
 import GUI from "./gui.js";
 import CONFIGURATOR from "./data_storage.js";
-import { serialShim } from "./serial_shim.js";
-
-let serial = serialShim();
+import { serial } from "./serial.js";
 
 const MSP = {
     symbols: {
@@ -370,17 +368,12 @@ const MSP = {
         return bufferOut;
     },
     send_cli_command(str, callback) {
-        serial = serialShim();
-
         const bufferOut = this.encode_message_cli(str);
         this.cli_callback = callback;
 
         serial.send(bufferOut);
     },
     send_message(code, data, callback_sent, callback_msp, doCallbackOnError) {
-        // Hack to make BT work
-        serial = serialShim();
-
         const connected = serial.connected;
 
         if (code === undefined || !connected || CONFIGURATOR.virtualMode) {

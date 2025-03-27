@@ -1,5 +1,6 @@
 import { i18n } from "../localization";
 import { gui_log } from "../gui_log";
+import { bluetoothDevices } from "./devices";
 
 /*  Certain flags needs to be enabled in the browser to use BT
  *
@@ -9,63 +10,9 @@ import { gui_log } from "../gui_log";
  *
  */
 
-const bluetoothDevices = [
-    {
-        name: "CC2541",
-        serviceUuid: "0000ffe0-0000-1000-8000-00805f9b34fb",
-        writeCharacteristic: "0000ffe1-0000-1000-8000-00805f9b34fb",
-        readCharacteristic: "0000ffe1-0000-1000-8000-00805f9b34fb",
-    },
-    {
-        name: "HC-05",
-        serviceUuid: "00001101-0000-1000-8000-00805f9b34fb",
-        writeCharacteristic: "00001101-0000-1000-8000-00805f9b34fb",
-        readCharacteristic: "00001101-0000-1000-8000-00805f9b34fb",
-    },
-    {
-        name: "HM-10",
-        serviceUuid: "0000ffe1-0000-1000-8000-00805f9b34fb",
-        writeCharacteristic: "0000ffe1-0000-1000-8000-00805f9b34fb",
-        readCharacteristic: "0000ffe1-0000-1000-8000-00805f9b34fb",
-    },
-    {
-        name: "HM-11",
-        serviceUuid: "6e400001-b5a3-f393-e0a9-e50e24dcca9e",
-        writeCharacteristic: "6e400003-b5a3-f393-e0a9-e50e24dcca9e",
-        readCharacteristic: "6e400002-b5a3-f393-e0a9-e50e24dcca9e",
-    },
-    {
-        name: "Nordic NRF",
-        serviceUuid: "6e400001-b5a3-f393-e0a9-e50e24dcca9e",
-        writeCharacteristic: "6e400003-b5a3-f393-e0a9-e50e24dcca9e",
-        readCharacteristic: "6e400002-b5a3-f393-e0a9-e50e24dcca9e",
-    },
-    {
-        name: "SpeedyBee V1",
-        serviceUuid: "00001000-0000-1000-8000-00805f9b34fb",
-        writeCharacteristic: "00001001-0000-1000-8000-00805f9b34fb",
-        readCharacteristic: "00001002-0000-1000-8000-00805f9b34fb",
-    },
-    {
-        name: "SpeedyBee V2",
-        serviceUuid: "0000abf0-0000-1000-8000-00805f9b34fb",
-        writeCharacteristic: "0000abf1-0000-1000-8000-00805f9b34fb",
-        readCharacteristic: "0000abf2-0000-1000-8000-00805f9b34fb",
-    },
-];
-
-class BT extends EventTarget {
+class WebBluetooth extends EventTarget {
     constructor() {
         super();
-
-        this.logHead = "[BLUETOOTH]";
-
-        if (!this.bluetooth && window && window.navigator && window.navigator.bluetooth) {
-            this.bluetooth = navigator.bluetooth;
-        } else {
-            console.error(`${this.logHead} Bluetooth API not available`);
-            return;
-        }
 
         this.connected = false;
         this.openRequested = false;
@@ -82,6 +29,15 @@ class BT extends EventTarget {
         this.portCounter = 0;
         this.devices = [];
         this.device = null;
+
+        this.logHead = "[BLUETOOTH]";
+
+        if (!this.bluetooth && window && window.navigator && window.navigator.bluetooth) {
+            this.bluetooth = navigator.bluetooth;
+        } else {
+            console.error(`${this.logHead} Bluetooth API not available`);
+            return;
+        }
 
         this.connect = this.connect.bind(this);
 
@@ -395,4 +351,4 @@ class BT extends EventTarget {
     }
 }
 
-export default new BT();
+export default WebBluetooth;

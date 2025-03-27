@@ -1,8 +1,6 @@
-class WebsocketSerial extends EventTarget {
+class Websocket extends EventTarget {
     constructor() {
         super();
-
-        this.logHead = "[WEBSOCKET]";
 
         this.connected = false;
         this.connectionInfo = null;
@@ -11,6 +9,8 @@ class WebsocketSerial extends EventTarget {
         this.bytesSent = 0;
         this.bytesReceived = 0;
         this.failed = 0;
+
+        this.logHead = "[WEBSOCKET]";
 
         this.address = "ws://localhost:5761";
 
@@ -123,4 +123,4 @@ class WebsocketSerial extends EventTarget {
     }
 }
 
-export default new WebsocketSerial();
+export default Websocket;

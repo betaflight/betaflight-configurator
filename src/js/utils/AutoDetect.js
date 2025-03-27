@@ -8,7 +8,7 @@ import MSP from "../msp";
 import MSPCodes from "../msp/MSPCodes";
 import semver from "semver";
 import { API_VERSION_1_45, API_VERSION_1_46 } from "../data_storage";
-import serial from "../webSerial";
+import { serial } from "../serial";
 
 /**
  *
@@ -19,7 +19,7 @@ import serial from "../webSerial";
 let mspHelper = null;
 
 function readSerialAdapter(event) {
-    MSP.read(event.detail.buffer);
+    MSP.read(event.detail);
 }
 
 class AutoDetect {
@@ -109,7 +109,7 @@ class AutoDetect {
             );
         }
 
-        serial.disconnect(this.onClosed);
+        serial.disconnect(this.onClosed.bind(this));
         MSP.disconnect_cleanup();
     }
 

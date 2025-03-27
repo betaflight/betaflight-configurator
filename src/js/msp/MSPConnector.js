@@ -4,18 +4,17 @@ import { i18n } from "../localization";
 import GUI from "../gui";
 import MSP from "../msp";
 import FC from "../fc";
-import { serialShim } from "../serial_shim";
+import { serial } from "../serial";
 import MSPCodes from "./MSPCodes";
 import CONFIGURATOR from "../data_storage";
 import { gui_log } from "../gui_log";
 
-const serial = serialShim();
 /**
  * This seems to be mainly used in firmware flasher parts.
  */
 
 function readSerialAdapter(e) {
-    read_serial(e.detail.buffer);
+    read_serial(e.detail);
 }
 
 function disconnectAndCleanup() {
