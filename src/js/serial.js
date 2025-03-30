@@ -39,7 +39,9 @@ class Serial extends EventTarget {
 
     // Add a getter method to safely access the protocol map
     _getProtocolByType(type) {
-        if (!type) return this._protocol;
+        if (!type) {
+            return this._protocol;
+        }
 
         const protocol = this._protocolMap[type.toLowerCase()];
 
@@ -56,10 +58,18 @@ class Serial extends EventTarget {
      * @returns {string} - Protocol type name
      */
     _getProtocolType(protocol) {
-        if (protocol === this._webSerial) return "webserial";
-        if (protocol === this._bluetooth) return "webbluetooth";
-        if (protocol === this._websocket) return "websocket";
-        if (protocol === this._virtual) return "virtual";
+        if (protocol === this._webSerial) {
+            return "webserial";
+        }
+        if (protocol === this._bluetooth) {
+            return "webbluetooth";
+        }
+        if (protocol === this._websocket) {
+            return "websocket";
+        }
+        if (protocol === this._virtual) {
+            return "virtual";
+        }
         return "unknown";
     }
 
