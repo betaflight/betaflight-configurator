@@ -828,19 +828,8 @@ export function reinitializeConnection(callback) {
         connectDisconnect();
     }
 
-    // gui_log(i18n.getMessage("deviceRebooting"));
-
     // Show reboot progress modal
     showRebootDialog(callback);
-
-    // // wait for the device to reboot
-    // setTimeout(function () {
-    //     gui_log(i18n.getMessage("deviceReady"));
-    // }, 2000);
-
-    if (callback && typeof callback === "function") {
-        callback();
-    }
 }
 
 function showRebootDialog(callback) {
@@ -873,7 +862,9 @@ function showRebootDialog(callback) {
         }, 1000);
 
         gui_log(i18n.getMessage("deviceReady"));
-        if (callback) callback();
+        if (callback && typeof callback === "function") {
+            callback();
+        }
     }, 2000);
 
     // Helper function to create the reboot dialog if it doesn't exist
