@@ -116,7 +116,6 @@ class AutoDetect {
     async getBoardInfo() {
         await MSP.promise(MSPCodes.MSP_BOARD_INFO);
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
-            FC.processBuildOptions();
             TABS.firmware_flasher.cloudBuildOptions = FC.CONFIG.buildOptions;
         }
         this.onFinishClose();
