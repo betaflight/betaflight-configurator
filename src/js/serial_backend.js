@@ -23,13 +23,11 @@ import CryptoES from "crypto-es";
 import $ from "jquery";
 import BuildApi from "./BuildApi";
 
-import { serialShim } from "./serial_shim.js";
+import { serial } from "./serial.js";
 import { EventBus } from "../components/eventBus";
 import { ispConnected } from "./utils/connection";
 
 const logHead = "[SERIAL-BACKEND]";
-
-let serial = serialShim();
 
 let mspHelper;
 let connectionTimestamp;
@@ -80,7 +78,7 @@ export function initializeSerialBackend() {
         }
     });
 
-    // Using serialShim for serial and bluetooth we don't know which event we need before we connect
+    // Using serial and bluetooth we don't know which event we need before we connect
     // Perhaps we should implement a Connection class that handles the connection and events for bluetooth, serial and sockets
     // TODO: use event gattserverdisconnected for save and reboot and device removal.
 
@@ -118,39 +116,32 @@ function connectDisconnect() {
             PortHandler.portPickerDisabled = true;
             $("div.connection_button__label").text(i18n.getMessage("connecting"));
 
+            // Set configuration flags for consistency with other code
             CONFIGURATOR.virtualMode = selectedPort === "virtual";
             CONFIGURATOR.bluetoothMode = selectedPort.startsWith("bluetooth");
             CONFIGURATOR.manualMode = selectedPort === "manual";
 
+            // Select the appropriate protocol based directly on the port path
+            serial.selectProtocol(selectedPort);
+            console.log("Serial protocol selected:", serial._protocol, "using port", portName);
+
             if (CONFIGURATOR.virtualMode) {
                 CONFIGURATOR.virtualApiVersion = PortHandler.portPicker.virtualMspVersion;
-
-                // Hack to get virtual working on the web
-                serial = serialShim();
+                // Virtual mode uses a callback instead of port path
                 serial.connect(onOpenVirtual);
-            } else if (selectedPort === "manual") {
-                serial = serialShim();
-                // Explicitly disconnect the event listeners before attaching the new ones.
-                serial.removeEventListener("connect", connectHandler);
-                serial.addEventListener("connect", connectHandler);
-
-                serial.removeEventListener("disconnect", disconnectHandler);
-                serial.addEventListener("disconnect", disconnectHandler);
-
-                serial.connect(portName, { baudRate });
             } else {
-                CONFIGURATOR.virtualMode = false;
-                serial = serialShim();
-                // Explicitly disconnect the event listeners before attaching the new ones.
+                // Set up event listeners for all non-virtual connections
                 serial.removeEventListener("connect", connectHandler);
                 serial.addEventListener("connect", connectHandler);
 
                 serial.removeEventListener("disconnect", disconnectHandler);
                 serial.addEventListener("disconnect", disconnectHandler);
 
+                // All non-virtual modes pass the port path and options
                 serial.connect(portName, { baudRate });
             }
         } else {
+            // If connected, start disconnection sequence
             GUI.timeout_kill_all();
             GUI.interval_kill_all();
             GUI.tab_switch_cleanup(() => (GUI.tab_switch_in_progress = false));
@@ -165,7 +156,11 @@ function connectDisconnect() {
         // show CLI panel on Control+I
         document.onkeydown = function (e) {
             if (e.code === "KeyI" && e.ctrlKey && !e.shiftKey && !e.altKey && !e.metaKey) {
-                if (isConnected && GUI.active_tab !== "cli" && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+                if (
+                    serial.connected &&
+                    GUI.active_tab !== "cli" &&
+                    semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)
+                ) {
                     GUI.showCliPanel();
                 }
             }
@@ -184,7 +179,6 @@ function finishClose(finishedCallback) {
         $("#dialogResetToCustomDefaults")[0].close();
     }
 
-    // serialShim calls the disconnect method for selected connection type.
     serial.disconnect(onClosed);
 
     MSP.disconnect_cleanup();
@@ -249,8 +243,6 @@ function resetConnection() {
 
     // unlock port select & baud
     PortHandler.portPickerDisabled = false;
-    // reset data
-    isConnected = false;
 }
 
 function abortConnection() {
@@ -271,7 +263,7 @@ function abortConnection() {
  * when serial events are handled.
  */
 function read_serial_adapter(event) {
-    read_serial(event.detail.buffer);
+    read_serial(event.detail.data);
 }
 
 function onOpen(openInfo) {
@@ -290,7 +282,7 @@ function onOpen(openInfo) {
         const result = getConfig("expertMode")?.expertMode ?? false;
         $('input[name="expertModeCheckbox"]').prop("checked", result).trigger("change");
 
-        // serialShim adds event listener for selected connection type
+        // serial adds event listener for selected connection type
         serial.removeEventListener("receive", read_serial_adapter);
         serial.addEventListener("receive", read_serial_adapter);
 
