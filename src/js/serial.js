@@ -22,11 +22,45 @@ class Serial extends EventTarget {
         this._websocket = new Websocket();
         this._virtual = new VirtualSerial();
 
+        // Update protocol map to use consistent naming
+        this._protocolMap = {
+            serial: this._webSerial, // TODO: should be 'webserial'
+            bluetooth: this._bluetooth, // TODO: should be 'webbluetooth'
+            websocket: this._websocket,
+            virtual: this._virtual,
+        };
+
         // Initialize with default protocol
         this.selectProtocol(false);
 
         // Forward events from all protocols to the Serial class
         this._setupEventForwarding();
+    }
+
+    // Add a getter method to safely access the protocol map
+    _getProtocolByType(type) {
+        if (!type) return this._protocol;
+
+        const protocol = this._protocolMap[type.toLowerCase()];
+
+        if (!protocol) {
+            console.warn(`${this.logHead} Unknown protocol type: ${type}`);
+        }
+
+        return protocol || null;
+    }
+
+    /**
+     * Get the protocol type as a string
+     * @param {Object} protocol - Protocol instance
+     * @returns {string} - Protocol type name
+     */
+    _getProtocolType(protocol) {
+        if (protocol === this._webSerial) return "webserial";
+        if (protocol === this._bluetooth) return "webbluetooth";
+        if (protocol === this._websocket) return "websocket";
+        if (protocol === this._virtual) return "virtual";
+        return "unknown";
     }
 
     /**
@@ -41,27 +75,20 @@ class Serial extends EventTarget {
                 events.forEach((eventType) => {
                     protocol.addEventListener(eventType, (event) => {
                         let newDetail;
-
-                        // Special handling for 'receive' events to ensure data is properly passed through
-                        if (eventType === "receive") {
-                            // If it's already a Uint8Array or ArrayBuffer, keep it as is
+                        if (event.type === "receive") {
+                            // For 'receive' events, we need to handle the data differently
                             newDetail = {
                                 data: event.detail,
-                                protocolType:
-                                    protocol === this._webSerial
-                                        ? "webSerial"
-                                        : protocol === this._bluetooth
-                                            ? "bluetooth"
-                                            : protocol === this._websocket
-                                                ? "websocket"
-                                                : protocol === this._virtual
-                                                    ? "virtual"
-                                                    : "unknown",
+                                protocolType: this._getProtocolType(protocol),
                             };
                         } else {
-                            // For all other events, pass through the detail as is
-                            newDetail = event.detail;
+                            // For other events, we can use the detail directly
+                            newDetail = {
+                                ...event.detail,
+                                protocolType: this._getProtocolType(protocol),
+                            };
                         }
+
                         // Dispatch the event with the new detail
                         this.dispatchEvent(
                             new CustomEvent(event.type, {
@@ -102,14 +129,14 @@ class Serial extends EventTarget {
                 CONFIGURATOR.bluetoothMode = false;
                 CONFIGURATOR.manualMode = true;
             } else if (portPath.startsWith("bluetooth")) {
-                console.log(`${this.logHead} Using bluetooth protocol (based on port path)`);
+                console.log(`${this.logHead} Using bluetooth protocol (based on port path: ${portPath})`);
                 newProtocol = this._bluetooth;
                 // Update CONFIGURATOR flags for consistency
                 CONFIGURATOR.virtualMode = false;
                 CONFIGURATOR.bluetoothMode = true;
                 CONFIGURATOR.manualMode = false;
             } else {
-                console.log(`${this.logHead} Using web serial protocol (based on port path)`);
+                console.log(`${this.logHead} Using web serial protocol (based on port path: ${portPath})`);
                 newProtocol = this._webSerial;
                 // Update CONFIGURATOR flags for consistency
                 CONFIGURATOR.virtualMode = false;
@@ -258,17 +285,58 @@ class Serial extends EventTarget {
     }
 
     /**
-     * Get devices from the current protocol
+     * Get devices from a specific protocol type or current protocol
+     * @param {string} protocolType - Optional protocol type ('serial', 'bluetooth', 'websocket', 'virtual')
+     * @returns {Promise<Array>} - List of devices
      */
-    async getDevices() {
-        return this._protocol?.getDevices() || [];
+    async getDevices(protocolType = null) {
+        try {
+            // Get the appropriate protocol
+            const targetProtocol = this._getProtocolByType(protocolType);
+
+            if (!targetProtocol) {
+                console.warn(`${this.logHead} No valid protocol for getting devices`);
+                return [];
+            }
+
+            if (typeof targetProtocol.getDevices !== "function") {
+                console.error(`${this.logHead} Selected protocol does not implement getDevices`);
+                return [];
+            }
+
+            return targetProtocol.getDevices() || [];
+        } catch (error) {
+            console.error(`${this.logHead} Error getting devices:`, error);
+            return [];
+        }
     }
 
     /**
-     * Request permission for a device
+     * Request permission to access a device
+     * @param {boolean} showAllDevices - Whether to show all devices or only those with filters
+     * @param {string} protocolType - Optional protocol type ('serial', 'bluetooth', etc.)
+     * @returns {Promise<Object>} - Promise resolving to the selected device
      */
-    async requestPermissionDevice(showAllSerialDevices = false) {
-        return this._protocol?.requestPermissionDevice(showAllSerialDevices) || null;
+    async requestPermissionDevice(showAllDevices = false, protocolType = null) {
+        try {
+            // Get the appropriate protocol
+            const targetProtocol = this._getProtocolByType(protocolType);
+
+            if (!targetProtocol) {
+                console.warn(`${this.logHead} No valid protocol for permission request`);
+                return null;
+            }
+
+            if (typeof targetProtocol.requestPermissionDevice !== "function") {
+                console.error(`${this.logHead} Selected protocol does not support permission requests`);
+                return null;
+            }
+
+            return targetProtocol.requestPermissionDevice(showAllDevices);
+        } catch (error) {
+            console.error(`${this.logHead} Error requesting device permission:`, error);
+            return null;
+        }
     }
 
     /**

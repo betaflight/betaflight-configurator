@@ -271,8 +271,10 @@ class WebSerial extends EventTarget {
             this.removeEventListener("receive", this.handleReceiveBytes);
 
             if (this.reader) {
-                await this.reader.cancel();
-                this.reader.releaseLock();
+                // removing this fixes a bug where the reader is not released when the port is closed
+                // note this prevented DFU mode from working on some devices
+                // await this.reader.cancel();
+                await this.reader.releaseLock();
                 this.reader = null;
             }
 
