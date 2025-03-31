@@ -36,6 +36,7 @@ let liveDataRefreshTimerId = false;
 let isConnected = false;
 
 const REBOOT_CONNECT_MAX_TIME_MS = 10000;
+const REBOOT_GRACE_PERIOD_MS = 2000;
 let rebootTimestamp = 0;
 
 const toggleStatus = function () {
@@ -106,6 +107,12 @@ function connectDisconnect() {
         if (!isConnected) {
             // prevent connection when we do not have permission
             if (selectedPort.startsWith("requestpermission")) {
+                return;
+            }
+
+            // When rebooting, adhere to the auto-connect setting
+            if (!PortHandler.portPicker.autoConnect && Date.now() - rebootTimestamp < REBOOT_GRACE_PERIOD_MS) {
+                console.log(`${logHead} Rebooting, not connecting`);
                 return;
             }
 
