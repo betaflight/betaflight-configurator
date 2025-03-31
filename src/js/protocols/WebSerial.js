@@ -272,7 +272,7 @@ class WebSerial extends EventTarget {
 
             if (this.reader) {
                 await this.reader.cancel();
-                this.reader.releaseLock();
+                await this.reader.releaseLock();
                 this.reader = null;
             }
 

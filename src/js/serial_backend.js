@@ -810,12 +810,16 @@ function startLiveDataRefreshTimer() {
 
 export function reinitializeConnection(callback) {
     // In virtual mode reconnect when autoconnect is enabled
-    if (CONFIGURATOR.virtualMode && PortHandler.portPicker.autoConnect) {
-        return setTimeout(function () {
-            $("a.connection_button__link").trigger("click");
-        }, 500);
+    if (CONFIGURATOR.virtualMode) {
+        connectDisconnect();
+        if (PortHandler.portPicker.autoConnect) {
+            return setTimeout(function () {
+                $("a.connection_button__link").trigger("click");
+            }, 500);
+        }
     }
 
+    // Send reboot command to the flight controller
     rebootTimestamp = Date.now();
     MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false);
 
@@ -824,14 +828,131 @@ export function reinitializeConnection(callback) {
         connectDisconnect();
     }
 
+    // Show reboot progress modal except for presets tab
+    if (GUI.active_tab === "presets") {
+        console.log("Rebooting in presets tab, skipping reboot dialog", GUI.active_tab);
+        gui_log(i18n.getMessage("deviceRebooting"));
+        gui_log(i18n.getMessage("deviceReady"));
+        if (callback && typeof callback === "function") {
+            callback();
+        }
+        return;
+    }
+    // Show reboot progress modal
+    showRebootDialog(callback);
+}
+
+function showRebootDialog(callback) {
     gui_log(i18n.getMessage("deviceRebooting"));
 
-    // wait for the device to reboot
-    setTimeout(function () {
-        gui_log(i18n.getMessage("deviceReady"));
-    }, 2000);
+    // Show reboot progress modal
+    const rebootDialog = document.getElementById("rebootProgressDialog") || createRebootProgressDialog();
+    rebootDialog.querySelector(".reboot-progress-bar").style.width = "0%";
+    rebootDialog.querySelector(".reboot-status").textContent = i18n.getMessage("rebootFlightController");
+    rebootDialog.showModal();
 
-    if (callback && typeof callback === "function") {
-        callback();
+    // Update progress during reboot
+    let progress = 0;
+    const progressInterval = setInterval(() => {
+        progress += 5;
+        if (progress <= 100) {
+            rebootDialog.querySelector(".reboot-progress-bar").style.width = `${progress}%`;
+        }
+    }, 100);
+
+    // Check for successful connection every 100ms
+    const connectionCheckInterval = setInterval(() => {
+        if (CONFIGURATOR.connectionValid) {
+            // Connection established, device is ready
+            clearInterval(connectionCheckInterval);
+            clearInterval(progressInterval);
+
+            rebootDialog.querySelector(".reboot-progress-bar").style.width = "100%";
+            rebootDialog.querySelector(".reboot-status").textContent = i18n.getMessage("rebootFlightControllerReady");
+
+            // Close the dialog after showing "ready" message briefly
+            setTimeout(() => {
+                rebootDialog.close();
+            }, 1000);
+
+            gui_log(i18n.getMessage("deviceReady"));
+            if (callback && typeof callback === "function") {
+                callback();
+            }
+        }
+    }, 100);
+
+    // Set a maximum timeout for the reboot process (5 seconds)
+    setTimeout(function () {
+        clearInterval(connectionCheckInterval);
+        clearInterval(progressInterval);
+
+        rebootDialog.querySelector(".reboot-progress-bar").style.width = "100%";
+        rebootDialog.querySelector(".reboot-status").textContent = i18n.getMessage("rebootFlightControllerReady");
+
+        // Close the dialog after showing "ready" message briefly
+        setTimeout(() => {
+            rebootDialog.close();
+        }, 1000);
+
+        gui_log(i18n.getMessage("deviceReady"));
+        if (callback && typeof callback === "function") {
+            callback();
+        }
+    }, 5000);
+
+    // Helper function to create the reboot dialog if it doesn't exist
+    function createRebootProgressDialog() {
+        const dialog = document.createElement("dialog");
+        dialog.id = "rebootProgressDialog";
+        dialog.className = "dialogReboot";
+
+        dialog.innerHTML = `
+            <div class="content">
+                <div class="reboot-status">${i18n.getMessage("rebootFlightController")}</div>
+                <div class="reboot-progress-container">
+                    <div class="reboot-progress-bar"></div>
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(dialog);
+
+        // Add styles if not already defined
+        if (!document.getElementById("rebootProgressStyle")) {
+            const style = document.createElement("style");
+            style.id = "rebootProgressStyle";
+            style.textContent = `
+                .dialogReboot {
+                    border: 1px solid #3f4241;
+                    border-radius: 5px;
+                    background-color: #2d3233;
+                    color: #fff;
+                    padding: 20px;
+                    max-width: 400px;
+                }
+                .reboot-progress-container {
+                    width: 100%;
+                    background-color: #424546;
+                    border-radius: 3px;
+                    margin: 15px 0 5px;
+                    height: 10px;
+                }
+                .reboot-progress-bar {
+                    height: 100%;
+                    background-color: #ffbb00;
+                    border-radius: 3px;
+                    transition: width 0.1s ease-in-out;
+                    width: 0%;
+                }
+                .reboot-status {
+                    text-align: center;
+                    margin: 10px 0;
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
+        return dialog;
     }
 }

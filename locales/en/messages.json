@@ -320,6 +320,12 @@
     "configuratorUpdateWebsite": {
         "message": "Go to Release Website"
     },
+    "rebootFlightController": {
+        "message": "Rebooting flight controller, reconnect when ready"
+    },
+    "rebootFlightControllerReady": {
+        "message": "Flight Controller is ready"
+    },
     "deviceRebooting": {
         "message": "Device - <span class=\"message-negative\">Rebooting</span>"
     },
