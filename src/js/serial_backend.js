@@ -828,6 +828,10 @@ export function reinitializeConnection(callback) {
         connectDisconnect();
     }
 
+    // Show reboot progress modal except for presets tab
+    if (GUI.active_tab === "presets") {
+        return;
+    }
     // Show reboot progress modal
     showRebootDialog(callback);
 }

@@ -19,6 +19,7 @@ import AutoBackup from "../utils/AutoBackup.js";
 import AutoDetect from "../utils/AutoDetect.js";
 import { EventBus } from "../../components/eventBus";
 import { ispConnected } from "../utils/connection.js";
+import FC from "../fc";
 
 const firmware_flasher = {
     targets: null,
@@ -255,6 +256,9 @@ firmware_flasher.initialize = function (callback) {
             }
 
             // extract osd protocols from general options and add to osdProtocols
+            console.log(`${self.logHead} buildOptions`, FC.CONFIG.buildOptions);
+            self.cloudBuildOptions = FC.CONFIG.buildOptions || [];
+            console.log(`${self.logHead} generalOptions`, self.cloudBuildOptions);
             data.osdProtocols = data.generalOptions
                 .filter((option) => option.group === "OSD")
                 .map((option) => {
