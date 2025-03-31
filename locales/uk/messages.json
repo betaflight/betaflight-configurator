@@ -3678,6 +3678,9 @@
     "firmwareFlasherFailedToLoadUnifiedConfig": {
         "message": "Не вдалося завантажити віддалений конфігураційний файл для {{remote_file}}"
     },
+    "firmwareFlasherCanceledBackup": {
+        "message": "Резервне копіювання скасовано, прошивання перервано"
+    },
     "firmwareFlasherLegacyLabel": {
         "message": "{{target}} (старий варіант)",
         "description": "If we have a Unified target and a old style target available, we are labeling the older one"
