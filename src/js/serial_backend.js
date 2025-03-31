@@ -109,6 +109,12 @@ function connectDisconnect() {
                 return;
             }
 
+            // When rebooting, adhere to the auto-connect setting
+            if (!PortHandler.portPicker.autoConnect && Date.now() - rebootTimestamp < 2000) {
+                console.log(`${logHead} Rebooting, not connecting`);
+                return;
+            }
+
             console.log(`${logHead} Connecting to: ${portName}`);
             GUI.connecting_to = portName;
 
