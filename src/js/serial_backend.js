@@ -830,6 +830,12 @@ export function reinitializeConnection(callback) {
 
     // Show reboot progress modal except for presets tab
     if (GUI.active_tab === "presets") {
+        console.log("Rebooting in presets tab, skipping reboot dialog", GUI.active_tab);
+        gui_log(i18n.getMessage("deviceRebooting"));
+        gui_log(i18n.getMessage("deviceReady"));
+        if (callback && typeof callback === "function") {
+            callback();
+        }
         return;
     }
     // Show reboot progress modal
@@ -854,9 +860,33 @@ function showRebootDialog(callback) {
         }
     }, 100);
 
-    // wait for the device to reboot
+    // Check for successful connection every 100ms
+    const connectionCheckInterval = setInterval(() => {
+        if (CONFIGURATOR.connectionValid) {
+            // Connection established, device is ready
+            clearInterval(connectionCheckInterval);
+            clearInterval(progressInterval);
+
+            rebootDialog.querySelector(".reboot-progress-bar").style.width = "100%";
+            rebootDialog.querySelector(".reboot-status").textContent = i18n.getMessage("rebootFlightControllerReady");
+
+            // Close the dialog after showing "ready" message briefly
+            setTimeout(() => {
+                rebootDialog.close();
+            }, 1000);
+
+            gui_log(i18n.getMessage("deviceReady"));
+            if (callback && typeof callback === "function") {
+                callback();
+            }
+        }
+    }, 100);
+
+    // Set a maximum timeout for the reboot process (5 seconds)
     setTimeout(function () {
+        clearInterval(connectionCheckInterval);
         clearInterval(progressInterval);
+
         rebootDialog.querySelector(".reboot-progress-bar").style.width = "100%";
         rebootDialog.querySelector(".reboot-status").textContent = i18n.getMessage("rebootFlightControllerReady");
 
@@ -869,7 +899,7 @@ function showRebootDialog(callback) {
         if (callback && typeof callback === "function") {
             callback();
         }
-    }, 2000);
+    }, 5000);
 
     // Helper function to create the reboot dialog if it doesn't exist
     function createRebootProgressDialog() {
