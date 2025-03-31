@@ -321,10 +321,7 @@
         "message": "Go to Release Website"
     },
     "rebootFlightController": {
-        "message": "Rebooting Flight Controller ..."
-    },
-    "rebootFlightControllerTitle": {
-        "message": "Rebooting Flight Controller"
+        "message": "Rebooting flight controller, reconnect when ready"
     },
     "rebootFlightControllerReady": {
         "message": "Flight Controller is ready"

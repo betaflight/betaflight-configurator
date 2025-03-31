@@ -909,7 +909,6 @@ function showRebootDialog(callback) {
 
         dialog.innerHTML = `
             <div class="content">
-                <h3>${i18n.getMessage("rebootFlightControllerTitle")}</h3>
                 <div class="reboot-status">${i18n.getMessage("rebootFlightController")}</div>
                 <div class="reboot-progress-container">
                     <div class="reboot-progress-bar"></div>
