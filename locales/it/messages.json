@@ -3678,6 +3678,9 @@
     "firmwareFlasherFailedToLoadUnifiedConfig": {
         "message": "Impossibile caricare la configurazione remota per {{remote_file}}"
     },
+    "firmwareFlasherCanceledBackup": {
+        "message": "Backup cancellato, flash annullato"
+    },
     "firmwareFlasherLegacyLabel": {
         "message": "{{target}} (Legacy)",
         "description": "If we have a Unified target and a old style target available, we are labeling the older one"
@@ -7492,6 +7495,18 @@
     },
     "firmwareFlasherBuildCustomDefines": {
         "message": "Definizioni Personalizzate"
+    },
+    "firmwareFlasherOSDProtocolNotSelected": {
+        "message": "Protocollo OSD non selezionato"
+    },
+    "firmwareFlasherOSDProtocolNotSelectedDescription": {
+        "message": "Seleziona un protocollo OSD per creare un firmware."
+    },
+    "firmwareFlasherOSDProtocolSelect": {
+        "message": "Selezione protocollo OSD"
+    },
+    "firmwareFlasherOSDProtocolNotSelectedContinue": {
+        "message": "Continua senza protocollo OSD"
     },
     "coreBuild": {
         "message": "Solo Core"
