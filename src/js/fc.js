@@ -284,7 +284,6 @@ const FC = {
             dynamic_THR_PID: 0, // moved in 1.45 to ADVANCED_TUNING
             throttle_MID: 0,
             throttle_EXPO: 0,
-            throttle_HOVER: 0,
             dynamic_THR_breakpoint: 0, // moved in 1.45 to ADVANCED_TUNING
             RC_YAW_EXPO: 0,
             rcYawRate: 0,
@@ -296,6 +295,7 @@ const FC = {
             pitch_rate_limit: 1998,
             yaw_rate_limit: 1998,
             rates_type: 0,
+            throttle_HOVER: 0,
         };
 
         this.AUX_CONFIG = [];
