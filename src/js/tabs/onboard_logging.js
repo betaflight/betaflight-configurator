@@ -202,7 +202,7 @@ onboard_logging.initialize = function (callback) {
             semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47) &&
             FC.SENSOR_CONFIG_ACTIVE.gyro_hardware == sensorTypes().gyro.elements.indexOf("VIRTUAL")
         ) {
-            // If the gyro sensor is virtual that mean SITL build
+            // If the gyro sensor is virtual, it means SITL is built
             deviceSelect.append(`<option value="4">${i18n.getMessage("blackboxLoggingVirtual")}</option>`);
         }
 
