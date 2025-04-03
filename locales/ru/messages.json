@@ -3267,6 +3267,9 @@
     "blackboxLoggingSerial": {
         "message": "Последовательный порт"
     },
+    "blackboxLoggingVirtual": {
+        "message": "Запись в файл"
+    },
     "serialLoggingSupportedNote": {
         "message": "Вы можете логировать работу на внешнее устройство (такое как OpenLager) используя последовательный порт. Сконфигурируйте порт во вкладке Порты."
     },

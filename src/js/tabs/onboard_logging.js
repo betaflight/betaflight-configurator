@@ -5,7 +5,7 @@ import { mspHelper } from "../msp/MSPHelper";
 import FC from "../fc";
 import MSP from "../msp";
 import MSPCodes from "../msp/MSPCodes";
-import CONFIGURATOR, { API_VERSION_1_45 } from "../data_storage";
+import CONFIGURATOR, { API_VERSION_1_45, API_VERSION_1_47 } from "../data_storage";
 import { gui_log } from "../gui_log";
 import { generateFilename } from "../utils/generate_filename";
 import semver from "semver";
@@ -16,6 +16,7 @@ import FileSystem from "../FileSystem";
 import { isExpertModeEnabled } from "../utils/isExportModeEnabled";
 import NotificationManager from "../../js/utils/notifications";
 import { get as getConfig } from "../ConfigStorage";
+import { sensorTypes } from "../sensor_types";
 
 let sdcardTimer;
 
@@ -196,6 +197,14 @@ onboard_logging.initialize = function (callback) {
             deviceSelect.append(`<option value="2">${i18n.getMessage("blackboxLoggingSdCard")}</option>`);
         }
         deviceSelect.append(`<option value="3">${i18n.getMessage("blackboxLoggingSerial")}</option>`);
+
+        if (
+            semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47) &&
+            FC.SENSOR_CONFIG_ACTIVE.gyro_hardware == sensorTypes().gyro.elements.indexOf("VIRTUAL")
+        ) {
+            // If the gyro sensor is virtual that mean SITL build
+            deviceSelect.append(`<option value="4">${i18n.getMessage("blackboxLoggingVirtual")}</option>`);
+        }
 
         deviceSelect.val(FC.BLACKBOX.blackboxDevice);
     }

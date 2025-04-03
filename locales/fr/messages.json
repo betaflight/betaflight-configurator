@@ -2559,6 +2559,9 @@
     "blackboxLoggingSerial": {
         "message": "Port série"
     },
+    "blackboxLoggingVirtual": {
+        "message": "Écrire dans un fichier"
+    },
     "serialLoggingSupportedNote": {
         "message": "Vous pouvez logger sur un périphérique externe (tel un OpenLager) en utilisant un port série. Configurez le port via l'onglet Ports."
     },

@@ -3073,6 +3073,9 @@
     "blackboxLoggingSerial": {
         "message": "Serieller Port"
     },
+    "blackboxLoggingVirtual": {
+        "message": "In eine Datei schreiben"
+    },
     "serialLoggingSupportedNote": {
         "message": "Das Speichern der Logs ist auf einem externen Gerät (z.B. OpenLager), mittels seriellem Port möglich. Dazu bitte den Anschluss im \"Anschlüsse Tab\" konfigurieren."
     },
