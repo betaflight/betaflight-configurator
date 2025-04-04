@@ -3436,7 +3436,7 @@
         "message": "Serial Port"
     },
     "blackboxLoggingVirtual": {
-        "message": "Writing to a file"
+        "message": "To File"
     },
     "serialLoggingSupportedNote": {
         "message": "You can log to an external logging device (such as an OpenLager) by using a serial port. Configure the port on the Ports tab."
