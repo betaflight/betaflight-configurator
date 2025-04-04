@@ -295,6 +295,7 @@ const FC = {
             pitch_rate_limit: 1998,
             yaw_rate_limit: 1998,
             rates_type: 0,
+            throttle_HOVER: 0,
         };
 
         this.AUX_CONFIG = [];
