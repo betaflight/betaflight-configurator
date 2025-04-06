@@ -231,6 +231,7 @@ class Serial extends EventTarget {
                     this._protocol.connect(path, options);
                 } else {
                     console.error(`${this.logHead} Failed to disconnect before reconnecting`);
+                    return false;
                 }
             });
 
@@ -243,41 +244,54 @@ class Serial extends EventTarget {
 
     /**
      * Disconnect from the current connection
+     * @param {function} [callback] - Optional callback for backward compatibility
+     * @returns {Promise<boolean>} - Promise resolving to true if disconnection was successful
      */
-    disconnect(callback) {
+    async disconnect(callback) {
+        // Return immediately if no protocol is selected
         if (!this._protocol) {
             console.warn(`${this.logHead} No protocol selected, nothing to disconnect`);
             if (callback) callback(false);
-            return false;
+            return Promise.resolve(false);
         }
 
-        if (!this._protocol.connected) {
-            console.warn(`${this.logHead} Protocol not connected, nothing to disconnect`);
-            if (callback) callback(false);
-            return false;
-        }
-
-        console.log(`${this.logHead} Disconnecting from current protocol`);
+        console.log(`${this.logHead} Disconnecting from current protocol`, this._protocol);
 
         try {
-            // Disconnect from the protocol
-            const result = this._protocol.disconnect((success) => {
-                if (success) {
-                    // Ensure our connection state is updated
-                    console.log(`${this.logHead} Disconnection successful`);
-                } else {
-                    console.error(`${this.logHead} Disconnection failed`);
+            // Handle case where we're already disconnected
+            if (!this._protocol.connected) {
+                console.log(`${this.logHead} Already disconnected, performing cleanup`);
+                if (callback) {
+                    callback(true);
                 }
+                return Promise.resolve(true);
+            }
 
-                // Call the callback with the result
-                if (callback) callback(success);
-            });
+            // Perform the actual disconnect
+            // Convert to a Promise if it isn't already
+            const result = await Promise.resolve(
+                this._protocol.disconnect((success) => {
+                    if (success) {
+                        console.log(`${this.logHead} Disconnection successful`);
+                    } else {
+                        console.error(`${this.logHead} Disconnection failed`);
+                    }
+                    // Call callback with disconnect result
+                    if (callback) {
+                        callback(success);
+                    }
+                }),
+            );
 
-            return result;
+            // If the protocol's disconnect returns a boolean or undefined, return it
+            // Otherwise assume successful disconnection if no errors were thrown
+            return typeof result === "boolean" ? result : true;
         } catch (error) {
             console.error(`${this.logHead} Error during disconnect:`, error);
-            if (callback) callback(false);
-            return false;
+            if (callback) {
+                callback(false);
+            }
+            return Promise.resolve(false);
         }
     }
 
