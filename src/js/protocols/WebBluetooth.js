@@ -43,9 +43,14 @@ class WebBluetooth extends EventTarget {
 
         this.bluetooth.addEventListener("connect", (e) => this.handleNewDevice(e.target));
         this.bluetooth.addEventListener("disconnect", (e) => this.handleRemovedDevice(e.target));
-        this.bluetooth.addEventListener("gatserverdisconnected", (e) => this.handleRemovedDevice(e.target));
+        this.bluetooth.addEventListener("gattserverdisconnected", (e) => this.handleRemovedDevice(e.target));
 
         this.loadDevices();
+
+        // Properly bind all event handlers ONCE
+        this.boundHandleDisconnect = this.handleDisconnect.bind(this);
+        this.boundHandleNotification = this.handleNotification.bind(this);
+        this.boundHandleReceiveBytes = this.handleReceiveBytes.bind(this);
     }
 
     handleNewDevice(device) {
@@ -135,26 +140,26 @@ class WebBluetooth extends EventTarget {
 
         console.log(`${this.logHead} Opening connection with ID: ${path}, Baud: ${options.baudRate}`);
 
-        this.device.addEventListener("gattserverdisconnected", this.handleDisconnect.bind(this));
+        // Use bound method references
+        this.device.addEventListener("gattserverdisconnected", this.boundHandleDisconnect);
 
         try {
             console.log(`${this.logHead} Connecting to GATT Server`);
 
             await this.gattConnect();
 
+            // Check if the GATT connection was successful before proceeding
+            if (!this.device.gatt?.connected) {
+                throw new Error("GATT server connection failed");
+            }
+
             gui_log(i18n.getMessage("bluetoothConnected", [this.device.name]));
 
             await this.getServices();
             await this.getCharacteristics();
             await this.startNotifications();
-        } catch (error) {
-            gui_log(i18n.getMessage("bluetoothConnectionError", [error]));
-        }
 
-        // Bluetooth API doesn't provide a way for getInfo() or similar to get the connection info
-        const connectionInfo = this.device.gatt.connected;
-
-        if (connectionInfo && !this.openCanceled) {
+            // Connection is fully established only after all setup completes successfully
             this.connected = true;
             this.connectionId = this.device.port;
             this.bitrate = options.baudRate;
@@ -163,35 +168,25 @@ class WebBluetooth extends EventTarget {
             this.failed = 0;
             this.openRequested = false;
 
-            this.device.addEventListener("disconnect", this.handleDisconnect.bind(this));
-            this.addEventListener("receive", this.handleReceiveBytes);
+            // Use bound references here too
+            this.device.addEventListener("disconnect", this.boundHandleDisconnect);
+            this.addEventListener("receive", this.boundHandleReceiveBytes);
 
             console.log(`${this.logHead} Connection opened with ID: ${this.connectionId}, Baud: ${options.baudRate}`);
 
-            this.dispatchEvent(new CustomEvent("connect", { detail: connectionInfo }));
-        } else if (connectionInfo && this.openCanceled) {
-            this.connectionId = this.device.port;
+            this.dispatchEvent(new CustomEvent("connect", { detail: true }));
+            return true;
+        } catch (error) {
+            console.error(`${this.logHead} Connection error:`, error);
+            gui_log(i18n.getMessage("bluetoothConnectionError", [error]));
 
-            console.log(
-                `${this.logHead} Connection opened with ID: ${connectionInfo.connectionId}, but request was canceled, disconnecting`,
-            );
-            // some bluetooth dongles/dongle drivers really doesn't like to be closed instantly, adding a small delay
-            setTimeout(() => {
-                this.openRequested = false;
-                this.openCanceled = false;
-                this.disconnect(() => {
-                    this.dispatchEvent(new CustomEvent("connect", { detail: false }));
-                });
-            }, 150);
-        } else if (this.openCanceled) {
-            console.log(`${this.logHead} Connection didn't open and request was canceled`);
+            // Clean up any partial connection state
             this.openRequested = false;
             this.openCanceled = false;
+
+            // Signal connection failure
             this.dispatchEvent(new CustomEvent("connect", { detail: false }));
-        } else {
-            this.openRequested = false;
-            console.log(`${this.logHead} Failed to open bluetooth port`);
-            this.dispatchEvent(new CustomEvent("connect", { detail: false }));
+            return false;
         }
     }
 
@@ -221,47 +216,84 @@ class WebBluetooth extends EventTarget {
     }
 
     async getCharacteristics() {
-        const characteristics = await this.service.getCharacteristics();
+        try {
+            const characteristics = await this.service.getCharacteristics();
 
-        characteristics.forEach((characteristic) => {
-            // console.log("Characteristic: ", characteristic);
-            if (characteristic.uuid == this.deviceDescription.writeCharacteristic) {
-                this.writeCharacteristic = characteristic;
+            if (!characteristics || characteristics.length === 0) {
+                throw new Error("No characteristics found");
             }
 
-            if (characteristic.uuid == this.deviceDescription.readCharacteristic) {
-                this.readCharacteristic = characteristic;
+            // Reset characteristics
+            this.writeCharacteristic = null;
+            this.readCharacteristic = null;
+
+            // Collect all matching characteristics first without breaking early
+            const writeMatches = [];
+            const readMatches = [];
+
+            for (const characteristic of characteristics) {
+                if (characteristic.uuid === this.deviceDescription.writeCharacteristic) {
+                    writeMatches.push(characteristic);
+                }
+
+                if (characteristic.uuid === this.deviceDescription.readCharacteristic) {
+                    readMatches.push(characteristic);
+                }
             }
-            return this.writeCharacteristic && this.readCharacteristic;
-        });
 
-        if (!this.writeCharacteristic) {
-            throw new Error(
-                "Unexpected write characteristic found - should be",
-                this.deviceDescription.writeCharacteristic,
-            );
+            // Select the first match of each type
+            if (writeMatches.length > 0) {
+                this.writeCharacteristic = writeMatches[0];
+                if (writeMatches.length > 1) {
+                    console.warn(`${this.logHead} Multiple write characteristics found, using first match`);
+                }
+            }
+
+            if (readMatches.length > 0) {
+                this.readCharacteristic = readMatches[0];
+                if (readMatches.length > 1) {
+                    console.warn(`${this.logHead} Multiple read characteristics found, using first match`);
+                }
+            }
+
+            if (!this.writeCharacteristic) {
+                throw new Error(`Write characteristic not found: ${this.deviceDescription.writeCharacteristic}`);
+            }
+
+            if (!this.readCharacteristic) {
+                throw new Error(`Read characteristic not found: ${this.deviceDescription.readCharacteristic}`);
+            }
+
+            // Use the bound method for the event listener
+            this.readCharacteristic.addEventListener("characteristicvaluechanged", this.boundHandleNotification);
+
+            return await this.readCharacteristic.readValue();
+        } catch (error) {
+            console.error(`${this.logHead} Error getting characteristics:`, error);
+            throw error;
         }
-
-        if (!this.readCharacteristic) {
-            throw new Error(
-                "Unexpected read characteristic found - should be",
-                this.deviceDescription.readCharacteristic,
-            );
-        }
-
-        this.readCharacteristic.addEventListener("characteristicvaluechanged", this.handleNotification.bind(this));
-
-        return await this.readCharacteristic.readValue();
     }
 
     handleNotification(event) {
-        const buffer = new Uint8Array(event.target.value.byteLength);
+        try {
+            if (!event.target.value) {
+                console.warn(`${this.logHead} Empty notification received`);
+                return;
+            }
 
-        for (let i = 0; i < event.target.value.byteLength; i++) {
-            buffer[i] = event.target.value.getUint8(i);
+            const buffer = new Uint8Array(event.target.value.byteLength);
+
+            // Copy data with validation
+            for (let i = 0; i < event.target.value.byteLength; i++) {
+                buffer[i] = event.target.value.getUint8(i);
+            }
+
+            if (buffer.length) {
+                this.dispatchEvent(new CustomEvent("receive", { detail: buffer }));
+            }
+        } catch (error) {
+            console.error(`${this.logHead} Error handling notification:`, error);
         }
-
-        this.dispatchEvent(new CustomEvent("receive", { detail: buffer }));
     }
 
     startNotifications() {
@@ -287,48 +319,51 @@ class WebBluetooth extends EventTarget {
             return;
         }
 
-        const doCleanup = async () => {
-            this.removeEventListener("receive", this.handleReceiveBytes);
-
-            if (this.device) {
-                this.device.removeEventListener("disconnect", this.handleDisconnect.bind(this));
-                this.device.removeEventListener("gattserverdisconnected", this.handleDisconnect);
-                this.readCharacteristic.removeEventListener(
-                    "characteristicvaluechanged",
-                    this.handleNotification.bind(this),
-                );
-
-                if (this.device.gatt.connected) {
-                    this.device.gatt.disconnect();
-                }
-
-                this.writeCharacteristic = false;
-                this.readCharacteristic = false;
-                this.deviceDescription = false;
-                this.device = null;
-            }
-        };
+        this.closeRequested = true; // Set this to prevent reentry
 
         try {
-            await doCleanup();
+            this.removeEventListener("receive", this.boundHandleReceiveBytes);
 
-            console.log(
-                `${this.logHead} Connection with ID: ${this.connectionId} closed, Sent: ${this.bytesSent} bytes, Received: ${this.bytesReceived} bytes`,
-            );
+            if (this.device) {
+                // Use the properly bound references
+                this.device.removeEventListener("disconnect", this.boundHandleDisconnect);
+                this.device.removeEventListener("gattserverdisconnected", this.boundHandleDisconnect);
 
+                if (this.readCharacteristic) {
+                    try {
+                        // Stop notifications first to avoid errors
+                        await this.readCharacteristic.stopNotifications();
+                        this.readCharacteristic.removeEventListener(
+                            "characteristicvaluechanged",
+                            this.boundHandleNotification,
+                        );
+                    } catch (err) {
+                        console.warn(`${this.logHead} Error stopping notifications:`, err);
+                    }
+                }
+
+                // Safely disconnect GATT
+                if (this.device.gatt?.connected) {
+                    await this.device.gatt.disconnect();
+                }
+
+                // Clear references
+                this.writeCharacteristic = null;
+                this.readCharacteristic = null;
+                this.deviceDescription = null;
+            }
+
+            console.log(`${this.logHead} Connection closed successfully`);
             this.connectionId = false;
             this.bitrate = 0;
+            this.device = null;
             this.dispatchEvent(new CustomEvent("disconnect", { detail: true }));
         } catch (error) {
-            console.error(error);
-            console.error(
-                `${this.logHead} Failed to close connection with ID: ${this.connectionId} closed, Sent: ${this.bytesSent} bytes, Received: ${this.bytesReceived} bytes`,
-            );
+            console.error(`${this.logHead} Error during disconnect:`, error);
             this.dispatchEvent(new CustomEvent("disconnect", { detail: false }));
         } finally {
-            if (this.openCanceled) {
-                this.openCanceled = false;
-            }
+            this.closeRequested = false;
+            this.openCanceled = false;
         }
     }
 
