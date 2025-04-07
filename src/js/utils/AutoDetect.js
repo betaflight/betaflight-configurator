@@ -26,10 +26,10 @@ class AutoDetect {
         // Store bound event handlers to make removal more reliable
         this.boundHandleConnect = this.handleConnect.bind(this);
         this.boundHandleDisconnect = this.handleDisconnect.bind(this);
-        this.boundReadSerialAdapter = this.readSerialAdapter.bind(this);
+        this.boundHandleSerialReceive = this.handleSerialReceive.bind(this);
     }
 
-    readSerialAdapter(event) {
+    handleSerialReceive(event) {
         MSP.read(event.detail);
     }
 
@@ -112,7 +112,7 @@ class AutoDetect {
         }
 
         // Remove event listeners using stored references
-        serial.removeEventListener("receive", this.boundReadSerialAdapter);
+        serial.removeEventListener("receive", this.boundHandleSerialReceive);
         serial.removeEventListener("connect", this.boundHandleConnect);
         serial.removeEventListener("disconnect", this.boundHandleDisconnect);
 
@@ -182,8 +182,8 @@ class AutoDetect {
 
     onConnect(openInfo) {
         if (openInfo) {
-            serial.removeEventListener("receive", this.boundReadSerialAdapter);
-            serial.addEventListener("receive", this.boundReadSerialAdapter);
+            serial.removeEventListener("receive", this.boundHandleSerialReceive);
+            serial.addEventListener("receive", this.boundHandleSerialReceive);
 
             mspHelper = new MspHelper();
             MSP.listen(mspHelper.process_data.bind(mspHelper));
