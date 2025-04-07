@@ -253,7 +253,7 @@ class Serial extends EventTarget {
         if (!this._protocol) {
             console.warn(`${this.logHead} No protocol selected, nothing to disconnect`);
             if (callback) callback(false);
-            return Promise.resolve(false);
+            return false; // When in an async function, this automatically becomes Promise<false>
         }
 
         console.log(`${this.logHead} Disconnecting from current protocol`, this._protocol);
@@ -265,34 +265,34 @@ class Serial extends EventTarget {
                 if (callback) {
                     callback(true);
                 }
-                return Promise.resolve(true);
+                return true; // Promise<true>
             }
 
-            // Perform the actual disconnect
-            // Convert to a Promise if it isn't already
-            const result = await Promise.resolve(
+            // Create a promise that will resolve/reject based on the protocol's disconnect result
+            return await new Promise((resolve) => {
+                // Call the protocol's disconnect with a callback that will resolve our promise
                 this._protocol.disconnect((success) => {
                     if (success) {
                         console.log(`${this.logHead} Disconnection successful`);
                     } else {
                         console.error(`${this.logHead} Disconnection failed`);
                     }
-                    // Call callback with disconnect result
+
+                    // Call original callback
                     if (callback) {
                         callback(success);
                     }
-                }),
-            );
 
-            // If the protocol's disconnect returns a boolean or undefined, return it
-            // Otherwise assume successful disconnection if no errors were thrown
-            return typeof result === "boolean" ? result : true;
+                    // Resolve our promise with the success value
+                    resolve(success);
+                });
+            });
         } catch (error) {
             console.error(`${this.logHead} Error during disconnect:`, error);
             if (callback) {
                 callback(false);
             }
-            return Promise.resolve(false);
+            return false; // Promise<false>
         }
     }
 
