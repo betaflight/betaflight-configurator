@@ -244,6 +244,9 @@
     "configuratorUpdateWebsite": {
         "message": "Idź do strony z aktualizacjami"
     },
+    "rebootFlightControllerReady": {
+        "message": "Kontroler lotu jest gotowy"
+    },
     "deviceRebooting": {
         "message": "Urządzenie - <span class=\"message-negative\">Uruchamianie ponowne<\/span>"
     },

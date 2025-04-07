@@ -244,6 +244,12 @@
     "configuratorUpdateWebsite": {
         "message": "릴리즈 웹사이트로 가기"
     },
+    "rebootFlightController": {
+        "message": "비행 컨트롤러 재부팅 중, 준비되면 다시 연결하세요"
+    },
+    "rebootFlightControllerReady": {
+        "message": "비행 컨트롤러가 준비되었습니다"
+    },
     "deviceRebooting": {
         "message": "기기 - <span class=\"message-negative\">재부팅<\/span>"
     },
@@ -3345,6 +3351,9 @@
     },
     "blackboxLoggingSerial": {
         "message": "시리얼 포트"
+    },
+    "blackboxLoggingVirtual": {
+        "message": "파일로"
     },
     "serialLoggingSupportedNote": {
         "message": "시리얼 포트를 사용하여 외부 로그 장치(OpenLager와 같은) 에 로그 할 수 있습니다. 포트 탭에서 포트를 환경설정하십시오."

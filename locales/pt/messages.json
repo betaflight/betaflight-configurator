@@ -240,6 +240,12 @@
     "configuratorUpdateWebsite": {
         "message": "Ir para a Página Web do lançamento"
     },
+    "rebootFlightController": {
+        "message": "A reiniciar a controladora de voo, reconecte quando estiver pronta"
+    },
+    "rebootFlightControllerReady": {
+        "message": "Controladora de voo está pronta"
+    },
     "deviceRebooting": {
         "message": "Dispositivo - <span class=\"message-negative\">Reiniciando<\/span>"
     },
@@ -3341,6 +3347,9 @@
     },
     "blackboxLoggingSerial": {
         "message": "Porta Serial"
+    },
+    "blackboxLoggingVirtual": {
+        "message": "Para Ficheiro"
     },
     "serialLoggingSupportedNote": {
         "message": "Pode fazer log para um dispositivo externo (como o OpenLager) utilizando a porta serial. Configure a porta na aba de Portas."
