@@ -244,6 +244,12 @@
     "configuratorUpdateWebsite": {
         "message": "Åbn udgivelseswebsted"
     },
+    "rebootFlightController": {
+        "message": "Genstart FC, tilslut igen, når du er klar"
+    },
+    "rebootFlightControllerReady": {
+        "message": "FC er klar"
+    },
     "deviceRebooting": {
         "message": "Enhed - <span class=\"message-negative\">Genstarter<\/span>"
     },
@@ -3345,6 +3351,9 @@
     },
     "blackboxLoggingSerial": {
         "message": "Seriel port"
+    },
+    "blackboxLoggingVirtual": {
+        "message": "Fil"
     },
     "serialLoggingSupportedNote": {
         "message": "Du kan logge til en ekstern logningsenhed (såsom OpenLager) ved at bruge en seriel port. Indstil seriel port på fanen Porte."

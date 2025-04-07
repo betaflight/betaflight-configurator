@@ -248,6 +248,12 @@
     "configuratorUpdateWebsite": {
         "message": "Ves a la pàgina de publicació"
     },
+    "rebootFlightController": {
+        "message": "S'està reiniciant el controlador de vol, torneu a connectar-vos quan estigui llest"
+    },
+    "rebootFlightControllerReady": {
+        "message": "La controladora de vol està llesta"
+    },
     "deviceRebooting": {
         "message": "Dispositiu - <span class=\"message-negative\">Reiniciant<\/span>"
     },
@@ -3349,6 +3355,9 @@
     },
     "blackboxLoggingSerial": {
         "message": "Port Sèrie"
+    },
+    "blackboxLoggingVirtual": {
+        "message": "A arxiu"
     },
     "serialLoggingSupportedNote": {
         "message": "Pots enregistrar a un dispositiu de registre extern (com ara un OpenLager o clon compatible) utilitzant el port serial. Configura el port a la pestanya de Ports."
