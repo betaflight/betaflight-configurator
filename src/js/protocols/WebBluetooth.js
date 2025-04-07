@@ -298,7 +298,7 @@ class WebBluetooth extends EventTarget {
                 const deviceRef = this.device;
 
                 // Verify device is still valid before checking connection status
-                if (!this.device || !this.device.gatt) {
+                if (!this.device?.gatt) {
                     if (this.deviceBackupRef) {
                         console.warn(`${this.logHead} Device or GATT became unavailable, restoring from backup`);
                         this.device = this.deviceBackupRef;
