@@ -819,7 +819,9 @@ export function reinitializeConnection(callback) {
     // In virtual mode reconnect when autoconnect is enabled
     if (CONFIGURATOR.virtualMode) {
         if (PortHandler.portPicker.autoConnect) {
-            return clickConnectDisconnect();
+            clickConnectDisconnect();
+        } else {
+            return connectDisconnect();
         }
     }
 
@@ -827,9 +829,13 @@ export function reinitializeConnection(callback) {
     rebootTimestamp = Date.now();
     MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false);
 
-    if (CONFIGURATOR.bluetoothMode && !PortHandler.portPicker.autoConnect) {
-        // Bluetooth devices are not disconnected when rebooting
-        clickConnectDisconnect();
+    if (CONFIGURATOR.bluetoothMode) {
+        if (PortHandler.portPicker.autoConnect) {
+            // Bluetooth devices are not disconnected when rebooting
+        } else {
+            // Disconnect from the device
+            clickConnectDisconnect();
+        }
     }
 
     // Show reboot progress modal except for presets tab
