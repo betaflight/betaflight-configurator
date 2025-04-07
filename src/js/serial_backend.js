@@ -889,6 +889,13 @@ function showRebootDialog() {
         }
     }, 100);
 
+    const timeout = !CONFIGURATOR.bluetoothMode && !CONFIGURATOR.virtualMode && !CONFIGURATOR.manualMode ? 5000 : 1500;
+
+    // Set a maximum timeout for the reboot process (5 seconds)
+    setTimeout(function () {
+        executeCallbackOnce();
+    }, timeout);
+
     // Helper function to create the reboot dialog if it doesn't exist
     function createRebootProgressDialog() {
         const dialog = document.createElement("dialog");
