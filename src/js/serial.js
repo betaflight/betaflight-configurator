@@ -252,7 +252,7 @@ class Serial extends EventTarget {
         if (!this._protocol) {
             console.warn(`${this.logHead} No protocol selected, nothing to disconnect`);
             if (callback) callback(false);
-            return false; // When in an async function, this automatically becomes Promise<false>
+            return false;
         }
 
         console.log(`${this.logHead} Disconnecting from current protocol`, this._protocol);
@@ -264,11 +264,11 @@ class Serial extends EventTarget {
                 if (callback) {
                     callback(true);
                 }
-                return true; // Promise<true>
+                return true;
             }
 
             // Create a promise that will resolve/reject based on the protocol's disconnect result
-            return await new Promise((resolve) => {
+            return new Promise((resolve) => {
                 // Call the protocol's disconnect with a callback that will resolve our promise
                 this._protocol.disconnect((success) => {
                     if (success) {
@@ -291,7 +291,7 @@ class Serial extends EventTarget {
             if (callback) {
                 callback(false);
             }
-            return false; // Promise<false>
+            return false;
         }
     }
 
