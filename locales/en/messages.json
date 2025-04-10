@@ -31,6 +31,9 @@
     "noticeTitle": {
         "message": "Notice"
     },
+    "search": {
+        "message": "Search"
+    },
     "dontShowAgain": {
         "message": "Don't show again"
     },

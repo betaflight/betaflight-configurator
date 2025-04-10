@@ -3265,6 +3265,21 @@ osd.initialize = function (callback) {
                     insertOrdered($displayFields, $field);
                 }
 
+                // Add the search field and its functionality
+                $("#element-fields").prepend(
+                    $(
+                        `<em class="fas fa-search" style="margin-left:3px"></em>
+                        <input type="text" class="elements-search-field" placeholder="${i18n.getMessage("search")}" />`,
+                    ),
+                );
+                $(".elements-search-field").on("input", function () {
+                    const searchTerm = $(this).val().toLowerCase();
+                    $(".switchable-field").each(function () {
+                        const fieldName = $(this).find("label").text().toLowerCase();
+                        $(this).toggle(fieldName.includes(searchTerm));
+                    });
+                });
+
                 GUI.switchery();
                 // buffer the preview
                 OSD.data.preview = [];
