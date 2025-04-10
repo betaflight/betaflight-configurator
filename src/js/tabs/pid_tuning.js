@@ -123,6 +123,7 @@ pid_tuning.initialize = function (callback) {
 
         $('.throttle input[name="mid"]').val(FC.RC_TUNING.throttle_MID.toFixed(2));
         $('.throttle input[name="expo"]').val(FC.RC_TUNING.throttle_EXPO.toFixed(2));
+        $('.throttle input[name="hover"]').val(FC.RC_TUNING.throttle_HOVER.toFixed(2));
 
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
             // Moved tpa to profile
@@ -890,6 +891,7 @@ pid_tuning.initialize = function (callback) {
 
         FC.RC_TUNING.throttle_MID = parseFloat($('.throttle input[name="mid"]').val());
         FC.RC_TUNING.throttle_EXPO = parseFloat($('.throttle input[name="expo"]').val());
+        FC.RC_TUNING.throttle_HOVER = parseFloat($('.throttle input[name="hover"]').val());
 
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
             FC.ADVANCED_TUNING.tpaMode = $('select[id="tpaMode"]').val();
@@ -1605,10 +1607,12 @@ pid_tuning.initialize = function (callback) {
             // let global validation trigger and adjust the values first
             const throttleMidE = $('.throttle input[name="mid"]');
             const throttleExpoE = $('.throttle input[name="expo"]');
+            const throttleHoverE = $('.throttle input[name="hover"]');
             const throttleLimitPercentE = $('.throttle_limit input[name="throttleLimitPercent"]');
             const throttleLimitTypeE = $('.throttle_limit select[id="throttleLimitType"]');
             const mid = parseFloat(throttleMidE.val());
             const expo = parseFloat(throttleExpoE.val());
+            const hover = parseFloat(throttleHoverE.val());
             const throttleLimitPercent = parseInt(throttleLimitPercentE.val()) / 100;
             const throttleLimitType = parseInt(throttleLimitTypeE.val());
             const throttleCurve = $(".throttle .throttle_curve canvas").get(0);
@@ -1619,7 +1623,9 @@ pid_tuning.initialize = function (callback) {
                 mid >= parseFloat(throttleMidE.prop("min")) &&
                 mid <= parseFloat(throttleMidE.prop("max")) &&
                 expo >= parseFloat(throttleExpoE.prop("min")) &&
-                expo <= parseFloat(throttleExpoE.prop("max"))
+                expo <= parseFloat(throttleExpoE.prop("max")) &&
+                hover >= parseFloat(throttleHoverE.prop("min")) &&
+                hover <= parseFloat(throttleHoverE.prop("max"))
             ) {
                 // continue
             } else {
@@ -1635,11 +1641,11 @@ pid_tuning.initialize = function (callback) {
             // math magic by englishman
             const topY = canvasHeight * (1 - throttleScale);
             const midX = canvasWidth * mid;
-            const midXl = midX * 0.5;
-            const midXr = (canvasWidth - midX) * 0.5 + midX;
-            const midY = canvasHeight - throttleScale * (midX * (canvasHeight / canvasWidth));
-            const midYl = canvasHeight - (canvasHeight - midY) * 0.5 * (expo + 1);
-            const midYr = topY + (midY - topY) * 0.5 * (expo + 1);
+            const midXl = midX * (1 - expo);
+            const midXr = (canvasWidth - midX) * expo + midX;
+            const midY = (canvasHeight - throttleScale) * (1 - hover);
+            const midYl = midY;
+            const midYr = midY;
 
             let thrPercent = (FC.RC.channels[3] - 1000) / 1000,
                 thrpos =
