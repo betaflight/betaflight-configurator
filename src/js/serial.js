@@ -224,16 +224,11 @@ class Serial extends EventTarget {
 
             // If we're connected to a different port, disconnect first
             console.log(`${this.logHead} Connected to a different port, disconnecting first`);
-            this.disconnect((success) => {
-                if (success) {
-                    // Now connect to the new port
-                    console.log(`${this.logHead} Reconnecting to new port:`, path);
-                    this._protocol.connect(path, options);
-                } else {
-                    console.error(`${this.logHead} Failed to disconnect before reconnecting`);
-                    return false;
-                }
-            });
+            const success = await this.disconnect();
+            if (!success) {
+                console.error(`${this.logHead} Failed to disconnect before reconnecting`);
+                return false;
+            }
 
             console.log(`${this.logHead} Reconnecting to new port:`, path);
             return this._protocol.connect(path, options);
@@ -269,30 +264,16 @@ class Serial extends EventTarget {
             }
 
             // Create a promise that will resolve/reject based on the protocol's disconnect result
-            return new Promise((resolve) => {
-                // Call the protocol's disconnect with a callback that will resolve our promise
-                this._protocol.disconnect((success) => {
-                    if (success) {
-                        console.log(`${this.logHead} Disconnection successful`);
-                    } else {
-                        console.error(`${this.logHead} Disconnection failed`);
-                    }
+            const success = await this._protocol.disconnect();
 
-                    // Call original callback
-                    if (callback) {
-                        callback(success);
-                    }
-
-                    // Resolve our promise with the success value
-                    resolve(success);
-                });
-            });
+            if (callback) callback(success);
+            return success;
         } catch (error) {
             console.error(`${this.logHead} Error during disconnect:`, error);
             if (callback) {
                 callback(false);
             }
-            return false;
+            return Promise.resolve(false);
         }
     }
 
