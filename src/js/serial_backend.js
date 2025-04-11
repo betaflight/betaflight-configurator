@@ -61,7 +61,7 @@ export function initializeSerialBackend() {
             !GUI.connecting_to &&
             GUI.active_tab !== "firmware_flasher" &&
             ((PortHandler.portPicker.autoConnect && !["manual", "virtual"].includes(device)) ||
-                Date.now() - rebootTimestamp < REBOOT_CONNECT_MAX_TIME_MS)
+                Date.now() - rebootTimestamp > REBOOT_CONNECT_MAX_TIME_MS)
         ) {
             connectDisconnect();
         }
@@ -73,7 +73,7 @@ export function initializeSerialBackend() {
             !GUI.connecting_to &&
             GUI.active_tab !== "firmware_flasher" &&
             ((PortHandler.portPicker.autoConnect && !["manual", "virtual"].includes(device)) ||
-                Date.now() - rebootTimestamp < REBOOT_CONNECT_MAX_TIME_MS)
+                Date.now() - rebootTimestamp > REBOOT_CONNECT_MAX_TIME_MS)
         ) {
             connectDisconnect();
         }
