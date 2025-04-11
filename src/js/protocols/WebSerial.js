@@ -5,7 +5,6 @@ const logHead = "[SERIAL]";
 
 // Update streamAsyncIterable function
 async function* streamAsyncIterable(reader, keepReadingFlag) {
-    let lockReleased = false;
     try {
         while (keepReadingFlag()) {
             try {
@@ -22,9 +21,8 @@ async function* streamAsyncIterable(reader, keepReadingFlag) {
     } finally {
         // Only release the lock if we still have the reader and it hasn't been released
         try {
-            if (reader && !reader.closed && !lockReleased) {
+            if (!reader?.closed) {
                 reader.releaseLock();
-                lockReleased = true;
             }
         } catch (error) {
             console.warn(`${logHead} Error releasing reader lock:`, error);
