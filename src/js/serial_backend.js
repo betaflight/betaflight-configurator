@@ -812,15 +812,9 @@ export function reinitializeConnection() {
     if (CONFIGURATOR.virtualMode) {
         connectDisconnect();
         if (PortHandler.portPicker.autoConnect) {
-<<<<<<< HEAD
             return setTimeout(function () {
                 $("a.connection_button__link").trigger("click");
             }, 500);
-=======
-            clickConnectDisconnect();
-        } else {
-            return connectDisconnect();
->>>>>>> d8b258f5 (Update autoconnect)
         }
     }
 
@@ -832,20 +826,11 @@ export function reinitializeConnection() {
     // Send reboot command to the flight controller
     MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false);
 
-<<<<<<< HEAD
     if (currentPort.startsWith("bluetooth")) {
         if (!PortHandler.portPicker.autoConnect) {
             return setTimeout(function () {
                 $("a.connection_button__link").trigger("click");
             }, 1500);
-=======
-    if (CONFIGURATOR.bluetoothMode) {
-        if (PortHandler.portPicker.autoConnect) {
-            // Bluetooth devices are not disconnected when rebooting
-        } else {
-            // Disconnect from the device
-            clickConnectDisconnect();
->>>>>>> d8b258f5 (Update autoconnect)
         }
     }
 
@@ -903,13 +888,6 @@ function showRebootDialog() {
             }
         }
     }, 100);
-
-    const timeout = !CONFIGURATOR.bluetoothMode && !CONFIGURATOR.virtualMode && !CONFIGURATOR.manualMode ? 5000 : 1500;
-
-    // Set a maximum timeout for the reboot process (5 seconds)
-    setTimeout(function () {
-        executeCallbackOnce();
-    }, timeout);
 
     // Helper function to create the reboot dialog if it doesn't exist
     function createRebootProgressDialog() {
