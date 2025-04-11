@@ -61,7 +61,7 @@ export function initializeSerialBackend() {
             !GUI.connecting_to &&
             GUI.active_tab !== "firmware_flasher" &&
             ((PortHandler.portPicker.autoConnect && !["manual", "virtual"].includes(device)) ||
-                Date.now() - rebootTimestamp < REBOOT_CONNECT_MAX_TIME_MS)
+                Date.now() - rebootTimestamp > REBOOT_CONNECT_MAX_TIME_MS)
         ) {
             connectDisconnect();
         }
@@ -73,7 +73,7 @@ export function initializeSerialBackend() {
             !GUI.connecting_to &&
             GUI.active_tab !== "firmware_flasher" &&
             ((PortHandler.portPicker.autoConnect && !["manual", "virtual"].includes(device)) ||
-                Date.now() - rebootTimestamp < REBOOT_CONNECT_MAX_TIME_MS)
+                Date.now() - rebootTimestamp > REBOOT_CONNECT_MAX_TIME_MS)
         ) {
             connectDisconnect();
         }
@@ -809,13 +809,19 @@ function startLiveDataRefreshTimer() {
 }
 
 export function reinitializeConnection(callback) {
+    function clickConnectDisconnect() {
+        connectDisconnect();
+        setTimeout(function () {
+            $("a.connection_button__link").trigger("click");
+        }, 500);
+    }
+
     // In virtual mode reconnect when autoconnect is enabled
     if (CONFIGURATOR.virtualMode) {
-        connectDisconnect();
         if (PortHandler.portPicker.autoConnect) {
-            return setTimeout(function () {
-                $("a.connection_button__link").trigger("click");
-            }, 500);
+            clickConnectDisconnect();
+        } else {
+            return connectDisconnect();
         }
     }
 
@@ -824,8 +830,12 @@ export function reinitializeConnection(callback) {
     MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false);
 
     if (CONFIGURATOR.bluetoothMode) {
-        // Bluetooth devices are not disconnected when rebooting
-        connectDisconnect();
+        if (PortHandler.portPicker.autoConnect) {
+            // Bluetooth devices are not disconnected when rebooting
+        } else {
+            // Disconnect from the device
+            clickConnectDisconnect();
+        }
     }
 
     // Show reboot progress modal except for presets tab
@@ -860,10 +870,14 @@ function showRebootDialog(callback) {
         }
     }, 100);
 
-    // Check for successful connection every 100ms
-    const connectionCheckInterval = setInterval(() => {
-        if (CONFIGURATOR.connectionValid) {
-            // Connection established, device is ready
+    // Track if the callback was executed
+    let callbackExecuted = false;
+
+    // Function to execute the callback only once
+    const executeCallbackOnce = () => {
+        if (!callbackExecuted) {
+            callbackExecuted = true;
+
             clearInterval(connectionCheckInterval);
             clearInterval(progressInterval);
 
@@ -876,30 +890,27 @@ function showRebootDialog(callback) {
             }, 1000);
 
             gui_log(i18n.getMessage("deviceReady"));
+
             if (callback && typeof callback === "function") {
                 callback();
             }
         }
+    };
+
+    // Check for successful connection every 100ms
+    const connectionCheckInterval = setInterval(() => {
+        if (CONFIGURATOR.connectionValid) {
+            // Connection established, device is ready
+            executeCallbackOnce();
+        }
     }, 100);
+
+    const timeout = !CONFIGURATOR.bluetoothMode && !CONFIGURATOR.virtualMode && !CONFIGURATOR.manualMode ? 5000 : 1500;
 
     // Set a maximum timeout for the reboot process (5 seconds)
     setTimeout(function () {
-        clearInterval(connectionCheckInterval);
-        clearInterval(progressInterval);
-
-        rebootDialog.querySelector(".reboot-progress-bar").style.width = "100%";
-        rebootDialog.querySelector(".reboot-status").textContent = i18n.getMessage("rebootFlightControllerReady");
-
-        // Close the dialog after showing "ready" message briefly
-        setTimeout(() => {
-            rebootDialog.close();
-        }, 1000);
-
-        gui_log(i18n.getMessage("deviceReady"));
-        if (callback && typeof callback === "function") {
-            callback();
-        }
-    }, 5000);
+        executeCallbackOnce();
+    }, timeout);
 
     // Helper function to create the reboot dialog if it doesn't exist
     function createRebootProgressDialog() {

@@ -121,8 +121,9 @@ PortHandler.removedSerialDevice = function (device) {
 PortHandler.addedUsbDevice = function (device) {
     this.updateDeviceList("usb").then(() => {
         const selectedPort = this.selectActivePort(device);
-        if (!device || selectedPort === device.path) {
-            // Send this event when the port handler auto selects a new device
+        console.log(`${this.logHead} Added USB device:`, device, selectedPort);
+        if (selectedPort === device.path) {
+            // Emit an event with the proper type for backward compatibility
             EventBus.$emit("port-handler:auto-select-usb-device", selectedPort);
         }
     });
