@@ -808,8 +808,7 @@ function startLiveDataRefreshTimer() {
     liveDataRefreshTimerId = setInterval(update_live_status, 250);
 }
 
-export function reinitializeConnection(callback) {
-    // In virtual mode reconnect when autoconnect is enabled
+export function reinitializeConnection() {
     if (CONFIGURATOR.virtualMode) {
         connectDisconnect();
         if (PortHandler.portPicker.autoConnect) {
@@ -819,13 +818,20 @@ export function reinitializeConnection(callback) {
         }
     }
 
-    // Send reboot command to the flight controller
+    const currentPort = PortHandler.portPicker.selectedPort;
+
+    // Set the reboot timestamp to the current time
     rebootTimestamp = Date.now();
+
+    // Send reboot command to the flight controller
     MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false);
 
-    if (CONFIGURATOR.bluetoothMode) {
-        // Bluetooth devices are not disconnected when rebooting
-        connectDisconnect();
+    if (currentPort.startsWith("bluetooth")) {
+        if (!PortHandler.portPicker.autoConnect) {
+            return setTimeout(function () {
+                $("a.connection_button__link").trigger("click");
+            }, 1500);
+        }
     }
 
     // Show reboot progress modal except for presets tab
@@ -833,16 +839,14 @@ export function reinitializeConnection(callback) {
         console.log("Rebooting in presets tab, skipping reboot dialog", GUI.active_tab);
         gui_log(i18n.getMessage("deviceRebooting"));
         gui_log(i18n.getMessage("deviceReady"));
-        if (callback && typeof callback === "function") {
-            callback();
-        }
+
         return;
     }
     // Show reboot progress modal
-    showRebootDialog(callback);
+    showRebootDialog();
 }
 
-function showRebootDialog(callback) {
+function showRebootDialog() {
     gui_log(i18n.getMessage("deviceRebooting"));
 
     // Show reboot progress modal
@@ -860,10 +864,12 @@ function showRebootDialog(callback) {
         }
     }, 100);
 
-    // Check for successful connection every 100ms
+    // Check for successful connection every 100ms with a timeout
     const connectionCheckInterval = setInterval(() => {
-        if (CONFIGURATOR.connectionValid) {
-            // Connection established, device is ready
+        const connectionCheckTimeoutReached = Date.now() - rebootTimestamp > REBOOT_CONNECT_MAX_TIME_MS;
+        const noSerialReconnect = !PortHandler.portPicker.autoConnect && PortHandler.portAvailable;
+
+        if (CONFIGURATOR.connectionValid || connectionCheckTimeoutReached || noSerialReconnect) {
             clearInterval(connectionCheckInterval);
             clearInterval(progressInterval);
 
@@ -875,31 +881,13 @@ function showRebootDialog(callback) {
                 rebootDialog.close();
             }, 1000);
 
-            gui_log(i18n.getMessage("deviceReady"));
-            if (callback && typeof callback === "function") {
-                callback();
+            if (connectionCheckTimeoutReached) {
+                console.log(`${logHead} Reboot timeout reached`);
+            } else {
+                gui_log(i18n.getMessage("deviceReady"));
             }
         }
     }, 100);
-
-    // Set a maximum timeout for the reboot process (5 seconds)
-    setTimeout(function () {
-        clearInterval(connectionCheckInterval);
-        clearInterval(progressInterval);
-
-        rebootDialog.querySelector(".reboot-progress-bar").style.width = "100%";
-        rebootDialog.querySelector(".reboot-status").textContent = i18n.getMessage("rebootFlightControllerReady");
-
-        // Close the dialog after showing "ready" message briefly
-        setTimeout(() => {
-            rebootDialog.close();
-        }, 1000);
-
-        gui_log(i18n.getMessage("deviceReady"));
-        if (callback && typeof callback === "function") {
-            callback();
-        }
-    }, 5000);
 
     // Helper function to create the reboot dialog if it doesn't exist
     function createRebootProgressDialog() {
