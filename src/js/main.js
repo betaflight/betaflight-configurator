@@ -111,11 +111,14 @@ function startProcess() {
     console.log(`Libraries: jQuery - ${$.fn.jquery}, three.js - ${THREE.REVISION}`);
 
     // Check if this is the first visit
-    if (getConfig('hasVisited')) {
-        setConfig('hasVisited', 'true');
+    if (getConfig('firstRun').firstRun === undefined) {  
+        setConfig({ firstRun: true });
         import('./tabs/static_tab.js').then(({ staticTab }) => {
             staticTab.initialize('options', () => {
-                console.log('Options tab opened on first visit.');
+                setTimeout(() => {
+                    // Open the options tab after a delay
+                    $("#tabs .tab_options a").click();
+                }, 100);
             });
         });
     }
