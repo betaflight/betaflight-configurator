@@ -111,8 +111,8 @@ function startProcess() {
     console.log(`Libraries: jQuery - ${$.fn.jquery}, three.js - ${THREE.REVISION}`);
 
     // Check if this is the first visit
-    if (!localStorage.getItem('hasVisited')) {
-        localStorage.setItem('hasVisited', 'true');
+    if (getConfig('hasVisited')) {
+        setConfig('hasVisited', 'true');
         import('./tabs/static_tab.js').then(({ staticTab }) => {
             staticTab.initialize('options', () => {
                 console.log('Options tab opened on first visit.');
