@@ -28,6 +28,9 @@
     "noticeTitle": {
         "message": "Aviso"
     },
+    "search": {
+        "message": "Pesquisa"
+    },
     "dontShowAgain": {
         "message": "Não mostrar novamente"
     },
@@ -2250,6 +2253,9 @@
     },
     "receiverThrottleExpo": {
         "message": "EXPO do Acelerador"
+    },
+    "receiverThrottleHover": {
+        "message": "Ponto de Pairar"
     },
     "receiverStickMin": {
         "message": "Limite 'Stick baixo'"

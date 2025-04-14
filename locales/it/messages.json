@@ -28,6 +28,9 @@
     "noticeTitle": {
         "message": "Avviso"
     },
+    "search": {
+        "message": "Cerca"
+    },
     "dontShowAgain": {
         "message": "Non mostrare più"
     },
@@ -239,6 +242,12 @@
     },
     "configuratorUpdateWebsite": {
         "message": "Pagina web degli aggiornamenti"
+    },
+    "rebootFlightController": {
+        "message": "Riavvio del controllore di volo, riconnettersi quando pronto"
+    },
+    "rebootFlightControllerReady": {
+        "message": "Il controllore di volo è pronto"
     },
     "deviceRebooting": {
         "message": "Dispositivo - <span class=\"message-negative\">Riavvio in corso<\/span>"
@@ -2245,6 +2254,9 @@
     "receiverThrottleExpo": {
         "message": "Esponenziale Gas"
     },
+    "receiverThrottleHover": {
+        "message": "Hover Point"
+    },
     "receiverStickMin": {
         "message": "Soglia \"Stick Giù\""
     },
@@ -3341,6 +3353,9 @@
     },
     "blackboxLoggingSerial": {
         "message": "Porta seriale"
+    },
+    "blackboxLoggingVirtual": {
+        "message": "Al File"
     },
     "serialLoggingSupportedNote": {
         "message": "Puoi registrare i dati su un dispositivo esterno (come OpenLager) usando una porta seriale. Configura la porta nella scheda Porte."

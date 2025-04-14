@@ -240,6 +240,12 @@
     "configuratorUpdateWebsite": {
         "message": "Перейти на сайт с релизами"
     },
+    "rebootFlightController": {
+        "message": "Перезагрузка полетного контроллера, переподключение по мере готовности"
+    },
+    "rebootFlightControllerReady": {
+        "message": "Полетный контроллер готов"
+    },
     "deviceRebooting": {
         "message": "Device - <span class=\"message-negative\">Перезагружается<\/span>"
     },
@@ -1342,14 +1348,26 @@
     "configurationMagDeclinationHelp": {
         "message": "Магнитное склонение – это угол между магнитным северным и севером. Он отличается для каждого местоположения на земле. Вы можете найти отклонение для вашего местоположения в интернете"
     },
+    "configurationRangefinder": {
+        "message": "$t(initialSetupSensorSonar.message)",
+        "description": "Don't translate!!!"
+    },
     "configurationRangefinderHelp": {
         "message": "Включить сонар для измерения расстояния до земли в см"
     },
     "configurationRangefinderType": {
         "message": "Тип"
     },
+    "configurationOpticalflow": {
+        "message": "$t(initialSetupSensorOpticalflow.message)",
+        "description": "Don't translate!!!"
+    },
     "configurationOpticalflowHelp": {
         "message": "Включить датчик оптического потока"
+    },
+    "configurationOpticalflowType": {
+        "message": "$t(configurationRangefinderType.message)",
+        "description": "Don't translate!!!"
     },
     "configurationBoardAlignment": {
         "message": "Выравнивание платы"
@@ -1369,11 +1387,35 @@
     "configurationGyroAlignmentHelp": {
         "message": "Выравнивание гироскопа — ориентация датчика гироскопа на плате полётного контроллера. По умолчанию обычно задано верное значение, но если у вас кастомная сборка или полётный контроллер с другой ориентацией гироскопа, вам может потребоваться изменить этот параметр."
     },
+    "configurationGyroAlignmentRoll": {
+        "message": "$t(configurationBoardAlignmentRoll.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyroAlignmentPitch": {
+        "message": "$t(configurationBoardAlignmentPitch.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyroAlignmentYaw": {
+        "message": "$t(configurationBoardAlignmentYaw.message)",
+        "description": "Don't translate!!!"
+    },
     "configurationMagAlignment": {
         "message": "Калибровка магнитометра"
     },
     "configurationBoardAlignmentHelp": {
         "message": "Произвольный поворот платы в градусах, чтобы сделать возможным установить её боком, вверх ногами или повёрнутой и т. д. При использовании внешних датчиков используйте настройки выравнивания датчиков (гироскоп, акселерометр, магнитометр) для определения положения датчиков независимо от ориентации платы. "
+    },
+    "configurationMagAlignmentRoll": {
+        "message": "$t(configurationBoardAlignmentRoll.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationMagAlignmentPitch": {
+        "message": "$t(configurationBoardAlignmentPitch.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationMagAlignmentYaw": {
+        "message": "$t(configurationBoardAlignmentYaw.message)",
+        "description": "Don't translate!!!"
     },
     "configurationSensorAlignmentGyro": {
         "message": "Положение Гиро."
@@ -2338,6 +2380,10 @@
     "auxiliaryModeLogicAND": {
         "message": "И"
     },
+    "auxiliaryHelpMode_3DDISABLE": {
+        "message": "Включает реверсивное направление вращения двигателя для создания отрицательной тяги и возможности летать в перевёрнутом состоянии. Стик газа работает в диапазоне значений от -100 до +100 вместо диапазона от 0 до +100",
+        "description": "Help text to 3D mode"
+    },
     "auxiliaryHelpMode_ACROTRAINER": {
         "message": "Режим полета, ограничивающий угол наклона модели при полете в режиме акро",
         "description": "Help text to ACRO TRAINER mode"
@@ -2406,6 +2452,10 @@
         "message": "Ввести вручную Этап 2 FailSafe",
         "description": "Help text to FAILSAFE mode"
     },
+    "auxiliaryHelpMode_FLIPOVERAFTERCRASH": {
+        "message": "Реверс моторов для переворачивания аппарата после аварийной посадки вверх ногами (требуется DShot)",
+        "description": "Help text to FLIP OVER AFTER CRASH mode"
+    },
     "auxiliaryHelpMode_FPVANGLEMIX": {
         "message": "Применить вращение по рысканью относительно FPV камеры, установленной под предустановленным углом",
         "description": "Help text to FPV ANGLE MIX mode"
@@ -2421,6 +2471,10 @@
     "auxiliaryHelpMode_HEADADJ": {
         "message": "Heading Adjust (Смена курса) -  задает новое направление рысканья для режима HEADFREE",
         "description": "Help text to HEAD ADJ mode"
+    },
+    "auxiliaryHelpMode_HEADFREE": {
+        "message": "Режим полета, где рысканье выравнивается по внешней системе координат (часто по направлению, куда смотрит пилот), а не по ориентации летательного аппарата. Разработан для начинающих, но используется редко, рекомендуется режим ANGLE",
+        "description": "Help text to HEADFREE mode"
     },
     "auxiliaryHelpMode_HORIZON": {
         "message": "Если стики крен и тангаж отцентрованы, этот гибридный режим работает точно как режим ANGLE (т.е. включено автовыравнивание), но по мере смещения стиков от центра, постепенно начинает вести себя как RATE (Акро) режим",
@@ -2820,6 +2874,10 @@
     },
     "gpsPositionalDop": {
         "message": "Позиционный DOP:"
+    },
+    "gpsMagneticDeclination": {
+        "message": "$t(configurationMagDeclination):",
+        "description": "Do not translate"
     },
     "gpsSignalStrHead": {
         "message": "Мощность GPS сигнала"
@@ -3267,6 +3325,9 @@
     "blackboxLoggingSerial": {
         "message": "Последовательный порт"
     },
+    "blackboxLoggingVirtual": {
+        "message": "в файл"
+    },
     "serialLoggingSupportedNote": {
         "message": "Вы можете логировать работу на внешнее устройство (такое как OpenLager) используя последовательный порт. Сконфигурируйте порт во вкладке Порты."
     },
@@ -3603,6 +3664,9 @@
     "firmwareFlasherFailedToLoadUnifiedConfig": {
         "message": "Не удалось загрузить конфигурацию для {{remote_file}}"
     },
+    "firmwareFlasherCanceledBackup": {
+        "message": "Резервное копирование отменено, процесс прошивки остановлен"
+    },
     "firmwareFlasherLegacyLabel": {
         "message": "{{target}} (Устаревш.)",
         "description": "If we have a Unified target and a old style target available, we are labeling the older one"
@@ -3677,6 +3741,15 @@
     "firmwareFlasherBackupIgnore": {
         "message": "Игнорировать риск",
         "description": "Ignore creating a backup before actual flashing takes place"
+    },
+    "firmwareBackupEnabled": {
+        "message": "Резервное копирование включено"
+    },
+    "firmwareBackupDisabled": {
+        "message": "Резервное копирование отключено"
+    },
+    "firmwareBackupAsk": {
+        "message": "Спрашивать перед созданием резервной копии"
     },
     "ledStripHelp": {
         "message": "Полетный контроллер может контролировать цвет и индивидуальные эффекты светодиодов на ленте.<br \/>Конфигурировать светодиоды на сетке, настроить порядок проводников затем установить светодиоды на ваш аппарат согласно позиции на сетке. Светодиоды без назначения номера цепи сохранены не будут.<br \/>Двойной щелчок на цвете меняет HSV значение."
@@ -5449,6 +5522,9 @@
         "message": "Название борта",
         "description": "One of the elements of the OSD"
     },
+    "osdDescElementCraftName": {
+        "message": "Название модели которое указно на вкладке Конфигурация.<\/br>Так же название можно сменить через переменную \"craft_name\" в консоли."
+    },
     "osdTextElementAltitude": {
         "message": "Высота",
         "description": "One of the elements of the OSD"
@@ -5508,9 +5584,15 @@
         "message": "Время работы",
         "description": "One of the elements of the OSD"
     },
+    "osdDescElementOnTime": {
+        "message": "Общее время на протяжении которого борт был подключен к источнику питания."
+    },
     "osdTextElementFlyTime": {
         "message": "Время полета",
         "description": "One of the elements of the OSD"
+    },
+    "osdDescElementFlyTime": {
+        "message": "Общее время в состоянии арминга в текущем цикле питания (мигает когда ниже порога тревоги)"
     },
     "osdTextElementFlyMode": {
         "message": "Режим полёта",
@@ -6940,6 +7022,9 @@
     "cliAutoComplete": {
         "message": "Расширенное автозаполнение консоли"
     },
+    "firmwareBackupOnFlash": {
+        "message": "Создать резервную копию перед прошивкой"
+    },
     "darkTheme": {
         "message": "Включить тёмную тему"
     },
@@ -7347,6 +7432,18 @@
     },
     "firmwareFlasherBuildCustomDefines": {
         "message": "Пользовательские настройки"
+    },
+    "firmwareFlasherOSDProtocolNotSelected": {
+        "message": "OSD протокол не выбран"
+    },
+    "firmwareFlasherOSDProtocolNotSelectedDescription": {
+        "message": "Вы должны выбрать OSD протокол для сборки прошивки."
+    },
+    "firmwareFlasherOSDProtocolSelect": {
+        "message": "Выбрать протокол OSD"
+    },
+    "firmwareFlasherOSDProtocolNotSelectedContinue": {
+        "message": "Продолжить без протокола OSD"
     },
     "coreBuild": {
         "message": "Только ядро"

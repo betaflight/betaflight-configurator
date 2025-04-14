@@ -28,6 +28,9 @@
     "noticeTitle": {
         "message": "알림"
     },
+    "search": {
+        "message": "검색"
+    },
     "dontShowAgain": {
         "message": "다시 보지 않기"
     },
@@ -2254,6 +2257,9 @@
     },
     "receiverThrottleExpo": {
         "message": "스로틀 EXPO"
+    },
+    "receiverThrottleHover": {
+        "message": "호버 포인트"
     },
     "receiverStickMin": {
         "message": "'스틱 낮음' 한계값"
