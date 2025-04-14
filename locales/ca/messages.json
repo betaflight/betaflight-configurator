@@ -2259,6 +2259,9 @@
     "receiverThrottleExpo": {
         "message": "Throttle EXPO"
     },
+    "receiverThrottleHover": {
+        "message": "Punt de Hover"
+    },
     "receiverStickMin": {
         "message": "Llindar 'Stick Low'"
     },

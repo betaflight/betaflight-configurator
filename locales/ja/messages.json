@@ -240,6 +240,12 @@
     "configuratorUpdateWebsite": {
         "message": "リリースサイトに移動"
     },
+    "rebootFlightController": {
+        "message": "フライトコントローラを再起動中、準備でき次第再接続"
+    },
+    "rebootFlightControllerReady": {
+        "message": "フライトコントローラ 準備完了"
+    },
     "deviceRebooting": {
         "message": "デバイス - <span class=\"message-negative\">再起動中<\/span>"
     },
@@ -742,6 +748,9 @@
     },
     "initialSetupButtonCalibratingText": {
         "message": "キャリブレーション中..."
+    },
+    "initialSetupButtonReset": {
+        "message": "設定を消去"
     },
     "initialSetupResetText": {
         "message": "フライトコントローラを<strong>未設定状態にリセット<\/strong>します。"
@@ -2864,6 +2873,14 @@
     "gpsAltitude": {
         "message": "高度:"
     },
+    "gpsLatitude": {
+        "message": "緯度:",
+        "description": "Show GPS position - Latitude"
+    },
+    "gpsLongitude": {
+        "message": "経度:",
+        "description": "Show GPS position - Longitude"
+    },
     "gpsHeading": {
         "message": "ヘッディング方位 \/ GPS:",
         "description": "Show IMU \/ GPS heading - Attitude \/ GPS course over ground"
@@ -3331,6 +3348,9 @@
     "blackboxLoggingSerial": {
         "message": "シリアルポート"
     },
+    "blackboxLoggingVirtual": {
+        "message": "ファイルへ"
+    },
     "serialLoggingSupportedNote": {
         "message": "飛行ログは外部の保存デバイス (OpenLoger等) にシリアルポートを使って保存できます。[ポート] タブでの設定が必要です。"
     },
@@ -3667,6 +3687,9 @@
     "firmwareFlasherFailedToLoadUnifiedConfig": {
         "message": "{{remote_file}} リモート設定のロードに失敗しました"
     },
+    "firmwareFlasherCanceledBackup": {
+        "message": "バックアップをキャンセルしたため、書き込みを中止しました"
+    },
     "firmwareFlasherLegacyLabel": {
         "message": "{{target}} (Legacy)",
         "description": "If we have a Unified target and a old style target available, we are labeling the older one"
@@ -3741,6 +3764,15 @@
     "firmwareFlasherBackupIgnore": {
         "message": "リスクを無視",
         "description": "Ignore creating a backup before actual flashing takes place"
+    },
+    "firmwareBackupEnabled": {
+        "message": "バックアップ 有効"
+    },
+    "firmwareBackupDisabled": {
+        "message": "バックアップ 無効"
+    },
+    "firmwareBackupAsk": {
+        "message": "バックアップ前に確認"
     },
     "ledStripHelp": {
         "message": "フライトコントローラは、個々のLEDストリップの色や効果を制御できます。<br\/>グリッド上にLEDを配置、配線順序を設定し、グリッド位置に従って機体にLEDを取り付けます。 ワイヤーオーダー番号のないLEDは保存されません。<br \/>HSV値を編集するには、色を選択、ダブルクリックします。"
@@ -7062,6 +7094,9 @@
     "cliAutoComplete": {
         "message": "CLI オートコンプリート"
     },
+    "firmwareBackupOnFlash": {
+        "message": "新しいターゲット書き込み前にバックアップを作成"
+    },
     "darkTheme": {
         "message": "ダークテーマを有効"
     },
@@ -7469,6 +7504,18 @@
     },
     "firmwareFlasherBuildCustomDefines": {
         "message": "カスタム定義"
+    },
+    "firmwareFlasherOSDProtocolNotSelected": {
+        "message": "OSDプロトコルが選択されていません"
+    },
+    "firmwareFlasherOSDProtocolNotSelectedDescription": {
+        "message": "ファームウェアのビルドにはOSDプロトコルの選択が必要です。"
+    },
+    "firmwareFlasherOSDProtocolSelect": {
+        "message": "OSDプロトコルを選択"
+    },
+    "firmwareFlasherOSDProtocolNotSelectedContinue": {
+        "message": "OSDプロトコル未選択のまま続ける"
     },
     "coreBuild": {
         "message": "コア部のみ"

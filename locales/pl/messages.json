@@ -28,6 +28,9 @@
     "noticeTitle": {
         "message": "Uwaga"
     },
+    "search": {
+        "message": "Wyszukaj"
+    },
     "dontShowAgain": {
         "message": "Nie pokazuj ponownie"
     },
@@ -243,6 +246,9 @@
     },
     "configuratorUpdateWebsite": {
         "message": "Idź do strony z aktualizacjami"
+    },
+    "rebootFlightController": {
+        "message": "Ponowne uruchamianie kontrolera lotu, gdy będziesz gotowy podłącz się ponownie"
     },
     "rebootFlightControllerReady": {
         "message": "Kontroler lotu jest gotowy"
@@ -2252,6 +2258,9 @@
     "receiverThrottleExpo": {
         "message": "Przepustnica EXPO"
     },
+    "receiverThrottleHover": {
+        "message": "Punkt Zawisu"
+    },
     "receiverStickMin": {
         "message": "Minimalna Pozycja Drążka"
     },
@@ -3349,6 +3358,9 @@
     "blackboxLoggingSerial": {
         "message": "Port Szeregowy"
     },
+    "blackboxLoggingVirtual": {
+        "message": "Do pliku"
+    },
     "serialLoggingSupportedNote": {
         "message": "Możesz podłączyć się do zewnętrznego urządzenia rejestrującego (takieiego jak OpenLager) używając portu szeregowego. Skonfiguruj port w zakładce portów."
     },
@@ -3684,6 +3696,9 @@
     },
     "firmwareFlasherFailedToLoadUnifiedConfig": {
         "message": "Nie udało się załadować konfiguracji zdalnej dla {{remote_file}}"
+    },
+    "firmwareFlasherCanceledBackup": {
+        "message": "Tworzenie kopii zapasowej anulowane, zapisywanie przerwane"
     },
     "firmwareFlasherLegacyLabel": {
         "message": "{{target}} (Starszy)",

@@ -28,6 +28,9 @@
     "noticeTitle": {
         "message": "Bemærk"
     },
+    "search": {
+        "message": "Søg"
+    },
     "dontShowAgain": {
         "message": "Vis ikke igen"
     },
@@ -2254,6 +2257,9 @@
     },
     "receiverThrottleExpo": {
         "message": "Gas EXPO"
+    },
+    "receiverThrottleHover": {
+        "message": "Svævepunkt"
     },
     "receiverStickMin": {
         "message": "'Pind Lav'-tærskel"
