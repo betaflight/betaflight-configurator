@@ -466,7 +466,9 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     FC.RC_TUNING.pitch_rate_limit = data.readU16();
                     FC.RC_TUNING.yaw_rate_limit = data.readU16();
                     FC.RC_TUNING.rates_type = data.readU8();
-                    FC.RC_TUNING.throttle_HOVER = parseFloat((data.readU8() / 100).toFixed(2));
+                    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+                        FC.RC_TUNING.throttle_HOVER = parseFloat((data.readU8() / 100).toFixed(2));
+                    }
                     break;
                 case MSPCodes.MSP_PID:
                     // PID data arrived, we need to scale it and save to appropriate bank / array
