@@ -258,7 +258,6 @@ firmware_flasher.initialize = function (callback) {
             // extract osd protocols from general options and add to osdProtocols
             console.log(`${self.logHead} buildOptions`, FC.CONFIG.buildOptions);
             self.cloudBuildOptions = FC.CONFIG.buildOptions || [];
-            console.log(`${self.logHead} generalOptions`, self.cloudBuildOptions);
             data.osdProtocols = data.generalOptions
                 .filter((option) => option.group === "OSD")
                 .map((option) => {
@@ -841,6 +840,7 @@ firmware_flasher.initialize = function (callback) {
                 })
                 .catch((error) => {
                     console.error("Error reading file:", error);
+                    self.enableLoadRemoteFileButton(true);
                 });
         });
 
