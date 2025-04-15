@@ -111,7 +111,7 @@ function startProcess() {
     console.log(`Libraries: jQuery - ${$.fn.jquery}, three.js - ${THREE.REVISION}`);
 
     // Check if this is the first visit
-    if (getConfig('firstRun').firstRun === undefined) {  
+    if (getConfig('firstRun').firstRun === undefined) {
         setConfig({ firstRun: true });
         import('./tabs/static_tab.js').then(({ staticTab }) => {
             staticTab.initialize('options', () => {
