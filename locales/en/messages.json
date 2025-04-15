@@ -3264,6 +3264,9 @@
     "escDshotDirectionDialog-SetDirectionHintSafety": {
         "message": "Motors will spin when setting the direction!"
     },
+    "escDshotDirectionDialog-SettingsAutoSaved": {
+        "message": "Motor direction is saved after selection"
+    },
     "escDshotDirectionDialog-WrongProtocolText": {
         "message": "Feature works with DSHOT ESCs only.<br />Verify that your ESC (electric speed controller) supports DSHOT protocol and change it on $t(tabMotorTesting.message) tab."
     },
