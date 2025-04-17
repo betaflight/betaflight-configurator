@@ -18,14 +18,19 @@ import { serial } from "../serial";
 
 let mspHelper = null;
 
-function readSerialAdapter(event) {
-    MSP.read(event.detail);
-}
-
 class AutoDetect {
     constructor() {
         this.board = FC.CONFIG.boardName;
         this.targetAvailable = false;
+
+        // Store bound event handlers to make removal more reliable
+        this.boundHandleConnect = this.handleConnect.bind(this);
+        this.boundHandleDisconnect = this.handleDisconnect.bind(this);
+        this.boundHandleSerialReceive = this.handleSerialReceive.bind(this);
+    }
+
+    handleSerialReceive(event) {
+        MSP.read(event.detail);
     }
 
     verifyBoard() {
@@ -51,11 +56,14 @@ class AutoDetect {
 
         gui_log(i18n.getMessage("firmwareFlasherDetectBoardQuery"));
 
-        serial.addEventListener("connect", this.handleConnect.bind(this), { once: true });
-        serial.addEventListener("disconnect", this.handleDisconnect.bind(this), { once: true });
-
         if (port.startsWith("serial")) {
+            serial.addEventListener("connect", this.boundHandleConnect, { once: true });
+            serial.addEventListener("disconnect", this.boundHandleDisconnect, { once: true });
+
+            serial.selectProtocol("serial");
             serial.connect(port, { baudRate: 115200 });
+        } else {
+            gui_log(i18n.getMessage("serialPortOpenFail"));
         }
     }
 
@@ -73,12 +81,6 @@ class AutoDetect {
         if (!this.targetAvailable) {
             gui_log(i18n.getMessage("firmwareFlasherBoardVerificationFail"));
         }
-
-        MSP.clearListeners();
-
-        serial.removeEventListener("receive", readSerialAdapter);
-        serial.removeEventListener("connect", this.handleConnect.bind(this));
-        serial.removeEventListener("disconnect", this.handleDisconnect.bind(this));
     }
 
     onFinishClose() {
@@ -109,8 +111,17 @@ class AutoDetect {
             );
         }
 
-        serial.disconnect(this.onClosed.bind(this));
+        // Remove event listeners using stored references
+        serial.removeEventListener("receive", this.boundHandleSerialReceive);
+        serial.removeEventListener("connect", this.boundHandleConnect);
+        serial.removeEventListener("disconnect", this.boundHandleDisconnect);
+
+        // Clean up MSP listeners
+        MSP.clearListeners();
         MSP.disconnect_cleanup();
+
+        // Disconnect without passing onClosed as a callback
+        serial.disconnect();
     }
 
     async getBoardInfo() {
@@ -171,8 +182,8 @@ class AutoDetect {
 
     onConnect(openInfo) {
         if (openInfo) {
-            serial.removeEventListener("receive", readSerialAdapter);
-            serial.addEventListener("receive", readSerialAdapter);
+            serial.removeEventListener("receive", this.boundHandleSerialReceive);
+            serial.addEventListener("receive", this.boundHandleSerialReceive);
 
             mspHelper = new MspHelper();
             MSP.listen(mspHelper.process_data.bind(mspHelper));
