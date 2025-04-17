@@ -110,6 +110,19 @@ function startProcess() {
     // log library versions in console to make version tracking easier
     console.log(`Libraries: jQuery - ${$.fn.jquery}, three.js - ${THREE.REVISION}`);
 
+    // Check if this is the first visit
+    if (getConfig('firstRun').firstRun === undefined) {
+        setConfig({ firstRun: true });
+        import('./tabs/static_tab.js').then(({ staticTab }) => {
+            staticTab.initialize('options', () => {
+                setTimeout(() => {
+                    // Open the options tab after a delay
+                    $("#tabs .tab_options a").click();
+                }, 100);
+            });
+        });
+    }
+
     // Tabs
     $("#tabs ul.mode-connected li").click(function () {
         // store the first class of the current tab (omit things like ".active")
