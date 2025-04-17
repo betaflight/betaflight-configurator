@@ -1106,7 +1106,10 @@ OSD.loadDisplayFields = function () {
             defaultPosition: -1,
             draw_order: 360,
             positionable: true,
-            preview: "2017-11-11 16:20:00",
+            preview(osdData) {
+                const variantSelected = OSD.getVariantForPreview(osdData, "RTC_DATE_TIME");
+                return variantSelected === 0 ? "2025-11-11 16:20:00" : "11-11 16:20";
+            },
         },
         ADJUSTMENT_RANGE: {
             name: "ADJUSTMENT_RANGE",
@@ -1577,9 +1580,15 @@ OSD.loadDisplayFields = function () {
         },
     };
 
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47) && have_sensor(FC.CONFIG.activeSensors, "gps")) {
-        OSD.ALL_DISPLAY_FIELDS.ALTITUDE.variants.push("osdTextElementAltitudeVariant1DecimalASL");
-        OSD.ALL_DISPLAY_FIELDS.ALTITUDE.variants.push("osdTextElementAltitudeVariantNoDecimalASL");
+    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+        if (have_sensor(FC.CONFIG.activeSensors, "gps")) {
+            OSD.ALL_DISPLAY_FIELDS.ALTITUDE.variants.push("osdTextElementAltitudeVariant1DecimalASL");
+            OSD.ALL_DISPLAY_FIELDS.ALTITUDE.variants.push("osdTextElementAltitudeVariantNoDecimalASL");
+        }
+        OSD.ALL_DISPLAY_FIELDS.RTC_DATE_TIME.variants = [
+            "osdTextElementRtcDateTimeVariantFullDate",
+            "osdTextElementRtcDateTimeVariantShortDate",
+        ];
     }
 };
 
