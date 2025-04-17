@@ -8,6 +8,7 @@ import { gui_log } from "../gui_log";
 import $ from "jquery";
 
 const servos = {};
+
 servos.initialize = function (callback) {
     if (GUI.active_tab !== "servos") {
         GUI.active_tab = "servos";
@@ -42,18 +43,21 @@ servos.initialize = function (callback) {
 
         $(".tab-servos").addClass("supported");
 
-        let servoCheckbox = "";
+        // setup header
         let servoHeader = "";
         for (let i = 0; i < FC.RC.active_channels - 4; i++) {
             servoHeader += `<th>A${i + 1}</th>`;
         }
+
         servoHeader += '<th style="width: 110px" i18n="servosRateAndDirection"></th>';
 
-        for (let i = 0; i < FC.RC.active_channels; i++) {
-            servoCheckbox += `<td class="channel"><input type="checkbox"/></td>`;
-        }
-
         $("div.tab-servos table.fields tr.main").append(servoHeader);
+
+        // setup checkboxes
+        let servoCheckbox = "";
+        for (let i = 0; i < FC.RC.active_channels; i++) {
+            servoCheckbox += `<td class="channel" id="channel${i}"><input type="checkbox"/></td>`;
+        }
 
         /*
          *  function: void process_servos(string, object)
@@ -93,6 +97,19 @@ servos.initialize = function (callback) {
 
             $("div.tab-servos table.fields tr:last").data("info", { obj: obj });
 
+            // check if input sources are reversed
+            for (const rule of FC.SERVO_RULES) {
+                const inputSource = rule.inputSource;
+                const reversed = FC.SERVO_CONFIG[obj].reversedInputSources & (1 << inputSource);
+                if (reversed) {
+                    FC.SERVO_CONFIG[obj].reversedInputSources |= 1 << inputSource;
+                    const inputSourceElement = $(`#channel${inputSource}`).find("input");
+                    if (inputSourceElement) {
+                        inputSourceElement.prop("checked", true).parent().css("background-color", "red");
+                    }
+                }
+            }
+
             // UI hooks
 
             // only one checkbox for indicating a channel to forward can be selected at a time, perhaps a radio group would be best here.
@@ -123,8 +140,7 @@ servos.initialize = function (callback) {
                 FC.SERVO_CONFIG[info.obj].min = parseInt($(".min input", this).val());
                 FC.SERVO_CONFIG[info.obj].max = parseInt($(".max input", this).val());
 
-                const val = parseInt($(".direction select", this).val());
-                FC.SERVO_CONFIG[info.obj].rate = val;
+                FC.SERVO_CONFIG[info.obj].rate = parseInt($(".direction select", this).val());
             });
 
             //
