@@ -61,7 +61,7 @@ export function initializeSerialBackend() {
             !GUI.connecting_to &&
             GUI.active_tab !== "firmware_flasher" &&
             ((PortHandler.portPicker.autoConnect && !["manual", "virtual"].includes(device)) ||
-                Date.now() - rebootTimestamp < REBOOT_CONNECT_MAX_TIME_MS)
+                Date.now() - rebootTimestamp > REBOOT_CONNECT_MAX_TIME_MS)
         ) {
             connectDisconnect();
         }
@@ -73,7 +73,7 @@ export function initializeSerialBackend() {
             !GUI.connecting_to &&
             GUI.active_tab !== "firmware_flasher" &&
             ((PortHandler.portPicker.autoConnect && !["manual", "virtual"].includes(device)) ||
-                Date.now() - rebootTimestamp < REBOOT_CONNECT_MAX_TIME_MS)
+                Date.now() - rebootTimestamp > REBOOT_CONNECT_MAX_TIME_MS)
         ) {
             connectDisconnect();
         }
@@ -809,23 +809,29 @@ function startLiveDataRefreshTimer() {
 }
 
 export function reinitializeConnection(callback) {
-    // In virtual mode reconnect when autoconnect is enabled
-    if (CONFIGURATOR.virtualMode) {
+    function checkAutoconnect() {
         connectDisconnect();
         if (PortHandler.portPicker.autoConnect) {
-            return setTimeout(function () {
+            setTimeout(function () {
                 $("a.connection_button__link").trigger("click");
-            }, 500);
+            }, 1500);
         }
     }
 
-    // Send reboot command to the flight controller
+    if (CONFIGURATOR.virtualMode) {
+        checkAutoconnect();
+    }
+
+    const currentPort = PortHandler.portPicker.selectedPort;
+
+    // Set the reboot timestamp to the current time
     rebootTimestamp = Date.now();
+
+    // Send reboot command to the flight controller
     MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false);
 
-    if (CONFIGURATOR.bluetoothMode) {
-        // Bluetooth devices are not disconnected when rebooting
-        connectDisconnect();
+    if (currentPort.startsWith("bluetooth")) {
+        checkAutoconnect();
     }
 
     // Show reboot progress modal except for presets tab
@@ -860,10 +866,11 @@ function showRebootDialog(callback) {
         }
     }, 100);
 
-    // Check for successful connection every 100ms
+    // Check for successful connection every 100ms with a timeout
     const connectionCheckInterval = setInterval(() => {
-        if (CONFIGURATOR.connectionValid) {
-            // Connection established, device is ready
+        const connectionCheckTimeoutReached = Date.now() - rebootTimestamp > REBOOT_CONNECT_MAX_TIME_MS;
+
+        if (CONFIGURATOR.connectionValid || connectionCheckTimeoutReached) {
             clearInterval(connectionCheckInterval);
             clearInterval(progressInterval);
 
@@ -875,31 +882,17 @@ function showRebootDialog(callback) {
                 rebootDialog.close();
             }, 1000);
 
-            gui_log(i18n.getMessage("deviceReady"));
+            if (connectionCheckTimeoutReached) {
+                console.log(`${this.logHead} Reboot timeout reached`);
+            } else {
+                gui_log(i18n.getMessage("deviceReady"));
+            }
+
             if (callback && typeof callback === "function") {
                 callback();
             }
         }
     }, 100);
-
-    // Set a maximum timeout for the reboot process (5 seconds)
-    setTimeout(function () {
-        clearInterval(connectionCheckInterval);
-        clearInterval(progressInterval);
-
-        rebootDialog.querySelector(".reboot-progress-bar").style.width = "100%";
-        rebootDialog.querySelector(".reboot-status").textContent = i18n.getMessage("rebootFlightControllerReady");
-
-        // Close the dialog after showing "ready" message briefly
-        setTimeout(() => {
-            rebootDialog.close();
-        }, 1000);
-
-        gui_log(i18n.getMessage("deviceReady"));
-        if (callback && typeof callback === "function") {
-            callback();
-        }
-    }, 5000);
 
     // Helper function to create the reboot dialog if it doesn't exist
     function createRebootProgressDialog() {
