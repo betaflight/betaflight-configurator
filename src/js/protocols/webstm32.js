@@ -150,7 +150,6 @@ class STM32Protocol {
                 // if firmware doesn't flush MSP/serial send buffers and gracefully shutdown VCP connections we won't get a reply, so don't wait for it.
                 this.mspConnector.disconnect((disconnectionResult) => {
                     console.log(`${this.logHead} Disconnecting from MSP`, disconnectionResult);
-                    this.handleDisconnect(disconnectionResult);
                 });
             });
             console.log(`${this.logHead} Reboot request received by device`);
