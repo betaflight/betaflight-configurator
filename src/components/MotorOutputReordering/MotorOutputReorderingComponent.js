@@ -1,13 +1,10 @@
 import MotorOutputReorderConfig from "./MotorOutputReorderingConfig";
 import MotorOutputReorderCanvas from "./MotorOutputReorderingCanvas";
 import { mspHelper } from "../../js/msp/MSPHelper";
-import { reinitializeConnection } from "../../js/serial_backend";
 import MSP from "../../js/msp";
 import MSPCodes from "../../js/msp/MSPCodes";
 import FC from "../../js/fc";
-import { gui_log } from "../../js/gui_log";
 import { i18n } from "../../js/localization";
-import GUI, { TABS } from "../../js/gui";
 import $ from "jquery";
 
 export default class MotorOutputReorderComponent {
@@ -82,25 +79,14 @@ export default class MotorOutputReorderComponent {
     }
 
     _save() {
-        function save_to_eeprom() {
-            MSP.send_message(MSPCodes.MSP_EEPROM_WRITE, false, false, reboot);
-        }
-
-        function reboot() {
-            gui_log(i18n.getMessage("configurationEepromSaved"));
-            GUI.tab_switch_cleanup(() =>
-                MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false, reinitializeConnection(TABS.motors)),
-            );
-        }
-
         FC.MOTOR_OUTPUT_ORDER = Array.from(this._newMotorOutputReorder);
 
         MSP.send_message(
             MSPCodes.MSP2_SET_MOTOR_OUTPUT_REORDERING,
             mspHelper.crunch(MSPCodes.MSP2_SET_MOTOR_OUTPUT_REORDERING),
+            false,
+            () => mspHelper.writeConfiguration(true),
         );
-
-        save_to_eeprom();
     }
 
     _calculateNewMotorOutputReorder() {

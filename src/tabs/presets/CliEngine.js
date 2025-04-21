@@ -235,7 +235,7 @@ export default class CliEngine {
                 CONFIGURATOR.cliEngineActive = false;
                 CONFIGURATOR.cliEngineValid = false;
                 gui_log(i18n.getMessage("cliReboot"));
-                reinitializeConnection(this._currentTab);
+                reinitializeConnection();
             }
         }
 
