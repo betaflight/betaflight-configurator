@@ -111,13 +111,13 @@ export function sensorTypes() {
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
         removeArrayElement(gyroElements, "L3G4200D");
         removeArrayElement(gyroElements, "MPU3050");
-        addArrayElementsAfter(gyroElements, "LSM6DSV16X", ["IIM42653", "ICM45686"]);
+        addArrayElementsAfter(gyroElements, "LSM6DSV16X", ["IIM42653", "ICM45605", "ICM45686"]);
 
         removeArrayElement(accElements, "ADXL345");
         removeArrayElement(accElements, "MMA8452");
         removeArrayElement(accElements, "BMA280");
         removeArrayElement(accElements, "LSM303DLHC");
-        addArrayElementsAfter(accElements, "LSM6DSV16X", ["IIM42653", "ICM45686"]);
+        addArrayElementsAfter(accElements, "LSM6DSV16X", ["IIM42653", "ICM45605", "ICM45686"]);
 
         addArrayElement(gpsElements, "VIRTUAL");
     }
