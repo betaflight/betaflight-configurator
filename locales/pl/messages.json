@@ -3181,6 +3181,9 @@
     "escDshotDirectionDialog-SetDirectionHintSafety": {
         "message": "Silniki będą obracać się podczas ustawiania kierunku!"
     },
+    "escDshotDirectionDialog-SettingsAutoSaved": {
+        "message": "Kierunek obrotu silnika jest zapisywany po dokonaniu wyboru"
+    },
     "escDshotDirectionDialog-WrongProtocolText": {
         "message": "Funkcja działa tylko z ESC z protokołem DSHOT.<br \/> Sprawdź, czy ESC (elektroniczny kontroler prędkości) którego używasz obsługuje protokół DSHOT i zmień go w ustawieniach $t(tabMotorTesting.message)."
     },

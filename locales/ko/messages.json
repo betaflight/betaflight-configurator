@@ -3181,6 +3181,9 @@
     "escDshotDirectionDialog-SetDirectionHintSafety": {
         "message": "방향을 설정할 때 모터가 회전합니다!"
     },
+    "escDshotDirectionDialog-SettingsAutoSaved": {
+        "message": "선택 시 모터 방향이 저장됩니더"
+    },
     "escDshotDirectionDialog-WrongProtocolText": {
         "message": "기능은 DSHOT ESC에서만 작동합니다.<br \/> ESC(전기 속도 제어기)가 DSHOT 프로토콜을 지원하는지 확인하고 $t(tabMotorTesting.message) 탭에서 변경하세요."
     },
@@ -5900,6 +5903,14 @@
     "osdTextElementRtcDateTime": {
         "message": "RTC 날짜 및 시간",
         "description": "One of the elements of the OSD"
+    },
+    "osdTextElementRtcDateTimeVariantFullDate": {
+        "message": "전체 날짜",
+        "description": "One of the variants of the RTC date and time element of the OSD"
+    },
+    "osdTextElementRtcDateTimeVariantShortDate": {
+        "message": "약식 날짜",
+        "description": "One of the variants of the RTC date and time element of the OSD"
     },
     "osdDescElementRtcDateTime": {
         "message": "실시간 날짜 \/ 시간"

@@ -3177,6 +3177,9 @@
     "escDshotDirectionDialog-SetDirectionHintSafety": {
         "message": "I motori gireranno quando si imposta la direzione!"
     },
+    "escDshotDirectionDialog-SettingsAutoSaved": {
+        "message": "La direzione del motore viene salvata alla selezione"
+    },
     "escDshotDirectionDialog-WrongProtocolText": {
         "message": "Funziona solo con ESC DSHOT.<br \/>Verifica che il tuo ESC (Electric Speed Controller) supporti il protocollo DSHOT e cambialo nella scheda $t(tabMotorTesting.message)."
     },

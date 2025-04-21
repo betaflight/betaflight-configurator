@@ -3177,6 +3177,9 @@
     "escDshotDirectionDialog-SetDirectionHintSafety": {
         "message": "Motores vão girar ao definir a direção!"
     },
+    "escDshotDirectionDialog-SettingsAutoSaved": {
+        "message": "Direção do motor é guardada após a seleção"
+    },
     "escDshotDirectionDialog-WrongProtocolText": {
         "message": "A funcionalidade funciona apenas com ESCs DSHOT.<br \/>Verifique se o seu ESC (electronic speed controller) suporta o protocolo DSHOT e altere-o na aba $t(tabMotorTesting.message)."
     },
@@ -5896,6 +5899,14 @@
     "osdTextElementRtcDateTime": {
         "message": "Data e hora do RTC",
         "description": "One of the elements of the OSD"
+    },
+    "osdTextElementRtcDateTimeVariantFullDate": {
+        "message": "Data completa",
+        "description": "One of the variants of the RTC date and time element of the OSD"
+    },
+    "osdTextElementRtcDateTimeVariantShortDate": {
+        "message": "Data abreviada",
+        "description": "One of the variants of the RTC date and time element of the OSD"
     },
     "osdDescElementRtcDateTime": {
         "message": "Relógio real (data \/ hora)"
