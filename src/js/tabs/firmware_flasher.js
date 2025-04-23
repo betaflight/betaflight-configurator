@@ -857,6 +857,13 @@ firmware_flasher.initialize = function (callback) {
         });
 
         async function enforceOSDSelection() {
+            const firmwareVersion = $('select[name="firmware_version"] option:selected').text();
+
+            // Skip OSD selection enforcement for firmware versions 4.3.x
+            if (firmwareVersion.startsWith("4.3.")) {
+                return true;
+            }
+
             if ($('select[name="osdProtocols"] option:selected').val() === "") {
                 return new Promise((resolve) => {
                     GUI.showYesNoDialog({
