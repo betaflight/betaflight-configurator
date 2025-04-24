@@ -672,7 +672,9 @@ firmware_flasher.initialize = function (callback) {
                 tracking.sendEvent(tracking.EVENT_CATEGORIES.FLASHING, "DFU Flashing", {
                     filename: self.filename || null,
                 });
-                DFU.connect(port, firmware, options);
+                DFU.requestPermission().then((device) => {
+                    DFU.connect(device.path, firmware, options);
+                });
             } else if (isSerial) {
                 if ($("input.updating").is(":checked")) {
                     options.no_reboot = true;
