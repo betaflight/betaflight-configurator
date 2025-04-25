@@ -1653,19 +1653,33 @@ pid_tuning.initialize = function (callback) {
             const midYl = midY;
             const midYr = midY;
 
-            let thrPercent = (FC.RC.channels[3] - 1000) / 1000,
-                thrpos =
-                    thrPercent <= mid
-                        ? getQuadraticCurvePoint(0, canvasHeight, midXl, midYl, midX, midY, thrPercent * (1.0 / mid))
-                        : getQuadraticCurvePoint(
-                            midX,
-                            midY,
-                            midXr,
-                            midYr,
-                            canvasWidth,
-                            topY,
-                            (thrPercent - mid) * (1.0 / (1.0 - mid)),
-                        );
+            // helper: invert x(t) for a quadratic Bézier
+            function getTfromXBezier(x, x0, cx, x1) {
+                // x(t) = (1–t)² x0 + 2(1–t)t cx + t² x1  ⇒  a t² + b t + c = 0
+                const a = x0 + x1 - 2 * cx;
+                const b = 2 * (cx - x0);
+                const c = x0 - x;
+                if (Math.abs(a) < 1e-6) {
+                    // linear case
+                    return -c / b;
+                }
+                const disc = b * b - 4 * a * c;
+                const t1 = (-b + Math.sqrt(disc)) / (2 * a);
+                const t2 = (-b - Math.sqrt(disc)) / (2 * a);
+                // pick the root in [0,1]
+                return 0 <= t1 && t1 <= 1 ? t1 : t2;
+            }
+
+            const thrPercent = (FC.RC.channels[3] - 1000) / 1000;
+            const thrX = thrPercent * canvasWidth;
+            let thrpos;
+            if (thrPercent <= mid) {
+                const t = getTfromXBezier(thrX, 0, midXl, midX);
+                thrpos = getQuadraticCurvePoint(0, canvasHeight, midXl, midYl, midX, midY, t);
+            } else {
+                const t = getTfromXBezier(thrX, midX, midXr, canvasWidth);
+                thrpos = getQuadraticCurvePoint(midX, midY, midXr, midYr, canvasWidth, topY, t);
+            }
 
             // draw
             context.clearRect(0, 0, canvasWidth, canvasHeight);
