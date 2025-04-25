@@ -36,6 +36,7 @@ const PortHandler = new (function () {
 PortHandler.initialize = function () {
     EventBus.$on("ports-input:request-permission-bluetooth", () => this.requestDevicePermission("bluetooth"));
     EventBus.$on("ports-input:request-permission", () => this.requestDevicePermission("serial"));
+    EventBus.$on("ports-input:request-permission-usb", () => this.requestDevicePermission("usb"));
     EventBus.$on("ports-input:change", this.onChangeSelectedPort.bind(this));
 
     // Use serial for all protocol events
@@ -134,25 +135,39 @@ PortHandler.onChangeSelectedPort = function (port) {
 
 /**
  * Request permission for a device of the specified type
- * @param {string} deviceType - Type of device ('serial' or 'bluetooth')
+ * @param {string} deviceType - Type of device ('serial', 'bluetooth', 'usb')
  */
-PortHandler.requestDevicePermission = function (deviceType = "serial") {
+PortHandler.requestDevicePermission = function (deviceType) {
     // Determine whether to show all devices based on device type
     const showAllDevices = deviceType === "serial" ? this.showAllSerialDevices : false;
 
-    // Use serial facade to request permission
-    serial
-        .requestPermissionDevice(showAllDevices, deviceType)
+    let requestPromise;
+    let logType = deviceType;
+
+    switch (deviceType) {
+        case "usb":
+            requestPromise = WEBUSBDFU.requestPermission();
+            logType = "USB";
+            break;
+        case "bluetooth":
+        case "serial":
+        default:
+            requestPromise = serial.requestPermissionDevice(showAllDevices, deviceType);
+            break;
+    }
+
+    console.log(`${this.logHead} Requesting permission for ${logType} device...`);
+    requestPromise
         .then((port) => {
             if (port) {
-                console.log(`${this.logHead} Permission granted for ${deviceType} device:`, port);
+                console.log(`${this.logHead} Permission granted for ${logType} device:`, port);
                 this.selectActivePort(port);
             } else {
-                console.log(`${this.logHead} Permission request cancelled or failed for ${deviceType}`);
+                console.log(`${this.logHead} Permission request cancelled or failed for ${logType} device`);
             }
         })
         .catch((error) => {
-            console.error(`${this.logHead} Error requesting permission for ${deviceType}:`, error);
+            console.error(`${this.logHead} Error requesting permission for ${logType} device:`, error);
         });
 };
 
