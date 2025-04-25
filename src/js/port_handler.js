@@ -138,36 +138,24 @@ PortHandler.onChangeSelectedPort = function (port) {
  * @param {string} deviceType - Type of device ('serial', 'bluetooth', 'usb')
  */
 PortHandler.requestDevicePermission = function (deviceType) {
-    // Determine whether to show all devices based on device type
-    const showAllDevices = deviceType === "serial" ? this.showAllSerialDevices : false;
+    const requestPromise =
+        deviceType === "usb"
+            ? WEBUSBDFU.requestPermission()
+            : serial.requestPermissionDevice(this.showAllSerialDevices, deviceType);
 
-    let requestPromise;
-    let logType = deviceType;
+    console.log(`${this.logHead} Requesting permission for ${deviceType} device...`);
 
-    switch (deviceType) {
-        case "usb":
-            requestPromise = WEBUSBDFU.requestPermission();
-            logType = "USB";
-            break;
-        case "bluetooth":
-        case "serial":
-        default:
-            requestPromise = serial.requestPermissionDevice(showAllDevices, deviceType);
-            break;
-    }
-
-    console.log(`${this.logHead} Requesting permission for ${logType} device...`);
     requestPromise
         .then((port) => {
             if (port) {
-                console.log(`${this.logHead} Permission granted for ${logType} device:`, port);
+                console.log(`${this.logHead} Permission granted for ${deviceType} device:`, port);
                 this.selectActivePort(port);
             } else {
-                console.log(`${this.logHead} Permission request cancelled or failed for ${logType} device`);
+                console.log(`${this.logHead} Permission request cancelled or failed for ${deviceType} device`);
             }
         })
         .catch((error) => {
-            console.error(`${this.logHead} Error requesting permission for ${logType} device:`, error);
+            console.error(`${this.logHead} Error requesting permission for ${deviceType} device:`, error);
         });
 };
 
