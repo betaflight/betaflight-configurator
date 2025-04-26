@@ -1667,10 +1667,7 @@ pid_tuning.initialize = function (callback) {
                 const t1 = (-b + Math.sqrt(disc)) / (2 * a);
                 const t2 = (-b - Math.sqrt(disc)) / (2 * a);
                 // pick the root in [0,1]
-                t = 0 <= t1 && t1 <= 1 ? t1 : t2;
-
-                // clamp to [0,1]
-                return t < 0 ? 0 : t > 1 ? 1 : t;
+                return 0 <= t1 && t1 <= 1 ? t1 : t2;
             }
 
             const thrPercent = (FC.RC.channels[3] - 1000) / 1000;
@@ -1724,7 +1721,7 @@ pid_tuning.initialize = function (callback) {
             let fontSize = 10;
             context.font = `${fontSize}pt Verdana, Arial, sans-serif`;
             let realthr = thrPercent * 100.0,
-                expothr = 100 - (thrpos.y / canvasHeight) * 100.0,
+                expothr = Math.max(0, Math.min(100, 100 - (thrpos.y / canvasHeight) * 100.0)),
                 thrlabel =
                     `${Math.round(thrPercent <= 0 ? 0 : realthr)}%` +
                     ` = ${Math.round(thrPercent <= 0 ? 0 : expothr)}%`,
