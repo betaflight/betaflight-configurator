@@ -1667,7 +1667,10 @@ pid_tuning.initialize = function (callback) {
                 const t1 = (-b + Math.sqrt(disc)) / (2 * a);
                 const t2 = (-b - Math.sqrt(disc)) / (2 * a);
                 // pick the root in [0,1]
-                return 0 <= t1 && t1 <= 1 ? t1 : t2;
+                t = 0 <= t1 && t1 <= 1 ? t1 : t2;
+
+                // clamp to [0,1]
+                return t < 0 ? 0 : t > 1 ? 1 : t;
             }
 
             const thrPercent = (FC.RC.channels[3] - 1000) / 1000;
