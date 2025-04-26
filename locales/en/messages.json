@@ -90,6 +90,10 @@
         "message": "--- I can't find my Bluetooth device---",
         "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access a Bluetooth device."
     },
+    "portsSelectPermissionDFU": {
+        "message": "--- I can't find my DFU device ---",
+        "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access a DFU device."
+    },
     "bluetoothConnected": {
         "message": "Connected to Bluetooth device: $1"
     },

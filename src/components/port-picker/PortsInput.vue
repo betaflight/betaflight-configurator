@@ -45,6 +45,9 @@
                 <option value="requestpermissionbluetooth">
                     {{ $t("portsSelectPermissionBluetooth") }}
                 </option>
+                <option value="requestpermissionusb">
+                    {{ $t("portsSelectPermissionDFU") }}
+                </option>
             </select>
         </div>
         <div id="auto-connect-and-baud">
@@ -159,6 +162,8 @@ export default defineComponent({
                 EventBus.$emit("ports-input:request-permission");
             } else if (value === "requestpermissionbluetooth") {
                 EventBus.$emit("ports-input:request-permission-bluetooth");
+            } else if (value === "requestpermissionusb") {
+                EventBus.$emit("ports-input:request-permission-usb");
             } else {
                 EventBus.$emit("ports-input:change", value);
             }
