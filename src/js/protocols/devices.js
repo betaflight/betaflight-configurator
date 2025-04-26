@@ -48,6 +48,7 @@ export const serialDevices = [
     { vendorId: 1155, productId: 12886 }, // STM32 in HID mode
     { vendorId: 1155, productId: 14158 }, // 0483:374e STM Electronics STLink Virtual COM Port (NUCLEO boards)
     { vendorId: 1155, productId: 22336 }, // STM Electronics Virtual COM Port
+    { vendorId: 10473, productId: 394 },  // GD32 VCP
     { vendorId: 4292, productId: 60000 }, // CP210x
     { vendorId: 4292, productId: 60001 }, // CP210x
     { vendorId: 4292, productId: 60002 }, // CP210x
