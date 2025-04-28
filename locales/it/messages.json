@@ -5900,6 +5900,14 @@
         "message": "Data e ora RTC",
         "description": "One of the elements of the OSD"
     },
+    "osdTextElementRtcDateTimeVariantFullDate": {
+        "message": "Data completa",
+        "description": "One of the variants of the RTC date and time element of the OSD"
+    },
+    "osdTextElementRtcDateTimeVariantShortDate": {
+        "message": "Data breve",
+        "description": "One of the variants of the RTC date and time element of the OSD"
+    },
     "osdDescElementRtcDateTime": {
         "message": "Data \/ ora dell'orologio in tempo reale (RTC)"
     },

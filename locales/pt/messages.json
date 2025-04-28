@@ -87,6 +87,10 @@
         "message": "--- Não encontro o meu dispositivo Bluetooth ---",
         "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access a Bluetooth device."
     },
+    "portsSelectPermissionDFU": {
+        "message": "--- Não encontro o meu dispositivo DFU ---",
+        "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access a DFU device."
+    },
     "bluetoothConnected": {
         "message": "Ligado ao dispositivo Bluetooth: $1"
     },

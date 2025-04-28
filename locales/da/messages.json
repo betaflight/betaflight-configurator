@@ -87,6 +87,10 @@
         "message": "--- Jeg kan ikke finde min Bluetooth enhed---",
         "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access a Bluetooth device."
     },
+    "portsSelectPermissionDFU": {
+        "message": "--- Jeg kan ikke finde min DFU forbindelse ---",
+        "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access a DFU device."
+    },
     "bluetoothConnected": {
         "message": "Forbundet til Bluetooth-enhed: $1"
     },
