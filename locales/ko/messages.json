@@ -87,6 +87,10 @@
         "message": "--- 블루투스 장치를 찾을 수 없습니다---",
         "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access a Bluetooth device."
     },
+    "portsSelectPermissionDFU": {
+        "message": "--- 내 DFU 장치를 찾을 수 없습니다 ---",
+        "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access a DFU device."
+    },
     "bluetoothConnected": {
         "message": "블루투스 장치에 연결됨: $1"
     },

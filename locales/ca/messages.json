@@ -28,6 +28,9 @@
     "noticeTitle": {
         "message": "Avís"
     },
+    "search": {
+        "message": "Cerca"
+    },
     "dontShowAgain": {
         "message": "No ho mostris més"
     },
@@ -83,6 +86,10 @@
     "portsSelectPermissionBluetooth": {
         "message": "--- No trobo el meu dispositiu Bluetooth---",
         "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access a Bluetooth device."
+    },
+    "portsSelectPermissionDFU": {
+        "message": "--- No trobo el meu dispositiu DFU ---",
+        "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access a DFU device."
     },
     "bluetoothConnected": {
         "message": "Connecta't al dispositiu Bluetooth: $1"
