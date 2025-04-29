@@ -1183,11 +1183,20 @@
     "initialSetupInfoBuildConfig": {
         "message": "Config"
     },
+    "initialSetupInfoBuildDownload": {
+        "message": "Download"
+    },
+    "initialSetupInfoBuildFirmware": {
+        "message": "Firmware:"
+    },
     "initialSetupInfoBuildLog": {
         "message": "Log"
     },
     "initialSetupInfoBuildOptions": {
         "message": "Options"
+    },
+    "initialSetupInfoBuildOptionsLabel": {
+        "message": "Options:"
     },
     "initialSetupInfoBuildOptionList": {
         "message": "Options defined in firmware build"
@@ -1196,7 +1205,7 @@
         "message": "Local Build - no Cloud information"
     },
     "initialSetupInfoBuildType": {
-        "message": "Build type"
+        "message": "Build type:"
     },
     "initialSetupInfoBuildLocal": {
         "message": "Local Build"

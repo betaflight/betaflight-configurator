@@ -212,6 +212,7 @@ setup.initialize = function (callback) {
             build_date_e = $(".build-date"),
             build_type_e = $(".build-type"),
             build_info_e = $(".build-info"),
+            build_firmware_e = $(".build-firmware"),
             build_options_e = $(".build-options");
 
         // DISARM FLAGS
@@ -369,27 +370,37 @@ setup.initialize = function (callback) {
 
             if (supported && ispConnected()) {
                 const buildRoot = `https://build.betaflight.com/api/builds/${FC.CONFIG.buildKey}`;
+
                 const buildConfig = `<span class="buildInfoBtn" title="${i18n.getMessage(
                     "initialSetupInfoBuildConfig",
                 )}: ${buildRoot}/json">
-                                    <a href="${buildRoot}/json" target="_blank"><strong>${i18n.getMessage(
+                    <a href="${buildRoot}/json" target="_blank"><strong>${i18n.getMessage(
     "initialSetupInfoBuildConfig",
 )}</strong></a></span>`;
+
                 const buildLog = `<span class="buildInfoBtn" title="${i18n.getMessage(
                     "initialSetupInfoBuildLog",
                 )}: ${buildRoot}/log">
-                                    <a href="${buildRoot}/log" target="_blank"><strong>${i18n.getMessage(
+                    <a href="${buildRoot}/log" target="_blank"><strong>${i18n.getMessage(
     "initialSetupInfoBuildLog",
 )}</strong></a></span>`;
-                build_info_e.html(`<span class="buildInfoBtn" title="${i18n.getMessage(
-                    "initialSetupInfoBuildOptions",
-                )}">
-                    <a class="buildOptions" href=#"><strong>${i18n.getMessage(
-        "initialSetupInfoBuildOptionList",
-    )}</strong></a></span>`);
+
                 build_info_e.html(`${buildConfig} ${buildLog}`);
+
+                const buildDownload = `<span class="buildInfoBtn" title="${i18n.getMessage(
+                    "initialSetupInfoBuildDownload",
+                )}: ${buildRoot}/hex">
+                    <a href="${buildRoot}/hex" target="_blank"><strong>${i18n.getMessage(
+    "initialSetupInfoBuildDownload",
+)}</strong></a></span>`;
+
+                build_firmware_e.html(buildDownload);
             } else {
                 build_info_e.html(
+                    supported ? i18n.getMessage("initialSetupNotOnline") : i18n.getMessage("initialSetupNoBuildInfo"),
+                );
+
+                build_firmware_e.html(
                     supported ? i18n.getMessage("initialSetupNotOnline") : i18n.getMessage("initialSetupNoBuildInfo"),
                 );
             }
@@ -418,7 +429,7 @@ setup.initialize = function (callback) {
                 const buildOptions = `<span class="buildInfoBtn" title="${i18n.getMessage(
                     "initialSetupInfoBuildOptionList",
                 )}">
-                                      <a class="buildOptions" href=#"><strong>${i18n.getMessage(
+                    <a class="buildOptions" href=#"><strong>${i18n.getMessage(
         "initialSetupInfoBuildOptions",
     )}</strong></a></span>`;
 
