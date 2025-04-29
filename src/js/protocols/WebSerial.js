@@ -1,17 +1,33 @@
 import { webSerialDevices, vendorIdNames } from "./devices";
 import { checkBrowserCompatibility } from "../utils/checkBrowserCompatibilty";
 
+const logHead = "[SERIAL]";
+
 async function* streamAsyncIterable(reader, keepReadingFlag) {
     try {
         while (keepReadingFlag()) {
-            const { done, value } = await reader.read();
-            if (done) {
-                return;
+            try {
+                const { done, value } = await reader.read();
+                if (done) {
+                    return;
+                }
+                yield value;
+            } catch (error) {
+                console.warn(`${logHead} Read error in streamAsyncIterable:`, error);
+                break;
             }
-            yield value;
         }
     } finally {
-        reader.releaseLock();
+        // Only release the lock if we still have the reader and it hasn't been released
+        try {
+            // Always attempt once; spec allows releasing even if the stream
+            // is already closed.  `locked` is the boolean we can trust.
+            if (reader?.locked) {
+                reader.releaseLock();
+            }
+        } catch (error) {
+            console.warn(`${logHead} Error releasing reader lock:`, error);
+        }
     }
 }
 
@@ -35,8 +51,6 @@ class WebSerial extends EventTarget {
         this.bytesSent = 0;
         this.bytesReceived = 0;
         this.failed = 0;
-
-        this.logHead = "[SERIAL]";
 
         this.portCounter = 0;
         this.ports = [];
@@ -78,7 +92,7 @@ class WebSerial extends EventTarget {
     }
 
     handleDisconnect() {
-        console.log(`${this.logHead} Device disconnected externally`);
+        console.log(`${logHead} Device disconnected externally`);
         this.disconnect();
     }
 
@@ -102,7 +116,7 @@ class WebSerial extends EventTarget {
 
     async loadDevices() {
         if (!navigator.serial) {
-            console.error(`${this.logHead} Web Serial API not available`);
+            console.error(`${logHead} Web Serial API not available`);
             return;
         }
 
@@ -111,13 +125,13 @@ class WebSerial extends EventTarget {
             this.portCounter = 1;
             this.ports = ports.map((port) => this.createPort(port));
         } catch (error) {
-            console.error(`${this.logHead} Error loading devices:`, error);
+            console.error(`${logHead} Error loading devices:`, error);
         }
     }
 
     async requestPermissionDevice(showAllSerialDevices = false) {
         if (!navigator.serial) {
-            console.error(`${this.logHead} Web Serial API not available`);
+            console.error(`${logHead} Web Serial API not available`);
             return null;
         }
 
@@ -132,9 +146,9 @@ class WebSerial extends EventTarget {
             if (!newPermissionPort) {
                 newPermissionPort = this.handleNewDevice(userSelectedPort);
             }
-            console.info(`${this.logHead} User selected SERIAL device from permissions:`, newPermissionPort.path);
+            console.info(`${logHead} User selected SERIAL device from permissions:`, newPermissionPort.path);
         } catch (error) {
-            console.error(`${this.logHead} User didn't select any SERIAL device when requesting permission:`, error);
+            console.error(`${logHead} User didn't select any SERIAL device when requesting permission:`, error);
         }
         return newPermissionPort;
     }
@@ -146,7 +160,7 @@ class WebSerial extends EventTarget {
     async connect(path, options = { baudRate: 115200 }) {
         // Prevent double connections
         if (this.connected) {
-            console.log(`${this.logHead} Already connected, not connecting again`);
+            console.log(`${logHead} Already connected, not connecting again`);
             return true;
         }
 
@@ -156,7 +170,7 @@ class WebSerial extends EventTarget {
         try {
             const device = this.ports.find((device) => device.path === path);
             if (!device) {
-                console.error(`${this.logHead} Device not found:`, path);
+                console.error(`${logHead} Device not found:`, path);
                 this.dispatchEvent(new CustomEvent("connect", { detail: false }));
                 return false;
             }
@@ -182,9 +196,7 @@ class WebSerial extends EventTarget {
                 this.port.addEventListener("disconnect", this.handleDisconnect);
                 this.addEventListener("receive", this.handleReceiveBytes);
 
-                console.log(
-                    `${this.logHead} Connection opened with ID: ${this.connectionId}, Baud: ${options.baudRate}`,
-                );
+                console.log(`${logHead} Connection opened with ID: ${this.connectionId}, Baud: ${options.baudRate}`);
 
                 this.dispatchEvent(new CustomEvent("connect", { detail: connectionInfo }));
 
@@ -196,9 +208,7 @@ class WebSerial extends EventTarget {
             } else if (connectionInfo && this.openCanceled) {
                 this.connectionId = path;
 
-                console.log(
-                    `${this.logHead} Connection opened with ID: ${path}, but request was canceled, disconnecting`,
-                );
+                console.log(`${logHead} Connection opened with ID: ${path}, but request was canceled, disconnecting`);
                 // some bluetooth dongles/dongle drivers really doesn't like to be closed instantly, adding a small delay
                 setTimeout(() => {
                     this.openRequested = false;
@@ -210,12 +220,12 @@ class WebSerial extends EventTarget {
                 return false;
             } else {
                 this.openRequested = false;
-                console.log(`${this.logHead} Failed to open serial port`);
+                console.log(`${logHead} Failed to open serial port`);
                 this.dispatchEvent(new CustomEvent("connect", { detail: false }));
                 return false;
             }
         } catch (error) {
-            console.error(`${this.logHead} Error connecting:`, error);
+            console.error(`${logHead} Error connecting:`, error);
             this.openRequested = false;
             this.dispatchEvent(new CustomEvent("connect", { detail: false }));
             return false;
@@ -228,67 +238,76 @@ class WebSerial extends EventTarget {
                 this.dispatchEvent(new CustomEvent("receive", { detail: value }));
             }
         } catch (error) {
-            console.error(`${this.logHead} Error reading:`, error);
+            console.error(`${logHead} Error reading:`, error);
             if (this.connected) {
                 this.disconnect();
             }
         }
     }
 
-    async disconnect(callback) {
-        // If already disconnected, just call callback and return
+    // Update disconnect method
+    async disconnect() {
+        // If already disconnected, just return
         if (!this.connected) {
-            if (callback) {
-                try {
-                    callback(true);
-                } catch (error) {
-                    console.error(`${this.logHead} Error calling disconnect callback:`, error);
-                }
-            }
             return true;
         }
 
         // Mark as disconnected immediately to prevent race conditions
         this.connected = false;
         this.transmitting = false;
+
+        // Signal the read loop to stop BEFORE attempting cleanup
         this.reading = false;
 
-        // if we are already closing, don't do it again
+        // If already closing, don't do it again
         if (this.closeRequested) {
-            if (callback) {
-                try {
-                    callback(true);
-                } catch (error) {
-                    console.error(`${this.logHead} Error calling disconnect callback:`, error);
-                }
-            }
             return true;
         }
 
         this.closeRequested = true;
 
         try {
+            // Remove event listeners first
             this.removeEventListener("receive", this.handleReceiveBytes);
 
+            // Small delay to allow ongoing operations to notice connection state change
+            await new Promise((resolve) => setTimeout(resolve, 50));
+
+            // Cancel reader first if it exists - this doesn't release the lock
             if (this.reader) {
-                await this.reader.cancel();
-                await this.reader.releaseLock();
-                this.reader = null;
+                try {
+                    await this.reader.cancel();
+                } catch (e) {
+                    console.warn(`${logHead} Reader cancel error (can be ignored):`, e);
+                }
             }
 
+            // Don't try to release the reader lock - streamAsyncIterable will handle it
+            this.reader = null;
+
+            // Release writer lock if it exists
             if (this.writer) {
-                await this.writer.releaseLock();
+                try {
+                    this.writer.releaseLock();
+                } catch (e) {
+                    console.warn(`${logHead} Writer release error (can be ignored):`, e);
+                }
                 this.writer = null;
             }
 
+            // Close the port
             if (this.port) {
                 this.port.removeEventListener("disconnect", this.handleDisconnect);
-                await this.port.close();
+                try {
+                    await this.port.close();
+                } catch (e) {
+                    console.warn(`${logHead} Port already closed or error during close:`, e);
+                }
                 this.port = null;
             }
 
             console.log(
-                `${this.logHead} Connection with ID: ${this.connectionId} closed, Sent: ${this.bytesSent} bytes, Received: ${this.bytesReceived} bytes`,
+                `${logHead} Connection with ID: ${this.connectionId} closed, Sent: ${this.bytesSent} bytes, Received: ${this.bytesReceived} bytes`,
             );
 
             this.connectionId = false;
@@ -296,33 +315,11 @@ class WebSerial extends EventTarget {
             this.closeRequested = false;
 
             this.dispatchEvent(new CustomEvent("disconnect", { detail: true }));
-
-            if (callback) {
-                try {
-                    callback(true);
-                } catch (error) {
-                    console.error(`${this.logHead} Error calling disconnect callback:`, error);
-                }
-            }
-
             return true;
         } catch (error) {
-            console.error(`${this.logHead} Error disconnecting:`, error);
-            console.error(
-                `${this.logHead} Failed to close connection with ID: ${this.connectionId} closed, Sent: ${this.bytesSent} bytes, Received: ${this.bytesReceived} bytes`,
-            );
-
+            console.error(`${logHead} Error disconnecting:`, error);
             this.closeRequested = false;
             this.dispatchEvent(new CustomEvent("disconnect", { detail: false }));
-
-            if (callback) {
-                try {
-                    callback(false);
-                } catch (error) {
-                    console.error(`${this.logHead} Error calling disconnect callback:`, error);
-                }
-            }
-
             return false;
         } finally {
             if (this.openCanceled) {
@@ -333,7 +330,7 @@ class WebSerial extends EventTarget {
 
     async send(data, callback) {
         if (!this.connected || !this.writer) {
-            console.error(`${this.logHead} Failed to send data, serial port not open`);
+            console.error(`${logHead} Failed to send data, serial port not open`);
             if (callback) {
                 callback({ bytesSent: 0 });
             }
@@ -350,7 +347,7 @@ class WebSerial extends EventTarget {
             }
             return result;
         } catch (error) {
-            console.error(`${this.logHead} Error sending data:`, error);
+            console.error(`${logHead} Error sending data:`, error);
             if (callback) {
                 callback({ bytesSent: 0 });
             }
