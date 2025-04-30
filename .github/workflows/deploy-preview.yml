@@ -28,6 +28,7 @@ jobs:
         with:
           node-version-file: '.nvmrc'
 
+      - run: npm ci
       - run: npm run build
 
       - name: Deploy to Cloudflare Pages
