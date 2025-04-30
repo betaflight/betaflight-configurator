@@ -32,7 +32,7 @@ jobs:
       - run: yarn install
       - run: yarn build
 
-      - name: Deploy
+      - name: Deploy to Cloudflare
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
