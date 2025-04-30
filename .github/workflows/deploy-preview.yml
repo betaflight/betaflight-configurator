@@ -32,9 +32,6 @@ jobs:
       - run: yarn install
       - run: yarn build
 
-      - name: Deploy to Cloudflare Pages
-        uses: andykenward/github-actions-cloudflare-pages@v2.3.2
-
       - name: Deploy
         uses: cloudflare/wrangler-action@v3
         with:
