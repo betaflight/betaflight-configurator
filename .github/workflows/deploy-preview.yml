@@ -33,8 +33,16 @@ jobs:
       - run: yarn build
 
       - name: Deploy to Cloudflare
+        id: deploy
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: pages deploy src/dist --project-name=${{ vars.CLOUDFLARE_PROJECT_NAME }} --commit-dirty=true      
+
+      - name: Add deployment comment
+        uses: thollander/actions-comment-pull-request@v3
+        with:
+          message: |
+             Preview URL: ${{ steps.deploy.outputs.deployment-url }}
+          reactions: eyes, rocket
