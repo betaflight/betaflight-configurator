@@ -1,0 +1,44 @@
+name: 'Preview Deployment'
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    permissions:
+      actions: read
+      contents: read
+      deployments: write
+      pull-requests: write
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Cache node_modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules/
+          key: node_modules-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
+
+      - name: Install node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+
+      - run: npm install yarn -g
+      - run: yarn install
+      - run: yarn build
+
+      - name: Deploy to Cloudflare Pages
+        uses: andykenward/github-actions-cloudflare-pages@v2.3.2
+        id: pages
+        with:
+          cloudflare-api-token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          cloudflare-account-id: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          cloudflare-project-name: ${{ vars.CLOUDFLARE_PROJECT_NAME }}
+          directory: src/dist
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-environment: ${{ vars.CLOUDFLARE_PROJECT_NAME }} ${{ (github.ref == 'refs/heads/main' && '(Production)') || '(Preview)' }}
