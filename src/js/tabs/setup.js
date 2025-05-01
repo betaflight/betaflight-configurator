@@ -212,8 +212,7 @@ setup.initialize = function (callback) {
             build_date_e = $(".build-date"),
             build_type_e = $(".build-type"),
             build_info_e = $(".build-info"),
-            build_firmware_e = $(".build-firmware"),
-            build_options_e = $(".build-options");
+            build_firmware_e = $(".build-firmware");
 
         // DISARM FLAGS
         // We add all the arming/disarming flags available, and show/hide them if needed.
@@ -365,12 +364,20 @@ setup.initialize = function (callback) {
             }
         }
 
+        // Gets the build root base URI for build.betaflight.com
+        const getBuildRootBaseUri = function () {
+            return `https://build.betaflight.com/api/builds/${FC.CONFIG.buildKey}`;
+        };
+
+        // Fills in the "Build info" part of the "Firmware info" box
         const showBuildInfo = function () {
-            const supported = FC.CONFIG.buildKey.length === 32;
+            const isIspConnected = ispConnected();
+            const buildKeyValid = FC.CONFIG.buildKey.length === 32;
 
-            if (supported && ispConnected()) {
-                const buildRoot = `https://build.betaflight.com/api/builds/${FC.CONFIG.buildKey}`;
+            if (buildKeyValid && isIspConnected) {
+                const buildRoot = getBuildRootBaseUri();
 
+                // Creates the "Config" button
                 const buildConfig = `<span class="buildInfoBtn" title="${i18n.getMessage(
                     "initialSetupInfoBuildConfig",
                 )}: ${buildRoot}/json">
@@ -378,6 +385,7 @@ setup.initialize = function (callback) {
     "initialSetupInfoBuildConfig",
 )}</strong></a></span>`;
 
+                // Creates the "Log" button
                 const buildLog = `<span class="buildInfoBtn" title="${i18n.getMessage(
                     "initialSetupInfoBuildLog",
                 )}: ${buildRoot}/log">
@@ -385,70 +393,75 @@ setup.initialize = function (callback) {
     "initialSetupInfoBuildLog",
 )}</strong></a></span>`;
 
+                // Shows the "Config" and "Log" buttons
                 build_info_e.html(`${buildConfig} ${buildLog}`);
-
-                const buildDownload = `<span class="buildInfoBtn" title="${i18n.getMessage(
-                    "initialSetupInfoBuildDownload",
-                )}: ${buildRoot}/hex">
-                    <a href="${buildRoot}/hex" target="_blank"><strong>${i18n.getMessage(
-    "initialSetupInfoBuildDownload",
-)}</strong></a></span>`;
-
-                build_firmware_e.html(buildDownload);
             } else {
                 build_info_e.html(
-                    supported ? i18n.getMessage("initialSetupNotOnline") : i18n.getMessage("initialSetupNoBuildInfo"),
-                );
-
-                build_firmware_e.html(
-                    supported ? i18n.getMessage("initialSetupNotOnline") : i18n.getMessage("initialSetupNoBuildInfo"),
+                    isIspConnected
+                        ? i18n.getMessage("initialSetupNoBuildInfo")
+                        : i18n.getMessage("initialSetupNotOnline"),
                 );
             }
         };
 
-        const showBuildOptions = function () {
-            const supported =
-                ((semver.eq(FC.CONFIG.apiVersion, API_VERSION_1_45) && ispConnected()) ||
+        // Fills in the "Firmware" part of the "Firmware info" box
+        const showBuildFirmware = function () {
+            const isIspConnected = ispConnected();
+            const buildOptionsValid =
+                ((semver.eq(FC.CONFIG.apiVersion, API_VERSION_1_45) && isIspConnected) ||
                     semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) &&
                 FC.CONFIG.buildOptions.length;
+            const buildKeyValid = FC.CONFIG.buildKey.length === 32;
+            const buildRoot = getBuildRootBaseUri();
 
-            if (supported) {
-                let buildOptionList = `<div class="dialogBuildInfoGrid-container">`;
-                for (const buildOptionElement of FC.CONFIG.buildOptions) {
-                    buildOptionList += `<div class="dialogBuildInfoGrid-item">${buildOptionElement}</div>`;
-                }
-                buildOptionList += `</div>`;
-
-                build_options_e.html(`<span class="buildInfoBtn" title="${i18n.getMessage(
-                    "initialSetupInfoBuildOptions",
-                )}">
-                    <a class="buildOptions" href=#"><strong>${i18n.getMessage(
-        "initialSetupInfoBuildOptionList",
-    )}</strong></a></span>`);
-
-                const buildOptions = `<span class="buildInfoBtn" title="${i18n.getMessage(
-                    "initialSetupInfoBuildOptionList",
-                )}">
-                    <a class="buildOptions" href=#"><strong>${i18n.getMessage(
+            if (buildOptionsValid || buildKeyValid) {
+                // Creates the "Options" button (if possible)
+                const buildOptions = buildOptionsValid
+                    ? `<span class="buildInfoBtn" title="${i18n.getMessage("initialSetupInfoBuildOptionList")}">
+                    <a class="buildOptions" href="#"><strong>${i18n.getMessage(
         "initialSetupInfoBuildOptions",
-    )}</strong></a></span>`;
+    )}</strong></a></span>`
+                    : "";
 
-                build_options_e.html(buildOptions);
+                // Creates the "Download" button (if possible)
+                const buildDownload = buildKeyValid
+                    ? `<span class="buildInfoBtn" title="${i18n.getMessage(
+                        "initialSetupInfoBuildDownload",
+                    )}: ${buildRoot}/hex">
+                    <a href="${buildRoot}/hex" target="_blank"><strong>${i18n.getMessage(
+    "initialSetupInfoBuildDownload",
+)}</strong></a></span>`
+                    : "";
 
-                $("a.buildOptions").on("click", async function () {
-                    showDialogBuildInfo(
-                        `<h3>${i18n.getMessage("initialSetupInfoBuildOptionList")}</h3>`,
-                        buildOptionList,
-                    );
-                });
+                // Shows the "Options" and/or "Download" buttons
+                build_firmware_e.html(`${buildOptions} ${buildDownload}`);
+
+                if (buildOptionsValid) {
+                    // Creates and attaches the "Options" dialog
+                    let buildOptionList = `<div class="dialogBuildInfoGrid-container">`;
+                    for (const buildOptionElement of FC.CONFIG.buildOptions) {
+                        buildOptionList += `<div class="dialogBuildInfoGrid-item">${buildOptionElement}</div>`;
+                    }
+                    buildOptionList += `</div>`;
+
+                    $("a.buildOptions").on("click", async function () {
+                        showDialogBuildInfo(
+                            `<h3>${i18n.getMessage("initialSetupInfoBuildOptionList")}</h3>`,
+                            buildOptionList,
+                        );
+                    });
+                }
             } else {
-                // should not happen, but just in case
-                build_options_e.html(`${i18n.getMessage("initialSetupNoBuildInfo")}`);
+                build_firmware_e.html(
+                    isIspConnected
+                        ? i18n.getMessage("initialSetupNoBuildInfo")
+                        : i18n.getMessage("initialSetupNotOnline"),
+                );
             }
         };
 
+        // Fills in the "Firmware info" box
         function showFirmwareInfo() {
-            // Firmware info
             msp_api_e.text(FC.CONFIG.apiVersion);
             build_date_e.text(FC.CONFIG.buildInfo);
 
@@ -459,7 +472,7 @@ setup.initialize = function (callback) {
                         : i18n.getMessage("initialSetupInfoBuildLocal"),
                 );
                 showBuildInfo();
-                showBuildOptions();
+                showBuildFirmware();
             }
         }
 

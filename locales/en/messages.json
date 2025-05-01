@@ -1195,9 +1195,6 @@
     "initialSetupInfoBuildOptions": {
         "message": "Options"
     },
-    "initialSetupInfoBuildOptionsLabel": {
-        "message": "Options:"
-    },
     "initialSetupInfoBuildOptionList": {
         "message": "Options defined in firmware build"
     },
