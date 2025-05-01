@@ -69,7 +69,8 @@ class WebSerial extends EventTarget {
             navigator.serial.addEventListener("connect", (e) => this.handleNewDevice(e.target));
             navigator.serial.addEventListener("disconnect", (e) => this.handleRemovedDevice(e.target));
         }
-
+        this.isMac = /macintosh|mac os x/i.test(navigator.userAgent);
+        this.isNeedBatchWrite = false;
         this.loadDevices();
     }
 
@@ -181,6 +182,7 @@ class WebSerial extends EventTarget {
 
             const connectionInfo = this.port.getInfo();
             this.connectionInfo = connectionInfo;
+            this.isNeedBatchWrite = this.checkIsNeedBatchWrite();
             this.writer = this.port.writable.getWriter();
             this.reader = this.port.readable.getReader();
 
@@ -328,6 +330,21 @@ class WebSerial extends EventTarget {
         }
     }
 
+    checkIsNeedBatchWrite() {
+        return this.isMac && vendorIdNames[this.connectionInfo.usbVendorId] === "AT32";
+    }
+
+    async batchWrite(data) {
+        const batchWriteSize = 63;
+        let remainingData = data;
+        while (remainingData.byteLength > batchWriteSize) {
+            const sliceData = remainingData.slice(0, batchWriteSize);
+            remainingData = remainingData.slice(batchWriteSize);
+            await this.writer.write(sliceData);
+        }
+        await this.writer.write(remainingData);
+    }
+
     async send(data, callback) {
         if (!this.connected || !this.writer) {
             console.error(`${logHead} Failed to send data, serial port not open`);
@@ -338,7 +355,11 @@ class WebSerial extends EventTarget {
         }
 
         try {
-            await this.writer.write(data);
+            if (this.isNeedBatchWrite) {
+                await this.batchWrite(data);
+            } else {
+                await this.writer.write(data);
+            }
             this.bytesSent += data.byteLength;
 
             const result = { bytesSent: data.byteLength };
