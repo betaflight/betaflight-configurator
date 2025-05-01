@@ -1183,6 +1183,12 @@
     "initialSetupInfoBuildConfig": {
         "message": "Config"
     },
+    "initialSetupInfoBuildDownload": {
+        "message": "Download"
+    },
+    "initialSetupInfoBuildFirmware": {
+        "message": "Firmware:"
+    },
     "initialSetupInfoBuildLog": {
         "message": "Log"
     },
@@ -1196,7 +1202,7 @@
         "message": "Local Build - no Cloud information"
     },
     "initialSetupInfoBuildType": {
-        "message": "Build type"
+        "message": "Build type:"
     },
     "initialSetupInfoBuildLocal": {
         "message": "Local Build"
