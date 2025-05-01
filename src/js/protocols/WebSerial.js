@@ -335,12 +335,19 @@ class WebSerial extends EventTarget {
     }
 
     async batchWrite(data) {
+        // AT32 on macOS requires smaller chunks (63 bytes) to work correctly due to 
+        // USB buffer size limitations in the macOS implementation
         const batchWriteSize = 63;
         let remainingData = data;
         while (remainingData.byteLength > batchWriteSize) {
             const sliceData = remainingData.slice(0, batchWriteSize);
             remainingData = remainingData.slice(batchWriteSize);
-            await this.writer.write(sliceData);
+            try {
+                await this.writer.write(sliceData);
+            } catch (error) {
+                console.error(`${this.logHead} Error writing batch chunk:`, error);
+                throw error; // Re-throw to be caught by the send method
+            }
         }
         await this.writer.write(remainingData);
     }
