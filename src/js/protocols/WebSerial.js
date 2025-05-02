@@ -182,6 +182,9 @@ class WebSerial extends EventTarget {
             const connectionInfo = this.port.getInfo();
             this.connectionInfo = connectionInfo;
             this.isNeedBatchWrite = this.checkIsNeedBatchWrite();
+            if (this.isNeedBatchWrite) {
+                console.log(`${this.logHead} Enabling batch write mode for AT32 on macOS`);
+            }
             this.writer = this.port.writable.getWriter();
             this.reader = this.port.readable.getReader();
 
