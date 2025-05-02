@@ -3,6 +3,7 @@ import MSP from "./msp";
 import Switchery from "switchery-latest";
 import jBox from "jbox";
 import $ from "jquery";
+import { getOS } from "./utils/checkBrowserCompatibilty";
 
 const TABS = {};
 
@@ -47,7 +48,7 @@ class GuiControl {
         this.allowedTabs = this.defaultAllowedTabsWhenDisconnected;
 
         // check which operating system is user running
-        this.operating_system = GUI_checkOperatingSystem();
+        this.operating_system = getOS();
     }
     // Timer managing methods
     // name = string
@@ -478,10 +479,6 @@ class GuiControl {
 
         this.showInteractiveDialog(cliPanelDialog);
     }
-}
-
-function GUI_checkOperatingSystem() {
-    return navigator?.userAgentData?.platform || "Android";
 }
 
 const GUI = new GuiControl();
