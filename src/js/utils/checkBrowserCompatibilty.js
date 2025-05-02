@@ -1,5 +1,32 @@
 import { Capacitor } from "@capacitor/core";
 
+// Detects OS using modern userAgentData API with fallback to legacy platform
+// Returns standardized OS name string or "unknown"
+export function getOS() {
+    let os = "unknown";
+    const userAgent = window.navigator.userAgent;
+    const platform = window.navigator?.userAgentData?.platform || window.navigator.platform;
+    const macosPlatforms = ["Macintosh", "MacIntel", "MacPPC", "Mac68K", "MacOS"];
+    const windowsPlatforms = ["Win32", "Win64", "Windows", "WinCE"];
+    const iosPlatforms = ["iPhone", "iPad", "iPod"];
+
+    if (macosPlatforms.includes(platform)) {
+        os = "MacOS";
+    } else if (iosPlatforms.includes(platform)) {
+        os = "iOS";
+    } else if (windowsPlatforms.includes(platform)) {
+        os = "Windows";
+    } else if (/Android/.test(userAgent)) {
+        os = "Android";
+    } else if (/Linux/.test(platform)) {
+        os = "Linux";
+    } else if (/CrOS/.test(platform)) {
+        os = "ChromeOS";
+    }
+
+    return os;
+}
+
 export function isChromiumBrowser() {
     // https://developer.mozilla.org/en-US/docs/Web/HTTP/Browser_detection_using_the_user_agent
     if (!navigator.userAgentData) {
