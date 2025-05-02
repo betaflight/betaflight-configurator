@@ -69,7 +69,6 @@ class WebSerial extends EventTarget {
             navigator.serial.addEventListener("connect", (e) => this.handleNewDevice(e.target));
             navigator.serial.addEventListener("disconnect", (e) => this.handleRemovedDevice(e.target));
         }
-        this.isMac = /macintosh|mac os x/i.test(navigator.userAgent);
         this.isNeedBatchWrite = false;
         this.loadDevices();
     }
@@ -331,11 +330,12 @@ class WebSerial extends EventTarget {
     }
 
     checkIsNeedBatchWrite() {
-        return this.isMac && vendorIdNames[this.connectionInfo.usbVendorId] === "AT32";
+        const isMac = /macintosh|mac os x/i.test(navigator.userAgent);
+        return isMac && vendorIdNames[this.connectionInfo.usbVendorId] === "AT32";
     }
 
     async batchWrite(data) {
-        // AT32 on macOS requires smaller chunks (63 bytes) to work correctly due to 
+        // AT32 on macOS requires smaller chunks (63 bytes) to work correctly due to
         // USB buffer size limitations in the macOS implementation
         const batchWriteSize = 63;
         let remainingData = data;
