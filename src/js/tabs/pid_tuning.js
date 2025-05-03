@@ -1594,15 +1594,104 @@ pid_tuning.initialize = function (callback) {
 
             /*
             Maths from: https://stackoverflow.com/questions/40918569/quadratic-bezier-curve-calculate-x-for-any-given-y
+            Finds the 't' parameter (position) for a given 'y' value on a quadratic Bezier curve defined by y-coordinates (startY, cpY, endY).
             */
-            function getPosfromYBezier(y, startY, cpY, endY) {
-                // y = (1-t)^2 * p0 + 2 * (1-t)*t*p1 + t^2 * p2
-                // y = (p2+p0-2p1)x^2 + 2(p1 - p0)x + p0
-                // 0 = (p2+p0-2p1)x^2 + 2(p1 - p0)x + (p0 - y)
-                const a = startY + endY - 2 * cpY;
-                const b = 2 * (cpY - startY);
-                const c = startY - y;
-                return a == 0 ? -c / b : (-b - Math.sqrt(Math.pow(b, 2) - 4 * a * c)) / (2 * a);
+            function getTfromYBezier(y, startY, cpY, endY) {
+                // Equation: y = (1-t)^2 * startY + 2 * (1-t)*t*cpY + t^2 * endY
+                // Rearranged into quadratic form At^2 + Bt + C = 0 where t is the variable:
+                // A = startY - 2*cpY + endY
+                // B = 2 * (cpY - startY)
+                // C = startY - y
+                const A = startY - 2 * cpY + endY;
+                const B = 2 * (cpY - startY);
+                const C = startY - y;
+
+                // Handle near-linear case (A is very small)
+                if (Math.abs(A) < 1e-6) {
+                    if (Math.abs(B) < 1e-6) {
+                        // Should not happen for a valid curve unless startY=cpY=endY
+                        return 0; // Or handle as error/edge case
+                    }
+                    // Linear equation: Bt + C = 0 => t = -C / B
+                    return -C / B;
+                }
+
+                // Solve quadratic equation: t = [-B ± sqrt(B^2 - 4AC)] / 2A
+                const disc = B * B - 4 * A * C;
+                if (disc < 0) {
+                    // No real solution (y is outside the curve's range) - return nearest valid t (0 or 1)
+                    // This might happen due to floating point inaccuracies or if y is exactly at endpoints with zero slope.
+                    // Check which end y is closer to.
+                    return Math.abs(y - startY) < Math.abs(y - endY) ? 0 : 1;
+                }
+
+                const t1 = (-B + Math.sqrt(disc)) / (2 * A);
+                const t2 = (-B - Math.sqrt(disc)) / (2 * A);
+
+                // We need the solution for t that is within the valid range [0, 1]
+                if (t1 >= 0 && t1 <= 1) {
+                    // If t2 is also valid, it implies a cusp or horizontal tangent.
+                    // For throttle curves, we generally expect a monotonic y change,
+                    // so one root should be correct. If both are valid, check which corresponds better,
+                    // but usually t1 is the one needed when solving from y.
+                    // Consider edge cases if the curve has vertical tangents, though unlikely here.
+                    if (t2 >= 0 && t2 <= 1) {
+                        // This case indicates the curve might go down then up or vice-versa in y.
+                        // For typical throttle expo, this shouldn't happen for the relevant 'y'.
+                        // We need to be careful. Let's assume standard expo behavior.
+                        // If startY > endY (like throttle curve), we likely want the smaller 't' if B is positive, larger if B negative?
+                        // Let's stick to t1 first, may need refinement based on curve shape.
+                        // If the control point pulls the curve "back" significantly, both might be valid.
+                        // Heuristic: If cpY is between startY and endY, usually only one t is valid.
+                        // If cpY is outside, choose the one reflecting the main curve direction.
+                        // Let's return t1 if it's valid, otherwise t2 if it's valid.
+                        return t1;
+                    }
+                    return t1; // t1 is valid, t2 is not
+                } else if (t2 >= 0 && t2 <= 1) {
+                    return t2; // t2 is valid, t1 is not
+                } else {
+                    // Neither solution is valid (should ideally be covered by disc < 0, but check anyway)
+                    // Return closest boundary
+                    return Math.abs(y - startY) < Math.abs(y - endY) ? 0 : 1;
+                }
+            }
+
+            // helper: invert x(t) for a quadratic Bézier
+            function getTfromXBezier(x, x0, cx, x1) {
+                // x(t) = (1–t)² x0 + 2(1–t)t cx + t² x1  ⇒  a t² + b t + c = 0
+                const a = x0 + x1 - 2 * cx;
+                const b = 2 * (cx - x0);
+                const c = x0 - x;
+                if (Math.abs(a) < 1e-6) {
+                    // linear case
+                    if (Math.abs(b) < 1e-6) return 0; // Avoid division by zero if x0=cx=x1
+                    return -c / b;
+                }
+                const disc = b * b - 4 * a * c;
+                if (disc < 0) return 0; // No real solution, return start
+                const t1 = (-b + Math.sqrt(disc)) / (2 * a);
+                const t2 = (-b - Math.sqrt(disc)) / (2 * a);
+                // pick the root in [0,1]
+                // Note: Added checks for NaN in case of sqrt(negative near zero)
+                const t1_valid = !isNaN(t1) && 0 <= t1 && t1 <= 1;
+                const t2_valid = !isNaN(t2) && 0 <= t2 && t2 <= 1;
+
+                if (t1_valid && t2_valid) {
+                    // If both are valid (e.g., curve loops back in x), choose the one appropriate for the segment.
+                    // For standard throttle curves split at mid, we expect only one valid root per segment.
+                    // If somehow both are valid, maybe default to smaller t? Or check which segment x falls into.
+                    // For now, prioritizing t1 if both are valid, similar to original code.
+                    return t1;
+                } else if (t1_valid) {
+                    return t1;
+                } else if (t2_valid) {
+                    return t2;
+                } else {
+                    // No valid root in [0, 1], likely x is outside the range for this segment
+                    // Return closest boundary t based on x proximity
+                    return Math.abs(x - x0) < Math.abs(x - x1) ? 0 : 1;
+                }
             }
 
             const THROTTLE_LIMIT_TYPES = {
@@ -1616,121 +1705,221 @@ pid_tuning.initialize = function (callback) {
             const throttleHoverE = $('.throttle input[name="hover"]');
             const throttleLimitPercentE = $('.throttle_limit input[name="throttleLimitPercent"]');
             const throttleLimitTypeE = $('.throttle_limit select[id="throttleLimitType"]');
-            const mid = parseFloat(throttleMidE.val());
-            const expo = parseFloat(throttleExpoE.val());
-            const hover = parseFloat(throttleHoverE.val());
-            const throttleLimitPercent = parseInt(throttleLimitPercentE.val()) / 100;
+            const mid = parseFloat(throttleMidE.val()); // Value 0-1
+            const expo = parseFloat(throttleExpoE.val()); // Value 0-1
+            const hover = parseFloat(throttleHoverE.val()); // Value 0-1 (hover throttle %)
+            const throttleLimitPercent = parseInt(throttleLimitPercentE.val()) / 100; // Value 0-1
             const throttleLimitType = parseInt(throttleLimitTypeE.val());
             const throttleCurve = $(".throttle .throttle_curve canvas").get(0);
             const context = throttleCurve.getContext("2d");
 
             // local validation to deal with input event
             if (
-                mid >= parseFloat(throttleMidE.prop("min")) &&
-                mid <= parseFloat(throttleMidE.prop("max")) &&
-                expo >= parseFloat(throttleExpoE.prop("min")) &&
-                expo <= parseFloat(throttleExpoE.prop("max")) &&
-                hover >= parseFloat(throttleHoverE.prop("min")) &&
-                hover <= parseFloat(throttleHoverE.prop("max"))
+                isNaN(mid) ||
+                isNaN(expo) ||
+                isNaN(hover) ||
+                isNaN(throttleLimitPercent) ||
+                isNaN(throttleLimitType) || // Check for NaN
+                mid < parseFloat(throttleMidE.prop("min")) ||
+                mid > parseFloat(throttleMidE.prop("max")) ||
+                expo < parseFloat(throttleExpoE.prop("min")) ||
+                expo > parseFloat(throttleExpoE.prop("max")) ||
+                hover < parseFloat(throttleHoverE.prop("min")) ||
+                hover > parseFloat(throttleHoverE.prop("max")) ||
+                throttleLimitPercent < parseInt(throttleLimitPercentE.prop("min")) / 100 ||
+                throttleLimitPercent > parseInt(throttleLimitPercentE.prop("max")) / 100
             ) {
-                // continue
-            } else {
-                return;
+                // console.log("Validation failed or NaN detected", {mid, expo, hover, throttleLimitPercent, throttleLimitType});
+                return; // Exit if values are invalid or not numbers
             }
 
             throttleCurve.width = throttleCurve.height * (throttleCurve.clientWidth / throttleCurve.clientHeight);
 
-            const throttleScale = throttleLimitType === THROTTLE_LIMIT_TYPES.SCALE ? throttleLimitPercent : 1;
             const canvasHeight = throttleCurve.height;
             const canvasWidth = throttleCurve.width;
 
-            // math magic by englishman
-            const topY = canvasHeight * (1 - throttleScale);
-            const midX = canvasWidth * mid;
-            const midXl = midX * (1 - expo);
-            const midXr = (canvasWidth - midX) * expo + midX;
-            const midY = canvasHeight * (1 - throttleScale * hover);
-            const midYl = midY;
-            const midYr = midY;
+            // --- Calculate Original (Unscaled, Unclipped) Curve Parameters ---
+            // These points define the curve shape based *only* on mid, expo, hover
+            const originalTopY = 0; // Top of the canvas corresponds to 100% output
+            const originalMidX = canvasWidth * mid;
+            const originalMidY = canvasHeight * (1 - hover); // Y=0 is top, Y=canvasHeight is bottom
+            const originalMidXl = originalMidX * (1 - expo); // Control point for lower curve (X)
+            const originalMidYl = originalMidY; // Control point for lower curve (Y) - same as midY
+            const originalMidXr = (canvasWidth - originalMidX) * expo + originalMidX; // Control point for upper curve (X)
+            const originalMidYr = originalMidY; // Control point for upper curve (Y) - same as midY
 
-            // helper: invert x(t) for a quadratic Bézier
-            function getTfromXBezier(x, x0, cx, x1) {
-                // x(t) = (1–t)² x0 + 2(1–t)t cx + t² x1  ⇒  a t² + b t + c = 0
-                const a = x0 + x1 - 2 * cx;
-                const b = 2 * (cx - x0);
-                const c = x0 - x;
-                if (Math.abs(a) < 1e-6) {
-                    // linear case
-                    return -c / b;
-                }
-                const disc = b * b - 4 * a * c;
-                const t1 = (-b + Math.sqrt(disc)) / (2 * a);
-                const t2 = (-b - Math.sqrt(disc)) / (2 * a);
-                // pick the root in [0,1]
-                return 0 <= t1 && t1 <= 1 ? t1 : t2;
-            }
-
-            const thrPercent = (FC.RC.channels[3] - 1000) / 1000;
-            const thrX = thrPercent * canvasWidth;
-            let thrpos;
-            if (thrPercent <= mid) {
-                const t = getTfromXBezier(thrX, 0, midXl, midX);
-                thrpos = getQuadraticCurvePoint(0, canvasHeight, midXl, midYl, midX, midY, t);
-            } else {
-                const t = getTfromXBezier(thrX, midX, midXr, canvasWidth);
-                thrpos = getQuadraticCurvePoint(midX, midY, midXr, midYr, canvasWidth, topY, t);
-            }
-
-            // draw
             context.clearRect(0, 0, canvasWidth, canvasHeight);
-            context.beginPath();
-            context.moveTo(0, canvasHeight);
-            if (throttleLimitType === THROTTLE_LIMIT_TYPES.CLIP) {
-                const throttleClipY = canvasHeight * (1 - throttleLimitPercent);
-                thrpos.y = thrpos.y < throttleClipY ? throttleClipY : thrpos.y;
-                const clipPos =
-                    throttleLimitPercent <= mid
-                        ? getPosfromYBezier(throttleClipY, canvasHeight, midYl, midY)
-                        : getPosfromYBezier(throttleClipY, midY, midYr, topY);
-                let curveClip = getQuadraticCurvePoint(0, canvasHeight, midXl, midYl, midX, midY, clipPos);
-                let ctrlX = curveClip.x / 2;
-                let ctrlY = midYl + ((canvasHeight - midYl) * (midX - curveClip.x)) / midX;
-                if (throttleLimitPercent > mid) {
-                    context.quadraticCurveTo(midXl, midYl, midX, midY);
-                    context.moveTo(midX, midY);
-                    curveClip = getQuadraticCurvePoint(midX, midY, midXr, midYr, canvasWidth, topY, clipPos);
-                    ctrlX = midX + (curveClip.x - midX) / 2;
-                    ctrlY = midYr + ((midY - midYr) * (canvasWidth - curveClip.x)) / (canvasWidth - midX);
-                }
-                context.quadraticCurveTo(ctrlX, ctrlY, curveClip.x, curveClip.y);
-                context.moveTo(curveClip.x, curveClip.y);
-                context.lineTo(canvasWidth, curveClip.y);
-            } else {
-                context.quadraticCurveTo(midXl, midYl, midX, midY);
-                context.moveTo(midX, midY);
-                context.quadraticCurveTo(midXr, midYr, canvasWidth, topY);
-            }
             context.lineWidth = 2;
-            context.strokeStyle = "#ffbb00";
-            context.stroke();
-            context.beginPath();
-            context.arc(thrpos.x, thrpos.y, 4, 0, 2 * Math.PI);
-            context.fillStyle = context.strokeStyle;
-            context.fill();
-            context.save();
-            let fontSize = 10;
-            context.font = `${fontSize}pt Verdana, Arial, sans-serif`;
-            let realthr = thrPercent * 100.0,
-                expothr = Math.max(0, Math.min(100, 100 - (thrpos.y / canvasHeight) * 100.0)),
-                thrlabel =
-                    `${Math.round(thrPercent <= 0 ? 0 : realthr)}%` +
-                    ` = ${Math.round(thrPercent <= 0 ? 0 : expothr)}%`,
-                textWidth = context.measureText(thrlabel);
-            context.fillStyle = "#888888";
-            context.scale(textWidth / throttleCurve.clientWidth, 1);
-            context.fillText(thrlabel, 5, 5 + fontSize);
-            context.restore();
-        }
+            context.strokeStyle = "#ffbb00"; // Curve color
+
+            let thrpos; // To store the current throttle indicator position {x, y}
+            const thrPercent = Math.max(0, Math.min(1, (FC.RC.channels[3] - 1000) / 1000)); // Ensure 0-1 range
+            const thrX = thrPercent * canvasWidth; // X position corresponding to input throttle stick
+
+            // --- Draw Curve based on Limit Type ---
+            if (throttleLimitType === THROTTLE_LIMIT_TYPES.CLIP && throttleLimitPercent < 1.0) {
+                const throttleClipY = canvasHeight * (1 - throttleLimitPercent); // Y coordinate of the limit line
+
+                // Find the intersection point (intersectX, throttleClipY) on the ORIGINAL curve
+                let intersectT;
+                let intersectX;
+
+                if (throttleClipY >= originalMidY) {
+                    // Intersection is on the lower curve segment [ (0, canvasHeight) to (originalMidX, originalMidY) ]
+                    // Control point Y is originalMidYl (which is originalMidY)
+                    intersectT = getTfromYBezier(throttleClipY, canvasHeight, originalMidYl, originalMidY);
+                    intersectX = getQBezierValue(intersectT, 0, originalMidXl, originalMidX);
+                } else {
+                    // Intersection is on the upper curve segment [ (originalMidX, originalMidY) to (canvasWidth, originalTopY=0) ]
+                    // Control point Y is originalMidYr (which is originalMidY)
+                    intersectT = getTfromYBezier(throttleClipY, originalMidY, originalMidYr, originalTopY);
+                    // Make sure t is in [0,1] range after calculation from Y
+                    intersectT = Math.max(0, Math.min(1, intersectT));
+                    intersectX = getQBezierValue(intersectT, originalMidX, originalMidXr, canvasWidth);
+                }
+                // Ensure intersectX is within bounds, handle potential calculation edge cases
+                intersectX = Math.max(0, Math.min(canvasWidth, intersectX));
+
+                // Draw the clipped curve
+                context.beginPath();
+                context.moveTo(0, canvasHeight); // Start at bottom-left
+
+                // Use clipping region to draw the curve below the limit line easily
+                context.save();
+                context.beginPath();
+                context.rect(0, throttleClipY, canvasWidth, canvasHeight - throttleClipY); // Define rectangle below the clip line
+                context.clip(); // Apply clipping
+
+                // Draw the *entire original* curve, only the part within the clip region will be visible
+                context.beginPath(); // Start new path for the curve itself
+                context.moveTo(0, canvasHeight);
+                context.quadraticCurveTo(originalMidXl, originalMidYl, originalMidX, originalMidY);
+                context.quadraticCurveTo(originalMidXr, originalMidYr, canvasWidth, originalTopY); // Draw original curve to top right
+                context.stroke(); // Stroke the curve within the clipped area
+
+                context.restore(); // Remove clipping region
+
+                // Draw the horizontal line segment from intersection to the right edge
+                context.beginPath();
+                context.moveTo(intersectX, throttleClipY);
+                context.lineTo(canvasWidth, throttleClipY);
+                context.stroke();
+
+                // Calculate thrpos based on original curve first
+                let original_thrpos;
+                if (thrPercent <= mid) {
+                    const t = getTfromXBezier(thrX, 0, originalMidXl, originalMidX);
+                    original_thrpos = getQuadraticCurvePoint(
+                        0,
+                        canvasHeight,
+                        originalMidXl,
+                        originalMidYl,
+                        originalMidX,
+                        originalMidY,
+                        t,
+                    );
+                } else {
+                    const t = getTfromXBezier(thrX, originalMidX, originalMidXr, canvasWidth);
+                    original_thrpos = getQuadraticCurvePoint(
+                        originalMidX,
+                        originalMidY,
+                        originalMidXr,
+                        originalMidYr,
+                        canvasWidth,
+                        originalTopY,
+                        t,
+                    );
+                }
+                // Apply the clip to the indicator position
+                thrpos = {
+                    x: original_thrpos.x,
+                    y: Math.max(throttleClipY, original_thrpos.y), // Clamp Y at the clip line
+                };
+            } else {
+                // Handles SCALE and OFF (no limit)
+                let scaleFactor = 1.0;
+                if (throttleLimitType === THROTTLE_LIMIT_TYPES.SCALE) {
+                    scaleFactor = throttleLimitPercent;
+                }
+
+                // Calculate potentially scaled curve points
+                const currentTopY = canvasHeight * (1 - scaleFactor); // Y position of 100% output after scaling
+                const currentMidX = originalMidX; // Mid X doesn't change
+                const currentMidY = canvasHeight * (1 - scaleFactor * hover); // Mid Y is scaled hover point
+                const currentMidXl = currentMidX * (1 - expo); // Control point X depends only on mid, expo
+                const currentMidXr = (canvasWidth - currentMidX) * expo + currentMidX;
+                const currentMidYl = currentMidY; // Control point Y is the same as the (scaled) mid Y
+                const currentMidYr = currentMidY;
+
+                // Draw the (potentially scaled) curve
+                context.beginPath();
+                context.moveTo(0, canvasHeight); // Start bottom-left
+                context.quadraticCurveTo(currentMidXl, currentMidYl, currentMidX, currentMidY);
+                context.quadraticCurveTo(currentMidXr, currentMidYr, canvasWidth, currentTopY); // End top-right (potentially scaled)
+                context.stroke();
+
+                // Calculate thrpos directly on the (potentially scaled) curve
+                if (thrPercent <= mid) {
+                    const t = getTfromXBezier(thrX, 0, currentMidXl, currentMidX);
+                    thrpos = getQuadraticCurvePoint(
+                        0,
+                        canvasHeight,
+                        currentMidXl,
+                        currentMidYl,
+                        currentMidX,
+                        currentMidY,
+                        t,
+                    );
+                } else {
+                    const t = getTfromXBezier(thrX, currentMidX, currentMidXr, canvasWidth);
+                    thrpos = getQuadraticCurvePoint(
+                        currentMidX,
+                        currentMidY,
+                        currentMidXr,
+                        currentMidYr,
+                        canvasWidth,
+                        currentTopY,
+                        t,
+                    );
+                }
+            }
+
+            // --- Draw Throttle Position Indicator ---
+            if (thrpos) {
+                // Ensure thrpos was calculated
+                // Clamp final thrpos to canvas bounds just in case
+                thrpos.x = Math.max(0, Math.min(canvasWidth, thrpos.x));
+                thrpos.y = Math.max(0, Math.min(canvasHeight, thrpos.y));
+
+                context.beginPath();
+                context.arc(thrpos.x, thrpos.y, 4, 0, 2 * Math.PI); // Draw circle marker
+                context.fillStyle = context.strokeStyle; // Use same color as curve
+                context.fill();
+
+                // --- Draw Text Label ---
+                context.save();
+                let fontSize = 10;
+                context.font = `${fontSize}pt Verdana, Arial, sans-serif`;
+                context.fillStyle = "#888888"; // Text color
+
+                // Calculate real input throttle % and the resulting output throttle % after curve and limit
+                let realInputThr = thrPercent * 100.0;
+                // Output Y goes from canvasHeight (0%) to 0 (100%), so invert and scale
+                let outputThr = Math.max(0, Math.min(100, (1 - thrpos.y / canvasHeight) * 100.0));
+
+                let thrlabel = `${Math.round(realInputThr)}%` + ` = ${Math.round(outputThr)}%`;
+
+                // Measure text and position it top-left
+                let textMetrics = context.measureText(thrlabel);
+                let textX = 5;
+                let textY = 5 + fontSize; // Position near top-left corner
+
+                context.fillText(thrlabel, textX, textY);
+                context.restore();
+            } else {
+                console.error("thrpos calculation failed");
+            }
+        } // end of redrawThrottleCurve
 
         $(".throttle input, .throttle_limit input, .throttle_limit select").on("change", () =>
             setTimeout(() => redrawThrottleCurve(true), 0),
