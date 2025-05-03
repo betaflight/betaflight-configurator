@@ -1649,7 +1649,7 @@ pid_tuning.initialize = function (callback) {
             const midX = canvasWidth * mid;
             const midXl = midX * (1 - expo);
             const midXr = (canvasWidth - midX) * expo + midX;
-            const midY = (canvasHeight - throttleScale) * (1 - hover);
+            const midY = canvasHeight * (1 - throttleScale * hover);
             const midYl = midY;
             const midYr = midY;
 
