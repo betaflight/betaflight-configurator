@@ -46,4 +46,5 @@ jobs:
           message: |
              Preview URL: ${{ steps.deploy.outputs.deployment-url }}
           reactions: eyes, rocket
-          only-update: true
+          comment-tag: 'Preview URL'
+          mode: recreate
