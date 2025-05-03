@@ -1,5 +1,6 @@
 import { webSerialDevices, vendorIdNames } from "./devices";
 import { checkBrowserCompatibility } from "../utils/checkBrowserCompatibilty";
+import { GUI } from "../gui";
 
 const logHead = "[SERIAL]";
 
@@ -333,7 +334,7 @@ class WebSerial extends EventTarget {
     }
 
     checkIsNeedBatchWrite() {
-        const isMac = /macintosh|mac os x/i.test(navigator.userAgent);
+        const isMac = GUI.operating_system === "MacOS";
         return isMac && vendorIdNames[this.connectionInfo.usbVendorId] === "AT32";
     }
 
