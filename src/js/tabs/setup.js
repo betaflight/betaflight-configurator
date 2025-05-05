@@ -304,50 +304,42 @@ setup.initialize = function (callback) {
                 }
             }
 
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
-                MSP.send_message(MSPCodes.MSP2_SENSOR_CONFIG_ACTIVE, false, false, function () {
-                    addSensorInfo(
-                        FC.SENSOR_CONFIG_ACTIVE.gyro_hardware,
-                        sensor_gyro_e,
-                        "gyro",
-                        sensorTypes().gyro.elements,
-                    );
-                    addSensorInfo(
-                        FC.SENSOR_CONFIG_ACTIVE.acc_hardware,
-                        sensor_acc_e,
-                        "acc",
-                        sensorTypes().acc.elements,
-                    );
-                    addSensorInfo(
-                        FC.SENSOR_CONFIG_ACTIVE.baro_hardware,
-                        sensor_baro_e,
-                        "baro",
-                        sensorTypes().baro.elements,
-                    );
-                    addSensorInfo(
-                        FC.SENSOR_CONFIG_ACTIVE.mag_hardware,
-                        sensor_mag_e,
-                        "mag",
-                        sensorTypes().mag.elements,
-                    );
-                    addSensorInfo(
-                        FC.SENSOR_CONFIG_ACTIVE.sonar_hardware,
-                        sensor_sonar_e,
-                        "sonar",
-                        sensorTypes().sonar.elements,
-                    );
+            MSP.send_message(MSPCodes.MSP2_SENSOR_CONFIG_ACTIVE, false, false, function () {
+                addSensorInfo(
+                    FC.SENSOR_CONFIG_ACTIVE.gyro_hardware,
+                    sensor_gyro_e,
+                    "gyro",
+                    sensorTypes().gyro.elements,
+                );
+                addSensorInfo(FC.SENSOR_CONFIG_ACTIVE.acc_hardware, sensor_acc_e, "acc", sensorTypes().acc.elements);
+                addSensorInfo(
+                    FC.SENSOR_CONFIG_ACTIVE.baro_hardware,
+                    sensor_baro_e,
+                    "baro",
+                    sensorTypes().baro.elements,
+                );
+                addSensorInfo(FC.SENSOR_CONFIG_ACTIVE.mag_hardware, sensor_mag_e, "mag", sensorTypes().mag.elements);
+                addSensorInfo(
+                    FC.SENSOR_CONFIG_ACTIVE.sonar_hardware,
+                    sensor_sonar_e,
+                    "sonar",
+                    sensorTypes().sonar.elements,
+                );
 
-                    // opticalflow sensor is available since 1.47
-                    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
-                        addSensorInfo(
-                            FC.SENSOR_CONFIG_ACTIVE.opticalflow_hardware,
-                            sensor_opticalflow_e,
-                            "opticalflow",
-                            sensorTypes().opticalflow.elements,
-                        );
-                    }
-                });
-            }
+                // opticalflow sensor is available since 1.47
+                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+                    addSensorInfo(
+                        FC.SENSOR_CONFIG_ACTIVE.opticalflow_hardware,
+                        sensor_opticalflow_e,
+                        "opticalflow",
+                        sensorTypes().opticalflow.elements,
+                    );
+                }
+            });
+        };
+
+        const hideSensorInfo = function () {
+            $("#sensorInfoBox").hide();
         };
 
         // Fills in the "Build type" part of the "Firmware info" box
@@ -524,7 +516,11 @@ setup.initialize = function (callback) {
         }
 
         prepareDisarmFlags();
-        showSensorInfo();
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+            showSensorInfo();
+        } else {
+            hideSensorInfo();
+        }
         showFirmwareInfo();
         showNetworkStatus();
 
