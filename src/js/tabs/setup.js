@@ -350,6 +350,20 @@ setup.initialize = function (callback) {
             }
         };
 
+        // Fills in the "Build type" part of the "Firmware info" box
+        const showBuildType = function () {
+            build_type_e.html(
+                FC.CONFIG.buildKey.length === 32
+                    ? i18n.getMessage("initialSetupInfoBuildCloud")
+                    : i18n.getMessage("initialSetupInfoBuildLocal"),
+            );
+        };
+
+        // Hides the "Build type" part of the "Firmware info" box
+        const hideBuildType = function () {
+            build_type_e.parent().hide();
+        };
+
         function showDialogBuildInfo(title, message) {
             const dialog = $(".dialogBuildInfo")[0];
 
@@ -402,6 +416,11 @@ setup.initialize = function (callback) {
                         : i18n.getMessage("initialSetupNotOnline"),
                 );
             }
+        };
+
+        // Hides the "Build info" part of the "Firmware info" box
+        const hideBuildInfo = function () {
+            build_info_e.parent().hide();
         };
 
         // Fills in the "Firmware" part of the "Firmware info" box
@@ -460,19 +479,24 @@ setup.initialize = function (callback) {
             }
         };
 
+        // Hides the "Firmware" part of the "Firmware info" box
+        const hideBuildFirmware = function () {
+            build_firmware_e.parent().hide();
+        };
+
         // Fills in the "Firmware info" box
         function showFirmwareInfo() {
             msp_api_e.text(FC.CONFIG.apiVersion);
             build_date_e.text(FC.CONFIG.buildInfo);
 
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
-                build_type_e.html(
-                    FC.CONFIG.buildKey.length === 32
-                        ? i18n.getMessage("initialSetupInfoBuildCloud")
-                        : i18n.getMessage("initialSetupInfoBuildLocal"),
-                );
+                showBuildType();
                 showBuildInfo();
                 showBuildFirmware();
+            } else {
+                hideBuildType();
+                hideBuildInfo();
+                hideBuildFirmware();
             }
         }
 
