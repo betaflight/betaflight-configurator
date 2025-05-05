@@ -1116,9 +1116,6 @@
     "initialSetupInfoBuildEmpty": {
         "message": "로컬 빌드 - 클라우드 정보 없음"
     },
-    "initialSetupInfoBuildType": {
-        "message": "빌드 형식"
-    },
     "initialSetupInfoBuildLocal": {
         "message": "로컬 빌드"
     },

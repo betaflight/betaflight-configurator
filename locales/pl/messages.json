@@ -1104,6 +1104,12 @@
     "initialSetupInfoBuildConfig": {
         "message": "Konfiguruj"
     },
+    "initialSetupInfoBuildDownload": {
+        "message": "Pobierz"
+    },
+    "initialSetupInfoBuildFirmware": {
+        "message": "Firmware:"
+    },
     "initialSetupInfoBuildLog": {
         "message": "Log"
     },
@@ -1117,7 +1123,7 @@
         "message": "Lokalna kompilacja - brak informacji o chmurze"
     },
     "initialSetupInfoBuildType": {
-        "message": "Typ kompilacji"
+        "message": "Typ kompilacji:"
     },
     "initialSetupInfoBuildLocal": {
         "message": "Kompilacja lokalna"

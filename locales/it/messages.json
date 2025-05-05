@@ -87,6 +87,10 @@
         "message": "--- Non trovo il dispositivo Bluetooth---",
         "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access a Bluetooth device."
     },
+    "portsSelectPermissionDFU": {
+        "message": "--- Non trovo il mio dispositivo DFU ---",
+        "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access a DFU device."
+    },
     "bluetoothConnected": {
         "message": "Connesso al Bluetooth: $1"
     },
@@ -1096,6 +1100,12 @@
     "initialSetupInfoBuildConfig": {
         "message": "Configurazione"
     },
+    "initialSetupInfoBuildDownload": {
+        "message": "Scarica"
+    },
+    "initialSetupInfoBuildFirmware": {
+        "message": "Firmware:"
+    },
     "initialSetupInfoBuildLog": {
         "message": "Log"
     },
@@ -1109,7 +1119,7 @@
         "message": "Build locale - nessuna informazione Cloud"
     },
     "initialSetupInfoBuildType": {
-        "message": "Tipo di build"
+        "message": "Tipo di build:"
     },
     "initialSetupInfoBuildLocal": {
         "message": "Build Locale"
