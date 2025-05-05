@@ -1053,9 +1053,6 @@
     "initialSetupInfoBuildEmpty": {
         "message": "Compilação Local - sem dados da nuvem"
     },
-    "initialSetupInfoBuildType": {
-        "message": "Tipo de compilação"
-    },
     "initialSetupInfoBuildLocal": {
         "message": "Compilação local"
     },

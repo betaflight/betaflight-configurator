@@ -1100,6 +1100,12 @@
     "initialSetupInfoBuildConfig": {
         "message": "Config"
     },
+    "initialSetupInfoBuildDownload": {
+        "message": "Download"
+    },
+    "initialSetupInfoBuildFirmware": {
+        "message": "Firmware:"
+    },
     "initialSetupInfoBuildLog": {
         "message": "Log"
     },
@@ -1113,7 +1119,7 @@
         "message": "Compilação local - sem informação da Nuvem"
     },
     "initialSetupInfoBuildType": {
-        "message": "Tipo de compilação"
+        "message": "Tipo de compilação:"
     },
     "initialSetupInfoBuildLocal": {
         "message": "Compilação local"

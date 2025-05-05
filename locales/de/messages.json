@@ -1058,9 +1058,6 @@
     "initialSetupInfoBuildEmpty": {
         "message": "Lokale Erstellung - keine Cloud-Informationen"
     },
-    "initialSetupInfoBuildType": {
-        "message": "Erstellungs-Typ"
-    },
     "initialSetupInfoBuildLocal": {
         "message": "Lokaler Build"
     },

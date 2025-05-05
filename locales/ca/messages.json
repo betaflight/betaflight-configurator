@@ -1108,6 +1108,12 @@
     "initialSetupInfoBuildConfig": {
         "message": "Configuració"
     },
+    "initialSetupInfoBuildDownload": {
+        "message": "Descarrega"
+    },
+    "initialSetupInfoBuildFirmware": {
+        "message": "Programari:"
+    },
     "initialSetupInfoBuildLog": {
         "message": "Registre"
     },
@@ -1121,7 +1127,7 @@
         "message": "Construcció local: sense informació al núvol"
     },
     "initialSetupInfoBuildType": {
-        "message": "Tipus de compilació"
+        "message": "Tipus de compilació:"
     },
     "initialSetupInfoBuildLocal": {
         "message": "Compilació local"

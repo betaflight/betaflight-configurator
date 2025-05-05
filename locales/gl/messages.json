@@ -1001,9 +1001,6 @@
     "initialSetupInfoBuildEmpty": {
         "message": "Construción local: sen información sobre a nube"
     },
-    "initialSetupInfoBuildType": {
-        "message": "Tipo de compilación"
-    },
     "initialSetupInfoBuildLocal": {
         "message": "Compilación local"
     },

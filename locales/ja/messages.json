@@ -1105,9 +1105,6 @@
     "initialSetupInfoBuildEmpty": {
         "message": "ローカルビルド - クラウド情報なし"
     },
-    "initialSetupInfoBuildType": {
-        "message": "ビルドタイプ"
-    },
     "initialSetupInfoBuildLocal": {
         "message": "ローカルビルド"
     },

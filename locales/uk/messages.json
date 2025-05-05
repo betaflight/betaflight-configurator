@@ -1099,9 +1099,6 @@
     "initialSetupInfoBuildEmpty": {
         "message": "Локальна збірка - без хмарних даних"
     },
-    "initialSetupInfoBuildType": {
-        "message": "Тип збірки"
-    },
     "initialSetupInfoBuildLocal": {
         "message": "Локальна збірка"
     },

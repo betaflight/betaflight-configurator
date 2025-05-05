@@ -1104,6 +1104,12 @@
     "initialSetupInfoBuildConfig": {
         "message": "Konfiguration"
     },
+    "initialSetupInfoBuildDownload": {
+        "message": "Hent"
+    },
+    "initialSetupInfoBuildFirmware": {
+        "message": "Firmware:"
+    },
     "initialSetupInfoBuildLog": {
         "message": "Log"
     },
@@ -1117,7 +1123,7 @@
         "message": "Lokalt bygget - ingen Cloud Build information"
     },
     "initialSetupInfoBuildType": {
-        "message": "Byg type"
+        "message": "Byg type:"
     },
     "initialSetupInfoBuildLocal": {
         "message": "Byg lokalt"
