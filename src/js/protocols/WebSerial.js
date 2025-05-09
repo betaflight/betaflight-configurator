@@ -184,7 +184,7 @@ class WebSerial extends EventTarget {
             this.connectionInfo = connectionInfo;
             this.isNeedBatchWrite = this.checkIsNeedBatchWrite();
             if (this.isNeedBatchWrite) {
-                console.log(`${this.logHead} Enabling batch write mode for AT32 on macOS`);
+                console.log(`${logHead} Enabling batch write mode for AT32 on macOS`);
             }
             this.writer = this.port.writable.getWriter();
             this.reader = this.port.readable.getReader();
@@ -349,7 +349,7 @@ class WebSerial extends EventTarget {
             try {
                 await this.writer.write(sliceData);
             } catch (error) {
-                console.error(`${this.logHead} Error writing batch chunk:`, error);
+                console.error(`${logHead} Error writing batch chunk:`, error);
                 throw error; // Re-throw to be caught by the send method
             }
         }
