@@ -1,6 +1,6 @@
 import { webSerialDevices, vendorIdNames } from "./devices";
 import { checkBrowserCompatibility } from "../utils/checkBrowserCompatibilty";
-import { GUI } from "../gui";
+import GUI from "../gui";
 
 const logHead = "[SERIAL]";
 
