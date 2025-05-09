@@ -1740,13 +1740,16 @@ pid_tuning.initialize = function (callback) {
 
             // --- Calculate Original (Unscaled, Unclipped) Curve Parameters ---
             // These points define the curve shape based *only* on mid, expo, hover
+            // MODIFIED TO USE HYBRID LOGIC
             const originalTopY = 0; // Top of the canvas corresponds to 100% output
-            const originalMidX = canvasWidth * mid;
-            const originalMidY = canvasHeight * (1 - hover); // Y=0 is top, Y=canvasHeight is bottom
-            const originalMidXl = originalMidX * (1 - expo); // Control point for lower curve (X)
-            const originalMidYl = originalMidY; // Control point for lower curve (Y) - same as midY
-            const originalMidXr = (canvasWidth - originalMidX) * expo + originalMidX; // Control point for upper curve (X)
-            const originalMidYr = originalMidY; // Control point for upper curve (Y) - same as midY
+            const originalMidX = canvasWidth * mid; // Central anchor X (from "new" definition)
+            const originalMidY = canvasHeight * (1 - hover); // Central anchor Y (from "new" definition, Y=0 is top, Y=canvasHeight is bottom)
+
+            // Applying "Old" control point calculation logic relative to the "New" anchor point (originalMidX, originalMidY)
+            const originalMidXl = originalMidX * 0.5; // Control point for lower curve (X)
+            const originalMidYl = canvasHeight - (canvasHeight - originalMidY) * 0.5 * (expo + 1); // Control point for lower curve (Y) - same as midY
+            const originalMidXr = (canvasWidth + originalMidX) * 0.5; // Control point for upper curve (X)
+            const originalMidYr = originalTopY + (originalMidY - originalTopY) * 0.5 * (expo + 1); // Control point for upper curve (Y) - same as midY
 
             context.clearRect(0, 0, canvasWidth, canvasHeight);
             context.lineWidth = 2;
@@ -1761,17 +1764,18 @@ pid_tuning.initialize = function (callback) {
                 const throttleClipY = canvasHeight * (1 - throttleLimitPercent); // Y coordinate of the limit line
 
                 // Find the intersection point (intersectX, throttleClipY) on the ORIGINAL curve
+                // ORIGINAL curve now means the (unscaled) HYBRID curve
                 let intersectT;
                 let intersectX;
 
                 if (throttleClipY >= originalMidY) {
                     // Intersection is on the lower curve segment [ (0, canvasHeight) to (originalMidX, originalMidY) ]
-                    // Control point Y is originalMidYl (which is originalMidY)
+                    // Control point Y is originalMidYl
                     intersectT = getTfromYBezier(throttleClipY, canvasHeight, originalMidYl, originalMidY);
                     intersectX = getQBezierValue(intersectT, 0, originalMidXl, originalMidX);
                 } else {
                     // Intersection is on the upper curve segment [ (originalMidX, originalMidY) to (canvasWidth, originalTopY=0) ]
-                    // Control point Y is originalMidYr (which is originalMidY)
+                    // Control point Y is originalMidYr
                     intersectT = getTfromYBezier(throttleClipY, originalMidY, originalMidYr, originalTopY);
                     // Make sure t is in [0,1] range after calculation from Y
                     intersectT = Math.max(0, Math.min(1, intersectT));
@@ -1790,7 +1794,7 @@ pid_tuning.initialize = function (callback) {
                 context.rect(0, throttleClipY, canvasWidth, canvasHeight - throttleClipY); // Define rectangle below the clip line
                 context.clip(); // Apply clipping
 
-                // Draw the *entire original* curve, only the part within the clip region will be visible
+                // Draw the *entire original* (hybrid) curve, only the part within the clip region will be visible
                 context.beginPath(); // Start new path for the curve itself
                 context.moveTo(0, canvasHeight);
                 context.quadraticCurveTo(originalMidXl, originalMidYl, originalMidX, originalMidY);
@@ -1805,7 +1809,7 @@ pid_tuning.initialize = function (callback) {
                 context.lineTo(canvasWidth, throttleClipY);
                 context.stroke();
 
-                // Calculate thrpos based on original curve first
+                // Calculate thrpos based on original (hybrid) curve first
                 let original_thrpos;
                 if (thrPercent <= mid) {
                     const t = getTfromXBezier(thrX, 0, originalMidXl, originalMidX);
@@ -1842,23 +1846,25 @@ pid_tuning.initialize = function (callback) {
                     scaleFactor = throttleLimitPercent;
                 }
 
-                // Calculate potentially scaled curve points
+                // Calculate potentially scaled curve points for the HYBRID curve
                 const currentTopY = canvasHeight * (1 - scaleFactor); // Y position of 100% output after scaling
-                const currentMidX = originalMidX; // Mid X doesn't change
-                const currentMidY = canvasHeight * (1 - scaleFactor * hover); // Mid Y is scaled hover point
-                const currentMidXl = currentMidX * (1 - expo); // Control point X depends only on mid, expo
-                const currentMidXr = (canvasWidth - currentMidX) * expo + currentMidX;
-                const currentMidYl = currentMidY; // Control point Y is the same as the (scaled) mid Y
-                const currentMidYr = currentMidY;
+                const currentMidX = originalMidX; // Mid X (anchor) doesn't change with scaleFactor directly here, it's from `mid` input
+                const currentMidY = canvasHeight * (1 - scaleFactor * hover); // Mid Y (anchor) is scaled hover point
 
-                // Draw the (potentially scaled) curve
+                // Apply "Old" control point logic to the scaled anchor (currentMidX, currentMidY) and scaled top (currentTopY)
+                const currentMidXl = currentMidX * 0.5; // Control point X depends only on mid, expo
+                const currentMidYl = canvasHeight - (canvasHeight - currentMidY) * 0.5 * (expo + 1); // Control point Y is the same as the (scaled) mid Y
+                const currentMidXr = (canvasWidth + currentMidX) * 0.5;
+                const currentMidYr = currentTopY + (currentMidY - currentTopY) * 0.5 * (expo + 1);
+
+                // Draw the (potentially scaled) hybrid curve
                 context.beginPath();
                 context.moveTo(0, canvasHeight); // Start bottom-left
                 context.quadraticCurveTo(currentMidXl, currentMidYl, currentMidX, currentMidY);
                 context.quadraticCurveTo(currentMidXr, currentMidYr, canvasWidth, currentTopY); // End top-right (potentially scaled)
                 context.stroke();
 
-                // Calculate thrpos directly on the (potentially scaled) curve
+                // Calculate thrpos directly on the (potentially scaled) hybrid curve
                 if (thrPercent <= mid) {
                     const t = getTfromXBezier(thrX, 0, currentMidXl, currentMidX);
                     thrpos = getQuadraticCurvePoint(
