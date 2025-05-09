@@ -1620,8 +1620,6 @@ pid_tuning.initialize = function (callback) {
                 const disc = B * B - 4 * A * C;
                 if (disc < 0) {
                     // No real solution (y is outside the curve's range) - return nearest valid t (0 or 1)
-                    // This might happen due to floating point inaccuracies or if y is exactly at endpoints with zero slope.
-                    // Check which end y is closer to.
                     return Math.abs(y - startY) < Math.abs(y - endY) ? 0 : 1;
                 }
 
@@ -1630,36 +1628,22 @@ pid_tuning.initialize = function (callback) {
 
                 // We need the solution for t that is within the valid range [0, 1]
                 if (t1 >= 0 && t1 <= 1) {
-                    // If t2 is also valid, it implies a cusp or horizontal tangent.
-                    // For throttle curves, we generally expect a monotonic y change,
-                    // so one root should be correct. If both are valid, check which corresponds better,
-                    // but usually t1 is the one needed when solving from y.
-                    // Consider edge cases if the curve has vertical tangents, though unlikely here.
                     if (t2 >= 0 && t2 <= 1) {
-                        // This case indicates the curve might go down then up or vice-versa in y.
-                        // For typical throttle expo, this shouldn't happen for the relevant 'y'.
-                        // We need to be careful. Let's assume standard expo behavior.
-                        // If startY > endY (like throttle curve), we likely want the smaller 't' if B is positive, larger if B negative?
-                        // Let's stick to t1 first, may need refinement based on curve shape.
-                        // If the control point pulls the curve "back" significantly, both might be valid.
-                        // Heuristic: If cpY is between startY and endY, usually only one t is valid.
-                        // If cpY is outside, choose the one reflecting the main curve direction.
-                        // Let's return t1 if it's valid, otherwise t2 if it's valid.
+                        // Both roots are valid, typically t1 is preferred for monotonic curves.
                         return t1;
                     }
                     return t1; // t1 is valid, t2 is not
                 } else if (t2 >= 0 && t2 <= 1) {
                     return t2; // t2 is valid, t1 is not
                 } else {
-                    // Neither solution is valid (should ideally be covered by disc < 0, but check anyway)
-                    // Return closest boundary
-                    return Math.abs(y - startY) < Math.abs(y - endY) ? 0 : 1;
+                    // Neither solution is valid
+                    return Math.abs(y - startY) < Math.abs(y - endY) ? 0 : 1; // Return closest boundary
                 }
             }
 
-            // helper: invert x(t) for a quadratic Bézier
+            // helper: invert x(t) for a quadratic Bézier to find t from x
+            // x(t) = (1–t)² x0 + 2(1–t)t cx + t² x1  ⇒  a t² + b t + c = 0
             function getTfromXBezier(x, x0, cx, x1) {
-                // x(t) = (1–t)² x0 + 2(1–t)t cx + t² x1  ⇒  a t² + b t + c = 0
                 const a = x0 + x1 - 2 * cx;
                 const b = 2 * (cx - x0);
                 const c = x0 - x;
@@ -1672,24 +1656,20 @@ pid_tuning.initialize = function (callback) {
                 if (disc < 0) return 0; // No real solution, return start
                 const t1 = (-b + Math.sqrt(disc)) / (2 * a);
                 const t2 = (-b - Math.sqrt(disc)) / (2 * a);
+
                 // pick the root in [0,1]
-                // Note: Added checks for NaN in case of sqrt(negative near zero)
                 const t1_valid = !isNaN(t1) && 0 <= t1 && t1 <= 1;
                 const t2_valid = !isNaN(t2) && 0 <= t2 && t2 <= 1;
 
                 if (t1_valid && t2_valid) {
-                    // If both are valid (e.g., curve loops back in x), choose the one appropriate for the segment.
-                    // For standard throttle curves split at mid, we expect only one valid root per segment.
-                    // If somehow both are valid, maybe default to smaller t? Or check which segment x falls into.
-                    // For now, prioritizing t1 if both are valid, similar to original code.
+                    // If both are valid, prioritize t1.
                     return t1;
                 } else if (t1_valid) {
                     return t1;
                 } else if (t2_valid) {
                     return t2;
                 } else {
-                    // No valid root in [0, 1], likely x is outside the range for this segment
-                    // Return closest boundary t based on x proximity
+                    // No valid root in [0, 1], return closest boundary t
                     return Math.abs(x - x0) < Math.abs(x - x1) ? 0 : 1;
                 }
             }
@@ -1719,7 +1699,7 @@ pid_tuning.initialize = function (callback) {
                 isNaN(expo) ||
                 isNaN(hover) ||
                 isNaN(throttleLimitPercent) ||
-                isNaN(throttleLimitType) || // Check for NaN
+                isNaN(throttleLimitType) ||
                 mid < parseFloat(throttleMidE.prop("min")) ||
                 mid > parseFloat(throttleMidE.prop("max")) ||
                 expo < parseFloat(throttleExpoE.prop("min")) ||
@@ -1729,7 +1709,6 @@ pid_tuning.initialize = function (callback) {
                 throttleLimitPercent < parseInt(throttleLimitPercentE.prop("min")) / 100 ||
                 throttleLimitPercent > parseInt(throttleLimitPercentE.prop("max")) / 100
             ) {
-                // console.log("Validation failed or NaN detected", {mid, expo, hover, throttleLimitPercent, throttleLimitType});
                 return; // Exit if values are invalid or not numbers
             }
 
@@ -1738,18 +1717,17 @@ pid_tuning.initialize = function (callback) {
             const canvasHeight = throttleCurve.height;
             const canvasWidth = throttleCurve.width;
 
-            // --- Calculate Original (Unscaled, Unclipped) Curve Parameters ---
+            // --- Calculate Base Curve Parameters (Unscaled, Unclipped) ---
             // These points define the curve shape based *only* on mid, expo, hover
-            // MODIFIED TO USE HYBRID LOGIC
             const originalTopY = 0; // Top of the canvas corresponds to 100% output
-            const originalMidX = canvasWidth * mid; // Central anchor X (from "new" definition)
-            const originalMidY = canvasHeight * (1 - hover); // Central anchor Y (from "new" definition, Y=0 is top, Y=canvasHeight is bottom)
+            const originalMidX = canvasWidth * mid; // Central anchor X based on 'mid' input
+            const originalMidY = canvasHeight * (1 - hover); // Central anchor Y based on 'hover' input (Y=0 is top, Y=canvasHeight is bottom)
 
-            // Applying "Old" control point calculation logic relative to the "New" anchor point (originalMidX, originalMidY)
-            const originalMidXl = originalMidX * 0.5; // Control point for lower curve (X)
-            const originalMidYl = canvasHeight - (canvasHeight - originalMidY) * 0.5 * (expo + 1); // Control point for lower curve (Y) - same as midY
-            const originalMidXr = (canvasWidth + originalMidX) * 0.5; // Control point for upper curve (X)
-            const originalMidYr = originalTopY + (originalMidY - originalTopY) * 0.5 * (expo + 1); // Control point for upper curve (Y) - same as midY
+            // Calculate control points for the two quadratic Bezier segments forming the curve, relative to the anchor point (originalMidX, originalMidY)
+            const originalMidXl = originalMidX * 0.5; // Control point X for the lower segment
+            const originalMidYl = canvasHeight - (canvasHeight - originalMidY) * 0.5 * (expo + 1); // Control point Y for the lower segment, influenced by 'expo'
+            const originalMidXr = (canvasWidth + originalMidX) * 0.5; // Control point X for the upper segment
+            const originalMidYr = originalTopY + (originalMidY - originalTopY) * 0.5 * (expo + 1); // Control point Y for the upper segment, influenced by 'expo'
 
             context.clearRect(0, 0, canvasWidth, canvasHeight);
             context.lineWidth = 2;
@@ -1759,47 +1737,39 @@ pid_tuning.initialize = function (callback) {
             const thrPercent = Math.max(0, Math.min(1, (FC.RC.channels[3] - 1000) / 1000)); // Ensure 0-1 range
             const thrX = thrPercent * canvasWidth; // X position corresponding to input throttle stick
 
+            // draw
             // --- Draw Curve based on Limit Type ---
             if (throttleLimitType === THROTTLE_LIMIT_TYPES.CLIP && throttleLimitPercent < 1.0) {
                 const throttleClipY = canvasHeight * (1 - throttleLimitPercent); // Y coordinate of the limit line
 
-                // Find the intersection point (intersectX, throttleClipY) on the ORIGINAL curve
-                // ORIGINAL curve now means the (unscaled) HYBRID curve
+                // Find the intersection point (intersectX, throttleClipY) on the base (unscaled) curve
                 let intersectT;
                 let intersectX;
 
                 if (throttleClipY >= originalMidY) {
-                    // Intersection is on the lower curve segment [ (0, canvasHeight) to (originalMidX, originalMidY) ]
-                    // Control point Y is originalMidYl
+                    // Intersection is on the lower curve segment
                     intersectT = getTfromYBezier(throttleClipY, canvasHeight, originalMidYl, originalMidY);
                     intersectX = getQBezierValue(intersectT, 0, originalMidXl, originalMidX);
                 } else {
-                    // Intersection is on the upper curve segment [ (originalMidX, originalMidY) to (canvasWidth, originalTopY=0) ]
-                    // Control point Y is originalMidYr
+                    // Intersection is on the upper curve segment
                     intersectT = getTfromYBezier(throttleClipY, originalMidY, originalMidYr, originalTopY);
-                    // Make sure t is in [0,1] range after calculation from Y
-                    intersectT = Math.max(0, Math.min(1, intersectT));
+                    intersectT = Math.max(0, Math.min(1, intersectT)); // Ensure t is in [0,1]
                     intersectX = getQBezierValue(intersectT, originalMidX, originalMidXr, canvasWidth);
                 }
-                // Ensure intersectX is within bounds, handle potential calculation edge cases
-                intersectX = Math.max(0, Math.min(canvasWidth, intersectX));
+                intersectX = Math.max(0, Math.min(canvasWidth, intersectX)); // Ensure intersectX is within bounds
 
                 // Draw the clipped curve
-                context.beginPath();
-                context.moveTo(0, canvasHeight); // Start at bottom-left
-
-                // Use clipping region to draw the curve below the limit line easily
                 context.save();
                 context.beginPath();
                 context.rect(0, throttleClipY, canvasWidth, canvasHeight - throttleClipY); // Define rectangle below the clip line
                 context.clip(); // Apply clipping
 
-                // Draw the *entire original* (hybrid) curve, only the part within the clip region will be visible
-                context.beginPath(); // Start new path for the curve itself
+                // Draw the *entire base* curve; only the part within the clip region will be visible
+                context.beginPath();
                 context.moveTo(0, canvasHeight);
                 context.quadraticCurveTo(originalMidXl, originalMidYl, originalMidX, originalMidY);
-                context.quadraticCurveTo(originalMidXr, originalMidYr, canvasWidth, originalTopY); // Draw original curve to top right
-                context.stroke(); // Stroke the curve within the clipped area
+                context.quadraticCurveTo(originalMidXr, originalMidYr, canvasWidth, originalTopY);
+                context.stroke();
 
                 context.restore(); // Remove clipping region
 
@@ -1809,7 +1779,7 @@ pid_tuning.initialize = function (callback) {
                 context.lineTo(canvasWidth, throttleClipY);
                 context.stroke();
 
-                // Calculate thrpos based on original (hybrid) curve first
+                // Calculate thrpos based on the base (unscaled) curve first
                 let original_thrpos;
                 if (thrPercent <= mid) {
                     const t = getTfromXBezier(thrX, 0, originalMidXl, originalMidX);
@@ -1846,25 +1816,25 @@ pid_tuning.initialize = function (callback) {
                     scaleFactor = throttleLimitPercent;
                 }
 
-                // Calculate potentially scaled curve points for the HYBRID curve
+                // Calculate potentially scaled curve points
                 const currentTopY = canvasHeight * (1 - scaleFactor); // Y position of 100% output after scaling
-                const currentMidX = originalMidX; // Mid X (anchor) doesn't change with scaleFactor directly here, it's from `mid` input
-                const currentMidY = canvasHeight * (1 - scaleFactor * hover); // Mid Y (anchor) is scaled hover point
+                const currentMidX = originalMidX; // Mid X anchor remains the same as the base curve
+                const currentMidY = canvasHeight * (1 - scaleFactor * hover); // Mid Y anchor is scaled by scaleFactor and hover
 
-                // Apply "Old" control point logic to the scaled anchor (currentMidX, currentMidY) and scaled top (currentTopY)
-                const currentMidXl = currentMidX * 0.5; // Control point X depends only on mid, expo
-                const currentMidYl = canvasHeight - (canvasHeight - currentMidY) * 0.5 * (expo + 1); // Control point Y is the same as the (scaled) mid Y
+                // Calculate control points relative to the scaled anchor (currentMidX, currentMidY) and scaled top (currentTopY)
+                const currentMidXl = currentMidX * 0.5;
+                const currentMidYl = canvasHeight - (canvasHeight - currentMidY) * 0.5 * (expo + 1);
                 const currentMidXr = (canvasWidth + currentMidX) * 0.5;
                 const currentMidYr = currentTopY + (currentMidY - currentTopY) * 0.5 * (expo + 1);
 
-                // Draw the (potentially scaled) hybrid curve
+                // Draw the (potentially scaled) curve
                 context.beginPath();
                 context.moveTo(0, canvasHeight); // Start bottom-left
                 context.quadraticCurveTo(currentMidXl, currentMidYl, currentMidX, currentMidY);
                 context.quadraticCurveTo(currentMidXr, currentMidYr, canvasWidth, currentTopY); // End top-right (potentially scaled)
                 context.stroke();
 
-                // Calculate thrpos directly on the (potentially scaled) hybrid curve
+                // Calculate thrpos directly on the (potentially scaled) curve
                 if (thrPercent <= mid) {
                     const t = getTfromXBezier(thrX, 0, currentMidXl, currentMidX);
                     thrpos = getQuadraticCurvePoint(
@@ -1892,8 +1862,7 @@ pid_tuning.initialize = function (callback) {
 
             // --- Draw Throttle Position Indicator ---
             if (thrpos) {
-                // Ensure thrpos was calculated
-                // Clamp final thrpos to canvas bounds just in case
+                // Clamp final thrpos to canvas bounds
                 thrpos.x = Math.max(0, Math.min(canvasWidth, thrpos.x));
                 thrpos.y = Math.max(0, Math.min(canvasHeight, thrpos.y));
 
@@ -1908,21 +1877,21 @@ pid_tuning.initialize = function (callback) {
                 context.font = `${fontSize}pt Verdana, Arial, sans-serif`;
                 context.fillStyle = "#888888"; // Text color
 
-                // Calculate real input throttle % and the resulting output throttle % after curve and limit
+                // Calculate real input throttle % and the resulting output throttle %
                 let realInputThr = thrPercent * 100.0;
                 // Output Y goes from canvasHeight (0%) to 0 (100%), so invert and scale
                 let outputThr = Math.max(0, Math.min(100, (1 - thrpos.y / canvasHeight) * 100.0));
 
                 let thrlabel = `${Math.round(realInputThr)}%` + ` = ${Math.round(outputThr)}%`;
 
-                // Measure text and position it top-left
-                let textMetrics = context.measureText(thrlabel);
+                // Position text top-left
                 let textX = 5;
-                let textY = 5 + fontSize; // Position near top-left corner
+                let textY = 5 + fontSize;
 
                 context.fillText(thrlabel, textX, textY);
                 context.restore();
             } else {
+                // Should not happen if logic is correct
                 console.error("thrpos calculation failed");
             }
         } // end of redrawThrottleCurve
