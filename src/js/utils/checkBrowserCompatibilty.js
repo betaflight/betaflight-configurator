@@ -6,7 +6,7 @@ export function getOS() {
     let os = "unknown";
     const userAgent = window.navigator.userAgent;
     const platform = window.navigator?.userAgentData?.platform || window.navigator.platform;
-    const macosPlatforms = ["Macintosh", "MacIntel", "MacPPC", "Mac68K", "MacOS"];
+    const macosPlatforms = ["Macintosh", "MacIntel", "MacPPC", "Mac68K", "macOS"];
     const windowsPlatforms = ["Win32", "Win64", "Windows", "WinCE"];
     const iosPlatforms = ["iPhone", "iPad", "iPod"];
 
