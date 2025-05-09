@@ -22,7 +22,9 @@
     "android:release": "vite build && node capacitor.config.generator.mjs && npx cap build android --release",
     "format": "prettier --write {src,test}/**/*.{js,vue,css,less}",
     "storybook": "start-storybook -p 6006",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "tauri:dev": "tauri dev",
+    "tauri:build": "tauri build"
   },
   "window": {
     "icon": "images/bf_icon_128.png",
@@ -44,6 +46,8 @@
     "@capacitor/android": "^7.0.1",
     "@capacitor/core": "^7.0.1",
     "@fortawesome/fontawesome-free": "^6.5.2",
+    "@tauri-apps/api": "^2.3.0",
+    "@tauri-apps/cli": "^2.3.1",
     "@vitejs/plugin-vue": "^5.2.1",
     "crypto-es": "^2.1.0",
     "d3": "^7.9.0",
