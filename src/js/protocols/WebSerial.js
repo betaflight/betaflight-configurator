@@ -1,5 +1,6 @@
 import { webSerialDevices, vendorIdNames } from "./devices";
 import { checkBrowserCompatibility } from "../utils/checkBrowserCompatibilty";
+import GUI from "../gui";
 
 const logHead = "[SERIAL]";
 
@@ -69,7 +70,7 @@ class WebSerial extends EventTarget {
             navigator.serial.addEventListener("connect", (e) => this.handleNewDevice(e.target));
             navigator.serial.addEventListener("disconnect", (e) => this.handleRemovedDevice(e.target));
         }
-
+        this.isNeedBatchWrite = false;
         this.loadDevices();
     }
 
@@ -181,6 +182,10 @@ class WebSerial extends EventTarget {
 
             const connectionInfo = this.port.getInfo();
             this.connectionInfo = connectionInfo;
+            this.isNeedBatchWrite = this.checkIsNeedBatchWrite();
+            if (this.isNeedBatchWrite) {
+                console.log(`${logHead} Enabling batch write mode for AT32 on macOS`);
+            }
             this.writer = this.port.writable.getWriter();
             this.reader = this.port.readable.getReader();
 
@@ -328,6 +333,29 @@ class WebSerial extends EventTarget {
         }
     }
 
+    checkIsNeedBatchWrite() {
+        const isMac = GUI.operating_system === "MacOS";
+        return isMac && vendorIdNames[this.connectionInfo.usbVendorId] === "AT32";
+    }
+
+    async batchWrite(data) {
+        // AT32 on macOS requires smaller chunks (63 bytes) to work correctly due to
+        // USB buffer size limitations in the macOS implementation
+        const batchWriteSize = 63;
+        let remainingData = data;
+        while (remainingData.byteLength > batchWriteSize) {
+            const sliceData = remainingData.slice(0, batchWriteSize);
+            remainingData = remainingData.slice(batchWriteSize);
+            try {
+                await this.writer.write(sliceData);
+            } catch (error) {
+                console.error(`${logHead} Error writing batch chunk:`, error);
+                throw error; // Re-throw to be caught by the send method
+            }
+        }
+        await this.writer.write(remainingData);
+    }
+
     async send(data, callback) {
         if (!this.connected || !this.writer) {
             console.error(`${logHead} Failed to send data, serial port not open`);
@@ -338,7 +366,11 @@ class WebSerial extends EventTarget {
         }
 
         try {
-            await this.writer.write(data);
+            if (this.isNeedBatchWrite) {
+                await this.batchWrite(data);
+            } else {
+                await this.writer.write(data);
+            }
             this.bytesSent += data.byteLength;
 
             const result = { bytesSent: data.byteLength };
