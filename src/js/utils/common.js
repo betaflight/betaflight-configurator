@@ -1,7 +1,6 @@
 import semver from "semver";
 import { mixerList } from "../model";
 import CONFIGURATOR from "../data_storage";
-import { gui_log } from "../gui_log";
 import $ from "jquery";
 
 export function millitime() {
@@ -32,19 +31,6 @@ export function bytesToSize(bytes) {
 
 export function isInt(n) {
     return n % 1 === 0;
-}
-
-/*
- *  checkChromeRuntimeError() has to be called after each chrome API call
- */
-
-export function checkChromeRuntimeError() {
-    if (chrome.runtime.lastError) {
-        console.error(`Chrome API Error: ${chrome.runtime.lastError.message}.\n Traced ${new Error().stack}`);
-        gui_log(`Chrome API Error: ${chrome.runtime.lastError.message}.`);
-        return true;
-    }
-    return false;
 }
 
 const majorFirmwareVersions = {
