@@ -132,7 +132,7 @@ export default defineComponent({
             type: Boolean,
             default: true,
         },
-            showDFUOption: {
+        showDFUOption: {
             type: Boolean,
             default: true,
         },
