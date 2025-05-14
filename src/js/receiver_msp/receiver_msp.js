@@ -1,7 +1,6 @@
 import "../jqueryPlugins.js";
 import windowWatcherUtil from "../utils/window_watchers.js";
 import DarkTheme from "../DarkTheme.js";
-import { isWeb } from "../utils/isWeb.js";
 import $ from "jquery";
 
 // This is a hack to get the i18n var of the parent, but the i18n.localizePage not works
@@ -68,7 +67,7 @@ function transmitChannels() {
     // Callback given to us by the window creator so we can have it send data over MSP for us:
     if (!window.setRawRx(channelValues)) {
         // MSP connection has gone away
-        isWeb() ? close() : chrome.app.window.current().close();
+        close();
     }
 }
 
@@ -145,13 +144,7 @@ $(".button-enable .btn").on("click", function () {
     const shrinkHeight = $(".warning").height();
 
     $(".warning").slideUp("short", function () {
-        if (isWeb()) {
-            resizeTo(outerWidth, outerHeight - shrinkHeight);
-        } else {
-            chrome.app.window.current().innerBounds.minHeight -= shrinkHeight;
-            chrome.app.window.current().innerBounds.height -= shrinkHeight;
-            chrome.app.window.current().innerBounds.maxHeight -= shrinkHeight;
-        }
+        resizeTo(outerWidth, outerHeight - shrinkHeight);
     });
 
     enableTX = true;

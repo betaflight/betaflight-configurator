@@ -1,5 +1,3 @@
-import GUI from "./gui";
-import windowWatcherUtil from "./utils/window_watchers";
 import { checkSetupAnalytics } from "./Analytics";
 import $ from "jquery";
 
@@ -28,10 +26,6 @@ DarkTheme.apply = function () {
             self.applyDark();
         } else {
             self.applyNormal();
-        }
-
-        if (chrome.app.window !== undefined) {
-            windowWatcherUtil.passValue(chrome.app.window.get("receiver_msp"), "darkTheme", isEnabled);
         }
     });
 };

@@ -34,19 +34,6 @@ export function isInt(n) {
     return n % 1 === 0;
 }
 
-/*
- *  checkChromeRuntimeError() has to be called after each chrome API call
- */
-
-export function checkChromeRuntimeError() {
-    if (chrome.runtime.lastError) {
-        console.error(`Chrome API Error: ${chrome.runtime.lastError.message}.\n Traced ${new Error().stack}`);
-        gui_log(`Chrome API Error: ${chrome.runtime.lastError.message}.`);
-        return true;
-    }
-    return false;
-}
-
 const majorFirmwareVersions = {
     1.47: "4.6.*",
     1.46: "4.5.*",

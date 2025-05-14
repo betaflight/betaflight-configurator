@@ -1,4 +1,3 @@
-import { isWeb } from "../utils/isWeb";
 /*
   This utility is intended to communicate between chrome windows.
   One window could watch passed values from another window and react to them.
@@ -41,7 +40,7 @@ windowWatcherUtil.passValue = function (windows, key, val) {
             return;
         }
 
-        const contentWindow = isWeb() ? win : win.contentWindow;
+        const contentWindow = win;
 
         if (contentWindow.bindings) {
             contentWindow.bindings[key] = val;
