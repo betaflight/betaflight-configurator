@@ -3,7 +3,11 @@ import { EventBus } from "../components/eventBus";
 import { serial } from "./serial.js";
 import WEBUSBDFU from "./protocols/webusbdfu";
 import { reactive } from "vue";
-import { checkWebBluetoothSupport, checkWebSerialSupport, checkWebUSBSupport } from "./utils/checkBrowserCompatibilty.js";
+import {
+    checkWebBluetoothSupport,
+    checkWebSerialSupport,
+    checkWebUSBSupport,
+} from "./utils/checkBrowserCompatibilty.js";
 
 const DEFAULT_PORT = "noselection";
 const DEFAULT_BAUDS = 115200;
@@ -32,6 +36,10 @@ const PortHandler = new (function () {
     this.showBluetoothOption = checkWebBluetoothSupport();
     this.showWebSerialOption = checkWebSerialSupport();
     this.showDFUOption = checkWebUSBSupport();
+
+    console.log(`${this.logHead} Bluetooth available: ${this.showBluetoothOption}`);
+    console.log(`${this.logHead} Serial available: ${this.showWebSerialOption}`);
+    console.log(`${this.logHead} DFU available: ${this.showDFUOption}`);
 
     this.showVirtualMode = getConfig("showVirtualMode", false).showVirtualMode;
     this.showManualMode = getConfig("showManualMode", false).showManualMode;
