@@ -1,7 +1,6 @@
 import semver from "semver";
 import { mixerList } from "../model";
 import CONFIGURATOR from "../data_storage";
-import { gui_log } from "../gui_log";
 import $ from "jquery";
 
 export function millitime() {
