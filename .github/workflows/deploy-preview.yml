@@ -1,6 +1,7 @@
 name: 'Preview Deployment'
 on:
   pull_request_target:
+    types: [opened, synchronize, reopened]
     branches:
       - master
 
@@ -16,6 +17,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Cache node_modules
         uses: actions/cache@v4
