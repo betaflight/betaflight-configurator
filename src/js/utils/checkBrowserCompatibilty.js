@@ -28,16 +28,15 @@ export function getOS() {
 }
 
 export function isChromiumBrowser() {
-    // https://developer.mozilla.org/en-US/docs/Web/HTTP/Browser_detection_using_the_user_agent
-    if (!navigator.userAgentData) {
-        console.log(navigator.userAgent);
-        return false;
+    if (navigator.userAgentData) {
+        return navigator.userAgentData.brands.some((brand) => {
+            return brand.brand == "Chromium";
+        });
     }
 
-    // https://learn.microsoft.com/en-us/microsoft-edge/web-platform/user-agent-guidance
-    return navigator.userAgentData.brands.some((brand) => {
-        return brand.brand == "Chromium";
-    });
+    // Fallback for older browsers/Android
+    const ua = navigator.userAgent.toLowerCase();
+    return ua.includes("chrom") || ua.includes("edg");
 }
 
 export function isAndroid() {
@@ -70,8 +69,7 @@ export function checkBrowserCompatibility() {
     const isNative = Capacitor.isNativePlatform();
 
     // const compatible = isNative || (webSerial && isChromium);
-    const compatible = isChromium
-        && (isWebSerial || isBluetooth || isUSB);
+    const compatible = isChromium && (isWebSerial || isBluetooth || isUSB);
 
     console.log("User Agent: ", navigator.userAgentData);
     console.log("Native: ", isNative);
