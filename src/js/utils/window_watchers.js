@@ -1,5 +1,5 @@
 /*
-  This utility is intended to communicate between chrome windows.
+  This utility is intended to communicate between browser windows.
   One window could watch passed values from another window and react to them.
 */
 
