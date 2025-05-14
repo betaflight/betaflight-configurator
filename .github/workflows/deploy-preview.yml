@@ -11,6 +11,7 @@ jobs:
       actions: read
       contents: read
       deployments: write
+      issues: write
       pull-requests: write
     runs-on: ubuntu-latest
     timeout-minutes: 5
