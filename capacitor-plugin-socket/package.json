@@ -1,0 +1,16 @@
+{
+  "name": "capacitor-plugin-socket",
+  "version": "1.0.0",
+  "description": "A Capacitor plugin for handling raw TCP sockets.",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "keywords": ["capacitor", "plugin", "tcp", "socket"],
+  "author": "Your Name",
+  "license": "MIT",
+  "devDependencies": {
+    "@capacitor/core": "latest",
+    "typescript": "^5.0.0"
+  }
+}
