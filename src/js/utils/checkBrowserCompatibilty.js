@@ -68,8 +68,7 @@ export function checkBrowserCompatibility() {
 
     const isNative = Capacitor.isNativePlatform();
 
-    // const compatible = isNative || (webSerial && isChromium);
-    const compatible = isChromium && (isWebSerial || isBluetooth || isUSB);
+    const compatible = isNative || (isChromium && (isWebSerial || isBluetooth || isUSB));
 
     console.log("User Agent: ", navigator.userAgentData);
     console.log("Native: ", isNative);
