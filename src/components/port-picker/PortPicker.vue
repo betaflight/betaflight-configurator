@@ -18,6 +18,9 @@
             :disabled="disabled"
             :show-virtual-option="showVirtualOption"
             :show-manual-option="showManualOption"
+            :show-bluetooth-option="showBluetoothOption"
+            :show-serial-option="showSerialOption"
+            :show-dfu-option="showDFUOption"
             @update:modelValue="updateModelValue(null, $event)"
         />
     </div>
@@ -59,6 +62,18 @@ export default defineComponent({
             default: true,
         },
         showManualOption: {
+            type: Boolean,
+            default: true,
+        },
+        showDFUOption: {
+            type: Boolean,
+            default: true,
+        },
+        showBluetoothOption: {
+            type: Boolean,
+            default: true,
+        },
+        showSerialOption: {
             type: Boolean,
             default: true,
         },

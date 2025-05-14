@@ -3,6 +3,7 @@ import { EventBus } from "../components/eventBus";
 import { serial } from "./serial.js";
 import WEBUSBDFU from "./protocols/webusbdfu";
 import { reactive } from "vue";
+import { checkWebBluetoothSupport, checkWebSerialSupport, checkWebUSBSupport } from "./utils/checkBrowserCompatibilty.js";
 
 const DEFAULT_PORT = "noselection";
 const DEFAULT_BAUDS = 115200;
@@ -27,7 +28,11 @@ const PortHandler = new (function () {
     this.bluetoothAvailable = false;
     this.dfuAvailable = false;
     this.portAvailable = false;
-    this.showAllSerialDevices = false;
+
+    this.showBluetoothOption = checkWebBluetoothSupport();
+    this.showWebSerialOption = checkWebSerialSupport();
+    this.showDFUOption = checkWebUSBSupport();
+
     this.showVirtualMode = getConfig("showVirtualMode", false).showVirtualMode;
     this.showManualMode = getConfig("showManualMode", false).showManualMode;
     this.showAllSerialDevices = getConfig("showAllSerialDevices", false).showAllSerialDevices;

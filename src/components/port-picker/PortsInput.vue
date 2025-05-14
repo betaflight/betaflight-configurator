@@ -19,6 +19,7 @@
                     {{ $t("portsSelectVirtual") }}
                 </option>
                 <option
+                    v-if="showBluetoothOption"
                     v-for="connectedBluetoothDevice in connectedBluetoothDevices"
                     :key="connectedBluetoothDevice.path"
                     :value="connectedBluetoothDevice.path"
@@ -26,6 +27,7 @@
                     {{ connectedBluetoothDevice.displayName }}
                 </option>
                 <option
+                    v-if="showSerialOption"
                     v-for="connectedSerialDevice in connectedSerialDevices"
                     :key="connectedSerialDevice.path"
                     :value="connectedSerialDevice.path"
@@ -33,19 +35,20 @@
                     {{ connectedSerialDevice.displayName }}
                 </option>
                 <option
+                    v-if="showDFUOption"
                     v-for="connectedUsbDevice in connectedUsbDevices"
                     :key="connectedUsbDevice.path"
                     :value="connectedUsbDevice.path"
                 >
                     {{ connectedUsbDevice.displayName }}
                 </option>
-                <option value="requestpermission">
+                <option v-if="showSerialOption" value="requestpermission">
                     {{ $t("portsSelectPermission") }}
                 </option>
-                <option value="requestpermissionbluetooth">
+                <option v-if="showBluetoothOption" value="requestpermissionbluetooth">
                     {{ $t("portsSelectPermissionBluetooth") }}
                 </option>
-                <option value="requestpermissionusb">
+                <option v-if="showDFUOption" value="requestpermissionusb">
                     {{ $t("portsSelectPermissionDFU") }}
                 </option>
             </select>
@@ -118,6 +121,18 @@ export default defineComponent({
             default: true,
         },
         showManualOption: {
+            type: Boolean,
+            default: true,
+        },
+        showBluetoothOption: {
+            type: Boolean,
+            default: true,
+        },
+        showSerialOption: {
+            type: Boolean,
+            default: true,
+        },
+            showDFUOption: {
             type: Boolean,
             default: true,
         },
