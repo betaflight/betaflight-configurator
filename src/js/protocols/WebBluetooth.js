@@ -360,7 +360,7 @@ class WebBluetooth extends EventTarget {
         } catch (error) {
             console.error(error);
         }
-        this.lastWrite = this.writeCharacteristic.writeValueWithResponse(dataBuffer);
+        this.lastWrite = this.writeCharacteristic.writeValue(dataBuffer);
 
         return {
             bytesSent: data.byteLength,
