@@ -2,15 +2,20 @@
   "name": "capacitor-plugin-socket",
   "version": "1.0.0",
   "description": "A Capacitor plugin for handling raw TCP sockets.",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": ["dist/*", "package.json", "README.md"],
   "scripts": {
-    "build": "tsc"
+    "clean": "rimraf dist",
+    "build": "npm run clean && tsc -p tsconfig.json"
   },
   "keywords": ["capacitor", "plugin", "tcp", "socket"],
-  "author": "Your Name",
+  "author": "Betaflight <dev.betaflight.com>",
   "license": "MIT",
+  "peerDependencies": {
+    "@capacitor/core": "^5.0.0"
+  },
   "devDependencies": {
-    "@capacitor/core": "latest",
     "typescript": "^5.0.0"
   }
 }
