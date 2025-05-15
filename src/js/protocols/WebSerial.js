@@ -1,5 +1,5 @@
 import { webSerialDevices, vendorIdNames } from "./devices";
-import { checkBrowserCompatibility } from "../utils/checkBrowserCompatibilty";
+import { checkBrowserCompatibility } from "../utils/checkBrowserCompatibility";
 import GUI from "../gui";
 
 const logHead = "[SERIAL]";
@@ -64,6 +64,11 @@ class WebSerial extends EventTarget {
         this.disconnect = this.disconnect.bind(this);
         this.handleDisconnect = this.handleDisconnect.bind(this);
         this.handleReceiveBytes = this.handleReceiveBytes.bind(this);
+
+        if (!navigator?.serial) {
+            console.error(`${this.logHead} Web Serial API not supported`);
+            return;
+        }
 
         // Initialize device connection/disconnection listeners
         if (navigator.serial) {

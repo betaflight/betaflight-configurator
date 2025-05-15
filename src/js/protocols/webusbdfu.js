@@ -79,16 +79,6 @@ class WEBUSBDFU_protocol extends EventTarget {
 
         if (!navigator?.usb) {
             console.error(`${this.logHead} WebUSB API not supported`);
-            // Show error notification if enabled and permitted
-            if (
-                getConfig("showNotifications").showNotifications
-                && NotificationManager.checkPermission() === "granted"
-            ) {
-                NotificationManager.showNotification("Betaflight Configurator", {
-                    body: i18n.getMessage("webusbNotSupportedMessage"),
-                    icon: "/images/pwa/favicon.ico",
-                });
-            }
             return;
         }
 

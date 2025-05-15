@@ -34,8 +34,9 @@ class WebBluetooth extends EventTarget {
         this.logHead = "[BLUETOOTH]";
 
         this.bluetooth = navigator?.bluetooth;
+
         if (!this.bluetooth) {
-            console.error(`${this.logHead} Bluetooth API not available`);
+            console.error(`${this.logHead} Web Bluetooth API not supported`);
             return;
         }
 
@@ -353,10 +354,10 @@ class WebBluetooth extends EventTarget {
         const dataBuffer = new Uint8Array(data);
 
         try {
-            if (this.lastWrite){
+            if (this.lastWrite) {
                 await this.lastWrite;
             }
-        } catch(error) {
+        } catch (error) {
             console.error(error);
         }
         this.lastWrite = this.writeCharacteristic.writeValueWithResponse(dataBuffer);
