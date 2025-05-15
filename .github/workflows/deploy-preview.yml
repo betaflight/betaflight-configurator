@@ -6,20 +6,15 @@ on:
       - master
 
 jobs:
-  deploy:
-    permissions:
-      actions: read
-      contents: read
-      deployments: write
-      issues: write
-      pull-requests: write
+  # Job 1: Build the code (no secrets here)
+  build:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false  # Don't persist GitHub token
 
       - name: Cache node_modules
         uses: actions/cache@v4
@@ -35,6 +30,29 @@ jobs:
       - run: npm install yarn -g
       - run: yarn install
       - run: yarn build
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-files
+          path: src/dist
+
+  # Job 2: Deploy with secrets (no PR code checkout)
+  deploy:
+    needs: build  # Wait for build job to complete
+    permissions:
+      actions: read
+      contents: read
+      deployments: write
+      issues: write
+      pull-requests: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: dist-files
+          path: src/dist
 
       - name: Deploy to Cloudflare
         id: deploy
