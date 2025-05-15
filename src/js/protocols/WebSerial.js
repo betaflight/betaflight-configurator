@@ -1,5 +1,4 @@
 import { webSerialDevices, vendorIdNames } from "./devices";
-import { checkBrowserCompatibility } from "../utils/checkBrowserCompatibilty";
 import GUI from "../gui";
 
 const logHead = "[SERIAL]";
@@ -39,8 +38,6 @@ class WebSerial extends EventTarget {
     constructor() {
         super();
 
-        checkBrowserCompatibility();
-
         this.connected = false;
         this.openRequested = false;
         this.openCanceled = false;
@@ -60,16 +57,20 @@ class WebSerial extends EventTarget {
         this.writer = null;
         this.reading = false;
 
+        if (!navigator?.serial) {
+            console.error(`${logHead} Web Serial API not supported`);
+            return;
+        }
+
         this.connect = this.connect.bind(this);
         this.disconnect = this.disconnect.bind(this);
         this.handleDisconnect = this.handleDisconnect.bind(this);
         this.handleReceiveBytes = this.handleReceiveBytes.bind(this);
 
         // Initialize device connection/disconnection listeners
-        if (navigator.serial) {
-            navigator.serial.addEventListener("connect", (e) => this.handleNewDevice(e.target));
-            navigator.serial.addEventListener("disconnect", (e) => this.handleRemovedDevice(e.target));
-        }
+        navigator.serial.addEventListener("connect", (e) => this.handleNewDevice(e.target));
+        navigator.serial.addEventListener("disconnect", (e) => this.handleRemovedDevice(e.target));
+
         this.isNeedBatchWrite = false;
         this.loadDevices();
     }
@@ -116,11 +117,6 @@ class WebSerial extends EventTarget {
     }
 
     async loadDevices() {
-        if (!navigator.serial) {
-            console.error(`${logHead} Web Serial API not available`);
-            return;
-        }
-
         try {
             const ports = await navigator.serial.getPorts();
             this.portCounter = 1;
@@ -131,11 +127,6 @@ class WebSerial extends EventTarget {
     }
 
     async requestPermissionDevice(showAllSerialDevices = false) {
-        if (!navigator.serial) {
-            console.error(`${logHead} Web Serial API not available`);
-            return null;
-        }
-
         let newPermissionPort = null;
 
         try {

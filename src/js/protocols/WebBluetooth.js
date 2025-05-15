@@ -20,6 +20,7 @@ class WebBluetooth extends EventTarget {
         this.closeRequested = false;
         this.transmitting = false;
         this.connectionInfo = null;
+        this.lastWrite = null;
 
         this.bitrate = 0;
         this.bytesSent = 0;
@@ -32,10 +33,10 @@ class WebBluetooth extends EventTarget {
 
         this.logHead = "[BLUETOOTH]";
 
-        if (!this.bluetooth && window && window.navigator && window.navigator.bluetooth) {
-            this.bluetooth = navigator.bluetooth;
-        } else {
-            console.error(`${this.logHead} Bluetooth API not available`);
+        this.bluetooth = navigator?.bluetooth;
+
+        if (!this.bluetooth) {
+            console.error(`${this.logHead} Web Bluetooth API not supported`);
             return;
         }
 
@@ -86,10 +87,14 @@ class WebBluetooth extends EventTarget {
     }
 
     async loadDevices() {
-        const devices = await this.getDevices();
+        try {
+            const devices = await this.getDevices();
 
-        this.portCounter = 1;
-        this.devices = devices.map((device) => this.createPort(device));
+            this.portCounter = 1;
+            this.devices = devices.map((device) => this.createPort(device));
+        } catch (error) {
+            console.error(`${this.logHead} Failed to load devices:`, error);
+        }
     }
 
     async requestPermissionDevice() {
@@ -251,7 +256,11 @@ class WebBluetooth extends EventTarget {
 
         this.readCharacteristic.addEventListener("characteristicvaluechanged", this.handleNotification.bind(this));
 
-        return await this.readCharacteristic.readValue();
+        try {
+            return await this.readCharacteristic.readValue();
+        } catch (e) {
+            console.error(`${this.logHead} Failed to read characteristic value:`, e);
+        }
     }
 
     handleNotification(event) {
@@ -261,7 +270,9 @@ class WebBluetooth extends EventTarget {
             buffer[i] = event.target.value.getUint8(i);
         }
 
-        this.dispatchEvent(new CustomEvent("receive", { detail: buffer }));
+        setTimeout(() => {
+            this.dispatchEvent(new CustomEvent("receive", { detail: buffer }));
+        }, 0);
     }
 
     startNotifications() {
@@ -342,7 +353,14 @@ class WebBluetooth extends EventTarget {
 
         const dataBuffer = new Uint8Array(data);
 
-        await this.writeCharacteristic.writeValue(dataBuffer);
+        try {
+            if (this.lastWrite) {
+                await this.lastWrite;
+            }
+        } catch (error) {
+            console.error(error);
+        }
+        this.lastWrite = this.writeCharacteristic.writeValue(dataBuffer);
 
         return {
             bytesSent: data.byteLength,

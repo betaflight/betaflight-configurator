@@ -28,16 +28,15 @@ export function getOS() {
 }
 
 export function isChromiumBrowser() {
-    // https://developer.mozilla.org/en-US/docs/Web/HTTP/Browser_detection_using_the_user_agent
-    if (!navigator.userAgentData) {
-        console.log(navigator.userAgent);
-        return false;
+    if (navigator.userAgentData) {
+        return navigator.userAgentData.brands.some((brand) => {
+            return brand.brand == "Chromium";
+        });
     }
 
-    // https://learn.microsoft.com/en-us/microsoft-edge/web-platform/user-agent-guidance
-    return navigator.userAgentData.brands.some((brand) => {
-        return brand.brand == "Chromium";
-    });
+    // Fallback for older browsers/Android
+    const ua = navigator.userAgent.toLowerCase();
+    return ua.includes("chrom") || ua.includes("edg");
 }
 
 export function isAndroid() {
@@ -62,16 +61,21 @@ export function isCapacitorWeb() {
 }
 
 export function checkBrowserCompatibility() {
-    const webSerial = "serial" in navigator;
-    const isNative = Capacitor.isNativePlatform();
+    const isWebSerial = checkWebSerialSupport();
+    const isWebBluetooth = checkWebBluetoothSupport();
+    const isWebUSB = checkWebUSBSupport();
     const isChromium = isChromiumBrowser();
 
-    const compatible = isNative || (webSerial && isChromium);
+    const isNative = Capacitor.isNativePlatform();
+
+    const compatible = isNative || (isChromium && (isWebSerial || isWebBluetooth || isWebUSB));
 
     console.log("User Agent: ", navigator.userAgentData);
     console.log("Native: ", isNative);
     console.log("Chromium: ", isChromium);
-    console.log("Web Serial: ", webSerial);
+    console.log("Web Serial: ", isWebSerial);
+    console.log("OS: ", getOS());
+
     console.log("Android: ", isAndroid());
     console.log("iOS: ", isIOS());
     console.log("Capacitor web: ", isCapacitorWeb());
@@ -82,11 +86,19 @@ export function checkBrowserCompatibility() {
 
     let errorMessage = "";
     if (!isChromium) {
-        errorMessage = "Betaflight app requires a Chromium based browser (Chrome, Chromium, Edge).";
+        errorMessage = "Betaflight app requires a Chromium based browser (Chrome, Chromium, Edge).<br/>";
     }
 
-    if (!webSerial) {
-        errorMessage += " Web Serial API support is disabled.";
+    if (!isWebBluetooth) {
+        errorMessage += "<br/>- Web Bluetooth API support is disabled.";
+    }
+
+    if (!isWebSerial) {
+        errorMessage += "<br/>- Web Serial API support is disabled.";
+    }
+
+    if (!isWebUSB) {
+        errorMessage += "<br/>- Web USB API support is disabled.";
     }
 
     const newDiv = document.createElement("div");
@@ -113,4 +125,46 @@ export function checkBrowserCompatibility() {
     });
 
     throw new Error("No compatible browser found.");
+}
+
+export function checkWebSerialSupport() {
+    if (!navigator.serial) {
+        console.error("Web Serial API is not supported in this browser.");
+        return false;
+    }
+
+    if (isIOS()) {
+        console.error("Web Serial API is not supported on iOS.");
+        return false;
+    }
+
+    return true;
+}
+
+export function checkWebBluetoothSupport() {
+    if (!navigator.bluetooth) {
+        console.error("Web Bluetooth API is not supported in this browser.");
+        return false;
+    }
+
+    if (isIOS()) {
+        console.error("Web Bluetooth API is not supported on iOS.");
+        return false;
+    }
+
+    return true;
+}
+
+export function checkWebUSBSupport() {
+    if (!navigator.usb) {
+        console.error("Web USB API is not supported in this browser.");
+        return false;
+    }
+
+    if (isIOS()) {
+        console.error("Web USB API is not supported on iOS.");
+        return false;
+    }
+
+    return true;
 }

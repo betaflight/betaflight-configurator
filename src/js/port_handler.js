@@ -3,6 +3,12 @@ import { EventBus } from "../components/eventBus";
 import { serial } from "./serial.js";
 import WEBUSBDFU from "./protocols/webusbdfu";
 import { reactive } from "vue";
+import {
+    checkBrowserCompatibility,
+    checkWebBluetoothSupport,
+    checkWebSerialSupport,
+    checkWebUSBSupport,
+} from "./utils/checkBrowserCompatibility.js";
 
 const DEFAULT_PORT = "noselection";
 const DEFAULT_BAUDS = 115200;
@@ -27,7 +33,17 @@ const PortHandler = new (function () {
     this.bluetoothAvailable = false;
     this.dfuAvailable = false;
     this.portAvailable = false;
-    this.showAllSerialDevices = false;
+
+    checkBrowserCompatibility();
+
+    this.showBluetoothOption = checkWebBluetoothSupport();
+    this.showSerialOption = checkWebSerialSupport();
+    this.showUsbOption = checkWebUSBSupport();
+
+    console.log(`${this.logHead} Bluetooth available: ${this.showBluetoothOption}`);
+    console.log(`${this.logHead} Serial available: ${this.showSerialOption}`);
+    console.log(`${this.logHead} DFU available: ${this.showUsbOption}`);
+
     this.showVirtualMode = getConfig("showVirtualMode", false).showVirtualMode;
     this.showManualMode = getConfig("showManualMode", false).showManualMode;
     this.showAllSerialDevices = getConfig("showAllSerialDevices", false).showAllSerialDevices;
@@ -183,21 +199,21 @@ PortHandler.selectActivePort = function (suggestedDevice = false) {
     }
 
     // If there is a connection, return it
-    // if (selectedPort) {
-    //     console.log(`${this.logHead} Using connected device: ${selectedPort.path}`);
-    //     selectedPort = selectedPort.path;
-    //     return selectedPort;
-    // }
+    if (selectedPort) {
+        console.log(`${this.logHead} Using connected device: ${selectedPort.path}`);
+        selectedPort = selectedPort.path;
+        return selectedPort;
+    }
 
     // If there is no connection, check for the last used device
     // Check if the device is already connected
-    // if (this.portPicker.selectedPort && this.portPicker.selectedPort !== DEFAULT_PORT) {
-    //     selectedPort = this.currentSerialPorts.find((device) => device.path === this.portPicker.selectedPort);
-    //     if (selectedPort) {
-    //         console.log(`${this.logHead} Using previously selected device: ${selectedPort.path}`);
-    //         return selectedPort.path;
-    //     }
-    // }
+    if (this.portPicker.selectedPort && this.portPicker.selectedPort !== DEFAULT_PORT) {
+        selectedPort = this.currentSerialPorts.find((device) => device.path === this.portPicker.selectedPort);
+        if (selectedPort) {
+            console.log(`${this.logHead} Using previously selected device: ${selectedPort.path}`);
+            return selectedPort.path;
+        }
+    }
 
     // Return the suggested device (the new device that has been detected)
     if (!selectedPort && suggestedDevice) {
@@ -289,15 +305,23 @@ PortHandler.updateDeviceList = async function (deviceType) {
     try {
         switch (deviceType) {
             case "bluetooth":
-                ports = await serial.getDevices("bluetooth");
+                if (this.showBluetoothOption) {
+                    ports = await serial.getDevices("bluetooth");
+                }
                 break;
             case "usb":
-                ports = await WEBUSBDFU.getDevices();
+                if (this.showUsbOption) {
+                    ports = await WEBUSBDFU.getDevices();
+                }
                 break;
             case "serial":
-            default:
-                ports = await serial.getDevices("serial");
+                if (this.showSerialOption) {
+                    ports = await serial.getDevices("serial");
+                }
                 break;
+            default:
+                console.warn(`${this.logHead} Unknown device type: ${deviceType}`);
+                return [];
         }
 
         // Sort the ports
