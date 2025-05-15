@@ -7,9 +7,10 @@ import com.getcapacitor.BridgeActivity;
 import betaflight.configurator.plugin.SocketPlugin;
 
 public class MainActivity extends BridgeActivity {
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+  @Override
+  public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
 		registerPlugin(BetaflightSerialPlugin.class);
-		super.onCreate(savedInstanceState);
-	}
+    registerPlugin(SocketPlugin.class);
+  }
 }
