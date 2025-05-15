@@ -7545,5 +7545,12 @@
     "programmingFailedNotification": {
         "message": "Збій програмування польотного контролера",
         "description": "Notification message when programming is unsuccessful"
+    },
+    "osdTextElementLidar": {
+        "message": "Сонар",
+        "description": "Displays distance from sonar sensor in cm"
+    },
+    "osdDescElementLidar": {
+        "message": "Відображає відстань від датчика сонара в см"
     }
 }

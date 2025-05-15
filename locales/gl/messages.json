@@ -6852,5 +6852,12 @@
     "betaflightSupportButton": {
         "message": "Wiki",
         "description": "Text for the button to open the support URL"
+    },
+    "osdTextElementLidar": {
+        "message": "Sonar",
+        "description": "Displays distance from sonar sensor in cm"
+    },
+    "osdDescElementLidar": {
+        "message": "Mostra a distancia desde o sensor de sonar en cm"
     }
 }

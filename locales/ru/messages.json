@@ -1105,6 +1105,9 @@
     "initialSetupInfoBuildEmpty": {
         "message": "Локальная сборка - в облаке нет информации"
     },
+    "initialSetupInfoBuildType": {
+        "message": "Тип сборки"
+    },
     "initialSetupInfoBuildLocal": {
         "message": "Локальная сборка"
     },
@@ -7482,5 +7485,12 @@
     "programmingFailedNotification": {
         "message": "Не удалось запрограммировать ПК",
         "description": "Notification message when programming is unsuccessful"
+    },
+	"osdTextElementLidar": {
+        "message": "Сонар",
+        "description": "Displays distance from sonar sensor in cm"
+    },
+    "osdDescElementLidar": {
+        "message": "Отображает расстояние по сонар в сантиметрах"
     }
 }

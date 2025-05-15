@@ -84,6 +84,7 @@ SYM.loadSymbols = function () {
     SYM.ROLL = 0x14;
     SYM.KM = 0x7d;
     SYM.MILES = 0x7e;
+    SYM.LIDAR_DIST = 0xa2;
 };
 
 FONT.initData = function () {
@@ -1578,6 +1579,15 @@ OSD.loadDisplayFields = function () {
             positionable: true,
             preview: "CUSTOM MSG4",
         },
+        OSD_LIDAR_DIST: {
+            name: "OSD_LIDAR_DIST",
+            text: "osdTextElementLidar",
+            desc: "osdDescElementLidar",
+            defaultPosition: -1,
+            draw_order: 610,
+            positionable: true,
+            preview: `${FONT.symbol(SYM.LIDAR_DIST)}---`,
+        },
     };
 
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
@@ -1987,6 +1997,7 @@ OSD.chooseFields = function () {
         F.TOTAL_FLIGHTS,
         F.OSD_UP_DOWN_REFERENCE,
         F.OSD_TX_UPLINK_POWER,
+        //      F.OSD_LIDAR_DIST,
     ];
 
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
@@ -2024,6 +2035,7 @@ OSD.chooseFields = function () {
             F.CUSTOM_MSG1,
             F.CUSTOM_MSG2,
             F.CUSTOM_MSG3,
+            F.OSD_LIDAR_DIST,
         ]);
     }
     // Choose statistic fields

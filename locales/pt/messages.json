@@ -7584,5 +7584,12 @@
     "programmingFailedNotification": {
         "message": "A programação da Controladora falhou",
         "description": "Notification message when programming is unsuccessful"
+    },
+    "osdTextElementLidar": {
+        "message": "Sonar",
+        "description": "Displays distance from sonar sensor in cm"
+    },
+    "osdDescElementLidar": {
+        "message": "Exibe a distância do sensor do sonar em cm"
     }
 }

@@ -7580,5 +7580,12 @@
     "programmingFailedNotification": {
         "message": "Programowanie kontrolera lotu nie powiodło się",
         "description": "Notification message when programming is unsuccessful"
+    },
+    "osdTextElementLidar": {
+        "message": "Sonar",
+        "description": "Displays distance from sonar sensor in cm"
+    },
+    "osdDescElementLidar": {
+        "message": "Wyświetla odległość od czujnika sonaru w cm"
     }
 }

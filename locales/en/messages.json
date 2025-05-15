@@ -7675,5 +7675,12 @@
     "programmingFailedNotification": {
         "message": "FC programming failed",
         "description": "Notification message when programming is unsuccessful"
+    },
+    "osdTextElementLidar": {
+        "message": "Sonar",
+        "description": "Displays distance from sonar sensor in cm"
+    },
+    "osdDescElementLidar": {
+        "message": "Displays distance from sonar sensor in cm"
     }
 }

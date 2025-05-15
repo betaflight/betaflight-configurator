@@ -7518,5 +7518,12 @@
     "programmingFailedNotification": {
         "message": "Error al programar la placa",
         "description": "Notification message when programming is unsuccessful"
+    },
+    "osdTextElementLidar": {
+        "message": "Sonar",
+        "description": "Displays distance from sonar sensor in cm"
+    },
+    "osdDescElementLidar": {
+        "message": "Muestra la distancia desde el sensor del sonar en cm."
     }
 }

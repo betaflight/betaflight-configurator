@@ -7554,5 +7554,12 @@
     "programmingFailedNotification": {
         "message": "FC のプログラムに失敗しました",
         "description": "Notification message when programming is unsuccessful"
+    },
+    "osdTextElementLidar": {
+        "message": "ソナー",
+        "description": "Displays distance from sonar sensor in cm"
+    },
+    "osdDescElementLidar": {
+        "message": "ソナーセンサーからの距離をcm単位で表示します"
     }
 }

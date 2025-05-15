@@ -5071,5 +5071,12 @@
     },
     "cordovaExitAppMessage": {
         "message": "Wilt u de configurator echt sluiten?"
+    },
+    "osdTextElementLidar": {
+        "message": "Sonar",
+        "description": "Displays distance from sonar sensor in cm"
+    },
+    "osdDescElementLidar": {
+        "message": "Geeft de afstand tot de sonarsensor weer in cm"
     }
 }

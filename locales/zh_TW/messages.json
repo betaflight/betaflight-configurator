@@ -4738,5 +4738,12 @@
     },
     "cordovaExitAppMessage": {
         "message": "你確定要關閉配置程式嗎？"
+    },
+    "osdTextElementLidar": {
+        "message": "聲納",
+        "description": "Displays distance from sonar sensor in cm"
+    },
+    "osdDescElementLidar": {
+        "message": "顯示與聲納感測器的距離（公分）"
     }
 }
