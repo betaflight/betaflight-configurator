@@ -34,11 +34,11 @@ const PortHandler = new (function () {
     this.portAvailable = false;
 
     this.showBluetoothOption = checkWebBluetoothSupport();
-    this.showWebSerialOption = checkWebSerialSupport();
+    this.showSerialOption = checkWebSerialSupport();
     this.showDFUOption = checkWebUSBSupport();
 
     console.log(`${this.logHead} Bluetooth available: ${this.showBluetoothOption}`);
-    console.log(`${this.logHead} Serial available: ${this.showWebSerialOption}`);
+    console.log(`${this.logHead} Serial available: ${this.showSerialOption}`);
     console.log(`${this.logHead} DFU available: ${this.showDFUOption}`);
 
     this.showVirtualMode = getConfig("showVirtualMode", false).showVirtualMode;
