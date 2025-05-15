@@ -4,6 +4,7 @@ import { serial } from "./serial.js";
 import WEBUSBDFU from "./protocols/webusbdfu";
 import { reactive } from "vue";
 import {
+    checkBrowserCompatibility,
     checkWebBluetoothSupport,
     checkWebSerialSupport,
     checkWebUSBSupport,
@@ -33,13 +34,15 @@ const PortHandler = new (function () {
     this.dfuAvailable = false;
     this.portAvailable = false;
 
+    checkBrowserCompatibility();
+
     this.showBluetoothOption = checkWebBluetoothSupport();
     this.showSerialOption = checkWebSerialSupport();
-    this.showDFUOption = checkWebUSBSupport();
+    this.showUsbOption = checkWebUSBSupport();
 
     console.log(`${this.logHead} Bluetooth available: ${this.showBluetoothOption}`);
     console.log(`${this.logHead} Serial available: ${this.showSerialOption}`);
-    console.log(`${this.logHead} DFU available: ${this.showDFUOption}`);
+    console.log(`${this.logHead} DFU available: ${this.showUsbOption}`);
 
     this.showVirtualMode = getConfig("showVirtualMode", false).showVirtualMode;
     this.showManualMode = getConfig("showManualMode", false).showManualMode;
@@ -302,14 +305,20 @@ PortHandler.updateDeviceList = async function (deviceType) {
     try {
         switch (deviceType) {
             case "bluetooth":
-                ports = await serial.getDevices("bluetooth");
+                if (this.showBluetoothOption) {
+                    ports = await serial.getDevices("bluetooth");
+                }
                 break;
             case "usb":
-                ports = await WEBUSBDFU.getDevices();
+                if (this.showUsbOption) {
+                    ports = await WEBUSBDFU.getDevices();
+                }
                 break;
             case "serial":
             default:
-                ports = await serial.getDevices("serial");
+                if (this.showSerialOption) {
+                    ports = await serial.getDevices("serial");
+                }
                 break;
         }
 

@@ -20,7 +20,7 @@
             :show-manual-option="showManualOption"
             :show-bluetooth-option="showBluetoothOption"
             :show-serial-option="showSerialOption"
-            :show-dfu-option="showDFUOption"
+            :show-usb-option="showUsbOption"
             @update:modelValue="updateModelValue(null, $event)"
         />
     </div>
@@ -65,15 +65,15 @@ export default defineComponent({
             type: Boolean,
             default: true,
         },
-        showDFUOption: {
-            type: Boolean,
-            default: true,
-        },
         showBluetoothOption: {
             type: Boolean,
             default: true,
         },
         showSerialOption: {
+            type: Boolean,
+            default: true,
+        },
+        showUsbOption: {
             type: Boolean,
             default: true,
         },

@@ -35,7 +35,7 @@
                     {{ connectedSerialDevice.displayName }}
                 </option>
                 <option
-                    v-if="showDFUOption"
+                    v-if="showUsbOption"
                     v-for="connectedUsbDevice in connectedUsbDevices"
                     :key="connectedUsbDevice.path"
                     :value="connectedUsbDevice.path"
@@ -48,7 +48,7 @@
                 <option v-if="showBluetoothOption" value="requestpermissionbluetooth">
                     {{ $t("portsSelectPermissionBluetooth") }}
                 </option>
-                <option v-if="showDFUOption" value="requestpermissionusb">
+                <option v-if="showUsbOption" value="requestpermissionusb">
                     {{ $t("portsSelectPermissionDFU") }}
                 </option>
             </select>
@@ -132,7 +132,7 @@ export default defineComponent({
             type: Boolean,
             default: true,
         },
-        showDFUOption: {
+        showUsbOption: {
             type: Boolean,
             default: true,
         },
