@@ -199,21 +199,21 @@ PortHandler.selectActivePort = function (suggestedDevice = false) {
     }
 
     // If there is a connection, return it
-    // if (selectedPort) {
-    //     console.log(`${this.logHead} Using connected device: ${selectedPort.path}`);
-    //     selectedPort = selectedPort.path;
-    //     return selectedPort;
-    // }
+    if (selectedPort) {
+        console.log(`${this.logHead} Using connected device: ${selectedPort.path}`);
+        selectedPort = selectedPort.path;
+        return selectedPort;
+    }
 
     // If there is no connection, check for the last used device
     // Check if the device is already connected
-    // if (this.portPicker.selectedPort && this.portPicker.selectedPort !== DEFAULT_PORT) {
-    //     selectedPort = this.currentSerialPorts.find((device) => device.path === this.portPicker.selectedPort);
-    //     if (selectedPort) {
-    //         console.log(`${this.logHead} Using previously selected device: ${selectedPort.path}`);
-    //         return selectedPort.path;
-    //     }
-    // }
+    if (this.portPicker.selectedPort && this.portPicker.selectedPort !== DEFAULT_PORT) {
+        selectedPort = this.currentSerialPorts.find((device) => device.path === this.portPicker.selectedPort);
+        if (selectedPort) {
+            console.log(`${this.logHead} Using previously selected device: ${selectedPort.path}`);
+            return selectedPort.path;
+        }
+    }
 
     // Return the suggested device (the new device that has been detected)
     if (!selectedPort && suggestedDevice) {
@@ -315,11 +315,13 @@ PortHandler.updateDeviceList = async function (deviceType) {
                 }
                 break;
             case "serial":
-            default:
                 if (this.showSerialOption) {
                     ports = await serial.getDevices("serial");
                 }
                 break;
+            default:
+                console.warn(`${this.logHead} Unknown device type: ${deviceType}`);
+                return [];
         }
 
         // Sort the ports
