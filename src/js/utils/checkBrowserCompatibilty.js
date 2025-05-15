@@ -62,13 +62,13 @@ export function isCapacitorWeb() {
 
 export function checkBrowserCompatibility() {
     const isWebSerial = checkWebSerialSupport();
-    const isBluetooth = checkWebBluetoothSupport();
-    const isUSB = checkWebUSBSupport();
+    const isWebBluetooth = checkWebBluetoothSupport();
+    const isWebUSB = checkWebUSBSupport();
     const isChromium = isChromiumBrowser();
 
     const isNative = Capacitor.isNativePlatform();
 
-    const compatible = isNative || (isChromium && (isWebSerial || isBluetooth || isUSB));
+    const compatible = isNative || (isChromium && (isWebSerial || isWebBluetooth || isWebUSB));
 
     console.log("User Agent: ", navigator.userAgentData);
     console.log("Native: ", isNative);
@@ -86,19 +86,19 @@ export function checkBrowserCompatibility() {
 
     let errorMessage = "";
     if (!isChromium) {
-        errorMessage = "Betaflight app requires a Chromium based browser (Chrome, Chromium, Edge).";
+        errorMessage = "Betaflight app requires a Chromium based browser (Chrome, Chromium, Edge).<br/>";
+    }
+
+    if (!isWebBluetooth) {
+        errorMessage += "<br/>- Web Bluetooth API support is disabled.";
     }
 
     if (!isWebSerial) {
-        errorMessage += " Web Serial API support is disabled.";
+        errorMessage += "<br/>- Web Serial API support is disabled.";
     }
 
-    if (!isBluetooth) {
-        errorMessage += " Web Bluetooth API support is disabled.";
-    }
-
-    if (!isUSB) {
-        errorMessage += " Web USB API support is disabled.";
+    if (!isWebUSB) {
+        errorMessage += "<br/>- Web USB API support is disabled.";
     }
 
     const newDiv = document.createElement("div");
