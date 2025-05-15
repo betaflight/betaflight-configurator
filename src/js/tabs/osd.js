@@ -1997,7 +1997,6 @@ OSD.chooseFields = function () {
         F.TOTAL_FLIGHTS,
         F.OSD_UP_DOWN_REFERENCE,
         F.OSD_TX_UPLINK_POWER,
-        //      F.OSD_LIDAR_DIST,
     ];
 
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
