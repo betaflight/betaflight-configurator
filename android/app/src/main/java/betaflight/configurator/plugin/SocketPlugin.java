@@ -95,7 +95,6 @@ public class SocketPlugin extends Plugin {
             } catch (Exception e) {
                 state.set(ConnectionState.ERROR);
                 closeResourcesInternal();
-                state.set(ConnectionState.DISCONNECTED);   // allow a new connect() attempt
                 call.reject("Connection failed: " + e.getMessage());
                 Log.e(TAG, "Connection failed", e);
             } finally {
@@ -204,14 +203,6 @@ public class SocketPlugin extends Plugin {
         });
     }
 
-    @PluginMethod
-    public void getStatus(final PluginCall call) {
-        JSObject result = new JSObject();
-        result.put("connected", state.get() == ConnectionState.CONNECTED);
-        result.put("state", state.get().toString());
-        call.resolve(result);
-    }
-
     @Override
     protected void handleOnDestroy() {
         socketLock.lock();
@@ -229,13 +220,13 @@ public class SocketPlugin extends Plugin {
 
     private void closeResourcesInternal() {
         if (reader != null) {
-            try { reader.close(); } catch (IOException e) { Log.e(TAG, "Error closing reader", e);} finally { reader = null; }
+            try { reader.close(); } catch (IOException e) { Log.e(TAG, "Error closing reader", e); } finally { reader = null; }
         }
         if (writer != null) {
-            try { writer.flush(); writer.close(); } catch (IOException e) { Log.e(TAG, "Error closing writer", e);} finally { writer = null; }
+            try { writer.flush(); writer.close(); } catch (IOException e) { Log.e(TAG, "Error closing writer", e); } finally { writer = null; }
         }
         if (socket != null) {
-            try { socket.close(); } catch (IOException e) { Log.e(TAG, "Error closing socket", e);} finally { socket = null; }
+            try { socket.close(); } catch (IOException e) { Log.e(TAG, "Error closing socket", e); } finally { socket = null; }
         }
     }
 
