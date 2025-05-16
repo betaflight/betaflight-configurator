@@ -121,6 +121,8 @@ public class SocketPlugin extends Plugin {
                 ret.put("data", data);
                 call.resolve(ret);
             } catch (Exception e) {
+                closeResources();
+                isConnected = false;
                 call.reject("Receive failed: " + e.getMessage());
             }
         });
