@@ -24,7 +24,8 @@ public class SocketPlugin extends Plugin {
     @PluginMethod
     public void connect(PluginCall call) {
         String ip = call.getString("ip");
-        int port = call.getInt("port");
+        // Use a default value (e.g., -1) to avoid NullPointerException if "port" is missing
+        int port = call.getInt("port", -1);
 
         // Validate inputs
         if (ip == null || ip.isEmpty()) {
