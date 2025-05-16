@@ -1,175 +1,256 @@
 package betaflight.configurator.plugin;
 
 import android.util.Log;
-
 import com.getcapacitor.JSObject;
 import com.getcapacitor.Plugin;
 import com.getcapacitor.PluginCall;
+import com.getcapacitor.PluginMethod;
 import com.getcapacitor.annotation.CapacitorPlugin;
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
- * Capacitor plugin that provides raw TCP socket functionality.
- * Implements methods to connect, send, receive, and disconnect.
+ * Capacitor plugin that provides raw TCP socket functionality with thread safety,
+ * robust resource management, and comprehensive error handling.
  */
 @CapacitorPlugin(name = "SocketPlugin")
 public class SocketPlugin extends Plugin {
+    private static final String TAG = "SocketPlugin";
+
+    // Error messages
+    private static final String ERROR_IP_REQUIRED = "IP address is required";
+    private static final String ERROR_INVALID_PORT = "Invalid port number";
+    private static final String ERROR_ALREADY_CONNECTED = "Already connected; please disconnect first";
+    private static final String ERROR_NOT_CONNECTED = "Not connected to any server";
+    private static final String ERROR_DATA_REQUIRED = "Data is required";
+    private static final String ERROR_CONNECTION_LOST = "Connection lost";
+    private static final String ERROR_CONNECTION_CLOSED = "Connection closed by peer";
+
+    // Connection settings
+    private static final int DEFAULT_TIMEOUT_MS = 30_000;
+    private static final int MIN_PORT = 1;
+    private static final int MAX_PORT = 65535;
+
+    private enum ConnectionState {
+        DISCONNECTED,
+        CONNECTING,
+        CONNECTED,
+        DISCONNECTING,
+        ERROR
+    }
+
+    // Thread-safe state and locks
+    private final AtomicReference<ConnectionState> state = new AtomicReference<>(ConnectionState.DISCONNECTED);
+    private final ReentrantLock socketLock = new ReentrantLock();
+    private final ReentrantLock writerLock = new ReentrantLock();
+
     private Socket socket;
     private BufferedReader reader;
     private BufferedWriter writer;
-    private boolean isConnected = false;
 
     @PluginMethod
-    public void connect(PluginCall call) {
+    public void connect(final PluginCall call) {
+        call.setKeepAlive(true);
         String ip = call.getString("ip");
-        // Use a default value (e.g., -1) to avoid NullPointerException if "port" is missing
         int port = call.getInt("port", -1);
 
-        // Validate inputs
         if (ip == null || ip.isEmpty()) {
-            call.reject("IP address is required");
+            call.reject(ERROR_IP_REQUIRED);
+            call.setKeepAlive(false);
+            return;
+        }
+        if (port < MIN_PORT || port > MAX_PORT) {
+            call.reject(ERROR_INVALID_PORT);
+            call.setKeepAlive(false);
+            return;
+        }
+        if (!compareAndSetState(ConnectionState.DISCONNECTED, ConnectionState.CONNECTING)) {
+            call.reject(ERROR_ALREADY_CONNECTED);
+            call.setKeepAlive(false);
             return;
         }
 
-        if (port <= 0 || port > 65535) {
-            call.reject("Invalid port number");
-            return;
-        }
-
-        // Prevent duplicate connections
-        if (socket != null && !socket.isClosed()) {
-            call.reject("Already connected; please disconnect first");
-            return;
-        }
-
-        // Run network operations on a background thread
         getBridge().getExecutor().execute(() -> {
+            socketLock.lock();
             try {
-                socket = new Socket(ip, port);
-                socket.setSoTimeout(30_000); // 30s timeout
+                socket = new Socket();
+                socket.connect(new InetSocketAddress(ip, port), DEFAULT_TIMEOUT_MS);
+                socket.setSoTimeout(DEFAULT_TIMEOUT_MS);
+
                 reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-                isConnected = true;
-                JSObject ret = new JSObject();
-                ret.put("success", true);
-                call.resolve(ret);
+
+                state.set(ConnectionState.CONNECTED);
+                JSObject result = new JSObject();
+                result.put("success", true);
+                call.resolve(result);
+                Log.d(TAG, "Connected to " + ip + ":" + port);
             } catch (Exception e) {
-                closeResources();
+                state.set(ConnectionState.ERROR);
+                closeResourcesInternal();
                 call.reject("Connection failed: " + e.getMessage());
+                Log.e(TAG, "Connection failed", e);
+            } finally {
+                socketLock.unlock();
+                call.setKeepAlive(false);
             }
         });
     }
 
     @PluginMethod
-    public void send(PluginCall call) {
+    public void send(final PluginCall call) {
         String data = call.getString("data");
-
-        // Validate input
-        if (data == null) {
-            call.reject("Data is required");
+        if (data == null || data.isEmpty()) {
+            call.reject(ERROR_DATA_REQUIRED);
             return;
         }
-
-        // Check connection state
-        if (socket == null || socket.isClosed() || !isConnected || reader == null || writer == null) {
-            call.reject("Not connected to any server");
+        if (state.get() != ConnectionState.CONNECTED) {
+            call.reject(ERROR_NOT_CONNECTED);
             return;
         }
-        // Run write operation on a background thread and synchronize on writer
+        call.setKeepAlive(true);
+
         getBridge().getExecutor().execute(() -> {
+            writerLock.lock();
             try {
-                BufferedWriter localWriter = writer; // capture after re-check
-                if (localWriter == null) {
-                    call.reject("Connection lost");
+                if (writer == null || state.get() != ConnectionState.CONNECTED) {
+                    call.reject(ERROR_CONNECTION_LOST);
                     return;
                 }
-                synchronized (localWriter) {
-                    // Append newline for framing; adjust as needed for your protocol
-                    localWriter.write(data);
-                    localWriter.newLine();
-                    localWriter.flush();
-                }
-                JSObject ret = new JSObject();
-                ret.put("success", true);
-                call.resolve(ret);
+                writer.write(data);
+                writer.newLine();
+                writer.flush();
+
+                JSObject result = new JSObject();
+                result.put("success", true);
+                call.resolve(result);
+                Log.d(TAG, "Sent data: " + truncateForLog(data));
             } catch (Exception e) {
-                closeResources();
-                isConnected = false;
-                call.reject("Send failed: " + e.getMessage());
+                handleCommunicationError(e, "Send failed", call);
+            } finally {
+                writerLock.unlock();
+                call.setKeepAlive(false);
             }
         });
     }
 
     @PluginMethod
-    public void receive(PluginCall call) {
-        // Check connection state
-        if (socket == null || socket.isClosed() || !isConnected || reader == null) {
-            call.reject("Not connected to any server");
+    public void receive(final PluginCall call) {
+        if (state.get() != ConnectionState.CONNECTED || reader == null) {
+            call.reject(ERROR_NOT_CONNECTED);
             return;
         }
+        call.setKeepAlive(true);
 
-        // Run read operation on a background thread to avoid blocking the UI
         getBridge().getExecutor().execute(() -> {
             try {
                 String data = reader.readLine();
                 if (data == null) {
-                    // Stream ended or connection closed by peer
-                    closeResources();
-                    isConnected = false;
-                    call.reject("Connection closed by peer");
+                    handleCommunicationError(new IOException("End of stream"), ERROR_CONNECTION_CLOSED, call);
                     return;
                 }
-                JSObject ret = new JSObject();
-                ret.put("data", data);
-                call.resolve(ret);
+                JSObject result = new JSObject();
+                result.put("data", data);
+                call.resolve(result);
+                Log.d(TAG, "Received data: " + truncateForLog(data));
             } catch (Exception e) {
-                closeResources();
-                isConnected = false;
-                call.reject("Receive failed: " + e.getMessage());
+                handleCommunicationError(e, "Receive failed", call);
+            } finally {
+                call.setKeepAlive(false);
             }
         });
     }
 
     @PluginMethod
-    public void disconnect(PluginCall call) {
+    public void disconnect(final PluginCall call) {
+        ConnectionState current = state.get();
+        if (current == ConnectionState.DISCONNECTED) {
+            JSObject result = new JSObject();
+            result.put("success", true);
+            call.resolve(result);
+            return;
+        }
+        if (!compareAndSetState(current, ConnectionState.DISCONNECTING)) {
+            call.reject("Invalid state for disconnect: " + current);
+            return;
+        }
+        call.setKeepAlive(true);
+
         getBridge().getExecutor().execute(() -> {
+            socketLock.lock();
             try {
-                closeResources();
-                isConnected = false;
-                JSObject ret = new JSObject();
-                ret.put("success", true);
-                call.resolve(ret);
+                closeResourcesInternal();
+                state.set(ConnectionState.DISCONNECTED);
+                JSObject result = new JSObject();
+                result.put("success", true);
+                call.resolve(result);
+                Log.d(TAG, "Disconnected successfully");
             } catch (Exception e) {
+                state.set(ConnectionState.ERROR);
                 call.reject("Disconnect failed: " + e.getMessage());
+                Log.e(TAG, "Disconnect failed", e);
+            } finally {
+                socketLock.unlock();
+                call.setKeepAlive(false);
             }
         });
     }
 
-    /**
-     * Helper method to close all resources and clean up state
-     */
-    private void closeResources() {
+    @Override
+    protected void handleOnDestroy() {
+        socketLock.lock();
         try {
-            if (reader != null) {
-                reader.close();
-                reader = null;
-            }
-            if (writer != null) {
-                writer.flush();
-                writer.close();
-                writer = null;
-            }
-            if (socket != null) {
-                socket.close();
-                socket = null;
-            }
-        } catch (IOException e) {
-            // Log but continue cleanup
-            isConnected = false;
-            getContext().getActivity().runOnUiThread(() ->
-                Log.e("SocketPlugin", "Error closing resources", e));
+            state.set(ConnectionState.DISCONNECTING);
+            closeResourcesInternal();
+            state.set(ConnectionState.DISCONNECTED);
+        } catch (Exception e) {
+            Log.e(TAG, "Error cleaning up resources on destroy", e);
+        } finally {
+            socketLock.unlock();
         }
+        super.handleOnDestroy();
+    }
+
+    private void closeResourcesInternal() {
+        if (reader != null) {
+            try { reader.close(); } catch (IOException e) { Log.e(TAG, "Error closing reader", e);} finally { reader = null; }
+        }
+        if (writer != null) {
+            try { writer.flush(); writer.close(); } catch (IOException e) { Log.e(TAG, "Error closing writer", e);} finally { writer = null; }
+        }
+        if (socket != null) {
+            try { socket.close(); } catch (IOException e) { Log.e(TAG, "Error closing socket", e);} finally { socket = null; }
+        }
+    }
+
+    private void handleCommunicationError(Exception error, String message, PluginCall call) {
+        socketLock.lock();
+        try {
+            state.set(ConnectionState.ERROR);
+            closeResourcesInternal();
+            state.set(ConnectionState.DISCONNECTED);
+            call.reject(message + ": " + error.getMessage());
+            Log.e(TAG, message, error);
+        } finally {
+            socketLock.unlock();
+        }
+    }
+
+    private boolean compareAndSetState(ConnectionState expected, ConnectionState newState) {
+        return state.compareAndSet(expected, newState);
+    }
+
+    private String truncateForLog(String data) {
+        if (data == null) return "null";
+        final int maxLen = 100;
+        if (data.length() <= maxLen) return data;
+        return data.substring(0, maxLen) + "... (" + data.length() + " chars)";
     }
 }
