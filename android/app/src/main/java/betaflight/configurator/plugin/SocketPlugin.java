@@ -43,22 +43,25 @@ public class SocketPlugin extends Plugin {
             return;
         }
 
-        try {
-            socket = new Socket(ip, port);
-            socket.setSoTimeout(30_000); // 30s timeout
-            reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-            isConnected = true;
-            JSObject ret = new JSObject();
-            ret.put("success", true);
-            call.resolve(ret);
-        } catch (Exception e) {
-            closeResources();
-            call.reject("Connection failed: " + e.getMessage());
-        }
+        // Run network operations on a background thread
+        getBridge().getExecutor().execute(() -> {
+            try {
+                socket = new Socket(ip, port);
+                socket.setSoTimeout(30_000); // 30s timeout
+                reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+                isConnected = true;
+                JSObject ret = new JSObject();
+                ret.put("success", true);
+                call.resolve(ret);
+            } catch (Exception e) {
+                closeResources();
+                call.reject("Connection failed: " + e.getMessage());
+            }
+        });
     }
 
-@PluginMethod
+    @PluginMethod
     public void send(PluginCall call) {
         String data = call.getString("data");
 
@@ -69,26 +72,38 @@ public class SocketPlugin extends Plugin {
         }
 
         // Check connection state
-        if (socket == null || socket.isClosed() || !isConnected) {
+        if (socket == null || socket.isClosed() || !isConnected || reader == null || writer == null) {
             call.reject("Not connected to any server");
             return;
         }
 
-        try {
-            writer.write(data);
-            writer.flush();
-            JSObject ret = new JSObject();
-            ret.put("success", true);
-            call.resolve(ret);
-        } catch (Exception e) {
-            closeResources();
-            isConnected = false;
-            call.reject("Send failed: " + e.getMessage());
-        }
+        // Run write operation on a background thread and synchronize on writer
+        getBridge().getExecutor().execute(() -> {
+            try {
+                synchronized (writer) {
+                    // Append newline for framing; adjust as needed for your protocol
+                    writer.write(data);
+                    writer.newLine();
+                    writer.flush();
+                }
+                JSObject ret = new JSObject();
+                ret.put("success", true);
+                call.resolve(ret);
+            } catch (Exception e) {
+                closeResources();
+                isConnected = false;
+                call.reject("Send failed: " + e.getMessage());
+            }
+        });
     }
 
     @PluginMethod
     public void receive(PluginCall call) {
+        // Check connection state
+        if (socket == null || socket.isClosed() || !isConnected || reader == null) {
+            call.reject("Not connected to any server");
+            return;
+        }
         try {
             String data = reader.readLine();
             JSObject ret = new JSObject();
