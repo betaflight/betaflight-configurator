@@ -104,14 +104,18 @@ public class SocketPlugin extends Plugin {
             call.reject("Not connected to any server");
             return;
         }
-        try {
-            String data = reader.readLine();
-            JSObject ret = new JSObject();
-            ret.put("data", data);
-            call.resolve(ret);
-        } catch (Exception e) {
-            call.reject("Receive failed: " + e.getMessage());
-        }
+
+        // Run read operation on a background thread to avoid blocking the UI
+        getBridge().getExecutor().execute(() -> {
+            try {
+                String data = reader.readLine();
+                JSObject ret = new JSObject();
+                ret.put("data", data);
+                call.resolve(ret);
+            } catch (Exception e) {
+                call.reject("Receive failed: " + e.getMessage());
+            }
+        });
     }
 
     @PluginMethod
