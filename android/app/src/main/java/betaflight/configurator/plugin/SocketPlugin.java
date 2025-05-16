@@ -135,22 +135,24 @@ public class SocketPlugin extends Plugin {
      * Helper method to close all resources and clean up state
      */
     private void closeResources() {
-    try {
-        if (reader != null) {
-            reader.close();
-            reader = null;
+        try {
+            if (reader != null) {
+                reader.close();
+                reader = null;
+            }
+            if (writer != null) {
+                writer.close();
+                writer = null;
+            }
+            if (socket != null) {
+                socket.close();
+                socket = null;
+            }
+        } catch (IOException e) {
+            // Log but continue cleanup
+            isConnected = false;
+            getContext().getActivity().runOnUiThread(() ->
+                Log.e("SocketPlugin", "Error closing resources", e));
         }
-        if (writer != null) {
-            writer.close();
-            writer = null;
-        }
-        if (socket != null) {
-            socket.close();
-            socket = null;
-        }
-    } catch (IOException e) {
-        // Log but continue cleanup
-        getContext().getActivity().runOnUiThread(() -> 
-            Log.e("SocketPlugin", "Error closing resources", e));
     }
 }
