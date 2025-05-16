@@ -109,6 +109,13 @@ public class SocketPlugin extends Plugin {
         getBridge().getExecutor().execute(() -> {
             try {
                 String data = reader.readLine();
+                if (data == null) {
+                    // Stream ended or connection closed by peer
+                    closeResources();
+                    isConnected = false;
+                    call.reject("Connection closed by peer");
+                    return;
+                }
                 JSObject ret = new JSObject();
                 ret.put("data", data);
                 call.resolve(ret);
