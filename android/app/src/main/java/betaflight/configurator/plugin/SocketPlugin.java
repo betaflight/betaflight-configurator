@@ -77,15 +77,19 @@ public class SocketPlugin extends Plugin {
             call.reject("Not connected to any server");
             return;
         }
-
         // Run write operation on a background thread and synchronize on writer
         getBridge().getExecutor().execute(() -> {
             try {
-                synchronized (writer) {
+                BufferedWriter localWriter = writer; // capture after re-check
+                if (localWriter == null) {
+                    call.reject("Connection lost");
+                    return;
+                }
+                synchronized (localWriter) {
                     // Append newline for framing; adjust as needed for your protocol
-                    writer.write(data);
-                    writer.newLine();
-                    writer.flush();
+                    localWriter.write(data);
+                    localWriter.newLine();
+                    localWriter.flush();
                 }
                 JSObject ret = new JSObject();
                 ret.put("success", true);
@@ -130,15 +134,17 @@ public class SocketPlugin extends Plugin {
 
     @PluginMethod
     public void disconnect(PluginCall call) {
-        try {
-            closeResources();
-            isConnected = false;
-            JSObject ret = new JSObject();
-            ret.put("success", true);
-            call.resolve(ret);
-        } catch (Exception e) {
-            call.reject("Disconnect failed: " + e.getMessage());
-        }
+        getBridge().getExecutor().execute(() -> {
+            try {
+                closeResources();
+                isConnected = false;
+                JSObject ret = new JSObject();
+                ret.put("success", true);
+                call.resolve(ret);
+            } catch (Exception e) {
+                call.reject("Disconnect failed: " + e.getMessage());
+            }
+        });
     }
 
     /**
@@ -151,6 +157,7 @@ public class SocketPlugin extends Plugin {
                 reader = null;
             }
             if (writer != null) {
+                writer.flush();
                 writer.close();
                 writer = null;
             }
