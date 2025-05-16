@@ -95,6 +95,7 @@ public class SocketPlugin extends Plugin {
             } catch (Exception e) {
                 state.set(ConnectionState.ERROR);
                 closeResourcesInternal();
+                state.set(ConnectionState.DISCONNECTED);   // allow a new connect() attempt
                 call.reject("Connection failed: " + e.getMessage());
                 Log.e(TAG, "Connection failed", e);
             } finally {
