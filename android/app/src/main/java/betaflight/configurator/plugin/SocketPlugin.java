@@ -203,6 +203,14 @@ public class SocketPlugin extends Plugin {
         });
     }
 
+    @PluginMethod
+    public void getStatus(final PluginCall call) {
+        JSObject result = new JSObject();
+        result.put("connected", state.get() == ConnectionState.CONNECTED);
+        result.put("state", state.get().toString());
+        call.resolve(result);
+    }
+
     @Override
     protected void handleOnDestroy() {
         socketLock.lock();
