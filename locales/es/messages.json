@@ -7524,6 +7524,7 @@
         "description": "Displays distance from sonar sensor in cm"
     },
     "osdDescElementLidar": {
-        "message": "Muestra la distancia desde el sensor del sonar en cm."
+        "message": "$t(osdTextElementLidar.message)",
+        "description": "Don't translate!!!"
     }
 }

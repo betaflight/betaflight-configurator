@@ -5717,10 +5717,11 @@
         "description": "Dialog text to prompt user to review options for the preset"
     },
     "osdTextElementLidar": {
-        "message": "声纳",
+        "message": "Sonar",
         "description": "Displays distance from sonar sensor in cm"
     },
     "osdDescElementLidar": {
-        "message": "显示与声纳传感器的距离（厘米）"
+        "message": "$t(osdTextElementLidar.message)",
+        "description": "Don't translate!!!"
     }
 }

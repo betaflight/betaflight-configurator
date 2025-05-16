@@ -7569,10 +7569,11 @@
         "description": "Notification message when programming is unsuccessful"
     },
     "osdTextElementLidar": {
-        "message": "소나",
+        "message": "Sonar",
         "description": "Displays distance from sonar sensor in cm"
     },
     "osdDescElementLidar": {
-        "message": "소나 센서로부터의 거리를 cm 단위로 표시합니다."
+        "message": "$t(osdTextElementLidar.message)",
+        "description": "Don't translate!!!"
     }
 }

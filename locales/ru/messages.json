@@ -7487,10 +7487,11 @@
         "description": "Notification message when programming is unsuccessful"
     },
 	"osdTextElementLidar": {
-        "message": "Сонар",
+        "message": "Sonar",
         "description": "Displays distance from sonar sensor in cm"
     },
     "osdDescElementLidar": {
-        "message": "Отображает расстояние по сонар в сантиметрах"
+        "message": "$t(osdTextElementLidar.message)",
+        "description": "Don't translate!!!"
     }
 }
