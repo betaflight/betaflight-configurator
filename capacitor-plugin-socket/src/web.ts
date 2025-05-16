@@ -21,4 +21,9 @@ export class SocketPluginWeb extends WebPlugin implements SocketPlugin {
     console.log('Web implementation does not support raw TCP sockets.');
     return { success: false };
   }
+
+  async getStatus(): Promise<{ connected: boolean; state: string }> {
+    console.log('Web implementation does not support raw TCP sockets.');
+    return { connected: false, state: 'disconnected' };
+  }
 }
