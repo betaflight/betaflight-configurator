@@ -54,13 +54,19 @@ jobs:
           name: dist-files
           path: src/dist
 
+      - name: Set short git commit SHA
+        id: vars
+        run: |
+          calculatedSha=$(echo ${{ github.event.pull_request.head.sha }} | head -c 8)
+          echo "COMMIT_SHORT_SHA=$calculatedSha" >> $GITHUB_ENV
+
       - name: Deploy to Cloudflare
         id: deploy
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy src/dist --project-name=${{ vars.CLOUDFLARE_PROJECT_NAME }} --branch ${{ github.head_ref }} --commit-dirty=true
+          command: pages deploy src/dist --project-name=${{ vars.CLOUDFLARE_PROJECT_NAME }} --branch=${{ env.COMMIT_SHORT_SHA }} --commit-dirty=true
 
       - name: Add deployment comment
         uses: thollander/actions-comment-pull-request@v3
