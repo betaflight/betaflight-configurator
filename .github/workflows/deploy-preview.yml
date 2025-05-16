@@ -72,7 +72,7 @@ jobs:
         uses: thollander/actions-comment-pull-request@v3
         with:
           message: |
-             Preview URL: ${{ steps.deploy.outputs.deployment-url }}
+             Preview URL: ${{ steps.deploy.outputs.pages-deployment-alias-url }}
           reactions: eyes, rocket
           comment-tag: 'Preview URL'
           mode: recreate
