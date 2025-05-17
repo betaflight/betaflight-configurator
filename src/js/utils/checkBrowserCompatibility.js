@@ -28,15 +28,26 @@ export function getOS() {
 }
 
 export function isChromiumBrowser() {
-    if (navigator.userAgentData) {
-        return navigator.userAgentData.brands.some((brand) => {
-            return brand.brand == "Chromium";
-        });
+    // https://developer.mozilla.org/en-US/docs/Web/HTTP/Browser_detection_using_the_user_agent
+    if (!navigator.userAgentData) {
+        // Fallback to traditional userAgent string check
+        return /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
     }
 
-    // Fallback for older browsers/Android
-    const ua = navigator.userAgent.toLowerCase();
-    return ua.includes("chrom") || ua.includes("edg");
+    // https://learn.microsoft.com/en-us/microsoft-edge/web-platform/user-agent-guidance
+    return navigator.userAgentData.brands.some((brand) => {
+        return brand.brand == "Chromium";
+    });
+}
+
+export function isFirefoxBrowser() {
+    if (navigator.userAgentData) {
+        return navigator.userAgentData.brands.some((brand) => {
+            return brand.brand == "Firefox";
+        });
+    }
+    // Fallback to traditional userAgent string check
+    return navigator.userAgent.includes("Firefox");
 }
 
 export function isAndroid() {
@@ -65,15 +76,18 @@ export function checkBrowserCompatibility() {
     const isWebBluetooth = checkWebBluetoothSupport();
     const isWebUSB = checkWebUSBSupport();
     const isChromium = isChromiumBrowser();
-
+    const isFirefox = isFirefoxBrowser();
     const isNative = Capacitor.isNativePlatform();
 
-    const compatible = isNative || (isChromium && (isWebSerial || isWebBluetooth || isWebUSB));
+    const compatible = isNative || ((isChromium || isFirefox) && (isWebSerial || isWebBluetooth || isWebUSB));
 
     console.log("User Agent: ", navigator.userAgentData);
     console.log("Native: ", isNative);
     console.log("Chromium: ", isChromium);
+    console.log("Firefox: ", isFirefox);
     console.log("Web Serial: ", isWebSerial);
+    console.log("Web Bluetooth: ", isWebBluetooth);
+    console.log("Web USB: ", isWebUSB);
     console.log("OS: ", getOS());
 
     console.log("Android: ", isAndroid());
