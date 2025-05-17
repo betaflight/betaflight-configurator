@@ -6132,13 +6132,5 @@
     },
     "coreBuildModeDescription": {
         "message": "Cette option construit un microprogramme qui contient les pilotes de matériel (et quelques fonctionnalités limitées). Il est disponible pour aider à détecter le matériel sur un contrôleur de vol, et est fourni pour cette commodité seulement. Toutes les fonctionnalités ne seront pas disponibles (uniquement du matériel) en utilisant cette option."
-    },
-    "osdTextElementLidar": {
-        "message": "Sonar",
-        "description": "Displays distance from sonar sensor in cm"
-    },
-    "osdDescElementLidar": {
-        "message": "$t(osdTextElementLidar.message)",
-        "description": "Don't translate!!!"
     }
 }

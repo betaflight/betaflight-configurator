@@ -5715,13 +5715,5 @@
     "presetsReviewOptionsWarning": {
         "message": "请在选择此预设之前查看选项列表。",
         "description": "Dialog text to prompt user to review options for the preset"
-    },
-    "osdTextElementLidar": {
-        "message": "Sonar",
-        "description": "Displays distance from sonar sensor in cm"
-    },
-    "osdDescElementLidar": {
-        "message": "$t(osdTextElementLidar.message)",
-        "description": "Don't translate!!!"
     }
 }
