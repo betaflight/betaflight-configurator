@@ -1105,6 +1105,9 @@
     "initialSetupInfoBuildEmpty": {
         "message": "Локальная сборка - в облаке нет информации"
     },
+    "initialSetupInfoBuildType": {
+        "message": "Тип сборки"
+    },
     "initialSetupInfoBuildLocal": {
         "message": "Локальная сборка"
     },
