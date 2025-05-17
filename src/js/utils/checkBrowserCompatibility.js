@@ -100,7 +100,8 @@ export function checkBrowserCompatibility() {
 
     let errorMessage = "";
     if (!isChromium) {
-        errorMessage = "Betaflight app requires a Chromium based browser (Chrome, Chromium, Edge).<br/>";
+        errorMessage =
+            "Betaflight app requires a Chromium based browser (Chrome, Chromium, Edge),<br> or Firefox based browser running the <a href='https://addons.mozilla.org/cs/firefox/addon/webserial-for-firefox/'>WebSerial extension</a>.<br/>";
     }
 
     if (!isWebBluetooth) {
