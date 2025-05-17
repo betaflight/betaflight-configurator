@@ -14,6 +14,7 @@ import $ from "jquery";
 import { ispConnected } from "../utils/connection";
 import { sensorTypes } from "../sensor_types";
 import { addArrayElementsAfter, replaceArrayElement } from "../utils/array";
+import { isFirefoxBrowser } from "../utils/checkBrowserCompatibility";
 
 const setup = {
     yaw_fix: 0.0,
@@ -387,17 +388,19 @@ setup.initialize = function (callback) {
                 const buildConfig = `<span class="buildInfoBtn" title="${i18n.getMessage(
                     "initialSetupInfoBuildConfig",
                 )}: ${buildRoot}/json">
-                    <a href="${buildRoot}/json" target="_blank"><strong>${i18n.getMessage(
-    "initialSetupInfoBuildConfig",
-)}</strong></a></span>`;
+                    <a href="${buildRoot}/json" target="_blank">
+                        <strong>${i18n.getMessage("initialSetupInfoBuildConfig")}</strong>
+                    </a>
+                </span>`;
 
                 // Creates the "Log" button
                 const buildLog = `<span class="buildInfoBtn" title="${i18n.getMessage(
                     "initialSetupInfoBuildLog",
                 )}: ${buildRoot}/log">
-                    <a href="${buildRoot}/log" target="_blank"><strong>${i18n.getMessage(
-    "initialSetupInfoBuildLog",
-)}</strong></a></span>`;
+                    <a href="${buildRoot}/log" target="_blank">
+                        <strong>${i18n.getMessage("initialSetupInfoBuildLog")}</strong>
+                    </a>
+                </span>`;
 
                 // Shows the "Config" and "Log" buttons
                 build_info_e.html(`${buildConfig} ${buildLog}`);
@@ -429,19 +432,19 @@ setup.initialize = function (callback) {
                 // Creates the "Options" button (if possible)
                 const buildOptions = buildOptionsValid
                     ? `<span class="buildInfoBtn" title="${i18n.getMessage("initialSetupInfoBuildOptionList")}">
-                    <a class="buildOptions" href="#"><strong>${i18n.getMessage(
-        "initialSetupInfoBuildOptions",
-    )}</strong></a></span>`
+                        <a class="buildOptions" href="#">
+                            <strong>${i18n.getMessage("initialSetupInfoBuildOptions")}</strong>
+                        </a>
+                    </span>`
                     : "";
 
                 // Creates the "Download" button (if possible)
                 const buildDownload = buildKeyValid
-                    ? `<span class="buildInfoBtn" title="${i18n.getMessage(
-                        "initialSetupInfoBuildDownload",
-                    )}: ${buildRoot}/hex">
-                    <a href="${buildRoot}/hex" target="_blank"><strong>${i18n.getMessage(
-    "initialSetupInfoBuildDownload",
-)}</strong></a></span>`
+                    ? `<span class="buildInfoBtn" title="${i18n.getMessage("initialSetupInfoBuildDownload")}: ${buildRoot}/hex">
+                        <a href="${buildRoot}/hex" target="_blank">
+                            <strong>${i18n.getMessage("initialSetupInfoBuildDownload")}</strong>
+                        </a>
+                    </span>`
                     : "";
 
                 // Shows the "Options" and/or "Download" buttons
@@ -493,13 +496,14 @@ setup.initialize = function (callback) {
         }
 
         function showNetworkStatus() {
+            const isFirefox = isFirefoxBrowser();
             const networkStatus = ispConnected();
 
             let statusText = "";
 
-            const type = navigator.connection.effectiveType;
-            const downlink = navigator.connection.downlink;
-            const rtt = navigator.connection.rtt;
+            const type = isFirefox ? "NA" : navigator.connection.effectiveType;
+            const downlink = isFirefox ? "NA" : navigator.connection.downlink;
+            const rtt = isFirefox ? "NA" : navigator.connection.rtt;
 
             if (!networkStatus || !navigator.onLine || type === "none") {
                 statusText = i18n.getMessage("initialSetupNetworkInfoStatusOffline");
@@ -510,9 +514,9 @@ setup.initialize = function (callback) {
             }
 
             $(".network-status").text(statusText);
-            $(".network-type").text(navigator.connection.effectiveType);
-            $(".network-downlink").text(`${navigator.connection.downlink} Mbps`);
-            $(".network-rtt").text(navigator.connection.rtt);
+            $(".network-type").text(type);
+            $(".network-downlink").text(`${downlink} Mbps`);
+            $(".network-rtt").text(rtt);
         }
 
         prepareDisarmFlags();
