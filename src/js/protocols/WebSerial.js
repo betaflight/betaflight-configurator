@@ -333,18 +333,26 @@ class WebSerial extends EventTarget {
         // AT32 on macOS requires smaller chunks (63 bytes) to work correctly due to
         // USB buffer size limitations in the macOS implementation
         const batchWriteSize = 63;
-        let remainingData = data;
-        while (remainingData.byteLength > batchWriteSize) {
-            const sliceData = remainingData.slice(0, batchWriteSize);
-            remainingData = remainingData.slice(batchWriteSize);
+
+        // Ensure data is a Uint8Array for proper slicing
+        const dataArray = data instanceof Uint8Array ? data : new Uint8Array(data);
+
+        let offset = 0;
+        while (offset + batchWriteSize < dataArray.byteLength) {
+            const chunk = dataArray.slice(offset, offset + batchWriteSize);
+            offset += batchWriteSize;
             try {
-                await this.writer.write(sliceData);
+                await this.writer.write(chunk);
             } catch (error) {
                 console.error(`${logHead} Error writing batch chunk:`, error);
                 throw error; // Re-throw to be caught by the send method
             }
         }
-        await this.writer.write(remainingData);
+
+        // Write the remaining data
+        if (offset < dataArray.byteLength) {
+            await this.writer.write(dataArray.slice(offset));
+        }
     }
 
     async send(data, callback) {
@@ -357,14 +365,17 @@ class WebSerial extends EventTarget {
         }
 
         try {
-            if (this.isNeedBatchWrite) {
-                await this.batchWrite(data);
-            } else {
-                await this.writer.write(data);
-            }
-            this.bytesSent += data.byteLength;
+            // Create a buffer from the data
+            const buffer = data instanceof ArrayBuffer ? data : new Uint8Array(data).buffer;
 
-            const result = { bytesSent: data.byteLength };
+            if (this.isNeedBatchWrite) {
+                await this.batchWrite(buffer);
+            } else {
+                await this.writer.write(new Uint8Array(buffer));
+            }
+            this.bytesSent += buffer.byteLength;
+
+            const result = { bytesSent: buffer.byteLength };
             if (callback) {
                 callback(result);
             }
