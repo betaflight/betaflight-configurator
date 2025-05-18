@@ -49,6 +49,7 @@ const VirtualFC = {
 
         virtualFC.BEEPER_CONFIG.beepers = new Beepers(FC.CONFIG);
         virtualFC.BEEPER_CONFIG.dshotBeaconConditions = new Beepers(FC.CONFIG, ["RX_LOST", "RX_SET"]);
+        virtualFC.BEEPER_CONFIG.dshotBeaconTone = 1;
 
         virtualFC.MIXER_CONFIG.mixer = 3;
 
@@ -176,6 +177,10 @@ const VirtualFC = {
             totalSizeKB: 2048,
         };
 
+        virtualFC.SENSOR_ALIGNMENT = { ...FC.SENSOR_ALIGNMENT };
+        virtualFC.SENSOR_ALIGNMENT.gyro_to_use = 0;
+        virtualFC.SENSOR_ALIGNMENT.gyro_detection_flags = 1;
+
         virtualFC.SENSOR_DATA = { ...FC.SENSOR_DATA };
 
         virtualFC.RC = {
@@ -254,7 +259,7 @@ const VirtualFC = {
         }
 
         // 11 1111 (pass bitchecks)
-        virtualFC.CONFIG.activeSensors = 63;
+        virtualFC.CONFIG.activeSensors = semver.gte(virtualFC.CONFIG.apiVersion, API_VERSION_1_47) ? 127 : 63;
 
         virtualFC.SENSOR_CONFIG_ACTIVE = {
             gyro_hardware: 2, // MPU6050
@@ -262,6 +267,7 @@ const VirtualFC = {
             baro_hardware: 4, // BMP280
             mag_hardware: 5, // QMC5883
             sonar_hardware: 1, // HCSR04
+            opticalflow_hardware: 1, // MT01
         };
 
         virtualFC.SENSOR_DATA.sonars = 231;
