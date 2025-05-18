@@ -53,7 +53,7 @@ jobs:
             releaseArgs: --linux64
 
           - name: macOS
-            os: macos-12
+            os: macos-13
             releaseArgs: --osx64
 
           - name: Windows
