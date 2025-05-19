@@ -151,7 +151,8 @@
             </div>
 
             <!-- Font Manager dialog -->
-            <div id="fontmanagercontent" style="display:none; width:720px;">
+            <dialog closedby="any" id="fontmanagerdialog" class="html-dialog" style="width: 750px;">
+            <div class="html-dialog-content" style="height: 430px; overflow-y: scroll;">
                 <div class="font-picker" style="margin-bottom: 10px;">
                     <h1 class="tab_title" i18n="osdSetupFontPresets"></h1>
                     <!-- Font preview and list -->
@@ -167,13 +168,13 @@
                     </div>
                     <!-- Boot logo setup -->
                     <h1 class="tab_title" i18n="osdSetupCustomLogoTitle"></h1>
-                    <div class="grid-row">
-                        <div id="font-logo-preview-container" class="content_wrapper grid-col col6">
+                    <div id="font-logo">
+                        <div id="font-logo-preview-container">
                             <div id="font-logo-preview">
                                 <!-- this will be resized at runtime -->
                             </div>
                         </div>
-                        <div id="font-logo-info grid-col col6">
+                        <div id="font-logo-info">
                             <h3 i18n="osdSetupCustomLogoInfoTitle"></h3>
                             <ul>
                                 <li id="font-logo-info-size" i18n="osdSetupCustomLogoInfoImageSize"></li>
@@ -183,22 +184,22 @@
                         </div>
                     </div>
                     <!-- Replace logo button -->
-                    <div class="default_btn" style="width:100%; float:left;">
+                    <div class="default_btn">
                         <a class="replace_logo" i18n="osdSetupCustomLogoOpenImageButton"></a>
                     </div>
                     <!-- Upload progress bar -->
                     <div class="info">
                         <a name="progressbar"></a>
                         <progress class="progress" value="0" min="0" max="100"></progress>
-                        <div class="progressLabel" style="margin-top: -21px; width: 95%; text-align: center; position: absolute;"></div>
+                        <div class="progressLabel"></div>
                     </div>
                 </div>
                 <!-- Upload button -->
-                <div class="default_btn green" style="width:100%; float:left;
-                    ">
+                <div class="default_btn green">
                     <a class="flash_font active" i18n="osdSetupUploadFont"></a>
                 </div>
             </div>
+            </dialog>
 
         </div>
     </div>
