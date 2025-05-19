@@ -2,8 +2,10 @@ import { WebPlugin } from '@capacitor/core';
 import { SocketPlugin } from './definitions';
 
 export class SocketPluginWeb extends WebPlugin implements SocketPlugin {
+  private readonly NOT_SUPPORTED_MESSAGE = 'Web implementation does not support raw TCP sockets.';
+
   async connect(options: { ip: string; port: number }): Promise<{ success: boolean }> {
-    console.log('Web implementation does not support raw TCP sockets.', options);
+    console.log(`${this.NOT_SUPPORTED_MESSAGE} Cannot connect to ${options.ip}:${options.port}`);
     return { success: false };
   }
 
