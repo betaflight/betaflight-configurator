@@ -75,18 +75,17 @@
         color: white;
     }
 }
-.jBox-container {
-    textarea#preview {
-        background-color: rgba(0, 0, 0, 0.75);
-        width: 100%;
-        resize: none;
-        overflow-y: scroll;
-        overflow-x: hidden;
-        font-family: monospace;
-        color: white;
-        padding: 5px;
-        margin-bottom: 5px;
-    }
+textarea#preview {
+    background-color: rgba(0, 0, 0, 0.75);
+    width: 100%;
+    resize: none;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    font-family: monospace;
+    color: white;
+    box-sizing: border-box;
+    padding: 5px;
+    margin-bottom: 5px;
 }
 .cli-textcomplete-dropdown {
     border: 1px solid var(--surface-500);

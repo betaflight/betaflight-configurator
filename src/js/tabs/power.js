@@ -5,8 +5,8 @@ import { mspHelper } from "../msp/MSPHelper";
 import FC from "../fc";
 import MSP from "../msp";
 import MSPCodes from "../msp/MSPCodes";
-import jBox from "jbox";
 import $ from "jquery";
+import { initializeModalDialog } from "../utils/initializeModalDialog";
 
 const power = {
     supported: false,
@@ -18,13 +18,6 @@ power.initialize = function (callback) {
 
     if (GUI.active_tab != "power") {
         GUI.active_tab = "power";
-    }
-
-    if (GUI.calibrationManager) {
-        GUI.calibrationManager.destroy();
-    }
-    if (GUI.calibrationManagerConfirmation) {
-        GUI.calibrationManagerConfirmation.destroy();
     }
 
     function load_status() {
@@ -223,9 +216,6 @@ power.initialize = function (callback) {
         }
         $(".tab-power").addClass("supported");
 
-        $("#calibrationmanagercontent").hide();
-        $("#calibrationmanagerconfirmcontent").hide();
-
         // battery
         const templateBatteryState = $("#tab-power-templates .battery-state .battery-state");
         const destinationBatteryState = $(".tab-power .battery-state");
@@ -347,33 +337,21 @@ power.initialize = function (callback) {
 
         //calibration manager
         let calibrationconfirmed = false;
-        GUI.calibrationManager = new jBox("Modal", {
-            width: 400,
-            height: 230,
-            closeButton: "title",
-            animation: false,
-            attach: $("#calibrationmanager"),
-            title: i18n.getMessage("powerCalibrationManagerTitle"),
-            content: $("#calibrationmanagercontent"),
-            onCloseComplete: function () {
-                if (!calibrationconfirmed) {
-                    TABS.power.initialize();
-                }
-            },
-        });
+        GUI.calibrationManager = initializeModalDialog(
+            "#calibrationmanager",
+            "#calibrationmanagerdialog",
+            "powerCalibrationManagerTitle",
+            null,
+            () => calibrationconfirmed || TABS.power.initialize(),
+        );
 
-        GUI.calibrationManagerConfirmation = new jBox("Modal", {
-            width: 400,
-            height: 230,
-            closeButton: "title",
-            animation: false,
-            attach: $("#calibrate"),
-            title: i18n.getMessage("powerCalibrationManagerConfirmationTitle"),
-            content: $("#calibrationmanagerconfirmcontent"),
-            onCloseComplete: function () {
-                GUI.calibrationManager.close();
-            },
-        });
+        GUI.calibrationManagerConfirmation = initializeModalDialog(
+            "#calibrate",
+            "#calibrationmanagerconfirmdialog",
+            "powerCalibrationManagerConfirmationTitle",
+            null,
+            () => GUI.calibrationManager.close(),
+        );
 
         $("a.calibrationmanager").click(function () {
             if (FC.BATTERY_CONFIG.voltageMeterSource == 1 && FC.BATTERY_STATE.voltage > 0.1) {
@@ -564,13 +542,6 @@ power.initialize = function (callback) {
 
 power.cleanup = function (callback) {
     if (callback) callback();
-
-    if (GUI.calibrationManager) {
-        GUI.calibrationManager.destroy();
-    }
-    if (GUI.calibrationManagerConfirmation) {
-        GUI.calibrationManagerConfirmation.destroy();
-    }
 };
 
 TABS.power = power;

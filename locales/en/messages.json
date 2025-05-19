@@ -5308,6 +5308,10 @@
         "message": "Font",
         "description": "Content of the selector for the OSD Font in the preview"
     },
+    "osdSetupFontManagerTitle": {
+        "message": "OSD Font Manager",
+        "description": "Dialog title"
+    },
     "osdSetupFontTypeDefault": {
         "message": "Default",
         "description": "Font Default"
