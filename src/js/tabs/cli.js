@@ -26,6 +26,7 @@ const cli = {
         windowWrapper: null,
     },
     lastArrival: 0,
+    lastSupportId: null,
 };
 
 function removePromptHash(promptText) {
@@ -210,7 +211,13 @@ cli.initialize = function (callback) {
         $("a.save").on("click", function () {
             const filename = generateFilename("cli", "txt");
 
-            saveFile(filename, self.outputHistory);
+            let content = self.outputHistory;
+
+            if (self.lastSupportId) {
+                content = `Support ID: ${self.lastSupportId}\n\n${content}`;
+            }
+
+            saveFile(filename, content);
         });
 
         $("a.clear").click(function () {
@@ -241,6 +248,7 @@ cli.initialize = function (callback) {
                                 clearInterval(delay);
                                 const text = self.outputHistory;
                                 api.submitSupportData(text, (key) => {
+                                    self.lastSupportId = key;
                                     writeToOutput(i18n.getMessage("buildServerSupportRequestSubmission", [key]));
                                 });
                             }
