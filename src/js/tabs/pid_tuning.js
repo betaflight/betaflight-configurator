@@ -1687,7 +1687,12 @@ pid_tuning.initialize = function (callback) {
             const throttleLimitTypeE = $('.throttle_limit select[id="throttleLimitType"]');
             const mid = parseFloat(throttleMidE.val()); // Value 0-1
             const expo = parseFloat(throttleExpoE.val()); // Value 0-1
-            const hover = parseFloat(throttleHoverE.val()); // Value 0-1 (hover throttle %)
+
+            // Hover parameter is only available from 1.47 so use mid value for older versions
+            const hover = semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)
+                ? parseFloat(throttleHoverE.val())
+                : mid;
+
             const throttleLimitPercent = parseInt(throttleLimitPercentE.val()) / 100; // Value 0-1
             const throttleLimitType = parseInt(throttleLimitTypeE.val());
             const throttleCurve = $(".throttle .throttle_curve canvas").get(0);
