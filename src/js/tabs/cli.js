@@ -214,7 +214,7 @@ cli.initialize = function (callback) {
             let content = self.outputHistory;
 
             if (self.lastSupportId) {
-                content = `Support ID: ${self.lastSupportId}\n\n${content}`;
+                content = `# Support ID: ${self.lastSupportId}\n\n${content}`;
             }
 
             saveFile(filename, content);
