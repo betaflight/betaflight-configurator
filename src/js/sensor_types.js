@@ -95,7 +95,7 @@ export function sensorTypes() {
         },
         sonar: {
             name: "Sonar",
-            elements: ["NONE", "HCSR04", "TFMINI", "TF02", "MTF01", "MTF02", "MTF01P", "MTF02P"],
+            elements: ["NONE", "HCSR04", "TFMINI", "TF02", "MTF01", "MTF02", "MTF01P", "MTF02P", "TFNOVA"],
         },
         opticalflow: {
             name: "Optical Flow",
