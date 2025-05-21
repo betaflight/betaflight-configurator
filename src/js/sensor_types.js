@@ -95,7 +95,7 @@ export function sensorTypes() {
         },
         sonar: {
             name: "Sonar",
-            elements: ["NONE", "HCSR04", "TFMINI", "TF02", "MTF01", "MTF02", "MTF01P", "MTF02P", "TFNOVA"],
+            elements: ["NONE", "HCSR04", "TFMINI", "TF02", "MTF01", "MTF02", "MTF01P", "MTF02P"],
         },
         opticalflow: {
             name: "Optical Flow",
@@ -106,6 +106,7 @@ export function sensorTypes() {
     const gyroElements = sensorTypes.gyro.elements;
     const accElements = sensorTypes.acc.elements;
     const gpsElements = sensorTypes.gps.elements;
+    const sonarElements = sensorTypes.sonar.elements;
 
     // remove deprecated sensors or add new ones
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
@@ -120,6 +121,7 @@ export function sensorTypes() {
         addArrayElementAfter(accElements, "LSM6DSV16X", "IIM42653");
 
         addArrayElement(gpsElements, "VIRTUAL");
+        addArrayElement(sonarElements, "TFNOVA");
     }
 
     return sensorTypes;
