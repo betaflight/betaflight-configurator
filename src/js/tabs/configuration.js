@@ -123,7 +123,7 @@ configuration.initialize = function (callback) {
             "Custom",
         ];
 
-        const orientation_mag_e = $("select.magalign");
+        const orientation_mag_e = $("select.mag_align");
 
         const orientation_gyro_to_use_e = $("select.gyro_to_use");
         const orientation_gyro_1_align_e = $("select.gyro_1_align");
@@ -248,12 +248,10 @@ configuration.initialize = function (callback) {
         }
 
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
-            $(".tab-configuration .gyro_align_custom").show();
             $('input[name="gyro_align_roll"]').val(FC.SENSOR_ALIGNMENT.gyro_align_roll);
             $('input[name="gyro_align_pitch"]').val(FC.SENSOR_ALIGNMENT.gyro_align_pitch);
             $('input[name="gyro_align_yaw"]').val(FC.SENSOR_ALIGNMENT.gyro_align_yaw);
 
-            $(".tab-configuration .mag_align_custom").show();
             $('input[name="mag_align_roll"]').val(FC.SENSOR_ALIGNMENT.mag_align_roll);
             $('input[name="mag_align_pitch"]').val(FC.SENSOR_ALIGNMENT.mag_align_pitch);
             $('input[name="mag_align_yaw"]').val(FC.SENSOR_ALIGNMENT.mag_align_yaw);
@@ -261,8 +259,8 @@ configuration.initialize = function (callback) {
             toggleGyroCustomAlignmentInputs();
             toggleMagCustomAlignmentInputs();
         } else {
-            $(".tab-configuration .gyro_align_custom").hide();
-            $(".tab-configuration .mag_align_custom").hide();
+            $(".tab-configuration .gyro_align_box").hide();
+            $(".tab-configuration .mag_align_box").hide();
         }
 
         $(".gyro_alignment_inputs_first").toggle(detected_gyro_1);
