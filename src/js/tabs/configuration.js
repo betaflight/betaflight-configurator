@@ -423,6 +423,70 @@ configuration.initialize = function (callback) {
             FC.BEEPER_CONFIG.beepers.updateData(element);
         });
 
+        function save_config() {
+            // Define all configuration operations to execute
+            const saveOperations = [
+                { code: MSPCodes.MSP_SET_FEATURE_CONFIG },
+                { code: MSPCodes.MSP_SET_BEEPER_CONFIG },
+                { code: MSPCodes.MSP_SET_BOARD_ALIGNMENT_CONFIG },
+                { code: MSPCodes.MSP_SET_RC_DEADBAND },
+                { code: MSPCodes.MSP_SET_SENSOR_ALIGNMENT },
+                { code: MSPCodes.MSP_SET_ADVANCED_CONFIG },
+                { code: MSPCodes.MSP_SET_ACC_TRIM },
+                { code: MSPCodes.MSP_SET_ARMING_CONFIG },
+                { code: MSPCodes.MSP_SET_SENSOR_CONFIG },
+                {
+                    condition: () => semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45),
+                    code: MSPCodes.MSP2_SET_TEXT,
+                    extraParams: MSPCodes.CRAFT_NAME,
+                    fallback: { code: MSPCodes.MSP_SET_NAME },
+                },
+                {
+                    condition: () => semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45),
+                    code: MSPCodes.MSP2_SET_TEXT,
+                    extraParams: MSPCodes.PILOT_NAME,
+                },
+                { code: MSPCodes.MSP_SET_RX_CONFIG },
+                {
+                    condition: () => semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46),
+                    code: MSPCodes.MSP_SET_COMPASS_CONFIG,
+                },
+            ];
+
+            // Start with a resolved promise
+            let saveChain = Promise.resolve(true);
+
+            // Build the promise chain
+            saveOperations.forEach((operation) => {
+                saveChain = saveChain.then(() => {
+                    // Skip if operation has a condition that returns false
+                    if (operation.condition && !operation.condition()) {
+                        if (operation.fallback) {
+                            // Use fallback operation if provided
+                            return MSP.promise(
+                                operation.fallback.code,
+                                operation.fallback.extraParams
+                                    ? mspHelper.crunch(operation.fallback.code, operation.fallback.extraParams)
+                                    : mspHelper.crunch(operation.fallback.code),
+                            );
+                        }
+                        return Promise.resolve(true);
+                    }
+
+                    // Execute the operation
+                    return MSP.promise(
+                        operation.code,
+                        operation.extraParams
+                            ? mspHelper.crunch(operation.code, operation.extraParams)
+                            : mspHelper.crunch(operation.code),
+                    );
+                });
+            });
+
+            // Complete the chain with final write
+            return saveChain.then(() => mspHelper.writeConfiguration(true));
+        }
+
         $("a.save").on("click", function () {
             // gather data that doesn't have automatic change event bound
             FC.BOARD_ALIGNMENT_CONFIG.roll = parseInt($('input[name="board_align_roll"]').val());
@@ -498,70 +562,6 @@ configuration.initialize = function (callback) {
                 FC.CONFIG.pilotName = $('input[name="pilotName"]').val().trim();
             } else {
                 FC.CONFIG.name = $('input[name="craftName"]').val().trim();
-            }
-
-            function save_config() {
-                Promise.resolve(true)
-                    .then(() =>
-                        MSP.promise(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG)),
-                    )
-                    .then(() =>
-                        MSP.promise(MSPCodes.MSP_SET_BEEPER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_BEEPER_CONFIG)),
-                    )
-                    .then(() =>
-                        MSP.promise(
-                            MSPCodes.MSP_SET_BOARD_ALIGNMENT_CONFIG,
-                            mspHelper.crunch(MSPCodes.MSP_SET_BOARD_ALIGNMENT_CONFIG),
-                        ),
-                    )
-                    .then(() =>
-                        MSP.promise(MSPCodes.MSP_SET_RC_DEADBAND, mspHelper.crunch(MSPCodes.MSP_SET_RC_DEADBAND)),
-                    )
-                    .then(() =>
-                        MSP.promise(
-                            MSPCodes.MSP_SET_SENSOR_ALIGNMENT,
-                            mspHelper.crunch(MSPCodes.MSP_SET_SENSOR_ALIGNMENT),
-                        ),
-                    )
-                    .then(() =>
-                        MSP.promise(
-                            MSPCodes.MSP_SET_ADVANCED_CONFIG,
-                            mspHelper.crunch(MSPCodes.MSP_SET_ADVANCED_CONFIG),
-                        ),
-                    )
-                    .then(() => MSP.promise(MSPCodes.MSP_SET_ACC_TRIM, mspHelper.crunch(MSPCodes.MSP_SET_ACC_TRIM)))
-                    .then(() =>
-                        MSP.promise(MSPCodes.MSP_SET_ARMING_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ARMING_CONFIG)),
-                    )
-                    .then(() =>
-                        MSP.promise(MSPCodes.MSP_SET_SENSOR_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_SENSOR_CONFIG)),
-                    )
-                    .then(() =>
-                        semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)
-                            ? MSP.promise(
-                                MSPCodes.MSP2_SET_TEXT,
-                                mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSPCodes.CRAFT_NAME),
-                            )
-                            : MSP.promise(MSPCodes.MSP_SET_NAME, mspHelper.crunch(MSPCodes.MSP_SET_NAME)),
-                    )
-                    .then(() =>
-                        semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)
-                            ? MSP.promise(
-                                MSPCodes.MSP2_SET_TEXT,
-                                mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSPCodes.PILOT_NAME),
-                            )
-                            : Promise.resolve(true),
-                    )
-                    .then(() => MSP.promise(MSPCodes.MSP_SET_RX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_RX_CONFIG)))
-                    .then(() =>
-                        semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)
-                            ? MSP.promise(
-                                MSPCodes.MSP_SET_COMPASS_CONFIG,
-                                mspHelper.crunch(MSPCodes.MSP_SET_COMPASS_CONFIG),
-                            )
-                            : Promise.resolve(true),
-                    )
-                    .then(() => mspHelper.writeConfiguration(true));
             }
 
             mspHelper.sendSerialConfig(save_config);
