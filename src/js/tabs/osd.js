@@ -84,7 +84,6 @@ SYM.loadSymbols = function () {
     SYM.ROLL = 0x14;
     SYM.KM = 0x7d;
     SYM.MILES = 0x7e;
-    //SYM.LIDAR_DIST = FONT.symbol(0x52) + FONT.symbol(0x46) + FONT.symbol(0x3a);
 };
 
 FONT.initData = function () {
