@@ -258,8 +258,15 @@ ports.initialize = function (callback) {
                             selectElement = functionsElement.find(selectElementSelector);
                             selectElement.append(`<option value="">${disabledText}</option>`);
                         }
-                        const isDisabled = FC.CONFIG.buildOptions.length && functionRule.dependsOn !== undefined && !FC.CONFIG.buildOptions.includes(functionRule.dependsOn) ? "disabled" : "";
-                        selectElement.append(`<option value="${functionName}" ${isDisabled}>${functionRule.displayName}</option>`);
+                        const isDisabled =
+                            FC.CONFIG.buildOptions.length &&
+                            functionRule.dependsOn !== undefined &&
+                            !FC.CONFIG.buildOptions.includes(functionRule.dependsOn)
+                                ? "disabled"
+                                : "";
+                        selectElement.append(
+                            `<option value="${functionName}" ${isDisabled}>${functionRule.displayName}</option>`,
+                        );
                         // sort telemetry, sensors, peripherals select elements. disabledText on top
                         selectElement.sortSelect(disabledText);
 
@@ -304,47 +311,44 @@ ports.initialize = function (callback) {
                 FC.VTX_CONFIG.vtx_table_channels === 0 ||
                 FC.VTX_CONFIG.vtx_table_powerlevels === 0);
 
-        const pheripheralsSelectElement = $('select[name="function-peripherals"]');
-        pheripheralsSelectElement.on("change", function () {
+        const peripheralsSelectElement = $('select[name="function-peripherals"]');
+
+        peripheralsSelectElement.on("change", function () {
             let vtxControlSelected, mspControlSelected;
 
-            pheripheralsSelectElement.each(function (index, element) {
-                const value = $(element).val();
+            // Handle each port's peripheral selection
+            peripheralsSelectElement.each(function (portIndex, element) {
+                const selectedFunction = $(element).val();
+                const mspCheckbox = $(`#functionCheckbox-${portIndex}-0-0`);
 
-                if (value === "TBS_SMARTAUDIO" || value === "IRC_TRAMP") {
-                    vtxControlSelected = value;
+                // Handle VTX control protocols (SmartAudio/Tramp)
+                if (selectedFunction === "TBS_SMARTAUDIO" || selectedFunction === "IRC_TRAMP") {
+                    vtxControlSelected = selectedFunction;
+                    mspCheckbox.prop("checked", false).trigger("change");
                 }
 
-                if (value.includes("MSP")) {
-                    mspControlSelected = value;
-
-                    // Enable MSP Configuration for MSP function
-                    $(".tab-ports .portConfiguration").each(function (port, portConfig) {
-                        const peripheralFunction = $(portConfig).find("select[name=function-peripherals]").val();
-
-                        if (peripheralFunction.includes("MSP") && index === port) {
-                            $(`#functionCheckbox-${port}-0-0`).prop("checked", true).trigger("change");
-                        }
-                    });
+                // Handle MSP-based peripheral functions
+                if (selectedFunction.includes("MSP")) {
+                    mspControlSelected = selectedFunction;
+                    mspCheckbox.prop("checked", true).trigger("change");
                 }
             });
 
+            // Update analytics and UI elements
             if (lastVtxControlSelected !== vtxControlSelected) {
                 self.analyticsChanges["VtxControl"] = vtxControlSelected;
-
                 lastVtxControlSelected = vtxControlSelected;
             }
 
             if (lastMspSelected !== mspControlSelected) {
                 self.analyticsChanges["MspControl"] = mspControlSelected;
-
                 lastMspSelected = mspControlSelected;
             }
 
             $(".vtxTableNotSet").toggle(vtxControlSelected && vtxTableNotConfigured);
         });
 
-        pheripheralsSelectElement.trigger("change");
+        peripheralsSelectElement.trigger("change");
     }
 
     function on_tab_loaded_handler() {
