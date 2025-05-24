@@ -1578,6 +1578,15 @@ OSD.loadDisplayFields = function () {
             positionable: true,
             preview: "CUSTOM MSG4",
         },
+        OSD_LIDAR_DIST: {
+            name: "OSD_LIDAR_DIST",
+            text: "osdTextElementLidar",
+            desc: "osdDescElementLidar",
+            defaultPosition: -1,
+            draw_order: 610,
+            positionable: true,
+            preview: "RF:---",
+        },
     };
 
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
@@ -2024,6 +2033,7 @@ OSD.chooseFields = function () {
             F.CUSTOM_MSG1,
             F.CUSTOM_MSG2,
             F.CUSTOM_MSG3,
+            F.OSD_LIDAR_DIST,
         ]);
     }
     // Choose statistic fields
