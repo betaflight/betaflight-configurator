@@ -84,7 +84,6 @@ SYM.loadSymbols = function () {
     SYM.ROLL = 0x14;
     SYM.KM = 0x7d;
     SYM.MILES = 0x7e;
-    SYM.LIDAR_DIST = 0xa2;
 };
 
 FONT.initData = function () {
@@ -1586,7 +1585,7 @@ OSD.loadDisplayFields = function () {
             defaultPosition: -1,
             draw_order: 610,
             positionable: true,
-            preview: `${FONT.symbol(SYM.LIDAR_DIST)}---`,
+            preview: "RF:---",
         },
     };
 
