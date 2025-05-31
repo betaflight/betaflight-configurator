@@ -1,8 +1,7 @@
-import { Scene, PerspectiveCamera, WebGLRenderer, AmbientLight, DirectionalLight, Vector3 } from "three";
+import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import FC from "./fc";
 import { get as getConfig } from "./ConfigStorage";
-import * as THREE from "three";
 
 // generate mixer
 export const mixerList = [
