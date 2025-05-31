@@ -38,7 +38,7 @@ export const mixerList = [
 // 3D model
 const Model = function (wrapper, canvas) {
     // Configure model detail level (1-10, where 1 is lowest detail and 10 is highest)
-    this.detailTolerance = 10; // Default value, can be modifie
+    this.detailTolerance = 10; // Default value, can be modified
 
     this.wrapper = wrapper;
     this.canvas = canvas;
