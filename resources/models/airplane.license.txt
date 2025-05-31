@@ -1,0 +1,11 @@
+Model Information:
+* title:	Low-Poly Biplane
+* source:	https://sketchfab.com/3d-models/low-poly-biplane-755175daea384176813e7dc90b2245a5
+* author:	lord_syrup (https://sketchfab.com/lord_syrup)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Low-Poly Biplane" (https://sketchfab.com/3d-models/low-poly-biplane-755175daea384176813e7dc90b2245a5) by lord_syrup (https://sketchfab.com/lord_syrup) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

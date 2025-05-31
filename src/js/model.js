@@ -1,8 +1,14 @@
+import {
+    Scene, PerspectiveCamera, WebGLRenderer,
+    AmbientLight, DirectionalLight, Vector3
+} from "three";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import FC from "./fc";
 import { get as getConfig } from "./ConfigStorage";
 import * as THREE from "three";
-import "./utils/three/Projector";
-import { CanvasRenderer } from "./utils/three/CanvasRenderer";
+//import "./utils/three/Projector";
+//import { CanvasRenderer } from "./utils/three/CanvasRenderer";
 
 // generate mixer
 export const mixerList = [
@@ -19,7 +25,7 @@ export const mixerList = [
     { name: "Octo X8", pos: 10, model: "custom", image: "octo_x8", motors: 8, servos: false },
     { name: "Octo Flat +", pos: 11, model: "custom", image: "octo_flat_p", motors: 8, servos: false },
     { name: "Octo Flat X", pos: 12, model: "custom", image: "octo_flat_x", motors: 8, servos: false },
-    { name: "Airplane", pos: 13, model: "custom", image: "airplane", motors: 1, servos: true },
+    { name: "Airplane", pos: 13, model: "airplane", image: "airplane", motors: 1, servos: true },
     { name: "Heli 120", pos: 14, model: "custom", image: "custom", motors: 1, servos: true },
     { name: "Heli 90", pos: 15, model: "custom", image: "custom", motors: 0, servos: true },
     { name: "V-tail Quad", pos: 16, model: "quad_vtail", image: "vtail_quad", motors: 4, servos: false },
@@ -33,6 +39,7 @@ export const mixerList = [
     { name: "Custom Tricopter", pos: 24, model: "custom", image: "custom", motors: 3, servos: true },
     { name: "Quad X 1234", pos: 25, model: "quad_x", image: "quad_x_1234", motors: 4, servos: false },
     { name: "Octo X8 +", pos: 26, model: "custom", image: "custom", motors: 8, servos: false },
+    //{ name: "Car", pos: 27, model: "car", image: "car", motors: 1, servos: true },
 ];
 
 // 3D model
@@ -40,24 +47,30 @@ const Model = function (wrapper, canvas) {
     // Configure model detail level (1-10, where 1 is lowest detail and 10 is highest)
     this.detailTolerance = 10; // Default value, can be modified
 
-    this.useWebGLRenderer = this.canUseWebGLRenderer();
+    //this.useWebGLRenderer = this.canUseWebGLRenderer();
 
     this.wrapper = wrapper;
     this.canvas = canvas;
 
-    if (this.useWebGLRenderer) {
-        this.renderer = new THREE.WebGLRenderer({
-            canvas: this.canvas[0],
-            alpha: true,
-            antialias: true, // Disable antialiasing for performance
-        });
-    } else {
-        console.log("Starting in low performance rendering mode");
-        this.renderer = new CanvasRenderer({
-            canvas: this.canvas[0],
-            alpha: true,
-        });
-    }
+    this.renderer = new THREE.WebGLRenderer({
+        canvas: this.canvas[0],
+        alpha: true,
+        antialias: true, // Disable antialiasing for performance
+    });
+
+    //if (this.useWebGLRenderer) {
+    //    this.renderer = new THREE.WebGLRenderer({
+    //        canvas: this.canvas[0],
+    //        alpha: true,
+    //        antialias: true, // Disable antialiasing for performance
+    //    });
+    //} else {
+    //    console.log("Starting in low performance rendering mode");
+    //    this.renderer = new CanvasRenderer({
+    //        canvas: this.canvas[0],
+    //        alpha: true,
+    //    });
+    //}
 
     this.renderer.setSize(this.wrapper.width(), this.wrapper.height());
 
@@ -95,9 +108,9 @@ const Model = function (wrapper, canvas) {
             this.model = model;
 
             // Apply canvas renderer optimizations if needed
-            if (!this.useWebGLRenderer) {
-                this.applyCanvasRendererOptimizations();
-            }
+            //if (!this.useWebGLRenderer) {
+            //    this.applyCanvasRendererOptimizations();
+            //}
 
             this.modelWrapper.add(model);
             this.scene.add(this.modelWrapper);
@@ -108,25 +121,35 @@ const Model = function (wrapper, canvas) {
 };
 
 Model.prototype.loadJSON = function (model_file, callback) {
-    const loader = new THREE.JSONLoader();
+    //const loader = new THREE.JSONLoader();
+    //let mdl = model_file;
+    //loader.load(
+    //    `./resources/models/${model_file}.json`,
+    //    function (geometry, materials) {
+    //        this.optimizeGeometry(geometry);
 
-    loader.load(
-        `./resources/models/${model_file}.json`,
-        function (geometry, materials) {
-            this.optimizeGeometry(geometry);
+    //        //const model = mdl == 'car' ? this.createModel(geometry, materials) : this.createCarModel(geometry);
+    //        const model = this.createModel(geometry, materials);
+    //        callback(model);
+    //    }.bind(this),
+    //);
 
-            const model = this.createModel(geometry, materials);
+    const loader = new GLTFLoader();
+    loader.load(`./resources/models/${model_file}.gltf`, (gltf) => {
+        const model = gltf.scene;
+        model.scale.set(15, 15, 15);
+        this.modelWrapper.add(model);
+        callback(model);
+    });
 
-            callback(model);
-        }.bind(this),
-    );
 };
 
-Model.prototype.optimizeGeometry = function (geometry) {
-    if (!this.useWebGLRenderer) {
-        this.optimizeGeometryForCanvas(geometry);
-    }
-};
+
+//Model.prototype.optimizeGeometry = function (geometry) {
+//    if (!this.useWebGLRenderer) {
+//        this.optimizeGeometryForCanvas(geometry);
+//    }
+//};
 
 Model.prototype.createModel = function (geometry, materials) {
     const model = new THREE.Mesh(geometry, materials);
@@ -134,84 +157,84 @@ Model.prototype.createModel = function (geometry, materials) {
     return model;
 };
 
-Model.prototype.optimizeGeometryForCanvas = function (geometry) {
-    // Aggressive geometry optimizations for Canvas renderer
-    geometry.mergeVertices();
+//Model.prototype.optimizeGeometryForCanvas = function (geometry) {
+//    // Aggressive geometry optimizations for Canvas renderer
+//    geometry.mergeVertices();
 
-    const tolerance = this.detailTolerance; // Use the configurable tolerance
-    const vertexMap = {};
-    const uniqueVertices = [];
-    const updatedFaces = [];
+//    const tolerance = this.detailTolerance; // Use the configurable tolerance
+//    const vertexMap = {};
+//    const uniqueVertices = [];
+//    const updatedFaces = [];
 
-    geometry.vertices.forEach((vertex, index) => {
-        // Round coordinates with configurable tolerance
-        const key = [
-            Math.round(vertex.x * tolerance) / tolerance,
-            Math.round(vertex.y * tolerance) / tolerance,
-            Math.round(vertex.z * tolerance) / tolerance,
-        ].join(",");
+//    geometry.vertices.forEach((vertex, index) => {
+//        // Round coordinates with configurable tolerance
+//        const key = [
+//            Math.round(vertex.x * tolerance) / tolerance,
+//            Math.round(vertex.y * tolerance) / tolerance,
+//            Math.round(vertex.z * tolerance) / tolerance,
+//        ].join(",");
 
-        if (vertexMap[key] === undefined) {
-            vertexMap[key] = uniqueVertices.length;
-            uniqueVertices.push(vertex);
-        }
-    });
+//        if (vertexMap[key] === undefined) {
+//            vertexMap[key] = uniqueVertices.length;
+//            uniqueVertices.push(vertex);
+//        }
+//    });
 
-    // Update faces to use new vertex indices
-    geometry.faces.forEach((face) => {
-        const v1 = geometry.vertices[face.a];
-        const v2 = geometry.vertices[face.b];
-        const v3 = geometry.vertices[face.c];
+//    // Update faces to use new vertex indices
+//    geometry.faces.forEach((face) => {
+//        const v1 = geometry.vertices[face.a];
+//        const v2 = geometry.vertices[face.b];
+//        const v3 = geometry.vertices[face.c];
 
-        const key1 = [
-            Math.round(v1.x * tolerance) / tolerance,
-            Math.round(v1.y * tolerance) / tolerance,
-            Math.round(v1.z * tolerance) / tolerance,
-        ].join(",");
-        const key2 = [
-            Math.round(v2.x * tolerance) / tolerance,
-            Math.round(v2.y * tolerance) / tolerance,
-            Math.round(v2.z * tolerance) / tolerance,
-        ].join(",");
-        const key3 = [
-            Math.round(v3.x * tolerance) / tolerance,
-            Math.round(v3.y * tolerance) / tolerance,
-            Math.round(v3.z * tolerance) / tolerance,
-        ].join(",");
+//        const key1 = [
+//            Math.round(v1.x * tolerance) / tolerance,
+//            Math.round(v1.y * tolerance) / tolerance,
+//            Math.round(v1.z * tolerance) / tolerance,
+//        ].join(",");
+//        const key2 = [
+//            Math.round(v2.x * tolerance) / tolerance,
+//            Math.round(v2.y * tolerance) / tolerance,
+//            Math.round(v2.z * tolerance) / tolerance,
+//        ].join(",");
+//        const key3 = [
+//            Math.round(v3.x * tolerance) / tolerance,
+//            Math.round(v3.y * tolerance) / tolerance,
+//            Math.round(v3.z * tolerance) / tolerance,
+//        ].join(",");
 
-        // Only keep faces that have three different vertices
-        if (
-            vertexMap[key1] !== vertexMap[key2] &&
-            vertexMap[key2] !== vertexMap[key3] &&
-            vertexMap[key1] !== vertexMap[key3]
-        ) {
-            const newFace = face.clone();
-            newFace.a = vertexMap[key1];
-            newFace.b = vertexMap[key2];
-            newFace.c = vertexMap[key3];
-            updatedFaces.push(newFace);
-        }
-    });
+//        // Only keep faces that have three different vertices
+//        if (
+//            vertexMap[key1] !== vertexMap[key2] &&
+//            vertexMap[key2] !== vertexMap[key3] &&
+//            vertexMap[key1] !== vertexMap[key3]
+//        ) {
+//            const newFace = face.clone();
+//            newFace.a = vertexMap[key1];
+//            newFace.b = vertexMap[key2];
+//            newFace.c = vertexMap[key3];
+//            updatedFaces.push(newFace);
+//        }
+//    });
 
-    // Update geometry with simplified data
-    geometry.vertices = uniqueVertices;
-    geometry.faces = updatedFaces;
+//    // Update geometry with simplified data
+//    geometry.vertices = uniqueVertices;
+//    geometry.faces = updatedFaces;
 
-    geometry.computeBoundingSphere();
-    geometry.computeFaceNormals();
-};
+//    geometry.computeBoundingSphere();
+//    geometry.computeFaceNormals();
+//};
 
-Model.prototype.canUseWebGLRenderer = function () {
-    // webgl capability detector
-    // it would seem the webgl "enabling" through advanced settings will be ignored in the future
-    // and webgl will be supported if gpu supports it by default (canary 40.0.2175.0), keep an eye on this one
-    const detector_canvas = document.createElement("canvas");
-    const isWebGLSupported =
-        window.WebGLRenderingContext &&
-        (detector_canvas.getContext("webgl") || detector_canvas.getContext("experimental-webgl"));
-    const { useLegacyRenderingModel } = getConfig("useLegacyRenderingModel");
-    return isWebGLSupported && !useLegacyRenderingModel;
-};
+//Model.prototype.canUseWebGLRenderer = function () {
+//    // webgl capability detector
+//    // it would seem the webgl "enabling" through advanced settings will be ignored in the future
+//    // and webgl will be supported if gpu supports it by default (canary 40.0.2175.0), keep an eye on this one
+//    const detector_canvas = document.createElement("canvas");
+//    const isWebGLSupported =
+//        window.WebGLRenderingContext &&
+//        (detector_canvas.getContext("webgl") || detector_canvas.getContext("experimental-webgl"));
+//    const { useLegacyRenderingModel } = getConfig("useLegacyRenderingModel");
+//    return isWebGLSupported && !useLegacyRenderingModel;
+//};
 
 Model.prototype.rotateTo = function (x, y, z) {
     if (!this.model) {
@@ -294,33 +317,33 @@ Model.prototype.dispose = function () {
     }
 };
 
-Model.prototype.applyCanvasRendererOptimizations = function () {
-    // Scene optimizations
-    this.scene.autoUpdate = true;
+//Model.prototype.applyCanvasRendererOptimizations = function () {
+//    // Scene optimizations
+//    this.scene.autoUpdate = true;
 
-    // Camera optimizations
-    this.camera.matrixAutoUpdate = false;
-    this.camera.updateMatrix();
-    this.camera.updateMatrixWorld();
+//    // Camera optimizations
+//    this.camera.matrixAutoUpdate = false;
+//    this.camera.updateMatrix();
+//    this.camera.updateMatrixWorld();
 
-    // Model and wrapper optimizations
-    if (this.model) {
-        this.model.matrixAutoUpdate = false;
-        this.model.frustumCulled = false;
-        this.model.renderOrder = 0;
-    }
+//    // Model and wrapper optimizations
+//    if (this.model) {
+//        this.model.matrixAutoUpdate = false;
+//        this.model.frustumCulled = false;
+//        this.model.renderOrder = 0;
+//    }
 
-    this.modelWrapper.matrixAutoUpdate = false;
-    this.modelWrapper.updateMatrix();
-    this.modelWrapper.updateMatrixWorld();
+//    this.modelWrapper.matrixAutoUpdate = false;
+//    this.modelWrapper.updateMatrix();
+//    this.modelWrapper.updateMatrixWorld();
 
-    // Light optimizations
-    this.scene.children.forEach((child) => {
-        if (child.isLight) {
-            child.matrixAutoUpdate = false;
-            child.updateMatrix();
-        }
-    });
-};
+//    // Light optimizations
+//    this.scene.children.forEach((child) => {
+//        if (child.isLight) {
+//            child.matrixAutoUpdate = false;
+//            child.updateMatrix();
+//        }
+//    });
+//};
 
 export default Model;
