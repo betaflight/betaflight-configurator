@@ -2,6 +2,7 @@ import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import FC from "./fc";
 import { get as getConfig } from "./ConfigStorage";
+import { CanvasRenderer } from "./utils/three/CanvasRenderer";
 
 // generate mixer
 export const mixerList = [
@@ -40,14 +41,24 @@ const Model = function (wrapper, canvas) {
     // Configure model detail level (1-10, where 1 is lowest detail and 10 is highest)
     this.detailTolerance = 10; // Default value, can be modified
 
+    this.useWebGLRenderer = this.canUseWebGLRenderer();
+
     this.wrapper = wrapper;
     this.canvas = canvas;
 
-    this.renderer = new THREE.WebGLRenderer({
-        canvas: this.canvas[0],
-        alpha: true,
-        antialias: true, // enable or disable antialiasing for performance
-    });
+    if (this.useWebGLRenderer) {
+        this.renderer = new THREE.WebGLRenderer({
+            canvas: this.canvas[0],
+            alpha: true,
+            antialias: true, // enable or disable antialiasing for performance
+        });
+    } else {
+        console.log("Starting in low performance rendering mode");
+        this.renderer = new CanvasRenderer({
+            canvas: this.canvas[0],
+            alpha: true,
+        });
+    }
 
     this.renderer.setSize(this.wrapper.width(), this.wrapper.height());
 
@@ -83,8 +94,15 @@ const Model = function (wrapper, canvas) {
         model_file,
         function (model) {
             this.model = model;
-            this.scene.add(this.modelWrapper);
+
+            // Apply canvas renderer optimizations if needed
+            if (!this.useWebGLRenderer) {
+                this.applyCanvasRendererOptimizations();
+            }
+
             this.modelWrapper.add(model);
+            this.scene.add(this.modelWrapper);
+
             this.render();
         }.bind(this),
     );
@@ -111,10 +129,95 @@ Model.prototype.loadGLTF = function (model_file, callback) {
     );
 };
 
+Model.prototype.optimizeGeometry = function (geometry) {
+    if (!this.useWebGLRenderer) {
+        this.optimizeGeometryForCanvas(geometry);
+    }
+};
+
 Model.prototype.createModel = function (geometry, materials) {
     const model = new THREE.Mesh(geometry, materials);
     model.scale.set(15, 15, 15);
     return model;
+};
+
+Model.prototype.optimizeGeometryForCanvas = function (geometry) {
+    // Aggressive geometry optimizations for Canvas renderer
+    geometry.mergeVertices();
+
+    const tolerance = this.detailTolerance; // Use the configurable tolerance
+    const vertexMap = {};
+    const uniqueVertices = [];
+    const updatedFaces = [];
+
+    geometry.vertices.forEach((vertex, index) => {
+        // Round coordinates with configurable tolerance
+        const key = [
+            Math.round(vertex.x * tolerance) / tolerance,
+            Math.round(vertex.y * tolerance) / tolerance,
+            Math.round(vertex.z * tolerance) / tolerance,
+        ].join(",");
+
+        if (vertexMap[key] === undefined) {
+            vertexMap[key] = uniqueVertices.length;
+            uniqueVertices.push(vertex);
+        }
+    });
+
+    // Update faces to use new vertex indices
+    geometry.faces.forEach((face) => {
+        const v1 = geometry.vertices[face.a];
+        const v2 = geometry.vertices[face.b];
+        const v3 = geometry.vertices[face.c];
+
+        const key1 = [
+            Math.round(v1.x * tolerance) / tolerance,
+            Math.round(v1.y * tolerance) / tolerance,
+            Math.round(v1.z * tolerance) / tolerance,
+        ].join(",");
+        const key2 = [
+            Math.round(v2.x * tolerance) / tolerance,
+            Math.round(v2.y * tolerance) / tolerance,
+            Math.round(v2.z * tolerance) / tolerance,
+        ].join(",");
+        const key3 = [
+            Math.round(v3.x * tolerance) / tolerance,
+            Math.round(v3.y * tolerance) / tolerance,
+            Math.round(v3.z * tolerance) / tolerance,
+        ].join(",");
+
+        // Only keep faces that have three different vertices
+        if (
+            vertexMap[key1] !== vertexMap[key2] &&
+            vertexMap[key2] !== vertexMap[key3] &&
+            vertexMap[key1] !== vertexMap[key3]
+        ) {
+            const newFace = face.clone();
+            newFace.a = vertexMap[key1];
+            newFace.b = vertexMap[key2];
+            newFace.c = vertexMap[key3];
+            updatedFaces.push(newFace);
+        }
+    });
+
+    // Update geometry with simplified data
+    geometry.vertices = uniqueVertices;
+    geometry.faces = updatedFaces;
+
+    geometry.computeBoundingSphere();
+    geometry.computeFaceNormals();
+};
+
+Model.prototype.canUseWebGLRenderer = function () {
+    // webgl capability detector
+    // it would seem the webgl "enabling" through advanced settings will be ignored in the future
+    // and webgl will be supported if gpu supports it by default (canary 40.0.2175.0), keep an eye on this one
+    const detector_canvas = document.createElement("canvas");
+    const isWebGLSupported =
+        window.WebGLRenderingContext &&
+        (detector_canvas.getContext("webgl") || detector_canvas.getContext("experimental-webgl"));
+    const { useLegacyRenderingModel } = getConfig("useLegacyRenderingModel");
+    return isWebGLSupported && !useLegacyRenderingModel;
 };
 
 Model.prototype.rotateTo = function (x, y, z) {
@@ -146,8 +249,23 @@ Model.prototype.render = function () {
         return;
     }
 
+    if (!this.useWebGLRenderer) {
+        this.applyCullingOptimizations();
+    }
+
     this.updateMatrices();
     this.performRender();
+};
+
+Model.prototype.applyCullingOptimizations = function () {
+    const modelForward = new THREE.Vector3(0, 0, 1);
+    modelForward.applyQuaternion(this.model.quaternion);
+    const dot = modelForward.dot(new THREE.Vector3(0, 0, 1));
+    const cullBackFaces = dot > 0;
+
+    if (this.model.material) {
+        this.model.material.side = cullBackFaces ? THREE.FrontSide : THREE.DoubleSide;
+    }
 };
 
 Model.prototype.updateMatrices = function () {
@@ -181,6 +299,35 @@ Model.prototype.dispose = function () {
         }
         this.renderer = null;
     }
+};
+
+Model.prototype.applyCanvasRendererOptimizations = function () {
+    // Scene optimizations
+    this.scene.autoUpdate = true;
+
+    // Camera optimizations
+    this.camera.matrixAutoUpdate = false;
+    this.camera.updateMatrix();
+    this.camera.updateMatrixWorld();
+
+    // Model and wrapper optimizations
+    if (this.model) {
+        this.model.matrixAutoUpdate = false;
+        this.model.frustumCulled = false;
+        this.model.renderOrder = 0;
+    }
+
+    this.modelWrapper.matrixAutoUpdate = false;
+    this.modelWrapper.updateMatrix();
+    this.modelWrapper.updateMatrixWorld();
+
+    // Light optimizations
+    this.scene.children.forEach((child) => {
+        if (child.isLight) {
+            child.matrixAutoUpdate = false;
+            child.updateMatrix();
+        }
+    });
 };
 
 export default Model;
