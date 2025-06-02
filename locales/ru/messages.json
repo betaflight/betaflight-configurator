@@ -28,6 +28,9 @@
     "noticeTitle": {
         "message": "Сообщение"
     },
+    "search": {
+        "message": "Поиск"
+    },
     "dontShowAgain": {
         "message": "Не показывать снова"
     },
@@ -83,6 +86,10 @@
     "portsSelectPermissionBluetooth": {
         "message": "--- Я не могу найти свое Bluetooth устройство --",
         "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access a Bluetooth device."
+    },
+    "portsSelectPermissionDFU": {
+        "message": "--- Я не могу найти свое DFU устройство ---",
+        "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access a DFU device."
     },
     "bluetoothConnected": {
         "message": "Подключиться к Bluetooth устройству: $1"
@@ -1093,6 +1100,12 @@
     "initialSetupInfoBuildConfig": {
         "message": "Конфигурация"
     },
+    "initialSetupInfoBuildDownload": {
+        "message": "Скачать"
+    },
+    "initialSetupInfoBuildFirmware": {
+        "message": "Прошивка:"
+    },
     "initialSetupInfoBuildLog": {
         "message": "Лог"
     },
@@ -1104,6 +1117,9 @@
     },
     "initialSetupInfoBuildEmpty": {
         "message": "Локальная сборка - в облаке нет информации"
+    },
+    "initialSetupInfoBuildType": {
+        "message": "Тип сборки:"
     },
     "initialSetupInfoBuildLocal": {
         "message": "Локальная сборка"
@@ -2236,6 +2252,9 @@
     "receiverThrottleExpo": {
         "message": "Газ, экспонента"
     },
+    "receiverThrottleHover": {
+        "message": "Точка зависания"
+    },
     "receiverStickMin": {
         "message": "Порог нижнего положения стика"
     },
@@ -2339,6 +2358,9 @@
     },
     "receiverModelPreview": {
         "message": "Предпросмотр"
+    },
+    "receiverMspWarningText": {
+        "message": "Эти стики позволяют Betaflight армиться и тестироваться без установленного приемника или передатчика. Тем не менее, <strong>эта функциональность не предназначена для полетов и пропеллеры должны быть сняты.<\/strong><br\/><br\/>Эта функциональность не гарантирует надежного управления аппаратом. <strong>Если не снять пропеллеры это может привести к серьёзным травмам.<\/strong>"
     },
     "receiverMspEnableButton": {
         "message": "Включить управление"
@@ -3144,6 +3166,9 @@
     },
     "escDshotDirectionDialog-SetDirectionHintSafety": {
         "message": "Моторы будут вращаться при настройке направления!"
+    },
+    "escDshotDirectionDialog-SettingsAutoSaved": {
+        "message": "Направление мотора сохраняется после выбора"
     },
     "escDshotDirectionDialog-WrongProtocolText": {
         "message": "Функция работает только с DSHOT ESC.<br \/>Убедитесь, что ваш ESC (контроллер скорости) поддерживает протокол DSHOT и измените его на вкладке $t(tabMotorTesting.message)."
@@ -5816,6 +5841,14 @@
         "message": "Дата и время RTC",
         "description": "One of the elements of the OSD"
     },
+    "osdTextElementRtcDateTimeVariantFullDate": {
+        "message": "Полный формат даты",
+        "description": "One of the variants of the RTC date and time element of the OSD"
+    },
+    "osdTextElementRtcDateTimeVariantShortDate": {
+        "message": "Краткий формат даты",
+        "description": "One of the variants of the RTC date and time element of the OSD"
+    },
     "osdDescElementRtcDateTime": {
         "message": "Отображать текущую дату и время"
     },
@@ -7482,5 +7515,13 @@
     "programmingFailedNotification": {
         "message": "Не удалось запрограммировать ПК",
         "description": "Notification message when programming is unsuccessful"
+    },
+    "osdTextElementLidar": {
+        "message": "Сонар",
+        "description": "Displays distance from sonar sensor in cm"
+    },
+    "osdDescElementLidar": {
+        "message": "$t(osdTextElementLidar.message)",
+        "description": "Don't translate!!!"
     }
 }
