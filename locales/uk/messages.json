@@ -28,6 +28,9 @@
     "noticeTitle": {
         "message": "Зверніть увагу"
     },
+    "search": {
+        "message": "Пошук"
+    },
     "dontShowAgain": {
         "message": "Не показувати знову"
     },
@@ -83,6 +86,10 @@
     "portsSelectPermissionBluetooth": {
         "message": "--- Я не можу знайти мій пристрій Bluetooth ---",
         "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access a Bluetooth device."
+    },
+    "portsSelectPermissionDFU": {
+        "message": "--- Я не можу знайти мій пристрій DFU ---",
+        "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access a DFU device."
     },
     "bluetoothConnected": {
         "message": "Під'єднано до пристрою Bluetooth: $1"
@@ -239,6 +246,12 @@
     },
     "configuratorUpdateWebsite": {
         "message": "Перейти на сайт з Релізами"
+    },
+    "rebootFlightController": {
+        "message": "Перезавантаження польотного контролера, перепідключення після готовності"
+    },
+    "rebootFlightControllerReady": {
+        "message": "Польотний контролер готовий"
     },
     "deviceRebooting": {
         "message": "Пристрій - <span class=\"message-negative\">перезавантажується<\/span>"
@@ -1087,6 +1100,12 @@
     "initialSetupInfoBuildConfig": {
         "message": "Конфігурація"
     },
+    "initialSetupInfoBuildDownload": {
+        "message": "Завантажити"
+    },
+    "initialSetupInfoBuildFirmware": {
+        "message": "Прошивка:"
+    },
     "initialSetupInfoBuildLog": {
         "message": "Журнал"
     },
@@ -1098,6 +1117,9 @@
     },
     "initialSetupInfoBuildEmpty": {
         "message": "Локальна збірка - без хмарних даних"
+    },
+    "initialSetupInfoBuildType": {
+        "message": "Тип збірки:"
     },
     "initialSetupInfoBuildLocal": {
         "message": "Локальна збірка"
@@ -2242,6 +2264,9 @@
     "receiverThrottleExpo": {
         "message": "Експоненційність тяги"
     },
+    "receiverThrottleHover": {
+        "message": "Точка зависання"
+    },
     "receiverStickMin": {
         "message": "Поріг мін. значення стіка"
     },
@@ -3162,6 +3187,9 @@
     "escDshotDirectionDialog-SetDirectionHintSafety": {
         "message": "Мотори почнуть обертатись при виборі напрямку!"
     },
+    "escDshotDirectionDialog-SettingsAutoSaved": {
+        "message": "Напрямок двигуна збережеться при виборі"
+    },
     "escDshotDirectionDialog-WrongProtocolText": {
         "message": "Функція працює тільки з DSHOT електронними контролерами швидкості.<br \/> Переконайтеся, що ваш електронний контролер швидкості (ESC) підтримує протокол DSHOT і змініть його на $t(tabMotorTesting.message) вкладці."
     },
@@ -3338,6 +3366,9 @@
     },
     "blackboxLoggingSerial": {
         "message": "Послідовний порт"
+    },
+    "blackboxLoggingVirtual": {
+        "message": "У файл"
     },
     "serialLoggingSupportedNote": {
         "message": "Ви можете записувати дані на зовнішній пристрій для логування (наприклад, OpenLager) за допомогою серійного порту. Налаштуйте порт на вкладці \"Порти\"."
@@ -5879,6 +5910,14 @@
         "message": "Дата й час з джерела RTC",
         "description": "One of the elements of the OSD"
     },
+    "osdTextElementRtcDateTimeVariantFullDate": {
+        "message": "Повний формат дати",
+        "description": "One of the variants of the RTC date and time element of the OSD"
+    },
+    "osdTextElementRtcDateTimeVariantShortDate": {
+        "message": "Короткий формат дати",
+        "description": "One of the variants of the RTC date and time element of the OSD"
+    },
     "osdDescElementRtcDateTime": {
         "message": "Дата \/ час з годинника реального часу"
     },
@@ -7545,5 +7584,13 @@
     "programmingFailedNotification": {
         "message": "Збій програмування польотного контролера",
         "description": "Notification message when programming is unsuccessful"
+    },
+    "osdTextElementLidar": {
+        "message": "Сонар",
+        "description": "Displays distance from sonar sensor in cm"
+    },
+    "osdDescElementLidar": {
+        "message": "$t(osdTextElementLidar.message)",
+        "description": "Don't translate!!!"
     }
 }
