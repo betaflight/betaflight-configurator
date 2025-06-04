@@ -1,0 +1,11 @@
+Model Information:
+* title:	Low Poly Mazda RX-7
+* source:	https://sketchfab.com/3d-models/low-poly-mazda-rx-7-3bf32b1d66bd4b6c8613cef75e2e2c01
+* author:	kulonee (https://sketchfab.com/ynesolefru)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Low Poly Mazda RX-7" (https://sketchfab.com/3d-models/low-poly-mazda-rx-7-3bf32b1d66bd4b6c8613cef75e2e2c01) by kulonee (https://sketchfab.com/ynesolefru) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

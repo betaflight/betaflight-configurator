@@ -21,6 +21,12 @@ testresults/
 .vscode/*
 !.vscode/extensions.json
 
+# Visual Studio
+.vs/
+
+# node js
+node_modules/
+
 # NetBeans
 nbproject/
 
