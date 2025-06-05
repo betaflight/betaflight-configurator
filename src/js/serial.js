@@ -30,9 +30,6 @@ class Serial extends EventTarget {
             virtual: this._virtual,
         };
 
-        // Initialize with default protocol
-        this.selectProtocol(false);
-
         // Forward events from all protocols to the Serial class
         this._setupEventForwarding();
     }
@@ -114,12 +111,12 @@ class Serial extends EventTarget {
     }
 
     /**
-     * Selects the appropriate protocol based on port path or CONFIGURATOR settings
+     * Selects the appropriate protocol based on port path
      * @param {string|null} portPath - Optional port path to determine protocol
      * @param {boolean} forceDisconnect - Whether to force disconnect from current protocol
      */
     selectProtocol(portPath = null, forceDisconnect = true) {
-        // Determine which protocol to use based on port path first, then fall back to CONFIGURATOR
+        // Determine which protocol to use based on port path
         let newProtocol;
 
         if (portPath) {
@@ -127,45 +124,14 @@ class Serial extends EventTarget {
             if (portPath === "virtual") {
                 console.log(`${this.logHead} Using virtual protocol (based on port path)`);
                 newProtocol = this._virtual;
-                // Update CONFIGURATOR flags for consistency
-                CONFIGURATOR.virtualMode = true;
-                CONFIGURATOR.bluetoothMode = false;
-                CONFIGURATOR.manualMode = false;
             } else if (portPath === "manual") {
                 console.log(`${this.logHead} Using websocket protocol (based on port path)`);
                 newProtocol = this._websocket;
-                // Update CONFIGURATOR flags for consistency
-                CONFIGURATOR.virtualMode = false;
-                CONFIGURATOR.bluetoothMode = false;
-                CONFIGURATOR.manualMode = true;
             } else if (portPath.startsWith("bluetooth")) {
                 console.log(`${this.logHead} Using bluetooth protocol (based on port path: ${portPath})`);
                 newProtocol = this._bluetooth;
-                // Update CONFIGURATOR flags for consistency
-                CONFIGURATOR.virtualMode = false;
-                CONFIGURATOR.bluetoothMode = true;
-                CONFIGURATOR.manualMode = false;
             } else {
                 console.log(`${this.logHead} Using web serial protocol (based on port path: ${portPath})`);
-                newProtocol = this._webSerial;
-                // Update CONFIGURATOR flags for consistency
-                CONFIGURATOR.virtualMode = false;
-                CONFIGURATOR.bluetoothMode = false;
-                CONFIGURATOR.manualMode = false;
-            }
-        } else {
-            // Fall back to CONFIGURATOR flags if no port path is provided
-            if (CONFIGURATOR.virtualMode) {
-                console.log(`${this.logHead} Using virtual protocol (based on CONFIGURATOR flags)`);
-                newProtocol = this._virtual;
-            } else if (CONFIGURATOR.manualMode) {
-                console.log(`${this.logHead} Using websocket protocol (based on CONFIGURATOR flags)`);
-                newProtocol = this._websocket;
-            } else if (CONFIGURATOR.bluetoothMode) {
-                console.log(`${this.logHead} Using bluetooth protocol (based on CONFIGURATOR flags)`);
-                newProtocol = this._bluetooth;
-            } else {
-                console.log(`${this.logHead} Using web serial protocol (based on CONFIGURATOR flags)`);
                 newProtocol = this._webSerial;
             }
         }
@@ -184,8 +150,6 @@ class Serial extends EventTarget {
             // Set new protocol
             this._protocol = newProtocol;
             console.log(`${this.logHead} Protocol switched successfully to:`, this._protocol);
-        } else {
-            console.log(`${this.logHead} Same protocol selected, no switch needed`);
         }
 
         return this._protocol;
@@ -250,8 +214,6 @@ class Serial extends EventTarget {
             if (callback) callback(false);
             return false;
         }
-
-        console.log(`${this.logHead} Disconnecting from current protocol`, this._protocol);
 
         try {
             // Handle case where we're already disconnected

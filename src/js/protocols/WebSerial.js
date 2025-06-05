@@ -1,7 +1,7 @@
 import { webSerialDevices, vendorIdNames } from "./devices";
 import GUI from "../gui";
 
-const logHead = "[SERIAL]";
+const logHead = "[WEBSERIAL]";
 
 async function* streamAsyncIterable(reader, keepReadingFlag) {
     try {
