@@ -342,11 +342,13 @@ PortHandler.updateDeviceList = async function (deviceType) {
                 console.log(`${this.logHead} Found DFU port(s)`, orderedPorts);
                 break;
             case "webserial":
-            default:
                 this.portAvailable = orderedPorts.length > 0;
                 this.currentSerialPorts = [...orderedPorts];
                 console.log(`${this.logHead} Found serial port(s)`, orderedPorts);
                 break;
+            default:
+                console.warn(`${this.logHead} Unknown device type for updating ports: ${deviceType}`);
+                return [];
         }
 
         return orderedPorts;
