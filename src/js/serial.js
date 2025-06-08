@@ -18,15 +18,15 @@ class Serial extends EventTarget {
 
         // Initialize the available protocols
         this._webSerial = new WebSerial();
-        this._bluetooth = new WebBluetooth();
-        this._websocket = new Websocket();
+        this._webBluetooth = new WebBluetooth();
+        this._webSocket = new Websocket();
         this._virtual = new VirtualSerial();
 
         // Update protocol map to use consistent naming
         this._protocolMap = {
-            serial: this._webSerial, // TODO: should be 'webserial'
-            bluetooth: this._bluetooth, // TODO: should be 'webbluetooth'
-            websocket: this._websocket,
+            webserial: this._webSerial,
+            webbluetooth: this._webBluetooth,
+            websocket: this._webSocket,
             virtual: this._virtual,
         };
 
@@ -58,10 +58,10 @@ class Serial extends EventTarget {
         if (protocol === this._webSerial) {
             return "webserial";
         }
-        if (protocol === this._bluetooth) {
+        if (protocol === this._webBluetooth) {
             return "webbluetooth";
         }
-        if (protocol === this._websocket) {
+        if (protocol === this._webSocket) {
             return "websocket";
         }
         if (protocol === this._virtual) {
@@ -74,7 +74,7 @@ class Serial extends EventTarget {
      * Set up event forwarding from all protocols to the Serial class
      */
     _setupEventForwarding() {
-        const protocols = [this._webSerial, this._bluetooth, this._websocket, this._virtual];
+        const protocols = [this._webSerial, this._webBluetooth, this._webSocket, this._virtual];
         const events = ["addedDevice", "removedDevice", "connect", "disconnect", "receive"];
 
         protocols.forEach((protocol) => {
@@ -126,10 +126,10 @@ class Serial extends EventTarget {
                 newProtocol = this._virtual;
             } else if (portPath === "manual") {
                 console.log(`${this.logHead} Using websocket protocol (based on port path)`);
-                newProtocol = this._websocket;
+                newProtocol = this._webSocket;
             } else if (portPath.startsWith("bluetooth")) {
                 console.log(`${this.logHead} Using bluetooth protocol (based on port path: ${portPath})`);
-                newProtocol = this._bluetooth;
+                newProtocol = this._webBluetooth;
             } else {
                 console.log(`${this.logHead} Using web serial protocol (based on port path: ${portPath})`);
                 newProtocol = this._webSerial;
@@ -254,7 +254,7 @@ class Serial extends EventTarget {
 
     /**
      * Get devices from a specific protocol type or current protocol
-     * @param {string} protocolType - Optional protocol type ('serial', 'bluetooth', 'websocket', 'virtual')
+     * @param {string} protocolType - Optional protocol type ('webserial', 'webbluetooth', 'websocket', 'virtual')
      * @returns {Promise<Array>} - List of devices
      */
     async getDevices(protocolType = null) {
