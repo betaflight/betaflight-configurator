@@ -177,7 +177,9 @@ PortHandler.requestDevicePermission = function (deviceType) {
 
 PortHandler.sortPorts = function (ports) {
     return ports.sort(function (a, b) {
-        return a.path.localeCompare(b.path, window.navigator.language, {
+        const locale = typeof window !== "undefined" && window.navigator ? window.navigator.language : "en";
+
+        return a.path.localeCompare(b.path, locale, {
             numeric: true,
             sensitivity: "base",
         });
