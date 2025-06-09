@@ -51,7 +51,7 @@ const PortHandler = new (function () {
 
 PortHandler.initialize = function () {
     EventBus.$on("ports-input:request-permission-bluetooth", () => this.requestDevicePermission("webbluetooth"));
-    EventBus.$on("ports-input:request-permission", () => this.requestDevicePermission("webserial"));
+    EventBus.$on("ports-input:request-permission-serial", () => this.requestDevicePermission("webserial"));
     EventBus.$on("ports-input:request-permission-usb", () => this.requestDevicePermission("usb"));
     EventBus.$on("ports-input:change", this.onChangeSelectedPort.bind(this));
 
