@@ -1910,6 +1910,10 @@
         "message": "Коэффициент опережения",
         "description": "Advance of the D Max feature"
     },
+    "pidTuningDMaxAdvanceHelp": {
+        "message": "D Max Advance увеличивает чувствительность коэффициента D при быстрых движениях стиков.<br><br>Advance не реагирует на показания гироскопа или эффект пропвоша. Он срабатывает раньше фактора Gain и иногда полезен для аппаратов с низкой управляемостью, которые сильно запаздывают в начале манёвра.<br><br>В большинстве случаев лучше оставлять это значение нулевым.<br><br>ВНИМАНИЕ: Либо Advance, либо Gain должны быть установлены выше 20, иначе D не будет увеличиваться как положено. Установка обоих значений в ноль зафиксирует D на базовом значении.",
+        "description": "D Max feature helpicon message"
+    },
     "pidTuningPidSettings": {
         "message": "Настройки PID-контроллера"
     },
@@ -2081,6 +2085,10 @@
     },
     "pidTuningFeedforward": {
         "message": "<b>F<\/b>eedforward"
+    },
+    "pidTuningFeedforwardHelp": {
+        "message": "Дополнительный коэффициент усиления, вычисляемый исключительно на основе стиковых команд, который помогает ускорять маневры аппарата при резких движениях стиков.<br><br>FF не вызывает колебаний, позволяет использовать более низкий коэффициент P при аналогичной реакции на стики и компенсирует естественное противодействие коэффициента D командам со стиков.<br><br>Низкие или нулевые значения приведут к более плавной, но более замедленной реакции на движения стиков.",
+        "description": "Feedforward Term helpicon message on PID table titlebar"
     },
     "pidTuningMaxRateWarning": {
         "message": "<span class=\"message-negative\"><b>Предупреждение:<\/b><\/span> очень высокие коэфициенты могут привести к рассинхронизации двигателей при быстрых замедлениях."
@@ -4255,6 +4263,10 @@
         "message": "Использовать слайдер для настройки D-Term",
         "description": "Disable or enable D Term Filter Tuning Slider"
     },
+    "pidTuningPidSlidersHelp": {
+        "message": "Ползунки для настройки лётных характеристик аппарата (PID коэффициенты)<br \/><br \/>\nДемпфирование (D gain): Сопротивляется быстрым движениям, минимизирует осциляции от P.<br \/><br \/>Трэкинг (P и I gain): Увеличивает отзывчивость аппарата, при слишком высоких значениях может вызывать вибрации или колебания.<br \/><br \/>Отзывчивость стиков (FF Gain): Увеличивает отзывчивость аппарата на быстрые движения стиков.<br \/><br \/>Дрейф - Колебания (I Gain): Точная настройка I.<br \/><br \/>Динамическое демпфирование  (D Max): Устанавливает максимальное значение усиления D во время быстрых движений.<br \/><br \/>Демпфирование по тангажу (Pitch:Roll D): Увеличивает демпфирование по тангажу относительно крена.<br \/><br \/>Трекинг по тангажу (Pitch:Roll P, I & FF): Увеличивает силу стабилизации по тангажу относительно крена.<br \/><br \/>Мастер-множитель: Увеличивает или уменьшает все PID коэффициенты, сохраняя их пропорции.",
+        "description": "Overall helpicon message for PID tuning sliders"
+    },
     "pidTuningSliderWarning": {
         "message": "<span class=\"message-negative\">ВНИМАНИЕ<\/span>: Текущие позиции слайдеров могут быть причиной \nнеконтролируемого поведения (flyaway), повреждения моторов и другого небезопасного поведения борта. Пожалуйста, продолжайте с осторожностью.",
         "description": "Warning shown when tuning slider are above safe limits"
@@ -4340,7 +4352,7 @@
         "description": "D Max slider helpicon message"
     },
     "pidTuningRollPitchRatioSlider": {
-        "message": "Демпфирование по крену: <i><small>Pitch:Roll D<\/small><\/i>",
+        "message": "Демпфирование по тангажу:<br \/><i><small>Pitch:Roll D<\/small><\/i>",
         "description": "Pitch-Roll Ratio slider label"
     },
     "pidTuningPitchPIGainSlider": {
@@ -4599,6 +4611,9 @@
     },
     "pidTuningAbsoluteControlGain": {
         "message": "Абсолютный контроль"
+    },
+    "pidTuningAbsoluteControlGainHelp": {
+        "message": "Эта функция решает некоторые фундаментальные проблемы, связанные с $t(pidTuningItermRotation.message), и может в какой-то момент заменить ее. Она накапливает абсолютную ошибку гироскопа в координатах аппарата и добавляет пропорциональную коррекцию в setpoint.<br><br>Режим AirMode должен быть включен и $t(pidTuningItermRelax.message) (для $t(pidTuningOptionRP.message)). В сочетании с $t(pidTuningIntegratedYaw.message), вы можете установить $t(pidTuningItermRelax.message) включенным для $t(pidTuningOptionRPY.message)."
     },
     "pidTuningThrottleBoost": {
         "message": "Ускорение газа"

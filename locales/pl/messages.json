@@ -3562,7 +3562,7 @@
         "message": "Wybierz swój kontroler lotu, aby zobaczyć dostępne wersje oprogramowania online. Wybierz odpowiednie oprogramowanie dla twojego kontrolera lotu."
     },
     "firmwareFlasherOnlineSelectBoardHint": {
-        "message": "Konfigurator Betaflight obsługuje flashowanie wielu kontrolerów lotu jednocześnie.<br><br>Koncepcja ta oznacza, że ​​ten sam plik .hex oprogramowania układowego może być używany dla wszystkich płyt korzystających z tego samego MCU.<br> <br>Betaflight 4.4 wprowadza <strong>Kompilację w chmurze<\/strong><br><br>W przypadku <strong>kompilacji w chmurze<\/strong> musimy zdefiniować opcje sprzętowe obecne w Twojej kompilacji.<br><br>Aby różne kontrolery współpracowały z tym samym oprogramowaniem układowym, a określony plik konfiguracyjny jest wdrażany wraz z oprogramowaniem układowym podczas flashowania.<br><br>Dzięki kompilacji lokalnej można załadować docelowy plik konfiguracyjny lub wybrać płytkę kontrolera lotu przed załadowaniem oprogramowania układowego .hex.<br><br>Jeśli napotkasz problemy z używaniem oprogramowania układowego, rozważ dołączenie do Discorda lub otwórz plik <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel =\"noopener noreferrer\">problem<\/a>."
+        "message": "Konfigurator Betaflight obsługuje flashowanie kontrolerów lotu wykorzystując ujednolicone cele.<br><br>Koncepcja ta oznacza, że ​​ten sam plik .hex oprogramowania układowego może być używany dla wszystkich kontrolerów lotu korzystających z tego samego MCU.<br> <br>Betaflight 4.4 wprowadza <strong>Kompilację w chmurze<\/strong><br><br>W przypadku <strong>kompilacji w chmurze<\/strong> musimy zdefiniować opcje sprzętowe obecne w Twojej kompilacji.<br><br>Aby różne kontrolery lotu współpracowały z tym samym oprogramowaniem układowym, a określony plik konfiguracyjny był wdrażany wraz z oprogramowaniem układowym podczas flashowania.<br><br>Dzięki kompilacji lokalnej można załadować docelowy plik konfiguracyjny lub wybrać płytkę kontrolera lotu przed załadowaniem oprogramowania układowego .hex.<br><br>Jeśli napotkasz problemy z używaniem oprogramowania układowego, rozważ dołączenie do Discorda lub otwórz plik <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel =\"noopener noreferrer\">problem<\/a>."
     },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "Wybierz wersję oprogramowania dla swojej płytki."
@@ -7520,7 +7520,7 @@
         "message": "Wybierz protokół OSD, który chciałbyś dołączyć do tej kompilacji. Zauważ, że jest to lista rozwijana, ale tylko jeden element może zostać wybrany."
     },
     "firmwareFlasherBranchDescription": {
-        "message": "Szczególnie przydatne dla programistów, możesz wybrać scalone PR, określić sha zatwierdzenia lub określić PR „jeszcze do scalenia”, wpisując #, po którym następuje numer PR, np. #1234 (jest to skrót dla gałęzi „pull\/1234\/head”)."
+        "message": "Szczególnie przydatne dla programistów – można wybrać scalone żądanie ściągnięcia, określić zakres zatwierdzenia lub określić żądanie ściągnięcia „jeszcze niescalone”, wpisując znak #, a następnie numer żądania ściągnięcia, np. #1234 (jest to skrót od gałęzi „pull\/1234\/head”)."
     },
     "firmwareFlasherCustomDefinesDescription": {
         "message": "Deweloperzy mogą dodać dowolne potrzebne definicje, oddzielone spacją, ale bez przedrostka `USE_` zostaną one dodane automatycznie."
