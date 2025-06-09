@@ -311,7 +311,7 @@ CliAutoComplete._initTextcomplete = function () {
                     const textCompleteElement = textCompleteDropDownElement[0];
                     if (textCompleteElement && $._data) {
                         const events = $._data(textCompleteElement, "events");
-                        if (events && events.mouseover && events.mouseover.length > 0) {
+                        if (events?.mouseover?.length > 0) {
                             savedMouseoverItemHandler = events.mouseover[0].handler;
                         }
                     }
