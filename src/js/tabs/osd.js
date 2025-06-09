@@ -112,15 +112,6 @@ FONT.constants = {
         CHAR_HEIGHT: 18,
         CHAR_WIDTH: 12,
     },
-    COLORS: {
-        // black
-        0: "rgba(0, 0, 0, 1)",
-        // also the value 3, could yield transparent according to
-        // https://www.sparkfun.com/datasheets/BreakoutBoards/MAX7456.pdf
-        1: "rgba(255, 255, 255, 0)",
-        // white
-        2: "rgba(255,255,255, 1)",
-    },
 };
 
 FONT.pushChar = function (fontCharacterBytes, fontCharacterBits) {
@@ -197,36 +188,45 @@ FONT.openFontFile = function () {
 };
 
 /**
- * returns a canvas image with the character on it
+ * Gets a character bitmap as a data URI.
+ * (Uses only single quotes so it can be embedded within double quotes)
+ * @param {number} charAddress Character index into a FONT array.
+ * @returns {string} Data URI.
  */
-const drawCanvas = function (charAddress) {
-    const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d");
+const characterBitmapDataUri = function (charAddress) {
+    // Validate input
+    if (!(charAddress in FONT.data.characters)) {
+        console.log("charAddress", charAddress, " is not in ", FONT.data.characters.length);
+    }
 
-    const pixelSize = 1;
-    const width = pixelSize * FONT.constants.SIZES.CHAR_WIDTH;
-    const height = pixelSize * FONT.constants.SIZES.CHAR_HEIGHT;
+    // Create data URI prefix and SVG wrapper
+    const width = FONT.constants.SIZES.CHAR_WIDTH;
+    const height = FONT.constants.SIZES.CHAR_HEIGHT;
+    const lines = [
+        "data:image/svg+xml;utf8,",
+        `<svg width='${width}' height='${height}' xmlns='http://www.w3.org/2000/svg'>`,
+    ];
 
-    canvas.width = width;
-    canvas.height = height;
-
+    // Create a rect for each visible pixel
     for (let y = 0; y < height; y++) {
         for (let x = 0; x < width; x++) {
-            if (!(charAddress in FONT.data.characters)) {
-                console.log("charAddress", charAddress, " is not in ", FONT.data.characters.length);
+            const color = FONT.data.characters[charAddress][y * width + x];
+            const fill = color === 0 ? "black" : color === 2 ? "white" : null;
+            if (fill) {
+                lines.push(`<rect x='${x}' y='${y}' width='1' height='1' fill='${fill}'/>`);
             }
-            const v = FONT.data.characters[charAddress][y * width + x];
-            ctx.fillStyle = FONT.constants.COLORS[v];
-            ctx.fillRect(x, y, pixelSize, pixelSize);
         }
     }
-    return canvas;
+
+    // Close SVG wrapper and return data URI
+    lines.push("</svg>");
+    return lines.join("");
 };
 
 FONT.draw = function (charAddress) {
     let cached = FONT.data.character_image_urls[charAddress];
     if (!cached) {
-        cached = FONT.data.character_image_urls[charAddress] = drawCanvas(charAddress).toDataURL("image/png");
+        cached = FONT.data.character_image_urls[charAddress] = characterBitmapDataUri(charAddress);
     }
     return cached;
 };
@@ -3410,7 +3410,7 @@ osd.initialize = function (callback) {
                         x = OSD.data.preview[i][2];
                         y = OSD.data.preview[i][3];
                     }
-                    const $img = $(`<div class="char" draggable><img src=${FONT.draw(charCode)}></img></div>`)
+                    const $img = $(`<div class="char" draggable><img src="${FONT.draw(charCode)}"></img></div>`)
                         .on("mouseenter", OSD.GUI.preview.onMouseEnter)
                         .on("mouseleave", OSD.GUI.preview.onMouseLeave)
                         .on("dragover", OSD.GUI.preview.onDragOver)
