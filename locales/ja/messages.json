@@ -28,6 +28,9 @@
     "noticeTitle": {
         "message": "通知"
     },
+    "search": {
+        "message": "検索"
+    },
     "dontShowAgain": {
         "message": "今後表示しない"
     },
@@ -83,6 +86,10 @@
     "portsSelectPermissionBluetooth": {
         "message": "--- Bluetoothデバイスが見つかりません ---",
         "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access a Bluetooth device."
+    },
+    "portsSelectPermissionDFU": {
+        "message": "--- DFUデバイスが見つかりません ---",
+        "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access a DFU device."
     },
     "bluetoothConnected": {
         "message": "Bluetoothデバイスに接続: $1"
@@ -1093,6 +1100,12 @@
     "initialSetupInfoBuildConfig": {
         "message": "設定"
     },
+    "initialSetupInfoBuildDownload": {
+        "message": "ダウンロード"
+    },
+    "initialSetupInfoBuildFirmware": {
+        "message": "ファームウェア:"
+    },
     "initialSetupInfoBuildLog": {
         "message": "ログ"
     },
@@ -1104,6 +1117,9 @@
     },
     "initialSetupInfoBuildEmpty": {
         "message": "ローカルビルド - クラウド情報なし"
+    },
+    "initialSetupInfoBuildType": {
+        "message": "ビルドタイプ:"
     },
     "initialSetupInfoBuildLocal": {
         "message": "ローカルビルド"
@@ -2248,6 +2264,9 @@
     "receiverThrottleExpo": {
         "message": "スロットル Expo"
     },
+    "receiverThrottleHover": {
+        "message": "ホバーポイント"
+    },
     "receiverStickMin": {
         "message": "スティック 低"
     },
@@ -3167,6 +3186,9 @@
     },
     "escDshotDirectionDialog-SetDirectionHintSafety": {
         "message": "回転方向を設定するとモーターが回転します！"
+    },
+    "escDshotDirectionDialog-SettingsAutoSaved": {
+        "message": "選択時にモーター回転方向が保存されます"
     },
     "escDshotDirectionDialog-WrongProtocolText": {
         "message": "この機能はDSHOT対応ESCのみで動作します。<br \/>お使いのESC (electric speed controller) がDSHOTプロトコルに対応していることを確認し $t(tabMotorTesting.message) タブで変更してください。"
@@ -5888,6 +5910,14 @@
         "message": "日付と時刻 (RTC)",
         "description": "One of the elements of the OSD"
     },
+    "osdTextElementRtcDateTimeVariantFullDate": {
+        "message": "日時 [全表示]",
+        "description": "One of the variants of the RTC date and time element of the OSD"
+    },
+    "osdTextElementRtcDateTimeVariantShortDate": {
+        "message": "日時 [短表示]",
+        "description": "One of the variants of the RTC date and time element of the OSD"
+    },
     "osdDescElementRtcDateTime": {
         "message": "ハードウェアクロック 日付 \/ 時間"
     },
@@ -7554,5 +7584,13 @@
     "programmingFailedNotification": {
         "message": "FC のプログラムに失敗しました",
         "description": "Notification message when programming is unsuccessful"
+    },
+    "osdTextElementLidar": {
+        "message": "ソナー",
+        "description": "Displays distance from sonar sensor in cm"
+    },
+    "osdDescElementLidar": {
+        "message": "$t(osdTextElementLidar.message)",
+        "description": "Don't translate!!!"
     }
 }
