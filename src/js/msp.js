@@ -382,6 +382,21 @@ const MSP = {
 
         serial.send(bufferOut);
     },
+    // Helper function to create a unique key for request identification
+    _createRequestKey(code, data) {
+        if (!data || data.length === 0) {
+            return `${code}:empty`;
+        }
+
+        // Create a simple hash of the data
+        let hash = 0;
+        for (let i = 0; i < data.length; i++) {
+            hash = ((hash << 5) - hash + data[i]) & 0xffffffff;
+        }
+
+        return `${code}:${hash}`;
+    },
+
     send_message(code, data, callback_sent, callback_msp, doCallbackOnError) {
         if (code === undefined || !serial.connected || CONFIGURATOR.virtualMode) {
             if (callback_msp) {
@@ -390,11 +405,15 @@ const MSP = {
             return false;
         }
 
-        const isDuplicateRequest = this.callbacks.some((instance) => instance.code === code);
+        // Create unique key combining code and data
+        const requestKey = this._createRequestKey(code, data);
+        const isDuplicateRequest = this.callbacks.some((instance) => instance.requestKey === requestKey);
+
         const bufferOut = code <= 254 ? this.encode_message_v1(code, data) : this.encode_message_v2(code, data);
 
         const requestObj = {
             code,
+            requestKey, // Add the unique key to the request object
             requestBuffer: bufferOut,
             callback: callback_msp,
             callbackOnError: doCallbackOnError,
@@ -402,7 +421,7 @@ const MSP = {
             attempts: 0, // Initialize retry counter
         };
 
-        // Track only the first outstanding request for a given code
+        // Track only the first outstanding request for a given key
         if (!isDuplicateRequest) {
             this._setupTimeout(requestObj, bufferOut);
             this.callbacks.push(requestObj);
@@ -435,9 +454,15 @@ const MSP = {
 
     _getDynamicMaxRetries() {
         // Reduce retries when queue is getting full to prevent resource exhaustion
-        if (this.callbacks.length > 30) return 1; // Very aggressive when queue is nearly full
-        if (this.callbacks.length > 20) return 2; // Moderate reduction
-        if (this.callbacks.length > 10) return 3; // Slight reduction
+        if (this.callbacks.length > 30) {
+            return 1;
+        } // Very aggressive when queue is nearly full
+        if (this.callbacks.length > 20) {
+            return 2;
+        } // Moderate reduction
+        if (this.callbacks.length > 10) {
+            return 3;
+        } // Slight reduction
         return this.MAX_RETRIES; // Full retries when queue is healthy
     },
 
