@@ -388,10 +388,8 @@ const MSP = {
 
         const requestObj = this._createRequestObject(code, bufferOut, callback_msp, doCallbackOnError);
 
-        // Set up timeout only for new requests
-        if (!isDuplicateRequest) {
-            this._setupTimeout(requestObj, bufferOut);
-        }
+        // Always set up timeout for all requests to ensure cleanup
+        this._setupTimeout(requestObj, bufferOut);
 
         this.callbacks.push(requestObj);
 
@@ -447,11 +445,17 @@ const MSP = {
                 `QUEUE: ${this.callbacks.length} (${this.callbacks.map((e) => e.code)})`,
         );
 
+        // Clear the existing timer before retry
+        clearTimeout(requestObj.timer);
+
         serial.send(bufferOut, (_sendInfo) => {
             requestObj.stop = performance.now();
             const executionTime = Math.round(requestObj.stop - requestObj.start);
             this.timeout = Math.max(this.MIN_TIMEOUT, Math.min(executionTime, this.MAX_TIMEOUT));
         });
+
+        // Re-arm the timeout for retry attempts
+        this._setupTimeout(requestObj, bufferOut);
     },
 
     _shouldSendMessage(data, isDuplicateRequest) {
