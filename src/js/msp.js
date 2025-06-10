@@ -1,4 +1,3 @@
-import GUI from "./gui.js";
 import CONFIGURATOR from "./data_storage.js";
 import { serial } from "./serial.js";
 
@@ -58,10 +57,6 @@ const MSP = {
     packet_error: 0,
     unsupported: 0,
 
-    MIN_TIMEOUT: 200,
-    MAX_TIMEOUT: 2000,
-    timeout: 200,
-
     last_received_timestamp: null,
     listeners: [],
 
@@ -71,10 +66,10 @@ const MSP = {
     cli_output: [],
     cli_callback: null,
 
-    // Add retry configuration
+    // Simplified retry configuration
     MAX_RETRIES: 10,
     MAX_QUEUE_SIZE: 50,
-    MIN_RETRIES: 3, // Minimum retries when queue is healthy
+    TIMEOUT: 1000,
 
     read(readInfo) {
         if (CONFIGURATOR.virtualMode) {
@@ -413,12 +408,12 @@ const MSP = {
 
         const requestObj = {
             code,
-            requestKey, // Add the unique key to the request object
+            requestKey,
             requestBuffer: bufferOut,
             callback: callback_msp,
             callbackOnError: doCallbackOnError,
             start: performance.now(),
-            attempts: 0, // Initialize retry counter
+            attempts: 0,
         };
 
         // Track only the first outstanding request for a given key
@@ -429,16 +424,9 @@ const MSP = {
 
         // Send message if it has data or is a new request
         if (data || !isDuplicateRequest) {
-            // Simple adaptive timeout - decrease on success, increase on timeout
             serial.send(bufferOut, (sendInfo) => {
-                if (sendInfo.bytesSent === bufferOut.byteLength) {
-                    // Success: gradually decrease timeout for faster response
-                    if (this.timeout > this.MIN_TIMEOUT) {
-                        this.timeout = Math.max(this.MIN_TIMEOUT, this.timeout - 5);
-                    }
-                    if (callback_sent) {
-                        callback_sent();
-                    }
+                if (sendInfo.bytesSent === bufferOut.byteLength && callback_sent) {
+                    callback_sent();
                 }
             });
         }
@@ -449,86 +437,44 @@ const MSP = {
     _setupTimeout(requestObj, bufferOut) {
         requestObj.timer = setTimeout(() => {
             this._handleTimeout(requestObj, bufferOut);
-        }, this.timeout);
-    },
-
-    _getDynamicMaxRetries() {
-        // Reduce retries when queue is getting full to prevent resource exhaustion
-        if (this.callbacks.length > 30) {
-            return 1;
-        } // Very aggressive when queue is nearly full
-        if (this.callbacks.length > 20) {
-            return 2;
-        } // Moderate reduction
-        if (this.callbacks.length > 10) {
-            return 3;
-        } // Slight reduction
-        return this.MAX_RETRIES; // Full retries when queue is healthy
+        }, this.TIMEOUT);
     },
 
     _handleTimeout(requestObj, bufferOut) {
-        // Increase timeout on failure for better reliability
-        this.timeout = Math.min(this.MAX_TIMEOUT, this.timeout + 50);
-
         // Increment retry attempts
         requestObj.attempts++;
 
-        const dynamicMaxRetries = this._getDynamicMaxRetries();
-
         console.warn(
-            `MSP: data request timed-out: ${requestObj.code} ID: ${serial.connectionId} ` +
-                `TAB: ${GUI.active_tab} TIMEOUT: ${this.timeout} ` +
-                `QUEUE: ${this.callbacks.length}/${this.MAX_QUEUE_SIZE} (${this.callbacks.map((e) => e.code)}) ` +
-                `ATTEMPTS: ${requestObj.attempts}/${dynamicMaxRetries}`,
+            `MSP: data request timed-out: ${requestObj.code} ` +
+                `QUEUE: ${this.callbacks.length}/${this.MAX_QUEUE_SIZE} ` +
+                `ATTEMPTS: ${requestObj.attempts}/${this.MAX_RETRIES}`,
         );
 
         // Check if max retries exceeded OR queue is too large
-        if (requestObj.attempts >= dynamicMaxRetries || this.callbacks.length > this.MAX_QUEUE_SIZE) {
+        if (requestObj.attempts >= this.MAX_RETRIES || this.callbacks.length > this.MAX_QUEUE_SIZE) {
             const reason =
-                requestObj.attempts >= dynamicMaxRetries
-                    ? `max retries (${dynamicMaxRetries})`
-                    : `queue overflow (${this.callbacks.length}/${this.MAX_QUEUE_SIZE})`;
+                requestObj.attempts >= this.MAX_RETRIES ? `max retries (${this.MAX_RETRIES})` : `queue overflow`;
 
             console.error(`MSP: Request ${requestObj.code} exceeded ${reason}, giving up`);
-
-            // Remove from callbacks to prevent memory leak
             this._removeRequestFromCallbacks(requestObj);
 
-            // Call error callback if available
             if (requestObj.callbackOnError && requestObj.callback) {
                 requestObj.callback();
             }
-
-            return; // Stop retrying
+            return;
         }
 
         // Clear the existing timer before retry
         clearTimeout(requestObj.timer);
 
-        // Reset start time for this retry attempt
-        requestObj.start = performance.now();
-
         serial.send(bufferOut, (sendInfo) => {
             if (sendInfo.bytesSent === bufferOut.byteLength) {
-                // Successfully sent retry
-                requestObj.stop = performance.now();
-                const executionTime = Math.round(requestObj.stop - requestObj.start);
-                // Reset baseline for next retry
-                requestObj.start = requestObj.stop;
-                this.timeout = Math.max(this.MIN_TIMEOUT, Math.min(executionTime, this.MAX_TIMEOUT));
-
-                // Re-arm the timeout for retry attempts
-                this._setupTimeout(requestObj, bufferOut);
+                requestObj.timer = setTimeout(() => {
+                    this._handleTimeout(requestObj, bufferOut);
+                }, this.TIMEOUT);
             } else {
-                // Failed to send retry - remove request and handle error
-                console.error(
-                    `MSP: Failed to send retry for request ${requestObj.code}: ` +
-                        `sent ${sendInfo.bytesSent}/${bufferOut.byteLength} bytes`,
-                );
-
+                console.error(`MSP: Failed to send retry for request ${requestObj.code}`);
                 this._removeRequestFromCallbacks(requestObj);
-
-                // Call error callback if available
                 if (requestObj.callbackOnError && requestObj.callback) {
                     requestObj.callback();
                 }
