@@ -71,6 +71,9 @@ const MSP = {
     cli_output: [],
     cli_callback: null,
 
+    // Add retry configuration
+    MAX_RETRIES: 10,
+
     read(readInfo) {
         if (CONFIGURATOR.virtualMode) {
             return;
@@ -394,12 +397,14 @@ const MSP = {
             callback: callback_msp,
             callbackOnError: doCallbackOnError,
             start: performance.now(),
+            attempts: 0, // Initialize retry counter
         };
 
-        // Always set up timeout for all requests to ensure cleanup
-        this._setupTimeout(requestObj, bufferOut);
-
-        this.callbacks.push(requestObj);
+        // Track only the first outstanding request for a given code
+        if (!isDuplicateRequest) {
+            this._setupTimeout(requestObj, bufferOut);
+            this.callbacks.push(requestObj);
+        }
 
         // Send message if it has data or is a new request
         if (data || !isDuplicateRequest) {
@@ -425,20 +430,44 @@ const MSP = {
     },
 
     _handleTimeout(requestObj, bufferOut) {
+        // Increment retry attempts
+        requestObj.attempts++;
+
         console.warn(
             `MSP: data request timed-out: ${requestObj.code} ID: ${serial.connectionId} ` +
                 `TAB: ${GUI.active_tab} TIMEOUT: ${this.timeout} ` +
-                `QUEUE: ${this.callbacks.length} (${this.callbacks.map((e) => e.code)})`,
+                `QUEUE: ${this.callbacks.length} (${this.callbacks.map((e) => e.code)}) ` +
+                `ATTEMPTS: ${requestObj.attempts}/${this.MAX_RETRIES}`,
         );
+
+        // Check if max retries exceeded
+        if (requestObj.attempts >= this.MAX_RETRIES) {
+            console.error(`MSP: Request ${requestObj.code} exceeded max retries (${this.MAX_RETRIES}), giving up`);
+
+            // Remove from callbacks to prevent memory leak
+            this._removeRequestFromCallbacks(requestObj);
+
+            // Call error callback if available
+            if (requestObj.callbackOnError && requestObj.callback) {
+                requestObj.callback();
+            }
+
+            return; // Stop retrying
+        }
 
         // Clear the existing timer before retry
         clearTimeout(requestObj.timer);
+
+        // Reset start time for this retry attempt
+        requestObj.start = performance.now();
 
         serial.send(bufferOut, (sendInfo) => {
             if (sendInfo.bytesSent === bufferOut.byteLength) {
                 // Successfully sent retry
                 requestObj.stop = performance.now();
                 const executionTime = Math.round(requestObj.stop - requestObj.start);
+                // Reset baseline for next retry
+                requestObj.start = requestObj.stop;
                 this.timeout = Math.max(this.MIN_TIMEOUT, Math.min(executionTime, this.MAX_TIMEOUT));
 
                 // Re-arm the timeout for retry attempts
