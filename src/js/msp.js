@@ -434,14 +434,37 @@ const MSP = {
         // Clear the existing timer before retry
         clearTimeout(requestObj.timer);
 
-        serial.send(bufferOut, (_sendInfo) => {
-            requestObj.stop = performance.now();
-            const executionTime = Math.round(requestObj.stop - requestObj.start);
-            this.timeout = Math.max(this.MIN_TIMEOUT, Math.min(executionTime, this.MAX_TIMEOUT));
-        });
+        serial.send(bufferOut, (sendInfo) => {
+            if (sendInfo.bytesSent === bufferOut.byteLength) {
+                // Successfully sent retry
+                requestObj.stop = performance.now();
+                const executionTime = Math.round(requestObj.stop - requestObj.start);
+                this.timeout = Math.max(this.MIN_TIMEOUT, Math.min(executionTime, this.MAX_TIMEOUT));
 
-        // Re-arm the timeout for retry attempts
-        this._setupTimeout(requestObj, bufferOut);
+                // Re-arm the timeout for retry attempts
+                this._setupTimeout(requestObj, bufferOut);
+            } else {
+                // Failed to send retry - remove request and handle error
+                console.error(
+                    `MSP: Failed to send retry for request ${requestObj.code}: ` +
+                        `sent ${sendInfo.bytesSent}/${bufferOut.byteLength} bytes`,
+                );
+
+                this._removeRequestFromCallbacks(requestObj);
+
+                // Call error callback if available
+                if (requestObj.callbackOnError && requestObj.callback) {
+                    requestObj.callback();
+                }
+            }
+        });
+    },
+
+    _removeRequestFromCallbacks(requestObj) {
+        const index = this.callbacks.indexOf(requestObj);
+        if (index > -1) {
+            this.callbacks.splice(index, 1);
+        }
     },
 
     /**
