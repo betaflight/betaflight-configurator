@@ -73,6 +73,8 @@ const MSP = {
 
     // Add retry configuration
     MAX_RETRIES: 10,
+    MAX_QUEUE_SIZE: 50,
+    MIN_RETRIES: 3, // Minimum retries when queue is healthy
 
     read(readInfo) {
         if (CONFIGURATOR.virtualMode) {
@@ -431,6 +433,14 @@ const MSP = {
         }, this.timeout);
     },
 
+    _getDynamicMaxRetries() {
+        // Reduce retries when queue is getting full to prevent resource exhaustion
+        if (this.callbacks.length > 30) return 1; // Very aggressive when queue is nearly full
+        if (this.callbacks.length > 20) return 2; // Moderate reduction
+        if (this.callbacks.length > 10) return 3; // Slight reduction
+        return this.MAX_RETRIES; // Full retries when queue is healthy
+    },
+
     _handleTimeout(requestObj, bufferOut) {
         // Increase timeout on failure for better reliability
         this.timeout = Math.min(this.MAX_TIMEOUT, this.timeout + 50);
@@ -438,16 +448,23 @@ const MSP = {
         // Increment retry attempts
         requestObj.attempts++;
 
+        const dynamicMaxRetries = this._getDynamicMaxRetries();
+
         console.warn(
             `MSP: data request timed-out: ${requestObj.code} ID: ${serial.connectionId} ` +
                 `TAB: ${GUI.active_tab} TIMEOUT: ${this.timeout} ` +
-                `QUEUE: ${this.callbacks.length} (${this.callbacks.map((e) => e.code)}) ` +
-                `ATTEMPTS: ${requestObj.attempts}/${this.MAX_RETRIES}`,
+                `QUEUE: ${this.callbacks.length}/${this.MAX_QUEUE_SIZE} (${this.callbacks.map((e) => e.code)}) ` +
+                `ATTEMPTS: ${requestObj.attempts}/${dynamicMaxRetries}`,
         );
 
-        // Check if max retries exceeded
-        if (requestObj.attempts >= this.MAX_RETRIES) {
-            console.error(`MSP: Request ${requestObj.code} exceeded max retries (${this.MAX_RETRIES}), giving up`);
+        // Check if max retries exceeded OR queue is too large
+        if (requestObj.attempts >= dynamicMaxRetries || this.callbacks.length > this.MAX_QUEUE_SIZE) {
+            const reason =
+                requestObj.attempts >= dynamicMaxRetries
+                    ? `max retries (${dynamicMaxRetries})`
+                    : `queue overflow (${this.callbacks.length}/${this.MAX_QUEUE_SIZE})`;
+
+            console.error(`MSP: Request ${requestObj.code} exceeded ${reason}, giving up`);
 
             // Remove from callbacks to prevent memory leak
             this._removeRequestFromCallbacks(requestObj);
