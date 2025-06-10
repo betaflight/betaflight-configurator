@@ -385,8 +385,8 @@ const MSP = {
 
         // Create a simple hash of the data
         let hash = 0;
-        for (let i = 0; i < data.length; i++) {
-            hash = ((hash << 5) - hash + data[i]) & 0xffffffff;
+        for (const byte of data) {
+            hash = ((hash << 5) - hash + byte) & 0xffffffff;
         }
 
         return `${code}:${hash}`;
