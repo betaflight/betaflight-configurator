@@ -378,15 +378,23 @@ const MSP = {
         serial.send(bufferOut);
     },
     send_message(code, data, callback_sent, callback_msp, doCallbackOnError) {
-        // Early validation
-        if (!this._validateSendMessage(code, callback_msp)) {
+        if (code === undefined || !serial.connected || CONFIGURATOR.virtualMode) {
+            if (callback_msp) {
+                callback_msp();
+            }
             return false;
         }
 
-        const isDuplicateRequest = this._isDuplicateRequest(code);
-        const bufferOut = this._encodeMessage(code, data);
+        const isDuplicateRequest = this.callbacks.some((instance) => instance.code === code);
+        const bufferOut = code <= 254 ? this.encode_message_v1(code, data) : this.encode_message_v2(code, data);
 
-        const requestObj = this._createRequestObject(code, bufferOut, callback_msp, doCallbackOnError);
+        const requestObj = {
+            code,
+            requestBuffer: bufferOut,
+            callback: callback_msp,
+            callbackOnError: doCallbackOnError,
+            start: performance.now(),
+        };
 
         // Always set up timeout for all requests to ensure cleanup
         this._setupTimeout(requestObj, bufferOut);
@@ -394,42 +402,20 @@ const MSP = {
         this.callbacks.push(requestObj);
 
         // Send message if it has data or is a new request
-        if (this._shouldSendMessage(data, isDuplicateRequest)) {
-            this._sendBuffer(bufferOut, callback_sent);
-        }
-
-        return true;
-    },
-
-    _validateSendMessage(code, callback_msp) {
-        const connected = serial.connected;
-
-        if (code === undefined || !connected || CONFIGURATOR.virtualMode) {
-            if (callback_msp) {
-                callback_msp();
+        if (data || !isDuplicateRequest) {
+            // Optimize timeout for frequent requests
+            if (this.timeout > this.MIN_TIMEOUT) {
+                this.timeout--;
             }
-            return false;
+
+            serial.send(bufferOut, (sendInfo) => {
+                if (sendInfo.bytesSent === bufferOut.byteLength && callback_sent) {
+                    callback_sent();
+                }
+            });
         }
 
         return true;
-    },
-
-    _isDuplicateRequest(code) {
-        return this.callbacks.some((instance) => instance.code === code);
-    },
-
-    _encodeMessage(code, data) {
-        return code <= 254 ? this.encode_message_v1(code, data) : this.encode_message_v2(code, data);
-    },
-
-    _createRequestObject(code, bufferOut, callback_msp, doCallbackOnError) {
-        return {
-            code,
-            requestBuffer: bufferOut,
-            callback: callback_msp,
-            callbackOnError: doCallbackOnError,
-            start: performance.now(),
-        };
     },
 
     _setupTimeout(requestObj, bufferOut) {
@@ -456,23 +442,6 @@ const MSP = {
 
         // Re-arm the timeout for retry attempts
         this._setupTimeout(requestObj, bufferOut);
-    },
-
-    _shouldSendMessage(data, isDuplicateRequest) {
-        return data || !isDuplicateRequest;
-    },
-
-    _sendBuffer(bufferOut, callback_sent) {
-        // Optimize timeout for frequent requests
-        if (this.timeout > this.MIN_TIMEOUT) {
-            this.timeout--;
-        }
-
-        serial.send(bufferOut, (sendInfo) => {
-            if (sendInfo.bytesSent === bufferOut.byteLength && callback_sent) {
-                callback_sent();
-            }
-        });
     },
 
     /**
