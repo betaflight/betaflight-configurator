@@ -408,14 +408,16 @@ const MSP = {
 
         // Send message if it has data or is a new request
         if (data || !isDuplicateRequest) {
-            // Optimize timeout for frequent requests
-            if (this.timeout > this.MIN_TIMEOUT) {
-                this.timeout--;
-            }
-
+            // Simple adaptive timeout - decrease on success, increase on timeout
             serial.send(bufferOut, (sendInfo) => {
-                if (sendInfo.bytesSent === bufferOut.byteLength && callback_sent) {
-                    callback_sent();
+                if (sendInfo.bytesSent === bufferOut.byteLength) {
+                    // Success: gradually decrease timeout for faster response
+                    if (this.timeout > this.MIN_TIMEOUT) {
+                        this.timeout = Math.max(this.MIN_TIMEOUT, this.timeout - 5);
+                    }
+                    if (callback_sent) {
+                        callback_sent();
+                    }
                 }
             });
         }
@@ -430,6 +432,9 @@ const MSP = {
     },
 
     _handleTimeout(requestObj, bufferOut) {
+        // Increase timeout on failure for better reliability
+        this.timeout = Math.min(this.MAX_TIMEOUT, this.timeout + 50);
+
         // Increment retry attempts
         requestObj.attempts++;
 
