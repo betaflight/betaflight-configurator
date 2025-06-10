@@ -363,8 +363,9 @@ class WebBluetooth extends EventTarget {
                 await this.lastWrite;
             }
             this.lastWrite = this.writeCharacteristic.writeValue(dataBuffer);
+            await this.lastWrite;
             this.bytesSent += data.byteLength;
-
+ 
             if (cb) {
                 cb({
                     error: null,
