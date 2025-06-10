@@ -365,11 +365,11 @@ class WebBluetooth extends EventTarget {
             this.lastWrite = this.writeCharacteristic.writeValue(dataBuffer);
             await this.lastWrite;
             this.bytesSent += data.byteLength;
- 
+
             if (cb) {
                 cb({
                     error: null,
-                    bytesSent: this.bytesSent,
+                    bytesSent: data.byteLength,
                 });
             }
         } catch (e) {

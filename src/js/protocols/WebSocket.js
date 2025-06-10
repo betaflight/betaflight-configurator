@@ -112,11 +112,11 @@ class Websocket extends EventTarget {
             try {
                 this.ws.send(data);
                 this.bytesSent += data.byteLength;
-                    
+
                 if (cb) {
                     cb({
                         error: null,
-                        bytesSent: this.bytesSent,
+                        bytesSent: data.byteLength,
                     });
                 }
             } catch (e) {
