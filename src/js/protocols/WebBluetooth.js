@@ -343,24 +343,43 @@ class WebBluetooth extends EventTarget {
         }
     }
 
-    async send(data) {
+    async send(data, cb) {
         if (!this.writeCharacteristic) {
+            if (cb) {
+                cb({
+                    error: "No write characteristic available",
+                    bytesSent: 0,
+                });
+            }
+            console.error(`${this.logHead} No write characteristic available`);
             return;
         }
 
         // There is no writable stream in the bluetooth API
-        this.bytesSent += data.byteLength;
-
         const dataBuffer = new Uint8Array(data);
 
         try {
             if (this.lastWrite) {
                 await this.lastWrite;
             }
-        } catch (error) {
-            console.error(error);
+            this.lastWrite = this.writeCharacteristic.writeValue(dataBuffer);
+            this.bytesSent += data.byteLength;
+
+            if (cb) {
+                cb({
+                    error: null,
+                    bytesSent: this.bytesSent,
+                });
+            }
+        } catch (e) {
+            console.error(`${this.logHead} Failed to send data:`, e);
+            if (cb) {
+                cb({
+                    error: e,
+                    bytesSent: 0,
+                });
+            }
         }
-        this.lastWrite = this.writeCharacteristic.writeValue(dataBuffer);
 
         return {
             bytesSent: data.byteLength,
