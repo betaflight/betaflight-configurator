@@ -378,6 +378,32 @@ const MSP = {
         serial.send(bufferOut);
     },
     send_message(code, data, callback_sent, callback_msp, doCallbackOnError) {
+        // Early validation
+        if (!this._validateSendMessage(code, callback_msp)) {
+            return false;
+        }
+
+        const isDuplicateRequest = this._isDuplicateRequest(code);
+        const bufferOut = this._encodeMessage(code, data);
+
+        const requestObj = this._createRequestObject(code, bufferOut, callback_msp, doCallbackOnError);
+
+        // Set up timeout only for new requests
+        if (!isDuplicateRequest) {
+            this._setupTimeout(requestObj, bufferOut);
+        }
+
+        this.callbacks.push(requestObj);
+
+        // Send message if it has data or is a new request
+        if (this._shouldSendMessage(data, isDuplicateRequest)) {
+            this._sendBuffer(bufferOut, callback_sent);
+        }
+
+        return true;
+    },
+
+    _validateSendMessage(code, callback_msp) {
         const connected = serial.connected;
 
         if (code === undefined || !connected || CONFIGURATOR.virtualMode) {
@@ -387,58 +413,62 @@ const MSP = {
             return false;
         }
 
-        let requestExists = false;
-        for (const instance of this.callbacks) {
-            if (instance.code === code) {
-                requestExists = true;
+        return true;
+    },
 
-                break;
-            }
-        }
+    _isDuplicateRequest(code) {
+        return this.callbacks.some((instance) => instance.code === code);
+    },
 
-        const bufferOut = code <= 254 ? this.encode_message_v1(code, data) : this.encode_message_v2(code, data);
+    _encodeMessage(code, data) {
+        return code <= 254 ? this.encode_message_v1(code, data) : this.encode_message_v2(code, data);
+    },
 
-        const obj = {
-            code: code,
+    _createRequestObject(code, bufferOut, callback_msp, doCallbackOnError) {
+        return {
+            code,
             requestBuffer: bufferOut,
             callback: callback_msp,
             callbackOnError: doCallbackOnError,
             start: performance.now(),
         };
+    },
 
-        if (!requestExists) {
-            obj.timer = setTimeout(() => {
-                console.warn(
-                    `MSP: data request timed-out: ${code} ID: ${serial.connectionId} TAB: ${GUI.active_tab} TIMEOUT: ${
-                        this.timeout
-                    } QUEUE: ${this.callbacks.length} (${this.callbacks.map((e) => e.code)})`,
-                );
-                serial.send(bufferOut, (_sendInfo) => {
-                    obj.stop = performance.now();
-                    const executionTime = Math.round(obj.stop - obj.start);
-                    this.timeout = Math.max(this.MIN_TIMEOUT, Math.min(executionTime, this.MAX_TIMEOUT));
-                });
-            }, this.timeout);
+    _setupTimeout(requestObj, bufferOut) {
+        requestObj.timer = setTimeout(() => {
+            this._handleTimeout(requestObj, bufferOut);
+        }, this.timeout);
+    },
+
+    _handleTimeout(requestObj, bufferOut) {
+        console.warn(
+            `MSP: data request timed-out: ${requestObj.code} ID: ${serial.connectionId} ` +
+                `TAB: ${GUI.active_tab} TIMEOUT: ${this.timeout} ` +
+                `QUEUE: ${this.callbacks.length} (${this.callbacks.map((e) => e.code)})`,
+        );
+
+        serial.send(bufferOut, (_sendInfo) => {
+            requestObj.stop = performance.now();
+            const executionTime = Math.round(requestObj.stop - requestObj.start);
+            this.timeout = Math.max(this.MIN_TIMEOUT, Math.min(executionTime, this.MAX_TIMEOUT));
+        });
+    },
+
+    _shouldSendMessage(data, isDuplicateRequest) {
+        return data || !isDuplicateRequest;
+    },
+
+    _sendBuffer(bufferOut, callback_sent) {
+        // Optimize timeout for frequent requests
+        if (this.timeout > this.MIN_TIMEOUT) {
+            this.timeout--;
         }
 
-        this.callbacks.push(obj);
-
-        // always send messages with data payload (even when there is a message already in the queue)
-        if (data || !requestExists) {
-            if (this.timeout > this.MIN_TIMEOUT) {
-                this.timeout--;
+        serial.send(bufferOut, (sendInfo) => {
+            if (sendInfo.bytesSent === bufferOut.byteLength && callback_sent) {
+                callback_sent();
             }
-
-            serial.send(bufferOut, (sendInfo) => {
-                if (sendInfo.bytesSent === bufferOut.byteLength) {
-                    if (callback_sent) {
-                        callback_sent();
-                    }
-                }
-            });
-        }
-
-        return true;
+        });
     },
 
     /**
