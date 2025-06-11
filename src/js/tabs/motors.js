@@ -709,7 +709,7 @@ motors.initialize = async function (callback) {
                 protocol !== "DISABLED" &&
                 FC.CONFIG.buildOptions.length &&
                 !FC.CONFIG.buildOptions.some((option) => protocol.includes(option.substring(4)))
-                    ? "disabled"
+                    ? 'disabled="disabled"'
                     : "";
             const option = `<option value="${index + 1}" ${isDisabled}>${protocol}</option>`;
             escProtocolElement.append(option);
@@ -1017,7 +1017,7 @@ motors.initialize = async function (callback) {
             $("div.sliders input:not(:disabled, :last)").val(val);
             const valuesList = $("div.values li:not(:last)");
             valuesList.slice(0, self.numberOfValidOutputs).text(val);
-            $("div.sliders input:not(:last):first").trigger("input");
+            $("div.sliders input:not(:disabled):not(:last)").first().trigger("input");
         }
 
         $("div.sliders input").each(function () {
@@ -1382,8 +1382,8 @@ motors.scrollSlider = function (slider, e) {
     }
 
     // Handle both jQuery wrapped events and native events
-    const deltaY = e.originalEvent ? e.originalEvent.deltaY : e.deltaY;
-    const altKey = e.originalEvent ? e.originalEvent.altKey : e.altKey;
+    const orig = e.originalEvent || e;
+    const { deltaY, altKey } = orig;
 
     if (!(deltaY && altKey)) {
         return;
