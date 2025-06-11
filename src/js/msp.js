@@ -465,9 +465,6 @@ const MSP = {
             return;
         }
 
-        // Clear the existing timer before retry
-        clearTimeout(requestObj.timer);
-
         serial.send(bufferOut, (sendInfo) => {
             if (sendInfo.bytesSent === bufferOut.byteLength) {
                 requestObj.timer = setTimeout(() => {
@@ -484,6 +481,11 @@ const MSP = {
     },
 
     _removeRequestFromCallbacks(requestObj) {
+        // Clear the timer if it exists
+        if (requestObj.timer) {
+            clearTimeout(requestObj.timer);
+        }
+
         const index = this.callbacks.indexOf(requestObj);
         if (index > -1) {
             this.callbacks.splice(index, 1);
