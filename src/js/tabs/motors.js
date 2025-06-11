@@ -705,7 +705,12 @@ motors.initialize = async function (callback) {
         const escProtocolElement = $("select.escprotocol");
 
         escProtocols.forEach((protocol, index) => {
-            const isDisabled = protocol !== "DISABLED" && FC.CONFIG.buildOptions.length && !FC.CONFIG.buildOptions.some(option => protocol.includes(option.substring(4))) ? "disabled" : "";
+            const isDisabled =
+                protocol !== "DISABLED" &&
+                FC.CONFIG.buildOptions.length &&
+                !FC.CONFIG.buildOptions.some((option) => protocol.includes(option.substring(4)))
+                    ? "disabled"
+                    : "";
             const option = `<option value="${index + 1}" ${isDisabled}>${protocol}</option>`;
             escProtocolElement.append(option);
         });
@@ -1003,20 +1008,34 @@ motors.initialize = async function (callback) {
             }
         });
 
-        $("div.sliders input:not(.master)").on("input wheel", function (e) {
-            self.scrollSlider($(this), e);
-        });
+        function handleWheelEvent(slider, e) {
+            self.scrollSlider(slider, e);
+        }
 
-        $("div.sliders input.master").on("input", function () {
-            const val = $(this).val();
-
+        function handleInputEvent(slider) {
+            const val = slider.val();
             $("div.sliders input:not(:disabled, :last)").val(val);
-            $("div.values li:not(:last)").slice(0, self.numberOfValidOutputs).text(val);
+            const valuesList = $("div.values li:not(:last)");
+            valuesList.slice(0, self.numberOfValidOutputs).text(val);
             $("div.sliders input:not(:last):first").trigger("input");
-        });
+        }
 
-        $("div.sliders input.master").on("input wheel", function (e) {
-            self.scrollSlider($(this), e);
+        $("div.sliders input").each(function () {
+            const slider = $(this);
+
+            this.addEventListener(
+                "wheel",
+                function (e) {
+                    handleWheelEvent($(this), e);
+                },
+                { passive: false },
+            );
+
+            if (slider.hasClass("master")) {
+                slider.on("input", function () {
+                    handleInputEvent($(this));
+                });
+            }
         });
 
         // check if motors are already spinning
@@ -1362,14 +1381,18 @@ motors.scrollSlider = function (slider, e) {
         return;
     }
 
-    if (!(e.originalEvent?.deltaY && e.originalEvent?.altKey)) {
+    // Handle both jQuery wrapped events and native events
+    const deltaY = e.originalEvent ? e.originalEvent.deltaY : e.deltaY;
+    const altKey = e.originalEvent ? e.originalEvent.altKey : e.altKey;
+
+    if (!(deltaY && altKey)) {
         return;
     }
 
     e.preventDefault();
 
     const step = 25;
-    const delta = e.originalEvent.deltaY > 0 ? -step : step;
+    const delta = deltaY > 0 ? -step : step;
     const val = parseInt(slider.val()) + delta;
     const roundedVal = Math.round(val / step) * step;
     slider.val(roundedVal);
