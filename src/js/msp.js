@@ -447,6 +447,7 @@ const MSP = {
         console.warn(
             `MSP: data request timed-out: ${requestObj.code} ` +
                 `QUEUE: ${this.callbacks.length}/${this.MAX_QUEUE_SIZE} ` +
+                `(${this.callbacks.map((e) => e.code)}) ` +
                 `ATTEMPTS: ${requestObj.attempts}/${this.MAX_RETRIES}`,
         );
 
