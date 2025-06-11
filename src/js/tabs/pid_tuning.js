@@ -172,6 +172,7 @@ pid_tuning.initialize = function (callback) {
 
         const antiGravitySwitch = $("#antiGravitySwitch");
         const antiGravityGain = $('.antigravity input[name="itermAcceleratorGain"]');
+        const levelAngleLimit = $('.antigravity input[name="angleLimit"]');
 
         $('.pid_filter select[name="dtermLowpassType"]').val(FC.FILTER_CONFIG.dterm_lowpass_type);
 
@@ -189,6 +190,11 @@ pid_tuning.initialize = function (callback) {
 
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
             antiGravityGain.attr({ min: "0.1", max: "25.0", step: "0.1" });
+            levelAngleLimit.attr({ min: "0", max: "85", step: "1" });
+        }
+
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+            levelAngleLimit.attr({ min: "0", max: "80", step: "1" });
         }
 
         antiGravitySwitch.on("change", function () {
