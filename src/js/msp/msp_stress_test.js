@@ -112,7 +112,7 @@ export class MSPStressTest {
      * Test 1: Queue Flooding - Send many requests quickly to test queue limits
      */
     async testQueueFlooding() {
-        const requestCount = 60; // More than default MAX_QUEUE_SIZE
+        const requestCount = 110; // More than default MAX_QUEUE_SIZE
         const promises = [];
 
         console.log(`  Flooding queue with ${requestCount} requests...`);
@@ -322,7 +322,7 @@ export class MSPStressTest {
     async testQueueOverflow() {
         console.log("  Testing queue overflow handling...");
 
-        const maxQueue = this.msp.MAX_QUEUE_SIZE || 50;
+        const maxQueue = this.msp.MAX_QUEUE_SIZE || 100;
         const overflowCount = maxQueue + 10;
 
         const promises = [];

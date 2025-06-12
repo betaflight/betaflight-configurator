@@ -29,7 +29,7 @@ export class MSPQueueMonitor {
         };
 
         this.thresholds = {
-            maxQueueSize: Math.floor((this.msp.MAX_QUEUE_SIZE || 50) * 0.8), // Alert when queue > 80% of MAX_QUEUE_SIZE
+            maxQueueSize: Math.floor((this.msp.MAX_QUEUE_SIZE || 100) * 0.8), // Alert when queue > 80% of MAX_QUEUE_SIZE
             maxAvgResponseTime: 2000, // Alert when avg response > 2s
             maxTimeoutRate: 0.1, // Alert when timeout rate > 10%
             memoryLeakThreshold: 100, // Alert when callbacks grow beyond expected
@@ -250,7 +250,7 @@ export class MSPQueueMonitor {
         return {
             isMonitoring: this.isMonitoring,
             currentQueueSize: this.msp.callbacks.length,
-            maxQueueSize: this.msp.MAX_QUEUE_SIZE || 50,
+            maxQueueSize: this.msp.MAX_QUEUE_SIZE || 100,
             metrics: { ...this.metrics },
             alerts: { ...this.alerts },
             queueContents: this.msp.callbacks.map((req) => ({
@@ -463,7 +463,7 @@ export class MSPQueueMonitor {
 
         // Deduct for queue size issues
         const currentQueueSize = this.currentQueueSize || (this.msp.callbacks?.length ?? 0);
-        const queueRatio = currentQueueSize / (this.msp.MAX_QUEUE_SIZE || 50);
+        const queueRatio = currentQueueSize / (this.msp.MAX_QUEUE_SIZE || 100);
         if (queueRatio > 0.8) {
             score -= 20;
         } else if (queueRatio > 0.6) {
@@ -581,7 +581,7 @@ export class MSPQueueMonitor {
     setNormalThresholds() {
         console.log("🔧 Resetting to normal thresholds...");
         this.thresholds = {
-            maxQueueSize: Math.floor((this.msp.MAX_QUEUE_SIZE || 50) * 0.8), // Alert when queue > 80% of MAX_QUEUE_SIZE
+            maxQueueSize: Math.floor((this.msp.MAX_QUEUE_SIZE || 100) * 0.8), // Alert when queue > 80% of MAX_QUEUE_SIZE
             maxAvgResponseTime: 2000, // Alert when avg response > 2s
             maxTimeoutRate: 0.1, // Alert when timeout rate > 10%
             memoryLeakThreshold: 100, // Alert when callbacks grow beyond expected
