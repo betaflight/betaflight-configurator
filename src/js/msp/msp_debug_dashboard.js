@@ -70,6 +70,9 @@ export class MSPDebugDashboard {
                 <!-- Alerts Section -->
                 <div class="alerts-section">
                     <h4>🚨 Alerts</h4>
+                    <div class="alerts-header">
+                        <button id="clear-alerts" style="float: right; padding: 2px 6px; font-size: 10px; background: #666; color: white; border: none; border-radius: 2px; cursor: pointer;">Clear Alerts</button>
+                    </div>
                     <div id="alerts-container" class="alerts-container">
                         <div class="no-alerts">No active alerts</div>
                     </div>
@@ -88,7 +91,7 @@ export class MSPDebugDashboard {
                 <!-- Live Chart -->
                 <div class="chart-section">
                     <h4>📈 Live Metrics</h4>
-                    <canvas id="msp-metrics-chart" width="400" height="200"></canvas>
+                    <canvas id="msp-metrics-chart"></canvas>
                 </div>
                 
                 <!-- Request Details -->
@@ -304,6 +307,11 @@ export class MSPDebugDashboard {
                 border-bottom: none;
             }
             
+            .queue-item-empty {
+                opacity: 0.3;
+                font-style: italic;
+            }
+            
             .test-results {
                 background: #2a2a2a;
                 padding: 10px;
@@ -344,6 +352,7 @@ export class MSPDebugDashboard {
                 height: 150px;
                 background: #2a2a2a;
                 border-radius: 3px;
+                display: block;
             }
             
             .test-result-item {
@@ -421,6 +430,8 @@ export class MSPDebugDashboard {
                 this.runStressTest();
             } else if (e.target.id === "msp-clear-metrics") {
                 this.clearMetrics();
+            } else if (e.target.id === "clear-alerts") {
+                this.clearAlerts();
             } else if (e.target.id === "msp-close-dashboard") {
                 this.hide();
             } else if (e.target.id === "analyze-queue") {
@@ -442,6 +453,14 @@ export class MSPDebugDashboard {
         document.addEventListener("keydown", (e) => {
             if (e.ctrlKey && e.shiftKey && e.key === "M") {
                 this.toggle();
+            }
+        });
+
+        // Handle window resize to redraw canvas with correct dimensions
+        window.addEventListener("resize", () => {
+            if (this.isVisible) {
+                // Delay redraw to ensure layout is updated
+                setTimeout(() => this.drawChart(), 100);
             }
         });
     }
@@ -607,6 +626,13 @@ export class MSPDebugDashboard {
     }
 
     /**
+     * Clear alerts only
+     */
+    clearAlerts() {
+        mspQueueMonitor.clearAlerts();
+    }
+
+    /**
      * Update display with current status
      */
     updateDisplay(status = null) {
@@ -752,23 +778,37 @@ export class MSPDebugDashboard {
         const container = document.getElementById("queue-contents");
         if (!container) return;
 
-        if (!queueContents || queueContents.length === 0) {
-            container.innerHTML = '<div style="text-align: center; color: #888; padding: 20px;">Queue is empty</div>';
-            return;
+        // Always show exactly 5 slots to prevent layout shifts
+        const maxSlots = 5;
+        const items = queueContents || [];
+        const slotsHtml = [];
+
+        // Add actual queue items
+        for (let i = 0; i < maxSlots; i++) {
+            if (i < items.length) {
+                const item = items[i];
+                slotsHtml.push(`
+                    <div class="queue-item">
+                        <span>Code: ${item.code}</span>
+                        <span>Age: ${Math.round(item.age)}ms</span>
+                        <span>Attempts: ${item.attempts}</span>
+                        <span style="color: ${item.hasTimer ? "#00ff00" : "#ff4444"}">${item.hasTimer ? "✓" : "✗"}</span>
+                    </div>
+                `);
+            } else {
+                // Add empty slot placeholder
+                slotsHtml.push(`
+                    <div class="queue-item queue-item-empty">
+                        <span style="color: #555;">—</span>
+                        <span style="color: #555;">—</span>
+                        <span style="color: #555;">—</span>
+                        <span style="color: #555;">—</span>
+                    </div>
+                `);
+            }
         }
 
-        container.innerHTML = queueContents
-            .map(
-                (item) => `
-            <div class="queue-item">
-                <span>Code: ${item.code}</span>
-                <span>Age: ${Math.round(item.age)}ms</span>
-                <span>Attempts: ${item.attempts}</span>
-                <span style="color: ${item.hasTimer ? "#00ff00" : "#ff4444"}">${item.hasTimer ? "✓" : "✗"}</span>
-            </div>
-        `,
-            )
-            .join("");
+        container.innerHTML = slotsHtml.join("");
     }
 
     /**
@@ -805,8 +845,28 @@ export class MSPDebugDashboard {
         if (!canvas) return;
 
         const ctx = canvas.getContext("2d");
-        const width = canvas.width;
-        const height = canvas.height;
+
+        // Get the display size (CSS pixels)
+        const rect = canvas.getBoundingClientRect();
+        const displayWidth = rect.width;
+        const displayHeight = rect.height;
+
+        // Get the device pixel ratio, falling back to 1
+        const devicePixelRatio = window.devicePixelRatio || 1;
+
+        // Set the internal canvas size to actual pixels for Hi-DPI displays
+        canvas.width = displayWidth * devicePixelRatio;
+        canvas.height = displayHeight * devicePixelRatio;
+
+        // Scale the canvas back down using CSS
+        canvas.style.width = `${displayWidth  }px`;
+        canvas.style.height = `${displayHeight  }px`;
+
+        // Scale the drawing context so everything draws at the correct size
+        ctx.scale(devicePixelRatio, devicePixelRatio);
+
+        const width = displayWidth;
+        const height = displayHeight;
 
         // Clear canvas
         ctx.fillStyle = "#2a2a2a";
@@ -834,7 +894,7 @@ export class MSPDebugDashboard {
 
         ctx.stroke();
 
-        // Draw labels
+        // Draw labels with proper font scaling
         ctx.fillStyle = "#ffffff";
         ctx.font = "10px monospace";
         ctx.fillText("Queue Size", 5, 15);
@@ -1010,9 +1070,16 @@ window.MSPDebug = {
     startMonitoring: () => mspQueueMonitor.startMonitoring(),
     stopMonitoring: () => mspQueueMonitor.stopMonitoring(),
     runTests: () => mspStressTest.runStressTestSuite(),
+    runFullSuite: () => mspStressTest.runStressTestSuite(),
     analyze: () => mspQueueMonitor.analyzeQueue(),
     report: () => mspQueueMonitor.generateReport(),
     showTestDetails: (index) => mspDebugDashboard.showTestDetails(index),
+
+    // Individual test methods
+    runTest: (testName) => mspStressTest.runSpecificTest(testName),
+    quickHealthCheck: () => window.MSPTestRunner.quickHealthCheck(),
+    stressScenario: (scenario) => window.MSPTestRunner.stressScenario(scenario),
+    getStatus: () => mspQueueMonitor.getStatus(),
 
     // Alert testing methods
     triggerTestAlerts: () => mspQueueMonitor.triggerTestAlerts(),
