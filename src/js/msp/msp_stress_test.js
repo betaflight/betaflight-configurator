@@ -92,10 +92,10 @@ export class MSPStressTest {
         }
 
         this.monitor.stopMonitoring();
-        this.monitor.destroy(); // Clean up MSP method patches and restore original behavior
         this.testResults = results;
-
         const report = this.generateTestReport(results);
+        // Now it’s safe to tear the monitor down
+        this.monitor.destroy();
         console.log("\n📊 Stress Test Suite Complete");
         console.log(report.summary);
 
