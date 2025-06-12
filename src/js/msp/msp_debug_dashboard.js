@@ -946,7 +946,7 @@ export class MSPDebugDashboard {
             <div><strong>By Code:</strong></div>
             <div style="margin-left: 10px;">
                 ${Object.entries(analysis.byCode)
-        .map(([code, count]) => `Code ${code}: ${count}`)
+        .map(([code, count]) => `Code ${this.escapeHtml(String(code))}: ${count}`)
         .join("<br>")}
             </div>
             ${
@@ -954,7 +954,7 @@ export class MSPDebugDashboard {
         ? `
                 <div><strong>Issues:</strong></div>
                 <div style="margin-left: 10px; color: #ff4444;">
-                    ${analysis.potentialIssues.join("<br>")}
+                    ${analysis.potentialIssues.map((p) => this.escapeHtml(String(p))).join("<br>")}
                 </div>
             `
         : ""
