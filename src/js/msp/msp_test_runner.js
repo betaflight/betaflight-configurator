@@ -20,13 +20,22 @@ import { mspStressTest } from "./msp_stress_test.js";
 import { mspDebugDashboard } from "./msp_debug_dashboard.js";
 
 export const MSPTestRunner = {
+    // Store the listener function so it can be removed later
+    _quickMonitorListener: null,
+
     /**
      * Start quick monitoring with console output
      */
     startQuickMonitor() {
         console.log("🚀 Starting MSP Quick Monitor...");
 
-        mspQueueMonitor.addListener((status) => {
+        // Remove any existing listener first
+        if (this._quickMonitorListener) {
+            mspQueueMonitor.removeListener(this._quickMonitorListener);
+        }
+
+        // Define the listener function so it can be referenced for removal
+        this._quickMonitorListener = (status) => {
             if (status.alerts && Object.values(status.alerts).some((alert) => alert)) {
                 console.warn("🚨 MSP Alert:", status.alerts);
             }
@@ -37,8 +46,9 @@ export const MSPTestRunner = {
                     `📊 MSP Status: Queue=${status.currentQueueSize}/${status.maxQueueSize}, Requests=${status.metrics.totalRequests}, AvgTime=${Math.round(status.metrics.avgResponseTime)}ms`,
                 );
             }
-        });
+        };
 
+        mspQueueMonitor.addListener(this._quickMonitorListener);
         mspQueueMonitor.startMonitoring(1000);
         console.log("✅ Quick monitor started. Use MSPTestRunner.stopMonitor() to stop.");
 
@@ -54,6 +64,13 @@ export const MSPTestRunner = {
      */
     stopMonitor() {
         mspQueueMonitor.stopMonitoring();
+
+        // Remove the listener to prevent duplicate logs
+        if (this._quickMonitorListener) {
+            mspQueueMonitor.removeListener(this._quickMonitorListener);
+            this._quickMonitorListener = null;
+        }
+
         console.log("⏹️ MSP Monitor stopped");
     },
 

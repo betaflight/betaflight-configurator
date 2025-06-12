@@ -60,7 +60,7 @@ export class MSPStressTest {
             try {
                 console.log(`\n📋 Running: ${testDef.name}`);
                 this.currentTest = testDef.name;
-                this.monitor.resetMetrics();
+                this.monitor.resetAll(); // Reset both metrics and alerts for clean test start
 
                 const startTime = performance.now();
                 const result = await testDef.test();
@@ -547,7 +547,7 @@ export class MSPStressTest {
 
         console.log(`🧪 Running specific test: ${testName}`);
         this.monitor.startMonitoring(100);
-        this.monitor.resetMetrics();
+        this.monitor.resetAll(); // Reset both metrics and alerts for clean test start
 
         try {
             const result = await testMethod();
