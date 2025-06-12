@@ -156,7 +156,7 @@ export class MSPQueueMonitor {
      * Check for alert conditions
      */
     _checkAlerts() {
-        const queueSize = this.msp.callbacks.length;
+        const queueSize = this.msp.callbacks?.length ?? 0;
 
         // Queue full alert
         const wasQueueFull = this.alerts.queueFull;
@@ -607,7 +607,7 @@ export class MSPQueueMonitor {
         }
 
         // Clear instrumentation flag
-        delete this.msp._mspQueueMonitorInstrumented;
+        this.msp._mspQueueMonitorInstrumented = undefined;
 
         this.listeners = [];
 
