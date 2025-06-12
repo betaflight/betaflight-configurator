@@ -636,7 +636,9 @@ export class MSPDebugDashboard {
      * Update display with current status
      */
     updateDisplay(status = null) {
-        if (!this.isVisible || this.updatesPaused) return;
+        if (!this.isVisible || this.updatesPaused) {
+            return;
+        }
 
         status = status || mspQueueMonitor.getStatus();
 
@@ -750,7 +752,9 @@ export class MSPDebugDashboard {
      */
     updateAlerts(alerts) {
         const container = document.getElementById("alerts-container");
-        if (!container) return;
+        if (!container) {
+            return;
+        }
 
         const activeAlerts = Object.entries(alerts).filter(([_, active]) => active);
 
@@ -776,7 +780,9 @@ export class MSPDebugDashboard {
      */
     updateQueueContents(queueContents) {
         const container = document.getElementById("queue-contents");
-        if (!container) return;
+        if (!container) {
+            return;
+        }
 
         // Always show exactly 5 slots to prevent layout shifts
         const maxSlots = 5;
@@ -842,7 +848,9 @@ export class MSPDebugDashboard {
      */
     drawChart() {
         const canvas = document.getElementById("msp-metrics-chart");
-        if (!canvas) return;
+        if (!canvas) {
+            return;
+        }
 
         const ctx = canvas.getContext("2d");
 
@@ -859,8 +867,8 @@ export class MSPDebugDashboard {
         canvas.height = displayHeight * devicePixelRatio;
 
         // Scale the canvas back down using CSS
-        canvas.style.width = `${displayWidth  }px`;
-        canvas.style.height = `${displayHeight  }px`;
+        canvas.style.width = `${displayWidth}px`;
+        canvas.style.height = `${displayHeight}px`;
 
         // Scale the drawing context so everything draws at the correct size
         ctx.scale(devicePixelRatio, devicePixelRatio);
@@ -872,7 +880,9 @@ export class MSPDebugDashboard {
         ctx.fillStyle = "#2a2a2a";
         ctx.fillRect(0, 0, width, height);
 
-        if (this.chartData.timestamps.length < 2) return;
+        if (this.chartData.timestamps.length < 2) {
+            return;
+        }
 
         // Draw queue size line
         ctx.strokeStyle = "#00ff00";
@@ -908,7 +918,9 @@ export class MSPDebugDashboard {
         const analysis = mspQueueMonitor.analyzeQueue();
         const container = document.getElementById("queue-analysis");
 
-        if (!container) return;
+        if (!container) {
+            return;
+        }
 
         container.innerHTML = `
             <div><strong>Total Items:</strong> ${analysis.totalItems}</div>
@@ -943,7 +955,9 @@ export class MSPDebugDashboard {
      */
     displayTestResults(results) {
         const container = document.getElementById("test-results");
-        if (!container) return;
+        if (!container) {
+            return;
+        }
 
         const summary = results.summary || {};
 
@@ -980,10 +994,14 @@ export class MSPDebugDashboard {
      * Show detailed test information
      */
     showTestDetails(testIndex) {
-        if (!this.lastTestResults || !this.lastTestResults.detailedResults) return;
+        if (!this?.lastTestResults?.detailedResults) {
+            return;
+        }
 
         const test = this.lastTestResults.detailedResults[testIndex];
-        if (!test) return;
+        if (!test) {
+            return;
+        }
 
         // Pause updates while showing details
         this.pauseUpdates(5000);

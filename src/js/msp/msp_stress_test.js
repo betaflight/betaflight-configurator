@@ -146,7 +146,7 @@ export class MSPStressTest {
             const requestStart = performance.now();
 
             try {
-                const result = await this.msp.promise(code, null);
+                await this.msp.promise(code, null);
                 results.push({
                     success: true,
                     responseTime: performance.now() - requestStart,
@@ -196,7 +196,7 @@ export class MSPStressTest {
         const results = await Promise.allSettled(promises);
         const successful = results.filter((r) => r.status === "fulfilled" && !r.value.error).length;
         const duplicateErrors = results.filter(
-            (r) => r.status === "rejected" || (r.value && r.value.error && r.value.error.includes("duplicate")),
+            (r) => r.status === "rejected" || r?.value?.error?.includes("duplicate"),
         ).length;
 
         return {
@@ -324,7 +324,7 @@ export class MSPStressTest {
         }
 
         const results = await Promise.allSettled(promises);
-        const rejected = results.filter((r) => r.status === "rejected" || (r.value && r.value.error)).length;
+        const rejected = results.filter((r) => r.status === "rejected" || r.value?.error).length;
 
         return {
             attemptedRequests: overflowCount,
@@ -362,7 +362,7 @@ export class MSPStressTest {
 
             const disconnectedResults = await Promise.allSettled(promises);
             const failedWhileDisconnected = disconnectedResults.filter(
-                (r) => r.status === "rejected" || (r.value && r.value.error),
+                (r) => r.status === "rejected" || r.value?.error,
             ).length;
 
             // Restore connection
@@ -472,13 +472,27 @@ export class MSPStressTest {
     _calculateOverallGrade(results) {
         const passRate = results.filter((r) => r.status === "PASSED").length / results.length;
 
-        if (passRate >= 0.95) return "A+";
-        if (passRate >= 0.9) return "A";
-        if (passRate >= 0.85) return "B+";
-        if (passRate >= 0.8) return "B";
-        if (passRate >= 0.75) return "C+";
-        if (passRate >= 0.7) return "C";
-        if (passRate >= 0.6) return "D";
+        if (passRate >= 0.95) {
+            return "A+";
+        }
+        if (passRate >= 0.9) {
+            return "A";
+        }
+        if (passRate >= 0.85) {
+            return "B+";
+        }
+        if (passRate >= 0.8) {
+            return "B";
+        }
+        if (passRate >= 0.75) {
+            return "C+";
+        }
+        if (passRate >= 0.7) {
+            return "C";
+        }
+        if (passRate >= 0.6) {
+            return "D";
+        }
         return "F";
     }
 
@@ -498,19 +512,19 @@ export class MSPStressTest {
 
         // Check performance issues
         const perfTest = results.find((r) => r.name === "Performance Under Load");
-        if (perfTest && perfTest.result && perfTest.result.avgResponseTime > 1000) {
+        if (perfTest?.result?.avgResponseTime > 1000) {
             recommendations.push("Average response time is high. Consider optimizing MSP request handling.");
         }
 
         // Check memory leaks
         const memTest = results.find((r) => r.name === "Memory Leak Detection");
-        if (memTest && memTest.result && memTest.result.memoryLeakDetected) {
+        if (memTest?.result?.memoryLeakDetected) {
             recommendations.push("Memory leak detected. Ensure all callbacks are properly cleaned up.");
         }
 
         // Check queue overflow handling
         const overflowTest = results.find((r) => r.name === "Queue Overflow Handling");
-        if (overflowTest && overflowTest.result && !overflowTest.result.overflowHandled) {
+        if (!overflowTest?.result?.overflowHandled) {
             recommendations.push("Queue overflow not properly handled. Implement proper queue management.");
         }
 

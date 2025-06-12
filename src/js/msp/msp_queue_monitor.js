@@ -103,7 +103,9 @@ export class MSPQueueMonitor {
      * Track when a request is completed (success or failure)
      */
     _trackRequestCompletion(requestObj) {
-        if (!requestObj) return;
+        if (!requestObj) {
+            return;
+        }
 
         const responseTime = performance.now() - requestObj.start;
         this.metrics.responseTimes.push(responseTime);
@@ -146,7 +148,6 @@ export class MSPQueueMonitor {
      */
     _checkAlerts() {
         const queueSize = this.msp.callbacks.length;
-        const maxQueueSize = this.msp.MAX_QUEUE_SIZE || 50;
 
         // Queue full alert
         const wasQueueFull = this.alerts.queueFull;
@@ -187,7 +188,9 @@ export class MSPQueueMonitor {
      * Start monitoring
      */
     startMonitoring(intervalMs = 1000) {
-        if (this.isMonitoring) return;
+        if (this.isMonitoring) {
+            return;
+        }
 
         this.isMonitoring = true;
         this.monitoringInterval = setInterval(() => {
@@ -202,7 +205,9 @@ export class MSPQueueMonitor {
      * Stop monitoring
      */
     stopMonitoring() {
-        if (!this.isMonitoring) return;
+        if (!this.isMonitoring) {
+            return;
+        }
 
         this.isMonitoring = false;
         if (this.monitoringInterval) {
@@ -281,16 +286,25 @@ export class MSPQueueMonitor {
 
             // Age analysis
             const age = now - req.start;
-            if (age < 1000) analysis.ageDistribution.fresh++;
-            else if (age < 5000) analysis.ageDistribution.recent++;
-            else if (age < 10000) analysis.ageDistribution.stale++;
-            else analysis.ageDistribution.ancient++;
+            if (age < 1000) {
+                analysis.ageDistribution.fresh++;
+            } else if (age < 5000) {
+                analysis.ageDistribution.recent++;
+            } else if (age < 10000) {
+                analysis.ageDistribution.stale++;
+            } else {
+                analysis.ageDistribution.ancient++;
+            }
 
             // Retry analysis
             const attempts = req.attempts || 0;
-            if (attempts === 0) analysis.retryDistribution.firstAttempt++;
-            else if (attempts === 1) analysis.retryDistribution.retrying++;
-            else analysis.retryDistribution.multipleRetries++;
+            if (attempts === 0) {
+                analysis.retryDistribution.firstAttempt++;
+            } else if (attempts === 1) {
+                analysis.retryDistribution.retrying++;
+            } else {
+                analysis.retryDistribution.multipleRetries++;
+            }
 
             // Identify potential issues
             if (age > 10000) {
@@ -409,8 +423,12 @@ export class MSPQueueMonitor {
         const alerts = Object.values(this.alerts);
         const activeAlerts = alerts.filter((alert) => alert).length;
 
-        if (activeAlerts === 0) return "HEALTHY";
-        if (activeAlerts <= 2) return "WARNING";
+        if (activeAlerts === 0) {
+            return "HEALTHY";
+        }
+        if (activeAlerts <= 2) {
+            return "WARNING";
+        }
         return "CRITICAL";
     }
 
@@ -421,27 +439,46 @@ export class MSPQueueMonitor {
         let score = 100;
 
         // Deduct for high timeout rate
-        if (this.metrics.timeoutRate > 0.1) score -= 30;
-        else if (this.metrics.timeoutRate > 0.05) score -= 15;
+        if (this.metrics.timeoutRate > 0.1) {
+            score -= 30;
+        } else if (this.metrics.timeoutRate > 0.05) {
+            score -= 15;
+        }
 
         // Deduct for slow responses
-        if (this.metrics.avgResponseTime > 2000) score -= 25;
-        else if (this.metrics.avgResponseTime > 1000) score -= 10;
+        if (this.metrics.avgResponseTime > 2000) {
+            score -= 25;
+        } else if (this.metrics.avgResponseTime > 1000) {
+            score -= 10;
+        }
 
         // Deduct for queue size issues
         const queueRatio = this.currentQueueSize / (this.msp.MAX_QUEUE_SIZE || 50);
-        if (queueRatio > 0.8) score -= 20;
-        else if (queueRatio > 0.6) score -= 10;
+        if (queueRatio > 0.8) {
+            score -= 20;
+        } else if (queueRatio > 0.6) {
+            score -= 10;
+        }
 
         // Deduct for failed requests
         const failureRate =
             this.metrics.totalRequests > 0 ? this.metrics.failedRequests / this.metrics.totalRequests : 0;
-        if (failureRate > 0.05) score -= 15;
+        if (failureRate > 0.05) {
+            score -= 15;
+        }
 
-        if (score >= 90) return "A";
-        if (score >= 80) return "B";
-        if (score >= 70) return "C";
-        if (score >= 60) return "D";
+        if (score >= 90) {
+            return "A";
+        }
+        if (score >= 80) {
+            return "B";
+        }
+        if (score >= 70) {
+            return "C";
+        }
+        if (score >= 60) {
+            return "D";
+        }
         return "F";
     }
 
