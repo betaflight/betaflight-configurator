@@ -29,7 +29,7 @@ export class MSPQueueMonitor {
         };
 
         this.thresholds = {
-            maxQueueSize: 40, // Alert when queue > 80% of MAX_QUEUE_SIZE
+            maxQueueSize: Math.floor((this.msp.MAX_QUEUE_SIZE || 50) * 0.8), // Alert when queue > 80% of MAX_QUEUE_SIZE
             maxAvgResponseTime: 2000, // Alert when avg response > 2s
             maxTimeoutRate: 0.1, // Alert when timeout rate > 10%
             memoryLeakThreshold: 100, // Alert when callbacks grow beyond expected
@@ -83,7 +83,7 @@ export class MSPQueueMonitor {
         this.metrics.requestsByCode.set(code, count + 1);
 
         // Check for queue size peaks
-        const currentQueueSize = this.msp.callbacks.length;
+        const currentQueueSize = this.msp.callbacks?.length ?? 0;
         if (currentQueueSize > this.metrics.queuePeakSize) {
             this.metrics.queuePeakSize = currentQueueSize;
         }
@@ -339,7 +339,7 @@ export class MSPQueueMonitor {
     }
 
     /**
-     * Reset metrics
+     * Reset metrics only (keep alerts intact)
      */
     resetMetrics() {
         this.metrics = {
@@ -356,12 +356,30 @@ export class MSPQueueMonitor {
             errorsByType: new Map(),
         };
 
+        // Note: Alerts are NOT reset here - they should only be cleared when conditions are no longer true
+        // or when explicitly requested via clearAlerts() method
+    }
+
+    /**
+     * Clear alerts (separate from metrics)
+     */
+    clearAlerts() {
+        console.log("🔄 Clearing all alerts...");
         this.alerts = {
             queueFull: false,
             highTimeout: false,
             slowResponses: false,
             memoryLeak: false,
         };
+        this._notifyListeners();
+    }
+
+    /**
+     * Reset both metrics and alerts (complete reset)
+     */
+    resetAll() {
+        this.resetMetrics();
+        this.clearAlerts();
     }
 
     /**
@@ -516,7 +534,7 @@ export class MSPQueueMonitor {
     setNormalThresholds() {
         console.log("🔧 Resetting to normal thresholds...");
         this.thresholds = {
-            maxQueueSize: 40, // Alert when queue > 80% of MAX_QUEUE_SIZE
+            maxQueueSize: Math.floor((this.msp.MAX_QUEUE_SIZE || 50) * 0.8), // Alert when queue > 80% of MAX_QUEUE_SIZE
             maxAvgResponseTime: 2000, // Alert when avg response > 2s
             maxTimeoutRate: 0.1, // Alert when timeout rate > 10%
             memoryLeakThreshold: 100, // Alert when callbacks grow beyond expected

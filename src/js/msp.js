@@ -51,10 +51,13 @@ const MSP = {
     message_buffer: null,
     message_buffer_uint8_view: null,
     message_checksum: 0,
+    crcError: false,
 
     callbacks: [],
     packet_error: 0,
     unsupported: 0,
+
+    TIMEOUT: 1000,
 
     last_received_timestamp: null,
     listeners: [],
@@ -64,8 +67,6 @@ const MSP = {
     cli_buffer: [], // buffer for CLI charactor output
     cli_output: [],
     cli_callback: null,
-
-    TIMEOUT: 1000,
 
     read(readInfo) {
         if (CONFIGURATOR.virtualMode) {
@@ -381,7 +382,6 @@ const MSP = {
             return false;
         }
 
-        // Create unique key combining code and data
         const requestExists = this.callbacks.some((instance) => instance.code === code);
 
         const bufferOut = code <= 254 ? this.encode_message_v1(code, data) : this.encode_message_v2(code, data);
@@ -394,7 +394,6 @@ const MSP = {
             start: performance.now(),
         };
 
-        // Track only the first outstanding request for a given key
         if (!requestExists) {
             obj.timer = setTimeout(() => {
                 console.warn(
@@ -408,9 +407,7 @@ const MSP = {
                     // We should probably give up connection if the request takes too long ?
                     if (executionTime > 5000) {
                         console.warn(
-                            `MSP: data request took too long: ${code} ID: ${serial.connectionId} TAB: ${GUI.active_tab} TIMEOUT: ${
-                                this.timeout
-                            } EXECUTION TIME: ${executionTime}ms`,
+                            `MSP: data request took too long: ${code} ID: ${serial.connectionId} TAB: ${GUI.active_tab} EXECUTION TIME: ${executionTime}ms`,
                         );
                     }
 
