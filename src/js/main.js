@@ -19,6 +19,19 @@ import { updateTabList } from "./utils/updateTabList.js";
 import * as THREE from "three";
 import NotificationManager from "./utils/notifications.js";
 
+// Load MSP debug tools in development environment
+if (import.meta.env.DEV || window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
+    import("./msp/msp_debug_tools.js")
+        .then(() => {
+            console.log("🔧 MSP Debug Tools loaded for development environment");
+            console.log("• Press Ctrl+Shift+M to toggle debug dashboard");
+            console.log("• Use MSPTestRunner.help() for all commands");
+        })
+        .catch((err) => {
+            console.warn("Failed to load MSP debug tools:", err);
+        });
+}
+
 if (typeof String.prototype.replaceAll === "undefined") {
     String.prototype.replaceAll = function (match, replace) {
         return this.replace(new RegExp(match, "g"), () => replace);
@@ -111,10 +124,10 @@ function startProcess() {
     console.log(`Libraries: jQuery - ${$.fn.jquery}, three.js - ${THREE.REVISION}`);
 
     // Check if this is the first visit
-    if (getConfig('firstRun').firstRun === undefined) {
+    if (getConfig("firstRun").firstRun === undefined) {
         setConfig({ firstRun: true });
-        import('./tabs/static_tab.js').then(({ staticTab }) => {
-            staticTab.initialize('options', () => {
+        import("./tabs/static_tab.js").then(({ staticTab }) => {
+            staticTab.initialize("options", () => {
                 setTimeout(() => {
                     // Open the options tab after a delay
                     $("#tabs .tab_options a").click();
