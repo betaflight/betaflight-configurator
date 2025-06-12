@@ -590,5 +590,82 @@ export class MSPStressTest {
     }
 }
 
-// Export singleton for easy use
-export const mspStressTest = new MSPStressTest(window.MSP);
+// Lazy initialization to avoid errors when window.MSP is not yet available
+let _mspStressTestInstance = null;
+
+export const mspStressTest = {
+    get instance() {
+        if (!_mspStressTestInstance) {
+            if (typeof window === "undefined" || !window.MSP) {
+                throw new Error(
+                    "MSP Stress Test: window.MSP is not available. Make sure MSP is loaded before using the stress test.",
+                );
+            }
+            _mspStressTestInstance = new MSPStressTest(window.MSP);
+        }
+        return _mspStressTestInstance;
+    },
+
+    // Proxy all methods to the lazy-initialized instance
+    runStressTestSuite(...args) {
+        return this.instance.runStressTestSuite(...args);
+    },
+    runSpecificTest(...args) {
+        return this.instance.runSpecificTest(...args);
+    },
+    generateTestReport(...args) {
+        return this.instance.generateTestReport(...args);
+    },
+    wait(...args) {
+        return this.instance.wait(...args);
+    },
+    destroy(...args) {
+        return this.instance.destroy(...args);
+    },
+
+    // Test methods
+    testQueueFlooding(...args) {
+        return this.instance.testQueueFlooding(...args);
+    },
+    testRapidFireRequests(...args) {
+        return this.instance.testRapidFireRequests(...args);
+    },
+    testDuplicateRequests(...args) {
+        return this.instance.testDuplicateRequests(...args);
+    },
+    testTimeoutRecovery(...args) {
+        return this.instance.testTimeoutRecovery(...args);
+    },
+    testMemoryLeaks(...args) {
+        return this.instance.testMemoryLeaks(...args);
+    },
+    testConcurrentMixedRequests(...args) {
+        return this.instance.testConcurrentMixedRequests(...args);
+    },
+    testQueueOverflow(...args) {
+        return this.instance.testQueueOverflow(...args);
+    },
+    testConnectionDisruption(...args) {
+        return this.instance.testConnectionDisruption(...args);
+    },
+    testPerformanceUnderLoad(...args) {
+        return this.instance.testPerformanceUnderLoad(...args);
+    },
+
+    // Getters for properties
+    get monitor() {
+        return this.instance.monitor;
+    },
+    get isRunning() {
+        return this.instance.isRunning;
+    },
+    get testResults() {
+        return this.instance.testResults;
+    },
+    get currentTest() {
+        return this.instance.currentTest;
+    },
+    get testCodes() {
+        return this.instance.testCodes;
+    },
+};

@@ -600,5 +600,77 @@ export class MSPQueueMonitor {
     }
 }
 
-// Export singleton instance for easy use
-export const mspQueueMonitor = new MSPQueueMonitor(window.MSP);
+// Lazy initialization to avoid errors when window.MSP is not yet available
+let _mspQueueMonitorInstance = null;
+
+export const mspQueueMonitor = {
+    get instance() {
+        if (!_mspQueueMonitorInstance) {
+            if (typeof window === "undefined" || !window.MSP) {
+                throw new Error(
+                    "MSP Queue Monitor: window.MSP is not available. Make sure MSP is loaded before using the monitor.",
+                );
+            }
+            _mspQueueMonitorInstance = new MSPQueueMonitor(window.MSP);
+        }
+        return _mspQueueMonitorInstance;
+    },
+
+    // Proxy all methods to the lazy-initialized instance
+    startMonitoring(...args) {
+        return this.instance.startMonitoring(...args);
+    },
+    stopMonitoring(...args) {
+        return this.instance.stopMonitoring(...args);
+    },
+    getStatus(...args) {
+        return this.instance.getStatus(...args);
+    },
+    analyzeQueue(...args) {
+        return this.instance.analyzeQueue(...args);
+    },
+    addListener(...args) {
+        return this.instance.addListener(...args);
+    },
+    removeListener(...args) {
+        return this.instance.removeListener(...args);
+    },
+    resetMetrics(...args) {
+        return this.instance.resetMetrics(...args);
+    },
+    clearAlerts(...args) {
+        return this.instance.clearAlerts(...args);
+    },
+    resetAll(...args) {
+        return this.instance.resetAll(...args);
+    },
+    generateReport(...args) {
+        return this.instance.generateReport(...args);
+    },
+    triggerTestAlerts(...args) {
+        return this.instance.triggerTestAlerts(...args);
+    },
+    setTestThresholds(...args) {
+        return this.instance.setTestThresholds(...args);
+    },
+    setNormalThresholds(...args) {
+        return this.instance.setNormalThresholds(...args);
+    },
+    destroy(...args) {
+        return this.instance.destroy(...args);
+    },
+
+    // Getters for properties
+    get isMonitoring() {
+        return this.instance.isMonitoring;
+    },
+    get metrics() {
+        return this.instance.metrics;
+    },
+    get alerts() {
+        return this.instance.alerts;
+    },
+    get thresholds() {
+        return this.instance.thresholds;
+    },
+};
