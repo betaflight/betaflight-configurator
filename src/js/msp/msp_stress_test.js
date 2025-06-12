@@ -132,7 +132,7 @@ export class MSPStressTest {
             successful,
             failed,
             successRate: successful / requestCount,
-            peakQueueSize: this.monitor.metrics.queuePeakSize,
+            peakQueueSize: (this.monitor.getStatus().metrics || {}).queuePeakSize ?? 0,
         };
     }
 
@@ -403,36 +403,81 @@ export class MSPStressTest {
         console.log("  Testing performance under sustained load...");
 
         const duration = 5000; // 5 seconds
-        const requestInterval = 50; // Request every 50ms
-        const startTime = performance.now();
+        const requestInterval = 20; // Request every 20ms for higher concurrency
+        const batchSize = 10; // Process batches of 10 concurrent requests
+        const batchInterval = 200; // Process batches every 200ms
 
+        const startTime = performance.now();
         const results = [];
         let requestCount = 0;
+        let pendingPromises = [];
+        let lastBatchTime = startTime;
 
         while (performance.now() - startTime < duration) {
             const requestStart = performance.now();
             requestCount++;
 
-            try {
-                await this.msp.promise(this.testCodes.MSP_STATUS, null);
-                results.push({
+            // Create promise without awaiting to allow concurrency
+            const promise = this.msp
+                .promise(this.testCodes.MSP_STATUS, null)
+                .then(() => ({
                     success: true,
                     responseTime: performance.now() - requestStart,
-                });
-            } catch (error) {
-                results.push({
+                }))
+                .catch((error) => ({
                     success: false,
                     responseTime: performance.now() - requestStart,
                     error: error.message,
+                }));
+
+            pendingPromises.push(promise);
+
+            // Process batch when we hit batch size or time interval
+            const now = performance.now();
+            if (pendingPromises.length >= batchSize || now - lastBatchTime >= batchInterval) {
+                const batchResults = await Promise.allSettled(pendingPromises);
+
+                // Extract results from settled promises
+                batchResults.forEach((settled) => {
+                    if (settled.status === "fulfilled") {
+                        results.push(settled.value);
+                    } else {
+                        results.push({
+                            success: false,
+                            responseTime: 0,
+                            error: settled.reason?.message || "Unknown error",
+                        });
+                    }
                 });
+
+                pendingPromises = [];
+                lastBatchTime = now;
             }
 
             await this.wait(requestInterval);
         }
 
+        // Process any remaining pending promises
+        if (pendingPromises.length > 0) {
+            const finalBatchResults = await Promise.allSettled(pendingPromises);
+            finalBatchResults.forEach((settled) => {
+                if (settled.status === "fulfilled") {
+                    results.push(settled.value);
+                } else {
+                    results.push({
+                        success: false,
+                        responseTime: 0,
+                        error: settled.reason?.message || "Unknown error",
+                    });
+                }
+            });
+        }
+
         const successful = results.filter((r) => r.success).length;
-        const avgResponseTime = results.reduce((sum, r) => sum + r.responseTime, 0) / results.length;
-        const maxResponseTime = Math.max(...results.map((r) => r.responseTime));
+        const responseTimes = results.map((r) => r.responseTime).filter((t) => t > 0);
+        const avgResponseTime =
+            responseTimes.length > 0 ? responseTimes.reduce((sum, r) => sum + r, 0) / responseTimes.length : 0;
+        const maxResponseTime = responseTimes.length > 0 ? Math.max(...responseTimes) : 0;
 
         return {
             duration,
@@ -443,6 +488,9 @@ export class MSPStressTest {
             avgResponseTime,
             maxResponseTime,
             throughput: requestCount / (duration / 1000),
+            concurrentRequests: true,
+            batchSize,
+            maxConcurrentRequests: batchSize,
         };
     }
 
