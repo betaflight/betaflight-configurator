@@ -3,12 +3,12 @@
  * Comprehensive testing tool for MSP queue management, timeout handling, and performance
  */
 
-import { MSPQueueMonitor } from "./msp_queue_monitor.js";
+import { mspQueueMonitor } from "./msp_queue_monitor.js";
 
 export class MSPStressTest {
     constructor(mspInstance) {
         this.msp = mspInstance;
-        this.monitor = new MSPQueueMonitor(mspInstance);
+        this.monitor = mspQueueMonitor; // Reuse singleton to avoid duplicate method patching
         this.isRunning = false;
         this.testResults = [];
         this.currentTest = null;
@@ -92,6 +92,7 @@ export class MSPStressTest {
         }
 
         this.monitor.stopMonitoring();
+        this.monitor.destroy(); // Clean up MSP method patches and restore original behavior
         this.testResults = results;
 
         const report = this.generateTestReport(results);
@@ -117,7 +118,7 @@ export class MSPStressTest {
         }
 
         const results = await Promise.allSettled(promises);
-        const successful = results.filter((r) => r.status === "fulfilled" && !r.value.error).length;
+        const successful = results.filter((r) => r.status === "fulfilled" && !(r.value && r.value.error)).length;
         const failed = results.length - successful;
 
         return {
@@ -194,9 +195,9 @@ export class MSPStressTest {
         }
 
         const results = await Promise.allSettled(promises);
-        const successful = results.filter((r) => r.status === "fulfilled" && !r.value.error).length;
+        const successful = results.filter((r) => r.status === "fulfilled" && !(r.value && r.value.error)).length;
         const duplicateErrors = results.filter(
-            (r) => r.status === "rejected" || r?.value?.error?.includes("duplicate"),
+            (r) => r.status === "rejected" || (r.value && r.value.error && r.value.error.includes("duplicate")),
         ).length;
 
         return {

@@ -46,6 +46,12 @@ export class MSPQueueMonitor {
      * Hook into MSP methods to collect real-time metrics
      */
     _hookMSPMethods() {
+        // Check if MSP instance is already instrumented to prevent double-patching
+        if (this.msp._mspQueueMonitorInstrumented) {
+            console.warn("MSP instance is already instrumented by MSPQueueMonitor");
+            return;
+        }
+
         // Store original methods
         this.originalSendMessage = this.msp.send_message.bind(this.msp);
         this.originalDispatchMessage = this.msp._dispatch_message.bind(this.msp);
@@ -70,6 +76,9 @@ export class MSPQueueMonitor {
                 return this.originalRemoveRequest(requestObj);
             };
         }
+
+        // Mark MSP instance as instrumented
+        this.msp._mspQueueMonitorInstrumented = true;
     }
 
     /**
@@ -453,7 +462,8 @@ export class MSPQueueMonitor {
         }
 
         // Deduct for queue size issues
-        const queueRatio = this.currentQueueSize / (this.msp.MAX_QUEUE_SIZE || 50);
+        const currentQueueSize = this.currentQueueSize || (this.msp.callbacks?.length ?? 0);
+        const queueRatio = currentQueueSize / (this.msp.MAX_QUEUE_SIZE || 50);
         if (queueRatio > 0.8) {
             score -= 20;
         } else if (queueRatio > 0.6) {
@@ -596,7 +606,13 @@ export class MSPQueueMonitor {
             this.msp._removeRequestFromCallbacks = this.originalRemoveRequest;
         }
 
+        // Clear instrumentation flag
+        delete this.msp._mspQueueMonitorInstrumented;
+
         this.listeners = [];
+
+        // Clear the singleton instance to allow creating a fresh monitor later
+        _mspQueueMonitorInstance = null;
     }
 }
 
