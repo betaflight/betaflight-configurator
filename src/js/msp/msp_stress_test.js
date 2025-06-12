@@ -29,7 +29,7 @@ export class MSPStressTest {
             MSP_RC_TUNING: 111,
             MSP_PID: 112,
             MSP_PIDNAMES: 116,
-            MSP_BOXNAMES: 116,
+            MSP_BOXNAMES: 117,
             MSP_MISC: 114,
             MSP_MOTOR_PINS: 115,
         };
@@ -40,6 +40,7 @@ export class MSPStressTest {
      */
     async runStressTestSuite() {
         console.log("🚀 Starting MSP Stress Test Suite");
+        this.isRunning = true;
         this.monitor.startMonitoring(100); // High frequency monitoring during tests
 
         const tests = [
@@ -56,50 +57,55 @@ export class MSPStressTest {
 
         const results = [];
 
-        for (const testDef of tests) {
-            try {
-                console.log(`\n📋 Running: ${testDef.name}`);
-                this.currentTest = testDef.name;
-                this.monitor.resetAll(); // Reset both metrics and alerts for clean test start
+        try {
+            for (const testDef of tests) {
+                try {
+                    console.log(`\n📋 Running: ${testDef.name}`);
+                    this.currentTest = testDef.name;
+                    this.monitor.resetAll(); // Reset both metrics and alerts for clean test start
 
-                const startTime = performance.now();
-                const result = await testDef.test();
-                const duration = performance.now() - startTime;
+                    const startTime = performance.now();
+                    const result = await testDef.test();
+                    const duration = performance.now() - startTime;
 
-                const testResult = {
-                    name: testDef.name,
-                    status: "PASSED",
-                    duration,
-                    result,
-                    metrics: this.monitor.getStatus(),
-                    timestamp: new Date().toISOString(),
-                };
+                    const testResult = {
+                        name: testDef.name,
+                        status: "PASSED",
+                        duration,
+                        result,
+                        metrics: this.monitor.getStatus(),
+                        timestamp: new Date().toISOString(),
+                    };
 
-                results.push(testResult);
-                console.log(`✅ ${testDef.name} completed in ${Math.round(duration)}ms`);
+                    results.push(testResult);
+                    console.log(`✅ ${testDef.name} completed in ${Math.round(duration)}ms`);
 
-                // Wait between tests to let queue settle
-                await this.wait(1000);
-            } catch (error) {
-                console.error(`❌ ${testDef.name} failed:`, error);
-                results.push({
-                    name: testDef.name,
-                    status: "FAILED",
-                    error: error.message,
-                    timestamp: new Date().toISOString(),
-                });
+                    // Wait between tests to let queue settle
+                    await this.wait(1000);
+                } catch (error) {
+                    console.error(`❌ ${testDef.name} failed:`, error);
+                    results.push({
+                        name: testDef.name,
+                        status: "FAILED",
+                        error: error.message,
+                        timestamp: new Date().toISOString(),
+                    });
+                }
             }
+
+            this.testResults = results;
+            const report = this.generateTestReport(results);
+            console.log("\n📊 Stress Test Suite Complete");
+            console.log(report.summary);
+
+            return report;
+        } finally {
+            // Ensure cleanup always happens regardless of errors
+            this.monitor.stopMonitoring();
+            this.isRunning = false;
+            this.currentTest = null;
+            this.monitor.destroy(); // Clean up MSP method patches and restore original behavior
         }
-
-        this.monitor.stopMonitoring();
-        this.testResults = results;
-        const report = this.generateTestReport(results);
-        // Now it’s safe to tear the monitor down
-        this.monitor.destroy();
-        console.log("\n📊 Stress Test Suite Complete");
-        console.log(report.summary);
-
-        return report;
     }
 
     /**
@@ -299,7 +305,7 @@ export class MSPStressTest {
         const results = await Promise.allSettled(promises);
         const totalTime = performance.now() - startTime;
 
-        const successful = results.filter((r) => r.status === "fulfilled" && !r.value.error).length;
+        const successful = results.filter((r) => r.status === "fulfilled" && !(r.value && r.value.error)).length;
 
         return {
             totalRequests: promises.length,
@@ -580,6 +586,7 @@ export class MSPStressTest {
             };
         } finally {
             this.monitor.stopMonitoring();
+            this.monitor.destroy();
         }
     }
 
