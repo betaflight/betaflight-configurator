@@ -24,6 +24,18 @@ export class MSPDebugDashboard {
     }
 
     /**
+     * Escape HTML characters to prevent XSS
+     */
+    escapeHtml(text) {
+        if (typeof text !== "string") {
+            return text;
+        }
+        const div = document.createElement("div");
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    /**
      * Create the dashboard HTML structure
      */
     createDashboard() {
@@ -795,9 +807,9 @@ export class MSPDebugDashboard {
                 const item = items[i];
                 slotsHtml.push(`
                     <div class="queue-item">
-                        <span>Code: ${item.code}</span>
+                        <span>Code: ${this.escapeHtml(item.code)}</span>
                         <span>Age: ${Math.round(item.age)}ms</span>
-                        <span>Attempts: ${item.attempts}</span>
+                        <span>Attempts: ${this.escapeHtml(item.attempts)}</span>
                         <span style="color: ${item.hasTimer ? "#00ff00" : "#ff4444"}">${item.hasTimer ? "✓" : "✗"}</span>
                     </div>
                 `);
@@ -976,9 +988,9 @@ export class MSPDebugDashboard {
             (test, index) => `
                     <div class="test-result-item" data-test-index="${index}" onclick="window.MSPDebug.showTestDetails(${index})">
                         <span class="${test.status === "PASSED" ? "test-passed" : "test-failed"}">
-                            ${test.name}
+                            ${this.escapeHtml(test.name)}
                         </span>
-                        <span>${test.status}</span>
+                        <span>${this.escapeHtml(test.status)}</span>
                     </div>
                 `,
         )
@@ -1008,15 +1020,15 @@ export class MSPDebugDashboard {
 
         const detailsHtml = `
             <div style="background: #1a1a1a; padding: 15px; border-radius: 5px; margin: 10px 0;">
-                <h4 style="color: #ffd700; margin: 0 0 10px 0;">📋 ${test.name} Details</h4>
-                <div><strong>Status:</strong> <span class="${test.status === "PASSED" ? "test-passed" : "test-failed"}">${test.status}</span></div>
+                <h4 style="color: #ffd700; margin: 0 0 10px 0;">📋 ${this.escapeHtml(test.name)} Details</h4>
+                <div><strong>Status:</strong> <span class="${test.status === "PASSED" ? "test-passed" : "test-failed"}">${this.escapeHtml(test.status)}</span></div>
                 ${test.duration ? `<div><strong>Duration:</strong> ${Math.round(test.duration)}ms</div>` : ""}
-                ${test.error ? `<div><strong>Error:</strong> <span style="color: #ff4444;">${test.error}</span></div>` : ""}
+                ${test.error ? `<div><strong>Error:</strong> <span style="color: #ff4444;">${this.escapeHtml(test.error)}</span></div>` : ""}
                 ${
     test.result
         ? `
                     <div style="margin-top: 10px;"><strong>Results:</strong></div>
-                    <pre style="background: #000; padding: 10px; border-radius: 3px; font-size: 10px; overflow-x: auto;">${JSON.stringify(test.result, null, 2)}</pre>
+                    <pre style="background: #000; padding: 10px; border-radius: 3px; font-size: 10px; overflow-x: auto;">${this.escapeHtml(JSON.stringify(test.result, null, 2))}</pre>
                 `
         : ""
 }
@@ -1026,9 +1038,9 @@ export class MSPDebugDashboard {
                     <div style="margin-top: 10px;"><strong>Metrics:</strong></div>
                     <div style="margin-left: 10px;">
                         Queue Size: ${test.metrics.currentQueueSize}/${test.metrics.maxQueueSize}<br>
-                        Total Requests: ${test.metrics.metrics.totalRequests}<br>
-                        Success Rate: ${Math.round((test.metrics.metrics.successRate || 0) * 100)}%<br>
-                        Avg Response: ${Math.round(test.metrics.metrics.avgResponseTime || 0)}ms
+                        Total Requests: ${test.metrics.totalRequests}<br>
+                        Success Rate: ${Math.round((test.metrics.successRate || 0) * 100)}%<br>
+                        Avg Response: ${Math.round(test.metrics.avgResponseTime || 0)}ms
                     </div>
                 `
         : ""
