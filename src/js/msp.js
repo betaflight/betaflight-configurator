@@ -1,3 +1,4 @@
+import GUI from "./gui.js";
 import CONFIGURATOR from "./data_storage.js";
 import { serial } from "./serial.js";
 
@@ -50,8 +51,6 @@ const MSP = {
     message_buffer: null,
     message_buffer_uint8_view: null,
     message_checksum: 0,
-    messageIsJumboFrame: false,
-    crcError: false,
 
     callbacks: [],
     packet_error: 0,
@@ -66,9 +65,6 @@ const MSP = {
     cli_output: [],
     cli_callback: null,
 
-    // Simplified retry configuration
-    MAX_RETRIES: 10,
-    MAX_QUEUE_SIZE: 50,
     TIMEOUT: 1000,
 
     read(readInfo) {
@@ -377,21 +373,6 @@ const MSP = {
 
         serial.send(bufferOut);
     },
-    // Helper function to create a unique key for request identification
-    _createRequestKey(code, data) {
-        if (!data || data.length === 0) {
-            return `${code}:empty`;
-        }
-
-        // Create a simple hash of the data
-        let hash = 0;
-        for (const byte of data) {
-            hash = ((hash << 5) - hash + byte) & 0xffffffff;
-        }
-
-        return `${code}:${hash}`;
-    },
-
     send_message(code, data, callback_sent, callback_msp, doCallbackOnError) {
         if (code === undefined || !serial.connected || CONFIGURATOR.virtualMode) {
             if (callback_msp) {
@@ -401,29 +382,47 @@ const MSP = {
         }
 
         // Create unique key combining code and data
-        const requestKey = this._createRequestKey(code, data);
-        const isDuplicateRequest = this.callbacks.some((instance) => instance.requestKey === requestKey);
+        const requestExists = this.callbacks.some((instance) => instance.code === code);
 
         const bufferOut = code <= 254 ? this.encode_message_v1(code, data) : this.encode_message_v2(code, data);
 
-        const requestObj = {
+        const obj = {
             code,
-            requestKey,
             requestBuffer: bufferOut,
             callback: callback_msp,
             callbackOnError: doCallbackOnError,
             start: performance.now(),
-            attempts: 0,
         };
 
         // Track only the first outstanding request for a given key
-        if (!isDuplicateRequest) {
-            this._setupTimeout(requestObj, bufferOut);
-            this.callbacks.push(requestObj);
+        if (!requestExists) {
+            obj.timer = setTimeout(() => {
+                console.warn(
+                    `MSP: data request timed-out: ${code} ID: ${serial.connectionId} TAB: ${GUI.active_tab} TIMEOUT: ${
+                        this.timeout
+                    } QUEUE: ${this.callbacks.length} (${this.callbacks.map((e) => e.code)})`,
+                );
+                serial.send(bufferOut, (_sendInfo) => {
+                    obj.stop = performance.now();
+                    const executionTime = Math.round(obj.stop - obj.start);
+                    // We should probably give up connection if the request takes too long ?
+                    if (executionTime > 5000) {
+                        console.warn(
+                            `MSP: data request took too long: ${code} ID: ${serial.connectionId} TAB: ${GUI.active_tab} TIMEOUT: ${
+                                this.timeout
+                            } EXECUTION TIME: ${executionTime}ms`,
+                        );
+                    }
+
+                    clearTimeout(obj.timer); // prevent leaks
+                });
+            }, this.TIMEOUT);
         }
 
-        // Send message if it has data or is a new request
-        if (data || !isDuplicateRequest) {
+        this.callbacks.push(obj);
+
+        // always send messages with data payload (even when there is a message already in the queue)
+        if (data || !requestExists) {
             serial.send(bufferOut, (sendInfo) => {
                 if (sendInfo.bytesSent === bufferOut.byteLength && callback_sent) {
                     callback_sent();
@@ -433,65 +432,6 @@ const MSP = {
 
         return true;
     },
-
-    _setupTimeout(requestObj, bufferOut) {
-        requestObj.timer = setTimeout(() => {
-            this._handleTimeout(requestObj, bufferOut);
-        }, this.TIMEOUT);
-    },
-
-    _handleTimeout(requestObj, bufferOut) {
-        // Increment retry attempts
-        requestObj.attempts++;
-
-        console.warn(
-            `MSP: data request timed-out: ${requestObj.code} ` +
-                `QUEUE: ${this.callbacks.length}/${this.MAX_QUEUE_SIZE} ` +
-                `(${this.callbacks.map((e) => e.code)}) ` +
-                `ATTEMPTS: ${requestObj.attempts}/${this.MAX_RETRIES}`,
-        );
-
-        // Check if max retries exceeded OR queue is too large
-        if (requestObj.attempts >= this.MAX_RETRIES || this.callbacks.length > this.MAX_QUEUE_SIZE) {
-            const reason =
-                requestObj.attempts >= this.MAX_RETRIES ? `max retries (${this.MAX_RETRIES})` : `queue overflow`;
-
-            console.error(`MSP: Request ${requestObj.code} exceeded ${reason}, giving up`);
-            this._removeRequestFromCallbacks(requestObj);
-
-            if (requestObj.callbackOnError && requestObj.callback) {
-                requestObj.callback();
-            }
-            return;
-        }
-
-        serial.send(bufferOut, (sendInfo) => {
-            if (sendInfo.bytesSent === bufferOut.byteLength) {
-                requestObj.timer = setTimeout(() => {
-                    this._handleTimeout(requestObj, bufferOut);
-                }, this.TIMEOUT);
-            } else {
-                console.error(`MSP: Failed to send retry for request ${requestObj.code}`);
-                this._removeRequestFromCallbacks(requestObj);
-                if (requestObj.callbackOnError && requestObj.callback) {
-                    requestObj.callback();
-                }
-            }
-        });
-    },
-
-    _removeRequestFromCallbacks(requestObj) {
-        // Clear the timer if it exists
-        if (requestObj.timer) {
-            clearTimeout(requestObj.timer);
-        }
-
-        const index = this.callbacks.indexOf(requestObj);
-        if (index > -1) {
-            this.callbacks.splice(index, 1);
-        }
-    },
-
     /**
      * resolves: {command: code, data: data, length: message_length}
      */
