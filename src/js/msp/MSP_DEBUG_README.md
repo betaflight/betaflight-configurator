@@ -48,62 +48,82 @@ import('./src/js/msp_debug_tools.js');
 
 **Start monitoring:**
 ```javascript
-MSPTestRunner.startQuickMonitor();
+MSPDebug.startMonitoring();
 ```
 
 **Show visual dashboard:**
 ```javascript
-MSPTestRunner.showDashboard();
+MSPDebug.show();
 // Or press Ctrl+Shift+M
 ```
 
-**Quick health check:**
+**Quick test of alert system:**
 ```javascript
-MSPTestRunner.quickHealthCheck();
+MSPDebug.testAlerts();
 ```
 
 **Run stress tests:**
 ```javascript
 // Run specific test
-MSPTestRunner.runTest('queue-flooding');
+MSPDebug.runTests();
 
-// Run full test suite
-MSPTestRunner.runFullSuite();
+// Run complete stress test suite with detailed console output
+MSPDebug.runFullSuite();
+
+// Run individual test by name
+MSPDebug.runTest('queue-flooding');
+
+// Quick health check
+MSPDebug.quickHealthCheck();
+
+// Run stress scenario
+MSPDebug.stressScenario('high-frequency');
 ```
 
 ## Available Commands
+
+The MSP Debug Tools provide two APIs:
+- **MSPDebug**: Modern, simplified API (recommended)
+- **MSPTestRunner**: Legacy API with additional methods
+
+Both APIs provide the same core functionality. Use `MSPDebug` for new code.
 
 ### Monitoring Commands
 
 | Command | Description |
 |---------|-------------|
-| `MSPTestRunner.startQuickMonitor()` | Start monitoring with console output |
-| `MSPTestRunner.stopMonitor()` | Stop monitoring |
-| `MSPTestRunner.getStatus()` | Get current MSP status |
-| `MSPTestRunner.analyzeQueue()` | Analyze current queue contents |
+| `MSPDebug.startMonitoring()` | Start monitoring with console output |
+| `MSPDebug.stopMonitoring()` | Stop monitoring |
+| `MSPDebug.getStatus()` | Get current MSP status |
+| `MSPDebug.monitor.getStatus()` | Get current MSP status (alternative) |
+| `MSPDebug.analyze()` | Analyze current queue contents |
 
 ### Testing Commands
 
 | Command | Description |
 |---------|-------------|
-| `MSPTestRunner.runTest('test-name')` | Run specific stress test |
-| `MSPTestRunner.runFullSuite()` | Run complete test suite |
-| `MSPTestRunner.quickHealthCheck()` | Quick health validation |
+| `MSPDebug.runTests()` | Run stress test suite |
+| `MSPDebug.runFullSuite()` | Run complete stress test suite with detailed output |
+| `MSPDebug.runTest('test-name')` | Run a specific test by name |
+| `MSPDebug.quickHealthCheck()` | Run a quick MSP health check |
+| `MSPDebug.stressScenario('scenario')` | Run specific stress test scenario |
+| `MSPDebug.testAlerts()` | Test alert system |
+| `MSPDebug.triggerTestAlerts()` | Manually trigger alerts |
 
-### Stress Scenarios
+### Alert Testing
 
 | Command | Description |
 |---------|-------------|
-| `MSPTestRunner.stressScenario('high-frequency')` | High frequency request test |
-| `MSPTestRunner.stressScenario('queue-overflow')` | Queue overflow handling test |
-| `MSPTestRunner.stressScenario('mixed-load')` | Mixed request types test |
+| `MSPDebug.setTestThresholds()` | Lower thresholds for easier testing |
+| `MSPDebug.setNormalThresholds()` | Restore normal thresholds |
+| `MSPDebug.testAlerts()` | Complete alert system test |
 
 ### Visual Tools
 
 | Command | Description |
 |---------|-------------|
-| `MSPTestRunner.showDashboard()` | Show visual debug dashboard |
-| `MSPTestRunner.generateReport()` | Generate and download report |
+| `MSPDebug.show()` | Show visual debug dashboard |
+| `MSPDebug.report()` | Generate and download report |
 
 ## Dashboard Interactions
 
@@ -139,15 +159,27 @@ The visual dashboard includes smart interaction handling to ensure a smooth user
 
 ## Available Tests
 
-1. **Queue Flooding** - Tests queue limits with many simultaneous requests
-2. **Rapid Fire Requests** - Tests high-frequency request handling
-3. **Duplicate Request Handling** - Validates duplicate request management
-4. **Timeout Recovery** - Tests timeout and retry mechanisms
-5. **Memory Leak Detection** - Checks for proper cleanup of completed requests
-6. **Concurrent Mixed Requests** - Tests various request types simultaneously
-7. **Queue Overflow Handling** - Tests behavior when queue reaches capacity
-8. **Connection Disruption** - Simulates connection issues
-9. **Performance Under Load** - Tests sustained load performance
+### Individual Test Names (for `runTest`)
+
+1. **queue-flooding** - Tests queue limits with many simultaneous requests
+2. **rapid-fire** - Tests high-frequency request handling
+3. **duplicates** - Validates duplicate request management
+4. **timeout-recovery** - Tests timeout and retry mechanisms
+5. **memory-leaks** - Checks for proper cleanup of completed requests
+6. **concurrent-mixed** - Tests various request types simultaneously
+7. **queue-overflow** - Tests behavior when queue reaches capacity
+8. **connection-disruption** - Simulates connection issues
+9. **performance-load** - Tests sustained load performance
+
+### Stress Scenarios (for `stressScenario`)
+
+- **high-frequency** - High-frequency requests every 10ms for 5 seconds
+- **queue-overflow** - Floods queue beyond capacity
+- **mixed-load** - Various request types and sizes
+
+### Full Test Suite
+
+The `runFullSuite()` command runs all individual tests in sequence with detailed console output and generates a comprehensive report.
 
 ## Monitoring Metrics
 
@@ -190,37 +222,50 @@ The visual dashboard provides:
 ### Development Testing
 ```javascript
 // Start monitoring during development
-MSPTestRunner.startQuickMonitor();
+MSPDebug.startMonitoring();
 
-// Run quick health check after changes
-MSPTestRunner.quickHealthCheck();
+// Quick health check
+MSPDebug.quickHealthCheck();
 
-// Test specific functionality
-MSPTestRunner.runTest('timeout-recovery');
+// Test the alert system
+MSPDebug.testAlerts();
+
+// Show visual dashboard
+MSPDebug.show();
 ```
 
 ### Performance Analysis
 ```javascript
 // Show dashboard for visual monitoring
-MSPTestRunner.showDashboard();
+MSPDebug.show();
 
-// Run performance stress test
-MSPTestRunner.stressScenario('high-frequency');
+// Run complete stress tests with detailed output
+MSPDebug.runFullSuite();
+
+// Test specific scenarios
+MSPDebug.stressScenario('high-frequency');
 
 // Generate detailed report
-MSPTestRunner.generateReport();
+MSPDebug.report();
 ```
 
 ### Issue Debugging
 ```javascript
+// Get current status
+MSPDebug.getStatus();
+
 // Analyze current queue state
-MSPTestRunner.analyzeQueue();
+MSPDebug.analyze();
 
-// Check for memory leaks
-MSPTestRunner.runTest('memory-leaks');
+// Test specific problematic scenario
+MSPDebug.runTest('memory-leaks');
 
-// Run full diagnostic
-MSPTestRunner.runFullSuite();
+// Check for alerts with low thresholds
+MSPDebug.setTestThresholds();
+MSPDebug.triggerTestAlerts();
+
+// Generate diagnostic report
+MSPDebug.report();
 ```
 
 ## Integration with Existing Code
@@ -231,6 +276,41 @@ The debug tools are designed to be non-intrusive:
 - Monitoring can be enabled/disabled at runtime
 - No performance impact when not actively monitoring
 - Original MSP behavior is preserved
+
+### Auto-loading
+The debug tools auto-load when `msp_debug_tools.js` is imported. They detect the presence of the global MSP object and initialize automatically.
+
+### Keyboard Shortcuts
+- `Ctrl+Shift+M`: Toggle debug dashboard
+
+## Implementation Status
+
+### ✅ Current Features
+
+#### Alert System
+- Enhanced debug logging with reduced console noise
+- Test infrastructure: `triggerTestAlerts()`, `setTestThresholds()`, `setNormalThresholds()`
+- Visual alert display in dashboard
+- Smart threshold management for testing
+
+#### Interactive Dashboard
+- Smart update pausing during user interactions
+- Clickable test results with detailed information
+- Enhanced interaction handling for all UI elements
+- Visual feedback with updates pause indicator
+
+#### Complete API
+- Dual API support: `MSPDebug` (modern) and `MSPTestRunner` (legacy)
+- All documented commands implemented and verified
+- Comprehensive testing methods (9 test types + 3 stress scenarios)
+- Real-time monitoring with alert detection
+
+### ✅ Verified Working
+- Alert system triggers correctly when thresholds exceeded
+- Dashboard displays alerts visually without update interference
+- Test results provide comprehensive detailed information
+- All API commands function as documented
+- Auto-loading works in development environment
 
 ## File Structure
 
