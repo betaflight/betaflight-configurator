@@ -690,8 +690,8 @@ presets.isPresetFitSearchFirmwareVersions = function (preset, searchParams) {
 
 presets.isPresetFitSearchString = function (preset, searchParams) {
     if (searchParams.searchString) {
-        const allKeywords = preset.keywords ? preset.keywords.join(" ") : "";
-        const allVersions = preset.firmware_version ? preset.firmware_version.join(" ") : "";
+        const allKeywords = Array.isArray(preset.keywords) ? preset.keywords.join(" ") : "";
+        const allVersions = Array.isArray(preset.firmware_version) ? preset.firmware_version.join(" ") : "";
         const totalLine = [preset.description, allKeywords, preset.title, preset.author, allVersions, preset.category]
             .join("\n")
             .toLowerCase()
