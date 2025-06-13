@@ -3625,8 +3625,7 @@ osd.initialize = function (callback) {
                     };
                     // Hide all menus function
                     const hideAllMenus = () => {
-                        $(".osd-context-menu").removeClass("show");
-                        $(".osd-position-grid").removeClass("show");
+                        $(".osd-context-menu, .osd-position-grid").removeClass("show");
                     };
                     // Event handlers
                     let menuTimeout;
@@ -3664,8 +3663,12 @@ osd.initialize = function (callback) {
                             $(this).removeClass("show");
                         });
                     // Global click handler to close menus
-                    globalMenuClickHandler = hideAllMenus;
-                    $(document).on("click", globalMenuClickHandler);
+                    if (!globalMenuClickHandler) {
+                        globalMenuClickHandler = () => {
+                            hideAllMenus();
+                        };
+                        $(document).on("click", globalMenuClickHandler);
+                    }
                     // Make field container relative positioned to contain the absolute positioned menu
                     $field.css("position", "relative");
                     // Append all elements
