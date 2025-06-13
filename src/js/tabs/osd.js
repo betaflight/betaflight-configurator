@@ -21,6 +21,192 @@ const FONT = {};
 const SYM = {};
 const OSD = {};
 
+const positionConfigs = {
+    TL: {
+        label: "Top Left",
+        coords: (w) => ({
+            x: 1,
+            y: 1,
+        }),
+        grow: {
+            x: 0,
+            y: 1,
+        },
+        gridPos: [0, 0],
+    },
+    TC: {
+        label: "Top Center",
+        coords: (w) => ({
+            x: Math.floor((OSD.data.displaySize.x - w) / 2),
+            y: 1,
+        }),
+        grow: {
+            x: 0,
+            y: 1,
+        },
+        gridPos: [1, 0],
+    },
+    TR: {
+        label: "Top Right",
+        coords: (w) => ({
+            x: Math.max(1, OSD.data.displaySize.x - w - 1),
+            y: 1,
+        }),
+        grow: {
+            x: 0,
+            y: 1,
+        },
+        gridPos: [2, 0],
+    },
+    // Top‑middle row
+    TML: {
+        label: "Top Middle Left",
+        coords: (w) => ({
+            x: 1,
+            y: Math.floor(OSD.data.displaySize.y / 3),
+        }),
+        grow: {
+            x: 0,
+            y: 1,
+        },
+        gridPos: [0, 1],
+    },
+    TMC: {
+        label: "Top Mid Center",
+        coords: (w) => ({
+            x: Math.floor((OSD.data.displaySize.x - w) / 2),
+            y: Math.floor(OSD.data.displaySize.y / 3),
+        }),
+        grow: {
+            x: 0,
+            y: 1,
+        },
+        gridPos: [1, 1],
+    },
+    TMR: {
+        label: "Top Middle Right",
+        coords: (w) => ({
+            x: Math.max(1, OSD.data.displaySize.x - w - 1),
+            y: Math.floor(OSD.data.displaySize.y / 3),
+        }),
+        grow: {
+            x: 0,
+            y: 1,
+        },
+        gridPos: [2, 1],
+    },
+    // Exact middle row
+    LMC: {
+        label: "Left Middle",
+        coords: (w) => ({
+            x: Math.floor(OSD.data.displaySize.x / 3),
+            y: Math.floor(OSD.data.displaySize.y / 2),
+        }),
+        grow: {
+            x: 0,
+            y: 1,
+        },
+        gridPos: [0, 2],
+    },
+    CTR: {
+        label: "Center",
+        coords: (w) => ({
+            x: Math.floor((OSD.data.displaySize.x - w) / 2),
+            y: Math.floor(OSD.data.displaySize.y / 2),
+        }),
+        grow: {
+            x: 0,
+            y: 1,
+        },
+        gridPos: [1, 2],
+    },
+    RMC: {
+        label: "Right Middle",
+        coords: (w) => ({
+            x: Math.max(1, Math.floor((OSD.data.displaySize.x * 2) / 3) - Math.floor(w / 2)),
+            y: Math.floor(OSD.data.displaySize.y / 2),
+        }),
+        grow: {
+            x: 0,
+            y: 1,
+        },
+        gridPos: [2, 2],
+    },
+    // Bottom‑middle row
+    BML: {
+        label: "Bottom Middle Left",
+        coords: (w) => ({
+            x: 1,
+            y: Math.floor((OSD.data.displaySize.y * 2) / 3),
+        }),
+        grow: {
+            x: 0,
+            y: -1,
+        },
+        gridPos: [0, 3],
+    },
+    BMC: {
+        label: "Bottom Mid Center",
+        coords: (w) => ({
+            x: Math.floor((OSD.data.displaySize.x - w) / 2),
+            y: Math.floor((OSD.data.displaySize.y * 2) / 3),
+        }),
+        grow: {
+            x: 0,
+            y: -1,
+        },
+        gridPos: [1, 3],
+    },
+    BMR: {
+        label: "Bottom Middle Right",
+        coords: (w) => ({
+            x: Math.max(1, OSD.data.displaySize.x - w - 1),
+            y: Math.floor((OSD.data.displaySize.y * 2) / 3),
+        }),
+        grow: {
+            x: 0,
+            y: -1,
+        },
+        gridPos: [2, 3],
+    },
+    BL: {
+        label: "Bottom Left",
+        coords: (w) => ({
+            x: 1,
+            y: OSD.data.displaySize.y - 2,
+        }),
+        grow: {
+            x: 0,
+            y: -1,
+        },
+        gridPos: [0, 4],
+    },
+    BC: {
+        label: "Bottom Center",
+        coords: (w) => ({
+            x: Math.floor((OSD.data.displaySize.x - w) / 2),
+            y: OSD.data.displaySize.y - 2,
+        }),
+        grow: {
+            x: 0,
+            y: -1,
+        },
+        gridPos: [1, 4],
+    },
+    BR: {
+        label: "Bottom Right",
+        coords: (w) => ({
+            x: Math.max(1, OSD.data.displaySize.x - w - 1),
+            y: OSD.data.displaySize.y - 2,
+        }),
+        grow: {
+            x: 0,
+            y: -1,
+        },
+        gridPos: [2, 4],
+    },
+};
+
 SYM.loadSymbols = function () {
     SYM.BLANK = 0x20;
     SYM.VOLT = 0x06;
@@ -3174,6 +3360,9 @@ osd.initialize = function (callback) {
                 // display fields on/off and position
                 const $displayFields = $("#element-fields").empty();
                 let enabledCount = 0;
+
+                OSD.data.displaySize.total = OSD.data.displaySize.x * OSD.data.displaySize.y;
+
                 for (const field of OSD.data.displayItems) {
                     // versioning related, if the field doesn't exist at the current flight controller version, just skip it
                     if (!field.name) {
@@ -3281,6 +3470,205 @@ osd.initialize = function (callback) {
                     $field.append($labelAndVariant);
                     // Insert in alphabetical order, with unknown fields at the end
                     $field.name = field.name;
+
+                    // OSD positioning buttons with element size compensation and centering logic
+                    // Enhanced OSD positioning with visual grid context menu
+
+                    // Create the context menu trigger button
+                    const $menuTrigger = $(`
+                    <div class="osd-menu-trigger grey" title="Position Options">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                            <circle cx="12" cy="5" r="2"/>
+                            <circle cx="12" cy="12" r="2"/>
+                            <circle cx="12" cy="19" r="2"/>
+                        </svg>
+                    </div>`);
+                    // Create the context menu
+                    const $contextMenu = $(`
+                    <div class="osd-context-menu">
+                        <div class="osd-menu-item align-to-item">
+                            <span>Align to Position</span>
+                            <span class="osd-menu-arrow">▶</span>
+                        </div>
+                    </div>`);
+                    // Create the position grid submenu
+                    const createPositionGrid = () => {
+                        const $grid = $(`
+                        <div class="osd-position-grid">
+                        <div class="grid-title">Choose Position</div>
+                        <div class="position-grid"></div>
+                        </div>`);
+                        const $gridContainer = $grid.find(".position-grid");
+                        // Create 15 cells for 3x5 grid
+                        for (let row = 0; row < 5; row++) {
+                            for (let col = 0; col < 3; col++) {
+                                const $cell = $('<div class="grid-cell"></div>');
+                                $cell.css("grid-row", row + 1);
+                                $cell.css("grid-column", col + 1);
+                                // Find matching position config
+                                const matchingConfig = Object.entries(positionConfigs).find(
+                                    ([key, config]) =>
+                                        config.gridPos && config.gridPos[0] === col && config.gridPos[1] === row,
+                                );
+                                if (matchingConfig) {
+                                    const [configKey, config] = matchingConfig;
+                                    $cell
+                                        .addClass("position-available")
+                                        .data("position-key", configKey)
+                                        .data("field", field)
+                                        .append(`<div class="position-tooltip">${config.label}</div>`);
+                                    // Add click handler for position selection
+                                    $cell.click(function (e) {
+                                        e.stopPropagation();
+                                        const positionKey = $(this).data("position-key");
+                                        const fieldToUpdate = $(this).data("field");
+                                        applyPosition(fieldToUpdate, positionKey);
+                                        hideAllMenus();
+                                    });
+                                }
+                                $gridContainer.append($cell);
+                            }
+                        }
+                        return $grid;
+                    };
+                    // Position application function
+                    const applyPosition = (fieldChanged, positionKey) => {
+                        const config = positionConfigs[positionKey];
+                        if (!config) return;
+                        // Get element width estimation (same logic as before)
+                        let elementWidth = 1;
+                        if (fieldChanged.preview && fieldChanged.preview.length) {
+                            elementWidth = fieldChanged.preview.length;
+                        } else if (fieldChanged.preview_length) {
+                            elementWidth = fieldChanged.preview_length;
+                        } else if (fieldChanged.length) {
+                            elementWidth = fieldChanged.length;
+                        } else if (fieldChanged.max_length) {
+                            elementWidth = fieldChanged.max_length;
+                        } else if (fieldChanged.name) {
+                            const fieldEstimates = {
+                                ALTITUDE: 6,
+                                THROTTLE_POS: 4,
+                                BATTERY_VOLTAGE: 5,
+                                RSSI_VALUE: 4,
+                                TIMER: 8,
+                                FLYMODE: 4,
+                                CRAFT_NAME: 12,
+                                PILOT_NAME: 12,
+                                HOME_DIST: 8,
+                                GPS_SPEED: 6,
+                                GPS_SATS: 3,
+                                CURRENT_DRAW: 6,
+                                MAH_DRAWN: 6,
+                                WH_DRAWN: 6,
+                                BATTERY_AVERAGE_CELL_VOLTAGE: 5,
+                                GPS_LON: 12,
+                                GPS_LAT: 12,
+                                DEBUG: 8,
+                                PID_ROLL: 8,
+                                PID_PITCH: 8,
+                                PID_YAW: 8,
+                                POWER: 4,
+                                PIDRATE_PROFILE: 3,
+                                PID_PROFILE: 3,
+                                RC_CHANNELS: 4,
+                                CAMERA_FRAME: 10,
+                            };
+                            elementWidth = fieldEstimates[fieldChanged.name] || 6;
+                        }
+                        const target = config.coords(elementWidth);
+                        let finalPosition = null;
+                        // Ensure target position is within bounds
+                        if (target.x < 1) target.x = 1;
+                        if (target.x + elementWidth > OSD.data.displaySize.x - 1) {
+                            target.x = Math.max(1, OSD.data.displaySize.x - elementWidth - 1);
+                        }
+                        // Find available position with growth logic
+                        for (
+                            let offset = 0;
+                            offset < Math.max(OSD.data.displaySize.x, OSD.data.displaySize.y);
+                            offset++
+                        ) {
+                            const testX = target.x + config.grow.x * offset;
+                            const testY = target.y + config.grow.y * offset;
+                            if (
+                                testX < 1 ||
+                                testX + elementWidth > OSD.data.displaySize.x - 1 ||
+                                testY < 1 ||
+                                testY > OSD.data.displaySize.y - 2
+                            )
+                                break;
+                            let canPlace = true;
+                            for (let i = 0; i < elementWidth && canPlace; i++) {
+                                const checkPos = testY * OSD.data.displaySize.x + testX + i;
+                                const cell = OSD.data.preview[checkPos];
+                                if (cell && cell[0] && cell[0].index !== fieldChanged.index) {
+                                    canPlace = false;
+                                }
+                            }
+                            if (canPlace) {
+                                finalPosition = testY * OSD.data.displaySize.x + testX;
+                                break;
+                            }
+                        }
+                        if (finalPosition !== null) {
+                            fieldChanged.position = finalPosition;
+                            MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, OSD.msp.encodeLayout(fieldChanged))
+                                .then(() => updateOsdView())
+                                .catch((err) => console.error("OSD update failed:", err));
+                        } else {
+                            // Show a nicer notification instead of alert
+                            alert("Unable to place element - not enough space available", "warning");
+                        }
+                    };
+                    // Hide all menus function
+                    const hideAllMenus = () => {
+                        $(".osd-context-menu").removeClass("show");
+                        $(".osd-position-grid").removeClass("show");
+                    };
+                    // Event handlers
+                    let menuTimeout;
+                    $menuTrigger.on("click", function (e) {
+                        e.stopPropagation();
+                        const $menu = $(this).siblings(".osd-context-menu");
+                        const isVisible = $menu.hasClass("show");
+                        hideAllMenus();
+                        if (!isVisible) {
+                            $menu.addClass("show");
+                        }
+                    });
+                    // Handle submenu hover
+                    $contextMenu
+                        .on("mouseenter", ".align-to-item", function () {
+                            clearTimeout(menuTimeout);
+                            const $grid = $(this).closest(".osd-context-menu").siblings(".osd-position-grid");
+                            $grid.addClass("show");
+                        })
+                        .on("mouseleave", ".align-to-item", function () {
+                            menuTimeout = setTimeout(() => {
+                                const $grid = $(this).closest(".osd-context-menu").siblings(".osd-position-grid");
+                                if (!$grid.is(":hover")) {
+                                    $grid.removeClass("show");
+                                }
+                            }, 200);
+                        });
+                    // Keep grid open when hovering over it
+                    const $positionGrid = createPositionGrid();
+                    $positionGrid
+                        .on("mouseenter", function () {
+                            clearTimeout(menuTimeout);
+                        })
+                        .on("mouseleave", function () {
+                            $(this).removeClass("show");
+                        });
+                    // Global click handler to close menus
+                    $(document).on("click", hideAllMenus);
+                    // Make field container relative positioned to contain the absolute positioned menu
+                    $field.css("position", "relative");
+                    // Append all elements
+                    $field.append($menuTrigger);
+                    $field.append($contextMenu);
+                    $field.append($positionGrid);
                     insertOrdered($displayFields, $field);
                 }
 
@@ -3302,7 +3690,7 @@ osd.initialize = function (callback) {
                 GUI.switchery();
                 // buffer the preview
                 OSD.data.preview = [];
-                OSD.data.displaySize.total = OSD.data.displaySize.x * OSD.data.displaySize.y;
+
                 for (const field of OSD.data.displayItems) {
                     // reset fields that somehow end up off the screen
                     if (field.position > OSD.data.displaySize.total) {

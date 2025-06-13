@@ -488,4 +488,177 @@
             }
         }
     }
+    // CSS for the context menu and visual grid
+    .osd-menu-trigger {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 20px;
+        height: 20px;
+        border-radius: 4px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        opacity: 0.7;
+        transition: all 0.2s ease;
+        z-index: 99;
+    }
+
+    .osd-menu-trigger:hover {
+        opacity: 1;
+        background: rgba(255, 255, 255, 0.2);
+        transform: scale(1.05);
+    }
+
+    .osd-context-menu {
+        position: absolute;
+        top: 25px;
+        right: 0;
+        background: #2a2a2a;
+        border: 1px solid #555;
+        border-radius: 8px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+        z-index: 1000;
+        min-width: 180px;
+        overflow: hidden;
+        opacity: 0;
+        transform: translateY(-10px);
+        transition: all 0.2s ease;
+        pointer-events: none;
+    }
+
+    .osd-context-menu.show {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: all;
+    }
+
+    .osd-menu-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 16px;
+        cursor: pointer;
+        color: #fff;
+        font-size: 13px;
+        border-bottom: 1px solid #444;
+        transition: background-color 0.15s ease;
+    }
+
+    .osd-menu-item:hover {
+        background: #3a3a3a;
+    }
+
+    .osd-menu-item:last-child {
+        border-bottom: none;
+    }
+
+    .osd-menu-arrow {
+        font-size: 10px;
+        opacity: 0.7;
+    }
+
+    .osd-position-grid {
+        position: absolute;
+        top: 0;
+        left: 100%;
+        margin-left: 8px;
+        background: #2a2a2a;
+        border: 1px solid #555;
+        border-radius: 8px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+        padding: 16px;
+        opacity: 0;
+        transform: translateX(-10px);
+        transition: all 0.2s ease;
+        pointer-events: none;
+        min-width: 200px;
+        z-index: 999999;
+    }
+
+    .osd-position-grid.show {
+        opacity: 1;
+        transform: translateX(0);
+        pointer-events: all;
+    }
+
+    .grid-title {
+        text-align: center;
+        color: #fff;
+        font-size: 12px;
+        font-weight: 600;
+        margin-bottom: 12px;
+    }
+
+    .position-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: repeat(5, 1fr);
+        gap: 6px;
+        width: 150px;
+        height: 120px;
+        margin: 0 auto;
+        border: 2px solid #555;
+        border-radius: 6px;
+        padding: 8px;
+        background: #1a1a1a;
+    }
+
+    .grid-cell {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        font-size: 8px;
+        color: rgba(255, 255, 255, 0.6);
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 3px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .grid-cell:hover {
+        background: rgba(59, 130, 246, 0.3);
+        transform: scale(1.1);
+    }
+
+    .grid-cell.active {
+        background: rgba(59, 130, 246, 0.6);
+        color: #fff;
+    }
+
+    .grid-cell::after {
+        content: "";
+        position: absolute;
+        width: 4px;
+        height: 4px;
+        background: currentColor;
+        border-radius: 50%;
+        opacity: 0.8;
+    }
+
+    .position-tooltip {
+        position: absolute;
+        bottom: -25px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #000;
+        color: #fff;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 10px;
+        white-space: nowrap;
+        opacity: 0;
+        transition: opacity 0.2s ease;
+        pointer-events: none;
+    }
+
+    .grid-cell:hover .position-tooltip {
+        opacity: 1;
+    }
 }
