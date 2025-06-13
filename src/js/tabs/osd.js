@@ -21,6 +21,8 @@ const FONT = {};
 const SYM = {};
 const OSD = {};
 
+// Stuff related to the "preset" positioning
+let globalMenuClickHandler = null;
 const positionConfigs = {
     TL: {
         label: "Top Left",
@@ -3662,7 +3664,8 @@ osd.initialize = function (callback) {
                             $(this).removeClass("show");
                         });
                     // Global click handler to close menus
-                    $(document).on("click", hideAllMenus);
+                    globalMenuClickHandler = hideAllMenus;
+                    $(document).on("click", globalMenuClickHandler);
                     // Make field container relative positioned to contain the absolute positioned menu
                     $field.css("position", "relative");
                     // Append all elements
@@ -3981,6 +3984,12 @@ osd.cleanup = function (callback) {
 
     if (callback) {
         callback();
+    }
+
+    // Remove position menu click handler
+    if (globalMenuClickHandler) {
+        $(document).off("click", globalMenuClickHandler);
+        globalMenuClickHandler = null;
     }
 };
 
