@@ -3595,7 +3595,7 @@ osd.initialize = function (callback) {
                                         // Lets skip over the advanced elements and just let any elements overlap these advanced elements and let it be overlapped by any element.
                                         // Since they don't actually use up the full space of their bounds and we can overlap with them while our elements still being fully visible.
                                         !(
-                                            cell[0].preview.constructor === Array ||
+                                            cell?.[0]?.preview?.constructor === Array ||
                                             fieldChanged.preview.constructor === Array
                                         )
                                     ) {
