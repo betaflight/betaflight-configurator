@@ -13,6 +13,7 @@ import $ from "jquery";
 import { serial } from "../serial";
 import FileSystem from "../FileSystem";
 import { ispConnected } from "../utils/connection";
+import { initializeModalDialog } from "../utils/initializeModalDialog";
 
 const cli = {
     lineDelayMs: 5,
@@ -157,20 +158,16 @@ cli.initialize = function (callback) {
 
         function previewCommands(result, fileName) {
             if (!self.GUI.snippetPreviewWindow) {
-                self.GUI.snippetPreviewWindow = new jBox("Modal", {
-                    id: "snippetPreviewWindow",
-                    width: "auto",
-                    height: "auto",
-                    closeButton: "title",
-                    animation: false,
-                    isolateScroll: false,
-                    title: i18n.getMessage("cliConfirmSnippetDialogTitle", { fileName: fileName }),
-                    content: $("#snippetpreviewcontent"),
-                    onCreated: () => $("#snippetpreviewcontent a.confirm").click(() => executeSnippet(fileName)),
-                });
+                self.GUI.snippetPreviewWindow = initializeModalDialog(
+                    null,
+                    "#snippetpreviewdialog",
+                    "cliConfirmSnippetDialogTitle",
+                    { fileName: fileName },
+                );
+                $("#snippetpreviewcontent a.confirm").click(() => executeSnippet(fileName));
             }
             previewArea.val(result);
-            self.GUI.snippetPreviewWindow.open();
+            self.GUI.snippetPreviewWindow.showModal();
         }
 
         const file = await FileSystem.pickOpenFile(i18n.getMessage("fileSystemPickerFiles", { typeof: "TXT" }), ".txt");
@@ -536,10 +533,6 @@ cli.supportWarningDialog = function (onAccept) {
 };
 
 cli.cleanup = function (callback) {
-    if (TABS.cli.GUI.snippetPreviewWindow) {
-        TABS.cli.GUI.snippetPreviewWindow.destroy();
-        TABS.cli.GUI.snippetPreviewWindow = null;
-    }
     if (!(CONFIGURATOR.connectionValid && CONFIGURATOR.cliValid && CONFIGURATOR.cliActive)) {
         if (callback) {
             callback();

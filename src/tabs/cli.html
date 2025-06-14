@@ -13,15 +13,17 @@
     </div>
 
     <!-- Snippet preview dialog -->
-    <div id="snippetpreviewcontent" style="display: none">
+    <dialog closedby="any" id="snippetpreviewdialog" style="border-color: var(--primary-500); padding: 0px;">
+    <div id="snippetpreviewcontent" style="padding: 10px 15px">
         <div class="note">
             <p i18n="cliConfirmSnippetNote"></p>
         </div>
-        <textarea id="preview" cols="120" rows="20"></textarea>
+        <textarea id="preview" rows="20"></textarea>
         <div class="default_btn">
             <a class="confirm" href="#" i18n="cliConfirmSnippetBtn"></a>
         </div>
     </div>
+    </dialog>
 
     <dialog class="supportWarningDialog">
         <h3 i18n="supportWarningDialogTitle"></h3>
