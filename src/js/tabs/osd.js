@@ -26,7 +26,7 @@ let globalMenuClickHandler = null;
 const positionConfigs = {
     TL: {
         label: "Top Left",
-        coords: (w) => ({
+        coords: (w, h) => ({
             x: 1,
             y: 1,
         }),
@@ -38,7 +38,7 @@ const positionConfigs = {
     },
     TC: {
         label: "Top Center",
-        coords: (w) => ({
+        coords: (w, h) => ({
             x: Math.floor((OSD.data.displaySize.x - w) / 2),
             y: 1,
         }),
@@ -50,7 +50,7 @@ const positionConfigs = {
     },
     TR: {
         label: "Top Right",
-        coords: (w) => ({
+        coords: (w, h) => ({
             x: Math.max(1, OSD.data.displaySize.x - w - 1),
             y: 1,
         }),
@@ -60,12 +60,12 @@ const positionConfigs = {
         },
         gridPos: [2, 0],
     },
-    // Top‑middle row
+    // Top-middle row
     TML: {
         label: "Top Middle Left",
-        coords: (w) => ({
+        coords: (w, h) => ({
             x: 1,
-            y: Math.floor(OSD.data.displaySize.y / 3),
+            y: Math.floor(OSD.data.displaySize.y / 3) - Math.floor(h / 2),
         }),
         grow: {
             x: 0,
@@ -75,9 +75,9 @@ const positionConfigs = {
     },
     TMC: {
         label: "Top Mid Center",
-        coords: (w) => ({
+        coords: (w, h) => ({
             x: Math.floor((OSD.data.displaySize.x - w) / 2),
-            y: Math.floor(OSD.data.displaySize.y / 3),
+            y: Math.floor(OSD.data.displaySize.y / 3) - Math.floor(h / 2),
         }),
         grow: {
             x: 0,
@@ -87,9 +87,9 @@ const positionConfigs = {
     },
     TMR: {
         label: "Top Middle Right",
-        coords: (w) => ({
+        coords: (w, h) => ({
             x: Math.max(1, OSD.data.displaySize.x - w - 1),
-            y: Math.floor(OSD.data.displaySize.y / 3),
+            y: Math.floor(OSD.data.displaySize.y / 3) - Math.floor(h / 2),
         }),
         grow: {
             x: 0,
@@ -100,9 +100,9 @@ const positionConfigs = {
     // Exact middle row
     LMC: {
         label: "Left Middle",
-        coords: (w) => ({
-            x: Math.floor(OSD.data.displaySize.x / 3),
-            y: Math.floor(OSD.data.displaySize.y / 2),
+        coords: (w, h) => ({
+            x: 1,
+            y: Math.floor((OSD.data.displaySize.y - h) / 2),
         }),
         grow: {
             x: 0,
@@ -112,9 +112,11 @@ const positionConfigs = {
     },
     CTR: {
         label: "Center",
-        coords: (w) => ({
-            x: Math.floor((OSD.data.displaySize.x - w) / 2),
-            y: Math.floor(OSD.data.displaySize.y / 2),
+        coords: (w, h) => ({
+            x: Math.floor(OSD.data.displaySize.x / 2 - w / 2),
+            y: Math.floor(OSD.data.displaySize.y / 2 - h / 2),
+            // x: 1,
+            // y: 1,
         }),
         grow: {
             x: 0,
@@ -124,9 +126,9 @@ const positionConfigs = {
     },
     RMC: {
         label: "Right Middle",
-        coords: (w) => ({
-            x: Math.max(1, Math.floor((OSD.data.displaySize.x * 2) / 3) - Math.floor(w / 2)),
-            y: Math.floor(OSD.data.displaySize.y / 2),
+        coords: (w, h) => ({
+            x: OSD.data.displaySize.x - 1 - w,
+            y: Math.floor((OSD.data.displaySize.y - h) / 2),
         }),
         grow: {
             x: 0,
@@ -134,12 +136,12 @@ const positionConfigs = {
         },
         gridPos: [2, 2],
     },
-    // Bottom‑middle row
+    // Bottom-middle row
     BML: {
         label: "Bottom Middle Left",
-        coords: (w) => ({
+        coords: (w, h) => ({
             x: 1,
-            y: Math.floor((OSD.data.displaySize.y * 2) / 3),
+            y: Math.floor((OSD.data.displaySize.y * 2) / 3) - Math.floor(h / 2),
         }),
         grow: {
             x: 0,
@@ -149,9 +151,9 @@ const positionConfigs = {
     },
     BMC: {
         label: "Bottom Mid Center",
-        coords: (w) => ({
+        coords: (w, h) => ({
             x: Math.floor((OSD.data.displaySize.x - w) / 2),
-            y: Math.floor((OSD.data.displaySize.y * 2) / 3),
+            y: Math.floor((OSD.data.displaySize.y * 2) / 3) - Math.floor(h / 2),
         }),
         grow: {
             x: 0,
@@ -161,9 +163,9 @@ const positionConfigs = {
     },
     BMR: {
         label: "Bottom Middle Right",
-        coords: (w) => ({
+        coords: (w, h) => ({
             x: Math.max(1, OSD.data.displaySize.x - w - 1),
-            y: Math.floor((OSD.data.displaySize.y * 2) / 3),
+            y: Math.floor((OSD.data.displaySize.y * 2) / 3) - Math.floor(h / 2),
         }),
         grow: {
             x: 0,
@@ -173,9 +175,9 @@ const positionConfigs = {
     },
     BL: {
         label: "Bottom Left",
-        coords: (w) => ({
+        coords: (w, h) => ({
             x: 1,
-            y: OSD.data.displaySize.y - 2,
+            y: OSD.data.displaySize.y - h - 1,
         }),
         grow: {
             x: 0,
@@ -185,9 +187,9 @@ const positionConfigs = {
     },
     BC: {
         label: "Bottom Center",
-        coords: (w) => ({
+        coords: (w, h) => ({
             x: Math.floor((OSD.data.displaySize.x - w) / 2),
-            y: OSD.data.displaySize.y - 2,
+            y: OSD.data.displaySize.y - h - 1,
         }),
         grow: {
             x: 0,
@@ -197,9 +199,9 @@ const positionConfigs = {
     },
     BR: {
         label: "Bottom Right",
-        coords: (w) => ({
+        coords: (w, h) => ({
             x: Math.max(1, OSD.data.displaySize.x - w - 1),
-            y: OSD.data.displaySize.y - 2,
+            y: OSD.data.displaySize.y - h - 1,
         }),
         grow: {
             x: 0,
@@ -2105,12 +2107,14 @@ OSD.searchLimitsElement = function (arrayElements) {
             limits.maxX = Math.max(valor.length, limits.maxX);
         });
     } else {
-        arrayElements.forEach(function (valor) {
-            limits.minX = Math.min(valor.x, limits.minX);
-            limits.maxX = Math.max(valor.x, limits.maxX);
-            limits.minY = Math.min(valor.y, limits.minY);
-            limits.maxY = Math.max(valor.y, limits.maxY);
-        });
+        for (let i = 0; i < arrayElements.length; i++) {
+            const { x, y } = arrayElements[i];
+            // Update axis limits.
+            if (x < limits.minX) limits.minX = x;
+            if (x > limits.maxX) limits.maxX = x;
+            if (y < limits.minY) limits.minY = y;
+            if (y > limits.maxY) limits.maxY = y;
+        }
     }
 
     return limits;
@@ -3478,13 +3482,13 @@ osd.initialize = function (callback) {
 
                     // Create the context menu trigger button
                     const $menuTrigger = $(`
-                    <div class="osd-menu-trigger grey" title="Position Options">
+                    <button type="button" class="osd-menu-trigger grey" aria-label="OSD position options">
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
                             <circle cx="12" cy="5" r="2"/>
                             <circle cx="12" cy="12" r="2"/>
                             <circle cx="12" cy="19" r="2"/>
                         </svg>
-                    </div>`);
+                    </button>`);
                     // Create the context menu
                     const $contextMenu = $(`
                     <div class="osd-context-menu">
@@ -3537,53 +3541,36 @@ osd.initialize = function (callback) {
                     const applyPosition = (fieldChanged, positionKey) => {
                         const config = positionConfigs[positionKey];
                         if (!config) return;
-                        // Get element width estimation (same logic as before)
-                        let elementWidth = 1;
-                        if (fieldChanged.preview && fieldChanged.preview.length) {
-                            elementWidth = fieldChanged.preview.length;
-                        } else if (fieldChanged.preview_length) {
-                            elementWidth = fieldChanged.preview_length;
-                        } else if (fieldChanged.length) {
-                            elementWidth = fieldChanged.length;
-                        } else if (fieldChanged.max_length) {
-                            elementWidth = fieldChanged.max_length;
-                        } else if (fieldChanged.name) {
-                            const fieldEstimates = {
-                                ALTITUDE: 6,
-                                THROTTLE_POS: 4,
-                                BATTERY_VOLTAGE: 5,
-                                RSSI_VALUE: 4,
-                                TIMER: 8,
-                                FLYMODE: 4,
-                                CRAFT_NAME: 12,
-                                PILOT_NAME: 12,
-                                HOME_DIST: 8,
-                                GPS_SPEED: 6,
-                                GPS_SATS: 3,
-                                CURRENT_DRAW: 6,
-                                MAH_DRAWN: 6,
-                                WH_DRAWN: 6,
-                                BATTERY_AVERAGE_CELL_VOLTAGE: 5,
-                                GPS_LON: 12,
-                                GPS_LAT: 12,
-                                DEBUG: 8,
-                                PID_ROLL: 8,
-                                PID_PITCH: 8,
-                                PID_YAW: 8,
-                                POWER: 4,
-                                PIDRATE_PROFILE: 3,
-                                PID_PROFILE: 3,
-                                RC_CHANNELS: 4,
-                                CAMERA_FRAME: 10,
-                            };
-                            elementWidth = fieldEstimates[fieldChanged.name] || 6;
+
+                        let elementWidth = fieldChanged.preview.constructor == String ? fieldChanged.preview.length : 1;
+                        // TODO : Are there any multi-lined String (simple) elements?Hardcoding this to one for now.
+                        let elementHeight = 1;
+
+                        let adjustOffsetX = 0;
+                        let adjustOffsetY = 0;
+
+                        // Advanced elements
+                        if (fieldChanged.preview.constructor == Array) {
+                            const limits = OSD.searchLimitsElement(fieldChanged.preview);
+
+                            elementWidth = limits.maxX - limits.minX;
+                            elementHeight = limits.maxY - limits.minY;
+
+                            // I'n
+                            adjustOffsetX = limits.minX + 1;
+                            adjustOffsetY = limits.minY + 1;
                         }
-                        const target = config.coords(elementWidth);
+
+                        const target = config.coords(elementWidth, elementHeight);
                         let finalPosition = null;
                         // Ensure target position is within bounds
                         if (target.x < 1) target.x = 1;
+                        if (target.y < 1) target.y = 1;
                         if (target.x + elementWidth > OSD.data.displaySize.x - 1) {
                             target.x = Math.max(1, OSD.data.displaySize.x - elementWidth - 1);
+                        }
+                        if (target.y + elementHeight > OSD.data.displaySize.y - 1) {
+                            target.y = Math.max(1, OSD.data.displaySize.y - elementHeight - 1);
                         }
                         // Find available position with growth logic
                         for (
@@ -3601,15 +3588,49 @@ osd.initialize = function (callback) {
                             )
                                 break;
                             let canPlace = true;
-                            for (let i = 0; i < elementWidth && canPlace; i++) {
-                                const checkPos = testY * OSD.data.displaySize.x + testX + i;
-                                const cell = OSD.data.preview[checkPos];
-                                if (cell && cell[0] && cell[0].index !== fieldChanged.index) {
-                                    canPlace = false;
+                            for (let row = 0; row < elementHeight && canPlace; row++) {
+                                for (let col = 0; col < elementWidth && canPlace; col++) {
+                                    const checkPos = (testY + row) * OSD.data.displaySize.x + testX + col;
+                                    const cell = OSD.data.preview[checkPos];
+
+                                    if (
+                                        cell &&
+                                        cell[0] &&
+                                        cell[0].index !== fieldChanged.index &&
+                                        // Lets skip over the advanced elements and just let any elements overlap these advanced elements and let it be overlapped by any element.
+                                        // Since they don't actually use up the full space of their bounds and we can overlap with them while our elements still being fully visible.
+                                        !(
+                                            cell[0].preview.constructor === Array ||
+                                            fieldChanged.preview.constructor === Array
+                                        )
+                                    ) {
+                                        canPlace = false;
+                                    }
                                 }
                             }
                             if (canPlace) {
                                 finalPosition = testY * OSD.data.displaySize.x + testX;
+                                {
+                                    // I'm just copying this block here but I actually don't fully understand why this is needed
+                                    // and why we can't just put it at that position and need these offsets/adjustments:
+
+                                    // if (displayItem.preview.constructor === Array) {
+                                    //     console.log(`Initial Drop Position: ${position}`);
+                                    //     const x = parseInt(ev.dataTransfer.getData("x"));
+                                    //     const y = parseInt(ev.dataTransfer.getData("y"));
+                                    //     console.log(`XY Co-ords: ${x}-${y}`);
+                                    //     position -= x; // <-- Here
+                                    //     position -= y * OSD.data.displaySize.x; // <-- Here
+                                    //     console.log(`Calculated Position: ${position}`);
+                                    // }
+
+                                    // This just imitates the code above^
+                                    // If this doesn't exist then advanced elements can't be properly
+                                    // placed/positioned to the preset positions
+                                    finalPosition -= adjustOffsetX;
+                                    finalPosition -= adjustOffsetY * OSD.data.displaySize.x;
+                                }
+
                                 break;
                             }
                         }
