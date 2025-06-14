@@ -2107,14 +2107,12 @@ OSD.searchLimitsElement = function (arrayElements) {
             limits.maxX = Math.max(valor.length, limits.maxX);
         });
     } else {
-        for (let i = 0; i < arrayElements.length; i++) {
-            const { x, y } = arrayElements[i];
-            // Update axis limits.
-            if (x < limits.minX) limits.minX = x;
-            if (x > limits.maxX) limits.maxX = x;
-            if (y < limits.minY) limits.minY = y;
-            if (y > limits.maxY) limits.maxY = y;
-        }
+        arrayElements.forEach(function (valor) {
+            limits.minX = Math.min(valor.x, limits.minX);
+            limits.maxX = Math.max(valor.x, limits.maxX);
+            limits.minY = Math.min(valor.y, limits.minY);
+            limits.maxY = Math.max(valor.y, limits.maxY);
+        });
     }
 
     return limits;
@@ -3556,7 +3554,6 @@ osd.initialize = function (callback) {
                             elementWidth = limits.maxX - limits.minX;
                             elementHeight = limits.maxY - limits.minY;
 
-                            // I'n
                             adjustOffsetX = limits.minX + 1;
                             adjustOffsetY = limits.minY + 1;
                         }
