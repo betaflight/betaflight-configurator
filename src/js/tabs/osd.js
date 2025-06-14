@@ -2346,6 +2346,10 @@ OSD.drawByOrder = function (selectedPosition, field, charCode, x, y) {
     }
 };
 
+OSD.hideAllPositionPresetMenus = function () {
+    $(".osd-context-menu, .osd-position-grid").removeClass("show");
+};
+
 OSD.msp = {
     /**
      * Note, unsigned 16 bit int for position ispacked:
@@ -3527,7 +3531,7 @@ osd.initialize = function (callback) {
                                         const positionKey = $(this).data("position-key");
                                         const fieldToUpdate = $(this).data("field");
                                         applyPosition(fieldToUpdate, positionKey);
-                                        hideAllMenus();
+                                        OSD.hideAllPositionPresetMenus();
                                     });
                                 }
                                 $gridContainer.append($cell);
@@ -3541,8 +3545,8 @@ osd.initialize = function (callback) {
                         if (!config) return;
 
                         let elementWidth = fieldChanged.preview.constructor == String ? fieldChanged.preview.length : 1;
-                        // TODO : Are there any multi-lined String (simple) elements?Hardcoding this to one for now.
-                        let elementHeight = 1;
+                        let elementHeight =
+                            fieldChanged.preview.constructor === String ? 1 : fieldChanged.preview.length;
 
                         let adjustOffsetX = 0;
                         let adjustOffsetY = 0;
@@ -3637,17 +3641,14 @@ osd.initialize = function (callback) {
                             alert("Unable to place element - not enough space available");
                         }
                     };
-                    // Hide all menus function
-                    const hideAllMenus = () => {
-                        $(".osd-context-menu, .osd-position-grid").removeClass("show");
-                    };
+
                     // Event handlers
                     let menuTimeout;
                     $menuTrigger.on("click", function (e) {
                         e.stopPropagation();
                         const $menu = $(this).siblings(".osd-context-menu");
                         const isVisible = $menu.hasClass("show");
-                        hideAllMenus();
+                        OSD.hideAllPositionPresetMenus();
                         if (!isVisible) {
                             $menu.addClass("show");
                         }
@@ -3679,7 +3680,7 @@ osd.initialize = function (callback) {
                     // Global click handler to close menus
                     if (!globalMenuClickHandler) {
                         globalMenuClickHandler = () => {
-                            hideAllMenus();
+                            OSD.hideAllPositionPresetMenus();
                         };
                         $(document).on("click", globalMenuClickHandler);
                     }
