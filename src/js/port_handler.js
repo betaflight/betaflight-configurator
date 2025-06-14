@@ -50,8 +50,8 @@ const PortHandler = new (function () {
 })();
 
 PortHandler.initialize = function () {
-    EventBus.$on("ports-input:request-permission-bluetooth", () => this.requestDevicePermission("bluetooth"));
-    EventBus.$on("ports-input:request-permission", () => this.requestDevicePermission("serial"));
+    EventBus.$on("ports-input:request-permission-bluetooth", () => this.requestDevicePermission("webbluetooth"));
+    EventBus.$on("ports-input:request-permission-serial", () => this.requestDevicePermission("webserial"));
     EventBus.$on("ports-input:request-permission-usb", () => this.requestDevicePermission("usb"));
     EventBus.$on("ports-input:change", this.onChangeSelectedPort.bind(this));
 
@@ -60,9 +60,9 @@ PortHandler.initialize = function () {
         const detail = event.detail;
 
         if (detail?.path?.startsWith("bluetooth")) {
-            this.handleDeviceAdded(detail, "bluetooth");
+            this.handleDeviceAdded(detail, "webbluetooth");
         } else {
-            this.handleDeviceAdded(detail, "serial");
+            this.handleDeviceAdded(detail, "webserial");
         }
     });
 
@@ -81,8 +81,8 @@ PortHandler.initialize = function () {
 PortHandler.refreshAllDeviceLists = async function () {
     // Update all device lists in parallel
     return Promise.all([
-        this.updateDeviceList("serial"),
-        this.updateDeviceList("bluetooth"),
+        this.updateDeviceList("webserial"),
+        this.updateDeviceList("webbluetooth"),
         this.updateDeviceList("usb"),
     ]).then(() => {
         this.selectActivePort();
@@ -112,7 +112,7 @@ PortHandler.removedSerialDevice = function (device) {
     if (!devicePath) {
         console.warn(`${this.logHead} Device removal event missing path information`, device);
         // Still update ports, but don't try to use the undefined path
-        this.updateDeviceList("serial").then(() => {
+        this.updateDeviceList("webserial").then(() => {
             this.selectActivePort();
         });
         return;
@@ -120,8 +120,8 @@ PortHandler.removedSerialDevice = function (device) {
 
     // Update the appropriate ports list based on the device type
     const updatePromise = devicePath.startsWith("bluetooth")
-        ? this.updateDeviceList("bluetooth")
-        : this.updateDeviceList("serial");
+        ? this.updateDeviceList("webbluetooth")
+        : this.updateDeviceList("webserial");
 
     const wasSelectedPort = this.portPicker.selectedPort === devicePath;
 
@@ -177,7 +177,9 @@ PortHandler.requestDevicePermission = function (deviceType) {
 
 PortHandler.sortPorts = function (ports) {
     return ports.sort(function (a, b) {
-        return a.path.localeCompare(b.path, window.navigator.language, {
+        const locale = typeof window !== "undefined" && window.navigator ? window.navigator.language : "en";
+
+        return a.path.localeCompare(b.path, locale, {
             numeric: true,
             sensitivity: "base",
         });
@@ -282,7 +284,7 @@ PortHandler.handleDeviceAdded = function (device, deviceType) {
 
     // Update the appropriate device list
     const updatePromise =
-        deviceType === "bluetooth" ? this.updateDeviceList("bluetooth") : this.updateDeviceList("serial");
+        deviceType === "webbluetooth" ? this.updateDeviceList("webbluetooth") : this.updateDeviceList("webserial");
 
     updatePromise.then(() => {
         const selectedPort = this.selectActivePort(device);
@@ -304,9 +306,9 @@ PortHandler.updateDeviceList = async function (deviceType) {
 
     try {
         switch (deviceType) {
-            case "bluetooth":
+            case "webbluetooth":
                 if (this.showBluetoothOption) {
-                    ports = await serial.getDevices("bluetooth");
+                    ports = await serial.getDevices("webbluetooth");
                 }
                 break;
             case "usb":
@@ -314,9 +316,9 @@ PortHandler.updateDeviceList = async function (deviceType) {
                     ports = await WEBUSBDFU.getDevices();
                 }
                 break;
-            case "serial":
+            case "webserial":
                 if (this.showSerialOption) {
-                    ports = await serial.getDevices("serial");
+                    ports = await serial.getDevices("webserial");
                 }
                 break;
             default:
@@ -329,7 +331,7 @@ PortHandler.updateDeviceList = async function (deviceType) {
 
         // Update the appropriate properties based on device type
         switch (deviceType) {
-            case "bluetooth":
+            case "webbluetooth":
                 this.bluetoothAvailable = orderedPorts.length > 0;
                 this.currentBluetoothPorts = [...orderedPorts];
                 console.log(`${this.logHead} Found bluetooth port(s)`, orderedPorts);
@@ -339,12 +341,14 @@ PortHandler.updateDeviceList = async function (deviceType) {
                 this.currentUsbPorts = [...orderedPorts];
                 console.log(`${this.logHead} Found DFU port(s)`, orderedPorts);
                 break;
-            case "serial":
-            default:
+            case "webserial":
                 this.portAvailable = orderedPorts.length > 0;
                 this.currentSerialPorts = [...orderedPorts];
                 console.log(`${this.logHead} Found serial port(s)`, orderedPorts);
                 break;
+            default:
+                console.warn(`${this.logHead} Unknown device type for updating ports: ${deviceType}`);
+                return [];
         }
 
         return orderedPorts;

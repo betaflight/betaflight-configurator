@@ -108,13 +108,13 @@ export function checkBrowserCompatibility() {
         .css({
             height: "100%",
             display: "grid",
-            "background-image": "url(../images/osd-bg-1.jpg",
+            "background-image": "url(../images/osd-bg-1.jpg)",
             "background-size": "cover",
             "background-repeat": "no-repeat",
         })
         .append(newDiv);
 
-    $("div").append(errorMessage).css({
+    $(newDiv).append(errorMessage).css({
         "font-size": "16px",
         "background-color": "var(--surface-200)",
         color: "var(--text)",

@@ -18,20 +18,17 @@ class Serial extends EventTarget {
 
         // Initialize the available protocols
         this._webSerial = new WebSerial();
-        this._bluetooth = new WebBluetooth();
-        this._websocket = new Websocket();
+        this._webBluetooth = new WebBluetooth();
+        this._webSocket = new Websocket();
         this._virtual = new VirtualSerial();
 
         // Update protocol map to use consistent naming
         this._protocolMap = {
-            serial: this._webSerial, // TODO: should be 'webserial'
-            bluetooth: this._bluetooth, // TODO: should be 'webbluetooth'
-            websocket: this._websocket,
+            webserial: this._webSerial,
+            webbluetooth: this._webBluetooth,
+            websocket: this._webSocket,
             virtual: this._virtual,
         };
-
-        // Initialize with default protocol
-        this.selectProtocol(false);
 
         // Forward events from all protocols to the Serial class
         this._setupEventForwarding();
@@ -61,10 +58,10 @@ class Serial extends EventTarget {
         if (protocol === this._webSerial) {
             return "webserial";
         }
-        if (protocol === this._bluetooth) {
+        if (protocol === this._webBluetooth) {
             return "webbluetooth";
         }
-        if (protocol === this._websocket) {
+        if (protocol === this._webSocket) {
             return "websocket";
         }
         if (protocol === this._virtual) {
@@ -77,7 +74,7 @@ class Serial extends EventTarget {
      * Set up event forwarding from all protocols to the Serial class
      */
     _setupEventForwarding() {
-        const protocols = [this._webSerial, this._bluetooth, this._websocket, this._virtual];
+        const protocols = [this._webSerial, this._webBluetooth, this._webSocket, this._virtual];
         const events = ["addedDevice", "removedDevice", "connect", "disconnect", "receive"];
 
         protocols.forEach((protocol) => {
@@ -114,12 +111,12 @@ class Serial extends EventTarget {
     }
 
     /**
-     * Selects the appropriate protocol based on port path or CONFIGURATOR settings
+     * Selects the appropriate protocol based on port path
      * @param {string|null} portPath - Optional port path to determine protocol
      * @param {boolean} forceDisconnect - Whether to force disconnect from current protocol
      */
     selectProtocol(portPath = null, forceDisconnect = true) {
-        // Determine which protocol to use based on port path first, then fall back to CONFIGURATOR
+        // Determine which protocol to use based on port path
         let newProtocol;
 
         if (portPath) {
@@ -127,45 +124,14 @@ class Serial extends EventTarget {
             if (portPath === "virtual") {
                 console.log(`${this.logHead} Using virtual protocol (based on port path)`);
                 newProtocol = this._virtual;
-                // Update CONFIGURATOR flags for consistency
-                CONFIGURATOR.virtualMode = true;
-                CONFIGURATOR.bluetoothMode = false;
-                CONFIGURATOR.manualMode = false;
             } else if (portPath === "manual") {
                 console.log(`${this.logHead} Using websocket protocol (based on port path)`);
-                newProtocol = this._websocket;
-                // Update CONFIGURATOR flags for consistency
-                CONFIGURATOR.virtualMode = false;
-                CONFIGURATOR.bluetoothMode = false;
-                CONFIGURATOR.manualMode = true;
+                newProtocol = this._webSocket;
             } else if (portPath.startsWith("bluetooth")) {
                 console.log(`${this.logHead} Using bluetooth protocol (based on port path: ${portPath})`);
-                newProtocol = this._bluetooth;
-                // Update CONFIGURATOR flags for consistency
-                CONFIGURATOR.virtualMode = false;
-                CONFIGURATOR.bluetoothMode = true;
-                CONFIGURATOR.manualMode = false;
+                newProtocol = this._webBluetooth;
             } else {
                 console.log(`${this.logHead} Using web serial protocol (based on port path: ${portPath})`);
-                newProtocol = this._webSerial;
-                // Update CONFIGURATOR flags for consistency
-                CONFIGURATOR.virtualMode = false;
-                CONFIGURATOR.bluetoothMode = false;
-                CONFIGURATOR.manualMode = false;
-            }
-        } else {
-            // Fall back to CONFIGURATOR flags if no port path is provided
-            if (CONFIGURATOR.virtualMode) {
-                console.log(`${this.logHead} Using virtual protocol (based on CONFIGURATOR flags)`);
-                newProtocol = this._virtual;
-            } else if (CONFIGURATOR.manualMode) {
-                console.log(`${this.logHead} Using websocket protocol (based on CONFIGURATOR flags)`);
-                newProtocol = this._websocket;
-            } else if (CONFIGURATOR.bluetoothMode) {
-                console.log(`${this.logHead} Using bluetooth protocol (based on CONFIGURATOR flags)`);
-                newProtocol = this._bluetooth;
-            } else {
-                console.log(`${this.logHead} Using web serial protocol (based on CONFIGURATOR flags)`);
                 newProtocol = this._webSerial;
             }
         }
@@ -184,8 +150,6 @@ class Serial extends EventTarget {
             // Set new protocol
             this._protocol = newProtocol;
             console.log(`${this.logHead} Protocol switched successfully to:`, this._protocol);
-        } else {
-            console.log(`${this.logHead} Same protocol selected, no switch needed`);
         }
 
         return this._protocol;
@@ -251,8 +215,6 @@ class Serial extends EventTarget {
             return false;
         }
 
-        console.log(`${this.logHead} Disconnecting from current protocol`, this._protocol);
-
         try {
             // Handle case where we're already disconnected
             if (!this._protocol.connected) {
@@ -292,7 +254,7 @@ class Serial extends EventTarget {
 
     /**
      * Get devices from a specific protocol type or current protocol
-     * @param {string} protocolType - Optional protocol type ('serial', 'bluetooth', 'websocket', 'virtual')
+     * @param {string} protocolType - Optional protocol type ('webserial', 'webbluetooth', 'websocket', 'virtual')
      * @returns {Promise<Array>} - List of devices
      */
     async getDevices(protocolType = null) {

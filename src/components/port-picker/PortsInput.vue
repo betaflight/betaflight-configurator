@@ -42,7 +42,7 @@
                 >
                     {{ connectedUsbDevice.displayName }}
                 </option>
-                <option v-if="showSerialOption" value="requestpermission">
+                <option v-if="showSerialOption" value="requestpermissionserial">
                     {{ $t("portsSelectPermission") }}
                 </option>
                 <option v-if="showBluetoothOption" value="requestpermissionbluetooth">
@@ -173,8 +173,8 @@ export default defineComponent({
 
         const onChangePort = (event) => {
             const value = event.target.value;
-            if (value === "requestpermission") {
-                EventBus.$emit("ports-input:request-permission");
+            if (value === "requestpermissionserial") {
+                EventBus.$emit("ports-input:request-permission-serial");
             } else if (value === "requestpermissionbluetooth") {
                 EventBus.$emit("ports-input:request-permission-bluetooth");
             } else if (value === "requestpermissionusb") {

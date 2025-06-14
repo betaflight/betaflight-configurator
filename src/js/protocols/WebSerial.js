@@ -1,7 +1,7 @@
 import { webSerialDevices, vendorIdNames } from "./devices";
 import GUI from "../gui";
 
-const logHead = "[SERIAL]";
+const logHead = "[WEBSERIAL]";
 
 async function* streamAsyncIterable(reader, keepReadingFlag) {
     try {
@@ -308,6 +308,7 @@ class WebSerial extends EventTarget {
 
             this.connectionId = false;
             this.bitrate = 0;
+            this.connectionInfo = null; // Reset connectionInfo
             this.closeRequested = false;
 
             this.dispatchEvent(new CustomEvent("disconnect", { detail: true }));
@@ -315,6 +316,8 @@ class WebSerial extends EventTarget {
         } catch (error) {
             console.error(`${logHead} Error disconnecting:`, error);
             this.closeRequested = false;
+            // Ensure connectionInfo is reset even on error if port was potentially open
+            this.connectionInfo = null;
             this.dispatchEvent(new CustomEvent("disconnect", { detail: false }));
             return false;
         } finally {

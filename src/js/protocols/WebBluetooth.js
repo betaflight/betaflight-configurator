@@ -44,7 +44,7 @@ class WebBluetooth extends EventTarget {
 
         this.bluetooth.addEventListener("connect", (e) => this.handleNewDevice(e.target));
         this.bluetooth.addEventListener("disconnect", (e) => this.handleRemovedDevice(e.target));
-        this.bluetooth.addEventListener("gatserverdisconnected", (e) => this.handleRemovedDevice(e.target));
+        this.bluetooth.addEventListener("gattserverdisconnected", (e) => this.handleRemovedDevice(e.target));
 
         this.loadDevices();
     }
