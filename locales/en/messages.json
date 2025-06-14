@@ -1531,6 +1531,16 @@
     "configurationSensorGyroToUseBoth": {
         "message": "Both"
     },
+    "configurationSensorGyroEnable": {
+        "message": "$t(sensorStatusGyroShort.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationSensorAlignment": {
+        "message": "Sensor Alignment"
+    },
+    "configurationGyroRequiredWarning": {
+        "message": "At least one gyro must remain enabled. If you disable all gyros, the flight controller will not work properly."
+    },
     "configurationSensorAlignmentGyro1": {
         "message": "First GYRO"
     },
@@ -3142,7 +3152,8 @@
         "message": "Reset overtime maximum"
     },
     "motorsSensorGyroSelect":{
-        "message": "gyro"
+        "message": "$t(sensorStatusGyroShort.message)",
+        "description": "Don't translate!!!"
     },
     "motorsSensorAccelSelect":{
         "message": "accel"
@@ -4738,7 +4749,8 @@
         "description": "Iterm Relax Type selection"
     },
     "pidTuningItermRelaxTypeOptionGyro": {
-        "message": "Gyro"
+        "message": "$t(sensorStatusGyroShort.message)",
+        "description": "Don't translate!!!"
     },
     "pidTuningItermRelaxTypeOptionSetpoint": {
         "message": "Setpoint"
