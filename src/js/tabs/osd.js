@@ -3591,9 +3591,7 @@ osd.initialize = function (callback) {
                                     const cell = OSD.data.preview[checkPos];
 
                                     if (
-                                        cell &&
-                                        cell[0] &&
-                                        cell[0].index !== fieldChanged.index &&
+                                        cell?.[0]?.index !== fieldChanged.index &&
                                         // Lets skip over the advanced elements and just let any elements overlap these advanced elements and let it be overlapped by any element.
                                         // Since they don't actually use up the full space of their bounds and we can overlap with them while our elements still being fully visible.
                                         !(
@@ -3607,26 +3605,24 @@ osd.initialize = function (callback) {
                             }
                             if (canPlace) {
                                 finalPosition = testY * OSD.data.displaySize.x + testX;
-                                {
-                                    // I'm just copying this block here but I actually don't fully understand why this is needed
-                                    // and why we can't just put it at that position and need these offsets/adjustments:
+                                // I'm just copying this block here but I actually don't fully understand why this is needed
+                                // and why we can't just put it at that position and need these offsets/adjustments:
 
-                                    // if (displayItem.preview.constructor === Array) {
-                                    //     console.log(`Initial Drop Position: ${position}`);
-                                    //     const x = parseInt(ev.dataTransfer.getData("x"));
-                                    //     const y = parseInt(ev.dataTransfer.getData("y"));
-                                    //     console.log(`XY Co-ords: ${x}-${y}`);
-                                    //     position -= x; // <-- Here
-                                    //     position -= y * OSD.data.displaySize.x; // <-- Here
-                                    //     console.log(`Calculated Position: ${position}`);
-                                    // }
+                                // if (displayItem.preview.constructor === Array) {
+                                //     console.log(`Initial Drop Position: ${position}`);
+                                //     const x = parseInt(ev.dataTransfer.getData("x"));
+                                //     const y = parseInt(ev.dataTransfer.getData("y"));
+                                //     console.log(`XY Co-ords: ${x}-${y}`);
+                                //     position -= x; // <-- Here
+                                //     position -= y * OSD.data.displaySize.x; // <-- Here
+                                //     console.log(`Calculated Position: ${position}`);
+                                // }
 
-                                    // This just imitates the code above^
-                                    // If this doesn't exist then advanced elements can't be properly
-                                    // placed/positioned to the preset positions
-                                    finalPosition -= adjustOffsetX;
-                                    finalPosition -= adjustOffsetY * OSD.data.displaySize.x;
-                                }
+                                // This just imitates the code above^
+                                // If this doesn't exist then advanced elements can't be properly
+                                // placed/positioned to the preset positions
+                                finalPosition -= adjustOffsetX;
+                                finalPosition -= adjustOffsetY * OSD.data.displaySize.x;
 
                                 break;
                             }
@@ -3638,7 +3634,7 @@ osd.initialize = function (callback) {
                                 .catch((err) => console.error("OSD update failed:", err));
                         } else {
                             // Show a nicer notification instead of alert
-                            alert("Unable to place element - not enough space available", "warning");
+                            alert("Unable to place element - not enough space available");
                         }
                     };
                     // Hide all menus function
