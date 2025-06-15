@@ -3485,11 +3485,6 @@ osd.initialize = function (callback) {
                     // Create the context menu trigger button
                     const $menuTrigger = $(`
                     <button type="button" class="osd-menu-trigger grey" aria-label="OSD position options">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
-                            <circle cx="12" cy="5" r="2"/>
-                            <circle cx="12" cy="12" r="2"/>
-                            <circle cx="12" cy="19" r="2"/>
-                        </svg>
                     </button>`);
                     // Create the context menu
                     const $contextMenu = $(`
@@ -3555,9 +3550,12 @@ osd.initialize = function (callback) {
                         if (fieldChanged.preview.constructor == Array) {
                             const limits = OSD.searchLimitsElement(fieldChanged.preview);
 
+                            // Per AI suggestion on the pull request(CodeRabbit),these should actually be +1,
+                            // But, applying this suggestion causes the elements to not be centered.
                             elementWidth = limits.maxX - limits.minX;
                             elementHeight = limits.maxY - limits.minY;
 
+                            // If this is not offsetted by 1,it's not centered properly.
                             adjustOffsetX = limits.minX + 1;
                             adjustOffsetY = limits.minY + 1;
                         }
