@@ -4,7 +4,7 @@ import I18NextVue from "i18next-vue";
 import i18next from "i18next";
 
 // Function to load tab content while preserving Vue functionality
-export function loadTabContent(contentElement, htmlPath, callback) {
+export function loadContent(contentElement, htmlPath, callback) {
     // Load the HTML content
     contentElement.load(htmlPath, function () {
         // Find all elements that need Vue functionality
