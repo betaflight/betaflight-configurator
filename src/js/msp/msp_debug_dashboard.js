@@ -19,6 +19,11 @@ export class MSPDebugDashboard {
         this.pauseTimeout = null;
         this.lastUpdateData = {};
 
+        // Performance optimization properties
+        this.lastChartUpdate = 0;
+        this.chartUpdatePending = false;
+        this.elementCache = new Map(); // Cache DOM elements to avoid repeated queries
+
         this.createDashboard();
         this.setupEventListeners();
     }
@@ -689,15 +694,29 @@ export class MSPDebugDashboard {
      */
     _hasDataChanged(status) {
         const lastData = this.lastUpdateData;
-        return (
-            !lastData ||
+        if (!lastData) return true;
+
+        // Quick primitive checks first (fastest)
+        if (
             lastData.currentQueueSize !== status.currentQueueSize ||
             lastData.totalRequests !== status.metrics.totalRequests ||
             lastData.successRate !== status.metrics.successRate ||
-            lastData.avgResponseTime !== status.metrics.avgResponseTime ||
-            lastData.alerts !== JSON.stringify(status.alerts) ||
-            lastData.queueContents !== JSON.stringify(status.queueContents)
-        );
+            lastData.avgResponseTime !== status.metrics.avgResponseTime
+        ) {
+            return true;
+        }
+
+        // More expensive object comparisons only if needed
+        try {
+            const currentAlertsStr = JSON.stringify(status.alerts);
+            const currentQueueStr = JSON.stringify(status.queueContents);
+
+            return lastData.alerts !== currentAlertsStr || lastData.queueContents !== currentQueueStr;
+        } catch (e) {
+            // If JSON.stringify fails, assume data changed
+            console.warn("JSON stringify failed in dashboard update check:", e);
+            return true;
+        }
     }
 
     /**
@@ -761,11 +780,18 @@ export class MSPDebugDashboard {
     }
 
     /**
-     * Update element text content
+     * Update element text content with caching
      */
     updateElement(id, value) {
-        const element = document.getElementById(id);
-        if (element) {
+        let element = this.elementCache.get(id);
+        if (!element) {
+            element = document.getElementById(id);
+            if (element) {
+                this.elementCache.set(id, element);
+            }
+        }
+
+        if (element && element.textContent !== value) {
             element.textContent = value;
         }
     }
@@ -855,6 +881,12 @@ export class MSPDebugDashboard {
      */
     updateChart(status) {
         const now = Date.now();
+
+        // Throttle chart updates to reduce performance impact
+        if (this.lastChartUpdate && now - this.lastChartUpdate < 200) {
+            return; // Skip update if less than 200ms since last update
+        }
+
         this.chartData.timestamps.push(now);
         this.chartData.queueSize.push(status.currentQueueSize);
         this.chartData.responseTime.push(status.metrics.avgResponseTime || 0);
@@ -866,7 +898,16 @@ export class MSPDebugDashboard {
             this.chartData.responseTime.shift();
         }
 
-        this.drawChart();
+        this.lastChartUpdate = now;
+
+        // Use requestAnimationFrame for smoother chart updates
+        if (!this.chartUpdatePending) {
+            this.chartUpdatePending = true;
+            requestAnimationFrame(() => {
+                this.drawChart();
+                this.chartUpdatePending = false;
+            });
+        }
     }
 
     /**
