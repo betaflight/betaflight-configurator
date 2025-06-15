@@ -794,7 +794,10 @@ export class MSPDebugDashboard {
         };
 
         container.innerHTML = activeAlerts
-            .map(([alertType, _]) => `<div class="alert-item">${alertMessages[alertType] || alertType}</div>`)
+            .map(
+                ([alertType, _]) =>
+                    `<div class="alert-item">${alertMessages[alertType] || this.escapeHtml(alertType)}</div>`,
+            )
             .join("");
     }
 
