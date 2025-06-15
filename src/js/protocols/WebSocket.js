@@ -112,8 +112,22 @@ class Websocket extends EventTarget {
             try {
                 this.ws.send(data);
                 this.bytesSent += data.byteLength;
+
+                if (cb) {
+                    cb({
+                        error: null,
+                        bytesSent: data.byteLength,
+                    });
+                }
             } catch (e) {
                 console.error(`${this.logHead}Failed to send data e: ${e}`);
+
+                if (cb) {
+                    cb({
+                        error: e,
+                        bytesSent: 0,
+                    });
+                }
             }
         }
 
