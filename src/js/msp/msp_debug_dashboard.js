@@ -572,8 +572,9 @@ export class MSPDebugDashboard {
         this.container.addEventListener(
             "mouseenter",
             (e) => {
-                if (e.target.closest(".test-result-item")) {
-                    e.target.style.backgroundColor = "#333";
+                const testResultItem = e.target.closest(".test-result-item");
+                if (testResultItem) {
+                    testResultItem.style.backgroundColor = "#333";
                     this.pauseUpdates(2000);
                 }
             },
@@ -583,8 +584,9 @@ export class MSPDebugDashboard {
         this.container.addEventListener(
             "mouseleave",
             (e) => {
-                if (e.target.closest(".test-result-item")) {
-                    e.target.style.backgroundColor = "";
+                const testResultItem = e.target.closest(".test-result-item");
+                if (testResultItem) {
+                    testResultItem.style.backgroundColor = "";
                 }
             },
             true,
