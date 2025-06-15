@@ -434,8 +434,8 @@ export class MSPDebugDashboard {
      * Setup event listeners
      */
     setupEventListeners() {
-        // Toggle monitoring
-        document.addEventListener("click", (e) => {
+        // Toggle monitoring - scoped to dashboard container
+        this.container.addEventListener("click", (e) => {
             if (e.target.id === "msp-toggle-monitoring") {
                 this.toggleMonitoring();
             } else if (e.target.id === "msp-run-stress-test") {
@@ -986,7 +986,7 @@ export class MSPDebugDashboard {
                 ${(results.detailedResults || [])
         .map(
             (test, index) => `
-                    <div class="test-result-item" data-test-index="${index}" onclick="window.MSPDebug.showTestDetails(${index})">
+                    <div class="test-result-item" data-test-index="${index}">
                         <span class="${test.status === "PASSED" ? "test-passed" : "test-failed"}">
                             ${this.escapeHtml(test.name)}
                         </span>
@@ -1000,6 +1000,17 @@ export class MSPDebugDashboard {
 
         // Store test results for detailed view
         this.lastTestResults = results;
+
+        // Add event delegation for test result items
+        container.addEventListener("click", (e) => {
+            const testResultItem = e.target.closest(".test-result-item");
+            if (testResultItem) {
+                const testIndex = parseInt(testResultItem.getAttribute("data-test-index"), 10);
+                if (!isNaN(testIndex)) {
+                    this.showTestDetails(testIndex);
+                }
+            }
+        });
     }
 
     /**
