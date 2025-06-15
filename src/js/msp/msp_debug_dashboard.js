@@ -1162,8 +1162,8 @@ window.MSPDebug = {
 
     // Individual test methods
     runTest: (testName) => mspStressTest.runSpecificTest(testName),
-    quickHealthCheck: () => window.MSPTestRunner.quickHealthCheck(),
-    stressScenario: (scenario) => window.MSPTestRunner.stressScenario(scenario),
+    quickHealthCheck: () => window.MSPTestRunner?.quickHealthCheck?.(),
+    stressScenario: (scenario) => window.MSPTestRunner?.stressScenario?.(scenario),
     getStatus: () => mspQueueMonitor.getStatus(),
 
     // Alert testing methods
