@@ -46,7 +46,7 @@ export function loadContent(contentElement, htmlPath, callback) {
             app.use(I18NextVue, { i18next });
 
             // Mount the app to this element and store the instance
-            const mountedApp = app.mount(el[0]);
+            app.mount(el[0]);
             console.log(
                 `${logHead} Mounted Vue app ${index + 1}/${vueElements.length} on element with data-vue attribute`,
             );
@@ -60,7 +60,7 @@ export function loadContent(contentElement, htmlPath, callback) {
 
         // Call the original callback (success case)
         if (callback) {
-            callback();
+            callback(null);
         }
     });
 }
@@ -79,7 +79,7 @@ function unmountVueApps(contentElement) {
             }
         });
         // Clear the stored apps
-        vueAppInstances.set(contentElement[0], []);
+        vueAppInstances.delete(contentElement[0]);
         console.log(`${logHead} Cleared Vue app instances from container`);
     }
 }
