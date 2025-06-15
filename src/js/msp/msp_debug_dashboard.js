@@ -450,6 +450,15 @@ export class MSPDebugDashboard {
                 this.analyzeQueue();
             } else if (e.target.id === "export-report") {
                 this.exportReport();
+            } else {
+                // Handle test result item clicks
+                const testResultItem = e.target.closest(".test-result-item");
+                if (testResultItem) {
+                    const testIndex = parseInt(testResultItem.getAttribute("data-test-index"), 10);
+                    if (!isNaN(testIndex)) {
+                        this.showTestDetails(testIndex);
+                    }
+                }
             }
         });
 
@@ -1000,17 +1009,6 @@ export class MSPDebugDashboard {
 
         // Store test results for detailed view
         this.lastTestResults = results;
-
-        // Add event delegation for test result items
-        container.addEventListener("click", (e) => {
-            const testResultItem = e.target.closest(".test-result-item");
-            if (testResultItem) {
-                const testIndex = parseInt(testResultItem.getAttribute("data-test-index"), 10);
-                if (!isNaN(testIndex)) {
-                    this.showTestDetails(testIndex);
-                }
-            }
-        });
     }
 
     /**
