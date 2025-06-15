@@ -104,7 +104,6 @@ export class MSPStressTest {
             this.monitor.stopMonitoring();
             this.isRunning = false;
             this.currentTest = null;
-            this.monitor.destroy(); // Clean up MSP method patches and restore original behavior
         }
     }
 
@@ -141,39 +140,65 @@ export class MSPStressTest {
      */
     async testRapidFireRequests() {
         const requestCount = 20;
-        const interval = 10; // 10ms between requests
+        const interval = 10; // 10ms between request initiation
 
         console.log(`  Sending ${requestCount} requests with ${interval}ms intervals...`);
 
-        const results = [];
+        const promises = [];
+        const requestStartTimes = [];
         const startTime = performance.now();
 
+        // Create all requests concurrently with timed intervals
         for (let i = 0; i < requestCount; i++) {
             const code = this.testCodes.MSP_STATUS;
             const requestStart = performance.now();
+            requestStartTimes.push(requestStart);
 
-            try {
-                await this.msp.promise(code, null);
-                results.push({
+            // Create promise without awaiting to allow concurrency
+            const promise = this.msp
+                .promise(code, null)
+                .then(() => ({
                     success: true,
                     responseTime: performance.now() - requestStart,
-                });
-            } catch (error) {
-                results.push({
+                    index: i,
+                }))
+                .catch((error) => ({
                     success: false,
                     error: error.message,
                     responseTime: performance.now() - requestStart,
-                });
-            }
+                    index: i,
+                }));
 
+            promises.push(promise);
+
+            // Wait interval before starting next request (except for last)
             if (i < requestCount - 1) {
                 await this.wait(interval);
             }
         }
 
+        // Wait for all requests to complete
+        const results = await Promise.allSettled(promises);
         const totalTime = performance.now() - startTime;
-        const successful = results.filter((r) => r.success).length;
-        const avgResponseTime = results.reduce((sum, r) => sum + r.responseTime, 0) / results.length;
+
+        // Extract results from settled promises
+        const processedResults = results.map((settled) => {
+            if (settled.status === "fulfilled") {
+                return settled.value;
+            } else {
+                return {
+                    success: false,
+                    error: settled.reason?.message || "Unknown error",
+                    responseTime: 0,
+                    index: -1,
+                };
+            }
+        });
+
+        const successful = processedResults.filter((r) => r.success).length;
+        const responseTimes = processedResults.map((r) => r.responseTime).filter((t) => t > 0);
+        const avgResponseTime =
+            responseTimes.length > 0 ? responseTimes.reduce((sum, r) => sum + r, 0) / responseTimes.length : 0;
 
         return {
             requestCount,
@@ -182,6 +207,8 @@ export class MSPStressTest {
             totalTime,
             avgResponseTime,
             throughput: requestCount / (totalTime / 1000), // requests per second
+            concurrentRequests: true,
+            maxConcurrentRequests: requestCount,
         };
     }
 
@@ -634,7 +661,6 @@ export class MSPStressTest {
             };
         } finally {
             this.monitor.stopMonitoring();
-            this.monitor.destroy();
         }
     }
 
@@ -642,7 +668,10 @@ export class MSPStressTest {
      * Cleanup
      */
     destroy() {
-        this.monitor.destroy();
+        // Only stop monitoring, don't destroy the shared singleton
+        if (this.monitor.isMonitoring) {
+            this.monitor.stopMonitoring();
+        }
     }
 }
 
