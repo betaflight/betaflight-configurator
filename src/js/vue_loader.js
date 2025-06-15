@@ -1,4 +1,4 @@
-import { createApp, reactive } from "vue";
+import { createApp } from "vue";
 import { BetaflightComponents } from "./vue_components.js";
 import I18NextVue from "i18next-vue";
 import i18next from "i18next";
