@@ -119,7 +119,9 @@ Model.prototype.loadGLTF = function (model_file, callback) {
         },
         (progress) => {
             // Optional: Handle loading progress
-            console.log("Loading progress:", progress);
+            console.log(
+                `Loading progress: ${progress.loaded}/${progress.total} (${Math.round((progress.loaded / progress.total) * 100)}%)`,
+            );
         },
         (error) => {
             console.error("Error loading model:", error);
