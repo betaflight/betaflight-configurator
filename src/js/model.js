@@ -119,9 +119,16 @@ Model.prototype.loadGLTF = function (model_file, callback) {
         },
         (progress) => {
             // Optional: Handle loading progress
-            console.log(
-                `Loading progress: ${progress.loaded}/${progress.total} (${Math.round((progress.loaded / progress.total) * 100)}%)`,
-            );
+            if (progress.total > 0) {
+                const pct = Math.round((progress.loaded / progress.total) * 100);
+                if (pct !== this._lastPct) {
+                    // throttle identical values
+                    this._lastPct = pct;
+                    console.log(`Loading progress: ${progress.loaded}/${progress.total} (${pct}%)`);
+                }
+            } else {
+                console.log(`Loading progress: ${progress.loaded} bytes`);
+            }
         },
         (error) => {
             console.error("Error loading model:", error);
