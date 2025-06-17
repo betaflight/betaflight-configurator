@@ -54,7 +54,7 @@
         "message": "Nie można wykonać tej operacji na twoim urządzeniu."
     },
     "storageDeviceNotReady": {
-        "message": "Urządzenie pamięci masowej nie jest gotowe. W przypadku karty microSD upewnij się, że jest prawidłowo rozpoznawana przez kontroler lotu."
+        "message": "Urządzenie pamięci masowej jest niegotowe do użycia. Jeśli korzystasz z karty microSD, sprawdź, czy kontroler lotu ją poprawnie rozpoznaje."
     },
     "connect": {
         "message": "Połącz"
@@ -694,7 +694,7 @@
         "message": "<p><strong>Betaflight<\/strong> to oprogramowanie kontrolera lotu , udostępniane za darmo na zasadach licencji <strong>open source<\/strong> i jest dostępne <strong>za darmo<\/strong> dla wszystkich użytkowników.<\/p><p>Jeśli używasz oprogramowania Betaflight oraz uważasz je za przydatne, rozważ <strong>wsparcie<\/strong> jego rozwoju poprzez darowiznę.<\/p>"
     },
     "defaultDonateBottom": {
-        "message": "<p>Jeśli chcesz wspierać nas finansowo na bieżąco, powinieneś rozważyć możliwość zostania naszym subskrybentem $t(patreonLink.message).<\/p>"
+        "message": "<p>Jeśli chcesz nas regularnie wspierać finansowo, rozważ zostanie naszym patronem na $t(patreonLink.message).<\/p>"
     },
     "patreonLink": {
         "message": "<a href=\"https:\/\/www.patreon.com\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">Patreon<\/a>",
@@ -1747,7 +1747,7 @@
         "message": "<span class=\"message-negative\"> OSTRZEŻENIE:<\/span> Tabela VTX nie została jeszcze skonfigurowana, a bez tego sterowanie VTX nie będzie możliwe. Proszę uzupełnić tabelę VTX w zakładce $t(tabVtx.message)."
     },
     "portsMSPHelp": {
-        "message": "<strong> Uwaga: <\/strong> <span class = \"message-negative\"> NIE <\/span> wyłączaj MSP na pierwszym porcie szeregowym, chyba że wiesz co robisz. Jeśli nie wiesz co robisz może sie okazać że potrzebne jest ponowne wgranie oprogramowania i przywrócenie ustawień."
+        "message": "<strong> Uwaga: <\/strong> <span class = \"message-negative\"> NIE <\/span> wyłączaj MSP na pierwszym porcie szeregowym, chyba że masz pewność, co robisz. W przeciwnym razie może być konieczne ponowne wgranie oprogramowania i przywrócenie ustawień."
     },
     "portsFirmwareUpgradeRequired": {
         "message": "Aktualizacja oprogramowania<span class=\"message-negative\">wymagana<\/span>. Konfiguracja oprogramowania portów szeregowych &lt; 1.8.0 nie jest obsługiwana."
@@ -1953,7 +1953,7 @@
         "description": "Auto Factor parameter help message"
     },
     "receiverRcFeedforwardTypeSelect": {
-        "message": "Typ odcięcia kanału"
+        "message": "Typ odcięcia Feedforward"
     },
     "receiverRcSetpointTypeSelect": {
         "message": "Typ odcięcia Wartości zadanej"
@@ -1968,7 +1968,7 @@
         "message": "Częstotliwość odcięcia w Hz używana przez filtr wejściowy. Stosowanie niższych wartości spowoduje płynniejsze wejście i jest bardziej odpowiednie dla protokołów wolniejszego odbiornika. Większość użytkowników powinna zostawić to na 0 co odpowiada \"Auto\"."
     },
     "rcSmoothingFeedforwardCutoffHelp": {
-        "message": "Częstotliwość odcięcia w Hz używana przez filtr wejściowy. Stosowanie niższych wartości spowoduje płynniejsze wejście i jest bardziej odpowiednie dla protokołów wolniejszego odbiornika. Większość użytkowników powinna zostawić to na 0 co odpowiada \"Auto\"."
+        "message": "Częstotliwość odcięcia w Hz stosowana przez filtr feedforward. Niższe wartości zapewniają płynniejsze sygnały wejściowe i lepiej sprawdzają się przy wolniejszych protokołach odbiornika. Większość użytkowników powinna pozostawić wartość 0, co odpowiada trybowi Auto."
     },
     "rcSmoothingChannelsSmoothedHelp": {
         "message": "Kanały do których odnosi się wygładzanie"
@@ -1977,13 +1977,13 @@
         "message": "Wybiera, czy częstotliwość odcięcia filtra wejściowego jest automatycznie obliczana (zalecane) czy wybierana ręcznie przez użytkownika. Używanie \"Ręcznego\" nie jest zalecane dla protokołów odbiorników, takich jak Crossfire które mogą zmieniać się w locie."
     },
     "receiverRcSmoothingFeedforwardManual": {
-        "message": "Wybiera, czy częstotliwość odcięcia filtra wejściowego jest automatycznie obliczana (zalecane) czy wybierana ręcznie przez użytkownika. Używanie \"Ręcznego\" nie jest zalecane dla protokołów odbiorników, takich jak Crossfire które mogą zmieniać się w locie."
+        "message": "Określa, czy częstotliwość odcięcia filtra feedforward jest obliczana automatycznie (zalecane) czy ręcznie wybierana przez użytkownika. Tryb Manual nie jest polecany dla protokołów odbiornika takich jak Crossfire, które mogą dynamicznie zmieniać się w trakcie lotu."
     },
     "receiverRcSmoothingSetpointHz": {
         "message": "Częstotliwość odcięcia Wartości zadanej"
     },
     "receiverRcSmoothingFeedforwardCutoff": {
-        "message": "Częstotliwość odcięcia kanału"
+        "message": "Częstotliwość odcięcia Feedforward"
     },
     "receiverRcFeedforwardType": {
         "message": "Typ filtru Feedforward"
@@ -2013,25 +2013,25 @@
         "message": "Feed-<br>forward"
     },
     "pidTuningFeedforwardGroupHelp": {
-        "message": "Feedforward dostosowuje reakcję drążka.<br \/><br \/> Te opcje pozwalają dostosować go, aby zapewnić wszystko, od wyraźnych, natychmiastowych reakcji drążka podczas wyścigów po miękkie, płynne reakcje w zastosowaniach kinowych\/HD."
+        "message": "Feedforward pozwala dostosować responsywność drążków, zapewniając pełną kontrolę nad stylem sterowania.<br \/><br \/> Dzięki tym ustawieniom możesz uzyskać szybkie i precyzyjne reakcje idealne do wyścigów lub płynne, łagodne ruchy doskonałe do nagrań kinowych i w jakości HD."
     },
     "pidTuningFeedforwardJitter": {
-        "message": "Redukcja Drgań"
+        "message": "Redukcja drgań"
     },
     "pidTuningFeedforwardJitterHelp": {
-        "message": "Redukcja Drgań zmniejsza Feedforward, gdy drążki poruszane są powoli, niezależnie od ich pozycji.<br><br>Umożliwia to płynny lot bez drgań podczas wykonywania gładkich, wolnych łuków, a jednocześnie zapewnia pełny Feedforward bez żadnych opóźnień, gdy drążki poruszane są szybko. Parametr Przejście nie jest wymagany i powinien być ustawiony na zero, gdy Redukcja Drgań jest aktywna.<br><br>Domyślnie 7. Wyższe wartości, np. 10-12, są dobre do zastosowań cinematic lub freestyle HD, 5 może być lepsze do ścigania się z użyciem szybkich linków RC."
+        "message": "Redukcja drgań ogranicza wpływ Feedforward przy wolnych ruchach drążków, niezależnie od ich pozycji.<br><br>Dzięki temu lot pozostaje płynny i wolny od zakłóceń podczas powolnych łuków, jednocześnie zapewniając pełne Feedforward bez opóźnień przy szybszych ruchach drążków. Gdy redukcja drgań jest aktywna, parametr Przejście nie jest wymagany i powinien być ustawiony na zero.<br><br>Domyślna wartość to 7. Wyższe ustawienia, np. 10-12, sprawdzą się w nagraniach kinowych i freestyle HD, natomiast 5 może być lepsze dla wyścigów z szybkimi połączeniami RC."
     },
     "pidTuningFeedforwardSmoothFactor": {
         "message": "Wygładzenie"
     },
     "pidTuningFeedforwardSmoothnessHelp": {
-        "message": "Wygładzanie wyprzedzające jest niezbędne do tłumienia szumów w ścieżce wyprzedzającej.<br><br> Najmniejsza wartość zapewniająca płynną ścieżkę jest najlepsza.<br><br> Domyślna wartość 25 jest dobra dla łączy RC 50-150 Hz. W przypadku łączy RC 250 Hz użyj 40-50. Dla łączy 500 Hz użyj 60-65."
+        "message": "Wygładzanie Feedforward jest niezbędne do redukcji szumów w śladzie feedforward.<br><br>Im mniejszą wartość dającą płynny ślad się dobierze, tym lepiej.<br><br>Domyślna wartość 25 jest dobra dla połączeń RC 50-150 Hz. W przypadku połączeń RC 250 Hz użyj 40-50, a dla połączeń 500 Hz wartość 60-65."
     },
     "pidTuningFeedforwardAveraging": {
         "message": "Uśrednianie"
     },
     "pidTuningFeedforwardAveragingHelp": {
-        "message": "Feedforward Averaging bierze średnią z ostatnich 2 lub 3 kroków feedforward. To wygładza ślad sprzężenia zwrotnego, ale dodaje trochę opóźnienia.<br><br>Jest najbardziej efektywne, gdy w sygnale występuje sekwencyjny jitter w górę\/w dół, co jest powszechne w przypadku szybszych łączy RC.<br><br>Uśrednianie 2 punktów jest potrzebny do łączy 500 Hz i hałaśliwych łączy 250 Hz lub do latania Cinematic \/ HD. Crossfire (przed CRSFShot) wymaga uśrednienia 3 punktów w trybie 150 Hz."
+        "message": "Uśrednianie Feedforward oblicza średnią z ostatnich 2 lub 3 kroków Feedforward, co wygładza jego przebieg, ale jednocześnie wprowadza pewne opóźnienie.<br><br>Najskuteczniej redukuje sekwencyjne zakłocenia w sygnale, które często występują przy szybszych połączeniach RC.<br><br>Uśrednianie 2-punktowe jest zalecane dla 500 Hz, zakłóconych połączeń 250 Hz oraz latania Cinematic\/HD. Uśrednianie 3-punktowe jest wymagane dla Crossfire (przed CRSFShot) w trybie 150 Hz."
     },
     "pidTuningOptionOff": {
         "message": "Wył"
@@ -2052,19 +2052,19 @@
         "message": "Wzmocnienie"
     },
     "pidTuningFeedforwardBoostHelp": {
-        "message": "Wzmocnienie ze sprzężeniem do przodu dodaje dodatkowy impuls w odpowiedzi na przyspieszenie lub zwolnienie drążka.<br><br>Minimalizuje to opóźnienie żyroskopowe spowodowane opóźnieniem przyspieszenia silnika i zmniejsza przeregulowanie, gdy drążki zwalniają przez mocne pociągnięcie silników.<br> <br>Domyślne przyspieszenie działa w przypadku większości konfiguracji. Piloci wyścigowi mogą chcieć go nieco zwiększyć. Boost można precyzyjnie dostroić dzięki starannej analizie dziennika."
+        "message": "Wzmocnienie Feedforward zapewnia dodatkowy impuls w reakcji na przyspieszenie lub spowolnienie ruchu drążków.<br><br>Pomaga zminimalizować opóźnienie żyroskopu wynikające z opóźnienia przyspieszenia silników oraz redukuje nadmierne przesterowanie, gdy drążki zwalniają, gwałtownie obniżając moc silników.<br> <br>Domyślne ustawienie wzmocnienia sprawdza się w większości konfiguracji, choć piloci wyścigowi mogą preferować jego niewielkie zwiększenie. Precyzyjne dostrojenie wzmocnienia można osiągnąć poprzez analizę logów."
     },
     "pidTuningFeedforwardMaxRateLimit": {
-        "message": "Maksymalny limit \"Rate\""
+        "message": "Maksymalne ograniczenie prędkości"
     },
     "pidTuningFeedforwardMaxRateLimitHelp": {
-        "message": "Tnie do przodu, gdy drążki poruszają się w kierunku maksymalnego wychylenia, aby zminimalizować przeregulowanie na początku fikołków lub beczek.<br><br>Nic nie robi na końcu fikołka lub beczki. Niższe wartości powodują, że tłumienie zaczyna się wcześniej.<br><br>Zwykle ta wartość nie wymaga modyfikacji. Najlepsza jest najwyższa wartość zgodna z dopuszczalnym przeregulowaniem na początku fikołka lub be"
+        "message": "Feedforward stopniowo maleje, gdy drążki zbliżają się do maksymalnego wychylenia, co pomaga ograniczyć nadmierne przesterowanie na początku flipa lub rolla.<br><br>Nie wpływa na końcową fazę manewru. Niższe wartości powodują wcześniejsze rozpoczęcie tłumienia.<br><br>Zwykle ta wartość nie wymaga modyfikacji. Optymalne ustawienie to najwyższa wartość, która zapewnia akceptowalne przesterowanie na początku flipów i rolli."
     },
     "pidTuningFeedforwardTransition": {
         "message": "Przejście"
     },
     "pidTuningFeedforwardTransitionHelp": {
-        "message": "Liniowo zmniejsza Feedforward, gdy drążki są blisko środka. <br><br>W wersji betaflight 4.2 i wcześniejszych przejścia mogą być używane do zapewnienia płynniejszych reakcji drążka blisko środkowej pozycji drążka.<br><br>W wersji betaflight 4.3 przejście nie jest zalecane, ponieważ zostało „zastąpione” redukcją jittera funkcja.<br><br>Wartość 0 wyłącza przejście. Wartość 0,3 zmniejsza sprzężenie do przodu do zera, gdy drążki znajdują się w martwym punkcie, ale zwiększa się do pełnej wartości normalnej, gdy drążki są >30% poza środkiem."
+        "message": "Stopniowo zmniejsza wpływ Feedforward, gdy drążki znajdują się blisko centrum. <br><br>W wersji 4.2 i wcześniejszych było używane do wygładzania reakcji w środkowym zakresie drążka.<br><br>W wersji 4.3 nie jest zalecane, ponieważ zastąpiła je funkcja redukcji drgań.<br><br>Wartość 0 wyłącza parametr Przejście, a 0.3 redukuje Feedforward do zera, gdy drążki są idealnie w centrum, stopniowo zwiększając je do pełnej wartości przy wychyleniu powyżej 30%."
     },
     "pidTuningProportional": {
         "message": "<b>P<\/b> - Proporcjonalny"
@@ -2095,7 +2095,7 @@
         "message": "<b>FF<\/b> - Feedforward"
     },
     "pidTuningFeedforwardHelp": {
-        "message": "Dodatkowy czynnik napędowy, pochodzący wyłącznie z sygnału wejściowego drążka, który pomaga szybko poruszać jednostką latającą za pomocą szybkich ruchów drążkiem.<br><br>FF nie może powodować oscylacji, pozwala na niższe P dla podobnych reakcji drążka i kompensuje naturalną opozycję D względem danych wejściowych.<br><br>Niskie lub zerowe wartości spowodują płynniejszą, ale bardziej opóźnioną reakcję na sygnały wejściowe drążka.",
+        "message": "Dodatkowy czynnik napędowy, wynikający wyłącznie z ruchów drążka, który ułatwia szybkie przejście do dynamicznych manewrów.<br><br>Feedforward nie powoduje oscylacji, pozwala na niższą wartość P przy zachowaniu dobrej responsywności i kompensuje naturalny opór D wobec ruchów drążków.<br><br>Niższe lub zerowe wartości sprawiają, że reakcja na drążki jest bardziej płynna, ale też nieco opóźniona.",
         "description": "Feedforward Term helpicon message on PID table titlebar"
     },
     "pidTuningMaxRateWarning": {
@@ -2720,7 +2720,7 @@
         "message": "Regulacja Pitch & Roll F"
     },
     "adjustmentsFunction23": {
-        "message": "Przejście do poprzedj wersji"
+        "message": "Przejście Feedforward"
     },
     "adjustmentsFunction24": {
         "message": "Horizon-Regulacja siły"
@@ -3216,7 +3216,7 @@
         "message": "Zatrzymaj silniki"
     },
     "sensorsInfo": {
-        "message": "Pamiętaj, że stosując częste odświeżanie i rysowanie wielu wykresów na raz wymaga wiekszej mocy obliczeniowej, co w przypadku używania laptopa, zwiększa zużycie akumulatora.<br \/>Zalecamy pozostawienie rysowania wykresów tylko dla czujników, których potrzebujesz najbardziej oraz wybranie niskich prędkości odświeżania danych."
+        "message": "Pamiętaj, że częste aktualizacje i jednoczesne wyświetlanie wielu wykresów obciąża zasoby systemowe i może przyspieszyć zużycie baterii, zwłaszcza na laptopie.<br \/>Zalecamy renderowanie wykresów tylko dla wybranych sensorów, przy stosowaniu rozsądnych okresów odświeżania."
     },
     "sensorsRefresh": {
         "message": "Odczyt:"
@@ -3637,10 +3637,10 @@
         "message": "Wybierz wersję oprogramowania dla"
     },
     "firmwareFlasherButtonLoadLocal": {
-        "message": "Załaduj oprogramowanie[Local]"
+        "message": "Załaduj oprogramowanie [Lokalnie]"
     },
     "firmwareFlasherButtonLoadOnline": {
-        "message": "Załaduj oprogramowanie[Online]"
+        "message": "Załaduj oprogramowanie [Online]"
     },
     "firmwareFlasherButtonDownloading": {
         "message": "Pobieranie..."
@@ -4942,13 +4942,13 @@
         "message": "Napięcie Ostrzegawcze Ogniwa"
     },
     "powerBatteryMinimumHelp": {
-        "message": "Napięcie uznawane za krytycznie niskie, powodujące wyświetlenie odpowiednich ostrzeżeń.  Ostrzeżenie „LAND NOW” w OSD i sygnał dźwiękowy w przypadku zastosowania buzzera generującego dźwięk. Pomaga także w obliczaniu liczby ogniw akumulatora."
+        "message": "Napięcie uznawane za krytycznie niskie, wywołujące odpowiednie ostrzeżenia. Na ekranie OSD pojawi się komunikat \"LAND NOW\", a jeśli buzzer jest przylutowany, zostanie wygenerowany sygnał dźwiękowy. Pomaga także w obliczaniu liczby ogniw akumulatora."
     },
     "powerBatteryMaximumHelp": {
         "message": "Napięcie w pełni naładowanego ogniwa. Pomaga w obliczeniu liczby ogniw."
     },
     "powerBatteryWarningHelp": {
-        "message": "Napięcie uznawane za niskie, powodujące wyświetlenie odpowiednich ostrzeżeń. Ostrzeżenie „Niski poziom baterii” w menu OSD."
+        "message": "Napięcie uznawane za niskie, wywołujące odpowiednie ostrzeżenia. Na ekranie OSD pojawi się komunikat \"LOW BATTERY\"."
     },
     "powerCalibrationManagerButton": {
         "message": "Kalibracja"
@@ -5182,13 +5182,13 @@
         "message": "<span class=\"message-negative\"><b>OSTRZEŻENIE:<\/b><\/span> Nie wykryto chipu OSD. Niektóre kontrolery lotu nie będą prawidłowo zasilać chipu OSD, chyba że zostaną podłączone do zasilania baterii. Podłącz baterię przed podłączeniem USB (ze ZDJĘTYMI śmigłami!)."
     },
     "osdSetupPreviewHelp": {
-        "message": "<strong>Uwaga:<\/strong> Podgląd OSD nie może pokazywać rzeczywistej czcionki zainstalowanej na kontrolerze lotu. Układ poszczególnych elementów może wyglądać inaczej, gdy używane są starsze wersje oprogramowania układowego - sprawdź wygląd czcionki poprzez okulary lub wyświetlacz przed rozpoczęciem jakiegokolwiek lotu."
+        "message": "<strong>Uwaga:<\/strong> Podgląd OSD może nie odzwierciedlać rzeczywistej czcionki zainstalowanej na kontrolerze lotu. Układ poszczególnych elementów może się różnić w starszych wersjach oprogramowania – przed lotem sprawdź ich wygląd przez gogle."
     },
     "osdSetupUnsupportedNote1": {
-        "message": "Twój kontroler lotu nie odpowiada na komendy OSD. Prawdopodobnie oznacza to że nie ma zintegrowanego OSD BetaFlight."
+        "message": "Twój kontroler lotu nie odpowiada na polecenia OSD. Może to oznaczać brak zintegrowanego BetaFlight OSD."
     },
     "osdSetupUnsupportedNote2": {
-        "message": "Zauważ, że niektóre kontrolery lotu mają na pokładzie układ <a href=\"https:\/\/www.youtube.com\/watch?v=ikKH_6SQ-Tk\" target=\"_blank\" rel=\"noopener noreferrer\">MinimOSD<\/a>, który można programować i konfigurować w <a href=\"https:\/\/github.com\/ShikOfTheRa\/scarab-osd\/releases\/latest\" target='_blank'>scarab-osd<\/a>, jednakże przez ten interfejs nie można skonfigurować MinimOSD."
+        "message": "Niektóre kontrolery lotu mają wbudowany <a href=\"https:\/\/www.youtube.com\/watch?v=ikKH_6SQ-Tk\" target=\"_blank\" rel=\"noopener noreferrer\">MinimOSD<\/a> który można sflashować i skonfigurować za pomocą <a href=\"https:\/\/github.com\/ShikOfTheRa\/scarab-osd\/releases\/latest\" target='_blank'>scarab-osd<\/a>, jednakże konfiguracja MinimOSD nie jest możliwa przez ten interfejs."
     },
     "osdSetupProfilesTitle": {
         "message": "Numer profilu OSD",
@@ -5206,7 +5206,7 @@
         "description": "Label of the selector for the OSD Profile in the preview. KEEP IT SHORT!!!"
     },
     "osdSetupPreviewForTitle": {
-        "message": "Zmiana profilu lub czcionki w tym miejscu NIE zmieni profilu ani czcionki w ustawieniach kontrolera lotu. Zmiana ma wpływ tylko na poniższe okno podglądu. Jeśli chcesz zmienić te ustawienia w kontrolerze, musisz użyć opcji '$t(osdSetupSelectedProfileTitle.message)' lub przycisku '$t(osdSetupFontManager.message)'.",
+        "message": "Zmiana profilu lub czcionki w tym miejscu nie zmienia ustawień kontrolera lotu – wpływa jedynie na okno podglądu. Aby dokonać rzeczywistej zmiany, skorzystaj z opcji '$t(osdSetupSelectedProfileTitle.message)' lub przycisku '$t(osdSetupFontManager.message)'.",
         "description": "Help content for the OSD profile and font PREVIEW"
     },
     "osdSetupSelectedProfileTitle": {
@@ -5316,16 +5316,16 @@
         "message": "Ustawienia VTX"
     },
     "osdSetupCraftNameTitle": {
-        "message": "Nazwa Modelu"
+        "message": "Nazwa modelu"
     },
     "osdSetupWarningsTitle": {
         "message": "Ostrzeżenia"
     },
     "osdSetupFontPresets": {
-        "message": "Ustawienia czcionek:"
+        "message": "Zestaw czcionek:"
     },
     "osdSetupFontPresetsSelector": {
-        "message": "Wybierz ustawienia czcionek:"
+        "message": "Wybierz zestaw czcionek:"
     },
     "osdSetupFontPresetsSelectorCustomOption": {
         "message": "Czcionka użytkownika",
@@ -5338,7 +5338,7 @@
         "message": "Otwórz plik czcionki"
     },
     "osdSetupCustomLogoTitle": {
-        "message": "Logo Boot:"
+        "message": "Logo przy rozruchu:"
     },
     "osdSetupCustomLogoOpenImageButton": {
         "message": "Wybierz własny obraz&hellip;"
@@ -5347,25 +5347,25 @@
         "message": "Własny obraz:"
     },
     "osdSetupCustomLogoInfoImageSize": {
-        "message": "Rozmiar musi wynosić $t(logoWidthPx)×$t(logoHeightPx) pikseli"
+        "message": "Wymagane wymiary obrazu: $t(logoWidthPx)×$t(logoHeightPx) pikseli"
     },
     "osdSetupCustomLogoInfoColorMap": {
-        "message": "Musi zawierać zielone, czarne i białe piksele"
+        "message": "Musi zawierać piksele w kolorach zielonym, czarnym i białym"
     },
     "osdSetupCustomLogoInfoUploadHint": {
-        "message": "Kliknij <b>$t(osdSetupUploadFont.message)<\/b> aby ustwwić niestandardowe logo"
+        "message": "Kliknij <b>$t(osdSetupUploadFont.message)<\/b> , aby zapisać własne logo"
     },
     "osdSetupCustomLogoImageSizeError": {
-        "message": "Nieprawidłowy rozmiar obrazu: {{width}}×{{height}} (oczekiwano $t(logoWidthPx)×$t(logoHeightPx))"
+        "message": "Nieprawidłowe wymiary obrazu: {{width}}×{{height}} (oczekiwano $t(logoWidthPx)×$t(logoHeightPx))"
     },
     "osdSetupCustomLogoColorMapError": {
         "message": "Obraz zawiera nieprawidłowy piksel: rgb({{valueR}}, {{valueG}}, {{valueB}}) o współrzędnych {{posX}}×{{posY}}"
     },
     "osdSetupUploadFont": {
-        "message": "Wgraj czcionke"
+        "message": "Załaduj czcionkę"
     },
     "osdSetupUploadingFont": {
-        "message": "Przesyłanie..."
+        "message": "Ładowanie..."
     },
     "osdSetupUploadingFontEnd": {
         "message": "Przesłano wszystkie {{length}} znaki do OSD"
@@ -5392,7 +5392,7 @@
         "message": "Przywróć ustawienia domyślne OSD"
     },
     "osdSetupButtonReset": {
-        "message": "Zresetuj Ustawienia"
+        "message": "Resetuj ustawienia"
     },
     "osdTextElementMainBattVoltage": {
         "message": "Napięcie akumulatora",
@@ -5427,7 +5427,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementCpuLoad": {
-        "message": "Bieżące obciążenie"
+        "message": "Bieżące obciążenie CPU"
     },
     "osdTextElementVtxChannel": {
         "message": "Kanał VTX",
@@ -5445,67 +5445,67 @@
         "description": "One of the variants of the VTX channel element of the OSD"
     },
     "osdTextElementVoltageWarning": {
-        "message": "Ostrzeżenie o napięciu baterii",
+        "message": "Ostrzeżenie o napięciu akumulatora",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementVoltageWarning": {
-        "message": "Wyświetla ostrzeżenie, gdy napięcie jest poniżej ustawionej wartości alarmu"
+        "message": "Wyświetla ostrzeżenie, gdy napięcie spada poniżej wartości alarmowej"
     },
     "osdTextElementArmed": {
         "message": "Uzbrojony",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementArmed": {
-        "message": "Tekstowa wiadomość uzbrojenia"
+        "message": "Tekstowy komunikat uzbrojenia"
     },
     "osdTextElementDisarmed": {
-        "message": "Nieuzbrojony",
+        "message": "Rozbrojony",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementDisarmed": {
-        "message": "Tekstowa wiadomość rozbrojenia"
+        "message": "Tekstowy komunikat rozbrojenia"
     },
     "osdTextElementCrosshairs": {
-        "message": "Celowniki",
+        "message": "Celownik",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementCrosshairs": {
-        "message": "Środek celownika ekranowego"
+        "message": "Celownik umieszczony na środku ekranu"
     },
     "osdTextElementArtificialHorizon": {
         "message": "Sztuczny horyzont",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementArtificialHorizon": {
-        "message": "Graficzny wskaźnik sztucznego horyzontu"
+        "message": "Graficzny wskaźnik poziomu horyzontu"
     },
     "osdTextElementHorizonSidebars": {
         "message": "Paski boczne sztucznego horyzontu",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementHorizonSidebars": {
-        "message": "Paski boczne wokół wskaźnika sztucznego horyzontu"
+        "message": "Boczne paski otaczające wskaźnik poziomu horyzontu"
     },
     "osdTextElementCurrentDraw": {
-        "message": "Pobór prądu",
+        "message": "Pobór prądu przez akumulator",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementCurrentDraw": {
-        "message": "Natychmiastowy pobór prądu z baterii"
+        "message": "Chwilowy pobór prądu przez akumulator"
     },
     "osdTextElementMahDrawn": {
-        "message": "Zużyta pojemność baterii mAh",
+        "message": "Pobór prądu akumulatora w mAh",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementMahDrawn": {
-        "message": "Całkowita zużyta pojemność baterii"
+        "message": "Całkowita wykorzystana pojemność akumulatora"
     },
     "osdTextElementWhDrawn": {
-        "message": "Pobór prądu akumulatora Wh",
+        "message": "Pobór prądu akumulatora w Wh",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementWhDrawn": {
-        "message": "Całkowita pojemność baterii wykorzystana w Wh"
+        "message": "Całkowita wykorzystana pojemność akumulatora w Wh"
     },
     "osdDescElementAuxValue": {
         "message": "Wartość Aux",
@@ -5516,7 +5516,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdTextElementSysGoggleVoltage": {
-        "message": "Goggle napięcie",
+        "message": "Napięcie w goglach",
         "description": "One of the system elements of the OSD"
     },
     "osdDescElementSysGoggleVoltage": {
@@ -5628,7 +5628,7 @@
         "message": "Aktualny pułap (miga gdy jest powyżej ustawionego limitu)"
     },
     "osdTextElementAltitudeVariant1DecimalAGL": {
-        "message": "AGL z 1 ułamkiem dziesiętnym",
+        "message": "AGL z jednym miejscem po przecinku",
         "description": "One of the variants of the altitude element of the OSD"
     },
     "osdTextElementAltitudeVariantNoDecimalAGL": {
@@ -5636,7 +5636,7 @@
         "description": "One of the variants of the altitude element of the OSD"
     },
     "osdTextElementAltitudeVariant1DecimalASL": {
-        "message": "ASL z 1 liczbą dziesiętną",
+        "message": "ASL z jednym miejscem po przecinku",
         "description": "One of the variants of the altitude element of the OSD"
     },
     "osdTextElementAltitudeVariantNoDecimalASL": {
@@ -5676,18 +5676,18 @@
         "description": "Description of the custom message 4 element of the OSD"
     },
     "osdTextElementOnTime": {
-        "message": "Na czas",
+        "message": "Czas włączenia",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementOnTime": {
-        "message": "Całkowity czas, w którym model był pod zasilaniem"
+        "message": "Całkowity czas, przez który model był włączony"
     },
     "osdTextElementFlyTime": {
         "message": "Czas lotu",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementFlyTime": {
-        "message": "Całkowity czas uzbrojenia modelu w bieżącym cyklu zasilania (mruga, gdy przekroczy próg alarmowy)"
+        "message": "Całkowity czas uzbrojenia modelu w bieżącym cyklu zasilania (miga po przekroczeniu progu alarmowego)"
     },
     "osdTextElementFlyMode": {
         "message": "Tryb lotu",
@@ -5715,14 +5715,14 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementGPSLon": {
-        "message": "Długość geograficzna GPS"
+        "message": "Współrzędna długości geograficznej GPS"
     },
     "osdTextElementGPSLat": {
         "message": "Szerokość geograficzna GPS",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementGPSLat": {
-        "message": "Szerokość geograficzna GPS"
+        "message": "Współrzędna szerokości geograficznej GPS"
     },
     "osdTextElementGPSVariant7Decimals": {
         "message": "7 miejsc po przecinku",
@@ -5787,21 +5787,21 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementPIDRateProfile": {
-        "message": "Wyświetlanie numeryczne aktywnych profilów PID i współczynników (rates)"
+        "message": "Numeryczny wskaźnik aktywnych profili PID i rate"
     },
     "osdTextElementBatteryWarning": {
-        "message": "Ostrzeżenie o baterii",
+        "message": "Alarm dotyczący akumulatora",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementBatteryWarning": {
-        "message": "Tekst ostrzeżenia, który pojawia się, gdy napięcie baterii spadnie poniżej progu ostrzegawczego"
+        "message": "Ostrzeżenie wyświetlane, gdy napięcie akumulatora spada poniżej ustalonego progu"
     },
     "osdTextElementAvgCellVoltage": {
         "message": "Średnie napięcie ogniwa baterii",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementAvgCellVoltage": {
-        "message": "Średnie napięcie ogniwa (napięcie głównej baterii \/ liczba ogniw)"
+        "message": "Średnie napięcie ogniwa (napięcie głównego akumulatora podzielone przez liczbę ogniw)"
     },
     "osdTextElementPitchAngle": {
         "message": "Kąt: pochylenie (pitch)",
@@ -5818,18 +5818,18 @@
         "message": "Kąt przechylenia (roll) w stopniach"
     },
     "osdTextElementMainBattUsage": {
-        "message": "Zużycie baterii",
+        "message": "Zużycie akumulatora",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementMainBattUsage": {
-        "message": "Graficzne przedstawienie obrazujące zużycie baterii"
+        "message": "Wizualizacja zużycia pojemności akumulatora"
     },
     "osdTextElementMainBattUsageVariantGraphrRemain": {
         "message": "Pozostało - graficznie",
         "description": "One of the variants for the Main Battery Usage element of the OSD"
     },
     "osdTextElementMainBattUsageVariantGraphUsage": {
-        "message": "Rozładowano - graficznie",
+        "message": "Zużyto - graficznie",
         "description": "One of the variants for the Main Battery Usage element of the OSD"
     },
     "osdTextElementMainBattUsageVariantValueRemain": {
@@ -5837,7 +5837,7 @@
         "description": "One of the variants for the Main Battery Usage element of the OSD"
     },
     "osdTextElementMainBattUsageVariantValueUsage": {
-        "message": "Procentowe użyto",
+        "message": "Zużyto - procentowo",
         "description": "One of the variants for the Main Battery Usage element of the OSD"
     },
     "osdTextElementArmedTime": {
@@ -5914,6 +5914,14 @@
         "message": "Data i godzina RTC",
         "description": "One of the elements of the OSD"
     },
+    "osdTextElementRtcDateTimeVariantFullDate": {
+        "message": "Pełna data",
+        "description": "One of the variants of the RTC date and time element of the OSD"
+    },
+    "osdTextElementRtcDateTimeVariantShortDate": {
+        "message": "Skrócona data",
+        "description": "One of the variants of the RTC date and time element of the OSD"
+    },
     "osdDescElementRtcDateTime": {
         "message": "Zegar w czasie rzeczywistym Data\/godzina"
     },
@@ -5943,7 +5951,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementCoreTemperature": {
-        "message": "Temperatura rdzenia STM32 MCU"
+        "message": "Temperatura rdzenia MCU STM32"
     },
     "osdTextAntiGravity": {
         "message": "Anti Gravity",
@@ -5953,11 +5961,11 @@
         "message": "Włącza wskaźnik, gdy anti gravity jest aktywne"
     },
     "osdTextGForce": {
-        "message": "Siła G",
+        "message": "Siła przeciążenia",
         "description": "One of the elements of the OSD"
     },
     "osdDescGForce": {
-        "message": "Pokazuje siłę przyciągania ziemskiego, jakiej doświadczył model"
+        "message": "Wskazuje, jak dużą siłę przeciążenia odczuwa model"
     },
     "osdTextElementMotorDiag": {
         "message": "Diagnostyka silnika",
@@ -5974,11 +5982,11 @@
         "message": "Numer i ostrzeżenia Czarnej Skrzynki"
     },
     "osdTextElementFlipArrow": {
-        "message": "Kierunek możliwego obrotu po zderzeniu",
+        "message": "Strzałka flip after crash",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementFlipArrow": {
-        "message": "Strzałka pokazująca, które silniki boczne są w trybie żółwia (akcelerometr musi być włączony)"
+        "message": "Strzałka wskazująca, która strona silników jest skierowana ku górze w trybie żółwia (akcelerometr musi być włączony)"
     },
     "osdTextElementLinkQuality": {
         "message": "Jakość połączenia",
@@ -5999,14 +6007,14 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementStickOverlayLeft": {
-        "message": "Wizualizacja pozycji drążka lewego."
+        "message": "Nakładka przedstawiająca pozycję lewego drążka nadajnika"
     },
     "osdTextElementStickOverlayRight": {
         "message": "Wizualizacja drążka prawego",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementStickOverlayRight": {
-        "message": "Wizualizacja pozycji drążka prawego."
+        "message": "Nakładka przedstawiająca pozycję prawego drążka nadajnika"
     },
     "osdTextElementDisplayName": {
         "message": "Wyświetl nazwę",
@@ -6072,11 +6080,11 @@
         "message": "Dodaje obramowanie o regulowanych wymiarach zaprojektowane, by imitować pole widzenia kamery HD.<br \/><br \/>Szerokość i wysokość obramowania możesz dostosować konfigurując zmienne \"osd_camera_frame_width\" i \"osd_camera_frame_height\" w Wierszu Poleceń CLI."
     },
     "osdTextElementEfficiency": {
-        "message": "Sprawność baterii",
+        "message": "Sprawność akumulatora",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementEfficiency": {
-        "message": "Chwilowe zużycie baterii w mAh \/ odległość. (Wymaga dobrego sygnału GPS)"
+        "message": "Chwilowe zużycie akumulatora w mAh na jednostkę odległości (wymaga stabilnego sygnału GPS)"
     },
     "osdTextTotalFlights": {
         "message": "Suma Lotów",
@@ -6086,11 +6094,11 @@
         "message": "Szacowana suma Lotów"
     },
     "osdTextElementUpDownReference": {
-        "message": "Góra (Pitch 90 stopni)\/Dół (Pitch -90 stopni)",
+        "message": "Odniesienie do pozycji „Góra” (Pitch 90°) \/ „Dół” (Pitch -90°)",
         "description": "OSD Symbol to show when pitch is approaching vertical (90 deg, U) and D for nose down (-90 deg, D)"
     },
     "osdDescUpDownReference": {
-        "message": "Symbol OSD do pokazania, gdy nachylenie zbliża się do pionu (90 stopni, U) i D dla nosa (-90 stopnia, D)"
+        "message": "Symbol OSD wskazujący, gdy kąt nachylenia zbliża się do pionu (90° – U) lub do pozycji nosa w dół (-90° – D)"
     },
     "osdTextElementTxUplinkPower": {
         "message": "Moc Nadajnika(Tx)",
@@ -6608,7 +6616,7 @@
         "description": "Introduction message in the VTX tab"
     },
     "vtxMessageNotSupported": {
-        "message": "<span class = \"message-negative\"> Uwaga: <\/span> Twój VTX nie jest skonfigurowany lub nie jest obsługiwany. Nie możesz stąd modyfikować wartości VTX. Będzie to możliwe tylko wtedy, gdy kontroler lotu jest podłączony do VTX przy użyciu protokołu, takiego jak Tramp lub SmartAudio i jest poprawnie skonfigurowany w zakładce $t(tabPorts.message) w razie potrzeby.",
+        "message": "<span class=\"message-negative\">Uwaga:<\/span> Twój VTX nie jest skonfigurowany lub nie jest obsługiwany, więc nie możesz zmieniać jego wartości w tym miejscu. Modyfikacja będzie możliwa jedynie, jeśli kontroler lotu jest podłączony do VTX za pomocą protokołu, takiego jak Tramp lub SmartAudio, oraz odpowiednio skonfigurowany w zakładce $t(tabPorts.message), jeśli jest to wymagane.",
         "description": "Message to show when the VTX is not supported in the VTX tab"
     },
     "vtxMessageTableNotConfigured": {
