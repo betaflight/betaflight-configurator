@@ -7,16 +7,12 @@ import "../js/injected_methods";
 import i18next from "i18next";
 import { createApp, reactive } from "vue";
 import I18NextVue from "i18next-vue";
-import BatteryLegend from "./quad-status/BatteryLegend.vue";
-import BetaflightLogo from "./betaflight-logo/BetaflightLogo.vue";
-import StatusBar from "./status-bar/StatusBar.vue";
-import BatteryIcon from "./quad-status/BatteryIcon.vue";
 import FC from "../js/fc.js";
 import MSP from "../js/msp.js";
 import PortHandler from "../js/port_handler.js";
 import PortUsage from "../js/port_usage.js";
-import PortPicker from "./port-picker/PortPicker.vue";
 import CONFIGURATOR from "../js/data_storage.js";
+import { BetaflightComponents } from "../js/vue_components.js";
 
 /*
  Most of the global objects can go here at first.
@@ -24,7 +20,7 @@ import CONFIGURATOR from "../js/data_storage.js";
  but these instance would eventually have more children
  which would find the use for those extra properties.
 
- FIXME For some reason, some of them (like PortHandler and FC) 
+ FIXME For some reason, some of them (like PortHandler and FC)
  need to be marked as reactive in it's own module, to detect
  changes in arrays so I added the `reactive` wrapper there too.
 */
@@ -45,13 +41,7 @@ i18next.on("initialized", function () {
         },
     });
 
-    app.use(I18NextVue, { i18next })
-        .component("BetaflightLogo", BetaflightLogo)
-        .component("BatteryLegend", BatteryLegend)
-        .component("StatusBar", StatusBar)
-        .component("BatteryIcon", BatteryIcon)
-        .component("PortPicker", PortPicker)
-        .mount("#main-wrapper");
+    app.use(I18NextVue, { i18next }).use(BetaflightComponents).mount("#main-wrapper");
 
     if (process.env.NODE_ENV === "development") {
         console.log("Development mode enabled, installing Vue tools");
