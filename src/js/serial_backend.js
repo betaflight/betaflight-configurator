@@ -55,19 +55,12 @@ function disconnectHandler(event) {
 export function initializeSerialBackend() {
     $("a.connection_button__link").on("click", connectDisconnect);
 
-    EventBus.$on("port-handler:auto-select-serial-device", function (device) {
-        if (
-            !GUI.connected_to &&
-            !GUI.connecting_to &&
-            GUI.active_tab !== "firmware_flasher" &&
-            ((PortHandler.portPicker.autoConnect && !["manual", "virtual"].includes(device)) ||
-                Date.now() - rebootTimestamp < REBOOT_CONNECT_MAX_TIME_MS)
-        ) {
-            connectDisconnect();
-        }
-    });
+    const autoConnectEvents = [
+        "port-handler:auto-select-webserial-device",
+        "port-handler:auto-select-webbluetooth-device",
+    ];
 
-    EventBus.$on("port-handler:auto-select-bluetooth-device", function (device) {
+    const autoConnectHandler = function (device) {
         if (
             !GUI.connected_to &&
             !GUI.connecting_to &&
@@ -77,6 +70,10 @@ export function initializeSerialBackend() {
         ) {
             connectDisconnect();
         }
+    };
+
+    autoConnectEvents.forEach((eventName) => {
+        EventBus.$on(eventName, autoConnectHandler);
     });
 
     // Using serial and bluetooth we don't know which event we need before we connect
