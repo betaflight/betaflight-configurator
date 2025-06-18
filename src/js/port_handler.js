@@ -280,8 +280,7 @@ PortHandler.handleDeviceAdded = function (device, deviceType) {
         const selectedPort = this.selectActivePort(device);
 
         if (selectedPort === device.path) {
-            // Emit an event with the proper type for backward compatibility
-            EventBus.$emit(`port-handler:auto-select-${deviceType}-device`, selectedPort);
+            EventBus.$emit(`port-handler:auto-select-serial-device`, selectedPort);
         }
     });
 };
