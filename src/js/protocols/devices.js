@@ -67,18 +67,18 @@ export const usbDevices = {
     filters: [
         { vendorId: 1155, productId: 57105 }, // STM Device in DFU Mode || Digital Radio in USB mode
         { vendorId: 10473, productId: 393 }, // GD32 DFU Bootloader
-        { vendorId: 0x2e3c, productId: 0xdf11 }, // AT32F435 DFU Bootloader
+        { vendorId: 11836, productId: 57105 }, // AT32F435 DFU Bootloader
         { vendorId: 12619, productId: 262 }, // APM32 DFU Bootloader
     ],
 };
 
 export const vendorIdNames = {
-    0x0403: "FTDI",
-    0x0483: "STM Electronics",
-    0x10c4: "Silicon Labs",
-    0x2e3c: "AT32",
-    0x314b: "Geehy Semiconductor",
-    0x2e8a: "Raspberry Pi Pico",
+    1027: "FTDI",
+    1155: "STM Electronics",
+    4292: "Silicon Labs",
+    11836: "AT32",
+    12619: "Geehy Semiconductor",
+    11914: "Raspberry Pi Pico",
 };
 
 export const webSerialDevices = serialDevices.map(({ vendorId, productId }) => ({
