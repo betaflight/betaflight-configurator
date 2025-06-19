@@ -146,6 +146,7 @@ class WebSerial extends EventTarget {
     }
 
     async getDevices() {
+        await this.loadDevices();
         return this.ports;
     }
 
