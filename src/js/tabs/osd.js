@@ -2920,8 +2920,9 @@ OSD.contextMenu = [
 OSD.getContextMenu = function () {
     let g_ContextMenu = $(`#global-context-menu.context-menu`);
 
-    if (g_ContextMenu.length > 0) return g_ContextMenu;
-    else {
+    if (g_ContextMenu.length > 0) {
+        return g_ContextMenu;
+    } else {
         // It doesn't exist,let's build one now.
         let contextMenuMarkup = $(`<div id="global-context-menu" class="context-menu"></div>`);
 
@@ -2970,8 +2971,9 @@ OSD.buildContextMenu = function (g_ContextMenu) {
             element.populateContentFn &&
             element.populateContentFn != null &&
             element.populateContentFn instanceof Function
-        )
+        ) {
             element.populateContentFn();
+        }
 
         let contextMenuItemContentTemplate = $(`<div class="context-menu-item-content"></div>`);
 
@@ -3059,7 +3061,9 @@ OSD.presetPosition.setupGrid = function () {
         }
     });
 
-    if (!contextMenuListObject) return;
+    if (!contextMenuListObject) {
+        return;
+    }
 
     const $grid = OSD.presetPosition.createGridWrapper();
     const $gridContainer = $grid.find("#preset-pos-grid");
@@ -3071,8 +3075,9 @@ OSD.presetPosition.setupGrid = function () {
 
 OSD.presetPosition.applyPosition = function (fieldChanged, positionKey) {
     const config = positionConfigs[positionKey];
-    if (!config) return;
-
+    if (!config) {
+        return;
+    }
     let elementWidth = fieldChanged.preview.constructor == String ? fieldChanged.preview.length : 1;
     let elementHeight = 1;
 
@@ -3083,15 +3088,13 @@ OSD.presetPosition.applyPosition = function (fieldChanged, positionKey) {
     if (fieldChanged.preview.constructor == Array) {
         const limits = OSD.searchLimitsElement(fieldChanged.preview);
 
-        // Per AI suggestion on the pull request(CodeRabbit),these should actually be +1,
-        // But, applying this suggestion causes the elements to not be centered.
-        elementWidth = limits.maxX - limits.minX;
-        elementHeight = limits.maxY - limits.minY;
+        elementWidth = limits.maxX - limits.minX + 1;
+        elementHeight = limits.maxY - limits.minY + 1;
 
         // Offset adjustments are needed because the positioning system expects
         // these values to account for the difference between logical and visual positioning.
-        adjustOffsetX = limits.minX + 1;
-        adjustOffsetY = limits.minY + 1;
+        adjustOffsetX = limits.minX; // keep raw limits – the centering maths upstream expects this
+        adjustOffsetY = limits.minY;
     } else if (fieldChanged.preview.constructor === String) {
         elementHeight = 1;
     }
@@ -3099,8 +3102,12 @@ OSD.presetPosition.applyPosition = function (fieldChanged, positionKey) {
     const target = config.coords(elementWidth, elementHeight);
     let finalPosition = null;
     // Ensure target position is within bounds
-    if (target.x < 1) target.x = 1;
-    if (target.y < 1) target.y = 1;
+    if (target.x < 1) {
+        target.x = 1;
+    }
+    if (target.y < 1) {
+        target.y = 1;
+    }
     if (target.x + elementWidth > OSD.data.displaySize.x - 1) {
         target.x = Math.max(1, OSD.data.displaySize.x - elementWidth - 1);
     }
@@ -3139,22 +3146,8 @@ OSD.presetPosition.applyPosition = function (fieldChanged, positionKey) {
         }
         if (canPlace) {
             finalPosition = testY * OSD.data.displaySize.x + testX;
-            // I'm just copying this block here but I actually don't fully understand why this is needed
-            // and why we can't just put it at that position and need these offsets/adjustments:
 
-            // if (displayItem.preview.constructor === Array) {
-            //     console.log(`Initial Drop Position: ${position}`);
-            //     const x = parseInt(ev.dataTransfer.getData("x"));
-            //     const y = parseInt(ev.dataTransfer.getData("y"));
-            //     console.log(`XY Co-ords: ${x}-${y}`);
-            //     position -= x; // <-- Here
-            //     position -= y * OSD.data.displaySize.x; // <-- Here
-            //     console.log(`Calculated Position: ${position}`);
-            // }
-
-            // This just imitates the code above^
-            // If this doesn't exist then advanced elements can't be properly
-            // placed/positioned to the preset positions
+            // If this doesn't exist then advanced elements won't be where we expect them to be.
             finalPosition -= adjustOffsetX;
             finalPosition -= adjustOffsetY * OSD.data.displaySize.x;
 

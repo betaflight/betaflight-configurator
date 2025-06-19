@@ -1,4 +1,6 @@
 .tab-osd {
+    --context-menu-z-index: 10001;
+
     .info {
         margin: 10px 0 0 0;
         position: relative;
@@ -535,7 +537,7 @@
         width: 0;
         opacity: 0;
         pointer-events: none;
-        z-index: 10001;
+        z-index: var(--context-menu-z-index);
         background-color: var(--surface-50);
         border-radius: 5px;
         transition: opacity 0.5s;
@@ -581,7 +583,7 @@
         opacity: 0;
         pointer-events: none;
         min-width: 200px;
-        z-index: 10001;
+        z-index: var(--context-menu-z-index);
 
         &.show {
             display: inline-block;
