@@ -3088,12 +3088,16 @@ OSD.presetPosition.applyPosition = function (fieldChanged, positionKey) {
     if (fieldChanged.preview.constructor == Array) {
         const limits = OSD.searchLimitsElement(fieldChanged.preview);
 
+        // Note: Using +1 for inclusive range calculation, which is mathematically
+        // correct for counting occupied positions. An element spanning coordinates
+        // -2 to 2 occupies 5 positions: [-2, -1, 0, 1, 2]
         elementWidth = limits.maxX - limits.minX + 1;
         elementHeight = limits.maxY - limits.minY + 1;
 
         // Offset adjustments are needed because the positioning system expects
         // these values to account for the difference between logical and visual positioning.
-        adjustOffsetX = limits.minX; // keep raw limits – the centering maths upstream expects this
+        // Use raw limits for offsets since they represent coordinate positions, not dimensions
+        adjustOffsetX = limits.minX;
         adjustOffsetY = limits.minY;
     } else if (fieldChanged.preview.constructor === String) {
         elementHeight = 1;
@@ -3147,7 +3151,7 @@ OSD.presetPosition.applyPosition = function (fieldChanged, positionKey) {
         if (canPlace) {
             finalPosition = testY * OSD.data.displaySize.x + testX;
 
-            // If this doesn't exist then advanced elements won't be where we expect them to be.
+            // Needed for advanced elements or else they won't be where we expect them to be.
             finalPosition -= adjustOffsetX;
             finalPosition -= adjustOffsetY * OSD.data.displaySize.x;
 
