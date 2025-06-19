@@ -436,7 +436,6 @@ function processBoardInfo() {
 }
 
 function checkReportProblems() {
-    const PROBLEM_ANALYTICS_EVENT = "ProblemFound";
     const problemItemTemplate = $("#dialogReportProblems-listItemTemplate");
 
     function checkReportProblem(problemName, problems) {
@@ -444,7 +443,6 @@ function checkReportProblems() {
             problems.push({ name: problemName, description: i18n.getMessage(`reportProblemsDialog${problemName}`) });
             return true;
         }
-
         return false;
     }
 
