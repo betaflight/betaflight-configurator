@@ -207,16 +207,6 @@ PortHandler.selectActivePort = function (suggestedDevice = false) {
         return selectedPort;
     }
 
-    // If there is no connection, check for the last used device
-    // Check if the device is already connected
-    if (this.portPicker.selectedPort && this.portPicker.selectedPort !== DEFAULT_PORT) {
-        selectedPort = this.currentSerialPorts.find((device) => device.path === this.portPicker.selectedPort);
-        if (selectedPort) {
-            console.log(`${this.logHead} Using previously selected device: ${selectedPort.path}`);
-            return selectedPort.path;
-        }
-    }
-
     // Return the suggested device (the new device that has been detected)
     if (!selectedPort && suggestedDevice) {
         selectedPort = suggestedDevice.path;
@@ -290,8 +280,7 @@ PortHandler.handleDeviceAdded = function (device, deviceType) {
         const selectedPort = this.selectActivePort(device);
 
         if (selectedPort === device.path) {
-            // Emit an event with the proper type for backward compatibility
-            EventBus.$emit(`port-handler:auto-select-${deviceType}-device`, selectedPort);
+            EventBus.$emit(`port-handler:auto-select-serial-device`, selectedPort);
         }
     });
 };

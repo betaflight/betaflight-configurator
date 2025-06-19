@@ -60,20 +60,7 @@ export function initializeSerialBackend() {
             !GUI.connected_to &&
             !GUI.connecting_to &&
             GUI.active_tab !== "firmware_flasher" &&
-            ((PortHandler.portPicker.autoConnect && !["manual", "virtual"].includes(device)) ||
-                Date.now() - rebootTimestamp < REBOOT_CONNECT_MAX_TIME_MS)
-        ) {
-            connectDisconnect();
-        }
-    });
-
-    EventBus.$on("port-handler:auto-select-bluetooth-device", function (device) {
-        if (
-            !GUI.connected_to &&
-            !GUI.connecting_to &&
-            GUI.active_tab !== "firmware_flasher" &&
-            ((PortHandler.portPicker.autoConnect && !["manual", "virtual"].includes(device)) ||
-                Date.now() - rebootTimestamp < REBOOT_CONNECT_MAX_TIME_MS)
+            (PortHandler.portPicker.autoConnect || Date.now() - rebootTimestamp < REBOOT_CONNECT_MAX_TIME_MS)
         ) {
             connectDisconnect();
         }
