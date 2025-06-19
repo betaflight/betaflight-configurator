@@ -2929,7 +2929,8 @@ OSD.getContextMenu = function () {
         let targetContainer = $(`body`);
 
         if (targetContainer.length == 0) {
-            alert("Target container doesn't exist,not sure where to place the context menu at.");
+            console.error("Target container doesn't exist, cannot place context menu");
+            gui_log("Context menu initialization failed");
             return;
         }
 
@@ -3001,44 +3002,44 @@ OSD.presetPosition.registerHandlers = function () {
     });
 };
 
-OSD.presetPosition.setupGrid = function () {
-    let contextMenuListObject = OSD.contextMenu.find((element) => {
-        if (element.name == OSD.presetPosition.contextMenuName) {
-            return true;
-        }
-    });
-
-    if (!contextMenuListObject) return;
-
-    const $grid = $(`
-        <div id="preset-pos-grid-wrapper">
+// Helper to create the grid wrapper
+OSD.presetPosition.createGridWrapper = function () {
+    return $(
+        `<div id="preset-pos-grid-wrapper">
             <div id="preset-pos-text">Choose Position</div>
             <div id="preset-pos-grid"></div>
-        </div>
-    `);
+        </div>`,
+    );
+};
 
-    const $gridContainer = $grid.find("#preset-pos-grid");
-    // Create 15 cells for 3x5 grid
+// Helper to create a single grid cell
+OSD.presetPosition.createGridCell = function (col, row) {
+    const $cell = $('<div class="preset-pos-grid-cell"></div>');
+    $cell.css("grid-row", row + 1);
+    $cell.css("grid-column", col + 1);
+    // Find matching position config
+    const matchingConfig = Object.entries(positionConfigs).find(
+        ([_, config]) => config.gridPos && config.gridPos[0] === col && config.gridPos[1] === row,
+    );
+    if (matchingConfig) {
+        const [configKey, config] = matchingConfig;
+        $cell.attr("data-position-key", configKey).append(`<div class="preset-pos-cell-tooltip">${config.label}</div>`);
+    }
+    return $cell;
+};
+
+// Helper to populate the grid with cells
+OSD.presetPosition.populateGrid = function ($gridContainer) {
     for (let row = 0; row < 5; row++) {
         for (let col = 0; col < 3; col++) {
-            const $cell = $('<div class="preset-pos-grid-cell"></div>');
-            $cell.css("grid-row", row + 1);
-            $cell.css("grid-column", col + 1);
-            // Find matching position config
-            const matchingConfig = Object.entries(positionConfigs).find(
-                ([_, config]) => config.gridPos && config.gridPos[0] === col && config.gridPos[1] === row,
-            );
-            if (matchingConfig) {
-                const [configKey, config] = matchingConfig;
-                $cell
-                    .attr("data-position-key", configKey)
-                    .append(`<div class="preset-pos-cell-tooltip">${config.label}</div>`);
-            }
+            const $cell = OSD.presetPosition.createGridCell(col, row);
             $gridContainer.append($cell);
         }
     }
+};
 
-    // Use event delegation - register click handler on document
+// Helper to register click event for grid cells
+OSD.presetPosition.registerGridCellClick = function () {
     $(document).on("click", ".preset-pos-grid-cell", function (e) {
         e.stopPropagation();
         const positionKey = $(this).attr("data-position-key");
@@ -3049,6 +3050,21 @@ OSD.presetPosition.setupGrid = function () {
         }
         OSD.presetPosition.applyPosition(fieldToUpdate, positionKey);
     });
+};
+
+OSD.presetPosition.setupGrid = function () {
+    let contextMenuListObject = OSD.contextMenu.find((element) => {
+        if (element.name == OSD.presetPosition.contextMenuName) {
+            return true;
+        }
+    });
+
+    if (!contextMenuListObject) return;
+
+    const $grid = OSD.presetPosition.createGridWrapper();
+    const $gridContainer = $grid.find("#preset-pos-grid");
+    OSD.presetPosition.populateGrid($gridContainer);
+    OSD.presetPosition.registerGridCellClick();
 
     contextMenuListObject.content = $grid;
 };
