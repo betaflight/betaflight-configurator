@@ -2346,10 +2346,6 @@ OSD.drawByOrder = function (selectedPosition, field, charCode, x, y) {
     }
 };
 
-OSD.hideAllPositionPresetMenus = function () {
-    $(".osd-context-menu, .osd-position-grid").removeClass("show");
-};
-
 OSD.msp = {
     /**
      * Note, unsigned 16 bit int for position ispacked:
@@ -2908,6 +2904,299 @@ OSD.GUI.preview = {
     },
 };
 
+OSD.presetPosition = {};
+OSD.presetPosition.contextMenuName = "preset_position";
+
+OSD.contextMenu = [
+    {
+        name: OSD.presetPosition.contextMenuName,
+        display: {
+            displayText: "Align to position",
+        },
+        populateContentFn: null,
+        content: null,
+    },
+];
+
+OSD.getContextMenu = function () {
+    let g_ContextMenu = $(`#global-context-menu.context-menu`);
+
+    if (g_ContextMenu.length > 0) return g_ContextMenu;
+    else {
+        // It doesn't exist,let's build one now.
+        let contextMenuMarkup = $(`<div id="global-context-menu" class="context-menu"></div>`);
+
+        // I'm really not 100% sure where I should place this
+        let targetContainer = $(`body`);
+
+        if (targetContainer.length == 0) {
+            alert("Target container doesn't exist,not sure where to place the context menu at.");
+            return;
+        }
+
+        targetContainer.append(contextMenuMarkup);
+
+        // Make sure to fill up content/set populateContentFn first,
+        // (e.g : preset positioning is already done in osd.initialize)
+        OSD.buildContextMenu(contextMenuMarkup);
+
+        return contextMenuMarkup;
+    }
+};
+
+OSD.buildContextMenu = function (g_ContextMenu) {
+    if (!OSD.contextMenu || OSD.contextMenu.length <= 0) {
+        console.log("Context menu array object is invalid or empty,not building context menu.");
+        return;
+    }
+
+    if (!g_ContextMenu || g_ContextMenu.length == 0) {
+        console.log("Context menu is null,not continuing!");
+        return;
+    }
+
+    OSD.contextMenu.forEach((element) => {
+        let contextMenuItemWrapper = $(`<div class="context-menu-item"></div>`);
+
+        let contextMenuItemDisplayTemplate = $(`
+            <div id="context-menu-${element.name}" class="context-menu-item-display">
+                <span>${element.display.displayText}</span>
+                <span>▶<span class="context-menu-item-content-wrapper"></span></span>
+            </div>
+        `);
+
+        let contextMenuItemContentWrapper = contextMenuItemDisplayTemplate.find(".context-menu-item-content-wrapper");
+        if (
+            element.populateContentFn &&
+            element.populateContentFn != null &&
+            element.populateContentFn instanceof Function
+        )
+            element.populateContentFn();
+
+        let contextMenuItemContentTemplate = $(`<div class="context-menu-item-content"></div>`);
+
+        if (element.content && element.content instanceof Object) {
+            contextMenuItemContentTemplate.append(element.content);
+        }
+
+        contextMenuItemWrapper.append(contextMenuItemDisplayTemplate);
+        contextMenuItemContentWrapper.append(contextMenuItemContentTemplate);
+
+        g_ContextMenu.append(contextMenuItemWrapper);
+
+        contextMenuItemDisplayTemplate.on("click", function () {
+            contextMenuItemContentTemplate.addClass("show");
+        });
+    });
+};
+
+OSD.presetPosition.registerHandlers = function () {
+    // Registering it on document since the buttons are not immediately available.
+    $(document).on("click", ".preset-pos-btn", OSD.presetPosition.onMenuTrigger);
+
+    // Hide the menu if anywhere else is clicked.
+    $(document).on("click", function (e) {
+        if (!$(e.target).closest(".context-menu").length) {
+            OSD.presetPosition.hideMenu();
+        }
+    });
+};
+
+OSD.presetPosition.setupGrid = function () {
+    let contextMenuListObject = OSD.contextMenu.find((element) => {
+        if (element.name == OSD.presetPosition.contextMenuName) {
+            return true;
+        }
+    });
+
+    if (!contextMenuListObject) return;
+
+    const $grid = $(`
+        <div id="preset-pos-grid-wrapper">
+            <div id="preset-pos-text">Choose Position</div>
+            <div id="preset-pos-grid"></div>
+        </div>
+    `);
+
+    const $gridContainer = $grid.find("#preset-pos-grid");
+    // Create 15 cells for 3x5 grid
+    for (let row = 0; row < 5; row++) {
+        for (let col = 0; col < 3; col++) {
+            const $cell = $('<div class="preset-pos-grid-cell"></div>');
+            $cell.css("grid-row", row + 1);
+            $cell.css("grid-column", col + 1);
+            // Find matching position config
+            const matchingConfig = Object.entries(positionConfigs).find(
+                ([_, config]) => config.gridPos && config.gridPos[0] === col && config.gridPos[1] === row,
+            );
+            if (matchingConfig) {
+                const [configKey, config] = matchingConfig;
+                $cell
+                    .attr("data-position-key", configKey)
+                    .append(`<div class="preset-pos-cell-tooltip">${config.label}</div>`);
+            }
+            $gridContainer.append($cell);
+        }
+    }
+
+    // Use event delegation - register click handler on document
+    $(document).on("click", ".preset-pos-grid-cell", function (e) {
+        e.stopPropagation();
+        const positionKey = $(this).attr("data-position-key");
+        const fieldToUpdate = $(this).data("field");
+        if (!positionKey || !fieldToUpdate) {
+            alert("Missing keys and fields to apply (position preset grid cell click)");
+            return;
+        }
+        OSD.presetPosition.applyPosition(fieldToUpdate, positionKey);
+    });
+
+    contextMenuListObject.content = $grid;
+};
+
+OSD.presetPosition.applyPosition = function (fieldChanged, positionKey) {
+    const config = positionConfigs[positionKey];
+    if (!config) return;
+
+    let elementWidth = fieldChanged.preview.constructor == String ? fieldChanged.preview.length : 1;
+    let elementHeight = fieldChanged.preview.constructor === String ? 1 : fieldChanged.preview.length;
+
+    let adjustOffsetX = 0;
+    let adjustOffsetY = 0;
+
+    // Advanced elements
+    if (fieldChanged.preview.constructor == Array) {
+        const limits = OSD.searchLimitsElement(fieldChanged.preview);
+
+        // Per AI suggestion on the pull request(CodeRabbit),these should actually be +1,
+        // But, applying this suggestion causes the elements to not be centered.
+        elementWidth = limits.maxX - limits.minX;
+        elementHeight = limits.maxY - limits.minY;
+
+        // If this is not offsetted by 1,it's not centered properly.
+        adjustOffsetX = limits.minX + 1;
+        adjustOffsetY = limits.minY + 1;
+    }
+
+    const target = config.coords(elementWidth, elementHeight);
+    let finalPosition = null;
+    // Ensure target position is within bounds
+    if (target.x < 1) target.x = 1;
+    if (target.y < 1) target.y = 1;
+    if (target.x + elementWidth > OSD.data.displaySize.x - 1) {
+        target.x = Math.max(1, OSD.data.displaySize.x - elementWidth - 1);
+    }
+    if (target.y + elementHeight > OSD.data.displaySize.y - 1) {
+        target.y = Math.max(1, OSD.data.displaySize.y - elementHeight - 1);
+    }
+    // Find available position with growth logic
+    for (let offset = 0; offset < Math.max(OSD.data.displaySize.x, OSD.data.displaySize.y); offset++) {
+        const testX = target.x + config.grow.x * offset;
+        const testY = target.y + config.grow.y * offset;
+        if (
+            testX < 1 ||
+            testX + elementWidth > OSD.data.displaySize.x - 1 ||
+            testY < 1 ||
+            testY > OSD.data.displaySize.y - 2
+        )
+            break;
+        let canPlace = true;
+        for (let row = 0; row < elementHeight && canPlace; row++) {
+            for (let col = 0; col < elementWidth && canPlace; col++) {
+                const checkPos = (testY + row) * OSD.data.displaySize.x + testX + col;
+                const cell = OSD.data.preview[checkPos];
+
+                if (
+                    cell &&
+                    cell[0] &&
+                    cell[0].index &&
+                    cell[0].index !== fieldChanged.index &&
+                    // Lets skip over the advanced elements and just let any elements overlap these advanced elements and let it be overlapped by any element.
+                    // Since they don't actually use up the full space of their bounds and we can overlap with them while our elements still being fully visible.
+                    !(cell[0].preview.constructor === Array || fieldChanged.preview.constructor === Array)
+                ) {
+                    canPlace = false;
+                }
+            }
+        }
+        if (canPlace) {
+            finalPosition = testY * OSD.data.displaySize.x + testX;
+            // I'm just copying this block here but I actually don't fully understand why this is needed
+            // and why we can't just put it at that position and need these offsets/adjustments:
+
+            // if (displayItem.preview.constructor === Array) {
+            //     console.log(`Initial Drop Position: ${position}`);
+            //     const x = parseInt(ev.dataTransfer.getData("x"));
+            //     const y = parseInt(ev.dataTransfer.getData("y"));
+            //     console.log(`XY Co-ords: ${x}-${y}`);
+            //     position -= x; // <-- Here
+            //     position -= y * OSD.data.displaySize.x; // <-- Here
+            //     console.log(`Calculated Position: ${position}`);
+            // }
+
+            // This just imitates the code above^
+            // If this doesn't exist then advanced elements can't be properly
+            // placed/positioned to the preset positions
+            finalPosition -= adjustOffsetX;
+            finalPosition -= adjustOffsetY * OSD.data.displaySize.x;
+
+            break;
+        }
+    }
+    if (finalPosition !== null) {
+        fieldChanged.position = finalPosition;
+        MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, OSD.msp.encodeLayout(fieldChanged))
+            .then(() => OSD.updateOsdView())
+            .catch((err) => console.error("OSD update failed:", err));
+    } else {
+        // Show a nicer notification instead of alert
+        alert("Unable to place element - not enough space available");
+    }
+};
+
+OSD.presetPosition.onMenuTrigger = function () {
+    let $instance = $(this);
+    let $referencePointWrapper = $instance.parent(".preset-pos-btn-wrapper");
+    let g_ContextMenu = OSD.getContextMenu();
+
+    if (g_ContextMenu.length == 0) {
+        alert("Preset position context menu not found!");
+        return;
+    }
+    let $contextMenuItem = $(`#context-menu-${OSD.presetPosition.contextMenuName}`);
+
+    if ($contextMenuItem.length == 0) {
+        alert("Preset position context menu item not found!");
+        return;
+    }
+
+    g_ContextMenu.appendTo($referencePointWrapper);
+    g_ContextMenu.removeClass("show");
+
+    let contentContainer = $contextMenuItem.find(".context-menu-item-content");
+    if (contentContainer.length > 0) {
+        contentContainer.removeClass("show");
+    }
+
+    // HACK:Apparently if the class is added on the same cycle of its creation,
+    // it can't animate any transitions,so we delay the class addition by 1ms.
+    setTimeout(function () {
+        g_ContextMenu.addClass("show");
+    }, 1);
+
+    // Set the field to update
+
+    $(`.preset-pos-grid-cell`).each((_, element) => {
+        let traverseElement = $(element).closest(".preset-pos-btn-wrapper");
+        let fieldToUpdate = traverseElement.data("field");
+        $(element).data("field", fieldToUpdate);
+    });
+};
+
+OSD.presetPosition.hideMenu = function () {
+    $(".context-menu, .context-menu-item-content").removeClass("show");
+};
+
 const osd = {
     analyticsChanges: {},
 };
@@ -3381,6 +3670,7 @@ osd.initialize = function (callback) {
                         enabledCount++;
                     }
 
+                    const $field_wrapper = $(`<div class="switchable-field-wrapper"></div>`);
                     const $field = $(`<div class="switchable-field switchable-field-flex field-${field.index}"></div>`);
                     let desc = null;
                     if (field.desc && field.desc.length) {
@@ -3479,218 +3769,17 @@ osd.initialize = function (callback) {
                     // Insert in alphabetical order, with unknown fields at the end
                     $field.name = field.name;
 
-                    // OSD positioning buttons with element size compensation and centering logic
-                    // Enhanced OSD positioning with visual grid context menu
+                    // Preset positioning button
+                    // Wrap around it so we can place stuff near it and has a reference point,which is the wrapper.
+                    const $btnPresetPosition = $(
+                        `<div class="preset-pos-btn-wrapper"><button type="button" class="preset-pos-btn" aria-label="OSD position options">…</button></div>`,
+                    );
+                    $btnPresetPosition.data("field", field);
 
-                    // Create the context menu trigger button
-                    const $menuTrigger = $(`
-                    <button type="button" class="osd-menu-trigger grey" aria-label="OSD position options">
-                    </button>`);
-                    // Create the context menu
-                    const $contextMenu = $(`
-                    <div class="osd-context-menu">
-                        <div class="osd-menu-item align-to-item">
-                            <span>Align to Position</span>
-                            <span class="osd-menu-arrow">▶</span>
-                        </div>
-                    </div>`);
-                    // Create the position grid submenu
-                    const createPositionGrid = () => {
-                        const $grid = $(`
-                        <div class="osd-position-grid">
-                        <div class="grid-title">Choose Position</div>
-                        <div class="position-grid"></div>
-                        </div>`);
-                        const $gridContainer = $grid.find(".position-grid");
-                        // Create 15 cells for 3x5 grid
-                        for (let row = 0; row < 5; row++) {
-                            for (let col = 0; col < 3; col++) {
-                                const $cell = $('<div class="grid-cell"></div>');
-                                $cell.css("grid-row", row + 1);
-                                $cell.css("grid-column", col + 1);
-                                // Find matching position config
-                                const matchingConfig = Object.entries(positionConfigs).find(
-                                    ([key, config]) =>
-                                        config.gridPos && config.gridPos[0] === col && config.gridPos[1] === row,
-                                );
-                                if (matchingConfig) {
-                                    const [configKey, config] = matchingConfig;
-                                    $cell
-                                        .addClass("position-available")
-                                        .data("position-key", configKey)
-                                        .data("field", field)
-                                        .append(`<div class="position-tooltip">${config.label}</div>`);
-                                    // Add click handler for position selection
-                                    $cell.click(function (e) {
-                                        e.stopPropagation();
-                                        const positionKey = $(this).data("position-key");
-                                        const fieldToUpdate = $(this).data("field");
-                                        applyPosition(fieldToUpdate, positionKey);
-                                        OSD.hideAllPositionPresetMenus();
-                                    });
-                                }
-                                $gridContainer.append($cell);
-                            }
-                        }
-                        return $grid;
-                    };
-                    // Position application function
-                    const applyPosition = (fieldChanged, positionKey) => {
-                        const config = positionConfigs[positionKey];
-                        if (!config) return;
-
-                        let elementWidth = fieldChanged.preview.constructor == String ? fieldChanged.preview.length : 1;
-                        let elementHeight =
-                            fieldChanged.preview.constructor === String ? 1 : fieldChanged.preview.length;
-
-                        let adjustOffsetX = 0;
-                        let adjustOffsetY = 0;
-
-                        // Advanced elements
-                        if (fieldChanged.preview.constructor == Array) {
-                            const limits = OSD.searchLimitsElement(fieldChanged.preview);
-
-                            // Per AI suggestion on the pull request(CodeRabbit),these should actually be +1,
-                            // But, applying this suggestion causes the elements to not be centered.
-                            elementWidth = limits.maxX - limits.minX;
-                            elementHeight = limits.maxY - limits.minY;
-
-                            // If this is not offsetted by 1,it's not centered properly.
-                            adjustOffsetX = limits.minX + 1;
-                            adjustOffsetY = limits.minY + 1;
-                        }
-
-                        const target = config.coords(elementWidth, elementHeight);
-                        let finalPosition = null;
-                        // Ensure target position is within bounds
-                        if (target.x < 1) target.x = 1;
-                        if (target.y < 1) target.y = 1;
-                        if (target.x + elementWidth > OSD.data.displaySize.x - 1) {
-                            target.x = Math.max(1, OSD.data.displaySize.x - elementWidth - 1);
-                        }
-                        if (target.y + elementHeight > OSD.data.displaySize.y - 1) {
-                            target.y = Math.max(1, OSD.data.displaySize.y - elementHeight - 1);
-                        }
-                        // Find available position with growth logic
-                        for (
-                            let offset = 0;
-                            offset < Math.max(OSD.data.displaySize.x, OSD.data.displaySize.y);
-                            offset++
-                        ) {
-                            const testX = target.x + config.grow.x * offset;
-                            const testY = target.y + config.grow.y * offset;
-                            if (
-                                testX < 1 ||
-                                testX + elementWidth > OSD.data.displaySize.x - 1 ||
-                                testY < 1 ||
-                                testY > OSD.data.displaySize.y - 2
-                            )
-                                break;
-                            let canPlace = true;
-                            for (let row = 0; row < elementHeight && canPlace; row++) {
-                                for (let col = 0; col < elementWidth && canPlace; col++) {
-                                    const checkPos = (testY + row) * OSD.data.displaySize.x + testX + col;
-                                    const cell = OSD.data.preview[checkPos];
-
-                                    if (
-                                        cell?.[0]?.index !== fieldChanged.index &&
-                                        // Lets skip over the advanced elements and just let any elements overlap these advanced elements and let it be overlapped by any element.
-                                        // Since they don't actually use up the full space of their bounds and we can overlap with them while our elements still being fully visible.
-                                        !(
-                                            cell?.[0]?.preview?.constructor === Array ||
-                                            fieldChanged.preview.constructor === Array
-                                        )
-                                    ) {
-                                        canPlace = false;
-                                    }
-                                }
-                            }
-                            if (canPlace) {
-                                finalPosition = testY * OSD.data.displaySize.x + testX;
-                                // I'm just copying this block here but I actually don't fully understand why this is needed
-                                // and why we can't just put it at that position and need these offsets/adjustments:
-
-                                // if (displayItem.preview.constructor === Array) {
-                                //     console.log(`Initial Drop Position: ${position}`);
-                                //     const x = parseInt(ev.dataTransfer.getData("x"));
-                                //     const y = parseInt(ev.dataTransfer.getData("y"));
-                                //     console.log(`XY Co-ords: ${x}-${y}`);
-                                //     position -= x; // <-- Here
-                                //     position -= y * OSD.data.displaySize.x; // <-- Here
-                                //     console.log(`Calculated Position: ${position}`);
-                                // }
-
-                                // This just imitates the code above^
-                                // If this doesn't exist then advanced elements can't be properly
-                                // placed/positioned to the preset positions
-                                finalPosition -= adjustOffsetX;
-                                finalPosition -= adjustOffsetY * OSD.data.displaySize.x;
-
-                                break;
-                            }
-                        }
-                        if (finalPosition !== null) {
-                            fieldChanged.position = finalPosition;
-                            MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, OSD.msp.encodeLayout(fieldChanged))
-                                .then(() => updateOsdView())
-                                .catch((err) => console.error("OSD update failed:", err));
-                        } else {
-                            // Show a nicer notification instead of alert
-                            alert("Unable to place element - not enough space available");
-                        }
-                    };
-
-                    // Event handlers
-                    let menuTimeout;
-                    $menuTrigger.on("click", function (e) {
-                        e.stopPropagation();
-                        const $menu = $(this).siblings(".osd-context-menu");
-                        const isVisible = $menu.hasClass("show");
-                        OSD.hideAllPositionPresetMenus();
-                        if (!isVisible) {
-                            $menu.addClass("show");
-                        }
-                    });
-                    // Handle submenu hover
-                    $contextMenu
-                        .on("mouseenter", ".align-to-item", function () {
-                            clearTimeout(menuTimeout);
-                            const $grid = $(this).closest(".osd-context-menu").siblings(".osd-position-grid");
-                            $grid.addClass("show");
-                        })
-                        .on("mouseleave", ".align-to-item", function () {
-                            menuTimeout = setTimeout(() => {
-                                const $grid = $(this).closest(".osd-context-menu").siblings(".osd-position-grid");
-                                if (!$grid.is(":hover")) {
-                                    $grid.removeClass("show");
-                                }
-                            }, 200);
-                        });
-                    // Keep grid open when hovering over it
-                    const $positionGrid = createPositionGrid();
-                    $positionGrid
-                        .on("mouseenter", function () {
-                            clearTimeout(menuTimeout);
-                        })
-                        .on("mouseleave", function () {
-                            $(this).removeClass("show");
-                        });
-                    // Global click handler to close menus
-                    if (!globalMenuClickHandler) {
-                        globalMenuClickHandler = () => {
-                            OSD.hideAllPositionPresetMenus();
-                        };
-                        $(document).on("click", globalMenuClickHandler);
-                    }
-                    // Make field container relative positioned to contain the absolute positioned menu
-                    $field.css("position", "relative");
-                    // Append all elements
-                    $field.append($menuTrigger);
-                    $field.append($contextMenu);
-                    $field.append($positionGrid);
-                    insertOrdered($displayFields, $field);
+                    $field_wrapper.append($field);
+                    $field_wrapper.append($btnPresetPosition);
+                    insertOrdered($displayFields, $field_wrapper);
                 }
-
                 // Add the search field and its functionality
                 $("#element-fields").prepend(
                     $(
@@ -3986,6 +4075,9 @@ osd.initialize = function (callback) {
         MSP.promise(MSPCodes.MSP_RX_CONFIG).finally(() => {
             GUI.content_ready(callback);
         });
+        OSD.presetPosition.registerHandlers();
+        OSD.presetPosition.setupGrid();
+        OSD.updateOsdView = updateOsdView;
     });
 };
 
