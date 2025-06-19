@@ -3136,13 +3136,9 @@ OSD.presetPosition.applyPosition = function (fieldChanged, positionKey) {
                 const cell = OSD.data.preview[checkPos];
 
                 if (
-                    cell &&
-                    cell[0] &&
-                    cell[0].index &&
+                    cell?.[0]?.index != null &&
                     cell[0].index !== fieldChanged.index &&
-                    // Lets skip over the advanced elements and just let any elements overlap these advanced elements and let it be overlapped by any element.
-                    // Since they don't actually use up the full space of their bounds and we can overlap with them while our elements still being fully visible.
-                    !(cell[0].preview.constructor === Array || fieldChanged.preview.constructor === Array)
+                    !(cell?.[0]?.preview.constructor === Array || fieldChanged.preview.constructor === Array)
                 ) {
                     canPlace = false;
                 }
@@ -3164,7 +3160,7 @@ OSD.presetPosition.applyPosition = function (fieldChanged, positionKey) {
             .then(() => OSD.updateOsdView())
             .catch((err) => console.error("OSD update failed:", err));
     } else {
-        gui_log(i18n.getMessage("osdPresetPositionNoSpace") || "Unable to place element - not enough space available");
+        gui_log("Unable to place element - not enough space available");
     }
 };
 
