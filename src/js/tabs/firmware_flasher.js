@@ -1097,7 +1097,6 @@ firmware_flasher.initialize = function (callback) {
 
             if (!GUI.connect_lock) {
                 // button disabled while flashing is in progress
-                tracking.sendEvent(tracking.EVENT_CATEGORIES.FLASHING, "ExitDfu", null);
                 try {
                     console.log(`${self.logHead} Closing DFU`);
                     DFU.requestPermission().then((device) => {
@@ -1331,8 +1330,6 @@ firmware_flasher.initialize = function (callback) {
                 .then((file) => {
                     console.log(`${self.logHead} Saving firmware to:`, file.name);
                     FileSystem.writeFile(file, self.intel_hex);
-
-                    tracking.sendEvent(tracking.EVENT_CATEGORIES.FLASHING, "SaveFirmware");
                 })
                 .catch((error) => {
                     console.error("Error saving file:", error);

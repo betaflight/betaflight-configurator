@@ -174,9 +174,6 @@ function connectDisconnect() {
 
 function finishClose(finishedCallback) {
     const wasConnected = CONFIGURATOR.connectionValid;
-    tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, "Disconnected", {
-        time: connectionTimestamp ? Date.now() - connectionTimestamp : undefined,
-    });
 
     if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
         // close reset to custom defaults dialog
@@ -259,8 +256,6 @@ function abortConnection() {
     GUI.connected_to = false;
     GUI.connecting_to = false;
 
-    tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, "SerialPortFailed");
-
     gui_log(i18n.getMessage("serialPortOpenFail"));
 
     resetConnection();
@@ -327,12 +322,6 @@ function onOpen(openInfo) {
                             });
                         });
                     } else {
-                        tracking.sendEvent(
-                            tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER,
-                            "ConnectionRefusedFirmwareType",
-                            { identifier: FC.CONFIG.flightControllerIdentifier },
-                        );
-
                         const dialog = $(".dialogConnectWarning")[0];
 
                         $(".dialogConnectWarning-content").html(i18n.getMessage("firmwareTypeNotSupported"));
@@ -347,10 +336,6 @@ function onOpen(openInfo) {
                     }
                 });
             } else {
-                tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, "ConnectionRefusedFirmwareVersion", {
-                    apiVersion: FC.CONFIG.apiVersion,
-                });
-
                 const dialog = $(".dialogConnectWarning")[0];
 
                 $(".dialogConnectWarning-content").html(
@@ -398,8 +383,6 @@ function processCustomDefaults() {
         const dialog = $("#dialogResetToCustomDefaults")[0];
 
         $("#dialogResetToCustomDefaults-acceptbtn").click(function () {
-            tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, "AcceptResetToCustomDefaults");
-
             const buffer = [];
             buffer.push(mspHelper.RESET_TYPES.CUSTOM_DEFAULTS);
             MSP.send_message(MSPCodes.MSP_RESET_CONF, buffer, false);
@@ -416,12 +399,9 @@ function processCustomDefaults() {
         });
 
         $("#dialogResetToCustomDefaults-cancelbtn").click(function () {
-            tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, "CancelResetToCustomDefaults");
-
             dialog.close();
 
             setConnectionTimeout();
-
             checkReportProblems();
         });
 
@@ -451,11 +431,11 @@ function processBoardInfo() {
         flightControllerVersion: FC.CONFIG.flightControllerVersion,
         flightControllerIdentifier: FC.CONFIG.flightControllerIdentifier,
         mcu: FC.CONFIG.targetName,
+        deviceIdentifier: CryptoES.SHA1(FC.CONFIG.deviceIdentifier).toString(),
     });
 }
 
 function checkReportProblems() {
-    const PROBLEM_ANALYTICS_EVENT = "ProblemFound";
     const problemItemTemplate = $("#dialogReportProblems-listItemTemplate");
 
     function checkReportProblem(problemName, problems) {
@@ -463,7 +443,6 @@ function checkReportProblems() {
             problems.push({ name: problemName, description: i18n.getMessage(`reportProblemsDialog${problemName}`) });
             return true;
         }
-
         return false;
     }
 
@@ -507,10 +486,6 @@ function checkReportProblems() {
         if (needsProblemReportingDialog) {
             problems.forEach((problem) => {
                 problemItemTemplate.clone().html(problem.description).appendTo(problemDialogList);
-            });
-
-            tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, PROBLEM_ANALYTICS_EVENT, {
-                problems: problems.map((problem) => problem.name),
             });
 
             const problemDialog = $("#dialogReportProblems")[0];
@@ -569,10 +544,6 @@ async function processUid() {
     gui_log(i18n.getMessage("uniqueDeviceIdReceived", FC.CONFIG.deviceIdentifier));
 
     processBuildConfiguration();
-
-    tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, "Connected", {
-        deviceIdentifier: CryptoES.SHA1(FC.CONFIG.deviceIdentifier),
-    });
 }
 
 async function processCraftName() {

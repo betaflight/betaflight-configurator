@@ -55,10 +55,6 @@ DarkTheme.applyNormal = function () {
 
 export function setDarkTheme(enabled) {
     DarkTheme.setConfig(enabled);
-
-    checkSetupAnalytics(function (analyticsService) {
-        analyticsService.sendEvent(analyticsService.EVENT_CATEGORIES.APPLICATION, "DarkTheme", { enabled: enabled });
-    });
 }
 
 export default DarkTheme;

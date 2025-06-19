@@ -65,7 +65,6 @@ function getCliCommand(command, cliBuffer) {
 
 function copyToClipboard(text) {
     function onCopySuccessful() {
-        tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, "CliCopyToClipboard", { length: text.length });
         const button = TABS.cli.GUI.copyButton;
         const origText = button.text();
         const origWidth = button.css("width");
@@ -146,11 +145,6 @@ cli.initialize = function (callback) {
 
         function executeSnippet(fileName) {
             const commands = previewArea.val();
-
-            tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, "CliExecuteFromFile", {
-                filename: fileName,
-            });
-
             executeCommands(commands);
             self.GUI.snippetPreviewWindow.close();
         }

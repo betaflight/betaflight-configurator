@@ -166,8 +166,6 @@ onboard_logging.initialize = function (callback) {
                 $(".tab-onboard_logging").toggleClass("msc-supported", true);
 
                 $("a.onboardLoggingRebootMsc").click(function () {
-                    tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, "RebootMsc");
-
                     const buffer = [];
                     if (GUI.operating_system === "Linux") {
                         // Reboot into MSC using UTC time offset instead of user timezone
@@ -390,11 +388,6 @@ onboard_logging.initialize = function (callback) {
             loggingStatus = "Dataflash";
         }
 
-        tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, "DataLogging", {
-            logSize: FC.DATAFLASH.usedSize,
-            logStatus: loggingStatus,
-        });
-
         if (FC.SDCARD.supported && !sdcardTimer) {
             // Poll for changes in SD card status
             sdcardTimer = setTimeout(function () {
@@ -426,8 +419,6 @@ onboard_logging.initialize = function (callback) {
     }
 
     function mark_saving_dialog_done(startTime, totalBytes, totalBytesCompressed) {
-        tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, "SaveDataflash");
-
         const totalTime = (new Date().getTime() - startTime) / 1000;
         console.log(
             `Received ${totalBytes} bytes in ${totalTime.toFixed(2)}s (${(totalBytes / totalTime / 1024).toFixed(

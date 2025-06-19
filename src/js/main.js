@@ -75,10 +75,18 @@ function appReady() {
         startProcess();
 
         checkSetupAnalytics(function (analyticsService) {
-            analyticsService.sendEvent(analyticsService.EVENT_CATEGORIES.APPLICATION, "SelectedLanguage", {
+            analyticsService.sendEvent(analyticsService.EVENT_CATEGORIES.APPLICATION, "AppStart", {
+                sessionControl: "start",
+                configuratorVersion: CONFIGURATOR.getDisplayVersion(),
+                gitRevision: CONFIGURATOR.gitRevision,
+                productName: CONFIGURATOR.productName,
+                operatingSystem: GUI.operating_system,
                 language: i18n.selectedLanguage,
             });
         });
+
+        $("a.connection_button__link").removeClass("disabled");
+        $("a.firmware_flasher_button__link").removeClass("disabled");
 
         initializeSerialBackend();
     });
@@ -111,10 +119,10 @@ function startProcess() {
     console.log(`Libraries: jQuery - ${$.fn.jquery}, three.js - ${THREE.REVISION}`);
 
     // Check if this is the first visit
-    if (getConfig('firstRun').firstRun === undefined) {
+    if (getConfig("firstRun").firstRun === undefined) {
         setConfig({ firstRun: true });
-        import('./tabs/static_tab.js').then(({ staticTab }) => {
-            staticTab.initialize('options', () => {
+        import("./tabs/static_tab.js").then(({ staticTab }) => {
+            staticTab.initialize("options", () => {
                 setTimeout(() => {
                     // Open the options tab after a delay
                     $("#tabs .tab_options a").click();
