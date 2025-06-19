@@ -3157,7 +3157,7 @@ OSD.presetPosition.applyPosition = function (fieldChanged, positionKey) {
     if (finalPosition !== null) {
         fieldChanged.position = finalPosition;
         MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, OSD.msp.encodeLayout(fieldChanged))
-            .then(() => OSD.updateOsdView())
+            .then(OSD.updateOsdView)
             .catch((err) => console.error("OSD update failed:", err));
     } else {
         gui_log("Unable to place element - not enough space available");
