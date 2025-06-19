@@ -21,8 +21,7 @@ const FONT = {};
 const SYM = {};
 const OSD = {};
 
-// Stuff related to the "preset" positioning
-let globalMenuClickHandler = null;
+// Preset position
 const positionConfigs = {
     TL: {
         label: "Top Left",
@@ -3059,7 +3058,7 @@ OSD.presetPosition.applyPosition = function (fieldChanged, positionKey) {
     if (!config) return;
 
     let elementWidth = fieldChanged.preview.constructor == String ? fieldChanged.preview.length : 1;
-    let elementHeight = fieldChanged.preview.constructor === String ? 1 : fieldChanged.preview.length;
+    let elementHeight = 1;
 
     let adjustOffsetX = 0;
     let adjustOffsetY = 0;
@@ -3073,9 +3072,12 @@ OSD.presetPosition.applyPosition = function (fieldChanged, positionKey) {
         elementWidth = limits.maxX - limits.minX;
         elementHeight = limits.maxY - limits.minY;
 
-        // If this is not offsetted by 1,it's not centered properly.
+        // Offset adjustments are needed because the positioning system expects
+        // these values to account for the difference between logical and visual positioning.
         adjustOffsetX = limits.minX + 1;
         adjustOffsetY = limits.minY + 1;
+    } else if (fieldChanged.preview.constructor === String) {
+        elementHeight = 1;
     }
 
     const target = config.coords(elementWidth, elementHeight);
@@ -3149,8 +3151,7 @@ OSD.presetPosition.applyPosition = function (fieldChanged, positionKey) {
             .then(() => OSD.updateOsdView())
             .catch((err) => console.error("OSD update failed:", err));
     } else {
-        // Show a nicer notification instead of alert
-        alert("Unable to place element - not enough space available");
+        gui_log(i18n.getMessage("osdPresetPositionNoSpace") || "Unable to place element - not enough space available");
     }
 };
 
@@ -3772,7 +3773,7 @@ osd.initialize = function (callback) {
                     // Preset positioning button
                     // Wrap around it so we can place stuff near it and has a reference point,which is the wrapper.
                     const $btnPresetPosition = $(
-                        `<div class="preset-pos-btn-wrapper"><button type="button" class="preset-pos-btn" aria-label="OSD position options">…</button></div>`,
+                        `<div class="preset-pos-btn-wrapper"><button type="button" class="preset-pos-btn" aria-label="OSD position options" title="Choose preset position">...</button></div>`,
                     );
                     $btnPresetPosition.data("field", field);
 
@@ -4092,12 +4093,6 @@ osd.cleanup = function (callback) {
 
     if (callback) {
         callback();
-    }
-
-    // Remove position menu click handler
-    if (globalMenuClickHandler) {
-        $(document).off("click", globalMenuClickHandler);
-        globalMenuClickHandler = null;
     }
 };
 
