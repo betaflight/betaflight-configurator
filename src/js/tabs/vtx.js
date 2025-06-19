@@ -635,10 +635,6 @@ vtx.initialize = function (callback) {
 
                 console.log("Saving lua to:", file.name);
                 FileSystem.writeFile(file, text);
-
-                tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, "VtxTableLuaSave", {
-                    length: text.length,
-                });
             })
             .catch((error) => {
                 console.error("Failed to write lua file:", error);
@@ -663,10 +659,6 @@ vtx.initialize = function (callback) {
 
                 console.log("Saving VTX to:", file.name);
                 FileSystem.writeFile(file, text);
-
-                tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, "VtxTableSave", {
-                    length: text.length,
-                });
             })
             .catch((error) => {
                 console.error("Failed to write VTX file:", error);

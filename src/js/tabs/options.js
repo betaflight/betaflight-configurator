@@ -80,15 +80,7 @@ options.initAnalyticsOptOut = function () {
             setConfig({ analyticsOptOut: checked });
 
             checkSetupAnalytics(function (analyticsService) {
-                if (checked) {
-                    analyticsService.sendEvent(analyticsService.EVENT_CATEGORIES.APPLICATION, "OptOut");
-                }
-
                 analyticsService.setOptOut(checked);
-
-                if (!checked) {
-                    analyticsService.sendEvent(analyticsService.EVENT_CATEGORIES.APPLICATION, "OptIn");
-                }
             });
         })
         .change();

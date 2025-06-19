@@ -47,11 +47,6 @@ function setupAnalytics(result) {
     if (typeof process === "object") {
         process.on("uncaughtException", logException);
     }
-
-    tracking.sendEvent(tracking.EVENT_CATEGORIES.APPLICATION, "AppStart", { sessionControl: "start" });
-
-    $("a.connection_button__link").removeClass("disabled");
-    $("a.firmware_flasher_button__link").removeClass("disabled");
 }
 
 export function checkSetupAnalytics(callback) {
