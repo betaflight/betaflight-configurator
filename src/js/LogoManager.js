@@ -290,7 +290,7 @@ LogoManager.replaceLogoInFont = function (img) {
 LogoManager.drawPreview = function () {
     const $el = this.elements.$preview.empty();
     for (let i = this.logoStartIndex, I = this.font.constants.MAX_CHAR_COUNT; i < I; i++) {
-        const url = this.font.data.character_image_urls[i];
+        const url = this.font.draw(i);
         $el.append(`<img src="${url}" title="0x${i.toString(16)}"></img>`);
     }
 };
