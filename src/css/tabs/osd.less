@@ -1,4 +1,6 @@
 .tab-osd {
+    --context-menu-z-index: 10001;
+
     .info {
         margin: 10px 0 0 0;
         position: relative;
@@ -276,6 +278,7 @@
         }
     }
     .switchable-field {
+        flex: 1;
         padding: 3px;
         border: 1px solid transparent;
         border-bottom: 1px solid var(--surface-500);
@@ -310,6 +313,14 @@
         .elements-search-field {
             margin: 0 0 5px 0.5rem;
         }
+    }
+    .switchable-field-wrapper {
+        display: flex;
+        gap: 5px;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        align-items: center;
+        justify-content: space-between;
     }
     .switchable-field-flex {
         display: flex;
@@ -486,6 +497,169 @@
                     grid-column: span 1;
                 }
             }
+        }
+    }
+
+    .preset-pos-btn-wrapper {
+        position: relative;
+        display: inline-block;
+    }
+
+    .preset-pos-btn {
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: var(--surface-500);
+        color: var(--text);
+        border: 1px solid var(--primary-800);
+        transition:
+            background-color 0.25s,
+            transform 0.25s;
+        &:hover {
+            background-color: var(--surface-700);
+            transform: scale(1.1);
+        }
+        &:active {
+            transform: scale(0.9);
+        }
+    }
+
+    .context-menu {
+        position: absolute;
+        display: inline-block;
+        min-width: 180px;
+        top: 0;
+        left: 20px;
+        padding: 5px;
+        width: 0;
+        opacity: 0;
+        pointer-events: none;
+        z-index: var(--context-menu-z-index);
+        background-color: var(--surface-50);
+        border-radius: 5px;
+        transition: opacity 0.5s;
+
+        &.show {
+            display: inline-block;
+
+            opacity: 1;
+            pointer-events: all;
+        }
+    }
+
+    .context-menu-item {
+        position: relative;
+    }
+
+    // The list "item"
+    .context-menu-item div.context-menu-item-display {
+        position: relative;
+        padding: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        cursor: pointer;
+        font-size: 13px;
+        transition: all 0.25s;
+        border-radius: 0;
+        &:hover {
+            background-color: var(--surface-700);
+            border-radius: 5px;
+        }
+    }
+
+    .context-menu-item span.context-menu-item-content-wrapper {
+        position: absolute;
+    }
+    // The "content" of the item itself
+    .context-menu-item div.context-menu-item-content {
+        position: absolute;
+        left: 10px;
+        top: -10px;
+        display: none;
+        opacity: 0;
+        pointer-events: none;
+        min-width: 200px;
+        z-index: var(--context-menu-z-index);
+
+        &.show {
+            display: inline-block;
+            opacity: 1;
+            pointer-events: all;
+        }
+    }
+
+    #preset-pos-grid-wrapper {
+        background-color: var(--surface-50);
+        border-radius: 5px;
+        padding: 10px;
+        gap: 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #preset-pos-text {
+        font-weight: 600;
+    }
+
+    #preset-pos-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: repeat(5, 1fr);
+        gap: 6px;
+        width: 150px;
+        height: 120px;
+        padding: 10px;
+        background-color: var(--surface-100);
+        border-radius: 5px;
+        border: 2px solid var(--surface-700);
+    }
+
+    .preset-pos-grid-cell {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        font-size: 8px;
+        cursor: pointer;
+        background-color: color-mix(in srgb, var(--surface-700) 50%, var(--primary-500) 50%);
+        border-radius: 5px;
+        transition: transform 0.25s;
+        .preset-pos-cell-tooltip {
+            position: absolute;
+            top: -25px;
+            font-size: 8px;
+            white-space: nowrap;
+            color: var(--text);
+            background-color: color-mix(in srgb, var(--surface-300) 70%, var(--primary-500) 30%);
+            opacity: 0;
+            transition: opacity 0.25s;
+            pointer-events: none;
+            padding: 5px;
+            border-radius: 5px;
+        }
+        &:hover {
+            transform: scale(1.25);
+            .preset-pos-cell-tooltip {
+                opacity: 1;
+            }
+        }
+        // The dots
+        &::after {
+            content: "";
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: currentColor;
+            border-radius: 50%;
+            opacity: 0.8;
         }
     }
 }

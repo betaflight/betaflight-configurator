@@ -21,6 +21,195 @@ const FONT = {};
 const SYM = {};
 const OSD = {};
 
+// Preset position
+const positionConfigs = {
+    TL: {
+        label: "Top Left",
+        coords: (w, h) => ({
+            x: 1,
+            y: 1,
+        }),
+        grow: {
+            x: 0,
+            y: 1,
+        },
+        gridPos: [0, 0],
+    },
+    TC: {
+        label: "Top Center",
+        coords: (w, h) => ({
+            x: Math.floor((OSD.data.displaySize.x - w) / 2),
+            y: 1,
+        }),
+        grow: {
+            x: 0,
+            y: 1,
+        },
+        gridPos: [1, 0],
+    },
+    TR: {
+        label: "Top Right",
+        coords: (w, h) => ({
+            x: Math.max(1, OSD.data.displaySize.x - w - 1),
+            y: 1,
+        }),
+        grow: {
+            x: 0,
+            y: 1,
+        },
+        gridPos: [2, 0],
+    },
+    // Top-middle row
+    TML: {
+        label: "Top Middle Left",
+        coords: (w, h) => ({
+            x: 1,
+            y: Math.floor(OSD.data.displaySize.y / 3) - Math.floor(h / 2),
+        }),
+        grow: {
+            x: 0,
+            y: 1,
+        },
+        gridPos: [0, 1],
+    },
+    TMC: {
+        label: "Top Mid Center",
+        coords: (w, h) => ({
+            x: Math.floor((OSD.data.displaySize.x - w) / 2),
+            y: Math.floor(OSD.data.displaySize.y / 3) - Math.floor(h / 2),
+        }),
+        grow: {
+            x: 0,
+            y: 1,
+        },
+        gridPos: [1, 1],
+    },
+    TMR: {
+        label: "Top Middle Right",
+        coords: (w, h) => ({
+            x: Math.max(1, OSD.data.displaySize.x - w - 1),
+            y: Math.floor(OSD.data.displaySize.y / 3) - Math.floor(h / 2),
+        }),
+        grow: {
+            x: 0,
+            y: 1,
+        },
+        gridPos: [2, 1],
+    },
+    // Exact middle row
+    LMC: {
+        label: "Left Middle",
+        coords: (w, h) => ({
+            x: 1,
+            y: Math.floor((OSD.data.displaySize.y - h) / 2),
+        }),
+        grow: {
+            x: 0,
+            y: 1,
+        },
+        gridPos: [0, 2],
+    },
+    CTR: {
+        label: "Center",
+        coords: (w, h) => ({
+            x: Math.floor(OSD.data.displaySize.x / 2 - w / 2),
+            y: Math.floor(OSD.data.displaySize.y / 2 - h / 2),
+            // x: 1,
+            // y: 1,
+        }),
+        grow: {
+            x: 0,
+            y: 1,
+        },
+        gridPos: [1, 2],
+    },
+    RMC: {
+        label: "Right Middle",
+        coords: (w, h) => ({
+            x: OSD.data.displaySize.x - 1 - w,
+            y: Math.floor((OSD.data.displaySize.y - h) / 2),
+        }),
+        grow: {
+            x: 0,
+            y: 1,
+        },
+        gridPos: [2, 2],
+    },
+    // Bottom-middle row
+    BML: {
+        label: "Bottom Middle Left",
+        coords: (w, h) => ({
+            x: 1,
+            y: Math.floor((OSD.data.displaySize.y * 2) / 3) - Math.floor(h / 2),
+        }),
+        grow: {
+            x: 0,
+            y: -1,
+        },
+        gridPos: [0, 3],
+    },
+    BMC: {
+        label: "Bottom Mid Center",
+        coords: (w, h) => ({
+            x: Math.floor((OSD.data.displaySize.x - w) / 2),
+            y: Math.floor((OSD.data.displaySize.y * 2) / 3) - Math.floor(h / 2),
+        }),
+        grow: {
+            x: 0,
+            y: -1,
+        },
+        gridPos: [1, 3],
+    },
+    BMR: {
+        label: "Bottom Middle Right",
+        coords: (w, h) => ({
+            x: Math.max(1, OSD.data.displaySize.x - w - 1),
+            y: Math.floor((OSD.data.displaySize.y * 2) / 3) - Math.floor(h / 2),
+        }),
+        grow: {
+            x: 0,
+            y: -1,
+        },
+        gridPos: [2, 3],
+    },
+    BL: {
+        label: "Bottom Left",
+        coords: (w, h) => ({
+            x: 1,
+            y: OSD.data.displaySize.y - h - 1,
+        }),
+        grow: {
+            x: 0,
+            y: -1,
+        },
+        gridPos: [0, 4],
+    },
+    BC: {
+        label: "Bottom Center",
+        coords: (w, h) => ({
+            x: Math.floor((OSD.data.displaySize.x - w) / 2),
+            y: OSD.data.displaySize.y - h - 1,
+        }),
+        grow: {
+            x: 0,
+            y: -1,
+        },
+        gridPos: [1, 4],
+    },
+    BR: {
+        label: "Bottom Right",
+        coords: (w, h) => ({
+            x: Math.max(1, OSD.data.displaySize.x - w - 1),
+            y: OSD.data.displaySize.y - h - 1,
+        }),
+        grow: {
+            x: 0,
+            y: -1,
+        },
+        gridPos: [2, 4],
+    },
+};
+
 SYM.loadSymbols = function () {
     SYM.BLANK = 0x20;
     SYM.VOLT = 0x06;
@@ -2714,6 +2903,311 @@ OSD.GUI.preview = {
     },
 };
 
+OSD.presetPosition = {};
+OSD.presetPosition.contextMenuName = "preset_position";
+
+OSD.contextMenu = [
+    {
+        name: OSD.presetPosition.contextMenuName,
+        display: {
+            displayText: "Align to position",
+        },
+        populateContentFn: null,
+        content: null,
+    },
+];
+
+OSD.getContextMenu = function () {
+    let g_ContextMenu = $(`#global-context-menu.context-menu`);
+
+    if (g_ContextMenu.length > 0) {
+        return g_ContextMenu;
+    } else {
+        // It doesn't exist,let's build one now.
+        let contextMenuMarkup = $(`<div id="global-context-menu" class="context-menu"></div>`);
+
+        // I'm really not 100% sure where I should place this
+        let targetContainer = $(`body`);
+
+        if (targetContainer.length == 0) {
+            console.error("Target container doesn't exist, cannot place context menu");
+            gui_log("Context menu initialization failed");
+            return;
+        }
+
+        targetContainer.append(contextMenuMarkup);
+
+        // Make sure to fill up content/set populateContentFn first,
+        // (e.g : preset positioning is already done in osd.initialize)
+        OSD.buildContextMenu(contextMenuMarkup);
+
+        return contextMenuMarkup;
+    }
+};
+
+OSD.buildContextMenu = function (g_ContextMenu) {
+    if (!OSD.contextMenu || OSD.contextMenu.length <= 0) {
+        console.log("Context menu array object is invalid or empty,not building context menu.");
+        return;
+    }
+
+    if (!g_ContextMenu || g_ContextMenu.length == 0) {
+        console.log("Context menu is null,not continuing!");
+        return;
+    }
+
+    OSD.contextMenu.forEach((element) => {
+        let contextMenuItemWrapper = $(`<div class="context-menu-item"></div>`);
+
+        let contextMenuItemDisplayTemplate = $(`
+            <div id="context-menu-${element.name}" class="context-menu-item-display">
+                <span>${element.display.displayText}</span>
+                <span>▶<span class="context-menu-item-content-wrapper"></span></span>
+            </div>
+        `);
+
+        let contextMenuItemContentWrapper = contextMenuItemDisplayTemplate.find(".context-menu-item-content-wrapper");
+        if (
+            element.populateContentFn &&
+            element.populateContentFn != null &&
+            element.populateContentFn instanceof Function
+        ) {
+            element.populateContentFn();
+        }
+
+        let contextMenuItemContentTemplate = $(`<div class="context-menu-item-content"></div>`);
+
+        if (element.content && element.content instanceof Object) {
+            contextMenuItemContentTemplate.append(element.content);
+        }
+
+        contextMenuItemWrapper.append(contextMenuItemDisplayTemplate);
+        contextMenuItemContentWrapper.append(contextMenuItemContentTemplate);
+
+        g_ContextMenu.append(contextMenuItemWrapper);
+
+        contextMenuItemDisplayTemplate.on("click", function () {
+            contextMenuItemContentTemplate.addClass("show");
+        });
+    });
+};
+
+OSD.presetPosition.registerHandlers = function () {
+    // Registering it on document since the buttons are not immediately available.
+    $(document).on("click", ".preset-pos-btn", OSD.presetPosition.onMenuTrigger);
+
+    // Hide the menu if anywhere else is clicked.
+    $(document).on("click", function (e) {
+        if (!$(e.target).closest(".context-menu").length) {
+            OSD.presetPosition.hideMenu();
+        }
+    });
+};
+
+// Helper to create the grid wrapper
+OSD.presetPosition.createGridWrapper = function () {
+    return $(
+        `<div id="preset-pos-grid-wrapper">
+            <div id="preset-pos-text">Choose Position</div>
+            <div id="preset-pos-grid"></div>
+        </div>`,
+    );
+};
+
+// Helper to create a single grid cell
+OSD.presetPosition.createGridCell = function (col, row) {
+    const $cell = $('<div class="preset-pos-grid-cell"></div>');
+    $cell.css("grid-row", row + 1);
+    $cell.css("grid-column", col + 1);
+    // Find matching position config
+    const matchingConfig = Object.entries(positionConfigs).find(
+        ([_, config]) => config.gridPos && config.gridPos[0] === col && config.gridPos[1] === row,
+    );
+    if (matchingConfig) {
+        const [configKey, config] = matchingConfig;
+        $cell.attr("data-position-key", configKey).append(`<div class="preset-pos-cell-tooltip">${config.label}</div>`);
+    }
+    return $cell;
+};
+
+// Helper to populate the grid with cells
+OSD.presetPosition.populateGrid = function ($gridContainer) {
+    for (let row = 0; row < 5; row++) {
+        for (let col = 0; col < 3; col++) {
+            const $cell = OSD.presetPosition.createGridCell(col, row);
+            $gridContainer.append($cell);
+        }
+    }
+};
+
+// Helper to register click event for grid cells
+OSD.presetPosition.registerGridCellClick = function () {
+    $(document).on("click", ".preset-pos-grid-cell", function (e) {
+        e.stopPropagation();
+        const positionKey = $(this).attr("data-position-key");
+        const fieldToUpdate = $(this).data("field");
+        if (!positionKey || !fieldToUpdate) {
+            alert("Missing keys and fields to apply (position preset grid cell click)");
+            return;
+        }
+        OSD.presetPosition.applyPosition(fieldToUpdate, positionKey);
+    });
+};
+
+OSD.presetPosition.setupGrid = function () {
+    let contextMenuListObject = OSD.contextMenu.find((element) => {
+        if (element.name == OSD.presetPosition.contextMenuName) {
+            return true;
+        }
+    });
+
+    if (!contextMenuListObject) {
+        return;
+    }
+
+    const $grid = OSD.presetPosition.createGridWrapper();
+    const $gridContainer = $grid.find("#preset-pos-grid");
+    OSD.presetPosition.populateGrid($gridContainer);
+    OSD.presetPosition.registerGridCellClick();
+
+    contextMenuListObject.content = $grid;
+};
+
+OSD.presetPosition.applyPosition = function (fieldChanged, positionKey) {
+    const config = positionConfigs[positionKey];
+    if (!config) {
+        return;
+    }
+    let elementWidth = fieldChanged.preview.constructor == String ? fieldChanged.preview.length : 1;
+    let elementHeight = 1;
+
+    let adjustOffsetX = 0;
+    let adjustOffsetY = 0;
+
+    // Advanced elements
+    if (fieldChanged.preview.constructor == Array) {
+        const limits = OSD.searchLimitsElement(fieldChanged.preview);
+
+        // Note: Using +1 for inclusive range calculation, which is mathematically
+        // correct for counting occupied positions. An element spanning coordinates
+        // -2 to 2 occupies 5 positions: [-2, -1, 0, 1, 2]
+        elementWidth = limits.maxX - limits.minX + 1;
+        elementHeight = limits.maxY - limits.minY + 1;
+
+        // Offset adjustments are needed because the positioning system expects
+        // these values to account for the difference between logical and visual positioning.
+        // Use raw limits for offsets since they represent coordinate positions, not dimensions
+        adjustOffsetX = limits.minX;
+        adjustOffsetY = limits.minY;
+    } else if (fieldChanged.preview.constructor === String) {
+        elementHeight = 1;
+    }
+
+    const target = config.coords(elementWidth, elementHeight);
+    let finalPosition = null;
+    // Ensure target position is within bounds
+    if (target.x < 1) {
+        target.x = 1;
+    }
+    if (target.y < 1) {
+        target.y = 1;
+    }
+    if (target.x + elementWidth > OSD.data.displaySize.x - 1) {
+        target.x = Math.max(1, OSD.data.displaySize.x - elementWidth - 1);
+    }
+    if (target.y + elementHeight > OSD.data.displaySize.y - 1) {
+        target.y = Math.max(1, OSD.data.displaySize.y - elementHeight - 1);
+    }
+    // Find available position with growth logic
+    for (let offset = 0; offset < Math.max(OSD.data.displaySize.x, OSD.data.displaySize.y); offset++) {
+        const testX = target.x + config.grow.x * offset;
+        const testY = target.y + config.grow.y * offset;
+        if (
+            testX < 1 ||
+            testX + elementWidth > OSD.data.displaySize.x - 1 ||
+            testY < 1 ||
+            testY > OSD.data.displaySize.y - 2
+        )
+            break;
+        let canPlace = true;
+        for (let row = 0; row < elementHeight && canPlace; row++) {
+            for (let col = 0; col < elementWidth && canPlace; col++) {
+                const checkPos = (testY + row) * OSD.data.displaySize.x + testX + col;
+                const cell = OSD.data.preview[checkPos];
+
+                if (
+                    cell?.[0]?.index != null &&
+                    cell[0].index !== fieldChanged.index &&
+                    !(cell?.[0]?.preview.constructor === Array || fieldChanged.preview.constructor === Array)
+                ) {
+                    canPlace = false;
+                }
+            }
+        }
+        if (canPlace) {
+            finalPosition = testY * OSD.data.displaySize.x + testX;
+
+            // Needed for advanced elements or else they won't be where we expect them to be.
+            finalPosition -= adjustOffsetX;
+            finalPosition -= adjustOffsetY * OSD.data.displaySize.x;
+
+            break;
+        }
+    }
+    if (finalPosition !== null) {
+        fieldChanged.position = finalPosition;
+        MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, OSD.msp.encodeLayout(fieldChanged))
+            .then(OSD.updateOsdView)
+            .catch((err) => console.error("OSD update failed:", err));
+    } else {
+        gui_log("Unable to place element - not enough space available");
+    }
+};
+
+OSD.presetPosition.onMenuTrigger = function (e) {
+    e.stopImmediatePropagation();
+    let $instance = $(this);
+    let $referencePointWrapper = $instance.parent(".preset-pos-btn-wrapper");
+    let g_ContextMenu = OSD.getContextMenu();
+
+    if (g_ContextMenu.length == 0) {
+        alert("Preset position context menu not found!");
+        return;
+    }
+    let $contextMenuItem = $(`#context-menu-${OSD.presetPosition.contextMenuName}`);
+
+    if ($contextMenuItem.length == 0) {
+        alert("Preset position context menu item not found!");
+        return;
+    }
+
+    g_ContextMenu.appendTo($referencePointWrapper);
+    g_ContextMenu.removeClass("show");
+
+    let contentContainer = $contextMenuItem.find(".context-menu-item-content");
+    if (contentContainer.length > 0) {
+        contentContainer.removeClass("show");
+    }
+
+    // HACK:Apparently if the class is added on the same cycle of its creation,
+    // it can't animate any transitions,so we delay the class addition by 1ms.
+    setTimeout(function () {
+        g_ContextMenu.addClass("show");
+    }, 1);
+
+    // Set the field to update
+
+    $(`.preset-pos-grid-cell`).each((_, element) => {
+        let traverseElement = $(element).closest(".preset-pos-btn-wrapper");
+        let fieldToUpdate = traverseElement.data("field");
+        $(element).data("field", fieldToUpdate);
+    });
+};
+
+OSD.presetPosition.hideMenu = function () {
+    $(".context-menu, .context-menu-item-content").removeClass("show");
+};
+
 const osd = {
     analyticsChanges: {},
 };
@@ -3174,6 +3668,9 @@ osd.initialize = function (callback) {
                 // display fields on/off and position
                 const $displayFields = $("#element-fields").empty();
                 let enabledCount = 0;
+
+                OSD.data.displaySize.total = OSD.data.displaySize.x * OSD.data.displaySize.y;
+
                 for (const field of OSD.data.displayItems) {
                     // versioning related, if the field doesn't exist at the current flight controller version, just skip it
                     if (!field.name) {
@@ -3184,6 +3681,7 @@ osd.initialize = function (callback) {
                         enabledCount++;
                     }
 
+                    const $field_wrapper = $(`<div class="switchable-field-wrapper"></div>`);
                     const $field = $(`<div class="switchable-field switchable-field-flex field-${field.index}"></div>`);
                     let desc = null;
                     if (field.desc && field.desc.length) {
@@ -3281,9 +3779,18 @@ osd.initialize = function (callback) {
                     $field.append($labelAndVariant);
                     // Insert in alphabetical order, with unknown fields at the end
                     $field.name = field.name;
-                    insertOrdered($displayFields, $field);
-                }
 
+                    // Preset positioning button
+                    // Wrap around it so we can place stuff near it and has a reference point,which is the wrapper.
+                    const $btnPresetPosition = $(
+                        `<div class="preset-pos-btn-wrapper"><button type="button" class="preset-pos-btn" aria-label="OSD position options" title="Choose preset position">...</button></div>`,
+                    );
+                    $btnPresetPosition.data("field", field);
+
+                    $field_wrapper.append($field);
+                    $field_wrapper.append($btnPresetPosition);
+                    insertOrdered($displayFields, $field_wrapper);
+                }
                 // Add the search field and its functionality
                 $("#element-fields").prepend(
                     $(
@@ -3302,7 +3809,7 @@ osd.initialize = function (callback) {
                 GUI.switchery();
                 // buffer the preview
                 OSD.data.preview = [];
-                OSD.data.displaySize.total = OSD.data.displaySize.x * OSD.data.displaySize.y;
+
                 for (const field of OSD.data.displayItems) {
                     // reset fields that somehow end up off the screen
                     if (field.position > OSD.data.displaySize.total) {
@@ -3579,6 +4086,9 @@ osd.initialize = function (callback) {
         MSP.promise(MSPCodes.MSP_RX_CONFIG).finally(() => {
             GUI.content_ready(callback);
         });
+        OSD.presetPosition.registerHandlers();
+        OSD.presetPosition.setupGrid();
+        OSD.updateOsdView = updateOsdView;
     });
 };
 
