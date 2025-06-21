@@ -16,6 +16,7 @@ import debounce from "lodash.debounce";
 import $ from "jquery";
 import FileSystem from "../FileSystem";
 import { have_sensor } from "../sensor_helpers";
+import { initializeModalDialog } from "../utils/initializeModalDialog";
 
 const FONT = {};
 const SYM = {};
@@ -3254,16 +3255,8 @@ osd.initialize = function (callback) {
             $(".display-layout .preview").css("zoom", previewZoom);
         }
 
-        // Open modal window
-        OSD.GUI.fontManager = new jBox("Modal", {
-            width: 750,
-            height: 455,
-            closeButton: "title",
-            animation: false,
-            attach: $("#fontmanager"),
-            title: "OSD Font Manager",
-            content: $("#fontmanagercontent"),
-        });
+        // Enable font manager dialog
+        OSD.GUI.fontManager = initializeModalDialog("#fontmanager", "#fontmanagerdialog", "osdSetupFontManagerTitle");
 
         $(".elements-container div.cf_tip").attr("title", i18n.getMessage("osdSectionHelpElements"));
         $(".videomode-container div.cf_tip").attr("title", i18n.getMessage("osdSectionHelpVideoMode"));
@@ -4093,10 +4086,6 @@ osd.initialize = function (callback) {
 };
 
 osd.cleanup = function (callback) {
-    if (OSD.GUI.fontManager) {
-        OSD.GUI.fontManager.destroy();
-    }
-
     // unbind "global" events
     $(document).unbind("keypress");
     $(document).off("click", "span.progressLabel a");
