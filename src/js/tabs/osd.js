@@ -3164,7 +3164,8 @@ OSD.presetPosition.applyPosition = function (fieldChanged, positionKey) {
     }
 };
 
-OSD.presetPosition.onMenuTrigger = function () {
+OSD.presetPosition.onMenuTrigger = function (e) {
+    e.stopImmediatePropagation();
     let $instance = $(this);
     let $referencePointWrapper = $instance.parent(".preset-pos-btn-wrapper");
     let g_ContextMenu = OSD.getContextMenu();
