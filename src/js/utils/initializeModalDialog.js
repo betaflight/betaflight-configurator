@@ -15,7 +15,7 @@ function getDialogTitleBar(messageId, messageParameters, onClose) {
             <div style="flex: 1; display: flex; align-items: center;">
                 <div style="padding: 15px;">${i18n.getMessage(messageId, messageParameters || undefined)}</div>
             </div>
-            <div id="dialogclose" style="flex: 0 0 47px; ; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+            <div id="dialogclose" style="flex: 0 0 47px; display: flex; align-items: center; justify-content: center; cursor: pointer;">
                 <svg width="10" height="10" version="1.1" xmlns="http://www.w3.org/2000/svg">
                     <line x1="0" y1="0" x2="10" y2="10" stroke="var(--surface-950)" stroke-width="2"/>
                     <line x1="0" y1="10" x2="10" y2="0" stroke="var(--surface-950)" stroke-width="2"/>
