@@ -50,7 +50,6 @@ class WebSerial extends EventTarget {
         this.bytesReceived = 0;
         this.failed = 0;
 
-        this.portCounter = 0;
         this.ports = [];
         this.port = null;
         this.reader = null;
@@ -107,7 +106,7 @@ class WebSerial extends EventTarget {
             ? vendorIdNames[portInfo.usbVendorId]
             : `VID:${portInfo.usbVendorId} PID:${portInfo.usbProductId}`;
         return {
-            path: `serial_${this.portCounter++}`,
+            path: "serial",
             displayName: `Betaflight ${displayName}`,
             vendorId: portInfo.usbVendorId,
             productId: portInfo.usbProductId,
@@ -118,7 +117,6 @@ class WebSerial extends EventTarget {
     async loadDevices() {
         try {
             const ports = await navigator.serial.getPorts();
-            this.portCounter = 1;
             this.ports = ports.map((port) => this.createPort(port));
         } catch (error) {
             console.error(`${logHead} Error loading devices:`, error);
