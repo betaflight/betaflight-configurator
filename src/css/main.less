@@ -1179,7 +1179,7 @@ dialog {
     gap: 0.5rem;
     white-space: nowrap;
     align-items: center;
-    overflow-x: hidden;
+    //overflow-x: hidden;
     border-radius: 999px;
     .switchery {
         margin-top: -3px;
@@ -1631,6 +1631,61 @@ button.active {
     border: 1px solid var(--primary-600);
     color: #000;
 }
+//*
+.cf_tip,
+.cf_tip_wide {
+    position: relative;
+}
+.cf_tip:hover,
+.cf_tip_wide:hover {
+    opacity: 1 !important;
+    z-index: 10000 !important;
+}
+.cf_tip:hover:before,
+.cf_tip:hover:after,
+.cf_tip_wide:hover:before,
+.cf_tip_wide:hover:after {
+    display: block;
+}
+.cf_tip:before,
+.cf_tip_wide:before {
+    content: "";
+
+    display: none;
+    left: 100%;
+    //right: 100%;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+
+    border: 6px solid;
+    border-color: transparent var(--primary-500) transparent transparent;
+}
+.cf_tip:after,
+.cf_tip_wide:after {
+    content: attr(title);
+    font-size: 12px;
+    font-weight: normal;
+    text-wrap: wrap;
+    white-space: pre-wrap;
+
+    display: none;
+    left: 100%;
+    margin-left: 12px;
+    //right: 100%;
+    //margin-right: 12px;
+    position: absolute;
+    width: 250px;
+    top: 50%;
+    transform: translateY(-50%);
+
+    background: var(--surface-300);
+    border: 2px solid var(--primary-500);
+    border-radius: 0.5rem;
+    color: var(--text);
+    padding: 8px;
+}
+//*/
 .jBox-Tooltip {
     max-width: 180px;
 }
