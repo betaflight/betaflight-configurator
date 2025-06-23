@@ -310,7 +310,6 @@ FONT.pushChar = function (fontCharacterBytes, fontCharacterBits) {
     }
     FONT.data.characters_bytes.push(fontCharacterBytes.slice(0));
     FONT.data.characters.push(fontCharacterBits.slice(0));
-    FONT.draw(FONT.data.characters.length - 1);
 };
 
 /**
@@ -451,7 +450,7 @@ FONT.upload = function ($progress) {
 FONT.preview = function ($el) {
     $el.empty();
     for (let i = 0; i < SYM.LOGO; i++) {
-        const url = FONT.data.character_image_urls[i];
+        const url = FONT.draw(i);
         $el.append(`<img src="${url}" title="0x${i.toString(16)}"></img>`);
     }
 };
@@ -3263,6 +3262,10 @@ osd.initialize = function (callback) {
             attach: $("#fontmanager"),
             title: "OSD Font Manager",
             content: $("#fontmanagercontent"),
+            onCreated: () => {
+                FONT.preview(fontPreviewElement);
+                LogoManager.drawPreview();
+            },
         });
 
         $(".elements-container div.cf_tip").attr("title", i18n.getMessage("osdSectionHelpElements"));
@@ -4006,6 +4009,7 @@ osd.initialize = function (callback) {
         // init structs once, also clears current font
         FONT.initData();
 
+        let fontPreviewNeedsReload = false;
         fontPresetsElement.change(function () {
             const $font = $(".fontpresets option:selected");
             const fontver = 2;
@@ -4013,8 +4017,12 @@ osd.initialize = function (callback) {
             $(".font-manager-version-info").text(i18n.getMessage(`osdDescribeFontVersion${fontver}`));
             $.get(`./resources/osd/${fontver}/${$font.data("font-file")}.mcm`, function (data) {
                 FONT.parseMCMFontFile(data);
-                FONT.preview(fontPreviewElement);
-                LogoManager.drawPreview();
+                if (fontPreviewNeedsReload) {
+                    FONT.preview(fontPreviewElement);
+                    LogoManager.drawPreview();
+                } else {
+                    fontPreviewNeedsReload = true;
+                }
                 updateOsdView();
                 $(".fontpresets option[value=-1]").hide();
             });
