@@ -53,6 +53,84 @@
             }
         }
     }
+
+    .gyro_box {
+        padding: 12px;
+        margin-bottom: 15px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+    .gyro_box:hover {
+        border-color: #bbb;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    }
+    .gyro_row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 10px;
+    }
+    .alignment-container {
+        display: flex;
+        align-items: center;
+        flex: 3;
+    }
+    .alignment-container span {
+        min-width: 100px;
+        margin-right: 10px;
+    }
+    .alignment-container select {
+        min-width: 120px;
+        flex: 1;
+    }
+    .enable-checkbox {
+        flex: 1;
+        text-align: left;
+        margin-right: 15px;
+        padding-right: 0;
+    }
+    .custom_alignment {
+        margin-top: 10px;
+        padding: 10px;
+    }
+    .alignment_inputs_row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 8px;
+    }
+    .alignment_input_cell {
+        flex: 1;
+        margin-right: 15px;
+        text-align: center;
+    }
+    .alignment_input_cell:last-child {
+        margin-right: 0;
+    }
+    .alignment_label {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 8px;
+        white-space: nowrap;
+    }
+    .alignment_label span {
+        font-size: 12px;
+        color: #333;
+        font-weight: 500;
+        display: inline-block;
+        vertical-align: middle;
+    }
+    .alignment_input_cell input {
+        width: 80px;
+        text-align: right;
+        padding: 4px 8px;
+        border: 1px solid #ddd;
+        border-radius: 3px;
+    }
+    .alignment_input_cell input:focus {
+        border-color: #999;
+        outline: none;
+    }
+
     thead {
         display: none;
     }

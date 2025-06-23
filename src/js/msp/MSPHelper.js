@@ -23,6 +23,8 @@ const ledDirectionLetters = ["n", "e", "s", "w", "u", "d"]; // in LSB bit order
 const ledBaseFunctionLetters = ["c", "f", "a", "l", "s", "g", "r", "p", "e", "u"]; // in LSB bit
 let ledOverlayLetters = ["t", "y", "o", "b", "v", "i", "w"]; // in LSB bit
 
+const MAX_GYROS = 8; // maximum number of gyros supported by Betaflight
+
 function MspHelper() {
     const self = this;
 
@@ -638,18 +640,35 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     FC.SENSOR_ALIGNMENT.align_acc = data.readU8();
                     FC.SENSOR_ALIGNMENT.align_mag = data.readU8();
                     FC.SENSOR_ALIGNMENT.gyro_detection_flags = data.readU8();
-                    FC.SENSOR_ALIGNMENT.gyro_to_use = data.readU8();
-                    FC.SENSOR_ALIGNMENT.gyro_1_align = data.readU8();
-                    FC.SENSOR_ALIGNMENT.gyro_2_align = data.readU8();
+
                     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
-                        FC.SENSOR_ALIGNMENT.gyro_align_roll = data.read16() / 10;
-                        FC.SENSOR_ALIGNMENT.gyro_align_pitch = data.read16() / 10;
-                        FC.SENSOR_ALIGNMENT.gyro_align_yaw = data.read16() / 10;
+                        FC.SENSOR_ALIGNMENT.gyro_enable_mask = data.readU8(); // replacing gyro_to_use
+
+                        // Initialize arrays for gyro alignment
+                        FC.SENSOR_ALIGNMENT.gyro_align = [];
+                        FC.SENSOR_ALIGNMENT.gyro_align_roll = [];
+                        FC.SENSOR_ALIGNMENT.gyro_align_pitch = [];
+                        FC.SENSOR_ALIGNMENT.gyro_align_yaw = [];
+
+                        for (let i = 0; i < MAX_GYROS; i++) {
+                            FC.SENSOR_ALIGNMENT.gyro_align[i] = data.readU8();
+                        }
+
+                        for (let i = 0; i < MAX_GYROS; i++) {
+                            FC.SENSOR_ALIGNMENT.gyro_align_roll[i] = data.read16() / 10;
+                            FC.SENSOR_ALIGNMENT.gyro_align_pitch[i] = data.read16() / 10;
+                            FC.SENSOR_ALIGNMENT.gyro_align_yaw[i] = data.read16() / 10;
+                        }
 
                         FC.SENSOR_ALIGNMENT.mag_align_roll = data.read16() / 10;
                         FC.SENSOR_ALIGNMENT.mag_align_pitch = data.read16() / 10;
                         FC.SENSOR_ALIGNMENT.mag_align_yaw = data.read16() / 10;
+                    } else {
+                        FC.SENSOR_ALIGNMENT.gyro_to_use = data.readU8();
+                        FC.SENSOR_ALIGNMENT.gyro_1_align = data.readU8();
+                        FC.SENSOR_ALIGNMENT.gyro_2_align = data.readU8();
                     }
+
                     break;
                 case MSPCodes.MSP_DISPLAYPORT:
                     break;
@@ -2079,19 +2098,33 @@ MspHelper.prototype.crunch = function (code, modifierCode = undefined) {
             buffer
                 .push8(FC.SENSOR_ALIGNMENT.align_gyro)
                 .push8(FC.SENSOR_ALIGNMENT.align_acc)
-                .push8(FC.SENSOR_ALIGNMENT.align_mag)
-                .push8(FC.SENSOR_ALIGNMENT.gyro_to_use)
-                .push8(FC.SENSOR_ALIGNMENT.gyro_1_align)
-                .push8(FC.SENSOR_ALIGNMENT.gyro_2_align);
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
-                buffer.push16(FC.SENSOR_ALIGNMENT.gyro_align_roll * 10);
-                buffer.push16(FC.SENSOR_ALIGNMENT.gyro_align_pitch * 10);
-                buffer.push16(FC.SENSOR_ALIGNMENT.gyro_align_yaw * 10);
+                .push8(FC.SENSOR_ALIGNMENT.align_mag);
 
-                buffer.push16(FC.SENSOR_ALIGNMENT.mag_align_roll * 10);
-                buffer.push16(FC.SENSOR_ALIGNMENT.mag_align_pitch * 10);
-                buffer.push16(FC.SENSOR_ALIGNMENT.mag_align_yaw * 10);
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+                buffer.push8(FC.SENSOR_ALIGNMENT.gyro_enable_mask); // replacing gyro_to_use
+
+                for (let i = 0; i < MAX_GYROS; i++) {
+                    buffer.push8(FC.SENSOR_ALIGNMENT.gyro_align[i]);
+                }
+
+                for (let i = 0; i < MAX_GYROS; i++) {
+                    buffer
+                        .push16(FC.SENSOR_ALIGNMENT.gyro_align_roll[i] * 10)
+                        .push16(FC.SENSOR_ALIGNMENT.gyro_align_pitch[i] * 10)
+                        .push16(FC.SENSOR_ALIGNMENT.gyro_align_yaw[i] * 10);
+                }
+
+                buffer
+                    .push16(FC.SENSOR_ALIGNMENT.mag_align_roll * 10)
+                    .push16(FC.SENSOR_ALIGNMENT.mag_align_pitch * 10)
+                    .push16(FC.SENSOR_ALIGNMENT.mag_align_yaw * 10);
+            } else {
+                buffer
+                    .push8(FC.SENSOR_ALIGNMENT.gyro_to_use)
+                    .push8(FC.SENSOR_ALIGNMENT.gyro_1_align)
+                    .push8(FC.SENSOR_ALIGNMENT.gyro_2_align);
             }
+
             break;
         case MSPCodes.MSP_SET_ADVANCED_CONFIG:
             buffer
