@@ -464,6 +464,15 @@ export class MSPDebugDashboard {
                         this.showTestDetails(testIndex);
                     }
                 }
+
+                // Handle close details button clicks
+                if (e.target.classList.contains("close-details-btn")) {
+                    const testDetails = e.target.closest(".test-details");
+                    if (testDetails) {
+                        testDetails.remove();
+                        this.pauseUpdates(1000);
+                    }
+                }
             }
         });
 
@@ -1100,7 +1109,7 @@ export class MSPDebugDashboard {
                 `
         : ""
 }
-                <button onclick="this.parentElement.remove(); window.MSPDebug.dashboard.pauseUpdates(1000);" 
+                <button class="close-details-btn" 
                         style="margin-top: 10px; padding: 5px 10px; background: #666; color: white; border: none; border-radius: 3px; cursor: pointer;">
                     Close Details
                 </button>
