@@ -663,8 +663,8 @@ firmware_flasher.initialize = function (callback) {
             }
 
             const port = PortHandler.portPicker.selectedPort;
-            const isSerial = port.startsWith("serial_");
-            const isDFU = port.startsWith("usb_");
+            const isSerial = port.startsWith("serial");
+            const isDFU = port.startsWith("usb");
 
             console.log(`${self.logHead} Selected port:`, port);
 

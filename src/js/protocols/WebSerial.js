@@ -44,14 +44,12 @@ class WebSerial extends EventTarget {
         this.closeRequested = false;
         this.transmitting = false;
         this.connectionInfo = null;
-        this.refreshRequired = true;
 
         this.bitrate = 0;
         this.bytesSent = 0;
         this.bytesReceived = 0;
         this.failed = 0;
 
-        this.portCounter = 0;
         this.ports = [];
         this.port = null;
         this.reader = null;
@@ -80,7 +78,6 @@ class WebSerial extends EventTarget {
         const added = this.createPort(device);
         this.ports.push(added);
         this.dispatchEvent(new CustomEvent("addedDevice", { detail: added }));
-        this.refreshRequired = true;
         return added;
     }
 
@@ -88,7 +85,6 @@ class WebSerial extends EventTarget {
         const removed = this.ports.find((port) => port.port === device);
         this.ports = this.ports.filter((port) => port.port !== device);
         this.dispatchEvent(new CustomEvent("removedDevice", { detail: removed }));
-        this.refreshRequired = true;
     }
 
     handleReceiveBytes(info) {
@@ -110,7 +106,7 @@ class WebSerial extends EventTarget {
             ? vendorIdNames[portInfo.usbVendorId]
             : `VID:${portInfo.usbVendorId} PID:${portInfo.usbProductId}`;
         return {
-            path: `serial_${this.portCounter++}`,
+            path: "serial",
             displayName: `Betaflight ${displayName}`,
             vendorId: portInfo.usbVendorId,
             productId: portInfo.usbProductId,
@@ -121,9 +117,7 @@ class WebSerial extends EventTarget {
     async loadDevices() {
         try {
             const ports = await navigator.serial.getPorts();
-            this.portCounter = 1;
             this.ports = ports.map((port) => this.createPort(port));
-            this.refreshRequired = false;
         } catch (error) {
             console.error(`${logHead} Error loading devices:`, error);
         }
@@ -145,14 +139,11 @@ class WebSerial extends EventTarget {
         } catch (error) {
             console.error(`${logHead} User didn't select any SERIAL device when requesting permission:`, error);
         }
-        this.refreshRequired = true;
         return newPermissionPort;
     }
 
     async getDevices() {
-        if (this.refreshRequired) {
-            await this.loadDevices();
-        }
+        await this.loadDevices();
         return this.ports;
     }
 
