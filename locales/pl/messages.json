@@ -361,10 +361,10 @@
         "description": "Text for the file picker dialog, showing the type of files selected. The parameter can be HEX, TXT, etc."
     },
     "serialErrorFrameError": {
-        "message": "Błąd połączenia szeregowego: zła ramka"
+        "message": "Błąd połączenia szeregowego: nieprawidłowe ramkowanie"
     },
     "serialErrorParityError": {
-        "message": "Błąd połączenia szeregowego: zła parzystość"
+        "message": "Błąd połączenia szeregowego: nieprawidłowa parzystość"
     },
     "serialPortOpened": {
         "message": "Port <span class=\"message-positive\">został otwarty<\/span> z ID: $1"
@@ -460,7 +460,7 @@
         "message": "Załadowanie adresu sektora bajtów z ustawieniami powiodło się."
     },
     "stm32AddressLoadUnknown": {
-        "message": "Nie można załadować bajtów ustawień procesora z powodu nieznanego błędu. Przerywanie."
+        "message": "Z powodu nieznanego błędu nie udało się załadować adresu dla sektora bajtów opcji. Operacja została przerwana."
     },
     "stm32NotReadProtected": {
         "message": "Zabezpieczenie odczytu nieaktywne"
@@ -472,7 +472,7 @@
         "message": "Usunięcie zabezpieczenia powiodło się."
     },
     "stm32UnprotectUnplug": {
-        "message": "WYMAGANE DZIAŁANIE UŻYTKOWNIKA: Aby spróbować wgrać oprogramowanieponownie odłącz i podłącz kontroler lotu w trybie DFU!"
+        "message": "WYMAGANE DZIAŁANIE UŻYTKOWNIKA: Aby spróbować wgrać oprogramowanie ponownie odłącz kontroler lotu, a następnie podłącz go w trybie DFU!"
     },
     "stm32UnprotectFailed": {
         "message": "Nie udało się odbezpieczyć płytki kontrolera lotu"
@@ -6957,10 +6957,10 @@
         "message": "Magnetometr (jeśli jest wspierany)"
     },
     "configurationSmallAngle": {
-        "message": "Maksymalny kąt trybu ARM [Stopnie]"
+        "message": "Maksymalny kąt uzbrojenia [w stopniach]"
     },
     "configurationSmallAngleHelp": {
-        "message": "Model nie uzbroi się, jeśli jest pochylony pod większym kątem niż ustalony. Działa tylko, gdy akcelerometr jest włączony. Ustawienie kąta 180 efektywnie wyłączy zabezpieczenie przed uzbrojeniem"
+        "message": "Model nie zostanie uzbrojony, jeśli jego przechylenie przekroczy podaną tutaj liczbę stopni. Dotyczy to tylko sytuacji, gdy akcelerometr jest włączony. Ustawienie wartości na 180 stopni skutecznie wyłączy to zabezpieczenie"
     },
     "configurationBatteryVoltage": {
         "message": "Napięcie akumulatora"
@@ -7057,7 +7057,7 @@
         "message": "Będzie widoczna tylko na OSD.<\/br> Może być edytowana z pomocą zmiennej <b>pilot_name<\/b> w Wierszu Poleceń CLI."
     },
     "configurationFpvCamAngleDegrees": {
-        "message": "Kąt pochylenia kamery FPV [stopnie]"
+        "message": "Kąt pochylenia kamery FPV [w stopniach]"
     },
     "onboardLoggingBlackbox": {
         "message": "Dziennik rejestrów Czarnej Skrzynki"
