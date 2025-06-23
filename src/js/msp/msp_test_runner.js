@@ -220,6 +220,11 @@ export const MSPTestRunner = {
     async quickHealthCheck() {
         console.log("🏥 Running Quick MSP Health Check...");
 
+        if (!window.MSP) {
+            console.error("MSP not available");
+            return { status: "ERROR", error: "MSP not initialized" };
+        }
+
         // Start monitoring briefly
         mspQueueMonitor.startMonitoring(100);
 
@@ -291,7 +296,12 @@ export const MSPTestRunner = {
                 const startTime = Date.now();
 
                 while (Date.now() - startTime < 5000) {
-                    promises.push(window.MSP.promise(101, null).catch(() => {}));
+                    promises.push(
+                        window.MSP.promise(101, null).catch((err) => {
+                            console.error("MSP request failed in sustained-load scenario:", err);
+                            return { error: err.message || "Unknown error" };
+                        }),
+                    );
                     await new Promise((resolve) => setTimeout(resolve, 10));
                 }
 
@@ -330,7 +340,12 @@ export const MSPTestRunner = {
                 for (let i = 0; i < 30; i++) {
                     const code = codes[i % codes.length];
                     const data = i % 4 === 0 ? new Uint8Array([i, i + 1, i + 2]) : null;
-                    promises.push(window.MSP.promise(code, data).catch(() => {}));
+                    promises.push(
+                        window.MSP.promise(code, data).catch((err) => {
+                            console.error(`MSP request failed in mixed-load scenario (code: ${code}):`, err);
+                            return { error: err.message || "Unknown error" };
+                        }),
+                    );
                 }
 
                 const startTime = Date.now();
