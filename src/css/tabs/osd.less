@@ -2,13 +2,15 @@
     --context-menu-z-index: 10001;
 
     .info {
-        position: relative;
+        display: grid;
+        grid-template-areas: "area";
         width: 100%;
+        margin-bottom: 10px;
         .progressLabel {
-            position: absolute;
+            grid-area: area;
             width: 100%;
             height: 26px;
-            margin-top: -22px;
+            line-height: 26px;
             text-align: center;
             color: white;
             font-weight: bold;
@@ -20,6 +22,7 @@
             }
         }
         .progress {
+            grid-area: area;
             width: 100%;
             height: 26px;
             border-radius: 5px;
