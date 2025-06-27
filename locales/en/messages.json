@@ -2704,6 +2704,10 @@
         "message": "Switch the VTX into pit mode (low output power, if supported)",
         "description": "Help text to VTX PIT MODE mode"
     },
+    "auxiliaryHelpMode_LAPTIMERRESET": {
+        "message": "Reset the transponder lap timer",
+        "description": "Help text to LAP TIMER RESET mode"
+    },
     "adjustmentsHelp": {
         "message": "Configure adjustment switches. See the 'in-flight adjustments' section of the manual for details. The changes that adjustment functions make are not saved automatically."
     },
