@@ -2,17 +2,16 @@
     --context-menu-z-index: 10001;
 
     .info {
-        margin: 10px 0 0 0;
-        position: relative;
+        display: grid;
+        grid-template-areas: "area";
         width: 100%;
+        margin-bottom: 10px;
         .progressLabel {
-            position: absolute;
+            grid-area: area;
             width: 100%;
             height: 26px;
-            top: 0;
-            left: 0;
+            line-height: 26px;
             text-align: center;
-            line-height: 24px;
             color: white;
             font-weight: bold;
             a {
@@ -23,6 +22,7 @@
             }
         }
         .progress {
+            grid-area: area;
             width: 100%;
             height: 26px;
             border-radius: 5px;
@@ -67,12 +67,6 @@
     input[type="checkbox"] {
         width: 18px;
         height: 18px;
-    }
-    ul {
-        li {
-            list-style: circle;
-            margin-left: 30px;
-        }
     }
     .options {
         position: relative;
@@ -382,13 +376,14 @@
             font-weight: normal;
         }
     }
-    .grid-col {
-        margin: 0px;
+    #font-logo {
+        display: flex;
+        margin-bottom: 2em;
     }
     #font-logo-preview-container {
         background: rgba(0, 255, 0, 0.4);
         margin-bottom: 10px;
-        box-sizing: border-box;
+        padding: 10px;
     }
     #font-logo-preview {
         background: rgba(0, 255, 0, 1);
@@ -396,7 +391,8 @@
         margin: auto;
     }
     #font-logo-info {
-        font-size: 125%;
+        flex: 1;
+        margin-left: 2em;
         line-height: 150%;
         h3 {
             margin-bottom: 0.2em;
@@ -431,11 +427,11 @@
         font-size: 9pt !important;
         cursor: pointer;
     }
+    .font-preview {
+        padding-bottom: 1.25rem;
+    }
     .fontpresets_wrapper {
-        display: inline-block;
-        position: absolute;
-        right: 1.2em;
-        top: 0.8em;
+        padding: 1rem 0;
     }
     .fontpresets {
         background: var(--surface-200);
