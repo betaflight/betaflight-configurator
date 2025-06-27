@@ -3796,6 +3796,7 @@ osd.initialize = function (callback) {
                     $(".switchable-field").each(function () {
                         const fieldName = $(this).find("label").text().toLowerCase();
                         $(this).toggle(fieldName.includes(searchTerm));
+                        $(this).closest(".switchable-field-wrapper").toggle(fieldName.includes(searchTerm));
                     });
                 });
 
