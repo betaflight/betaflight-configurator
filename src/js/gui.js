@@ -292,6 +292,7 @@ class GuiControl {
 
         // loading tooltip
         $(function () {
+            /*
             new jBox("Tooltip", {
                 attach: ".cf_tip",
                 trigger: "mouseenter",
@@ -320,6 +321,7 @@ class GuiControl {
                 },
                 outside: "x",
             });
+            */
         });
 
         if (callback) {
