@@ -3029,9 +3029,6 @@
     "motorsResetMaximum": {
         "message": "Reiniciar valor máximo en el tiempo"
     },
-    "motorsSensorGyroSelect": {
-        "message": "giro"
-    },
     "motorsSensorAccelSelect": {
         "message": "acel"
     },
@@ -4606,9 +4603,6 @@
     "pidTuningItermRelaxType": {
         "message": "Tipo",
         "description": "Iterm Relax Type selection"
-    },
-    "pidTuningItermRelaxTypeOptionGyro": {
-        "message": "Giro"
     },
     "pidTuningItermRelaxTypeOptionSetpoint": {
         "message": "Valor objetivo"

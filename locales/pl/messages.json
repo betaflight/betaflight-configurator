@@ -1452,6 +1452,16 @@
     "configurationSensorGyroToUseBoth": {
         "message": "Oba"
     },
+    "configurationSensorGyroEnable": {
+        "message": "$t(sensorStatusGyroShort.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationSensorAlignment": {
+        "message": "Wyrównanie czujnika"
+    },
+    "configurationGyroRequiredWarning": {
+        "message": "Przynajmniej jeden żyroskop musi pozostać włączony. Jeśli wyłączysz wszystkie żyroskopy, kontroler lotu nie będzie działał prawidłowo."
+    },
     "configurationSensorAlignmentGyro1": {
         "message": " GYRO 1"
     },
@@ -3059,7 +3069,8 @@
         "message": "Resetuj z upływem czasu"
     },
     "motorsSensorGyroSelect": {
-        "message": "gyro"
+        "message": "$t(sensorStatusGyroShort.message)",
+        "description": "Don't translate!!!"
     },
     "motorsSensorAccelSelect": {
         "message": "accel"
@@ -4655,7 +4666,8 @@
         "description": "Iterm Relax Type selection"
     },
     "pidTuningItermRelaxTypeOptionGyro": {
-        "message": "Gyro"
+        "message": "$t(sensorStatusGyroShort.message)",
+        "description": "Don't translate!!!"
     },
     "pidTuningItermRelaxTypeOptionSetpoint": {
         "message": "Wartość zadana"
@@ -5224,6 +5236,10 @@
     "osdSetupPreviewSelectFont": {
         "message": "Czcionka",
         "description": "Content of the selector for the OSD Font in the preview"
+    },
+    "osdSetupFontManagerTitle": {
+        "message": "Menedżer czcionek OSD",
+        "description": "Dialog title"
     },
     "osdSetupFontTypeDefault": {
         "message": "Default",
