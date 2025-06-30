@@ -1448,6 +1448,16 @@
     "configurationSensorGyroToUseBoth": {
         "message": "Entrambi"
     },
+    "configurationSensorGyroEnable": {
+        "message": "$t(sensorStatusGyroShort.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationSensorAlignment": {
+        "message": "Allineamento Sensore"
+    },
+    "configurationGyroRequiredWarning": {
+        "message": "Almeno un giroscopio deve rimanere abilitato. Se disabiliti tutti i giroscopi, il controllore di volo non funzionerà correttamente."
+    },
     "configurationSensorAlignmentGyro1": {
         "message": "Primo Gyro"
     },
@@ -3055,7 +3065,8 @@
         "message": "Reimposta il massimo tempo supplementare"
     },
     "motorsSensorGyroSelect": {
-        "message": "Gyro"
+        "message": "$t(sensorStatusGyroShort.message)",
+        "description": "Don't translate!!!"
     },
     "motorsSensorAccelSelect": {
         "message": "Accel"
@@ -4651,7 +4662,8 @@
         "description": "Iterm Relax Type selection"
     },
     "pidTuningItermRelaxTypeOptionGyro": {
-        "message": "Gyro"
+        "message": "$t(sensorStatusGyroShort.message)",
+        "description": "Don't translate!!!"
     },
     "pidTuningItermRelaxTypeOptionSetpoint": {
         "message": "Setpoint"
@@ -5220,6 +5232,10 @@
     "osdSetupPreviewSelectFont": {
         "message": "Carattere",
         "description": "Content of the selector for the OSD Font in the preview"
+    },
+    "osdSetupFontManagerTitle": {
+        "message": "Gestione Font Osd",
+        "description": "Dialog title"
     },
     "osdSetupFontTypeDefault": {
         "message": "Predefinito",

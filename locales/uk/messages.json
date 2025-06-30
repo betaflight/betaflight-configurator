@@ -3054,9 +3054,6 @@
     "motorsResetMaximum": {
         "message": "Скинути максимальні значення (накопичені за час спостереження)"
     },
-    "motorsSensorGyroSelect": {
-        "message": "гіроскоп"
-    },
     "motorsSensorAccelSelect": {
         "message": "акселерометр"
     },
@@ -4649,9 +4646,6 @@
     "pidTuningItermRelaxType": {
         "message": "Тип",
         "description": "Iterm Relax Type selection"
-    },
-    "pidTuningItermRelaxTypeOptionGyro": {
-        "message": "Гіроскоп"
     },
     "pidTuningItermRelaxTypeOptionSetpoint": {
         "message": "Задане значення"

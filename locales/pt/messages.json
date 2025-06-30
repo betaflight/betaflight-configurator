@@ -1448,6 +1448,16 @@
     "configurationSensorGyroToUseBoth": {
         "message": "Ambos"
     },
+    "configurationSensorGyroEnable": {
+        "message": "$t(sensorStatusGyroShort.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationSensorAlignment": {
+        "message": "Alinhamento do Sensor"
+    },
+    "configurationGyroRequiredWarning": {
+        "message": "Pelo menos um gyro deve permanecer ativo. Se desativar todos os gyros, a controladora de voo não funcionará corretamente."
+    },
     "configurationSensorAlignmentGyro1": {
         "message": "Primeiro GYRO"
     },
@@ -3055,7 +3065,8 @@
         "message": "Repor máximos extraordinários"
     },
     "motorsSensorGyroSelect": {
-        "message": "gyro"
+        "message": "$t(sensorStatusGyroShort.message)",
+        "description": "Don't translate!!!"
     },
     "motorsSensorAccelSelect": {
         "message": "acelerómetro"
@@ -4651,7 +4662,8 @@
         "description": "Iterm Relax Type selection"
     },
     "pidTuningItermRelaxTypeOptionGyro": {
-        "message": "Gyro"
+        "message": "$t(sensorStatusGyroShort.message)",
+        "description": "Don't translate!!!"
     },
     "pidTuningItermRelaxTypeOptionSetpoint": {
         "message": "Setpoint"
