@@ -1452,6 +1452,16 @@
     "configurationSensorGyroToUseBoth": {
         "message": "Begge"
     },
+    "configurationSensorGyroEnable": {
+        "message": "$t(sensorStatusGyroShort.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationSensorAlignment": {
+        "message": "Sensor justering"
+    },
+    "configurationGyroRequiredWarning": {
+        "message": "Mindst én gyro skal være aktiveret. Hvis du deaktiverer alle gyroer, vil FC ikke fungere korrekt."
+    },
     "configurationSensorAlignmentGyro1": {
         "message": "Første GYRO"
     },
@@ -2611,6 +2621,10 @@
         "message": "Skift VTX til pit mode (lav udgangseffekt), skal være understøttet af VTX",
         "description": "Help text to VTX PIT MODE mode"
     },
+    "auxiliaryHelpMode_LAPTIMERRESET": {
+        "message": "Nulstil transponder timer",
+        "description": "Help text to LAP TIMER RESET mode"
+    },
     "adjustmentsHelp": {
         "message": "Opsætning af kanal justeringer. Se 'in-flight adjustments' delen af manualen for detaljer. Ændringer gemmes Ikke automatisk."
     },
@@ -3059,7 +3073,8 @@
         "message": "Nulstil tidsoverskridelsesmaks."
     },
     "motorsSensorGyroSelect": {
-        "message": "gyro"
+        "message": "$t(sensorStatusGyroShort.message)",
+        "description": "Don't translate!!!"
     },
     "motorsSensorAccelSelect": {
         "message": "accel"
@@ -4655,7 +4670,8 @@
         "description": "Iterm Relax Type selection"
     },
     "pidTuningItermRelaxTypeOptionGyro": {
-        "message": "Gyro"
+        "message": "$t(sensorStatusGyroShort.message)",
+        "description": "Don't translate!!!"
     },
     "pidTuningItermRelaxTypeOptionSetpoint": {
         "message": "Setpoint"
@@ -5224,6 +5240,10 @@
     "osdSetupPreviewSelectFont": {
         "message": "Skrifttype",
         "description": "Content of the selector for the OSD Font in the preview"
+    },
+    "osdSetupFontManagerTitle": {
+        "message": "Rediger OSD skrifttype",
+        "description": "Dialog title"
     },
     "osdSetupFontTypeDefault": {
         "message": "Standard",

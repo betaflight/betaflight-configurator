@@ -28,6 +28,9 @@
     "noticeTitle": {
         "message": "Aviso"
     },
+    "search": {
+        "message": "Buscar"
+    },
     "dontShowAgain": {
         "message": "No volver a mostrar"
     },
@@ -83,6 +86,10 @@
     "portsSelectPermissionBluetooth": {
         "message": "--- No encuentro mi dispositivo Bluetooth --",
         "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access a Bluetooth device."
+    },
+    "portsSelectPermissionDFU": {
+        "message": "--- No encuentro mi dispositivo DFU ---",
+        "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access a DFU device."
     },
     "bluetoothConnected": {
         "message": "Conectado con dispositivo Bluetooth: $1"
@@ -239,6 +246,12 @@
     },
     "configuratorUpdateWebsite": {
         "message": "Ir a la Web de Versiones"
+    },
+    "rebootFlightController": {
+        "message": "Reiniciando el controlador de vuelo, vuelve a conectar cuando disponible"
+    },
+    "rebootFlightControllerReady": {
+        "message": "Controlador de vuelo disponible"
     },
     "deviceRebooting": {
         "message": "Dispositivo - <span class=\"message-negative\">Reiniciando<\/span>"
@@ -1087,6 +1100,12 @@
     "initialSetupInfoBuildConfig": {
         "message": "Configuración"
     },
+    "initialSetupInfoBuildDownload": {
+        "message": "Descargar"
+    },
+    "initialSetupInfoBuildFirmware": {
+        "message": "Firmware:"
+    },
     "initialSetupInfoBuildLog": {
         "message": "Registro"
     },
@@ -1098,6 +1117,9 @@
     },
     "initialSetupInfoBuildEmpty": {
         "message": "Compilación local - no hay información en la nube"
+    },
+    "initialSetupInfoBuildType": {
+        "message": "Tipo de compilación:"
     },
     "initialSetupInfoBuildLocal": {
         "message": "Compilación local"
@@ -1425,6 +1447,16 @@
     },
     "configurationSensorGyroToUseBoth": {
         "message": "Ambos"
+    },
+    "configurationSensorGyroEnable": {
+        "message": "$t(sensorStatusGyroShort.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationSensorAlignment": {
+        "message": "Alineación del sensor"
+    },
+    "configurationGyroRequiredWarning": {
+        "message": "Al menos un giro debe permanecer activado. Si desactivas todos los giros, el controlador de vuelo no funcionará correctamente."
     },
     "configurationSensorAlignmentGyro1": {
         "message": "Primer Giro"
@@ -2242,6 +2274,9 @@
     "receiverThrottleExpo": {
         "message": "Acelerador EXPO"
     },
+    "receiverThrottleHover": {
+        "message": "Punto de flotación"
+    },
     "receiverStickMin": {
         "message": "Umbral 'Palanca Baja'"
     },
@@ -2581,6 +2616,10 @@
     "auxiliaryHelpMode_VTXPITMODE": {
         "message": "Cambia el VTX a modo Pit (potencia de salida baja, si es compatible)",
         "description": "Help text to VTX PIT MODE mode"
+    },
+    "auxiliaryHelpMode_LAPTIMERRESET": {
+        "message": "Reiniciar el cronómetro del transpondedor",
+        "description": "Help text to LAP TIMER RESET mode"
     },
     "adjustmentsHelp": {
         "message": "Configura interruptores para correcciones. Mira el apartado 'in-flight adjustments' del manual para detalles. Las correcciones realizadas no se guardan automáticamente."
@@ -3030,7 +3069,8 @@
         "message": "Reiniciar valor máximo en el tiempo"
     },
     "motorsSensorGyroSelect": {
-        "message": "giro"
+        "message": "$t(sensorStatusGyroShort.message)",
+        "description": "Don't translate!!!"
     },
     "motorsSensorAccelSelect": {
         "message": "acel"
@@ -3161,6 +3201,9 @@
     },
     "escDshotDirectionDialog-SetDirectionHintSafety": {
         "message": "¡Los motores girarán al configurar la dirección!"
+    },
+    "escDshotDirectionDialog-SettingsAutoSaved": {
+        "message": "La dirección del motor se guarda al seleccionar"
     },
     "escDshotDirectionDialog-WrongProtocolText": {
         "message": "Esta funcionalidad sólo trabaja con ESCs DSHOT.<br \/>Verifica que tu ESC (controlador de velocidad electrónico) soporta el protocolo DSHOT y selecciónalo en la pestaña $t(tabMotorTesting.message)."
@@ -3338,6 +3381,9 @@
     },
     "blackboxLoggingSerial": {
         "message": "Puerto Serie"
+    },
+    "blackboxLoggingVirtual": {
+        "message": "A archivo"
     },
     "serialLoggingSupportedNote": {
         "message": "Puedes registrar en un dispositivo externo (como un OpenLager) usando un puerto serie. Configura el puerto en el apartado Puertos."
@@ -3675,6 +3721,9 @@
     "firmwareFlasherFailedToLoadUnifiedConfig": {
         "message": "Error al cargar configuración remota para {{remote_file}}"
     },
+    "firmwareFlasherCanceledBackup": {
+        "message": "Copia de seguridad cancelada, instalación abortada"
+    },
     "firmwareFlasherLegacyLabel": {
         "message": "{{target}} (Obsoleto)",
         "description": "If we have a Unified target and a old style target available, we are labeling the older one"
@@ -3749,6 +3798,15 @@
     "firmwareFlasherBackupIgnore": {
         "message": "Ignorar este riesgo",
         "description": "Ignore creating a backup before actual flashing takes place"
+    },
+    "firmwareBackupEnabled": {
+        "message": "Copia de seguridad activada"
+    },
+    "firmwareBackupDisabled": {
+        "message": "Copia de seguridad desactivada"
+    },
+    "firmwareBackupAsk": {
+        "message": "Preguntar antes de copia de seguridad"
     },
     "ledStripHelp": {
         "message": "El controlador de vuelo puede controlar colores y efectos de LEDs individuales de una tira.<br \/>Configura LEDs en la rejilla, configura el orden del cableado y añade LEDs a tu aeronave de acuerdo a las posiciones de la rejilla. LEDs sin número de orden de cableado no se guardarán.<br \/>Doble-pulsación en un color para editar los valores HSV."
@@ -4608,7 +4666,8 @@
         "description": "Iterm Relax Type selection"
     },
     "pidTuningItermRelaxTypeOptionGyro": {
-        "message": "Giro"
+        "message": "$t(sensorStatusGyroShort.message)",
+        "description": "Don't translate!!!"
     },
     "pidTuningItermRelaxTypeOptionSetpoint": {
         "message": "Valor objetivo"
@@ -5177,6 +5236,10 @@
     "osdSetupPreviewSelectFont": {
         "message": "Fuente",
         "description": "Content of the selector for the OSD Font in the preview"
+    },
+    "osdSetupFontManagerTitle": {
+        "message": "Gestor de fuentes OSD",
+        "description": "Dialog title"
     },
     "osdSetupFontTypeDefault": {
         "message": "Por defecto",
@@ -5866,6 +5929,14 @@
     "osdTextElementRtcDateTime": {
         "message": "RTC: fecha y hora",
         "description": "One of the elements of the OSD"
+    },
+    "osdTextElementRtcDateTimeVariantFullDate": {
+        "message": "Fecha completa",
+        "description": "One of the variants of the RTC date and time element of the OSD"
+    },
+    "osdTextElementRtcDateTimeVariantShortDate": {
+        "message": "Fecha corta",
+        "description": "One of the variants of the RTC date and time element of the OSD"
     },
     "osdDescElementRtcDateTime": {
         "message": "Fecha \/ Hora en tiempo real"
@@ -7070,6 +7141,9 @@
     "cliAutoComplete": {
         "message": "AutoCompletar CLI Avanzado"
     },
+    "firmwareBackupOnFlash": {
+        "message": "Crear una copia de seguridad antes de instalar una nueva placa"
+    },
     "darkTheme": {
         "message": "Activar tema oscuro"
     },
@@ -7478,6 +7552,18 @@
     "firmwareFlasherBuildCustomDefines": {
         "message": "Defines personalizados"
     },
+    "firmwareFlasherOSDProtocolNotSelected": {
+        "message": "Protocolo OSD no seleccionado"
+    },
+    "firmwareFlasherOSDProtocolNotSelectedDescription": {
+        "message": "Debe seleccionar un protocolo OSD para construir un firmware."
+    },
+    "firmwareFlasherOSDProtocolSelect": {
+        "message": "Seleccionar protocolo OSD"
+    },
+    "firmwareFlasherOSDProtocolNotSelectedContinue": {
+        "message": "Continuar sin protocolo OSD"
+    },
     "coreBuild": {
         "message": "Versión base"
     },
@@ -7518,5 +7604,13 @@
     "programmingFailedNotification": {
         "message": "Error al programar la placa",
         "description": "Notification message when programming is unsuccessful"
+    },
+    "osdTextElementLidar": {
+        "message": "Sonar",
+        "description": "Displays distance from sonar sensor in cm"
+    },
+    "osdDescElementLidar": {
+        "message": "$t(osdTextElementLidar.message)",
+        "description": "Don't translate!!!"
     }
 }
