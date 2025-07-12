@@ -40,6 +40,8 @@ class WebBluetooth extends EventTarget {
             return;
         }
 
+        this.writeQueue = Promise.resolve();
+
         this.connect = this.connect.bind(this);
 
         this.bluetooth.addEventListener("connect", (e) => this.handleNewDevice(e.target));
@@ -255,12 +257,6 @@ class WebBluetooth extends EventTarget {
         }
 
         this.readCharacteristic.addEventListener("characteristicvaluechanged", this.handleNotification.bind(this));
-
-        try {
-            return await this.readCharacteristic.readValue();
-        } catch (e) {
-            console.error(`${this.logHead} Failed to read characteristic value:`, e);
-        }
     }
 
     handleNotification(event) {
@@ -270,9 +266,8 @@ class WebBluetooth extends EventTarget {
             buffer[i] = event.target.value.getUint8(i);
         }
 
-        setTimeout(() => {
-            this.dispatchEvent(new CustomEvent("receive", { detail: buffer }));
-        }, 0);
+        // Dispatch immediately instead of using setTimeout to avoid race conditions
+        this.dispatchEvent(new CustomEvent("receive", { detail: buffer }));
     }
 
     startNotifications() {
@@ -358,34 +353,35 @@ class WebBluetooth extends EventTarget {
         // There is no writable stream in the bluetooth API
         const dataBuffer = new Uint8Array(data);
 
-        try {
-            if (this.lastWrite) {
-                await this.lastWrite;
-            }
-            this.lastWrite = this.writeCharacteristic.writeValue(dataBuffer);
-            await this.lastWrite;
-            this.bytesSent += data.byteLength;
+        // Serialize writes to prevent concurrent access
+        this.writeQueue = this.writeQueue
+            .then(async () => {
+                try {
+                    await this.writeCharacteristic.writeValue(dataBuffer);
+                    this.bytesSent += data.byteLength;
 
-            if (cb) {
-                cb({
-                    error: null,
-                    bytesSent: data.byteLength,
-                });
-            }
-        } catch (e) {
-            console.error(`${this.logHead} Failed to send data:`, e);
-            if (cb) {
-                cb({
-                    error: e,
-                    bytesSent: 0,
-                });
-            }
-        }
+                    if (cb) {
+                        cb({
+                            error: null,
+                            bytesSent: data.byteLength,
+                        });
+                    }
+                } catch (e) {
+                    console.error(`${this.logHead} Failed to send data:`, e);
+                    if (cb) {
+                        cb({
+                            error: e,
+                            bytesSent: 0,
+                        });
+                    }
+                    throw e; // re-throw to keep the queue in a rejected state
+                }
+            })
+            .catch(() => {
+                // swallow here so queue chain continues on next write
+            });
 
-        return {
-            bytesSent: data.byteLength,
-            resultCode: 0,
-        };
+        await this.writeQueue;
     }
 }
 
