@@ -1857,9 +1857,6 @@
     "motorsResetMaximum": {
         "message": "重置最大時間"
     },
-    "motorsSensorGyroSelect": {
-        "message": "陀螺儀"
-    },
     "motorsSensorAccelSelect": {
         "message": "加速度計"
     },
@@ -2780,9 +2777,6 @@
     "pidTuningItermRelaxType": {
         "message": "類型",
         "description": "Iterm Relax Type selection"
-    },
-    "pidTuningItermRelaxTypeOptionGyro": {
-        "message": "陀螺儀"
     },
     "pidTuningItermRelaxTypeOptionSetpoint": {
         "message": "設定點"

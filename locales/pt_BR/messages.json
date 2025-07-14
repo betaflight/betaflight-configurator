@@ -2800,9 +2800,6 @@
     "motorsResetMaximum": {
         "message": "Redefinir valores máximos do gráfico"
     },
-    "motorsSensorGyroSelect": {
-        "message": "giroscópio"
-    },
     "motorsSensorAccelSelect": {
         "message": "acelerômetro"
     },
@@ -4307,9 +4304,6 @@
     "pidTuningItermRelaxType": {
         "message": "Tipo",
         "description": "Iterm Relax Type selection"
-    },
-    "pidTuningItermRelaxTypeOptionGyro": {
-        "message": "Gyro"
     },
     "pidTuningItermRelaxTypeOptionSetpoint": {
         "message": "Setpoint"

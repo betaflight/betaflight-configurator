@@ -1456,6 +1456,16 @@
     "configurationSensorGyroToUseBoth": {
         "message": "Tots dos"
     },
+    "configurationSensorGyroEnable": {
+        "message": "$t(sensorStatusGyroShort.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationSensorAlignment": {
+        "message": "Alineació del sensor"
+    },
+    "configurationGyroRequiredWarning": {
+        "message": "Com a mínim un giroscopi ha de romandre activat. Si desactiveu tots els giroscopis, el controlador de vol no funcionarà correctament."
+    },
     "configurationSensorAlignmentGyro1": {
         "message": "Primer GIRO"
     },
@@ -2615,6 +2625,10 @@
         "message": "Canvia el VTX al mode PIT (potència de sortida baixa, si és compatible)",
         "description": "Help text to VTX PIT MODE mode"
     },
+    "auxiliaryHelpMode_LAPTIMERRESET": {
+        "message": "Restableix el cronòmetre de volta del transponedor",
+        "description": "Help text to LAP TIMER RESET mode"
+    },
     "adjustmentsHelp": {
         "message": "Configureu els interruptors d'ajust. Consulteu la secció \"Ajustaments de vol\" del manual per obtenir-ne més detalls. Els canvis que realitzen les funcions d'ajust no es guarden automàticament. Hi ha 4 ranures (slots). Cada interruptor utilitzat per fer ajustaments simultanis requereix l'ús exclusiu d'una ranura."
     },
@@ -3063,7 +3077,8 @@
         "message": "Reset overtime maximum"
     },
     "motorsSensorGyroSelect": {
-        "message": "gyro"
+        "message": "$t(sensorStatusGyroShort.message)",
+        "description": "Don't translate!!!"
     },
     "motorsSensorAccelSelect": {
         "message": "accel"
@@ -4659,7 +4674,8 @@
         "description": "Iterm Relax Type selection"
     },
     "pidTuningItermRelaxTypeOptionGyro": {
-        "message": "Giro"
+        "message": "$t(sensorStatusGyroShort.message)",
+        "description": "Don't translate!!!"
     },
     "pidTuningItermRelaxTypeOptionSetpoint": {
         "message": "D Punt d'ajust"
@@ -5228,6 +5244,10 @@
     "osdSetupPreviewSelectFont": {
         "message": "Font",
         "description": "Content of the selector for the OSD Font in the preview"
+    },
+    "osdSetupFontManagerTitle": {
+        "message": "Gestor de fonts OSD",
+        "description": "Dialog title"
     },
     "osdSetupFontTypeDefault": {
         "message": "Per defecte",

@@ -3054,9 +3054,6 @@
     "motorsResetMaximum": {
         "message": "オーバータイム最大値をリセット"
     },
-    "motorsSensorGyroSelect": {
-        "message": "ジャイロ"
-    },
     "motorsSensorAccelSelect": {
         "message": "加速度センサー"
     },
@@ -4649,9 +4646,6 @@
     "pidTuningItermRelaxType": {
         "message": "タイプ",
         "description": "Iterm Relax Type selection"
-    },
-    "pidTuningItermRelaxTypeOptionGyro": {
-        "message": "ジャイロ"
     },
     "pidTuningItermRelaxTypeOptionSetpoint": {
         "message": "セットポイント"
