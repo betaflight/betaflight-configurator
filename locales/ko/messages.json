@@ -1443,6 +1443,16 @@
     "configurationSensorGyroToUseBoth": {
         "message": "모두"
     },
+    "configurationSensorGyroEnable": {
+        "message": "$t(sensorStatusGyroShort.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationSensorAlignment": {
+        "message": "센서 정렬"
+    },
+    "configurationGyroRequiredWarning": {
+        "message": "자이로를 하나 이상 활성화한 상태로 유지해야 합니다. 모든 자이로를 비활성화하면 비행 컨트롤러가 제대로 작동하지 않습니다."
+    },
     "configurationSensorAlignmentGyro1": {
         "message": "첫번째 자이로"
     },
@@ -2602,6 +2612,10 @@
         "message": "VTX를 피트모드로 전환합니다 (지원시 저전력 모드로 진입)",
         "description": "Help text to VTX PIT MODE mode"
     },
+    "auxiliaryHelpMode_LAPTIMERRESET": {
+        "message": "트랜스폰더 랩 타이머 초기화",
+        "description": "Help text to LAP TIMER RESET mode"
+    },
     "adjustmentsHelp": {
         "message": "조정 스위치를 설정하세요. 자세한 내용은 매뉴얼의 '비행중 조정' 섹션을 참조하십시오. 조정 기능의 변경 사항은 자동으로 저장되지 않습니다."
     },
@@ -3050,7 +3064,8 @@
         "message": "초과시간 최대값 초기화"
     },
     "motorsSensorGyroSelect": {
-        "message": "자이로"
+        "message": "$t(sensorStatusGyroShort.message)",
+        "description": "Don't translate!!!"
     },
     "motorsSensorAccelSelect": {
         "message": "가속도계"
@@ -4646,7 +4661,8 @@
         "description": "Iterm Relax Type selection"
     },
     "pidTuningItermRelaxTypeOptionGyro": {
-        "message": "자이로"
+        "message": "$t(sensorStatusGyroShort.message)",
+        "description": "Don't translate!!!"
     },
     "pidTuningItermRelaxTypeOptionSetpoint": {
         "message": "설정점"

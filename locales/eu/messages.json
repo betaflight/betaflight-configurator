@@ -1881,9 +1881,6 @@
     "motorsResetMaximum": {
         "message": "Denboran geihenezko balioa berrezarri"
     },
-    "motorsSensorGyroSelect": {
-        "message": "giro"
-    },
     "motorsSensorAccelSelect": {
         "message": "azel"
     },
@@ -2849,9 +2846,6 @@
     "pidTuningItermRelaxType": {
         "message": "Mota",
         "description": "Iterm Relax Type selection"
-    },
-    "pidTuningItermRelaxTypeOptionGyro": {
-        "message": "Giro"
     },
     "pidTuningItermRelaxTypeOptionSetpoint": {
         "message": "Setpoint"

@@ -1402,7 +1402,7 @@
         "message": "Ułożenie żyroskopu"
     },
     "configurationGyroAlignmentHelp": {
-        "message": "Ułożenie żyroskopu jest jego orientacją na płycie kontrolera lotu. Domyślna wartość jest zazwyczaj poprawna, ale jeśli masz niestandardową konstrukcję lub kontroler lotu z inną orientacją żyroskopu, może być konieczne dostosowanie tego ustawienia."
+        "message": "Ułożenie żyroskopu jest jego orientacją na płytce kontrolera lotu. Domyślna konfiguracja zwykle jest odpowiednia, jednak w przypadku niestandardowych konstrukcji lub płytek z nietypowym ułożeniem żyroskopu konieczna może być ręczna korekta tego ustawienia."
     },
     "configurationGyroAlignmentRoll": {
         "message": "$t(configurationBoardAlignmentRoll.message)",
@@ -1451,6 +1451,16 @@
     },
     "configurationSensorGyroToUseBoth": {
         "message": "Oba"
+    },
+    "configurationSensorGyroEnable": {
+        "message": "$t(sensorStatusGyroShort.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationSensorAlignment": {
+        "message": "Wyrównanie czujnika"
+    },
+    "configurationGyroRequiredWarning": {
+        "message": "Przynajmniej jeden żyroskop musi pozostać włączony. Jeśli wyłączysz wszystkie żyroskopy, kontroler lotu nie będzie działał prawidłowo."
     },
     "configurationSensorAlignmentGyro1": {
         "message": " GYRO 1"
@@ -2611,6 +2621,10 @@
         "message": "Przełącz VTX w tryb pit mode (niska moc wyjściowa, jeśli jest obsługiwana)",
         "description": "Help text to VTX PIT MODE mode"
     },
+    "auxiliaryHelpMode_LAPTIMERRESET": {
+        "message": "Zresetuj licznik okrążeń w transponderze",
+        "description": "Help text to LAP TIMER RESET mode"
+    },
     "adjustmentsHelp": {
         "message": "Konfiguruj modyfikacje przełączników. Szczegółowe informacje można znaleźć w sekcji „Korekty podczas lotu”. Zmiany, które wprowadzają funkcje modyfikacji, nie są zapisywane automatycznie."
     },
@@ -3059,7 +3073,8 @@
         "message": "Resetuj z upływem czasu"
     },
     "motorsSensorGyroSelect": {
-        "message": "gyro"
+        "message": "$t(sensorStatusGyroShort.message)",
+        "description": "Don't translate!!!"
     },
     "motorsSensorAccelSelect": {
         "message": "accel"
@@ -3556,7 +3571,7 @@
         "message": "Bez ponownego uruchamiania"
     },
     "firmwareFlasherOnlineSelectBuildType": {
-        "message": "Wybierz typ build'u żeby zobaczyć dostępne płytki."
+        "message": "Wybierz wersję kompilacji, aby zobaczyć listę dostępnych urządzeń."
     },
     "firmwareFlasherOnlineSelectBoardDescription": {
         "message": "Wybierz swój kontroler lotu, aby zobaczyć dostępne wersje oprogramowania online. Wybierz odpowiednie oprogramowanie dla twojego kontrolera lotu."
@@ -3565,7 +3580,7 @@
         "message": "Konfigurator Betaflight obsługuje flashowanie kontrolerów lotu wykorzystując ujednolicone cele.<br><br>Koncepcja ta oznacza, że ​​ten sam plik .hex oprogramowania układowego może być używany dla wszystkich kontrolerów lotu korzystających z tego samego MCU.<br> <br>Betaflight 4.4 wprowadza <strong>Kompilację w chmurze<\/strong><br><br>W przypadku <strong>kompilacji w chmurze<\/strong> musimy zdefiniować opcje sprzętowe obecne w Twojej kompilacji.<br><br>Aby różne kontrolery lotu współpracowały z tym samym oprogramowaniem układowym, a określony plik konfiguracyjny był wdrażany wraz z oprogramowaniem układowym podczas flashowania.<br><br>Dzięki kompilacji lokalnej można załadować docelowy plik konfiguracyjny lub wybrać płytkę kontrolera lotu przed załadowaniem oprogramowania układowego .hex.<br><br>Jeśli napotkasz problemy z używaniem oprogramowania układowego, rozważ dołączenie do Discorda lub otwórz plik <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel =\"noopener noreferrer\">problem<\/a>."
     },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
-        "message": "Wybierz wersję oprogramowania dla swojej płytki."
+        "message": "Wybierz wersję oprogramowania dla swojego urządzenia."
     },
     "firmwareFlasherNoRebootDescription": {
         "message": "Włącz, jeśli twój kontroler lotu jest w trybie DFU. np. jeśli włączyłeś swój kontroler za pomocą zwarcia dwóch pinów bootloadera lub przytrzymując przycisk BOOT."
@@ -4655,7 +4670,8 @@
         "description": "Iterm Relax Type selection"
     },
     "pidTuningItermRelaxTypeOptionGyro": {
-        "message": "Gyro"
+        "message": "$t(sensorStatusGyroShort.message)",
+        "description": "Don't translate!!!"
     },
     "pidTuningItermRelaxTypeOptionSetpoint": {
         "message": "Wartość zadana"
@@ -5224,6 +5240,10 @@
     "osdSetupPreviewSelectFont": {
         "message": "Czcionka",
         "description": "Content of the selector for the OSD Font in the preview"
+    },
+    "osdSetupFontManagerTitle": {
+        "message": "Menedżer czcionek OSD",
+        "description": "Dialog title"
     },
     "osdSetupFontTypeDefault": {
         "message": "Default",
@@ -7063,7 +7083,7 @@
         "message": "Dziennik rejestrów Czarnej Skrzynki"
     },
     "onboardLoggingRateOfLogging": {
-        "message": "Tempo rejestrów Czarnej Skrzynki"
+        "message": "Częstotliwość rejestrowania danych Czarnej Skrzynki"
     },
     "onboardLoggingDebugFields": {
         "message": "Dane zawarte"
@@ -7087,7 +7107,7 @@
         "message": "Pokładowa karta SD"
     },
     "onboardLoggingMsc": {
-        "message": "Tryb masowej pamięci"
+        "message": "Tryb pamięci masowej"
     },
     "onboardLoggingMscNote": {
         "message": "Uruchom ponownie w trybie <strong> pamięci masowej (MSC) <\/strong>. Po aktywacji wbudowana karta SD w kontrolerze lotu zostanie rozpoznana przez komputer jako urządzenie do przechowywania danych i umożliwi pobranie plików dziennika. Wyjmnij karte i wyłącz kontroler lotu, aby wyjść z trybu urządzenia pamięci masowej."

@@ -1448,6 +1448,16 @@
     "configurationSensorGyroToUseBoth": {
         "message": "Оба"
     },
+    "configurationSensorGyroEnable": {
+        "message": "$t(sensorStatusGyroShort.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationSensorAlignment": {
+        "message": "Выравнивание датчика"
+    },
+    "configurationGyroRequiredWarning": {
+        "message": "По крайней мере один гироскоп должен оставаться включенным. Если вы отключите все гироскопы, контроллер полета не будет работать должным образом."
+    },
     "configurationSensorAlignmentGyro1": {
         "message": "Первый ГИРО"
     },
@@ -1576,7 +1586,7 @@
         "message": "Используете количество сигналов для индикации как много GSP спутников найдено"
     },
     "beeperRX_SET": {
-        "message": "Сигналить когда aux канал включен для сигнала"
+        "message": "Издавать сигнал когда вспомогательный канал настроен на подачу звукового сигнала"
     },
     "beeperACC_CALIBRATION": {
         "message": "Калибровка акселерометра в полете завершена успешно"
@@ -1912,6 +1922,10 @@
     },
     "pidTuningDMaxAdvanceHelp": {
         "message": "D Max Advance увеличивает чувствительность коэффициента D при быстрых движениях стиков.<br><br>Advance не реагирует на показания гироскопа или эффект пропвоша. Он срабатывает раньше фактора Gain и иногда полезен для аппаратов с низкой управляемостью, которые сильно запаздывают в начале манёвра.<br><br>В большинстве случаев лучше оставлять это значение нулевым.<br><br>ВНИМАНИЕ: Либо Advance, либо Gain должны быть установлены выше 20, иначе D не будет увеличиваться как положено. Установка обоих значений в ноль зафиксирует D на базовом значении.",
+        "description": "D Max feature helpicon message"
+    },
+    "pidTuningDMaxFeatureHelp": {
+        "message": "D Max увеличивает коэффициент D при быстрых движениях по данным гироскопа и\/или стиков.<br><br>\n\nФактор 'Gain' усиливает D, когда аппарат быстро поворачивает или испытывает вибрации в зоне пропвоша. Обычно достаточно только 'Gain'.<br><br>\n\nФактор 'Advance' увеличивает D до значения D Max при движениях стиков. Обычно не требуется и должен быть установлен в ноль. Может быть полезен для аппаратов с низкой управляемостью, склонных к сильному перерегулированию.<br><br>\n\nБолее высокие значения Gain (например, 40) могут лучше подходить для фристайла, так как активнее повышают D.<br><br>\n\nВНИМАНИЕ: Хотя бы один из параметров (Gain или Advance) должен быть установлен выше 20, иначе D не будет увеличиваться должным образом. Если оба установлены в ноль, D останется на базовом значении.",
         "description": "D Max feature helpicon message"
     },
     "pidTuningPidSettings": {
@@ -2415,6 +2429,10 @@
         "message": "Режим полета, ограничивающий угол наклона модели при полете в режиме акро",
         "description": "Help text to ACRO TRAINER mode"
     },
+    "auxiliaryHelpMode_ARM": {
+        "message": "Активирует вывод сигналов на моторы и позволяет аппарату взлетать. <span class=\"message-negative\">Внимание:<\/span> В целях безопасности рекомендуется настроить <b>BOXPREARM<\/b> (двухэтапное включение).",
+        "description": "Help text to ARM mode"
+    },
     "auxiliaryHelpMode_ANGLE": {
         "message": "В этом режиме автовыравнивания каналы крена и тангажа контролируют угол между соответствующей осью и вертикалью, что позволяет добиться ровного полета, просто оставляя стики в центральном положении",
         "description": "Help text to ANGLE mode"
@@ -2426,6 +2444,10 @@
     "auxiliaryHelpMode_AIRMODE": {
         "message": "AirMode позволяет поддерживать стабильность летательного аппарата при низком уровне газа. Для получения дополнительной информации обратитесь к <a href=\"https:\/\/betaflight.com\/docs\/development\/modes#airmode\" target=\"_blank\" rel=\"noopener noreferrer\">AirMode<\/a> на Betaflight.com.",
         "description": "Help text to AIRMODE mode"
+    },
+    "auxiliaryHelpMode_ALTHOLD": {
+        "message": "<a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/position-hold-v4-6#altitude-hold\" target=\"_blank\" rel=\"noopener noreferrer\">Удержание высоты (Altitude Hold)<\/a> активно регулирует высоту аппарата, используя внешние датчики в сочетании с Angle Mode (Стабилизационным режимом).",
+        "description": "Help text for ALTITUDE HOLD mode"
     },
     "auxiliaryHelpMode_BEEPER": {
         "message": "Включает звуковой сигнал - полезно для определения местоположения упавшего воздушного судна",
@@ -2594,6 +2616,10 @@
     "auxiliaryHelpMode_VTXPITMODE": {
         "message": "Переключить VTX в режим PitMode (низкая выходная мощность, если поддерживается)",
         "description": "Help text to VTX PIT MODE mode"
+    },
+    "auxiliaryHelpMode_LAPTIMERRESET": {
+        "message": "Сбросить таймер круга транспондера",
+        "description": "Help text to LAP TIMER RESET mode"
     },
     "adjustmentsHelp": {
         "message": "Установка настроечных переключателей. Смотри 'in-flight adjustments' главу руководства. Изменения, которые делают настроечные функции, автоматически не сохраняются."
@@ -3043,7 +3069,8 @@
         "message": "Сбросить сверхурочный максимум"
     },
     "motorsSensorGyroSelect": {
-        "message": "гиро"
+        "message": "$t(sensorStatusGyroShort.message)",
+        "description": "Don't translate!!!"
     },
     "motorsSensorAccelSelect": {
         "message": "аксел"
@@ -4137,6 +4164,9 @@
     "pidTuningYawJumpPrevention": {
         "message": "Yaw продвижение"
     },
+    "pidTuningYawJumpPreventionHelp": {
+        "message": "Предотвращает подпрыгивание аппарата в конце рыскания. Более высокое значение увеличивает демпфирование в конце манёвров рысканья (работает аналогично старому параметру yaw D, который, в отличие от других осей, не был настоящим D-компонентом)."
+    },
     "pidTuningRcExpoPower": {
         "message": "Мощность RC Экспо"
     },
@@ -4181,6 +4211,9 @@
     },
     "pidTuningMotorLimit": {
         "message": "Коэффициент масштабирования [%]"
+    },
+    "pidTuningMotorLimitHelp": {
+        "message": "Процентное снижение управляющего сигнала для каждого мотора.<br><br>\n\nУменьшает ток ESC и нагрев моторов при использовании батарей с большим числом элементов на высокооборотных моторах (high KV).<br><br>\n\nПри использовании 6S батареи на аппарате с моторами, пропеллерами и настройками для 4S попробуйте 66%; <br>при использовании 4S батареи на аппарате, рассчитанном на 3S, попробуйте 75%.<br><br>\n\nУбедитесь, что все компоненты поддерживают напряжение используемой батареи."
     },
     "pidTuningCellCount": {
         "message": "Количество ячеек - для автоматического переключения Профиля"
@@ -4323,6 +4356,10 @@
         "message": "Мастер-множитель:",
         "description": "Master tuning slider label"
     },
+    "pidTuningMasterSliderHelp": {
+        "message": "Равномерно увеличивает все PID-параметры. Не изменяйте этот ползунок, пока не исчерпаете возможности регулировки других ползунков. Обычно требуется только для аппаратов с низкой управляемостью или высоким моментом инерции (MoI), таких как X-Class или кинолифтеры. Слишком высокое значение Мастер-множитель может вызвать высокочастотные колебания и\/или перегрев моторов.",
+        "description": "Master Gain tuning slider helpicon message"
+    },
     "pidTuningDGainSlider": {
         "message": "Демпфирование:<br \/><i><small>D Gains<\/small><\/i>",
         "description": "D Gain (Damping) tuning slider label"
@@ -4335,13 +4372,25 @@
         "message": "Трекинг:<br \/><i><small>P & I Gains<\/small><\/i>",
         "description": "P and I Gain (Stability) tuning slider label"
     },
+    "pidTuningPIGainSliderHelp": {
+        "message": "Увеличьте значение ползунока Трекинг, чтобы улучшить реакцию аппарата на ваши команды и внешние воздействия, предотвращая отклонение носа аппарата от курса в любых условиях.<br \/><br \/>\n\nНизкие значения Tracking приведут к заметным колебаниям и сносу с траектории при движениях стиков и во время пропвоша. Высокие значения Tracking могут вызвать вибрации и резкий отскок (визуально малозаметный, но слышимый). Чрезмерное увеличение Tracking может привести к устойчивым колебаниям и перегреву моторов.",
+        "description": "P and I gain tuning slider helpicon message"
+    },
     "pidTuningResponseSlider": {
         "message": "Отзывчивость стиков: <br \/><i><small>FF Gains<\/small><\/i>",
         "description": "Response tuning slider label"
     },
+    "pidTuningResponseSliderHelp": {
+        "message": "Уменьшение Отзывчевости стиков увеличит задержку реакции аппарата на команды и может привести к медленному возврату в исходное положение после флипа или ролла.<br><br>\n\nУвеличение Отзывчевости стиков обеспечит более резкую реакцию на быстрые движения стиков. Слишком высокое значение может вызвать перелёт в конце флипа или бочки.<br \/><br \/>\n\n<strong>Примечание:<\/strong><br \/>\n«Ослабление I» может уменьшить отскок для аппаратов с низкой управляемостью или при использовании низких значений Stick Response.",
+        "description": "Stick response gain tuning slider helpicon message"
+    },
     "pidTuningIGainSlider": {
         "message": "Дрейф - Колебание:<br \/><i><small>I Gains<\/small><\/i>",
         "description": "I-term slider label"
+    },
+    "pidTuningIGainSliderHelp": {
+        "message": "Увеличивает или уменьшает коэффициент I. Более высокое значение I может улучшить стабилизацию в спиральных виражах, орбитах или при сбросе газа до 0%. Однако чрезмерное значение I, особенно при недостаточном P, может вызвать колебания или отскок после флипов\/роллов или при резком сбросе газа до 0%.<br \/><br \/>\n\nКак правило, ползунок \"Дрейф - Колебание\" следует устанавливать как можно выше для сохранения траектории в спиральных виражах, орбитах и т.д., но не настолько высоко, чтобы появились колебания при сбросе газа до 0%.<br \/><br \/>\n\n<strong>Примечание:<\/strong><br \/>\nЕсли наблюдается заметный отскок в любой ситуации, убедитесь, что активирован \"Ослабление I\", и попробуйте уменьшить значение отсечки.",
+        "description": "I-gain Gain tuning slider helpicon message"
     },
     "pidTuningDMaxGainSlider": {
         "message": "Динамическое демпфирование:<br \/><i><small>D Max<\/small><\/i>",
@@ -4354,6 +4403,10 @@
     "pidTuningRollPitchRatioSlider": {
         "message": "Демпфирование по тангажу:<br \/><i><small>Pitch:Roll D<\/small><\/i>",
         "description": "Pitch-Roll Ratio slider label"
+    },
+    "pidTuningRollPitchRatioSliderHelp": {
+        "message": "Увеличение демпфирования (D) только по оси тангажа (Pitch относительно Roll). Помогает контролировать перелёты или отскок именно по тангажу.<br \/><br \/>\n\nАппараты с более \"тяжёлым\" моментом инерции по оси тангажа обычно требуют большего демпфирования (поскольку тангаж обладает большей инерцией и накапливает больше импульса).<br \/><br \/>\n\nСначала настройте основные ползунки \"Демпфирование\" и\/или \"Трекинг\" , пока не добьётесь правильного поведения по оси крена. Затем используйте ползунки для тангажа (увеличение или уменьшение) для точной настройки оси тангажа без влияния на крен.",
+        "description": "Pitch-Roll Ratio tuning slider helpicon message"
     },
     "pidTuningPitchPIGainSlider": {
         "message": "Трекинг по тангажу:<br><i><small>Pitch:Roll P, I & FF<\/small><\/i>",
@@ -4389,10 +4442,10 @@
         "message": "Тип фильтра"
     },
     "pidTuningMinCutoffFrequency": {
-        "message": "Мин. частота среза [Hz]"
+        "message": "Мин. частота среза [Гц]"
     },
     "pidTuningMaxCutoffFrequency": {
-        "message": "Макс. частота среза [Hz]"
+        "message": "Макс. частота среза [Гц]"
     },
     "pidTuningGyroLowpass2": {
         "message": "Фильтр низких частот гироскопа - 2 \"Lowpass\""
@@ -4428,7 +4481,7 @@
         "message": "Центральная частота [Гц]"
     },
     "pidTuningCutoffFrequency": {
-        "message": "Частота среза [Hz]"
+        "message": "Частота среза [Гц]"
     },
     "pidTuningNotchFilterHelp": {
         "message": "Режекторный (Notch) фильтр — это симметричный, узкий, высокочастотный фильтр с параметрами центра и среза.<br \/><br \/>\nЦентральная частота — это центральная частота фильтра. Частота среза - нижняя частота среза, на которой ослабление сигнала составляет -3 дБ.<br \/><br \/>\nНапример, режекторный фильтр с частотой среза 160 и с центром 260 создает широкую полосу от 160 до 360 Гц с затуханием от -3 дБ и максимальным подавлением на частотах около 260 Гц.",
@@ -4456,10 +4509,10 @@
         "message": "Q фактор"
     },
     "pidTuningDynamicNotchMinHz": {
-        "message": "Мин. частота [Hz]"
+        "message": "Мин. частота [Гц]"
     },
     "pidTuningDynamicNotchMaxHz": {
-        "message": "Макс. частота [Hz]"
+        "message": "Макс. частота [Гц]"
     },
     "pidTuningDynamicNotchCount": {
         "message": "Количество режекторных фильтров"
@@ -4491,8 +4544,12 @@
         "message": "Число гармоник Gyro RPM фильтра",
         "description": "Text for one of the parameters of the RPM Filter"
     },
+    "pidTuningRpmHarmonicsHelp": {
+        "message": "<b>Количество гармоник на каждый мотор.<\/b> Значение 3 (рекомендуется для большинства аппаратов) создаст 3 режекторных фильтра на мотор для каждой оси, всего 36 фильтров. Один фильтр на основной частоте мотора и два - на кратных этой частоте гармониках.",
+        "description": "Help text for one of the parameters of the RPM Filter"
+    },
     "pidTuningRpmMinHz": {
-        "message": "Минимальная частота Gyro RPM фильтра [Hz]",
+        "message": "Минимальная частота Gyro RPM фильтра [Гц]",
         "description": "Text for one of the parameters of the RPM Filter"
     },
     "pidTuningRpmMinHzHelp": {
@@ -4555,6 +4612,9 @@
     "pidTuningVbatSagCompensation": {
         "message": "Компенсация просадки напряжения батареи"
     },
+    "pidTuningVbatSagCompensationHelp": {
+        "message": "Обеспечивает стабильные показатели тяги и работы PID во всем рабочем диапазоне напряжения батареи, увеличивая выходную мощность моторов по мере падения напряжения.<br \/><br \/>\n\nУровень компенсации можно регулировать от 0% до 100%. Рекомендуется полная компенсация (100%).<br \/><br \/>\n\nПодробнее см. в <a href=\"https:\/\/betaflight.com\/docs\/wiki\/tuning\/4-2-tuning-notes#dynamic-battery-sag-compensation\" target=\"_blank\" rel=\"noopener noreferrer\">этой статье вики<\/a>."
+    },
     "pidTuningVbatSagValue": {
         "message": "%"
     },
@@ -4570,6 +4630,9 @@
     "pidTuningItermRotation": {
         "message": "Вращение I"
     },
+    "pidTuningItermRotationHelp": {
+        "message": "<b>Корректно поворачивает вектор I<\/b> на другие оси при вращении аппарата во время непрерывного рысканья при выполнении роллов, а также при выполнении \"воронок\" и других трюков. Особенно ценится пилотами, летающими в LOS-режиме."
+    },
     "pidTuningSmartFeedforward": {
         "message": "Интеллектуальное упреждение"
     },
@@ -4578,6 +4641,9 @@
     },
     "pidTuningItermRelax": {
         "message": "Ослабление I"
+    },
+    "pidTuningItermRelaxHelp": {
+        "message": "Подавляет накопление I при быстрых движениях, уменьшая отскок в конце роллов, флипов и других резких манёвров.<br><br>\n\n<b>Режим Setpoint<\/b> реагирует на сглаженные движения стиков и лучше всего подходит для отзывчивых аппаратов.<br><br>\n\n<b>Режим Gyro<\/b> может быть полезен для аппаратов с выраженным запаздыванием реакции.<br><br>\n\nОбычно <b>iTerm Relax<\/b> не следует применять для оси рысканья (yaw)."
     },
     "pidTuningItermRelaxAxes": {
         "message": "Oси",
@@ -4600,7 +4666,8 @@
         "description": "Iterm Relax Type selection"
     },
     "pidTuningItermRelaxTypeOptionGyro": {
-        "message": "Гиро"
+        "message": "$t(sensorStatusGyroShort.message)",
+        "description": "Don't translate!!!"
     },
     "pidTuningItermRelaxTypeOptionSetpoint": {
         "message": "Setpoint"
@@ -5169,6 +5236,10 @@
     "osdSetupPreviewSelectFont": {
         "message": "Шрифт",
         "description": "Content of the selector for the OSD Font in the preview"
+    },
+    "osdSetupFontManagerTitle": {
+        "message": "Менеджер шрифтов OSD",
+        "description": "Dialog title"
     },
     "osdSetupFontTypeDefault": {
         "message": "По умолчанию",

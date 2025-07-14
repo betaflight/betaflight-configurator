@@ -1448,6 +1448,16 @@
     "configurationSensorGyroToUseBoth": {
         "message": "Ambos"
     },
+    "configurationSensorGyroEnable": {
+        "message": "$t(sensorStatusGyroShort.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationSensorAlignment": {
+        "message": "Alinhamento do Sensor"
+    },
+    "configurationGyroRequiredWarning": {
+        "message": "Pelo menos um gyro deve permanecer ativo. Se desativar todos os gyros, a controladora de voo não funcionará corretamente."
+    },
     "configurationSensorAlignmentGyro1": {
         "message": "Primeiro GYRO"
     },
@@ -2607,6 +2617,10 @@
         "message": "Mudar o VTX para modo pit (baixa emissão de energia, se suportado)",
         "description": "Help text to VTX PIT MODE mode"
     },
+    "auxiliaryHelpMode_LAPTIMERRESET": {
+        "message": "Reset do cronómetro de voltas do transponder",
+        "description": "Help text to LAP TIMER RESET mode"
+    },
     "adjustmentsHelp": {
         "message": "Configure os switches de ajuste. Veja a secção 'in-flight adjustments' do manual para detalhes. As alterações que as funções de ajuste fazem não são gravadas automaticamente."
     },
@@ -3055,7 +3069,8 @@
         "message": "Repor máximos extraordinários"
     },
     "motorsSensorGyroSelect": {
-        "message": "gyro"
+        "message": "$t(sensorStatusGyroShort.message)",
+        "description": "Don't translate!!!"
     },
     "motorsSensorAccelSelect": {
         "message": "acelerómetro"
@@ -4651,7 +4666,8 @@
         "description": "Iterm Relax Type selection"
     },
     "pidTuningItermRelaxTypeOptionGyro": {
-        "message": "Gyro"
+        "message": "$t(sensorStatusGyroShort.message)",
+        "description": "Don't translate!!!"
     },
     "pidTuningItermRelaxTypeOptionSetpoint": {
         "message": "Setpoint"
@@ -5220,6 +5236,10 @@
     "osdSetupPreviewSelectFont": {
         "message": "Tipo de letra",
         "description": "Content of the selector for the OSD Font in the preview"
+    },
+    "osdSetupFontManagerTitle": {
+        "message": "Gestor de Fontes do OSD",
+        "description": "Dialog title"
     },
     "osdSetupFontTypeDefault": {
         "message": "Predefinição",

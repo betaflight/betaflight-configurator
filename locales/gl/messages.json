@@ -2676,9 +2676,6 @@
     "motorsResetMaximum": {
         "message": "Restablecer o tempo máximo"
     },
-    "motorsSensorGyroSelect": {
-        "message": "xiro"
-    },
     "motorsSensorAccelSelect": {
         "message": "accel"
     },
@@ -4162,9 +4159,6 @@
     "pidTuningItermRelaxType": {
         "message": "Tipo",
         "description": "Iterm Relax Type selection"
-    },
-    "pidTuningItermRelaxTypeOptionGyro": {
-        "message": "Xiro"
     },
     "pidTuningItermRelaxTypeOptionSetpoint": {
         "message": "Valor obxetivo"
