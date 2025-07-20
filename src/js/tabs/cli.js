@@ -198,16 +198,16 @@ cli.initialize = function (callback) {
             textarea.attr("placeholder", i18n.getMessage("cliInputPlaceholder")).prop("disabled", false).focus();
         });
 
-        const addSupportIdtoOutput = function (content) {
-            if (self.lastSupportId) {
-                content = `# Support ID: ${self.lastSupportId}\n\n${content}`;
+        function formatContentWithSupportId(content, supportId) {
+            if (supportId) {
+                content = `# Support ID: ${supportId}\n\n${content}`;
             }
             return content;
         };
 
         $("a.save").on("click", function () {
             const filename = generateFilename("cli", "txt");
-            const content = addSupportIdtoOutput(self.outputHistory);
+            const content = formatContentWithSupportId(self.outputHistory, self.lastSupportId);
 
             saveFile(filename, content);
         });
@@ -217,7 +217,7 @@ cli.initialize = function (callback) {
         });
 
         self.GUI.copyButton.click(function () {
-            const content = addSupportIdtoOutput(self.outputHistory);
+            const content = formatContentWithSupportId(self.outputHistory, self.lastSupportId);
             copyToClipboard(content);
         });
 
