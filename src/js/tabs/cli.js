@@ -215,7 +215,11 @@ cli.initialize = function (callback) {
         });
 
         self.GUI.copyButton.click(function () {
-            copyToClipboard(self.outputHistory);
+            let content = self.outputHistory;
+            if (self.lastSupportId) {
+                content = `# Support ID: ${self.lastSupportId}\n\n${content}`;
+            }
+            copyToClipboard(content);
         });
 
         $("a.load").on("click", function () {
