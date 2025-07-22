@@ -163,7 +163,7 @@ class WebBluetooth extends EventTarget {
 
         if (connectionInfo && !this.openCanceled) {
             this.connected = true;
-            this.connectionId = this.device.port;
+            this.connectionId = path;
             this.bitrate = options.baudRate;
             this.bytesReceived = 0;
             this.bytesSent = 0;
@@ -177,11 +177,9 @@ class WebBluetooth extends EventTarget {
 
             this.dispatchEvent(new CustomEvent("connect", { detail: connectionInfo }));
         } else if (connectionInfo && this.openCanceled) {
-            this.connectionId = this.device.port;
+            this.connectionId = path;
 
-            console.log(
-                `${this.logHead} Connection opened with ID: ${connectionInfo.connectionId}, but request was canceled, disconnecting`,
-            );
+            console.log(`${this.logHead} Connection opened with ID: ${path}, but request was canceled, disconnecting`);
             // some bluetooth dongles/dongle drivers really doesn't like to be closed instantly, adding a small delay
             setTimeout(() => {
                 this.openRequested = false;
@@ -260,11 +258,11 @@ class WebBluetooth extends EventTarget {
     }
 
     handleNotification(event) {
-        const buffer = new Uint8Array(event.target.value.byteLength);
-
-        for (let i = 0; i < event.target.value.byteLength; i++) {
-            buffer[i] = event.target.value.getUint8(i);
-        }
+        // Create a proper Uint8Array directly from the DataView buffer
+        const dataView = event.target.value;
+        const buffer = new Uint8Array(
+            dataView.buffer.slice(dataView.byteOffset, dataView.byteOffset + dataView.byteLength),
+        );
 
         // Dispatch immediately instead of using setTimeout to avoid race conditions
         this.dispatchEvent(new CustomEvent("receive", { detail: buffer }));
