@@ -53,6 +53,7 @@ const MSP = {
     message_checksum: 0,
     messageIsJumboFrame: false,
     crcError: false,
+    bt11_crc_corruption_logged: false,
 
     callbacks: [],
     packet_error: 0,
@@ -263,15 +264,37 @@ const MSP = {
         this.message_buffer = new ArrayBuffer(this.message_length_expected);
         this.message_buffer_uint8_view = new Uint8Array(this.message_buffer);
     },
+    _isBT11CorruptionPattern(expectedChecksum) {
+        if (expectedChecksum !== 0xff || this.message_checksum === 0xff) {
+            return false;
+        }
+
+        if (!serial?._webBluetooth?.connected) {
+            return false;
+        }
+
+        const deviceDescription = serial._webBluetooth.deviceDescription;
+        if (!deviceDescription) {
+            return false;
+        }
+
+        const problematicDevices = ["BT-11", "CC2541"];
+        return problematicDevices.includes(deviceDescription.name);
+    },
     _dispatch_message(expectedChecksum) {
         if (this.message_checksum === expectedChecksum) {
             // message received, store dataview
             this.dataView = new DataView(this.message_buffer, 0, this.message_length_expected);
         } else {
-            // Special handling for BT-11/Bluetooth checksum corruption
-            // Common pattern: received checksum is 0xff but calculated is correct
-            if (expectedChecksum === 0xff && this.message_checksum !== 0xff) {
-                // console.log("Detected potential Bluetooth checksum corruption (0xff), attempting recovery...");
+            // Special handling for specific BT-11/CC2541 checksum corruption
+            // Only apply workaround for known problematic devices
+            const isBT11Device = this._isBT11CorruptionPattern(expectedChecksum);
+            if (isBT11Device) {
+                if (!this.bt11_crc_corruption_logged) {
+                    const logHead = "[MSP/BLUETOOTH]";
+                    console.log(`${logHead} Detected BT-11/CC2541 checksum corruption (0xff), skipping CRC check`);
+                    this.bt11_crc_corruption_logged = true;
+                }
                 // Use the calculated checksum instead of the received one
                 this.dataView = new DataView(this.message_buffer, 0, this.message_length_expected);
                 this.crcError = false; // Override the CRC error for this specific case
@@ -466,6 +489,7 @@ const MSP = {
     disconnect_cleanup() {
         this.state = 0; // reset packet state for "clean" initial entry (this is only required if user hot-disconnects)
         this.packet_error = 0; // reset CRC packet error counter for next session
+        this.bt11_crc_corruption_logged = false;
 
         this.callbacks_cleanup();
     },
