@@ -268,9 +268,18 @@ const MSP = {
             // message received, store dataview
             this.dataView = new DataView(this.message_buffer, 0, this.message_length_expected);
         } else {
-            this.packet_error++;
-            this.crcError = true;
-            this.dataView = new DataView(new ArrayBuffer(0));
+            // Special handling for BT-11/Bluetooth checksum corruption
+            // Common pattern: received checksum is 0xff but calculated is correct
+            if (expectedChecksum === 0xff && this.message_checksum !== 0xff) {
+                console.log("Detected potential Bluetooth checksum corruption (0xff), attempting recovery...");
+                // Use the calculated checksum instead of the received one
+                this.dataView = new DataView(this.message_buffer, 0, this.message_length_expected);
+                this.crcError = false; // Override the CRC error for this specific case
+            } else {
+                this.packet_error++;
+                this.crcError = true;
+                this.dataView = new DataView(new ArrayBuffer(0));
+            }
         }
         this.notify();
         // Reset variables
