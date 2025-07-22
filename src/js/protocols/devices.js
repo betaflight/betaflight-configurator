@@ -3,7 +3,7 @@ export const bluetoothDevices = [
         name: "CC2541",
         serviceUuid: "0000ffe0-0000-1000-8000-00805f9b34fb",
         writeCharacteristic: "0000ffe1-0000-1000-8000-00805f9b34fb",
-        readCharacteristic: "0000ffe1-0000-1000-8000-00805f9b34fb",
+        readCharacteristic: "0000ffe2-0000-1000-8000-00805f9b34fb",
     },
     {
         name: "HC-05",
