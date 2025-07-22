@@ -290,10 +290,10 @@ const MSP = {
             const isBT11Device = this._isBT11CorruptionPattern(expectedChecksum);
             if (isBT11Device) {
                 if (!this.bt11_crc_corruption_logged) {
-                    console.log(`Detected BT-11/CC2541 checksum corruption (0xff), skipping CRC check`);
+                    console.log(`Detected BT-11/CC2541 CRC corruption (0xff), skipping CRC check`);
                     this.bt11_crc_corruption_logged = true;
                 }
-                // Use the calculated checksum instead of the received one
+                // Bypass checksum validation for known BT-11/CC2541 corruption pattern
                 this.dataView = new DataView(this.message_buffer, 0, this.message_length_expected);
                 this.crcError = false; // Override the CRC error for this specific case
             } else {
