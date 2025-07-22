@@ -278,8 +278,7 @@ const MSP = {
             return false;
         }
 
-        const problematicDevices = ["BT-11", "CC2541"];
-        return problematicDevices.includes(deviceDescription.name);
+        return deviceDescription?.susceptibleToCrcCorruption ?? false;
     },
     _dispatch_message(expectedChecksum) {
         if (this.message_checksum === expectedChecksum) {
