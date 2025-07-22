@@ -337,14 +337,24 @@ class WebBluetooth extends EventTarget {
     }
 
     async send(data, cb) {
-        if (!this.writeCharacteristic) {
+        if (!this.writeCharacteristic || typeof this.writeCharacteristic.writeValue !== "function") {
             if (cb) {
                 cb({
-                    error: "No write characteristic available",
+                    error: "No write characteristic available or characteristic is invalid",
                     bytesSent: 0,
                 });
             }
-            console.error(`${this.logHead} No write characteristic available`);
+            console.error(`${this.logHead} No write characteristic available or characteristic is invalid`);
+            return;
+        }
+        if (!this.device?.gatt?.connected) {
+            if (cb) {
+                cb({
+                    error: "GATT Server is disconnected. Cannot perform GATT operations.",
+                    bytesSent: 0,
+                });
+            }
+            console.error(`${this.logHead} GATT Server is disconnected. Cannot perform GATT operations.`);
             return;
         }
 
