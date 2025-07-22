@@ -6,6 +6,8 @@ import "../js/localization.js";
 import "../js/injected_methods";
 import i18next from "i18next";
 import { createApp, reactive } from "vue";
+import { Tooltip, options } from "floating-vue";
+import "floating-vue/dist/style.css";
 import I18NextVue from "i18next-vue";
 import FC from "../js/fc.js";
 import MSP from "../js/msp.js";
@@ -40,6 +42,19 @@ i18next.on("initialized", function () {
             return betaflightModel;
         },
     });
+
+    // Register Floating Vue tooltip and custom themes
+    app.component("VTooltip", Tooltip);
+    options.themes.custom = {
+        $extend: "tooltip",
+        html: true,
+        placement: "right",
+        popperTriggers: ["focus", "hover", "touch"],
+        triggers: ["focus", "hover", "touch"],
+    };
+    options.themes.custom_wide = {
+        $extend: "custom",
+    };
 
     app.use(I18NextVue, { i18next }).use(BetaflightComponents).mount("#main-wrapper");
 

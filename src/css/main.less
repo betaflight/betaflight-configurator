@@ -1631,10 +1631,18 @@ button.active {
     border: 1px solid var(--primary-600);
     color: #000;
 }
-.jBox-Tooltip {
+.v-popper--theme-tooltip.v-popper--theme-custom .v-popper__inner {
+    background: var(--surface-300);
+    border: 2px solid var(--primary-500);
+    border-radius: 0.5rem;
+    color: var(--text);
     max-width: 180px;
+    padding: 8px;
 }
-.jBox-Widetip {
+.v-popper--theme-tooltip.v-popper--theme-custom .v-popper__arrow-outer {
+    border-color: var(--primary-500);
+}
+.v-popper--theme-tooltip.v-popper--theme-custom_wide .v-popper__inner {
     max-width: 300px;
 }
 .hidden {
@@ -1647,48 +1655,6 @@ button.active {
 .topBorderLine {
     border-top: 1px solid var(--surface-400);
     padding-top: 5px;
-}
-.jBox-container {
-    background: var(--surface-300) !important;
-    border: 2px solid var(--primary-500);
-    color: var(--text);
-    border-radius: 0.5rem !important;
-}
-.jBox-title {
-    background: var(--surface-300) !important;
-    border-bottom: 1px solid var(--surface-950) !important;
-}
-.jBox-content {
-    padding: 0.5rem;
-}
-.jBox-Modal {
-    .jBox-content {
-        padding: 10px 15px;
-    }
-}
-.jBox-pointer-top {
-    width: 22px;
-    height: 10px;
-}
-.jBox-pointer-bottom {
-    width: 22px;
-    height: 10px;
-}
-.jBox-pointer-left {
-    width: 10px;
-    height: 20px;
-}
-.jBox-pointer-right {
-    width: 10px;
-    height: 20px;
-}
-.jBox-pointer {
-    &:after {
-        width: 10px;
-        height: 9px;
-        border: 2px solid var(--primary-500) !important;
-        background-color: var(--primary-500) !important;
-    }
 }
 #dialogResetToCustomDefaults-content {
     margin-top: 10px;

@@ -1,7 +1,7 @@
 import { get as getConfig } from "./ConfigStorage";
 import MSP from "./msp";
 import Switchery from "switchery-latest";
-import jBox from "jbox";
+import { createTooltip } from "floating-vue";
 import $ from "jquery";
 import { getOS } from "./utils/checkBrowserCompatibility";
 
@@ -290,36 +290,16 @@ class GuiControl {
             .html(i18n.getMessage("betaflightSupportButton"))
             .attr("href", `https://betaflight.com/docs/wiki/configurator/${tRex}-tab`);
 
-        // loading tooltip
+        // Create tooltips once page is "ready"
         $(function () {
-            new jBox("Tooltip", {
-                attach: ".cf_tip",
-                trigger: "mouseenter",
-                closeOnMouseleave: true,
-                closeOnClick: "body",
-                delayOpen: 100,
-                delayClose: 100,
-                position: {
-                    x: "right",
-                    y: "center",
-                },
-                outside: "x",
-            });
-
-            new jBox("Tooltip", {
-                theme: "Widetip",
-                attach: ".cf_tip_wide",
-                trigger: "mouseenter",
-                closeOnMouseleave: true,
-                closeOnClick: "body",
-                delayOpen: 100,
-                delayClose: 100,
-                position: {
-                    x: "right",
-                    y: "center",
-                },
-                outside: "x",
-            });
+            for (const suffix of ["", "_wide"]) {
+                $(`.cf_tip${suffix}`).each((_, element) => {
+                    createTooltip(element, {
+                        content: $(element).attr("title"),
+                        theme: `custom${suffix}`,
+                    });
+                });
+            }
         });
 
         if (callback) {
