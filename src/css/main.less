@@ -1631,11 +1631,19 @@ button.active {
     border: 1px solid var(--primary-600);
     color: #000;
 }
-.jBox-Tooltip {
-    max-width: 180px;
+.tippy-box[data-theme~="custom"] {
+    background: var(--surface-300);
+    border: 2px solid var(--primary-500);
+    border-radius: 0.5rem;
+    color: var(--text);
 }
-.jBox-Widetip {
-    max-width: 300px;
+.tippy-box[data-theme~="custom"][data-placement^="right"] > .tippy-arrow:before {
+    border-right-color: var(--primary-500);
+    left: -9px;
+}
+.tippy-box[data-theme~="custom"][data-placement^="left"] > .tippy-arrow:before {
+    border-left-color: var(--primary-500);
+    right: -9px;
 }
 .hidden {
     display: none;
@@ -1647,48 +1655,6 @@ button.active {
 .topBorderLine {
     border-top: 1px solid var(--surface-400);
     padding-top: 5px;
-}
-.jBox-container {
-    background: var(--surface-300) !important;
-    border: 2px solid var(--primary-500);
-    color: var(--text);
-    border-radius: 0.5rem !important;
-}
-.jBox-title {
-    background: var(--surface-300) !important;
-    border-bottom: 1px solid var(--surface-950) !important;
-}
-.jBox-content {
-    padding: 0.5rem;
-}
-.jBox-Modal {
-    .jBox-content {
-        padding: 10px 15px;
-    }
-}
-.jBox-pointer-top {
-    width: 22px;
-    height: 10px;
-}
-.jBox-pointer-bottom {
-    width: 22px;
-    height: 10px;
-}
-.jBox-pointer-left {
-    width: 10px;
-    height: 20px;
-}
-.jBox-pointer-right {
-    width: 10px;
-    height: 20px;
-}
-.jBox-pointer {
-    &:after {
-        width: 10px;
-        height: 9px;
-        border: 2px solid var(--primary-500) !important;
-        background-color: var(--primary-500) !important;
-    }
 }
 #dialogResetToCustomDefaults-content {
     margin-top: 10px;
