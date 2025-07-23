@@ -118,9 +118,11 @@ function connectDisconnect() {
                 serial.addEventListener("disconnect", disconnectHandler);
             }
 
-            const callback = selectedPort === "virtual" ? onOpenVirtual : undefined;
-
-            serial.connect(portName, { baudRate: PortHandler.portPicker.selectedBauds }, callback);
+            serial.connect(
+                portName,
+                { baudRate: PortHandler.portPicker.selectedBauds },
+                selectedPort === "virtual" ? onOpenVirtual : undefined,
+            );
         } else {
             // If connected, start disconnection sequence
             GUI.timeout_kill_all();
