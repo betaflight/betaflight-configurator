@@ -82,14 +82,11 @@ export function initializeSerialBackend() {
 
 function connectDisconnect() {
     const selectedPort = PortHandler.portPicker.selectedPort;
-    const portName = selectedPort === "manual" ? PortHandler.portPicker.portOverride : selectedPort;
 
-    if (!GUI.connect_lock && selectedPort !== "noselection" && !selectedPort.path?.startsWith("usb_")) {
+    if (!GUI.connect_lock && selectedPort !== "noselection" && !selectedPort.path?.startsWith("usb")) {
         // GUI control overrides the user control
 
         GUI.configuration_loaded = false;
-
-        const baudRate = PortHandler.portPicker.selectedBauds;
 
         if (!isConnected) {
             // prevent connection when we do not have permission
@@ -103,6 +100,8 @@ function connectDisconnect() {
                 return;
             }
 
+            const portName = selectedPort === "manual" ? PortHandler.portPicker.portOverride : selectedPort;
+
             console.log(`${logHead} Connecting to: ${portName}`);
             GUI.connecting_to = portName;
 
@@ -110,27 +109,21 @@ function connectDisconnect() {
             PortHandler.portPickerDisabled = true;
             $("div.connection_button__label").text(i18n.getMessage("connecting"));
 
-            // Set configuration flags for consistency with other code
-            CONFIGURATOR.virtualMode = selectedPort === "virtual";
-
-            // Select the appropriate protocol based directly on the port path
-            serial.selectProtocol(selectedPort);
-
-            if (CONFIGURATOR.virtualMode) {
-                CONFIGURATOR.virtualApiVersion = PortHandler.portPicker.virtualMspVersion;
-                // Virtual mode uses a callback instead of port path
-                serial.connect(onOpenVirtual);
-            } else {
-                // Set up event listeners for all non-virtual connections
+            // Set up event listeners for non-virtual connections
+            if (selectedPort !== "virtual") {
                 serial.removeEventListener("connect", connectHandler);
                 serial.addEventListener("connect", connectHandler);
 
                 serial.removeEventListener("disconnect", disconnectHandler);
                 serial.addEventListener("disconnect", disconnectHandler);
-
-                // All non-virtual modes pass the port path and options
-                serial.connect(portName, { baudRate });
             }
+
+            const connectionOptions =
+                selectedPort === "virtual" ? {} : { baudRate: PortHandler.portPicker.selectedBauds };
+
+            const callback = selectedPort === "virtual" ? onOpenVirtual : undefined;
+
+            serial.connect(portName, connectionOptions, callback);
         } else {
             // If connected, start disconnection sequence
             GUI.timeout_kill_all();
@@ -348,6 +341,9 @@ function onOpenVirtual() {
     GUI.connecting_to = false;
 
     CONFIGURATOR.connectionValid = true;
+    CONFIGURATOR.virtualMode = true;
+    CONFIGURATOR.virtualApiVersion = PortHandler.portPicker.virtualMspVersion;
+
     isConnected = true;
 
     mspHelper = new MspHelper();

@@ -18,7 +18,7 @@ class VirtualSerial {
         this.transmitting = false;
         this.outputBuffer = [];
     }
-    connect(callback) {
+    connect(port, options, callback) {
         if (!this.openCanceled) {
             this.connected = true;
             this.connectionId = VIRTUAL;

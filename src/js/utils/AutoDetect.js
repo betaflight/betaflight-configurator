@@ -56,12 +56,16 @@ class AutoDetect {
 
         gui_log(i18n.getMessage("firmwareFlasherDetectBoardQuery"));
 
-        if (port.startsWith("serial")) {
+        if (!port.startsWith("virtual")) {
             serial.addEventListener("connect", this.boundHandleConnect, { once: true });
             serial.addEventListener("disconnect", this.boundHandleDisconnect, { once: true });
 
-            serial.selectProtocol("serial");
-            serial.connect(port, { baudRate: 115200 });
+            console.log("Connecting to serial port", port, serial.connected, serial.connectionId);
+
+            serial.connect(port, { baudRate: PortHandler.portPicker.selectedBauds || 115200 }, (openInfo) => {
+                // this.onConnect(openInfo);
+                console.log("Serial port opened", openInfo);
+            });
         } else {
             gui_log(i18n.getMessage("serialPortOpenFail"));
         }
