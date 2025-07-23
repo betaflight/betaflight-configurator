@@ -105,6 +105,20 @@ class WebBluetooth extends EventTarget {
         return deviceDescription?.susceptibleToCrcCorruption ?? false;
     }
 
+    shouldBypassCrc(expectedChecksum) {
+        // Special handling for specific BT-11/CC2541 checksum corruption
+        // Only apply workaround for known problematic devices
+        const isBT11Device = this.isBT11CorruptionPattern(expectedChecksum);
+        if (isBT11Device) {
+            if (!this.bt11_crc_corruption_logged) {
+                console.log(`Detected BT-11/CC2541 CRC corruption (0xff), skipping CRC check`);
+                this.bt11_crc_corruption_logged = true;
+            }
+            return true;
+        }
+        return false;
+    }
+
     async loadDevices() {
         try {
             const devices = await this.getDevices();
