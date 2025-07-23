@@ -3,7 +3,6 @@ import BFClipboard from "../Clipboard";
 import { generateFilename } from "../utils/generate_filename";
 import GUI, { TABS } from "../gui";
 import BuildApi from "../BuildApi";
-import { tracking } from "../Analytics";
 import { reinitializeConnection } from "../serial_backend";
 import CONFIGURATOR from "../data_storage";
 import CliAutoComplete from "../CliAutoComplete";
@@ -203,7 +202,7 @@ cli.initialize = function (callback) {
                 content = `# Support ID: ${supportId}\n\n${content}`;
             }
             return content;
-        };
+        }
 
         $("a.save").on("click", function () {
             const filename = generateFilename("cli", "txt");
