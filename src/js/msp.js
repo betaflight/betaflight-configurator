@@ -264,43 +264,18 @@ const MSP = {
         this.message_buffer = new ArrayBuffer(this.message_length_expected);
         this.message_buffer_uint8_view = new Uint8Array(this.message_buffer);
     },
-    _isBT11CorruptionPattern(expectedChecksum) {
-        if (expectedChecksum !== 0xff || this.message_checksum === 0xff) {
-            return false;
-        }
 
-        if (!serial?._webBluetooth?.connected) {
-            return false;
-        }
-
-        const deviceDescription = serial._webBluetooth.deviceDescription;
-        if (!deviceDescription) {
-            return false;
-        }
-
-        return deviceDescription?.susceptibleToCrcCorruption ?? false;
-    },
     _dispatch_message(expectedChecksum) {
         if (this.message_checksum === expectedChecksum) {
             // message received, store dataview
             this.dataView = new DataView(this.message_buffer, 0, this.message_length_expected);
+        } else if (this._shouldBypassCrc(expectedChecksum)) {
+            this.dataView = new DataView(this.message_buffer, 0, this.message_length_expected);
+            this.crcError = false; // Override the CRC error for this specific case
         } else {
-            // Special handling for specific BT-11/CC2541 checksum corruption
-            // Only apply workaround for known problematic devices
-            const isBT11Device = this._isBT11CorruptionPattern(expectedChecksum);
-            if (isBT11Device) {
-                if (!this.bt11_crc_corruption_logged) {
-                    console.log(`Detected BT-11/CC2541 CRC corruption (0xff), skipping CRC check`);
-                    this.bt11_crc_corruption_logged = true;
-                }
-                // Bypass checksum validation for known BT-11/CC2541 corruption pattern
-                this.dataView = new DataView(this.message_buffer, 0, this.message_length_expected);
-                this.crcError = false; // Override the CRC error for this specific case
-            } else {
-                this.packet_error++;
-                this.crcError = true;
-                this.dataView = new DataView(new ArrayBuffer(0));
-            }
+            this.packet_error++;
+            this.crcError = true;
+            this.dataView = new DataView(new ArrayBuffer(0));
         }
         this.notify();
         // Reset variables
@@ -308,6 +283,20 @@ const MSP = {
         this.state = 0;
         this.messageIsJumboFrame = false;
         this.crcError = false;
+    },
+
+    _shouldBypassCrc(expectedChecksum) {
+        // Special handling for specific BT-11/CC2541 checksum corruption
+        // Only apply workaround for known problematic devices
+        const isBT11Device = serial._webBluetooth.isBT11CorruptionPattern(expectedChecksum);
+        if (isBT11Device) {
+            if (!this.bt11_crc_corruption_logged) {
+                console.log(`Detected BT-11/CC2541 CRC corruption (0xff), skipping CRC check`);
+                this.bt11_crc_corruption_logged = true;
+            }
+            return true;
+        }
+        return false;
     },
     notify() {
         this.listeners.forEach((listener) => {

@@ -88,6 +88,23 @@ class WebBluetooth extends EventTarget {
         };
     }
 
+    isBT11CorruptionPattern(expectedChecksum) {
+        if (expectedChecksum !== 0xff || this.message_checksum === 0xff) {
+            return false;
+        }
+
+        if (!this.connected) {
+            return false;
+        }
+
+        const deviceDescription = this.deviceDescription;
+        if (!deviceDescription) {
+            return false;
+        }
+
+        return deviceDescription?.susceptibleToCrcCorruption ?? false;
+    }
+
     async loadDevices() {
         try {
             const devices = await this.getDevices();
