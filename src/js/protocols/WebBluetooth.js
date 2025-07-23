@@ -113,7 +113,7 @@ class WebBluetooth extends EventTarget {
         const isBT11Device = this.isBT11CorruptionPattern(expectedChecksum);
         if (isBT11Device) {
             if (!this.bt11_crc_corruption_logged) {
-                console.log(`Detected BT-11/CC2541 CRC corruption (0xff), skipping CRC check`);
+                console.log(`${this.logHead} Detected BT-11/CC2541 CRC corruption (0xff), skipping CRC check`);
                 this.bt11_crc_corruption_logged = true;
             }
             return true;
