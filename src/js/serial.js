@@ -1,4 +1,3 @@
-import CONFIGURATOR from "./data_storage";
 import WebSerial from "./protocols/WebSerial.js";
 import WebBluetooth from "./protocols/WebBluetooth.js";
 import Websocket from "./protocols/WebSocket.js";
