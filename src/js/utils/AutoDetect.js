@@ -62,10 +62,7 @@ class AutoDetect {
 
             console.log("Connecting to serial port", port, serial.connected, serial.connectionId);
 
-            serial.connect(port, { baudRate: PortHandler.portPicker.selectedBauds || 115200 }, (openInfo) => {
-                // this.onConnect(openInfo);
-                console.log("Serial port opened", openInfo);
-            });
+            serial.connect(port, { baudRate: PortHandler.portPicker.selectedBauds || 115200 });
         } else {
             gui_log(i18n.getMessage("serialPortOpenFail"));
         }
