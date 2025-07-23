@@ -1,6 +1,5 @@
 import { i18n } from "../localization";
 import GUI, { TABS } from "../gui";
-import { tracking } from "../Analytics";
 import { mspHelper } from "../msp/MSPHelper";
 import FC from "../fc";
 import MSP from "../msp";
