@@ -53,7 +53,6 @@ const MSP = {
     message_checksum: 0,
     messageIsJumboFrame: false,
     crcError: false,
-    bt11_crc_corruption_logged: false,
 
     callbacks: [],
     packet_error: 0,
@@ -462,7 +461,6 @@ const MSP = {
     disconnect_cleanup() {
         this.state = 0; // reset packet state for "clean" initial entry (this is only required if user hot-disconnects)
         this.packet_error = 0; // reset CRC packet error counter for next session
-        this.bt11_crc_corruption_logged = false;
 
         this.callbacks_cleanup();
     },

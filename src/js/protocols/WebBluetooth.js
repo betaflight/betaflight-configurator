@@ -35,6 +35,8 @@ class WebBluetooth extends EventTarget {
 
         this.bluetooth = navigator?.bluetooth;
 
+        this.bt11_crc_corruption_logged = false;
+
         if (!this.bluetooth) {
             console.error(`${this.logHead} Web Bluetooth API not supported`);
             return;
@@ -341,6 +343,7 @@ class WebBluetooth extends EventTarget {
                 this.readCharacteristic = false;
                 this.deviceDescription = false;
                 this.device = null;
+                this.bt11_crc_corruption_logged = false;
             }
         };
 
