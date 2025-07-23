@@ -62,7 +62,7 @@
     "lodash.debounce": "^4.0.8",
     "marked": "^15.0.7",
     "multicast-dns": "^7.2.5",
-    "multiple-select": "^2.0.9",
+    "multiple-select": "^2.1.1",
     "ol": "^10.4.0",
     "select2": "^4.0.13",
     "semver-min": "^0.7.2",
