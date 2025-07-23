@@ -3163,7 +3163,7 @@
         "message": "accel"
     },
     "motorsTelemetryHelp": {
-        "message": "This numbers show the telemetry info received from the ESCs if available. It can show the actual speed of motors (in RPM), the error rate of the telemetry link and the temperature of the ESCs.",
+        "message": "These numbers show the telemetry info received from the ESCs if available. It can show the actual speed of motors (R, in RPM), the error rate (E) of the telemetry link and the temperature (T) of the ESCs.",
         "description": "Help text for the telemetry values in the motors tab."
     },
     "motorsRPM": {
