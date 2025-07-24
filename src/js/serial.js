@@ -1,4 +1,3 @@
-import CONFIGURATOR from "./data_storage";
 import WebSerial from "./protocols/WebSerial.js";
 import WebBluetooth from "./protocols/WebBluetooth.js";
 import Websocket from "./protocols/WebSocket.js";
@@ -160,19 +159,13 @@ class Serial extends EventTarget {
      * @param {string|function} path - Port path or callback for virtual mode
      * @param {object} options - Connection options (baudRate, etc.)
      */
-    async connect(path, options) {
+    async connect(path, options, callback) {
+        // Select the appropriate protocol based directly on the port path
+        this.selectProtocol(path);
+
         if (!this._protocol) {
-            console.error(`${this.logHead} No protocol selected, cannot connect`);
+            console.error(`${this.logHead} No valid protocol selected for connection`);
             return false;
-        }
-
-        // If path is a function, it's a callback for virtual mode
-        const isCallback = typeof path === "function";
-
-        // In virtual mode, a callback is passed as the first parameter
-        if (isCallback && CONFIGURATOR.virtualMode) {
-            console.log(`${this.logHead} Connecting in virtual mode`);
-            return this._protocol.connect(path);
         }
 
         // Check if already connected
@@ -195,11 +188,11 @@ class Serial extends EventTarget {
             }
 
             console.log(`${this.logHead} Reconnecting to new port:`, path);
-            return this._protocol.connect(path, options);
+            return this._protocol.connect(path, options, callback);
         }
 
         console.log(`${this.logHead} Connecting to port:`, path, "with options:", options);
-        return this._protocol.connect(path, options);
+        return this._protocol.connect(path, options, callback);
     }
 
     /**
