@@ -80,6 +80,21 @@ export function initializeSerialBackend() {
     PortUsage.initialize();
 }
 
+async function sendConfigTracking() {
+    tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, "Loaded", {
+        boardIdentifier: FC.CONFIG.boardIdentifier,
+        targetName: FC.CONFIG.targetName,
+        boardName: FC.CONFIG.boardName,
+        hardware: FC.CONFIG.hardwareName,
+        manufacturerId: FC.CONFIG.manufacturerId,
+        apiVersion: FC.CONFIG.apiVersion,
+        flightControllerVersion: FC.CONFIG.flightControllerVersion,
+        flightControllerIdentifier: FC.CONFIG.flightControllerIdentifier,
+        mcu: FC.CONFIG.targetName,
+        deviceIdentifier: CryptoES.SHA1(FC.CONFIG.deviceIdentifier).toString(),
+    });  
+}
+
 function connectDisconnect() {
     const selectedPort = PortHandler.portPicker.selectedPort;
 
@@ -403,18 +418,6 @@ function processBoardInfo() {
     } else {
         processCustomDefaults();
     }
-    tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, "Loaded", {
-        boardIdentifier: FC.CONFIG.boardIdentifier,
-        targetName: FC.CONFIG.targetName,
-        boardName: FC.CONFIG.boardName,
-        hardware: FC.CONFIG.hardwareName,
-        manufacturerId: FC.CONFIG.manufacturerId,
-        apiVersion: FC.CONFIG.apiVersion,
-        flightControllerVersion: FC.CONFIG.flightControllerVersion,
-        flightControllerIdentifier: FC.CONFIG.flightControllerIdentifier,
-        mcu: FC.CONFIG.targetName,
-        deviceIdentifier: CryptoES.SHA1(FC.CONFIG.deviceIdentifier).toString(),
-    });
 }
 
 function checkReportProblems() {
@@ -502,7 +505,7 @@ async function processBuildOptions() {
 
         buildApi.requestBuildOptions(FC.CONFIG.buildKey, onLoadCloudBuild, processCraftName);
     } else {
-        processCraftName();
+        await processCraftName();
     }
 }
 
@@ -515,7 +518,7 @@ async function processBuildConfiguration() {
         gui_log(i18n.getMessage("buildKey", FC.CONFIG.buildKey));
     }
 
-    processBuildOptions();
+    await processBuildOptions();
 }
 
 async function processUid() {
@@ -525,7 +528,8 @@ async function processUid() {
 
     gui_log(i18n.getMessage("uniqueDeviceIdReceived", FC.CONFIG.deviceIdentifier));
 
-    processBuildConfiguration();
+    await sendConfigTracking();    
+    await processBuildConfiguration();
 }
 
 async function processCraftName() {
