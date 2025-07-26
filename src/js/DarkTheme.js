@@ -1,4 +1,3 @@
-import { checkSetupAnalytics } from "./Analytics";
 import $ from "jquery";
 
 const css_dark = ["./css/dark-theme.css"];
