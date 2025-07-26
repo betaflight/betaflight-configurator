@@ -123,7 +123,7 @@ class Serial extends EventTarget {
             if (portPath === "virtual") {
                 console.log(`${this.logHead} Using virtual protocol (based on port path)`);
                 newProtocol = this._virtual;
-            } else if (portPath === "manual") {
+            } else if (portPath === "manual" || /^(tcp|ws):\/\/([A-Za-z0-9.-]+)(?::(\d+))?$/.test(portPath)) {
                 console.log(`${this.logHead} Using websocket protocol (based on port path)`);
                 newProtocol = this._webSocket;
             } else if (portPath.startsWith("bluetooth")) {
