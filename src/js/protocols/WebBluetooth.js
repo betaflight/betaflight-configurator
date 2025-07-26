@@ -35,6 +35,8 @@ class WebBluetooth extends EventTarget {
 
         this.bluetooth = navigator?.bluetooth;
 
+        this.bt11_crc_corruption_logged = false;
+
         if (!this.bluetooth) {
             console.error(`${this.logHead} Web Bluetooth API not supported`);
             return;
@@ -86,6 +88,37 @@ class WebBluetooth extends EventTarget {
             productId: device.id,
             port: device,
         };
+    }
+
+    isBT11CorruptionPattern(expectedChecksum) {
+        if (expectedChecksum !== 0xff || this.message_checksum === 0xff) {
+            return false;
+        }
+
+        if (!this.connected) {
+            return false;
+        }
+
+        const deviceDescription = this.deviceDescription;
+        if (!deviceDescription) {
+            return false;
+        }
+
+        return deviceDescription?.susceptibleToCrcCorruption ?? false;
+    }
+
+    shouldBypassCrc(expectedChecksum) {
+        // Special handling for specific BT-11/CC2541 checksum corruption
+        // Only apply workaround for known problematic devices
+        const isBT11Device = this.isBT11CorruptionPattern(expectedChecksum);
+        if (isBT11Device) {
+            if (!this.bt11_crc_corruption_logged) {
+                console.log(`${this.logHead} Detected BT-11/CC2541 CRC corruption (0xff), skipping CRC check`);
+                this.bt11_crc_corruption_logged = true;
+            }
+            return true;
+        }
+        return false;
     }
 
     async loadDevices() {
@@ -163,7 +196,7 @@ class WebBluetooth extends EventTarget {
 
         if (connectionInfo && !this.openCanceled) {
             this.connected = true;
-            this.connectionId = this.device.port;
+            this.connectionId = path;
             this.bitrate = options.baudRate;
             this.bytesReceived = 0;
             this.bytesSent = 0;
@@ -177,11 +210,9 @@ class WebBluetooth extends EventTarget {
 
             this.dispatchEvent(new CustomEvent("connect", { detail: connectionInfo }));
         } else if (connectionInfo && this.openCanceled) {
-            this.connectionId = this.device.port;
+            this.connectionId = path;
 
-            console.log(
-                `${this.logHead} Connection opened with ID: ${connectionInfo.connectionId}, but request was canceled, disconnecting`,
-            );
+            console.log(`${this.logHead} Connection opened with ID: ${path}, but request was canceled, disconnecting`);
             // some bluetooth dongles/dongle drivers really doesn't like to be closed instantly, adding a small delay
             setTimeout(() => {
                 this.openRequested = false;
@@ -260,11 +291,11 @@ class WebBluetooth extends EventTarget {
     }
 
     handleNotification(event) {
-        const buffer = new Uint8Array(event.target.value.byteLength);
-
-        for (let i = 0; i < event.target.value.byteLength; i++) {
-            buffer[i] = event.target.value.getUint8(i);
-        }
+        // Create a proper Uint8Array directly from the DataView buffer
+        const dataView = event.target.value;
+        const buffer = new Uint8Array(
+            dataView.buffer.slice(dataView.byteOffset, dataView.byteOffset + dataView.byteLength),
+        );
 
         // Dispatch immediately instead of using setTimeout to avoid race conditions
         this.dispatchEvent(new CustomEvent("receive", { detail: buffer }));
@@ -312,6 +343,7 @@ class WebBluetooth extends EventTarget {
                 this.readCharacteristic = false;
                 this.deviceDescription = false;
                 this.device = null;
+                this.bt11_crc_corruption_logged = false;
             }
         };
 
@@ -339,14 +371,24 @@ class WebBluetooth extends EventTarget {
     }
 
     async send(data, cb) {
-        if (!this.writeCharacteristic) {
+        if (!this.writeCharacteristic || typeof this.writeCharacteristic.writeValue !== "function") {
             if (cb) {
                 cb({
-                    error: "No write characteristic available",
+                    error: "No write characteristic available or characteristic is invalid",
                     bytesSent: 0,
                 });
             }
-            console.error(`${this.logHead} No write characteristic available`);
+            console.error(`${this.logHead} No write characteristic available or characteristic is invalid`);
+            return;
+        }
+        if (!this.device?.gatt?.connected) {
+            if (cb) {
+                cb({
+                    error: "GATT Server is disconnected. Cannot perform GATT operations.",
+                    bytesSent: 0,
+                });
+            }
+            console.error(`${this.logHead} GATT Server is disconnected. Cannot perform GATT operations.`);
             return;
         }
 
