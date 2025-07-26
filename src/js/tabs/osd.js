@@ -3944,10 +3944,14 @@ osd.initialize = function (callback) {
                 // Attach new tooltips
                 OSD.data.tooltips = $(".osd_tip").toArray();
                 for (const element of OSD.data.tooltips) {
-                    createTooltip(element, {
-                        content: $(element).attr("title"),
-                        theme: "custom",
-                    });
+                    const jQueryElement = $(element);
+                    const attrTitle = jQueryElement.attr("title");
+                    if (attrTitle && !jQueryElement.hasClass("v-popper--has-tooltip")) {
+                        createTooltip(element, {
+                            content: attrTitle,
+                            theme: "custom",
+                        });
+                    }
                 }
             });
         }

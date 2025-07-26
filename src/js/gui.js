@@ -294,10 +294,14 @@ class GuiControl {
         $(function () {
             for (const suffix of ["", "_wide"]) {
                 $(`.cf_tip${suffix}`).each((_, element) => {
-                    createTooltip(element, {
-                        content: $(element).attr("title"),
-                        theme: `custom${suffix}`,
-                    });
+                    const jQueryElement = $(element);
+                    const attrTitle = jQueryElement.attr("title");
+                    if (attrTitle && !jQueryElement.hasClass("v-popper--has-tooltip")) {
+                        createTooltip(element, {
+                            content: attrTitle,
+                            theme: `custom${suffix}`,
+                        });
+                    }
                 });
             }
         });
