@@ -3070,10 +3070,6 @@
     "motorsSensorAccelSelect": {
         "message": "가속도계"
     },
-    "motorsTelemetryHelp": {
-        "message": "이 수치는 ESC로부터 수신한 텔레메트리 정보를 보여줍니다. 그것은 모터의 실제 속도(RPM), 텔레메트리 링크의 오류율 및 ESC의 온도를 보여줄 수 있습니다.",
-        "description": "Help text for the telemetry values in the motors tab."
-    },
     "motorsRPM": {
         "message": "R: {{motorsRpmValue}}",
         "description": "To put under the motors in the motors tab. KEEP IT SHORT or not translate. Keep the letters as prefix. Shows the RPM of the motor if telemetry is available."

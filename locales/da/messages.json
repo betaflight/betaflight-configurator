@@ -3080,7 +3080,7 @@
         "message": "accel"
     },
     "motorsTelemetryHelp": {
-        "message": "Disse tal viser telemetri info modtaget fra ESC'er (hvis ESC understøtter det). Det kan vise den faktiske hastighed af motorer (i RPM), fejlfrekvens fra telemetri link og temperaturen i ESC'erne.",
+        "message": "Her vises telemetri info modtaget fra ESC'er (hvis ESC understøtter det). Det kan vise den faktiske motor hastighed (i RPM), fejlfrekvens fra telemetri link og temperatur (T) i ESC'erne.",
         "description": "Help text for the telemetry values in the motors tab."
     },
     "motorsRPM": {

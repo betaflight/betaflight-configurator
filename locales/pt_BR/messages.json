@@ -2803,10 +2803,6 @@
     "motorsSensorAccelSelect": {
         "message": "acelerômetro"
     },
-    "motorsTelemetryHelp": {
-        "message": "Estes números são os dados de telemetria recebidos dos ESCs. Se disponível, são exibidos: A velocidade atual do motor (em RPM), a taxa de erros da conexão da telemetria e a temperatura dos ESCs.",
-        "description": "Help text for the telemetry values in the motors tab."
-    },
     "motorsRPM": {
         "message": "R: {{motorsRpmValue}}",
         "description": "To put under the motors in the motors tab. KEEP IT SHORT or not translate. Keep the letters as prefix. Shows the RPM of the motor if telemetry is available."
