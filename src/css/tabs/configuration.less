@@ -136,17 +136,24 @@
     }
 
     .beeper-controls {
-        margin-bottom: 1rem;
+        margin-bottom: 0.5rem;
         display: flex;
-        gap: 0.5rem;
+        gap: 0.25rem;
 
         .btn {
-            padding: 0.5rem 1rem;
-            font-size: 0.875rem;
+            padding: 0.15rem 0.5rem;
+            font-size: 10px;
             border: 1px solid #ccc;
             background: #f5f5f5;
             cursor: pointer;
-            border-radius: 3px;
+            border-radius: 999px;
+            white-space: nowrap;
+            height: 1.4rem;
+            display: flex;
+            align-items: center;
+            transition:
+                color 200ms,
+                background-color 200ms;
 
             &:hover {
                 background: #e9e9e9;
