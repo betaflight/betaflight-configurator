@@ -59,8 +59,9 @@ export function initializeSerialBackend() {
         if (
             !GUI.connected_to &&
             !GUI.connecting_to &&
-            GUI.active_tab !== "firmware_flasher" &&
-            (PortHandler.portPicker.autoConnect || Date.now() - rebootTimestamp < REBOOT_CONNECT_MAX_TIME_MS)
+            !["cli", "firmware_flasher"].includes(GUI.active_tab) &&
+            PortHandler.portPicker.autoConnect &&
+            !(Date.now() - rebootTimestamp > REBOOT_CONNECT_MAX_TIME_MS)
         ) {
             connectDisconnect();
         }
@@ -811,9 +812,9 @@ export function reinitializeConnection() {
         }
     }
 
-    // Show reboot progress modal except for presets tab
-    if (GUI.active_tab === "presets") {
-        console.log("Rebooting in presets tab, skipping reboot dialog", GUI.active_tab);
+    // Show reboot progress modal except for cli and presets tab
+    if (["cli", "presets"].includes(GUI.active_tab)) {
+        console.log(`${logHead} Rebooting in ${GUI.active_tab} tab, skipping reboot dialog`);
         gui_log(i18n.getMessage("deviceRebooting"));
         gui_log(i18n.getMessage("deviceReady"));
 
