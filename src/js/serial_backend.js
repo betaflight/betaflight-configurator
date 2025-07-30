@@ -587,6 +587,13 @@ function setRtc() {
 function finishOpen() {
     CONFIGURATOR.connectionValid = true;
 
+    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+        if (getConfig("cliOnlyMode")?.cliOnlyMode) {
+            connectCli();
+            return;
+        }
+    }
+
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) && FC.CONFIG.buildOptions.length) {
         GUI.allowedTabs = Array.from(GUI.defaultAllowedTabs);
 
@@ -652,7 +659,13 @@ function onConnect() {
         })
         .show();
 
-    if (FC.CONFIG.flightControllerVersion !== "") {
+    const isCliOnlyMode =
+        semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47) &&
+        getConfig("cliOnlyMode")?.cliOnlyMode &&
+        GUI.allowedTabs.length === 1 &&
+        GUI.allowedTabs[0] === "cli";
+
+    if (FC.CONFIG.flightControllerVersion !== "" && !isCliOnlyMode) {
         FC.FEATURE_CONFIG.features = new Features(FC.CONFIG);
         FC.BEEPER_CONFIG.beepers = new Beepers(FC.CONFIG);
         FC.BEEPER_CONFIG.dshotBeaconConditions = new Beepers(FC.CONFIG, ["RX_LOST", "RX_SET"]);
@@ -668,12 +681,12 @@ function onConnect() {
         if (FC.CONFIG.boardType === 0 || FC.CONFIG.boardType === 2) {
             startLiveDataRefreshTimer();
         }
+
+        $("#sensor-status").show();
+        $("#dataflash_wrapper_global").show();
     }
 
-    // header bar
-    $("#sensor-status").show();
     $("#portsinput").hide();
-    $("#dataflash_wrapper_global").show();
 }
 
 function onClosed(result) {
