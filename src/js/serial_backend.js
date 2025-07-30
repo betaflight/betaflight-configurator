@@ -331,6 +331,12 @@ function onOpen(openInfo) {
                     }
                 });
             } else {
+                if (!serial.connected) {
+                    GUI.timeout_remove("connecting"); // kill connecting timer
+                    abortConnection();
+                    return;
+                }
+
                 const dialog = $(".dialogConnectWarning")[0];
 
                 $(".dialogConnectWarning-content").html(
