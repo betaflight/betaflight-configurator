@@ -1710,6 +1710,12 @@
     "beeperRC_SMOOTHING_INIT_FAIL": {
         "message": "Beep when armed and rc smoothing has not initialized filters"
     },
+    "configurationBeeperEnableAll": {
+        "message": "Enable All"
+    },
+    "configurationBeeperDisableAll": {
+        "message": "Disable All"
+    },
     "configuration3d": {
         "message": "3D ESC/Motor Features"
     },

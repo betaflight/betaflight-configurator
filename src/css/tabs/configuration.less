@@ -134,6 +134,38 @@
     thead {
         display: none;
     }
+
+    .beeper-controls {
+        margin-bottom: 0.5rem;
+        display: flex;
+        gap: 0.25rem;
+
+        .btn {
+            padding: 0.15rem 0.5rem;
+            font-size: 10px;
+            border: 1px solid var(--surface-400);
+            background: var(--primary-300);
+            cursor: pointer;
+            border-radius: 999px;
+            white-space: nowrap;
+            height: 1.4rem;
+            display: flex;
+            align-items: center;
+            transition:
+                color 200ms,
+                background-color 200ms;
+
+            &:hover {
+                background: var(--primary-500);
+                border-color: var(--surface-500);
+            }
+
+            &:active {
+                background: var(--surface-300);
+            }
+        }
+    }
+
     @media all and (max-width: 575px) {
         .grid-box {
             &.col2 {

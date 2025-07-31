@@ -117,6 +117,19 @@ configuration.initialize = function (callback) {
             FC.BEEPER_CONFIG.dshotBeaconConditions.updateData(element);
         });
 
+        // DShot Beeper toggle all buttons
+        $(".dshot-beeper-enable-all").click(function () {
+            $("input.condition", dshotBeaconCondition_e).each(function () {
+                $(this).prop("checked", true).trigger("change");
+            });
+        });
+
+        $(".dshot-beeper-disable-all").click(function () {
+            $("input.condition", dshotBeaconCondition_e).each(function () {
+                $(this).prop("checked", false).trigger("change");
+            });
+        });
+
         // Analog Beeper
         const destination = $(".beepers .beeper-configuration");
         const beeper_e = $(".tab-configuration .beepers");
@@ -641,6 +654,19 @@ configuration.initialize = function (callback) {
         $("input.condition", beeper_e).change(function () {
             const element = $(this);
             FC.BEEPER_CONFIG.beepers.updateData(element);
+        });
+
+        // Analog Beeper toggle all buttons
+        $(".beeper-enable-all").click(function () {
+            $("input.condition", beeper_e).each(function () {
+                $(this).prop("checked", true).trigger("change");
+            });
+        });
+
+        $(".beeper-disable-all").click(function () {
+            $("input.condition", beeper_e).each(function () {
+                $(this).prop("checked", false).trigger("change");
+            });
         });
 
         function save_config() {
