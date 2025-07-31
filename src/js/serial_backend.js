@@ -92,8 +92,12 @@ async function sendConfigTracking() {
         flightControllerIdentifier: FC.CONFIG.flightControllerIdentifier,
         mcu: FC.CONFIG.targetName,
         deviceIdentifier: CryptoES.SHA1(FC.CONFIG.deviceIdentifier).toString(),
+<<<<<<< HEAD
         buildKey: FC.CONFIG.buildKey
     });  
+=======
+    });
+>>>>>>> f98ca952 (Add connection timer)
 }
 
 function connectDisconnect() {
@@ -361,6 +365,14 @@ function onOpenVirtual() {
 
     isConnected = true;
 
+    // Set connection timestamp for virtual connections
+    connectionTimestamp = Date.now();
+    setTimeout(() => {
+        if (window.vm && window.vm.CONNECTION) {
+            window.vm.CONNECTION.timestamp = connectionTimestamp;
+        }
+    }, 100);
+
     mspHelper = new MspHelper();
 
     VirtualFC.setVirtualConfig();
@@ -527,8 +539,20 @@ async function processUid() {
 
     connectionTimestamp = Date.now();
 
+    // Update the global CONNECTION object for Vue components
+    // Use a small delay to ensure the Vue app is mounted
+    setTimeout(() => {
+        if (window.vm && window.vm.CONNECTION) {
+            window.vm.CONNECTION.timestamp = connectionTimestamp;
+        }
+    }, 100);
+
     gui_log(i18n.getMessage("uniqueDeviceIdReceived", FC.CONFIG.deviceIdentifier));
 
+<<<<<<< HEAD
+=======
+    await sendConfigTracking();
+>>>>>>> f98ca952 (Add connection timer)
     await processBuildConfiguration();
     await sendConfigTracking();    
 }
@@ -653,6 +677,14 @@ function onConnect() {
 
 function onClosed(result) {
     gui_log(i18n.getMessage(result ? "serialPortClosedOk" : "serialPortClosedFail"));
+
+    // Clear connection timestamp
+    connectionTimestamp = null;
+    setTimeout(() => {
+        if (window.vm && window.vm.CONNECTION) {
+            window.vm.CONNECTION.timestamp = null;
+        }
+    }, 100);
 
     $("#tabs ul.mode-connected").hide();
     $("#tabs ul.mode-connected-cli").hide();
@@ -902,4 +934,8 @@ function showRebootDialog() {
 
         return dialog;
     }
+}
+
+export function getConnectionTimestamp() {
+    return connectionTimestamp;
 }

@@ -721,6 +721,10 @@
         "message": "CPU Load:",
         "description": "CPU load text shown in the status bar"
     },
+    "statusbar_connection_time": {
+        "message": "Connection:",
+        "description": "Connection time text shown in the status bar"
+    },
     "dfu_connect_message": {
         "message": "Please use the Firmware Flasher to access DFU devices"
     },

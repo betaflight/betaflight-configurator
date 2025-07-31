@@ -14,6 +14,11 @@ import PortUsage from "../js/port_usage.js";
 import CONFIGURATOR from "../js/data_storage.js";
 import { BetaflightComponents } from "../js/vue_components.js";
 
+// Connection tracking object
+const CONNECTION = reactive({
+    timestamp: null,
+});
+
 /*
  Most of the global objects can go here at first.
  It's a bit of overkill for simple components,
@@ -30,6 +35,7 @@ const betaflightModel = reactive({
     MSP,
     PortUsage,
     PortHandler,
+    CONNECTION,
 });
 
 i18next.on("initialized", function () {
