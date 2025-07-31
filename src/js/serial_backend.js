@@ -588,11 +588,9 @@ function setRtc() {
 function finishOpen() {
     CONFIGURATOR.connectionValid = true;
 
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
-        if (getConfig("cliOnlyMode")?.cliOnlyMode) {
-            connectCli();
-            return;
-        }
+    if (getConfig("cliOnlyMode")?.cliOnlyMode) {
+        connectCli();
+        return;
     }
 
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) && FC.CONFIG.buildOptions.length) {
@@ -661,10 +659,7 @@ function onConnect() {
         .show();
 
     const isCliOnlyMode =
-        semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47) &&
-        getConfig("cliOnlyMode")?.cliOnlyMode &&
-        GUI.allowedTabs.length === 1 &&
-        GUI.allowedTabs[0] === "cli";
+        getConfig("cliOnlyMode")?.cliOnlyMode && GUI.allowedTabs.length === 1 && GUI.allowedTabs[0] === "cli";
 
     if (FC.CONFIG.flightControllerVersion !== "" && !isCliOnlyMode) {
         FC.FEATURE_CONFIG.features = new Features(FC.CONFIG);
