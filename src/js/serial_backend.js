@@ -92,12 +92,8 @@ async function sendConfigTracking() {
         flightControllerIdentifier: FC.CONFIG.flightControllerIdentifier,
         mcu: FC.CONFIG.targetName,
         deviceIdentifier: CryptoES.SHA1(FC.CONFIG.deviceIdentifier).toString(),
-<<<<<<< HEAD
-        buildKey: FC.CONFIG.buildKey
-    });  
-=======
+        buildKey: FC.CONFIG.buildKey,
     });
->>>>>>> f98ca952 (Add connection timer)
 }
 
 function connectDisconnect() {
@@ -245,14 +241,6 @@ function resetConnection() {
     CONFIGURATOR.cliEngineValid = false;
     CONFIGURATOR.cliEngineActive = false;
 
-    // Clear connection timestamp
-    connectionTimestamp = null;
-    setTimeout(() => {
-        if (window.vm?.CONNECTION) {
-            window.vm.CONNECTION.timestamp = null;
-        }
-    }, 100);
-
     // unlock port select & baud
     PortHandler.portPickerDisabled = false;
 }
@@ -376,7 +364,7 @@ function onOpenVirtual() {
     // Set connection timestamp for virtual connections
     connectionTimestamp = Date.now();
     setTimeout(() => {
-        if (window.vm?.CONNECTION) {
+        if (window.vm && window.vm.CONNECTION) {
             window.vm.CONNECTION.timestamp = connectionTimestamp;
         }
     }, 100);
@@ -550,19 +538,15 @@ async function processUid() {
     // Update the global CONNECTION object for Vue components
     // Use a small delay to ensure the Vue app is mounted
     setTimeout(() => {
-        if (window.vm?.CONNECTION) {
+        if (window.vm && window.vm.CONNECTION) {
             window.vm.CONNECTION.timestamp = connectionTimestamp;
         }
     }, 100);
 
     gui_log(i18n.getMessage("uniqueDeviceIdReceived", FC.CONFIG.deviceIdentifier));
 
-<<<<<<< HEAD
-=======
-    await sendConfigTracking();
->>>>>>> f98ca952 (Add connection timer)
     await processBuildConfiguration();
-    await sendConfigTracking();    
+    await sendConfigTracking();
 }
 
 async function processCraftName() {
@@ -685,6 +669,14 @@ function onConnect() {
 
 function onClosed(result) {
     gui_log(i18n.getMessage(result ? "serialPortClosedOk" : "serialPortClosedFail"));
+
+    // Clear connection timestamp
+    connectionTimestamp = null;
+    setTimeout(() => {
+        if (window.vm && window.vm.CONNECTION) {
+            window.vm.CONNECTION.timestamp = null;
+        }
+    }, 100);
 
     $("#tabs ul.mode-connected").hide();
     $("#tabs ul.mode-connected-cli").hide();
