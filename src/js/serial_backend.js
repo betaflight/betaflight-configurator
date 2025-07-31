@@ -39,6 +39,10 @@ const REBOOT_CONNECT_MAX_TIME_MS = 10000;
 const REBOOT_GRACE_PERIOD_MS = 2000;
 let rebootTimestamp = 0;
 
+function isCliOnlyMode() {
+    return getConfig("cliOnlyMode")?.cliOnlyMode === true;
+}
+
 const toggleStatus = function () {
     isConnected = !isConnected;
 };
@@ -59,8 +63,10 @@ export function initializeSerialBackend() {
         if (
             !GUI.connected_to &&
             !GUI.connecting_to &&
-            GUI.active_tab !== "firmware_flasher" &&
-            (PortHandler.portPicker.autoConnect || Date.now() - rebootTimestamp < REBOOT_CONNECT_MAX_TIME_MS)
+            !["cli", "firmware_flasher"].includes(GUI.active_tab) &&
+            PortHandler.portPicker.autoConnect &&
+            !isCliOnlyMode() &&
+            Date.now() - rebootTimestamp <= REBOOT_CONNECT_MAX_TIME_MS
         ) {
             connectDisconnect();
         }
@@ -235,6 +241,26 @@ function resetConnection() {
     $("div.connection_button__label").text(i18n.getMessage("connect"));
     $("a.connection_button__link").removeClass("active");
 
+    clearLiveDataRefreshTimer();
+
+    MSP.clearListeners();
+
+    if (PortHandler.portPicker.selectedPort !== "virtual") {
+        serial.removeEventListener("receive", read_serial_adapter);
+        serial.removeEventListener("connect", connectHandler);
+        serial.removeEventListener("disconnect", disconnectHandler);
+    }
+
+    $("#tabs ul.mode-connected").hide();
+    $("#tabs ul.mode-connected-cli").hide();
+    $("#tabs ul.mode-disconnected").show();
+
+    // header bar
+    $("#sensor-status").hide();
+    $("#portsinput").show();
+    $("#dataflash_wrapper_global").hide();
+    $("#quad-status_wrapper").hide();
+
     CONFIGURATOR.connectionValid = false;
     CONFIGURATOR.cliValid = false;
     CONFIGURATOR.cliActive = false;
@@ -331,6 +357,11 @@ function onOpen(openInfo) {
                     }
                 });
             } else {
+                if (!serial.connected) {
+                    abortConnection();
+                    return;
+                }
+
                 const dialog = $(".dialogConnectWarning")[0];
 
                 $(".dialogConnectWarning-content").html(
@@ -578,6 +609,11 @@ function setRtc() {
 function finishOpen() {
     CONFIGURATOR.connectionValid = true;
 
+    if (isCliOnlyMode()) {
+        connectCli();
+        return;
+    }
+
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) && FC.CONFIG.buildOptions.length) {
         GUI.allowedTabs = Array.from(GUI.defaultAllowedTabs);
 
@@ -643,7 +679,7 @@ function onConnect() {
         })
         .show();
 
-    if (FC.CONFIG.flightControllerVersion !== "") {
+    if (FC.CONFIG.flightControllerVersion !== "" && !isCliOnlyMode()) {
         FC.FEATURE_CONFIG.features = new Features(FC.CONFIG);
         FC.BEEPER_CONFIG.beepers = new Beepers(FC.CONFIG);
         FC.BEEPER_CONFIG.dshotBeaconConditions = new Beepers(FC.CONFIG, ["RX_LOST", "RX_SET"]);
@@ -659,12 +695,12 @@ function onConnect() {
         if (FC.CONFIG.boardType === 0 || FC.CONFIG.boardType === 2) {
             startLiveDataRefreshTimer();
         }
+
+        $("#sensor-status").show();
+        $("#dataflash_wrapper_global").show();
     }
 
-    // header bar
-    $("#sensor-status").show();
     $("#portsinput").hide();
-    $("#dataflash_wrapper_global").show();
 }
 
 function onClosed(result) {
@@ -691,16 +727,6 @@ function onClosed(result) {
     console.log(`${logHead} Connection closed:`, result);
 
     resetConnection();
-
-    clearLiveDataRefreshTimer();
-
-    MSP.clearListeners();
-
-    if (PortHandler.portPicker.selectedPort !== "virtual") {
-        serial.removeEventListener("receive", read_serial_adapter);
-        serial.removeEventListener("connect", connectHandler);
-        serial.removeEventListener("disconnect", disconnectHandler);
-    }
 }
 
 export function read_serial(info) {
@@ -817,9 +843,9 @@ export function reinitializeConnection() {
         }
     }
 
-    // Show reboot progress modal except for presets tab
-    if (GUI.active_tab === "presets") {
-        console.log("Rebooting in presets tab, skipping reboot dialog", GUI.active_tab);
+    // Show reboot progress modal except for cli and presets tab
+    if (["cli", "presets"].includes(GUI.active_tab)) {
+        console.log(`${logHead} Rebooting in ${GUI.active_tab} tab, skipping reboot dialog`);
         gui_log(i18n.getMessage("deviceRebooting"));
         gui_log(i18n.getMessage("deviceReady"));
 
