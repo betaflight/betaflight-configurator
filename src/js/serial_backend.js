@@ -364,7 +364,7 @@ function onOpenVirtual() {
     // Set connection timestamp for virtual connections
     connectionTimestamp = Date.now();
     setTimeout(() => {
-        if (window.vm && window.vm.CONNECTION) {
+        if (window.vm?.CONNECTION) {
             window.vm.CONNECTION.timestamp = connectionTimestamp;
         }
     }, 100);
@@ -538,7 +538,7 @@ async function processUid() {
     // Update the global CONNECTION object for Vue components
     // Use a small delay to ensure the Vue app is mounted
     setTimeout(() => {
-        if (window.vm && window.vm.CONNECTION) {
+        if (window.vm?.CONNECTION) {
             window.vm.CONNECTION.timestamp = connectionTimestamp;
         }
     }, 100);
@@ -673,7 +673,7 @@ function onClosed(result) {
     // Clear connection timestamp
     connectionTimestamp = null;
     setTimeout(() => {
-        if (window.vm && window.vm.CONNECTION) {
+        if (window.vm?.CONNECTION) {
             window.vm.CONNECTION.timestamp = null;
         }
     }, 100);
