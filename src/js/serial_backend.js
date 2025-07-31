@@ -92,6 +92,7 @@ async function sendConfigTracking() {
         flightControllerIdentifier: FC.CONFIG.flightControllerIdentifier,
         mcu: FC.CONFIG.targetName,
         deviceIdentifier: CryptoES.SHA1(FC.CONFIG.deviceIdentifier).toString(),
+        buildKey: FC.CONFIG.buildKey
     });  
 }
 
@@ -528,8 +529,8 @@ async function processUid() {
 
     gui_log(i18n.getMessage("uniqueDeviceIdReceived", FC.CONFIG.deviceIdentifier));
 
-    await sendConfigTracking();    
     await processBuildConfiguration();
+    await sendConfigTracking();    
 }
 
 async function processCraftName() {
