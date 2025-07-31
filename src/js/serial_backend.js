@@ -39,6 +39,10 @@ const REBOOT_CONNECT_MAX_TIME_MS = 10000;
 const REBOOT_GRACE_PERIOD_MS = 2000;
 let rebootTimestamp = 0;
 
+function isCliOnlyMode() {
+    return getConfig("cliOnlyMode")?.cliOnlyMode === true;
+}
+
 const toggleStatus = function () {
     isConnected = !isConnected;
 };
@@ -61,6 +65,7 @@ export function initializeSerialBackend() {
             !GUI.connecting_to &&
             !["cli", "firmware_flasher"].includes(GUI.active_tab) &&
             PortHandler.portPicker.autoConnect &&
+            !isCliOnlyMode() &&
             Date.now() - rebootTimestamp <= REBOOT_CONNECT_MAX_TIME_MS
         ) {
             connectDisconnect();
@@ -588,7 +593,7 @@ function setRtc() {
 function finishOpen() {
     CONFIGURATOR.connectionValid = true;
 
-    if (getConfig("cliOnlyMode")?.cliOnlyMode) {
+    if (isCliOnlyMode()) {
         connectCli();
         return;
     }
@@ -658,10 +663,7 @@ function onConnect() {
         })
         .show();
 
-    const isCliOnlyMode =
-        getConfig("cliOnlyMode")?.cliOnlyMode && GUI.allowedTabs.length === 1 && GUI.allowedTabs[0] === "cli";
-
-    if (FC.CONFIG.flightControllerVersion !== "" && !isCliOnlyMode) {
+    if (FC.CONFIG.flightControllerVersion !== "" && !isCliOnlyMode()) {
         FC.FEATURE_CONFIG.features = new Features(FC.CONFIG);
         FC.BEEPER_CONFIG.beepers = new Beepers(FC.CONFIG);
         FC.BEEPER_CONFIG.dshotBeaconConditions = new Beepers(FC.CONFIG, ["RX_LOST", "RX_SET"]);
