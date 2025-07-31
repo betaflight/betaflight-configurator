@@ -235,6 +235,26 @@ function resetConnection() {
     $("div.connection_button__label").text(i18n.getMessage("connect"));
     $("a.connection_button__link").removeClass("active");
 
+    clearLiveDataRefreshTimer();
+
+    MSP.clearListeners();
+
+    if (PortHandler.portPicker.selectedPort !== "virtual") {
+        serial.removeEventListener("receive", read_serial_adapter);
+        serial.removeEventListener("connect", connectHandler);
+        serial.removeEventListener("disconnect", disconnectHandler);
+    }
+
+    $("#tabs ul.mode-connected").hide();
+    $("#tabs ul.mode-connected-cli").hide();
+    $("#tabs ul.mode-disconnected").show();
+
+    // header bar
+    $("#sensor-status").hide();
+    $("#portsinput").show();
+    $("#dataflash_wrapper_global").hide();
+    $("#quad-status_wrapper").hide();
+
     CONFIGURATOR.connectionValid = false;
     CONFIGURATOR.cliValid = false;
     CONFIGURATOR.cliActive = false;
@@ -659,29 +679,9 @@ function onConnect() {
 function onClosed(result) {
     gui_log(i18n.getMessage(result ? "serialPortClosedOk" : "serialPortClosedFail"));
 
-    $("#tabs ul.mode-connected").hide();
-    $("#tabs ul.mode-connected-cli").hide();
-    $("#tabs ul.mode-disconnected").show();
-
-    // header bar
-    $("#sensor-status").hide();
-    $("#portsinput").show();
-    $("#dataflash_wrapper_global").hide();
-    $("#quad-status_wrapper").hide();
-
     console.log(`${logHead} Connection closed:`, result);
 
     resetConnection();
-
-    clearLiveDataRefreshTimer();
-
-    MSP.clearListeners();
-
-    if (PortHandler.portPicker.selectedPort !== "virtual") {
-        serial.removeEventListener("receive", read_serial_adapter);
-        serial.removeEventListener("connect", connectHandler);
-        serial.removeEventListener("disconnect", disconnectHandler);
-    }
 }
 
 export function read_serial(info) {
