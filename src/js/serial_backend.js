@@ -245,6 +245,14 @@ function resetConnection() {
     CONFIGURATOR.cliEngineValid = false;
     CONFIGURATOR.cliEngineActive = false;
 
+    // Clear connection timestamp
+    connectionTimestamp = null;
+    setTimeout(() => {
+        if (window.vm?.CONNECTION) {
+            window.vm.CONNECTION.timestamp = null;
+        }
+    }, 100);
+
     // unlock port select & baud
     PortHandler.portPickerDisabled = false;
 }
@@ -677,14 +685,6 @@ function onConnect() {
 
 function onClosed(result) {
     gui_log(i18n.getMessage(result ? "serialPortClosedOk" : "serialPortClosedFail"));
-
-    // Clear connection timestamp
-    connectionTimestamp = null;
-    setTimeout(() => {
-        if (window.vm?.CONNECTION) {
-            window.vm.CONNECTION.timestamp = null;
-        }
-    }, 100);
 
     $("#tabs ul.mode-connected").hide();
     $("#tabs ul.mode-connected-cli").hide();
