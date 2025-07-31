@@ -714,16 +714,6 @@ function onClosed(result) {
         }
     }, 100);
 
-    $("#tabs ul.mode-connected").hide();
-    $("#tabs ul.mode-connected-cli").hide();
-    $("#tabs ul.mode-disconnected").show();
-
-    // header bar
-    $("#sensor-status").hide();
-    $("#portsinput").show();
-    $("#dataflash_wrapper_global").hide();
-    $("#quad-status_wrapper").hide();
-
     console.log(`${logHead} Connection closed:`, result);
 
     resetConnection();
@@ -952,8 +942,4 @@ function showRebootDialog() {
 
         return dialog;
     }
-}
-
-export function getConnectionTimestamp() {
-    return connectionTimestamp;
 }

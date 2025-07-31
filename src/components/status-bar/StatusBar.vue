@@ -93,9 +93,11 @@ export default defineComponent({
             }
         });
 
+        const DEFAULT_CONNECTION_TIME = "00:00";
+
         const formattedConnectionTime = computed(() => {
             if (!props.connectionTimestamp) {
-                return "00:00";
+                return DEFAULT_CONNECTION_TIME;
             }
 
             // Use currentTime.value to make this reactive to time changes
