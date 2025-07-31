@@ -153,9 +153,17 @@
         "message": "Set connection timeout to allow longer initialisation on device plugin or reboot",
         "description": "Change timeout on auto-connect and reboot so the bus has more time to initialize after being detected by the system"
     },
+    "developmentSettings": {
+        "message": "Development Settings",
+        "description": "Title for the development settings section"
+    },
     "showAllSerialDevices": {
         "message": "Show all serial devices (for manufacturers or development)",
         "description": "Do not filter serial devices using VID/PID values (for manufacturers or development)"
+    },
+    "cliOnlyMode": {
+        "message": "Enable CLI only mode",
+        "description": "Text for the option to enable or disable CLI only mode"
     },
     "showManualMode": {
         "message": "Enable manual connection mode",

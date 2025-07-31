@@ -32,6 +32,7 @@ options.initialize = function (callback) {
         TABS.options.initShowWarnings();
         TABS.options.initMeteredConnection();
         TABS.options.initBackupOnFlash();
+        TABS.options.initCLiOnlyMode();
 
         GUI.content_ready(callback);
     });
@@ -259,6 +260,17 @@ options.initUserLanguage = function () {
             i18n.localizePage();
         })
         .trigger("change");
+};
+
+options.initCLiOnlyMode = function () {
+    const cliOnlyModeElement = $("div.cliOnlyMode input");
+    const result = getConfig("cliOnlyMode", false);
+    cliOnlyModeElement.prop("checked", !!result.cliOnlyMode).on("change", () => {
+        const checked = cliOnlyModeElement.is(":checked");
+        setConfig({ cliOnlyMode: checked });
+    });
+    // Trigger change to ensure the initial state is set correctly
+    cliOnlyModeElement.trigger("change");
 };
 
 // TODO: remove when modules are in place
