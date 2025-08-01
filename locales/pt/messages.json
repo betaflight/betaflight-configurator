@@ -3076,7 +3076,7 @@
         "message": "acelerómetro"
     },
     "motorsTelemetryHelp": {
-        "message": "Estes números mostram a info de telemetria recebida dos ESCs, se disponível. Pode mostrar a velocidade atual dos motores (em RPM), a taxa de erros do link de telemetria e a temperatura dos ESCs.",
+        "message": "Estes números mostram a info de telemetria recebida dos ESCs, se disponível. Pode mostrar a velocidade atual dos motores (R, em RPM), a taxa de erros (E) do link de telemetria e a temperatura (T) dos ESCs.",
         "description": "Help text for the telemetry values in the motors tab."
     },
     "motorsRPM": {

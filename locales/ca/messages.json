@@ -3084,7 +3084,7 @@
         "message": "accel"
     },
     "motorsTelemetryHelp": {
-        "message": "Aquests números mostren la informació de telemetria rebuda dels ESC si està disponible. Pot mostrar la velocitat real dels motors (en RPM), la tasa d'error de l'enllaç de telemetria i la temperatura dels ESC.",
+        "message": "Aquests números mostren la informació de telemetria rebuda dels ESC si està disponible. Pot mostrar la velocitat real dels motors (R, en RPM), la tasa d'error (E) de l'enllaç de telemetria i la temperatura (T) dels ESC.",
         "description": "Help text for the telemetry values in the motors tab."
     },
     "motorsRPM": {

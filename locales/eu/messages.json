@@ -1884,10 +1884,6 @@
     "motorsSensorAccelSelect": {
         "message": "azel"
     },
-    "motorsTelemetryHelp": {
-        "message": "Zenbaki hauek eskuragarri dauden ESCko telemetriari buruzko informazioa erakusten dute. Motoreen benetako abiadura (RPM), telemetria- loturaren akats-tasa eta ESCen tenperatura erakuts ditzake.",
-        "description": "Help text for the telemetry values in the motors tab."
-    },
     "motorsRPM": {
         "message": "R: {{motorsRpmValue}}",
         "description": "To put under the motors in the motors tab. KEEP IT SHORT or not translate. Keep the letters as prefix. Shows the RPM of the motor if telemetry is available."

@@ -1953,10 +1953,6 @@
     "motorsSensorAccelSelect": {
         "message": "accel"
     },
-    "motorsTelemetryHelp": {
-        "message": "Deze nummers tonen de telemetrie informatie die ontvangen is van de ESC's. Het kan de werkelijke snelheid van motoren weergeven (in RPM), de foutsnelheid van de telemetrielink maar ook de temperatuur van de ESC's.",
-        "description": "Help text for the telemetry values in the motors tab."
-    },
     "motorsRPM": {
         "message": "R: {{motorsRpmValue}}",
         "description": "To put under the motors in the motors tab. KEEP IT SHORT or not translate. Keep the letters as prefix. Shows the RPM of the motor if telemetry is available."

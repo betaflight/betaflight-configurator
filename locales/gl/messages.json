@@ -2679,10 +2679,6 @@
     "motorsSensorAccelSelect": {
         "message": "accel"
     },
-    "motorsTelemetryHelp": {
-        "message": "Estes números mostran a información de telemetría recibida dos CES se está dispoñible. Pode amosar a velocidade real dos motores (en RPM), a velocidade de erro do enlace de telemetría e a temperatura dos CES.",
-        "description": "Help text for the telemetry values in the motors tab."
-    },
     "motorsRPM": {
         "message": "R: {{motorsRpmValue}}",
         "description": "To put under the motors in the motors tab. KEEP IT SHORT or not translate. Keep the letters as prefix. Shows the RPM of the motor if telemetry is available."

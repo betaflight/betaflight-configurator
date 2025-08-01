@@ -1448,6 +1448,16 @@
     "configurationSensorGyroToUseBoth": {
         "message": "両方"
     },
+    "configurationSensorGyroEnable": {
+        "message": "$t(sensorStatusGyroShort.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationSensorAlignment": {
+        "message": "センサー アライメント"
+    },
+    "configurationGyroRequiredWarning": {
+        "message": "少なくとも1つのジャイロセンサーを有効にしておく必要があります。すべてのジャイロセンサーを無効にすると、フライトコントローラが正常に動作しません。"
+    },
     "configurationSensorAlignmentGyro1": {
         "message": "第1ジャイロ"
     },
@@ -2607,6 +2617,10 @@
         "message": "VTXをピットモードへ切り替えます (サポートされる場合は低出力)",
         "description": "Help text to VTX PIT MODE mode"
     },
+    "auxiliaryHelpMode_LAPTIMERRESET": {
+        "message": "トランスポンダ―用ラップタイマーをリセット",
+        "description": "Help text to LAP TIMER RESET mode"
+    },
     "adjustmentsHelp": {
         "message": "調整スイッチを設定します。詳細については、マニュアルの『in-flight adjustment(飛行調整)』の項目を参照してください。『調整』機能による変更は自動的には保存されません。"
     },
@@ -3054,11 +3068,15 @@
     "motorsResetMaximum": {
         "message": "オーバータイム最大値をリセット"
     },
+    "motorsSensorGyroSelect": {
+        "message": "$t(sensorStatusGyroShort.message)",
+        "description": "Don't translate!!!"
+    },
     "motorsSensorAccelSelect": {
         "message": "加速度センサー"
     },
     "motorsTelemetryHelp": {
-        "message": "この番号は、利用可能時にESCから受信したテレメトリー情報を示します。モーターの実速度(RPM)、テレメトリーリンクのエラー率、ESC温度を表示します。",
+        "message": "これらの数値は、利用可能な場合にはESCから受信したテレメトリー情報を表示します。モーターの回転数 (R、単位:RPM)、テレメトリーリンクのエラー率(E)、ESC温度(T)を表示します。",
         "description": "Help text for the telemetry values in the motors tab."
     },
     "motorsRPM": {
@@ -4647,6 +4665,10 @@
         "message": "タイプ",
         "description": "Iterm Relax Type selection"
     },
+    "pidTuningItermRelaxTypeOptionGyro": {
+        "message": "$t(sensorStatusGyroShort.message)",
+        "description": "Don't translate!!!"
+    },
     "pidTuningItermRelaxTypeOptionSetpoint": {
         "message": "セットポイント"
     },
@@ -5214,6 +5236,10 @@
     "osdSetupPreviewSelectFont": {
         "message": "フォント",
         "description": "Content of the selector for the OSD Font in the preview"
+    },
+    "osdSetupFontManagerTitle": {
+        "message": "OSD フォントマネージャー",
+        "description": "Dialog title"
     },
     "osdSetupFontTypeDefault": {
         "message": "デフォルト値",

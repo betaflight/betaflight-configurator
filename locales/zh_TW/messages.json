@@ -1860,10 +1860,6 @@
     "motorsSensorAccelSelect": {
         "message": "加速度計"
     },
-    "motorsTelemetryHelp": {
-        "message": "此數字顯示從電調收到的回傳訊息(如果有的話) 。他可以顯示電機的實時轉速(RPM) ，遙測鏈接的錯誤率和電調的溫度。",
-        "description": "Help text for the telemetry values in the motors tab."
-    },
     "motorsRPM": {
         "message": "R: {{motorsRpmValue}}",
         "description": "To put under the motors in the motors tab. KEEP IT SHORT or not translate. Keep the letters as prefix. Shows the RPM of the motor if telemetry is available."

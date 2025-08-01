@@ -2893,10 +2893,6 @@
     "motorsSensorAccelSelect": {
         "message": "Beschleunigungssensor"
     },
-    "motorsTelemetryHelp": {
-        "message": "Diese Werte zeigen die von den ESCs erhaltenen Telemetrien an, wenn diese verfügbar sind. Sie zeigen die tatsächliche Geschwindigkeit der Motoren (in RPM), die Fehlerrate der Telemetrieverbindung und die Temperatur der ESCs.",
-        "description": "Help text for the telemetry values in the motors tab."
-    },
     "motorsRPM": {
         "message": "R: {{motorsRpmValue}}",
         "description": "To put under the motors in the motors tab. KEEP IT SHORT or not translate. Keep the letters as prefix. Shows the RPM of the motor if telemetry is available."
