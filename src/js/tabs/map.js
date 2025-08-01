@@ -94,32 +94,44 @@ export function initMap() {
 
     map.addLayer(currentPositionLayer);
 
-    // Start with Satellite layer
+    // Start with Satellite layer active
     osmLayer.setVisible(false);
     googleHybridLayer.setVisible(false);
+    $("#Satellite").addClass("active");
 
-    $("#Hybrid").on("click", function () {
-        if (!googleHybridLayer.isVisible()) {
-            osmLayer.setVisible(false);
-            googleSatLayer.setVisible(false);
-            googleHybridLayer.setVisible(true);
-        }
-    });
+    // Helper function to handle layer switching
+    function switchMapLayer(buttonSelector, targetLayer) {
+        const $button = $(buttonSelector);
+        const isCurrentlyActive = $button.hasClass("active");
 
-    $("#Satellite").on("click", function () {
-        if (!googleSatLayer.isVisible()) {
+        // Remove active class from all buttons
+        $("#Hybrid, #Satellite, #Street").removeClass("active");
+
+        if (!isCurrentlyActive) {
+            // Activate this button and show its layer
+            $button.addClass("active");
+            osmLayer.setVisible(targetLayer === "street");
+            googleSatLayer.setVisible(targetLayer === "satellite");
+            googleHybridLayer.setVisible(targetLayer === "hybrid");
+        } else {
+            // Deactivate - hide all layers, show default (satellite)
             osmLayer.setVisible(false);
             googleSatLayer.setVisible(true);
             googleHybridLayer.setVisible(false);
+            $("#Satellite").addClass("active");
         }
+    }
+
+    $("#Hybrid").on("click", function () {
+        switchMapLayer("#Hybrid", "hybrid");
+    });
+
+    $("#Satellite").on("click", function () {
+        switchMapLayer("#Satellite", "satellite");
     });
 
     $("#Street").on("click", function () {
-        if (!osmLayer.isVisible()) {
-            osmLayer.setVisible(true);
-            googleSatLayer.setVisible(false);
-            googleHybridLayer.setVisible(false);
-        }
+        switchMapLayer("#Street", "street");
     });
 
     return {

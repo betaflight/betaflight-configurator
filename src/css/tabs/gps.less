@@ -170,29 +170,39 @@
             justify-content: end;
             gap: 0.5rem;
             button {
-                background-color: white;
+                background-color: var(--surface-700);
                 border-radius: 4px;
                 border: 1px var(--surface-500) solid;
-                color: grey;
+                color: var(--surface-100);
                 text-align: center;
-                font-size: 20px;
+                font-size: 12px;
                 line-height: 10px;
                 padding: 6px;
                 margin-top: 5px;
+                margin-bottom: 5px;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
                 &:hover {
-                    background-color: var(--surface-500);
+                    background-color: var(--surface-600);
                 }
                 &:active {
-                    background-color: #e6e6e6;
+                    background-color: var(--primary-400);
+                    color: var(--primary-900);
+                }
+                &.active {
+                    background-color: var(--primary-400);
+                    color: var(--primary-900);
+                    &:hover {
+                        background-color: var(--primary-300);
+                    }
                 }
                 &:first-child {
                     margin-left: -1px;
-                    margin-right: 5px;
                     border-bottom-left-radius: 0px;
                     border-top-left-radius: 0px;
                 }
                 &:last-child {
-                    margin-right: 0px;
+                    margin-right: 5px;
                     border-bottom-right-radius: 0px;
                     border-top-right-radius: 0px;
                 }
@@ -212,7 +222,8 @@ meter[value] {
         box-shadow: 0 0 3px rgba(0, 0, 0, 0.25) inset;
     }
     &::-webkit-meter-value {
-        background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.15), rgba(0, 0, 0, 0.15)),
+        background-image:
+            -webkit-linear-gradient(top, rgba(255, 255, 255, 0.15), rgba(0, 0, 0, 0.15)),
             -webkit-linear-gradient(left, #ffbb00, #ffbb00);
         border-radius: 2px;
         box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.25) inset;
