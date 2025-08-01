@@ -106,11 +106,6 @@ export function initMap() {
         "#Street": osmLayer,
     };
 
-    const defaultLayer = {
-        selector: "#Satellite",
-        layer: googleSatLayer,
-    };
-
     // Helper function to handle layer switching
     function switchMapLayer(buttonSelector) {
         const $button = $(buttonSelector);
@@ -157,15 +152,12 @@ export function initMap() {
             } else if (mapContainer.msRequestFullscreen) {
                 mapContainer.msRequestFullscreen();
             }
-        } else {
-            // Exit fullscreen
-            if (document.exitFullscreen) {
-                document.exitFullscreen();
-            } else if (document.webkitExitFullscreen) {
-                document.webkitExitFullscreen();
-            } else if (document.msExitFullscreen) {
-                document.msExitFullscreen();
-            }
+        } else if (document.exitFullscreen) {
+            document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+        } else if (document.msExitFullscreen) {
+            document.msExitFullscreen();
         }
     });
 
