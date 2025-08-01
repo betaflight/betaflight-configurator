@@ -1,6 +1,10 @@
 <template>
     <div id="status-bar">
         <PortUtilization :usage-down="portUsageDown" :usage-up="portUsageUp" />
+        <span v-if="connectionTimestamp">
+            <span class="message">{{ $t("statusbar_connection_time") }}</span>
+            <span class="value">{{ formattedConnectionTime }}</span>
+        </span>
         <ReadingStat message="statusbar_packet_error" :model-value="packetError" />
         <ReadingStat message="statusbar_i2c_error" :model-value="i2cError" />
         <ReadingStat message="statusbar_cycle_time" :model-value="cycleTime" />
@@ -15,7 +19,7 @@
 </template>
 
 <script>
-import { defineComponent } from "vue";
+import { defineComponent, ref, computed, onMounted, onUnmounted } from "vue";
 import StatusBarVersion from "./StatusBarVersion.vue";
 import ReadingStat from "./ReadingStat.vue";
 import PortUtilization from "./PortUtilization.vue";
@@ -34,6 +38,10 @@ export default defineComponent({
         portUsageUp: {
             type: Number,
             default: 0,
+        },
+        connectionTimestamp: {
+            type: Number,
+            default: null,
         },
         packetError: {
             type: Number,
@@ -67,6 +75,42 @@ export default defineComponent({
             type: String,
             default: "",
         },
+    },
+    setup(props) {
+        const currentTime = ref(Date.now());
+        let interval = null;
+
+        onMounted(() => {
+            // Update current time every second for the connection timer
+            interval = setInterval(() => {
+                currentTime.value = Date.now();
+            }, 1000);
+        });
+
+        onUnmounted(() => {
+            if (interval) {
+                clearInterval(interval);
+            }
+        });
+
+        const formattedConnectionTime = computed(() => {
+            if (!props.connectionTimestamp) {
+                return "00:00";
+            }
+
+            // Use currentTime.value to make this reactive to time changes
+            const elapsedMs = currentTime.value - props.connectionTimestamp;
+            const elapsedSeconds = Math.floor(elapsedMs / 1000);
+
+            const minutes = Math.floor(elapsedSeconds / 60);
+            const seconds = elapsedSeconds % 60;
+
+            return `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+        });
+
+        return {
+            formattedConnectionTime,
+        };
     },
 });
 </script>

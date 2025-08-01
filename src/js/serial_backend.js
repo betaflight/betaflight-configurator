@@ -98,8 +98,8 @@ async function sendConfigTracking() {
         flightControllerIdentifier: FC.CONFIG.flightControllerIdentifier,
         mcu: FC.CONFIG.targetName,
         deviceIdentifier: CryptoES.SHA1(FC.CONFIG.deviceIdentifier).toString(),
-        buildKey: FC.CONFIG.buildKey
-    });  
+        buildKey: FC.CONFIG.buildKey,
+    });
 }
 
 function connectDisconnect() {
@@ -392,6 +392,14 @@ function onOpenVirtual() {
 
     isConnected = true;
 
+    // Set connection timestamp for virtual connections
+    connectionTimestamp = Date.now();
+    setTimeout(() => {
+        if (window.vm?.CONNECTION) {
+            window.vm.CONNECTION.timestamp = connectionTimestamp;
+        }
+    }, 100);
+
     mspHelper = new MspHelper();
 
     VirtualFC.setVirtualConfig();
@@ -558,10 +566,18 @@ async function processUid() {
 
     connectionTimestamp = Date.now();
 
+    // Update the global CONNECTION object for Vue components
+    // Use a small delay to ensure the Vue app is mounted
+    setTimeout(() => {
+        if (window.vm?.CONNECTION) {
+            window.vm.CONNECTION.timestamp = connectionTimestamp;
+        }
+    }, 100);
+
     gui_log(i18n.getMessage("uniqueDeviceIdReceived", FC.CONFIG.deviceIdentifier));
 
     await processBuildConfiguration();
-    await sendConfigTracking();    
+    await sendConfigTracking();
 }
 
 async function processCraftName() {
@@ -689,6 +705,14 @@ function onConnect() {
 
 function onClosed(result) {
     gui_log(i18n.getMessage(result ? "serialPortClosedOk" : "serialPortClosedFail"));
+
+    // Clear connection timestamp
+    connectionTimestamp = null;
+    setTimeout(() => {
+        if (window.vm?.CONNECTION) {
+            window.vm.CONNECTION.timestamp = null;
+        }
+    }, 100);
 
     console.log(`${logHead} Connection closed:`, result);
 
