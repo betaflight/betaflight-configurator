@@ -146,6 +146,55 @@ export function initMap() {
         switchMapLayer("#Street");
     });
 
+    // Fullscreen functionality
+    $("#fullscreen").on("click", function () {
+        const mapContainer = document.getElementById("loadmap");
+
+        if (!document.fullscreenElement) {
+            // Enter fullscreen
+            if (mapContainer.requestFullscreen) {
+                mapContainer.requestFullscreen();
+            } else if (mapContainer.webkitRequestFullscreen) {
+                mapContainer.webkitRequestFullscreen();
+            } else if (mapContainer.msRequestFullscreen) {
+                mapContainer.msRequestFullscreen();
+            }
+        } else {
+            // Exit fullscreen
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+            } else if (document.msExitFullscreen) {
+                document.msExitFullscreen();
+            }
+        }
+    });
+
+    // Handle fullscreen change events to update button state
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+    document.addEventListener("webkitfullscreenchange", handleFullscreenChange);
+    document.addEventListener("msfullscreenchange", handleFullscreenChange);
+
+    function handleFullscreenChange() {
+        const isFullscreen = !!(
+            document.fullscreenElement ||
+            document.webkitFullscreenElement ||
+            document.msFullscreenElement
+        );
+        const $fullscreenBtn = $("#fullscreen");
+
+        if (isFullscreen) {
+            $fullscreenBtn.addClass("active").attr("aria-label", "Exit fullscreen");
+            // Trigger map resize to ensure proper rendering in fullscreen
+            setTimeout(() => map.updateSize(), 100);
+        } else {
+            $fullscreenBtn.removeClass("active").attr("aria-label", "Toggle fullscreen");
+            // Trigger map resize when exiting fullscreen
+            setTimeout(() => map.updateSize(), 100);
+        }
+    }
+
     return {
         mapView,
         iconStyleMag,
