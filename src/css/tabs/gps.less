@@ -1,3 +1,7 @@
+/* Height of the map controls bar (used in fullscreen calculations) */
+:root {
+    --map-controls-bar-height: 33px;
+}
 @import "ol/ol.css";
 
 #map {
@@ -162,7 +166,7 @@
         }
         .controls {
             width: 100%;
-            height: 33px;
+            height: var(--map-controls-bar-height);
             border-bottom-left-radius: 3px;
             border-bottom-right-radius: 3px;
             background-color: #d1d1d1;
@@ -212,7 +216,8 @@
             height: 100vh !important;
             background-color: var(--surface-100);
             .map {
-                height: calc(100vh - 33px) !important;
+                /* Subtract controls bar height from total height */
+                height: calc(100vh - var(--map-controls-bar-height)) !important;
                 width: 100vw !important;
             }
             .controls {
@@ -230,7 +235,7 @@
             height: 100vh !important;
             background-color: var(--surface-100);
             .map {
-                height: calc(100vh - 33px) !important;
+                height: calc(100vh - var(--map-controls-bar-height)) !important;
                 width: 100vw !important;
             }
             .controls {
@@ -248,7 +253,7 @@
             height: 100vh !important;
             background-color: var(--surface-100);
             .map {
-                height: calc(100vh - 33px) !important;
+                height: calc(100vh - var(--map-controls-bar-height)) !important;
                 width: 100vw !important;
             }
             .controls {
