@@ -184,13 +184,11 @@ export function initMap() {
 
         if (isFullscreen) {
             $fullscreenBtn.addClass("active").attr("aria-label", "Exit fullscreen");
-            // Trigger map resize to ensure proper rendering in fullscreen
-            setTimeout(() => map.updateSize(), 100);
         } else {
             $fullscreenBtn.removeClass("active").attr("aria-label", "Toggle fullscreen");
-            // Trigger map resize when exiting fullscreen
-            setTimeout(() => map.updateSize(), 100);
         }
+        // Use requestAnimationFrame to ensure DOM has updated before resizing
+        requestAnimationFrame(() => map.updateSize());
     }
 
     return {
