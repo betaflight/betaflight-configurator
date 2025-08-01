@@ -94,33 +94,102 @@ export function initMap() {
 
     map.addLayer(currentPositionLayer);
 
-    // Start with Satellite layer
+    // Start with Satellite layer active
     osmLayer.setVisible(false);
     googleHybridLayer.setVisible(false);
+    $("#Satellite").addClass("active");
+
+    // Map button selectors to their corresponding layers
+    const layerConfig = {
+        "#Hybrid": googleHybridLayer,
+        "#Satellite": googleSatLayer,
+        "#Street": osmLayer,
+    };
+
+    // Helper function to handle layer switching
+    function switchMapLayer(buttonSelector) {
+        const $button = $(buttonSelector);
+        const isCurrentlyActive = $button.hasClass("active");
+        const targetLayer = layerConfig[buttonSelector];
+
+        // If already active, do nothing (prevent deactivation)
+        if (isCurrentlyActive) {
+            return;
+        }
+
+        // Remove active class from all buttons
+        Object.keys(layerConfig).forEach((selector) => $(selector).removeClass("active"));
+
+        // Activate this button and show its layer
+        $button.addClass("active");
+        // Hide all layers, then show the target layer
+        Object.values(layerConfig).forEach((layer) => layer.setVisible(false));
+        targetLayer.setVisible(true);
+    }
 
     $("#Hybrid").on("click", function () {
-        if (!googleHybridLayer.isVisible()) {
-            osmLayer.setVisible(false);
-            googleSatLayer.setVisible(false);
-            googleHybridLayer.setVisible(true);
-        }
+        switchMapLayer("#Hybrid");
     });
 
     $("#Satellite").on("click", function () {
-        if (!googleSatLayer.isVisible()) {
-            osmLayer.setVisible(false);
-            googleSatLayer.setVisible(true);
-            googleHybridLayer.setVisible(false);
-        }
+        switchMapLayer("#Satellite");
     });
 
     $("#Street").on("click", function () {
-        if (!osmLayer.isVisible()) {
-            osmLayer.setVisible(true);
-            googleSatLayer.setVisible(false);
-            googleHybridLayer.setVisible(false);
+        switchMapLayer("#Street");
+    });
+
+    // Fullscreen functionality
+    $("#fullscreen").on("click", function () {
+        const mapContainer = document.getElementById("loadmap");
+
+        if (!document.fullscreenElement) {
+            // Enter fullscreen
+            if (mapContainer.requestFullscreen) {
+                mapContainer.requestFullscreen();
+            } else if (mapContainer.webkitRequestFullscreen) {
+                mapContainer.webkitRequestFullscreen();
+            } else if (mapContainer.msRequestFullscreen) {
+                mapContainer.msRequestFullscreen();
+            }
+        } else if (document.exitFullscreen) {
+            document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+        } else if (document.msExitFullscreen) {
+            document.msExitFullscreen();
         }
     });
+
+    // Store handler reference for cleanup
+    function handleFullscreenChange() {
+        const isFullscreen = !!(
+            document.fullscreenElement ||
+            document.webkitFullscreenElement ||
+            document.msFullscreenElement
+        );
+        const $fullscreenBtn = $("#fullscreen");
+
+        if (isFullscreen) {
+            $fullscreenBtn.addClass("active").attr("aria-label", "Exit fullscreen");
+        } else {
+            $fullscreenBtn.removeClass("active").attr("aria-label", "Toggle fullscreen");
+        }
+        // Use requestAnimationFrame to ensure DOM has updated before resizing
+        requestAnimationFrame(() => map.updateSize());
+    }
+
+    // Add event listeners
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+    document.addEventListener("webkitfullscreenchange", handleFullscreenChange);
+    document.addEventListener("msfullscreenchange", handleFullscreenChange);
+
+    // Cleanup function to remove event listeners
+    function destroy() {
+        document.removeEventListener("fullscreenchange", handleFullscreenChange);
+        document.removeEventListener("webkitfullscreenchange", handleFullscreenChange);
+        document.removeEventListener("msfullscreenchange", handleFullscreenChange);
+    }
 
     return {
         mapView,
@@ -129,5 +198,6 @@ export function initMap() {
         iconStyleNoFix,
         iconFeature,
         iconGeometry,
+        destroy,
     };
 }
