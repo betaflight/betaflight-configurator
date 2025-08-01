@@ -210,8 +210,8 @@
             }
         }
 
-        // Fullscreen styles
-        &:fullscreen {
+        // Fullscreen styles (mixin)
+        .fullscreen-map-styles() {
             width: 100vw !important;
             height: 100vh !important;
             background-color: var(--surface-100);
@@ -228,41 +228,14 @@
                 z-index: 1000;
             }
         }
-
-        // Webkit fullscreen (for Safari)
-        &:-webkit-full-screen {
-            width: 100vw !important;
-            height: 100vh !important;
-            background-color: var(--surface-100);
-            .map {
-                height: calc(100vh - var(--map-controls-bar-height)) !important;
-                width: 100vw !important;
-            }
-            .controls {
-                position: fixed;
-                bottom: 0;
-                left: 0;
-                width: 100vw !important;
-                z-index: 1000;
-            }
+        &:fullscreen {
+            .fullscreen-map-styles();
         }
-
-        // MS fullscreen (for IE/Edge)
+        &:-webkit-full-screen {
+            .fullscreen-map-styles();
+        }
         &:-ms-fullscreen {
-            width: 100vw !important;
-            height: 100vh !important;
-            background-color: var(--surface-100);
-            .map {
-                height: calc(100vh - var(--map-controls-bar-height)) !important;
-                width: 100vw !important;
-            }
-            .controls {
-                position: fixed;
-                bottom: 0;
-                left: 0;
-                width: 100vw !important;
-                z-index: 1000;
-            }
+            .fullscreen-map-styles();
         }
     }
     iframe {
