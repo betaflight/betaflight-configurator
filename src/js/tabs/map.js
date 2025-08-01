@@ -99,39 +99,51 @@ export function initMap() {
     googleHybridLayer.setVisible(false);
     $("#Satellite").addClass("active");
 
+    // Map button selectors to their corresponding layers
+    const layerConfig = {
+        "#Hybrid": googleHybridLayer,
+        "#Satellite": googleSatLayer,
+        "#Street": osmLayer,
+    };
+
+    const defaultLayer = {
+        selector: "#Satellite",
+        layer: googleSatLayer,
+    };
+
     // Helper function to handle layer switching
-    function switchMapLayer(buttonSelector, targetLayer) {
+    function switchMapLayer(buttonSelector) {
         const $button = $(buttonSelector);
         const isCurrentlyActive = $button.hasClass("active");
+        const targetLayer = layerConfig[buttonSelector];
 
         // Remove active class from all buttons
-        $("#Hybrid, #Satellite, #Street").removeClass("active");
+        Object.keys(layerConfig).forEach((selector) => $(selector).removeClass("active"));
 
         if (!isCurrentlyActive) {
             // Activate this button and show its layer
             $button.addClass("active");
-            osmLayer.setVisible(targetLayer === "street");
-            googleSatLayer.setVisible(targetLayer === "satellite");
-            googleHybridLayer.setVisible(targetLayer === "hybrid");
+            // Hide all layers, then show the target layer
+            Object.values(layerConfig).forEach((layer) => layer.setVisible(false));
+            targetLayer.setVisible(true);
         } else {
-            // Deactivate - hide all layers, show default (satellite)
-            osmLayer.setVisible(false);
-            googleSatLayer.setVisible(true);
-            googleHybridLayer.setVisible(false);
-            $("#Satellite").addClass("active");
+            // Deactivate - show default layer
+            Object.values(layerConfig).forEach((layer) => layer.setVisible(false));
+            defaultLayer.layer.setVisible(true);
+            $(defaultLayer.selector).addClass("active");
         }
     }
 
     $("#Hybrid").on("click", function () {
-        switchMapLayer("#Hybrid", "hybrid");
+        switchMapLayer("#Hybrid");
     });
 
     $("#Satellite").on("click", function () {
-        switchMapLayer("#Satellite", "satellite");
+        switchMapLayer("#Satellite");
     });
 
     $("#Street").on("click", function () {
-        switchMapLayer("#Street", "street");
+        switchMapLayer("#Street");
     });
 
     return {
