@@ -161,11 +161,7 @@ export function initMap() {
         }
     });
 
-    // Handle fullscreen change events to update button state
-    document.addEventListener("fullscreenchange", handleFullscreenChange);
-    document.addEventListener("webkitfullscreenchange", handleFullscreenChange);
-    document.addEventListener("msfullscreenchange", handleFullscreenChange);
-
+    // Store handler reference for cleanup
     function handleFullscreenChange() {
         const isFullscreen = !!(
             document.fullscreenElement ||
@@ -183,6 +179,18 @@ export function initMap() {
         requestAnimationFrame(() => map.updateSize());
     }
 
+    // Add event listeners
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+    document.addEventListener("webkitfullscreenchange", handleFullscreenChange);
+    document.addEventListener("msfullscreenchange", handleFullscreenChange);
+
+    // Cleanup function to remove event listeners
+    function destroy() {
+        document.removeEventListener("fullscreenchange", handleFullscreenChange);
+        document.removeEventListener("webkitfullscreenchange", handleFullscreenChange);
+        document.removeEventListener("msfullscreenchange", handleFullscreenChange);
+    }
+
     return {
         mapView,
         iconStyleMag,
@@ -190,5 +198,6 @@ export function initMap() {
         iconStyleNoFix,
         iconFeature,
         iconGeometry,
+        destroy,
     };
 }

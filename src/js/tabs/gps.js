@@ -190,7 +190,9 @@ gps.initialize = async function (callback) {
             $(".GPS_info td.positionalDop").parent().hide();
         }
 
-        const { mapView, iconStyleMag, iconStyleGPS, iconStyleNoFix, iconFeature, iconGeometry } = initMap();
+        // Store map instance for cleanup
+        gps._mapInstance = initMap();
+        const { mapView, iconStyleMag, iconStyleGPS, iconStyleNoFix, iconFeature, iconGeometry } = gps._mapInstance;
 
         // End GPS Configuration
 
@@ -454,6 +456,11 @@ gps.initialize = async function (callback) {
 };
 
 gps.cleanup = function (callback) {
+    // Clean up map event listeners and resources
+    if (gps._mapInstance && typeof gps._mapInstance.destroy === "function") {
+        gps._mapInstance.destroy();
+        gps._mapInstance = null;
+    }
     if (callback) callback();
 };
 
