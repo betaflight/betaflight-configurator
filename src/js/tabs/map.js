@@ -117,21 +117,19 @@ export function initMap() {
         const isCurrentlyActive = $button.hasClass("active");
         const targetLayer = layerConfig[buttonSelector];
 
+        // If already active, do nothing (prevent deactivation)
+        if (isCurrentlyActive) {
+            return;
+        }
+
         // Remove active class from all buttons
         Object.keys(layerConfig).forEach((selector) => $(selector).removeClass("active"));
 
-        if (!isCurrentlyActive) {
-            // Activate this button and show its layer
-            $button.addClass("active");
-            // Hide all layers, then show the target layer
-            Object.values(layerConfig).forEach((layer) => layer.setVisible(false));
-            targetLayer.setVisible(true);
-        } else {
-            // Deactivate - show default layer
-            Object.values(layerConfig).forEach((layer) => layer.setVisible(false));
-            defaultLayer.layer.setVisible(true);
-            $(defaultLayer.selector).addClass("active");
-        }
+        // Activate this button and show its layer
+        $button.addClass("active");
+        // Hide all layers, then show the target layer
+        Object.values(layerConfig).forEach((layer) => layer.setVisible(false));
+        targetLayer.setVisible(true);
     }
 
     $("#Hybrid").on("click", function () {
