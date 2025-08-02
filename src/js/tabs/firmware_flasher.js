@@ -424,6 +424,11 @@ firmware_flasher.initialize = async function (callback) {
             const target = $('select[name="board"] option:selected').val();
 
             async function LoadTargetDetail(detail) {
+                if (!detail) {
+                    self.enableLoadRemoteFileButton(false);
+                    return;
+                }
+
                 self.targetDetail = detail;
                 if (detail.cloudBuild === true) {
                     $("div.build_configuration").slideDown();
@@ -460,7 +465,14 @@ firmware_flasher.initialize = async function (callback) {
                 self.enableLoadRemoteFileButton(true);
             }
 
-            await LoadTargetDetail(await self.buildApi.loadTarget(target, release));
+            try {
+                let targetDetail = await self.buildApi.loadTarget(target, release);
+                await LoadTargetDetail(targetDetail);
+            } catch (error) {
+                console.error("Failed to load target:", error);
+                loadFailed();
+                return;
+            }
 
             if (self.validateBuildKey()) {
                 let options = await self.buildApi.loadOptionsByBuildKey(release, self.cloudBuildKey);
