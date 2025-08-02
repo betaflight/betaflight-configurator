@@ -203,7 +203,7 @@ cli.initialize = function (callback) {
                 content = `# Support ID: ${supportId}\n\n${content}`;
             }
             return content;
-        };
+        }
 
         $("a.save").on("click", function () {
             const filename = generateFilename("cli", "txt");
@@ -228,25 +228,32 @@ cli.initialize = function (callback) {
         $("a.support")
             .toggle(ispConnected())
             .on("click", function () {
-                function submitSupportData(data) {
+                async function submitSupportData(data) {
                     clearHistory();
                     const api = new BuildApi();
 
-                    api.getSupportCommands(async (commands) => {
-                        commands = [`###\n# Problem description\n# ${data}\n###`, ...commands];
-                        await executeCommands(commands.join("\n"));
-                        const delay = setInterval(() => {
-                            const time = new Date().getTime();
-                            if (self.lastArrival < time - 250) {
-                                clearInterval(delay);
-                                const text = self.outputHistory;
-                                api.submitSupportData(text, (key) => {
-                                    self.lastSupportId = key;
-                                    writeToOutput(i18n.getMessage("buildServerSupportRequestSubmission", [key]));
-                                });
+                    let commands = await api.getSupportCommands();
+                    if (!commands) {
+                        alert("An error has occurred");
+                        return;
+                    }
+
+                    commands = [`###\n# Problem description\n# ${data}\n###`, ...commands];
+                    await executeCommands(commands.join("\n"));
+                    const delay = setInterval(async () => {
+                        const time = new Date().getTime();
+                        if (self.lastArrival < time - 250) {
+                            clearInterval(delay);
+                            const text = self.outputHistory;
+                            let key = await api.submitSupportData(text);
+                            if (!key) {
+                                writeToOutput(i18n.getMessage("buildServerSupportRequestSubmission", ["** error **"]));
+                                return;
                             }
-                        }, 250);
-                    });
+                            self.lastSupportId = key;
+                            writeToOutput(i18n.getMessage("buildServerSupportRequestSubmission", [key]));
+                        }
+                    }, 250);
                 }
 
                 self.supportWarningDialog(submitSupportData);

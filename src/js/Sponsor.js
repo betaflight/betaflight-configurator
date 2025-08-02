@@ -8,7 +8,7 @@ export default class Sponsor {
         this._api = new BuildApi();
     }
 
-    Refresh() {
+    async Refresh() {
         if (!ispConnected()) {
             return;
         }
@@ -17,27 +17,26 @@ export default class Sponsor {
             return;
         }
 
-        this._api.loadSponsorTile(DarkTheme.enabled ? "dark" : "light", this._name, (content) => {
-            if (content) {
-                this._div.fadeOut(500, () => {
-                    this._div.html(content);
-                    this._div.fadeIn(500);
-                });
-                this._div.show();
-            } else {
-                this._div.hide();
-            }
-        });
+        let content = await this._api.loadSponsorTile(DarkTheme.enabled ? "dark" : "light", this._name);
+        if (content) {
+            this._div.fadeOut(500, () => {
+                this._div.html(content);
+                this._div.fadeIn(500);
+            });
+            this._div.show();
+        } else {
+            this._div.hide();
+        }
     }
 
-    loadSponsorTile(name, div) {
+    async loadSponsorTile(name, div) {
         this._name = name;
         this._div = div;
 
         GUI.interval_add(
             "sponsor",
-            () => {
-                this.Refresh();
+            async () => {
+                await this.Refresh();
             },
             15000,
             true,

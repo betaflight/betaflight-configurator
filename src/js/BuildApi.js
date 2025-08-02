@@ -1,7 +1,7 @@
 import { gui_log } from "./gui_log";
 import { i18n } from "./localization";
 import { get as getStorage, set as setStorage } from "./SessionStorage";
-import $ from "jquery";
+import CONFIGURATOR from "./data_storage.js";
 
 export default class BuildApi {
     constructor() {
@@ -9,176 +9,206 @@ export default class BuildApi {
         this._cacheExpirationPeriod = 3600 * 1000;
     }
 
-    load(url, onSuccess, onFailure) {
+    async fetchJson(url) {
+        const response = await fetch(url, {
+            method: "GET",
+            headers: {
+                "User-Agent": navigator.userAgent,
+                "X-CFG-VER": `${CONFIGURATOR.version}`,
+            },
+        });
+
+        if (response.status === 200 || response.status === 201 || response.status === 202) {
+            return await response.json();
+        }
+
+        gui_log(i18n.getMessage("buildServerFailure", [url, `HTTP ${response.status}`]));
+        return null;
+    }
+
+    async fetchCachedJson(url) {
+        const self = this;
         const dataTag = `${url}_Data`;
         const cacheLastUpdateTag = `${url}_LastUpdate`;
 
-        const result = getStorage([cacheLastUpdateTag, dataTag]);
-        const dataTimestamp = $.now();
-        const cachedData = result[dataTag];
-        const cachedLastUpdate = result[cacheLastUpdateTag];
+        const storageResult = getStorage([cacheLastUpdateTag, dataTag]);
+        const dataTimestamp = Date.now();
+        const cachedData = storageResult[dataTag];
+        const cachedLastUpdate = storageResult[cacheLastUpdateTag];
 
-        const cachedCallback = () => {
+        if (cachedData && cachedLastUpdate && dataTimestamp - cachedLastUpdate < self._cacheExpirationPeriod) {
             if (cachedData) {
                 gui_log(i18n.getMessage("buildServerUsingCached", [url]));
             }
 
-            onSuccess(cachedData);
-        };
-
-        if (!cachedData || !cachedLastUpdate || dataTimestamp - cachedLastUpdate > this._cacheExpirationPeriod) {
-            $.get(url, function (info) {
-                // cache loaded info
-                const object = {};
-                object[dataTag] = info;
-                object[cacheLastUpdateTag] = $.now();
-                setStorage(object);
-                onSuccess(info);
-            }).fail((xhr) => {
-                gui_log(i18n.getMessage("buildServerFailure", [url, `HTTP ${xhr.status}`]));
-                if (onFailure !== undefined) {
-                    onFailure();
-                } else {
-                    cachedCallback();
-                }
-            });
-        } else {
-            cachedCallback();
+            return cachedData;
         }
+
+        const response = await fetch(url, {
+            method: "GET",
+            headers: {
+                "User-Agent": navigator.userAgent,
+                "X-CFG-VER": `${CONFIGURATOR.version}`,
+            },
+        });
+
+        if (response.status == 500) {
+            throw new Error(await response.text());
+        }
+
+        if (response.status == 404) {
+            return null;
+        }
+
+        const result = await response.json();
+
+        const object = {};
+        object[dataTag] = result;
+        object[cacheLastUpdateTag] = Date.now();
+        setStorage(object);
+        return result;
     }
 
-    loadTargets(callback) {
+    async loadTargets() {
         const url = `${this._url}/api/targets`;
-        this.load(url, callback);
+        return await this.fetchCachedJson(url);
     }
 
-    loadTargetReleases(target, callback) {
+    async loadTargetReleases(target) {
         const url = `${this._url}/api/targets/${target}`;
-        this.load(url, callback);
+        return await this.fetchCachedJson(url);
     }
 
-    loadTarget(target, release, onSuccess, onFailure) {
+    async loadTarget(target, release) {
         const url = `${this._url}/api/builds/${release}/${target}`;
-        this.load(url, onSuccess, onFailure);
+        return await this.fetchCachedJson(url);
     }
 
-    loadTargetHex(path, onSuccess, onFailure) {
+    async loadTargetHex(path) {
         const url = `${this._url}${path}`;
-        $.get(url, function (data) {
-            gui_log(i18n.getMessage("buildServerSuccess", [path]));
-            onSuccess(data);
-        }).fail((xhr) => {
-            gui_log(i18n.getMessage("buildServerFailure", [path, `HTTP ${xhr.status}`]));
-            if (onFailure !== undefined) {
-                onFailure();
-            }
+
+        const response = await fetch(url, {
+            method: "GET",
+            headers: {
+                "User-Agent": navigator.userAgent,
+                "X-CFG-VER": `${CONFIGURATOR.version}`,
+            },
         });
+
+        if (response.status === 200) {
+            return await response.text();
+        }
+
+        gui_log(i18n.getMessage("buildServerFailure", [path, `HTTP ${xhr.status}`]));
+        return null;
     }
 
-    getSupportCommands(onSuccess, onFailure) {
+    async getSupportCommands() {
         const url = `${this._url}/api/support/commands`;
-        $.get(url, function (data) {
-            onSuccess(data);
-        }).fail((xhr) => {
-            gui_log(i18n.getMessage("buildServerFailure", [url, `HTTP ${xhr.status}`]));
-            if (onFailure !== undefined) {
-                onFailure();
-            }
+
+        const response = await fetch(url, {
+            method: "GET",
+            headers: {
+                "User-Agent": navigator.userAgent,
+                "X-CFG-VER": `${CONFIGURATOR.version}`,
+            },
         });
+
+        if (response.status === 200) {
+            return await response.json();
+        }
+
+        gui_log(i18n.getMessage("buildServerFailure", [url, `HTTP ${response.status}`]));
+        return null;
     }
 
-    submitSupportData(data, onSuccess, onFailure) {
+    async submitSupportData(data) {
         const url = `${this._url}/api/support`;
-        $.ajax({
-            url: url,
-            type: "POST",
-            data: data,
-            contentType: "text/plain",
-            dataType: "text",
 
-            success: function (response) {
-                onSuccess(response);
+        const response = await fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "text/plain",
+                "User-Agent": navigator.userAgent,
+                "X-CFG-VER": `${CONFIGURATOR.version}`,
             },
-        }).fail((xhr) => {
-            gui_log(i18n.getMessage("buildServerFailure", [`HTTP ${xhr.status}`]));
-            if (onFailure !== undefined) {
-                onFailure();
-            }
+            body: data,
         });
+
+        if (response.status === 200) {
+            return await response.text();
+        }
+
+        gui_log(i18n.getMessage("buildServerFailure", [url, `HTTP ${response.status}`]));
+        return null;
     }
 
-    requestBuild(request, onSuccess, onFailure) {
+    async requestBuild(request) {
         const url = `${this._url}/api/builds`;
-        $.ajax({
-            url: url,
-            type: "POST",
-            data: JSON.stringify(request),
-            contentType: "application/json",
-            dataType: "json",
 
-            success: function (response) {
-                onSuccess(response);
+        const response = await fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "User-Agent": navigator.userAgent,
+                "X-CFG-VER": `${CONFIGURATOR.version}`,
             },
-        }).fail((xhr) => {
-            gui_log(i18n.getMessage("buildServerFailure", [url, `HTTP ${xhr.status}`]));
-            if (onFailure !== undefined) {
-                onFailure();
-            }
+            body: JSON.stringify(request),
         });
+
+        if (response.status === 200 || response.status === 201 || response.status === 202) {
+            return await response.json();
+        }
+
+        gui_log(i18n.getMessage("buildServerFailure", [url, `HTTP ${response.status}`]));
+        return null;
     }
 
-    requestBuildStatus(key, onSuccess, onFailure) {
+    async requestBuildStatus(key) {
         const url = `${this._url}/api/builds/${key}/status`;
-        $.get(url, function (data) {
-            gui_log(i18n.getMessage("buildServerSuccess", [url]));
-            onSuccess(data);
-        }).fail((xhr) => {
-            gui_log(i18n.getMessage("buildServerFailure", [url, `HTTP ${xhr.status}`]));
-            if (onFailure !== undefined) {
-                onFailure();
-            }
-        });
+        return await this.fetchJson(url);
     }
 
-    requestBuildOptions(key, onSuccess, onFailure) {
+    async requestBuildOptions(key) {
         const url = `${this._url}/api/builds/${key}/json`;
-        $.get(url, function (data) {
-            onSuccess(data);
-        }).fail((xhr) => {
-            if (onFailure !== undefined) {
-                onFailure();
-            }
-        });
+        return await this.fetchJson(url);
     }
 
-    loadOptions(release, onSuccess, onFailure) {
+    async loadOptions(release) {
         const url = `${this._url}/api/options/${release}`;
-        this.load(url, onSuccess, onFailure);
+        return await this.fetchJson(url);
     }
 
-    loadOptionsByBuildKey(release, key, onSuccess, onFailure) {
+    async loadOptionsByBuildKey(release, key) {
         const url = `${this._url}/api/options/${release}/${key}`;
-        this.load(url, onSuccess, onFailure);
+        return await this.fetchJson(url);
     }
 
-    loadCommits(release, onSuccess, onFailure) {
+    async loadCommits(release) {
         const url = `${this._url}/api/releases/${release}/commits`;
-        this.load(url, onSuccess, onFailure);
+        return await this.fetchJson(url);
     }
 
-    loadConfiguratorRelease(type, onSuccess, onFailure) {
+    async loadConfiguratorRelease(type) {
         const url = `${this._url}/api/configurator/releases/${type}`;
-        this.load(url, onSuccess, onFailure);
+        return await this.fetchJson(url);
     }
 
-    loadSponsorTile(mode, page, onSuccess, onFailure) {
+    async loadSponsorTile(mode, page) {
         const url = `${this._url}/api/configurator/sponsors/${mode}/${page}`;
-        $.get(url, function (data) {
-            onSuccess(data);
-        }).fail((xhr) => {
-            if (onFailure !== undefined) {
-                onFailure();
-            }
+        const response = await fetch(url, {
+            method: "GET",
+            headers: {
+                "User-Agent": navigator.userAgent,
+                "X-CFG-VER": `${CONFIGURATOR.version}`,
+            },
         });
+
+        if (response.status === 200 || response.status === 201 || response.status === 202) {
+            return await response.text();
+        }
+
+        gui_log(i18n.getMessage("buildServerFailure", [url, `HTTP ${response.status}`]));
+        return null;
     }
 }

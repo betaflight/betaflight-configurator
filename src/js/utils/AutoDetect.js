@@ -133,13 +133,6 @@ class AutoDetect {
         this.onFinishClose();
     }
 
-    async getCloudBuildOptions(options) {
-        // Do not use FC.CONFIG.buildOptions here as the object gets destroyed.
-        TABS.firmware_flasher.cloudBuildOptions = options.Request.Options;
-
-        await this.getBoardInfo();
-    }
-
     async getBuildInfo() {
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) && FC.CONFIG.flightControllerIdentifier === "BTFL") {
             await MSP.promise(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.BUILD_KEY));
@@ -157,11 +150,12 @@ class AutoDetect {
                 TABS.firmware_flasher.validateBuildKey() &&
                 (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_46) || buildDate < supportedDate)
             ) {
-                return TABS.firmware_flasher.buildApi.requestBuildOptions(
+                let options = await TABS.firmware_flasher.buildApi.requestBuildOptions(
                     TABS.firmware_flasher.cloudBuildKey,
-                    this.getCloudBuildOptions.bind(this),
-                    this.getBoardInfo.bind(this),
                 );
+                if (options) {
+                    TABS.firmware_flasher.cloudBuildOptions = options.Request.Options;
+                }
             }
         }
 
