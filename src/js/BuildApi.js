@@ -9,6 +9,27 @@ export default class BuildApi {
         this._cacheExpirationPeriod = 3600 * 1000;
     }
 
+    isSuccessCode(code) {
+        return code === 200 || code === 201 || code === 202;
+    }
+
+    async fetchText(url) {
+        const response = await fetch(url, {
+            method: "GET",
+            headers: {
+                "User-Agent": navigator.userAgent,
+                "X-CFG-VER": `${CONFIGURATOR.version}`,
+            },
+        });
+
+        if (this.isSuccessCode(response.status)) {
+            return await response.text();
+        }
+
+        gui_log(i18n.getMessage("buildServerFailure", [url, `HTTP ${response.status}`]));
+        return null;
+    }
+
     async fetchJson(url) {
         const response = await fetch(url, {
             method: "GET",
@@ -18,7 +39,7 @@ export default class BuildApi {
             },
         });
 
-        if (response.status === 200 || response.status === 201 || response.status === 202) {
+        if (this.isSuccessCode(response.status)) {
             return await response.json();
         }
 
@@ -27,7 +48,6 @@ export default class BuildApi {
     }
 
     async fetchCachedJson(url) {
-        const self = this;
         const dataTag = `${url}_Data`;
         const cacheLastUpdateTag = `${url}_LastUpdate`;
 
@@ -36,7 +56,7 @@ export default class BuildApi {
         const cachedData = storageResult[dataTag];
         const cachedLastUpdate = storageResult[cacheLastUpdateTag];
 
-        if (cachedData && cachedLastUpdate && dataTimestamp - cachedLastUpdate < self._cacheExpirationPeriod) {
+        if (cachedData && cachedLastUpdate && dataTimestamp - cachedLastUpdate < this._cacheExpirationPeriod) {
             if (cachedData) {
                 gui_log(i18n.getMessage("buildServerUsingCached", [url]));
             }
@@ -52,11 +72,11 @@ export default class BuildApi {
             },
         });
 
-        if (response.status == 500) {
+        if (response.status === 500) {
             throw new Error(await response.text());
         }
 
-        if (response.status == 404) {
+        if (response.status === 404) {
             return null;
         }
 
@@ -99,27 +119,13 @@ export default class BuildApi {
             return await response.text();
         }
 
-        gui_log(i18n.getMessage("buildServerFailure", [path, `HTTP ${xhr.status}`]));
+        gui_log(i18n.getMessage("buildServerFailure", [path, `HTTP ${response.status}`]));
         return null;
     }
 
     async getSupportCommands() {
         const url = `${this._url}/api/support/commands`;
-
-        const response = await fetch(url, {
-            method: "GET",
-            headers: {
-                "User-Agent": navigator.userAgent,
-                "X-CFG-VER": `${CONFIGURATOR.version}`,
-            },
-        });
-
-        if (response.status === 200) {
-            return await response.json();
-        }
-
-        gui_log(i18n.getMessage("buildServerFailure", [url, `HTTP ${response.status}`]));
-        return null;
+        return await this.fetchJson(url);
     }
 
     async submitSupportData(data) {
@@ -196,19 +202,6 @@ export default class BuildApi {
 
     async loadSponsorTile(mode, page) {
         const url = `${this._url}/api/configurator/sponsors/${mode}/${page}`;
-        const response = await fetch(url, {
-            method: "GET",
-            headers: {
-                "User-Agent": navigator.userAgent,
-                "X-CFG-VER": `${CONFIGURATOR.version}`,
-            },
-        });
-
-        if (response.status === 200 || response.status === 201 || response.status === 202) {
-            return await response.text();
-        }
-
-        gui_log(i18n.getMessage("buildServerFailure", [url, `HTTP ${response.status}`]));
-        return null;
+        return await this.fetchText(url);
     }
 }

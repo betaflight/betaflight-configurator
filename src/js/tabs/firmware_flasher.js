@@ -141,7 +141,7 @@ firmware_flasher.initialize = async function (callback) {
             self.configFilename = filename !== undefined ? filename : null;
         }
 
-        function onLoadFailed() {
+        function loadFailed() {
             $("span.progressLabel")
                 .attr("i18n", "firmwareFlasherFailedToLoadOnlineFirmware")
                 .removeClass("i18n-replaced");
@@ -152,7 +152,7 @@ firmware_flasher.initialize = async function (callback) {
 
         function processHex(data, key) {
             if (!data) {
-                onLoadFailed();
+                loadFailed();
                 return;
             }
 
@@ -990,7 +990,7 @@ firmware_flasher.initialize = async function (callback) {
                 let response = await self.buildApi.requestBuild(request);
                 if (!response) {
                     updateStatus("FailRequest", "", 0, false);
-                    onLoadFailed();
+                    loadFailed();
                     return;
                 }
 
@@ -1055,8 +1055,8 @@ firmware_flasher.initialize = async function (callback) {
                         if (self.cancelBuild) {
                             suffix = "Cancel";
                         }
-                        updateStatus(`Fail${suffix}`, key, 0, true);
-                        onLoadFailed();
+                        updateStatus(`Fail${suffix}`, response.key, 0, true);
+                        loadFailed();
                         return;
                     }
 

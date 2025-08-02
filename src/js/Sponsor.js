@@ -17,16 +17,20 @@ export default class Sponsor {
             return;
         }
 
-        let content = await this._api.loadSponsorTile(DarkTheme.enabled ? "dark" : "light", this._name);
-        if (content) {
-            this._div.fadeOut(500, () => {
-                this._div.html(content);
-                this._div.fadeIn(500);
-            });
-            this._div.show();
-        } else {
-            this._div.hide();
+        try {
+            let content = await this._api.loadSponsorTile(DarkTheme.enabled ? "dark" : "light", this._name);
+            if (content) {
+                this._div.fadeOut(500, () => {
+                    this._div.html(content);
+                    this._div.fadeIn(500);
+                });
+                this._div.show();
+                return;
+            }
+        } catch (error) {
+            console.error("Failed to load sponsor tile: ", error);
         }
+        this._div.hide();
     }
 
     async loadSponsorTile(name, div) {

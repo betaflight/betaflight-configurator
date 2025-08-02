@@ -542,9 +542,13 @@ async function processBuildConfiguration() {
         // firmware 1_46 or higher retrieves build options from the flight controller
         if (FC.CONFIG.buildKey.length === 32 && ispConnected()) {
             const buildApi = new BuildApi();
-            let options = await buildApi.requestBuildOptions(FC.CONFIG.buildKey);
-            if (options) {
-                FC.CONFIG.buildOptions = options.Request.Options;
+            try {
+                let options = await buildApi.requestBuildOptions(FC.CONFIG.buildKey);
+                if (options) {
+                    FC.CONFIG.buildOptions = options.Request.Options;
+                }
+            } catch (error) {
+                console.error("Failed to request build options: ", error);
             }
         }
     }

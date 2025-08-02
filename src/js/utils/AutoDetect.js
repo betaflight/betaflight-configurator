@@ -150,11 +150,15 @@ class AutoDetect {
                 TABS.firmware_flasher.validateBuildKey() &&
                 (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_46) || buildDate < supportedDate)
             ) {
-                let options = await TABS.firmware_flasher.buildApi.requestBuildOptions(
-                    TABS.firmware_flasher.cloudBuildKey,
-                );
-                if (options) {
-                    TABS.firmware_flasher.cloudBuildOptions = options.Request.Options;
+                try {
+                    let options = await TABS.firmware_flasher.buildApi.requestBuildOptions(
+                        TABS.firmware_flasher.cloudBuildKey,
+                    );
+                    if (options) {
+                        TABS.firmware_flasher.cloudBuildOptions = options.Request.Options;
+                    }
+                } catch (error) {
+                    console.error(`${this.logHead} Failed to request build options:`, error);
                 }
             }
         }
