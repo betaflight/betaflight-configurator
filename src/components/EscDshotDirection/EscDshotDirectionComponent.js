@@ -1,5 +1,4 @@
 import { i18n } from "../../js/localization.js";
-import GUI from "../../js/gui.js";
 import EscDshotDirectionMotorDriver from "./EscDshotDirectionMotorDriver.js";
 import DshotCommand from "../../js/utils/DshotCommand.js";
 import FC from "../../js/fc.js";
