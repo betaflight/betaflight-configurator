@@ -57,10 +57,7 @@ export default class BuildApi {
         const cachedLastUpdate = storageResult[cacheLastUpdateTag];
 
         if (cachedData && cachedLastUpdate && dataTimestamp - cachedLastUpdate < this._cacheExpirationPeriod) {
-            if (cachedData) {
-                gui_log(i18n.getMessage("buildServerUsingCached", [url]));
-            }
-
+            gui_log(i18n.getMessage("buildServerUsingCached", [url]));
             return cachedData;
         }
 
