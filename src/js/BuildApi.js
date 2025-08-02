@@ -162,7 +162,7 @@ export default class BuildApi {
             body: JSON.stringify(request),
         });
 
-        if (response.status === 200 || response.status === 201 || response.status === 202) {
+        if (this.isSuccessCode(response.status)) {
             return await response.json();
         }
 

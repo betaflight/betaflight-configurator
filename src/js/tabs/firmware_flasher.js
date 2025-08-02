@@ -474,14 +474,19 @@ firmware_flasher.initialize = async function (callback) {
                 return;
             }
 
-            if (self.validateBuildKey()) {
-                let options = await self.buildApi.loadOptionsByBuildKey(release, self.cloudBuildKey);
-                if (options) {
-                    buildOptions(options);
-                    return;
+            try {
+                if (self.validateBuildKey()) {
+                    let options = await self.buildApi.loadOptionsByBuildKey(release, self.cloudBuildKey);
+                    if (options) {
+                        buildOptions(options);
+                        return;
+                    }
                 }
+                buildOptions(await self.buildApi.loadOptions(release));
+            } catch (error) {
+                console.error("Failed to load build options:", error);
+                return;
             }
-            buildOptions(await self.buildApi.loadOptions(release));
         }
 
         function populateReleases(versions_element, target) {
