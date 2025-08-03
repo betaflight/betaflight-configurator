@@ -36,12 +36,12 @@ Comprehensive monitoring and stress testing tools for the MSP (MultiWii Serial P
 Include the debug tools in your page:
 
 ```javascript
-import './src/js/msp_debug_tools.js';
+import './src/js/msp/debug/msp_debug_tools.js';
 ```
 
 Or in development, load via console:
 ```javascript
-import('./src/js/msp_debug_tools.js');
+import('./src/js/msp/debug/msp_debug_tools.js');
 ```
 
 ### 2. Basic Usage
@@ -315,12 +315,17 @@ The debug tools auto-load when `msp_debug_tools.js` is imported. They detect the
 ## File Structure
 
 ```
-src/js/
-├── msp_queue_monitor.js     # Core monitoring functionality
-├── msp_stress_test.js       # Stress testing framework
-├── msp_debug_dashboard.js   # Visual dashboard UI
-├── msp_test_runner.js       # Console command interface
-└── msp_debug_tools.js       # Integration and auto-loading
+src/js/msp/
+├── MSPCodes.js
+├── MSPConnector.js  
+├── MSPHelper.js
+└── debug/
+    ├── msp_queue_monitor.js     # Core monitoring functionality
+    ├── msp_stress_test.js       # Stress testing framework
+    ├── msp_debug_dashboard.js   # Visual dashboard UI
+    ├── msp_test_runner.js       # Console command interface
+    ├── msp_debug_tools.js       # Integration and auto-loading
+    └── MSP_DEBUG_README.md      # Documentation
 ```
 
 ## Requirements

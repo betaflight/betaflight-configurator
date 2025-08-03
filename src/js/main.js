@@ -18,7 +18,7 @@ import { updateTabList } from "./utils/updateTabList.js";
 import * as THREE from "three";
 import NotificationManager from "./utils/notifications.js";
 
-import("./msp/msp_debug_tools.js")
+import("./msp/debug/msp_debug_tools.js")
     .then(() => {
         console.log("🔧 MSP Debug Tools loaded for development environment");
         console.log("• Press Ctrl+Shift+M to toggle debug dashboard");
