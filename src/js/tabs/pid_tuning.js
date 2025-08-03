@@ -77,6 +77,7 @@ pid_tuning.initialize = function (callback) {
                 )
                 : true,
         )
+        .then(() => (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47) ? MSP.promise(MSPCodes.MSP_STATUS_EX) : true))
         .then(() => MSP.promise(MSPCodes.MSP_SIMPLIFIED_TUNING))
         .then(() => MSP.promise(MSPCodes.MSP_ADVANCED_CONFIG))
         .then(() => MSP.send_message(MSPCodes.MSP_MIXER_CONFIG, false, false, load_html));
@@ -1699,9 +1700,7 @@ pid_tuning.initialize = function (callback) {
             const expo = parseFloat(throttleExpoE.val()); // Value 0-1
 
             // Hover parameter is only available from 1.47 so use mid value for older versions
-            const hover = semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)
-                ? parseFloat(throttleHoverE.val())
-                : mid;
+            const hover = semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47) ? parseFloat(throttleHoverE.val()) : mid;
 
             const throttleLimitPercent = parseInt(throttleLimitPercentE.val()) / 100; // Value 0-1
             const throttleLimitType = parseInt(throttleLimitTypeE.val());
