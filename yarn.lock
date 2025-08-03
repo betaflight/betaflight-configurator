@@ -4356,11 +4356,6 @@ eslint-plugin-prettier@^5.2.3:
     prettier-linter-helpers "^1.0.0"
     synckit "^0.9.1"
 
-eslint-plugin-unused-imports@^4.1.4:
-  version "4.1.4"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-unused-imports/-/eslint-plugin-unused-imports-4.1.4.tgz#62ddc7446ccbf9aa7b6f1f0b00a980423cda2738"
-  integrity sha512-YptD6IzQjDardkl0POxnnRBhU1OEePMV0nd6siHaRBbd+lyh6NAhFEobiznKU7kTsSsDeSD62Pe7kAM1b7dAZQ==
-
 eslint-plugin-vue@^9.32.0:
   version "9.32.0"
   resolved "https://registry.yarnpkg.com/eslint-plugin-vue/-/eslint-plugin-vue-9.32.0.tgz#2b558e827886b567dfaa156cc1cad0f596461fab"
@@ -7291,7 +7286,7 @@ multipipe@^0.1.2:
   dependencies:
     duplexer2 "0.0.2"
 
-multiple-select@^2.1.1:
+multiple-select@^2.0.9:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/multiple-select/-/multiple-select-2.1.1.tgz#2ea6ffc61ee72b001d1b8952a8023d87467e6743"
   integrity sha512-+7vfBBk6Wd0ovaSxx8IWtWi03KRLVlYBQUJSR4U9OyLkbOG6Br+z1RQph5X0BHUuQem63rdiF9cfQNysHWCDVA==

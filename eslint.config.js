@@ -1,7 +1,6 @@
 import { defineConfig } from "eslint-define-config";
 import vuePlugin from "eslint-plugin-vue";
 import prettierPlugin from "eslint-plugin-prettier";
-import unusedImportsPlugin from "eslint-plugin-unused-imports";
 import vueParser from "vue-eslint-parser";
 
 export default defineConfig([
@@ -23,7 +22,6 @@ export default defineConfig([
         plugins: {
             vue: vuePlugin,
             prettier: prettierPlugin,
-            "unused-imports": unusedImportsPlugin,
         },
         rules: {
             "no-var": "error",
@@ -34,16 +32,6 @@ export default defineConfig([
                 4,
                 {
                     SwitchCase: 1,
-                },
-            ],
-            "unused-imports/no-unused-imports": "error",
-            "unused-imports/no-unused-vars": [
-                "warn",
-                {
-                    vars: "all",
-                    varsIgnorePattern: "^_",
-                    args: "after-used",
-                    argsIgnorePattern: "^_",
                 },
             ],
         },
