@@ -103,21 +103,7 @@ export default class BuildApi {
 
     async loadTargetHex(path) {
         const url = `${this._url}${path}`;
-
-        const response = await fetch(url, {
-            method: "GET",
-            headers: {
-                "User-Agent": navigator.userAgent,
-                "X-CFG-VER": `${CONFIGURATOR.version}`,
-            },
-        });
-
-        if (response.status === 200) {
-            return await response.text();
-        }
-
-        gui_log(i18n.getMessage("buildServerFailure", [path, `HTTP ${response.status}`]));
-        return null;
+        return await this.fetchText(url);
     }
 
     async getSupportCommands() {
