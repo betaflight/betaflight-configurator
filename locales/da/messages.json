@@ -150,9 +150,17 @@
         "message": "Indstil forbindelsens timeout for at tillade længere initialisering på plugin eller genstart",
         "description": "Change timeout on auto-connect and reboot so the bus has more time to initialize after being detected by the system"
     },
+    "developmentSettings": {
+        "message": "Indstillinger udvikling",
+        "description": "Title for the development settings section"
+    },
     "showAllSerialDevices": {
         "message": "Vis alle serielle enheder (for producenter eller ved udvikling)",
         "description": "Do not filter serial devices using VID\/PID values (for manufacturers or development)"
+    },
+    "cliOnlyMode": {
+        "message": "Aktiver kun CLI tilstand",
+        "description": "Text for the option to enable or disable CLI only mode"
     },
     "showManualMode": {
         "message": "Aktiver forbindelse manuelt",
@@ -641,6 +649,10 @@
     "statusbar_cpu_load": {
         "message": "CPU belastning:",
         "description": "CPU load text shown in the status bar"
+    },
+    "statusbar_connection_time": {
+        "message": "Forbindelse:",
+        "description": "Connection time text shown in the status bar"
     },
     "dfu_connect_message": {
         "message": "Benyt Brænd firmware for at tilgå DFU-enheder"
@@ -1627,6 +1639,12 @@
     },
     "beeperRC_SMOOTHING_INIT_FAIL": {
         "message": "Bip når aktiveret og rc smooting ikke har initialiseret filtre"
+    },
+    "configurationBeeperEnableAll": {
+        "message": "Aktiver alt"
+    },
+    "configurationBeeperDisableAll": {
+        "message": "Deaktiver alt"
     },
     "configuration3d": {
         "message": "3D ESC\/Motorfunktioner"
