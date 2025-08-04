@@ -150,9 +150,17 @@
         "message": "Establiu el temps d'espera de la connexió per permetre una inicialització més llarga al connectar del dispositiu o reiniciar-lo",
         "description": "Change timeout on auto-connect and reboot so the bus has more time to initialize after being detected by the system"
     },
+    "developmentSettings": {
+        "message": "Configuració de desenvolupament",
+        "description": "Title for the development settings section"
+    },
     "showAllSerialDevices": {
         "message": "Mostra tots els dispositius sèrie (per a fabricants o desenvolupament)",
         "description": "Do not filter serial devices using VID\/PID values (for manufacturers or development)"
+    },
+    "cliOnlyMode": {
+        "message": "Activa el mode CLI només",
+        "description": "Text for the option to enable or disable CLI only mode"
     },
     "showManualMode": {
         "message": "Activa el mode de connexió manual",
@@ -645,6 +653,10 @@
     "statusbar_cpu_load": {
         "message": "Càrrega de CPU:",
         "description": "CPU load text shown in the status bar"
+    },
+    "statusbar_connection_time": {
+        "message": "Connexió:",
+        "description": "Connection time text shown in the status bar"
     },
     "dfu_connect_message": {
         "message": "Si us plau, utilitza el Flashejador de Firmware per accedir als dispositius DFU"
@@ -1631,6 +1643,12 @@
     },
     "beeperRC_SMOOTHING_INIT_FAIL": {
         "message": "Emet un beep quan el suavitzat armat i rc no ha inicialitzat filtres"
+    },
+    "configurationBeeperEnableAll": {
+        "message": "Activar-ho tot"
+    },
+    "configurationBeeperDisableAll": {
+        "message": "Desactiva-ho tot"
     },
     "configuration3d": {
         "message": "Característiques 3D ESC\/Motor"
