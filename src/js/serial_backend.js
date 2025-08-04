@@ -530,25 +530,6 @@ function checkReportProblems() {
     });
 }
 
-async function processBuildOptions() {
-    const supported = semver.eq(FC.CONFIG.apiVersion, API_VERSION_1_45);
-
-    // firmware 1_45 or higher is required to support cloud build options
-    // firmware 1_46 or higher retrieves build options from the flight controller
-    if (supported && FC.CONFIG.buildKey.length === 32 && ispConnected()) {
-        const buildApi = new BuildApi();
-
-        function onLoadCloudBuild(options) {
-            FC.CONFIG.buildOptions = options.Request.Options;
-            processCraftName();
-        }
-
-        buildApi.requestBuildOptions(FC.CONFIG.buildKey, onLoadCloudBuild, processCraftName);
-    } else {
-        await processCraftName();
-    }
-}
-
 async function processBuildConfiguration() {
     const supported = semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45);
 
@@ -556,9 +537,23 @@ async function processBuildConfiguration() {
         // get build key from firmware
         await MSP.promise(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.BUILD_KEY));
         gui_log(i18n.getMessage("buildKey", FC.CONFIG.buildKey));
+
+        // firmware 1_45 or higher is required to support cloud build options
+        // firmware 1_46 or higher retrieves build options from the flight controller
+        if (FC.CONFIG.buildKey.length === 32 && ispConnected()) {
+            const buildApi = new BuildApi();
+            try {
+                let options = await buildApi.requestBuildOptions(FC.CONFIG.buildKey);
+                if (options) {
+                    FC.CONFIG.buildOptions = options.Request.Options;
+                }
+            } catch (error) {
+                console.error("Failed to request build options: ", error);
+            }
+        }
     }
 
-    await processBuildOptions();
+    await processCraftName();
 }
 
 async function processUid() {

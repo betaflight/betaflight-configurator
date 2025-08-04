@@ -40,7 +40,7 @@ const firmware_flasher = {
     cancelBuild: false,
 };
 
-firmware_flasher.initialize = function (callback) {
+firmware_flasher.initialize = async function (callback) {
     const self = this;
 
     if (GUI.active_tab !== "firmware_flasher") {
@@ -60,7 +60,7 @@ firmware_flasher.initialize = function (callback) {
 
     self.logHead = "[FIRMWARE_FLASHER]";
 
-    function onDocumentLoad() {
+    async function onDocumentLoad() {
         function parseHex(str, callback) {
             read_hex_file(str).then((data) => {
                 callback(data);
@@ -141,7 +141,22 @@ firmware_flasher.initialize = function (callback) {
             self.configFilename = filename !== undefined ? filename : null;
         }
 
+        function loadFailed() {
+            $("span.progressLabel")
+                .attr("i18n", "firmwareFlasherFailedToLoadOnlineFirmware")
+                .removeClass("i18n-replaced");
+            self.enableLoadRemoteFileButton(true);
+            $("a.load_remote_file").text(i18n.getMessage("firmwareFlasherButtonLoadOnline"));
+            i18n.localizePage();
+        }
+
         function processHex(data, key) {
+            if (!data) {
+                loadFailed();
+                return;
+            }
+
+            self.localFirmwareLoaded = false;
             self.intel_hex = data;
 
             parseHex(self.intel_hex, function (data) {
@@ -157,12 +172,7 @@ firmware_flasher.initialize = function (callback) {
                     self.enableFlashButton(false);
                 }
             });
-        }
 
-        function onLoadSuccess(data, key) {
-            self.localFirmwareLoaded = false;
-
-            processHex(data, key);
             self.enableLoadRemoteFileButton(true);
             $("a.load_remote_file").text(i18n.getMessage("firmwareFlasherButtonLoadOnline"));
         }
@@ -367,9 +377,9 @@ firmware_flasher.initialize = function (callback) {
         // translate to user-selected language
         i18n.localizePage();
 
-        self.sponsor.loadSponsorTile("flash", $("div.tab_sponsor"));
+        await self.sponsor.loadSponsorTile("flash", $("div.tab_sponsor"));
 
-        buildType_e.on("change", function () {
+        buildType_e.on("change", async function () {
             self.enableLoadRemoteFileButton(false);
 
             const build_type = buildType_e.val();
@@ -384,7 +394,7 @@ firmware_flasher.initialize = function (callback) {
 
             if (!GUI.connect_lock) {
                 try {
-                    self.buildApi.loadTargets(loadTargetList);
+                    loadTargetList(await self.buildApi.loadTargets());
                 } catch (err) {
                     console.error(err);
                 }
@@ -393,7 +403,7 @@ firmware_flasher.initialize = function (callback) {
             setConfig({ selected_build_type: build_type });
         });
 
-        function selectFirmware(release) {
+        async function selectFirmware(release) {
             $("div.build_configuration").slideUp();
             $("div.release_info").slideUp();
 
@@ -413,16 +423,21 @@ firmware_flasher.initialize = function (callback) {
 
             const target = $('select[name="board"] option:selected').val();
 
-            function onTargetDetail(response) {
-                self.targetDetail = response;
+            async function LoadTargetDetail(detail) {
+                if (!detail) {
+                    self.enableLoadRemoteFileButton(false);
+                    return;
+                }
 
-                if (response.cloudBuild === true) {
+                self.targetDetail = detail;
+                if (detail.cloudBuild === true) {
                     $("div.build_configuration").slideDown();
 
                     const expertMode = expertMode_e.is(":checked");
                     if (expertMode) {
-                        if (response.releaseType === "Unstable") {
-                            self.buildApi.loadCommits(response.release, (commits) => {
+                        if (detail.releaseType === "Unstable") {
+                            let commits = await self.buildApi.loadCommits(detail.release);
+                            if (commits) {
                                 const select_e = $('select[name="commits"]');
                                 select_e.empty();
                                 commits.forEach((commit) => {
@@ -430,7 +445,7 @@ firmware_flasher.initialize = function (callback) {
                                         $(`<option value='${commit.sha}'>${commit.message.split("\n")[0]}</option>`),
                                     );
                                 });
-                            });
+                            }
 
                             $("div.commitSelection").show();
                         } else {
@@ -443,21 +458,34 @@ firmware_flasher.initialize = function (callback) {
                     $("input.corebuild_mode").trigger("change");
                 }
 
-                if (response.configuration && !self.isConfigLocal) {
-                    setBoardConfig(response.configuration);
+                if (detail.configuration && !self.isConfigLocal) {
+                    setBoardConfig(detail.configuration);
                 }
 
                 self.enableLoadRemoteFileButton(true);
             }
 
-            self.buildApi.loadTarget(target, release, onTargetDetail);
+            try {
+                let targetDetail = await self.buildApi.loadTarget(target, release);
+                await LoadTargetDetail(targetDetail);
+            } catch (error) {
+                console.error("Failed to load target:", error);
+                loadFailed();
+                return;
+            }
 
-            const OnInvalidBuildKey = () => self.buildApi.loadOptions(release, buildOptions);
-
-            if (self.validateBuildKey()) {
-                self.buildApi.loadOptionsByBuildKey(release, self.cloudBuildKey, buildOptions, OnInvalidBuildKey);
-            } else {
-                OnInvalidBuildKey();
+            try {
+                if (self.validateBuildKey()) {
+                    let options = await self.buildApi.loadOptionsByBuildKey(release, self.cloudBuildKey);
+                    if (options) {
+                        buildOptions(options);
+                        return;
+                    }
+                }
+                buildOptions(await self.buildApi.loadOptions(release));
+            } catch (error) {
+                console.error("Failed to load build options:", error);
+                return;
             }
         }
 
@@ -537,7 +565,7 @@ firmware_flasher.initialize = function (callback) {
             toggleTelemetryProtocolInfo();
         });
 
-        $('select[name="board"]').on("change", function () {
+        $('select[name="board"]').on("change", async function () {
             self.enableLoadRemoteFileButton(false);
             let target = $(this).val();
 
@@ -583,7 +611,7 @@ firmware_flasher.initialize = function (callback) {
                         $(`<option value='0'>${i18n.getMessage("firmwareFlasherOptionLoading")}</option>`),
                     );
 
-                    self.buildApi.loadTargetReleases(target, (data) => populateReleases(versions_e, data));
+                    populateReleases(versions_e, await self.buildApi.loadTargetReleases(target));
                 }
             }
         });
@@ -906,15 +934,6 @@ firmware_flasher.initialize = function (callback) {
                 return;
             }
 
-            function onLoadFailed() {
-                $("span.progressLabel")
-                    .attr("i18n", "firmwareFlasherFailedToLoadOnlineFirmware")
-                    .removeClass("i18n-replaced");
-                self.enableLoadRemoteFileButton(true);
-                $("a.load_remote_file").text(i18n.getMessage("firmwareFlasherButtonLoadOnline"));
-                i18n.localizePage();
-            }
-
             function updateStatus(status, key, val, showLog) {
                 if (showLog === true) {
                     $("div.release_info #cloudTargetLog")
@@ -925,7 +944,7 @@ firmware_flasher.initialize = function (callback) {
                 $(".buildProgress").val(val);
             }
 
-            function processBuildSuccess(response, statusResponse, suffix) {
+            async function processBuildSuccess(response, statusResponse, suffix) {
                 if (statusResponse.status !== "success") {
                     return;
                 }
@@ -933,15 +952,10 @@ firmware_flasher.initialize = function (callback) {
                 if (statusResponse.configuration !== undefined && !self.isConfigLocal) {
                     setBoardConfig(statusResponse.configuration);
                 }
-                self.buildApi.loadTargetHex(response.url, (hex) => onLoadSuccess(hex, response.file), onLoadFailed);
+                processHex(await self.buildApi.loadTargetHex(response.url), response.file);
             }
 
-            function processBuildFailure(key, suffix) {
-                updateStatus(`Fail${suffix}`, key, 0, true);
-                onLoadFailed();
-            }
-
-            function requestCloudBuild(targetDetail) {
+            async function requestCloudBuild(targetDetail) {
                 let request = {
                     target: targetDetail.target,
                     release: targetDetail.release,
@@ -990,88 +1004,83 @@ firmware_flasher.initialize = function (callback) {
                 }
 
                 console.info("Build request:", request);
-                self.buildApi.requestBuild(
-                    request,
-                    (response) => {
-                        console.info("Build response:", response);
+                let response = await self.buildApi.requestBuild(request);
+                if (!response) {
+                    updateStatus("FailRequest", "", 0, false);
+                    loadFailed();
+                    return;
+                }
 
-                        // Complete the summary object to be used later
-                        self.targetDetail.file = response.file;
+                console.info("Build response:", response);
 
-                        if (!targetDetail.cloudBuild) {
-                            // it is a previous release, so simply load the hex
-                            self.buildApi.loadTargetHex(
-                                response.url,
-                                (hex) => onLoadSuccess(hex, response.file),
-                                onLoadFailed,
-                            );
+                // Complete the summary object to be used later
+                self.targetDetail.file = response.file;
+
+                if (!targetDetail.cloudBuild) {
+                    // it is a previous release, so simply load the hex
+                    processHex(await self.buildApi.loadTargetHex(response.url), response.file);
+                    return;
+                }
+
+                updateStatus("Pending", response.key, 0, false);
+                self.cancelBuild = false;
+
+                let statusResponse = await self.buildApi.requestBuildStatus(response.key);
+
+                if (statusResponse.status === "success") {
+                    // will be cached already, no need to wait.
+                    await processBuildSuccess(response, statusResponse, "Cached");
+                    return;
+                }
+
+                self.enableCancelBuildButton(true);
+                const retrySeconds = 5;
+                let retries = 1;
+                let processing = false;
+                let timeout = 120;
+                const timer = setInterval(async () => {
+                    retries++;
+                    let statusResponse = await self.buildApi.requestBuildStatus(response.key);
+
+                    if (!statusResponse) {
+                        return;
+                    }
+
+                    if (statusResponse.timeOut !== undefined) {
+                        if (!processing) {
+                            processing = true;
+                            retries = 1;
+                        }
+                        timeout = statusResponse.timeOut;
+                    }
+                    const retryTotal = timeout / retrySeconds;
+
+                    if (statusResponse.status !== "queued" || retries > retryTotal || self.cancelBuild) {
+                        self.enableCancelBuildButton(false);
+                        clearInterval(timer);
+
+                        if (statusResponse.status === "success") {
+                            processBuildSuccess(response, statusResponse, "");
                             return;
                         }
 
-                        updateStatus("Pending", response.key, 0, false);
-                        self.cancelBuild = false;
+                        let suffix = "";
+                        if (retries > retryTotal) {
+                            suffix = "TimeOut";
+                        }
 
-                        self.buildApi.requestBuildStatus(response.key, (statusResponse) => {
-                            if (statusResponse.status === "success") {
-                                // will be cached already, no need to wait.
-                                processBuildSuccess(response, statusResponse, "Cached");
-                                return;
-                            }
+                        if (self.cancelBuild) {
+                            suffix = "Cancel";
+                        }
+                        updateStatus(`Fail${suffix}`, response.key, 0, true);
+                        loadFailed();
+                        return;
+                    }
 
-                            self.enableCancelBuildButton(true);
-                            const retrySeconds = 5;
-                            let retries = 1;
-                            let processing = false;
-                            let timeout = 120;
-                            const timer = setInterval(() => {
-                                self.buildApi.requestBuildStatus(response.key, (statusResponse) => {
-                                    if (statusResponse.timeOut !== undefined) {
-                                        if (!processing) {
-                                            processing = true;
-                                            retries = 1;
-                                        }
-                                        timeout = statusResponse.timeOut;
-                                    }
-                                    const retryTotal = timeout / retrySeconds;
-
-                                    if (
-                                        statusResponse.status !== "queued" ||
-                                        retries > retryTotal ||
-                                        self.cancelBuild
-                                    ) {
-                                        self.enableCancelBuildButton(false);
-                                        clearInterval(timer);
-
-                                        if (statusResponse.status === "success") {
-                                            processBuildSuccess(response, statusResponse, "");
-                                            return;
-                                        }
-
-                                        let suffix = "";
-                                        if (retries > retryTotal) {
-                                            suffix = "TimeOut";
-                                        }
-
-                                        if (self.cancelBuild) {
-                                            suffix = "Cancel";
-                                        }
-                                        processBuildFailure(response.key, suffix);
-                                        return;
-                                    }
-
-                                    if (processing) {
-                                        updateStatus("Processing", response.key, retries * (100 / retryTotal), false);
-                                    }
-                                    retries++;
-                                });
-                            }, retrySeconds * 1000);
-                        });
-                    },
-                    () => {
-                        updateStatus("FailRequest", "", 0, false);
-                        onLoadFailed();
-                    },
-                );
+                    if (processing) {
+                        updateStatus("Processing", response.key, retries * (100 / retryTotal), false);
+                    }
+                }, retrySeconds * 1000);
             }
 
             if (self.targetDetail) {
@@ -1081,7 +1090,7 @@ firmware_flasher.initialize = function (callback) {
 
                 showReleaseNotes(self.targetDetail);
 
-                requestCloudBuild(self.targetDetail);
+                await requestCloudBuild(self.targetDetail);
             } else {
                 $("span.progressLabel")
                     .attr("i18n", "firmwareFlasherFailedToLoadOnlineFirmware")
@@ -1345,10 +1354,8 @@ firmware_flasher.initialize = function (callback) {
         GUI.content_ready(callback);
     }
 
-    self.buildApi.loadTargets(() => {
-        console.log(`${self.logHead} Targets loaded`);
-        $("#content").load("./tabs/firmware_flasher.html", onDocumentLoad);
-    });
+    console.log(`${self.logHead} Targets loaded`);
+    $("#content").load("./tabs/firmware_flasher.html", onDocumentLoad);
 };
 
 // Helper functions
