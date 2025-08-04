@@ -3,7 +3,6 @@ import BFClipboard from "../Clipboard";
 import { generateFilename } from "../utils/generate_filename";
 import GUI, { TABS } from "../gui";
 import BuildApi from "../BuildApi";
-import { tracking } from "../Analytics";
 import { reinitializeConnection } from "../serial_backend";
 import CONFIGURATOR from "../data_storage";
 import CliAutoComplete from "../CliAutoComplete";
