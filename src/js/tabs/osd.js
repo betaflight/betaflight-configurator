@@ -2354,12 +2354,12 @@ OSD.initializeRulers = function () {
     if (!canvas || !preview || !container || !OSD.data?.displaySize) return false;
     if (!enabled) {
         canvas.style.display = "none";
-        preview.style.marginRight = "";
-        preview.style.marginLeft = "";
-        preview.style.marginTop = "";
-        container.style.paddingRight = "";
-        container.style.paddingLeft = "";
-        container.style.paddingTop = "";
+        preview.style.marginRight = "initial";
+        preview.style.marginLeft = "initial";
+        preview.style.marginTop = "initial";
+        container.style.paddingRight = "0px";
+        container.style.paddingLeft = "0px";
+        container.style.paddingTop = "0px";
         return false;
     }
     canvas.style.display = "block";
