@@ -2429,12 +2429,22 @@ OSD._rowCenterY = function (i, containerRect, rows) {
 };
 
 OSD._drawTopAxis = function (ctx, params) {
-    const { cols, cx, top, colsInRow, containerRect, config } = params;
+    const { cols, top, colsInRow, containerRect, config } = params;
+    let centerIndex, minOffset, maxOffset;
+    if (cols % 2 === 0) {
+        centerIndex = cols / 2 - 0.5;
+        minOffset = -Math.floor(cols / 2 - 0.5);
+        maxOffset = Math.floor(cols / 2 - 0.5);
+    } else {
+        centerIndex = Math.floor(cols / 2);
+        minOffset = -centerIndex;
+        maxOffset = centerIndex;
+    }
     for (let i = 0; i < cols; i++) {
+        let offset = Math.round(i - centerIndex);
         const x = OSD._colCenterX(i, containerRect, colsInRow);
-        const offset = i - cx;
-        const isCenter = i === cx;
-        const isMajor = i % 5 === 0 || i === 0 || i === cols - 1 || isCenter;
+        const isCenter = offset === 0;
+        const isMajor = offset % 5 === 0 || isCenter;
         const tick = isMajor ? config.tickMajor : config.tickMinor;
         ctx.strokeStyle = isCenter ? config.colorCenter : isMajor ? config.colorMajor : config.colorMinor;
         ctx.lineWidth = 1;
@@ -2444,7 +2454,7 @@ OSD._drawTopAxis = function (ctx, params) {
         ctx.moveTo(x + 0.5, y0 + 0.5);
         ctx.lineTo(x + 0.5, y1 + 0.5);
         ctx.stroke();
-        if (isMajor) {
+        if (isMajor && offset >= minOffset && offset <= maxOffset) {
             ctx.fillStyle = isCenter ? config.colorCenter : "#ffffff";
             ctx.save();
             ctx.textBaseline = "bottom";
@@ -2458,12 +2468,22 @@ OSD._drawTopAxis = function (ctx, params) {
     }
 };
 OSD._drawBottomAxis = function (ctx, params) {
-    const { cols, cx, bottom, ch, colsInRow, containerRect, config } = params;
+    const { cols, bottom, ch, colsInRow, containerRect, config } = params;
+    let centerIndex, minOffset, maxOffset;
+    if (cols % 2 === 0) {
+        centerIndex = cols / 2 - 0.5;
+        minOffset = -Math.floor(cols / 2 - 0.5);
+        maxOffset = Math.floor(cols / 2 - 0.5);
+    } else {
+        centerIndex = Math.floor(cols / 2);
+        minOffset = -centerIndex;
+        maxOffset = centerIndex;
+    }
     for (let i = 0; i < cols; i++) {
+        let offset = Math.round(i - centerIndex);
         const x = OSD._colCenterX(i, containerRect, colsInRow);
-        const offset = i - cx;
-        const isCenter = i === cx;
-        const isMajor = i % 5 === 0 || i === 0 || i === cols - 1 || isCenter;
+        const isCenter = offset === 0;
+        const isMajor = offset % 5 === 0 || isCenter;
         const tick = isMajor ? config.tickMajor : config.tickMinor;
         ctx.strokeStyle = isCenter ? config.colorCenter : isMajor ? config.colorMajor : config.colorMinor;
         ctx.lineWidth = 1;
@@ -2473,7 +2493,7 @@ OSD._drawBottomAxis = function (ctx, params) {
         ctx.moveTo(x + 0.5, y0 + 0.5);
         ctx.lineTo(x + 0.5, y1 + 0.5);
         ctx.stroke();
-        if (isMajor) {
+        if (isMajor && offset >= minOffset && offset <= maxOffset) {
             ctx.fillStyle = isCenter ? config.colorCenter : "#ffffff";
             const maxLabelY = ch - 12;
             const labelY = Math.min(maxLabelY, y1 + config.bottomLabelOffset);
