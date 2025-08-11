@@ -2390,12 +2390,12 @@ OSD.initializeRulers = function () {
     if (!canvas || !preview || !container || !OSD.data?.displaySize) return false;
     if (!enabled) {
         canvas.style.display = "none";
-        preview.style.marginRight = "initial";
-        preview.style.marginLeft = "initial";
-        preview.style.marginTop = "initial";
-        container.style.paddingRight = "0px";
-        container.style.paddingLeft = "0px";
-        container.style.paddingTop = "0px";
+        preview.style.marginRight = "";
+        preview.style.marginLeft = "";
+        preview.style.marginTop = "";
+        container.style.paddingRight = "";
+        container.style.paddingLeft = "";
+        container.style.paddingTop = "";
         return false;
     }
     canvas.style.display = "block";
