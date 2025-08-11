@@ -2469,15 +2469,11 @@ function drawHorizontalAxis(ctx, params, axis) {
         }
     }
 }
-OSD._drawTopAxis = function (ctx, params) {
-    drawHorizontalAxis(ctx, params, "top");
-};
-OSD._drawBottomAxis = function (ctx, params) {
-    drawHorizontalAxis(ctx, params, "bottom");
-};
-OSD._drawLeftAxis = function (ctx, params) {
-    const { rowsCount, cy, left, ch, signPad, rows, containerRect, config } = params;
-    ctx.textAlign = "right";
+
+// Shared vertical axis drawing helper for left/right rulers
+function drawVerticalAxis(ctx, params, axis) {
+    const { rowsCount, cy, left, right, ch, cw, signPad, rows, containerRect, config } = params;
+    ctx.textAlign = axis === "left" ? "right" : "left";
     for (let i = 0; i < rowsCount; i++) {
         const y = OSD._rowCenterY(i, containerRect, rows);
         const offset = i - cy;
@@ -2487,8 +2483,14 @@ OSD._drawLeftAxis = function (ctx, params) {
         ctx.strokeStyle = isCenter ? config.colorCenter : isMajor ? config.colorMajor : config.colorMinor;
         ctx.lineWidth = 1;
         ctx.beginPath();
-        const x0 = left - 1;
-        const x1 = Math.max(0, left - tick);
+        let x0, x1, labelX;
+        if (axis === "left") {
+            x0 = left - 1;
+            x1 = Math.max(0, left - tick);
+        } else {
+            x0 = Math.min(cw - 1, right + 1);
+            x1 = Math.min(cw - 1, right + tick);
+        }
         ctx.moveTo(x0 + 0.5, y + 0.5);
         ctx.lineTo(x1 + 0.5, y + 0.5);
         ctx.stroke();
@@ -2497,8 +2499,13 @@ OSD._drawLeftAxis = function (ctx, params) {
             const text = offset.toString();
             const textWidth = ctx.measureText(text).width;
             const extra = text.startsWith("-") ? signPad : 0;
-            const desired = x1 - (isMajor ? config.sideLabelOffsetMajor : config.sideLabelOffset) - extra;
-            const labelX = Math.max(config.minEdgePadding + textWidth, desired);
+            if (axis === "left") {
+                const desired = x1 - (isMajor ? config.sideLabelOffsetMajor : config.sideLabelOffset) - extra;
+                labelX = Math.max(config.minEdgePadding + textWidth, desired);
+            } else {
+                const desired = x1 + (isMajor ? config.sideLabelOffsetMajor : config.sideLabelOffset) + extra;
+                labelX = Math.min(cw - config.minEdgePadding - textWidth, desired);
+            }
             ctx.lineWidth = 3;
             ctx.strokeStyle = "rgba(0,0,0,0.6)";
             const yLabel = Math.max(config.minEdgePadding, Math.min(ch - config.minEdgePadding, y + 0.5));
@@ -2506,38 +2513,19 @@ OSD._drawLeftAxis = function (ctx, params) {
             ctx.fillText(text, labelX, yLabel);
         }
     }
+}
+
+OSD._drawTopAxis = function (ctx, params) {
+    drawHorizontalAxis(ctx, params, "top");
+};
+OSD._drawBottomAxis = function (ctx, params) {
+    drawHorizontalAxis(ctx, params, "bottom");
+};
+OSD._drawLeftAxis = function (ctx, params) {
+    drawVerticalAxis(ctx, params, "left");
 };
 OSD._drawRightAxis = function (ctx, params) {
-    const { rowsCount, cy, right, cw, signPad, rows, containerRect, config } = params;
-    ctx.textAlign = "left";
-    for (let i = 0; i < rowsCount; i++) {
-        const y = OSD._rowCenterY(i, containerRect, rows);
-        const offset = i - cy;
-        const isCenter = i === cy;
-        const isMajor = Math.abs(offset) % config.verticalLabelStep === 0 || i === 0 || i === rowsCount - 1 || isCenter;
-        const tick = isMajor ? config.vertTickMajor : config.tickMinor;
-        ctx.strokeStyle = isCenter ? config.colorCenter : isMajor ? config.colorMajor : config.colorMinor;
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        const x0 = Math.min(cw - 1, right + 1);
-        const x1 = Math.min(cw - 1, right + tick);
-        ctx.moveTo(x0 + 0.5, y + 0.5);
-        ctx.lineTo(x1 + 0.5, y + 0.5);
-        ctx.stroke();
-        if (isMajor) {
-            ctx.fillStyle = isCenter ? config.colorCenter : "#ffffff";
-            const text = offset.toString();
-            const textWidth = ctx.measureText(text).width;
-            const extra = text.startsWith("-") ? signPad : 0;
-            const desired = x1 + (isMajor ? config.sideLabelOffsetMajor : config.sideLabelOffset) + extra;
-            const labelX = Math.min(cw - config.minEdgePadding - textWidth, desired);
-            ctx.lineWidth = 3;
-            ctx.strokeStyle = "rgba(0,0,0,0.6)";
-            const yLabel = Math.max(config.minEdgePadding, Math.min(params.ch - config.minEdgePadding, y + 0.5));
-            ctx.strokeText(text, labelX, yLabel);
-            ctx.fillText(text, labelX, yLabel);
-        }
-    }
+    drawVerticalAxis(ctx, params, "right");
 };
 
 OSD.drawRulers = function () {
