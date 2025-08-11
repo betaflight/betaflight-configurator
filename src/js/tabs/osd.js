@@ -30,10 +30,6 @@ const positionConfigs = {
             x: 1,
             y: 1,
         }),
-        grow: {
-            x: 0,
-            y: 1,
-        },
         gridPos: [0, 0],
     },
     TC: {
@@ -2328,6 +2324,258 @@ OSD.updateDisplaySize = function () {
     };
 };
 
+OSD.drawRulers = function () {
+    // Dynamic, 0-centered meter around the preview, aligned to DOM cell centers
+    const canvas = document.querySelector(".ruler-overlay");
+    const preview = document.querySelector(".preview");
+    const container = document.querySelector(".preview-container");
+    const enabled = document.querySelector("#osd-preview-rulers-selector")?.checked;
+
+    if (!canvas || !preview || !container || !OSD.data?.displaySize) return;
+
+    if (!enabled) {
+        canvas.style.display = "none";
+        // Clear any runtime spacing
+        preview.style.marginRight = "";
+        preview.style.marginLeft = "";
+        preview.style.marginTop = "";
+        container.style.paddingRight = "";
+        container.style.paddingLeft = "";
+        container.style.paddingTop = "";
+        return;
+    }
+    canvas.style.display = "block";
+    // Reserve small gaps so outside meters can render without overlap
+    const reserveRight = 0; // px (use preview margin-right instead to avoid pushing container)
+    const reserveLeft = 0; // px (use preview margin-left for symmetry/centering)
+    const reserveTop = 26; // px
+    container.style.paddingRight = reserveRight ? `${reserveRight}px` : "";
+    container.style.paddingLeft = reserveLeft ? `${reserveLeft}px` : "";
+    container.style.paddingTop = `${reserveTop}px`;
+    // Add baseline symmetric margins; will be updated dynamically after offsets are known
+    preview.style.marginRight = "30px";
+    preview.style.marginLeft = "30px";
+
+    // Match canvas pixel buffer to container box for crisp drawing
+    const cw = Math.max(1, Math.floor(container.clientWidth));
+    const ch = Math.max(1, Math.floor(container.clientHeight));
+    if (canvas.width !== cw) canvas.width = cw;
+    if (canvas.height !== ch) canvas.height = ch;
+
+    const ctx = canvas.getContext("2d");
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Collect grid DOM info
+    const rows = preview.querySelectorAll(".row");
+    if (!rows.length) return;
+    const colsInRow = rows[0].querySelectorAll(".char");
+    if (!colsInRow.length) return;
+
+    // Rects relative to container for proper canvas coordinates
+    const containerRect = container.getBoundingClientRect();
+    const previewRect = preview.getBoundingClientRect();
+    // Use floor for left/top and ceil for right/bottom to bias ticks outside
+    const left = Math.floor(previewRect.left - containerRect.left);
+    const top = Math.floor(previewRect.top - containerRect.top);
+    const right = Math.ceil(previewRect.right - containerRect.left);
+    const bottom = Math.ceil(previewRect.bottom - containerRect.top);
+
+    // Cell sizes
+    const charRect = colsInRow[0].getBoundingClientRect();
+    const cellW = charRect.width;
+    const cellH = charRect.height;
+
+    // Centers in index space
+    const cols = colsInRow.length;
+    const rowsCount = rows.length;
+    const cx = Math.floor(cols / 2);
+    const cy = Math.floor(rowsCount / 2);
+
+    // Meter styling
+    const meterThickness = 16; // space for ticks+labels
+    const tickMinor = 6;
+    const tickMajor = 10;
+    const vertTickMajor = tickMajor + 6; // extend STEP markers on left/right
+    const labelPadding = 8;
+    const topLabelOffset = 4; // small gap above the tip, like bottom feel
+    const sideLabelOffset = labelPadding + 44; // base spacing on left/right (+4px)
+    const sideLabelOffsetMajor = sideLabelOffset + 16; // extra spacing for STEP markers (major)
+    const bottomLabelOffset = labelPadding + 14; // more gap so bottom labels don't touch markers
+    const edgeGap = 4; // small gap between preview edge and tick start for top
+    const minEdgePadding = 10; // keep labels away from canvas edges for visibility
+    // extra spacing for negative numbers based on actual minus sign width
+    const signPad = Math.ceil(ctx.measureText("-").width) + 2;
+    const verticalTextNudge = 0; // keep left/right labels centered on the tick line
+    // Small bumps to force top/right meters further outside the preview
+    const bumpTop = 3;
+    const bumpRight = 3;
+    const colorMinor = "#888888";
+    const colorMajor = "#cccccc";
+    const colorCenter = "#ffff00";
+    ctx.font = "10px monospace";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+
+    // Always draw outside preview per feedback
+    const drawBottomInside = false;
+    const drawRightInside = false;
+
+    // Debug: verify parameters active in the browser (toggle rulers or resize to see logs)
+    try {
+        console.debug("[OSD.drawRulers] v2025-08-11-9", {
+            topLabelOffset,
+            sideLabelOffset,
+            sideLabelOffsetMajor,
+            bottomLabelOffset,
+            vertTickMajor,
+            edgeGap,
+            signPad,
+        });
+    } catch (_) {}
+
+    // Helper: x position for column center
+    const colCenterX = (i) => {
+        const rect = colsInRow[i].getBoundingClientRect();
+        return Math.round(rect.left - containerRect.left + rect.width / 2);
+    };
+    // Helper: y position for row center
+    const rowCenterY = (i) => {
+        const rect = rows[i].getBoundingClientRect();
+        return Math.round(rect.top - containerRect.top + rect.height / 2);
+    };
+
+    // Top axis (draw markers outside above the preview; labels above the tip)
+    for (let i = 0; i < cols; i++) {
+        const x = colCenterX(i);
+        const offset = i - cx;
+        const isCenter = i === cx;
+        const isMajor = i % 5 === 0 || i === 0 || i === cols - 1 || isCenter;
+        const tick = isMajor ? tickMajor : tickMinor;
+        ctx.strokeStyle = isCenter ? colorCenter : isMajor ? colorMajor : colorMinor;
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        // draw ticks upward outside the preview with a small edge gap
+        const y0 = Math.max(0, top - edgeGap);
+        const y1 = Math.max(0, y0 - tick);
+        ctx.moveTo(x + 0.5, y0 + 0.5);
+        ctx.lineTo(x + 0.5, y1 + 0.5);
+        ctx.stroke();
+        if (isMajor) {
+            ctx.fillStyle = isCenter ? colorCenter : "#ffffff";
+            // Place label above the tick (outside the preview)
+            ctx.save();
+            ctx.textBaseline = "bottom";
+            const labelY = Math.max(minEdgePadding, y1 - topLabelOffset);
+            // outline for contrast
+            ctx.lineWidth = 3;
+            ctx.strokeStyle = "rgba(0,0,0,0.6)";
+            ctx.strokeText(offset.toString(), x, labelY);
+            ctx.fillText(offset.toString(), x, labelY);
+            ctx.restore();
+        }
+    }
+
+    // Bottom axis (outside if space, otherwise inside the preview)
+    for (let i = 0; i < cols; i++) {
+        const x = colCenterX(i);
+        const offset = i - cx;
+        const isCenter = i === cx;
+        const isMajor = i % 5 === 0 || i === 0 || i === cols - 1 || isCenter;
+        const tick = isMajor ? tickMajor : tickMinor;
+        ctx.strokeStyle = isCenter ? colorCenter : isMajor ? colorMajor : colorMinor;
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        // draw below preview (outside) starting just outside edge
+        const y0 = Math.min(ch, bottom + 1);
+        const y1 = Math.min(ch, bottom + tick);
+        ctx.moveTo(x + 0.5, y0 + 0.5);
+        ctx.lineTo(x + 0.5, y1 + 0.5);
+        ctx.stroke();
+        if (isMajor) {
+            ctx.fillStyle = isCenter ? colorCenter : "#ffffff";
+            // place label below tick tip with extra gap, clamp to canvas
+            const maxLabelY = ch - 12; // keep text comfortably inside canvas
+            const labelY = Math.min(maxLabelY, y1 + bottomLabelOffset);
+            ctx.save();
+            ctx.textBaseline = "top";
+            // outline for contrast
+            ctx.lineWidth = 3;
+            ctx.strokeStyle = "rgba(0,0,0,0.6)";
+            ctx.strokeText(offset.toString(), x, labelY);
+            ctx.fillText(offset.toString(), x, labelY);
+            ctx.restore();
+        }
+    }
+
+    // Left axis (outside ticks, labels outside to the left of tick tips)
+    ctx.textAlign = "right";
+    const verticalLabelStep = 2; // label every 2 cells vertically
+    for (let i = 0; i < rowsCount; i++) {
+        const y = rowCenterY(i);
+        const offset = i - cy;
+        const isCenter = i === cy;
+        const isMajor = Math.abs(offset) % verticalLabelStep === 0 || i === 0 || i === rowsCount - 1 || isCenter;
+        const tick = isMajor ? vertTickMajor : tickMinor; // longer STEP markers on left/right
+        ctx.strokeStyle = isCenter ? colorCenter : isMajor ? colorMajor : colorMinor;
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        const x0 = left - 1;
+        const x1 = Math.max(0, left - tick);
+        ctx.moveTo(x0 + 0.5, y + 0.5);
+        ctx.lineTo(x1 + 0.5, y + 0.5);
+        ctx.stroke();
+        if (isMajor) {
+            ctx.fillStyle = isCenter ? colorCenter : "#ffffff";
+            // Place label outside, left of the tick tip
+            const text = offset.toString();
+            const textWidth = ctx.measureText(text).width;
+            const extra = text.startsWith("-") ? signPad : 0;
+            const desired = x1 - (isMajor ? sideLabelOffsetMajor : sideLabelOffset) - extra;
+            const labelX = Math.max(minEdgePadding + textWidth, desired);
+            // outline for contrast
+            ctx.lineWidth = 3;
+            ctx.strokeStyle = "rgba(0,0,0,0.6)";
+            const yLabel = Math.max(minEdgePadding, Math.min(ch - minEdgePadding, y + 0.5));
+            ctx.strokeText(text, labelX, yLabel);
+            ctx.fillText(text, labelX, yLabel);
+        }
+    }
+
+    // Right axis (outside ticks, labels outside to the right of tick tips)
+    ctx.textAlign = "left";
+    for (let i = 0; i < rowsCount; i++) {
+        const y = rowCenterY(i);
+        const offset = i - cy;
+        const isCenter = i === cy;
+        const isMajor = Math.abs(offset) % verticalLabelStep === 0 || i === 0 || i === rowsCount - 1 || isCenter;
+        const tick = isMajor ? vertTickMajor : tickMinor; // longer STEP markers on left/right
+        ctx.strokeStyle = isCenter ? colorCenter : isMajor ? colorMajor : colorMinor;
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        // start ticks exactly at preview right edge to touch the last cell
+        const x0 = Math.min(cw - 1, right + 1);
+        const x1 = Math.min(cw - 1, right + tick);
+        ctx.moveTo(x0 + 0.5, y + 0.5);
+        ctx.lineTo(x1 + 0.5, y + 0.5);
+        ctx.stroke();
+        if (isMajor) {
+            ctx.fillStyle = isCenter ? colorCenter : "#ffffff";
+            // Place label outside, right of the tick tip
+            const text = offset.toString();
+            const textWidth = ctx.measureText(text).width;
+            const extra = text.startsWith("-") ? signPad : 0;
+            const desired = x1 + (isMajor ? sideLabelOffsetMajor : sideLabelOffset) + extra;
+            const labelX = Math.min(cw - minEdgePadding - textWidth, desired);
+            // outline for contrast
+            ctx.lineWidth = 3;
+            ctx.strokeStyle = "rgba(0,0,0,0.6)";
+            const yLabel = Math.max(minEdgePadding, Math.min(ch - minEdgePadding, y + 0.5));
+            ctx.strokeText(text, labelX, yLabel);
+            ctx.fillText(text, labelX, yLabel);
+        }
+    }
+};
+
 OSD.drawByOrder = function (selectedPosition, field, charCode, x, y) {
     // Check if there is other field at the same position
     if (OSD.data.preview[selectedPosition] !== undefined) {
@@ -3964,6 +4212,27 @@ osd.initialize = function (callback) {
             });
         });
 
+        // Rulers toggle
+        $("#osd-preview-rulers-selector").change(function () {
+            OSD.drawRulers();
+        });
+
+        // Window resize listener for rulers
+        $(window).on("resize.osd-rulers", function () {
+            if (document.querySelector("#osd-preview-rulers-selector")?.checked) {
+                // Throttle the resize calls using requestAnimationFrame
+                if (OSD.rulersResizeTimer) {
+                    cancelAnimationFrame(OSD.rulersResizeTimer);
+                }
+                OSD.rulersResizeTimer = requestAnimationFrame(() => {
+                    // Use setTimeout to ensure preview has been resized
+                    setTimeout(() => {
+                        OSD.drawRulers();
+                    }, 100);
+                });
+            }
+        });
+
         $("a.save").click(function () {
             MSP.promise(MSPCodes.MSP_EEPROM_WRITE);
             gui_log(i18n.getMessage("osdSettingsSaved"));
@@ -4084,6 +4353,7 @@ osd.cleanup = function (callback) {
     // unbind "global" events
     $(document).unbind("keypress");
     $(document).off("click", "span.progressLabel a");
+    $(window).off("resize.osd-rulers");
 
     if (callback) {
         callback();

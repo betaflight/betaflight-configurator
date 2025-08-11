@@ -28,6 +28,7 @@
             border-radius: 5px;
             border: 1px solid var(--surface-500);
             -webkit-appearance: none;
+            appearance: none;
             &::-webkit-progress-bar {
                 background-color: var(--text);
                 border-radius: 4px;
@@ -159,6 +160,7 @@
         }
     }
     .display-layout {
+        height: 100%;
         label {
             margin: 0.25em 0.1em;
             display: inline-block;
@@ -187,10 +189,27 @@
         /* please don't copy the generic background image from another project
 		* and replace the one that @nathantsoi took :)
 		*/
+        .preview-container {
+            position: relative;
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        .ruler-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 10;
+            pointer-events: none;
+        }
+
         .preview {
             background: url(../../images/osd-bg-1.jpg);
             background-size: cover;
             background-repeat: no-repeat;
+            margin-top: 20px;
+            margin-left: 20px;
         }
         .gui_box_titlebar {
             label {
@@ -204,6 +223,7 @@
         }
         .gui_box_bottombar {
             text-align: center;
+            margin-top: 30px;
         }
         .row {
             display: flex;
@@ -254,6 +274,13 @@
         display: none;
     }
     .osd-preview-zoom-selector {
+        margin-left: 5px;
+        vertical-align: text-bottom;
+    }
+    .osd-preview-rulers-group {
+        margin-left: 10px;
+    }
+    .osd-preview-rulers-selector {
         margin-left: 5px;
         vertical-align: text-bottom;
     }
