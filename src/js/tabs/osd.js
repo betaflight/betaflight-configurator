@@ -2429,23 +2429,7 @@ OSD._rowCenterY = function (i, containerRect, rows) {
 };
 
 OSD._drawTopAxis = function (ctx, params) {
-    const {
-        cols,
-        cx,
-        top,
-        // edgeGap,
-        // tickMajor,
-        // tickMinor,
-        // colorCenter,
-        // colorMajor,
-        // colorMinor,
-        // minEdgePadding,
-        // topLabelOffset,
-        // rowsCount,
-        colsInRow,
-        containerRect,
-        config,
-    } = params;
+    const { cols, cx, top, colsInRow, containerRect, config } = params;
     for (let i = 0; i < cols; i++) {
         const x = OSD._colCenterX(i, containerRect, colsInRow);
         const offset = i - cx;
@@ -2474,23 +2458,7 @@ OSD._drawTopAxis = function (ctx, params) {
     }
 };
 OSD._drawBottomAxis = function (ctx, params) {
-    const {
-        cols,
-        cx,
-        bottom,
-        ch,
-        // tickMajor,
-        // tickMinor,
-        // colorCenter,
-        // colorMajor,
-        // colorMinor,
-        // minEdgePadding,
-        // bottomLabelOffset,
-        // rowsCount,
-        colsInRow,
-        containerRect,
-        config,
-    } = params;
+    const { cols, cx, bottom, ch, colsInRow, containerRect, config } = params;
     for (let i = 0; i < cols; i++) {
         const x = OSD._colCenterX(i, containerRect, colsInRow);
         const offset = i - cx;
@@ -2520,24 +2488,7 @@ OSD._drawBottomAxis = function (ctx, params) {
     }
 };
 OSD._drawLeftAxis = function (ctx, params) {
-    const {
-        rowsCount,
-        cy,
-        left,
-        ch,
-        // vertTickMajor,
-        // tickMinor,
-        // colorCenter,
-        // colorMajor,
-        // colorMinor,
-        // minEdgePadding,
-        // sideLabelOffset,
-        // sideLabelOffsetMajor,
-        signPad,
-        rows,
-        containerRect,
-        config,
-    } = params;
+    const { rowsCount, cy, left, ch, signPad, rows, containerRect, config } = params;
     ctx.textAlign = "right";
     for (let i = 0; i < rowsCount; i++) {
         const y = OSD._rowCenterY(i, containerRect, rows);
@@ -2569,24 +2520,7 @@ OSD._drawLeftAxis = function (ctx, params) {
     }
 };
 OSD._drawRightAxis = function (ctx, params) {
-    const {
-        rowsCount,
-        cy,
-        right,
-        cw,
-        // vertTickMajor,
-        // tickMinor,
-        // colorCenter,
-        // colorMajor,
-        // colorMinor,
-        // minEdgePadding,
-        // sideLabelOffset,
-        // sideLabelOffsetMajor,
-        signPad,
-        rows,
-        containerRect,
-        config,
-    } = params;
+    const { rowsCount, cy, right, cw, signPad, rows, containerRect, config } = params;
     ctx.textAlign = "left";
     for (let i = 0; i < rowsCount; i++) {
         const y = OSD._rowCenterY(i, containerRect, rows);
