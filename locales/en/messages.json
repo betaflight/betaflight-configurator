@@ -7742,5 +7742,9 @@
     "osdDescElementLidar": {
         "message": "$t(osdTextElementLidar.message)",
         "description": "Don't translate!!!"
+    },
+    "osdSetupPreviewCheckRulers": {
+        "message": "Rulers",
+        "description": "Label for the checkbox to toggle OSD preview rulers around the preview"
     }
 }
