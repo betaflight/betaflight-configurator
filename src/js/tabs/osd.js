@@ -1,39 +1,3 @@
-// Ruler meter constants
-// Space for ticks and labels around preview
-const METER_THICKNESS = 16; // px
-// Minor tick length
-const TICK_MINOR_PX = 6; // px
-// Major tick length
-const TICK_MAJOR_PX = 10; // px
-// Vertical axis major tick extension
-const VERT_TICK_EXTENSION_PX = 6; // px
-// Base spacing for side labels (left/right)
-const SIDE_LABEL_BASE_OFFSET_PX = 44; // px
-// Extra spacing for major side labels
-const SIDE_LABEL_MAJOR_EXTRA_PX = 16; // px
-// Bottom label gap from tick tip
-const BOTTOM_LABEL_GAP_PX = 14; // px
-// Top label gap from tick tip
-const TOP_LABEL_GAP_PX = 4; // px
-// Small gap between preview edge and tick start
-const EDGE_GAP_PX = 4; // px
-// Minimum edge padding for label visibility
-const MIN_EDGE_PADDING_PX = 10; // px
-// Extra spacing for negative sign
-const SIGN_PADDING_EXTRA_PX = 2; // px
-// Vertical label step for left/right axes
-const VERTICAL_LABEL_STEP = 2;
-// Small bump for top axis
-const BUMP_TOP_PX = 3; // px
-// Small bump for right axis
-const BUMP_RIGHT_PX = 3; // px
-// Colors
-const COLOR_MINOR = "#888888";
-const COLOR_MAJOR = "#cccccc";
-const COLOR_CENTER = "#ffff00";
-// Font for ruler labels
-const DEFAULT_FONT = "10px monospace";
-
 import { i18n } from "../localization";
 import GUI, { TABS } from "../gui";
 import { tracking } from "../Analytics";
@@ -2362,24 +2326,24 @@ OSD.updateDisplaySize = function () {
 
 // Ruler config object for all magic numbers
 OSD.rulerConfig = {
-    meterThickness: METER_THICKNESS,
-    tickMinor: TICK_MINOR_PX,
-    tickMajor: TICK_MAJOR_PX,
-    vertTickMajor: TICK_MAJOR_PX + VERT_TICK_EXTENSION_PX,
-    labelPadding: SIDE_LABEL_BASE_OFFSET_PX - 44, // for legacy compatibility
-    topLabelOffset: TOP_LABEL_GAP_PX,
-    sideLabelOffset: SIDE_LABEL_BASE_OFFSET_PX,
-    sideLabelOffsetMajor: SIDE_LABEL_BASE_OFFSET_PX + SIDE_LABEL_MAJOR_EXTRA_PX,
-    bottomLabelOffset: BOTTOM_LABEL_GAP_PX,
-    edgeGap: EDGE_GAP_PX,
-    minEdgePadding: MIN_EDGE_PADDING_PX,
-    verticalLabelStep: VERTICAL_LABEL_STEP,
-    bumpTop: BUMP_TOP_PX,
-    bumpRight: BUMP_RIGHT_PX,
-    colorMinor: COLOR_MINOR,
-    colorMajor: COLOR_MAJOR,
-    colorCenter: COLOR_CENTER,
-    font: DEFAULT_FONT,
+    meterThickness: 16, // px
+    tickMinor: 4, // px
+    tickMajor: 8, // px
+    vertTickMajor: 12, // px
+    labelPadding: 12, // px
+    topLabelOffset: 4, // px
+    sideLabelOffset: 12, // px
+    sideLabelOffsetMajor: 16, // px
+    bottomLabelOffset: 12, // px
+    edgeGap: 12, // px
+    minEdgePadding: 12, // px
+    verticalLabelStep: 2,
+    bumpTop: 3, // px
+    bumpRight: 3, // px
+    colorMinor: "#888888",
+    colorMajor: "#cccccc",
+    colorCenter: "#ffff00",
+    font: "10px monospace",
 };
 
 OSD.initializeRulers = function () {
@@ -2432,8 +2396,7 @@ OSD.setupRulerContext = function (canvas, preview, container, config) {
     const rowsCount = rows.length;
     const cx = Math.floor(cols / 2);
     const cy = Math.floor(rowsCount / 2);
-    // SIGN_PAD is the measured width of '-' plus SIGN_PADDING_EXTRA_PX for clarity
-    const signPad = Math.ceil(ctx.measureText("-").width) + SIGN_PADDING_EXTRA_PX;
+    const signPad = Math.ceil(ctx.measureText("-").width);
     return {
         ctx,
         cw,
@@ -2470,15 +2433,15 @@ OSD._drawTopAxis = function (ctx, params) {
         cols,
         cx,
         top,
-        edgeGap,
-        tickMajor,
-        tickMinor,
-        colorCenter,
-        colorMajor,
-        colorMinor,
-        minEdgePadding,
-        topLabelOffset,
-        rowsCount,
+        // edgeGap,
+        // tickMajor,
+        // tickMinor,
+        // colorCenter,
+        // colorMajor,
+        // colorMinor,
+        // minEdgePadding,
+        // topLabelOffset,
+        // rowsCount,
         colsInRow,
         containerRect,
         config,
@@ -2516,14 +2479,14 @@ OSD._drawBottomAxis = function (ctx, params) {
         cx,
         bottom,
         ch,
-        tickMajor,
-        tickMinor,
-        colorCenter,
-        colorMajor,
-        colorMinor,
-        minEdgePadding,
-        bottomLabelOffset,
-        rowsCount,
+        // tickMajor,
+        // tickMinor,
+        // colorCenter,
+        // colorMajor,
+        // colorMinor,
+        // minEdgePadding,
+        // bottomLabelOffset,
+        // rowsCount,
         colsInRow,
         containerRect,
         config,
@@ -2562,14 +2525,14 @@ OSD._drawLeftAxis = function (ctx, params) {
         cy,
         left,
         ch,
-        vertTickMajor,
-        tickMinor,
-        colorCenter,
-        colorMajor,
-        colorMinor,
-        minEdgePadding,
-        sideLabelOffset,
-        sideLabelOffsetMajor,
+        // vertTickMajor,
+        // tickMinor,
+        // colorCenter,
+        // colorMajor,
+        // colorMinor,
+        // minEdgePadding,
+        // sideLabelOffset,
+        // sideLabelOffsetMajor,
         signPad,
         rows,
         containerRect,
@@ -2611,14 +2574,14 @@ OSD._drawRightAxis = function (ctx, params) {
         cy,
         right,
         cw,
-        vertTickMajor,
-        tickMinor,
-        colorCenter,
-        colorMajor,
-        colorMinor,
-        minEdgePadding,
-        sideLabelOffset,
-        sideLabelOffsetMajor,
+        // vertTickMajor,
+        // tickMinor,
+        // colorCenter,
+        // colorMajor,
+        // colorMinor,
+        // minEdgePadding,
+        // sideLabelOffset,
+        // sideLabelOffsetMajor,
         signPad,
         rows,
         containerRect,
