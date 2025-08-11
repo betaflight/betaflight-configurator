@@ -2351,7 +2351,9 @@ OSD.initializeRulers = function () {
     const preview = document.querySelector(".preview");
     const container = document.querySelector(".preview-container");
     const enabled = document.querySelector("#osd-preview-rulers-selector")?.checked;
-    if (!canvas || !preview || !container || !OSD.data?.displaySize) return false;
+    if (!canvas || !preview || !container || !OSD.data?.displaySize) {
+        return false;
+    }
     if (!enabled) {
         canvas.style.display = "none";
         preview.style.marginRight = "";
@@ -2372,17 +2374,25 @@ OSD.initializeRulers = function () {
 OSD.setupRulerContext = function (canvas, preview, container, config) {
     const cw = Math.max(1, Math.floor(container.clientWidth));
     const ch = Math.max(1, Math.floor(container.clientHeight));
-    if (canvas.width !== cw) canvas.width = cw;
-    if (canvas.height !== ch) canvas.height = ch;
+    if (canvas.width !== cw) {
+        canvas.width = cw;
+    }
+    if (canvas.height !== ch) {
+        canvas.height = ch;
+    }
     const ctx = canvas.getContext("2d");
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.font = config.font;
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     const rows = preview.querySelectorAll(".row");
-    if (!rows.length) return false;
+    if (!rows.length) {
+        return false;
+    }
     const colsInRow = rows[0].querySelectorAll(".char");
-    if (!colsInRow.length) return false;
+    if (!colsInRow.length) {
+        return false;
+    }
     const containerRect = container.getBoundingClientRect();
     const previewRect = preview.getBoundingClientRect();
     const left = Math.floor(previewRect.left - containerRect.left);
@@ -2439,8 +2449,9 @@ function drawHorizontalAxis(ctx, params, axis) {
         const x = OSD._colCenterX(i, containerRect, colsInRow);
         const isCenter = offset === 0;
         const isMajor = offset % 5 === 0 || isCenter;
+        const majorColor = isMajor ? config.colorMajor : config.colorMinor;
         const tick = isMajor ? config.tickMajor : config.tickMinor;
-        ctx.strokeStyle = isCenter ? config.colorCenter : isMajor ? config.colorMajor : config.colorMinor;
+        ctx.strokeStyle = isCenter ? config.colorCenter : majorColor;
         ctx.lineWidth = 1;
         ctx.beginPath();
         let y0, y1, labelY;
@@ -2479,8 +2490,9 @@ function drawVerticalAxis(ctx, params, axis) {
         const offset = i - cy;
         const isCenter = i === cy;
         const isMajor = Math.abs(offset) % config.verticalLabelStep === 0 || i === 0 || i === rowsCount - 1 || isCenter;
+        const majorColor = isMajor ? config.colorMajor : config.colorMinor;
         const tick = isMajor ? config.vertTickMajor : config.tickMinor;
-        ctx.strokeStyle = isCenter ? config.colorCenter : isMajor ? config.colorMajor : config.colorMinor;
+        ctx.strokeStyle = isCenter ? config.colorCenter : majorColor;
         ctx.lineWidth = 1;
         ctx.beginPath();
         let x0, x1, labelX;
@@ -2531,9 +2543,13 @@ OSD._drawRightAxis = function (ctx, params) {
 OSD.drawRulers = function () {
     const config = OSD.rulerConfig;
     const init = OSD.initializeRulers();
-    if (!init) return;
+    if (!init) {
+        return;
+    }
     const setup = OSD.setupRulerContext(init.canvas, init.preview, init.container, config);
-    if (!setup) return;
+    if (!setup) {
+        return;
+    }
     // Compose params for axis functions
     const params = { ...setup, config };
     OSD._drawTopAxis(params.ctx, params);
