@@ -642,6 +642,10 @@
         "message": "Obciążenie CPU:",
         "description": "CPU load text shown in the status bar"
     },
+    "statusbar_connection_time": {
+        "message": "Połączenie:",
+        "description": "Connection time text shown in the status bar"
+    },
     "dfu_connect_message": {
         "message": "Użyć zakładki Wgraj Oprogramowanie, aby połączyć się z urządzeniem w trybie DFU"
     },

@@ -150,9 +150,17 @@
         "message": "Definir tempo limite de ligação para permitir uma inicialização mais demorada no arranque ou no reiniciar do dispositivo",
         "description": "Change timeout on auto-connect and reboot so the bus has more time to initialize after being detected by the system"
     },
+    "developmentSettings": {
+        "message": "Definições de desenvolvimento",
+        "description": "Title for the development settings section"
+    },
     "showAllSerialDevices": {
         "message": "Mostrar todos os dispositivos serial (para fabricantes ou desenvolvimento)",
         "description": "Do not filter serial devices using VID\/PID values (for manufacturers or development)"
+    },
+    "cliOnlyMode": {
+        "message": "Ativar modo de CLI apenas",
+        "description": "Text for the option to enable or disable CLI only mode"
     },
     "showManualMode": {
         "message": "Ativar modo de ligação manual",
@@ -1623,6 +1631,12 @@
     },
     "beeperRC_SMOOTHING_INIT_FAIL": {
         "message": "Emite um sinal sonoro quando armado e o \"suavizar RC\" não iniciou os filtros"
+    },
+    "configurationBeeperEnableAll": {
+        "message": "Ativar Tudo"
+    },
+    "configurationBeeperDisableAll": {
+        "message": "Desativar Tudo"
     },
     "configuration3d": {
         "message": "Modo 3D dos Motores\/ESC"
