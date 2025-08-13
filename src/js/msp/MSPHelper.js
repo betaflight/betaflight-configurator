@@ -1055,7 +1055,7 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     data.readU8(); // was FC.RX_CONFIG.rcInterpolationChannels
                     data.readU8(); // was FC.RX_CONFIG.rcSmoothingType
                     FC.RX_CONFIG.rcSmoothingSetpointCutoff = data.readU8();
-                    FC.RX_CONFIG.rcSmoothingFeedforwardCutoff = data.readU8();
+                    FC.RX_CONFIG.rcSmoothingFeedforwardCutoff = data.readU8(); // deprecated in 1.47
                     data.readU8(); // was FC.RX_CONFIG.rcSmoothingInputType
                     data.readU8(); // was FC.RX_CONFIG.rcSmoothingDerivativeType
                     FC.RX_CONFIG.usbCdcHidType = data.readU8();
@@ -1996,7 +1996,7 @@ MspHelper.prototype.crunch = function (code, modifierCode = undefined) {
                 .push8(FC.RX_CONFIG.rcInterpolationChannels)
                 .push8(FC.RX_CONFIG.rcSmoothingType)
                 .push8(FC.RX_CONFIG.rcSmoothingSetpointCutoff)
-                .push8(FC.RX_CONFIG.rcSmoothingFeedforwardCutoff)
+                .push8(FC.RX_CONFIG.rcSmoothingFeedforwardCutoff) // deprecated in 1.47
                 .push8(FC.RX_CONFIG.rcSmoothingInputType)
                 .push8(FC.RX_CONFIG.rcSmoothingDerivativeType);
 
