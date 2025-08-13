@@ -1619,6 +1619,12 @@
     "beeperRC_SMOOTHING_INIT_FAIL": {
         "message": "아밍시 rc 스무딩이 필터를 초기화하지 않은 때 비프음"
     },
+    "configurationBeeperEnableAll": {
+        "message": "모두 사용"
+    },
+    "configurationBeeperDisableAll": {
+        "message": "전체 해제"
+    },
     "configuration3d": {
         "message": "3D ESC\/모터 기능"
     },

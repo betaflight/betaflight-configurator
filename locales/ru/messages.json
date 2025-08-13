@@ -1624,6 +1624,12 @@
     "beeperRC_SMOOTHING_INIT_FAIL": {
         "message": "Издавать звуковой сигнал если арминг не прошел инициализацию по фильтрам"
     },
+    "configurationBeeperEnableAll": {
+        "message": "Включить все"
+    },
+    "configurationBeeperDisableAll": {
+        "message": "Отключить все"
+    },
     "configuration3d": {
         "message": "3D функционал Моторов\/Регуляторов"
     },
