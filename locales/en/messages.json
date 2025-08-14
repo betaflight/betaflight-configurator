@@ -3391,6 +3391,9 @@
     "cliEnter": {
         "message": "CLI mode detected"
     },
+    "cliDevEnter": {
+        "message": "CLI only developer mode detected"
+    },
     "cliReboot": {
         "message": "CLI reboot detected"
     },

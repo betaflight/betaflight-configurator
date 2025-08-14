@@ -12,6 +12,7 @@ import { serial } from "../serial";
 import FileSystem from "../FileSystem";
 import { ispConnected } from "../utils/connection";
 import { initializeModalDialog } from "../utils/initializeModalDialog";
+import { get as getConfig } from "../ConfigStorage";
 
 const cli = {
     lineDelayMs: 5,
@@ -477,7 +478,7 @@ cli.read = function (readInfo) {
     this.lastArrival = new Date().getTime();
 
     if (!CONFIGURATOR.cliValid && validateText.indexOf("CLI") !== -1) {
-        gui_log(i18n.getMessage("cliEnter"));
+        gui_log(i18n.getMessage(getConfig("cliOnlyMode")?.cliOnlyMode ? "cliDevEnter" : "cliEnter"));
         CONFIGURATOR.cliValid = true;
         // begin output history with the prompt (last line of welcome message)
         // this is to match the content of the history with what the user sees on this tab
