@@ -56,6 +56,8 @@ export default defineConfig({
         __APP_REVISION__: JSON.stringify(commitHash),
     },
     build: {
+        outDir: "dist",
+        emptyOutDir: true,
         rollupOptions: {
             input: {
                 main: resolve(__dirname, "src/index.html"),
@@ -115,6 +117,7 @@ export default defineConfig({
         alias: {
             "/src": path.resolve(process.cwd(), "src"),
             vue: path.resolve(__dirname, "node_modules/vue/dist/vue.esm-bundler.js"),
+            "@": resolve(__dirname, "src"),
         },
     },
     server: {
