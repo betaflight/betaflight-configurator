@@ -988,7 +988,7 @@ firmware_flasher.initialize = async function (callback) {
                         request.options.push($(this).val());
                     });
 
-                    if ($('input[name="expertModeCheckbox"]').is(":checked")) {
+                    if (expertMode_e.is(":checked")) {
                         if (targetDetail.releaseType === "Unstable") {
                             request.commit = $('select[name="commits"] option:selected').val();
                         }
