@@ -538,34 +538,6 @@ configuration.initialize = function (callback) {
             });
         }
 
-        function toggleMagCustomAlignmentInputs() {
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
-                $('input[name="mag_align_roll"]').attr(
-                    "disabled",
-                    FC.SENSOR_ALIGNMENT.align_mag !== SENSOR_ALIGNMENTS.length,
-                );
-                $('input[name="mag_align_pitch"]').attr(
-                    "disabled",
-                    FC.SENSOR_ALIGNMENT.align_mag !== SENSOR_ALIGNMENTS.length,
-                );
-                $('input[name="mag_align_yaw"]').attr(
-                    "disabled",
-                    FC.SENSOR_ALIGNMENT.align_mag !== SENSOR_ALIGNMENTS.length,
-                );
-            }
-        }
-
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
-            $('input[name="mag_align_roll"]').val(FC.SENSOR_ALIGNMENT.mag_align_roll);
-            $('input[name="mag_align_pitch"]').val(FC.SENSOR_ALIGNMENT.mag_align_pitch);
-            $('input[name="mag_align_yaw"]').val(FC.SENSOR_ALIGNMENT.mag_align_yaw);
-
-            toggleMagCustomAlignmentInputs();
-        } else {
-            $(".tab-configuration .gyro_align_box").hide();
-            $(".tab-configuration .mag_align_box").hide();
-        }
-
         // Magnetometer
         const orientation_mag_e = $("select.mag_align");
 
@@ -584,6 +556,13 @@ configuration.initialize = function (callback) {
 
         orientation_mag_e.val(FC.SENSOR_ALIGNMENT.align_mag);
 
+        function toggleMagCustomAlignmentInputs() {
+            // Toggle custom alignment visibility based on current value
+            const index = parseInt(orientation_mag_e.val()) - 1;
+            const isCustom = SENSOR_ALIGNMENTS[index] === "Custom";
+            $(".mag_align_inputs").toggle(isCustom);
+        }
+
         orientation_mag_e.change(function () {
             let value = parseInt($(this).val());
 
@@ -597,6 +576,17 @@ configuration.initialize = function (callback) {
 
             toggleMagCustomAlignmentInputs();
         });
+
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+            $('input[name="mag_align_roll"]').val(FC.SENSOR_ALIGNMENT.mag_align_roll);
+            $('input[name="mag_align_pitch"]').val(FC.SENSOR_ALIGNMENT.mag_align_pitch);
+            $('input[name="mag_align_yaw"]').val(FC.SENSOR_ALIGNMENT.mag_align_yaw);
+
+            toggleMagCustomAlignmentInputs();
+        } else {
+            $(".tab-configuration .gyro_align_box").hide();
+            $(".tab-configuration .mag_align_box").hide();
+        }
 
         // Range finder
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
