@@ -3308,6 +3308,9 @@
     "cliEnter": {
         "message": "CLI tilstand !"
     },
+    "cliDevEnter": {
+        "message": "CLI udviklertilstand registreret"
+    },
     "cliReboot": {
         "message": "CLI genstart registreret"
     },
