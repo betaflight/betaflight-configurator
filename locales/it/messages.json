@@ -144,7 +144,7 @@
         "description": "Text for the option to disable internet access for metered connection or to disable data over slow connections"
     },
     "analyticsOptOut": {
-        "message": "Disattiva la raccolta anonima di dati statistici"
+        "message": "Disabilita la raccolta anonima dei dati statistici"
     },
     "connectionTimeout": {
         "message": "Imposta il timeout della connessione per consentire una inizializzazione più lunga durante il plugin o il riavvio",
@@ -163,7 +163,7 @@
         "description": "Text for the option to enable or disable CLI only mode"
     },
     "showManualMode": {
-        "message": "Abilita la modalità di connessione manuale",
+        "message": "Abilita modalità di connessione manuale",
         "description": "Text for the option to enable or disable manual connection mode"
     },
     "showVirtualMode": {
@@ -171,7 +171,7 @@
         "description": "Text for the option to enable or disable the virtual FC"
     },
     "useLegacyRenderingModel": {
-        "message": "Abilita il rendering legacy per il modello 3D (per dispositivi a basse prestazioni)",
+        "message": "Abilita compatibilità rendering per il modello 3D (per dispositivi a basse prestazioni)",
         "description": "Text for the option to enable or disable legacy rendering of the 3D model"
     },
     "cordovaForceComputerUI": {
@@ -3303,6 +3303,9 @@
     },
     "cliEnter": {
         "message": "Rilevata modalità CLI"
+    },
+    "cliDevEnter": {
+        "message": "Modalità sviluppatore solo CLI abilitata"
     },
     "cliReboot": {
         "message": "Rilevato riavvio CLI"

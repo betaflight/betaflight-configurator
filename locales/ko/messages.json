@@ -3283,6 +3283,9 @@
     "cliEnter": {
         "message": "CLI 모드가 감지됨"
     },
+    "cliDevEnter": {
+        "message": "CLI 전용 개발자 모드가 감지됨"
+    },
     "cliReboot": {
         "message": "CLI 재부팅이 감지됨"
     },

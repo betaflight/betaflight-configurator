@@ -646,6 +646,10 @@
         "message": "Carga de CPU:",
         "description": "CPU load text shown in the status bar"
     },
+    "statusbar_connection_time": {
+        "message": "Ligação:",
+        "description": "Connection time text shown in the status bar"
+    },
     "dfu_connect_message": {
         "message": "Por favor use o Flasher de Firmware para aceder a dispositivos DFU"
     },
@@ -3299,6 +3303,9 @@
     },
     "cliEnter": {
         "message": "Modo CLI detetado"
+    },
+    "cliDevEnter": {
+        "message": "Modo de programador de apenas CLI detetado"
     },
     "cliReboot": {
         "message": "Reiniciar por CLI detetado"
