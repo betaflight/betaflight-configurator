@@ -91,6 +91,27 @@ export class MSPQueueMonitor {
         const count = this.metrics.requestsByCode.get(code) || 0;
         this.metrics.requestsByCode.set(code, count + 1);
 
+        // Count potential duplicates already present in the queue (same code + same data)
+        try {
+            const callbacks = this.msp.callbacks || [];
+            const isDuplicate = callbacks.some((req) => {
+                if (req.code !== code) return false;
+                const a = data;
+                const b = req.data;
+                if (!a && !b) return true;
+                if (!a || !b) return false;
+                if (a === b) return true;
+                if (a.length !== b.length) return false;
+                for (let i = 0; i < a.length; i++) {
+                    if (a[i] !== b[i]) return false;
+                }
+                return true;
+            });
+            if (isDuplicate) this.metrics.duplicates++;
+        } catch (_) {
+            // best-effort only
+        }
+
         // Check for queue size peaks
         const currentQueueSize = this.msp.callbacks?.length ?? 0;
         if (currentQueueSize > this.metrics.queuePeakSize) {
