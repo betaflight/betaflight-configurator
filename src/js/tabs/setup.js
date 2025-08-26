@@ -511,9 +511,9 @@ setup.initialize = function (callback) {
             }
 
             $(".network-status").text(statusText);
-            $(".network-type").text(connection?.effectiveType || "Unknown");
-            $(".network-downlink").text(connection?.downlink ? `${connection.downlink} Mbps` : "Unknown");
-            $(".network-rtt").text(connection?.rtt ? `${connection.rtt} ms` : "Unknown");
+            $(".network-type").text(type);
+            $(".network-downlink").text(`${downLink} Mbps`);
+            $(".network-rtt").text(`${rtt} ms`");
         }
 
         prepareDisarmFlags();
