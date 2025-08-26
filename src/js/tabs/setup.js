@@ -513,7 +513,7 @@ setup.initialize = function (callback) {
             $(".network-status").text(statusText);
             $(".network-type").text(type);
             $(".network-downlink").text(`${downLink} Mbps`);
-            $(".network-rtt").text(`${rtt} ms`");
+            $(".network-rtt").text(`${rtt} ms`);
         }
 
         prepareDisarmFlags();
