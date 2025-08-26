@@ -512,7 +512,7 @@ setup.initialize = function (callback) {
 
             $(".network-status").text(statusText);
             $(".network-type").text(type);
-            $(".network-downlink").text(`${downLink} Mbps`);
+            $(".network-downlink").text(`${downlink} Mbps`);
             $(".network-rtt").text(`${rtt} ms`);
         }
 
