@@ -36,6 +36,24 @@ export class MSPStressTest {
     }
 
     /**
+     * Helper to determine test status from result object
+     */
+    getTestStatus(result) {
+        if (!result || typeof result !== "object") return "FAILED";
+        if (result.error) return "FAILED";
+        if (result.memoryLeakDetected === true) return "FAILED";
+        if (result.overflowHandled === false) return "FAILED";
+        if (result.timeoutOccurred === true && result.recoveryTime > 2000) return "FAILED";
+        if (result.recoverySuccessful === false) return "FAILED";
+        if (result.failed && result.failed > 0) return "FAILED";
+        if (result.duplicateRejections && result.duplicateRejections > 0) return "FAILED";
+        if (result.leaked && result.leaked > 0) return "FAILED";
+        if (result.failedWhileDisconnected && result.failedWhileDisconnected > 0 && result.recoverySuccessful === false) return "FAILED";
+        // Add more checks as needed for new failure signals
+        return "PASSED";
+    }
+
+    /**
      * Run a comprehensive stress test suite
      */
     async runStressTestSuite() {
@@ -70,7 +88,7 @@ export class MSPStressTest {
 
                     const testResult = {
                         name: testDef.name,
-                        status: "PASSED",
+                        status: this.getTestStatus(result),
                         duration,
                         result,
                         metrics: this.monitor.getStatus(),
