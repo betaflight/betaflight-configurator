@@ -498,9 +498,9 @@ setup.initialize = function (callback) {
             let statusText = "";
 
             const connection = navigator.connection;
-            const type = connection?.effectiveType || "unknown";
-            const downlink = connection?.downlink || 0;
-            const rtt = connection?.rtt || 0;
+            const type = connection?.effectiveType || "Unknown";
+            const downlink = connection?.downlink || "Unknown";
+            const rtt = connection?.rtt || "Unknown";
 
             if (!networkStatus || !navigator.onLine || type === "none") {
                 statusText = i18n.getMessage("initialSetupNetworkInfoStatusOffline");
