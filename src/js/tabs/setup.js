@@ -497,9 +497,10 @@ setup.initialize = function (callback) {
 
             let statusText = "";
 
-            const type = navigator.connection.effectiveType;
-            const downlink = navigator.connection.downlink;
-            const rtt = navigator.connection.rtt;
+            const connection = navigator.connection;
+            const type = connection?.effectiveType || "Unknown";
+            const downlink = connection?.downlink || "Unknown";
+            const rtt = connection?.rtt || "Unknown";
 
             if (!networkStatus || !navigator.onLine || type === "none") {
                 statusText = i18n.getMessage("initialSetupNetworkInfoStatusOffline");
@@ -510,9 +511,9 @@ setup.initialize = function (callback) {
             }
 
             $(".network-status").text(statusText);
-            $(".network-type").text(navigator.connection.effectiveType);
-            $(".network-downlink").text(`${navigator.connection.downlink} Mbps`);
-            $(".network-rtt").text(navigator.connection.rtt);
+            $(".network-type").text(type);
+            $(".network-downlink").text(`${downLink} Mbps`);
+            $(".network-rtt").text(`${rtt} ms`);
         }
 
         prepareDisarmFlags();
