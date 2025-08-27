@@ -1,4 +1,4 @@
-eimport MSP from "./msp";
+import MSP from "./msp";
 import FC from "./fc";
 import MSPCodes from "./msp/MSPCodes";
 import semver from "semver";
