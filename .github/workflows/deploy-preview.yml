@@ -73,6 +73,5 @@ jobs:
         with:
           message: |
              Preview URL: ${{ steps.deploy.outputs.pages-deployment-alias-url }}
-          reactions: eyes, rocket
           comment-tag: 'Preview URL'
           mode: recreate
