@@ -12,7 +12,7 @@ import { showErrorDialog } from "../utils/showErrorDialog";
 import $ from "jquery";
 import DEBUG from "../debug";
 import FileSystem from "../FileSystem";
-import { isExpertModeEnabled } from "../utils/isExportModeEnabled";
+import { isExpertModeEnabled } from "../utils/isExpertModeEnabled";
 import NotificationManager from "../../js/utils/notifications";
 import { get as getConfig } from "../ConfigStorage";
 import { sensorTypes } from "../sensor_types";
