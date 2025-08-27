@@ -10,10 +10,10 @@ import TuningSliders from "../TuningSliders";
 import Model from "../model";
 import RateCurve from "../RateCurve";
 import MSPCodes from "../msp/MSPCodes";
-import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "../data_storage";
+import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_25_12 } from "../data_storage";
 import { gui_log } from "../gui_log";
 import { degToRad, isInt } from "../utils/common";
-import semver from "semver";
+import compareVersions from "../utils/compareVersions.js";
 import * as THREE from "three";
 import $ from "jquery";
 
@@ -62,7 +62,7 @@ pid_tuning.initialize = function (callback) {
         .then(() => MSP.promise(MSPCodes.MSP_RC_DEADBAND))
         .then(() => MSP.promise(MSPCodes.MSP_MOTOR_CONFIG))
         .then(() =>
-            semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)
+            compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)
                 ? MSP.promise(
                     MSPCodes.MSP2_GET_TEXT,
                     mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.PID_PROFILE_NAME),
@@ -70,14 +70,16 @@ pid_tuning.initialize = function (callback) {
                 : true,
         )
         .then(() =>
-            semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)
+            compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)
                 ? MSP.promise(
                     MSPCodes.MSP2_GET_TEXT,
                     mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.RATE_PROFILE_NAME),
                 )
                 : true,
         )
-        .then(() => (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47) ? MSP.promise(MSPCodes.MSP_STATUS_EX) : true))
+        .then(() =>
+            compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_25_12) ? MSP.promise(MSPCodes.MSP_STATUS_EX) : true,
+        )
         .then(() => MSP.promise(MSPCodes.MSP_SIMPLIFIED_TUNING))
         .then(() => MSP.promise(MSPCodes.MSP_ADVANCED_CONFIG))
         .then(() => MSP.send_message(MSPCodes.MSP_MIXER_CONFIG, false, false, load_html));
@@ -93,7 +95,7 @@ pid_tuning.initialize = function (callback) {
         self.setRateProfile();
 
         // Profile names
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+        if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
             $('input[name="pidProfileName"]').val(FC.CONFIG.pidProfileNames[FC.CONFIG.profile]);
             $('input[name="rateProfileName"]').val(FC.CONFIG.rateProfileNames[FC.CONFIG.rateProfile]);
         } else {
@@ -125,14 +127,14 @@ pid_tuning.initialize = function (callback) {
         $('.throttle input[name="mid"]').val(FC.RC_TUNING.throttle_MID.toFixed(2));
         $('.throttle input[name="expo"]').val(FC.RC_TUNING.throttle_EXPO.toFixed(2));
 
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+        if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_25_12)) {
             $('.throttle input[name="hover"]').val(FC.RC_TUNING.throttle_HOVER.toFixed(2));
         } else {
             $('.throttle input[name="hover"]').parent().hide();
             $(".throttle thead th:nth-child(2)").hide();
         }
 
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+        if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
             // Moved tpa to profile
             $('select[id="tpaMode"]').val(FC.ADVANCED_TUNING.tpaMode);
             $('input[id="tpaRate"]').val(FC.ADVANCED_TUNING.tpaRate * 100);
@@ -179,7 +181,7 @@ pid_tuning.initialize = function (callback) {
 
         const ITERM_ACCELERATOR_GAIN_OFF = 0;
 
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+        if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
             // we keep the same name in html - just switching variable.
             antiGravityGain.val(FC.ADVANCED_TUNING.antiGravityGain / 10);
             antiGravitySwitch.prop("checked", FC.ADVANCED_TUNING.antiGravityGain !== ITERM_ACCELERATOR_GAIN_OFF);
@@ -189,18 +191,18 @@ pid_tuning.initialize = function (callback) {
             antiGravitySwitch.prop("checked", FC.ADVANCED_TUNING.itermAcceleratorGain !== ITERM_ACCELERATOR_GAIN_OFF);
         }
 
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+        if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
             antiGravityGain.attr({ min: "0.1", max: "25.0", step: "0.1" });
             levelAngleLimit.attr({ min: "0", max: "85", step: "1" });
         }
 
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+        if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_25_12)) {
             levelAngleLimit.attr({ min: "0", max: "80", step: "1" });
         }
 
         antiGravitySwitch.on("change", function () {
             if (antiGravitySwitch.is(":checked")) {
-                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+                if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
                     antiGravityGain.val(Number.parseFloat(FC.ADVANCED_TUNING.antiGravityGain / 10 || 8).toFixed(1));
                 } else {
                     const DEFAULT_ACCELERATOR_GAIN = 3.5;
@@ -215,11 +217,12 @@ pid_tuning.initialize = function (callback) {
 
                 $(".antigravity .suboption").show();
                 $(".antigravity .antiGravityThres").toggle(
-                    semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_45) && FC.ADVANCED_TUNING.itermAcceleratorGain === 0,
+                    compareVersions.lt(FC.CONFIG.apiVersion, API_VERSION_1_45) &&
+                        FC.ADVANCED_TUNING.itermAcceleratorGain === 0,
                 );
-                $(".antigravity .antiGravityMode").toggle(semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_45));
+                $(".antigravity .antiGravityMode").toggle(compareVersions.lt(FC.CONFIG.apiVersion, API_VERSION_1_45));
             } else {
-                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+                if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
                     antiGravityGain.val(ITERM_ACCELERATOR_GAIN_OFF / 1000);
                 } else {
                     $('.antigravity select[id="antiGravityMode"]').val(0);
@@ -291,7 +294,7 @@ pid_tuning.initialize = function (callback) {
             Number.parseFloat(FC.ADVANCED_TUNING.feedforwardTransition / 100).toFixed(2),
         );
 
-        if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+        if (compareVersions.lt(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
             // AntiGravity Mode
             const antiGravityModeSelect = $('.antigravity select[id="antiGravityMode"]');
 
@@ -417,7 +420,7 @@ pid_tuning.initialize = function (callback) {
             .prop("checked", FC.FILTER_CONFIG.gyro_rpm_notch_harmonics !== 0)
             .trigger("change");
 
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+        if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
             $('input[name="idleMinRpm-number"]').attr("max", 200);
         }
 
@@ -826,7 +829,7 @@ pid_tuning.initialize = function (callback) {
         // Catch all the changes and stuff the inside PIDs array
 
         // Profile names
-        if (semver.gte(FC.CONFIG.apiVersion, "1.45.0")) {
+        if (compareVersions.gte(FC.CONFIG.apiVersion, "1.45.0")) {
             FC.CONFIG.pidProfileNames[FC.CONFIG.profile] = $('input[name="pidProfileName"]').val().trim();
             FC.CONFIG.rateProfileNames[FC.CONFIG.rateProfile] = $('input[name="rateProfileName"]').val().trim();
         }
@@ -906,7 +909,7 @@ pid_tuning.initialize = function (callback) {
         FC.RC_TUNING.throttle_EXPO = parseFloat($('.throttle input[name="expo"]').val());
         FC.RC_TUNING.throttle_HOVER = parseFloat($('.throttle input[name="hover"]').val());
 
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+        if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
             FC.ADVANCED_TUNING.tpaMode = $('select[id="tpaMode"]').val();
             FC.ADVANCED_TUNING.tpaRate = parseInt($('input[id="tpaRate"]').val()) / 100;
             FC.ADVANCED_TUNING.tpaBreakpoint = parseInt($('input[id="tpaBreakpoint"]').val());
@@ -915,7 +918,7 @@ pid_tuning.initialize = function (callback) {
             FC.RC_TUNING.dynamic_THR_breakpoint = parseInt($('.tpa-old input[name="tpa-breakpoint"]').val());
         }
 
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+        if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
             $('input[id="tpaBreakpoint"]').attr({ max: 2000, min: 1000 });
         }
 
@@ -954,7 +957,7 @@ pid_tuning.initialize = function (callback) {
         const antiGravityGain = $('.antigravity input[name="itermAcceleratorGain"]');
 
         FC.FILTER_CONFIG.dterm_lowpass_type = parseInt($('.pid_filter select[name="dtermLowpassType"]').val());
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+        if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
             FC.ADVANCED_TUNING.antiGravityGain = parseInt(antiGravityGain.val() * 10);
         } else {
             FC.ADVANCED_TUNING.itermThrottleThreshold = parseInt(
@@ -992,7 +995,7 @@ pid_tuning.initialize = function (callback) {
             $('input[name="feedforwardTransition-number"]').val() * 100,
         );
 
-        FC.ADVANCED_TUNING.antiGravityMode = semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_45)
+        FC.ADVANCED_TUNING.antiGravityMode = compareVersions.lt(FC.CONFIG.apiVersion, API_VERSION_1_45)
             ? $('select[id="antiGravityMode"]').val()
             : 0;
 
@@ -1166,7 +1169,7 @@ pid_tuning.initialize = function (callback) {
 
         $(".tab-pid_tuning .pidTuningSuperexpoRates").hide();
 
-        if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+        if (compareVersions.lt(FC.CONFIG.apiVersion, API_VERSION_25_12)) {
             const derivativeTip = document.querySelector(".derivative .cf_tip");
             const dMaxTip = document.querySelector(".dmax .cf_tip");
 
@@ -1201,11 +1204,11 @@ pid_tuning.initialize = function (callback) {
         function loadRateProfilesList() {
             let numberOfRateProfiles = 6;
 
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+            if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
                 numberOfRateProfiles = 4;
             }
 
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+            if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_25_12)) {
                 numberOfRateProfiles = FC.CONFIG.numberOfRateProfiles;
             }
 
@@ -1409,7 +1412,7 @@ pid_tuning.initialize = function (callback) {
 
         $(".pid_tuning .roll_pitch_rate").hide();
 
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+        if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
             $(".tpa-old").hide();
         } else {
             $(".tpa").hide();
@@ -1700,7 +1703,9 @@ pid_tuning.initialize = function (callback) {
             const expo = parseFloat(throttleExpoE.val()); // Value 0-1
 
             // Hover parameter is only available from 1.47 so use mid value for older versions
-            const hover = semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47) ? parseFloat(throttleHoverE.val()) : mid;
+            const hover = compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_25_12)
+                ? parseFloat(throttleHoverE.val())
+                : mid;
 
             const throttleLimitPercent = parseInt(throttleLimitPercentE.val()) / 100; // Value 0-1
             const throttleLimitType = parseInt(throttleLimitTypeE.val());
@@ -2237,7 +2242,7 @@ pid_tuning.initialize = function (callback) {
             MSP.promise(MSPCodes.MSP_SET_PID, mspHelper.crunch(MSPCodes.MSP_SET_PID))
                 .then(() => MSP.promise(MSPCodes.MSP_SET_PID_ADVANCED, mspHelper.crunch(MSPCodes.MSP_SET_PID_ADVANCED)))
                 .then(() =>
-                    semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)
+                    compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)
                         ? MSP.promise(
                             MSPCodes.MSP2_SET_TEXT,
                             mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSPCodes.PID_PROFILE_NAME),
@@ -2245,7 +2250,7 @@ pid_tuning.initialize = function (callback) {
                         : true,
                 )
                 .then(() =>
-                    semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)
+                    compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)
                         ? MSP.promise(
                             MSPCodes.MSP2_SET_TEXT,
                             mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSPCodes.RATE_PROFILE_NAME),
@@ -3029,7 +3034,7 @@ pid_tuning.updateFilterWarning = function () {
 
 pid_tuning.updatePIDColors = function (clear = false) {
     // Would be nice to make colors work again in the future
-    if (semver.gte(FC.CONFIG.apiVersion, "1.44.0")) {
+    if (compareVersions.gte(FC.CONFIG.apiVersion, "1.44.0")) {
         return;
     }
 

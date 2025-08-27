@@ -1,7 +1,7 @@
 import GUI from "./gui";
 import CONFIGURATOR from "./data_storage";
 import FC from "./fc";
-import semver from "semver";
+import compareVersions from "./utils/compareVersions";
 import $ from "jquery";
 
 /**
@@ -460,7 +460,7 @@ CliAutoComplete._initTextcomplete = function () {
             search: function (term, callback) {
                 sendOnEnter = false;
                 let arr = cache.resources;
-                if (semver.gte(FC.CONFIG.flightControllerVersion, "4.0.0")) {
+                if (compareVersions.gte(FC.CONFIG.flightControllerVersion, "4.0.0")) {
                     arr = ["show"].concat(arr);
                 } else {
                     arr = ["list"].concat(arr);

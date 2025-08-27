@@ -1,6 +1,6 @@
 import FC from "./fc.js";
-import { API_VERSION_1_46, API_VERSION_1_47 } from "./data_storage";
-import semver from "semver";
+import compareVersions from "./utils/compareVersions.js";
+import { API_VERSION_1_46, API_VERSION_25_12 } from "./data_storage";
 import { removeArrayElement, addArrayElement, replaceArrayElement, addArrayElementAfter } from "./utils/array";
 
 const DEBUG = {
@@ -809,7 +809,7 @@ const DEBUG = {
 };
 
 function update() {
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+    if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
         DEBUG.fieldNames.ATTITUDE = {
             "debug[all]": "Attitude",
             "debug[0]": "Roll Angle",
@@ -823,7 +823,7 @@ function update() {
         };
     }
 
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+    if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_25_12)) {
         replaceArrayElement(DEBUG.modes, "GPS_RESCUE_THROTTLE_PID", "AUTOPILOT_ALTITUDE");
         removeArrayElement(DEBUG.modes, "GYRO_SCALED");
         addArrayElementAfter(DEBUG.modes, "RANGEFINDER_QUALITY", "OPTICALFLOW");
@@ -835,7 +835,7 @@ function update() {
 
         delete DEBUG.fieldNames.GPS_RESCUE_THROTTLE_PID;
         delete DEBUG.fieldNames.GYRO_SCALED;
-        
+
         DEBUG.fieldNames["MULTI_GYRO_RAW"] = DEBUG.fieldNames.DUAL_GYRO_RAW;
         DEBUG.fieldNames["MULTI_GYRO_DIFF"] = DEBUG.fieldNames.DUAL_GYRO_DIFF;
         DEBUG.fieldNames["MULTI_GYRO_SCALED"] = DEBUG.fieldNames.DUAL_GYRO_SCALED;

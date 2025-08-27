@@ -10,11 +10,11 @@ import Model from "../model";
 import RateCurve from "../RateCurve";
 import MSPCodes from "../msp/MSPCodes";
 import windowWatcherUtil from "../utils/window_watchers";
-import CONFIGURATOR, { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "../data_storage";
+import CONFIGURATOR, { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_25_12 } from "../data_storage";
 import DarkTheme from "../DarkTheme";
 import { gui_log } from "../gui_log";
 import { degToRad } from "../utils/common";
-import semver from "semver";
+import compareVersions from "../utils/compareVersions";
 import { updateTabList } from "../utils/updateTabList";
 import * as THREE from "three";
 import * as d3 from "d3";
@@ -289,7 +289,7 @@ receiver.initialize = function (callback) {
 
         warnRxProtocolNotInBuildOptions();
 
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+        if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
             serialRxSelectElement.sortSelect("NONE").select2();
         } else {
             serialRxSelectElement.sortSelect().select2();
@@ -363,7 +363,7 @@ receiver.initialize = function (callback) {
         if (
             FC.FEATURE_CONFIG.features.isEnabled("RX_SPI") &&
             FC.RX_CONFIG.rxSpiProtocol == 19 &&
-            semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)
+            compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)
         ) {
             tab.elrsBindingPhraseEnabled = true;
 
@@ -391,7 +391,7 @@ receiver.initialize = function (callback) {
             tab.elrsBindingPhraseEnabled = false;
         }
 
-        if (tab.elrsBindingPhraseEnabled && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+        if (tab.elrsBindingPhraseEnabled && compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_25_12)) {
             $('input[name="elrsModelId-number"]').val(FC.RX_CONFIG.elrsModelId);
         } else {
             $('input[name="elrsModelId-number"]').parent().hide();
@@ -485,7 +485,7 @@ receiver.initialize = function (callback) {
 
             FC.RX_CONFIG.rcSmoothingSetpointCutoff = parseInt($('input[name="rcSmoothingSetpointHz-number"]').val());
 
-            if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+            if (compareVersions.lt(FC.CONFIG.apiVersion, API_VERSION_25_12)) {
                 FC.RX_CONFIG.rcSmoothingFeedforwardCutoff = parseInt(
                     $('input[name="rcSmoothingFeedforwardCutoff-number"]').val(),
                 );
@@ -507,7 +507,7 @@ receiver.initialize = function (callback) {
                     FC.RX_CONFIG.elrsUid = [0, 0, 0, 0, 0, 0];
                 }
 
-                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+                if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_25_12)) {
                     FC.RX_CONFIG.elrsModelId = parseInt($('input[name="elrsModelId-number"]').val());
                 }
             }
@@ -647,7 +647,7 @@ receiver.initialize = function (callback) {
             })
             .change();
 
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+        if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_25_12)) {
             $(".tab-receiver .rcSmoothing-feedforward-manual").hide();
         } else {
             const rcSmoothingFeedforwardNumberElement = $('input[name="rcSmoothingFeedforwardCutoff-number"]');
@@ -954,7 +954,7 @@ function updateInterpolationView() {
     $(".tab-receiver .rcSmoothing-feedforward-cutoff").show();
     $(".tab-receiver .rcSmoothing-setpoint-cutoff").show();
 
-    if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+    if (compareVersions.lt(FC.CONFIG.apiVersion, API_VERSION_25_12)) {
         $(".tab-receiver .rcSmoothing-feedforward-manual").show();
     }
 

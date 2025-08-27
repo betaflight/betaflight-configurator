@@ -2,7 +2,7 @@ import { i18n } from "../localization";
 import GUI, { TABS } from "../gui";
 import { mspHelper } from "../msp/MSPHelper";
 import FC from "../fc";
-import semver from "semver";
+import compareVersions from "../utils/compareVersions.js";
 import MSP from "../msp";
 import MSPCodes from "../msp/MSPCodes";
 import $ from "jquery";
@@ -22,7 +22,7 @@ led_strip.initialize = function (callback, scrollPosition) {
     TABS.led_strip.baseFuncs = ["c", "f", "a", "l", "s", "g", "r", "p", "e", "u"];
     TABS.led_strip.overlays = ["t", "y", "o", "b", "v", "i", "w"];
 
-    if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+    if (compareVersions.lt(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
         TABS.led_strip.overlays = TABS.led_strip.overlays.filter((x) => x !== "y");
     }
 
@@ -45,7 +45,7 @@ led_strip.initialize = function (callback, scrollPosition) {
             MSPCodes.MSP_LED_STRIP_MODECOLOR,
             false,
             false,
-            semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46) ? load_led_config_values : load_html,
+            compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_46) ? load_led_config_values : load_html,
         );
     }
 
@@ -882,7 +882,7 @@ led_strip.initialize = function (callback, scrollPosition) {
     }
 
     function isRainbowActive(activeFunction) {
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+        if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
             switch (activeFunction) {
                 case "function-c":
                 case "function-a":
@@ -935,7 +935,7 @@ led_strip.initialize = function (callback, scrollPosition) {
 
         $(".vtxOverlay").toggle(isVtxActive(activeFunction));
 
-        $(".brightnessSliderDiv").toggle(semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46));
+        $(".brightnessSliderDiv").toggle(compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_46));
 
         // set mode colors visibility
         if (activeFunction === "function-f") {

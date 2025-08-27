@@ -7,7 +7,7 @@ import MSP from "../msp";
 import MSPCodes from "../msp/MSPCodes";
 import * as d3 from "d3";
 import $ from "jquery";
-import semver from "semver";
+import compareVersions from "../utils/compareVersions";
 import { API_VERSION_1_46 } from "../data_storage";
 import DEBUG from "../debug";
 
@@ -274,7 +274,7 @@ sensors.initialize = function (callback) {
             setConfig({ graphs_enabled: _checkboxes });
         });
 
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+        if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
             sensors.debugColumns = 8;
 
             MSP.send_message(MSPCodes.MSP_ADVANCED_CONFIG, false, false, displayDebugColumnNames);

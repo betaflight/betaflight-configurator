@@ -4,10 +4,10 @@ import { mspHelper } from "../msp/MSPHelper";
 import FC from "../fc";
 import MSP from "../msp";
 import MSPCodes from "../msp/MSPCodes";
-import CONFIGURATOR, { API_VERSION_1_45, API_VERSION_1_47 } from "../data_storage";
+import CONFIGURATOR, { API_VERSION_1_45, API_VERSION_25_12 } from "../data_storage";
 import { gui_log } from "../gui_log";
 import { generateFilename } from "../utils/generate_filename";
-import semver from "semver";
+import compareVersions from "../utils/compareVersions";
 import { showErrorDialog } from "../utils/showErrorDialog";
 import $ from "jquery";
 import DEBUG from "../debug";
@@ -40,7 +40,7 @@ onboard_logging.initialize = function (callback) {
                 MSP.send_message(MSPCodes.MSP_SDCARD_SUMMARY, false, false, function () {
                     MSP.send_message(MSPCodes.MSP_BLACKBOX_CONFIG, false, false, function () {
                         MSP.send_message(MSPCodes.MSP_ADVANCED_CONFIG, false, false, function () {
-                            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+                            if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
                                 MSP.send_message(
                                     MSPCodes.MSP2_GET_TEXT,
                                     mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.CRAFT_NAME),
@@ -114,7 +114,7 @@ onboard_logging.initialize = function (callback) {
 
             if (FC.BLACKBOX.supported) {
                 $(".tab-onboard_logging a.save-settings").on("click", async function () {
-                    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+                    if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
                         let fieldsMask = 0;
 
                         $(".blackboxDebugFields select option:not(:selected)").each(function () {
@@ -196,7 +196,7 @@ onboard_logging.initialize = function (callback) {
         deviceSelect.append(`<option value="3">${i18n.getMessage("blackboxLoggingSerial")}</option>`);
 
         if (
-            semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47) &&
+            compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_25_12) &&
             FC.SENSOR_CONFIG_ACTIVE.gyro_hardware == sensorTypes().gyro.elements.indexOf("VIRTUAL")
         ) {
             // If the gyro sensor is virtual, it means SITL is built
@@ -240,7 +240,7 @@ onboard_logging.initialize = function (callback) {
     }
 
     function populateDebugFields(debugFieldsSelect) {
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+        if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
             $(".blackboxDebugFields").show();
 
             let fieldsMask = FC.BLACKBOX.blackboxDisabledMask;

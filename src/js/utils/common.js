@@ -1,5 +1,5 @@
-import semver from "semver";
 import { mixerList } from "../model";
+import compareVersions from "./compareVersions";
 import CONFIGURATOR from "../data_storage";
 import $ from "jquery";
 
@@ -34,7 +34,7 @@ export function isInt(n) {
 }
 
 const majorFirmwareVersions = {
-    1.47: "4.6.*",
+    25.12: "25.12.*",
     1.46: "4.5.*",
     1.45: "4.4.*",
     1.44: "4.3.*",
@@ -42,8 +42,8 @@ const majorFirmwareVersions = {
 
 export function generateVirtualApiVersions() {
     const firmwareVersionDropdown = document.getElementById("firmware-version-dropdown");
-    const max = semver.minor(CONFIGURATOR.API_VERSION_MAX_SUPPORTED);
-    const min = semver.minor(CONFIGURATOR.API_VERSION_ACCEPTED);
+    const max = compareVersions.minor(CONFIGURATOR.API_VERSION_MAX_SUPPORTED);
+    const min = compareVersions.minor(CONFIGURATOR.API_VERSION_ACCEPTED);
 
     for (let i = max; i >= min; i--) {
         const option = document.createElement("option");

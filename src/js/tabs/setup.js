@@ -1,6 +1,7 @@
 import { i18n } from "../localization";
-import semver from "semver";
 import { isExpertModeEnabled } from "../utils/isExpertModeEnabled";
+import compareVersions from "../utils/compareVersions";
+import { isExpertModeEnabled } from "../utils/isExportModeEnabled";
 import GUI, { TABS } from "../gui";
 import { have_sensor } from "../sensor_helpers";
 import { mspHelper } from "../msp/MSPHelper";
@@ -8,7 +9,7 @@ import FC from "../fc";
 import MSP from "../msp";
 import Model from "../model";
 import MSPCodes from "../msp/MSPCodes";
-import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "../data_storage";
+import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_25_12 } from "../data_storage";
 import { gui_log } from "../gui_log";
 import $ from "jquery";
 import { ispConnected } from "../utils/connection";
@@ -136,7 +137,7 @@ setup.initialize = function (callback) {
                     $("#mag_calib_rest").show();
                 }
 
-                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+                if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
                     let cycle = 0;
                     const cycleMax = 45;
                     const interval = 1000;
@@ -249,11 +250,11 @@ setup.initialize = function (callback) {
                 // 'ARM_SWITCH',           // Needs to be the last element, since it's always activated if one of the others is active when arming
             ];
 
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+            if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
                 replaceArrayElement(disarmFlagElements, "RPMFILTER", "DSHOT_TELEM");
             }
 
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+            if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_25_12)) {
                 addArrayElementsAfter(disarmFlagElements, "MOTOR_PROTOCOL", ["CRASHFLIP", "ALTHOLD", "POSHOLD"]);
             }
 
@@ -327,7 +328,7 @@ setup.initialize = function (callback) {
                 );
 
                 // opticalflow sensor is available since 1.47
-                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+                if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_25_12)) {
                     addSensorInfo(
                         FC.SENSOR_CONFIG_ACTIVE.opticalflow_hardware,
                         sensor_opticalflow_e,
@@ -419,8 +420,8 @@ setup.initialize = function (callback) {
         const showBuildFirmware = function () {
             const isIspConnected = ispConnected();
             const buildOptionsValid =
-                ((semver.eq(FC.CONFIG.apiVersion, API_VERSION_1_45) && isIspConnected) ||
-                    semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) &&
+                ((compareVersions.eq(FC.CONFIG.apiVersion, API_VERSION_1_45) && isIspConnected) ||
+                    compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) &&
                 FC.CONFIG.buildOptions.length;
             const buildKeyValid = FC.CONFIG.buildKey.length === 32;
             const buildRoot = getBuildRootBaseUri();
@@ -481,7 +482,7 @@ setup.initialize = function (callback) {
             msp_api_e.text(FC.CONFIG.apiVersion);
             build_date_e.text(FC.CONFIG.buildInfo);
 
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+            if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
                 showBuildType();
                 showBuildInfo();
                 showBuildFirmware();
@@ -517,7 +518,7 @@ setup.initialize = function (callback) {
         }
 
         prepareDisarmFlags();
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+        if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
             showSensorInfo();
         } else {
             hideSensorInfo();
@@ -549,13 +550,13 @@ setup.initialize = function (callback) {
             bat_mah_drawing_e.text(i18n.getMessage("initialSetupBatteryAValue", [FC.ANALOG.amperage.toFixed(2)]));
             rssi_e.text(i18n.getMessage("initialSetupRSSIValue", [((FC.ANALOG.rssi / 1023) * 100).toFixed(0)]));
 
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46) && FC.CONFIG.cpuTemp) {
+            if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_46) && FC.CONFIG.cpuTemp) {
                 cputemp_e.html(`${FC.CONFIG.cpuTemp.toFixed(0)} &#8451;`);
             } else {
                 cputemp_e.text(i18n.getMessage("initialSetupCpuTempNotSupported"));
             }
 
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+            if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_25_12)) {
                 mcu_e.text(FC.MCU_INFO.name);
             } else {
                 mcu_e.parent().hide();

@@ -8,7 +8,7 @@ import ConfigInserter from "../ConfigInserter.js";
 import { tracking } from "../Analytics";
 import PortHandler from "../port_handler";
 import { gui_log } from "../gui_log";
-import semver from "semver";
+import compareVersions from "../utils/compareVersions.js";
 import { urlExists } from "../utils/common";
 import read_hex_file from "../workers/hex_parser.js";
 import Sponsor from "../Sponsor";
@@ -491,7 +491,7 @@ firmware_flasher.initialize = async function (callback) {
 
         function populateReleases(versions_element, target) {
             const sortReleases = function (a, b) {
-                return -semver.compareBuild(a.release, b.release);
+                return -compareVersions.compareBuild(a.release, b.release);
             };
 
             versions_element.empty();

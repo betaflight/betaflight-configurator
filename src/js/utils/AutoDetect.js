@@ -6,7 +6,7 @@ import MspHelper from "../msp/MSPHelper";
 import FC from "../fc";
 import MSP from "../msp";
 import MSPCodes from "../msp/MSPCodes";
-import semver from "semver";
+import compareVersions from "./compareVersions";
 import { API_VERSION_1_45, API_VERSION_1_46 } from "../data_storage";
 import { serial } from "../serial";
 
@@ -127,14 +127,17 @@ class AutoDetect {
 
     async getBoardInfo() {
         await MSP.promise(MSPCodes.MSP_BOARD_INFO);
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+        if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
             TABS.firmware_flasher.cloudBuildOptions = FC.CONFIG.buildOptions;
         }
         this.onFinishClose();
     }
 
     async getBuildInfo() {
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) && FC.CONFIG.flightControllerIdentifier === "BTFL") {
+        if (
+            compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) &&
+            FC.CONFIG.flightControllerIdentifier === "BTFL"
+        ) {
             await MSP.promise(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.BUILD_KEY));
             await MSP.promise(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.CRAFT_NAME));
             await MSP.promise(MSPCodes.MSP_BUILD_INFO);
@@ -148,7 +151,7 @@ class AutoDetect {
 
             if (
                 TABS.firmware_flasher.validateBuildKey() &&
-                (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_46) || buildDate < supportedDate)
+                (compareVersions.lt(FC.CONFIG.apiVersion, API_VERSION_1_46) || buildDate < supportedDate)
             ) {
                 try {
                     let options = await TABS.firmware_flasher.buildApi.requestBuildOptions(
@@ -170,7 +173,7 @@ class AutoDetect {
         await MSP.promise(MSPCodes.MSP_API_VERSION);
         gui_log(i18n.getMessage("apiVersionReceived", FC.CONFIG.apiVersion));
 
-        if (FC.CONFIG.apiVersion.includes("null") || semver.lt(FC.CONFIG.apiVersion, "1.39.0")) {
+        if (FC.CONFIG.apiVersion.includes("null") || compareVersions.lt(FC.CONFIG.apiVersion, "1.39.0")) {
             // auto-detect is not supported
             this.onFinishClose();
         } else {

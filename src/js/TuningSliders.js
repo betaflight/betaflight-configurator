@@ -1,9 +1,10 @@
 import MSP from "./msp";
 import FC from "./fc";
 import MSPCodes from "./msp/MSPCodes";
-import semver from "semver";
 import { API_VERSION_1_47 } from "./data_storage";
 import { isExpertModeEnabled } from "./utils/isExpertModeEnabled";
+import compareVersions from "./utils/compareVersions";
+import { isExpertModeEnabled } from "./utils/isExportModeEnabled";
 import { mspHelper } from "./msp/MSPHelper";
 import $ from "jquery";
 
@@ -271,7 +272,7 @@ TuningSliders.updateSlidersWarning = function (slidersUnavailable = false) {
     const WARNING_D_MAX_GAIN = 60;
     const WARNING_I_GAIN = 2.5 * FC.PIDS[0][0];
     const WARNING_D_GAIN = 42;
-    const enableWarning = semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_47)
+    const enableWarning = compareVersions.lt(FC.CONFIG.apiVersion, API_VERSION_1_47)
         ? FC.PIDS[0][0] > WARNING_P_GAIN ||
           FC.PIDS[0][1] > WARNING_I_GAIN ||
           FC.PIDS[0][2] > WARNING_D_MAX_GAIN ||

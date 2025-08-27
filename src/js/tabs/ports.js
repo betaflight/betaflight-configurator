@@ -1,12 +1,12 @@
-import semver from "semver";
 import { i18n } from "../localization";
+import compareVersions from "../utils/compareVersions";
 import GUI, { TABS } from "../gui";
 import { tracking } from "../Analytics";
 import { mspHelper } from "../msp/MSPHelper";
 import FC from "../fc";
 import MSP from "../msp";
 import MSPCodes from "../msp/MSPCodes";
-import { API_VERSION_1_45, API_VERSION_1_47 } from "../data_storage";
+import { API_VERSION_1_45, API_VERSION_25_12 } from "../data_storage";
 import $ from "jquery";
 
 const ports = {
@@ -69,7 +69,7 @@ ports.initialize = function (callback) {
         { name: "FRSKY_OSD", groups: ["peripherals"], maxPorts: 1, dependsOn: "USE_FRSKYOSD" },
     ];
 
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+    if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
         functionRules.push({ name: "VTX_MSP", groups: ["peripherals"], sharableWith: ["msp"], maxPorts: 1 });
     }
 
@@ -96,7 +96,7 @@ ports.initialize = function (callback) {
         "2470000",
     ];
 
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+    if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_25_12)) {
         gpsBaudRates.push("230400");
     }
 

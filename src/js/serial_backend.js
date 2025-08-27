@@ -10,7 +10,7 @@ import MSP from "./msp";
 import MSPCodes from "./msp/MSPCodes";
 import PortUsage from "./port_usage";
 import PortHandler from "./port_handler";
-import CONFIGURATOR, { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "./data_storage";
+import CONFIGURATOR, { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_25_12 } from "./data_storage";
 import { bit_check } from "./bit.js";
 import { sensor_status, have_sensor } from "./sensor_helpers";
 import { update_dataflash_global } from "./update_dataflash_global";
@@ -18,7 +18,7 @@ import { gui_log } from "./gui_log";
 import { updateTabList } from "./utils/updateTabList";
 import { get as getConfig } from "./ConfigStorage";
 import { tracking } from "./Analytics";
-import semver from "semver";
+import compareVersions from "./utils/compareVersions.js";
 import CryptoES from "crypto-es";
 import $ from "jquery";
 import BuildApi from "./BuildApi";
@@ -164,7 +164,7 @@ function connectDisconnect() {
                 if (
                     serial.connected &&
                     GUI.active_tab !== "cli" &&
-                    semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)
+                    compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_25_12)
                 ) {
                     GUI.showCliPanel();
                 }
@@ -176,7 +176,7 @@ function connectDisconnect() {
 function finishClose(finishedCallback) {
     const wasConnected = CONFIGURATOR.connectionValid;
 
-    if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+    if (compareVersions.lt(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
         // close reset to custom defaults dialog
         $("#dialogResetToCustomDefaults")[0].close();
     }
@@ -325,7 +325,7 @@ function onOpen(openInfo) {
                 return;
             }
 
-            if (semver.gte(FC.CONFIG.apiVersion, CONFIGURATOR.API_VERSION_ACCEPTED)) {
+            if (compareVersions.gte(FC.CONFIG.apiVersion, CONFIGURATOR.API_VERSION_ACCEPTED)) {
                 MSP.send_message(MSPCodes.MSP_FC_VARIANT, false, false, function () {
                     if (FC.CONFIG.flightControllerIdentifier === "BTFL") {
                         MSP.send_message(MSPCodes.MSP_FC_VERSION, false, false, function () {
@@ -453,7 +453,7 @@ function processCustomDefaults() {
 function processBoardInfo() {
     gui_log(i18n.getMessage("boardInfoReceived", [FC.CONFIG.hardwareName, FC.CONFIG.boardVersion]));
 
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+    if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
         checkReportProblems();
     } else {
         processCustomDefaults();
@@ -479,7 +479,7 @@ function checkReportProblems() {
         let problems = [];
         let abort = false;
 
-        if (semver.minor(FC.CONFIG.apiVersion) > semver.minor(CONFIGURATOR.API_VERSION_MAX_SUPPORTED)) {
+        if (compareVersions.gt(FC.CONFIG.apiVersion, CONFIGURATOR.API_VERSION_MAX_SUPPORTED)) {
             const problemName = "API_VERSION_MAX_SUPPORTED";
             problems.push({
                 name: problemName,
@@ -531,7 +531,7 @@ function checkReportProblems() {
 }
 
 async function processBuildConfiguration() {
-    const supported = semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45);
+    const supported = compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_45);
 
     if (supported) {
         // get build key from firmware
@@ -576,7 +576,7 @@ async function processUid() {
 }
 
 async function processCraftName() {
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+    if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
         await MSP.promise(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.CRAFT_NAME));
     } else {
         await MSP.promise(MSPCodes.MSP_NAME);
@@ -585,11 +585,11 @@ async function processCraftName() {
     gui_log(
         i18n.getMessage(
             "craftNameReceived",
-            semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) ? [FC.CONFIG.craftName] : [FC.CONFIG.name],
+            compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) ? [FC.CONFIG.craftName] : [FC.CONFIG.name],
         ),
     );
 
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+    if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
         await MSP.promise(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.PILOT_NAME));
     }
 
@@ -609,7 +609,7 @@ function finishOpen() {
         return;
     }
 
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) && FC.CONFIG.buildOptions.length) {
+    if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) && FC.CONFIG.buildOptions.length) {
         GUI.allowedTabs = Array.from(GUI.defaultAllowedTabs);
 
         for (const tab of GUI.defaultCloudBuildTabOptions) {

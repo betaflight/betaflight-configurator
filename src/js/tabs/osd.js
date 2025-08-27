@@ -6,10 +6,10 @@ import VirtualFC from "../VirtualFC";
 import FC from "../fc";
 import MSP from "../msp";
 import MSPCodes from "../msp/MSPCodes";
-import CONFIGURATOR, { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "../data_storage";
+import CONFIGURATOR, { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_25_12 } from "../data_storage";
 import LogoManager from "../LogoManager";
 import { gui_log } from "../gui_log";
-import semver from "semver";
+import compareVersions from "../utils/compareVersions";
 import jBox from "jbox";
 import inflection from "inflection";
 import debounce from "lodash.debounce";
@@ -651,7 +651,9 @@ OSD.generateLQPreview = function () {
 OSD.generateCraftName = function () {
     let preview = "CRAFT_NAME";
 
-    const craftName = semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) ? FC.CONFIG.craftName : FC.CONFIG.name;
+    const craftName = compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)
+        ? FC.CONFIG.craftName
+        : FC.CONFIG.name;
     if (craftName !== "") {
         preview = craftName.toUpperCase();
     }
@@ -1427,7 +1429,7 @@ OSD.loadDisplayFields = function () {
             positionable: true,
             preview: OSD.drawStickOverlayPreview,
         },
-        ...(semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_45)
+        ...(compareVersions.lt(FC.CONFIG.apiVersion, API_VERSION_1_45)
             ? {
                 DISPLAY_NAME: {
                     name: "DISPLAY_NAME",
@@ -1442,7 +1444,7 @@ OSD.loadDisplayFields = function () {
                 },
             }
             : {}),
-        ...(semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)
+        ...(compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)
             ? {
                 PILOT_NAME: {
                     name: "PILOT_NAME",
@@ -1779,7 +1781,7 @@ OSD.loadDisplayFields = function () {
         },
     };
 
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+    if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_25_12)) {
         if (have_sensor(FC.CONFIG.activeSensors, "gps")) {
             OSD.ALL_DISPLAY_FIELDS.ALTITUDE.variants.push("osdTextElementAltitudeVariant1DecimalASL");
             OSD.ALL_DISPLAY_FIELDS.ALTITUDE.variants.push("osdTextElementAltitudeVariantNoDecimalASL");
@@ -2174,7 +2176,7 @@ OSD.chooseFields = function () {
         F.STICK_OVERLAY_LEFT,
         F.STICK_OVERLAY_RIGHT,
         // show either DISPLAY_NAME or PILOT_NAME depending on the MSP version
-        semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) ? F.PILOT_NAME : F.DISPLAY_NAME,
+        compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) ? F.PILOT_NAME : F.DISPLAY_NAME,
         F.ESC_RPM_FREQ,
         F.RATE_PROFILE_NAME,
         F.PID_PROFILE_NAME,
@@ -2188,7 +2190,7 @@ OSD.chooseFields = function () {
         F.OSD_TX_UPLINK_POWER,
     ];
 
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+    if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
         OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
             F.WH_DRAWN,
             F.AUX_VALUE,
@@ -2208,7 +2210,7 @@ OSD.chooseFields = function () {
         ]);
     }
 
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+    if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
         OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
             F.GPS_LAP_TIME_CURRENT,
             F.GPS_LAP_TIME_PREVIOUS,
@@ -2216,7 +2218,7 @@ OSD.chooseFields = function () {
         ]);
     }
 
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+    if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_25_12)) {
         OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
             F.DEBUG2,
             F.CUSTOM_MSG0,
@@ -2266,11 +2268,11 @@ OSD.chooseFields = function () {
         F.MIN_RSSI_DBM,
     ];
 
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+    if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
         OSD.constants.STATISTIC_FIELDS = OSD.constants.STATISTIC_FIELDS.concat([F.USED_WH, F.MIN_RSNR]);
     }
 
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+    if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
         OSD.constants.STATISTIC_FIELDS = OSD.constants.STATISTIC_FIELDS.concat([
             F.STAT_BEST_3_CONSEC_LAPS,
             F.STAT_BEST_LAP,
@@ -2306,10 +2308,10 @@ OSD.chooseFields = function () {
 
     OSD.constants.TIMER_TYPES = ["ON_TIME", "TOTAL_ARMED_TIME", "LAST_ARMED_TIME", "ON_ARM_TIME"];
 
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+    if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
         OSD.constants.WARNINGS = OSD.constants.WARNINGS.concat([F.RSNR]);
     }
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+    if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
         OSD.constants.WARNINGS = OSD.constants.WARNINGS.concat([F.LOAD]);
     }
 };
@@ -2449,11 +2451,11 @@ OSD.msp = {
             result.push8(OSD.data.parameters.cameraFrameWidth);
             result.push8(OSD.data.parameters.cameraFrameHeight);
 
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+            if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
                 result.push16(OSD.data.alarms.link_quality.value);
             }
 
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+            if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_25_12)) {
                 result.push16(OSD.data.alarms.rssi_dbm.value);
             }
         }
@@ -2568,7 +2570,7 @@ OSD.msp = {
         d.state.isMax7456FontDeviceDetected = bit_check(d.flags, 5);
         d.state.haveOsdFeature = bit_check(d.flags, 0);
         d.state.isOsdSlave = bit_check(d.flags, 1);
-        d.state.isMspDevice = bit_check(d.flags, 6) && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45);
+        d.state.isMspDevice = bit_check(d.flags, 6) && compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_45);
 
         d.displayItems = [];
         d.statItems = [];
@@ -2680,14 +2682,14 @@ OSD.msp = {
         d.parameters.cameraFrameWidth = view.readU8();
         d.parameters.cameraFrameHeight = view.readU8();
 
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+        if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
             d.alarms["link_quality"] = {
                 display_name: i18n.getMessage("osdTimerAlarmOptionLinkQuality"),
                 value: view.readU16(),
             };
         }
 
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+        if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_25_12)) {
             d.alarms["rssi_dbm"] = {
                 display_name: i18n.getMessage("osdTimerAlarmOptionRssiDbm"),
                 value: view.read16(),
@@ -3301,7 +3303,7 @@ osd.initialize = function (callback) {
         // 2 way binding... sorta
         async function updateOsdView() {
             // ask for the OSD canvas data
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+            if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
                 await MSP.promise(MSPCodes.MSP_OSD_CANVAS);
             }
 
@@ -3329,7 +3331,7 @@ osd.initialize = function (callback) {
                 for (let i = 0; i < OSD.constants.VIDEO_TYPES.length; i++) {
                     // Disable SD or HD option depending on the build
                     let disabled = false;
-                    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) && FC.CONFIG.buildOptions.length) {
+                    if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) && FC.CONFIG.buildOptions.length) {
                         if (OSD.constants.VIDEO_TYPES[i] !== "HD" && !FC.CONFIG.buildOptions.includes("USE_OSD_SD")) {
                             disabled = true;
                         }

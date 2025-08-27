@@ -1,4 +1,4 @@
-import semver from "semver";
+import compareVersions from "../utils/compareVersions";
 import { i18n } from "../localization";
 import GUI, { TABS } from "../gui";
 import { tracking } from "../Analytics";
@@ -6,7 +6,7 @@ import { mspHelper } from "../msp/MSPHelper";
 import FC from "../fc";
 import MSP from "../msp";
 import MSPCodes from "../msp/MSPCodes";
-import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "../data_storage";
+import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_25_12 } from "../data_storage";
 import { updateTabList } from "../utils/updateTabList";
 import $ from "jquery";
 import { have_sensor } from "../sensor_helpers";
@@ -54,24 +54,24 @@ configuration.initialize = function (callback) {
             .then(() => MSP.promise(MSPCodes.MSP_SENSOR_CONFIG))
             .then(() => MSP.promise(MSPCodes.MSP_SENSOR_ALIGNMENT))
             .then(() =>
-                semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_45)
+                compareVersions.lt(FC.CONFIG.apiVersion, API_VERSION_1_45)
                     ? MSP.promise(MSPCodes.MSP_NAME)
                     : Promise.resolve(true),
             )
             .then(() =>
-                semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)
+                compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)
                     ? MSP.promise(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.CRAFT_NAME))
                     : Promise.resolve(true),
             )
             .then(() => MSP.promise(MSPCodes.MSP_RX_CONFIG))
             .then(() =>
-                semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)
+                compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)
                     ? MSP.promise(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.PILOT_NAME))
                     : Promise.resolve(true),
             )
             .then(() => MSP.promise(MSPCodes.MSP_ADVANCED_CONFIG))
             .then(() =>
-                semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)
+                compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)
                     ? MSP.promise(MSPCodes.MSP_COMPASS_CONFIG)
                     : Promise.resolve(true),
             )
@@ -201,7 +201,7 @@ configuration.initialize = function (callback) {
         $('input[id="magHardwareSwitch"]').prop("checked", FC.SENSOR_CONFIG.mag_hardware !== 1);
 
         // Only show these sections for supported FW
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+        if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
             $('input[name="craftName"]').val(FC.CONFIG.craftName);
             $('input[name="pilotName"]').val(FC.CONFIG.pilotName);
         } else {
@@ -222,7 +222,7 @@ configuration.initialize = function (callback) {
 
         $('input[id="configurationSmallAngle"]').val(FC.ARMING_CONFIG.small_angle);
 
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+        if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
             $('input[id="configurationGyroCalOnFirstArm"]').prop(
                 "checked",
                 FC.ARMING_CONFIG.gyro_cal_on_first_arm === 1,
@@ -241,7 +241,7 @@ configuration.initialize = function (callback) {
         const gyro_align_elements = [];
 
         // Multi gyro handling for newer firmware
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+        if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_25_12)) {
             // Define gyro detection flags
             const GYRO_DETECTION_FLAGS = { DETECTED_DUAL_GYROS: 1 << 7 };
             for (let i = 0; i < MAX_GYROS; i++) {
@@ -468,6 +468,7 @@ configuration.initialize = function (callback) {
             // Only show not found message if no gyros are detected
             $(".gyro_alignment_inputs_notfound").toggle(!detected_gyros.some((detected) => detected));
         } else {
+            console.log("ALERT, compareVersions does not work ???");
             // Original code for older firmware versions remains unchanged
             const orientation_gyro_to_use_e = $("select.gyro_to_use");
             const orientation_gyro_1_align_e = $("select.gyro_1_align");
@@ -542,7 +543,7 @@ configuration.initialize = function (callback) {
         const orientation_mag_e = $("select.mag_align");
 
         const hasMag =
-            have_sensor(FC.CONFIG.activeSensors, "mag") && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46);
+            have_sensor(FC.CONFIG.activeSensors, "mag") && compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_46);
 
         if (hasMag) {
             $('input[name="mag_declination"]').val(FC.COMPASS_CONFIG.mag_declination.toFixed(1));
@@ -577,7 +578,7 @@ configuration.initialize = function (callback) {
             toggleMagCustomAlignmentInputs();
         });
 
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+        if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_25_12)) {
             $('input[name="mag_align_roll"]').val(FC.SENSOR_ALIGNMENT.mag_align_roll);
             $('input[name="mag_align_pitch"]').val(FC.SENSOR_ALIGNMENT.mag_align_pitch);
             $('input[name="mag_align_yaw"]').val(FC.SENSOR_ALIGNMENT.mag_align_yaw);
@@ -589,7 +590,7 @@ configuration.initialize = function (callback) {
         }
 
         // Range finder
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+        if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_25_12)) {
             const rangeFinderType_e = $("select.rangefinderType");
             const sonarElements = sensorTypes().sonar.elements;
 
@@ -603,7 +604,7 @@ configuration.initialize = function (callback) {
         }
 
         // Optical flow sensor
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+        if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_25_12)) {
             const opticalflowType_e = $("select.opticalflowType");
             const opticalflowElements = sensorTypes().opticalflow.elements;
 
@@ -672,19 +673,19 @@ configuration.initialize = function (callback) {
                 { code: MSPCodes.MSP_SET_ARMING_CONFIG },
                 { code: MSPCodes.MSP_SET_SENSOR_CONFIG },
                 {
-                    condition: () => semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45),
+                    condition: () => compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_45),
                     code: MSPCodes.MSP2_SET_TEXT,
                     extraParams: MSPCodes.CRAFT_NAME,
                     fallback: { code: MSPCodes.MSP_SET_NAME },
                 },
                 {
-                    condition: () => semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45),
+                    condition: () => compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_45),
                     code: MSPCodes.MSP2_SET_TEXT,
                     extraParams: MSPCodes.PILOT_NAME,
                 },
                 { code: MSPCodes.MSP_SET_RX_CONFIG },
                 {
-                    condition: () => semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46),
+                    condition: () => compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_46),
                     code: MSPCodes.MSP_SET_COMPASS_CONFIG,
                 },
             ];
@@ -729,7 +730,7 @@ configuration.initialize = function (callback) {
             FC.BOARD_ALIGNMENT_CONFIG.pitch = parseInt($('input[name="board_align_pitch"]').val());
             FC.BOARD_ALIGNMENT_CONFIG.yaw = parseInt($('input[name="board_align_yaw"]').val());
 
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+            if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_25_12)) {
                 // Initialize arrays if they don't exist
                 if (!Array.isArray(FC.SENSOR_ALIGNMENT.gyro_align_roll)) {
                     FC.SENSOR_ALIGNMENT.gyro_align = new Array(MAX_GYROS).fill(1);
@@ -775,7 +776,7 @@ configuration.initialize = function (callback) {
             FC.CONFIG.accelerometerTrims[1] = parseInt($('input[name="roll"]').val());
             FC.CONFIG.accelerometerTrims[0] = parseInt($('input[name="pitch"]').val());
 
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+            if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
                 FC.ARMING_CONFIG.gyro_cal_on_first_arm = $('input[id="configurationGyroCalOnFirstArm"]').is(":checked")
                     ? 1
                     : 0;
@@ -790,7 +791,7 @@ configuration.initialize = function (callback) {
                 FC.COMPASS_CONFIG.mag_declination = $('input[name="mag_declination"]').val();
             }
 
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+            if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_25_12)) {
                 FC.SENSOR_CONFIG.sonar_hardware = $("select.rangefinderType").val();
                 FC.SENSOR_CONFIG.opticalflow_hardware = $("select.opticalflowType").val();
             }
@@ -824,7 +825,7 @@ configuration.initialize = function (callback) {
             FC.SENSOR_CONFIG.baro_hardware = $('input[id="baroHardwareSwitch"]').is(":checked") ? 0 : 1;
             FC.SENSOR_CONFIG.mag_hardware = $('input[id="magHardwareSwitch"]').is(":checked") ? 0 : 1;
 
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+            if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
                 FC.CONFIG.craftName = $('input[name="craftName"]').val().trim();
                 FC.CONFIG.pilotName = $('input[name="pilotName"]').val().trim();
             } else {

@@ -5,8 +5,8 @@ import MSP from "../msp";
 import FC from "../fc";
 import MSPCodes from "../msp/MSPCodes";
 import adjustBoxNameIfPeripheralWithModeID from "../peripherals";
-import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "../data_storage";
-import semver from "semver";
+import compareVersions from "../utils/compareVersions";
+import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_25_12 } from "../data_storage";
 import $ from "jquery";
 
 const failsafe = {};
@@ -65,7 +65,7 @@ failsafe.initialize = function (callback) {
     }
 
     function load_compass_config() {
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+        if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
             MSP.send_message(MSPCodes.MSP_COMPASS_CONFIG, false, false, load_gps_config);
         } else {
             load_gps_config();
@@ -336,7 +336,7 @@ failsafe.initialize = function (callback) {
         $('input[name="gps_rescue_min_start_dist"]').val(FC.GPS_RESCUE.minStartDistM);
 
         // Introduced in 1.45
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+        if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
             $('input[name="gps_rescue_angle"]').attr("max", 80);
             $('input[name="gps_rescue_return_altitude"]').attr({ min: 2, max: 255 });
             $('input[name="gps_rescue_descent_distance"]').attr("min", 5);
@@ -347,14 +347,14 @@ failsafe.initialize = function (callback) {
         }
 
         // Introduced in 1.46
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+        if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
             $('input[name="gps_rescue_initial_climb"]').val(FC.GPS_RESCUE.initialClimbM);
         } else {
             $('input[name="gps_rescue_initial_climb"]').closest(".number").hide();
         }
 
         // Update attributes for API version 4.5
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+        if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
             $('input[name="gps_rescue_angle"]').attr({ min: 30, max: 60 });
             $('input[name="gps_rescue_return_altitude"]').attr({ min: 5, max: 1000 });
             $('input[name="gps_rescue_descent_distance"]').attr("min", 10);
@@ -367,7 +367,7 @@ failsafe.initialize = function (callback) {
         }
 
         // Update attributes for API version 4.6
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+        if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_25_12)) {
             $('input[name="failsafe_off_delay"]').attr({ max: 250 }); // renamed to "failsafe_landing_time"
         }
 
@@ -421,7 +421,7 @@ failsafe.initialize = function (callback) {
             FC.GPS_RESCUE.minStartDistM = $('input[name="gps_rescue_min_start_dist"]').val();
 
             // Introduced in 1.46
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+            if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
                 FC.GPS_RESCUE.initialClimbM = $('input[name="gps_rescue_initial_climb"]').val();
             }
 

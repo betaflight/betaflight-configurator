@@ -1,7 +1,7 @@
 import { bit_check } from "./bit";
 import { reactive } from "vue";
 import { API_VERSION_1_45, API_VERSION_1_46 } from "./data_storage";
-import semver from "semver";
+import compareVersions from "./utils/compareVersions";
 
 const INITIAL_CONFIG = {
     apiVersion: "0.0.0",
@@ -803,7 +803,7 @@ const FC = {
             "IRC GHOST",
         ];
 
-        if (semver.gte(apiVersion, API_VERSION_1_46)) {
+        if (compareVersions.gte(apiVersion, API_VERSION_1_46)) {
             // Default to NONE and move SPEKTRUM1024 to the end (firmware PR #12500)
             serialRxTypes[0] = "NONE";
             serialRxTypes.push("SPEKTRUM1024");
@@ -965,7 +965,7 @@ const FC = {
         versionFilterDefaults.dterm_lowpass_dyn_max_hz = 150;
 
         // Introduced in 1.45
-        if (semver.gte(this.CONFIG.apiVersion, API_VERSION_1_45)) {
+        if (compareVersions.gte(this.CONFIG.apiVersion, API_VERSION_1_45)) {
             versionFilterDefaults.dyn_notch_min_hz = 100;
         }
 

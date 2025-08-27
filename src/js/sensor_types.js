@@ -1,6 +1,6 @@
-import semver from "semver";
+import compareVersions from "./utils/compareVersions";
 import FC from "./fc";
-import { API_VERSION_1_47 } from "./data_storage";
+import { API_VERSION_25_12 } from "./data_storage";
 import { removeArrayElement, addArrayElement, addArrayElementsAfter } from "./utils/array";
 
 export function sensorTypes() {
@@ -108,10 +108,16 @@ export function sensorTypes() {
     const gpsElements = sensorTypes.gps.elements;
 
     // remove deprecated sensors or add new ones
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+    if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_25_12)) {
         removeArrayElement(gyroElements, "L3G4200D");
         removeArrayElement(gyroElements, "MPU3050");
-        addArrayElementsAfter(gyroElements, "LSM6DSV16X", ["IIM42653", "ICM45605", "ICM45686", "ICM40609D", "IIM42652"]);
+        addArrayElementsAfter(gyroElements, "LSM6DSV16X", [
+            "IIM42653",
+            "ICM45605",
+            "ICM45686",
+            "ICM40609D",
+            "IIM42652",
+        ]);
 
         removeArrayElement(accElements, "ADXL345");
         removeArrayElement(accElements, "MMA8452");

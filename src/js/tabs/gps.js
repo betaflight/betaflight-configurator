@@ -1,5 +1,5 @@
 import { i18n } from "../localization";
-import semver from "semver";
+import compareVersions from "../utils/compareVersions.js";
 import { API_VERSION_1_46 } from "../data_storage";
 import GUI, { TABS } from "../gui";
 import FC from "../fc";
@@ -45,7 +45,7 @@ gps.initialize = async function (callback) {
         i18n.localizePage();
 
         const hasMag =
-            have_sensor(FC.CONFIG.activeSensors, "mag") && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46);
+            have_sensor(FC.CONFIG.activeSensors, "mag") && compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_46);
 
         function get_raw_gps_data() {
             MSP.send_message(MSPCodes.MSP_RAW_GPS, false, false, get_comp_gps_data);
@@ -68,7 +68,7 @@ gps.initialize = async function (callback) {
         }
 
         function get_mag_data() {
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+            if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
                 MSP.send_message(MSPCodes.MSP_COMPASS_CONFIG, false, false, update_ui);
             } else {
                 update_ui();
@@ -130,7 +130,7 @@ gps.initialize = async function (callback) {
             .change();
 
         // auto_baud is no longer used in API 1.46
-        if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+        if (compareVersions.lt(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
             gpsAutoBaudElement.prop("checked", FC.GPS_CONFIG.auto_baud === 1);
         }
 
@@ -148,7 +148,7 @@ gps.initialize = async function (callback) {
                 gpsUbloxSbasGroup.toggle(enableSbasVisible);
 
                 gpsAutoBaudGroup.toggle(
-                    (ubloxSelected || mspSelected) && semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_46),
+                    (ubloxSelected || mspSelected) && compareVersions.lt(FC.CONFIG.apiVersion, API_VERSION_1_46),
                 );
                 gpsAutoConfigGroup.toggle(ubloxSelected);
             })
@@ -186,7 +186,7 @@ gps.initialize = async function (callback) {
         gpsBaudrateElement.prop("disabled", true);
         gpsBaudrateElement.parent().hide();
 
-        if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+        if (compareVersions.lt(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
             $(".GPS_info td.positionalDop").parent().hide();
         }
 
@@ -366,7 +366,7 @@ gps.initialize = async function (callback) {
             $(".GPS_info td.sats").text(FC.GPS_DATA.numSat);
             $(".GPS_info td.distToHome").text(`${FC.GPS_DATA.distanceToHome} m`);
 
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+            if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
                 const positionalDop = (FC.GPS_DATA.positionalDop / 100).toFixed(2);
                 const { qualityColor, stars } = getPositionalDopQuality(positionalDop);
                 const pdopHtml = `${stars} <span class="colorToggle ${qualityColor}">${positionalDop}</span>`;
