@@ -3,7 +3,7 @@ import FC from "./fc";
 import MSPCodes from "./msp/MSPCodes";
 import semver from "semver";
 import { API_VERSION_1_47 } from "./data_storage";
-import { isExpertModeEnabled } from "./utils/isExportModeEnabled";
+import { isExpertModeEnabled } from "./utils/isExpertModeEnabled";
 import { mspHelper } from "./msp/MSPHelper";
 import $ from "jquery";
 

@@ -1,6 +1,6 @@
 import { i18n } from "../localization";
 import semver from "semver";
-import { isExpertModeEnabled } from "../utils/isExportModeEnabled";
+import { isExpertModeEnabled } from "../utils/isExpertModeEnabled";
 import GUI, { TABS } from "../gui";
 import { have_sensor } from "../sensor_helpers";
 import { mspHelper } from "../msp/MSPHelper";

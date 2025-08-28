@@ -13,7 +13,7 @@ import FC from "./fc.js";
 import CONFIGURATOR from "./data_storage.js";
 import CliAutoComplete from "./CliAutoComplete.js";
 import DarkTheme, { setDarkTheme } from "./DarkTheme.js";
-import { isExpertModeEnabled } from "./utils/isExportModeEnabled.js";
+import { isExpertModeEnabled } from "./utils/isExpertModeEnabled.js";
 import { updateTabList } from "./utils/updateTabList.js";
 import * as THREE from "three";
 import NotificationManager from "./utils/notifications.js";
