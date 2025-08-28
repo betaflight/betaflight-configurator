@@ -1,6 +1,6 @@
 import { bit_check, bit_set, bit_clear } from "./bit";
 import compareVersions from "./utils/compareVersions";
-import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_25_12 } from "./data_storage";
+import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "./data_storage";
 import { tracking } from "./Analytics";
 import $ from "jquery";
 
@@ -42,7 +42,7 @@ const Features = function (config) {
         });
     }
 
-    if (compareVersions.gte(config.apiVersion, API_VERSION_25_12)) {
+    if (compareVersions.gte(config.apiVersion, API_VERSION_1_47)) {
         addFeatureDependsOn(self._features, "SOFTSERIAL", "SOFTSERIAL");
     }
 

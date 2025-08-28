@@ -2,11 +2,11 @@ export const API_VERSION_1_39 = "1.39.0";
 export const API_VERSION_1_44 = "1.44.0";
 export const API_VERSION_1_45 = "1.45.0";
 export const API_VERSION_1_46 = "1.46.0";
-export const API_VERSION_25_12 = "25.12.0";
+export const API_VERSION_1_47 = "1.47.0";
 
 const CONFIGURATOR = {
     API_VERSION_ACCEPTED: API_VERSION_1_44,
-    API_VERSION_MAX_SUPPORTED: API_VERSION_25_12,
+    API_VERSION_MAX_SUPPORTED: API_VERSION_1_47,
 
     connectionValid: false,
     connectionValidCliOnly: false,

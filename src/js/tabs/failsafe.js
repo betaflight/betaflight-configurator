@@ -6,7 +6,7 @@ import FC from "../fc";
 import MSPCodes from "../msp/MSPCodes";
 import adjustBoxNameIfPeripheralWithModeID from "../peripherals";
 import compareVersions from "../utils/compareVersions";
-import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_25_12 } from "../data_storage";
+import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "../data_storage";
 import $ from "jquery";
 
 const failsafe = {};
@@ -367,7 +367,7 @@ failsafe.initialize = function (callback) {
         }
 
         // Update attributes for API version 4.6
-        if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_25_12)) {
+        if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
             $('input[name="failsafe_off_delay"]').attr({ max: 250 }); // renamed to "failsafe_landing_time"
         }
 

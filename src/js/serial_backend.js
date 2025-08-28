@@ -10,7 +10,7 @@ import MSP from "./msp";
 import MSPCodes from "./msp/MSPCodes";
 import PortUsage from "./port_usage";
 import PortHandler from "./port_handler";
-import CONFIGURATOR, { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_25_12 } from "./data_storage";
+import CONFIGURATOR, { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "./data_storage";
 import { bit_check } from "./bit.js";
 import { sensor_status, have_sensor } from "./sensor_helpers";
 import { update_dataflash_global } from "./update_dataflash_global";
@@ -164,7 +164,7 @@ function connectDisconnect() {
                 if (
                     serial.connected &&
                     GUI.active_tab !== "cli" &&
-                    compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_25_12)
+                    compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)
                 ) {
                     GUI.showCliPanel();
                 }

@@ -6,7 +6,7 @@ import { mspHelper } from "../msp/MSPHelper";
 import FC from "../fc";
 import MSP from "../msp";
 import MSPCodes from "../msp/MSPCodes";
-import { API_VERSION_1_45, API_VERSION_25_12 } from "../data_storage";
+import { API_VERSION_1_45, API_VERSION_1_47 } from "../data_storage";
 import $ from "jquery";
 
 const ports = {
@@ -96,7 +96,7 @@ ports.initialize = function (callback) {
         "2470000",
     ];
 
-    if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_25_12)) {
+    if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
         gpsBaudRates.push("230400");
     }
 

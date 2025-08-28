@@ -9,7 +9,7 @@ import FC from "../fc";
 import MSP from "../msp";
 import Model from "../model";
 import MSPCodes from "../msp/MSPCodes";
-import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_25_12 } from "../data_storage";
+import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "../data_storage";
 import { gui_log } from "../gui_log";
 import $ from "jquery";
 import { ispConnected } from "../utils/connection";
@@ -254,7 +254,7 @@ setup.initialize = function (callback) {
                 replaceArrayElement(disarmFlagElements, "RPMFILTER", "DSHOT_TELEM");
             }
 
-            if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_25_12)) {
+            if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
                 addArrayElementsAfter(disarmFlagElements, "MOTOR_PROTOCOL", ["CRASHFLIP", "ALTHOLD", "POSHOLD"]);
             }
 
@@ -328,7 +328,7 @@ setup.initialize = function (callback) {
                 );
 
                 // opticalflow sensor is available since 1.47
-                if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_25_12)) {
+                if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
                     addSensorInfo(
                         FC.SENSOR_CONFIG_ACTIVE.opticalflow_hardware,
                         sensor_opticalflow_e,
@@ -556,7 +556,7 @@ setup.initialize = function (callback) {
                 cputemp_e.text(i18n.getMessage("initialSetupCpuTempNotSupported"));
             }
 
-            if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_25_12)) {
+            if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
                 mcu_e.text(FC.MCU_INFO.name);
             } else {
                 mcu_e.parent().hide();

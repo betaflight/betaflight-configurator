@@ -6,7 +6,7 @@ import VirtualFC from "../VirtualFC";
 import FC from "../fc";
 import MSP from "../msp";
 import MSPCodes from "../msp/MSPCodes";
-import CONFIGURATOR, { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_25_12 } from "../data_storage";
+import CONFIGURATOR, { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "../data_storage";
 import LogoManager from "../LogoManager";
 import { gui_log } from "../gui_log";
 import compareVersions from "../utils/compareVersions";
@@ -1781,7 +1781,7 @@ OSD.loadDisplayFields = function () {
         },
     };
 
-    if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_25_12)) {
+    if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
         if (have_sensor(FC.CONFIG.activeSensors, "gps")) {
             OSD.ALL_DISPLAY_FIELDS.ALTITUDE.variants.push("osdTextElementAltitudeVariant1DecimalASL");
             OSD.ALL_DISPLAY_FIELDS.ALTITUDE.variants.push("osdTextElementAltitudeVariantNoDecimalASL");
@@ -2218,7 +2218,7 @@ OSD.chooseFields = function () {
         ]);
     }
 
-    if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_25_12)) {
+    if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
         OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
             F.DEBUG2,
             F.CUSTOM_MSG0,
@@ -2455,7 +2455,7 @@ OSD.msp = {
                 result.push16(OSD.data.alarms.link_quality.value);
             }
 
-            if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_25_12)) {
+            if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
                 result.push16(OSD.data.alarms.rssi_dbm.value);
             }
         }
@@ -2689,7 +2689,7 @@ OSD.msp = {
             };
         }
 
-        if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_25_12)) {
+        if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
             d.alarms["rssi_dbm"] = {
                 display_name: i18n.getMessage("osdTimerAlarmOptionRssiDbm"),
                 value: view.read16(),

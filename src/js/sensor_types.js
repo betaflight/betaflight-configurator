@@ -1,6 +1,6 @@
 import compareVersions from "./utils/compareVersions";
 import FC from "./fc";
-import { API_VERSION_25_12 } from "./data_storage";
+import { API_VERSION_1_47 } from "./data_storage";
 import { removeArrayElement, addArrayElement, addArrayElementsAfter } from "./utils/array";
 
 export function sensorTypes() {
@@ -108,7 +108,7 @@ export function sensorTypes() {
     const gpsElements = sensorTypes.gps.elements;
 
     // remove deprecated sensors or add new ones
-    if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_25_12)) {
+    if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
         removeArrayElement(gyroElements, "L3G4200D");
         removeArrayElement(gyroElements, "MPU3050");
         addArrayElementsAfter(gyroElements, "LSM6DSV16X", [

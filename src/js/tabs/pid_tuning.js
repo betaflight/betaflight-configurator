@@ -10,7 +10,7 @@ import TuningSliders from "../TuningSliders";
 import Model from "../model";
 import RateCurve from "../RateCurve";
 import MSPCodes from "../msp/MSPCodes";
-import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_25_12 } from "../data_storage";
+import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "../data_storage";
 import { gui_log } from "../gui_log";
 import { degToRad, isInt } from "../utils/common";
 import compareVersions from "../utils/compareVersions.js";
@@ -78,7 +78,7 @@ pid_tuning.initialize = function (callback) {
                 : true,
         )
         .then(() =>
-            compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_25_12) ? MSP.promise(MSPCodes.MSP_STATUS_EX) : true,
+            compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_47) ? MSP.promise(MSPCodes.MSP_STATUS_EX) : true,
         )
         .then(() => MSP.promise(MSPCodes.MSP_SIMPLIFIED_TUNING))
         .then(() => MSP.promise(MSPCodes.MSP_ADVANCED_CONFIG))
@@ -127,7 +127,7 @@ pid_tuning.initialize = function (callback) {
         $('.throttle input[name="mid"]').val(FC.RC_TUNING.throttle_MID.toFixed(2));
         $('.throttle input[name="expo"]').val(FC.RC_TUNING.throttle_EXPO.toFixed(2));
 
-        if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_25_12)) {
+        if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
             $('.throttle input[name="hover"]').val(FC.RC_TUNING.throttle_HOVER.toFixed(2));
         } else {
             $('.throttle input[name="hover"]').parent().hide();
@@ -196,7 +196,7 @@ pid_tuning.initialize = function (callback) {
             levelAngleLimit.attr({ min: "0", max: "85", step: "1" });
         }
 
-        if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_25_12)) {
+        if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
             levelAngleLimit.attr({ min: "0", max: "80", step: "1" });
         }
 
@@ -1169,7 +1169,7 @@ pid_tuning.initialize = function (callback) {
 
         $(".tab-pid_tuning .pidTuningSuperexpoRates").hide();
 
-        if (compareVersions.lt(FC.CONFIG.apiVersion, API_VERSION_25_12)) {
+        if (compareVersions.lt(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
             const derivativeTip = document.querySelector(".derivative .cf_tip");
             const dMaxTip = document.querySelector(".dmax .cf_tip");
 
@@ -1208,7 +1208,7 @@ pid_tuning.initialize = function (callback) {
                 numberOfRateProfiles = 4;
             }
 
-            if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_25_12)) {
+            if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
                 numberOfRateProfiles = FC.CONFIG.numberOfRateProfiles;
             }
 
@@ -1703,7 +1703,7 @@ pid_tuning.initialize = function (callback) {
             const expo = parseFloat(throttleExpoE.val()); // Value 0-1
 
             // Hover parameter is only available from 1.47 so use mid value for older versions
-            const hover = compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_25_12)
+            const hover = compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)
                 ? parseFloat(throttleHoverE.val())
                 : mid;
 

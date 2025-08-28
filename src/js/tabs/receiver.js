@@ -10,7 +10,7 @@ import Model from "../model";
 import RateCurve from "../RateCurve";
 import MSPCodes from "../msp/MSPCodes";
 import windowWatcherUtil from "../utils/window_watchers";
-import CONFIGURATOR, { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_25_12 } from "../data_storage";
+import CONFIGURATOR, { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "../data_storage";
 import DarkTheme from "../DarkTheme";
 import { gui_log } from "../gui_log";
 import { degToRad } from "../utils/common";
@@ -391,7 +391,7 @@ receiver.initialize = function (callback) {
             tab.elrsBindingPhraseEnabled = false;
         }
 
-        if (tab.elrsBindingPhraseEnabled && compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_25_12)) {
+        if (tab.elrsBindingPhraseEnabled && compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
             $('input[name="elrsModelId-number"]').val(FC.RX_CONFIG.elrsModelId);
         } else {
             $('input[name="elrsModelId-number"]').parent().hide();
@@ -485,7 +485,7 @@ receiver.initialize = function (callback) {
 
             FC.RX_CONFIG.rcSmoothingSetpointCutoff = parseInt($('input[name="rcSmoothingSetpointHz-number"]').val());
 
-            if (compareVersions.lt(FC.CONFIG.apiVersion, API_VERSION_25_12)) {
+            if (compareVersions.lt(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
                 FC.RX_CONFIG.rcSmoothingFeedforwardCutoff = parseInt(
                     $('input[name="rcSmoothingFeedforwardCutoff-number"]').val(),
                 );
@@ -507,7 +507,7 @@ receiver.initialize = function (callback) {
                     FC.RX_CONFIG.elrsUid = [0, 0, 0, 0, 0, 0];
                 }
 
-                if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_25_12)) {
+                if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
                     FC.RX_CONFIG.elrsModelId = parseInt($('input[name="elrsModelId-number"]').val());
                 }
             }
@@ -647,7 +647,7 @@ receiver.initialize = function (callback) {
             })
             .change();
 
-        if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_25_12)) {
+        if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
             $(".tab-receiver .rcSmoothing-feedforward-manual").hide();
         } else {
             const rcSmoothingFeedforwardNumberElement = $('input[name="rcSmoothingFeedforwardCutoff-number"]');
@@ -954,7 +954,7 @@ function updateInterpolationView() {
     $(".tab-receiver .rcSmoothing-feedforward-cutoff").show();
     $(".tab-receiver .rcSmoothing-setpoint-cutoff").show();
 
-    if (compareVersions.lt(FC.CONFIG.apiVersion, API_VERSION_25_12)) {
+    if (compareVersions.lt(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
         $(".tab-receiver .rcSmoothing-feedforward-manual").show();
     }
 

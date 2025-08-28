@@ -2,7 +2,7 @@ import Features from "./Features";
 import { i18n } from "./localization";
 import Beepers from "./Beepers";
 import FC from "./fc";
-import CONFIGURATOR, { API_VERSION_25_12 } from "./data_storage";
+import CONFIGURATOR, { API_VERSION_1_47 } from "./data_storage";
 import { OSD } from "./tabs/osd";
 import compareVersions from "./utils/compareVersions";
 import { addArrayElement, addArrayElementAfter } from "./utils/array";
@@ -240,7 +240,7 @@ const VirtualFC = {
             "LAP TIMER RESET",
         ];
 
-        if (compareVersions.gte(virtualFC.CONFIG.apiVersion, API_VERSION_25_12)) {
+        if (compareVersions.gte(virtualFC.CONFIG.apiVersion, API_VERSION_1_47)) {
             addArrayElementAfter(virtualFC.AUX_CONFIG, "HORIZON", "ALT_HOLD");
             addArrayElementAfter(virtualFC.AUX_CONFIG, "CAMSTAB", "POS_HOLD");
             addArrayElement(virtualFC.AUX_CONFIG, "CHIRP");
@@ -259,7 +259,7 @@ const VirtualFC = {
         }
 
         // 11 1111 (pass bitchecks)
-        virtualFC.CONFIG.activeSensors = compareVersions.gte(virtualFC.CONFIG.apiVersion, API_VERSION_25_12) ? 127 : 63;
+        virtualFC.CONFIG.activeSensors = compareVersions.gte(virtualFC.CONFIG.apiVersion, API_VERSION_1_47) ? 127 : 63;
 
         virtualFC.SENSOR_CONFIG_ACTIVE = {
             gyro_hardware: 2, // MPU6050

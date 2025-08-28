@@ -4,7 +4,7 @@ import { mspHelper } from "../msp/MSPHelper";
 import FC from "../fc";
 import MSP from "../msp";
 import MSPCodes from "../msp/MSPCodes";
-import CONFIGURATOR, { API_VERSION_1_45, API_VERSION_25_12 } from "../data_storage";
+import CONFIGURATOR, { API_VERSION_1_45, API_VERSION_1_47 } from "../data_storage";
 import { gui_log } from "../gui_log";
 import { generateFilename } from "../utils/generate_filename";
 import compareVersions from "../utils/compareVersions";
@@ -196,7 +196,7 @@ onboard_logging.initialize = function (callback) {
         deviceSelect.append(`<option value="3">${i18n.getMessage("blackboxLoggingSerial")}</option>`);
 
         if (
-            compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_25_12) &&
+            compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_47) &&
             FC.SENSOR_CONFIG_ACTIVE.gyro_hardware == sensorTypes().gyro.elements.indexOf("VIRTUAL")
         ) {
             // If the gyro sensor is virtual, it means SITL is built

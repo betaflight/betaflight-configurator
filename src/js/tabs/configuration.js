@@ -6,7 +6,7 @@ import { mspHelper } from "../msp/MSPHelper";
 import FC from "../fc";
 import MSP from "../msp";
 import MSPCodes from "../msp/MSPCodes";
-import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_25_12 } from "../data_storage";
+import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "../data_storage";
 import { updateTabList } from "../utils/updateTabList";
 import $ from "jquery";
 import { have_sensor } from "../sensor_helpers";
@@ -241,7 +241,7 @@ configuration.initialize = function (callback) {
         const gyro_align_elements = [];
 
         // Multi gyro handling for newer firmware
-        if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_25_12)) {
+        if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
             // Define gyro detection flags
             const GYRO_DETECTION_FLAGS = { DETECTED_DUAL_GYROS: 1 << 7 };
             for (let i = 0; i < MAX_GYROS; i++) {
@@ -468,7 +468,6 @@ configuration.initialize = function (callback) {
             // Only show not found message if no gyros are detected
             $(".gyro_alignment_inputs_notfound").toggle(!detected_gyros.some((detected) => detected));
         } else {
-            console.log("ALERT, compareVersions does not work ???");
             // Original code for older firmware versions remains unchanged
             const orientation_gyro_to_use_e = $("select.gyro_to_use");
             const orientation_gyro_1_align_e = $("select.gyro_1_align");
@@ -578,7 +577,7 @@ configuration.initialize = function (callback) {
             toggleMagCustomAlignmentInputs();
         });
 
-        if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_25_12)) {
+        if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
             $('input[name="mag_align_roll"]').val(FC.SENSOR_ALIGNMENT.mag_align_roll);
             $('input[name="mag_align_pitch"]').val(FC.SENSOR_ALIGNMENT.mag_align_pitch);
             $('input[name="mag_align_yaw"]').val(FC.SENSOR_ALIGNMENT.mag_align_yaw);
@@ -590,7 +589,7 @@ configuration.initialize = function (callback) {
         }
 
         // Range finder
-        if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_25_12)) {
+        if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
             const rangeFinderType_e = $("select.rangefinderType");
             const sonarElements = sensorTypes().sonar.elements;
 
@@ -604,7 +603,7 @@ configuration.initialize = function (callback) {
         }
 
         // Optical flow sensor
-        if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_25_12)) {
+        if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
             const opticalflowType_e = $("select.opticalflowType");
             const opticalflowElements = sensorTypes().opticalflow.elements;
 
@@ -730,7 +729,7 @@ configuration.initialize = function (callback) {
             FC.BOARD_ALIGNMENT_CONFIG.pitch = parseInt($('input[name="board_align_pitch"]').val());
             FC.BOARD_ALIGNMENT_CONFIG.yaw = parseInt($('input[name="board_align_yaw"]').val());
 
-            if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_25_12)) {
+            if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
                 // Initialize arrays if they don't exist
                 if (!Array.isArray(FC.SENSOR_ALIGNMENT.gyro_align_roll)) {
                     FC.SENSOR_ALIGNMENT.gyro_align = new Array(MAX_GYROS).fill(1);
@@ -791,7 +790,7 @@ configuration.initialize = function (callback) {
                 FC.COMPASS_CONFIG.mag_declination = $('input[name="mag_declination"]').val();
             }
 
-            if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_25_12)) {
+            if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
                 FC.SENSOR_CONFIG.sonar_hardware = $("select.rangefinderType").val();
                 FC.SENSOR_CONFIG.opticalflow_hardware = $("select.opticalflowType").val();
             }

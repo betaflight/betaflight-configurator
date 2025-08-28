@@ -1,6 +1,6 @@
 import FC from "./fc.js";
 import compareVersions from "./utils/compareVersions.js";
-import { API_VERSION_1_46, API_VERSION_25_12 } from "./data_storage";
+import { API_VERSION_1_46, API_VERSION_1_47 } from "./data_storage";
 import { removeArrayElement, addArrayElement, replaceArrayElement, addArrayElementAfter } from "./utils/array";
 
 const DEBUG = {
@@ -823,7 +823,7 @@ function update() {
         };
     }
 
-    if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_25_12)) {
+    if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
         replaceArrayElement(DEBUG.modes, "GPS_RESCUE_THROTTLE_PID", "AUTOPILOT_ALTITUDE");
         removeArrayElement(DEBUG.modes, "GYRO_SCALED");
         addArrayElementAfter(DEBUG.modes, "RANGEFINDER_QUALITY", "OPTICALFLOW");

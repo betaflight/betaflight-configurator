@@ -7,7 +7,7 @@ import FC from "../fc";
 import vtxDeviceStatusFactory from "../utils/VtxDeviceStatus/VtxDeviceStatusFactory";
 import MSP from "../msp";
 import MSPCodes from "./MSPCodes";
-import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_25_12 } from "../data_storage";
+import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "../data_storage";
 import EscProtocols from "../utils/EscProtocols";
 import huffmanDecodeBuf from "../huffman";
 import { defaultHuffmanTree, defaultHuffmanLenIndex } from "../default_huffman_tree";
@@ -239,7 +239,7 @@ MspHelper.prototype.process_data = function (dataHandler) {
                         FC.CONFIG.cpuTemp = data.readU16();
                     }
 
-                    if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_25_12)) {
+                    if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
                         FC.CONFIG.numberOfRateProfiles = data.readU8();
                     }
                     break;
@@ -468,7 +468,7 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     FC.RC_TUNING.pitch_rate_limit = data.readU16();
                     FC.RC_TUNING.yaw_rate_limit = data.readU16();
                     FC.RC_TUNING.rates_type = data.readU8();
-                    if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_25_12)) {
+                    if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
                         FC.RC_TUNING.throttle_HOVER = parseFloat((data.readU8() / 100).toFixed(2));
                     }
                     break;
@@ -641,7 +641,7 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     FC.SENSOR_ALIGNMENT.align_mag = data.readU8();
                     FC.SENSOR_ALIGNMENT.gyro_detection_flags = data.readU8();
 
-                    if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_25_12)) {
+                    if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
                         FC.SENSOR_ALIGNMENT.gyro_enable_mask = data.readU8(); // replacing gyro_to_use
 
                         // Initialize arrays for gyro alignment
@@ -805,13 +805,8 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     break;
 
                 case MSPCodes.MSP_API_VERSION:
-                    {
-                        const v1 = data.readU8();
-                        const v2 = data.readU8();
-                        const v3 = data.readU8();
-
-                        FC.CONFIG.apiVersion = v1 != 1 ? `${v1}.${v2}.${v3}` : `${v2}.${v3}.0`;
-                    }
+                    FC.CONFIG.mspProtocolVersion = data.readU8();
+                    FC.CONFIG.apiVersion = `${data.readU8()}.${data.readU8()}.0`;
                     break;
 
                 case MSPCodes.MSP_FC_VARIANT:
@@ -1075,7 +1070,7 @@ MspHelper.prototype.process_data = function (dataHandler) {
                         }
                     }
 
-                    if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_25_12)) {
+                    if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
                         FC.RX_CONFIG.elrsModelId = data.readU8();
                     }
 
@@ -1241,7 +1236,7 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
                         FC.SENSOR_CONFIG.sonar_hardware = data.readU8();
                     }
-                    if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_25_12)) {
+                    if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
                         FC.SENSOR_CONFIG.opticalflow_hardware = data.readU8();
                     }
                     break;
@@ -1253,12 +1248,12 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
                         FC.SENSOR_CONFIG_ACTIVE.sonar_hardware = data.readU8();
                     }
-                    if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_25_12)) {
+                    if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
                         FC.SENSOR_CONFIG_ACTIVE.opticalflow_hardware = data.readU8();
                     }
                     break;
                 case MSPCodes.MSP2_MCU_INFO:
-                    if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_25_12)) {
+                    if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
                         FC.MCU_INFO = {
                             id: data.readU8(),
                             name: self.getText(data),
@@ -1868,7 +1863,7 @@ MspHelper.prototype.crunch = function (code, modifierCode = undefined) {
             buffer.push8(FC.RC_TUNING.rates_type);
 
             // Introduced in 1.47
-            if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_25_12)) {
+            if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
                 buffer.push8(Math.round(FC.RC_TUNING.throttle_HOVER * 100));
             }
             break;
@@ -2017,7 +2012,7 @@ MspHelper.prototype.crunch = function (code, modifierCode = undefined) {
             }
 
             // Introduced in 1.47
-            if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_25_12)) {
+            if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
                 buffer.push8(FC.RX_CONFIG.elrsModelId);
             }
 
@@ -2105,7 +2100,7 @@ MspHelper.prototype.crunch = function (code, modifierCode = undefined) {
                 .push8(FC.SENSOR_ALIGNMENT.align_acc)
                 .push8(FC.SENSOR_ALIGNMENT.align_mag);
 
-            if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_25_12)) {
+            if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
                 buffer.push8(FC.SENSOR_ALIGNMENT.gyro_enable_mask); // replacing gyro_to_use
 
                 for (let i = 0; i < MAX_GYROS; i++) {
@@ -2266,7 +2261,7 @@ MspHelper.prototype.crunch = function (code, modifierCode = undefined) {
             buffer.push8(FC.SENSOR_CONFIG.acc_hardware);
             buffer.push8(FC.SENSOR_CONFIG.baro_hardware);
             buffer.push8(FC.SENSOR_CONFIG.mag_hardware);
-            if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_25_12)) {
+            if (compareVersions.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
                 buffer.push8(FC.SENSOR_CONFIG.sonar_hardware);
                 buffer.push8(FC.SENSOR_CONFIG.opticalflow_hardware);
             }

@@ -18,7 +18,7 @@ import { isInt, getMixerImageSrc } from "../utils/common";
 import * as d3 from "d3";
 import $ from "jquery";
 import compareVersions from "../utils/compareVersions.js";
-import { API_VERSION_25_12 } from "../data_storage.js";
+import { API_VERSION_1_47 } from "../data_storage.js";
 
 const motors = {
     previousDshotBidir: null,
@@ -804,7 +804,7 @@ motors.initialize = async function (callback) {
             const dshotTelemetry = FC.MOTOR_CONFIG.use_dshot_telemetry;
             const idleMinRpm = FC.ADVANCED_TUNING.idleMinRpm;
             $("div.minthrottle").toggle(
-                analogProtocolConfigured && compareVersions.lt(FC.CONFIG.apiVersion, API_VERSION_25_12),
+                analogProtocolConfigured && compareVersions.lt(FC.CONFIG.apiVersion, API_VERSION_1_47),
             );
             $("div.maxthrottle").toggle(analogProtocolConfigured);
             $("div.mincommand").toggle(analogProtocolConfigured);
