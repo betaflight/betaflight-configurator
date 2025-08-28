@@ -5,8 +5,8 @@ import MSP from "../msp";
 import FC from "../fc";
 import MSPCodes from "../msp/MSPCodes";
 import adjustBoxNameIfPeripheralWithModeID from "../peripherals";
-import compareVersions from "../utils/compareVersions";
 import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "../data_storage";
+import compareVersions from "../utils/compareVersions";
 import $ from "jquery";
 
 const failsafe = {};

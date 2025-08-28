@@ -1,7 +1,6 @@
 import { i18n } from "../localization";
-import { isExpertModeEnabled } from "../utils/isExpertModeEnabled";
 import compareVersions from "../utils/compareVersions";
-import { isExpertModeEnabled } from "../utils/isExportModeEnabled";
+import { isExpertModeEnabled } from "../utils/isExpertModeEnabled";
 import GUI, { TABS } from "../gui";
 import { have_sensor } from "../sensor_helpers";
 import { mspHelper } from "../msp/MSPHelper";

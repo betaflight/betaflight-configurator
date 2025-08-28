@@ -1,5 +1,5 @@
-import FC from "../fc";
 import compareVersions from "./compareVersions";
+import FC from "../fc";
 import { API_VERSION_1_45 } from "../data_storage";
 
 function zeroPad(value, width) {

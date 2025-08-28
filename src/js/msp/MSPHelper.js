@@ -4,6 +4,7 @@ import { bit_check, bit_set } from "../bit";
 import { i18n } from "../localization";
 import { gui_log } from "../gui_log";
 import FC from "../fc";
+import compareVersions from "../utils/compareVersions";
 import vtxDeviceStatusFactory from "../utils/VtxDeviceStatus/VtxDeviceStatusFactory";
 import MSP from "../msp";
 import MSPCodes from "./MSPCodes";
@@ -16,7 +17,6 @@ import { showErrorDialog } from "../utils/showErrorDialog";
 import GUI, { TABS } from "../gui";
 import { OSD } from "../tabs/osd";
 import { reinitializeConnection } from "../serial_backend";
-import compareVersions from "../utils/compareVersions";
 
 // Used for LED_STRIP
 const ledDirectionLetters = ["n", "e", "s", "w", "u", "d"]; // in LSB bit order

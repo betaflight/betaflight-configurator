@@ -1,9 +1,9 @@
 import MSP from "./msp";
 import FC from "./fc";
 import MSPCodes from "./msp/MSPCodes";
+import compareVersions from "./utils/compareVersions";
 import { API_VERSION_1_47 } from "./data_storage";
 import { isExpertModeEnabled } from "./utils/isExpertModeEnabled";
-import compareVersions from "./utils/compareVersions";
 import { mspHelper } from "./msp/MSPHelper";
 import $ from "jquery";
 

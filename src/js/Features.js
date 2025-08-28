@@ -1,6 +1,6 @@
 import { bit_check, bit_set, bit_clear } from "./bit";
-import compareVersions from "./utils/compareVersions";
 import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "./data_storage";
+import compareVersions from "./utils/compareVersions";
 import { tracking } from "./Analytics";
 import $ from "jquery";
 

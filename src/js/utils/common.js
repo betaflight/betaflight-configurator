@@ -1,5 +1,5 @@
-import { mixerList } from "../model";
 import compareVersions from "./compareVersions";
+import { mixerList } from "../model";
 import CONFIGURATOR from "../data_storage";
 import $ from "jquery";
 

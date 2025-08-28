@@ -1,6 +1,6 @@
 import FC from "./fc.js";
-import compareVersions from "./utils/compareVersions.js";
 import { API_VERSION_1_46, API_VERSION_1_47 } from "./data_storage";
+import compareVersions from "./utils/compareVersions.js";
 import { removeArrayElement, addArrayElement, replaceArrayElement, addArrayElementAfter } from "./utils/array";
 
 const DEBUG = {
