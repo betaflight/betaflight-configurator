@@ -54,9 +54,9 @@ compareVersions.compareBuild = function (a, b) {
     if (cmp !== 0) {
         return cmp;
     }
-    // If main versions are equal, compare suffixes lexically
-    const suffixA = a.slice(mainA.length);
-    const suffixB = b.slice(mainB.length);
+    // If main versions are equal, compare suffixes
+    let suffixA = a.slice(mainA.length);
+    let suffixB = b.slice(mainB.length);
     if (!suffixA && !suffixB) {
         return 0;
     }
@@ -66,7 +66,55 @@ compareVersions.compareBuild = function (a, b) {
     if (!suffixB) {
         return -1;
     }
-    return suffixA.localeCompare(suffixB);
+    // Remove leading hyphens
+    suffixA = suffixA.replace(/^-/, "");
+    suffixB = suffixB.replace(/^-/, "");
+    // Split into identifiers (dot or non-alphanumeric boundaries)
+    const splitIdentifiers = (s) => (s.length === 0 ? [] : s.split(/\.|(?<=\D)(?=\d)|(?<=\d)(?=\D)/));
+    const idsA = splitIdentifiers(suffixA);
+    const idsB = splitIdentifiers(suffixB);
+    const len = Math.max(idsA.length, idsB.length);
+    for (let i = 0; i < len; i++) {
+        const idA = idsA[i];
+        const idB = idsB[i];
+        if (idA === undefined) {
+            return -1;
+        }
+        if (idB === undefined) {
+            return 1;
+        }
+        const isNumA = /^\d+$/.test(idA);
+        const isNumB = /^\d+$/.test(idB);
+        if (isNumA && isNumB) {
+            const numA = parseInt(idA, 10);
+            const numB = parseInt(idB, 10);
+            if (numA > numB) {
+                return 1;
+            }
+            if (numA < numB) {
+                return -1;
+            }
+        } else if (isNumA) {
+            return -1;
+        } else if (isNumB) {
+            return 1;
+        } else {
+            if (idA > idB) {
+                return 1;
+            }
+            if (idA < idB) {
+                return -1;
+            }
+        }
+    }
+    // If all identifiers are equal, shorter list wins
+    if (idsA.length > idsB.length) {
+        return 1;
+    }
+    if (idsA.length < idsB.length) {
+        return -1;
+    }
+    return 0;
 };
 
 export default compareVersions;
