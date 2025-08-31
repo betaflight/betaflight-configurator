@@ -732,7 +732,7 @@ firmware_flasher.initialize = async function (callback) {
         async function saveFirmware() {
             const isUf2 = self.firmware_type === "UF2";
             FileSystem.pickSaveFile(
-                self.targetDetail.file,
+                self.filename,
                 i18n.getMessage("fileSystemPickerFiles", { typeof: isUf2 ? "UF2" : "HEX" }),
                 isUf2 ? ".uf2" : ".hex",
             )
@@ -880,63 +880,73 @@ firmware_flasher.initialize = async function (callback) {
 
             self.developmentFirmwareLoaded = false;
 
-            FileSystem.pickOpenFile(i18n.getMessage("fileSystemPickerFiles", { typeof: "HEX" }), ".hex")
+            FileSystem.pickOpenFile(i18n.getMessage("fileSystemPickFirmwareFiles"), [".hex", ".uf2"])
                 .then((file) => {
-                    console.log(`${self.logHead} Saving firmware to:`, file.name);
-                    FileSystem.readFile(file).then((data) => {
-                        if (file.name.split(".").pop() === "hex") {
-                            self.intel_hex = data;
-                            parseHex(self.intel_hex, function (data) {
-                                self.parsed_hex = data;
+                    console.log(`${self.logHead} loading firmware from:`, file.name);
+                    const extension = file.name.split(".").pop();
+                    if (extension === "uf2") {
+                        FileSystem.readFileAsBlob(file).then((data) => {
+                            self.uf2_binary = data;
+                            self.firmware_type = "UF2";
+                            self.localFirmwareLoaded = true;
+                            showLoadedFirmware(file.name, self.uf2_binary.length);
+                        });
+                    } else {
+                        FileSystem.readFile(file).then((data) => {
+                            if (extension === "hex") {
+                                self.intel_hex = data;
+                                self.firmware_type = "HEX";
+                                parseHex(self.intel_hex, function (data) {
+                                    self.parsed_hex = data;
 
-                                if (self.parsed_hex) {
-                                    self.localFirmwareLoaded = true;
+                                    if (self.parsed_hex) {
+                                        self.localFirmwareLoaded = true;
 
-                                    showLoadedFirmware(file.name, self.parsed_hex.bytes_total);
-                                } else {
-                                    self.flashingMessage(
-                                        i18n.getMessage("firmwareFlasherHexCorrupted"),
-                                        self.FLASH_MESSAGE_TYPES.INVALID,
-                                    );
-                                }
-                            });
-                        } else {
-                            clearBufferedFirmware();
+                                        showLoadedFirmware(file.name, self.parsed_hex.bytes_total);
+                                    } else {
+                                        self.flashingMessage(
+                                            i18n.getMessage("firmwareFlasherHexCorrupted"),
+                                            self.FLASH_MESSAGE_TYPES.INVALID,
+                                        );
+                                    }
+                                });
+                            } else {
+                                clearBufferedFirmware();
 
-                            let config = cleanUnifiedConfigFile(data);
-                            if (config !== null) {
-                                setBoardConfig(config, file.name);
+                                let config = cleanUnifiedConfigFile(data);
+                                if (config !== null) {
+                                    setBoardConfig(config, file.name);
 
-                                if (self.isConfigLocal && !self.parsed_hex) {
-                                    self.flashingMessage(
-                                        i18n.getMessage("firmwareFlasherLoadedConfig"),
-                                        self.FLASH_MESSAGE_TYPES.NEUTRAL,
-                                    );
-                                }
+                                    if (self.isConfigLocal && !self.parsed_hex) {
+                                        self.flashingMessage(
+                                            i18n.getMessage("firmwareFlasherLoadedConfig"),
+                                            self.FLASH_MESSAGE_TYPES.NEUTRAL,
+                                        );
+                                    }
 
-                                if (
-                                    (self.isConfigLocal && self.parsed_hex && !self.localFirmwareLoaded) ||
-                                    self.localFirmwareLoaded
-                                ) {
-                                    self.enableFlashButton(true);
-                                    self.flashingMessage(
-                                        i18n.getMessage(
-                                            "firmwareFlasherFirmwareLocalLoaded",
-                                            self.parsed_hex.bytes_total,
-                                        ),
-                                        self.FLASH_MESSAGE_TYPES.NEUTRAL,
-                                    );
+                                    if (
+                                        (self.isConfigLocal && self.parsed_hex && !self.localFirmwareLoaded) ||
+                                        self.localFirmwareLoaded
+                                    ) {
+                                        self.enableFlashButton(true);
+                                        self.flashingMessage(
+                                            i18n.getMessage(
+                                                "firmwareFlasherFirmwareLocalLoaded",
+                                                self.parsed_hex.bytes_total,
+                                            ),
+                                            self.FLASH_MESSAGE_TYPES.NEUTRAL,
+                                        );
+                                    }
                                 }
                             }
-                        }
-                    });
+                        });
+                    }
                 })
                 .catch((error) => {
                     console.error("Error reading file:", error);
                     self.enableLoadRemoteFileButton(true);
                 });
         });
-
         /**
          * Lock / Unlock the firmware download button according to the firmware selection dropdown.
          */
