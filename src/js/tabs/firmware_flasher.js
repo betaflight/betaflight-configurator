@@ -729,15 +729,20 @@ firmware_flasher.initialize = async function (callback) {
             return null;
         }
 
-        async function saveFirmware(filename, data) {
-            const handle = await getHandle(filename);
-            if (!handle) {
-                return false;
-            }
-            const writable = await handle.createWritable();
-            await writable.write(data);
-            await writable.close();
-            return true;
+        async function saveFirmware() {
+            const isUf2 = self.firmware_type === "UF2";
+            FileSystem.pickSaveFile(
+                self.targetDetail.file,
+                i18n.getMessage("fileSystemPickerFiles", { typeof: isUf2 ? "UF2" : "HEX" }),
+                isUf2 ? ".uf2" : ".hex",
+            )
+                .then((file) => {
+                    console.log(`${self.logHead} Saving firmware to:`, file.name);
+                    FileSystem.writeFile(file, isUf2 ? self.uf2_binary : self.intel_hex);
+                })
+                .catch((error) => {
+                    console.error("Error saving file:", error);
+                });
         }
 
         async function flashHexFirmware(firmware) {
@@ -1361,9 +1366,10 @@ firmware_flasher.initialize = async function (callback) {
                 tracking.sendEvent(tracking.EVENT_CATEGORIES.FLASHING, "UF2 Flashing", {
                     filename: self.filename || null,
                 });
-                await saveFirmware(self.filename, self.uf2_binary);
+                await saveFirmware();
                 self.isFlashing = false;
                 GUI.interval_resume("sponsor");
+                self.enableFlashButton(true);
                 self.enableLoadRemoteFileButton(true);
                 self.enableLoadFileButton(true);
                 return;
@@ -1406,20 +1412,7 @@ firmware_flasher.initialize = async function (callback) {
             }
         });
 
-        $("span.progressLabel").on("click", "a.save_firmware", function () {
-            FileSystem.pickSaveFile(
-                self.targetDetail.file,
-                i18n.getMessage("fileSystemPickerFiles", { typeof: "HEX" }),
-                ".hex",
-            )
-                .then((file) => {
-                    console.log(`${self.logHead} Saving firmware to:`, file.name);
-                    FileSystem.writeFile(file, self.intel_hex);
-                })
-                .catch((error) => {
-                    console.error("Error saving file:", error);
-                });
-        });
+        $("span.progressLabel").on("click", "a.save_firmware", saveFirmware);
 
         self.flashingMessage(i18n.getMessage("firmwareFlasherLoadFirmwareFile"), self.FLASH_MESSAGE_TYPES.NEUTRAL);
 
