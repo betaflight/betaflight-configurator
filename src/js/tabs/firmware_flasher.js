@@ -67,14 +67,14 @@ firmware_flasher.initialize = async function (callback) {
             });
         }
 
-        function showLoadedHex(filename) {
+        function showLoadedFirmware(filename, bytes) {
             self.filename = filename;
 
             if (self.localFirmwareLoaded) {
                 self.flashingMessage(
                     i18n.getMessage("firmwareFlasherFirmwareLocalLoaded", {
                         filename: filename,
-                        bytes: self.parsed_hex.bytes_total,
+                        bytes: bytes,
                     }),
                     self.FLASH_MESSAGE_TYPES.NEUTRAL,
                 );
@@ -82,7 +82,7 @@ firmware_flasher.initialize = async function (callback) {
                 self.flashingMessage(
                     `<a class="save_firmware" href="#" title="Save Firmware">${i18n.getMessage(
                         "firmwareFlasherFirmwareOnlineLoaded",
-                        { filename: filename, bytes: self.parsed_hex.bytes_total },
+                        { filename: filename, bytes: bytes },
                     )}</a>`,
                     self.FLASH_MESSAGE_TYPES.NEUTRAL,
                 );
@@ -90,7 +90,7 @@ firmware_flasher.initialize = async function (callback) {
             self.enableFlashButton(true);
 
             tracking.sendEvent(tracking.EVENT_CATEGORIES.FLASHING, "FirmwareLoaded", {
-                firmwareSize: self.parsed_hex.bytes_total,
+                firmwareSize: bytes,
                 firmwareName: filename,
                 firmwareSource: self.localFirmwareLoaded ? "file" : "http",
                 selectedTarget: self.targetDetail?.target,
@@ -151,19 +151,15 @@ firmware_flasher.initialize = async function (callback) {
         }
 
         function processHex(data, key) {
-            if (!data) {
-                loadFailed();
-                return;
-            }
-
+            self.firmware_type = "HEX";
             self.localFirmwareLoaded = false;
-            self.intel_hex = data;
+            self.intel_hex = String.fromCharCode().apply(null, data);
 
             parseHex(self.intel_hex, function (data) {
                 self.parsed_hex = data;
 
                 if (self.parsed_hex) {
-                    showLoadedHex(key);
+                    showLoadedFirmware(key, self.parsed_hex.bytes_total);
                 } else {
                     self.flashingMessage(
                         i18n.getMessage("firmwareFlasherHexCorrupted"),
@@ -172,6 +168,28 @@ firmware_flasher.initialize = async function (callback) {
                     self.enableFlashButton(false);
                 }
             });
+        }
+
+        function processUf2(data, key) {
+            self.firmware_type = "UF2";
+            self.uf2_binary = data;
+            showLoadedFirmware(key, data.length);
+        }
+
+        function processFile(data, key) {
+            if (!data) {
+                loadFailed();
+                return;
+            }
+
+            if (key.endsWith("hex")) {
+                processHex(data, key);
+            } else if (key.endsWith("uf2")) {
+                processUf2(data, key);
+            } else {
+                alert("Invalid file format");
+                loadFailed();
+            }
 
             self.enableLoadRemoteFileButton(true);
             $("a.load_remote_file").text(i18n.getMessage("firmwareFlasherButtonLoadOnline"));
@@ -535,6 +553,8 @@ firmware_flasher.initialize = async function (callback) {
             clearBoardConfig();
             self.intel_hex = undefined;
             self.parsed_hex = undefined;
+            self.uf2_binary = undefined;
+            self.firmware_type = undefined;
             self.localFirmwareLoaded = false;
         }
 
@@ -680,7 +700,46 @@ firmware_flasher.initialize = async function (callback) {
 
         EventBus.$on("port-handler:auto-select-usb-device", detectedUsbDevice);
 
-        function flashFirmware(firmware) {
+        async function getHandle(filename) {
+            // set some options, like the suggested file name and the file type.
+            const options = {
+                suggestedName: filename,
+                types: [
+                    {
+                        description: "UF2 Files",
+                        accept: {
+                            "application/octet-stream": [".uf2"],
+                        },
+                    },
+                ],
+            };
+
+            // prompt the user for the location to save the file.
+            try {
+                const handle = await window.showSaveFilePicker(options);
+                return handle;
+            } catch (err) {
+                if (err instanceof DOMException) {
+                    console.log(`${self.logHead} User cancelled saving file for flashing`);
+                } else {
+                    console.error(`${self.logHead} ${err}`);
+                }
+            }
+            return null;
+        }
+
+        async function saveFirmware(filename, data) {
+            const handle = await getHandle(filename);
+            if (!handle) {
+                return false;
+            }
+            const writable = await handle.createWritable();
+            await writable.write(data);
+            await writable.close();
+            return true;
+        }
+
+        async function flashHexFirmware(firmware) {
             const options = {};
 
             let eraseAll = false;
@@ -827,7 +886,7 @@ firmware_flasher.initialize = async function (callback) {
                                 if (self.parsed_hex) {
                                     self.localFirmwareLoaded = true;
 
-                                    showLoadedHex(file.name);
+                                    showLoadedFirmware(file.name, self.parsed_hex.bytes_total);
                                 } else {
                                     self.flashingMessage(
                                         i18n.getMessage("firmwareFlasherHexCorrupted"),
@@ -952,7 +1011,7 @@ firmware_flasher.initialize = async function (callback) {
                 if (statusResponse.configuration !== undefined && !self.isConfigLocal) {
                     setBoardConfig(statusResponse.configuration);
                 }
-                processHex(await self.buildApi.loadTargetHex(response.url), response.file);
+                processFile(await self.buildApi.loadTargetFirmware(response.url), response.file);
             }
 
             async function requestCloudBuild(targetDetail) {
@@ -1017,8 +1076,8 @@ firmware_flasher.initialize = async function (callback) {
                 self.targetDetail.file = response.file;
 
                 if (!targetDetail.cloudBuild) {
-                    // it is a previous release, so simply load the hex
-                    processHex(await self.buildApi.loadTargetHex(response.url), response.file);
+                    // it is a previous release, so simply load the file
+                    processFile(await self.buildApi.loadTargetFirmware(response.url), response.file);
                     return;
                 }
 
@@ -1265,7 +1324,7 @@ firmware_flasher.initialize = async function (callback) {
                             }
                         }
 
-                        flashFirmware(self.parsed_hex);
+                        flashHexFirmware(self.parsed_hex);
                     } catch (e) {
                         console.log(`${self.logHead} Flashing failed: ${e.message}`);
                     }
@@ -1280,7 +1339,7 @@ firmware_flasher.initialize = async function (callback) {
             }
         }
 
-        $("a.flash_firmware").on("click", function () {
+        $("a.flash_firmware").on("click", async function () {
             if (GUI.connect_lock) {
                 return;
             }
@@ -1292,6 +1351,18 @@ firmware_flasher.initialize = async function (callback) {
             self.enableDfuExitButton(false);
             self.enableLoadRemoteFileButton(false);
             self.enableLoadFileButton(false);
+
+            if (self.uf2_binary) {
+                tracking.sendEvent(tracking.EVENT_CATEGORIES.FLASHING, "UF2 Flashing", {
+                    filename: self.filename || null,
+                });
+                await saveFirmware(self.filename, self.uf2_binary);
+                self.isFlashing = false;
+                GUI.interval_resume("sponsor");
+                self.enableLoadRemoteFileButton(true);
+                self.enableLoadFileButton(true);
+                return;
+            }
 
             const isFlashOnConnect = $("input.flash_on_connect").is(":checked");
 

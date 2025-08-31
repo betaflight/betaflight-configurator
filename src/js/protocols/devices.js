@@ -70,6 +70,7 @@ export const usbDevices = {
         { vendorId: 10473, productId: 393 }, // GD32 DFU Bootloader
         { vendorId: 11836, productId: 57105 }, // AT32F435 DFU Bootloader
         { vendorId: 12619, productId: 262 }, // APM32 DFU Bootloader
+        { vendorId: 11914, productId: 15 }, // Raspberry Pi Pico in Bootloader mode
     ],
 };
 
