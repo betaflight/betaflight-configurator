@@ -80,7 +80,7 @@ firmware_flasher.initialize = async function (callback) {
                 );
             } else {
                 self.flashingMessage(
-                    `<a class="save_firmware" href="#" title="Save Firmware">${i18n.getMessage(
+                    `<a class="save_firmware" href="#" title="${i18n.getMessage("firmwareFlasherTooltipSaveFirmware")}">${i18n.getMessage(
                         "firmwareFlasherFirmwareOnlineLoaded",
                         { filename: filename, bytes: bytes },
                     )}</a>`,
@@ -152,7 +152,10 @@ firmware_flasher.initialize = async function (callback) {
 
         function processHex(data, key) {
             self.firmware_type = "HEX";
-            self.localFirmwareLoaded = false;
+            if (!data || data.length === 0) {
+                loadFailed();
+                return;
+            }
             const decoder = new TextDecoder();
             self.intel_hex = decoder.decode(data);
 
@@ -173,6 +176,10 @@ firmware_flasher.initialize = async function (callback) {
 
         function processUf2(data, key) {
             self.firmware_type = "UF2";
+            if (!data || data.length === 0) {
+                loadFailed();
+                return;
+            }
             self.uf2_binary = data;
             showLoadedFirmware(key, data.length);
         }
@@ -557,6 +564,7 @@ firmware_flasher.initialize = async function (callback) {
             self.uf2_binary = undefined;
             self.firmware_type = undefined;
             self.localFirmwareLoaded = false;
+            self.filename = null;
         }
 
         $('select[name="board"]').select2();
@@ -700,34 +708,6 @@ firmware_flasher.initialize = async function (callback) {
         }
 
         EventBus.$on("port-handler:auto-select-usb-device", detectedUsbDevice);
-
-        async function getHandle(filename) {
-            // set some options, like the suggested file name and the file type.
-            const options = {
-                suggestedName: filename,
-                types: [
-                    {
-                        description: "UF2 Files",
-                        accept: {
-                            "application/octet-stream": [".uf2"],
-                        },
-                    },
-                ],
-            };
-
-            // prompt the user for the location to save the file.
-            try {
-                const handle = await window.showSaveFilePicker(options);
-                return handle;
-            } catch (err) {
-                if (err instanceof DOMException) {
-                    console.log(`${self.logHead} User cancelled saving file for flashing`);
-                } else {
-                    console.error(`${self.logHead} ${err}`);
-                }
-            }
-            return null;
-        }
 
         async function saveFirmware() {
             const isUf2 = self.firmware_type === "UF2";
