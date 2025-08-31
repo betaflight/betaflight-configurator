@@ -23,7 +23,7 @@ export default class BuildApi {
         });
 
         if (this.isSuccessCode(response.status)) {
-            return await response.bytes();
+            return new Uint8Array(await response.arrayBuffer());
         }
 
         gui_log(i18n.getMessage("buildServerFailure", [url, `HTTP ${response.status}`]));

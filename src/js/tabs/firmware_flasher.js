@@ -153,7 +153,8 @@ firmware_flasher.initialize = async function (callback) {
         function processHex(data, key) {
             self.firmware_type = "HEX";
             self.localFirmwareLoaded = false;
-            self.intel_hex = String.fromCharCode().apply(null, data);
+            const decoder = new TextDecoder();
+            self.intel_hex = decoder.decode(data);
 
             parseHex(self.intel_hex, function (data) {
                 self.parsed_hex = data;
@@ -1352,7 +1353,11 @@ firmware_flasher.initialize = async function (callback) {
             self.enableLoadRemoteFileButton(false);
             self.enableLoadFileButton(false);
 
-            if (self.uf2_binary) {
+            if (self.firmware_type === "UF2") {
+                // due to save dialoque security requirements
+                // we need to do this within proximity to the
+                // user action hence here.
+
                 tracking.sendEvent(tracking.EVENT_CATEGORIES.FLASHING, "UF2 Flashing", {
                     filename: self.filename || null,
                 });
