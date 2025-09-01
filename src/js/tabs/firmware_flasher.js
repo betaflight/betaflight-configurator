@@ -70,7 +70,7 @@ firmware_flasher.initialize = async function (callback) {
 
     async function onDocumentLoad() {
         function parseHex(str, callback) {
-            self.intel_hex = data;
+            self.intel_hex = str;
             self.firmware_type = "HEX";
             read_hex_file(str).then((data) => {
                 callback(data);
@@ -750,11 +750,14 @@ firmware_flasher.initialize = async function (callback) {
                     i18n.getMessage("fileSystemPickerFiles", { typeof: fileType.toUpperCase() }),
                     `.${fileType.toLowerCase()}`,
                 );
+                if (!file) return false; // user cancelled
 
                 console.log(`${self.logHead} Saving firmware to:`, file.name);
                 await FileSystem.writeFile(file, fileType === "UF2" ? self.uf2_binary : self.intel_hex);
+                return true;
             } catch (err) {
                 console.error(err);
+                return false;
             }
         }
 
@@ -898,13 +901,17 @@ firmware_flasher.initialize = async function (callback) {
                     ".hex",
                     ".uf2",
                 ]);
+
+                if (!file) {
+                    return; // user cancelled
+                }
                 console.log(`${self.logHead} loading firmware from:`, file.name);
 
                 const extension = getExtension(file.name);
                 if (extension === "uf2") {
                     const data = await FileSystem.readFileAsBlob(file);
-                    processUf2(data, file.name);
                     self.localFirmwareLoaded = true;
+                    processUf2(data, file.name);
                 } else {
                     const data = await FileSystem.readFile(file);
                     if (extension === "hex") {
@@ -963,7 +970,7 @@ firmware_flasher.initialize = async function (callback) {
 
         $("a.cloud_build_cancel").on("click", function (evt) {
             $("a.cloud_build_cancel").toggleClass("disabled", true);
-            this.cancelBuild = true;
+            self.cancelBuild = true;
         });
 
         async function enforceOSDSelection() {
