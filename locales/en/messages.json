@@ -3815,6 +3815,12 @@
     "firmwareFlasherTooltipSaveFirmware": {
         "message": "Save Firmware"
     },
+    "firmwareFlasherInvalidFileFormat": {
+        "message": "Invalid file format"
+    },
+    "firmwareFlasherUf2Corrupted": {
+        "message": "UF2 file appears to be corrupted"
+    },
     "firmwareFlasherHexCorrupted": {
         "message": "HEX file appears to be corrupted"
     },
