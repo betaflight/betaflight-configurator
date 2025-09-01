@@ -5,7 +5,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Configurator Build process
+# App Build process
 cache/
 apps/
 dist/
