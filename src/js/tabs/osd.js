@@ -10,7 +10,7 @@ import CONFIGURATOR, { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } fr
 import LogoManager from "../LogoManager";
 import { gui_log } from "../gui_log";
 import semver from "semver";
-import jBox from "jbox";
+import tippy from "tippy.js";
 import inflection from "inflection";
 import debounce from "lodash.debounce";
 import $ from "jquery";
@@ -3937,28 +3937,22 @@ osd.initialize = function (callback) {
                     }
                 }
 
-                // Remove last tooltips
-                for (const tt of OSD.data.tooltips) {
-                    tt.destroy();
+                // Remove previous tooltips
+                for (const element of OSD.data.tooltips) {
+                    element._tippy?.destroy();
                 }
-                OSD.data.tooltips = [];
-
-                // Generate tooltips for OSD elements
-                $(".osd_tip").each(function () {
-                    const myModal = new jBox("Tooltip", {
-                        delayOpen: 100,
-                        delayClose: 100,
-                        position: {
-                            x: "right",
-                            y: "center",
-                        },
-                        outside: "x",
-                    });
-
-                    myModal.attach($(this));
-
-                    OSD.data.tooltips.push(myModal);
-                });
+                // Attach new tooltips
+                OSD.data.tooltips = $(".osd_tip").toArray();
+                for (const element of OSD.data.tooltips) {
+                    const jQueryElement = $(element);
+                    const attrTitle = jQueryElement.attr("title");
+                    if (attrTitle && !element._tippy) {
+                        tippy(element, {
+                            content: attrTitle,
+                        });
+                        jQueryElement.removeAttr("title");
+                    }
+                }
             });
         }
 

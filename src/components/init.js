@@ -6,6 +6,8 @@ import "../js/localization.js";
 import "../js/injected_methods";
 import i18next from "i18next";
 import { createApp, reactive } from "vue";
+import tippy from "tippy.js";
+import "tippy.js/dist/tippy.css";
 import I18NextVue from "i18next-vue";
 import FC from "../js/fc.js";
 import MSP from "../js/msp.js";
@@ -36,6 +38,18 @@ const betaflightModel = reactive({
     PortUsage,
     PortHandler,
     CONNECTION,
+});
+
+tippy.setDefaultProps({
+    allowHTML: true,
+    appendTo: () => document.body,
+    delay: 100,
+    interactive: true,
+    placement: "right",
+    theme: "custom",
+    // Un-comment for debugging:
+    // hideOnClick: false,
+    // trigger: 'click',
 });
 
 i18next.on("initialized", function () {

@@ -1,7 +1,7 @@
 import { get as getConfig } from "./ConfigStorage";
 import MSP from "./msp";
 import Switchery from "switchery-latest";
-import jBox from "jbox";
+import tippy from "tippy.js";
 import $ from "jquery";
 import { getOS } from "./utils/checkBrowserCompatibility";
 
@@ -290,35 +290,17 @@ class GuiControl {
             .html(i18n.getMessage("betaflightSupportButton"))
             .attr("href", `https://betaflight.com/docs/wiki/configurator/${tRex}-tab`);
 
-        // loading tooltip
+        // Create tooltips once page is "ready"
         $(function () {
-            new jBox("Tooltip", {
-                attach: ".cf_tip",
-                trigger: "mouseenter",
-                closeOnMouseleave: true,
-                closeOnClick: "body",
-                delayOpen: 100,
-                delayClose: 100,
-                position: {
-                    x: "right",
-                    y: "center",
-                },
-                outside: "x",
-            });
-
-            new jBox("Tooltip", {
-                theme: "Widetip",
-                attach: ".cf_tip_wide",
-                trigger: "mouseenter",
-                closeOnMouseleave: true,
-                closeOnClick: "body",
-                delayOpen: 100,
-                delayClose: 100,
-                position: {
-                    x: "right",
-                    y: "center",
-                },
-                outside: "x",
+            $(".cf_tip, .cf_tip_wide").each((_, element) => {
+                const jQueryElement = $(element);
+                const attrTitle = jQueryElement.attr("title");
+                if (attrTitle && !element._tippy) {
+                    tippy(element, {
+                        content: attrTitle,
+                    });
+                    jQueryElement.removeAttr("title");
+                }
             });
         });
 
