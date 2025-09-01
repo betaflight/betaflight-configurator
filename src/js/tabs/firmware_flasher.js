@@ -162,12 +162,15 @@ firmware_flasher.initialize = async function (callback) {
 
         function processHex(data, key) {
             self.firmware_type = "HEX";
-            if (!data || data.length === 0) {
+            const bytes = data instanceof Uint8Array ? data : data instanceof ArrayBuffer ? new Uint8Array(data) : null;
+
+            if (!bytes || bytes.byteLength === 0) {
                 loadFailed();
                 return;
             }
-            const decoder = new TextDecoder();
-            self.intel_hex = decoder.decode(data);
+
+            const decoder = new TextDecoder("utf-8");
+            self.intel_hex = decoder.decode(bytes);
 
             parseHex(self.intel_hex, function (data) {
                 self.parsed_hex = data;
