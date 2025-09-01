@@ -3,7 +3,7 @@
   "productName": "Betaflight",
   "displayName": "Betaflight - Configuration and management tool",
   "description": "Crossplatform configuration and management tool for the Betaflight flight control firmware.",
-  "version": "11.0.0",
+  "version": "2025.12.0-beta",
   "type": "module",
   "main": "index.html",
   "scripts": {
@@ -29,7 +29,7 @@
     "id": "main-window",
     "min_width": 1024,
     "min_height": 550,
-    "title": "Betaflight Configurator"
+    "title": "Betaflight App"
   },
   "repository": {
     "type": "git",

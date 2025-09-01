@@ -605,8 +605,8 @@
         "description": "Message that appears in the GUI log panel indicating operating system"
     },
     "infoVersionConfigurator": {
-        "message" : "Configurator: <strong>{{configuratorVersion}}</strong>",
-        "description": "Message that appears in the GUI log panel indicating Configurator version"
+        "message" : "Version: <strong>{{configuratorVersion}}</strong>",
+        "description": "Message that appears in the GUI log panel indicating application version"
     },
     "buildServerSuccess": {
         "message" : "Success: $1"
@@ -693,7 +693,7 @@
         "message": "Firmware"
     },
     "versionLabelConfigurator": {
-        "message": "Configurator"
+        "message": "Version"
     },
     "notifications_app_just_updated_to_version": {
         "message": "Application just updated to version: $1"
@@ -752,7 +752,7 @@
         "message": "EEPROM <span class=\"message-positive\">saved</span>"
     },
     "defaultWelcomeIntro": {
-        "message": "Welcome to <strong>Betaflight - Configurator</strong>, a utility designed to simplify updating, configuring and tuning of your flight controller."
+        "message": "Welcome to the <strong>Betaflight App</strong>, a utility designed to simplify updating, configuring and tuning of your flight controller."
     },
     "defaultWelcomeHead": {
         "message": "Hardware"
