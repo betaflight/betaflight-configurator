@@ -1393,12 +1393,19 @@ firmware_flasher.initialize = async function (callback) {
                 tracking.sendEvent(tracking.EVENT_CATEGORIES.FLASHING, "UF2 Flashing", {
                     filename: self.filename || null,
                 });
-                await saveFirmware();
+                const saved = await saveFirmware();
+                self.flashingMessage(
+                    saved
+                        ? i18n.getMessage("firmwareFlasherUF2SaveSuccess")
+                        : i18n.getMessage("firmwareFlasherUF2SaveFailed"),
+                    saved ? self.FLASH_MESSAGE_TYPES.VALID : self.FLASH_MESSAGE_TYPES.INVALID,
+                );
                 self.isFlashing = false;
                 GUI.interval_resume("sponsor");
                 self.enableFlashButton(true);
                 self.enableLoadRemoteFileButton(true);
                 self.enableLoadFileButton(true);
+                self.enableDfuExitButton(PortHandler.dfuAvailable);
                 return;
             }
 
@@ -1470,7 +1477,7 @@ firmware_flasher.cleanup = function (callback) {
 
 firmware_flasher.enableCancelBuildButton = function (enabled) {
     $("a.cloud_build_cancel").toggleClass("disabled", !enabled);
-    self.cancelBuild = false; // remove the semaphore
+    firmware_flasher.cancelBuild = false; // remove the semaphore
 };
 
 firmware_flasher.enableFlashButton = function (enabled) {

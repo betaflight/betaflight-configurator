@@ -3824,6 +3824,12 @@
     "firmwareFlasherHexCorrupted": {
         "message": "HEX file appears to be corrupted"
     },
+    "firmwareFlasherUF2SaveSuccess": {
+        "message": "Saved (flashed) UF2 successfully"
+    },
+    "firmwareFlasherUF2SaveFailed": {
+        "message": "Failed to save (flash) UF2"
+    },
     "firmwareFlasherConfigCorrupted": {
         "message": "Config file appears to be corrupted, ASCII accepted (chars 0-255)",
         "description": "shown in the progress bar at the bottom, be brief"
