@@ -818,7 +818,16 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     break;
 
                 case MSPCodes.MSP_FC_VERSION:
-                    FC.CONFIG.flightControllerVersion = `${data.readU8()}.${data.readU8()}.${data.readU8()}`;
+                    const major = data.readU8();
+                    if (major < 10) {
+                        // use the old method (the 3 bytes)
+                        FC.CONFIG.flightControllerVersion = `${major}.${data.readU8()}.${data.readU8()}`;
+                    } else {
+                        // discard the next two bytes
+                        data.readU16();
+                        // the version is the text that follows
+                        FC.CONFIG.flightControllerVersion = this.getText(data);
+                    }
                     break;
 
                 case MSPCodes.MSP_BUILD_INFO: {
