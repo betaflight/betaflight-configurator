@@ -2444,6 +2444,7 @@ function drawHorizontalAxis(ctx, params, axis) {
     let centerIndex = Math.floor(cols / 2);
     let minOffset = -centerIndex;
     let maxOffset = centerIndex;
+    const isDark = document.body.classList.contains("dark-theme");
     for (let i = 0; i < cols; i++) {
         let offset = i - centerIndex;
         const x = OSD._colCenterX(i, containerRect, colsInRow);
@@ -2469,12 +2470,9 @@ function drawHorizontalAxis(ctx, params, axis) {
         ctx.lineTo(x + 0.5, y1 + 0.5);
         ctx.stroke();
         if (isMajor && offset >= minOffset && offset <= maxOffset) {
-            ctx.fillStyle = isCenter ? config.colorCenter : "#ffffff";
+            ctx.fillStyle = isDark ? "#fff" : "#000";
             ctx.save();
             ctx.textBaseline = axis === "top" ? "bottom" : "top";
-            ctx.lineWidth = 3;
-            ctx.strokeStyle = "rgba(0,0,0,0.6)";
-            ctx.strokeText(offset.toString(), x, labelY);
             ctx.fillText(offset.toString(), x, labelY);
             ctx.restore();
         }
@@ -2485,6 +2483,7 @@ function drawHorizontalAxis(ctx, params, axis) {
 function drawVerticalAxis(ctx, params, axis) {
     const { rowsCount, cy, left, right, ch, cw, signPad, rows, containerRect, config } = params;
     ctx.textAlign = axis === "left" ? "right" : "left";
+    const isDark = document.body.classList.contains("dark-theme");
     for (let i = 0; i < rowsCount; i++) {
         const y = OSD._rowCenterY(i, containerRect, rows);
         const offset = i - cy;
@@ -2507,7 +2506,7 @@ function drawVerticalAxis(ctx, params, axis) {
         ctx.lineTo(x1 + 0.5, y + 0.5);
         ctx.stroke();
         if (isMajor) {
-            ctx.fillStyle = isCenter ? config.colorCenter : "#ffffff";
+            ctx.fillStyle = isDark ? "#fff" : "#000";
             const text = offset.toString();
             const textWidth = ctx.measureText(text).width;
             const extra = text.startsWith("-") ? signPad : 0;
@@ -2518,10 +2517,7 @@ function drawVerticalAxis(ctx, params, axis) {
                 const desired = x1 + (isMajor ? config.sideLabelOffsetMajor : config.sideLabelOffset) + extra;
                 labelX = Math.min(cw - config.minEdgePadding - textWidth, desired);
             }
-            ctx.lineWidth = 3;
-            ctx.strokeStyle = "rgba(0,0,0,0.6)";
             const yLabel = Math.max(config.minEdgePadding, Math.min(ch - config.minEdgePadding, y + 0.5));
-            ctx.strokeText(text, labelX, yLabel);
             ctx.fillText(text, labelX, yLabel);
         }
     }
