@@ -900,7 +900,7 @@ firmware_flasher.initialize = async function (callback) {
             self.developmentFirmwareLoaded = false;
 
             try {
-                const file = await FileSystem.pickOpenFile(i18n.getMessage("fileSystemPickFirmwareFiles"), [
+                const file = await FileSystem.pickOpenFile(i18n.getMessage("fileSystemPickerFirmwareFiles"), [
                     ".hex",
                     ".uf2",
                 ]);
@@ -952,7 +952,10 @@ firmware_flasher.initialize = async function (callback) {
                             ) {
                                 self.enableFlashButton(true);
                                 self.flashingMessage(
-                                    i18n.getMessage("firmwareFlasherFirmwareLocalLoaded", self.parsed_hex.bytes_total),
+                                    i18n.getMessage("firmwareFlasherFirmwareLocalLoaded", {
+                                        filename: file.name,
+                                        bytes: self.parsed_hex.bytes_total,
+                                    }),
                                     self.FLASH_MESSAGE_TYPES.NEUTRAL,
                                 );
                             }

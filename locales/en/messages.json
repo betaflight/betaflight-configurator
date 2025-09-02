@@ -446,7 +446,7 @@
         "message": "{{typeof}} files",
         "description": "Text for the file picker dialog, showing the type of files selected. The parameter can be HEX, TXT, etc."
     },
-    "fileSystemPickFirmwareFiles": {
+    "fileSystemPickerFirmwareFiles": {
         "message": "Firmware files"
     },
     "serialErrorFrameError": {
