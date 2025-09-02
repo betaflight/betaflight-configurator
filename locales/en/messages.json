@@ -446,6 +446,9 @@
         "message": "{{typeof}} files",
         "description": "Text for the file picker dialog, showing the type of files selected. The parameter can be HEX, TXT, etc."
     },
+    "fileSystemPickerFirmwareFiles": {
+        "message": "Firmware files"
+    },
     "serialErrorFrameError": {
         "message": "Serial connection error: bad framing"
     },
@@ -3809,8 +3812,23 @@
     "firmwareFlasherFirmwareOnlineLoaded": {
         "message": "Loaded Online Firmware: {{filename}} ({{bytes}} bytes)"
     },
+    "firmwareFlasherTooltipSaveFirmware": {
+        "message": "Save Firmware"
+    },
+    "firmwareFlasherInvalidFileFormat": {
+        "message": "Invalid file format"
+    },
+    "firmwareFlasherUf2Corrupted": {
+        "message": "UF2 file appears to be corrupted"
+    },
     "firmwareFlasherHexCorrupted": {
         "message": "HEX file appears to be corrupted"
+    },
+    "firmwareFlasherUF2SaveSuccess": {
+        "message": "Saved (flashed) UF2 successfully"
+    },
+    "firmwareFlasherUF2SaveFailed": {
+        "message": "Failed to save (flash) UF2"
     },
     "firmwareFlasherConfigCorrupted": {
         "message": "Config file appears to be corrupted, ASCII accepted (chars 0-255)",

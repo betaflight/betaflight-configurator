@@ -13,6 +13,23 @@ export default class BuildApi {
         return code === 200 || code === 201 || code === 202;
     }
 
+    async fetchBytes(url) {
+        const response = await fetch(url, {
+            method: "GET",
+            headers: {
+                "User-Agent": navigator.userAgent,
+                "X-CFG-VER": `${CONFIGURATOR.version}`,
+            },
+        });
+
+        if (this.isSuccessCode(response.status)) {
+            return new Uint8Array(await response.arrayBuffer());
+        }
+
+        gui_log(i18n.getMessage("buildServerFailure", [url, `HTTP ${response.status}`]));
+        return null;
+    }
+
     async fetchText(url) {
         const response = await fetch(url, {
             method: "GET",
@@ -101,9 +118,9 @@ export default class BuildApi {
         return await this.fetchCachedJson(url);
     }
 
-    async loadTargetHex(path) {
+    async loadTargetFirmware(path) {
         const url = `${this._url}${path}`;
-        return await this.fetchText(url);
+        return await this.fetchBytes(url);
     }
 
     async getSupportCommands() {
