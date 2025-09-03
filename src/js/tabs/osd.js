@@ -30,10 +30,6 @@ const positionConfigs = {
             x: 1,
             y: 1,
         }),
-        grow: {
-            x: 0,
-            y: 1,
-        },
         gridPos: [0, 0],
     },
     TC: {
@@ -2328,6 +2324,236 @@ OSD.updateDisplaySize = function () {
     };
 };
 
+// Ruler config object for all magic numbers
+OSD.rulerConfig = {
+    meterThickness: 16, // px
+    tickMinor: 4, // px
+    tickMajor: 8, // px
+    vertTickMajor: 12, // px
+    labelPadding: 12, // px
+    topLabelOffset: 4, // px
+    sideLabelOffset: 12, // px
+    sideLabelOffsetMajor: 16, // px
+    bottomLabelOffset: 12, // px
+    edgeGap: 12, // px
+    minEdgePadding: 12, // px
+    verticalLabelStep: 2,
+    bumpTop: 3, // px
+    bumpRight: 3, // px
+    colorMinor: "#888888",
+    colorMajor: "#cccccc",
+    colorCenter: "#ffff00",
+    font: "10px monospace",
+};
+
+OSD.initializeRulers = function () {
+    const canvas = document.querySelector(".ruler-overlay");
+    const preview = document.querySelector(".preview");
+    const container = document.querySelector(".preview-container");
+    const enabled = document.querySelector("#osd-preview-rulers-selector")?.checked;
+    if (!canvas || !preview || !container || !OSD.data?.displaySize) {
+        return false;
+    }
+    if (!enabled) {
+        canvas.style.display = "none";
+        preview.style.marginRight = "";
+        preview.style.marginLeft = "";
+        preview.style.marginTop = "";
+        container.style.paddingRight = "";
+        container.style.paddingLeft = "";
+        container.style.paddingTop = "";
+        return false;
+    }
+    canvas.style.display = "block";
+    container.style.paddingTop = "26px";
+    preview.style.marginRight = "30px";
+    preview.style.marginLeft = "30px";
+    return { canvas, preview, container };
+};
+
+OSD.setupRulerContext = function (canvas, preview, container, config) {
+    const cw = Math.max(1, Math.floor(container.clientWidth));
+    const ch = Math.max(1, Math.floor(container.clientHeight));
+    if (canvas.width !== cw) {
+        canvas.width = cw;
+    }
+    if (canvas.height !== ch) {
+        canvas.height = ch;
+    }
+    const ctx = canvas.getContext("2d");
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.font = config.font;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    const rows = preview.querySelectorAll(".row");
+    if (!rows.length) {
+        return false;
+    }
+    const colsInRow = rows[0].querySelectorAll(".char");
+    if (!colsInRow.length) {
+        return false;
+    }
+    const containerRect = container.getBoundingClientRect();
+    const previewRect = preview.getBoundingClientRect();
+    const left = Math.floor(previewRect.left - containerRect.left);
+    const top = Math.floor(previewRect.top - containerRect.top);
+    const right = Math.ceil(previewRect.right - containerRect.left);
+    const bottom = Math.ceil(previewRect.bottom - containerRect.top);
+    const charRect = colsInRow[0].getBoundingClientRect();
+    const cellW = charRect.width;
+    const cellH = charRect.height;
+    const cols = colsInRow.length;
+    const rowsCount = rows.length;
+    const cx = Math.floor(cols / 2);
+    const cy = Math.floor(rowsCount / 2);
+    const signPad = Math.ceil(ctx.measureText("-").width);
+    return {
+        ctx,
+        cw,
+        ch,
+        containerRect,
+        previewRect,
+        cols,
+        rowsCount,
+        cx,
+        cy,
+        cellW,
+        cellH,
+        left,
+        top,
+        right,
+        bottom,
+        rows,
+        colsInRow,
+        signPad,
+    };
+};
+
+OSD._colCenterX = function (i, containerRect, colsInRow) {
+    const rect = colsInRow[i].getBoundingClientRect();
+    return Math.round(rect.left - containerRect.left + rect.width / 2);
+};
+OSD._rowCenterY = function (i, containerRect, rows) {
+    const rect = rows[i].getBoundingClientRect();
+    return Math.round(rect.top - containerRect.top + rect.height / 2);
+};
+
+// Shared axis drawing helper for top/bottom horizontal rulers
+function drawHorizontalAxis(ctx, params, axis) {
+    const { cols, containerRect, colsInRow, config } = params;
+    let centerIndex = Math.floor(cols / 2);
+    let minOffset = -centerIndex;
+    let maxOffset = centerIndex;
+    const isDark = document.body.classList.contains("dark-theme");
+    for (let i = 0; i < cols; i++) {
+        let offset = i - centerIndex + (cols % 2 === 0 ? 1 : 0);
+        const x = OSD._colCenterX(i, containerRect, colsInRow);
+        const isCenter = offset === 0;
+        const isMajor = offset % 5 === 0 || isCenter;
+        const majorColor = isMajor ? config.colorMajor : config.colorMinor;
+        const tick = isMajor ? config.tickMajor : config.tickMinor;
+        ctx.strokeStyle = isCenter ? config.colorCenter : majorColor;
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        let y0, y1, labelY;
+        if (axis === "top") {
+            y0 = Math.max(0, params.top - config.edgeGap);
+            y1 = Math.max(0, y0 - tick);
+            labelY = Math.max(config.minEdgePadding, y1 - config.topLabelOffset);
+        } else {
+            y0 = Math.min(params.ch, params.bottom + 1);
+            y1 = Math.min(params.ch, params.bottom + tick);
+            const maxLabelY = params.ch - 12;
+            labelY = Math.min(maxLabelY, y1 + config.bottomLabelOffset);
+        }
+        ctx.moveTo(x + 0.5, y0 + 0.5);
+        ctx.lineTo(x + 0.5, y1 + 0.5);
+        ctx.stroke();
+        if (isMajor && offset >= minOffset && offset <= maxOffset) {
+            ctx.fillStyle = isDark ? "#fff" : "#000";
+            ctx.save();
+            ctx.textBaseline = axis === "top" ? "bottom" : "top";
+            ctx.fillText(offset.toString(), x, labelY);
+            ctx.restore();
+        }
+    }
+}
+
+// Shared vertical axis drawing helper for left/right rulers
+function drawVerticalAxis(ctx, params, axis) {
+    const { rowsCount, cy, left, right, ch, cw, signPad, rows, containerRect, config } = params;
+    ctx.textAlign = axis === "left" ? "right" : "left";
+    const isDark = document.body.classList.contains("dark-theme");
+    for (let i = 0; i < rowsCount; i++) {
+        const y = OSD._rowCenterY(i, containerRect, rows);
+        const offset = i - cy + (rowsCount % 2 === 0 ? 1 : 0);
+        const isCenter = i === cy;
+        const isMajor = Math.abs(offset) % config.verticalLabelStep === 0 || i === 0 || i === rowsCount - 1 || isCenter;
+        const majorColor = isMajor ? config.colorMajor : config.colorMinor;
+        const tick = isMajor ? config.vertTickMajor : config.tickMinor;
+        ctx.strokeStyle = isCenter ? config.colorCenter : majorColor;
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        let x0, x1, labelX;
+        if (axis === "left") {
+            x0 = left - 1;
+            x1 = Math.max(0, left - tick);
+        } else {
+            x0 = Math.min(cw - 1, right + 1);
+            x1 = Math.min(cw - 1, right + tick);
+        }
+        ctx.moveTo(x0 + 0.5, y + 0.5);
+        ctx.lineTo(x1 + 0.5, y + 0.5);
+        ctx.stroke();
+        if (isMajor) {
+            ctx.fillStyle = isDark ? "#fff" : "#000";
+            const text = offset.toString();
+            const textWidth = ctx.measureText(text).width;
+            const extra = text.startsWith("-") ? signPad : 0;
+            if (axis === "left") {
+                const desired = x1 - (isMajor ? config.sideLabelOffsetMajor : config.sideLabelOffset) - extra;
+                labelX = Math.max(config.minEdgePadding + textWidth, desired);
+            } else {
+                const desired = x1 + (isMajor ? config.sideLabelOffsetMajor : config.sideLabelOffset) + extra;
+                labelX = Math.min(cw - config.minEdgePadding - textWidth, desired);
+            }
+            const yLabel = Math.max(config.minEdgePadding, Math.min(ch - config.minEdgePadding, y + 0.5));
+            ctx.fillText(text, labelX, yLabel);
+        }
+    }
+}
+
+OSD._drawTopAxis = function (ctx, params) {
+    drawHorizontalAxis(ctx, params, "top");
+};
+OSD._drawBottomAxis = function (ctx, params) {
+    drawHorizontalAxis(ctx, params, "bottom");
+};
+OSD._drawLeftAxis = function (ctx, params) {
+    drawVerticalAxis(ctx, params, "left");
+};
+OSD._drawRightAxis = function (ctx, params) {
+    drawVerticalAxis(ctx, params, "right");
+};
+
+OSD.drawRulers = function () {
+    const config = OSD.rulerConfig;
+    const init = OSD.initializeRulers();
+    if (!init) {
+        return;
+    }
+    const setup = OSD.setupRulerContext(init.canvas, init.preview, init.container, config);
+    if (!setup) {
+        return;
+    }
+    // Compose params for axis functions
+    const params = { ...setup, config };
+    OSD._drawTopAxis(params.ctx, params);
+    OSD._drawBottomAxis(params.ctx, params);
+    OSD._drawLeftAxis(params.ctx, params);
+    OSD._drawRightAxis(params.ctx, params);
+};
+
 OSD.drawByOrder = function (selectedPosition, field, charCode, x, y) {
     // Check if there is other field at the same position
     if (OSD.data.preview[selectedPosition] !== undefined) {
@@ -3964,6 +4190,27 @@ osd.initialize = function (callback) {
             });
         });
 
+        // Rulers toggle
+        $("#osd-preview-rulers-selector").change(function () {
+            OSD.drawRulers();
+        });
+
+        // Window resize listener for rulers
+        $(window).on("resize.osd-rulers", function () {
+            if (document.querySelector("#osd-preview-rulers-selector")?.checked) {
+                // Throttle the resize calls using requestAnimationFrame
+                if (OSD.rulersResizeTimer) {
+                    cancelAnimationFrame(OSD.rulersResizeTimer);
+                }
+                OSD.rulersResizeTimer = requestAnimationFrame(() => {
+                    // Use setTimeout to ensure preview has been resized
+                    setTimeout(() => {
+                        OSD.drawRulers();
+                    }, 100);
+                });
+            }
+        });
+
         $("a.save").click(function () {
             MSP.promise(MSPCodes.MSP_EEPROM_WRITE);
             gui_log(i18n.getMessage("osdSettingsSaved"));
@@ -4084,6 +4331,7 @@ osd.cleanup = function (callback) {
     // unbind "global" events
     $(document).unbind("keypress");
     $(document).off("click", "span.progressLabel a");
+    $(window).off("resize.osd-rulers");
 
     if (callback) {
         callback();
