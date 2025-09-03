@@ -149,6 +149,16 @@ ports.initialize = function (callback) {
             58: "UART8",
             59: "UART9",
             60: "UART10",
+            70: "PIOUART0",
+            71: "PIOUART1",
+            72: "PIOUART2",
+            73: "PIOUART3",
+            74: "PIOUART4",
+            75: "PIOUART5",
+            76: "PIOUART6",
+            77: "PIOUART7",
+            78: "PIOUART8",
+            79: "PIOUART9",
         };
 
         let gpsBaudrateElement = $("select.gps_baudrate");
