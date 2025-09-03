@@ -2446,7 +2446,7 @@ function drawHorizontalAxis(ctx, params, axis) {
     let maxOffset = centerIndex;
     const isDark = document.body.classList.contains("dark-theme");
     for (let i = 0; i < cols; i++) {
-        let offset = i - centerIndex;
+        let offset = i - centerIndex + (cols % 2 === 0 ? 1 : 0);
         const x = OSD._colCenterX(i, containerRect, colsInRow);
         const isCenter = offset === 0;
         const isMajor = offset % 5 === 0 || isCenter;
@@ -2486,7 +2486,7 @@ function drawVerticalAxis(ctx, params, axis) {
     const isDark = document.body.classList.contains("dark-theme");
     for (let i = 0; i < rowsCount; i++) {
         const y = OSD._rowCenterY(i, containerRect, rows);
-        const offset = i - cy;
+        const offset = i - cy + (rowsCount % 2 === 0 ? 1 : 0);
         const isCenter = i === cy;
         const isMajor = Math.abs(offset) % config.verticalLabelStep === 0 || i === 0 || i === rowsCount - 1 || isCenter;
         const majorColor = isMajor ? config.colorMajor : config.colorMinor;
