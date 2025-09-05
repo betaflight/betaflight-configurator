@@ -1,0 +1,10 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "Default capability for all windows, allows core and shell open permissions.",
+  "windows": ["*"],
+  "permissions": [
+    "core:default",
+    "shell:allow-open"
+  ]
+}
