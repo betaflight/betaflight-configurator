@@ -10,7 +10,10 @@
   },
   "app": {
     "security": {
-      "csp": null
+      "csp": null,
+      "capabilities": [
+        { "path": "./capabilities/default.json" }
+      ]
     },
     "windows": [
       {
@@ -29,7 +32,9 @@
   },
   "plugins": {
     "shell": {
-      "open": true
+      "open": {
+        "allowlist": ["^https://.*"]
+      }
     }
   }
 }
