@@ -643,26 +643,6 @@ MspHelper.prototype.process_data = function (dataHandler) {
 
                     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
                         FC.SENSOR_ALIGNMENT.gyro_enable_mask = data.readU8(); // replacing gyro_to_use
-
-                        // Initialize arrays for gyro alignment
-                        FC.SENSOR_ALIGNMENT.gyro_align = [];
-                        FC.SENSOR_ALIGNMENT.gyro_align_roll = [];
-                        FC.SENSOR_ALIGNMENT.gyro_align_pitch = [];
-                        FC.SENSOR_ALIGNMENT.gyro_align_yaw = [];
-
-                        for (let i = 0; i < MAX_GYROS; i++) {
-                            FC.SENSOR_ALIGNMENT.gyro_align[i] = data.readU8();
-                        }
-
-                        for (let i = 0; i < MAX_GYROS; i++) {
-                            FC.SENSOR_ALIGNMENT.gyro_align_roll[i] = data.read16() / 10;
-                            FC.SENSOR_ALIGNMENT.gyro_align_pitch[i] = data.read16() / 10;
-                            FC.SENSOR_ALIGNMENT.gyro_align_yaw[i] = data.read16() / 10;
-                        }
-
-                        FC.SENSOR_ALIGNMENT.mag_align_roll = data.read16() / 10;
-                        FC.SENSOR_ALIGNMENT.mag_align_pitch = data.read16() / 10;
-                        FC.SENSOR_ALIGNMENT.mag_align_yaw = data.read16() / 10;
                     } else {
                         FC.SENSOR_ALIGNMENT.gyro_to_use = data.readU8();
                         FC.SENSOR_ALIGNMENT.gyro_1_align = data.readU8();
@@ -2112,22 +2092,6 @@ MspHelper.prototype.crunch = function (code, modifierCode = undefined) {
 
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
                 buffer.push8(FC.SENSOR_ALIGNMENT.gyro_enable_mask); // replacing gyro_to_use
-
-                for (let i = 0; i < MAX_GYROS; i++) {
-                    buffer.push8(FC.SENSOR_ALIGNMENT.gyro_align[i]);
-                }
-
-                for (let i = 0; i < MAX_GYROS; i++) {
-                    buffer
-                        .push16(FC.SENSOR_ALIGNMENT.gyro_align_roll[i] * 10)
-                        .push16(FC.SENSOR_ALIGNMENT.gyro_align_pitch[i] * 10)
-                        .push16(FC.SENSOR_ALIGNMENT.gyro_align_yaw[i] * 10);
-                }
-
-                buffer
-                    .push16(FC.SENSOR_ALIGNMENT.mag_align_roll * 10)
-                    .push16(FC.SENSOR_ALIGNMENT.mag_align_pitch * 10)
-                    .push16(FC.SENSOR_ALIGNMENT.mag_align_yaw * 10);
             } else {
                 buffer
                     .push8(FC.SENSOR_ALIGNMENT.gyro_to_use)

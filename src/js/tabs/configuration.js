@@ -238,8 +238,6 @@ configuration.initialize = function (callback) {
             $('input[id="configurationAutoDisarmDelay"]').parent().parent().hide();
         }
 
-        const gyro_align_elements = [];
-
         // Multi gyro handling for newer firmware
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
             // Define gyro detection flags
@@ -259,10 +257,8 @@ configuration.initialize = function (callback) {
             // Use the specific gyro container (not the general sensor_align_content)
             const gyroContainer = $(".sensor_align_content .gyro_align_box");
 
-            // Hide the gyro selector (not used in new firmware)
-            $(".gyro_alignment_inputs_selection").hide();
-
             // Hide unused legacy elements
+            $(".gyro_alignment_inputs_selection").hide();
             $(".gyro_alignment_inputs_first").hide();
             $(".gyro_alignment_inputs_second").hide();
 
@@ -278,16 +274,7 @@ configuration.initialize = function (callback) {
             function createGyroAlignmentUI(gyroIndex, container) {
                 // Create a new gyro alignment div
                 const gyroBox = $(`<div class="gyro_box" id="gyro_box_${gyroIndex + 1}"></div>`);
-
-                // Create a combined row for alignment and enable/disable
-                const combinedRow = $(`<div class="gyro_row"></div>`);
-                const alignmentLabel = $(`<span>${i18n.getMessage("configurationSensorAlignment")}</span>`);
-                const alignmentSelect = $(`<select class="gyro_${gyroIndex + 1}_align"></select>`);
-
-                // Add all alignment options
-                for (let j = 0; j < SENSOR_ALIGNMENTS.length; j++) {
-                    alignmentSelect.append(`<option value="${j + 1}">${SENSOR_ALIGNMENTS[j]}</option>`);
-                }
+                const gyroRow = $(`<div class="gyro_row"></div>`);
 
                 // Create enable/disable checkbox
                 const enableCheck = $(`<div class="checkbox enable-checkbox">
@@ -297,136 +284,17 @@ configuration.initialize = function (callback) {
                     </label>
                 </div>`);
 
-                // Add both elements to the combined row
-                const alignmentContainer = $(`<div class="alignment-container"></div>`);
-                alignmentContainer.append(alignmentLabel, alignmentSelect);
-
-                // First the checkbox, then the alignment dropdown
-                combinedRow.append(enableCheck, alignmentContainer);
-
-                // Create custom alignment section
-                const customAlignSection = $(
-                    `<div id="custom_align_gyro_${gyroIndex + 1}" class="custom_alignment"></div>`,
-                );
-
-                // Create a single row for all alignment inputs
-                const customAlignRow = $(`<div class="alignment_inputs_row"></div>`);
-
-                // Create the roll input
-                const rollInput = $(`<div class="alignment_input_cell">
-                    <div class="alignment_label">
-                        <div class="alignicon roll"></div>
-                        <span>${i18n.getMessage("configurationGyroAlignmentRoll")}</span>
-                    </div>
-                    <input type="number" class="gyro_${gyroIndex + 1}_align_roll" min="-180" max="360" step="1" value="0" />
-                </div>`);
-
-                // Create the pitch input
-                const pitchInput = $(`<div class="alignment_input_cell">
-                    <div class="alignment_label">
-                        <div class="alignicon pitch"></div>
-                        <span>${i18n.getMessage("configurationGyroAlignmentPitch")}</span>
-                    </div>
-                    <input type="number" class="gyro_${gyroIndex + 1}_align_pitch" min="-180" max="360" step="1" value="0" />
-                </div>`);
-
-                // Create the yaw input
-                const yawInput = $(`<div class="alignment_input_cell">
-                    <div class="alignment_label">
-                        <div class="alignicon yaw"></div>
-                        <span>${i18n.getMessage("configurationGyroAlignmentYaw")}</span>
-                    </div>
-                    <input type="number" class="gyro_${gyroIndex + 1}_align_yaw" min="-180" max="360" step="1" value="0" />
-                </div>`);
-
-                // Initialize custom alignment values
-                if (FC.SENSOR_ALIGNMENT.gyro_align_roll[gyroIndex] !== undefined) {
-                    rollInput.find("input").val(FC.SENSOR_ALIGNMENT.gyro_align_roll[gyroIndex]);
-                    pitchInput.find("input").val(FC.SENSOR_ALIGNMENT.gyro_align_pitch[gyroIndex]);
-                    yawInput.find("input").val(FC.SENSOR_ALIGNMENT.gyro_align_yaw[gyroIndex]);
-                } else {
-                    FC.SENSOR_ALIGNMENT.gyro_align_roll[gyroIndex] = 0;
-                    FC.SENSOR_ALIGNMENT.gyro_align_pitch[gyroIndex] = 0;
-                    FC.SENSOR_ALIGNMENT.gyro_align_yaw[gyroIndex] = 0;
-                }
-
-                // Add custom alignment inputs to row
-                customAlignRow.append(rollInput, pitchInput, yawInput);
-
-                // Add row to custom alignment section
-                customAlignSection.append(customAlignRow);
-
-                // Assemble the box
-                gyroBox.append(combinedRow);
-                gyroBox.append(customAlignSection);
+                gyroRow.append(enableCheck);
+                gyroBox.append(gyroRow);
 
                 // Add the box to the container
                 container.append(gyroBox);
-
-                // Store reference to alignment element
-                gyro_align_elements[gyroIndex] = alignmentSelect;
-
-                // Initialize alignment dropdown with current value
-                if (FC.SENSOR_ALIGNMENT.gyro_align[gyroIndex] !== undefined) {
-                    alignmentSelect.val(FC.SENSOR_ALIGNMENT.gyro_align[gyroIndex]);
-                }
 
                 // Initialize the enable checkbox
                 enableCheck
                     .find("input")
                     .prop("checked", (FC.SENSOR_ALIGNMENT.gyro_enable_mask & (1 << gyroIndex)) !== 0);
 
-                // Toggle custom alignment visibility based on current value
-                const isCustom = parseInt(FC.SENSOR_ALIGNMENT.gyro_align[gyroIndex]) === SENSOR_ALIGNMENTS.length;
-                customAlignSection.toggle(isCustom);
-
-                // Add change handler for alignment
-                alignmentSelect.on("change", function () {
-                    const value = parseInt($(this).val());
-
-                    if (value !== FC.SENSOR_ALIGNMENT.gyro_align[gyroIndex]) {
-                        const newValue = $(this).find("option:selected").text();
-                        self.analyticsChanges[`Gyro${gyroIndex + 1}Alignment`] = newValue;
-                    }
-
-                    FC.SENSOR_ALIGNMENT.gyro_align[gyroIndex] = value;
-
-                    // Toggle custom alignment
-                    customAlignSection.toggle(value === SENSOR_ALIGNMENTS.length);
-
-                    // If custom alignment is selected, ensure the custom values are initialized
-                    if (value === SENSOR_ALIGNMENTS.length) {
-                        if (FC.SENSOR_ALIGNMENT.gyro_align_roll[gyroIndex] === undefined) {
-                            FC.SENSOR_ALIGNMENT.gyro_align_roll[gyroIndex] = 0;
-                            FC.SENSOR_ALIGNMENT.gyro_align_pitch[gyroIndex] = 0;
-                            FC.SENSOR_ALIGNMENT.gyro_align_yaw[gyroIndex] = 0;
-
-                            rollInput.find("input").val(0);
-                            pitchInput.find("input").val(0);
-                            yawInput.find("input").val(0);
-                        }
-                    }
-                });
-
-                // Add change handlers for custom alignment inputs
-                rollInput.find("input").on("change", function () {
-                    const value = parseInt($(this).val());
-                    const min = parseInt($(this).attr("min"));
-                    const max = parseInt($(this).attr("max"));
-                    FC.SENSOR_ALIGNMENT.gyro_align_roll[gyroIndex] = Math.max(min, Math.min(max, value || 0));
-                });
-                pitchInput.find("input").on("change", function () {
-                    const value = parseInt($(this).val());
-                    const min = parseInt($(this).attr("min"));
-                    const max = parseInt($(this).attr("max"));
-                    FC.SENSOR_ALIGNMENT.gyro_align_pitch[gyroIndex] = Math.max(min, Math.min(max, value || 0));
-                });
-                yawInput.find("input").on("change", function () {
-                    const value = parseInt($(this).val());
-                    const min = parseInt($(this).attr("min"));
-                    const max = parseInt($(this).attr("max"));
-                    FC.SENSOR_ALIGNMENT.gyro_align_yaw[gyroIndex] = Math.max(min, Math.min(max, value || 0));
-                });
                 // Add handler for enable/disable checkbox
                 enableCheck.find("input").change(function () {
                     const checked = $(this).is(":checked");
@@ -748,19 +616,6 @@ configuration.initialize = function (callback) {
                         FC.SENSOR_ALIGNMENT.gyro_enable_mask |= 1 << i;
                     }
                     // If not checked, the bit stays 0 as we initialized the mask to 0
-
-                    // Use stored reference for more reliable access
-                    FC.SENSOR_ALIGNMENT.gyro_align[i] = gyro_align_elements[i]
-                        ? parseInt(gyro_align_elements[i].val())
-                        : 0;
-                }
-
-                // Gather custom alignment values for all detected gyros
-                for (let i = 0; i < MAX_GYROS; i++) {
-                    // Get the values from the inputs and store in the arrays
-                    FC.SENSOR_ALIGNMENT.gyro_align_roll[i] = parseInt($(`.gyro_${i + 1}_align_roll`).val()) || 0;
-                    FC.SENSOR_ALIGNMENT.gyro_align_pitch[i] = parseInt($(`.gyro_${i + 1}_align_pitch`).val()) || 0;
-                    FC.SENSOR_ALIGNMENT.gyro_align_yaw[i] = parseInt($(`.gyro_${i + 1}_align_yaw`).val()) || 0;
                 }
 
                 FC.SENSOR_ALIGNMENT.mag_align_roll = parseInt($('input[name="mag_align_roll"]').val());
