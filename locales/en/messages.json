@@ -1493,7 +1493,7 @@
         "message": "Yaw Degrees"
     },
     "configurationGyroAlignment": {
-        "message": "Gyro Alignment"
+        "message": "Active IMU"
     },
     "configurationGyroAlignmentHelp": {
         "message": "The gyro alignment is the orientation of the gyro sensor on the flight controller board. The default is usually correct, but if you have a custom build or a flight controller with a different gyro orientation, you may need to adjust this setting."
