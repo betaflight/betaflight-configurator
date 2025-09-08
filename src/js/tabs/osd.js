@@ -4022,10 +4022,12 @@ osd.initialize = function (callback) {
                 );
                 $(".elements-search-field").on("input", function () {
                     const searchTerm = $(this).val().toLowerCase();
-                    $(".switchable-field").each(function () {
+                    $("#element-fields .switchable-field").each(function () {
                         const fieldName = $(this).find("label").text().toLowerCase();
                         $(this).toggle(fieldName.includes(searchTerm));
-                        $(this).closest(".switchable-field-wrapper").toggle(fieldName.includes(searchTerm));
+                        $(this)
+                            .closest("#element-fields .switchable-field-wrapper")
+                            .toggle(fieldName.includes(searchTerm));
                     });
                 });
 
