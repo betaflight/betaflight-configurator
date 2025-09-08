@@ -58,9 +58,6 @@
     "cancel": {
         "message": "取消"
     },
-    "autoConnectEnabled": {
-        "message": "自動連接：開啟 - 配置器會自動連接新發現的埠口。"
-    },
     "autoConnectDisabled": {
         "message": "自動連接: 禁用 - 用戶需要選擇正確的串口, 然後單擊 “連接” 按鈕。"
     },
@@ -138,12 +135,6 @@
     "sensorStatusSonarShort": {
         "message": "聲納",
         "description": "Text of the image in the top sensors icons. Please keep it short."
-    },
-    "checkForConfiguratorUnstableVersions": {
-        "message": "顯示測試版本的配置程式更新提示"
-    },
-    "configuratorUpdateNotice": {
-        "message": "$ t（configuratorUpdateHelp.message）"
     },
     "configuratorUpdateWebsite": {
         "message": "打開版本發佈網站"
@@ -367,14 +358,8 @@
     "noConfigurationReceived": {
         "message": "<span class=\"message-negative\">10秒<\/span>內沒有接受到配置訊息，飛控通訊 <span class=\"message-negative\">失敗<\/span>"
     },
-    "firmwareVersionNotSupported": {
-        "message": "Betaflight 配置程式<span class=\"message-negative\">不支援<\/span>該固件版本。請更新固件以確保其API版本為<strong>$1<\/strong> 或更高。更新固件之前，使用 CLI 來備份設置。使用 CLI 進行備份\/恢復的詳細操作流程請參考Betaflight文檔。<br \/>如果不想將固件更新到最新版本，可以下載使用支援該固件的舊版配置程式。"
-    },
     "firmwareTypeNotSupported": {
         "message": "<span class=\"message-negative\">不支持<\/span>非 Betaflight 固件，只能使用 CLI 模式"
-    },
-    "firmwareUpgradeRequired": {
-        "message": "需要將此設備上的固件更新到新版本。更新固件之前，使用 CLI 來備份設置。使用 CLI 進行備份\/恢復的詳細操作流程請參考Betaflight文檔。<br \/>如果不想將固件更新到最新版本，可以下載使用支援該固件的舊版配置程式。"
     },
     "resetToCustomDefaultsDialog": {
         "message": "有適用于次飛控板的自定義默認設置，通常來說，還有在應用了自定義默認設置之後飛控板才能正常工作。<br \/>您是否要為此飛控板應用自定義默認設置？"
@@ -445,9 +430,6 @@
     "versionLabelFirmware": {
         "message": "固件"
     },
-    "versionLabelConfigurator": {
-        "message": "配置程式"
-    },
     "notifications_app_just_updated_to_version": {
         "message": "程式已更新到版本: $1"
     },
@@ -485,9 +467,6 @@
     "eeprom_saved_ok": {
         "message": "EEPROM <span class=\"message-positive\">已保存<\/span>"
     },
-    "defaultWelcomeIntro": {
-        "message": "歡迎使用<strong> Betaflight - 配置程式<\/strong>，為簡化固件升級，設置和調校飛控而生的工具。"
-    },
     "defaultWelcomeHead": {
         "message": "硬體"
     },
@@ -502,9 +481,6 @@
     },
     "defaultDonateHead": {
         "message": "開源\/捐贈說明"
-    },
-    "defaultDonateText": {
-        "message": "<p><strong>Betaflight<\/strong>是一個<strong>開放源碼<\/strong>的飛行控制軟體，它可供所有用戶免費使用，但 <strong>不提供擔保<\/strong>。 <\/p><p>如果你覺得 Betaflight 或 Betaflight 配置程式對你有用，請考慮捐贈以 <strong>支援<\/strong> 它的開發工作<\/p>"
     },
     "defaultDonateBottom": {
         "message": "<p>如果你想持續捐助資金，請考慮在$t(patreonLink.message)上贊助我們。<\/p>"
@@ -696,10 +672,6 @@
     "initialSetupArmingDisableFlagsTooltipBST": {
         "message": "一個黑羊遙測設備 (例如 TBS Core Pro) 已上鎖並阻止解鎖",
         "description": "Message that pops up to describe the BST arming disable flag"
-    },
-    "initialSetupArmingDisableFlagsTooltipMSP": {
-        "message": "MSP 連接已激活，可能正在與當前的配置程式通訊中",
-        "description": "Message that pops up to describe the MSP arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipPARALYZE": {
         "message": "癱瘓模式已被激活",
@@ -1958,9 +1930,6 @@
     },
     "cliConfirmSnippetBtn": {
         "message": "執行"
-    },
-    "loggingNote": {
-        "message": "數據<span class=\"message-negative\">僅會<\/span>在此頁面記錄，關閉此頁面將會 <span class=\"message-negative\">取消<\/span>數據記錄，並且應用將會返回<strong>“普通配置”<\/strong>狀態。<br \/>你可以選擇合適的全局刷新率，飛控出於性能考慮，只會每 <strong>1<\/strong> 秒寫入一次日誌。"
     },
     "loggingSamplesSaved": {
         "message": "採樣已保存"
@@ -4192,10 +4161,6 @@
         "message": "直接輸入頻率",
         "description": "Text of one of the fields of the VTX tab"
     },
-    "vtxFrequencyChannelHelp": {
-        "message": "如果您啟用此功能，配置器將會讓您直接選擇特定頻率而不是常見的頻段\/頻道。為了使其工作，您的圖傳必須支援此功能。",
-        "description": "Help text for the frequency or channel select field of the VTX tab"
-    },
     "vtxSelectedMode": {
         "message": "選擇模式",
         "description": "Title for the actual mode header of the VTX"
@@ -4678,9 +4643,6 @@
     "cordovaIncompatibleWebview": {
         "message": "不兼容的 webview"
     },
-    "cordovaWebviewTroubleshootingMsg": {
-        "message": "您必須更新您設備的 webview 才能使用配置程式。"
-    },
     "cordovaWebviewTroubleshootingMsg2": {
         "message": "下面的工具旨在幫助您安裝一個新的 webview 或更新已安裝的 webview。"
     },
@@ -4725,8 +4687,5 @@
     },
     "cordovaExitAppTitle": {
         "message": "確認"
-    },
-    "cordovaExitAppMessage": {
-        "message": "你確定要關閉配置程式嗎？"
     }
 }

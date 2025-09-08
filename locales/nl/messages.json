@@ -65,9 +65,6 @@
     "cancel": {
         "message": "Annuleren"
     },
-    "autoConnectEnabled": {
-        "message": "Automatisch verbinden: Aan - Configurator zal automatisch proberen verbinding te maken wanneer een nieuwe poort is gedetecteerd"
-    },
     "autoConnectDisabled": {
         "message": "Automatisch verbinden: Uitgeschakeld - Gebruiker moet de poort selecteren en zelf \"Verbinden\" klikken"
     },
@@ -165,12 +162,6 @@
     "sensorStatusSonarShort": {
         "message": "Sonar",
         "description": "Text of the image in the top sensors icons. Please keep it short."
-    },
-    "checkForConfiguratorUnstableVersions": {
-        "message": "Update meldingen voor onstabiele versies van de configurator weergeven"
-    },
-    "configuratorUpdateNotice": {
-        "message": "U gebruikt een verouderde versie van de <b>Betaflight Configurator<\/b>.<br>$t(configuratorUpdateHelp.message)"
     },
     "configuratorUpdateWebsite": {
         "message": "Ga naar de Release Pagina"
@@ -397,14 +388,8 @@
     "noConfigurationReceived": {
         "message": "Geen configuratie binnen <span class=\"message-negative\">10 seconden<\/span>ontvangen, communicatie <span class=\"message-negative\">is mislukt<\/span>"
     },
-    "firmwareVersionNotSupported": {
-        "message": "Dit besturingssysteem is <span class=\"message-negative\">niet ondersteund<\/span>. Upgrade alstublieft naar een besturingssysteem die wel API versie <strong>$1<\/strong> of hoger ondersteunt. Gebruik CLI om een backup te maken vóór het flashen. CLI backup\/herstel procedure is terug te vinden in de documentatie.<br \/>Als alternatief kunt u een oudere versie van de configurator gebruiken als je nog niet wil upgraden."
-    },
     "firmwareTypeNotSupported": {
         "message": "Firmware anders dan Betaflight is <span class=\"message-negative\">niet ondersteund<\/span>, behalve CLI modus."
-    },
-    "firmwareUpgradeRequired": {
-        "message": "Het besturingssysteem op dit apparaat moet worden geupgrade naar een nieuwere versie. Gebruik CLI om een backup te maken voor dat je begint met flashen. Hoe je dit moet doen staat in de documentatie.<br \/>Als alternatief kunt u een oudere versie van de configurator gebruiken als je nog niet wilt upgraden."
     },
     "resetToCustomDefaultsDialog": {
         "message": "Er zijn aangepaste standaardinstellingen voor dit bord beschikbaar. Normaal gesproken zal een bord niet goed werken tenzij deze aangepaste standaardinstellingen worden toegepast.<br \/>Wilt u de aangepaste standaardinstellingen voor dit bord toepassen?"
@@ -421,10 +406,6 @@
     "infoVersionOs": {
         "message": "Besturingsysteem:<strong>{{operatingSystem}}<\/strong>",
         "description": "Message that appears in the GUI log panel indicating operating system"
-    },
-    "infoVersionConfigurator": {
-        "message": "Configurator: <strong>{{configuratorVersion}}<\/strong>",
-        "description": "Message that appears in the GUI log panel indicating Configurator version"
     },
     "buildServerUsingCached": {
         "message": "Maakt gebruik van gecachte versie informatie voor $1."
@@ -486,9 +467,6 @@
     "versionLabelFirmware": {
         "message": "Besturingssysteem"
     },
-    "versionLabelConfigurator": {
-        "message": "Configurator"
-    },
     "notifications_app_just_updated_to_version": {
         "message": "Applicatie is geupdate naar versie: $1"
     },
@@ -538,9 +516,6 @@
     "eeprom_saved_ok": {
         "message": "EEPROM <span class=\"message-positive\">opgeslagen<\/span>"
     },
-    "defaultWelcomeIntro": {
-        "message": "Welkom bij <strong>Betaflight - Configurator<\/strong>, een hulpmiddel dat ontworpen is om het bijwerken, configureren en tunen van uw vlucht controller te vereenvoudigen."
-    },
     "defaultWelcomeHead": {
         "message": "Hardware"
     },
@@ -555,9 +530,6 @@
     },
     "defaultDonateHead": {
         "message": "Open Source \/ Donatie Mededeling"
-    },
-    "defaultDonateText": {
-        "message": "<p><strong>Betaflight<\/strong> is een vluchtcontroller software die <strong>open source<\/strong> is en gratis beschikbaar is <strong>zonder garantie<\/strong> voor alle gebruikers.<\/p><p>Als u Betaflight of Betaflight Configurator nuttig vindt, overweeg dan <strong>om zijn ontwikkeling te ondersteunen<\/strong> door te doneren.<\/p>"
     },
     "defaultDonateBottom": {
         "message": "<p>Als u regelmatig wilt doneren kunt u overwegen om zich aan te sluiten bij ons Patreon account. $t(patreonLink.message)<\/p>"
@@ -749,10 +721,6 @@
     "initialSetupArmingDisableFlagsTooltipBST": {
         "message": "Een Black Sheep Telemetry apparaat (TBS Core Pro bijvoorbeeld) is uigeschakeld en verhindert arming",
         "description": "Message that pops up to describe the BST arming disable flag"
-    },
-    "initialSetupArmingDisableFlagsTooltipMSP": {
-        "message": "MSP-verbinding is actief, waarschijnlijk met deze Betaflight Configurator",
-        "description": "Message that pops up to describe the MSP arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipPARALYZE": {
         "message": "Paralyze modus is geactiveerd",
@@ -2169,9 +2137,6 @@
     "cliConfirmSnippetBtn": {
         "message": "Uitvoeren"
     },
-    "loggingNote": {
-        "message": "Gegevens worden <span class=\"message-negative\">alleen<\/span> op dit tabblad gelogd. Als u dit tabblad verlaat <span class=\"message-negative\">annuleert<\/span> u de logging en zal de applicatie terugkeren naar de normale <strong>\"configurator\"<\/strong> staat. <br\/>U bent vrij om de globale updateperiode te wijzigen. Gegevens worden om prestatieredenen elke <strong>1<\/strong> seconde naar het logbestand weggeschreven."
-    },
     "loggingSamplesSaved": {
         "message": "Voorbeelden opgeslagen:"
     },
@@ -2514,14 +2479,6 @@
     "firmwareFlasherVerifyBoard": {
         "message": "<h3>Firmware komt niet overeen<\/h3><br \/>Het verbonden bord is <strong>{{verified_board}}<\/strong> terwijl je <strong>{{selected_board}}<\/strong> hebt geselecteerd.<br \/><br \/>Wilt u doorgaan met flashen?",
         "description": "Make a quick connection to read firmware target and never flash a wrong target again"
-    },
-    "firmwareFlasherBoardVerificationSuccess": {
-        "message": "De configurator heeft <span class=\"message-positive\">succesvol<\/span> het bord gedetecteerd en geverifieerd: <strong>{{boardName}}<\/strong>",
-        "description": "Board verification has succeeded."
-    },
-    "firmwareFlasherBoardVerificationFail": {
-        "message": "De configurator <span class=\"message-negative\">kan het bord niet verifiëren<\/span>. Als dit niet werkt, probeer dan eerst langzaam tussen de tabbladen te wisselen. Of maak een nieuwe Usb-verbinding. Of als laatst, pas de standaardinstellingen toe op dit bord en probeer het opnieuw",
-        "description": "Sometimes MSP values cannot be read from firmware correctly"
     },
     "firmwareFlasherButtonAbort": {
         "message": "Afbreken"
@@ -4514,10 +4471,6 @@
         "message": "Voer frequentie rechtstreeks in",
         "description": "Text of one of the fields of the VTX tab"
     },
-    "vtxFrequencyChannelHelp": {
-        "message": "Als u dit inschakelt, laat de Configurator u een frequentie selecteren in plaats van de gebruikelijke band \/ kanaal. Om dit te laten werken, moet uw VTX deze functie ondersteunen.",
-        "description": "Help text for the frequency or channel select field of the VTX tab"
-    },
     "vtxSelectedMode": {
         "message": "Geselecteerde modus",
         "description": "Title for the actual mode header of the VTX"
@@ -5011,9 +4964,6 @@
     "cordovaIncompatibleWebview": {
         "message": "Incompatibele webweergave"
     },
-    "cordovaWebviewTroubleshootingMsg": {
-        "message": "U moet de webweergave van uw apparaat bijwerken om de configurator te gebruiken."
-    },
     "cordovaWebviewTroubleshootingMsg2": {
         "message": "De onderstaande tool is bedoeld om u te helpen bij het installeren van een nieuwe webview of het updaten van een reeds geïnstalleerde webview."
     },
@@ -5058,8 +5008,5 @@
     },
     "cordovaExitAppTitle": {
         "message": "Bevestiging"
-    },
-    "cordovaExitAppMessage": {
-        "message": "Wilt u de configurator echt sluiten?"
     }
 }

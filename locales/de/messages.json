@@ -124,9 +124,6 @@
     "submit": {
         "message": "Absenden"
     },
-    "autoConnectEnabled": {
-        "message": "Automatisch Verbinden: Aktiviert - Konfigurator versucht automatisch eine Verbindung herzustellen, wenn ein neuer Port erkannt wird"
-    },
     "autoConnectDisabled": {
         "message": "Automatisch Verbinden: Deaktiviert - Der Benutzer muss den richtigen seriellen Anschluss auswählen und selbst auf die Schaltfläche „Verbinden“ klicken"
     },
@@ -237,12 +234,6 @@
     "sensorStatusSonarShort": {
         "message": "Sonar",
         "description": "Text of the image in the top sensors icons. Please keep it short."
-    },
-    "checkForConfiguratorUnstableVersions": {
-        "message": "Aktualisierungsmeldungen für instabile Versionen des Konfigurators anzeigen"
-    },
-    "configuratorUpdateNotice": {
-        "message": "Sie verwenden eine veraltete Version des <b>Betaflight Configurators<\/b>.\n<br>$t(configuratorUpdateHelp.message)"
     },
     "configuratorUpdateHelp": {
         "message": "Wenn Internet verfügbar ist, sollte die App automatisch nach verfügbaren Updates fragen."
@@ -476,14 +467,8 @@
     "noConfigurationReceived": {
         "message": "Keine Konfiguration innerhalb <span class=\"message-negative\">10 Sekunden<\/span> erhalten, Kommunikation <span class=\"message-negative\">fehlgeschlagen<\/span>"
     },
-    "firmwareVersionNotSupported": {
-        "message": "Die Firmware Version wird <span class=\"message-negative\">nicht unterstützt<\/span>. Bitte auf eine Firmware updaten, die API Version <strong>$1<\/strong> oder höher unterstützt. Bitte die Kommandozeile vor dem Flashen für ein Backup nutzen. <br \/>Alternativ bitte eine alte Version des Konfigurators downloaden."
-    },
     "firmwareTypeNotSupported": {
         "message": "Ungültige Betaflight Firmware wird <span class=\"message-negative\">nicht unterstützt<\/span> mit Ausnahme vom CLI Modus."
-    },
-    "firmwareUpgradeRequired": {
-        "message": "Die Firmware dieses Geräts muss auf eine neuere Version aktualisiert werden. Verwenden Sie das CLI für die Sicherung vor dem Flashen. Das Erstellen einer CLI-Sicherung\/Wiederherstellung ist in der Dokumentation beschrieben.<br \/>Alternativ können Sie eine alte Version des Konfigurators herunterladen und verwenden, wenn Sie noch nicht bereit für ein Upgrade sind."
     },
     "resetToCustomDefaultsDialog": {
         "message": "Es sind benutzerdefinierte Standards für diesen Flightcontroller verfügbar. Normalerweise funktioniert ein Flightcontroller nicht ordnungsgemäß, wenn keine benutzerdefinierten Standardeinstellungen angewendet werden. <br \/> Möchtest Du die benutzerdefinierten Standardeinstellungen anwenden?"
@@ -497,19 +482,12 @@
     "reportProblemsDialogFooter": {
         "message": "<span class=\"message-negative\"><strong>Sie müssen diese Probleme beheben, bevor Sie versuchen, Ihren Copter zu fliegen<\/span><\/strong>."
     },
-    "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
-        "message": "<span class=\"message-negative\"><strong>Die verwendete Betaflight-Configurator-Version ($3) unterstützt nicht die Firmware$4<\/strong><\/span>.<br>$t(configuratorUpdateHelp.message)"
-    },
     "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
         "message": "<strong>Es ist kein Motorausgabeprotokoll ausgewählt<\/strong>.<br>Bitte wähle ein für den ESCs geeignetes Motorausgabeprotokoll in '$t(configurationEscFeatures.message)' auf der Registerkarte '$t(tabMotorTesting.message)' aus.<br>$t(escProtocolDisabledMessage.message)"
     },
     "infoVersionOs": {
         "message": "OS: <strong>{{operatingSystem}}<\/strong>",
         "description": "Message that appears in the GUI log panel indicating operating system"
-    },
-    "infoVersionConfigurator": {
-        "message": "Konfigurator: <strong>{{configuratorVersion}}<\/strong>",
-        "description": "Message that appears in the GUI log panel indicating Configurator version"
     },
     "buildServerSuccess": {
         "message": "Erfolgreich: $1"
@@ -595,9 +573,6 @@
     "versionLabelFirmware": {
         "message": "Firmware"
     },
-    "versionLabelConfigurator": {
-        "message": "Konfigurator"
-    },
     "notifications_app_just_updated_to_version": {
         "message": "Anwendung kürzlich aktualisiert auf: $1"
     },
@@ -650,9 +625,6 @@
     "eeprom_saved_ok": {
         "message": "EEPROM <span class=\"message-positive\">gespeichert<\/span>"
     },
-    "defaultWelcomeIntro": {
-        "message": "Willkommen im <strong>Betaflight-Konfigurator<\/strong>, einer Anwendung um Updates, Konfiguration und Tuning deines Flugcontrollers zu erleichtern."
-    },
     "defaultWelcomeHead": {
         "message": "Hardware"
     },
@@ -662,26 +634,17 @@
     "defaultContributingHead": {
         "message": "Mitmachen"
     },
-    "defaultContributingText": {
-        "message": "Wenn du beitragen möchtest, Betaflight noch besser zu machen, kannst du in vielerlei Hinsicht helfen:<br \/><ul><li>Nutze dein Wissen über Betaflight, um Inhalte auf <a href=\"https:\/\/betaflight.com\/docs\/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">unserem Wiki<\/a> zu erstellen, zu aktualisieren oder Fragen anderer Benutzer in Online-Foren zu beantworten;<\/li><li><a href=\"https:\/\/betaflight.com\/docs\/development\" target=\"_blank\" rel=\"noopener noreferrer\">Trage Code<\/a> zur Firmware und zum Konfigurator bei - zu neuen Features, Korrekturen, Verbesserungen;<\/li><li>Testen von <a href=\"https:\/\/github.com\/Betaflight\/betaflight\/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">neuen Funktionen und Korrekturen<\/a> und geben Feedback ab;<\/li><li>Hilfe für andere Benutzer bei der Lösung von Probleme, die sie in <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel=\"noopener noreferrer\">unserem Issue-Tracker<\/a> melden, und Teilnahme an Diskussionen auf Funktionsanfragen;<\/li><li><a href=\"https:\/\/github.com\/betaflight\/betaflight\/tree\/master\/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">Übersetze<\/a> den Betaflight Konfigurator in eine andere Sprachen oder hilf dabei, die vorhandenen Übersetzungen zu pflegen.<\/li><\/ul>"
-    },
     "defaultFacebookText": {
         "message": "Wir haben auch eine <a href=\"https:\/\/www.facebook.com\/groups\/betaflightgroup\/\" target=\"_blank\" rel=\"noopener noreferrer\">Facebook Gruppe<\/a>.<br \/>Trete bei, um über Betaflight zu sprechen,  Konfigurationsfragen zu stellen oder einfach nur um mit anderen Piloten abzuhängen."
     },
     "defaultDiscordText": {
         "message": "Betaflight <a href=\"https:\/\/discord.betaflight.com\/invite\" target=\"_blank\" rel=\"noopener noreferrer\">Discord Server<\/a>.<br \/>Teile deine Flugerfahrung, diskutiere über Betaflight, hilf Anderen oder erhalte Hilfe von der Community."
     },
-    "statisticsDisclaimer": {
-        "message": "Betaflight Konfigurator sammelt anonyme Nutzungsdaten. Diese Daten umfassen zum Beispiel (aber nicht beschränkt) die Anzahl der Starts, die geographische Region der Nutzer, Typen von Flugsteuerungen, Firmware-Versionen, Verwendung von UI-Elementen und Tabs etc. Die Zusammenfassung dieser Daten ist hier <a href=\"https:\/\/datastudio.google.com\/u\/0\/reporting\/1pK1PFw0eWmsgl2npvuzwAqscVzlhJvuF\" target=\"_blank\" rel=\"noopener noreferrer\">einsehbar.<\/a>. Die Erfassung wird durchgeführt, um besser zu verstehen, wie Betaflight Configurator verwendet wird, um Community-Trends zu verstehen und für mögliche UI-Verbesserungen. Benutzer können die Datenerfassung über die Registerkarte Optionen abstellen (Opt-out)."
-    },
     "defaultButtonFirmwareFlasher": {
         "message": "Firmware Flasher"
     },
     "defaultDonateHead": {
         "message": "Open Source-\/Spenden-Hinweis"
-    },
-    "defaultDonateText": {
-        "message": "<p><strong>Betaflight<\/strong> ist eine Flugkontrollersoftware, die <strong>Open Source<\/strong> ist. Sie ist <strong>ohne Garantie<\/strong> für alle Nutzer frei verfügbar.<\/p><p>Falls du Betaflight oder den Betaflight-Konfigurator findest, <strong>unterstütze<\/strong> bitte deren Entwicklung durch eine Spende.<\/p>"
     },
     "defaultDonateBottom": {
         "message": "<p>Über $t(patreonLink.message) kannst du uns auch kontinuierlich finanziell unterstützen.<\/p>"
@@ -991,10 +954,6 @@
     "initialSetupArmingDisableFlagsTooltipBST": {
         "message": "Ein Black Sheep Telemetrie-Gerät (z.B. TBS Core Pro) hat 'Disarming' ausgelöst und verhindert das Arming",
         "description": "Message that pops up to describe the BST arming disable flag"
-    },
-    "initialSetupArmingDisableFlagsTooltipMSP": {
-        "message": "MSP-Verbindung - wahrscheinlich mit diesem Betaflight-Konfigurator - ist aktiv",
-        "description": "Message that pops up to describe the MSP arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipPARALYZE": {
         "message": "Paralyze-Modus wurde aktiviert",
@@ -3130,9 +3089,6 @@
     "cliCommand": {
         "message": "Befehl hier eingeben"
     },
-    "loggingNote": {
-        "message": "Daten werden <span class=\"message-negative\">nur <\/span> in diesem Tab geloggt. Wenn der Tab geschlossen wird, wird das Loggen <span class=\"message-negative\">abgebrochen<\/span> und die Anwendung geht in den normalen Modus zurück."
-    },
     "loggingSamplesSaved": {
         "message": "Gespeicherte Logs:"
     },
@@ -3374,9 +3330,6 @@
     "firmwareFlasherOnlineSelectBoardDescription": {
         "message": "Wählen oder erkennen Sie Ihr Board, um verfügbare Online-Firmware-Releases zu sehen - Wählen Sie die richtige Firmware für Ihr Board."
     },
-    "firmwareFlasherOnlineSelectBoardHint": {
-        "message": "Betaflight-Konfigurator unterstützt das Flashen von \"Unified Targets\" mit den jeweiligen Board-spezifischen Konfigurationen in einem Schritt.<br><br>Das Konzept der \"Unified Targets\" bedeutet, dass die gleiche Firmware .hex-Datei für alle Boards mit der gleichen MCU verwendet werden kann.<br><br>Betaflight 4.4 führt <strong>Cloud Build<\/strong> ein.<br><br>Mit <strong>Cloud Build<\/strong> müssen wir diejenigen Hardware-Optionen definieren, die in deinem Build (Modell) vorhanden sind.<br><br>Damit verschiedene Boards mit derselben Firmware funktionieren, wird eine spezifische Konfigurationsdatei neben der Firmware bereitgestellt, wenn ein Unified Target geflasht wird.<br><br>Mit \"Local Build\" kann die Konfigurationsdatei eines Unified Targets geladen oder ein Board gewählt werden, bevor eine Firmware .hex-Datei geladen wird.<br><br>Falls Probleme mit der Firmware auftreten, trete bitte dem Discord-Kanal bei oder öffne ein <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel=\"noopener noreferrer\">Ticket<\/a>."
-    },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "Wähle die Firmware-Version für deinen Flightcontroller."
     },
@@ -3542,18 +3495,6 @@
     "firmwareFlasherVerifyBoard": {
         "message": "<h3>Firmware stimmt nicht überein<\/h3><br \/>Das verbundene Board ist <strong>{{verified_board}}<\/strong> während Du aber <strong>{{selected_board}}<\/strong>ausgewählt hast.<br \/><br \/>Möchtest Du fortfahren?",
         "description": "Make a quick connection to read firmware target and never flash a wrong target again"
-    },
-    "firmwareFlasherBoardVerificationSuccess": {
-        "message": "Konfigurator hat <span class=\"message-positive\">erfolgreich<\/span> das Board erkannt und überprüft: <strong>{{boardName}}<\/strong>",
-        "description": "Board verification has succeeded."
-    },
-    "firmwareFlasherBoardVerficationTargetNotAvailable": {
-        "message": "Der Konfigurator hat das Board erkannt: <strong>{{boardName}}<\/strong> aber es wurde kein offizielles Betaflight-Target(Ziel-Hardware) l gefunden",
-        "description": "Board verification has succeeded, but the target is not available as offical Betaflight target."
-    },
-    "firmwareFlasherBoardVerificationFail": {
-        "message": "<span class=\"message-negative\">Fehler<\/span> Der Fc konnte nicht verifiziert werden. Versuche die Usb-Verbindung neu aufzubauen und den Vorgang wiederholen. Achte darauf das die Hardware spezifischen Defaults geladen werden",
-        "description": "Sometimes MSP values cannot be read from firmware correctly"
     },
     "firmwareFlasherButtonAbort": {
         "message": "Abbruch"
@@ -6295,10 +6236,6 @@
         "message": "Frequenz direkt eingeben",
         "description": "Text of one of the fields of the VTX tab"
     },
-    "vtxFrequencyChannelHelp": {
-        "message": "Wenn du das aktivierst, wird der Konfigurator dir eine Frequenz anstelle des üblichen Bands\/Kanals auswählen. Damit dies funktioniert, muss der VTX diese Funktion unterstützen.",
-        "description": "Help text for the frequency or channel select field of the VTX tab"
-    },
     "vtxSelectedMode": {
         "message": "Ausgewählter Modus",
         "description": "Title for the actual mode header of the VTX"
@@ -6862,9 +6799,6 @@
     "cordovaIncompatibleWebview": {
         "message": "Inkompatible Webansicht"
     },
-    "cordovaWebviewTroubleshootingMsg": {
-        "message": "Sie müssen die Webansicht Ihres Geräts aktualisieren, um den Konfigurator verwenden zu können."
-    },
     "cordovaWebviewTroubleshootingMsg2": {
         "message": "Das untenstehende Tool soll helfen, eine neue Webansicht zu installieren oder eine bereits installierte Webansicht zu aktualisieren."
     },
@@ -6909,9 +6843,6 @@
     },
     "cordovaExitAppTitle": {
         "message": "Bestätigung"
-    },
-    "cordovaExitAppMessage": {
-        "message": "Möchtest du den Konfigurator wirklich schließen?"
     },
     "dropDownSelectAll": {
         "message": "Auswählen\/alle abwählen",

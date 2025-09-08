@@ -122,7 +122,7 @@
         "message": "Envia"
     },
     "autoConnectEnabled": {
-        "message": "Auto-Connectar: Habilitat - El configurador provarà de connectar-se automàticament quan el nou port sigui detectat"
+        "message": "Auto-Connectar: Habilitat - L'App provarà de connectar-se automàticament quan el nou port sigui detectat"
     },
     "autoConnectDisabled": {
         "message": "Auto-Connectar: Deshabilitat - L'usuari ha de seleccionar el port sèrie correcte i clicar el botó \"Connectar\""
@@ -252,10 +252,10 @@
         "description": "Text of the image in the top sensors icons. Please keep it short."
     },
     "checkForConfiguratorUnstableVersions": {
-        "message": "Mostra la notificació de versions inestables del configurador"
+        "message": "Mostra la notificació de versions inestables de l'App"
     },
     "configuratorUpdateNotice": {
-        "message": "Esteu utilitzant una versió obsoleta del <b>Configurador Betaflight<\/b>.<br>$t(configuratorUpdateHelp.message)"
+        "message": "Esteu utilitzant una versió obsoleta del <b>App Betaflight<\/b>.<br>$t(configuratorUpdateHelp.message)"
     },
     "configuratorUpdateHelp": {
         "message": "Quan Internet está disponible la app pot preguntar sobre actualitzacions disponibles."
@@ -371,6 +371,9 @@
     "fileSystemPickerFiles": {
         "message": "{{typeof}} arxius",
         "description": "Text for the file picker dialog, showing the type of files selected. The parameter can be HEX, TXT, etc."
+    },
+    "fileSystemPickerFirmwareFiles": {
+        "message": "Arxius de programari"
     },
     "serialErrorFrameError": {
         "message": "Error de connexió de port sèrie: trames dolentes"
@@ -496,13 +499,13 @@
         "message": "No s'ha rebut cap configuració en <span class=\"message-negative\">10 segons<\/span>, communicació <span class=\"message-negative\">fallida<\/span>"
     },
     "firmwareVersionNotSupported": {
-        "message": "Aquest firmware <span class=\"message-negative\">no està suportat<\/span>. Siusplau, actualitza al firmware que suporti la versió api <strong>$1<\/strong> o millor. Utilitza el CLI per fer una còpia de seguretat abans de flashejar. La còpia i restauració al CLI està explicada a la documentació.<br \/>També pots fer servir una versió antiga del configurador si no estàs llest per actualitzar."
+        "message": "Aquest firmware <span class=\"message-negative\">no està suportat<\/span>. Siusplau, actualitza al firmware que suporti la versió API <strong>$1<\/strong> o millor. Utilitza el CLI per fer una còpia de seguretat abans de flashejar. La còpia i restauració al CLI està explicada a la documentació.<br \/>També pots fer servir una versió antiga de l'App si no estàs llest per actualitzar."
     },
     "firmwareTypeNotSupported": {
         "message": "El firmware NO - Betaflight <span class=\"message-negative\">no està suportat<\/span>, excepte pel mode CLI."
     },
     "firmwareUpgradeRequired": {
-        "message": "El firmware d'aquest dispositiu necessita ser actualitzat a una versió superior. Utilitza el CLI per fer una còpia de seguretat abans de flashejar. El procediment està explicat a la documentació.<br \/>D'altra banda pots descarregar i fer servir una versió antiga del configurador si no estàs preparat per actualitzar."
+        "message": "El firmware d'aquest dispositiu necessita ser actualitzat a una versió superior. Utilitza el CLI per fer una còpia de seguretat abans de flashejar. El procediment està explicat a la documentació.<br \/>D'altra banda pots descarregar i fer servir una versió antiga del App si no estàs preparat per actualitzar."
     },
     "resetToCustomDefaultsDialog": {
         "message": "Hi ha disponibles valors per defecte personalitzats per a aquesta controladora. Normalment, la controladora no funcionarà correctament tret que s'apliquin els valors per defecte personalitzats.<br \/> Voleu aplicar els valors per defecte personalitzats per aquesta controladora?"
@@ -517,7 +520,7 @@
         "message": "<span class=\"message-negative\"><strong>Cal que solucioneu aquests problemes abans d’intentar volar el vostre quad<\/span><\/strong>."
     },
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
-        "message": "<span class=\"message-negative\"><strong>La versió de configurador feta servir ($3) no suporta aquest programari $4<\/strong><\/span>.<br>$t(configuratorUpdateHelp.message)"
+        "message": "<span class=\"message-negative\"><strong>La versió de App usat ($3) no suporta aquest programari $4<\/strong><\/span>.<br>$t(configuratorUpdateHelp.message)"
     },
     "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
         "message": "<strong>No hi ha cap protocol de sortida del motor seleccionat<\/strong>.<br>Si us plau, seleccioneu un protocol de sortida del motor adequat per als ESC's \"$t(configurationEscFeatures.message)\" a la pestanya \"$t(tabMotorTesting.message)\".<br>$t(escProtocolDisabledMessage.message)"
@@ -530,8 +533,8 @@
         "description": "Message that appears in the GUI log panel indicating operating system"
     },
     "infoVersionConfigurator": {
-        "message": "Configurador: <strong>{{configuratorVersion}}<\/strong>",
-        "description": "Message that appears in the GUI log panel indicating Configurator version"
+        "message": "Versió del App: <strong>{{configuratorVersion}}<\/strong>",
+        "description": "Message that appears in the GUI log panel indicating application version"
     },
     "buildServerSuccess": {
         "message": "Èxit: $1"
@@ -618,7 +621,7 @@
         "message": "Programari"
     },
     "versionLabelConfigurator": {
-        "message": "Configurador"
+        "message": "Versió de l'aplicació"
     },
     "notifications_app_just_updated_to_version": {
         "message": "S'ha actualitzat la versió a: $1"
@@ -677,7 +680,7 @@
         "message": "EEPROM <span class=\"message-positive\">desada<\/span>"
     },
     "defaultWelcomeIntro": {
-        "message": "Benvingut a <strong>Betaflight - Configurator<\/strong>, una aplicació dissenyada per a simplificar l'actualització, configuració i posada a punt de la teva controladora de vol."
+        "message": "Benvingut a <strong>App Betaflight<\/strong>, una aplicació dissenyada per a simplificar l'actualització, configuració i posada a punt de la teva controladora de vol."
     },
     "defaultWelcomeHead": {
         "message": "Maquinari"
@@ -689,7 +692,7 @@
         "message": "Contribuir"
     },
     "defaultContributingText": {
-        "message": "Si voleu ajudar a millorar encara més Betaflight, podeu ajudar-nos de moltes maneres, incloent:<br \/><ul><li>utilitzar els vostres coneixements sobre Betaflight per crear o actualitzar contingut a <a href=\"https:\/\/betaflight.com\/docs\/wiki\" target=\"_blank\" rel=\"noopener noreferrer\"> el nostre Wiki<\/a>, o responent a les preguntes d'altres usuaris als fòrums en línia;<\/li><li><a href=\"https:\/\/betaflight.com\/docs\/development\" target=\"_blank\" rel=\"noopener noreferrer\"> codi que contribueix<\/a> al firmware i Configurator - novetats, solucions, millores;<\/li><li>proves <a href=\"https:\/\/github.com\/Betaflight\/betaflight\/pulls\" target=\"_blank\" rel=\"noopener noreferrer\"> noves funcions i solucions<\/a> i proporciona comentaris;<\/li><li>ajudant a altres usuaris a resoldre els problemes que exposen a <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_ blank\" rel=\"noopener noreferrer\"> el nostre tracker de asumptes<\/a>, i participant en discussions sobre peticions de funcions;<\/li><li><a href=\"https:\/\/github.com\/betaflight\/betaflight\/tree\/master\/README.md#Translators\" target=\"_ blank\" rel=\"noopener noreferrer\"> traduïnt<\/a> el Configurador de Betaflight a un nou idioma o ajudant a mantenir les traduccions existents.<\/li><\/ul>"
+        "message": "Si voleu ajudar a millorar encara més Betaflight, podeu col·laborar de moltes maneres, com ara:<br \/><ul><li>utilitzant els vostres coneixements de Betaflight per crear o actualitzar contingut a la <a href=\"https:\/\/betaflight.com\/docs\/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">nostra Wiki<\/a> o responent preguntes d'altres usuaris en fòrums en línia;<\/li><li><a href=\"https:\/\/betaflight.com\/docs\/development\" target=\"_blank\" rel=\"noopener noreferrer\">contribuint amb codi<\/a> al firmware i a l'aplicació: noves funcions, correccions, millores;<\/li><li>provant <a href=\"https:\/\/github.com\/Betaflight\/betaflight\/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">noves funcions i correccions<\/a> i proporcionant comentaris;<\/li><li>ajudant altres usuaris a resoldre els problemes que informen a <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel=\"noopener noreferrer\">el nostre seguiment d'incidències<\/a> i participar en debats sobre sol·licituds de funcions;<\/li><li><a href=\"https:\/\/github.com\/betaflight\/betaflight\/tree\/master\/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">traduir<\/a> l'aplicació Betaflight a un nou idioma o ajudar a mantenir les traduccions existents.<\/li><\/ul>"
     },
     "defaultFacebookText": {
         "message": "També tenim un <a href=\"https:\/\/www.facebook.com\/groups\/betaflightgroup\/\" target=\"_blank\" rel=\"noopener noreferrer\">Grup de Facebook<\/a>. <br \/>Uneix-te a nosaltres per obtenir un lloc on parlar de Betaflight, fer preguntes de configuració o simplement passar una estona amb altres pilots."
@@ -698,7 +701,7 @@
         "message": "Betaflight <a href=\"https:\/\/discord.betaflight.com\/invite\" target=\"_blank\" rel=\"noopener noreferrer\">Servidor de Discord<\/a>.<br \/>Comparteix la teva experiència de vol, parla sobre Betaflight, ajudar a altres persones o obtenir ajuda per a tu mateix de la comunitat."
     },
     "statisticsDisclaimer": {
-        "message": "Betaflight Configurator recopila estadístiques d'ús anònimes. Per exemple, aquestes dades inclouen (però no es limiten a) el nombre de llançaments, la regió geogràfica dels usuaris, els tipus de controladors de vol, les versions del microprogramari, l'ús d'elements i pestanyes de la IU, etc. El resum d'aquestes dades es comparteix <a href=\"https:\/\/datastudio.google.com\/u\/0\/reporting\/1pK1PFw0eWmsgl2npvuzwAqscVzlhJvuF\" target=\"_blank\" rel=\"noopener noreferrer\">aquí<\/a>. La recollida es fa per entendre millor com s'utilitza Betaflight Configurator, per entendre les tendències de la comunitat i per a possibles millores de la interfície d'usuari. Els usuaris poden desactivar la recollida de dades a la pestanya Opcions."
+        "message": "El App Betaflight recopila estadístiques d'ús anònimes. Per exemple, aquestes dades inclouen (però no es limiten a) el nombre de llançaments, la regió geogràfica dels usuaris, els tipus de controladors de vol, les versions del microprogramari, l'ús d'elements i pestanyes de la IU, etc. El resum d'aquestes dades es comparteix <a href=\"https:\/\/datastudio.google.com\/u\/0\/reporting\/1pK1PFw0eWmsgl2npvuzwAqscVzlhJvuF\" target=\"_blank\" rel=\"noopener noreferrer\">aquí<\/a>. La recollida es fa per entendre millor com s'utilitza el App Betaflight, per entendre les tendències de la comunitat i per a possibles millores de la interfície d'usuari. Els usuaris poden desactivar la recollida de dades a la pestanya Opcions."
     },
     "defaultButtonFirmwareFlasher": {
         "message": "Flashejador de Firmware"
@@ -707,7 +710,7 @@
         "message": "Codi Lliure \/ Avís de Donació"
     },
     "defaultDonateText": {
-        "message": "<p><strong>Betaflight<\/strong> és un programari de control de vols que és <strong>de codi obert<\/strong> i està disponible de forma gratuïta <strong>sense garantia<\/strong> per a tots els usuaris.<\/p><p>Si heu pensat que Betaflight o Betaflight Configurator són útils, considereu <strong> donar suport<\/strong> al seu desenvolupament donant.<\/p>"
+        "message": "<p><strong>Betaflight<\/strong> és un programari de control de vols que és <strong>de codi obert<\/strong> i està disponible de forma gratuïta <strong>sense garantia<\/strong> per a tots els usuaris.<\/p><p>Si heu pensat que Betaflight o App Betaflight són útils, considereu <strong> donar suport<\/strong> al seu desenvolupament donant.<\/p>"
     },
     "defaultDonateBottom": {
         "message": "<p>Si voleu contribuir econòmicament de forma continuada, haureu de plantejar-vos ser un mecenes per a nosaltres en $t(patreonLink.message).<\/p>"
@@ -1019,7 +1022,7 @@
         "description": "Message that pops up to describe the BST arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipMSP": {
-        "message": "La connexió MSP està activa, probablement amb aquest configurador Betaflight",
+        "message": "La connexió MSP està activa, probablement amb aquesta App Betaflight",
         "description": "Message that pops up to describe the MSP arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipPARALYZE": {
@@ -3312,6 +3315,9 @@
     "cliEnter": {
         "message": "Mode CLI detectat"
     },
+    "cliDevEnter": {
+        "message": "S'ha detectat el mode de desenvolupador només per a la CLI"
+    },
     "cliReboot": {
         "message": "Reinici CLI detectat"
     },
@@ -3349,7 +3355,7 @@
         "message": "Escriu l'ordre aquí"
     },
     "loggingNote": {
-        "message": "Les dades es registraran en aquesta pestanya <span class=\"message-negative\">només<\/span>, deixant la pestanya <span class=\"message-negative\">cancel·lar<\/span> el registre i l'aplicació tornarà a la normalitat <strong>\"configurador\"<\/strong>. <br \/> Podeu seleccionar el període d'actualització global, les dades seran escrites al fitxer de registre cada <strong>1<\/strong> segon per motius de rendiment."
+        "message": "Les dades es registraran en aquesta pestanya <span class=\"message-negative\">només<\/span>, deixant la pestanya <span class=\"message-negative\">cancel·lar<\/span> el registre i l'aplicació tornarà a la normalitat. <br \/> Podeu seleccionar el període d'actualització global, les dades seran escrites al fitxer de registre cada <strong>1<\/strong> segon per motius de rendiment."
     },
     "loggingSamplesSaved": {
         "message": "Mostres desades:"
@@ -3599,7 +3605,7 @@
         "message": "Selecciona la teva placa per veure les versions de programari online disponibles - Selecciona el programari correcte per a la teva placa."
     },
     "firmwareFlasherOnlineSelectBoardHint": {
-        "message": "El configurador de Betaflight admet la carga de programari nificat amb les configuracions específiques de la placa respectiva en un sol pas.<br><br>El concepte d'objectius unificats significa que es pot utilitzar el mateix fitxer .hex de microprogramari per a totes les plaques que utilitzen la mateixa MCU.<br> <br>Betaflight 4.4 presenta <strong>Cloud Build<\/strong><br><br>Amb <strong>Cloud Build<\/strong> hem de definir les opcions de maquinari presents a la vostra compilació.<br><br>Per fer les diferents plaques funcionen amb el mateix microprogramari, un fitxer de configuració específic es desplega al costat del microprogramari quan es mostra un Unified Target.<br><br>Amb Local build podeu carregar un fitxer de configuració de destinació unificat o triar un tauler abans de carregar un microprogramari. .hex.<br><br>Si trobeu problemes amb el microprogramari, considereu unir-vos a Discord o obrir un <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel =\"noopener noreferrer\">problema<\/a>."
+        "message": "L' App de Betaflight admet la carga de programari nificat amb les configuracions específiques de la placa respectiva en un sol pas.<br><br>El concepte d'objectius unificats significa que es pot utilitzar el mateix fitxer .hex de microprogramari per a totes les plaques que utilitzen la mateixa MCU.<br><br>Betaflight 4.4 presenta <strong>Cloud Build<\/strong><br><br>Amb <strong>Cloud Build<\/strong> hem de definir les opcions de maquinari presents a la vostra compilació.<br><br>Per fer les diferents plaques funcionen amb el mateix microprogramari, un fitxer de configuració específic es desplega al costat del microprogramari quan es mostra un Unified Target.<br><br>Amb Local build podeu carregar un fitxer de configuració de destinació unificat o triar un tauler abans de carregar un microprogramari. .hex.<br><br>Si trobeu problemes amb el microprogramari, considereu unir-vos a Discord o obrir un <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel =\"noopener noreferrer\">problema<\/a>."
     },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "Selecciona la versió per la teva controladora."
@@ -3727,8 +3733,23 @@
     "firmwareFlasherFirmwareOnlineLoaded": {
         "message": "Firmware en línia carregat: {{filename}} ({{bytes}} bytes)"
     },
+    "firmwareFlasherTooltipSaveFirmware": {
+        "message": "Guardar programari"
+    },
+    "firmwareFlasherInvalidFileFormat": {
+        "message": "Format de fitxer invàlid"
+    },
+    "firmwareFlasherUf2Corrupted": {
+        "message": "L'arxiu UF2 sembla corrupte"
+    },
     "firmwareFlasherHexCorrupted": {
         "message": "L'arxiu HEX sembla corrupte"
+    },
+    "firmwareFlasherUF2SaveSuccess": {
+        "message": "Arxiu UF2 guardat (Flaix) amb èxit"
+    },
+    "firmwareFlasherUF2SaveFailed": {
+        "message": "Error en guardar (Flaix) UF2"
     },
     "firmwareFlasherConfigCorrupted": {
         "message": "Sembla que el fitxer de configuració està malmès, s'accepta ASCII (caràcters 0-255)",
@@ -3774,15 +3795,15 @@
         "description": "Make a quick connection to read firmware target and never flash a wrong target again"
     },
     "firmwareFlasherBoardVerificationSuccess": {
-        "message": "El configurador ha <span class=\"message-positive\">detectat<\/span> correctament i verificat la placa: <strong>{{boardName}}<\/strong>",
+        "message": "L' App ha <span class=\"message-positive\">detectat<\/span> correctament i verificat la placa: <strong>{{boardName}}<\/strong>",
         "description": "Board verification has succeeded."
     },
     "firmwareFlasherBoardVerficationTargetNotAvailable": {
-        "message": "El configurador ha detectat la controladora: <strong>{{boardName}}<\/strong> però no s'ha trobat cap versió oficial de Betaflight",
+        "message": "L' App ha detectat la controladora: <strong>{{boardName}}<\/strong> però no s'ha trobat cap versió oficial de Betaflight",
         "description": "Board verification has succeeded, but the target is not available as offical Betaflight target."
     },
     "firmwareFlasherBoardVerificationFail": {
-        "message": "El configurador <span class=\"message-negative\">ha fallat<\/span>al verificar la placa, si això no funciona, proveu de canviar lentament de pestanya per tornar-ho a provar, feu una nova connexió usb o connecteu-vos primer si és possible que hàgiu oblidat aplicar els ajustos personalitzats per defecte",
+        "message": "La App <span class=\"message-negative\">ha fallat<\/span>al verificar la placa, si això no funciona, proveu de canviar lentament de pestanya per tornar-ho a provar, feu una nova connexió usb o connecteu-vos primer si és possible que hàgiu oblidat aplicar els ajustos personalitzats per defecte.",
         "description": "Sometimes MSP values cannot be read from firmware correctly"
     },
     "firmwareFlasherButtonAbort": {
@@ -6678,7 +6699,7 @@
         "description": "Text of one of the fields of the VTX tab"
     },
     "vtxFrequencyChannelHelp": {
-        "message": "Si activeu això, el configurador us permetrà seleccionar una freqüència al lloc de la banda o del canal habituals. Perquè funcioni, la vostra VTX ha de ser compatible amb aquesta funció.",
+        "message": "Si activeu això, l'App us permetrà seleccionar una freqüència al lloc de la banda o del canal habituals. Perquè funcioni, la vostra VTX ha de ser compatible amb aquesta funció.",
         "description": "Help text for the frequency or channel select field of the VTX tab"
     },
     "vtxSelectedMode": {
@@ -7252,7 +7273,7 @@
         "message": "Visor web incompatible"
     },
     "cordovaWebviewTroubleshootingMsg": {
-        "message": "Per utilitzar el configurador, heu d'actualitzar el visor web del dispositiu."
+        "message": "Per utilitzar l'App, heu d'actualitzar el visor web del dispositiu."
     },
     "cordovaWebviewTroubleshootingMsg2": {
         "message": "L’eina següent té la finalitat d’ajudar-vos a instal·lar un nou visor web o a actualitzar una visor web ja instal·lat."
@@ -7300,7 +7321,7 @@
         "message": "Confirmació"
     },
     "cordovaExitAppMessage": {
-        "message": "Esteu segur que voleu tancar el configurador?"
+        "message": "Esteu segur que voleu tancar l'App?"
     },
     "dropDownSelectAll": {
         "message": "[Seleccionar\/desseleccionar tot]",
@@ -7638,5 +7659,9 @@
     "osdDescElementLidar": {
         "message": "$t(osdTextElementLidar.message)",
         "description": "Don't translate!!!"
+    },
+    "osdSetupPreviewCheckRulers": {
+        "message": "Regles",
+        "description": "Label for the checkbox to toggle OSD preview rulers around the preview"
     }
 }

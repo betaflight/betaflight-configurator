@@ -121,9 +121,6 @@
     "submit": {
         "message": "Отправить"
     },
-    "autoConnectEnabled": {
-        "message": "Подключаться автоматически: Включено - При обнаружении нового порта конфигуратор будет подключаться к нему автоматически"
-    },
     "autoConnectDisabled": {
         "message": "Подключаться автоматически: Отключено - Пользователю необходимо выбрать нужный последовательный порт и нажать кнопку \"Подключиться\""
     },
@@ -234,12 +231,6 @@
     "sensorStatusSonarShort": {
         "message": "Сонар",
         "description": "Text of the image in the top sensors icons. Please keep it short."
-    },
-    "checkForConfiguratorUnstableVersions": {
-        "message": "Показывать уведомления о появлении нестабильных версий конфигуратора"
-    },
-    "configuratorUpdateNotice": {
-        "message": "Вы используете устаревшую версию <b>конфигуратора Betaflight<\/b>.<br>$t(configuratorUpdateHelp.message)"
     },
     "configuratorUpdateHelp": {
         "message": "При доступном интернете, приложение будет автоматически запрашивать доступные обновления."
@@ -479,14 +470,8 @@
     "noConfigurationReceived": {
         "message": "No configuration received within <span class=\"message-negative\">10 seconds<\/span>, communication <span class=\"message-negative\">failed<\/span>"
     },
-    "firmwareVersionNotSupported": {
-        "message": "Версия этой прошивки <span class=\"message-negative\">не поддерживается<\/span> данным конфигуратором. Пожалуйста, обновите прошивку, которая поддерживает версию конфигуратора <strong>$1<\/strong> или выше. Используйте командную строку, чтобы сделать резервную копию прошивки перед тем, как обновлять прошивку. Процедура создания\/восстановления резервной копии описана в документации.<br \/>Если вы не хотите обновлять прошивку, то используйте более старую версию конфигуратора."
-    },
     "firmwareTypeNotSupported": {
         "message": "Прошивка не Betaflight <span class=\"message-negative\">не поддерживается<\/span>, за исключением режима CLI."
-    },
-    "firmwareUpgradeRequired": {
-        "message": "Прошивка в этом устройстве нуждается в обновлении до новой версии. Используйте командную строку, чтобы сделать резервную копию перед обновлением прошивки. Процедура создания\/восстановления резервной копии описана в документации.<br \/>Если вы не хотите обновлять прошивку, то используйте более старую версию конфигуратора."
     },
     "resetToCustomDefaultsDialog": {
         "message": "Для этой платы есть особые параметры по умолчанию. Обычно, плата не будет работать должным образом, если не будут применены такие настройки.<br\/>Хотите применить пользовательские настройки по умолчанию для этой платы?"
@@ -500,9 +485,6 @@
     "reportProblemsDialogFooter": {
         "message": "<span class=\"message-negative\"><strong>Необходимо устранить эти проблемы, прежде чем взлетать<\/span><\/strong>."
     },
-    "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
-        "message": "<span class=\"message-negative\"><strong>Используемая версия конфигурации ($3) не поддерживает прошивку $4<\/strong><\/span>.<br>$t(configuratorUpdateHelp.message)"
-    },
     "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
         "message": "<strong>не выбран протокол управления двигателями<\/strong>.<br>Пожалуйста, выберите протокол управления двигателями, соответствующий вашему ESC в '$t(configurationEscFeatures.message)' на вкладке '$t(tabMotorTesting.message)'.<br>$t(escProtocolDisabledMessage.message)"
     },
@@ -512,10 +494,6 @@
     "infoVersionOs": {
         "message": "ОС: <strong>{{operatingSystem}}<\/strong>",
         "description": "Message that appears in the GUI log panel indicating operating system"
-    },
-    "infoVersionConfigurator": {
-        "message": "Конфигуратор: <strong>{{configuratorVersion}}<\/strong>",
-        "description": "Message that appears in the GUI log panel indicating Configurator version"
     },
     "buildServerSuccess": {
         "message": "Готово: $1"
@@ -601,9 +579,6 @@
     "versionLabelFirmware": {
         "message": "Прошивка"
     },
-    "versionLabelConfigurator": {
-        "message": "Конфигуратор"
-    },
     "notifications_app_just_updated_to_version": {
         "message": "Приложение обновлено до версии: $1"
     },
@@ -656,9 +631,6 @@
     "eeprom_saved_ok": {
         "message": "EEPROM <span class=\"message-positive\">сохранён<\/span>"
     },
-    "defaultWelcomeIntro": {
-        "message": "Вас приветствует <strong>Betaflight конфигуратор<\/strong> - утилита разработанная для лёгкого обновления, конфигурации и настройки вашего полётного контроллера."
-    },
     "defaultWelcomeHead": {
         "message": "Аппаратная часть"
     },
@@ -668,26 +640,17 @@
     "defaultContributingHead": {
         "message": "Содействие"
     },
-    "defaultContributingText": {
-        "message": "Если вы хотите помочь улучшить Betaflight - вот несколько способов это сделать:<br \/><ul><li>используйте свои знания для создания или обновления содержимого <a href=\"https:\/\/betaflight.com\/docs\/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki<\/a>, или для помощи другим пользователям форумов;<\/li><li><a href=\"https:\/\/betaflight.com\/docs\/development\" target=\"_blank\" rel=\"noopener noreferrer\">пишите код<\/a> для самой прошивки и Конфигуратора - новые возможности, исправления, улучшения;<\/li><li>тестируйте <a href=\"https:\/\/github.com\/Betaflight\/betaflight\/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">новые функции и исправления<\/a> и оставляйте обратную связь;<\/li><li>помогайте другим пользователям решать проблемы о которых они сообщают в нашем <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel=\"noopener noreferrer\">трекере проблем<\/a>, и участвуйте в обсуждении новых запросов;<\/li><li><a href=\"https:\/\/github.com\/betaflight\/betaflight\/tree\/master\/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">переводите<\/a> Betaflight Конфигуратор на другие языки или помогайте обновлять существующие переводы.<\/li><\/ul>"
-    },
     "defaultFacebookText": {
         "message": "Также у нас есть группа на Facebook<a href=\"https:\/\/www.facebook.com\/groups\/betaflightgroup\/\" target=\"_blank\" rel=\"noopener noreferrer\"><\/a>.<br \/>Присоединяйтесь к нам, чтобы поговорить о Betaflight, задать вопросы о конфигурации или просто пообщаться с другими пилотами."
     },
     "defaultDiscordText": {
         "message": "Betaflight <a href=\"https:\/\/discord.betaflight.com\/invite\" target=\"_blank\" rel=\"noopener noreferrer\">сервер Discord<\/a>.<br \/>Делись опытом полетов, обсуждай Betaflight, помогай другим людям и узнавай новое для себя."
     },
-    "statisticsDisclaimer": {
-        "message": "Betaflight Конфигуратор собирает анонимную статистику использования. Например, эти данные включают (но не ограничиваются) количество запусков, географический регион пользователей, типы полетов, версии прошивки, использование UI элементов и вкладок и т.д. Статистика по этим данным приведена <a href=\"https:\/\/datastudio.google.com\/u\/0\/reporting\/1pK1PFw0eWmsgl2npvuzwAqscVzlhJvuF\" target=\"_blank\" rel=\"noopener noreferrer\">здесь<\/a>. Сбор статистики производится, чтобы лучше понять, как используется Betaflight Конфигуратор, понять тенденции сообщества и возможные улучшения интерфейса. Пользователи могут отказаться от сбора данных во вкладке Параметры."
-    },
     "defaultButtonFirmwareFlasher": {
         "message": "Программатор"
     },
     "defaultDonateHead": {
         "message": "Открытый код \/ Пожертвование"
-    },
-    "defaultDonateText": {
-        "message": "<p><strong>Betaflight<\/strong> является прошивкой для полётных контроллеров <strong>с открытым исходным кодом<\/strong> и доступна абсолютно бесплатно <strong>без каких либо гарантий<\/strong> для всех пользователей.<\/p><p>Если Betaflight или Betaflight конфигуратор оказались вам полезными, пожалуйста <strong>поддержите<\/strong> разработку пожертвованием.<\/p>"
     },
     "defaultDonateBottom": {
         "message": "<p>Если вы хотите осуществлять финансовую помощь на постоянной основе, вы можете стать нашим покровителем на $t(patreonLink.message).<\/p>"
@@ -997,10 +960,6 @@
     "initialSetupArmingDisableFlagsTooltipBST": {
         "message": "Black Sheep устройство телеметрии (TBS Core Pro например) дизарм и предварительно арминг",
         "description": "Message that pops up to describe the BST arming disable flag"
-    },
-    "initialSetupArmingDisableFlagsTooltipMSP": {
-        "message": "MSP соединение активно, возможно с этим Betaflight Configurator",
-        "description": "Message that pops up to describe the MSP arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipPARALYZE": {
         "message": "Парализный режим активирован",
@@ -3324,9 +3283,6 @@
     "cliCommand": {
         "message": "Введите команду здесь"
     },
-    "loggingNote": {
-        "message": "Информация будет логироваться <span class=\"message-negative\">только<\/span> в этой вкладке, покидание этой вкладки <span class=\"message-negative\">отменит<\/span> логирование и приложение вернется в нормальное <strong>\"конфигуратор\"<\/strong> состояние.<br \/> Вы вольны выбрать глобальный период обновления, информация будет записана в лог файл раз в <strong>1<\/strong> секунду по соображениям производительности."
-    },
     "loggingSamplesSaved": {
         "message": "Сэмплов сохранено:"
     },
@@ -3574,9 +3530,6 @@
     "firmwareFlasherOnlineSelectBoardDescription": {
         "message": "Выберите вашу плату или используйте автоопределение, чтобы увидеть доступные для скачивания версии прошивок - Выберите прошивку, подходящую для Вашего полётного контроллера."
     },
-    "firmwareFlasherOnlineSelectBoardHint": {
-        "message": "Betaflight Configurator поддерживает прошивку Unified Targets с соответствующими конфигурациями для конкретной платы в один шаг.<br><br>Концепция Unified Targets означает, что один и тот же файл прошивки .hex может быть использован для всех плат, использующих тот же микроконтроллер.<br><br> В Betaflight 4.4 представлена функция <strong>Cloud Build<\/strong><br><br>С <strong>Cloud Build<\/strong> нам необходимо определить опции оборудования, присутствующего на вашей сборке.<br><br>Чтобы заставить разные платы работать с одной и той же прошивкой, при прошивке Unified Target развертывается специфический файл конфигурации вместе с прошивкой.<br><br>С помощью локальной сборки вы можете загрузить унифицированный конфигурационный файл или выбрать плату перед загрузкой файла прошивки .hex.<br><br>Если у вас возникли проблемы при использовании прошивки, пожалуйста, подумайте о присоединении к Discord или откройте <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel=\"noopener noreferrer\">запрос<\/a>."
-    },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "Выберите версию прошивки для Вашей платы."
     },
@@ -3688,9 +3641,6 @@
     "firmwareFlasherRecoveryHead": {
         "message": "<strong>Потеря связи \/ Восстановление связи<\/strong>"
     },
-    "firmwareFlasherRecoveryText": {
-        "message": "Если возникла потеря связи с вашим устройством, то выполните следующие действия, чтобы восстановить связь:<ul><li>Отключите питание<\/li><li>Включите \"Без перезагрузки\", включите \"Полное стирание чипа\".<\/li><li>Замкните контакты \"BOOT\" или удерживайте кнопку BOOT нажатой.<\/li><li>Включите питание (светодиод НЕ будет мигать, если всё сделано правильно).<\/li><li>Установите STM32 драйверы и Zadig, если это необходимо (см. раздел <a href=\"https:\/\/github.com\/betaflight\/betaflight\/wiki\/Installing-Betaflight\"target=\"_blank\">USB Flashing<\/a> в инструкции Betaflight).<\/li><li>Закройте Конфигуратор, закройте все Chrome приложения и завершите все Chrome процессы, перезапустите Конфигуратор.<\/li><li>Отпустите кнопку \"BOOT\", если на вашем FC она есть.<\/li><li>Залейте нужную прошивку (укажите вручную битрейт, если он указан в инструкции вашего полётного контроллера).<\/li><li>Отключите питание<\/li><li> Снимите \"BOOT\" джампер.<\/li><li>Включите питание (светодиод должен мигать).<\/li><li>Пробуйте подключиться.<\/li><\/ul>"
-    },
     "firmwareFlasherButtonLeave": {
         "message": "Покинуть программатор"
     },
@@ -3748,18 +3698,6 @@
     "firmwareFlasherVerifyBoard": {
         "message": "<h3>Несоответствие прошивки<\/h3><br \/>Подключена плата <strong>{{verified_board}}<\/strong> но вы выбрали <strong>{{selected_board}}<\/strong>.<br \/><br \/> Уверены, что хотите продолжить прошивку?",
         "description": "Make a quick connection to read firmware target and never flash a wrong target again"
-    },
-    "firmwareFlasherBoardVerificationSuccess": {
-        "message": "Конфигуратор <span class=\"message-positive\">успешно<\/span> обнаружил и определил плату: <strong>{{boardName}}<\/strong>",
-        "description": "Board verification has succeeded."
-    },
-    "firmwareFlasherBoardVerficationTargetNotAvailable": {
-        "message": "Конфигуратор обнаружил плату: <strong>{{boardName}}<\/strong> но официальной целевой Betaflight прошивки не найдено",
-        "description": "Board verification has succeeded, but the target is not available as offical Betaflight target."
-    },
-    "firmwareFlasherBoardVerificationFail": {
-        "message": "Конфигуратору <span class=\"message-negative\">не удалось<\/span> проверить плату, если это не работает, попробуйте медленно переключиться на другую вкладку, чтобы повторить попытку, создать новое Usb-соединение или подключиться сначала, если вы могли забыть применить пользовательские настройки по умолчанию",
-        "description": "Sometimes MSP values cannot be read from firmware correctly"
     },
     "firmwareFlasherButtonAbort": {
         "message": "Отмена"
@@ -6653,10 +6591,6 @@
         "message": "Ввести частоту напрямую",
         "description": "Text of one of the fields of the VTX tab"
     },
-    "vtxFrequencyChannelHelp": {
-        "message": "Если это включено, Конфигуратор позволит вам выбирать частоту напрямую вместо комбинации сетка\/канал. Видеопередатчик должен поддерживать такую возможность.",
-        "description": "Help text for the frequency or channel select field of the VTX tab"
-    },
     "vtxSelectedMode": {
         "message": "Выбранный режим",
         "description": "Title for the actual mode header of the VTX"
@@ -7227,9 +7161,6 @@
     "cordovaIncompatibleWebview": {
         "message": "Несовместимая версия webview"
     },
-    "cordovaWebviewTroubleshootingMsg": {
-        "message": "Вы должны обновить webview вашего устройства, чтобы использовать конфигуратор."
-    },
     "cordovaWebviewTroubleshootingMsg2": {
         "message": "Приведенный ниже инструмент предназначен для того, чтобы помочь вам установить новый webview или обновить уже установленный."
     },
@@ -7274,9 +7205,6 @@
     },
     "cordovaExitAppTitle": {
         "message": "Подтверждение"
-    },
-    "cordovaExitAppMessage": {
-        "message": "Вы действительно хотите закрыть конфигуратор?"
     },
     "dropDownSelectAll": {
         "message": "Выбрать\/Снять все",

@@ -247,7 +247,7 @@
         "message": "Mostra notifiche per versioni beta del configuratore"
     },
     "configuratorUpdateNotice": {
-        "message": "Stai utilizzando una versione obsoleta del <b>Betaflight Configurator<\/b>.<br>$t(configuratorUpdateHelp.message)"
+        "message": "Stai utilizzando una versione obsoleta dell' <b>App Betaflight<\/b>.<br>$t(configuratorUpdateHelp.message)"
     },
     "configuratorUpdateHelp": {
         "message": "Quando internet è disponibile, l'app controlla automaticamente gli aggiornamenti disponibili."
@@ -363,6 +363,9 @@
     "fileSystemPickerFiles": {
         "message": "{{typeof}} files",
         "description": "Text for the file picker dialog, showing the type of files selected. The parameter can be HEX, TXT, etc."
+    },
+    "fileSystemPickerFirmwareFiles": {
+        "message": "Files del firmware"
     },
     "serialErrorFrameError": {
         "message": "Errore di connessione seriale: frame errato"
@@ -488,13 +491,13 @@
         "message": "Nessuna risposta ricevuta da <span class=\"message-negative\">10 secondi<\/span>, connessione <span class=\"message-negative\">fallita<\/span>"
     },
     "firmwareVersionNotSupported": {
-        "message": "Questa versione del firmware <span class=\"message-negative\">non è supportata<\/span>. Si prega di aggiornare con un firmware che supporti la versione <strong>api $1<\/strong> o superiore. Usa il CLI per effettuare un backup prima di flashare la scheda. Puoi trovare la procedura nella documentazione.<br \/>In alternativa scarica una versione precedente del configuratore."
+        "message": "Questa versione del firmware <span class=\"message-negative\">non è supportata<\/span>. Aggiorna il firmware che supporti la versione <strong>api $1<\/strong> o superiore. Usa il CLI per effettuare un backup prima di flashare la scheda. Puoi trovare la procedura nella documentazione.<br \/>In alternativa scarica una versione precedente dell'app se non sei pronto per aggiornare."
     },
     "firmwareTypeNotSupported": {
         "message": "Firmware diversi da Betaflight <span class=\"message-negative\">non sono supportati<\/span>, ad eccezione della modalità CLI."
     },
     "firmwareUpgradeRequired": {
-        "message": "La versione del firmware installato sul dispositivo necessita un aggiornamento. Usa il CLI per effettuare un backup prima dell'aggiornamento. La procedura è disponibile nella documentazione. <br\/>In alternativa puoi scaricare una versione precedente del configuratore."
+        "message": "Il firmware su questo dispositivo deve essere aggiornato a una versione più recente. Usare CLI per il backup prima di flashare. La procedura di backup\/ripristino con CLI è nella documentazione.<br \/>In alternativa, scarica e usa una vecchia versione dell'app se non sei pronto per l'aggiornamento."
     },
     "resetToCustomDefaultsDialog": {
         "message": "Ci sono impostazioni di fabbrica personalizzate disponibili per questa scheda. Di solito una scheda non funzionerà a dovere a meno che le impostazioni personalizzate non siano applicate.<br\/> Vuoi applicare le impostazioni personalizzate di questa scheda?"
@@ -509,7 +512,7 @@
         "message": "<span class=\"message-negative\"><strong>Risolvere questi problemi prima del volo dell'aeromobile<\/span><\/strong>."
     },
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
-        "message": "<span class=\"message-negative\"><strong>La versione del configuratore ($3) non supporta il firmware $4<\/strong><\/span>.<br>$t(configuratorUpdateHelp.message)"
+        "message": "<span class=\"message-negative\"><strong>La versione dell'app utilizzata ($3) non supporta il firmware $4<\/strong><\/span>.<br>$t(configuratorUpdateHelp.message)"
     },
     "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
         "message": "<strong>Non è stato selezionato alcun protocollo di output dei motori<\/strong>.<br>Si prega di selezionare un protocollo di output dei motori appropriato per i tuoi ESC in '$t(configurationEscFeatures.message)' nella scheda $t(tabMotorTesting.message).<br>$t(escProtocolDisabledMessage.message)"
@@ -522,8 +525,8 @@
         "description": "Message that appears in the GUI log panel indicating operating system"
     },
     "infoVersionConfigurator": {
-        "message": "Configuratore: <strong>{{configuratorVersion}}<\/strong>",
-        "description": "Message that appears in the GUI log panel indicating Configurator version"
+        "message": "Versione App: <strong>{{configuratorVersion}}<\/strong>",
+        "description": "Message that appears in the GUI log panel indicating application version"
     },
     "buildServerSuccess": {
         "message": "Successo: $1"
@@ -610,7 +613,7 @@
         "message": "Firmware"
     },
     "versionLabelConfigurator": {
-        "message": "Configuratore"
+        "message": "Versione App"
     },
     "notifications_app_just_updated_to_version": {
         "message": "Applicazione appena aggiornata alla versione: $1"
@@ -669,7 +672,7 @@
         "message": "EEPROM <span class=\"message-positive\">salvata<\/span>"
     },
     "defaultWelcomeIntro": {
-        "message": "Benvenuto in<strong> Betaflight - Configurator<\/strong>, utility disegnata per aggiornare, configurare e regolare il tuo controllore di volo in maniera semplice."
+        "message": "Benvenuti nella <strong>App Betaflight<\/strong>, un'utilità progettata per semplificare l'aggiornamento, la configurazione e la messa a punto del tuo controllore di volo."
     },
     "defaultWelcomeHead": {
         "message": "Hardware"
@@ -681,7 +684,7 @@
         "message": "Contribuisci"
     },
     "defaultContributingText": {
-        "message": "Per migliorare Betaflight puoi aiutare in diversi modi, tra cui:<br \/><ul><li>Utilizzare la tua conoscenza di Betaflight per creare o aggiornare contenuti sulla <a href=\"https:\/\/betaflight.com\/docs\/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">nostra Wiki<\/a>, o rispondere alle domande degli altri utenti nei forum online;<\/li><li><a href=\"https:\/\/betaflight.com\/docs\/development\" target=\"_blank\" rel=\"noopener noreferrer\">Contribuire al codice<\/a> del firmware e del Configuratore - nuove funzionalità, correzioni, miglioramenti;<\/li><li>Testare <a href=\"https:\/\/github.com\/Betaflight\/betaflight\/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">nuove funzioni e correzioni<\/a> e fornire feedback;<\/li><li>Aiutando altri utenti a risolvere i problemi segnalati nei <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel=\"noopener noreferrer\">nostri issue tracker<\/a>, e partecipare alle discussioni sulle richieste di funzioni;<\/li><li><a href=\"https:\/\/github.com\/betaflight\/betaflight\/tree\/master\/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">Traducendo<\/a> il Betaflight Configurator in una nuova lingua o aggiornando le traduzioni esistenti.<\/li><\/ul>"
+        "message": "Se vuoi contribuire a migliorare Betaflight si può aiutare in molti modi, includendo:<br \/><ul><li>utilizzando la tua conoscenza di Betaflight per creare o aggiornare contenuti su <a href=\"https:\/\/betaflight.com\/docs\/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">il nostro Wiki<\/a>, o rispondere alle domande degli altri utenti nei forum online;<\/li><li><a href=\"https:\/\/betaflight.com\/docs\/development\" target=\"_blank\" rel=\"noopener noreferrer\">contribuendo codice<\/a> al firmware e all'app - nuove funzionalità, correzioni, miglioramenti;<\/li><li>testando <a href=\"https:\/\/github.com\/Betaflight\/betaflight\/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">nuove funzionalità e correzioni<\/a> fornendo feedback;<\/li><li>aiutando altri utenti a risolvere i problemi che segnalano nel <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel=\"noopener noreferrer\">nostro issue tracker<\/a>, e partecipare alle discussioni sulle richieste di funzionalità;<\/li><li><a href=\"https:\/\/github.com\/betaflight\/betaflight\/tree\/master\/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">traducendo<\/a> Betaflight App in una nuova lingua, o contribuendo a mantenere le traduzioni esistenti.<\/li><\/ul>"
     },
     "defaultFacebookText": {
         "message": "Visita il <a href=\"https:\/\/www.facebook.com\/groups\/betaflightgroup\/\" target=\"_blank\" rel=\"noopener noreferrer\">gruppo Facebook<\/a>.<br \/> Unisciti a noi per discutere di Betaflight, per domande sulla configurazione, o semplicemente per discutere con altri piloti."
@@ -690,7 +693,7 @@
         "message": "<a href=\"https:\/\/discord.betaflight.com\/invite\" target=\"_blank\" rel=\"noopener noreferrer\">Server Discord<\/a> di Betaflight.<br \/>Condividi la tua esperienza di volo, parla di Betaflight, aiuta altre persone o ottieni aiuto dalla community."
     },
     "statisticsDisclaimer": {
-        "message": "Betaflight Configurator raccoglie statistiche anonime sull'utilizzo. Ad esempio, questi dati includono (ma non si limitano a) il numero di lanci, la regione geografica degli utenti, tipi di controllori di volo, versioni del firmware, utilizzo di elementi e schede dell'interfaccia utente, ecc. Il riassunto di questi dati è condiviso <a href=\"https:\/\/datastudio.google.com\/u\/0\/reporting\/1pK1PFw0eWmsgl2npvuzwAqscVzlhJvuF\" target=\"_blank\" rel=\"noopener noreferrer\">qui<\/a>. La raccolta viene fatta per capire meglio come viene utilizzato Betaflight Configurator, per comprendere le tendenze della comunità e per possibili miglioramenti dell'interfaccia utente. Gli utenti possono disabilitare la raccolta dati nella scheda Opzioni."
+        "message": "Betaflight App raccoglie statistiche anonime sull'utilizzo. Ad esempio, questi dati includono (ma non limitati a) il numero di lanci, la regione geografica degli utenti, tipi di controllori di volo, versioni del firmware, utilizzo di elementi e schede dell'interfaccia utente, ecc. Il riassunto di questi dati è condiviso <a href=\"https:\/\/datastudio.google.com\/u\/0\/reporting\/1pK1PFw0eWmsgl2npvuzwAqscVzlhJvuF\" target=\"_blank\" rel=\"noopener noreferrer\">qui<\/a>. La raccolta viene fatta per capire meglio come viene utilizzata Betaflight App, per comprendere le tendenze della comunità e per possibili miglioramenti dell'UI. Gli utenti possono scegliere di non partecipare alla raccolta dei dati nella scheda Opzioni."
     },
     "defaultButtonFirmwareFlasher": {
         "message": "Firmware Flasher"
@@ -699,7 +702,7 @@
         "message": "Open Source \/ Donazione"
     },
     "defaultDonateText": {
-        "message": "<p><strong>Betaflight<\/strong> è un software <strong>open source<\/strong> per controllori di volo ed è disponibile gratuitamente <strong>senza garanzie<\/strong> a tutti gli utenti.<\/p><p>Se hai trovato Betaflight o Betaflight configurator utili, ti invitiamo a valutare di <strong>supportare<\/strong> lo sviluppo con una donazione.<\/p>"
+        "message": "<p><strong>Betaflight<\/strong> è un software <strong>open source<\/strong> per controllori di volo ed è disponibile gratuitamente <strong>senza garanzie<\/strong> a tutti gli utenti.<\/p><p>Se hai trovato Betaflight o Betaflight App utili, ti invitiamo a valutare di <strong>supportare<\/strong> lo sviluppo con una donazione.<\/p>"
     },
     "defaultDonateBottom": {
         "message": "<p>Se vuoi contribuire finanziariamente su base continua, dovresti considerare di diventare un benefattore per noi su $t(patreonLink.message).<\/p>"
@@ -1011,7 +1014,7 @@
         "description": "Message that pops up to describe the BST arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipMSP": {
-        "message": "Connessione MSP attiva, probabilmente con questo Betaflight Configurator",
+        "message": "Connessione MSP attiva, probabilmente con l'app Betaflight",
         "description": "Message that pops up to describe the MSP arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipPARALYZE": {
@@ -3344,7 +3347,7 @@
         "message": "Inserisci il comando"
     },
     "loggingNote": {
-        "message": "I dati saranno registrati <span class=\"message-negative\">soltanto<\/span> in questa schermata, spostandoti da questa la registrazione sarà <span class=\"message-negative\">annullata<\/span> ed il programma tornerà nel suo stato normale di <strong>\"configuratore\"<\/strong><br \/>. Sei libero di selezionare la frequenza di aggiornamento globale, i dati saranno scritti nel file di registro <strong>ogni secondo<\/strong> per questioni di prestazioni."
+        "message": "I dati saranno registrati <span class=\"message-negative\">solo<\/span> in questa scheda. Lasciando la scheda <span class=\"message-negative\">annullerà la registrazione<\/span> e l'applicazione tornerà al suo stato normale.<br \/> È possibile selezionare il periodo di aggiornamento globale; i dati saranno scritti nel file di log ogni <strong>1<\/strong> secondo per motivi di prestazioni."
     },
     "loggingSamplesSaved": {
         "message": "Esempi salvati:"
@@ -3594,7 +3597,7 @@
         "message": "Seleziona o rileva automaticamente la scheda per vedere i relativi firmware disponibili online - Seleziona il firmware corretto per la tua scheda."
     },
     "firmwareFlasherOnlineSelectBoardHint": {
-        "message": "Il configuratore Betaflight supporta il flash di obiettivi unificati (Unified Targets) con le rispettive configurazioni specifiche della scheda in una fase.<br><br>Il concetto di Unified Targets significa che lo stesso firmware . hex file può essere utilizzato per tutte le schede che utilizzano la stessa MCU.<br><br>Betaflight 4.4 introduce <strong>Cloud Build<\/strong><br><br>Con <strong>Cloud Build<\/strong> dobbiamo definire le opzioni hardware da includere nella build.<br><br>Per far funzionare schede diverse con lo stesso firmware, un file di configurazione specifico viene distribuito insieme al firmware quando viene flashato un obiettivo unificato.<br><br>Con le Local build puoi caricare un file di configurazione unificato o scegliere una scheda prima di caricare un file .hex del firmware.<br><br>Se riscontri problemi utilizzando il firmware, considera di partecipare su Discord o aprire una <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel=\"noopener noreferrer\">segnalazione<\/a>."
+        "message": "Betaflight App supporta il flashing di Unified Targets con le rispettive configurazioni specifiche della scheda in un solo passaggio.<br><br>Il concetto di Unified Targets significa che lo stesso file .hex del firmware può essere utilizzato per tutte le schede che usano lo stesso MCU.<br><br>Betaflight 4.4 introduce <strong>Cloud Build<\/strong><br><br>Con <strong>Cloud Build<\/strong> abbiamo bisogno di definire le opzioni hardware presenti sulla tua build.<br><br>Per far funzionare diverse schede con lo stesso firmware, un file di configurazione specifico viene distribuito accanto al firmware quando viene flashato un obiettivo unificato.<br><br>Con la build locale è possibile caricare un file di configurazione di destinazione unificato o scegliere una scheda prima di caricare un file .hex del firmware.<br><br>Se riscontri problemi utilizzando il firmware, considera di entrare in Discord o aprire <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel=\"noopener noreferrer\">un richiesta<\/a>."
     },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "Seleziona la versione del firmware per la tua scheda."
@@ -3708,7 +3711,7 @@
         "message": "<strong> Recupero \/ comunicazione persa <\/strong>"
     },
     "firmwareFlasherRecoveryText": {
-        "message": "Se hai perso la comunicazione con la tua scheda segui questi passaggi per ripristinare la comunicazione: <ul><li>Spegni<\/li><li>Abilita 'Nessuna sequenza di riavvio', attiva la 'Cancellazione completa del chip'.<\/li><li>Collega i pin BOOT o tieni premuto il pulsante BOOT.<\/li><li>Accendere (il LED di attività NON lampeggerà se eseguito correttamente).<\/li><li>Installa tutti i driver STM32 e Zadig se necessario (vedi la sezione <a href=\"https:\/\/github.com\/betaflight\/betaflight\/wiki\/Installing-Betaflight\"target=\"_blank\" rel=\"noopener noreferrer\">USB Flashing<\/a> del manuale di Betaflight).<\/li><li>Chiudi e riavvia il configuratore.<\/li><li>Rilascia il pulsante BOOT se il tuo FC ne ha uno.<\/li><li>Flasha con il firmware corretto (utilizzando il baud rate manuale se specificato nel manuale del tuo controllore di volo).<\/li><li>Spegni.<\/li><li>Rimuovi il collegamento dei pin BOOT.<\/li><li>Accendi (il LED di attività dovrebbe lampeggiare).<\/li><li>Connetti normalmente.<\/li><\/ul>"
+        "message": "Se hai perso la comunicazione con la tua scheda segui questi passaggi per ripristinare la comunicazione: <ul><li>Spegnimento<\/li><li>Abilita 'Nessuna sequenza di riavvio', abilita 'Cancellazione completa del chip'.<\/li><li>Ponticellare i pin del BOOT o tenere premuto il pulsante BOOT.<\/li><li>Accensione (il LED NON lampeggia se non eseguito correttamente).<\/li><li>Installare tutti i driver STM32 e Zadig se necessario (vedere la sezione <a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">USB Flashing<\/a> del manuale di Betaflight).<\/li><li>Chiudere l'App, quindi riavviarla.<\/li><li>Rilascia il pulsante BOOT se il tuo FC ne ha uno.<\/li><li>Flash con firmware corretto (utilizzando la velocità di baud manuale se specificato nel manuale dell' FC).<\/li><li>Spegnimento.<\/li><li>Rimuovere il ponticello BOOT.<\/li><li>Accensione (attività LED dovrebbe lampeggiare).<\/li><li>Connetti normalmente.<\/li><\/ul>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Lascia il firmware flasher"
@@ -3722,8 +3725,23 @@
     "firmwareFlasherFirmwareOnlineLoaded": {
         "message": "Caricato Firmware Online: {{filename}} ({{bytes}} byte)"
     },
+    "firmwareFlasherTooltipSaveFirmware": {
+        "message": "Salva Firmware"
+    },
+    "firmwareFlasherInvalidFileFormat": {
+        "message": "Formato del file non valido"
+    },
+    "firmwareFlasherUf2Corrupted": {
+        "message": "Il file UF2 sembra essere corrotto"
+    },
     "firmwareFlasherHexCorrupted": {
         "message": "Il file HEX sembra essere corrotto"
+    },
+    "firmwareFlasherUF2SaveSuccess": {
+        "message": "UF2 salvato (flashed) con successo"
+    },
+    "firmwareFlasherUF2SaveFailed": {
+        "message": "Impossibile salvare (flash) UF2"
     },
     "firmwareFlasherConfigCorrupted": {
         "message": "Il file di configurazione sembra corrotto, ASCII accettato (caratteri 0-255)",
@@ -3769,15 +3787,15 @@
         "description": "Make a quick connection to read firmware target and never flash a wrong target again"
     },
     "firmwareFlasherBoardVerificationSuccess": {
-        "message": "Il configuratore ha rilevato e verificato con <span class=\"message-positive\">successo<\/span> la scheda: <strong>{{boardName}}<\/strong>",
+        "message": "L'app ha rilevato e verificato con <span class=\"message-positive\">successo<\/span> la scheda: <strong>{{boardName}}<\/strong>",
         "description": "Board verification has succeeded."
     },
     "firmwareFlasherBoardVerficationTargetNotAvailable": {
-        "message": "Il configuratore ha rilevato la scheda: <strong>{{boardName}}<\/strong> ma non è stato trovato alcun target ufficiale di Betaflight",
+        "message": "L'app ha rilevato la scheda: <strong>{{boardName}}<\/strong> ma non è stato trovato un target ufficiale di Betaflight",
         "description": "Board verification has succeeded, but the target is not available as offical Betaflight target."
     },
     "firmwareFlasherBoardVerificationFail": {
-        "message": "Il configuratore <span class=\"message-negative\">non è riuscito<\/span> a verificare la scheda, se questo non funziona si prega di provare a cambiare schede lentamente per riprovare, fare una nuova connessione usb o connettersi prima in caso tu abbia dimenticato di applicare impostazioni personalizzate",
+        "message": "L'app <span class=\"message-negative\">non è riuscita<\/span> a verificare la scheda. Se non funziona, prova a cambiare schede lentamente per riprovare, riconnettere l'usb o connettersi prima se hai dimenticato di applicare impostazioni personalizzate.",
         "description": "Sometimes MSP values cannot be read from firmware correctly"
     },
     "firmwareFlasherButtonAbort": {
@@ -6673,7 +6691,7 @@
         "description": "Text of one of the fields of the VTX tab"
     },
     "vtxFrequencyChannelHelp": {
-        "message": "Se abiliti questa opzione, il Configuratore ti permetterà di selezionare una frequenza al posto di canale e banda. La VTX deve supportare questa funzione affinché questo funzioni.",
+        "message": "Se abiliti questa opzione, l'app ti consentirà di selezionare una frequenza al posto di canale\/banda. La VTX deve supportare questa funzione.",
         "description": "Help text for the frequency or channel select field of the VTX tab"
     },
     "vtxSelectedMode": {
@@ -7247,7 +7265,7 @@
         "message": "Webview non compatibile"
     },
     "cordovaWebviewTroubleshootingMsg": {
-        "message": "È necessario aggiornare il webview del dispositivo per utilizzare il configuratore."
+        "message": "Aggiorna la lista web dei dispositivi per utilizzare l'App Betaflight."
     },
     "cordovaWebviewTroubleshootingMsg2": {
         "message": "Lo strumento qui sotto ti aiuterà ad installare un nuovo webview o ad aggiornare quello già installato."
@@ -7295,7 +7313,7 @@
         "message": "Conferma"
     },
     "cordovaExitAppMessage": {
-        "message": "Sei sicuro di voler chiudere il configuratore?"
+        "message": "Vuoi davvero chiudere l'app?"
     },
     "dropDownSelectAll": {
         "message": "[Seleziona\/deseleziona tutto]",
@@ -7633,5 +7651,9 @@
     "osdDescElementLidar": {
         "message": "$t(osdTextElementLidar.message)",
         "description": "Don't translate!!!"
+    },
+    "osdSetupPreviewCheckRulers": {
+        "message": "Righelli",
+        "description": "Label for the checkbox to toggle OSD preview rulers around the preview"
     }
 }

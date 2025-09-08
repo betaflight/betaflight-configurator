@@ -122,7 +122,7 @@
         "message": "送信"
     },
     "autoConnectEnabled": {
-        "message": "自動接続: 有効 - Configuratorは自動的に新しいポートが検出されたときに接続を試みます。"
+        "message": "自動接続: 有効 - Appは自動的に新しいポートが検出されたときに接続を試みます"
     },
     "autoConnectDisabled": {
         "message": "自動接続: 無効 - ユーザが正しいシリアル ポートを選択し、別途 [接続] ボタンをクリックする必要があります。"
@@ -150,9 +150,17 @@
         "message": "接続タイムアウトを設定し、デバイスプラグインのより長めの初期化や再起動を許可する",
         "description": "Change timeout on auto-connect and reboot so the bus has more time to initialize after being detected by the system"
     },
+    "developmentSettings": {
+        "message": "開発者向け設定",
+        "description": "Title for the development settings section"
+    },
     "showAllSerialDevices": {
         "message": "すべてのシリアルデバイスを表示 (ベンダーまたはデベロッパー向け)",
         "description": "Do not filter serial devices using VID\/PID values (for manufacturers or development)"
+    },
+    "cliOnlyMode": {
+        "message": "CLI 限定モードを有効",
+        "description": "Text for the option to enable or disable CLI only mode"
     },
     "showManualMode": {
         "message": "手動接続モード 有効",
@@ -236,10 +244,10 @@
         "description": "Text of the image in the top sensors icons. Please keep it short."
     },
     "checkForConfiguratorUnstableVersions": {
-        "message": "未検証バージョンの更新通知を表示"
+        "message": "未検証バージョンのApp更新通知を表示"
     },
     "configuratorUpdateNotice": {
-        "message": "<b>Betaflight Configurator<\/b>の旧バージョンを使用しています。<br>$t(configuratorUpdateHelp.message)"
+        "message": "旧バージョンの <b>Betaflight App<\/b> を使用しています。<br>$t(configuratorUpdateHelp.message)"
     },
     "configuratorUpdateHelp": {
         "message": "インターネットが利用可能な場合、アプリは自動的に利用可能なアップデートを要求します。"
@@ -355,6 +363,9 @@
     "fileSystemPickerFiles": {
         "message": "{{typeof}} ファイル",
         "description": "Text for the file picker dialog, showing the type of files selected. The parameter can be HEX, TXT, etc."
+    },
+    "fileSystemPickerFirmwareFiles": {
+        "message": "ファームウェアファイル"
     },
     "serialErrorFrameError": {
         "message": "シリアル接続エラー: フレーム長 不良"
@@ -480,13 +491,13 @@
         "message": "<span class=\"message-negative\">10秒<\/span>以内に構成情報を受信できず、通信に<span class=\"message-negative\">失敗<\/span>しました。"
     },
     "firmwareVersionNotSupported": {
-        "message": "このファームウェアバージョンは<span class=\"message-negative\">サポートされていません<\/span>。<strong>$1<\/strong>以上のバージョンのAPIをサポートするファームウェアにアップグレードしてください。書き換えする前にCLIを使用してバックアップしてください。CLIのバックアップ \/ リストア手順はドキュメントに記載されています。<br\/>または、アップグレードする準備ができていない場合は、旧バージョンのConfiguratorをダウンロードして使用してください。"
+        "message": "このファームウェアバージョンは<span class=\"message-negative\">サポートされていません<\/span>。<strong>$1<\/strong>以上のバージョンのAPIをサポートするファームウェアにアップグレードしてください。書き換えする前にCLIを使用してバックアップしてください。CLIのバックアップ \/ リストア手順はドキュメントに記載されています。<br\/>または、アップグレードする準備ができていない場合は、旧バージョンのアプリをダウンロードして使用してください。"
     },
     "firmwareTypeNotSupported": {
         "message": "CLIモードを除き、Betaflight以外のファームウェアは<span class=\"message-negative\">サポートされていません<\/span>。"
     },
     "firmwareUpgradeRequired": {
-        "message": "このデバイスのファームウェアは、新しいバージョンにアップグレードする必要があります。 書き換えする前にCLIを使用してバックアップしてください。 CLIのバックアップ \/ リストア手順はドキュメントに記載されています。<br\/>または、アップグレードする準備ができていない場合は、旧バージョンのConfiguratorをダウンロードして使用してください。"
+        "message": "このデバイスのファームウェアは、新しいバージョンにアップグレードする必要があります。 書換えする前にCLIを使用してバックアップして下さい。 CLIのバックアップ \/ リストア手順はドキュメントに記載されています。<br \/>または、アップグレードする準備ができていない場合は、旧バージョンのアプリをダウンロードして使用して下さい。"
     },
     "resetToCustomDefaultsDialog": {
         "message": "このFCボードにはカスタムされた初期値が適用されています。通常、カスタム初期値が適用されない場合はFCボードが正常に動作しません。<br \/>このFCボードにカスタム初期値を適用しますか？"
@@ -501,7 +512,7 @@
         "message": "<span class=\"message-negative\"><strong>飛行を試みる前に、これらの問題を修正する必要があります。<\/span><\/strong>"
     },
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
-        "message": "<span class=\"message-negative\"><strong>使用されるBetaflight Configurator version ($3) はファームウェア $4<\/strong><\/span> をサポートしていません。<br>$t(configuratorUpdateHelp.message)"
+        "message": "<span class=\"message-negative\"><strong>使用されるBetaflight App バージョン ($3) はファームウェア $4<\/strong><\/span> をサポートしていません。<br>$t(configuratorUpdateHelp.message)"
     },
     "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
         "message": "<strong>モーター出力プロトコルが選択されていません。<\/strong><br>『$t(tabMotorTesting.message)』タブの『$t(configurationEscFeatures.message)』で、ESCに適したモーター出力プロトコルを選択してください。<br>$t(escProtocolDisabledMessage.message)"
@@ -514,8 +525,8 @@
         "description": "Message that appears in the GUI log panel indicating operating system"
     },
     "infoVersionConfigurator": {
-        "message": "Configurator: <strong>{{configuratorVersion}}<\/strong>",
-        "description": "Message that appears in the GUI log panel indicating Configurator version"
+        "message": "App バージョン: <strong>{{configuratorVersion}}<\/strong>",
+        "description": "Message that appears in the GUI log panel indicating application version"
     },
     "buildServerSuccess": {
         "message": "成功: $1"
@@ -602,7 +613,7 @@
         "message": "ファーム"
     },
     "versionLabelConfigurator": {
-        "message": "Configurator"
+        "message": "App バージョン"
     },
     "notifications_app_just_updated_to_version": {
         "message": "アプリケーション更新バージョン: $1"
@@ -638,6 +649,10 @@
         "message": "CPU使用率:",
         "description": "CPU load text shown in the status bar"
     },
+    "statusbar_connection_time": {
+        "message": "接続:",
+        "description": "Connection time text shown in the status bar"
+    },
     "dfu_connect_message": {
         "message": "DFUデバイスへのアクセスはファームフラッシャーを使用してください"
     },
@@ -657,7 +672,7 @@
         "message": "EEPROM <span class=\"message-positive\">保存しました<\/span>"
     },
     "defaultWelcomeIntro": {
-        "message": "<strong>Betaflight - Configurator<\/strong>へようこそ。<br \/>このユーティリティは、フライトコントローラの設定やチューニングを簡単に更新できるよう設計されています。"
+        "message": "<strong>Betaflight App<\/strong>へようこそ。<br \/>このユーティリティは、フライトコントローラの設定やチューニングを簡単に更新できるよう設計されています。"
     },
     "defaultWelcomeHead": {
         "message": "ハードウェア"
@@ -669,7 +684,7 @@
         "message": "開発への協力・貢献"
     },
     "defaultContributingText": {
-        "message": "Betaflightを今後より良く改善したい場合は、以下を含むさまざまな方法で支援できます:<br \/><ul><li>Betaflightに関する知識を活かして<a href=\"https:\/\/betaflight.com\/docs\/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki<\/a>コンテンツの作成または更新、オンラインフォーラムで他ユーザの質問への回答;<\/li><li>新機能や修正、改善されたファームウェアとConfiguratorへの<a href=\"https:\/\/betaflight.com\/docs\/development\" target=\"_blank\" rel=\"noopener noreferrer\">コード提供<\/a>;<\/li><li><a href=\"https:\/\/github.com\/Betaflight\/betaflight\/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">新機能と修正<\/a>、テスト、フィードバックの提供;<\/li><li><a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel=\"noopener noreferrer\">Issue tracker<\/a>で他ユーザから報告された問題を解決支援し、新機能リクエストに関する議論に協力;<\/li><li>Betaflight Configuratorの新しい言語への<a href=\"https:\/\/github.com\/betaflight\/betaflight\/tree\/master\/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">翻訳<\/a>、または既存翻訳の維持支援.<\/li><\/ul>"
+        "message": "もしBetaflightをさらに良くするお手伝いをしていただけるなら、次のような方法があります:<br \/><ul><li>\nBetaflight に関する知識を活かして <a href=\"https:\/\/betaflight.com\/docs\/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki<\/a> のコンテンツを作成・更新したり、オンラインフォーラムで他のユーザの質問に答える<\/li><li>ファームウェアやアプリへの <a href=\"https:\/\/betaflight.com\/docs\/development\" target=\"_blank\" rel=\"noopener noreferrer\">コード貢献<\/a> [新機能の追加、修正、改善 など] <\/li><li><a href=\"https:\/\/github.com\/Betaflight\/betaflight\/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">新機能や修正<\/a> をテストして、フィードバックを提供する<\/li><li><a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel=\"noopener noreferrer\">Issue tracker<\/a> で報告された問題の解決を手伝い、機能要望に関する議論に参加する<\/li><li>Betaflight Appを <a href=\"https:\/\/github.com\/betaflight\/betaflight\/tree\/master\/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">新しい言語に翻訳<\/a> したり、既存の翻訳の維持に協力する<\/li><\/ul>"
     },
     "defaultFacebookText": {
         "message": "私たちは<a href=\"https:\/\/www.facebook.com\/groups\/betaflightgroup\/\" target=\"_blank\" rel=\"noopener noreferrer\">Facebookグループ<\/a>も運営しています。<br \/>私たちと一緒にBetaflightについて語り合い、設定に関する質問をしたり、パイロット同士で交流してみましょう。"
@@ -678,7 +693,7 @@
         "message": "Betaflight <a href=\"https:\/\/discord.betaflight.com\/invite\" target=\"_blank\" rel=\"noopener noreferrer\">Discord Server<\/a>.<br \/>貴方の飛行体験を共有したり、Betaflightについて話したり、他の人を救済しコミュニティから自分自身助けを得たりすることができます。"
     },
     "statisticsDisclaimer": {
-        "message": "Betaflight Configuratorは匿名における利用統計データを収集します。例えばこのデータには、起動回数、ユーザの地理的な地域、フライトコントローラの種類、ファームウェアバージョン、UI要素やタブの使用状況等が含まれます。(ただし、これらに限定されるものではありません) このデータの要約は <a href=\"https:\/\/datastudio.google.com\/u\/0\/reporting\/1pK1PFw0eWmsgl2npvuzwAqscVzlhJvuF\" target=\"_blank\" rel=\"noopener noreferrer\">こちら<\/a> で共有されています。データ収集はBetaflight Configuratorがどのように使用されているかをより良く理解し、コミュニティの傾向を把握し、UIを改善するために行われます。またユーザは、オプションタブにてデータ収集の停止を選択可能です。"
+        "message": "Betaflight Appは匿名における利用統計データを収集します。例えばこのデータには、起動回数、ユーザの地理的な地域、フライトコントローラの種類、ファームウェアバージョン、UI要素やタブの使用状況等が含まれます。(ただし、これらに限定されるものではありません) このデータの要約は <a href=\"https:\/\/datastudio.google.com\/u\/0\/reporting\/1pK1PFw0eWmsgl2npvuzwAqscVzlhJvuF\" target=\"_blank\" rel=\"noopener noreferrer\">こちら<\/a> で共有されています。データ収集はBetaflight Configuratorがどのように使用されているかをより良く理解し、コミュニティの傾向を把握し、UIを改善するために行われます。またユーザは、オプションタブにてデータ収集の停止を選択可能です。"
     },
     "defaultButtonFirmwareFlasher": {
         "message": "ファームフラッシャー"
@@ -687,7 +702,7 @@
         "message": "オープンソース \/ 寄付について"
     },
     "defaultDonateText": {
-        "message": "<p><strong>Betaflight<\/strong>は<strong>オープンソース<\/strong>であり、すべてのユーザに対し保証なしで<strong>無償<\/strong>にて提供されるフライトコントローラソフトウェアです。<\/p><p>もし、あなたがBetaflightやBetaflight Configuratorが役立つものと感じたら、寄付による開発の<strong>サポート<\/strong>をご検討ください。<\/p>"
+        "message": "<p><strong>Betaflight<\/strong>は<strong>オープンソース<\/strong>であり、すべてのユーザに対し保証なしで<strong>無償<\/strong>にて提供されるフライトコントローラソフトウェアです。<\/p><p>もし、あなたがBetaflightやBetaflight Appが役立つものと感じたら、寄付による開発の<strong>サポート<\/strong>をご検討ください。<\/p>"
     },
     "defaultDonateBottom": {
         "message": "<p>引き続き経済的に貢献したい場合は <a href='https:\/\/www.patreon.com\/betaflight'>Patreon<\/a> で私達の支援者になることをご検討ください。<\/p>"
@@ -999,7 +1014,7 @@
         "description": "Message that pops up to describe the BST arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipMSP": {
-        "message": "おそらくこのBetaflight Configuratorで、MSP接続は有効です",
+        "message": "MSP接続が有効です。[おそらくBetaflight Appと通信中]",
         "description": "Message that pops up to describe the MSP arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipPARALYZE": {
@@ -1623,6 +1638,12 @@
     },
     "beeperRC_SMOOTHING_INIT_FAIL": {
         "message": "アーム時にRCスムージングがフィルターを初期化できていない時のビープ音"
+    },
+    "configurationBeeperEnableAll": {
+        "message": "すべて有効"
+    },
+    "configurationBeeperDisableAll": {
+        "message": "すべて無効"
     },
     "configuration3d": {
         "message": "3D ESC \/ モーター機能"
@@ -3286,6 +3307,9 @@
     "cliEnter": {
         "message": "CLIモード検出"
     },
+    "cliDevEnter": {
+        "message": "開発者向け CLI限定モードが検出されました"
+    },
     "cliReboot": {
         "message": "CLIリブート検出"
     },
@@ -3323,7 +3347,7 @@
         "message": "ここにコマンドを入力"
     },
     "loggingNote": {
-        "message": "ログデータは<span class=\"message-negative\">このタブを選択している間のみ<\/span>記録されます。このタブから他へ切り替えると<span class=\"message-negative\">ログは停止<\/span>し、通常の<strong>Configurator<\/strong>の状態に戻ります。<br \/>また項目全体のログ更新期間を自由に選択できます。パフォーマンス上の理由から、<strong>1秒<\/strong>ごとにログファイルにデータが書き込まれます。"
+        "message": "ログデータは<span class=\"message-negative\">このタブを選択している間のみ<\/span>記録されます。このタブを離れると記録は<span class=\"message-negative\">中止<\/span>され、アプリケーションは通常の状態に戻ります。<br \/>また項目全体のログ更新間隔を選択できます。パフォーマンス上の理由から、データは<strong>1 秒<\/strong>ごとにログファイルへ書き込まれます。"
     },
     "loggingSamplesSaved": {
         "message": "サンプル保存:"
@@ -3573,7 +3597,7 @@
         "message": "FCボードを任意選択または検出すると、オンラインで利用可能なファームウェア リリースが表示されます - お使いのFCボードに適したファームウェアを選択してください。"
     },
     "firmwareFlasherOnlineSelectBoardHint": {
-        "message": "Betaflight Configuratorは、各FCボード固有の設定を持つ統一ターゲットのファームウェアフラッシュをワンステップでサポートします。<br><br>統一ターゲットのコンセプトは、同じMCUを使用するすべてのFCボードで同じファームウェアの.hexファイルを使用できることを意味しています。<br><br>Betaflight 4.4で導入された<strong>クラウドビルド<\/strong><br><br><strong>クラウドビルド<\/strong>では、ビルドに存在するハードウェアオプションを定義する必要があります。<br><br>異なるFCボードを同じファームウェアで動作させるために、統一ターゲットファームウェアをフラッシュする際、それと同時に特定の設定ファイルが展開されます。<br><br>ローカルビルドでは、統一ターゲット設定ファイルをロードしたり、ファームウェアの.hexファイルをロードする前にFCボードを選択することができます。<br><br>ファームウェアを使用していて問題が発生した場合は、Discordへの参加、または<a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel=\"noopener noreferrer\">Issue<\/a>の新規投稿をご検討ください。"
+        "message": "Betaflight Appは、各FCボード固有の設定を持つ統一ターゲットのファームウェアフラッシュをワンステップでサポートします。<br><br>統一ターゲットのコンセプトは、同じMCUを使用するすべてのFCボードで同じファームウェアの.hexファイルを使用できることを意味しています。<br><br>Betaflight 4.4 で導入された<strong>クラウドビルド<\/strong><br><br><strong>クラウドビルド<\/strong>では、ビルドに存在するハードウェアオプションを定義する必要があります。<br><br>異なるFCボードを同じファームウェアで動作させるために、統一ターゲットファームウェアをフラッシュする際、それと同時に特定の設定ファイルが展開されます。<br><br>ローカルビルドでは、統一ターゲット設定ファイルをロードしたり、ファームウェアの.hexファイルをロードする前にFCボードを選択することができます。<br><br>ファームウェアを使用していて問題が発生した場合は、Discordへの参加、または<a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel=\"noopener noreferrer\">Issue<\/a>の新規投稿をご検討ください。"
     },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "FCボードのファームウェアバージョンを選択してください。"
@@ -3687,7 +3711,7 @@
         "message": "<strong>リカバリー \/ 通信ロスト<\/strong>"
     },
     "firmwareFlasherRecoveryText": {
-        "message": "FCボードとの通信が切断された場合は、以下の手順に従って通信を回復してください: <ul><li>電源をオフにします。<\/li><li>[再起動シーケンスなし] を有効にし [チップメモリの完全消去] を有効にします。<\/li><li>BOOTピンをジャンパさせるか、またはBOOTボタンを長押ししてください。<\/li><li>電源をオンにします。(正しく行われればアクティビティLEDは点滅しません) <\/li><li>すべてのSTM32ドライバと、必要あればZadigをインストールします。(Betaflightマニュアルの [<a href=\"https:\/\/betaflight.com\/docs\/wiki\/archive\/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">USB Flashing<\/a>] 章を参照) <\/li><li>Betaflight Configuratorを一度閉じ、Configuratorを再起動します。<\/li><li>FCボードにBOOTボタンがあれば、BOOTボタンを放してください。<\/li><li>正常なファームウェアをフラッシュしてください。(FCのボードのマニュアルに指定されている場合は、手動で伝送速度を調整してください) <\/li><li>電源をオフにします。<\/li>\n<li>BOOTピンのジャンパを取り外します。<\/li><li>電源をオンにします。(アクティビティLEDが点滅するはずです) <\/li><li>再度、通常通り接続してください。<\/li><\/ul>"
+        "message": "FCボードとの通信が切断された場合は、以下の手順に従って通信を回復してください: <ul><li>電源をオフにします。<\/li><li>[再起動シーケンスなし] を有効にし [チップメモリの完全消去] を有効にします。<\/li><li>BOOTピンをジャンパさせるか、またはBOOTボタンを長押ししてください。<\/li><li>電源をオンにします。(正しく行われればアクティビティLEDは点滅しません) <\/li><li>すべてのSTM32ドライバと、必要あればZadigをインストールします。(Betaflightマニュアルの [<a href=\"https:\/\/betaflight.com\/docs\/wiki\/archive\/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">USB Flashing<\/a>] 章を参照) <\/li><li>Betaflight Appを一度閉じ、Appを再起動します。<\/li><li>FCボードにBOOTボタンがあれば、BOOTボタンを放してください。<\/li><li>正常なファームウェアをフラッシュしてください。(FCのボードのマニュアルに指定されている場合は、手動で伝送速度を調整してください) <\/li><li>電源をオフにします。<\/li>\n<li>BOOTピンのジャンパを取り外します。<\/li><li>電源をオンにします。(アクティビティLEDが点滅するはずです) <\/li><li>再度、通常通り接続してください。<\/li><\/ul>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "ファームフラッシャーより退避"
@@ -3701,8 +3725,23 @@
     "firmwareFlasherFirmwareOnlineLoaded": {
         "message": "オンラインファームウェアがロードされました: {{filename}} ({{bytes}} bytes)"
     },
+    "firmwareFlasherTooltipSaveFirmware": {
+        "message": "ファームウェアを保存"
+    },
+    "firmwareFlasherInvalidFileFormat": {
+        "message": "無効なファイル形式です"
+    },
+    "firmwareFlasherUf2Corrupted": {
+        "message": "UF2ファイルが破損しているようです"
+    },
     "firmwareFlasherHexCorrupted": {
         "message": "HEXファイルが破損しているようです"
+    },
+    "firmwareFlasherUF2SaveSuccess": {
+        "message": "UF2は正常に保存 (更新) されました"
+    },
+    "firmwareFlasherUF2SaveFailed": {
+        "message": "UF2の保存 (更新) に失敗しました"
     },
     "firmwareFlasherConfigCorrupted": {
         "message": "設定ファイル破損の可能性があります。ASCII文字列が入力されました。(chars 0-255)",
@@ -3748,15 +3787,15 @@
         "description": "Make a quick connection to read firmware target and never flash a wrong target again"
     },
     "firmwareFlasherBoardVerificationSuccess": {
-        "message": "Betaflight ConfiguratorはFC基板の検出と検証に<span class=\"message-positive\">成功<\/span>しました: <strong>{{boardName}}<\/strong>",
+        "message": "Betaflight AppはFC基板の検出と検証に<span class=\"message-positive\">成功<\/span>しました: <strong>{{boardName}}<\/strong>",
         "description": "Board verification has succeeded."
     },
     "firmwareFlasherBoardVerficationTargetNotAvailable": {
-        "message": "Betaflight ConfiguratorはFCボードを検出: <strong>{{boardName}}<\/strong> しかしながらBetaflightにて公式ターゲットが見つかりませんでした",
+        "message": "Betaflight AppはFCボードを検出: <strong>{{boardName}}<\/strong> しかしながらBetaflightにて公式ターゲットが見つかりませんでした",
         "description": "Board verification has succeeded, but the target is not available as offical Betaflight target."
     },
     "firmwareFlasherBoardVerificationFail": {
-        "message": "Betaflight Configuratorでボードの検証に<span class=\"message-negative\">失敗<\/span>しました。うまくいかない場合はタブをゆっくりと切り替え再試行してください。またUSB接続を改めてやり直すか、カスタムデフォルトを適用し忘れた場合は最初から接続し直してください。",
+        "message": "Betaflight Appはボードの検証に<span class=\"message-negative\">失敗<\/span>しました。この問題が続く場合は、タブを切り替えて再試行するか、USBを再接続してください。また、カスタムデフォルトの適用を忘れている可能性がある場合は、先に接続してから再試行してください。",
         "description": "Sometimes MSP values cannot be read from firmware correctly"
     },
     "firmwareFlasherButtonAbort": {
@@ -6652,7 +6691,7 @@
         "description": "Text of one of the fields of the VTX tab"
     },
     "vtxFrequencyChannelHelp": {
-        "message": "これを有効にするとBetaflight Configuratorで通常のバンド\/チャンネルの代わりに周波数を選択できます。これを機能させるにはVTXがこの機能をサポートしている必要があります。",
+        "message": "これを有効にすると、Betaflight Appで通常のバンド\/チャンネルの代わりに周波数を選択できます。 これを機能させるには、VTXがこの機能をサポートしている必要があります。",
         "description": "Help text for the frequency or channel select field of the VTX tab"
     },
     "vtxSelectedMode": {
@@ -7226,7 +7265,7 @@
         "message": "互換性のないWebView"
     },
     "cordovaWebviewTroubleshootingMsg": {
-        "message": "Betaflight Configuratorを使用するにはデバイスのWebViewを更新する必要があります。"
+        "message": "Betaflight Appを使用するにはデバイスのWebViewを更新する必要があります。"
     },
     "cordovaWebviewTroubleshootingMsg2": {
         "message": "以下のツールは新しいWebViewをインストールしたり、既にインストール済のWebViewを更新したりするのに役立ちます。"
@@ -7274,7 +7313,7 @@
         "message": "確認中"
     },
     "cordovaExitAppMessage": {
-        "message": "Betaflight Configuratorを終了しても良いですか？"
+        "message": "アプリケーションを終了しますか？"
     },
     "dropDownSelectAll": {
         "message": "[すべて選択\/選択解除]",
@@ -7612,5 +7651,9 @@
     "osdDescElementLidar": {
         "message": "$t(osdTextElementLidar.message)",
         "description": "Don't translate!!!"
+    },
+    "osdSetupPreviewCheckRulers": {
+        "message": "ルーラー",
+        "description": "Label for the checkbox to toggle OSD preview rulers around the preview"
     }
 }

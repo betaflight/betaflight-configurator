@@ -248,10 +248,10 @@
         "description": "Text of the image in the top sensors icons. Please keep it short."
     },
     "checkForConfiguratorUnstableVersions": {
-        "message": "Vis opdateringsadviseringer for foreløbige versioner af konfiguratoren"
+        "message": "Vis opdateringsadviseringer for foreløbige versioner af app"
     },
     "configuratorUpdateNotice": {
-        "message": "Du bruger en forældet version af <b>Betaflight Configurator<\/b>.<br>$t(configuratorUpdateHelp.message)"
+        "message": "Du bruger en forældet version af <b>Betaflight app<\/b>.<br>$t(configuratorUpdateHelp.message)"
     },
     "configuratorUpdateHelp": {
         "message": "Når internettet er tilgængeligt, vil Configurator automatisk undersøge for mulige opdateringer."
@@ -367,6 +367,9 @@
     "fileSystemPickerFiles": {
         "message": "{{typeof}} filer",
         "description": "Text for the file picker dialog, showing the type of files selected. The parameter can be HEX, TXT, etc."
+    },
+    "fileSystemPickerFirmwareFiles": {
+        "message": "Firmware info"
     },
     "serialErrorFrameError": {
         "message": "Seriel kommunikation fejl: forkert framing"
@@ -513,7 +516,7 @@
         "message": "<span class=\"message-negative\"><strong>Du skal løse problemer med disse indstillinger, før du forsøger at flyve med dit fartøj<\/span><\/strong>."
     },
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
-        "message": "<span class=\"message-negative\"><strong>Din Betaflight configurator ($3) understøtter ikke den anvendte firmware $4<\/strong><\/span>.<br>$t(configuratorUpdateHelp.message)"
+        "message": "<span class=\"message-negative\"><strong>Den anvendte app version ($3) understøtter ikke firmware $4<\/strong><\/span>.<br>$t(configuratorUpdateHelp.message)"
     },
     "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
         "message": "<strong>der er ikke valgt en motor protokol<\/strong>.<br>Vælg venligst en motor protokol passende for dine ESC'er i '$t(configurationEscFeatures.message)' på '$t(tabMotorTesting.message)' fanen.<br>$t(escProtocolDisabledMessage.message)"
@@ -526,8 +529,8 @@
         "description": "Message that appears in the GUI log panel indicating operating system"
     },
     "infoVersionConfigurator": {
-        "message": "Configurator: <strong>{{configuratorVersion}}<\/strong>",
-        "description": "Message that appears in the GUI log panel indicating Configurator version"
+        "message": "App version: <strong>{{configuratorVersion}}<\/strong>",
+        "description": "Message that appears in the GUI log panel indicating application version"
     },
     "buildServerSuccess": {
         "message": "Succes: $1"
@@ -614,7 +617,7 @@
         "message": "Firmware"
     },
     "versionLabelConfigurator": {
-        "message": "Configurator"
+        "message": "App version"
     },
     "notifications_app_just_updated_to_version": {
         "message": "Program netop opdateret til version: $1"
@@ -673,7 +676,7 @@
         "message": "Konfiguration  <span class=\"message-positive\">gemt<\/span> i EEPROM"
     },
     "defaultWelcomeIntro": {
-        "message": "Velkommen til <strong>Betaflight - Configurator<\/strong>, et værktøj til opdatering, opsætning og tuning af din flight controller (FC)."
+        "message": "Velkommen til <strong>Betaflight app<\/strong>, et værktøj til opdatering, opsætning og tuning af din flight controller (FC)."
     },
     "defaultWelcomeHead": {
         "message": "Hardware"
@@ -685,7 +688,7 @@
         "message": "Bidrag"
     },
     "defaultContributingText": {
-        "message": "Hvis du gerne vil hjælpe med at gøre Betaflight endnu bedre, kan du hjælpe på mange måder, herunder:<br \/><ul><li>ved at bruge din viden om Betaflight til at oprette eller opdatere indhold på <a href=\"https:\/\/betaflight.com\/docs\/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">vores Wiki<\/a>, eller ved at besvare andre brugeres spørgsmål i onlinefora<\/li><li><a href=\"https:\/\/betaflight.com\/docs\/development\" target=\"_blank\" rel=\"noopener noreferrer\">bidrage med kode<\/a> til firmware og Configurator - nye funktioner, rettelser, forbedringer,<\/li><li>test af <a href=\"https:\/\/github.com\/Betaflight\/betaflight\/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">nye funktioner og rettelser<\/a> og give feedback;<\/li><li>hjælper andre brugere med at løse de problemer, de rapporterer i <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel=\"noopener noreferrer\">vores issue tracker<\/a>, deltagelse i diskussioner om ønsker til rettelser og forbedringer<\/li><li><a href=\"https:\/\/github.com\/betaflight\/betaflight\/tree\/master\/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">oversætte<\/a> Betaflight Configurator til et nyt sprog eller hjælpe med at vedligeholde eksisterende oversættelser.<\/li><\/ul>"
+        "message": "Hvis du gerne vil hjælpe med at gøre Betaflight endnu bedre, kan du hjælpe på mange måder. herunder:<br \/><ul><li>ved hjælp af din viden om Betaflight til at oprette eller opdatere indhold på <a href=\"https:\/\/betaflight.com\/docs\/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">vores Wiki<\/a>, eller besvare andre brugeres spørgsmål i onlinefora<\/li><li><a href=\"https:\/\/betaflight.com\/docs\/development\" target=\"_blank\" rel=\"noopener noreferrer\">bidrager kode<\/a> til firmwaren og app - nye funktioner, rettelser, forbedringer,<\/li><li>test <a href=\"https:\/\/github.com\/Betaflight\/betaflight\/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">nye funktioner og rettelser<\/a> og giver feedback;<\/li><li>hjælper andre brugere med at løse de problemer, de rapporterer i <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel=\"noopener noreferrer\">vores issue tracker<\/a>, deltagelse i diskussioner om anmodninger om indslag<\/li><li><a href=\"https:\/\/github.com\/betaflight\/betaflight\/tree\/master\/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">oversætter<\/a> Betaflight app til et nyt sprog eller hjælper med at vedligeholde de eksisterende oversættelser.<\/li><\/ul>"
     },
     "defaultFacebookText": {
         "message": "Vi har også en <a href=\"https:\/\/www.facebook.com\/groups\/betaflightgroup\/\" target=\"_blank\" rel=\"noopener noreferrer\">Facebook-gruppe<\/a>.<br \/>Meld dig ind i gruppen vedrørende Betaflight, for at stille spørgsmål om opsætning eller blot hænge ud med andre piloter."
@@ -694,7 +697,7 @@
         "message": "Betaflight <a href=\"https:\/\/discord.betaflight.com\/invite\" target=\"_blank\" rel=\"noopener noreferrer\">Discord Server<\/a>.<br \/>Del din flyve oplevelse, skriv om Betaflight, hjælp andre eller få hjælp til dig selv fra Betaflight fællesskabet."
     },
     "statisticsDisclaimer": {
-        "message": "Betaflight Configurator indsamler anonym brugsstatistik. For eksempel omfatter disse data (men er ikke begrænset til) antallet af release udgivelser, geografiske region af brugerne, FC type, firmwareversioner, brug af UI-elementer og faner osv. Resuméet af disse data er delt <a href=\"https:\/\/datastudio.google.com\/u\/0\/reporting\/1pK1PFw0eWmsgl2npvuzwAqscVzlhJvuF\" target=\"_blank\" rel=\"noopener noreferrer\">her<\/a>. Indsamlingen skal anvendes til bedre at forstå, hvordan Betaflight Configurator bliver brugt, for at forstå fællesskabstendenser og for mulige UI forbedringer. Brugere kan fravælge dataindsamling i fanen Indstillinger."
+        "message": "Betaflight app indsamler anonym brugsstatistik. For eksempel omfatter disse data (men er ikke begrænset til) antallet af release udgivelser, geografiske region af brugerne, FC type, firmwareversioner, brug af UI-elementer og faner osv. Resuméet af disse data er delt <a href=\"https:\/\/datastudio.google.com\/u\/0\/reporting\/1pK1PFw0eWmsgl2npvuzwAqscVzlhJvuF\" target=\"_blank\" rel=\"noopener noreferrer\">her<\/a>. Indsamlingen skal anvendes til bedre at forstå, hvordan Betaflight app bliver brugt, for at forstå tendenser og for mulige UI forbedringer. Brugere kan fravælge dataindsamling i fanen Indstillinger."
     },
     "defaultButtonFirmwareFlasher": {
         "message": "Brænd firmware"
@@ -703,7 +706,7 @@
         "message": "Vedrørende Open Source og støtte med donation"
     },
     "defaultDonateText": {
-        "message": "<p><strong>Betaflight<\/strong> er <strong>open source<\/strong> programmel til opsætning af flight controller (FC) som er tilgængelig uden beregning, for alle brugere, men også <strong>uden garanti<\/strong>.<\/p><p>Hvis du fandt Betaflight eller Betaflight-Configurator nyttig, så overvej venligst at <strong>støtte<\/strong> udviklingen ved en donation.<\/p>"
+        "message": "<p><strong>Betaflight<\/strong> er <strong>open source<\/strong> programmel til opsætning af flight controller (FC) som er tilgængelig uden beregning, for alle brugere, men også <strong>uden garanti<\/strong>.<\/p><p>Hvis du fandt Betaflight eller Betaflight app nyttig, så overvej venligst at <strong>støtte<\/strong> udviklingen ved en donation.<\/p>"
     },
     "defaultDonateBottom": {
         "message": "<p>Hvis du løbende vil støtte op om projektet, bør du overveje a blive patreon for os på $t(patreonLink.message).<\/p>"
@@ -1015,7 +1018,7 @@
         "description": "Message that pops up to describe the BST arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipMSP": {
-        "message": "MSP-forbindelsen er aktiv, antagelig med denne Betaflight Configurator",
+        "message": "MSP forbindelsen er aktiv, antagelig med denne Betaflight app",
         "description": "Message that pops up to describe the MSP arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipPARALYZE": {
@@ -3348,7 +3351,7 @@
         "message": "Indtast kommando her"
     },
     "loggingNote": {
-        "message": "Data vil <span class=\"message-negative\">kun <\/span>blive logget i dette vindue, når du forlader vinduet vil logning <span class=\"message-negative\">standse<\/span> og Configurator vil vende tilbage til sin normale tilstand.<br \/> Du er velkommen til at ændre opdateringsperiode for målinger, data skrives uanset til logfilen hvert <strong>1<\/strong> sekund pga hastigheds hensyn."
+        "message": "Data vil <span class=\"message-negative\">kun <\/span>blive logget i dette vindue, når du forlader vinduet vil logning <span class=\"message-negative\">standse<\/span> og app vil vende tilbage til sin normale tilstand. Du kan ændre opdateringsperiode for målinger, data skrives uanset til logfilen hvert <strong>1<\/strong> sekund pga hensyn til hastighed."
     },
     "loggingSamplesSaved": {
         "message": "Gemte målinger:"
@@ -3598,7 +3601,7 @@
         "message": "Vælg eller registrer din FC for at se tilgængelige online firmware versioner - Vælg den korrekte firmware som passer til din FC."
     },
     "firmwareFlasherOnlineSelectBoardHint": {
-        "message": "Betaflight configurator understøtter FC fælles type (unified target) med konfiguration af FC i et trin. Begrebet FC fælles type betyder, at den samme firmware .hex fil kan bruges til alle FC med samme MCU.<br><br>Betaflight 4.4 indfører  <strong>Sky Build (Cloud Build)<\/strong><br><br>Med Build i skyen, er det nødvendigt at definere hardware tilvalg, indstillinger og protokol, som skal findes i din release.<br><br>Forskelle mellem de forskellige FC styres af en konfigurationsfil, som kommer sammen med firmware, når en FC fælles type brændes i din FC..<br><br>Ved at indlæse en lokal Build fra din pc, kan du indlæse en FC fælles type konfiguration, eller vælge anden FC type, før du henter et firmware image.<br><br>Hvis du støder på problemer ved anvendelse af FC firmware image, overvej at gå på Discord eller åbn et <a href=\\\"https:\/\/github.com\/betaflight\/betaflight\/issues\\\" target=\\\"_blank\\\" rel=\\\"noopener noreferrer\\\">problem<\/a>, overvej at undlade anvendelse af image, indtil problemet er blevet afklaret eller løst."
+        "message": "Betaflight app understøtter FC fælles type (unified target) med konfiguration af FC i et trin. Begrebet FC fælles type betyder, at den samme firmware .hex fil kan bruges til alle FC med samme MCU.<br><br>Betaflight 4.4 indfører  <strong>Sky Build (Cloud Build)<\/strong><br><br>Med Build i skyen, er det nødvendigt at definere hardware tilvalg, indstillinger og protokol, som skal findes i din release.<br><br>Forskelle mellem de forskellige FC styres af en konfigurationsfil, som kommer sammen med firmware, når en FC fælles type brændes i din FC..<br><br>Ved at indlæse en lokal Build fra din pc, kan du indlæse en FC fælles type konfiguration, eller vælge anden FC type, før du henter et firmware image.<br><br>Hvis du støder på problemer ved anvendelse af FC firmware image, overvej at gå på Discord eller åbn et <a href=\\\"https:\/\/github.com\/betaflight\/betaflight\/issues\\\" target=\\\"_blank\\\" rel=\\\"noopener noreferrer\\\">problem<\/a>, overvej at undlade anvendelse af image, indtil problemet er blevet afklaret eller løst."
     },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "Vælg firmware version."
@@ -3712,7 +3715,7 @@
         "message": "<strong>Gendannelse \/ tabt kommunikation<\/strong>"
     },
     "firmwareFlasherRecoveryText": {
-        "message": "Hvis du har mistet kommunikationen med din FC, skal du følge disse trin for at gendanne kommunikation: <ul><li>Sluk FC.<\/li><li>Aktiver 'Ingen genstartssekvens', aktiver 'Slet alt på chip'.<\/li><li>Hold FC BOOT knap nede eller sæt BOOT jumper til sluttet.<\/li><li>Tænd FC (aktivitet LED blinker IKKE, hvis det er gjort korrekt).<\/li><li>Installer alle STM32 drivere og Zadig om nødvendigt, se evt.  <a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">USB Flashing<\/a> sektion i Betaflight manual (engelsk).<\/li><li>Genstart konfigurator (luk \/ åben)<\/li><li>Slip BOOT-knappen eller fjern jumper over BOOT kontakt, på din FC.<\/li><li>Flash med korrekt firmware (ved hjælp af manuel baud hastighed, hvis angivet i din FC's manual).<\/li><li>Sluk FC.<\/li><li>Hvis der er en BOOT jumper, fjern den.<\/li><li>Tænd FC (aktivitet LED skal blinke).<\/li><li>Forbind FC normalt.<\/li><\/ul>"
+        "message": "Hvis du har mistet kommunikationen med din FC, skal du følge disse trin for at gendanne kommunikation: <ul><li>Sluk FC.<\/li><li>Aktiver 'Ingen genstartssekvens', aktiver 'Slet alt på chip'.<\/li><li>Hold FC BOOT knap nede eller sæt BOOT jumper til sluttet.<\/li><li>Tænd FC (aktivitet LED blinker IKKE, hvis det er gjort korrekt).<\/li><li>Installer alle STM32 drivere og Zadig om nødvendigt, se evt.  <a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">USB Flashing<\/a> sektion i Betaflight manual (engelsk).<\/li><li>Genstart app (luk \/ åben)<\/li><li>Slip BOOT-knappen eller fjern jumper over BOOT kontakt, på din FC.<\/li><li>Flash med korrekt firmware (ved hjælp af manuel baud hastighed, hvis angivet i din FC's manual).<\/li><li>Sluk FC.<\/li><li>Hvis der er en BOOT jumper, fjern den.<\/li><li>Tænd FC (aktivitet LED skal blinke).<\/li><li>Forbind FC normalt.<\/li><\/ul>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Forlad Firmware brænder"
@@ -3726,8 +3729,23 @@
     "firmwareFlasherFirmwareOnlineLoaded": {
         "message": "Indlæst Internet firmware image: {{filename}} ({{bytes}} bytes)"
     },
+    "firmwareFlasherTooltipSaveFirmware": {
+        "message": "Gem firmware image"
+    },
+    "firmwareFlasherInvalidFileFormat": {
+        "message": "Ugyldigt filformat"
+    },
+    "firmwareFlasherUf2Corrupted": {
+        "message": "Det valgte firmware image (UF2) ser ud til at være ødelagt"
+    },
     "firmwareFlasherHexCorrupted": {
         "message": "Det valgte firmware image ser ud til at være ødelagt"
+    },
+    "firmwareFlasherUF2SaveSuccess": {
+        "message": "Gemt (brændt) firmware image (UF2) lykkedes"
+    },
+    "firmwareFlasherUF2SaveFailed": {
+        "message": "Kunne ikke gemme (brænde) firmware image (UF2)"
     },
     "firmwareFlasherConfigCorrupted": {
         "message": "Konfigurationsfilen synes at være beskadiget, ASCII accepteret (tegn 0-255)",
@@ -3773,15 +3791,15 @@
         "description": "Make a quick connection to read firmware target and never flash a wrong target again"
     },
     "firmwareFlasherBoardVerificationSuccess": {
-        "message": "Configurator har med <span class=\"message-positive\">succes<\/span> dekteret FC: <strong>{{boardName}}<\/strong>",
+        "message": "App har <span class=\"message-positive\">succes<\/span> fundet FC: <strong>{{boardName}}<\/strong>",
         "description": "Board verification has succeeded."
     },
     "firmwareFlasherBoardVerficationTargetNotAvailable": {
-        "message": "Konfigurator har detekteret FC: <strong>{{boardName}}<\/strong>, men der blev ikke fundet et officielt Betaflight firmware image",
+        "message": "App har fundet FC: <strong>{{boardName}}<\/strong>, men der blev ikke fundet et officielt Betaflight firmware image",
         "description": "Board verification has succeeded, but the target is not available as offical Betaflight target."
     },
     "firmwareFlasherBoardVerificationFail": {
-        "message": "Configurator <span class=\"message-negative\">mislykkedes<\/span> med at bestemme FC, hvis dette ikke virker, så prøv at skifte fane langsomt for at prøve igen, opret en ny USB-forbindelse eller opret forbindelse først, måske du ikke har acceperet at konfiguerer med standardopsætninger efter brænding af nyt image",
+        "message": "App <span class=\"message-negative\">mislykkedes<\/span> med at bestemme FC, hvis dette ikke virker, så skift fane og prøv så igen. Eller etabler en ny USB-forbindelse og opret forbindelse, eller måske har du ikke acceperet konfiguration med standardopsætninger efter brænding af nyt image.",
         "description": "Sometimes MSP values cannot be read from firmware correctly"
     },
     "firmwareFlasherButtonAbort": {
@@ -6677,7 +6695,7 @@
         "description": "Text of one of the fields of the VTX tab"
     },
     "vtxFrequencyChannelHelp": {
-        "message": "Hvis du aktiverer dette, vil Configurator give mulighed for direkte vælge en frekvens i stedet for den sædvanlige band\/kanal. For at dette kan fungere, skal din VTX understøtte denne funktion.",
+        "message": "Hvis du aktiverer dette, vil app give mulighed for direkte vælge en frekvens i stedet for den sædvanlige band\/kanal. For at dette kan fungere, skal din VTX understøtte denne funktion.",
         "description": "Help text for the frequency or channel select field of the VTX tab"
     },
     "vtxSelectedMode": {
@@ -7251,7 +7269,7 @@
         "message": "Inkompatibel webview"
     },
     "cordovaWebviewTroubleshootingMsg": {
-        "message": "Du skal opdatere din enheds webview for at bruge Configuratoren."
+        "message": "Du skal opdatere din enheds webview for at bruge Betaflight app."
     },
     "cordovaWebviewTroubleshootingMsg2": {
         "message": "Værktøjet nedenfor er beregnet til at hjælpe dig med at installere en ny webview eller til at opdatere en allerede installeret webview."
@@ -7299,7 +7317,7 @@
         "message": "Bekræftelse"
     },
     "cordovaExitAppMessage": {
-        "message": "Vil du virkelig lukke Configuratoren?"
+        "message": "Vil du virkelig lukke app?"
     },
     "dropDownSelectAll": {
         "message": "[Vælg\/fravælg alle]",
@@ -7637,5 +7655,9 @@
     "osdDescElementLidar": {
         "message": "$t(osdTextElementLidar.message)",
         "description": "Don't translate!!!"
+    },
+    "osdSetupPreviewCheckRulers": {
+        "message": "Lineal",
+        "description": "Label for the checkbox to toggle OSD preview rulers around the preview"
     }
 }
