@@ -92,17 +92,36 @@ export function urlExists(url) {
  */
 
 $.fn.sortSelect = function (text = "") {
-    const op = this.children("option");
+    this.each(function () {
+        const select = this;
+        // Collect option data
+        const optionData = Array.from(select.options).map(opt => ({
+            value: opt.value,
+            text: opt.text,
+            selected: opt.selected,
+            disabled: opt.disabled,
+        }));
 
-    op.sort((a, b) => {
-        if (a.text === text) {
-            return -1;
-        }
-        if (b.text === text) {
-            return 1;
-        }
-        return a.text.localeCompare(b.text, window.navigator.language, { ignorePunctuation: true });
+        // Sort option data
+        optionData.sort((a, b) => {
+            if (a.text === text) { return -1; }
+            if (b.text === text) { return 1; }
+            return a.text.localeCompare(b.text, window.navigator.language, { ignorePunctuation: true });
+        });
+
+        // Remove all options
+        while (select.options.length) { select.remove(0); }
+
+        // Add sorted options
+        optionData.forEach(opt => {
+            const option = document.createElement("option");
+            option.value = opt.value;
+            option.text = opt.text;
+            option.selected = opt.selected;
+            option.disabled = opt.disabled;
+            select.add(option);
+        });
     });
 
-    return this.empty().append(op);
+    return this;
 };
