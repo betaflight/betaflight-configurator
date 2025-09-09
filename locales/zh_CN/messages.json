@@ -71,9 +71,6 @@
     "cancel": {
         "message": "取消"
     },
-    "autoConnectEnabled": {
-        "message": "自动连接：开启 - 配置器会自动连接新发现的端口"
-    },
     "autoConnectDisabled": {
         "message": "自动连接: 禁用-用户需要选择正确的串行端口, 然后单击 \"连接\" 按钮。"
     },
@@ -166,12 +163,6 @@
     "sensorStatusSonarShort": {
         "message": "声呐",
         "description": "Text of the image in the top sensors icons. Please keep it short."
-    },
-    "checkForConfiguratorUnstableVersions": {
-        "message": "显示测试版本的配置程序更新提示"
-    },
-    "configuratorUpdateNotice": {
-        "message": "您正在使用旧版本的 <b>Betaflight配置程序<\/b>。<br>$t(configuratorUpdateHelp.message)"
     },
     "configuratorUpdateWebsite": {
         "message": "打开版本发布网站"
@@ -398,14 +389,8 @@
     "noConfigurationReceived": {
         "message": "<span class=\"message-negative\">10秒<\/span>内没有接收到配置信息，飞控通信 <span class=\"message-negative\"> 失败<\/span>"
     },
-    "firmwareVersionNotSupported": {
-        "message": "Betaflight 配置程序<span class=\"message-negative\">不支持<\/span>该固件版本。请更新固件以确保其API版本为 <strong>$1<\/strong> 或者更高。更新固件之前，使用 CLI 来备份设置。使用 CLI 进行备份\/恢复的具体操作流程请参考Betaflight文档。<br \/>如果不想将固件更新到最新版本，可以下载使用支持该固件的旧版配置程序。"
-    },
     "firmwareTypeNotSupported": {
         "message": "<span class=\"message-negative\">不支持<\/span>非 Betaflight 固件，只能使用 CLI 模式"
-    },
-    "firmwareUpgradeRequired": {
-        "message": "需要将此设备上的固件更新到新版本，更新固件之前，使用 CLI 来备份设置。用 CLI 进行备份\/恢复的具体操作流程请参考 Betaflight 文档。<br \/>如果不想将固件更新到最新版本，可以下载使用支持该固件的旧版配置程序。"
     },
     "resetToCustomDefaultsDialog": {
         "message": "有适用于此飞控板的自定义默认设置。通常来说，只有在应用了自定义默认设置之后飞控板才能正常工作。<br \/>您是否要为此飞控板应用自定义默认设置？"
@@ -422,10 +407,6 @@
     "infoVersionOs": {
         "message": "操作系统: <strong>{{operatingSystem}}<\/strong>",
         "description": "Message that appears in the GUI log panel indicating operating system"
-    },
-    "infoVersionConfigurator": {
-        "message": "配置程序: <strong>{{configuratorVersion}}<\/strong>",
-        "description": "Message that appears in the GUI log panel indicating Configurator version"
     },
     "buildServerUsingCached": {
         "message": "使用已缓存的 $1 生成信息。"
@@ -487,9 +468,6 @@
     "versionLabelFirmware": {
         "message": "固件"
     },
-    "versionLabelConfigurator": {
-        "message": "配置程序"
-    },
     "notifications_app_just_updated_to_version": {
         "message": "程序已经更新到版本: $1"
     },
@@ -542,9 +520,6 @@
     "eeprom_saved_ok": {
         "message": "EEPROM <span class=\"message-positive\">已保存<\/span>"
     },
-    "defaultWelcomeIntro": {
-        "message": "欢迎使用 <strong>Betaflight - 配置程序<\/strong>，为简化固件升级，设置和调校飞控而生的工具。"
-    },
     "defaultWelcomeHead": {
         "message": "硬件"
     },
@@ -562,9 +537,6 @@
     },
     "defaultDonateHead": {
         "message": "开源\/捐赠说明"
-    },
-    "defaultDonateText": {
-        "message": "<p><strong>Betaflight<\/strong>是一个<strong>开放源码<\/strong>的飞行控制软件，它可供所有用户免费使用，但 <strong>不提供担保<\/strong>。<\/p><p>如果你觉得 Betaflight 或 Betaflight 配置程序对你有用，请考虑捐赠以 <strong>支持<\/strong> 它的开发工作<\/p>"
     },
     "defaultDonateBottom": {
         "message": "<p>如果你想持续捐助资金，请考虑在$t(patreonLink.message)上赞助我们。<\/p>"
@@ -759,10 +731,6 @@
     "initialSetupArmingDisableFlagsTooltipBST": {
         "message": "一个黑羊遥测设备 (例如 TBS Core Pro) 已上锁并阻止解锁",
         "description": "Message that pops up to describe the BST arming disable flag"
-    },
-    "initialSetupArmingDisableFlagsTooltipMSP": {
-        "message": "MSP 连接已激活，可能正与当前的配置程序通信中。",
-        "description": "Message that pops up to describe the MSP arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipPARALYZE": {
         "message": "瘫痪模式已被激活（已扑街）",
@@ -2376,9 +2344,6 @@
     "cliConfirmSnippetBtn": {
         "message": "执行"
     },
-    "loggingNote": {
-        "message": "数据<span class=\"message-negative\">仅会<\/span>在此页面记录，关闭此页面将会 <span class=\"message-negative\">取消<\/span>数据记录，并且应用将会返回<strong>“普通配置”<\/strong> 状态。<br \/>你可以选择合适的全局刷新率，飞控出于性能考虑，只会每 <strong>1<\/strong> 秒写入一次日志。"
-    },
     "loggingSamplesSaved": {
         "message": "采样已保存"
     },
@@ -2727,18 +2692,6 @@
     "firmwareFlasherVerifyBoard": {
         "message": "<h3>固件不匹配<\/h3><br \/>连接的飞控板是 <strong>{{verified_board}}<\/strong> 而您选择的是 <strong>{{selected_board}}<\/strong>。<br \/><br \/>您想要继续刷写吗？",
         "description": "Make a quick connection to read firmware target and never flash a wrong target again"
-    },
-    "firmwareFlasherBoardVerificationSuccess": {
-        "message": "配置程序 <span class=\"message-positive\">已成功<\/span> 检测并验证了飞控板：<strong>{{boardName}}<\/strong>",
-        "description": "Board verification has succeeded."
-    },
-    "firmwareFlasherBoardVerficationTargetNotAvailable": {
-        "message": "配置程序检测到电路板： <strong>{{boardName}}<\/strong> 但找不到与之对应的官方 Betaflight 目标",
-        "description": "Board verification has succeeded, but the target is not available as offical Betaflight target."
-    },
-    "firmwareFlasherBoardVerificationFail": {
-        "message": "配置程序验证飞控板 <span class=\"message-negative\">失败<\/span> ，如果无法通过缓慢切换标签页使其工作，请先连接并应用自定义默认设置或重新连接 USB",
-        "description": "Sometimes MSP values cannot be read from firmware correctly"
     },
     "firmwareFlasherButtonAbort": {
         "message": "中止"
@@ -4939,10 +4892,6 @@
         "message": "直接输入频率",
         "description": "Text of one of the fields of the VTX tab"
     },
-    "vtxFrequencyChannelHelp": {
-        "message": "如果您启用此功能，配置器将会让您直接选择特定频率而不是常见的频段\/频道。为了使其工作，您的图传必须支持此功能。",
-        "description": "Help text for the frequency or channel select field of the VTX tab"
-    },
     "vtxSelectedMode": {
         "message": "选择模式",
         "description": "Title for the actual mode header of the VTX"
@@ -5447,9 +5396,6 @@
     "cordovaIncompatibleWebview": {
         "message": "不兼容的 webview"
     },
-    "cordovaWebviewTroubleshootingMsg": {
-        "message": "您必须更新您设备的 webview 才能使用配置程序。"
-    },
     "cordovaWebviewTroubleshootingMsg2": {
         "message": "下面的工具旨在帮助您安装一个新的 webview 或更新已安装的 webview。"
     },
@@ -5494,9 +5440,6 @@
     },
     "cordovaExitAppTitle": {
         "message": "确认"
-    },
-    "cordovaExitAppMessage": {
-        "message": "你确定要关闭配置程序吗？"
     },
     "dropDownSelectAll": {
         "message": "[全选\/取消全选]",

@@ -121,9 +121,6 @@
     "submit": {
         "message": "제출"
     },
-    "autoConnectEnabled": {
-        "message": "자동-연결: 활성화됨 - 새로운 포트가 감지되면 컨피규레이터가 자동으로 연결을 시도합니다."
-    },
     "autoConnectDisabled": {
         "message": "자동-연결: 비활성화됨 - 올바른 시리얼 포트를 선택하고 \"연결\" 버튼을 클릭하십시오."
     },
@@ -238,12 +235,6 @@
     "sensorStatusSonarShort": {
         "message": "Sonar",
         "description": "Text of the image in the top sensors icons. Please keep it short."
-    },
-    "checkForConfiguratorUnstableVersions": {
-        "message": "컨피규레이터의 불안정 버전의 업데이트 정보 보기"
-    },
-    "configuratorUpdateNotice": {
-        "message": "당신은 오래된 버전의 <b>베타플라이트 컨피규레이터<\/b>를 사용 중입니다.<br>$t(configuratorUpdateHelp.message)"
     },
     "configuratorUpdateHelp": {
         "message": "인터넷이 사용 가능하면 앱이 자동으로 사용 가능한 업데이트를 요청합니다."
@@ -483,14 +474,8 @@
     "noConfigurationReceived": {
         "message": "<span class=\"message-negative\">10 초<\/span> 내에 환경설정을 수신하지 못했습니다. 통신 <span class=\"message-negative\">실패<\/span>"
     },
-    "firmwareVersionNotSupported": {
-        "message": "이 펌웨어 버전은 <span class=\"message-negative\">지원하지 않습니다<\/span>. API 버전 <strong>$1<\/strong> 이상을 지원하는 펌웨어로 업그레이드하십시오. 플래시하기 전에 CLI를 사용하여 백업하십시오. CLI 백업\/복원 절차는 문서를 참고하십시오.<br \/>또는 업그레이드 준비가 되지 않은 경우 이전 버전의 컨피규레이터를 다운로드하여 사용하십시오."
-    },
     "firmwareTypeNotSupported": {
         "message": "베타플라이트 펌웨어가 아닌 경우, CLI 모드를 제외하고 <span class=\"message-negative\">지원되지 않습니다.<\/span>"
-    },
-    "firmwareUpgradeRequired": {
-        "message": "이 기기의 펌웨어는 최신 버전으로 업그레이드해야합니다. 플래시하기 전에 CLI를 사용하여 백업하십시오. CLI 백업\/복원 절차는 문서를 참고하십시오. <br \/>또는 업그레이드 준비가 되지 않은 경우 이전 버전의 컨피규레이터를 다운로드하여 사용하십시오."
     },
     "resetToCustomDefaultsDialog": {
         "message": "이 보드에 대한 사용자 정의 기본값이 있습니다. 일반적으로 보드는 사용자 정의 기본값을 적용하지 않으면 제대로 작동하지 않습니다.<br \/>이 보드에 대한 사용자 정의 기본값을 적용하시겠습니까?"
@@ -504,9 +489,6 @@
     "reportProblemsDialogFooter": {
         "message": "<span class=\"message-negative\"><strong>당신의 기체를 날리기 전에 이 문제들을 해결할 필요가 있습니다<\/span><\/strong>."
     },
-    "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
-        "message": "<span class=\"message-negative\"><strong>사용된 컨피규레이터 버전 ($3)이 펌웨어 $4를 지원하지 않습니다<\/strong><\/span>.<br>$t(configuratorUpdateHelp.message)"
-    },
     "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
         "message": "<strong>선택된 모터 출력 프로토콜이 없습니다<\/strong>.<br>'$t(tabMotorTesting.message)' 탭의 '$t(configurationEscFeatures.message)'에서 ESC에 적합한 모터 출력 프로토콜을 선택하십시오.<br> $t(escProtocolDisabledMessage.message)"
     },
@@ -516,10 +498,6 @@
     "infoVersionOs": {
         "message": "OS: <strong>{{operatingSystem}}<\/strong>",
         "description": "Message that appears in the GUI log panel indicating operating system"
-    },
-    "infoVersionConfigurator": {
-        "message": "컨피규레이터: <strong>{{configuratorVersion}}<\/strong>",
-        "description": "Message that appears in the GUI log panel indicating Configurator version"
     },
     "buildServerSuccess": {
         "message": "성공: $1"
@@ -605,9 +583,6 @@
     "versionLabelFirmware": {
         "message": "펌웨어"
     },
-    "versionLabelConfigurator": {
-        "message": "컨피규레이터"
-    },
     "notifications_app_just_updated_to_version": {
         "message": "어플리케이션이 버전: $1으로 업데이트되었습니다."
     },
@@ -660,9 +635,6 @@
     "eeprom_saved_ok": {
         "message": "EEPROM <span class=\"message-positive\">저장됨<\/span>"
     },
-    "defaultWelcomeIntro": {
-        "message": "<strong>베타플라이트 - 컨피규레이터<\/strong>에 오신 것을 환영합니다.<br>이 유틸리티는 비행 컨트롤러의 업데이트, 구성 및 튜닝을 간소화하도록 설계되었습니다."
-    },
     "defaultWelcomeHead": {
         "message": "하드웨어"
     },
@@ -672,26 +644,17 @@
     "defaultContributingHead": {
         "message": "기여하기"
     },
-    "defaultContributingText": {
-        "message": "베타플라이트를 훨씬 더 좋게 만들고 싶다면, 다음과 같은 여러 가지 방법으로 도울 수 있습니다:<br \/><ul><li>베타플라이트에 대한 지식을 활용하여 <a href=\"https:\/\/betaflight.com\/docs\/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">위키<\/a>에 대한 내용을 만들거나, 온라인 포럼에서 다른 사용자의 질문에 답변할 수 있습니다;<\/li><li>펌웨어와 컨피규레이터에 대한 코드 - 새로운 기능, 수정, 개선 사항에 <a href=\"https:\/\/betaflight.com\/docs\/development\" target=\"_blank\" rel=\"noopener noreferrer\">코드를 공헌<\/a>할 수 있습니다;<\/li><li><a href=\"https:\/\/github.com\/Betaflight\/betaflight\/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">새로운 기능과 수정<\/a>을 테스트하고, 피드백을 제공할 수 있습니다;<\/li><li>다른 사용자들이 <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel=\"noopener noreferrer\">이슈 트랙커<\/a>에 보고한 문제를 해결하여 도움을 줄 수 있으며, 기능 요청에 대한 논의에 참여할 수 있습니다;<\/li><li>베타플라이트 컨피규레이터를 새로운 언어로 <a href=\"https:\/\/github.com\/betaflight\/betaflight\/tree\/master\/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">번역<\/a>하거나, 기존 번역을 유지하도록 도울 수 있습니다.<br \/>한글번역(교정) 문의: 짱아부지JJangPapa(oto4futur@gmail.com)<\/li><\/ul><br \/><ul>베타플라이트 설정이 처음이시거나 새로운 기능을 배우시려면, <a href=\"https:\/\/www.youtube.com\/playlist?list=PLp92gAniAd2r2tY1b2xGnIKLQAbPiskQI\" target=\"_blank\" rel=\"noopener noreferrer\">베타플라이트 설정 가이드(한글판)<\/a>을 참고하세요.<\/ul>"
-    },
     "defaultFacebookText": {
         "message": "우리는 또한 <a href=\"https:\/\/www.facebook.com\/groups\/betaflightgroup\/\" target=\"_blank\" rel=\"noopener noreferrer\">페이스북 그룹<\/a>이 있습니다.<br \/>우리와 함께 베타플라이트에 대해 이야기하고, 환경설정 질문을 하거나, 동료 파일럿과 어울릴 수 있습니다."
     },
     "defaultDiscordText": {
         "message": "베타플라이트 <a href=\"https:\/\/discord.betaflight.com\/invite\" target=\"_blank\" rel=\"noopener noreferrer\">디스코드 서버<\/a>.<br \/>당신의 비행 경험을 공유하고, 베타플라이트에 대해 얘기하고, 다른 사람들을 돕거나 커뮤니티로부터 스스로 도움을 얻으세요."
     },
-    "statisticsDisclaimer": {
-        "message": "베타플라이트 컨피규레이터는 익명의 사용 통계를 수집합니다. 예를 들어, 이 데이터에는 실행 횟수, 사용자의 지리적 지역, 비행 컨트롤러 유형, 펌웨어 버전, UI 요소 및 탭 사용 등이 포함됩니다(이것들로 제한되지는 않습니다). 이 데이터의 요약은 <a href=\"https:\/\/datastudio.google.com\/u\/0\/reporting\/1pK1PFw0eWmsgl2npvuzwAqscVzlhJvuF\" target=\"_blank\" rel=\"noopener noreferrer\">여기<\/a>에 공유됩니다. 베타플라이트 컨피규레이터가 어떻게 사용되고 있는지를 더 잘 이해하고 커뮤니티 추세를 이해하며 가능한 UI 개선을 위해 수집이 수행됩니다. 사용자는 옵션 탭에서 데이터 수집을 거부할 수 있습니다."
-    },
     "defaultButtonFirmwareFlasher": {
         "message": "펌웨어 플래시 도구"
     },
     "defaultDonateHead": {
         "message": "오픈 소스 \/ 기부 알림"
-    },
-    "defaultDonateText": {
-        "message": "<p><strong>베타플라이트<\/strong>는 비행 컨트롤러 소프트웨어로 <strong>오픈 소스<\/strong>이며 모든 사용자들이 <strong>보증없이<\/strong> 무료로 사용할 수 있습니다.<\/p><p>베타플라이트 또는 베타플라이트 컨피규레이터가 유용하다고 판단되면, 기부하는 방법으로 개발을 <strong>지원하는<\/strong> 것을 고려하시기 바랍니다.<\/p>"
     },
     "defaultDonateBottom": {
         "message": "<p>지속적으로 재정적으로 기여 하려는 경우 $t(patreonLink.message)에서 우리의 수호자가 되는 것을 고려하세요.<\/p>"
@@ -1001,10 +964,6 @@
     "initialSetupArmingDisableFlagsTooltipBST": {
         "message": "TBS 텔레메트리 장치 (예 TBS 코어 프로) 가 해제되었으며 아밍하는 것을 방해하고 있습니다",
         "description": "Message that pops up to describe the BST arming disable flag"
-    },
-    "initialSetupArmingDisableFlagsTooltipMSP": {
-        "message": "MSP 연결이 활성화 중입니다, 아마도 이 베타플라이트 컨피규레이터와 연결되어 있는 거 같습니다",
-        "description": "Message that pops up to describe the MSP arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipPARALYZE": {
         "message": "마비 모드가 활성화 되어있습니다",
@@ -3322,9 +3281,6 @@
     "cliCommand": {
         "message": "여기에 명령어를 입력하세요"
     },
-    "loggingNote": {
-        "message": "데이터가 이 탭에 로그되어 집니다. 데이터는 <span class=\"message-negative\">오직<\/span> 이 탭에서만 기록되며, 탭을 나가면 기록을 <span class=\"message-negative\">취소<\/span>하고 어플리케이션이 일반적인 <strong>\"컨피규레이터\"<\/strong> 상태로 돌아갑니다.<br \/> 사용자는 전체 업데이트 주기를 자유롭게 선택할 수 있으며, 데이터는 성능상의 이유로 매 <strong>1<\/strong>초마다 로그 파일에 기록됩니다."
-    },
     "loggingSamplesSaved": {
         "message": "샘플 저장됨:"
     },
@@ -3572,9 +3528,6 @@
     "firmwareFlasherOnlineSelectBoardDescription": {
         "message": "보드를 선택하거나 감지로 사용 가능한 온라인 펌웨어 릴리즈를 확인하십시오 - 보드에 적합한 올바른 펌웨어를 선택하십시오."
     },
-    "firmwareFlasherOnlineSelectBoardHint": {
-        "message": "베타플라이트 컨피규레이터는 각 보드별 환경설정으로 통합 타겟의 플래시를 한 번에 지원합니다.<br><br>통합 타겟의 개념은 동일한 펌웨어 .hex 파일을 동일한 MCU를 사용하는 모든 보드에 사용할 수 있다는 것을 의미합니다.<br><br>Betaflight 4.4는 <strong>클라우드 빌드<\/strong>를 포함합니다<br><br><strong>클라우드 빌드<\/strong>를 사용하려면 빌드에 존재하는 하드웨어 옵션을 정의해야 합니다.<br><br>다른 보드가 동일한 펌웨어에서 작동하도록 하기 위해 통합 타겟이 플래시될 때 특정 환경설정 파일이 펌웨어와 함께 배포됩니다.<br><br>로컬 빌드를 사용하면 통합 대상 환경설정 파일을 로드하거나 펌웨어 .hex 파일을 로드하기 전에 보드를 선택할 수 있습니다.<br><br>펌웨어를 사용하는 데 문제가 발생하는 경우 Discord에 가입하거나 <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel=\"noopener noreferrer\">이슈<\/a>를 여는 것을 고려하십시오."
-    },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "당신의 보드에 대한 펌웨어 버전을 선택하십시오."
     },
@@ -3686,9 +3639,6 @@
     "firmwareFlasherRecoveryHead": {
         "message": "<strong>통신 복구 \/ 손실<\/strong>"
     },
-    "firmwareFlasherRecoveryText": {
-        "message": "보드와의 통신이 끊어진 경우 다음 단계에 따라 통신을 복구하십시오: <ul><li>전원을 끄십시오.<\/li><li>'재부팅 절차 없음', '칩 전부 삭제'를 활성화 하십시오.<\/li><li>부트 핀을 점프하거나 부트 버튼을 누르고 계십시오.<\/li><li>전원을 켜십시오.(제대로 완료되면 작동 중인 LED가 깜박거리지 않습니다)<\/li><li>필요한 경우 STM32 드라이버와 Zadig를 설치하십시오. (베타플라이트 매뉴얼의 <a href=\"https:\/\/betaflight.com\/docs\/wiki\/archive\/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">USB 플래싱<\/a> 섹션을 보십시오.)<\/li><li>컨피규레이터를 닫고, 컨피규레이터를 다시 시작하십시오.<\/li><li>FC에 BOOT 버튼이 있으면 해제하십시오.<\/li><li>올바른 펌웨어로 플래시 하십시오. (당신의 FC 매뉴얼에 명시된 경우 수동 전송 속도를 사용하여).<\/li><li>전원을 끄십시오.<\/li><li>BOOT 점퍼를 제거하십시오.<\/li><li>전원을 켜십시오. (작동 중인 LED가 깜박입니다.).<\/li><li>정상적으로 연결하십시오.<\/li><\/ul>"
-    },
     "firmwareFlasherButtonLeave": {
         "message": "펌웨어 플래시 도구 나가기"
     },
@@ -3746,18 +3696,6 @@
     "firmwareFlasherVerifyBoard": {
         "message": "<h3>펌웨어 불일치<\/h3><br \/>연결된 보드는 <strong>{{verified_board}}<\/strong>인 반면에 당신이 선택한 보드는 <strong>{{selected_board}}<\/strong>입니다.<br \/><br \/>계속 플래싱을 하시겠습니까?",
         "description": "Make a quick connection to read firmware target and never flash a wrong target again"
-    },
-    "firmwareFlasherBoardVerificationSuccess": {
-        "message": "컨피규레이터가 보드: <strong>{{boardName}}<\/strong>를 <span class=\"message-positive\">성공적으로<\/span> 감지하고 검증하였습니다.",
-        "description": "Board verification has succeeded."
-    },
-    "firmwareFlasherBoardVerficationTargetNotAvailable": {
-        "message": "컨피규레이터가 보드를 감지했습니다: <strong>{{boardName}}<\/strong> 그러나 공식 베타라이트 타겟을 찾을 수 없습니다.",
-        "description": "Board verification has succeeded, but the target is not available as offical Betaflight target."
-    },
-    "firmwareFlasherBoardVerificationFail": {
-        "message": "컨피규레이터가 보드를 검증하는 데 <span class=\"message-negative\">실패하였습니다<\/span>, 만약 이 기능이 작동하지 않으면 탭을 천천히 전환하여 다시 시도하거나, 새 usb 연결을 만들거나, 사용자 지정 기본값을 적용하는 것을 잊은 경우 먼저 연결하십시오.",
-        "description": "Sometimes MSP values cannot be read from firmware correctly"
     },
     "firmwareFlasherButtonAbort": {
         "message": "중지"
@@ -6647,10 +6585,6 @@
         "message": "직접 주파수 입력",
         "description": "Text of one of the fields of the VTX tab"
     },
-    "vtxFrequencyChannelHelp": {
-        "message": "이 기능을 활성화하면 컨피규레이터에서 상습 밴드\/채널을 대신하여 주파수를 선택할 수 있습니다. 이 기능이 작동하려면 VTX가 이 기능을 지원해야 합니다.",
-        "description": "Help text for the frequency or channel select field of the VTX tab"
-    },
     "vtxSelectedMode": {
         "message": "선택된 모드",
         "description": "Title for the actual mode header of the VTX"
@@ -7221,9 +7155,6 @@
     "cordovaIncompatibleWebview": {
         "message": "호환 되지 않는 웹뷰"
     },
-    "cordovaWebviewTroubleshootingMsg": {
-        "message": "컨피규레이터를 사용하기 위해서 장치의 웹뷰를 업데이트해야 합니다."
-    },
     "cordovaWebviewTroubleshootingMsg2": {
         "message": "아래 도구는 새 웹뷰를 설치하거나 이미 설치된 웹뷰를 업데이트하는 데 도움을 줄 것입니다."
     },
@@ -7268,9 +7199,6 @@
     },
     "cordovaExitAppTitle": {
         "message": "확인"
-    },
-    "cordovaExitAppMessage": {
-        "message": "정말 컨피규레이터를 종료하시겠습니까?"
     },
     "dropDownSelectAll": {
         "message": "[모두 선택\/선택 해제]",

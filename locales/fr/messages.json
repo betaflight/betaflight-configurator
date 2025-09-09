@@ -74,9 +74,6 @@
     "submit": {
         "message": "Envoyer"
     },
-    "autoConnectEnabled": {
-        "message": "Connexion automatique: Activée - Le configurateur se connecte automatiquement quand un nouveau port est détecté."
-    },
     "autoConnectDisabled": {
         "message": "Connexion automatique: Désactivée - L'utilisateur doit sélectionner manuellement le port série et cliquer sur \"Connexion\"."
     },
@@ -172,12 +169,6 @@
     "sensorStatusSonarShort": {
         "message": "Sonar",
         "description": "Text of the image in the top sensors icons. Please keep it short."
-    },
-    "checkForConfiguratorUnstableVersions": {
-        "message": "Montrer les notifications de mise à jour des versions instables du configurateur"
-    },
-    "configuratorUpdateNotice": {
-        "message": "Votre version du <b>Configurateur Betaflight<\/b> est obsolète.<br>$t(configuratorUpdateHelp.message)"
     },
     "configuratorUpdateWebsite": {
         "message": "Aller sur le site de publication"
@@ -404,14 +395,8 @@
     "noConfigurationReceived": {
         "message": "Aucune donnée reçue depuis <span class=\"message-negative\">10 secondes<\/span>, <span class=\"message-negative\">échec<\/span> de communication."
     },
-    "firmwareVersionNotSupported": {
-        "message": "Cette version du micrologiciel <span class=\"message-negative\">n'est pas supportée<\/span>. Veuillez le mettre à jour vers une version compatible avec l'API <strong>$1<\/strong> ou ultérieure. Utiliser le CLI pour sauvegarder avant de flasher. Les procédures de sauvegarde \/ restauration par CLI sont décrites dans l'aide.<br \/> Téléchargez et utilisez une ancienne version du configurateur si vous n'êtes pas prêt à mettre à jour."
-    },
     "firmwareTypeNotSupported": {
         "message": "Les firmwares autres que Betaflight <span class=\"message-negative\">ne sont pas supportés<\/span>, à part en mode CLI."
-    },
-    "firmwareUpgradeRequired": {
-        "message": "Le micrologiciel de ce dispositif a besoin d'être mis à jour. Utilisez le CLI pour sauvegarder avant de flasher. Les procédures de sauvegarde\/restauration par le CLI sont décrites dans l'aide.<br \/>Téléchargez et utilisez une ancienne version du configurateur si vous n'êtes pas prêt à le mettre à jour."
     },
     "resetToCustomDefaultsDialog": {
         "message": "Des valeurs de réglage par défaut sont disponibles pour cette carte. Avec des valeurs par défaut propres à cette carte, celle-ci devrait fonctionner correctement.<br\/>Souhaitez vous appliquer les réglages par défaut propres à cette carte ?"
@@ -422,19 +407,12 @@
     "reportProblemsDialogHeader": {
         "message": "Les <strong>problèmes suivants avec votre configuration<\/strong> ont été détectés :"
     },
-    "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
-        "message": "<span class=\"message-negative\"><strong>La version du configurateur utilisée ($3) ne supporte pas le firmware $4<\/strong><\/span>.<br>$t(configuratorUpdateHelp.message)"
-    },
     "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
         "message": "<strong>Aucun protocole de sortie vers les moteurs n'est sélectionné<\/strong>.<br>Veuillez choisir un protocole correspondant à vos ESC dans '$t(configurationEscFeatures.message)' l'onglet '$t(tabMotorTesting.message)'.<br>$t(escProtocolDisabledMessage.message)"
     },
     "infoVersionOs": {
         "message": "OS : <strong>{{operatingSystem}}<\/strong>",
         "description": "Message that appears in the GUI log panel indicating operating system"
-    },
-    "infoVersionConfigurator": {
-        "message": "Configurateur: <strong>{{configuratorVersion}}<\/strong>",
-        "description": "Message that appears in the GUI log panel indicating Configurator version"
     },
     "buildServerSuccess": {
         "message": "Réussi: $1"
@@ -511,9 +489,6 @@
     "versionLabelFirmware": {
         "message": "Micrologiciel"
     },
-    "versionLabelConfigurator": {
-        "message": "Configurateur"
-    },
     "notifications_app_just_updated_to_version": {
         "message": "Application mise à jour en version: $1"
     },
@@ -566,9 +541,6 @@
     "eeprom_saved_ok": {
         "message": "EEPROM <span class=\"message-positive\">enregistrée<\/span>"
     },
-    "defaultWelcomeIntro": {
-        "message": "Bienvenue dans le <strong>Configurateur - Betaflight<\/strong>, un utilitaire pour simplifier la mise à jour, la configuration et les réglages de votre contrôleur de vol."
-    },
     "defaultWelcomeHead": {
         "message": "Matériel"
     },
@@ -584,17 +556,11 @@
     "defaultDiscordText": {
         "message": "Betaflight <a href=\"https:\/\/discord.betaflight.com\/invite\" target=\"_blank\" rel=\"noopener noreferrer\">Serveur Discord<\/a>.<br \/>Partagez votre expérience de vol, parlez de Betaflight, aidez d'autres personnes ou obtenez de l'aide de la part de la communauté."
     },
-    "statisticsDisclaimer": {
-        "message": "Betaflight Configurator collecte des statistiques d'utilisation anonymes. Par exemple, ces données incluent (mais ne se limitent pas à) le nombre de lancements, la région géographique des utilisateurs, types de contrôleurs de vol, versions du micrologiciel, utilisation des éléments et des onglets de l'interface, etc. Le résumé de ces données est partagé <a href=\"https:\/\/datastudio.google.com\/u\/0\/reporting\/1pK1PFw0eWmsgl2npvuzwAqscVzlhJvuF\" target=\"_blank\" rel=\"noopener noreferrer\">ici<\/a>. La collecte est faite afin de mieux comprendre comment Betaflight Configurator est utilisé, pour comprendre les tendances de la communauté, et pour les éventuelles améliorations de l'interface utilisateur. Les utilisateurs peuvent se retirer de la collecte de données dans l'onglet Options."
-    },
     "defaultButtonFirmwareFlasher": {
         "message": "Flasher le Firmware"
     },
     "defaultDonateHead": {
         "message": "Open Source \/ Avis de dons"
-    },
-    "defaultDonateText": {
-        "message": "<p><strong>Betaflight<\/strong>est un logiciel de contrôle de vol <strong>libre (open source)<\/strong> et gratuit <strong>sans aucune garantie<\/strong>, pour tous les utilisateurs.<\/p><p>Si vous trouvez Betaflight ou Betaflight Configurator utiles, veuillez envisager<strong>d'aider<\/strong> leur développement grâce à un don.<\/p>"
     },
     "defaultDonateBottom": {
         "message": "<p>Si vous voulez contribuer financièrement de façon régulière, vous devriez envisager de devenir un de nos Patron sur $t(patreonLink.message).<\/p>"
@@ -835,10 +801,6 @@
     "initialSetupArmingDisableFlagsTooltipBST": {
         "message": "Un appareil de télémétrie de TBS (Core Pro par exemple) est désarmé et empêche l'armement",
         "description": "Message that pops up to describe the BST arming disable flag"
-    },
-    "initialSetupArmingDisableFlagsTooltipMSP": {
-        "message": "La connexion MSP est active, probablement avec ce configurateur Betaflight",
-        "description": "Message that pops up to describe the MSP arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipPARALYZE": {
         "message": "Le mode Paralyze a été activé",
@@ -2495,9 +2457,6 @@
     "cliConfirmSnippetBtn": {
         "message": "Exécuter"
     },
-    "loggingNote": {
-        "message": "Les données sont enregistrées dans cet onglet <span class=\"message-negative\">uniquement<\/span>, quitter l'onglet  <span class=\"message-negative\">arrête<\/span> l'enregistrement et l'application retourne en <strong>\"configurateur\"<\/strong>.<br \/> Peu importe la période de rafraîchissement, les données sont écrites <strong>chaque<\/strong> seconde afin de préserver les performances."
-    },
     "loggingSamplesSaved": {
         "message": "Échantillons sauvés:"
     },
@@ -2717,9 +2676,6 @@
     "firmwareFlasherOnlineSelectBuildType": {
         "message": "Choisir le type de build pour voir les cartes disponibles."
     },
-    "firmwareFlasherOnlineSelectBoardHint": {
-        "message": "Le configurateur Betaflight supporte le flash de cibles unifiées avec les configurations spécifiques de la carte en une seule étape.<br><br>Le concept de cibles unifiées signifie que le même firmware . ex file peut être utilisé pour toutes les cartes en utilisant le même MCU.<br><br>Betaflight 4.4 introduit <strong>Cloud Build<\/strong><br><br>Avec <strong>Cloud Build<\/strong> nous devons définir les options matérielles présentes sur votre build.<br><br>Pour que les différentes cartes fonctionnent avec le même firmware, un fichier de configuration spécifique est déployé à côté du microprogramme lorsqu'une cible unifiée est flashée.<br><br>Avec la compilation locale vous pouvez charger un fichier de configuration cible unifié ou choisir une carte avant de charger un fichier .hex firmware.<br><br>Si vous rencontrez des problèmes en utilisant le firmware, veuillez envisager de rejoindre Discord ou ouvrez une <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel=\"noopener noreferrer\">anomalie<\/a>."
-    },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "Sélectionnez la version du micrologiciel pour votre carte."
     },
@@ -2882,18 +2838,6 @@
     "firmwareFlasherVerifyBoard": {
         "message": "<h3>Incompatibilité du firmware<\/h3><br \/>La carte connectée est <strong>{{verified_board}}<\/strong> alors que vous avez sélectionné <strong>{{selected_board}}<\/strong>.<br \/><br \/>Voulez-vous continuer à flasher ?",
         "description": "Make a quick connection to read firmware target and never flash a wrong target again"
-    },
-    "firmwareFlasherBoardVerificationSuccess": {
-        "message": "Le configurateur a <span class=\"message-positive\">correctement<\/span> détecté et vérifié la carte : <strong>{{boardName}}<\/strong>",
-        "description": "Board verification has succeeded."
-    },
-    "firmwareFlasherBoardVerficationTargetNotAvailable": {
-        "message": "Le configurateur a détecté la carte : <strong>{{boardName}}<\/strong> mais aucune cible Betaflight officielle n'a été trouvée",
-        "description": "Board verification has succeeded, but the target is not available as offical Betaflight target."
-    },
-    "firmwareFlasherBoardVerificationFail": {
-        "message": "Le configurateur <span class=\"message-negative\">n'a pas pu vérifer<\/span> la carte, si cela ne fonctionne pas, veuillez essayer de basculer lentement sur l'onglet pour réessayer, faire une nouvelle connexion usb ou se connecter en premier si vous avez oublié d'appliquer des valeurs par défaut personnalisées",
-        "description": "Sometimes MSP values cannot be read from firmware correctly"
     },
     "firmwareFlasherButtonAbort": {
         "message": "Annuler"
@@ -5298,10 +5242,6 @@
         "message": "Saisir la fréquence directement",
         "description": "Text of one of the fields of the VTX tab"
     },
-    "vtxFrequencyChannelHelp": {
-        "message": "Si vous activez ceci, le Configurateur vous permettra de choisir une fréquence à la place de la bande \/ du canal habituel. Votre VTX doit prendre en charge cette fonctionnalité.",
-        "description": "Help text for the frequency or channel select field of the VTX tab"
-    },
     "vtxSelectedMode": {
         "message": "Choisir le mode",
         "description": "Title for the actual mode header of the VTX"
@@ -5827,9 +5767,6 @@
     "cordovaIncompatibleWebview": {
         "message": "Webview incompatible"
     },
-    "cordovaWebviewTroubleshootingMsg": {
-        "message": "Vous devez mettre à jour le webview de votre appareil pour pouvoir utiliser le configurateur."
-    },
     "cordovaWebviewTroubleshootingMsg2": {
         "message": "L'outil ci-dessous est destiné à vous aider à installer un nouveau webview ou à mettre à jour un webview déjà installé."
     },
@@ -5874,9 +5811,6 @@
     },
     "cordovaExitAppTitle": {
         "message": "Confirmation"
-    },
-    "cordovaExitAppMessage": {
-        "message": "Voulez-vous vraiment fermer le configurateur ?"
     },
     "dropDownSelectAll": {
         "message": "[Tout sélectionner\/désélectionner]",

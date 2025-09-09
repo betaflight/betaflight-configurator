@@ -122,7 +122,7 @@
         "message": "Prześlij"
     },
     "autoConnectEnabled": {
-        "message": "Automatyczne połączenie: Włączone - Konfigurator automatycznie spróbuje połączyć się, gdy wykryje nowy port."
+        "message": "Automatyczne połączenie: Włączone - Aplikacja automatycznie próbuje połączyć się po wykryciu nowego portu"
     },
     "autoConnectDisabled": {
         "message": "Automatyczne połączenie: Wyłączone - Użytkownik samodzielnie musi wybrać prawidłowy port i kliknąć \"Połącz\""
@@ -240,10 +240,10 @@
         "description": "Text of the image in the top sensors icons. Please keep it short."
     },
     "checkForConfiguratorUnstableVersions": {
-        "message": "Pokaż powiadomienia o aktualizacji dla niestabilnych wersji konfiguratora."
+        "message": "Pokaż powiadomienia o aktualizacji dla niestabilnych wersji aplikacji"
     },
     "configuratorUpdateNotice": {
-        "message": "Używasz przestarzałej wersji <b>Konfiguratora Betaflight<\/b>.<br>$t(configuratorUpdateHelp.message)"
+        "message": "Używasz nieaktualnej wersji <b>Aplikacji Betaflight <\/b>.<br>$t(configuratorUpdateHelp.message)"
     },
     "configuratorUpdateHelp": {
         "message": "Gdy masz dostęp do internetu, aplikacja powinna automatycznie sprawdzić dostępne aktualizacje."
@@ -359,6 +359,9 @@
     "fileSystemPickerFiles": {
         "message": "{{typeof}} pliki",
         "description": "Text for the file picker dialog, showing the type of files selected. The parameter can be HEX, TXT, etc."
+    },
+    "fileSystemPickerFirmwareFiles": {
+        "message": "Pliki oprogramowania"
     },
     "serialErrorFrameError": {
         "message": "Błąd połączenia szeregowego: nieprawidłowe ramkowanie"
@@ -484,13 +487,13 @@
         "message": "Nie udało się połączyć przez <span class=\"message-negative\">10 sekund<\/span>, komunikacja <span class=\"message-negative\">zawiodła<\/span>"
     },
     "firmwareVersionNotSupported": {
-        "message": "Ta wersja oprogramowania kontrolera lotu <span class=\"message-negative\">nie jest wspierana<\/span>. Proszę uaktualnij oprogramowanie do wersji, która wspiera API <strong>$1<\/strong>, lub wyższej. Użyj CLI, aby zgrać bieżącą konfigurację. Opis zgrywania oraz przywrócenia konfiguracji opisany jest w dokumentacji.<br \/>Możesz również pobrać starszą wersję konfiguratora, jeżeli nie chcesz aktualizować oprogramowania kontrolera lotu."
+        "message": "Ta wersja oprogramowania jest <span class=\"message-negative\">nie obsługiwana<\/span>. Uaktualnij do oprogramowania, które obsługuje api w wersji <strong>$1<\/strong> lub wyższej. Użyj CLI do tworzenia kopii zapasowej przed wgraniem. Procedura tworzenia kopii zapasowej\/przywracania CLI znajduje się w dokumentacji.<br \/>Alternatywnie pobierz i użyj starej wersji aplikacji, jeśli nie jesteś gotowy do aktualizacji."
     },
     "firmwareTypeNotSupported": {
         "message": "Oprogramowanie inne niż Betaflight <span class=\"message-negative\">nie jest wspierane<\/span>, z wyjątkiem trybu CLI."
     },
     "firmwareUpgradeRequired": {
-        "message": "Oprogramowanie na tym urządzeniu wymaga aktualizacji do nowszej wersji. Najpierw użyj Wiersza Poleceń CLI, aby zapisać do pliku bieżącą konfigurację. Procedura zapisu\/odczytu konfiguracji opisana jest w dokumentacji.<br \/>Alternatywnie pobierz starszą wersję konfiguratora, jeśli nie chcesz aktualizować oprogramowania urządzenia."
+        "message": "Oprogramowanie na tym urządzeniu wymaga aktualizacji do nowszej wersji. Użyj CLI do tworzenia kopii zapasowych przed wgraniem. Procedura tworzenia kopii zapasowej\/przywracania CLI znajduje się w dokumentacji.<br \/>Alternatywnie pobierz i użyj starej wersji aplikacji, jeśli nie jesteś gotowy do aktualizacji."
     },
     "resetToCustomDefaultsDialog": {
         "message": "Dostępne są wstępne ustawienia domyślne dla tego kontrolera lotu. Zwykle kontroler lotu będzie działał  nie prawidłowo, jeśli nie zostaną one zastosowane.<br \/> Czy chcesz zastosować wstępne ustawienia domyślne dla tego kontrolera?"
@@ -505,7 +508,7 @@
         "message": "<span class=\"message-negative\"><strong>Musisz rozwiązać te problemy zanim spróbujesz latać swoją jednostką latająca.<\/span><\/strong>."
     },
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
-        "message": "<span class=\"message-negative\"><strong>Użyta wersja konfiguratora ($3) nie obsługuje oprogramowania $4<\/strong><\/span>.<br>$t(configuratorUpdateHelp.message)"
+        "message": "<span class=\"message-negative\"><strong>Używana wersja aplikacji ($3) nie obsługuje oprogramowania $4<\/strong><\/span>.<br>$t(configuratorUpdateHelp.message)"
     },
     "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
         "message": "<strong>Nie wybrano protokołu sterowania silnikami<\/strong>.<br>Wybierz protokół sterowania odpowiedni dla twoich ESC wybierając '$t(configurationEscFeatures.message)' w zakładce  '$t(tabMotorTesting.message)'. <br>$t(escProtocolDisabledMessage.message)"
@@ -518,8 +521,8 @@
         "description": "Message that appears in the GUI log panel indicating operating system"
     },
     "infoVersionConfigurator": {
-        "message": "Konfigurator: <strong>{{configuratorVersion}}<\/strong>",
-        "description": "Message that appears in the GUI log panel indicating Configurator version"
+        "message": "Wersja aplikacji: <strong>{{configuratorVersion}}<\/strong>",
+        "description": "Message that appears in the GUI log panel indicating application version"
     },
     "buildServerSuccess": {
         "message": "Ukończono: $1"
@@ -606,7 +609,7 @@
         "message": "Oprogramowanie"
     },
     "versionLabelConfigurator": {
-        "message": "Konfigurator"
+        "message": "Wersja aplikacji"
     },
     "notifications_app_just_updated_to_version": {
         "message": "Aplikacja właśnie została zaktualizowana do wersji: $1"
@@ -665,7 +668,7 @@
         "message": "<span class=\"message-positive\">Zapisano<\/span> zmiany w EEPROM"
     },
     "defaultWelcomeIntro": {
-        "message": "Witaj w <strong>Betaflight Configurator<\/strong>, narzędziu zaprojektowanym, aby uprościć aktualizację, konfigurację oraz tuning twojego kontrolera lotu."
+        "message": "Witamy w aplikacji <strong>Betaflight<\/strong>, narzędziu opracowanym w celu uproszczenia aktualizacji, konfiguracji i dostrajania kontrolera lotu."
     },
     "defaultWelcomeHead": {
         "message": "Sprzęt"
@@ -676,26 +679,17 @@
     "defaultContributingHead": {
         "message": "Współtworzenie"
     },
-    "defaultContributingText": {
-        "message": "Jeśli chcesz pomagać w rozwijaniu Betaflight, możesz to robić na wiele sposobów:<br \/><ul><li> Wykorzystując swoją wiedzę o Betaflight, twórz lub aktualizuj treści na <a href=\"https:\/\/betaflight.com\/docs\/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">naszej Wiki<\/a> lub odpowiadaj na pytania innych użytkowników na forach internetowych.<\/li><li><a href=\"https:\/\/betaflight.com\/docs\/development\" target=\"_blank\" rel=\"noopener noreferrer\">Bierz udział w tworzeniu kodu<\/a> oprogramowania układowego oraz Konfiguratora. Kreuj nowe funkcje, poprawki i ulepszenia.<\/li><li>Testuj <a href=\"https:\/\/github.com\/Betaflight\/betaflight\/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">nowe funkcje i poprawki<\/a>, nie zapominając o pozostawieniu nam feedbacku.<\/li><li> Pomagaj innym użytkownikom w rozwiązywaniu problemów, które zgłosili w <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel=\"noopener noreferrer\"> systemie zgłaszania problemów<\/a> oraz bierz udział w dyskusjach dotyczących wniosków o nowe funkcjonalności.<\/li><li><a href=\"https:\/\/crowdin.com\/project\/betaflight-configurator#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">Zostań tłumaczem<\/a> Konfiguratora Betaflight na nowy język lub pomóż w poprawianiu istniejących tłumaczeń.<\/li><\/ul>"
-    },
     "defaultFacebookText": {
         "message": "Mamy również <a href=\"https:\/\/www.facebook.com\/groups\/betaflightgroup\/\" target=\"_blank\" rel=\"noopener noreferrer\">grupę na Facebooku<\/a>.<br \/>Dołącz do nas aby porozmawiać o Betaflight, spytać o konfigurację lub po prostu spędzić czas z innymi pilotami."
     },
     "defaultDiscordText": {
         "message": "Betaflight <a href=\"https:\/\/discord.betaflight.com\/invite\" target=\"_blank\" rel=\"noopener noreferrer\">Serwer na Discordzie<\/a>.<br \/> Podziel się doświadczeniami z lotów, porozmawiaj o Betaflight i pomóż innym osobom albo sam uzyskaj pomoc."
     },
-    "statisticsDisclaimer": {
-        "message": "Betaflight Configurator gromadzi anonimowe statystyki użytkowania. Dane te obejmują (ale nie ograniczają się do): liczbę uruchomień, region geograficzny użytkownika, rodzaje kontrolerów lotu, wybierane wersje oprogramowania, korzystanie z elementów interfejsu, otwieranych zakładek itd. Dane są gromadzone <a href=\"https:\/\/datastudio.google.com\/u\/0\/reporting\/1pK1PFw0eWmsgl2npvuzwAqscVzlhJvuF\" target=\"_blank\" rel=\"noopener noreferrer\">tutaj<\/a>. Informacje te pomagają lepiej zrozumieć, jak jest używany Betaflight Configurator, by wprowadzać ulepszenia interfejsu a także w celu poznania trendów, jakie panują w społeczności. Użytkownik może wyłączyć zbieranie danych w zakładce Opcje Ustawień."
-    },
     "defaultButtonFirmwareFlasher": {
         "message": "Wgraj Oprogramowanie"
     },
     "defaultDonateHead": {
         "message": "Informacja o Open Source \/ Darowiznach"
-    },
-    "defaultDonateText": {
-        "message": "<p><strong>Betaflight<\/strong> to oprogramowanie kontrolera lotu , udostępniane za darmo na zasadach licencji <strong>open source<\/strong> i jest dostępne <strong>za darmo<\/strong> dla wszystkich użytkowników.<\/p><p>Jeśli używasz oprogramowania Betaflight oraz uważasz je za przydatne, rozważ <strong>wsparcie<\/strong> jego rozwoju poprzez darowiznę.<\/p>"
     },
     "defaultDonateBottom": {
         "message": "<p>Jeśli chcesz nas regularnie wspierać finansowo, rozważ zostanie naszym patronem na $t(patreonLink.message).<\/p>"
@@ -1005,10 +999,6 @@
     "initialSetupArmingDisableFlagsTooltipBST": {
         "message": "Urządzenie Black Sheep Telemetry (np. TBS Core Pro) jest rozbrojone i uniemożliwia uzbrojenie",
         "description": "Message that pops up to describe the BST arming disable flag"
-    },
-    "initialSetupArmingDisableFlagsTooltipMSP": {
-        "message": "Połączenie MSP jest aktywne, prawdopodobnie z tym konfiguratorem Betafligh",
-        "description": "Message that pops up to describe the MSP arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipPARALYZE": {
         "message": "Tryb Paraliż został aktywowany",
@@ -3326,9 +3316,6 @@
     "cliCommand": {
         "message": "Tutaj wprowadź polecenie"
     },
-    "loggingNote": {
-        "message": "Dane będą zbierane <span class=\"message-negative\">wyłącznie w tym oknie<\/span>, opuszczenie tego okna <span class=\"message-negative\">zatrzyma<\/span> zbieranie danych, a program przejdzie w <strong>tryb standardowej pracy<\/strong>.<br \/>Możesz zmieniać globalne ustawienia aktualizacji, dane będą zapisywane do pliku co <strong>1<\/strong> sekundę."
-    },
     "loggingSamplesSaved": {
         "message": "Zapisane próbki:"
     },
@@ -3576,9 +3563,6 @@
     "firmwareFlasherOnlineSelectBoardDescription": {
         "message": "Wybierz swój kontroler lotu, aby zobaczyć dostępne wersje oprogramowania online. Wybierz odpowiednie oprogramowanie dla twojego kontrolera lotu."
     },
-    "firmwareFlasherOnlineSelectBoardHint": {
-        "message": "Konfigurator Betaflight obsługuje flashowanie kontrolerów lotu wykorzystując ujednolicone cele.<br><br>Koncepcja ta oznacza, że ​​ten sam plik .hex oprogramowania układowego może być używany dla wszystkich kontrolerów lotu korzystających z tego samego MCU.<br> <br>Betaflight 4.4 wprowadza <strong>Kompilację w chmurze<\/strong><br><br>W przypadku <strong>kompilacji w chmurze<\/strong> musimy zdefiniować opcje sprzętowe obecne w Twojej kompilacji.<br><br>Aby różne kontrolery lotu współpracowały z tym samym oprogramowaniem układowym, a określony plik konfiguracyjny był wdrażany wraz z oprogramowaniem układowym podczas flashowania.<br><br>Dzięki kompilacji lokalnej można załadować docelowy plik konfiguracyjny lub wybrać płytkę kontrolera lotu przed załadowaniem oprogramowania układowego .hex.<br><br>Jeśli napotkasz problemy z używaniem oprogramowania układowego, rozważ dołączenie do Discorda lub otwórz plik <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel =\"noopener noreferrer\">problem<\/a>."
-    },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "Wybierz wersję oprogramowania dla swojego urządzenia."
     },
@@ -3690,9 +3674,6 @@
     "firmwareFlasherRecoveryHead": {
         "message": "<strong>Problemy z połączeniem FC<\/strong>"
     },
-    "firmwareFlasherRecoveryText": {
-        "message": "Jeżeli utracono komunikację z kontrolerem lotu, należy wykonać następujące kroki, aby ją przywrócić: <ul><li>Odłączyć zasilanie kontrolera lotu.<\/li><li>Zaznaczyć opcje „Bez ponownego uruchamiania” oraz „Pełne czyszczenie pamięci”.<\/li><li>Złączyć zworką styki BOOT lub przytrzymać przycisk BOOT na kontrolerze lotu.<\/li><li>Podłączyć zasilanie kontrolera lotu (proprawne wykonanie zasygnalizuje dioda aktywności, która PRZESTANIE mrugać).<\/li><li>Jeżeli to konieczne, zainstalować wszystkie sterowniki STM32 i Zadig. Więcej przydatnych informacji na stronie:\n<a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\"> instalowanie oprogramowania<\/a> w instrukcji Betaflight.<\/li><li>Zamknąć konfigurator, a następnie uruchomić go ponownie.<\/li><li>Zwolnić przycisk BOOT, jeśli kontroler lotu go posiada.<\/li><li>Zainstalować poprawne oprogramowanie układowe (używać ręcznej szybkości transmisji, jeśli jest to określone w instrukcji kontrolera lotu).<\/li><li>Odłączyć zasilanie kontrolera lotu.<\/li><li>Usunąć zworkę ze styków BOOT.<\/li><li>Podłączyć zasilanie kontrolera lotu (dioda aktywności powinna teraz mrugać).<\/li><li>Połączyć normalnie.<\/li><\/ul>"
-    },
     "firmwareFlasherButtonLeave": {
         "message": "Urzyj opcji wgrywania oprogramowania"
     },
@@ -3704,6 +3685,12 @@
     },
     "firmwareFlasherFirmwareOnlineLoaded": {
         "message": "Załadowano Firmware Online: {{filename}} ({{bytes}} bajtów)"
+    },
+    "firmwareFlasherInvalidFileFormat": {
+        "message": "Nieprawidłowy format pliku"
+    },
+    "firmwareFlasherUf2Corrupted": {
+        "message": "Plik UF2 wydaje się być uszkodzony"
     },
     "firmwareFlasherHexCorrupted": {
         "message": "Plik HEX wydaje się być uszkodzony"
@@ -3750,18 +3737,6 @@
     "firmwareFlasherVerifyBoard": {
         "message": "<h3>Niezgodność oprogramowania<\/h3><br \/>Połączony kontroler lotu to <strong>{{verified_board}}<\/strong> podczas gdy Ty wybrałeś <strong>{{selected_board}}<\/strong>.<br \/><br \/>Czy chcesz kontynuować wgrywanie?",
         "description": "Make a quick connection to read firmware target and never flash a wrong target again"
-    },
-    "firmwareFlasherBoardVerificationSuccess": {
-        "message": "Konfigurator <span class=\"message-positive\">pomyślnie<\/span> wykrył i zweryfikował kontroler lotu: <strong>{{boardName}}<\/strong>",
-        "description": "Board verification has succeeded."
-    },
-    "firmwareFlasherBoardVerficationTargetNotAvailable": {
-        "message": "Konfigurator wykrył kontroler lotu: <strong>{{boardName}}<\/strong>, lecz nie znaleziono oficjalnego oprogramowania układowego Betaflight",
-        "description": "Board verification has succeeded, but the target is not available as offical Betaflight target."
-    },
-    "firmwareFlasherBoardVerificationFail": {
-        "message": "Konfiguracja <span class=\"message-negative\">nie powiodła się<\/span> ponieważ nie zdołano zidentyfikować kontrolera lotu. Spróbuj ponownie lub utwórz nowe połączenie USB, jeśli to nie pomogło podłącz kontroler lotu w trybie DFU",
-        "description": "Sometimes MSP values cannot be read from firmware correctly"
     },
     "firmwareFlasherButtonAbort": {
         "message": "Przerwij"
@@ -6655,10 +6630,6 @@
         "message": "Wprowadź częstotliwość bezpośrednio",
         "description": "Text of one of the fields of the VTX tab"
     },
-    "vtxFrequencyChannelHelp": {
-        "message": "Jeśli włączysz tę opcję, konfigurator pozwoli Ci wybrać częstotliwość zamiast (standardowo) pasma\/kanału. Twój VTX musi mieć mieć taką funkcję aby zadziałało poprawnie.",
-        "description": "Help text for the frequency or channel select field of the VTX tab"
-    },
     "vtxSelectedMode": {
         "message": "Wybierz tryb",
         "description": "Title for the actual mode header of the VTX"
@@ -7229,9 +7200,6 @@
     "cordovaIncompatibleWebview": {
         "message": "Serwer niekompatybilny"
     },
-    "cordovaWebviewTroubleshootingMsg": {
-        "message": "Aby korzystać z konfiguratora, musisz zaktualizować aplikację webview."
-    },
     "cordovaWebviewTroubleshootingMsg2": {
         "message": "Poniższe narzędzie ma pomóc Ci zainstalować lub uaktualnić aplikację webview."
     },
@@ -7276,9 +7244,6 @@
     },
     "cordovaExitAppTitle": {
         "message": "Potwierdzenie"
-    },
-    "cordovaExitAppMessage": {
-        "message": "Czy na pewno chcesz zamknąć konfigurator?"
     },
     "dropDownSelectAll": {
         "message": "[Zaznacz\/odznacz wszystko]",
