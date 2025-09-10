@@ -92,6 +92,11 @@ export function urlExists(url) {
  */
 
 $.fn.sortSelect = function (text = "") {
+    /*
+
+    Chrome v140 does not work with sortSelect function properly.
+    Disabling it for now until a fix is found.
+
     this.each(function () {
         const select = this;
         // Collect option data
@@ -122,6 +127,8 @@ $.fn.sortSelect = function (text = "") {
             select.add(option);
         });
     });
+
+    */
 
     return this;
 };
