@@ -3357,11 +3357,11 @@
         "description": "D Max slider label"
     },
     "pidTuningRollPitchRatioSlider": {
-        "message": "Atténuation du Pitch :<br \/><i><small>Pitch:Roll D<\/small><\/i>",
+        "message": "Atténuation du Pitch :<br \/><i><small>Pitch: D<\/small><\/i>",
         "description": "Pitch-Roll Ratio slider label"
     },
     "pidTuningPitchPIGainSlider": {
-        "message": "Suivi du Pitch:<br><i><small>Pitch:Roll P, I & FF<\/small><\/i>",
+        "message": "Suivi du Pitch:<br><i><small>Pitch: P, I & FF<\/small><\/i>",
         "description": "Pitch P & I slider label"
     },
     "pidTuningPitchPIGainSliderHelp": {

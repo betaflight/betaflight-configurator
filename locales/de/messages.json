@@ -4090,11 +4090,11 @@
         "description": "D Max slider label"
     },
     "pidTuningRollPitchRatioSlider": {
-        "message": "Pitch-Dämpfung:<br \/><i><small>Pitch:Roll D<\/small><\/i>",
+        "message": "Pitch-Dämpfung:<br \/><i><small>Pitch: D<\/small><\/i>",
         "description": "Pitch-Roll Ratio slider label"
     },
     "pidTuningPitchPIGainSlider": {
-        "message": "Pitch Nachverfolgung:<br><i><small>Pitch:Roll P, I & FF<\/small><\/i>",
+        "message": "Pitch Nachverfolgung:<br><i><small>Pitch: P, I & FF<\/small><\/i>",
         "description": "Pitch P & I slider label"
     },
     "pidTuningPitchPIGainSliderHelp": {
