@@ -3858,11 +3858,11 @@
         "description": "D Max slider label"
     },
     "pidTuningRollPitchRatioSlider": {
-        "message": "Amortiguamento Pitch:<br \/><i><small>Pitch: D<\/small><\/i>",
+        "message": "Amortiguamento Pitch:<br \/><i><small>Pitch: Roll D<\/small><\/i>",
         "description": "Pitch-Roll Ratio slider label"
     },
     "pidTuningPitchPIGainSlider": {
-        "message": "Seguimento de Pitch:<br><i><small>Pitch: P, I y FF<\/small><\/i>",
+        "message": "Seguimento de Pitch:<br><i><small>Pitch:Roll P, I y FF<\/small><\/i>",
         "description": "Pitch P & I slider label"
     },
     "pidTuningPitchPIGainSliderHelp": {

@@ -4231,7 +4231,7 @@
         "description": "Disable or enable D Term Filter Tuning Slider"
     },
     "pidTuningPidSlidersHelp": {
-        "message": "Deslizadores para ajustar las características de vuelo de la aeronave (ganancias de PID)<br \/><br \/>Amortiguación (ganancia de D): Resiste el movimiento rápido, minimiza la oscilación de P.<br \/><br \/>Seguimiento (ganancias de P y D): Mejora la capacidad de respuesta de la aeronave, si es demasiado alto puede causar vibración u oscilación.<br \/><br \/>Respuesta de los mandos (Prealimentación): Aumenta la capacidad de respuesta de la aeronave a movimientos de mando más rápidos.<br \/><br \/>Rumbo - Oscilación (ganancia de I, experto): Ajuste fino de I.<br \/><br \/>D dinámica (D Max, experto): Establece la cantidad máxima a la que D puede ser impulsada durante movimientos rápidos.<br \/><br \/>Amortiguación de Pitch (ratio Pitch de D, experto): Aumenta la cantidad de amortiguación en el pitch relativo al roll.<br \/><br \/>Seguimiento de Pitch (ratio Pitch de P, I y F, experto): Aumenta la fuerza de estabilización en pitch relativo al roll.<br \/><br \/>Multiplicador Maestro (todas las ganancias, expertos): Aumenta o reduce todas las ganancias del PID, manteniendo constantes sus proporciones.",
+        "message": "Deslizadores para ajustar las características de vuelo de la aeronave (ganancias de PID)<br \/><br \/>Amortiguación (ganancia de D): Resiste el movimiento rápido, minimiza la oscilación de P.<br \/><br \/>Seguimiento (ganancias de P y D): Mejora la capacidad de respuesta de la aeronave, si es demasiado alto puede causar vibración u oscilación.<br \/><br \/>Respuesta de los mandos (Prealimentación): Aumenta la capacidad de respuesta de la aeronave a movimientos de mando más rápidos.<br \/><br \/>Rumbo - Oscilación (ganancia de I, experto): Ajuste fino de I.<br \/><br \/>D dinámica (D Max, experto): Establece la cantidad máxima a la que D puede ser impulsada durante movimientos rápidos.<br \/><br \/>Amortiguación de Pitch (ratio Pitch:Roll de D, experto): Aumenta la cantidad de amortiguación en el pitch relativo al roll.<br \/><br \/>Seguimiento de Pitch (ratio Pitch:Roll de P, I y F, experto): Aumenta la fuerza de estabilización en pitch relativo al roll.<br \/><br \/>Multiplicador Maestro (todas las ganancias, expertos): Aumenta o reduce todas las ganancias del PID, manteniendo constantes sus proporciones.",
         "description": "Overall helpicon message for PID tuning sliders"
     },
     "pidTuningSliderWarning": {
@@ -4335,7 +4335,7 @@
         "description": "D Max slider helpicon message"
     },
     "pidTuningRollPitchRatioSlider": {
-        "message": "Amortiguación de Pitch:<br \/><i><small>Pitch: D<\/small><\/i>",
+        "message": "Amortiguación de Pitch:<br \/><i><small>Pitch:Roll D<\/small><\/i>",
         "description": "Pitch-Roll Ratio slider label"
     },
     "pidTuningRollPitchRatioSliderHelp": {
@@ -4343,7 +4343,7 @@
         "description": "Pitch-Roll Ratio tuning slider helpicon message"
     },
     "pidTuningPitchPIGainSlider": {
-        "message": "Seguimiento de Pitch:<br><i><small>Pitch: P, I y F<\/small><\/i>",
+        "message": "Seguimiento de Pitch:<br><i><small>Pitch:Roll P, I y F<\/small><\/i>",
         "description": "Pitch P & I slider label"
     },
     "pidTuningPitchPIGainSliderHelp": {
