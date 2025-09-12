@@ -4423,7 +4423,7 @@
         "description": "Disable or enable D Term Filter Tuning Slider"
     },
     "pidTuningPidSlidersHelp": {
-        "message": "Sliders to adjust the aircraft flight characteristics (PID gains)<br /><br />Damping (D gain): Resists fast movement, minimises P oscillation.<br /><br />Tracking (P and I gain): Enchances the responsiveness of the aircraft, if too high may cause trilling or oscillation.<br /><br />Stick Response (Feedforward): Increases the responsiveness of the aircraft to faster stick movements.<br /><br />Drift - Wobble (I gain, expert):  Fine adjustment of I.<br /><br />Dynamic D (D Max, expert):  Sets the maximum amount that D can be boosted to during fast movements.<br /><br />Pitch Damping (Pitch:Roll D ratio, expert): Increases the amount of damping on pitch relative to roll.<br /><br />Pitch Tracking (Pitch:Roll P, I and F ratio, expert): Increases stabilising strenght on pitch relative to roll.<br /><br />Master Multiplier (all gains, expert): Raises or Lowers all the PID gains, keeping their proportions constant.",
+        "message": "Sliders to adjust the aircraft flight characteristics (PID gains)<br /><br />Damping (D gain): Resists fast movement, minimises P oscillation.<br /><br />Tracking (P and I gain): Enchances the responsiveness of the aircraft, if too high may cause trilling or oscillation.<br /><br />Stick Response (Feedforward): Increases the responsiveness of the aircraft to faster stick movements.<br /><br />Drift - Wobble (I gain, expert):  Fine adjustment of I.<br /><br />Dynamic D (D Max, expert):  Sets the maximum amount that D can be boosted to during fast movements.<br /><br />Pitch Damping (Pitch: D ratio, expert): Increases the amount of damping on pitch relative to roll.<br /><br />Pitch Tracking (Pitch: P, I and F ratio, expert): Increases stabilising strenght on pitch relative to roll.<br /><br />Master Multiplier (all gains, expert): Raises or Lowers all the PID gains, keeping their proportions constant.",
         "description": "Overall helpicon message for PID tuning sliders"
     },
     "pidTuningSliderWarning": {
@@ -4527,7 +4527,7 @@
         "description": "D Max slider helpicon message"
     },
     "pidTuningRollPitchRatioSlider": {
-        "message": "Pitch Damping:<br /><i><small>Pitch:Roll D</small></i>",
+        "message": "Pitch Damping:<br /><i><small>Pitch: D</small></i>",
         "description": "Pitch-Roll Ratio slider label"
     },
     "pidTuningRollPitchRatioSliderHelp": {
@@ -4535,7 +4535,7 @@
         "description": "Pitch-Roll Ratio tuning slider helpicon message"
     },
     "pidTuningPitchPIGainSlider": {
-        "message": "Pitch Tracking:<br><i><small>Pitch:Roll P, I & FF</small></i>",
+        "message": "Pitch Tracking:<br><i><small>Pitch: P, I & FF</small></i>",
         "description": "Pitch P & I slider label"
     },
     "pidTuningPitchPIGainSliderHelp": {
