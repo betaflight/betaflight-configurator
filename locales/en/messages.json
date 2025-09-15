@@ -5764,7 +5764,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementCraftName": {
-        "message": "Aircraft name as set in the Configuration tab.</br>Can also be set via the \"aircraft_name\" CLI variable."
+        "message": "Aircraft name as set in the Configuration tab.</br>Can also be set via the \"craft_name\" CLI variable."
     },
     "osdTextElementAltitude": {
         "message": "Altitude",
