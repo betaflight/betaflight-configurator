@@ -15,7 +15,8 @@ const VirtualFC = {
         virtualFC.resetState();
         virtualFC.CONFIG.deviceIdentifier = 0;
 
-        virtualFC.CONFIG.flightControllerVersion = "4.6.0";
+        virtualFC.CONFIG.flightControllerVersion = "2025.12.0";
+        virtualFC.CONFIG.flightControllerIdentifier = "BTFL";
         virtualFC.CONFIG.apiVersion = CONFIGURATOR.virtualApiVersion;
 
         virtualFC.CONFIG.cpuTemp = 48;
