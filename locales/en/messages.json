@@ -1501,6 +1501,9 @@
     "configurationGyroActiveIMU": {
         "message": "Active IMU"
     },
+    "configurationGyroActiveIMUHelp": {
+        "message": "Select which gyro to use as the primary gyro. The primary gyro is used for stabilization and control. If you have only one gyro, it will be selected automatically.<br><br>It is not always possible to enable multiple gyros, when they are of different types or brands."
+    },
     "configurationGyroAlignmentRoll": {
         "message": "$t(configurationBoardAlignmentRoll.message)",
         "description": "Don't translate!!!"

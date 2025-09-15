@@ -240,10 +240,8 @@ configuration.initialize = function (callback) {
 
         // Multi gyro handling for newer firmware
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
-            // Hide unused legacy elements
-            $(".gyro_alignment_inputs_selection").hide();
-            $(".gyro_alignment_inputs_first").hide();
-            $(".gyro_alignment_inputs_second").hide();
+            // Hide deprecated gyro_box
+            $(".tab-configuration .gyro_box").parent().hide();
 
             // Define gyro detection flags
             const GYRO_DETECTION_FLAGS = { DETECTED_DUAL_GYROS: 1 << 7 };
@@ -264,22 +262,9 @@ configuration.initialize = function (callback) {
                 FC.SENSOR_ALIGNMENT.gyro_enable_mask = 1;
             }
 
-            // Use the specific gyro container (not the general sensor_align_content)
-            const gyroContainer = $(".sensor_align_content .gyro_align_box");
-            // Clear any existing content in the gyro container
-            gyroContainer.empty();
-
             if (gyroCount > 1) {
                 // Track which gyros are detected
                 const detected_gyros = [];
-
-                $(".tab-configuration .gyro_box .spacer_box_title")
-                    .attr("i18n", "configurationGyroActiveIMU")
-                    .removeClass("i18n-replaced");
-                i18n.localizePage(); // Update the title text
-
-                // Make the gyro container visible
-                gyroContainer.show();
 
                 function createGyroBox(gyroIndex, container) {
                     // Create a new gyro alignment div
@@ -340,17 +325,20 @@ configuration.initialize = function (callback) {
 
                     // If gyro is detected, create UI for it
                     if (detected_gyros[i]) {
-                        createGyroBox(i, gyroContainer);
+                        createGyroBox(i, $(".tab-configuration .gyro_enable_configuration"));
                     }
                 }
 
                 // Only show not found message if no gyros are detected
-                $(".gyro_alignment_inputs_notfound").toggle(!detected_gyros.some((detected) => detected));
+                $(".gyro_notfound").toggle(!detected_gyros.some((detected) => detected));
             } else {
                 // Hide the gyro container if not needed
-                $(".tab-configuration .gyro_box").parent().hide();
+                $(".tab-configuration .gyro_enable_box").parent().hide();
             }
         } else {
+            // Hide the gyro enable box introduced in 1.47
+            $(".tab-configuration .gyro_enable_box").parent().hide();
+
             // Original code for older firmware versions remains unchanged
             const orientation_gyro_to_use_e = $("select.gyro_to_use");
             const orientation_gyro_1_align_e = $("select.gyro_1_align");
