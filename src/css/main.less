@@ -2058,6 +2058,11 @@ each(range(12), {
     #reveal_btn {
         display: block;
         order: 4;
+        transition: transform 0.3s;
+        transform-origin: center center;
+    }
+    .headerbar.expand #reveal_btn {
+        transform: rotate(180deg);
     }
     #header_buttons {
         margin-left: auto;
