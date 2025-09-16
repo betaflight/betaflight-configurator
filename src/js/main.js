@@ -334,6 +334,10 @@ function startProcess() {
         $("#background").hide();
     });
 
+    $("#reveal_btn").on("click", function () {
+        $(".headerbar").toggleClass("expand");
+    });
+
     $(window).on("resize", function () {
         // 575px is the mobile breakpoint defined in CSS
         if (window.innerWidth > 575) {
