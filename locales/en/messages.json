@@ -7218,7 +7218,7 @@
         "message": "Blackbox logging rate"
     },
     "onboardLoggingDebugFields": {
-        "message": "Data included"
+        "message": "Debug Fields included"
     },
     "onboardLoggingDebugMode": {
         "message": "Blackbox debug mode"

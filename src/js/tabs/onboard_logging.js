@@ -114,15 +114,6 @@ onboard_logging.initialize = function (callback) {
 
             if (FC.BLACKBOX.supported) {
                 $(".tab-onboard_logging a.save-settings").on("click", async function () {
-                    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
-                        let fieldsMask = 0;
-
-                        $(".blackboxDebugFields select option:not(:selected)").each(function () {
-                            fieldsMask |= 1 << $(this).val();
-                        });
-
-                        FC.BLACKBOX.blackboxDisabledMask = fieldsMask;
-                    }
                     FC.BLACKBOX.blackboxSampleRate = parseInt(loggingRatesSelect.val(), 10);
                     FC.BLACKBOX.blackboxPDenom = parseInt(loggingRatesSelect.val(), 10);
                     FC.BLACKBOX.blackboxDevice = parseInt(deviceSelect.val(), 10);
@@ -239,6 +230,38 @@ onboard_logging.initialize = function (callback) {
         debugModeSelect.val(FC.PID_ADVANCED_CONFIG.debugMode).select2().sortSelect("NONE");
     }
 
+    function createDebugTableRow(i, enabled) {
+        const row = $("<tr></tr>");
+        const checkboxCell = $("<td></td>");
+        const labelCell = $("<td></td>");
+
+        const checkbox = $(
+            `<input type="checkbox" class="toggle" name="blackboxDebugField${i}" value="${i}" ${enabled ? "checked" : ""}>`,
+        );
+        checkboxCell.append(checkbox);
+        checkboxCell.css("width", "40px");
+        row.append(checkboxCell);
+
+        const label = $(`<label for="blackboxDebugField${i}">${DEBUG.enableFields[i]}</label>`);
+        labelCell.append(label);
+        row.append(labelCell);
+
+        $(".blackboxDebugFieldsTable").append(row);
+
+        // Initialize the enable checkbox
+        checkboxCell.find("input").prop("checked", (FC.BLACKBOX.blackboxDisabledMask & (1 << i)) === 0);
+
+        // Add handler for enable/disable checkbox
+        checkboxCell.find("input").on("change", function () {
+            const checked = $(this).is(":checked");
+            if (checked) {
+                FC.BLACKBOX.blackboxDisabledMask &= ~(1 << i);
+            } else {
+                FC.BLACKBOX.blackboxDisabledMask |= 1 << i;
+            }
+        });
+    }
+
     function populateDebugFields(debugFieldsSelect) {
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
             $(".blackboxDebugFields").show();
@@ -247,10 +270,8 @@ onboard_logging.initialize = function (callback) {
 
             for (let i = 0; i < DEBUG.enableFields.length; i++) {
                 const enabled = (fieldsMask & (1 << i)) === 0;
-                debugFieldsSelect.append(new Option(DEBUG.enableFields[i], i, false, enabled));
+                createDebugTableRow(i, enabled);
             }
-
-            debugFieldsSelect.sortSelect().multipleSelect();
         } else {
             $(".blackboxDebugFields").hide();
         }
