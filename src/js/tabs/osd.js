@@ -2794,6 +2794,7 @@ OSD.msp = {
         d.state.haveMax7456Configured = bit_check(d.flags, 4);
         d.state.haveFrSkyOSDConfigured = bit_check(d.flags, 3);
         d.state.haveMax7456FontDeviceConfigured = d.state.haveMax7456Configured || d.state.haveFrSkyOSDConfigured;
+        d.state.haveAirbotTheiaOsdDevice = bit_check(d.flags, 7) && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47);
         d.state.isMax7456FontDeviceDetected = bit_check(d.flags, 5);
         d.state.haveOsdFeature = bit_check(d.flags, 0);
         d.state.isOsdSlave = bit_check(d.flags, 1);
@@ -3543,7 +3544,7 @@ osd.initialize = function (callback) {
                     OSD.msp.decode(info);
                 }
 
-                if (OSD.data.state.haveMax7456FontDeviceConfigured && !OSD.data.state.isMax7456FontDeviceDetected) {
+                if (OSD.data.state.haveMax7456FontDeviceConfigured && !OSD.data.state.isMax7456FontDeviceDetected && !OSD.data.state.haveAirbotTheiaOsdDevice) {
                     $(".noOsdChipDetect").show();
                 }
 
@@ -3819,7 +3820,7 @@ osd.initialize = function (callback) {
                     $(".requires-max7456").hide();
                 }
 
-                if (!OSD.data.state.isMax7456FontDeviceDetected || !OSD.data.state.haveMax7456FontDeviceConfigured) {
+                if (!OSD.data.state.isMax7456FontDeviceDetected || (!OSD.data.state.haveMax7456FontDeviceConfigured && !OSD.data.state.haveAirbotTheiaOsdDevice)) {
                     $(".requires-max7456-font-device-detected").addClass("disabled");
                 }
 
