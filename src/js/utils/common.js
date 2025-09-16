@@ -1,6 +1,4 @@
-import semver from "semver";
 import { mixerList } from "../model";
-import CONFIGURATOR from "../data_storage";
 import $ from "jquery";
 
 export function millitime() {
@@ -31,34 +29,6 @@ export function bytesToSize(bytes) {
 
 export function isInt(n) {
     return n % 1 === 0;
-}
-
-const majorFirmwareVersions = {
-    1.47: "4.6.*",
-    1.46: "4.5.*",
-    1.45: "4.4.*",
-    1.44: "4.3.*",
-};
-
-export function generateVirtualApiVersions() {
-    const firmwareVersionDropdown = document.getElementById("firmware-version-dropdown");
-    const max = semver.minor(CONFIGURATOR.API_VERSION_MAX_SUPPORTED);
-    const min = semver.minor(CONFIGURATOR.API_VERSION_ACCEPTED);
-
-    for (let i = max; i >= min; i--) {
-        const option = document.createElement("option");
-        const verNum = `1.${i}`;
-        option.value = `${verNum}.0`;
-        option.text = `MSP: ${verNum} `;
-
-        if (majorFirmwareVersions.hasOwnProperty(verNum)) {
-            option.text += ` | Firmware: ${majorFirmwareVersions[verNum]}`;
-        } else if (i === max) {
-            option.text += ` | Latest Firmware`;
-        }
-
-        firmwareVersionDropdown.appendChild(option);
-    }
 }
 
 export function getMixerImageSrc(mixerIndex, reverseMotorDir) {
