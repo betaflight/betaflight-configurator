@@ -379,9 +379,10 @@ const MSP = {
             return false;
         }
 
-        const requestExists = this.callbacks.some((instance) => instance.code === code);
-
         const bufferOut = code <= 254 ? this.encode_message_v1(code, data) : this.encode_message_v2(code, data);
+        const requestExists = this.callbacks.some(
+            (instance) => instance.code === code && instance.requestBuffer?.byteLength === bufferOut.byteLength,
+        );
 
         const obj = {
             code,
