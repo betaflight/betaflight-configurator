@@ -122,7 +122,8 @@ const MSP = {
                             this.state = this.decoder_states.DIRECTION_V2;
                             break;
                         default:
-                            console.log(`Unknown protocol char ${String.fromCharCode(chunk)}`);
+                            // Removed logging of unknown protocol characters because the log itself is binary.
+                            // console.log(`Unknown protocol char ${String.fromCharCode(chunk)}`);
                             this.state = this.decoder_states.IDLE;
                     }
                     break;

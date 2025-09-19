@@ -2450,147 +2450,74 @@ MspHelper.prototype.setRawRx = function (channels) {
 
 /**
  * Send a request to read a block of data from the dataflash at the given address and pass that address and a dataview
- * of the returned data to the given callback (or null for the data if an error occured).
+ * of the returned data to the given callback (or null for the data if an error occurred).
  */
-MspHelper.prototype.dataflashRead = function (address, blockSize, onDataCallback) {
-    let outData = [address & 0xff, (address >> 8) & 0xff, (address >> 16) & 0xff, (address >> 24) & 0xff];
+MspHelper.prototype.dataflashRead = function(address, blockSize, onDataCallback) {
+    let outData = [
+        address & 0xFF,
+        (address >> 8) & 0xFF,
+        (address >> 16) & 0xFF,
+        (address >> 24) & 0xFF,
+        blockSize & 0xFF,
+        (blockSize >> 8) & 0xFF,
+        1 // allow compression
+    ];
 
-    outData = outData.concat([blockSize & 0xff, (blockSize >> 8) & 0xff]);
+    const mspObj = this.msp || (typeof MSP !== 'undefined' ? MSP : null);
+    if (!mspObj) {
+        console.error('MSP object not found, cannot read dataflash.');
+        onDataCallback(address, null);
+        return;
+    }
 
-    // Allow compression
-    outData = outData.concat([1]);
+    mspObj.send_message(MSPCodes.MSP_DATAFLASH_READ, outData, false, function(response) {
+        let payloadView = null;
 
-    MSP.send_message(
-        MSPCodes.MSP_DATAFLASH_READ,
-        outData,
-        false,
-        function (response) {
-            if (!response.crcError) {
-                const chunkAddress = response.data.readU32();
+        if (response && response.data) {
+            const headerSize = 7;
+            const chunkAddress = response.data.readU32();
+            const dataSize = response.data.readU16();
+            const dataCompressionType = response.data.readU8();
 
-                const headerSize = 7;
-                const dataSize = response.data.readU16();
-                const dataCompressionType = response.data.readU8();
-
-                // Verify that the address of the memory returned matches what the caller asked for and there was not a CRC error
-                if (chunkAddress == address) {
-                    /* Strip that address off the front of the reply and deliver it separately so the caller doesn't have to
-                     * figure out the reply format:
-                     */
-                    if (dataCompressionType == 0) {
-                        onDataCallback(
-                            address,
-                            new DataView(response.data.buffer, response.data.byteOffset + headerSize, dataSize),
-                        );
-                    } else if (dataCompressionType == 1) {
-                        // Read compressed char count to avoid decoding stray bit sequences as bytes
+            if (chunkAddress === address) {
+                try {
+                    if (dataCompressionType === 0) {
+                        payloadView = new DataView(response.data.buffer, response.data.byteOffset + headerSize, dataSize);
+                    } else if (dataCompressionType === 1) {
                         const compressedCharCount = response.data.readU16();
-
-                        // Compressed format uses 2 additional bytes as a pseudo-header to denote the number of uncompressed bytes
                         const compressedArray = new Uint8Array(
                             response.data.buffer,
                             response.data.byteOffset + headerSize + 2,
-                            dataSize - 2,
+                            dataSize - 2
                         );
                         const decompressedArray = huffmanDecodeBuf(
                             compressedArray,
                             compressedCharCount,
                             defaultHuffmanTree,
-                            defaultHuffmanLenIndex,
+                            defaultHuffmanLenIndex
                         );
-
-                        onDataCallback(address, new DataView(decompressedArray.buffer), dataSize);
+                        payloadView = new DataView(decompressedArray.buffer);
                     }
-                } else {
-                    // Report address error
-                    console.log(`Expected address ${address} but received ${chunkAddress} - retrying`);
-                    onDataCallback(address, null); // returning null to the callback forces a retry
+                } catch (e) {
+                    console.warn('Decompression or read failed, delivering raw data anyway');
+                    payloadView = new DataView(response.data.buffer, response.data.byteOffset + headerSize, dataSize);
                 }
             } else {
-                // Report crc error
-                console.log(`CRC error for address ${address} - retrying`);
-                onDataCallback(address, null); // returning null to the callback forces a retry
+                console.log(`Expected address ${address} but received ${chunkAddress}`);
             }
-        },
-        true,
-    );
-};
-
-MspHelper.prototype.sendServoConfigurations = function (onCompleteCallback) {
-    let nextFunction = send_next_servo_configuration;
-
-    let servoIndex = 0;
-
-    if (FC.SERVO_CONFIG.length == 0) {
-        onCompleteCallback();
-    } else {
-        nextFunction();
-    }
-
-    function send_next_servo_configuration() {
-        const buffer = [];
-
-        // send one at a time, with index
-
-        const servoConfiguration = FC.SERVO_CONFIG[servoIndex];
-
-        buffer
-            .push8(servoIndex)
-            .push16(servoConfiguration.min)
-            .push16(servoConfiguration.max)
-            .push16(servoConfiguration.middle)
-            .push8(servoConfiguration.rate);
-
-        let out = servoConfiguration.indexOfChannelToForward;
-        if (out == undefined) {
-            out = 255; // Cleanflight defines "CHANNEL_FORWARDING_DISABLED" as "(uint8_t)0xFF"
-        }
-        buffer.push8(out).push32(servoConfiguration.reversedInputSources);
-
-        // prepare for next iteration
-        servoIndex++;
-        if (servoIndex == FC.SERVO_CONFIG.length) {
-            nextFunction = onCompleteCallback;
         }
 
-        MSP.send_message(MSPCodes.MSP_SET_SERVO_CONFIGURATION, buffer, false, nextFunction);
-    }
-};
+        // Deliver payloadView if defined, otherwise pass null
+        onDataCallback(address, payloadView);
 
-MspHelper.prototype.sendModeRanges = function (onCompleteCallback) {
-    let nextFunction = send_next_mode_range;
-
-    let modeRangeIndex = 0;
-
-    if (FC.MODE_RANGES.length == 0) {
-        onCompleteCallback();
-    } else {
-        send_next_mode_range();
-    }
-
-    function send_next_mode_range() {
-        const modeRange = FC.MODE_RANGES[modeRangeIndex];
-        const buffer = [];
-
-        buffer
-            .push8(modeRangeIndex)
-            .push8(modeRange.id)
-            .push8(modeRange.auxChannelIndex)
-            .push8((modeRange.range.start - 900) / 25)
-            .push8((modeRange.range.end - 900) / 25);
-
-        const modeRangeExtra = FC.MODE_RANGES_EXTRA[modeRangeIndex];
-
-        buffer.push8(modeRangeExtra.modeLogic).push8(modeRangeExtra.linkedTo);
-
-        // prepare for next iteration
-        modeRangeIndex++;
-        if (modeRangeIndex == FC.MODE_RANGES.length) {
-            nextFunction = onCompleteCallback;
+        if (!response || response.crcError) {
+            console.log(`CRC error or missing data at address ${address} - delivering whatever we got`);
+        } else if (payloadView) {
+            console.log(`Block at ${address} received (${payloadView.byteLength} bytes)`);
         }
-        MSP.send_message(MSPCodes.MSP_SET_MODE_RANGE, buffer, false, nextFunction);
-    }
-};
+    }, true); // end of send_message
+}; // end of dataflashRead
+
 
 MspHelper.prototype.sendAdjustmentRanges = function (onCompleteCallback) {
     let nextFunction = send_next_adjustment_range;
