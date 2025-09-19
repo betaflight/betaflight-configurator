@@ -62,8 +62,6 @@ const MSP = {
     last_received_timestamp: null,
     listeners: [],
 
-    JUMBO_FRAME_SIZE_LIMIT: 255,
-
     cli_buffer: [], // buffer for CLI character output
     cli_output: [],
     cli_callback: null,
