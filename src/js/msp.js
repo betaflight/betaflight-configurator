@@ -277,7 +277,6 @@ const MSP = {
         // Reset variables
         this.message_length_received = 0;
         this.state = 0;
-        this.messageIsJumboFrame = false;
         this.crcError = false;
     },
     notify() {

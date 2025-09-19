@@ -314,7 +314,7 @@ The debug tools auto-load when `msp_debug_tools.js` is imported. They detect the
 
 ## File Structure
 
-```
+```text
 src/js/msp/
 ├── MSPCodes.js
 ├── MSPConnector.js  
