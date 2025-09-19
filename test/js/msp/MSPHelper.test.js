@@ -3,7 +3,7 @@ import MspHelper from "../../../src/js/msp/MSPHelper";
 import MSPCodes from "../../../src/js/msp/MSPCodes";
 import "../../../src/js/injected_methods";
 import FC from "../../../src/js/fc";
-import { API_VERSION_1_46 } from "../../../src/js/data_storage";
+import { API_VERSION_1_47 } from "../../../src/js/data_storage";
 
 describe("MspHelper", () => {
     const mspHelper = new MspHelper();
@@ -28,7 +28,6 @@ describe("MspHelper", () => {
                 callbacks: [
                     {
                         callback: callbackFunction,
-                        callbackOnError: true,
                         code: MSPCodes.MSP_BOARD_INFO,
                     },
                 ],
@@ -79,7 +78,7 @@ describe("MspHelper", () => {
             expect(FC.MOTOR_DATA.slice(motorCount, 8)).toContain(undefined);
         });
         it("handles MSP_BOARD_INFO correctly for API version", () => {
-            FC.CONFIG.apiVersion = API_VERSION_1_46;
+            FC.CONFIG.apiVersion = API_VERSION_1_47;
             let infoBuffer = [];
 
             const boardIdentifier = appendStringToArray(infoBuffer, generateRandomString(4)); // set board-identifier
