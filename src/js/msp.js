@@ -64,7 +64,7 @@ const MSP = {
 
     JUMBO_FRAME_SIZE_LIMIT: 255,
 
-    cli_buffer: [], // buffer for CLI charactor output
+    cli_buffer: [], // buffer for CLI character output
     cli_output: [],
     cli_callback: null,
 
@@ -285,7 +285,7 @@ const MSP = {
         });
     },
     listen(listener) {
-        if (this.listeners.indexOf(listener) == -1) {
+        if (this.listeners.indexOf(listener) === -1) {
             this.listeners.push(listener);
         }
     },
