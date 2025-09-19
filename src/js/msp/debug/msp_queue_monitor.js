@@ -52,10 +52,10 @@ export class MSPQueueMonitor {
             return;
         }
 
+
         // Store original methods
         this.originalSendMessage = this.msp.send_message.bind(this.msp);
         this.originalDispatchMessage = this.msp._dispatch_message.bind(this.msp);
-        this.originalRemoveRequest = this.msp._removeRequestFromCallbacks?.bind(this.msp);
 
         // Override send_message to track requests
         this.msp.send_message = (...args) => {
@@ -63,19 +63,34 @@ export class MSPQueueMonitor {
             return this.originalSendMessage(...args);
         };
 
-        // Override _dispatch_message to track responses
+        // Override _dispatch_message to track completions and responses
         this.msp._dispatch_message = (...args) => {
+            // Try to find the just-completed request object (if any)
+            let requestObj = null;
+            if (Array.isArray(this.msp.callbacks)) {
+                // Heuristic: find the most recently completed/removed request
+                // (MSP._dispatch_message removes the entry after calling callbacks)
+                // So, before calling the original, find the matching entry by code and buffer
+                const code = this.msp.code;
+                const buffer = this.msp.message_buffer;
+                if (code !== undefined && buffer) {
+                    // Use the same requestKey logic as MSP
+                    if (typeof this.msp._getRequestKey === 'function') {
+                        const requestKey = this.msp._getRequestKey(code, buffer);
+                        requestObj = this.msp.callbacks.find((req) => req.requestKey === requestKey);
+                    } else {
+                        // fallback: match by code
+                        requestObj = this.msp.callbacks.find((req) => req.code === code);
+                    }
+                }
+            }
+            // Track completion before the original removes it
+            if (requestObj) {
+                this._trackRequestCompletion(requestObj);
+            }
             this._trackResponse();
             return this.originalDispatchMessage(...args);
         };
-
-        // Override _removeRequestFromCallbacks to track completions
-        if (this.originalRemoveRequest) {
-            this.msp._removeRequestFromCallbacks = (requestObj) => {
-                this._trackRequestCompletion(requestObj);
-                return this.originalRemoveRequest(requestObj);
-            };
-        }
 
         // Mark MSP instance as instrumented
         this.msp._mspQueueMonitorInstrumented = true;
