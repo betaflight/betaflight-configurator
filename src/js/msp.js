@@ -312,8 +312,8 @@ const MSP = {
         const dataLength = data ? data.length : 0;
         // always reserve 6 bytes for protocol overhead !
         const bufferSize = dataLength + 6;
-        let bufferOut = new ArrayBuffer(bufferSize);
-        let bufView = new Uint8Array(bufferOut);
+        const bufferOut = new ArrayBuffer(bufferSize);
+        const bufView = new Uint8Array(bufferOut);
 
         bufView[0] = 36; // $
         bufView[1] = 77; // M
@@ -380,8 +380,13 @@ const MSP = {
         }
 
         const bufferOut = code <= 254 ? this.encode_message_v1(code, data) : this.encode_message_v2(code, data);
+        const view = new Uint8Array(bufferOut);
+        const keyCrc = this.crc8_dvb_s2_data(view, 0, view.length);
         const requestExists = this.callbacks.some(
-            (instance) => instance.code === code && instance.requestBuffer?.byteLength === bufferOut.byteLength,
+            (i) =>
+                i.code === code &&
+                i.requestBuffer?.byteLength === bufferOut.byteLength &&
+                this.crc8_dvb_s2_data(new Uint8Array(i.requestBuffer), 0, i.requestBuffer.byteLength) === keyCrc,
         );
 
         const obj = {
