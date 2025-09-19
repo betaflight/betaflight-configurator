@@ -28,7 +28,6 @@ describe("MspHelper", () => {
                 callbacks: [
                     {
                         callback: callbackFunction,
-                        callbackOnError: true,
                         code: MSPCodes.MSP_BOARD_INFO,
                     },
                 ],
