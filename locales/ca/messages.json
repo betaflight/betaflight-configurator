@@ -4757,7 +4757,7 @@
         "message": "Yaw Integrat"
     },
     "pidTuningIntegratedYawCaution": {
-        "message": "<span class=\"message-negative\">ATENCIÓ<\/span>: si activeu aquesta característica, heu d'ajustar el PID YAW en conseqüència. Més informació <a href=\"https:\/\/github.com\/cleanflight\/cleanflight\/wiki\/Integrated-Yaw\"target=\"blank\" rel=\"noopener noreferrer\">aquí<\/a>"
+        "message": "<span class=\"message-negative\">ATENCIÓ<\/span>: si activeu aquesta característica, heu d'ajustar el PID YAW en conseqüència. Més informació <a href=\"https:\/\/betaflight.com\/docs\/development\/IntegratedYaw\"target=\"blank\" rel=\"noopener noreferrer\">aquí<\/a>"
     },
     "pidTuningIntegratedYawHelp": {
         "message": "Integrated Yaw integra els valors de guiñada P, I i D, la qual cosa permet que les guiñades P, I i D s'ajustin una mica com si sintonitzeu el pas i el gir.<br><br>Es requereix molt poca I, perquè la P integrada actua com I i la D integrada actuen com P.<br><br>NOTA: La guiada integrada requereix l'ús del control absolut, ja que no es necessita cap I amb la guiada integrada."
