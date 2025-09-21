@@ -643,9 +643,9 @@ MspHelper.prototype.process_data = function (dataHandler) {
 
                     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
                         FC.SENSOR_ALIGNMENT.gyro_enable_mask = data.readU8(); // replacing gyro_to_use
-                        FC.SENSOR_ALIGNMENT.mag_align_roll = data.readU16();
-                        FC.SENSOR_ALIGNMENT.mag_align_pitch = data.readU16();
-                        FC.SENSOR_ALIGNMENT.mag_align_yaw = data.readU16();
+                        FC.SENSOR_ALIGNMENT.mag_align_roll = data.read16();
+                        FC.SENSOR_ALIGNMENT.mag_align_pitch = data.read16();
+                        FC.SENSOR_ALIGNMENT.mag_align_yaw = data.read16();
                     } else {
                         FC.SENSOR_ALIGNMENT.gyro_to_use = data.readU8();
                         FC.SENSOR_ALIGNMENT.gyro_1_align = data.readU8();
