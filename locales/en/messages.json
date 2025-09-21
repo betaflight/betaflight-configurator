@@ -2727,6 +2727,10 @@
         "message": "Disable the control of VTX settings through the OSD",
         "description": "Help text to VTX CONTROL DISABLE mode"
     },
+    "auxiliaryHelpMode_VTXPOWER": {
+        "message": "Cycle through VTX power levels (if supported by VTX)",
+        "description": "Help text to VTX POWER mode"
+    },
     "auxiliaryHelpMode_VTXPITMODE": {
         "message": "Switch the VTX into pit mode (low output power, if supported)",
         "description": "Help text to VTX PIT MODE mode"
