@@ -564,12 +564,11 @@
         -webkit-appearance: none;
         width: 100%;
         height: 1rem;
-        border: none;
-        outline: none;
+        border: none !important;
+        outline: none !important;
         opacity: 0.8;
         transition: opacity 0.2s;
         background: var(--surface-200);
-        border: none !important;
         background-color: transparent !important;
         padding: 0.25rem !important;
         &:hover {
@@ -824,7 +823,6 @@
     font-weight: normal;
     display: grid;
     grid-template-columns: auto auto;
-    // place-items: center start;
     background-image: linear-gradient(
         315deg,
         rgba(255, 255, 255, 0.2) 10%,
