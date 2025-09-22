@@ -6,7 +6,7 @@
         </div>
         <div class="content_wrapper_header">
             <div class="profile single-field">
-                <div class="helpicon cf_tip topspacer" i18n_title="pidTuningProfileTip"></div>
+                <div class="helpicon cf_tip" i18n_title="pidTuningProfileTip"></div>
                 <div class="head" i18n="pidTuningProfile"></div>
                 <div>
                     <select name="profile">
@@ -15,7 +15,7 @@
                 </div>
             </div>
             <div class="rate_profile single-field">
-                <div class="helpicon cf_tip topspacer" i18n_title="pidTuningRateProfileTip"></div>
+                <div class="helpicon cf_tip" i18n_title="pidTuningRateProfileTip"></div>
                 <div class="head" i18n="pidTuningRateProfile"></div>
                 <div>
                     <select name="rate_profile">
@@ -24,7 +24,7 @@
                 </div>
             </div>
             <div class="controller single-field">
-                <div class="helpicon cf_tip topspacer" i18n_title="pidTuningPidControllerTip"></div>
+                <div class="helpicon cf_tip" i18n_title="pidTuningPidControllerTip"></div>
                 <div class="head" i18n="pidTuningControllerHead"></div>
                 <div>
                     <select name="controller">
@@ -154,7 +154,7 @@
                         </table>
                     </div>
 
-                    <div class="gui_box topspacer slidersDisabled">
+                    <div class="gui_box slidersDisabled">
                         <table class="note-button">
                             <td i18n="pidTuningPidSlidersDisabled"></td>
                             <td>
@@ -165,13 +165,11 @@
 
                     <!-- TUNING SLIDERS-->
 
-                    <div id="slidersPidsBox" class="gui_box grey topspacer tuningPIDSliders">
+                    <div id="slidersPidsBox" class="gui_box grey tuningPIDSliders">
                         <table class="pid_titlebar">
                             <tr>
                                 <th scope="col">
                                     <div i18n="pidTuningSliderPidsMode" class="sm-min"></div>
-                                </th>
-                                <th scope="col">
                                     <select id="sliderPidsModeSelect" class="sliderMode">
                                         <option value="0" i18n="pidTuningOptionOff"></option>
                                         <option value="1" i18n="pidTuningOptionRP"></option>
@@ -311,19 +309,19 @@
                          </table>
                     </div>
 
-                    <div class="gui_box topspacer slidersWarning">
+                    <div class="danger slidersWarning">
                         <p i18n="pidTuningSliderWarning"></p>
                     </div>
 
-                    <div class="gui_box topspacer nonExpertModeSlidersNote">
+                    <div class="note nonExpertModeSlidersNote">
                         <p i18n="pidTuningPidSlidersNonExpertMode"></p>
                     </div>
-                    <div class="gui_box topspacer expertSettingsDetectedNote">
+                    <div class="note expertSettingsDetectedNote">
                         <p i18n="pidTuningSlidersExpertSettingsDetectedNote"></p>
                     </div>
 
                     <!-- BARO, MAG, GPS -->
-                    <div id="pid_baro_mag_gps" class="pid_optional needed_by_ALT needed_by_VEL needed_by_MAG needed_by_Pos needed_by_PosR needed_by_NavR gui_box grey topspacer pid_tuning">
+                    <div id="pid_baro_mag_gps" class="pid_optional needed_by_ALT needed_by_VEL needed_by_MAG needed_by_Pos needed_by_PosR needed_by_NavR gui_box grey pid_tuning">
                         <table class="pid_titlebar needed_by_ALT needed_by_VEL needed_by_MAG">
                             <tr class="needed_by_ALT needed_by_VEL needed_by_MAG">
                                 <th class="name"></th>
@@ -396,7 +394,7 @@
                             </tr>
                         </table>
                     </div>
-                    <div id="pid_accel" class="pid_optional needed_by_LEVEL gui_box grey topspacer pid_tuning">
+                    <div id="pid_accel" class="pid_optional needed_by_LEVEL gui_box grey pid_tuning">
                         <table id="pid_level" class="pid_tuning needed_by_LEVEL">
                             <tr class="needed_by_LEVEL">
                                 <th colspan="3">
@@ -907,7 +905,7 @@
                         </table>
                     </div>
 
-                    <div class="note rates-tab-warning maxRateWarning">
+                    <div class="danger rates-tab-warning maxRateWarning">
                         <p i18n="pidTuningMaxRateWarning"></p>
                     </div>
                     <div class="gui_box grey rateSetup">
@@ -1138,7 +1136,7 @@
                 </div>
 
                 <!-- Filter Slider -->
-                <div id="slidersFilterBox" class="gui_box grey topspacer tuningFilterSliders">
+                <div id="slidersFilterBox" class="gui_box grey tuningFilterSliders">
                     <table class="pid_titlebar">
                         <tr>
                             <th scope="col" class="sm-min"></th>
@@ -1194,20 +1192,20 @@
                     </table>
                 </div>
 
-                <div class="gui_box topspacer slidersWarning">
+                <div class="danger slidersWarning">
                     <p i18n="pidTuningSliderWarning"></p>
                 </div>
 
-                <div class="gui_box topspacer nonExpertModeSlidersNote">
+                <div class="note nonExpertModeSlidersNote">
                     <p i18n="pidTuningFilterSlidersNonExpertMode"></p>
                 </div>
 
-                <div class="gui_box topspacer expertSettingsDetectedNote">
+                <div class="note expertSettingsDetectedNote">
                     <p i18n="pidTuningSlidersExpertSettingsDetectedNote"></p>
                 </div>
 
                 <div class="cf_column two_columns">
-                    <div class="gui_box grey topspacer pid_filter two_columns_first">
+                    <div class="gui_box grey pid_filter two_columns_first">
                         <table class="pid_titlebar new_rates">
                             <tr>
                                 <th i18n="pidTuningNonProfileFilterSettings"></th>
@@ -1444,7 +1442,7 @@
                             </tr>
                         </table>
                     </div>
-                    <div class="gui_box grey topspacer pid_filter two_columns_second">
+                    <div class="gui_box grey pid_filter two_columns_second">
                         <table class="pid_titlebar new_rates">
                             <tr>
                                 <th i18n="pidTuningFilterSettings"></th>
