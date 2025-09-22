@@ -67,6 +67,11 @@ function MspHelper() {
         LIDAR_TF: 15,
         FRSKY_OSD: 16,
         VTX_MSP: 17,
+        GIMBAL: 18,
+        KOLIBRI_INITIATOR: 19,
+        DETONATOR: 20,
+        MANTICORE_INITIATOR_V1: 21,
+        MANTICORE_INITIATOR_V2: 22,
     };
 
     self.REBOOT_TYPES = {

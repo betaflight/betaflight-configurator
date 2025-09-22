@@ -73,6 +73,12 @@ ports.initialize = function (callback) {
         functionRules.push({ name: "VTX_MSP", groups: ["peripherals"], sharableWith: ["msp"], maxPorts: 1 });
     }
 
+    functionRules.push({ name: "GIMBAL", groups: ["peripherals"], maxPorts: 1 });
+    functionRules.push({ name: "KOLIBRI_INITIATOR", groups: ["peripherals"], maxPorts: 1 });
+    functionRules.push({ name: "DETONATOR", groups: ["peripherals"], maxPorts: 1 });
+    functionRules.push({ name: "MANTICORE_INITIATOR_V1", groups: ["peripherals"], sharableWith: ["msp"], maxPorts: 1 });
+    functionRules.push({ name: "MANTICORE_INITIATOR_V2", groups: ["peripherals"], sharableWith: ["msp"], maxPorts: 1 });
+
     for (const rule of functionRules) {
         rule.displayName = i18n.getMessage(`portsFunction_${rule.name}`);
     }

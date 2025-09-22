@@ -1937,6 +1937,12 @@
     "portsFunction_VTX_MSP": {
         "message": "VTX (MSP + Displayport)"
     },
+    "portsFunction_MANTICORE_INITIATOR_V1": {
+        "message": "Manticore V1"
+    },
+    "portsFunction_MANTICORE_INITIATOR_V2": {
+        "message": "Manticore V2"
+    },
     "pidTuningProfileOption": {
         "message": "Profile $1"
     },
@@ -7744,6 +7750,15 @@
     "osdTextElementLidar": {
         "message": "Sonar",
         "description": "Displays distance from sonar sensor in cm"
+    },
+    "osdTextElementManticoreV1": {
+        "message": "Manticore V1"
+    },
+    "osdTextElementManticoreV2": {
+        "message": "Manticore V2"
+    },
+    "osdTextElementManticoreV2Logger": {
+        "message": "Manticore V2 Logger"
     },
     "osdDescElementLidar": {
         "message": "$t(osdTextElementLidar.message)",

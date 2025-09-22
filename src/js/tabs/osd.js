@@ -1773,6 +1773,78 @@ OSD.loadDisplayFields = function () {
             positionable: true,
             preview: "RF:---",
         },
+        MB_OSD_STATS: {
+            name: "MB_OSD_STATS",
+            text: "MB_OSD_STATS",
+            desc: "MB_OSD_STATS",
+            defaultPosition: -1,
+            draw_order: 610,
+            positionable: true,
+            preview: "MB_OSD_STATS",
+        },
+        MB_VRX_RSSI: {
+            name: "MB_VRX_RSSI",
+            text: "MB_VRX_RSSI",
+            desc: "MB_VRX_RSSI",
+            defaultPosition: -1,
+            draw_order: 610,
+            positionable: true,
+            preview: "MB_VRX_RSSI",
+        },
+        MB_INIK_INITIATOR: {
+            name: "MB_INIK_INITIATOR",
+            text: "MB_INIK_INITIATOR",
+            desc: "MB_INIK_INITIATOR",
+            defaultPosition: -1,
+            draw_order: 610,
+            positionable: true,
+            preview: "MB_INIK_INITIATOR",
+        },
+        MB_USE_KOLIBRI_INITIATOR_OSD: {
+            name: "MB_USE_KOLIBRI_INITIATOR_OSD",
+            text: "MB_USE_KOLIBRI_INITIATOR_OSD",
+            desc: "MB_USE_KOLIBRI_INITIATOR_OSD",
+            defaultPosition: -1,
+            draw_order: 610,
+            positionable: true,
+            preview: "MB_USE_KOLIBRI_INITIATOR_OSD",
+        },
+        MB_LASERDETON_INITIATOR_OSD: {
+            name: "MB_LASERDETON_INITIATOR_OSD",
+            text: "MB_LASERDETON_INITIATOR_OSD",
+            desc: "MB_LASERDETON_INITIATOR_OSD",
+            defaultPosition: -1,
+            draw_order: 610,
+            positionable: true,
+            preview: "MB_LASERDETON_INITIATOR_OSD",
+        },
+        MANTICORE_INITIATOR_V1: {
+            name: "MANTICORE_INITIATOR_V1",
+            text: "osdTextElementManticoreV1",
+            desc: "osdTextElementManticoreV1",
+            defaultPosition: -1,
+            draw_order: 1075,
+            positionable: true,
+            preview: "MANTICORE V1",
+        },
+        MANTICORE_INITIATOR_V2: {
+            name: "MANTICORE_INITIATOR_V2",
+            text: "osdTextElementManticoreV2",
+            desc: "osdTextElementManticoreV2",
+            defaultPosition: -1,
+            draw_order: 1075,
+            positionable: true,
+            preview: "MANTICORE V2",
+        },
+        MANTICORE_INITIATOR_LOGGER_V2: {
+            name: "MANTICORE_INITIATOR_LOGGER_V2",
+            text: "osdTextElementManticoreV2Logger",
+            desc: "osdTextElementManticoreV2Logger",
+            defaultPosition: -1,
+            draw_order: 1076,
+            positionable: true,
+            preview: "MANTICORE V2 LOGGER",
+        },
     };
 
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
@@ -2220,6 +2292,14 @@ OSD.chooseFields = function () {
             F.CUSTOM_MSG2,
             F.CUSTOM_MSG3,
             F.OSD_LIDAR_DIST,
+            F.MB_OSD_STATS,
+            F.MB_VRX_RSSI,
+            F.MB_INIK_INITIATOR,
+            F.MB_USE_KOLIBRI_INITIATOR_OSD,
+            F.MB_LASERDETON_INITIATOR_OSD,
+            F.MANTICORE_INITIATOR_V1,
+            F.MANTICORE_INITIATOR_V2,
+            F.MANTICORE_INITIATOR_LOGGER_V2,
         ]);
     }
     // Choose statistic fields
@@ -3544,7 +3624,11 @@ osd.initialize = function (callback) {
                     OSD.msp.decode(info);
                 }
 
-                if (OSD.data.state.haveMax7456FontDeviceConfigured && !OSD.data.state.isMax7456FontDeviceDetected && !OSD.data.state.haveAirbotTheiaOsdDevice) {
+                if (
+                    OSD.data.state.haveMax7456FontDeviceConfigured &&
+                    !OSD.data.state.isMax7456FontDeviceDetected &&
+                    !OSD.data.state.haveAirbotTheiaOsdDevice
+                ) {
                     $(".noOsdChipDetect").show();
                 }
 
@@ -3820,7 +3904,10 @@ osd.initialize = function (callback) {
                     $(".requires-max7456").hide();
                 }
 
-                if (!OSD.data.state.isMax7456FontDeviceDetected || (!OSD.data.state.haveMax7456FontDeviceConfigured && !OSD.data.state.haveAirbotTheiaOsdDevice)) {
+                if (
+                    !OSD.data.state.isMax7456FontDeviceDetected ||
+                    (!OSD.data.state.haveMax7456FontDeviceConfigured && !OSD.data.state.haveAirbotTheiaOsdDevice)
+                ) {
                     $(".requires-max7456-font-device-detected").addClass("disabled");
                 }
 
