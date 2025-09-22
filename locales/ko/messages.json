@@ -5567,9 +5567,6 @@
         "message": "기체 이름",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementCraftName": {
-        "message": "컨피규레이터 탭에서 설정한 기체 이름.<\/br>CLI 변수 \"craft_name\"을 통해 설정할 수도 있습니다."
-    },
     "osdTextElementAltitude": {
         "message": "고도",
         "description": "One of the elements of the OSD"
@@ -7010,9 +7007,6 @@
     },
     "onboardLoggingRateOfLogging": {
         "message": "블랙박스 로그기록 속도"
-    },
-    "onboardLoggingDebugFields": {
-        "message": "데이터 포함"
     },
     "onboardLoggingDebugMode": {
         "message": "블랙박스 디버그 모드"

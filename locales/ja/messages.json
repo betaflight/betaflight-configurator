@@ -1415,6 +1415,12 @@
     "configurationGyroAlignmentHelp": {
         "message": "ジャイロ アライメントは、FCボード上のジャイロセンサーの向きを指します。通常はデフォルト設定で正しい場合がほとんどですが、カスタムビルドや異なる向きのジャイロセンサーを持つフライトコントローラを使用している場合、この設定を調整する必要があるかもしれません。"
     },
+    "configurationGyroActiveIMU": {
+        "message": "IMU 有効"
+    },
+    "configurationGyroActiveIMUHelp": {
+        "message": "どのジャイロを一次ジャイロとして使用するかを選択してください。一次ジャイロは安定化および制御に使用されます。ジャイロが1つしかない場合は、自動的に選択されます。<br><br>ジャイロの種類やメーカーが異なる場合、複数のジャイロを有効化できないことがあります。"
+    },
     "configurationGyroAlignmentRoll": {
         "message": "$t(configurationBoardAlignmentRoll.message)",
         "description": "Don't translate!!!"
@@ -5673,7 +5679,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementCraftName": {
-        "message": "【基本設定】タブで設定した機体名。<\/br>CLI変数『craft_name』でも設定可能です。"
+        "message": "【基本設定】タブで設定された機体名。<br>CLI変数『craft_name』CLI変数を通じて設定することも可能です。"
     },
     "osdTextElementAltitude": {
         "message": "高度",
@@ -7121,7 +7127,7 @@
         "message": "Blackboxログレート"
     },
     "onboardLoggingDebugFields": {
-        "message": "データ含"
+        "message": "デバッグフィールドを含む"
     },
     "onboardLoggingDebugMode": {
         "message": "Blackboxデバッグモード"

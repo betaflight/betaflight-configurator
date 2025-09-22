@@ -5573,9 +5573,6 @@
         "message": "Название борта",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementCraftName": {
-        "message": "Название модели которое указно на вкладке Конфигурация.<\/br>Так же название можно сменить через переменную \"craft_name\" в консоли."
-    },
     "osdTextElementAltitude": {
         "message": "Высота",
         "description": "One of the elements of the OSD"
@@ -7016,9 +7013,6 @@
     },
     "onboardLoggingRateOfLogging": {
         "message": "Частота записи в Blackbox"
-    },
-    "onboardLoggingDebugFields": {
-        "message": "Включенные данные"
     },
     "onboardLoggingDebugMode": {
         "message": "Режим отладки черного ящика"

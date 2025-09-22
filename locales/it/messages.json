@@ -775,7 +775,7 @@
         "message": "Cancella Impostazioni"
     },
     "initialSetupResetText": {
-        "message": "Resetta il controllore di volo a uno stato <strong>non configurato.<\/strong>"
+        "message": "Resetta il controllore di volo ad uno stato <strong>non configurato.<\/strong>"
     },
     "initialSetupButtonBackup": {
         "message": "Backup JSON"
@@ -1414,6 +1414,12 @@
     },
     "configurationGyroAlignmentHelp": {
         "message": "L'allineamento del gyro è l'orientamento del sensore gyro sulla scheda del controllore di volo. Il valore predefinito è generalmente corretto, ma se si dispone di una build personalizzata o di un controllore di volo con un diverso orientamento, potrebbe essere necessario modificare questa impostazione."
+    },
+    "configurationGyroActiveIMU": {
+        "message": "IMU Attiva"
+    },
+    "configurationGyroActiveIMUHelp": {
+        "message": "Seleziona quale giroscopio usare come giroscopio primario. Il giroscopio primario viene utilizzato per la stabilizzazione e il controllo. Se è disponibile un solo giroscopio, verrà selezionato automaticamente.<br><br>Non sempre è possibile abilitare più giroscopi, se sono di tipi o marche diversi."
     },
     "configurationGyroAlignmentRoll": {
         "message": "$t(configurationBoardAlignmentRoll.message)",
@@ -2633,6 +2639,10 @@
     "auxiliaryHelpMode_VTXCONTROLDISABLE": {
         "message": "Disabilita il controllo delle impostazioni VTX tramite l'OSD",
         "description": "Help text to VTX CONTROL DISABLE mode"
+    },
+    "auxiliaryHelpMode_VTXPOWER": {
+        "message": "Scorri attraverso i livelli di potenza VTX (se la VTX lo supporta)",
+        "description": "Help text to VTX POWER mode"
     },
     "auxiliaryHelpMode_VTXPITMODE": {
         "message": "Cambia la VTX in modalità pit (bassa potenza in uscita, se supportata)",
@@ -5673,7 +5683,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementCraftName": {
-        "message": "Nome del velivolo come impostato nella scheda Configurazione.<\/br>Può anche essere impostato tramite la variabile CLI \"craft_name\"."
+        "message": "Nome dell'aeromobile come impostato nella scheda Configurazione.<\/br>Può anche essere impostato tramite la variabile CLI \"craft_name\"."
     },
     "osdTextElementAltitude": {
         "message": "Altitudine",
@@ -7121,7 +7131,7 @@
         "message": "Frequenza di registrazione della BlackBox"
     },
     "onboardLoggingDebugFields": {
-        "message": "Dati inclusi"
+        "message": "Debug Inclusi"
     },
     "onboardLoggingDebugMode": {
         "message": "Modalità debug Blackbox"

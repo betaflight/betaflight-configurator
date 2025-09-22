@@ -6658,9 +6658,6 @@
     "onboardLoggingRateOfLogging": {
         "message": "Blackbox Log-Geschwindigkeit"
     },
-    "onboardLoggingDebugFields": {
-        "message": "Enthaltene Daten"
-    },
     "onboardLoggingDebugMode": {
         "message": "Blackbox Debug Modus"
     },

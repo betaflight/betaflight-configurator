@@ -1423,6 +1423,12 @@
     "configurationGyroAlignmentHelp": {
         "message": "L'alineació del giroscopi és l'orientació del sensor del giroscopi a la placa del controlador de vol. El valor predeterminat sol ser correcte, però si teniu una construcció personalitzada o un controlador de vol amb una orientació de giroscopi diferent, és possible que hàgiu d'ajustar aquesta configuració."
     },
+    "configurationGyroActiveIMU": {
+        "message": "IMU actiu"
+    },
+    "configurationGyroActiveIMUHelp": {
+        "message": "Seleccioneu quin giroscopi voleu utilitzar com a giroscopi principal. El giroscopi principal s'utilitza per a l'estabilització i el control. Si només teniu un giroscopi, es seleccionarà automàticament.<br><br>No sempre és possible habilitar diversos giroscopis quan són de diferents tipus o marques."
+    },
     "configurationGyroAlignmentRoll": {
         "message": "$t(configurationBoardAlignmentRoll.message)",
         "description": "Don't translate!!!"
@@ -2641,6 +2647,10 @@
     "auxiliaryHelpMode_VTXCONTROLDISABLE": {
         "message": "Desactiva el control de la configuració de VTX mitjançant l'OSD",
         "description": "Help text to VTX CONTROL DISABLE mode"
+    },
+    "auxiliaryHelpMode_VTXPOWER": {
+        "message": "Canvia pels nivells de potència del VTX (si el VTX és compatible)",
+        "description": "Help text to VTX POWER mode"
     },
     "auxiliaryHelpMode_VTXPITMODE": {
         "message": "Canvia el VTX al mode PIT (potència de sortida baixa, si és compatible)",
@@ -7129,7 +7139,7 @@
         "message": "Velocitat d'enregistrament de Blackbox"
     },
     "onboardLoggingDebugFields": {
-        "message": "Dades incloses"
+        "message": "Camps de depuració inclosos"
     },
     "onboardLoggingDebugMode": {
         "message": "Mode de depuració de Blackbox"

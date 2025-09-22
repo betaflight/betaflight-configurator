@@ -150,9 +150,17 @@
         "message": "Ustaw limit czasu połączenia, aby umożliwić dłuższą inicjalizację podłączenia urządzenia lub ponownego uruchomienia",
         "description": "Change timeout on auto-connect and reboot so the bus has more time to initialize after being detected by the system"
     },
+    "developmentSettings": {
+        "message": "Ustawienia deweloperskie",
+        "description": "Title for the development settings section"
+    },
     "showAllSerialDevices": {
         "message": "Pokaż wszystkie urządzenia szeregowe (dla producentów lub deweloperów)",
         "description": "Do not filter serial devices using VID\/PID values (for manufacturers or development)"
+    },
+    "cliOnlyMode": {
+        "message": "Włącz tryb tylko CLI",
+        "description": "Text for the option to enable or disable CLI only mode"
     },
     "showManualMode": {
         "message": "Włącz tryb ręczny połączenia",
@@ -1622,6 +1630,12 @@
     "beeperRC_SMOOTHING_INIT_FAIL": {
         "message": "Sygnał dzwiękowy gdy uzbrojono a wygładzanie rc nie zainicjowało filtrów"
     },
+    "configurationBeeperEnableAll": {
+        "message": "Włącz wszystko"
+    },
+    "configurationBeeperDisableAll": {
+        "message": "Wyłącz wszystko"
+    },
     "configuration3d": {
         "message": "Ustawienia ESC\/Silnika do lotów 3D"
     },
@@ -2611,6 +2625,10 @@
         "message": "Wyłącz kontrolę ustawień VTX poprzez OSD",
         "description": "Help text to VTX CONTROL DISABLE mode"
     },
+    "auxiliaryHelpMode_VTXPOWER": {
+        "message": "Przełączaj się między poziomami mocy VTX (jeśli są obsługiwane przez VTX)",
+        "description": "Help text to VTX POWER mode"
+    },
     "auxiliaryHelpMode_VTXPITMODE": {
         "message": "Przełącz VTX w tryb pit mode (niska moc wyjściowa, jeśli jest obsługiwana)",
         "description": "Help text to VTX PIT MODE mode"
@@ -3072,6 +3090,10 @@
     },
     "motorsSensorAccelSelect": {
         "message": "accel"
+    },
+    "motorsTelemetryHelp": {
+        "message": "Liczby te pokazują informacje o telemetrii otrzymane od ESC, jeśli są dostępne. Mogą również pokazywać rzeczywistą prędkość silników (R) w RPM, wskaźnik błędu łącza telemetrycznego (E) oraz temperatury ESC (T).",
+        "description": "Help text for the telemetry values in the motors tab."
     },
     "motorsRPM": {
         "message": "R: {{motorsRpmValue}}",
@@ -7055,9 +7077,6 @@
     },
     "onboardLoggingRateOfLogging": {
         "message": "Częstotliwość rejestrowania danych Czarnej Skrzynki"
-    },
-    "onboardLoggingDebugFields": {
-        "message": "Dane zawarte"
     },
     "onboardLoggingDebugMode": {
         "message": "Tryb debugowania Czarnej Skrzynki"
