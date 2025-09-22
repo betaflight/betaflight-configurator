@@ -205,9 +205,16 @@ input[type="number"] {
         padding-bottom: 0;
         margin-bottom: 0;
     }
-    .helpicon,
     label {
         margin: 0 !important;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    .helpicon {
+        margin-right: 7px !important;
+        margin-left: auto !important;
+        float: none;
     }
 }
 .clear-both {
@@ -1275,6 +1282,7 @@ dialog {
     .select {
         display: flex;
         gap: 1rem;
+        align-items: center;
     }
 }
 .fixed_band {
