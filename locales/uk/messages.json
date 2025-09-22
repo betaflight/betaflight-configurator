@@ -121,6 +121,9 @@
     "submit": {
         "message": "Надіслати"
     },
+    "autoConnectEnabled": {
+        "message": "Автопідключення: Увімкнено - застосунок автоматично здійснює підключення при виявленні нового порту"
+    },
     "autoConnectDisabled": {
         "message": "Автопідключення: Вимкнено - Користувач повинен вибрати правильний серійний порт та натиснути \"Підключитись\""
     },
@@ -147,9 +150,17 @@
         "message": "Встановіть затримку підключення, щоб дозволити довшу ініціалізацію після підключення пристрою або перезавантаження",
         "description": "Change timeout on auto-connect and reboot so the bus has more time to initialize after being detected by the system"
     },
+    "developmentSettings": {
+        "message": "Налаштування розробки",
+        "description": "Title for the development settings section"
+    },
     "showAllSerialDevices": {
         "message": "Показати всі послідовні пристрої (для виробників або розробки)",
         "description": "Do not filter serial devices using VID\/PID values (for manufacturers or development)"
+    },
+    "cliOnlyMode": {
+        "message": "Увімкнути режим лише командного рядка",
+        "description": "Text for the option to enable or disable CLI only mode"
     },
     "showManualMode": {
         "message": "Увімкнути режим ручного з'єднання",
@@ -231,6 +242,12 @@
     "sensorStatusSonarShort": {
         "message": "Сонар",
         "description": "Text of the image in the top sensors icons. Please keep it short."
+    },
+    "checkForConfiguratorUnstableVersions": {
+        "message": "Показувати сповіщення про оновлення для нестабільних версій застосунка"
+    },
+    "configuratorUpdateNotice": {
+        "message": "Ви використовуєте застарілу версію <b>застосунку Betaflight<\/b>.<br>$t(configuratorUpdateHelp.message)"
     },
     "configuratorUpdateHelp": {
         "message": "Коли мережа доступна, застосунок має автоматично перевіряти наявність оновлень."
@@ -346,6 +363,9 @@
     "fileSystemPickerFiles": {
         "message": "{{typeof}} файли",
         "description": "Text for the file picker dialog, showing the type of files selected. The parameter can be HEX, TXT, etc."
+    },
+    "fileSystemPickerFirmwareFiles": {
+        "message": "Файли прошивки"
     },
     "serialErrorFrameError": {
         "message": "Помилка послідовного підключення: погане кадрування"
@@ -470,8 +490,14 @@
     "noConfigurationReceived": {
         "message": "Конфігурація не отримана протягом <span class=\"message-negative\">10 секунд<\/span>, зв’язок <span class=\"message-negative\"> невдалий<\/span>"
     },
+    "firmwareVersionNotSupported": {
+        "message": "Ця версія прошивки <span class=\"message-negative\">не підтримується<\/span>. Будь ласка, оновіть прошивку до версії з підтримкою API <strong>$1<\/strong> або новішої. Використовуйте командний рядок для резервного копіювання перед прошивкою. Процедуру резервного копіювання\/відновлення через командний рядок знайдете в документації.<br \/>Або завантажте та використовуйте стару версію застосунку, якщо не готові до оновлення."
+    },
     "firmwareTypeNotSupported": {
         "message": "Прошивка не Betaflight <span class=\"message-negative\">не підтримується<\/span>, окрім режиму командного рядка."
+    },
+    "firmwareUpgradeRequired": {
+        "message": "Прошивку цього пристрою потрібно оновити до новішої версії. Використовуйте командний рядок для резервного копіювання перед прошивкою. Процедуру резервного копіювання\/відновлення через командний рядок знайдете в документації.<br \/>Або завантажте та використовуйте стару версію застосунку, якщо не готові до оновлення."
     },
     "resetToCustomDefaultsDialog": {
         "message": "Для цієї плати доступні спеціальні параметри за замовчуванням. Як правило, плата не працюватиме належним чином, якщо не будуть застосовані спеціальні параметри за замовчуванням.<br \/>Застосувати спеціальні параметри за замовчуванням для цієї плати?"
@@ -485,6 +511,9 @@
     "reportProblemsDialogFooter": {
         "message": "<span class=\"message-negative\"><strong>Вам потрібно виправити ці проблеми, перш ніж спробуєте злетіти своїм повітряним судном<\/span><\/strong>."
     },
+    "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
+        "message": "<span class=\"message-negative\"><strong>Використана версія застосунку ($3) не підтримує прошивку $4<\/strong><\/span>.<br>$t(configuratorUpdateHelp.message)"
+    },
     "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
         "message": "<strong>Протокол вихідного сигналу мотора не вибрано<\/strong>.<br>Будь ласка, виберіть протокол виводу мотора, відповідний до вашого електронного контролера швидкості ESC '$t(configurationEscFeatures.message)' на '$t(tabMotorTesting.message)' вкладці.<br>$t(escProtocolDisabledMessage.message)"
     },
@@ -494,6 +523,10 @@
     "infoVersionOs": {
         "message": "ОС: <strong>{{operatingSystem}}<\/strong>",
         "description": "Message that appears in the GUI log panel indicating operating system"
+    },
+    "infoVersionConfigurator": {
+        "message": "Версія застосунку: <strong>{{configuratorVersion}}<\/strong>",
+        "description": "Message that appears in the GUI log panel indicating application version"
     },
     "buildServerSuccess": {
         "message": "Успішно: $1"
@@ -579,6 +612,9 @@
     "versionLabelFirmware": {
         "message": "Прошивка"
     },
+    "versionLabelConfigurator": {
+        "message": "Версія застосунку"
+    },
     "notifications_app_just_updated_to_version": {
         "message": "Застосунок оновлено до версії: $1"
     },
@@ -613,6 +649,10 @@
         "message": "Завантаження ЦП:",
         "description": "CPU load text shown in the status bar"
     },
+    "statusbar_connection_time": {
+        "message": "З'єднання:",
+        "description": "Connection time text shown in the status bar"
+    },
     "dfu_connect_message": {
         "message": "Будь ласка, використовуйте програматор для доступу до пристроїв DFU"
     },
@@ -631,6 +671,9 @@
     "eeprom_saved_ok": {
         "message": "EEPROM <span class=\"message-positive\">збережено<\/span>"
     },
+    "defaultWelcomeIntro": {
+        "message": "Ласкаво просимо до <strong>застосунку Betaflight<\/strong> - програми, призначеної для спрощення оновлення, конфігурації та налаштування вашого польотного контролера."
+    },
     "defaultWelcomeHead": {
         "message": "Апаратне забезпечення"
     },
@@ -640,17 +683,26 @@
     "defaultContributingHead": {
         "message": "Сприяння"
     },
+    "defaultContributingText": {
+        "message": "Якщо ви хочете допомогти зробити Betaflight ще кращим, ви можете долучитися багатьма способами, зокрема:<br \/><ul><li>використовувати свої знання про Betaflight, щоб створювати або оновлювати матеріали в <a href=\"https:\/\/betaflight.com\/docs\/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">нашій Wiki<\/a> чи відповідати на запитання інших користувачів в онлайн-форумах;<\/li><li><a href=\"https:\/\/betaflight.com\/docs\/development\" target=\"_blank\" rel=\"noopener noreferrer\">вносити зміни до коду<\/a> прошивки та застосунку — нові функції, виправлення, покращення;<\/li><li>тестувати <a href=\"https:\/\/github.com\/Betaflight\/betaflight\/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">нові функції та виправлення<\/a> та надавати відгуки;<\/li><li>допомагати іншим користувачам вирішувати проблеми, про які вони повідомляють у <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel=\"noopener noreferrer\">нашому трекері помилок<\/a>, а також брати участь в обговореннях запитів на нові функції;<\/li><li><a href=\"https:\/\/github.com\/betaflight\/betaflight\/tree\/master\/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">перекладати<\/a> застосунок Betaflight на нову мову або допомагати підтримувати наявні переклади.<\/li><\/ul>"
+    },
     "defaultFacebookText": {
         "message": "Ми також маємо <a href=\"https:\/\/www.facebook.com\/groups\/betaflightgroup\/\" target=\"_blank\" rel=\"noopener noreferrer\">групу на Facebook<\/a>.<br \/>Приєднуйтесь до нас, щоб мати можливість обговорювати Betaflight, ставити запитання щодо налаштування, або просто спілкуватись зі своїми колегами-пілотами."
     },
     "defaultDiscordText": {
         "message": "Сервер Betaflight на <a href=\"https:\/\/discord.betaflight.com\/invite\" target=\"_blank\" rel=\"noopener noreferrer\">Discord<\/a>.<br \/>Діліться своїм досвідом польотів, обговорюйте Betaflight, допомагайте іншим або отримуйте допомогу від спільноти."
     },
+    "statisticsDisclaimer": {
+        "message": "Застосунок Betaflight збирає анонімну статистику використання. Наприклад, ці дані включають (але не обмежуються) кількість запусків, географічний регіон користувачів, типи контролерів польоту, версії прошивок, використання елементів і вкладок інтерфейсу тощо. Зведена інформація про ці дані наведена <a href=\"https:\/\/datastudio.google.com\/u\/0\/reporting\/1pK1PFw0eWmsgl2npvuzwAqscVzlhJvuF\" target=\"_blank\" rel=\"noopener noreferrer\">тут<\/a>. Збір інформації здійснюється для кращого розуміння того, як використовується застосунок Betaflight, а також для виявлення тенденцій у спільноті та можливого вдосконалення інтерфейсу. Користувачі можуть відмовитися від збору даних на вкладці \"Опції\"."
+    },
     "defaultButtonFirmwareFlasher": {
         "message": "Програматор"
     },
     "defaultDonateHead": {
         "message": "Відкритий код \/ Повідомлення про пожертву"
+    },
+    "defaultDonateText": {
+        "message": "<p><strong>Betaflight<\/strong> - це програмне забезпечення для польотного контролера, яке є <strong>відкритим кодом<\/strong> і доступне безкоштовно <strong>без гарантії<\/strong> для всіх користувачів.<\/p><p>Якщо вважаєте, що прошивка Betaflight або застосунок Betaflight були корисними для вас, будь ласка, розгляньте можливість <strong>підтримати<\/strong> їх розробку пожертвуванням.<\/p>"
     },
     "defaultDonateBottom": {
         "message": "<p>Якщо хочете сприяти фінансово на постійній основі, можете розглянути можливість стати нашим патроном на $t(patreonLink.message).<\/p>"
@@ -960,6 +1012,10 @@
     "initialSetupArmingDisableFlagsTooltipBST": {
         "message": "Телеметричний пристрій Black Sheep (наприклад, TBS Core Pro) охолощений і запобігає взведенню",
         "description": "Message that pops up to describe the BST arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipMSP": {
+        "message": "MSP підключення активне, ймовірно, через застосунок Betaflight",
+        "description": "Message that pops up to describe the MSP arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipPARALYZE": {
         "message": "Увімкнено режим паралічу",
@@ -1359,6 +1415,12 @@
     "configurationGyroAlignmentHelp": {
         "message": "Вирівнювання гіроскопа — це орієнтація датчика гіроскопа на платі польотного контролера. Значення за замовчуванням зазвичай правильне, але якщо ви маєте користувацьку збірку чи польотний контролер з іншою орієнтацією гіроскопа, можливо потрібно буде змінити це налаштування."
     },
+    "configurationGyroActiveIMU": {
+        "message": "Активний ІВП"
+    },
+    "configurationGyroActiveIMUHelp": {
+        "message": "Виберіть, який гіроскоп використовувати як основний. Основний гіроскоп використовується для стабілізації та керування. Якщо у вас лише один гіроскоп, він буде вибраний автоматично.<br><br>Не завжди можливо ввімкнути кілька гіроскопів, якщо вони різних типів або виробників."
+    },
     "configurationGyroAlignmentRoll": {
         "message": "$t(configurationBoardAlignmentRoll.message)",
         "description": "Don't translate!!!"
@@ -1406,6 +1468,16 @@
     },
     "configurationSensorGyroToUseBoth": {
         "message": "Обидва"
+    },
+    "configurationSensorGyroEnable": {
+        "message": "$t(sensorStatusGyroShort.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationSensorAlignment": {
+        "message": "Вирівнювання сенсора"
+    },
+    "configurationGyroRequiredWarning": {
+        "message": "Щонайменше один гіроскоп повинен лишатись увімкненим. Якщо ви вимкнете всі гіроскопи, польотний контролер не працюватиме належним чином."
     },
     "configurationSensorAlignmentGyro1": {
         "message": "Перший гіроскоп"
@@ -1572,6 +1644,12 @@
     },
     "beeperRC_SMOOTHING_INIT_FAIL": {
         "message": "Звуковий сигнал при взведенні, коли згладжування команд пульта не ініціалізувало фільтри"
+    },
+    "configurationBeeperEnableAll": {
+        "message": "Увімкнути все"
+    },
+    "configurationBeeperDisableAll": {
+        "message": "Вимкнути все"
     },
     "configuration3d": {
         "message": "3D Функції ESC\/мотора"
@@ -2562,9 +2640,17 @@
         "message": "Вимкнути керування налаштуваннями відеопередавача через наекранне меню",
         "description": "Help text to VTX CONTROL DISABLE mode"
     },
+    "auxiliaryHelpMode_VTXPOWER": {
+        "message": "Перемикати по колу рівні потужності VTX (якщо підтримується VTX)",
+        "description": "Help text to VTX POWER mode"
+    },
     "auxiliaryHelpMode_VTXPITMODE": {
         "message": "Перемкнути відеопередавач у режим ями (низька вихідна потужність, якщо підтримується)",
         "description": "Help text to VTX PIT MODE mode"
+    },
+    "auxiliaryHelpMode_LAPTIMERRESET": {
+        "message": "Скинути транспондерний таймер кіл",
+        "description": "Help text to LAP TIMER RESET mode"
     },
     "adjustmentsHelp": {
         "message": "Налаштувати перемикачі регулювання. Додаткову інформацію дивіться у розділі посібника «Коригування під час польоту». Зміни, внесені функціями налаштування, не зберігаються автоматично."
@@ -3013,8 +3099,16 @@
     "motorsResetMaximum": {
         "message": "Скинути максимальні значення (накопичені за час спостереження)"
     },
+    "motorsSensorGyroSelect": {
+        "message": "$t(sensorStatusGyroShort.message)",
+        "description": "Don't translate!!!"
+    },
     "motorsSensorAccelSelect": {
         "message": "акселерометр"
+    },
+    "motorsTelemetryHelp": {
+        "message": "Ці числа показують телеметрію, отриману від регуляторів швидкості (ESC), якщо вона доступна. Це може показувати фактичну швидкість моторів (R, в об\/хв), частоту помилок (E) телеметричного зв’язку та температуру (T) регуляторів швидкості.",
+        "description": "Help text for the telemetry values in the motors tab."
     },
     "motorsRPM": {
         "message": "R: {{motorsRpmValue}}",
@@ -3223,6 +3317,9 @@
     "cliEnter": {
         "message": "Виявлено режим CLI"
     },
+    "cliDevEnter": {
+        "message": "Виявлено режим лише командного рядка для розробників"
+    },
     "cliReboot": {
         "message": "Виявлено перезавантаження з CLI"
     },
@@ -3258,6 +3355,9 @@
     },
     "cliCommand": {
         "message": "Введіть команду тут"
+    },
+    "loggingNote": {
+        "message": "Дані будуть зберігатися <span class=\"message-negative\">лише<\/span> в цій вкладці, вихід з вкладки призведе до <span class=\"message-negative\">скасування<\/span> логування, а програма повернеться до свого звичайного стану.<br \/> Ви можете вибрати глобальний період оновлення, дані будуть записуватися в журнальний файл кожну <strong>1<\/strong> секунду з міркувань швидкодії."
     },
     "loggingSamplesSaved": {
         "message": "Зразків збережено:"
@@ -3506,6 +3606,9 @@
     "firmwareFlasherOnlineSelectBoardDescription": {
         "message": "Виберіть або визначте вашу плату, щоб побачити доступні онлайн версії прошивок - Виберіть відповідну прошивку для вашої плати."
     },
+    "firmwareFlasherOnlineSelectBoardHint": {
+        "message": "Застосунок Betaflight підтримує прошивання уніфікованих цільових пристроїв разом з відповідними платоспецифічними налаштуваннями за один крок.<br><br>Концепція уніфікованих цільових пристроїв означає, що один і той же файл прошивки .hex можна використовувати для всіх плат, які використовують той самий мікроконтролер (MCU).<br><br>У версії Betaflight 4.4 додається <strong>Хмарна Збірка (Cloud Build)<\/strong><br><br>З Хмарною Збіркою (Cloud Build) нам потрібно описати опції обладнання, наявного у вашій збірці.<br><br>Щоб різні плати працювали з однією і тією ж прошивкою, при прошиванні уніфікованої цільової прошивки, специфічний файл конфігурації розміщується поряд з прошивкою.<br><br>При локальній збірці, ви можете завантажити файл конфігурації уніфікованого цільового пристрою або вибрати плату перед завантаженням файлу прошивки .hex.<br><br>Якщо у вас виникають проблеми з використанням прошивки, рекомендуємо приєднатися до Discord або <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel=\"noopener noreferrer\">повідомити про проблему<\/a>."
+    },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "Оберіть версію прошивки для вашої плати."
     },
@@ -3617,6 +3720,9 @@
     "firmwareFlasherRecoveryHead": {
         "message": "<strong>Відновлення \/ Втрата зв'язку<\/strong>"
     },
+    "firmwareFlasherRecoveryText": {
+        "message": "Якщо зв’язок із платою втрачено, виконайте такі кроки, щоб відновити зв’язок: <ul><li>Вимкніть живлення.<\/li><li>Увімкніть «Польотник уже в режимі завантажувача», увімкніть «Повністю очистити мікроконтролер».<\/li><li>Замкніть контакти BOOT або утримуйте кнопку BOOT.<\/li><li>Увімкніть живлення (індикатор активності НЕ блимає, якщо все зроблено правильно).<\/li><li>Установіть усі драйвери STM32 і Zadig, якщо потрібно (див. <a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">Прошивання через USB<\/a> у посібнику Betaflight).<\/li><li>Закрийте застосунок, перезапустіть його.<\/li><li>Відпустіть кнопку BOOT, якщо вона є на вашому польотнику.<\/li><li>Прошийте правильною прошивкою (з використанням ручної швидкості передачі даних, якщо вказано у посібнику коритувача до вашого польотного контролера).<\/li><li>Вимкніть живлення.<\/li><li>Зніміть перемичку BOOT.<\/li><li>Увімкніть живлення (світлодіод активності має блимати).<\/li><li>Підключіться нормально.<\/li><\/ul>"
+    },
     "firmwareFlasherButtonLeave": {
         "message": "Вийти з програматора"
     },
@@ -3629,8 +3735,23 @@
     "firmwareFlasherFirmwareOnlineLoaded": {
         "message": "Завантажено онлайн прошивку: {{filename}} ({{bytes}} байт)"
     },
+    "firmwareFlasherTooltipSaveFirmware": {
+        "message": "Зберегти прошивку"
+    },
+    "firmwareFlasherInvalidFileFormat": {
+        "message": "Некоректний формат файлу"
+    },
+    "firmwareFlasherUf2Corrupted": {
+        "message": "Схоже, UF2 файл пошкоджено"
+    },
     "firmwareFlasherHexCorrupted": {
         "message": "Схоже, бінарний файл пошкоджено"
+    },
+    "firmwareFlasherUF2SaveSuccess": {
+        "message": "UF2 збережено (прошито) успішно"
+    },
+    "firmwareFlasherUF2SaveFailed": {
+        "message": "Не вдалося зберегти (прошити) UF2"
     },
     "firmwareFlasherConfigCorrupted": {
         "message": "Конфігураційний файл пошкоджений, лише ASCII символи (символи 0-255) є допустимими при прошивці",
@@ -3674,6 +3795,18 @@
     "firmwareFlasherVerifyBoard": {
         "message": "<h3>Неспівпадіння прошивки<\/h3><br \/>Підключена плата - <strong>{{verified_board}}<\/strong>, тоді як ви обрали <strong>{{selected_board}}<\/strong>.<br \/><br \/>Бажаєте продовжити прошивку?",
         "description": "Make a quick connection to read firmware target and never flash a wrong target again"
+    },
+    "firmwareFlasherBoardVerificationSuccess": {
+        "message": "Застосунок <span class=\"message-positive\">успішно<\/span> виявив і перевірив плату: <strong>{{boardName}}<\/strong>",
+        "description": "Board verification has succeeded."
+    },
+    "firmwareFlasherBoardVerficationTargetNotAvailable": {
+        "message": "Застосунок виявив плату: <strong>{{boardName}}<\/strong>, але не було знайдено офіційної цільової прошивки Betaflight",
+        "description": "Board verification has succeeded, but the target is not available as offical Betaflight target."
+    },
+    "firmwareFlasherBoardVerificationFail": {
+        "message": "Застосунок <span class=\"message-negative\">не зміг<\/span> перевірити плату. Якщо проблема не зникає, спробуйте переключити вкладки та повторити, перепід’єднайте USB або під’єднайтесь спочатку, якщо ви могли забути застосувати спеціальні налаштування за замовчуванням.",
+        "description": "Sometimes MSP values cannot be read from firmware correctly"
     },
     "firmwareFlasherButtonAbort": {
         "message": "Перервати"
@@ -4581,6 +4714,10 @@
         "message": "Тип",
         "description": "Iterm Relax Type selection"
     },
+    "pidTuningItermRelaxTypeOptionGyro": {
+        "message": "$t(sensorStatusGyroShort.message)",
+        "description": "Don't translate!!!"
+    },
     "pidTuningItermRelaxTypeOptionSetpoint": {
         "message": "Задане значення"
     },
@@ -5149,6 +5286,10 @@
         "message": "Шрифт",
         "description": "Content of the selector for the OSD Font in the preview"
     },
+    "osdSetupFontManagerTitle": {
+        "message": "Менеджер шрифтів",
+        "description": "Dialog title"
+    },
     "osdSetupFontTypeDefault": {
         "message": "За замовчуванням",
         "description": "Font Default"
@@ -5542,7 +5683,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementCraftName": {
-        "message": "Ім’я повітряного судна, встановлене на вкладці Конфігурація.<\/br>Також можна встановити за допомогою змінної CLI \"aircraft_name\"."
+        "message": "Ім’я повітряного судна, встановлене на вкладці Конфігурація.<\/br>Також можна встановити за допомогою змінної CLI \"craft_name\"."
     },
     "osdTextElementAltitude": {
         "message": "Висота",
@@ -6559,6 +6700,10 @@
         "message": "Введіть частоту безпосередньо",
         "description": "Text of one of the fields of the VTX tab"
     },
+    "vtxFrequencyChannelHelp": {
+        "message": "Якщо ви ввімкнете це, застосунок дозволить вам вибрати частоту замість звичного діапазону\/каналу. Щоб це спрацювало, ваш відеопередавач має підтримувати цю функцію.",
+        "description": "Help text for the frequency or channel select field of the VTX tab"
+    },
     "vtxSelectedMode": {
         "message": "Обраний режим",
         "description": "Title for the actual mode header of the VTX"
@@ -6986,7 +7131,7 @@
         "message": "Частота записів в чорну скриню"
     },
     "onboardLoggingDebugFields": {
-        "message": "Дані, що включені"
+        "message": "Увімкнені поля налагодження"
     },
     "onboardLoggingDebugMode": {
         "message": "Режим налагодження"
@@ -7129,6 +7274,9 @@
     "cordovaIncompatibleWebview": {
         "message": "Несумісний webview"
     },
+    "cordovaWebviewTroubleshootingMsg": {
+        "message": "Вам необхідно оновити webview вашого пристрою для використання застосунку Betaflight."
+    },
     "cordovaWebviewTroubleshootingMsg2": {
         "message": "Нижче наведений інструмент допоможе вам встановити новий webview або оновити вже встановлений webview."
     },
@@ -7173,6 +7321,9 @@
     },
     "cordovaExitAppTitle": {
         "message": "Підтвердження"
+    },
+    "cordovaExitAppMessage": {
+        "message": "Ви дійсно хочете закрити застосунок?"
     },
     "dropDownSelectAll": {
         "message": "[Вибрати все\/зняти виділення]",
@@ -7510,5 +7661,9 @@
     "osdDescElementLidar": {
         "message": "$t(osdTextElementLidar.message)",
         "description": "Don't translate!!!"
+    },
+    "osdSetupPreviewCheckRulers": {
+        "message": "Лінійки",
+        "description": "Label for the checkbox to toggle OSD preview rulers around the preview"
     }
 }

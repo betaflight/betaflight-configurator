@@ -1272,7 +1272,7 @@
         "message": "Analog RSSI-input"
     },
     "featureLED_STRIP": {
-        "message": "Flerfarvet RGB LED-strimmel understøttelse"
+        "message": "Flerfarvet RGB LED strimmel"
     },
     "featureLED_STRIPTip": {
         "message": "Aktiver flerfavet LED strimmel, indstil på fanen LED-strimmel"
@@ -1418,6 +1418,12 @@
     },
     "configurationGyroAlignmentHelp": {
         "message": "Gyro indstilling er orienteringen af gyro retning på FC. Start indstiling er normalt korrekt, men hvis du har en brugerdefineret build eller en FC med en anden gyro retning, det kan være nødvendigt at ændre denne indstilling."
+    },
+    "configurationGyroActiveIMU": {
+        "message": "Aktiv IMU"
+    },
+    "configurationGyroActiveIMUHelp": {
+        "message": "Vælg den gyro, der skal være den primære gyro. Den primære gyro bruges til stabilisering og kontrol. Hvis du kun har et gyro, vælges den automatisk.<br><br>Det er ikke altid muligt at aktivere flere gyroer, hvis de har forskellig type eller fabrikant."
     },
     "configurationGyroAlignmentRoll": {
         "message": "$t(configurationBoardAlignmentRoll.message)",
@@ -1772,13 +1778,13 @@
         "message": "Tilbehør"
     },
     "portsHelp": {
-        "message": "<strong>Bemærk:<\/strong> Ikke alle kombinationer er gyldige. Hvis FC firmwaren opdager det, nulstilles opsætning af seriel port."
+        "message": "<strong>Bemærk:<\/strong> Ikke alle kombinationer er gyldige. Hvis FC firmwaren opdager det, nulstilles portens opsætning."
     },
     "portsVtxTableNotSet": {
         "message": "<span class=\"message-negative\">ADVARSEL:<\/span> VTX-tabellen er ikke opsat korrekt og derfor vil VTX-kontrol ikke være mulig. Opsæt VTX-tabellen i fanen $t(tabVtx.message)."
     },
     "portsMSPHelp": {
-        "message": "<strong>Bemærk:<\/strong> Deaktivér <span class=\"message-negative\">IKKE<\/span> MSP på den første serielle port med mindre du ved, hvad du gør. Du kan så risikere at skulle brænde firmware image igen og så måske slette hele din konfiguration."
+        "message": "<strong>Bemærk:<\/strong> Deaktivér <span class=\"message-negative\">IKKE<\/span> MSP på den første serielle port med mindre du ved, hvad du gør. Du kan risikere at skulle brænde firmware image igen og så måske slette din konfiguration af FC."
     },
     "portsFirmwareUpgradeRequired": {
         "message": "Firmware-opgradering <span class=\"message-negative\">nødvendig<\/span>.  Opsætningen af seriel port understøttes ikke af firmware &lt; 1.8.0."
@@ -2637,6 +2643,10 @@
     "auxiliaryHelpMode_VTXCONTROLDISABLE": {
         "message": "Deaktiver kontrol af VTX indstillinger via OSD",
         "description": "Help text to VTX CONTROL DISABLE mode"
+    },
+    "auxiliaryHelpMode_VTXPOWER": {
+        "message": "Rul gennem niveauer for VTX effekt (hvis VTX har denne mulighed)",
+        "description": "Help text to VTX POWER mode"
     },
     "auxiliaryHelpMode_VTXPITMODE": {
         "message": "Skift VTX til pit mode (lav udgangseffekt), skal være understøttet af VTX",
@@ -5677,7 +5687,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementCraftName": {
-        "message": "Fartøjs navn som det er indstillet på fanen Opsætning ved Tilpasning.<\/br>Kan også indstilles via \"craft_name\" CLI variabel."
+        "message": "Navn på fartøj som det er indstillet på fanen Opsætning.<\/br>Kan også indstilles ved med CLI variabel \"craft_name\"."
     },
     "osdTextElementAltitude": {
         "message": "Højde",
@@ -7125,7 +7135,7 @@
         "message": "Blackbox lognings hastighed"
     },
     "onboardLoggingDebugFields": {
-        "message": "Data som logges"
+        "message": "Debug logning inkluderet"
     },
     "onboardLoggingDebugMode": {
         "message": "Blackbox logger med debug for ..."

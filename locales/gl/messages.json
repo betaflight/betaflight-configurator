@@ -6320,9 +6320,6 @@
     "onboardLoggingRateOfLogging": {
         "message": "Tasa de rexistro da caixa negra"
     },
-    "onboardLoggingDebugFields": {
-        "message": "Datos incluídos"
-    },
     "onboardLoggingDebugMode": {
         "message": "Modo de depuración Caixa negra"
     },

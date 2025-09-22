@@ -5567,9 +5567,6 @@
         "message": "Nombre aeronave",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementCraftName": {
-        "message": "Nombre de la aeronave tal y como se establece en la pestaña Configuración.<\/br>También se puede establecer a través de la variable CLI \"craft_name\"."
-    },
     "osdTextElementAltitude": {
         "message": "Altitud",
         "description": "One of the elements of the OSD"
@@ -7010,9 +7007,6 @@
     },
     "onboardLoggingRateOfLogging": {
         "message": "Frecuencia de muestreo"
-    },
-    "onboardLoggingDebugFields": {
-        "message": "Datos incluidos"
     },
     "onboardLoggingDebugMode": {
         "message": "Modo de depuración de la Caja Negra"
