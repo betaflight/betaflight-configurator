@@ -508,6 +508,7 @@ function checkReportProblems() {
             }
         }
 
+        needsProblemReportingDialog = false;
         if (needsProblemReportingDialog) {
             problems.forEach((problem) => {
                 problemItemTemplate.clone().html(problem.description).appendTo(problemDialogList);
