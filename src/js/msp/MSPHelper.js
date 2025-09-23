@@ -1253,6 +1253,14 @@ MspHelper.prototype.process_data = function (dataHandler) {
                         };
                     }
                     break;
+                case MSPCodes.MSP2_GYRO_SENSOR:
+                    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+                        FC.GYRO_SENSOR.gyro_count = data.readU8();
+                        for (let i = 0; i < FC.GYRO_SENSOR.gyro_count; i++) {
+                            FC.GYRO_SENSOR.gyro_hardware[i] = data.readU8();
+                        }
+                    }
+                    break;
 
                 case MSPCodes.MSP_LED_STRIP_CONFIG:
                     FC.LED_STRIP = [];

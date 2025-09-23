@@ -160,6 +160,7 @@ const FC = {
     FC_CONFIG: null,
     FEATURE_CONFIG: null,
     FILTER_CONFIG: null,
+    GYRO_SENSOR: null,
     GPS_CONFIG: null,
     COMPASS_CONFIG: null,
     GPS_DATA: null,
@@ -601,6 +602,11 @@ const FC = {
         this.MCU_INFO = {
             id: 0,
             name: 0,
+        };
+
+        this.GYRO_SENSOR = {
+            gyro_count: 0,
+            gyro_hardware: [],
         };
 
         this.RX_CONFIG = {
