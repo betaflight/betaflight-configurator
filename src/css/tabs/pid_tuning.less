@@ -69,25 +69,22 @@
         }
     }
     table {
-        float: left;
         margin: 0;
         border-collapse: collapse;
         width: 100%;
         table-layout: fixed;
-        padding: 1px;
         border-bottom: 0 solid var(--surface-500);
         .inputBackground {
             background: white;
         }
         td {
             border-bottom: 0 solid var(--surface-500);
-            padding: 1px 1px 1px 5px;
+            padding: 0.5rem;
             border-right: 1px solid var(--surface-500);
         }
         th {
             padding: 0;
             border: 0;
-            height: 10px;
             font-weight: normal;
             text-overflow: ellipsis;
             overflow: hidden;
@@ -97,14 +94,11 @@
             td {
                 &:first-child {
                     text-align: left;
-                    padding-left: 5px;
                 }
                 &:last-child {
                     border-right: 0 solid var(--surface-500);
                 }
                 text-align: left;
-                padding-left: 5px;
-                padding-right: 5px;
             }
         }
         .groupSwitchValue {
@@ -122,16 +116,11 @@
             border: 1px solid var(--surface-500);
             border-radius: 3px;
         }
-        select {
-            text-align-last: right;
-            border-radius: 3px;
-            border: 1px solid var(--surface-500);
-            width: 75px;
-        }
     }
     .gui_box {
-        margin-bottom: 5px;
-        display: table;
+        padding: 0;
+        overflow: hidden;
+        gap: 0;
         span {
             font-style: normal;
             font-weight: normal;
@@ -139,25 +128,22 @@
             font-size: 11px;
         }
     }
+    .note,
+    .danger {
+        margin-bottom: 0;
+    }
     .subtab-filter {
         .gui_box {
             float: none;
         }
         table {
-            input {
-                width: 77px;
-                float: right;
-                box-sizing: border-box;
-            }
             select {
-                width: 77px;
-                float: right;
-                box-sizing: border-box;
+                display: inline-block;
+                margin-left: auto;
             }
         }
         .newFilter {
             .helpicon {
-                margin-right: 2px;
                 margin-top: 2px;
             }
         }
@@ -169,10 +155,6 @@
                     }
                 }
             }
-            input {
-                width: calc(100% - 14px);
-                box-sizing: content-box;
-            }
         }
     }
     .sliderDivider {
@@ -182,7 +164,7 @@
     }
     .pid_titlebar {
         th {
-            padding: 5px;
+            padding: 0.5rem;
             text-align: center;
             border-right: 1px solid var(--surface-500);
             &:first-child {
@@ -198,7 +180,6 @@
         background-color: var(--surface-300);
         border-top-left-radius: 3px;
         border-top-right-radius: 3px;
-        height: 20px;
         td {
             &:first-child {
                 text-align: left;
@@ -242,8 +223,7 @@
             }
         }
         td {
-            padding-left: 5px;
-            padding-right: 5px;
+            padding: 0 0.5rem;
             &:first-child {
                 &:not(.filterTable) {
                     width: 75px;
@@ -257,8 +237,8 @@
             }
         }
         .helpicon {
-            margin-top: 3px;
             margin-left: auto;
+            margin-right: 0;
         }
         .suboption {
             margin-left: 2%;
@@ -362,13 +342,9 @@
         .head {
             text-align: left;
             border-radius: 4px;
-            background-color: var(--surface-300);
             color: var(--text);
-            height: 19px;
             font-weight: normal;
-            padding: 2px 2px 2px 6px;
-            border-top-left-radius: 3px;
-            border-top-right-radius: 3px;
+            padding-bottom: 0.5rem;
         }
     }
     .new_rates {
@@ -379,7 +355,9 @@
                 padding-left: 10px;
             }
             &:last-child {
-                border-bottom-right-radius: 0;
+                span {
+                    margin-right: auto;
+                }
             }
         }
     }
@@ -482,24 +460,14 @@
     .topspacer {
         margin-top: 5px;
     }
-    .profile {
-        min-width: 130px;
-        select {
-            border: 1px solid var(--surface-500);
-            border-radius: 3px;
-            margin-left: 5px;
-            margin-right: 5px;
-            width: calc(100% - 10px);
-        }
-    }
+    .profile,
     .rate_profile {
         min-width: 130px;
         select {
-            border: 1px solid var(--surface-500);
-            border-radius: 3px;
-            margin-left: 5px;
-            margin-right: 5px;
-            width: calc(100% - 10px);
+            width: 100%;
+        }
+        .helpicon {
+            margin: 0;
         }
     }
     .controller {
@@ -594,14 +562,15 @@
     }
     .tuningSlider {
         -webkit-appearance: none;
-        width: calc(100% - 14px);
-        height: 15px;
-        border: none;
-        outline: none;
+        width: 100%;
+        height: 1rem;
+        border: none !important;
+        outline: none !important;
         opacity: 0.8;
         transition: opacity 0.2s;
-        margin: 7px;
         background: var(--surface-200);
+        background-color: transparent !important;
+        padding: 0.25rem !important;
         &:hover {
             opacity: 1;
         }
@@ -678,7 +647,7 @@
                 }
                 &:nth-child(2) {
                     text-align: center;
-                    width: 30px;
+                    width: 32px;
                 }
                 &:last-child {
                     width: 30px;
@@ -695,16 +664,14 @@
             th {
                 text-align: center;
                 &:first-child {
-                    width: 6%;
-                    text-align: right;
-                    border-right: none;
+                    width: 20%;
+                    text-align: left;
+                    div {
+                        display: inline-block;
+                    }
                 }
                 &:nth-child(2) {
-                    width: 14%;
-                    border-right: none;
-                }
-                &:nth-child(3) {
-                    width: 30px;
+                    width: 32px;
                 }
                 &:last-child {
                     width: 30px;
@@ -728,13 +695,6 @@
                 }
             }
         }
-    }
-    .slidersWarning {
-        text-align: center;
-        background: #ffa3a3;
-        border: 1px solid red;
-        font-weight: 600;
-        font-size: 12px;
     }
     .nonExpertModeSlidersNote {
         text-align: center;
@@ -806,10 +766,6 @@
         width: 80%;
         height: 80%;
     }
-    .rates-tab-warning {
-        display: flex;
-        flex-flow: row wrap;
-    }
     .float-left {
         float: left;
     }
@@ -857,18 +813,16 @@
     }
 }
 .pid_mode {
-    width: calc(100% - 5px);
-    height: 18px;
     background-color: var(--surface-400);
-    float: left;
     margin: 0;
     text-align: left;
-    line-height: 13px;
-    padding: 5px 0 0 5px;
+    padding: 0.25rem 0.5rem;
     font-size: 12px;
     border-bottom: 1px solid var(--surface-500);
     color: var(--text);
     font-weight: normal;
+    display: grid;
+    grid-template-columns: auto auto;
     background-image: linear-gradient(
         315deg,
         rgba(255, 255, 255, 0.2) 10%,
@@ -893,11 +847,6 @@
         rgba(255, 255, 255, 0.2) 100%,
         transparent
     );
-    > div {
-        &:first-child {
-            float: left;
-        }
-    }
 }
 .pid_roll {
     background-color: #e24761;

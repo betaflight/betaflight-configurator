@@ -103,17 +103,17 @@ gps.initialize = async function (callback) {
         // Introduced in API 1.43
         gpsSbas.push(i18n.getMessage("gpsSbasNone"));
 
-        const gpsProtocolElement = $("select.gps_protocol");
+        const gpsProtocolElement = $(".number.gps_protocol");
         const gpsAutoBaudElement = $('input[name="gps_auto_baud"]');
         const gpsAutoBaudGroup = $(".gps_auto_baud");
         const gpsAutoConfigElement = $('input[name="gps_auto_config"]');
         const gpsAutoConfigGroup = $(".gps_auto_config");
         const gpsUbloxGalileoElement = $('input[name="gps_ublox_galileo"]');
         const gpsUbloxGalileoGroup = $(".gps_ublox_galileo");
-        const gpsUbloxSbasElement = $("select.gps_ubx_sbas");
+        const gpsUbloxSbasElement = $(".number.gps_ubx_sbas");
         const gpsUbloxSbasGroup = $(".gps_ubx_sbas");
         const gpsHomeOnceElement = $('input[name="gps_home_once"]');
-        const gpsBaudrateElement = $("select.gps_baudrate");
+        const gpsBaudrateElement = $(".number.gps_baudrate");
 
         for (let protocolIndex = 0; protocolIndex < gpsProtocols.length; protocolIndex++) {
             gpsProtocolElement.append(`<option value="${protocolIndex}">${gpsProtocols[protocolIndex]}</option>`);

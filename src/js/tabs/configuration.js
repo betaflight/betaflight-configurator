@@ -231,7 +231,7 @@ configuration.initialize = function (callback) {
             if (FC.FEATURE_CONFIG.features.isEnabled("MOTOR_STOP")) {
                 $('input[id="configurationAutoDisarmDelay"]').val(FC.ARMING_CONFIG.auto_disarm_delay);
             } else {
-                $('input[id="configurationAutoDisarmDelay"]').parent().hide();
+                $('input[id="configurationAutoDisarmDelay"]').parent().parent().hide();
             }
         } else {
             $('input[id="configurationGyroCalOnFirstArm"]').parent().parent().hide();
