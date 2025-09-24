@@ -2449,75 +2449,92 @@ MspHelper.prototype.setRawRx = function (channels) {
 };
 
 /**
- * Send a request to read a block of data from the dataflash at the given address and pass that address and a dataview
- * of the returned data to the given callback (or null for the data if an error occurred).
+ * Send a request to read a block of data from the dataflash at the given address
+ * and pass that address, a DataView of the returned data, and bytesCompressed
+ * to the given callback.
  */
-MspHelper.prototype.dataflashRead = function(address, blockSize, onDataCallback) {
+MspHelper.prototype.dataflashRead = function (address, blockSize, onDataCallback) {
     let outData = [
-        address & 0xFF,
-        (address >> 8) & 0xFF,
-        (address >> 16) & 0xFF,
-        (address >> 24) & 0xFF,
-        blockSize & 0xFF,
-        (blockSize >> 8) & 0xFF,
-        1 // allow compression
+        address & 0xff,
+        (address >> 8) & 0xff,
+        (address >> 16) & 0xff,
+        (address >> 24) & 0xff,
+        blockSize & 0xff,
+        (blockSize >> 8) & 0xff,
+        1, // allow compression
     ];
 
-    const mspObj = this.msp || (typeof MSP !== 'undefined' ? MSP : null);
+    const mspObj = this.msp || (typeof MSP !== "undefined" ? MSP : null);
     if (!mspObj) {
-        console.error('MSP object not found, cannot read dataflash.');
-        onDataCallback(address, null);
+        console.error("MSP object not found, cannot read dataflash.");
+        onDataCallback(address, null, 0);
         return;
     }
 
-    mspObj.send_message(MSPCodes.MSP_DATAFLASH_READ, outData, false, function(response) {
-        let payloadView = null;
+    mspObj.send_message(
+        MSPCodes.MSP_DATAFLASH_READ,
+        outData,
+        false,
+        function (response) {
+            let payloadView = null;
+            let bytesCompressed = 0;
 
-        if (response && response.data) {
-            const headerSize = 7;
-            const chunkAddress = response.data.readU32();
-            const dataSize = response.data.readU16();
-            const dataCompressionType = response.data.readU8();
+            if (response && response.data) {
+                const headerSize = 7;
+                const chunkAddress = response.data.readU32();
+                const dataSize = response.data.readU16();
+                const dataCompressionType = response.data.readU8();
 
-            if (chunkAddress === address) {
-                try {
-                    if (dataCompressionType === 0) {
-                        payloadView = new DataView(response.data.buffer, response.data.byteOffset + headerSize, dataSize);
-                    } else if (dataCompressionType === 1) {
-                        const compressedCharCount = response.data.readU16();
-                        const compressedArray = new Uint8Array(
+                if (chunkAddress === address) {
+                    try {
+                        if (dataCompressionType === 0) {
+                            payloadView = new DataView(
+                                response.data.buffer,
+                                response.data.byteOffset + headerSize,
+                                dataSize,
+                            );
+                            bytesCompressed = dataSize; // treat uncompressed as same size
+                        } else if (dataCompressionType === 1) {
+                            const compressedCharCount = response.data.readU16();
+                            const compressedArray = new Uint8Array(
+                                response.data.buffer,
+                                response.data.byteOffset + headerSize + 2,
+                                dataSize - 2,
+                            );
+                            const decompressedArray = huffmanDecodeBuf(
+                                compressedArray,
+                                compressedCharCount,
+                                defaultHuffmanTree,
+                                defaultHuffmanLenIndex,
+                            );
+                            payloadView = new DataView(decompressedArray.buffer);
+                            bytesCompressed = compressedCharCount;
+                        }
+                    } catch (e) {
+                        console.warn("Decompression or read failed, delivering raw data anyway");
+                        payloadView = new DataView(
                             response.data.buffer,
-                            response.data.byteOffset + headerSize + 2,
-                            dataSize - 2
+                            response.data.byteOffset + headerSize,
+                            dataSize,
                         );
-                        const decompressedArray = huffmanDecodeBuf(
-                            compressedArray,
-                            compressedCharCount,
-                            defaultHuffmanTree,
-                            defaultHuffmanLenIndex
-                        );
-                        payloadView = new DataView(decompressedArray.buffer);
+                        bytesCompressed = dataSize;
                     }
-                } catch (e) {
-                    console.warn('Decompression or read failed, delivering raw data anyway');
-                    payloadView = new DataView(response.data.buffer, response.data.byteOffset + headerSize, dataSize);
+                } else {
+                    console.log(`Expected address ${address} but received ${chunkAddress}`);
                 }
-            } else {
-                console.log(`Expected address ${address} but received ${chunkAddress}`);
             }
-        }
 
-        // Deliver payloadView if defined, otherwise pass null
-        onDataCallback(address, payloadView);
+            onDataCallback(address, payloadView, bytesCompressed);
 
-        if (!response || response.crcError) {
-            console.log(`CRC error or missing data at address ${address} - delivering whatever we got`);
-        } else if (payloadView) {
-            console.log(`Block at ${address} received (${payloadView.byteLength} bytes)`);
-        }
-    }, true); // end of send_message
+            if (!response || response.crcError) {
+                console.log(`CRC error or missing data at address ${address} - delivering whatever we got`);
+            } else if (payloadView) {
+                console.log(`Block at ${address} received (${payloadView.byteLength} bytes)`);
+            }
+        },
+        true,
+    ); // end of send_message
 }; // end of dataflashRead
-
 
 MspHelper.prototype.sendAdjustmentRanges = function (onCompleteCallback) {
     let nextFunction = send_next_adjustment_range;
