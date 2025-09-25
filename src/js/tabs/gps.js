@@ -111,7 +111,7 @@ gps.initialize = async function (callback) {
         const gpsUbloxGalileoElement = $('input[name="gps_ublox_galileo"]');
         const gpsUbloxGalileoGroup = $(".gps_ublox_galileo");
         const gpsUbloxSbasElement = $(".gps_ubx_sbas");
-        const gpsUbloxSbasGroup = $(".gps_ubx_sbas");
+        const gpsUbloxSbasGroup = gpsUbloxSbasElement.closest(".select");
         const gpsHomeOnceElement = $('input[name="gps_home_once"]');
         const gpsBaudrateElement = $(".gps_baudrate");
 
