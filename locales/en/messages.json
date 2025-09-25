@@ -368,6 +368,24 @@
     "tabOptions": {
         "message": "Options"
     },
+    "tabNornConfig": {
+        "message": "NORN Config"
+    },
+    "nornManticore": {
+        "message": "Manticore"
+    },
+    "nornVtx": {
+        "message": "VTX"
+    },
+    "nornNone": {
+        "message": "None"
+    },
+    "nornGenerate": {
+        "message": "Generate"
+    },
+    "nornOutput": {
+        "message": "NORN Configuration"
+    },
 
     "tabSetup": {
         "message": "Setup"

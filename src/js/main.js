@@ -279,6 +279,9 @@ function startProcess() {
                             configuration.initialize(content_ready),
                         );
                         break;
+                    case "norn_config":
+                        import("./tabs/norn_config").then(({ norn_config }) => norn_config.initialize(content_ready));
+                        break;
                     case "pid_tuning":
                         import("./tabs/pid_tuning").then(({ pid_tuning }) => pid_tuning.initialize(content_ready));
                         break;

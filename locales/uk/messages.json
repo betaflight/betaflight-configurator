@@ -7510,5 +7510,23 @@
     "osdDescElementLidar": {
         "message": "$t(osdTextElementLidar.message)",
         "description": "Don't translate!!!"
+    },
+    "nornManticore": {
+        "message": "Manticore"
+    },
+    "nornVtx": {
+        "message": "VTX"
+    },
+    "nornNone": {
+        "message": "Немає"
+    },
+    "nornGenerate": {
+        "message": "Згенерувати"
+    },
+    "nornOutput": {
+        "message": "Конфігурація"
+    },
+    "tabNornConfig": {
+        "message": "NORN Налаштування"
     }
 }

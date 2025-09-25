@@ -30,6 +30,7 @@ class GuiControl {
             "presets",
             "cli",
             "configuration",
+            "norn_config",
             "logging",
             "onboard_logging",
             "modes",

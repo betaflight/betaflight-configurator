@@ -1,0 +1,42 @@
+defaults nosave
+
+batch start
+
+defaults nosave
+
+
+
+<% if (manticoreKey === 'uart') { %>
+# Manticore UART variant
+set uart1_function = RX_SERIAL
+set uart2_function = TELEMETRY
+<% } %>
+
+<% if (manticoreKey === 'gpio') { %>
+# Manticore GPIO variant
+set gpio_output = ON
+set gpio_mode = ALTERNATE
+<% } %>
+
+<% if (vtxKey === '5.8_vtx') { %>
+# 5.8GHz VTX settings
+set vtx_band = A
+set vtx_channel = 1
+set vtx_power = 25
+<% } %>
+
+<% if (vtxKey === '3.3_vtx') { %>
+# 3.3GHz VTX settings
+set vtx_band = B
+set vtx_channel = 3
+set vtx_power = 100
+<% } %>
+
+<% if (vtxKey === 'optica') { %>
+# Optica VTX settings
+set vtx_band = O
+set vtx_channel = 2
+set vtx_power = 50
+<% } %>
+
+
