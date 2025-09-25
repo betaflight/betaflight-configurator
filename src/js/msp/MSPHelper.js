@@ -1762,14 +1762,13 @@ MspHelper.prototype.process_data = function (dataHandler) {
         if (dataHandler.callbacks[i]?.code === code) {
             // save callback reference
             const callback = dataHandler.callbacks[i].callback;
-            const callbackOnError = dataHandler.callbacks[i].callbackOnError;
 
             // remove timeout
-            clearInterval(dataHandler.callbacks[i].timer);
+            clearTimeout(dataHandler.callbacks[i].timer);
 
             // remove object from array
             dataHandler.callbacks.splice(i, 1);
-            if (!crcError || callbackOnError) {
+            if (!crcError) {
                 // fire callback
                 if (callback) {
                     callback({ command: code, data: data, length: data.byteLength, crcError: crcError });
