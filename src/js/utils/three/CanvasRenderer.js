@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { Projector, RenderableSprite, RenderableLine, RenderableFace } from "three/examples/jsm/renderers/Projector";
+import { Projector, RenderableSprite, RenderableLine, RenderableFace } from "./Projector";
 
 /**
  * @author mrdoob / http://mrdoob.com/
