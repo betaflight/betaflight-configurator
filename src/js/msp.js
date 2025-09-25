@@ -58,9 +58,7 @@ const MSP = {
     packet_error: 0,
     unsupported: 0,
 
-    MIN_TIMEOUT: 200,
-    MAX_TIMEOUT: 2000,
-    timeout: 200,
+    TIMEOUT: 1000,
 
     last_received_timestamp: null,
     listeners: [],
@@ -289,7 +287,7 @@ const MSP = {
         });
     },
     listen(listener) {
-        if (this.listeners.indexOf(listener) == -1) {
+        if (this.listeners.indexOf(listener) === -1) {
             this.listeners.push(listener);
         }
     },
@@ -318,8 +316,8 @@ const MSP = {
         const dataLength = data ? data.length : 0;
         // always reserve 6 bytes for protocol overhead !
         const bufferSize = dataLength + 6;
-        let bufferOut = new ArrayBuffer(bufferSize);
-        let bufView = new Uint8Array(bufferOut);
+        const bufferOut = new ArrayBuffer(bufferSize);
+        const bufView = new Uint8Array(bufferOut);
 
         bufView[0] = 36; // $
         bufView[1] = 77; // M
@@ -378,25 +376,22 @@ const MSP = {
         serial.send(bufferOut);
     },
     send_message(code, data, callback_sent, callback_msp, doCallbackOnError) {
-        const connected = serial.connected;
-
-        if (code === undefined || !connected || CONFIGURATOR.virtualMode) {
+        if (code === undefined || !serial.connected || CONFIGURATOR.virtualMode) {
             if (callback_msp) {
                 callback_msp();
             }
             return false;
         }
 
-        let requestExists = false;
-        for (const instance of this.callbacks) {
-            if (instance.code === code) {
-                requestExists = true;
-
-                break;
-            }
-        }
-
         const bufferOut = code <= 254 ? this.encode_message_v1(code, data) : this.encode_message_v2(code, data);
+        const view = new Uint8Array(bufferOut);
+        const keyCrc = this.crc8_dvb_s2_data(view, 0, view.length);
+        const requestExists = this.callbacks.some(
+            (i) =>
+                i.code === code &&
+                i.requestBuffer?.byteLength === bufferOut.byteLength &&
+                this.crc8_dvb_s2_data(new Uint8Array(i.requestBuffer), 0, i.requestBuffer.byteLength) === keyCrc,
+        );
 
         const obj = {
             code: code,
@@ -409,31 +404,23 @@ const MSP = {
         if (!requestExists) {
             obj.timer = setTimeout(() => {
                 console.warn(
-                    `MSP: data request timed-out: ${code} ID: ${serial.connectionId} TAB: ${GUI.active_tab} TIMEOUT: ${
-                        this.timeout
-                    } QUEUE: ${this.callbacks.length} (${this.callbacks.map((e) => e.code)})`,
+                    `MSP: data request timed-out: ${code} ID: ${serial.connectionId} TAB: ${GUI.active_tab} QUEUE: ${this.callbacks.length} (${this.callbacks.map((e) => e.code)})`,
                 );
-                serial.send(bufferOut, (_sendInfo) => {
-                    obj.stop = performance.now();
-                    const executionTime = Math.round(obj.stop - obj.start);
-                    this.timeout = Math.max(this.MIN_TIMEOUT, Math.min(executionTime, this.MAX_TIMEOUT));
+                serial.send(bufferOut, (sendInfo) => {
+                    if (sendInfo.bytesSent === bufferOut.byteLength && callback_sent) {
+                        callback_sent();
+                    }
                 });
-            }, this.timeout);
+            }, this.TIMEOUT);
         }
 
         this.callbacks.push(obj);
 
         // always send messages with data payload (even when there is a message already in the queue)
         if (data || !requestExists) {
-            if (this.timeout > this.MIN_TIMEOUT) {
-                this.timeout--;
-            }
-
             serial.send(bufferOut, (sendInfo) => {
-                if (sendInfo.bytesSent === bufferOut.byteLength) {
-                    if (callback_sent) {
-                        callback_sent();
-                    }
+                if (sendInfo.bytesSent === bufferOut.byteLength && callback_sent) {
+                    callback_sent();
                 }
             });
         }
