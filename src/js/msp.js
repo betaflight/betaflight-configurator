@@ -375,7 +375,7 @@ const MSP = {
 
         serial.send(bufferOut);
     },
-    send_message(code, data, callback_sent, callback_msp, doCallbackOnError) {
+    send_message(code, data, callback_sent, callback_msp) {
         if (code === undefined || !serial.connected || CONFIGURATOR.virtualMode) {
             if (callback_msp) {
                 callback_msp();
@@ -397,7 +397,6 @@ const MSP = {
             code: code,
             requestBuffer: bufferOut,
             callback: callback_msp,
-            callbackOnError: doCallbackOnError,
             start: performance.now(),
         };
 
