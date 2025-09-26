@@ -35,7 +35,11 @@ setup.initialize = function (callback) {
     }
 
     function load_mixer_config() {
-        MSP.send_message(MSPCodes.MSP_MIXER_CONFIG, false, false, load_html);
+        MSP.send_message(MSPCodes.MSP_MIXER_CONFIG, false, false, load_gyro_sensor);
+    }
+
+    function load_gyro_sensor() {
+        MSP.send_message(MSPCodes.MSP_SENSOR_ALIGNMENT, false, false, load_html);
     }
 
     function load_html() {
@@ -305,12 +309,25 @@ setup.initialize = function (callback) {
             }
 
             MSP.send_message(MSPCodes.MSP2_SENSOR_CONFIG_ACTIVE, false, false, function () {
-                addSensorInfo(
-                    FC.SENSOR_CONFIG_ACTIVE.gyro_hardware,
-                    sensor_gyro_e,
-                    "gyro",
-                    sensorTypes().gyro.elements,
-                );
+                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+                    MSP.send_message(MSPCodes.MSP2_GYRO_SENSOR, false, false, function () {
+                        let gyroInfoList = [];
+                        for (let i = 0; i < FC.GYRO_SENSOR.gyro_count; i++) {
+                            if ((FC.SENSOR_ALIGNMENT.gyro_enable_mask & (1 << i)) !== 0) {
+                                gyroInfoList.push(sensorTypes().gyro.elements[FC.GYRO_SENSOR.gyro_hardware[i]]);
+                            }
+                        }
+                        sensor_gyro_e.html(gyroInfoList.join(" "));
+                    });
+                } else {
+                    addSensorInfo(
+                        FC.SENSOR_CONFIG_ACTIVE.gyro_hardware,
+                        sensor_gyro_e,
+                        "gyro",
+                        sensorTypes().gyro.elements,
+                    );
+                }
+
                 addSensorInfo(FC.SENSOR_CONFIG_ACTIVE.acc_hardware, sensor_acc_e, "acc", sensorTypes().acc.elements);
                 addSensorInfo(
                     FC.SENSOR_CONFIG_ACTIVE.baro_hardware,
