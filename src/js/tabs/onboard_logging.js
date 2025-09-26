@@ -443,14 +443,16 @@ onboard_logging.initialize = function (callback) {
         console.log(
             `Received ${totalBytes} bytes in ${totalTime.toFixed(2)}s (${(totalBytes / totalTime / 1024).toFixed(
                 2,
-            )}kB / s) with block size ${self.blockSize}.`,
+            )} kB / s) with block size ${self.blockSize}.`,
         );
-        if (!isNaN(totalBytesCompressed)) {
+
+        if (typeof totalBytesCompressed === "number" && totalBytesCompressed > 0) {
+            const meanCompressionFactor = totalBytes / totalBytesCompressed;
             console.log(
                 "Compressed into",
                 totalBytesCompressed,
                 "bytes with mean compression factor of",
-                totalBytes / totalBytesCompressed,
+                meanCompressionFactor.toFixed(2),
             );
         }
 
@@ -490,48 +492,47 @@ onboard_logging.initialize = function (callback) {
                     show_saving_dialog();
 
                     function onChunkRead(chunkAddress, chunkDataView, bytesCompressed) {
-                        if (chunkDataView !== null) {
-                            // Did we receive any data?
-                            if (chunkDataView.byteLength > 0) {
-                                nextAddress += chunkDataView.byteLength;
-                                if (isNaN(bytesCompressed) || isNaN(totalBytesCompressed)) {
-                                    totalBytesCompressed = null;
-                                } else {
-                                    totalBytesCompressed += bytesCompressed;
-                                }
+                        if (chunkDataView && chunkDataView.byteLength > 0) {
+                            // Always write non-empty data, even if CRC mismatch
+                            const blob = new Blob([chunkDataView]);
+                            FileSystem.writeChunck(openedFile, blob);
 
-                                $(".dataflash-saving progress").attr("value", (nextAddress / maxBytes) * 100);
+                            nextAddress += chunkDataView.byteLength;
 
-                                const blob = new Blob([chunkDataView]);
-                                FileSystem.writeChunck(openedFile, blob).then(() => {
-                                    if (saveCancelled || nextAddress >= maxBytes) {
-                                        if (saveCancelled) {
-                                            dismiss_saving_dialog();
-                                        } else {
-                                            mark_saving_dialog_done(startTime, nextAddress, totalBytesCompressed);
-                                        }
-                                        FileSystem.closeFile(openedFile);
-                                    } else {
-                                        if (!self.writeError) {
-                                            mspHelper.dataflashRead(nextAddress, self.blockSize, onChunkRead);
-                                        } else {
-                                            dismiss_saving_dialog();
-                                            FileSystem.closeFile(openedFile);
-                                        }
-                                    }
-                                });
-                            } else {
-                                // A zero-byte block indicates end-of-file, so we're done
+                            // Track total compressed bytes, if provided
+                            if (typeof bytesCompressed === "number") {
+                                if (totalBytesCompressed == null) totalBytesCompressed = 0; // initialize if previously unknown
+                                totalBytesCompressed += bytesCompressed;
+                            }
+
+                            $(".dataflash-saving progress").attr("value", (nextAddress / maxBytes) * 100);
+
+                            if (saveCancelled || nextAddress >= maxBytes) {
                                 mark_saving_dialog_done(startTime, nextAddress, totalBytesCompressed);
                                 FileSystem.closeFile(openedFile);
+                            } else {
+                                mspHelper.dataflashRead(nextAddress, self.blockSize, onChunkRead);
                             }
+                        } else if (chunkDataView && chunkDataView.byteLength === 0) {
+                            // Zero-length block → EOF
+                            mark_saving_dialog_done(startTime, nextAddress, totalBytesCompressed);
+                            FileSystem.closeFile(openedFile);
                         } else {
-                            // There was an error with the received block (address didn't match the one we asked for), retry
-                            mspHelper.dataflashRead(nextAddress, self.blockSize, onChunkRead);
+                            // Null block → skip ahead (hard error)
+                            console.warn(`Skipping null block at address ${nextAddress}`);
+                            nextAddress += self.blockSize;
+
+                            if (nextAddress >= maxBytes) {
+                                mark_saving_dialog_done(startTime, nextAddress, totalBytesCompressed);
+                                FileSystem.closeFile(openedFile);
+                            } else {
+                                mspHelper.dataflashRead(nextAddress, self.blockSize, onChunkRead);
+                            }
                         }
                     }
 
-                    const startTime = new Date().getTime();
+                    const startTime = new Date().getTime(); // Start timestamp
+
                     // Fetch the initial block
                     FileSystem.openFile(fileWriter).then((file) => {
                         openedFile = file;
