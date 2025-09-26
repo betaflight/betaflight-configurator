@@ -87,6 +87,7 @@ export function sensorTypes() {
                 "LIS3MDL",
                 "MPU925X_AK8963",
                 "IST8310",
+                "QMC5883P",
             ],
         },
         gps: {
