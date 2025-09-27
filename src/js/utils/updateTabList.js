@@ -9,7 +9,7 @@ export function updateTabList(features) {
     $("#tabs ul.mode-connected li.tab_sensors").toggle(isExpertModeEnabled);
     $("#tabs ul.mode-connected li.tab_logging").toggle(isExpertModeEnabled);
     $("#tabs ul.mode-connected li.tab_servos").toggle(
-        isExpertModeEnabled && FC.CONFIG?.buildOptions?.includes("USE_SERVOS"),
+        ["USE_SERVOS", "USE_WING"].some((option) => FC.CONFIG?.buildOptions?.includes(option)),
     );
 
     $("#tabs ul.mode-connected li.tab_gps").toggle(FC.CONFIG?.buildOptions?.includes("USE_GPS"));

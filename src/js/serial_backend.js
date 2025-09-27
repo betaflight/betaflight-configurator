@@ -617,6 +617,11 @@ function finishOpen() {
                 GUI.allowedTabs.push(tab);
             }
         }
+
+        // Special case: USE_WING includes servo functionality but doesn't expose USE_SERVOS in build options
+        if (FC.CONFIG.buildOptions.some((opt) => opt.includes("USE_WING")) && !GUI.allowedTabs.includes("servos")) {
+            GUI.allowedTabs.push("servos");
+        }
     } else {
         GUI.allowedTabs = Array.from(GUI.defaultAllowedFCTabsWhenConnected);
     }
