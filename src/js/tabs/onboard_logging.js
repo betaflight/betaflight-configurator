@@ -488,8 +488,8 @@ onboard_logging.initialize = function (callback) {
             show_saving_dialog();
 
             const MAX_SIMPLE_RETRIES = 5;
-            const BASE_RETRY_BACKOFF_MS = 30; // starting backoff
-            const INTER_BLOCK_DELAY_MS = 2; // small delay between successful blocks
+            const BASE_RETRY_BACKOFF_MS = 50; // starting backoff
+            const INTER_BLOCK_DELAY_MS = 10; // small delay between successful blocks
             const startTime = new Date().getTime();
 
             prepare_file(async (fileWriter) => {
