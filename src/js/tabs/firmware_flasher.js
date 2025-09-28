@@ -291,6 +291,7 @@ firmware_flasher.initialize = async function (callback) {
                 "USE_SERIALRX_FPORT",
                 "USE_SERIALRX_GHST",
                 "USE_SERIALRX_JETIEXBUS",
+                "USE_SERIALRX_MAVLINK",
             ].includes(radioProtocol);
 
             $('select[name="telemetryProtocols"]').attr("disabled", hasTelemetryEnabledByDefault);

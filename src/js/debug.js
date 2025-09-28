@@ -848,13 +848,14 @@ function update() {
         addArrayElement(DEBUG.modes, "AUTOPILOT_POSITION");
         addArrayElement(DEBUG.modes, "CHIRP");
         addArrayElement(DEBUG.modes, "FLASH_TEST_PRBS");
+        addArrayElement(DEBUG.modes, "MAVLINK");
         replaceArrayElement(DEBUG.modes, "DUAL_GYRO_RAW", "MULTI_GYRO_RAW");
         replaceArrayElement(DEBUG.modes, "DUAL_GYRO_DIFF", "MULTI_GYRO_DIFF");
         replaceArrayElement(DEBUG.modes, "DUAL_GYRO_SCALED", "MULTI_GYRO_SCALED");
 
         delete DEBUG.fieldNames.GPS_RESCUE_THROTTLE_PID;
         delete DEBUG.fieldNames.GYRO_SCALED;
-        
+
         DEBUG.fieldNames["MULTI_GYRO_RAW"] = DEBUG.fieldNames.DUAL_GYRO_RAW;
         DEBUG.fieldNames["MULTI_GYRO_DIFF"] = DEBUG.fieldNames.DUAL_GYRO_DIFF;
         DEBUG.fieldNames["MULTI_GYRO_SCALED"] = DEBUG.fieldNames.DUAL_GYRO_SCALED;

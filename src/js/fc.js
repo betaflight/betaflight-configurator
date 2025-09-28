@@ -84,6 +84,7 @@ const FIRMWARE_BUILD_OPTIONS = {
     USE_SERIALRX_SUMD: 4106,
     USE_SERIALRX_SUMH: 4107,
     USE_SERIALRX_XBUS: 4108,
+    USE_SERIALRX_MAVLINK: 4109,
 
     // Motor Protocols
     USE_BRUSHED: 8230,
@@ -803,6 +804,7 @@ const FC = {
             // Default to NONE and move SPEKTRUM1024 to the end (firmware PR #12500)
             serialRxTypes[0] = "NONE";
             serialRxTypes.push("SPEKTRUM1024");
+            serialRxTypes.push("MAVLINK");
         }
 
         return serialRxTypes;
@@ -850,6 +852,9 @@ const FC = {
             }
             if (options.includes("USE_SERIALRX_GHST")) {
                 supportedRxTypes.push("IRC GHOST");
+            }
+            if (options.includes("USE_SERIALRX_MAVLINK")) {
+                supportedRxTypes.push("MAVLINK");
             }
             return supportedRxTypes;
         }
