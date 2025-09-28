@@ -491,17 +491,23 @@ onboard_logging.initialize = function (callback) {
 
                     show_saving_dialog();
 
+                    // START PATCH: minimal retry for null/missing blocks
+                    const MAX_SIMPLE_RETRIES = 1;
+                    let simpleRetryCount = 0;
+
                     function onChunkRead(chunkAddress, chunkDataView, bytesCompressed) {
                         if (chunkDataView && chunkDataView.byteLength > 0) {
-                            // Always write non-empty data, even if CRC mismatch
+                            // Reset retry counter after a good block
+                            simpleRetryCount = 0;
+
+                            // --- ORIGINAL BLOCK WRITE LOGIC ---
                             const blob = new Blob([chunkDataView]);
                             FileSystem.writeChunck(openedFile, blob);
 
                             nextAddress += chunkDataView.byteLength;
 
-                            // Track total compressed bytes, if provided
                             if (typeof bytesCompressed === "number") {
-                                if (totalBytesCompressed == null) totalBytesCompressed = 0; // initialize if previously unknown
+                                if (totalBytesCompressed == null) totalBytesCompressed = 0;
                                 totalBytesCompressed += bytesCompressed;
                             }
 
@@ -513,23 +519,34 @@ onboard_logging.initialize = function (callback) {
                             } else {
                                 mspHelper.dataflashRead(nextAddress, self.blockSize, onChunkRead);
                             }
+                            // --- END ORIGINAL LOGIC ---
                         } else if (chunkDataView && chunkDataView.byteLength === 0) {
                             // Zero-length block → EOF
                             mark_saving_dialog_done(startTime, nextAddress, totalBytesCompressed);
                             FileSystem.closeFile(openedFile);
                         } else {
-                            // Null block → skip ahead (hard error)
-                            console.warn(`Skipping null block at address ${nextAddress}`);
-                            nextAddress += self.blockSize;
-
-                            if (nextAddress >= maxBytes) {
-                                mark_saving_dialog_done(startTime, nextAddress, totalBytesCompressed);
-                                FileSystem.closeFile(openedFile);
-                            } else {
+                            // Null/missing block
+                            if (simpleRetryCount < MAX_SIMPLE_RETRIES) {
+                                simpleRetryCount++;
+                                console.warn(`Null/missing block at ${nextAddress}, retry ${simpleRetryCount}`);
                                 mspHelper.dataflashRead(nextAddress, self.blockSize, onChunkRead);
+                            } else {
+                                console.error(
+                                    `Skipping null block at ${nextAddress} after ${MAX_SIMPLE_RETRIES} retry`,
+                                );
+                                nextAddress += self.blockSize; // Move to next block
+                                simpleRetryCount = 0; // reset counter for next block
+
+                                if (nextAddress >= maxBytes) {
+                                    mark_saving_dialog_done(startTime, nextAddress, totalBytesCompressed);
+                                    FileSystem.closeFile(openedFile);
+                                } else {
+                                    mspHelper.dataflashRead(nextAddress, self.blockSize, onChunkRead);
+                                }
                             }
                         }
                     }
+                    // END PATCH
 
                     const startTime = new Date().getTime(); // Start timestamp
 
