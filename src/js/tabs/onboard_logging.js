@@ -492,7 +492,7 @@ onboard_logging.initialize = function (callback) {
                     show_saving_dialog();
 
                     // START PATCH: minimal retry for null/missing blocks
-                    const MAX_SIMPLE_RETRIES = 1;
+                    const MAX_SIMPLE_RETRIES = 5;
                     let simpleRetryCount = 0;
 
                     function onChunkRead(chunkAddress, chunkDataView, bytesCompressed) {
