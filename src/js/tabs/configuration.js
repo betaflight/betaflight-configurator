@@ -75,6 +75,11 @@ configuration.initialize = function (callback) {
                     ? MSP.promise(MSPCodes.MSP_COMPASS_CONFIG)
                     : Promise.resolve(true),
             )
+            .then(() =>
+                semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)
+                    ? MSP.promise(MSPCodes.MSP2_GYRO_SENSOR)
+                    : Promise.resolve(true),
+            )
             .then(() => load_html());
     }
 
@@ -270,12 +275,12 @@ configuration.initialize = function (callback) {
                     // Create a new gyro alignment div
                     const gyroBox = $(`<div id="gyro_box_${gyroIndex + 1}"></div>`);
                     const gyroRow = $(`<div class="gyro_row"></div>`);
+                    const gyroDetected = sensorTypes().gyro.elements[FC.GYRO_SENSOR.gyro_hardware[gyroIndex]];
 
-                    // Create enable/disable checkbox
                     const enableCheck = $(`<div class="checkbox enable-checkbox">
                         <label>
                             <input type="checkbox" class="toggle" id="gyro_${gyroIndex + 1}_enable">
-                            <span>${i18n.getMessage("configurationSensorGyroEnable")} ${gyroIndex + 1}</span>
+                            <span> ${gyroDetected}</span>
                         </label>
                     </div>`);
 
