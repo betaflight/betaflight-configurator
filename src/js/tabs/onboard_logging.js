@@ -537,7 +537,7 @@ onboard_logging.initialize = function (callback) {
                                 nextAddress += self.blockSize; // Move to next block
                                 simpleRetryCount = 0; // reset counter for next block
 
-                                if (nextAddress >= maxBytes) {
+                                if (saveCancelled || nextAddress >= maxBytes) {
                                     mark_saving_dialog_done(startTime, nextAddress, totalBytesCompressed);
                                     FileSystem.closeFile(openedFile);
                                 } else {
