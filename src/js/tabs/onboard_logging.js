@@ -495,6 +495,8 @@ onboard_logging.initialize = function (callback) {
                     const MAX_SIMPLE_RETRIES = 5;
                     let simpleRetryCount = 0;
 
+                    const startTime = new Date().getTime(); // Start timestamp
+
                     function onChunkRead(chunkAddress, chunkDataView, bytesCompressed) {
                         if (chunkDataView && chunkDataView.byteLength > 0) {
                             // Reset retry counter after a good block
@@ -528,27 +530,20 @@ onboard_logging.initialize = function (callback) {
                             // Null/missing block
                             if (simpleRetryCount < MAX_SIMPLE_RETRIES) {
                                 simpleRetryCount++;
-                                console.warn(`Null/missing block at ${nextAddress}, retry ${simpleRetryCount}`);
+                                if (simpleRetryCount % 2 === 1) {
+                                    console.warn(`Null/missing block at ${nextAddress}, retry ${simpleRetryCount}`);
+                                }
                                 mspHelper.dataflashRead(nextAddress, self.blockSize, onChunkRead);
                             } else {
                                 console.error(
-                                    `Skipping null block at ${nextAddress} after ${MAX_SIMPLE_RETRIES} retry`,
+                                    `Skipping null block at ${nextAddress} after ${MAX_SIMPLE_RETRIES} retries`,
                                 );
-                                nextAddress += self.blockSize; // Move to next block
-                                simpleRetryCount = 0; // reset counter for next block
-
-                                if (saveCancelled || nextAddress >= maxBytes) {
-                                    mark_saving_dialog_done(startTime, nextAddress, totalBytesCompressed);
-                                    FileSystem.closeFile(openedFile);
-                                } else {
-                                    mspHelper.dataflashRead(nextAddress, self.blockSize, onChunkRead);
-                                }
+                                nextAddress += self.blockSize; // Move to next block only after retries exhausted
+                                simpleRetryCount = 0;
+                                mspHelper.dataflashRead(nextAddress, self.blockSize, onChunkRead);
                             }
                         }
                     }
-                    // END PATCH
-
-                    const startTime = new Date().getTime(); // Start timestamp
 
                     // Fetch the initial block
                     FileSystem.openFile(fileWriter).then((file) => {
