@@ -101,6 +101,9 @@ const DEBUG = {
         "TASK",
         "GIMBAL",
         "WING_SETPOINT",
+        "DEBUG_AUTOPILOT",
+        "CHIRP",
+        "FLASH_TEST_PRBS",
     ],
 
     fieldNames: {
@@ -854,7 +857,7 @@ function update() {
 
         delete DEBUG.fieldNames.GPS_RESCUE_THROTTLE_PID;
         delete DEBUG.fieldNames.GYRO_SCALED;
-        
+
         DEBUG.fieldNames["MULTI_GYRO_RAW"] = DEBUG.fieldNames.DUAL_GYRO_RAW;
         DEBUG.fieldNames["MULTI_GYRO_DIFF"] = DEBUG.fieldNames.DUAL_GYRO_DIFF;
         DEBUG.fieldNames["MULTI_GYRO_SCALED"] = DEBUG.fieldNames.DUAL_GYRO_SCALED;
