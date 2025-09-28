@@ -502,7 +502,7 @@ onboard_logging.initialize = function (callback) {
 
                             // --- ORIGINAL BLOCK WRITE LOGIC ---
                             const blob = new Blob([chunkDataView]);
-                            FileSystem.writeChunck(openedFile, blob);
+                            FileSystem.writeChunk(openedFile, blob);
 
                             nextAddress += chunkDataView.byteLength;
 
