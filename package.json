@@ -38,7 +38,7 @@
   "author": "The Betaflight open source project.",
   "license": "GPL-3.0",
   "engines": {
-    "node": "20.x"
+    "node": "24.x"
   },
   "dependencies": {
     "@capacitor/android": "^7.0.1",
@@ -130,7 +130,7 @@
   },
   "resolutions": {
     "jquery": "3.6.3",
-    "libxmljs2": "0.32.0"
+    "libxmljs2": "0.37.0"
   },
   "husky": {
     "hooks": {
