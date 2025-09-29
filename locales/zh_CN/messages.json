@@ -28,8 +28,19 @@
     "noticeTitle": {
         "message": "注意"
     },
+    "search": {
+        "message": "搜索"
+    },
     "dontShowAgain": {
         "message": "不再显示"
+    },
+    "pwaOnNeedRefreshTitle": {
+        "message": "应用程序需要更新",
+        "description": "Title of the window that appears when the app needs to be refreshed to get the latest changes"
+    },
+    "pwaOnOffilenReadyTitle": {
+        "message": "当前可以离线使用应用程序",
+        "description": "Title of the window that appears when the app is ready to be installed and used offline"
     },
     "operationNotSupported": {
         "message": "您的硬件不支持此操作。"
@@ -49,9 +60,33 @@
     "portsSelectManual": {
         "message": "手动选择"
     },
+    "portsSelectNone": {
+        "message": "连接不可用"
+    },
     "portsSelectVirtual": {
         "message": "虚拟模式 (实验性)",
         "description": "Configure a Virtual Flight Controller without the need of a physical FC."
+    },
+    "portsSelectPermission": {
+        "message": "--- 找不到我的 USB 设备 ----",
+        "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access the device."
+    },
+    "portsSelectPermissionBluetooth": {
+        "message": "--- 找不到我的 蓝牙 设备 ----",
+        "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access a Bluetooth device."
+    },
+    "portsSelectPermissionDFU": {
+        "message": "--- 找不到我的 DFU 设备 ----",
+        "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access a DFU device."
+    },
+    "bluetoothConnected": {
+        "message": "已连接到蓝牙设备： $1"
+    },
+    "bluetoothConnectionType": {
+        "message": "蓝牙连接类型： $1"
+    },
+    "bluetoothConnectionError": {
+        "message": "蓝牙错误： $1"
     },
     "virtualMSPVersion": {
         "message": "虚拟固件版本"
@@ -71,17 +106,27 @@
     "cancel": {
         "message": "取消"
     },
+    "submit": {
+        "message": "提交"
+    },
     "autoConnectDisabled": {
         "message": "自动连接: 禁用-用户需要选择正确的串行端口, 然后单击 \"连接\" 按钮。"
     },
     "expertMode": {
         "message": "启用专家模式"
     },
+    "expertModeDescription": {
+        "message": "启用专家模式选项"
+    },
     "warningSettings": {
         "message": "显示警告"
     },
     "rememberLastTab": {
         "message": "连接后重新打开最后使用的选项页"
+    },
+    "meteredConnection": {
+        "message": "禁用互联网连接(用于按流量计费的连接或慢速连接)",
+        "description": "Text for the option to disable internet access for metered connection or to disable data over slow connections"
     },
     "analyticsOptOut": {
         "message": "退出匿名的统计数据收集"
@@ -90,9 +135,17 @@
         "message": "设置连接超时阈值，以允许更长时间的初始化或重启",
         "description": "Change timeout on auto-connect and reboot so the bus has more time to initialize after being detected by the system"
     },
+    "developmentSettings": {
+        "message": "开发设置",
+        "description": "Title for the development settings section"
+    },
     "showAllSerialDevices": {
         "message": "显示所有串口设备 (面向制造商或开发)",
         "description": "Do not filter serial devices using VID\/PID values (for manufacturers or development)"
+    },
+    "showManualMode": {
+        "message": "启用手动连接模式",
+        "description": "Text for the option to enable or disable manual connection mode"
     },
     "showVirtualMode": {
         "message": "启用虚拟连接模式",
@@ -107,6 +160,9 @@
     "language_choice_message": {
         "message": "更改语言:",
         "description": "Try and be brief"
+    },
+    "userLanguageSelect": {
+        "message": "选择默认语言"
     },
     "language_default": {
         "message": "系统默认"
@@ -164,8 +220,20 @@
         "message": "声呐",
         "description": "Text of the image in the top sensors icons. Please keep it short."
     },
+    "checkForConfiguratorUnstableVersions": {
+        "message": "显示不稳定版本应用程序的更新提醒"
+    },
+    "configuratorUpdateHelp": {
+        "message": "当网络可用时，应用会自动请求可用的更新。"
+    },
     "configuratorUpdateWebsite": {
         "message": "打开版本发布网站"
+    },
+    "rebootFlightController": {
+        "message": "正在重启飞控，完成后重新连接"
+    },
+    "rebootFlightControllerReady": {
+        "message": "飞控准备就绪"
     },
     "deviceRebooting": {
         "message": "设备 - <span class=\"message-negative\">重启中<\/span>"
@@ -228,7 +296,7 @@
         "message": "OSD 屏幕叠加显示"
     },
     "tabVtx": {
-        "message": "图传(VTX)"
+        "message": "图传"
     },
     "tabPower": {
         "message": "动力 & 电池"
@@ -266,11 +334,18 @@
     "logActionShow": {
         "message": "显示日志"
     },
+    "fileSystemPickerFiles": {
+        "message": "{{typeof}} 文件",
+        "description": "Text for the file picker dialog, showing the type of files selected. The parameter can be HEX, TXT, etc."
+    },
+    "fileSystemPickerFirmwareFiles": {
+        "message": "固件文件"
+    },
     "serialErrorFrameError": {
         "message": "串行连接错误：数据帧错误"
     },
     "serialErrorParityError": {
-        "message": "串行连接错误：奇偶错误"
+        "message": "串行连接错误：奇偶校验错误"
     },
     "serialPortOpened": {
         "message": "打开串口 <span class=\"message-positive\">成功<\/span> ID: $1"
@@ -389,8 +464,14 @@
     "noConfigurationReceived": {
         "message": "<span class=\"message-negative\">10秒<\/span>内没有接收到配置信息，飞控通信 <span class=\"message-negative\"> 失败<\/span>"
     },
+    "firmwareVersionNotSupported": {
+        "message": "<span class=\"message-negative\">不支持<\/span>此版本的固件。请升级固件，使其能够支持<strong>$1<\/strong>或更高版本的 api。刷写前请使用 CLI 备份。CLI 备份\/恢复的步骤在文档中有说明。<br \/>如果你不准备升级固件，也可以下载使用旧版本的应用程序。"
+    },
     "firmwareTypeNotSupported": {
         "message": "<span class=\"message-negative\">不支持<\/span>非 Betaflight 固件，只能使用 CLI 模式"
+    },
+    "firmwareUpgradeRequired": {
+        "message": "该设备上的固件需要升级到新的版本。使用 CLI 在刷写前备份 。CLI 备份\/恢复的步骤在文档中有说明。<br \/>如果你不准备升级固件，也可以下载使用旧版本的应用程序。"
     },
     "resetToCustomDefaultsDialog": {
         "message": "有适用于此飞控板的自定义默认设置。通常来说，只有在应用了自定义默认设置之后飞控板才能正常工作。<br \/>您是否要为此飞控板应用自定义默认设置？"
@@ -401,6 +482,12 @@
     "reportProblemsDialogHeader": {
         "message": "检测到<strong>您的配置存在下列问题<\/strong>:"
     },
+    "reportProblemsDialogFooter": {
+        "message": "<span class=\"message-negative\"><strong>在飞行前，你需要修复这些问题<\/span><\/strong> 。"
+    },
+    "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
+        "message": "<span class=\"message-negative\"><strong>当前应用版本($3)不支持该固件 $4<\/strong><\/span><br>$t(configuratorUpdateHelp.message)"
+    },
     "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
         "message": "<strong>尚未选择任何电调协议<\/strong>。<br>请在 ‘$t(tabMotorTesting.message)’ 页面内 ‘$t(configurationEscFeatures.message)’ 中选择适合您电调的输出协议。<br>$t(escProtocolDisabledMessage.message)"
     },
@@ -408,8 +495,21 @@
         "message": "操作系统: <strong>{{operatingSystem}}<\/strong>",
         "description": "Message that appears in the GUI log panel indicating operating system"
     },
+    "infoVersionConfigurator": {
+        "message": "应用版本： <strong>{{configuratorVersion}}<\/strong>",
+        "description": "Message that appears in the GUI log panel indicating application version"
+    },
+    "buildServerSuccess": {
+        "message": "成功: $1"
+    },
     "buildServerUsingCached": {
         "message": "使用已缓存的 $1 生成信息。"
+    },
+    "supportWarningDialogTitle": {
+        "message": "确认提交数据"
+    },
+    "supportWarningDialogInputPlaceHolder": {
+        "message": "描述问题"
     },
     "releaseCheckLoaded": {
         "message": "从 Github 载入 $1 发布信息"
@@ -441,6 +541,9 @@
     "uniqueDeviceIdReceived": {
         "message": "唯一设备 ID: <strong>0x$1<\/strong>"
     },
+    "craftNameReceived": {
+        "message": "飞行器名称: <strong>$1<\/strong>"
+    },
     "armingDisabled": {
         "message": "<strong>禁止解锁<\/strong>"
     },
@@ -467,6 +570,9 @@
     },
     "versionLabelFirmware": {
         "message": "固件"
+    },
+    "versionLabelConfigurator": {
+        "message": "应用程序版本"
     },
     "notifications_app_just_updated_to_version": {
         "message": "程序已经更新到版本: $1"
@@ -502,6 +608,10 @@
         "message": "CPU负载:",
         "description": "CPU load text shown in the status bar"
     },
+    "statusbar_connection_time": {
+        "message": "连接：",
+        "description": "Connection time text shown in the status bar"
+    },
     "dfu_connect_message": {
         "message": "请使用固件烧写器来访问 DFU 设备"
     },
@@ -531,6 +641,9 @@
     },
     "defaultDiscordText": {
         "message": "Betaflight <a href=\"https:\/\/discord.betaflight.com\/invite\" target=\"_blank\" rel=\"noopener noreferrer\">Discord 服务器<\/a>。<br \/>分享您的飞行经验，讨论 Betaflight，帮助其他人或从社区中为自己获得一些帮助。"
+    },
+    "statisticsDisclaimer": {
+        "message": "Betaflight 应用收集匿名的使用情况统计信息。包括（但不限于）启动次数、用户的地理区域、飞行控制器的类型、固件版本、UI 元素和选项卡的使用情况等等以及其他未在此处说明的数据。此类数据汇总展示<a href=\"https:\/\/datastudio.google.com\/u\/0\/reporting\/1pK1PFw0eWmsgl2npvuzwAqscVzlhJvuF\" target=\"_blank\" rel=\"noopener noreferrer\">在这里<\/a>。数据收集是为了更好地了解 Betaflight 应用使用方式、了解社区趋势以及可能的 UI 改进。用户可以在「选项」选项卡中选择退出数据收集。"
     },
     "defaultButtonFirmwareFlasher": {
         "message": "固件烧写器"
@@ -596,6 +709,12 @@
     "initialSetupButtonCalibratingText": {
         "message": "正在校准…"
     },
+    "initialSetupButtonBackup": {
+        "message": "备份 JSON"
+    },
+    "initialSetupButtonRestore": {
+        "message": "恢复 JSON"
+    },
     "initialSetupButtonRebootBootloader": {
         "message": "激活启动引导程序\/DFU"
     },
@@ -650,6 +769,20 @@
     "initialSetupMagHead": {
         "message": "磁力计"
     },
+    "initialSetupInfoHead": {
+        "message": "系统信息"
+    },
+    "initialSetupInfoHeadHelp": {
+        "message": "显示与解除锁定、电池信息、RSSI等级相关的FC 标志。",
+        "description": "Message that pops up to describe the System info section"
+    },
+    "initialSensorInfoHead": {
+        "message": "传感器信息"
+    },
+    "initialSensorInfoHeadHelp": {
+        "message": "显示传感器硬件",
+        "description": "Message that pops up to describe the Sensor info section"
+    },
     "initialSetupBattery": {
         "message": "电池电压："
     },
@@ -668,8 +801,27 @@
     "initialSetupBatteryAValue": {
         "message": "$1 A"
     },
+    "initialSetupCpuTemp": {
+        "message": "CPU 温度："
+    },
     "initialSetupRSSI": {
         "message": "RSSI："
+    },
+    "initialSetupNotDetected": {
+        "message": "未检测到或已禁用",
+        "description": "Message that pops up when hardware is not detected or disabled"
+    },
+    "initialSetupRSSIValue": {
+        "message": "$1 dBm"
+    },
+    "initialSetupMCU": {
+        "message": "MCU："
+    },
+    "initialSetupSensorHardware": {
+        "message": "传感器："
+    },
+    "initialSetupSensorGyro": {
+        "message": "陀螺仪:"
     },
     "initialSetupArmingDisableFlags": {
         "message": "禁止解锁标志："
@@ -758,6 +910,18 @@
     "initialSetupInstrumentsHead": {
         "message": "仪表"
     },
+    "initialSetupInfoBuildDownload": {
+        "message": "下载"
+    },
+    "initialSetupInfoBuildFirmware": {
+        "message": "固件："
+    },
+    "initialSetupInfoBuildLog": {
+        "message": "日志"
+    },
+    "initialSetupInfoBuildOptions": {
+        "message": "选项"
+    },
     "initialSetupButtonSave": {
         "message": "保存"
     },
@@ -784,6 +948,25 @@
     },
     "initialSetupEepromSaved": {
         "message": "EEPROM <span class=\"message-positive\">已保存<\/span>"
+    },
+    "initialSetupNetworkInfoHelp": {
+        "message": "显示网络连接状态",
+        "description": "Message that pops up to describe the Network Connection section"
+    },
+    "initialSetupNetworkInfoStatus": {
+        "message": "状态："
+    },
+    "initialSetupNetworkInfoStatusOnline": {
+        "message": "在线"
+    },
+    "initialSetupNetworkInfoStatusOffline": {
+        "message": "离线"
+    },
+    "initialSetupNetworkInfoStatusSlow": {
+        "message": "慢"
+    },
+    "initialSetupNetworkType": {
+        "message": "类型："
     },
     "featureNone": {
         "message": "&lt;请选择&gt;"
@@ -1191,7 +1374,7 @@
         "message": "<strong>注意：<\/strong> 不是所有的组合都是有效的，如果飞控检查到某组合不能同时工作，对应串口的设置将会被重置。"
     },
     "portsVtxTableNotSet": {
-        "message": "<span class=\"message-negative\">警告: <\/span>图传表尚未正确设置，图传控制功能不可用。请在$t(tabVtx.message)选项卡内配置图传表。"
+        "message": "<span class=\"message-negative\">警告: <\/span>图传表尚未正确设置，图传控制功能不可用。请在「$t(tabVtx.message)」选项卡内配置图传表。"
     },
     "portsMSPHelp": {
         "message": "<strong>注意：<\/strong> <span class=\"message-negative\">不要<\/span> 关闭第一个串口的MSP选项。否则你可能要重新烧录固件并清空（丢失）所有设置。"
@@ -2505,6 +2688,15 @@
     },
     "firmwareFlasherReleaseTarget": {
         "message": "飞控目标："
+    },
+    "firmwareFlasherReleaseMCU": {
+        "message": "MCU"
+    },
+    "firmwareFlasherCloudBuildLogUrl": {
+        "message": "显示日志"
+    },
+    "firmwareFlasherCloudBuildStatus": {
+        "message": "状态："
     },
     "firmwareFlasherReleaseFileUrl": {
         "message": "手动下载"
@@ -5648,5 +5840,17 @@
     "presetsReviewOptionsWarning": {
         "message": "请在选择此预设之前查看选项列表。",
         "description": "Dialog text to prompt user to review options for the preset"
+    },
+    "firmwareFlasherOSDProtocolNotSelected": {
+        "message": "未选择 OSD 协议"
+    },
+    "firmwareFlasherOSDProtocolNotSelectedDescription": {
+        "message": "您必须选择一个 OSD 协议才能构建固件。"
+    },
+    "firmwareFlasherOSDProtocolSelect": {
+        "message": "选择 OSD 协议"
+    },
+    "firmwareFlasherOSDProtocolNotSelectedContinue": {
+        "message": "不选择 OSD 协议并继续进行"
     }
 }

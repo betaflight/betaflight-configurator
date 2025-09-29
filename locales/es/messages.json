@@ -121,6 +121,9 @@
     "submit": {
         "message": "Enviar"
     },
+    "autoConnectEnabled": {
+        "message": "Auto-Conectar: Activado - La aplicación intenta conectar automáticamente cuando detecta un nuevo puerto"
+    },
     "autoConnectDisabled": {
         "message": "Auto-Conectar: Desactivado - El usuario debe elegir el puerto serie correcto y pulsar \"Conectar\" por si mismo"
     },
@@ -147,9 +150,17 @@
         "message": "Establece el tiempo de espera de la conexión para permitir una inicialización más larga del dispositivo al conectar o reiniciar",
         "description": "Change timeout on auto-connect and reboot so the bus has more time to initialize after being detected by the system"
     },
+    "developmentSettings": {
+        "message": "Ajustes de desarrollo",
+        "description": "Title for the development settings section"
+    },
     "showAllSerialDevices": {
         "message": "Mostrar todos los dispositivos serie (para fabricantes o desarrollo)",
         "description": "Do not filter serial devices using VID\/PID values (for manufacturers or development)"
+    },
+    "cliOnlyMode": {
+        "message": "Activar modo CLI",
+        "description": "Text for the option to enable or disable CLI only mode"
     },
     "showManualMode": {
         "message": "Activar modo de conexión manual",
@@ -231,6 +242,12 @@
     "sensorStatusSonarShort": {
         "message": "Sonar",
         "description": "Text of the image in the top sensors icons. Please keep it short."
+    },
+    "checkForConfiguratorUnstableVersions": {
+        "message": "Mostrar notificaciones de actualizaciones para versiones no estables de la aplicación"
+    },
+    "configuratorUpdateNotice": {
+        "message": "Estás utilizando una versión desactualizada de <b>Betaflight App<\/b>.<br>$t(configuratorUpdateHelp.message)"
     },
     "configuratorUpdateHelp": {
         "message": "Cuando internet está disponible, la aplicación consultará automáticamente si hay actualizaciones disponibles."
@@ -346,6 +363,9 @@
     "fileSystemPickerFiles": {
         "message": "Archivos {{typeof}}",
         "description": "Text for the file picker dialog, showing the type of files selected. The parameter can be HEX, TXT, etc."
+    },
+    "fileSystemPickerFirmwareFiles": {
+        "message": "Archivos de firmware"
     },
     "serialErrorFrameError": {
         "message": "Error en conexión serie: framing incorrecto"
@@ -470,8 +490,14 @@
     "noConfigurationReceived": {
         "message": "No se ha recibido la configuración dentro de <span class=\"message-negative\">10 segundos<\/span>, comunicación <span class=\"message-negative\">fallida<\/span>"
     },
+    "firmwareVersionNotSupported": {
+        "message": "Esta versión de firmware <span class=\"message-negative\">no está soportada<\/span>. Por favor actualiza a un firmware con soporte para el api versión <strong>$1<\/strong> o superior. Usa CLI para realizar un copia de seguridad antes de la instalación. El proceso de copia\/restauración usando CLI está en la documentación.<br \/>Como alternativa puedes descargar y usar una versión anterior de la aplicación si no estás listo para actualizar."
+    },
     "firmwareTypeNotSupported": {
         "message": "No-Betaflight firmware <span class=\"message-negative\"> no soportado<\/span>, excepto modo CLI."
+    },
+    "firmwareUpgradeRequired": {
+        "message": "El firmware de este dispositivo necesita actualizarse a una nueva versión. Use CLI para hacer una copia de seguridad antes de flashear. El proceso de copia\/restauración con CLI está en la documentación.<br \/>Alternativamente puede descargar y usar una versión anterior de la aplicación si no está preparado para actualizar."
     },
     "resetToCustomDefaultsDialog": {
         "message": "Hay valores por defecto personalizados disponibles para esta placa. Normalmente, una placa no funcionará correctamente a menos que se apliquen valores por defecto personalizados.<br \/>¿Quieres aplicar los valores por defecto personalizados para esta placa?"
@@ -485,6 +511,9 @@
     "reportProblemsDialogFooter": {
         "message": "<span class=\"message-negative\"><strong>Necesitas solucionar estos problemas antes de intentar volar tu aeronave<\/strong><\/span>."
     },
+    "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
+        "message": "<span class=\"message-negative\"><strong>La versión de la aplicación usada ($3) no soporta el firmware $4<\/strong><\/span>.<br>$t(configuratorUpdateHelp.message)"
+    },
     "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
         "message": "<strong>no hay ningún protocolo de salida de motor seleccionado<\/strong>.<br>Por favor, selecciona un protocolo de salida de motor apropiado para tus ESCs en '$t(configurationEscFeatures.message)' en la pestaña '$t(tabMotorTesting.message)'.<br> $t(escProtocolDisabledMessage.message)"
     },
@@ -494,6 +523,10 @@
     "infoVersionOs": {
         "message": "SO: <strong>{{operatingSystem}}<\/strong>",
         "description": "Message that appears in the GUI log panel indicating operating system"
+    },
+    "infoVersionConfigurator": {
+        "message": "Versión de la aplicación: <strong>{{configuratorVersion}}<\/strong>",
+        "description": "Message that appears in the GUI log panel indicating application version"
     },
     "buildServerSuccess": {
         "message": "Éxito: $1"
@@ -579,6 +612,9 @@
     "versionLabelFirmware": {
         "message": "Firmware"
     },
+    "versionLabelConfigurator": {
+        "message": "Versión de la aplicación"
+    },
     "notifications_app_just_updated_to_version": {
         "message": "La aplicación se acaba de actualizar a: $1"
     },
@@ -613,6 +649,10 @@
         "message": "Carga de CPU:",
         "description": "CPU load text shown in the status bar"
     },
+    "statusbar_connection_time": {
+        "message": "Conexión:",
+        "description": "Connection time text shown in the status bar"
+    },
     "dfu_connect_message": {
         "message": "Use el Instalador de Firmware para acceder a dispositivos DFU"
     },
@@ -631,6 +671,9 @@
     "eeprom_saved_ok": {
         "message": "EEPROM  <span class=\"message-positive\">guardada<\/span>"
     },
+    "defaultWelcomeIntro": {
+        "message": "Bienvenido a <strong>Betaflight App<\/strong>, una utilidad diseñada para simplificar el actualizar, configurar y ajustar tu controlador de vuelo."
+    },
     "defaultWelcomeHead": {
         "message": "Hardware"
     },
@@ -640,17 +683,26 @@
     "defaultContributingHead": {
         "message": "Contribuir"
     },
+    "defaultContributingText": {
+        "message": "Si deseas ayudar a mejorar Betaflight puedes ayudar de muchas maneras. incluyendo:<br \/><ul><li>usando tu conocimiento de Betaflight para crear o actualizar contenido en <a href=\"https:\/\/betaflight.com\/docs\/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">nuestro Wiki<\/a>, o responder a las preguntas de otros usuarios en los foros en línea;<\/li><li><a href=\"https:\/\/betaflight.com\/docs\/development\" target=\"_blank\" rel=\"noopener noreferrer\">contribuyendo código<\/a> al firmware y a la aplicación: nuevas características, correcciones, mejoras;<\/li><li>prueba <a href=\"https:\/\/github.com\/Betaflight\/betaflight\/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">nuevas características y corrige<\/a> y proporciona comentarios;<\/li><li>ayudando a otros usuarios a resolver los problemas que reportan en <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel=\"noopener noreferrer\">nuestro gestor de incidencias<\/a>y participando en discusiones sobre solicitudes de características;<\/li><li><a href=\"https:\/\/github.com\/betaflight\/betaflight\/tree\/master\/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">traduciendo<\/a> Betaflight App a un nuevo idioma o ayudando a mantener las traducciones existentes.<\/li><\/ul>"
+    },
     "defaultFacebookText": {
         "message": "También tenemos un <a href=\"https:\/\/www.facebook.com\/groups\/betaflightgroup\/\" target=\"_blank\" rel=\"noopener noreferrer\">Grupo de Facebook<\/a>.<br \/>Únete a nosotros para tener un lugar donde hablar sobre Betaflight, preguntar sobre configuraciones, o simplemente charlar con otros pilotos."
     },
     "defaultDiscordText": {
         "message": "<a href=\"https:\/\/discord.betaflight.com\/invite\" target=\"_blank\" rel=\"noopener noreferrer\">Servidor Discord<\/a> de Betaflight.<br \/>Comparte tu experiencia de vuelo, habla sobre Betaflight, ayuda a otras personas o recibe ayuda de la comunidad."
     },
+    "statisticsDisclaimer": {
+        "message": "Betaflight App recopila estadísticas de uso anónimas. Por ejemplo, estos datos incluyen (pero no se limitan a) el número de ejecuciones, la región geográfica de los usuarios, tipos de controladores de vuelo, versiones de firmware, uso de elementos y pestañas, etc. El resumen de estos datos se comparte <a href=\"https:\/\/datastudio.google.com\/u\/0\/reporting\/1pK1PFw0eWmsgl2npvuzwAqscVzlhJvuF\" target=\"_blank\" rel=\"noopener noreferrer\">aquí<\/a>. La recolección se hace para entender mejor cómo se utiliza el Configurador Betaflight, para entender las tendencias de la comunidad, y para posibles mejoras en la interfaz de usuario. Los usuarios pueden dejar de recolectar datos en la pestaña Opciones."
+    },
     "defaultButtonFirmwareFlasher": {
         "message": "Instalar Firmware"
     },
     "defaultDonateHead": {
         "message": "Software Libre \/ Aviso de Donación"
+    },
+    "defaultDonateText": {
+        "message": "<p><strong>Betaflight<\/strong> es un software controlador de vuelo que es <strong>software libre<\/strong> y está disponible gratuitamente <strong>sin garantía<\/strong> para todos los usuarios.<\/p><p>Si encuentras Betaflight o Betaflight App útil, por favor considera <strong>ayudar<\/strong> al desarrollo donando.<\/p>"
     },
     "defaultDonateBottom": {
         "message": "<p>Si deseas contribuir financieramente de manera regular, deberías considerar convertirte en patrocinador nuestro en $t(patreonLink.message). <\/p >"
@@ -960,6 +1012,10 @@
     "initialSetupArmingDisableFlagsTooltipBST": {
         "message": "Un dispositivo de Telemetría Black Sheep (TBS Core Pro por ejemplo) desarmó y está evitando el armado",
         "description": "Message that pops up to describe the BST arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipMSP": {
+        "message": "La conexión MSP está activa, probablemente con la Betaflight App",
+        "description": "Message that pops up to describe the MSP arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipPARALYZE": {
         "message": "El modo PARALYZE ha sido activado",
@@ -1359,6 +1415,12 @@
     "configurationGyroAlignmentHelp": {
         "message": "La alineación del giro es la orientación del giro en la placa del controlador de vuelo. Generalmente el valor por defecto es correcto, pero si tienes una versión personalizada o un controlador de vuelo con una orientación diferente del giro, puede que necesites ajustar esta configuración."
     },
+    "configurationGyroActiveIMU": {
+        "message": "Activar IMU"
+    },
+    "configurationGyroActiveIMUHelp": {
+        "message": "Selecciona qué giro usar como giro primario. El giro primario se utiliza para estabilizar y controlar. Si sólo tienes un giro, se seleccionará automáticamente.<br><br>No siempre es posible activar múltiples giros, cuando son de diferentes tipos o marcas."
+    },
     "configurationGyroAlignmentRoll": {
         "message": "$t(configurationBoardAlignmentRoll.message)",
         "description": "Don't translate!!!"
@@ -1406,10 +1468,6 @@
     },
     "configurationSensorGyroToUseBoth": {
         "message": "Ambos"
-    },
-    "configurationSensorGyroEnable": {
-        "message": "$t(sensorStatusGyroShort.message)",
-        "description": "Don't translate!!!"
     },
     "configurationSensorAlignment": {
         "message": "Alineación del sensor"
@@ -1582,6 +1640,12 @@
     },
     "beeperRC_SMOOTHING_INIT_FAIL": {
         "message": "Pita cuando está armado y el suavizado rc no ha inicializado los filtros"
+    },
+    "configurationBeeperEnableAll": {
+        "message": "Activar todos"
+    },
+    "configurationBeeperDisableAll": {
+        "message": "Desactivar todos"
     },
     "configuration3d": {
         "message": "3D"
@@ -2572,6 +2636,10 @@
         "message": "Desactiva el control de ajustes del VTX a través del OSD",
         "description": "Help text to VTX CONTROL DISABLE mode"
     },
+    "auxiliaryHelpMode_VTXPOWER": {
+        "message": "Alternar entre los niveles de energía VTX (si es compatible con el VTX)",
+        "description": "Help text to VTX POWER mode"
+    },
     "auxiliaryHelpMode_VTXPITMODE": {
         "message": "Cambia el VTX a modo Pit (potencia de salida baja, si es compatible)",
         "description": "Help text to VTX PIT MODE mode"
@@ -3034,6 +3102,10 @@
     "motorsSensorAccelSelect": {
         "message": "acel"
     },
+    "motorsTelemetryHelp": {
+        "message": "Estos números muestran la información de telemetría recibida desde los ESC si está disponible. Puede mostrar la velocidad actual de los motores (R, en RPM), la tasa de error (E) del enlace de telemetría y la temperatura (T) de los ESC.",
+        "description": "Help text for the telemetry values in the motors tab."
+    },
     "motorsRPM": {
         "message": "R: {{motorsRpmValue}}",
         "description": "To put under the motors in the motors tab. KEEP IT SHORT or not translate. Keep the letters as prefix. Shows the RPM of the motor if telemetry is available."
@@ -3241,6 +3313,9 @@
     "cliEnter": {
         "message": "Detectado modo CLI"
     },
+    "cliDevEnter": {
+        "message": "Modo de desarrollador CLI detectado"
+    },
     "cliReboot": {
         "message": "Detectado reinicio CLI"
     },
@@ -3276,6 +3351,9 @@
     },
     "cliCommand": {
         "message": "Introduce el comando aquí"
+    },
+    "loggingNote": {
+        "message": "Los datos se registran <span class=\"message-negative\">sólamente<\/span> en esta pestaña. Abandonar la pestaña <span class=\"message-negative\">cancelará<\/span> el registro y la aplicación volverá al estado normal.<br \/> Puedes elegir cualquier período de actualización global; los datos se almacenarán en el archivo de log cada <strong>1<\/strong> segundo por razones de rendimiento."
     },
     "loggingSamplesSaved": {
         "message": "Muestras Guardadas:"
@@ -3524,6 +3602,9 @@
     "firmwareFlasherOnlineSelectBoardDescription": {
         "message": "Selecciona o detecta tu placa para ver las versiones de firmware disponibles - Elige el firmware adecuado para tu placa."
     },
+    "firmwareFlasherOnlineSelectBoardHint": {
+        "message": "Betaflight App soporta la instalación de Placas Unificadas con sus respectivas configuraciones de placa en un sólo paso.<br><br>El concepto de Placas Unificadas significa que el mismo archivo .hex puede ser usado por todas las placas con la misma MCU.<br><br>Betaflight 4.4 introduce <strong>Compilación en la Nube<\/strong>.<br><br>Con <strong>Compilación en la Nube<\/strong> necesitamos indicar las opciones de hardware presentes en tu aeronave.<br><br>Para hacer que diferentes placas funcionen con el mismo hardware, un archivo de configuración específico se despliegue junto al firmware cuando una Placa Unificada se instala.<br><br>Con archivos de firmware en local puedes cargar un archivo de configuración de placa o elegir la placa antes de cargar de cargar el archivo .hex del firmware.<br><br>Si encuentras un problema instalando el firmware, por favor unete a nuestro <a href=\"https:\/\/discord.gg\/n4E6ak4u3c\" target=\"_blank\" rel=\"noopener noreferrer\">Discord<\/a> o abre una <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel=\"noopener noreferrer\">incidencia<\/a>."
+    },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "Elige la versión de firmware para tu placa."
     },
@@ -3635,6 +3716,9 @@
     "firmwareFlasherRecoveryHead": {
         "message": "<strong>Recuperación \/ Pérdida de comunicación<\/strong>"
     },
+    "firmwareFlasherRecoveryText": {
+        "message": "Si has perdido la comunicación con tu placa sigue estos pasos para restaurar la comunicación: <ul><li>Apagar.<\/li><li>Activar 'No reiniciar', activar 'Borrado completo del chip'.<\/li><li>Unir los pins BOOT o pulsar el botón BOOT.<\/li><li>Encender (el LED de actividad NO parpadeará si se hace correctamente).<\/li><li>Instalar todos los drivers para STM32 y Zadig si es necesario (ver sección <a href=\"https:\/\/betaflight.com\/docs\/wiki\/archive\/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">Instalación por USB<\/a> del manual).<\/li><li>Cerrar la aplicación, reiniciar la aplicación.<\/li><li>Soltar botón BOOT si tu FC tiene uno.<\/li><li>Instalar el firmware correcto (configurando la velocidad de transmisión si viene especificada en el manual de tu FC).<\/li><li>Apagar.<\/li><li>Liberar pins BOOT.<\/li><li>Encender (el LED de actividad debe parpadear).<\/li><li>Conectar normalmente.<\/li><\/ul>"
+    },
     "firmwareFlasherButtonLeave": {
         "message": "Abandonar el Instalador de Firmware"
     },
@@ -3647,8 +3731,23 @@
     "firmwareFlasherFirmwareOnlineLoaded": {
         "message": "Cargado Firmware Internet {{filename}} ({{bytes}} bytes)"
     },
+    "firmwareFlasherTooltipSaveFirmware": {
+        "message": "Guardar Firmware"
+    },
+    "firmwareFlasherInvalidFileFormat": {
+        "message": "Formato de archivo inválido"
+    },
+    "firmwareFlasherUf2Corrupted": {
+        "message": "El archivo UF2 parece estar corrupto"
+    },
     "firmwareFlasherHexCorrupted": {
         "message": "El archivo HEX parece estar corrupto"
+    },
+    "firmwareFlasherUF2SaveSuccess": {
+        "message": "UF2 guardado (instalado) con éxito"
+    },
+    "firmwareFlasherUF2SaveFailed": {
+        "message": "Error al guardar (instalar) UF2"
     },
     "firmwareFlasherConfigCorrupted": {
         "message": "Archivo de configuración corrupto, aceptado ASCII (caracteres 0-255)",
@@ -3692,6 +3791,18 @@
     "firmwareFlasherVerifyBoard": {
         "message": "<h3>Desajuste de firmware<\/h3><br \/>La placa conectada es <strong>{{verified_board}}<\/strong> y has seleccionado <strong>{{selected_board}}<\/strong>.<br \/><br \/>¿Seguro que quieres continuar con la instalación?",
         "description": "Make a quick connection to read firmware target and never flash a wrong target again"
+    },
+    "firmwareFlasherBoardVerificationSuccess": {
+        "message": "La aplicación ha detectado y verificado <span class=\"message-positive\">con éxito<\/span> la placa: <strong>{{boardName}}<\/strong>",
+        "description": "Board verification has succeeded."
+    },
+    "firmwareFlasherBoardVerficationTargetNotAvailable": {
+        "message": "La aplicación ha detectado la placa: <strong>{{boardName}}<\/strong> pero no se ha encontrado ninguna placa oficial de Betaflight",
+        "description": "Board verification has succeeded, but the target is not available as offical Betaflight target."
+    },
+    "firmwareFlasherBoardVerificationFail": {
+        "message": "La aplicación <span class=\"message-negative\">falló<\/span> al verificar la placa. Si el problema persiste, por favor intenta cambiar de pestaña y vuelve a intentarlo, reconecta el USB, o conéctate primero si has olvidado aplicar valores por defecto personalizados.",
+        "description": "Sometimes MSP values cannot be read from firmware correctly"
     },
     "firmwareFlasherButtonAbort": {
         "message": "Abortar"
@@ -5567,6 +5678,9 @@
         "message": "Nombre aeronave",
         "description": "One of the elements of the OSD"
     },
+    "osdDescElementCraftName": {
+        "message": "Nombre de la aeronave tal y como se establece en la pestaña Configuración.<\/br>También se puede establecer a través de la variable CLI \"craft_name\"."
+    },
     "osdTextElementAltitude": {
         "message": "Altitud",
         "description": "One of the elements of the OSD"
@@ -6582,6 +6696,10 @@
         "message": "Introducir frecuencia directamente",
         "description": "Text of one of the fields of the VTX tab"
     },
+    "vtxFrequencyChannelHelp": {
+        "message": "Si lo activas, la aplicación te permitirá seleccionar una frecuencia en lugar de la habitual banda\/canal. Para que esto funcione tu VTX debe soportar esta funcionalidad.",
+        "description": "Help text for the frequency or channel select field of the VTX tab"
+    },
     "vtxSelectedMode": {
         "message": "Modo Seleccionado",
         "description": "Title for the actual mode header of the VTX"
@@ -7008,6 +7126,9 @@
     "onboardLoggingRateOfLogging": {
         "message": "Frecuencia de muestreo"
     },
+    "onboardLoggingDebugFields": {
+        "message": "Campos de depuración incluidos"
+    },
     "onboardLoggingDebugMode": {
         "message": "Modo de depuración de la Caja Negra"
     },
@@ -7149,6 +7270,9 @@
     "cordovaIncompatibleWebview": {
         "message": "Webview incompatible"
     },
+    "cordovaWebviewTroubleshootingMsg": {
+        "message": "Debes actualizar el webview de tu dispositivo para poder usar Betaflight App."
+    },
     "cordovaWebviewTroubleshootingMsg2": {
         "message": "La siguiente herramienta está diseñada para ayudarte a instalar un nuevo webview o a actualizar el webview ya instalado."
     },
@@ -7193,6 +7317,9 @@
     },
     "cordovaExitAppTitle": {
         "message": "Confirmación"
+    },
+    "cordovaExitAppMessage": {
+        "message": "¿Realmente quieres cerrar la aplicación?"
     },
     "dropDownSelectAll": {
         "message": "[Seleccionar\/deseleccionar todo]",
@@ -7530,5 +7657,9 @@
     "osdDescElementLidar": {
         "message": "$t(osdTextElementLidar.message)",
         "description": "Don't translate!!!"
+    },
+    "osdSetupPreviewCheckRulers": {
+        "message": "Reglas",
+        "description": "Label for the checkbox to toggle OSD preview rulers around the preview"
     }
 }

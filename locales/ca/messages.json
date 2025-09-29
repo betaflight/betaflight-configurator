@@ -1477,10 +1477,6 @@
     "configurationSensorGyroToUseBoth": {
         "message": "Tots dos"
     },
-    "configurationSensorGyroEnable": {
-        "message": "$t(sensorStatusGyroShort.message)",
-        "description": "Don't translate!!!"
-    },
     "configurationSensorAlignment": {
         "message": "Alineació del sensor"
     },

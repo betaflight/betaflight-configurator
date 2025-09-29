@@ -1469,10 +1469,6 @@
     "configurationSensorGyroToUseBoth": {
         "message": "両方"
     },
-    "configurationSensorGyroEnable": {
-        "message": "$t(sensorStatusGyroShort.message)",
-        "description": "Don't translate!!!"
-    },
     "configurationSensorAlignment": {
         "message": "センサー アライメント"
     },
@@ -2639,6 +2635,10 @@
     "auxiliaryHelpMode_VTXCONTROLDISABLE": {
         "message": "OSD経由でVTX設定の制御を無効にします",
         "description": "Help text to VTX CONTROL DISABLE mode"
+    },
+    "auxiliaryHelpMode_VTXPOWER": {
+        "message": "VTX出力レベルを順に切替 (VTX対応時)",
+        "description": "Help text to VTX POWER mode"
     },
     "auxiliaryHelpMode_VTXPITMODE": {
         "message": "VTXをピットモードへ切り替えます (サポートされる場合は低出力)",
