@@ -2107,9 +2107,6 @@
     "receiverRcSmoothingFeedforwardTypeAuto": {
         "message": "Auto"
     },
-    "receiverRcSmoothing": {
-        "message": "RC Smoothing"
-    },
     "pidTuningDtermSetpointTransition": {
         "message": "D Setpoint transition"
     },
