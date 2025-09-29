@@ -1473,10 +1473,6 @@
     "configurationSensorGyroToUseBoth": {
         "message": "Begge"
     },
-    "configurationSensorGyroEnable": {
-        "message": "$t(sensorStatusGyroShort.message)",
-        "description": "Don't translate!!!"
-    },
     "configurationSensorAlignment": {
         "message": "Sensor justering"
     },

@@ -1454,10 +1454,6 @@
     "configurationSensorGyroToUseBoth": {
         "message": "Oba"
     },
-    "configurationSensorGyroEnable": {
-        "message": "$t(sensorStatusGyroShort.message)",
-        "description": "Don't translate!!!"
-    },
     "configurationSensorAlignment": {
         "message": "Wyrównanie czujnika"
     },
