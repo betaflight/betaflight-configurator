@@ -620,10 +620,10 @@ receiver.initialize = function (callback) {
 
         const rc_smoothing_protocol_e = $('select[name="rcSmoothing-select"]');
         rc_smoothing_protocol_e.change(function () {
-            FC.RX_CONFIG.rcSmoothingMode = parseFloat($(this).val());
+            FC.RX_CONFIG.rcSmoothing = parseInt($(this).val());
             updateInterpolationView();
         });
-        rc_smoothing_protocol_e.val(FC.RX_CONFIG.rcSmoothingMode);
+        rc_smoothing_protocol_e.val(FC.RX_CONFIG.rcSmoothing);
 
         const rcSmoothingNumberElement = $('input[name="rcSmoothingSetpointHz-number"]');
         rcSmoothingNumberElement.val(FC.RX_CONFIG.rcSmoothingSetpointCutoff);
@@ -967,7 +967,7 @@ function updateInterpolationView() {
     $(".tab-receiver .rcSmoothingOff").text(i18n.getMessage("off"));
     $(".tab-receiver .rcSmoothingOn").text(i18n.getMessage("on"));
 
-    if (FC.RX_CONFIG.rcSmoothingMode === 0) {
+    if (FC.RX_CONFIG.rcSmoothing === 0) {
         $(".tab-receiver .rcSmoothing-feedforward-cutoff").hide();
         $(".tab-receiver .rcSmoothing-setpoint-cutoff").hide();
         $(".tab-receiver .rcSmoothing-feedforward-manual").hide();
