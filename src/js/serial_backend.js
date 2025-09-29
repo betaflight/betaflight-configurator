@@ -110,7 +110,18 @@ function connectDisconnect() {
 
         GUI.configuration_loaded = false;
 
-        if (!isConnected) {
+        if (isConnected) {
+            // If connected, start disconnection sequence
+            GUI.timeout_kill_all();
+            GUI.interval_kill_all();
+            GUI.tab_switch_cleanup(() => (GUI.tab_switch_in_progress = false));
+
+            function onFinishCallback() {
+                finishClose(toggleStatus);
+            }
+
+            mspHelper?.setArmingEnabled(true, false, onFinishCallback);
+        } else {
             // prevent connection when we do not have permission
             if (selectedPort.startsWith("requestpermission")) {
                 return;
@@ -145,17 +156,6 @@ function connectDisconnect() {
                 { baudRate: PortHandler.portPicker.selectedBauds },
                 selectedPort === "virtual" ? onOpenVirtual : undefined,
             );
-        } else {
-            // If connected, start disconnection sequence
-            GUI.timeout_kill_all();
-            GUI.interval_kill_all();
-            GUI.tab_switch_cleanup(() => (GUI.tab_switch_in_progress = false));
-
-            function onFinishCallback() {
-                finishClose(toggleStatus);
-            }
-
-            mspHelper?.setArmingEnabled(true, false, onFinishCallback);
         }
 
         // show CLI panel on Control+I
@@ -395,8 +395,8 @@ function onOpenVirtual() {
     // Set connection timestamp for virtual connections
     connectionTimestamp = Date.now();
     setTimeout(() => {
-        if (window.vm?.CONNECTION) {
-            window.vm.CONNECTION.timestamp = connectionTimestamp;
+        if (globalThis.vm?.CONNECTION) {
+            globalThis.vm.CONNECTION.timestamp = connectionTimestamp;
         }
     }, 100);
 
@@ -460,16 +460,16 @@ function processBoardInfo() {
     }
 }
 
+function checkReportProblem(problemName, problems) {
+    if (bit_check(FC.CONFIG.configurationProblems, FC.CONFIGURATION_PROBLEM_FLAGS[problemName])) {
+        problems.push({ name: problemName, description: i18n.getMessage(`reportProblemsDialog${problemName}`) });
+        return true;
+    }
+    return false;
+}
+
 function checkReportProblems() {
     const problemItemTemplate = $("#dialogReportProblems-listItemTemplate");
-
-    function checkReportProblem(problemName, problems) {
-        if (bit_check(FC.CONFIG.configurationProblems, FC.CONFIGURATION_PROBLEM_FLAGS[problemName])) {
-            problems.push({ name: problemName, description: i18n.getMessage(`reportProblemsDialog${problemName}`) });
-            return true;
-        }
-        return false;
-    }
 
     MSP.send_message(MSPCodes.MSP_STATUS, false, false, function () {
         let needsProblemReportingDialog = false;
@@ -509,9 +509,9 @@ function checkReportProblems() {
         }
 
         if (needsProblemReportingDialog) {
-            problems.forEach((problem) => {
+            for (const problem of problems) {
                 problemItemTemplate.clone().html(problem.description).appendTo(problemDialogList);
-            });
+            }
 
             const problemDialog = $("#dialogReportProblems")[0];
             $("#dialogReportProblems-closebtn").click(function () {
@@ -564,8 +564,8 @@ async function processUid() {
     // Update the global CONNECTION object for Vue components
     // Use a small delay to ensure the Vue app is mounted
     setTimeout(() => {
-        if (window.vm?.CONNECTION) {
-            window.vm.CONNECTION.timestamp = connectionTimestamp;
+        if (globalThis.vm?.CONNECTION) {
+            globalThis.vm.CONNECTION.timestamp = connectionTimestamp;
         }
     }, 100);
 
@@ -617,6 +617,11 @@ function finishOpen() {
                 GUI.allowedTabs.push(tab);
             }
         }
+
+        // Special case: USE_WING includes servo functionality but doesn't expose USE_SERVOS in build options
+        if (FC.CONFIG.buildOptions.some((opt) => opt.includes("USE_WING")) && !GUI.allowedTabs.includes("servos")) {
+            GUI.allowedTabs.push("servos");
+        }
     } else {
         GUI.allowedTabs = Array.from(GUI.defaultAllowedFCTabsWhenConnected);
     }
@@ -665,7 +670,7 @@ function onConnect() {
             });
 
             if (FC.CONFIG.boardType == 0) {
-                if (classes.indexOf("osd-required") >= 0) {
+                if (classes.includes("osd-required")) {
                     found = false;
                 }
             }
@@ -704,8 +709,8 @@ function onClosed(result) {
     // Clear connection timestamp
     connectionTimestamp = null;
     setTimeout(() => {
-        if (window.vm?.CONNECTION) {
-            window.vm.CONNECTION.timestamp = null;
+        if (globalThis.vm?.CONNECTION) {
+            globalThis.vm.CONNECTION.timestamp = null;
         }
     }, 100);
 
