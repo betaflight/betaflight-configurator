@@ -632,7 +632,7 @@ const FC = {
             rcSmoothingDerivativeType: 0,
             rcSmoothingAutoFactor: 0,
             usbCdcHidType: 0,
-            rcSmoothingMode: 0,
+            rcSmoothing: 0,
             elrsUid: [0, 0, 0, 0, 0, 0],
         };
 

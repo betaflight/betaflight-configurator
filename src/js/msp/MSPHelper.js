@@ -1053,7 +1053,7 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     data.readU8(); // was FC.RX_CONFIG.rcSmoothingDerivativeType
                     FC.RX_CONFIG.usbCdcHidType = data.readU8();
                     FC.RX_CONFIG.rcSmoothingAutoFactor = data.readU8();
-                    FC.RX_CONFIG.rcSmoothingMode = data.readU8();
+                    FC.RX_CONFIG.rcSmoothing = data.readU8();
 
                     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
                         const elrsUidLength = 6;
@@ -2004,7 +2004,7 @@ MspHelper.prototype.crunch = function (code, modifierCode = undefined) {
             buffer.push8(FC.RX_CONFIG.usbCdcHidType).push8(FC.RX_CONFIG.rcSmoothingAutoFactor);
 
             // Introduced in 1.44
-            buffer.push8(FC.RX_CONFIG.rcSmoothingMode);
+            buffer.push8(FC.RX_CONFIG.rcSmoothing);
 
             // Introduced in 1.45
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
