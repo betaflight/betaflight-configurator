@@ -620,7 +620,7 @@ receiver.initialize = function (callback) {
 
         const rc_smoothing_protocol_e = $('select[name="rcSmoothing-select"]');
         rc_smoothing_protocol_e.change(function () {
-            FC.RX_CONFIG.rcSmoothing = parseInt($(this).val());
+            FC.RX_CONFIG.rcSmoothing = Number.parseInt($(this).val());
             updateInterpolationView();
         });
         rc_smoothing_protocol_e.val(FC.RX_CONFIG.rcSmoothing);
