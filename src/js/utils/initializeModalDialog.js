@@ -54,11 +54,15 @@ export function initializeModalDialog(activationSelector, dialogSelector, messag
         onClose && onClose();
     });
     // Handle activation button click
-    $(activationSelector).on("click", () => {
-        dialogElement.showModal();
-        // Reset any previous scrolling
-        dialogContainerElement.scroll(0, 0);
-    });
+    if (activationSelector) {
+        $(activationSelector).on("click", () => {
+            dialogElement.showModal();
+            // Reset any previous scrolling
+            if (dialogContainerElement) {
+                dialogContainerElement.scroll(0, 0);
+            }
+        });
+    }
     // Return dialog element
     return dialogElement;
 }

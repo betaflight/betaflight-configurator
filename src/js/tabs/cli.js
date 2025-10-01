@@ -100,6 +100,9 @@ cli.initialize = function (callback) {
     self.cliBuffer = "";
     self.startProcessing = false;
 
+    // Reset modal dialog reference since DOM gets rebuilt on tab switch
+    self.GUI.snippetPreviewWindow = null;
+
     const enterKeyCode = 13;
 
     function clearHistory() {
@@ -159,6 +162,7 @@ cli.initialize = function (callback) {
                 );
                 $("#snippetpreviewcontent a.confirm").click(() => executeSnippet(fileName));
             }
+
             previewArea.val(result);
             self.GUI.snippetPreviewWindow.showModal();
         }
