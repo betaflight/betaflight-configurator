@@ -740,10 +740,60 @@ firmware_flasher.initialize = async function (callback) {
                 STM32.rebootMode = 0;
                 GUI.connect_lock = false;
                 startFlashing();
+            } else {
+                // Auto-detect board when firmware flasher tab is active and no flash-on-connect
+                console.log(`${self.logHead} Auto-detecting board for connected USB device`);
+                AutoDetect.verifyBoard();
+            }
+        }
+
+        function detectedSerialDevice(device) {
+            const isFlashOnConnect = $("input.flash_on_connect").is(":checked");
+
+            console.log(`${self.logHead} Detected serial device:`, device);
+            console.log(`${self.logHead} Reboot mode: %s, flash on connect`, STM32.rebootMode, isFlashOnConnect);
+
+            if (STM32.rebootMode || isFlashOnConnect) {
+                STM32.rebootMode = 0;
+                GUI.connect_lock = false;
+                startFlashing();
+            } else {
+                // Auto-detect board when firmware flasher tab is active and no flash-on-connect
+                console.log(`${self.logHead} Auto-detecting board for connected serial device`);
+                AutoDetect.verifyBoard();
             }
         }
 
         EventBus.$on("port-handler:auto-select-usb-device", detectedUsbDevice);
+        EventBus.$on("port-handler:auto-select-serial-device", detectedSerialDevice);
+
+        // Also listen for port changes to catch reconnections
+        function onPortChange(port) {
+            console.log(`${self.logHead} Port changed to:`, port);
+            // Auto-detect board when port changes and we're on firmware flasher tab
+            if (port && port !== "0" && !$("input.flash_on_connect").is(":checked") && !STM32.rebootMode) {
+                console.log(`${self.logHead} Auto-detecting board for port change`);
+                setTimeout(() => {
+                    AutoDetect.verifyBoard();
+                }, 500); // Small delay to ensure port is ready
+            } else if (!port || port === "0") {
+                // Clear board selection when no port is selected
+                console.log(`${self.logHead} Clearing board selection - no port selected`);
+                $('select[name="board"]').val("0").trigger("change");
+            }
+        }
+
+        // Listen for device removal to clear board selection
+        function onDeviceRemoved(devicePath) {
+            console.log(`${self.logHead} Device removed:`, devicePath);
+            // Clear board selection when device is removed
+            $('select[name="board"]').val("0").trigger("change");
+            // Also clear any loaded firmware
+            clearBufferedFirmware();
+        }
+
+        EventBus.$on("ports-input:change", onPortChange);
+        EventBus.$on("port-handler:device-removed", onDeviceRemoved);
 
         async function saveFirmware() {
             const fileType = self.firmware_type;
@@ -1458,6 +1508,17 @@ firmware_flasher.initialize = async function (callback) {
             $("a.exit_dfu").removeClass("disabled");
         }
 
+        // Auto-detect board if a drone is already connected when tab becomes active
+        if (
+            (PortHandler.portAvailable && !$('select[name="board"]').val()) ||
+            $('select[name="board"]').val() === "0"
+        ) {
+            console.log(`${self.logHead} Auto-detecting board for already connected device`);
+            setTimeout(() => {
+                AutoDetect.verifyBoard();
+            }, 1000); // Small delay to ensure tab is fully loaded
+        }
+
         GUI.content_ready(callback);
     }
 
@@ -1475,6 +1536,12 @@ firmware_flasher.cleanup = function (callback) {
     // unbind "global" events
     $(document).unbind("keypress");
     $(document).off("click", "span.progressLabel a");
+
+    // Clean up EventBus listeners
+    EventBus.$off("port-handler:auto-select-usb-device");
+    EventBus.$off("port-handler:auto-select-serial-device");
+    EventBus.$off("ports-input:change");
+    EventBus.$off("port-handler:device-removed");
 
     if (callback) callback();
 };
