@@ -386,7 +386,27 @@
     "nornOutput": {
         "message": "NORN Configuration"
     },
-
+    "nornDrone": {
+        "message": "Drone"
+    },
+    "nornController": {
+        "message": "Controller"
+    },
+    "nornSize": {
+        "message": "Size"
+    },
+    "nornCraftName": {
+        "message": "Craft Name"
+    },
+    "nornGPS": {
+        "message": "GPS"
+    },
+    "nornCopy": {
+        "message": "Copy to clipboard"
+    },
+    "nornSave": {
+        "message": "Save"
+    },
     "tabSetup": {
         "message": "Setup"
     },

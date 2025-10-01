@@ -7,28 +7,94 @@
 
         <div class="grid-row grid-box col2">
             <div class="col-span-1">
-                <div class="gui_box grey">
-                    <div class="gui_box_titlebar">
-                        <div class="spacer_box_title" i18n="nornManticore"></div>
+                <div class="grid-row grid-box col2">
+                    <div class="col-span-1">
+                        <div class="gui_box grey">
+                            <div class="gui_box_titlebar">
+                                <div class="spacer_box_title" i18n="nornController"></div>
+                            </div>
+                            <div class="spacer_box">
+                                <div class="select">
+                                    <select name="norn_fc" id="norn_fc">
+                                        <option value="" i18n="nornNone"></option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="spacer_box">
-                        <div class="select">
-                            <select name="norn_manticore" id="norn_manticore">
-                                <option value="" i18n="nornNone"></option>
-                            </select>
+                    <div class="col-span-1">
+                        <div class="gui_box grey">
+                            <div class="gui_box_titlebar">
+                                <div class="spacer_box_title" i18n="nornSize"></div>
+                            </div>
+                            <div class="spacer_box">
+                                <div class="select">
+                                    <select name="norn_drone_size" id="norn_drone_size">
+                                        <option value="" i18n="nornNone"></option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="gui_box grey" style="margin-top: 16px;">
-                    <div class="gui_box_titlebar">
-                        <div class="spacer_box_title" i18n="nornVtx"></div>
+                <div class="grid-row grid-box col2">
+                    <div class="col-span-1">
+                        <div class="gui_box grey">
+                            <div class="gui_box_titlebar">
+                                <div class="spacer_box_title" i18n="nornManticore"></div>
+                            </div>
+                            <div class="spacer_box">
+                                <div class="select">
+                                    <select name="norn_manticore" id="norn_manticore">
+                                        <option value="" i18n="nornNone"></option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="spacer_box">
-                        <div class="select">
-                            <select name="norn_vtx" id="norn_vtx">
-                                <option value="" i18n="nornNone"></option>
-                            </select>
+                    <div class="col-span-1">
+                        <div class="gui_box grey">
+                            <div class="gui_box_titlebar">
+                                <div class="spacer_box_title" i18n="nornVtx"></div>
+                            </div>
+                            <div class="spacer_box">
+                                <div class="select">
+                                    <select name="norn_vtx" id="norn_vtx">
+                                        <option value="" i18n="nornNone"></option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid-row grid-box col2">
+                    <div class="col-span-1">
+                        <div class="gui_box grey">
+                            <div class="gui_box_titlebar">
+                                <div class="spacer_box_title" i18n="nornCraftName"></div>
+                            </div>
+                            <div class="spacer_box">
+                                <div class="select">
+                                    <input type="text" id="norn_craft_name" placeholder="Enter craft name" style="width: 100%;" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-span-1">
+                        <div class="gui_box grey">
+                            <div class="gui_box_titlebar">
+                                <div class="spacer_box_title" i18n="nornGPS"></div>
+                            </div>
+                            <div class="spacer_box">
+                                <div class="select">
+                                    <div>
+                                        <input type="checkbox" id="norn_gps" class="toggle" />
+                                    </div>
+                                    <span class="freelabel" i18n="nornGPS"></span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -45,6 +111,10 @@
                     </div>
                     <div class="spacer_box">
                         <textarea id="norn_config_output" rows="20" style="width: 100%;" readonly></textarea>
+                        <div class="buttons" style="margin-top: 8px;">
+                            <a href="#" class="copy regular-button" i18n="nornCopy"></a>
+                            <a href="#" class="save regular-button" i18n="nornSave"></a>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -7526,6 +7526,27 @@
     "nornOutput": {
         "message": "Конфігурація"
     },
+    "nornDrone": {
+        "message": "Дрон"
+    },
+    "nornController": {
+        "message": "Контролер"
+    },
+    "nornSize": {
+        "message": "Розмір"
+    },
+    "nornCraftName": {
+        "message": "Назва дрона"
+    },
+    "nornGPS": {
+        "message": "GPS"
+    },
+    "nornCopy": {
+        "message": "Копіювати в буффер"
+    },
+    "nornSave": {
+        "message": "Зберегти"
+    },
     "tabNornConfig": {
         "message": "NORN Налаштування"
     }

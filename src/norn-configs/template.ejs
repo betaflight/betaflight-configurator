@@ -4,7 +4,44 @@ batch start
 
 defaults nosave
 
+<% if (fcKey === 'f4') { %>
+# Flight Controller: F4 tweaks
+set pid_process_denom = 2
+<% } %>
 
+<% if (fcKey === 'f7') { %>
+# Flight Controller: F7 tweaks
+set pid_process_denom = 1
+<% } %>
+
+<% if (fcKey === 'h7') { %>
+# Flight Controller: H7 tweaks
+set pid_process_denom = 1
+set cpu_overclock = ON
+<% } %>
+
+<% if (droneSize) { %>
+# Drone Size: <%= droneSize %>"
+<% if (droneSize === '7') { %>
+set motor_pwm_rate = 32000
+set motor_poles = 12
+<% } else if (droneSize === '8') { %>
+set motor_pwm_rate = 24000
+set motor_poles = 14
+<% } else if (droneSize === '9') { %>
+set motor_pwm_rate = 24000
+set motor_poles = 16
+<% } else if (droneSize === '10') { %>
+set motor_pwm_rate = 16000
+set motor_poles = 18
+<% } else if (droneSize === '13') { %>
+set motor_pwm_rate = 12000
+set motor_poles = 20
+<% } else if (droneSize === '15') { %>
+set motor_pwm_rate = 8000
+set motor_poles = 22
+<% } %>
+<% } %>
 
 <% if (manticoreKey === 'uart') { %>
 # Manticore UART variant
@@ -37,6 +74,17 @@ set vtx_power = 100
 set vtx_band = O
 set vtx_channel = 2
 set vtx_power = 50
+<% } %>
+
+<% if (gpsEnabled) { %>
+# GPS Enabled
+feature GPS
+set gps_baudrate = AUTO
+<% } %>
+
+<% if (craftName) { %>
+# Craft name
+set craft_name = <%= craftName %>
 <% } %>
 
 

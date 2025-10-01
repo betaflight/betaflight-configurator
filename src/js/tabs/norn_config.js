@@ -28,6 +28,36 @@ norn_config.initialize = function (callback) {
     function update_ui() {
         i18n.localizePage();
 
+        // Populate Flight Controller list (explicit options)
+        const fcSelect = $("select[name='norn_fc']");
+        if (fcSelect.length) {
+            fcSelect.empty();
+            fcSelect.append(`<option value="">${i18n.getMessage("nornNone")}</option>`);
+            fcSelect.append(`<option value="f4">FLASHHOBBYF405</option>`);
+            fcSelect.append(`<option value="f7">SPEEDYBEEF405V3</option>`);
+            fcSelect.append(`<option value="h7">TAKERF722SE</option>`);
+            fcSelect.append(`<option value="h7">GEPRCF722</option>`);
+            fcSelect.on("change", function () {
+                self.analyticsChanges["NornFC"] = $(this).val() || null;
+            });
+        }
+
+        // Populate Drone Size list (explicit options)
+        const droneSizeSelect = $("select[name='norn_drone_size']");
+        if (droneSizeSelect.length) {
+            droneSizeSelect.empty();
+            droneSizeSelect.append(`<option value="">${i18n.getMessage("nornNone")}</option>`);
+            droneSizeSelect.append(`<option value="7">7</option>`);
+            droneSizeSelect.append(`<option value="8">8</option>`);
+            droneSizeSelect.append(`<option value="9">9</option>`);
+            droneSizeSelect.append(`<option value="10">10</option>`);
+            droneSizeSelect.append(`<option value="13">13</option>`);
+            droneSizeSelect.append(`<option value="15">15</option>`);
+            droneSizeSelect.on("change", function () {
+                self.analyticsChanges["NornDroneSize"] = $(this).val() || null;
+            });
+        }
+
         // Populate Manticore models (allow None) with explicit options
         const manticoreSelect = $("select[name='norn_manticore']");
         if (manticoreSelect.length) {
@@ -54,16 +84,24 @@ norn_config.initialize = function (callback) {
         }
 
         // Example dropdown wiring
-        const exampleSelect = $("select[name='norn_mode']");
-        if (exampleSelect.length) {
-            exampleSelect.on("change", function () {
-                const value = $(this).val();
-                self.analyticsChanges["NornMode"] = value;
-            });
-        }
+        // none for now
 
-        // Example button wiring
+        // Button wiring
         $("a.generate").on("click", on_generate_handler);
+        $("a.copy").on("click", on_copy_handler);
+        $("a.save").on("click", on_save_handler);
+
+        // GPS toggle wiring
+        const gpsToggle = $("#norn_gps");
+        gpsToggle.on("change", function () {
+            self.analyticsChanges["NornGPS"] = $(this).is(":checked");
+        });
+
+        // Craft name input wiring
+        const craftNameInput = $("#norn_craft_name");
+        craftNameInput.on("input", function () {
+            self.analyticsChanges["NornCraftName"] = $(this).val() || null;
+        });
     }
 
     function on_tab_loaded_handler() {
@@ -94,9 +132,13 @@ norn_config.initialize = function (callback) {
     }
 
     function getSelectedKeys() {
+        const fcKey = $("select[name='norn_fc']").val() || "";
+        const droneSize = $("select[name='norn_drone_size']").val() || "";
         const manticoreKey = $("select[name='norn_manticore']").val() || "";
         const vtxKey = $("select[name='norn_vtx']").val() || "";
-        return { manticoreKey, vtxKey };
+        const gpsEnabled = $("#norn_gps").is(":checked");
+        const craftName = $("#norn_craft_name").val() || "";
+        return { fcKey, droneSize, manticoreKey, vtxKey, gpsEnabled, craftName };
     }
 
     function on_generate_handler(e) {
@@ -120,6 +162,56 @@ norn_config.initialize = function (callback) {
         }
 
         $("#norn_config_output").val(result);
+    }
+
+    function on_copy_handler(e) {
+        e?.preventDefault?.();
+        const text = $("#norn_config_output").val();
+        if (text) {
+            navigator.clipboard
+                ?.writeText(text)
+                .then(() => {
+                    console.log("Config copied to clipboard");
+                })
+                .catch((err) => {
+                    console.error("Failed to copy to clipboard:", err);
+                });
+        }
+    }
+
+    function on_save_handler(e) {
+        e?.preventDefault?.();
+        const text = $("#norn_config_output").val();
+        if (!text) return;
+
+        // Generate filename based on selected options
+        const parts = [];
+        const fcKey = $("select[name='norn_fc']").val();
+        const droneSize = $("select[name='norn_drone_size']").val();
+        const manticoreKey = $("select[name='norn_manticore']").val();
+        const vtxKey = $("select[name='norn_vtx']").val();
+        const gpsEnabled = $("#norn_gps").is(":checked");
+        const craftName = $("#norn_craft_name").val();
+
+        if (fcKey) parts.push(fcKey);
+        if (droneSize) parts.push(`${droneSize}inch`);
+        if (manticoreKey) parts.push(manticoreKey);
+        if (vtxKey) parts.push(vtxKey);
+        if (gpsEnabled) parts.push("GPS");
+        if (craftName) parts.push(craftName);
+
+        const filename = parts.length > 0 ? `norn_config_${parts.join("_")}.txt` : "norn_config.txt";
+
+        // Create and trigger download
+        const blob = new Blob([text], { type: "text/plain" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
     }
 
     load_configuration_from_fc();
