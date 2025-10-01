@@ -11,6 +11,7 @@ import $ from "jquery";
 import { serial } from "../serial";
 import FileSystem from "../FileSystem";
 import { ispConnected } from "../utils/connection";
+import { initializeModalDialog } from "../utils/initializeModalDialog";
 import { get as getConfig } from "../ConfigStorage";
 
 const cli = {
@@ -99,6 +100,9 @@ cli.initialize = function (callback) {
     self.cliBuffer = "";
     self.startProcessing = false;
 
+    // Reset modal dialog reference since DOM gets rebuilt on tab switch
+    self.GUI.snippetPreviewWindow = null;
+
     const enterKeyCode = 13;
 
     function clearHistory() {
@@ -145,37 +149,22 @@ cli.initialize = function (callback) {
         function executeSnippet(fileName) {
             const commands = previewArea.val();
             executeCommands(commands);
-
-            // Get the dialog element directly and close it
-            const snippetDialog = $("#snippetpreviewdialog")[0];
-            if (snippetDialog) {
-                snippetDialog.close();
-            }
+            self.GUI.snippetPreviewWindow.close();
         }
 
         function previewCommands(result, fileName) {
-            const snippetDialog = $("#snippetpreviewdialog")[0];
-            if (!snippetDialog) {
-                console.error("Snippet dialog element not found in DOM");
-                return;
-            }
-
-            // Always update the click handler with the current fileName
-            $("#snippetpreviewcontent a.confirm")
-                .off("click")
-                .on("click", () => executeSnippet(fileName));
-
-            // Mark as initialized after first use
             if (!self.GUI.snippetPreviewWindow) {
-                self.GUI.snippetPreviewWindow = snippetDialog;
+                self.GUI.snippetPreviewWindow = initializeModalDialog(
+                    null,
+                    "#snippetpreviewdialog",
+                    "cliConfirmSnippetDialogTitle",
+                    { fileName: fileName },
+                );
+                $("#snippetpreviewcontent a.confirm").click(() => executeSnippet(fileName));
             }
 
             previewArea.val(result);
-
-            // Show the modal directly
-            if (!snippetDialog.hasAttribute("open")) {
-                snippetDialog.showModal();
-            }
+            self.GUI.snippetPreviewWindow.showModal();
         }
 
         const file = await FileSystem.pickOpenFile(i18n.getMessage("fileSystemPickerFiles", { typeof: "TXT" }), ".txt");
