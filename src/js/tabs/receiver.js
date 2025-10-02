@@ -496,6 +496,9 @@ receiver.initialize = function (callback) {
                 if (FC.RX_CONFIG.rcSmoothingThrottleCutoff === 0) {
                     $('select[name="rcSmoothing-throttle-manual-select"]').val(0).trigger("change");
                 }
+                FC.RX_CONFIG.rcSmoothingAutoFactorThrottle = Number.parseInt(
+                    $('input[name="rcSmoothingAutoFactorThrottle-number"]').val(),
+                );
             } else {
                 FC.RX_CONFIG.rcSmoothingFeedforwardCutoff = parseInt(
                     $('input[name="rcSmoothingFeedforwardCutoff-number"]').val(),
@@ -724,6 +727,12 @@ receiver.initialize = function (callback) {
         rcSmoothingAutoFactor.val(FC.RX_CONFIG.rcSmoothingAutoFactor);
 
         $(".receiverRcSmoothingAutoFactorHelp").attr("title", i18n.getMessage("receiverRcSmoothingAutoFactorHelp2"));
+
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+            $('input[name="rcSmoothingAutoFactorThrottle-number"]').val(FC.RX_CONFIG.rcSmoothingAutoFactorThrottle);
+        } else {
+            $(".tab-receiver .rcSmoothing-auto-factor-throttle").hide();
+        }
 
         updateInterpolationView();
 
@@ -987,15 +996,19 @@ function updateInterpolationView() {
     $(".tab-receiver .rcSmoothing-feedforward-cutoff").show();
     $(".tab-receiver .rcSmoothing-setpoint-cutoff").show();
 
-    if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+        $(".tab-receiver .rcSmoothing-throttle-manual").show();
+    } else {
         $(".tab-receiver .rcSmoothing-feedforward-manual").show();
     }
 
     $(".tab-receiver .rcSmoothing-setpoint-manual").show();
-    $(".tab-receiver .rcSmoothing-throttle-cutoff").show();
 
     if (FC.RX_CONFIG.rcSmoothingFeedforwardCutoff === 0 || FC.RX_CONFIG.rcSmoothingSetpointCutoff === 0) {
         $(".tab-receiver .rcSmoothing-auto-factor").show();
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+            $(".tab-receiver .rcSmoothing-auto-factor-throttle").show();
+        }
     }
 
     $(".tab-receiver .rcSmoothingOff").text(i18n.getMessage("off"));
@@ -1007,7 +1020,9 @@ function updateInterpolationView() {
         $(".tab-receiver .rcSmoothing-throttle-cutoff").hide();
         $(".tab-receiver .rcSmoothing-feedforward-manual").hide();
         $(".tab-receiver .rcSmoothing-setpoint-manual").hide();
+        $(".tab-receiver .rcSmoothing-throttle-manual").hide();
         $(".tab-receiver .rcSmoothing-auto-factor").hide();
+        $(".tab-receiver .rcSmoothing-auto-factor-throttle").hide();
     }
 
     if (FC.RX_CONFIG.rcSmoothingFeedforwardCutoff === 0) {
