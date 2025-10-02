@@ -985,6 +985,7 @@ function updateInterpolationView() {
     }
 
     $(".tab-receiver .rcSmoothing-setpoint-manual").show();
+    $(".tab-receiver .rcSmoothing-throttle-cutoff").show();
 
     if (FC.RX_CONFIG.rcSmoothingFeedforwardCutoff === 0 || FC.RX_CONFIG.rcSmoothingSetpointCutoff === 0) {
         $(".tab-receiver .rcSmoothing-auto-factor").show();
@@ -996,6 +997,7 @@ function updateInterpolationView() {
     if (FC.RX_CONFIG.rcSmoothing === 0) {
         $(".tab-receiver .rcSmoothing-feedforward-cutoff").hide();
         $(".tab-receiver .rcSmoothing-setpoint-cutoff").hide();
+        $(".tab-receiver .rcSmoothing-throttle-cutoff").hide();
         $(".tab-receiver .rcSmoothing-feedforward-manual").hide();
         $(".tab-receiver .rcSmoothing-setpoint-manual").hide();
         $(".tab-receiver .rcSmoothing-auto-factor").hide();
@@ -1007,6 +1009,10 @@ function updateInterpolationView() {
 
     if (FC.RX_CONFIG.rcSmoothingSetpointCutoff === 0) {
         $(".tab-receiver .rcSmoothing-setpoint-cutoff").hide();
+    }
+
+    if (FC.RX_CONFIG.rcSmoothingThrottleCutoff === 0) {
+        $(".tab-receiver .rcSmoothing-throttle-cutoff").hide();
     }
 }
 
