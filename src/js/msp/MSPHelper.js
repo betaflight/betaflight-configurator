@@ -1048,8 +1048,13 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     data.readU8(); // was FC.RX_CONFIG.rcInterpolationChannels
                     data.readU8(); // was FC.RX_CONFIG.rcSmoothingType
                     FC.RX_CONFIG.rcSmoothingSetpointCutoff = data.readU8();
-                    FC.RX_CONFIG.rcSmoothingFeedforwardCutoff = data.readU8(); // deprecated in 1.47
-                    data.readU8(); // was FC.RX_CONFIG.rcSmoothingInputType
+                    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+                        FC.RX_CONFIG.rcSmoothingThrottleCutoff = data.readU8();
+                        FC.RX_CONFIG.rcSmoothingAutoFactorThrottle = data.readU8();
+                    } else {
+                        FC.RX_CONFIG.rcSmoothingFeedforwardCutoff = data.readU8(); // deprecated in 1.47
+                        data.readU8(); // was FC.RX_CONFIG.rcSmoothingDerivativeCutoff
+                    }
                     data.readU8(); // was FC.RX_CONFIG.rcSmoothingDerivativeType
                     FC.RX_CONFIG.usbCdcHidType = data.readU8();
                     FC.RX_CONFIG.rcSmoothingAutoFactor = data.readU8();
@@ -1995,10 +2000,15 @@ MspHelper.prototype.crunch = function (code, modifierCode = undefined) {
                 .push8(FC.RX_CONFIG.fpvCamAngleDegrees)
                 .push8(FC.RX_CONFIG.rcInterpolationChannels)
                 .push8(FC.RX_CONFIG.rcSmoothingType)
-                .push8(FC.RX_CONFIG.rcSmoothingSetpointCutoff)
-                .push8(FC.RX_CONFIG.rcSmoothingFeedforwardCutoff) // deprecated in 1.47
-                .push8(FC.RX_CONFIG.rcSmoothingInputType)
-                .push8(FC.RX_CONFIG.rcSmoothingDerivativeType);
+                .push8(FC.RX_CONFIG.rcSmoothingSetpointCutoff);
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+                buffer.push8(FC.RX_CONFIG.rcSmoothingThrottleCutoff);
+                buffer.push8(FC.RX_CONFIG.rcSmoothingAutoFactorThrottle);
+            } else {
+                buffer.push8(FC.RX_CONFIG.rcSmoothingFeedforwardCutoff);
+                buffer.push8(FC.RX_CONFIG.rcSmoothingInputType);
+            }
+            buffer.push8(FC.RX_CONFIG.rcSmoothingDerivativeType);
 
             // Introduced in 1.42
             buffer.push8(FC.RX_CONFIG.usbCdcHidType).push8(FC.RX_CONFIG.rcSmoothingAutoFactor);

@@ -2057,22 +2057,33 @@
         "message": "Manual"
     },
     "receiverRcSmoothingAutoFactor": {
-        "message": "Auto Factor",
-        "description": "Auto Factor parameter for RC smoothing"
+        "message": "SetPoint Auto Factor",
+        "description": "SetPoint Auto Factor parameter for RC smoothing"
     },
     "receiverRcSmoothingAutoFactorHelp": {
-        "message": "Adjusts the Auto factor calculation, 10 is the default factor to delay ratio. Increasing the number will smooth RC inputs more, while also adding delay. This may be useful for unreliable RC connections or for cinematic flying.<br>Be careful with numbers approaching 50, input delay will become noticeable.<br>Use the CLI command rc_smoothing_info while TX and RX are powered to see the automatically calculated RC smoothing cutoffs.",
-        "description": "Auto Factor parameter help message"
+        "message": "Adjusts the SetPoint Auto factor calculation, 10 is the default factor to delay ratio. Increasing the number will smooth RC inputs more, while also adding delay. This may be useful for unreliable RC connections or for cinematic flying.<br>Be careful with numbers approaching 50, input delay will become noticeable.<br>Use the CLI command rc_smoothing_info while TX and RX are powered to see the automatically calculated RC smoothing cutoffs.",
+        "description": "SetPoint Auto Factor parameter help message"
     },
     "receiverRcSmoothingAutoFactorHelp2": {
-        "message": "Adjusts auto RC smoothing. 30 is the default. Higher values smooth RC inputs more - e.g. 60 for HD freestyle or 90-120 for cinematic flying. Note: Values over 50 will cause appreciable stick delay. Lower values, eg 20-25, will transfer some of the RC control steps into the motor signals, slightly increasing motor heat, but will reduce RC delay slightly. This may be useful for racing.",
-        "description": "Auto Factor parameter help message"
+        "message": "Adjusts SetPoint RC smoothing. 30 is the default. Higher values smooth RC inputs more - e.g. 60 for HD freestyle or 90-120 for cinematic flying. Note: Values over 50 will cause appreciable stick delay. Lower values, eg 20-25, will transfer some of the RC control steps into the motor signals, slightly increasing motor heat, but will reduce RC delay slightly. This may be useful for racing.",
+        "description": "SetPoint Auto Factor parameter help message"
+    },
+    "receiverRcSmoothingAutoFactorThrottle": {
+        "message": "Throttle Auto Factor",
+        "description": "Throttle Auto Factor parameter for RC smoothing"
+    },
+    "receiverRcSmoothingAutoFactorThrottleHelp": {
+        "message": "Adjusts the Throttle factor calculation, 10 is the default factor to delay ratio. Increasing the number will smooth throttle inputs more, while also adding delay. This may be useful for unreliable RC connections or for cinematic flying.<br>Be careful with numbers approaching 50, input delay will become noticeable.<br>Use the CLI command rc_smoothing_info while TX and RX are powered to see the automatically calculated RC smoothing cutoffs.",
+        "description": "Throttle Auto Factor parameter help message"
     },
     "receiverRcFeedforwardTypeSelect": {
         "message": "Feedforward Cutoff Type"
     },
     "receiverRcSetpointTypeSelect": {
         "message": "Setpoint Cutoff Type"
+    },
+    "receiverThrottleTypeSelect": {
+        "message": "Throttle Cutoff Type"
     },
     "receiverRcSmoothingInterpolation": {
         "message": "Interpolation"
@@ -2095,8 +2106,17 @@
     "receiverRcSmoothingFeedforwardManual": {
         "message": "Selects whether the feedforward filter cutoff frequency is automatically calculated (recommended) or manually selected by the user. Using \"Manual\" is not recommended for receiver protocols like Crossfire which can change in flight."
     },
+    "receiverRcSmoothingThrottleManual": {
+        "message": "Selects whether RC smoothing is automatically calculated (recommended) or manually selected by the user. Using \"Manual\" is not recommended for receiver protocols like Crossfire which can change in flight."
+    },
+    "rcSmoothingThrottleCutoffHelp": {
+        "message": "The cutoff frequency in Hz used by the throttle smoothing filter. Using lower values will result in smoother inputs and are more appropriate for slower receiver protocols. Most users should leave this at 0 corresponding to \"Auto\"."
+    },
     "receiverRcSmoothingSetpointHz": {
         "message": "Setpoint Cutoff Frequency"
+    },
+    "receiverRcSmoothingThrottleCutoffHz": {
+        "message": "Throttle Cutoff Frequency"
     },
     "receiverRcSmoothingFeedforwardCutoff": {
         "message": "Feedforward Cutoff Frequency"
