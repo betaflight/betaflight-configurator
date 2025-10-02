@@ -1,12 +1,15 @@
-name: 'Preview Deployment'
+name: 'Deployment (PR and Push)'
 on:
   pull_request_target:
     types: [opened, synchronize, reopened]
     branches:
       - master
+      - '*-maintenance'
   push:
     branches:
       - master
+      - release
+      - '*-maintenance'
 
 jobs:
   # Job 1: Build the code (no secrets here)
