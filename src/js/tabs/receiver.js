@@ -485,7 +485,11 @@ receiver.initialize = function (callback) {
 
             FC.RX_CONFIG.rcSmoothingSetpointCutoff = parseInt($('input[name="rcSmoothingSetpointHz-number"]').val());
 
-            if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+                FC.RX_CONFIG.rcSmoothingThrottleCutoff = parseInt(
+                    $('input[name="rcSmoothingThrottleCutoffHz-number"]').val(),
+                );
+            } else {
                 FC.RX_CONFIG.rcSmoothingFeedforwardCutoff = parseInt(
                     $('input[name="rcSmoothingFeedforwardCutoff-number"]').val(),
                 );
@@ -649,7 +653,29 @@ receiver.initialize = function (callback) {
 
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
             $(".tab-receiver .rcSmoothing-feedforward-manual").hide();
+
+            const rcSmoothingThrottleNumberElement = $('input[name="rcSmoothingThrottleCutoffHz-number"]');
+            rcSmoothingThrottleNumberElement.val(FC.RX_CONFIG.rcSmoothingThrottleCutoff);
+
+            $('select[name="rcSmoothing-throttle-manual-select"]').val("1");
+            if (FC.RX_CONFIG.rcSmoothingThrottleCutoff === 0) {
+                $('select[name="rcSmoothing-throttle-manual-select"]').val("0");
+                $(".tab-receiver .rcSmoothing-throttle-cutoff").hide();
+            }
+            $('select[name="rcSmoothing-throttle-manual-select"]')
+                .on("change", function () {
+                    if ($(this).val() === "0") {
+                        $(".tab-receiver .rcSmoothing-throttle-cutoff").hide();
+                        rcSmoothingThrottleNumberElement.val(0);
+                    }
+                    if ($(this).val() === "1") {
+                        $(".tab-receiver .rcSmoothing-throttle-cutoff").show();
+                        rcSmoothingThrottleNumberElement.val(FC.RX_CONFIG.rcSmoothingThrottleCutoff);
+                    }
+                })
+                .trigger("change");
         } else {
+            $(".tab-receiver .rcSmoothing-throttle-cutoff").hide();
             const rcSmoothingFeedforwardNumberElement = $('input[name="rcSmoothingFeedforwardCutoff-number"]');
 
             rcSmoothingFeedforwardNumberElement.val(FC.RX_CONFIG.rcSmoothingFeedforwardCutoff);

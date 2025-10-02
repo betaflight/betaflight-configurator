@@ -2074,6 +2074,9 @@
     "receiverRcSetpointTypeSelect": {
         "message": "Setpoint Cutoff Type"
     },
+    "receiverThrottleTypeSelect": {
+        "message": "Throttle Cutoff Type"
+    },
     "receiverRcSmoothingInterpolation": {
         "message": "Interpolation"
     },
@@ -2095,8 +2098,17 @@
     "receiverRcSmoothingFeedforwardManual": {
         "message": "Selects whether the feedforward filter cutoff frequency is automatically calculated (recommended) or manually selected by the user. Using \"Manual\" is not recommended for receiver protocols like Crossfire which can change in flight."
     },
+    "receiverRcSmoothingThrottleManual": {
+        "message": "Selects whether RC smoothing is automatically calculated (recommended) or manually selected by the user. Using \"Manual\" is not recommended for receiver protocols like Crossfire which can change in flight."
+    },
+    "rcSmoothingThrottleCutoffHelp": {
+        "message": "The cutoff frequency in Hz used by the throttle smoothing filter. Using lower values will result in smoother inputs and are more appropriate for slower receiver protocols. Most users should leave this at 0 corresponding to \"Auto\"."
+    },
     "receiverRcSmoothingSetpointHz": {
         "message": "Setpoint Cutoff Frequency"
+    },
+    "receiverRcSmoothingThrottleCutoffHz": {
+        "message": "Throttle Cutoff Frequency"
     },
     "receiverRcSmoothingFeedforwardCutoff": {
         "message": "Feedforward Cutoff Frequency"

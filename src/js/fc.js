@@ -627,6 +627,7 @@ const FC = {
             fpvCamAngleDegrees: 0,
             rcSmoothingType: 0,
             rcSmoothingSetpointCutoff: 0,
+            rcSmoothingThrottleCutoff: 0,
             rcSmoothingFeedforwardCutoff: 0,
             rcSmoothingInputType: 0,
             rcSmoothingDerivativeType: 0,

@@ -226,6 +226,37 @@
                                 </div>
                             </td>
                         </tr>
+
+                        <tr class="rcSmoothing-throttle-manual">
+                            <td>
+                                <select name="rcSmoothing-throttle-manual-select">
+                                    <option value="0" i18n="receiverRcSmoothingAuto"></option>
+                                    <option value="1" i18n="receiverRcSmoothingManual"></option>
+                                </select>
+                            </td>
+                            <td>
+                                <div>
+                                    <label>
+                                        <span i18n="receiverThrottleTypeSelect"></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="helpicon cf_tip" i18n_title="receiverRcSmoothingThrottleManual"></div>
+                            </td>
+                        </tr>
+                        <tr class="rcSmoothing-throttle-manual">
+                            <td class="rcSmoothing-throttle-cutoff"><input type="number" name="rcSmoothingThrottleCutoffHz-number" step="1" min="0" max="255"/></td>
+                            <td class="rcSmoothing-throttle-cutoff" colspan="2">
+                                <div>
+                                    <label>
+                                        <span i18n="receiverRcSmoothingThrottleCutoffHz"></span>
+                                    </label>
+                                    <div class="helpicon cf_tip" i18n_title="rcSmoothingThrottleCutoffHelp"></div>
+                                </div>
+                            </td>
+                        </tr>
+
                         <tr class="rcSmoothing-feedforward-manual">
                             <td>
                                 <select name="rcSmoothing-feedforward-select">
