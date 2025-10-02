@@ -4,6 +4,9 @@ on:
     types: [opened, synchronize, reopened]
     branches:
       - master
+  push:
+    branches:
+      - master
 
 jobs:
   # Job 1: Build the code (no secrets here)
@@ -60,13 +63,25 @@ jobs:
           calculatedSha=$(echo ${{ github.event.pull_request.head.sha }} | head -c 8)
           echo "COMMIT_SHORT_SHA=$calculatedSha" >> $GITHUB_ENV
 
+      - name: Set alias branch name for Cloudflare (if a push)
+        id: branch_push
+        if: github.event_name == 'push'
+        run: |
+          echo "BRANCH=${{ github.event.ref_name }}" >> $GITHUB_ENV
+
+      - name: Set alias branch name for Cloudflare (if a pull_request)
+        id: branch_pull
+        if: github.event_name == 'pull_request'
+        run: |
+          echo "BRANCH=PR${{ github.event.pull_request.number }}" >> $GITHUB_ENV
+
       - name: Deploy to Cloudflare
         id: deploy
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy src/dist --project-name=${{ vars.CLOUDFLARE_PROJECT_NAME }} --branch=PR${{ github.event.pull_request.number }} --commit-dirty=true
+          command: pages deploy src/dist --project-name=${{ vars.CLOUDFLARE_PROJECT_NAME }} --branch=${{ env.BRANCH }} --commit-dirty=true
 
       - name: Add deployment comment
         uses: thollander/actions-comment-pull-request@v3
