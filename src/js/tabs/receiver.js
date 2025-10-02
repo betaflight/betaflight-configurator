@@ -485,10 +485,17 @@ receiver.initialize = function (callback) {
 
             FC.RX_CONFIG.rcSmoothingSetpointCutoff = parseInt($('input[name="rcSmoothingSetpointHz-number"]').val());
 
+            if (FC.RX_CONFIG.rcSmoothingSetpointCutoff === 0) {
+                $('select[name="rcSmoothing-setpoint-manual-select"]').val(0).trigger("change");
+            }
+
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
-                FC.RX_CONFIG.rcSmoothingThrottleCutoff = parseInt(
+                FC.RX_CONFIG.rcSmoothingThrottleCutoff = Number.parseInt(
                     $('input[name="rcSmoothingThrottleCutoffHz-number"]').val(),
                 );
+                if (FC.RX_CONFIG.rcSmoothingThrottleCutoff === 0) {
+                    $('select[name="rcSmoothing-throttle-manual-select"]').val(0).trigger("change");
+                }
             } else {
                 FC.RX_CONFIG.rcSmoothingFeedforwardCutoff = parseInt(
                     $('input[name="rcSmoothingFeedforwardCutoff-number"]').val(),
