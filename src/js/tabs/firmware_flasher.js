@@ -806,9 +806,17 @@ firmware_flasher.initialize = async function (callback) {
                 // Maybe the board is in DFU mode, but it does not have permissions. Ask for them.
                 console.log(`${self.logHead} No valid port detected, asking for permissions`);
 
-                DFU.requestPermission().then((device) => {
-                    DFU.connect(device.path, firmware, options);
-                });
+                DFU.requestPermission()
+                    .then((device) => {
+                        DFU.connect(device.path, firmware, options);
+                    })
+                    .catch((error) => {
+                        console.error("Permission request denied", error);
+                        self.flashingMessage(
+                            i18n.getMessage("firmwareFlasherNoDevice"),
+                            self.FLASH_MESSAGE_TYPES.INVALID,
+                        );
+                    });
             }
 
             GUI.interval_resume("sponsor");
