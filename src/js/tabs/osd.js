@@ -26,7 +26,7 @@ const OSD = {};
 const positionConfigs = {
     TL: {
         label: "Top Left",
-        coords: (w, h) => ({
+        coords: (_w, _h) => ({
             x: 1,
             y: 1,
         }),
@@ -34,7 +34,7 @@ const positionConfigs = {
     },
     TC: {
         label: "Top Center",
-        coords: (w, h) => ({
+        coords: (w, _h) => ({
             x: Math.floor((OSD.data.displaySize.x - w) / 2),
             y: 1,
         }),
@@ -46,7 +46,7 @@ const positionConfigs = {
     },
     TR: {
         label: "Top Right",
-        coords: (w, h) => ({
+        coords: (w, _h) => ({
             x: Math.max(1, OSD.data.displaySize.x - w - 1),
             y: 1,
         }),
@@ -59,7 +59,7 @@ const positionConfigs = {
     // Top-middle row
     TML: {
         label: "Top Middle Left",
-        coords: (w, h) => ({
+        coords: (_w, h) => ({
             x: 1,
             y: Math.floor(OSD.data.displaySize.y / 3) - Math.floor(h / 2),
         }),
@@ -96,7 +96,7 @@ const positionConfigs = {
     // Exact middle row
     LMC: {
         label: "Left Middle",
-        coords: (w, h) => ({
+        coords: (_w, h) => ({
             x: 1,
             y: Math.floor((OSD.data.displaySize.y - h) / 2),
         }),
@@ -135,7 +135,7 @@ const positionConfigs = {
     // Bottom-middle row
     BML: {
         label: "Bottom Middle Left",
-        coords: (w, h) => ({
+        coords: (_w, h) => ({
             x: 1,
             y: Math.floor((OSD.data.displaySize.y * 2) / 3) - Math.floor(h / 2),
         }),
@@ -171,7 +171,7 @@ const positionConfigs = {
     },
     BL: {
         label: "Bottom Left",
-        coords: (w, h) => ({
+        coords: (_w, h) => ({
             x: 1,
             y: OSD.data.displaySize.y - h - 1,
         }),
@@ -3544,7 +3544,11 @@ osd.initialize = function (callback) {
                     OSD.msp.decode(info);
                 }
 
-                if (OSD.data.state.haveMax7456FontDeviceConfigured && !OSD.data.state.isMax7456FontDeviceDetected && !OSD.data.state.haveAirbotTheiaOsdDevice) {
+                if (
+                    OSD.data.state.haveMax7456FontDeviceConfigured &&
+                    !OSD.data.state.isMax7456FontDeviceDetected &&
+                    !OSD.data.state.haveAirbotTheiaOsdDevice
+                ) {
                     $(".noOsdChipDetect").show();
                 }
 
@@ -3820,7 +3824,10 @@ osd.initialize = function (callback) {
                     $(".requires-max7456").hide();
                 }
 
-                if (!OSD.data.state.isMax7456FontDeviceDetected || (!OSD.data.state.haveMax7456FontDeviceConfigured && !OSD.data.state.haveAirbotTheiaOsdDevice)) {
+                if (
+                    !OSD.data.state.isMax7456FontDeviceDetected ||
+                    (!OSD.data.state.haveMax7456FontDeviceConfigured && !OSD.data.state.haveAirbotTheiaOsdDevice)
+                ) {
                     $(".requires-max7456-font-device-detected").addClass("disabled");
                 }
 
@@ -3890,7 +3897,6 @@ osd.initialize = function (callback) {
 
                 // display fields on/off and position
                 const $displayFields = $("#element-fields").empty();
-                let enabledCount = 0;
 
                 OSD.data.displaySize.total = OSD.data.displaySize.x * OSD.data.displaySize.y;
 
@@ -3898,10 +3904,6 @@ osd.initialize = function (callback) {
                     // versioning related, if the field doesn't exist at the current flight controller version, just skip it
                     if (!field.name) {
                         continue;
-                    }
-
-                    if (field.isVisible[OSD.getCurrentPreviewProfile()]) {
-                        enabledCount++;
                     }
 
                     const $field_wrapper = $(`<div class="switchable-field-wrapper"></div>`);

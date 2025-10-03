@@ -59,7 +59,7 @@ function disconnectHandler(event) {
 export function initializeSerialBackend() {
     $("a.connection_button__link").on("click", connectDisconnect);
 
-    EventBus.$on("port-handler:auto-select-serial-device", function (device) {
+    EventBus.$on("port-handler:auto-select-serial-device", function () {
         if (
             !GUI.connected_to &&
             !GUI.connecting_to &&
@@ -658,7 +658,7 @@ function onConnect() {
     // show only appropriate tabs
     $("#tabs ul.mode-connected li").hide();
     $("#tabs ul.mode-connected li")
-        .filter(function (index) {
+        .filter(function () {
             const classes = $(this).attr("class").split(/\s+/);
             let found = false;
 

@@ -123,8 +123,8 @@ export class MSPQueueMonitor {
                 return true;
             });
             if (isDuplicate) this.metrics.duplicates++;
-        } catch (_) {
-            // best-effort only
+        } catch {
+            // Ignore errors in duplicate detection
         }
 
         // Check for queue size peaks

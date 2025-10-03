@@ -375,7 +375,7 @@ presets.tryLoadPresets = function () {
 
     const failedToLoad = [];
 
-    Promise.all(this.presetsRepo.map((p) => p.loadIndex().catch((reason) => failedToLoad.push(p))))
+    Promise.all(this.presetsRepo.map((p) => p.loadIndex().catch(() => failedToLoad.push(p))))
         .then(() => {
             this._domWarningFailedToLoadRepositories.toggle(failedToLoad.length > 0);
             this._domWarningFailedToLoadRepositories.html(

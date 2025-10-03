@@ -133,13 +133,13 @@ class Projector {
             let uvs = [];
 
             let object = null;
-            let material = null;
+            let _material = null;
 
             let normalMatrix = new THREE.Matrix3();
 
             function setObject(value) {
                 object = value;
-                material = object.material;
+                _material = object.material;
 
                 normalMatrix.getNormalMatrix(object.matrixWorld);
 

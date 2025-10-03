@@ -1,7 +1,5 @@
 import $ from "jquery";
 
-const css_dark = ["./css/dark-theme.css"];
-
 const DarkTheme = {
     configSetting: undefined,
     enabled: false,

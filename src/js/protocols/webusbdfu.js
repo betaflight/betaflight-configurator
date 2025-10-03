@@ -471,7 +471,7 @@ class WEBUSBDFU_protocol extends EventTarget {
                 };
                 return memory;
             };
-            const chipInfo = descriptors.map(parseDescriptor).reduce((o, v, i) => {
+            const chipInfo = descriptors.map(parseDescriptor).reduce((o, v) => {
                 o[v.type.toLowerCase().replace(" ", "_")] = v;
                 return o;
             }, {});
@@ -500,7 +500,7 @@ class WEBUSBDFU_protocol extends EventTarget {
                     }
                 })
                 .catch((error) => {
-                    console.log(`${this.logHead} USB controlTransfer IN failed for request: ${request}`);
+                    console.log(`${this.logHead} USB controlTransfer IN failed for request: ${request} (${error})`);
                     callback([], 1);
                 });
         } else {
@@ -525,7 +525,7 @@ class WEBUSBDFU_protocol extends EventTarget {
                     }
                 })
                 .catch((error) => {
-                    console.log(`${this.logHead} USB controlTransfer OUT failed for request: ${request}`);
+                    console.log(`${this.logHead} USB controlTransfer OUT failed for request: ${request} (${error})`);
                 });
         }
     }
@@ -900,7 +900,7 @@ class WEBUSBDFU_protocol extends EventTarget {
                                 const spans_page = hexData.address < page_start && end_address > page_end;
 
                                 if (starts_in_page || ends_in_page || spans_page) {
-                                    const idx = erase_pages.findIndex((element, index, array) => {
+                                    const idx = erase_pages.findIndex((element) => {
                                         return element.sector === i && element.page === j;
                                     });
                                     if (idx === -1) {
@@ -1161,31 +1161,23 @@ class WEBUSBDFU_protocol extends EventTarget {
                                 ? this.transferSize
                                 : this.hex.data[reading_block].bytes - bytes_verified;
 
-                        this.controlTransfer(
-                            "in",
-                            this.request.UPLOAD,
-                            wBlockNum++,
-                            0,
-                            bytes_to_read,
-                            0,
-                            (data, code) => {
-                                for (const piece of data) {
-                                    this.verify_hex[reading_block].push(piece);
-                                }
+                        this.controlTransfer("in", this.request.UPLOAD, wBlockNum++, 0, bytes_to_read, 0, (data) => {
+                            for (const piece of data) {
+                                this.verify_hex[reading_block].push(piece);
+                            }
 
-                                address += bytes_to_read;
-                                bytes_verified += bytes_to_read;
-                                bytes_verified_total += bytes_to_read;
+                            address += bytes_to_read;
+                            bytes_verified += bytes_to_read;
+                            bytes_verified_total += bytes_to_read;
 
-                                // update progress bar
-                                TABS.firmware_flasher.flashProgress(
-                                    ((this.hex.bytes_total + bytes_verified_total) / (this.hex.bytes_total * 2)) * 100,
-                                );
+                            // update progress bar
+                            TABS.firmware_flasher.flashProgress(
+                                ((this.hex.bytes_total + bytes_verified_total) / (this.hex.bytes_total * 2)) * 100,
+                            );
 
-                                // verify another page
-                                read();
-                            },
-                        );
+                            // verify another page
+                            read();
+                        });
                     } else {
                         if (reading_block < blocks) {
                             // move to another block
@@ -1261,7 +1253,7 @@ class WEBUSBDFU_protocol extends EventTarget {
             this.loadAddress(address, () => {
                 // 'downloading' 0 bytes to the program start address followed by a GETSTATUS is used to trigger DFU exit on STM32
                 this.controlTransfer("out", this.request.DNLOAD, 0, 0, 0, 0, () => {
-                    this.controlTransfer("in", this.request.GETSTATUS, 0, 0, 6, 0, (data) => {
+                    this.controlTransfer("in", this.request.GETSTATUS, 0, 0, 6, 0, () => {
                         this.cleanup();
                     });
                 });
