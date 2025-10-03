@@ -37,8 +37,12 @@ class AutoDetect {
         const port = PortHandler.portPicker.selectedPort;
         const isLoaded = TABS.firmware_flasher.targets ? Object.keys(TABS.firmware_flasher.targets).length > 0 : false;
 
+        if (!PortHandler.portAvailable) {
+            gui_log(i18n.getMessage("firmwareFlasherNoValidPort"));
+            return;
+        }
+
         if (!isLoaded) {
-            console.log("Releases not loaded yet");
             gui_log(i18n.getMessage("firmwareFlasherNoTargetsLoaded"));
             return;
         }
