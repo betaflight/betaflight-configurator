@@ -239,7 +239,7 @@ firmware_flasher.initialize = async function (callback) {
             $("a.load_remote_file").text(i18n.getMessage("firmwareFlasherButtonLoadOnline"));
         }
 
-        function loadTargetList(targets) {
+        async function loadTargetList(targets) {
             if (!targets || !ispConnected()) {
                 $('select[name="board"]').empty().append('<option value="0">Offline</option>');
                 $('select[name="firmware_version"]').empty().append('<option value="0">Offline</option>');
@@ -445,6 +445,7 @@ firmware_flasher.initialize = async function (callback) {
             self.enableLoadRemoteFileButton(false);
 
             const build_type = buildType_e.val();
+            const currentlySelectedBoard = $('select[name="board"]').val();
 
             $('select[name="board"]')
                 .empty()
@@ -456,7 +457,16 @@ firmware_flasher.initialize = async function (callback) {
 
             if (!GUI.connect_lock) {
                 try {
-                    loadTargetList(await self.buildApi.loadTargets());
+                    await loadTargetList(await self.buildApi.loadTargets());
+
+                    // Restore the previously selected board if it was selected and still exists
+                    if (
+                        currentlySelectedBoard &&
+                        currentlySelectedBoard !== "0" &&
+                        $(`select[name="board"] option[value="${currentlySelectedBoard}"]`).length > 0
+                    ) {
+                        $('select[name="board"]').val(currentlySelectedBoard).trigger("change");
+                    }
                 } catch (err) {
                     console.error(err);
                 }
