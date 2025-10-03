@@ -780,11 +780,27 @@ firmware_flasher.initialize = async function (callback) {
 
             console.log(`${self.logHead} Selected port:`, port);
 
+            // Common function to reset flashing state on errors
+            const resetFlashingState = () => {
+                self.isFlashing = false;
+                self.enableFlashButton(true);
+                self.enableDfuExitButton(PortHandler.dfuAvailable);
+                self.enableLoadRemoteFileButton(true);
+                self.enableLoadFileButton(true);
+                self.flashingMessage(i18n.getMessage("firmwareFlasherFirmwareNotLoaded"), self.FLASH_MESSAGE_TYPES.NEUTRAL);
+                GUI.interval_resume("sponsor");
+            };
+
             if (isDFU) {
                 tracking.sendEvent(tracking.EVENT_CATEGORIES.FLASHING, "DFU Flashing", {
                     filename: self.filename || null,
                 });
-                DFU.connect(port, firmware, options);
+                try {
+                    DFU.connect(port, firmware, options);
+                } catch (error) {
+                    console.error(`${self.logHead} DFU connection failed:`, error);
+                    resetFlashingState();
+                }
             } else if (isSerial) {
                 if ($("input.updating").is(":checked")) {
                     options.no_reboot = true;
@@ -799,30 +815,21 @@ firmware_flasher.initialize = async function (callback) {
 
                 tracking.sendEvent(tracking.EVENT_CATEGORIES.FLASHING, "Flashing", { filename: self.filename || null });
 
-                STM32.connect(port, baud, firmware, options);
+                try {
+                    STM32.connect(port, baud, firmware, options);
+                } catch (error) {
+                    console.error(`${self.logHead} STM32 connection failed:`, error);
+                    resetFlashingState();
+                }
             } else {
                 // Maybe the board is in DFU mode, but it does not have permissions. Ask for them.
                 console.log(`${self.logHead} No valid port detected, asking for permissions`);
                 
-                const resetFlashingState = () => {
-                    self.isFlashing = false;
-                    self.enableFlashButton(true);
-                    self.enableDfuExitButton(PortHandler.dfuAvailable);
-                    self.enableLoadRemoteFileButton(true);
-                    self.enableLoadFileButton(true);
-                    self.flashingMessage(i18n.getMessage("firmwareFlasherFirmwareNotLoaded"), self.FLASH_MESSAGE_TYPES.NEUTRAL);
-                    GUI.interval_resume("sponsor");
-                };
-                
                 DFU.requestPermission().then((device) => {
-                    if (device?.path) {
-                        DFU.connect(device.path, firmware, options);
-                    } else {
-                        // User cancelled or no device found: reset flashing state and re-enable button
-                        resetFlashingState();
-                    }
-                }).catch(() => {
+                    DFU.connect(device.path, firmware, options);
+                }).catch((error) => {
                     // Error or user cancelled: reset flashing state and re-enable button
+                    console.error(`${self.logHead} DFU permission request failed:`, error);
                     resetFlashingState();
                 });
             }
