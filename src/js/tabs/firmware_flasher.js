@@ -803,13 +803,29 @@ firmware_flasher.initialize = async function (callback) {
             } else {
                 // Maybe the board is in DFU mode, but it does not have permissions. Ask for them.
                 console.log(`${self.logHead} No valid port detected, asking for permissions`);
+                
+                const resetFlashingState = () => {
+                    self.isFlashing = false;
+                    self.enableFlashButton(true);
+                    self.enableDfuExitButton(PortHandler.dfuAvailable);
+                    self.enableLoadRemoteFileButton(true);
+                    self.enableLoadFileButton(true);
+                    self.flashingMessage(i18n.getMessage("firmwareFlasherFirmwareNotLoaded"), self.FLASH_MESSAGE_TYPES.NEUTRAL);
+                    GUI.interval_resume("sponsor");
+                };
+                
                 DFU.requestPermission().then((device) => {
-                    DFU.connect(device.path, firmware, options);
+                    if (device?.path) {
+                        DFU.connect(device.path, firmware, options);
+                    } else {
+                        // User cancelled or no device found: reset flashing state and re-enable button
+                        resetFlashingState();
+                    }
+                }).catch(() => {
+                    // Error or user cancelled: reset flashing state and re-enable button
+                    resetFlashingState();
                 });
             }
-
-            self.isFlashing = false;
-            GUI.interval_resume("sponsor");
         }
 
         let result = getConfig("erase_chip");
