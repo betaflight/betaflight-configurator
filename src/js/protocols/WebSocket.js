@@ -57,7 +57,7 @@ class Websocket extends EventTarget {
         return new Uint8Array(buffer);
     }
 
-    async connect(path, options) {
+    async connect(path) {
         this.address = path;
         console.log(`${this.logHead} Connecting to ${this.address}`);
 

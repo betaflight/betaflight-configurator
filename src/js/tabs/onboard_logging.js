@@ -110,7 +110,6 @@ onboard_logging.initialize = function (callback) {
             const deviceSelect = $(".blackboxDevice select");
             const loggingRatesSelect = $(".blackboxRate select");
             const debugModeSelect = $(".blackboxDebugMode select");
-            const debugFieldsSelect = $(".blackboxDebugFields select");
 
             if (FC.BLACKBOX.supported) {
                 $(".tab-onboard_logging a.save-settings").on("click", async function () {
@@ -137,7 +136,7 @@ onboard_logging.initialize = function (callback) {
             populateLoggingRates(loggingRatesSelect);
             populateDevices(deviceSelect);
             populateDebugModes(debugModeSelect);
-            populateDebugFields(debugFieldsSelect);
+            populateDebugFields();
 
             deviceSelect
                 .change(function () {
@@ -262,7 +261,7 @@ onboard_logging.initialize = function (callback) {
         });
     }
 
-    function populateDebugFields(debugFieldsSelect) {
+    function populateDebugFields() {
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
             $(".blackboxDebugFields").show();
 
@@ -407,6 +406,11 @@ onboard_logging.initialize = function (callback) {
         if (dataflashPresent && FC.SDCARD.state === MSP.SDCARD_STATE_NOT_PRESENT) {
             loggingStatus = "Dataflash";
         }
+
+        tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, "DataLogging", {
+            logSize: FC.DATAFLASH.usedSize,
+            logStatus: loggingStatus,
+        });
 
         if (FC.SDCARD.supported && !sdcardTimer) {
             // Poll for changes in SD card status

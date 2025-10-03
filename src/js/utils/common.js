@@ -61,7 +61,7 @@ export function urlExists(url) {
  * @return {object} sorted option list.
  */
 
-$.fn.sortSelect = function (text = "") {
+$.fn.sortSelect = function () {
     /*
 
     Chrome v140 does not work with sortSelect function properly.

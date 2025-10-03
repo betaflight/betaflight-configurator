@@ -146,7 +146,7 @@ cli.initialize = function (callback) {
     async function loadFile() {
         const previewArea = $("#snippetpreviewcontent textarea#preview");
 
-        function executeSnippet(fileName) {
+        function executeSnippet() {
             const commands = previewArea.val();
             executeCommands(commands);
             self.GUI.snippetPreviewWindow.close();
@@ -160,7 +160,7 @@ cli.initialize = function (callback) {
                     "cliConfirmSnippetDialogTitle",
                     { fileName: fileName },
                 );
-                $("#snippetpreviewcontent a.confirm").click(() => executeSnippet(fileName));
+                $("#snippetpreviewcontent a.confirm").on("click", executeSnippet);
             }
 
             previewArea.val(result);

@@ -159,7 +159,7 @@ Model.prototype.optimizeGeometryForCanvas = function (geometry) {
     const uniqueVertices = [];
     const updatedFaces = [];
 
-    geometry.vertices.forEach((vertex, index) => {
+    geometry.vertices.forEach((vertex) => {
         // Round coordinates with configurable tolerance
         const key = [
             Math.round(vertex.x * tolerance) / tolerance,

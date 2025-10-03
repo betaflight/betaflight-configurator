@@ -66,7 +66,7 @@ export default class PresetsSourcesDialog {
         return sources;
     }
 
-    _readActiveSourceIndexFromStorage(sourcesCount) {
+    _readActiveSourceIndexFromStorage() {
         const obj = getConfig("PresetSourcesActiveIndexes");
         return obj.PresetSourcesActiveIndexes || [0];
     }

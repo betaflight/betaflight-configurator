@@ -23,8 +23,6 @@ const ledDirectionLetters = ["n", "e", "s", "w", "u", "d"]; // in LSB bit order
 const ledBaseFunctionLetters = ["c", "f", "a", "l", "s", "g", "r", "p", "e", "u"]; // in LSB bit
 let ledOverlayLetters = ["t", "y", "o", "b", "v", "i", "w"]; // in LSB bit
 
-const MAX_GYROS = 8; // maximum number of gyros supported by Betaflight
-
 function MspHelper() {
     const self = this;
 

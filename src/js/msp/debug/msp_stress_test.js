@@ -276,7 +276,7 @@ export class MSPStressTest {
             try {
                 await this.msp.promise(code, null);
                 return { error: "Expected timeout but request succeeded" };
-            } catch (error) {
+            } catch {
                 const timeoutTime = performance.now() - startTime;
 
                 // Test that new requests work after timeout
