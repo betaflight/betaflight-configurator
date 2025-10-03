@@ -26,18 +26,25 @@ function readSerialAdapter(event) {
 }
 
 function onTimeoutHandler() {
-    GUI.connect_lock = false;
     console.log(`${STM32Protocol.logHead} Looking for capabilities via MSP failed`);
 
     TABS.firmware_flasher.flashingMessage(
         i18n.getMessage("stm32RebootingToBootloaderFailed"),
         TABS.firmware_flasher.FLASH_MESSAGE_TYPES.INVALID,
     );
+
+    STM32.handleError();
 }
 
 function onFailureHandler() {
-    GUI.connect_lock = false;
-    TABS.firmware_flasher.refresh();
+    console.log(`${STM32Protocol.logHead} MSP connection failed`);
+
+    TABS.firmware_flasher.flashingMessage(
+        i18n.getMessage("stm32RebootingToBootloaderFailed"),
+        TABS.firmware_flasher.FLASH_MESSAGE_TYPES.INVALID,
+    );
+
+    STM32.handleError();
 }
 
 class STM32Protocol {
@@ -88,6 +95,18 @@ class STM32Protocol {
         this.handleMSPConnect = this.handleMSPConnect.bind(this);
     }
 
+    /**
+     * Centralized error handling method that resets UI state and releases connection lock
+     * @param {boolean} resetRebootMode - Whether to reset the reboot mode
+     */
+    handleError(resetRebootMode = true) {
+        GUI.connect_lock = false;
+        if (resetRebootMode) {
+            this.rebootMode = 0;
+        }
+        TABS.firmware_flasher.resetFlashingState();
+    }
+
     handleConnect(event) {
         console.log(`${this.logHead} Connected to serial port`, event.detail, event);
         if (event) {
@@ -118,19 +137,17 @@ class STM32Protocol {
                                 console.log(`${this.logHead} DFU request permission granted`, device);
                             } else {
                                 console.error(`${this.logHead} DFU request permission denied`);
-                                this.rebootMode = 0;
-                                GUI.connect_lock = false;
+                                this.handleError();
                             }
                         })
                         .catch((e) => {
                             console.error(`${this.logHead} DFU request permission failed`, e);
-                            this.rebootMode = 0;
-                            GUI.connect_lock = false;
+                            this.handleError();
                         });
                 }
             }, 3000);
         } else {
-            GUI.connect_lock = false;
+            this.handleError(false);
         }
     }
 

@@ -38,6 +38,9 @@ const firmware_flasher = {
     config: {},
     developmentFirmwareLoaded: false, // Is the firmware to be flashed from the development branch?
     cancelBuild: false,
+    // Properties to preserve firmware state during flashing
+    preFlashingMessage: null,
+    preFlashingMessageType: null,
 };
 
 firmware_flasher.initialize = async function (callback) {
@@ -782,20 +785,14 @@ firmware_flasher.initialize = async function (callback) {
 
             // Common function to reset flashing state on errors
             const resetFlashingState = () => {
-                self.isFlashing = false;
-                self.enableFlashButton(true);
-                self.enableDfuExitButton(PortHandler.dfuAvailable);
-                self.enableLoadRemoteFileButton(true);
-                self.enableLoadFileButton(true);
-                self.flashingMessage(i18n.getMessage("firmwareFlasherFirmwareNotLoaded"), self.FLASH_MESSAGE_TYPES.NEUTRAL);
-                GUI.interval_resume("sponsor");
+                self.resetFlashingState();
             };
 
             if (isDFU) {
                 tracking.sendEvent(tracking.EVENT_CATEGORIES.FLASHING, "DFU Flashing", {
                     filename: self.filename || null,
                 });
-                DFU.connect(port, firmware, options).catch(error => {
+                DFU.connect(port, firmware, options).catch((error) => {
                     console.error(`${self.logHead} DFU connection failed:`, error);
                     resetFlashingState();
                 });
@@ -813,24 +810,23 @@ firmware_flasher.initialize = async function (callback) {
 
                 tracking.sendEvent(tracking.EVENT_CATEGORIES.FLASHING, "Flashing", { filename: self.filename || null });
 
-                STM32.connect(port, baud, firmware, options).catch(error => {
-                    console.error(`${self.logHead} STM32 connection failed:`, error);
-                    resetFlashingState();
-                });
+                STM32.connect(port, baud, firmware, options);
             } else {
                 // Maybe the board is in DFU mode, but it does not have permissions. Ask for them.
                 console.log(`${self.logHead} No valid port detected, asking for permissions`);
 
-                DFU.requestPermission().then((device) => {
-                    DFU.connect(device.path, firmware, options).catch(error => {
-                        console.error(`${self.logHead} DFU permission connection failed:`, error);
+                DFU.requestPermission()
+                    .then((device) => {
+                        DFU.connect(device.path, firmware, options).catch((error) => {
+                            console.error(`${self.logHead} DFU permission connection failed:`, error);
+                            resetFlashingState();
+                        });
+                    })
+                    .catch((error) => {
+                        // Error or user cancelled: reset flashing state and re-enable button
+                        console.error(`${self.logHead} DFU permission request failed:`, error);
                         resetFlashingState();
                     });
-                }).catch((error) => {
-                    // Error or user cancelled: reset flashing state and re-enable button
-                    console.error(`${self.logHead} DFU permission request failed:`, error);
-                    resetFlashingState();
-                });
             }
         }
 
@@ -1403,6 +1399,9 @@ firmware_flasher.initialize = async function (callback) {
                 return;
             }
 
+            // Preserve current firmware message state before flashing
+            self.preservePreFlashingState();
+
             self.isFlashing = true;
             GUI.interval_pause("sponsor");
 
@@ -1520,6 +1519,43 @@ firmware_flasher.enableLoadFileButton = function (enabled) {
 
 firmware_flasher.enableDfuExitButton = function (enabled) {
     $("a.exit_dfu").toggleClass("disabled", !enabled);
+};
+
+firmware_flasher.resetFlashingState = function () {
+    console.log(`${this.logHead} Resetting flashing state`);
+    this.isFlashing = false;
+    this.enableFlashButton(this.parsed_hex || this.uf2_binary ? true : false); // Only enable if firmware is loaded
+    this.enableDfuExitButton(PortHandler.dfuAvailable);
+    this.enableLoadRemoteFileButton(true);
+    this.enableLoadFileButton(true);
+
+    // Restore pre-flashing message if firmware is still loaded, otherwise show "not loaded"
+    if (this.parsed_hex || this.uf2_binary) {
+        if (this.preFlashingMessage && this.preFlashingMessageType) {
+            this.flashingMessage(this.preFlashingMessage, this.preFlashingMessageType);
+        }
+    } else {
+        this.flashingMessage(i18n.getMessage("firmwareFlasherFirmwareNotLoaded"), this.FLASH_MESSAGE_TYPES.NEUTRAL);
+    }
+
+    GUI.interval_resume("sponsor");
+};
+
+firmware_flasher.preservePreFlashingState = function () {
+    // Preserve the current firmware message and type before flashing starts
+    const progressLabel = $("span.progressLabel");
+    this.preFlashingMessage = progressLabel.html();
+
+    // Determine the current message type based on CSS classes
+    if (progressLabel.hasClass("valid")) {
+        this.preFlashingMessageType = this.FLASH_MESSAGE_TYPES.VALID;
+    } else if (progressLabel.hasClass("invalid")) {
+        this.preFlashingMessageType = this.FLASH_MESSAGE_TYPES.INVALID;
+    } else if (progressLabel.hasClass("actionRequired")) {
+        this.preFlashingMessageType = this.FLASH_MESSAGE_TYPES.ACTION;
+    } else {
+        this.preFlashingMessageType = this.FLASH_MESSAGE_TYPES.NEUTRAL;
+    }
 };
 
 firmware_flasher.refresh = function (callback) {
