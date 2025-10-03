@@ -29,7 +29,6 @@ const firmware_flasher = {
     selectedBoard: undefined,
     cloudBuildKey: null,
     cloudBuildOptions: null,
-    isFlashing: false,
     intel_hex: undefined, // standard intel hex in string format
     parsed_hex: undefined, // parsed raw hex in array format
     isConfigLocal: false, // Set to true if the user loads one locally
@@ -807,16 +806,12 @@ firmware_flasher.initialize = async function (callback) {
                 // Maybe the board is in DFU mode, but it does not have permissions. Ask for them.
                 console.log(`${self.logHead} No valid port detected, asking for permissions`);
 
-                DFU.requestPermission()
-                    .then((device) => {
-                        DFU.connect(device.path, firmware, options);
-                    })
-                    .catch((error) => {
-                        // Error or user cancelled: reset flashing state and re-enable button
-                        console.error(`${self.logHead} DFU permission request failed:`, error);
-                        self.resetFlashingState();
-                    });
+                DFU.requestPermission().then((device) => {
+                    DFU.connect(device.path, firmware, options);
+                });
             }
+
+            GUI.interval_resume("sponsor");
         }
 
         let result = getConfig("erase_chip");
@@ -1265,7 +1260,6 @@ firmware_flasher.initialize = async function (callback) {
 
             const aborted = function (message) {
                 GUI.connect_lock = false;
-                self.isFlashing = false;
                 self.enableFlashButton(true);
                 self.enableLoadRemoteFileButton(true);
                 self.enableLoadFileButton(true);
@@ -1391,7 +1385,6 @@ firmware_flasher.initialize = async function (callback) {
             // Preserve current firmware message state before flashing
             self.preservePreFlashingState();
 
-            self.isFlashing = true;
             GUI.interval_pause("sponsor");
 
             self.enableFlashButton(false);
@@ -1414,7 +1407,6 @@ firmware_flasher.initialize = async function (callback) {
                         : i18n.getMessage("firmwareFlasherUF2SaveFailed"),
                     saved ? self.FLASH_MESSAGE_TYPES.VALID : self.FLASH_MESSAGE_TYPES.INVALID,
                 );
-                self.isFlashing = false;
                 GUI.interval_resume("sponsor");
                 self.enableFlashButton(true);
                 self.enableLoadRemoteFileButton(true);
@@ -1511,9 +1503,8 @@ firmware_flasher.enableDfuExitButton = function (enabled) {
 };
 
 firmware_flasher.resetFlashingState = function () {
-    console.log(`${this.logHead} Resetting flashing state`);
-    this.isFlashing = false;
-    this.enableFlashButton(this.parsed_hex || this.uf2_binary ? true : false); // Only enable if firmware is loaded
+    console.log(`${this.logHead} Reset flashing state`);
+    this.enableFlashButton(!!this.parsed_hex || !!this.uf2_binary); // Only enable if firmware is loaded
     this.enableDfuExitButton(PortHandler.dfuAvailable);
     this.enableLoadRemoteFileButton(true);
     this.enableLoadFileButton(true);
