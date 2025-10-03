@@ -25,25 +25,8 @@ function readSerialAdapter(event) {
     read_serial(event.detail.buffer);
 }
 
-function onTimeoutHandler() {
-    console.log(`${STM32Protocol.logHead} Looking for capabilities via MSP failed`);
-
-    TABS.firmware_flasher.flashingMessage(
-        i18n.getMessage("stm32RebootingToBootloaderFailed"),
-        TABS.firmware_flasher.FLASH_MESSAGE_TYPES.INVALID,
-    );
-
-    STM32.handleError();
-}
-
-function onFailureHandler() {
-    console.log(`${STM32Protocol.logHead} MSP connection failed`);
-
-    TABS.firmware_flasher.flashingMessage(
-        i18n.getMessage("stm32RebootingToBootloaderFailed"),
-        TABS.firmware_flasher.FLASH_MESSAGE_TYPES.INVALID,
-    );
-
+function onMSPConnectionError() {
+    gui_log(i18n.getMessage("stm32RebootingToBootloaderFailed"));
     STM32.handleError();
 }
 
@@ -268,8 +251,8 @@ class STM32Protocol {
                 this.port,
                 this.mspOptions.reboot_baud,
                 this.handleMSPConnect,
-                onTimeoutHandler,
-                onFailureHandler,
+                onMSPConnectionError,
+                onMSPConnectionError,
             );
         }
     }
