@@ -795,12 +795,10 @@ firmware_flasher.initialize = async function (callback) {
                 tracking.sendEvent(tracking.EVENT_CATEGORIES.FLASHING, "DFU Flashing", {
                     filename: self.filename || null,
                 });
-                try {
-                    DFU.connect(port, firmware, options);
-                } catch (error) {
+                DFU.connect(port, firmware, options).catch(error => {
                     console.error(`${self.logHead} DFU connection failed:`, error);
                     resetFlashingState();
-                }
+                });
             } else if (isSerial) {
                 if ($("input.updating").is(":checked")) {
                     options.no_reboot = true;
@@ -815,12 +813,10 @@ firmware_flasher.initialize = async function (callback) {
 
                 tracking.sendEvent(tracking.EVENT_CATEGORIES.FLASHING, "Flashing", { filename: self.filename || null });
 
-                try {
-                    STM32.connect(port, baud, firmware, options);
-                } catch (error) {
+                STM32.connect(port, baud, firmware, options).catch(error => {
                     console.error(`${self.logHead} STM32 connection failed:`, error);
                     resetFlashingState();
-                }
+                });
             } else {
                 // Maybe the board is in DFU mode, but it does not have permissions. Ask for them.
                 console.log(`${self.logHead} No valid port detected, asking for permissions`);
