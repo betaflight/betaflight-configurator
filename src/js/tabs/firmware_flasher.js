@@ -822,7 +822,10 @@ firmware_flasher.initialize = async function (callback) {
                 console.log(`${self.logHead} No valid port detected, asking for permissions`);
                 
                 DFU.requestPermission().then((device) => {
-                    DFU.connect(device.path, firmware, options);
+                    DFU.connect(device.path, firmware, options).catch(error => {
+                        console.error(`${self.logHead} DFU permission connection failed:`, error);
+                        resetFlashingState();
+                    });
                 }).catch((error) => {
                     // Error or user cancelled: reset flashing state and re-enable button
                     console.error(`${self.logHead} DFU permission request failed:`, error);
