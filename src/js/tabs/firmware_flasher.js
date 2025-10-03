@@ -783,19 +783,11 @@ firmware_flasher.initialize = async function (callback) {
 
             console.log(`${self.logHead} Selected port:`, port);
 
-            // Common function to reset flashing state on errors
-            const resetFlashingState = () => {
-                self.resetFlashingState();
-            };
-
             if (isDFU) {
                 tracking.sendEvent(tracking.EVENT_CATEGORIES.FLASHING, "DFU Flashing", {
                     filename: self.filename || null,
                 });
-                DFU.connect(port, firmware, options).catch((error) => {
-                    console.error(`${self.logHead} DFU connection failed:`, error);
-                    resetFlashingState();
-                });
+                DFU.connect(port, firmware, options);
             } else if (isSerial) {
                 if ($("input.updating").is(":checked")) {
                     options.no_reboot = true;
@@ -817,15 +809,12 @@ firmware_flasher.initialize = async function (callback) {
 
                 DFU.requestPermission()
                     .then((device) => {
-                        DFU.connect(device.path, firmware, options).catch((error) => {
-                            console.error(`${self.logHead} DFU permission connection failed:`, error);
-                            resetFlashingState();
-                        });
+                        DFU.connect(device.path, firmware, options);
                     })
                     .catch((error) => {
                         // Error or user cancelled: reset flashing state and re-enable button
                         console.error(`${self.logHead} DFU permission request failed:`, error);
-                        resetFlashingState();
+                        self.resetFlashingState();
                     });
             }
         }
