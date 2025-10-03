@@ -451,14 +451,22 @@ class GuiControl {
 
         const cliPanelDialog = {
             title: i18n.getMessage("cliPanelTitle"),
-            buttonCloseText: i18n.getMessage("Close"),
+            buttonCloseText: i18n.getMessage("close"),
         };
 
-        // clear any text leftovers from previous session
-        $("#cli-command").val("");
+        // clear response from previous session
         $("#cli-response").text("");
 
         this.showInteractiveDialog(cliPanelDialog);
+
+        // Set focus on the CLI command input when dialog opens
+        // Use timeout to ensure dialog is fully rendered
+        setTimeout(() => {
+            const cliInput = $("#cli-command");
+            if (cliInput.length > 0 && cliInput.is(":visible")) {
+                cliInput.focus();
+            }
+        }, 100);
     }
 }
 
