@@ -811,11 +811,8 @@ firmware_flasher.initialize = async function (callback) {
                         DFU.connect(device.path, firmware, options);
                     })
                     .catch((error) => {
-                        console.error("Permission request denied", error);
-                        self.flashingMessage(
-                            i18n.getMessage("firmwareFlasherNoDevice"),
-                            self.FLASH_MESSAGE_TYPES.INVALID,
-                        );
+                        console.error("Permission request failed", error);
+                        firmware_flasher.resetFlashingState();
                     });
             }
 
