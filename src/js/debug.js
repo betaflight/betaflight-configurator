@@ -848,6 +848,7 @@ function update() {
         addArrayElement(DEBUG.modes, "AUTOPILOT_POSITION");
         addArrayElement(DEBUG.modes, "CHIRP");
         addArrayElement(DEBUG.modes, "FLASH_TEST_PRBS");
+        addArrayElement(DEBUG.modes, "MAVLINK_TELEMETRY");
         replaceArrayElement(DEBUG.modes, "DUAL_GYRO_RAW", "MULTI_GYRO_RAW");
         replaceArrayElement(DEBUG.modes, "DUAL_GYRO_DIFF", "MULTI_GYRO_DIFF");
         replaceArrayElement(DEBUG.modes, "DUAL_GYRO_SCALED", "MULTI_GYRO_SCALED");
@@ -917,6 +918,14 @@ function update() {
             "debug[5]": "pidI",
             "debug[6]": "pidD",
             "debug[7]": "pidA",
+        };
+
+        DEBUG.fieldNames.MAVLINK_TELEMETRY = {
+            "debug[all]": "MAVLink Telemetry",
+            "debug[0]": "Telemetry state",
+            "debug[1]": "Last known TX buffer free space",
+            "debug[2]": "Estimated TX buffer free space",
+            "debug[3]": "Ticks",
         };
 
         addArrayElementAfter(DEBUG.enableFields, "Gyro", "Attitude");
