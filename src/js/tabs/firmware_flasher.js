@@ -29,7 +29,6 @@ const firmware_flasher = {
     selectedBoard: undefined,
     cloudBuildKey: null,
     cloudBuildOptions: null,
-    isFlashing: false,
     intel_hex: undefined, // standard intel hex in string format
     parsed_hex: undefined, // parsed raw hex in array format
     isConfigLocal: false, // Set to true if the user loads one locally
@@ -38,6 +37,9 @@ const firmware_flasher = {
     config: {},
     developmentFirmwareLoaded: false, // Is the firmware to be flashed from the development branch?
     cancelBuild: false,
+    // Properties to preserve firmware state during flashing
+    preFlashingMessage: null,
+    preFlashingMessageType: null,
 };
 
 firmware_flasher.initialize = async function (callback) {
@@ -813,12 +815,17 @@ firmware_flasher.initialize = async function (callback) {
             } else {
                 // Maybe the board is in DFU mode, but it does not have permissions. Ask for them.
                 console.log(`${self.logHead} No valid port detected, asking for permissions`);
-                DFU.requestPermission().then((device) => {
-                    DFU.connect(device.path, firmware, options);
-                });
+
+                DFU.requestPermission()
+                    .then((device) => {
+                        DFU.connect(device.path, firmware, options);
+                    })
+                    .catch((error) => {
+                        console.error("Permission request failed", error);
+                        firmware_flasher.resetFlashingState();
+                    });
             }
 
-            self.isFlashing = false;
             GUI.interval_resume("sponsor");
         }
 
@@ -1268,7 +1275,6 @@ firmware_flasher.initialize = async function (callback) {
 
             const aborted = function (message) {
                 GUI.connect_lock = false;
-                self.isFlashing = false;
                 self.enableFlashButton(true);
                 self.enableLoadRemoteFileButton(true);
                 self.enableLoadFileButton(true);
@@ -1391,7 +1397,9 @@ firmware_flasher.initialize = async function (callback) {
                 return;
             }
 
-            self.isFlashing = true;
+            // Preserve current firmware message state before flashing
+            self.preservePreFlashingState();
+
             GUI.interval_pause("sponsor");
 
             self.enableFlashButton(false);
@@ -1414,7 +1422,6 @@ firmware_flasher.initialize = async function (callback) {
                         : i18n.getMessage("firmwareFlasherUF2SaveFailed"),
                     saved ? self.FLASH_MESSAGE_TYPES.VALID : self.FLASH_MESSAGE_TYPES.INVALID,
                 );
-                self.isFlashing = false;
                 GUI.interval_resume("sponsor");
                 self.enableFlashButton(true);
                 self.enableLoadRemoteFileButton(true);
@@ -1508,6 +1515,42 @@ firmware_flasher.enableLoadFileButton = function (enabled) {
 
 firmware_flasher.enableDfuExitButton = function (enabled) {
     $("a.exit_dfu").toggleClass("disabled", !enabled);
+};
+
+firmware_flasher.resetFlashingState = function () {
+    console.log(`${this.logHead} Reset flashing state`);
+    this.enableFlashButton(!!this.parsed_hex || !!this.uf2_binary); // Only enable if firmware is loaded
+    this.enableDfuExitButton(PortHandler.dfuAvailable);
+    this.enableLoadRemoteFileButton(true);
+    this.enableLoadFileButton(true);
+
+    // Restore pre-flashing message if firmware is still loaded, otherwise show "not loaded"
+    if (this.parsed_hex || this.uf2_binary) {
+        if (this.preFlashingMessage && this.preFlashingMessageType) {
+            this.flashingMessage(this.preFlashingMessage, this.preFlashingMessageType);
+        }
+    } else {
+        this.flashingMessage(i18n.getMessage("firmwareFlasherFirmwareNotLoaded"), this.FLASH_MESSAGE_TYPES.NEUTRAL);
+    }
+
+    GUI.interval_resume("sponsor");
+};
+
+firmware_flasher.preservePreFlashingState = function () {
+    // Preserve the current firmware message and type before flashing starts
+    const progressLabel = $("span.progressLabel");
+    this.preFlashingMessage = progressLabel.html();
+
+    // Determine the current message type based on CSS classes
+    if (progressLabel.hasClass("valid")) {
+        this.preFlashingMessageType = this.FLASH_MESSAGE_TYPES.VALID;
+    } else if (progressLabel.hasClass("invalid")) {
+        this.preFlashingMessageType = this.FLASH_MESSAGE_TYPES.INVALID;
+    } else if (progressLabel.hasClass("actionRequired")) {
+        this.preFlashingMessageType = this.FLASH_MESSAGE_TYPES.ACTION;
+    } else {
+        this.preFlashingMessageType = this.FLASH_MESSAGE_TYPES.NEUTRAL;
+    }
 };
 
 firmware_flasher.refresh = function (callback) {
