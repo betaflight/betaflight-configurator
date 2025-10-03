@@ -70,7 +70,7 @@ jobs:
         id: branch_push
         if: github.event_name == 'push'
         run: |
-          echo "BRANCH=${{ github.event.ref_name }}" >> $GITHUB_ENV
+          echo "BRANCH=${{ github.ref_name }}" >> $GITHUB_ENV
 
       - name: Set alias branch name for Cloudflare (if a pull_request)
         id: branch_pull
