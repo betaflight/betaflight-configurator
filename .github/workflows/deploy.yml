@@ -74,7 +74,7 @@ jobs:
 
       - name: Set alias branch name for Cloudflare (if a pull_request)
         id: branch_pull
-        if: github.event_name == 'pull_request'
+        if: github.event_name != 'push'
         run: |
           echo "BRANCH=PR${{ github.event.pull_request.number }}" >> $GITHUB_ENV
 
@@ -87,7 +87,7 @@ jobs:
           command: pages deploy src/dist --project-name=${{ vars.CLOUDFLARE_PROJECT_NAME }} --branch=${{ env.BRANCH }} --commit-dirty=true
 
       - name: Add deployment comment
-        if: github.event_name == 'pull_request'
+        if: github.event_name != 'push'
         uses: thollander/actions-comment-pull-request@v3
         with:
           message: |
