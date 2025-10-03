@@ -2058,7 +2058,7 @@
     },
     "receiverRcSmoothingAutoFactor": {
         "message": "Setpoint Auto Factor",
-        "description": "SetPoint Auto Factor parameter for RC smoothing"
+        "description": "Setpoint Auto Factor parameter for RC smoothing"
     },
     "receiverRcSmoothingAutoFactorHelp": {
         "message": "Adjusts the Setpoint Auto factor calculation, 10 is the default factor to delay ratio. Increasing the number will smooth RC inputs more, while also adding delay. This may be useful for unreliable RC connections or for cinematic flying.<br>Be careful with numbers approaching 50, input delay will become noticeable.<br>Use the CLI command rc_smoothing_info while TX and RX are powered to see the automatically calculated RC smoothing cutoffs.",
