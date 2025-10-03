@@ -820,7 +820,7 @@ firmware_flasher.initialize = async function (callback) {
             } else {
                 // Maybe the board is in DFU mode, but it does not have permissions. Ask for them.
                 console.log(`${self.logHead} No valid port detected, asking for permissions`);
-                
+
                 DFU.requestPermission().then((device) => {
                     DFU.connect(device.path, firmware, options).catch(error => {
                         console.error(`${self.logHead} DFU permission connection failed:`, error);
