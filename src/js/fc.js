@@ -804,8 +804,12 @@ const FC = {
             // Default to NONE and move SPEKTRUM1024 to the end (firmware PR #12500)
             serialRxTypes[0] = "NONE";
             serialRxTypes.push("SPEKTRUM1024");
+        }
+        
+        if semver.gte(apiVersion, API_VERSION_1_47)) {
             serialRxTypes.push("MAVLINK");
         }
+}
 
         return serialRxTypes;
     },
