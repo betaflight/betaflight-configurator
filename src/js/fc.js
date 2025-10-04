@@ -809,7 +809,6 @@ const FC = {
         if (semver.gte(apiVersion, API_VERSION_1_47)) {
             serialRxTypes.push("MAVLINK");
         }
-}
 
         return serialRxTypes;
     },
