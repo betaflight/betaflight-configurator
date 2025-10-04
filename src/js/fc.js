@@ -1,6 +1,6 @@
 import { bit_check } from "./bit";
 import { reactive } from "vue";
-import { API_VERSION_1_45, API_VERSION_1_46 } from "./data_storage";
+import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "./data_storage";
 import semver from "semver";
 
 const INITIAL_CONFIG = {
