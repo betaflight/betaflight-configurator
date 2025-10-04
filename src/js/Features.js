@@ -61,7 +61,7 @@ const Features = function (config) {
             }
         }
 
-        // Add TELEMETRY feature if any of the following protocols are used: CRSF, GHST, FPORT, JETI, MAVLINK
+        // Add TELEMETRY feature if any of the following protocols are used: CRSF, GHST, FPORT, JETI
         if (semver.gte(config.apiVersion, API_VERSION_1_46)) {
             let enableTelemetry = false;
             if (
