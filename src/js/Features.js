@@ -70,8 +70,7 @@ const Features = function (config) {
                         opt.includes("CRSF") ||
                         opt.includes("GHST") ||
                         opt.includes("FPORT") ||
-                        opt.includes("JETI") ||
-                        opt.includes("MAVLINK"),
+                        opt.includes("JETI"),
                 )
             ) {
                 enableTelemetry = true;
