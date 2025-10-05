@@ -11,10 +11,18 @@ import { initializeModalDialog } from "../utils/initializeModalDialog";
 const power = {
     supported: false,
     analyticsChanges: {},
+    amperageHistory5s: [], // Store last 5 seconds of amperage readings for average calculation
+    amperageHistorySize5s: 25, // Number of readings to keep for 5 seconds average (5Hz * 5s = 25)
+    amperageHistory10s: [], // Store last 10 seconds of amperage readings for average calculation
+    amperageHistorySize10s: 50, // Number of readings to keep for 10 seconds average (5Hz * 10s = 50)
 };
 
 power.initialize = function (callback) {
     const self = this;
+
+    // Reset amperage history when initializing
+    self.amperageHistory5s = [];
+    self.amperageHistory10s = [];
 
     if (GUI.active_tab != "power") {
         GUI.active_tab = "power";
@@ -224,6 +232,8 @@ power.initialize = function (callback) {
         $(elementBatteryState).find(".voltage").attr("id", "battery-voltage");
         $(elementBatteryState).find(".mah-drawn").attr("id", "battery-mah-drawn");
         $(elementBatteryState).find(".amperage").attr("id", "battery-amperage");
+        $(elementBatteryState).find(".amperage-average-5s").attr("id", "battery-amperage-average-5s");
+        $(elementBatteryState).find(".amperage-average-10s").attr("id", "battery-amperage-average-10s");
 
         destinationBatteryState.append(elementBatteryState.children());
 
@@ -332,6 +342,31 @@ power.initialize = function (callback) {
                 elementMspBatteryState.text(i18n.getMessage("powerMahValue", [FC.BATTERY_STATE.mAhDrawn]));
                 elementMspBatteryState = $(`${elementPrefix}-amperage .value`);
                 elementMspBatteryState.text(i18n.getMessage("powerAmperageValue", [FC.BATTERY_STATE.amperage]));
+
+                // Calculate amperage averages
+                const currentAmperage = FC.BATTERY_STATE.amperage;
+
+                // 5 seconds average
+                self.amperageHistory5s.push(currentAmperage);
+                if (self.amperageHistory5s.length > self.amperageHistorySize5s) {
+                    self.amperageHistory5s.shift();
+                }
+                const amperageSum5s = self.amperageHistory5s.reduce((sum, value) => sum + value, 0);
+                const amperageAverage5s = amperageSum5s / self.amperageHistory5s.length;
+
+                // 10 seconds average
+                self.amperageHistory10s.push(currentAmperage);
+                if (self.amperageHistory10s.length > self.amperageHistorySize10s) {
+                    self.amperageHistory10s.shift();
+                }
+                const amperageSum10s = self.amperageHistory10s.reduce((sum, value) => sum + value, 0);
+                const amperageAverage10s = amperageSum10s / self.amperageHistory10s.length;
+
+                // Display average amperages
+                elementMspBatteryState = $(`${elementPrefix}-amperage-average-5s .value`);
+                elementMspBatteryState.text(i18n.getMessage("powerAmperageValue", [amperageAverage5s.toFixed(2)]));
+                elementMspBatteryState = $(`${elementPrefix}-amperage-average-10s .value`);
+                elementMspBatteryState.text(i18n.getMessage("powerAmperageValue", [amperageAverage10s.toFixed(2)]));
             });
         }
 
