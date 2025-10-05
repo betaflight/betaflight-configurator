@@ -98,6 +98,7 @@ ports.initialize = function (callback) {
 
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
         gpsBaudRates.push("230400");
+        telemetryBaudRates.push("230400", "460800");
     }
 
     const columns = ["configuration", "peripherals", "sensors", "telemetry", "rx"];
