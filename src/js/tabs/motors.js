@@ -33,6 +33,7 @@ const motors = {
     sensorGyroScale: 2000,
     sensorAccelRate: 20,
     sensorAccelScale: 2,
+    amperageHistory: [], // Store amperage readings with timestamps for average calculation
     sensorSelectValues: {
         gyroScale: {
             1: 1,
@@ -76,6 +77,9 @@ motors.initialize = async function (callback) {
     self.escProtocolIsDshot = false;
     self.configHasChanged = false;
     self.configChanges = {};
+
+    // Reset amperage history when initializing
+    self.amperageHistory = [];
 
     // Update filtering defaults based on API version
     const FILTER_DEFAULT = FC.getFilterDefaults();
@@ -463,6 +467,8 @@ motors.initialize = async function (callback) {
         const motorVoltage = $(".motors-bat-voltage");
         const motorMahDrawingElement = $(".motors-bat-mah-drawing");
         const motorMahDrawnElement = $(".motors-bat-mah-drawn");
+        const motorAmperageAverage5sElement = $(".motors-bat-amperage-average-5s");
+        const motorAmperageAverage10sElement = $(".motors-bat-amperage-average-10s");
 
         const rawDataTextElements = {
             x: [],
@@ -639,6 +645,55 @@ motors.initialize = async function (callback) {
                 motorVoltage.text(i18n.getMessage("motorsVoltageValue", [FC.ANALOG.voltage]));
                 motorMahDrawingElement.text(i18n.getMessage("motorsADrawingValue", [FC.ANALOG.amperage.toFixed(2)]));
                 motorMahDrawnElement.text(i18n.getMessage("motorsmAhDrawnValue", [FC.ANALOG.mAhdrawn]));
+
+                // Calculate amperage averages using timestamp-based approach
+                const currentAmperage = FC.ANALOG.amperage;
+                const currentTimestamp = performance.now();
+
+                // Add current reading with timestamp
+                TABS.motors.amperageHistory.push({
+                    value: currentAmperage,
+                    timestamp: currentTimestamp,
+                });
+
+                // Calculate time thresholds
+                const tenSecondsAgo = currentTimestamp - 10000;
+                const fiveSecondsAgo = currentTimestamp - 5000;
+
+                // Remove readings older than 10 seconds and calculate averages in one pass
+                const validReadings = [];
+                let amperageSum5s = 0;
+                let amperageSum10s = 0;
+                let count5s = 0;
+                let count10s = 0;
+
+                for (const reading of TABS.motors.amperageHistory) {
+                    if (reading.timestamp >= tenSecondsAgo) {
+                        validReadings.push(reading);
+                        amperageSum10s += reading.value;
+                        count10s++;
+
+                        if (reading.timestamp >= fiveSecondsAgo) {
+                            amperageSum5s += reading.value;
+                            count5s++;
+                        }
+                    }
+                }
+
+                // Update history with only valid readings
+                TABS.motors.amperageHistory = validReadings;
+
+                // Calculate averages
+                const amperageAverage5s = count5s > 0 ? amperageSum5s / count5s : 0;
+                const amperageAverage10s = count10s > 0 ? amperageSum10s / count10s : 0;
+
+                // Display average amperages
+                motorAmperageAverage5sElement.text(
+                    i18n.getMessage("motorsAmperageAverage5sValue", [amperageAverage5s.toFixed(2)]),
+                );
+                motorAmperageAverage10sElement.text(
+                    i18n.getMessage("motorsAmperageAverage10sValue", [amperageAverage10s.toFixed(2)]),
+                );
             }
         }
 
