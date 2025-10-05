@@ -33,6 +33,10 @@ const motors = {
     sensorGyroScale: 2000,
     sensorAccelRate: 20,
     sensorAccelScale: 2,
+    amperageHistory5s: [], // Store last 5 seconds of amperage readings for average calculation
+    amperageHistorySize5s: 20, // Number of readings to keep for 5 seconds average (4Hz * 5s = 20)
+    amperageHistory10s: [], // Store last 10 seconds of amperage readings for average calculation
+    amperageHistorySize10s: 40, // Number of readings to keep for 10 seconds average (4Hz * 10s = 40)
     sensorSelectValues: {
         gyroScale: {
             1: 1,
@@ -76,6 +80,10 @@ motors.initialize = async function (callback) {
     self.escProtocolIsDshot = false;
     self.configHasChanged = false;
     self.configChanges = {};
+
+    // Reset amperage history when initializing
+    self.amperageHistory5s = [];
+    self.amperageHistory10s = [];
 
     // Update filtering defaults based on API version
     const FILTER_DEFAULT = FC.getFilterDefaults();
@@ -463,6 +471,8 @@ motors.initialize = async function (callback) {
         const motorVoltage = $(".motors-bat-voltage");
         const motorMahDrawingElement = $(".motors-bat-mah-drawing");
         const motorMahDrawnElement = $(".motors-bat-mah-drawn");
+        const motorAmperageAverage5sElement = $(".motors-bat-amperage-average-5s");
+        const motorAmperageAverage10sElement = $(".motors-bat-amperage-average-10s");
 
         const rawDataTextElements = {
             x: [],
@@ -639,6 +649,33 @@ motors.initialize = async function (callback) {
                 motorVoltage.text(i18n.getMessage("motorsVoltageValue", [FC.ANALOG.voltage]));
                 motorMahDrawingElement.text(i18n.getMessage("motorsADrawingValue", [FC.ANALOG.amperage.toFixed(2)]));
                 motorMahDrawnElement.text(i18n.getMessage("motorsmAhDrawnValue", [FC.ANALOG.mAhdrawn]));
+
+                // Calculate amperage averages
+                const currentAmperage = FC.ANALOG.amperage;
+
+                // 5 seconds average
+                TABS.motors.amperageHistory5s.push(currentAmperage);
+                if (TABS.motors.amperageHistory5s.length > TABS.motors.amperageHistorySize5s) {
+                    TABS.motors.amperageHistory5s.shift();
+                }
+                const amperageSum5s = TABS.motors.amperageHistory5s.reduce((sum, value) => sum + value, 0);
+                const amperageAverage5s = amperageSum5s / TABS.motors.amperageHistory5s.length;
+
+                // 10 seconds average
+                TABS.motors.amperageHistory10s.push(currentAmperage);
+                if (TABS.motors.amperageHistory10s.length > TABS.motors.amperageHistorySize10s) {
+                    TABS.motors.amperageHistory10s.shift();
+                }
+                const amperageSum10s = TABS.motors.amperageHistory10s.reduce((sum, value) => sum + value, 0);
+                const amperageAverage10s = amperageSum10s / TABS.motors.amperageHistory10s.length;
+
+                // Display average amperages
+                motorAmperageAverage5sElement.text(
+                    i18n.getMessage("motorsAmperageAverage5sValue", [amperageAverage5s.toFixed(2)]),
+                );
+                motorAmperageAverage10sElement.text(
+                    i18n.getMessage("motorsAmperageAverage10sValue", [amperageAverage10s.toFixed(2)]),
+                );
             }
         }
 
