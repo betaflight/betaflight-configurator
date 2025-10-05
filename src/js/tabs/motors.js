@@ -654,20 +654,20 @@ motors.initialize = async function (callback) {
                 const currentAmperage = FC.ANALOG.amperage;
 
                 // 5 seconds average
-                TABS.motors.amperageHistory5s.push(currentAmperage);
-                if (TABS.motors.amperageHistory5s.length > TABS.motors.amperageHistorySize5s) {
-                    TABS.motors.amperageHistory5s.shift();
+                self.amperageHistory5s.push(currentAmperage);
+                if (self.amperageHistory5s.length > self.amperageHistorySize5s) {
+                    self.amperageHistory5s.shift();
                 }
-                const amperageSum5s = TABS.motors.amperageHistory5s.reduce((sum, value) => sum + value, 0);
-                const amperageAverage5s = amperageSum5s / TABS.motors.amperageHistory5s.length;
+                const amperageSum5s = self.amperageHistory5s.reduce((sum, value) => sum + value, 0);
+                const amperageAverage5s = amperageSum5s / self.amperageHistory5s.length;
 
                 // 10 seconds average
-                TABS.motors.amperageHistory10s.push(currentAmperage);
-                if (TABS.motors.amperageHistory10s.length > TABS.motors.amperageHistorySize10s) {
-                    TABS.motors.amperageHistory10s.shift();
+                self.amperageHistory10s.push(currentAmperage);
+                if (self.amperageHistory10s.length > self.amperageHistorySize10s) {
+                    self.amperageHistory10s.shift();
                 }
-                const amperageSum10s = TABS.motors.amperageHistory10s.reduce((sum, value) => sum + value, 0);
-                const amperageAverage10s = amperageSum10s / TABS.motors.amperageHistory10s.length;
+                const amperageSum10s = self.amperageHistory10s.reduce((sum, value) => sum + value, 0);
+                const amperageAverage10s = amperageSum10s / self.amperageHistory10s.length;
 
                 // Display average amperages
                 motorAmperageAverage5sElement.text(
