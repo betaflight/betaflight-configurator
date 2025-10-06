@@ -1,25 +1,38 @@
+<%if (fcKey) { %># FC: <%= fcKey %>
+<% } %><% if (droneSize) { %># Drone Size: <%= droneSize %>
+<% } %><% if (manticoreKey) { %># Manticore: <%= manticoreKey %>
+<% } %><% if (vtxKey) { %># VTX: <%= vtxKey %>
+<% } %><% if (gpsEnabled) { %># GPS: <%= gpsEnabled %>
+<% } %><% if (craftName) { %># Craft Name: <%= craftName %>
+<% } %>
+
 defaults nosave
 
 batch start
 
 defaults nosave
 
-<% if (fcKey === 'f4') { %>
-# Flight Controller: F4 tweaks
+<%# Flight Controller Configuration Blocks %>
+<% if (fcKey === 'FLASHHOBBYF405') { %>
 set pid_process_denom = 2
 <% } %>
 
-<% if (fcKey === 'f7') { %>
-# Flight Controller: F7 tweaks
+<% if (fcKey === 'SPEEDYBEEF405V3') { %>
 set pid_process_denom = 1
 <% } %>
 
-<% if (fcKey === 'h7') { %>
-# Flight Controller: H7 tweaks
+<% if (fcKey === 'TAKERF722SE') { %>
 set pid_process_denom = 1
 set cpu_overclock = ON
 <% } %>
 
+<% if (fcKey === 'GEPRCF722') { %>
+set pid_process_denom = 1
+set cpu_overclock = ON
+<% } %>
+
+<%# Drone Size Configuration Block %>
+<%# Motor settings optimized for different frame sizes %>
 <% if (droneSize) { %>
 # Drone Size: <%= droneSize %>"
 <% if (droneSize === '7') { %>
@@ -43,48 +56,58 @@ set motor_poles = 22
 <% } %>
 <% } %>
 
-<% if (manticoreKey === 'uart') { %>
+<%# Manticore System Configuration Blocks %>
+<% if (manticoreKey === 'UART') { %>
 # Manticore UART variant
+# Configure UART ports for Manticore communication
 set uart1_function = RX_SERIAL
 set uart2_function = TELEMETRY
 <% } %>
 
-<% if (manticoreKey === 'gpio') { %>
-# Manticore GPIO variant
+<% if (manticoreKey === 'GPIO') { %>
+# Manticore GPIO variant  
+# Configure GPIO pins for Manticore interface
 set gpio_output = ON
 set gpio_mode = ALTERNATE
 <% } %>
 
-<% if (vtxKey === '5.8_vtx') { %>
+<%# Video Transmitter (VTX) Configuration Blocks %>
+<% if (vtxKey === '5.8VTX') { %>
 # 5.8GHz VTX settings
+# Standard 5.8GHz video transmitter configuration
 set vtx_band = A
 set vtx_channel = 1
 set vtx_power = 25
 <% } %>
 
-<% if (vtxKey === '3.3_vtx') { %>
+<% if (vtxKey === '3.3VTX') { %>
 # 3.3GHz VTX settings
+# Long-range 3.3GHz video transmitter configuration
 set vtx_band = B
 set vtx_channel = 3
 set vtx_power = 100
 <% } %>
 
-<% if (vtxKey === 'optica') { %>
+<% if (vtxKey === 'OPTICA') { %>
 # Optica VTX settings
+# Digital video transmitter configuration
 set vtx_band = O
 set vtx_channel = 2
 set vtx_power = 50
 <% } %>
 
+<%# GPS Configuration Block %>
 <% if (gpsEnabled) { %>
 # GPS Enabled
+# Enable GPS functionality with auto baudrate detection
 feature GPS
 set gps_baudrate = AUTO
 <% } %>
 
+<%# Custom Craft Name Configuration Block %>
 <% if (craftName) { %>
 # Craft name
+# Set custom identification name for the craft
 set craft_name = <%= craftName %>
 <% } %>
-
 

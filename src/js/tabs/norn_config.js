@@ -33,10 +33,10 @@ norn_config.initialize = function (callback) {
         if (fcSelect.length) {
             fcSelect.empty();
             fcSelect.append(`<option value="">${i18n.getMessage("nornNone")}</option>`);
-            fcSelect.append(`<option value="f4">FLASHHOBBYF405</option>`);
-            fcSelect.append(`<option value="f7">SPEEDYBEEF405V3</option>`);
-            fcSelect.append(`<option value="h7">TAKERF722SE</option>`);
-            fcSelect.append(`<option value="h7">GEPRCF722</option>`);
+            fcSelect.append(`<option value="FLASHHOBBYF405">FLASHHOBBYF405</option>`);
+            fcSelect.append(`<option value="SPEEDYBEEF405V3">SPEEDYBEEF405V3</option>`);
+            fcSelect.append(`<option value="TAKERF722SE">TAKERF722SE</option>`);
+            fcSelect.append(`<option value="GEPRCF722">GEPRCF722</option>`);
             fcSelect.on("change", function () {
                 self.analyticsChanges["NornFC"] = $(this).val() || null;
             });
@@ -63,8 +63,8 @@ norn_config.initialize = function (callback) {
         if (manticoreSelect.length) {
             manticoreSelect.empty();
             manticoreSelect.append(`<option value="">${i18n.getMessage("nornNone")}</option>`);
-            manticoreSelect.append(`<option value="uart">UART</option>`);
-            manticoreSelect.append(`<option value="gpio">GPIO</option>`);
+            manticoreSelect.append(`<option value="UART">UART</option>`);
+            manticoreSelect.append(`<option value="GPIO">GPIO</option>`);
             manticoreSelect.on("change", function () {
                 self.analyticsChanges["NornManticore"] = $(this).val() || null;
             });
@@ -75,9 +75,9 @@ norn_config.initialize = function (callback) {
         if (vtxSelect.length) {
             vtxSelect.empty();
             vtxSelect.append(`<option value="">${i18n.getMessage("nornNone")}</option>`);
-            vtxSelect.append(`<option value="3.3_vtx">3.3GHz</option>`);
-            vtxSelect.append(`<option value="5.8_vtx">5.8GHz</option>`);
-            vtxSelect.append(`<option value="optica">Optica</option>`);
+            vtxSelect.append(`<option value="3.3VTX">3.3GHz</option>`);
+            vtxSelect.append(`<option value="5.8VTX">5.8GHz</option>`);
+            vtxSelect.append(`<option value="OPTICA">Optica</option>`);
             vtxSelect.on("change", function () {
                 self.analyticsChanges["NornVtx"] = $(this).val() || null;
             });
