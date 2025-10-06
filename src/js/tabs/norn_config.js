@@ -67,6 +67,7 @@ norn_config.initialize = function (callback) {
             fcSelect.append(`<option value="GEPRCF722">GEPRCF722</option>`);
             fcSelect.on("change", function () {
                 self.analyticsChanges["NornFC"] = $(this).val() || null;
+                clearMandatoryFieldValidation();
             });
         }
 
@@ -95,6 +96,7 @@ norn_config.initialize = function (callback) {
             manticoreSelect.append(`<option value="GPIO">GPIO</option>`);
             manticoreSelect.on("change", function () {
                 self.analyticsChanges["NornManticore"] = $(this).val() || null;
+                clearMandatoryFieldValidation();
             });
         }
 
@@ -108,6 +110,7 @@ norn_config.initialize = function (callback) {
             vtxSelect.append(`<option value="OPTICA">Optica</option>`);
             vtxSelect.on("change", function () {
                 self.analyticsChanges["NornVtx"] = $(this).val() || null;
+                clearMandatoryFieldValidation();
             });
         }
 
@@ -146,6 +149,7 @@ norn_config.initialize = function (callback) {
             controllerSelect.append(`<option value="TX12">TX12</option>`);
             controllerSelect.on("change", function () {
                 self.analyticsChanges["NornController"] = $(this).val() || null;
+                clearMandatoryFieldValidation();
             });
         }
 
@@ -201,8 +205,57 @@ norn_config.initialize = function (callback) {
         return { fcKey, droneSize, manticoreKey, vtxKey, gpsEnabled, craftName, mbId, controller, failSafe };
     }
 
+    function updateMandatoryFieldValidation() {
+        // Clear previous validation
+        clearMandatoryFieldValidation();
+
+        // Check mandatory fields and highlight missing ones
+        const mandatoryFields = [
+            { selector: "select[name='norn_fc']", label: "Flight Controller" },
+            { selector: "select[name='norn_manticore']", label: "Manticore" },
+            { selector: "select[name='norn_vtx']", label: "VTX" },
+            { selector: "select[name='norn_controller']", label: "Radio Controller" },
+        ];
+
+        mandatoryFields.forEach((field) => {
+            const element = $(field.selector);
+            if (!element.val()) {
+                element.closest(".gui_box").addClass("mandatory-missing");
+                element.addClass("mandatory-missing");
+            }
+        });
+    }
+
+    function clearMandatoryFieldValidation() {
+        // Remove validation highlighting
+        $(".gui_box").removeClass("mandatory-missing");
+        $("select, input").removeClass("mandatory-missing");
+    }
+
     function on_generate_handler(e) {
         e?.preventDefault?.();
+
+        // Validate mandatory fields
+        const fcKey = $("select[name='norn_fc']").val();
+        const manticoreKey = $("select[name='norn_manticore']").val();
+        const vtxKey = $("select[name='norn_vtx']").val();
+        const controller = $("select[name='norn_controller']").val();
+
+        const missingFields = [];
+        if (!fcKey) missingFields.push("Flight Controller");
+        if (!manticoreKey) missingFields.push("Manticore");
+        if (!vtxKey) missingFields.push("VTX");
+        if (!controller) missingFields.push("Radio Controller");
+
+        if (missingFields.length > 0) {
+            // Highlight missing mandatory fields
+            updateMandatoryFieldValidation();
+            alert(`Please select the following mandatory fields:\n${missingFields.join(", ")}`);
+            return;
+        }
+
+        // Clear any validation highlighting
+        clearMandatoryFieldValidation();
 
         const templatePath = Object.keys(templateFiles)[0];
         let result;
