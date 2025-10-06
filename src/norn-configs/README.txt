@@ -6,9 +6,10 @@
 #
 # fcKey: Flight Controller type (from select[name='norn_fc'])
 #   - '': Empty/None selected
-#   - 'f4': FLASHHOBBYF405 (F4 chip)
-#   - 'f7': SPEEDYBEEF405V3 (F7 chip)  
-#   - 'h7': TAKERF722SE or GEPRCF722 (H7 chip) - Note: both use same value
+#   - 'FLASHHOBBYF405': FLASHHOBBYF405 (F4 chip)
+#   - 'SPEEDYBEEF405V3': SPEEDYBEEF405V3 (F7 chip)  
+#   - 'TAKERF722SE': TAKERF722SE (H7 chip)
+#   - 'GEPRCF722': GEPRCF722 (H7 chip)
 #
 # droneSize: Drone frame size in inches (from select[name='norn_drone_size'])
 #   - '': Empty/None selected
@@ -21,14 +22,14 @@
 #
 # manticoreKey: Manticore system configuration (from select[name='norn_manticore'])
 #   - '': Empty/None selected
-#   - 'uart': UART-based Manticore setup
-#   - 'gpio': GPIO-based Manticore setup
+#   - 'UART': UART-based Manticore setup
+#   - 'GPIO': GPIO-based Manticore setup
 #
 # vtxKey: Video Transmitter configuration (from select[name='norn_vtx'])
 #   - '': Empty/None selected
-#   - '3.3_vtx': 3.3GHz VTX setup
-#   - '5.8_vtx': 5.8GHz VTX setup
-#   - 'optica': Optica VTX setup
+#   - '3.3VTX': 3.3GHz VTX setup
+#   - '5.8VTX': 5.8GHz VTX setup
+#   - 'OPTICA': Optica VTX setup
 #
 # gpsEnabled: Boolean flag for GPS functionality (from #norn_gps checkbox)
 #   - true: Enable GPS features
@@ -38,20 +39,26 @@
 #   - '': Empty string if no name entered
 #   - Any string value for craft identification
 #
-# Template Syntax:
-#   - <% if (condition) { %> ... <% } %> : Conditional blocks
-#   - <%= variable %> : Output variable value
-#   - <%# comment %> : Template comments (not included in output)
+# mbId: MB ID identifier (from #norn_mb_id input)
+#   - '': Empty string if no MB ID entered
+#   - Any string value for MB identification
+#
+# Template Syntax (Handlebars):
+#   - {{#if condition}} ... {{/if}} : Conditional blocks
+#   - {{variable}} : Output variable value
+#   - {{!-- comment --}} : Template comments (not included in output)
+#   - {{#if (eq variable 'value')}} : Equality comparison with helper
 #
 # Example usage in conditional blocks:
-#   <% if (fcKey === 'f4') { %>
-#   # This section applies only to F4 flight controllers
-#   <% } %>
+#   {{#if (eq fcKey 'FLASHHOBBYF405')}}
+#   # This section applies only to FLASHHOBBYF405 flight controllers
+#   {{/if}}
 #
-#   <% if (droneSize === '7') { %>
-#   # This section applies only to 7-inch drones
-#   <% } %>
+#   {{#if droneSize}}
+#   # This section applies only when drone size is selected
+#   {{/if}}
 #
 # Note: All select elements have an empty option for "None" selection
 # Checkbox elements return boolean values (true/false)
 # Input elements return string values (may be empty string)
+# The 'eq' helper is registered for equality comparisons in Handlebars

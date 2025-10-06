@@ -11,6 +11,29 @@ Handlebars.registerHelper("eq", function (a, b) {
     return a === b;
 });
 
+Handlebars.registerHelper("ne", function (a, b) {
+    return a !== b;
+});
+
+Handlebars.registerHelper("and", function (a, b) {
+    return a && b;
+});
+
+Handlebars.registerHelper("or", function (a, b) {
+    return a || b;
+});
+
+Handlebars.registerHelper("not", function (a) {
+    return !a;
+});
+
+Handlebars.registerHelper("elseif", function (condition, options) {
+    if (condition) {
+        return options.fn(this);
+    }
+    return options.inverse(this);
+});
+
 // Discover config sources (text-based)
 const templateFiles = import.meta.glob("../../norn-configs/template.hbs", { eager: true, as: "raw" });
 
@@ -107,6 +130,12 @@ norn_config.initialize = function (callback) {
         craftNameInput.on("input", function () {
             self.analyticsChanges["NornCraftName"] = $(this).val() || null;
         });
+
+        // MB ID input wiring
+        const mbIdInput = $("#norn_mb_id");
+        mbIdInput.on("input", function () {
+            self.analyticsChanges["NornMBId"] = $(this).val() || null;
+        });
     }
 
     function on_tab_loaded_handler() {
@@ -143,7 +172,8 @@ norn_config.initialize = function (callback) {
         const vtxKey = $("select[name='norn_vtx']").val() || "";
         const gpsEnabled = $("#norn_gps").is(":checked");
         const craftName = $("#norn_craft_name").val() || "";
-        return { fcKey, droneSize, manticoreKey, vtxKey, gpsEnabled, craftName };
+        const mbId = $("#norn_mb_id").val() || "";
+        return { fcKey, droneSize, manticoreKey, vtxKey, gpsEnabled, craftName, mbId };
     }
 
     function on_generate_handler(e) {
@@ -198,6 +228,7 @@ norn_config.initialize = function (callback) {
         const vtxKey = $("select[name='norn_vtx']").val();
         const gpsEnabled = $("#norn_gps").is(":checked");
         const craftName = $("#norn_craft_name").val();
+        const mbId = $("#norn_mb_id").val();
 
         if (fcKey) parts.push(fcKey);
         if (droneSize) parts.push(`${droneSize}inch`);
@@ -205,6 +236,7 @@ norn_config.initialize = function (callback) {
         if (vtxKey) parts.push(vtxKey);
         if (gpsEnabled) parts.push("GPS");
         if (craftName) parts.push(craftName);
+        if (mbId) parts.push(`MB${mbId}`);
 
         const filename = parts.length > 0 ? `norn_config_${parts.join("_")}.txt` : "norn_config.txt";
 

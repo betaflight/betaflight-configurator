@@ -398,6 +398,9 @@
     "nornCraftName": {
         "message": "Craft Name"
     },
+    "nornMBId": {
+        "message": "MB ID"
+    },
     "nornGPS": {
         "message": "GPS"
     },
