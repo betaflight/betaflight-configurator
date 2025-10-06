@@ -43,6 +43,15 @@
 #   - '': Empty string if no MB ID entered
 #   - Any string value for MB identification
 #
+# controller: Controller type (from select[name='norn_controller'])
+#   - '': Empty/None selected
+#   - 'BOXER': BOXER controller
+#   - 'TX12': TX12 controller
+#
+# failSafe: FailSafe configuration (from select[name='norn_failsafe'])
+#   - '': Empty/None selected
+#   - 'Default': Default failSafe configuration
+#
 # Template Syntax (Handlebars):
 #   - {{#if condition}} ... {{/if}} : Conditional blocks
 #   - {{variable}} : Output variable value

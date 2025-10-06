@@ -136,6 +136,29 @@ norn_config.initialize = function (callback) {
         mbIdInput.on("input", function () {
             self.analyticsChanges["NornMBId"] = $(this).val() || null;
         });
+
+        // Populate Controller list (explicit options)
+        const controllerSelect = $("select[name='norn_controller']");
+        if (controllerSelect.length) {
+            controllerSelect.empty();
+            controllerSelect.append(`<option value="">${i18n.getMessage("nornNone")}</option>`);
+            controllerSelect.append(`<option value="BOXER">BOXER</option>`);
+            controllerSelect.append(`<option value="TX12">TX12</option>`);
+            controllerSelect.on("change", function () {
+                self.analyticsChanges["NornController"] = $(this).val() || null;
+            });
+        }
+
+        // Populate FailSafe list (explicit options)
+        const failSafeSelect = $("select[name='norn_failsafe']");
+        if (failSafeSelect.length) {
+            failSafeSelect.empty();
+            failSafeSelect.append(`<option value="">${i18n.getMessage("nornNone")}</option>`);
+            failSafeSelect.append(`<option value="Default">Default</option>`);
+            failSafeSelect.on("change", function () {
+                self.analyticsChanges["NornFailSafe"] = $(this).val() || null;
+            });
+        }
     }
 
     function on_tab_loaded_handler() {
@@ -173,7 +196,9 @@ norn_config.initialize = function (callback) {
         const gpsEnabled = $("#norn_gps").is(":checked");
         const craftName = $("#norn_craft_name").val() || "";
         const mbId = $("#norn_mb_id").val() || "";
-        return { fcKey, droneSize, manticoreKey, vtxKey, gpsEnabled, craftName, mbId };
+        const controller = $("select[name='norn_controller']").val() || "";
+        const failSafe = $("select[name='norn_failsafe']").val() || "";
+        return { fcKey, droneSize, manticoreKey, vtxKey, gpsEnabled, craftName, mbId, controller, failSafe };
     }
 
     function on_generate_handler(e) {
@@ -229,6 +254,8 @@ norn_config.initialize = function (callback) {
         const gpsEnabled = $("#norn_gps").is(":checked");
         const craftName = $("#norn_craft_name").val();
         const mbId = $("#norn_mb_id").val();
+        const controller = $("select[name='norn_controller']").val();
+        const failSafe = $("select[name='norn_failsafe']").val();
 
         if (fcKey) parts.push(fcKey);
         if (droneSize) parts.push(`${droneSize}inch`);
@@ -237,6 +264,8 @@ norn_config.initialize = function (callback) {
         if (gpsEnabled) parts.push("GPS");
         if (craftName) parts.push(craftName);
         if (mbId) parts.push(`MB${mbId}`);
+        if (controller) parts.push(controller);
+        if (failSafe) parts.push(failSafe);
 
         const filename = parts.length > 0 ? `norn_config_${parts.join("_")}.txt` : "norn_config.txt";
 

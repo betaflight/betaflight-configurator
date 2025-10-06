@@ -392,6 +392,9 @@
     "nornController": {
         "message": "Controller"
     },
+    "nornRadioController": {
+        "message": "Radio Controller"
+    },
     "nornSize": {
         "message": "Size"
     },
@@ -400,6 +403,9 @@
     },
     "nornMBId": {
         "message": "MB ID"
+    },
+    "nornFailSafe": {
+        "message": "FailSafe"
     },
     "nornGPS": {
         "message": "GPS"
