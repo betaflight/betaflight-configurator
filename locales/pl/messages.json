@@ -1954,18 +1954,6 @@
     "receiverRcSmoothingManual": {
         "message": "Ręcznie"
     },
-    "receiverRcSmoothingAutoFactor": {
-        "message": "Współczynnik automatyczny",
-        "description": "Auto Factor parameter for RC smoothing"
-    },
-    "receiverRcSmoothingAutoFactorHelp": {
-        "message": "Dostosowuje automatyczne obliczanie współczynnika, 10 jest domyślnym stosunkiem współczynnika do opóźnienia. Zwiększenie liczby bardziej wygładzi wejścia RC, dodając jednocześnie opóźnienie. Może to być przydatne w przypadku zawodnych połączeń RC lub podczas latania z kamerą.<br>Uważaj na liczby zbliżające się do 50, opóźnienie wejściowe będzie zauważalne.<br>Użyj polecenia CLI rc_smoothing_info, gdy TX i RX są zasilane, aby zobaczyć automatycznie obliczone wygładzanie RC odcięcia.",
-        "description": "Auto Factor parameter help message"
-    },
-    "receiverRcSmoothingAutoFactorHelp2": {
-        "message": "Dostosowuje automatyczne wygładzanie RC. 30 jest domyślną wartością. Wyższe wartości wygładzają wejścia RC bardziej - np. 60 dla freestyle HD lub 90-120 dla latania kinowego. Uwaga: wartości powyżej 50 spowodują znaczne opóźnienie drążka. Niższe wartości, np. 20-25, przeniosą niektóre kroki sterowania RC do sygnałów silnika, nieznacznie zwiększając ciepło silnika, ale zmniejszą nieco opóźnienie RC. Może to być przydatne podczas wyścigów.",
-        "description": "Auto Factor parameter help message"
-    },
     "receiverRcFeedforwardTypeSelect": {
         "message": "Typ odcięcia Feedforward"
     },
@@ -2004,9 +1992,6 @@
     },
     "receiverRcSmoothingFeedforwardTypeAuto": {
         "message": "Auto"
-    },
-    "receiverRcSmoothingMode": {
-        "message": "Tryb wygładzania"
     },
     "pidTuningDtermSetpointTransition": {
         "message": "D przejście do wartości zadanej"

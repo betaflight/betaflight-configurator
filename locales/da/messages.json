@@ -596,10 +596,10 @@
         "message": "<strong>Aktiveret<\/strong>"
     },
     "runawayTakeoffPreventionDisabled": {
-        "message": "<strong>Runaway Takeoff-beskyttelse midlertidigt deaktiveret<\/strong>"
+        "message": "<strong>Landingsbane start beskyttelse midlertidigt deaktiveret<\/strong>"
     },
     "runawayTakeoffPreventionEnabled": {
-        "message": "<strong>Runaway Takeoff-beskyttelse aktiveret<\/strong>"
+        "message": "<strong>Landingsbane start beskyttelse aktiveret<\/strong>"
     },
     "boardInfoReceived": {
         "message": "Board: <strong>$1<\/strong>, version: <strong>$2<\/strong>"
@@ -966,7 +966,7 @@
         "description": "Message that pops up to describe the BOXFAILSAFE arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipRUNAWAY_TAKEOFF": {
-        "message": "Runway Takeoff-beskyttelse er blevet udløst",
+        "message": "Landingsbane start beskyttelse er blevet udløst",
         "description": "Message that pops up to describe the RUNAWAY_TAKEOFF arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipCRASH_DETECTED": {
@@ -1525,7 +1525,7 @@
         "message": "Motor tomgang (%)"
     },
     "configurationMotorIdleHelp": {
-        "message": "Sætter tomgangshastigheden for motorerne, mens bevæbnet og gassen er 'lav' (under `min_check`).<br\/><br\/><strong class=\"message-positive\">Dynamic Idle ikke aktiveret<\/strong><br\/><br\/>Hver motor får `min_command` plus Motor Idle procent.<br\/><br\/><b>Tomgang for lav<\/b>: motorerne starter muligvis ikke pålideligt, drejer langsomt op eller desynkroniseres i flip- eller ruller.<br\/><br\/><b>Idle for høj<\/b>: flyet kan føle 'floaty'.<br\/><br\/><b>Note<\/b>: analog ESC skal kalibreres, så motorerne starter lige over `min_command`.<br\/><br\/><strong class=\"message-positive\">Dynamisk tomgang aktiveret<\/strong><br\/><br\/>På rustning, den 'normal' tomgangsværdi sendes til hver motor, indtil de spinde op.<br\/><br\/>Når motorsignalet er drejet, justeres det for at opnå den ønskede RPM.<br\/><br\/>Inden start er motorsignalet begrænset til motortomgangsprocenten, og den indstillede omdrejningspunkt kan ikke opnås. Det er OK. Når gassen er hævet over procentdelen 'airmode_motor_start_throttle', er grænsen meget højere, og den indstillede RPM skal opnås i tomgang.<br\/><br\/><b>Tomgang for lav<\/b>: motorer kan ikke starte pålideligt<br\/><br\/><b>Tomgang for høj<\/b>: rystning før start (kun hvis dynamisk tomgang er også høj)<br\/><br\/><b>Note<\/b>: Dynamisk tomgang kræver DShot og DShot Telemetry."
+        "message": "Sætter tomgangshastigheden for motorerne, mens bevæbnet og gassen er 'lav' (under `min_check`).<br\/><br\/><strong class=\"message-positive\">Dynamic Idle ikke aktiveret<\/strong><br\/><br\/>Hver motor får `min_command` plus motor tomgang procent.<br\/><br\/><b>Tomgang for lav<\/b>: motorerne starter muligvis ikke pålideligt, drejer langsomt op eller desynkroniseres i flip- eller rul.<br\/><br\/><b>Tomgang for høj<\/b>: flyet kan føle 'flydende'.<br\/><br\/><b>Note<\/b>: analog ESC skal kalibreres, så motorerne starter lige over `min_command`.<br\/><br\/><strong class=\"message-positive\">Dynamisk tomgang aktiveret<\/strong><br\/><br\/>Ved aktivering, sendes den 'normal' tomgangsværdi til hver motor, indtil de spinder op.<br\/><br\/>Når motorsignalet er begrænset, justeres det for at opnå den ønskede RPM.<br\/><br\/>Inden start er motorsignalet begrænset til motor tomgang procent, og den indstillede omdrejningspunkt kan ikke nås. Det er OK. Når gassen er hævet over procentangivelsen 'airmode_motor_start_throttle', er grænsen meget højere, og den indstillede RPM skal nås i tomgang.<br\/><br\/><b>Tomgang for lav<\/b>: motorer kan ikke starte pålideligt<br\/><br\/><b>Tomgang for høj<\/b>: rystning før start (kun hvis dynamisk tomgang er også høj)<br\/><br\/><b>Note<\/b>: Dynamisk tomgang kræver DShot og DShot telemetry."
     },
     "configurationMotorPoles": {
         "message": "Motor magneter",
@@ -1974,22 +1974,33 @@
         "message": "Manuel"
     },
     "receiverRcSmoothingAutoFactor": {
-        "message": "Automatisk faktor",
-        "description": "Auto Factor parameter for RC smoothing"
+        "message": "Setpoint automatisk faktor",
+        "description": "Setpoint Auto Factor parameter for RC smoothing"
     },
     "receiverRcSmoothingAutoFactorHelp": {
-        "message": "Justerer automatisk faktor beregning, 10 er standard faktor til delay ratio. Øget antal vil glatte RC indgange mere, samtidig med at du tilføjer delay. Dette kan være nyttigt for upålidelige RC forbindelser eller til biografflyvning.<br>Vær forsigtig med, at tallene nærmer sig 50, vil inputforsinkelsen blive mærkbar.<br>Brug CLI kommandoen rc_smoothing_info mens TX og RX er drevet til at se de automatisk beregnede RC udjævning cutoffs.",
-        "description": "Auto Factor parameter help message"
+        "message": "Justerer automatisk Setpoint faktor beregning, 10 er standard faktor til forsinket ratio. Øget antal vil udglatte RC signalet mere, samtidig med at du tilføjer forsinkelse. Dette kan være nyttigt for upålidelige RC forbindelser eller til biografflyvning.<br>Vær forsigtig, når værdien nærmer sig 50, her vil forsinkelsen blive mærkbar.<br>Brug CLI kommandoen rc_smoothing_info mens TX og RX er tændt, for at se de automatisk beregnede RC dæmpende afskærings værdier.",
+        "description": "Setpoint Auto Factor parameter help message"
     },
     "receiverRcSmoothingAutoFactorHelp2": {
-        "message": "Justerer auto RC udjævning. 30 er standard. Højere værdier glat RC indgange mere - f.eks. 60 til HD-freestyle eller 90-120 til filmflyvning. Bemærk: Værdier over 50 vil forårsage mærkbar stick delay. Lavere værdier, fx 20-25, vil overføre nogle af RC-kontroltrinene til motorsignalerne, lidt stigende motorvarme, men vil reducere RC delay lidt. Dette kan være nyttigt til væddeløb.",
-        "description": "Auto Factor parameter help message"
+        "message": "Justerer Setpoint RC indgangsfilteret. 30 er standard. Højere værdier udglatter RC indgangen mere - f.eks. 60 til HD-freestyle eller 90-120 til filmflyvning. Bemærk: Værdier over 50 vil forårsage mærkbar forsinkelse for pind bevægelser. Lavere værdier, fx 20-25, vil overføre nogle af RC signalerne til motorerne, give lidt større motorvarme, men vil reducere RC forsinkelse lidt. Dette kan være nyttigt til ræs.",
+        "description": "Setpoint Auto Factor parameter help message"
+    },
+    "receiverRcSmoothingAutoFactorThrottle": {
+        "message": "Gas auto faktor",
+        "description": "Throttle Auto Factor parameter for RC smoothing"
+    },
+    "receiverRcSmoothingAutoFactorThrottleHelp": {
+        "message": "Justerer gas faktor beregning, 10 er standard faktor til forsinket ratio. Øget værdi vil udglatte RC indgangen mere, samtidig med at du tilføjer forsinkelse. Dette kan være nyttigt for upålidelige RC forbindelser eller til biografflyvning.<br>Vær forsigtig, når værdien nærmer sig 50, her vil forsinkelsen blive mærkbar.<br>Brug CLI kommandoen rc_smoothing_info mens TX og RX er tændt, for at se de automatisk beregnede RC dæmpende afskærings værdier.",
+        "description": "Throttle Auto Factor parameter help message"
     },
     "receiverRcFeedforwardTypeSelect": {
-        "message": "Feedforward Cutoff type"
+        "message": "Feedforward afskærings type"
     },
     "receiverRcSetpointTypeSelect": {
-        "message": "Setpoint Cutoff Type"
+        "message": "Setpoint afskærings type"
+    },
+    "receiverThrottleTypeSelect": {
+        "message": "Gas afskærings type"
     },
     "receiverRcSmoothingInterpolation": {
         "message": "Interpolation"
@@ -1998,10 +2009,10 @@
         "message": "Filter"
     },
     "rcSmoothingSetpointCutoffHelp": {
-        "message": "Afskæringsfrekvensen i Hz brugt af indgangsfilteret. Lavere værdier vil resultere i jævnere input og er mere passende til langsommere modtagerprotokoller. Bør, for de fleste brugere, bibeholdes på 0, dvs. \"Auto\"."
+        "message": "Afskæringsfrekvensen i Hz brugt af indgangsfilteret. Lavere værdier vil resultere i jævnere input og er mere passende til langsommere modtager protokoller. Bør, for de fleste brugere, bibeholdes på 0, dvs. \"Auto\"."
     },
     "rcSmoothingFeedforwardCutoffHelp": {
-        "message": "Afskæringsfrekvensen i Hz brugt af indgangsfilteret. Lavere værdier vil resultere i jævnere input og er mere passende til langsommere modtagerprotokoller. Bør, for de fleste brugere, bibeholdes på 0, dvs. \"Auto\"."
+        "message": "Afskæringsfrekvensen i Hz brugt af indgangsfilteret. Lavere værdier vil resultere i jævnere input og er mere passende til langsommere modtager protokoller. Bør, for de fleste brugere, bibeholdes på 0, dvs. \"Auto\"."
     },
     "rcSmoothingChannelsSmoothedHelp": {
         "message": "Kanaludjævningen gælder for"
@@ -2012,20 +2023,26 @@
     "receiverRcSmoothingFeedforwardManual": {
         "message": "Vælger, om inputfilter afskæringsfrekvensen beregnes automatisk (anbefales) eller vælges manuelt af brugeren. Brug af \"Manuel\" anbefales ikke til modtagerprotokoller såsom Crossfire, da den kan ændre sig under flyvning."
     },
+    "receiverRcSmoothingThrottleManual": {
+        "message": "Vælger, om RC indgangsfilteret beregnes automatisk (anbefales) eller vælges manuelt af brugeren. Brug af \"Manuel\" anbefales ikke til modtagerprotokoller såsom Crossfire, der kan ændre frekvens under flyvning."
+    },
+    "rcSmoothingThrottleCutoffHelp": {
+        "message": "Afskæringsfrekvensen i Hz brugt af gas indgangsfilteret. Lavere værdier vil resultere i jævnere input og er mere passende til langsomme modtager protokoller. Bør, for de fleste brugere, bibeholdes på 0, dvs. \"Auto\"."
+    },
     "receiverRcSmoothingSetpointHz": {
-        "message": "Setpoint Cutoff frekvens"
+        "message": "Setpoint afskærings frekvens"
+    },
+    "receiverRcSmoothingThrottleCutoffHz": {
+        "message": "Gas afskærings frekvens"
     },
     "receiverRcSmoothingFeedforwardCutoff": {
-        "message": "Feedforward Cutoff frekvens"
+        "message": "Feedforward afskærings frekvens"
     },
     "receiverRcFeedforwardType": {
         "message": "Feedforward filtertype"
     },
     "receiverRcSmoothingFeedforwardTypeAuto": {
         "message": "Auto"
-    },
-    "receiverRcSmoothingMode": {
-        "message": "Anvend udjævning"
     },
     "pidTuningDtermSetpointTransition": {
         "message": "D Setpoint-overgang"
@@ -2121,7 +2138,7 @@
         "description": "D Max Term helpicon message on PID table titlebar"
     },
     "pidTuningDerivativeHelp": {
-        "message": "Styrer styrken af at dæmpe til en bevægelse på fartøjet. For pind bevæger sig, dæmper D-udtrykket kommandoen. For en udvendig indflydelse (probel turbulens ELLER vind stød) dæmper D-term indflydelse.<br><br>Højere værdier giver mere dæmpning og reducerer overskridelse af P-term og FF.<br>Men D-udtrykket er MEGET følsomt over for gyro højfrekvente vibrationer (støj forstørres med 10x til 100x).<br><br>Høj frekvens støj kan forårsage motorvarme og brænde motorer, hvis D forstærkning er for høj, eller gyro støj ikke filtreres godt (se fanen Filtere).<br><br>Tænk på D-udtrykket som støddæmper på din bil, men med den negative iboende egenskab at det kan forstørrelse højfrekvent gyro støj.",
+        "message": "Bestemmer styrken af at dæmpe en bevægelse på fartøjet. Med pindens bevægelse, dæmper D-udtrykket kommandoen. For en udfra kommende påvirkning (propel turbulens ELLER vind stød) dæmper D-term påvirkning.<br><br>Højere værdier giver mere dæmpning og reducerer overskridelse af P-term og FF.<br>Men D-udtrykket er MEGET følsomt over for gyro højfrekvente vibrationer (støj forstørres med 10x til 100x).<br><br>Høj frekvens støj kan forårsage motorvarme og brænde motorer af, hvis D forstærkning er for høj, eller gyro støj ikke filtreres godt (se fanen Filtere).<br><br>Tænk på D-udtrykket som støddæmper på din bil, men med den negative iboende egenskab at det kan forstørrelse højfrekvent gyro støj.",
         "description": "Derivative Term helpicon message on PID table titlebar"
     },
     "pidTuningFeedforward": {
@@ -3129,7 +3146,7 @@
         "message": "<strong>Motor test tilstand \/ Motor aktiveret:<\/strong><br \/><br \/><strong class=\"message-negative\">ADVARSEL: Alvorlig risiko for skader! Fjern alle propeller fra fartøj !<\/strong><br \/><br \/><ul><li>&#x2022; Motorerne vil rotere, når FC er aktiveret eller når skyderne hæves \/ er hævet<\/li><li>&#x2022; Motor test tilstand vil forblive aktiv, selv hvis du skifter til anden menu<\/li><li>&#x2022; Motorerne standser hvis du trykker på en hilken somhelst test, men <strong>kun<\/strong> mens du er her i motor menu<\/li><li>&#x2022; Selv fjernelse af USB kabel standser ikke motorerne!<\/li><\/ul>"
     },
     "motorsEnableControl": {
-        "message": "<strong>Jeg forstår risikoen,<\/strong> propellerne er fjernet - aktivér motorkontrol og indkobling, og deaktivér Runaway Takeoff-beskyttelse."
+        "message": "<strong>Jeg forstår risikoen,<\/strong> propellerne er fjernet - aktivér motorkontrol og indkobling, og deaktivér landingsbane start beskyttelse."
     },
     "motorsDialogMixerReset": {
         "message": "<strong>Mixer mode problem opdaget<\/strong><br \/><br \/> {{mixerName}} modellen skal bruge <strong class=\"message-positive\">{{mixerMotors}}<\/strong> motorressourcer og den aktuelle konfiguration af firmwaren giver <strong class=\"message-positive\">{{outputs}}<\/strong> brugbare output(er) for den valgte tilstand.<br \/><br \/>Hvis du bruger en tilpasset mixertilstand, skal du definere en tilpasset mmix, før du ændrer mixertilstand.<br \/><br \/>Kontroller venligst din konfiguration og tilføj de nødvendige motorressourcer."
@@ -4306,7 +4323,7 @@
         "message": "Profil <strong>u<\/strong>afhængige filter indstillinger"
     },
     "pidTuningFilterSlidersHelp": {
-        "message": "Disse skydere justere Gyro og D-term filtre.<br \/><br \/>For mere filtrering:<br \/> - Skyderne til venstre<br> - Lavere afskæringsfrekvenser.<br \/><br \/> Stærkere filtrering holder motorerne køligere ved at fjerne mere støj, men forsinker gyro signal mere og kan forværre propel turbulens eller forårsage resonant svingning. Mindre responsive fartøjer fx X-Class fungerer bedst ved stærkere filtrering. <br><br>For mindre filtrering:<br \/> - Skydere til højre<br \/> - Højere cutoff frekvenser <br><br>Mindre filtrering reducerer gyro signal forsinkelse, og kan ofte forbedre mod propel turbulens. Bevæger gyro lowpass filter højre er normalt OK, men det er normalt ikke nødvendigt at flytte D-filteret til højre, og det kan nemt resultere i meget varme motorer.",
+        "message": "Disse skydere justere Gyro og D-term filtre.<br \/><br \/>For mere filtrering:<br \/> - Skyderne til venstre<br> - Lavere afskæringsfrekvenser.<br \/><br \/> Stærkere filtrering holder motorerne køligere ved at fjerne mere støj, men forsinker gyro signal mere og kan forværre propel turbulens eller forårsage resonant svingning. Mindre responsive fartøjer fx X-Class fungerer bedst ved stærkere filtrering. <br><br>For mindre filtrering:<br \/> - Skydere til højre<br \/> - Højere afskærings frekvenser <br><br>Mindre filtrering reducerer gyro signal forsinkelse, og kan ofte forbedre mod propel turbulens. Bevæger gyro lowpass filter højre er normalt OK, men det er normalt ikke nødvendigt at flytte D-filteret til højre, og det kan nemt resultere i meget varme motorer.",
         "description": "Overall helpicon message for filter tuning sliders"
     },
     "pidTuningSliderLowFiltering": {
@@ -4326,7 +4343,7 @@
         "description": "Gyro filter tuning slider label"
     },
     "pidTuningGyroFilterSliderHelp": {
-        "message": "Ændrer Gyro Lowpass filter cutoffs.<br \/><br \/>Flytning skyderen til venstre giver stærkere Gyro filtrering (lavere cutoff frekvens).<br \/><br \/>Flytning af skyderen til højre giver mindre Gyro filtrering (højere cutoff frekvens).<br \/><br \/>Når skyderen flyttes til højre for at forbedre  mod propel turbulens, skal du være FORSIGTIG for ikke at blive for radikal. Du vil tillade mere støj i både P og D og kan få et fartøj som flyver væk eller brændte motorer.<br \/><br \/>Du kan være nødt til at flytte skyderen til venstre, hvis du har resonans problemer, dårlige lejer, ødelagte propeller, varme motorer, osv.<br \/><br \/>Gyro filtrering anvendes før, og i tillæg til D filtrering.",
+        "message": "Ændrer Gyro Lowpass filter afskæring.<br \/><br \/>Flytning skyderen til venstre giver stærkere Gyro filtrering (lavere cutoff frekvens).<br \/><br \/>Flytning af skyderen til højre giver mindre Gyro filtrering (højere afskærings frekvens).<br \/><br \/>Når skyderen flyttes til højre for at forbedre  mod propel turbulens, skal du være FORSIGTIG for ikke at være for radikal. Hvis du tillader mere støj i både P og D kan det få et fartøj til at flyver væk eller få brændte motorer.<br \/><br \/>Du kan være nødt til at flytte skyderen til venstre, hvis du har resonans problemer, dårlige lejer, ødelagte propeller, varme motorer, osv.<br \/><br \/>Gyro filtrering anvendes før, og i tillæg til D filtrering.",
         "description": "Gyro filter tuning slider helpicon message"
     },
     "pidTuningGyroSliderEnabled": {
@@ -4338,7 +4355,7 @@
         "description": "D Term filter tuning slider label"
     },
     "pidTuningDTermFilterSliderHelp": {
-        "message": "Ændrer D-termen Lowpass Filter cutoffs.<br \/><br \/>Flytning skyderen til venstre giver stærkere D filtrering (lavere cutoff frekvens).<br \/><br \/>Flytning af skyderen til højre giver mindre filtrering (højere afskærings frekvens).<br \/><br \/>D-term er det mest følsomme PID element til støj og resonans. Det kan forstærke højfrekvente støj med 10x til 100x. Derfor er D filter cutoffs meget lavere end gyro filtre.<br \/><br \/>D-term filtrering anvendes efter og i tillæg til gyro filtrering. Standard D filtrering er optimal for de fleste quads og skal sjældent ændres.<br \/><br \/>Flyttes denne skyder til venstre reduceres motorvarme i frekvens støjende fartøjer og med høj PID 'D' term, men vi kan også se mere propel turbulens og lavere frekvens D resonans.<br \/><br \/>Flytning af skyderen til højre anbefales ikke, men kan forbedre mod propel turbulens på rene fartøjer. Det kan forårsage uønsket slid på motor ved aktivering, pludselig resonans i flyvning og alvorlig motor overophedning.",
+        "message": "Ændrer D-termen Lowpass Filter cutoffs.<br \/><br \/>Flytning skyderen til venstre giver stærkere D filtrering (lavere afskærings frekvens).<br \/><br \/>Flytning af skyderen til højre giver mindre filtrering (højere afskærings frekvens).<br \/><br \/>D-term er det mest følsomme PID element til støj og resonans. Det kan forstærke højfrekvente støj med 10x til 100x. Derfor er D filter afskæring meget lavere end gyro filtre.<br \/><br \/>D-term filtrering anvendes efter og i tillæg til gyro filtrering. Standard D filtrering er optimal for de fleste quads og skal sjældent ændres.<br \/><br \/>Flyttes denne skyder til venstre reduceres motorvarme i frekvens støjende fartøjer og med høj PID 'D' term, men vi kan også se mere propel turbulens og lavere frekvens D resonans.<br \/><br \/>Flytning af skyderen til højre anbefales ikke, men kan forbedre mod propel turbulens på enkle fartøjer. Det kan forårsage uønsket slid på motor ved aktivering, pludselig resonans i flyvning og alvorlig motor overophedning.",
         "description": "D Term filter tuning slider helpicon message"
     },
     "pidTuningDTermSliderEnabled": {
@@ -4422,7 +4439,7 @@
         "description": "P and I Gain (Stability) tuning slider label"
     },
     "pidTuningPIGainSliderHelp": {
-        "message": "Forøg sporings skyder for at skærpe fartøjets respons på dine kommandoer og også eksterne indflydelser; undgå at næsen på fartøjer går ud af kurs i enhver tilstand.<br \/><br \/>Lavere sporings værdier vil give mange hop, tab af ønsket kurs ved pind bevægelser og i probel turbulens. Høje sporingd værdier kan resultere i svingninger og hurtig tilbagehop (svært at se, men du kan høre dem). Overdreven sporing kan resultere i uønsket resonnans og for varme motorer.",
+        "message": "Forøg sporings skyder for at skærpe fartøjets respons på dine kommandoer og også eksterne indflydelser; undgå at næsen på fartøjer går ud af kurs i enhver tilstand.<br \/><br \/>Lavere sporings værdier vil give mange hop, tab af ønsket kurs ved pind bevægelser og i propel turbulens. Høje sporings værdier kan resultere i svingninger og hurtig tilbagehop (svært at se, men du kan høre dem). Overdreven sporing kan resultere i uønsket resonnans og for varme motorer.",
         "description": "P and I gain tuning slider helpicon message"
     },
     "pidTuningResponseSlider": {
@@ -4475,7 +4492,7 @@
         "message": "Gyro Lowpass 1"
     },
     "pidTuningGyroLowpassHelp": {
-        "message": "Den første af to Gyro lowpass filtre.<br \/><br \/>Brugen af gyro lowpass 1 i dynamisk tilstand var vigtig med den tidligere dynamiske hak kode. Gyro lowpass 1 kan normalt deaktiveres helt i firmware 4.3 når RPM filtrering anvendes, medmindre gyro har ingen intern hardware filtrering.<br \/><br \/>I dynamisk tilstand vil filtreringen være stærkere ved lav gas, med mindre filtrering og mindre forsinkelse, efterhånden som gas øges. Overgangen fra lav til høj cutoff vil ske tidligere, som gas stiger, med højere Gyro lowpass expo værdier.<br \/><br \/>I statisk tilstand er afskæringsfrekvensen fast.<br \/><br \/>Filtertypen er standard PT1. Højere ordrefiltrering er sjældent påkrævet.",
+        "message": "Den første af to Gyro lowpass filtre.<br \/><br \/>Brugen af gyro lowpass 1 i dynamisk tilstand var vigtig med den tidligere dynamiske hak kode. Gyro lowpass 1 kan normalt deaktiveres helt i firmware 4.3 når RPM filtrering anvendes, medmindre gyro har ingen intern hardware filtrering.<br \/><br \/>I dynamisk tilstand vil filtreringen være stærkere ved lav gas, med mindre filtrering og mindre forsinkelse, efterhånden som gas øges. Overgangen fra lav til høj afskæring vil ske tidligere, som gas stiger, med højere Gyro lowpass expo værdier.<br \/><br \/>I statisk tilstand er afskæringsfrekvensen fast.<br \/><br \/>Filtertypen er standard PT1. Højere ordrefiltrering er sjældent påkrævet.",
         "description": "Help icon for the Gyro Lowpass 1 Filter"
     },
     "pidTuningGyroLowpassMode": {
@@ -4500,15 +4517,15 @@
         "message": "Gyro Lowpass 2"
     },
     "pidTuningGyroLowpass2Help": {
-        "message": "Den anden af to Gyro lowpass filtre.<br \/><br \/>Dette filter kører i gyro loop, filtrering af signalet før det kommer ind i PID loop'et. Det er altid i statisk (fast cutoff) tilstand.<br \/><br \/>Hvis PID loop frekvensen er mindre end gyro loop frekvens, fx en 4k PID loop med en 8k gyro loop, dette filter bør bibeholdes for at forhindre aliasing problemer på grund af 8k->4k nedprøvetagning.<br \/><br \/>En enkelt gyro lowpass 2 konfiguration, der er sat til et sted 500 og 1000Hz, fungerer godt for Betaflight 4. eller højere, for rene builds med RPM filtrering aktiv og i det mindste standard D filtrering.",
+        "message": "Den anden af to Gyro lowpass filtre.<br \/><br \/>Dette filter kører i gyro loop, filtrering af signalet før det kommer ind i PID loop'et. Det er altid i statisk (fast cutoff) tilstand.<br \/><br \/>Hvis PID loop frekvensen er mindre end gyro loop frekvens, fx en 4k PID loop med en 8k gyro loop, dette filter bør bibeholdes for at forhindre aliasing problemer på grund af 8k->4k nedprøvetagning.<br \/><br \/>En enkelt gyro lowpass 2 konfiguration, der er sat til et sted 500 og 1000Hz, fungerer godt for Betaflight 4.3 eller højere, for rene builds med RPM filtrering aktiv og i det mindste standard D filtrering.",
         "description": "Gyro lowpass filter helpicon message"
     },
     "pidTuningGyroLowpassFilterHelp": {
-        "message": "Gyro lowpass filtre dæmper høj frekvens støj ved at holde støjen ude af PID loop. Der er to uafhængigt konfigurerbare gyro filtre; som standard begge er aktive.<br \/><br \/>Med RPM filtrering kan gyro filter skyderen ofte flyttes et stykke til højre, alternativt kan et enkelt statisk gyro lowpasfilter på 500 hz være tilstrækkeligt.<br \/><br \/>Et fartøj vil have mindre probel turbulens med den mindste gyro filter forsinkelse.<br \/><br \/>Kontroller altid for motorvarme, når skydere flyttes til højre. Med minimal gyro filtrering, er det vigtigt at have nok D filtrering! Vær forsigtig!",
+        "message": "Gyro lowpass filtre dæmper høj frekvens støj ved at holde støjen ude af PID loop. Der er to uafhængigt konfigurerbare gyro filtre; som standard begge er aktive.<br \/><br \/>Med RPM filtrering kan gyro filter skyderen ofte flyttes et stykke til højre, alternativt kan et enkelt statisk gyro lowpasfilter på 500 hz være tilstrækkeligt.<br \/><br \/>Et fartøj vil have mindre propel turbulens med den mindste gyro filter forsinkelse.<br \/><br \/>Kontroller altid for motorvarme, når skydere flyttes til højre. Med minimal gyro filtrering, er det vigtigt at have nok D filtrering! Vær forsigtig!",
         "description": "Gyro lowpass filter helpicon message"
     },
     "pidTuningDTermLowpassFilterHelp": {
-        "message": "D-term lowpass filtre dæmper højere frekvens støj og resonanser, der ellers ville blive forstærket af D forstærkning.<br \/><br \/>Der er to D-filtre, og deres virkninger er additive. Begge er nødvendige i næsten alle fartøjer, selvom en enkelt PT2 kan anvendes i stedet for dobbelt PT1's.<br \/><br \/>Generelle fartøjer vil flyve bedst og have den mindste probel turbulens når der er konfigureret til at have den mindste filterforsinkelse (skydere til højre, højere cutoff værdier). Men især med D-filtre, skydere til højre kan i høj grad øge chancen for at få varme motorer.<br \/><br \/>Det er meget nemt at brænde motorer, hvis du ikke har nok D-filtrering - vær forsigtig!",
+        "message": "D-term lowpass filtre dæmper højere frekvens støj og resonans, der ellers ville blive forstærket af D forstærkning.<br \/><br \/>Der er to D-filtre, og deres virkninger er additive. Begge er nødvendige i næsten alle fartøjer, selvom en enkelt PT2 kan anvendes i stedet for dobbelt PT1's.<br \/><br \/>Generelle fartøjer vil flyve bedst og have den mindste propel turbulens når der er konfigureret til at have den mindste filterforsinkelse (skydere til højre, højere afskærings værdier). Men især med D-filtre, skydere til højre kan i høj grad øge risiko for at få for varme motorer.<br \/><br \/>Det er meget nemt at brænde motorer af, hvis du ikke har nok D-filtrering - vær forsigtig!",
         "description": "D-term lowpass filter helpicon message"
     },
     "pidTuningGyroNotchFiltersGroup": {
@@ -4518,7 +4535,7 @@
         "message": "Gyrohak filter 1"
     },
     "pidTuningGyroNotchFilterHelp": {
-        "message": "Gælder et statisk (konstant frekvens) hak filter for Gyro, ved den angivne centerfrekvens. <br \/><br \/>Kan være nyttig for isolerede, konstante frekvensgenkendelser, der påvirker både P og D. <br \/><br \/>For at være nyttig, skal resonansfrekvensen være konstant på tværs af gas området.<br \/><br \/>Notch bredde er indstillet af cutoff frekvens. Cutoff skal typisk indstilles mellem 10 % og 40 % under centerfrekvensen. Brug det tætteste filterområde, der styrer resonans. Undgå at indstille notch filtre under 100hz undtagen under særlige omstændigheder.<br \/><br \/>Statiske notch filtre er sjældent påkrævet i 4.3."
+        "message": "Gælder et statisk (konstant frekvens) hak filter for Gyro, ved den angivne centerfrekvens. <br \/><br \/>Kan være nyttig for isolerede, konstante frekvens gentagelser, der påvirker både P og D. <br \/><br \/>For at være nyttig, skal resonansfrekvensen være konstant på tværs af gas området.<br \/><br \/>Notch bredde er indstillet af afskærings frekvens. Afskæring skal typisk indstilles mellem 10 % og 40 % under centerfrekvensen. Brug det tætteste filterområde, der styrer resonans. Undgå at indstille notch filtre under 100hz undtagen under særlige omstændigheder.<br \/><br \/>Statiske notch filtre er sjældent påkrævet i 4.3."
     },
     "pidTuningGyroNotchFilter2": {
         "message": "Gyro Notch filter 2"
@@ -4533,7 +4550,7 @@
         "message": "Afskæringsfrekvens [Hz]"
     },
     "pidTuningNotchFilterHelp": {
-        "message": "Et hakkefilter er et symmetrisk, smalt, high-cut filter, med center og cutoff parmaetre.<br \/><br \/>Den midterste værdi er filterets midterfrekvens. Cutoff-værdien er lav-side -3dB cutoff-frekvensen.<br \/><br \/>For eksempel en Notch Cutoff på 160 med et Notch Center på 260 returnerer et bredt hak med en -3dB rækkevidde fra 160-360Hz og stærkeste dæmpning omkring 260hz.",
+        "message": "Et hak filter er et symmetrisk, smalt, high-cut filter, med center og afskærings parmaetre.<br \/><br \/>Den midterste værdi er filterets midterfrekvens. Afskærings værdien er lav-side -3dB afskærings frekvensen.<br \/><br \/>For eksempel en Notch afskæring på 160 med et Notch Center på 260 returnerer et bredt hak med en -3dB rækkevidde fra 160-360Hz og stærkeste dæmpning omkring 260hz.",
         "description": "Notch filter helpicon message"
     },
     "pidTuningDynamicNotchFilterGroup": {
@@ -4567,7 +4584,7 @@
         "message": "Antal Notch"
     },
     "pidTuningDynamicNotchRangeHelp": {
-        "message": "Den dynamiske hak har tre frekvensområder: LOW(80-330hz) til lavere revving fartøjer som 6+ tommer, MEDIUM(140-550hz) for et normalt 5 tommer fartøj, HIGH(230-800hz) for meget høj revving 2,5 -3 tommer fartøjer. AUTO-indstilling vælger området afhængigt af værdien af Gyro Dynamic Lowpass 1 Filters max cutoff frekvens."
+        "message": "Den dynamiske hak har tre frekvensområder: LOW(80-330hz) til lavere revving fartøjer som 6+ tommer, MEDIUM(140-550hz) for et normalt 5 tommer fartøj, HIGH(230-800hz) for meget høj revving 2,5 -3 tommer fartøjer. AUTO-indstilling vælger området afhængigt af værdien af Gyro Dynamic Lowpass 1 Filters max afskærings frekvens."
     },
     "pidTuningDynamicNotchQHelp": {
         "message": "Q faktor justerer, hvor smalle eller brede de dynamiske hak filtre er. Højere værdi gør det smallere og mere præcis og lavere værdi gør det bredere og bredere. At have en virkelig lav værdi vil i høj grad øge filter forsinkelse."
@@ -4612,7 +4629,7 @@
         "message": "D Term Lowpass 1"
     },
     "pidTuningDTermLowpassHelp": {
-        "message": "Den første af to D-term lowpass filtre.<br \/><br \/>I dynamisk tilstand vil filtrering være stærkere ved lav gas, med mindre filtrering og mindre forsinkelse, efterhånden som gas øges. Dette hjælper med at styre mortor slid eller uventede situationer hvor fartøj flyver væk ved aktivering og samtidig reducere delay og probel turbulens efter takeoff. Overgangen fra lav til høj cutoff vil ske tidligere, da gas er steget, med højere D-term lowpass expo værdier.<br \/><br \/>I statisk tilstand er afskæringsfrekvensen fast. Dette anbefales ikke til D filtrering.<br \/><br \/>Filtertypen er som standard PT1, selvom nogle brugere kun har brugt et enkelt dynamisk Biquad-filter her, uden anden PT1.<br \/><br \/>Ændringer, der resulterer i mindre D-filtrering, kan forårsage alvorlig overophedning af motoren eller at fartøjet flyver væk ved aktivering.",
+        "message": "Den første af to D-term lowpass filtre.<br \/><br \/>I dynamisk tilstand vil filtrering være stærkere ved lav gas, med mindre filtrering og mindre forsinkelse, efterhånden som gas øges. Dette hjælper med at styre slid på motor eller uventede situationer hvor fartøj flyver væk ved aktivering, vil samtidig reducere forsinkelse og propel turbulens efter landingsbane start. Overgangen fra lav til høj afskæring vil ske tidligere, når gas er steget, med højere D-term lowpass expo værdier.<br \/><br \/>I statisk tilstand er afskæringsfrekvensen fast. Dette anbefales ikke til D filtrering.<br \/><br \/>Filtertypen er som standard PT1, selvom nogle brugere kun har brugt et enkelt dynamisk Biquad-filter her, uden anden PT1.<br \/><br \/>Ændringer, der resulterer i mindre D-filtrering, kan forårsage alvorlig overophedning af motoren eller at fartøjet flyver væk ved aktivering.",
         "description": "Help icon for the DTerm Lowpass 1 Filter"
     },
     "pidTuningDTermLowpassMode": {
@@ -4622,7 +4639,7 @@
         "message": "D Term Lowpass 2"
     },
     "pidTuningDTermLowpass2Help": {
-        "message": "Det andet af to D-term lowpass filtre. <br \/><br \/>Dette filter er altid i statisk (fast cutoff) tilstand. Mindst to PT1 lavpasfiltre, eller et enkelt filter for anden ordre, er nødvendige for D filtrering.<br \/><br \/>Normalt er dette cutoff sat til den højere værdi af det dynamiske lowpass 1 område. Dette giver anden ordre støj control over denne frekvens. <br \/><br \/>Ændringer, der resulterer i mindre D-filtrering, kan forårsage alvorlig overophedning af motoren eller fartøjet flyver væk ved aktivering.",
+        "message": "Det andet af to D-term lowpass filtre. <br \/><br \/>Dette filter er altid i statisk (fast afskæring) tilstand. Mindst to PT1 lavpasfiltre, eller et enkelt filter for anden orden, er nødvendige for D filtrering.<br \/><br \/>Normalt er denne afskæring sat til den højere værdi af det dynamiske lowpass 1 område. Dette giver anden ordre støj control over denne frekvens. <br \/><br \/>Ændringer, der resulterer i mindre D-filtrering, kan forårsage alvorlig overophedning af motoren eller fartøjet flyver væk ved aktivering.",
         "description": "Help icon for the DTerm Lowpass 2 Filter"
     },
     "pidTuningDTermLowpassFiltersGroup": {
@@ -4644,7 +4661,7 @@
         "message": "D Term Notch filter"
     },
     "pidTuningDTermNotchFiltersGroupHelp": {
-        "message": "Gælder et statisk (konstant frekvens) hak filter til D-Term data, ved den angivne centerfrekvens.<br \/><br \/>Notch bredde er indstillet af cutoff frekvens.  <br \/><br \/>Kan være nyttig for isolerede, konstante frekvensgenkendelser, der forstærkes af D.<br \/><br \/>Hold cutoffen så tæt på centrum som muligt. Undgå at indstille notch filtre under 100 hz undtagen på lave RPM builds."
+        "message": "Gælder et statisk (konstant frekvens) hak filter til D-Term data, ved den angivne centerfrekvens.<br \/><br \/>Notch bredde er indstillet af afskærings frekvens. <br \/><br \/>Kan være nyttig for isolerede, konstante gentagende frekvenser, der forstærkes af D.<br \/><br \/>Hold afskæring så tæt på centrum som muligt. Undgå at indstille notch filtre under 100 hz undtagen på enheder med lav RPM."
     },
     "pidTuningYawLowpassFiltersGroup": {
         "message": "Sideror signal filter"
@@ -4722,7 +4739,7 @@
         "message": "Setpoint"
     },
     "pidTuningItermRelaxCutoff": {
-        "message": "Cutoff",
+        "message": "Afskæring",
         "description": "Cutoff value of the I Term Relax"
     },
     "pidTuningItermRelaxCutoffHelp": {

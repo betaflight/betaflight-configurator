@@ -1432,18 +1432,6 @@
     "receiverRcSmoothingManual": {
         "message": "Manuel"
     },
-    "receiverRcSmoothingAutoFactor": {
-        "message": "Facteur automatique",
-        "description": "Auto Factor parameter for RC smoothing"
-    },
-    "receiverRcSmoothingAutoFactorHelp": {
-        "message": "Ajuste le calcul du facteur automatique, 10 est le délais par défaut. L'augmentation du nombre adoucit les entrées RC, tout en ajoutant du délai, ce qui peut être utile pour des connexions RC peu fiables ou pour le vol cinématographique.<br>Soyez prudent avec les nombres approchant de 50, le délai d'entrée deviendra remarquable.<br>Utilisez la commande CLI rc_smoothing_info alors que TX et RX sont alimentés pour voir les valeurs calculées automatiquement.",
-        "description": "Auto Factor parameter help message"
-    },
-    "receiverRcSmoothingAutoFactorHelp2": {
-        "message": "Ajuste automatiquement le lissage RC. 30 est la valeur par défaut. Des valeurs plus élevées lissent les entrées RC de manière plus importante - e.g. 60 pour le freestyle HD ou 90-120 pour le vol cinématographique. Des valeurs moins élevées, par exemple 20-25, transféreront certains des paliers du contrôle RC dans les signaux du moteur, augmentant légèrement la chaleur du moteur, mais réduira un peu le délais de la RC. Cela peut être utile pour la course.",
-        "description": "Auto Factor parameter help message"
-    },
     "receiverRcFeedforwardTypeSelect": {
         "message": "Type de coupure du FeedForward"
     },
@@ -1482,9 +1470,6 @@
     },
     "receiverRcSmoothingFeedforwardTypeAuto": {
         "message": "Auto"
-    },
-    "receiverRcSmoothingMode": {
-        "message": "Type de lissage"
     },
     "pidTuningDtermSetpointTransition": {
         "message": "D Setpoint transition"

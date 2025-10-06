@@ -1599,18 +1599,6 @@
     "receiverRcSmoothingManual": {
         "message": "Manual"
     },
-    "receiverRcSmoothingAutoFactor": {
-        "message": "Factor Automático",
-        "description": "Auto Factor parameter for RC smoothing"
-    },
-    "receiverRcSmoothingAutoFactorHelp": {
-        "message": "Axusta o cálculo do factor automático, 10 é o factor predeterminado para a relación de retardo. Aumentar o número suavizará máis as entradas de RC, ao tempo que engade un atraso. Isto pode ser útil para conexións RC pouco fiables ou para voos cinematográficos.<br>Teña coidado cos números que se aproximan a 50, o atraso de entrada será perceptible.<br>Empregue o comando da CLI rc_smoothing_info mentres TX e RX están acendidos para ver os cortes calculados automaticamente para o suavizado RC.",
-        "description": "Auto Factor parameter help message"
-    },
-    "receiverRcSmoothingAutoFactorHelp2": {
-        "message": "Axusta o suavizado automático RC. 30 é o valor predeterminado. Os valores máis altos suavizan máis as entradas de RC, p. exemp. 60 para freestyle HD ou 90-120 para voo cinemático. Nota: Os valores superiores a 50 provocarán un atraso apreciable do stick. Valores máis baixos, por exemplo, 20-25, transferirán algúns dos pasos de control RC aos sinais do motor, aumentando lixeiramente a calor do motor, pero reducirán lixeiramente o atraso RC. Isto pode ser útil para as carreiras.",
-        "description": "Auto Factor parameter help message"
-    },
     "receiverRcFeedforwardTypeSelect": {
         "message": "Tipo de Corte de Prealimentación"
     },
@@ -1649,9 +1637,6 @@
     },
     "receiverRcSmoothingFeedforwardTypeAuto": {
         "message": "Auto"
-    },
-    "receiverRcSmoothingMode": {
-        "message": "Modo suavizado"
     },
     "pidTuningDtermSetpointTransition": {
         "message": "Transición de punto D"

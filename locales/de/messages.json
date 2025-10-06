@@ -1778,18 +1778,6 @@
     "receiverRcSmoothingManual": {
         "message": "Manuell"
     },
-    "receiverRcSmoothingAutoFactor": {
-        "message": "Auto-Faktor",
-        "description": "Auto Factor parameter for RC smoothing"
-    },
-    "receiverRcSmoothingAutoFactorHelp": {
-        "message": "Verändert die automatische Glättungs-Berechnung, 10 ist der Standard des Glättung- \/ Verzögerungsverhältnisses. Die Erhöhung des Wertes glättet RC-Eingaben mehr, was aber auch zu mehr Verzögerung(Delay) führt. Dies kann für unzuverlässige RC-Verbindungen oder für cinematisches Fliegen nützlich sein.<br>Sei mit Werten, die sich 50 annähern vorsichtig, die Eingabeverzögerung wird kann signifikant sein.<br>Benutze den CLI-Befehl rc_smoothing_info, während die Fernsteuerung und der Empfänger eingeschaltet sind, um die automatisch berechneten RC-Glättungswerte zu sehen.",
-        "description": "Auto Factor parameter help message"
-    },
-    "receiverRcSmoothingAutoFactorHelp2": {
-        "message": "Automatische RC-Glättung einstellen. 30 ist die Standardeinstellung. Höhere Werte glätten RC-Eingänge - z. 60 für HD Freestyle oder 90-120 für Cinematic. Kleinere Werte, z. B. 20-25, übertragen einige der RC-Steuersignale in die Motorsignale und wird zu etwas wärmeren Motoren führen. Dies reduziert aber eine geringfügige RC-Verzögerung. Dies kann für den Wettkampf nützlich sein.",
-        "description": "Auto Factor parameter help message"
-    },
     "receiverRcFeedforwardTypeSelect": {
         "message": "FeedForward Grenzfrequenz Typ"
     },
@@ -1828,9 +1816,6 @@
     },
     "receiverRcSmoothingFeedforwardTypeAuto": {
         "message": "Auto"
-    },
-    "receiverRcSmoothingMode": {
-        "message": "Glättungsmodus"
     },
     "pidTuningDtermSetpointTransition": {
         "message": "D Setpoint transition"

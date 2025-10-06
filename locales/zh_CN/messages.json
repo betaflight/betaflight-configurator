@@ -223,6 +223,9 @@
     "checkForConfiguratorUnstableVersions": {
         "message": "显示不稳定版本应用程序的更新提醒"
     },
+    "configuratorUpdateNotice": {
+        "message": "你正在使用旧版本的 <b>Betaflight 应用<\/b>。<br>$t(configuratorUpdateHelp.message)"
+    },
     "configuratorUpdateHelp": {
         "message": "当网络可用时，应用会自动请求可用的更新。"
     },
@@ -1523,18 +1526,6 @@
     "receiverRcSmoothingManual": {
         "message": "手动"
     },
-    "receiverRcSmoothingAutoFactor": {
-        "message": "自动因子",
-        "description": "Auto Factor parameter for RC smoothing"
-    },
-    "receiverRcSmoothingAutoFactorHelp": {
-        "message": "调整自动平滑因子的计算，10 是默认的延迟比因子。增加该数将加大对 RC 输入信号的平滑度，但同时会增加延迟。对于 RC 链接并不可靠的情况和电影式飞行来说这可能非常有用。<br>当数字接近 50 时请小心，输入延迟将会变得非常明显。<br>当遥控器与接收机都上电时，可以使用 CLI 命令 rc_smoothing_info 查看自动计算的 RC 平滑的截止频率。",
-        "description": "Auto Factor parameter help message"
-    },
-    "receiverRcSmoothingAutoFactorHelp2": {
-        "message": "自动调整 RC 信号平滑。30 为默认值。 更高的值可以进一步平滑 RC 输入信号 - 例如: HD 花飞使用 60，电影式飞行使用 90-120。注意，当此值超过 50 时会造成明显的摇杆延迟。较低的值，例如 20-25，会将部分 RC 控制信号中的阶跃信号传入电机信号，造成电机温度略有升高，但将降低 RC 信号延迟。这可能有助于竟速飞行。",
-        "description": "Auto Factor parameter help message"
-    },
     "receiverRcFeedforwardTypeSelect": {
         "message": "前馈截止类型"
     },
@@ -1573,9 +1564,6 @@
     },
     "receiverRcSmoothingFeedforwardTypeAuto": {
         "message": "自动"
-    },
-    "receiverRcSmoothingMode": {
-        "message": "平滑模式"
     },
     "pidTuningDtermSetpointTransition": {
         "message": "D 设定点转换阈值"

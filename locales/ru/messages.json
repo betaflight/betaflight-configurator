@@ -1907,18 +1907,6 @@
     "receiverRcSmoothingManual": {
         "message": "Ручной"
     },
-    "receiverRcSmoothingAutoFactor": {
-        "message": "Автоматический коэффициент",
-        "description": "Auto Factor parameter for RC smoothing"
-    },
-    "receiverRcSmoothingAutoFactorHelp": {
-        "message": "Регулирует расчет автофактора ,10 является коэффициентом задержки по умолчанию. Увеличение коэфицента позволяет больше сгладить RC команды, при этом задержка станет больше. Может быть полезно для ненадежных RC соединений, либо для видеосъемки.<br>Будьте осторожны с числами, близки к 50, задержка ввода станет заметной.<br>Используйте команду CLI rc_smoothing_info когда TX и RX включены, чтобы увидеть автоматически рассчитанные диапазоны сглаживания.",
-        "description": "Auto Factor parameter help message"
-    },
-    "receiverRcSmoothingAutoFactorHelp2": {
-        "message": "Данный параметр регулирует автоматическое сглаживание сигнала с пульта управления RC. Значение по умолчанию - 30. Более высокие значения сильнее сглаживают поступающие сигналы с пульта управления: например, 60 для HD freestyle или 90-120 для кинематографической съемки. ПРИМЕЧАНИЕ: Значения выше 50 вызовут заметную задержку команд управления от стиков.\nПри более низких значениях, например 20-25, часть харктерной ступенчатой формы сигнала управления с пульта, приобразуется в сигналы управления двигателями, что незначительно увеличит нагрев двигателей, но немного уменьшит задержку сигнала с пульта управления. Может быть полезно для гонок.",
-        "description": "Auto Factor parameter help message"
-    },
     "receiverRcFeedforwardTypeSelect": {
         "message": "Тип отсечки Feedforward"
     },
@@ -1957,9 +1945,6 @@
     },
     "receiverRcSmoothingFeedforwardTypeAuto": {
         "message": "Авто"
-    },
-    "receiverRcSmoothingMode": {
-        "message": "Режим сглаживания"
     },
     "pidTuningDtermSetpointTransition": {
         "message": "D Setpoint transition"

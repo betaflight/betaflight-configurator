@@ -1969,18 +1969,6 @@
     "receiverRcSmoothingManual": {
         "message": "手動"
     },
-    "receiverRcSmoothingAutoFactor": {
-        "message": "自動係数",
-        "description": "Auto Factor parameter for RC smoothing"
-    },
-    "receiverRcSmoothingAutoFactorHelp": {
-        "message": "自動係数演算を調整します。10がデフォルト係数と遅延の比率です。この数値を増加させると、RC入力がより滑らかとなりますが、遅延も付加されます。これは信頼性の低いRC接続やシネマティック飛行に役立ちます。<br>数値が50に近づくと、入力遅延が顕著になりますので注意してください。<br>TXとRXの電力が供給されている間にCLIコマンドrc_smoothing_infoを使用すると、自動計算されたRCスムージング カットオフを確認できます。",
-        "description": "Auto Factor parameter help message"
-    },
-    "receiverRcSmoothingAutoFactorHelp2": {
-        "message": "自動RCスムージングを調整します。30がデフォルト値です。値が高いほど、スムーズなRC入力が増加します。 HDフリースタイル機体の場合は60、シネマティック飛行の場合は90～120です。注: 50以上の値はかなりの遅延を引き起こします。低い値、例えば20～25は、モーター信号にRC制御ステップの一部を転送します。モーター発熱は若干上がりますが、RC信号遅延を若干軽減します。これはレース用機体にも役立つかもしれません。",
-        "description": "Auto Factor parameter help message"
-    },
     "receiverRcFeedforwardTypeSelect": {
         "message": "フィードフォワード カットオフタイプ"
     },
@@ -2019,9 +2007,6 @@
     },
     "receiverRcSmoothingFeedforwardTypeAuto": {
         "message": "自動"
-    },
-    "receiverRcSmoothingMode": {
-        "message": "スムージングモード"
     },
     "pidTuningDtermSetpointTransition": {
         "message": "D値 セットポイント 遷移"
