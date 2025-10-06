@@ -53,6 +53,8 @@ jobs:
       issues: write
       pull-requests: write
     runs-on: ubuntu-latest
+    environment:
+      name: ${{ github.ref_name }}
     steps:
       - name: Download build artifact
         uses: actions/download-artifact@v5
