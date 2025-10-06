@@ -2239,6 +2239,12 @@
     "motorsmAhDrawn": {
         "message": "已消耗电流："
     },
+    "motorsAmperageAverage5s": {
+        "message": "电流 (5秒平均)："
+    },
+    "motorsAmperageAverage10s": {
+        "message": "电流 (10秒平均)："
+    },
     "motorsVoltageValue": {
         "message": "$1 V"
     },
@@ -2247,6 +2253,12 @@
     },
     "motorsmAhDrawnValue": {
         "message": "$1 mAh"
+    },
+    "motorsAmperageAverage5sValue": {
+        "message": "$1 A"
+    },
+    "motorsAmperageAverage10sValue": {
+        "message": "$1 A"
     },
     "motorsText": {
         "message": "电机"
@@ -3999,6 +4011,12 @@
     },
     "powerBatteryAmperage": {
         "message": "电流"
+    },
+    "powerBatteryAmperageAverage5s": {
+        "message": "电流 (5秒平均)"
+    },
+    "powerBatteryAmperageAverage10s": {
+        "message": "电流 (10秒平均)"
     },
     "powerBatteryCapacity": {
         "message": "容量 (mAh)"

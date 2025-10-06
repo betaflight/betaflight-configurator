@@ -3130,6 +3130,12 @@
     "motorsmAhDrawn": {
         "message": "Amp. drawn:"
     },
+    "motorsAmperageAverage5s": {
+        "message": "Amperage (5s avg):"
+    },
+    "motorsAmperageAverage10s": {
+        "message": "Amperage (10s avg):"
+    },
     "motorsVoltageValue": {
         "message": "$1 V"
     },
@@ -3138,6 +3144,12 @@
     },
     "motorsmAhDrawnValue": {
         "message": "$1 mAh"
+    },
+    "motorsAmperageAverage5sValue": {
+        "message": "$1 A"
+    },
+    "motorsAmperageAverage10sValue": {
+        "message": "$1 A"
     },
     "motorsText":{
         "message": "Motors"
@@ -5332,6 +5344,12 @@
     },
     "powerBatteryAmperage": {
         "message": "Amperage"
+    },
+    "powerBatteryAmperageAverage5s": {
+        "message": "Amperage (5s average)"
+    },
+    "powerBatteryAmperageAverage10s": {
+        "message": "Amperage (10s average)"
     },
     "powerBatteryCapacity": {
         "message": "Capacity (mAh)"

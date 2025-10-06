@@ -11,10 +11,14 @@ import { initializeModalDialog } from "../utils/initializeModalDialog";
 const power = {
     supported: false,
     analyticsChanges: {},
+    amperageHistory: [], // Store amperage readings with timestamps for average calculation
 };
 
 power.initialize = function (callback) {
     const self = this;
+
+    // Reset amperage history when initializing
+    self.amperageHistory = [];
 
     if (GUI.active_tab != "power") {
         GUI.active_tab = "power";
@@ -224,6 +228,8 @@ power.initialize = function (callback) {
         $(elementBatteryState).find(".voltage").attr("id", "battery-voltage");
         $(elementBatteryState).find(".mah-drawn").attr("id", "battery-mah-drawn");
         $(elementBatteryState).find(".amperage").attr("id", "battery-amperage");
+        $(elementBatteryState).find(".amperage-average-5s").attr("id", "battery-amperage-average-5s");
+        $(elementBatteryState).find(".amperage-average-10s").attr("id", "battery-amperage-average-10s");
 
         destinationBatteryState.append(elementBatteryState.children());
 
@@ -332,6 +338,53 @@ power.initialize = function (callback) {
                 elementMspBatteryState.text(i18n.getMessage("powerMahValue", [FC.BATTERY_STATE.mAhDrawn]));
                 elementMspBatteryState = $(`${elementPrefix}-amperage .value`);
                 elementMspBatteryState.text(i18n.getMessage("powerAmperageValue", [FC.BATTERY_STATE.amperage]));
+
+                // Calculate amperage averages using timestamp-based approach
+                const currentAmperage = FC.BATTERY_STATE.amperage;
+                const currentTimestamp = performance.now();
+
+                // Add current reading with timestamp
+                self.amperageHistory.push({
+                    value: currentAmperage,
+                    timestamp: currentTimestamp,
+                });
+
+                // Calculate time thresholds
+                const tenSecondsAgo = currentTimestamp - 10000;
+                const fiveSecondsAgo = currentTimestamp - 5000;
+
+                // Remove readings older than 10 seconds and calculate averages in one pass
+                const validReadings = [];
+                let amperageSum5s = 0;
+                let amperageSum10s = 0;
+                let count5s = 0;
+                let count10s = 0;
+
+                for (const reading of self.amperageHistory) {
+                    if (reading.timestamp >= tenSecondsAgo) {
+                        validReadings.push(reading);
+                        amperageSum10s += reading.value;
+                        count10s++;
+
+                        if (reading.timestamp >= fiveSecondsAgo) {
+                            amperageSum5s += reading.value;
+                            count5s++;
+                        }
+                    }
+                }
+
+                // Update history with only valid readings
+                self.amperageHistory = validReadings;
+
+                // Calculate averages
+                const amperageAverage5s = count5s > 0 ? amperageSum5s / count5s : 0;
+                const amperageAverage10s = count10s > 0 ? amperageSum10s / count10s : 0;
+
+                // Display average amperages
+                elementMspBatteryState = $(`${elementPrefix}-amperage-average-5s .value`);
+                elementMspBatteryState.text(i18n.getMessage("powerAmperageValue", [amperageAverage5s.toFixed(2)]));
+                elementMspBatteryState = $(`${elementPrefix}-amperage-average-10s .value`);
+                elementMspBatteryState.text(i18n.getMessage("powerAmperageValue", [amperageAverage10s.toFixed(2)]));
             });
         }
 
