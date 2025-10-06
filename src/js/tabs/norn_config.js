@@ -1,4 +1,4 @@
-import ejs from "ejs";
+import Handlebars from "handlebars";
 import { i18n } from "../localization";
 import GUI, { TABS } from "../gui";
 import { mspHelper } from "../msp/MSPHelper";
@@ -6,8 +6,13 @@ import MSP from "../msp";
 import MSPCodes from "../msp/MSPCodes";
 import $ from "jquery";
 
+// Register Handlebars helpers
+Handlebars.registerHelper("eq", function (a, b) {
+    return a === b;
+});
+
 // Discover config sources (text-based)
-const templateFiles = import.meta.glob("../../norn-configs/template.ejs", { eager: true, as: "raw" });
+const templateFiles = import.meta.glob("../../norn-configs/template.hbs", { eager: true, as: "raw" });
 
 const norn_config = {
     analyticsChanges: {},
@@ -148,7 +153,8 @@ norn_config.initialize = function (callback) {
         let result;
         if (templatePath) {
             const tpl = readFileRaw(templateFiles, templatePath);
-            result = ejs.render(tpl, getSelectedKeys());
+            const template = Handlebars.compile(tpl);
+            result = template(getSelectedKeys());
         } else {
             // Fallback to old behavior if template missing
             const parts = [];
