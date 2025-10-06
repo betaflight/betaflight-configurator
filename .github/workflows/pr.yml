@@ -3,7 +3,7 @@ name: PR
 on:
   pull_request:
     branches:
-      - '*-maintenance'
+      - '10.10-maintenance'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number }}

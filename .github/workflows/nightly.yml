@@ -17,7 +17,7 @@ name: Nightly
 on:
   push:
     branches:
-      - '*-maintenance'
+      - '10.10-maintenance'
 
 jobs:
   ci:
