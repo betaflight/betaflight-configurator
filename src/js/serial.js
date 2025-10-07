@@ -33,6 +33,51 @@ class Serial extends EventTarget {
         this._setupEventForwarding();
     }
 
+    /**
+     * Helper to handle cases where protocol is already connected.
+     * If already connected to the requested path -> return true.
+     * If connected to a different path -> attempt to disconnect and then
+     * connect using the existing protocol instance (returns true/false).
+     * If the helper does not handle the situation, return undefined to
+     * allow normal connect flow to proceed.
+     */
+    async _handleReconnection(requestedPath, options, callback) {
+        try {
+            const connectedPort = this._protocol.getConnectedPort?.();
+            if (this._protocol.connected && connectedPort?.path === requestedPath) {
+                console.log(`${this.logHead} Already connected to the requested port`);
+                if (callback) callback(true);
+                return true;
+            }
+
+            if (this._protocol.connected && connectedPort?.path !== requestedPath) {
+                console.log(`${this.logHead} Connected to a different port, disconnecting first`);
+                const success = await this.disconnect();
+                if (!success) {
+                    console.error(`${this.logHead} Failed to disconnect before reconnecting`);
+                    if (callback) callback(false);
+                    return false;
+                }
+
+                // After successful disconnect, attempt to connect to new path
+                console.log(`${this.logHead} Reconnecting to new port:`, requestedPath);
+                try {
+                    const result = await this._protocol.connect(requestedPath, options, callback);
+                    return result;
+                } catch (err) {
+                    console.error(`${this.logHead} Reconnect attempt failed:`, err);
+                    if (callback) callback(false);
+                    return false;
+                }
+            }
+        } catch (err) {
+            console.warn(`${this.logHead} _handleReconnection encountered an error:`, err);
+            return false;
+        }
+
+        return undefined;
+    }
+
     // Add a getter method to safely access the protocol map
     _getProtocolByType(type) {
         if (!type) {
@@ -111,42 +156,27 @@ class Serial extends EventTarget {
 
     /**
      * Selects the appropriate protocol based on port path
-     * @param {string|null} portPath - Optional port path to determine protocol
-     * @param {boolean} forceDisconnect - Whether to force disconnect from current protocol
+     * @param {string|null} portPath - Port path to determine protocol
      */
-    selectProtocol(portPath = null, forceDisconnect = true) {
+    selectProtocol(portPath) {
         // Determine which protocol to use based on port path
         let newProtocol;
 
-        if (portPath) {
-            // Select protocol based on port path
-            if (portPath === "virtual") {
-                console.log(`${this.logHead} Using virtual protocol (based on port path)`);
-                newProtocol = this._virtual;
-            } else if (portPath === "manual" || /^(tcp|ws):\/\/([A-Za-z0-9.-]+)(?::(\d+))?$/.test(portPath)) {
-                console.log(`${this.logHead} Using websocket protocol (based on port path)`);
-                newProtocol = this._webSocket;
-            } else if (portPath.startsWith("bluetooth")) {
-                console.log(`${this.logHead} Using bluetooth protocol (based on port path: ${portPath})`);
-                newProtocol = this._webBluetooth;
-            } else {
-                console.log(`${this.logHead} Using web serial protocol (based on port path: ${portPath})`);
-                newProtocol = this._webSerial;
-            }
+        // Select protocol based on port path. Default to webSerial for
+        // typical serial device identifiers (e.g., COM1, /dev/ttyUSB0).
+        if (portPath === "virtual") {
+            newProtocol = this._virtual;
+        } else if (portPath === "manual" || /^(tcp|ws):\/\/([A-Za-z0-9.-]+)(?::(\d+))?$/.test(portPath)) {
+            newProtocol = this._webSocket;
+        } else if (portPath && portPath.startsWith("bluetooth")) {
+            newProtocol = this._webBluetooth;
+        } else {
+            newProtocol = this._webSerial;
         }
 
-        // If we're switching to a different protocol
-        if (this._protocol !== newProtocol) {
-            // Clean up previous protocol if exists
-            if (this._protocol && forceDisconnect) {
-                // Disconnect if connected
-                if (this._protocol.connected) {
-                    console.log(`${this.logHead} Disconnecting from current protocol before switching`);
-                    this._protocol.disconnect();
-                }
-            }
+        console.log(`${this.logHead} Selected protocol: ${this._getProtocolType(newProtocol)} (${portPath})`);
 
-            // Set new protocol
+        if (this._protocol !== newProtocol) {
             this._protocol = newProtocol;
             console.log(`${this.logHead} Protocol switched successfully to:`, this._protocol);
         }
@@ -168,31 +198,122 @@ class Serial extends EventTarget {
             return false;
         }
 
-        // Check if already connected
-        if (this._protocol.connected) {
-            console.warn(`${this.logHead} Protocol already connected, not connecting again`);
-
+        // Check if already connected and handle reconnection if needed
+        if (this._protocol.connected && !this._protocol.openRequested) {
             // If we're already connected to the requested port, return success
-            const connectedPort = this._protocol.getConnectedPort?.();
-            if (connectedPort && connectedPort.path === path) {
-                console.log(`${this.logHead} Already connected to the requested port`);
+            const reconnectionResult = await this._handleReconnection(path, options, callback);
+            // _handleReconnection returns true/false when it handled the case,
+            // otherwise undefined to continue normal connect flow.
+            if (reconnectionResult !== undefined) return reconnectionResult;
+        }
+
+        // If a connect/open is already in progress on the protocol, wait for it
+        // to finish instead of returning immediately. This avoids race
+        // conditions while allowing callers to await connection completion.
+        if (this._protocol.openRequested) {
+            console.warn(`${this.logHead} Protocol connection already in progress, waiting for completion`);
+            // Wait for either a 'connect' or 'disconnect' event dispatched
+            // at the Serial level, then re-evaluate state.
+            const waited = await new Promise((resolve) => {
+                const onConnect = () => {
+                    cleanup();
+                    resolve(true);
+                };
+                const onDisconnect = () => {
+                    cleanup();
+                    resolve(false);
+                };
+                const cleanup = () => {
+                    try {
+                        this.removeEventListener("connect", onConnect);
+                        this.removeEventListener("disconnect", onDisconnect);
+                    } catch {
+                        /* ignore */
+                    }
+                };
+                const timer = setTimeout(() => {
+                    cleanup();
+                    resolve(null);
+                }, 5000);
+                const wrap =
+                    (fn) =>
+                        (...args) => {
+                            clearTimeout(timer);
+                            fn(...args);
+                        };
+                this.addEventListener("connect", wrap(onConnect), { once: true });
+                this.addEventListener("disconnect", wrap(onDisconnect), { once: true });
+            });
+
+            // Optional: if timed out, re-evaluate state to proceed safely
+            if (waited === null && this._protocol.connected && this._protocol.getConnectedPort?.()?.path === path) {
                 return true;
             }
 
-            // If we're connected to a different port, disconnect first
-            console.log(`${this.logHead} Connected to a different port, disconnecting first`);
-            const success = await this.disconnect();
-            if (!success) {
-                console.error(`${this.logHead} Failed to disconnect before reconnecting`);
+            // If timed out but connection is still in progress, fail gracefully
+            if (waited === null && this._protocol.openRequested) {
+                console.error(`${this.logHead} Connection attempt timed out and is still in progress`);
+                if (callback) callback(false);
                 return false;
             }
 
-            console.log(`${this.logHead} Reconnecting to new port:`, path);
-            return this._protocol.connect(path, options, callback);
+            // After the in-flight attempt finished, if we're already connected to
+            // the requested port, return success. Otherwise, fall-through and
+            // attempt to connect now that the protocol is no longer in the
+            // 'openRequested' state.
+            if (this._protocol.connected) {
+                if (this._protocol.getConnectedPort?.()?.path === path) {
+                    console.log(`${this.logHead} Already connected to the requested port after waiting`);
+                    return true;
+                }
+
+                // If connected to a different port after waiting, disconnect first
+                console.log(`${this.logHead} Connected to different port after waiting, disconnecting first`);
+                const success = await this.disconnect();
+                if (!success) {
+                    console.error(`${this.logHead} Failed to disconnect before reconnecting`);
+                    return false;
+                }
+            }
         }
 
         console.log(`${this.logHead} Connecting to port:`, path, "with options:", options);
-        return this._protocol.connect(path, options, callback);
+
+        // When connect fails (for example due to Web Serial InvalidStateError),
+        // callers that waited for a 'connect' or 'disconnect' event may never be notified and protocol state (openRequested) can be left true.
+        // This can block future connect attempts and create confusing races. The reset ensures consistent state and notifies waiters.
+
+        try {
+            const result = await this._protocol.connect(path, options, callback);
+            return result;
+        } catch (error) {
+            // If connect fails, ensure protocol state is reset so callers can
+            // attempt new connections reliably. Also dispatch a Serial-level
+            // disconnect event so any waiters are notified.
+            console.error(`${this.logHead} Error during protocol.connect:`, error);
+            try {
+                if (this._protocol) {
+                    // Best-effort state cleanup
+                    this._protocol.openRequested = false;
+                    this._protocol.connected = false;
+                    if (Object.prototype.hasOwnProperty.call(this._protocol, "connectionId")) {
+                        this._protocol.connectionId = null;
+                    }
+                }
+            } catch (cleanupErr) {
+                console.warn(`${this.logHead} Failed to cleanup protocol state:`, cleanupErr);
+            }
+
+            // Notify listeners that connection did not succeed
+            try {
+                this.dispatchEvent(new CustomEvent("disconnect", { detail: false }));
+            } catch {
+                /* ignore */
+            }
+
+            if (callback) callback(false);
+            return false;
+        }
     }
 
     /**
@@ -228,7 +349,7 @@ class Serial extends EventTarget {
             if (callback) {
                 callback(false);
             }
-            return Promise.resolve(false);
+            return false;
         }
     }
 
