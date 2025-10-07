@@ -257,7 +257,7 @@ logging.initialize = function (callback) {
     }
 
     function append_to_file(data) {
-        FileSystem.writeChunck(logging.fileWriter, new Blob([data], { type: "text/plain" })).catch((error) => {
+        FileSystem.writeChunk(logging.fileWriter, new Blob([data], { type: "text/plain" })).catch((error) => {
             console.error("Error appending to file: ", error);
         });
     }
