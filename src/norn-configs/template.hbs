@@ -1,0 +1,315 @@
+# FC: {{fcKey}}
+# Drone Size: {{droneSize}}
+# Manticore: {{manticoreKey}}
+# VTX: {{vtxKey}}
+# Video Format: {{videoFormat}}
+# GPS: {{gpsEnabled}}
+# Craft Name: {{craftName}}
+# MB ID: {{mbId}}
+# Controller: {{controller}}
+# FailSafe: {{failSafe}}
+
+defaults nosave
+batch start
+defaults nosave
+
+{{!-- GPIO Configuration --}}
+{{#if (eq manticoreKey 'GPIO')}}
+# RESOURCES CONFIGURATION
+  {{!-- FLASHHOBBYF405 specific GPIO resources --}}
+  {{#if (eq fcKey 'FLASHHOBBYF405')}}
+resource PINIO 1 A01
+resource PINIO 2 A00
+  {{/if}}
+  {{!-- TAKERF722SE specific GPIO resources --}}
+  {{#if (eq fcKey 'TAKERF722SE')}}
+resource PINIO 1 A03
+resource PINIO 3 A02
+  {{/if}}
+  {{!-- Common GPIO configuration for ALL GPIO setups --}}
+set pinio_config = 1,1,1,1
+set pinio_box = 58,255,59,255
+{{/if}}
+
+# FEATURES CONFIGURATION
+{{!-- Common features for all configurations --}}
+feature TELEMETRY
+feature OSD
+{{!-- GPS feature --}}
+{{#if gpsEnabled}}
+feature GPS
+{{/if}}
+
+# PORTS CONFIGURATION
+{{#if (ne vtxKey 'OPTICA')}}
+serial UART1 8192 115200 57600 0 115200
+{{/if}}
+{{!-- Manticore UART Configuration --}}
+{{#if (eq manticoreKey 'UART')}}
+  {{#if (eq fcKey 'FLASHHOBBYF405')}}
+serial UART4 4194304 115200 57600 0 115200
+  {{else}}
+serial UART2 4194304 115200 57600 0 115200
+  {{/if}}
+{{/if}}
+{{!-- Manticore GPIO Configuration --}}
+{{#if (eq manticoreKey 'GPIO')}}
+  {{#if (eq fcKey 'FLASHHOBBYF405')}}
+serial UART4 2097152 115200 57600 0 115200
+  {{else}}
+serial UART2 2097152 115200 57600 0 115200
+  {{/if}}
+{{/if}}
+serial UART5 64 115200 57600 0 115200
+{{!-- GPS Configuration --}}
+{{#if gpsEnabled}}
+serial UART6 2 115200 57600 0 115200
+{{/if}}
+
+# AUX CONFIGURATION
+{{!-- TX12 Controller AUX Configuration --}}
+{{#if (eq controller 'TX12')}}
+aux 0 0 0 1800 2100 0 0
+aux 1 1 1 1400 2100 0 0
+aux 2 58 2 1400 2100 0 0
+aux 3 59 2 1800 2100 0 0
+{{/if}}
+{{!-- Default AUX Configuration (for BOXER or no controller selected) --}}
+{{#if (ne controller 'TX12')}}
+aux 0 0 0 1800 2100 0 0
+aux 1 1 1 1700 2100 0 0
+aux 2 2 1 1300 1700 0 0
+aux 4 58 4 1800 2100 0 0
+aux 5 59 5 1800 2100 0 0
+{{/if}}
+
+# CAMERA/VTX CONFIGURATION
+{{!-- Camera Configuration for all VTX types and video formats --}}
+{{#if vtxKey}}
+  {{!-- 5.8GHz VTX Configuration --}}
+  {{#if (eq vtxKey '5.8VTX')}}
+vtxtable bands 8
+vtxtable channels 8
+vtxtable band 1 BAND_A   A CUSTOM  5865 5845 5825 5805 5785 5765 5745 5725
+vtxtable band 2 BAND_B   B CUSTOM  5733 5752 5771 5790 5809 5828 5847 5866
+vtxtable band 3 BAND_E   E CUSTOM  5705 5685 5665 5645 5885 5905 5925 5945
+vtxtable band 4 BAND_F   F CUSTOM  5740 5760 5780 5800 5820 5840 5860 5880
+vtxtable band 5 BAND_R   R CUSTOM  5658 5695 5732 5769 5806 5843 5880 5917
+vtxtable band 6 BAND_L   L CUSTOM  5917 5800 5645 5493 5333 5200 5050 4990
+vtxtable band 7 BAND_X   X CUSTOM  4990 5020 5050 5080 5110 5140 5170 5200
+vtxtable band 8 BAND_C   C CUSTOM  4990 5020 5050 5080 5110 5140 5170 5200
+vtxtable powerlevels 5
+vtxtable powervalues 25 100 200 400 600
+vtxtable powerlabels 25 200 500 1.5 2.5
+set vtx_channel = 4
+set vtx_power = 4
+set vtx_low_power_disarm = ON
+set vtx_freq = 5800
+  {{/if}}
+  {{!-- 3.3GHz VTX Configuration --}}
+  {{#if (eq vtxKey '3.3VTX')}}
+vtxtable bands 5
+vtxtable channels 8
+vtxtable band 1 BAND_A   A CUSTOM  3320 3345 3370 3395 3420 3445 3470 3495
+vtxtable band 2 BAND_B   B CUSTOM  3310 3330 3355 3380 3405 3430 3455 3480
+vtxtable band 3 BAND_C   C CUSTOM  3490 3510 3530 3550 3570 3590 3610 3630
+vtxtable band 4 BAND_D   D CUSTOM  3330 3350 3370 3390 3410 3430 3450 3470
+vtxtable band 5 BAND_E   E CUSTOM  3170 3190 3210 3230 3250 3270 3290 3310
+vtxtable powerlevels 5
+vtxtable powervalues 25 100 200 400 600
+vtxtable powerlabels 250 500 1W 2W 4W
+set vtx_channel = 1
+set vtx_power = 1
+set vtx_low_power_disarm = ON
+set vtx_freq = 3320
+  {{/if}}
+  {{!-- Video Format Configuration --}}
+  {{#if videoFormat}}
+set vcd_video_system = {{videoFormat}}
+  {{/if}}
+{{/if}}
+
+{{#if (eq failSafe 'Default')}}
+# FAILSAFE CONFIGURATION
+rxfail 0 s 1500
+rxfail 1 s 1500
+rxfail 2 s 1500
+rxfail 3 h
+set failsafe_delay = 10
+set failsafe_landing_time = 200
+set failsafe_throttle = 1800
+set failsafe_procedure = AUTO-LAND
+{{/if}}
+
+{{#if craftName}}
+# CRAFT NAME CONFIGURATION
+set craft_name = {{craftName}}
+{{/if}}
+
+{{#if mbId}}
+# MB CONFIGURATION
+set mb_id = {{mbId}}
+{{/if}}
+
+# COMMON CONFIGURATION
+set blackbox_disable_gps = ON 
+set dshot_bidir = ON
+set motor_pwm_protocol = DSHOT300
+set vbat_min_cell_voltage = 280
+set vbat_warning_cell_voltage = 300
+set yaw_motors_reversed = ON
+
+# OSD CONFIGURATION
+{{!-- Common OSD settings for all video formats --}}
+set osd_cap_alarm = 12000
+set osd_alt_alarm = 300
+set osd_vbat_pos = 257
+set osd_rssi_pos = 34
+set osd_link_quality_pos = 2101
+set osd_link_tx_power_pos = 128
+set osd_rssi_dbm_pos = 2133
+set osd_rsnr_pos = 2165
+set osd_tim_1_pos = 363
+set osd_flymode_pos = 2082
+set osd_throttle_pos = 2273
+set osd_crosshairs_pos = 2286
+set osd_ah_sbar_pos = 2287
+set osd_ah_pos = 2159
+set osd_current_pos = 2144
+set osd_mah_drawn_pos = 352
+set osd_altitude_pos = 18681
+set osd_avg_cell_voltage_pos = 2113
+set osd_battery_usage_pos = 33122
+set osd_disarmed_pos = 298
+set osd_esc_rpm_pos = 56
+set osd_stick_overlay_left_pos = 321
+{{!-- Video Format specific OSD positions --}}
+{{#if (eq videoFormat 'PAL')}}
+set osd_tim_2_pos = 2519
+set osd_vtx_channel_pos = 18872
+set osd_craft_name_pos = 2497
+set osd_warnings_pos = 14730
+set osd_efficiency_pos = 22
+{{/if}}
+{{#if (eq videoFormat 'NTSC')}}
+set osd_tim_2_pos = 2455
+set osd_vtx_channel_pos = 18808
+set osd_craft_name_pos = 2433
+set osd_warnings_pos = 14666
+set osd_efficiency_pos = 228
+{{/if}}
+{{!-- Manticore OSD Configuration --}}
+{{#if (eq manticoreKey 'GPIO')}}
+set osd_manticore_initiator_v1_pos = 2090
+{{/if}}
+{{#if (eq manticoreKey 'UART')}}
+set osd_manticore_initiator_v2_pos = 2090
+{{/if}}
+set osd_mb_stats_pos = 0
+{{!-- GPS OSD Configuration --}}
+{{#if gpsEnabled}}
+set osd_gps_speed_pos = 2337
+set osd_gps_sats_pos = 2209
+set osd_home_dir_pos = 2305
+set osd_home_dist_pos = 2306
+set osd_flight_dist_pos = 2241
+{{#if (eq videoFormat 'PAL')}}
+set osd_gps_lon_pos = 18891
+set osd_gps_lat_pos = 18859
+{{/if}}
+{{#if (eq videoFormat 'NTSC')}}
+set osd_gps_lon_pos = 18827
+set osd_gps_lat_pos = 18795
+{{/if}}
+{{/if}}
+
+# PROFILE CONFIGURATION
+{{!-- Profile configuration for 7", 8", and 9" drones --}}
+{{#if (or (eq droneSize '7') (eq droneSize '8') (eq droneSize '9'))}}
+profile 0
+
+set dterm_lpf1_dyn_min_hz = 60
+set dterm_lpf1_dyn_max_hz = 120
+set dterm_lpf1_static_hz = 60
+set dterm_lpf2_static_hz = 120
+set p_pitch = 38
+set i_pitch = 43
+set d_pitch = 29
+set f_pitch = 106
+set p_roll = 37
+set i_roll = 38
+set d_roll = 27
+set f_roll = 101
+set i_yaw = 44
+set f_yaw = 101
+set d_min_roll = 21
+set d_min_pitch = 23
+set auto_profile_cell_count = 6
+set thrust_linear = 20
+set simplified_pids_mode = OFF
+set simplified_i_gain = 90
+set simplified_d_gain = 95
+set simplified_pi_gain = 55
+set simplified_dmax_gain = 10
+set simplified_feedforward_gain = 85
+set simplified_dterm_filter_multiplier = 80
+{{/if}}
+{{!-- Profile configuration for 10" drones --}}
+{{#if (eq droneSize '10')}}
+profile 0
+
+set dterm_lpf1_dyn_min_hz = 60
+set dterm_lpf1_dyn_max_hz = 120
+set dterm_lpf1_static_hz = 60
+set dterm_lpf2_static_hz = 120
+set simplified_dterm_filter_multiplier = 80
+{{/if}}
+{{!-- Profile configuration for 13" drones --}}
+{{#if (eq droneSize '13')}}
+profile 0
+
+set dterm_lpf1_dyn_min_hz = 60
+set dterm_lpf1_dyn_max_hz = 120
+set dterm_lpf1_static_hz = 60
+set dterm_lpf2_static_hz = 105
+set iterm_rotation = ON
+set iterm_windup = 90
+set p_pitch = 56
+set i_pitch = 80
+set d_pitch = 47
+set f_pitch = 74
+set p_roll = 53
+set i_roll = 76
+set d_roll = 42
+set f_roll = 71
+set p_yaw = 50
+set i_yaw = 120
+set f_yaw = 70
+set d_max_roll = 44
+set d_max_pitch = 50
+set thrust_linear = 20
+set dyn_idle_min_rpm = 25
+set simplified_pids_mode = RP
+set simplified_i_gain = 80
+set simplified_d_gain = 140
+set simplified_pi_gain = 120
+set simplified_d_max_gain = 20
+set simplified_feedforward_gain = 60
+set simplified_dterm_filter = OFF
+set simplified_dterm_filter_multiplier = 80
+{{/if}}
+
+profile 1
+profile 2
+profile 3
+
+# restore original profile selection
+profile 0
+
+rateprofile 0
+rateprofile 1
+rateprofile 2
+rateprofile 3
+
+# restore original rateprofile selection
+rateprofile 0

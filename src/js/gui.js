@@ -19,7 +19,14 @@ class GuiControl {
         this.timeout_array = [];
         this.buttonDisabledClass = "disabled";
 
-        this.defaultAllowedTabsWhenDisconnected = ["landing", "firmware_flasher", "privacy_policy", "options", "help"];
+        this.defaultAllowedTabsWhenDisconnected = [
+            "landing",
+            "firmware_flasher",
+            "privacy_policy",
+            "options",
+            "help",
+            "norn_config",
+        ];
 
         this.defaultAllowedTabs = [
             "setup",
@@ -30,6 +37,7 @@ class GuiControl {
             "presets",
             "cli",
             "configuration",
+            "norn_config",
             "logging",
             "onboard_logging",
             "modes",

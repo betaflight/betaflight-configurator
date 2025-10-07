@@ -1,0 +1,193 @@
+<div class="tab-norn-config">
+    <style>
+        .mandatory-missing {
+            border: 2px solid #ff4444 !important;
+            background-color: #ffe6e6 !important;
+        }
+
+        .mandatory-missing select {
+            border: 2px solid #ff4444 !important;
+        }
+    </style>
+    <div class="content_wrapper">
+        <div class="tab_title" i18n="tabNornConfig"></div>
+        <div class="cf_doc_version_bt">
+            <a id="button-documentation" href="" target="_blank" rel="noopener noreferrer"></a>
+        </div>
+
+        <div class="grid-row grid-box col2">
+            <div class="col-span-1">
+                <div class="grid-row grid-box col2">
+                    <div class="col-span-1">
+                        <div class="gui_box grey">
+                            <div class="gui_box_titlebar">
+                                <div class="spacer_box_title" i18n="nornController"></div>
+                            </div>
+                            <div class="spacer_box">
+                                <div class="select">
+                                    <select name="norn_fc" id="norn_fc">
+                                        <option value="" i18n="nornNone"></option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-span-1">
+                        <div class="gui_box grey">
+                            <div class="gui_box_titlebar">
+                                <div class="spacer_box_title" i18n="nornSize"></div>
+                            </div>
+                            <div class="spacer_box">
+                                <div class="select">
+                                    <select name="norn_drone_size" id="norn_drone_size">
+                                        <option value="" i18n="nornNone"></option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid-row grid-box col2">
+                    <div class="col-span-1">
+                        <div class="gui_box grey">
+                            <div class="gui_box_titlebar">
+                                <div class="spacer_box_title" i18n="nornManticore"></div>
+                            </div>
+                            <div class="spacer_box">
+                                <div class="select">
+                                    <select name="norn_manticore" id="norn_manticore">
+                                        <option value="" i18n="nornNone"></option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-span-1">
+                        <div class="gui_box grey">
+                            <div class="gui_box_titlebar">
+                                <div class="spacer_box_title" i18n="nornRadioController"></div>
+                            </div>
+                            <div class="spacer_box">
+                                <div class="select">
+                                    <select name="norn_controller" id="norn_controller">
+                                        <option value="" i18n="nornNone"></option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid-row grid-box col2">
+                    <div class="col-span-2">
+                        <div class="gui_box grey">
+                            <div class="gui_box_titlebar">
+                                <div class="spacer_box_title" i18n="nornCamera"></div>
+                            </div>
+                            <div class="spacer_box">
+                                <div class="grid-row grid-box col2">
+                                    <div class="col-span-1">
+                                        <div class="select">
+                                            <label i18n="nornVtx"></label>
+                                            <select name="norn_vtx" id="norn_vtx">
+                                                <option value="" i18n="nornNone"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-span-1">
+                                        <div class="select">
+                                            <label i18n="nornVideoFormat"></label>
+                                            <select name="norn_video_format" id="norn_video_format">
+                                                <option value="" i18n="nornNone"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid-row grid-box col2">
+                    <div class="col-span-1">
+                        <div class="gui_box grey">
+                            <div class="gui_box_titlebar">
+                                <div class="spacer_box_title" i18n="nornCraftName"></div>
+                            </div>
+                            <div class="spacer_box">
+                                <div class="select">
+                                    <input type="text" id="norn_craft_name" placeholder="Enter craft name"
+                                        style="width: 100%;" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-span-1">
+                        <div class="gui_box grey">
+                            <div class="gui_box_titlebar">
+                                <div class="spacer_box_title" i18n="nornMBId"></div>
+                            </div>
+                            <div class="spacer_box">
+                                <div class="select">
+                                    <input type="text" id="norn_mb_id" placeholder="Enter MB ID" style="width: 100%;" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid-row grid-box col2">
+                    <div class="col-span-1">
+                        <div class="gui_box grey">
+                            <div class="gui_box_titlebar">
+                                <div class="spacer_box_title" i18n="nornGPS"></div>
+                            </div>
+                            <div class="spacer_box">
+                                <div class="select">
+                                    <div>
+                                        <input type="checkbox" id="norn_gps" class="toggle" />
+                                    </div>
+                                    <span class="freelabel" i18n="nornGPS"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-span-1">
+                        <div class="gui_box grey">
+                            <div class="gui_box_titlebar">
+                                <div class="spacer_box_title" i18n="nornFailSafe"></div>
+                            </div>
+                            <div class="spacer_box">
+                                <div class="select">
+                                    <select name="norn_failsafe" id="norn_failsafe">
+                                        <option value="" i18n="nornNone"></option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="buttons" style="margin-top: 16px;">
+                    <a href="#" class="generate regular-button" i18n="nornGenerate"></a>
+                </div>
+            </div>
+
+            <div class="col-span-1">
+                <div class="gui_box grey">
+                    <div class="gui_box_titlebar">
+                        <div class="spacer_box_title" i18n="nornOutput"></div>
+                    </div>
+                    <div class="spacer_box">
+                        <textarea id="norn_config_output" rows="20" style="width: 100%;" readonly></textarea>
+                        <div class="buttons" style="margin-top: 8px;">
+                            <a href="#" class="copy regular-button" i18n="nornCopy"></a>
+                            <a href="#" class="save regular-button" i18n="nornSave"></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

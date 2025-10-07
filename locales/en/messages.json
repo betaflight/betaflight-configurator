@@ -368,7 +368,60 @@
     "tabOptions": {
         "message": "Options"
     },
-
+    "tabNornConfig": {
+        "message": "NORN Config"
+    },
+    "nornManticore": {
+        "message": "Manticore"
+    },
+    "nornVtx": {
+        "message": "VTX"
+    },
+    "nornNone": {
+        "message": "None"
+    },
+    "nornGenerate": {
+        "message": "Generate"
+    },
+    "nornOutput": {
+        "message": "NORN Configuration"
+    },
+    "nornDrone": {
+        "message": "Drone"
+    },
+    "nornController": {
+        "message": "Controller"
+    },
+    "nornRadioController": {
+        "message": "Radio Controller"
+    },
+    "nornSize": {
+        "message": "Size"
+    },
+    "nornCraftName": {
+        "message": "Craft Name"
+    },
+    "nornMBId": {
+        "message": "MB ID"
+    },
+    "nornFailSafe": {
+        "message": "FailSafe"
+    },
+    "nornVideoFormat": {
+        "message": "Video Format"
+    },
+    "nornCamera": {
+        "message": "Camera"
+    },
+    "nornGPS": {
+        "message": "GPS"
+    },
+    "nornCopy": {
+        "message": "Copy to clipboard"
+    },
+    "nornSave": {
+        "message": "Save"
+    },
     "tabSetup": {
         "message": "Setup"
     },
