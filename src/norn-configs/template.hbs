@@ -71,8 +71,8 @@ serial UART6 2 115200 57600 0 115200
 {{#if (eq controller 'TX12')}}
 aux 0 0 0 1800 2100 0 0
 aux 1 1 1 1400 2100 0 0
-aux 2 40 2 1400 2100 0 0
-aux 3 41 2 1800 2100 0 0
+aux 2 58 2 1400 2100 0 0
+aux 3 59 2 1800 2100 0 0
 {{/if}}
 {{!-- Default AUX Configuration (for BOXER or no controller selected) --}}
 {{#if (ne controller 'TX12')}}
@@ -160,6 +160,7 @@ set vbat_warning_cell_voltage = 300
 set yaw_motors_reversed = ON
 
 # OSD CONFIGURATION
+{{!-- Common OSD settings for all video formats --}}
 set osd_cap_alarm = 12000
 set osd_alt_alarm = 300
 set osd_vbat_pos = 257
@@ -169,24 +170,34 @@ set osd_link_tx_power_pos = 128
 set osd_rssi_dbm_pos = 2133
 set osd_rsnr_pos = 2165
 set osd_tim_1_pos = 363
-set osd_tim_2_pos = 2455
 set osd_flymode_pos = 2082
 set osd_throttle_pos = 2273
-set osd_vtx_channel_pos = 18808
 set osd_crosshairs_pos = 2286
 set osd_ah_sbar_pos = 2287
 set osd_ah_pos = 2159
 set osd_current_pos = 2144
 set osd_mah_drawn_pos = 352
-set osd_craft_name_pos = 2433
-set osd_altitude_pos = 18681 
-set osd_warnings_pos = 14666
+set osd_altitude_pos = 18681
 set osd_avg_cell_voltage_pos = 2113
 set osd_battery_usage_pos = 33122
 set osd_disarmed_pos = 298
 set osd_esc_rpm_pos = 56
 set osd_stick_overlay_left_pos = 321
+{{!-- Video Format specific OSD positions --}}
+{{#if (eq videoFormat 'PAL')}}
+set osd_tim_2_pos = 2519
+set osd_vtx_channel_pos = 18872
+set osd_craft_name_pos = 2497
+set osd_warnings_pos = 14730
+set osd_efficiency_pos = 22
+{{/if}}
+{{#if (eq videoFormat 'NTSC')}}
+set osd_tim_2_pos = 2455
+set osd_vtx_channel_pos = 18808
+set osd_craft_name_pos = 2433
+set osd_warnings_pos = 14666
 set osd_efficiency_pos = 228
+{{/if}}
 {{!-- Manticore OSD Configuration --}}
 {{#if (eq manticoreKey 'GPIO')}}
 set osd_manticore_initiator_v1_pos = 2090
@@ -198,10 +209,16 @@ set osd_mb_stats_pos = 0
 {{!-- GPS OSD Configuration --}}
 {{#if gpsEnabled}}
 set osd_gps_speed_pos = 2337
-set osd_gps_lon_pos = 18827
-set osd_gps_lat_pos = 18795
 set osd_gps_sats_pos = 2209
 set osd_home_dir_pos = 2305
 set osd_home_dist_pos = 2306
 set osd_flight_dist_pos = 2241
+{{#if (eq videoFormat 'PAL')}}
+set osd_gps_lon_pos = 18891
+set osd_gps_lat_pos = 18859
+{{/if}}
+{{#if (eq videoFormat 'NTSC')}}
+set osd_gps_lon_pos = 18827
+set osd_gps_lat_pos = 18795
+{{/if}}
 {{/if}}
