@@ -163,6 +163,19 @@ norn_config.initialize = function (callback) {
                 self.analyticsChanges["NornFailSafe"] = $(this).val() || null;
             });
         }
+
+        // Populate Video Format list (explicit options)
+        const videoFormatSelect = $("select[name='norn_video_format']");
+        if (videoFormatSelect.length) {
+            videoFormatSelect.empty();
+            videoFormatSelect.append(`<option value="">${i18n.getMessage("nornNone")}</option>`);
+            videoFormatSelect.append(`<option value="NTSC">NTSC</option>`);
+            videoFormatSelect.append(`<option value="PAL">PAL</option>`);
+            videoFormatSelect.on("change", function () {
+                self.analyticsChanges["NornVideoFormat"] = $(this).val() || null;
+                clearMandatoryFieldValidation();
+            });
+        }
     }
 
     function on_tab_loaded_handler() {
@@ -202,7 +215,19 @@ norn_config.initialize = function (callback) {
         const mbId = $("#norn_mb_id").val() || "";
         const controller = $("select[name='norn_controller']").val() || "";
         const failSafe = $("select[name='norn_failsafe']").val() || "";
-        return { fcKey, droneSize, manticoreKey, vtxKey, gpsEnabled, craftName, mbId, controller, failSafe };
+        const videoFormat = $("select[name='norn_video_format']").val() || "";
+        return {
+            fcKey,
+            droneSize,
+            manticoreKey,
+            vtxKey,
+            gpsEnabled,
+            craftName,
+            mbId,
+            controller,
+            failSafe,
+            videoFormat,
+        };
     }
 
     function updateMandatoryFieldValidation() {
@@ -214,13 +239,22 @@ norn_config.initialize = function (callback) {
             { selector: "select[name='norn_fc']", label: "Flight Controller" },
             { selector: "select[name='norn_manticore']", label: "Manticore" },
             { selector: "select[name='norn_vtx']", label: "VTX" },
+            { selector: "select[name='norn_video_format']", label: "Video Format" },
             { selector: "select[name='norn_controller']", label: "Radio Controller" },
         ];
 
         mandatoryFields.forEach((field) => {
             const element = $(field.selector);
             if (!element.val()) {
-                element.closest(".gui_box").addClass("mandatory-missing");
+                // For Camera section dropdowns, highlight the entire Camera section
+                if (
+                    field.selector === "select[name='norn_vtx']" ||
+                    field.selector === "select[name='norn_video_format']"
+                ) {
+                    element.closest(".gui_box").addClass("mandatory-missing");
+                } else {
+                    element.closest(".gui_box").addClass("mandatory-missing");
+                }
                 element.addClass("mandatory-missing");
             }
         });
@@ -229,6 +263,7 @@ norn_config.initialize = function (callback) {
     function clearMandatoryFieldValidation() {
         // Remove validation highlighting
         $(".gui_box").removeClass("mandatory-missing");
+        $(".select").removeClass("mandatory-missing");
         $("select, input").removeClass("mandatory-missing");
     }
 
@@ -239,18 +274,20 @@ norn_config.initialize = function (callback) {
         const fcKey = $("select[name='norn_fc']").val();
         const manticoreKey = $("select[name='norn_manticore']").val();
         const vtxKey = $("select[name='norn_vtx']").val();
+        const videoFormat = $("select[name='norn_video_format']").val();
         const controller = $("select[name='norn_controller']").val();
 
         const missingFields = [];
         if (!fcKey) missingFields.push("Flight Controller");
         if (!manticoreKey) missingFields.push("Manticore");
         if (!vtxKey) missingFields.push("VTX");
+        if (!videoFormat) missingFields.push("Video Format");
         if (!controller) missingFields.push("Radio Controller");
 
         if (missingFields.length > 0) {
             // Highlight missing mandatory fields
             updateMandatoryFieldValidation();
-            alert(`Please select the following mandatory fields:\n${missingFields.join(", ")}`);
+            // alert(`Please select the following mandatory fields:\n${missingFields.join(", ")}`);
             return;
         }
 
@@ -309,6 +346,7 @@ norn_config.initialize = function (callback) {
         const mbId = $("#norn_mb_id").val();
         const controller = $("select[name='norn_controller']").val();
         const failSafe = $("select[name='norn_failsafe']").val();
+        const videoFormat = $("select[name='norn_video_format']").val();
 
         if (fcKey) parts.push(fcKey);
         if (droneSize) parts.push(`${droneSize}inch`);
@@ -319,6 +357,7 @@ norn_config.initialize = function (callback) {
         if (mbId) parts.push(`MB${mbId}`);
         if (controller) parts.push(controller);
         if (failSafe) parts.push(failSafe);
+        if (videoFormat) parts.push(videoFormat);
 
         const filename = parts.length > 0 ? `norn_config_${parts.join("_")}.txt` : "norn_config.txt";
 

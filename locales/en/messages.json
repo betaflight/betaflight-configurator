@@ -407,6 +407,12 @@
     "nornFailSafe": {
         "message": "FailSafe"
     },
+    "nornVideoFormat": {
+        "message": "Video Format"
+    },
+    "nornCamera": {
+        "message": "Camera"
+    },
     "nornGPS": {
         "message": "GPS"
     },

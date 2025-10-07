@@ -52,6 +52,11 @@
 #   - '': Empty/None selected
 #   - 'Default': Default failSafe configuration
 #
+# videoFormat: Video format (from select[name='norn_video_format'])
+#   - '': Empty/None selected
+#   - 'NTSC': NTSC video format
+#   - 'PAL': PAL video format
+#
 # Template Syntax (Handlebars):
 #   - {{#if condition}} ... {{/if}} : Conditional blocks
 #   - {{variable}} : Output variable value

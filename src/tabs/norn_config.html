@@ -4,6 +4,7 @@
             border: 2px solid #ff4444 !important;
             background-color: #ffe6e6 !important;
         }
+
         .mandatory-missing select {
             border: 2px solid #ff4444 !important;
         }
@@ -65,13 +66,43 @@
                     <div class="col-span-1">
                         <div class="gui_box grey">
                             <div class="gui_box_titlebar">
-                                <div class="spacer_box_title" i18n="nornVtx"></div>
+                                <div class="spacer_box_title" i18n="nornRadioController"></div>
                             </div>
                             <div class="spacer_box">
                                 <div class="select">
-                                    <select name="norn_vtx" id="norn_vtx">
+                                    <select name="norn_controller" id="norn_controller">
                                         <option value="" i18n="nornNone"></option>
                                     </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid-row grid-box col2">
+                    <div class="col-span-2">
+                        <div class="gui_box grey">
+                            <div class="gui_box_titlebar">
+                                <div class="spacer_box_title" i18n="nornCamera"></div>
+                            </div>
+                            <div class="spacer_box">
+                                <div class="grid-row grid-box col2">
+                                    <div class="col-span-1">
+                                        <div class="select">
+                                            <label i18n="nornVtx"></label>
+                                            <select name="norn_vtx" id="norn_vtx">
+                                                <option value="" i18n="nornNone"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-span-1">
+                                        <div class="select">
+                                            <label i18n="nornVideoFormat"></label>
+                                            <select name="norn_video_format" id="norn_video_format">
+                                                <option value="" i18n="nornNone"></option>
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -86,7 +117,8 @@
                             </div>
                             <div class="spacer_box">
                                 <div class="select">
-                                    <input type="text" id="norn_craft_name" placeholder="Enter craft name" style="width: 100%;" />
+                                    <input type="text" id="norn_craft_name" placeholder="Enter craft name"
+                                        style="width: 100%;" />
                                 </div>
                             </div>
                         </div>
@@ -109,7 +141,7 @@
                 </div>
 
                 <div class="grid-row grid-box col2">
-                    <div class="col-span-1">
+                    <div class="col-span-2">
                         <div class="gui_box grey">
                             <div class="gui_box_titlebar">
                                 <div class="spacer_box_title" i18n="nornMBId"></div>
@@ -117,20 +149,6 @@
                             <div class="spacer_box">
                                 <div class="select">
                                     <input type="text" id="norn_mb_id" placeholder="Enter MB ID" style="width: 100%;" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-span-1">
-                        <div class="gui_box grey">
-                            <div class="gui_box_titlebar">
-                                <div class="spacer_box_title" i18n="nornRadioController"></div>
-                            </div>
-                            <div class="spacer_box">
-                                <div class="select">
-                                    <select name="norn_controller" id="norn_controller">
-                                        <option value="" i18n="nornNone"></option>
-                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -179,5 +197,3 @@
         </div>
     </div>
 </div>
-
-

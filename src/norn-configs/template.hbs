@@ -1,7 +1,8 @@
 # FC: {{fcKey}}
 # Drone Size: {{droneSize}}
 # Manticore: {{manticoreKey}}
-# Video: {{vtxKey}}
+# VTX: {{vtxKey}}
+# Video Format: {{videoFormat}}
 # GPS: {{gpsEnabled}}
 # Craft Name: {{craftName}}
 # MB ID: {{mbId}}
@@ -78,14 +79,15 @@ aux 3 41 2 1800 2100 0 0
 aux 0 0 0 1800 2100 0 0
 aux 1 1 1 1700 2100 0 0
 aux 2 2 1 1300 1700 0 0
-aux 3 26 3 1675 2100 0 0
 aux 4 58 4 1800 2100 0 0
 aux 5 59 5 1800 2100 0 0
 {{/if}}
 
-# VTX CONFIGURATION
-{{!-- 5.8GHz VTX Configuration --}}
-{{#if (eq vtxKey '5.8VTX')}}
+# CAMERA/VTX CONFIGURATION
+{{!-- Camera Configuration for all VTX types and video formats --}}
+{{#if vtxKey}}
+  {{!-- 5.8GHz VTX Configuration --}}
+  {{#if (eq vtxKey '5.8VTX')}}
 vtxtable bands 8
 vtxtable channels 8
 vtxtable band 1 BAND_A   A CUSTOM  5865 5845 5825 5805 5785 5765 5745 5725
@@ -99,9 +101,13 @@ vtxtable band 8 BAND_C   C CUSTOM  4990 5020 5050 5080 5110 5140 5170 5200
 vtxtable powerlevels 5
 vtxtable powervalues 25 100 200 400 600
 vtxtable powerlabels 25 200 500 1.5 2.5
-{{/if}}
-{{!-- 3.3GHz VTX Configuration --}}
-{{#if (eq vtxKey '3.3VTX')}}
+set vtx_channel = 4
+set vtx_power = 4
+set vtx_low_power_disarm = ON
+set vtx_freq = 5800
+  {{/if}}
+  {{!-- 3.3GHz VTX Configuration --}}
+  {{#if (eq vtxKey '3.3VTX')}}
 vtxtable bands 5
 vtxtable channels 8
 vtxtable band 1 BAND_A   A CUSTOM  3320 3345 3370 3395 3420 3445 3470 3495
@@ -112,6 +118,15 @@ vtxtable band 5 BAND_E   E CUSTOM  3170 3190 3210 3230 3250 3270 3290 3310
 vtxtable powerlevels 5
 vtxtable powervalues 25 100 200 400 600
 vtxtable powerlabels 250 500 1W 2W 4W
+set vtx_channel = 1
+set vtx_power = 1
+set vtx_low_power_disarm = ON
+set vtx_freq = 3320
+  {{/if}}
+  {{!-- Video Format Configuration --}}
+  {{#if videoFormat}}
+set vcd_video_system = {{videoFormat}}
+  {{/if}}
 {{/if}}
 
 {{#if (eq failSafe 'Default')}}
@@ -120,6 +135,10 @@ rxfail 0 s 1500
 rxfail 1 s 1500
 rxfail 2 s 1500
 rxfail 3 h
+set failsafe_delay = 10
+set failsafe_landing_time = 200
+set failsafe_throttle = 1800
+set failsafe_procedure = AUTO-LAND
 {{/if}}
 
 {{#if craftName}}
@@ -130,4 +149,59 @@ set craft_name = {{craftName}}
 {{#if mbId}}
 # MB CONFIGURATION
 set mb_id = {{mbId}}
+{{/if}}
+
+# COMMON CONFIGURATION
+set blackbox_disable_gps = ON 
+set dshot_bidir = ON
+set motor_pwm_protocol = DSHOT300
+set vbat_min_cell_voltage = 280
+set vbat_warning_cell_voltage = 300
+set yaw_motors_reversed = ON
+
+# OSD CONFIGURATION
+set osd_cap_alarm = 12000
+set osd_alt_alarm = 300
+set osd_vbat_pos = 257
+set osd_rssi_pos = 34
+set osd_link_quality_pos = 2101
+set osd_link_tx_power_pos = 128
+set osd_rssi_dbm_pos = 2133
+set osd_rsnr_pos = 2165
+set osd_tim_1_pos = 363
+set osd_tim_2_pos = 2455
+set osd_flymode_pos = 2082
+set osd_throttle_pos = 2273
+set osd_vtx_channel_pos = 18808
+set osd_crosshairs_pos = 2286
+set osd_ah_sbar_pos = 2287
+set osd_ah_pos = 2159
+set osd_current_pos = 2144
+set osd_mah_drawn_pos = 352
+set osd_craft_name_pos = 2433
+set osd_altitude_pos = 18681 
+set osd_warnings_pos = 14666
+set osd_avg_cell_voltage_pos = 2113
+set osd_battery_usage_pos = 33122
+set osd_disarmed_pos = 298
+set osd_esc_rpm_pos = 56
+set osd_stick_overlay_left_pos = 321
+set osd_efficiency_pos = 228
+{{!-- Manticore OSD Configuration --}}
+{{#if (eq manticoreKey 'GPIO')}}
+set osd_manticore_initiator_v1_pos = 2090
+{{/if}}
+{{#if (eq manticoreKey 'UART')}}
+set osd_manticore_initiator_v2_pos = 2090
+{{/if}}
+set osd_mb_stats_pos = 0
+{{!-- GPS OSD Configuration --}}
+{{#if gpsEnabled}}
+set osd_gps_speed_pos = 2337
+set osd_gps_lon_pos = 18827
+set osd_gps_lat_pos = 18795
+set osd_gps_sats_pos = 2209
+set osd_home_dir_pos = 2305
+set osd_home_dist_pos = 2306
+set osd_flight_dist_pos = 2241
 {{/if}}
