@@ -1779,13 +1779,17 @@ MspHelper.prototype.process_data = function (dataHandler) {
 
             // remove object from array
             dataHandler.callbacks.splice(i, 1);
-            if (!crcError) {
-                // fire callback
-                if (callback) {
-                    callback({ command: code, data: data, length: data.byteLength, crcError: crcError });
+            // Always invoke callback and pass crcError flag. Callbacks expect to
+            // receive the original DataView so they can choose how to handle CRC
+            // errors; don't replace the data with null here to avoid breaking
+            // existing consumers that dereference response.data before checking
+            // crcError.
+            if (callback) {
+                try {
+                    callback({ command: code, data: data, length: data ? data.byteLength : 0, crcError: crcError });
+                } catch (e) {
+                    console.error(`callback for code ${code} threw:`, e);
                 }
-            } else {
-                console.warn(`code: ${code} - crc failed. No callback`);
             }
         }
     }
