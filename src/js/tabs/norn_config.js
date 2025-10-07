@@ -81,9 +81,9 @@ norn_config.initialize = function (callback) {
             droneSizeSelect.append(`<option value="9">9</option>`);
             droneSizeSelect.append(`<option value="10">10</option>`);
             droneSizeSelect.append(`<option value="13">13</option>`);
-            droneSizeSelect.append(`<option value="15">15</option>`);
             droneSizeSelect.on("change", function () {
                 self.analyticsChanges["NornDroneSize"] = $(this).val() || null;
+                clearMandatoryFieldValidation();
             });
         }
 
@@ -237,6 +237,7 @@ norn_config.initialize = function (callback) {
         // Check mandatory fields and highlight missing ones
         const mandatoryFields = [
             { selector: "select[name='norn_fc']", label: "Flight Controller" },
+            { selector: "select[name='norn_drone_size']", label: "Drone Size" },
             { selector: "select[name='norn_manticore']", label: "Manticore" },
             { selector: "select[name='norn_vtx']", label: "VTX" },
             { selector: "select[name='norn_video_format']", label: "Video Format" },
@@ -272,6 +273,7 @@ norn_config.initialize = function (callback) {
 
         // Validate mandatory fields
         const fcKey = $("select[name='norn_fc']").val();
+        const droneSize = $("select[name='norn_drone_size']").val();
         const manticoreKey = $("select[name='norn_manticore']").val();
         const vtxKey = $("select[name='norn_vtx']").val();
         const videoFormat = $("select[name='norn_video_format']").val();
@@ -279,6 +281,7 @@ norn_config.initialize = function (callback) {
 
         const missingFields = [];
         if (!fcKey) missingFields.push("Flight Controller");
+        if (!droneSize) missingFields.push("Drone Size");
         if (!manticoreKey) missingFields.push("Manticore");
         if (!vtxKey) missingFields.push("VTX");
         if (!videoFormat) missingFields.push("Video Format");

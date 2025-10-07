@@ -222,3 +222,94 @@ set osd_gps_lon_pos = 18827
 set osd_gps_lat_pos = 18795
 {{/if}}
 {{/if}}
+
+# PROFILE CONFIGURATION
+{{!-- Profile configuration for 7", 8", and 9" drones --}}
+{{#if (or (eq droneSize '7') (eq droneSize '8') (eq droneSize '9'))}}
+profile 0
+
+set dterm_lpf1_dyn_min_hz = 60
+set dterm_lpf1_dyn_max_hz = 120
+set dterm_lpf1_static_hz = 60
+set dterm_lpf2_static_hz = 120
+set p_pitch = 38
+set i_pitch = 43
+set d_pitch = 29
+set f_pitch = 106
+set p_roll = 37
+set i_roll = 38
+set d_roll = 27
+set f_roll = 101
+set i_yaw = 44
+set f_yaw = 101
+set d_min_roll = 21
+set d_min_pitch = 23
+set auto_profile_cell_count = 6
+set thrust_linear = 20
+set simplified_pids_mode = OFF
+set simplified_i_gain = 90
+set simplified_d_gain = 95
+set simplified_pi_gain = 55
+set simplified_dmax_gain = 10
+set simplified_feedforward_gain = 85
+set simplified_dterm_filter_multiplier = 80
+{{/if}}
+{{!-- Profile configuration for 10" drones --}}
+{{#if (eq droneSize '10')}}
+profile 0
+
+set dterm_lpf1_dyn_min_hz = 60
+set dterm_lpf1_dyn_max_hz = 120
+set dterm_lpf1_static_hz = 60
+set dterm_lpf2_static_hz = 120
+set simplified_dterm_filter_multiplier = 80
+{{/if}}
+{{!-- Profile configuration for 13" drones --}}
+{{#if (eq droneSize '13')}}
+profile 0
+
+set dterm_lpf1_dyn_min_hz = 60
+set dterm_lpf1_dyn_max_hz = 120
+set dterm_lpf1_static_hz = 60
+set dterm_lpf2_static_hz = 105
+set iterm_rotation = ON
+set iterm_windup = 90
+set p_pitch = 56
+set i_pitch = 80
+set d_pitch = 47
+set f_pitch = 74
+set p_roll = 53
+set i_roll = 76
+set d_roll = 42
+set f_roll = 71
+set p_yaw = 50
+set i_yaw = 120
+set f_yaw = 70
+set d_max_roll = 44
+set d_max_pitch = 50
+set thrust_linear = 20
+set dyn_idle_min_rpm = 25
+set simplified_pids_mode = RP
+set simplified_i_gain = 80
+set simplified_d_gain = 140
+set simplified_pi_gain = 120
+set simplified_d_max_gain = 20
+set simplified_feedforward_gain = 60
+set simplified_dterm_filter = OFF
+set simplified_dterm_filter_multiplier = 80
+{{/if}}
+
+profile 1
+profile 2
+profile 3
+
+# restore original profile selection
+profile 0
+
+rateprofile 0
+rateprofile 1
+rateprofile 2
+rateprofile 3
+
+# restore original rateprofile selection
+rateprofile 0
