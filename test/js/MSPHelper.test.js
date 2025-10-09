@@ -1,9 +1,9 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import MspHelper from "../../../src/js/msp/MSPHelper";
-import MSPCodes from "../../../src/js/msp/MSPCodes";
-import "../../../src/js/injected_methods";
-import FC from "../../../src/js/fc";
-import { API_VERSION_1_47 } from "../../../src/js/data_storage";
+import MspHelper from "../../src/js/msp/MSPHelper";
+import MSPCodes from "../../src/js/msp/MSPCodes";
+import "../../src/js/injected_methods";
+import FC from "../../src/js/fc";
+import { API_VERSION_1_47 } from "../../src/js/data_storage";
 
 describe("MspHelper", () => {
     const mspHelper = new MspHelper();
@@ -11,14 +11,17 @@ describe("MspHelper", () => {
         FC.resetState();
     });
     describe("process_data", () => {
-        it("refuses to process data with crc-error", () => {
+        it("notifies callbacks with crcError flag but preserves the data", () => {
             let callbackCalled = false;
 
             let callbackFunction = (item) => {
                 callbackCalled = true;
                 expect(item["crcError"]).toEqual(true);
                 expect(item["command"]).toEqual(MSPCodes.MSP_BOARD_INFO);
-                expect(item["length"]).toEqual(0);
+                // data should be preserved so callers that need to inspect it
+                // can still do so (they must check crcError themselves).
+                expect(item["data"]).not.toBeNull();
+                expect(item["length"]).toBeGreaterThanOrEqual(0);
             };
 
             mspHelper.process_data({
@@ -35,6 +38,60 @@ describe("MspHelper", () => {
 
             expect(callbackCalled).toEqual(true);
         });
+
+        it("passes crcError flag to callbacks when crcError is set", () => {
+            let received = null;
+
+            mspHelper.process_data({
+                code: MSPCodes.MSP_BOARD_INFO,
+                dataView: new DataView(new Uint8Array([]).buffer),
+                crcError: true,
+                callbacks: [
+                    {
+                        callback: (item) => {
+                            received = item;
+                        },
+                        code: MSPCodes.MSP_BOARD_INFO,
+                    },
+                ],
+            });
+
+            expect(received).not.toEqual(null);
+            expect(received.crcError).toEqual(true);
+            expect(received.command).toEqual(MSPCodes.MSP_BOARD_INFO);
+            // Data is preserved even when crcError is true; callers must
+            // check crcError before using the payload.
+            expect(received.data).not.toBeNull();
+            expect(received.length).toEqual(0);
+        });
+
+        it("suppresses data for callbacks when crcError is set", () => {
+            let received = null;
+
+            const payload = new Uint8Array([1, 2, 3, 4]);
+            const dv = new DataView(payload.buffer);
+
+            mspHelper.process_data({
+                code: MSPCodes.MSP_BOARD_INFO,
+                dataView: dv,
+                crcError: true,
+                callbacks: [
+                    {
+                        callback: (item) => {
+                            received = item;
+                        },
+                        code: MSPCodes.MSP_BOARD_INFO,
+                    },
+                ],
+            });
+
+            expect(received).not.toEqual(null);
+            // Data is preserved even on CRC error; callers must check crcError
+            // before acting on the payload.
+            expect(received.length).toEqual(dv.byteLength);
+            expect(received.data).toBeInstanceOf(DataView);
+        });
+
         it("handles MSP_API_VERSION correctly", () => {
             let randomValues = crypto.getRandomValues(new Uint8Array(3));
             const [mspProtocolVersion, apiVersionMajor, apiVersionMinor] = randomValues;
@@ -48,6 +105,7 @@ describe("MspHelper", () => {
             expect(FC.CONFIG.mspProtocolVersion).toEqual(mspProtocolVersion);
             expect(FC.CONFIG.apiVersion).toEqual(`${apiVersionMajor}.${apiVersionMinor}.0`);
         });
+
         it("handles MSP_PIDNAMES correctly", () => {
             let pidNamesCount = 1 + crypto.getRandomValues(new Uint8Array(1))[0];
             let expectedNames = Array.from({ length: pidNamesCount }).map((_) => generateRandomString());
@@ -64,6 +122,7 @@ describe("MspHelper", () => {
 
             expect(FC.PID_NAMES).toEqual(expectedNames);
         });
+
         it("handles MSP_MOTOR correctly", () => {
             let motorCount = crypto.getRandomValues(new Uint8Array(1))[0] % 8;
             let motorBytes = crypto.getRandomValues(new Uint16Array(motorCount));
@@ -77,6 +136,7 @@ describe("MspHelper", () => {
             expect(new Uint16Array(FC.MOTOR_DATA).slice(0, motorCount)).toEqual(motorBytes);
             expect(FC.MOTOR_DATA.slice(motorCount, 8)).toContain(undefined);
         });
+
         it("handles MSP_BOARD_INFO correctly for API version", () => {
             FC.CONFIG.apiVersion = API_VERSION_1_47;
             let infoBuffer = [];

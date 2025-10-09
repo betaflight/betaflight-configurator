@@ -188,8 +188,6 @@ function startProcess() {
                 if (GUI.connected_to || GUI.connecting_to) {
                     $("a.connection_button__link").click();
                 }
-                // this line is required but it triggers opening the firmware flasher tab again
-                $("a.firmware_flasher_button__link").click();
             } else if (GUI.allowedTabs.indexOf(tab) < 0) {
                 gui_log(i18n.getMessage("tabSwitchUpgradeRequired", [tabName]));
                 return;

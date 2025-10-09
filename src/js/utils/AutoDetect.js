@@ -33,42 +33,38 @@ class AutoDetect {
         MSP.read(event.detail);
     }
 
-    verifyBoard() {
+    async verifyBoard() {
         const port = PortHandler.portPicker.selectedPort;
-        const isLoaded = TABS.firmware_flasher.targets ? Object.keys(TABS.firmware_flasher.targets).length > 0 : false;
-
-        if (!PortHandler.portAvailable) {
-            gui_log(i18n.getMessage("firmwareFlasherNoValidPort"));
-            return;
-        }
-
-        if (!isLoaded) {
-            gui_log(i18n.getMessage("firmwareFlasherNoTargetsLoaded"));
-            return;
-        }
-
-        if (serial.connected || serial.connectionId) {
-            console.warn(
-                "Attempting to connect while there still is a connection",
-                serial.connected,
-                serial.connectionId,
-                serial.openCanceled,
-            );
-            serial.disconnect();
-            return;
-        }
-
-        gui_log(i18n.getMessage("firmwareFlasherDetectBoardQuery"));
 
         if (!port.startsWith("virtual")) {
             serial.addEventListener("connect", this.boundHandleConnect, { once: true });
             serial.addEventListener("disconnect", this.boundHandleDisconnect, { once: true });
 
-            console.log("Connecting to serial port", port, serial.connected, serial.connectionId);
+            const isLoaded = TABS.firmware_flasher.targets
+                ? Object.keys(TABS.firmware_flasher.targets).length > 0
+                : false;
+            let result = false;
 
-            serial.connect(port, { baudRate: PortHandler.portPicker.selectedBauds || 115200 });
-        } else {
-            gui_log(i18n.getMessage("serialPortOpenFail"));
+            try {
+                if (!PortHandler.portAvailable) {
+                    gui_log(i18n.getMessage("firmwareFlasherNoValidPort"));
+                } else if (!isLoaded) {
+                    gui_log(i18n.getMessage("firmwareFlasherNoTargetsLoaded"));
+                } else if (serial.connected || serial.connectionId) {
+                    console.warn("Attempting to connect while there still is a connection", serial.connected);
+                    gui_log(i18n.getMessage("serialPortOpenFail"));
+                } else {
+                    console.log("Connecting to serial port", port);
+                    gui_log(i18n.getMessage("firmwareFlasherDetectBoardQuery"));
+                    result = await serial.connect(port, { baudRate: PortHandler.portPicker.selectedBauds || 115200 });
+                }
+            } catch (error) {
+                console.error("Failed to connect:", error);
+            } finally {
+                if (!result) {
+                    this.cleanup();
+                }
+            }
         }
     }
 
@@ -116,17 +112,7 @@ class AutoDetect {
             );
         }
 
-        // Remove event listeners using stored references
-        serial.removeEventListener("receive", this.boundHandleSerialReceive);
-        serial.removeEventListener("connect", this.boundHandleConnect);
-        serial.removeEventListener("disconnect", this.boundHandleDisconnect);
-
-        // Clean up MSP listeners
-        MSP.clearListeners();
-        MSP.disconnect_cleanup();
-
-        // Disconnect without passing onClosed as a callback
-        serial.disconnect();
+        this.cleanup();
     }
 
     async getBoardInfo() {
@@ -194,6 +180,20 @@ class AutoDetect {
         } else {
             gui_log(i18n.getMessage("serialPortOpenFail"));
         }
+    }
+
+    cleanup() {
+        // Remove event listeners using stored references
+        serial.removeEventListener("receive", this.boundHandleSerialReceive);
+        serial.removeEventListener("connect", this.boundHandleConnect);
+        serial.removeEventListener("disconnect", this.boundHandleDisconnect);
+
+        // Clean up MSP listeners
+        MSP.clearListeners();
+        MSP.disconnect_cleanup();
+
+        // Disconnect without passing onClosed as a callback
+        serial.disconnect();
     }
 }
 
