@@ -323,7 +323,6 @@ failsafe.initialize = function (callback) {
                 altitude_number_field.hide();
             }
         }
-        showReturnAlt();
         $("#failsafeGpsRescueItemAltitudeSelect").on("change", showReturnAlt);
 
         // Introduced in 1.43
@@ -331,6 +330,9 @@ failsafe.initialize = function (callback) {
         $('input[name="gps_rescue_descend_rate"]').val((FC.GPS_RESCUE.descendRate / 100).toFixed(1));
         $('input[name="gps_rescue_allow_arming_without_fix"]').prop("checked", FC.GPS_RESCUE.allowArmingWithoutFix > 0);
         $('select[name="gps_rescue_altitude_mode"]').val(FC.GPS_RESCUE.altitudeMode);
+
+        // Call showReturnAlt after the altitude mode value is set
+        showReturnAlt();
 
         // Introduced in 1.44
         $('input[name="gps_rescue_min_start_dist"]').val(FC.GPS_RESCUE.minStartDistM);

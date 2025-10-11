@@ -37,9 +37,6 @@
     "storageDeviceNotReady": {
         "message": "Biltegiratzeko gailua ez dago prest. MikroSD txartelaren kasuan, ziurtatu hegaldi kontroladorea behar bezala aitortzen duela."
     },
-    "options_title": {
-        "message": "Aplikazioaren ezarpenak"
-    },
     "connect": {
         "message": "Konektatu"
     },
@@ -63,9 +60,6 @@
     },
     "cancel": {
         "message": "Ezeztatu"
-    },
-    "autoConnectEnabled": {
-        "message": "Konexio-Automatikoa: Gaituta - Konfiguratzaileak ataka berria hautematen denean automatikoki konektatzen saiatzen da"
     },
     "autoConnectDisabled": {
         "message": "Konexio-Automatikoa: desgaituta - Erabiltzaileak serieko portu egokia hautatu behar du eta \"Konektatu\" botoia sakatu behar du"
@@ -144,12 +138,6 @@
     "sensorStatusSonarShort": {
         "message": "Sonar",
         "description": "Text of the image in the top sensors icons. Please keep it short."
-    },
-    "checkForConfiguratorUnstableVersions": {
-        "message": "Erakutsi konfiguratzailearen bertsio ezegonkorretarako eguneratze jakinarazpenak"
-    },
-    "configuratorUpdateNotice": {
-        "message": "<b>Betaflight Konfiguratzailearen<\/b> bertsio zaharkitua erabiltzen ari zara.<br>$t(configuratorUpdateHelp.message)"
     },
     "configuratorUpdateWebsite": {
         "message": "Bertsio agirien webgunera joan"
@@ -376,14 +364,8 @@
     "noConfigurationReceived": {
         "message": "Ez zaio heldu konfigurazioa <span class=\"message-negative\">10 segunduko<\/span> epean, komunikazioa <span class=\"message-negative\">HUTS<\/span> egin du"
     },
-    "firmwareVersionNotSupported": {
-        "message": "Firmware bertsio hau <span class=\"message-negative\">EZ dago onartua<\/span>. Mezedez firmwarea eguneratu, API bertsioa <strong>$1<\/strong> edo berriagora. CLI-a erabili backupa egiteko flasheatu aurretik. CLI backupa gorde edo beripintzeko modua dokumentazioan aurkitu dezakezu.<br \/>Baita ere Konfiguratzailearen aurreko bertsio bat dezkargatu eta erabili dezakezu ezin baduzu edo ez bazaude eguneratzeko prest."
-    },
     "firmwareTypeNotSupported": {
         "message": "Betaflight ez den firmwarea <span class=\"message-negative\">ez da onartzen<\/span>, CLI moduan izan ezik."
-    },
-    "firmwareUpgradeRequired": {
-        "message": "Firmware bertsio hau EZ dago onartua. Mezedez firmwarea eguneratu, API bertsioa edo berriagora. CLI-a erabili backupa egiteko flasheatu aurretik. CLI backupa gorde edo beripintzeko modua dokumentazioan aurkitu dezakezu. <br\/>Baita ere Konfiguratzailearen aurreko bertsio bat dezkargatu eta erabili dezakezu ezin baduzu edo ez bazaude eguneratzeko prest."
     },
     "resetToCustomDefaultsDialog": {
         "message": "Lehenetsi pertsonalizatuak daude eskuragarri kontrolatzaile honetarako. Normalki, kontrolatzailea ez da behar bezela ibiliko ez badinba zaizkiao bere lehenetsi pertsonalizatuak ipintzen.<br \/>Nahi duzu kontroladore honi bere lehenetsi pertsonalizatuak ipintzea?"
@@ -454,9 +436,6 @@
     "versionLabelFirmware": {
         "message": "Firmwarea"
     },
-    "versionLabelConfigurator": {
-        "message": "Konfiguratzailea"
-    },
     "notifications_app_just_updated_to_version": {
         "message": "Aplikazioa:$1 bertsiora eguneratu da"
     },
@@ -506,9 +485,6 @@
     "eeprom_saved_ok": {
         "message": "EEPROM <span class=\"message-positive\">gordeta<\/span>"
     },
-    "defaultWelcomeIntro": {
-        "message": "Ongi etorri <strong>Betaflight-Konfiguratzailea<\/strong> ra, zure hegaldi kontroladorea eguneratu, konfiguratu eta sintonizatzeko diseinatutako tresna."
-    },
     "defaultWelcomeHead": {
         "message": "Hardware"
     },
@@ -523,9 +499,6 @@
     },
     "defaultDonateHead": {
         "message": "Kode Irekia \/ dohaintza abisua"
-    },
-    "defaultDonateText": {
-        "message": "<p><strong>Betafligth<\/strong><strong> kode irekiko<\/strong>, egaldi kontroladore softwarea da eta dohainik eskuragarri dago, <strong>berme barik<\/strong> erabiltzaile guztientzako.<\/p><p> Betaflight edo Betaflight Konfiguratzailea, erabilgarri aurkitu baduzu, mesedez kontuan euki <strong>laguntzea<\/strong> bere garapenera, dohaintza bat emoten.<\/p>"
     },
     "defaultDonateBottom": {
         "message": "<p>Era erregular baten ekonomikoki laguntzeko idea baduzu, kontuan euki beharko zenuen \"Patron\" bilakatzea gure Patreon portalean $t(patreonLink.message)<\/p>"
@@ -581,9 +554,6 @@
     },
     "initialSetupButtonCalibratingText": {
         "message": "Kalibratzen..."
-    },
-    "initialSetupButtonReset": {
-        "message": "Ezarpenak berrezarri"
     },
     "initialSetupButtonRebootBootloader": {
         "message": "Boot Loader \/ DFU aktibatu"
@@ -720,10 +690,6 @@
     "initialSetupArmingDisableFlagsTooltipBST": {
         "message": "Black Sheep Telemetry gailua (TBS Core Pro adibidez) desarmatu egin da eta armatzea eragozten du",
         "description": "Message that pops up to describe the BST arming disable flag"
-    },
-    "initialSetupArmingDisableFlagsTooltipMSP": {
-        "message": "MSP konexioa aktiboa da, seguruenik Betaflight Configurator honekin",
-        "description": "Message that pops up to describe the MSP arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipPARALYZE": {
         "message": "Paralyze modua aktibatu da",
@@ -1887,15 +1853,8 @@
     "motorsResetMaximum": {
         "message": "Denboran geihenezko balioa berrezarri"
     },
-    "motorsSensorGyroSelect": {
-        "message": "giro"
-    },
     "motorsSensorAccelSelect": {
         "message": "azel"
-    },
-    "motorsTelemetryHelp": {
-        "message": "Zenbaki hauek eskuragarri dauden ESCko telemetriari buruzko informazioa erakusten dute. Motoreen benetako abiadura (RPM), telemetria- loturaren akats-tasa eta ESCen tenperatura erakuts ditzake.",
-        "description": "Help text for the telemetry values in the motors tab."
     },
     "motorsRPM": {
         "message": "R: {{motorsRpmValue}}",
@@ -2025,9 +1984,6 @@
     },
     "cliConfirmSnippetBtn": {
         "message": "Exekutatu"
-    },
-    "loggingNote": {
-        "message": "Fitxa honetan <span class=\"message-negative\">bakarrik erregistratuko da<\/span>, eta fitxan <span class=\"message-negative\">bertan behera utziko du<\/span> erregistroa eta aplikazioa bere ohiko egoerara itzuliko da <strong>\"konfiguratzailea\"<\/strong> egoera.<br \/> Eguneratze-aldi globala aukeratzeko askatasuna duzu. Datuak erregistroko fitxategian idatziko dira <strong> 1 <\/strong> segundo guztietan errendimendu arrazoiengatik."
     },
     "loggingSamplesSaved": {
         "message": "Laginak gordeta:"
@@ -2364,9 +2320,6 @@
     },
     "firmwareFlasherFlashTrigger": {
         "message": "<strong>$1<\/strong> Detektatuta - Konektatzean instalatu exekutatzen ari da"
-    },
-    "firmwareFlasherPreviousDevice": {
-        "message": "<strong>$1<\/strong> - aurreko gailua instalazioan dago. Mesedez berriro konektatu berriro saiatzeko"
     },
     "ledStripHelp": {
         "message": "Hegaldi-kontroladoreak banda bateko LED banakako koloreak eta efektuak kontrolatu ditzake.<br\/> Konfiguratu saretako LEDak, kableatu ordena konfiguratu eta ondoren itsatsi LED hegazkinaren saretako posizioen arabera. Ez dira alanbreak ordenatzen dituzten LEDak gordeko.<br\/> Egin klik bikoitza kolorean HSVren balioak editatzeko."
@@ -2858,9 +2811,6 @@
     "pidTuningItermRelaxType": {
         "message": "Mota",
         "description": "Iterm Relax Type selection"
-    },
-    "pidTuningItermRelaxTypeOptionGyro": {
-        "message": "Giro"
     },
     "pidTuningItermRelaxTypeOptionSetpoint": {
         "message": "Setpoint"
@@ -4291,10 +4241,6 @@
         "message": "Frekuentzia sartu",
         "description": "Text of one of the fields of the VTX tab"
     },
-    "vtxFrequencyChannelHelp": {
-        "message": "Hau gaitzen baduzu, konfiguratzaileak ohiko banda\/kanalaren frekuentzia hautatzeko aukera emango dio. Horretarako, zure VTX funtzio hau onartu behar du.",
-        "description": "Help text for the frequency or channel select field of the VTX tab"
-    },
     "vtxSelectedMode": {
         "message": "Aukeratutako modua",
         "description": "Title for the actual mode header of the VTX"
@@ -4777,9 +4723,6 @@
     "cordovaIncompatibleWebview": {
         "message": "Webview bateraezina"
     },
-    "cordovaWebviewTroubleshootingMsg": {
-        "message": "Zure gailuraren webview aplikazioa eguneratu behar duzu konfiguratzailea erabili ahal izateko."
-    },
     "cordovaWebviewTroubleshootingMsg2": {
         "message": "Beheko tresna webview berria instalatzeko edo instalatutako webview-a eguneratzen laguntzeko balio du."
     },
@@ -4824,8 +4767,5 @@
     },
     "cordovaExitAppTitle": {
         "message": "Baieztatzea"
-    },
-    "cordovaExitAppMessage": {
-        "message": "Benetan konfiguratzailea itxi nahi duzu?"
     }
 }

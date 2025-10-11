@@ -138,7 +138,7 @@ servos.initialize = function (callback) {
 
             function save_to_eeprom() {
                 if (save_configuration_to_eeprom) {
-                    mspHelper.writeConfiguration(function () {
+                    mspHelper.writeConfiguration(false, function () {
                         gui_log(i18n.getMessage("servosEepromSave"));
                     });
                 }

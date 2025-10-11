@@ -1,4 +1,4 @@
-class WebsocketSerial extends EventTarget {
+class Websocket extends EventTarget {
     constructor() {
         super();
 
@@ -10,7 +10,7 @@ class WebsocketSerial extends EventTarget {
         this.bytesReceived = 0;
         this.failed = 0;
 
-        this.logHead = "[WEBSOCKET] ";
+        this.logHead = "[WEBSOCKET]";
 
         this.address = "ws://localhost:5761";
 
@@ -57,7 +57,7 @@ class WebsocketSerial extends EventTarget {
         return new Uint8Array(buffer);
     }
 
-    async connect(path, options) {
+    async connect(path) {
         this.address = path;
         console.log(`${this.logHead} Connecting to ${this.address}`);
 
@@ -112,8 +112,22 @@ class WebsocketSerial extends EventTarget {
             try {
                 this.ws.send(data);
                 this.bytesSent += data.byteLength;
+
+                if (cb) {
+                    cb({
+                        error: null,
+                        bytesSent: data.byteLength,
+                    });
+                }
             } catch (e) {
                 console.error(`${this.logHead}Failed to send data e: ${e}`);
+
+                if (cb) {
+                    cb({
+                        error: e,
+                        bytesSent: 0,
+                    });
+                }
             }
         }
 
@@ -123,4 +137,4 @@ class WebsocketSerial extends EventTarget {
     }
 }
 
-export default new WebsocketSerial();
+export default Websocket;

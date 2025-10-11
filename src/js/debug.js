@@ -788,6 +788,13 @@ const DEBUG = {
             "debug[all]": "Chirp",
             "debug[0]": "Chirp sinarg",
         },
+        FLASH_TEST_PRBS: {
+            "debug[all]": "Flash Test PRBS",
+            "debug[0]": "State",
+            "debug[1]": "Flash Length",
+            "debug[6]": "FlashLength / Pagesize",
+            "debug[7]": "Errors",
+        },
     },
 
     enableFields: [
@@ -821,6 +828,17 @@ function update() {
             "debug[6]": "Pitch Forward Angle",
             "debug[7]": "dcmKp Gain",
         };
+        DEBUG.fieldNames.GPS_RESCUE_THROTTLE_PID = {
+            "debug[all]": "GPS Rescue throttle PID",
+            "debug[0]": "Throttle P",
+            "debug[1]": "Throttle D",
+            "debug[2]": "Altitude",
+            "debug[3]": "Target altitude",
+            "debug[4]": "Throttle I",
+            "debug[5]": "Tilt adjustment",
+            "debug[6]": "Throttle D before lp smoothing",
+            "debug[7]": "Throttle adjustment",
+        };
     }
 
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
@@ -829,9 +847,22 @@ function update() {
         addArrayElementAfter(DEBUG.modes, "RANGEFINDER_QUALITY", "OPTICALFLOW");
         addArrayElement(DEBUG.modes, "AUTOPILOT_POSITION");
         addArrayElement(DEBUG.modes, "CHIRP");
+        addArrayElement(DEBUG.modes, "FLASH_TEST_PRBS");
+        addArrayElement(DEBUG.modes, "MAVLINK_TELEMETRY");
+        replaceArrayElement(DEBUG.modes, "DUAL_GYRO_RAW", "MULTI_GYRO_RAW");
+        replaceArrayElement(DEBUG.modes, "DUAL_GYRO_DIFF", "MULTI_GYRO_DIFF");
+        replaceArrayElement(DEBUG.modes, "DUAL_GYRO_SCALED", "MULTI_GYRO_SCALED");
 
         delete DEBUG.fieldNames.GPS_RESCUE_THROTTLE_PID;
         delete DEBUG.fieldNames.GYRO_SCALED;
+
+        DEBUG.fieldNames["MULTI_GYRO_RAW"] = DEBUG.fieldNames.DUAL_GYRO_RAW;
+        DEBUG.fieldNames["MULTI_GYRO_DIFF"] = DEBUG.fieldNames.DUAL_GYRO_DIFF;
+        DEBUG.fieldNames["MULTI_GYRO_SCALED"] = DEBUG.fieldNames.DUAL_GYRO_SCALED;
+
+        delete DEBUG.fieldNames.DUAL_GYRO_RAW;
+        delete DEBUG.fieldNames.DUAL_GYRO_DIFF;
+        delete DEBUG.fieldNames.DUAL_GYRO_SCALED;
 
         DEBUG.fieldNames.FFT_FREQ = {
             "debug[all]": "Debug FFT FREQ",
@@ -887,6 +918,14 @@ function update() {
             "debug[5]": "pidI",
             "debug[6]": "pidD",
             "debug[7]": "pidA",
+        };
+
+        DEBUG.fieldNames.MAVLINK_TELEMETRY = {
+            "debug[all]": "MAVLink Telemetry",
+            "debug[0]": "Telemetry state",
+            "debug[1]": "Last known TX buffer free space",
+            "debug[2]": "Estimated TX buffer free space",
+            "debug[3]": "Ticks",
         };
 
         addArrayElementAfter(DEBUG.enableFields, "Gyro", "Attitude");

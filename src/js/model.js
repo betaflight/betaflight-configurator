@@ -1,7 +1,7 @@
+import * as THREE from "three";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import FC from "./fc";
 import { get as getConfig } from "./ConfigStorage";
-import * as THREE from "three";
-import "./utils/three/Projector";
 import { CanvasRenderer } from "./utils/three/CanvasRenderer";
 
 // generate mixer
@@ -19,7 +19,7 @@ export const mixerList = [
     { name: "Octo X8", pos: 10, model: "custom", image: "octo_x8", motors: 8, servos: false },
     { name: "Octo Flat +", pos: 11, model: "custom", image: "octo_flat_p", motors: 8, servos: false },
     { name: "Octo Flat X", pos: 12, model: "custom", image: "octo_flat_x", motors: 8, servos: false },
-    { name: "Airplane", pos: 13, model: "custom", image: "airplane", motors: 1, servos: true },
+    { name: "Airplane", pos: 13, model: "airplane", image: "airplane", motors: 1, servos: true },
     { name: "Heli 120", pos: 14, model: "custom", image: "custom", motors: 1, servos: true },
     { name: "Heli 90", pos: 15, model: "custom", image: "custom", motors: 0, servos: true },
     { name: "V-tail Quad", pos: 16, model: "quad_vtail", image: "vtail_quad", motors: 4, servos: false },
@@ -33,6 +33,7 @@ export const mixerList = [
     { name: "Custom Tricopter", pos: 24, model: "custom", image: "custom", motors: 3, servos: true },
     { name: "Quad X 1234", pos: 25, model: "quad_x", image: "quad_x_1234", motors: 4, servos: false },
     { name: "Octo X8 +", pos: 26, model: "custom", image: "custom", motors: 8, servos: false },
+    //{ name: "Car", pos: 27, model: "car", image: "car", motors: 1, servos: true }, //  reserved for upcoming feature work
 ];
 
 // 3D model
@@ -49,7 +50,7 @@ const Model = function (wrapper, canvas) {
         this.renderer = new THREE.WebGLRenderer({
             canvas: this.canvas[0],
             alpha: true,
-            antialias: true, // Disable antialiasing for performance
+            antialias: true, // enable or disable antialiasing for performance
         });
     } else {
         console.log("Starting in low performance rendering mode");
@@ -89,7 +90,7 @@ const Model = function (wrapper, canvas) {
     this.scene.add(this.camera);
     this.scene.add(this.modelWrapper);
 
-    this.loadJSON(
+    this.loadGLTF(
         model_file,
         function (model) {
             this.model = model;
@@ -107,18 +108,33 @@ const Model = function (wrapper, canvas) {
     );
 };
 
-Model.prototype.loadJSON = function (model_file, callback) {
-    const loader = new THREE.JSONLoader();
-
+Model.prototype.loadGLTF = function (model_file, callback) {
+    const loader = new GLTFLoader();
     loader.load(
-        `./resources/models/${model_file}.json`,
-        function (geometry, materials) {
-            this.optimizeGeometry(geometry);
-
-            const model = this.createModel(geometry, materials);
-
+        `./resources/models/${model_file}.gltf`,
+        (gltf) => {
+            const model = gltf.scene;
+            model.scale.set(15, 15, 15);
             callback(model);
-        }.bind(this),
+        },
+        (progress) => {
+            // Optional: Handle loading progress
+            if (progress.total > 0) {
+                const pct = Math.round((progress.loaded / progress.total) * 100);
+                if (pct !== this._lastPct) {
+                    // throttle identical values
+                    this._lastPct = pct;
+                    console.log(`Loading progress: ${progress.loaded}/${progress.total} (${pct}%)`);
+                }
+            } else {
+                console.log(`Loading progress: ${progress.loaded} bytes`);
+            }
+        },
+        (error) => {
+            console.error("Error loading model:", error);
+            // Fallback to a default model or show error to user
+            callback(null);
+        },
     );
 };
 
@@ -143,7 +159,7 @@ Model.prototype.optimizeGeometryForCanvas = function (geometry) {
     const uniqueVertices = [];
     const updatedFaces = [];
 
-    geometry.vertices.forEach((vertex, index) => {
+    geometry.vertices.forEach((vertex) => {
         // Round coordinates with configurable tolerance
         const key = [
             Math.round(vertex.x * tolerance) / tolerance,

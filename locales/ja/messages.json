@@ -28,6 +28,9 @@
     "noticeTitle": {
         "message": "通知"
     },
+    "search": {
+        "message": "検索"
+    },
     "dontShowAgain": {
         "message": "今後表示しない"
     },
@@ -52,9 +55,6 @@
     },
     "storageDeviceNotReady": {
         "message": "ストレージデバイスの準備ができていません。microSDカードを利用する場合は、FCボード側が正常に認識しているかを確認してください。"
-    },
-    "options_title": {
-        "message": "オプション設定"
     },
     "connect": {
         "message": "接続"
@@ -87,6 +87,10 @@
         "message": "--- Bluetoothデバイスが見つかりません ---",
         "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access a Bluetooth device."
     },
+    "portsSelectPermissionDFU": {
+        "message": "--- DFUデバイスが見つかりません ---",
+        "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access a DFU device."
+    },
     "bluetoothConnected": {
         "message": "Bluetoothデバイスに接続: $1"
     },
@@ -118,7 +122,7 @@
         "message": "送信"
     },
     "autoConnectEnabled": {
-        "message": "自動接続: 有効 - Configuratorは自動的に新しいポートが検出されたときに接続を試みます。"
+        "message": "自動接続: 有効 - Appは自動的に新しいポートが検出されたときに接続を試みます"
     },
     "autoConnectDisabled": {
         "message": "自動接続: 無効 - ユーザが正しいシリアル ポートを選択し、別途 [接続] ボタンをクリックする必要があります。"
@@ -146,9 +150,17 @@
         "message": "接続タイムアウトを設定し、デバイスプラグインのより長めの初期化や再起動を許可する",
         "description": "Change timeout on auto-connect and reboot so the bus has more time to initialize after being detected by the system"
     },
+    "developmentSettings": {
+        "message": "開発者向け設定",
+        "description": "Title for the development settings section"
+    },
     "showAllSerialDevices": {
         "message": "すべてのシリアルデバイスを表示 (ベンダーまたはデベロッパー向け)",
         "description": "Do not filter serial devices using VID\/PID values (for manufacturers or development)"
+    },
+    "cliOnlyMode": {
+        "message": "CLI 限定モードを有効",
+        "description": "Text for the option to enable or disable CLI only mode"
     },
     "showManualMode": {
         "message": "手動接続モード 有効",
@@ -157,6 +169,10 @@
     "showVirtualMode": {
         "message": "バーチャル接続モード 有効",
         "description": "Text for the option to enable or disable the virtual FC"
+    },
+    "useLegacyRenderingModel": {
+        "message": "3Dモデル レガシーレンダリング 有効 (低性能デバイス向け)",
+        "description": "Text for the option to enable or disable legacy rendering of the 3D model"
     },
     "cordovaForceComputerUI": {
         "message": "電話インターフェイスの代わりにコンピュータインターフェイスを使用"
@@ -228,16 +244,22 @@
         "description": "Text of the image in the top sensors icons. Please keep it short."
     },
     "checkForConfiguratorUnstableVersions": {
-        "message": "未検証バージョンの更新通知を表示"
+        "message": "未検証バージョンのApp更新通知を表示"
     },
     "configuratorUpdateNotice": {
-        "message": "<b>Betaflight Configurator<\/b>の旧バージョンを使用しています。<br>$t(configuratorUpdateHelp.message)"
+        "message": "旧バージョンの <b>Betaflight App<\/b> を使用しています。<br>$t(configuratorUpdateHelp.message)"
     },
     "configuratorUpdateHelp": {
         "message": "インターネットが利用可能な場合、アプリは自動的に利用可能なアップデートを要求します。"
     },
     "configuratorUpdateWebsite": {
         "message": "リリースサイトに移動"
+    },
+    "rebootFlightController": {
+        "message": "フライトコントローラを再起動中、準備でき次第再接続"
+    },
+    "rebootFlightControllerReady": {
+        "message": "フライトコントローラ 準備完了"
     },
     "deviceRebooting": {
         "message": "デバイス - <span class=\"message-negative\">再起動中<\/span>"
@@ -341,6 +363,9 @@
     "fileSystemPickerFiles": {
         "message": "{{typeof}} ファイル",
         "description": "Text for the file picker dialog, showing the type of files selected. The parameter can be HEX, TXT, etc."
+    },
+    "fileSystemPickerFirmwareFiles": {
+        "message": "ファームウェアファイル"
     },
     "serialErrorFrameError": {
         "message": "シリアル接続エラー: フレーム長 不良"
@@ -466,13 +491,13 @@
         "message": "<span class=\"message-negative\">10秒<\/span>以内に構成情報を受信できず、通信に<span class=\"message-negative\">失敗<\/span>しました。"
     },
     "firmwareVersionNotSupported": {
-        "message": "このファームウェアバージョンは<span class=\"message-negative\">サポートされていません<\/span>。<strong>$1<\/strong>以上のバージョンのAPIをサポートするファームウェアにアップグレードしてください。書き換えする前にCLIを使用してバックアップしてください。CLIのバックアップ \/ リストア手順はドキュメントに記載されています。<br\/>または、アップグレードする準備ができていない場合は、旧バージョンのConfiguratorをダウンロードして使用してください。"
+        "message": "このファームウェアバージョンは<span class=\"message-negative\">サポートされていません<\/span>。<strong>$1<\/strong>以上のバージョンのAPIをサポートするファームウェアにアップグレードしてください。書き換えする前にCLIを使用してバックアップしてください。CLIのバックアップ \/ リストア手順はドキュメントに記載されています。<br\/>または、アップグレードする準備ができていない場合は、旧バージョンのアプリをダウンロードして使用してください。"
     },
     "firmwareTypeNotSupported": {
         "message": "CLIモードを除き、Betaflight以外のファームウェアは<span class=\"message-negative\">サポートされていません<\/span>。"
     },
     "firmwareUpgradeRequired": {
-        "message": "このデバイスのファームウェアは、新しいバージョンにアップグレードする必要があります。 書き換えする前にCLIを使用してバックアップしてください。 CLIのバックアップ \/ リストア手順はドキュメントに記載されています。<br\/>または、アップグレードする準備ができていない場合は、旧バージョンのConfiguratorをダウンロードして使用してください。"
+        "message": "このデバイスのファームウェアは、新しいバージョンにアップグレードする必要があります。 書換えする前にCLIを使用してバックアップして下さい。 CLIのバックアップ \/ リストア手順はドキュメントに記載されています。<br \/>または、アップグレードする準備ができていない場合は、旧バージョンのアプリをダウンロードして使用して下さい。"
     },
     "resetToCustomDefaultsDialog": {
         "message": "このFCボードにはカスタムされた初期値が適用されています。通常、カスタム初期値が適用されない場合はFCボードが正常に動作しません。<br \/>このFCボードにカスタム初期値を適用しますか？"
@@ -487,7 +512,7 @@
         "message": "<span class=\"message-negative\"><strong>飛行を試みる前に、これらの問題を修正する必要があります。<\/span><\/strong>"
     },
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
-        "message": "<span class=\"message-negative\"><strong>使用されるBetaflight Configurator version ($3) はファームウェア $4<\/strong><\/span> をサポートしていません。<br>$t(configuratorUpdateHelp.message)"
+        "message": "<span class=\"message-negative\"><strong>使用されるBetaflight App バージョン ($3) はファームウェア $4<\/strong><\/span> をサポートしていません。<br>$t(configuratorUpdateHelp.message)"
     },
     "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
         "message": "<strong>モーター出力プロトコルが選択されていません。<\/strong><br>『$t(tabMotorTesting.message)』タブの『$t(configurationEscFeatures.message)』で、ESCに適したモーター出力プロトコルを選択してください。<br>$t(escProtocolDisabledMessage.message)"
@@ -500,8 +525,8 @@
         "description": "Message that appears in the GUI log panel indicating operating system"
     },
     "infoVersionConfigurator": {
-        "message": "Configurator: <strong>{{configuratorVersion}}<\/strong>",
-        "description": "Message that appears in the GUI log panel indicating Configurator version"
+        "message": "App バージョン: <strong>{{configuratorVersion}}<\/strong>",
+        "description": "Message that appears in the GUI log panel indicating application version"
     },
     "buildServerSuccess": {
         "message": "成功: $1"
@@ -588,7 +613,7 @@
         "message": "ファーム"
     },
     "versionLabelConfigurator": {
-        "message": "Configurator"
+        "message": "App バージョン"
     },
     "notifications_app_just_updated_to_version": {
         "message": "アプリケーション更新バージョン: $1"
@@ -624,6 +649,10 @@
         "message": "CPU使用率:",
         "description": "CPU load text shown in the status bar"
     },
+    "statusbar_connection_time": {
+        "message": "接続:",
+        "description": "Connection time text shown in the status bar"
+    },
     "dfu_connect_message": {
         "message": "DFUデバイスへのアクセスはファームフラッシャーを使用してください"
     },
@@ -643,7 +672,7 @@
         "message": "EEPROM <span class=\"message-positive\">保存しました<\/span>"
     },
     "defaultWelcomeIntro": {
-        "message": "<strong>Betaflight - Configurator<\/strong>へようこそ。<br \/>このユーティリティは、フライトコントローラの設定やチューニングを簡単に更新できるよう設計されています。"
+        "message": "<strong>Betaflight App<\/strong>へようこそ。<br \/>このユーティリティは、フライトコントローラの設定やチューニングを簡単に更新できるよう設計されています。"
     },
     "defaultWelcomeHead": {
         "message": "ハードウェア"
@@ -655,7 +684,7 @@
         "message": "開発への協力・貢献"
     },
     "defaultContributingText": {
-        "message": "Betaflightを今後より良く改善したい場合は、以下を含むさまざまな方法で支援できます:<br \/><ul><li>Betaflightに関する知識を活かして<a href=\"https:\/\/betaflight.com\/docs\/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki<\/a>コンテンツの作成または更新、オンラインフォーラムで他ユーザの質問への回答;<\/li><li>新機能や修正、改善されたファームウェアとConfiguratorへの<a href=\"https:\/\/betaflight.com\/docs\/development\" target=\"_blank\" rel=\"noopener noreferrer\">コード提供<\/a>;<\/li><li><a href=\"https:\/\/github.com\/Betaflight\/betaflight\/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">新機能と修正<\/a>、テスト、フィードバックの提供;<\/li><li><a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel=\"noopener noreferrer\">Issue tracker<\/a>で他ユーザから報告された問題を解決支援し、新機能リクエストに関する議論に協力;<\/li><li>Betaflight Configuratorの新しい言語への<a href=\"https:\/\/github.com\/betaflight\/betaflight\/tree\/master\/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">翻訳<\/a>、または既存翻訳の維持支援.<\/li><\/ul>"
+        "message": "もしBetaflightをさらに良くするお手伝いをしていただけるなら、次のような方法があります:<br \/><ul><li>\nBetaflight に関する知識を活かして <a href=\"https:\/\/betaflight.com\/docs\/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki<\/a> のコンテンツを作成・更新したり、オンラインフォーラムで他のユーザの質問に答える<\/li><li>ファームウェアやアプリへの <a href=\"https:\/\/betaflight.com\/docs\/development\" target=\"_blank\" rel=\"noopener noreferrer\">コード貢献<\/a> [新機能の追加、修正、改善 など] <\/li><li><a href=\"https:\/\/github.com\/Betaflight\/betaflight\/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">新機能や修正<\/a> をテストして、フィードバックを提供する<\/li><li><a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel=\"noopener noreferrer\">Issue tracker<\/a> で報告された問題の解決を手伝い、機能要望に関する議論に参加する<\/li><li>Betaflight Appを <a href=\"https:\/\/github.com\/betaflight\/betaflight\/tree\/master\/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">新しい言語に翻訳<\/a> したり、既存の翻訳の維持に協力する<\/li><\/ul>"
     },
     "defaultFacebookText": {
         "message": "私たちは<a href=\"https:\/\/www.facebook.com\/groups\/betaflightgroup\/\" target=\"_blank\" rel=\"noopener noreferrer\">Facebookグループ<\/a>も運営しています。<br \/>私たちと一緒にBetaflightについて語り合い、設定に関する質問をしたり、パイロット同士で交流してみましょう。"
@@ -664,7 +693,7 @@
         "message": "Betaflight <a href=\"https:\/\/discord.betaflight.com\/invite\" target=\"_blank\" rel=\"noopener noreferrer\">Discord Server<\/a>.<br \/>貴方の飛行体験を共有したり、Betaflightについて話したり、他の人を救済しコミュニティから自分自身助けを得たりすることができます。"
     },
     "statisticsDisclaimer": {
-        "message": "Betaflight Configuratorは匿名における利用統計データを収集します。例えばこのデータには、起動回数、ユーザの地理的な地域、フライトコントローラの種類、ファームウェアバージョン、UI要素やタブの使用状況等が含まれます。(ただし、これらに限定されるものではありません) このデータの要約は <a href=\"https:\/\/datastudio.google.com\/u\/0\/reporting\/1pK1PFw0eWmsgl2npvuzwAqscVzlhJvuF\" target=\"_blank\" rel=\"noopener noreferrer\">こちら<\/a> で共有されています。データ収集はBetaflight Configuratorがどのように使用されているかをより良く理解し、コミュニティの傾向を把握し、UIを改善するために行われます。またユーザは、オプションタブにてデータ収集の停止を選択可能です。"
+        "message": "Betaflight Appは匿名における利用統計データを収集します。例えばこのデータには、起動回数、ユーザの地理的な地域、フライトコントローラの種類、ファームウェアバージョン、UI要素やタブの使用状況等が含まれます。(ただし、これらに限定されるものではありません) このデータの要約は <a href=\"https:\/\/datastudio.google.com\/u\/0\/reporting\/1pK1PFw0eWmsgl2npvuzwAqscVzlhJvuF\" target=\"_blank\" rel=\"noopener noreferrer\">こちら<\/a> で共有されています。データ収集はBetaflight Configuratorがどのように使用されているかをより良く理解し、コミュニティの傾向を把握し、UIを改善するために行われます。またユーザは、オプションタブにてデータ収集の停止を選択可能です。"
     },
     "defaultButtonFirmwareFlasher": {
         "message": "ファームフラッシャー"
@@ -673,7 +702,7 @@
         "message": "オープンソース \/ 寄付について"
     },
     "defaultDonateText": {
-        "message": "<p><strong>Betaflight<\/strong>は<strong>オープンソース<\/strong>であり、すべてのユーザに対し保証なしで<strong>無償<\/strong>にて提供されるフライトコントローラソフトウェアです。<\/p><p>もし、あなたがBetaflightやBetaflight Configuratorが役立つものと感じたら、寄付による開発の<strong>サポート<\/strong>をご検討ください。<\/p>"
+        "message": "<p><strong>Betaflight<\/strong>は<strong>オープンソース<\/strong>であり、すべてのユーザに対し保証なしで<strong>無償<\/strong>にて提供されるフライトコントローラソフトウェアです。<\/p><p>もし、あなたがBetaflightやBetaflight Appが役立つものと感じたら、寄付による開発の<strong>サポート<\/strong>をご検討ください。<\/p>"
     },
     "defaultDonateBottom": {
         "message": "<p>引き続き経済的に貢献したい場合は <a href='https:\/\/www.patreon.com\/betaflight'>Patreon<\/a> で私達の支援者になることをご検討ください。<\/p>"
@@ -743,7 +772,7 @@
         "message": "キャリブレーション中..."
     },
     "initialSetupButtonReset": {
-        "message": "設定をリセット"
+        "message": "設定を消去"
     },
     "initialSetupResetText": {
         "message": "フライトコントローラを<strong>未設定状態にリセット<\/strong>します。"
@@ -866,6 +895,10 @@
         "message": "ビルドに含まれていません",
         "description": "Message that pops up when hardware support is not included in build"
     },
+    "initialSetupNotDetected": {
+        "message": "未検出または無効",
+        "description": "Message that pops up when hardware is not detected or disabled"
+    },
     "initialSetupRSSIValue": {
         "message": "$1 dBm"
     },
@@ -892,6 +925,9 @@
     },
     "initialSetupSensorSonar": {
         "message": "ソナー:"
+    },
+    "initialSetupSensorOpticalflow": {
+        "message": "オプティカルフロー:"
     },
     "initialSetupSensorRadar": {
         "message": "レーダー:"
@@ -978,7 +1014,7 @@
         "description": "Message that pops up to describe the BST arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipMSP": {
-        "message": "おそらくこのBetaflight Configuratorで、MSP接続は有効です",
+        "message": "MSP接続が有効です。[おそらくBetaflight Appと通信中]",
         "description": "Message that pops up to describe the MSP arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipPARALYZE": {
@@ -1020,6 +1056,14 @@
     "initialSetupArmingDisableFlagsTooltipCRASHFLIP": {
         "message": "クラッシュフリップスイッチが有効です",
         "description": "Message that pops to describe the CRASHFLIP arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipALTHOLD": {
+        "message": "高度維持機能が有効",
+        "description": "Message that pops up to describe the ALTHOLD arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipPOSHOLD": {
+        "message": "ポジションホールドが有効",
+        "description": "Message that pops up to describe the POSHOLD arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "他のフラグの1つはアーム時にフラグを解除します",
@@ -1071,6 +1115,12 @@
     "initialSetupInfoBuildConfig": {
         "message": "設定"
     },
+    "initialSetupInfoBuildDownload": {
+        "message": "ダウンロード"
+    },
+    "initialSetupInfoBuildFirmware": {
+        "message": "ファームウェア:"
+    },
     "initialSetupInfoBuildLog": {
         "message": "ログ"
     },
@@ -1084,7 +1134,7 @@
         "message": "ローカルビルド - クラウド情報なし"
     },
     "initialSetupInfoBuildType": {
-        "message": "ビルドタイプ"
+        "message": "ビルドタイプ:"
     },
     "initialSetupInfoBuildLocal": {
         "message": "ローカルビルド"
@@ -1168,6 +1218,9 @@
     "featureMOTOR_STOP": {
         "message": "アーム後にモーターを回転させない"
     },
+    "featureMOTOR_STOPTip": {
+        "message": "エアモードが有効な場合、この機能は無効になります"
+    },
     "featureSERVO_TILT": {
         "message": "サーボジンバル"
     },
@@ -1182,6 +1235,10 @@
     },
     "featureGPS": {
         "message": "ナビゲーションとテレメトリー用のGPS"
+    },
+    "featureGPSTip": {
+        "message": "GPSデータを有効化 \/ 無効化します。GPSを有効にできない場合は、[ポート] タブでGPSにポートが割り当てられていることを確認してください",
+        "description": "Message that pops up to describe the GPS feature"
     },
     "featureSONAR": {
         "message": "ソナー 超音波距離センサー"
@@ -1310,11 +1367,35 @@
     "configurationMagAlignmentHelp": {
         "message": "コンパス アライメントは、FCボード上の磁気センサーの向きを指します。通常はデフォルト設定で正しい場合がほとんどですが、カスタムビルドや異なる向きの磁気センサーを持つフライトコントローラを使用している場合、この設定を調整する必要があるかもしれません。"
     },
+    "configurationMagDeclination": {
+        "message": "コンパス偏角"
+    },
     "configurationMagDeclinationInput": {
         "message": "偏角"
     },
     "configurationMagDeclinationHelp": {
         "message": "コンパス偏角は、磁北 (磁気北極) と真北 (地理的北極) の間の角度を指します。この角度は地球上の場所によって異なります。ご自身の位置での偏角は、インターネットで簡単に確認することができます。"
+    },
+    "configurationRangefinder": {
+        "message": "$t(initialSetupSensorSonar.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationRangefinderHelp": {
+        "message": "距離計 (レンジファインダー) を有効にし、地面までの距離をcm単位で計測"
+    },
+    "configurationRangefinderType": {
+        "message": "タイプ"
+    },
+    "configurationOpticalflow": {
+        "message": "$t(initialSetupSensorOpticalflow.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationOpticalflowHelp": {
+        "message": "オプティカルフローセンサー 有効"
+    },
+    "configurationOpticalflowType": {
+        "message": "$t(configurationRangefinderType.message)",
+        "description": "Don't translate!!!"
     },
     "configurationBoardAlignment": {
         "message": "FCボード アライメント"
@@ -1333,6 +1414,12 @@
     },
     "configurationGyroAlignmentHelp": {
         "message": "ジャイロ アライメントは、FCボード上のジャイロセンサーの向きを指します。通常はデフォルト設定で正しい場合がほとんどですが、カスタムビルドや異なる向きのジャイロセンサーを持つフライトコントローラを使用している場合、この設定を調整する必要があるかもしれません。"
+    },
+    "configurationGyroActiveIMU": {
+        "message": "IMU 有効"
+    },
+    "configurationGyroActiveIMUHelp": {
+        "message": "どのジャイロを一次ジャイロとして使用するかを選択してください。一次ジャイロは安定化および制御に使用されます。ジャイロが1つしかない場合は、自動的に選択されます。<br><br>ジャイロの種類やメーカーが異なる場合、複数のジャイロを有効化できないことがあります。"
     },
     "configurationGyroAlignmentRoll": {
         "message": "$t(configurationBoardAlignmentRoll.message)",
@@ -1381,6 +1468,12 @@
     },
     "configurationSensorGyroToUseBoth": {
         "message": "両方"
+    },
+    "configurationSensorAlignment": {
+        "message": "センサー アライメント"
+    },
+    "configurationGyroRequiredWarning": {
+        "message": "少なくとも1つのジャイロセンサーを有効にしておく必要があります。すべてのジャイロセンサーを無効にすると、フライトコントローラが正常に動作しません。"
     },
     "configurationSensorAlignmentGyro1": {
         "message": "第1ジャイロ"
@@ -1547,6 +1640,12 @@
     },
     "beeperRC_SMOOTHING_INIT_FAIL": {
         "message": "アーム時にRCスムージングがフィルターを初期化できていない時のビープ音"
+    },
+    "configurationBeeperEnableAll": {
+        "message": "すべて有効"
+    },
+    "configurationBeeperDisableAll": {
+        "message": "すべて無効"
     },
     "configuration3d": {
         "message": "3D ESC \/ モーター機能"
@@ -2198,6 +2297,9 @@
     "receiverThrottleExpo": {
         "message": "スロットル Expo"
     },
+    "receiverThrottleHover": {
+        "message": "ホバーポイント"
+    },
     "receiverStickMin": {
         "message": "スティック 低"
     },
@@ -2534,9 +2636,17 @@
         "message": "OSD経由でVTX設定の制御を無効にします",
         "description": "Help text to VTX CONTROL DISABLE mode"
     },
+    "auxiliaryHelpMode_VTXPOWER": {
+        "message": "VTX出力レベルを順に切替 (VTX対応時)",
+        "description": "Help text to VTX POWER mode"
+    },
     "auxiliaryHelpMode_VTXPITMODE": {
         "message": "VTXをピットモードへ切り替えます (サポートされる場合は低出力)",
         "description": "Help text to VTX PIT MODE mode"
+    },
+    "auxiliaryHelpMode_LAPTIMERRESET": {
+        "message": "トランスポンダ―用ラップタイマーをリセット",
+        "description": "Help text to LAP TIMER RESET mode"
     },
     "adjustmentsHelp": {
         "message": "調整スイッチを設定します。詳細については、マニュアルの『in-flight adjustment(飛行調整)』の項目を参照してください。『調整』機能による変更は自動的には保存されません。"
@@ -2820,9 +2930,13 @@
     "gpsAltitude": {
         "message": "高度:"
     },
-    "gpsLatLon": {
-        "message": "現在の 緯度 \/ 経度:",
-        "description": "Show GPS position - Latitude \/ Longitude"
+    "gpsLatitude": {
+        "message": "緯度:",
+        "description": "Show GPS position - Latitude"
+    },
+    "gpsLongitude": {
+        "message": "経度:",
+        "description": "Show GPS position - Longitude"
     },
     "gpsHeading": {
         "message": "ヘッディング方位 \/ GPS:",
@@ -2840,6 +2954,10 @@
     },
     "gpsPositionalDop": {
         "message": "位置精度低下率:"
+    },
+    "gpsMagneticDeclination": {
+        "message": "$t(configurationMagDeclination):",
+        "description": "Do not translate"
     },
     "gpsSignalStrHead": {
         "message": "GPS強度"
@@ -2978,13 +3096,14 @@
         "message": "オーバータイム最大値をリセット"
     },
     "motorsSensorGyroSelect": {
-        "message": "ジャイロ"
+        "message": "$t(sensorStatusGyroShort.message)",
+        "description": "Don't translate!!!"
     },
     "motorsSensorAccelSelect": {
         "message": "加速度センサー"
     },
     "motorsTelemetryHelp": {
-        "message": "この番号は、利用可能時にESCから受信したテレメトリー情報を示します。モーターの実速度(RPM)、テレメトリーリンクのエラー率、ESC温度を表示します。",
+        "message": "これらの数値は、利用可能な場合にはESCから受信したテレメトリー情報を表示します。モーターの回転数 (R、単位:RPM)、テレメトリーリンクのエラー率(E)、ESC温度(T)を表示します。",
         "description": "Help text for the telemetry values in the motors tab."
     },
     "motorsRPM": {
@@ -3110,6 +3229,9 @@
     "escDshotDirectionDialog-SetDirectionHintSafety": {
         "message": "回転方向を設定するとモーターが回転します！"
     },
+    "escDshotDirectionDialog-SettingsAutoSaved": {
+        "message": "選択時にモーター回転方向が保存されます"
+    },
     "escDshotDirectionDialog-WrongProtocolText": {
         "message": "この機能はDSHOT対応ESCのみで動作します。<br \/>お使いのESC (electric speed controller) がDSHOTプロトコルに対応していることを確認し $t(tabMotorTesting.message) タブで変更してください。"
     },
@@ -3191,6 +3313,9 @@
     "cliEnter": {
         "message": "CLIモード検出"
     },
+    "cliDevEnter": {
+        "message": "開発者向け CLI限定モードが検出されました"
+    },
     "cliReboot": {
         "message": "CLIリブート検出"
     },
@@ -3228,7 +3353,7 @@
         "message": "ここにコマンドを入力"
     },
     "loggingNote": {
-        "message": "ログデータは<span class=\"message-negative\">このタブを選択している間のみ<\/span>記録されます。このタブから他へ切り替えると<span class=\"message-negative\">ログは停止<\/span>し、通常の<strong>Configurator<\/strong>の状態に戻ります。<br \/>また項目全体のログ更新期間を自由に選択できます。パフォーマンス上の理由から、<strong>1秒<\/strong>ごとにログファイルにデータが書き込まれます。"
+        "message": "ログデータは<span class=\"message-negative\">このタブを選択している間のみ<\/span>記録されます。このタブを離れると記録は<span class=\"message-negative\">中止<\/span>され、アプリケーションは通常の状態に戻ります。<br \/>また項目全体のログ更新間隔を選択できます。パフォーマンス上の理由から、データは<strong>1 秒<\/strong>ごとにログファイルへ書き込まれます。"
     },
     "loggingSamplesSaved": {
         "message": "サンプル保存:"
@@ -3286,6 +3411,9 @@
     },
     "blackboxLoggingSerial": {
         "message": "シリアルポート"
+    },
+    "blackboxLoggingVirtual": {
+        "message": "ファイルへ"
     },
     "serialLoggingSupportedNote": {
         "message": "飛行ログは外部の保存デバイス (OpenLoger等) にシリアルポートを使って保存できます。[ポート] タブでの設定が必要です。"
@@ -3475,7 +3603,7 @@
         "message": "FCボードを任意選択または検出すると、オンラインで利用可能なファームウェア リリースが表示されます - お使いのFCボードに適したファームウェアを選択してください。"
     },
     "firmwareFlasherOnlineSelectBoardHint": {
-        "message": "Betaflight Configuratorは、各FCボード固有の設定を持つ統一ターゲットのファームウェアフラッシュをワンステップでサポートします。<br><br>統一ターゲットのコンセプトは、同じMCUを使用するすべてのFCボードで同じファームウェアの.hexファイルを使用できることを意味しています。<br><br>Betaflight 4.4で導入された<strong>クラウドビルド<\/strong><br><br><strong>クラウドビルド<\/strong>では、ビルドに存在するハードウェアオプションを定義する必要があります。<br><br>異なるFCボードを同じファームウェアで動作させるために、統一ターゲットファームウェアをフラッシュする際、それと同時に特定の設定ファイルが展開されます。<br><br>ローカルビルドでは、統一ターゲット設定ファイルをロードしたり、ファームウェアの.hexファイルをロードする前にFCボードを選択することができます。<br><br>ファームウェアを使用していて問題が発生した場合は、Discordへの参加、または<a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel=\"noopener noreferrer\">Issue<\/a>の新規投稿をご検討ください。"
+        "message": "Betaflight Appは、各FCボード固有の設定を持つ統一ターゲットのファームウェアフラッシュをワンステップでサポートします。<br><br>統一ターゲットのコンセプトは、同じMCUを使用するすべてのFCボードで同じファームウェアの.hexファイルを使用できることを意味しています。<br><br>Betaflight 4.4 で導入された<strong>クラウドビルド<\/strong><br><br><strong>クラウドビルド<\/strong>では、ビルドに存在するハードウェアオプションを定義する必要があります。<br><br>異なるFCボードを同じファームウェアで動作させるために、統一ターゲットファームウェアをフラッシュする際、それと同時に特定の設定ファイルが展開されます。<br><br>ローカルビルドでは、統一ターゲット設定ファイルをロードしたり、ファームウェアの.hexファイルをロードする前にFCボードを選択することができます。<br><br>ファームウェアを使用していて問題が発生した場合は、Discordへの参加、または<a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel=\"noopener noreferrer\">Issue<\/a>の新規投稿をご検討ください。"
     },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "FCボードのファームウェアバージョンを選択してください。"
@@ -3589,7 +3717,7 @@
         "message": "<strong>リカバリー \/ 通信ロスト<\/strong>"
     },
     "firmwareFlasherRecoveryText": {
-        "message": "FCボードとの通信が切断された場合は、以下の手順に従って通信を回復してください: <ul><li>電源をオフにします。<\/li><li>[再起動シーケンスなし] を有効にし [チップメモリの完全消去] を有効にします。<\/li><li>BOOTピンをジャンパさせるか、またはBOOTボタンを長押ししてください。<\/li><li>電源をオンにします。(正しく行われればアクティビティLEDは点滅しません) <\/li><li>すべてのSTM32ドライバと、必要あればZadigをインストールします。(Betaflightマニュアルの [<a href=\"https:\/\/betaflight.com\/docs\/wiki\/archive\/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">USB Flashing<\/a>] 章を参照) <\/li><li>Betaflight Configuratorを一度閉じ、Configuratorを再起動します。<\/li><li>FCボードにBOOTボタンがあれば、BOOTボタンを放してください。<\/li><li>正常なファームウェアをフラッシュしてください。(FCのボードのマニュアルに指定されている場合は、手動で伝送速度を調整してください) <\/li><li>電源をオフにします。<\/li>\n<li>BOOTピンのジャンパを取り外します。<\/li><li>電源をオンにします。(アクティビティLEDが点滅するはずです) <\/li><li>再度、通常通り接続してください。<\/li><\/ul>"
+        "message": "FCボードとの通信が切断された場合は、以下の手順に従って通信を回復してください: <ul><li>電源をオフにします。<\/li><li>[再起動シーケンスなし] を有効にし [チップメモリの完全消去] を有効にします。<\/li><li>BOOTピンをジャンパさせるか、またはBOOTボタンを長押ししてください。<\/li><li>電源をオンにします。(正しく行われればアクティビティLEDは点滅しません) <\/li><li>すべてのSTM32ドライバと、必要あればZadigをインストールします。(Betaflightマニュアルの [<a href=\"https:\/\/betaflight.com\/docs\/wiki\/archive\/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">USB Flashing<\/a>] 章を参照) <\/li><li>Betaflight Appを一度閉じ、Appを再起動します。<\/li><li>FCボードにBOOTボタンがあれば、BOOTボタンを放してください。<\/li><li>正常なファームウェアをフラッシュしてください。(FCのボードのマニュアルに指定されている場合は、手動で伝送速度を調整してください) <\/li><li>電源をオフにします。<\/li>\n<li>BOOTピンのジャンパを取り外します。<\/li><li>電源をオンにします。(アクティビティLEDが点滅するはずです) <\/li><li>再度、通常通り接続してください。<\/li><\/ul>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "ファームフラッシャーより退避"
@@ -3603,8 +3731,23 @@
     "firmwareFlasherFirmwareOnlineLoaded": {
         "message": "オンラインファームウェアがロードされました: {{filename}} ({{bytes}} bytes)"
     },
+    "firmwareFlasherTooltipSaveFirmware": {
+        "message": "ファームウェアを保存"
+    },
+    "firmwareFlasherInvalidFileFormat": {
+        "message": "無効なファイル形式です"
+    },
+    "firmwareFlasherUf2Corrupted": {
+        "message": "UF2ファイルが破損しているようです"
+    },
     "firmwareFlasherHexCorrupted": {
         "message": "HEXファイルが破損しているようです"
+    },
+    "firmwareFlasherUF2SaveSuccess": {
+        "message": "UF2は正常に保存 (更新) されました"
+    },
+    "firmwareFlasherUF2SaveFailed": {
+        "message": "UF2の保存 (更新) に失敗しました"
     },
     "firmwareFlasherConfigCorrupted": {
         "message": "設定ファイル破損の可能性があります。ASCII文字列が入力されました。(chars 0-255)",
@@ -3622,6 +3765,9 @@
     },
     "firmwareFlasherFailedToLoadUnifiedConfig": {
         "message": "{{remote_file}} リモート設定のロードに失敗しました"
+    },
+    "firmwareFlasherCanceledBackup": {
+        "message": "バックアップをキャンセルしたため、書き込みを中止しました"
     },
     "firmwareFlasherLegacyLabel": {
         "message": "{{target}} (Legacy)",
@@ -3647,15 +3793,15 @@
         "description": "Make a quick connection to read firmware target and never flash a wrong target again"
     },
     "firmwareFlasherBoardVerificationSuccess": {
-        "message": "Betaflight ConfiguratorはFC基板の検出と検証に<span class=\"message-positive\">成功<\/span>しました: <strong>{{boardName}}<\/strong>",
+        "message": "Betaflight AppはFC基板の検出と検証に<span class=\"message-positive\">成功<\/span>しました: <strong>{{boardName}}<\/strong>",
         "description": "Board verification has succeeded."
     },
     "firmwareFlasherBoardVerficationTargetNotAvailable": {
-        "message": "Betaflight ConfiguratorはFCボードを検出: <strong>{{boardName}}<\/strong> しかしながらBetaflightにて公式ターゲットが見つかりませんでした",
+        "message": "Betaflight AppはFCボードを検出: <strong>{{boardName}}<\/strong> しかしながらBetaflightにて公式ターゲットが見つかりませんでした",
         "description": "Board verification has succeeded, but the target is not available as offical Betaflight target."
     },
     "firmwareFlasherBoardVerificationFail": {
-        "message": "Betaflight Configuratorでボードの検証に<span class=\"message-negative\">失敗<\/span>しました。うまくいかない場合はタブをゆっくりと切り替え再試行してください。またUSB接続を改めてやり直すか、カスタムデフォルトを適用し忘れた場合は最初から接続し直してください。",
+        "message": "Betaflight Appはボードの検証に<span class=\"message-negative\">失敗<\/span>しました。この問題が続く場合は、タブを切り替えて再試行するか、USBを再接続してください。また、カスタムデフォルトの適用を忘れている可能性がある場合は、先に接続してから再試行してください。",
         "description": "Sometimes MSP values cannot be read from firmware correctly"
     },
     "firmwareFlasherButtonAbort": {
@@ -3682,9 +3828,6 @@
     "unstableFirmwareAcknowledgementFlash": {
         "message": "フラッシュ"
     },
-    "firmwareFlasherPreviousDevice": {
-        "message": "検出: <strong>$1<\/strong> - 以前のデバイスがまだ書き込まれています。再接続してもう一度お試しください。"
-    },
     "firmwareFlasherRemindBackupTitle": {
         "message": "設定を消去",
         "description": "Warning message title before actual flashing takes place"
@@ -3700,6 +3843,15 @@
     "firmwareFlasherBackupIgnore": {
         "message": "リスクを無視",
         "description": "Ignore creating a backup before actual flashing takes place"
+    },
+    "firmwareBackupEnabled": {
+        "message": "バックアップ 有効"
+    },
+    "firmwareBackupDisabled": {
+        "message": "バックアップ 無効"
+    },
+    "firmwareBackupAsk": {
+        "message": "バックアップ前に確認"
     },
     "ledStripHelp": {
         "message": "フライトコントローラは、個々のLEDストリップの色や効果を制御できます。<br\/>グリッド上にLEDを配置、配線順序を設定し、グリッド位置に従って機体にLEDを取り付けます。 ワイヤーオーダー番号のないLEDは保存されません。<br \/>HSV値を編集するには、色を選択、ダブルクリックします。"
@@ -4559,7 +4711,8 @@
         "description": "Iterm Relax Type selection"
     },
     "pidTuningItermRelaxTypeOptionGyro": {
-        "message": "ジャイロ"
+        "message": "$t(sensorStatusGyroShort.message)",
+        "description": "Don't translate!!!"
     },
     "pidTuningItermRelaxTypeOptionSetpoint": {
         "message": "セットポイント"
@@ -5129,6 +5282,10 @@
         "message": "フォント",
         "description": "Content of the selector for the OSD Font in the preview"
     },
+    "osdSetupFontManagerTitle": {
+        "message": "OSD フォントマネージャー",
+        "description": "Dialog title"
+    },
     "osdSetupFontTypeDefault": {
         "message": "デフォルト値",
         "description": "Font Default"
@@ -5522,7 +5679,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementCraftName": {
-        "message": "【基本設定】タブで設定した機体名。<\/br>CLI変数『craft_name』でも設定可能です。"
+        "message": "【基本設定】タブで設定された機体名。<br>CLI変数『craft_name』CLI変数を通じて設定することも可能です。"
     },
     "osdTextElementAltitude": {
         "message": "高度",
@@ -5817,6 +5974,14 @@
     "osdTextElementRtcDateTime": {
         "message": "日付と時刻 (RTC)",
         "description": "One of the elements of the OSD"
+    },
+    "osdTextElementRtcDateTimeVariantFullDate": {
+        "message": "日時 [全表示]",
+        "description": "One of the variants of the RTC date and time element of the OSD"
+    },
+    "osdTextElementRtcDateTimeVariantShortDate": {
+        "message": "日時 [短表示]",
+        "description": "One of the variants of the RTC date and time element of the OSD"
     },
     "osdDescElementRtcDateTime": {
         "message": "ハードウェアクロック 日付 \/ 時間"
@@ -6532,7 +6697,7 @@
         "description": "Text of one of the fields of the VTX tab"
     },
     "vtxFrequencyChannelHelp": {
-        "message": "これを有効にするとBetaflight Configuratorで通常のバンド\/チャンネルの代わりに周波数を選択できます。これを機能させるにはVTXがこの機能をサポートしている必要があります。",
+        "message": "これを有効にすると、Betaflight Appで通常のバンド\/チャンネルの代わりに周波数を選択できます。 これを機能させるには、VTXがこの機能をサポートしている必要があります。",
         "description": "Help text for the frequency or channel select field of the VTX tab"
     },
     "vtxSelectedMode": {
@@ -6962,7 +7127,7 @@
         "message": "Blackboxログレート"
     },
     "onboardLoggingDebugFields": {
-        "message": "データ含"
+        "message": "デバッグフィールドを含む"
     },
     "onboardLoggingDebugMode": {
         "message": "Blackboxデバッグモード"
@@ -7020,6 +7185,9 @@
     },
     "cliAutoComplete": {
         "message": "CLI オートコンプリート"
+    },
+    "firmwareBackupOnFlash": {
+        "message": "新しいターゲット書き込み前にバックアップを作成"
     },
     "darkTheme": {
         "message": "ダークテーマを有効"
@@ -7103,7 +7271,7 @@
         "message": "互換性のないWebView"
     },
     "cordovaWebviewTroubleshootingMsg": {
-        "message": "Betaflight Configuratorを使用するにはデバイスのWebViewを更新する必要があります。"
+        "message": "Betaflight Appを使用するにはデバイスのWebViewを更新する必要があります。"
     },
     "cordovaWebviewTroubleshootingMsg2": {
         "message": "以下のツールは新しいWebViewをインストールしたり、既にインストール済のWebViewを更新したりするのに役立ちます。"
@@ -7151,7 +7319,7 @@
         "message": "確認中"
     },
     "cordovaExitAppMessage": {
-        "message": "Betaflight Configuratorを終了しても良いですか？"
+        "message": "アプリケーションを終了しますか？"
     },
     "dropDownSelectAll": {
         "message": "[すべて選択\/選択解除]",
@@ -7429,6 +7597,18 @@
     "firmwareFlasherBuildCustomDefines": {
         "message": "カスタム定義"
     },
+    "firmwareFlasherOSDProtocolNotSelected": {
+        "message": "OSDプロトコルが選択されていません"
+    },
+    "firmwareFlasherOSDProtocolNotSelectedDescription": {
+        "message": "ファームウェアのビルドにはOSDプロトコルの選択が必要です。"
+    },
+    "firmwareFlasherOSDProtocolSelect": {
+        "message": "OSDプロトコルを選択"
+    },
+    "firmwareFlasherOSDProtocolNotSelectedContinue": {
+        "message": "OSDプロトコル未選択のまま続ける"
+    },
     "coreBuild": {
         "message": "コア部のみ"
     },
@@ -7469,5 +7649,17 @@
     "programmingFailedNotification": {
         "message": "FC のプログラムに失敗しました",
         "description": "Notification message when programming is unsuccessful"
+    },
+    "osdTextElementLidar": {
+        "message": "ソナー",
+        "description": "Displays distance from sonar sensor in cm"
+    },
+    "osdDescElementLidar": {
+        "message": "$t(osdTextElementLidar.message)",
+        "description": "Don't translate!!!"
+    },
+    "osdSetupPreviewCheckRulers": {
+        "message": "ルーラー",
+        "description": "Label for the checkbox to toggle OSD preview rulers around the preview"
     }
 }

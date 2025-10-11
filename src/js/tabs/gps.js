@@ -103,17 +103,17 @@ gps.initialize = async function (callback) {
         // Introduced in API 1.43
         gpsSbas.push(i18n.getMessage("gpsSbasNone"));
 
-        const gpsProtocolElement = $("select.gps_protocol");
+        const gpsProtocolElement = $(".gps_protocol");
         const gpsAutoBaudElement = $('input[name="gps_auto_baud"]');
         const gpsAutoBaudGroup = $(".gps_auto_baud");
         const gpsAutoConfigElement = $('input[name="gps_auto_config"]');
         const gpsAutoConfigGroup = $(".gps_auto_config");
         const gpsUbloxGalileoElement = $('input[name="gps_ublox_galileo"]');
         const gpsUbloxGalileoGroup = $(".gps_ublox_galileo");
-        const gpsUbloxSbasElement = $("select.gps_ubx_sbas");
-        const gpsUbloxSbasGroup = $(".gps_ubx_sbas");
+        const gpsUbloxSbasElement = $(".gps_ubx_sbas");
+        const gpsUbloxSbasGroup = gpsUbloxSbasElement.closest(".select");
         const gpsHomeOnceElement = $('input[name="gps_home_once"]');
-        const gpsBaudrateElement = $("select.gps_baudrate");
+        const gpsBaudrateElement = $(".gps_baudrate");
 
         for (let protocolIndex = 0; protocolIndex < gpsProtocols.length; protocolIndex++) {
             gpsProtocolElement.append(`<option value="${protocolIndex}">${gpsProtocols[protocolIndex]}</option>`);
@@ -190,7 +190,9 @@ gps.initialize = async function (callback) {
             $(".GPS_info td.positionalDop").parent().hide();
         }
 
-        const { mapView, iconStyleMag, iconStyleGPS, iconStyleNoFix, iconFeature, iconGeometry } = initMap();
+        // Store map instance for cleanup
+        gps._mapInstance = initMap();
+        const { mapView, iconStyleMag, iconStyleGPS, iconStyleNoFix, iconFeature, iconGeometry } = gps._mapInstance;
 
         // End GPS Configuration
 
@@ -334,9 +336,9 @@ gps.initialize = async function (callback) {
         }
 
         function update_ui() {
-            const lat = FC.GPS_DATA.lat / 10000000;
-            const lon = FC.GPS_DATA.lon / 10000000;
-            const url = `https://maps.google.com/?q=${lat},${lon}`;
+            const latitude = FC.GPS_DATA.latitude / 10000000;
+            const longitude = FC.GPS_DATA.longitude / 10000000;
+            const url = `https://maps.google.com/?q=${latitude},${longitude}`;
             const imuHeadingDegrees = FC.SENSOR_DATA.kinematics[2];
             // Convert to radians and add 180 degrees to make icon point in the right direction
             const imuHeadingRadians = ((imuHeadingDegrees + 180) * Math.PI) / 180;
@@ -353,9 +355,12 @@ gps.initialize = async function (callback) {
 
             const gpsUnitText = i18n.getMessage("gpsPositionUnit");
             $(".GPS_info td.alt").text(`${alt} m`);
-            $(".GPS_info td.latLon a")
+            $(".GPS_info td.latitude a")
                 .prop("href", url)
-                .text(`${lat.toFixed(6)} / ${lon.toFixed(6)} ${gpsUnitText}`);
+                .text(`${latitude.toFixed(6)} ${gpsUnitText}`);
+            $(".GPS_info td.longitude a")
+                .prop("href", url)
+                .text(`${longitude.toFixed(6)} ${gpsUnitText}`);
             $(".GPS_info td.heading").text(`${imuHeadingDegrees.toFixed(0)} / ${gpsHeading.toFixed(0)} ${gpsUnitText}`);
             $(".GPS_info td.speed").text(`${FC.GPS_DATA.speed} cm/s`);
             $(".GPS_info td.sats").text(FC.GPS_DATA.numSat);
@@ -384,12 +389,12 @@ gps.initialize = async function (callback) {
             if (ispConnected()) {
                 $("#connect").hide();
 
-                gpsFoundPosition = !!(lon && lat);
+                gpsFoundPosition = !!(longitude && latitude);
 
                 if (gpsFoundPosition) {
                     (hasMag ? iconStyleMag : iconStyleGPS).getImage().setRotation(imuHeadingRadians);
                     iconFeature.setStyle(hasMag ? iconStyleMag : iconStyleGPS);
-                    const center = fromLonLat([lon, lat]);
+                    const center = fromLonLat([longitude, latitude]);
                     mapView.setCenter(center);
                     iconGeometry.setCoordinates(center);
                 } else {
@@ -451,6 +456,11 @@ gps.initialize = async function (callback) {
 };
 
 gps.cleanup = function (callback) {
+    // Clean up map event listeners and resources
+    if (gps._mapInstance && typeof gps._mapInstance.destroy === "function") {
+        gps._mapInstance.destroy();
+        gps._mapInstance = null;
+    }
     if (callback) callback();
 };
 

@@ -4,6 +4,11 @@
         flex-direction: column;
         gap: 1rem;
     }
+    .motorstop {
+        .spacer_box {
+            gap: 0;
+        }
+    }
     .configuration {
         display: flex;
         flex-direction: column;
@@ -44,6 +49,18 @@
             line-height: 18px;
         }
     }
+    table.featuresMultiple {
+        border-collapse: collapse;
+        margin-bottom: 0.5rem;
+        tbody {
+            border-bottom: 1px solid var(--surface-500);
+            tr {
+                td {
+                    padding: 0 0 0.5rem 0;
+                }
+            }
+        }
+    }
     .number {
         input {
             width: 55px;
@@ -70,11 +87,6 @@
         span {
             margin-left: 0;
         }
-        margin-bottom: 5px;
-        clear: left;
-        padding-bottom: 5px;
-        border-bottom: 1px solid var(--surface-500);
-        width: 100%;
         &:last-child {
             border-bottom: none;
             padding-bottom: 0;
@@ -127,9 +139,8 @@
         }
     }
     .selectProtocol {
-        margin-bottom: 5px;
-        clear: left;
-        padding-bottom: 5px;
+        padding: 0.5rem 0;
+        margin-bottom: 0.5rem;
         border-bottom: 1px solid var(--surface-500);
         width: 100%;
     }
@@ -146,16 +157,6 @@
     }
     .modelAndGraph {
         width: 100%;
-    }
-    .btn {
-        .disabled {
-            cursor: default;
-            color: #fff;
-            background-color: #afafaf;
-            border: none;
-            pointer-events: none;
-            opacity: 0.5;
-        }
     }
     #dialogMotorOutputReorder-closebtn {
         margin-right: 0px;

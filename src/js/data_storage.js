@@ -11,8 +11,6 @@ const CONFIGURATOR = {
 
     connectionValid: false,
     connectionValidCliOnly: false,
-    bluetoothMode: false,
-    manualMode: false,
     virtualMode: false,
     virtualApiVersion: "0.0.1",
     cliActive: false,

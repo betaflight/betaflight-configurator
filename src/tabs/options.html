@@ -5,13 +5,6 @@
                 <div class="spacer_box_title" i18n="tabOptions"></div>
             </div>
             <div class="spacer">
-                <div class="checkForConfiguratorUnstableVersions margin-bottom">
-                    <div>
-                        <input type="checkbox" class="toggle" />
-                    </div>
-                    <span class="freelabel"
-                        i18n="checkForConfiguratorUnstableVersions"></span>
-                </div>
                 <div class="rememberLastTab margin-bottom">
                     <div>
                         <input type="checkbox" class="toggle" />
@@ -36,12 +29,6 @@
                     </div>
                     <span class="freelabel" i18n="cliAutoComplete"></span>
                 </div>
-                <div class="showAllSerialDevices margin-bottom">
-                    <div>
-                        <input type="checkbox" class="toggle" />
-                    </div>
-                    <span class="freelabel" i18n="showAllSerialDevices"></span>
-                </div>
                 <div class="showManualMode margin-bottom">
                     <div>
                         <input type="checkbox" class="toggle" />
@@ -60,13 +47,6 @@
                     </div>
                     <span class="freelabel"
                         i18n="useLegacyRenderingModel"></span>
-                </div>
-                <div class="cordovaForceComputerUI margin-bottom">
-                    <div>
-                        <input type="checkbox" class="toggle" />
-                    </div>
-                    <span class="freelabel"
-                        i18n="cordovaForceComputerUI"></span>
                 </div>
                 <div class="darkTheme margin-bottom">
                     <select id="darkThemeSelect">
@@ -88,6 +68,14 @@
                     </div>
                     <span class="freelabel" i18n="showNotifications"></span>
                 </div>
+                <div class="backupOnFlash margin-bottom">
+                    <select id="backupOnFlashSelect">
+                        <option value="0" i18n="firmwareBackupDisabled"></option>
+                        <option value="1" i18n="firmwareBackupEnabled"></option>
+                        <option value="2" i18n="firmwareBackupAsk"></option>
+                    </select>
+                    <span class="freelabel" i18n="firmwareBackupOnFlash"></span>
+                </div>
                 <div class="userLanguage">
                     <span class="dropdown">
                         <select class="dropdown-select" id="userLanguage"
@@ -96,6 +84,29 @@
                         </select>
                     </span>
                     <span i18n="userLanguageSelect"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="gui_box">
+            <div class="gui_box_titlebar">
+                <div class="spacer_box_title" i18n="developmentSettings"></div>
+            </div>
+            <div class="spacer">
+                <div class="showAllSerialDevices margin-bottom">
+                    <div>
+                        <input type="checkbox" class="toggle" />
+                    </div>
+                    <span class="freelabel" i18n="showAllSerialDevices"></span>
+                </div>
+
+                <div class="developmentSettings margin-bottom">
+                    <div class="cliOnlyMode margin-bottom">
+                        <div>
+                            <input type="checkbox" class="toggle" />
+                        </div>
+                        <span class="freelabel" i18n="cliOnlyMode"></span>
+                    </div>
                 </div>
             </div>
         </div>

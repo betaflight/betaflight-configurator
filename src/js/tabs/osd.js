@@ -10,16 +10,202 @@ import CONFIGURATOR, { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } fr
 import LogoManager from "../LogoManager";
 import { gui_log } from "../gui_log";
 import semver from "semver";
-import jBox from "jbox";
+import tippy from "tippy.js";
 import inflection from "inflection";
 import debounce from "lodash.debounce";
 import $ from "jquery";
 import FileSystem from "../FileSystem";
 import { have_sensor } from "../sensor_helpers";
+import { initializeModalDialog } from "../utils/initializeModalDialog";
 
 const FONT = {};
 const SYM = {};
 const OSD = {};
+
+// Preset position
+const positionConfigs = {
+    TL: {
+        label: "Top Left",
+        coords: (_w, _h) => ({
+            x: 1,
+            y: 1,
+        }),
+        gridPos: [0, 0],
+    },
+    TC: {
+        label: "Top Center",
+        coords: (w, _h) => ({
+            x: Math.floor((OSD.data.displaySize.x - w) / 2),
+            y: 1,
+        }),
+        grow: {
+            x: 0,
+            y: 1,
+        },
+        gridPos: [1, 0],
+    },
+    TR: {
+        label: "Top Right",
+        coords: (w, _h) => ({
+            x: Math.max(1, OSD.data.displaySize.x - w - 1),
+            y: 1,
+        }),
+        grow: {
+            x: 0,
+            y: 1,
+        },
+        gridPos: [2, 0],
+    },
+    // Top-middle row
+    TML: {
+        label: "Top Middle Left",
+        coords: (_w, h) => ({
+            x: 1,
+            y: Math.floor(OSD.data.displaySize.y / 3) - Math.floor(h / 2),
+        }),
+        grow: {
+            x: 0,
+            y: 1,
+        },
+        gridPos: [0, 1],
+    },
+    TMC: {
+        label: "Top Mid Center",
+        coords: (w, h) => ({
+            x: Math.floor((OSD.data.displaySize.x - w) / 2),
+            y: Math.floor(OSD.data.displaySize.y / 3) - Math.floor(h / 2),
+        }),
+        grow: {
+            x: 0,
+            y: 1,
+        },
+        gridPos: [1, 1],
+    },
+    TMR: {
+        label: "Top Middle Right",
+        coords: (w, h) => ({
+            x: Math.max(1, OSD.data.displaySize.x - w - 1),
+            y: Math.floor(OSD.data.displaySize.y / 3) - Math.floor(h / 2),
+        }),
+        grow: {
+            x: 0,
+            y: 1,
+        },
+        gridPos: [2, 1],
+    },
+    // Exact middle row
+    LMC: {
+        label: "Left Middle",
+        coords: (_w, h) => ({
+            x: 1,
+            y: Math.floor((OSD.data.displaySize.y - h) / 2),
+        }),
+        grow: {
+            x: 0,
+            y: 1,
+        },
+        gridPos: [0, 2],
+    },
+    CTR: {
+        label: "Center",
+        coords: (w, h) => ({
+            x: Math.floor(OSD.data.displaySize.x / 2 - w / 2),
+            y: Math.floor(OSD.data.displaySize.y / 2 - h / 2),
+            // x: 1,
+            // y: 1,
+        }),
+        grow: {
+            x: 0,
+            y: 1,
+        },
+        gridPos: [1, 2],
+    },
+    RMC: {
+        label: "Right Middle",
+        coords: (w, h) => ({
+            x: OSD.data.displaySize.x - 1 - w,
+            y: Math.floor((OSD.data.displaySize.y - h) / 2),
+        }),
+        grow: {
+            x: 0,
+            y: 1,
+        },
+        gridPos: [2, 2],
+    },
+    // Bottom-middle row
+    BML: {
+        label: "Bottom Middle Left",
+        coords: (_w, h) => ({
+            x: 1,
+            y: Math.floor((OSD.data.displaySize.y * 2) / 3) - Math.floor(h / 2),
+        }),
+        grow: {
+            x: 0,
+            y: -1,
+        },
+        gridPos: [0, 3],
+    },
+    BMC: {
+        label: "Bottom Mid Center",
+        coords: (w, h) => ({
+            x: Math.floor((OSD.data.displaySize.x - w) / 2),
+            y: Math.floor((OSD.data.displaySize.y * 2) / 3) - Math.floor(h / 2),
+        }),
+        grow: {
+            x: 0,
+            y: -1,
+        },
+        gridPos: [1, 3],
+    },
+    BMR: {
+        label: "Bottom Middle Right",
+        coords: (w, h) => ({
+            x: Math.max(1, OSD.data.displaySize.x - w - 1),
+            y: Math.floor((OSD.data.displaySize.y * 2) / 3) - Math.floor(h / 2),
+        }),
+        grow: {
+            x: 0,
+            y: -1,
+        },
+        gridPos: [2, 3],
+    },
+    BL: {
+        label: "Bottom Left",
+        coords: (_w, h) => ({
+            x: 1,
+            y: OSD.data.displaySize.y - h - 1,
+        }),
+        grow: {
+            x: 0,
+            y: -1,
+        },
+        gridPos: [0, 4],
+    },
+    BC: {
+        label: "Bottom Center",
+        coords: (w, h) => ({
+            x: Math.floor((OSD.data.displaySize.x - w) / 2),
+            y: OSD.data.displaySize.y - h - 1,
+        }),
+        grow: {
+            x: 0,
+            y: -1,
+        },
+        gridPos: [1, 4],
+    },
+    BR: {
+        label: "Bottom Right",
+        coords: (w, h) => ({
+            x: Math.max(1, OSD.data.displaySize.x - w - 1),
+            y: OSD.data.displaySize.y - h - 1,
+        }),
+        grow: {
+            x: 0,
+            y: -1,
+        },
+        gridPos: [2, 4],
+    },
+};
 
 SYM.loadSymbols = function () {
     SYM.BLANK = 0x20;
@@ -112,15 +298,6 @@ FONT.constants = {
         CHAR_HEIGHT: 18,
         CHAR_WIDTH: 12,
     },
-    COLORS: {
-        // black
-        0: "rgba(0, 0, 0, 1)",
-        // also the value 3, could yield transparent according to
-        // https://www.sparkfun.com/datasheets/BreakoutBoards/MAX7456.pdf
-        1: "rgba(255, 255, 255, 0)",
-        // white
-        2: "rgba(255,255,255, 1)",
-    },
 };
 
 FONT.pushChar = function (fontCharacterBytes, fontCharacterBits) {
@@ -197,36 +374,45 @@ FONT.openFontFile = function () {
 };
 
 /**
- * returns a canvas image with the character on it
+ * Gets a character bitmap as a data URI.
+ * (Uses only single quotes so it can be embedded within double quotes)
+ * @param {number} charAddress Character index into a FONT array.
+ * @returns {string} Data URI.
  */
-const drawCanvas = function (charAddress) {
-    const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d");
+const characterBitmapDataUri = function (charAddress) {
+    // Validate input
+    if (!(charAddress in FONT.data.characters)) {
+        console.log("charAddress", charAddress, " is not in ", FONT.data.characters.length);
+    }
 
-    const pixelSize = 1;
-    const width = pixelSize * FONT.constants.SIZES.CHAR_WIDTH;
-    const height = pixelSize * FONT.constants.SIZES.CHAR_HEIGHT;
+    // Create data URI prefix and SVG wrapper
+    const width = FONT.constants.SIZES.CHAR_WIDTH;
+    const height = FONT.constants.SIZES.CHAR_HEIGHT;
+    const lines = [
+        "data:image/svg+xml;utf8,",
+        `<svg width='${width}' height='${height}' xmlns='http://www.w3.org/2000/svg'>`,
+    ];
 
-    canvas.width = width;
-    canvas.height = height;
-
+    // Create a rect for each visible pixel
     for (let y = 0; y < height; y++) {
         for (let x = 0; x < width; x++) {
-            if (!(charAddress in FONT.data.characters)) {
-                console.log("charAddress", charAddress, " is not in ", FONT.data.characters.length);
+            const color = FONT.data.characters[charAddress][y * width + x];
+            const fill = color === 0 ? "black" : color === 2 ? "white" : null;
+            if (fill) {
+                lines.push(`<rect x='${x}' y='${y}' width='1' height='1' fill='${fill}'/>`);
             }
-            const v = FONT.data.characters[charAddress][y * width + x];
-            ctx.fillStyle = FONT.constants.COLORS[v];
-            ctx.fillRect(x, y, pixelSize, pixelSize);
         }
     }
-    return canvas;
+
+    // Close SVG wrapper and return data URI
+    lines.push("</svg>");
+    return lines.join("");
 };
 
 FONT.draw = function (charAddress) {
     let cached = FONT.data.character_image_urls[charAddress];
     if (!cached) {
-        cached = FONT.data.character_image_urls[charAddress] = drawCanvas(charAddress).toDataURL("image/png");
+        cached = FONT.data.character_image_urls[charAddress] = characterBitmapDataUri(charAddress);
     }
     return cached;
 };
@@ -1106,7 +1292,10 @@ OSD.loadDisplayFields = function () {
             defaultPosition: -1,
             draw_order: 360,
             positionable: true,
-            preview: "2017-11-11 16:20:00",
+            preview(osdData) {
+                const variantSelected = OSD.getVariantForPreview(osdData, "RTC_DATE_TIME");
+                return variantSelected === 0 ? "2025-11-11 16:20:00" : "11-11 16:20";
+            },
         },
         ADJUSTMENT_RANGE: {
             name: "ADJUSTMENT_RANGE",
@@ -1575,11 +1764,26 @@ OSD.loadDisplayFields = function () {
             positionable: true,
             preview: "CUSTOM MSG4",
         },
+        OSD_LIDAR_DIST: {
+            name: "OSD_LIDAR_DIST",
+            text: "osdTextElementLidar",
+            desc: "osdDescElementLidar",
+            defaultPosition: -1,
+            draw_order: 610,
+            positionable: true,
+            preview: "RF:---",
+        },
     };
 
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47) && have_sensor(FC.CONFIG.activeSensors, "gps")) {
-        OSD.ALL_DISPLAY_FIELDS.ALTITUDE.variants.push("osdTextElementAltitudeVariant1DecimalASL");
-        OSD.ALL_DISPLAY_FIELDS.ALTITUDE.variants.push("osdTextElementAltitudeVariantNoDecimalASL");
+    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+        if (have_sensor(FC.CONFIG.activeSensors, "gps")) {
+            OSD.ALL_DISPLAY_FIELDS.ALTITUDE.variants.push("osdTextElementAltitudeVariant1DecimalASL");
+            OSD.ALL_DISPLAY_FIELDS.ALTITUDE.variants.push("osdTextElementAltitudeVariantNoDecimalASL");
+        }
+        OSD.ALL_DISPLAY_FIELDS.RTC_DATE_TIME.variants = [
+            "osdTextElementRtcDateTimeVariantFullDate",
+            "osdTextElementRtcDateTimeVariantShortDate",
+        ];
     }
 };
 
@@ -2015,6 +2219,7 @@ OSD.chooseFields = function () {
             F.CUSTOM_MSG1,
             F.CUSTOM_MSG2,
             F.CUSTOM_MSG3,
+            F.OSD_LIDAR_DIST,
         ]);
     }
     // Choose statistic fields
@@ -2103,6 +2308,9 @@ OSD.chooseFields = function () {
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
         OSD.constants.WARNINGS = OSD.constants.WARNINGS.concat([F.LOAD]);
     }
+    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+        OSD.constants.WARNINGS = OSD.constants.WARNINGS.filter((w) => w.name !== "RC_SMOOTHING_FAILURE");
+    }
 };
 
 OSD.updateDisplaySize = function () {
@@ -2117,6 +2325,236 @@ OSD.updateDisplaySize = function () {
         y: OSD.data.VIDEO_ROWS[videoType],
         total: null,
     };
+};
+
+// Ruler config object for all magic numbers
+OSD.rulerConfig = {
+    meterThickness: 16, // px
+    tickMinor: 4, // px
+    tickMajor: 8, // px
+    vertTickMajor: 12, // px
+    labelPadding: 12, // px
+    topLabelOffset: 4, // px
+    sideLabelOffset: 12, // px
+    sideLabelOffsetMajor: 16, // px
+    bottomLabelOffset: 12, // px
+    edgeGap: 12, // px
+    minEdgePadding: 12, // px
+    verticalLabelStep: 2,
+    bumpTop: 3, // px
+    bumpRight: 3, // px
+    colorMinor: "#888888",
+    colorMajor: "#cccccc",
+    colorCenter: "#ffff00",
+    font: "10px monospace",
+};
+
+OSD.initializeRulers = function () {
+    const canvas = document.querySelector(".ruler-overlay");
+    const preview = document.querySelector(".preview");
+    const container = document.querySelector(".preview-container");
+    const enabled = document.querySelector("#osd-preview-rulers-selector")?.checked;
+    if (!canvas || !preview || !container || !OSD.data?.displaySize) {
+        return false;
+    }
+    if (!enabled) {
+        canvas.style.display = "none";
+        preview.style.marginRight = "";
+        preview.style.marginLeft = "";
+        preview.style.marginTop = "";
+        container.style.paddingRight = "";
+        container.style.paddingLeft = "";
+        container.style.paddingTop = "";
+        return false;
+    }
+    canvas.style.display = "block";
+    container.style.paddingTop = "26px";
+    preview.style.marginRight = "30px";
+    preview.style.marginLeft = "30px";
+    return { canvas, preview, container };
+};
+
+OSD.setupRulerContext = function (canvas, preview, container, config) {
+    const cw = Math.max(1, Math.floor(container.clientWidth));
+    const ch = Math.max(1, Math.floor(container.clientHeight));
+    if (canvas.width !== cw) {
+        canvas.width = cw;
+    }
+    if (canvas.height !== ch) {
+        canvas.height = ch;
+    }
+    const ctx = canvas.getContext("2d");
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.font = config.font;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    const rows = preview.querySelectorAll(".row");
+    if (!rows.length) {
+        return false;
+    }
+    const colsInRow = rows[0].querySelectorAll(".char");
+    if (!colsInRow.length) {
+        return false;
+    }
+    const containerRect = container.getBoundingClientRect();
+    const previewRect = preview.getBoundingClientRect();
+    const left = Math.floor(previewRect.left - containerRect.left);
+    const top = Math.floor(previewRect.top - containerRect.top);
+    const right = Math.ceil(previewRect.right - containerRect.left);
+    const bottom = Math.ceil(previewRect.bottom - containerRect.top);
+    const charRect = colsInRow[0].getBoundingClientRect();
+    const cellW = charRect.width;
+    const cellH = charRect.height;
+    const cols = colsInRow.length;
+    const rowsCount = rows.length;
+    const cx = Math.floor(cols / 2);
+    const cy = Math.floor(rowsCount / 2);
+    const signPad = Math.ceil(ctx.measureText("-").width);
+    return {
+        ctx,
+        cw,
+        ch,
+        containerRect,
+        previewRect,
+        cols,
+        rowsCount,
+        cx,
+        cy,
+        cellW,
+        cellH,
+        left,
+        top,
+        right,
+        bottom,
+        rows,
+        colsInRow,
+        signPad,
+    };
+};
+
+OSD._colCenterX = function (i, containerRect, colsInRow) {
+    const rect = colsInRow[i].getBoundingClientRect();
+    return Math.round(rect.left - containerRect.left + rect.width / 2);
+};
+OSD._rowCenterY = function (i, containerRect, rows) {
+    const rect = rows[i].getBoundingClientRect();
+    return Math.round(rect.top - containerRect.top + rect.height / 2);
+};
+
+// Shared axis drawing helper for top/bottom horizontal rulers
+function drawHorizontalAxis(ctx, params, axis) {
+    const { cols, containerRect, colsInRow, config } = params;
+    let centerIndex = Math.floor(cols / 2);
+    let minOffset = -centerIndex;
+    let maxOffset = centerIndex;
+    const isDark = document.body.classList.contains("dark-theme");
+    for (let i = 0; i < cols; i++) {
+        let offset = i - centerIndex + (cols % 2 === 0 ? 1 : 0);
+        const x = OSD._colCenterX(i, containerRect, colsInRow);
+        const isCenter = offset === 0;
+        const isMajor = offset % 5 === 0 || isCenter;
+        const majorColor = isMajor ? config.colorMajor : config.colorMinor;
+        const tick = isMajor ? config.tickMajor : config.tickMinor;
+        ctx.strokeStyle = isCenter ? config.colorCenter : majorColor;
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        let y0, y1, labelY;
+        if (axis === "top") {
+            y0 = Math.max(0, params.top - config.edgeGap);
+            y1 = Math.max(0, y0 - tick);
+            labelY = Math.max(config.minEdgePadding, y1 - config.topLabelOffset);
+        } else {
+            y0 = Math.min(params.ch, params.bottom + 1);
+            y1 = Math.min(params.ch, params.bottom + tick);
+            const maxLabelY = params.ch - 12;
+            labelY = Math.min(maxLabelY, y1 + config.bottomLabelOffset);
+        }
+        ctx.moveTo(x + 0.5, y0 + 0.5);
+        ctx.lineTo(x + 0.5, y1 + 0.5);
+        ctx.stroke();
+        if (isMajor && offset >= minOffset && offset <= maxOffset) {
+            ctx.fillStyle = isDark ? "#fff" : "#000";
+            ctx.save();
+            ctx.textBaseline = axis === "top" ? "bottom" : "top";
+            ctx.fillText(offset.toString(), x, labelY);
+            ctx.restore();
+        }
+    }
+}
+
+// Shared vertical axis drawing helper for left/right rulers
+function drawVerticalAxis(ctx, params, axis) {
+    const { rowsCount, cy, left, right, ch, cw, signPad, rows, containerRect, config } = params;
+    ctx.textAlign = axis === "left" ? "right" : "left";
+    const isDark = document.body.classList.contains("dark-theme");
+    for (let i = 0; i < rowsCount; i++) {
+        const y = OSD._rowCenterY(i, containerRect, rows);
+        const offset = i - cy + (rowsCount % 2 === 0 ? 1 : 0);
+        const isCenter = i === cy;
+        const isMajor = Math.abs(offset) % config.verticalLabelStep === 0 || i === 0 || i === rowsCount - 1 || isCenter;
+        const majorColor = isMajor ? config.colorMajor : config.colorMinor;
+        const tick = isMajor ? config.vertTickMajor : config.tickMinor;
+        ctx.strokeStyle = isCenter ? config.colorCenter : majorColor;
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        let x0, x1, labelX;
+        if (axis === "left") {
+            x0 = left - 1;
+            x1 = Math.max(0, left - tick);
+        } else {
+            x0 = Math.min(cw - 1, right + 1);
+            x1 = Math.min(cw - 1, right + tick);
+        }
+        ctx.moveTo(x0 + 0.5, y + 0.5);
+        ctx.lineTo(x1 + 0.5, y + 0.5);
+        ctx.stroke();
+        if (isMajor) {
+            ctx.fillStyle = isDark ? "#fff" : "#000";
+            const text = offset.toString();
+            const textWidth = ctx.measureText(text).width;
+            const extra = text.startsWith("-") ? signPad : 0;
+            if (axis === "left") {
+                const desired = x1 - (isMajor ? config.sideLabelOffsetMajor : config.sideLabelOffset) - extra;
+                labelX = Math.max(config.minEdgePadding + textWidth, desired);
+            } else {
+                const desired = x1 + (isMajor ? config.sideLabelOffsetMajor : config.sideLabelOffset) + extra;
+                labelX = Math.min(cw - config.minEdgePadding - textWidth, desired);
+            }
+            const yLabel = Math.max(config.minEdgePadding, Math.min(ch - config.minEdgePadding, y + 0.5));
+            ctx.fillText(text, labelX, yLabel);
+        }
+    }
+}
+
+OSD._drawTopAxis = function (ctx, params) {
+    drawHorizontalAxis(ctx, params, "top");
+};
+OSD._drawBottomAxis = function (ctx, params) {
+    drawHorizontalAxis(ctx, params, "bottom");
+};
+OSD._drawLeftAxis = function (ctx, params) {
+    drawVerticalAxis(ctx, params, "left");
+};
+OSD._drawRightAxis = function (ctx, params) {
+    drawVerticalAxis(ctx, params, "right");
+};
+
+OSD.drawRulers = function () {
+    const config = OSD.rulerConfig;
+    const init = OSD.initializeRulers();
+    if (!init) {
+        return;
+    }
+    const setup = OSD.setupRulerContext(init.canvas, init.preview, init.container, config);
+    if (!setup) {
+        return;
+    }
+    // Compose params for axis functions
+    const params = { ...setup, config };
+    OSD._drawTopAxis(params.ctx, params);
+    OSD._drawBottomAxis(params.ctx, params);
+    OSD._drawLeftAxis(params.ctx, params);
+    OSD._drawRightAxis(params.ctx, params);
 };
 
 OSD.drawByOrder = function (selectedPosition, field, charCode, x, y) {
@@ -2356,6 +2794,7 @@ OSD.msp = {
         d.state.haveMax7456Configured = bit_check(d.flags, 4);
         d.state.haveFrSkyOSDConfigured = bit_check(d.flags, 3);
         d.state.haveMax7456FontDeviceConfigured = d.state.haveMax7456Configured || d.state.haveFrSkyOSDConfigured;
+        d.state.haveAirbotTheiaOsdDevice = bit_check(d.flags, 7) && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47);
         d.state.isMax7456FontDeviceDetected = bit_check(d.flags, 5);
         d.state.haveOsdFeature = bit_check(d.flags, 0);
         d.state.isOsdSlave = bit_check(d.flags, 1);
@@ -2576,12 +3015,14 @@ OSD.GUI.preview = {
             return;
         }
         $(`#element-fields .field-${$(this).data("field").index}`).addClass("mouseover");
+        $(`.preview .char.field-${$(this).data("field").index}`).addClass("mouseover");
     },
     onMouseLeave() {
         if (!$(this).data("field")) {
             return;
         }
         $(`#element-fields .field-${$(this).data("field").index}`).removeClass("mouseover");
+        $(`.preview .char.field-${$(this).data("field").index}`).removeClass("mouseover");
     },
     onDragStart(e) {
         const ev = e.originalEvent;
@@ -2693,6 +3134,311 @@ OSD.GUI.preview = {
     },
 };
 
+OSD.presetPosition = {};
+OSD.presetPosition.contextMenuName = "preset_position";
+
+OSD.contextMenu = [
+    {
+        name: OSD.presetPosition.contextMenuName,
+        display: {
+            displayText: "Align to position",
+        },
+        populateContentFn: null,
+        content: null,
+    },
+];
+
+OSD.getContextMenu = function () {
+    let g_ContextMenu = $(`#global-context-menu.context-menu`);
+
+    if (g_ContextMenu.length > 0) {
+        return g_ContextMenu;
+    } else {
+        // It doesn't exist,let's build one now.
+        let contextMenuMarkup = $(`<div id="global-context-menu" class="context-menu"></div>`);
+
+        // I'm really not 100% sure where I should place this
+        let targetContainer = $(`body`);
+
+        if (targetContainer.length == 0) {
+            console.error("Target container doesn't exist, cannot place context menu");
+            gui_log("Context menu initialization failed");
+            return;
+        }
+
+        targetContainer.append(contextMenuMarkup);
+
+        // Make sure to fill up content/set populateContentFn first,
+        // (e.g : preset positioning is already done in osd.initialize)
+        OSD.buildContextMenu(contextMenuMarkup);
+
+        return contextMenuMarkup;
+    }
+};
+
+OSD.buildContextMenu = function (g_ContextMenu) {
+    if (!OSD.contextMenu || OSD.contextMenu.length <= 0) {
+        console.log("Context menu array object is invalid or empty,not building context menu.");
+        return;
+    }
+
+    if (!g_ContextMenu || g_ContextMenu.length == 0) {
+        console.log("Context menu is null,not continuing!");
+        return;
+    }
+
+    OSD.contextMenu.forEach((element) => {
+        let contextMenuItemWrapper = $(`<div class="context-menu-item"></div>`);
+
+        let contextMenuItemDisplayTemplate = $(`
+            <div id="context-menu-${element.name}" class="context-menu-item-display">
+                <span>${element.display.displayText}</span>
+                <span>▶<span class="context-menu-item-content-wrapper"></span></span>
+            </div>
+        `);
+
+        let contextMenuItemContentWrapper = contextMenuItemDisplayTemplate.find(".context-menu-item-content-wrapper");
+        if (
+            element.populateContentFn &&
+            element.populateContentFn != null &&
+            element.populateContentFn instanceof Function
+        ) {
+            element.populateContentFn();
+        }
+
+        let contextMenuItemContentTemplate = $(`<div class="context-menu-item-content"></div>`);
+
+        if (element.content && element.content instanceof Object) {
+            contextMenuItemContentTemplate.append(element.content);
+        }
+
+        contextMenuItemWrapper.append(contextMenuItemDisplayTemplate);
+        contextMenuItemContentWrapper.append(contextMenuItemContentTemplate);
+
+        g_ContextMenu.append(contextMenuItemWrapper);
+
+        contextMenuItemDisplayTemplate.on("click", function () {
+            contextMenuItemContentTemplate.addClass("show");
+        });
+    });
+};
+
+OSD.presetPosition.registerHandlers = function () {
+    // Registering it on document since the buttons are not immediately available.
+    $(document).on("click", ".preset-pos-btn", OSD.presetPosition.onMenuTrigger);
+
+    // Hide the menu if anywhere else is clicked.
+    $(document).on("click", function (e) {
+        if (!$(e.target).closest(".context-menu").length) {
+            OSD.presetPosition.hideMenu();
+        }
+    });
+};
+
+// Helper to create the grid wrapper
+OSD.presetPosition.createGridWrapper = function () {
+    return $(
+        `<div id="preset-pos-grid-wrapper">
+            <div id="preset-pos-text">Choose Position</div>
+            <div id="preset-pos-grid"></div>
+        </div>`,
+    );
+};
+
+// Helper to create a single grid cell
+OSD.presetPosition.createGridCell = function (col, row) {
+    const $cell = $('<div class="preset-pos-grid-cell"></div>');
+    $cell.css("grid-row", row + 1);
+    $cell.css("grid-column", col + 1);
+    // Find matching position config
+    const matchingConfig = Object.entries(positionConfigs).find(
+        ([_, config]) => config.gridPos && config.gridPos[0] === col && config.gridPos[1] === row,
+    );
+    if (matchingConfig) {
+        const [configKey, config] = matchingConfig;
+        $cell.attr("data-position-key", configKey).append(`<div class="preset-pos-cell-tooltip">${config.label}</div>`);
+    }
+    return $cell;
+};
+
+// Helper to populate the grid with cells
+OSD.presetPosition.populateGrid = function ($gridContainer) {
+    for (let row = 0; row < 5; row++) {
+        for (let col = 0; col < 3; col++) {
+            const $cell = OSD.presetPosition.createGridCell(col, row);
+            $gridContainer.append($cell);
+        }
+    }
+};
+
+// Helper to register click event for grid cells
+OSD.presetPosition.registerGridCellClick = function () {
+    $(document).on("click", ".preset-pos-grid-cell", function (e) {
+        e.stopPropagation();
+        const positionKey = $(this).attr("data-position-key");
+        const fieldToUpdate = $(this).data("field");
+        if (!positionKey || !fieldToUpdate) {
+            alert("Missing keys and fields to apply (position preset grid cell click)");
+            return;
+        }
+        OSD.presetPosition.applyPosition(fieldToUpdate, positionKey);
+    });
+};
+
+OSD.presetPosition.setupGrid = function () {
+    let contextMenuListObject = OSD.contextMenu.find((element) => {
+        if (element.name == OSD.presetPosition.contextMenuName) {
+            return true;
+        }
+    });
+
+    if (!contextMenuListObject) {
+        return;
+    }
+
+    const $grid = OSD.presetPosition.createGridWrapper();
+    const $gridContainer = $grid.find("#preset-pos-grid");
+    OSD.presetPosition.populateGrid($gridContainer);
+    OSD.presetPosition.registerGridCellClick();
+
+    contextMenuListObject.content = $grid;
+};
+
+OSD.presetPosition.applyPosition = function (fieldChanged, positionKey) {
+    const config = positionConfigs[positionKey];
+    if (!config) {
+        return;
+    }
+    let elementWidth = fieldChanged.preview.constructor == String ? fieldChanged.preview.length : 1;
+    let elementHeight = 1;
+
+    let adjustOffsetX = 0;
+    let adjustOffsetY = 0;
+
+    // Advanced elements
+    if (fieldChanged.preview.constructor == Array) {
+        const limits = OSD.searchLimitsElement(fieldChanged.preview);
+
+        // Note: Using +1 for inclusive range calculation, which is mathematically
+        // correct for counting occupied positions. An element spanning coordinates
+        // -2 to 2 occupies 5 positions: [-2, -1, 0, 1, 2]
+        elementWidth = limits.maxX - limits.minX + 1;
+        elementHeight = limits.maxY - limits.minY + 1;
+
+        // Offset adjustments are needed because the positioning system expects
+        // these values to account for the difference between logical and visual positioning.
+        // Use raw limits for offsets since they represent coordinate positions, not dimensions
+        adjustOffsetX = limits.minX;
+        adjustOffsetY = limits.minY;
+    } else if (fieldChanged.preview.constructor === String) {
+        elementHeight = 1;
+    }
+
+    const target = config.coords(elementWidth, elementHeight);
+    let finalPosition = null;
+    // Ensure target position is within bounds
+    if (target.x < 1) {
+        target.x = 1;
+    }
+    if (target.y < 1) {
+        target.y = 1;
+    }
+    if (target.x + elementWidth > OSD.data.displaySize.x - 1) {
+        target.x = Math.max(1, OSD.data.displaySize.x - elementWidth - 1);
+    }
+    if (target.y + elementHeight > OSD.data.displaySize.y - 1) {
+        target.y = Math.max(1, OSD.data.displaySize.y - elementHeight - 1);
+    }
+    // Find available position with growth logic
+    for (let offset = 0; offset < Math.max(OSD.data.displaySize.x, OSD.data.displaySize.y); offset++) {
+        const testX = target.x + config.grow.x * offset;
+        const testY = target.y + config.grow.y * offset;
+        if (
+            testX < 1 ||
+            testX + elementWidth > OSD.data.displaySize.x - 1 ||
+            testY < 1 ||
+            testY > OSD.data.displaySize.y - 2
+        )
+            break;
+        let canPlace = true;
+        for (let row = 0; row < elementHeight && canPlace; row++) {
+            for (let col = 0; col < elementWidth && canPlace; col++) {
+                const checkPos = (testY + row) * OSD.data.displaySize.x + testX + col;
+                const cell = OSD.data.preview[checkPos];
+
+                if (
+                    cell?.[0]?.index != null &&
+                    cell[0].index !== fieldChanged.index &&
+                    !(cell?.[0]?.preview.constructor === Array || fieldChanged.preview.constructor === Array)
+                ) {
+                    canPlace = false;
+                }
+            }
+        }
+        if (canPlace) {
+            finalPosition = testY * OSD.data.displaySize.x + testX;
+
+            // Needed for advanced elements or else they won't be where we expect them to be.
+            finalPosition -= adjustOffsetX;
+            finalPosition -= adjustOffsetY * OSD.data.displaySize.x;
+
+            break;
+        }
+    }
+    if (finalPosition !== null) {
+        fieldChanged.position = finalPosition;
+        MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, OSD.msp.encodeLayout(fieldChanged))
+            .then(OSD.updateOsdView)
+            .catch((err) => console.error("OSD update failed:", err));
+    } else {
+        gui_log("Unable to place element - not enough space available");
+    }
+};
+
+OSD.presetPosition.onMenuTrigger = function (e) {
+    e.stopImmediatePropagation();
+    let $instance = $(this);
+    let $referencePointWrapper = $instance.parent(".preset-pos-btn-wrapper");
+    let g_ContextMenu = OSD.getContextMenu();
+
+    if (g_ContextMenu.length == 0) {
+        alert("Preset position context menu not found!");
+        return;
+    }
+    let $contextMenuItem = $(`#context-menu-${OSD.presetPosition.contextMenuName}`);
+
+    if ($contextMenuItem.length == 0) {
+        alert("Preset position context menu item not found!");
+        return;
+    }
+
+    g_ContextMenu.appendTo($referencePointWrapper);
+    g_ContextMenu.removeClass("show");
+
+    let contentContainer = $contextMenuItem.find(".context-menu-item-content");
+    if (contentContainer.length > 0) {
+        contentContainer.removeClass("show");
+    }
+
+    // HACK:Apparently if the class is added on the same cycle of its creation,
+    // it can't animate any transitions,so we delay the class addition by 1ms.
+    setTimeout(function () {
+        g_ContextMenu.addClass("show");
+    }, 1);
+
+    // Set the field to update
+
+    $(`.preset-pos-grid-cell`).each((_, element) => {
+        let traverseElement = $(element).closest(".preset-pos-btn-wrapper");
+        let fieldToUpdate = traverseElement.data("field");
+        $(element).data("field", fieldToUpdate);
+    });
+};
+
+OSD.presetPosition.hideMenu = function () {
+    $(".context-menu, .context-menu-item-content").removeClass("show");
+};
+
 const osd = {
     analyticsChanges: {},
 };
@@ -2739,16 +3485,8 @@ osd.initialize = function (callback) {
             $(".display-layout .preview").css("zoom", previewZoom);
         }
 
-        // Open modal window
-        OSD.GUI.fontManager = new jBox("Modal", {
-            width: 750,
-            height: 455,
-            closeButton: "title",
-            animation: false,
-            attach: $("#fontmanager"),
-            title: "OSD Font Manager",
-            content: $("#fontmanagercontent"),
-        });
+        // Enable font manager dialog
+        OSD.GUI.fontManager = initializeModalDialog("#fontmanager", "#fontmanagerdialog", "osdSetupFontManagerTitle");
 
         $(".elements-container div.cf_tip").attr("title", i18n.getMessage("osdSectionHelpElements"));
         $(".videomode-container div.cf_tip").attr("title", i18n.getMessage("osdSectionHelpVideoMode"));
@@ -2806,7 +3544,11 @@ osd.initialize = function (callback) {
                     OSD.msp.decode(info);
                 }
 
-                if (OSD.data.state.haveMax7456FontDeviceConfigured && !OSD.data.state.isMax7456FontDeviceDetected) {
+                if (
+                    OSD.data.state.haveMax7456FontDeviceConfigured &&
+                    !OSD.data.state.isMax7456FontDeviceDetected &&
+                    !OSD.data.state.haveAirbotTheiaOsdDevice
+                ) {
                     $(".noOsdChipDetect").show();
                 }
 
@@ -3082,7 +3824,10 @@ osd.initialize = function (callback) {
                     $(".requires-max7456").hide();
                 }
 
-                if (!OSD.data.state.isMax7456FontDeviceDetected || !OSD.data.state.haveMax7456FontDeviceConfigured) {
+                if (
+                    !OSD.data.state.isMax7456FontDeviceDetected ||
+                    (!OSD.data.state.haveMax7456FontDeviceConfigured && !OSD.data.state.haveAirbotTheiaOsdDevice)
+                ) {
                     $(".requires-max7456-font-device-detected").addClass("disabled");
                 }
 
@@ -3152,17 +3897,16 @@ osd.initialize = function (callback) {
 
                 // display fields on/off and position
                 const $displayFields = $("#element-fields").empty();
-                let enabledCount = 0;
+
+                OSD.data.displaySize.total = OSD.data.displaySize.x * OSD.data.displaySize.y;
+
                 for (const field of OSD.data.displayItems) {
                     // versioning related, if the field doesn't exist at the current flight controller version, just skip it
                     if (!field.name) {
                         continue;
                     }
 
-                    if (field.isVisible[OSD.getCurrentPreviewProfile()]) {
-                        enabledCount++;
-                    }
-
+                    const $field_wrapper = $(`<div class="switchable-field-wrapper"></div>`);
                     const $field = $(`<div class="switchable-field switchable-field-flex field-${field.index}"></div>`);
                     let desc = null;
                     if (field.desc && field.desc.length) {
@@ -3260,13 +4004,40 @@ osd.initialize = function (callback) {
                     $field.append($labelAndVariant);
                     // Insert in alphabetical order, with unknown fields at the end
                     $field.name = field.name;
-                    insertOrdered($displayFields, $field);
+
+                    // Preset positioning button
+                    // Wrap around it so we can place stuff near it and has a reference point,which is the wrapper.
+                    const $btnPresetPosition = $(
+                        `<div class="preset-pos-btn-wrapper"><button type="button" class="preset-pos-btn" aria-label="OSD position options" title="Choose preset position">...</button></div>`,
+                    );
+                    $btnPresetPosition.data("field", field);
+
+                    $field_wrapper.append($field);
+                    $field_wrapper.append($btnPresetPosition);
+                    insertOrdered($displayFields, $field_wrapper);
                 }
+                // Add the search field and its functionality
+                $("#element-fields").prepend(
+                    $(
+                        `<em class="fas fa-search" style="margin-left:3px"></em>
+                        <input type="text" class="elements-search-field" placeholder="${i18n.getMessage("search")}" />`,
+                    ),
+                );
+                $(".elements-search-field").on("input", function () {
+                    const searchTerm = $(this).val().toLowerCase();
+                    $("#element-fields .switchable-field").each(function () {
+                        const fieldName = $(this).find("label").text().toLowerCase();
+                        $(this).toggle(fieldName.includes(searchTerm));
+                        $(this)
+                            .closest("#element-fields .switchable-field-wrapper")
+                            .toggle(fieldName.includes(searchTerm));
+                    });
+                });
 
                 GUI.switchery();
                 // buffer the preview
                 OSD.data.preview = [];
-                OSD.data.displaySize.total = OSD.data.displaySize.x * OSD.data.displaySize.y;
+
                 for (const field of OSD.data.displayItems) {
                     // reset fields that somehow end up off the screen
                     if (field.position > OSD.data.displaySize.total) {
@@ -3374,7 +4145,7 @@ osd.initialize = function (callback) {
                         x = OSD.data.preview[i][2];
                         y = OSD.data.preview[i][3];
                     }
-                    const $img = $(`<div class="char" draggable><img src=${FONT.draw(charCode)}></img></div>`)
+                    const $img = $(`<div class="char" draggable><img src="${FONT.draw(charCode)}"></img></div>`)
                         .on("mouseenter", OSD.GUI.preview.onMouseEnter)
                         .on("mouseleave", OSD.GUI.preview.onMouseLeave)
                         .on("dragover", OSD.GUI.preview.onDragOver)
@@ -3400,28 +4171,22 @@ osd.initialize = function (callback) {
                     }
                 }
 
-                // Remove last tooltips
-                for (const tt of OSD.data.tooltips) {
-                    tt.destroy();
+                // Remove previous tooltips
+                for (const element of OSD.data.tooltips) {
+                    element._tippy?.destroy();
                 }
-                OSD.data.tooltips = [];
-
-                // Generate tooltips for OSD elements
-                $(".osd_tip").each(function () {
-                    const myModal = new jBox("Tooltip", {
-                        delayOpen: 100,
-                        delayClose: 100,
-                        position: {
-                            x: "right",
-                            y: "center",
-                        },
-                        outside: "x",
-                    });
-
-                    myModal.attach($(this));
-
-                    OSD.data.tooltips.push(myModal);
-                });
+                // Attach new tooltips
+                OSD.data.tooltips = $(".osd_tip").toArray();
+                for (const element of OSD.data.tooltips) {
+                    const jQueryElement = $(element);
+                    const attrTitle = jQueryElement.attr("title");
+                    if (attrTitle && !element._tippy) {
+                        tippy(element, {
+                            content: attrTitle,
+                        });
+                        jQueryElement.removeAttr("title");
+                    }
+                }
             });
         }
 
@@ -3431,6 +4196,27 @@ osd.initialize = function (callback) {
             MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, OSD.msp.encodeOther()).then(function () {
                 updateOsdView();
             });
+        });
+
+        // Rulers toggle
+        $("#osd-preview-rulers-selector").change(function () {
+            OSD.drawRulers();
+        });
+
+        // Window resize listener for rulers
+        $(window).on("resize.osd-rulers", function () {
+            if (document.querySelector("#osd-preview-rulers-selector")?.checked) {
+                // Throttle the resize calls using requestAnimationFrame
+                if (OSD.rulersResizeTimer) {
+                    cancelAnimationFrame(OSD.rulersResizeTimer);
+                }
+                OSD.rulersResizeTimer = requestAnimationFrame(() => {
+                    // Use setTimeout to ensure preview has been resized
+                    setTimeout(() => {
+                        OSD.drawRulers();
+                    }, 100);
+                });
+            }
         });
 
         $("a.save").click(function () {
@@ -3543,17 +4329,17 @@ osd.initialize = function (callback) {
         MSP.promise(MSPCodes.MSP_RX_CONFIG).finally(() => {
             GUI.content_ready(callback);
         });
+        OSD.presetPosition.registerHandlers();
+        OSD.presetPosition.setupGrid();
+        OSD.updateOsdView = updateOsdView;
     });
 };
 
 osd.cleanup = function (callback) {
-    if (OSD.GUI.fontManager) {
-        OSD.GUI.fontManager.destroy();
-    }
-
     // unbind "global" events
     $(document).unbind("keypress");
     $(document).off("click", "span.progressLabel a");
+    $(window).off("resize.osd-rulers");
 
     if (callback) {
         callback();

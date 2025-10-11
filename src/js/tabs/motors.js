@@ -704,9 +704,16 @@ motors.initialize = async function (callback) {
         const escProtocols = EscProtocols.GetAvailableProtocols(FC.CONFIG.apiVersion);
         const escProtocolElement = $("select.escprotocol");
 
-        for (let j = 0; j < escProtocols.length; j++) {
-            escProtocolElement.append(`<option value="${j + 1}">${escProtocols[j]}</option>`);
-        }
+        escProtocols.forEach((protocol, index) => {
+            const isDisabled =
+                protocol !== "DISABLED" &&
+                FC.CONFIG.buildOptions.length &&
+                !FC.CONFIG.buildOptions.some((option) => protocol.includes(option.substring(4)))
+                    ? 'disabled="disabled"'
+                    : "";
+            const option = `<option value="${index + 1}" ${isDisabled}>${protocol}</option>`;
+            escProtocolElement.append(option);
+        });
 
         escProtocolElement.sortSelect("DISABLED");
 
@@ -794,6 +801,8 @@ motors.initialize = async function (callback) {
             const rpmFeaturesVisible =
                 (digitalProtocol && dshotBidirElement.is(":checked")) || $("input[name='ESC_SENSOR']").is(":checked");
 
+            const dshotTelemetry = FC.MOTOR_CONFIG.use_dshot_telemetry;
+            const idleMinRpm = FC.ADVANCED_TUNING.idleMinRpm;
             $("div.minthrottle").toggle(analogProtocolConfigured && semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_47));
             $("div.maxthrottle").toggle(analogProtocolConfigured);
             $("div.mincommand").toggle(analogProtocolConfigured);
@@ -801,11 +810,10 @@ motors.initialize = async function (callback) {
             divUnsyncedPWMFreq.toggle(analogProtocolConfigured);
 
             $("div.motorIdle").toggle(
-                (protocolConfigured && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) ||
-                    (digitalProtocolConfigured && FC.MOTOR_CONFIG.use_dshot_telemetry && FC.ADVANCED_TUNING.idleMinRpm),
+                protocolConfigured || (digitalProtocolConfigured && dshotTelemetry && idleMinRpm),
             );
 
-            $("div.idleMinRpm").toggle(protocolConfigured && digitalProtocol && FC.MOTOR_CONFIG.use_dshot_telemetry);
+            $("div.idleMinRpm").toggle(protocolConfigured && digitalProtocol && dshotTelemetry);
 
             $(".escSensor").toggle(digitalProtocolConfigured);
 
@@ -1000,20 +1008,34 @@ motors.initialize = async function (callback) {
             }
         });
 
-        $("div.sliders input:not(.master)").on("input wheel", function (e) {
-            self.scrollSlider($(this), e);
-        });
+        function handleWheelEvent(slider, e) {
+            self.scrollSlider(slider, e);
+        }
 
-        $("div.sliders input.master").on("input", function () {
-            const val = $(this).val();
-
+        function handleInputEvent(slider) {
+            const val = slider.val();
             $("div.sliders input:not(:disabled, :last)").val(val);
-            $("div.values li:not(:last)").slice(0, self.numberOfValidOutputs).text(val);
-            $("div.sliders input:not(:last):first").trigger("input");
-        });
+            const valuesList = $("div.values li:not(:last)");
+            valuesList.slice(0, self.numberOfValidOutputs).text(val);
+            $("div.sliders input:not(:disabled):not(:last)").first().trigger("input");
+        }
 
-        $("div.sliders input.master").on("input wheel", function (e) {
-            self.scrollSlider($(this), e);
+        $("div.sliders input").each(function () {
+            const slider = $(this);
+
+            this.addEventListener(
+                "wheel",
+                function (e) {
+                    handleWheelEvent($(this), e);
+                },
+                { passive: false },
+            );
+
+            if (slider.hasClass("master")) {
+                slider.on("input", function () {
+                    handleInputEvent($(this));
+                });
+            }
         });
 
         // check if motors are already spinning
@@ -1359,14 +1381,18 @@ motors.scrollSlider = function (slider, e) {
         return;
     }
 
-    if (!(e.originalEvent?.deltaY && e.originalEvent?.altKey)) {
+    // Handle both jQuery wrapped events and native events
+    const orig = e.originalEvent || e;
+    const { deltaY, altKey } = orig;
+
+    if (!(deltaY && altKey)) {
         return;
     }
 
     e.preventDefault();
 
     const step = 25;
-    const delta = e.originalEvent.deltaY > 0 ? -step : step;
+    const delta = deltaY > 0 ? -step : step;
     const val = parseInt(slider.val()) + delta;
     const roundedVal = Math.round(val / step) * step;
     slider.val(roundedVal);

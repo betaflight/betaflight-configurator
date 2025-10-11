@@ -1,7 +1,7 @@
 import semver from "semver";
 import FC from "./fc";
 import { API_VERSION_1_47 } from "./data_storage";
-import { removeArrayElement, addArrayElement, addArrayElementAfter } from "./utils/array";
+import { removeArrayElement, addArrayElement, addArrayElementsAfter } from "./utils/array";
 
 export function sensorTypes() {
     const sensorTypes = {
@@ -95,7 +95,7 @@ export function sensorTypes() {
         },
         sonar: {
             name: "Sonar",
-            elements: ["NONE", "HCSR04", "TFMINI", "TF02", "MTF01", "MTF02", "MTF01P", "MTF02P"],
+            elements: ["NONE", "HCSR04", "TFMINI", "TF02", "MTF01", "MTF02", "MTF01P", "MTF02P", "TFNOVA"],
         },
         opticalflow: {
             name: "Optical Flow",
@@ -111,13 +111,13 @@ export function sensorTypes() {
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
         removeArrayElement(gyroElements, "L3G4200D");
         removeArrayElement(gyroElements, "MPU3050");
-        addArrayElementAfter(gyroElements, "LSM6DSV16X", "IIM42653");
+        addArrayElementsAfter(gyroElements, "LSM6DSV16X", ["IIM42653", "ICM45605", "ICM45686", "ICM40609D", "IIM42652"]);
 
         removeArrayElement(accElements, "ADXL345");
         removeArrayElement(accElements, "MMA8452");
         removeArrayElement(accElements, "BMA280");
         removeArrayElement(accElements, "LSM303DLHC");
-        addArrayElementAfter(accElements, "LSM6DSV16X", "IIM42653");
+        addArrayElementsAfter(accElements, "LSM6DSV16X", ["IIM42653", "ICM45605", "ICM45686", "ICM40609D", "IIM42652"]);
 
         addArrayElement(gpsElements, "VIRTUAL");
     }

@@ -15,7 +15,8 @@ const VirtualFC = {
         virtualFC.resetState();
         virtualFC.CONFIG.deviceIdentifier = 0;
 
-        virtualFC.CONFIG.flightControllerVersion = "4.6.0";
+        virtualFC.CONFIG.flightControllerVersion = "2025.12.0";
+        virtualFC.CONFIG.flightControllerIdentifier = "BTFL";
         virtualFC.CONFIG.apiVersion = CONFIGURATOR.virtualApiVersion;
 
         virtualFC.CONFIG.cpuTemp = 48;
@@ -49,6 +50,7 @@ const VirtualFC = {
 
         virtualFC.BEEPER_CONFIG.beepers = new Beepers(FC.CONFIG);
         virtualFC.BEEPER_CONFIG.dshotBeaconConditions = new Beepers(FC.CONFIG, ["RX_LOST", "RX_SET"]);
+        virtualFC.BEEPER_CONFIG.dshotBeaconTone = 1;
 
         virtualFC.MIXER_CONFIG.mixer = 3;
 
@@ -176,6 +178,10 @@ const VirtualFC = {
             totalSizeKB: 2048,
         };
 
+        virtualFC.SENSOR_ALIGNMENT = { ...FC.SENSOR_ALIGNMENT };
+        virtualFC.SENSOR_ALIGNMENT.gyro_to_use = 0;
+        virtualFC.SENSOR_ALIGNMENT.gyro_detection_flags = 1;
+
         virtualFC.SENSOR_DATA = { ...FC.SENSOR_DATA };
 
         virtualFC.RC = {
@@ -200,7 +206,7 @@ const VirtualFC = {
             "BEEPERON",
             "LEDLOW",
             "CALIB",
-            "OSD",
+            "OSD DISABLE",
             "TELEMETRY",
             "SERVO1",
             "SERVO2",
@@ -208,7 +214,7 @@ const VirtualFC = {
             "BLACKBOX",
             "FAILSAFE",
             "AIR MODE",
-            "3D",
+            "3D DISABLE",
             "FPV ANGLE MIX",
             "BLACKBOX ERASE",
             "CAMERA CONTROL 1",
@@ -226,7 +232,7 @@ const VirtualFC = {
             "PARALYZE",
             "GPS RESCUE",
             "ACRO TRAINER",
-            "DISABLE VTX CONTROL",
+            "VTX CONTROL DISABLE",
             "LAUNCH CONTROL",
             "MSP OVERRIDE",
             "STICK COMMANDS DISABLE",
@@ -254,7 +260,7 @@ const VirtualFC = {
         }
 
         // 11 1111 (pass bitchecks)
-        virtualFC.CONFIG.activeSensors = 63;
+        virtualFC.CONFIG.activeSensors = semver.gte(virtualFC.CONFIG.apiVersion, API_VERSION_1_47) ? 127 : 63;
 
         virtualFC.SENSOR_CONFIG_ACTIVE = {
             gyro_hardware: 2, // MPU6050
@@ -262,6 +268,7 @@ const VirtualFC = {
             baro_hardware: 4, // BMP280
             mag_hardware: 5, // QMC5883
             sonar_hardware: 1, // HCSR04
+            opticalflow_hardware: 1, // MT01
         };
 
         virtualFC.SENSOR_DATA.sonars = 231;
@@ -321,8 +328,8 @@ const VirtualFC = {
 const sampleGpsData = {
     fix: 2,
     numSat: 10,
-    lat: 474919409,
-    lon: 190539766,
+    latitude: 474919409,
+    longitude: 190539766,
     alt: 0,
     speed: 0,
     ground_course: 1337,

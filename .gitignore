@@ -5,16 +5,14 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Configurator Build process
+# App Build process
 cache/
 apps/
 dist/
-dist_cordova/
 debug/
 release/
 testresults/
 .eslintcache
-cordova/bundle.keystore
 
 # OSX
 .DS_store
@@ -22,6 +20,12 @@ cordova/bundle.keystore
 # artefacts for Visual Studio Code
 .vscode/*
 !.vscode/extensions.json
+
+# Visual Studio
+.vs/
+
+# node js
+node_modules/
 
 # NetBeans
 nbproject/
@@ -37,3 +41,9 @@ test-results-junit/
 
 # Capacitor config file, we generate it at runtime
 capacitor.config.json
+
+# Ignore Gradle project-specific cache directory
+.gradle
+
+# Ignore Gradle build output directory
+build

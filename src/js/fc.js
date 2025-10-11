@@ -1,6 +1,6 @@
 import { bit_check } from "./bit";
 import { reactive } from "vue";
-import { API_VERSION_1_45, API_VERSION_1_46 } from "./data_storage";
+import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "./data_storage";
 import semver from "semver";
 
 const INITIAL_CONFIG = {
@@ -84,6 +84,7 @@ const FIRMWARE_BUILD_OPTIONS = {
     USE_SERIALRX_SUMD: 4106,
     USE_SERIALRX_SUMH: 4107,
     USE_SERIALRX_XBUS: 4108,
+    USE_SERIALRX_MAVLINK: 4109,
 
     // Motor Protocols
     USE_BRUSHED: 8230,
@@ -125,6 +126,7 @@ const FIRMWARE_BUILD_OPTIONS = {
     USE_SOFTSERIAL: 16423,
     USE_WING: 16424,
     USE_POSITION_HOLD: 16425,
+    USE_CHIRP: 16426,
 };
 
 const FC = {
@@ -159,6 +161,7 @@ const FC = {
     FC_CONFIG: null,
     FEATURE_CONFIG: null,
     FILTER_CONFIG: null,
+    GYRO_SENSOR: null,
     GPS_CONFIG: null,
     COMPASS_CONFIG: null,
     GPS_DATA: null,
@@ -295,6 +298,7 @@ const FC = {
             pitch_rate_limit: 1998,
             yaw_rate_limit: 1998,
             rates_type: 0,
+            throttle_HOVER: 0.5, // default for firmware before 1.47
         };
 
         this.AUX_CONFIG = [];
@@ -342,8 +346,8 @@ const FC = {
         this.GPS_DATA = {
             fix: 0,
             numSat: 0,
-            lat: 0,
-            lon: 0,
+            latitude: 0,
+            longitude: 0,
             alt: 0,
             speed: 0,
             ground_course: 0,
@@ -477,9 +481,6 @@ const FC = {
             gyro_to_use: 0,
             gyro_1_align: 0,
             gyro_2_align: 0,
-            gyro_align_roll: 0,
-            gyro_align_pitch: 0,
-            gyro_align_yaw: 0,
             mag_align_roll: 0,
             mag_align_pitch: 0,
             mag_align_yaw: 0,
@@ -604,6 +605,11 @@ const FC = {
             name: 0,
         };
 
+        this.GYRO_SENSOR = {
+            gyro_count: 0,
+            gyro_hardware: [],
+        };
+
         this.RX_CONFIG = {
             serialrx_provider: 0,
             stick_max: 0,
@@ -622,12 +628,14 @@ const FC = {
             fpvCamAngleDegrees: 0,
             rcSmoothingType: 0,
             rcSmoothingSetpointCutoff: 0,
+            rcSmoothingThrottleCutoff: 0,
             rcSmoothingFeedforwardCutoff: 0,
             rcSmoothingInputType: 0,
             rcSmoothingDerivativeType: 0,
             rcSmoothingAutoFactor: 0,
+            rcSmoothingAutoFactorThrottle: 0,
             usbCdcHidType: 0,
-            rcSmoothingMode: 0,
+            rcSmoothing: 0,
             elrsUid: [0, 0, 0, 0, 0, 0],
         };
 
@@ -805,6 +813,10 @@ const FC = {
             serialRxTypes[0] = "NONE";
             serialRxTypes.push("SPEKTRUM1024");
         }
+        
+        if (semver.gte(apiVersion, API_VERSION_1_47)) {
+            serialRxTypes.push("MAVLINK");
+        }
 
         return serialRxTypes;
     },
@@ -851,6 +863,9 @@ const FC = {
             }
             if (options.includes("USE_SERIALRX_GHST")) {
                 supportedRxTypes.push("IRC GHOST");
+            }
+            if (options.includes("USE_SERIALRX_MAVLINK")) {
+                supportedRxTypes.push("MAVLINK");
             }
             return supportedRxTypes;
         }

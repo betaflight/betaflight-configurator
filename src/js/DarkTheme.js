@@ -1,9 +1,4 @@
-import GUI from "./gui";
-import windowWatcherUtil from "./utils/window_watchers";
-import { checkSetupAnalytics } from "./Analytics";
 import $ from "jquery";
-
-const css_dark = ["./css/dark-theme.css"];
 
 const DarkTheme = {
     configSetting: undefined,
@@ -28,10 +23,6 @@ DarkTheme.apply = function () {
             self.applyDark();
         } else {
             self.applyNormal();
-        }
-
-        if (chrome.app.window !== undefined) {
-            windowWatcherUtil.passValue(chrome.app.window.get("receiver_msp"), "darkTheme", isEnabled);
         }
     });
 };
@@ -61,10 +52,6 @@ DarkTheme.applyNormal = function () {
 
 export function setDarkTheme(enabled) {
     DarkTheme.setConfig(enabled);
-
-    checkSetupAnalytics(function (analyticsService) {
-        analyticsService.sendEvent(analyticsService.EVENT_CATEGORIES.APPLICATION, "DarkTheme", { enabled: enabled });
-    });
 }
 
 export default DarkTheme;

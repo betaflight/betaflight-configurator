@@ -1,11 +1,12 @@
-# Betaflight Configurator
+![Betaflight](https://raw.githubusercontent.com/betaflight/.github/main/profile/images/bf_logo.svg#gh-light-mode-only)
+![Betaflight](https://raw.githubusercontent.com/betaflight/.github/main/profile/images/bf_logo_dark.svg#gh-dark-mode-only)
 
-![Betaflight](http://static.rcgroups.net/forums/attachments/6/1/0/3/7/6/a9088900-228-bf_logo.jpg)
+# Betaflight App
 
 [![Latest version](https://img.shields.io/github/v/release/betaflight/betaflight-configurator)](https://github.com/betaflight/betaflight-configurator/releases) [![Build](https://img.shields.io/github/actions/workflow/status/betaflight/betaflight-configurator/nightly.yml?branch=master)](https://github.com/betaflight/betaflight-configurator/actions/workflows/nightly.yml) [![Crowdin](https://d322cqt584bo4o.cloudfront.net/betaflight-configurator/localized.svg)](https://crowdin.com/project/betaflight-configurator) [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=betaflight_betaflight-configurator&metric=alert_status)](https://sonarcloud.io/dashboard?id=betaflight_betaflight-configurator) [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0) [![Join us on Discord!](https://img.shields.io/discord/868013470023548938)](https://discord.gg/n4E6ak4u3c)
 
 
-Betaflight Configurator is a crossplatform configuration tool for the Betaflight flight control system.
+Betaflight App is a crossplatform configuration tool for the Betaflight flight control system.
 
 It runs as an application under different operating systems and allows you to configure the Betaflight software running on any supported Betaflight target. [Downloads are available in Releases.](https://github.com/betaflight/betaflight-configurator/releases)
 
@@ -13,9 +14,9 @@ Various types of aircraft are supported by the tool and by Betaflight, e.g. quad
 
 ## Authors
 
-Betaflight Configurator is a [fork](#credits) of the Cleanflight Configurator with support for Betaflight instead of Cleanflight.
+Betaflight App is a [fork](#credits) of the Cleanflight Configurator with support for Betaflight instead of Cleanflight.
 
-This configurator is the only configurator with support for Betaflight specific features. It will likely require that you run the latest firmware on the flight controller.
+This app is the only app (or configurator) with support for Betaflight specific features. It will likely require that you run the latest firmware on the flight controller.
 
 If you are experiencing any problems please make sure you are running the [latest firmware version](https://github.com/betaflight/betaflight/releases/).
 
@@ -56,7 +57,7 @@ Post-installation errors can be prevented by making sure the directory `/usr/sha
 sudo mkdir /usr/share/desktop-directories/
 ```
 
-The `libatomic` library must also be installed before installing Betaflight Configurator. (If the library is missing, the installation will succeed but Betaflight Configurator will not start.) Some Linux distributions (e.g. Fedora) will install it automatically. On Debian or Ubuntu you can install it as follows:
+The `libatomic` library must also be installed before installing Betaflight App. (If the library is missing, the installation will succeed but Betaflight App will not start.) Some Linux distributions (e.g. Fedora) will install it automatically. On Debian or Ubuntu you can install it as follows:
 
 ```
 sudo apt install libatomic1
@@ -84,13 +85,13 @@ sudo apt-get -f install
 
 #### Graphics Issues
 
-If you experience graphics display problems or smudged/dithered fonts display issues in Betaflight Configurator, try invoking the `betaflight-configurator` executable file with the `--disable-gpu` command line switch. This will switch off hardware graphics acceleration. Likewise, setting your graphics card antialiasing option to OFF (e.g. FXAA parameter on NVidia graphics cards) might be a remedy as well.
+If you experience graphics display problems or smudged/dithered fonts display issues in Betaflight App, try invoking the `betaflight-configurator` executable file with the `--disable-gpu` command line switch. This will switch off hardware graphics acceleration. Likewise, setting your graphics card antialiasing option to OFF (e.g. FXAA parameter on NVidia graphics cards) might be a remedy as well.
 
 ### Unstable Testing Versions
 
-The future of the Configurator is moving to a PWA (Progressive Web Application). In this way it will be easier to maintain specially to support different devices like phones, tablets. etc. Is a work in progress but you can have access to the latest snapshot in PWA way without installing anything (take into account that some things don't work and are in development).
+The future of the Betaflight App is moving to a PWA (Progressive Web Application). In this way it will be easier to maintain specially to support different devices like phones, tablets. etc. Is a work in progress but you can have access to the latest snapshot in PWA way without installing anything (take into account that some things don't work and are in development).
 
-- Latest PWA master snapshot of the Configurator: https://master.dev.app.betaflight.com/
+- Latest PWA master snapshot of the App: [https://master.app.betaflight.com/](https://master.app.betaflight.com/)
 
 **Be aware that this version is intended for testing / feedback only, and may be buggy or broken, and can cause flight controller settings to be corrupted. Caution is advised when using this version.**
 
@@ -98,7 +99,7 @@ The future of the Configurator is moving to a PWA (Progressive Web Application).
 
 **Please do not submit pull requests for translation changes, but read and follow the instructions below!**
 
-Betaflight Configurator has been translated into several languages. The application will try to detect and use your system language if a translation into this language is available. You can help [translating the application into your language](https://github.com/betaflight/betaflight/tree/master/README.md#translators);
+Betaflight App has been translated into several languages. The application will try to detect and use your system language if a translation into this language is available. You can help [translating the application into your language](https://github.com/betaflight/betaflight/tree/master/README.md#translators);
 
 If you prefer to have the application in English or any other language, you can select your desired language in the first screen of the application.
 
@@ -106,7 +107,7 @@ If you prefer to have the application in English or any other language, you can 
 
 ### Technical details
 
-The next versions of the Configurator will be a modern tool that based on PWA (Progressive Web Application) and uses principally Node, Yarn, Vite and Vue for development and building. For Android we use Capacitor as wrapper over the PWA. To build and develop over it, follow the instructions below.
+The next versions of the App will be a modern tool that based on PWA (Progressive Web Application) and uses principally Node, Yarn, Vite and Vue for development and building. For Android we use Capacitor as wrapper over the PWA. To build and develop over it, follow the instructions below.
 
 ### Prepare your environment
 
@@ -176,11 +177,11 @@ Etiquette: Don't ask to ask and please wait around long enough for a reply - som
 
 ### Issue trackers
 
-For Betaflight configurator issues raise them here
+For Betaflight App issues raise them here
 
 https://github.com/betaflight/betaflight-configurator/issues
 
-For Betaflight firmware issues raise them here
+For Betaflight Firmware issues raise them here
 
 https://github.com/betaflight/betaflight/issues
 
@@ -190,6 +191,6 @@ We accept clean and reasonable patches, submit them!
 
 ## Credits
 
-ctn - primary author and maintainer of Baseflight Configurator from which Cleanflight Configurator project was forked.
+ctn    - primary author and maintainer of Baseflight Configurator from which Cleanflight Configurator project was forked.
 
-Hydra -  author and maintainer of Cleanflight Configurator from which this project was forked.
+Hydra  - author and maintainer of Cleanflight Configurator from which this project was forked.

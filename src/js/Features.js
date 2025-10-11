@@ -67,7 +67,10 @@ const Features = function (config) {
             if (
                 config.buildOptions.some(
                     (opt) =>
-                        opt.includes("CRSF") || opt.includes("GHST") || opt.includes("FPORT") || opt.includes("JETI"),
+                        opt.includes("CRSF") ||
+                        opt.includes("GHST") ||
+                        opt.includes("FPORT") ||
+                        opt.includes("JETI"),
                 )
             ) {
                 enableTelemetry = true;

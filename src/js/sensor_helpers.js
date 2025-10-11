@@ -76,19 +76,17 @@ export function sensor_status(sensors_detected = 0, gps_fix_state = 0) {
         $(".magicon", eSensorStatus).removeClass("active");
     }
 
-    if (have_sensor(sensors_detected, "gps")) {
+    const gnssSensorDetected = have_sensor(sensors_detected, "gps");
+    const hasGnssFix = gps_fix_state > 0;
+
+    if (gnssSensorDetected || hasGnssFix) {
         $(".gps", eSensorStatus).addClass("on");
-        if (gps_fix_state) {
-            $(".gpsicon", eSensorStatus).removeClass("active");
-            $(".gpsicon", eSensorStatus).addClass("active_fix");
-        } else {
-            $(".gpsicon", eSensorStatus).removeClass("active_fix");
-            $(".gpsicon", eSensorStatus).addClass("active");
-        }
+        $(".gpsicon", eSensorStatus)
+            .toggleClass("active", gnssSensorDetected && !hasGnssFix)
+            .toggleClass("active_fix", gnssSensorDetected && hasGnssFix);
     } else {
         $(".gps", eSensorStatus).removeClass("on");
-        $(".gpsicon", eSensorStatus).removeClass("active");
-        $(".gpsicon", eSensorStatus).removeClass("active_fix");
+        $(".gpsicon", eSensorStatus).removeClass("active active_fix");
     }
 
     if (have_sensor(sensors_detected, "sonar")) {

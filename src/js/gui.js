@@ -1,16 +1,11 @@
 import { get as getConfig } from "./ConfigStorage";
 import MSP from "./msp";
 import Switchery from "switchery-latest";
-import jBox from "jbox";
+import tippy from "tippy.js";
 import $ from "jquery";
+import { getOS } from "./utils/checkBrowserCompatibility";
 
 const TABS = {};
-
-const GUI_MODES = {
-    NWJS: "NW.js",
-    Cordova: "Cordova",
-    Other: "Other",
-};
 
 class GuiControl {
     constructor() {
@@ -43,20 +38,16 @@ class GuiControl {
             "ports",
             "receiver",
             "sensors",
-            "vtx",
         ];
 
-        this.defaultCloudBuildTabOptions = ["gps", "led_strip", "osd", "servos", "transponder"];
+        this.defaultCloudBuildTabOptions = ["gps", "led_strip", "osd", "servos", "transponder", "vtx"];
 
         this.defaultAllowedFCTabsWhenConnected = [...this.defaultAllowedTabs, ...this.defaultCloudBuildTabOptions];
 
         this.allowedTabs = this.defaultAllowedTabsWhenDisconnected;
 
         // check which operating system is user running
-        this.operating_system = GUI_checkOperatingSystem();
-
-        // Check the method of execution
-        this.nwGui = GUI_MODES.Other;
+        this.operating_system = getOS();
     }
     // Timer managing methods
     // name = string
@@ -299,35 +290,17 @@ class GuiControl {
             .html(i18n.getMessage("betaflightSupportButton"))
             .attr("href", `https://betaflight.com/docs/wiki/configurator/${tRex}-tab`);
 
-        // loading tooltip
+        // Create tooltips once page is "ready"
         $(function () {
-            new jBox("Tooltip", {
-                attach: ".cf_tip",
-                trigger: "mouseenter",
-                closeOnMouseleave: true,
-                closeOnClick: "body",
-                delayOpen: 100,
-                delayClose: 100,
-                position: {
-                    x: "right",
-                    y: "center",
-                },
-                outside: "x",
-            });
-
-            new jBox("Tooltip", {
-                theme: "Widetip",
-                attach: ".cf_tip_wide",
-                trigger: "mouseenter",
-                closeOnMouseleave: true,
-                closeOnClick: "body",
-                delayOpen: 100,
-                delayClose: 100,
-                position: {
-                    x: "right",
-                    y: "center",
-                },
-                outside: "x",
+            $(".cf_tip, .cf_tip_wide").each((_, element) => {
+                const jQueryElement = $(element);
+                const attrTitle = jQueryElement.attr("title");
+                if (attrTitle && !element._tippy) {
+                    tippy(element, {
+                        content: attrTitle,
+                    });
+                    jQueryElement.removeAttr("title");
+                }
             });
         });
 
@@ -343,9 +316,6 @@ class GuiControl {
                 : "tab_setup";
 
         $(`#tabs ul.mode-connected .${tab} a`).trigger("click");
-    }
-    isOther() {
-        return this.Mode === GUI_MODES.Other;
     }
     showYesNoDialog(yesNoDialogSettings) {
         // yesNoDialogSettings:
@@ -481,19 +451,23 @@ class GuiControl {
 
         const cliPanelDialog = {
             title: i18n.getMessage("cliPanelTitle"),
-            buttonCloseText: i18n.getMessage("Close"),
+            buttonCloseText: i18n.getMessage("close"),
         };
 
-        // clear any text leftovers from previous session
-        $("#cli-command").val("");
+        // clear response from previous session
         $("#cli-response").text("");
 
         this.showInteractiveDialog(cliPanelDialog);
-    }
-}
 
-function GUI_checkOperatingSystem() {
-    return navigator?.userAgentData?.platform || "Android";
+        // Set focus on the CLI command input when dialog opens
+        // Use timeout to ensure dialog is fully rendered
+        setTimeout(() => {
+            const cliInput = $("#cli-command");
+            if (cliInput.length > 0 && cliInput.is(":visible")) {
+                cliInput.focus();
+            }
+        }, 100);
+    }
 }
 
 const GUI = new GuiControl();

@@ -23,11 +23,11 @@ import CryptoES from "crypto-es";
 import $ from "jquery";
 import BuildApi from "./BuildApi";
 
-import { serialShim } from "./serial_shim.js";
+import { serial } from "./serial.js";
 import { EventBus } from "../components/eventBus";
 import { ispConnected } from "./utils/connection";
 
-let serial = serialShim();
+const logHead = "[SERIAL-BACKEND]";
 
 let mspHelper;
 let connectionTimestamp;
@@ -36,7 +36,12 @@ let liveDataRefreshTimerId = false;
 let isConnected = false;
 
 const REBOOT_CONNECT_MAX_TIME_MS = 10000;
+const REBOOT_GRACE_PERIOD_MS = 2000;
 let rebootTimestamp = 0;
+
+function isCliOnlyMode() {
+    return getConfig("cliOnlyMode")?.cliOnlyMode === true;
+}
 
 const toggleStatus = function () {
     isConnected = !isConnected;
@@ -52,33 +57,22 @@ function disconnectHandler(event) {
 }
 
 export function initializeSerialBackend() {
-    $("div.connect_controls a.connect").on("click", connectDisconnect);
+    $("a.connection_button__link").on("click", connectDisconnect);
 
-    EventBus.$on("port-handler:auto-select-serial-device", function (device) {
+    EventBus.$on("port-handler:auto-select-serial-device", function () {
         if (
             !GUI.connected_to &&
             !GUI.connecting_to &&
-            GUI.active_tab !== "firmware_flasher" &&
-            ((PortHandler.portPicker.autoConnect && !["manual", "virtual"].includes(device)) ||
-                Date.now() - rebootTimestamp < REBOOT_CONNECT_MAX_TIME_MS)
+            !["cli", "firmware_flasher"].includes(GUI.active_tab) &&
+            PortHandler.portPicker.autoConnect &&
+            !isCliOnlyMode() &&
+            Date.now() - rebootTimestamp <= REBOOT_CONNECT_MAX_TIME_MS
         ) {
             connectDisconnect();
         }
     });
 
-    EventBus.$on("port-handler:auto-select-bluetooth-device", function (device) {
-        if (
-            !GUI.connected_to &&
-            !GUI.connecting_to &&
-            GUI.active_tab !== "firmware_flasher" &&
-            ((PortHandler.portPicker.autoConnect && !["manual", "virtual"].includes(device)) ||
-                Date.now() - rebootTimestamp < REBOOT_CONNECT_MAX_TIME_MS)
-        ) {
-            connectDisconnect();
-        }
-    });
-
-    // Using serialShim for serial and bluetooth we don't know which event we need before we connect
+    // Using serial and bluetooth we don't know which event we need before we connect
     // Perhaps we should implement a Connection class that handles the connection and events for bluetooth, serial and sockets
     // TODO: use event gattserverdisconnected for save and reboot and device removal.
 
@@ -92,63 +86,32 @@ export function initializeSerialBackend() {
     PortUsage.initialize();
 }
 
+async function sendConfigTracking() {
+    tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, "Loaded", {
+        boardIdentifier: FC.CONFIG.boardIdentifier,
+        targetName: FC.CONFIG.targetName,
+        boardName: FC.CONFIG.boardName,
+        hardware: FC.CONFIG.hardwareName,
+        manufacturerId: FC.CONFIG.manufacturerId,
+        apiVersion: FC.CONFIG.apiVersion,
+        flightControllerVersion: FC.CONFIG.flightControllerVersion,
+        flightControllerIdentifier: FC.CONFIG.flightControllerIdentifier,
+        mcu: FC.CONFIG.targetName,
+        deviceIdentifier: CryptoES.SHA1(FC.CONFIG.deviceIdentifier).toString(),
+        buildKey: FC.CONFIG.buildKey,
+    });
+}
+
 function connectDisconnect() {
     const selectedPort = PortHandler.portPicker.selectedPort;
-    const portName = selectedPort === "manual" ? PortHandler.portPicker.portOverride : selectedPort;
 
-    if (!GUI.connect_lock && selectedPort !== "noselection" && !selectedPort.path?.startsWith("usb_")) {
+    if (!GUI.connect_lock && selectedPort !== "noselection" && !selectedPort.path?.startsWith("usb")) {
         // GUI control overrides the user control
 
         GUI.configuration_loaded = false;
 
-        const baudRate = PortHandler.portPicker.selectedBauds;
-
-        if (!isConnected) {
-            // prevent connection when we do not have permission
-            if (selectedPort.startsWith("requestpermission")) {
-                return;
-            }
-
-            console.log(`[SERIAL-BACKEND] Connecting to: ${portName}`);
-            GUI.connecting_to = portName;
-
-            // lock port select & baud while we are connecting / connected
-            PortHandler.portPickerDisabled = true;
-            $("div.connect_controls div.connect_state").text(i18n.getMessage("connecting"));
-
-            CONFIGURATOR.virtualMode = selectedPort === "virtual";
-            CONFIGURATOR.bluetoothMode = selectedPort.startsWith("bluetooth");
-            CONFIGURATOR.manualMode = selectedPort === "manual";
-
-            if (CONFIGURATOR.virtualMode) {
-                CONFIGURATOR.virtualApiVersion = PortHandler.portPicker.virtualMspVersion;
-
-                // Hack to get virtual working on the web
-                serial = serialShim();
-                serial.connect(onOpenVirtual);
-            } else if (selectedPort === "manual") {
-                serial = serialShim();
-                // Explicitly disconnect the event listeners before attaching the new ones.
-                serial.removeEventListener("connect", connectHandler);
-                serial.addEventListener("connect", connectHandler);
-
-                serial.removeEventListener("disconnect", disconnectHandler);
-                serial.addEventListener("disconnect", disconnectHandler);
-
-                serial.connect(portName, { baudRate });
-            } else {
-                CONFIGURATOR.virtualMode = false;
-                serial = serialShim();
-                // Explicitly disconnect the event listeners before attaching the new ones.
-                serial.removeEventListener("connect", connectHandler);
-                serial.addEventListener("connect", connectHandler);
-
-                serial.removeEventListener("disconnect", disconnectHandler);
-                serial.addEventListener("disconnect", disconnectHandler);
-
-                serial.connect(portName, { baudRate });
-            }
-        } else {
+        if (isConnected) {
+            // If connected, start disconnection sequence
             GUI.timeout_kill_all();
             GUI.interval_kill_all();
             GUI.tab_switch_cleanup(() => (GUI.tab_switch_in_progress = false));
@@ -158,12 +121,51 @@ function connectDisconnect() {
             }
 
             mspHelper?.setArmingEnabled(true, false, onFinishCallback);
+        } else {
+            // prevent connection when we do not have permission
+            if (selectedPort.startsWith("requestpermission")) {
+                return;
+            }
+
+            // When rebooting, adhere to the auto-connect setting
+            if (!PortHandler.portPicker.autoConnect && Date.now() - rebootTimestamp < REBOOT_GRACE_PERIOD_MS) {
+                console.log(`${logHead} Rebooting, not connecting`);
+                return;
+            }
+
+            const portName = selectedPort === "manual" ? PortHandler.portPicker.portOverride : selectedPort;
+
+            console.log(`${logHead} Connecting to: ${portName}`);
+            GUI.connecting_to = portName;
+
+            // lock port select & baud while we are connecting / connected
+            PortHandler.portPickerDisabled = true;
+            $("div.connection_button__label").text(i18n.getMessage("connecting"));
+
+            // Set up event listeners for non-virtual connections
+            if (selectedPort !== "virtual") {
+                serial.removeEventListener("connect", connectHandler);
+                serial.addEventListener("connect", connectHandler);
+
+                serial.removeEventListener("disconnect", disconnectHandler);
+                serial.addEventListener("disconnect", disconnectHandler);
+            }
+
+            serial.connect(
+                portName,
+                { baudRate: PortHandler.portPicker.selectedBauds },
+                selectedPort === "virtual" ? onOpenVirtual : undefined,
+            );
         }
 
         // show CLI panel on Control+I
         document.onkeydown = function (e) {
             if (e.code === "KeyI" && e.ctrlKey && !e.shiftKey && !e.altKey && !e.metaKey) {
-                if (isConnected && GUI.active_tab !== "cli" && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+                if (
+                    serial.connected &&
+                    GUI.active_tab !== "cli" &&
+                    semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)
+                ) {
                     GUI.showCliPanel();
                 }
             }
@@ -173,17 +175,17 @@ function connectDisconnect() {
 
 function finishClose(finishedCallback) {
     const wasConnected = CONFIGURATOR.connectionValid;
-    tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, "Disconnected", {
-        time: connectionTimestamp ? Date.now() - connectionTimestamp : undefined,
-    });
 
     if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
         // close reset to custom defaults dialog
         $("#dialogResetToCustomDefaults")[0].close();
     }
 
-    // serialShim calls the disconnect method for selected connection type.
-    serial.disconnect(onClosed);
+    serial.disconnect();
+
+    if (CONFIGURATOR.virtualMode) {
+        onClosed(true);
+    }
 
     MSP.disconnect_cleanup();
     PortUsage.reset();
@@ -200,8 +202,8 @@ function finishClose(finishedCallback) {
     PortHandler.portPickerDisabled = false;
 
     // reset connect / disconnect button
-    $("div.connect_controls a.connect").removeClass("active");
-    $("div.connect_controls div.connect_state").text(i18n.getMessage("connect"));
+    $("a.connection_button__link").removeClass("active");
+    $("div.connection_button__label").text(i18n.getMessage("connect"));
 
     // reset active sensor indicators
     sensor_status();
@@ -236,8 +238,28 @@ function setConnectionTimeout() {
 
 function resetConnection() {
     // reset connect / disconnect button
-    $("div#connectbutton div.connect_state").text(i18n.getMessage("connect"));
-    $("div#connectbutton a.connect").removeClass("active");
+    $("div.connection_button__label").text(i18n.getMessage("connect"));
+    $("a.connection_button__link").removeClass("active");
+
+    clearLiveDataRefreshTimer();
+
+    MSP.clearListeners();
+
+    if (PortHandler.portPicker.selectedPort !== "virtual") {
+        serial.removeEventListener("receive", read_serial_adapter);
+        serial.removeEventListener("connect", connectHandler);
+        serial.removeEventListener("disconnect", disconnectHandler);
+    }
+
+    $("#tabs ul.mode-connected").hide();
+    $("#tabs ul.mode-connected-cli").hide();
+    $("#tabs ul.mode-disconnected").show();
+
+    // header bar
+    $("#sensor-status").hide();
+    $("#portsinput").show();
+    $("#dataflash_wrapper_global").hide();
+    $("#quad-status_wrapper").hide();
 
     CONFIGURATOR.connectionValid = false;
     CONFIGURATOR.cliValid = false;
@@ -247,8 +269,6 @@ function resetConnection() {
 
     // unlock port select & baud
     PortHandler.portPickerDisabled = false;
-    // reset data
-    isConnected = false;
 }
 
 function abortConnection() {
@@ -256,8 +276,6 @@ function abortConnection() {
 
     GUI.connected_to = false;
     GUI.connecting_to = false;
-
-    tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, "SerialPortFailed");
 
     gui_log(i18n.getMessage("serialPortOpenFail"));
 
@@ -269,7 +287,7 @@ function abortConnection() {
  * when serial events are handled.
  */
 function read_serial_adapter(event) {
-    read_serial(event.detail.buffer);
+    read_serial(event.detail.data);
 }
 
 function onOpen(openInfo) {
@@ -288,7 +306,7 @@ function onOpen(openInfo) {
         const result = getConfig("expertMode")?.expertMode ?? false;
         $('input[name="expertModeCheckbox"]').prop("checked", result).trigger("change");
 
-        // serialShim adds event listener for selected connection type
+        // serial adds event listener for selected connection type
         serial.removeEventListener("receive", read_serial_adapter);
         serial.addEventListener("receive", read_serial_adapter);
 
@@ -297,7 +315,7 @@ function onOpen(openInfo) {
         mspHelper = new MspHelper();
         MSP.listen(mspHelper.process_data.bind(mspHelper));
         MSP.timeout = 250;
-        console.log(`[SERIAL-BACKEND] Requesting configuration data`);
+        console.log(`${logHead} Requesting configuration data`);
 
         MSP.send_message(MSPCodes.MSP_API_VERSION, false, false, function () {
             gui_log(i18n.getMessage("apiVersionReceived", FC.CONFIG.apiVersion));
@@ -321,21 +339,10 @@ function onOpen(openInfo) {
                             MSP.send_message(MSPCodes.MSP_BUILD_INFO, false, false, function () {
                                 gui_log(i18n.getMessage("buildInfoReceived", [FC.CONFIG.buildInfo]));
 
-                                // retrieve build options from the flight controller
-                                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
-                                    FC.processBuildOptions();
-                                }
-
                                 MSP.send_message(MSPCodes.MSP_BOARD_INFO, false, false, processBoardInfo);
                             });
                         });
                     } else {
-                        tracking.sendEvent(
-                            tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER,
-                            "ConnectionRefusedFirmwareType",
-                            { identifier: FC.CONFIG.flightControllerIdentifier },
-                        );
-
                         const dialog = $(".dialogConnectWarning")[0];
 
                         $(".dialogConnectWarning-content").html(i18n.getMessage("firmwareTypeNotSupported"));
@@ -350,9 +357,10 @@ function onOpen(openInfo) {
                     }
                 });
             } else {
-                tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, "ConnectionRefusedFirmwareVersion", {
-                    apiVersion: FC.CONFIG.apiVersion,
-                });
+                if (!serial.connected) {
+                    abortConnection();
+                    return;
+                }
 
                 const dialog = $(".dialogConnectWarning")[0];
 
@@ -379,7 +387,18 @@ function onOpenVirtual() {
     GUI.connecting_to = false;
 
     CONFIGURATOR.connectionValid = true;
+    CONFIGURATOR.virtualMode = true;
+    CONFIGURATOR.virtualApiVersion = PortHandler.portPicker.virtualMspVersion;
+
     isConnected = true;
+
+    // Set connection timestamp for virtual connections
+    connectionTimestamp = Date.now();
+    setTimeout(() => {
+        if (globalThis.vm?.CONNECTION) {
+            globalThis.vm.CONNECTION.timestamp = connectionTimestamp;
+        }
+    }, 100);
 
     mspHelper = new MspHelper();
 
@@ -401,8 +420,6 @@ function processCustomDefaults() {
         const dialog = $("#dialogResetToCustomDefaults")[0];
 
         $("#dialogResetToCustomDefaults-acceptbtn").click(function () {
-            tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, "AcceptResetToCustomDefaults");
-
             const buffer = [];
             buffer.push(mspHelper.RESET_TYPES.CUSTOM_DEFAULTS);
             MSP.send_message(MSPCodes.MSP_RESET_CONF, buffer, false);
@@ -419,12 +436,9 @@ function processCustomDefaults() {
         });
 
         $("#dialogResetToCustomDefaults-cancelbtn").click(function () {
-            tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, "CancelResetToCustomDefaults");
-
             dialog.close();
 
             setConnectionTimeout();
-
             checkReportProblems();
         });
 
@@ -444,31 +458,18 @@ function processBoardInfo() {
     } else {
         processCustomDefaults();
     }
-    tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, "Loaded", {
-        boardIdentifier: FC.CONFIG.boardIdentifier,
-        targetName: FC.CONFIG.targetName,
-        boardName: FC.CONFIG.boardName,
-        hardware: FC.CONFIG.hardwareName,
-        manufacturerId: FC.CONFIG.manufacturerId,
-        apiVersion: FC.CONFIG.apiVersion,
-        flightControllerVersion: FC.CONFIG.flightControllerVersion,
-        flightControllerIdentifier: FC.CONFIG.flightControllerIdentifier,
-        mcu: FC.CONFIG.targetName,
-    });
+}
+
+function checkReportProblem(problemName, problems) {
+    if (bit_check(FC.CONFIG.configurationProblems, FC.CONFIGURATION_PROBLEM_FLAGS[problemName])) {
+        problems.push({ name: problemName, description: i18n.getMessage(`reportProblemsDialog${problemName}`) });
+        return true;
+    }
+    return false;
 }
 
 function checkReportProblems() {
-    const PROBLEM_ANALYTICS_EVENT = "ProblemFound";
     const problemItemTemplate = $("#dialogReportProblems-listItemTemplate");
-
-    function checkReportProblem(problemName, problems) {
-        if (bit_check(FC.CONFIG.configurationProblems, FC.CONFIGURATION_PROBLEM_FLAGS[problemName])) {
-            problems.push({ name: problemName, description: i18n.getMessage(`reportProblemsDialog${problemName}`) });
-            return true;
-        }
-
-        return false;
-    }
 
     MSP.send_message(MSPCodes.MSP_STATUS, false, false, function () {
         let needsProblemReportingDialog = false;
@@ -508,13 +509,9 @@ function checkReportProblems() {
         }
 
         if (needsProblemReportingDialog) {
-            problems.forEach((problem) => {
+            for (const problem of problems) {
                 problemItemTemplate.clone().html(problem.description).appendTo(problemDialogList);
-            });
-
-            tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, PROBLEM_ANALYTICS_EVENT, {
-                problems: problems.map((problem) => problem.name),
-            });
+            }
 
             const problemDialog = $("#dialogReportProblems")[0];
             $("#dialogReportProblems-closebtn").click(function () {
@@ -533,25 +530,6 @@ function checkReportProblems() {
     });
 }
 
-async function processBuildOptions() {
-    const supported = semver.eq(FC.CONFIG.apiVersion, API_VERSION_1_45);
-
-    // firmware 1_45 or higher is required to support cloud build options
-    // firmware 1_46 or higher retrieves build options from the flight controller
-    if (supported && FC.CONFIG.buildKey.length === 32 && ispConnected()) {
-        const buildApi = new BuildApi();
-
-        function onLoadCloudBuild(options) {
-            FC.CONFIG.buildOptions = options.Request.Options;
-            processCraftName();
-        }
-
-        buildApi.requestBuildOptions(FC.CONFIG.buildKey, onLoadCloudBuild, processCraftName);
-    } else {
-        processCraftName();
-    }
-}
-
 async function processBuildConfiguration() {
     const supported = semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45);
 
@@ -559,9 +537,23 @@ async function processBuildConfiguration() {
         // get build key from firmware
         await MSP.promise(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.BUILD_KEY));
         gui_log(i18n.getMessage("buildKey", FC.CONFIG.buildKey));
+
+        // firmware 1_45 or higher is required to support cloud build options
+        // firmware 1_46 or higher retrieves build options from the flight controller
+        if (FC.CONFIG.buildKey.length === 32 && ispConnected()) {
+            const buildApi = new BuildApi();
+            try {
+                let options = await buildApi.requestBuildOptions(FC.CONFIG.buildKey);
+                if (options) {
+                    FC.CONFIG.buildOptions = options.Request.Options;
+                }
+            } catch (error) {
+                console.error("Failed to request build options: ", error);
+            }
+        }
     }
 
-    processBuildOptions();
+    await processCraftName();
 }
 
 async function processUid() {
@@ -569,13 +561,18 @@ async function processUid() {
 
     connectionTimestamp = Date.now();
 
+    // Update the global CONNECTION object for Vue components
+    // Use a small delay to ensure the Vue app is mounted
+    setTimeout(() => {
+        if (globalThis.vm?.CONNECTION) {
+            globalThis.vm.CONNECTION.timestamp = connectionTimestamp;
+        }
+    }, 100);
+
     gui_log(i18n.getMessage("uniqueDeviceIdReceived", FC.CONFIG.deviceIdentifier));
 
-    processBuildConfiguration();
-
-    tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, "Connected", {
-        deviceIdentifier: CryptoES.SHA1(FC.CONFIG.deviceIdentifier),
-    });
+    await processBuildConfiguration();
+    await sendConfigTracking();
 }
 
 async function processCraftName() {
@@ -607,6 +604,11 @@ function setRtc() {
 function finishOpen() {
     CONFIGURATOR.connectionValid = true;
 
+    if (isCliOnlyMode()) {
+        connectCli();
+        return;
+    }
+
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) && FC.CONFIG.buildOptions.length) {
         GUI.allowedTabs = Array.from(GUI.defaultAllowedTabs);
 
@@ -614,6 +616,11 @@ function finishOpen() {
             if (FC.CONFIG.buildOptions.some((opt) => opt.toLowerCase().includes(tab))) {
                 GUI.allowedTabs.push(tab);
             }
+        }
+
+        // Special case: USE_WING includes servo functionality but doesn't expose USE_SERVOS in build options
+        if (FC.CONFIG.buildOptions.some((opt) => opt.includes("USE_WING")) && !GUI.allowedTabs.includes("servos")) {
+            GUI.allowedTabs.push("servos");
         }
     } else {
         GUI.allowedTabs = Array.from(GUI.defaultAllowedFCTabsWhenConnected);
@@ -632,15 +639,18 @@ function connectCli() {
 }
 
 function onConnect() {
-    if ($("div#flashbutton a.flash_state").hasClass("active") || $("div#flashbutton a.flash").hasClass("active")) {
-        $("div#flashbutton a.flash_state").removeClass("active");
-        $("div#flashbutton a.flash").removeClass("active");
+    if (
+        $("a.firmware_flasher_button__label").hasClass("active") ||
+        $("a.firmware_flasher_button__link").hasClass("active")
+    ) {
+        $("a.firmware_flasher_button__label").removeClass("active");
+        $("a.firmware_flasher_button__link").removeClass("active");
     }
 
     GUI.timeout_remove("connecting"); // kill connecting timer
 
-    $("div#connectbutton div.connect_state").text(i18n.getMessage("disconnect")).addClass("active");
-    $("div#connectbutton a.connect").addClass("active");
+    $("div.connection_button__label").text(i18n.getMessage("disconnect")).addClass("active");
+    $("a.connection_button__link").addClass("active");
 
     $("#tabs ul.mode-disconnected").hide();
     $("#tabs ul.mode-connected-cli").show();
@@ -648,7 +658,7 @@ function onConnect() {
     // show only appropriate tabs
     $("#tabs ul.mode-connected li").hide();
     $("#tabs ul.mode-connected li")
-        .filter(function (index) {
+        .filter(function () {
             const classes = $(this).attr("class").split(/\s+/);
             let found = false;
 
@@ -660,7 +670,7 @@ function onConnect() {
             });
 
             if (FC.CONFIG.boardType == 0) {
-                if (classes.indexOf("osd-required") >= 0) {
+                if (classes.includes("osd-required")) {
                     found = false;
                 }
             }
@@ -669,7 +679,7 @@ function onConnect() {
         })
         .show();
 
-    if (FC.CONFIG.flightControllerVersion !== "") {
+    if (FC.CONFIG.flightControllerVersion !== "" && !isCliOnlyMode()) {
         FC.FEATURE_CONFIG.features = new Features(FC.CONFIG);
         FC.BEEPER_CONFIG.beepers = new Beepers(FC.CONFIG);
         FC.BEEPER_CONFIG.dshotBeaconConditions = new Beepers(FC.CONFIG, ["RX_LOST", "RX_SET"]);
@@ -685,40 +695,28 @@ function onConnect() {
         if (FC.CONFIG.boardType === 0 || FC.CONFIG.boardType === 2) {
             startLiveDataRefreshTimer();
         }
+
+        $("#sensor-status").show();
+        $("#dataflash_wrapper_global").show();
     }
 
-    // header bar
-    $("#sensor-status").show();
     $("#portsinput").hide();
-    $("#dataflash_wrapper_global").show();
 }
 
 function onClosed(result) {
     gui_log(i18n.getMessage(result ? "serialPortClosedOk" : "serialPortClosedFail"));
 
-    $("#tabs ul.mode-connected").hide();
-    $("#tabs ul.mode-connected-cli").hide();
-    $("#tabs ul.mode-disconnected").show();
+    // Clear connection timestamp
+    connectionTimestamp = null;
+    setTimeout(() => {
+        if (globalThis.vm?.CONNECTION) {
+            globalThis.vm.CONNECTION.timestamp = null;
+        }
+    }, 100);
 
-    // header bar
-    $("#sensor-status").hide();
-    $("#portsinput").show();
-    $("#dataflash_wrapper_global").hide();
-    $("#quad-status_wrapper").hide();
-
-    console.log("[SERIAL-BACKEND] Connection closed:", result);
+    console.log(`${logHead} Connection closed:`, result);
 
     resetConnection();
-
-    clearLiveDataRefreshTimer();
-
-    MSP.clearListeners();
-
-    if (PortHandler.portPicker.selectedPort !== "virtual") {
-        serial.removeEventListener("receive", read_serial_adapter);
-        serial.removeEventListener("connect", connectHandler);
-        serial.removeEventListener("disconnect", disconnectHandler);
-    }
 }
 
 export function read_serial(info) {
@@ -809,30 +807,139 @@ function startLiveDataRefreshTimer() {
     liveDataRefreshTimerId = setInterval(update_live_status, 250);
 }
 
-export function reinitializeConnection(callback) {
-    // In virtual mode reconnect when autoconnect is enabled
-    if (CONFIGURATOR.virtualMode && PortHandler.portPicker.autoConnect) {
-        return setTimeout(function () {
-            $("a.connect").trigger("click");
-        }, 500);
+export function reinitializeConnection() {
+    if (CONFIGURATOR.virtualMode) {
+        connectDisconnect();
+        if (PortHandler.portPicker.autoConnect) {
+            return setTimeout(function () {
+                $("a.connection_button__link").trigger("click");
+            }, 500);
+        }
     }
 
+    const currentPort = PortHandler.portPicker.selectedPort;
+
+    // Set the reboot timestamp to the current time
     rebootTimestamp = Date.now();
+
+    // Send reboot command to the flight controller
     MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false);
 
-    if (CONFIGURATOR.bluetoothMode) {
-        // Bluetooth devices are not disconnected when rebooting
-        connectDisconnect();
+    if (currentPort.startsWith("bluetooth")) {
+        if (!PortHandler.portPicker.autoConnect) {
+            return setTimeout(function () {
+                $("a.connection_button__link").trigger("click");
+            }, 1500);
+        }
     }
 
+    // Show reboot progress modal except for cli and presets tab
+    if (["cli", "presets"].includes(GUI.active_tab)) {
+        console.log(`${logHead} Rebooting in ${GUI.active_tab} tab, skipping reboot dialog`);
+        gui_log(i18n.getMessage("deviceRebooting"));
+        gui_log(i18n.getMessage("deviceReady"));
+
+        return;
+    }
+    // Show reboot progress modal
+    showRebootDialog();
+}
+
+function showRebootDialog() {
     gui_log(i18n.getMessage("deviceRebooting"));
 
-    // wait for the device to reboot
-    setTimeout(function () {
-        gui_log(i18n.getMessage("deviceReady"));
-    }, 2000);
+    // Show reboot progress modal
+    const rebootDialog = document.getElementById("rebootProgressDialog") || createRebootProgressDialog();
+    rebootDialog.querySelector(".reboot-progress-bar").style.width = "0%";
+    rebootDialog.querySelector(".reboot-status").textContent = i18n.getMessage("rebootFlightController");
+    rebootDialog.showModal();
 
-    if (callback && typeof callback === "function") {
-        callback();
+    // Update progress during reboot
+    let progress = 0;
+    const progressInterval = setInterval(() => {
+        progress += 5;
+        if (progress <= 100) {
+            rebootDialog.querySelector(".reboot-progress-bar").style.width = `${progress}%`;
+        }
+    }, 100);
+
+    // Check for successful connection every 100ms with a timeout
+    const connectionCheckInterval = setInterval(() => {
+        const connectionCheckTimeoutReached = Date.now() - rebootTimestamp > REBOOT_CONNECT_MAX_TIME_MS;
+        const noSerialReconnect = !PortHandler.portPicker.autoConnect && PortHandler.portAvailable;
+
+        if (CONFIGURATOR.connectionValid || connectionCheckTimeoutReached || noSerialReconnect) {
+            clearInterval(connectionCheckInterval);
+            clearInterval(progressInterval);
+
+            rebootDialog.querySelector(".reboot-progress-bar").style.width = "100%";
+            rebootDialog.querySelector(".reboot-status").textContent = i18n.getMessage("rebootFlightControllerReady");
+
+            // Close the dialog after showing "ready" message briefly
+            setTimeout(() => {
+                rebootDialog.close();
+            }, 1000);
+
+            if (connectionCheckTimeoutReached) {
+                console.log(`${logHead} Reboot timeout reached`);
+            } else {
+                gui_log(i18n.getMessage("deviceReady"));
+            }
+        }
+    }, 100);
+
+    // Helper function to create the reboot dialog if it doesn't exist
+    function createRebootProgressDialog() {
+        const dialog = document.createElement("dialog");
+        dialog.id = "rebootProgressDialog";
+        dialog.className = "dialogReboot";
+
+        dialog.innerHTML = `
+            <div class="content">
+                <div class="reboot-status">${i18n.getMessage("rebootFlightController")}</div>
+                <div class="reboot-progress-container">
+                    <div class="reboot-progress-bar"></div>
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(dialog);
+
+        // Add styles if not already defined
+        if (!document.getElementById("rebootProgressStyle")) {
+            const style = document.createElement("style");
+            style.id = "rebootProgressStyle";
+            style.textContent = `
+                .dialogReboot {
+                    border: 1px solid #3f4241;
+                    border-radius: 5px;
+                    background-color: #2d3233;
+                    color: #fff;
+                    padding: 20px;
+                    max-width: 400px;
+                }
+                .reboot-progress-container {
+                    width: 100%;
+                    background-color: #424546;
+                    border-radius: 3px;
+                    margin: 15px 0 5px;
+                    height: 10px;
+                }
+                .reboot-progress-bar {
+                    height: 100%;
+                    background-color: #ffbb00;
+                    border-radius: 3px;
+                    transition: width 0.1s ease-in-out;
+                    width: 0%;
+                }
+                .reboot-status {
+                    text-align: center;
+                    margin: 10px 0;
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
+        return dialog;
     }
 }

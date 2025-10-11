@@ -1,6 +1,5 @@
 import "./jqueryPlugins";
 import $ from "jquery";
-import "jbox";
 import "../components/init.js";
 import { gui_log } from "./gui_log.js";
 // same, msp seems to be everywhere used from global scope
@@ -14,11 +13,20 @@ import FC from "./fc.js";
 import CONFIGURATOR from "./data_storage.js";
 import CliAutoComplete from "./CliAutoComplete.js";
 import DarkTheme, { setDarkTheme } from "./DarkTheme.js";
-import { isExpertModeEnabled } from "./utils/isExportModeEnabled.js";
+import { isExpertModeEnabled } from "./utils/isExpertModeEnabled.js";
 import { updateTabList } from "./utils/updateTabList.js";
-import { checkForConfiguratorUpdates } from "./utils/checkForConfiguratorUpdates.js";
 import * as THREE from "three";
 import NotificationManager from "./utils/notifications.js";
+
+import("./msp/debug/msp_debug_tools.js")
+    .then(() => {
+        console.log("🔧 MSP Debug Tools loaded for development environment");
+        console.log("• Press Ctrl+Shift+M to toggle debug dashboard");
+        console.log("• Use MSPTestRunner.help() for all commands");
+    })
+    .catch((err) => {
+        console.warn("Failed to load MSP debug tools:", err);
+    });
 
 if (typeof String.prototype.replaceAll === "undefined") {
     String.prototype.replaceAll = function (match, replace) {
@@ -27,15 +35,11 @@ if (typeof String.prototype.replaceAll === "undefined") {
 }
 
 $(document).ready(function () {
-    if (typeof cordovaApp === "undefined") {
-        appReady();
-    }
+    appReady();
 });
 
 function readConfiguratorVersionMetadata() {
-    // These are injected by vite. If not checking
-    // for undefined occasionally there is a race
-    // condition where this fails the nwjs and cordova builds
+    // These are injected by vite. Check for undefined is needed to prevent race conditions
     CONFIGURATOR.productName =
         typeof __APP_PRODUCTNAME__ !== "undefined" ? __APP_PRODUCTNAME__ : "Betaflight Configurator";
     CONFIGURATOR.version = typeof __APP_VERSION__ !== "undefined" ? __APP_VERSION__ : "0.0.0";
@@ -70,20 +74,21 @@ function appReady() {
     cleanupLocalStorage();
 
     i18n.init(function () {
-        // pass the configurator version as a custom header for every AJAX request.
-        $.ajaxSetup({
-            headers: {
-                "X-CFG-VER": `${CONFIGURATOR.version}`,
-            },
-        });
-
         startProcess();
 
         checkSetupAnalytics(function (analyticsService) {
-            analyticsService.sendEvent(analyticsService.EVENT_CATEGORIES.APPLICATION, "SelectedLanguage", {
+            analyticsService.sendEvent(analyticsService.EVENT_CATEGORIES.APPLICATION, "AppStart", {
+                sessionControl: "start",
+                configuratorVersion: CONFIGURATOR.getDisplayVersion(),
+                gitRevision: CONFIGURATOR.gitRevision,
+                productName: CONFIGURATOR.productName,
+                operatingSystem: GUI.operating_system,
                 language: i18n.selectedLanguage,
             });
         });
+
+        $("a.connection_button__link").removeClass("disabled");
+        $("a.firmware_flasher_button__link").removeClass("disabled");
 
         initializeSerialBackend();
     });
@@ -102,14 +107,10 @@ function startProcess() {
     gui_log(i18n.getMessage("infoVersionOs", { operatingSystem: GUI.operating_system }));
     gui_log(i18n.getMessage("infoVersionConfigurator", { configuratorVersion: CONFIGURATOR.getDisplayVersion() }));
 
-    $(".connect_b a.connect").removeClass("disabled");
+    $("a.connection_button__link").removeClass("disabled");
     // with Vue reactive system we don't need to call these,
     // our view is reactive to model changes
     // updateTopBarVersion();
-
-    if (!GUI.isOther()) {
-        checkForConfiguratorUpdates();
-    }
 
     // log webgl capability
     // it would seem the webgl "enabling" through advanced settings will be ignored in the future
@@ -118,6 +119,20 @@ function startProcess() {
 
     // log library versions in console to make version tracking easier
     console.log(`Libraries: jQuery - ${$.fn.jquery}, three.js - ${THREE.REVISION}`);
+
+    // Check if this is the first visit
+    const firstRunCfg = getConfig("firstRun") ?? {};
+    if (firstRunCfg.firstRun === undefined) {
+        setConfig({ firstRun: true });
+        import("./tabs/static_tab.js").then(({ staticTab }) => {
+            staticTab.initialize("options", () => {
+                setTimeout(() => {
+                    // Open the options tab after a delay
+                    $("#tabs .tab_options a").click();
+                }, 100);
+            });
+        });
+    }
 
     // Tabs
     $("#tabs ul.mode-connected li").click(function () {
@@ -131,15 +146,18 @@ function startProcess() {
         }
     });
 
-    $("div.open_firmware_flasher a.flash").on("click", function () {
-        if ($("div#flashbutton a.flash_state").hasClass("active") && $("div#flashbutton a.flash").hasClass("active")) {
-            $("div#flashbutton a.flash_state").removeClass("active");
-            $("div#flashbutton a.flash").removeClass("active");
+    $("a.firmware_flasher_button__link").on("click", function () {
+        if (
+            $("a.firmware_flasher_button__label").hasClass("active") &&
+            $("a.firmware_flasher_button__link").hasClass("active")
+        ) {
+            $("a.firmware_flasher_button__label").removeClass("active");
+            $("a.firmware_flasher_button__link").removeClass("active");
             $("#tabs ul.mode-disconnected .tab_landing a").click();
         } else {
             $("#tabs ul.mode-disconnected .tab_firmware_flasher a").click();
-            $("div#flashbutton a.flash_state").addClass("active");
-            $("div#flashbutton a.flash").addClass("active");
+            $("a.firmware_flasher_button__label").addClass("active");
+            $("a.firmware_flasher_button__link").addClass("active");
         }
     });
 
@@ -168,10 +186,10 @@ function startProcess() {
 
             if (GUI.allowedTabs.indexOf(tab) < 0 && tab === "firmware_flasher") {
                 if (GUI.connected_to || GUI.connecting_to) {
-                    $("a.connect").click();
+                    $("a.connection_button__link").click();
                 }
                 // this line is required but it triggers opening the firmware flasher tab again
-                $("div.open_firmware_flasher a.flash").click();
+                $("a.firmware_flasher_button__link").click();
             } else if (GUI.allowedTabs.indexOf(tab) < 0) {
                 gui_log(i18n.getMessage("tabSwitchUpgradeRequired", [tabName]));
                 return;
@@ -182,11 +200,11 @@ function startProcess() {
             GUI.tab_switch_cleanup(function () {
                 // disable active firmware flasher if it was active
                 if (
-                    $("div#flashbutton a.flash_state").hasClass("active") &&
-                    $("div#flashbutton a.flash").hasClass("active")
+                    $("a.firmware_flasher_button__label").hasClass("active") &&
+                    $("a.firmware_flasher_button__link").hasClass("active")
                 ) {
-                    $("div#flashbutton a.flash_state").removeClass("active");
-                    $("div#flashbutton a.flash").removeClass("active");
+                    $("a.firmware_flasher_button__label").removeClass("active");
+                    $("a.firmware_flasher_button__link").removeClass("active");
                 }
                 // disable previously active tab highlight
                 $("li", ui_tabs).removeClass("active");
@@ -310,9 +328,34 @@ function startProcess() {
                 }
             });
         }
+
+        $(".tab_container").removeClass("reveal");
+        $("#background").hide();
     });
 
     $("#tabs ul.mode-disconnected li a:first").click();
+
+    $("#menu_btn").on("click", function () {
+        $(".tab_container").toggleClass("reveal");
+        $("#background").toggle();
+    });
+
+    $("#background").on("click", function () {
+        $(".tab_container").removeClass("reveal");
+        $("#background").hide();
+    });
+
+    $("#reveal_btn").on("click", function () {
+        $(".headerbar").toggleClass("expand");
+    });
+
+    $(window).on("resize", function () {
+        // 575px is the mobile breakpoint defined in CSS
+        if (window.innerWidth > 575) {
+            $(".tab_container").removeClass("reveal");
+            $("#background").hide();
+        }
+    });
 
     // listen to all input change events and adjust the value within limits if necessary
     $("#content").on("focus", 'input[type="number"]', function () {

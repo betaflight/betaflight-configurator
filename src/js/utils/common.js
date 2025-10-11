@@ -1,7 +1,4 @@
-import semver from "semver";
 import { mixerList } from "../model";
-import CONFIGURATOR from "../data_storage";
-import { gui_log } from "../gui_log";
 import $ from "jquery";
 
 export function millitime() {
@@ -34,47 +31,6 @@ export function isInt(n) {
     return n % 1 === 0;
 }
 
-/*
- *  checkChromeRuntimeError() has to be called after each chrome API call
- */
-
-export function checkChromeRuntimeError() {
-    if (chrome.runtime.lastError) {
-        console.error(`Chrome API Error: ${chrome.runtime.lastError.message}.\n Traced ${new Error().stack}`);
-        gui_log(`Chrome API Error: ${chrome.runtime.lastError.message}.`);
-        return true;
-    }
-    return false;
-}
-
-const majorFirmwareVersions = {
-    1.47: "4.6.*",
-    1.46: "4.5.*",
-    1.45: "4.4.*",
-    1.44: "4.3.*",
-};
-
-export function generateVirtualApiVersions() {
-    const firmwareVersionDropdown = document.getElementById("firmware-version-dropdown");
-    const max = semver.minor(CONFIGURATOR.API_VERSION_MAX_SUPPORTED);
-    const min = semver.minor(CONFIGURATOR.API_VERSION_ACCEPTED);
-
-    for (let i = max; i >= min; i--) {
-        const option = document.createElement("option");
-        const verNum = `1.${i}`;
-        option.value = `${verNum}.0`;
-        option.text = `MSP: ${verNum} `;
-
-        if (majorFirmwareVersions.hasOwnProperty(verNum)) {
-            option.text += ` | Firmware: ${majorFirmwareVersions[verNum]}`;
-        } else if (i === max) {
-            option.text += ` | Latest Firmware`;
-        }
-
-        firmwareVersionDropdown.appendChild(option);
-    }
-}
-
 export function getMixerImageSrc(mixerIndex, reverseMotorDir) {
     const reverse = reverseMotorDir ? "_reversed" : "";
 
@@ -105,18 +61,44 @@ export function urlExists(url) {
  * @return {object} sorted option list.
  */
 
-$.fn.sortSelect = function (text = "") {
-    const op = this.children("option");
+$.fn.sortSelect = function () {
+    /*
 
-    op.sort((a, b) => {
-        if (a.text === text) {
-            return -1;
-        }
-        if (b.text === text) {
-            return 1;
-        }
-        return a.text.localeCompare(b.text, window.navigator.language, { ignorePunctuation: true });
+    Chrome v140 does not work with sortSelect function properly.
+    Disabling it for now until a fix is found.
+
+    this.each(function () {
+        const select = this;
+        // Collect option data
+        const optionData = Array.from(select.options).map(opt => ({
+            value: opt.value,
+            text: opt.text,
+            selected: opt.selected,
+            disabled: opt.disabled,
+        }));
+
+        // Sort option data
+        optionData.sort((a, b) => {
+            if (a.text === text) { return -1; }
+            if (b.text === text) { return 1; }
+            return a.text.localeCompare(b.text, window.navigator.language, { ignorePunctuation: true });
+        });
+
+        // Remove all options
+        while (select.options.length) { select.remove(0); }
+
+        // Add sorted options
+        optionData.forEach(opt => {
+            const option = document.createElement("option");
+            option.value = opt.value;
+            option.text = opt.text;
+            option.selected = opt.selected;
+            option.disabled = opt.disabled;
+            select.add(option);
+        });
     });
 
-    return this.empty().append(op);
+    */
+
+    return this;
 };

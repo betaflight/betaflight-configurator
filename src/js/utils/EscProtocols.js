@@ -1,6 +1,6 @@
 class EscProtocols {
     static get PROTOCOL_PWM() {
-        return "PWM";
+        return "PWM_OUTPUT";
     }
     static get PROTOCOL_ONESHOT125() {
         return "ONESHOT125";
@@ -49,7 +49,7 @@ class EscProtocols {
         return EscProtocols.DSHOT_PROTOCOLS_SET.includes(protocolName);
     }
 
-    static GetAvailableProtocols(apiVersion) {
+    static GetAvailableProtocols(_apiVersion) {
         const escProtocols = [
             EscProtocols.PROTOCOL_PWM,
             EscProtocols.PROTOCOL_ONESHOT125,
@@ -66,7 +66,7 @@ class EscProtocols {
         return escProtocols;
     }
 
-    static ReorderPwmProtocols(apiVersion, protocolIndex) {
+    static ReorderPwmProtocols(_apiVersion, protocolIndex) {
         return protocolIndex;
     }
 }

@@ -19,6 +19,7 @@ import AutoBackup from "../utils/AutoBackup.js";
 import AutoDetect from "../utils/AutoDetect.js";
 import { EventBus } from "../../components/eventBus";
 import { ispConnected } from "../utils/connection.js";
+import FC from "../fc";
 
 const firmware_flasher = {
     targets: null,
@@ -28,7 +29,6 @@ const firmware_flasher = {
     selectedBoard: undefined,
     cloudBuildKey: null,
     cloudBuildOptions: null,
-    isFlashing: false,
     intel_hex: undefined, // standard intel hex in string format
     parsed_hex: undefined, // parsed raw hex in array format
     isConfigLocal: false, // Set to true if the user loads one locally
@@ -37,9 +37,12 @@ const firmware_flasher = {
     config: {},
     developmentFirmwareLoaded: false, // Is the firmware to be flashed from the development branch?
     cancelBuild: false,
+    // Properties to preserve firmware state during flashing
+    preFlashingMessage: null,
+    preFlashingMessageType: null,
 };
 
-firmware_flasher.initialize = function (callback) {
+firmware_flasher.initialize = async function (callback) {
     const self = this;
 
     if (GUI.active_tab !== "firmware_flasher") {
@@ -57,29 +60,41 @@ firmware_flasher.initialize = function (callback) {
     self.intel_hex = undefined;
     self.parsed_hex = undefined;
 
-    function onDocumentLoad() {
+    self.logHead = "[FIRMWARE_FLASHER]";
+
+    function getExtension(key) {
+        if (!key) {
+            return undefined;
+        }
+        const lower = key.toLowerCase();
+        return lower.split("?")[0].split("#")[0].split(".").pop();
+    }
+
+    async function onDocumentLoad() {
         function parseHex(str, callback) {
+            self.intel_hex = str;
+            self.firmware_type = "HEX";
             read_hex_file(str).then((data) => {
                 callback(data);
             });
         }
 
-        function showLoadedHex(filename) {
+        function showLoadedFirmware(filename, bytes) {
             self.filename = filename;
 
             if (self.localFirmwareLoaded) {
                 self.flashingMessage(
                     i18n.getMessage("firmwareFlasherFirmwareLocalLoaded", {
                         filename: filename,
-                        bytes: self.parsed_hex.bytes_total,
+                        bytes: bytes,
                     }),
                     self.FLASH_MESSAGE_TYPES.NEUTRAL,
                 );
             } else {
                 self.flashingMessage(
-                    `<a class="save_firmware" href="#" title="Save Firmware">${i18n.getMessage(
+                    `<a class="save_firmware" href="#" title="${i18n.getMessage("firmwareFlasherTooltipSaveFirmware")}">${i18n.getMessage(
                         "firmwareFlasherFirmwareOnlineLoaded",
-                        { filename: filename, bytes: self.parsed_hex.bytes_total },
+                        { filename: filename, bytes: bytes },
                     )}</a>`,
                     self.FLASH_MESSAGE_TYPES.NEUTRAL,
                 );
@@ -87,7 +102,7 @@ firmware_flasher.initialize = function (callback) {
             self.enableFlashButton(true);
 
             tracking.sendEvent(tracking.EVENT_CATEGORIES.FLASHING, "FirmwareLoaded", {
-                firmwareSize: self.parsed_hex.bytes_total,
+                firmwareSize: bytes,
                 firmwareName: filename,
                 firmwareSource: self.localFirmwareLoaded ? "file" : "http",
                 selectedTarget: self.targetDetail?.target,
@@ -138,14 +153,32 @@ firmware_flasher.initialize = function (callback) {
             self.configFilename = filename !== undefined ? filename : null;
         }
 
+        function loadFailed() {
+            $("span.progressLabel")
+                .attr("i18n", "firmwareFlasherFailedToLoadOnlineFirmware")
+                .removeClass("i18n-replaced");
+            self.enableLoadRemoteFileButton(true);
+            $("a.load_remote_file").text(i18n.getMessage("firmwareFlasherButtonLoadOnline"));
+            i18n.localizePage();
+        }
+
         function processHex(data, key) {
-            self.intel_hex = data;
+            self.firmware_type = "HEX";
+            const bytes = data instanceof Uint8Array ? data : data instanceof ArrayBuffer ? new Uint8Array(data) : null;
+
+            if (!bytes || bytes.byteLength === 0) {
+                loadFailed();
+                return;
+            }
+
+            const decoder = new TextDecoder("utf-8");
+            self.intel_hex = decoder.decode(bytes);
 
             parseHex(self.intel_hex, function (data) {
                 self.parsed_hex = data;
 
                 if (self.parsed_hex) {
-                    showLoadedHex(key);
+                    showLoadedFirmware(key, self.parsed_hex.bytes_total);
                 } else {
                     self.flashingMessage(
                         i18n.getMessage("firmwareFlasherHexCorrupted"),
@@ -156,15 +189,59 @@ firmware_flasher.initialize = function (callback) {
             });
         }
 
-        function onLoadSuccess(data, key) {
-            self.localFirmwareLoaded = false;
+        async function processUf2(data, key) {
+            self.firmware_type = "UF2";
 
-            processHex(data, key);
+            const toBytes = (buf) => {
+                return buf instanceof Uint8Array
+                    ? buf
+                    : buf instanceof ArrayBuffer
+                        ? new Uint8Array(buf)
+                        : buf.arrayBuffer
+                            ? new Uint8Array(buf.arrayBuffer ? undefined : buf)
+                            : buf; // File/Blob typically have arrayBuffer()
+            };
+
+            const bytes = data
+                ? data instanceof Blob
+                    ? new Uint8Array(await data.arrayBuffer())
+                    : toBytes(data)
+                : undefined;
+
+            if (!bytes || bytes.byteLength === 0) {
+                loadFailed();
+                return;
+            }
+            self.uf2_binary = bytes;
+            showLoadedFirmware(key, bytes.byteLength);
+        }
+
+        async function processFile(data, key) {
+            if (!data || !key) {
+                loadFailed();
+                return;
+            }
+
+            switch (getExtension(key)) {
+                case "hex":
+                    processHex(data, key);
+                    break;
+                case "uf2":
+                    await processUf2(data, key);
+                    break;
+                default:
+                    self.flashingMessage(
+                        i18n.getMessage("firmwareFlasherInvalidFileFormat") || "Invalid file format",
+                        self.FLASH_MESSAGE_TYPES.INVALID,
+                    );
+                    loadFailed();
+            }
+
             self.enableLoadRemoteFileButton(true);
             $("a.load_remote_file").text(i18n.getMessage("firmwareFlasherButtonLoadOnline"));
         }
 
-        function loadTargetList(targets) {
+        async function loadTargetList(targets) {
             if (!targets || !ispConnected()) {
                 $('select[name="board"]').empty().append('<option value="0">Offline</option>');
                 $('select[name="firmware_version"]').empty().append('<option value="0">Offline</option>');
@@ -186,7 +263,7 @@ firmware_flasher.initialize = function (callback) {
 
             Object.keys(targets)
                 .sort((a, b) => a.target - b.target)
-                .forEach(function (target, i) {
+                .forEach(function (target) {
                     const descriptor = targets[target];
                     const select_e = $(`<option value='${descriptor.target}'>${descriptor.target}</option>`);
                     boards_e.append(select_e);
@@ -239,12 +316,22 @@ firmware_flasher.initialize = function (callback) {
             }
         }
 
+        function updateOsdProtocolColor() {
+            const osdProtocol = $('select[name="osdProtocols"] option:selected').val();
+            $('select[name="osdProtocols"]')
+                .next(".select2-container")
+                .find(".select2-selection__rendered")
+                .attr("style", osdProtocol === "" ? "color: red !important" : "");
+        }
+
         function buildOptions(data) {
             if (!ispConnected()) {
                 return;
             }
 
             // extract osd protocols from general options and add to osdProtocols
+            console.log(`${self.logHead} buildOptions`, FC.CONFIG.buildOptions);
+            self.cloudBuildOptions = FC.CONFIG.buildOptions || [];
             data.osdProtocols = data.generalOptions
                 .filter((option) => option.group === "OSD")
                 .map((option) => {
@@ -264,6 +351,12 @@ firmware_flasher.initialize = function (callback) {
             buildOptionsList($('select[name="osdProtocols"]'), data.osdProtocols);
             buildOptionsList($('select[name="options"]'), data.generalOptions);
             buildOptionsList($('select[name="motorProtocols"]'), data.motorProtocols);
+
+            // Using setTimeout to ensure this runs after Select2 has finished initializing/rendering
+            setTimeout(updateOsdProtocolColor, 0);
+
+            // Add change handler to update color when selection changes
+            $('select[name="osdProtocols"]').on("change", updateOsdProtocolColor);
 
             if (!self.validateBuildKey()) {
                 preselectRadioProtocolFromStorage();
@@ -348,12 +441,13 @@ firmware_flasher.initialize = function (callback) {
         // translate to user-selected language
         i18n.localizePage();
 
-        self.sponsor.loadSponsorTile("flash", $("div.tab_sponsor"));
+        await self.sponsor.loadSponsorTile("flash", $("div.tab_sponsor"));
 
-        buildType_e.on("change", function () {
+        buildType_e.on("change", async function () {
             self.enableLoadRemoteFileButton(false);
 
             const build_type = buildType_e.val();
+            const currentlySelectedBoard = $('select[name="board"]').val();
 
             $('select[name="board"]')
                 .empty()
@@ -365,7 +459,16 @@ firmware_flasher.initialize = function (callback) {
 
             if (!GUI.connect_lock) {
                 try {
-                    self.buildApi.loadTargets(loadTargetList);
+                    await loadTargetList(await self.buildApi.loadTargets());
+
+                    // Restore the previously selected board if it was selected and still exists
+                    if (
+                        currentlySelectedBoard &&
+                        currentlySelectedBoard !== "0" &&
+                        $(`select[name="board"] option[value="${currentlySelectedBoard}"]`).length > 0
+                    ) {
+                        $('select[name="board"]').val(currentlySelectedBoard).trigger("change");
+                    }
                 } catch (err) {
                     console.error(err);
                 }
@@ -374,7 +477,7 @@ firmware_flasher.initialize = function (callback) {
             setConfig({ selected_build_type: build_type });
         });
 
-        function selectFirmware(release) {
+        async function selectFirmware(release) {
             $("div.build_configuration").slideUp();
             $("div.release_info").slideUp();
 
@@ -386,7 +489,7 @@ firmware_flasher.initialize = function (callback) {
                 );
                 if (self.parsed_hex && self.parsed_hex.bytes_total) {
                     // Changing the board triggers a version change, so we need only dump it here.
-                    console.log("throw out loaded hex");
+                    console.log(`${self.logHead} throw out loaded hex`);
                     self.intel_hex = undefined;
                     self.parsed_hex = undefined;
                 }
@@ -394,16 +497,21 @@ firmware_flasher.initialize = function (callback) {
 
             const target = $('select[name="board"] option:selected').val();
 
-            function onTargetDetail(response) {
-                self.targetDetail = response;
+            async function LoadTargetDetail(detail) {
+                if (!detail) {
+                    self.enableLoadRemoteFileButton(false);
+                    return;
+                }
 
-                if (response.cloudBuild === true) {
+                self.targetDetail = detail;
+                if (detail.cloudBuild === true) {
                     $("div.build_configuration").slideDown();
 
                     const expertMode = expertMode_e.is(":checked");
                     if (expertMode) {
-                        if (response.releaseType === "Unstable") {
-                            self.buildApi.loadCommits(response.release, (commits) => {
+                        if (detail.releaseType === "Unstable") {
+                            let commits = await self.buildApi.loadCommits(detail.release);
+                            if (commits) {
                                 const select_e = $('select[name="commits"]');
                                 select_e.empty();
                                 commits.forEach((commit) => {
@@ -411,7 +519,7 @@ firmware_flasher.initialize = function (callback) {
                                         $(`<option value='${commit.sha}'>${commit.message.split("\n")[0]}</option>`),
                                     );
                                 });
-                            });
+                            }
 
                             $("div.commitSelection").show();
                         } else {
@@ -424,21 +532,34 @@ firmware_flasher.initialize = function (callback) {
                     $("input.corebuild_mode").trigger("change");
                 }
 
-                if (response.configuration && !self.isConfigLocal) {
-                    setBoardConfig(response.configuration);
+                if (detail.configuration && !self.isConfigLocal) {
+                    setBoardConfig(detail.configuration);
                 }
 
                 self.enableLoadRemoteFileButton(true);
             }
 
-            self.buildApi.loadTarget(target, release, onTargetDetail);
+            try {
+                let targetDetail = await self.buildApi.loadTarget(target, release);
+                await LoadTargetDetail(targetDetail);
+            } catch (error) {
+                console.error("Failed to load target:", error);
+                loadFailed();
+                return;
+            }
 
-            const OnInvalidBuildKey = () => self.buildApi.loadOptions(release, buildOptions);
-
-            if (self.validateBuildKey()) {
-                self.buildApi.loadOptionsByBuildKey(release, self.cloudBuildKey, buildOptions, OnInvalidBuildKey);
-            } else {
-                OnInvalidBuildKey();
+            try {
+                if (self.validateBuildKey()) {
+                    let options = await self.buildApi.loadOptionsByBuildKey(release, self.cloudBuildKey);
+                    if (options) {
+                        buildOptions(options);
+                        return;
+                    }
+                }
+                buildOptions(await self.buildApi.loadOptions(release));
+            } catch (error) {
+                console.error("Failed to load build options:", error);
+                return;
             }
         }
 
@@ -488,7 +609,10 @@ firmware_flasher.initialize = function (callback) {
             clearBoardConfig();
             self.intel_hex = undefined;
             self.parsed_hex = undefined;
+            self.uf2_binary = undefined;
+            self.firmware_type = undefined;
             self.localFirmwareLoaded = false;
+            self.filename = null;
         }
 
         $('select[name="board"]').select2();
@@ -518,7 +642,7 @@ firmware_flasher.initialize = function (callback) {
             toggleTelemetryProtocolInfo();
         });
 
-        $('select[name="board"]').on("change", function () {
+        $('select[name="board"]').on("change", async function () {
             self.enableLoadRemoteFileButton(false);
             let target = $(this).val();
 
@@ -530,7 +654,7 @@ firmware_flasher.initialize = function (callback) {
 
             if (!GUI.connect_lock) {
                 self.selectedBoard = target;
-                console.log("board changed to", target);
+                console.log(`${self.logHead} board changed to`, target);
 
                 self.flashingMessage(
                     i18n.getMessage("firmwareFlasherLoadFirmwareFile"),
@@ -564,7 +688,7 @@ firmware_flasher.initialize = function (callback) {
                         $(`<option value='0'>${i18n.getMessage("firmwareFlasherOptionLoading")}</option>`),
                     );
 
-                    self.buildApi.loadTargetReleases(target, (data) => populateReleases(versions_e, data));
+                    populateReleases(versions_e, await self.buildApi.loadTargetReleases(target));
                 }
             }
         });
@@ -621,8 +745,8 @@ firmware_flasher.initialize = function (callback) {
         function detectedUsbDevice(device) {
             const isFlashOnConnect = $("input.flash_on_connect").is(":checked");
 
-            console.log("Detected USB device:", device);
-            console.log("Reboot mode: %s, flash on connect", STM32.rebootMode, isFlashOnConnect);
+            console.log(`${self.logHead} Detected USB device:`, device);
+            console.log(`${self.logHead} Reboot mode: %s, flash on connect`, STM32.rebootMode, isFlashOnConnect);
 
             if (STM32.rebootMode || isFlashOnConnect) {
                 STM32.rebootMode = 0;
@@ -633,21 +757,37 @@ firmware_flasher.initialize = function (callback) {
 
         EventBus.$on("port-handler:auto-select-usb-device", detectedUsbDevice);
 
-        function flashFirmware(firmware) {
+        async function saveFirmware() {
+            const fileType = self.firmware_type;
+            try {
+                const file = await FileSystem.pickSaveFile(
+                    self.filename,
+                    i18n.getMessage("fileSystemPickerFiles", { typeof: fileType.toUpperCase() }),
+                    `.${fileType.toLowerCase()}`,
+                );
+                if (!file) return false; // user cancelled
+
+                console.log(`${self.logHead} Saving firmware to:`, file.name);
+                await FileSystem.writeFile(file, fileType === "UF2" ? self.uf2_binary : self.intel_hex);
+                return true;
+            } catch (err) {
+                console.error(err);
+                return false;
+            }
+        }
+
+        async function flashHexFirmware(firmware) {
             const options = {};
 
-            let eraseAll = false;
             if ($("input.erase_chip").is(":checked") || expertMode_e.is(":not(:checked)")) {
                 options.erase_chip = true;
-
-                eraseAll = true;
             }
 
             const port = PortHandler.portPicker.selectedPort;
-            const isSerial = port.startsWith("serial_");
-            const isDFU = port.startsWith("usb_");
+            const isSerial = port.startsWith("serial");
+            const isDFU = port.startsWith("usb");
 
-            console.log("Selected port:", port);
+            console.log(`${self.logHead} Selected port:`, port);
 
             if (isDFU) {
                 tracking.sendEvent(tracking.EVENT_CATEGORIES.FLASHING, "DFU Flashing", {
@@ -671,13 +811,18 @@ firmware_flasher.initialize = function (callback) {
                 STM32.connect(port, baud, firmware, options);
             } else {
                 // Maybe the board is in DFU mode, but it does not have permissions. Ask for them.
-                console.log("No valid port detected, asking for permissions");
-                DFU.requestPermission().then((device) => {
-                    DFU.connect(device.path, firmware, options);
-                });
+                console.log(`${self.logHead} No valid port detected, asking for permissions`);
+
+                DFU.requestPermission()
+                    .then((device) => {
+                        DFU.connect(device.path, firmware, options);
+                    })
+                    .catch((error) => {
+                        console.error("Permission request failed", error);
+                        firmware_flasher.resetFlashingState();
+                    });
             }
 
-            self.isFlashing = false;
             GUI.interval_resume("sponsor");
         }
 
@@ -761,69 +906,82 @@ firmware_flasher.initialize = function (callback) {
         $("input.flash_manual_baud_rate").change();
 
         // UI Hooks
-        $("a.load_file").on("click", function () {
+        $("a.load_file").on("click", async function () {
             // Reset button when loading a new firmware
             self.enableFlashButton(false);
             self.enableLoadRemoteFileButton(false);
 
             self.developmentFirmwareLoaded = false;
 
-            FileSystem.pickOpenFile(i18n.getMessage("fileSystemPickerFiles", { typeof: "HEX" }), ".hex")
-                .then((file) => {
-                    console.log("Saving firmware to:", file.name);
-                    FileSystem.readFile(file).then((data) => {
-                        if (file.name.split(".").pop() === "hex") {
-                            self.intel_hex = data;
-                            parseHex(self.intel_hex, function (data) {
-                                self.parsed_hex = data;
+            try {
+                const file = await FileSystem.pickOpenFile(i18n.getMessage("fileSystemPickerFirmwareFiles"), [
+                    ".hex",
+                    ".uf2",
+                ]);
 
-                                if (self.parsed_hex) {
-                                    self.localFirmwareLoaded = true;
+                if (!file) {
+                    return; // user cancelled
+                }
+                console.log(`${self.logHead} loading firmware from:`, file.name);
 
-                                    showLoadedHex(file.name);
-                                } else {
-                                    self.flashingMessage(
-                                        i18n.getMessage("firmwareFlasherHexCorrupted"),
-                                        self.FLASH_MESSAGE_TYPES.INVALID,
-                                    );
-                                }
-                            });
-                        } else {
-                            clearBufferedFirmware();
+                const extension = getExtension(file.name);
+                if (extension === "uf2") {
+                    const data = await FileSystem.readFileAsBlob(file);
+                    self.localFirmwareLoaded = true;
+                    processUf2(data, file.name);
+                } else {
+                    const data = await FileSystem.readFile(file);
+                    if (extension === "hex") {
+                        parseHex(data, function (data) {
+                            self.parsed_hex = data;
 
-                            let config = cleanUnifiedConfigFile(data);
-                            if (config !== null) {
-                                setBoardConfig(config, file.name);
+                            if (self.parsed_hex) {
+                                self.localFirmwareLoaded = true;
 
-                                if (self.isConfigLocal && !self.parsed_hex) {
-                                    self.flashingMessage(
-                                        i18n.getMessage("firmwareFlasherLoadedConfig"),
-                                        self.FLASH_MESSAGE_TYPES.NEUTRAL,
-                                    );
-                                }
+                                showLoadedFirmware(file.name, self.parsed_hex.bytes_total);
+                            } else {
+                                self.flashingMessage(
+                                    i18n.getMessage("firmwareFlasherHexCorrupted"),
+                                    self.FLASH_MESSAGE_TYPES.INVALID,
+                                );
+                            }
+                        });
+                    } else {
+                        clearBufferedFirmware();
 
-                                if (
-                                    (self.isConfigLocal && self.parsed_hex && !self.localFirmwareLoaded) ||
-                                    self.localFirmwareLoaded
-                                ) {
-                                    self.enableFlashButton(true);
-                                    self.flashingMessage(
-                                        i18n.getMessage(
-                                            "firmwareFlasherFirmwareLocalLoaded",
-                                            self.parsed_hex.bytes_total,
-                                        ),
-                                        self.FLASH_MESSAGE_TYPES.NEUTRAL,
-                                    );
-                                }
+                        let config = cleanUnifiedConfigFile(data);
+                        if (config !== null) {
+                            setBoardConfig(config, file.name);
+
+                            if (self.isConfigLocal && !self.parsed_hex) {
+                                self.flashingMessage(
+                                    i18n.getMessage("firmwareFlasherLoadedConfig"),
+                                    self.FLASH_MESSAGE_TYPES.NEUTRAL,
+                                );
+                            }
+
+                            if (
+                                (self.isConfigLocal && self.parsed_hex && !self.localFirmwareLoaded) ||
+                                self.localFirmwareLoaded
+                            ) {
+                                self.enableFlashButton(true);
+                                self.flashingMessage(
+                                    i18n.getMessage("firmwareFlasherFirmwareLocalLoaded", {
+                                        filename: file.name,
+                                        bytes: self.parsed_hex.bytes_total,
+                                    }),
+                                    self.FLASH_MESSAGE_TYPES.NEUTRAL,
+                                );
                             }
                         }
-                    });
-                })
-                .catch((error) => {
-                    console.error("Error reading file:", error);
-                });
+                    }
+                }
+            } catch (error) {
+                console.error("Error reading file:", error);
+                self.enableLoadRemoteFileButton(true);
+                self.enableLoadFileButton(true);
+            }
         });
-
         /**
          * Lock / Unlock the firmware download button according to the firmware selection dropdown.
          */
@@ -831,13 +989,44 @@ firmware_flasher.initialize = function (callback) {
             selectFirmware($("option:selected", evt.target).val());
         });
 
-        $("a.cloud_build_cancel").on("click", function (evt) {
+        $("a.cloud_build_cancel").on("click", function () {
             $("a.cloud_build_cancel").toggleClass("disabled", true);
             self.cancelBuild = true;
         });
 
-        $("a.load_remote_file").on("click", function (evt) {
+        async function enforceOSDSelection() {
+            const firmwareVersion = $('select[name="firmware_version"] option:selected').text();
+
+            // Skip OSD selection enforcement for firmware versions 4.3.x
+            if (firmwareVersion.startsWith("4.3.")) {
+                return true;
+            }
+
+            if ($('select[name="osdProtocols"] option:selected').val() === "") {
+                return new Promise((resolve) => {
+                    GUI.showYesNoDialog({
+                        title: i18n.getMessage("firmwareFlasherOSDProtocolNotSelected"),
+                        text: i18n.getMessage("firmwareFlasherOSDProtocolNotSelectedDescription"),
+                        buttonYesText: i18n.getMessage("firmwareFlasherOSDProtocolNotSelectedContinue"),
+                        buttonNoText: i18n.getMessage("firmwareFlasherOSDProtocolSelect"),
+                        buttonYesCallback: () => resolve(true),
+                        buttonNoCallback: () => resolve(false),
+                    });
+                });
+            } else {
+                return true; // No issue with OSD selection
+            }
+        }
+
+        $("a.load_remote_file").on("click", async function () {
             if (!self.selectedBoard) {
+                return;
+            }
+
+            // Ensure the user has selected an OSD protocol
+            const shouldContinue = await enforceOSDSelection();
+
+            if (!shouldContinue) {
                 return;
             }
 
@@ -855,15 +1044,6 @@ firmware_flasher.initialize = function (callback) {
                 return;
             }
 
-            function onLoadFailed() {
-                $("span.progressLabel")
-                    .attr("i18n", "firmwareFlasherFailedToLoadOnlineFirmware")
-                    .removeClass("i18n-replaced");
-                self.enableLoadRemoteFileButton(true);
-                $("a.load_remote_file").text(i18n.getMessage("firmwareFlasherButtonLoadOnline"));
-                i18n.localizePage();
-            }
-
             function updateStatus(status, key, val, showLog) {
                 if (showLog === true) {
                     $("div.release_info #cloudTargetLog")
@@ -874,7 +1054,7 @@ firmware_flasher.initialize = function (callback) {
                 $(".buildProgress").val(val);
             }
 
-            function processBuildSuccess(response, statusResponse, suffix) {
+            async function processBuildSuccess(response, statusResponse, suffix) {
                 if (statusResponse.status !== "success") {
                     return;
                 }
@@ -882,15 +1062,10 @@ firmware_flasher.initialize = function (callback) {
                 if (statusResponse.configuration !== undefined && !self.isConfigLocal) {
                     setBoardConfig(statusResponse.configuration);
                 }
-                self.buildApi.loadTargetHex(response.url, (hex) => onLoadSuccess(hex, response.file), onLoadFailed);
+                processFile(await self.buildApi.loadTargetFirmware(response.url), response.file);
             }
 
-            function processBuildFailure(key, suffix) {
-                updateStatus(`Fail${suffix}`, key, 0, true);
-                onLoadFailed();
-            }
-
-            function requestCloudBuild(targetDetail) {
+            async function requestCloudBuild(targetDetail) {
                 let request = {
                     target: targetDetail.target,
                     release: targetDetail.release,
@@ -923,7 +1098,7 @@ firmware_flasher.initialize = function (callback) {
                         request.options.push($(this).val());
                     });
 
-                    if ($('input[name="expertModeCheckbox"]').is(":checked")) {
+                    if (expertMode_e.is(":checked")) {
                         if (targetDetail.releaseType === "Unstable") {
                             request.commit = $('select[name="commits"] option:selected').val();
                         }
@@ -939,88 +1114,83 @@ firmware_flasher.initialize = function (callback) {
                 }
 
                 console.info("Build request:", request);
-                self.buildApi.requestBuild(
-                    request,
-                    (response) => {
-                        console.info("Build response:", response);
+                let response = await self.buildApi.requestBuild(request);
+                if (!response) {
+                    updateStatus("FailRequest", "", 0, false);
+                    loadFailed();
+                    return;
+                }
 
-                        // Complete the summary object to be used later
-                        self.targetDetail.file = response.file;
+                console.info("Build response:", response);
 
-                        if (!targetDetail.cloudBuild) {
-                            // it is a previous release, so simply load the hex
-                            self.buildApi.loadTargetHex(
-                                response.url,
-                                (hex) => onLoadSuccess(hex, response.file),
-                                onLoadFailed,
-                            );
+                // Complete the summary object to be used later
+                self.targetDetail.file = response.file;
+
+                if (!targetDetail.cloudBuild) {
+                    // it is a previous release, so simply load the file
+                    processFile(await self.buildApi.loadTargetFirmware(response.url), response.file);
+                    return;
+                }
+
+                updateStatus("Pending", response.key, 0, false);
+                self.cancelBuild = false;
+
+                let statusResponse = await self.buildApi.requestBuildStatus(response.key);
+
+                if (statusResponse.status === "success") {
+                    // will be cached already, no need to wait.
+                    await processBuildSuccess(response, statusResponse, "Cached");
+                    return;
+                }
+
+                self.enableCancelBuildButton(true);
+                const retrySeconds = 5;
+                let retries = 1;
+                let processing = false;
+                let timeout = 120;
+                const timer = setInterval(async () => {
+                    retries++;
+                    let statusResponse = await self.buildApi.requestBuildStatus(response.key);
+
+                    if (!statusResponse) {
+                        return;
+                    }
+
+                    if (statusResponse.timeOut !== undefined) {
+                        if (!processing) {
+                            processing = true;
+                            retries = 1;
+                        }
+                        timeout = statusResponse.timeOut;
+                    }
+                    const retryTotal = timeout / retrySeconds;
+
+                    if (statusResponse.status !== "queued" || retries > retryTotal || self.cancelBuild) {
+                        self.enableCancelBuildButton(false);
+                        clearInterval(timer);
+
+                        if (statusResponse.status === "success") {
+                            processBuildSuccess(response, statusResponse, "");
                             return;
                         }
 
-                        updateStatus("Pending", response.key, 0, false);
-                        self.cancelBuild = false;
+                        let suffix = "";
+                        if (retries > retryTotal) {
+                            suffix = "TimeOut";
+                        }
 
-                        self.buildApi.requestBuildStatus(response.key, (statusResponse) => {
-                            if (statusResponse.status === "success") {
-                                // will be cached already, no need to wait.
-                                processBuildSuccess(response, statusResponse, "Cached");
-                                return;
-                            }
+                        if (self.cancelBuild) {
+                            suffix = "Cancel";
+                        }
+                        updateStatus(`Fail${suffix}`, response.key, 0, true);
+                        loadFailed();
+                        return;
+                    }
 
-                            self.enableCancelBuildButton(true);
-                            const retrySeconds = 5;
-                            let retries = 1;
-                            let processing = false;
-                            let timeout = 120;
-                            const timer = setInterval(() => {
-                                self.buildApi.requestBuildStatus(response.key, (statusResponse) => {
-                                    if (statusResponse.timeOut !== undefined) {
-                                        if (!processing) {
-                                            processing = true;
-                                            retries = 1;
-                                        }
-                                        timeout = statusResponse.timeOut;
-                                    }
-                                    const retryTotal = timeout / retrySeconds;
-
-                                    if (
-                                        statusResponse.status !== "queued" ||
-                                        retries > retryTotal ||
-                                        self.cancelBuild
-                                    ) {
-                                        self.enableCancelBuildButton(false);
-                                        clearInterval(timer);
-
-                                        if (statusResponse.status === "success") {
-                                            processBuildSuccess(response, statusResponse, "");
-                                            return;
-                                        }
-
-                                        let suffix = "";
-                                        if (retries > retryTotal) {
-                                            suffix = "TimeOut";
-                                        }
-
-                                        if (self.cancelBuild) {
-                                            suffix = "Cancel";
-                                        }
-                                        processBuildFailure(response.key, suffix);
-                                        return;
-                                    }
-
-                                    if (processing) {
-                                        updateStatus("Processing", response.key, retries * (100 / retryTotal), false);
-                                    }
-                                    retries++;
-                                });
-                            }, retrySeconds * 1000);
-                        });
-                    },
-                    () => {
-                        updateStatus("FailRequest", "", 0, false);
-                        onLoadFailed();
-                    },
-                );
+                    if (processing) {
+                        updateStatus("Processing", response.key, retries * (100 / retryTotal), false);
+                    }
+                }, retrySeconds * 1000);
             }
 
             if (self.targetDetail) {
@@ -1030,7 +1200,7 @@ firmware_flasher.initialize = function (callback) {
 
                 showReleaseNotes(self.targetDetail);
 
-                requestCloudBuild(self.targetDetail);
+                await requestCloudBuild(self.targetDetail);
             } else {
                 $("span.progressLabel")
                     .attr("i18n", "firmwareFlasherFailedToLoadOnlineFirmware")
@@ -1046,14 +1216,13 @@ firmware_flasher.initialize = function (callback) {
 
             if (!GUI.connect_lock) {
                 // button disabled while flashing is in progress
-                tracking.sendEvent(tracking.EVENT_CATEGORIES.FLASHING, "ExitDfu", null);
                 try {
-                    console.log("Closing DFU");
+                    console.log(`${self.logHead} Closing DFU`);
                     DFU.requestPermission().then((device) => {
                         DFU.connect(device.path, self.parsed_hex, { exitDfu: true });
                     });
                 } catch (e) {
-                    console.log(`Exiting DFU failed: ${e.message}`);
+                    console.log(`${self.logHead} Exiting DFU failed: ${e.message}`);
                 }
             }
         });
@@ -1087,47 +1256,53 @@ firmware_flasher.initialize = function (callback) {
             setTimeout(() => detectBoardElement.toggleClass("disabled", false), 2000);
         });
 
-        $("a.flash_firmware").on("click", function () {
-            self.isFlashing = true;
-            GUI.interval_pause("sponsor");
-            const isFlashOnConnect = $("input.flash_on_connect").is(":checked");
-
-            self.enableFlashButton(false);
-            self.enableDfuExitButton(false);
-            self.enableLoadRemoteFileButton(false);
-            self.enableLoadFileButton(false);
-
-            function initiateFlashing() {
-                if (self.developmentFirmwareLoaded && !isFlashOnConnect) {
-                    checkShowAcknowledgementDialog();
-                } else {
-                    startFlashing();
-                }
-            }
-
-            // Backup not available in DFU, manual or virtual mode.
-            // When flash on connect is enabled, the backup dialog is not shown.
-            if (isFlashOnConnect || !(PortHandler.portAvailable || GUI.connect_lock)) {
-                initiateFlashing();
+        function initiateFlashing() {
+            if (self.developmentFirmwareLoaded) {
+                checkShowAcknowledgementDialog();
             } else {
-                GUI.showYesNoDialog({
-                    title: i18n.getMessage("firmwareFlasherRemindBackupTitle"),
-                    text: i18n.getMessage("firmwareFlasherRemindBackup"),
-                    buttonYesText: i18n.getMessage("firmwareFlasherBackup"),
-                    buttonNoText: i18n.getMessage("firmwareFlasherBackupIgnore"),
-                    buttonYesCallback: () => {
-                        // prevent connection while backup is in progress
-                        GUI.connect_lock = true;
-                        AutoBackup.execute(() => {
-                            GUI.connect_lock = false;
-                            initiateFlashing();
-                        });
-                    },
-
-                    buttonNoCallback: initiateFlashing,
-                });
+                startFlashing();
             }
-        });
+        }
+
+        // Backup not available in DFU, manual, virtual mode or when using flash on connect
+
+        function startBackup(callback) {
+            // prevent connection while backup is in progress
+            GUI.connect_lock = true;
+
+            const aborted = function (message) {
+                GUI.connect_lock = false;
+                self.enableFlashButton(true);
+                self.enableLoadRemoteFileButton(true);
+                self.enableLoadFileButton(true);
+                GUI.interval_resume("sponsor");
+                self.flashingMessage(i18n.getMessage(message), self.FLASH_MESSAGE_TYPES.INVALID);
+            };
+
+            const callBackWhenPortAvailable = function () {
+                const startTime = Date.now();
+                const interval = setInterval(() => {
+                    if (PortHandler.portAvailable) {
+                        clearInterval(interval);
+                        callback();
+                    } else if (Date.now() - startTime > 5000) {
+                        clearInterval(interval);
+                        // failed to connect
+                        aborted("portsSelectNone");
+                    }
+                }, 100);
+            };
+
+            AutoBackup.execute((result) => {
+                GUI.connect_lock = false;
+                if (result) {
+                    // wait for the port to be available again - timeout after 5 seconds
+                    callBackWhenPortAvailable();
+                } else {
+                    aborted("firmwareFlasherCanceledBackup");
+                }
+            });
+        }
 
         function checkShowAcknowledgementDialog() {
             const DAY_MS = 86400 * 1000;
@@ -1194,14 +1369,14 @@ firmware_flasher.initialize = function (callback) {
                             if (configInserter.insertConfig(self.parsed_hex, self.config)) {
                                 self.parsed_hex.configInserted = true;
                             } else {
-                                console.log("Firmware does not support custom defaults.");
+                                console.log(`${self.logHead} Firmware does not support custom defaults.`);
                                 clearBoardConfig();
                             }
                         }
 
-                        flashFirmware(self.parsed_hex);
+                        flashHexFirmware(self.parsed_hex);
                     } catch (e) {
-                        console.log(`Flashing failed: ${e.message}`);
+                        console.log(`${self.logHead} Flashing failed: ${e.message}`);
                     }
                     // Disable flash on connect after flashing to prevent continuous flashing
                     $("input.flash_on_connect").prop("checked", false).change();
@@ -1214,22 +1389,82 @@ firmware_flasher.initialize = function (callback) {
             }
         }
 
-        $("span.progressLabel").on("click", "a.save_firmware", function () {
-            FileSystem.pickSaveFile(
-                self.targetDetail.file,
-                i18n.getMessage("fileSystemPickerFiles", { typeof: "HEX" }),
-                ".hex",
-            )
-                .then((file) => {
-                    console.log("Saving firmware to:", file.name);
-                    FileSystem.writeFile(file, self.intel_hex);
+        $("a.flash_firmware").on("click", async function () {
+            if (GUI.connect_lock) {
+                return;
+            }
 
-                    tracking.sendEvent(tracking.EVENT_CATEGORIES.FLASHING, "SaveFirmware");
-                })
-                .catch((error) => {
-                    console.error("Error saving file:", error);
+            // Preserve current firmware message state before flashing
+            self.preservePreFlashingState();
+
+            GUI.interval_pause("sponsor");
+
+            self.enableFlashButton(false);
+            self.enableDfuExitButton(false);
+            self.enableLoadRemoteFileButton(false);
+            self.enableLoadFileButton(false);
+
+            if (self.firmware_type === "UF2") {
+                // due to save dialoque security requirements
+                // we need to do this within proximity to the
+                // user action hence here.
+
+                tracking.sendEvent(tracking.EVENT_CATEGORIES.FLASHING, "UF2 Flashing", {
+                    filename: self.filename || null,
                 });
+                const saved = await saveFirmware();
+                self.flashingMessage(
+                    saved
+                        ? i18n.getMessage("firmwareFlasherUF2SaveSuccess")
+                        : i18n.getMessage("firmwareFlasherUF2SaveFailed"),
+                    saved ? self.FLASH_MESSAGE_TYPES.VALID : self.FLASH_MESSAGE_TYPES.INVALID,
+                );
+                GUI.interval_resume("sponsor");
+                self.enableFlashButton(true);
+                self.enableLoadRemoteFileButton(true);
+                self.enableLoadFileButton(true);
+                self.enableDfuExitButton(PortHandler.dfuAvailable);
+                return;
+            }
+
+            const isFlashOnConnect = $("input.flash_on_connect").is(":checked");
+
+            if (isFlashOnConnect || !PortHandler.portAvailable) {
+                startFlashing();
+                return;
+            }
+
+            // backupOnFlash:
+            // 0: disabled (default)
+            // 1: backup without dialog
+            // 2: backup with dialog
+
+            const backupOnFlash = getConfig("backupOnFlash", 1).backupOnFlash;
+
+            switch (backupOnFlash) {
+                case 1:
+                    // prevent connection while backup is in progress
+                    startBackup(initiateFlashing);
+                    break;
+                case 2:
+                    GUI.showYesNoDialog({
+                        title: i18n.getMessage("firmwareFlasherRemindBackupTitle"),
+                        text: i18n.getMessage("firmwareFlasherRemindBackup"),
+                        buttonYesText: i18n.getMessage("firmwareFlasherBackup"),
+                        buttonNoText: i18n.getMessage("firmwareFlasherBackupIgnore"),
+                        buttonYesCallback: () => {
+                            startBackup(initiateFlashing);
+                        },
+                        buttonNoCallback: initiateFlashing,
+                    });
+                    break;
+                default:
+                    initiateFlashing();
+                    break;
+            }
         });
+
+        $("span.progressLabel").on("click", "a.save_firmware", saveFirmware);
 
         self.flashingMessage(i18n.getMessage("firmwareFlasherLoadFirmwareFile"), self.FLASH_MESSAGE_TYPES.NEUTRAL);
 
@@ -1240,10 +1475,8 @@ firmware_flasher.initialize = function (callback) {
         GUI.content_ready(callback);
     }
 
-    self.buildApi.loadTargets(() => {
-        console.log("Targets loaded");
-        $("#content").load("./tabs/firmware_flasher.html", onDocumentLoad);
-    });
+    console.log(`${self.logHead} Targets loaded`);
+    $("#content").load("./tabs/firmware_flasher.html", onDocumentLoad);
 };
 
 // Helper functions
@@ -1262,7 +1495,7 @@ firmware_flasher.cleanup = function (callback) {
 
 firmware_flasher.enableCancelBuildButton = function (enabled) {
     $("a.cloud_build_cancel").toggleClass("disabled", !enabled);
-    self.cancelBuild = false; // remove the semaphore
+    firmware_flasher.cancelBuild = false; // remove the semaphore
 };
 
 firmware_flasher.enableFlashButton = function (enabled) {
@@ -1279,6 +1512,42 @@ firmware_flasher.enableLoadFileButton = function (enabled) {
 
 firmware_flasher.enableDfuExitButton = function (enabled) {
     $("a.exit_dfu").toggleClass("disabled", !enabled);
+};
+
+firmware_flasher.resetFlashingState = function () {
+    console.log(`${this.logHead} Reset flashing state`);
+    this.enableFlashButton(!!this.parsed_hex || !!this.uf2_binary); // Only enable if firmware is loaded
+    this.enableDfuExitButton(PortHandler.dfuAvailable);
+    this.enableLoadRemoteFileButton(true);
+    this.enableLoadFileButton(true);
+
+    // Restore pre-flashing message if firmware is still loaded, otherwise show "not loaded"
+    if (this.parsed_hex || this.uf2_binary) {
+        if (this.preFlashingMessage && this.preFlashingMessageType) {
+            this.flashingMessage(this.preFlashingMessage, this.preFlashingMessageType);
+        }
+    } else {
+        this.flashingMessage(i18n.getMessage("firmwareFlasherFirmwareNotLoaded"), this.FLASH_MESSAGE_TYPES.NEUTRAL);
+    }
+
+    GUI.interval_resume("sponsor");
+};
+
+firmware_flasher.preservePreFlashingState = function () {
+    // Preserve the current firmware message and type before flashing starts
+    const progressLabel = $("span.progressLabel");
+    this.preFlashingMessage = progressLabel.html();
+
+    // Determine the current message type based on CSS classes
+    if (progressLabel.hasClass("valid")) {
+        this.preFlashingMessageType = this.FLASH_MESSAGE_TYPES.VALID;
+    } else if (progressLabel.hasClass("invalid")) {
+        this.preFlashingMessageType = this.FLASH_MESSAGE_TYPES.INVALID;
+    } else if (progressLabel.hasClass("actionRequired")) {
+        this.preFlashingMessageType = this.FLASH_MESSAGE_TYPES.ACTION;
+    } else {
+        this.preFlashingMessageType = this.FLASH_MESSAGE_TYPES.NEUTRAL;
+    }
 };
 
 firmware_flasher.refresh = function (callback) {

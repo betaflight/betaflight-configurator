@@ -1,0 +1,98 @@
+name: 'Deployment (PR and Push)'
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+    branches:
+      - master
+      - '*-maintenance'
+  push:
+    branches:
+      - master
+      - release
+      - '*-maintenance'
+
+jobs:
+  # Job 1: Build the code (no secrets here)
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false  # Don't persist GitHub token
+
+      - name: Cache node_modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules/
+          key: node_modules-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
+
+      - name: Install node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version-file: '.nvmrc'
+
+      - run: npm install yarn -g
+      - run: yarn install
+      - run: yarn build
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-files
+          path: src/dist
+
+  # Job 2: Deploy with secrets (no PR code checkout)
+  deploy:
+    needs: build  # Wait for build job to complete
+    permissions:
+      actions: read
+      contents: read
+      deployments: write
+      issues: write
+      pull-requests: write
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ github.ref_name }}
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v5
+        with:
+          name: dist-files
+          path: src/dist
+
+      - name: Set short git commit SHA
+        id: vars
+        run: |
+          calculatedSha=$(echo ${{ github.event.pull_request.head.sha }} | head -c 8)
+          echo "COMMIT_SHORT_SHA=$calculatedSha" >> $GITHUB_ENV
+
+      - name: Set alias branch name for Cloudflare (if a push)
+        id: branch_push
+        if: github.event_name == 'push'
+        run: |
+          echo "BRANCH=${{ github.ref_name }}" >> $GITHUB_ENV
+
+      - name: Set alias branch name for Cloudflare (if a pull_request)
+        id: branch_pull
+        if: github.event_name == 'pull_request_target' || github.event_name == 'pull_request'
+        run: |
+          echo "BRANCH=PR${{ github.event.pull_request.number }}" >> $GITHUB_ENV
+
+      - name: Deploy to Cloudflare
+        id: deploy
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy src/dist --project-name=${{ vars.CLOUDFLARE_PROJECT_NAME }} --branch=${{ env.BRANCH }} --commit-dirty=true
+
+      - name: Add deployment comment
+        if: github.event_name == 'pull_request_target' || github.event_name == 'pull_request'
+        uses: thollander/actions-comment-pull-request@v3
+        with:
+          message: |
+             Preview URL: ${{ steps.deploy.outputs.pages-deployment-alias-url }}
+          comment-tag: 'Preview URL'
+          mode: recreate

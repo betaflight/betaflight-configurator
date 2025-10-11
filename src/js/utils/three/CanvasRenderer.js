@@ -551,7 +551,7 @@ class CanvasRenderer {
                             );
                             grad.addColorStop(0, colorStyle1);
                             grad.addColorStop(1, colorStyle2);
-                        } catch (exception) {
+                        } catch {
                             grad = colorStyle1;
                         }
 

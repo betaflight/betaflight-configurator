@@ -2,7 +2,6 @@ import GUI from "./gui";
 import CONFIGURATOR from "./data_storage";
 import FC from "./fc";
 import semver from "semver";
-import { tracking } from "./Analytics";
 import $ from "jquery";
 
 /**
@@ -59,8 +58,6 @@ CliAutoComplete.setEnabled = function (enable) {
 };
 
 CliAutoComplete.initialize = function ($textarea, sendLine, writeToOutput) {
-    tracking.sendEvent(tracking.EVENT_CATEGORIES.APPLICATION, "CliAutoComplete", { configEnabled: this.configEnabled });
-
     this.$textarea = $textarea;
     this.forceOpen = false;
     this.sendLine = sendLine;
@@ -306,27 +303,44 @@ CliAutoComplete._initTextcomplete = function () {
             const textCompleteDropDownElement = $(".textcomplete-dropdown");
 
             if (!savedMouseoverItemHandler) {
-                // save the original 'mouseover' handeler
+                // save the original 'mouseover' handler
                 try {
-                    savedMouseoverItemHandler = $._data(textCompleteDropDownElement[0], "events").mouseover[0].handler;
+                    const textCompleteElement = textCompleteDropDownElement[0];
+                    if (textCompleteElement && $._data) {
+                        const events = $._data(textCompleteElement, "events");
+                        if (events?.mouseover?.length > 0) {
+                            savedMouseoverItemHandler = events.mouseover[0].handler;
+                        }
+                    }
                 } catch (error) {
-                    console.log(error);
+                    console.warn("Failed to retrieve mouseover handler:", error);
+                    savedMouseoverItemHandler = null;
                 }
 
-                if (savedMouseoverItemHandler) {
+                if (savedMouseoverItemHandler && typeof savedMouseoverItemHandler === "function") {
                     textCompleteDropDownElement
                         .off("mouseover") // initially disable it
                         .off("mousemove") // avoid `mousemove` accumulation if previous show did not trigger `mousemove`
                         .on("mousemove", ".textcomplete-item", function (e) {
-                            // the mouse has moved so reenable `mouseover`
-                            $(this)
-                                .parent()
-                                .off("mousemove")
-                                .on("mouseover", ".textcomplete-item", savedMouseoverItemHandler);
+                            try {
+                                // the mouse has moved so reenable `mouseover`
+                                const $parent = $(this).parent();
+                                if ($parent.length > 0) {
+                                    $parent
+                                        .off("mousemove")
+                                        .on("mouseover", ".textcomplete-item", savedMouseoverItemHandler);
 
-                            // trigger the mouseover handler to select the item under the cursor
-                            savedMouseoverItemHandler(e);
+                                    // trigger the mouseover handler to select the item under the cursor
+                                    if (typeof savedMouseoverItemHandler === "function") {
+                                        savedMouseoverItemHandler.call(this, e);
+                                    }
+                                }
+                            } catch (error) {
+                                console.warn("Error in mousemove handler:", error);
+                            }
                         });
+                } else {
+                    console.warn("No valid mouseover handler found for textcomplete dropdown");
                 }
             }
         });

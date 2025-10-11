@@ -3,7 +3,7 @@ import FC from "./fc";
 import MSPCodes from "./msp/MSPCodes";
 import semver from "semver";
 import { API_VERSION_1_47 } from "./data_storage";
-import { isExpertModeEnabled } from "./utils/isExportModeEnabled";
+import { isExpertModeEnabled } from "./utils/isExpertModeEnabled";
 import { mspHelper } from "./msp/MSPHelper";
 import $ from "jquery";
 
@@ -46,8 +46,6 @@ const TuningSliders = {
 
     expertMode: false,
 };
-
-const D_MAX_RATIO = 0.85;
 
 TuningSliders.initialize = function () {
     this.PID_DEFAULT = FC.getPidDefaults();
@@ -441,7 +439,7 @@ TuningSliders.updateFormPids = function (updateSlidersOnly = false) {
     this.updateSlidersWarning();
 };
 
-TuningSliders.calculateNewPids = function (updateSlidersOnly = false) {
+TuningSliders.calculateNewPids = function () {
     // this is the main calculation for PID sliders, inputs are in form of slider position values
     // values get set both into forms and their respective variables
     FC.TUNING_SLIDERS.slider_pids_mode = this.sliderPidsMode;

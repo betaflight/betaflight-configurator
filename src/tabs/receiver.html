@@ -191,8 +191,8 @@
                             </td>
                             <td colspan="2">
                                 <div>
-                                    <label class="rcSmoothingMode">
-                                        <span i18n="receiverRcSmoothingMode"></span>
+                                    <label>
+                                        <span i18n="receiverRcSmoothing"></span>
                                     </label>
                                 </div>
                             </td>
@@ -216,7 +216,7 @@
                             </td>
                         </tr>
                         <tr class="rcSmoothing-setpoint-manual">
-                            <td class="rcSmoothing-setpoint-cutoff"><input type="number" name="rcSmoothingSetpointHz-number" step="1" min="1" max="255"/></td>
+                            <td class="rcSmoothing-setpoint-cutoff"><input type="number" name="rcSmoothingSetpointHz-number" step="1" min="0" max="255"/></td>
                             <td class="rcSmoothing-setpoint-cutoff" colspan="2">
                                 <div>
                                     <label>
@@ -226,6 +226,69 @@
                                 </div>
                             </td>
                         </tr>
+
+                        <tr class="rcSmoothing-auto-factor">
+                            <td>
+                                <input type="number" name="rcSmoothingAutoFactor-number" step="1" min="0" max="250">
+                            </td>
+                            <td>
+                                <div>
+                                    <label>
+                                        <span i18n="receiverRcSmoothingAutoFactor"></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="helpicon cf_tip receiverRcSmoothingAutoFactorHelp" i18n_title="receiverRcSmoothingAutoFactorHelp"></div>
+                            </td>
+                        </tr>
+
+                        <tr class="rcSmoothing-throttle-manual">
+                            <td>
+                                <select name="rcSmoothing-throttle-manual-select">
+                                    <option value="0" i18n="receiverRcSmoothingAuto"></option>
+                                    <option value="1" i18n="receiverRcSmoothingManual"></option>
+                                </select>
+                            </td>
+                            <td>
+                                <div>
+                                    <label>
+                                        <span i18n="receiverThrottleTypeSelect"></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="helpicon cf_tip" i18n_title="receiverRcSmoothingThrottleManual"></div>
+                            </td>
+                        </tr>
+                        <tr class="rcSmoothing-throttle-manual">
+                            <td class="rcSmoothing-throttle-cutoff"><input type="number" name="rcSmoothingThrottleCutoffHz-number" step="1" min="0" max="255"/></td>
+                            <td class="rcSmoothing-throttle-cutoff" colspan="2">
+                                <div>
+                                    <label>
+                                        <span i18n="receiverRcSmoothingThrottleCutoffHz"></span>
+                                    </label>
+                                    <div class="helpicon cf_tip" i18n_title="rcSmoothingThrottleCutoffHelp"></div>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr class="rcSmoothing-auto-factor-throttle">
+                            <td>
+                                <input type="number" name="rcSmoothingAutoFactorThrottle-number" step="1" min="0" max="250">
+                            </td>
+                            <td>
+                                <div>
+                                    <label>
+                                        <span i18n="receiverRcSmoothingAutoFactorThrottle"></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="helpicon cf_tip receiverRcSmoothingAutoFactorThrottleHelp" i18n_title="receiverRcSmoothingAutoFactorThrottleHelp"></div>
+                            </td>
+                        </tr>
+
                         <tr class="rcSmoothing-feedforward-manual">
                             <td>
                                 <select name="rcSmoothing-feedforward-select">
@@ -253,21 +316,6 @@
                                     </label>
                                     <div class="helpicon cf_tip" i18n_title="rcSmoothingFeedforwardCutoffHelp"></div>
                                 </div>
-                            </td>
-                        </tr>
-                        <tr class="rcSmoothing-auto-factor">
-                            <td>
-                                <input type="number" name="rcSmoothingAutoFactor-number" step="1" min="0" max="250">
-                            </td>
-                            <td>
-                                <div>
-                                    <label>
-                                        <span i18n="receiverRcSmoothingAutoFactor"></span>
-                                    </label>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="helpicon cf_tip receiverRcSmoothingAutoFactorHelp" i18n_title="receiverRcSmoothingAutoFactorHelp"></div>
                             </td>
                         </tr>
                     </table>

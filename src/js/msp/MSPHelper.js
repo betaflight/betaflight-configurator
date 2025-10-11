@@ -309,8 +309,8 @@ MspHelper.prototype.process_data = function (dataHandler) {
                 case MSPCodes.MSP_RAW_GPS:
                     FC.GPS_DATA.fix = data.readU8();
                     FC.GPS_DATA.numSat = data.readU8();
-                    FC.GPS_DATA.lat = data.read32();
-                    FC.GPS_DATA.lon = data.read32();
+                    FC.GPS_DATA.latitude = data.read32();
+                    FC.GPS_DATA.longitude = data.read32();
                     FC.GPS_DATA.alt = data.readU16();
                     FC.GPS_DATA.speed = data.readU16();
                     FC.GPS_DATA.ground_course = data.readU16();
@@ -466,6 +466,9 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     FC.RC_TUNING.pitch_rate_limit = data.readU16();
                     FC.RC_TUNING.yaw_rate_limit = data.readU16();
                     FC.RC_TUNING.rates_type = data.readU8();
+                    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+                        FC.RC_TUNING.throttle_HOVER = parseFloat((data.readU8() / 100).toFixed(2));
+                    }
                     break;
                 case MSPCodes.MSP_PID:
                     // PID data arrived, we need to scale it and save to appropriate bank / array
@@ -635,18 +638,18 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     FC.SENSOR_ALIGNMENT.align_acc = data.readU8();
                     FC.SENSOR_ALIGNMENT.align_mag = data.readU8();
                     FC.SENSOR_ALIGNMENT.gyro_detection_flags = data.readU8();
-                    FC.SENSOR_ALIGNMENT.gyro_to_use = data.readU8();
-                    FC.SENSOR_ALIGNMENT.gyro_1_align = data.readU8();
-                    FC.SENSOR_ALIGNMENT.gyro_2_align = data.readU8();
-                    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
-                        FC.SENSOR_ALIGNMENT.gyro_align_roll = data.read16() / 10;
-                        FC.SENSOR_ALIGNMENT.gyro_align_pitch = data.read16() / 10;
-                        FC.SENSOR_ALIGNMENT.gyro_align_yaw = data.read16() / 10;
 
+                    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+                        FC.SENSOR_ALIGNMENT.gyro_enable_mask = data.readU8(); // replacing gyro_to_use
                         FC.SENSOR_ALIGNMENT.mag_align_roll = data.read16() / 10;
                         FC.SENSOR_ALIGNMENT.mag_align_pitch = data.read16() / 10;
                         FC.SENSOR_ALIGNMENT.mag_align_yaw = data.read16() / 10;
+                    } else {
+                        FC.SENSOR_ALIGNMENT.gyro_to_use = data.readU8();
+                        FC.SENSOR_ALIGNMENT.gyro_1_align = data.readU8();
+                        FC.SENSOR_ALIGNMENT.gyro_2_align = data.readU8();
                     }
+
                     break;
                 case MSPCodes.MSP_DISPLAYPORT:
                     break;
@@ -795,9 +798,19 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     FC.CONFIG.flightControllerIdentifier = fcVariantIdentifier;
                     break;
 
-                case MSPCodes.MSP_FC_VERSION:
-                    FC.CONFIG.flightControllerVersion = `${data.readU8()}.${data.readU8()}.${data.readU8()}`;
+                case MSPCodes.MSP_FC_VERSION: {
+                    const major = data.readU8();
+                    if (major < 10) {
+                        // use the old method (the 3 bytes)
+                        FC.CONFIG.flightControllerVersion = `${major}.${data.readU8()}.${data.readU8()}`;
+                    } else {
+                        // discard the next two bytes
+                        data.readU16();
+                        // the version is the text that follows
+                        FC.CONFIG.flightControllerVersion = this.getText(data);
+                    }
                     break;
+                }
 
                 case MSPCodes.MSP_BUILD_INFO: {
                     const dateLength = 11;
@@ -824,11 +837,13 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     console.log("Fw git rev:", FC.CONFIG.gitRevision);
 
                     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
-                        let option = data.readU16();
-                        while (option) {
+                        FC.CONFIG.buildOptions = [];
+                        let option;
+                        while ((option = data.readU16())) {
                             FC.CONFIG.buildOptions.push(option);
-                            option = data.readU16();
                         }
+                        // Humanize the build options
+                        FC.processBuildOptions();
                     }
 
                     break;
@@ -1031,12 +1046,17 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     data.readU8(); // was FC.RX_CONFIG.rcInterpolationChannels
                     data.readU8(); // was FC.RX_CONFIG.rcSmoothingType
                     FC.RX_CONFIG.rcSmoothingSetpointCutoff = data.readU8();
-                    FC.RX_CONFIG.rcSmoothingFeedforwardCutoff = data.readU8();
-                    data.readU8(); // was FC.RX_CONFIG.rcSmoothingInputType
+                    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+                        FC.RX_CONFIG.rcSmoothingThrottleCutoff = data.readU8();
+                        FC.RX_CONFIG.rcSmoothingAutoFactorThrottle = data.readU8();
+                    } else {
+                        FC.RX_CONFIG.rcSmoothingFeedforwardCutoff = data.readU8(); // deprecated in 1.47
+                        data.readU8(); // was FC.RX_CONFIG.rcSmoothingDerivativeCutoff
+                    }
                     data.readU8(); // was FC.RX_CONFIG.rcSmoothingDerivativeType
                     FC.RX_CONFIG.usbCdcHidType = data.readU8();
                     FC.RX_CONFIG.rcSmoothingAutoFactor = data.readU8();
-                    FC.RX_CONFIG.rcSmoothingMode = data.readU8();
+                    FC.RX_CONFIG.rcSmoothing = data.readU8();
 
                     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
                         const elrsUidLength = 6;
@@ -1234,6 +1254,14 @@ MspHelper.prototype.process_data = function (dataHandler) {
                             id: data.readU8(),
                             name: self.getText(data),
                         };
+                    }
+                    break;
+                case MSPCodes.MSP2_GYRO_SENSOR:
+                    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+                        FC.GYRO_SENSOR.gyro_count = data.readU8();
+                        for (let i = 0; i < FC.GYRO_SENSOR.gyro_count; i++) {
+                            FC.GYRO_SENSOR.gyro_hardware[i] = data.readU8();
+                        }
                     }
                     break;
 
@@ -1745,14 +1773,13 @@ MspHelper.prototype.process_data = function (dataHandler) {
         if (dataHandler.callbacks[i]?.code === code) {
             // save callback reference
             const callback = dataHandler.callbacks[i].callback;
-            const callbackOnError = dataHandler.callbacks[i].callbackOnError;
 
             // remove timeout
-            clearInterval(dataHandler.callbacks[i].timer);
+            clearTimeout(dataHandler.callbacks[i].timer);
 
             // remove object from array
             dataHandler.callbacks.splice(i, 1);
-            if (!crcError || callbackOnError) {
+            if (!crcError) {
                 // fire callback
                 if (callback) {
                     callback({ command: code, data: data, length: data.byteLength, crcError: crcError });
@@ -1837,6 +1864,11 @@ MspHelper.prototype.crunch = function (code, modifierCode = undefined) {
 
             // Introduced in 1.43
             buffer.push8(FC.RC_TUNING.rates_type);
+
+            // Introduced in 1.47
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+                buffer.push8(Math.round(FC.RC_TUNING.throttle_HOVER * 100));
+            }
             break;
         case MSPCodes.MSP_SET_RX_MAP:
             for (let i = 0; i < FC.RC_MAP.length; i++) {
@@ -1966,16 +1998,21 @@ MspHelper.prototype.crunch = function (code, modifierCode = undefined) {
                 .push8(FC.RX_CONFIG.fpvCamAngleDegrees)
                 .push8(FC.RX_CONFIG.rcInterpolationChannels)
                 .push8(FC.RX_CONFIG.rcSmoothingType)
-                .push8(FC.RX_CONFIG.rcSmoothingSetpointCutoff)
-                .push8(FC.RX_CONFIG.rcSmoothingFeedforwardCutoff)
-                .push8(FC.RX_CONFIG.rcSmoothingInputType)
-                .push8(FC.RX_CONFIG.rcSmoothingDerivativeType);
+                .push8(FC.RX_CONFIG.rcSmoothingSetpointCutoff);
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+                buffer.push8(FC.RX_CONFIG.rcSmoothingThrottleCutoff);
+                buffer.push8(FC.RX_CONFIG.rcSmoothingAutoFactorThrottle);
+            } else {
+                buffer.push8(FC.RX_CONFIG.rcSmoothingFeedforwardCutoff);
+                buffer.push8(FC.RX_CONFIG.rcSmoothingInputType);
+            }
+            buffer.push8(FC.RX_CONFIG.rcSmoothingDerivativeType);
 
             // Introduced in 1.42
             buffer.push8(FC.RX_CONFIG.usbCdcHidType).push8(FC.RX_CONFIG.rcSmoothingAutoFactor);
 
             // Introduced in 1.44
-            buffer.push8(FC.RX_CONFIG.rcSmoothingMode);
+            buffer.push8(FC.RX_CONFIG.rcSmoothing);
 
             // Introduced in 1.45
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
@@ -2069,19 +2106,21 @@ MspHelper.prototype.crunch = function (code, modifierCode = undefined) {
             buffer
                 .push8(FC.SENSOR_ALIGNMENT.align_gyro)
                 .push8(FC.SENSOR_ALIGNMENT.align_acc)
-                .push8(FC.SENSOR_ALIGNMENT.align_mag)
-                .push8(FC.SENSOR_ALIGNMENT.gyro_to_use)
-                .push8(FC.SENSOR_ALIGNMENT.gyro_1_align)
-                .push8(FC.SENSOR_ALIGNMENT.gyro_2_align);
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
-                buffer.push16(FC.SENSOR_ALIGNMENT.gyro_align_roll * 10);
-                buffer.push16(FC.SENSOR_ALIGNMENT.gyro_align_pitch * 10);
-                buffer.push16(FC.SENSOR_ALIGNMENT.gyro_align_yaw * 10);
+                .push8(FC.SENSOR_ALIGNMENT.align_mag);
 
-                buffer.push16(FC.SENSOR_ALIGNMENT.mag_align_roll * 10);
-                buffer.push16(FC.SENSOR_ALIGNMENT.mag_align_pitch * 10);
-                buffer.push16(FC.SENSOR_ALIGNMENT.mag_align_yaw * 10);
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+                buffer
+                    .push8(FC.SENSOR_ALIGNMENT.gyro_enable_mask) // replacing gyro_to_use
+                    .push16(FC.SENSOR_ALIGNMENT.mag_align_roll * 10)
+                    .push16(FC.SENSOR_ALIGNMENT.mag_align_pitch * 10)
+                    .push16(FC.SENSOR_ALIGNMENT.mag_align_yaw * 10);
+            } else {
+                buffer
+                    .push8(FC.SENSOR_ALIGNMENT.gyro_to_use)
+                    .push8(FC.SENSOR_ALIGNMENT.gyro_1_align)
+                    .push8(FC.SENSOR_ALIGNMENT.gyro_2_align);
             }
+
             break;
         case MSPCodes.MSP_SET_ADVANCED_CONFIG:
             buffer
@@ -2901,7 +2940,7 @@ MspHelper.prototype.writeConfiguration = function (reboot, callback) {
             console.log("Configuration saved to EEPROM");
             if (reboot) {
                 GUI.tab_switch_cleanup(function () {
-                    return reinitializeConnection(callback);
+                    return reinitializeConnection();
                 });
             }
             if (callback) {

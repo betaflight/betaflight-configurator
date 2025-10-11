@@ -4,7 +4,6 @@ import { get as getConfig, set as setConfig } from "../ConfigStorage";
 import PortHandler from "../port_handler";
 import CliAutoComplete from "../CliAutoComplete";
 import DarkTheme, { setDarkTheme } from "../DarkTheme";
-import { checkForConfiguratorUpdates } from "../utils/checkForConfiguratorUpdates";
 import { checkSetupAnalytics } from "../Analytics";
 import $ from "jquery";
 import NotificationManager from "../utils/notifications";
@@ -20,20 +19,20 @@ options.initialize = function (callback) {
         i18n.localizePage();
 
         TABS.options.initRememberLastTab();
-        TABS.options.initCheckForConfiguratorUnstableVersions();
         TABS.options.initAnalyticsOptOut();
         TABS.options.initCliAutoComplete();
         TABS.options.initShowAllSerialDevices();
         TABS.options.initShowVirtualMode();
         TABS.options.initUseManualConnection();
         TABS.options.initLegacyRendering3DModel();
-        TABS.options.initCordovaForceComputerUI();
         TABS.options.initDarkTheme();
         TABS.options.initShowDevToolsOnStartup();
         TABS.options.initShowNotifications();
         TABS.options.initUserLanguage();
         TABS.options.initShowWarnings();
         TABS.options.initMeteredConnection();
+        TABS.options.initBackupOnFlash();
+        TABS.options.initCLiOnlyMode();
 
         GUI.content_ready(callback);
     });
@@ -69,21 +68,6 @@ options.initRememberLastTab = function () {
         .change();
 };
 
-options.initCheckForConfiguratorUnstableVersions = function () {
-    const result = getConfig("checkForConfiguratorUnstableVersions");
-    if (result.checkForConfiguratorUnstableVersions) {
-        $("div.checkForConfiguratorUnstableVersions input").prop("checked", true);
-    }
-
-    $("div.checkForConfiguratorUnstableVersions input").change(function () {
-        const checked = $(this).is(":checked");
-
-        setConfig({ checkForConfiguratorUnstableVersions: checked });
-
-        checkForConfiguratorUpdates();
-    });
-};
-
 options.initAnalyticsOptOut = function () {
     const result = getConfig("analyticsOptOut");
     if (result.analyticsOptOut) {
@@ -97,15 +81,7 @@ options.initAnalyticsOptOut = function () {
             setConfig({ analyticsOptOut: checked });
 
             checkSetupAnalytics(function (analyticsService) {
-                if (checked) {
-                    analyticsService.sendEvent(analyticsService.EVENT_CATEGORIES.APPLICATION, "OptOut");
-                }
-
                 analyticsService.setOptOut(checked);
-
-                if (!checked) {
-                    analyticsService.sendEvent(analyticsService.EVENT_CATEGORIES.APPLICATION, "OptIn");
-                }
             });
         })
         .change();
@@ -162,10 +138,6 @@ options.initUseManualConnection = function () {
         setConfig({ showManualMode: checked });
         PortHandler.setShowManualMode(checked);
     });
-};
-
-options.initCordovaForceComputerUI = function () {
-    $("div.cordovaForceComputerUI").hide();
 };
 
 options.initLegacyRendering3DModel = function () {
@@ -256,6 +228,19 @@ options.initMeteredConnection = function () {
         .trigger("change");
 };
 
+options.initBackupOnFlash = function () {
+    // default to always backup on flash
+    const result = getConfig("backupOnFlash", 1);
+    $("#backupOnFlashSelect").val(result.backupOnFlash);
+    $("#backupOnFlashSelect")
+        .on("change", function () {
+            const value = parseInt($(this).val());
+
+            setConfig({ backupOnFlash: value });
+        })
+        .trigger("change");
+};
+
 options.initUserLanguage = function () {
     const userLanguage = i18n.selectedLanguage;
     const userLanguageElement = $("#userLanguage");
@@ -275,6 +260,17 @@ options.initUserLanguage = function () {
             i18n.localizePage();
         })
         .trigger("change");
+};
+
+options.initCLiOnlyMode = function () {
+    const cliOnlyModeElement = $("div.cliOnlyMode input");
+    const result = getConfig("cliOnlyMode", false);
+    cliOnlyModeElement.prop("checked", !!result.cliOnlyMode).on("change", () => {
+        const checked = cliOnlyModeElement.is(":checked");
+        setConfig({ cliOnlyMode: checked });
+    });
+    // Trigger change to ensure the initial state is set correctly
+    cliOnlyModeElement.trigger("change");
 };
 
 // TODO: remove when modules are in place

@@ -3,8 +3,8 @@
 <head>
     <meta name="viewport" content="width=device-width,initial-scale=1">
 
-    <script type="module" src="/src/js/utils/common.js"></script>
-    <script type="module" src="/src/js/browserMain.js"></script>
+    <script type="module" src="/src/js/utils/common.js?v=${Date.now()}"></script>
+    <script type="module" src="/src/js/browserMain.js?v=${Date.now()}"></script>
 
     <title>Betaflight</title>
     <meta name="description" content="Configuration and management tool for the Betaflight flight control firmware">
@@ -33,6 +33,9 @@
             :connected-usb-devices="PortHandler.currentUsbPorts"
             :show-virtual-option="PortHandler.showVirtualMode"
             :show-manual-option="PortHandler.showManualMode"
+            :show-bluetooth-option="PortHandler.showBluetoothOption"
+            :show-serial-option="PortHandler.showSerialOption"
+            :show-usb-option="PortHandler.showUsbOption"
             :disabled="PortHandler.portPickerDisabled"
         ></port-picker>
         <div class="header-wrapper">
@@ -91,22 +94,18 @@
                 </div>
             </div>
         </div>
-        <div id="header_btns">
-            <div class="open_firmware_flasher" id="flashbutton">
-                <div class="firmware_b">
-                    <a class="flash disabled" href="#"></a>
-                </div>
-                <div class="flash_state" i18n="flashTab"></div>
+        <div id="header_buttons">
+            <div class="firmware_flasher_button">
+                <a class="firmware_flasher_button__link disabled" href="#"></a>
+                <div class="firmware_flasher_button__label" i18n="flashTab"></div>
             </div>
-            <div class="connect_controls" id="connectbutton">
-                <div class="connect_b">
-                    <a class="connect disabled" href="#"></a>
-                </div>
-                <div class="connect_state" i18n="connect"></div>
+            <div class="connection_button">
+                <a class="connection_button__link disabled" href="#"></a>
+                <div class="connection_button__label" i18n="connect"></div>
             </div>
         </div>
         <div id="reveal_btn">
-            <em class="fas fa-ellipsis-v"></em>
+            <em class="fas fa-chevron-down"></em>
         </div>
     </div>
     <div id="log">
@@ -171,6 +170,7 @@
     <status-bar
             :port-usage-down="PortUsage.port_usage_down"
             :port-usage-up="PortUsage.port_usage_up"
+            :connection-timestamp="CONNECTION.timestamp"
             :packet-error="MSP.packet_error"
             :i2c-error="FC.CONFIG.i2cError"
             :cycle-time="FC.CONFIG.cycleTime"

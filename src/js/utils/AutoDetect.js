@@ -8,7 +8,7 @@ import MSP from "../msp";
 import MSPCodes from "../msp/MSPCodes";
 import semver from "semver";
 import { API_VERSION_1_45, API_VERSION_1_46 } from "../data_storage";
-import serial from "../webSerial";
+import { serial } from "../serial";
 
 /**
  *
@@ -18,22 +18,31 @@ import serial from "../webSerial";
 
 let mspHelper = null;
 
-function readSerialAdapter(event) {
-    MSP.read(event.detail.buffer);
-}
-
 class AutoDetect {
     constructor() {
         this.board = FC.CONFIG.boardName;
         this.targetAvailable = false;
+
+        // Store bound event handlers to make removal more reliable
+        this.boundHandleConnect = this.handleConnect.bind(this);
+        this.boundHandleDisconnect = this.handleDisconnect.bind(this);
+        this.boundHandleSerialReceive = this.handleSerialReceive.bind(this);
+    }
+
+    handleSerialReceive(event) {
+        MSP.read(event.detail);
     }
 
     verifyBoard() {
         const port = PortHandler.portPicker.selectedPort;
         const isLoaded = TABS.firmware_flasher.targets ? Object.keys(TABS.firmware_flasher.targets).length > 0 : false;
 
+        if (!PortHandler.portAvailable) {
+            gui_log(i18n.getMessage("firmwareFlasherNoValidPort"));
+            return;
+        }
+
         if (!isLoaded) {
-            console.log("Releases not loaded yet");
             gui_log(i18n.getMessage("firmwareFlasherNoTargetsLoaded"));
             return;
         }
@@ -51,11 +60,15 @@ class AutoDetect {
 
         gui_log(i18n.getMessage("firmwareFlasherDetectBoardQuery"));
 
-        serial.addEventListener("connect", this.handleConnect.bind(this), { once: true });
-        serial.addEventListener("disconnect", this.handleDisconnect.bind(this), { once: true });
+        if (!port.startsWith("virtual")) {
+            serial.addEventListener("connect", this.boundHandleConnect, { once: true });
+            serial.addEventListener("disconnect", this.boundHandleDisconnect, { once: true });
 
-        if (port.startsWith("serial")) {
-            serial.connect(port, { baudRate: 115200 });
+            console.log("Connecting to serial port", port, serial.connected, serial.connectionId);
+
+            serial.connect(port, { baudRate: PortHandler.portPicker.selectedBauds || 115200 });
+        } else {
+            gui_log(i18n.getMessage("serialPortOpenFail"));
         }
     }
 
@@ -73,12 +86,6 @@ class AutoDetect {
         if (!this.targetAvailable) {
             gui_log(i18n.getMessage("firmwareFlasherBoardVerificationFail"));
         }
-
-        MSP.clearListeners();
-
-        serial.removeEventListener("receive", readSerialAdapter);
-        serial.removeEventListener("connect", this.handleConnect.bind(this));
-        serial.removeEventListener("disconnect", this.handleDisconnect.bind(this));
     }
 
     onFinishClose() {
@@ -109,24 +116,25 @@ class AutoDetect {
             );
         }
 
-        serial.disconnect(this.onClosed);
+        // Remove event listeners using stored references
+        serial.removeEventListener("receive", this.boundHandleSerialReceive);
+        serial.removeEventListener("connect", this.boundHandleConnect);
+        serial.removeEventListener("disconnect", this.boundHandleDisconnect);
+
+        // Clean up MSP listeners
+        MSP.clearListeners();
         MSP.disconnect_cleanup();
+
+        // Disconnect without passing onClosed as a callback
+        serial.disconnect();
     }
 
     async getBoardInfo() {
         await MSP.promise(MSPCodes.MSP_BOARD_INFO);
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
-            FC.processBuildOptions();
             TABS.firmware_flasher.cloudBuildOptions = FC.CONFIG.buildOptions;
         }
         this.onFinishClose();
-    }
-
-    async getCloudBuildOptions(options) {
-        // Do not use FC.CONFIG.buildOptions here as the object gets destroyed.
-        TABS.firmware_flasher.cloudBuildOptions = options.Request.Options;
-
-        await this.getBoardInfo();
     }
 
     async getBuildInfo() {
@@ -146,11 +154,16 @@ class AutoDetect {
                 TABS.firmware_flasher.validateBuildKey() &&
                 (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_46) || buildDate < supportedDate)
             ) {
-                return TABS.firmware_flasher.buildApi.requestBuildOptions(
-                    TABS.firmware_flasher.cloudBuildKey,
-                    this.getCloudBuildOptions.bind(this),
-                    this.getBoardInfo.bind(this),
-                );
+                try {
+                    let options = await TABS.firmware_flasher.buildApi.requestBuildOptions(
+                        TABS.firmware_flasher.cloudBuildKey,
+                    );
+                    if (options) {
+                        TABS.firmware_flasher.cloudBuildOptions = options.Request.Options;
+                    }
+                } catch (error) {
+                    console.error(`${this.logHead} Failed to request build options:`, error);
+                }
             }
         }
 
@@ -172,8 +185,8 @@ class AutoDetect {
 
     onConnect(openInfo) {
         if (openInfo) {
-            serial.removeEventListener("receive", readSerialAdapter);
-            serial.addEventListener("receive", readSerialAdapter);
+            serial.removeEventListener("receive", this.boundHandleSerialReceive);
+            serial.addEventListener("receive", this.boundHandleSerialReceive);
 
             mspHelper = new MspHelper();
             MSP.listen(mspHelper.process_data.bind(mspHelper));

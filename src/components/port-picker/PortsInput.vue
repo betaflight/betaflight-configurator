@@ -19,6 +19,7 @@
                     {{ $t("portsSelectVirtual") }}
                 </option>
                 <option
+                    v-if="showBluetoothOption"
                     v-for="connectedBluetoothDevice in connectedBluetoothDevices"
                     :key="connectedBluetoothDevice.path"
                     :value="connectedBluetoothDevice.path"
@@ -26,6 +27,7 @@
                     {{ connectedBluetoothDevice.displayName }}
                 </option>
                 <option
+                    v-if="showSerialOption"
                     v-for="connectedSerialDevice in connectedSerialDevices"
                     :key="connectedSerialDevice.path"
                     :value="connectedSerialDevice.path"
@@ -33,17 +35,21 @@
                     {{ connectedSerialDevice.displayName }}
                 </option>
                 <option
+                    v-if="showUsbOption"
                     v-for="connectedUsbDevice in connectedUsbDevices"
                     :key="connectedUsbDevice.path"
                     :value="connectedUsbDevice.path"
                 >
                     {{ connectedUsbDevice.displayName }}
                 </option>
-                <option value="requestpermission">
+                <option v-if="showSerialOption" value="requestpermissionserial">
                     {{ $t("portsSelectPermission") }}
                 </option>
-                <option value="requestpermissionbluetooth">
+                <option v-if="showBluetoothOption" value="requestpermissionbluetooth">
                     {{ $t("portsSelectPermissionBluetooth") }}
+                </option>
+                <option v-if="showUsbOption" value="requestpermissionusb">
+                    {{ $t("portsSelectPermissionDFU") }}
                 </option>
             </select>
         </div>
@@ -118,6 +124,18 @@ export default defineComponent({
             type: Boolean,
             default: true,
         },
+        showBluetoothOption: {
+            type: Boolean,
+            default: true,
+        },
+        showSerialOption: {
+            type: Boolean,
+            default: true,
+        },
+        showUsbOption: {
+            type: Boolean,
+            default: true,
+        },
     },
     emits: ["update:modelValue"],
     setup(props, { emit }) {
@@ -155,10 +173,12 @@ export default defineComponent({
 
         const onChangePort = (event) => {
             const value = event.target.value;
-            if (value === "requestpermission") {
-                EventBus.$emit("ports-input:request-permission");
+            if (value === "requestpermissionserial") {
+                EventBus.$emit("ports-input:request-permission-serial");
             } else if (value === "requestpermissionbluetooth") {
                 EventBus.$emit("ports-input:request-permission-bluetooth");
+            } else if (value === "requestpermissionusb") {
+                EventBus.$emit("ports-input:request-permission-usb");
             } else {
                 EventBus.$emit("ports-input:change", value);
             }

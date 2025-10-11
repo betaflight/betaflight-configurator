@@ -1,14 +1,21 @@
 import { get as getConfig } from "./ConfigStorage";
 import { EventBus } from "../components/eventBus";
-import serial from "./webSerial";
-import usb from "./protocols/webusbdfu";
-import BT from "./protocols/bluetooth";
+import { serial } from "./serial.js";
+import WEBUSBDFU from "./protocols/webusbdfu";
 import { reactive } from "vue";
+import {
+    checkBrowserCompatibility,
+    checkWebBluetoothSupport,
+    checkWebSerialSupport,
+    checkWebUSBSupport,
+} from "./utils/checkBrowserCompatibility.js";
 
 const DEFAULT_PORT = "noselection";
 const DEFAULT_BAUDS = 115200;
 
 const PortHandler = new (function () {
+    this.logHead = "[PORTHANDLER]";
+
     this.currentSerialPorts = [];
     this.currentUsbPorts = [];
     this.currentBluetoothPorts = [];
@@ -26,28 +33,60 @@ const PortHandler = new (function () {
     this.bluetoothAvailable = false;
     this.dfuAvailable = false;
     this.portAvailable = false;
-    this.showAllSerialDevices = false;
+
+    checkBrowserCompatibility();
+
+    this.showBluetoothOption = checkWebBluetoothSupport();
+    this.showSerialOption = checkWebSerialSupport();
+    this.showUsbOption = checkWebUSBSupport();
+
+    console.log(`${this.logHead} Bluetooth available: ${this.showBluetoothOption}`);
+    console.log(`${this.logHead} Serial available: ${this.showSerialOption}`);
+    console.log(`${this.logHead} DFU available: ${this.showUsbOption}`);
+
     this.showVirtualMode = getConfig("showVirtualMode", false).showVirtualMode;
     this.showManualMode = getConfig("showManualMode", false).showManualMode;
     this.showAllSerialDevices = getConfig("showAllSerialDevices", false).showAllSerialDevices;
 })();
 
 PortHandler.initialize = function () {
-    EventBus.$on("ports-input:request-permission-bluetooth", this.askBluetoothPermissionPort.bind(this));
-    EventBus.$on("ports-input:request-permission", this.askSerialPermissionPort.bind(this));
+    EventBus.$on("ports-input:request-permission-bluetooth", () => this.requestDevicePermission("webbluetooth"));
+    EventBus.$on("ports-input:request-permission-serial", () => this.requestDevicePermission("webserial"));
+    EventBus.$on("ports-input:request-permission-usb", () => this.requestDevicePermission("usb"));
     EventBus.$on("ports-input:change", this.onChangeSelectedPort.bind(this));
 
-    BT.addEventListener("addedDevice", (event) => this.addedBluetoothDevice(event.detail));
-    BT.addEventListener("removedDevice", (event) => this.addedBluetoothDevice(event.detail));
+    // Use serial for all protocol events
+    serial.addEventListener("addedDevice", (event) => {
+        const detail = event.detail;
 
-    serial.addEventListener("addedDevice", (event) => this.addedSerialDevice(event.detail));
-    serial.addEventListener("removedDevice", (event) => this.removedSerialDevice(event.detail));
+        if (detail?.path?.startsWith("bluetooth")) {
+            this.handleDeviceAdded(detail, "webbluetooth");
+        } else {
+            this.handleDeviceAdded(detail, "webserial");
+        }
+    });
 
-    usb.addEventListener("addedDevice", (event) => this.addedUsbDevice(event.detail));
+    serial.addEventListener("removedDevice", (event) => {
+        this.removedSerialDevice(event.detail);
+    });
 
-    this.addedBluetoothDevice();
-    this.addedSerialDevice();
-    this.addedUsbDevice();
+    // Keep USB listener separate as it's not part of the serial protocols
+    WEBUSBDFU.addEventListener("addedDevice", (event) => this.addedUsbDevice(event.detail));
+
+    // Initial device discovery using the serial facade
+    this.refreshAllDeviceLists();
+};
+
+// Refactored refreshAllDeviceLists to use updateDeviceList
+PortHandler.refreshAllDeviceLists = async function () {
+    // Update all device lists in parallel
+    return Promise.all([
+        this.updateDeviceList("webserial"),
+        this.updateDeviceList("webbluetooth"),
+        this.updateDeviceList("usb"),
+    ]).then(() => {
+        this.selectActivePort();
+    });
 };
 
 PortHandler.setShowVirtualMode = function (showVirtualMode) {
@@ -64,47 +103,43 @@ PortHandler.setShowAllSerialDevices = function (showAllSerialDevices) {
     this.showAllSerialDevices = showAllSerialDevices;
 };
 
-PortHandler.addedSerialDevice = function (device) {
-    this.updateCurrentSerialPortsList().then(() => {
-        const selectedPort = this.selectActivePort(device);
-        if (!device || selectedPort === device.path) {
-            // Send this event when the port handler auto selects a new device
-            EventBus.$emit("port-handler:auto-select-serial-device", selectedPort);
-        }
-    });
-};
-
 PortHandler.removedSerialDevice = function (device) {
-    this.updateCurrentSerialPortsList().then(() => {
-        if (this.portPicker.selectedPort === device.path) {
-            this.selectActivePort();
-        }
-    });
-};
+    console.log(`${this.logHead} Device removal event received:`, device);
 
-PortHandler.addedBluetoothDevice = function (device) {
-    this.updateCurrentBluetoothPortsList().then(() => {
-        const selectedPort = this.selectActivePort(device);
-        if (!device || selectedPort === device.path) {
-            // Send this event when the port handler auto selects a new device
-            EventBus.$emit("port-handler:auto-select-bluetooth-device", selectedPort);
-        }
-    });
-};
+    // Get device path safely
+    const devicePath = device?.path || (typeof device === "string" ? device : null);
 
-PortHandler.removedBluetoothDevice = function (device) {
-    this.updateCurrentBluetoothPortsList().then(() => {
-        if (this.portPicker.selectedPort === device.path) {
+    if (!devicePath) {
+        console.warn(`${this.logHead} Device removal event missing path information`, device);
+        // Still update ports, but don't try to use the undefined path
+        this.updateDeviceList("webserial").then(() => {
             this.selectActivePort();
+        });
+        return;
+    }
+
+    // Update the appropriate ports list based on the device type
+    const updatePromise = devicePath.startsWith("bluetooth")
+        ? this.updateDeviceList("webbluetooth")
+        : this.updateDeviceList("webserial");
+
+    const wasSelectedPort = this.portPicker.selectedPort === devicePath;
+
+    updatePromise.then(() => {
+        if (wasSelectedPort) {
+            this.selectActivePort();
+
+            // Send event for UI components that might need to update
+            EventBus.$emit("port-handler:device-removed", devicePath);
         }
     });
 };
 
 PortHandler.addedUsbDevice = function (device) {
-    this.updateCurrentUsbPortsList().then(() => {
+    this.updateDeviceList("usb").then(() => {
         const selectedPort = this.selectActivePort(device);
-        if (!device || selectedPort === device.path) {
-            // Send this event when the port handler auto selects a new device
+        if (selectedPort === device?.path) {
+            // Send event when the port handler auto selects a new USB device
             EventBus.$emit("port-handler:auto-select-usb-device", selectedPort);
         }
     });
@@ -114,78 +149,62 @@ PortHandler.onChangeSelectedPort = function (port) {
     this.portPicker.selectedPort = port;
 };
 
-PortHandler.updateCurrentSerialPortsList = async function () {
-    const ports = await serial.getDevices();
-    const orderedPorts = this.sortPorts(ports);
-    this.portAvailable = orderedPorts.length > 0;
+/**
+ * Request permission for a device of the specified type
+ * @param {string} deviceType - Type of device ('serial', 'bluetooth', 'usb')
+ */
+PortHandler.requestDevicePermission = function (deviceType) {
+    const requestPromise =
+        deviceType === "usb"
+            ? WEBUSBDFU.requestPermission()
+            : serial.requestPermissionDevice(this.showAllSerialDevices, deviceType);
 
-    this.currentSerialPorts = [...orderedPorts];
-};
+    console.log(`${this.logHead} Requesting permission for ${deviceType} device...`);
 
-PortHandler.updateCurrentUsbPortsList = async function () {
-    const ports = await usb.getDevices();
-    const orderedPorts = this.sortPorts(ports);
-    this.dfuAvailable = orderedPorts.length > 0;
-
-    this.currentUsbPorts = [...orderedPorts];
-};
-
-PortHandler.updateCurrentBluetoothPortsList = async function () {
-    if (BT.bluetooth) {
-        const ports = await BT.getDevices();
-        const orderedPorts = this.sortPorts(ports);
-        this.bluetoothAvailable = orderedPorts.length > 0;
-
-        this.currentBluetoothPorts = [...orderedPorts];
-    }
+    requestPromise
+        .then((port) => {
+            if (port) {
+                console.log(`${this.logHead} Permission granted for ${deviceType} device:`, port);
+                this.selectActivePort(port);
+            } else {
+                console.log(`${this.logHead} Permission request cancelled or failed for ${deviceType} device`);
+            }
+        })
+        .catch((error) => {
+            console.error(`${this.logHead} Error requesting permission for ${deviceType} device:`, error);
+        });
 };
 
 PortHandler.sortPorts = function (ports) {
     return ports.sort(function (a, b) {
-        return a.path.localeCompare(b.path, window.navigator.language, {
+        const locale = typeof window !== "undefined" && window.navigator ? window.navigator.language : "en";
+
+        return a.path.localeCompare(b.path, locale, {
             numeric: true,
             sensitivity: "base",
         });
     });
 };
 
-PortHandler.askBluetoothPermissionPort = function () {
-    if (BT.bluetooth) {
-        BT.requestPermissionDevice().then((port) => {
-            // When giving permission to a new device, the port is selected in the handleNewDevice method, but if the user
-            // selects a device that had already permission, or cancels the permission request, we need to select the port
-            // so do it here too
-            this.selectActivePort(port);
-        });
-    }
-};
-
-PortHandler.askSerialPermissionPort = function () {
-    serial.requestPermissionDevice(this.showAllSerialDevices).then((port) => {
-        // When giving permission to a new device, the port is selected in the handleNewDevice method, but if the user
-        // selects a device that had already permission, or cancels the permission request, we need to select the port
-        // so do it here too
-        this.selectActivePort(port);
-    });
-};
-
-PortHandler.selectActivePort = function (suggestedDevice) {
+PortHandler.selectActivePort = function (suggestedDevice = false) {
     const deviceFilter = ["AT32", "CP210", "SPR", "STM"];
     let selectedPort;
 
-    // Return the same that is connected to serial
+    // First check for active connections
     if (serial.connected) {
         selectedPort = this.currentSerialPorts.find((device) => device === serial.getConnectedPort());
     }
 
-    // Return the same that is connected to usb (dfu mode)
-    if (usb.usbDevice) {
-        selectedPort = this.currentUsbPorts.find((device) => device === usb.getConnectedPort());
+    // Return the same that is connected to WEBUSBDFU (dfu mode)
+    if (WEBUSBDFU.usbDevice) {
+        selectedPort = this.currentUsbPorts.find((device) => device === WEBUSBDFU.getConnectedPort());
     }
 
-    // Return the same that is connected to bluetooth
-    if (BT.device) {
-        selectedPort = this.currentBluetoothPorts.find((device) => device === BT.getConnectedPort());
+    // If there is a connection, return it
+    if (selectedPort) {
+        console.log(`${this.logHead} Using connected device: ${selectedPort.path}`);
+        selectedPort = selectedPort.path;
+        return selectedPort;
     }
 
     // Return the suggested device (the new device that has been detected)
@@ -236,13 +255,96 @@ PortHandler.selectActivePort = function (suggestedDevice) {
     // Return the default port if no other port was selected
     this.portPicker.selectedPort = selectedPort || DEFAULT_PORT;
 
-    console.log(`[PORTHANDLER] automatically selected device is '${this.portPicker.selectedPort}'`);
-
-    // hack to update Vue component
-    const p = document.getElementById("port");
-    p.value = this.portPicker.selectedPort;
+    console.log(
+        `${this.logHead} Automatically selected device is '${this.portPicker.selectedPort}' - suggested:`,
+        suggestedDevice,
+    );
 
     return selectedPort;
+};
+
+// Create a unified handler for device addition
+PortHandler.handleDeviceAdded = function (device, deviceType) {
+    if (!device) {
+        console.warn(`${this.logHead} Invalid ${deviceType} device added event`);
+        return;
+    }
+
+    console.log(`${this.logHead} ${deviceType} device added:`, device);
+
+    // Update the appropriate device list
+    const updatePromise =
+        deviceType === "webbluetooth" ? this.updateDeviceList("webbluetooth") : this.updateDeviceList("webserial");
+
+    updatePromise.then(() => {
+        const selectedPort = this.selectActivePort(device);
+
+        if (selectedPort === device.path) {
+            EventBus.$emit(`port-handler:auto-select-serial-device`, selectedPort);
+        }
+    });
+};
+
+/**
+ * Update device list with common implementation
+ * @param {string} deviceType - Type of device ('serial', 'bluetooth', 'usb')
+ * @returns {Promise} - Promise that resolves after updating the ports list
+ */
+PortHandler.updateDeviceList = async function (deviceType) {
+    let ports = [];
+
+    try {
+        switch (deviceType) {
+            case "webbluetooth":
+                if (this.showBluetoothOption) {
+                    ports = await serial.getDevices("webbluetooth");
+                }
+                break;
+            case "usb":
+                if (this.showUsbOption) {
+                    ports = await WEBUSBDFU.getDevices();
+                }
+                break;
+            case "webserial":
+                if (this.showSerialOption) {
+                    ports = await serial.getDevices("webserial");
+                }
+                break;
+            default:
+                console.warn(`${this.logHead} Unknown device type: ${deviceType}`);
+                return [];
+        }
+
+        // Sort the ports
+        const orderedPorts = this.sortPorts(ports);
+
+        // Update the appropriate properties based on device type
+        switch (deviceType) {
+            case "webbluetooth":
+                this.bluetoothAvailable = orderedPorts.length > 0;
+                this.currentBluetoothPorts = [...orderedPorts];
+                console.log(`${this.logHead} Found bluetooth port(s)`, orderedPorts);
+                break;
+            case "usb":
+                this.dfuAvailable = orderedPorts.length > 0;
+                this.currentUsbPorts = [...orderedPorts];
+                console.log(`${this.logHead} Found DFU port(s)`, orderedPorts);
+                break;
+            case "webserial":
+                this.portAvailable = orderedPorts.length > 0;
+                this.currentSerialPorts = [...orderedPorts];
+                console.log(`${this.logHead} Found serial port(s)`, orderedPorts);
+                break;
+            default:
+                console.warn(`${this.logHead} Unknown device type for updating ports: ${deviceType}`);
+                return [];
+        }
+
+        return orderedPorts;
+    } catch (error) {
+        console.error(`${this.logHead} Error updating ${deviceType} devices:`, error);
+        return [];
+    }
 };
 
 // We need to explicit make it reactive. If not, Vue3 does not detect correctly changes in array properties

@@ -1,6 +1,6 @@
 import { i18n } from "../localization";
 import semver from "semver";
-import { isExpertModeEnabled } from "../utils/isExportModeEnabled";
+import { isExpertModeEnabled } from "../utils/isExpertModeEnabled";
 import GUI, { TABS } from "../gui";
 import { have_sensor } from "../sensor_helpers";
 import { mspHelper } from "../msp/MSPHelper";
@@ -35,7 +35,11 @@ setup.initialize = function (callback) {
     }
 
     function load_mixer_config() {
-        MSP.send_message(MSPCodes.MSP_MIXER_CONFIG, false, false, load_html);
+        MSP.send_message(MSPCodes.MSP_MIXER_CONFIG, false, false, load_gyro_sensor);
+    }
+
+    function load_gyro_sensor() {
+        MSP.send_message(MSPCodes.MSP_SENSOR_ALIGNMENT, false, false, load_html);
     }
 
     function load_html() {
@@ -73,11 +77,8 @@ setup.initialize = function (callback) {
 
         $("#arming-disable-flag").attr("title", i18n.getMessage("initialSetupArmingDisableFlagsTooltip"));
 
-        if (isExpertModeEnabled()) {
-            $(".initialSetupRebootBootloader").show();
-        } else {
-            $(".initialSetupRebootBootloader").hide();
-        }
+        $(".initialSetupReset").toggle(isExpertModeEnabled());
+        $(".initialSetupRebootBootloader").toggle(isExpertModeEnabled());
 
         $("a.rebootBootloader").click(function () {
             const buffer = [];
@@ -215,7 +216,7 @@ setup.initialize = function (callback) {
             build_date_e = $(".build-date"),
             build_type_e = $(".build-type"),
             build_info_e = $(".build-info"),
-            build_options_e = $(".build-options");
+            build_firmware_e = $(".build-firmware");
 
         // DISARM FLAGS
         // We add all the arming/disarming flags available, and show/hide them if needed.
@@ -307,50 +308,69 @@ setup.initialize = function (callback) {
                 }
             }
 
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
-                MSP.send_message(MSPCodes.MSP2_SENSOR_CONFIG_ACTIVE, false, false, function () {
+            MSP.send_message(MSPCodes.MSP2_SENSOR_CONFIG_ACTIVE, false, false, function () {
+                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+                    MSP.send_message(MSPCodes.MSP2_GYRO_SENSOR, false, false, function () {
+                        let gyroInfoList = [];
+                        for (let i = 0; i < FC.GYRO_SENSOR.gyro_count; i++) {
+                            if ((FC.SENSOR_ALIGNMENT.gyro_enable_mask & (1 << i)) !== 0) {
+                                gyroInfoList.push(sensorTypes().gyro.elements[FC.GYRO_SENSOR.gyro_hardware[i]]);
+                            }
+                        }
+                        sensor_gyro_e.html(gyroInfoList.join(" "));
+                    });
+                } else {
                     addSensorInfo(
                         FC.SENSOR_CONFIG_ACTIVE.gyro_hardware,
                         sensor_gyro_e,
                         "gyro",
                         sensorTypes().gyro.elements,
                     );
-                    addSensorInfo(
-                        FC.SENSOR_CONFIG_ACTIVE.acc_hardware,
-                        sensor_acc_e,
-                        "acc",
-                        sensorTypes().acc.elements,
-                    );
-                    addSensorInfo(
-                        FC.SENSOR_CONFIG_ACTIVE.baro_hardware,
-                        sensor_baro_e,
-                        "baro",
-                        sensorTypes().baro.elements,
-                    );
-                    addSensorInfo(
-                        FC.SENSOR_CONFIG_ACTIVE.mag_hardware,
-                        sensor_mag_e,
-                        "mag",
-                        sensorTypes().mag.elements,
-                    );
-                    addSensorInfo(
-                        FC.SENSOR_CONFIG_ACTIVE.sonar_hardware,
-                        sensor_sonar_e,
-                        "sonar",
-                        sensorTypes().sonar.elements,
-                    );
+                }
 
-                    // opticalflow sensor is available since 1.47
-                    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
-                        addSensorInfo(
-                            FC.SENSOR_CONFIG_ACTIVE.opticalflow_hardware,
-                            sensor_opticalflow_e,
-                            "opticalflow",
-                            sensorTypes().opticalflow.elements,
-                        );
-                    }
-                });
-            }
+                addSensorInfo(FC.SENSOR_CONFIG_ACTIVE.acc_hardware, sensor_acc_e, "acc", sensorTypes().acc.elements);
+                addSensorInfo(
+                    FC.SENSOR_CONFIG_ACTIVE.baro_hardware,
+                    sensor_baro_e,
+                    "baro",
+                    sensorTypes().baro.elements,
+                );
+                addSensorInfo(FC.SENSOR_CONFIG_ACTIVE.mag_hardware, sensor_mag_e, "mag", sensorTypes().mag.elements);
+                addSensorInfo(
+                    FC.SENSOR_CONFIG_ACTIVE.sonar_hardware,
+                    sensor_sonar_e,
+                    "sonar",
+                    sensorTypes().sonar.elements,
+                );
+
+                // opticalflow sensor is available since 1.47
+                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+                    addSensorInfo(
+                        FC.SENSOR_CONFIG_ACTIVE.opticalflow_hardware,
+                        sensor_opticalflow_e,
+                        "opticalflow",
+                        sensorTypes().opticalflow.elements,
+                    );
+                }
+            });
+        };
+
+        const hideSensorInfo = function () {
+            $("#sensorInfoBox").hide();
+        };
+
+        // Fills in the "Build type" part of the "Firmware info" box
+        const showBuildType = function () {
+            build_type_e.html(
+                FC.CONFIG.buildKey.length === 32
+                    ? i18n.getMessage("initialSetupInfoBuildCloud")
+                    : i18n.getMessage("initialSetupInfoBuildLocal"),
+            );
+        };
+
+        // Hides the "Build type" part of the "Firmware info" box
+        const hideBuildType = function () {
+            build_type_e.parent().hide();
         };
 
         function showDialogBuildInfo(title, message) {
@@ -367,91 +387,125 @@ setup.initialize = function (callback) {
             }
         }
 
-        const showBuildInfo = function () {
-            const supported = FC.CONFIG.buildKey.length === 32;
+        // Gets the build root base URI for build.betaflight.com
+        const getBuildRootBaseUri = function () {
+            return `https://build.betaflight.com/api/builds/${FC.CONFIG.buildKey}`;
+        };
 
-            if (supported && ispConnected()) {
-                const buildRoot = `https://build.betaflight.com/api/builds/${FC.CONFIG.buildKey}`;
+        // Fills in the "Build info" part of the "Firmware info" box
+        const showBuildInfo = function () {
+            const isIspConnected = ispConnected();
+            const buildKeyValid = FC.CONFIG.buildKey.length === 32;
+
+            if (buildKeyValid && isIspConnected) {
+                const buildRoot = getBuildRootBaseUri();
+
+                // Creates the "Config" button
                 const buildConfig = `<span class="buildInfoBtn" title="${i18n.getMessage(
                     "initialSetupInfoBuildConfig",
                 )}: ${buildRoot}/json">
-                                    <a href="${buildRoot}/json" target="_blank"><strong>${i18n.getMessage(
+                    <a href="${buildRoot}/json" target="_blank"><strong>${i18n.getMessage(
     "initialSetupInfoBuildConfig",
 )}</strong></a></span>`;
+
+                // Creates the "Log" button
                 const buildLog = `<span class="buildInfoBtn" title="${i18n.getMessage(
                     "initialSetupInfoBuildLog",
                 )}: ${buildRoot}/log">
-                                    <a href="${buildRoot}/log" target="_blank"><strong>${i18n.getMessage(
+                    <a href="${buildRoot}/log" target="_blank"><strong>${i18n.getMessage(
     "initialSetupInfoBuildLog",
 )}</strong></a></span>`;
-                build_info_e.html(`<span class="buildInfoBtn" title="${i18n.getMessage(
-                    "initialSetupInfoBuildOptions",
-                )}">
-                    <a class="buildOptions" href=#"><strong>${i18n.getMessage(
-        "initialSetupInfoBuildOptionList",
-    )}</strong></a></span>`);
+
+                // Shows the "Config" and "Log" buttons
                 build_info_e.html(`${buildConfig} ${buildLog}`);
             } else {
                 build_info_e.html(
-                    supported ? i18n.getMessage("initialSetupNotOnline") : i18n.getMessage("initialSetupNoBuildInfo"),
+                    isIspConnected
+                        ? i18n.getMessage("initialSetupNoBuildInfo")
+                        : i18n.getMessage("initialSetupNotOnline"),
                 );
             }
         };
 
-        const showBuildOptions = function () {
-            const supported =
-                ((semver.eq(FC.CONFIG.apiVersion, API_VERSION_1_45) && ispConnected()) ||
+        // Hides the "Build info" part of the "Firmware info" box
+        const hideBuildInfo = function () {
+            build_info_e.parent().hide();
+        };
+
+        // Fills in the "Firmware" part of the "Firmware info" box
+        const showBuildFirmware = function () {
+            const isIspConnected = ispConnected();
+            const buildOptionsValid =
+                ((semver.eq(FC.CONFIG.apiVersion, API_VERSION_1_45) && isIspConnected) ||
                     semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) &&
                 FC.CONFIG.buildOptions.length;
+            const buildKeyValid = FC.CONFIG.buildKey.length === 32;
+            const buildRoot = getBuildRootBaseUri();
 
-            if (supported) {
-                let buildOptionList = `<div class="dialogBuildInfoGrid-container">`;
-                for (const buildOptionElement of FC.CONFIG.buildOptions) {
-                    buildOptionList += `<div class="dialogBuildInfoGrid-item">${buildOptionElement}</div>`;
-                }
-                buildOptionList += `</div>`;
-
-                build_options_e.html(`<span class="buildInfoBtn" title="${i18n.getMessage(
-                    "initialSetupInfoBuildOptions",
-                )}">
-                    <a class="buildOptions" href=#"><strong>${i18n.getMessage(
-        "initialSetupInfoBuildOptionList",
-    )}</strong></a></span>`);
-
-                const buildOptions = `<span class="buildInfoBtn" title="${i18n.getMessage(
-                    "initialSetupInfoBuildOptionList",
-                )}">
-                                      <a class="buildOptions" href=#"><strong>${i18n.getMessage(
+            if (buildOptionsValid || buildKeyValid) {
+                // Creates the "Options" button (if possible)
+                const buildOptions = buildOptionsValid
+                    ? `<span class="buildInfoBtn" title="${i18n.getMessage("initialSetupInfoBuildOptionList")}">
+                    <a class="buildOptions" href="#"><strong>${i18n.getMessage(
         "initialSetupInfoBuildOptions",
-    )}</strong></a></span>`;
+    )}</strong></a></span>`
+                    : "";
 
-                build_options_e.html(buildOptions);
+                // Creates the "Download" button (if possible)
+                const buildDownload = buildKeyValid
+                    ? `<span class="buildInfoBtn" title="${i18n.getMessage(
+                        "initialSetupInfoBuildDownload",
+                    )}: ${buildRoot}/hex">
+                    <a href="${buildRoot}/hex" target="_blank"><strong>${i18n.getMessage(
+    "initialSetupInfoBuildDownload",
+)}</strong></a></span>`
+                    : "";
 
-                $("a.buildOptions").on("click", async function () {
-                    showDialogBuildInfo(
-                        `<h3>${i18n.getMessage("initialSetupInfoBuildOptionList")}</h3>`,
-                        buildOptionList,
-                    );
-                });
+                // Shows the "Options" and/or "Download" buttons
+                build_firmware_e.html(`${buildOptions} ${buildDownload}`);
+
+                if (buildOptionsValid) {
+                    // Creates and attaches the "Options" dialog
+                    let buildOptionList = `<div class="dialogBuildInfoGrid-container">`;
+                    for (const buildOptionElement of FC.CONFIG.buildOptions) {
+                        buildOptionList += `<div class="dialogBuildInfoGrid-item">${buildOptionElement}</div>`;
+                    }
+                    buildOptionList += `</div>`;
+
+                    $("a.buildOptions").on("click", async function () {
+                        showDialogBuildInfo(
+                            `<h3>${i18n.getMessage("initialSetupInfoBuildOptionList")}</h3>`,
+                            buildOptionList,
+                        );
+                    });
+                }
             } else {
-                // should not happen, but just in case
-                build_options_e.html(`${i18n.getMessage("initialSetupNoBuildInfo")}`);
+                build_firmware_e.html(
+                    isIspConnected
+                        ? i18n.getMessage("initialSetupNoBuildInfo")
+                        : i18n.getMessage("initialSetupNotOnline"),
+                );
             }
         };
 
+        // Hides the "Firmware" part of the "Firmware info" box
+        const hideBuildFirmware = function () {
+            build_firmware_e.parent().hide();
+        };
+
+        // Fills in the "Firmware info" box
         function showFirmwareInfo() {
-            // Firmware info
             msp_api_e.text(FC.CONFIG.apiVersion);
             build_date_e.text(FC.CONFIG.buildInfo);
 
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
-                build_type_e.html(
-                    FC.CONFIG.buildKey.length === 32
-                        ? i18n.getMessage("initialSetupInfoBuildCloud")
-                        : i18n.getMessage("initialSetupInfoBuildLocal"),
-                );
+                showBuildType();
                 showBuildInfo();
-                showBuildOptions();
+                showBuildFirmware();
+            } else {
+                hideBuildType();
+                hideBuildInfo();
+                hideBuildFirmware();
             }
         }
 
@@ -460,9 +514,10 @@ setup.initialize = function (callback) {
 
             let statusText = "";
 
-            const type = navigator.connection.effectiveType;
-            const downlink = navigator.connection.downlink;
-            const rtt = navigator.connection.rtt;
+            const connection = navigator.connection;
+            const type = connection?.effectiveType || "Unknown";
+            const downlink = connection?.downlink || "Unknown";
+            const rtt = connection?.rtt || "Unknown";
 
             if (!networkStatus || !navigator.onLine || type === "none") {
                 statusText = i18n.getMessage("initialSetupNetworkInfoStatusOffline");
@@ -473,13 +528,17 @@ setup.initialize = function (callback) {
             }
 
             $(".network-status").text(statusText);
-            $(".network-type").text(navigator.connection.effectiveType);
-            $(".network-downlink").text(`${navigator.connection.downlink} Mbps`);
-            $(".network-rtt").text(navigator.connection.rtt);
+            $(".network-type").text(type);
+            $(".network-downlink").text(`${downlink} Mbps`);
+            $(".network-rtt").text(`${rtt} ms`);
         }
 
         prepareDisarmFlags();
-        showSensorInfo();
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+            showSensorInfo();
+        } else {
+            hideSensorInfo();
+        }
         showFirmwareInfo();
         showNetworkStatus();
 
@@ -524,13 +583,16 @@ setup.initialize = function (callback) {
             gpsFix_e.toggleClass("ready", FC.GPS_DATA.fix != 0);
             gpsSats_e.text(FC.GPS_DATA.numSat);
 
-            const lat = FC.GPS_DATA.lat / 10000000;
-            const lon = FC.GPS_DATA.lon / 10000000;
-            const url = `https://maps.google.com/?q=${lat},${lon}`;
+            const latitude = FC.GPS_DATA.latitude / 10000000;
+            const longitude = FC.GPS_DATA.longitude / 10000000;
+            const url = `https://maps.google.com/?q=${latitude},${longitude}`;
             const gpsUnitText = i18n.getMessage("gpsPositionUnit");
-            $(".GPS_info td.latLon a")
+            $(".GPS_info td.latitude a")
                 .prop("href", url)
-                .text(`${lat.toFixed(4)} / ${lon.toFixed(4)} ${gpsUnitText}`);
+                .text(`${latitude.toFixed(4)} ${gpsUnitText}`);
+            $(".GPS_info td.longitude a")
+                .prop("href", url)
+                .text(`${longitude.toFixed(4)} ${gpsUnitText}`);
         }
 
         function get_fast_data() {
@@ -590,6 +652,18 @@ setup.cleanup = function (callback) {
     }
 
     if (callback) callback();
+};
+
+setup.expertModeChanged = function () {
+    this.refresh();
+};
+
+setup.refresh = function () {
+    const self = this;
+
+    GUI.tab_switch_cleanup(function () {
+        self.initialize();
+    });
 };
 
 TABS.setup = setup;

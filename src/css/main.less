@@ -23,6 +23,14 @@ body {
     margin: 0;
     padding: 0;
     overflow: hidden;
+
+    ::-webkit-scrollbar {
+        width: 0.3rem;
+        height: 2em;
+    }
+    ::-webkit-scrollbar-thumb {
+        background: var(--surface-600);
+    }
 }
 &::backdrop {
     background-image: none;
@@ -41,14 +49,30 @@ a.disabled {
     cursor: default;
     color: #999;
 }
+.html-dialog {
+    border-color: var(--primary-500);
+    padding: 0px;
+}
+.html-dialog-content {
+    padding: 15px 15px;
+}
 .background_paper {
     background-color: var(--surface-200);
-    background-image: linear-gradient(var(--surface-300) 2px, transparent 2px),
+    background-image:
+        linear-gradient(var(--surface-300) 2px, transparent 2px),
         linear-gradient(90deg, var(--surface-300) 2px, transparent 2px),
         linear-gradient(var(--surface-300) 1px, transparent 1px),
         linear-gradient(90deg, var(--surface-300) 1px, rgba(0, 0, 0, 0) 1px);
-    background-size: 75px 75px, 75px 75px, 15px 15px, 15px 15px;
-    background-position: -2px -2px, -2px -2px, -1px -1px, -1px -1px;
+    background-size:
+        75px 75px,
+        75px 75px,
+        15px 15px,
+        15px 15px;
+    background-position:
+        -2px -2px,
+        -2px -2px,
+        -1px -1px,
+        -1px -1px;
 }
 .standard_input {
     padding-left: 3px;
@@ -181,9 +205,16 @@ input[type="number"] {
         padding-bottom: 0;
         margin-bottom: 0;
     }
-    .helpicon,
     label {
         margin: 0 !important;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    .helpicon {
+        margin-right: 7px !important;
+        margin-left: auto !important;
+        float: none;
     }
 }
 .clear-both {
@@ -287,21 +318,20 @@ input[type="number"] {
     width: fit-content;
     display: none;
 }
-#header_btns {
-    display: flex;
-    align-items: center;
-    gap: 2rem;
-}
-.open_firmware_flasher,
-.connect_controls {
+.firmware_flasher_button,
+.connection_button {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
-.firmware_b {
-    width: 52px;
-    height: 52px;
-    a.flash {
+
+#header_buttons {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+
+    a.firmware_flasher_button__link {
+        display: block;
         background-color: var(--primary-500);
         border: 1px solid var(--primary-600);
         background-repeat: no-repeat;
@@ -309,66 +339,62 @@ input[type="number"] {
         width: 50px;
         border-radius: 100px;
         box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
-        float: left;
         transition: none;
-        background-image: url(../images/icons/cf_icon_flasher_white.svg);
+        background-image: url(../images/icons/cf_icon_flasher_black.svg);
         background-size: 30px;
         background-position: center 10px;
         &:hover {
             background-color: var(--primary-400);
         }
     }
-    a.flash.disabled {
+    a.firmware_flasher_button__link.disabled {
         background-color: var(--surface-500);
         pointer-events: none;
         cursor: default;
     }
-    a.flash.active {
+    a.firmware_flasher_button__link.active {
         background-color: var(--error-500);
         border: 1px solid var(--error-600);
         transition: none;
-        background-image: url(../images/icons/cf_icon_flasher_white.svg);
         &:hover {
             background-color: var(--error-400);
         }
     }
-}
-.connect_b {
-    width: 52px;
-    height: 52px;
-    a.connect {
-        background-color: var(--primary-500);
-        border: 1px solid var(--primary-600);
+
+    a.connection_button__link {
+        display: block;
+        background-color: var(--primary-action);
+        border: 1px solid var(--primary-action-border);
         background-repeat: no-repeat;
         height: 50px;
         width: 50px;
         border-radius: 100px;
         box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
-        float: left;
         transition: none;
-        background-image: url(../images/icons/cf_icon_usb2_white.svg);
+        background-image: url(../images/icons/cf_icon_usb2_black.svg);
         background-size: 44px;
         background-position: center 6px;
         &:hover {
-            background-color: var(--primary-400);
+            background-color: var(--primary-action-hover);
         }
     }
-    a.connect.disabled {
+    a.connection_button__link.disabled {
         background-color: var(--surface-500);
         pointer-events: none;
         cursor: default;
     }
-    a.connect.active {
+    a.connection_button__link.active {
         background-color: var(--error-500);
         border: 1px solid var(--error-600);
         transition: none;
-        background-image: url(../images/icons/cf_icon_usb1_white.svg);
+        background-image: url(../images/icons/cf_icon_usb1_black.svg);
         &:hover {
             background-color: var(--error-400);
         }
     }
 }
-.flash_state {
+
+.firmware_flasher_button__label {
     white-space: nowrap;
 }
 .header-wrapper {
@@ -653,9 +679,9 @@ input[type="number"] {
     width: 17rem;
     overflow: auto;
     padding: 1rem;
-    padding-right: 0.5rem;
     background-color: var(--surface-100);
 }
+
 #content {
     transition: all 0.2s;
     overflow-x: hidden;
@@ -760,8 +786,8 @@ each(@tabIcons, {
     .ic_@{key} {
         &::before {
             content: " ";
-            width: 1rem;
-            height: 1rem;
+            min-width: 1rem;
+            min-height: 1rem;
             mask: @value no-repeat center center;
             -webkit-mask: @value no-repeat center center;
             background-color: var(--surface-700);
@@ -943,6 +969,7 @@ dialog {
     background-color: var(--primary-transparent-2);
     border: 1px solid var(--primary-500);
     margin-bottom: 0.5rem;
+    margin-top: 0.5rem;
     border-radius: 0.5rem;
     padding: 0.5rem;
 }
@@ -951,6 +978,7 @@ dialog {
     border: 1px solid var(--error-600);
     color: #fff;
     margin-bottom: 0.5rem;
+    margin-top: 0.5rem;
     border-radius: 0.5rem;
     padding: 0.5rem;
 }
@@ -1254,6 +1282,7 @@ dialog {
     .select {
         display: flex;
         gap: 1rem;
+        align-items: center;
     }
 }
 .fixed_band {
@@ -1611,11 +1640,20 @@ button.active {
     border: 1px solid var(--primary-600);
     color: #000;
 }
-.jBox-Tooltip {
-    max-width: 180px;
+.tippy-box[data-theme~="custom"] {
+    background: var(--surface-300);
+    border: 2px solid var(--primary-500);
+    border-radius: 0.5rem;
+    color: var(--text);
+    font-size: 0.75rem;
 }
-.jBox-Widetip {
-    max-width: 300px;
+.tippy-box[data-theme~="custom"][data-placement^="right"] > .tippy-arrow:before {
+    border-right-color: var(--primary-500);
+    left: -9px;
+}
+.tippy-box[data-theme~="custom"][data-placement^="left"] > .tippy-arrow:before {
+    border-left-color: var(--primary-500);
+    right: -9px;
 }
 .hidden {
     display: none;
@@ -1627,48 +1665,6 @@ button.active {
 .topBorderLine {
     border-top: 1px solid var(--surface-400);
     padding-top: 5px;
-}
-.jBox-container {
-    background: var(--surface-300) !important;
-    border: 2px solid var(--primary-500);
-    color: var(--text);
-    border-radius: 0.5rem !important;
-}
-.jBox-title {
-    background: var(--surface-300) !important;
-    border-bottom: 1px solid var(--surface-950) !important;
-}
-.jBox-content {
-    padding: 0.5rem;
-}
-.jBox-Modal {
-    .jBox-content {
-        padding: 10px 15px;
-    }
-}
-.jBox-pointer-top {
-    width: 22px;
-    height: 10px;
-}
-.jBox-pointer-bottom {
-    width: 22px;
-    height: 10px;
-}
-.jBox-pointer-left {
-    width: 10px;
-    height: 20px;
-}
-.jBox-pointer-right {
-    width: 10px;
-    height: 20px;
-}
-.jBox-pointer {
-    &:after {
-        width: 10px;
-        height: 9px;
-        border: 2px solid var(--primary-500) !important;
-        background-color: var(--primary-500) !important;
-    }
 }
 #dialogResetToCustomDefaults-content {
     margin-top: 10px;
@@ -1834,13 +1830,13 @@ each(range(12), {
         overflow-y: auto;
     }
 }
-@media only screen and (max-device-height: 750px) {
+@media (max-height: 750px) {
     .tab_container {
         overflow-x: hidden;
         overflow-y: auto;
     }
 }
-@media only screen and (max-width: 1055px) {
+@media (max-width: 1055px) {
     #tabs {
         li {
             a {
@@ -1917,25 +1913,17 @@ each(range(12), {
         }
     }
 }
-@media only screen and (max-device-width: 1055px) {
+@media (max-width: 1055px) {
     #tabs {
         li {
             a {
-                font-weight: normal;
-                font-size: 12px;
-                padding-left: 60px;
                 padding-top: 6px;
-                padding-bottom: 2px;
-                content: "";
-                transition: none;
-                text-overflow: clip;
-                white-space: nowrap;
-                overflow: hidden;
+                padding-bottom: 6px;
+            }
+            ::before {
+                padding-left: 3px;
             }
         }
-    }
-    .tab_container {
-        width: 42px;
     }
     #content {
         width: calc(100% - 42px);
@@ -2020,7 +2008,6 @@ each(range(12), {
         font-size: 13px;
         padding-top: 0.2rem;
         padding-bottom: 0.25rem;
-        padding-left: 2.5rem;
     }
     #side_menu_swipe {
         display: block;
@@ -2079,22 +2066,16 @@ each(range(12), {
     #reveal_btn {
         display: block;
         order: 4;
+        transition: transform 0.3s;
+        transform-origin: center center;
     }
-    #header_btns {
+    .headerbar.expand #reveal_btn {
+        transform: rotate(180deg);
+    }
+    #header_buttons {
         margin-left: auto;
         order: 3;
         gap: 1rem;
-    }
-    .firmware_b,
-    .connect_b {
-        height: fit-content !important;
-        width: fit-content !important;
-        a {
-            height: 2rem !important;
-            width: 2rem !important;
-            background-size: 1.5rem !important;
-            background-position: center !important;
-        }
     }
     .web-port-picker {
         order: 5;
@@ -2111,10 +2092,10 @@ each(range(12), {
         order: 5;
         justify-content: space-around;
     }
-    .flash_state {
+    .firmware_flasher_button__label {
         display: none !important;
     }
-    .connect_state {
+    .connection_button__label {
         display: none !important;
     }
     #port-picker.reveal {

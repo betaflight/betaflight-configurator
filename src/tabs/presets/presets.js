@@ -136,7 +136,7 @@ presets.disconnectCliMakeSure = function () {
     GUI.timeout_add(
         "disconnect",
         function () {
-            $("div.connect_controls a.connect").trigger("click");
+            $("a.connection_button__link").trigger("click");
         },
         500,
     );
@@ -375,7 +375,7 @@ presets.tryLoadPresets = function () {
 
     const failedToLoad = [];
 
-    Promise.all(this.presetsRepo.map((p) => p.loadIndex().catch((reason) => failedToLoad.push(p))))
+    Promise.all(this.presetsRepo.map((p) => p.loadIndex().catch(() => failedToLoad.push(p))))
         .then(() => {
             this._domWarningFailedToLoadRepositories.toggle(failedToLoad.length > 0);
             this._domWarningFailedToLoadRepositories.html(
@@ -690,8 +690,8 @@ presets.isPresetFitSearchFirmwareVersions = function (preset, searchParams) {
 
 presets.isPresetFitSearchString = function (preset, searchParams) {
     if (searchParams.searchString) {
-        const allKeywords = preset.keywords.join(" ");
-        const allVersions = preset.firmware_version.join(" ");
+        const allKeywords = Array.isArray(preset.keywords) ? preset.keywords.join(" ") : "";
+        const allVersions = Array.isArray(preset.firmware_version) ? preset.firmware_version.join(" ") : "";
         const totalLine = [preset.description, allKeywords, preset.title, preset.author, allVersions, preset.category]
             .join("\n")
             .toLowerCase()

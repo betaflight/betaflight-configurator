@@ -1,6 +1,4 @@
-import { serialShim } from "./serial_shim";
-
-const serial = serialShim();
+import { serial } from "./serial";
 
 const PortUsage = {
     previous_received: 0,
@@ -16,14 +14,16 @@ const PortUsage = {
         }, 1000);
     },
     update: function () {
-        if (serial.bitrate) {
+        if (serial?._protocol?.bitrate) {
             const port_usage_down = parseInt(
-                (((serial.bytesReceived - this.previous_received) * 10) / serial.bitrate) * 100,
+                (((serial._protocol.bytesReceived - this.previous_received) * 10) / serial._protocol.bitrate) * 100,
             );
-            const port_usage_up = parseInt((((serial.bytesSent - this.previous_sent) * 10) / serial.bitrate) * 100);
+            const port_usage_up = parseInt(
+                (((serial._protocol.bytesSent - this.previous_sent) * 10) / serial._protocol.bitrate) * 100,
+            );
 
-            this.previous_received = serial.bytesReceived;
-            this.previous_sent = serial.bytesSent;
+            this.previous_received = serial._protocol.bytesReceived;
+            this.previous_sent = serial._protocol.bytesSent;
             this.port_usage_down = port_usage_down;
             this.port_usage_up = port_usage_up;
         } else {

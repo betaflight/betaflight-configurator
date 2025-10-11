@@ -19,6 +19,10 @@ class FileSystem {
             ],
         });
 
+        if (!fileHandle) {
+            return null;
+        }
+
         const file = this._createFile(fileHandle);
 
         if (await this.verifyPermission(file, true)) {

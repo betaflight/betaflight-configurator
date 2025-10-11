@@ -1,16 +1,17 @@
 .tab-osd {
+    --context-menu-z-index: 10001;
+
     .info {
-        margin: 10px 0 0 0;
-        position: relative;
+        display: grid;
+        grid-template-areas: "area";
         width: 100%;
+        margin-bottom: 10px;
         .progressLabel {
-            position: absolute;
+            grid-area: area;
             width: 100%;
             height: 26px;
-            top: 0;
-            left: 0;
+            line-height: 26px;
             text-align: center;
-            line-height: 24px;
             color: white;
             font-weight: bold;
             a {
@@ -21,11 +22,13 @@
             }
         }
         .progress {
+            grid-area: area;
             width: 100%;
             height: 26px;
             border-radius: 5px;
             border: 1px solid var(--surface-500);
             -webkit-appearance: none;
+            appearance: none;
             &::-webkit-progress-bar {
                 background-color: var(--text);
                 border-radius: 4px;
@@ -65,12 +68,6 @@
     input[type="checkbox"] {
         width: 18px;
         height: 18px;
-    }
-    ul {
-        li {
-            list-style: circle;
-            margin-left: 30px;
-        }
     }
     .options {
         position: relative;
@@ -163,6 +160,7 @@
         }
     }
     .display-layout {
+        height: 100%;
         label {
             margin: 0.25em 0.1em;
             display: inline-block;
@@ -191,10 +189,29 @@
         /* please don't copy the generic background image from another project
 		* and replace the one that @nathantsoi took :)
 		*/
+        .preview-container {
+            position: relative;
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        .ruler-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            pointer-events: none;
+        }
+
         .preview {
             background: url(../../images/osd-bg-1.jpg);
             background-size: cover;
             background-repeat: no-repeat;
+            margin-top: 20px;
+            margin-left: 20px;
         }
         .gui_box_titlebar {
             label {
@@ -208,6 +225,7 @@
         }
         .gui_box_bottombar {
             text-align: center;
+            margin-top: 30px;
         }
         .row {
             display: flex;
@@ -261,6 +279,13 @@
         margin-left: 5px;
         vertical-align: text-bottom;
     }
+    .osd-preview-rulers-group {
+        margin-left: 10px;
+    }
+    .osd-preview-rulers-selector {
+        margin-left: 5px;
+        vertical-align: text-bottom;
+    }
     .char.mouseover {
         background: rgba(255, 255, 255, 0.4);
     }
@@ -276,6 +301,7 @@
         }
     }
     .switchable-field {
+        flex: 1;
         padding: 3px;
         border: 1px solid transparent;
         border-bottom: 1px solid var(--surface-500);
@@ -307,6 +333,17 @@
         margin-top: 5px;
         margin-bottom: 8px;
         width: 100%;
+        .elements-search-field {
+            margin: 0 0 5px 0.5rem;
+        }
+    }
+    .switchable-field-wrapper {
+        display: flex;
+        gap: 5px;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        align-items: center;
+        justify-content: space-between;
     }
     .switchable-field-flex {
         display: flex;
@@ -368,13 +405,14 @@
             font-weight: normal;
         }
     }
-    .grid-col {
-        margin: 0px;
+    #font-logo {
+        display: flex;
+        margin-bottom: 2em;
     }
     #font-logo-preview-container {
         background: rgba(0, 255, 0, 0.4);
         margin-bottom: 10px;
-        box-sizing: border-box;
+        padding: 10px;
     }
     #font-logo-preview {
         background: rgba(0, 255, 0, 1);
@@ -382,7 +420,8 @@
         margin: auto;
     }
     #font-logo-info {
-        font-size: 125%;
+        flex: 1;
+        margin-left: 2em;
         line-height: 150%;
         h3 {
             margin-bottom: 0.2em;
@@ -417,11 +456,11 @@
         font-size: 9pt !important;
         cursor: pointer;
     }
+    .font-preview {
+        padding-bottom: 1.25rem;
+    }
     .fontpresets_wrapper {
-        display: inline-block;
-        position: absolute;
-        right: 1.2em;
-        top: 0.8em;
+        padding: 1rem 0;
     }
     .fontpresets {
         background: var(--surface-200);
@@ -483,6 +522,169 @@
                     grid-column: span 1;
                 }
             }
+        }
+    }
+
+    .preset-pos-btn-wrapper {
+        position: relative;
+        display: inline-block;
+    }
+
+    .preset-pos-btn {
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: var(--surface-500);
+        color: var(--text);
+        border: 1px solid var(--primary-800);
+        transition:
+            background-color 0.25s,
+            transform 0.25s;
+        &:hover {
+            background-color: var(--surface-700);
+            transform: scale(1.1);
+        }
+        &:active {
+            transform: scale(0.9);
+        }
+    }
+
+    .context-menu {
+        position: absolute;
+        display: inline-block;
+        min-width: 180px;
+        top: 0;
+        left: 20px;
+        padding: 5px;
+        width: 0;
+        opacity: 0;
+        pointer-events: none;
+        z-index: var(--context-menu-z-index);
+        background-color: var(--surface-50);
+        border-radius: 5px;
+        transition: opacity 0.5s;
+
+        &.show {
+            display: inline-block;
+
+            opacity: 1;
+            pointer-events: all;
+        }
+    }
+
+    .context-menu-item {
+        position: relative;
+    }
+
+    // The list "item"
+    .context-menu-item div.context-menu-item-display {
+        position: relative;
+        padding: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        cursor: pointer;
+        font-size: 13px;
+        transition: all 0.25s;
+        border-radius: 0;
+        &:hover {
+            background-color: var(--surface-700);
+            border-radius: 5px;
+        }
+    }
+
+    .context-menu-item span.context-menu-item-content-wrapper {
+        position: absolute;
+    }
+    // The "content" of the item itself
+    .context-menu-item div.context-menu-item-content {
+        position: absolute;
+        left: 10px;
+        top: -10px;
+        display: none;
+        opacity: 0;
+        pointer-events: none;
+        min-width: 200px;
+        z-index: var(--context-menu-z-index);
+
+        &.show {
+            display: inline-block;
+            opacity: 1;
+            pointer-events: all;
+        }
+    }
+
+    #preset-pos-grid-wrapper {
+        background-color: var(--surface-50);
+        border-radius: 5px;
+        padding: 10px;
+        gap: 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #preset-pos-text {
+        font-weight: 600;
+    }
+
+    #preset-pos-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: repeat(5, 1fr);
+        gap: 6px;
+        width: 150px;
+        height: 120px;
+        padding: 10px;
+        background-color: var(--surface-100);
+        border-radius: 5px;
+        border: 2px solid var(--surface-700);
+    }
+
+    .preset-pos-grid-cell {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        font-size: 8px;
+        cursor: pointer;
+        background-color: color-mix(in srgb, var(--surface-700) 50%, var(--primary-500) 50%);
+        border-radius: 5px;
+        transition: transform 0.25s;
+        .preset-pos-cell-tooltip {
+            position: absolute;
+            top: -25px;
+            font-size: 8px;
+            white-space: nowrap;
+            color: var(--text);
+            background-color: color-mix(in srgb, var(--surface-300) 70%, var(--primary-500) 30%);
+            opacity: 0;
+            transition: opacity 0.25s;
+            pointer-events: none;
+            padding: 5px;
+            border-radius: 5px;
+        }
+        &:hover {
+            transform: scale(1.25);
+            .preset-pos-cell-tooltip {
+                opacity: 1;
+            }
+        }
+        // The dots
+        &::after {
+            content: "";
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: currentColor;
+            border-radius: 50%;
+            opacity: 0.8;
         }
     }
 }

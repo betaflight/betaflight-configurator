@@ -31,6 +31,9 @@
     "noticeTitle": {
         "message": "Notice"
     },
+    "search": {
+        "message": "Search"
+    },
     "dontShowAgain": {
         "message": "Don't show again"
     },
@@ -55,9 +58,6 @@
     },
     "storageDeviceNotReady": {
         "message": "The storage device is not ready. In the case of a microSD card, make sure it is properly recognised by your flight controller."
-    },
-    "options_title": {
-        "message": "Application Options"
     },
     "connect": {
         "message": "Connect"
@@ -90,6 +90,10 @@
         "message": "--- I can't find my Bluetooth device---",
         "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access a Bluetooth device."
     },
+    "portsSelectPermissionDFU": {
+        "message": "--- I can't find my DFU device ---",
+        "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access a DFU device."
+    },
     "bluetoothConnected": {
         "message": "Connected to Bluetooth device: $1"
     },
@@ -121,7 +125,7 @@
         "message": "Submit"
     },
     "autoConnectEnabled": {
-        "message": "Auto-Connect: Enabled - Configurator automatically tries to connect when new port is detected"
+        "message": "Auto-Connect: Enabled - App automatically tries to connect when new port is detected"
     },
     "autoConnectDisabled": {
         "message": "Auto-Connect: Disabled - User needs to select the correct serial port and click \"Connect\" button on its own"
@@ -149,9 +153,17 @@
         "message": "Set connection timeout to allow longer initialisation on device plugin or reboot",
         "description": "Change timeout on auto-connect and reboot so the bus has more time to initialize after being detected by the system"
     },
+    "developmentSettings": {
+        "message": "Development Settings",
+        "description": "Title for the development settings section"
+    },
     "showAllSerialDevices": {
         "message": "Show all serial devices (for manufacturers or development)",
         "description": "Do not filter serial devices using VID/PID values (for manufacturers or development)"
+    },
+    "cliOnlyMode": {
+        "message": "Enable CLI only mode",
+        "description": "Text for the option to enable or disable CLI only mode"
     },
     "showManualMode": {
         "message": "Enable manual connection mode",
@@ -312,16 +324,22 @@
         "description": "Text of the image in the top sensors icons. Please keep it short."
     },
     "checkForConfiguratorUnstableVersions": {
-        "message": "Show update notifications for unstable versions of the configurator"
+        "message": "Show update notifications for unstable versions of the app"
     },
     "configuratorUpdateNotice": {
-        "message": "You are using an outdated version of the <b>Betaflight Configurator</b>.<br>$t(configuratorUpdateHelp.message)"
+        "message": "You are using an outdated version of the <b>Betaflight App</b>.<br>$t(configuratorUpdateHelp.message)"
     },
     "configuratorUpdateHelp": {
         "message": "When internet is available, the app should automatically ask for available updates."
     },
     "configuratorUpdateWebsite": {
         "message": "Go to Release Website"
+    },
+    "rebootFlightController": {
+        "message": "Rebooting flight controller, reconnect when ready"
+    },
+    "rebootFlightControllerReady": {
+        "message": "Flight Controller is ready"
     },
     "deviceRebooting": {
         "message": "Device - <span class=\"message-negative\">Rebooting</span>"
@@ -427,6 +445,9 @@
     "fileSystemPickerFiles": {
         "message": "{{typeof}} files",
         "description": "Text for the file picker dialog, showing the type of files selected. The parameter can be HEX, TXT, etc."
+    },
+    "fileSystemPickerFirmwareFiles": {
+        "message": "Firmware files"
     },
     "serialErrorFrameError": {
         "message": "Serial connection error: bad framing"
@@ -553,13 +574,13 @@
         "message": "No configuration received within <span class=\"message-negative\">10 seconds</span>, communication <span class=\"message-negative\">failed</span>"
     },
     "firmwareVersionNotSupported": {
-        "message": "This firmware version is <span class=\"message-negative\">not supported</span>. Please upgrade to firmware that supports api version <strong>$1</strong> or higher. Use CLI for backup before flashing. CLI backup/restore procedure is in the documention.<br />Alternatively download and use an old version of the configurator if you are not ready to upgrade."
+        "message": "This firmware version is <span class=\"message-negative\">not supported</span>. Please upgrade to firmware that supports api version <strong>$1</strong> or higher. Use CLI for backup before flashing. CLI backup/restore procedure is in the documentation.<br />Alternatively download and use an old version of the app if you are not ready to upgrade."
     },
     "firmwareTypeNotSupported": {
         "message": "Non - Betaflight firmware is <span class=\"message-negative\">not supported</span>, except for CLI mode."
     },
     "firmwareUpgradeRequired": {
-        "message": "The firmware on this device needs upgrading to a newer version. Use CLI for backup before flashing. CLI backup/restore procedure is in the documention.<br />Alternatively download and use an old version of the configurator if you are not ready to upgrade."
+        "message": "The firmware on this device needs upgrading to a newer version. Use CLI for backup before flashing. CLI backup/restore procedure is in the documentation.<br />Alternatively download and use an old version of the app if you are not ready to upgrade."
     },
     "resetToCustomDefaultsDialog": {
         "message": "There are custom defaults for this board available. Normally, a board will not work properly unless custom defaults are applied.<br />Do you want to apply the custom defaults for this board?"
@@ -574,7 +595,7 @@
         "message": "<span class=\"message-negative\"><strong>You need to fix these problems before attempting to fly your aircraft</span></strong>."
     },
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
-        "message": "<span class=\"message-negative\"><strong>The configurator version used ($3) does not support firmware $4</strong></span>.<br>$t(configuratorUpdateHelp.message)"
+        "message": "<span class=\"message-negative\"><strong>The app version used ($3) does not support firmware $4</strong></span>.<br>$t(configuratorUpdateHelp.message)"
     },
     "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
         "message": "<strong>there is no motor output protocol selected</strong>.<br>Please select a motor output protocol appropriate for your ESCs in '$t(configurationEscFeatures.message)' on the '$t(tabMotorTesting.message)' tab.<br>$t(escProtocolDisabledMessage.message)"
@@ -587,8 +608,8 @@
         "description": "Message that appears in the GUI log panel indicating operating system"
     },
     "infoVersionConfigurator": {
-        "message" : "Configurator: <strong>{{configuratorVersion}}</strong>",
-        "description": "Message that appears in the GUI log panel indicating Configurator version"
+        "message" : "App Version: <strong>{{configuratorVersion}}</strong>",
+        "description": "Message that appears in the GUI log panel indicating application version"
     },
     "buildServerSuccess": {
         "message" : "Success: $1"
@@ -675,7 +696,7 @@
         "message": "Firmware"
     },
     "versionLabelConfigurator": {
-        "message": "Configurator"
+        "message": "App Version"
     },
     "notifications_app_just_updated_to_version": {
         "message": "Application just updated to version: $1"
@@ -711,6 +732,10 @@
         "message": "CPU Load:",
         "description": "CPU load text shown in the status bar"
     },
+    "statusbar_connection_time": {
+        "message": "Connection:",
+        "description": "Connection time text shown in the status bar"
+    },
     "dfu_connect_message": {
         "message": "Please use the Firmware Flasher to access DFU devices"
     },
@@ -730,7 +755,7 @@
         "message": "EEPROM <span class=\"message-positive\">saved</span>"
     },
     "defaultWelcomeIntro": {
-        "message": "Welcome to <strong>Betaflight - Configurator</strong>, a utility designed to simplify updating, configuring and tuning of your flight controller."
+        "message": "Welcome to the <strong>Betaflight App</strong>, a utility designed to simplify updating, configuring and tuning of your flight controller."
     },
     "defaultWelcomeHead": {
         "message": "Hardware"
@@ -742,7 +767,7 @@
         "message": "Contributing"
     },
     "defaultContributingText": {
-        "message": "If you would like to help make Betaflight even better you can help in many ways, including:<br /><ul><li>using your knowledge of Betaflight to create or update content on <a href=\"https://betaflight.com/docs/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">our Wiki</a>, or answering other users' questions in online forums;</li><li><a href=\"https://betaflight.com/docs/development\" target=\"_blank\" rel=\"noopener noreferrer\">contributing code</a> to the firmware and Configurator - new features, fixes, improvements;</li><li>testing <a href=\"https://github.com/Betaflight/betaflight/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">new features and fixes</a> and providing feedback;</li><li>helping other users solve the problems they report in <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">our issue tracker</a>, and participating in discussions on feature requests;</li><li><a href=\"https://github.com/betaflight/betaflight/tree/master/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">translating</a> Betaflight Configurator into a new language, or helping to maintain the existing translations.</li></ul>"
+        "message": "If you would like to help make Betaflight even better you can help in many ways, including:<br /><ul><li>using your knowledge of Betaflight to create or update content on <a href=\"https://betaflight.com/docs/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">our Wiki</a>, or answering other users' questions in online forums;</li><li><a href=\"https://betaflight.com/docs/development\" target=\"_blank\" rel=\"noopener noreferrer\">contributing code</a> to the firmware and app - new features, fixes, improvements;</li><li>testing <a href=\"https://github.com/Betaflight/betaflight/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">new features and fixes</a> and providing feedback;</li><li>helping other users solve the problems they report in <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">our issue tracker</a>, and participating in discussions on feature requests;</li><li><a href=\"https://github.com/betaflight/betaflight/tree/master/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">translating</a> Betaflight App into a new language, or helping to maintain the existing translations.</li></ul>"
     },
     "defaultFacebookText": {
         "message": "We also have a <a href=\"https://www.facebook.com/groups/betaflightgroup/\" target=\"_blank\" rel=\"noopener noreferrer\">Facebook Group</a>.<br />Join us to get a place to talk about Betaflight, ask configuration questions, or just hang out with fellow pilots."
@@ -751,7 +776,7 @@
         "message": "Betaflight <a href=\"https://discord.betaflight.com/invite\" target=\"_blank\" rel=\"noopener noreferrer\">Discord Server</a>.<br />Share your flight experience, talk about Betaflight, help other people or get some help for yourself from the community."
     },
     "statisticsDisclaimer": {
-        "message": "Betaflight Configurator collects anonymous usage statistics. For example, this data includes (but is not limited to) the number of launches, geographical region of the users, types of flight controllers, firmware versions, usage of UI elements and tabs, etc. The summary of this data is shared <a href=\"https://datastudio.google.com/u/0/reporting/1pK1PFw0eWmsgl2npvuzwAqscVzlhJvuF\" target=\"_blank\" rel=\"noopener noreferrer\">here</a>. Collection is done in order to better understand how Betaflight Configurator is being used, to understand community trends, and for possible UI improvements. Users can opt-out of data collection in the Options tab."
+        "message": "Betaflight App collects anonymous usage statistics. For example, this data includes (but is not limited to) the number of launches, geographical region of the users, types of flight controllers, firmware versions, usage of UI elements and tabs, etc. The summary of this data is shared <a href=\"https://datastudio.google.com/u/0/reporting/1pK1PFw0eWmsgl2npvuzwAqscVzlhJvuF\" target=\"_blank\" rel=\"noopener noreferrer\">here</a>. Collection is done in order to better understand how Betaflight App is being used, to understand community trends, and for possible UI improvements. Users can opt-out of data collection in the Options tab."
     },
     "defaultButtonFirmwareFlasher": {
         "message": "Firmware Flasher"
@@ -760,7 +785,7 @@
         "message": "Open Source / Donation Notice"
     },
     "defaultDonateText": {
-        "message": "<p><strong>Betaflight</strong> is a flight controller software that is <strong>open source</strong> and is available free of charge <strong>without warranty</strong> to all users.</p><p>If you found the Betaflight or Betaflight Configurator useful, please consider <strong>supporting</strong> its development by donating.</p>"
+        "message": "<p><strong>Betaflight</strong> is a flight controller software that is <strong>open source</strong> and is available free of charge <strong>without warranty</strong> to all users.</p><p>If you found the Betaflight or Betaflight App useful, please consider <strong>supporting</strong> its development by donating.</p>"
     },
     "defaultDonateBottom": {
         "message": "<p>If you want to contribute financially on an ongoing basis, you should consider becoming a patron for us on $t(patreonLink.message).</p>"
@@ -830,7 +855,7 @@
         "message": "Calibrating..."
     },
     "initialSetupButtonReset": {
-        "message": "Reset Settings"
+        "message": "Erase Settings"
     },
     "initialSetupResetText": {
         "message": "Reset the flight controller to an <strong>unconfigured state.</strong>"
@@ -1072,7 +1097,7 @@
         "description": "Message that pops up to describe the BST arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipMSP": {
-        "message": "MSP connection is active, probably with this Betaflight Configurator",
+        "message": "MSP connection is active, likely with the Betaflight App",
         "description": "Message that pops up to describe the MSP arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipPARALYZE": {
@@ -1173,6 +1198,12 @@
     "initialSetupInfoBuildConfig": {
         "message": "Config"
     },
+    "initialSetupInfoBuildDownload": {
+        "message": "Download"
+    },
+    "initialSetupInfoBuildFirmware": {
+        "message": "Firmware:"
+    },
     "initialSetupInfoBuildLog": {
         "message": "Log"
     },
@@ -1186,7 +1217,7 @@
         "message": "Local Build - no Cloud information"
     },
     "initialSetupInfoBuildType": {
-        "message": "Build type"
+        "message": "Build type:"
     },
     "initialSetupInfoBuildLocal": {
         "message": "Local Build"
@@ -1467,6 +1498,12 @@
     "configurationGyroAlignmentHelp": {
         "message": "The gyro alignment is the orientation of the gyro sensor on the flight controller board. The default is usually correct, but if you have a custom build or a flight controller with a different gyro orientation, you may need to adjust this setting."
     },
+    "configurationGyroActiveIMU": {
+        "message": "Active IMU"
+    },
+    "configurationGyroActiveIMUHelp": {
+        "message": "Select which gyro to use as the primary gyro. The primary gyro is used for stabilization and control. If you have only one gyro, it will be selected automatically.<br><br>It is not always possible to enable multiple gyros, when they are of different types or brands."
+    },
     "configurationGyroAlignmentRoll": {
         "message": "$t(configurationBoardAlignmentRoll.message)",
         "description": "Don't translate!!!"
@@ -1514,6 +1551,12 @@
     },
     "configurationSensorGyroToUseBoth": {
         "message": "Both"
+    },
+    "configurationSensorAlignment": {
+        "message": "Sensor Alignment"
+    },
+    "configurationGyroRequiredWarning": {
+        "message": "At least one gyro must remain enabled. If you disable all gyros, the flight controller will not work properly."
     },
     "configurationSensorAlignmentGyro1": {
         "message": "First GYRO"
@@ -1683,6 +1726,12 @@
     },
     "beeperRC_SMOOTHING_INIT_FAIL": {
         "message": "Beep when armed and rc smoothing has not initialized filters"
+    },
+    "configurationBeeperEnableAll": {
+        "message": "Enable All"
+    },
+    "configurationBeeperDisableAll": {
+        "message": "Disable All"
     },
     "configuration3d": {
         "message": "3D ESC/Motor Features"
@@ -2008,22 +2057,33 @@
         "message": "Manual"
     },
     "receiverRcSmoothingAutoFactor": {
-        "message": "Auto Factor",
-        "description": "Auto Factor parameter for RC smoothing"
+        "message": "Setpoint Auto Factor",
+        "description": "Setpoint Auto Factor parameter for RC smoothing"
     },
     "receiverRcSmoothingAutoFactorHelp": {
-        "message": "Adjusts the Auto factor calculation, 10 is the default factor to delay ratio. Increasing the number will smooth RC inputs more, while also adding delay. This may be useful for unreliable RC connections or for cinematic flying.<br>Be careful with numbers approaching 50, input delay will become noticeable.<br>Use the CLI command rc_smoothing_info while TX and RX are powered to see the automatically calculated RC smoothing cutoffs.",
-        "description": "Auto Factor parameter help message"
+        "message": "Adjusts the Setpoint Auto factor calculation, 10 is the default factor to delay ratio. Increasing the number will smooth RC inputs more, while also adding delay. This may be useful for unreliable RC connections or for cinematic flying.<br>Be careful with numbers approaching 50, input delay will become noticeable.<br>Use the CLI command rc_smoothing_info while TX and RX are powered to see the automatically calculated RC smoothing cutoffs.",
+        "description": "Setpoint Auto Factor parameter help message"
     },
     "receiverRcSmoothingAutoFactorHelp2": {
-        "message": "Adjusts auto RC smoothing. 30 is the default. Higher values smooth RC inputs more - e.g. 60 for HD freestyle or 90-120 for cinematic flying. Note: Values over 50 will cause appreciable stick delay. Lower values, eg 20-25, will transfer some of the RC control steps into the motor signals, slightly increasing motor heat, but will reduce RC delay slightly. This may be useful for racing.",
-        "description": "Auto Factor parameter help message"
+        "message": "Adjusts Setpoint RC smoothing. 30 is the default. Higher values smooth RC inputs more - e.g. 60 for HD freestyle or 90-120 for cinematic flying. Note: Values over 50 will cause appreciable stick delay. Lower values, eg 20-25, will transfer some of the RC control steps into the motor signals, slightly increasing motor heat, but will reduce RC delay slightly. This may be useful for racing.",
+        "description": "Setpoint Auto Factor parameter help message"
+    },
+    "receiverRcSmoothingAutoFactorThrottle": {
+        "message": "Throttle Auto Factor",
+        "description": "Throttle Auto Factor parameter for RC smoothing"
+    },
+    "receiverRcSmoothingAutoFactorThrottleHelp": {
+        "message": "Adjusts the Throttle factor calculation, 10 is the default factor to delay ratio. Increasing the number will smooth throttle inputs more, while also adding delay. This may be useful for unreliable RC connections or for cinematic flying.<br>Be careful with numbers approaching 50, input delay will become noticeable.<br>Use the CLI command rc_smoothing_info while TX and RX are powered to see the automatically calculated RC smoothing cutoffs.",
+        "description": "Throttle Auto Factor parameter help message"
     },
     "receiverRcFeedforwardTypeSelect": {
         "message": "Feedforward Cutoff Type"
     },
     "receiverRcSetpointTypeSelect": {
         "message": "Setpoint Cutoff Type"
+    },
+    "receiverThrottleTypeSelect": {
+        "message": "Throttle Cutoff Type"
     },
     "receiverRcSmoothingInterpolation": {
         "message": "Interpolation"
@@ -2046,8 +2106,17 @@
     "receiverRcSmoothingFeedforwardManual": {
         "message": "Selects whether the feedforward filter cutoff frequency is automatically calculated (recommended) or manually selected by the user. Using \"Manual\" is not recommended for receiver protocols like Crossfire which can change in flight."
     },
+    "receiverRcSmoothingThrottleManual": {
+        "message": "Selects whether RC smoothing is automatically calculated (recommended) or manually selected by the user. Using \"Manual\" is not recommended for receiver protocols like Crossfire which can change in flight."
+    },
+    "rcSmoothingThrottleCutoffHelp": {
+        "message": "The cutoff frequency in Hz used by the throttle smoothing filter. Using lower values will result in smoother inputs and are more appropriate for slower receiver protocols. Most users should leave this at 0 corresponding to \"Auto\"."
+    },
     "receiverRcSmoothingSetpointHz": {
         "message": "Setpoint Cutoff Frequency"
+    },
+    "receiverRcSmoothingThrottleCutoffHz": {
+        "message": "Throttle Cutoff Frequency"
     },
     "receiverRcSmoothingFeedforwardCutoff": {
         "message": "Feedforward Cutoff Frequency"
@@ -2057,9 +2126,6 @@
     },
     "receiverRcSmoothingFeedforwardTypeAuto": {
         "message": "Auto"
-    },
-    "receiverRcSmoothingMode": {
-        "message": "Smoothing Mode"
     },
     "pidTuningDtermSetpointTransition": {
         "message": "D Setpoint transition"
@@ -2334,6 +2400,9 @@
     },
     "receiverThrottleExpo": {
         "message": "Throttle EXPO"
+    },
+    "receiverThrottleHover": {
+        "message": "Hover Point"
     },
     "receiverStickMin": {
         "message": "'Stick Low' Threshold"
@@ -2671,9 +2740,17 @@
         "message": "Disable the control of VTX settings through the OSD",
         "description": "Help text to VTX CONTROL DISABLE mode"
     },
+    "auxiliaryHelpMode_VTXPOWER": {
+        "message": "Cycle through VTX power levels (if supported by VTX)",
+        "description": "Help text to VTX POWER mode"
+    },
     "auxiliaryHelpMode_VTXPITMODE": {
         "message": "Switch the VTX into pit mode (low output power, if supported)",
         "description": "Help text to VTX PIT MODE mode"
+    },
+    "auxiliaryHelpMode_LAPTIMERRESET": {
+        "message": "Reset the transponder lap timer",
+        "description": "Help text to LAP TIMER RESET mode"
     },
     "adjustmentsHelp": {
         "message": "Configure adjustment switches. See the 'in-flight adjustments' section of the manual for details. The changes that adjustment functions make are not saved automatically."
@@ -2957,9 +3034,13 @@
     "gpsAltitude": {
         "message": "Altitude:"
     },
-    "gpsLatLon": {
-        "message": "Current Latitude / Longitude:",
-        "description": "Show GPS position - Latitude / Longitude"
+    "gpsLatitude": {
+        "message": "Latitude:",
+        "description": "Show GPS position - Latitude"
+    },
+    "gpsLongitude": {
+        "message": "Longitude:",
+        "description": "Show GPS position - Longitude"
     },
     "gpsHeading": {
         "message": "Heading IMU / GPS:",
@@ -3119,13 +3200,14 @@
         "message": "Reset overtime maximum"
     },
     "motorsSensorGyroSelect":{
-        "message": "gyro"
+        "message": "$t(sensorStatusGyroShort.message)",
+        "description": "Don't translate!!!"
     },
     "motorsSensorAccelSelect":{
         "message": "accel"
     },
     "motorsTelemetryHelp": {
-        "message": "This numbers show the telemetry info received from the ESCs if available. It can show the actual speed of motors (in RPM), the error rate of the telemetry link and the temperature of the ESCs.",
+        "message": "These numbers show the telemetry info received from the ESCs if available. It can show the actual speed of motors (R, in RPM), the error rate (E) of the telemetry link and the temperature (T) of the ESCs.",
         "description": "Help text for the telemetry values in the motors tab."
     },
     "motorsRPM": {
@@ -3251,6 +3333,9 @@
     "escDshotDirectionDialog-SetDirectionHintSafety": {
         "message": "Motors will spin when setting the direction!"
     },
+    "escDshotDirectionDialog-SettingsAutoSaved": {
+        "message": "Motor direction is saved upon selection"
+    },
     "escDshotDirectionDialog-WrongProtocolText": {
         "message": "Feature works with DSHOT ESCs only.<br />Verify that your ESC (electric speed controller) supports DSHOT protocol and change it on $t(tabMotorTesting.message) tab."
     },
@@ -3332,6 +3417,9 @@
     "cliEnter": {
         "message": "CLI mode detected"
     },
+    "cliDevEnter": {
+        "message": "CLI only developer mode detected"
+    },
     "cliReboot": {
         "message": "CLI reboot detected"
     },
@@ -3369,7 +3457,7 @@
         "message": "Enter command here"
     },
     "loggingNote": {
-        "message": "Data will be logged in this tab <span class=\"message-negative\">only</span>, leaving the tab will <span class=\"message-negative\">cancel</span> logging and application will return to its normal <strong>\"configurator\"</strong> state.<br /> You are free to select the global update period, data will be written into the log file every <strong>1</strong> second for performance reasons."
+        "message": "Data will be logged in this tab <span class=\"message-negative\">only</span>. Leaving the tab will <span class=\"message-negative\">cancel</span> logging and the application will return to its normal state.<br /> You can select the global update period; data will be written to the log file every <strong>1</strong> second for performance reasons."
     },
     "loggingSamplesSaved": {
         "message": "Samples Saved:"
@@ -3427,6 +3515,9 @@
     },
     "blackboxLoggingSerial": {
         "message": "Serial Port"
+    },
+    "blackboxLoggingVirtual": {
+        "message": "To File"
     },
     "serialLoggingSupportedNote": {
         "message": "You can log to an external logging device (such as an OpenLager) by using a serial port. Configure the port on the Ports tab."
@@ -3616,7 +3707,7 @@
         "message": "Select or detect your board to see available online firmware releases - Select the correct firmware appropriate for your board."
     },
     "firmwareFlasherOnlineSelectBoardHint": {
-        "message": "Betaflight configurator supports flashing of Unified Targets with the respective board specific configurations in one step.<br><br>The concept of Unified Targets means that the same firmware .hex file can be used for all boards using the same MCU.<br><br>Betaflight 4.4 introduces <strong>Cloud Build</strong><br><br>With <strong>Cloud Build</strong> we need to define hardware options present on your build.<br><br>To make the different boards work with the same firmware, a specific configuration file is deployed alongside the firmware when a Unified Target is flashed.<br><br>With Local build you can load a unified target configuration file or chose a board before loading a firmware .hex file.<br><br>If you encounter problems using the firmware, please consider joining Discord or open an <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">issue</a>."
+        "message": "Betaflight App supports flashing of Unified Targets with the respective board specific configurations in one step.<br><br>The concept of Unified Targets means that the same firmware .hex file can be used for all boards using the same MCU.<br><br>Betaflight 4.4 introduces <strong>Cloud Build</strong><br><br>With <strong>Cloud Build</strong> we need to define hardware options present on your build.<br><br>To make the different boards work with the same firmware, a specific configuration file is deployed alongside the firmware when a Unified Target is flashed.<br><br>With Local build you can load a unified target configuration file or chose a board before loading a firmware .hex file.<br><br>If you encounter problems using the firmware, please consider joining Discord or open an <a href=\"https://github.com/betaflight/betaflight/issues\" target=\"_blank\" rel=\"noopener noreferrer\">issue</a>."
     },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "Select firmware version for your board."
@@ -3730,7 +3821,7 @@
         "message": "<strong>Recovery / Lost communication</strong>"
     },
     "firmwareFlasherRecoveryText": {
-        "message": "If you have lost communication with your board follow these steps to restore communication: <ul><li>Power off</li><li>Enable 'No reboot sequence', enable 'Full chip erase'.</li><li>Jumper the BOOT pins or hold BOOT button.</li><li>Power on (activity LED will NOT flash if done correctly).</li><li>Install all STM32 drivers and Zadig if required (see <a href=\"https://betaflight.com/docs/wiki/guides/current/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">USB Flashing</a> section of Betaflight manual).</li><li>Close configurator, Restart Configurator.</li><li>Release BOOT button if your FC has one.</li><li>Flash with correct firmware (using manual baud rate if specified in your FC's manual).</li><li>Power off.</li><li>Remove BOOT jumper.</li><li>Power on (activity LED should flash).</li><li>Connect normally.</li></ul>"
+        "message": "If you have lost communication with your board follow these steps to restore communication: <ul><li>Power off</li><li>Enable 'No reboot sequence', enable 'Full chip erase'.</li><li>Jumper the BOOT pins or hold BOOT button.</li><li>Power on (activity LED will NOT flash if done correctly).</li><li>Install all STM32 drivers and Zadig if required (see <a href=\"https://betaflight.com/docs/wiki/guides/current/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">USB Flashing</a> section of Betaflight manual).</li><li>Close the App, then restart it.</li><li>Release BOOT button if your FC has one.</li><li>Flash with correct firmware (using manual baud rate if specified in your FC's manual).</li><li>Power off.</li><li>Remove BOOT jumper.</li><li>Power on (activity LED should flash).</li><li>Connect normally.</li></ul>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Leave Firmware Flasher"
@@ -3744,8 +3835,23 @@
     "firmwareFlasherFirmwareOnlineLoaded": {
         "message": "Loaded Online Firmware: {{filename}} ({{bytes}} bytes)"
     },
+    "firmwareFlasherTooltipSaveFirmware": {
+        "message": "Save Firmware"
+    },
+    "firmwareFlasherInvalidFileFormat": {
+        "message": "Invalid file format"
+    },
+    "firmwareFlasherUf2Corrupted": {
+        "message": "UF2 file appears to be corrupted"
+    },
     "firmwareFlasherHexCorrupted": {
         "message": "HEX file appears to be corrupted"
+    },
+    "firmwareFlasherUF2SaveSuccess": {
+        "message": "Saved (flashed) UF2 successfully"
+    },
+    "firmwareFlasherUF2SaveFailed": {
+        "message": "Failed to save (flash) UF2"
     },
     "firmwareFlasherConfigCorrupted": {
         "message": "Config file appears to be corrupted, ASCII accepted (chars 0-255)",
@@ -3763,6 +3869,9 @@
     },
     "firmwareFlasherFailedToLoadUnifiedConfig": {
         "message": "Failed to load remote config for {{remote_file}}"
+    },
+    "firmwareFlasherCanceledBackup": {
+        "message": "Backup cancelled, flashing aborted"
     },
     "firmwareFlasherLegacyLabel": {
         "message": "{{target}} (Legacy)",
@@ -3788,15 +3897,15 @@
         "description": "Make a quick connection to read firmware target and never flash a wrong target again"
     },
     "firmwareFlasherBoardVerificationSuccess": {
-        "message": "Configurator has <span class=\"message-positive\">successfully</span> detected and verified the board: <strong>{{boardName}}</strong>",
+        "message": "App has <span class=\"message-positive\">successfully</span> detected and verified the board: <strong>{{boardName}}</strong>",
         "description": "Board verification has succeeded."
     },
     "firmwareFlasherBoardVerficationTargetNotAvailable": {
-        "message": "Configurator has detected the board: <strong>{{boardName}}</strong> but no official Betaflight target was found",
+        "message": "App has detected the board: <strong>{{boardName}}</strong> but no official Betaflight target was found",
         "description": "Board verification has succeeded, but the target is not available as offical Betaflight target."
     },
     "firmwareFlasherBoardVerificationFail": {
-        "message": "Configurator <span class=\"message-negative\">failed</span> to verify the board, if this does not work please try switching tab slowly to retry, make a new usb connection or connect first if you might have forgotten to apply custom defaults",
+        "message": "The App <span class=\"message-negative\">failed</span> to verify the board. If this persists, try switching tabs and retry, reconnect the USB, or connect first if you might have forgotten to apply custom defaults.",
         "description": "Sometimes MSP values cannot be read from firmware correctly"
     },
     "firmwareFlasherButtonAbort": {
@@ -3823,9 +3932,6 @@
     "unstableFirmwareAcknowledgementFlash": {
         "message": "Flash"
     },
-    "firmwareFlasherPreviousDevice": {
-        "message": "Detected: <strong>$1</strong> - previous device still flashing, please replug to try again"
-    },
     "firmwareFlasherRemindBackupTitle": {
         "message": "Wipe out settings",
         "description": "Warning message title before actual flashing takes place"
@@ -3841,6 +3947,15 @@
     "firmwareFlasherBackupIgnore": {
         "message": "Ignore the risk",
         "description": "Ignore creating a backup before actual flashing takes place"
+    },
+    "firmwareBackupEnabled": {
+        "message": "Backup enabled"
+    },
+    "firmwareBackupDisabled": {
+        "message": "Backup disabled"
+    },
+    "firmwareBackupAsk": {
+        "message": "Ask before backup"
     },
     "ledStripHelp": {
         "message": "The flight controller can control colors and effects of individual LEDs on a strip.<br />Configure LEDs on the grid, configure wiring order then attach LEDs on your aircraft according to grid positions. LEDs without wire ordering number will not be saved.<br />Double-click on a color to edit the HSV values."
@@ -4700,7 +4815,8 @@
         "description": "Iterm Relax Type selection"
     },
     "pidTuningItermRelaxTypeOptionGyro": {
-        "message": "Gyro"
+        "message": "$t(sensorStatusGyroShort.message)",
+        "description": "Don't translate!!!"
     },
     "pidTuningItermRelaxTypeOptionSetpoint": {
         "message": "Setpoint"
@@ -5270,6 +5386,10 @@
         "message": "Font",
         "description": "Content of the selector for the OSD Font in the preview"
     },
+    "osdSetupFontManagerTitle": {
+        "message": "OSD Font Manager",
+        "description": "Dialog title"
+    },
     "osdSetupFontTypeDefault": {
         "message": "Default",
         "description": "Font Default"
@@ -5664,7 +5784,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementCraftName": {
-        "message": "Aircraft name as set in the Configuration tab.</br>Can also be set via the \"aircraft_name\" CLI variable."
+        "message": "Aircraft name as set in the Configuration tab.</br>Can also be set via the \"craft_name\" CLI variable."
     },
     "osdTextElementAltitude": {
         "message": "Altitude",
@@ -5959,6 +6079,14 @@
     "osdTextElementRtcDateTime": {
         "message": "RTC date and time",
         "description": "One of the elements of the OSD"
+    },
+    "osdTextElementRtcDateTimeVariantFullDate": {
+        "message": "Full date",
+        "description": "One of the variants of the RTC date and time element of the OSD"
+    },
+    "osdTextElementRtcDateTimeVariantShortDate": {
+        "message": "Short date",
+        "description": "One of the variants of the RTC date and time element of the OSD"
     },
     "osdDescElementRtcDateTime": {
         "message": "Real time clock date / time"
@@ -6677,7 +6805,7 @@
         "description": "Text of one of the fields of the VTX tab"
     },
     "vtxFrequencyChannelHelp": {
-        "message": "If you enable this, the Configurator will let you select a frequency in place of the habitual band/channel. For this to work your VTX must support this feature.",
+        "message": "If you enable this, the App will let you select a frequency instead of the usual band/channel. For this to work your VTX must support this feature.",
         "description": "Help text for the frequency or channel select field of the VTX tab"
     },
     "vtxSelectedMode": {
@@ -7107,7 +7235,7 @@
         "message": "Blackbox logging rate"
     },
     "onboardLoggingDebugFields": {
-        "message": "Data included"
+        "message": "Debug Fields included"
     },
     "onboardLoggingDebugMode": {
         "message": "Blackbox debug mode"
@@ -7165,6 +7293,9 @@
     },
     "cliAutoComplete": {
         "message": "Advanced CLI AutoComplete"
+    },
+    "firmwareBackupOnFlash": {
+        "message": "Create a backup before flashing new target"
     },
     "darkTheme": {
         "message": "Enable dark theme"
@@ -7248,7 +7379,7 @@
         "message": "Incompatible webview"
     },
     "cordovaWebviewTroubleshootingMsg": {
-        "message": "You must update your device's webview in order to use the configurator."
+        "message": "You must update your device's webview in order to use the Betaflight App."
     },
     "cordovaWebviewTroubleshootingMsg2": {
         "message": "The tool below is intended to help you to install a new webview or to update an already installed webview."
@@ -7296,7 +7427,7 @@
         "message": "Confirmation"
     },
     "cordovaExitAppMessage": {
-        "message": "Do you really want to close the configurator?"
+        "message": "Do you really want to close the app?"
     },
     "dropDownSelectAll": {
         "message": "[Select/deselect all]",
@@ -7574,6 +7705,18 @@
     "firmwareFlasherBuildCustomDefines": {
         "message": "Custom Defines"
     },
+    "firmwareFlasherOSDProtocolNotSelected": {
+        "message": "OSD protocol not selected"
+    },
+    "firmwareFlasherOSDProtocolNotSelectedDescription": {
+        "message": "You must select an OSD protocol to build a firmware."
+    },
+    "firmwareFlasherOSDProtocolSelect": {
+        "message": "Select OSD protocol"
+    },
+    "firmwareFlasherOSDProtocolNotSelectedContinue": {
+        "message": "Continue without OSD protocol"
+    },
     "coreBuild": {
         "message": "Core Only"
     },
@@ -7614,5 +7757,17 @@
     "programmingFailedNotification": {
         "message": "FC programming failed",
         "description": "Notification message when programming is unsuccessful"
+    },
+    "osdTextElementLidar": {
+        "message": "Sonar",
+        "description": "Displays distance from sonar sensor in cm"
+    },
+    "osdDescElementLidar": {
+        "message": "$t(osdTextElementLidar.message)",
+        "description": "Don't translate!!!"
+    },
+    "osdSetupPreviewCheckRulers": {
+        "message": "Rulers",
+        "description": "Label for the checkbox to toggle OSD preview rulers around the preview"
     }
 }

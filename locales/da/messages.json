@@ -28,15 +28,18 @@
     "noticeTitle": {
         "message": "Bemærk"
     },
+    "search": {
+        "message": "Søg"
+    },
     "dontShowAgain": {
-        "message": "Skjul"
+        "message": "Vis ikke igen"
     },
     "pwaOnNeedRefreshTitle": {
-        "message": "Applikationen har fundet obligatorisk opdatering",
+        "message": "Applikationen kræver opdatering",
         "description": "Title of the window that appears when the app needs to be refreshed to get the latest changes"
     },
     "pwaOnNeedRefreshText": {
-        "message": "Du skal opdatere siden for at få de seneste ændringer. Genopfriskning vil genindlæse siden, og du vil miste alle ikke-gemte ændringer og vil afbryde iganværende operation.<br><br>Vil du opdatere  nu? Du kan også afvise  og opdatere manuelt senere.",
+        "message": "Opdatér siden for at få de seneste ændringer. Genopfriskning vil genindlæse siden, og man mister alle ikke-gemte ændringer og iganværende operationer afbrydes.<br><br>Ønsker du at opdatere nu? Du kan også afvise beskeden og opdatere manuelt senere.",
         "description": "Text of the window that appears when the app needs to be refreshed to get the latest changes"
     },
     "pwaOnOffilenReadyTitle": {
@@ -52,9 +55,6 @@
     },
     "storageDeviceNotReady": {
         "message": "Lagerenheden er ikke klar. Ved microSD-kort skal du sørge for, at det er korrekt genkendt af din flight controller."
-    },
-    "options_title": {
-        "message": "Program indstillinger"
     },
     "connect": {
         "message": "Tilslut konfigurering"
@@ -86,6 +86,10 @@
     "portsSelectPermissionBluetooth": {
         "message": "--- Jeg kan ikke finde min Bluetooth enhed---",
         "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access a Bluetooth device."
+    },
+    "portsSelectPermissionDFU": {
+        "message": "--- Jeg kan ikke finde min DFU forbindelse ---",
+        "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access a DFU device."
     },
     "bluetoothConnected": {
         "message": "Forbundet til Bluetooth-enhed: $1"
@@ -146,9 +150,17 @@
         "message": "Indstil forbindelsens timeout for at tillade længere initialisering på plugin eller genstart",
         "description": "Change timeout on auto-connect and reboot so the bus has more time to initialize after being detected by the system"
     },
+    "developmentSettings": {
+        "message": "Indstillinger udvikling",
+        "description": "Title for the development settings section"
+    },
     "showAllSerialDevices": {
         "message": "Vis alle serielle enheder (for producenter eller ved udvikling)",
         "description": "Do not filter serial devices using VID\/PID values (for manufacturers or development)"
+    },
+    "cliOnlyMode": {
+        "message": "Aktiver kun CLI tilstand",
+        "description": "Text for the option to enable or disable CLI only mode"
     },
     "showManualMode": {
         "message": "Aktiver forbindelse manuelt",
@@ -157,6 +169,10 @@
     "showVirtualMode": {
         "message": "Aktiver virtuel forbindelse",
         "description": "Text for the option to enable or disable the virtual FC"
+    },
+    "useLegacyRenderingModel": {
+        "message": "Aktiver ældre indstillinger for 3D-model (for enheder med lav ydeevne)",
+        "description": "Text for the option to enable or disable legacy rendering of the 3D model"
     },
     "cordovaForceComputerUI": {
         "message": "Brug computerens interface i stedet for telefonens interface"
@@ -232,16 +248,22 @@
         "description": "Text of the image in the top sensors icons. Please keep it short."
     },
     "checkForConfiguratorUnstableVersions": {
-        "message": "Vis opdateringsadviseringer for foreløbige versioner af konfiguratoren"
+        "message": "Vis opdateringsadviseringer for foreløbige versioner af app"
     },
     "configuratorUpdateNotice": {
-        "message": "Du bruger en forældet version af <b>Betaflight Configurator<\/b>.<br>$t(configuratorUpdateHelp.message)"
+        "message": "Du bruger en forældet version af <b>Betaflight app<\/b>.<br>$t(configuratorUpdateHelp.message)"
     },
     "configuratorUpdateHelp": {
         "message": "Når internettet er tilgængeligt, vil Configurator automatisk undersøge for mulige opdateringer."
     },
     "configuratorUpdateWebsite": {
         "message": "Åbn udgivelseswebsted"
+    },
+    "rebootFlightController": {
+        "message": "Genstart FC, tilslut igen, når du er klar"
+    },
+    "rebootFlightControllerReady": {
+        "message": "FC er klar"
     },
     "deviceRebooting": {
         "message": "Enhed - <span class=\"message-negative\">Genstarter<\/span>"
@@ -313,7 +335,7 @@
         "message": "GPS"
     },
     "tabMotorTesting": {
-        "message": "Motorer"
+        "message": "Motor styring"
     },
     "tabLedStrip": {
         "message": "LED-strimmel"
@@ -345,6 +367,9 @@
     "fileSystemPickerFiles": {
         "message": "{{typeof}} filer",
         "description": "Text for the file picker dialog, showing the type of files selected. The parameter can be HEX, TXT, etc."
+    },
+    "fileSystemPickerFirmwareFiles": {
+        "message": "Firmware info"
     },
     "serialErrorFrameError": {
         "message": "Seriel kommunikation fejl: forkert framing"
@@ -485,13 +510,13 @@
         "message": "Anvend tilpassede standarder"
     },
     "reportProblemsDialogHeader": {
-        "message": "Følgende <strong>problemer med din konfiguration<\/strong> blev opdaget:"
+        "message": "Følgende <strong>problemer med din konfiguration<\/strong> blev registeret:"
     },
     "reportProblemsDialogFooter": {
         "message": "<span class=\"message-negative\"><strong>Du skal løse problemer med disse indstillinger, før du forsøger at flyve med dit fartøj<\/span><\/strong>."
     },
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
-        "message": "<span class=\"message-negative\"><strong>Din Betaflight configurator ($3) understøtter ikke den anvendte firmware $4<\/strong><\/span>.<br>$t(configuratorUpdateHelp.message)"
+        "message": "<span class=\"message-negative\"><strong>Den anvendte app version ($3) understøtter ikke firmware $4<\/strong><\/span>.<br>$t(configuratorUpdateHelp.message)"
     },
     "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
         "message": "<strong>der er ikke valgt en motor protokol<\/strong>.<br>Vælg venligst en motor protokol passende for dine ESC'er i '$t(configurationEscFeatures.message)' på '$t(tabMotorTesting.message)' fanen.<br>$t(escProtocolDisabledMessage.message)"
@@ -504,8 +529,8 @@
         "description": "Message that appears in the GUI log panel indicating operating system"
     },
     "infoVersionConfigurator": {
-        "message": "Configurator: <strong>{{configuratorVersion}}<\/strong>",
-        "description": "Message that appears in the GUI log panel indicating Configurator version"
+        "message": "App version: <strong>{{configuratorVersion}}<\/strong>",
+        "description": "Message that appears in the GUI log panel indicating application version"
     },
     "buildServerSuccess": {
         "message": "Succes: $1"
@@ -592,7 +617,7 @@
         "message": "Firmware"
     },
     "versionLabelConfigurator": {
-        "message": "Configurator"
+        "message": "App version"
     },
     "notifications_app_just_updated_to_version": {
         "message": "Program netop opdateret til version: $1"
@@ -628,6 +653,10 @@
         "message": "CPU belastning:",
         "description": "CPU load text shown in the status bar"
     },
+    "statusbar_connection_time": {
+        "message": "Forbindelse:",
+        "description": "Connection time text shown in the status bar"
+    },
     "dfu_connect_message": {
         "message": "Benyt Brænd firmware for at tilgå DFU-enheder"
     },
@@ -647,7 +676,7 @@
         "message": "Konfiguration  <span class=\"message-positive\">gemt<\/span> i EEPROM"
     },
     "defaultWelcomeIntro": {
-        "message": "Velkommen til <strong>Betaflight - Configurator<\/strong>, et værktøj til opdatering, opsætning og tuning af din flight controller (FC)."
+        "message": "Velkommen til <strong>Betaflight app<\/strong>, et værktøj til opdatering, opsætning og tuning af din flight controller (FC)."
     },
     "defaultWelcomeHead": {
         "message": "Hardware"
@@ -659,7 +688,7 @@
         "message": "Bidrag"
     },
     "defaultContributingText": {
-        "message": "Hvis du gerne vil hjælpe med at gøre Betaflight endnu bedre, kan du hjælpe på mange måder, herunder:<br \/><ul><li>ved at bruge din viden om Betaflight til at oprette eller opdatere indhold på <a href=\"https:\/\/betaflight.com\/docs\/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">vores Wiki<\/a>, eller ved at besvare andre brugeres spørgsmål i onlinefora<\/li><li><a href=\"https:\/\/betaflight.com\/docs\/development\" target=\"_blank\" rel=\"noopener noreferrer\">bidrage med kode<\/a> til firmware og Configurator - nye funktioner, rettelser, forbedringer,<\/li><li>test af <a href=\"https:\/\/github.com\/Betaflight\/betaflight\/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">nye funktioner og rettelser<\/a> og give feedback;<\/li><li>hjælper andre brugere med at løse de problemer, de rapporterer i <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel=\"noopener noreferrer\">vores issue tracker<\/a>, deltagelse i diskussioner om ønsker til rettelser og forbedringer<\/li><li><a href=\"https:\/\/github.com\/betaflight\/betaflight\/tree\/master\/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">oversætte<\/a> Betaflight Configurator til et nyt sprog eller hjælpe med at vedligeholde eksisterende oversættelser.<\/li><\/ul>"
+        "message": "Hvis du gerne vil hjælpe med at gøre Betaflight endnu bedre, kan du hjælpe på mange måder. herunder:<br \/><ul><li>ved hjælp af din viden om Betaflight til at oprette eller opdatere indhold på <a href=\"https:\/\/betaflight.com\/docs\/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">vores Wiki<\/a>, eller besvare andre brugeres spørgsmål i onlinefora<\/li><li><a href=\"https:\/\/betaflight.com\/docs\/development\" target=\"_blank\" rel=\"noopener noreferrer\">bidrager kode<\/a> til firmwaren og app - nye funktioner, rettelser, forbedringer,<\/li><li>test <a href=\"https:\/\/github.com\/Betaflight\/betaflight\/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">nye funktioner og rettelser<\/a> og giver feedback;<\/li><li>hjælper andre brugere med at løse de problemer, de rapporterer i <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel=\"noopener noreferrer\">vores issue tracker<\/a>, deltagelse i diskussioner om anmodninger om indslag<\/li><li><a href=\"https:\/\/github.com\/betaflight\/betaflight\/tree\/master\/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">oversætter<\/a> Betaflight app til et nyt sprog eller hjælper med at vedligeholde de eksisterende oversættelser.<\/li><\/ul>"
     },
     "defaultFacebookText": {
         "message": "Vi har også en <a href=\"https:\/\/www.facebook.com\/groups\/betaflightgroup\/\" target=\"_blank\" rel=\"noopener noreferrer\">Facebook-gruppe<\/a>.<br \/>Meld dig ind i gruppen vedrørende Betaflight, for at stille spørgsmål om opsætning eller blot hænge ud med andre piloter."
@@ -668,7 +697,7 @@
         "message": "Betaflight <a href=\"https:\/\/discord.betaflight.com\/invite\" target=\"_blank\" rel=\"noopener noreferrer\">Discord Server<\/a>.<br \/>Del din flyve oplevelse, skriv om Betaflight, hjælp andre eller få hjælp til dig selv fra Betaflight fællesskabet."
     },
     "statisticsDisclaimer": {
-        "message": "Betaflight Configurator indsamler anonym brugsstatistik. For eksempel omfatter disse data (men er ikke begrænset til) antallet af release udgivelser, geografiske region af brugerne, FC type, firmwareversioner, brug af UI-elementer og faner osv. Resuméet af disse data er delt <a href=\"https:\/\/datastudio.google.com\/u\/0\/reporting\/1pK1PFw0eWmsgl2npvuzwAqscVzlhJvuF\" target=\"_blank\" rel=\"noopener noreferrer\">her<\/a>. Indsamlingen skal anvendes til bedre at forstå, hvordan Betaflight Configurator bliver brugt, for at forstå fællesskabstendenser og for mulige UI forbedringer. Brugere kan fravælge dataindsamling i fanen Indstillinger."
+        "message": "Betaflight app indsamler anonym brugsstatistik. For eksempel omfatter disse data (men er ikke begrænset til) antallet af release udgivelser, geografiske region af brugerne, FC type, firmwareversioner, brug af UI-elementer og faner osv. Resuméet af disse data er delt <a href=\"https:\/\/datastudio.google.com\/u\/0\/reporting\/1pK1PFw0eWmsgl2npvuzwAqscVzlhJvuF\" target=\"_blank\" rel=\"noopener noreferrer\">her<\/a>. Indsamlingen skal anvendes til bedre at forstå, hvordan Betaflight app bliver brugt, for at forstå tendenser og for mulige UI forbedringer. Brugere kan fravælge dataindsamling i fanen Indstillinger."
     },
     "defaultButtonFirmwareFlasher": {
         "message": "Brænd firmware"
@@ -677,7 +706,7 @@
         "message": "Vedrørende Open Source og støtte med donation"
     },
     "defaultDonateText": {
-        "message": "<p><strong>Betaflight<\/strong> er <strong>open source<\/strong> programmel til opsætning af flight controller (FC) som er tilgængelig uden beregning, for alle brugere, men også <strong>uden garanti<\/strong>.<\/p><p>Hvis du fandt Betaflight eller Betaflight-Configurator nyttig, så overvej venligst at <strong>støtte<\/strong> udviklingen ved en donation.<\/p>"
+        "message": "<p><strong>Betaflight<\/strong> er <strong>open source<\/strong> programmel til opsætning af flight controller (FC) som er tilgængelig uden beregning, for alle brugere, men også <strong>uden garanti<\/strong>.<\/p><p>Hvis du fandt Betaflight eller Betaflight app nyttig, så overvej venligst at <strong>støtte<\/strong> udviklingen ved en donation.<\/p>"
     },
     "defaultDonateBottom": {
         "message": "<p>Hvis du løbende vil støtte op om projektet, bør du overveje a blive patreon for os på $t(patreonLink.message).<\/p>"
@@ -917,7 +946,7 @@
         "message": "Liste over flag som angiver, hvorfor indkobling pt. ikke er tilladt. Før markøren over flaget, eller se Wiki'en (siden 'Indkoblingssekvens og Sikkerhed'), for mere info."
     },
     "initialSetupArmingDisableFlagsTooltipNO_GYRO": {
-        "message": "En gyro blev ikke fundet",
+        "message": "En gyro blev ikke registreret",
         "description": "Message that pops up to describe the NO_GYRO arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipFAILSAFE": {
@@ -941,7 +970,7 @@
         "description": "Message that pops up to describe the RUNAWAY_TAKEOFF arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipCRASH_DETECTED": {
-        "message": "Nedstyrtet drone er aktiv",
+        "message": "Nedstyrtet drone tilstand er aktiv",
         "description": "Message that pops up to describe the CRASH_DETECTED arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipCALIBRATING": {
@@ -989,7 +1018,7 @@
         "description": "Message that pops up to describe the BST arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipMSP": {
-        "message": "MSP-forbindelsen er aktiv, antagelig med denne Betaflight Configurator",
+        "message": "MSP forbindelsen er aktiv, antagelig med denne Betaflight app",
         "description": "Message that pops up to describe the MSP arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipPARALYZE": {
@@ -1037,7 +1066,7 @@
         "description": "Message that pops up to describe the ALTHOLD arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipPOSHOLD": {
-        "message": "Fast Højde er aktiv",
+        "message": "Fast Position er aktiv",
         "description": "Message that pops up to describe the POSHOLD arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
@@ -1090,6 +1119,12 @@
     "initialSetupInfoBuildConfig": {
         "message": "Konfiguration"
     },
+    "initialSetupInfoBuildDownload": {
+        "message": "Hent"
+    },
+    "initialSetupInfoBuildFirmware": {
+        "message": "Firmware:"
+    },
     "initialSetupInfoBuildLog": {
         "message": "Log"
     },
@@ -1103,7 +1138,7 @@
         "message": "Lokalt bygget - ingen Cloud Build information"
     },
     "initialSetupInfoBuildType": {
-        "message": "Byg type"
+        "message": "Byg type:"
     },
     "initialSetupInfoBuildLocal": {
         "message": "Byg lokalt"
@@ -1237,7 +1272,7 @@
         "message": "Analog RSSI-input"
     },
     "featureLED_STRIP": {
-        "message": "Flerfarvet RGB LED-strimmel understøttelse"
+        "message": "Flerfarvet RGB LED strimmel"
     },
     "featureLED_STRIPTip": {
         "message": "Aktiver flerfavet LED strimmel, indstil på fanen LED-strimmel"
@@ -1384,6 +1419,12 @@
     "configurationGyroAlignmentHelp": {
         "message": "Gyro indstilling er orienteringen af gyro retning på FC. Start indstiling er normalt korrekt, men hvis du har en brugerdefineret build eller en FC med en anden gyro retning, det kan være nødvendigt at ændre denne indstilling."
     },
+    "configurationGyroActiveIMU": {
+        "message": "Aktiv IMU"
+    },
+    "configurationGyroActiveIMUHelp": {
+        "message": "Vælg den gyro, der skal være den primære gyro. Den primære gyro bruges til stabilisering og kontrol. Hvis du kun har et gyro, vælges den automatisk.<br><br>Det er ikke altid muligt at aktivere flere gyroer, hvis de har forskellig type eller fabrikant."
+    },
     "configurationGyroAlignmentRoll": {
         "message": "$t(configurationBoardAlignmentRoll.message)",
         "description": "Don't translate!!!"
@@ -1431,6 +1472,12 @@
     },
     "configurationSensorGyroToUseBoth": {
         "message": "Begge"
+    },
+    "configurationSensorAlignment": {
+        "message": "Sensor justering"
+    },
+    "configurationGyroRequiredWarning": {
+        "message": "Mindst én gyro skal være aktiveret. Hvis du deaktiverer alle gyroer, vil FC ikke fungere korrekt."
     },
     "configurationSensorAlignmentGyro1": {
         "message": "Første GYRO"
@@ -1598,6 +1645,12 @@
     "beeperRC_SMOOTHING_INIT_FAIL": {
         "message": "Bip når aktiveret og rc smooting ikke har initialiseret filtre"
     },
+    "configurationBeeperEnableAll": {
+        "message": "Aktiver alt"
+    },
+    "configurationBeeperDisableAll": {
+        "message": "Deaktiver alt"
+    },
     "configuration3d": {
         "message": "3D ESC\/Motorfunktioner"
     },
@@ -1721,13 +1774,13 @@
         "message": "Tilbehør"
     },
     "portsHelp": {
-        "message": "<strong>Bemærk:<\/strong> Ikke alle kombinationer er gyldige. Hvis FC firmwaren opdager det, nulstilles opsætning af seriel port."
+        "message": "<strong>Bemærk:<\/strong> Ikke alle kombinationer er gyldige. Hvis FC firmwaren opdager det, nulstilles portens opsætning."
     },
     "portsVtxTableNotSet": {
         "message": "<span class=\"message-negative\">ADVARSEL:<\/span> VTX-tabellen er ikke opsat korrekt og derfor vil VTX-kontrol ikke være mulig. Opsæt VTX-tabellen i fanen $t(tabVtx.message)."
     },
     "portsMSPHelp": {
-        "message": "<strong>Bemærk:<\/strong> Deaktivér <span class=\"message-negative\">IKKE<\/span> MSP på den første serielle port med mindre du ved, hvad du gør. Du kan så risikere at skulle brænde firmware image igen og så måske slette hele din konfiguration."
+        "message": "<strong>Bemærk:<\/strong> Deaktivér <span class=\"message-negative\">IKKE<\/span> MSP på den første serielle port med mindre du ved, hvad du gør. Du kan risikere at skulle brænde firmware image igen og så måske slette din konfiguration af FC."
     },
     "portsFirmwareUpgradeRequired": {
         "message": "Firmware-opgradering <span class=\"message-negative\">nødvendig<\/span>.  Opsætningen af seriel port understøttes ikke af firmware &lt; 1.8.0."
@@ -2248,6 +2301,9 @@
     "receiverThrottleExpo": {
         "message": "Gas EXPO"
     },
+    "receiverThrottleHover": {
+        "message": "Svævepunkt"
+    },
     "receiverStickMin": {
         "message": "'Pind Lav'-tærskel"
     },
@@ -2417,7 +2473,7 @@
         "description": "Help text to AIRMODE mode"
     },
     "auxiliaryHelpMode_ALTHOLD": {
-        "message": "<a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/position-hold-v4-6#altitude-hold\" target=\"_blank\" rel=\"noopener noreferrer\">Højde Hold<\/a> regulerer aktivt flyets højde ved hjælp af eksterne sensorer kombineret med Vinkel Mode (Stabil tilstand).",
+        "message": "<a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/position-hold-v4-6#altitude-hold\" target=\"_blank\" rel=\"noopener noreferrer\">Hold højde<\/a> regulerer fartøjets højde vha. eksterne sensorer kombineret med Vinkeltilstand (Stabil tilstand).",
         "description": "Help text for ALTITUDE HOLD mode"
     },
     "auxiliaryHelpMode_BEEPER": {
@@ -2445,7 +2501,7 @@
         "description": "Help text to BLACKBOX ERASE mode"
     },
     "auxiliaryHelpMode_BOXPREARM": {
-        "message": "Aktiverer BOXPREARM tilstand",
+        "message": "Aktiverer BOXPREARM tilstand ",
         "description": "Help text to BOXPREARM mode"
     },
     "auxiliaryHelpMode_CALIB": {
@@ -2584,9 +2640,17 @@
         "message": "Deaktiver kontrol af VTX indstillinger via OSD",
         "description": "Help text to VTX CONTROL DISABLE mode"
     },
+    "auxiliaryHelpMode_VTXPOWER": {
+        "message": "Rul gennem niveauer for VTX effekt (hvis VTX har denne mulighed)",
+        "description": "Help text to VTX POWER mode"
+    },
     "auxiliaryHelpMode_VTXPITMODE": {
         "message": "Skift VTX til pit mode (lav udgangseffekt), skal være understøttet af VTX",
         "description": "Help text to VTX PIT MODE mode"
+    },
+    "auxiliaryHelpMode_LAPTIMERRESET": {
+        "message": "Nulstil transponder timer",
+        "description": "Help text to LAP TIMER RESET mode"
     },
     "adjustmentsHelp": {
         "message": "Opsætning af kanal justeringer. Se 'in-flight adjustments' delen af manualen for detaljer. Ændringer gemmes Ikke automatisk."
@@ -2685,7 +2749,7 @@
         "message": "Krængror P justering"
     },
     "adjustmentsFunction19": {
-        "message": "Krængror I justering"
+        "message": "Krænger I justering"
     },
     "adjustmentsFunction20": {
         "message": "Krængror D justering"
@@ -2870,9 +2934,13 @@
     "gpsAltitude": {
         "message": "Højde:"
     },
-    "gpsLatLon": {
-        "message": "Nuværende breddegrad \/ længdegrad:",
-        "description": "Show GPS position - Latitude \/ Longitude"
+    "gpsLatitude": {
+        "message": "Breddegrad:",
+        "description": "Show GPS position - Latitude"
+    },
+    "gpsLongitude": {
+        "message": "Længdegrad:",
+        "description": "Show GPS position - Longitude"
     },
     "gpsHeading": {
         "message": "Retning IMU \/ GPS:",
@@ -3032,13 +3100,14 @@
         "message": "Nulstil tidsoverskridelsesmaks."
     },
     "motorsSensorGyroSelect": {
-        "message": "gyro"
+        "message": "$t(sensorStatusGyroShort.message)",
+        "description": "Don't translate!!!"
     },
     "motorsSensorAccelSelect": {
         "message": "accel"
     },
     "motorsTelemetryHelp": {
-        "message": "Disse tal viser telemetri info modtaget fra ESC'er (hvis ESC understøtter det). Det kan vise den faktiske hastighed af motorer (i RPM), fejlfrekvens fra telemetri link og temperaturen i ESC'erne.",
+        "message": "Her vises telemetri info modtaget fra ESC'er (hvis ESC understøtter det). Det kan vise den faktiske motor hastighed (i RPM), fejlfrekvens fra telemetri link og temperatur (T) i ESC'erne.",
         "description": "Help text for the telemetry values in the motors tab."
     },
     "motorsRPM": {
@@ -3164,6 +3233,9 @@
     "escDshotDirectionDialog-SetDirectionHintSafety": {
         "message": "Motorer vil rotere når du sætter retningen!"
     },
+    "escDshotDirectionDialog-SettingsAutoSaved": {
+        "message": "Motor retning gemmes ved valg"
+    },
     "escDshotDirectionDialog-WrongProtocolText": {
         "message": "Funktionen fungerer kun med DSHOT ESC'er.<br \/>Kontroller, at din ESC understøtter Dshot protokol og sæt protokol på fanen $t(tabMotorTesting.message)."
     },
@@ -3245,6 +3317,9 @@
     "cliEnter": {
         "message": "CLI tilstand !"
     },
+    "cliDevEnter": {
+        "message": "CLI udviklertilstand registreret"
+    },
     "cliReboot": {
         "message": "CLI genstart registreret"
     },
@@ -3282,7 +3357,7 @@
         "message": "Indtast kommando her"
     },
     "loggingNote": {
-        "message": "Data vil <span class=\"message-negative\">kun <\/span>blive logget i dette vindue, når du forlader vinduet vil logning <span class=\"message-negative\">standse<\/span> og Configurator vil vende tilbage til sin normale tilstand.<br \/> Du er velkommen til at ændre opdateringsperiode for målinger, data skrives uanset til logfilen hvert <strong>1<\/strong> sekund pga hastigheds hensyn."
+        "message": "Data vil <span class=\"message-negative\">kun <\/span>blive logget i dette vindue, når du forlader vinduet vil logning <span class=\"message-negative\">standse<\/span> og app vil vende tilbage til sin normale tilstand. Du kan ændre opdateringsperiode for målinger, data skrives uanset til logfilen hvert <strong>1<\/strong> sekund pga hensyn til hastighed."
     },
     "loggingSamplesSaved": {
         "message": "Gemte målinger:"
@@ -3340,6 +3415,9 @@
     },
     "blackboxLoggingSerial": {
         "message": "Seriel port"
+    },
+    "blackboxLoggingVirtual": {
+        "message": "Fil"
     },
     "serialLoggingSupportedNote": {
         "message": "Du kan logge til en ekstern logningsenhed (såsom OpenLager) ved at bruge en seriel port. Indstil seriel port på fanen Porte."
@@ -3529,7 +3607,7 @@
         "message": "Vælg eller registrer din FC for at se tilgængelige online firmware versioner - Vælg den korrekte firmware som passer til din FC."
     },
     "firmwareFlasherOnlineSelectBoardHint": {
-        "message": "Betaflight configurator understøtter FC fælles type (unified target) med konfiguration af FC i et trin. Begrebet FC fælles type betyder, at den samme firmware .hex fil kan bruges til alle FC med samme MCU.<br><br>Betaflight 4.4 indfører  <strong>Sky Build (Cloud Build)<\/strong><br><br>Med Build i skyen, er det nødvendigt at definere hardware tilvalg, indstillinger og protokol, som skal findes i din release.<br><br>Forskelle mellem de forskellige FC styres af en konfigurationsfil, som kommer sammen med firmware, når en FC fælles type brændes i din FC..<br><br>Ved at indlæse en lokal Build fra din pc, kan du indlæse en FC fælles type konfiguration, eller vælge anden FC type, før du henter et firmware image.<br><br>Hvis du støder på problemer ved anvendelse af FC firmware image, overvej at gå på Discord eller åbn et <a href=\\\"https:\/\/github.com\/betaflight\/betaflight\/issues\\\" target=\\\"_blank\\\" rel=\\\"noopener noreferrer\\\">problem<\/a>, overvej at undlade anvendelse af image, indtil problemet er blevet afklaret eller løst."
+        "message": "Betaflight app understøtter FC fælles type (unified target) med konfiguration af FC i et trin. Begrebet FC fælles type betyder, at den samme firmware .hex fil kan bruges til alle FC med samme MCU.<br><br>Betaflight 4.4 indfører  <strong>Sky Build (Cloud Build)<\/strong><br><br>Med Build i skyen, er det nødvendigt at definere hardware tilvalg, indstillinger og protokol, som skal findes i din release.<br><br>Forskelle mellem de forskellige FC styres af en konfigurationsfil, som kommer sammen med firmware, når en FC fælles type brændes i din FC..<br><br>Ved at indlæse en lokal Build fra din pc, kan du indlæse en FC fælles type konfiguration, eller vælge anden FC type, før du henter et firmware image.<br><br>Hvis du støder på problemer ved anvendelse af FC firmware image, overvej at gå på Discord eller åbn et <a href=\\\"https:\/\/github.com\/betaflight\/betaflight\/issues\\\" target=\\\"_blank\\\" rel=\\\"noopener noreferrer\\\">problem<\/a>, overvej at undlade anvendelse af image, indtil problemet er blevet afklaret eller løst."
     },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "Vælg firmware version."
@@ -3643,7 +3721,7 @@
         "message": "<strong>Gendannelse \/ tabt kommunikation<\/strong>"
     },
     "firmwareFlasherRecoveryText": {
-        "message": "Hvis du har mistet kommunikationen med din FC, skal du følge disse trin for at gendanne kommunikation: <ul><li>Sluk FC.<\/li><li>Aktiver 'Ingen genstartssekvens', aktiver 'Slet alt på chip'.<\/li><li>Hold FC BOOT knap nede eller sæt BOOT jumper til sluttet.<\/li><li>Tænd FC (aktivitet LED blinker IKKE, hvis det er gjort korrekt).<\/li><li>Installer alle STM32 drivere og Zadig om nødvendigt, se evt.  <a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">USB Flashing<\/a> sektion i Betaflight manual (engelsk).<\/li><li>Genstart konfigurator (luk \/ åben)<\/li><li>Slip BOOT-knappen eller fjern jumper over BOOT kontakt, på din FC.<\/li><li>Flash med korrekt firmware (ved hjælp af manuel baud hastighed, hvis angivet i din FC's manual).<\/li><li>Sluk FC.<\/li><li>Hvis der er en BOOT jumper, fjern den.<\/li><li>Tænd FC (aktivitet LED skal blinke).<\/li><li>Forbind FC normalt.<\/li><\/ul>"
+        "message": "Hvis du har mistet kommunikationen med din FC, skal du følge disse trin for at gendanne kommunikation: <ul><li>Sluk FC.<\/li><li>Aktiver 'Ingen genstartssekvens', aktiver 'Slet alt på chip'.<\/li><li>Hold FC BOOT knap nede eller sæt BOOT jumper til sluttet.<\/li><li>Tænd FC (aktivitet LED blinker IKKE, hvis det er gjort korrekt).<\/li><li>Installer alle STM32 drivere og Zadig om nødvendigt, se evt.  <a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">USB Flashing<\/a> sektion i Betaflight manual (engelsk).<\/li><li>Genstart app (luk \/ åben)<\/li><li>Slip BOOT-knappen eller fjern jumper over BOOT kontakt, på din FC.<\/li><li>Flash med korrekt firmware (ved hjælp af manuel baud hastighed, hvis angivet i din FC's manual).<\/li><li>Sluk FC.<\/li><li>Hvis der er en BOOT jumper, fjern den.<\/li><li>Tænd FC (aktivitet LED skal blinke).<\/li><li>Forbind FC normalt.<\/li><\/ul>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Forlad Firmware brænder"
@@ -3657,8 +3735,23 @@
     "firmwareFlasherFirmwareOnlineLoaded": {
         "message": "Indlæst Internet firmware image: {{filename}} ({{bytes}} bytes)"
     },
+    "firmwareFlasherTooltipSaveFirmware": {
+        "message": "Gem firmware image"
+    },
+    "firmwareFlasherInvalidFileFormat": {
+        "message": "Ugyldigt filformat"
+    },
+    "firmwareFlasherUf2Corrupted": {
+        "message": "Det valgte firmware image (UF2) ser ud til at være ødelagt"
+    },
     "firmwareFlasherHexCorrupted": {
         "message": "Det valgte firmware image ser ud til at være ødelagt"
+    },
+    "firmwareFlasherUF2SaveSuccess": {
+        "message": "Gemt (brændt) firmware image (UF2) lykkedes"
+    },
+    "firmwareFlasherUF2SaveFailed": {
+        "message": "Kunne ikke gemme (brænde) firmware image (UF2)"
     },
     "firmwareFlasherConfigCorrupted": {
         "message": "Konfigurationsfilen synes at være beskadiget, ASCII accepteret (tegn 0-255)",
@@ -3677,6 +3770,9 @@
     "firmwareFlasherFailedToLoadUnifiedConfig": {
         "message": "Kunne ikke indlæse fjernkonfiguration for {{remote_file}}"
     },
+    "firmwareFlasherCanceledBackup": {
+        "message": "Sikkerhedskopiering annulleret, brænding afbrudt"
+    },
     "firmwareFlasherLegacyLabel": {
         "message": "{{target}} (Legacy)",
         "description": "If we have a Unified target and a old style target available, we are labeling the older one"
@@ -3694,22 +3790,22 @@
         "message": "Du har ikke <span class=\"message-negative\">skriverettigheder<\/span> til denne fil"
     },
     "firmwareFlasherFlashTrigger": {
-        "message": "Detekteret: <strong>$1<\/strong> - starter brænding ved tilslutning"
+        "message": "Registreret: <strong>$1<\/strong> - starter brænding ved tilslutning"
     },
     "firmwareFlasherVerifyBoard": {
         "message": "<h3>Firmware version passer ikke<\/h3><br \/>Den tilsluttede FC er <strong>{{verified_board}}<\/strong> mens du valgte <strong>{{selected_board}}<\/strong>.<br \/><br \/>Vil du fortsætte med at brænde image?",
         "description": "Make a quick connection to read firmware target and never flash a wrong target again"
     },
     "firmwareFlasherBoardVerificationSuccess": {
-        "message": "Configurator har med <span class=\"message-positive\">succes<\/span> dekteret FC: <strong>{{boardName}}<\/strong>",
+        "message": "App har <span class=\"message-positive\">succes<\/span> fundet FC: <strong>{{boardName}}<\/strong>",
         "description": "Board verification has succeeded."
     },
     "firmwareFlasherBoardVerficationTargetNotAvailable": {
-        "message": "Konfigurator har detekteret FC: <strong>{{boardName}}<\/strong>, men der blev ikke fundet et officielt Betaflight firmware image",
+        "message": "App har fundet FC: <strong>{{boardName}}<\/strong>, men der blev ikke fundet et officielt Betaflight firmware image",
         "description": "Board verification has succeeded, but the target is not available as offical Betaflight target."
     },
     "firmwareFlasherBoardVerificationFail": {
-        "message": "Configurator <span class=\"message-negative\">mislykkedes<\/span> med at bestemme FC, hvis dette ikke virker, så prøv at skifte fane langsomt for at prøve igen, opret en ny USB-forbindelse eller opret forbindelse først, måske du ikke har acceperet at konfiguerer med standardopsætninger efter brænding af nyt image",
+        "message": "App <span class=\"message-negative\">mislykkedes<\/span> med at bestemme FC, hvis dette ikke virker, så skift fane og prøv så igen. Eller etabler en ny USB-forbindelse og opret forbindelse, eller måske har du ikke acceperet konfiguration med standardopsætninger efter brænding af nyt image.",
         "description": "Sometimes MSP values cannot be read from firmware correctly"
     },
     "firmwareFlasherButtonAbort": {
@@ -3736,9 +3832,6 @@
     "unstableFirmwareAcknowledgementFlash": {
         "message": "Brænd firmware"
     },
-    "firmwareFlasherPreviousDevice": {
-        "message": "Detekteret: <strong>$1<\/strong> - tidligere enhed flashes stadig, gentilslut og forsøg igen"
-    },
     "firmwareFlasherRemindBackupTitle": {
         "message": "Slet alle indstillinger",
         "description": "Warning message title before actual flashing takes place"
@@ -3754,6 +3847,15 @@
     "firmwareFlasherBackupIgnore": {
         "message": "Ignorer risiko",
         "description": "Ignore creating a backup before actual flashing takes place"
+    },
+    "firmwareBackupEnabled": {
+        "message": "Sikkerhedskopiering aktiv"
+    },
+    "firmwareBackupDisabled": {
+        "message": "Sikkerhedskopiering ikke aktiv"
+    },
+    "firmwareBackupAsk": {
+        "message": "Spørg før sikkerhedskopiering"
     },
     "ledStripHelp": {
         "message": "FC kan styre farver og effekter på individuelle LED'er på en strimmel.<br \/>Opsæt LED'er i gitteret, opsæt ledningsrækkefølge og forbnd så LED'erne på dit fartøj jf. gitterpositionerne. LED'er uden ledningsnummer vil ikke blive gemt.<br \/>Dobbeltklik på en farve for at redigere HSV-værdierne."
@@ -4052,7 +4154,7 @@
         "message": "Højderor [E]"
     },
     "controlAxisYaw": {
-        "message": "Sideror [R]"
+        "message": "Side [R]"
     },
     "controlAxisThrottle": {
         "message": "Gas [T]"
@@ -4613,7 +4715,8 @@
         "description": "Iterm Relax Type selection"
     },
     "pidTuningItermRelaxTypeOptionGyro": {
-        "message": "Gyro"
+        "message": "$t(sensorStatusGyroShort.message)",
+        "description": "Don't translate!!!"
     },
     "pidTuningItermRelaxTypeOptionSetpoint": {
         "message": "Setpoint"
@@ -5183,6 +5286,10 @@
         "message": "Skrifttype",
         "description": "Content of the selector for the OSD Font in the preview"
     },
+    "osdSetupFontManagerTitle": {
+        "message": "Rediger OSD skrifttype",
+        "description": "Dialog title"
+    },
     "osdSetupFontTypeDefault": {
         "message": "Standard",
         "description": "Font Default"
@@ -5576,7 +5683,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementCraftName": {
-        "message": "Fartøjs navn som det er indstillet på fanen Opsætning ved Tilpasning.<\/br>Kan også indstilles via \"craft_name\" CLI variabel."
+        "message": "Navn på fartøj som det er indstillet på fanen Opsætning.<\/br>Kan også indstilles ved med CLI variabel \"craft_name\"."
     },
     "osdTextElementAltitude": {
         "message": "Højde",
@@ -5871,6 +5978,14 @@
     "osdTextElementRtcDateTime": {
         "message": "RTC dato og tidspunkt",
         "description": "One of the elements of the OSD"
+    },
+    "osdTextElementRtcDateTimeVariantFullDate": {
+        "message": "Dato",
+        "description": "One of the variants of the RTC date and time element of the OSD"
+    },
+    "osdTextElementRtcDateTimeVariantShortDate": {
+        "message": "Enkel dato",
+        "description": "One of the variants of the RTC date and time element of the OSD"
     },
     "osdDescElementRtcDateTime": {
         "message": "Realtid ur dato \/ tid"
@@ -6586,7 +6701,7 @@
         "description": "Text of one of the fields of the VTX tab"
     },
     "vtxFrequencyChannelHelp": {
-        "message": "Hvis du aktiverer dette, vil Configurator give mulighed for direkte vælge en frekvens i stedet for den sædvanlige band\/kanal. For at dette kan fungere, skal din VTX understøtte denne funktion.",
+        "message": "Hvis du aktiverer dette, vil app give mulighed for direkte vælge en frekvens i stedet for den sædvanlige band\/kanal. For at dette kan fungere, skal din VTX understøtte denne funktion.",
         "description": "Help text for the frequency or channel select field of the VTX tab"
     },
     "vtxSelectedMode": {
@@ -6798,7 +6913,7 @@
         "description": "Message in the GUI log when the lua VTX Config file is saved"
     },
     "vtxSavedLuaFileKo": {
-        "message": "<span class=\"message-negative\">Fejl<\/span> ved gemning af lua VTX konfigurations fil",
+        "message": "<span class=\"message-negative\">Fejl<\/span> ved gemning af lua VTX konfigurations fil ",
         "description": "Message in the GUI log when the lua VTX Config file saving has failed"
     },
     "vtxLoadFileOk": {
@@ -7016,7 +7131,7 @@
         "message": "Blackbox lognings hastighed"
     },
     "onboardLoggingDebugFields": {
-        "message": "Data som logges"
+        "message": "Debug logning inkluderet"
     },
     "onboardLoggingDebugMode": {
         "message": "Blackbox logger med debug for ..."
@@ -7074,6 +7189,9 @@
     },
     "cliAutoComplete": {
         "message": "Avanceret CLI autoudfyld"
+    },
+    "firmwareBackupOnFlash": {
+        "message": "Opret en sikkerhedskopi, før du brænder fc"
     },
     "darkTheme": {
         "message": "Brug mørkt tema for Configuration"
@@ -7157,7 +7275,7 @@
         "message": "Inkompatibel webview"
     },
     "cordovaWebviewTroubleshootingMsg": {
-        "message": "Du skal opdatere din enheds webview for at bruge Configuratoren."
+        "message": "Du skal opdatere din enheds webview for at bruge Betaflight app."
     },
     "cordovaWebviewTroubleshootingMsg2": {
         "message": "Værktøjet nedenfor er beregnet til at hjælpe dig med at installere en ny webview eller til at opdatere en allerede installeret webview."
@@ -7205,7 +7323,7 @@
         "message": "Bekræftelse"
     },
     "cordovaExitAppMessage": {
-        "message": "Vil du virkelig lukke Configuratoren?"
+        "message": "Vil du virkelig lukke app?"
     },
     "dropDownSelectAll": {
         "message": "[Vælg\/fravælg alle]",
@@ -7483,6 +7601,18 @@
     "firmwareFlasherBuildCustomDefines": {
         "message": "Brugertilpasset Defines"
     },
+    "firmwareFlasherOSDProtocolNotSelected": {
+        "message": "OSD protokol ikke valgt"
+    },
+    "firmwareFlasherOSDProtocolNotSelectedDescription": {
+        "message": "Du skal vælge en OSD protokol for at samensætte firmware."
+    },
+    "firmwareFlasherOSDProtocolSelect": {
+        "message": "Vælg OSD protokol"
+    },
+    "firmwareFlasherOSDProtocolNotSelectedContinue": {
+        "message": "Fortsæt uden OSD protokol"
+    },
     "coreBuild": {
         "message": "Kun grund komponenter"
     },
@@ -7523,5 +7653,17 @@
     "programmingFailedNotification": {
         "message": "FC brænding \/ programmering mislykkedes",
         "description": "Notification message when programming is unsuccessful"
+    },
+    "osdTextElementLidar": {
+        "message": "Sonar afstandsmåler",
+        "description": "Displays distance from sonar sensor in cm"
+    },
+    "osdDescElementLidar": {
+        "message": "$t(osdTextElementLidar.message)",
+        "description": "Don't translate!!!"
+    },
+    "osdSetupPreviewCheckRulers": {
+        "message": "Lineal",
+        "description": "Label for the checkbox to toggle OSD preview rulers around the preview"
     }
 }

@@ -1,5 +1,6 @@
 import { i18n } from "../localization";
 import { gui_log } from "../gui_log";
+import { bluetoothDevices } from "./devices";
 
 /*  Certain flags needs to be enabled in the browser to use BT
  *
@@ -9,61 +10,9 @@ import { gui_log } from "../gui_log";
  *
  */
 
-const bluetoothDevices = [
-    {
-        name: "CC2541",
-        serviceUuid: "0000ffe0-0000-1000-8000-00805f9b34fb",
-        writeCharacteristic: "0000ffe1-0000-1000-8000-00805f9b34fb",
-        readCharacteristic: "0000ffe1-0000-1000-8000-00805f9b34fb",
-    },
-    {
-        name: "HC-05",
-        serviceUuid: "00001101-0000-1000-8000-00805f9b34fb",
-        writeCharacteristic: "00001101-0000-1000-8000-00805f9b34fb",
-        readCharacteristic: "00001101-0000-1000-8000-00805f9b34fb",
-    },
-    {
-        name: "HM-10",
-        serviceUuid: "0000ffe1-0000-1000-8000-00805f9b34fb",
-        writeCharacteristic: "0000ffe1-0000-1000-8000-00805f9b34fb",
-        readCharacteristic: "0000ffe1-0000-1000-8000-00805f9b34fb",
-    },
-    {
-        name: "HM-11",
-        serviceUuid: "6e400001-b5a3-f393-e0a9-e50e24dcca9e",
-        writeCharacteristic: "6e400003-b5a3-f393-e0a9-e50e24dcca9e",
-        readCharacteristic: "6e400002-b5a3-f393-e0a9-e50e24dcca9e",
-    },
-    {
-        name: "Nordic NRF",
-        serviceUuid: "6e400001-b5a3-f393-e0a9-e50e24dcca9e",
-        writeCharacteristic: "6e400003-b5a3-f393-e0a9-e50e24dcca9e",
-        readCharacteristic: "6e400002-b5a3-f393-e0a9-e50e24dcca9e",
-    },
-    {
-        name: "SpeedyBee V1",
-        serviceUuid: "00001000-0000-1000-8000-00805f9b34fb",
-        writeCharacteristic: "00001001-0000-1000-8000-00805f9b34fb",
-        readCharacteristic: "00001002-0000-1000-8000-00805f9b34fb",
-    },
-    {
-        name: "SpeedyBee V2",
-        serviceUuid: "0000abf0-0000-1000-8000-00805f9b34fb",
-        writeCharacteristic: "0000abf1-0000-1000-8000-00805f9b34fb",
-        readCharacteristic: "0000abf2-0000-1000-8000-00805f9b34fb",
-    },
-];
-
-class BT extends EventTarget {
+class WebBluetooth extends EventTarget {
     constructor() {
         super();
-
-        if (!this.bluetooth && window && window.navigator && window.navigator.bluetooth) {
-            this.bluetooth = navigator.bluetooth;
-        } else {
-            console.error(`${this.logHead} Bluetooth API not available`);
-            return;
-        }
 
         this.connected = false;
         this.openRequested = false;
@@ -71,23 +20,35 @@ class BT extends EventTarget {
         this.closeRequested = false;
         this.transmitting = false;
         this.connectionInfo = null;
+        this.lastWrite = null;
 
         this.bitrate = 0;
         this.bytesSent = 0;
         this.bytesReceived = 0;
         this.failed = 0;
 
-        this.logHead = "[BLUETOOTH]";
-
         this.portCounter = 0;
         this.devices = [];
         this.device = null;
+
+        this.logHead = "[BLUETOOTH]";
+
+        this.bluetooth = navigator?.bluetooth;
+
+        this.bt11_crc_corruption_logged = false;
+
+        if (!this.bluetooth) {
+            console.error(`${this.logHead} Web Bluetooth API not supported`);
+            return;
+        }
+
+        this.writeQueue = Promise.resolve();
 
         this.connect = this.connect.bind(this);
 
         this.bluetooth.addEventListener("connect", (e) => this.handleNewDevice(e.target));
         this.bluetooth.addEventListener("disconnect", (e) => this.handleRemovedDevice(e.target));
-        this.bluetooth.addEventListener("gatserverdisconnected", (e) => this.handleRemovedDevice(e.target));
+        this.bluetooth.addEventListener("gattserverdisconnected", (e) => this.handleRemovedDevice(e.target));
 
         this.loadDevices();
     }
@@ -129,11 +90,46 @@ class BT extends EventTarget {
         };
     }
 
-    async loadDevices() {
-        const devices = await this.getDevices();
+    isBT11CorruptionPattern(expectedChecksum) {
+        if (expectedChecksum !== 0xff || this.message_checksum === 0xff) {
+            return false;
+        }
 
-        this.portCounter = 1;
-        this.devices = devices.map((device) => this.createPort(device));
+        if (!this.connected) {
+            return false;
+        }
+
+        const deviceDescription = this.deviceDescription;
+        if (!deviceDescription) {
+            return false;
+        }
+
+        return deviceDescription?.susceptibleToCrcCorruption ?? false;
+    }
+
+    shouldBypassCrc(expectedChecksum) {
+        // Special handling for specific BT-11/CC2541 checksum corruption
+        // Only apply workaround for known problematic devices
+        const isBT11Device = this.isBT11CorruptionPattern(expectedChecksum);
+        if (isBT11Device) {
+            if (!this.bt11_crc_corruption_logged) {
+                console.log(`${this.logHead} Detected BT-11/CC2541 CRC corruption (0xff), skipping CRC check`);
+                this.bt11_crc_corruption_logged = true;
+            }
+            return true;
+        }
+        return false;
+    }
+
+    async loadDevices() {
+        try {
+            const devices = await this.getDevices();
+
+            this.portCounter = 1;
+            this.devices = devices.map((device) => this.createPort(device));
+        } catch (error) {
+            console.error(`${this.logHead} Failed to load devices:`, error);
+        }
     }
 
     async requestPermissionDevice() {
@@ -200,7 +196,7 @@ class BT extends EventTarget {
 
         if (connectionInfo && !this.openCanceled) {
             this.connected = true;
-            this.connectionId = this.device.port;
+            this.connectionId = path;
             this.bitrate = options.baudRate;
             this.bytesReceived = 0;
             this.bytesSent = 0;
@@ -214,11 +210,9 @@ class BT extends EventTarget {
 
             this.dispatchEvent(new CustomEvent("connect", { detail: connectionInfo }));
         } else if (connectionInfo && this.openCanceled) {
-            this.connectionId = this.device.port;
+            this.connectionId = path;
 
-            console.log(
-                `${this.logHead} Connection opened with ID: ${connectionInfo.connectionId}, but request was canceled, disconnecting`,
-            );
+            console.log(`${this.logHead} Connection opened with ID: ${path}, but request was canceled, disconnecting`);
             // some bluetooth dongles/dongle drivers really doesn't like to be closed instantly, adding a small delay
             setTimeout(() => {
                 this.openRequested = false;
@@ -294,17 +288,16 @@ class BT extends EventTarget {
         }
 
         this.readCharacteristic.addEventListener("characteristicvaluechanged", this.handleNotification.bind(this));
-
-        return await this.readCharacteristic.readValue();
     }
 
     handleNotification(event) {
-        const buffer = new Uint8Array(event.target.value.byteLength);
+        // Create a proper Uint8Array directly from the DataView buffer
+        const dataView = event.target.value;
+        const buffer = new Uint8Array(
+            dataView.buffer.slice(dataView.byteOffset, dataView.byteOffset + dataView.byteLength),
+        );
 
-        for (let i = 0; i < event.target.value.byteLength; i++) {
-            buffer[i] = event.target.value.getUint8(i);
-        }
-
+        // Dispatch immediately instead of using setTimeout to avoid race conditions
         this.dispatchEvent(new CustomEvent("receive", { detail: buffer }));
     }
 
@@ -350,6 +343,7 @@ class BT extends EventTarget {
                 this.readCharacteristic = false;
                 this.deviceDescription = false;
                 this.device = null;
+                this.bt11_crc_corruption_logged = false;
             }
         };
 
@@ -376,23 +370,61 @@ class BT extends EventTarget {
         }
     }
 
-    async send(data) {
-        if (!this.writeCharacteristic) {
+    async send(data, cb) {
+        if (!this.writeCharacteristic || typeof this.writeCharacteristic.writeValue !== "function") {
+            if (cb) {
+                cb({
+                    error: "No write characteristic available or characteristic is invalid",
+                    bytesSent: 0,
+                });
+            }
+            console.error(`${this.logHead} No write characteristic available or characteristic is invalid`);
+            return;
+        }
+        if (!this.device?.gatt?.connected) {
+            if (cb) {
+                cb({
+                    error: "GATT Server is disconnected. Cannot perform GATT operations.",
+                    bytesSent: 0,
+                });
+            }
+            console.error(`${this.logHead} GATT Server is disconnected. Cannot perform GATT operations.`);
             return;
         }
 
         // There is no writable stream in the bluetooth API
-        this.bytesSent += data.byteLength;
-
         const dataBuffer = new Uint8Array(data);
 
-        await this.writeCharacteristic.writeValue(dataBuffer);
+        // Serialize writes to prevent concurrent access
+        this.writeQueue = this.writeQueue
+            .then(async () => {
+                try {
+                    await this.writeCharacteristic.writeValue(dataBuffer);
+                    this.bytesSent += data.byteLength;
 
-        return {
-            bytesSent: data.byteLength,
-            resultCode: 0,
-        };
+                    if (cb) {
+                        cb({
+                            error: null,
+                            bytesSent: data.byteLength,
+                        });
+                    }
+                } catch (e) {
+                    console.error(`${this.logHead} Failed to send data:`, e);
+                    if (cb) {
+                        cb({
+                            error: e,
+                            bytesSent: 0,
+                        });
+                    }
+                    throw e; // re-throw to keep the queue in a rejected state
+                }
+            })
+            .catch(() => {
+                // swallow here so queue chain continues on next write
+            });
+
+        await this.writeQueue;
     }
 }
 
-export default new BT();
+export default WebBluetooth;

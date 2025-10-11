@@ -3,18 +3,16 @@ import BFClipboard from "../Clipboard";
 import { generateFilename } from "../utils/generate_filename";
 import GUI, { TABS } from "../gui";
 import BuildApi from "../BuildApi";
-import { tracking } from "../Analytics";
 import { reinitializeConnection } from "../serial_backend";
 import CONFIGURATOR from "../data_storage";
 import CliAutoComplete from "../CliAutoComplete";
 import { gui_log } from "../gui_log";
-import jBox from "jbox";
 import $ from "jquery";
-import { serialShim } from "../serial_shim";
+import { serial } from "../serial";
 import FileSystem from "../FileSystem";
 import { ispConnected } from "../utils/connection";
-
-const serial = serialShim();
+import { initializeModalDialog } from "../utils/initializeModalDialog";
+import { get as getConfig } from "../ConfigStorage";
 
 const cli = {
     lineDelayMs: 5,
@@ -28,6 +26,7 @@ const cli = {
         windowWrapper: null,
     },
     lastArrival: 0,
+    lastSupportId: null,
 };
 
 function removePromptHash(promptText) {
@@ -66,7 +65,6 @@ function getCliCommand(command, cliBuffer) {
 
 function copyToClipboard(text) {
     function onCopySuccessful() {
-        tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, "CliCopyToClipboard", { length: text.length });
         const button = TABS.cli.GUI.copyButton;
         const origText = button.text();
         const origWidth = button.css("width");
@@ -101,6 +99,9 @@ cli.initialize = function (callback) {
     self.outputHistory = "";
     self.cliBuffer = "";
     self.startProcessing = false;
+
+    // Reset modal dialog reference since DOM gets rebuilt on tab switch
+    self.GUI.snippetPreviewWindow = null;
 
     const enterKeyCode = 13;
 
@@ -145,33 +146,25 @@ cli.initialize = function (callback) {
     async function loadFile() {
         const previewArea = $("#snippetpreviewcontent textarea#preview");
 
-        function executeSnippet(fileName) {
+        function executeSnippet() {
             const commands = previewArea.val();
-
-            tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, "CliExecuteFromFile", {
-                filename: fileName,
-            });
-
             executeCommands(commands);
             self.GUI.snippetPreviewWindow.close();
         }
 
         function previewCommands(result, fileName) {
             if (!self.GUI.snippetPreviewWindow) {
-                self.GUI.snippetPreviewWindow = new jBox("Modal", {
-                    id: "snippetPreviewWindow",
-                    width: "auto",
-                    height: "auto",
-                    closeButton: "title",
-                    animation: false,
-                    isolateScroll: false,
-                    title: i18n.getMessage("cliConfirmSnippetDialogTitle", { fileName: fileName }),
-                    content: $("#snippetpreviewcontent"),
-                    onCreated: () => $("#snippetpreviewcontent a.confirm").click(() => executeSnippet(fileName)),
-                });
+                self.GUI.snippetPreviewWindow = initializeModalDialog(
+                    null,
+                    "#snippetpreviewdialog",
+                    "cliConfirmSnippetDialogTitle",
+                    { fileName: fileName },
+                );
+                $("#snippetpreviewcontent a.confirm").on("click", executeSnippet);
             }
+
             previewArea.val(result);
-            self.GUI.snippetPreviewWindow.open();
+            self.GUI.snippetPreviewWindow.showModal();
         }
 
         const file = await FileSystem.pickOpenFile(i18n.getMessage("fileSystemPickerFiles", { typeof: "TXT" }), ".txt");
@@ -209,10 +202,18 @@ cli.initialize = function (callback) {
             textarea.attr("placeholder", i18n.getMessage("cliInputPlaceholder")).prop("disabled", false).focus();
         });
 
+        function formatContentWithSupportId(content, supportId) {
+            if (supportId) {
+                content = `# Support ID: ${supportId}\n\n${content}`;
+            }
+            return content;
+        }
+
         $("a.save").on("click", function () {
             const filename = generateFilename("cli", "txt");
+            const content = formatContentWithSupportId(self.outputHistory, self.lastSupportId);
 
-            saveFile(filename, self.outputHistory);
+            saveFile(filename, content);
         });
 
         $("a.clear").click(function () {
@@ -220,7 +221,8 @@ cli.initialize = function (callback) {
         });
 
         self.GUI.copyButton.click(function () {
-            copyToClipboard(self.outputHistory);
+            const content = formatContentWithSupportId(self.outputHistory, self.lastSupportId);
+            copyToClipboard(content);
         });
 
         $("a.load").on("click", function () {
@@ -230,24 +232,32 @@ cli.initialize = function (callback) {
         $("a.support")
             .toggle(ispConnected())
             .on("click", function () {
-                function submitSupportData(data) {
+                async function submitSupportData(data) {
                     clearHistory();
                     const api = new BuildApi();
 
-                    api.getSupportCommands(async (commands) => {
-                        commands = [`###\n# Problem description\n# ${data}\n###`, ...commands];
-                        await executeCommands(commands.join("\n"));
-                        const delay = setInterval(() => {
-                            const time = new Date().getTime();
-                            if (self.lastArrival < time - 250) {
-                                clearInterval(delay);
-                                const text = self.outputHistory;
-                                api.submitSupportData(text, (key) => {
-                                    writeToOutput(i18n.getMessage("buildServerSupportRequestSubmission", [key]));
-                                });
+                    let commands = await api.getSupportCommands();
+                    if (!commands) {
+                        alert("An error has occurred");
+                        return;
+                    }
+
+                    commands = [`###\n# Problem description\n# ${data}\n###`, ...commands];
+                    await executeCommands(commands.join("\n"));
+                    const delay = setInterval(async () => {
+                        const time = new Date().getTime();
+                        if (self.lastArrival < time - 250) {
+                            clearInterval(delay);
+                            const text = self.outputHistory;
+                            let key = await api.submitSupportData(text);
+                            if (!key) {
+                                writeToOutput(i18n.getMessage("buildServerSupportRequestSubmission", ["** error **"]));
+                                return;
                             }
-                        }, 250);
-                    });
+                            self.lastSupportId = key;
+                            writeToOutput(i18n.getMessage("buildServerSupportRequestSubmission", [key]));
+                        }
+                    }, 250);
                 }
 
                 self.supportWarningDialog(submitSupportData);
@@ -472,7 +482,7 @@ cli.read = function (readInfo) {
     this.lastArrival = new Date().getTime();
 
     if (!CONFIGURATOR.cliValid && validateText.indexOf("CLI") !== -1) {
-        gui_log(i18n.getMessage("cliEnter"));
+        gui_log(i18n.getMessage(getConfig("cliOnlyMode")?.cliOnlyMode ? "cliDevEnter" : "cliEnter"));
         CONFIGURATOR.cliValid = true;
         // begin output history with the prompt (last line of welcome message)
         // this is to match the content of the history with what the user sees on this tab
@@ -530,10 +540,6 @@ cli.supportWarningDialog = function (onAccept) {
 };
 
 cli.cleanup = function (callback) {
-    if (TABS.cli.GUI.snippetPreviewWindow) {
-        TABS.cli.GUI.snippetPreviewWindow.destroy();
-        TABS.cli.GUI.snippetPreviewWindow = null;
-    }
     if (!(CONFIGURATOR.connectionValid && CONFIGURATOR.cliValid && CONFIGURATOR.cliActive)) {
         if (callback) {
             callback();
@@ -543,13 +549,7 @@ cli.cleanup = function (callback) {
     }
 
     this.send(getCliCommand("exit\r", this.cliBuffer), function () {
-        // we could handle this "nicely", but this will do for now
-        // (another approach is however much more complicated):
-        // we can setup an interval asking for data lets say every 200ms, when data arrives, callback will be triggered and tab switched
-        // we could probably implement this someday
-        reinitializeConnection(function () {
-            GUI.timeout_add("tab_change_callback", callback, 500);
-        });
+        reinitializeConnection();
     });
 
     CONFIGURATOR.cliActive = false;
