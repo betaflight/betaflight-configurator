@@ -1973,18 +1973,6 @@
     "receiverRcSmoothingManual": {
         "message": "수동"
     },
-    "receiverRcSmoothingAutoFactor": {
-        "message": "자동 환경인자",
-        "description": "Auto Factor parameter for RC smoothing"
-    },
-    "receiverRcSmoothingAutoFactorHelp": {
-        "message": "자동 환경인자 계산을 조정하며, 10은 기본 환경인자 대 지연 비율입니다. 숫자를 늘리면 RC 입력이 더 부드러워지는 동시에 지연도 더해집니다. 이것은 신뢰할 수 없는 RC 연결 또는 시네마틱 비행에 유용할 수 있습니다.<br>숫자가 50에 가까워지면 입력 지연이 눈에 띄게 됩니다.<br>TX와 RX가 전원이 공급되는 동안 CLI 명령 rc_smoothing_info를 사용하여 자동으로 계산된 RC 스무딩 컷오프를 확인하십시오.",
-        "description": "Auto Factor parameter help message"
-    },
-    "receiverRcSmoothingAutoFactorHelp2": {
-        "message": "자동 RC 스무딩을 조정합니다. 30이 기본값입니다. 예를 들어 HD 프리스타일의 경우 60, 씨네마틱 비행의 경우 90-120과 같이 높은 값이 매끄러운 RC 입력을 더 부드럽게 합니다. 참고: 값이 50을 초과하면 상당한 스틱 지연이 발생합니다. 예를 들어 20-25와 같이 낮은 값은 일부 RC 제어 단계를 모터 신호로 전달하여 모터 열을 약간 증가시키지만 RC 지연을 약간 감소시킵니다. 이것은 레이싱에 유용할 수 있습니다.",
-        "description": "Auto Factor parameter help message"
-    },
     "receiverRcFeedforwardTypeSelect": {
         "message": "피드포워드 컷오프 형식"
     },
@@ -2023,9 +2011,6 @@
     },
     "receiverRcSmoothingFeedforwardTypeAuto": {
         "message": "자동"
-    },
-    "receiverRcSmoothingMode": {
-        "message": "스무딩 모드"
     },
     "pidTuningDtermSetpointTransition": {
         "message": "D 설정점 전환"

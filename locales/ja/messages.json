@@ -1970,22 +1970,33 @@
         "message": "手動"
     },
     "receiverRcSmoothingAutoFactor": {
-        "message": "自動係数",
-        "description": "Auto Factor parameter for RC smoothing"
+        "message": "セットポイント自動係数",
+        "description": "Setpoint Auto Factor parameter for RC smoothing"
     },
     "receiverRcSmoothingAutoFactorHelp": {
-        "message": "自動係数演算を調整します。10がデフォルト係数と遅延の比率です。この数値を増加させると、RC入力がより滑らかとなりますが、遅延も付加されます。これは信頼性の低いRC接続やシネマティック飛行に役立ちます。<br>数値が50に近づくと、入力遅延が顕著になりますので注意してください。<br>TXとRXの電力が供給されている間にCLIコマンドrc_smoothing_infoを使用すると、自動計算されたRCスムージング カットオフを確認できます。",
-        "description": "Auto Factor parameter help message"
+        "message": "セットポイント自動係数演算を調整します。10 がデフォルト係数と遅延の比率です。この数値を増加させると、RC入力がより滑らかになりますが、同時に遅延も増加します。これは不安定なRC接続やシネマティック飛行に有効です。<br>ただし、50 付近の値では入力遅延が顕著になりますので注意してください。<br>送信機 [TX] と受信機 [RX] の電源を入れた状態で、CLI コマンド rc_smoothing_info を使用すると、自動計算されたRC スムージングのカットオフ値を確認できます。",
+        "description": "Setpoint Auto Factor parameter help message"
     },
     "receiverRcSmoothingAutoFactorHelp2": {
-        "message": "自動RCスムージングを調整します。30がデフォルト値です。値が高いほど、スムーズなRC入力が増加します。 HDフリースタイル機体の場合は60、シネマティック飛行の場合は90～120です。注: 50以上の値はかなりの遅延を引き起こします。低い値、例えば20～25は、モーター信号にRC制御ステップの一部を転送します。モーター発熱は若干上がりますが、RC信号遅延を若干軽減します。これはレース用機体にも役立つかもしれません。",
-        "description": "Auto Factor parameter help message"
+        "message": "セットポイントのRCスムージングを調整します。デフォルト値は 30 です。値を大きくするとRC入力がよりスムーズになります。HDフリースタイル機体の場合は 60、シネマティック飛行の場合は 90～120 です。注: 50 以上の値では、スティック操作の遅延が目立つようになります。値を小さくすると、例えば 20～25 は、RC入力のステップがモーター信号に反映され、モーター温度がわずかに上昇する可能性がありますが、RC信号遅延はわずかに減少します。これはレース用途に有効です。",
+        "description": "Setpoint Auto Factor parameter help message"
+    },
+    "receiverRcSmoothingAutoFactorThrottle": {
+        "message": "スロットル自動係数",
+        "description": "Throttle Auto Factor parameter for RC smoothing"
+    },
+    "receiverRcSmoothingAutoFactorThrottleHelp": {
+        "message": "スロットル自動係数演算を調整します。10 がデフォルト係数と遅延の比率です。この数値を増加させると、スロットル入力がより滑らかになりますが、同時に遅延も増加します。これは不安定なRC接続やシネマティック飛行に有効です。<br>ただし、50 付近の値では入力遅延が顕著になりますので注意してください。<br>送信機 [TX] と受信機 [RX] の電源を入れた状態で、CLI コマンド rc_smoothing_info を使用すると、自動計算されたRC スムージングのカットオフ値を確認できます。",
+        "description": "Throttle Auto Factor parameter help message"
     },
     "receiverRcFeedforwardTypeSelect": {
         "message": "フィードフォワード カットオフタイプ"
     },
     "receiverRcSetpointTypeSelect": {
         "message": "セットポイント カットオフタイプ"
+    },
+    "receiverThrottleTypeSelect": {
+        "message": "スロットル カットオフ タイプ"
     },
     "receiverRcSmoothingInterpolation": {
         "message": "補間"
@@ -1994,22 +2005,31 @@
         "message": "フィルター"
     },
     "rcSmoothingSetpointCutoffHelp": {
-        "message": "セットポイントフィルターで使用されるカットオフ周波数(Hz)。値を小さくすると入力信号がスムーズとなり、受信機プロトコルの通信が遅延する際に適切に設定できます。ほとんどのユーザーは、「自動」となる0としてください。"
+        "message": "セットポイントフィルターのカットオフ周波数 (Hz) を設定します。値を低くすると入力がよりスムーズになりますが、反応が遅くなります。低速な受信機プロトコルに適しています。ほとんどのユーザは、デフォルト値の 0 (自動設定) を推奨します。"
     },
     "rcSmoothingFeedforwardCutoffHelp": {
-        "message": "フィードフォワードフィルターで使用されるカットオフ周波数(Hz)。値を小さくすると入力信号がスムーズとなり、受信機プロトコルの通信が遅延する際に適切に設定できます。ほとんどのユーザーは、「自動」となる0としてください。"
+        "message": "フィードフォワードフィルターのカットオフ周波数 (Hz) を設定します。値を低くすると入力がよりスムーズになりますが、反応が遅くなります。低速な受信機プロトコルに適しています。ほとんどのユーザは、デフォルト値の 0 (自動設定) を推奨します。"
     },
     "rcSmoothingChannelsSmoothedHelp": {
         "message": "適用するスムージングチャンネル"
     },
     "receiverRcSmoothingSetpointManual": {
-        "message": "セットポイントフィルターカットオフ周波数を自動計算する(推奨)か、ユーザ手動選択するかを設定します。「手動」を使用する場合、飛行中にパラメータを変更できるCrossfireのような受信プロトコルにはお勧めできません。"
+        "message": "セットポイントフィルターカットオフ周波数を自動計算する (推奨) か、ユーザ手動選択するかを設定します。Crossfireのように飛行中に更新レートが変化する受信機プロトコルでは、「手動選択」は推奨されません。"
     },
     "receiverRcSmoothingFeedforwardManual": {
-        "message": "フィードフォワードフィルターカットオフ周波数を自動計算する(推奨)か、ユーザ手動選択するかを設定します。「手動」を使用する場合、飛行中にパラメータを変更できるCrossfireのような受信プロトコルにはお勧めできません。"
+        "message": "フィードフォワードフィルターカットオフ周波数を自動計算する (推奨) か、ユーザ手動選択するかを設定します。Crossfireのように飛行中に更新レートが変化する受信機プロトコルでは、「手動選択」は推奨されません。"
+    },
+    "receiverRcSmoothingThrottleManual": {
+        "message": "RCスムージングを自動計算する(推奨)か、ユーザ手動選択するかを設定します。Crossfireのように飛行中に更新レートが変化する受信機プロトコルでは、「手動選択」は推奨されません。"
+    },
+    "rcSmoothingThrottleCutoffHelp": {
+        "message": "スロットルスムージングフィルターのカットオフ周波数 (Hz) を設定します。値を低くすると入力がよりスムーズになりますが、反応が遅くなります。低速な受信機プロトコルに適しています。ほとんどのユーザは、デフォルト値の 0 (自動設定) を推奨します。"
     },
     "receiverRcSmoothingSetpointHz": {
         "message": "セットポイント カットオフ 周波数"
+    },
+    "receiverRcSmoothingThrottleCutoffHz": {
+        "message": "スロットル カットオフ 周波数"
     },
     "receiverRcSmoothingFeedforwardCutoff": {
         "message": "フィードフォワード カットオフ 周波数"
@@ -2019,9 +2039,6 @@
     },
     "receiverRcSmoothingFeedforwardTypeAuto": {
         "message": "自動"
-    },
-    "receiverRcSmoothingMode": {
-        "message": "スムージングモード"
     },
     "pidTuningDtermSetpointTransition": {
         "message": "D値 セットポイント 遷移"

@@ -1283,10 +1283,6 @@
     "receiverRcSmoothingManual": {
         "message": "Manueel"
     },
-    "receiverRcSmoothingAutoFactor": {
-        "message": "Auto Factor",
-        "description": "Auto Factor parameter for RC smoothing"
-    },
     "receiverRcSmoothingInterpolation": {
         "message": "Interpolatie"
     },
@@ -1301,9 +1297,6 @@
     },
     "receiverRcSmoothingFeedforwardTypeAuto": {
         "message": "Automatisch"
-    },
-    "receiverRcSmoothingMode": {
-        "message": "Vloeiende Modus"
     },
     "pidTuningDtermSetpointTransition": {
         "message": "D Setpoint transition"

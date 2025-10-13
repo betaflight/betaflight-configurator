@@ -1970,22 +1970,33 @@
         "message": "Manual"
     },
     "receiverRcSmoothingAutoFactor": {
-        "message": "Fator Auto",
-        "description": "Auto Factor parameter for RC smoothing"
+        "message": "Fator Automático do Setpoint",
+        "description": "Setpoint Auto Factor parameter for RC smoothing"
     },
     "receiverRcSmoothingAutoFactorHelp": {
-        "message": "Ajusta o cálculo do fator automático, 10 é o fator padrão para o rácio de atraso. Aumentar o número irá suavizar mais os inputs de RC adicionando, ao mesmo tempo, atrasos. Isso pode ser útil para ligações RC instáveis ou para voo cinemático.<br>Tenha cuidado com números próximos de 50, o atraso de entrada tornar-se-á perceptível.<br>Use o comando do CLI rc_smoothing_info enquanto o TX e RX estão alimentados para ver o cálculo automático dos cutoffs do RC smoothing.",
-        "description": "Auto Factor parameter help message"
+        "message": "Ajusta o cálculo do Fator Automático do Setpoint, 10 é o fator padrão para a relação de atraso. Aumentar o número irá suavizar mais as entradas do RC adicionando, ao mesmo tempo, atrasos. Isso pode ser útil para ligações RC pouco fiáveis ou para voos cinemáticos.<br>Tenha cuidado com números próximos de 50, o atraso tornar-se-á perceptível.<br>Use o comando CLI rc_smoothing_info enquanto o TX e RX estão ligados para ver o cálculo automático dos cutoffs de suavização de RC.",
+        "description": "Setpoint Auto Factor parameter help message"
     },
     "receiverRcSmoothingAutoFactorHelp2": {
-        "message": "Ajusta o auto Suavizar RC. 30 é o valor por defeito. Valores maiores suavizam mais os inputs de RC - por exemplo, 60 para um estilo livre HD ou 90-120 para voo cinemático. Nota: Valores acima de 50 causarão um atraso apreciável nos sticks. Valores inferiores, por exemplo, 20-25, transferirão alguns degraus do controle do RC para os sinais do motor, aumentando ligeiramente o calor do motor, mas reduzirá ligeiramente o atraso do RC. Isto pode ser útil para corridas.",
-        "description": "Auto Factor parameter help message"
+        "message": "Ajusta a suavização do Setpoint de RC. 30 é o padrão. Valores maiores suavizam mais os inputs de RC - por exemplo, 60 para freestyle HD ou 90-120 para voo cinemático. Nota: Valores acima de 50 causarão um atraso apreciável nos sticks. Valores mais baixos, por exemplo, 20-25, transferirão algumas etapas de controle do RC para os sinais do motor, aumentando ligeiramente o calor do motor, mas reduzirá ligeiramente o atraso do RC. Isto pode ser útil para corridas.",
+        "description": "Setpoint Auto Factor parameter help message"
+    },
+    "receiverRcSmoothingAutoFactorThrottle": {
+        "message": "Fator Auto do Acelerador",
+        "description": "Throttle Auto Factor parameter for RC smoothing"
+    },
+    "receiverRcSmoothingAutoFactorThrottleHelp": {
+        "message": "Ajusta o cálculo do Fator de Acelerador, 10 é o fator padrão para a relação de atraso. Aumentar o número irá suavizar mais as entradas do RC adicionando, ao mesmo tempo, atrasos. Isto pode ser útil para ligações RC pouco fiáveis ou para voos cinemáticos.<br>Tenha cuidado com números próximos de 50, o atraso tornar-se-á perceptível.<br>Use o comando CLI rc_smoothing_info enquanto o TX e RX estão ligados para ver o cálculo automático dos cutoffs de suavização de RC.",
+        "description": "Throttle Auto Factor parameter help message"
     },
     "receiverRcFeedforwardTypeSelect": {
         "message": "Tipo de corte Feedforward"
     },
     "receiverRcSetpointTypeSelect": {
         "message": "Tipo de corte Setpoint"
+    },
+    "receiverThrottleTypeSelect": {
+        "message": "Tipo de Cutoff do Acelerador"
     },
     "receiverRcSmoothingInterpolation": {
         "message": "Interpolação"
@@ -2008,8 +2019,17 @@
     "receiverRcSmoothingFeedforwardManual": {
         "message": "Seleciona se a frequência de corte do filtro de feedforward é calculada automaticamente (recomendado) ou manualmente selecionada pelo utilizador. Usar \"Manual\" não é recomendado para protocolos de recetor como Crossfire que podem mudar durante o voo."
     },
+    "receiverRcSmoothingThrottleManual": {
+        "message": "Seleciona se a suavização de RC é calculada automaticamente (recomendado) ou manualmente selecionada pelo utilizador. Usar \"Manual\" não é recomendado para protocolos como Crossfire que podem mudar durante o voo."
+    },
+    "rcSmoothingThrottleCutoffHelp": {
+        "message": "Frequência de corte em Hz usada pelo filtro suavizador de aceleração. Usar valores mais baixos resultará em entradas mais suaves e são mais apropriadas para protocolos mais lentos do receptor. A maioria dos utilizadores deve deixar isto a 0 que corresponde a \"Auto\"."
+    },
     "receiverRcSmoothingSetpointHz": {
         "message": "Frequência de corte Setpoint"
+    },
+    "receiverRcSmoothingThrottleCutoffHz": {
+        "message": "Frequência de Curoff do Acelerador"
     },
     "receiverRcSmoothingFeedforwardCutoff": {
         "message": "Frequência de corte Feedforward"
@@ -2019,9 +2039,6 @@
     },
     "receiverRcSmoothingFeedforwardTypeAuto": {
         "message": "Auto"
-    },
-    "receiverRcSmoothingMode": {
-        "message": "Modo de Suavização"
     },
     "pidTuningDtermSetpointTransition": {
         "message": "Transição D Setpoint"
