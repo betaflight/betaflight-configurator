@@ -121,6 +121,9 @@
     "submit": {
         "message": "Отправить"
     },
+    "autoConnectEnabled": {
+        "message": "Автоматическое подключение: Включено - конфигуратор будет подключаться при обнаружении нового порта"
+    },
     "autoConnectDisabled": {
         "message": "Подключаться автоматически: Отключено - Пользователю необходимо выбрать нужный последовательный порт и нажать кнопку \"Подключиться\""
     },
@@ -147,9 +150,17 @@
         "message": "Установите тайм-аут соединения, чтобы разрешить более длительную инициализацию при подключении или перезагрузке устройства",
         "description": "Change timeout on auto-connect and reboot so the bus has more time to initialize after being detected by the system"
     },
+    "developmentSettings": {
+        "message": "Настройки для разработки",
+        "description": "Title for the development settings section"
+    },
     "showAllSerialDevices": {
         "message": "Показать все последовательные устройства (для производителей или разработки)",
         "description": "Do not filter serial devices using VID\/PID values (for manufacturers or development)"
+    },
+    "cliOnlyMode": {
+        "message": "Включить режим только командной строки",
+        "description": "Text for the option to enable or disable CLI only mode"
     },
     "showManualMode": {
         "message": "Включить режим ручного подключения",
@@ -231,6 +242,9 @@
     "sensorStatusSonarShort": {
         "message": "Сонар",
         "description": "Text of the image in the top sensors icons. Please keep it short."
+    },
+    "checkForConfiguratorUnstableVersions": {
+        "message": "Показывать уведомления о появлении нестабильных версий конфигуратора"
     },
     "configuratorUpdateHelp": {
         "message": "При доступном интернете, приложение будет автоматически запрашивать доступные обновления."
@@ -346,6 +360,9 @@
     "fileSystemPickerFiles": {
         "message": "{{typeof}} файлов",
         "description": "Text for the file picker dialog, showing the type of files selected. The parameter can be HEX, TXT, etc."
+    },
+    "fileSystemPickerFirmwareFiles": {
+        "message": "Файлы прошивки"
     },
     "serialErrorFrameError": {
         "message": "Ошибка последовательного соединения: неверный кадр"
@@ -579,6 +596,9 @@
     "versionLabelFirmware": {
         "message": "Прошивка"
     },
+    "versionLabelConfigurator": {
+        "message": "Версия приложения"
+    },
     "notifications_app_just_updated_to_version": {
         "message": "Приложение обновлено до версии: $1"
     },
@@ -612,6 +632,10 @@
     "statusbar_cpu_load": {
         "message": "Загрузка ЦПУ:",
         "description": "CPU load text shown in the status bar"
+    },
+    "statusbar_connection_time": {
+        "message": "Подключение:",
+        "description": "Connection time text shown in the status bar"
     },
     "dfu_connect_message": {
         "message": "Пожалуйста, используйте \"Программатор\" для доступа к DFU устройств"
@@ -1907,23 +1931,14 @@
     "receiverRcSmoothingManual": {
         "message": "Ручной"
     },
-    "receiverRcSmoothingAutoFactor": {
-        "message": "Автоматический коэффициент",
-        "description": "Auto Factor parameter for RC smoothing"
-    },
-    "receiverRcSmoothingAutoFactorHelp": {
-        "message": "Регулирует расчет автофактора ,10 является коэффициентом задержки по умолчанию. Увеличение коэфицента позволяет больше сгладить RC команды, при этом задержка станет больше. Может быть полезно для ненадежных RC соединений, либо для видеосъемки.<br>Будьте осторожны с числами, близки к 50, задержка ввода станет заметной.<br>Используйте команду CLI rc_smoothing_info когда TX и RX включены, чтобы увидеть автоматически рассчитанные диапазоны сглаживания.",
-        "description": "Auto Factor parameter help message"
-    },
-    "receiverRcSmoothingAutoFactorHelp2": {
-        "message": "Данный параметр регулирует автоматическое сглаживание сигнала с пульта управления RC. Значение по умолчанию - 30. Более высокие значения сильнее сглаживают поступающие сигналы с пульта управления: например, 60 для HD freestyle или 90-120 для кинематографической съемки. ПРИМЕЧАНИЕ: Значения выше 50 вызовут заметную задержку команд управления от стиков.\nПри более низких значениях, например 20-25, часть харктерной ступенчатой формы сигнала управления с пульта, приобразуется в сигналы управления двигателями, что незначительно увеличит нагрев двигателей, но немного уменьшит задержку сигнала с пульта управления. Может быть полезно для гонок.",
-        "description": "Auto Factor parameter help message"
-    },
     "receiverRcFeedforwardTypeSelect": {
         "message": "Тип отсечки Feedforward"
     },
     "receiverRcSetpointTypeSelect": {
         "message": "Тип отсечки Setpoint"
+    },
+    "receiverThrottleTypeSelect": {
+        "message": "Тип отсечки газа"
     },
     "receiverRcSmoothingInterpolation": {
         "message": "Интерполяция"
@@ -1949,6 +1964,9 @@
     "receiverRcSmoothingSetpointHz": {
         "message": "Частота среза заданного значения"
     },
+    "receiverRcSmoothingThrottleCutoffHz": {
+        "message": "Частота среза по газу"
+    },
     "receiverRcSmoothingFeedforwardCutoff": {
         "message": "Частота среза Feedforward"
     },
@@ -1957,9 +1975,6 @@
     },
     "receiverRcSmoothingFeedforwardTypeAuto": {
         "message": "Авто"
-    },
-    "receiverRcSmoothingMode": {
-        "message": "Режим сглаживания"
     },
     "pidTuningDtermSetpointTransition": {
         "message": "D Setpoint transition"
@@ -3243,6 +3258,9 @@
     "cliEnter": {
         "message": "Обнаружен переход в режим командной строки"
     },
+    "cliDevEnter": {
+        "message": "Обнаружен режим разработчика только командная строка"
+    },
     "cliReboot": {
         "message": "Обнаружен переход в режим CLI"
     },
@@ -3648,6 +3666,12 @@
     },
     "firmwareFlasherFirmwareOnlineLoaded": {
         "message": "Прошивка загружена по сети: {{filename}} ({{bytes}} байт)"
+    },
+    "firmwareFlasherTooltipSaveFirmware": {
+        "message": "Сохранить прошивку"
+    },
+    "firmwareFlasherInvalidFileFormat": {
+        "message": "Недопустимый формат файла"
     },
     "firmwareFlasherHexCorrupted": {
         "message": "HEX-файл поврежден"
@@ -5569,6 +5593,9 @@
         "message": "Название борта",
         "description": "One of the elements of the OSD"
     },
+    "osdDescElementCraftName": {
+        "message": "Название модели которое указно на вкладке Конфигурация.<\/br>Так же название можно сменить через переменную \"craft_name\" в консоли."
+    },
     "osdTextElementAltitude": {
         "message": "Высота",
         "description": "One of the elements of the OSD"
@@ -7010,6 +7037,9 @@
     "onboardLoggingRateOfLogging": {
         "message": "Частота записи в Blackbox"
     },
+    "onboardLoggingDebugFields": {
+        "message": "Поля отладки включены"
+    },
     "onboardLoggingDebugMode": {
         "message": "Режим отладки черного ящика"
     },
@@ -7151,6 +7181,9 @@
     "cordovaIncompatibleWebview": {
         "message": "Несовместимая версия webview"
     },
+    "cordovaWebviewTroubleshootingMsg": {
+        "message": "Вы должны обновить webview вашего устройства, чтобы использовать конфигуратор."
+    },
     "cordovaWebviewTroubleshootingMsg2": {
         "message": "Приведенный ниже инструмент предназначен для того, чтобы помочь вам установить новый webview или обновить уже установленный."
     },
@@ -7195,6 +7228,9 @@
     },
     "cordovaExitAppTitle": {
         "message": "Подтверждение"
+    },
+    "cordovaExitAppMessage": {
+        "message": "Вы действительно хотите закрыть приложение?"
     },
     "dropDownSelectAll": {
         "message": "Выбрать\/Снять все",
@@ -7532,5 +7568,9 @@
     "osdDescElementLidar": {
         "message": "$t(osdTextElementLidar.message)",
         "description": "Don't translate!!!"
+    },
+    "osdSetupPreviewCheckRulers": {
+        "message": "Линейки",
+        "description": "Label for the checkbox to toggle OSD preview rulers around the preview"
     }
 }

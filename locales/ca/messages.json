@@ -1977,23 +1977,22 @@
     "receiverRcSmoothingManual": {
         "message": "Manual"
     },
-    "receiverRcSmoothingAutoFactor": {
-        "message": "Factor automàtic",
-        "description": "Auto Factor parameter for RC smoothing"
+    "receiverRcSmoothingAutoFactorThrottle": {
+        "message": "Factor automàtic de l'accelerador",
+        "description": "Throttle Auto Factor parameter for RC smoothing"
     },
-    "receiverRcSmoothingAutoFactorHelp": {
-        "message": "Ajusta el càlcul de factor automàtic, 10 és la relació predeterminada del percentatge de retard. L’augment del nombre suavitzarà més les entrades de RC, alhora que afegirà retard. Això pot ser útil per a connexions RC poc fiables o per vols cinematogràfics.<br>Compte amb els números que s’aproximen als 50, el retard d’entrada es farà notori.<br>Utilitzeu la comanda CLI rc_smoothing_info mentre que TX i RX s’alimenten per veure el retalls del suavitzat RC automàticament calculat.",
-        "description": "Auto Factor parameter help message"
-    },
-    "receiverRcSmoothingAutoFactorHelp2": {
-        "message": "Ajusta el suavització automàtica de RC. 30 és el valor predeterminat. Els valors més alts suavitzen més les entrades de RC, p. 60 per a estil lliure HD o 90-120 per a vol cinematogràfic. Nota: els valors superiors a 50 provocaran un retard apreciable del stick. Els valors més baixos, per exemple, 20-25, transferiran alguns dels passos de control RC als senyals del motor, augmentant lleugerament la calor del motor, però reduiran lleugerament el retard de RC. Això pot ser útil per a curses.",
-        "description": "Auto Factor parameter help message"
+    "receiverRcSmoothingAutoFactorThrottleHelp": {
+        "message": "Ajusta el càlcul del factor d'acceleració. 10 és la relació predeterminada entre el factor i el retard. Augmentar el nombre suavitzarà més les entrades d'acceleració, alhora que afegirà retard. Això pot ser útil per a connexions RC poc fiables o per a vols cinemàtics.<br>Aneu amb compte amb els nombres que s'acosten a 50, el retard d'entrada es farà notable.<br>Utilitzeu l'ordre CLI rc_smoothing_info mentre el TX i el RX estan alimentats per veure els talls de suavització del RC calculats automàticament.",
+        "description": "Throttle Auto Factor parameter help message"
     },
     "receiverRcFeedforwardTypeSelect": {
         "message": "FeedForward Cutoff Tipus"
     },
     "receiverRcSetpointTypeSelect": {
         "message": "Tipus de tall d’entrada"
+    },
+    "receiverThrottleTypeSelect": {
+        "message": "Tipus de tall de l'accelerador"
     },
     "receiverRcSmoothingInterpolation": {
         "message": "Interpolació"
@@ -2016,8 +2015,17 @@
     "receiverRcSmoothingFeedforwardManual": {
         "message": "Selecciona si la freqüència de tall del filtre d’entrada es calcula de forma automàtica (recomanada) o seleccionada manualment per l’usuari. L'ús de \"Manual\" no es recomana per als protocols del receptor com Crossfire, que pot canviar en vol."
     },
+    "receiverRcSmoothingThrottleManual": {
+        "message": "Selecciona si el suavitzat RC es calcula automàticament (recomanat) o si l'usuari el selecciona manualment. No es recomana utilitzar \"Manual\" per a protocols de receptor com Crossfire, que poden canviar durant el vol."
+    },
+    "rcSmoothingThrottleCutoffHelp": {
+        "message": "La freqüència de tall en Hz utilitzada pel filtre d’entrada. Si utilitzeu valors inferiors, obtindreu entrades més suaus i són més apropiats per a protocols de receptor més lents. La majoria dels usuaris haurien de deixar això al 0 corresponent a \"Auto\"."
+    },
     "receiverRcSmoothingSetpointHz": {
         "message": "Freqüència de tall d'entrada"
+    },
+    "receiverRcSmoothingThrottleCutoffHz": {
+        "message": "Freqüència de tall de l'accelerador"
     },
     "receiverRcSmoothingFeedforwardCutoff": {
         "message": "FeedForward Cutoff Frequëncia"
@@ -2027,9 +2035,6 @@
     },
     "receiverRcSmoothingFeedforwardTypeAuto": {
         "message": "Auto"
-    },
-    "receiverRcSmoothingMode": {
-        "message": "Tipus de suavització"
     },
     "pidTuningDtermSetpointTransition": {
         "message": "D Setpoint transition"

@@ -1717,18 +1717,6 @@
     "receiverRcSmoothingManual": {
         "message": "Manual"
     },
-    "receiverRcSmoothingAutoFactor": {
-        "message": "Fator Automático",
-        "description": "Auto Factor parameter for RC smoothing"
-    },
-    "receiverRcSmoothingAutoFactorHelp": {
-        "message": "Ajusta o cálculo do fator automático, 10 é a razão padrão entre fator e atraso. Aumentar o número irá suavizar mais as entradas dos comandos de RC, porém irá aumentar também o atraso. Isso pode ser útil para conexões RC instáveis ou para voo cinemático.<br>Tenha cuidado com números próximos de 50, onde o atraso dos comandos se torna perceptível.<br>Use o comando do CLI rc_smoothing_info enquanto o TX e RX estão ligados para ver o cálculo automático dos cutoffs da Suavização RC.",
-        "description": "Auto Factor parameter help message"
-    },
-    "receiverRcSmoothingAutoFactorHelp2": {
-        "message": "Ajusta o auto Suavizar RC. 30 é o valor padrão. Valores maiores suavizam mais as entradas dos comandos RC - por exemplo, 60 para um estilo livre HD ou 90 a 120 para voo cinemático. Nota: Valores acima de 50 causarão um atraso perceptível nos sticks. Valores inferiores, por exemplo, 20 a 25, transferirão alguns degraus do controle do RC para os sinais do motor, aumentando a temperatura dos motores, mas também reduzirá o atraso do comando. Isto pode ser útil para corridas.",
-        "description": "Auto Factor parameter help message"
-    },
     "receiverRcFeedforwardTypeSelect": {
         "message": "Tipo de corte Feedforward"
     },
@@ -1767,9 +1755,6 @@
     },
     "receiverRcSmoothingFeedforwardTypeAuto": {
         "message": "Auto"
-    },
-    "receiverRcSmoothingMode": {
-        "message": "Modo Suave"
     },
     "pidTuningDtermSetpointTransition": {
         "message": "Transição do ponto D"
