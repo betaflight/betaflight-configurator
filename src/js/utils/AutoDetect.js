@@ -193,7 +193,7 @@ class AutoDetect {
             await serial.disconnect();
         } catch (error) {
             // Log the error with context but continue to run cleanup
-            console.error(`${this.logHead || "AutoDetect"}: serial.disconnect() failed:`, error);
+            console.error("Serial disconnection failed:", error);
         } finally {
             // Remove event listeners using stored references (disconnect listener is once-registered and already removed)
             serial.removeEventListener("receive", this.boundHandleSerialReceive);
