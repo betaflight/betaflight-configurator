@@ -182,18 +182,18 @@ class AutoDetect {
         }
     }
 
-    cleanup() {
-        // Remove event listeners using stored references
+    async cleanup() {
+        // Disconnect first, so the once-registered disconnect handler can fire
+        await serial.disconnect();
+
+        // Remove event listeners using stored references (disconnect listener is once-registered and already removed)
         serial.removeEventListener("receive", this.boundHandleSerialReceive);
         serial.removeEventListener("connect", this.boundHandleConnect);
-        serial.removeEventListener("disconnect", this.boundHandleDisconnect);
+        // Do NOT remove disconnect listener, as it is once-registered and will be auto-removed
 
-        // Clean up MSP listeners
+        // Clean up MSP listeners after disconnect
         MSP.clearListeners();
         MSP.disconnect_cleanup();
-
-        // Disconnect without passing onClosed as a callback
-        serial.disconnect();
     }
 }
 
