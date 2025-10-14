@@ -37,14 +37,12 @@ class AutoDetect {
         const port = PortHandler.portPicker.selectedPort;
 
         if (!port.startsWith("virtual")) {
-            serial.addEventListener("connect", this.boundHandleConnect, { once: true });
-            serial.addEventListener("disconnect", this.boundHandleDisconnect, { once: true });
-
             // Safely check firmware_flasher.targets (use optional chaining so this doesn't throw when undefined)
             const isLoaded = TABS.firmware_flasher?.targets
                 ? Object.keys(TABS.firmware_flasher.targets).length > 0
                 : false;
             let result = false;
+            let attempted = false;
 
             try {
                 if (!PortHandler.portAvailable) {
@@ -55,6 +53,11 @@ class AutoDetect {
                     console.warn("Attempting to connect while there still is a connection", serial.connected);
                     gui_log(i18n.getMessage("serialPortOpenFail"));
                 } else {
+                    // We're about to attempt a connection: register listeners just-in-time
+                    attempted = true;
+                    serial.addEventListener("connect", this.boundHandleConnect, { once: true });
+                    serial.addEventListener("disconnect", this.boundHandleDisconnect, { once: true });
+
                     console.log("Connecting to serial port", port);
                     gui_log(i18n.getMessage("firmwareFlasherDetectBoardQuery"));
                     result = await serial.connect(port, { baudRate: PortHandler.portPicker.selectedBauds || 115200 });
@@ -62,7 +65,8 @@ class AutoDetect {
             } catch (error) {
                 console.error("Failed to connect:", error);
             } finally {
-                if (!result) {
+                // Only run cleanup when we actually attempted a connection and it failed
+                if (attempted && !result) {
                     this.cleanup();
                 }
             }
