@@ -40,7 +40,8 @@ class AutoDetect {
             serial.addEventListener("connect", this.boundHandleConnect, { once: true });
             serial.addEventListener("disconnect", this.boundHandleDisconnect, { once: true });
 
-            const isLoaded = TABS.firmware_flasher.targets
+            // Safely check firmware_flasher.targets (use optional chaining so this doesn't throw when undefined)
+            const isLoaded = TABS.firmware_flasher?.targets
                 ? Object.keys(TABS.firmware_flasher.targets).length > 0
                 : false;
             let result = false;
