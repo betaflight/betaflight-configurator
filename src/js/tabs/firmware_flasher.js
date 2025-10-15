@@ -77,10 +77,20 @@ const firmware_flasher = {
     detectedSerialDevice: function (device) {
         console.log(`${firmware_flasher.logHead} Detected serial device:`, device);
 
-        if (GUI.connect_lock && !STM32.rebootMode) {
+        // If another operation is in progress, ignore port events.
+        if (GUI.connect_lock) {
             console.log(
                 `${firmware_flasher.logHead} Serial device event ignored due to active operation (connect_lock)`,
             );
+            return;
+        }
+
+        const isFlashOnConnect = $("input.flash_on_connect").is(":checked");
+
+        // If flash-on-connect is enabled, trigger startFlashing (if available) instead
+        // of running AutoDetect.verifyBoard(), mirroring the onPortChange logic.
+        if (isFlashOnConnect) {
+            firmware_flasher.startFlashing?.();
             return;
         }
 
