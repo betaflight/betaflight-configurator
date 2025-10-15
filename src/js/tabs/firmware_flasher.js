@@ -1567,12 +1567,11 @@ firmware_flasher.initialize = async function (callback) {
             $("a.exit_dfu").removeClass("disabled");
         }
 
-
-            const isFlashOnConnect = $("input.flash_on_connect").is(":checked");
-            if (PortHandler.portAvailable && !isFlashOnConnect) {
-                console.log(`${self.logHead} 💥 Auto-detecting board for already connected device`);
-                AutoDetect.verifyBoard();
-            }
+        const isFlashOnConnect = $("input.flash_on_connect").is(":checked");
+        if (PortHandler.portAvailable && !isFlashOnConnect) {
+            console.log(`${self.logHead} 💥 Auto-detecting board for already connected device`);
+            AutoDetect.verifyBoard();
+        }
 
         GUI.content_ready(callback);
     }
