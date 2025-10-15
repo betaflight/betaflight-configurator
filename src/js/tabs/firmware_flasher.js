@@ -22,7 +22,6 @@ import { ispConnected } from "../utils/connection.js";
 import FC from "../fc";
 
 const PORT_CHANGE_DEBOUNCE_MS = 500;
-const AUTO_DETECT_DELAY_MS = 1000;
 
 const firmware_flasher = {
     targets: null,
