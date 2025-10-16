@@ -300,6 +300,13 @@ function showVersionMismatchAndCli() {
     connectCli();
 }
 
+function checkApiVersionCompatibility() {
+    if (semver.minor(FC.CONFIG.apiVersion) > semver.minor(CONFIGURATOR.API_VERSION_MAX_SUPPORTED)) {
+        return false; // incompatible
+    }
+    return true; // compatible
+}
+
 /**
  * purpose of this is to bridge the old and new api
  * when serial events are handled.
@@ -343,15 +350,17 @@ function onOpen(openInfo) {
                 return;
             }
 
-            // we should check for problems before proceeding
-            // as some problems may prevent further communication
-            const abort = await checkReportProblems();
+            // Check version compatibility first
+            if (!checkApiVersionCompatibility()) {
+                dialogConnectVersionMismatch();
+                return;
+            }
 
-            // If checkReportProblems() already displayed its own dialog and indicates we should abort
-            // the normal flow (e.g. due to version incompatibility), do not open another modal here.
-            // Instead, switch to CLI to keep the app usable without double-modals.
-            if (abort) {
-                connectCli();
+            // Only check for other problems if version is compatible
+            const hasProblems = await checkReportProblems();
+
+            if (hasProblems) {
+                // checkReportProblems already showed its dialog, just return
                 return;
             }
 
@@ -477,39 +486,21 @@ function checkReportProblem(problemName, problems) {
 async function checkReportProblems() {
     const problemItemTemplate = $("#dialogReportProblems-listItemTemplate");
 
-    MSP.promise(MSPCodes.MSP_STATUS);
+    await MSP.promise(MSPCodes.MSP_STATUS);
+
     let needsProblemReportingDialog = false;
     const problemDialogList = $("#dialogReportProblems-list");
     problemDialogList.empty();
 
     let problems = [];
-    let abort = false;
 
-    if (semver.minor(FC.CONFIG.apiVersion) > semver.minor(CONFIGURATOR.API_VERSION_MAX_SUPPORTED)) {
-        const problemName = "API_VERSION_MAX_SUPPORTED";
-        problems.push({
-            name: problemName,
-            description: i18n.getMessage(`reportProblemsDialog${problemName}`, [
-                CONFIGURATOR.latestVersion,
-                CONFIGURATOR.latestVersionReleaseUrl,
-                CONFIGURATOR.getDisplayVersion(),
-                FC.CONFIG.flightControllerVersion,
-            ]),
-        });
-        needsProblemReportingDialog = true;
+    // only check for more problems if we are not already aborting
+    needsProblemReportingDialog =
+        checkReportProblem("MOTOR_PROTOCOL_DISABLED", problems) || needsProblemReportingDialog;
 
-        abort = true;
-    }
-
-    if (!abort) {
-        // only check for more problems if we are not already aborting
+    if (have_sensor(FC.CONFIG.activeSensors, "acc")) {
         needsProblemReportingDialog =
-            checkReportProblem("MOTOR_PROTOCOL_DISABLED", problems) || needsProblemReportingDialog;
-
-        if (have_sensor(FC.CONFIG.activeSensors, "acc")) {
-            needsProblemReportingDialog =
-                checkReportProblem("ACC_NEEDS_CALIBRATION", problems) || needsProblemReportingDialog;
-        }
+            checkReportProblem("ACC_NEEDS_CALIBRATION", problems) || needsProblemReportingDialog;
     }
 
     if (needsProblemReportingDialog) {
@@ -525,14 +516,12 @@ async function checkReportProblems() {
         problemDialog.showModal();
         $("#dialogReportProblems").scrollTop(0);
         $("#dialogReportProblems-closebtn").focus();
-    }
-
-    if (!abort) {
+    } else {
         // if we are not aborting, we can continue
         processUid();
     }
 
-    return abort;
+    return needsProblemReportingDialog;
 }
 
 async function processBuildConfiguration() {
