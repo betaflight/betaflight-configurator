@@ -341,7 +341,7 @@ function onOpen(openInfo) {
 
         console.log(`${logHead} Requesting configuration data`);
 
-        MSP.send_message(MSPCodes.MSP_API_VERSION, false, false, async function () {
+        MSP.send_message(MSPCodes.MSP_API_VERSION, false, false, function () {
             gui_log(i18n.getMessage("apiVersionReceived", FC.CONFIG.apiVersion));
 
             if (FC.CONFIG.apiVersion.includes("null")) {
@@ -352,14 +352,6 @@ function onOpen(openInfo) {
             // Check version compatibility first
             if (!checkApiVersionCompatibility()) {
                 showVersionMismatchAndCli();
-                return;
-            }
-
-            // Only check for other problems if version is compatible
-            const hasProblems = await checkReportProblems();
-
-            if (hasProblems) {
-                // checkReportProblems already showed its dialog, just return
                 return;
             }
 
@@ -469,7 +461,9 @@ function processCustomDefaults() {
 function processBoardInfo() {
     gui_log(i18n.getMessage("boardInfoReceived", [FC.CONFIG.hardwareName, FC.CONFIG.boardVersion]));
 
-    if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+        checkReportProblems();
+    } else {
         processCustomDefaults();
     }
 }
@@ -482,45 +476,43 @@ function checkReportProblem(problemName, problems) {
     return false;
 }
 
-async function checkReportProblems() {
+function checkReportProblems() {
     const problemItemTemplate = $("#dialogReportProblems-listItemTemplate");
 
-    await MSP.promise(MSPCodes.MSP_STATUS);
+    MSP.send_message(MSPCodes.MSP_STATUS, false, false, function () {
+        let needsProblemReportingDialog = false;
+        const problemDialogList = $("#dialogReportProblems-list");
+        problemDialogList.empty();
 
-    let needsProblemReportingDialog = false;
-    const problemDialogList = $("#dialogReportProblems-list");
-    problemDialogList.empty();
+        let problems = [];
 
-    let problems = [];
-
-    // only check for more problems if we are not already aborting
-    needsProblemReportingDialog =
-        checkReportProblem("MOTOR_PROTOCOL_DISABLED", problems) || needsProblemReportingDialog;
-
-    if (have_sensor(FC.CONFIG.activeSensors, "acc")) {
+        // only check for more problems if we are not already aborting
         needsProblemReportingDialog =
-            checkReportProblem("ACC_NEEDS_CALIBRATION", problems) || needsProblemReportingDialog;
-    }
+            checkReportProblem("MOTOR_PROTOCOL_DISABLED", problems) || needsProblemReportingDialog;
 
-    if (needsProblemReportingDialog) {
-        for (const problem of problems) {
-            problemItemTemplate.clone().prop("id", null).html(problem.description).appendTo(problemDialogList);
+        if (have_sensor(FC.CONFIG.activeSensors, "acc")) {
+            needsProblemReportingDialog =
+                checkReportProblem("ACC_NEEDS_CALIBRATION", problems) || needsProblemReportingDialog;
         }
 
-        const problemDialog = $("#dialogReportProblems")[0];
-        $("#dialogReportProblems-closebtn")
-            .off("click")
-            .one("click", () => problemDialog.close());
+        if (needsProblemReportingDialog) {
+            for (const problem of problems) {
+                problemItemTemplate.clone().prop("id", null).html(problem.description).appendTo(problemDialogList);
+            }
 
-        problemDialog.showModal();
-        $("#dialogReportProblems").scrollTop(0);
-        $("#dialogReportProblems-closebtn").focus();
-    } else {
-        // if we are not aborting, we can continue
-        processUid();
-    }
+            const problemDialog = $("#dialogReportProblems")[0];
+            $("#dialogReportProblems-closebtn")
+                .off("click")
+                .one("click", () => problemDialog.close());
 
-    return needsProblemReportingDialog;
+            problemDialog.showModal();
+            $("#dialogReportProblems").scrollTop(0);
+            $("#dialogReportProblems-closebtn").focus();
+        } else {
+            // if we are not aborting, we can continue
+            processUid();
+        }
+    });
 }
 
 async function processBuildConfiguration() {
