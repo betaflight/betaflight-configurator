@@ -372,7 +372,7 @@ function onOpen(openInfo) {
                             });
                         });
                     } else {
-                        showVersionMismatchAndCli();
+                        showVersionMismatchAndCli(i18n.getMessage("firmwareTypeNotSupported"));
                     }
                 });
             } else {
