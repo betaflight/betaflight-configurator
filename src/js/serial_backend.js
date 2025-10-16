@@ -296,7 +296,6 @@ function showVersionMismatchAndCli() {
 
     dialog.showModal();
 
-    console.log(`${logHead} Connecting to CLI`);
     connectCli();
 }
 
@@ -618,9 +617,10 @@ function finishOpen() {
 function connectCli() {
     CONFIGURATOR.connectionValid = true; // making it possible to open the CLI tab
     GUI.allowedTabs = ["cli"];
-    // do we need to cleanup MSP listeners here?
+
     MSP.clearListeners();
     MSP.disconnect_cleanup();
+
     onConnect();
     $("#tabs .tab_cli a").click();
 }
