@@ -283,11 +283,11 @@ function abortConnection() {
 }
 
 // Centralized helper: show version mismatch warning and switch to CLI
-function showVersionMismatchAndCli() {
+function showVersionMismatchAndCli(message) {
     const dialog = $(".dialogConnectWarning")[0];
 
     $(".dialogConnectWarning-content").html(
-        i18n.getMessage("firmwareVersionNotSupported", [CONFIGURATOR.API_VERSION_ACCEPTED]),
+        message || i18n.getMessage("firmwareVersionNotSupported", [CONFIGURATOR.API_VERSION_ACCEPTED]),
     );
 
     $(".dialogConnectWarning-closebtn").one("click", function () {
