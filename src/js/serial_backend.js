@@ -314,14 +314,40 @@ function onOpen(openInfo) {
         FC.resetState();
         mspHelper = new MspHelper();
         MSP.listen(mspHelper.process_data.bind(mspHelper));
-        MSP.timeout = 250;
+
         console.log(`${logHead} Requesting configuration data`);
 
-        MSP.send_message(MSPCodes.MSP_API_VERSION, false, false, function () {
+        function dialogConnectVersionMismatch() {
+            const dialog = $(".dialogConnectWarning")[0];
+
+            $(".dialogConnectWarning-content").html(
+                i18n.getMessage("firmwareVersionNotSupported", [CONFIGURATOR.API_VERSION_ACCEPTED]),
+            );
+
+            $(".dialogConnectWarning-closebtn").click(function () {
+                dialog.close();
+            });
+
+            dialog.showModal();
+
+            console.log(`${logHead} Connecting to CLI`);
+            connectCli();
+        }
+
+        MSP.send_message(MSPCodes.MSP_API_VERSION, false, false, async function () {
             gui_log(i18n.getMessage("apiVersionReceived", FC.CONFIG.apiVersion));
 
             if (FC.CONFIG.apiVersion.includes("null")) {
                 abortConnection();
+                return;
+            }
+
+            // we should check for problems before proceeding
+            // as some problems may prevent further communication
+            const status = await checkReportProblems();
+
+            if (status) {
+                dialogConnectVersionMismatch();
                 return;
             }
 
@@ -343,17 +369,7 @@ function onOpen(openInfo) {
                             });
                         });
                     } else {
-                        const dialog = $(".dialogConnectWarning")[0];
-
-                        $(".dialogConnectWarning-content").html(i18n.getMessage("firmwareTypeNotSupported"));
-
-                        $(".dialogConnectWarning-closebtn").click(function () {
-                            dialog.close();
-                        });
-
-                        dialog.showModal();
-
-                        connectCli();
+                        dialogConnectVersionMismatch();
                     }
                 });
             } else {
@@ -453,9 +469,7 @@ function processCustomDefaults() {
 function processBoardInfo() {
     gui_log(i18n.getMessage("boardInfoReceived", [FC.CONFIG.hardwareName, FC.CONFIG.boardVersion]));
 
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
-        checkReportProblems();
-    } else {
+    if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
         processCustomDefaults();
     }
 }
@@ -468,66 +482,65 @@ function checkReportProblem(problemName, problems) {
     return false;
 }
 
-function checkReportProblems() {
+async function checkReportProblems() {
     const problemItemTemplate = $("#dialogReportProblems-listItemTemplate");
 
-    MSP.send_message(MSPCodes.MSP_STATUS, false, false, function () {
-        let needsProblemReportingDialog = false;
-        const problemDialogList = $("#dialogReportProblems-list");
-        problemDialogList.empty();
+    MSP.promise(MSPCodes.MSP_STATUS);
+    let needsProblemReportingDialog = false;
+    const problemDialogList = $("#dialogReportProblems-list");
+    problemDialogList.empty();
 
-        let problems = [];
-        let abort = false;
+    let problems = [];
+    let abort = false;
 
-        if (semver.minor(FC.CONFIG.apiVersion) > semver.minor(CONFIGURATOR.API_VERSION_MAX_SUPPORTED)) {
-            const problemName = "API_VERSION_MAX_SUPPORTED";
-            problems.push({
-                name: problemName,
-                description: i18n.getMessage(`reportProblemsDialog${problemName}`, [
-                    CONFIGURATOR.latestVersion,
-                    CONFIGURATOR.latestVersionReleaseUrl,
-                    CONFIGURATOR.getDisplayVersion(),
-                    FC.CONFIG.flightControllerVersion,
-                ]),
-            });
-            needsProblemReportingDialog = true;
+    if (semver.minor(FC.CONFIG.apiVersion) > semver.minor(CONFIGURATOR.API_VERSION_MAX_SUPPORTED)) {
+        const problemName = "API_VERSION_MAX_SUPPORTED";
+        problems.push({
+            name: problemName,
+            description: i18n.getMessage(`reportProblemsDialog${problemName}`, [
+                CONFIGURATOR.latestVersion,
+                CONFIGURATOR.latestVersionReleaseUrl,
+                CONFIGURATOR.getDisplayVersion(),
+                FC.CONFIG.flightControllerVersion,
+            ]),
+        });
+        needsProblemReportingDialog = true;
 
-            abort = true;
-            GUI.timeout_remove("connecting"); // kill connecting timer
-            connectDisconnect(); // disconnect
-        }
+        abort = true;
+    }
 
-        if (!abort) {
-            // only check for problems if we are not already aborting
+    if (!abort) {
+        // only check for more problems if we are not already aborting
+        needsProblemReportingDialog =
+            checkReportProblem("MOTOR_PROTOCOL_DISABLED", problems) || needsProblemReportingDialog;
+
+        if (have_sensor(FC.CONFIG.activeSensors, "acc")) {
             needsProblemReportingDialog =
-                checkReportProblem("MOTOR_PROTOCOL_DISABLED", problems) || needsProblemReportingDialog;
+                checkReportProblem("ACC_NEEDS_CALIBRATION", problems) || needsProblemReportingDialog;
+        }
+    }
 
-            if (have_sensor(FC.CONFIG.activeSensors, "acc")) {
-                needsProblemReportingDialog =
-                    checkReportProblem("ACC_NEEDS_CALIBRATION", problems) || needsProblemReportingDialog;
-            }
+    if (needsProblemReportingDialog) {
+        for (const problem of problems) {
+            problemItemTemplate.clone().html(problem.description).appendTo(problemDialogList);
         }
 
-        if (needsProblemReportingDialog) {
-            for (const problem of problems) {
-                problemItemTemplate.clone().html(problem.description).appendTo(problemDialogList);
-            }
+        const problemDialog = $("#dialogReportProblems")[0];
+        $("#dialogReportProblems-closebtn").click(function () {
+            problemDialog.close();
+        });
 
-            const problemDialog = $("#dialogReportProblems")[0];
-            $("#dialogReportProblems-closebtn").click(function () {
-                problemDialog.close();
-            });
+        problemDialog.showModal();
+        $("#dialogReportProblems").scrollTop(0);
+        $("#dialogReportProblems-closebtn").focus();
+    }
 
-            problemDialog.showModal();
-            $("#dialogReportProblems").scrollTop(0);
-            $("#dialogReportProblems-closebtn").focus();
-        }
+    if (!abort) {
+        // if we are not aborting, we can continue
+        processUid();
+    }
 
-        if (!abort) {
-            // if we are not aborting, we can continue
-            processUid();
-        }
-    });
+    return abort;
 }
 
 async function processBuildConfiguration() {
@@ -634,6 +647,9 @@ function finishOpen() {
 function connectCli() {
     CONFIGURATOR.connectionValid = true; // making it possible to open the CLI tab
     GUI.allowedTabs = ["cli"];
+    // do we need to cleanup MSP listeners here?
+    MSP.clearListeners();
+    MSP.disconnect_cleanup();
     onConnect();
     $("#tabs .tab_cli a").click();
 }
