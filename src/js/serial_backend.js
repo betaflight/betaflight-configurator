@@ -502,7 +502,7 @@ async function checkReportProblems() {
 
     if (needsProblemReportingDialog) {
         for (const problem of problems) {
-            problemItemTemplate.clone().html(problem.description).appendTo(problemDialogList);
+            problemItemTemplate.clone().prop("id", null).html(problem.description).appendTo(problemDialogList);
         }
 
         const problemDialog = $("#dialogReportProblems")[0];
