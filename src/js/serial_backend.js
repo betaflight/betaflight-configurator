@@ -282,6 +282,26 @@ function abortConnection() {
     resetConnection();
 }
 
+// Centralized helper: show version mismatch warning and switch to CLI
+function showVersionMismatchAndCli() {
+    const dialog = $(".dialogConnectWarning")[0];
+
+    $(".dialogConnectWarning-content").html(
+        i18n.getMessage("firmwareVersionNotSupported", [CONFIGURATOR.API_VERSION_ACCEPTED]),
+    );
+
+    $(".dialogConnectWarning-closebtn")
+        .off("click")
+        .on("click", function () {
+            dialog.close();
+        });
+
+    dialog.showModal();
+
+    console.log(`${logHead} Connecting to CLI`);
+    connectCli();
+}
+
 /**
  * purpose of this is to bridge the old and new api
  * when serial events are handled.
@@ -317,23 +337,6 @@ function onOpen(openInfo) {
 
         console.log(`${logHead} Requesting configuration data`);
 
-        function dialogConnectVersionMismatch() {
-            const dialog = $(".dialogConnectWarning")[0];
-
-            $(".dialogConnectWarning-content").html(
-                i18n.getMessage("firmwareVersionNotSupported", [CONFIGURATOR.API_VERSION_ACCEPTED]),
-            );
-
-            $(".dialogConnectWarning-closebtn").click(function () {
-                dialog.close();
-            });
-
-            dialog.showModal();
-
-            console.log(`${logHead} Connecting to CLI`);
-            connectCli();
-        }
-
         MSP.send_message(MSPCodes.MSP_API_VERSION, false, false, async function () {
             gui_log(i18n.getMessage("apiVersionReceived", FC.CONFIG.apiVersion));
 
@@ -344,10 +347,13 @@ function onOpen(openInfo) {
 
             // we should check for problems before proceeding
             // as some problems may prevent further communication
-            const status = await checkReportProblems();
+            const abort = await checkReportProblems();
 
-            if (status) {
-                dialogConnectVersionMismatch();
+            // If checkReportProblems() already displayed its own dialog and indicates we should abort
+            // the normal flow (e.g. due to version incompatibility), do not open another modal here.
+            // Instead, switch to CLI to keep the app usable without double-modals.
+            if (abort) {
+                connectCli();
                 return;
             }
 
@@ -369,7 +375,7 @@ function onOpen(openInfo) {
                             });
                         });
                     } else {
-                        dialogConnectVersionMismatch();
+                        showVersionMismatchAndCli();
                     }
                 });
             } else {
@@ -378,19 +384,7 @@ function onOpen(openInfo) {
                     return;
                 }
 
-                const dialog = $(".dialogConnectWarning")[0];
-
-                $(".dialogConnectWarning-content").html(
-                    i18n.getMessage("firmwareVersionNotSupported", [CONFIGURATOR.API_VERSION_ACCEPTED]),
-                );
-
-                $(".dialogConnectWarning-closebtn").click(function () {
-                    dialog.close();
-                });
-
-                dialog.showModal();
-
-                connectCli();
+                showVersionMismatchAndCli();
             }
         });
     } else {
