@@ -8,7 +8,7 @@ export const API_VERSION_1_48 = "1.48.0";
 const CONFIGURATOR = {
     // all versions are specified and compared using semantic versioning http://semver.org/
     API_VERSION_ACCEPTED: API_VERSION_1_44,
-    API_VERSION_MAX_SUPPORTED: API_VERSION_1_46,
+    API_VERSION_MAX_SUPPORTED: API_VERSION_1_48,
 
     connectionValid: false,
     connectionValidCliOnly: false,
