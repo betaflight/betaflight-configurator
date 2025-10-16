@@ -301,7 +301,9 @@ function showVersionMismatchAndCli() {
 }
 
 function checkApiVersionCompatibility() {
-    return semver.minor(FC.CONFIG.apiVersion) <= semver.minor(CONFIGURATOR.API_VERSION_MAX_SUPPORTED);
+    const maxMajor = semver.major(CONFIGURATOR.API_VERSION_MAX_SUPPORTED);
+    const maxMinor = semver.minor(CONFIGURATOR.API_VERSION_MAX_SUPPORTED);
+    return semver.satisfies(FC.CONFIG.apiVersion, `<=${maxMajor}.${maxMinor}`);
 }
 
 /**
