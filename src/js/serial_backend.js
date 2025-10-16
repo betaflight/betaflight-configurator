@@ -344,8 +344,8 @@ function onOpen(openInfo) {
                 )
             ) {
                 showVersionMismatchAndCli(
-                    i18n.getMessage("API_VERSION_NOT_YET_SUPPORTED", [
-                        FC.CONFIG.apiVersion,
+                    i18n.getMessage("reportProblemsDialogAPI_VERSION_MAX_SUPPORTED", [
+                        CONFIGURATOR.getDisplayVersion(),
                         CONFIGURATOR.API_VERSION_MAX_SUPPORTED,
                     ]),
                 );
