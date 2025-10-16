@@ -299,12 +299,6 @@ function showVersionMismatchAndCli(message) {
     connectCli();
 }
 
-function checkApiVersionCompatibility() {
-    const maxMajor = semver.major(CONFIGURATOR.API_VERSION_MAX_SUPPORTED);
-    const maxMinor = semver.minor(CONFIGURATOR.API_VERSION_MAX_SUPPORTED);
-    return semver.satisfies(FC.CONFIG.apiVersion, `<=${maxMajor}.${maxMinor}`);
-}
-
 /**
  * purpose of this is to bridge the old and new api
  * when serial events are handled.
@@ -349,7 +343,12 @@ function onOpen(openInfo) {
             }
 
             // Check version compatibility first
-            if (!checkApiVersionCompatibility()) {
+            if (
+                !semver.satisfies(
+                    FC.CONFIG.apiVersion,
+                    `<=${semver.major(CONFIGURATOR.API_VERSION_MAX_SUPPORTED)}.${semver.minor(CONFIGURATOR.API_VERSION_MAX_SUPPORTED)}`,
+                )
+            ) {
                 showVersionMismatchAndCli();
                 return;
             }
