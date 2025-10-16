@@ -506,9 +506,9 @@ async function checkReportProblems() {
         }
 
         const problemDialog = $("#dialogReportProblems")[0];
-        $("#dialogReportProblems-closebtn").click(function () {
-            problemDialog.close();
-        });
+        $("#dialogReportProblems-closebtn")
+            .off("click")
+            .one("click", () => problemDialog.close());
 
         problemDialog.showModal();
         $("#dialogReportProblems").scrollTop(0);
