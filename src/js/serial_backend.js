@@ -476,43 +476,42 @@ function checkReportProblem(problemName, problems) {
     return false;
 }
 
-function checkReportProblems() {
-    const problemItemTemplate = $("#dialogReportProblems-listItemTemplate");
+async function checkReportProblems() {
+    await MSP.promise(MSPCodes.MSP_STATUS);
 
-    MSP.send_message(MSPCodes.MSP_STATUS, false, false, function () {
-        let needsProblemReportingDialog = false;
+    let needsProblemReportingDialog = false;
+    let problems = [];
+
+    // only check for more problems if we are not already aborting
+    needsProblemReportingDialog =
+        checkReportProblem("MOTOR_PROTOCOL_DISABLED", problems) || needsProblemReportingDialog;
+
+    if (have_sensor(FC.CONFIG.activeSensors, "acc")) {
+        needsProblemReportingDialog =
+            checkReportProblem("ACC_NEEDS_CALIBRATION", problems) || needsProblemReportingDialog;
+    }
+
+    if (needsProblemReportingDialog) {
+        const problemItemTemplate = $("#dialogReportProblems-listItemTemplate");
         const problemDialogList = $("#dialogReportProblems-list");
+
         problemDialogList.empty();
 
-        let problems = [];
-
-        // only check for more problems if we are not already aborting
-        needsProblemReportingDialog =
-            checkReportProblem("MOTOR_PROTOCOL_DISABLED", problems) || needsProblemReportingDialog;
-
-        if (have_sensor(FC.CONFIG.activeSensors, "acc")) {
-            needsProblemReportingDialog =
-                checkReportProblem("ACC_NEEDS_CALIBRATION", problems) || needsProblemReportingDialog;
+        for (const problem of problems) {
+            problemItemTemplate.clone().prop("id", null).html(problem.description).appendTo(problemDialogList);
         }
 
-        if (needsProblemReportingDialog) {
-            for (const problem of problems) {
-                problemItemTemplate.clone().prop("id", null).html(problem.description).appendTo(problemDialogList);
-            }
+        const problemDialog = $("#dialogReportProblems")[0];
+        $("#dialogReportProblems-closebtn")
+            .off("click")
+            .one("click", () => problemDialog.close());
 
-            const problemDialog = $("#dialogReportProblems")[0];
-            $("#dialogReportProblems-closebtn")
-                .off("click")
-                .one("click", () => problemDialog.close());
+        problemDialog.showModal();
+        $("#dialogReportProblems").scrollTop(0);
+        $("#dialogReportProblems-closebtn").focus();
+    }
 
-            problemDialog.showModal();
-            $("#dialogReportProblems").scrollTop(0);
-            $("#dialogReportProblems-closebtn").focus();
-        } else {
-            // if we are not aborting, we can continue
-            processUid();
-        }
-    });
+    processUid();
 }
 
 async function processBuildConfiguration() {
