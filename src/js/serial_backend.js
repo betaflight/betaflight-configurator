@@ -349,7 +349,7 @@ function onOpen(openInfo) {
 
             // Check version compatibility first
             if (!checkApiVersionCompatibility()) {
-                dialogConnectVersionMismatch();
+                showVersionMismatchAndCli();
                 return;
             }
 
