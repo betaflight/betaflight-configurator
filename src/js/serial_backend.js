@@ -286,13 +286,8 @@ function abortConnection() {
 function showVersionMismatchAndCli(message) {
     const dialog = $(".dialogConnectWarning")[0];
 
-    $(".dialogConnectWarning-content").html(
-        message || i18n.getMessage("firmwareVersionNotSupported", [CONFIGURATOR.API_VERSION_ACCEPTED]),
-    );
-
-    $(".dialogConnectWarning-closebtn").one("click", function () {
-        dialog.close();
-    });
+    $(".dialogConnectWarning-content").html(message);
+    $(".dialogConnectWarning-closebtn").one("click", () => dialog.close());
 
     dialog.showModal();
 
@@ -342,14 +337,15 @@ function onOpen(openInfo) {
                 return;
             }
 
-            // Check version compatibility first
             if (
                 !semver.satisfies(
                     FC.CONFIG.apiVersion,
                     `<=${semver.major(CONFIGURATOR.API_VERSION_MAX_SUPPORTED)}.${semver.minor(CONFIGURATOR.API_VERSION_MAX_SUPPORTED)}`,
                 )
             ) {
-                showVersionMismatchAndCli();
+                showVersionMismatchAndCli(
+                    i18n.getMessage("firmwareVersionNotYetSupported", [CONFIGURATOR.API_VERSION_MAX_SUPPORTED]),
+                );
                 return;
             }
 
@@ -371,16 +367,13 @@ function onOpen(openInfo) {
                             });
                         });
                     } else {
-                        showVersionMismatchAndCli(i18n.getMessage("firmwareTypeNotSupported"));
+                        showVersionMismatchAndCli(
+                            i18n.getMessage("firmwareTypeNotSupported", [CONFIGURATOR.API_VERSION_ACCEPTED]),
+                        );
                     }
                 });
             } else {
-                if (!serial.connected) {
-                    abortConnection();
-                    return;
-                }
-
-                showVersionMismatchAndCli();
+                showVersionMismatchAndCli(i18n.getMessage("firmwareUpgradeRequired"));
             }
         });
     } else {
