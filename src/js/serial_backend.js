@@ -290,11 +290,9 @@ function showVersionMismatchAndCli() {
         i18n.getMessage("firmwareVersionNotSupported", [CONFIGURATOR.API_VERSION_ACCEPTED]),
     );
 
-    $(".dialogConnectWarning-closebtn")
-        .off("click")
-        .on("click", function () {
-            dialog.close();
-        });
+    $(".dialogConnectWarning-closebtn").one("click", function () {
+        dialog.close();
+    });
 
     dialog.showModal();
 
