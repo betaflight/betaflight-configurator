@@ -33,42 +33,43 @@ class AutoDetect {
         MSP.read(event.detail);
     }
 
-    verifyBoard() {
+    async verifyBoard() {
         const port = PortHandler.portPicker.selectedPort;
-        const isLoaded = TABS.firmware_flasher.targets ? Object.keys(TABS.firmware_flasher.targets).length > 0 : false;
-
-        if (!PortHandler.portAvailable) {
-            gui_log(i18n.getMessage("firmwareFlasherNoValidPort"));
-            return;
-        }
-
-        if (!isLoaded) {
-            gui_log(i18n.getMessage("firmwareFlasherNoTargetsLoaded"));
-            return;
-        }
-
-        if (serial.connected || serial.connectionId) {
-            console.warn(
-                "Attempting to connect while there still is a connection",
-                serial.connected,
-                serial.connectionId,
-                serial.openCanceled,
-            );
-            serial.disconnect();
-            return;
-        }
-
-        gui_log(i18n.getMessage("firmwareFlasherDetectBoardQuery"));
 
         if (!port.startsWith("virtual")) {
-            serial.addEventListener("connect", this.boundHandleConnect, { once: true });
-            serial.addEventListener("disconnect", this.boundHandleDisconnect, { once: true });
+            // Safely check firmware_flasher.targets (use optional chaining so this doesn't throw when undefined)
+            const isLoaded = TABS.firmware_flasher?.targets
+                ? Object.keys(TABS.firmware_flasher.targets).length > 0
+                : false;
+            let result = false;
+            let attempted = false;
 
-            console.log("Connecting to serial port", port, serial.connected, serial.connectionId);
+            try {
+                if (!PortHandler.portAvailable) {
+                    gui_log(i18n.getMessage("firmwareFlasherNoValidPort"));
+                } else if (!isLoaded) {
+                    gui_log(i18n.getMessage("firmwareFlasherNoTargetsLoaded"));
+                } else if (serial.connected || serial.connectionId) {
+                    console.warn("Attempting to connect while there still is a connection", serial.connected);
+                    gui_log(i18n.getMessage("serialPortOpenFail"));
+                } else {
+                    // We're about to attempt a connection: register listeners just-in-time
+                    attempted = true;
+                    serial.addEventListener("connect", this.boundHandleConnect, { once: true });
+                    serial.addEventListener("disconnect", this.boundHandleDisconnect, { once: true });
 
-            serial.connect(port, { baudRate: PortHandler.portPicker.selectedBauds || 115200 });
-        } else {
-            gui_log(i18n.getMessage("serialPortOpenFail"));
+                    console.log("Connecting to serial port", port);
+                    gui_log(i18n.getMessage("firmwareFlasherDetectBoardQuery"));
+                    result = await serial.connect(port, { baudRate: PortHandler.portPicker.selectedBauds || 115200 });
+                }
+            } catch (error) {
+                console.error("Failed to connect:", error);
+            } finally {
+                // Only run cleanup when we actually attempted a connection and it failed
+                if (attempted && !result) {
+                    this.cleanup();
+                }
+            }
         }
     }
 
@@ -116,17 +117,7 @@ class AutoDetect {
             );
         }
 
-        // Remove event listeners using stored references
-        serial.removeEventListener("receive", this.boundHandleSerialReceive);
-        serial.removeEventListener("connect", this.boundHandleConnect);
-        serial.removeEventListener("disconnect", this.boundHandleDisconnect);
-
-        // Clean up MSP listeners
-        MSP.clearListeners();
-        MSP.disconnect_cleanup();
-
-        // Disconnect without passing onClosed as a callback
-        serial.disconnect();
+        this.cleanup();
     }
 
     async getBoardInfo() {
@@ -193,6 +184,25 @@ class AutoDetect {
             this.requestBoardInformation();
         } else {
             gui_log(i18n.getMessage("serialPortOpenFail"));
+        }
+    }
+
+    async cleanup() {
+        // Disconnect first, so the once-registered disconnect handler can fire
+        try {
+            await serial.disconnect();
+        } catch (error) {
+            // Log the error with context but continue to run cleanup
+            console.error("Serial disconnection failed:", error);
+        } finally {
+            // Remove event listeners using stored references (disconnect listener is once-registered and already removed)
+            serial.removeEventListener("receive", this.boundHandleSerialReceive);
+            serial.removeEventListener("connect", this.boundHandleConnect);
+            // Do NOT remove disconnect listener, as it is once-registered and will be auto-removed
+
+            // Clean up MSP listeners after disconnect (always run)
+            MSP.clearListeners();
+            MSP.disconnect_cleanup();
         }
     }
 }
