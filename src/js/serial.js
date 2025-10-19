@@ -72,14 +72,20 @@ class Serial extends EventTarget {
      */
     selectProtocol(portPath) {
         // Determine which protocol to use based on port path
-        const s = typeof portPath === "string" ? portPath : "";
-        // Default to webserial for typical serial device identifiers.
-        if (s === "virtual") return this._getProtocol?.("virtual");
-        if (s === "manual" || /^(tcp|ws|wss):\/\/[A-Za-z0-9.-]+(?::\d+)?(\/.*)?$/.test(s)) {
-            return this._getProtocol?.("websocket");
+        let protocol;
+
+        // Select protocol based on port path. Default to webSerial for
+        // typical serial device identifiers (e.g., COM1, /dev/ttyUSB0).
+        if (portPath === "virtual") {
+            protocol = this._protocols.find((p) => p.name === "virtual")?.instance;
+        } else if (portPath === "manual" || /^(tcp|ws):\/\/([A-Za-z0-9.-]+)(?::(\d+))?$/.test(portPath)) {
+            protocol = this._protocols.find((p) => p.name === "websocket")?.instance;
+        } else if (portPath.startsWith("bluetooth")) {
+            protocol = this._protocols.find((p) => p.name === "webbluetooth")?.instance;
+        } else {
+            protocol = this._protocols.find((p) => p.name === "webserial")?.instance;
         }
-        if (s.startsWith("bluetooth")) return this._getProtocol?.("webbluetooth");
-        return this._getProtocol?.("webserial");
+        return protocol;
     }
 
     /**
