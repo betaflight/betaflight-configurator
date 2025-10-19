@@ -203,9 +203,9 @@ class Serial extends EventTarget {
     }
 
     /**
-     * Get protocol type
+     * Get protocol
      */
-    get protocolType() {
+    get protocol() {
         return this._protocol ? this._protocol.constructor.name.toLowerCase() : null;
     }
 }
