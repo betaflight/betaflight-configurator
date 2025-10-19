@@ -33,9 +33,9 @@ class Serial extends EventTarget {
     _setupEventForwarding() {
         const events = ["addedDevice", "removedDevice", "connect", "disconnect", "receive"];
 
-        this._protocols.forEach(({ name, instance }) => {
+        for (const { name, instance } of this._protocols) {
             if (typeof instance?.addEventListener === "function") {
-                events.forEach((eventType) => {
+                for (const eventType of events) {
                     instance.addEventListener(eventType, (event) => {
                         let newDetail;
                         if (event.type === "receive") {
@@ -61,9 +61,9 @@ class Serial extends EventTarget {
                             }),
                         );
                     });
-                });
+                }
             }
-        });
+        }
     }
 
     /**
@@ -102,7 +102,7 @@ class Serial extends EventTarget {
         } catch (error) {
             console.error(`${this.logHead} Error during connection:`, error);
         }
-        callback && callback(result);
+        callback?.(result);
         return result;
     }
 
@@ -118,7 +118,7 @@ class Serial extends EventTarget {
         } catch (error) {
             console.error(`${this.logHead} Error during disconnect:`, error);
         }
-        callback && callback(result);
+        callback?.(result);
         return result;
     }
 

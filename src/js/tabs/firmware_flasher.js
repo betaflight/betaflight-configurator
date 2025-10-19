@@ -21,8 +21,6 @@ import { EventBus } from "../../components/eventBus";
 import { ispConnected } from "../utils/connection.js";
 import FC from "../fc";
 
-const PORT_CHANGE_DEBOUNCE_MS = 500;
-
 const firmware_flasher = {
     targets: null,
     buildApi: new BuildApi(),
