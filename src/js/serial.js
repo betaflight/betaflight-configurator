@@ -115,7 +115,7 @@ class Serial extends EventTarget {
     async disconnect(callback) {
         let result = false;
         try {
-            result = await this._protocol?.disconnect();
+            result = await this._protocol.disconnect();
         } catch (error) {
             console.error(`${this.logHead} Error during disconnect:`, error);
         }
@@ -129,7 +129,7 @@ class Serial extends EventTarget {
     async send(data, callback) {
         let result;
         try {
-            result = (await this._protocol?.send(data, callback)) ?? { bytesSent: 0 };
+            result = (await this._protocol.send(data, callback)) ?? { bytesSent: 0 };
         } catch (error) {
             result = { bytesSent: 0 };
             console.error(`${this.logHead} Error sending data:`, error);
