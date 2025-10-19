@@ -98,7 +98,10 @@ class Serial extends EventTarget {
             this._protocol = this.selectProtocol(path);
             result = await this._protocol.connect(path, options);
         } catch (error) {
-            console.error(`${this.logHead} Error during connection:`, error);
+            console.error(
+                `${this.logHead} Error during connection to path '${path}' with protocol '${this._protocol?.constructor?.name || "undefined"}':`,
+                error,
+            );
         }
         callback?.(result);
         return result;
