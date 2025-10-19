@@ -2,8 +2,6 @@ import "./jqueryPlugins";
 import $ from "jquery";
 import "../components/init.js";
 import { gui_log } from "./gui_log.js";
-// same, msp seems to be everywhere used from global scope
-import "./msp/MSPHelper.js";
 import { i18n } from "./localization.js";
 import GUI, { TABS } from "./gui.js";
 import { get as getConfig, set as setConfig } from "./ConfigStorage.js";
@@ -184,13 +182,18 @@ function startProcess() {
                 return;
             }
 
-            if (GUI.allowedTabs.indexOf(tab) < 0 && tab === "firmware_flasher") {
-                if (GUI.connected_to || GUI.connecting_to) {
-                    $("a.connection_button__link").click();
+            if (!GUI.allowedTabs.includes(tab)) {
+                if (tab === "firmware_flasher") {
+                    // Special handling for firmware flasher tab
+                    if (GUI.connected_to || GUI.connecting_to) {
+                        $("a.connection_button__link").trigger("click");
+                    }
+                    // This line is required but it triggers opening the firmware flasher tab again
+                    $("a.firmware_flasher_button__link").trigger("click");
+                } else {
+                    gui_log(i18n.getMessage("tabSwitchUpgradeRequired", [tabName]));
+                    return;
                 }
-            } else if (GUI.allowedTabs.indexOf(tab) < 0) {
-                gui_log(i18n.getMessage("tabSwitchUpgradeRequired", [tabName]));
-                return;
             }
 
             GUI.tab_switch_in_progress = true;
