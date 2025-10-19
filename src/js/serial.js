@@ -72,21 +72,14 @@ class Serial extends EventTarget {
      */
     selectProtocol(portPath) {
         // Determine which protocol to use based on port path
-        let protocol;
-
-        // Select protocol based on port path. Default to webSerial for
-        // typical serial device identifiers (e.g., COM1, /dev/ttyUSB0).
-        if (portPath === "virtual") {
-            protocol = this._protocols.find((p) => p.name === "virtual")?.instance;
-        } else if (portPath === "manual" || /^(tcp|ws):\/\/([A-Za-z0-9.-]+)(?::(\d+))?$/.test(portPath)) {
-            protocol = this._protocols.find((p) => p.name === "websocket")?.instance;
-        } else if (portPath.startsWith("bluetooth")) {
-            protocol = this._protocols.find((p) => p.name === "webbluetooth")?.instance;
-        } else {
-            protocol = this._protocols.find((p) => p.name === "webserial")?.instance;
+        const s = typeof portPath === "string" ? portPath : "";
+        // Default to webserial for typical serial device identifiers.
+        if (s === "virtual") return this._getProtocol?.("virtual");
+        if (s === "manual" || /^(tcp|ws|wss):\/\/[A-Za-z0-9.-]+(?::\d+)?(\/.*)?$/.test(s)) {
+            return this._getProtocol?.("websocket");
         }
-
-        return protocol;
+        if (s.startsWith("bluetooth")) return this._getProtocol?.("webbluetooth");
+        return this._getProtocol?.("webserial");
     }
 
     /**
@@ -102,10 +95,9 @@ class Serial extends EventTarget {
             result = await this._protocol.connect(path, options, callback);
         } catch (error) {
             console.error(`${this.logHead} Error during connection:`, error);
-        } finally {
-            callback && callback(result);
-            return result;
         }
+        callback && callback(result);
+        return result;
     }
 
     /**
@@ -119,10 +111,9 @@ class Serial extends EventTarget {
             result = await this._protocol?.disconnect();
         } catch (error) {
             console.error(`${this.logHead} Error during disconnect:`, error);
-        } finally {
-            callback && callback(result);
-            return result;
         }
+        callback && callback(result);
+        return result;
     }
 
     /**
@@ -134,7 +125,6 @@ class Serial extends EventTarget {
             if (callback) callback({ bytesSent: 0 });
             return { bytesSent: 0 };
         }
-
         return this._protocol.send(data, callback);
     }
 
@@ -175,12 +165,11 @@ class Serial extends EventTarget {
         let result = false;
         try {
             const targetProtocol = this._protocols.find((p) => p.name === protocolType?.toLowerCase())?.instance;
-            result = await targetProtocol.requestPermissionDevice(showAllDevices);
+            result = await targetProtocol?.requestPermissionDevice(showAllDevices);
         } catch (error) {
             console.error(`${this.logHead} Error requesting device permission:`, error);
-        } finally {
-            return result;
         }
+        return result;
     }
 
     /**
