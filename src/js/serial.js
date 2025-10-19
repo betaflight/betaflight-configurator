@@ -123,13 +123,15 @@ class Serial extends EventTarget {
     /**
      * Send data through the serial connection
      */
-    send(data, callback) {
-        if (!this._protocol || !this._protocol.connected) {
-            console.warn(`${this.logHead} Cannot send data - not connected`);
-            if (callback) callback({ bytesSent: 0 });
-            return { bytesSent: 0 };
+    async send(data, callback) {
+        let result = false;
+        try {
+            result = await this._protocol?.send(data, callback);
+        } catch (error) {
+            result = { bytesSent: 0 };
+            console.error(`${this.logHead} Error sending data:`, error);
         }
-        return this._protocol.send(data, callback);
+        return result;
     }
 
     /**
@@ -195,6 +197,13 @@ class Serial extends EventTarget {
      */
     get connectionId() {
         return this._protocol?.connectionId || null;
+    }
+
+    /**
+     * Get protocol type
+     */
+    get protocolType() {
+        return this._protocol ? this._protocol.constructor.name.toLowerCase() : null;
     }
 }
 
