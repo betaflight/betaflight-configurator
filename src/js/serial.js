@@ -92,7 +92,7 @@ class Serial extends EventTarget {
         let result = false;
         try {
             this._protocol = this.selectProtocol(path);
-            result = await this._protocol.connect(path, options, callback);
+            result = await this._protocol.connect(path, options);
         } catch (error) {
             console.error(`${this.logHead} Error during connection:`, error);
         }
