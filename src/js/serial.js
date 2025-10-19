@@ -129,7 +129,7 @@ class Serial extends EventTarget {
     async send(data, callback) {
         let result;
         try {
-            result = (await this._protocol.send(data, callback)) ?? { bytesSent: 0 };
+            result = await this._protocol.send(data, callback);
         } catch (error) {
             result = { bytesSent: 0 };
             console.error(`${this.logHead} Error sending data:`, error);
