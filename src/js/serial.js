@@ -127,9 +127,9 @@ class Serial extends EventTarget {
      * Send data through the serial connection
      */
     async send(data, callback) {
-        let result = false;
+        let result;
         try {
-            result = await this._protocol?.send(data, callback);
+            result = (await this._protocol?.send(data, callback)) ?? { bytesSent: 0 };
         } catch (error) {
             result = { bytesSent: 0 };
             console.error(`${this.logHead} Error sending data:`, error);
