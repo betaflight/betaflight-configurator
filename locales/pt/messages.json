@@ -512,7 +512,7 @@
         "message": "<span class=\"message-negative\"><strong>Tem de corrigir estes problemas antes de tentar voar o seu aparelho<\/span><\/strong>."
     },
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
-        "message": "<span class=\"message-negative\"><strong>A versão da app utilizada ($3) não suporta o firmware $4<\/strong><\/span>.<br>$t(configuratorUpdateHelp.message)"
+        "message": "<span class=\"message-negative\"><strong>A versão utilizada da App ($1) não suporta o firmware $2<\/strong><\/span>.<br>$t(configuratorUpdateHelp.message)"
     },
     "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
         "message": "<strong>não há nenhum protocolo de saída do motor selecionado<\/strong>.<br>Por favor, selecione um protocolo de saída de motor apropriado para os seus ESCs em '$t(configurationEscFeatures.message)' na aba '$t(tabMotorTesting.message)'.<br>$t(escProtocolDisabledMessage.message)"

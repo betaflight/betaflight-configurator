@@ -511,9 +511,6 @@
     "reportProblemsDialogFooter": {
         "message": "<span class=\"message-negative\"><strong>飛行を試みる前に、これらの問題を修正する必要があります。<\/span><\/strong>"
     },
-    "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
-        "message": "<span class=\"message-negative\"><strong>使用されるBetaflight App バージョン ($3) はファームウェア $4<\/strong><\/span> をサポートしていません。<br>$t(configuratorUpdateHelp.message)"
-    },
     "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
         "message": "<strong>モーター出力プロトコルが選択されていません。<\/strong><br>『$t(tabMotorTesting.message)』タブの『$t(configurationEscFeatures.message)』で、ESCに適したモーター出力プロトコルを選択してください。<br>$t(escProtocolDisabledMessage.message)"
     },
