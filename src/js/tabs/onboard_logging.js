@@ -479,7 +479,8 @@ onboard_logging.initialize = function (callback) {
     }
 
     function conditionallyEraseFlash(maxBytes, nextAddress) {
-        if (!isNaN(maxBytes) && nextAddress >= maxBytes) {
+        if (Number.isFinite(maxBytes) && nextAddress >= maxBytes) {
+            eraseCancelled = false;
             $(".dataflash-confirm-erase").addClass("erasing");
             MSP.send_message(MSPCodes.MSP_DATAFLASH_ERASE, false, false, poll_for_erase_completion);
         } else {
@@ -510,7 +511,7 @@ onboard_logging.initialize = function (callback) {
                             // Did we receive any data?
                             if (chunkDataView.byteLength > 0) {
                                 nextAddress += chunkDataView.byteLength;
-                                if (isNaN(bytesCompressed) || isNaN(totalBytesCompressed)) {
+                                if (Number.isNaN(bytesCompressed) || Number.isNaN(totalBytesCompressed)) {
                                     totalBytesCompressed = null;
                                 } else {
                                     totalBytesCompressed += bytesCompressed;
