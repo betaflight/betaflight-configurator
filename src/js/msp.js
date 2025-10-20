@@ -263,7 +263,7 @@ const MSP = {
         if (this.message_checksum === expectedChecksum) {
             // message received, store dataview
             this.dataView = new DataView(this.message_buffer, 0, this.message_length_expected);
-        } else if (serial._webBluetooth.shouldBypassCrc(expectedChecksum)) {
+        } else if (serial.protocol === "bluetooth" && serial._protocol?.shouldBypassCrc?.(expectedChecksum)) {
             this.dataView = new DataView(this.message_buffer, 0, this.message_length_expected);
             this.crcError = false; // Override the CRC error for this specific case
         } else {

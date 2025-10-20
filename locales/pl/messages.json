@@ -516,7 +516,7 @@
         "message": "<span class=\"message-negative\"><strong>Musisz rozwiązać te problemy zanim spróbujesz latać swoją jednostką latająca.<\/span><\/strong>."
     },
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
-        "message": "<span class=\"message-negative\"><strong>Używana wersja aplikacji ($3) nie obsługuje oprogramowania $4<\/strong><\/span>.<br>$t(configuratorUpdateHelp.message)"
+        "message": "<span class=\"message-negative\"><strong>Używana wersja aplikacji ($1) nie obsługuje oprogramowania $2<\/strong><\/span>.<br>$t(configuratorUpdateHelp.message)"
     },
     "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
         "message": "<strong>Nie wybrano protokołu sterowania silnikami<\/strong>.<br>Wybierz protokół sterowania odpowiedni dla twoich ESC wybierając '$t(configurationEscFeatures.message)' w zakładce  '$t(tabMotorTesting.message)'. <br>$t(escProtocolDisabledMessage.message)"
@@ -693,11 +693,17 @@
     "defaultDiscordText": {
         "message": "Betaflight <a href=\"https:\/\/discord.betaflight.com\/invite\" target=\"_blank\" rel=\"noopener noreferrer\">Serwer na Discordzie<\/a>.<br \/> Podziel się doświadczeniami z lotów, porozmawiaj o Betaflight i pomóż innym osobom albo sam uzyskaj pomoc."
     },
+    "statisticsDisclaimer": {
+        "message": "Aplikacja Betaflight zbiera anonimowe statystyki użytkowania. Na przykład dane te obejmują (ale nie ograniczają się do) liczbę uruchomień, region geograficzny użytkowników, typy kontrolerów lotu, wersje oprogramowania firmware, wykorzystanie elementów interfejsu użytkownika, kart itp. Podsumowanie tych danych jest dostępne <a href=\"https:\/\/datastudio.google.com\/u\/0\/reporting\/1pK1PFw0eWmsgl2npvuzwAqscVzlhJvuF\" target=\"_blank\" rel=\"noopener noreferrer\">tutaj<\/a>. Kolekcja jest wykonywana w celu lepszego zrozumienia, w jaki sposób aplikacja Betaflight jest używana, zrozumienia trendów społeczności i możliwych ulepszeń interfejsu użytkownika. Użytkownicy mogą wyłączyć zbieranie danych w zakładce Opcje."
+    },
     "defaultButtonFirmwareFlasher": {
         "message": "Wgraj Oprogramowanie"
     },
     "defaultDonateHead": {
         "message": "Informacja o Open Source \/ Darowiznach"
+    },
+    "defaultDonateText": {
+        "message": "<p><strong>Betaflight<\/strong> jest oprogramowaniem kontrolera lotu, które jest <strong>open source<\/strong> i jest dostępne bezpłatnie <strong>bez gwarancji<\/strong> dla wszystkich użytkowników.<\/p><p>Jeśli uważasz, że aplikacja Betaflight lub Betaflight jest przydatna, rozważ <strong>wspieranie<\/strong> poprzez dotację.<\/p>"
     },
     "defaultDonateBottom": {
         "message": "<p>Jeśli chcesz nas regularnie wspierać finansowo, rozważ zostanie naszym patronem na $t(patreonLink.message).<\/p>"
@@ -1007,6 +1013,10 @@
     "initialSetupArmingDisableFlagsTooltipBST": {
         "message": "Urządzenie Black Sheep Telemetry (np. TBS Core Pro) jest rozbrojone i uniemożliwia uzbrojenie",
         "description": "Message that pops up to describe the BST arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipMSP": {
+        "message": "Połączenie MSP jest aktywne, prawdopodobnie z aplikacją Betaflight",
+        "description": "Message that pops up to describe the MSP arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipPARALYZE": {
         "message": "Tryb Paraliż został aktywowany",
@@ -1405,6 +1415,12 @@
     },
     "configurationGyroAlignmentHelp": {
         "message": "Ułożenie żyroskopu jest jego orientacją na płytce kontrolera lotu. Domyślna konfiguracja zwykle jest odpowiednia, jednak w przypadku niestandardowych konstrukcji lub płytek z nietypowym ułożeniem żyroskopu konieczna może być ręczna korekta tego ustawienia."
+    },
+    "configurationGyroActiveIMU": {
+        "message": "Aktywny IMU"
+    },
+    "configurationGyroActiveIMUHelp": {
+        "message": "Wybierz żyroskop, który ma być używany jako żyroskop główny. Żyroskop główny służy do stabilizacji i sterowania. Jeśli masz tylko jeden żyroskop, zostanie on wybrany automatycznie.<br><br> Nie zawsze jest możliwe włączenie wielu żyroskopów, jeśli są one różnych typów lub marek."
     },
     "configurationGyroAlignmentRoll": {
         "message": "$t(configurationBoardAlignmentRoll.message)",
@@ -1954,23 +1970,26 @@
     "receiverRcSmoothingManual": {
         "message": "Ręcznie"
     },
-    "receiverRcSmoothingAutoFactor": {
-        "message": "Współczynnik automatyczny",
-        "description": "Auto Factor parameter for RC smoothing"
-    },
     "receiverRcSmoothingAutoFactorHelp": {
         "message": "Dostosowuje automatyczne obliczanie współczynnika, 10 jest domyślnym stosunkiem współczynnika do opóźnienia. Zwiększenie liczby bardziej wygładzi wejścia RC, dodając jednocześnie opóźnienie. Może to być przydatne w przypadku zawodnych połączeń RC lub podczas latania z kamerą.<br>Uważaj na liczby zbliżające się do 50, opóźnienie wejściowe będzie zauważalne.<br>Użyj polecenia CLI rc_smoothing_info, gdy TX i RX są zasilane, aby zobaczyć automatycznie obliczone wygładzanie RC odcięcia.",
-        "description": "Auto Factor parameter help message"
+        "description": "Setpoint Auto Factor parameter help message"
     },
     "receiverRcSmoothingAutoFactorHelp2": {
         "message": "Dostosowuje automatyczne wygładzanie RC. 30 jest domyślną wartością. Wyższe wartości wygładzają wejścia RC bardziej - np. 60 dla freestyle HD lub 90-120 dla latania kinowego. Uwaga: wartości powyżej 50 spowodują znaczne opóźnienie drążka. Niższe wartości, np. 20-25, przeniosą niektóre kroki sterowania RC do sygnałów silnika, nieznacznie zwiększając ciepło silnika, ale zmniejszą nieco opóźnienie RC. Może to być przydatne podczas wyścigów.",
-        "description": "Auto Factor parameter help message"
+        "description": "Setpoint Auto Factor parameter help message"
+    },
+    "receiverRcSmoothingAutoFactorThrottleHelp": {
+        "message": "Dostosowuje automatyczne obliczanie współczynnika, 10 jest domyślnym stosunkiem współczynnika do opóźnienia. Zwiększenie liczby bardziej wygładzi wejścia RC, dodając jednocześnie opóźnienie. Może to być przydatne w przypadku zawodnych połączeń RC lub podczas latania z kamerą.<br>Uważaj na liczby zbliżające się do 50, opóźnienie wejściowe będzie zauważalne.<br>Użyj polecenia CLI rc_smoothing_info, gdy TX i RX są zasilane, aby zobaczyć automatycznie obliczone wygładzanie RC odcięcia.",
+        "description": "Throttle Auto Factor parameter help message"
     },
     "receiverRcFeedforwardTypeSelect": {
         "message": "Typ odcięcia Feedforward"
     },
     "receiverRcSetpointTypeSelect": {
         "message": "Typ odcięcia Wartości zadanej"
+    },
+    "receiverThrottleTypeSelect": {
+        "message": "Typ odcięcia przepustnicy"
     },
     "receiverRcSmoothingInterpolation": {
         "message": "Interpolacja"
@@ -1993,6 +2012,12 @@
     "receiverRcSmoothingFeedforwardManual": {
         "message": "Określa, czy częstotliwość odcięcia filtra feedforward jest obliczana automatycznie (zalecane) czy ręcznie wybierana przez użytkownika. Tryb Manual nie jest polecany dla protokołów odbiornika takich jak Crossfire, które mogą dynamicznie zmieniać się w trakcie lotu."
     },
+    "receiverRcSmoothingThrottleManual": {
+        "message": "Wybiera, czy częstotliwość odcięcia filtra wejściowego jest automatycznie obliczana (zalecane) czy wybierana ręcznie przez użytkownika. Używanie \"Ręcznego\" nie jest zalecane dla protokołów odbiorników, takich jak Crossfire które mogą zmieniać się w locie."
+    },
+    "rcSmoothingThrottleCutoffHelp": {
+        "message": "Częstotliwość odcięcia w Hz stosowana przez filtr feedforward. Niższe wartości zapewniają płynniejsze sygnały wejściowe i lepiej sprawdzają się przy wolniejszych protokołach odbiornika. Większość użytkowników powinna pozostawić wartość 0, co odpowiada trybowi Auto."
+    },
     "receiverRcSmoothingSetpointHz": {
         "message": "Częstotliwość odcięcia Wartości zadanej"
     },
@@ -2004,9 +2029,6 @@
     },
     "receiverRcSmoothingFeedforwardTypeAuto": {
         "message": "Auto"
-    },
-    "receiverRcSmoothingMode": {
-        "message": "Tryb wygładzania"
     },
     "pidTuningDtermSetpointTransition": {
         "message": "D przejście do wartości zadanej"
@@ -3298,6 +3320,9 @@
     "cliEnter": {
         "message": "Wykryto tryb Wiersza Poleceń CLI"
     },
+    "cliDevEnter": {
+        "message": "Wykryto tryb programisty tylko dla CLI"
+    },
     "cliReboot": {
         "message": "Wykryto ponowne uruchomienie Wiersza Poleceń CLI"
     },
@@ -3333,6 +3358,9 @@
     },
     "cliCommand": {
         "message": "Tutaj wprowadź polecenie"
+    },
+    "loggingNote": {
+        "message": "Dane będą zbierane w tej karcie <span class=\"message-negative\">tylko<\/span>. Opuszczenie zakładki <span class=\"message-negative\">anuluj logowanie<\/span>, a aplikacja powróci do normalnego stanu.<br \/> Możesz wybrać globalny okres aktualizacji; dane będą zapisywane do pliku dziennika co <strong>1<\/strong> sekundę ze względów wydajności."
     },
     "loggingSamplesSaved": {
         "message": "Zapisane próbki:"
@@ -3704,6 +3732,9 @@
     "firmwareFlasherFirmwareOnlineLoaded": {
         "message": "Załadowano Firmware Online: {{filename}} ({{bytes}} bajtów)"
     },
+    "firmwareFlasherTooltipSaveFirmware": {
+        "message": "Zapisz Firmware"
+    },
     "firmwareFlasherInvalidFileFormat": {
         "message": "Nieprawidłowy format pliku"
     },
@@ -3712,6 +3743,9 @@
     },
     "firmwareFlasherHexCorrupted": {
         "message": "Plik HEX wydaje się być uszkodzony"
+    },
+    "firmwareFlasherUF2SaveSuccess": {
+        "message": "Pomyślnie zapisano (flashed) UF2"
     },
     "firmwareFlasherConfigCorrupted": {
         "message": "Plik konfiguracyjny wydaje się być uszkodzony, ASCII akceptowane (znaki 0-255)",

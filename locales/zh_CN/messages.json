@@ -38,12 +38,20 @@
         "message": "应用程序需要更新",
         "description": "Title of the window that appears when the app needs to be refreshed to get the latest changes"
     },
+    "pwaOnNeedRefreshText": {
+        "message": "你需要刷新此页面才能获得最新的更改。现在刷新将重新加载此页面，同时，你将丢失所有未保存的更改，并将中止任何正在进行的操作。<br><br>你想立即刷新吗？你也可以忽略此消息并稍后手动刷新页面。",
+        "description": "Text of the window that appears when the app needs to be refreshed to get the latest changes"
+    },
     "pwaOnOffilenReadyTitle": {
         "message": "当前可以离线使用应用程序",
         "description": "Title of the window that appears when the app is ready to be installed and used offline"
     },
+    "pwaOnOffilenReadyText": {
+        "message": "你可以根据需要将其作为独立应用程序安装到设备上。在浏览器地址栏或菜单中能够找到该选项。",
+        "description": "Text of the window that appears when the app is ready to be installed and used offline"
+    },
     "operationNotSupported": {
-        "message": "您的硬件不支持此操作。"
+        "message": "你的硬件不支持此操作。"
     },
     "storageDeviceNotReady": {
         "message": "存储设备尚未就绪。如果是 microSD 卡, 请确保它已被飞控正确识别。"
@@ -56,6 +64,10 @@
     },
     "disconnect": {
         "message": "断开连接"
+    },
+    "portsSelectNoSelection": {
+        "message": "选择你的设备",
+        "description": "Text for the option to select a device in the port selection dropdown"
     },
     "portsSelectManual": {
         "message": "手动选择"
@@ -109,8 +121,11 @@
     "submit": {
         "message": "提交"
     },
+    "autoConnectEnabled": {
+        "message": "自动连接：已启用——检测到新端口时，应用程序会自动尝试连接"
+    },
     "autoConnectDisabled": {
-        "message": "自动连接: 禁用-用户需要选择正确的串行端口, 然后单击 \"连接\" 按钮。"
+        "message": "自动连接：已禁用——用户需要选择正确的串行端口, 然后点击「连接」按钮"
     },
     "expertMode": {
         "message": "启用专家模式"
@@ -125,14 +140,14 @@
         "message": "连接后重新打开最后使用的选项页"
     },
     "meteredConnection": {
-        "message": "禁用互联网连接(用于按流量计费的连接或慢速连接)",
+        "message": "禁用互联网连接(适合按流量计费或慢速网络)",
         "description": "Text for the option to disable internet access for metered connection or to disable data over slow connections"
     },
     "analyticsOptOut": {
         "message": "退出匿名的统计数据收集"
     },
     "connectionTimeout": {
-        "message": "设置连接超时阈值，以允许更长时间的初始化或重启",
+        "message": "设置连接超时时间，以便在设备上电或重启时进行更长时间的初始化",
         "description": "Change timeout on auto-connect and reboot so the bus has more time to initialize after being detected by the system"
     },
     "developmentSettings": {
@@ -143,6 +158,10 @@
         "message": "显示所有串口设备 (面向制造商或开发)",
         "description": "Do not filter serial devices using VID\/PID values (for manufacturers or development)"
     },
+    "cliOnlyMode": {
+        "message": "启用仅 CLI 模式",
+        "description": "Text for the option to enable or disable CLI only mode"
+    },
     "showManualMode": {
         "message": "启用手动连接模式",
         "description": "Text for the option to enable or disable manual connection mode"
@@ -150,6 +169,10 @@
     "showVirtualMode": {
         "message": "启用虚拟连接模式",
         "description": "Text for the option to enable or disable the virtual FC"
+    },
+    "useLegacyRenderingModel": {
+        "message": "为 3D 模型启用旧版渲染（适用于低性能设备）",
+        "description": "Text for the option to enable or disable legacy rendering of the 3D model"
     },
     "cordovaForceComputerUI": {
         "message": "停用手机界面并切换至计算机界面"
@@ -223,6 +246,9 @@
     "checkForConfiguratorUnstableVersions": {
         "message": "显示不稳定版本应用程序的更新提醒"
     },
+    "configuratorUpdateNotice": {
+        "message": "你正在使用旧版本的 <b>Betaflight 应用<\/b>。<br>$t(configuratorUpdateHelp.message)"
+    },
     "configuratorUpdateHelp": {
         "message": "当网络可用时，应用会自动请求可用的更新。"
     },
@@ -293,10 +319,7 @@
         "message": "比赛应答器"
     },
     "tabOsd": {
-        "message": "OSD 屏幕叠加显示"
-    },
-    "tabVtx": {
-        "message": "图传"
+        "message": "OSD"
     },
     "tabPower": {
         "message": "动力 & 电池"
@@ -312,12 +335,6 @@
     },
     "tabRawSensorData": {
         "message": "传感器"
-    },
-    "tabCLI": {
-        "message": "CLI(命令行)"
-    },
-    "tabLogging": {
-        "message": "日志"
     },
     "tabOnboardLogging": {
         "message": "黑盒子"
@@ -366,7 +383,7 @@
         "message": "加载中…"
     },
     "usbDeviceOpened": {
-        "message": "打开 USB 设备 <span class=\"message-positive\">成功<\/span> ID: $1"
+        "message": "打开 USB 设备 <span class=\"message-positive\">成功<\/span> ID为：$1"
     },
     "usbDeviceOpenFail": {
         "message": "打开 USB 设备 <span class=\"message-negative\">失败<\/span>！"
@@ -453,7 +470,7 @@
         "message": "解除保护成功。"
     },
     "stm32UnprotectUnplug": {
-        "message": "请拔出飞控并且以 DFU 模式重新连接飞控后重新尝试烧录！"
+        "message": "必要操作：拔出飞控并且以 DFU 模式重新连接后，再尝试烧录！"
     },
     "stm32UnprotectFailed": {
         "message": "解除保护失败"
@@ -485,11 +502,11 @@
     "reportProblemsDialogFooter": {
         "message": "<span class=\"message-negative\"><strong>在飞行前，你需要修复这些问题<\/span><\/strong> 。"
     },
-    "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
-        "message": "<span class=\"message-negative\"><strong>当前应用版本($3)不支持该固件 $4<\/strong><\/span><br>$t(configuratorUpdateHelp.message)"
-    },
     "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
         "message": "<strong>尚未选择任何电调协议<\/strong>。<br>请在 ‘$t(tabMotorTesting.message)’ 页面内 ‘$t(configurationEscFeatures.message)’ 中选择适合您电调的输出协议。<br>$t(escProtocolDisabledMessage.message)"
+    },
+    "reportProblemsDialogACC_NEEDS_CALIBRATION": {
+        "message": "<strong>加速度计已启用但尚未校准<\/strong>。<br>如果你准备使用加速度计，请按照「$t(tabSetup.message)」选项页中「$t(initialSetupButtonCalibrateAccel.message)」的说明进行操作。如果启用了任何需要加速度计的功能（自动水平模式、GPS救援等），在加速度计校准完成前，飞行器将无法解锁。<br>如果您不打算使用加速度计，建议你在「$t(tabConfiguration.message)」选项页的「$t(configurationSystem.message)」中禁用它。"
     },
     "infoVersionOs": {
         "message": "操作系统: <strong>{{operatingSystem}}<\/strong>",
@@ -505,8 +522,14 @@
     "buildServerUsingCached": {
         "message": "使用已缓存的 $1 生成信息。"
     },
+    "buildServerSupportRequestSubmission": {
+        "message": "<br>*** 支持数据已提交 *** <br>Id: $1<br><br><br># 复制 ID 并提交到 betaflight 团队。"
+    },
     "supportWarningDialogTitle": {
         "message": "确认提交数据"
+    },
+    "supportWarningDialogText": {
+        "message": "请确认将数据提交到 Betaflight 团队。<br><br>该进程将会执行一些命令，并将执行结果提交到构建服务器上。<br><br>你将会得到一个唯一标识符，对应你所提交的数据。<br><br>在 Discord 上沟通或在 Github 上提交 issues 时，请确保向 Betaflight 团队提供了该唯一标识符。"
     },
     "supportWarningDialogInputPlaceHolder": {
         "message": "描述问题"
@@ -524,13 +547,13 @@
         "message": "找不到 $1 发布信息"
     },
     "tabSwitchConnectionRequired": {
-        "message": "在查看任何页面信息之前，你需要先<strong>连接<\/strong>"
+        "message": "在查看任何选项页之前，你需要先<strong>连接<\/strong>。"
     },
     "tabSwitchWaitForOperation": {
         "message": "<span class=\"message-negative\">不能<\/span> 执行当前操作，请等待上一个操作完成…"
     },
     "tabSwitchUpgradeRequired": {
-        "message": "需要<strong>更新<\/strong>到最新版本的 Betaflight 固件才能使用 $1 页面"
+        "message": "需要<strong>更新<\/strong>到最新版本的 Betaflight 固件才能使用此「$1」选项页。"
     },
     "firmwareVersion": {
         "message": "固件版本：<strong>$1<\/strong>"
@@ -593,19 +616,19 @@
         "description": "References 'Upload' in the status bar, port utilization. Keep one character long if possible"
     },
     "statusbar_packet_error": {
-        "message": "数据包错误:",
+        "message": "数据包错误：",
         "description": "Packet error text shown in the status bar"
     },
     "statusbar_i2c_error": {
-        "message": "I2C 错误:",
+        "message": "I2C 错误：",
         "description": "CPU load text shown in the status bar"
     },
     "statusbar_cycle_time": {
-        "message": "循环时间:",
+        "message": "循环时间：",
         "description": "Cycle time text shown in the status bar"
     },
     "statusbar_cpu_load": {
-        "message": "CPU负载:",
+        "message": "CPU 负载：",
         "description": "CPU load text shown in the status bar"
     },
     "statusbar_connection_time": {
@@ -616,7 +639,7 @@
         "message": "请使用固件烧写器来访问 DFU 设备"
     },
     "dfu_erased_kilobytes": {
-        "message": "擦除$1 kB 闪存 <span class=\"message-positive\">成功<\/span>"
+        "message": "<span class=\"message-positive\">成功<\/span>擦除 $1 kB 闪存"
     },
     "dfu_device_flash_info": {
         "message": "检测到闪存空间为 $1 KiB 的芯片"
@@ -630,11 +653,20 @@
     "eeprom_saved_ok": {
         "message": "EEPROM <span class=\"message-positive\">已保存<\/span>"
     },
+    "defaultWelcomeIntro": {
+        "message": "欢迎使用<strong>Betaflight 应用<\/strong>，为简化固件升级、设置和调校飞控而生的工具。"
+    },
     "defaultWelcomeHead": {
         "message": "硬件"
     },
+    "defaultWelcomeText": {
+        "message": "此应用程序支持所有可以运行 Betaflight 的硬件。检查「固件烧写工具」选项页以获取完整的硬件列表。<br \/><br \/> <a href=\"https:\/\/github.com\/betaflight\/blackbox-log-viewer\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">下载 Betaflight 黑匣子日志查看器<\/a><br \/><br \/><a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">下载 Betaflight TX Lua Scripts<\/a><br \/><br \/>本固件源代码可以从 <a href=\"https:\/\/github.com\/betaflight\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">这里下载<\/a> <br \/><br \/>对于使用 CP210x USB 转串口芯片的旧款硬件：<br \/>最新的<b> CP210x 驱动程序<\/b>可以从<a href=\"https:\/\/www.silabs.com\/products\/development-tools\/software\/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">这里下载<\/a> <br \/>最新的用于 Windows USB 驱动程序安装的<b> Zadig <\/b>可以从 <a href=\"http:\/\/zadig.akeo.ie\/\" target=\"_blank\" rel=\"noopener noreferrer\">这里下载<\/a> <br \/><b>ImpulseRC Driver Fixer <\/b>可以从 <a href=\"https:\/\/impulserc.com\/pages\/downloads\" target=\"blank\" rel=\"noopener noreferrer\">这里下载<\/a>"
+    },
     "defaultContributingHead": {
         "message": "参与开发"
+    },
+    "defaultContributingText": {
+        "message": "如果想协助 Betaflight 精益求精，你有很多途径可以提供帮助，包括：<br \/><ul><li>借助你对 Betaflight 的了解在<a href=\"https:\/\/betaflight.com\/docs\/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">我们的 Wiki<\/a> 创建或更新内容，或者在我们的线上论坛回答他人的问题；<\/li><li>为固件和应用<a href=\"https:\/\/betaflight.com\/docs\/development\" target=\"_blank\" rel=\"noopener noreferrer\">贡献代码<\/a>——新功能、修复、改进；<\/li><li>测试<a href=\"https:\/\/github.com\/Betaflight\/betaflight\/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">新功能、问题修复<\/a>以及提供反馈；<\/li><li>帮助解决其他用户汇报在<a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel=\"noopener noreferrer\">我们的问题跟踪器<\/a>的问题，并参与功能需求相关的讨论；<\/li><li>将 Betaflight 应用<a href=\"https:\/\/github.com\/betaflight\/betaflight\/tree\/master\/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">翻译<\/a>成新的语言，或是帮助维护现有的翻译。<\/li><\/ul>"
     },
     "defaultFacebookText": {
         "message": "我们还有一个 <a href=\"https:\/\/www.facebook.com\/groups\/betaflightgroup\/\" target=\"_blank\" rel=\"noopener noreferrer\">Facebook 小组<\/a>。<br \/>加入我们来一起讨论 Betaflight，询问配置问题，或者只是和小伙伴们闲聊。"
@@ -643,13 +675,16 @@
         "message": "Betaflight <a href=\"https:\/\/discord.betaflight.com\/invite\" target=\"_blank\" rel=\"noopener noreferrer\">Discord 服务器<\/a>。<br \/>分享您的飞行经验，讨论 Betaflight，帮助其他人或从社区中为自己获得一些帮助。"
     },
     "statisticsDisclaimer": {
-        "message": "Betaflight 应用收集匿名的使用情况统计信息。包括（但不限于）启动次数、用户的地理区域、飞行控制器的类型、固件版本、UI 元素和选项卡的使用情况等等以及其他未在此处说明的数据。此类数据汇总展示<a href=\"https:\/\/datastudio.google.com\/u\/0\/reporting\/1pK1PFw0eWmsgl2npvuzwAqscVzlhJvuF\" target=\"_blank\" rel=\"noopener noreferrer\">在这里<\/a>。数据收集是为了更好地了解 Betaflight 应用使用方式、了解社区趋势以及可能的 UI 改进。用户可以在「选项」选项卡中选择退出数据收集。"
+        "message": "Betaflight 应用收集匿名的使用情况统计信息。包括（但不限于）启动次数、用户的地理区域、飞行控制器的类型、固件版本、UI 元素和选项页的使用情况等等以及其他未在此处说明的数据。此类数据汇总展示<a href=\"https:\/\/datastudio.google.com\/u\/0\/reporting\/1pK1PFw0eWmsgl2npvuzwAqscVzlhJvuF\" target=\"_blank\" rel=\"noopener noreferrer\">在这里<\/a>。数据收集是为了更好地了解 Betaflight 应用使用方式、了解社区趋势以及可能的 UI 改进。用户可以在「选项」选项页中选择退出数据收集。"
     },
     "defaultButtonFirmwareFlasher": {
         "message": "固件烧写器"
     },
     "defaultDonateHead": {
         "message": "开源\/捐赠说明"
+    },
+    "defaultDonateText": {
+        "message": "<p><strong>Betaflight<\/strong> 是一个<strong>开源<\/strong>的飞控软件，可供所有人免费使用但<strong>不提供担保<\/strong>。<\/p><p>如果你认为 Betaflight 或 Betaflight 应用对你有帮助，请考虑通过捐赠来<strong>支持<\/strong>它的开发。<\/p>"
     },
     "defaultDonateBottom": {
         "message": "<p>如果你想持续捐助资金，请考虑在$t(patreonLink.message)上赞助我们。<\/p>"
@@ -670,6 +705,9 @@
     "defaultDocumentation": {
         "message": "Betaflight 的文档和发布说明可以在 wiki 里面找到。<br \/><br \/>"
     },
+    "defaultDocumentation1": {
+        "message": "Betaflight wiki 是一个优秀的信息源，它在 <a href=\"https:\/\/betaflight.com\/docs\/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">这里<\/a> 。"
+    },
     "defaultDocumentation2": {
         "message": "最新发布版本的信息可以在 <a href=\"https:\/\/github.com\/Betaflight\/Betaflight\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">这里<\/a> 找到。"
     },
@@ -688,11 +726,17 @@
     "defaultSupport1": {
         "message": "<a href=\"http:\/\/www.rcgroups.com\/forums\/showthread.php?t=2464844&page=1\" target=\"_blank\" rel=\"noopener noreferrer\">RC Groups thread<\/a>"
     },
+    "defaultSupport2": {
+        "message": "<a href=\"https:\/\/betaflight.com\/docs\/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight Wiki<\/a>"
+    },
     "defaultSupport3": {
         "message": "<a href=\"https:\/\/www.youtube.com\/playlist?list=PLwoDb7WF6c8nT4jjsE4VENEmwu9x8zDiE\" target=\"_blank\" rel=\"noopener noreferrer\">Joshua Bardwell Betaflight 4.3 视频<\/a>"
     },
     "defaultSupport4": {
         "message": "<a href=\"https:\/\/github.com\/Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">GitHub<\/a>"
+    },
+    "defaultSupport5": {
+        "message": "<a href=\"https:\/\/discord.betaflight.com\/invite\" target=\"_blank\" rel=\"noopener noreferrer\">Discord 上的 Betaflight 开发人员<\/a>"
     },
     "initialSetupButtonCalibrateAccel": {
         "message": "校准加速度计"
@@ -709,6 +753,12 @@
     "initialSetupButtonCalibratingText": {
         "message": "正在校准…"
     },
+    "initialSetupButtonReset": {
+        "message": "擦除设置"
+    },
+    "initialSetupResetText": {
+        "message": "将飞行控制器重置为 <strong>未配置状态。<\/strong>"
+    },
     "initialSetupButtonBackup": {
         "message": "备份 JSON"
     },
@@ -718,6 +768,12 @@
     "initialSetupButtonRebootBootloader": {
         "message": "激活启动引导程序\/DFU"
     },
+    "initialSetupBackupRestoreHeader": {
+        "message": "实验性备份和恢复"
+    },
+    "initialSetupBackupRestoreText": {
+        "message": "<strong>备份<\/strong>你的配置时遇到问题，<strong>CLI <\/strong> 设置<span class=\"message-negative\">没有<\/span>被包含 - 在 CLI 使用“diff all” 命令来处理此问题。"
+    },
     "initialSetupRebootBootloaderText": {
         "message": "重新启动到 <strong>启动引导程序\/DFU<\/strong> 模式。"
     },
@@ -726,6 +782,10 @@
     },
     "initialSetupButtonResetZaxisValue": {
         "message": "重置 Z 轴，补偿: $1 度"
+    },
+    "initialSetupHeading": {
+        "message": "偏航：",
+        "description": "Heading [yaw] attitude value shown on Setup tab"
     },
     "initialSetupMixerHead": {
         "message": "混控类型"
@@ -769,11 +829,14 @@
     "initialSetupMagHead": {
         "message": "磁力计"
     },
+    "initialSetupMagDeclination": {
+        "message": "磁偏角："
+    },
     "initialSetupInfoHead": {
         "message": "系统信息"
     },
     "initialSetupInfoHeadHelp": {
-        "message": "显示与解除锁定、电池信息、RSSI等级相关的FC 标志。",
+        "message": "显示与解除锁定、电池信息、RSSI 等级相关的 FC 标志。",
         "description": "Message that pops up to describe the System info section"
     },
     "initialSensorInfoHead": {
@@ -804,8 +867,15 @@
     "initialSetupCpuTemp": {
         "message": "CPU 温度："
     },
+    "initialSetupCpuTempNotSupported": {
+        "message": "在早于 1.46 的 MSP API 中不支持该功能"
+    },
     "initialSetupRSSI": {
         "message": "RSSI："
+    },
+    "initialSetupNotInBuild": {
+        "message": "未包括在构建中",
+        "description": "Message that pops up when hardware support is not included in build"
     },
     "initialSetupNotDetected": {
         "message": "未检测到或已禁用",
@@ -823,6 +893,27 @@
     "initialSetupSensorGyro": {
         "message": "陀螺仪:"
     },
+    "initialSetupSensorAcc": {
+        "message": "加速度计："
+    },
+    "initialSetupSensorMag": {
+        "message": "磁力计："
+    },
+    "initialSetupSensorBaro": {
+        "message": "气压计："
+    },
+    "initialSetupSensorGPS": {
+        "message": "GPS："
+    },
+    "initialSetupSensorSonar": {
+        "message": "声呐："
+    },
+    "initialSetupSensorOpticalflow": {
+        "message": "光流计："
+    },
+    "initialSetupSensorRadar": {
+        "message": "雷达："
+    },
     "initialSetupArmingDisableFlags": {
         "message": "禁止解锁标志："
     },
@@ -830,7 +921,7 @@
         "message": "允许解锁"
     },
     "initialSetupArmingDisableFlagsTooltip": {
-        "message": "阻止解锁的原因列表。将鼠标停留在标志上以获得信息，或参考Wiki中的(解锁顺序与安全) 章节。"
+        "message": "一系列当前阻止你解锁的标志信号。将鼠标停留在标志上以获得信息，或参考 Wiki（在 Arming Sequence & Safety 页面) 获取详细信息。"
     },
     "initialSetupArmingDisableFlagsTooltipNO_GYRO": {
         "message": "未检测到陀螺仪",
@@ -844,6 +935,10 @@
         "message": "未检测到有效的接收机信号",
         "description": "Message that pops up to describe the RX_FAILSAFE arming disable flag"
     },
+    "initialSetupArmingDisableFlagsTooltipNOT_DISARMED": {
+        "message": "你的接收机刚刚从接收机失控保护中恢复，但解锁开关处于已解锁状态。",
+        "description": "Message that pops up to describe the NOT_DISARMED arming disable flag"
+    },
     "initialSetupArmingDisableFlagsTooltipBOXFAILSAFE": {
         "message": "失控保护模式开关已激活",
         "description": "Message that pops up to describe the BOXFAILSAFE arming disable flag"
@@ -852,9 +947,21 @@
         "message": "已触发预防起飞失控",
         "description": "Message that pops up to describe the RUNAWAY_TAKEOFF arming disable flag"
     },
+    "initialSetupArmingDisableFlagsTooltipCRASH_DETECTED": {
+        "message": "崩溃检测已激活",
+        "description": "Message that pops up to describe the CRASH_DETECTED arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipCALIBRATING": {
+        "message": "飞行器正在校准",
+        "description": "Message that pops up to describe the CALIBRATING arming disable flag"
+    },
     "initialSetupArmingDisableFlagsTooltipTHROTTLE": {
         "message": "油门通道值过高",
         "description": "Message that pops up to describe the THROTTLE arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipANGLE": {
+        "message": "飞行器未（充分）放平",
+        "description": "Message that pops up to describe the ANGLE arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipBOOT_GRACE_TIME": {
         "message": "上电后解锁太早",
@@ -867,6 +974,10 @@
     "initialSetupArmingDisableFlagsTooltipLOAD": {
         "message": "系统负载过高, 无法安全飞行",
         "description": "Message that pops up to describe the LOAD arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipACC_CALIBRATION": {
+        "message": "加速度计校准仍在进行中",
+        "description": "Message that pops up to describe the ACC_CALIBRATION arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipCLI": {
         "message": "CLI (命令行) 已激活",
@@ -884,6 +995,10 @@
         "message": "一个黑羊遥测设备 (例如 TBS Core Pro) 已上锁并阻止解锁",
         "description": "Message that pops up to describe the BST arming disable flag"
     },
+    "initialSetupArmingDisableFlagsTooltipMSP": {
+        "message": "MSP 链接已激活，可能已与 Betaflight 应用连接",
+        "description": "Message that pops up to describe the MSP arming disable flag"
+    },
     "initialSetupArmingDisableFlagsTooltipPARALYZE": {
         "message": "瘫痪模式已被激活（已扑街）",
         "description": "Message that pops up to describe the PARALYZE arming disable flag"
@@ -900,6 +1015,34 @@
         "message": "基于转速的滤波器已开启，但一个或多个电调未发送有效的 DSHOT 回传数据。请确认电调支持 DSHOT 回传功能并且已刷入支持双向 DSHOT 回传的固件。",
         "description": "Message that pops up to describe the RPMFILTER arming disable flag"
     },
+    "initialSetupArmingDisableFlagsTooltipREBOOT_REQUIRED": {
+        "message": "存在需要重启的配置变更",
+        "description": "Message that pops up to describe the REBOOT_REQD arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipDSHOT_BITBANG": {
+        "message": "Bitbanged Dshot 无法正常工作，无法正常控制电机。可能是由于在飞控上启用了其他功能造成了定时器冲突。",
+        "description": "Message that pops up to describe the DSHOT_BBANG arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipNO_ACC_CALIBRATION": {
+        "message": "已启用了使用加速度计的功能，但加速度计未校准。请校准加速度计。",
+        "description": "Message that pops up to describe the NO_ACC_CAL arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipMOTOR_PROTOCOL": {
+        "message": "尚未选择电机输出协议",
+        "description": "Message that pops up to describe the MOTOR_PROTO arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipCRASHFLIP": {
+        "message": "反乌龟已激活",
+        "description": "Message that pops to describe the CRASHFLIP arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipALTHOLD": {
+        "message": "高度保持已激活",
+        "description": "Message that pops up to describe the ALTHOLD arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipPOSHOLD": {
+        "message": "位置保持已激活",
+        "description": "Message that pops up to describe the POSHOLD arming disable flag"
+    },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "解锁时有一个阻止解锁的标志处于活跃状态",
         "description": "Message that pops up to describe the ARM_SWITCH arming disable flag"
@@ -907,8 +1050,35 @@
     "initialSetupGPSHead": {
         "message": "GPS"
     },
+    "initialSetupGPSHeadHelp": {
+        "message": "显示 GPS 信息，如果已在「端口」、「配置」和「GPS」选项页中正确激活",
+        "description": "Message that pops up to describe the GPS section"
+    },
+    "initialSetupSonarHead": {
+        "message": "声呐"
+    },
+    "initialSetupSonarHeadHelp": {
+        "message": "显示声纳信息，如果已在「配置」选项页中正确激活",
+        "description": "Message that pops up to describe the Sonar section"
+    },
+    "initialSetupAltitudeSonar": {
+        "message": "高度"
+    },
     "initialSetupInstrumentsHead": {
         "message": "仪表"
+    },
+    "initialSetupInstrumentsHeadHelp": {
+        "message": "在仪表显示飞机的航向、俯仰和横滚",
+        "description": "Message that pops up to describe the Instruments section"
+    },
+    "initialSetupInfoAPIversion": {
+        "message": "MSP API:"
+    },
+    "initialSetupInfoBuild": {
+        "message": "固件信息"
+    },
+    "initialSetupInfoBuildConfig": {
+        "message": "选项"
     },
     "initialSetupInfoBuildDownload": {
         "message": "下载"
@@ -921,6 +1091,21 @@
     },
     "initialSetupInfoBuildOptions": {
         "message": "选项"
+    },
+    "initialSetupInfoBuildType": {
+        "message": "构建类型："
+    },
+    "initialSetupInfoBuildLocal": {
+        "message": "本地构建"
+    },
+    "initialSetupInfoBuildCloud": {
+        "message": "云端构建"
+    },
+    "initialSetupNoBuildInfo": {
+        "message": "没有可用的构建信息"
+    },
+    "initialSetupNotOnline": {
+        "message": "服务器不可用"
     },
     "initialSetupButtonSave": {
         "message": "保存"
@@ -949,6 +1134,9 @@
     "initialSetupEepromSaved": {
         "message": "EEPROM <span class=\"message-positive\">已保存<\/span>"
     },
+    "initialSetupNetworkInfo": {
+        "message": "网络信息"
+    },
     "initialSetupNetworkInfoHelp": {
         "message": "显示网络连接状态",
         "description": "Message that pops up to describe the Network Connection section"
@@ -968,6 +1156,9 @@
     "initialSetupNetworkType": {
         "message": "类型："
     },
+    "initialSetupNetworkRtt": {
+        "message": "RTT："
+    },
     "featureNone": {
         "message": "&lt;请选择&gt;"
     },
@@ -978,10 +1169,13 @@
         "message": "实时水平校准"
     },
     "featureRX_SERIAL": {
-        "message": "串行接收机 (通过 UART)"
+        "message": "串行 (通过 UART)"
     },
     "featureMOTOR_STOP": {
         "message": "解锁时不要转动电机"
+    },
+    "featureMOTOR_STOPTip": {
+        "message": "该功能在 AIRMODE 启用时被禁用"
     },
     "featureSERVO_TILT": {
         "message": "舵机云台"
@@ -998,14 +1192,24 @@
     "featureGPS": {
         "message": "启用 GPS 导航"
     },
+    "featureGPSTip": {
+        "message": "启用\/禁用 GPS 数据。如果无法启用 GPS ，在「端口」选项页检查是否已有端口被分配到 GPS",
+        "description": "Message that pops up to describe the GPS feature"
+    },
     "featureSONAR": {
         "message": "声呐"
+    },
+    "featureSONARTip": {
+        "message": "启用声纳测距，以厘米为单位测量到地面的距离"
     },
     "featureTELEMETRY": {
         "message": "遥测输出"
     },
     "feature3D": {
         "message": "3D 模式（配合支持反向转动的电调使用）"
+    },
+    "feature3DTip": {
+        "message": "启用 3D 模式以配合使用可反转的 ESC，在「电机」选项页进行配置"
     },
     "featureRX_PARALLEL_PWM": {
         "message": "PWM 接收机 (每个通道都需要接线)"
@@ -1019,6 +1223,9 @@
     "featureLED_STRIP": {
         "message": "彩色 RGB LED灯带"
     },
+    "featureLED_STRIPTip": {
+        "message": "启用多色 RGB LED 条支持，在「LED灯带」选项页进行配置"
+    },
     "featureDISPLAY": {
         "message": "OLED 显示屏"
     },
@@ -1028,6 +1235,9 @@
     "featureOSD": {
         "message": "OSD"
     },
+    "featureOSDTip": {
+        "message": "启用 OSD ，在「OSD」选项页进行配置"
+    },
     "featureCHANNEL_FORWARDING": {
         "message": "转发 Aux 通道信号到舵机输出"
     },
@@ -1035,10 +1245,14 @@
         "message": "比赛应答器"
     },
     "featureTRANSPONDERTip": {
-        "message": "开启后，请在比赛应答器页面完成设置。"
+        "message": "开启后，请在「比赛应答器」选项页完成设置。"
     },
     "featureAIRMODE": {
         "message": "永久启用 Airmode"
+    },
+    "featureAIRMODETip": {
+        "message": "$t(auxiliaryHelpMode_AIRMODE.message)",
+        "description": "Don't translate!!!"
     },
     "featureRX_SPI": {
         "message": "SPI Rx (例如内置 RX)"
@@ -1095,13 +1309,28 @@
         "message": "<strong>注意:<\/strong> 不是所有的功能都能同时被启用。当飞控检测到有冲突时会禁用相应的功能。<br \/><strong>注意:<\/strong>  <span class=\"message-negative\">先<\/span> 设置串口，再启用需要用到串口的功能。"
     },
     "configurationSerialRXHelp": {
-        "message": "&#8226; 必须将接收机对应的 UART 设置为 “数字串行接收机” (在 <i>端口<\/i> 页面)<br>&#8226; 从下拉列表中选择正确的数据格式，如下："
+        "message": "&#8226; 接收机对应的 UART 端口必须启用「串行接收机」(在 <i>端口<\/i> 选项页)<br>&#8226; 从下拉列表中选择正确的数据格式，如下："
     },
     "configurationSpiRxHelp": {
         "message": "<strong>注意:<\/strong> SPI 接收机只有通过 SPI 总线连接到飞控或板载了相应硬件时才能工作。"
     },
     "configurationOtherFeaturesHelp": {
         "message": "<strong>注意:<\/strong> 不是所有飞控都能支持所有的功能。如果你启用了某个功能，但在“保存并重启”以后，该功能被禁用，则说明你的飞控不支持该功能。"
+    },
+    "configurationMagDeclinationHelp": {
+        "message": "磁偏角是磁北和真北之间的夹角。它在地球上的每个位置都不同。你可以在互联网上查找你所在位置的磁偏角"
+    },
+    "configurationRangefinder": {
+        "message": "$t(initialSetupSensorSonar.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationOpticalflow": {
+        "message": "$t(initialSetupSensorOpticalflow.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationOpticalflowType": {
+        "message": "$t(configurationRangefinderType.message)",
+        "description": "Don't translate!!!"
     },
     "configurationBoardAlignmentRoll": {
         "message": "横滚 度"
@@ -1111,6 +1340,33 @@
     },
     "configurationBoardAlignmentYaw": {
         "message": "偏航 度"
+    },
+    "configurationGyroActiveIMUHelp": {
+        "message": "选择一个陀螺仪作为主陀螺仪。主陀螺仪将用于稳定与控制。如果仅有一个陀螺仪，它将被自动选定。<br><br>当同时启用多个不同类型或品牌的陀螺仪时，有可能不会起效。"
+    },
+    "configurationGyroAlignmentRoll": {
+        "message": "$t(configurationBoardAlignmentRoll.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyroAlignmentPitch": {
+        "message": "$t(configurationBoardAlignmentPitch.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyroAlignmentYaw": {
+        "message": "$t(configurationBoardAlignmentYaw.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationMagAlignmentRoll": {
+        "message": "$t(configurationBoardAlignmentRoll.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationMagAlignmentPitch": {
+        "message": "$t(configurationBoardAlignmentPitch.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationMagAlignmentYaw": {
+        "message": "$t(configurationBoardAlignmentYaw.message)",
+        "description": "Don't translate!!!"
     },
     "configurationSensorAlignmentGyro": {
         "message": "陀螺仪方向"
@@ -1129,6 +1385,9 @@
     },
     "configurationSensorGyroToUseBoth": {
         "message": "同时启用"
+    },
+    "configurationGyroRequiredWarning": {
+        "message": "至少要启用一个陀螺仪。如果您禁用所有陀螺仪，飞行控制器将无法正常工作。"
     },
     "configurationSensorAlignmentGyro1": {
         "message": "第一个陀螺仪"
@@ -1163,6 +1422,18 @@
     "configurationReverseMotorSwitchHelp": {
         "message": "此选项告知混控程序电机转向已经被反转，且螺旋桨也已对应安装。<strong>警告：<\/strong>此选项并不反转电机实际转向。要反转电机实际转向，请通过电调配置软件进行设置，或者交换电调 - 电机的线序。同时在尝试解锁前务必确认螺旋桨是按照上面示意图的转向安装的。"
     },
+    "configurationAutoDisarmDelay": {
+        "message": "一段延迟 [秒] 后锁定电机"
+    },
+    "configurationAutoDisarmDelayHelp": {
+        "message": "在设定的延迟时间 [秒] 后锁定电机（需要启用 MOTOR_STOP 功能）"
+    },
+    "configurationGyroCalOnFirstArm": {
+        "message": "第一次解锁时校准陀螺仪"
+    },
+    "configurationMotorIdle": {
+        "message": "电机怠速（%）"
+    },
     "configurationMotorPoles": {
         "message": "电机极数",
         "description": "One of the fields of the ESC\/Motor configuration"
@@ -1174,6 +1445,10 @@
     "configurationMotorPolesHelp": {
         "message": "磁极数是电机转子上的磁铁数量。不要计算绕组所在的定子数量。典型的5寸机的电机有14个磁铁；较小的飞机，例如3寸或更小的飞机，电机通常有12个磁铁。",
         "description": "Help text for the Motor poles field of the ESC\/Motor configuration"
+    },
+    "configurationMotorIdleRpmHelp": {
+        "message": "这是来自当前 PID 配置文件的动态怠速值。当动态怠速设置为零时，只会应用静态电机怠速。在「PID 调校」选项页上更改动态怠速设置。",
+        "description": "Help text for dynamic idle setting"
     },
     "configurationThrottleMinimum": {
         "message": "最小油门（解锁时飞控输出给电调的最低油门数值）"
@@ -1268,6 +1543,12 @@
     "beeperRC_SMOOTHING_INIT_FAIL": {
         "message": "当已解锁且 RC 平滑尚未完成滤波器初始化时发出警告"
     },
+    "configurationBeeperEnableAll": {
+        "message": "全部启用"
+    },
+    "configurationBeeperDisableAll": {
+        "message": "全部禁用"
+    },
     "configuration3d": {
         "message": "3D 电调\/电机功能"
     },
@@ -1305,7 +1586,14 @@
         "description": "Value for some options that show the speed of gyro, pid, etc. in kHz"
     },
     "configurationLoopTimeHelp": {
-        "message": "<strong>注意：<\/strong>确保你的飞控有能力运行在这些频率上！检查CPU循环时间是否稳定。改变频率可能需要重新调校PID。提示：关闭加速度计和其他传感器可以节省运算资源以获得更高性能。"
+        "message": "<strong>注意：<\/strong>确保你的飞控有能力运行在这些频率上！检查 CPU 以及循环时间是否稳定。改变频率可能需要重新调校 PID 。提示：关闭加速度计和其他传感器可以节省运算资源以获得更高性能。"
+    },
+    "configurationGPS": {
+        "message": "GPS 配置"
+    },
+    "configurationGPSHelp": {
+        "message": "为 GPS 设备设置协议（不要忘了在「端口」选项页中设置端口）、使用自动波特率（或者在「端口」选项页设置一个）和其他配置",
+        "description": "Help text GPS configuration"
     },
     "configurationGPSProtocol": {
         "message": "协议"
@@ -1334,12 +1622,6 @@
         "message": "设置单次返航点",
         "description": "Option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
     },
-    "configurationSerialRX": {
-        "message": "串行数字接收机协议"
-    },
-    "configurationSpiRX": {
-        "message": "SPI 总线接口接收机协议"
-    },
     "configurationEepromSaved": {
         "message": "EEPROM <span class=\"message-positive\">已保存<\/span>"
     },
@@ -1361,6 +1643,9 @@
     "portsSerialRx": {
         "message": "串行数字接收机"
     },
+    "portsSerialRxHelp": {
+        "message": "启用或禁用特定 UART 上用于遥控的串行接收机（RX）。仅允许启用一个。"
+    },
     "portsSensorIn": {
         "message": "传感器输入"
     },
@@ -1374,7 +1659,7 @@
         "message": "<strong>注意：<\/strong> 不是所有的组合都是有效的，如果飞控检查到某组合不能同时工作，对应串口的设置将会被重置。"
     },
     "portsVtxTableNotSet": {
-        "message": "<span class=\"message-negative\">警告: <\/span>图传表尚未正确设置，图传控制功能不可用。请在「$t(tabVtx.message)」选项卡内配置图传表。"
+        "message": "<span class=\"message-negative\">警告: <\/span>图传表尚未正确设置，图传控制功能不可用。请在「$t(tabVtx.message)」选项页内配置图传表。"
     },
     "portsMSPHelp": {
         "message": "<strong>注意：<\/strong> <span class=\"message-negative\">不要<\/span> 关闭第一个串口的MSP选项。否则你可能要重新烧录固件并清空（丢失）所有设置。"
@@ -1466,6 +1751,18 @@
     "pidTuningSubTabFilter": {
         "message": "滤波器设置"
     },
+    "pidProfileName": {
+        "message": "PID 配置文件名"
+    },
+    "pidProfileNameHelp": {
+        "message": "PID 配置文件名称，可以描述此配置文件的调校目标：较轻\/较重的电池、运动相机\/没有运动相机、较高海拔等。"
+    },
+    "rateProfileName": {
+        "message": "Rate 配置文件名"
+    },
+    "rateProfileNameHelp": {
+        "message": "Rate 配置文件名称，可以描述此配置文件适用的飞行类型：航拍、竞速、花飞等。"
+    },
     "pidTuningShowAllPids": {
         "message": "显示所有PID"
     },
@@ -1501,6 +1798,10 @@
     "pidTuningAntiGravityHelp": {
         "message": "反重力会在油门变化后的短时间内增大 I (在4.3中还会增大 P)，从而提高油门抽动期间的姿态稳定度。<br><br>更高的增益值可能会提高弱动力飞机或质心偏离中心的飞机的稳定性。"
     },
+    "pidTuningDerivative": {
+        "message": "<b>D<\/b>erivative",
+        "description": "Table header of the Derivative feature in the PIDs tab"
+    },
     "pidTuningDMaxSettingTitle": {
         "message": "动态<br>阻尼",
         "description": "Sidebar title for the options panel for the D Max feature"
@@ -1522,18 +1823,6 @@
     },
     "receiverRcSmoothingManual": {
         "message": "手动"
-    },
-    "receiverRcSmoothingAutoFactor": {
-        "message": "自动因子",
-        "description": "Auto Factor parameter for RC smoothing"
-    },
-    "receiverRcSmoothingAutoFactorHelp": {
-        "message": "调整自动平滑因子的计算，10 是默认的延迟比因子。增加该数将加大对 RC 输入信号的平滑度，但同时会增加延迟。对于 RC 链接并不可靠的情况和电影式飞行来说这可能非常有用。<br>当数字接近 50 时请小心，输入延迟将会变得非常明显。<br>当遥控器与接收机都上电时，可以使用 CLI 命令 rc_smoothing_info 查看自动计算的 RC 平滑的截止频率。",
-        "description": "Auto Factor parameter help message"
-    },
-    "receiverRcSmoothingAutoFactorHelp2": {
-        "message": "自动调整 RC 信号平滑。30 为默认值。 更高的值可以进一步平滑 RC 输入信号 - 例如: HD 花飞使用 60，电影式飞行使用 90-120。注意，当此值超过 50 时会造成明显的摇杆延迟。较低的值，例如 20-25，会将部分 RC 控制信号中的阶跃信号传入电机信号，造成电机温度略有升高，但将降低 RC 信号延迟。这可能有助于竟速飞行。",
-        "description": "Auto Factor parameter help message"
     },
     "receiverRcFeedforwardTypeSelect": {
         "message": "前馈截止类型"
@@ -1573,9 +1862,6 @@
     },
     "receiverRcSmoothingFeedforwardTypeAuto": {
         "message": "自动"
-    },
-    "receiverRcSmoothingMode": {
-        "message": "平滑模式"
     },
     "pidTuningDtermSetpointTransition": {
         "message": "D 设定点转换阈值"
@@ -1872,6 +2158,18 @@
     "receiverResetRefreshRateTitle": {
         "message": "重置刷新率"
     },
+    "receiverRowContainerPitch": {
+        "message": "俯仰 [E]：",
+        "description": "Pitch label in signal graph"
+    },
+    "receiverRowContainerYaw": {
+        "message": "偏航 [R]：",
+        "description": "Yaw label in signal graph"
+    },
+    "receiverRowContainerThrottle": {
+        "message": "油门 [T]：",
+        "description": "Throttle label in signal graph"
+    },
     "receiverButtonSave": {
         "message": "保存"
     },
@@ -1884,6 +2182,10 @@
     "receiverButtonBindMessage": {
         "message": "对频请求已发送到飞行控制器。"
     },
+    "receiverButtonSticks": {
+        "message": "遥控器模拟器",
+        "description": "Button that opens a window with a radio emulator on the receiver tab. Actually only enabled for MSP protocol"
+    },
     "receiverDataRefreshed": {
         "message": "RC 调整数据 <strong>已刷新<\/strong>"
     },
@@ -1892,6 +2194,9 @@
     },
     "receiverModelPreview": {
         "message": "预览"
+    },
+    "receiverMspWarningText": {
+        "message": "这些摇杆允许在没有发射机或接收机的情况下解锁并测试 Betaflight。然而，<strong>此功能并非用于飞行，且绝对不能安装螺旋桨。<\/strong><br \/><br \/>此功能无法保证对飞行器的可靠控制。<strong>如果螺旋桨未拆除，可能会导致严重伤害。<\/strong>"
     },
     "receiverMspEnableButton": {
         "message": "启用控制"
@@ -1929,6 +2234,18 @@
     },
     "auxiliaryModeLogicAND": {
         "message": "和"
+    },
+    "auxiliaryHelpMode_AIRMODE": {
+        "message": "AirMode 允许在低油门时保持飞行器的稳定性。有关更多信息，请参阅 Betaflight.com 上的 <a href=\"https:\/\/betaflight.com\/docs\/development\/modes#airmode\" target=\"_blank\" rel=\"noopener noreferrer\">AirMode<\/a> 。",
+        "description": "Help text to AIRMODE mode"
+    },
+    "auxiliaryHelpMode_ALTHOLD": {
+        "message": "<a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/position-hold-v4-6#altitude-hold\" target=\"_blank\" rel=\"noopener noreferrer\">高度保持（Altitude Hold）<\/a> 使用外部传感器结合 Angle 模式（稳定模式）主动调节飞行器的高度。",
+        "description": "Help text for ALTITUDE HOLD mode"
+    },
+    "auxiliaryHelpMode_CAMSTAB": {
+        "message": "启用摄像头稳定模式",
+        "description": "Help text to CAMSTAB mode"
     },
     "adjustmentsHelp": {
         "message": "配置调整开关。详细信息请参阅手册中的“飞行中调整”章节。通过该调整功能所进行的更改将不会被自动保存。"
@@ -2311,6 +2628,10 @@
     "motorsSensorAccelSelect": {
         "message": "加速度计"
     },
+    "motorsTelemetryHelp": {
+        "message": "这些数字展示了可能存在的从电调收到的遥测信息。它可以显示电机的实际转速(R，单位 RPM)、遥测链接的错误率（E）和电调的温度（T）。",
+        "description": "Help text for the telemetry values in the motors tab."
+    },
     "motorsRPM": {
         "message": "R: {{motorsRpmValue}}",
         "description": "To put under the motors in the motors tab. KEEP IT SHORT or not translate. Keep the letters as prefix. Shows the RPM of the motor if telemetry is available."
@@ -2325,6 +2646,9 @@
     },
     "motorsMaster": {
         "message": "主控制"
+    },
+    "motorsNotice": {
+        "message": "<strong>电机测试模式 \/ 解锁通知：<\/strong><br \/><br \/><strong class=\"message-negative\">警！告！：存在严重受伤风险！移除所有螺旋桨！<\/strong><br \/><br \/><ul><li>&#x2022; 解锁或升起滑块时电机将会旋转<\/li><li>&#x2022; 切换到其他选项页后，电机测试模式仍将保持激活<\/li><li>&#x2022; 仅当处在「电机」选项页中时，才可通过按下任意按键停止电机<\/li><li>&#x2022; 断开 USB 连接可能无法停止电机！<\/li><\/ul>"
     },
     "motorsEnableControl": {
         "message": "<strong>我已了解风险 <\/strong>， 螺旋桨已被拆除 - 启用电机控制和允许解锁，并禁用[预防起飞失控]。"
@@ -2362,6 +2686,9 @@
     "motorsRemapDialogRiskNotice": {
         "message": "<strong>安全提示<\/strong><br \/><strong class=\"message-negative\">请拆除所有螺旋桨以免受伤！<\/strong><br \/>电机<strong>将会转动<\/strong>"
     },
+    "motorsRemapDialogExplanations": {
+        "message": "<strong>信息提示<\/strong><br \/> 电机将开始一个接一个的转动，并且可以选择让哪个电机转动。确保已接入电池，并选择了正确的电调协议。这个工具只能对当前已激活的电机进行排序。更多复杂的重新映射工作请在 CLI 中使用 Resource 命令。可参考<a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Remapping-Motors-with-Resource-Command\" target=\"_blank\" rel=\"noopener noreferrer\"> Wiki 页<\/a> 。"
+    },
     "motorsRemapDialogSave": {
         "message": "保存"
     },
@@ -2390,7 +2717,7 @@
         "message": "<strong>我已了解风险<\/strong>，<br \/>所有螺旋桨已拆除。"
     },
     "escDshotDirectionDialog-InformationNotice": {
-        "message": "<strong>信息提示：<\/strong><br \/>若要更改电机转动方向， 必须接入电池，且必须在$t(tabMotorTesting.message)中设置正确的电调协议。请注意，并非所有支持 Dshot 协议的 ESC 都能使用此对话框。请检查您的 ESC 固件。"
+        "message": "<strong>信息提示：<\/strong><br \/>若要更改电机转动方向， 必须接入电池，且必须在「$t(tabMotorTesting.message)」选项页中设置正确的电调协议。请注意，并非所有支持 Dshot 协议的 ESC 都能使用此对话框。请检查你的 ESC 固件。"
     },
     "escDshotDirectionDialog-NormalInformationNotice": {
         "message": "通过单独选择并旋转电机来设置电机旋转方向。"
@@ -2429,7 +2756,10 @@
         "message": "在设置转向时电机会旋转！"
     },
     "escDshotDirectionDialog-WrongProtocolText": {
-        "message": "该功能只适用于DSHOT电调。<br \/>验证您的电调是否支持DSHOT 协议，并在 $t(tabMotorTesting.message) 页内更改。"
+        "message": "该功能只适用于 DSHOT 电调。<br \/>验证你的电调 （ESC，electric speed controller）是否支持 DSHOT 协议，并在「$t(tabMotorTesting.message)」选项页内更改。"
+    },
+    "escDshotDirectionDialog-WrongMixerText": {
+        "message": "电机数为 0。<br \/>在「 $t(tabMotorTesting.message) 」选项页核实当前混控器，或通过 CLI 设置一个自定义混控器。参见此 <a href=\"https:\/\/betaflight.com\/docs\/development\/Mixer\" target=\"_blank\" rel=\"noopener noreferrer\">Wiki 页面<\/a>。"
     },
     "escDshotDirectionDialog-WrongFirmwareText": {
         "message": "更新固件。<br \/> 请确保您正在使用最新的固件：Betaflight 4.3或更高版本。"
@@ -2527,6 +2857,9 @@
     "cliConfirmSnippetBtn": {
         "message": "执行"
     },
+    "loggingNote": {
+        "message": "数据<span class=\"message-negative\">仅会<\/span>被记录在此选项页，离开此选项页将会 <span class=\"message-negative\">取消<\/span>数据记录，并且应用将会返回普通状态。<br \/>你可以自行选择合适的全局更新周期，出于性能考虑，默认会每 <strong> 1 <\/strong> 秒写入一次日志文件。"
+    },
     "loggingSamplesSaved": {
         "message": "采样已保存"
     },
@@ -2582,7 +2915,7 @@
         "message": "串口"
     },
     "serialLoggingSupportedNote": {
-        "message": "你可以使用串口外接记录设备来记录日志（例如 OpenLager）。需要在串口设置页设置相应的串口。"
+        "message": "你可以使用串口外接记录设备来记录日志（例如 OpenLager）。需要在「端口」选项页设置相应的串口。"
     },
     "sdcardNote": {
         "message": "飞行数据可以保存到板载的SD卡槽。"
@@ -2893,6 +3226,15 @@
     },
     "firmwareFlasherDetectBoardQuery": {
         "message": "查询飞控板信息以辅助选择正确固件"
+    },
+    "unstableFirmwareAcknowledgementDialog": {
+        "message": "你将要刷入一个<strong>基于开发版本构建的固件<\/strong>。 此固件仍在开发中，可能会出现以下问题：<strong><ul><li>固件完全不工作； <\/li><li>固件无法飞行； <\/li><li>固件存在安全性问题，比如飞行器失控<\/li><li>固件可能会造成飞控变砖，甚至损坏； <\/li><\/ul><\/strong>如果继续刷入此固件，<strong>你将对上述所有风险承担全部责任<\/strong>。 此外，你需要明白，尝试起飞之前，必须进行<strong>彻底的测试并在测试时卸下螺旋桨<\/strong>。"
+    },
+    "unstableFirmwareAcknowledgement": {
+        "message": "我已阅读上述声明并且<strong>我自愿承担刷入不稳定版本固件的一切后果<strong>"
+    },
+    "unstableFirmwareAcknowledgementFlash": {
+        "message": "闪存"
     },
     "ledStripHelp": {
         "message": "飞控可以控制 LED 灯带上的每一个灯珠的颜色和效果。<br \/>配置灯珠的位置，连线的顺序，然后按位置将灯带接入。没有设置过接线顺序的灯珠设置不会被保存。<br \/>在一个颜色上双击可编辑 HSV 值。"
@@ -4259,6 +4601,9 @@
     "osdDescElementMahDrawn": {
         "message": "累计已用电池容量"
     },
+    "osdDescElementCraftName": {
+        "message": "「配置」选项页中设置的飞行器名称。<\/br>也可使用 CLI 变量 “craft_name” 来设置。"
+    },
     "osdTextElementAltitude": {
         "message": "海拔高度",
         "description": "One of the elements of the OSD"
@@ -4468,6 +4813,9 @@
         "message": "电调温度",
         "description": "One of the elements of the OSD"
     },
+    "osdDescElementEscTemperature": {
+        "message": "由 ESC 遥测报告的温度，可以是通过串行单线遥测获取的，也可以是通过支持 EDT 的 DShot 双向遥测获取的，这取决于您的 ESC 固件是否支持。"
+    },
     "osdTextElementEscRpm": {
         "message": "电调转速",
         "description": "One of the elements of the OSD"
@@ -4577,6 +4925,9 @@
     "osdTextElementDisplayName": {
         "message": "显示名称",
         "description": "One of the elements of the OSD"
+    },
+    "osdDescElementPilotName": {
+        "message": "「配置」选项页中设置的飞行员名称。<\/br>也可使用 CLI 变量 “pilot_name” 来设置。"
     },
     "osdTextElementEscRpmFreq": {
         "message": "电调转速频率",
@@ -5112,6 +5463,10 @@
         "message": "Tramp",
         "description": "Text for one of the types of the VTX type in VTX tab"
     },
+    "vtxType_5": {
+        "message": "MSP",
+        "description": "Text for one of the types of the VTX type in VTX tab"
+    },
     "vtxType_255": {
         "message": "未知",
         "description": "Text for one of the types of the VTX type in VTX tab"
@@ -5308,6 +5663,14 @@
         "message": "保存",
         "description": "Save button in the VTX tab"
     },
+    "buttonSaving": {
+        "message": "正在保存",
+        "description": "Show state of the Save button in the VTX\/LED tab"
+    },
+    "buttonSaved": {
+        "message": "已保存",
+        "description": "Saved action button in the VTX\/LED tab"
+    },
     "vtxSmartAudioUnlocked": {
         "message": "{{version}} 已解锁",
         "description": "Indicates if SA device is unlocked"
@@ -5447,6 +5810,18 @@
     "configurationPersonalization": {
         "message": "个性化"
     },
+    "craftName": {
+        "message": "飞行器名称"
+    },
+    "configurationCraftNameHelp": {
+        "message": "可显示在日志、备份文件名和 OSD 中。<\/br>可借助 CLI 变量 <b>craft_name<\/b> 进行设置。"
+    },
+    "configurationPilotName": {
+        "message": "飞行员名称"
+    },
+    "configurationPilotNameHelp": {
+        "message": "可显示在 OSD 中。<\/br>可借助 CLI 变量<b>pilot_name<\/b> 进行设置。"
+    },
     "configurationFpvCamAngleDegrees": {
         "message": "FPV摄像头角度 [degrees]"
     },
@@ -5455,6 +5830,9 @@
     },
     "onboardLoggingRateOfLogging": {
         "message": "黑盒日志记录速率"
+    },
+    "onboardLoggingDebugFields": {
+        "message": "已包含调试字段"
     },
     "onboardLoggingDebugMode": {
         "message": "黑盒调试模式"
@@ -5488,6 +5866,9 @@
     },
     "dialogConfirmResetTitle": {
         "message": "确认"
+    },
+    "dialogConfirmResetNote": {
+        "message": "警告：你确定要将<strong>所有设置<\/strong>重置为未配置状态吗？这<strong>不是<\/strong>“恢复出厂”。此操作可能会导致意想不到的问题，并且可能需要重新刷写固件才能重新连接。"
     },
     "dialogConfirmResetConfirm": {
         "message": "重置"
@@ -5588,6 +5969,9 @@
     "cordovaIncompatibleWebview": {
         "message": "不兼容的 webview"
     },
+    "cordovaWebviewTroubleshootingMsg": {
+        "message": "你必须更新你设备的 webview 才能使用 Betaflight 应用。"
+    },
     "cordovaWebviewTroubleshootingMsg2": {
         "message": "下面的工具旨在帮助您安装一个新的 webview 或更新已安装的 webview。"
     },
@@ -5633,6 +6017,9 @@
     "cordovaExitAppTitle": {
         "message": "确认"
     },
+    "cordovaExitAppMessage": {
+        "message": "你确定要关闭应用吗？"
+    },
     "dropDownSelectAll": {
         "message": "[全选\/取消全选]",
         "description": "Select all item in the drop down\/multiple select"
@@ -5660,6 +6047,10 @@
     "presetsKeywords": {
         "message": "关键字:",
         "description": "Hint text in the presets detailed dialog"
+    },
+    "presetsSourceRepository": {
+        "message": "来源：",
+        "description": "Text prefixing user defined name of the preset repository containing a preset"
     },
     "presetsVersions": {
         "message": "固件:",
@@ -5806,8 +6197,12 @@
         "description": "Presets tab, sources dialog, button to reset source after modifications"
     },
     "presetsSourcesDialogMakeSourceActive": {
-        "message": "激活",
+        "message": "设为激活",
         "description": "Presets tab, sources dialog, button to make selected source active"
+    },
+    "presetsSourcesDialogMakeSourceDisable": {
+        "message": "设为禁用",
+        "description": "Presets tab, sources dialog, button to make selected source disabled"
     },
     "presetsSourcesDialogDeleteSource": {
         "message": "删除",
@@ -5821,9 +6216,17 @@
         "message": "请确保你在选择加载预设<strong>之前<\/strong>已经对当前配置进行备份（'$t(presetsBackupSave.message)' 按钮或 CLI 命令），否则，应用预设之后将无法恢复先前的配置。",
         "description": "Warning message that shows up at the top of the presets tab"
     },
+    "presets_sources_dialog_warning": {
+        "message": "<span class=\"message-negative\">警告！<\/span> 使用第三方预设源可能会有危险。<br\/>请确保你只添加并使用可信任的来源。 恶意或不良的预设源会破坏你的飞行器配置，并可能会损坏你的设备。",
+        "description": "Warning message that shows up at the top of the preset sources dialog"
+    },
     "presetsWarningWrongVersionConfirmation": {
         "message": "已选择预设需要固件版本为 $1<br\/> 但当前固件版本为 $2",
         "description": "Warning message that shows up at the top of the preset sources dialog"
+    },
+    "presetsNoPresetsFound": {
+        "message": "没有找到符合搜索条件的预设",
+        "description": "Message that apprears on presets tab if no presets were found"
     },
     "presetsTooManyPresetsFound": {
         "message": "已达到可显示预设数的最大限制",
@@ -5841,6 +6244,54 @@
         "message": "请在选择此预设之前查看选项列表。",
         "description": "Dialog text to prompt user to review options for the preset"
     },
+    "firmwareFlasherBuildConfigurationHead": {
+        "message": "构建选项"
+    },
+    "firmwareFlasherBuildOptions": {
+        "message": "其他选项"
+    },
+    "firmwareFlasherBuildRadioProtocols": {
+        "message": "无线电协议"
+    },
+    "firmwareFlasherBuildTelemetryProtocols": {
+        "message": "遥测协议"
+    },
+    "firmwareFlasherBuildMotorProtocols": {
+        "message": "电机协议"
+    },
+    "firmwareFlasherBuildOsdProtocols": {
+        "message": "OSD 协议"
+    },
+    "firmwareFlasherConfigurationFile": {
+        "message": "配置文件名："
+    },
+    "firmwareFlasherRadioProtocolDescription": {
+        "message": "选择你希望在此构建中引入的无线电协议。要注意这是一个下拉列表，但仅能选择一个项目。"
+    },
+    "firmwareFlasherTelemetryProtocolDescription": {
+        "message": "选择你希望在此构建中引入的遥测协议。要注意这是一个下拉列表，但仅能选择一个项目。基于你在无线电协议中的选项，例如CRSF，将会忽视你在此处选择的协议，并启用一些其他的遥测协议。"
+    },
+    "firmwareFlasherOptionLabelTelemetryProtocolIncluded": {
+        "message": "协议已自动包含"
+    },
+    "firmwareFlasherOptionsDescription": {
+        "message": "选择你希望在此构建中引入的通用选项。请注意，这是一个下拉列表，并且可以选择多个项目。修正类的选项也在这里添加，例如 AKK 图传。"
+    },
+    "firmwareFlasherMotorProtocolDescription": {
+        "message": "选择你希望在此构建中引入的电机（ESC）协议。请注意，这是一个下拉菜单，但仅能选择一个项目。"
+    },
+    "firmwareFlasherOsdProtocolDescription": {
+        "message": "选择你希望在此构建中引入的 OSD 协议。请注意，这是一个下拉菜单，但仅能选择一个项目。"
+    },
+    "firmwareFlasherBranchDescription": {
+        "message": "对于开发人员特别有用，你可以选择一个已合并的 PR、指定提交的 sha、或者通过输入一个跟着 PR 编号的“#”来指定一个尚未合并的 PR。例如： #1234（这是分支“pull\/1234\/head”的简写）。"
+    },
+    "firmwareFlasherCustomDefinesDescription": {
+        "message": "对于开发人员，你可以根据需要，任意添加宏定义并用空格分隔，但无需使用“USE_”前缀，它将被自动添加。"
+    },
+    "firmwareFlasherBuildCustomDefines": {
+        "message": "自定义选项"
+    },
     "firmwareFlasherOSDProtocolNotSelected": {
         "message": "未选择 OSD 协议"
     },
@@ -5852,5 +6303,26 @@
     },
     "firmwareFlasherOSDProtocolNotSelectedContinue": {
         "message": "不选择 OSD 协议并继续进行"
+    },
+    "coreBuild": {
+        "message": "仅核心功能"
+    },
+    "coreBuildModeDescription": {
+        "message": "此选项构建一个包含硬件驱动程序（以及一些有限的功能）的固件。该固件只是为了便于实现该功能——用于协助检测飞行控制板上的硬件——而提供的。使用此选项，会导致仅有部分功能（指硬件功能）可用。"
+    },
+    "betaflightSupportButton": {
+        "message": "百科",
+        "description": "Text for the button to open the support URL"
+    },
+    "showNotifications": {
+        "message": "显示耗时操作通知"
+    },
+    "notificationsDeniedTitle": {
+        "message": "通知已被阻止",
+        "description": "Title when Notifications has no or denied permissions"
+    },
+    "notificationsDenied": {
+        "message": "通知已被阻止。请在你的浏览器设置中启用通知。否则，你将无法收到有关耗时操作的通知。如果你使用的是 Chrome 浏览器，可以点击地址栏中的锁图标并选择“网站设置”来启用通知。",
+        "description": "Message when Notifications has no or denied permissions"
     }
 }

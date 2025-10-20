@@ -15,83 +15,40 @@ class Serial extends EventTarget {
 
         this.logHead = "[SERIAL]";
 
-        // Initialize the available protocols
-        this._webSerial = new WebSerial();
-        this._webBluetooth = new WebBluetooth();
-        this._webSocket = new Websocket();
-        this._virtual = new VirtualSerial();
-
-        // Update protocol map to use consistent naming
-        this._protocolMap = {
-            webserial: this._webSerial,
-            webbluetooth: this._webBluetooth,
-            websocket: this._webSocket,
-            virtual: this._virtual,
-        };
+        // Initialize protocols with metadata for easier lookup
+        this._protocols = [
+            { name: "webserial", instance: new WebSerial() },
+            { name: "webbluetooth", instance: new WebBluetooth() },
+            { name: "websocket", instance: new Websocket() },
+            { name: "virtual", instance: new VirtualSerial() },
+        ];
 
         // Forward events from all protocols to the Serial class
         this._setupEventForwarding();
-    }
-
-    // Add a getter method to safely access the protocol map
-    _getProtocolByType(type) {
-        if (!type) {
-            return this._protocol;
-        }
-
-        const protocol = this._protocolMap[type.toLowerCase()];
-
-        if (!protocol) {
-            console.warn(`${this.logHead} Unknown protocol type: ${type}`);
-        }
-
-        return protocol || null;
-    }
-
-    /**
-     * Get the protocol type as a string
-     * @param {Object} protocol - Protocol instance
-     * @returns {string} - Protocol type name
-     */
-    _getProtocolType(protocol) {
-        if (protocol === this._webSerial) {
-            return "webserial";
-        }
-        if (protocol === this._webBluetooth) {
-            return "webbluetooth";
-        }
-        if (protocol === this._webSocket) {
-            return "websocket";
-        }
-        if (protocol === this._virtual) {
-            return "virtual";
-        }
-        return "unknown";
     }
 
     /**
      * Set up event forwarding from all protocols to the Serial class
      */
     _setupEventForwarding() {
-        const protocols = [this._webSerial, this._webBluetooth, this._webSocket, this._virtual];
         const events = ["addedDevice", "removedDevice", "connect", "disconnect", "receive"];
 
-        protocols.forEach((protocol) => {
-            if (protocol && typeof protocol.addEventListener === "function") {
-                events.forEach((eventType) => {
-                    protocol.addEventListener(eventType, (event) => {
+        for (const { name, instance } of this._protocols) {
+            if (typeof instance?.addEventListener === "function") {
+                for (const eventType of events) {
+                    instance.addEventListener(eventType, (event) => {
                         let newDetail;
                         if (event.type === "receive") {
                             // For 'receive' events, we need to handle the data differently
                             newDetail = {
                                 data: event.detail,
-                                protocolType: this._getProtocolType(protocol),
+                                protocolType: name,
                             };
                         } else {
                             // For other events, we can use the detail directly
                             newDetail = {
                                 ...event.detail,
-                                protocolType: this._getProtocolType(protocol),
+                                protocolType: name,
                             };
                         }
 
@@ -104,54 +61,30 @@ class Serial extends EventTarget {
                             }),
                         );
                     });
-                });
+                }
             }
-        });
+        }
     }
 
     /**
      * Selects the appropriate protocol based on port path
-     * @param {string|null} portPath - Optional port path to determine protocol
-     * @param {boolean} forceDisconnect - Whether to force disconnect from current protocol
+     * @param {string|function|null} portPath - Port path or callback function for virtual mode
      */
-    selectProtocol(portPath = null, forceDisconnect = true) {
+    selectProtocol(portPath) {
         // Determine which protocol to use based on port path
-        let newProtocol;
-
-        if (portPath) {
-            // Select protocol based on port path
-            if (portPath === "virtual") {
-                console.log(`${this.logHead} Using virtual protocol (based on port path)`);
-                newProtocol = this._virtual;
-            } else if (portPath === "manual" || /^(tcp|ws):\/\/([A-Za-z0-9.-]+)(?::(\d+))?$/.test(portPath)) {
-                console.log(`${this.logHead} Using websocket protocol (based on port path)`);
-                newProtocol = this._webSocket;
-            } else if (portPath.startsWith("bluetooth")) {
-                console.log(`${this.logHead} Using bluetooth protocol (based on port path: ${portPath})`);
-                newProtocol = this._webBluetooth;
-            } else {
-                console.log(`${this.logHead} Using web serial protocol (based on port path: ${portPath})`);
-                newProtocol = this._webSerial;
-            }
+        const isFn = typeof portPath === "function";
+        const s = typeof portPath === "string" ? portPath : "";
+        // Default to webserial for typical serial device identifiers.
+        if (isFn || s === "virtual") {
+            return this._protocols.find((p) => p.name === "virtual")?.instance;
         }
-
-        // If we're switching to a different protocol
-        if (this._protocol !== newProtocol) {
-            // Clean up previous protocol if exists
-            if (this._protocol && forceDisconnect) {
-                // Disconnect if connected
-                if (this._protocol.connected) {
-                    console.log(`${this.logHead} Disconnecting from current protocol before switching`);
-                    this._protocol.disconnect();
-                }
-            }
-
-            // Set new protocol
-            this._protocol = newProtocol;
-            console.log(`${this.logHead} Protocol switched successfully to:`, this._protocol);
+        if (s === "manual" || /^(tcp|ws|wss):\/\/[A-Za-z0-9.-]+(?::\d+)?(\/.*)?$/.test(s)) {
+            return this._protocols.find((p) => p.name === "websocket")?.instance;
         }
-
-        return this._protocol;
+        if (s.startsWith("bluetooth")) {
+            return this._protocols.find((p) => p.name === "webbluetooth")?.instance;
+        }
+        return this._protocols.find((p) => p.name === "webserial")?.instance;
     }
 
     /**
@@ -161,38 +94,18 @@ class Serial extends EventTarget {
      */
     async connect(path, options, callback) {
         // Select the appropriate protocol based directly on the port path
-        this.selectProtocol(path);
-
-        if (!this._protocol) {
-            console.error(`${this.logHead} No valid protocol selected for connection`);
-            return false;
+        let result = false;
+        try {
+            this._protocol = this.selectProtocol(path);
+            result = await this._protocol.connect(path, options);
+        } catch (error) {
+            console.error(
+                `${this.logHead} Error during connection to path '${path}' with protocol '${this._protocol?.constructor?.name || "undefined"}':`,
+                error,
+            );
         }
-
-        // Check if already connected
-        if (this._protocol.connected) {
-            console.warn(`${this.logHead} Protocol already connected, not connecting again`);
-
-            // If we're already connected to the requested port, return success
-            const connectedPort = this._protocol.getConnectedPort?.();
-            if (connectedPort && connectedPort.path === path) {
-                console.log(`${this.logHead} Already connected to the requested port`);
-                return true;
-            }
-
-            // If we're connected to a different port, disconnect first
-            console.log(`${this.logHead} Connected to a different port, disconnecting first`);
-            const success = await this.disconnect();
-            if (!success) {
-                console.error(`${this.logHead} Failed to disconnect before reconnecting`);
-                return false;
-            }
-
-            console.log(`${this.logHead} Reconnecting to new port:`, path);
-            return this._protocol.connect(path, options, callback);
-        }
-
-        console.log(`${this.logHead} Connecting to port:`, path, "with options:", options);
-        return this._protocol.connect(path, options, callback);
+        callback?.(result);
+        return result;
     }
 
     /**
@@ -201,48 +114,29 @@ class Serial extends EventTarget {
      * @returns {Promise<boolean>} - Promise resolving to true if disconnection was successful
      */
     async disconnect(callback) {
-        // Return immediately if no protocol is selected
-        if (!this._protocol) {
-            console.warn(`${this.logHead} No protocol selected, nothing to disconnect`);
-            if (callback) callback(false);
-            return false;
-        }
-
+        let result = false;
         try {
-            // Handle case where we're already disconnected
-            if (!this._protocol.connected) {
-                console.log(`${this.logHead} Already disconnected, performing cleanup`);
-                if (callback) {
-                    callback(true);
-                }
-                return true;
-            }
-
-            // Create a promise that will resolve/reject based on the protocol's disconnect result
-            const success = await this._protocol.disconnect();
-
-            if (callback) callback(success);
-            return success;
+            result = (await this._protocol?.disconnect()) ?? false;
         } catch (error) {
             console.error(`${this.logHead} Error during disconnect:`, error);
-            if (callback) {
-                callback(false);
-            }
-            return Promise.resolve(false);
         }
+        callback?.(result);
+        return result;
     }
 
     /**
      * Send data through the serial connection
      */
-    send(data, callback) {
-        if (!this._protocol || !this._protocol.connected) {
-            console.warn(`${this.logHead} Cannot send data - not connected`);
-            if (callback) callback({ bytesSent: 0 });
-            return { bytesSent: 0 };
+    async send(data, callback) {
+        let result;
+        try {
+            result = (await this._protocol?.send(data, callback)) ?? { bytesSent: 0 };
+        } catch (error) {
+            result = { bytesSent: 0 };
+            console.error(`${this.logHead} Error sending data:`, error);
         }
-
-        return this._protocol.send(data, callback);
+        callback?.(result);
+        return result;
     }
 
     /**
@@ -253,7 +147,7 @@ class Serial extends EventTarget {
     async getDevices(protocolType = null) {
         try {
             // Get the appropriate protocol
-            const targetProtocol = this._getProtocolByType(protocolType);
+            const targetProtocol = this._protocols.find((p) => p.name === protocolType?.toLowerCase())?.instance;
 
             if (!targetProtocol) {
                 console.warn(`${this.logHead} No valid protocol for getting devices`);
@@ -265,7 +159,7 @@ class Serial extends EventTarget {
                 return [];
             }
 
-            return targetProtocol.getDevices() || [];
+            return targetProtocol.getDevices?.() || [];
         } catch (error) {
             console.error(`${this.logHead} Error getting devices:`, error);
             return [];
@@ -278,26 +172,15 @@ class Serial extends EventTarget {
      * @param {string} protocolType - Optional protocol type ('serial', 'bluetooth', etc.)
      * @returns {Promise<Object>} - Promise resolving to the selected device
      */
-    async requestPermissionDevice(showAllDevices = false, protocolType = null) {
+    async requestPermissionDevice(showAllDevices = false, protocolType) {
+        let result = false;
         try {
-            // Get the appropriate protocol
-            const targetProtocol = this._getProtocolByType(protocolType);
-
-            if (!targetProtocol) {
-                console.warn(`${this.logHead} No valid protocol for permission request`);
-                return null;
-            }
-
-            if (typeof targetProtocol.requestPermissionDevice !== "function") {
-                console.error(`${this.logHead} Selected protocol does not support permission requests`);
-                return null;
-            }
-
-            return targetProtocol.requestPermissionDevice(showAllDevices);
+            const targetProtocol = this._protocols.find((p) => p.name === protocolType?.toLowerCase())?.instance;
+            result = await targetProtocol?.requestPermissionDevice(showAllDevices);
         } catch (error) {
             console.error(`${this.logHead} Error requesting device permission:`, error);
-            return null;
         }
+        return result;
     }
 
     /**
@@ -311,7 +194,21 @@ class Serial extends EventTarget {
      * Get connection status
      */
     get connected() {
-        return this._protocol ? this._protocol.connected : false;
+        return this._protocol?.connected || false;
+    }
+
+    /**
+     * Get connectionId
+     */
+    get connectionId() {
+        return this._protocol?.connectionId || null;
+    }
+
+    /**
+     * Get protocol
+     */
+    get protocol() {
+        return this._protocol ? this._protocol.constructor.name.toLowerCase() : null;
     }
 }
 

@@ -40,6 +40,42 @@ const firmware_flasher = {
     // Properties to preserve firmware state during flashing
     preFlashingMessage: null,
     preFlashingMessageType: null,
+    logHead: "[FIRMWARE_FLASHER]",
+    // Event handlers to allow removal on tab change
+    detectedUsbDevice: function (device) {
+        const isFlashOnConnect = $("input.flash_on_connect").is(":checked");
+
+        console.log(`${firmware_flasher.logHead} Detected USB device:`, device);
+
+        // If another operation is in progress, ignore port events (unless we're resuming from a reboot)
+        if (GUI.connect_lock && !STM32.rebootMode) {
+            console.log(`${firmware_flasher.logHead} Port event ignored due to active operation (connect_lock)`);
+            return;
+        }
+
+        // Proceed if we're resuming a reboot sequence or if flash-on-connect is enabled and no operation is active
+        if (STM32.rebootMode || isFlashOnConnect) {
+            const wasReboot = !!STM32.rebootMode;
+            STM32.rebootMode = 0;
+            // Only clear the global connect lock when we are resuming from a reboot
+            // so we don't accidentally interrupt another active operation.
+            if (wasReboot) {
+                GUI.connect_lock = false;
+            }
+            firmware_flasher.startFlashing?.();
+        }
+    },
+    onDeviceRemoved: function (devicePath) {
+        console.log(`${firmware_flasher.logHead} Device removed:`, devicePath);
+
+        // Avoid clearing when removal is expected during flashing/reboot
+        if (GUI.connect_lock || STM32.rebootMode) {
+            return;
+        }
+
+        $('select[name="board"]').val("0").trigger("change");
+        firmware_flasher.clearBufferedFirmware?.();
+    },
 };
 
 firmware_flasher.initialize = async function (callback) {
@@ -59,8 +95,6 @@ firmware_flasher.initialize = async function (callback) {
     self.isConfigLocal = false;
     self.intel_hex = undefined;
     self.parsed_hex = undefined;
-
-    self.logHead = "[FIRMWARE_FLASHER]";
 
     function getExtension(key) {
         if (!key) {
@@ -742,20 +776,14 @@ firmware_flasher.initialize = async function (callback) {
             return output.join("").split("\n");
         }
 
-        function detectedUsbDevice(device) {
-            const isFlashOnConnect = $("input.flash_on_connect").is(":checked");
+        // Expose the local startFlashing implementation to module callers/tests so
+        // module-scoped handlers can safely call firmware_flasher.startFlashing()
+        // even if those callers ran before initialize() completed.
+        firmware_flasher.startFlashing = startFlashing;
+        firmware_flasher.clearBufferedFirmware = clearBufferedFirmware;
 
-            console.log(`${self.logHead} Detected USB device:`, device);
-            console.log(`${self.logHead} Reboot mode: %s, flash on connect`, STM32.rebootMode, isFlashOnConnect);
-
-            if (STM32.rebootMode || isFlashOnConnect) {
-                STM32.rebootMode = 0;
-                GUI.connect_lock = false;
-                startFlashing();
-            }
-        }
-
-        EventBus.$on("port-handler:auto-select-usb-device", detectedUsbDevice);
+        EventBus.$on("port-handler:auto-select-usb-device", firmware_flasher.detectedUsbDevice);
+        EventBus.$on("port-handler:device-removed", firmware_flasher.onDeviceRemoved);
 
         async function saveFirmware() {
             const fileType = self.firmware_type;
@@ -1489,6 +1517,16 @@ firmware_flasher.cleanup = function (callback) {
     // unbind "global" events
     $(document).unbind("keypress");
     $(document).off("click", "span.progressLabel a");
+
+    const cleanupHandler = (evt, property) => {
+        const handler = firmware_flasher[property];
+        if (handler) {
+            EventBus.$off(evt, handler);
+        }
+    };
+
+    cleanupHandler("port-handler:auto-select-usb-device", "detectedUsbDevice");
+    cleanupHandler("port-handler:device-removed", "onDeviceRemoved");
 
     if (callback) callback();
 };
