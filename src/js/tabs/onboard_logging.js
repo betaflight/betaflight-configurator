@@ -356,10 +356,9 @@ onboard_logging.initialize = function (callback) {
             true,
         );
 
-        $("a.regular-button.erase-flash, a.regular-button.require-msc-supported.save-flash").toggleClass(
-            "disabled",
-            FC.DATAFLASH.usedSize === 0,
-        );
+        $(
+            "a.regular-button.erase-flash, a.regular-button.save-flash-erase, a.regular-button.require-msc-supported.save-flash",
+        ).toggleClass("disabled", FC.DATAFLASH.usedSize === 0);
 
         $(".tab-onboard_logging")
             .toggleClass("sdcard-error", FC.SDCARD.state === MSP.SDCARD_STATE_FATAL)
