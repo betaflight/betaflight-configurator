@@ -103,6 +103,7 @@ onboard_logging.initialize = function (callback) {
                 $(".tab-onboard_logging a.erase-flash-cancel").click(flash_erase_cancel);
 
                 $(".tab-onboard_logging a.save-flash").click(flash_save_begin);
+                $(".tab-onboard_logging a.save-flash-erase").click(() => flash_save_begin(true));
                 $(".tab-onboard_logging a.save-flash-cancel").click(flash_save_cancel);
                 $(".tab-onboard_logging a.save-flash-dismiss").click(dismiss_saving_dialog);
             }
@@ -355,7 +356,7 @@ onboard_logging.initialize = function (callback) {
             true,
         );
 
-        $("a.regular-button erase-flash, a.regular-button.require-msc-supported.save-flash").toggleClass(
+        $("a.regular-button.erase-flash, a.regular-button.require-msc-supported.save-flash").toggleClass(
             "disabled",
             FC.DATAFLASH.usedSize === 0,
         );
