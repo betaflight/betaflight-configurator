@@ -378,15 +378,6 @@ class WebSerial extends EventTarget {
             return { bytesSent: 0 };
         }
     }
-
-    /**
-     * Clean up resources when the protocol is no longer needed
-     */
-    cleanup() {
-        if (this.connected) {
-            this.disconnect();
-        }
-    }
 }
 
 // Export the class itself, not an instance

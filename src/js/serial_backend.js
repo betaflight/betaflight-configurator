@@ -1,8 +1,8 @@
 import GUI, { TABS } from "./gui";
 import { i18n } from "./localization";
 // NOTE: this is a circular dependency, needs investigating
-import MspHelper from "./msp/MSPHelper";
 import Features from "./Features";
+import MspHelper from "./msp/MSPHelper";
 import VirtualFC from "./VirtualFC";
 import Beepers from "./Beepers";
 import FC from "./fc";
