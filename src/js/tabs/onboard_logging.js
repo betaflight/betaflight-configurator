@@ -478,7 +478,19 @@ onboard_logging.initialize = function (callback) {
         });
     }
 
-    function flash_save_begin() {
+    function conditionallyEraseFlash(maxBytes, nextAddress) {
+        if (!isNaN(maxBytes) && nextAddress >= maxBytes) {
+            $(".dataflash-confirm-erase").addClass("erasing");
+            MSP.send_message(MSPCodes.MSP_DATAFLASH_ERASE, false, false, poll_for_erase_completion);
+        } else {
+            gui_log(
+                i18n.getMessage("dataflashSaveIncompleteWarning") ||
+                    "Downloaded size did not match expected size - not erasing flash.",
+            );
+        }
+    }
+
+    function flash_save_begin(alsoErase = false) {
         if (GUI.connected_to) {
             self.blockSize = self.BLOCK_SIZE;
 
@@ -515,6 +527,10 @@ onboard_logging.initialize = function (callback) {
                                             mark_saving_dialog_done(startTime, nextAddress, totalBytesCompressed);
                                         }
                                         FileSystem.closeFile(openedFile);
+                                        // Optionally erase after successful full download
+                                        if (!saveCancelled && alsoErase) {
+                                            conditionallyEraseFlash(maxBytes, nextAddress);
+                                        }
                                     } else {
                                         if (!self.writeError) {
                                             mspHelper.dataflashRead(nextAddress, self.blockSize, onChunkRead);
@@ -528,6 +544,9 @@ onboard_logging.initialize = function (callback) {
                                 // A zero-byte block indicates end-of-file, so we're done
                                 mark_saving_dialog_done(startTime, nextAddress, totalBytesCompressed);
                                 FileSystem.closeFile(openedFile);
+                                if (alsoErase) {
+                                    conditionallyEraseFlash(maxBytes, nextAddress);
+                                }
                             }
                         } else {
                             // There was an error with the received block (address didn't match the one we asked for), retry
