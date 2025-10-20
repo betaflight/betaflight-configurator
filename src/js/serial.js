@@ -68,13 +68,14 @@ class Serial extends EventTarget {
 
     /**
      * Selects the appropriate protocol based on port path
-     * @param {string|null} portPath - Port path to determine protocol
+     * @param {string|function|null} portPath - Port path or callback function for virtual mode
      */
     selectProtocol(portPath) {
         // Determine which protocol to use based on port path
+        const isFn = typeof portPath === "function";
         const s = typeof portPath === "string" ? portPath : "";
         // Default to webserial for typical serial device identifiers.
-        if (s === "virtual") {
+        if (isFn || s === "virtual") {
             return this._protocols.find((p) => p.name === "virtual")?.instance;
         }
         if (s === "manual" || /^(tcp|ws|wss):\/\/[A-Za-z0-9.-]+(?::\d+)?(\/.*)?$/.test(s)) {
