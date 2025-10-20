@@ -66,7 +66,7 @@ export function initializeSerialBackend() {
                 !["cli", "firmware_flasher"].includes(GUI.active_tab) &&
                 PortHandler.portPicker.autoConnect &&
                 !isCliOnlyMode() &&
-                (connectionTimestamp == null || connectionTimestamp > 0)) ||
+                (connectionTimestamp === null || connectionTimestamp > 0)) ||
             Date.now() - rebootTimestamp <= REBOOT_CONNECT_MAX_TIME_MS
         ) {
             connectDisconnect();
