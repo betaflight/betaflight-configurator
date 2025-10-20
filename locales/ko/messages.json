@@ -515,9 +515,6 @@
     "reportProblemsDialogFooter": {
         "message": "<span class=\"message-negative\"><strong>당신의 기체를 날리기 전에 이 문제들을 해결할 필요가 있습니다<\/span><\/strong>."
     },
-    "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
-        "message": "<span class=\"message-negative\"><strong>사용된 앱 버전($3)이 펌웨어 $4를 지원하지 않습니다<\/strong><\/span>.<br>$t(configuratorUpdateHelp.message)"
-    },
     "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
         "message": "<strong>선택된 모터 출력 프로토콜이 없습니다<\/strong>.<br>'$t(tabMotorTesting.message)' 탭의 '$t(configurationEscFeatures.message)'에서 ESC에 적합한 모터 출력 프로토콜을 선택하십시오.<br> $t(escProtocolDisabledMessage.message)"
     },

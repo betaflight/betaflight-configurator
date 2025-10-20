@@ -516,7 +516,7 @@
         "message": "<span class=\"message-negative\"><strong>Du skal løse problemer med disse indstillinger, før du forsøger at flyve med dit fartøj<\/span><\/strong>."
     },
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
-        "message": "<span class=\"message-negative\"><strong>Den anvendte app version ($3) understøtter ikke firmware $4<\/strong><\/span>.<br>$t(configuratorUpdateHelp.message)"
+        "message": "<span class=\"message-negative\"><strong>Din app med version ($1) understøtter ikke den anvendte firmware $2<\/strong><\/span>.<br>$t(configuratorUpdateHelp.message)"
     },
     "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
         "message": "<strong>der er ikke valgt en motor protokol<\/strong>.<br>Vælg venligst en motor protokol passende for dine ESC'er i '$t(configurationEscFeatures.message)' på '$t(tabMotorTesting.message)' fanen.<br>$t(escProtocolDisabledMessage.message)"

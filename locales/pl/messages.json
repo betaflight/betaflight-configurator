@@ -516,7 +516,7 @@
         "message": "<span class=\"message-negative\"><strong>Musisz rozwiązać te problemy zanim spróbujesz latać swoją jednostką latająca.<\/span><\/strong>."
     },
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
-        "message": "<span class=\"message-negative\"><strong>Używana wersja aplikacji ($3) nie obsługuje oprogramowania $4<\/strong><\/span>.<br>$t(configuratorUpdateHelp.message)"
+        "message": "<span class=\"message-negative\"><strong>Używana wersja aplikacji ($1) nie obsługuje oprogramowania $2<\/strong><\/span>.<br>$t(configuratorUpdateHelp.message)"
     },
     "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
         "message": "<strong>Nie wybrano protokołu sterowania silnikami<\/strong>.<br>Wybierz protokół sterowania odpowiedni dla twoich ESC wybierając '$t(configurationEscFeatures.message)' w zakładce  '$t(tabMotorTesting.message)'. <br>$t(escProtocolDisabledMessage.message)"

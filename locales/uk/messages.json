@@ -512,7 +512,7 @@
         "message": "<span class=\"message-negative\"><strong>Вам потрібно виправити ці проблеми, перш ніж спробуєте злетіти своїм повітряним судном<\/span><\/strong>."
     },
     "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
-        "message": "<span class=\"message-negative\"><strong>Використана версія застосунку ($3) не підтримує прошивку $4<\/strong><\/span>.<br>$t(configuratorUpdateHelp.message)"
+        "message": "<span class=\"message-negative\"><strong>Використана версія застосунку ($1) не підтримує прошивку $2<\/strong><\/span>.<br>$t(configuratorUpdateHelp.message)"
     },
     "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
         "message": "<strong>Протокол вихідного сигналу мотора не вибрано<\/strong>.<br>Будь ласка, виберіть протокол виводу мотора, відповідний до вашого електронного контролера швидкості ESC '$t(configurationEscFeatures.message)' на '$t(tabMotorTesting.message)' вкладці.<br>$t(escProtocolDisabledMessage.message)"
@@ -1969,11 +1969,34 @@
     "receiverRcSmoothingManual": {
         "message": "Ручний"
     },
+    "receiverRcSmoothingAutoFactor": {
+        "message": "Автоматичний коефіцієнт заданого значення",
+        "description": "Setpoint Auto Factor parameter for RC smoothing"
+    },
+    "receiverRcSmoothingAutoFactorHelp": {
+        "message": "Налаштовує обчислення автоматичного коефіцієнта заданого значення, за замовчуванням 10 - це співвідношення коефіцієнта до затримки. Збільшення цього значення призведе до більшого згладжування команд від пульта, водночас збільшуючи затримку. Це може бути корисно для ненадійних з'єднань з пультом або для кінематографічного польоту.<br>Будьте обережні з числами, що наближаються до 50, затримка на вході стане помітною.<br>Використайте команду в командному рядку rc_smoothing_info при увімкнених TX і RX, щоб побачити автоматично розраховані значення відсікання згладжування.",
+        "description": "Setpoint Auto Factor parameter help message"
+    },
+    "receiverRcSmoothingAutoFactorHelp2": {
+        "message": "Налаштовує згладжування заданого значення команд пульта. Значення за замовчуванням - 30. Вищі значення згладжують команди пульта більше - наприклад, 60 для HD фрістайлу або 90-120 для кінематографічного польоту. Примітка: Значення понад 50 спричиняють помітну затримку команд стіків. Менші значення, наприклад, 20-25, передають більше сигналів керування пульта в сигнали мотора, трохи збільшуючи нагрів моторів, але трохи зменшують затримку реакції на команди стіків. Це може бути корисно для перегонів.",
+        "description": "Setpoint Auto Factor parameter help message"
+    },
+    "receiverRcSmoothingAutoFactorThrottle": {
+        "message": "Автоматичний коефіцієнт згладжування тяги",
+        "description": "Throttle Auto Factor parameter for RC smoothing"
+    },
+    "receiverRcSmoothingAutoFactorThrottleHelp": {
+        "message": "Налаштовує обчислення коефіцієнта згладжування тяги, за замовчуванням 10 - це співвідношення коефіцієнта до затримки. Збільшення цього значення призведе до більшого згладжування команд від пульта, водночас збільшуючи затримку. Це може бути корисно для ненадійних з'єднань з пультом або для кінематографічного польоту.<br>Будьте обережні з числами, що наближаються до 50, затримка на вході стане помітною.<br>Використайте команду в командному рядку rc_smoothing_info при увімкнених TX і RX, щоб побачити автоматично розраховані значення відсікання згладжування.",
+        "description": "Throttle Auto Factor parameter help message"
+    },
     "receiverRcFeedforwardTypeSelect": {
         "message": "Тип відсікання упередження"
     },
     "receiverRcSetpointTypeSelect": {
         "message": "Тип відсікання заданого значення"
+    },
+    "receiverThrottleTypeSelect": {
+        "message": "Тип відсікання тяги"
     },
     "receiverRcSmoothingInterpolation": {
         "message": "Інтерполяція"
@@ -1996,8 +2019,17 @@
     "receiverRcSmoothingFeedforwardManual": {
         "message": "Дозволяє вибрати, чи буде частота відсікання фільтра упередження (анг. - feedforward) автоматично розраховуватися (рекомендовано) або вибиратися користувачем вручну. Використання режиму \"Ручний\" не рекомендується для таких протоколів приймачів, як Crossfire, які можуть змінювати частоту у польоті."
     },
+    "receiverRcSmoothingThrottleManual": {
+        "message": "Дозволяє вибрати, чи буде згладжування команд пульта автоматично розраховуватися (рекомендовано) або вибиратися користувачем вручну. Використання режиму \"Ручний\" не рекомендується для таких протоколів приймачів, як Crossfire, які можуть змінювати частоту пакетів в польоті."
+    },
+    "rcSmoothingThrottleCutoffHelp": {
+        "message": "Частота відсікання в Гц, яка використовується фільтром згладжування тяги. Використання нижчих значень призведе до більш плавних вхідних сигналів і більше підходить для повільних протоколів приймачів. Більшості користувачів слід залишити цей параметр на 0, що відповідає значенню \"Автоматичний\"."
+    },
     "receiverRcSmoothingSetpointHz": {
         "message": "Частота відсікання заданого значення"
+    },
+    "receiverRcSmoothingThrottleCutoffHz": {
+        "message": "Частота відсікання тяги"
     },
     "receiverRcSmoothingFeedforwardCutoff": {
         "message": "Частота відсікання упередження"
