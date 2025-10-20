@@ -84,10 +84,162 @@
 @media all and (max-width: 575px) {
     .tab-adjustments {
         .overflow {
-            overflow: auto;
+            overflow: visible;
         }
-        .range {
-            min-width: 300px;
+
+        .adjustments thead {
+            display: none;
+        }
+
+        .adjustments tbody {
+            display: block;
+        }
+
+        .adjustment {
+            display: block;
+            background-color: var(--surface-200);
+            margin-bottom: 0.5rem;
+            border-radius: 0.5rem;
+            overflow: visible;
+            width: 100%;
+            box-sizing: border-box;
+
+            &:nth-child(odd) {
+                background-color: var(--surface-200);
+            }
+
+            td {
+                display: block;
+                border: none;
+                padding: 0.75rem;
+                text-align: left;
+                width: 100%;
+                box-sizing: border-box;
+
+                &.info {
+                    padding: 0;
+                }
+
+                &::before {
+                    content: attr(data-label);
+                    font-weight: bold;
+                    display: block;
+                    margin-bottom: 0.5rem;
+                    color: var(--text);
+                    font-size: 0.9em;
+                }
+            }
+            .info {
+                height: auto;
+                min-height: 2.5rem;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: center;
+                background-color: var(--surface-300);
+                padding: 2rem;
+                gap: 1rem;
+
+                .enabling {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 0.75rem;
+
+                    &::before {
+                        content: "Enable";
+                        font-weight: bold;
+                        color: var(--text);
+                        font-size: 0.9em;
+                    }
+                }
+            }
+
+            .channelInfo {
+                &::before {
+                    content: "When Channel";
+                }
+
+                > div:first-child {
+                    margin-bottom: 0.75rem;
+
+                    select {
+                        width: 100%;
+                        padding: 0.5rem;
+                        border: 1px solid var(--surface-500);
+                        border-radius: 3px;
+                        box-sizing: border-box;
+                    }
+                }
+
+                .limits {
+                    display: flex;
+                    justify-content: space-between;
+                    padding: 0;
+                    margin-top: 0.5rem;
+
+                    p {
+                        margin: 0;
+                        font-size: 0.875em;
+                        flex: 1;
+
+                        &.lowerLimit {
+                            text-align: left;
+                        }
+
+                        &.upperLimit {
+                            text-align: right;
+                        }
+                    }
+                }
+            }
+
+            .range {
+                &::before {
+                    content: "Is In Range";
+                }
+
+                padding: 0.75rem;
+
+                .channel-slider {
+                    margin-top: 1rem;
+                    margin-bottom: 2.5rem;
+                    width: 100%;
+                    position: relative;
+                }
+
+                .marker {
+                    top: 2.75rem;
+                }
+            }
+
+            .functionSelection {
+                &::before {
+                    content: "Then Apply Function";
+                }
+
+                select {
+                    width: 100%;
+                    padding: 0.5rem;
+                    border: 1px solid var(--surface-500);
+                    border-radius: 3px;
+                    box-sizing: border-box;
+                }
+            }
+
+            .functionSwitchChannel {
+                &::before {
+                    content: "Via Channel";
+                }
+
+                select {
+                    width: 100%;
+                    padding: 0.5rem;
+                    border: 1px solid var(--surface-500);
+                    border-radius: 3px;
+                    box-sizing: border-box;
+                }
+            }
         }
     }
 }
