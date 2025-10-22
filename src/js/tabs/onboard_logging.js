@@ -610,7 +610,10 @@ onboard_logging.initialize = function (callback) {
         flash_update_summary(function () {
             if (CONFIGURATOR.connectionValid && !eraseCancelled) {
                 if (FC.DATAFLASH.ready) {
-                    $(".dataflash-confirm-erase")[0].close();
+                    const dialog = $(".dataflash-confirm-erase")[0];
+                    if (dialog?.open) {
+                        dialog.close();
+                    }
                     if (getConfig("showNotifications").showNotifications) {
                         NotificationManager.showNotification("Betaflight Configurator", {
                             body: i18n.getMessage("flashEraseDoneNotification"),
