@@ -3549,9 +3549,6 @@
     "dataflashButtonSaveFile": {
         "message": "Save flash to file..."
     },
-    "dataflashButtonSaveFileDeprecated": {
-        "message": "Save flash to file... (unsupported)"
-    },
     "dataflashSavetoFileNote": {
         "message": "Directly saving flash to file is slow and inherently prone to error / file corruption.<br>In some cases it will work for small files, but this is not supported and support requests for it will be closed without comment - use Mass Storage mode instead."
     },
