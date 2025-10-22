@@ -553,7 +553,7 @@ onboard_logging.initialize = function (callback) {
                                 // A zero-byte block indicates end-of-file, so we're done
                                 mark_saving_dialog_done(startTime, nextAddress, totalBytesCompressed);
                                 FileSystem.closeFile(openedFile);
-                                if (alsoErase) {
+                                if (!saveCancelled && alsoErase) {
                                     conditionallyEraseFlash(maxBytes, nextAddress);
                                 }
                             }
