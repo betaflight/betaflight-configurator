@@ -5,7 +5,7 @@ description = "Betaflight App"
 authors = ["Betaflight Team"]
 license = "GPL-3.0"
 repository = "https://github.com/betaflight/betaflight-configurator"
-edition = "2021"
+edition = "2024"
 
 [build-dependencies]
 tauri-build = { version = "2.9.0", features = [] }
