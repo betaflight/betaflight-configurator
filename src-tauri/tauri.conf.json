@@ -32,9 +32,7 @@
   },
   "plugins": {
     "shell": {
-      "open": {
-        "allowlist": ["^https://.*"]
-      }
+      "open": true
     }
   }
 }
