@@ -24,7 +24,9 @@
     "storybook": "start-storybook -p 6006",
     "prepare": "husky install",
     "tauri:dev": "tauri dev",
-    "tauri:build": "tauri build"
+    "tauri:build": "tauri build",
+    "tauri:android:dev": "tauri android dev",
+    "tauri:android:build": "tauri android build"
   },
   "window": {
     "icon": "images/bf_icon_128.png",
