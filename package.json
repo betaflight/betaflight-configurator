@@ -43,9 +43,9 @@
     "prepare": "husky install",
     "tauri:dev": "tauri dev",
     "tauri:build": "tauri build",
-  "tauri:dev:android": "run-script-os",
-  "tauri:dev:android:win32": "yarn android:emu:start && yarn android:adb:wait && yarn android:adb:reverse && tauri android dev",
-  "tauri:dev:android:default": "yarn android:emu:start && yarn android:adb:wait && yarn android:adb:reverse && tauri android dev",
+    "tauri:dev:android": "run-script-os",
+    "tauri:dev:android:win32": "yarn android:emu:start && yarn android:adb:wait && yarn android:adb:reverse && tauri android dev",
+    "tauri:dev:android:default": "yarn android:emu:start && yarn android:adb:wait && yarn android:adb:reverse && tauri android dev",
     "tauri:dev:android:with-dist": "yarn build && yarn tauri:dev:android",
     "tauri:build:android": "tauri android build"
   },
