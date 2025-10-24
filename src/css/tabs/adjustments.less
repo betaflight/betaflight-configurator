@@ -116,10 +116,6 @@
                 width: 100%;
                 box-sizing: border-box;
 
-                &.info {
-                    padding: 0;
-                }
-
                 &::before {
                     content: attr(data-label);
                     font-weight: bold;
@@ -137,29 +133,27 @@
                 align-items: center;
                 justify-content: center;
                 background-color: var(--surface-300);
-                padding: 2rem;
                 gap: 1rem;
+                padding: 0.75rem;
+
+                &::before {
+                    content: attr(data-label);
+                    font-weight: bold;
+                    display: inline;
+                    margin-bottom: 0;
+                    color: var(--text);
+                    font-size: 0.9em;
+                }
 
                 .enabling {
                     display: flex;
                     align-items: center;
                     justify-content: center;
                     gap: 0.75rem;
-
-                    &::before {
-                        content: "Enable";
-                        font-weight: bold;
-                        color: var(--text);
-                        font-size: 0.9em;
-                    }
                 }
             }
 
             .channelInfo {
-                &::before {
-                    content: "When Channel";
-                }
-
                 > div:first-child {
                     margin-bottom: 0.75rem;
 
@@ -195,10 +189,6 @@
             }
 
             .range {
-                &::before {
-                    content: "Is In Range";
-                }
-
                 padding: 0.75rem;
 
                 .channel-slider {
@@ -214,10 +204,6 @@
             }
 
             .functionSelection {
-                &::before {
-                    content: "Then Apply Function";
-                }
-
                 select {
                     width: 100%;
                     padding: 0.5rem;
@@ -228,10 +214,6 @@
             }
 
             .functionSwitchChannel {
-                &::before {
-                    content: "Via Channel";
-                }
-
                 select {
                     width: 100%;
                     padding: 0.5rem;
