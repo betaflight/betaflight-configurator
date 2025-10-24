@@ -25,8 +25,8 @@
     "prepare": "husky install",
     "tauri:dev": "tauri dev",
     "tauri:build": "tauri build",
-    "tauri:android:dev": "tauri android dev",
-    "tauri:android:build": "tauri android build"
+    "tauri:dev:android": "cargo tauri android dev",
+    "tauri:build:android": "cargo tauri android build"
   },
   "window": {
     "icon": "images/bf_icon_128.png",
