@@ -33,7 +33,7 @@
     "android:emu:start:host:win32": "start \"\" \"%ANDROID_HOME%\\emulator\\emulator.exe\" -avd Medium_Phone_API_35 -gpu host -no-snapshot-load",
     "android:emu:start:host:default": "QT_QPA_PLATFORM=xcb $ANDROID_HOME/emulator/emulator -avd ${AVD:-Medium_Phone_API_35} -gpu host -no-snapshot-load &",
     "android:adb:wait": "run-script-os",
-    "android:adb:wait:win32": "%ANDROID_HOME%\\platform-tools\\adb.exe wait-for-device",
+    "android:adb:wait:win32": "%ANDROID_HOME%\\platform-tools\\adb.exe wait-for-device && %ANDROID_HOME%\\platform-tools\\adb.exe shell \"while [ $(getprop sys.boot_completed) != 1 ]; do sleep 1; done\"",
     "android:adb:wait:default": "$ANDROID_HOME/platform-tools/adb wait-for-device && until $ANDROID_HOME/platform-tools/adb shell getprop sys.boot_completed 2>/dev/null | grep -q 1; do sleep 1; done",
     "android:adb:reverse": "run-script-os",
     "android:adb:reverse:win32": "%ANDROID_HOME%\\platform-tools\\adb.exe reverse tcp:8000 tcp:8000",
