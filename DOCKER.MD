@@ -1,20 +1,21 @@
-🐳 Development Environment with Docker
+# 🐳 Development Environment with Docker
 
 To ensure all developers use a consistent environment, especially for cross-platform compilation (Rust, Node.js, Android SDK/NDK), we provide a Dockerfile.
 
-1. Build the Docker Image
+## 1. Build the Docker Image
 
 Build the container image from the Dockerfile in the project root. This process will download all system dependencies, the Rust toolchain, and the Android SDK/NDK.
-Bash
 
-docker build -t betaflight-tauri-dev .
+```bash
+    docker build -t betaflight-tauri-dev .
+```
 
-2. Run the Development Container
+## 2. Run the Development Container
 
 Run the image and mount your local project directory into the container's /app directory. This allows you to work on your code locally while running all build commands inside the isolated Docker environment.
-Bash
 
-docker run -it --rm \
+```bash
+    docker run -it --rm \
     -v $(pwd):/app \
     --name betaflight-dev-container \
     betaflight-tauri-dev
@@ -24,8 +25,9 @@ docker run -it --rm \
     --rm: Automatically removes the container when you exit.
 
     -v $(pwd):/app: Mounts your current directory (the project root) to the /app working directory in the container.
+```
 
-3. Execute Build/Dev Commands
+## 3. Execute Build/Dev Commands
 
 Once inside the container's terminal, you can run any of the Tauri commands without needing to worry about local prerequisites.
 
