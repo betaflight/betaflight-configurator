@@ -1,51 +1,6 @@
 import { Capacitor } from "@capacitor/core";
 import { isTauri } from "@tauri-apps/api/core";
 
-// In dev on Android/WebView, a previously installed service worker can cache assets
-// and prevent hot updates from Vite. Proactively unregister all SW and clear caches
-// when running in dev or in a native (Capacitor/Tauri) context.
-async function disableServiceWorkersForDev() {
-    try {
-        const isDev = (() => {
-            try {
-                return !!(import.meta && import.meta.env && import.meta.env.DEV);
-            } catch (_) {
-                return false;
-            }
-        })();
-        const isNative = Capacitor?.isNativePlatform?.() === true;
-        if ((isDev || isNative) && typeof navigator !== "undefined" && "serviceWorker" in navigator) {
-            const regs = await navigator.serviceWorker.getRegistrations();
-            for (const r of regs) {
-                try {
-                    await r.unregister();
-                } catch (_) {}
-            }
-            if (typeof caches !== "undefined" && caches?.keys) {
-                const keys = await caches.keys();
-                for (const k of keys) {
-                    try {
-                        await caches.delete(k);
-                    } catch (_) {}
-                }
-            }
-            // Also attempt to stop active controller
-            if (navigator.serviceWorker.controller) {
-                try {
-                    navigator.serviceWorker.controller.postMessage({ type: "SKIP_WAITING" });
-                } catch (_) {}
-            }
-            // Small delay to ensure SW is cleared before app logic proceeds
-            await new Promise((res) => setTimeout(res, 50));
-        }
-    } catch (_) {
-        // best-effort; ignore
-    }
-}
-
-// Fire and forget; we don't block app init
-// disableServiceWorkersForDev();
-
 // Detects OS using modern userAgentData API with fallback to legacy platform
 // Returns standardized OS name string or "unknown"
 export function getOS() {
