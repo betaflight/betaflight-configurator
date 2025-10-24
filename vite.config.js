@@ -120,7 +120,6 @@ export default defineConfig({
         alias: {
             "/src": path.resolve(process.cwd(), "src"),
             vue: path.resolve(__dirname, "node_modules/vue/dist/vue.esm-bundler.js"),
-            "@": resolve(__dirname, "src"),
         },
     },
     server: {
