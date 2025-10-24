@@ -1,4 +1,5 @@
 import { Capacitor } from "@capacitor/core";
+import { isTauri } from "@tauri-apps/api/core";
 
 // Detects OS using modern userAgentData API with fallback to legacy platform
 // Returns standardized OS name string or "unknown"
@@ -60,17 +61,14 @@ export function isCapacitorWeb() {
     return false;
 }
 
-export function isTauri() {
-    return "__TAURI_INTERNALS__" in window;
-}
-
 export function checkBrowserCompatibility() {
     const isWebSerial = checkWebSerialSupport();
     const isWebBluetooth = checkWebBluetoothSupport();
     const isWebUSB = checkWebUSBSupport();
     const isChromium = isChromiumBrowser();
 
-    const isNative = Capacitor.isNativePlatform() || isTauri();
+    const tauriDetected = isTauri();
+    const isNative = Capacitor.isNativePlatform() || tauriDetected;
 
     // Check if running in a test environment
     const isTestEnvironment =
@@ -79,6 +77,7 @@ export function checkBrowserCompatibility() {
     const compatible = isTestEnvironment || isNative || (isChromium && (isWebSerial || isWebBluetooth || isWebUSB));
 
     console.log("User Agent: ", navigator.userAgentData);
+    console.log("Tauri detected: ", tauriDetected);
     console.log("Native: ", isNative);
     console.log("Chromium: ", isChromium);
     console.log("Web Serial: ", isWebSerial);
@@ -88,9 +87,9 @@ export function checkBrowserCompatibility() {
     console.log("iOS: ", isIOS());
     console.log("Capacitor web: ", isCapacitorWeb());
 
-    // if (compatible) {
-    return true;
-    // }
+    if (compatible) {
+        return true;
+    }
 
     let errorMessage = "";
     if (!isChromium) {
