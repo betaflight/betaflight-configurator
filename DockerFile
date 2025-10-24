@@ -43,10 +43,13 @@ RUN $CARGO_HOME/bin/rustup target add \
     i686-linux-android \
     x86_64-linux-android
 
-# Install a Node.js runtime (e.g., Bun, or use Node/NPM if preferred)
-# Replace this section with your preferred runtime installation (npm, yarn, pnpm)
-RUN curl -fsSL https://bun.sh/install | bash
-ENV PATH="/root/.bun/bin:$PATH"
+# Install Node.js 22 LTS and Yarn (global)
+# Use NodeSource for up-to-date Node on Debian; then install Yarn 1.x globally
+RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
+    && apt-get update \
+    && apt-get install -y --no-install-recommends nodejs \
+    && npm i -g yarn@1.22.22 \
+    && rm -rf /var/lib/apt/lists/*
 
 # --- Install Android SDK/NDK ---
 # Download the Android SDK command line tools
