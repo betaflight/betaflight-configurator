@@ -12,7 +12,7 @@
     "security": {
       "csp": null,
       "capabilities": [
-        { "path": "./capabilities/default.json" }
+        "default"
       ]
     },
     "windows": [
