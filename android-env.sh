@@ -2,13 +2,13 @@
 
 # Android SDK and NDK environment setup script for Tauri Android development
 
-# Set Android SDK path (adjust if your SDK is in a different location)
-export ANDROID_HOME="$HOME/Android/Sdk"
+# Set Android SDK path
+export ANDROID_HOME="${ANDROID_SDK_HOME:-$HOME/Android/Sdk}"
 export ANDROID_SDK_ROOT="$ANDROID_HOME"
 
 # Find the NDK version automatically (uses the first one found)
 if [[ -d "$ANDROID_HOME/ndk" ]]; then
-    NDK_VERSION=$(ls -1 "$ANDROID_HOME/ndk" | head -n 1)
+    NDK_VERSION=$(ls -1 "$ANDROID_HOME/ndk" | sort -V | tail -n 1)  # Pick highest version
     if [[ -n "$NDK_VERSION" ]]; then
         export NDK_HOME="$ANDROID_HOME/ndk/$NDK_VERSION"
         echo "Found NDK version: $NDK_VERSION"
