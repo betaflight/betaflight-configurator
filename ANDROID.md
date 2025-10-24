@@ -212,6 +212,16 @@ This will:
 3. Compile Android APK
 4. Install and launch on connected device/emulator
 
+Note: Dev mode does not rebuild the `dist/` folder. Tauri will load from `devUrl` during `tauri android dev` and falls back to `dist/` only if the dev server is unreachable. If you need a fresh fallback, build the web assets first:
+```bash
+yarn build
+yarn tauri:dev:android
+```
+Alternatively, use the convenience script to build dist then run dev:
+```bash
+yarn tauri:dev:android:with-dist
+```
+
 #### Live Reload Setup
 To enable hot module replacement on the emulator:
 
