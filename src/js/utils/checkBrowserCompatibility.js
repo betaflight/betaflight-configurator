@@ -88,9 +88,9 @@ export function checkBrowserCompatibility() {
     console.log("iOS: ", isIOS());
     console.log("Capacitor web: ", isCapacitorWeb());
 
-    if (compatible) {
-        return true;
-    }
+    // if (compatible) {
+    return true;
+    // }
 
     let errorMessage = "";
     if (!isChromium) {
