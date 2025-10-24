@@ -21,7 +21,7 @@
     "android:sync": "vite build && node capacitor.config.generator.mjs && npx cap sync android",
     "android:release": "vite build && node capacitor.config.generator.mjs && npx cap build android --release",
     "android:emu:list": "$ANDROID_HOME/emulator/emulator -list-avds",
-    "android:emu:check": "adb devices | grep -q emulator && echo 'Emulator running' || echo 'No emulator'",
+    "android:emu:check": "$ANDROID_HOME/platform-tools/adb devices | grep -q emulator && echo 'Emulator running' || echo 'No emulator'",
     "android:emu:start": "QT_QPA_PLATFORM=xcb $ANDROID_HOME/emulator/emulator -avd ${AVD:-Medium_Phone_API_35} -gpu swiftshader_indirect -no-snapshot-load &",
     "android:emu:start:host": "QT_QPA_PLATFORM=xcb $ANDROID_HOME/emulator/emulator -avd ${AVD:-Medium_Phone_API_35} -gpu host -no-snapshot-load &",
     "format": "prettier --write {src,test}/**/*.{js,vue,css,less}",
