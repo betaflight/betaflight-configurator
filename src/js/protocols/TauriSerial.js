@@ -90,38 +90,56 @@ class TauriSerial extends EventTarget {
         console.log(`${logHead} Device monitoring stopped`);
     }
 
+    /**
+     * Convert the raw portsMap from the plugin into our standardized port objects.
+     * @private
+     */
+    _convertPortsMapToArray(portsMap) {
+        return Object.entries(portsMap).map(([path, info]) => {
+            let vendorId = undefined;
+            let productId = undefined;
+
+            if (info.vid) {
+                vendorId = typeof info.vid === "number" ? info.vid : Number.parseInt(info.vid, 10);
+            }
+            if (info.pid) {
+                productId = typeof info.pid === "number" ? info.pid : Number.parseInt(info.pid, 10);
+            }
+
+            return {
+                path,
+                displayName: this.getDisplayName(path, vendorId, productId),
+                vendorId,
+                productId,
+                serialNumber: info.serial_number,
+            };
+        });
+    }
+
+    /**
+     * Filter ports to only include known Betaflight-compatible devices.
+     * @private
+     */
+    _filterToKnownDevices(ports) {
+        return ports.filter((port) => {
+            // Only include ports with known vendor IDs (Betaflight-compatible devices)
+            if (!port.vendorId || !port.productId) {
+                return false;
+            }
+            // Check if this device is in our known devices list
+            return serialDevices.some((d) => d.vendorId === port.vendorId && d.productId === port.productId);
+        });
+    }
+
     async checkDeviceChanges() {
         try {
             const portsMap = await invoke("plugin:serialplugin|available_ports");
 
             // Convert to our format
-            const allPorts = Object.entries(portsMap).map(([path, info]) => {
-                let vendorId = undefined;
-                let productId = undefined;
-
-                if (info.vid) {
-                    vendorId = typeof info.vid === "number" ? info.vid : Number.parseInt(info.vid, 10);
-                }
-                if (info.pid) {
-                    productId = typeof info.pid === "number" ? info.pid : Number.parseInt(info.pid, 10);
-                }
-
-                return {
-                    path,
-                    displayName: this.getDisplayName(path, vendorId, productId),
-                    vendorId,
-                    productId,
-                    serialNumber: info.serial_number,
-                };
-            });
+            const allPorts = this._convertPortsMapToArray(portsMap);
 
             // Filter to only known devices
-            const currentPorts = allPorts.filter((port) => {
-                if (!port.vendorId || !port.productId) {
-                    return false;
-                }
-                return serialDevices.some((d) => d.vendorId === port.vendorId && d.productId === port.productId);
-            });
+            const currentPorts = this._filterToKnownDevices(allPorts);
 
             // Check for removed devices
             const removedPorts = this.ports.filter(
@@ -157,36 +175,10 @@ class TauriSerial extends EventTarget {
             const portsMap = await invoke("plugin:serialplugin|available_ports");
 
             // Convert the object map to array
-            const allPorts = Object.entries(portsMap).map(([path, info]) => {
-                // The plugin returns vid/pid as decimal strings like "1155", "22336"
-                let vendorId = undefined;
-                let productId = undefined;
-
-                if (info.vid) {
-                    vendorId = typeof info.vid === "number" ? info.vid : Number.parseInt(info.vid, 10);
-                }
-                if (info.pid) {
-                    productId = typeof info.pid === "number" ? info.pid : Number.parseInt(info.pid, 10);
-                }
-
-                return {
-                    path,
-                    displayName: this.getDisplayName(path, vendorId, productId),
-                    vendorId,
-                    productId,
-                    serialNumber: info.serial_number,
-                };
-            });
+            const allPorts = this._convertPortsMapToArray(portsMap);
 
             // Filter to only known devices
-            this.ports = allPorts.filter((port) => {
-                // Only include ports with known vendor IDs (Betaflight-compatible devices)
-                if (!port.vendorId || !port.productId) {
-                    return false;
-                }
-                // Check if this device is in our known devices list
-                return serialDevices.some((d) => d.vendorId === port.vendorId && d.productId === port.productId);
-            });
+            this.ports = this._filterToKnownDevices(allPorts);
 
             console.log(`${logHead} Found ${this.ports.length} serial ports (filtered from ${allPorts.length})`);
             return this.ports;
