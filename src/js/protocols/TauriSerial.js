@@ -4,6 +4,14 @@ import { serialDevices, vendorIdNames } from "./devices";
 const logHead = "[TAURI SERIAL]";
 
 /**
+ * Detects Broken pipe/EPIPE errors across platforms.
+ */
+function isBrokenPipeError(error) {
+    const s = typeof error === "string" ? error : error?.message || (error?.toString ? error.toString() : "") || "";
+    return /broken pipe|EPIPE|os error 32|code:\s*32/i.test(s);
+}
+
+/**
  * Async generator that polls the serial port for incoming data
  * Similar to streamAsyncIterable in WebSerial but uses polling instead of streams
  */
@@ -25,10 +33,18 @@ async function* pollSerialData(path, keepReadingFlag) {
                 // Small delay between polls to avoid overwhelming the system
                 await new Promise((resolve) => setTimeout(resolve, 5));
             } catch (error) {
+                const msg = error?.message || (error?.toString ? error.toString() : "");
                 // Timeout is expected when no data available
-                if (!error.toString().includes("no data received")) {
-                    console.warn(`${logHead} Poll error:`, error);
+                if (msg && msg.toLowerCase().includes("no data received")) {
+                    // Continue polling
+                    await new Promise((resolve) => setTimeout(resolve, 5));
+                    continue;
                 }
+                if (isBrokenPipeError(msg)) {
+                    console.error(`${logHead} Fatal poll error (broken pipe) on ${path}:`, error);
+                    throw error;
+                }
+                console.warn(`${logHead} Poll error:`, error);
                 // Continue polling
                 await new Promise((resolve) => setTimeout(resolve, 5));
             }
@@ -68,7 +84,12 @@ class TauriSerial extends EventTarget {
         // Detect if running on macOS with AT32 (needs batch writes)
         this.isNeedBatchWrite = false;
 
+        // Device monitoring
+        this.monitoringDevices = false;
+        this.deviceMonitorInterval = null;
+
         this.loadDevices();
+        this.startDeviceMonitoring();
     }
 
     handleReceiveBytes(info) {
@@ -77,6 +98,99 @@ class TauriSerial extends EventTarget {
 
     getConnectedPort() {
         return this.connectionId;
+    }
+
+    handleFatalSerialError(error) {
+        // On fatal errors (broken pipe, etc.), just disconnect cleanly
+        // Device monitoring will automatically detect the removal and emit removedDevice
+        if (this.connected) {
+            this.disconnect();
+        }
+    }
+
+    startDeviceMonitoring() {
+        if (this.monitoringDevices) {
+            return;
+        }
+
+        this.monitoringDevices = true;
+        // Check for device changes every 1 second
+        this.deviceMonitorInterval = setInterval(async () => {
+            await this.checkDeviceChanges();
+        }, 1000);
+
+        console.log(`${logHead} Device monitoring started`);
+    }
+
+    stopDeviceMonitoring() {
+        if (this.deviceMonitorInterval) {
+            clearInterval(this.deviceMonitorInterval);
+            this.deviceMonitorInterval = null;
+        }
+        this.monitoringDevices = false;
+        console.log(`${logHead} Device monitoring stopped`);
+    }
+
+    async checkDeviceChanges() {
+        try {
+            const portsMap = await invoke("plugin:serialplugin|available_ports");
+
+            // Convert to our format
+            const allPorts = Object.entries(portsMap).map(([path, info]) => {
+                let vendorId = undefined;
+                let productId = undefined;
+
+                if (info.vid) {
+                    vendorId = typeof info.vid === "number" ? info.vid : parseInt(info.vid, 10);
+                }
+                if (info.pid) {
+                    productId = typeof info.pid === "number" ? info.pid : parseInt(info.pid, 10);
+                }
+
+                return {
+                    path,
+                    displayName: this.getDisplayName(path, vendorId, productId),
+                    vendorId,
+                    productId,
+                    serialNumber: info.serial_number,
+                };
+            });
+
+            // Filter to only known devices
+            const currentPorts = allPorts.filter((port) => {
+                if (!port.vendorId || !port.productId) {
+                    return false;
+                }
+                return serialDevices.some((d) => d.vendorId === port.vendorId && d.productId === port.productId);
+            });
+
+            // Check for removed devices
+            const removedPorts = this.ports.filter(
+                (oldPort) => !currentPorts.find((newPort) => newPort.path === oldPort.path),
+            );
+
+            // Check for added devices
+            const addedPorts = currentPorts.filter(
+                (newPort) => !this.ports.find((oldPort) => oldPort.path === newPort.path),
+            );
+
+            // Emit events for removed devices
+            for (const removed of removedPorts) {
+                this.dispatchEvent(new CustomEvent("removedDevice", { detail: removed }));
+                console.log(`${logHead} Device removed: ${removed.path}`);
+            }
+
+            // Emit events for added devices
+            for (const added of addedPorts) {
+                this.dispatchEvent(new CustomEvent("addedDevice", { detail: added }));
+                console.log(`${logHead} Device added: ${added.path}`);
+            }
+
+            // Update our ports list
+            this.ports = currentPorts;
+        } catch (error) {
+            console.warn(`${logHead} Error checking device changes:`, error);
+        }
     }
 
     async loadDevices() {
@@ -200,9 +314,7 @@ class TauriSerial extends EventTarget {
             }
         } catch (error) {
             console.error(`${logHead} Error in read loop:`, error);
-            if (this.connected) {
-                this.disconnect();
-            }
+            this.handleFatalSerialError(error);
         }
     }
 
@@ -259,6 +371,10 @@ class TauriSerial extends EventTarget {
         } catch (error) {
             console.error(`${logHead} Error sending data:`, error);
             this.transmitting = false;
+            if (isBrokenPipeError(error)) {
+                // Treat as device removal to trigger reconnect flow
+                this.handleFatalSerialError(error);
+            }
             const res = { bytesSent: 0 };
             callback?.(res);
             return res;
@@ -329,14 +445,10 @@ class TauriSerial extends EventTarget {
         }
     }
 
+    // Deprecated: addPort is no longer needed since monitoring handles this
     addPort(path) {
-        // Reload devices to get updated port info
-        this.loadDevices().then(() => {
-            const added = this.ports.find((p) => p.path === path);
-            if (added) {
-                this.dispatchEvent(new CustomEvent("addedDevice", { detail: added }));
-            }
-        });
+        // Device monitoring will automatically detect and emit addedDevice
+        console.log(`${logHead} addPort called for ${path}, monitoring will handle detection`);
     }
 }
 
