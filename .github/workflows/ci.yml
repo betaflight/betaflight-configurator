@@ -75,6 +75,9 @@ jobs:
             librsvg2-dev \
             patchelf
 
+      - name: Build web assets (Vite)
+        run: yarn build
+
       - name: Build Tauri (Linux)
         uses: tauri-apps/tauri-action@v0
         with:

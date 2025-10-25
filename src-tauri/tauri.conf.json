@@ -4,7 +4,9 @@
   "identifier": "com.betaflight.app",
   "build": {
     "beforeDevCommand": "yarn dev",
+    "beforeDevCommandCwd": "..",
     "beforeBuildCommand": "yarn build",
+    "beforeBuildCommandCwd": "..",
     "devUrl": "http://localhost:8000",
     "frontendDist": "../dist"
   },
