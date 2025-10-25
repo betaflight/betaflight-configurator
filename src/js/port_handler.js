@@ -63,16 +63,16 @@ PortHandler.initialize = function () {
     // Use serial for all protocol events
     serial.addEventListener("addedDevice", (event) => {
         const detail = event.detail;
-        const proto = (detail?.protocolType || "").toLowerCase();
+        const protocol = (detail?.protocolType || "").toLowerCase();
 
-        if (detail?.path?.startsWith("bluetooth") || proto === "webbluetooth") {
+        if (detail?.path?.startsWith("bluetooth") || protocol === "webbluetooth") {
             this.handleDeviceAdded(detail, "webbluetooth");
-        } else if (proto === "tauriserial") {
+        } else if (protocol === "tauriserial") {
             this.handleDeviceAdded(detail, "tauriserial");
         } else {
             this.handleDeviceAdded(detail, "webserial");
         }
-        console.log(`${this.logHead} #### Device addition event received:`, event.detail, proto);
+        console.log(`${this.logHead} #### Device addition event received:`, event.detail, protocol);
     });
 
     serial.addEventListener("removedDevice", (event) => {
@@ -117,7 +117,7 @@ PortHandler.removedSerialDevice = function (device) {
 
     // Get device path safely
     const devicePath = device?.path || (typeof device === "string" ? device : null);
-    const proto = (device?.protocolType || "").toLowerCase();
+    const protocol = (device?.protocolType || "").toLowerCase();
 
     if (!devicePath) {
         console.warn(`${this.logHead} Device removal event missing path information`, device);
@@ -131,7 +131,7 @@ PortHandler.removedSerialDevice = function (device) {
     // Update the appropriate ports list based on the device type
     const updatePromise = devicePath.startsWith("bluetooth")
         ? this.updateDeviceList("webbluetooth")
-        : this.updateDeviceList(proto === "tauriserial" ? "tauriserial" : "webserial");
+        : this.updateDeviceList(protocol === "tauriserial" ? "tauriserial" : "webserial");
 
     const wasSelectedPort = this.portPicker.selectedPort === devicePath;
 

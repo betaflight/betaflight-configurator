@@ -11,48 +11,7 @@ function isBrokenPipeError(error) {
     return /broken pipe|EPIPE|os error 32|code:\s*32/i.test(s);
 }
 
-/**
- * Async generator that polls the serial port for incoming data
- * Similar to streamAsyncIterable in WebSerial but uses polling instead of streams
- */
-async function* pollSerialData(path, keepReadingFlag) {
-    try {
-        while (keepReadingFlag()) {
-            try {
-                // Non-blocking read with short timeout
-                const result = await invoke("plugin:serialplugin|read_binary", {
-                    path,
-                    size: 256,
-                    timeout: 10,
-                });
-
-                if (result && result.length > 0) {
-                    yield new Uint8Array(result);
-                }
-
-                // Small delay between polls to avoid overwhelming the system
-                await new Promise((resolve) => setTimeout(resolve, 5));
-            } catch (error) {
-                const msg = error?.message || (error?.toString ? error.toString() : "");
-                // Timeout is expected when no data available
-                if (msg && msg.toLowerCase().includes("no data received")) {
-                    // Continue polling
-                    await new Promise((resolve) => setTimeout(resolve, 5));
-                    continue;
-                }
-                if (isBrokenPipeError(msg)) {
-                    console.error(`${logHead} Fatal poll error (broken pipe) on ${path}:`, error);
-                    throw error;
-                }
-                console.warn(`${logHead} Poll error:`, error);
-                // Continue polling
-                await new Promise((resolve) => setTimeout(resolve, 5));
-            }
-        }
-    } finally {
-        console.log(`${logHead} Polling stopped for ${path}`);
-    }
-}
+// Note: We avoid async generator + for-await-of to improve compatibility in some runtimes.
 
 /**
  * TauriSerial protocol implementation using tauri-plugin-serialplugin
@@ -141,10 +100,10 @@ class TauriSerial extends EventTarget {
                 let productId = undefined;
 
                 if (info.vid) {
-                    vendorId = typeof info.vid === "number" ? info.vid : parseInt(info.vid, 10);
+                    vendorId = typeof info.vid === "number" ? info.vid : Number.parseInt(info.vid, 10);
                 }
                 if (info.pid) {
-                    productId = typeof info.pid === "number" ? info.pid : parseInt(info.pid, 10);
+                    productId = typeof info.pid === "number" ? info.pid : Number.parseInt(info.pid, 10);
                 }
 
                 return {
@@ -204,10 +163,10 @@ class TauriSerial extends EventTarget {
                 let productId = undefined;
 
                 if (info.vid) {
-                    vendorId = typeof info.vid === "number" ? info.vid : parseInt(info.vid, 10);
+                    vendorId = typeof info.vid === "number" ? info.vid : Number.parseInt(info.vid, 10);
                 }
                 if (info.pid) {
-                    productId = typeof info.pid === "number" ? info.pid : parseInt(info.pid, 10);
+                    productId = typeof info.pid === "number" ? info.pid : Number.parseInt(info.pid, 10);
                 }
 
                 return {
@@ -309,12 +268,41 @@ class TauriSerial extends EventTarget {
 
     async readLoop() {
         try {
-            for await (let value of pollSerialData(this.connectionId, () => this.reading)) {
-                this.dispatchEvent(new CustomEvent("receive", { detail: value }));
+            while (this.reading) {
+                try {
+                    // Non-blocking read with short timeout
+                    const result = await invoke("plugin:serialplugin|read_binary", {
+                        path: this.connectionId,
+                        size: 256,
+                        timeout: 10,
+                    });
+
+                    if (result && result.length > 0) {
+                        this.dispatchEvent(new CustomEvent("receive", { detail: new Uint8Array(result) }));
+                    }
+
+                    // Small delay between polls to avoid overwhelming the system
+                    await new Promise((resolve) => setTimeout(resolve, 5));
+                } catch (error) {
+                    const msg = error?.message || (error?.toString ? error.toString() : "");
+                    // Timeout is expected when no data available
+                    if (msg && msg.toLowerCase().includes("no data received")) {
+                        await new Promise((resolve) => setTimeout(resolve, 5));
+                        continue;
+                    }
+                    if (isBrokenPipeError(msg)) {
+                        console.error(`${logHead} Fatal poll error (broken pipe) on ${this.connectionId}:`, error);
+                        throw error;
+                    }
+                    console.warn(`${logHead} Poll error:`, error);
+                    await new Promise((resolve) => setTimeout(resolve, 5));
+                }
             }
         } catch (error) {
             console.error(`${logHead} Error in read loop:`, error);
             this.handleFatalSerialError(error);
+        } finally {
+            console.log(`${logHead} Polling stopped for ${this.connectionId || "<no-port>"}`);
         }
     }
 
