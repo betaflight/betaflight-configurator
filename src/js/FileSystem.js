@@ -98,12 +98,12 @@ class FileSystem {
         return await fileHandle.createWritable(options);
     }
 
-    async writeChunck(writable, chunk) {
-        await writable.write(chunk);
+    async writeChunk(writable, chunk) {
+        writable.write(chunk);
     }
 
     async closeFile(writable) {
-        await writable.close();
+        writable.close();
     }
 }
 

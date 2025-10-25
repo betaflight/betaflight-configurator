@@ -447,14 +447,16 @@ onboard_logging.initialize = function (callback) {
         console.log(
             `Received ${totalBytes} bytes in ${totalTime.toFixed(2)}s (${(totalBytes / totalTime / 1024).toFixed(
                 2,
-            )}kB / s) with block size ${self.blockSize}.`,
+            )} kB / s) with block size ${self.blockSize}.`,
         );
-        if (!isNaN(totalBytesCompressed)) {
+
+        if (typeof totalBytesCompressed === "number" && totalBytesCompressed > 0) {
+            const meanCompressionFactor = totalBytes / totalBytesCompressed;
             console.log(
                 "Compressed into",
                 totalBytesCompressed,
                 "bytes with mean compression factor of",
-                totalBytes / totalBytesCompressed,
+                meanCompressionFactor.toFixed(2),
             );
         }
 
@@ -479,72 +481,91 @@ onboard_logging.initialize = function (callback) {
     }
 
     function flash_save_begin() {
-        if (GUI.connected_to) {
-            self.blockSize = self.BLOCK_SIZE;
+        if (!GUI.connected_to) return;
 
-            // Begin by refreshing the occupied size in case it changed while the tab was open
-            flash_update_summary(function () {
-                const maxBytes = FC.DATAFLASH.usedSize;
+        self.blockSize = self.BLOCK_SIZE;
 
-                let openedFile;
-                prepare_file(function (fileWriter) {
-                    let nextAddress = 0;
-                    let totalBytesCompressed = 0;
+        flash_update_summary(async () => {
+            const maxBytes = FC.DATAFLASH.usedSize;
+            let openedFile;
+            let totalBytesCompressed = 0;
+            show_saving_dialog();
 
-                    show_saving_dialog();
+            const MAX_SIMPLE_RETRIES = 5;
+            const BASE_RETRY_BACKOFF_MS = 50; // starting backoff
+            const INTER_BLOCK_DELAY_MS = 10; // small delay between successful blocks
+            const startTime = new Date().getTime();
 
-                    function onChunkRead(chunkAddress, chunkDataView, bytesCompressed) {
-                        if (chunkDataView !== null) {
-                            // Did we receive any data?
-                            if (chunkDataView.byteLength > 0) {
-                                nextAddress += chunkDataView.byteLength;
-                                if (isNaN(bytesCompressed) || isNaN(totalBytesCompressed)) {
-                                    totalBytesCompressed = null;
-                                } else {
-                                    totalBytesCompressed += bytesCompressed;
-                                }
+            prepare_file(async (fileWriter) => {
+                openedFile = await FileSystem.openFile(fileWriter);
+                let nextAddress = 0;
 
-                                $(".dataflash-saving progress").attr("value", (nextAddress / maxBytes) * 100);
-
-                                const blob = new Blob([chunkDataView]);
-                                FileSystem.writeChunck(openedFile, blob).then(() => {
-                                    if (saveCancelled || nextAddress >= maxBytes) {
-                                        if (saveCancelled) {
-                                            dismiss_saving_dialog();
-                                        } else {
-                                            mark_saving_dialog_done(startTime, nextAddress, totalBytesCompressed);
-                                        }
-                                        FileSystem.closeFile(openedFile);
-                                    } else {
-                                        if (!self.writeError) {
-                                            mspHelper.dataflashRead(nextAddress, self.blockSize, onChunkRead);
-                                        } else {
-                                            dismiss_saving_dialog();
-                                            FileSystem.closeFile(openedFile);
-                                        }
-                                    }
-                                });
-                            } else {
-                                // A zero-byte block indicates end-of-file, so we're done
-                                mark_saving_dialog_done(startTime, nextAddress, totalBytesCompressed);
-                                FileSystem.closeFile(openedFile);
-                            }
-                        } else {
-                            // There was an error with the received block (address didn't match the one we asked for), retry
-                            mspHelper.dataflashRead(nextAddress, self.blockSize, onChunkRead);
-                        }
+                async function readNextBlock() {
+                    if (saveCancelled || nextAddress >= maxBytes) {
+                        mark_saving_dialog_done(startTime, nextAddress, totalBytesCompressed);
+                        await FileSystem.closeFile(openedFile);
+                        return;
                     }
 
-                    const startTime = new Date().getTime();
-                    // Fetch the initial block
-                    FileSystem.openFile(fileWriter).then((file) => {
-                        openedFile = file;
-                        mspHelper.dataflashRead(nextAddress, self.blockSize, onChunkRead);
-                    });
-                });
+                    let simpleRetryCount = 0;
+
+                    async function attemptRead() {
+                        mspHelper.dataflashRead(
+                            nextAddress,
+                            self.blockSize,
+                            async (chunkAddress, chunkDataView, bytesCompressed) => {
+                                if (chunkDataView && chunkDataView.byteLength > 0) {
+                                    // Reset retry counter
+                                    simpleRetryCount = 0;
+
+                                    // Write and await completion to prevent Mac buffer stalls
+                                    const blob = new Blob([chunkDataView]);
+                                    await FileSystem.writeChunk(openedFile, blob);
+
+                                    nextAddress += chunkDataView.byteLength;
+                                    if (typeof bytesCompressed === "number") {
+                                        totalBytesCompressed = (totalBytesCompressed || 0) + bytesCompressed;
+                                    }
+
+                                    $(".dataflash-saving progress").attr("value", (nextAddress / maxBytes) * 100);
+
+                                    // Small delay between blocks to reduce Mac Chrome hangs
+                                    setTimeout(readNextBlock, INTER_BLOCK_DELAY_MS);
+                                } else if (chunkDataView && chunkDataView.byteLength === 0) {
+                                    // EOF
+                                    mark_saving_dialog_done(startTime, nextAddress, totalBytesCompressed);
+                                    await FileSystem.closeFile(openedFile);
+                                } else {
+                                    // Null/missing block
+                                    if (simpleRetryCount < MAX_SIMPLE_RETRIES) {
+                                        simpleRetryCount++;
+                                        const backoff = BASE_RETRY_BACKOFF_MS * simpleRetryCount;
+                                        if (simpleRetryCount % 2 === 1) {
+                                            console.warn(
+                                                `Null/missing block at ${nextAddress}, retry ${simpleRetryCount}, backoff ${backoff}ms`,
+                                            );
+                                        }
+                                        setTimeout(attemptRead, backoff);
+                                    } else {
+                                        console.error(
+                                            `Skipping null block at ${nextAddress} after ${MAX_SIMPLE_RETRIES} retries`,
+                                        );
+                                        nextAddress += self.blockSize;
+                                        readNextBlock();
+                                    }
+                                }
+                            },
+                        );
+                    }
+
+                    attemptRead();
+                }
+
+                // Start reading the first block
+                readNextBlock();
             });
-        }
-    }
+        });
+    } // end of flash_save_begin
 
     function prepare_file(onComplete) {
         const prefix = "BLACKBOX_LOG";
