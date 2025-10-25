@@ -102,7 +102,16 @@ onboard_logging.initialize = function (callback) {
                 $(".tab-onboard_logging a.erase-flash-confirm").click(flash_erase);
                 $(".tab-onboard_logging a.erase-flash-cancel").click(flash_erase_cancel);
 
-                $(".tab-onboard_logging a.save-flash").click(flash_save_begin);
+                $(".tab-onboard_logging a.save-flash").on("click", (e) => {
+                    e.preventDefault();
+                    flash_save_begin(false);
+                });
+
+                $(".tab-onboard_logging a.save-flash-erase").on("click", (e) => {
+                    e.preventDefault();
+                    flash_save_begin(true);
+                });
+
                 $(".tab-onboard_logging a.save-flash-cancel").click(flash_save_cancel);
                 $(".tab-onboard_logging a.save-flash-dismiss").click(dismiss_saving_dialog);
             }
@@ -355,10 +364,9 @@ onboard_logging.initialize = function (callback) {
             true,
         );
 
-        $("a.regular-button erase-flash, a.regular-button.require-msc-supported.save-flash").toggleClass(
-            "disabled",
-            FC.DATAFLASH.usedSize === 0,
-        );
+        $(
+            "a.regular-button.erase-flash, a.regular-button.save-flash-erase, a.regular-button.require-msc-supported.save-flash",
+        ).toggleClass("disabled", FC.DATAFLASH.usedSize === 0);
 
         $(".tab-onboard_logging")
             .toggleClass("sdcard-error", FC.SDCARD.state === MSP.SDCARD_STATE_FATAL)
@@ -478,7 +486,20 @@ onboard_logging.initialize = function (callback) {
         });
     }
 
-    function flash_save_begin() {
+    function conditionallyEraseFlash(maxBytes, nextAddress) {
+        if (Number.isFinite(maxBytes) && nextAddress >= maxBytes) {
+            eraseCancelled = false;
+            $(".dataflash-confirm-erase").addClass("erasing");
+            MSP.send_message(MSPCodes.MSP_DATAFLASH_ERASE, false, false, poll_for_erase_completion);
+        } else {
+            gui_log(
+                i18n.getMessage("dataflashSaveIncompleteWarning") ||
+                    "Downloaded size did not match expected size - not erasing flash.",
+            );
+        }
+    }
+
+    function flash_save_begin(alsoErase = false) {
         if (GUI.connected_to) {
             self.blockSize = self.BLOCK_SIZE;
 
@@ -498,7 +519,7 @@ onboard_logging.initialize = function (callback) {
                             // Did we receive any data?
                             if (chunkDataView.byteLength > 0) {
                                 nextAddress += chunkDataView.byteLength;
-                                if (isNaN(bytesCompressed) || isNaN(totalBytesCompressed)) {
+                                if (Number.isNaN(bytesCompressed) || Number.isNaN(totalBytesCompressed)) {
                                     totalBytesCompressed = null;
                                 } else {
                                     totalBytesCompressed += bytesCompressed;
@@ -515,6 +536,10 @@ onboard_logging.initialize = function (callback) {
                                             mark_saving_dialog_done(startTime, nextAddress, totalBytesCompressed);
                                         }
                                         FileSystem.closeFile(openedFile);
+                                        // Optionally erase after successful full download
+                                        if (!saveCancelled && alsoErase) {
+                                            conditionallyEraseFlash(maxBytes, nextAddress);
+                                        }
                                     } else {
                                         if (!self.writeError) {
                                             mspHelper.dataflashRead(nextAddress, self.blockSize, onChunkRead);
@@ -528,6 +553,9 @@ onboard_logging.initialize = function (callback) {
                                 // A zero-byte block indicates end-of-file, so we're done
                                 mark_saving_dialog_done(startTime, nextAddress, totalBytesCompressed);
                                 FileSystem.closeFile(openedFile);
+                                if (!saveCancelled && alsoErase) {
+                                    conditionallyEraseFlash(maxBytes, nextAddress);
+                                }
                             }
                         } else {
                             // There was an error with the received block (address didn't match the one we asked for), retry
@@ -582,7 +610,10 @@ onboard_logging.initialize = function (callback) {
         flash_update_summary(function () {
             if (CONFIGURATOR.connectionValid && !eraseCancelled) {
                 if (FC.DATAFLASH.ready) {
-                    $(".dataflash-confirm-erase")[0].close();
+                    const dialog = $(".dataflash-confirm-erase")[0];
+                    if (dialog?.open) {
+                        dialog.close();
+                    }
                     if (getConfig("showNotifications").showNotifications) {
                         NotificationManager.showNotification("Betaflight Configurator", {
                             body: i18n.getMessage("flashEraseDoneNotification"),
