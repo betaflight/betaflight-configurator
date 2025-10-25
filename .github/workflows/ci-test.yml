@@ -1,0 +1,17 @@
+name: CI Test
+
+on:
+  workflow_dispatch:
+    inputs:
+      run_docker_build:
+        description: "Also try a Docker build if a Dockerfile exists"
+        required: false
+        default: "false"
+        type: choice
+        options: ["false", "true"]
+
+jobs:
+  call-ci:
+    uses: ./.github/workflows/ci.yml
+    with:
+      run_docker_build: ${{ github.event.inputs.run_docker_build == 'true' }}
