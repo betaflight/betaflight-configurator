@@ -26,19 +26,24 @@ class Serial extends EventTarget {
 
         // Forward events from current protocols
         this._setupEventForwarding();
+    }
 
+    /**
+     * Perform any asynchronous initialization required by the Serial facade.
+     * This keeps constructors synchronous and predictable.
+     */
+    async init() {
         // Dynamically include the native Tauri serial adapter so web builds don't try to resolve it.
         if (isTauri) {
-            import("./protocols/TauriSerial.js")
-                .then(({ default: TauriSerial }) => {
-                    const inst = new TauriSerial();
-                    this._protocols.unshift({ name: "tauriserial", instance: inst });
-                    // Wire event forwarding for this late-added protocol
-                    this._setupEventForwardingFor("tauriserial", inst);
-                })
-                .catch((err) => {
-                    console.warn(`${this.logHead} Failed to load TauriSerial adapter:`, err);
-                });
+            try {
+                const { default: TauriSerial } = await import("./protocols/TauriSerial.js");
+                const inst = new TauriSerial();
+                this._protocols.unshift({ name: "tauriserial", instance: inst });
+                // Wire event forwarding for this late-added protocol
+                this._setupEventForwardingFor("tauriserial", inst);
+            } catch (err) {
+                console.warn(`${this.logHead} Failed to load TauriSerial adapter:`, err);
+            }
         }
     }
 
@@ -58,7 +63,9 @@ class Serial extends EventTarget {
         instance,
         events = ["addedDevice", "removedDevice", "connect", "disconnect", "receive"],
     ) {
-        if (typeof instance?.addEventListener !== "function") return;
+        if (typeof instance?.addEventListener !== "function") {
+            return;
+        }
         for (const eventType of events) {
             instance.addEventListener(eventType, (event) => {
                 let newDetail;
@@ -105,7 +112,9 @@ class Serial extends EventTarget {
         }
         // Prefer Tauri plugin if present
         const tauriInst = this._protocols.find((p) => p.name === "tauriserial")?.instance;
-        if (tauriInst) return tauriInst;
+        if (tauriInst) {
+            return tauriInst;
+        }
         return this._protocols.find((p) => p.name === "webserial")?.instance;
     }
 
@@ -236,3 +245,6 @@ class Serial extends EventTarget {
 
 // Export a singleton instance
 export const serial = new Serial();
+// Kick off async initialization outside of the constructor.
+// Intentionally not awaited to avoid blocking module load.
+void serial.init();
