@@ -47,6 +47,39 @@ jobs:
           if-no-files-found: warn
           retention-days: 14
 
+  tauri-linux-preview:
+    name: Tauri Linux preview (deb/appimage)
+    runs-on: ubuntu-latest
+    needs: node-ci
+    if: ${{ github.event_name == 'pull_request' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Node
+        uses: actions/setup-node@v5
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build Tauri (Linux)
+        uses: tauri-apps/tauri-action@v0
+        with:
+          tauriScript: yarn tauri:build
+
+      - name: Upload Linux installers
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-installers
+          path: |
+            src-tauri/target/release/bundle/**/*.deb
+            src-tauri/target/release/bundle/**/*.AppImage
+          if-no-files-found: warn
+          retention-days: 14
+
   docker-build:
     name: Docker build (optional)
     runs-on: ubuntu-latest
