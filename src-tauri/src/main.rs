@@ -4,9 +4,15 @@
 )]
 
 fn main() {
-    tauri::Builder::default()
-        .plugin(tauri_plugin_shell::init())
-    .plugin(tauri_plugin_serialplugin::init())
+    let mut builder = tauri::Builder::default()
+        .plugin(tauri_plugin_shell::init());
+
+    #[cfg(not(any(target_os = "android", target_os = "ios")))]
+    {
+        builder = builder.plugin(tauri_plugin_serialplugin::init());
+    }
+
+    builder
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
