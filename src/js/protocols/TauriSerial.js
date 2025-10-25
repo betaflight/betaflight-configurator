@@ -47,8 +47,7 @@ class TauriSerial extends EventTarget {
         this.monitoringDevices = false;
         this.deviceMonitorInterval = null;
 
-        this.loadDevices();
-        this.startDeviceMonitoring();
+        this.loadDevices().then(() => this.startDeviceMonitoring());
     }
 
     handleReceiveBytes(info) {
