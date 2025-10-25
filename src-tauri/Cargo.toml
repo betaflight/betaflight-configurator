@@ -18,6 +18,7 @@ tauri-build = { version = "2.5", features = [] }
 [dependencies]
 tauri = { version = "2.5", features = [] }
 tauri-plugin-shell = "2.3"
+tauri-plugin-serialplugin = "2.11"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 
