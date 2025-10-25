@@ -34,7 +34,7 @@ class Serial extends EventTarget {
      */
     async init() {
         // Dynamically include the native Tauri serial adapter so web builds don't try to resolve it.
-        if (isTauri) {
+        if (isTauri()) {
             try {
                 const { default: TauriSerial } = await import("./protocols/TauriSerial.js");
                 const inst = new TauriSerial();
