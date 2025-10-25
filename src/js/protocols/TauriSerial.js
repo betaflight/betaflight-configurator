@@ -95,15 +95,16 @@ class TauriSerial extends EventTarget {
      */
     _convertPortsMapToArray(portsMap) {
         return Object.entries(portsMap).map(([path, info]) => {
-            let vendorId = undefined;
-            let productId = undefined;
-
-            if (info.vid) {
-                vendorId = typeof info.vid === "number" ? info.vid : Number.parseInt(info.vid, 10);
-            }
-            if (info.pid) {
-                productId = typeof info.pid === "number" ? info.pid : Number.parseInt(info.pid, 10);
-            }
+            const vendorId = info.vid
+                ? typeof info.vid === "number"
+                    ? info.vid
+                    : Number.parseInt(info.vid, 10)
+                : undefined;
+            const productId = info.pid
+                ? typeof info.pid === "number"
+                    ? info.pid
+                    : Number.parseInt(info.pid, 10)
+                : undefined;
 
             return {
                 path,
@@ -142,12 +143,12 @@ class TauriSerial extends EventTarget {
 
             // Check for removed devices
             const removedPorts = this.ports.filter(
-                (oldPort) => !currentPorts.find((newPort) => newPort.path === oldPort.path),
+                (oldPort) => !currentPorts.some((newPort) => newPort.path === oldPort.path),
             );
 
             // Check for added devices
             const addedPorts = currentPorts.filter(
-                (newPort) => !this.ports.find((oldPort) => oldPort.path === newPort.path),
+                (newPort) => !this.ports.some((oldPort) => oldPort.path === newPort.path),
             );
 
             // Emit events for removed devices
@@ -277,7 +278,7 @@ class TauriSerial extends EventTarget {
                 } catch (error) {
                     const msg = error?.message || (error?.toString ? error.toString() : "");
                     // Timeout is expected when no data available
-                    if (msg && msg.toLowerCase().includes("no data received")) {
+                    if (msg?.toLowerCase().includes("no data received")) {
                         await new Promise((resolve) => setTimeout(resolve, 5));
                         continue;
                     }
