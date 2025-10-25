@@ -3,6 +3,7 @@ import { EventBus } from "../components/eventBus";
 import { serial } from "./serial.js";
 import WEBUSBDFU from "./protocols/webusbdfu";
 import { reactive } from "vue";
+import { isTauri } from "@tauri-apps/api/core";
 import {
     checkBrowserCompatibility,
     checkWebBluetoothSupport,
@@ -37,7 +38,8 @@ const PortHandler = new (function () {
     checkBrowserCompatibility();
 
     this.showBluetoothOption = checkWebBluetoothSupport();
-    this.showSerialOption = checkWebSerialSupport();
+    // In Tauri, native serial is available via plugin even if Web Serial API isn't.
+    this.showSerialOption = checkWebSerialSupport() || isTauri();
     this.showUsbOption = checkWebUSBSupport();
 
     console.log(`${this.logHead} Bluetooth available: ${this.showBluetoothOption}`);
@@ -47,23 +49,30 @@ const PortHandler = new (function () {
     this.showVirtualMode = getConfig("showVirtualMode", false).showVirtualMode;
     this.showManualMode = getConfig("showManualMode", false).showManualMode;
     this.showAllSerialDevices = getConfig("showAllSerialDevices", false).showAllSerialDevices;
+    // Decide which serial protocol to prefer at runtime
+    this.serialProtocol = isTauri() ? "tauriserial" : "webserial";
+    console.log(`${this.logHead} ### Using serial protocol: ${this.serialProtocol}`);
 })();
 
 PortHandler.initialize = function () {
     EventBus.$on("ports-input:request-permission-bluetooth", () => this.requestDevicePermission("webbluetooth"));
-    EventBus.$on("ports-input:request-permission-serial", () => this.requestDevicePermission("webserial"));
+    EventBus.$on("ports-input:request-permission-serial", () => this.requestDevicePermission(this.serialProtocol));
     EventBus.$on("ports-input:request-permission-usb", () => this.requestDevicePermission("usb"));
     EventBus.$on("ports-input:change", this.onChangeSelectedPort.bind(this));
 
     // Use serial for all protocol events
     serial.addEventListener("addedDevice", (event) => {
         const detail = event.detail;
+        const proto = (detail?.protocolType || "").toLowerCase();
 
-        if (detail?.path?.startsWith("bluetooth")) {
+        if (detail?.path?.startsWith("bluetooth") || proto === "webbluetooth") {
             this.handleDeviceAdded(detail, "webbluetooth");
+        } else if (proto === "tauriserial") {
+            this.handleDeviceAdded(detail, "tauriserial");
         } else {
             this.handleDeviceAdded(detail, "webserial");
         }
+        console.log(`${this.logHead} #### Device addition event received:`, event.detail, proto);
     });
 
     serial.addEventListener("removedDevice", (event) => {
@@ -81,7 +90,7 @@ PortHandler.initialize = function () {
 PortHandler.refreshAllDeviceLists = async function () {
     // Update all device lists in parallel
     return Promise.all([
-        this.updateDeviceList("webserial"),
+        this.updateDeviceList(this.serialProtocol),
         this.updateDeviceList("webbluetooth"),
         this.updateDeviceList("usb"),
     ]).then(() => {
@@ -108,11 +117,12 @@ PortHandler.removedSerialDevice = function (device) {
 
     // Get device path safely
     const devicePath = device?.path || (typeof device === "string" ? device : null);
+    const proto = (device?.protocolType || "").toLowerCase();
 
     if (!devicePath) {
         console.warn(`${this.logHead} Device removal event missing path information`, device);
         // Still update ports, but don't try to use the undefined path
-        this.updateDeviceList("webserial").then(() => {
+        this.updateDeviceList(this.serialProtocol).then(() => {
             this.selectActivePort();
         });
         return;
@@ -121,7 +131,7 @@ PortHandler.removedSerialDevice = function (device) {
     // Update the appropriate ports list based on the device type
     const updatePromise = devicePath.startsWith("bluetooth")
         ? this.updateDeviceList("webbluetooth")
-        : this.updateDeviceList("webserial");
+        : this.updateDeviceList(proto === "tauriserial" ? "tauriserial" : "webserial");
 
     const wasSelectedPort = this.portPicker.selectedPort === devicePath;
 
@@ -274,7 +284,9 @@ PortHandler.handleDeviceAdded = function (device, deviceType) {
 
     // Update the appropriate device list
     const updatePromise =
-        deviceType === "webbluetooth" ? this.updateDeviceList("webbluetooth") : this.updateDeviceList("webserial");
+        deviceType === "webbluetooth"
+            ? this.updateDeviceList("webbluetooth")
+            : this.updateDeviceList(deviceType === "tauriserial" ? "tauriserial" : "webserial");
 
     updatePromise.then(() => {
         const selectedPort = this.selectActivePort(device);
@@ -310,6 +322,11 @@ PortHandler.updateDeviceList = async function (deviceType) {
                     ports = await serial.getDevices("webserial");
                 }
                 break;
+            case "tauriserial":
+                if (this.showSerialOption) {
+                    ports = await serial.getDevices("tauriserial");
+                }
+                break;
             default:
                 console.warn(`${this.logHead} Unknown device type: ${deviceType}`);
                 return [];
@@ -331,6 +348,7 @@ PortHandler.updateDeviceList = async function (deviceType) {
                 console.log(`${this.logHead} Found DFU port(s)`, orderedPorts);
                 break;
             case "webserial":
+            case "tauriserial":
                 this.portAvailable = orderedPorts.length > 0;
                 this.currentSerialPorts = [...orderedPorts];
                 console.log(`${this.logHead} Found serial port(s)`, orderedPorts);

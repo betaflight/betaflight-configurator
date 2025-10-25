@@ -47,12 +47,25 @@ export default defineConfig([
                 },
             ],
         },
-        ignores: ["dist/", "*.json", "*.html", "*.less", "*.css", "package.json"],
+        ignores: [
+            "dist/",
+            "src/dist/",
+            "**/dist/**",
+            "**/src/dist/**",
+            "*.json",
+            "*.html",
+            "*.less",
+            "*.css",
+            "package.json",
+        ],
     },
     {
         files: ["**/*.vue"],
         languageOptions: {
             parser: vueParser,
+        },
+        plugins: {
+            vue: vuePlugin,
         },
         processor: "vue/vue",
     },
