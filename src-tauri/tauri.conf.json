@@ -27,7 +27,7 @@
   },
   "bundle": {
     "active": true,
-    "targets": ["deb", "appimage"],
+    "targets": ["deb", "appimage", "dmg", "nsis"],
     "icon": ["icons/bf_icon_128.png"]
   },
   "plugins": {
