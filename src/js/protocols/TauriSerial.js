@@ -415,20 +415,6 @@ class TauriSerial extends EventTarget {
         await this.loadDevices();
         return this.ports;
     }
-
-    removePort(path) {
-        const removed = this.ports.find((p) => p.path === path);
-        this.ports = this.ports.filter((p) => p.path !== path);
-        if (removed) {
-            this.dispatchEvent(new CustomEvent("removedDevice", { detail: removed }));
-        }
-    }
-
-    // Deprecated: addPort is no longer needed since monitoring handles this
-    addPort(path) {
-        // Device monitoring will automatically detect and emit addedDevice
-        console.log(`${logHead} addPort called for ${path}, monitoring will handle detection`);
-    }
 }
 
 export default TauriSerial;
