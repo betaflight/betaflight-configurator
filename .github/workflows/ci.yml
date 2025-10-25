@@ -84,7 +84,8 @@ jobs:
       - name: Build Tauri (Linux)
         uses: tauri-apps/tauri-action@v0
         with:
-          tauriScript: yarn tauri:build
+          # Use the Tauri CLI directly; the action appends 'build' automatically.
+          tauriScript: yarn tauri
 
       - name: Upload Linux installers
         uses: actions/upload-artifact@v4
