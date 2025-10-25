@@ -1,7 +1,10 @@
 name: CI
 
-# Keep this as a callable workflow to minimize disruption; callers can trigger it.
+# Run on PRs to show artifacts, and keep callable for reuse.
 on:
+  pull_request:
+  push:
+    branches: [ tauri ]
   workflow_call:
     inputs:
       run_docker_build:
@@ -48,7 +51,8 @@ jobs:
     name: Docker build (optional)
     runs-on: ubuntu-latest
     needs: node-ci
-    if: ${{ inputs.run_docker_build == true }}
+    # Only run when called as a reusable workflow AND the caller enabled it
+    if: ${{ github.event_name == 'workflow_call' && inputs.run_docker_build == true }}
     steps:
       - name: Checkout
         uses: actions/checkout@v5
