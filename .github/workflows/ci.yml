@@ -75,6 +75,9 @@ jobs:
             librsvg2-dev \
             patchelf
 
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
       - name: Build web assets (Vite)
         run: yarn build
 
