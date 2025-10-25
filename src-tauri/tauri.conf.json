@@ -3,8 +3,8 @@
   "version": "2025.12.0",
   "identifier": "com.betaflight.app",
   "build": {
-    "beforeDevCommand": "cd .. && yarn dev",
-    "beforeBuildCommand": "cd .. && yarn build",
+    "beforeDevCommand": "yarn dev",
+    "beforeBuildCommand": "yarn build",
     "devUrl": "http://localhost:8000",
     "frontendDist": "../dist"
   },
