@@ -6,7 +6,7 @@
     "beforeDevCommand": "yarn dev",
     "beforeBuildCommand": "yarn build",
     "devUrl": "http://localhost:8000",
-    "frontendDist": "../dist"
+    "frontendDist": "../src/dist"
   },
   "app": {
     "security": {
