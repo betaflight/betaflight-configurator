@@ -89,6 +89,16 @@ jobs:
         with:
           # Use the Tauri CLI directly; the action appends 'build' automatically.
           tauriScript: yarn tauri
+          # Disable updater.json handling and any release uploads for PR previews.
+          includeUpdaterJson: false
+
+      - name: Inspect Tauri bundle output
+        if: always()
+        run: |
+          echo "Listing bundle directory (if present):"
+          ls -la src-tauri/target/release || true
+          ls -la src-tauri/target/release/bundle || true
+          find src-tauri/target/release/bundle -maxdepth 3 -type f -print || true
 
       - name: Upload Linux installers
         uses: actions/upload-artifact@v4
@@ -99,6 +109,15 @@ jobs:
             src-tauri/target/release/bundle/**/*.AppImage
           if-no-files-found: warn
           retention-days: 14
+
+      - name: Upload bundle folder (fallback)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-bundle-raw
+          path: src-tauri/target/release/bundle
+          if-no-files-found: warn
+          retention-days: 7
 
   docker-build:
     name: Docker build (optional)
