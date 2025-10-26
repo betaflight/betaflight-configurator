@@ -1,7 +1,7 @@
 name: Artifact links comments creator
 on:
   workflow_run:
-    workflows: ["PR"]
+    workflows: ["CI"]
     types: [completed]
 
 jobs:
