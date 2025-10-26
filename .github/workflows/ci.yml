@@ -110,15 +110,6 @@ jobs:
           if-no-files-found: warn
           retention-days: 14
 
-      - name: Upload bundle folder (fallback)
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: linux-bundle-raw
-          path: src-tauri/target/release/bundle
-          if-no-files-found: warn
-          retention-days: 7
-
   docker-build:
     name: Docker build (optional)
     runs-on: ubuntu-latest
