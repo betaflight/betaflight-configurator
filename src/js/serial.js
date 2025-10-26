@@ -2,7 +2,6 @@ import WebSerial from "./protocols/WebSerial.js";
 import WebBluetooth from "./protocols/WebBluetooth.js";
 import Websocket from "./protocols/WebSocket.js";
 import VirtualSerial from "./protocols/VirtualSerial.js";
-import { isTauri } from "@tauri-apps/api/core";
 
 /**
  * Base Serial class that manages all protocol implementations
@@ -24,27 +23,8 @@ class Serial extends EventTarget {
             { name: "virtual", instance: new VirtualSerial() },
         ];
 
-        // Forward events from current protocols
+        // Forward events from all protocols to the Serial class
         this._setupEventForwarding();
-    }
-
-    /**
-     * Perform any asynchronous initialization required by the Serial facade.
-     * This keeps constructors synchronous and predictable.
-     */
-    async init() {
-        // Dynamically include the native Tauri serial adapter so web builds don't try to resolve it.
-        if (isTauri()) {
-            try {
-                const { default: TauriSerial } = await import("./protocols/TauriSerial.js");
-                const inst = new TauriSerial();
-                this._protocols.unshift({ name: "tauriserial", instance: inst });
-                // Wire event forwarding for this late-added protocol
-                this._setupEventForwardingFor("tauriserial", inst);
-            } catch (err) {
-                console.warn(`${this.logHead} Failed to load TauriSerial adapter:`, err);
-            }
-        }
     }
 
     /**
@@ -54,41 +34,35 @@ class Serial extends EventTarget {
         const events = ["addedDevice", "removedDevice", "connect", "disconnect", "receive"];
 
         for (const { name, instance } of this._protocols) {
-            this._setupEventForwardingFor(name, instance, events);
-        }
-    }
+            if (typeof instance?.addEventListener === "function") {
+                for (const eventType of events) {
+                    instance.addEventListener(eventType, (event) => {
+                        let newDetail;
+                        if (event.type === "receive") {
+                            // For 'receive' events, we need to handle the data differently
+                            newDetail = {
+                                data: event.detail,
+                                protocolType: name,
+                            };
+                        } else {
+                            // For other events, we can use the detail directly
+                            newDetail = {
+                                ...event.detail,
+                                protocolType: name,
+                            };
+                        }
 
-    _setupEventForwardingFor(
-        name,
-        instance,
-        events = ["addedDevice", "removedDevice", "connect", "disconnect", "receive"],
-    ) {
-        if (typeof instance?.addEventListener !== "function") {
-            return;
-        }
-        for (const eventType of events) {
-            instance.addEventListener(eventType, (event) => {
-                let newDetail;
-                if (event.type === "receive") {
-                    newDetail = {
-                        data: event.detail,
-                        protocolType: name,
-                    };
-                } else {
-                    newDetail = {
-                        ...event.detail,
-                        protocolType: name,
-                    };
+                        // Dispatch the event with the new detail
+                        this.dispatchEvent(
+                            new CustomEvent(event.type, {
+                                detail: newDetail,
+                                bubbles: event.bubbles,
+                                cancelable: event.cancelable,
+                            }),
+                        );
+                    });
                 }
-
-                this.dispatchEvent(
-                    new CustomEvent(event.type, {
-                        detail: newDetail,
-                        bubbles: event.bubbles,
-                        cancelable: event.cancelable,
-                    }),
-                );
-            });
+            }
         }
     }
 
@@ -100,7 +74,7 @@ class Serial extends EventTarget {
         // Determine which protocol to use based on port path
         const isFn = typeof portPath === "function";
         const s = typeof portPath === "string" ? portPath : "";
-        // Default to native Tauri serial when available; otherwise Web Serial.
+        // Default to webserial for typical serial device identifiers.
         if (isFn || s === "virtual") {
             return this._protocols.find((p) => p.name === "virtual")?.instance;
         }
@@ -109,11 +83,6 @@ class Serial extends EventTarget {
         }
         if (s.startsWith("bluetooth")) {
             return this._protocols.find((p) => p.name === "webbluetooth")?.instance;
-        }
-        // Prefer Tauri plugin if present
-        const tauriInst = this._protocols.find((p) => p.name === "tauriserial")?.instance;
-        if (tauriInst) {
-            return tauriInst;
         }
         return this._protocols.find((p) => p.name === "webserial")?.instance;
     }
@@ -172,7 +141,7 @@ class Serial extends EventTarget {
 
     /**
      * Get devices from a specific protocol type or current protocol
-     * @param {string} protocolType - Optional protocol type ('tauriserial','webserial','webbluetooth','websocket','virtual')
+     * @param {string} protocolType - Optional protocol type ('webserial', 'webbluetooth', 'websocket', 'virtual')
      * @returns {Promise<Array>} - List of devices
      */
     async getDevices(protocolType = null) {
@@ -245,6 +214,3 @@ class Serial extends EventTarget {
 
 // Export a singleton instance
 export const serial = new Serial();
-// Kick off async initialization outside of the constructor.
-// Intentionally not awaited to avoid blocking module load.
-void serial.init();

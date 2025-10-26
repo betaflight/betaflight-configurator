@@ -47,7 +47,3 @@ capacitor.config.json
 
 # Ignore Gradle build output directory
 build
-
-# Ignore Tauri build artifacts
-src-tauri/target/
-src-tauri/gen/

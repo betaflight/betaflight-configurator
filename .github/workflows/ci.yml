@@ -1,147 +1,111 @@
+# Builds Betaflight Configurator on Windows, Android, Linux and macOS platforms.
+#
+# After building, artifacts are released to a separate repository.
+
 name: CI
 
-# Run on PRs to show artifacts, and keep callable for reuse.
 on:
-  pull_request:
-  push:
-    branches: [ tauri ]
   workflow_call:
     inputs:
-      run_docker_build:
-        description: 'Also try a Docker build if a Dockerfile exists'
+      debug_build:
+        description: 'Specifies if it is a debug build or a release build'
+        default: true
         required: false
-        default: false
         type: boolean
 
 jobs:
-  node-ci:
-    name: Lint, test, and build (Node)
+  test:
+    name: Test
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v5
+      - uses: actions/checkout@v5
 
-      - name: Setup Node
+      - name: Cache node_modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules/
+          key: node_modules-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
+
+      - name: Install Node.js
         uses: actions/setup-node@v5
         with:
           node-version-file: '.nvmrc'
-          cache: 'yarn'
 
-      - name: Install dependencies (Yarn classic)
-        run: yarn install --frozen-lockfile
+      - run: yarn install --immutable --immutable-cache --check-cache
 
-      - name: Lint
-        run: yarn lint
+      - name: Run unit tests
+        run: yarn test
 
-      - name: Unit tests
-        run: yarn test --run
+  build:
+    name: Build (${{ matrix.name }})
+    needs: test
+    runs-on:  ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - name: Android
+            os: ubuntu-latest
+            releaseArgs: --android
 
-      - name: Build web (Vite)
-        run: yarn build
+          - name: Linux
+            os: ubuntu-latest
+            releaseArgs: --linux64
 
-      - name: Upload web dist
-        uses: actions/upload-artifact@v4
-        with:
-          name: web-dist
-          path: src/dist/
-          if-no-files-found: warn
-          retention-days: 14
+          - name: macOS
+            os: macos-11
+            releaseArgs: --osx64
 
-  tauri-linux-preview:
-    name: Tauri Linux preview (deb/appimage)
-    runs-on: ubuntu-latest
-    needs: node-ci
-    if: ${{ github.event_name == 'pull_request' }}
+          - name: Windows
+            os: windows-2022
+            releaseArgs: --win64
     steps:
-      - name: Checkout
-        uses: actions/checkout@v5
+      - uses: actions/checkout@v5
 
-      - name: Setup Node
+      - name: Cache NW.js
+        uses: actions/cache@v4
+        with:
+          path: cache/
+          key: nwjs-${{ inputs.debug_build && 'debug' || 'release' }}-${{ runner.os }}
+
+      - name: Cache node_modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules/
+          key: node_modules-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
+
+      - name: Install Node.js
         uses: actions/setup-node@v5
         with:
           node-version-file: '.nvmrc'
-          cache: 'yarn'
 
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile
-
-      - name: Install Linux deps (Tauri)
+      - name: Install macos dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-            pkg-config \
-            libgtk-3-dev \
-            libwebkit2gtk-4.1-dev \
-            libayatana-appindicator3-dev \
-            librsvg2-dev \
-            libudev-dev \
-            libssl-dev \
-            patchelf
+          sudo -H pip install setuptools packaging
+          sudo npm install -g yarn@1.22.0 node-gyp@10 macos-alias
+          yarn --network-timeout 1000000
+        if: ${{ matrix.name == 'macOs' }}
 
-      - name: Install Rust
-        uses: dtolnay/rust-toolchain@stable
-
-      - name: Build web assets (Vite)
-        run: yarn build
-
-      - name: Build Tauri (Linux)
-        uses: tauri-apps/tauri-action@v0
+      - name: Install Java JDK 8
+        uses: actions/setup-java@v5
+        if: ${{ matrix.name == 'Android' }}
         with:
-          # Use the Tauri CLI directly; the action appends 'build' automatically.
-          tauriScript: yarn tauri
-          # Disable updater.json handling and any release uploads for PR previews.
-          includeUpdaterJson: false
+          distribution: temurin
+          java-version: '8'
 
-      - name: Inspect Tauri bundle output
-        if: always()
-        run: |
-          echo "Listing bundle directory (if present):"
-          ls -la src-tauri/target/release || true
-          ls -la src-tauri/target/release/bundle || true
-          find src-tauri/target/release/bundle -maxdepth 3 -type f -print || true
+      - run: yarn install --immutable --immutable-cache --check-cache
 
-      - name: Upload Linux installers
+      - run: yarn version --no-git-tag-version --new-version ${{ github.ref_name }}
+        if: ${{ !inputs.debug_build }}
+
+      - run: yarn gulp release ${{ matrix.releaseArgs }}
+        if: ${{ !inputs.debug_build && matrix.name != 'Android' }}
+
+      - run: yarn gulp debug-release ${{ matrix.releaseArgs }}
+        if: ${{ inputs.debug_build || matrix.name == 'Android' }}
+
+      - name: Publish build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: linux-installers
-          path: |
-            src-tauri/target/release/bundle/**/*.deb
-            src-tauri/target/release/bundle/**/*.AppImage
-          if-no-files-found: warn
-          retention-days: 14
-
-  docker-build:
-    name: Docker build (optional)
-    runs-on: ubuntu-latest
-    needs: node-ci
-    # Only run when called as a reusable workflow AND the caller enabled it
-    if: ${{ github.event_name == 'workflow_call' && inputs.run_docker_build == true }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v5
-
-      - name: Check for Dockerfile
-        id: chk
-        shell: bash
-        run: |
-          if [[ -f Dockerfile ]]; then
-            echo "present=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "present=false" >> "$GITHUB_OUTPUT"
-          fi
-
-      - name: Build container image
-        if: ${{ steps.chk.outputs.present == 'true' }}
-        run: |
-          docker build -t betaflight-configurator:ci .
-      - name: Export container (tar)
-        if: ${{ steps.chk.outputs.present == 'true' }}
-        run: |
-          docker save betaflight-configurator:ci -o image.tar
-      - name: Upload image
-        uses: actions/upload-artifact@v4
-        if: ${{ steps.chk.outputs.present == 'true' }}
-        with:
-          name: docker-image
-          path: image.tar
-          retention-days: 7
+          name: Betaflight-Configurator${{ inputs.debug_build == 'true' && '-Debug' || '' }}-${{ matrix.name }}
+          path: release/
+          retention-days: 90
