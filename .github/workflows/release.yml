@@ -1,7 +1,7 @@
 # You'll need to setup the follwing environment variables:
 #   secrets.REPO_TOKEN - A GitHub token with permissions to push and publish releases to the repo
 
-name: Release
+name: Release builds (APK/EXE/DMG/DEB)
 
 on:
   workflow_dispatch:
@@ -21,19 +21,100 @@ on:
         required: true
         type: boolean
 
-jobs:
-  ci:
-    name: CI
-    uses: ./.github/workflows/ci.yml
-    with:
-      debug_build: false
 
-  release:
-    name: Release
-    needs: ci
+jobs:
+  desktop:
+    name: Tauri desktop build (${{ matrix.os }})
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Node
+        uses: actions/setup-node@v5
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build desktop bundles (Tauri)
+        uses: tauri-apps/tauri-action@v0
+        with:
+          tauriScript: yarn tauri:build
+
+      - name: Upload desktop artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: betaflight-desktop-${{ matrix.os }}
+          path: |
+            src-tauri/target/release/bundle/**/*.deb
+            src-tauri/target/release/bundle/**/*.AppImage
+            src-tauri/target/release/bundle/**/*.dmg
+            src-tauri/target/release/bundle/**/*.msi
+            src-tauri/target/release/bundle/**/*.exe
+          if-no-files-found: warn
+          retention-days: 30
+
+  android:
+    name: Android APK (Capacitor)
     runs-on: ubuntu-latest
     steps:
-      - name: Fetch build artifacts
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Node
+        uses: actions/setup-node@v5
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Setup Java 11
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '11'
+
+      - name: Cache Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Build Android release (unsigned)
+        run: |
+          yarn android:release
+
+      - name: Upload APK/AAB artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: betaflight-android
+          path: |
+            android/app/build/outputs/apk/release/*.apk
+            android/app/build/outputs/bundle/release/*.aab
+          if-no-files-found: warn
+          retention-days: 30
+
+  publish:
+    name: Create GitHub Release
+    needs: [desktop, android]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all artifacts
         uses: actions/download-artifact@v5
         with:
           path: release-assets/
@@ -44,9 +125,8 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           name: ${{ github.event.inputs.title }}
           tag_name: ${{ github.event.inputs.tag }}
-          target_commitish: ${{ GITHUB.REF_NAME }}
           generate_release_notes: ${{ github.event.inputs.generate_release_notes }}
-          files: release-assets/Betaflight-Configurator-*/**
+          files: release-assets/**
           draft: true
           prerelease: false
-          fail_on_unmatched_files: true
+          fail_on_unmatched_files: false

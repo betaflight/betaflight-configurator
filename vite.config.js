@@ -56,6 +56,8 @@ export default defineConfig({
         __APP_REVISION__: JSON.stringify(commitHash),
     },
     build: {
+        outDir: "dist",
+        emptyOutDir: true,
         rollupOptions: {
             input: {
                 main: resolve(__dirname, "src/index.html"),
@@ -84,6 +86,9 @@ export default defineConfig({
         }),
         VitePWA({
             registerType: "prompt",
+            devOptions: {
+                enabled: false,
+            },
             workbox: {
                 globPatterns: ["**/*.{js,css,html,ico,png,svg,json,mcm}"],
                 // 5MB
@@ -120,6 +125,12 @@ export default defineConfig({
     server: {
         port: 8000,
         strictPort: true,
+        host: true,
+        hmr: {
+            protocol: "ws",
+            host: "localhost",
+            clientPort: 8000,
+        },
     },
     preview: {
         port: 8080,
