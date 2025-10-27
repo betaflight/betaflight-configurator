@@ -48,7 +48,7 @@ jobs:
               return;
             }
             const prNumber = pullRequests[0].number;
-            const artifactLinks = process.env.ARTIFACT_LINKS;
+            const artifactLinks = `${{ steps.artifacts.outputs.artifact_links }}`;
             
             const body = `## 🚀 Build Artifacts Ready!
             
@@ -64,5 +64,3 @@ jobs:
               issue_number: prNumber,
               body: body
             });
-        env:
-          ARTIFACT_LINKS: ${{ steps.artifacts.outputs.artifact_links }}
