@@ -148,6 +148,9 @@ jobs:
       - name: Build web assets (Vite)
         run: yarn build
 
+      - name: Initialize Tauri Android project
+        run: yarn tauri android init --ci
+
       - name: Build Tauri Android APK
         uses: tauri-apps/tauri-action@v0
         with:
