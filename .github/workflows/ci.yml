@@ -88,8 +88,7 @@ jobs:
         uses: tauri-apps/tauri-action@v0
         with:
           # Use the Tauri CLI directly; the action appends 'build' automatically.
-          tauriScript: yarn tauri:build
-          projectPath: src-tauri
+          tauriScript: yarn tauri
           # Disable updater.json handling and any release uploads for PR previews.
           includeUpdaterJson: false
 
@@ -108,8 +107,6 @@ jobs:
           path: |
             src-tauri/target/release/bundle/**/*.deb
             src-tauri/target/release/bundle/**/*.AppImage
-            src-tauri/target/**/release/bundle/**/*.deb
-            src-tauri/target/**/release/bundle/**/*.AppImage
           if-no-files-found: warn
           retention-days: 14
 
