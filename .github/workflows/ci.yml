@@ -151,7 +151,7 @@ jobs:
       - name: Build Tauri Android APK
         uses: tauri-apps/tauri-action@v0
         with:
-          tauriScript: yarn tauri android build
+          tauriScript: yarn tauri android
           includeUpdaterJson: false
 
       - name: Inspect Android bundle output
