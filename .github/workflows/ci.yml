@@ -95,16 +95,8 @@ jobs:
       - name: Inspect Tauri bundle output
         if: always()
         run: |
-          echo "Listing bundle directory (if present):"
-          ls -la src-tauri/target/release || true
-          ls -la src-tauri/target/release/bundle || true
-          find src-tauri/target/release/bundle -maxdepth 3 -type f -print || true
-          echo "\nEnumerating any bundle folders under src-tauri/target (temporary diagnostics):"
-          # Show top-level target directories (e.g., x86_64-unknown-linux-gnu)
-          find src-tauri/target -maxdepth 2 -type d -print || true
-          echo "\nAll files found under any 'bundle' directory:" 
-          # Print any files that exist under any bundle directory across target triples
-          find src-tauri/target -type f -path "*/bundle/*" -print || true
+          echo "Bundle artifacts:"
+          find src-tauri/target/release/bundle -type f \( -name "*.deb" -o -name "*.AppImage" \) -print || true
 
       - name: Upload Linux installers
         uses: actions/upload-artifact@v4
