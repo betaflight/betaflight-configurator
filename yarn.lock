@@ -2183,7 +2183,7 @@
     magic-string "^0.25.0"
     string.prototype.matchall "^4.0.6"
 
-"@tauri-apps/api@^2.5.0":
+"@tauri-apps/api@^2.9.0":
   version "2.9.0"
   resolved "https://registry.yarnpkg.com/@tauri-apps/api/-/api-2.9.0.tgz#047fcbfec05a719b0cec997eee244cee453fb2fc"
   integrity sha512-qD5tMjh7utwBk9/5PrTA/aGr3i5QaJ/Mlt7p8NilQ45WgbifUNPyKWsA63iQ8YfQq6R8ajMapU+/Q8nMcPRLNw==
@@ -2243,7 +2243,7 @@
   resolved "https://registry.yarnpkg.com/@tauri-apps/cli-win32-x64-msvc/-/cli-win32-x64-msvc-2.9.1.tgz#d7c8512dd70f9aa8203f2011322542ec11f76b66"
   integrity sha512-/JHlOzpUDhjBOO9w167bcYxfJbcMQv7ykS/Y07xjtcga8np0rzUzVGWYmLMH7orKcDMC7wjhheEW1x8cbGma/Q==
 
-"@tauri-apps/cli@^2.5.0":
+"@tauri-apps/cli@^2.9.1":
   version "2.9.1"
   resolved "https://registry.yarnpkg.com/@tauri-apps/cli/-/cli-2.9.1.tgz#cdc1cc6a005fef017b2a8f1a96d32537afc74579"
   integrity sha512-kKi2/WWsNXKoMdatBl4xrT7e1Ce27JvsetBVfWuIb6D3ep/Y0WO5SIr70yarXOSWam8NyDur4ipzjZkg6m7VDg==
