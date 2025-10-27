@@ -58,7 +58,7 @@ class TauriSerial extends EventTarget {
         return this.connectionId;
     }
 
-    handleFatalSerialError(error) {
+    handleFatalSerialError() {
         // On fatal errors (broken pipe, etc.), just disconnect cleanly
         // Device monitoring will automatically detect the removal and emit removedDevice
         if (this.connected) {
