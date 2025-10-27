@@ -1,0 +1,80 @@
+# Use a base image that supports the necessary build tools
+FROM debian:bookworm-slim
+
+# Set environment variables for non-interactive installs and Android components
+# You may need to update these versions over time
+ENV DEBIAN_FRONTEND=noninteractive
+ENV RUSTUP_HOME=/usr/local/rustup \
+    CARGO_HOME=/usr/local/cargo \
+    ANDROID_SDK_ROOT=/usr/local/android-sdk \
+    NDK_VERSION=26.3.11579204 \
+    SDK_PLATFORM_VERSION=34 \
+    SDK_BUILD_TOOLS_VERSION=34.0.0
+ENV PATH=$CARGO_HOME/bin:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$PATH
+
+# --- Install System Dependencies (Rust, Node.js, and Build Tools) ---
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        curl \
+        wget \
+        xz-utils \
+        unzip \
+        git \
+        build-essential \
+        libwebkit2gtk-4.1-dev \
+        libssl-dev \
+        libayatana-appindicator3-dev \
+        librsvg2-dev \
+        libxdo-dev \
+        # Dependencies for Android build targets (needed for the linker)
+        clang \
+        llvm \
+        g++-multilib \
+        openjdk-17-jdk \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Rust
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain stable
+
+# Add Rust targets for Android
+RUN $CARGO_HOME/bin/rustup target add \
+    aarch64-linux-android \
+    armv7-linux-androideabi \
+    i686-linux-android \
+    x86_64-linux-android
+
+# Install Node.js 22 LTS and Yarn (global)
+# Use NodeSource for up-to-date Node on Debian; then install Yarn 1.x globally
+RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
+    && apt-get update \
+    && apt-get install -y --no-install-recommends nodejs \
+    && npm i -g yarn@1.22.22 \
+    && rm -rf /var/lib/apt/lists/*
+
+# --- Install Android SDK/NDK ---
+# Download the Android SDK command line tools
+RUN mkdir -p $ANDROID_SDK_ROOT/cmdline-tools && \
+    wget -q https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O cmdline-tools.zip && \
+    unzip -q cmdline-tools.zip -d $ANDROID_SDK_ROOT/cmdline-tools && \
+    mv $ANDROID_SDK_ROOT/cmdline-tools/cmdline-tools $ANDROID_SDK_ROOT/cmdline-tools/latest && \
+    rm cmdline-tools.zip
+
+# Accept licenses and install platform tools, platforms, and NDK
+RUN yes | sdkmanager --licenses && \
+    sdkmanager \
+    "platform-tools" \
+    "platforms;android-${SDK_PLATFORM_VERSION}" \
+    "build-tools;${SDK_BUILD_TOOLS_VERSION}" \
+    "ndk;${NDK_VERSION}"
+
+# Set the NDK_HOME environment variable
+ENV NDK_HOME=$ANDROID_SDK_ROOT/ndk/${NDK_VERSION}
+
+# Create a non-root user and set it as the working user
+# This is a security best practice
+RUN useradd -ms /bin/bash developer && chown -R developer:developer /usr/local/
+USER developer
+WORKDIR /app
+
+# The ENTRYPOINT should be set to your shell to allow running commands
+ENTRYPOINT ["/bin/bash"]

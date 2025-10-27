@@ -1,0 +1,38 @@
+{
+  "productName": "Betaflight App",
+  "version": "2025.12.0",
+  "identifier": "com.betaflight.app",
+  "build": {
+    "beforeDevCommand": "yarn dev",
+    "beforeBuildCommand": "yarn build",
+    "devUrl": "http://localhost:8000",
+    "frontendDist": "../src/dist"
+  },
+  "app": {
+    "security": {
+      "csp": null,
+      "capabilities": [
+        "default"
+      ]
+    },
+    "windows": [
+      {
+        "title": "Betaflight App",
+        "width": 1024,
+        "height": 550,
+        "resizable": true,
+        "fullscreen": false
+      }
+    ]
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["deb", "appimage", "dmg", "nsis"],
+    "icon": ["icons/bf_icon_128.png"]
+  },
+  "plugins": {
+    "shell": {
+      "open": true
+    }
+  }
+}
