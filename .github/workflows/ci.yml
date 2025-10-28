@@ -189,17 +189,28 @@ jobs:
           fi
           echo "Found unsigned APK: $UNSIGNED_APK"
           SIGNED_APK="${UNSIGNED_APK%-unsigned.apk}-debug-signed.apk"
+          ALIGNED_APK="${UNSIGNED_APK%-unsigned.apk}-aligned.apk"
+          
+          # First zipalign the unsigned APK
+          echo "Zipaligning APK..."
+          ${ANDROID_HOME}/build-tools/$(ls ${ANDROID_HOME}/build-tools | tail -1)/zipalign -v -p 4 "$UNSIGNED_APK" "$ALIGNED_APK"
+          
+          # Then sign the aligned APK
           echo "Signing APK to: $SIGNED_APK"
           jarsigner -verbose -sigalg SHA256withRSA -digestalg SHA-256 \
             -keystore "${HOME}/.android/debug.keystore" \
             -storepass android \
             -keypass android \
-            "$UNSIGNED_APK" \
+            "$ALIGNED_APK" \
             androiddebugkey
-          # Zipalign the signed APK
-          ${ANDROID_HOME}/build-tools/$(ls ${ANDROID_HOME}/build-tools | tail -1)/zipalign -v 4 "$UNSIGNED_APK" "$SIGNED_APK"
+          
+          # Move aligned+signed APK to final name
+          mv "$ALIGNED_APK" "$SIGNED_APK"
           echo "Signed APK created: $SIGNED_APK"
           ls -lh "$SIGNED_APK"
+          
+          # Verify the signature
+          jarsigner -verify -verbose -certs "$SIGNED_APK"
 
       - name: Inspect Android bundle output
         if: always()
