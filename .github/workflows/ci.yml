@@ -157,18 +157,62 @@ jobs:
           tauriScript: yarn tauri android
           includeUpdaterJson: false
 
+      - name: Generate debug keystore
+        shell: bash
+        run: |
+          set -euo pipefail
+          KEYSTORE_PATH="${HOME}/.android/debug.keystore"
+          mkdir -p "${HOME}/.android"
+          if [ ! -f "$KEYSTORE_PATH" ]; then
+            echo "Generating debug keystore at $KEYSTORE_PATH"
+            keytool -genkeypair -v \
+              -keystore "$KEYSTORE_PATH" \
+              -storepass android \
+              -alias androiddebugkey \
+              -keypass android \
+              -keyalg RSA \
+              -keysize 2048 \
+              -validity 10000 \
+              -dname "CN=Android Debug,O=Android,C=US"
+          else
+            echo "Debug keystore already exists at $KEYSTORE_PATH"
+          fi
+
+      - name: Sign APK with debug key
+        shell: bash
+        run: |
+          set -euo pipefail
+          UNSIGNED_APK=$(find src-tauri/gen/android/app/build/outputs/apk -name "*-unsigned.apk" | head -1)
+          if [ -z "$UNSIGNED_APK" ]; then
+            echo "Error: No unsigned APK found"
+            exit 1
+          fi
+          echo "Found unsigned APK: $UNSIGNED_APK"
+          SIGNED_APK="${UNSIGNED_APK%-unsigned.apk}-debug-signed.apk"
+          echo "Signing APK to: $SIGNED_APK"
+          jarsigner -verbose -sigalg SHA256withRSA -digestalg SHA-256 \
+            -keystore "${HOME}/.android/debug.keystore" \
+            -storepass android \
+            -keypass android \
+            "$UNSIGNED_APK" \
+            androiddebugkey
+          # Zipalign the signed APK
+          ${ANDROID_HOME}/build-tools/$(ls ${ANDROID_HOME}/build-tools | tail -1)/zipalign -v 4 "$UNSIGNED_APK" "$SIGNED_APK"
+          echo "Signed APK created: $SIGNED_APK"
+          ls -lh "$SIGNED_APK"
+
       - name: Inspect Android bundle output
         if: always()
         run: |
           echo "Android APK artifacts:"
           find src-tauri/gen/android -type f -name "*.apk" -print || true
 
-      - name: Upload Android APK
+      - name: Upload signed Android APK
         uses: actions/upload-artifact@v4
         with:
-          name: android-apk
+          name: android-apk-debug-signed
           path: |
-            src-tauri/gen/android/app/build/outputs/apk/**/*.apk
+            src-tauri/gen/android/app/build/outputs/apk/**/*-debug-signed.apk
           if-no-files-found: warn
           retention-days: 14
 
