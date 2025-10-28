@@ -162,23 +162,22 @@ jobs:
             echo "Zipaligning APK..."
             BUILD_TOOLS_VERSION=$(ls ${ANDROID_HOME}/build-tools | tail -1)
             ${ANDROID_HOME}/build-tools/${BUILD_TOOLS_VERSION}/zipalign -v -p 4 "$UNSIGNED_APK" "$ALIGNED_APK"
-            
-            # Then sign the aligned APK
+
+            # Then sign the aligned APK with v2/v3 signatures using apksigner
             echo "Signing aligned APK..."
-            jarsigner -verbose -sigalg SHA256withRSA -digestalg SHA-256 \
-              -keystore "$KEYSTORE" \
-              -storepass "$STORE_PASS" \
-              -keypass "$KEY_PASS" \
-              "$ALIGNED_APK" \
-              "$KEY_ALIAS"
-            
-            # Move to final name
-            mv "$ALIGNED_APK" "$SIGNED_APK"
+            ${ANDROID_HOME}/build-tools/${BUILD_TOOLS_VERSION}/apksigner sign \
+              --ks "$KEYSTORE" \
+              --ks-key-alias "$KEY_ALIAS" \
+              --ks-pass pass:"$STORE_PASS" \
+              --key-pass pass:"$KEY_PASS" \
+              --v1-signing-enabled true \
+              --out "$SIGNED_APK" \
+              "$ALIGNED_APK"
             echo "Signed APK created: $SIGNED_APK"
             ls -lh "$SIGNED_APK"
             
             # Verify the signature
-            jarsigner -verify -verbose -certs "$SIGNED_APK"
+            ${ANDROID_HOME}/build-tools/${BUILD_TOOLS_VERSION}/apksigner verify --verbose --print-certs "$SIGNED_APK"
           else
             echo "Warning: No unsigned APK found"
           fi

@@ -51,3 +51,8 @@ build
 # Ignore Tauri build artifacts
 src-tauri/target/
 src-tauri/gen/
+
+# Keystores (never commit signing keys)
+*.keystore
+*.jks
+debug.keystore
