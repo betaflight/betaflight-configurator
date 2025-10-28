@@ -99,13 +99,114 @@ jobs:
         run: |
           yarn android:release
 
+      - name: Setup release keystore (if available)
+        if: ${{ secrets.ANDROID_KEYSTORE_BASE64 != '' }}
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "Setting up release keystore from secrets"
+          echo "$ANDROID_KEYSTORE_BASE64" | base64 -d > release.keystore
+          echo "KEYSTORE_PATH=$(pwd)/release.keystore" >> $GITHUB_ENV
+          echo "KEYSTORE_PASSWORD=$ANDROID_KEYSTORE_PASSWORD" >> $GITHUB_ENV
+          echo "KEY_ALIAS=$ANDROID_KEY_ALIAS" >> $GITHUB_ENV
+          echo "KEY_PASSWORD=$ANDROID_KEY_PASSWORD" >> $GITHUB_ENV
+
+      - name: Sign APK/AAB (release or debug)
+        shell: bash
+        run: |
+          set -euo pipefail
+          
+          # Determine signing configuration
+          if [ -f "release.keystore" ]; then
+            echo "Using release keystore for signing"
+            KEYSTORE="release.keystore"
+            STORE_PASS="${KEYSTORE_PASSWORD}"
+            KEY_ALIAS="${KEY_ALIAS}"
+            KEY_PASS="${KEY_PASSWORD}"
+            SUFFIX="release-signed"
+          else
+            echo "No release keystore found - using debug keystore"
+            mkdir -p "${HOME}/.android"
+            KEYSTORE="${HOME}/.android/debug.keystore"
+            if [ ! -f "$KEYSTORE" ]; then
+              echo "Generating debug keystore"
+              keytool -genkeypair -v \
+                -keystore "$KEYSTORE" \
+                -storepass android \
+                -alias androiddebugkey \
+                -keypass android \
+                -keyalg RSA \
+                -keysize 2048 \
+                -validity 10000 \
+                -dname "CN=Android Debug,O=Android,C=US"
+            fi
+            STORE_PASS="android"
+            KEY_ALIAS="androiddebugkey"
+            KEY_PASS="android"
+            SUFFIX="debug-signed"
+          fi
+          
+          # Sign APK
+          UNSIGNED_APK=$(find src-tauri/gen/android/app/build/outputs/apk -name "*-unsigned.apk" | head -1)
+          if [ -n "$UNSIGNED_APK" ]; then
+            echo "Signing APK: $UNSIGNED_APK"
+            SIGNED_APK="${UNSIGNED_APK%-unsigned.apk}-${SUFFIX}.apk"
+            ALIGNED_APK="${UNSIGNED_APK%-unsigned.apk}-aligned.apk"
+            
+            # First zipalign the unsigned APK
+            echo "Zipaligning APK..."
+            BUILD_TOOLS_VERSION=$(ls ${ANDROID_HOME}/build-tools | tail -1)
+            ${ANDROID_HOME}/build-tools/${BUILD_TOOLS_VERSION}/zipalign -v -p 4 "$UNSIGNED_APK" "$ALIGNED_APK"
+
+            # Then sign the aligned APK with v2/v3 signatures using apksigner
+            echo "Signing aligned APK..."
+            ${ANDROID_HOME}/build-tools/${BUILD_TOOLS_VERSION}/apksigner sign \
+              --ks "$KEYSTORE" \
+              --ks-key-alias "$KEY_ALIAS" \
+              --ks-pass pass:"$STORE_PASS" \
+              --key-pass pass:"$KEY_PASS" \
+              --v1-signing-enabled true \
+              --out "$SIGNED_APK" \
+              "$ALIGNED_APK"
+            echo "Signed APK created: $SIGNED_APK"
+            ls -lh "$SIGNED_APK"
+            
+            # Verify the signature
+            ${ANDROID_HOME}/build-tools/${BUILD_TOOLS_VERSION}/apksigner verify --verbose --print-certs "$SIGNED_APK"
+          else
+            echo "Warning: No unsigned APK found"
+          fi
+          
+          # Sign AAB (if release keystore available)
+          if [ -f "release.keystore" ]; then
+            UNSIGNED_AAB=$(find src-tauri/gen/android/app/build/outputs/bundle -name "*.aab" | head -1)
+            if [ -n "$UNSIGNED_AAB" ]; then
+              echo "Signing AAB: $UNSIGNED_AAB"
+              SIGNED_AAB="${UNSIGNED_AAB%.aab}-signed.aab"
+              jarsigner -verbose -sigalg SHA256withRSA -digestalg SHA-256 \
+                -keystore "$KEYSTORE" \
+                -storepass "$STORE_PASS" \
+                -keypass "$KEY_PASS" \
+                "$UNSIGNED_AAB" \
+                "$KEY_ALIAS"
+              mv "$UNSIGNED_AAB" "$SIGNED_AAB"
+              echo "Signed AAB created: $SIGNED_AAB"
+              ls -lh "$SIGNED_AAB"
+            fi
+          fi
+
       - name: Upload APK/AAB artifacts
         uses: actions/upload-artifact@v4
         with:
           name: betaflight-android
           path: |
-            android/app/build/outputs/apk/release/*.apk
-            android/app/build/outputs/bundle/release/*.aab
+            src-tauri/gen/android/app/build/outputs/apk/universal/release/*-signed.apk
+            src-tauri/gen/android/app/build/outputs/bundle/universalRelease/*-signed.aab
           if-no-files-found: warn
           retention-days: 30
 

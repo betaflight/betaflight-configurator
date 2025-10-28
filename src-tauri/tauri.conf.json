@@ -28,7 +28,10 @@
   "bundle": {
     "active": true,
     "targets": ["deb", "appimage", "dmg", "nsis"],
-    "icon": ["icons/bf_icon_128.png"]
+    "icon": ["icons/bf_icon_128.png"],
+    "android": {
+      "minSdkVersion": 28
+    }
   },
   "plugins": {
     "shell": {
