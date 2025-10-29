@@ -1,7 +1,5 @@
 # Android USB Serial Support
 
-# Android USB Serial Support
-
 ## Current Status (v2.16.0)
 
 The `tauri-plugin-serialplugin` version 2.16.0 includes Android support, but requires additional runtime permission handling to actually detect USB devices.

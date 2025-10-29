@@ -42,7 +42,7 @@ adb install -r gen/android/app/build/outputs/apk/universal/release/app-universal
 ```bash
 # Clear old logs and start monitoring
 adb logcat -c
-adb logcat -s BetaflightUSB:* TauriActivity:* *:E
+adb logcat BetaflightUSB:* TauriActivity:* *:E
 
 # What you should see:
 # - "Checking connected USB devices: X found"

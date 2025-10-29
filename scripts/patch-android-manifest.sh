@@ -125,7 +125,7 @@ if [ -f "$APP_BUILD_GRADLE" ]; then
             awk '/^dependencies \{/ {
                 print
                 print "    // USB Serial library for Android"
-                print "    implementation(\"com.github.mik3y:usb-serial-for-android:3.8.0\")"
+                print "    implementation(\"com.github.mik3y:usb-serial-for-android:3.9.0\")"
                 next
             }
             { print }' "$APP_BUILD_GRADLE" > "$APP_BUILD_GRADLE.tmp" && mv "$APP_BUILD_GRADLE.tmp" "$APP_BUILD_GRADLE"
@@ -136,7 +136,7 @@ if [ -f "$APP_BUILD_GRADLE" ]; then
 
 dependencies {
     // USB Serial library for Android
-    implementation("com.github.mik3y:usb-serial-for-android:3.8.0")
+    implementation("com.github.mik3y:usb-serial-for-android:3.9.0")
 }
 EOF
             echo "✓ USB serial library dependency added!"
