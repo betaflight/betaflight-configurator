@@ -152,25 +152,49 @@ echo ""
 echo "✓ Android USB support configuration complete!"
 echo "You can now build the Android app with: cargo tauri android build"
 
-# Add JitPack repository to settings.gradle.kts
+# Add JitPack repository to settings.gradle.kts (dependencyResolutionManagement.repositories)
 SETTINGS_GRADLE="src-tauri/gen/android/settings.gradle.kts"
 if [ -f "$SETTINGS_GRADLE" ]; then
     echo "Adding JitPack repository to $SETTINGS_GRADLE..."
     if ! grep -q "jitpack.io" "$SETTINGS_GRADLE"; then
-        # Use awk to insert maven repository into existing repositories block
-        awk '
-            /repositories \{/ && !found {
-                print
-                print "        maven { url = uri(\"https://jitpack.io\") }"
-                found=1
-                next
-            }
-            { print }
-        ' "$SETTINGS_GRADLE" > "$SETTINGS_GRADLE.tmp" && mv "$SETTINGS_GRADLE.tmp" "$SETTINGS_GRADLE"
-        echo "✓ JitPack repository added to settings.gradle.kts!"
+        if grep -q "dependencyResolutionManagement" "$SETTINGS_GRADLE"; then
+            # Insert into dependencyResolutionManagement { repositories { ... } }
+            awk '
+                BEGIN { in_dep=0; brace=0; inserted=0 }
+                /dependencyResolutionManagement/ { in_dep=1 }
+                {
+                    if (in_dep && $0 ~ /\{/ ) { brace++ }
+                    if (in_dep && $0 ~ /\}/ ) { brace-- }
+                    print
+                    # Insert only when inside dependencyResolutionManagement and at repositories { line
+                    if (in_dep && brace>0 && $0 ~ /repositories \{/ && inserted==0) {
+                        print "        maven { url = uri(\"https://jitpack.io\") }"
+                        inserted=1
+                    }
+                    if (in_dep && brace==0) { in_dep=0 }
+                }
+            ' "$SETTINGS_GRADLE" > "$SETTINGS_GRADLE.tmp" && mv "$SETTINGS_GRADLE.tmp" "$SETTINGS_GRADLE"
+            echo "✓ JitPack repository added inside dependencyResolutionManagement.repositories"
+        else
+            # No dependencyResolutionManagement block; append a full block
+            cat >> "$SETTINGS_GRADLE" << 'EOF'
+
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+        maven { url = uri("https://jitpack.io") }
+    }
+}
+EOF
+            echo "✓ dependencyResolutionManagement with JitPack appended to settings.gradle.kts"
+        fi
     else
         echo "JitPack repository already present in settings.gradle.kts"
     fi
+    echo "Preview of repositories in settings.gradle.kts:"
+    grep -n "dependencyResolutionManagement\|repositories \{|jitpack.io" -n "$SETTINGS_GRADLE" || true
 else
     echo "Warning: $SETTINGS_GRADLE not found, skipping JitPack repository addition"
 fi
