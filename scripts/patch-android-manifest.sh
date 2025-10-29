@@ -124,29 +124,41 @@ if [ -f "$APP_BUILD_GRADLE" ]; then
             # Use awk to insert after the dependencies { line (portable)
             awk '/^dependencies \{/ {
                 print
-                print "    // USB Serial library for Android - force 3.8.0 to override plugin transitive dependency"
-                print "    implementation(\"com.github.mik3y:usb-serial-for-android:3.8.0\") {"
-                print "        isForce = true"
-                print "    }"
+                print "    // USB Serial library for Android - explicit version to override plugin transitive 3.8.1"
+                print "    implementation(\"com.github.mik3y:usb-serial-for-android:3.8.0\")"
                 next
             }
             { print }' "$APP_BUILD_GRADLE" > "$APP_BUILD_GRADLE.tmp" && mv "$APP_BUILD_GRADLE.tmp" "$APP_BUILD_GRADLE"
-            echo "✓ USB serial library dependency added with version override!"
+            echo "✓ USB serial library dependency added!"
         else
             echo "No dependencies block found, appending new block..."
             cat >> "$APP_BUILD_GRADLE" << 'EOF'
 
 dependencies {
-    // USB Serial library for Android - force 3.8.0 to override plugin transitive dependency
-    implementation("com.github.mik3y:usb-serial-for-android:3.8.0") {
-        isForce = true
-    }
+    // USB Serial library for Android - explicit version to override plugin transitive 3.8.1
+    implementation("com.github.mik3y:usb-serial-for-android:3.8.0")
 }
 EOF
-            echo "✓ USB serial library dependency added with version override!"
+            echo "✓ USB serial library dependency added!"
         fi
     else
         echo "USB serial library dependency already present"
+    fi
+    
+    # Add resolution strategy to force version 3.8.0
+    echo "Adding version resolution strategy..."
+    if ! grep -q "resolutionStrategy" "$APP_BUILD_GRADLE"; then
+        cat >> "$APP_BUILD_GRADLE" << 'EOF'
+
+configurations.all {
+    resolutionStrategy {
+        force("com.github.mik3y:usb-serial-for-android:3.8.0")
+    }
+}
+EOF
+        echo "✓ Resolution strategy added to force version 3.8.0"
+    else
+        echo "Resolution strategy already present"
     fi
 else
     echo "Warning: $APP_BUILD_GRADLE not found, skipping dependency addition"
