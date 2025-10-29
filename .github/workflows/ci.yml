@@ -158,16 +158,31 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          FILE="src-tauri/gen/android/build.gradle.kts"
+          FILE="src-tauri/gen/android/settings.gradle.kts"
           if [ -f "$FILE" ]; then
             echo "Ensuring JitPack repository in $FILE..."
             if ! grep -q "jitpack.io" "$FILE"; then
-              echo "Adding JitPack repository..."
-              printf '\nallprojects {\n    repositories {\n        maven(url = "https://jitpack.io")\n    }\n}\n' >> "$FILE"
+              echo "Adding JitPack repository to dependencyResolutionManagement..."
+              # Use awk to insert maven repository into existing repositories block
+              awk '
+                /repositories \{/ && !found {
+                  print
+                  print "        maven { url = uri(\"https://jitpack.io\") }"
+                  found=1
+                  next
+                }
+                { print }
+              ' "$FILE" > "$FILE.tmp" && mv "$FILE.tmp" "$FILE"
+              echo "JitPack repository added"
+            else
+              echo "JitPack repository already present"
             fi
-            echo "Repositories block in $FILE now contains:"
-            grep -n "jitpack.io" "$FILE" || true
+            echo "Repositories configuration:"
+            grep -A 5 "repositories {" "$FILE" || true
+          else
+            echo "Warning: $FILE not found"
           fi
+
 
       - name: Build Tauri Android APK
         uses: tauri-apps/tauri-action@v0
