@@ -10,6 +10,7 @@ import android.hardware.usb.UsbManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import app.tauri.TauriActivity
 
 class MainActivity : TauriActivity() {
     private val TAG = "BetaflightUSB"
