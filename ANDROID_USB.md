@@ -1,22 +1,35 @@
 # Android USB Serial Support
 
-## Problem
+# Android USB Serial Support
 
-The Betaflight Configurator uses `tauri-plugin-serialplugin` to access serial ports. On Linux, this works without special configuration, but **Android requires explicit USB permissions** that must be declared in the `AndroidManifest.xml`.
+## Current Status (v2.16.0)
 
-Since the Android project in `src-tauri/gen/android/` is **regenerated at build time**, manual changes to the manifest are lost.
+The `tauri-plugin-serialplugin` version 2.16.0 includes Android support with Kotlin implementation for USB serial communication. However, USB devices may not be detected due to runtime permission handling.
 
-## Solution
+## What's Working
 
-We've created a patch script that automatically adds the required USB permissions and device filters to the generated Android manifest.
+✅ **Build**: APK compiles successfully  
+✅ **Manifest Permissions**: USB permissions are patched into AndroidManifest.xml  
+✅ **Plugin**: Version 2.16.0 has Android Kotlin code  
+✅ **Dependencies**: `usb-serial-for-android` library is added via Gradle  
+✅ **Device Filter**: USB device VID/PID filter is created  
 
-### Required Permissions
+## What May Not Be Working
 
-The script adds:
-- `android.permission.USB_PERMISSION` - Required to access USB devices
-- `android.hardware.usb.host` - Declares USB host mode support
-- USB device intent filter - Prompts user when compatible USB device is connected
-- USB device filter - Lists all Betaflight-compatible USB devices (FTDI, STM32, CP210x, etc.)
+❌ **Runtime Permission Request**: Android requires explicit permission request when USB device is attached  
+❌ **Port Detection**: USB ports may not appear without proper UsbManager usage  
+
+## The Problem
+
+Even with manifest permissions, Android apps need to:
+1. **Request permission at runtime** when a USB device is detected
+2. **Use Android's UsbManager** to enumerate connected USB devices
+3. **Handle USB_DEVICE_ATTACHED intent** to detect when devices are plugged in
+
+The plugin version 2.16.0 has Kotlin code for this, but it may need:
+- Proper initialization in MainActivity
+- USB permission dialog handling
+- Event bridging between Android and Tauri
 
 ## Usage
 
