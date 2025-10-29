@@ -5,10 +5,9 @@
   "platforms": ["linux", "windows", "macOS", "android", "iOS"],
   "windows": ["*"],
   "permissions": [
-    "core:default",
-    "shell:allow-open",
-    "serialplugin:default",
-    "serialplugin:allow-available-ports",
+  "core:default",
+  "shell:allow-open",
+  "serialplugin:allow-available-ports",
     "serialplugin:allow-cancel-read",
     "serialplugin:allow-close",
     "serialplugin:allow-close-all",
