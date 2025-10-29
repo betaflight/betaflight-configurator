@@ -121,14 +121,27 @@ class TauriSerial extends EventTarget {
      * @private
      */
     _filterToKnownDevices(ports) {
-        return ports.filter((port) => {
+        // TEMPORARY DEBUG: Disable filtering to see ALL USB devices
+        console.log(`${logHead} === DEBUG: Filtering ${ports.length} ports ===`);
+        
+        const filtered = ports.filter((port) => {
             // Only include ports with known vendor IDs (Betaflight-compatible devices)
             if (!port.vendorId || !port.productId) {
+                console.log(`${logHead}   FILTERED OUT (no VID/PID): ${port.path}`);
                 return false;
             }
             // Check if this device is in our known devices list
-            return serialDevices.some((d) => d.vendorId === port.vendorId && d.productId === port.productId);
+            const isKnown = serialDevices.some((d) => d.vendorId === port.vendorId && d.productId === port.productId);
+            if (!isKnown) {
+                console.log(`${logHead}   FILTERED OUT (unknown device): ${port.path} VID:${port.vendorId} PID:${port.productId}`);
+            }
+            return isKnown;
         });
+        
+        // TEMPORARY: Return ALL ports regardless of filter for debugging
+        console.log(`${logHead} === DEBUG: TEMPORARILY RETURNING ALL PORTS (${ports.length}) INSTEAD OF FILTERED (${filtered.length}) ===`);
+        return ports; // Return all ports for now to debug
+        // return filtered; // Restore this later
     }
 
     async checkDeviceChanges() {
@@ -177,10 +190,23 @@ class TauriSerial extends EventTarget {
             // Convert the object map to array
             const allPorts = this._convertPortsMapToArray(portsMap);
 
+            // DEBUG: Log all detected ports before filtering
+            console.log(`${logHead} === DEBUG: All detected ports BEFORE filtering ===`);
+            console.log(`${logHead} Raw portsMap from plugin:`, portsMap);
+            console.log(`${logHead} Total ports detected: ${allPorts.length}`);
+            allPorts.forEach((port, index) => {
+                console.log(`${logHead}   [${index}] path: ${port.path}, VID: ${port.vendorId}, PID: ${port.productId}, displayName: ${port.displayName}`);
+            });
+
             // Filter to only known devices
             this.ports = this._filterToKnownDevices(allPorts);
 
+            console.log(`${logHead} === DEBUG: After filtering ===`);
             console.log(`${logHead} Found ${this.ports.length} serial ports (filtered from ${allPorts.length})`);
+            this.ports.forEach((port, index) => {
+                console.log(`${logHead}   [${index}] KEPT: ${port.path} (${port.displayName})`);
+            });
+            
             return this.ports;
         } catch (error) {
             console.error(`${logHead} Error loading devices:`, error);
