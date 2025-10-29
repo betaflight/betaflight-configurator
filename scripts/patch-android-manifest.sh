@@ -124,22 +124,26 @@ if [ -f "$APP_BUILD_GRADLE" ]; then
             # Use awk to insert after the dependencies { line (portable)
             awk '/^dependencies \{/ {
                 print
-                print "    // USB Serial library for Android"
-                print "    implementation(\"com.github.mik3y:usb-serial-for-android:3.8.0\")"
+                print "    // USB Serial library for Android - force 3.8.0 to override plugin transitive dependency"
+                print "    implementation(\"com.github.mik3y:usb-serial-for-android:3.8.0\") {"
+                print "        isForce = true"
+                print "    }"
                 next
             }
             { print }' "$APP_BUILD_GRADLE" > "$APP_BUILD_GRADLE.tmp" && mv "$APP_BUILD_GRADLE.tmp" "$APP_BUILD_GRADLE"
-            echo "✓ USB serial library dependency added!"
+            echo "✓ USB serial library dependency added with version override!"
         else
             echo "No dependencies block found, appending new block..."
             cat >> "$APP_BUILD_GRADLE" << 'EOF'
 
 dependencies {
-    // USB Serial library for Android
-    implementation("com.github.mik3y:usb-serial-for-android:3.8.0")
+    // USB Serial library for Android - force 3.8.0 to override plugin transitive dependency
+    implementation("com.github.mik3y:usb-serial-for-android:3.8.0") {
+        isForce = true
+    }
 }
 EOF
-            echo "✓ USB serial library dependency added!"
+            echo "✓ USB serial library dependency added with version override!"
         fi
     else
         echo "USB serial library dependency already present"
@@ -180,7 +184,6 @@ if [ -f "$SETTINGS_GRADLE" ]; then
             cat >> "$SETTINGS_GRADLE" << 'EOF'
 
 dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         google()
         mavenCentral()
