@@ -30,7 +30,11 @@ case $choice in
         echo "  2. Tap 'Pair device with pairing code'"
         echo "  3. Note the IP address, port, and pairing code"
         echo ""
-        read -p "Enter IP:PORT (e.g., 192.168.1.100:12345): " pair_address
+        echo "Examples:"
+        echo "  IPv4: 192.168.1.100:37891"
+        echo "  IPv6: [fe80::1234:5678:90ab:cdef]:37891"
+        echo ""
+        read -p "Enter IP:PORT: " pair_address
         echo ""
         echo "Running: adb pair $pair_address"
         adb pair "$pair_address"
@@ -39,8 +43,7 @@ case $choice in
             echo ""
             echo "✅ Pairing successful!"
             echo ""
-            read -p "Enter the wireless debugging port (usually different, like :38281): " debug_port
-            connect_address="${pair_address%:*}:${debug_port}"
+            read -p "Enter the wireless debugging IP:PORT (shown in main Wireless debugging screen): " connect_address
             echo "Running: adb connect $connect_address"
             adb connect "$connect_address"
             

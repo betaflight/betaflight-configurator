@@ -30,18 +30,26 @@ Or follow the manual steps below:
 3. Tap **Wireless debugging**
 4. Tap **Pair device with pairing code**
 5. Note down:
-   - IP address (e.g., `192.168.1.100`)
+   - IP address (IPv4 like `192.168.1.100` or IPv6 like `fe80::1234`)
    - Pairing port (e.g., `:37891`)
    - Pairing code (e.g., `123456`)
 
 **On Your PC:**
 ```bash
 # Pair the device (one-time, use the pairing port)
+# IPv4:
 adb pair 192.168.1.100:37891
-# Enter pairing code: 123456
+
+# IPv6 (use brackets):
+adb pair [fe80::1234:5678:90ab:cdef]:37891
+
+# Enter pairing code when prompted: 123456
 
 # Connect using the wireless debugging port (different from pairing port!)
+# Use the IP:PORT shown in the main "Wireless debugging" screen
 adb connect 192.168.1.100:38281
+# or
+adb connect [fe80::1234:5678:90ab:cdef]:38281
 
 # Verify
 adb devices
@@ -50,6 +58,8 @@ adb devices
 ### Reconnecting Later:
 ```bash
 adb connect 192.168.1.100:38281
+# or for IPv6
+adb connect [fe80::1234:5678:90ab:cdef]:38281
 ```
 
 ---
