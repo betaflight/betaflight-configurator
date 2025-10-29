@@ -148,31 +148,28 @@ class TauriSerial extends EventTarget {
      * @private
      */
     _filterToKnownDevices(ports) {
-        // TEMPORARY DEBUG: Disable filtering to see ALL USB devices
-        console.log(`${logHead} === DEBUG: Filtering ${ports.length} ports ===`);
-
+        // Set to true to enable debug logs
+        const DEBUG = false;
+        if (DEBUG) {
+            console.log(`${logHead} Filtering ${ports.length} ports`);
+        }
         const filtered = ports.filter((port) => {
-            // Only include ports with known vendor IDs (Betaflight-compatible devices)
             if (!port.vendorId || !port.productId) {
-                console.log(`${logHead}   FILTERED OUT (no VID/PID): ${port.path}`);
+                if (DEBUG) console.log(`${logHead} FILTERED OUT (no VID/PID): ${port.path}`);
                 return false;
             }
-            // Check if this device is in our known devices list
             const isKnown = serialDevices.some((d) => d.vendorId === port.vendorId && d.productId === port.productId);
-            if (!isKnown) {
+            if (!isKnown && DEBUG) {
                 console.log(
-                    `${logHead}   FILTERED OUT (unknown device): ${port.path} VID:${port.vendorId} PID:${port.productId}`,
+                    `${logHead} FILTERED OUT (unknown device): ${port.path} VID:${port.vendorId} PID:${port.productId}`,
                 );
             }
             return isKnown;
         });
-
-        // TEMPORARY: Return ALL ports regardless of filter for debugging
-        console.log(
-            `${logHead} === DEBUG: TEMPORARILY RETURNING ALL PORTS (${ports.length}) INSTEAD OF FILTERED (${filtered.length}) ===`,
-        );
-        return ports; // Return all ports for now to debug
-        // return filtered; // Restore this later
+        if (DEBUG) {
+            console.log(`${logHead} Returning ${filtered.length} filtered ports`);
+        }
+        return filtered;
     }
 
     async checkDeviceChanges() {
