@@ -229,7 +229,7 @@ EOF
     fi
 
     echo "Preview of repositories in settings.gradle.kts:"
-    grep -n "dependencyResolutionManagement\|pluginManagement\|repositories \{|jitpack.io" "$SETTINGS_GRADLE" || true
+    grep -En 'dependencyResolutionManagement|pluginManagement|repositories \{|jitpack.io' "$SETTINGS_GRADLE" || true
 else
     echo "Warning: $SETTINGS_GRADLE not found, skipping JitPack repository addition"
 fi
