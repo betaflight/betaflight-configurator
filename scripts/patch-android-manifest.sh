@@ -151,3 +151,26 @@ fi
 echo ""
 echo "✓ Android USB support configuration complete!"
 echo "You can now build the Android app with: cargo tauri android build"
+
+# Add JitPack repository to settings.gradle.kts
+SETTINGS_GRADLE="src-tauri/gen/android/settings.gradle.kts"
+if [ -f "$SETTINGS_GRADLE" ]; then
+    echo "Adding JitPack repository to $SETTINGS_GRADLE..."
+    if ! grep -q "jitpack.io" "$SETTINGS_GRADLE"; then
+        # Use awk to insert maven repository into existing repositories block
+        awk '
+            /repositories \{/ && !found {
+                print
+                print "        maven { url = uri(\"https://jitpack.io\") }"
+                found=1
+                next
+            }
+            { print }
+        ' "$SETTINGS_GRADLE" > "$SETTINGS_GRADLE.tmp" && mv "$SETTINGS_GRADLE.tmp" "$SETTINGS_GRADLE"
+        echo "✓ JitPack repository added to settings.gradle.kts!"
+    else
+        echo "JitPack repository already present in settings.gradle.kts"
+    fi
+else
+    echo "Warning: $SETTINGS_GRADLE not found, skipping JitPack repository addition"
+fi
