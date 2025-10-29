@@ -3,6 +3,7 @@
 # Supports dev (debuggable) and release (signed) builds
 #
 # Usage:
+#   scripts/build-android-local.sh validate       # fast checks, no build
 #   scripts/build-android-local.sh dev            # debuggable build, auto-install
 #   scripts/build-android-local.sh release        # release build, signed and install
 #   scripts/build-android-local.sh release \
@@ -43,10 +44,69 @@ done
 
 cd "$ROOT_DIR"
 
+# Helper to run tauri via available toolchain (cargo-tauri preferred)
+run_tauri() {
+  local args=("$@")
+  # Prefer cargo tauri if available
+  if command -v cargo >/dev/null 2>&1; then
+    if cargo tauri --version >/dev/null 2>&1; then
+      cargo tauri "${args[@]}"
+      return $?
+    fi
+  fi
+  # Try npx @tauri-apps/cli (no permanent install required)
+  if command -v npx >/dev/null 2>&1; then
+    npx --yes @tauri-apps/cli "${args[@]}"
+    return $?
+  fi
+  # Try yarn tauri if project has it
+  if command -v yarn >/dev/null 2>&1; then
+    yarn tauri "${args[@]}"
+    return $?
+  fi
+  echo "Error: No Tauri CLI found. Install one of:\n  - cargo install tauri-cli   (Rust-based)\n  - npm i -g @tauri-apps/cli (Node-based)\nOr ensure 'npx' is available." >&2
+  return 127
+}
+
+# Ensure node modules and local vite exist
+ensure_node_modules() {
+  if [[ ! -d "$ROOT_DIR/node_modules" || ! -x "$ROOT_DIR/node_modules/.bin/vite" ]]; then
+    echo "   Installing web dependencies (yarn install)"
+    yarn install --silent || yarn install
+  fi
+}
+
+# Fast validation mode (no build, no patch side-effects)
+if [[ "$MODE" == "validate" ]]; then
+  echo "==> VALIDATE mode: running quick checks (no build)"
+
+  echo "- Checking prerequisites"
+  command -v adb >/dev/null 2>&1 && echo "  ✓ adb found" || echo "  ✗ adb missing"
+  command -v keytool >/dev/null 2>&1 && echo "  ✓ keytool found" || echo "  ⚠ keytool missing (only needed for signing)"
+  command -v apksigner >/dev/null 2>&1 && echo "  ✓ apksigner found" || echo "  ⚠ apksigner not on PATH (will try ANDROID_HOME/build-tools)"
+  command -v yarn >/dev/null 2>&1 && echo "  ✓ yarn found" || echo "  ✗ yarn missing"
+
+  echo "- Checking Android manifest path"
+  if [[ -f "$MANIFEST_PATH" ]]; then
+    echo "  ✓ Manifest exists: $MANIFEST_PATH"
+  else
+    echo "  ✗ Manifest missing (will be created by 'yarn tauri android init --ci')"
+  fi
+
+  echo "- Dry syntax check for patch script"
+  bash -n "$ROOT_DIR/scripts/patch-android-manifest.sh" && echo "  ✓ patch-android-manifest.sh syntax OK" || echo "  ✗ patch script has syntax errors"
+
+  echo "- Listing connected ADB devices"
+  adb devices
+
+  echo "==> Validate finished. Use 'dev' for debuggable build or 'release' to sign/install."
+  exit 0
+fi
+
 echo "==> Checking Android project generation"
 if [[ ! -f "$MANIFEST_PATH" ]]; then
   echo "   Android project not found, initializing..."
-  yarn tauri android init --ci
+  run_tauri android init --ci
 else
   echo "   Android project already initialized"
 fi
@@ -60,10 +120,15 @@ if [[ "$MODE" == "dev" || "$MODE" == "debug" ]]; then
   echo "   This enables WebView debugging so console logs are visible"
   # Optional: build web assets so dev fallback exists
   if [[ ! -d "$ROOT_DIR/dist" ]]; then
+    ensure_node_modules
     echo "   Building web assets (vite)"
     yarn build
   fi
-  yarn tauri android dev
+  # Help the device reach the dev server on port 8000
+  if command -v yarn >/dev/null 2>&1; then
+    yarn android:adb:reverse || true
+  fi
+  run_tauri android dev
   echo "==> Dev build complete and should be installed on the device."
   exit 0
 fi
@@ -74,7 +139,7 @@ if [[ "$MODE" != "release" ]]; then
 fi
 
 echo "==> Building release APK"
-yarn tauri android build
+run_tauri android build
 
 # Locate the unsigned universal APK produced by Gradle
 UNSIGNED_APK=$(find "$GEN_ANDROID_DIR/app/build/outputs/apk" -type f -name "*-unsigned.apk" | head -1 || true)

@@ -2,11 +2,20 @@
   "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "default",
   "description": "Default capability for all windows, allows core and shell open permissions.",
-  "platforms": ["linux", "windows", "macOS"],
+  "platforms": ["linux", "windows", "macOS", "android", "iOS"],
   "windows": ["*"],
   "permissions": [
     "core:default",
     "shell:allow-open",
-    "serialplugin:default"
+    "serialplugin:default",
+    "serialplugin:allow-available-ports",
+    "serialplugin:allow-cancel-read",
+    "serialplugin:allow-close",
+    "serialplugin:allow-close-all",
+    "serialplugin:allow-force-close",
+    "serialplugin:allow-open",
+    "serialplugin:allow-read",
+    "serialplugin:allow-write",
+    "serialplugin:allow-write-binary"
   ]
 }
