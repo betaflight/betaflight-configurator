@@ -104,15 +104,9 @@ EOF
 echo "✓ Android manifest patched successfully!"
 echo "✓ USB device filter created successfully!"
 
-# Copy custom MainActivity with USB permission handling
-if [ -f "scripts/MainActivity.kt" ]; then
-    echo "Installing custom MainActivity with USB permission handling..."
-    mkdir -p "$(dirname "$MAINACTIVITY_PATH")"
-    cp "scripts/MainActivity.kt" "$MAINACTIVITY_PATH"
-    echo "✓ MainActivity installed successfully!"
-else
-    echo "Warning: scripts/MainActivity.kt not found, skipping MainActivity installation"
-fi
+# Skip custom MainActivity - USB permissions can be handled by the serial plugin
+# The manifest intent filters and permissions are sufficient for device discovery
+echo "Skipping custom MainActivity (not needed for USB serial permissions)"
 
 # Add USB serial library dependency to app build.gradle.kts
 if [ -f "$APP_BUILD_GRADLE" ]; then
