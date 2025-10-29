@@ -125,7 +125,7 @@ if [ -f "$APP_BUILD_GRADLE" ]; then
             awk '/^dependencies \{/ {
                 print
                 print "    // USB Serial library for Android"
-                print "    implementation(\"com.github.mik3y:usb-serial-for-android:3.9.0\")"
+                print "    implementation(\"com.github.mik3y:usb-serial-for-android:3.8.0\")"
                 next
             }
             { print }' "$APP_BUILD_GRADLE" > "$APP_BUILD_GRADLE.tmp" && mv "$APP_BUILD_GRADLE.tmp" "$APP_BUILD_GRADLE"
@@ -136,7 +136,7 @@ if [ -f "$APP_BUILD_GRADLE" ]; then
 
 dependencies {
     // USB Serial library for Android
-    implementation("com.github.mik3y:usb-serial-for-android:3.9.0")
+    implementation("com.github.mik3y:usb-serial-for-android:3.8.0")
 }
 EOF
             echo "✓ USB serial library dependency added!"
@@ -193,8 +193,43 @@ EOF
     else
         echo "JitPack repository already present in settings.gradle.kts"
     fi
+    # Also ensure pluginManagement.repositories has JitPack (for plugin resolution, some AGP versions read from here)
+    if ! grep -q "pluginManagement" "$SETTINGS_GRADLE"; then
+        cat >> "$SETTINGS_GRADLE" << 'EOF'
+
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        google()
+        mavenCentral()
+        maven { url = uri("https://jitpack.io") }
+    }
+}
+EOF
+        echo "✓ pluginManagement with JitPack appended to settings.gradle.kts"
+    else
+        # Insert JitPack into existing pluginManagement.repositories if missing
+        if ! grep -q "jitpack.io" "$SETTINGS_GRADLE"; then
+            awk '
+                BEGIN { in_pm=0; brace=0; inserted=0 }
+                /pluginManagement/ { in_pm=1 }
+                {
+                    if (in_pm && $0 ~ /\{/ ) { brace++ }
+                    if (in_pm && $0 ~ /\}/ ) { brace-- }
+                    print
+                    if (in_pm && brace>0 && $0 ~ /repositories \{/ && inserted==0) {
+                        print "        maven { url = uri(\"https://jitpack.io\") }"
+                        inserted=1
+                    }
+                    if (in_pm && brace==0) { in_pm=0 }
+                }
+            ' "$SETTINGS_GRADLE" > "$SETTINGS_GRADLE.tmp" && mv "$SETTINGS_GRADLE.tmp" "$SETTINGS_GRADLE"
+            echo "✓ JitPack inserted into pluginManagement.repositories"
+        fi
+    fi
+
     echo "Preview of repositories in settings.gradle.kts:"
-    grep -n "dependencyResolutionManagement\|repositories \{|jitpack.io" -n "$SETTINGS_GRADLE" || true
+    grep -n "dependencyResolutionManagement\|pluginManagement\|repositories \{|jitpack.io" "$SETTINGS_GRADLE" || true
 else
     echo "Warning: $SETTINGS_GRADLE not found, skipping JitPack repository addition"
 fi
