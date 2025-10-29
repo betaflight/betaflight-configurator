@@ -7,6 +7,7 @@ set -e
 MANIFEST_PATH="src-tauri/gen/android/app/src/main/AndroidManifest.xml"
 DEVICE_FILTER_PATH="src-tauri/gen/android/app/src/main/res/xml/device_filter.xml"
 APP_BUILD_GRADLE="src-tauri/gen/android/app/build.gradle.kts"
+MAINACTIVITY_PATH="src-tauri/gen/android/app/src/main/java/com/betaflight/configurator/MainActivity.kt"
 
 if [ ! -f "$MANIFEST_PATH" ]; then
     echo "Error: Android manifest not found at $MANIFEST_PATH"
@@ -102,6 +103,16 @@ EOF
 
 echo "✓ Android manifest patched successfully!"
 echo "✓ USB device filter created successfully!"
+
+# Copy custom MainActivity with USB permission handling
+if [ -f "scripts/MainActivity.kt" ]; then
+    echo "Installing custom MainActivity with USB permission handling..."
+    mkdir -p "$(dirname "$MAINACTIVITY_PATH")"
+    cp "scripts/MainActivity.kt" "$MAINACTIVITY_PATH"
+    echo "✓ MainActivity installed successfully!"
+else
+    echo "Warning: scripts/MainActivity.kt not found, skipping MainActivity installation"
+fi
 
 # Add USB serial library dependency to app build.gradle.kts
 if [ -f "$APP_BUILD_GRADLE" ]; then

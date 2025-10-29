@@ -55,22 +55,22 @@ jobs:
       - name: Patch Android manifest for USB support
         run: bash scripts/patch-android-manifest.sh
 
-      - name: Show generated files AFTER patch
+      - name: Show files after patch
         run: |
-          echo "=== MANIFEST AFTER PATCH ==="
+          echo "=== AndroidManifest.xml AFTER patch ==="
           cat src-tauri/gen/android/app/src/main/AndroidManifest.xml
           echo ""
-          echo "=== DEVICE FILTER ==="
-          cat src-tauri/gen/android/app/src/main/res/xml/device_filter.xml || echo "device_filter.xml not found"
-          echo ""
-          echo "=== APP BUILD.GRADLE.KTS AFTER PATCH ==="
-          cat src-tauri/gen/android/app/build.gradle.kts
-          echo ""
           echo "=== Checking for USB permissions ==="
-          grep -i "usb" src-tauri/gen/android/app/src/main/AndroidManifest.xml || echo "No USB found in manifest"
+          grep -i "usb" src-tauri/gen/android/app/src/main/AndroidManifest.xml || echo "No USB permissions found!"
           echo ""
-          echo "=== Checking for usb-serial dependency ==="
-          grep -i "usb-serial" src-tauri/gen/android/app/build.gradle.kts || echo "No usb-serial dependency found"
+          echo "=== device_filter.xml ==="
+          cat src-tauri/gen/android/app/src/main/res/xml/device_filter.xml || echo "device_filter.xml not found!"
+          echo ""
+          echo "=== MainActivity.kt ==="
+          cat src-tauri/gen/android/app/src/main/java/com/betaflight/configurator/MainActivity.kt || echo "MainActivity.kt not found!"
+          echo ""
+          echo "=== app/build.gradle.kts dependencies ==="
+          grep -A 10 "dependencies {" src-tauri/gen/android/app/build.gradle.kts || echo "No dependencies block found!"
 
       - name: Ensure JitPack repository
         shell: bash
