@@ -20,9 +20,9 @@ tauri = { version = "2.9", features = [] }
 tauri-plugin-shell = "2.3"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
-# Use older version to avoid Kotlin compilation issues on Android
+# Version 2.16.0 has Android USB support without Kotlin compilation issues
 # Version 2.21 has onDetach override incompatibility with Tauri 2.9
-tauri-plugin-serialplugin = "2.10.0"
+tauri-plugin-serialplugin = "2.16.0"
 
 [features]
 default = ["custom-protocol"]
