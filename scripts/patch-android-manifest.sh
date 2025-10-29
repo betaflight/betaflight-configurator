@@ -6,6 +6,7 @@ set -e
 
 MANIFEST_PATH="src-tauri/gen/android/app/src/main/AndroidManifest.xml"
 DEVICE_FILTER_PATH="src-tauri/gen/android/app/src/main/res/xml/device_filter.xml"
+APP_BUILD_GRADLE="src-tauri/gen/android/app/build.gradle.kts"
 
 if [ ! -f "$MANIFEST_PATH" ]; then
     echo "Error: Android manifest not found at $MANIFEST_PATH"
@@ -78,5 +79,26 @@ EOF
 
 echo "✓ Android manifest patched successfully!"
 echo "✓ USB device filter created successfully!"
+
+# Add USB serial library dependency to app build.gradle.kts
+if [ -f "$APP_BUILD_GRADLE" ]; then
+    echo "Adding USB serial library dependency..."
+    if ! grep -q "usb-serial-for-android" "$APP_BUILD_GRADLE"; then
+        cat >> "$APP_BUILD_GRADLE" << 'EOF'
+
+dependencies {
+    // USB Serial library for Android
+    implementation("com.github.mik3y:usb-serial-for-android:3.8.0")
+}
+EOF
+        echo "✓ USB serial library dependency added!"
+    else
+        echo "USB serial library dependency already present"
+    fi
+else
+    echo "Warning: $APP_BUILD_GRADLE not found, skipping dependency addition"
+fi
+
 echo ""
+echo "✓ Android USB support configuration complete!"
 echo "You can now build the Android app with: cargo tauri android build"

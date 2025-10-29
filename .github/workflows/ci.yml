@@ -126,11 +126,11 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
-      - name: Setup Java 17
+      - name: Setup Java 21
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: '21'
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
@@ -153,6 +153,21 @@ jobs:
 
       - name: Patch Android manifest for USB support
         run: bash scripts/patch-android-manifest.sh
+
+      - name: Ensure JitPack repository (for usb-serial-for-android)
+        shell: bash
+        run: |
+          set -euo pipefail
+          FILE="src-tauri/gen/android/build.gradle.kts"
+          if [ -f "$FILE" ]; then
+            echo "Ensuring JitPack repository in $FILE..."
+            if ! grep -q "jitpack.io" "$FILE"; then
+              echo "Adding JitPack repository..."
+              printf '\nallprojects {\n    repositories {\n        maven(url = "https://jitpack.io")\n    }\n}\n' >> "$FILE"
+            fi
+            echo "Repositories block in $FILE now contains:"
+            grep -n "jitpack.io" "$FILE" || true
+          fi
 
       - name: Build Tauri Android APK
         uses: tauri-apps/tauri-action@v0
