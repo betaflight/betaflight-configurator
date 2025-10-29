@@ -87,8 +87,14 @@ if [ -f "$APP_BUILD_GRADLE" ]; then
         # Check if dependencies block exists
         if grep -q "^dependencies {" "$APP_BUILD_GRADLE"; then
             echo "Inserting into existing dependencies block..."
-            # Insert after the dependencies { line
-            sed -i '/^dependencies {/a\    \/\/ USB Serial library for Android\n    implementation("com.github.mik3y:usb-serial-for-android:3.8.0")' "$APP_BUILD_GRADLE"
+            # Use awk to insert after the dependencies { line (portable)
+            awk '/^dependencies \{/ {
+                print
+                print "    // USB Serial library for Android"
+                print "    implementation(\"com.github.mik3y:usb-serial-for-android:3.8.0\")"
+                next
+            }
+            { print }' "$APP_BUILD_GRADLE" > "$APP_BUILD_GRADLE.tmp" && mv "$APP_BUILD_GRADLE.tmp" "$APP_BUILD_GRADLE"
             echo "✓ USB serial library dependency added!"
         else
             echo "No dependencies block found, appending new block..."
