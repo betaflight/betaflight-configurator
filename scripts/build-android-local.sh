@@ -64,7 +64,7 @@ run_tauri() {
     yarn tauri "${args[@]}"
     return $?
   fi
-  echo "Error: No Tauri CLI found. Install one of:\n  - cargo install tauri-cli   (Rust-based)\n  - npm i -g @tauri-apps/cli (Node-based)\nOr ensure 'npx' is available." >&2
+  printf "Error: No Tauri CLI found. Install one of:\n  - cargo install tauri-cli   (Rust-based)\n  - npm i -g @tauri-apps/cli (Node-based)\nOr ensure 'npx' is available.\n" >&2
   return 127
 }
 

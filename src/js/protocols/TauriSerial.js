@@ -117,13 +117,40 @@ class TauriSerial extends EventTarget {
     }
 
     /**
+     * Request USB permission for a device path (Android only).
+     * This triggers the permission dialog by attempting a dummy open.
+     * Usage: await tauriserial.requestUsbPermission(path)
+     */
+    async requestUsbPermission(path) {
+        try {
+            console.log(`${logHead} Requesting USB permission for ${path} (Android)`);
+            // Use a dummy baud rate and catch errors
+            await invoke("plugin:serialplugin|open", { path, baudRate: 9600 });
+            // If permission is granted, this will succeed (or fail for other reasons)
+            console.log(`${logHead} USB permission granted for ${path}`);
+            // Immediately close if opened
+            await invoke("plugin:serialplugin|close", { path });
+            return true;
+        } catch (error) {
+            const errorStr = error?.toString() || error?.message || "";
+            if (errorStr.includes("permission") || errorStr.includes("Permission")) {
+                console.warn(`${logHead} USB permission denied for ${path}`);
+                return false;
+            }
+            // Other errors
+            console.error(`${logHead} Error requesting USB permission:`, error);
+            return false;
+        }
+    }
+
+    /**
      * Filter ports to only include known Betaflight-compatible devices.
      * @private
      */
     _filterToKnownDevices(ports) {
         // TEMPORARY DEBUG: Disable filtering to see ALL USB devices
         console.log(`${logHead} === DEBUG: Filtering ${ports.length} ports ===`);
-        
+
         const filtered = ports.filter((port) => {
             // Only include ports with known vendor IDs (Betaflight-compatible devices)
             if (!port.vendorId || !port.productId) {
@@ -133,13 +160,17 @@ class TauriSerial extends EventTarget {
             // Check if this device is in our known devices list
             const isKnown = serialDevices.some((d) => d.vendorId === port.vendorId && d.productId === port.productId);
             if (!isKnown) {
-                console.log(`${logHead}   FILTERED OUT (unknown device): ${port.path} VID:${port.vendorId} PID:${port.productId}`);
+                console.log(
+                    `${logHead}   FILTERED OUT (unknown device): ${port.path} VID:${port.vendorId} PID:${port.productId}`,
+                );
             }
             return isKnown;
         });
-        
+
         // TEMPORARY: Return ALL ports regardless of filter for debugging
-        console.log(`${logHead} === DEBUG: TEMPORARILY RETURNING ALL PORTS (${ports.length}) INSTEAD OF FILTERED (${filtered.length}) ===`);
+        console.log(
+            `${logHead} === DEBUG: TEMPORARILY RETURNING ALL PORTS (${ports.length}) INSTEAD OF FILTERED (${filtered.length}) ===`,
+        );
         return ports; // Return all ports for now to debug
         // return filtered; // Restore this later
     }
@@ -185,7 +216,21 @@ class TauriSerial extends EventTarget {
 
     async loadDevices() {
         try {
-            const portsMap = await invoke("plugin:serialplugin|available_ports");
+            let portsMap = await invoke("plugin:serialplugin|available_ports");
+
+            // ANDROID FIX: Check if result is a string (Android deserialization issue)
+            if (typeof portsMap === "string") {
+                console.log(`${logHead} Result is a string, attempting to parse...`);
+                try {
+                    // The Android plugin returns a string like: "{/dev/bus/usb/002/002={type=USB, vid=1155, ...}}"
+                    // We need to convert this to proper JSON
+                    portsMap = this._parseAndroidPortsResponse(portsMap);
+                    console.log(`${logHead} Parsed portsMap:`, portsMap);
+                } catch (parseError) {
+                    console.error(`${logHead} Failed to parse string response:`, parseError);
+                    return [];
+                }
+            }
 
             // Convert the object map to array
             const allPorts = this._convertPortsMapToArray(portsMap);
@@ -195,7 +240,9 @@ class TauriSerial extends EventTarget {
             console.log(`${logHead} Raw portsMap from plugin:`, portsMap);
             console.log(`${logHead} Total ports detected: ${allPorts.length}`);
             allPorts.forEach((port, index) => {
-                console.log(`${logHead}   [${index}] path: ${port.path}, VID: ${port.vendorId}, PID: ${port.productId}, displayName: ${port.displayName}`);
+                console.log(
+                    `${logHead}   [${index}] path: ${port.path}, VID: ${port.vendorId}, PID: ${port.productId}, displayName: ${port.displayName}`,
+                );
             });
 
             // Filter to only known devices
@@ -206,12 +253,53 @@ class TauriSerial extends EventTarget {
             this.ports.forEach((port, index) => {
                 console.log(`${logHead}   [${index}] KEPT: ${port.path} (${port.displayName})`);
             });
-            
+
             return this.ports;
         } catch (error) {
             console.error(`${logHead} Error loading devices:`, error);
             return [];
         }
+    }
+
+    /**
+     * Parse Android plugin's string response to JSON
+     * Input: "{/dev/bus/usb/002/002={type=USB, vid=1155, pid=22336, manufacturer=Betaflight, ...}}"
+     * Output: {"/dev/bus/usb/002/002": {type: "USB", vid: "1155", ...}}
+     * @private
+     */
+    _parseAndroidPortsResponse(responseStr) {
+        // Remove outer braces
+        let inner = responseStr.trim();
+        if (inner.startsWith("{") && inner.endsWith("}")) {
+            inner = inner.slice(1, -1);
+        }
+
+        const ports = {};
+
+        // Split by port entries (look for pattern: path={...})
+        // This regex finds: /dev/bus/usb/XXX/XXX={...}
+        const portPattern = /(\/dev\/[^=]+)=\{([^}]+)\}/g;
+        let match;
+
+        while ((match = portPattern.exec(inner)) !== null) {
+            const path = match[1];
+            const propsStr = match[2];
+
+            // Parse properties: "type=USB, vid=1155, pid=22336, ..."
+            const props = {};
+            const propPairs = propsStr.split(",").map((s) => s.trim());
+
+            for (const pair of propPairs) {
+                const [key, value] = pair.split("=").map((s) => s.trim());
+                if (key && value) {
+                    props[key] = value;
+                }
+            }
+
+            ports[path] = props;
+        }
+
+        return ports;
     }
 
     getDisplayName(path, vendorId, productId) {
@@ -241,10 +329,12 @@ class TauriSerial extends EventTarget {
             };
 
             console.log(`${logHead} Opening port ${path} at ${openOptions.baudRate} baud`);
+            console.log(`${logHead} Note: On Android, this will trigger a USB permission request dialog`);
 
-            // Open the port
+            // Open the port - On Android, this automatically requests USB permission
             const openResult = await invoke("plugin:serialplugin|open", openOptions);
             console.log(`${logHead} Open result:`, openResult);
+            console.log(`${logHead} USB permission granted and port opened successfully!`);
 
             // Set a reasonable timeout for read/write operations (100ms)
             try {
@@ -278,6 +368,20 @@ class TauriSerial extends EventTarget {
             return true;
         } catch (error) {
             console.error(`${logHead} Error connecting:`, error);
+            console.error(`${logHead} Error details:`, {
+                message: error?.message,
+                stack: error?.stack,
+                type: typeof error,
+                stringValue: error?.toString(),
+            });
+
+            // Check if it's a permission error
+            const errorStr = error?.toString() || error?.message || "";
+            if (errorStr.includes("permission") || errorStr.includes("Permission")) {
+                console.error(`${logHead} USB PERMISSION DENIED! User must grant permission in the Android dialog.`);
+                console.error(`${logHead} Please check if the permission dialog appeared and was dismissed.`);
+            }
+
             this.openRequested = false;
             this.dispatchEvent(new CustomEvent("connect", { detail: false }));
             return false;
