@@ -171,6 +171,14 @@ echo "You can now build the Android app with: cargo tauri android build"
 # Add JitPack repository to settings.gradle.kts (dependencyResolutionManagement.repositories)
 SETTINGS_GRADLE="src-tauri/gen/android/settings.gradle.kts"
 if [ -f "$SETTINGS_GRADLE" ]; then
+    echo ""
+    echo "========================================="
+    echo "BEFORE: settings.gradle.kts content"
+    echo "========================================="
+    cat "$SETTINGS_GRADLE"
+    echo "========================================="
+    echo ""
+    
     echo "Adding JitPack repository to $SETTINGS_GRADLE..."
     if ! grep -q "jitpack.io" "$SETTINGS_GRADLE"; then
         if grep -q "dependencyResolutionManagement" "$SETTINGS_GRADLE"; then
@@ -243,6 +251,14 @@ EOF
         fi
     fi
 
+    echo ""
+    echo "========================================="
+    echo "AFTER: settings.gradle.kts content"
+    echo "========================================="
+    cat "$SETTINGS_GRADLE"
+    echo "========================================="
+    echo ""
+    
     echo "Preview of repositories in settings.gradle.kts:"
     grep -En 'dependencyResolutionManagement|pluginManagement|repositories \{|jitpack.io' "$SETTINGS_GRADLE" || true
 else
