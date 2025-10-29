@@ -100,7 +100,6 @@ version = "2025.12.0"
 dependencies = [
  "serde",
  "serde_json",
- "serialport",
  "tauri",
  "tauri-build",
  "tauri-plugin-serialplugin",
@@ -3497,9 +3496,9 @@ dependencies = [
 
 [[package]]
 name = "tauri-plugin-serialplugin"
-version = "2.21.0"
+version = "2.10.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "99a23ab6d07a643246533ac7ada2921a8d7a858c3245913019ef56d3f4093761"
+checksum = "d6731c73268150533b1cd8dfb286dddee89cb2840883f3cff30e4b566e6a2ae8"
 dependencies = [
  "serde",
  "serde_json",
