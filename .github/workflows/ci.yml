@@ -163,7 +163,14 @@ jobs:
             echo "Ensuring JitPack repository in $FILE..."
             if ! grep -q "jitpack.io" "$FILE"; then
               echo "Adding JitPack repository..."
-              printf '\nallprojects {\n    repositories {\n        maven(url = "https://jitpack.io")\n    }\n}\n' >> "$FILE"
+              if grep -q "allprojects" "$FILE"; then
+                echo "Warning: allprojects block exists, but jitpack.io not found"
+                # Try to insert within the existing repositories block
+                sed -i '/allprojects {/,/repositories {/a\        maven { url "https://jitpack.io" }' "$FILE" || \
+                printf '\nallprojects {\n    repositories {\n        maven(url = "https://jitpack.io")\n    }\n}\n' >> "$FILE"
+              else
+                printf '\nallprojects {\n    repositories {\n        maven(url = "https://jitpack.io")\n    }\n}\n' >> "$FILE"
+              fi
             fi
             echo "Repositories block in $FILE now contains:"
             grep -n "jitpack.io" "$FILE" || true

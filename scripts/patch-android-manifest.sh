@@ -84,14 +84,23 @@ echo "✓ USB device filter created successfully!"
 if [ -f "$APP_BUILD_GRADLE" ]; then
     echo "Adding USB serial library dependency..."
     if ! grep -q "usb-serial-for-android" "$APP_BUILD_GRADLE"; then
-        cat >> "$APP_BUILD_GRADLE" << 'EOF'
+        # Check if dependencies block exists
+        if grep -q "^dependencies {" "$APP_BUILD_GRADLE"; then
+            echo "Inserting into existing dependencies block..."
+            # Insert after the dependencies { line
+            sed -i '/^dependencies {/a\    \/\/ USB Serial library for Android\n    implementation("com.github.mik3y:usb-serial-for-android:3.8.0")' "$APP_BUILD_GRADLE"
+            echo "✓ USB serial library dependency added!"
+        else
+            echo "No dependencies block found, appending new block..."
+            cat >> "$APP_BUILD_GRADLE" << 'EOF'
 
 dependencies {
     // USB Serial library for Android
     implementation("com.github.mik3y:usb-serial-for-android:3.8.0")
 }
 EOF
-        echo "✓ USB serial library dependency added!"
+            echo "✓ USB serial library dependency added!"
+        fi
     else
         echo "USB serial library dependency already present"
     fi
