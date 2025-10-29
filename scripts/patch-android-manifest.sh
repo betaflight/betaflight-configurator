@@ -116,6 +116,41 @@ fi
 
 # Add USB serial library dependency to app build.gradle.kts
 if [ -f "$APP_BUILD_GRADLE" ]; then
+    # Add JitPack repository directly to app build.gradle.kts (fallback if settings.gradle.kts injection fails)
+    echo "Adding JitPack repository to app build.gradle.kts..."
+    if ! grep -q "jitpack.io" "$APP_BUILD_GRADLE"; then
+        # Insert repositories block at the top of the file, after any existing buildscript/plugins blocks
+        awk '
+            BEGIN { inserted=0 }
+            {
+                print
+                # Insert after plugins or buildscript block closes, or before first line if no such blocks
+                if (!inserted && (NR==1 || $0 ~ /^plugins \{/ || $0 ~ /^buildscript \{/)) {
+                    if ($0 ~ /^\}/ || NR==1) {
+                        print ""
+                        print "repositories {"
+                        print "    maven { url = uri(\"https://jitpack.io\") }"
+                        print "}"
+                        print ""
+                        inserted=1
+                    }
+                }
+            }
+            END {
+                if (!inserted) {
+                    print ""
+                    print "repositories {"
+                    print "    maven { url = uri(\"https://jitpack.io\") }"
+                    print "}"
+                    print ""
+                }
+            }
+        ' "$APP_BUILD_GRADLE" > "$APP_BUILD_GRADLE.tmp" && mv "$APP_BUILD_GRADLE.tmp" "$APP_BUILD_GRADLE"
+        echo "✓ JitPack repository added to app build.gradle.kts"
+    else
+        echo "JitPack repository already present in app build.gradle.kts"
+    fi
+    
     echo "Adding USB serial library dependency..."
     if ! grep -q "usb-serial-for-android" "$APP_BUILD_GRADLE"; then
         # Check if dependencies block exists
