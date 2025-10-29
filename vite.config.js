@@ -128,7 +128,7 @@ export default defineConfig({
         host: "0.0.0.0",
         hmr: {
             protocol: "ws",
-            host: "192.168.1.140",
+            host: "localhost",
             clientPort: 8000,
         },
     },
