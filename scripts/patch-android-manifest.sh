@@ -24,7 +24,15 @@ if grep -q "android.permission.USB_PERMISSION" "$MANIFEST_PATH"; then
     echo "USB permissions already present in manifest"
 else
     # Add USB permissions before </manifest>
-    sed -i '/<\/manifest>/i \    <!-- USB permissions for serial communication -->\n    <uses-permission android:name="android.permission.USB_PERMISSION" />\n    <uses-feature android:name="android.hardware.usb.host" android:required="false" />' "$MANIFEST_PATH"
+    # Using awk for portability across macOS and Linux
+    awk '
+        /<\/manifest>/ {
+            print "    <!-- USB permissions for serial communication -->"
+            print "    <uses-permission android:name=\"android.permission.USB_PERMISSION\" />"
+            print "    <uses-feature android:name=\"android.hardware.usb.host\" android:required=\"false\" />"
+        }
+        { print }
+    ' "$MANIFEST_PATH" > "$MANIFEST_PATH.tmp" && mv "$MANIFEST_PATH.tmp" "$MANIFEST_PATH"
     echo "Added USB permissions to manifest"
 fi
 
@@ -33,7 +41,22 @@ if grep -q "USB_DEVICE_ATTACHED" "$MANIFEST_PATH"; then
     echo "USB intent filter already present in manifest"
 else
     # Add USB device intent filter and metadata before </activity>
-    sed -i '0,/<\/activity>/s|</activity>|\n            <!-- Intent filter for USB device attach -->\n            <intent-filter>\n                <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />\n            </intent-filter>\n\n            <!-- USB device filter metadata -->\n            <meta-data\n                android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"\n                android:resource="@xml/device_filter" />\n        </activity>|' "$MANIFEST_PATH"
+    # Using awk for portability across macOS and Linux
+    awk '
+        /<\/activity>/ && !found {
+            print "            <!-- Intent filter for USB device attach -->"
+            print "            <intent-filter>"
+            print "                <action android:name=\"android.hardware.usb.action.USB_DEVICE_ATTACHED\" />"
+            print "            </intent-filter>"
+            print ""
+            print "            <!-- USB device filter metadata -->"
+            print "            <meta-data"
+            print "                android:name=\"android.hardware.usb.action.USB_DEVICE_ATTACHED\""
+            print "                android:resource=\"@xml/device_filter\" />"
+            found=1
+        }
+        { print }
+    ' "$MANIFEST_PATH" > "$MANIFEST_PATH.tmp" && mv "$MANIFEST_PATH.tmp" "$MANIFEST_PATH"
     echo "Added USB intent filter to manifest"
 fi
 

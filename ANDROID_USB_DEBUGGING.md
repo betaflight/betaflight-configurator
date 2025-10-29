@@ -2,14 +2,19 @@
 
 ## Current Situation
 
-**Status**: APK builds and installs, but USB ports not detected on Android tablet
+**Status**: APK builds and installs, but app doesn't prompt for USB permission when device is attached
+
+**Critical Finding**: The app not prompting for USB permission means the **intent filter is likely not being added** to the manifest. This could be due to:
+1. The `sed -i` command failing on different platforms (macOS vs Linux)
+2. The intent filter not being inserted in the right place
+3. The patch script running but failing silently
 
 **What We Know**:
-- ✅ Build succeeds without errors
+- ✅ Build succeeds without errors  
 - ✅ Plugin v2.16.0 has Android Kotlin code
-- ✅ Manifest patch script runs in CI
-- ✅ App prompts for USB device handling when device attached
-- ❌ No ports show in the UI after permission granted
+- ✅ Manifest patch script is called in CI
+- ❌ App doesn't prompt for USB device handling when device attached
+- ❌ No ports show in the UI
 
 ## Investigation Steps
 
