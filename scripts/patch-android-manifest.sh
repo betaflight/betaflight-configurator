@@ -197,7 +197,10 @@ echo ""
 echo "✓ Android USB support configuration complete!"
 echo "You can now build the Android app with: cargo tauri android build"
 
-# Add JitPack repository to settings.gradle.kts (dependencyResolutionManagement.repositories)
+SETTINGS_GRADLE="src-tauri/gen/android/settings.gradle.kts"
+if [ ! -f "$SETTINGS_GRADLE" ]; then
+    echo "settings.gradle.kts not found, creating and injecting required repository blocks..."
+    cat > "$SETTINGS_GRADLE" << 'EOF'
 dependencyResolutionManagement {
     repositories {
         google()
@@ -205,6 +208,7 @@ dependencyResolutionManagement {
         maven { url = uri("https://jitpack.io") }
     }
 }
+
 pluginManagement {
     repositories {
         gradlePluginPortal()
@@ -213,10 +217,6 @@ pluginManagement {
         maven { url = uri("https://jitpack.io") }
     }
 }
-SETTINGS_GRADLE="src-tauri/gen/android/settings.gradle.kts"
-if [ ! -f "$SETTINGS_GRADLE" ]; then
-    echo "settings.gradle.kts not found, creating and injecting required repository blocks..."
-    cat > "$SETTINGS_GRADLE" << 'EOF'
 EOF
     echo "✓ settings.gradle.kts created and injected with JitPack and required repositories."
 else
