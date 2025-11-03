@@ -125,7 +125,7 @@ export default defineConfig({
     server: {
         port: 8000,
         strictPort: true,
-        host: "0.0.0.0",
+        host: true,
         hmr: {
             protocol: "ws",
             host: "localhost",
