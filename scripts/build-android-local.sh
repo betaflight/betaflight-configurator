@@ -94,7 +94,7 @@ if [[ "$MODE" == "validate" ]]; then
   fi
 
   echo "- Dry syntax check for patch script"
-  bash -n "$ROOT_DIR/scripts/patch-android-manifest.sh" && echo "  ✓ patch-android-manifest.sh syntax OK" || echo "  ✗ patch script has syntax errors"
+  bash -n "$ROOT_DIR/scripts/tauri-patch-android.sh" && echo "  ✓ tauri-patch-android.sh syntax OK" || echo "  ✗ patch script has syntax errors"
 
   echo "- Listing connected ADB devices"
   adb devices
@@ -148,7 +148,7 @@ fi
 
 # Always patch after init (init may regenerate files)
 echo "==> Patching Android manifest and Gradle for USB serial support"
-bash "$ROOT_DIR/scripts/patch-android-manifest.sh"
+bash "$ROOT_DIR/scripts/tauri-patch-android.sh"
 
 if [[ "$MODE" == "dev" || "$MODE" == "debug" ]]; then
   echo "==> Building debuggable APK (dev)"

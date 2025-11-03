@@ -6,7 +6,6 @@
   "windows": ["*"],
   "permissions": [
     "core:default",
-    "shell:allow-open",
     "serialplugin:allow-available-ports",
     "serialplugin:allow-cancel-read",
     "serialplugin:allow-close",
@@ -15,6 +14,10 @@
     "serialplugin:allow-open",
     "serialplugin:allow-read",
     "serialplugin:allow-write",
-    "serialplugin:allow-write-binary"
+    "serialplugin:allow-write-binary",
+    "serialplugin:allow-available-ports-direct",
+    "serialplugin:allow-set-baud-rate",
+    "serialplugin:allow-start-listening",
+    "serialplugin:allow-stop-listening"
   ]
 }
