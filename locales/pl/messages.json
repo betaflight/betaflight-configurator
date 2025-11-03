@@ -687,6 +687,9 @@
     "defaultContributingHead": {
         "message": "Współtworzenie"
     },
+    "defaultContributingText": {
+        "message": "Jeśli chcesz pomóc ulepszyć Betaflight, możesz to zrobić na wiele sposobów, między innymi:<br \/><ul><li>wykorzystując swoją wiedzę na temat Betaflight do tworzenia lub aktualizowania treści na <a href=\"https:\/\/betaflight.com\/docs\/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">naszej Wiki<\/a> lub odpowiadając na pytania innych użytkowników na forach internetowych; <\/li><li><a href=\"https:\/\/betaflight.com\/docs\/development\" target=\"_blank\" rel=\"noopener noreferrer\">dostarczając kod<\/a> do oprogramowania układowego i aplikacji – nowe funkcje, poprawki, ulepszenia;<\/li><li>testując <a href=\"https:\/\/github.com\/Betaflight\/betaflight\/pulls\" target=\"_blank\" rel=„noopener noreferrer”>nowe funkcje i poprawki<\/a> oraz przekazując swoją opinię;<\/li><li>pomagając innym użytkownikom rozwiązywać zgłaszane przez nich problemy w <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel=\"noopener noreferrer\">naszym systemie zgłoszeń<\/a> i uczestnicząc w dyskusjach na temat proponowanych funkcji; <\/li><li><a href=\"https:\/\/github.com\/betaflight\/betaflight\/tree\/master\/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">tłumacząc<\/a> program Betaflight na nowy język lub pomagając w utrzymaniu istniejących tłumaczeń.<\/li><\/ul>"
+    },
     "defaultFacebookText": {
         "message": "Mamy również <a href=\"https:\/\/www.facebook.com\/groups\/betaflightgroup\/\" target=\"_blank\" rel=\"noopener noreferrer\">grupę na Facebooku<\/a>.<br \/>Dołącz do nas aby porozmawiać o Betaflight, spytać o konfigurację lub po prostu spędzić czas z innymi pilotami."
     },
@@ -3609,6 +3612,9 @@
     "firmwareFlasherOnlineSelectBoardDescription": {
         "message": "Wybierz swój kontroler lotu, aby zobaczyć dostępne wersje oprogramowania online. Wybierz odpowiednie oprogramowanie dla twojego kontrolera lotu."
     },
+    "firmwareFlasherOnlineSelectBoardHint": {
+        "message": "Betaflight App obsługuje programowanie Unified Target (ujednoliconej platformy docelowej) wraz z przypisaną konfiguracją sprzętową konkretnej płytki – wszystko w jednym kroku.<br><br>Koncepcja Unified Target oznacza, że ten sam plik z oprogramowaniem .hex może być używany na wszystkich płytkach z tym samym MCU.<br><br>Betaflight 4.4 wprowadza funkcję <strong>Cloud Build<\/strong>.<br><br>Dzięki <strong>Cloud Build<\/strong> możesz samodzielnie określić, jakie opcje sprzętowe są obecne w Twojej konfiguracji.<br><br>Aby różne płytki mogły działać z tym samym oprogramowaniem, przy wgrywaniu Unified Target dołączany jest odpowiedni plik konfiguracyjny.<br><br>W przypadku kompilacji z lokalnego źródła możesz załadować plik konfiguracyjny Unified Target lub wybrać płytkę przed załadowaniem pliku z oprogramowaniem .hex.<br><br>Jeśli napotkasz problemy z oprogramowaniem, zachęcamy do dołączenia do Discorda lub utworzenia <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel=\"noopener noreferrer\">zgłoszenia<\/a>."
+    },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "Wybierz wersję oprogramowania dla swojego urządzenia."
     },
@@ -3719,6 +3725,9 @@
     },
     "firmwareFlasherRecoveryHead": {
         "message": "<strong>Problemy z połączeniem FC<\/strong>"
+    },
+    "firmwareFlasherRecoveryText": {
+        "message": "Jeśli utraciłeś łączność z płytką kontrolera lotu, wykonaj poniższe kroki, aby ją przywrócić: <ul> <li>Wyłącz zasilanie.<\/li> <li>Włącz opcje „Bez ponownego uruchamiania” oraz „Pełne czyszczenie pamięci”.<\/li> <li>Zewrzyj piny BOOT lub przytrzymaj przycisk BOOT na płytce.<\/li> <li>Włącz zasilanie (jeśli wszystko przebiegło poprawnie, dioda LED aktywności NIE BĘDZIE migać).<\/li> <li>Zainstaluj wszystkie sterowniki STM32 oraz program Zadig, jeśli to wymagane (zobacz sekcję <a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">USB Flashing<\/a> w instrukcji Betaflight).<\/li> <li>Zamknij program, a następnie uruchom go ponownie.<\/li> <li>Zwolnij przycisk BOOT, jeśli Twoja płytka go posiada.<\/li> <li>Wgraj odpowiednie oprogramowanie (użyj ręcznego ustawienia szybkości transmisji – baud rate – jeśli zostało to wskazane w instrukcji Twojej płytki).<\/li> <li>Wyłącz zasilanie.<\/li> <li>Usuń zworkę BOOT.<\/li> <li>Włącz zasilanie (dioda LED aktywności powinna zacząć migać).<\/li> <li>Połącz się w normalny sposób.<\/li> <\/ul>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Urzyj opcji wgrywania oprogramowania"
