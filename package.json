@@ -25,7 +25,7 @@
     "prepare": "husky install",
     "tauri:dev": "tauri dev",
     "tauri:build": "tauri build",
-    "tauri:dev:android": "yarn tauri:dev:android",
+    "tauri:dev:android": "tauri android dev",
     "tauri:build:android": "tauri android build"
   },
   "window": {
