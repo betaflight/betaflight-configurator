@@ -152,7 +152,7 @@ jobs:
         run: yarn tauri android init --ci
 
       - name: Patch Android manifest for USB support
-        run: bash scripts/patch-android-manifest.sh
+        run: bash scripts/tauri-patch-android.sh
 
       - name: Build Tauri Android APK
         uses: tauri-apps/tauri-action@v0

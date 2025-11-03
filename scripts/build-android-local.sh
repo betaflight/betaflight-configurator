@@ -103,12 +103,47 @@ if [[ "$MODE" == "validate" ]]; then
   exit 0
 fi
 
+# Helper to select Android device for dev builds
+select_android_device() {
+  if ! command -v adb >/dev/null 2>&1; then
+    echo "adb not found. Please install Android SDK and ensure adb is in PATH."
+    exit 1
+  fi
+  
+  echo "==> Checking for connected Android devices..."
+  local devices
+  devices=$(adb devices | grep -v "List of devices" | grep -v "^$" | awk '{print $1}')
+  
+  if [[ -z "$devices" ]]; then
+    echo "No devices connected. Please connect your tablet via wireless ADB."
+    echo "Run: adb connect <tablet_ip>:<port>"
+    exit 1
+  fi
+  
+  local device_count
+  device_count=$(echo "$devices" | wc -l)
+  
+  if [[ $device_count -eq 1 ]]; then
+    local device_id
+    device_id=$(echo "$devices" | head -1)
+    echo "Using device: $device_id"
+    export ANDROID_SERIAL="$device_id"
+  else
+    echo "Multiple devices found. Select one:"
+    select device_id in $devices; do
+      if [[ -n "$device_id" ]]; then
+        echo "Selected: $device_id"
+        export ANDROID_SERIAL="$device_id"
+        break
+      fi
+    done
+  fi
+}
+
 echo "==> Checking Android project generation"
 if [[ ! -f "$MANIFEST_PATH" ]]; then
   echo "   Android project not found, initializing..."
   run_tauri android init --ci
-else
-  echo "   Android project already initialized"
 fi
 
 # Always patch after init (init may regenerate files)
@@ -124,10 +159,7 @@ if [[ "$MODE" == "dev" || "$MODE" == "debug" ]]; then
     echo "   Building web assets (vite)"
     yarn build
   fi
-  # Help the device reach the dev server on port 8000
-  if command -v yarn >/dev/null 2>&1; then
-    yarn android:adb:reverse || true
-  fi
+  select_android_device
   run_tauri android dev
   echo "==> Dev build complete and should be installed on the device."
   exit 0

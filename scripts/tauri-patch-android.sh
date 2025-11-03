@@ -108,91 +108,6 @@ echo "✓ USB device filter created successfully!"
 # The manifest intent filters and permissions are sufficient for device discovery
 echo "Skipping custom MainActivity (not needed for USB serial permissions)"
 
-# Add USB serial library dependency to app build.gradle.kts
-if [ -f "$APP_BUILD_GRADLE" ]; then
-    # Add JitPack repository directly to app build.gradle.kts (fallback if settings.gradle.kts injection fails)
-    echo "Adding JitPack repository to app build.gradle.kts..."
-    if ! grep -q "jitpack.io" "$APP_BUILD_GRADLE"; then
-        # Insert repositories block at the top of the file, after any existing buildscript/plugins blocks
-        awk '
-            BEGIN { inserted=0 }
-            {
-                print
-                # Insert after plugins or buildscript block closes, or before first line if no such blocks
-                if (!inserted && (NR==1 || $0 ~ /^plugins \{/ || $0 ~ /^buildscript \{/)) {
-                    if ($0 ~ /^\}/ || NR==1) {
-                        print ""
-                        print "repositories {"
-                        print "    maven { url = uri(\"https://jitpack.io\") }"
-                        print "}"
-                        print ""
-                        inserted=1
-                    }
-                }
-            }
-            END {
-                if (!inserted) {
-                    print ""
-                    print "repositories {"
-                    print "    maven { url = uri(\"https://jitpack.io\") }"
-                    print "}"
-                    print ""
-                }
-            }
-        ' "$APP_BUILD_GRADLE" > "$APP_BUILD_GRADLE.tmp" && mv "$APP_BUILD_GRADLE.tmp" "$APP_BUILD_GRADLE"
-        echo "✓ JitPack repository added to app build.gradle.kts"
-    else
-        echo "JitPack repository already present in app build.gradle.kts"
-    fi
-    
-    echo "Adding USB serial library dependency..."
-    if ! grep -q "usb-serial-for-android" "$APP_BUILD_GRADLE"; then
-        # Check if dependencies block exists
-        if grep -q "^dependencies {" "$APP_BUILD_GRADLE"; then
-            echo "Inserting into existing dependencies block..."
-            # Use awk to insert after the dependencies { line (portable)
-            awk '/^dependencies \{/ {
-                print
-                print "    // USB Serial library for Android - explicit version to override plugin transitive 3.8.1"
-                print "    implementation(\"com.github.mik3y:usb-serial-for-android:3.8.0\")"
-                next
-            }
-            { print }' "$APP_BUILD_GRADLE" > "$APP_BUILD_GRADLE.tmp" && mv "$APP_BUILD_GRADLE.tmp" "$APP_BUILD_GRADLE"
-            echo "✓ USB serial library dependency added!"
-        else
-            echo "No dependencies block found, appending new block..."
-            cat >> "$APP_BUILD_GRADLE" << 'EOF'
-
-dependencies {
-    // USB Serial library for Android - explicit version to override plugin transitive 3.8.1
-    implementation("com.github.mik3y:usb-serial-for-android:3.8.0")
-}
-EOF
-            echo "✓ USB serial library dependency added!"
-        fi
-    else
-        echo "USB serial library dependency already present"
-    fi
-    
-    # Add resolution strategy to force version 3.8.0
-    echo "Adding version resolution strategy..."
-    if ! grep -q "resolutionStrategy" "$APP_BUILD_GRADLE"; then
-        cat >> "$APP_BUILD_GRADLE" << 'EOF'
-
-configurations.all {
-    resolutionStrategy {
-        force("com.github.mik3y:usb-serial-for-android:3.8.0")
-    }
-}
-EOF
-        echo "✓ Resolution strategy added to force version 3.8.0"
-    else
-        echo "Resolution strategy already present"
-    fi
-else
-    echo "Warning: $APP_BUILD_GRADLE not found, skipping dependency addition"
-fi
-
 echo ""
 echo "✓ Android USB support configuration complete!"
 echo "You can now build the Android app with: cargo tauri android build"
@@ -218,7 +133,4 @@ pluginManagement {
     }
 }
 EOF
-    echo "✓ settings.gradle.kts created and injected with JitPack and required repositories."
-else
-    echo "settings.gradle.kts already exists, checking for JitPack and required blocks..."
 fi
