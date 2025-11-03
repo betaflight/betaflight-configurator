@@ -132,5 +132,9 @@ pluginManagement {
         maven { url = uri("https://jitpack.io") }
     }
 }
+
+dependencies {
+    implementation 'com.github.mik3y:usb-serial-for-android:3.9.0'
+}
 EOF
 fi
