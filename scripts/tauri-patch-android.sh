@@ -221,7 +221,7 @@ if [ -f "$APP_BUILD_GRADLE" ]; then
         if grep -q "^dependencies {" "$APP_BUILD_GRADLE"; then
             # Insert after the opening dependencies { line
             sed -i '/^dependencies {/a\
-    implementation("com.github.mik3y:usb-serial-for-android:3.9.0")
+    implementation("com.github.mik3y:usb-serial-for-android:3.8.0")
 ' "$APP_BUILD_GRADLE"
         else
             # Create dependencies block if it doesn't exist
@@ -229,7 +229,7 @@ if [ -f "$APP_BUILD_GRADLE" ]; then
             cat >> "$APP_BUILD_GRADLE" << 'EOF'
 
 dependencies {
-    implementation("com.github.mik3y:usb-serial-for-android:3.9.0")
+    implementation("com.github.mik3y:usb-serial-for-android:3.8.0")
 }
 EOF
         fi
