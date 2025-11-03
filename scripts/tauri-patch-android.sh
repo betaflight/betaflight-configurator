@@ -188,24 +188,60 @@ EOF
     else
         # Check and add missing repositories in pluginManagement
         if ! grep -A 10 "pluginManagement" "$SETTINGS_GRADLE" | grep -q "gradlePluginPortal()"; then
-            sed -i '/pluginManagement {/,/}/ { /repositories {/a\
-        gradlePluginPortal()
-}' "$SETTINGS_GRADLE"
+            # Using awk for portability across macOS and Linux
+            awk '
+                /pluginManagement \{/,/\}/ {
+                    if ($0 ~ /repositories \{/ && !found) {
+                        print $0
+                        print "        gradlePluginPortal()"
+                        found=1
+                        next
+                    }
+                }
+                { print }
+            ' "$SETTINGS_GRADLE" > "$SETTINGS_GRADLE.tmp" && mv "$SETTINGS_GRADLE.tmp" "$SETTINGS_GRADLE"
         fi
         if ! grep -A 10 "pluginManagement" "$SETTINGS_GRADLE" | grep -q "google()"; then
-            sed -i '/pluginManagement {/,/}/ { /repositories {/a\
-        google()
-}' "$SETTINGS_GRADLE"
+            # Using awk for portability across macOS and Linux
+            awk '
+                /pluginManagement \{/,/\}/ {
+                    if ($0 ~ /repositories \{/ && !found) {
+                        print $0
+                        print "        google()"
+                        found=1
+                        next
+                    }
+                }
+                { print }
+            ' "$SETTINGS_GRADLE" > "$SETTINGS_GRADLE.tmp" && mv "$SETTINGS_GRADLE.tmp" "$SETTINGS_GRADLE"
         fi
         if ! grep -A 10 "pluginManagement" "$SETTINGS_GRADLE" | grep -q "mavenCentral()"; then
-            sed -i '/pluginManagement {/,/}/ { /repositories {/a\
-        mavenCentral()
-}' "$SETTINGS_GRADLE"
+            # Using awk for portability across macOS and Linux
+            awk '
+                /pluginManagement \{/,/\}/ {
+                    if ($0 ~ /repositories \{/ && !found) {
+                        print $0
+                        print "        mavenCentral()"
+                        found=1
+                        next
+                    }
+                }
+                { print }
+            ' "$SETTINGS_GRADLE" > "$SETTINGS_GRADLE.tmp" && mv "$SETTINGS_GRADLE.tmp" "$SETTINGS_GRADLE"
         fi
         if ! grep -A 10 "pluginManagement" "$SETTINGS_GRADLE" | grep -q "jitpack.io"; then
-            sed -i '/pluginManagement {/,/}/ { /repositories {/a\
-        maven { url = uri("https://jitpack.io") }
-}' "$SETTINGS_GRADLE"
+            # Using awk for portability across macOS and Linux
+            awk '
+                /pluginManagement \{/,/\}/ {
+                    if ($0 ~ /repositories \{/ && !found) {
+                        print $0
+                        print "        maven { url = uri(\"https://jitpack.io\") }"
+                        found=1
+                        next
+                    }
+                }
+                { print }
+            ' "$SETTINGS_GRADLE" > "$SETTINGS_GRADLE.tmp" && mv "$SETTINGS_GRADLE.tmp" "$SETTINGS_GRADLE"
         fi
     fi
 fi
