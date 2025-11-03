@@ -112,9 +112,12 @@ echo ""
 echo "✓ Android USB support configuration complete!"
 echo "You can now build the Android app with: cargo tauri android build"
 
+# Idempotent settings.gradle.kts patching
 SETTINGS_GRADLE="src-tauri/gen/android/settings.gradle.kts"
+echo "Ensuring required repositories in settings.gradle.kts..."
+
 if [ ! -f "$SETTINGS_GRADLE" ]; then
-    echo "settings.gradle.kts not found, creating and injecting required repository blocks..."
+    echo "Creating settings.gradle.kts with required repository blocks..."
     cat > "$SETTINGS_GRADLE" << 'EOF'
 dependencyResolutionManagement {
     repositories {
@@ -132,9 +135,107 @@ pluginManagement {
         maven { url = uri("https://jitpack.io") }
     }
 }
+EOF
+else
+    echo "Patching existing settings.gradle.kts..."
 
-dependencies {
-    implementation 'com.github.mik3y:usb-serial-for-android:3.9.0'
+    # Add dependencyResolutionManagement repositories if missing
+    if ! grep -q "dependencyResolutionManagement" "$SETTINGS_GRADLE"; then
+        echo "Adding dependencyResolutionManagement block..."
+        cat >> "$SETTINGS_GRADLE" << 'EOF'
+
+dependencyResolutionManagement {
+    repositories {
+        google()
+        mavenCentral()
+        maven { url = uri("https://jitpack.io") }
+    }
 }
 EOF
+    else
+        # Check and add missing repositories in dependencyResolutionManagement
+        if ! grep -A 10 "dependencyResolutionManagement" "$SETTINGS_GRADLE" | grep -q "google()"; then
+            sed -i '/dependencyResolutionManagement {/,/}/ { /repositories {/a\
+        google()
+}' "$SETTINGS_GRADLE"
+        fi
+        if ! grep -A 10 "dependencyResolutionManagement" "$SETTINGS_GRADLE" | grep -q "mavenCentral()"; then
+            sed -i '/dependencyResolutionManagement {/,/}/ { /repositories {/a\
+        mavenCentral()
+}' "$SETTINGS_GRADLE"
+        fi
+        if ! grep -A 10 "dependencyResolutionManagement" "$SETTINGS_GRADLE" | grep -q "jitpack.io"; then
+            sed -i '/dependencyResolutionManagement {/,/}/ { /repositories {/a\
+        maven { url = uri("https://jitpack.io") }
+}' "$SETTINGS_GRADLE"
+        fi
+    fi
+
+    # Add pluginManagement repositories if missing
+    if ! grep -q "pluginManagement" "$SETTINGS_GRADLE"; then
+        echo "Adding pluginManagement block..."
+        cat >> "$SETTINGS_GRADLE" << 'EOF'
+
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        google()
+        mavenCentral()
+        maven { url = uri("https://jitpack.io") }
+    }
+}
+EOF
+    else
+        # Check and add missing repositories in pluginManagement
+        if ! grep -A 10 "pluginManagement" "$SETTINGS_GRADLE" | grep -q "gradlePluginPortal()"; then
+            sed -i '/pluginManagement {/,/}/ { /repositories {/a\
+        gradlePluginPortal()
+}' "$SETTINGS_GRADLE"
+        fi
+        if ! grep -A 10 "pluginManagement" "$SETTINGS_GRADLE" | grep -q "google()"; then
+            sed -i '/pluginManagement {/,/}/ { /repositories {/a\
+        google()
+}' "$SETTINGS_GRADLE"
+        fi
+        if ! grep -A 10 "pluginManagement" "$SETTINGS_GRADLE" | grep -q "mavenCentral()"; then
+            sed -i '/pluginManagement {/,/}/ { /repositories {/a\
+        mavenCentral()
+}' "$SETTINGS_GRADLE"
+        fi
+        if ! grep -A 10 "pluginManagement" "$SETTINGS_GRADLE" | grep -q "jitpack.io"; then
+            sed -i '/pluginManagement {/,/}/ { /repositories {/a\
+        maven { url = uri("https://jitpack.io") }
+}' "$SETTINGS_GRADLE"
+        fi
+    fi
+fi
+
+# Idempotent app/build.gradle.kts dependency injection
+APP_BUILD_GRADLE="src-tauri/gen/android/app/build.gradle.kts"
+echo "Ensuring usb-serial-for-android dependency in app/build.gradle.kts..."
+
+if [ -f "$APP_BUILD_GRADLE" ]; then
+    if ! grep -q "usb-serial-for-android" "$APP_BUILD_GRADLE"; then
+        echo "Adding usb-serial-for-android dependency to app module..."
+        # Find the dependencies block and add the dependency
+        if grep -q "^dependencies {" "$APP_BUILD_GRADLE"; then
+            # Insert after the opening dependencies { line
+            sed -i '/^dependencies {/a\
+    implementation("com.github.mik3y:usb-serial-for-android:3.9.0")
+' "$APP_BUILD_GRADLE"
+        else
+            # Create dependencies block if it doesn't exist
+            echo "Creating dependencies block with usb-serial-for-android..."
+            cat >> "$APP_BUILD_GRADLE" << 'EOF'
+
+dependencies {
+    implementation("com.github.mik3y:usb-serial-for-android:3.9.0")
+}
+EOF
+        fi
+    else
+        echo "usb-serial-for-android dependency already present in app module"
+    fi
+else
+    echo "Warning: app/build.gradle.kts not found, cannot add usb-serial-for-android dependency"
 fi
