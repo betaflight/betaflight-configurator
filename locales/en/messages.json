@@ -4535,7 +4535,7 @@
         "description": "Pitch-Roll Ratio tuning slider helpicon message"
     },
     "pidTuningPitchPIGainSlider": {
-        "message": "Pitch Tracking:<br><i><small>Pitch: P, I & FF</small></i>",
+        "message": "Pitch Tracking:<br><i><small>Pitch:Roll P, I & FF</small></i>",
         "description": "Pitch P & I slider label"
     },
     "pidTuningPitchPIGainSliderHelp": {
