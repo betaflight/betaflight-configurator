@@ -4527,7 +4527,7 @@
         "description": "D Max slider helpicon message"
     },
     "pidTuningRollPitchRatioSlider": {
-        "message": "Pitch Damping:<br /><i><small>Pitch: D</small></i>",
+        "message": "Pitch Damping:<br /><i><small>Pitch:Roll D</small></i>",
         "description": "Pitch-Roll Ratio slider label"
     },
     "pidTuningRollPitchRatioSliderHelp": {
