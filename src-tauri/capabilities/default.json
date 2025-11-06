@@ -2,11 +2,11 @@
   "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "default",
   "description": "Default capability for all windows, allows core and shell open permissions.",
-  "platforms": ["linux", "windows", "macOS"],
+  "platforms": ["linux", "windows", "macOS", "android", "iOS"],
   "windows": ["*"],
   "permissions": [
     "core:default",
-    "shell:allow-open",
+    "opener:default",
     "serialplugin:default"
   ]
 }

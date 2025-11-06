@@ -126,11 +126,11 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
-      - name: Setup Java 17
+      - name: Setup Java 21
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: '21'
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
@@ -150,6 +150,9 @@ jobs:
 
       - name: Initialize Tauri Android project
         run: yarn tauri android init --ci
+
+      - name: Patch Android manifest for USB support
+        run: bash scripts/tauri-patch-android.sh
 
       - name: Build Tauri Android APK
         uses: tauri-apps/tauri-action@v0

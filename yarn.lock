@@ -2183,7 +2183,7 @@
     magic-string "^0.25.0"
     string.prototype.matchall "^4.0.6"
 
-"@tauri-apps/api@^2.9.0":
+"@tauri-apps/api@>=2.0.0-beta.6", "@tauri-apps/api@^2.9.0":
   version "2.9.0"
   resolved "https://registry.yarnpkg.com/@tauri-apps/api/-/api-2.9.0.tgz#047fcbfec05a719b0cec997eee244cee453fb2fc"
   integrity sha512-qD5tMjh7utwBk9/5PrTA/aGr3i5QaJ/Mlt7p8NilQ45WgbifUNPyKWsA63iQ8YfQq6R8ajMapU+/Q8nMcPRLNw==
@@ -9845,6 +9845,13 @@ tar@^6.1.11:
     minizlib "^2.1.1"
     mkdirp "^1.0.3"
     yallist "^4.0.0"
+
+tauri-plugin-serialplugin-api@^2.21.1:
+  version "2.21.1"
+  resolved "https://registry.yarnpkg.com/tauri-plugin-serialplugin-api/-/tauri-plugin-serialplugin-api-2.21.1.tgz#a8ac2ab6ff0024988b552259d98fe22fe21f5cf2"
+  integrity sha512-V89gkiHmsjRXN000oSP+6Oiatsvt1EGJHjcS2c7+VLiSic+934UYWxKaZ3oG4s3zefajzKFLl3EjankRIaPHRQ==
+  dependencies:
+    "@tauri-apps/api" ">=2.0.0-beta.6"
 
 temp-dir@^2.0.0:
   version "2.0.0"

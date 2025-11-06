@@ -2,6 +2,7 @@ import WebSerial from "./protocols/WebSerial.js";
 import WebBluetooth from "./protocols/WebBluetooth.js";
 import Websocket from "./protocols/WebSocket.js";
 import VirtualSerial from "./protocols/VirtualSerial.js";
+import TauriSerial from "./protocols/TauriSerial.js";
 import { isTauri } from "@tauri-apps/api/core";
 
 /**
@@ -17,34 +18,20 @@ class Serial extends EventTarget {
         this.logHead = "[SERIAL]";
 
         // Initialize protocols with metadata for easier lookup
-        this._protocols = [
-            { name: "webserial", instance: new WebSerial() },
-            { name: "webbluetooth", instance: new WebBluetooth() },
-            { name: "websocket", instance: new Websocket() },
-            { name: "virtual", instance: new VirtualSerial() },
-        ];
+
+        if (isTauri()) {
+            this._protocols = [{ name: "tauriserial", instance: new TauriSerial() }];
+        } else {
+            this._protocols = [
+                { name: "webserial", instance: new WebSerial() },
+                { name: "webbluetooth", instance: new WebBluetooth() },
+                { name: "websocket", instance: new Websocket() },
+                { name: "virtual", instance: new VirtualSerial() },
+            ];
+        }
 
         // Forward events from current protocols
         this._setupEventForwarding();
-    }
-
-    /**
-     * Perform any asynchronous initialization required by the Serial facade.
-     * This keeps constructors synchronous and predictable.
-     */
-    async init() {
-        // Dynamically include the native Tauri serial adapter so web builds don't try to resolve it.
-        if (isTauri()) {
-            try {
-                const { default: TauriSerial } = await import("./protocols/TauriSerial.js");
-                const inst = new TauriSerial();
-                this._protocols.unshift({ name: "tauriserial", instance: inst });
-                // Wire event forwarding for this late-added protocol
-                this._setupEventForwardingFor("tauriserial", inst);
-            } catch (err) {
-                console.warn(`${this.logHead} Failed to load TauriSerial adapter:`, err);
-            }
-        }
     }
 
     /**
@@ -58,11 +45,7 @@ class Serial extends EventTarget {
         }
     }
 
-    _setupEventForwardingFor(
-        name,
-        instance,
-        events = ["addedDevice", "removedDevice", "connect", "disconnect", "receive"],
-    ) {
+    _setupEventForwardingFor(name, instance, events) {
         if (typeof instance?.addEventListener !== "function") {
             return;
         }
@@ -245,6 +228,3 @@ class Serial extends EventTarget {
 
 // Export a singleton instance
 export const serial = new Serial();
-// Kick off async initialization outside of the constructor.
-// Intentionally not awaited to avoid blocking module load.
-void serial.init();
