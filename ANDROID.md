@@ -319,12 +319,6 @@ mkdir -p dist && touch dist/.gitkeep
 
 ## Available Scripts
 
-### Emulator Management
-- `yarn android:emu:list` - List all AVDs
-- `yarn android:emu:check` - Check if emulator is running
-- `yarn android:emu:start` - Start emulator with SwiftShader
-- `yarn android:emu:start:host` - Start with host GPU
-
 ### Tauri Android
 - `yarn tauri:dev:android` - Development build with hot reload
 - `yarn tauri:build:android` - Production release build

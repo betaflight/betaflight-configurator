@@ -164,35 +164,6 @@ PortHandler.onChangeSelectedPort = function (port) {
  * @param {string} deviceType - Type of device ('serial', 'bluetooth', 'usb')
  */
 PortHandler.requestDevicePermission = function (deviceType) {
-    // Tauri USB permission flow for Android
-    if (deviceType === "tauriserial" && isTauri()) {
-        // Use the currently selected port, or first available
-        const portPath =
-            this.portPicker.selectedPort !== DEFAULT_PORT
-                ? this.portPicker.selectedPort
-                : this.currentSerialPorts[0]?.path || null;
-        if (!portPath) {
-            console.warn(`${this.logHead} No serial port available to request permission for.`);
-            return;
-        }
-        console.log(`${this.logHead} Requesting TAURI USB permission for:`, portPath);
-        serial
-            .requestUsbPermission(portPath)
-            .then((granted) => {
-                if (granted) {
-                    console.log(`${this.logHead} Permission granted for TAURI serial device:`, portPath);
-                    this.selectActivePort(portPath);
-                } else {
-                    console.log(`${this.logHead} Permission denied or cancelled for TAURI serial device:`, portPath);
-                }
-            })
-            .catch((error) => {
-                console.error(`${this.logHead} Error requesting TAURI USB permission:`, error);
-            });
-        return;
-    }
-
-    // Existing PWA and USB logic
     const requestPromise =
         deviceType === "usb"
             ? WEBUSBDFU.requestPermission()

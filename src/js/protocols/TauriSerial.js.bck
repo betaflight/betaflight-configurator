@@ -1,20 +1,10 @@
-import { SerialPort } from "tauri-plugin-serialplugin-api";
+import { invoke } from "@tauri-apps/api/core";
 import { serialDevices, vendorIdNames } from "./devices";
 
 const logHead = "[TAURI SERIAL]";
 
 /**
- * Detects Broken pipe/EPIPE errors across platforms.
- */
-function isBrokenPipeError(error) {
-    const s = typeof error === "string" ? error : error?.message || (error?.toString ? error.toString() : "") || "";
-    return /broken pipe|EPIPE|os error 32|code:\s*32/i.test(s);
-}
-
-// Note: We avoid async generator + for-await-of to improve compatibility in some runtimes.
-
-/**
- * TauriSerial protocol implementation using tauri-plugin-serialplugin
+ * TauriSerial protocol implementation using tauri-plugin-serialplugin-api
  */
 class TauriSerial extends EventTarget {
     constructor() {
@@ -39,7 +29,6 @@ class TauriSerial extends EventTarget {
         this.connect = this.connect.bind(this);
         this.disconnect = this.disconnect.bind(this);
         this.handleReceiveBytes = this.handleReceiveBytes.bind(this);
-        this.handleDisconnect = this.handleDisconnect.bind(this);
 
         // Detect if running on macOS with AT32 (needs batch writes)
         this.isNeedBatchWrite = false;
@@ -48,24 +37,15 @@ class TauriSerial extends EventTarget {
         this.monitoringDevices = false;
         this.deviceMonitorInterval = null;
 
-        // this.loadDevices().then(() => this.startDeviceMonitoring());
-        this.loadDevices();
+        this.loadDevices().then(() => this.startDeviceMonitoring());
     }
 
     handleReceiveBytes(info) {
         this.bytesReceived += info.detail.byteLength;
     }
 
-    handleDisconnect() {
-        // Handle unexpected disconnections (e.g., device unplugged)
-        if (this.connected) {
-            console.log(`${logHead} Unexpected disconnect detected`);
-            this.disconnect();
-        }
-    }
-
     getConnectedPort() {
-        return this.port;
+        return this.connectionId;
     }
 
     handleFatalSerialError() {
@@ -131,11 +111,23 @@ class TauriSerial extends EventTarget {
      * This triggers the permission dialog by attempting a dummy open.
      * Usage: await tauriserial.requestPermissionDevice(path)
      */
-    async requestPermissionDevice() {
+    async requestPermissionDevice(path) {
         try {
-            console.log(`${logHead} Requesting USB permission for Android device`);
+            console.log(`${logHead} Requesting USB permission for ${path} (Android)`);
+            // Use a dummy baud rate and catch errors
+            await invoke("plugin:serialplugin|open", { path, baudRate: 9600 });
+            // If permission is granted, this will succeed (or fail for other reasons)
+            console.log(`${logHead} USB permission granted for ${path}`);
+            // Immediately close if opened
+            await invoke("plugin:serialplugin|close", { path });
             return true;
         } catch (error) {
+            const errorStr = error?.toString() || error?.message || "";
+            if (errorStr.includes("permission") || errorStr.includes("Permission")) {
+                console.warn(`${logHead} USB permission denied for ${path}`);
+                return false;
+            }
+            // Other errors
             console.error(`${logHead} Error requesting USB permission:`, error);
             return false;
         }
@@ -172,7 +164,21 @@ class TauriSerial extends EventTarget {
 
     async checkDeviceChanges() {
         try {
-            const portsMap = await SerialPort.available_ports_direct();
+            let portsMap = await invoke("plugin:serialplugin|available_ports");
+
+            // ANDROID FIX: Check if result is a string (Android deserialization issue)
+            if (typeof portsMap === "string") {
+                console.log(`${logHead} Result is a string, attempting to parse...`);
+                try {
+                    // The Android plugin returns a string like: "{/dev/bus/usb/002/002={type=USB, vid=1155, ...}}"
+                    // We need to convert this to proper JSON
+                    portsMap = this._parseAndroidPortsResponse(portsMap);
+                    console.log(`${logHead} Parsed portsMap:`, portsMap);
+                } catch (parseError) {
+                    console.error(`${logHead} Failed to parse string response:`, parseError);
+                    return;
+                }
+            }
 
             // Convert to our format
             const allPorts = this._convertPortsMapToArray(portsMap);
@@ -185,16 +191,16 @@ class TauriSerial extends EventTarget {
                 (oldPort) => !currentPorts.some((newPort) => newPort.path === oldPort.path),
             );
 
+            // Check for added devices
+            const addedPorts = currentPorts.filter(
+                (newPort) => !this.ports.some((oldPort) => oldPort.path === newPort.path),
+            );
+
             // Emit events for removed devices
             for (const removed of removedPorts) {
                 this.dispatchEvent(new CustomEvent("removedDevice", { detail: removed }));
                 console.log(`${logHead} Device removed: ${removed.path}`);
             }
-
-            // Check for added devices
-            const addedPorts = currentPorts.filter(
-                (newPort) => !this.ports.some((oldPort) => oldPort.path === newPort.path),
-            );
 
             // Emit events for added devices
             for (const added of addedPorts) {
@@ -203,52 +209,108 @@ class TauriSerial extends EventTarget {
             }
 
             // Update our ports list
-            console.log(`${logHead} Device check complete. Current ports:`, currentPorts, this.ports);
+            console.log(`${logHead} Device check complete. Current ports:`, currentPorts, portsMap, allPorts);
             this.ports = currentPorts;
         } catch (error) {
+            const errorStr = error?.toString() || error?.message || "";
+            
+            // Handle Android USB permission errors specifically
+            if (errorStr.includes("permission") || errorStr.includes("Permission") || errorStr.includes("not given")) {
+                console.log(`${logHead} USB permission required for device monitoring. Some devices may not be accessible until permission is granted.`);
+                // Don't treat this as a fatal error - continue monitoring
+                return;
+            }
+            
             console.warn(`${logHead} Error checking device changes:`, error);
         }
     }
 
-    createPort(port) {
-        const displayName = vendorIdNames[port.usbVendorId]
-            ? vendorIdNames[port.usbVendorId]
-            : `VID:${port.usbVendorId} PID:${port.usbProductId}`;
-        return {
-            path: "tauriserial",
-            displayName: `Betaflight ${displayName}`,
-            vendorId: port.usbVendorId,
-            productId: port.usbProductId,
-            port: port,
-        };
-    }
-
     async loadDevices() {
         try {
-            let newPorts = await SerialPort.available_ports_direct();
-            console.log(`${logHead} Loaded devices:`, newPorts);
+            let portsMap = await invoke("plugin:serialplugin|available_ports");
 
             // ANDROID FIX: Check if result is a string (Android deserialization issue)
-            if (typeof newPorts === "string") {
+            if (typeof portsMap === "string") {
                 console.log(`${logHead} Result is a string, attempting to parse...`);
                 try {
                     // The Android plugin returns a string like: "{/dev/bus/usb/002/002={type=USB, vid=1155, ...}}"
                     // We need to convert this to proper JSON
-                    newPorts = this._parseAndroidPortsResponse(newPorts);
-                    console.log(`${logHead} Parsed ports:`, newPorts);
+                    portsMap = this._parseAndroidPortsResponse(portsMap);
+                    console.log(`${logHead} Parsed portsMap:`, portsMap);
                 } catch (parseError) {
                     console.error(`${logHead} Failed to parse string response:`, parseError);
                     return [];
                 }
             }
 
-            const allPorts = this._convertPortsMapToArray(newPorts);
-            this.ports = allPorts.map((port) => this.createPort(port));
+            // Convert the object map to array
+            const allPorts = this._convertPortsMapToArray(portsMap);
+
+            // DEBUG: Log all detected ports before filtering
+            console.log(`${logHead} === DEBUG: All detected ports BEFORE filtering ===`);
+            console.log(`${logHead} Raw portsMap from plugin:`, portsMap);
+            console.log(`${logHead} Total ports detected: ${allPorts.length}`);
+            allPorts.forEach((port, index) => {
+                console.log(
+                    `${logHead}   [${index}] path: ${port.path}, VID: ${port.vendorId}, PID: ${port.productId}, displayName: ${port.displayName}`,
+                );
+            });
+
+            // Filter to only known devices
+            this.ports = this._filterToKnownDevices(allPorts);
+
+            console.log(`${logHead} === DEBUG: After filtering ===`);
+            console.log(`${logHead} Found ${this.ports.length} serial ports (filtered from ${allPorts.length})`);
+            this.ports.forEach((port, index) => {
+                console.log(`${logHead}   [${index}] KEPT: ${port.path} (${port.displayName})`);
+            });
+
             return this.ports;
         } catch (error) {
             console.error(`${logHead} Error loading devices:`, error);
             return [];
         }
+    }
+
+    /**
+     * Parse Android plugin's string response to JSON
+     * Input: "{/dev/bus/usb/002/002={type=USB, vid=1155, pid=22336, manufacturer=Betaflight, ...}}"
+     * Output: {"/dev/bus/usb/002/002": {type: "USB", vid: "1155", ...}}
+     * @private
+     */
+    _parseAndroidPortsResponse(responseStr) {
+        // Remove outer braces
+        let inner = responseStr.trim();
+        if (inner.startsWith("{") && inner.endsWith("}")) {
+            inner = inner.slice(1, -1);
+        }
+
+        const ports = {};
+
+        // Split by port entries (look for pattern: path={...})
+        // This regex finds: /dev/bus/usb/XXX/XXX={...}
+        const portPattern = /(\/dev\/[^=]+)=\{([^}]+)\}/g;
+        let match;
+
+        while ((match = portPattern.exec(inner)) !== null) {
+            const path = match[1];
+            const propsStr = match[2];
+
+            // Parse properties: "type=USB, vid=1155, pid=22336, ..."
+            const props = {};
+            const propPairs = propsStr.split(",").map((s) => s.trim());
+
+            for (const pair of propPairs) {
+                const [key, value] = pair.split("=").map((s) => s.trim());
+                if (key && value) {
+                    props[key] = value;
+                }
+            }
+
+            ports[path] = props;
+        }
+
+        return ports;
     }
 
     getDisplayName(path, vendorId, productId) {
@@ -271,54 +333,70 @@ class TauriSerial extends EventTarget {
 
         this.openRequested = true;
 
-        const port = {
-            path,
-            baudRate: options.baudRate || 115200,
-        };
-
         try {
-            console.log(`${logHead} Connecting to ${path} with options:`, port);
-            this.port = new SerialPort(port);
-            const openResult = await this.port.open();
-            console.log(`${logHead} Port opened successfully!`, openResult);
+            const openOptions = {
+                path,
+                baudRate: options.baudRate || 115200,
+            };
+
+            console.log(`${logHead} Opening port ${path} at ${openOptions.baudRate} baud`);
+            console.log(`${logHead} Note: On Android, this will trigger a USB permission request dialog`);
+
+            // Open the port - On Android, this automatically requests USB permission
+            const openResult = await invoke("plugin:serialplugin|open", openOptions);
+            console.log(`${logHead} Open result:`, openResult);
+            console.log(`${logHead} USB permission granted and port opened successfully!`);
+
+            // Set a reasonable timeout for read/write operations (100ms)
+            try {
+                await invoke("plugin:serialplugin|set_timeout", {
+                    path,
+                    timeout: 100,
+                });
+            } catch (e) {
+                console.debug(`${logHead} Could not set timeout:`, e);
+            }
+
+            // Connection successful
+            this.connected = true;
+            this.connectionId = path;
+            this.bitrate = openOptions.baudRate;
+            this.openRequested = false;
+
+            this.connectionInfo = {
+                connectionId: path,
+                bitrate: this.bitrate,
+            };
+
+            this.addEventListener("receive", this.handleReceiveBytes);
+
+            // Start reading
+            this.reading = true;
+            this.readLoop();
+
+            this.dispatchEvent(new CustomEvent("connect", { detail: true }));
+            console.log(`${logHead} Connected to ${path}`);
+            return true;
         } catch (error) {
             console.error(`${logHead} Error connecting:`, error);
+            console.error(`${logHead} Error details:`, {
+                message: error?.message,
+                stack: error?.stack,
+                type: typeof error,
+                stringValue: error?.toString(),
+            });
+
+            // Check if it's a permission error
+            const errorStr = error?.toString() || error?.message || "";
+            if (errorStr.includes("permission") || errorStr.includes("Permission")) {
+                console.error(`${logHead} USB PERMISSION DENIED! User must grant permission in the Android dialog.`);
+                console.error(`${logHead} Please check if the permission dialog appeared and was dismissed.`);
+            }
+
+            this.openRequested = false;
+            this.dispatchEvent(new CustomEvent("connect", { detail: false }));
+            return false;
         }
-
-        // Connection successful
-        this.connected = true;
-        this.connectionId = path;
-        this.bitrate = port.baudRate;
-        this.openRequested = false;
-
-        this.connectionInfo = {
-            connectionId: path,
-            bitrate: this.bitrate,
-        };
-
-        this.addEventListener("receive", this.handleReceiveBytes);
-        // should we add disconnect handler here ?
-        this.addEventListener("disconnect", this.handleDisconnect);
-
-        // Start port listening
-        await this.port.listen((data) => {
-            this.dispatchEvent(new CustomEvent("receive", { detail: new Uint8Array.from(data) }));
-        });
-
-        // Start reading
-        this.reading = true;
-        this.readLoop();
-
-        this.dispatchEvent(new CustomEvent("connect", { detail: true }));
-        console.log(`${logHead} Connected to ${path}`);
-        return true;
-    }
-    catch(error) {
-        console.error(`${logHead} Error connecting:`, error);
-
-        this.openRequested = false;
-        this.dispatchEvent(new CustomEvent("connect", { detail: false }));
-        return false;
     }
 
     async readLoop() {
@@ -326,7 +404,11 @@ class TauriSerial extends EventTarget {
             while (this.reading) {
                 try {
                     // Non-blocking read with short timeout
-                    const result = await SerialPort.readBinary(this.port, 1024, 100);
+                    const result = await invoke("plugin:serialplugin|read_binary", {
+                        path: this.connectionId,
+                        size: 256,
+                        timeout: 10,
+                    });
 
                     if (result && result.length > 0) {
                         this.dispatchEvent(new CustomEvent("receive", { detail: new Uint8Array(result) }));
@@ -366,13 +448,45 @@ class TauriSerial extends EventTarget {
         }
 
         try {
+            // Convert data to Uint8Array
+            let dataArray;
+            if (data instanceof ArrayBuffer) {
+                dataArray = new Uint8Array(data);
+            } else if (data instanceof Uint8Array) {
+                dataArray = data;
+            } else if (Array.isArray(data)) {
+                dataArray = new Uint8Array(data);
+            } else {
+                console.error(`${logHead} Unsupported data type:`, data?.constructor?.name);
+                const res = { bytesSent: 0 };
+                callback?.(res);
+                return res;
+            }
+
             this.transmitting = true;
 
-            const dataArray = data instanceof ArrayBuffer ? new Uint8Array(data) : data;
-            this.bytesSent += await this.port.writeBinary(dataArray);
-            this.transmitting = false;
+            const writeChunk = async (chunk) => {
+                await invoke("plugin:serialplugin|write_binary", {
+                    path: this.connectionId,
+                    value: Array.from(chunk),
+                });
+            };
 
-            const res = { bytesSent: this.bytesSent };
+            if (this.isNeedBatchWrite) {
+                // Batch write for macOS AT32 compatibility
+                const batchSize = 63;
+                for (let offset = 0; offset < dataArray.length; offset += batchSize) {
+                    const chunk = dataArray.slice(offset, offset + batchSize);
+                    await writeChunk(chunk);
+                }
+            } else {
+                await writeChunk(dataArray);
+            }
+
+            this.transmitting = false;
+            this.bytesSent += dataArray.length;
+
+            const res = { bytesSent: dataArray.length };
             callback?.(res);
             return res;
         } catch (error) {
@@ -403,7 +517,6 @@ class TauriSerial extends EventTarget {
         }
 
         this.closeRequested = true;
-        let result = false;
 
         try {
             this.removeEventListener("receive", this.handleReceiveBytes);
@@ -412,28 +525,32 @@ class TauriSerial extends EventTarget {
             await new Promise((resolve) => setTimeout(resolve, 50));
 
             // Close the port
-            if (this.port) {
-                await this.port.cancelListen();
-                await this.port.close();
-                console.log(`${logHead} Port closed`);
+            if (this.connectionId) {
+                try {
+                    await invoke("plugin:serialplugin|close", { path: this.connectionId });
+                    console.log(`${logHead} Port closed`);
+                } catch (error) {
+                    console.warn(`${logHead} Error closing port:`, error);
+                }
             }
 
-            this.dispatchEvent(new CustomEvent("disconnect", { detail: true }));
-            result = true;
-        } catch (error) {
-            console.error(`${logHead} Error disconnecting:`, error);
-            this.closeRequested = false;
-            this.dispatchEvent(new CustomEvent("disconnect", { detail: false }));
-            result = false;
-        } finally {
             this.connectionId = null;
             this.bitrate = 0;
             this.connectionInfo = null;
             this.closeRequested = false;
-            this.openCanceled = false;
-        }
 
-        return result;
+            this.dispatchEvent(new CustomEvent("disconnect", { detail: true }));
+            return true;
+        } catch (error) {
+            console.error(`${logHead} Error disconnecting:`, error);
+            this.closeRequested = false;
+            this.dispatchEvent(new CustomEvent("disconnect", { detail: false }));
+            return false;
+        } finally {
+            if (this.openCanceled) {
+                this.openCanceled = false;
+            }
+        }
     }
 
     async getDevices() {

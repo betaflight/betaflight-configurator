@@ -73,6 +73,7 @@
     "semver-min": "^0.7.2",
     "short-unique-id": "^5.2.0",
     "switchery-latest": "^0.8.2",
+    "tauri-plugin-serialplugin-api": "^2.21.1",
     "three": "^0.176.0",
     "tiny-emitter": "^2.1.0",
     "tippy.js": "^6.3.7",
