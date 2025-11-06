@@ -30,9 +30,20 @@ bash "$SCRIPT_DIR/patch-gradle-settings.sh"
 echo "4. Configuring app Gradle dependencies..."
 bash "$SCRIPT_DIR/patch-app-gradle.sh"
 
-# Skip custom MainActivity - USB permissions can be handled by the serial plugin
-# The manifest intent filters and permissions are sufficient for device discovery
-echo "Skipping custom MainActivity (not needed for USB serial permissions)"
+echo "5. Applying custom MainActivity (if provided)..."
+
+# If a custom MainActivity.kt exists in scripts/, copy it into the generated Android project
+CUSTOM_MAIN_ACTIVITY_SRC="$SCRIPT_DIR/MainActivity.kt"
+CUSTOM_MAIN_ACTIVITY_DST_DIR="src-tauri/gen/android/app/src/main/java/com/betaflight/app"
+CUSTOM_MAIN_ACTIVITY_DST="$CUSTOM_MAIN_ACTIVITY_DST_DIR/MainActivity.kt"
+
+if [ -f "$CUSTOM_MAIN_ACTIVITY_SRC" ]; then
+    mkdir -p "$CUSTOM_MAIN_ACTIVITY_DST_DIR"
+    cp "$CUSTOM_MAIN_ACTIVITY_SRC" "$CUSTOM_MAIN_ACTIVITY_DST"
+    echo "   - Custom MainActivity applied to $CUSTOM_MAIN_ACTIVITY_DST"
+else
+    echo "   - No custom MainActivity found at $CUSTOM_MAIN_ACTIVITY_SRC; skipping"
+fi
 
 echo ""
 echo "✓ Android USB support configuration complete!"
