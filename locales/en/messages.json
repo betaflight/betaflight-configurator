@@ -6075,7 +6075,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementRemaningTimeEstimate" : {
-        "message": "Estimate of flight time remaning"
+        "message": "Estimate of flight time remaining"
     },
     "osdTextElementRtcDateTime": {
         "message": "RTC date and time",
