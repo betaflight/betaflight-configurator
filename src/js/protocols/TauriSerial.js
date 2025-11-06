@@ -211,14 +211,14 @@ class TauriSerial extends EventTarget {
     }
 
     createPort(port) {
-        const displayName = vendorIdNames[port.usbVendorId]
-            ? vendorIdNames[port.usbVendorId]
-            : `VID:${port.usbVendorId} PID:${port.usbProductId}`;
+        const displayName = vendorIdNames[port.vendorId]
+            ? vendorIdNames[port.vendorId]
+            : `VID:${port.vendorId} PID:${port.productId}`;
         return {
             path: "tauriserial",
             displayName: `Betaflight ${displayName}`,
-            vendorId: port.usbVendorId,
-            productId: port.usbProductId,
+            vendorId: port.vendorId,
+            productId: port.productId,
             port: port,
         };
     }
