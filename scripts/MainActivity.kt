@@ -1,4 +1,4 @@
-package com.betaflight.configurator
+package com.betaflight.app
 
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
@@ -10,7 +10,6 @@ import android.hardware.usb.UsbManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import app.tauri.TauriActivity
 
 class MainActivity : TauriActivity() {
     private val TAG = "BetaflightUSB"
@@ -145,14 +144,16 @@ class MainActivity : TauriActivity() {
             return
         }
         
+        // Use FLAG_IMMUTABLE for Android 12+ (API 31+) as required by Android 14+ (API 34+)
+        // when using implicit intents with PendingIntent
         val flags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         } else {
             PendingIntent.FLAG_UPDATE_CURRENT
         }
         
         val permissionIntent = PendingIntent.getBroadcast(
-            this,
+            this as Context,
             0,
             Intent(ACTION_USB_PERMISSION),
             flags

@@ -172,7 +172,7 @@ class TauriSerial extends EventTarget {
 
     async checkDeviceChanges() {
         try {
-            const portsMap = await SerialPort.available_ports_direct();
+            const portsMap = await SerialPort.available_ports();
 
             // Convert to our format
             const allPorts = this._convertPortsMapToArray(portsMap);
@@ -225,7 +225,7 @@ class TauriSerial extends EventTarget {
 
     async loadDevices() {
         try {
-            let newPorts = await SerialPort.available_ports_direct();
+            let newPorts = await SerialPort.available_ports();
             console.log(`${logHead} Loaded devices:`, newPorts);
 
             // ANDROID FIX: Check if result is a string (Android deserialization issue)
@@ -272,7 +272,7 @@ class TauriSerial extends EventTarget {
         this.openRequested = true;
 
         const port = {
-            path,
+            path: /dev/,
             baudRate: options.baudRate || 115200,
         };
 
@@ -301,9 +301,9 @@ class TauriSerial extends EventTarget {
         this.addEventListener("disconnect", this.handleDisconnect);
 
         // Start port listening
-        await this.port.listen((data) => {
-            this.dispatchEvent(new CustomEvent("receive", { detail: new Uint8Array.from(data) }));
-        });
+        // await this.port.listen(data => {
+        //     this.dispatchEvent(new CustomEvent("receive", { detail: new Uint8Array.from(data) }));
+        // });
 
         // Start reading
         this.reading = true;
