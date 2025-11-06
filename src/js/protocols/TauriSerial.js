@@ -215,7 +215,7 @@ class TauriSerial extends EventTarget {
             ? vendorIdNames[port.vendorId]
             : `VID:${port.vendorId} PID:${port.productId}`;
         return {
-            path: "tauriserial",
+            path: port.path,
             displayName: `Betaflight ${displayName}`,
             vendorId: port.vendorId,
             productId: port.productId,
@@ -272,7 +272,7 @@ class TauriSerial extends EventTarget {
         this.openRequested = true;
 
         const port = {
-            path: /dev/,
+            path: path,
             baudRate: options.baudRate || 115200,
         };
 
@@ -326,7 +326,7 @@ class TauriSerial extends EventTarget {
             while (this.reading) {
                 try {
                     // Non-blocking read with short timeout
-                    const result = await SerialPort.readBinary(this.port, 1024, 100);
+                    const result = await SerialPort.read({ timeout: 100 });
 
                     if (result && result.length > 0) {
                         this.dispatchEvent(new CustomEvent("receive", { detail: new Uint8Array(result) }));
