@@ -300,12 +300,8 @@ class TauriSerial extends EventTarget {
         // should we add disconnect handler here ?
         this.addEventListener("disconnect", this.handleDisconnect);
 
-        // Start port listening
-        // await this.port.listen(data => {
-        //     this.dispatchEvent(new CustomEvent("receive", { detail: new Uint8Array.from(data) }));
-        // });
-
-        // Start reading
+        // On mobile platforms, listen() events may not work reliably
+        // Use active polling with read() instead
         this.reading = true;
         this.readLoop();
 
@@ -322,39 +318,23 @@ class TauriSerial extends EventTarget {
     }
 
     async readLoop() {
-        try {
-            while (this.reading) {
-                try {
-                    // Non-blocking read with short timeout
-                    const result = await SerialPort.read({ timeout: 100 });
+        console.log(`${logHead} Starting read loop`);
+        while (this.reading) {
+            try {
+                const result = await this.port.read({ timeout: 100, size: 1024 });
 
-                    if (result && result.length > 0) {
-                        this.dispatchEvent(new CustomEvent("receive", { detail: new Uint8Array(result) }));
-                    }
-
-                    // Small delay between polls to avoid overwhelming the system
-                    await new Promise((resolve) => setTimeout(resolve, 5));
-                } catch (error) {
-                    const msg = error?.message || (error?.toString ? error.toString() : "");
-                    // Timeout is expected when no data available
-                    if (msg?.toLowerCase().includes("no data received")) {
-                        await new Promise((resolve) => setTimeout(resolve, 5));
-                        continue;
-                    }
-                    if (isBrokenPipeError(msg)) {
-                        console.error(`${logHead} Fatal poll error (broken pipe) on ${this.connectionId}:`, error);
-                        throw error;
-                    }
-                    console.warn(`${logHead} Poll error:`, error);
-                    await new Promise((resolve) => setTimeout(resolve, 5));
+                if (result && Array.isArray(result) && result.length > 0) {
+                    console.log(`${logHead} Read ${result.length} bytes`);
+                    this.dispatchEvent(new CustomEvent("receive", { detail: new Uint8Array(result) }));
                 }
+
+                await new Promise((resolve) => setTimeout(resolve, 5));
+            } catch (error) {
+                console.error(`${logHead} Read error:`, error);
+                await new Promise((resolve) => setTimeout(resolve, 100));
             }
-        } catch (error) {
-            console.error(`${logHead} Error in read loop:`, error);
-            this.handleFatalSerialError(error);
-        } finally {
-            console.log(`${logHead} Polling stopped for ${this.connectionId || "<no-port>"}`);
         }
+        console.log(`${logHead} Read loop stopped`);
     }
 
     async send(data, callback) {
@@ -369,9 +349,12 @@ class TauriSerial extends EventTarget {
             this.transmitting = true;
 
             const dataArray = data instanceof ArrayBuffer ? new Uint8Array(data) : data;
-            this.bytesSent += await this.port.writeBinary(dataArray);
+            console.log(`${logHead} Sending ${dataArray.length} bytes:`, Array.from(dataArray.slice(0, 20)));
+            const bytesWritten = await this.port.writeBinary(dataArray);
+            this.bytesSent += bytesWritten;
             this.transmitting = false;
 
+            console.log(`${logHead} Sent ${bytesWritten} bytes successfully`);
             const res = { bytesSent: this.bytesSent };
             callback?.(res);
             return res;
@@ -413,9 +396,13 @@ class TauriSerial extends EventTarget {
 
             // Close the port
             if (this.port) {
-                await this.port.cancelListen();
-                await this.port.close();
-                console.log(`${logHead} Port closed`);
+                try {
+                    await this.port.close();
+                    console.log(`${logHead} Port closed`);
+                } catch (closeError) {
+                    // Ignore deserialization errors on close - the port is closed anyway
+                    console.warn(`${logHead} Error during port close (ignored):`, closeError);
+                }
             }
 
             this.dispatchEvent(new CustomEvent("disconnect", { detail: true }));
