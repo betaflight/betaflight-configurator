@@ -390,6 +390,7 @@ class GuiControl {
             buttonConfirm.on("click", confirmAction);
 
             // Add Enter key support for single-choice dialog
+            // Remove any previous keydown handlers before adding new one
             dialog.off("keydown");
             dialog.on("keydown", (e) => {
                 if (e.key === "Enter") {
