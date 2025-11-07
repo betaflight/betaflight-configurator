@@ -381,9 +381,21 @@ class GuiControl {
 
             buttonConfirm.off("click");
 
-            buttonConfirm.on("click", () => {
+            const confirmAction = () => {
                 dialog[0].close();
+                dialog.off("keydown");
                 resolve();
+            };
+
+            buttonConfirm.on("click", confirmAction);
+
+            // Add Enter key support for single-choice dialog
+            dialog.off("keydown");
+            dialog.on("keydown", (e) => {
+                if (e.key === "Enter") {
+                    e.preventDefault();
+                    confirmAction();
+                }
             });
 
             dialog[0].showModal();
