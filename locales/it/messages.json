@@ -5981,11 +5981,11 @@
     "osdDescElementEscRpm": {
         "message": "RPM riportati dalla telemetria ESC"
     },
-    "osdTextElementRemaningTimeEstimate": {
+    "osdTextElementRemainingTimeEstimate": {
         "message": "Timer: stima del tempo rimanente",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementRemaningTimeEstimate": {
+    "osdDescElementRemainingTimeEstimate": {
         "message": "Stima del tempo di volo rimanente"
     },
     "osdTextElementRtcDateTime": {

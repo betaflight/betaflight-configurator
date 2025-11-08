@@ -5985,11 +5985,11 @@
     "osdDescElementEscRpm": {
         "message": "RPM rapporteret af ESC telemetri"
     },
-    "osdTextElementRemaningTimeEstimate": {
+    "osdTextElementRemainingTimeEstimate": {
         "message": "Tidtagning: estimeret resterende flyvetid",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementRemaningTimeEstimate": {
+    "osdDescElementRemainingTimeEstimate": {
         "message": "Skønnet resterende flyvetid"
     },
     "osdTextElementRtcDateTime": {

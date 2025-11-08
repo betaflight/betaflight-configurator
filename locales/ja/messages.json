@@ -5978,11 +5978,11 @@
     "osdDescElementEscRpm": {
         "message": "回転数レポート by ESCテレメトリー"
     },
-    "osdTextElementRemaningTimeEstimate": {
+    "osdTextElementRemainingTimeEstimate": {
         "message": "Timer: 想定残り時間",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementRemaningTimeEstimate": {
+    "osdDescElementRemainingTimeEstimate": {
         "message": "残り飛行時間の予測"
     },
     "osdTextElementRtcDateTime": {

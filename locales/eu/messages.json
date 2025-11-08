@@ -3649,11 +3649,11 @@
     "osdDescElementEscRpm": {
         "message": "RPM ESCren telemetriaren bidez jakinarazi da"
     },
-    "osdTextElementRemaningTimeEstimate": {
+    "osdTextElementRemainingTimeEstimate": {
         "message": "Tenporizadorea: zenbat denbora geratzen den",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementRemaningTimeEstimate": {
+    "osdDescElementRemainingTimeEstimate": {
         "message": "Geratzen den hegaldiaren denbora"
     },
     "osdTextElementRtcDateTime": {

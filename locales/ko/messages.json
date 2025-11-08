@@ -5950,11 +5950,11 @@
     "osdDescElementEscRpm": {
         "message": "ESC 텔레메트리에 의해 보고된 RPM"
     },
-    "osdTextElementRemaningTimeEstimate": {
+    "osdTextElementRemainingTimeEstimate": {
         "message": "타이머: 남은 시간 추정치",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementRemaningTimeEstimate": {
+    "osdDescElementRemainingTimeEstimate": {
         "message": "남은 비행시간 예상"
     },
     "osdTextElementRtcDateTime": {

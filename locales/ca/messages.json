@@ -5989,11 +5989,11 @@
     "osdDescElementEscRpm": {
         "message": "RPM reportat per la telemetria ESC"
     },
-    "osdTextElementRemaningTimeEstimate": {
+    "osdTextElementRemainingTimeEstimate": {
         "message": "Temporitzador: estimació del temps restant",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementRemaningTimeEstimate": {
+    "osdDescElementRemainingTimeEstimate": {
         "message": "Temps estimat restant de volt"
     },
     "osdTextElementRtcDateTime": {

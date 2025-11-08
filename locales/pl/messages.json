@@ -5959,11 +5959,11 @@
     "osdDescElementEscRpm": {
         "message": "RPM zgłaszane za pomocą telemetrii ESC"
     },
-    "osdTextElementRemaningTimeEstimate": {
+    "osdTextElementRemainingTimeEstimate": {
         "message": "Licznik: szacowany pozostały czas",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementRemaningTimeEstimate": {
+    "osdDescElementRemainingTimeEstimate": {
         "message": "Szacunkowy czas lotu"
     },
     "osdTextElementRtcDateTime": {

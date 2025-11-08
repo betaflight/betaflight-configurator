@@ -4824,11 +4824,11 @@
     "osdDescElementEscRpm": {
         "message": "电调回传电机转速"
     },
-    "osdTextElementRemaningTimeEstimate": {
+    "osdTextElementRemainingTimeEstimate": {
         "message": "计时器: 预估剩余时间",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementRemaningTimeEstimate": {
+    "osdDescElementRemainingTimeEstimate": {
         "message": "预计剩余电池飞行时间"
     },
     "osdTextElementRtcDateTime": {

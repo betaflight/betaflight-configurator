@@ -4573,11 +4573,11 @@
     "osdDescElementEscRpm": {
         "message": "Tr\/min reporté par la télémétrie des ESC"
     },
-    "osdTextElementRemaningTimeEstimate": {
+    "osdTextElementRemainingTimeEstimate": {
         "message": "Minuterie : estimation du temps restant",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementRemaningTimeEstimate": {
+    "osdDescElementRemainingTimeEstimate": {
         "message": "Estimation du temps de vol restant"
     },
     "osdTextElementRtcDateTime": {

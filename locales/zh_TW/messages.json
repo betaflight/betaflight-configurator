@@ -3576,11 +3576,11 @@
     "osdDescElementEscRpm": {
         "message": "電調回傳電機轉速"
     },
-    "osdTextElementRemaningTimeEstimate": {
+    "osdTextElementRemainingTimeEstimate": {
         "message": "計時器: 預估剩餘時間",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementRemaningTimeEstimate": {
+    "osdDescElementRemainingTimeEstimate": {
         "message": "預計剩餘電池飛行時間"
     },
     "osdTextElementRtcDateTime": {
