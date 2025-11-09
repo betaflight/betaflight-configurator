@@ -383,17 +383,16 @@ class GuiControl {
 
             const confirmAction = () => {
                 dialog[0].close();
-                dialog.off("keydown");
+                $(document).off("keydown.informationDialog");
                 resolve();
             };
 
             buttonConfirm.on("click", confirmAction);
 
             // Add Enter key support for single-choice dialog
-            // Remove any previous keydown handlers before adding new one
-            dialog.off("keydown");
-            dialog.on("keydown", (e) => {
-                if (e.key === "Enter") {
+            $(document).off("keydown.informationDialog");
+            $(document).on("keydown.informationDialog", (e) => {
+                if (e.which === 13) {
                     e.preventDefault();
                     confirmAction();
                 }
