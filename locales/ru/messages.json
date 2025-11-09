@@ -5879,11 +5879,11 @@
     "osdDescElementEscRpm": {
         "message": "Скорость оборотов, полученная из телеметрии от ESC"
     },
-    "osdTextElementRemainingTimeEstimate": {
+    "osdTextElementRemaningTimeEstimate": {
         "message": "Таймер: оставшееся расчетное время",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementRemainingTimeEstimate": {
+    "osdDescElementRemaningTimeEstimate": {
         "message": "Расчётное время до полного разряда батареи"
     },
     "osdTextElementRtcDateTime": {

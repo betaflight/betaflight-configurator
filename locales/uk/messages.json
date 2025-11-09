@@ -5981,11 +5981,11 @@
     "osdDescElementEscRpm": {
         "message": "Оберти\/хв з телеметрії ESC"
     },
-    "osdTextElementRemainingTimeEstimate": {
+    "osdTextElementRemaningTimeEstimate": {
         "message": "Таймер: оцінка часу, що залишився",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementRemainingTimeEstimate": {
+    "osdDescElementRemaningTimeEstimate": {
         "message": "Приблизний час польоту, що залишився"
     },
     "osdTextElementRtcDateTime": {
