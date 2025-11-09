@@ -392,8 +392,8 @@ class GuiControl {
             // Add Enter key support for single-choice dialog
             $(document).off("keydown.informationDialog");
             $(document).on("keydown.informationDialog", (e) => {
-                // Only trigger if Enter key is pressed and target is not an input/textarea
-                if (e.which === 13 && !$(e.target).is("input, textarea")) {
+                // Only trigger if Enter is pressed, dialog is open, and target is not an input/textarea
+                if (e.which === 13 && dialog[0].open && !$(e.target).is("input, textarea")) {
                     e.preventDefault();
                     confirmAction();
                 }
