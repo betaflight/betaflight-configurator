@@ -22,7 +22,6 @@ class CapacitorSerialProtocol extends EventTarget {
 
         this.connect = this.connect.bind(this);
         this.disconnect = this.disconnect.bind(this);
-        this.handleReceiveBytes = this.handleReceiveBytes.bind(this);
         this.handleDataEvent = this.handleDataEvent.bind(this);
         this.handleConnectedEvent = this.handleConnectedEvent.bind(this);
         this.handleAttachedEvent = this.handleAttachedEvent.bind(this);
@@ -49,32 +48,26 @@ class CapacitorSerialProtocol extends EventTarget {
     }
 
     handleDataEvent(event) {
-        console.log(`${logHead} Data event received:`, event);
         if (event?.data) {
-            console.log(`${logHead} Raw data from plugin:`, event.data, typeof event.data);
-            // Convert hex string to Uint8Array (like WebSerial does)
+            // Convert hex string from plugin to Uint8Array
             const uint8Array = this.hexStringToUint8Array(event.data);
-            console.log(`${logHead} Received ${uint8Array.byteLength} bytes:`, uint8Array);
             this.bytesReceived += uint8Array.byteLength;
             this.dispatchEvent(new CustomEvent("receive", { detail: uint8Array }));
-        } else {
-            console.warn(`${logHead} Data event received but no data property:`, event);
         }
     }
 
     handleConnectedEvent(event) {
-        console.log(`${logHead} Device connected:`, event);
         this.connected = true;
     }
 
     handleAttachedEvent(event) {
-        console.log(`${logHead} Device attached:`, event);
         const added = this.handleNewDevice(event);
-        this.dispatchEvent(new CustomEvent("addedDevice", { detail: added }));
+        if (added) {
+            this.dispatchEvent(new CustomEvent("addedDevice", { detail: added }));
+        }
     }
 
     handleDetachedEvent(event) {
-        console.log(`${logHead} Device detached:`, event);
         this.handleDeviceRemoval(event);
     }
 
@@ -83,44 +76,22 @@ class CapacitorSerialProtocol extends EventTarget {
         this.dispatchEvent(new CustomEvent("error", { detail: event.error }));
     }
 
-    hexStringToArrayBuffer(hexString) {
-        // Remove any spaces or non-hex characters
-        const cleanHex = hexString.replace(/[^0-9A-Fa-f]/g, "");
-        const length = cleanHex.length / 2;
-        const buffer = new ArrayBuffer(length);
-        const view = new Uint8Array(buffer);
-
-        for (let i = 0; i < length; i++) {
-            view[i] = parseInt(cleanHex.substr(i * 2, 2), 16);
-        }
-
-        return buffer;
-    }
-
     hexStringToUint8Array(hexString) {
-        // Remove any spaces or non-hex characters
-        const cleanHex = hexString.replace(/[^0-9A-Fa-f]/g, "");
-        const length = cleanHex.length / 2;
+        const length = hexString.length / 2;
         const uint8Array = new Uint8Array(length);
 
         for (let i = 0; i < length; i++) {
-            uint8Array[i] = parseInt(cleanHex.substr(i * 2, 2), 16);
+            uint8Array[i] = parseInt(hexString.substr(i * 2, 2), 16);
         }
 
         return uint8Array;
     }
 
     arrayBufferToHexString(buffer) {
-        // Handle both Uint8Array and ArrayBuffer
         const bytes = buffer instanceof Uint8Array ? buffer : new Uint8Array(buffer);
         return Array.from(bytes)
             .map((b) => b.toString(16).padStart(2, "0"))
             .join("");
-    }
-
-    handleReceiveBytes(info) {
-        console.log(`${logHead} Received ${info.detail.byteLength} bytes`);
-        this.bytesReceived += info.detail.byteLength;
     }
 
     getConnectedPort() {
@@ -131,7 +102,6 @@ class CapacitorSerialProtocol extends EventTarget {
         const added = this.createPort(device);
         if (added) {
             this.ports.push(added);
-            this.dispatchEvent(new CustomEvent("addedDevice", { detail: added }));
         }
         return added;
     }
@@ -159,28 +129,22 @@ class CapacitorSerialProtocol extends EventTarget {
         if (index !== -1) {
             const removed = this.ports.splice(index, 1)[0];
             this.dispatchEvent(new CustomEvent("removedDevice", { detail: removed }));
-            console.log(`${logHead} Device removed: VID:${device.vendorId} PID:${device.productId}`);
         }
     }
 
     async loadDevices() {
         try {
             const result = await UsbSerial.connectedDevices();
-            console.log(`${logHead} connectedDevices result:`, result);
             this.ports = [];
 
             if (result?.devices && Array.isArray(result.devices)) {
                 for (const device of result.devices) {
-                    const vid = device.device?.vendorId;
-                    const pid = device.device?.productId;
-                    const did = device.device?.deviceId;
                     const port = this.createPort(device.device);
                     if (port) {
                         this.ports.push(port);
                     }
                 }
             }
-            console.log(`${logHead} Loaded ${this.ports.length} devices`);
         } catch (error) {
             console.error(`${logHead} Error loading devices:`, error);
         }
@@ -193,21 +157,6 @@ class CapacitorSerialProtocol extends EventTarget {
 
     async connect(path, options = { baudRate: 115200 }) {
         try {
-            /*
-            if (!this.selectedDevice) {
-                console.error(`${logHead} No device selected`);
-                this.dispatchEvent(new CustomEvent("connect", { detail: false }));
-                return false;
-            }
-
-            const device = this.ports.find(p => p.deviceId === this.selectedDevice.deviceId);
-            if (!device) {
-                console.error(`${logHead} Device not found`);
-                this.dispatchEvent(new CustomEvent("connect", { detail: false }));
-                return false;
-            }
-            */
-
             const device = this.ports.find((device) => device.path === path);
 
             if (!device) {
@@ -216,8 +165,6 @@ class CapacitorSerialProtocol extends EventTarget {
                 return false;
             }
 
-            console.log(`${logHead} Connecting to device:`, device);
-            // Open serial connection
             await UsbSerial.openSerial({
                 deviceId: device.deviceId,
                 portNum: 0,
@@ -229,16 +176,12 @@ class CapacitorSerialProtocol extends EventTarget {
                 rts: false,
             });
 
-            console.log(`${logHead} Serial connection opened with options:`, options);
             this.isOpen = true;
             this.connectionId = path;
             this.connected = true;
             this.port = device;
 
-            this.addEventListener("receive", this.handleReceiveBytes);
-
             this.dispatchEvent(new CustomEvent("connect", { detail: true }));
-            console.log(`${logHead} Connected to ${path}`);
 
             return true;
         } catch (error) {
@@ -248,13 +191,8 @@ class CapacitorSerialProtocol extends EventTarget {
         }
     }
 
-    /**
-     * Request serial permissions for a device.
-     * This will trigger Android's permission dialog.
-     */
     async requestPermissionDevice() {
         try {
-            // Reload devices to get the latest list
             await this.loadDevices();
 
             // Try to find a matching device from our known serial devices list
@@ -262,7 +200,6 @@ class CapacitorSerialProtocol extends EventTarget {
                 const device = this.ports.find((p) => p.vendorId === vendorId && p.productId === productId);
                 if (device) {
                     this.selectedDevice = device;
-                    console.log(`${logHead} Selected device:`, device);
                     return device;
                 }
             }
@@ -270,11 +207,9 @@ class CapacitorSerialProtocol extends EventTarget {
             // If no known device found, select the first available device
             if (this.ports.length > 0) {
                 this.selectedDevice = this.ports[0];
-                console.log(`${logHead} Selected first available device:`, this.selectedDevice);
                 return this.selectedDevice;
             }
 
-            console.warn(`${logHead} No compatible devices found`);
             return null;
         } catch (error) {
             console.error(`${logHead} Error requesting device permission:`, error);
@@ -291,26 +226,17 @@ class CapacitorSerialProtocol extends EventTarget {
 
         try {
             // Handle both Uint8Array and ArrayBuffer
-            let uint8Array;
-            if (data instanceof Uint8Array) {
-                uint8Array = data;
-            } else if (data instanceof ArrayBuffer) {
-                uint8Array = new Uint8Array(data);
-            } else {
-                throw new Error("Data must be Uint8Array or ArrayBuffer");
-            }
+            const uint8Array = data instanceof Uint8Array ? data : new Uint8Array(data);
 
             // Convert to hex string for the plugin
-            const hexString = this.arrayBufferToHexString(uint8Array.buffer);
-            console.log(`${logHead} Sending data:`, data, "hex:", hexString);
+            const hexString = this.arrayBufferToHexString(uint8Array);
 
             await UsbSerial.writeSerial({ data: hexString });
 
             const bytesSent = uint8Array.byteLength;
             this.bytesSent += bytesSent;
-            console.log(`${logHead} Sent ${bytesSent} bytes`);
 
-            callback?.({ bytesSent: bytesSent });
+            callback?.({ bytesSent });
             return true;
         } catch (error) {
             console.error(`${logHead} Error sending data:`, error);
@@ -330,7 +256,6 @@ class CapacitorSerialProtocol extends EventTarget {
 
         try {
             await UsbSerial.closeSerial();
-            console.log(`${logHead} Serial connection closed`);
         } catch (error) {
             console.error(`${logHead} Error closing serial connection:`, error);
             closeError = error;
@@ -339,7 +264,6 @@ class CapacitorSerialProtocol extends EventTarget {
             this.connected = false;
             this.port = null;
             this.connectionId = null;
-            this.removeEventListener("receive", this.handleReceiveBytes);
             this.dispatchEvent(new CustomEvent("disconnect", { detail: true }));
         }
 
