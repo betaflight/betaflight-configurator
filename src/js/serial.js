@@ -26,9 +26,12 @@ class Serial extends EventTarget {
                 { name: "serial", instance: new WebSerial() },
                 { name: "bluetooth", instance: new WebBluetooth() },
                 { name: "websocket", instance: new Websocket() },
-                { name: "virtual", instance: new VirtualSerial() },
             ];
         }
+
+        // Always add virtual protocol
+        this._protocols.push({ name: "virtual", instance: new VirtualSerial() });
+
         // Forward events from all protocols to the Serial class
         this._setupEventForwarding();
     }
