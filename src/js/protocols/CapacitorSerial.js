@@ -48,11 +48,8 @@ class CapacitorSerialProtocol extends EventTarget {
     }
 
     cleanup() {
-        UsbSerial.removeAllListeners("data");
-        UsbSerial.removeAllListeners("connected");
-        UsbSerial.removeAllListeners("attached");
-        UsbSerial.removeAllListeners("detached");
-        UsbSerial.removeAllListeners("error");
+        // Don't remove listeners - they need to persist for reconnection and device attach/detach events
+        // Only cleanup is handled in disconnect() by resetting state
     }
 
     handleDataEvent(event) {
@@ -68,8 +65,14 @@ class CapacitorSerialProtocol extends EventTarget {
         this.connected = true;
     }
 
-    handleAttachedEvent(event) {
-        this.handleNewDevice(event);
+    async handleAttachedEvent(event) {
+        // Reload device list to ensure we have the latest device info with proper permissions
+        await this.loadDevices();
+
+        const added = this.handleNewDevice(event);
+        if (added) {
+            this.dispatchEvent(new CustomEvent("addedDevice", { detail: added }));
+        }
     }
 
     handleDetachedEvent(event) {
@@ -265,7 +268,7 @@ class CapacitorSerialProtocol extends EventTarget {
             console.error(`${logHead} Error closing serial connection:`, error);
             closeError = error;
         } finally {
-            this.cleanup();
+            // Reset state but keep listeners active for reconnection
             this.isOpen = false;
             this.connected = false;
             this.port = null;
