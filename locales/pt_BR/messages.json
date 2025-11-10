@@ -3074,9 +3074,6 @@
     "dataflashButtonSaveFile": {
         "message": "Salvar memória em um arquivo..."
     },
-    "dataflashButtonSaveFileDeprecated": {
-        "message": "Salvar memória em um arquivo... (não suportado)"
-    },
     "dataflashSavetoFileNote": {
         "message": "Salvar a memória flash diretamente em um arquivo é lento e propenso a erros ou arquivos corrompidos.<br>Em alguns casos, ele funcionará para arquivos pequenos, mas isto não é suportado e pedidos de suporte serão fechados sem comentários - ao invés, use o modo de armazenamento."
     },
@@ -5372,13 +5369,6 @@
     },
     "osdDescElementEscRpm": {
         "message": "RPM reportado pela telemetria do ESC"
-    },
-    "osdTextElementRemaningTimeEstimate": {
-        "message": "Cronômetro: tempo restante estimado",
-        "description": "One of the elements of the OSD"
-    },
-    "osdDescElementRemaningTimeEstimate": {
-        "message": "Tempo estimado de voo restante"
     },
     "osdTextElementRtcDateTime": {
         "message": "Data e hora do RTC",

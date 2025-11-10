@@ -2214,9 +2214,6 @@
     "dataflashButtonSaveFile": {
         "message": "Sla flash op in bestand..."
     },
-    "dataflashButtonSaveFileDeprecated": {
-        "message": "Flash opslaan in bestand... (niet ondersteund)"
-    },
     "dataflashSavetoFileNote": {
         "message": "Het direct opslaan van Flash naar een bestand is traag en inherent vatbaar voor fouten. Het kan lijden tot bestandscorruptie.<br>In sommige gevallen werkt het wel voor kleine bestanden. Maar dit wordt niet ondersteund. Ondersteuningsverzoeken hiervoor worden zonder commentaar gesloten. Gebruik in plaats daarvan de modus voor massaopslag."
     },
@@ -3854,13 +3851,6 @@
     },
     "osdDescElementEscRpm": {
         "message": "RPM gerapporteerd door ESC telemetry"
-    },
-    "osdTextElementRemaningTimeEstimate": {
-        "message": "Timer: geschatte resterende tijd",
-        "description": "One of the elements of the OSD"
-    },
-    "osdDescElementRemaningTimeEstimate": {
-        "message": "Geschate resterende vluchttijd"
     },
     "osdTextElementRtcDateTime": {
         "message": "RTC datum en tijd",

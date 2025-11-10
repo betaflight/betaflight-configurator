@@ -3470,14 +3470,15 @@
     "dataflashButtonSaveFile": {
         "message": "Desa la flash a un arxiu..."
     },
-    "dataflashButtonSaveFileDeprecated": {
-        "message": "Desa el flash al fitxer... (no soportat)"
-    },
     "dataflashSavetoFileNote": {
         "message": "Desar directament el flaix al fitxer és lent i és inherent a la corrupció d’errors o fitxers. <br>En alguns casos funcionarà per a fitxers petits, però no està soportat i les sol·licituds d’assistència es tancaran sense comentaris - Utilitzeu el mode d’emmagatzematge massiu en el seu lloc."
     },
     "dataflashSaveFileDepreciationHint": {
         "message": "Aquest mètode és lent i inherent a la corrupció d'errors \/ fitxers corruptes, ja que la connexió MSP té limitacions fonamentals intrínseces que la fan inadequada per a les transferències de fitxers. Pot funcionar només per a fitxers de registre petits. No creeu sol·licituds d'assistència si les transferències de fitxers fallen quan es desen amb aquest mètode. El mètode recomanat és utilitzar '<b> $t(onboardLoggingRebootMscText.message)<\/b>' (a sota) per activar el mode d'emmagatzematge massiu i accedir al controlador de vol com a dispositiu d'emmagatzematge per descarregar els fitxers de registre."
+    },
+    "dataflashButtonSaveAndErase": {
+        "message": "Desar i esborrar",
+        "description": "Button text to save blackbox logs to file and then erase the flash"
     },
     "dataflashButtonErase": {
         "message": "Esborra la memòria"
@@ -4367,7 +4368,7 @@
         "description": "Disable or enable D Term Filter Tuning Slider"
     },
     "pidTuningPidSlidersHelp": {
-        "message": "Control lliscant per ajustar les característiques del vol del quad (guanys PID)<br \/><br \/>Amortiment (guany D): Resisteix el moviment ràpid, minimitza l’oscil·lació P. <br \/><br \/>Seguiment (guany P i I): encoratja la capacitat de resposta del quad, si és massa alta, pot provocar trillacions o oscil·lacions. <br \/><br \/>Resposta al stick (Feedforward): augmenta la capacitat de resposta del quad a moviments de stick més ràpids. <br \/><br \/>Deriva - Wobble (Jo guanyo, expert): ajust fi de I.<br \/><br \/>Dynamic D (D Max, expert): estableix la quantitat màxima a la qual es pot augmentar D durant moviments ràpids. <br \/><br \/>Pitch Damping (Pitch: Roll D ratio, expert): augmenta la quantitat d'amortiment en el pitch respecte al roll. <br \/><br \/>Pitch Tracking (Pitch: Roll P, I and F ratio, expert): Augmenta força estabilitzadora en el to respecte al rodament. <br \/><br \/>Multiplicador principal (Tots els guanys, expert): augmenta o disminueix tots els guanys PID, mantenint les seves proporcions constants.",
+        "message": "Controls lliscants per ajustar les característiques del vol del quad (guanys PID)<br \/><br \/>Amortiment (guany D): Resisteix el moviment ràpid, minimitza l’oscil·lació P. <br \/><br \/>Seguiment (guany P i I): encoratja la capacitat de resposta del quad, si és massa alta, pot provocar trillacions o oscil·lacions. <br \/><br \/>Resposta al stick (Feedforward): augmenta la capacitat de resposta del quad a moviments de stick més ràpids. <br \/><br \/>Deriva - Wobble (Jo guanyo, expert): ajust fi de I.<br \/><br \/>Dynamic D (D Max, expert): estableix la quantitat màxima del D reforçada durant moviments ràpids. <br \/><br \/>Pitch Damping (Pitch: Roll D ratio, expert): augmenta la quantitat d'amortiment en el pitch respecte al roll. <br \/><br \/>Pitch Tracking (Pitch: Roll P, I and F ratio, expert): Augmenta força estabilitzadora en el to respecte al roll. <br \/><br \/>Multiplicador principal (Tots els guanys, expert): augmenta o disminueix tots els guanys PID, mantenint les seves proporcions constants.",
         "description": "Overall helpicon message for PID tuning sliders"
     },
     "pidTuningSliderWarning": {
@@ -5988,13 +5989,6 @@
     },
     "osdDescElementEscRpm": {
         "message": "RPM reportat per la telemetria ESC"
-    },
-    "osdTextElementRemaningTimeEstimate": {
-        "message": "Temporitzador: estimació del temps restant",
-        "description": "One of the elements of the OSD"
-    },
-    "osdDescElementRemaningTimeEstimate": {
-        "message": "Temps estimat restant de volt"
     },
     "osdTextElementRtcDateTime": {
         "message": "RTC dia i hora",

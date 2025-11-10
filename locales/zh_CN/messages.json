@@ -2941,9 +2941,6 @@
     "dataflashButtonSaveFile": {
         "message": "保存闪存数据到文件"
     },
-    "dataflashButtonSaveFileDeprecated": {
-        "message": "将闪存保存到文件...(不支持)"
-    },
     "dataflashSavetoFileNote": {
         "message": "直接将闪存保存到文件是的速度是比较缓慢的，且容易发生内部错误\/文件损坏。<br>在某些情况下，它将适用于小文件， 但我们并不支持这样做，并且相关的支持请求将会被关闭且不会得到回复 - 请使用大容量存储模式。"
     },
@@ -4823,13 +4820,6 @@
     },
     "osdDescElementEscRpm": {
         "message": "电调回传电机转速"
-    },
-    "osdTextElementRemaningTimeEstimate": {
-        "message": "计时器: 预估剩余时间",
-        "description": "One of the elements of the OSD"
-    },
-    "osdDescElementRemaningTimeEstimate": {
-        "message": "预计剩余电池飞行时间"
     },
     "osdTextElementRtcDateTime": {
         "message": "RTC日期和时间",

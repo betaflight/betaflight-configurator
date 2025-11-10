@@ -3431,9 +3431,6 @@
     "dataflashButtonSaveFile": {
         "message": "플래시를 파일로 저장..."
     },
-    "dataflashButtonSaveFileDeprecated": {
-        "message": "플래시를 파일로 저장... (지지하지 않음)"
-    },
     "dataflashSavetoFileNote": {
         "message": "플래시를 파일에 직접 저장하면 속도가 느리고 오류\/파일이 손상되기 쉽습니다.<br>일부 경우에는 작은 파일에 효과가 있지만, 이것은 권장되지 않으며, 이에 대한 지원 요청은 코멘트 없이 종결됩니다 - 대신 대용량 저장 모드를 사용하십시요."
     },
@@ -4326,10 +4323,6 @@
     "pidTuningDTermSliderEnabled": {
         "message": "D 텀 슬라이더 사용",
         "description": "Disable or enable D Term Filter Tuning Slider"
-    },
-    "pidTuningPidSlidersHelp": {
-        "message": "기체 비행 특성(PID 게인)을 조정하는 슬라이더<br \/><br \/>댐핑 (D 게인): 빠른 움직임에 저항하고, P 진동을 최소화합니다.<br \/><br \/>추적 (P 및 I 게인): 기체의 응답성을 강화시키며, 너무 높으면 떨림이나 진동이 발생할 수 있습니다.<br \/><br \/>스틱 응답 (피드포워드): 더 빠른 스틱 움직임에 대한 기체의 응답성을 증가시킵니다.<br \/><br \/>드리프트 - 워블(I 게인, 전문가): I의 미세 조정.<br \/><br \/>다이나믹 D (D 최대, 전문가): 빠른 이동 중에 D가 부스트될 수 있는 최대 양을 설정합니다.<br \/><br \/>피치 댐핑 (피치:롤 D 비율, 전문가): 롤에 대한 피치의 댐핑 양을 증가시킵니다.<br \/><br \/>피치 추적 (피치:롤 P, I 및 F 비율, 전문가): 롤에 대한 피치의 안정화 강도를 증가시킵니다.<br \/><br \/>마스터 승수 (모든 게인, 전문가): 비율을 일정하게 유지하면서 모든 PID 게인을 높이거나 낮춥니다.",
-        "description": "Overall helpicon message for PID tuning sliders"
     },
     "pidTuningSliderWarning": {
         "message": "<span class=\"message-negative\">주의<\/span>: 현재 슬라이더 위치는 기체가 멀리 날아가거나, 모터 손상 또는 안전하지 않은 기체 동작이 발생할 수 있습니다. 신중하게 진행하십시오.",
@@ -5949,13 +5942,6 @@
     },
     "osdDescElementEscRpm": {
         "message": "ESC 텔레메트리에 의해 보고된 RPM"
-    },
-    "osdTextElementRemaningTimeEstimate": {
-        "message": "타이머: 남은 시간 추정치",
-        "description": "One of the elements of the OSD"
-    },
-    "osdDescElementRemaningTimeEstimate": {
-        "message": "남은 비행시간 예상"
     },
     "osdTextElementRtcDateTime": {
         "message": "RTC 날짜 및 시간",
