@@ -419,7 +419,8 @@ class EscDshotDirectionComponent {
             return;
         }
 
-        // SPACEBAR RELEASE: Stop motors immediately
+        // SPACEBAR RELEASE: Stop motors (preserves pending direction changes)
+        // Motors stop immediately unless direction change is in progress (~100ms delay)
         if (event.code === "Space") {
             event.preventDefault();
             event.stopPropagation();
@@ -435,7 +436,7 @@ class EscDshotDirectionComponent {
     }
 
     _handleSpacebarRelease() {
-        this._motorDriver.stopAllMotorsNow();
+        this._motorDriver.stopAllMotors();
     }
 
     _handleWindowBlur() {
@@ -475,11 +476,11 @@ class EscDshotDirectionComponent {
             this._deactivateWizardMotorButtons();
         }
 
-        // Stop motors (this adds stop commands to the queue)
-        this._motorDriver.stopAllMotorsNow();
+        // Stop motors - adds stop commands to end of queue (preserves pending direction changes)
+        this._motorDriver.stopAllMotors();
 
-        // Deactivate motor driver - this tells queue to stop AFTER processing current commands
-        // This is critical - it allows direction change + save commands to complete
+        // Deactivate motor driver - prevents new commands and stops queue when empty
+        // Queue will drain naturally, completing any pending direction change + save commands
         this._motorDriver.deactivate();
 
         // Clear wizard flag after motor driver deactivation
@@ -570,7 +571,7 @@ class EscDshotDirectionComponent {
     _onStopWizardButtonClicked() {
         this._domSpinWizardButton.toggle(true);
         this._domSpinningWizard.toggle(false);
-        this._motorDriver.stopAllMotorsNow();
+        this._motorDriver.stopAllMotors();
         this._deactivateWizardMotorButtons();
 
         // NEW: Disable keyboard shortcuts when wizard stops
