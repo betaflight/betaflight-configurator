@@ -1,0 +1,92 @@
+diff --git a/node_modules/capacitor-plugin-usb-serial/android/src/main/java/com/viewtrak/plugins/usbserial/UsbSerial.java b/node_modules/capacitor-plugin-usb-serial/android/src/main/java/com/viewtrak/plugins/usbserial/UsbSerial.java
+index a366b4a..c094c1e 100644
+--- a/node_modules/capacitor-plugin-usb-serial/android/src/main/java/com/viewtrak/plugins/usbserial/UsbSerial.java
++++ b/node_modules/capacitor-plugin-usb-serial/android/src/main/java/com/viewtrak/plugins/usbserial/UsbSerial.java
+@@ -105,6 +105,7 @@ public class UsbSerial implements SerialInputOutputManager.Listener {
+ 
+     @Override
+     public void onNewData(byte[] data) {
++        android.util.Log.d("UsbSerial", "onNewData called with " + data.length + " bytes");
+         mainLooper.post(() -> updateReceivedData(data));
+     }
+ 
+@@ -195,11 +196,15 @@ public class UsbSerial implements SerialInputOutputManager.Listener {
+                 }
+             }
+             usbSerialPort.open(usbConnection);
++            android.util.Log.d("UsbSerial", "Serial port opened successfully");
+             usbSerialPort.setParameters(settings.baudRate, settings.dataBits, settings.stopBits, settings.parity);
++            android.util.Log.d("UsbSerial", "Serial parameters set: baudRate=" + settings.baudRate);
+             if (settings.dtr) usbSerialPort.setDTR(true);
+             if (settings.rts) usbSerialPort.setRTS(true);
+             usbIoManager = new SerialInputOutputManager(usbSerialPort, this);
++            android.util.Log.d("UsbSerial", "SerialInputOutputManager created");
+             usbIoManager.start();
++            android.util.Log.d("UsbSerial", "SerialInputOutputManager started - should now receive data");
+ //            connected = true;
+             setConnectedDevice(device);
+         } catch (Exception exception) {
+@@ -233,8 +238,12 @@ public class UsbSerial implements SerialInputOutputManager.Listener {
+             throw new Error("can't send empty string to device", new Throwable("EMPTY_STRING"));
+         }
+         try {
+-            byte[] data = (str + "\r\n").getBytes();
++            // Convert hex string to bytes (for binary protocols like MSP)
++            android.util.Log.d("UsbSerial", "writeSerial: converting hex string (" + str.length() + " chars) to bytes");
++            byte[] data = HexDump.hexStringToByteArray(str);
++            android.util.Log.d("UsbSerial", "writeSerial: writing " + data.length + " bytes");
+             usbSerialPort.write(data, WRITE_WAIT_MILLIS);
++            android.util.Log.d("UsbSerial", "writeSerial: write successful");
+         } catch (Exception e) {
+             closeSerial();
+             throw new Error("connection lost: " + e.getMessage(), e.getCause());
+@@ -260,25 +269,13 @@ public class UsbSerial implements SerialInputOutputManager.Listener {
+ 
+     private void updateReceivedData(byte[] data) {
+         try {
+-            messageNMEA += new String(data);
+-
+-            while (messageNMEA.indexOf(0x0a) != -1) {
+-
+-                int eol = messageNMEA.indexOf(0x0a);
+-                if (-1 != eol) {
+-                    String sentence = messageNMEA.substring(0, eol + 1);
+-                    messageNMEA = messageNMEA.substring(eol + 1);
+-
+-                    // Boolean allowed = throttle.tryAcquire();
+-                    // if (!allowed) {
+-                    // return;
+-                    // }
+-
+-                    callback.receivedData(sentence);
+-                } else if (messageNMEA.length() > 128) {
+-                    throw new Exception("invalid NMEA string");
+-                }
+-            }
++            // FIXED: Send all data immediately as hex string (for binary protocols like MSP)
++            // Original code waited for newline characters (NMEA protocol), which never comes with binary data
++            android.util.Log.d("UsbSerial", "updateReceivedData: sending " + data.length + " bytes as hex");
++            String hexData = HexDump.toHexString(data);
++            android.util.Log.d("UsbSerial", "updateReceivedData: hex string length = " + hexData.length());
++            callback.receivedData(hexData);
++            android.util.Log.d("UsbSerial", "updateReceivedData: callback.receivedData called successfully");
+         } catch (Exception exception) {
+             updateReadDataError(exception);
+         }
+diff --git a/node_modules/capacitor-plugin-usb-serial/android/src/main/java/com/viewtrak/plugins/usbserial/UsbSerialPlugin.java b/node_modules/capacitor-plugin-usb-serial/android/src/main/java/com/viewtrak/plugins/usbserial/UsbSerialPlugin.java
+index 2d2edd1..ec097e8 100644
+--- a/node_modules/capacitor-plugin-usb-serial/android/src/main/java/com/viewtrak/plugins/usbserial/UsbSerialPlugin.java
++++ b/node_modules/capacitor-plugin-usb-serial/android/src/main/java/com/viewtrak/plugins/usbserial/UsbSerialPlugin.java
+@@ -156,9 +156,12 @@ public class UsbSerialPlugin extends Plugin implements Callback {
+ 
+     @Override
+     public void receivedData(String Data) {
++        android.util.Log.d("UsbSerialPlugin", "receivedData callback: " + Data.length() + " chars");
+         JSObject ret = new JSObject();
+         ret.put("data", Data);
++        android.util.Log.d("UsbSerialPlugin", "Calling notifyListeners with data event");
+         notifyListeners("data", ret);
++        android.util.Log.d("UsbSerialPlugin", "notifyListeners completed");
+     }
+ 
+     @Override

@@ -24,7 +24,7 @@ class Serial extends EventTarget {
         } else {
             this._protocols = [
                 { name: "serial", instance: new WebSerial() },
-                { name: "webbluetooth", instance: new WebBluetooth() },
+                { name: "bluetooth", instance: new WebBluetooth() },
                 { name: "websocket", instance: new Websocket() },
                 { name: "virtual", instance: new VirtualSerial() },
             ];
@@ -88,7 +88,7 @@ class Serial extends EventTarget {
             return this._protocols.find((p) => p.name === "websocket")?.instance;
         }
         if (s.startsWith("bluetooth")) {
-            return this._protocols.find((p) => p.name === "webbluetooth")?.instance;
+            return this._protocols.find((p) => p.name === "bluetooth")?.instance;
         }
         return this._protocols.find((p) => p.name === "serial")?.instance;
     }

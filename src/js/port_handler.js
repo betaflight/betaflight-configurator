@@ -50,7 +50,7 @@ const PortHandler = new (function () {
 })();
 
 PortHandler.initialize = function () {
-    EventBus.$on("ports-input:request-permission-bluetooth", () => this.requestDevicePermission("webbluetooth"));
+    EventBus.$on("ports-input:request-permission-bluetooth", () => this.requestDevicePermission("bluetooth"));
     EventBus.$on("ports-input:request-permission-serial", () => this.requestDevicePermission("serial"));
     EventBus.$on("ports-input:request-permission-usb", () => this.requestDevicePermission("usb"));
     EventBus.$on("ports-input:change", this.onChangeSelectedPort.bind(this));
@@ -60,7 +60,7 @@ PortHandler.initialize = function () {
         const detail = event.detail;
 
         if (detail?.path?.startsWith("bluetooth")) {
-            this.handleDeviceAdded(detail, "webbluetooth");
+            this.handleDeviceAdded(detail, "bluetooth");
         } else {
             this.handleDeviceAdded(detail, "serial");
         }
@@ -82,7 +82,7 @@ PortHandler.refreshAllDeviceLists = async function () {
     // Update all device lists in parallel
     return Promise.all([
         this.updateDeviceList("serial"),
-        this.updateDeviceList("webbluetooth"),
+        this.updateDeviceList("bluetooth"),
         this.updateDeviceList("usb"),
     ]).then(() => {
         this.selectActivePort();
@@ -120,7 +120,7 @@ PortHandler.removedSerialDevice = function (device) {
 
     // Update the appropriate ports list based on the device type
     const updatePromise = devicePath.startsWith("bluetooth")
-        ? this.updateDeviceList("webbluetooth")
+        ? this.updateDeviceList("bluetooth")
         : this.updateDeviceList("serial");
 
     const wasSelectedPort = this.portPicker.selectedPort === devicePath;
@@ -274,7 +274,7 @@ PortHandler.handleDeviceAdded = function (device, deviceType) {
 
     // Update the appropriate device list
     const updatePromise =
-        deviceType === "webbluetooth" ? this.updateDeviceList("webbluetooth") : this.updateDeviceList("serial");
+        deviceType === "bluetooth" ? this.updateDeviceList("bluetooth") : this.updateDeviceList("serial");
 
     updatePromise.then(() => {
         const selectedPort = this.selectActivePort(device);
@@ -295,9 +295,9 @@ PortHandler.updateDeviceList = async function (deviceType) {
 
     try {
         switch (deviceType) {
-            case "webbluetooth":
+            case "bluetooth":
                 if (this.showBluetoothOption) {
-                    ports = await serial.getDevices("webbluetooth");
+                    ports = await serial.getDevices("bluetooth");
                 }
                 break;
             case "usb":
@@ -320,7 +320,7 @@ PortHandler.updateDeviceList = async function (deviceType) {
 
         // Update the appropriate properties based on device type
         switch (deviceType) {
-            case "webbluetooth":
+            case "bluetooth":
                 this.bluetoothAvailable = orderedPorts.length > 0;
                 this.currentBluetoothPorts = [...orderedPorts];
                 console.log(`${this.logHead} Found bluetooth port(s)`, orderedPorts);
