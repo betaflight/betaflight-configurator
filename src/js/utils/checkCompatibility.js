@@ -88,7 +88,7 @@ export function checkCompatibility() {
     }
 
     if (!hasBluetoothSupport) {
-        errorMessage += "<br/>- Web Bluetooth API support is disabled.";
+        errorMessage += "<br/>- Bluetooth API support is disabled.";
     }
 
     if (!hasSerialSupport) {
@@ -96,7 +96,7 @@ export function checkCompatibility() {
     }
 
     if (!hasUsbSupport) {
-        errorMessage += "<br/>- Web USB API support is disabled.";
+        errorMessage += "<br/>- USB API support is disabled.";
     }
 
     const newDiv = document.createElement("div");
