@@ -2,6 +2,8 @@ import WebSerial from "./protocols/WebSerial.js";
 import WebBluetooth from "./protocols/WebBluetooth.js";
 import Websocket from "./protocols/WebSocket.js";
 import VirtualSerial from "./protocols/VirtualSerial.js";
+import { isAndroid } from "./utils/checkBrowserCompatibility.js";
+import CapacitorSerial from "./protocols/CapacitorSerial.js";
 
 /**
  * Base Serial class that manages all protocol implementations
@@ -16,13 +18,17 @@ class Serial extends EventTarget {
         this.logHead = "[SERIAL]";
 
         // Initialize protocols with metadata for easier lookup
-        this._protocols = [
-            { name: "webserial", instance: new WebSerial() },
-            { name: "webbluetooth", instance: new WebBluetooth() },
-            { name: "websocket", instance: new Websocket() },
-            { name: "virtual", instance: new VirtualSerial() },
-        ];
 
+        if (isAndroid()) {
+            this._protocols = [{ name: "serial", instance: new CapacitorSerial() }];
+        } else {
+            this._protocols = [
+                { name: "serial", instance: new WebSerial() },
+                { name: "webbluetooth", instance: new WebBluetooth() },
+                { name: "websocket", instance: new Websocket() },
+                { name: "virtual", instance: new VirtualSerial() },
+            ];
+        }
         // Forward events from all protocols to the Serial class
         this._setupEventForwarding();
     }
@@ -74,7 +80,7 @@ class Serial extends EventTarget {
         // Determine which protocol to use based on port path
         const isFn = typeof portPath === "function";
         const s = typeof portPath === "string" ? portPath : "";
-        // Default to webserial for typical serial device identifiers.
+        // Default to serial for typical serial device identifiers.
         if (isFn || s === "virtual") {
             return this._protocols.find((p) => p.name === "virtual")?.instance;
         }
@@ -84,7 +90,7 @@ class Serial extends EventTarget {
         if (s.startsWith("bluetooth")) {
             return this._protocols.find((p) => p.name === "webbluetooth")?.instance;
         }
-        return this._protocols.find((p) => p.name === "webserial")?.instance;
+        return this._protocols.find((p) => p.name === "serial")?.instance;
     }
 
     /**
@@ -141,7 +147,7 @@ class Serial extends EventTarget {
 
     /**
      * Get devices from a specific protocol type or current protocol
-     * @param {string} protocolType - Optional protocol type ('webserial', 'webbluetooth', 'websocket', 'virtual')
+     * @param {string} protocolType - Optional protocol type ('serial', 'bluetooth', 'websocket', 'virtual')
      * @returns {Promise<Array>} - List of devices
      */
     async getDevices(protocolType = null) {

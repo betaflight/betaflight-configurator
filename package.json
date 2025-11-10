@@ -45,6 +45,7 @@
     "@capacitor/core": "^7.0.1",
     "@fortawesome/fontawesome-free": "^6.5.2",
     "@vitejs/plugin-vue": "^6.0.1",
+    "capacitor-plugin-usb-serial": "^0.0.6",
     "crypto-es": "^2.1.0",
     "d3": "^7.9.0",
     "djv": "^2.1.4",
