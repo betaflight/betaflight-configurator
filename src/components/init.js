@@ -38,6 +38,8 @@ const betaflightModel = reactive({
     PortUsage,
     PortHandler,
     CONNECTION,
+    // Reactive expert mode flag to drive tab visibility via Vue
+    expertMode: false,
 });
 
 tippy.setDefaultProps({
