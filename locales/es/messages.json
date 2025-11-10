@@ -3427,9 +3427,6 @@
     "dataflashButtonSaveFile": {
         "message": "Guardar flash a archivo..."
     },
-    "dataflashButtonSaveFileDeprecated": {
-        "message": "Guardar flash en archivo... (sin soporte)"
-    },
     "dataflashSavetoFileNote": {
         "message": "Guardar directamente la flash en archivo es lento e inherentemente propenso a error \/ corrupción de archivo.<br>En algunos casos funcionará para archivos pequeños, pero esto no está soportado y las peticiones de soporte se cerrarán sin comentarios - utiliza el modo de Almacenamiento Masivo en su lugar."
     },
@@ -4322,10 +4319,6 @@
     "pidTuningDTermSliderEnabled": {
         "message": "Usar deslizador del D Term",
         "description": "Disable or enable D Term Filter Tuning Slider"
-    },
-    "pidTuningPidSlidersHelp": {
-        "message": "Deslizadores para ajustar las características de vuelo de la aeronave (ganancias de PID)<br \/><br \/>Amortiguación (ganancia de D): Resiste el movimiento rápido, minimiza la oscilación de P.<br \/><br \/>Seguimiento (ganancias de P y D): Mejora la capacidad de respuesta de la aeronave, si es demasiado alto puede causar vibración u oscilación.<br \/><br \/>Respuesta de los mandos (Prealimentación): Aumenta la capacidad de respuesta de la aeronave a movimientos de mando más rápidos.<br \/><br \/>Rumbo - Oscilación (ganancia de I, experto): Ajuste fino de I.<br \/><br \/>D dinámica (D Max, experto): Establece la cantidad máxima a la que D puede ser impulsada durante movimientos rápidos.<br \/><br \/>Amortiguación de Pitch (ratio Pitch:Roll de D, experto): Aumenta la cantidad de amortiguación en el pitch relativo al roll.<br \/><br \/>Seguimiento de Pitch (ratio Pitch:Roll de P, I y F, experto): Aumenta la fuerza de estabilización en pitch relativo al roll.<br \/><br \/>Multiplicador Maestro (todas las ganancias, expertos): Aumenta o reduce todas las ganancias del PID, manteniendo constantes sus proporciones.",
-        "description": "Overall helpicon message for PID tuning sliders"
     },
     "pidTuningSliderWarning": {
         "message": "<span class=\"message-negative\">ATENCIÓN<\/span>: Los valores actuales de los deslizadores puede causar que se vaya volando, daño a los motores o comportamiento no seguro de la aeronave. Por favor procede con precaución.",
@@ -5945,13 +5938,6 @@
     },
     "osdDescElementEscRpm": {
         "message": "RPM reportadas por la telemetría de los ESC"
-    },
-    "osdTextElementRemaningTimeEstimate": {
-        "message": "Temporizador: tiempo restante estimado",
-        "description": "One of the elements of the OSD"
-    },
-    "osdDescElementRemaningTimeEstimate": {
-        "message": "Tiempo estimado de vuelo restante"
     },
     "osdTextElementRtcDateTime": {
         "message": "RTC: fecha y hora",

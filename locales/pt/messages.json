@@ -3462,14 +3462,15 @@
     "dataflashButtonSaveFile": {
         "message": "Gravar flash para ficheiro..."
     },
-    "dataflashButtonSaveFileDeprecated": {
-        "message": "Gravar flash para ficheiro... (não suportado)"
-    },
     "dataflashSavetoFileNote": {
         "message": "Gravar a flash diretamente para ficheiro é lento e inerentemente propenso a erro \/ ficheiro corrompido.<br>Em alguns casos, funcionará para ficheiros pequenos, mas isto não é suportado e pedidos de suporte para tal serão fechados sem comentários - use o modo de armazenamento em massa."
     },
     "dataflashSaveFileDepreciationHint": {
         "message": "Este método é lento e inerentemente propenso a erros \/ ficheiros corrompidos, porque a própria ligação MSP tem intrinsecamente, limitações fundamentais que a tornam inadequada para transferências de ficheiros. Pode funcionar apenas para ficheiros de log pequenos. Não crie pedidos de suporte se a transferência de ficheiros falhar quando gravar usando este método. O método recomendado é usar '<b>$t(onboardLoggingRebootMscText.message)<\/b>' (abaixo) para ativar o modo de armazenamento em massa, e aceder ao controlador de voo como um dispositivo de armazenamento para baixar os ficheiros de log."
+    },
+    "dataflashButtonSaveAndErase": {
+        "message": "Gravar e Apagar",
+        "description": "Button text to save blackbox logs to file and then erase the flash"
     },
     "dataflashButtonErase": {
         "message": "Apagar flash"
@@ -4359,7 +4360,7 @@
         "description": "Disable or enable D Term Filter Tuning Slider"
     },
     "pidTuningPidSlidersHelp": {
-        "message": "Sliders para ajustar as características de voo (ganhos de PID)<br \/><br \/>Amortecimento (ganho D): Resiste ao movimento rápido, minimiza a oscilação P.<br \/><br \/>Rastreio (ganho P e I): Melhora a responsividade do quad, se muito alta, pode causar tremores ou oscilações.<br \/><br \/>Resposta dos Sticks (Feedforward): Aumenta a capacidade de resposta do quad a movimentos rápidos dos sticks.<br \/><br \/>Deriva - Wobble (ganho I, perito): Ajuste fino do I.<br \/><br \/>D Dinâmico (D Max, perito): Define a quantidade máxima que D pode ser impulsionado durante movimentos rápidos.<br \/><br \/>Amortecimento de Pitch (Pitch: rácio Roll D, perito): Aumenta a quantidade de amortecimento do pitch em relação ao roll.<br \/><br \/>Rastreio de Pitch (Pitch:rácio Roll P, I e F, perito): Aumenta a força de estabilização no pitch relativamente ao roll.<br \/><br \/>Multiplicador Master (todos os ganhos, perito): Aumenta ou Diminui todos os ganhos de PID, mantendo as suas proporções constantes.",
+        "message": "Sliders para ajustar as características de voo (ganhos de PID)<br \/><br \/>Amortecimento (ganho D): Resiste ao movimento rápido, minimiza a oscilação P.<br \/><br \/>Rastreio (ganho P e I): Melhora a resposta do quad; se muito alta, pode causar tremores ou oscilações.<br \/><br \/>Resposta dos Sticks (Feedforward): Aumenta a capacidade de resposta do quad a movimentos rápidos dos sticks.<br \/><br \/>Deriva - Oscilação (ganho I, perito): Ajuste fino do I.<br \/><br \/>D Dinâmico (D Max, perito): Define a quantidade máxima que o D pode ser aumentado durante movimentos rápidos.<br \/><br \/>Amortecimento de Pitch (Pitch: rácio Roll D, perito): Aumenta a quantidade de amortecimento do pitch em relação ao roll.<br \/><br \/>Rastreio de Pitch (Pitch:rácio Roll P, I e F, perito): Aumenta a força de estabilização no pitch relativamente ao roll.<br \/><br \/>Multiplicador Master (todos os ganhos, perito): Aumenta ou Diminui todos os ganhos de PID, mantendo as suas proporções constantes.",
         "description": "Overall helpicon message for PID tuning sliders"
     },
     "pidTuningSliderWarning": {
@@ -5980,13 +5981,6 @@
     },
     "osdDescElementEscRpm": {
         "message": "RPM reportado pela telemetria do ESC"
-    },
-    "osdTextElementRemaningTimeEstimate": {
-        "message": "Cronómetro: tempo restante estimado",
-        "description": "One of the elements of the OSD"
-    },
-    "osdDescElementRemaningTimeEstimate": {
-        "message": "Tempo estimado de voo restante"
     },
     "osdTextElementRtcDateTime": {
         "message": "Data e hora do RTC",

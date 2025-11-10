@@ -2069,9 +2069,6 @@
     "dataflashButtonSaveFile": {
         "message": "Flash memoria fitxategira gorde..."
     },
-    "dataflashButtonSaveFileDeprecated": {
-        "message": "Flash memoria fitzategira gorde...(ez da onartzen)"
-    },
     "dataflashSavetoFileNote": {
         "message": "Flash memoria fitxategian gordetzea motela da eta berez akatsak \/ fitxategiak hondatzeko joera du.<br>Zenbait kasutan fitxategi txikientzat funtzionatuko du, baina hori ez da onartzen eta laguntza eskaerak itxi egingo dira iruzkinik egin gabe - erabili Biltegiratze Masiboa modua ordez."
     },
@@ -3648,13 +3645,6 @@
     },
     "osdDescElementEscRpm": {
         "message": "RPM ESCren telemetriaren bidez jakinarazi da"
-    },
-    "osdTextElementRemaningTimeEstimate": {
-        "message": "Tenporizadorea: zenbat denbora geratzen den",
-        "description": "One of the elements of the OSD"
-    },
-    "osdDescElementRemaningTimeEstimate": {
-        "message": "Geratzen den hegaldiaren denbora"
     },
     "osdTextElementRtcDateTime": {
         "message": "RTC data eta ordua",

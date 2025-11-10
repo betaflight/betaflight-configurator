@@ -688,7 +688,7 @@
         "message": "Współtworzenie"
     },
     "defaultContributingText": {
-        "message": "Jeśli chcesz pomóc ulepszyć Betaflight, możesz to zrobić na wiele sposobów, między innymi:<br \/><ul><li>wykorzystując swoją wiedzę na temat Betaflight do tworzenia lub aktualizowania treści na <a href=\"https:\/\/betaflight.com\/docs\/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">naszej Wiki<\/a> lub odpowiadając na pytania innych użytkowników na forach internetowych; <\/li><li><a href=\"https:\/\/betaflight.com\/docs\/development\" target=\"_blank\" rel=\"noopener noreferrer\">dostarczając kod<\/a> do oprogramowania układowego i aplikacji – nowe funkcje, poprawki, ulepszenia;<\/li><li>testując <a href=\"https:\/\/github.com\/Betaflight\/betaflight\/pulls\" target=\"_blank\" rel=„noopener noreferrer”>nowe funkcje i poprawki<\/a> oraz przekazując swoją opinię;<\/li><li>pomagając innym użytkownikom rozwiązywać zgłaszane przez nich problemy w <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel=\"noopener noreferrer\">naszym systemie zgłoszeń<\/a> i uczestnicząc w dyskusjach na temat proponowanych funkcji; <\/li><li><a href=\"https:\/\/github.com\/betaflight\/betaflight\/tree\/master\/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">tłumacząc<\/a> program Betaflight na nowy język lub pomagając w utrzymaniu istniejących tłumaczeń.<\/li><\/ul>"
+        "message": "Jeśli chcesz pomagać w rozwijaniu Betaflight, możesz to robić na wiele sposobów:<br \/><ul><li> Wykorzystując swoją wiedzę o Betaflight, twórz lub aktualizuj treści na <a href=\"https:\/\/betaflight.com\/docs\/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">naszej Wiki<\/a> lub odpowiadaj na pytania innych cużytkowników na forach internetowych.<\/li><li><a href=\"https:\/\/betaflight.com\/docs\/development\" target=\"_blank\" rel=\"noopener noreferrer\">Bierz udział w tworzeniu kodu<\/a> oprogramowania układowego oraz Konfiguratora. Kreuj nowe funkcje, poprawki i ulepszenia.<\/li><li>Testuj <ahref=\"https:\/\/github.com\/Betaflight\/betaflight\/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">nowe funkcje i poprawki<\/a>, nie zapominając o pozostawieniu nam feedbacku.<\/li><li> Pomagaj innym użytkownikom w rozwiązywaniu problemów, które zgłosili w <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel=\"noopener noreferrer\"> systemie zgłaszania problemów<\/a> oraz bierz udział w dyskusjach dotyczących wniosków o nowe funkcjonalności.<\/li><li><a href=\"https:\/\/crowdin.com\/project\/betaflight-configurator#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">Zostań tłumaczem<\/a> Konfiguratora Betaflight na nowy język lub pomóż w poprawianiu istniejących tłumaczeń.<\/li><\/ul>"
     },
     "defaultFacebookText": {
         "message": "Mamy również <a href=\"https:\/\/www.facebook.com\/groups\/betaflightgroup\/\" target=\"_blank\" rel=\"noopener noreferrer\">grupę na Facebooku<\/a>.<br \/>Dołącz do nas aby porozmawiać o Betaflight, spytać o konfigurację lub po prostu spędzić czas z innymi pilotami."
@@ -1973,6 +1973,10 @@
     "receiverRcSmoothingManual": {
         "message": "Ręcznie"
     },
+    "receiverRcSmoothingAutoFactor": {
+        "message": "Automatyczny współczynnik ustawienia",
+        "description": "Setpoint Auto Factor parameter for RC smoothing"
+    },
     "receiverRcSmoothingAutoFactorHelp": {
         "message": "Dostosowuje automatyczne obliczanie współczynnika, 10 jest domyślnym stosunkiem współczynnika do opóźnienia. Zwiększenie liczby bardziej wygładzi wejścia RC, dodając jednocześnie opóźnienie. Może to być przydatne w przypadku zawodnych połączeń RC lub podczas latania z kamerą.<br>Uważaj na liczby zbliżające się do 50, opóźnienie wejściowe będzie zauważalne.<br>Użyj polecenia CLI rc_smoothing_info, gdy TX i RX są zasilane, aby zobaczyć automatycznie obliczone wygładzanie RC odcięcia.",
         "description": "Setpoint Auto Factor parameter help message"
@@ -1980,6 +1984,10 @@
     "receiverRcSmoothingAutoFactorHelp2": {
         "message": "Dostosowuje automatyczne wygładzanie RC. 30 jest domyślną wartością. Wyższe wartości wygładzają wejścia RC bardziej - np. 60 dla freestyle HD lub 90-120 dla latania kinowego. Uwaga: wartości powyżej 50 spowodują znaczne opóźnienie drążka. Niższe wartości, np. 20-25, przeniosą niektóre kroki sterowania RC do sygnałów silnika, nieznacznie zwiększając ciepło silnika, ale zmniejszą nieco opóźnienie RC. Może to być przydatne podczas wyścigów.",
         "description": "Setpoint Auto Factor parameter help message"
+    },
+    "receiverRcSmoothingAutoFactorThrottle": {
+        "message": "Współczynnik automatycznego sterowania przepustnicą",
+        "description": "Throttle Auto Factor parameter for RC smoothing"
     },
     "receiverRcSmoothingAutoFactorThrottleHelp": {
         "message": "Dostosowuje automatyczne obliczanie współczynnika, 10 jest domyślnym stosunkiem współczynnika do opóźnienia. Zwiększenie liczby bardziej wygładzi wejścia RC, dodając jednocześnie opóźnienie. Może to być przydatne w przypadku zawodnych połączeń RC lub podczas latania z kamerą.<br>Uważaj na liczby zbliżające się do 50, opóźnienie wejściowe będzie zauważalne.<br>Użyj polecenia CLI rc_smoothing_info, gdy TX i RX są zasilane, aby zobaczyć automatycznie obliczone wygładzanie RC odcięcia.",
@@ -2023,6 +2031,9 @@
     },
     "receiverRcSmoothingSetpointHz": {
         "message": "Częstotliwość odcięcia Wartości zadanej"
+    },
+    "receiverRcSmoothingThrottleCutoffHz": {
+        "message": "Częstotliwość odcięcia przepustnicy"
     },
     "receiverRcSmoothingFeedforwardCutoff": {
         "message": "Częstotliwość odcięcia Feedforward"
@@ -3455,14 +3466,15 @@
     "dataflashButtonSaveFile": {
         "message": "Zapisz do pliku..."
     },
-    "dataflashButtonSaveFileDeprecated": {
-        "message": "Zrzut pamięci flash do pliku... (nie wspierany)"
-    },
     "dataflashSavetoFileNote": {
         "message": "Bezpośrednie zapisywanie zawartości pamięci do pliku jest powolne i z natury podatne na błąd lub nawet uszkodzenie pliku.<br>W niektórych przypadkach będzie to działać podczas zapisu małych plików, ale zalecane jest użycie trybu pamięci masowej."
     },
     "dataflashSaveFileDepreciationHint": {
         "message": "Ta metoda jest powolna i z natury podatna na błąd \/ uszkodzenie plików, ponieważ połączenie MSP jest zmienne, co jest podstawowym ograniczeniem, które sprawia, że jest nieodpowiednie do przesyłania plików. Może zadziałać tylko dla małych plików. Nie twórz żądań dodania wsparcia tej funkcji gdy transfer plików nie powiedzie się po zapisaniu, przy użyciu tej metody. Zalecaną metodą jest użycie '<b>$t(onboardLoggingRebootMscText.message)<\/b>' (poniżej) aby aktywować tryb pamięci masowej i uzyskać dostęp do kontrolera lotu jako urządzenia pamięci."
+    },
+    "dataflashButtonSaveAndErase": {
+        "message": "Zapisz i Wyczyść",
+        "description": "Button text to save blackbox logs to file and then erase the flash"
     },
     "dataflashButtonErase": {
         "message": "Kasuj pamieć"
@@ -3754,7 +3766,10 @@
         "message": "Plik HEX wydaje się być uszkodzony"
     },
     "firmwareFlasherUF2SaveSuccess": {
-        "message": "Pomyślnie zapisano (flashed) UF2"
+        "message": "Pomyślnie zapisano () UF2"
+    },
+    "firmwareFlasherUF2SaveFailed": {
+        "message": "Nie udało się zapisać (flash) UF2"
     },
     "firmwareFlasherConfigCorrupted": {
         "message": "Plik konfiguracyjny wydaje się być uszkodzony, ASCII akceptowane (znaki 0-255)",
@@ -3798,6 +3813,18 @@
     "firmwareFlasherVerifyBoard": {
         "message": "<h3>Niezgodność oprogramowania<\/h3><br \/>Połączony kontroler lotu to <strong>{{verified_board}}<\/strong> podczas gdy Ty wybrałeś <strong>{{selected_board}}<\/strong>.<br \/><br \/>Czy chcesz kontynuować wgrywanie?",
         "description": "Make a quick connection to read firmware target and never flash a wrong target again"
+    },
+    "firmwareFlasherBoardVerificationSuccess": {
+        "message": "Aplikacja <span class=\"message-positive\">pomyślnie<\/span> wykryła i zweryfikowała board: <strong>{{boardName}}<\/strong>",
+        "description": "Board verification has succeeded."
+    },
+    "firmwareFlasherBoardVerficationTargetNotAvailable": {
+        "message": "Aplikacja wykryła board: <strong>{{boardName}}<\/strong>, ale nie znaleziono oficjalnego celu Betaflight",
+        "description": "Board verification has succeeded, but the target is not available as offical Betaflight target."
+    },
+    "firmwareFlasherBoardVerificationFail": {
+        "message": "Aplikacja <span class=\"message-negative\">nie powiodła się<\/span> w celu zweryfikowania działu. Jeśli ta opcja będzie się powtarzała, spróbuj zmienić zakładki i ponowić próbę, podłącz się ponownie lub połącz najpierw jeśli zapomniałeś zastosować niestandardowe ustawienia domyślne.",
+        "description": "Sometimes MSP values cannot be read from firmware correctly"
     },
     "firmwareFlasherButtonAbort": {
         "message": "Przerwij"
@@ -5959,12 +5986,12 @@
     "osdDescElementEscRpm": {
         "message": "RPM zgłaszane za pomocą telemetrii ESC"
     },
-    "osdTextElementRemaningTimeEstimate": {
-        "message": "Licznik: szacowany pozostały czas",
+    "osdTextElementRemainingTimeEstimate": {
+        "message": "Licznik: pozostały szacunkowy czas",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementRemaningTimeEstimate": {
-        "message": "Szacunkowy czas lotu"
+    "osdDescElementRemainingTimeEstimate": {
+        "message": "Szacowany pozostały czas lotu"
     },
     "osdTextElementRtcDateTime": {
         "message": "Data i godzina RTC",
@@ -6691,6 +6718,10 @@
         "message": "Wprowadź częstotliwość bezpośrednio",
         "description": "Text of one of the fields of the VTX tab"
     },
+    "vtxFrequencyChannelHelp": {
+        "message": "Jeśli to włączysz, aplikacja pozwoli Ci wybrać częstotliwość zamiast zwykłego paska\/kanału. Aby to zadziałało, VTX musi obsługiwać tę funkcję.",
+        "description": "Help text for the frequency or channel select field of the VTX tab"
+    },
     "vtxSelectedMode": {
         "message": "Wybierz tryb",
         "description": "Title for the actual mode header of the VTX"
@@ -7117,6 +7148,9 @@
     "onboardLoggingRateOfLogging": {
         "message": "Częstotliwość rejestrowania danych Czarnej Skrzynki"
     },
+    "onboardLoggingDebugFields": {
+        "message": "Pola debugowania uwzględnione"
+    },
     "onboardLoggingDebugMode": {
         "message": "Tryb debugowania Czarnej Skrzynki"
     },
@@ -7258,6 +7292,9 @@
     "cordovaIncompatibleWebview": {
         "message": "Serwer niekompatybilny"
     },
+    "cordovaWebviewTroubleshootingMsg": {
+        "message": "Aby korzystać z aplikacji Betaflight musisz zaktualizować widok swojego urządzenia."
+    },
     "cordovaWebviewTroubleshootingMsg2": {
         "message": "Poniższe narzędzie ma pomóc Ci zainstalować lub uaktualnić aplikację webview."
     },
@@ -7302,6 +7339,9 @@
     },
     "cordovaExitAppTitle": {
         "message": "Potwierdzenie"
+    },
+    "cordovaExitAppMessage": {
+        "message": "Czy na pewno chcesz zamknąć aplikację?"
     },
     "dropDownSelectAll": {
         "message": "[Zaznacz\/odznacz wszystko]",
@@ -7639,5 +7679,9 @@
     "osdDescElementLidar": {
         "message": "$t(osdTextElementLidar.message)",
         "description": "Don't translate!!!"
+    },
+    "osdSetupPreviewCheckRulers": {
+        "message": "Linijki",
+        "description": "Label for the checkbox to toggle OSD preview rulers around the preview"
     }
 }
