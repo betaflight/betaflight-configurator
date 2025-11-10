@@ -86,7 +86,7 @@ class CapacitorSerialProtocol extends EventTarget {
         const uint8Array = new Uint8Array(length);
 
         for (let i = 0; i < length; i++) {
-            uint8Array[i] = parseInt(hexString.slice(i * 2, i * 2 + 2), 16);
+            uint8Array[i] = Number.parseInt(hexString.slice(i * 2, i * 2 + 2), 16);
         }
 
         return uint8Array;
@@ -273,7 +273,7 @@ class CapacitorSerialProtocol extends EventTarget {
             this.dispatchEvent(new CustomEvent("disconnect", { detail: true }));
         }
 
-        callback?.(closeError ? false : true);
+        callback?.(!closeError);
 
         if (closeError) {
             throw new Error("Failed to close serial port", { cause: closeError });

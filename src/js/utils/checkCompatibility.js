@@ -4,8 +4,8 @@ import { Capacitor } from "@capacitor/core";
 // Returns standardized OS name string or "unknown"
 export function getOS() {
     let os = "unknown";
-    const userAgent = window.navigator.userAgent;
-    const platform = window.navigator?.userAgentData?.platform || window.navigator.platform;
+    const userAgent = globalThis.navigator.userAgent;
+    const platform = globalThis.navigator?.userAgentData?.platform;
     const macosPlatforms = ["Macintosh", "MacIntel", "MacPPC", "Mac68K", "macOS"];
     const windowsPlatforms = ["Win32", "Win64", "Windows", "WinCE"];
     const iosPlatforms = ["iPhone", "iPad", "iPod"];
