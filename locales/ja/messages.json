@@ -3459,9 +3459,6 @@
     "dataflashButtonSaveFile": {
         "message": "ファイルに保存します..."
     },
-    "dataflashButtonSaveFileDeprecated": {
-        "message": "フラッシュデータをファイルへ保存... (未サポート)"
-    },
     "dataflashSavetoFileNote": {
         "message": "フラッシュされているデータを直接ファイルへ保存するのは時間がかかり、本質的にエラーやファイル破損の原因になります。<br>場合によっては小さなファイルなら動作することはありますが、これらはサポートされておらず、サポートにおける問い合わせはコメントなくクローズされます - 代わりに大容量ストレージモードをご利用ください。"
     },
@@ -4354,10 +4351,6 @@
     "pidTuningDTermSliderEnabled": {
         "message": "D値スライダーを使用",
         "description": "Disable or enable D Term Filter Tuning Slider"
-    },
-    "pidTuningPidSlidersHelp": {
-        "message": "機体のの飛行特性 (PID強度) を調整するスライダー<br \/><br \/>ダンピング (D値強度): 速い動きに抵抗し、P値における振動を最小限に抑えます。<br \/><br \/>トラッキング (P値&I値強度): 機体の応答性を高めます。機体反応を向上させますが、値が高すぎるとトリルや振動発生の原因となります。<br \/><br \/>スティックレスポンス (FF値強度): 機体の反応性を高めます。機敏なスティックの動きに対する機体のの反応を高めます。<br \/><br \/>ドリフト - ふらつき (I値強度,上級者向け): I値の微調整が可能です。<br \/><br \/>動的D値 (D Max,上級者向け):  D値の最大値を設定します。機敏な挙動の際にD値をブーストできる最大値を設定します。<br \/><br \/>ピッチダンピング (Pitch:RollのD値比,上級者向け): ピッチのダンピング量を設定します。ロールに対するピッチのダンピング量を増加させます。<br \/><br \/>ピッチトラッキング (Pitch:Roll P値&I値TFF値比,上級者向け): ピッチの安定性を高めます。ロールに対するピッチのスタビライズ強度を増加させます。<br \/><br \/>基準値 倍率設定 (PID強度 上級者向け): すべてのPID強度を、その比率を一定に保ちながら増減します。",
-        "description": "Overall helpicon message for PID tuning sliders"
     },
     "pidTuningSliderWarning": {
         "message": "<span class=\"message-negative\">警告:<\/span> 現在のスライダー位置は、飛行散逸 [フライアウェイ] やモーターの損傷、または安全でない機体の挙動が発生する場合があります。注意して実施してください。",
@@ -5977,13 +5970,6 @@
     },
     "osdDescElementEscRpm": {
         "message": "回転数レポート by ESCテレメトリー"
-    },
-    "osdTextElementRemaningTimeEstimate": {
-        "message": "Timer: 想定残り時間",
-        "description": "One of the elements of the OSD"
-    },
-    "osdDescElementRemaningTimeEstimate": {
-        "message": "残り飛行時間の予測"
     },
     "osdTextElementRtcDateTime": {
         "message": "日付と時刻 (RTC)",

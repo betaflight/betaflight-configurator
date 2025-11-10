@@ -3161,9 +3161,6 @@
     "dataflashButtonSaveFile": {
         "message": "Inhalt in Datei speichern"
     },
-    "dataflashButtonSaveFileDeprecated": {
-        "message": "Datei speichern unter (nicht unterstützt)"
-    },
     "dataflashSavetoFileNote": {
         "message": "Direktes speichern von Flashdaten in eine Datei ist langsam und anfällig für Fehler\/ fehlerhafte Dateien.<br> In manchen Fällen wird dies für kleine Dateien funktionieren, dies ist allerdigs nicht vorgesehen und Support Anfragen diesbezüglich werden ohne Kommentar geschlossen. Nutze stattdessen den Massenspeichermodus."
     },
@@ -5495,13 +5492,6 @@
     },
     "osdDescElementEscRpm": {
         "message": "Motordrehzahl (über Regler Telemetrie)"
-    },
-    "osdTextElementRemaningTimeEstimate": {
-        "message": "Timer: geschätzte verbleibende Zeit",
-        "description": "One of the elements of the OSD"
-    },
-    "osdDescElementRemaningTimeEstimate": {
-        "message": "Errechnete verbleibende Flugzeit"
     },
     "osdTextElementRtcDateTime": {
         "message": "Echtzeit und Datum",

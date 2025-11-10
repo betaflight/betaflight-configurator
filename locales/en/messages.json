@@ -6070,12 +6070,12 @@
     "osdDescElementEscRpm": {
         "message": "RPM reported by ESC telemetry"
     },
-    "osdTextElementRemaningTimeEstimate": {
+    "osdTextElementRemainingTimeEstimate": {
         "message": "Timer: remaining time estimate",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementRemaningTimeEstimate" : {
-        "message": "Estimate of flight time remaning"
+    "osdDescElementRemainingTimeEstimate" : {
+        "message": "Estimate of flight time remaining"
     },
     "osdTextElementRtcDateTime": {
         "message": "RTC date and time",
