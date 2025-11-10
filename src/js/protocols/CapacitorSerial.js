@@ -47,6 +47,14 @@ class CapacitorSerialProtocol extends EventTarget {
         UsbSerial.addListener("error", this.handleErrorEvent);
     }
 
+    cleanup() {
+        UsbSerial.removeAllListeners("data");
+        UsbSerial.removeAllListeners("connected");
+        UsbSerial.removeAllListeners("attached");
+        UsbSerial.removeAllListeners("detached");
+        UsbSerial.removeAllListeners("error");
+    }
+
     handleDataEvent(event) {
         if (event?.data) {
             // Convert hex string from plugin to Uint8Array
@@ -61,10 +69,7 @@ class CapacitorSerialProtocol extends EventTarget {
     }
 
     handleAttachedEvent(event) {
-        const added = this.handleNewDevice(event);
-        if (added) {
-            this.dispatchEvent(new CustomEvent("addedDevice", { detail: added }));
-        }
+        this.handleNewDevice(event);
     }
 
     handleDetachedEvent(event) {
@@ -81,7 +86,7 @@ class CapacitorSerialProtocol extends EventTarget {
         const uint8Array = new Uint8Array(length);
 
         for (let i = 0; i < length; i++) {
-            uint8Array[i] = parseInt(hexString.substr(i * 2, 2), 16);
+            uint8Array[i] = parseInt(hexString.slice(i * 2, i * 2 + 2), 16);
         }
 
         return uint8Array;
@@ -260,6 +265,7 @@ class CapacitorSerialProtocol extends EventTarget {
             console.error(`${logHead} Error closing serial connection:`, error);
             closeError = error;
         } finally {
+            this.cleanup();
             this.isOpen = false;
             this.connected = false;
             this.port = null;

@@ -95,7 +95,7 @@ export function checkCompatibility() {
         errorMessage += "<br/>- Serial API support is disabled.";
     }
 
-    if (!hasUSBSupport) {
+    if (!hasUsbSupport) {
         errorMessage += "<br/>- Web USB API support is disabled.";
     }
 
