@@ -330,7 +330,7 @@ class EscDshotDirectionComponent {
             event.stopPropagation();
             this._domAgreeSafetyCheckBox.prop("checked", true);
             this._domAgreeSafetyCheckBox.trigger("change");
-            return;
+            // Don't return - allow flow-through to next steps
         }
 
         // Step 2: Start wizard if checkbox is checked and wizard isn't open yet
@@ -338,7 +338,7 @@ class EscDshotDirectionComponent {
             event.preventDefault();
             event.stopPropagation();
             this._onStartWizardButtonClicked();
-            return;
+            // Don't return - allow flow-through to spin motors
         }
 
         // Step 3: Spin motors if wizard is open but not spinning yet
@@ -436,7 +436,8 @@ class EscDshotDirectionComponent {
     }
 
     _handleSpacebarRelease() {
-        this._motorDriver.stopAllMotors();
+        // Fully stop wizard (same as clicking "Stop motors" button)
+        this._onStopWizardButtonClicked();
     }
 
     _handleWindowBlur() {
