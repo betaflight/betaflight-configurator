@@ -229,7 +229,6 @@ class WebSerial extends EventTarget {
     async readLoop() {
         try {
             for await (let value of streamAsyncIterable(this.reader, () => this.reading)) {
-                console.log(`${logHead} Received data:`, value);
                 this.dispatchEvent(new CustomEvent("receive", { detail: value }));
             }
         } catch (error) {
@@ -359,7 +358,6 @@ class WebSerial extends EventTarget {
         }
 
         try {
-            console.log(`${logHead} Sending data:`, data);
             if (this.isNeedBatchWrite) {
                 await this.batchWrite(data);
             } else {
