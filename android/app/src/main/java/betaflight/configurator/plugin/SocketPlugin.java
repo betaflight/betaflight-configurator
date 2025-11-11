@@ -288,7 +288,18 @@ public class SocketPlugin extends Plugin {
             state.set(ConnectionState.ERROR);
             closeResourcesInternal();
             state.set(ConnectionState.DISCONNECTED);
-            call.reject(message + ": " + error.getMessage());
+
+            String fullMsg = message + ": " + (error != null ? error.getMessage() : "unknown error");
+            if (call != null) {
+                call.reject(fullMsg);
+            } else {
+                // No PluginCall available (e.g., background reader thread). Log the error.
+                Log.e(TAG, fullMsg, error);
+                // Optionally notify listeners (commented to avoid duplicate notifications):
+                // JSObject err = new JSObject();
+                // err.put("error", fullMsg);
+                // notifyListeners("socketError", err);
+            }
             Log.e(TAG, message, error);
         } finally {
             socketLock.unlock();
