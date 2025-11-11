@@ -54,6 +54,8 @@ public class SocketPlugin extends Plugin {
     private Socket socket;
     private InputStream input;
     private OutputStream output;
+    private Thread readerThread;
+    private volatile boolean readerRunning = false;
 
     @PluginMethod
     public void connect(final PluginCall call) {
@@ -92,6 +94,8 @@ public class SocketPlugin extends Plugin {
                 result.put("success", true);
                 call.resolve(result);
                 Log.d(TAG, "Connected to " + ip + ":" + port);
+
+                startReaderThread();
             } catch (Exception e) {
                 state.set(ConnectionState.ERROR);
                 closeResourcesInternal();
@@ -143,34 +147,10 @@ public class SocketPlugin extends Plugin {
 
     @PluginMethod
     public void receive(final PluginCall call) {
-        if (state.get() != ConnectionState.CONNECTED || input == null) {
-            call.reject(ERROR_NOT_CONNECTED);
-            return;
-        }
-        call.setKeepAlive(true);
-
-        getBridge().getExecutor().execute(() -> {
-            try {
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                int b;
-                while ((b = input.read()) != -1 && b != '\n') {
-                    baos.write(b);
-                }
-                String data = new String(baos.toByteArray(), StandardCharsets.UTF_8);
-                if (data == null) {
-                    handleCommunicationError(new IOException("End of stream"), ERROR_CONNECTION_CLOSED, call);
-                    return;
-                }
-                JSObject result = new JSObject();
-                result.put("data", data);
-                call.resolve(result);
-                Log.d(TAG, "Received data: " + truncateForLog(data));
-            } catch (Exception e) {
-                handleCommunicationError(e, "Receive failed", call);
-            } finally {
-                call.setKeepAlive(false);
-            }
-        });
+        // Deprecated by continuous reader (Task 2)
+        JSObject result = new JSObject();
+        result.put("data", "");
+        call.reject("Continuous read active. Listen for 'dataReceived' events instead.");
     }
 
     @PluginMethod
@@ -231,14 +211,82 @@ public class SocketPlugin extends Plugin {
         super.handleOnDestroy();
     }
 
+    private void startReaderThread() {
+        if (readerThread != null && readerThread.isAlive()) return;
+        readerRunning = true;
+        readerThread = new Thread(() -> {
+            Log.d(TAG, "Reader thread started");
+            try {
+                ByteArrayOutputStream lineBuf = new ByteArrayOutputStream();
+                while (readerRunning && state.get() == ConnectionState.CONNECTED && input != null) {
+                    int b = input.read();
+                    if (b == -1) {
+                        notifyDisconnectFromPeer();
+                        break;
+                    }
+                    if (b == '\n') {
+                        String line = new String(lineBuf.toByteArray(), StandardCharsets.UTF_8);
+                        lineBuf.reset();
+                        if (line.endsWith("\r")) {
+                            line = line.substring(0, line.length() - 1);
+                        }
+                        JSObject payload = new JSObject();
+                        payload.put("data", line);
+                        notifyListeners("dataReceived", payload);
+                    } else {
+                        lineBuf.write(b);
+                        if (lineBuf.size() > 1024 * 1024) { // safety cap
+                            lineBuf.reset();
+                            Log.w(TAG, "Dropped oversized line");
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                if (readerRunning) {
+                    Log.e(TAG, "Reader thread error", e);
+                    JSObject err = new JSObject();
+                    err.put("error", e.getMessage());
+                    notifyListeners("dataReceivedError", err);
+                    handleCommunicationError(e, "Receive failed", null);
+                }
+            } finally {
+                Log.d(TAG, "Reader thread stopped");
+            }
+        }, "SocketReaderThread");
+        readerThread.start();
+    }
+
+    private void notifyDisconnectFromPeer() {
+        Log.d(TAG, "Peer closed connection");
+        JSObject evt = new JSObject();
+        evt.put("reason", "peer_closed");
+        notifyListeners("connectionClosed", evt);
+        socketLock.lock();
+        try {
+            state.set(ConnectionState.ERROR);
+            closeResourcesInternal();
+            state.set(ConnectionState.DISCONNECTED);
+        } finally {
+            socketLock.unlock();
+        }
+    }
+
+    private void stopReaderThread() {
+        readerRunning = false;
+        if (readerThread != null) {
+            try {
+                readerThread.interrupt();
+                readerThread.join(500);
+            } catch (InterruptedException ignored) {}
+            readerThread = null;
+        }
+    }
+
     private void closeResourcesInternal() {
-        if (input != null) { try { input.close(); } catch (IOException e) { Log.e(TAG, "Error closing input stream", e); } finally { input = null; }
-        }
-        if (output != null) { try { output.close(); } catch (IOException e) { Log.e(TAG, "Error closing output stream", e); } finally { output = null; }
-        }
-        if (socket != null) {
-            try { socket.close(); } catch (IOException e) { Log.e(TAG, "Error closing socket", e); } finally { socket = null; }
-        }
+        stopReaderThread();
+        if (input != null) { try { input.close(); } catch (IOException e) { Log.e(TAG, "Error closing input stream", e); } finally { input = null; } }
+        if (output != null) { try { output.close(); } catch (IOException e) { Log.e(TAG, "Error closing output stream", e); } finally { output = null; } }
+        if (socket != null) { try { socket.close(); } catch (IOException e) { Log.e(TAG, "Error closing socket", e); } finally { socket = null; } }
     }
 
     private void handleCommunicationError(Exception error, String message, PluginCall call) {
