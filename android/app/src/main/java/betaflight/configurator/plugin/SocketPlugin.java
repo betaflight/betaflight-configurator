@@ -1,5 +1,6 @@
 package betaflight.configurator.plugin;
 
+import android.util.Base64;
 import android.util.Log;
 import com.getcapacitor.JSObject;
 import com.getcapacitor.Plugin;
@@ -13,6 +14,7 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -217,28 +219,19 @@ public class SocketPlugin extends Plugin {
         readerThread = new Thread(() -> {
             Log.d(TAG, "Reader thread started");
             try {
-                ByteArrayOutputStream lineBuf = new ByteArrayOutputStream();
+                byte[] buf = new byte[4096];
                 while (readerRunning && state.get() == ConnectionState.CONNECTED && input != null) {
-                    int b = input.read();
-                    if (b == -1) {
+                    int read = input.read(buf);
+                    if (read == -1) {
                         notifyDisconnectFromPeer();
                         break;
                     }
-                    if (b == '\n') {
-                        String line = new String(lineBuf.toByteArray(), StandardCharsets.UTF_8);
-                        lineBuf.reset();
-                        if (line.endsWith("\r")) {
-                            line = line.substring(0, line.length() - 1);
-                        }
+                    if (read > 0) {
+                        byte[] chunk = Arrays.copyOf(buf, read);
+                        String b64 = Base64.encodeToString(chunk, Base64.NO_WRAP);
                         JSObject payload = new JSObject();
-                        payload.put("data", line);
+                        payload.put("data", b64);
                         notifyListeners("dataReceived", payload);
-                    } else {
-                        lineBuf.write(b);
-                        if (lineBuf.size() > 1024 * 1024) { // safety cap
-                            lineBuf.reset();
-                            Log.w(TAG, "Dropped oversized line");
-                        }
                     }
                 }
             } catch (Exception e) {
