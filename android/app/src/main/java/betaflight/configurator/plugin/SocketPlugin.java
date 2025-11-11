@@ -181,8 +181,16 @@ public class SocketPlugin extends Plugin {
                 Log.d(TAG, "Disconnected successfully");
             } catch (Exception e) {
                 state.set(ConnectionState.ERROR);
+                // Ensure cleanup completes even on error
+                try {
+                    closeResourcesInternal();
+                } catch (Exception ce) {
+                    Log.e(TAG, "Cleanup error during disconnect", ce);
+                }
                 call.reject("Disconnect failed: " + e.getMessage());
                 Log.e(TAG, "Disconnect failed", e);
+                // Reset to a clean disconnected state after handling error
+                state.set(ConnectionState.DISCONNECTED);
             } finally {
                 socketLock.unlock();
                 call.setKeepAlive(false);
