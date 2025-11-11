@@ -6,13 +6,13 @@ import com.getcapacitor.Plugin;
 import com.getcapacitor.PluginCall;
 import com.getcapacitor.PluginMethod;
 import com.getcapacitor.annotation.CapacitorPlugin;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -52,8 +52,8 @@ public class SocketPlugin extends Plugin {
     private final ReentrantLock writerLock = new ReentrantLock();
 
     private Socket socket;
-    private BufferedReader reader;
-    private BufferedWriter writer;
+    private InputStream input;
+    private OutputStream output;
 
     @PluginMethod
     public void connect(final PluginCall call) {
@@ -84,8 +84,8 @@ public class SocketPlugin extends Plugin {
                 socket.connect(new InetSocketAddress(ip, port), DEFAULT_TIMEOUT_MS);
                 socket.setSoTimeout(DEFAULT_TIMEOUT_MS);
 
-                reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+                input = socket.getInputStream();
+                output = socket.getOutputStream();
 
                 state.set(ConnectionState.CONNECTED);
                 JSObject result = new JSObject();
@@ -120,13 +120,13 @@ public class SocketPlugin extends Plugin {
         getBridge().getExecutor().execute(() -> {
             writerLock.lock();
             try {
-                if (writer == null || state.get() != ConnectionState.CONNECTED) {
+                if (output == null || state.get() != ConnectionState.CONNECTED) {
                     call.reject(ERROR_CONNECTION_LOST);
                     return;
                 }
-                writer.write(data);
-                writer.newLine();
-                writer.flush();
+                byte[] payload = (data + "\n").getBytes(StandardCharsets.UTF_8);
+                output.write(payload);
+                output.flush();
 
                 JSObject result = new JSObject();
                 result.put("success", true);
@@ -143,7 +143,7 @@ public class SocketPlugin extends Plugin {
 
     @PluginMethod
     public void receive(final PluginCall call) {
-        if (state.get() != ConnectionState.CONNECTED || reader == null) {
+        if (state.get() != ConnectionState.CONNECTED || input == null) {
             call.reject(ERROR_NOT_CONNECTED);
             return;
         }
@@ -151,7 +151,12 @@ public class SocketPlugin extends Plugin {
 
         getBridge().getExecutor().execute(() -> {
             try {
-                String data = reader.readLine();
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                int b;
+                while ((b = input.read()) != -1 && b != '\n') {
+                    baos.write(b);
+                }
+                String data = new String(baos.toByteArray(), StandardCharsets.UTF_8);
                 if (data == null) {
                     handleCommunicationError(new IOException("End of stream"), ERROR_CONNECTION_CLOSED, call);
                     return;
@@ -227,11 +232,9 @@ public class SocketPlugin extends Plugin {
     }
 
     private void closeResourcesInternal() {
-        if (reader != null) {
-            try { reader.close(); } catch (IOException e) { Log.e(TAG, "Error closing reader", e); } finally { reader = null; }
+        if (input != null) { try { input.close(); } catch (IOException e) { Log.e(TAG, "Error closing input stream", e); } finally { input = null; }
         }
-        if (writer != null) {
-            try { writer.flush(); writer.close(); } catch (IOException e) { Log.e(TAG, "Error closing writer", e); } finally { writer = null; }
+        if (output != null) { try { output.close(); } catch (IOException e) { Log.e(TAG, "Error closing output stream", e); } finally { output = null; }
         }
         if (socket != null) {
             try { socket.close(); } catch (IOException e) { Log.e(TAG, "Error closing socket", e); } finally { socket = null; }
