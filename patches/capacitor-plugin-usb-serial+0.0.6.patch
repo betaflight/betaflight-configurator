@@ -1,0 +1,44 @@
+diff --git a/node_modules/capacitor-plugin-usb-serial/android/src/main/java/com/viewtrak/plugins/usbserial/UsbSerial.java b/node_modules/capacitor-plugin-usb-serial/android/src/main/java/com/viewtrak/plugins/usbserial/UsbSerial.java
+index a366b4a..c80e172 100644
+--- a/node_modules/capacitor-plugin-usb-serial/android/src/main/java/com/viewtrak/plugins/usbserial/UsbSerial.java
++++ b/node_modules/capacitor-plugin-usb-serial/android/src/main/java/com/viewtrak/plugins/usbserial/UsbSerial.java
+@@ -233,7 +233,8 @@ public class UsbSerial implements SerialInputOutputManager.Listener {
+             throw new Error("can't send empty string to device", new Throwable("EMPTY_STRING"));
+         }
+         try {
+-            byte[] data = (str + "\r\n").getBytes();
++            // Convert hex string to bytes (for binary protocols like MSP)
++            byte[] data = HexDump.hexStringToByteArray(str);
+             usbSerialPort.write(data, WRITE_WAIT_MILLIS);
+         } catch (Exception e) {
+             closeSerial();
+@@ -260,25 +261,10 @@ public class UsbSerial implements SerialInputOutputManager.Listener {
+ 
+     private void updateReceivedData(byte[] data) {
+         try {
+-            messageNMEA += new String(data);
+-
+-            while (messageNMEA.indexOf(0x0a) != -1) {
+-
+-                int eol = messageNMEA.indexOf(0x0a);
+-                if (-1 != eol) {
+-                    String sentence = messageNMEA.substring(0, eol + 1);
+-                    messageNMEA = messageNMEA.substring(eol + 1);
+-
+-                    // Boolean allowed = throttle.tryAcquire();
+-                    // if (!allowed) {
+-                    // return;
+-                    // }
+-
+-                    callback.receivedData(sentence);
+-                } else if (messageNMEA.length() > 128) {
+-                    throw new Exception("invalid NMEA string");
+-                }
+-            }
++            // FIXED: Send all data immediately as hex string (for binary protocols like MSP)
++            // Original code waited for newline characters (NMEA protocol), which never comes with binary data
++            String hexData = HexDump.toHexString(data);
++            callback.receivedData(hexData);
+         } catch (Exception exception) {
+             updateReadDataError(exception);
+         }

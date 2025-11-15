@@ -22,7 +22,8 @@
     "android:release": "vite build && node capacitor.config.generator.mjs && npx cap build android --release",
     "format": "prettier --write {src,test}/**/*.{js,vue,css,less}",
     "storybook": "start-storybook -p 6006",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "postinstall": "patch-package"
   },
   "window": {
     "icon": "images/bf_icon_128.png",
@@ -45,6 +46,7 @@
     "@capacitor/core": "^7.0.1",
     "@fortawesome/fontawesome-free": "^6.5.2",
     "@vitejs/plugin-vue": "^6.0.1",
+    "capacitor-plugin-usb-serial": "^0.0.6",
     "crypto-es": "^2.1.0",
     "d3": "^7.9.0",
     "djv": "^2.1.4",
@@ -115,7 +117,9 @@
     "lint-staged": "^15.4.3",
     "nw-builder": "^3.8.6",
     "os": "^0.1.2",
+    "patch-package": "^8.0.1",
     "postcss": "^8.5.3",
+    "postinstall-postinstall": "^2.1.0",
     "prettier": "^3.5.2",
     "rollup": "^4.34.9",
     "rollup-plugin-copy": "^3.5.0",

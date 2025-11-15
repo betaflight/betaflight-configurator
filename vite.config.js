@@ -120,6 +120,7 @@ export default defineConfig({
     server: {
         port: 8000,
         strictPort: true,
+        host: "0.0.0.0", // Listen on all network interfaces for Android device access
     },
     preview: {
         port: 8080,

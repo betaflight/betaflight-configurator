@@ -3,7 +3,7 @@ import MSP from "./msp";
 import Switchery from "switchery-latest";
 import tippy from "tippy.js";
 import $ from "jquery";
-import { getOS } from "./utils/checkBrowserCompatibility";
+import { getOS } from "./utils/checkCompatibility";
 
 const TABS = {};
 

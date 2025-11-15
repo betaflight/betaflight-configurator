@@ -4,8 +4,8 @@ import { Capacitor } from "@capacitor/core";
 // Returns standardized OS name string or "unknown"
 export function getOS() {
     let os = "unknown";
-    const userAgent = window.navigator.userAgent;
-    const platform = window.navigator?.userAgentData?.platform || window.navigator.platform;
+    const userAgent = globalThis.navigator.userAgent;
+    const platform = globalThis.navigator?.userAgentData?.platform;
     const macosPlatforms = ["Macintosh", "MacIntel", "MacPPC", "Mac68K", "macOS"];
     const windowsPlatforms = ["Win32", "Win64", "Windows", "WinCE"];
     const iosPlatforms = ["iPhone", "iPad", "iPod"];
@@ -53,17 +53,10 @@ export function isIOS() {
     return false;
 }
 
-export function isCapacitorWeb() {
-    if (Capacitor.isNativePlatform()) {
-        return Capacitor.getPlatform() === "web";
-    }
-    return false;
-}
-
-export function checkBrowserCompatibility() {
-    const isWebSerial = checkWebSerialSupport();
-    const isWebBluetooth = checkWebBluetoothSupport();
-    const isWebUSB = checkWebUSBSupport();
+export function checkCompatibility() {
+    const hasSerialSupport = checkSerialSupport();
+    const hasBluetoothSupport = checkBluetoothSupport();
+    const hasUsbSupport = checkUsbSupport();
     const isChromium = isChromiumBrowser();
 
     const isNative = Capacitor.isNativePlatform();
@@ -72,17 +65,18 @@ export function checkBrowserCompatibility() {
     const isTestEnvironment =
         typeof process !== "undefined" && (process.env.NODE_ENV === "test" || process.env.JEST_WORKER_ID !== undefined);
 
-    const compatible = isTestEnvironment || isNative || (isChromium && (isWebSerial || isWebBluetooth || isWebUSB));
+    const compatible =
+        isTestEnvironment || isNative || (isChromium && (hasSerialSupport || hasBluetoothSupport || hasUsbSupport));
 
     console.log("User Agent: ", navigator.userAgentData);
     console.log("Native: ", isNative);
     console.log("Chromium: ", isChromium);
-    console.log("Web Serial: ", isWebSerial);
+    console.log("Serial: ", hasSerialSupport);
+    console.log("Bluetooth: ", hasBluetoothSupport);
+    console.log("USB: ", hasUsbSupport);
     console.log("OS: ", getOS());
-
     console.log("Android: ", isAndroid());
     console.log("iOS: ", isIOS());
-    console.log("Capacitor web: ", isCapacitorWeb());
 
     if (compatible) {
         return true;
@@ -93,16 +87,16 @@ export function checkBrowserCompatibility() {
         errorMessage = "Betaflight app requires a Chromium based browser (Chrome, Chromium, Edge).<br/>";
     }
 
-    if (!isWebBluetooth) {
-        errorMessage += "<br/>- Web Bluetooth API support is disabled.";
+    if (!hasBluetoothSupport) {
+        errorMessage += "<br/>- Bluetooth API support is disabled.";
     }
 
-    if (!isWebSerial) {
-        errorMessage += "<br/>- Web Serial API support is disabled.";
+    if (!hasSerialSupport) {
+        errorMessage += "<br/>- Serial API support is disabled.";
     }
 
-    if (!isWebUSB) {
-        errorMessage += "<br/>- Web USB API support is disabled.";
+    if (!hasUsbSupport) {
+        errorMessage += "<br/>- USB API support is disabled.";
     }
 
     const newDiv = document.createElement("div");
@@ -131,44 +125,39 @@ export function checkBrowserCompatibility() {
     throw new Error("No compatible browser found.");
 }
 
-export function checkWebSerialSupport() {
-    if (!navigator.serial) {
-        console.error("Web Serial API is not supported in this browser.");
-        return false;
+export function checkSerialSupport() {
+    let result = false;
+    if (isAndroid()) {
+        result = true;
+    } else if (navigator.serial) {
+        result = true;
+    } else if (isIOS()) {
+        // Not implemented yet
     }
 
-    if (isIOS()) {
-        console.error("Web Serial API is not supported on iOS.");
-        return false;
-    }
-
-    return true;
+    return result;
 }
 
-export function checkWebBluetoothSupport() {
-    if (!navigator.bluetooth) {
-        console.error("Web Bluetooth API is not supported in this browser.");
-        return false;
+export function checkBluetoothSupport() {
+    let result = false;
+    if (isAndroid()) {
+        // Not implemented yet
+    } else if (navigator.bluetooth) {
+        result = true;
+    } else if (isIOS()) {
+        // Not implemented yet
     }
-
-    if (isIOS()) {
-        console.error("Web Bluetooth API is not supported on iOS.");
-        return false;
-    }
-
-    return true;
+    return result;
 }
 
-export function checkWebUSBSupport() {
-    if (!navigator.usb) {
-        console.error("Web USB API is not supported in this browser.");
-        return false;
+export function checkUsbSupport() {
+    let result = false;
+    if (isAndroid()) {
+        // Not implemented yet
+    } else if (navigator.usb) {
+        result = true;
+    } else if (isIOS()) {
+        // Not implemented yet
     }
-
-    if (isIOS()) {
-        console.error("Web USB API is not supported on iOS.");
-        return false;
-    }
-
-    return true;
+    return result;
 }
