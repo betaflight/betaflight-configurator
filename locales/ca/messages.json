@@ -5990,6 +5990,13 @@
     "osdDescElementEscRpm": {
         "message": "RPM reportat per la telemetria ESC"
     },
+    "osdTextElementRemainingTimeEstimate": {
+        "message": "Temporitzador: estimació del temps restant",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementRemainingTimeEstimate": {
+        "message": "Estimació del temps de vol restant"
+    },
     "osdTextElementRtcDateTime": {
         "message": "RTC dia i hora",
         "description": "One of the elements of the OSD"
