@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "module": "ESNext",
+    "lib": ["es2017", "dom"],
+    "target": "es2017",
+    "moduleResolution": "node",
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "sourceMap": true,
+    "declaration": true,
+    "inlineSourceMap": false,
+    "inlineSources": false,
+    "outDir": "./dist/esm",
+    "removeComments": false,
+    "skipLibCheck": true
+  },
+  "files": [
+    "src/definitions.ts",
+    "src/index.ts",
+    "src/web.ts"
+  ]
+}

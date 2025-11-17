@@ -1,0 +1,71 @@
+{
+  "name": "capacitor-plugin-betaflight-serial",
+  "version": "1.0.0",
+  "description": "Custom Capacitor USB Serial plugin for Betaflight Configurator",
+  "main": "dist/esm/index.js",
+  "types": "dist/esm/index.d.ts",
+  "unpkg": "dist/plugin.js",
+  "files": [
+    "android/src/main/",
+    "android/build.gradle",
+    "dist/",
+    "ios/Plugin/",
+    "CapacitorPluginBetaflightSerial.podspec"
+  ],
+  "author": "Betaflight Team",
+  "license": "GPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": "github.com/betaflight/betaflight-configurator"
+  },
+  "bugs": {
+    "url": "https://github.com/betaflight/betaflight-configurator/issues"
+  },
+  "keywords": [
+    "capacitor",
+    "plugin",
+    "native",
+    "usb",
+    "serial",
+    "betaflight"
+  ],
+  "scripts": {
+    "verify": "npm run verify:android",
+    "verify:android": "cd android && ./gradlew clean build test && cd ..",
+    "lint": "npm run eslint",
+    "eslint": "eslint . --ext ts",
+    "prettier": "prettier \"**/*.{css,html,ts,js,java}\"",
+    "fmt": "npm run eslint -- --fix && npm run prettier -- --write",
+    "docgen": "docgen --api BetaflightSerialPlugin --output-readme README.md --output-json dist/docs.json",
+    "build": "npm run clean && npm run docgen && tsc && rollup -c rollup.config.js",
+    "clean": "rimraf ./dist",
+    "watch": "tsc --watch",
+    "prepublishOnly": "npm run build",
+    "prepare": "npm run build"
+  },
+  "devDependencies": {
+    "@capacitor/android": "^7.0.0",
+    "@capacitor/core": "^7.0.0",
+    "@capacitor/docgen": "^0.0.18",
+    "@ionic/eslint-config": "^0.3.0",
+    "@ionic/prettier-config": "^1.0.1",
+    "eslint": "^7.11.0",
+    "prettier": "~2.3.0",
+    "prettier-plugin-java": "~1.0.2",
+    "rimraf": "^3.0.2",
+    "rollup": "^2.32.0",
+    "typescript": "~4.1.5"
+  },
+  "peerDependencies": {
+    "@capacitor/core": "^7.0.0"
+  },
+  "prettier": "@ionic/prettier-config",
+  "eslintConfig": {
+    "extends": "@ionic/eslint-config/recommended"
+  },
+  "capacitor": {
+    "android": {
+      "src": "android"
+    }
+  }
+}

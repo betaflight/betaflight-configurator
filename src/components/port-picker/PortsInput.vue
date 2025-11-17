@@ -42,6 +42,14 @@
                 >
                     {{ connectedUsbDevice.displayName }}
                 </option>
+                <option
+                    v-if="showCapacitorOption"
+                    v-for="connectedCapacitorDevice in connectedCapacitorDevices"
+                    :key="connectedCapacitorDevice.path"
+                    :value="connectedCapacitorDevice.path"
+                >
+                    {{ connectedCapacitorDevice.displayName }}
+                </option>
                 <option v-if="showSerialOption" value="requestpermissionserial">
                     {{ $t("portsSelectPermission") }}
                 </option>
@@ -50,6 +58,9 @@
                 </option>
                 <option v-if="showUsbOption" value="requestpermissionusb">
                     {{ $t("portsSelectPermissionDFU") }}
+                </option>
+                <option v-if="showCapacitorOption" value="requestpermissioncapacitor">
+                    {{ $t("portsSelectPermission") }}
                 </option>
             </select>
         </div>
@@ -108,6 +119,10 @@ export default defineComponent({
             type: Array,
             default: () => [],
         },
+        connectedCapacitorDevices: {
+            type: Array,
+            default: () => [],
+        },
         connectedBluetoothDevices: {
             type: Array,
             default: () => [],
@@ -133,6 +148,10 @@ export default defineComponent({
             default: true,
         },
         showUsbOption: {
+            type: Boolean,
+            default: true,
+        },
+        showCapacitorOption: {
             type: Boolean,
             default: true,
         },
@@ -179,6 +198,8 @@ export default defineComponent({
                 EventBus.$emit("ports-input:request-permission-bluetooth");
             } else if (value === "requestpermissionusb") {
                 EventBus.$emit("ports-input:request-permission-usb");
+            } else if (value === "requestpermissioncapacitor") {
+                EventBus.$emit("ports-input:request-permission-capacitor");
             } else {
                 EventBus.$emit("ports-input:change", value);
             }
