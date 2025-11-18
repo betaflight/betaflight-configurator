@@ -45,7 +45,8 @@
         <!-- Explicit receiver to handle USB permission PendingIntent on Android 14+ -->
         <receiver
             android:name="com.betaflight.plugin.serial.UsbPermissionReceiver"
-            android:exported="true">
+            android:exported="true"
+            android:permission="android.permission.MANAGE_USB">
             <intent-filter>
                 <action android:name="com.betaflight.USB_PERMISSION" />
             </intent-filter>
