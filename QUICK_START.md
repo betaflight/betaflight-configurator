@@ -5,7 +5,8 @@
 ### 1. Install Dependencies
 
 ```bash
-cd /home/mark/dev/betaflight/betaflight-configurator/capacitor-plugin-serial/betaflight-configurator
+# Navigate to your configurator directory
+cd betaflight-configurator
 
 # Install the custom plugin (local package)
 yarn install
