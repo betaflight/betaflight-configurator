@@ -45,7 +45,7 @@
     "@capacitor/core": "^7.0.1",
     "@fortawesome/fontawesome-free": "^6.5.2",
     "@vitejs/plugin-vue": "^6.0.1",
-    "capacitor-plugin-betaflight-serial": "link:./capacitor-plugin-betaflight-serial",
+    "capacitor-plugin-betaflight-serial": "link:./capacitor-plugins/betaflight-serial",
     "crypto-es": "^2.1.0",
     "d3": "^7.9.0",
     "djv": "^2.1.4",

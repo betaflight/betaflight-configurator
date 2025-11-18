@@ -48,6 +48,6 @@ capacitor.config.json
 # Ignore Gradle build output directory
 build
 
-# Ignore capcitor android build output directory
-capacitor-plugin-betaflight-serial/android/bin/
+# Ignore Capacitor Android build output directories for local plugins
+capacitor-plugins/*/android/bin/
 
