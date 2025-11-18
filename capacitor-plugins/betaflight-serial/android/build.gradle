@@ -54,7 +54,7 @@ dependencies {
     implementation "androidx.appcompat:appcompat:$androidxAppCompatVersion"
     
     // USB Serial for Android library - provides comprehensive USB-to-serial driver support
-    implementation 'com.github.mik3y:usb-serial-for-android:3.8.0'
+    implementation 'com.github.mik3y:usb-serial-for-android:3.9.0'
     
     testImplementation "junit:junit:$junitVersion"
     androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
