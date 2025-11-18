@@ -314,7 +314,7 @@ PortHandler.updateDeviceList = async function (deviceType) {
                 }
                 break;
             case "capacitorserial":
-                if (this.showCapacitorOption || true) {
+                if (this.showCapacitorOption) {
                     ports = await serial.getDevices("capacitorserial");
                 }
                 break;
