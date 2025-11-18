@@ -14,10 +14,6 @@
   ],
   "author": "Betaflight Team",
   "license": "GPL-3.0",
-  "repository": {
-    "type": "git",
-    "url": "github.com/betaflight/betaflight-configurator"
-  },
   "bugs": {
     "url": "https://github.com/betaflight/betaflight-configurator/issues"
   },
