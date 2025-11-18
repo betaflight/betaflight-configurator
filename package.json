@@ -7,7 +7,9 @@
   "type": "module",
   "main": "index.html",
   "scripts": {
+    "predev": "yarn --cwd capacitor-plugins/betaflight-serial install && yarn --cwd capacitor-plugins/betaflight-serial build",
     "dev": "vite",
+    "prebuild": "yarn --cwd capacitor-plugins/betaflight-serial install && yarn --cwd capacitor-plugins/betaflight-serial build",
     "build": "vite build",
     "preview": "vite preview",
     "review": "vite build && vite preview",
@@ -22,7 +24,8 @@
     "android:release": "vite build && node capacitor.config.generator.mjs && npx cap build android --release",
     "format": "prettier --write {src,test}/**/*.{js,vue,css,less}",
     "storybook": "start-storybook -p 6006",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "postinstall": "yarn --cwd capacitor-plugins/betaflight-serial install && yarn --cwd capacitor-plugins/betaflight-serial build"
   },
   "window": {
     "icon": "images/bf_icon_128.png",
