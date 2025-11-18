@@ -1,1 +1,0 @@
--keep class com.betaflight.plugin.serial.** { *; }
