@@ -144,6 +144,11 @@ class CapacitorSerial extends EventTarget {
 
             console.log(`${logHead} Permission granted for ${this.ports.length} devices`);
 
+            // Dispatch addedDevice event for each new port to update UI
+            for (const port of this.ports) {
+                this.dispatchEvent(new CustomEvent("addedDevice", { detail: port }));
+            }
+
             // Return the first device if available
             return this.ports.length > 0 ? this.ports[0] : null;
         } catch (error) {
@@ -267,24 +272,7 @@ class CapacitorSerial extends EventTarget {
             return { bytesSent: 0 };
         }
 
-        // Normalize data to Uint8Array (MSP passes Uint8Array or ArrayBuffer)
-        if (data instanceof ArrayBuffer) {
-            data = new Uint8Array(data);
-        } else if (ArrayBuffer.isView(data)) {
-            // Accept DataView or other typed views; re-wrap to Uint8Array slice
-            data = new Uint8Array(data.buffer, data.byteOffset || 0, data.byteLength);
-        } else if (Array.isArray(data)) {
-            data = new Uint8Array(data);
-        }
-
-        // Handle empty or invalid data
-        if (!data || typeof data.length !== "number" || data.length === 0) {
-            console.log(`${logHead} Empty data, skipping send (data:`, data, `length:`, data?.length, `)`);
-            if (callback) {
-                callback({ bytesSent: 0 });
-            }
-            return { bytesSent: 0 };
-        }
+        data = new Uint8Array(data);
 
         try {
             // Convert Uint8Array to hex string

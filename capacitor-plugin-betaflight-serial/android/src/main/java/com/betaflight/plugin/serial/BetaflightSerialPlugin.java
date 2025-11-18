@@ -49,6 +49,8 @@ import java.util.Map;
     }
 )
 public class BetaflightSerialPlugin extends Plugin implements SerialInputOutputManager.Listener {
+    // Hold a static reference for forwarding permission callbacks from an explicit BroadcastReceiver
+    private static java.lang.ref.WeakReference<BetaflightSerialPlugin> sInstance = new java.lang.ref.WeakReference<>(null);
     private static final String TAG = "BetaflightSerial";
     private static final String ACTION_USB_PERMISSION = "com.betaflight.USB_PERMISSION";
     private static final int WRITE_WAIT_MILLIS = 2000;
@@ -81,6 +83,7 @@ public class BetaflightSerialPlugin extends Plugin implements SerialInputOutputM
     @Override
     public void load() {
         super.load();
+        sInstance = new java.lang.ref.WeakReference<>(this);
         usbManager = (UsbManager) getContext().getSystemService(Context.USB_SERVICE);
         
         // Register USB broadcast receivers
@@ -136,13 +139,32 @@ public class BetaflightSerialPlugin extends Plugin implements SerialInputOutputM
                     String deviceKey = getDeviceKey(device);
                     permissionRequestedDevices.put(deviceKey, device);
                     
+                    // Create fully explicit broadcast intent with component
+                    Intent permissionAction = new Intent(ACTION_USB_PERMISSION);
+                    permissionAction.setComponent(new android.content.ComponentName(
+                        getContext(),
+                        UsbPermissionReceiver.class
+                    ));
+                    permissionAction.putExtra(UsbManager.EXTRA_DEVICE, device);
+                    
+                    int requestCode = device.getDeviceId();
+                    int flags;
+                    
+                    if (Build.VERSION.SDK_INT >= 34) { // Android 14+ (U / API 34)
+                        // Android 14+ requires IMMUTABLE for explicit intents
+                        flags = PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE;
+                    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                        // Android 12-13 requires MUTABLE for UsbManager
+                        flags = PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE;
+                    } else {
+                        flags = PendingIntent.FLAG_UPDATE_CURRENT;
+                    }
+                    
                     PendingIntent permissionIntent = PendingIntent.getBroadcast(
                         getContext(),
-                        0,
-                        new Intent(ACTION_USB_PERMISSION),
-                        Build.VERSION.SDK_INT >= Build.VERSION_CODES.S 
-                            ? PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT
-                            : PendingIntent.FLAG_UPDATE_CURRENT
+                        requestCode,
+                        permissionAction,
+                        flags
                     );
                     
                     usbManager.requestPermission(device, permissionIntent);
@@ -356,7 +378,7 @@ public class BetaflightSerialPlugin extends Plugin implements SerialInputOutputM
 
     // ===== Private helper methods =====
 
-    private void handlePermissionResult(Intent intent) {
+    public void handlePermissionResult(Intent intent) {
         UsbDevice device = intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
         if (device == null) return;
 
@@ -371,6 +393,14 @@ public class BetaflightSerialPlugin extends Plugin implements SerialInputOutputM
         if (permissionRequestedDevices.isEmpty() && pendingPermissionCall != null) {
             resolveWithDeviceList(pendingPermissionCall);
             pendingPermissionCall = null;
+        }
+    }
+
+    // Static entry point for the explicit BroadcastReceiver to forward the permission result
+    public static void onUsbPermissionResult(Context context, Intent intent) {
+        BetaflightSerialPlugin instance = sInstance.get();
+        if (instance != null) {
+            instance.handlePermissionResult(intent);
         }
     }
 

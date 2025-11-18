@@ -3,4 +3,4 @@ include ':capacitor-android'
 project(':capacitor-android').projectDir = new File('../node_modules/@capacitor/android/capacitor')
 
 include ':capacitor-plugin-betaflight-serial'
-project(':capacitor-plugin-betaflight-serial').projectDir = new File('../node_modules/capacitor-plugin-betaflight-serial/android')
+project(':capacitor-plugin-betaflight-serial').projectDir = new File('../capacitor-plugin-betaflight-serial/android')

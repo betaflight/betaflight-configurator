@@ -115,6 +115,11 @@ export default defineConfig({
         alias: {
             "/src": path.resolve(process.cwd(), "src"),
             vue: path.resolve(__dirname, "node_modules/vue/dist/vue.esm-bundler.js"),
+            // Ensure local Capacitor plugin resolves to its ESM entry without relying on package exports
+            "capacitor-plugin-betaflight-serial": path.resolve(
+                __dirname,
+                "capacitor-plugin-betaflight-serial/dist/esm/index.js",
+            ),
         },
     },
     server: {
