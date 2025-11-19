@@ -275,7 +275,7 @@ firmware_flasher.initialize = async function (callback) {
             $("a.load_remote_file").text(i18n.getMessage("firmwareFlasherButtonLoadOnline"));
         }
 
-        async function loadTargetList(targets) {
+        async function populateTargetList(targets) {
             if (!targets || !ispConnected()) {
                 $('select[name="board"]').empty().append('<option value="0">Offline</option>');
                 $('select[name="firmware_version"]').empty().append('<option value="0">Offline</option>');
@@ -518,7 +518,7 @@ firmware_flasher.initialize = async function (callback) {
 
             if (!GUI.connect_lock) {
                 try {
-                    await loadTargetList(await self.buildApi.loadTargets());
+                    await populateTargetList(await self.buildApi.loadTargets());
 
                     // Restore the previously selected board if it was selected and still exists
                     if (
