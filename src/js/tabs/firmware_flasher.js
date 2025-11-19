@@ -275,6 +275,10 @@ firmware_flasher.initialize = async function (callback) {
             $("a.load_remote_file").text(i18n.getMessage("firmwareFlasherButtonLoadOnline"));
         }
 
+        function capitalizeFirstLetter(string) {
+            return [...string][0].toUpperCase() + [...string].slice(1).join("");
+        }
+
         async function loadTargetList(targets) {
             if (!targets || !ispConnected()) {
                 $('select[name="board"]').empty().append('<option value="0">Offline</option>');
@@ -295,13 +299,39 @@ firmware_flasher.initialize = async function (callback) {
                 $(`<option value='0'>${i18n.getMessage("firmwareFlasherOptionLabelSelectFirmwareVersion")}</option>`),
             );
 
-            Object.keys(targets)
-                .sort((a, b) => a.target - b.target)
-                .forEach(function (target) {
-                    const descriptor = targets[target];
-                    const select_e = $(`<option value='${descriptor.target}'>${descriptor.target}</option>`);
-                    boards_e.append(select_e);
+            const groupOrder = {
+                Supported: 0,
+                Unsupported: 1,
+                Legacy: 2,
+            };
+
+            const groupNames = {
+                Supported: "Verified / Partner",
+                Unsupported: "Vendor / Community",
+                Legacy: "Legacy",
+            };
+
+            const safeGrouped = Object.groupBy(targets, (descriptor) =>
+                descriptor.group ? capitalizeFirstLetter(descriptor.group) : "Unsupported",
+            );
+
+            const sortedGroups = Object.keys(safeGrouped).sort((a, b) => {
+                const groupA = groupOrder[a] !== undefined ? groupOrder[a] : 999;
+                const groupB = groupOrder[b] !== undefined ? groupOrder[b] : 999;
+                return groupA - groupB;
+            });
+
+            sortedGroups.forEach((groupKey) => {
+                const groupItems = safeGrouped[groupKey];
+                const optgroup = $(`<optgroup label='${groupNames[groupKey]}'>`);
+                const sortedTargets = groupItems.sort((a, b) => a.target.localeCompare(b.target));
+                sortedTargets.forEach(function (descriptor) {
+                    const group = descriptor.group ? ` (${descriptor.group})` : " (not supported)";
+                    const select_e = $(`<option value='${descriptor.target}'>${descriptor.target}${group}</option>`);
+                    optgroup.append(select_e);
                 });
+                boards_e.append(optgroup).append("</optgroup>");
+            });
 
             TABS.firmware_flasher.targets = targets;
 
