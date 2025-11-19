@@ -320,7 +320,7 @@ firmware_flasher.initialize = async function (callback) {
             sortedGroups.forEach((groupKey) => {
                 const groupItems = safeGrouped[groupKey];
                 const optgroup = $("<optgroup>").attr("label", groupNames[groupKey] || groupKey);
-                const sortedTargets = groupItems.sort((a, b) => a.target.localeCompare(b.target));
+                const sortedTargets = groupItems.toSorted((a, b) => a.target.localeCompare(b.target));
                 sortedTargets.forEach(function (descriptor) {
                     const select_e = $("<option>").val(descriptor.target).text(descriptor.target);
                     optgroup.append(select_e);
