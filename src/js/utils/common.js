@@ -54,6 +54,10 @@ export function urlExists(url) {
     return http.status !== 404;
 }
 
+export function capitalizeFirstLetter(string) {
+    return (string?.[0]?.toUpperCase() || "") + (string?.slice(1) || "");
+}
+
 /**
  * Returns jquery sorted option list with optional value staying on top of the list.
  *

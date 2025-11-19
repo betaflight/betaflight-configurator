@@ -9,7 +9,7 @@ import { tracking } from "../Analytics";
 import PortHandler from "../port_handler";
 import { gui_log } from "../gui_log";
 import semver from "semver";
-import { urlExists } from "../utils/common";
+import { urlExists, capitalizeFirstLetter } from "../utils/common";
 import read_hex_file from "../workers/hex_parser.js";
 import Sponsor from "../Sponsor";
 import FileSystem from "../FileSystem";
@@ -275,10 +275,6 @@ firmware_flasher.initialize = async function (callback) {
             $("a.load_remote_file").text(i18n.getMessage("firmwareFlasherButtonLoadOnline"));
         }
 
-        function capitalizeFirstLetter(string) {
-            return [...string][0].toUpperCase() + [...string].slice(1).join("");
-        }
-
         async function loadTargetList(targets) {
             if (!targets || !ispConnected()) {
                 $('select[name="board"]').empty().append('<option value="0">Offline</option>');
@@ -323,14 +319,13 @@ firmware_flasher.initialize = async function (callback) {
 
             sortedGroups.forEach((groupKey) => {
                 const groupItems = safeGrouped[groupKey];
-                const optgroup = $(`<optgroup label='${groupNames[groupKey]}'>`);
+                const optgroup = $("<optgroup>").attr("label", groupNames[groupKey] || groupKey);
                 const sortedTargets = groupItems.sort((a, b) => a.target.localeCompare(b.target));
                 sortedTargets.forEach(function (descriptor) {
-                    const group = descriptor.group ? ` (${descriptor.group})` : " (not supported)";
-                    const select_e = $(`<option value='${descriptor.target}'>${descriptor.target}${group}</option>`);
+                    const select_e = $("<option>").val(descriptor.target).text(descriptor.target);
                     optgroup.append(select_e);
                 });
-                boards_e.append(optgroup).append("</optgroup>");
+                boards_e.append(optgroup);
             });
 
             TABS.firmware_flasher.targets = targets;
