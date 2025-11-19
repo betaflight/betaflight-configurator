@@ -301,25 +301,25 @@ firmware_flasher.initialize = async function (callback) {
                 Legacy: 2,
             };
 
-            const groupNames = {
+            const groupLabels = {
                 Supported: "Verified / Partner",
                 Unsupported: "Vendor / Community",
                 Legacy: "Legacy",
             };
 
-            const safeGrouped = Object.groupBy(targets, (descriptor) =>
+            const groupTargets = Object.groupBy(targets, (descriptor) =>
                 descriptor.group ? capitalizeFirstLetter(descriptor.group) : "Unsupported",
             );
 
-            const sortedGroups = Object.keys(safeGrouped).sort((a, b) => {
+            const groupSorted = Object.keys(groupTargets).sort((a, b) => {
                 const groupA = groupOrder[a] !== undefined ? groupOrder[a] : 999;
                 const groupB = groupOrder[b] !== undefined ? groupOrder[b] : 999;
                 return groupA - groupB;
             });
 
-            sortedGroups.forEach((groupKey) => {
-                const groupItems = safeGrouped[groupKey];
-                const optgroup = $("<optgroup>").attr("label", groupNames[groupKey] || groupKey);
+            groupSorted.forEach((groupKey) => {
+                const groupItems = groupTargets[groupKey];
+                const optgroup = $("<optgroup>").attr("label", groupLabels[groupKey] || groupKey);
                 const sortedTargets = [...groupItems].sort((a, b) => a.target.localeCompare(b.target));
                 sortedTargets.forEach(function (descriptor) {
                     const select_e = $("<option>").val(descriptor.target).text(descriptor.target);
