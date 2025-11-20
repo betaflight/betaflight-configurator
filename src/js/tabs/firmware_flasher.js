@@ -302,9 +302,9 @@ firmware_flasher.initialize = async function (callback) {
             };
 
             const groupLabels = {
-                Supported: "Verified / Partner",
-                Unsupported: "Vendor / Community",
-                Legacy: "Legacy",
+                Supported: i18n.getMessage("firmwareFlasherOptionLabelVerifiedPartner"),
+                Unsupported: i18n.getMessage("firmwareFlasherOptionLabelVendorCommunity"),
+                Legacy: i18n.getMessage("firmwareFlasherOptionLabelLegacy"),
             };
 
             const groupTargets = Object.groupBy(targets, (descriptor) =>

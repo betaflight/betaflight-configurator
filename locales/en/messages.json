@@ -7718,6 +7718,15 @@
     "firmwareFlasherOSDProtocolNotSelectedContinue": {
         "message": "Continue without OSD protocol"
     },
+    "firmwareFlasherOptionLabelVerifiedPartner": {
+        "message": "Verified Partner"
+    },
+    "firmwareFlasherOptionLabelVendorCommunity": {
+        "message": "Vendor / Community"
+    },
+    "firmwareFlasherOptionLabelLegacy": {
+        "message": "Legacy"
+    },
     "coreBuild": {
         "message": "Core Only"
     },
