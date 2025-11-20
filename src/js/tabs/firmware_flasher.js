@@ -312,8 +312,8 @@ firmware_flasher.initialize = async function (callback) {
             );
 
             const groupSorted = Object.keys(groupTargets).sort((a, b) => {
-                const groupA = groupOrder[a] === undefined ? 999 : groupOrder[a];
-                const groupB = groupOrder[b] === undefined ? 999 : groupOrder[b];
+                const groupA = groupOrder[a] ?? 999;
+                const groupB = groupOrder[b] ?? 999;
                 return groupA - groupB;
             });
 
