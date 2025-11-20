@@ -9,7 +9,7 @@ import { tracking } from "../Analytics";
 import PortHandler from "../port_handler";
 import { gui_log } from "../gui_log";
 import semver from "semver";
-import { urlExists, capitalizeFirstLetter } from "../utils/common";
+import { urlExists } from "../utils/common";
 import read_hex_file from "../workers/hex_parser.js";
 import Sponsor from "../Sponsor";
 import FileSystem from "../FileSystem";
@@ -296,19 +296,19 @@ firmware_flasher.initialize = async function (callback) {
             );
 
             const groupOrder = {
-                Supported: 0,
-                Unsupported: 1,
-                Legacy: 2,
+                supported: 0,
+                unsupported: 1,
+                legacy: 2,
             };
 
             const groupLabels = {
-                Supported: i18n.getMessage("firmwareFlasherOptionLabelVerifiedPartner"),
-                Unsupported: i18n.getMessage("firmwareFlasherOptionLabelVendorCommunity"),
-                Legacy: i18n.getMessage("firmwareFlasherOptionLabelLegacy"),
+                supported: i18n.getMessage("firmwareFlasherOptionLabelVerifiedPartner"),
+                unsupported: i18n.getMessage("firmwareFlasherOptionLabelVendorCommunity"),
+                legacy: i18n.getMessage("firmwareFlasherOptionLabelLegacy"),
             };
 
             const groupTargets = Object.groupBy(targets, (descriptor) =>
-                descriptor.group ? capitalizeFirstLetter(descriptor.group) : "Unsupported",
+                descriptor.group ? descriptor.group : "unsupported",
             );
 
             const groupSorted = Object.keys(groupTargets).sort((a, b) => {
