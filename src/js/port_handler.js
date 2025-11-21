@@ -34,7 +34,6 @@ const PortHandler = new (function () {
     this.bluetoothAvailable = false;
     this.dfuAvailable = false;
     this.portAvailable = false;
-    this.capacitorAvailable = false;
 
     checkCompatibility();
 
@@ -344,10 +343,10 @@ PortHandler.updateDeviceList = async function (deviceType) {
                 console.log(`${this.logHead} Found bluetooth port(s)`, orderedPorts);
                 break;
             case "capacitorserial":
-                this.capacitorAvailable = orderedPorts.length > 0;
+                this.portAvailable = orderedPorts.length > 0;
                 this.currentCapacitorPorts = [...orderedPorts];
                 // If we discover ports at runtime, ensure the option becomes visible
-                if (this.capacitorAvailable && !this.showCapacitorOption) {
+                if (this.portAvailable && !this.showCapacitorOption) {
                     this.showCapacitorOption = true;
                 }
                 console.log(`${this.logHead} Found Capacitor serial port(s)`, orderedPorts);
