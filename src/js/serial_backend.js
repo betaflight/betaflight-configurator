@@ -61,13 +61,13 @@ export function initializeSerialBackend() {
 
     EventBus.$on("port-handler:auto-select-serial-device", function () {
         if (
-            !GUI.connected_to &&
-            !GUI.connecting_to &&
-            !["cli", "firmware_flasher"].includes(GUI.active_tab) &&
-            PortHandler.portPicker.autoConnect &&
-            !isCliOnlyMode() &&
-            (connectionTimestamp === null || connectionTimestamp > 0) ||
-            (Date.now() - rebootTimestamp <= REBOOT_CONNECT_MAX_TIME_MS)
+            (!GUI.connected_to &&
+                !GUI.connecting_to &&
+                !["cli", "firmware_flasher"].includes(GUI.active_tab) &&
+                PortHandler.portPicker.autoConnect &&
+                !isCliOnlyMode() &&
+                (connectionTimestamp === null || connectionTimestamp > 0)) ||
+            Date.now() - rebootTimestamp <= REBOOT_CONNECT_MAX_TIME_MS
         ) {
             connectDisconnect();
         }
@@ -600,6 +600,11 @@ function finishOpen() {
         // Special case: USE_WING includes servo functionality but doesn't expose USE_SERVOS in build options
         if (FC.CONFIG.buildOptions.some((opt) => opt.includes("USE_WING")) && !GUI.allowedTabs.includes("servos")) {
             GUI.allowedTabs.push("servos");
+        }
+
+        // CORE_BUILD should include OSD
+        if (FC.CONFIG.buildOptions.includes("CORE_BUILD")) {
+            GUI.allowedTabs.push("osd");
         }
     } else {
         GUI.allowedTabs = Array.from(GUI.defaultAllowedFCTabsWhenConnected);
