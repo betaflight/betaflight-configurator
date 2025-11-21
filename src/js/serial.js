@@ -24,7 +24,7 @@ class Serial extends EventTarget {
             this._protocols = [
                 { name: "serial", instance: new WebSerial() },
                 { name: "bluetooth", instance: new WebBluetooth() },
-                { name: "websocket", instance: new Websocket() },
+                { name: "tcp", instance: new Websocket() },
             ];
         }
 
@@ -87,7 +87,7 @@ class Serial extends EventTarget {
             return this._protocols.find((p) => p.name === "virtual")?.instance;
         }
         if (s === "manual" || /^(tcp|ws|wss):\/\/[A-Za-z0-9.-]+(?::\d+)?(\/.*)?$/.test(s)) {
-            return this._protocols.find((p) => p.name === "websocket")?.instance;
+            return this._protocols.find((p) => p.name === "tcp")?.instance;
         }
         if (s.startsWith("bluetooth")) {
             return this._protocols.find((p) => p.name === "bluetooth")?.instance;
@@ -149,7 +149,7 @@ class Serial extends EventTarget {
 
     /**
      * Get devices from a specific protocol type or current protocol
-     * @param {string} protocolType - Optional protocol type ('serial', 'bluetooth', 'websocket', 'virtual')
+     * @param {string} protocolType - Optional protocol type ('serial', 'bluetooth', 'tcp', 'virtual')
      * @returns {Promise<Array>} - List of devices
      */
     async getDevices(protocolType = null) {
