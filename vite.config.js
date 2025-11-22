@@ -115,11 +115,17 @@ export default defineConfig({
         alias: {
             "/src": path.resolve(process.cwd(), "src"),
             vue: path.resolve(__dirname, "node_modules/vue/dist/vue.esm-bundler.js"),
+            // Ensure local Capacitor plugin resolves to its ESM entry without relying on package exports
+            "capacitor-plugin-betaflight-serial": path.resolve(
+                __dirname,
+                "capacitor-plugins/betaflight-serial/dist/esm/index.js",
+            ),
         },
     },
     server: {
         port: 8000,
         strictPort: true,
+        host: "0.0.0.0", // Listen on all network interfaces for Android device access
     },
     preview: {
         port: 8080,

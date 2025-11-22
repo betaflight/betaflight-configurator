@@ -3,6 +3,7 @@ import WebBluetooth from "./protocols/WebBluetooth.js";
 import Websocket from "./protocols/WebSocket.js";
 import VirtualSerial from "./protocols/VirtualSerial.js";
 import { isAndroid } from "./utils/checkCompatibility.js";
+import CapacitorSerial from "./protocols/CapacitorSerial.js";
 
 /**
  * Base Serial class that manages all protocol implementations
