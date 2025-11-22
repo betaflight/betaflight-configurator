@@ -16,7 +16,7 @@ This implementation creates a **custom Capacitor USB Serial plugin** specificall
 
 ### 🏗️ Architecture
 
-```
+```text
 betaflight-configurator/
 ├── capacitor-plugin-betaflight-serial/     # Custom plugin (NEW)
 │   ├── android/
@@ -289,9 +289,9 @@ All the Betaflight-compatible devices listed in `device_filter.xml`.
 
 ### USB Serial for Android Library
 
-- GitHub: https://github.com/mik3y/usb-serial-for-android
+- GitHub: [mik3y/usb-serial-for-android](https://github.com/mik3y/usb-serial-for-android)
 - Documentation: Comprehensive driver support
-- License: LGPL v2.1
+- License: MIT
 
 ### Capacitor Documentation
 
