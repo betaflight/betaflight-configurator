@@ -1,4 +1,3 @@
-import { Capacitor } from "@capacitor/core";
 import { BetaflightSerial } from "capacitor-plugin-betaflight-serial";
 
 const logHead = "[CAPACITORSERIAL]";
@@ -27,38 +26,23 @@ class CapacitorSerial extends EventTarget {
         this.currentDevice = null;
         this.connectionId = null;
 
-        // Check if we're running on Android
-        if (!this.isAndroid()) {
-            console.log(`${logHead} Not running on Android, CapacitorSerial will not be available`);
-            return;
-        }
-
         this.connect = this.connect.bind(this);
         this.disconnect = this.disconnect.bind(this);
         this.handleDataReceived = this.handleDataReceived.bind(this);
         this.handleDeviceAttached = this.handleDeviceAttached.bind(this);
         this.handleDeviceDetached = this.handleDeviceDetached.bind(this);
 
-        // Set up event listeners from the native plugin
-        this.setupNativeListeners();
-
-        // Load initial device list
-        this.loadDevices();
-
-        console.log(`${logHead} CapacitorSerial initialized`);
-    }
-
-    isAndroid() {
-        return Capacitor.isNativePlatform() && Capacitor.getPlatform() === "android";
-    }
-
-    setupNativeListeners() {
         // Listen for data received from native plugin
         BetaflightSerial.addListener("dataReceived", this.handleDataReceived);
 
         // Listen for device attach/detach events
         BetaflightSerial.addListener("deviceAttached", this.handleDeviceAttached);
         BetaflightSerial.addListener("deviceDetached", this.handleDeviceDetached);
+
+        // Load initial device list
+        this.loadDevices();
+
+        console.log(`${logHead} CapacitorSerial initialized`);
     }
 
     handleDataReceived(event) {
@@ -277,8 +261,6 @@ class CapacitorSerial extends EventTarget {
         try {
             // Convert Uint8Array to hex string
             const hexString = this.uint8ArrayToHexString(data);
-            console.log(`${logHead} Sending data, length: ${data.length}, hex: ${hexString.substring(0, 50)}...`);
-
             const result = await BetaflightSerial.write({ data: hexString });
 
             this.bytesSent += result.bytesSent;
