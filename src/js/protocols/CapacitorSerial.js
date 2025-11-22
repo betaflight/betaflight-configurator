@@ -69,6 +69,20 @@ class CapacitorSerial extends EventTarget {
         const removed = this.ports.find((port) => port.path === deviceKey);
 
         if (removed) {
+            // Check if this was the currently connected device
+            const wasConnected = this.connected && this.currentDevice && this.currentDevice.path === deviceKey;
+
+            if (wasConnected) {
+                console.warn(`${logHead} Currently connected device detached, cleaning up connection state`);
+
+                // Clean up state without calling native disconnect (already done)
+                this.cleanupConnectionState();
+
+                // Dispatch disconnect event to notify the app
+                this.dispatchEvent(new CustomEvent("disconnect", { detail: true }));
+            }
+
+            // Remove from ports list
             this.ports = this.ports.filter((port) => port.path !== deviceKey);
             this.dispatchEvent(new CustomEvent("removedDevice", { detail: removed }));
             console.log(`${logHead} Device detached:`, removed.path);
@@ -183,7 +197,7 @@ class CapacitorSerial extends EventTarget {
                 this.openRequested = false;
                 this.currentDevice = device;
 
-                console.log(`${logHead} Connection opened with ID: ${this.connectionId}, Baud: ${options.baudRate}`);
+                console.log(`${logHead} Connection opened with ID: ${this.connectionId}, Baud: ${baudRate}`);
 
                 this.connectionInfo = {
                     usbVendorId: device.vendorId,
@@ -213,13 +227,24 @@ class CapacitorSerial extends EventTarget {
         }
     }
 
+    cleanupConnectionState() {
+        // Clean up connection state (shared between disconnect and device removal)
+        this.connected = false;
+        this.transmitting = false;
+        this.connectionId = null;
+        this.bitrate = 0;
+        this.connectionInfo = null;
+        this.currentDevice = null;
+
+        if (this.openCanceled) {
+            this.openCanceled = false;
+        }
+    }
+
     async disconnect() {
         if (!this.connected) {
             return true;
         }
-
-        this.connected = false;
-        this.transmitting = false;
 
         try {
             await BetaflightSerial.disconnect();
@@ -228,21 +253,14 @@ class CapacitorSerial extends EventTarget {
                 `${logHead} Connection with ID: ${this.connectionId} closed, Sent: ${this.bytesSent} bytes, Received: ${this.bytesReceived} bytes`,
             );
 
-            this.connectionId = null;
-            this.bitrate = 0;
-            this.connectionInfo = null;
-            this.currentDevice = null;
-
+            this.cleanupConnectionState();
             this.dispatchEvent(new CustomEvent("disconnect", { detail: true }));
             return true;
         } catch (error) {
             console.error(`${logHead} Error disconnecting:`, error);
+            this.cleanupConnectionState();
             this.dispatchEvent(new CustomEvent("disconnect", { detail: false }));
             return false;
-        } finally {
-            if (this.openCanceled) {
-                this.openCanceled = false;
-            }
         }
     }
 
