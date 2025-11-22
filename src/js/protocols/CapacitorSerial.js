@@ -56,6 +56,9 @@ class CapacitorSerial extends EventTarget {
 
     handleDeviceAttached(device) {
         const added = this.createPort(device);
+        if (this.ports.some((port) => port.path === added.path)) {
+            return;
+        }
         this.ports.push(added);
         this.dispatchEvent(new CustomEvent("addedDevice", { detail: added }));
         console.log(`${logHead} Device attached:`, added.path);
@@ -69,11 +72,6 @@ class CapacitorSerial extends EventTarget {
             this.ports = this.ports.filter((port) => port.path !== deviceKey);
             this.dispatchEvent(new CustomEvent("removedDevice", { detail: removed }));
             console.log(`${logHead} Device detached:`, removed.path);
-
-            // If it was the connected device, disconnect
-            if (this.connectionId === deviceKey) {
-                this.disconnect();
-            }
         }
     }
 
@@ -146,7 +144,8 @@ class CapacitorSerial extends EventTarget {
         return this.ports;
     }
 
-    async connect(path, options = { baudRate: 115200 }) {
+    async connect(path, options) {
+        const baudRate = options?.baudRate ?? 115200;
         // Prevent double connections
         if (this.connected) {
             console.log(`${logHead} Already connected, not connecting again`);
@@ -167,17 +166,17 @@ class CapacitorSerial extends EventTarget {
             // The deviceId from usb-serial-for-android is in format "vendorId:productId:deviceNum"
             const deviceId = device.device.deviceId;
 
-            console.log(`${logHead} Connecting to device:`, deviceId, "at", options.baudRate, "baud");
+            console.log(`${logHead} Connecting to device:`, deviceId, "at", baudRate, "baud");
 
             const result = await BetaflightSerial.connect({
                 deviceId: deviceId,
-                baudRate: options.baudRate,
+                baudRate: baudRate,
             });
 
             if (result.success && !this.openCanceled) {
                 this.connected = true;
                 this.connectionId = path;
-                this.bitrate = options.baudRate;
+                this.bitrate = baudRate;
                 this.bytesReceived = 0;
                 this.bytesSent = 0;
                 this.failed = 0;
@@ -290,7 +289,7 @@ class CapacitorSerial extends EventTarget {
 
         const bytes = new Uint8Array(hexString.length / 2);
         for (let i = 0; i < hexString.length; i += 2) {
-            bytes[i / 2] = parseInt(hexString.substr(i, 2), 16);
+            bytes[i / 2] = Number.parseInt(hexString.substr(i, 2), 16);
         }
         return bytes;
     }
