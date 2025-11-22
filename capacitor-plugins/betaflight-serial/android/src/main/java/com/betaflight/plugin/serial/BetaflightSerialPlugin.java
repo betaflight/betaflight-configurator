@@ -415,6 +415,13 @@ public class BetaflightSerialPlugin extends Plugin implements SerialInputOutputM
 
         Log.d(TAG, "USB device attached: " + getDeviceKey(device));
 
+        // Only notify about devices that have permission
+        // This prevents auto-selection of unpermitted devices that show the "Open with" dialog
+        if (!usbManager.hasPermission(device)) {
+            Log.d(TAG, "Device attached but no permission yet, skipping notification");
+            return;
+        }
+
         try {
             JSObject deviceInfo = createDeviceInfo(device);
             notifyListeners("deviceAttached", deviceInfo);
