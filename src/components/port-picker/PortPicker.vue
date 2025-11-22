@@ -15,14 +15,12 @@
             :connected-bluetooth-devices="connectedBluetoothDevices"
             :connected-serial-devices="connectedSerialDevices"
             :connected-usb-devices="connectedUsbDevices"
-            :connected-capacitor-devices="connectedCapacitorDevices"
             :disabled="disabled"
             :show-virtual-option="showVirtualOption"
             :show-manual-option="showManualOption"
             :show-bluetooth-option="showBluetoothOption"
             :show-serial-option="showSerialOption"
             :show-usb-option="showUsbOption"
-            :show-capacitor-option="showCapacitorOption"
             @update:modelValue="updateModelValue(null, $event)"
         />
     </div>
@@ -59,10 +57,6 @@ export default defineComponent({
             type: Array,
             default: () => [],
         },
-        connectedCapacitorDevices: {
-            type: Array,
-            default: () => [],
-        },
         showVirtualOption: {
             type: Boolean,
             default: true,
@@ -80,10 +74,6 @@ export default defineComponent({
             default: true,
         },
         showUsbOption: {
-            type: Boolean,
-            default: true,
-        },
-        showCapacitorOption: {
             type: Boolean,
             default: true,
         },

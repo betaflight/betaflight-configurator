@@ -19,7 +19,6 @@ const PortHandler = new (function () {
     this.currentSerialPorts = [];
     this.currentUsbPorts = [];
     this.currentBluetoothPorts = [];
-    this.currentCapacitorPorts = [];
 
     this.portPicker = {
         selectedPort: DEFAULT_PORT,
@@ -44,7 +43,6 @@ const PortHandler = new (function () {
     console.log(`${this.logHead} Bluetooth available: ${this.showBluetoothOption}`);
     console.log(`${this.logHead} Serial available: ${this.showSerialOption}`);
     console.log(`${this.logHead} DFU available: ${this.showUsbOption}`);
-    console.log(`${this.logHead} Capacitor Serial available: ${this.showCapacitorOption}`);
 
     this.showVirtualMode = getConfig("showVirtualMode", false).showVirtualMode;
     this.showManualMode = getConfig("showManualMode", false).showManualMode;
@@ -244,16 +242,6 @@ PortHandler.selectActivePort = function (suggestedDevice = false) {
         }
     }
 
-    // Return some capacitor serial port that is recognized by the filter
-    if (!selectedPort) {
-        selectedPort = this.currentCapacitorPorts.find((device) =>
-            deviceFilter.some((filter) => device.displayName.includes(filter)),
-        );
-        if (selectedPort) {
-            selectedPort = selectedPort.path;
-        }
-    }
-
     // Return the virtual port
     if (!selectedPort && this.showVirtualMode) {
         selectedPort = "virtual";
@@ -312,11 +300,6 @@ PortHandler.updateDeviceList = async function (deviceType) {
                     ports = await serial.getDevices("bluetooth");
                 }
                 break;
-            case "capacitorserial":
-                if (this.showCapacitorOption) {
-                    ports = await serial.getDevices("capacitorserial");
-                }
-                break;
             case "usb":
                 if (this.showUsbOption) {
                     ports = await WEBUSBDFU.getDevices();
@@ -341,15 +324,6 @@ PortHandler.updateDeviceList = async function (deviceType) {
                 this.bluetoothAvailable = orderedPorts.length > 0;
                 this.currentBluetoothPorts = [...orderedPorts];
                 console.log(`${this.logHead} Found bluetooth port(s)`, orderedPorts);
-                break;
-            case "capacitorserial":
-                this.portAvailable = orderedPorts.length > 0;
-                this.currentCapacitorPorts = [...orderedPorts];
-                // If we discover ports at runtime, ensure the option becomes visible
-                if (this.portAvailable && !this.showCapacitorOption) {
-                    this.showCapacitorOption = true;
-                }
-                console.log(`${this.logHead} Found Capacitor serial port(s)`, orderedPorts);
                 break;
             case "usb":
                 this.dfuAvailable = orderedPorts.length > 0;
