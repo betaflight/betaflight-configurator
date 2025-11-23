@@ -1,4 +1,4 @@
-package com.betaflight.plugin.serial;
+package betaflight.configurator.protocols.serial;
 
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;

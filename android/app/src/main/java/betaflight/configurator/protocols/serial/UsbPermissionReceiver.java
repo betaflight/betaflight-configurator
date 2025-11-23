@@ -1,4 +1,4 @@
-package com.betaflight.plugin.serial;
+package betaflight.configurator.protocols.serial;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

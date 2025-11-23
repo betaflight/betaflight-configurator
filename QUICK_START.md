@@ -15,27 +15,16 @@ yarn install
 npx cap sync android
 ```
 
-### 2. Build the Plugin (Optional)
-
-If you want to make changes to the plugin TypeScript code:
-
-```bash
-cd capacitor-plugin-betaflight-serial
-yarn install
-yarn build
-cd ..
-```
-
-### 3. Build Android App
+### 2. Build Android App
 
 ```bash
 # Development build with live reload
 yarn android:dev
 
-# Or standard build
+# Standard build
 yarn android:run
 
-# Or release build
+# Release build
 yarn android:release
 ```
 
@@ -44,19 +33,9 @@ yarn android:release
 ### New Files Created
 
 ```
-capacitor-plugin-betaflight-serial/
-├── package.json                                    # Plugin package config
-├── tsconfig.json                                   # TypeScript config
-├── rollup.config.js                                # Build config
-├── README.md                                       # Plugin documentation
-├── src/
-│   ├── definitions.ts                              # TypeScript interfaces
-│   ├── index.ts                                    # Plugin export
-│   └── web.ts                                      # Web stub implementation
-└── android/
-    ├── build.gradle                                # Android build config
-    └── src/main/java/com/betaflight/plugin/serial/
-        └── BetaflightSerialPlugin.java             # Native implementation
+android/app/src/main/java/betaflight/configurator/protocols/serial/
+├── BetaflightSerialPlugin.java                     # Native implementation
+└── UsbPermissionReceiver.java                      # Permission callback bridge
 
 src/js/protocols/CapacitorSerial.js                 # Protocol adapter
 
@@ -69,13 +48,12 @@ QUICK_START.md                                      # This file
 ### Modified Files
 
 ```
-package.json                                        # Added plugin dependency
+package.json                                        # Added Android build scripts & deps
 src/js/serial.js                                    # Added CapacitorSerial protocol
 src/js/port_handler.js                              # Added Capacitor support
 src/js/utils/checkBrowserCompatibility.js           # Added Capacitor check
 android/app/src/main/AndroidManifest.xml            # Added USB permissions
-android/app/capacitor.build.gradle                  # Added plugin dependency
-android/capacitor.settings.gradle                   # Added plugin project
+android/app/src/main/java/betaflight/configurator/MainActivity.java  # Registers plugin
 ```
 
 ## Testing on Android Device
@@ -192,10 +170,16 @@ npx cap sync android
 
 ```
 betaflight-configurator/
-├── capacitor-plugin-betaflight-serial/    # Our custom plugin
-│   ├── android/                           # Native Android code
-│   ├── src/                               # TypeScript interfaces
-│   └── package.json                       # Plugin package
+├── android/
+│   └── app/
+│       └── src/main/
+│           ├── AndroidManifest.xml        # Modified
+│           ├── java/
+│           │   ├── betaflight/configurator/MainActivity.java
+│           │   └── betaflight/configurator/protocols/serial/
+│           │       ├── BetaflightSerialPlugin.java
+│           │       └── UsbPermissionReceiver.java
+│           └── res/xml/device_filter.xml  # NEW
 │
 ├── src/js/
 │   ├── serial.js                          # Serial system (modified)
@@ -206,30 +190,18 @@ betaflight-configurator/
 │       ├── CapacitorSerial.js             # Android USB (NEW)
 │       └── ...
 │
-└── android/
-    ├── app/
-    │   ├── src/main/
-    │   │   ├── AndroidManifest.xml        # Modified
-    │   │   └── res/xml/
-    │   │       └── device_filter.xml      # NEW
-    │   └── capacitor.build.gradle         # Modified
-    └── capacitor.settings.gradle          # Modified
+└── documentation/
+   ├── CAPACITOR_SERIAL_IMPLEMENTATION.md
+   └── QUICK_START.md
 ```
 
 ## Development Workflow
 
 ### Making Changes to Native Code
 
-1. Edit `capacitor-plugin-betaflight-serial/android/src/main/java/com/betaflight/plugin/serial/BetaflightSerialPlugin.java`
+1. Edit files under `android/app/src/main/java/betaflight/configurator/protocols/serial/`
 2. Run `npx cap sync android`
 3. Rebuild app: `yarn android:run`
-
-### Making Changes to TypeScript
-
-1. Edit files in `capacitor-plugin-betaflight-serial/src/`
-2. Build plugin: `cd capacitor-plugin-betaflight-serial && yarn build`
-3. Sync: `npx cap sync android`
-4. Rebuild app: `yarn android:run`
 
 ### Making Changes to Protocol Adapter
 
@@ -244,7 +216,7 @@ betaflight-configurator/
 
 | Aspect | PR #4698 | This Implementation |
 |--------|----------|---------------------|
-| Plugin | capacitor-plugin-usb-serial (external) | capacitor-plugin-betaflight-serial (custom) |
+| Plugin | capacitor-plugin-usb-serial (external) | Embedded BetaflightSerial plugin (app module) |
 | Patches | Required (patch-package) | None needed |
 | Permissions | Problematic | Native Android handling |
 | Protocol | NMEA (text lines) | Binary (hex strings) |
@@ -272,7 +244,7 @@ For issues or questions:
 
 1. Check logs: `adb logcat | grep BetaflightSerial`
 2. Review documentation: `CAPACITOR_SERIAL_IMPLEMENTATION.md`
-3. Check plugin README: `capacitor-plugin-betaflight-serial/README.md`
+3. Review native source: `android/app/src/main/java/betaflight/configurator/protocols/serial`
 4. Create GitHub issue with:
    - Android version
    - Device model

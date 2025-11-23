@@ -1,6 +1,7 @@
-import { BetaflightSerial } from "capacitor-plugin-betaflight-serial";
+import { Capacitor } from "@capacitor/core";
 
 const logHead = "[CAPACITORSERIAL]";
+const BetaflightSerial = Capacitor?.Plugins?.BetaflightSerial;
 
 /**
  * Capacitor Serial protocol implementation for Android
@@ -10,6 +11,11 @@ const logHead = "[CAPACITORSERIAL]";
 class CapacitorSerial extends EventTarget {
     constructor() {
         super();
+
+        if (!BetaflightSerial) {
+            console.error(`${logHead} Native BetaflightSerial plugin is not available`);
+            return;
+        }
 
         this.connected = false;
         this.openRequested = false;
@@ -307,7 +313,7 @@ class CapacitorSerial extends EventTarget {
 
         const bytes = new Uint8Array(hexString.length / 2);
         for (let i = 0; i < hexString.length; i += 2) {
-            bytes[i / 2] = Number.parseInt(hexString.substr(i, 2), 16);
+            bytes[i / 2] = Number.parseInt(hexString.substring(i, i + 2), 16);
         }
         return bytes;
     }

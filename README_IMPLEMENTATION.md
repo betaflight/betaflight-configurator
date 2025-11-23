@@ -6,26 +6,14 @@ I've successfully recreated PR #4698 with a **custom Capacitor USB Serial plugin
 
 ## 🎯 What Was Built
 
-### 1. Custom Capacitor Plugin (`capacitor-plugin-betaflight-serial`)
+### 1. Embedded Capacitor Plugin (Android app module)
 
-A complete, production-ready Capacitor plugin with:
-
-- **Native Android Implementation** (Java)
-  - Uses `usb-serial-for-android` library (mature, well-tested)
-  - Supports all major USB-to-serial chipsets
-  - Binary data transmission via hex strings
-  - Proper permission handling
-  - Device attach/detach detection
-
-- **TypeScript Interfaces**
-  - Clean API definitions
-  - Full type safety
-  - Comprehensive documentation
-
-- **Build Configuration**
-  - Proper Gradle setup
-  - Package configuration
-  - TypeScript compilation
+- **Native Android Implementation** (Java, now inside `android/app/src/main/java/betaflight/configurator/protocols/serial`)
+   - Uses `usb-serial-for-android` library (mature, well-tested)
+   - Supports all major USB-to-serial chipsets
+   - Binary data transmission via hex strings
+   - Proper permission handling
+   - Device attach/detach detection
 
 ### 2. Protocol Adapter (`CapacitorSerial.js`)
 
@@ -95,21 +83,11 @@ JavaScript (processes MSP response)
 
 ## 📁 Files Created
 
-### Plugin Files (15 files)
+### Native Plugin Files (embedded)
 ```
-capacitor-plugin-betaflight-serial/
-├── package.json
-├── tsconfig.json
-├── rollup.config.js
-├── README.md
-├── src/
-│   ├── definitions.ts
-│   ├── index.ts
-│   └── web.ts
-└── android/
-    ├── build.gradle
-    └── src/main/java/com/betaflight/plugin/serial/
-        └── BetaflightSerialPlugin.java
+android/app/src/main/java/betaflight/configurator/protocols/serial/
+├── BetaflightSerialPlugin.java
+└── UsbPermissionReceiver.java
 ```
 
 ### Integration Files (3 new, 6 modified)
@@ -187,7 +165,7 @@ Modified:
 
 ## 📚 Documentation
 
-Three comprehensive documentation files created:
+Two comprehensive documentation files created:
 
 1. **CAPACITOR_SERIAL_IMPLEMENTATION.md** (14KB)
    - Complete architecture overview
@@ -198,11 +176,6 @@ Three comprehensive documentation files created:
    - Installation instructions
    - Testing procedures
    - Development workflow
-
-3. **capacitor-plugin-betaflight-serial/README.md** (9KB)
-   - Plugin API reference
-   - Usage examples
-   - Configuration guide
 
 ## 🎓 Technical Highlights
 
@@ -262,7 +235,7 @@ Edit `android/app/src/main/res/xml/device_filter.xml`:
 
 Edit `src/js/protocols/CapacitorSerial.js` for JavaScript changes.
 
-Edit `capacitor-plugin-betaflight-serial/android/src/main/java/.../BetaflightSerialPlugin.java` for native changes.
+Edit `android/app/src/main/java/betaflight/configurator/protocols/serial/BetaflightSerialPlugin.java` for native changes.
 
 ### Adjusting Serial Parameters
 

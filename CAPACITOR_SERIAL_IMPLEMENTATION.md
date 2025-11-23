@@ -18,30 +18,24 @@ This implementation creates a **custom Capacitor USB Serial plugin** specificall
 
 ```text
 betaflight-configurator/
-├── capacitor-plugin-betaflight-serial/     # Custom plugin (NEW)
-│   ├── android/
-│   │   ├── src/main/java/com/betaflight/plugin/serial/
-│   │   │   └── BetaflightSerialPlugin.java
-│   │   └── build.gradle
-│   ├── src/
-│   │   ├── definitions.ts
-│   │   ├── index.ts
-│   │   └── web.ts
-│   ├── package.json
-│   └── README.md
+├── android/app/src/main/java/
+│   ├── betaflight/configurator/MainActivity.java    # Registers the plugin
+│   └── com/betaflight/plugin/serial/                # Native plugin source (NEW LOCATION)
+│       ├── BetaflightSerialPlugin.java
+│       └── UsbPermissionReceiver.java
 │
 ├── src/js/protocols/
-│   └── CapacitorSerial.js                  # Protocol adapter (NEW)
+│   └── CapacitorSerial.js                  # Protocol adapter
 │
 └── android/app/src/main/res/xml/
-    └── device_filter.xml                   # USB device filters (NEW)
+    └── device_filter.xml                   # USB device filters
 ```
 
 ## 📦 Plugin Structure
 
 ### Native Android Layer
 
-**File**: `capacitor-plugin-betaflight-serial/android/src/main/java/com/betaflight/plugin/serial/BetaflightSerialPlugin.java`
+**File**: `android/app/src/main/java/betaflight/configurator/protocols/serial/BetaflightSerialPlugin.java`
 
 **Key Features**:
 - Uses `usb-serial-for-android` library (proven, mature library)
@@ -192,8 +186,7 @@ All the Betaflight-compatible devices listed in `device_filter.xml`.
 
 ### What Was Added
 
-- ✅ `capacitor-plugin-betaflight-serial` (local plugin)
-- ✅ Native Android USB serial implementation
+- ✅ Native Android USB serial implementation embedded inside the app module
 - ✅ CapacitorSerial protocol adapter
 - ✅ Enhanced port handler support
 - ✅ Device filter XML configuration
