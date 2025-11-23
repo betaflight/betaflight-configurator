@@ -311,8 +311,6 @@ public class BetaflightSerialPlugin extends Plugin implements SerialInputOutputM
             // Write data to serial port
             serialPort.write(data, WRITE_WAIT_MILLIS);
 
-            Log.d(TAG, "Wrote " + data.length + " bytes to serial port");
-
             JSObject result = new JSObject();
             result.put("bytesSent", data.length);
             call.resolve(result);
@@ -371,8 +369,6 @@ public class BetaflightSerialPlugin extends Plugin implements SerialInputOutputM
         JSObject eventData = new JSObject();
         eventData.put("data", hexData);
         notifyListeners("dataReceived", eventData);
-        
-        Log.d(TAG, "Received " + data.length + " bytes from serial port");
     }
 
     @Override
