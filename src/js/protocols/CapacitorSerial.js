@@ -76,7 +76,7 @@ class CapacitorSerial extends EventTarget {
 
         if (removed) {
             // Check if this was the currently connected device
-            const wasConnected = this.connected && this.currentDevice && this.currentDevice.path === deviceKey;
+            const wasConnected = this.connected && this.currentDevice?.path === deviceKey;
 
             if (wasConnected) {
                 console.warn(`${logHead} Currently connected device detached, cleaning up connection state`);
