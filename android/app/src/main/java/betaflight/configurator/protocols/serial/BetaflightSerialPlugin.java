@@ -119,6 +119,11 @@ public class BetaflightSerialPlugin extends Plugin implements SerialInputOutputM
     @PluginMethod
     public void requestPermission(PluginCall call) {
         try {
+            if (pendingPermissionCall != null) {
+                call.reject("Another permission request is already in progress");
+                return;
+            }
+
             List<UsbSerialDriver> availableDrivers = UsbSerialProber.getDefaultProber().findAllDrivers(usbManager);
             
             if (availableDrivers.isEmpty()) {
@@ -128,56 +133,61 @@ public class BetaflightSerialPlugin extends Plugin implements SerialInputOutputM
                 return;
             }
 
-            pendingPermissionCall = call;
-            permissionRequestedDevices.clear();
-
-            // Request permission for each device
+            List<UsbDevice> devicesNeedingPermission = new ArrayList<>();
             for (UsbSerialDriver driver : availableDrivers) {
                 UsbDevice device = driver.getDevice();
-                
                 if (!usbManager.hasPermission(device)) {
-                    String deviceKey = getDeviceKey(device);
-                    permissionRequestedDevices.put(deviceKey, device);
-                    
-                    // Create fully explicit broadcast intent with component
-                    Intent permissionAction = new Intent(ACTION_USB_PERMISSION);
-                    permissionAction.setComponent(new android.content.ComponentName(
-                        getContext(),
-                        UsbPermissionReceiver.class
-                    ));
-                    permissionAction.putExtra(UsbManager.EXTRA_DEVICE, device);
-                    
-                    int requestCode = device.getDeviceId();
-                    int flags;
-                    
-                    if (Build.VERSION.SDK_INT >= 34) { // Android 14+ (U / API 34)
-                        // Android 14+ requires IMMUTABLE for explicit intents
-                        flags = PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE;
-                    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                        // Android 12-13 requires MUTABLE for UsbManager
-                        flags = PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE;
-                    } else {
-                        flags = PendingIntent.FLAG_UPDATE_CURRENT;
-                    }
-                    
-                    PendingIntent permissionIntent = PendingIntent.getBroadcast(
-                        getContext(),
-                        requestCode,
-                        permissionAction,
-                        flags
-                    );
-                    
-                    usbManager.requestPermission(device, permissionIntent);
-                    Log.d(TAG, "Requested permission for device: " + deviceKey);
+                    devicesNeedingPermission.add(device);
                 }
             }
 
-            // If all devices already have permission, resolve immediately
-            if (permissionRequestedDevices.isEmpty()) {
+            if (devicesNeedingPermission.isEmpty()) {
                 resolveWithDeviceList(call);
+                return;
+            }
+
+            pendingPermissionCall = call;
+            permissionRequestedDevices.clear();
+
+            for (UsbDevice device : devicesNeedingPermission) {
+                String deviceKey = getDeviceKey(device);
+                permissionRequestedDevices.put(deviceKey, device);
+
+                // Create fully explicit broadcast intent with component
+                Intent permissionAction = new Intent(ACTION_USB_PERMISSION);
+                permissionAction.setComponent(new android.content.ComponentName(
+                    getContext(),
+                    UsbPermissionReceiver.class
+                ));
+                permissionAction.putExtra(UsbManager.EXTRA_DEVICE, device);
+
+                int requestCode = device.getDeviceId();
+                int flags;
+
+                if (Build.VERSION.SDK_INT >= 34) { // Android 14+ (U / API 34)
+                    // Android 14+ requires IMMUTABLE for explicit intents
+                    flags = PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE;
+                } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    // Android 12-13 requires MUTABLE for UsbManager
+                    flags = PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE;
+                } else {
+                    flags = PendingIntent.FLAG_UPDATE_CURRENT;
+                }
+
+                PendingIntent permissionIntent = PendingIntent.getBroadcast(
+                    getContext(),
+                    requestCode,
+                    permissionAction,
+                    flags
+                );
+
+                usbManager.requestPermission(device, permissionIntent);
+                Log.d(TAG, "Requested permission for device: " + deviceKey);
             }
         } catch (Exception e) {
             Log.e(TAG, "Error requesting permission", e);
+            pendingPermissionCall = null;
+            permissionRequestedDevices.clear();
             call.reject("Failed to request permission: " + e.getMessage());
         }
     }
