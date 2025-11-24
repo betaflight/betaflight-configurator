@@ -1,3 +1,5 @@
+src/js/protocols/CapacitorSerial.js                 # Protocol adapter
+
 # Betaflight Configurator - Custom Capacitor USB Serial Plugin
 
 ## Overview
@@ -20,7 +22,7 @@ This implementation creates a **custom Capacitor USB Serial plugin** specificall
 betaflight-configurator/
 ├── android/app/src/main/java/
 │   ├── betaflight/configurator/MainActivity.java    # Registers the plugin
-│   └── com/betaflight/plugin/serial/                # Native plugin source (NEW LOCATION)
+│   └── betaflight/configurator/protocols/serial/    # Native plugin source
 │       ├── BetaflightSerialPlugin.java
 │       └── UsbPermissionReceiver.java
 │
@@ -28,7 +30,7 @@ betaflight-configurator/
 │   └── CapacitorSerial.js                  # Protocol adapter
 │
 └── android/app/src/main/res/xml/
-    └── device_filter.xml                   # USB device filters
+   └── device_filter.xml                   # USB device filters
 ```
 
 ## 📦 Plugin Structure
@@ -70,7 +72,7 @@ betaflight-configurator/
 - Event forwarding to the serial system
 - Android platform detection
 
-## 🔧 Integration Points
+## 🔗 Integration Points
 
 ### 1. Serial System (`src/js/serial.js`)
 
@@ -78,11 +80,11 @@ Added CapacitorSerial to the protocol list:
 
 ```javascript
 this._protocols = [
-    { name: "webserial", instance: new WebSerial() },
-    { name: "webbluetooth", instance: new WebBluetooth() },
-    { name: "capacitorserial", instance: new CapacitorSerial() },  // NEW
-    { name: "websocket", instance: new Websocket() },
-    { name: "virtual", instance: new VirtualSerial() },
+   { name: "webserial", instance: new WebSerial() },
+   { name: "webbluetooth", instance: new WebBluetooth() },
+   { name: "capacitorserial", instance: new CapacitorSerial() },  // NEW
+   { name: "websocket", instance: new Websocket() },
+   { name: "virtual", instance: new VirtualSerial() },
 ];
 ```
 
@@ -109,12 +111,12 @@ Added `checkCapacitorSerialSupport()` function:
 **AndroidManifest.xml**:
 ```xml
 <intent-filter>
-    <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
+   <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
 </intent-filter>
 
 <meta-data
-    android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
-    android:resource="@xml/device_filter" />
+   android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
+   android:resource="@xml/device_filter" />
 
 <uses-feature android:name="android.hardware.usb.host" android:required="true" />
 ```
@@ -159,7 +161,7 @@ await serial.send(data);  // CapacitorSerial protocol
 // JavaScript: Uint8Array received via 'receive' event
 ```
 
-## 📝 Supported USB Chipsets
+## 📚 Supported USB Chipsets
 
 Via `usb-serial-for-android` library:
 
@@ -278,7 +280,7 @@ All the Betaflight-compatible devices listed in `device_filter.xml`.
 3. Monitor native logs for I/O errors
 4. Test with simple MSP commands first
 
-## 📚 Additional Resources
+## 📖 Additional Resources
 
 ### USB Serial for Android Library
 
