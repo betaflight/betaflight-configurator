@@ -19,14 +19,12 @@ class CapacitorSerial extends EventTarget {
 
         this.connected = false;
         this.openRequested = false;
-        this.openCanceled = false;
         this.transmitting = false;
         this.connectionInfo = null;
 
         this.bitrate = 0;
         this.bytesSent = 0;
         this.bytesReceived = 0;
-        this.failed = 0;
 
         this.ports = [];
         this.currentDevice = null;
@@ -189,13 +187,12 @@ class CapacitorSerial extends EventTarget {
                 baudRate: baudRate,
             });
 
-            if (result.success && !this.openCanceled) {
+            if (result.success) {
                 this.connected = true;
                 this.connectionId = path;
                 this.bitrate = baudRate;
                 this.bytesReceived = 0;
                 this.bytesSent = 0;
-                this.failed = 0;
                 this.openRequested = false;
                 this.currentDevice = device;
 
@@ -208,13 +205,6 @@ class CapacitorSerial extends EventTarget {
 
                 this.dispatchEvent(new CustomEvent("connect", { detail: this.connectionInfo }));
                 return true;
-            } else if (result.success && this.openCanceled) {
-                console.log(`${logHead} Connection opened but was canceled, disconnecting`);
-                this.openRequested = false;
-                this.openCanceled = false;
-                await this.disconnect();
-                this.dispatchEvent(new CustomEvent("connect", { detail: false }));
-                return false;
             } else {
                 this.openRequested = false;
                 console.error(`${logHead} Failed to connect:`, result.error);
@@ -237,10 +227,8 @@ class CapacitorSerial extends EventTarget {
         this.bitrate = 0;
         this.connectionInfo = null;
         this.currentDevice = null;
-
-        if (this.openCanceled) {
-            this.openCanceled = false;
-        }
+        this.bytesSent = 0;
+        this.bytesReceived = 0;
     }
 
     async disconnect() {
