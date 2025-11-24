@@ -5982,6 +5982,13 @@
     "osdDescElementEscRpm": {
         "message": "RPM riportati dalla telemetria ESC"
     },
+    "osdTextElementRemainingTimeEstimate": {
+        "message": "Timer: stima del tempo rimanente",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementRemainingTimeEstimate": {
+        "message": "Stima del tempo di volo rimanente"
+    },
     "osdTextElementRtcDateTime": {
         "message": "Data e ora RTC",
         "description": "One of the elements of the OSD"
@@ -7619,6 +7626,15 @@
     },
     "firmwareFlasherOSDProtocolNotSelectedContinue": {
         "message": "Continua senza protocollo OSD"
+    },
+    "firmwareFlasherOptionLabelVerifiedPartner": {
+        "message": "Partner Verificato"
+    },
+    "firmwareFlasherOptionLabelVendorCommunity": {
+        "message": "Venditore \/ Community"
+    },
+    "firmwareFlasherOptionLabelLegacy": {
+        "message": "Legacy"
     },
     "coreBuild": {
         "message": "Solo Core"
