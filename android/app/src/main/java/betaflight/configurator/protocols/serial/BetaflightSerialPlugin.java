@@ -251,6 +251,10 @@ public class BetaflightSerialPlugin extends Plugin implements SerialInputOutputM
             // Get the first port (most devices have only one port)
             List<UsbSerialPort> ports = targetDriver.getPorts();
             if (ports.isEmpty()) {
+                if (connection != null) {
+                    connection.close();
+                    connection = null;
+                }
                 call.reject("No serial ports available on device: " + deviceId);
                 return;
             }
