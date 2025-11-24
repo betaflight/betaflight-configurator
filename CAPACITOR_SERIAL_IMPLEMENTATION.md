@@ -76,35 +76,38 @@ betaflight-configurator/
 
 ### 1. Serial System (`src/js/serial.js`)
 
-Added CapacitorSerial to the protocol list:
+
+**Protocol Registration:**
+
+CapacitorSerial is registered in the protocol list alongside WebSerial, WebBluetooth, WebSocket, and VirtualSerial. The protocol is selected automatically for ports with the `capacitor-` prefix.
 
 ```javascript
 this._protocols = [
    { name: "webserial", instance: new WebSerial() },
    { name: "webbluetooth", instance: new WebBluetooth() },
-   { name: "capacitorserial", instance: new CapacitorSerial() },  // NEW
+   { name: "capacitorserial", instance: new CapacitorSerial() },
    { name: "websocket", instance: new Websocket() },
    { name: "virtual", instance: new VirtualSerial() },
 ];
 ```
 
-Protocol selection based on port path prefix `"capacitor-"`.
+**Selection Logic:**
+The port handler chooses the protocol based on the port path prefix, e.g. `capacitor-<deviceId>`. This ensures Android USB devices are routed to the CapacitorSerial implementation.
 
 ### 2. Port Handler (`src/js/port_handler.js`)
 
-Added Capacitor Serial support:
-- New `currentCapacitorPorts` array
-- New `capacitorAvailable` flag
-- New `showCapacitorOption` check
-- Added to device list refresh cycle
-- Event handling for Capacitor devices
 
-### 3. Compatibility Checks (`src/js/utils/checkBrowserCompatibility.js`)
+**Port Handler Updates:**
+Detects available Capacitor serial ports dynamically from the protocol layer
+- `showCapacitorOption` controls UI visibility for Capacitor ports
+- Device list refresh includes Capacitor devices when available
+- Handles attach/detach events and permission requests for Capacitor devices
 
-Added `checkCapacitorSerialSupport()` function:
-- Returns `true` on Android native platform
-- Returns `false` otherwise
-- Integrated into compatibility check
+### 3. Compatibility Checks (`src/js/utils/checkCompatibility.js`)
+
+
+**Compatibility Check:**
+Serial protocol compatibility is determined by `checkSerialSupport()` in `src/js/utils/checkCompatibility.js`. This function returns `true` for Android/Capacitor environments and for browsers supporting the Web Serial API. It is used to conditionally enable CapacitorSerial in the UI and protocol selection logic.
 
 ### 4. Android Configuration
 
