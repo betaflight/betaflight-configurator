@@ -168,7 +168,8 @@ class Serial extends EventTarget {
                 return [];
             }
 
-            return targetProtocol.getDevices?.() || [];
+            const devices = await targetProtocol.getDevices?.();
+            return devices ?? [];
         } catch (error) {
             console.error(`${this.logHead} Error getting devices:`, error);
             return [];
