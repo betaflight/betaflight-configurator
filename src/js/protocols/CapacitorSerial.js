@@ -68,6 +68,7 @@ class CapacitorSerial extends EventTarget {
         this.ports.push(added);
         this.dispatchEvent(new CustomEvent("addedDevice", { detail: added }));
         console.log(`${logHead} Device attached:`, added.path);
+        return added;
     }
 
     handleDeviceDetached(device) {
@@ -137,26 +138,21 @@ class CapacitorSerial extends EventTarget {
     }
 
     async requestPermissionDevice() {
+        let newPermissionPort = null;
         try {
             console.log(`${logHead} Requesting USB permissions...`);
-            const result = await BetaflightSerial.requestPermission();
-
-            // Update ports list with newly permitted devices
-            this.ports = result.devices.map((device) => this.createPort(device));
-
-            console.log(`${logHead} Permission granted for ${this.ports.length} devices`);
-
-            // Dispatch addedDevice event for each new port to update UI
-            for (const port of this.ports) {
-                this.dispatchEvent(new CustomEvent("addedDevice", { detail: port }));
+            const userSelectedPort = await BetaflightSerial.requestPermission();
+            if (userSelectedPort?.devices?.length === 0) {
+                console.log(`${logHead} No device selected or permission denied`);
+                return null;
             }
-
-            // Return the first device if available
-            return this.ports.length > 0 ? this.ports[0] : null;
+            newPermissionPort = this.handleDeviceAttached(userSelectedPort.devices[0]);
+            console.log(`${logHead} Permission granted for ${newPermissionPort?.path}`);
         } catch (error) {
             console.error(`${logHead} Error requesting permission:`, error);
             return null;
         }
+        return newPermissionPort;
     }
 
     async getDevices() {
