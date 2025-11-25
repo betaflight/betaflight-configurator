@@ -7635,6 +7635,15 @@
     "firmwareFlasherOSDProtocolNotSelectedContinue": {
         "message": "Continueu sense protocol OSD"
     },
+    "firmwareFlasherOptionLabelVerifiedPartner": {
+        "message": "Soci verificat"
+    },
+    "firmwareFlasherOptionLabelVendorCommunity": {
+        "message": "Proveïdor \/ Comunitat"
+    },
+    "firmwareFlasherOptionLabelLegacy": {
+        "message": "Legacy"
+    },
     "coreBuild": {
         "message": "Només el nucli"
     },

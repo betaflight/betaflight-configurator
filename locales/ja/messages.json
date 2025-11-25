@@ -511,6 +511,9 @@
     "reportProblemsDialogFooter": {
         "message": "<span class=\"message-negative\"><strong>飛行を試みる前に、これらの問題を修正する必要があります。<\/span><\/strong>"
     },
+    "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
+        "message": "<span class=\"message-negative\"><strong>使用されるBetaflight App バージョン ($1) はファームウェア $2<\/strong><\/span> をサポートしていません。<br>$t(configuratorUpdateHelp.message)"
+    },
     "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
         "message": "<strong>モーター出力プロトコルが選択されていません。<\/strong><br>『$t(tabMotorTesting.message)』タブの『$t(configurationEscFeatures.message)』で、ESCに適したモーター出力プロトコルを選択してください。<br>$t(escProtocolDisabledMessage.message)"
     },
@@ -3465,6 +3468,10 @@
     "dataflashSaveFileDepreciationHint": {
         "message": "この方法は時間がかかり、エラーやファイル破損を起こしやすくなります。それはMSP接続自体、本質的にファイル転送に不向きな基本的制約がございます。この方法は小さなログファイルに対してだけ機能するかもしれませんが、保存時にファイル転送が失敗した場合でも、サポートへの問い合わせは行わないでください。推奨方法は '<b>$t(onboardLoggingRebootMscText.message)<\/b>' (下記)を使用して大容量ストレージモードを有効にし、ログファイルをダウンロードするためのストレージデバイスとしてフライトコントローラにアクセスします。"
     },
+    "dataflashButtonSaveAndErase": {
+        "message": "保存して消去",
+        "description": "Button text to save blackbox logs to file and then erase the flash"
+    },
     "dataflashButtonErase": {
         "message": "データを消去"
     },
@@ -4351,6 +4358,10 @@
     "pidTuningDTermSliderEnabled": {
         "message": "D値スライダーを使用",
         "description": "Disable or enable D Term Filter Tuning Slider"
+    },
+    "pidTuningPidSlidersHelp": {
+        "message": "機体のの飛行特性 (PID強度) を調整するスライダー<br \/><br \/>ダンピング (D値強度): 速い動きに抵抗し、P値における振動を最小限に抑えます。<br \/><br \/>トラッキング (P値&I値強度): 機体の応答性を高めます。機体反応を向上させますが、値が高すぎるとトリルや振動発生の原因となります。<br \/><br \/>スティックレスポンス (FF値強度): 機体の反応性を高めます。機敏なスティックの動きに対する機体のの反応を高めます。<br \/><br \/>ドリフト - ふらつき (I値強度,上級者向け): I値の微調整が可能です。<br \/><br \/>動的D値 (D Max,上級者向け):  D値の最大値を設定します。機敏な挙動の際にD値をブーストできる最大値を設定します。<br \/><br \/>ピッチダンピング (Pitch:RollのD値比,上級者向け): ピッチのダンピング量を設定します。ロールに対するピッチのダンピング量を増加させます。<br \/><br \/>ピッチトラッキング (Pitch:Roll P値&I値TFF値比,上級者向け): ピッチの安定性を高めます。ロールに対するピッチのスタビライズ強度を増加させます。<br \/><br \/>基準値 倍率設定 (PID強度 上級者向け): すべてのPID強度を、その比率を一定に保ちながら増減します。",
+        "description": "Overall helpicon message for PID tuning sliders"
     },
     "pidTuningSliderWarning": {
         "message": "<span class=\"message-negative\">警告:<\/span> 現在のスライダー位置は、飛行散逸 [フライアウェイ] やモーターの損傷、または安全でない機体の挙動が発生する場合があります。注意して実施してください。",
@@ -5970,6 +5981,13 @@
     },
     "osdDescElementEscRpm": {
         "message": "回転数レポート by ESCテレメトリー"
+    },
+    "osdTextElementRemainingTimeEstimate": {
+        "message": "タイマー: 推定残り時間",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementRemainingTimeEstimate": {
+        "message": "残り飛行時間の予測"
     },
     "osdTextElementRtcDateTime": {
         "message": "日付と時刻 (RTC)",
@@ -7608,6 +7626,15 @@
     },
     "firmwareFlasherOSDProtocolNotSelectedContinue": {
         "message": "OSDプロトコル未選択のまま続ける"
+    },
+    "firmwareFlasherOptionLabelVerifiedPartner": {
+        "message": "認証されたパートナー"
+    },
+    "firmwareFlasherOptionLabelVendorCommunity": {
+        "message": "ベンダー \/ コミュニティ"
+    },
+    "firmwareFlasherOptionLabelLegacy": {
+        "message": "レガシー"
     },
     "coreBuild": {
         "message": "コア部のみ"

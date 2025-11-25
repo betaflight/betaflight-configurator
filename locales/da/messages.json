@@ -7631,6 +7631,15 @@
     "firmwareFlasherOSDProtocolNotSelectedContinue": {
         "message": "Fortsæt uden OSD protokol"
     },
+    "firmwareFlasherOptionLabelVerifiedPartner": {
+        "message": "Verificeret Partner"
+    },
+    "firmwareFlasherOptionLabelVendorCommunity": {
+        "message": "Leverandør \/ Fællesskab"
+    },
+    "firmwareFlasherOptionLabelLegacy": {
+        "message": "Ældre"
+    },
     "coreBuild": {
         "message": "Kun grund komponenter"
     },
