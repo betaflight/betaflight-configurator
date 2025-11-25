@@ -41,7 +41,7 @@ jobs:
         run: npm install @capacitor/core @capacitor/cli @capacitor/android
 
       - name: Build and Sign Android APK
-        uses: action-capacitor-android@v1
+        uses: Narottam04/action-capacitor-android@v1
         with:
           build-type: 'release'
         env:
