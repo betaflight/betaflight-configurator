@@ -40,7 +40,6 @@ jobs:
       - name: Install Capacitor Dependencies
         run: |
           npm install @capacitor/core @capacitor/cli @capacitor/android
-          npx cap add android # Ensures the Android project structure is ready
 
       - name: Sync Web Assets to Android Project
         run: npx cap sync android
@@ -52,9 +51,9 @@ jobs:
           java-version: '17'
 
       - name: Setup Android SDK
-        uses: android-actions/setup-android@v2
+        uses: android-actions/setup-android@v3
         with:
-          sdk-filter: 'platform-tools,platforms;android-34'
+          sdk-filter: 'platform-tools,build-tools;34.0.0,platforms;android-34'
 
       - name: Build Android APK
         working-directory: android
@@ -66,10 +65,10 @@ jobs:
           ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
 
       - name: Upload APK as Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: betaflight-configurator-apk
-          path: android/app/build/outputs/apk/release/app-release.apk # Check this path!
+          path: android/app/build/outputs/apk/release/app-release.apk
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
