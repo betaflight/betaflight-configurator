@@ -38,37 +38,21 @@ jobs:
       - run: yarn build
 
       - name: Install Capacitor Dependencies
-        run: |
-          npm install @capacitor/core @capacitor/cli @capacitor/android
+        run: npm install @capacitor/core @capacitor/cli @capacitor/android
 
-      - name: Sync Web Assets to Android Project
-        run: npx cap sync android
-
-      - name: Set up JDK
-        uses: actions/setup-java@v4
+      - name: Build and Sign Android APK
+        uses: action-capacitor-android@v1
         with:
-          distribution: 'temurin'
-          java-version: '17'
-
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-        with:
-          sdk-filter: 'platform-tools,build-tools;34.0.0,platforms;android-34'
-
-      - name: Build Android APK
-        working-directory: android
-        run: ./gradlew assembleRelease
+          build-type: 'release'
         env:
-          ANDROID_SIGNING_KEY: ${{ secrets.ANDROID_SIGNING_KEY }}
-          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
-          ANDROID_KEY_STORE_PASSWORD: ${{ secrets.ANDROID_KEY_STORE_PASSWORD }}
-          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          RELEASE_KEYSTORE: ${{ secrets.RELEASE_KEYSTORE }}
+          RELEASE_KEYSTORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
 
       - name: Upload APK as Artifact
         uses: actions/upload-artifact@v4
         with:
           name: betaflight-configurator-apk
-          path: android/app/build/outputs/apk/release/app-release.apk
+          path: android/app/build/outputs/apk/release/app-release-signed.apk
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
