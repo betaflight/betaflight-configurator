@@ -13,6 +13,30 @@ function base64ToUint8Array(b64) {
     return bytes;
 }
 
+function uint8ArrayToBase64(bytes) {
+    let binary = "";
+    for (let i = 0; i < bytes.byteLength; i++) {
+        binary += String.fromCharCode(bytes[i]);
+    }
+    return btoa(binary);
+}
+
+function normalizeToUint8Array(data) {
+    if (data instanceof Uint8Array) {
+        return data;
+    }
+    if (ArrayBuffer.isView(data)) {
+        return new Uint8Array(data.buffer, data.byteOffset, data.byteLength);
+    }
+    if (data instanceof ArrayBuffer) {
+        return new Uint8Array(data);
+    }
+    if (Array.isArray(data)) {
+        return Uint8Array.from(data);
+    }
+    throw new TypeError("Unsupported data type for TCP send");
+}
+
 class CapacitorSocket extends EventTarget {
     constructor() {
         super();
@@ -95,16 +119,31 @@ class CapacitorSocket extends EventTarget {
           }
         */
 
-        const url = new URL(path);
-        const host = url.hostname;
-        const port = Number.parseInt(url.port, 10);
+        let host;
+        let port;
 
-        console.log(`${this.logHead} Connecting to ${path}`);
+        try {
+            const normalizedPath = path.includes("://") ? path : `tcp://${path}`;
+            const url = new URL(normalizedPath);
+            host = url.hostname;
+            const parsedPort = url.port ? Number.parseInt(url.port, 10) : Number.NaN;
+            const fallbackPort = Number.isNaN(parsedPort) ? Number.parseInt(options?.port, 10) : parsedPort;
+            if (Number.isNaN(fallbackPort)) {
+                throw new Error(`Invalid port in path: ${path}`);
+            }
+            port = fallbackPort;
+        } catch (parseError) {
+            console.error(`${this.logHead} Invalid TCP address: ${path}`, parseError);
+            this.dispatchEvent(new CustomEvent("connect", { detail: false }));
+            return;
+        }
+
+        console.log(`${this.logHead} Connecting to ${host}:${port}`);
 
         try {
             const result = await Capacitor.Plugins.BetaflightTcp.connect({ ip: host, port });
             if (result?.success) {
-                this.address = path;
+                this.address = `${host}:${port}`;
                 this.connected = true;
             } else {
                 throw new Error("Connect failed");
@@ -151,15 +190,17 @@ class CapacitorSocket extends EventTarget {
       */
 
         if (this.connected) {
+            const bytes = normalizeToUint8Array(data);
             try {
-                const res = await Capacitor.Plugins.BetaflightTcp.send({ data });
+                const payload = uint8ArrayToBase64(bytes);
+                const res = await Capacitor.Plugins.BetaflightTcp.send({ data: payload });
 
                 if (res.success) {
-                    this.bytesSent += data.byteLength;
+                    this.bytesSent += bytes.byteLength;
                     if (cb) {
                         cb({
                             error: null,
-                            bytesSent: data.byteLength,
+                            bytesSent: bytes.byteLength,
                         });
                     }
                 } else {
@@ -175,10 +216,14 @@ class CapacitorSocket extends EventTarget {
                     });
                 }
             }
+
+            return {
+                bytesSent: bytes.byteLength,
+            };
         }
 
         return {
-            bytesSent: this.connected ? data.byteLength : 0,
+            bytesSent: 0,
         };
     }
 }
