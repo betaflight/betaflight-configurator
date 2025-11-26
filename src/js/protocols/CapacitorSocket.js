@@ -37,8 +37,8 @@ class CapacitorSocket extends EventTarget {
 
         Capacitor.Plugins.BetaflightTcp.addListener("dataReceived", (ev) => {
             const bytes = base64ToUint8Array(ev.data);
-            console.log("TCP data chunk (bytes length):", bytes.length, "text:", text);
-            this.dispatchEvent(new CustomEvent("receive", { detail: bytes })); // TODO check detail
+            // Forward raw bytes as detail; Serial/port_usage consume TypedArray.byteLength.
+            this.dispatchEvent(new CustomEvent("receive", { detail: bytes }));
         });
 
         Capacitor.Plugins.BetaflightTcp.addListener("dataReceivedError", (ev) => {
@@ -48,7 +48,7 @@ class CapacitorSocket extends EventTarget {
         Capacitor.Plugins.BetaflightTcp.addListener("connectionClosed", () => {
             console.log("TCP connection closed by peer");
             this.connected = false;
-            this.dispatchEvent(new CustomEvent("disconnect", { detail: { socketId: this.address } }));
+            this.dispatchEvent(new CustomEvent("disconnect", { detail: this.address }));
         });
     }
 
