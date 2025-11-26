@@ -210,14 +210,10 @@ class CapacitorSocket extends EventTarget {
                     });
                 }
             }
-
-            return {
-                bytesSent: this.connected ? bytes.byteLength : 0,
-            };
         }
 
         return {
-            bytesSent: 0,
+            bytesSent: this.connected ? bytes.byteLength : 0,
         };
     }
 }
