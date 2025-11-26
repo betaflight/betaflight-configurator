@@ -3,6 +3,7 @@ import WebBluetooth from "./protocols/WebBluetooth.js";
 import Websocket from "./protocols/WebSocket.js";
 import VirtualSerial from "./protocols/VirtualSerial.js";
 import { isAndroid } from "./utils/checkCompatibility.js";
+import CapacitorSerial from "./protocols/CapacitorSerial.js";
 
 /**
  * Base Serial class that manages all protocol implementations
@@ -167,7 +168,8 @@ class Serial extends EventTarget {
                 return [];
             }
 
-            return targetProtocol.getDevices?.() || [];
+            const devices = await targetProtocol.getDevices?.();
+            return devices ?? [];
         } catch (error) {
             console.error(`${this.logHead} Error getting devices:`, error);
             return [];
