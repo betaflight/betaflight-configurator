@@ -4,7 +4,7 @@ import android.os.Bundle;
 
 import betaflight.configurator.protocols.serial.BetaflightSerialPlugin;
 import com.getcapacitor.BridgeActivity;
-import betaflight.configurator.plugin.SocketPlugin;
+import betaflight.configurator.protocols.tcp.SocketPlugin;
 
 public class MainActivity extends BridgeActivity {
   @Override

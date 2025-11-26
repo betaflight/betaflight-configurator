@@ -1,4 +1,4 @@
-package betaflight.configurator.plugin;
+package betaflight.configurator.protocols.tcp;
 
 import android.util.Base64;
 import android.util.Log;
