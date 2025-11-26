@@ -87,30 +87,30 @@ class CapacitorSocket extends EventTarget {
 
     async connect(path, options) {
         /*
-        async connect(options) {
-          const { host, port } = options;
-          const res = await Capacitor.Plugins.BetaflightTcp.connect({ ip: host, port });
-          if (res && res.success) this.connected = true;
-          else throw new Error("Connect failed");
-        }
+          async connect(options) {
+              const { host, port } = options;
+              const res = await Capacitor.Plugins.BetaflightTcp.connect({ ip: host, port });
+              if (res && res.success) this.connected = true;
+              else throw new Error("Connect failed");
+          }
+        */
 
-      */
+        const url = new URL(path);
+        const host = url.hostname;
+        const port = parseInt(url.port, 10);
 
-        const { host, port } = options; // TODO Extract host and port from path
-
-        this.address = path;
-        console.log(`${this.logHead} Connecting to ${this.address}`);
+        console.log(`${this.logHead} Connecting to ${path}`);
 
         try {
             const result = await Capacitor.Plugins.BetaflightTcp.connect({ ip: host, port });
             if (result?.success) {
+                this.address = path;
                 this.connected = true;
             } else {
                 throw new Error("Connect failed");
-                throw new Error("Connect failed");
             }
 
-            this.dispatchEvent(new CustomEvent("connect", { detail: this.connectionInfo })); // TODO need to check result detail
+            this.dispatchEvent(new CustomEvent("connect", { detail: this.address })); // TODO need to check result detail
         } catch (e) {
             console.error(`${this.logHead}Failed to connect to socket: ${e}`);
         }
