@@ -132,15 +132,9 @@ class CapacitorSocket extends EventTarget {
                 throw new Error(`Invalid port in path: ${path}`);
             }
             port = fallbackPort;
-        } catch (parseError) {
-            console.error(`${this.logHead} Invalid TCP address: ${path}`, parseError);
-            this.dispatchEvent(new CustomEvent("connect", { detail: false }));
-            return;
-        }
 
-        console.log(`${this.logHead} Connecting to ${host}:${port}`);
+            console.log(`${this.logHead} Connecting to ${host}:${port}`);
 
-        try {
             const result = await Capacitor.Plugins.BetaflightTcp.connect({ ip: host, port });
             if (result?.success) {
                 this.address = `${host}:${port}`;
@@ -148,10 +142,10 @@ class CapacitorSocket extends EventTarget {
             } else {
                 throw new Error("Connect failed");
             }
-
             this.dispatchEvent(new CustomEvent("connect", { detail: this.address })); // TODO need to check result detail
         } catch (e) {
             console.error(`${this.logHead}Failed to connect to socket: ${e}`);
+            this.dispatchEvent(new CustomEvent("connect", { detail: false }));
         }
     }
 
