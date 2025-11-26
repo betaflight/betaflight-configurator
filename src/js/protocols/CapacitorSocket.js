@@ -178,7 +178,7 @@ class CapacitorSocket extends EventTarget {
         }
 
         return {
-            bytesSent: data.byteLength,
+            bytesSent: this.connected ? data.byteLength : 0,
         };
     }
 }
