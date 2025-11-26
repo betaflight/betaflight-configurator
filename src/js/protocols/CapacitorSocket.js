@@ -5,14 +5,12 @@ function base64ToUint8Array(b64) {
     const len = binary.length;
     const bytes = new Uint8Array(len);
     for (let i = 0; i < len; i++) {
-        bytes[i] = binary.codePointAt(i); // was using charCodeAt
+        // The atob() function returns a binary string where each character represents a single byte (0–255).
+        // codePointAt() is designed for Unicode code points and can return values greater than 255, which will overflow Uint8Array slots and corrupt received data.
+        // Use charCodeAt(i) to safely extract byte values.
+        bytes[i] = binary.charCodeAt(i);
     }
     return bytes;
-}
-
-async function blob2uint(blob) {
-    const buffer = await new Response(blob).arrayBuffer();
-    return new Uint8Array(buffer);
 }
 
 class CapacitorSocket extends EventTarget {
@@ -37,12 +35,14 @@ class CapacitorSocket extends EventTarget {
 
         Capacitor.Plugins.BetaflightTcp.addListener("dataReceived", (ev) => {
             const bytes = base64ToUint8Array(ev.data);
+            this.handleReceiveBytes({ detail: bytes });
             // Forward raw bytes as detail; Serial/port_usage consume TypedArray.byteLength.
             this.dispatchEvent(new CustomEvent("receive", { detail: bytes }));
         });
 
         Capacitor.Plugins.BetaflightTcp.addListener("dataReceivedError", (ev) => {
             console.warn("TCP read error:", ev.error);
+            this.handleDisconnect();
         });
 
         Capacitor.Plugins.BetaflightTcp.addListener("connectionClosed", () => {
@@ -97,7 +97,7 @@ class CapacitorSocket extends EventTarget {
 
         const url = new URL(path);
         const host = url.hostname;
-        const port = parseInt(url.port, 10);
+        const port = Number.parseInt(url.port, 10);
 
         console.log(`${this.logHead} Connecting to ${path}`);
 
@@ -124,18 +124,21 @@ class CapacitorSocket extends EventTarget {
           this.connected = !res.success ? this.connected : false;
         }
       */
-        this.connected = false;
-        this.bytesReceived = 0;
-        this.bytesSent = 0;
 
         if (this.connected) {
             try {
                 const res = await Capacitor.Plugins.BetaflightTcp.disconnect();
-                this.connected = !res.success ? this.connected : false;
+                if (res.success) {
+                    this.connected = false;
+                }
             } catch (e) {
                 console.error(`${this.logHead}Failed to close socket: ${e}`);
             }
         }
+
+        this.connected = false;
+        this.bytesReceived = 0;
+        this.bytesSent = 0;
     }
 
     async send(data, cb) {
