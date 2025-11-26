@@ -130,7 +130,7 @@ public class SocketPlugin extends Plugin {
                     call.reject(ERROR_CONNECTION_LOST);
                     return;
                 }
-                byte[] payload = (data + "\n").getBytes(StandardCharsets.UTF_8);
+                byte[] payload = data.getBytes(StandardCharsets.UTF_8);
                 output.write(payload);
                 output.flush();
 
