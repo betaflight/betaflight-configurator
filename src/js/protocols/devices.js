@@ -48,6 +48,12 @@ export const bluetoothDevices = [
         writeCharacteristic: "0000db33-0000-1000-8000-00805f9b34fb",
         readCharacteristic: "0000db34-0000-1000-8000-00805f9b34fb",
     },
+    {
+        name: "SpeedyBee F7V3",
+        serviceUuid: "0000abf0-0000-1000-8000-00805f9b34fb",
+        writeCharacteristic: "0000abf1-0000-1000-8000-00805f9b34fb",
+        readCharacteristic: "0000abf2-0000-1000-8000-00805f9b34fb",
+    },
 ];
 
 export const serialDevices = [
