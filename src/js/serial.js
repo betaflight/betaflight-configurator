@@ -5,6 +5,7 @@ import VirtualSerial from "./protocols/VirtualSerial.js";
 import { isAndroid } from "./utils/checkCompatibility.js";
 import CapacitorSerial from "./protocols/CapacitorSerial.js";
 import CapacitorTcp from "./protocols/CapacitorTcp.js";
+import CapacitorBluetooth from "./protocols/CapacitorBluetooth.js";
 
 /**
  * Base Serial class that manages all protocol implementations
@@ -24,6 +25,7 @@ class Serial extends EventTarget {
             this._protocols = [
                 { name: "serial", instance: new CapacitorSerial() },
                 { name: "tcp", instance: new CapacitorTcp() },
+                { name: "bluetooth", instance: new CapacitorBluetooth() },
             ];
         } else {
             this._protocols = [
