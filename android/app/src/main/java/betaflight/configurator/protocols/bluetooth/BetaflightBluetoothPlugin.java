@@ -300,6 +300,14 @@ public class BetaflightBluetoothPlugin extends Plugin {
 			return;
 		}
 
+		int properties = characteristic.getProperties();
+		boolean supportsWrite = (properties & BluetoothGattCharacteristic.PROPERTY_WRITE) != 0;
+		boolean supportsWriteNoResponse = (properties & BluetoothGattCharacteristic.PROPERTY_WRITE_NO_RESPONSE) != 0;
+		if (!supportsWrite && !supportsWriteNoResponse) {
+			call.reject("Characteristic does not support write operations");
+			return;
+		}
+
 		byte[] payload;
 		try {
 			payload = decodePayload(value, encoding);
@@ -308,7 +316,15 @@ public class BetaflightBluetoothPlugin extends Plugin {
 			return;
 		}
 
-		int writeType = withoutResponse ? BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE : BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT;
+		int writeType;
+		if (withoutResponse) {
+			writeType = BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE;
+		} else if (!supportsWrite && supportsWriteNoResponse) {
+			writeType = BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE;
+			Log.d(TAG, "Characteristic " + characteristicUuid + " does not support acknowledged writes; falling back to no response mode");
+		} else {
+			writeType = BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT;
+		}
 
 		boolean submitted = submitWrite(gatt, characteristic, payload, writeType);
 		if (!submitted) {
@@ -924,7 +940,17 @@ public class BetaflightBluetoothPlugin extends Plugin {
 			logGattLayout("Services discovered", gatt);
 			JSArray services = new JSArray();
 			for (BluetoothGattService service : gatt.getServices()) {
-				services.put(service.getUuid().toString());
+				JSObject servicePayload = new JSObject();
+				servicePayload.put("uuid", service.getUuid().toString());
+				JSArray characteristics = new JSArray();
+				for (BluetoothGattCharacteristic characteristic : service.getCharacteristics()) {
+					JSObject characteristicPayload = new JSObject();
+					characteristicPayload.put("uuid", characteristic.getUuid().toString());
+					characteristicPayload.put("properties", characteristic.getProperties());
+					characteristics.put(characteristicPayload);
+				}
+				servicePayload.put("characteristics", characteristics);
+				services.put(servicePayload);
 			}
 			JSObject payload = new JSObject();
 			payload.put("deviceId", connectedDeviceId);
