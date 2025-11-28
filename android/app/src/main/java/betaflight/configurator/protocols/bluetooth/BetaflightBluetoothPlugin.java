@@ -43,8 +43,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Queue;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -104,7 +106,7 @@ public class BetaflightBluetoothPlugin extends Plugin {
 	private Runnable connectTimeoutRunnable;
 	private PluginCall pendingConnectCall;
 	private String connectedDeviceId;
-	private final List<PluginCall> pendingStartNotificationCalls = new ArrayList<>();
+	private final Queue<PluginCall> pendingStartNotificationCalls = new ConcurrentLinkedQueue<>();
 	private volatile boolean servicesDiscovered = false;
 
 	@Override
@@ -832,9 +834,8 @@ public class BetaflightBluetoothPlugin extends Plugin {
 		if (!servicesDiscovered || pendingStartNotificationCalls.isEmpty()) {
 			return;
 		}
-		List<PluginCall> queued = new ArrayList<>(pendingStartNotificationCalls);
-		pendingStartNotificationCalls.clear();
-		for (PluginCall pendingCall : queued) {
+		PluginCall pendingCall;
+		while ((pendingCall = pendingStartNotificationCalls.poll()) != null) {
 			startNotificationsInternal(pendingCall);
 		}
 	}
@@ -843,9 +844,8 @@ public class BetaflightBluetoothPlugin extends Plugin {
 		if (pendingStartNotificationCalls.isEmpty()) {
 			return;
 		}
-		List<PluginCall> queued = new ArrayList<>(pendingStartNotificationCalls);
-		pendingStartNotificationCalls.clear();
-		for (PluginCall pendingCall : queued) {
+		PluginCall pendingCall;
+		while ((pendingCall = pendingStartNotificationCalls.poll()) != null) {
 			pendingCall.setKeepAlive(false);
 			pendingCall.reject(reason);
 		}
