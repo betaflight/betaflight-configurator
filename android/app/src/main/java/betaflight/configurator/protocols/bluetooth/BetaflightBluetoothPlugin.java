@@ -958,6 +958,13 @@ public class BetaflightBluetoothPlugin extends Plugin {
 			notifyListeners("services", payload);
 		}
 
+		@Deprecated
+		@Override
+		public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
+			byte[] value = characteristic != null ? characteristic.getValue() : null;
+			onCharacteristicChanged(gatt, characteristic, value);
+		}
+
 		@Override
 		public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, byte[] value) {
 			JSObject payload = new JSObject();
