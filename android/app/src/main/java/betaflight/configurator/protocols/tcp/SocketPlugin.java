@@ -81,7 +81,7 @@ public class SocketPlugin extends Plugin {
             return;
         }
 
-        getBridge().getExecutor().execute(() -> {
+        new Thread(() -> {
             socketLock.lock();
             try {
                 socket = new Socket();
@@ -107,9 +107,9 @@ public class SocketPlugin extends Plugin {
                 socketLock.unlock();
                 call.setKeepAlive(false);
             }
-        });
+        }).start();
     }
-
+    
     @PluginMethod
     public void send(final PluginCall call) {
         String data = call.getString("data");
@@ -123,7 +123,7 @@ public class SocketPlugin extends Plugin {
         }
         call.setKeepAlive(true);
 
-        getBridge().getExecutor().execute(() -> {
+        new Thread(() -> {
             writerLock.lock();
             try {
                 if (output == null || state.get() != ConnectionState.CONNECTED) {
@@ -144,9 +144,9 @@ public class SocketPlugin extends Plugin {
                 writerLock.unlock();
                 call.setKeepAlive(false);
             }
-        });
+        }).start();
     }
-
+    
     @PluginMethod
     public void receive(final PluginCall call) {
         // Deprecated by continuous reader (Task 2)
@@ -170,7 +170,7 @@ public class SocketPlugin extends Plugin {
         }
         call.setKeepAlive(true);
 
-        getBridge().getExecutor().execute(() -> {
+        new Thread(() -> {
             socketLock.lock();
             try {
                 closeResourcesInternal();
@@ -195,7 +195,7 @@ public class SocketPlugin extends Plugin {
                 socketLock.unlock();
                 call.setKeepAlive(false);
             }
-        });
+        }).start();
     }
 
     @PluginMethod
