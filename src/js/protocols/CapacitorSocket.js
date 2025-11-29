@@ -1,5 +1,7 @@
 import { Capacitor } from "@capacitor/core";
 
+const BetaflightTcp = Capacitor?.Plugins?.BetaflightTcp;
+
 function base64ToUint8Array(b64) {
     const binary = atob(b64);
     const len = binary.length;
@@ -54,22 +56,28 @@ class CapacitorSocket extends EventTarget {
         this.address = "http://localhost:5761";
 
         this.socket = null;
+        this.plugin = BetaflightTcp;
 
         this.connect = this.connect.bind(this);
 
-        Capacitor.Plugins.BetaflightTcp.addListener("dataReceived", (ev) => {
+        if (!this.plugin) {
+            console.warn(`${this.logHead} Native BetaflightTcp plugin is not available`);
+            return;
+        }
+
+        this.plugin.addListener("dataReceived", (ev) => {
             const bytes = base64ToUint8Array(ev.data);
             this.handleReceiveBytes({ detail: bytes });
             // Forward raw bytes as detail; Serial/port_usage consume TypedArray.byteLength.
             this.dispatchEvent(new CustomEvent("receive", { detail: bytes }));
         });
 
-        Capacitor.Plugins.BetaflightTcp.addListener("dataReceivedError", (ev) => {
+        this.plugin.addListener("dataReceivedError", (ev) => {
             console.warn("TCP read error:", ev.error);
             this.handleDisconnect();
         });
 
-        Capacitor.Plugins.BetaflightTcp.addListener("connectionClosed", () => {
+        this.plugin.addListener("connectionClosed", () => {
             console.log("TCP connection closed by peer");
             this.connected = false;
             this.dispatchEvent(new CustomEvent("disconnect", { detail: this.address }));
@@ -119,6 +127,12 @@ class CapacitorSocket extends EventTarget {
           }
         */
 
+        if (!this.plugin) {
+            console.warn(`${this.logHead} Cannot connect; native plugin unavailable`);
+            this.dispatchEvent(new CustomEvent("connect", { detail: false }));
+            return;
+        }
+
         let host;
         let port;
 
@@ -135,7 +149,7 @@ class CapacitorSocket extends EventTarget {
 
             console.log(`${this.logHead} Connecting to ${host}:${port}`);
 
-            const result = await Capacitor.Plugins.BetaflightTcp.connect({ ip: host, port });
+            const result = await this.plugin.connect({ ip: host, port });
             if (result?.success) {
                 this.address = `${host}:${port}`;
                 this.connected = true;
@@ -158,9 +172,14 @@ class CapacitorSocket extends EventTarget {
         }
       */
 
+        if (!this.plugin) {
+            console.warn(`${this.logHead} Cannot disconnect; native plugin unavailable`);
+            return;
+        }
+
         if (this.connected) {
             try {
-                const res = await Capacitor.Plugins.BetaflightTcp.disconnect();
+                const res = await this.plugin.disconnect();
                 if (res.success) {
                     this.connected = false;
                 }
@@ -183,11 +202,18 @@ class CapacitorSocket extends EventTarget {
         }
       */
 
+        if (!this.plugin) {
+            console.warn(`${this.logHead} Cannot send; native plugin unavailable`);
+            return {
+                bytesSent: 0,
+            };
+        }
+
         if (this.connected) {
             const bytes = normalizeToUint8Array(data);
             try {
                 const payload = uint8ArrayToBase64(bytes);
-                const res = await Capacitor.Plugins.BetaflightTcp.send({ data: payload });
+                const res = await this.plugin.send({ data: payload });
 
                 if (res.success) {
                     this.bytesSent += bytes.byteLength;
@@ -213,7 +239,7 @@ class CapacitorSocket extends EventTarget {
         }
 
         return {
-            bytesSent: this.connected ? bytes.byteLength : 0,
+            bytesSent: 0,
         };
     }
 }
