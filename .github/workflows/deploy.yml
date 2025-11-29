@@ -43,13 +43,36 @@ jobs:
       - name: Sync Capacitor Android Project
         run: npx cap sync android
 
-      - name: Build and Sign Android APK
-        uses: Narottam04/action-capacitor-android@v1
+      - name: Set up Java
+        uses: actions/setup-java@v4
         with:
-          build-type: 'release'
+          distribution: temurin
+          java-version: '21'
+          cache: gradle
+
+      - name: Build and Sign Android APK
         env:
-          RELEASE_KEYSTORE: ${{ secrets.RELEASE_KEYSTORE }}
+          RELEASE_KEYSTORE_BASE64: ${{ secrets.RELEASE_KEYSTORE }}
           RELEASE_KEYSTORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
+          RELEASE_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
+          RELEASE_KEY_ALIAS_PASSWORD: ${{ secrets.RELEASE_KEY_ALIAS_PASSWORD }}
+        run: |
+          : "${RELEASE_KEYSTORE_BASE64:?Set the RELEASE_KEYSTORE secret with your base64-encoded keystore}"
+          : "${RELEASE_KEYSTORE_PASSWORD:?Set the RELEASE_KEYSTORE_PASSWORD secret with your keystore password}"
+          : "${RELEASE_KEY_ALIAS:?Set the RELEASE_KEY_ALIAS secret with your key alias}"
+          : "${RELEASE_KEY_ALIAS_PASSWORD:?Set the RELEASE_KEY_ALIAS_PASSWORD secret with your key alias password}"
+
+          mkdir -p android/keystore
+          echo "$RELEASE_KEYSTORE_BASE64" | base64 --decode > android/keystore/release.jks
+
+          pushd android >/dev/null
+          ./gradlew clean
+          ./gradlew assembleRelease \
+            -Pandroid.injected.signing.store.file="$PWD/keystore/release.jks" \
+            -Pandroid.injected.signing.store.password="$RELEASE_KEYSTORE_PASSWORD" \
+            -Pandroid.injected.signing.key.alias="$RELEASE_KEY_ALIAS" \
+            -Pandroid.injected.signing.key.password="$RELEASE_KEY_ALIAS_PASSWORD"
+          popd >/dev/null
 
       - name: Upload APK as Artifact
         uses: actions/upload-artifact@v4
