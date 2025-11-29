@@ -37,6 +37,26 @@ jobs:
       - run: yarn install
       - run: yarn build
 
+      - name: Generate Capacitor Config
+        run: node capacitor.config.generator.mjs
+
+      - name: Sync Capacitor Android Project
+        run: npx cap sync android
+
+      - name: Build and Sign Android APK
+        uses: Narottam04/action-capacitor-android@v1
+        with:
+          build-type: 'release'
+        env:
+          RELEASE_KEYSTORE: ${{ secrets.RELEASE_KEYSTORE }}
+          RELEASE_KEYSTORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
+
+      - name: Upload APK as Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: betaflight-configurator-apk
+          path: android/app/build/outputs/apk/release/*.apk
+
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
