@@ -1052,7 +1052,7 @@ public class BetaflightBluetoothPlugin extends Plugin {
 		@Deprecated
 		@Override
 		public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
-			if (characteristic == null || value == null) {
+			if (characteristic == null) {
 		        Log.w(TAG, "Received notification with null characteristic or value");
     		    return;
 			}
