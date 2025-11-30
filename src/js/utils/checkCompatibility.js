@@ -106,9 +106,10 @@ export function checkCompatibility() {
         .css({
             height: "100%",
             display: "grid",
-            "background-image": "url(../images/osd-bg-1.jpg)",
-            "background-size": "cover",
-            "background-repeat": "no-repeat",
+            "background-image": "url(/images/pattern_dark.png)",
+            "background-size": "300px",
+            "background-repeat": "repeat",
+            "background-color": "var(--surface-500)",
         })
         .append(newDiv);
 
