@@ -55,25 +55,25 @@
     <!-- Permissions -->
 
     <uses-permission android:name="android.permission.INTERNET" />
-<!-- Request legacy Bluetooth permissions on older devices. -->
-    <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 
-    <!-- Needed only if your app looks for Bluetooth devices.
-         If your app doesn't use Bluetooth scan results to derive physical
-         location information, you can
-         <a href="#assert-never-for-location">strongly assert that your app
-         doesn't derive physical location</a>. -->
+    <uses-permission android:name="android.permission.BLUETOOTH"
+                     android:maxSdkVersion="30" />
+
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"
+                     android:maxSdkVersion="30" />
+
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"
+                     android:maxSdkVersion="30" />
+
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"
+                     android:maxSdkVersion="30" />
+
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN"
+                     android:minSdkVersion="31"
                      android:usesPermissionFlags="neverForLocation" />
 
-    <!-- Needed only if your app communicates with already-paired Bluetooth
-         devices. -->
-    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
-
-    <!-- Needed only if your app uses Bluetooth scan results to derive
-         physical location. -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT"
+                     android:minSdkVersion="31" />
 
     <uses-feature android:name="android.hardware.bluetooth_le" android:required="true"/>
 

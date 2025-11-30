@@ -49,6 +49,11 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicReference;
 
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import android.content.pm.PackageManager;
+import android.content.Intent;
+
 /**
  * Custom Capacitor plugin that provides BLE scanning, connection management, and
  * MSP-friendly binary transport for Betaflight Configurator.
@@ -58,13 +63,14 @@ import java.util.concurrent.atomic.AtomicReference;
 	permissions = {
 		@Permission(
 			alias = "bluetooth",
-			strings = {
-				Manifest.permission.BLUETOOTH,
-				Manifest.permission.BLUETOOTH_ADMIN,
-				Manifest.permission.BLUETOOTH_SCAN,
-				Manifest.permission.BLUETOOTH_CONNECT,
-				Manifest.permission.ACCESS_FINE_LOCATION
-			}
+			strings = {}
+			// strings = {
+			// 	Manifest.permission.BLUETOOTH,
+			// 	Manifest.permission.BLUETOOTH_ADMIN,
+			// 	Manifest.permission.BLUETOOTH_SCAN,
+			// 	Manifest.permission.BLUETOOTH_CONNECT,
+			// 	Manifest.permission.ACCESS_FINE_LOCATION
+			// }
 		)
 	}
 )
@@ -139,15 +145,100 @@ public class BetaflightBluetoothPlugin extends Plugin {
 		call.resolve(result);
 	}
 
+	// @PluginMethod
+	// public void requestPermissions(PluginCall call) {
+	// 	if (getPermissionState("bluetooth") == PermissionState.GRANTED) {
+	// 		JSObject result = new JSObject();
+	// 		result.put("granted", true);
+	// 		call.resolve(result);
+	// 		return;
+	// 	}
+	// 	requestPermissionForAlias("bluetooth", call, "onPermissionResult");
+	// }
+
 	@PluginMethod
 	public void requestPermissions(PluginCall call) {
-		if (getPermissionState("bluetooth") == PermissionState.GRANTED) {
+		// Determine required permissions based on Android version
+		String[] requiredPermissions = getRequiredPermissions();
+		
+		// Check if all required permissions are already granted
+		boolean allGranted = true;
+		for (String permission : requiredPermissions) {
+			if (ContextCompat.checkSelfPermission(getContext(), permission) 
+					!= PackageManager.PERMISSION_GRANTED) {
+				allGranted = false;
+				break;
+			}
+		}
+		
+		if (allGranted) {
 			JSObject result = new JSObject();
 			result.put("granted", true);
 			call.resolve(result);
 			return;
 		}
-		requestPermissionForAlias("bluetooth", call, "onPermissionResult");
+		
+		// Store the call for later resolution
+		pendingPermissionCall = call;
+		
+		// Request permissions using Activity's native method
+		ActivityCompat.requestPermissions(
+			getActivity(),
+			requiredPermissions,
+			BLUETOOTH_PERMISSION_REQUEST_CODE
+		);
+	}
+
+	// Add these as class fields
+	private static final int BLUETOOTH_PERMISSION_REQUEST_CODE = 9002;
+	private PluginCall pendingPermissionCall;
+
+	// Helper to get version-specific permissions
+	private String[] getRequiredPermissions() {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) { // Android 12+
+			return new String[]{
+				Manifest.permission.BLUETOOTH_SCAN,
+				Manifest.permission.BLUETOOTH_CONNECT
+			};
+		} else { // Android 8-11
+			return new String[]{
+				Manifest.permission.BLUETOOTH,
+				Manifest.permission.BLUETOOTH_ADMIN,
+				Manifest.permission.ACCESS_COARSE_LOCATION
+			};
+		}
+	}
+
+	// Handle the permission result from the Activity
+	@Override
+	protected void handleOnActivityResult(int requestCode, int resultCode, Intent data) {
+		super.handleOnActivityResult(requestCode, resultCode, data);
+	}
+
+	// This is called by the Activity when permissions are granted/denied
+	@Override
+	protected void handleRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+		super.handleRequestPermissionsResult(requestCode, permissions, grantResults);
+		
+		if (requestCode == BLUETOOTH_PERMISSION_REQUEST_CODE && pendingPermissionCall != null) {
+			boolean allGranted = true;
+			for (int result : grantResults) {
+				if (result != PackageManager.PERMISSION_GRANTED) {
+					allGranted = false;
+					break;
+				}
+			}
+			
+			if (allGranted) {
+				JSObject result = new JSObject();
+				result.put("granted", true);
+				pendingPermissionCall.resolve(result);
+			} else {
+				pendingPermissionCall.reject("Bluetooth permissions denied");
+			}
+			
+			pendingPermissionCall = null;
+		}
 	}
 
 	@PermissionCallback
