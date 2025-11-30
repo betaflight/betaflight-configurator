@@ -64,13 +64,6 @@ import android.content.Intent;
 		@Permission(
 			alias = "bluetooth",
 			strings = {}
-			// strings = {
-			// 	Manifest.permission.BLUETOOTH,
-			// 	Manifest.permission.BLUETOOTH_ADMIN,
-			// 	Manifest.permission.BLUETOOTH_SCAN,
-			// 	Manifest.permission.BLUETOOTH_CONNECT,
-			// 	Manifest.permission.ACCESS_FINE_LOCATION
-			// }
 		)
 	}
 )
@@ -145,17 +138,6 @@ public class BetaflightBluetoothPlugin extends Plugin {
 		call.resolve(result);
 	}
 
-	// @PluginMethod
-	// public void requestPermissions(PluginCall call) {
-	// 	if (getPermissionState("bluetooth") == PermissionState.GRANTED) {
-	// 		JSObject result = new JSObject();
-	// 		result.put("granted", true);
-	// 		call.resolve(result);
-	// 		return;
-	// 	}
-	// 	requestPermissionForAlias("bluetooth", call, "onPermissionResult");
-	// }
-
 	@PluginMethod
 	public void requestPermissions(PluginCall call) {
 		// Determine required permissions based on Android version
@@ -189,11 +171,9 @@ public class BetaflightBluetoothPlugin extends Plugin {
 		);
 	}
 
-	// Add these as class fields
 	private static final int BLUETOOTH_PERMISSION_REQUEST_CODE = 9002;
 	private PluginCall pendingPermissionCall;
 
-	// Helper to get version-specific permissions
 	private String[] getRequiredPermissions() {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) { // Android 12+
 			return new String[]{
