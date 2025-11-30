@@ -186,15 +186,7 @@ class CapacitorBluetooth extends EventTarget {
         }
 
         try {
-            // Update bluetoothDevices with the actual service UUID your hardware uses
-            // (capture it with nRF Connect or the PWA’s device.uuids), then restore the filtered scan.
-
-            // const options = {
-            //     services: [...new Set(uuids)],
-            //     optionalServices: uuids,
-            //     acceptAllDevices: uuids.length === 0,
-            // };
-            const options = {};
+            const options = { acceptAllDevices: true }; // Android workaround
             const userSelectedDevice = await BetaflightBluetooth.requestDevice(options);
             console.log(`${logHead} User selected Bluetooth device:`, userSelectedDevice);
             newPermissionDevice = this.handleNewDevice(userSelectedDevice);
