@@ -175,7 +175,6 @@ class CapacitorBluetooth extends EventTarget {
 
     async requestPermissionDevice() {
         let newPermissionDevice = null;
-        const uuids = bluetoothDevices.map((device) => device.serviceUuid).filter(Boolean);
 
         try {
             await BetaflightBluetooth.requestPermissions(); // prompt once
