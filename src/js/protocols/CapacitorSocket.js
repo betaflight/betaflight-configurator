@@ -90,6 +90,7 @@ class CapacitorSocket extends EventTarget {
 
     handleDisconnect() {
         this.disconnect();
+        this.dispatchEvent(new CustomEvent("disconnect", { detail: true }));
     }
 
     createPort(url) {
