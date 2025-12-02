@@ -2933,6 +2933,11 @@ MspHelper.prototype.sendSerialConfig = function (callback) {
 };
 
 MspHelper.prototype.writeConfiguration = function (reboot, callback) {
+    if (reboot) {
+        GUI.interval_kill_all(); // stop status_pull and other tab timers immediately
+        MSP.callbacks_cleanup(); // drop any stale callbacks
+    }
+
     // We need some protection when testing motors on motors tab
     if (!FC.CONFIG.armingDisabled) {
         this.setArmingEnabled(false, false);
@@ -2951,7 +2956,7 @@ MspHelper.prototype.writeConfiguration = function (reboot, callback) {
                 callback();
             }
         });
-    }, 100); // 100ms delay before sending MSP_EEPROM_WRITE to ensure that all settings have been received
+    }, 200); // 200ms delay before sending MSP_EEPROM_WRITE to ensure that all settings have been received
 };
 
 let mspHelper;

@@ -993,7 +993,7 @@ public class BetaflightBluetoothPlugin extends Plugin {
 			if (newState == BluetoothProfile.STATE_CONNECTED && status == BluetoothGatt.GATT_SUCCESS) {
 				connectionState.set(ConnectionState.CONNECTED);
 				gatt.discoverServices();
-				connectedSuccessfully();
+				// connectedSuccessfully() now called after service discovery
 			} else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
 				connectionState.set(ConnectionState.DISCONNECTED);
 				cleanupGatt();
@@ -1027,20 +1027,31 @@ public class BetaflightBluetoothPlugin extends Plugin {
 			payload.put("deviceId", connectedDeviceId);
 			payload.put("services", services);
 			notifyListeners("services", payload);
+			// Now resolve the connect call after services are discovered
+			connectedSuccessfully();
 		}
 
+		/**
+		 * Deprecated 2-arg callback for backward compatibility (API < 33).
+		 * Forwards to the 3-arg version.
+		 */
 		@Deprecated
+		@SuppressWarnings("deprecation")
 		@Override
 		public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
-			byte[] value = characteristic != null ? characteristic.getValue() : null;
+			byte[] value = (characteristic != null) ? characteristic.getValue() : null;
+			if (characteristic == null || value == null) {
+				Log.w(TAG, "Received notification with null characteristic or value (2-arg)");
+				return;
+			}
 			onCharacteristicChanged(gatt, characteristic, value);
 		}
 
 		@Override
 		public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, byte[] value) {
 			if (characteristic == null || value == null) {
-		        Log.w(TAG, "Received notification with null characteristic or value");
-    		    return;
+                Log.w(TAG, "Received notification with null characteristic or value");
+                return;
 			}
 			JSObject payload = new JSObject();
 			payload.put("deviceId", connectedDeviceId);
