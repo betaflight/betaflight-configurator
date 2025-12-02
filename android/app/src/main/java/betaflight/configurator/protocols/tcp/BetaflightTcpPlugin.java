@@ -13,7 +13,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.ReentrantLock;
@@ -131,14 +130,14 @@ public class BetaflightTcpPlugin extends Plugin {
                     call.reject(ERROR_CONNECTION_LOST);
                     return;
                 }
-                byte[] payload = data.getBytes(StandardCharsets.UTF_8);
+                byte[] payload = Base64.decode(data, Base64.NO_WRAP);
                 output.write(payload);
                 output.flush();
 
                 JSObject result = new JSObject();
                 result.put("success", true);
                 call.resolve(result);
-                Log.d(TAG, "Sent data: " + truncateForLog(data));
+                Log.d(TAG, "Sent " + payload.length + " bytes");
             } catch (Exception e) {
                 handleCommunicationError(e, "Send failed", call);
             } finally {
@@ -147,7 +146,7 @@ public class BetaflightTcpPlugin extends Plugin {
             }
         }).start();
     }
-    
+
     @PluginMethod
     public void receive(final PluginCall call) {
         // Deprecated by continuous reader (Task 2)
