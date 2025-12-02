@@ -72,28 +72,19 @@ public class BetaflightTcpPlugin extends Plugin {
             call.setKeepAlive(false);
             return;
         }
-        // Port is optional: only check if provided
-        if (port != -1 && (port < MIN_PORT || port > MAX_PORT)) {
-            call.reject(ERROR_INVALID_PORT);
-            call.setKeepAlive(false);
-            return;
-        }
+        
         if (!compareAndSetState(ConnectionState.DISCONNECTED, ConnectionState.CONNECTING)) {
             call.reject(ERROR_ALREADY_CONNECTED);
             call.setKeepAlive(false);
             return;
         }
 
+
         new Thread(() -> {
             socketLock.lock();
             try {
                 socket = new Socket();
-                InetSocketAddress address;
-                if (port != -1) {
-                    address = new InetSocketAddress(ip, port);
-                } else {
-                    address = InetSocketAddress.createUnresolved(ip, 0);
-                }
+                InetSocketAddress address = new InetSocketAddress(ip, port);
                 socket.connect(address, DEFAULT_TIMEOUT_MS);
                 socket.setSoTimeout(DEFAULT_TIMEOUT_MS);
 
