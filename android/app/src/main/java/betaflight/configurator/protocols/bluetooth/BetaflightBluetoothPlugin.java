@@ -105,8 +105,12 @@ public class BetaflightBluetoothPlugin extends Plugin {
 	private Runnable connectTimeoutRunnable;
 	private PluginCall pendingConnectCall;
 	private String connectedDeviceId;
+
+	// Cached per connection
 	private BluetoothGattCharacteristic writeCharacteristic = null;
 	private boolean writeNoResponseSupported = false;
+	private int cachedWriteType = BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT;
+
 	private final Queue<PluginCall> pendingStartNotificationCalls = new ConcurrentLinkedQueue<>();
 	private volatile boolean servicesDiscovered = false;
 
@@ -328,32 +332,19 @@ public class BetaflightBluetoothPlugin extends Plugin {
 	@PluginMethod
 	public void write(PluginCall call) {
 		if (!ensureConnected(call)) return;
-
 		final BluetoothGatt gatt = bluetoothGatt;
 		if (gatt == null || !servicesDiscovered) { call.reject("Not connected"); return; }
 
 		final BluetoothGattCharacteristic target = writeCharacteristic;
 		if (target == null) { call.reject("Write characteristic not available"); return; }
 
-		// Params and payload decode only
 		final String value = call.getString("value", call.getString("data"));
 		final String encoding = call.getString("encoding", "base64");
-		final boolean withoutResponse = call.getBoolean("withoutResponse", false);
-
 		final byte[] payload;
-		try {
-			payload = decodePayload(value, encoding);
-		} catch (IllegalArgumentException ex) {
-			call.reject("Failed to decode payload: " + ex.getMessage());
-			return;
-		}
+		try { payload = decodePayload(value, encoding); }
+		catch (IllegalArgumentException ex) { call.reject("Failed to decode payload: " + ex.getMessage()); return; }
 
-		// Minimal branch based on cached capability (no property reads here)
-		final int writeType = (withoutResponse && writeNoResponseSupported)
-				? BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE
-				: BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT;
-
-		final boolean ok = submitWrite(gatt, target, payload, writeType);
+		final boolean ok = submitWrite(gatt, target, payload, cachedWriteType);
 		if (ok) {
 			JSObject result = new JSObject();
 			result.put("bytesSent", payload.length);
@@ -646,6 +637,7 @@ public class BetaflightBluetoothPlugin extends Plugin {
 		bluetoothGatt = null;
 		writeCharacteristic = null;
 		writeNoResponseSupported = false;
+		cachedWriteType = BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT;
 		connectedDeviceId = null;
 		servicesDiscovered = false;
 	}
@@ -948,6 +940,7 @@ public class BetaflightBluetoothPlugin extends Plugin {
 			} else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
 				connectionState.set(ConnectionState.DISCONNECTED);
 				cleanupGatt();
+				// notifyConnectionState("disconnected", null);
 				failConnect(status == BluetoothGatt.GATT_SUCCESS ? "Disconnected" : "Connect status: " + status);
 			}
 		}
@@ -959,33 +952,29 @@ public class BetaflightBluetoothPlugin extends Plugin {
 
 			writeCharacteristic = null;
 			writeNoResponseSupported = false;
+			cachedWriteType = BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT;
 
 			try {
 				for (BluetoothGattService svc : gatt.getServices()) {
-					BluetoothGattCharacteristic preferred = null;
-					BluetoothGattCharacteristic fallback  = null;
-
+					BluetoothGattCharacteristic preferred = null, fallback = null;
 					for (BluetoothGattCharacteristic ch : svc.getCharacteristics()) {
-						final int props = ch.getProperties();
-						if ((props & BluetoothGattCharacteristic.PROPERTY_WRITE_NO_RESPONSE) != 0) {
-							preferred = ch; // best option
-							break;
-						}
-						if (fallback == null && (props & BluetoothGattCharacteristic.PROPERTY_WRITE) != 0) {
-							fallback = ch;
-						}
+						int props = ch.getProperties();
+						if ((props & BluetoothGattCharacteristic.PROPERTY_WRITE_NO_RESPONSE) != 0) { preferred = ch; break; }
+						if (fallback == null && (props & BluetoothGattCharacteristic.PROPERTY_WRITE) != 0) fallback = ch;
 					}
-
-					final BluetoothGattCharacteristic chosen = (preferred != null) ? preferred : fallback;
+					BluetoothGattCharacteristic chosen = (preferred != null) ? preferred : fallback;
 					if (chosen != null) {
 						writeCharacteristic = chosen;
 						writeNoResponseSupported =
-								(chosen.getProperties() & BluetoothGattCharacteristic.PROPERTY_WRITE_NO_RESPONSE) != 0;
+							(chosen.getProperties() & BluetoothGattCharacteristic.PROPERTY_WRITE_NO_RESPONSE) != 0;
+						cachedWriteType = writeNoResponseSupported
+							? BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE
+							: BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT;
 						break;
 					}
 				}
 			} catch (Exception ignored) {
-				// leave writeCharacteristic null; write() will report unavailable
+				// leave writeCharacteristic null; write() will reject
 			}
 
 			flushPendingStartNotificationCalls();
