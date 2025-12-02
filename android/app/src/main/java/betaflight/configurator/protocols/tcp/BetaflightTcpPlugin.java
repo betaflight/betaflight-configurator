@@ -110,6 +110,7 @@ public class BetaflightTcpPlugin extends Plugin {
             } catch (Exception e) {
                 state.set(ConnectionState.ERROR);
                 closeResourcesInternal();
+                state.set(ConnectionState.DISCONNECTED);
                 call.reject("Connection failed: " + e.getMessage());
                 Log.e(TAG, "Connection failed", e);
             } finally {
