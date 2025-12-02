@@ -492,10 +492,19 @@ public class BetaflightBluetoothPlugin extends Plugin {
 			}
 		};
 
-		bluetoothLeScanner.startScan(filters.isEmpty() ? null : filters, settings, activeScanCallback);
-
-		scanTimeoutRunnable = () -> rejectPendingScan("Scan timed out");
-		mainHandler.postDelayed(scanTimeoutRunnable, timeoutMs);
+		try {
+            bluetoothLeScanner.startScan(
+                filters.isEmpty() ? null : filters,
+                settings,
+                activeScanCallback
+            );
+        } catch (SecurityException ex) {
+            Log.e(TAG, "Bluetooth LE scan failed due to missing permissions", ex);
+            rejectPendingScan("Bluetooth scan permission denied");
+            return;
+        }
+        scanTimeoutRunnable = () -> rejectPendingScan("Scan timed out");
+        mainHandler.postDelayed(scanTimeoutRunnable, timeoutMs);
 	}
 
 	private void handleScanResult(ScanResult result, ScanCriteria criteria) {
