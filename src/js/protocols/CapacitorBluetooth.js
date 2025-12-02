@@ -85,7 +85,6 @@ class CapacitorBluetooth extends EventTarget {
         this.bt11_crc_corruption_logged = false;
 
         this.writeQueue = Promise.resolve();
-        this.bleInitialized = false;
         this.notificationActive = false;
         this.disconnectHandled = true;
         this.nativeListeners = [];
@@ -102,8 +101,9 @@ class CapacitorBluetooth extends EventTarget {
 
     handleNewDevice(devicePayload) {
         const resolvedDevice = devicePayload?.device ?? devicePayload;
-        if (!resolvedDevice?.deviceId) {
-            console.warn(`${this.logHead} Ignoring device without an ID`, devicePayload);
+
+        if (!resolvedDevice?.uuids?.[0]) {
+            console.error(`${this.logHead} Error: Could not resolve device UUID`, devicePayload);
             return null;
         }
 
@@ -189,11 +189,16 @@ class CapacitorBluetooth extends EventTarget {
             const userSelectedDevice = await BetaflightBluetooth.requestDevice(options);
             console.log(`${logHead} User selected Bluetooth device:`, userSelectedDevice);
             newPermissionDevice = this.handleNewDevice(userSelectedDevice);
-            console.info(`${logHead} User selected Bluetooth device from permissions:`, newPermissionDevice.path);
+            console.info(`${logHead} User selected Bluetooth device from permissions:`, newPermissionDevice);
         } catch (error) {
             console.error(`${logHead} User didn't select any Bluetooth device when requesting permission:`, error);
         }
-        return newPermissionDevice;
+        console.log(
+            `${logHead} Permission device after filtering:`,
+            newPermissionDevice,
+            newPermissionDevice?.device?.uuids,
+        );
+        return newPermissionDevice?.device?.uuids?.length ? newPermissionDevice : null;
     }
 
     async getDevices() {
@@ -372,7 +377,7 @@ class CapacitorBluetooth extends EventTarget {
     }
 
     async send(data, cb) {
-        if (!this.connected || !this.deviceDescription || !this.device) {
+        if (!this.connected || !this.device || !this.deviceDescription?.writeCharacteristic) {
             if (cb) {
                 cb({
                     error: "No write characteristic available or device is disconnected",
