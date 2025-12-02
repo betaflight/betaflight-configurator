@@ -62,15 +62,18 @@ public class SocketPlugin extends Plugin {
     @PluginMethod
     public void connect(final PluginCall call) {
         call.setKeepAlive(true);
-        String ip = call.getString("ip");
-        int port = call.getInt("port", -1);
+        final String ip = call.getString("ip");
+
+        Integer portObj = call.getInt("port");
+        final int port = (portObj != null) ? portObj : -1;
 
         if (ip == null || ip.isEmpty()) {
             call.reject(ERROR_IP_REQUIRED);
             call.setKeepAlive(false);
             return;
         }
-        if (port < MIN_PORT || port > MAX_PORT) {
+        // Port is optional: only check if provided
+        if (port != -1 && (port < MIN_PORT || port > MAX_PORT)) {
             call.reject(ERROR_INVALID_PORT);
             call.setKeepAlive(false);
             return;
@@ -85,7 +88,13 @@ public class SocketPlugin extends Plugin {
             socketLock.lock();
             try {
                 socket = new Socket();
-                socket.connect(new InetSocketAddress(ip, port), DEFAULT_TIMEOUT_MS);
+                InetSocketAddress address;
+                if (port != -1) {
+                    address = new InetSocketAddress(ip, port);
+                } else {
+                    address = InetSocketAddress.createUnresolved(ip, 0);
+                }
+                socket.connect(address, DEFAULT_TIMEOUT_MS);
                 socket.setSoTimeout(DEFAULT_TIMEOUT_MS);
 
                 input = socket.getInputStream();
@@ -95,7 +104,7 @@ public class SocketPlugin extends Plugin {
                 JSObject result = new JSObject();
                 result.put("success", true);
                 call.resolve(result);
-                Log.d(TAG, "Connected to " + ip + ":" + port);
+                Log.d(TAG, "Connected to " + ip + (port != -1 ? (":" + port) : ""));
 
                 startReaderThread();
             } catch (Exception e) {
