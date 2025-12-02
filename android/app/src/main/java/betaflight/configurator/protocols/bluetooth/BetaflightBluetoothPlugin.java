@@ -106,6 +106,7 @@ public class BetaflightBluetoothPlugin extends Plugin {
 	private PluginCall pendingConnectCall;
 	private String connectedDeviceId;
 	private BluetoothGattCharacteristic writeCharacteristic = null;
+	private boolean writeNoResponseSupported = false;
 	private final Queue<PluginCall> pendingStartNotificationCalls = new ConcurrentLinkedQueue<>();
 	private volatile boolean servicesDiscovered = false;
 
@@ -329,23 +330,16 @@ public class BetaflightBluetoothPlugin extends Plugin {
 		if (!ensureConnected(call)) return;
 
 		final BluetoothGatt gatt = bluetoothGatt;
-		if (gatt == null || !servicesDiscovered) {
-			call.reject("Not connected");
-			return;
-		}
+		if (gatt == null || !servicesDiscovered) { call.reject("Not connected"); return; }
 
 		final BluetoothGattCharacteristic target = writeCharacteristic;
-		if (target == null) {
-			call.reject("Write characteristic not available");
-			return;
-		}
+		if (target == null) { call.reject("Write characteristic not available"); return; }
 
-		// Fetch payload params from call (they were previously undefined in this method)
+		// Params and payload decode only
 		final String value = call.getString("value", call.getString("data"));
 		final String encoding = call.getString("encoding", "base64");
 		final boolean withoutResponse = call.getBoolean("withoutResponse", false);
 
-		// Decode payload using your existing helper
 		final byte[] payload;
 		try {
 			payload = decodePayload(value, encoding);
@@ -354,10 +348,8 @@ public class BetaflightBluetoothPlugin extends Plugin {
 			return;
 		}
 
-		// Choose write type: prefer NO_RESPONSE when supported or requested
-		final int props = target.getProperties();
-		final boolean canNoRsp = (props & BluetoothGattCharacteristic.PROPERTY_WRITE_NO_RESPONSE) != 0;
-		final int writeType = (withoutResponse || canNoRsp)
+		// Minimal branch based on cached capability (no property reads here)
+		final int writeType = (withoutResponse && writeNoResponseSupported)
 				? BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE
 				: BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT;
 
@@ -652,7 +644,8 @@ public class BetaflightBluetoothPlugin extends Plugin {
 			try { bluetoothGatt.close(); } catch (Exception ignored) {}
 		}
 		bluetoothGatt = null;
-		writeCharacteristic = null; // reset for next connection
+		writeCharacteristic = null;
+		writeNoResponseSupported = false;
 		connectedDeviceId = null;
 		servicesDiscovered = false;
 	}
@@ -961,29 +954,33 @@ public class BetaflightBluetoothPlugin extends Plugin {
 
 		@Override
 		public void onServicesDiscovered(BluetoothGatt gatt, int status) {
-			if (status != BluetoothGatt.GATT_SUCCESS) {
-				return;
-			}
+			if (status != BluetoothGatt.GATT_SUCCESS) return;
 			servicesDiscovered = true;
-			// Resolve and cache a write characteristic once per connection
+
 			writeCharacteristic = null;
+			writeNoResponseSupported = false;
+
 			try {
 				for (BluetoothGattService svc : gatt.getServices()) {
 					BluetoothGattCharacteristic preferred = null;
-					BluetoothGattCharacteristic fallback = null;
+					BluetoothGattCharacteristic fallback  = null;
+
 					for (BluetoothGattCharacteristic ch : svc.getCharacteristics()) {
 						final int props = ch.getProperties();
 						if ((props & BluetoothGattCharacteristic.PROPERTY_WRITE_NO_RESPONSE) != 0) {
-							preferred = ch; // best option for MSP
+							preferred = ch; // best option
 							break;
 						}
 						if (fallback == null && (props & BluetoothGattCharacteristic.PROPERTY_WRITE) != 0) {
 							fallback = ch;
 						}
 					}
+
 					final BluetoothGattCharacteristic chosen = (preferred != null) ? preferred : fallback;
 					if (chosen != null) {
 						writeCharacteristic = chosen;
+						writeNoResponseSupported =
+								(chosen.getProperties() & BluetoothGattCharacteristic.PROPERTY_WRITE_NO_RESPONSE) != 0;
 						break;
 					}
 				}
