@@ -22,9 +22,9 @@ import java.util.concurrent.locks.ReentrantLock;
  * Capacitor plugin that provides raw TCP socket functionality with thread safety,
  * robust resource management, and comprehensive error handling.
  */
-@CapacitorPlugin(name = "SocketPlugin")
-public class SocketPlugin extends Plugin {
-    private static final String TAG = "SocketPlugin";
+@CapacitorPlugin(name = "BetaflightTcp")
+public class BetaflightTcpPlugin extends Plugin {
+    private static final String TAG = "BetaflightTcp";
 
     // Error messages
     private static final String ERROR_IP_REQUIRED = "IP address is required";

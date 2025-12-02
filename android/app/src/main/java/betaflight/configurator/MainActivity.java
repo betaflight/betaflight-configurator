@@ -4,13 +4,13 @@ import android.os.Bundle;
 
 import betaflight.configurator.protocols.serial.BetaflightSerialPlugin;
 import com.getcapacitor.BridgeActivity;
-import betaflight.configurator.protocols.tcp.SocketPlugin;
+import betaflight.configurator.protocols.tcp.BetaflightTcpPlugin;
 
 public class MainActivity extends BridgeActivity {
   @Override
   public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
     registerPlugin(BetaflightSerialPlugin.class);
-    registerPlugin(SocketPlugin.class);
+    registerPlugin(BetaflightTcpPlugin.class);
+    super.onCreate(savedInstanceState);
   }
 }
