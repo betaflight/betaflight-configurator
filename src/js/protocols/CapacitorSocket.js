@@ -90,7 +90,6 @@ class CapacitorSocket extends EventTarget {
 
     handleDisconnect() {
         this.disconnect();
-        this.dispatchEvent(new CustomEvent("disconnect", { detail: true }));
     }
 
     createPort(url) {
@@ -184,8 +183,10 @@ class CapacitorSocket extends EventTarget {
                 if (res.success) {
                     this.connected = false;
                 }
+                this.dispatchEvent(new CustomEvent("disconnect", { detail: true }));
             } catch (e) {
                 console.error(`${this.logHead}Failed to close socket: ${e}`);
+                this.dispatchEvent(new CustomEvent("disconnect", { detail: false }));
             }
         }
 
