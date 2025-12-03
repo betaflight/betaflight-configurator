@@ -79,8 +79,7 @@ class CapacitorSocket extends EventTarget {
 
         this.plugin.addListener("connectionClosed", () => {
             console.log("TCP connection closed by peer");
-            this.connected = false;
-            this.dispatchEvent(new CustomEvent("disconnect", { detail: this.address }));
+            this.handleDisconnect();
         });
     }
 
@@ -118,21 +117,6 @@ class CapacitorSocket extends EventTarget {
     }
 
     async connect(path, options) {
-        /*
-          async connect(options) {
-              const { host, port } = options;
-              const res = await Capacitor.Plugins.BetaflightTcp.connect({ ip: host, port });
-              if (res && res.success) this.connected = true;
-              else throw new Error("Connect failed");
-          }
-        */
-
-        if (!this.plugin) {
-            console.warn(`${this.logHead} Cannot connect; native plugin unavailable`);
-            this.dispatchEvent(new CustomEvent("connect", { detail: false }));
-            return;
-        }
-
         let host;
         let port;
 
@@ -164,30 +148,15 @@ class CapacitorSocket extends EventTarget {
     }
 
     async disconnect() {
-        /*
-        async disconnect() {
-          if (!this.connected) return;
-          const res = await Capacitor.Plugins.BetaflightTcp.disconnect();
-          this.connected = !res.success ? this.connected : false;
-        }
-      */
-
-        if (!this.plugin) {
-            console.warn(`${this.logHead} Cannot disconnect; native plugin unavailable`);
-            return;
-        }
-
-        if (this.connected) {
-            try {
-                const res = await this.plugin.disconnect();
-                if (res.success) {
-                    this.connected = false;
-                }
-                this.dispatchEvent(new CustomEvent("disconnect", { detail: true }));
-            } catch (e) {
-                console.error(`${this.logHead}Failed to close socket: ${e}`);
-                this.dispatchEvent(new CustomEvent("disconnect", { detail: false }));
+        try {
+            const res = await this.plugin.disconnect();
+            if (res.success) {
+                this.connected = false;
             }
+            this.dispatchEvent(new CustomEvent("disconnect", { detail: true }));
+        } catch (e) {
+            console.error(`${this.logHead}Failed to close connection: ${e}`);
+            this.dispatchEvent(new CustomEvent("disconnect", { detail: false }));
         }
 
         this.connected = false;
@@ -196,21 +165,6 @@ class CapacitorSocket extends EventTarget {
     }
 
     async send(data, cb) {
-        /*
-        async send(data) {
-          if (!this.connected) throw new Error("Socket is not connected");
-          const res = await Capacitor.Plugins.BetaflightTcp.send({ data });
-          if (!res.success) throw new Error("Send failed");
-        }
-      */
-
-        if (!this.plugin) {
-            console.warn(`${this.logHead} Cannot send; native plugin unavailable`);
-            return {
-                bytesSent: 0,
-            };
-        }
-
         if (this.connected) {
             const bytes = normalizeToUint8Array(data);
             try {
