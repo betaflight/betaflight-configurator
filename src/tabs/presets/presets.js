@@ -585,6 +585,7 @@ presets.displayPresets = function (fitPresets) {
             preset[1],
             true,
             this.presetsSourcesDialog.isThirdPartyActive,
+            null,
             favoritePresets,
         );
         presetPanel.load();

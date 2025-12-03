@@ -33,6 +33,7 @@
     background-origin: content-box;
     background-repeat: no-repeat;
     position: absolute;
+    cursor: pointer;
     right: -6px;
     top: -5px;
 }

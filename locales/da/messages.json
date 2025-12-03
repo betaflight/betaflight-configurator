@@ -3466,14 +3466,15 @@
     "dataflashButtonSaveFile": {
         "message": "Gem flash til fil..."
     },
-    "dataflashButtonSaveFileDeprecated": {
-        "message": "Gem flash til fil... (understøttes ikke)"
-    },
     "dataflashSavetoFileNote": {
         "message": "Gemning direkte af fil til flash er langsom og i sagens natur i risiko for fejl \/ fil korruption.<br>I nogle tilfælde vil det virke for små filer, men dette understøttes ikke og support anmodninger om ændring bliver lukket uden videre kommentar - brug masselager tilstand i stedet."
     },
     "dataflashSaveFileDepreciationHint": {
         "message": "Denne metode er langsom og i sagens natur med risiko for fejl \/ fil korruption, fordi MSP forbindelsen selv har grundlæggende begrænsninger, der er uegnet til filoverførsler. Forbindelsen kan kun arbejde med små logfiler. Opret ikke supportanmodninger, hvis filoverførsler mislykkes, når de gemmes ved brug af denne metode. Den anbefalede metode er at bruge '<b>$t(onboardLoggingRebootMscText.message)<\/b>' (nedenfor) for at aktivere masselager tilstand og få adgang til din FC som en lagerenhed for at hente og læse logfiler."
+    },
+    "dataflashButtonSaveAndErase": {
+        "message": "Gem & Slet",
+        "description": "Button text to save blackbox logs to file and then erase the flash"
     },
     "dataflashButtonErase": {
         "message": "Slet flash"
@@ -5985,11 +5986,11 @@
     "osdDescElementEscRpm": {
         "message": "RPM rapporteret af ESC telemetri"
     },
-    "osdTextElementRemaningTimeEstimate": {
-        "message": "Tidtagning: estimeret resterende flyvetid",
+    "osdTextElementRemainingTimeEstimate": {
+        "message": "Timer: Resterende flyvetid efter skøn",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementRemaningTimeEstimate": {
+    "osdDescElementRemainingTimeEstimate": {
         "message": "Skønnet resterende flyvetid"
     },
     "osdTextElementRtcDateTime": {
@@ -7629,6 +7630,15 @@
     },
     "firmwareFlasherOSDProtocolNotSelectedContinue": {
         "message": "Fortsæt uden OSD protokol"
+    },
+    "firmwareFlasherOptionLabelVerifiedPartner": {
+        "message": "Verificeret Partner"
+    },
+    "firmwareFlasherOptionLabelVendorCommunity": {
+        "message": "Leverandør \/ Fællesskab"
+    },
+    "firmwareFlasherOptionLabelLegacy": {
+        "message": "Ældre"
     },
     "coreBuild": {
         "message": "Kun grund komponenter"

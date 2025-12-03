@@ -30,7 +30,7 @@ import { ispConnected } from "./utils/connection";
 const logHead = "[SERIAL-BACKEND]";
 
 let mspHelper;
-let connectionTimestamp;
+let connectionTimestamp = null;
 let liveDataRefreshTimerId = false;
 
 let isConnected = false;
@@ -66,7 +66,8 @@ export function initializeSerialBackend() {
             !["cli", "firmware_flasher"].includes(GUI.active_tab) &&
             PortHandler.portPicker.autoConnect &&
             !isCliOnlyMode() &&
-            Date.now() - rebootTimestamp <= REBOOT_CONNECT_MAX_TIME_MS
+            (connectionTimestamp === null || connectionTimestamp > 0) ||
+            (Date.now() - rebootTimestamp <= REBOOT_CONNECT_MAX_TIME_MS)
         ) {
             connectDisconnect();
         }

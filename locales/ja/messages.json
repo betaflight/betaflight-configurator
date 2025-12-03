@@ -511,6 +511,9 @@
     "reportProblemsDialogFooter": {
         "message": "<span class=\"message-negative\"><strong>飛行を試みる前に、これらの問題を修正する必要があります。<\/span><\/strong>"
     },
+    "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
+        "message": "<span class=\"message-negative\"><strong>使用されるBetaflight App バージョン ($1) はファームウェア $2<\/strong><\/span> をサポートしていません。<br>$t(configuratorUpdateHelp.message)"
+    },
     "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
         "message": "<strong>モーター出力プロトコルが選択されていません。<\/strong><br>『$t(tabMotorTesting.message)』タブの『$t(configurationEscFeatures.message)』で、ESCに適したモーター出力プロトコルを選択してください。<br>$t(escProtocolDisabledMessage.message)"
     },
@@ -3459,14 +3462,15 @@
     "dataflashButtonSaveFile": {
         "message": "ファイルに保存します..."
     },
-    "dataflashButtonSaveFileDeprecated": {
-        "message": "フラッシュデータをファイルへ保存... (未サポート)"
-    },
     "dataflashSavetoFileNote": {
         "message": "フラッシュされているデータを直接ファイルへ保存するのは時間がかかり、本質的にエラーやファイル破損の原因になります。<br>場合によっては小さなファイルなら動作することはありますが、これらはサポートされておらず、サポートにおける問い合わせはコメントなくクローズされます - 代わりに大容量ストレージモードをご利用ください。"
     },
     "dataflashSaveFileDepreciationHint": {
         "message": "この方法は時間がかかり、エラーやファイル破損を起こしやすくなります。それはMSP接続自体、本質的にファイル転送に不向きな基本的制約がございます。この方法は小さなログファイルに対してだけ機能するかもしれませんが、保存時にファイル転送が失敗した場合でも、サポートへの問い合わせは行わないでください。推奨方法は '<b>$t(onboardLoggingRebootMscText.message)<\/b>' (下記)を使用して大容量ストレージモードを有効にし、ログファイルをダウンロードするためのストレージデバイスとしてフライトコントローラにアクセスします。"
+    },
+    "dataflashButtonSaveAndErase": {
+        "message": "保存して消去",
+        "description": "Button text to save blackbox logs to file and then erase the flash"
     },
     "dataflashButtonErase": {
         "message": "データを消去"
@@ -5978,11 +5982,11 @@
     "osdDescElementEscRpm": {
         "message": "回転数レポート by ESCテレメトリー"
     },
-    "osdTextElementRemaningTimeEstimate": {
-        "message": "Timer: 想定残り時間",
+    "osdTextElementRemainingTimeEstimate": {
+        "message": "タイマー: 推定残り時間",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementRemaningTimeEstimate": {
+    "osdDescElementRemainingTimeEstimate": {
         "message": "残り飛行時間の予測"
     },
     "osdTextElementRtcDateTime": {
@@ -7622,6 +7626,15 @@
     },
     "firmwareFlasherOSDProtocolNotSelectedContinue": {
         "message": "OSDプロトコル未選択のまま続ける"
+    },
+    "firmwareFlasherOptionLabelVerifiedPartner": {
+        "message": "認証されたパートナー"
+    },
+    "firmwareFlasherOptionLabelVendorCommunity": {
+        "message": "ベンダー \/ コミュニティ"
+    },
+    "firmwareFlasherOptionLabelLegacy": {
+        "message": "レガシー"
     },
     "coreBuild": {
         "message": "コア部のみ"

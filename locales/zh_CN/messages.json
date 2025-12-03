@@ -122,7 +122,7 @@
         "message": "提交"
     },
     "autoConnectEnabled": {
-        "message": "自动连接：已启用——检测到新端口时，应用程序会自动尝试连接"
+        "message": "自动连接：已启用——检测到新端口时，应用会自动尝试连接"
     },
     "autoConnectDisabled": {
         "message": "自动连接：已禁用——用户需要选择正确的串行端口, 然后点击「连接」按钮"
@@ -167,7 +167,7 @@
         "description": "Text for the option to enable or disable manual connection mode"
     },
     "showVirtualMode": {
-        "message": "启用虚拟连接模式",
+        "message": "启用仿真连接模式",
         "description": "Text for the option to enable or disable the virtual FC"
     },
     "useLegacyRenderingModel": {
@@ -216,10 +216,10 @@
         "description": "Text of the image in the top sensors icons. Please keep it short."
     },
     "sensorStatusMag": {
-        "message": "磁力仪"
+        "message": "磁力计"
     },
     "sensorStatusMagShort": {
-        "message": "磁力仪",
+        "message": "磁力计",
         "description": "Text of the image in the top sensors icons. Please keep it short."
     },
     "sensorStatusBaro": {
@@ -244,7 +244,7 @@
         "description": "Text of the image in the top sensors icons. Please keep it short."
     },
     "checkForConfiguratorUnstableVersions": {
-        "message": "显示不稳定版本应用程序的更新提醒"
+        "message": "显示不稳定版本应用的更新提醒"
     },
     "configuratorUpdateNotice": {
         "message": "你正在使用旧版本的 <b>Betaflight 应用<\/b>。<br>$t(configuratorUpdateHelp.message)"
@@ -265,10 +265,10 @@
         "message": "设备 - <span class=\"message-negative\">重启中<\/span>"
     },
     "deviceRebooting_flashBootloader": {
-        "message": "设备 - <span class=\"message-negative\">重启并进入闪存Bootloader<\/span>"
+        "message": "设备 - <span class=\"message-negative\">重启并进入闪存 Bootloader<\/span>"
     },
     "deviceRebooting_romBootloader": {
-        "message": "设备 - <span class=\"message-negative\">重启并进入内存Bootloader<\/span>"
+        "message": "设备 - <span class=\"message-negative\">重启并进入ROM Bootloader<\/span>"
     },
     "deviceReady": {
         "message": "设备 - <span class=\"message-positive\">已就绪<\/span>"
@@ -321,6 +321,9 @@
     "tabOsd": {
         "message": "OSD"
     },
+    "tabVtx": {
+        "message": "视频发送"
+    },
     "tabPower": {
         "message": "动力 & 电池"
     },
@@ -335,6 +338,12 @@
     },
     "tabRawSensorData": {
         "message": "传感器"
+    },
+    "tabCLI": {
+        "message": "CLI"
+    },
+    "tabLogging": {
+        "message": "线传日志"
     },
     "tabOnboardLogging": {
         "message": "黑盒子"
@@ -401,25 +410,25 @@
         "message": "未找到 USB DFU"
     },
     "stm32RebootingToBootloader": {
-        "message": "重新启动并进入 bootloader ..."
+        "message": "正在重启并进入 bootloader ..."
     },
     "stm32RebootingToBootloaderFailed": {
-        "message": "重启设备并进入 bootloader：失败"
+        "message": "尝试重启设备以进入 bootloader：失败"
     },
     "stm32TimedOut": {
         "message": "STM32 - 超时，烧录失败"
     },
     "stm32WrongResponse": {
-        "message": "STM32 通信失败，错误的响应。应为：$1 (0x$2) 实际收到: $3 (0x$4)"
+        "message": "STM32 通信失败，错误的响应。应为：$1 (0x$2) 实际收到：$3 (0x$4)"
     },
     "stm32ContactingBootloader": {
-        "message": "尝试连接引导程序"
+        "message": "尝试连接 bootloader…"
     },
     "stm32ContactingBootloaderFailed": {
-        "message": "引导程序通信失败"
+        "message": "与 bootloader 通信失败"
     },
     "stm32ResponseBootloaderFailed": {
-        "message": "引导程序无响应，烧录失败"
+        "message": "未收到 bootloader 的响应，烧录失败"
     },
     "stm32GlobalEraseExtended": {
         "message": "正在执行全局芯片擦除（通过扩展擦除）…"
@@ -440,7 +449,7 @@
         "message": "擦除中…"
     },
     "stm32Flashing": {
-        "message": "烧录中…"
+        "message": "刷写中…"
     },
     "stm32Verifying": {
         "message": "验证中…"
@@ -452,13 +461,13 @@
         "message": "烧录失败"
     },
     "stm32AddressLoadFailed": {
-        "message": "定位选项字节扇区失败。很可能是因为读取保护造成的。"
+        "message": "加载选项字节区域失败。很可能是因为读取保护造成的。"
     },
     "stm32AddressLoadSuccess": {
-        "message": "定位选项字节扇区成功。"
+        "message": "加载选项字节区域成功。"
     },
     "stm32AddressLoadUnknown": {
-        "message": "因未知错误，定位选项字节扇区失败。正在中止。"
+        "message": "因未知错误，加载选项字节区域失败。正在中止。"
     },
     "stm32NotReadProtected": {
         "message": "读取保护未启用"
@@ -491,25 +500,28 @@
         "message": "该设备上的固件需要升级到新的版本。使用 CLI 在刷写前备份 。CLI 备份\/恢复的步骤在文档中有说明。<br \/>如果你不准备升级固件，也可以下载使用旧版本的应用程序。"
     },
     "resetToCustomDefaultsDialog": {
-        "message": "有适用于此飞控板的自定义默认设置。通常来说，只有在应用了自定义默认设置之后飞控板才能正常工作。<br \/>您是否要为此飞控板应用自定义默认设置？"
+        "message": "有适用于此飞控板的定制预设值。通常来说，只有在设定了这些定制的预设值后，飞控板才能正常工作。<br \/>你是否要为此飞控板应用这些定制的预设值？"
     },
     "resetToCustomDefaultsAccept": {
-        "message": "应用自定义默认设置"
+        "message": "使用定制的预设值"
     },
     "reportProblemsDialogHeader": {
-        "message": "检测到<strong>您的配置存在下列问题<\/strong>:"
+        "message": "检测到<strong>你的配置存在下列问题<\/strong>："
     },
     "reportProblemsDialogFooter": {
         "message": "<span class=\"message-negative\"><strong>在飞行前，你需要修复这些问题<\/span><\/strong> 。"
+    },
+    "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
+        "message": "<span class=\"message-negative\"><strong>当前应用版本（$1）不支持该固件 $2<\/strong><\/span>。<br>$t(configuratorUpdateHelp.message)"
     },
     "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
         "message": "<strong>尚未选择任何电调协议<\/strong>。<br>请在 ‘$t(tabMotorTesting.message)’ 页面内 ‘$t(configurationEscFeatures.message)’ 中选择适合您电调的输出协议。<br>$t(escProtocolDisabledMessage.message)"
     },
     "reportProblemsDialogACC_NEEDS_CALIBRATION": {
-        "message": "<strong>加速度计已启用但尚未校准<\/strong>。<br>如果你准备使用加速度计，请按照「$t(tabSetup.message)」选项页中「$t(initialSetupButtonCalibrateAccel.message)」的说明进行操作。如果启用了任何需要加速度计的功能（自动水平模式、GPS救援等），在加速度计校准完成前，飞行器将无法解锁。<br>如果您不打算使用加速度计，建议你在「$t(tabConfiguration.message)」选项页的「$t(configurationSystem.message)」中禁用它。"
+        "message": "<strong>加速度计已启用但尚未校准<\/strong>。<br>如果你准备使用加速度计，请按照「$t(tabSetup.message)」选项页中「$t(initialSetupButtonCalibrateAccel.message)」的说明进行操作。如果启用了任何需要加速度计的功能（自动水平模式、GPS救援等），在加速度计校准完成前，飞行器将无法解锁。<br>如果你不打算使用加速度计，建议你在「$t(tabConfiguration.message)」选项页的「$t(configurationSystem.message)」中禁用它。"
     },
     "infoVersionOs": {
-        "message": "操作系统: <strong>{{operatingSystem}}<\/strong>",
+        "message": "操作系统：<strong>{{operatingSystem}}<\/strong>",
         "description": "Message that appears in the GUI log panel indicating operating system"
     },
     "infoVersionConfigurator": {
@@ -517,13 +529,19 @@
         "description": "Message that appears in the GUI log panel indicating application version"
     },
     "buildServerSuccess": {
-        "message": "成功: $1"
+        "message": "成功：$1"
+    },
+    "buildServerFailure": {
+        "message": "<b>构建服务失败: $1 <code>$2<\/code><\/b>"
     },
     "buildServerUsingCached": {
-        "message": "使用已缓存的 $1 生成信息。"
+        "message": "使用已缓存的 $1 构建信息。"
     },
     "buildServerSupportRequestSubmission": {
         "message": "<br>*** 支持数据已提交 *** <br>Id: $1<br><br><br># 复制 ID 并提交到 betaflight 团队。"
+    },
+    "buildKey": {
+        "message": "构建标识： <strong>$1<\/strong>"
     },
     "supportWarningDialogTitle": {
         "message": "确认提交数据"
@@ -535,16 +553,16 @@
         "message": "描述问题"
     },
     "releaseCheckLoaded": {
-        "message": "从 Github 载入 $1 发布信息"
+        "message": "已从 Github 加载的 $1 发行版信息。"
     },
     "releaseCheckFailed": {
-        "message": "<b>从 GitHub 获取 $1 发布版本失败，载入原版本信息。 失败原因：<code>$2<\/code><\/b>"
+        "message": "<b>未能从 GitHub 获取 $1 发行版，将使用已缓存的内容。 失败原因：<code>$2<\/code><\/b>"
     },
     "releaseCheckCached": {
-        "message": "使用已缓存的 $1 版本信息"
+        "message": "使用已缓存的与 $1 相关发行版本信息。"
     },
     "releaseCheckNoInfo": {
-        "message": "找不到 $1 发布信息"
+        "message": "没有适合 $1 的相关发行版信息。"
     },
     "tabSwitchConnectionRequired": {
         "message": "在查看任何选项页之前，你需要先<strong>连接<\/strong>。"
@@ -553,7 +571,7 @@
         "message": "<span class=\"message-negative\">不能<\/span> 执行当前操作，请等待上一个操作完成…"
     },
     "tabSwitchUpgradeRequired": {
-        "message": "需要<strong>更新<\/strong>到最新版本的 Betaflight 固件才能使用此「$1」选项页。"
+        "message": "需要<strong>更新<\/strong>到最新版本的 Betaflight 固件才能使用「$1」选项页。"
     },
     "firmwareVersion": {
         "message": "固件版本：<strong>$1<\/strong>"
@@ -580,7 +598,7 @@
         "message": "<strong> 预防起飞失控 已启用 <\/strong>"
     },
     "boardInfoReceived": {
-        "message": "飞控：<strong>$1<\/strong>, 版本：<strong>$2<\/strong>"
+        "message": "飞控板：<strong>$1<\/strong>, 版本：<strong>$2<\/strong>"
     },
     "buildInfoReceived": {
         "message": "当前固件发布时间： <strong>$1<\/strong>"
@@ -595,7 +613,7 @@
         "message": "固件"
     },
     "versionLabelConfigurator": {
-        "message": "应用程序版本"
+        "message": "应用版本"
     },
     "notifications_app_just_updated_to_version": {
         "message": "程序已经更新到版本: $1"
@@ -654,7 +672,7 @@
         "message": "EEPROM <span class=\"message-positive\">已保存<\/span>"
     },
     "defaultWelcomeIntro": {
-        "message": "欢迎使用<strong>Betaflight 应用<\/strong>，为简化固件升级、设置和调校飞控而生的工具。"
+        "message": "欢迎使用<strong> Betaflight 应用<\/strong>，为简化固件升级、设置和调校飞控而生的工具。"
     },
     "defaultWelcomeHead": {
         "message": "硬件"
@@ -669,7 +687,7 @@
         "message": "如果想协助 Betaflight 精益求精，你有很多途径可以提供帮助，包括：<br \/><ul><li>借助你对 Betaflight 的了解在<a href=\"https:\/\/betaflight.com\/docs\/wiki\" target=\"_blank\" rel=\"noopener noreferrer\">我们的 Wiki<\/a> 创建或更新内容，或者在我们的线上论坛回答他人的问题；<\/li><li>为固件和应用<a href=\"https:\/\/betaflight.com\/docs\/development\" target=\"_blank\" rel=\"noopener noreferrer\">贡献代码<\/a>——新功能、修复、改进；<\/li><li>测试<a href=\"https:\/\/github.com\/Betaflight\/betaflight\/pulls\" target=\"_blank\" rel=\"noopener noreferrer\">新功能、问题修复<\/a>以及提供反馈；<\/li><li>帮助解决其他用户汇报在<a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel=\"noopener noreferrer\">我们的问题跟踪器<\/a>的问题，并参与功能需求相关的讨论；<\/li><li>将 Betaflight 应用<a href=\"https:\/\/github.com\/betaflight\/betaflight\/tree\/master\/README.md#Translators\" target=\"_blank\" rel=\"noopener noreferrer\">翻译<\/a>成新的语言，或是帮助维护现有的翻译。<\/li><\/ul>"
     },
     "defaultFacebookText": {
-        "message": "我们还有一个 <a href=\"https:\/\/www.facebook.com\/groups\/betaflightgroup\/\" target=\"_blank\" rel=\"noopener noreferrer\">Facebook 小组<\/a>。<br \/>加入我们来一起讨论 Betaflight，询问配置问题，或者只是和小伙伴们闲聊。"
+        "message": "我们还有一个 <a href=\"https:\/\/www.facebook.com\/groups\/betaflightgroup\/\" target=\"_blank\" rel=\"noopener noreferrer\">Facebook 小组<\/a>。<br \/>加入我们来一起讨论 Betaflight，询问配置问题，或者只是和飞行爱好者们闲聊。"
     },
     "defaultDiscordText": {
         "message": "Betaflight <a href=\"https:\/\/discord.betaflight.com\/invite\" target=\"_blank\" rel=\"noopener noreferrer\">Discord 服务器<\/a>。<br \/>分享您的飞行经验，讨论 Betaflight，帮助其他人或从社区中为自己获得一些帮助。"
@@ -874,7 +892,7 @@
         "message": "RSSI："
     },
     "initialSetupNotInBuild": {
-        "message": "未包括在构建中",
+        "message": "构建时未包含在内",
         "description": "Message that pops up when hardware support is not included in build"
     },
     "initialSetupNotDetected": {
@@ -1012,8 +1030,12 @@
         "description": "Message that pops up to describe the RESC arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipRPMFILTER": {
-        "message": "基于转速的滤波器已开启，但一个或多个电调未发送有效的 DSHOT 回传数据。请确认电调支持 DSHOT 回传功能并且已刷入支持双向 DSHOT 回传的固件。",
+        "message": "基于转速的滤波器已开启，但一个或多个电调提供有效的 DSHOT 遥测数据。检查所用电调是否支持该功能，并确保已安装的固件支持双向 DSHOT 遥测。",
         "description": "Message that pops up to describe the RPMFILTER arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipDSHOT_TELEM": {
+        "message": "Dshot 遥测已启用，但一个或多个电调没有提供有效的 DSHOT 遥测数据。 检查所用电调是否支持该功能，并确保已安装的固件支持双向 DSHOT 遥测。",
+        "description": "Message that pops up to describe the DSHOT_TELEM arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipREBOOT_REQUIRED": {
         "message": "存在需要重启的配置变更",
@@ -1024,7 +1046,7 @@
         "description": "Message that pops up to describe the DSHOT_BBANG arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipNO_ACC_CALIBRATION": {
-        "message": "已启用了使用加速度计的功能，但加速度计未校准。请校准加速度计。",
+        "message": "已启用了依赖加速度计的功能，但加速度计尚未校准。请校准加速度计。",
         "description": "Message that pops up to describe the NO_ACC_CAL arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipMOTOR_PROTOCOL": {
@@ -1077,6 +1099,19 @@
     "initialSetupInfoBuild": {
         "message": "固件信息"
     },
+    "initialSetupInfoFirmwareHelp": {
+        "message": "显示固件构建信息，这需要连接到在线构建服务器。<br>「选项」列出云构建时指定了哪些选项。<br>日志和配置链接借助固件中存储的标识显示云端信息。<br>如果使用本地构建的固件，该部分为空。",
+        "description": "Message that pops up to describe the Build \/ Firmware section"
+    },
+    "initialSetupInfoBuildDate": {
+        "message": "构建日期："
+    },
+    "initialSetupInfoBuildInfo": {
+        "message": "构建信息："
+    },
+    "initialSetupInfoBuildInfoKey": {
+        "message": "构建标识"
+    },
     "initialSetupInfoBuildConfig": {
         "message": "选项"
     },
@@ -1091,6 +1126,12 @@
     },
     "initialSetupInfoBuildOptions": {
         "message": "选项"
+    },
+    "initialSetupInfoBuildOptionList": {
+        "message": "固件构建时定义的选项"
+    },
+    "initialSetupInfoBuildEmpty": {
+        "message": "本地构建——无云端信息"
     },
     "initialSetupInfoBuildType": {
         "message": "构建类型："
@@ -1159,6 +1200,9 @@
     "initialSetupNetworkRtt": {
         "message": "RTT："
     },
+    "initialSetupNetworkDownlink": {
+        "message": "下行链路："
+    },
     "featureNone": {
         "message": "&lt;请选择&gt;"
     },
@@ -1204,6 +1248,9 @@
     },
     "featureTELEMETRY": {
         "message": "遥测输出"
+    },
+    "featureTELEMETRYTip": {
+        "message": "启用发送到遥控器的遥测数据"
     },
     "feature3D": {
         "message": "3D 模式（配合支持反向转动的电调使用）"
@@ -1317,12 +1364,27 @@
     "configurationOtherFeaturesHelp": {
         "message": "<strong>注意:<\/strong> 不是所有飞控都能支持所有的功能。如果你启用了某个功能，但在“保存并重启”以后，该功能被禁用，则说明你的飞控不支持该功能。"
     },
+    "configurationMagAlignmentHelp": {
+        "message": "磁力计校准是指飞控板上磁力计传感器的方向。默认设置通常是正确的，但如果你使用的是自定义构建或飞控板上的磁力计方向不同，则可能需要调整该设置。"
+    },
+    "configurationMagDeclination": {
+        "message": "磁偏角"
+    },
+    "configurationMagDeclinationInput": {
+        "message": "赤纬度"
+    },
     "configurationMagDeclinationHelp": {
         "message": "磁偏角是磁北和真北之间的夹角。它在地球上的每个位置都不同。你可以在互联网上查找你所在位置的磁偏角"
     },
     "configurationRangefinder": {
         "message": "$t(initialSetupSensorSonar.message)",
         "description": "Don't translate!!!"
+    },
+    "configurationRangefinderHelp": {
+        "message": "启用测距仪，以厘米为单位测量到地面的距离"
+    },
+    "configurationRangefinderType": {
+        "message": "类型"
     },
     "configurationOpticalflow": {
         "message": "$t(initialSetupSensorOpticalflow.message)",
@@ -1332,6 +1394,9 @@
         "message": "$t(configurationRangefinderType.message)",
         "description": "Don't translate!!!"
     },
+    "configurationBoardAlignment": {
+        "message": "飞控板校准"
+    },
     "configurationBoardAlignmentRoll": {
         "message": "横滚 度"
     },
@@ -1340,6 +1405,15 @@
     },
     "configurationBoardAlignmentYaw": {
         "message": "偏航 度"
+    },
+    "configurationGyroAlignment": {
+        "message": "陀螺仪校准"
+    },
+    "configurationGyroAlignmentHelp": {
+        "message": "陀螺仪校准是指飞控板上陀螺仪传感器的方向。默认设置通常是正确的，但如果你使用的是自定义构建或飞控板上的陀螺仪方向不同，则可能需要调整该设置。"
+    },
+    "configurationGyroActiveIMU": {
+        "message": "激活 IMU"
     },
     "configurationGyroActiveIMUHelp": {
         "message": "选择一个陀螺仪作为主陀螺仪。主陀螺仪将用于稳定与控制。如果仅有一个陀螺仪，它将被自动选定。<br><br>当同时启用多个不同类型或品牌的陀螺仪时，有可能不会起效。"
@@ -1355,6 +1429,9 @@
     "configurationGyroAlignmentYaw": {
         "message": "$t(configurationBoardAlignmentYaw.message)",
         "description": "Don't translate!!!"
+    },
+    "configurationMagAlignment": {
+        "message": "磁力计校准"
     },
     "configurationMagAlignmentRoll": {
         "message": "$t(configurationBoardAlignmentRoll.message)",
@@ -1641,7 +1718,7 @@
         "message": "设置\/MSP"
     },
     "portsSerialRx": {
-        "message": "串行数字接收机"
+        "message": "串行接收机"
     },
     "portsSerialRxHelp": {
         "message": "启用或禁用特定 UART 上用于遥控的串行接收机（RX）。仅允许启用一个。"
@@ -2944,9 +3021,6 @@
     "dataflashButtonSaveFile": {
         "message": "保存闪存数据到文件"
     },
-    "dataflashButtonSaveFileDeprecated": {
-        "message": "将闪存保存到文件...(不支持)"
-    },
     "dataflashSavetoFileNote": {
         "message": "直接将闪存保存到文件是的速度是比较缓慢的，且容易发生内部错误\/文件损坏。<br>在某些情况下，它将适用于小文件， 但我们并不支持这样做，并且相关的支持请求将会被关闭且不会得到回复 - 请使用大容量存储模式。"
     },
@@ -3035,7 +3109,7 @@
         "message": "手动下载"
     },
     "firmwareFlasherTargetWarning": {
-        "message": "<span class=\"message-negative\">重要<\/span>：请选择飞控对应的固件，如果烧写错误的固件将会导致 <span class=\"message-negative\">糟糕<\/span> 的事发生。"
+        "message": "<span class=\"message-negative\">重要<\/span>：务必刷入与飞控板型号匹配的文件。如果刷入不匹配的二进制文件将会发生<span class=\"message-negative\">糟糕<\/span>的后果。"
     },
     "firmwareFlasherPath": {
         "message": "路径："
@@ -3065,7 +3139,7 @@
         "message": "选择对应你飞控型号的固件版本"
     },
     "firmwareFlasherNoRebootDescription": {
-        "message": "如果你的飞控已经处于boot模式下则启用这个选项。比如你在插电时已经短接了飞控的boot引脚或者按住了boot按钮。"
+        "message": "你的飞控已经处于 boot 模式下时，启用这个选项。比如说，在你给飞控上电时，已经短接了 bootloader 引脚或已按住了飞控板上的 BOOT 按钮。"
     },
     "firmwareFlasherFlashOnConnect": {
         "message": "当飞控连接时自动烧录固件"
@@ -3161,7 +3235,7 @@
         "message": "信息："
     },
     "firmwareFlasherWarningText": {
-        "message": "请<span class=\"message-negative\">不要<\/span>尝试烧写<strong>Betaflight 不支持的飞控板<\/strong>。烧写固件过程中千万<br \/><span class=\"message-negative\">不要<\/span> <strong>断开飞控连接<\/strong> <strong>或关闭电脑<\/strong><br \/><br \/><strong>注意：<\/strong>STM32 的bootloader 储存在 ROM 中，所以不会有变砖可能。<br \/><strong>注意：在固件烧写页面<\/strong><span class=\"message-negative\">自动连接<\/span>会被自动禁用。<br \/><strong>注意：<\/strong>烧写固件可能会清空设置，请务必先备份好你的数据。<br \/><strong>注意：<\/strong>如果烧写遇到问题，<strong>尝试拔掉连接到飞控的所有连线<\/strong> 然后尝试重启，更新 Chrome 浏览器，升级驱动。<br \/><strong>注意：<\/strong>当使用虚拟USB（VCP）的飞控（大多数新的飞控都是），请仔细阅读 Betaflight 手册 USB flashing 部分章节，并确保驱动和软件已正确安装。"
+        "message": "请<span class=\"message-negative\">不要<\/span>在此刷写<strong> Betaflight 不支持的飞控板<\/strong>。<br \/>刷写时，<span class=\"message-negative\">不要<\/span><strong>断开<\/strong>飞控板或<strong>关闭电脑<\/strong>。<br \/><br \/><strong>注意：<\/strong>STM32 的 bootloader 储存在 ROM 区域，所以不会有变砖可能。<br \/><strong>注意：<\/strong>进入「固件烧写工具」后，<span class=\"message-negative\">自动连接<\/span>始终处于禁用。<br \/><strong>注意：<\/strong>务必备份好你的数据；升级\/降级后可能会清空你的设置项。<br \/><strong>注意：<\/strong>如果刷写遇到问题，首先<strong>拔掉连接到飞控的所有连线<\/strong> ，接着重启飞控，升级驱动。<br \/><strong>注意：<\/strong>当直接使用飞控板 USB 接口进行刷写时（多数较新的飞控板都是如此），确保你已经阅读 Betaflight 手册中 USB Flashing 这一部分，并确保驱动和软件已正确安装。"
     },
     "firmwareFlasherRecoveryHead": {
         "message": "<strong> 恢复\/丢失通信 <\/strong>"
@@ -3217,6 +3291,10 @@
     "firmwareFlasherVerifyBoard": {
         "message": "<h3>固件不匹配<\/h3><br \/>连接的飞控板是 <strong>{{verified_board}}<\/strong> 而您选择的是 <strong>{{selected_board}}<\/strong>。<br \/><br \/>您想要继续刷写吗？",
         "description": "Make a quick connection to read firmware target and never flash a wrong target again"
+    },
+    "firmwareFlasherBoardVerificationSuccess": {
+        "message": "应用<span class=\"message-positive\">已成功<\/span> 发现到并验证了飞控板：<strong>{{boardName}}<\/strong>",
+        "description": "Board verification has succeeded."
     },
     "firmwareFlasherButtonAbort": {
         "message": "中止"
@@ -4823,13 +4901,6 @@
     "osdDescElementEscRpm": {
         "message": "电调回传电机转速"
     },
-    "osdTextElementRemaningTimeEstimate": {
-        "message": "计时器: 预估剩余时间",
-        "description": "One of the elements of the OSD"
-    },
-    "osdDescElementRemaningTimeEstimate": {
-        "message": "预计剩余电池飞行时间"
-    },
     "osdTextElementRtcDateTime": {
         "message": "RTC日期和时间",
         "description": "One of the elements of the OSD"
@@ -5434,6 +5505,10 @@
     "vtxFrequencyChannel": {
         "message": "直接输入频率",
         "description": "Text of one of the fields of the VTX tab"
+    },
+    "vtxFrequencyChannelHelp": {
+        "message": "如果你启用此功能，应用将会让你直接选择一个特定频率而不是常见的频段\/信道。你的 VTX 必须支持此功能，该设置才会生效。",
+        "description": "Help text for the frequency or channel select field of the VTX tab"
     },
     "vtxSelectedMode": {
         "message": "选择模式",

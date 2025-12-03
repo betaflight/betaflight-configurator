@@ -3549,14 +3549,15 @@
     "dataflashButtonSaveFile": {
         "message": "Save flash to file..."
     },
-    "dataflashButtonSaveFileDeprecated": {
-        "message": "Save flash to file... (unsupported)"
-    },
     "dataflashSavetoFileNote": {
         "message": "Directly saving flash to file is slow and inherently prone to error / file corruption.<br>In some cases it will work for small files, but this is not supported and support requests for it will be closed without comment - use Mass Storage mode instead."
     },
     "dataflashSaveFileDepreciationHint": {
         "message": "This method is slow and inherently prone to error / file corruption, because the MSP connection itself has intrinsic, fundamental limitations that make it unsuitable for file transfers. It may work for small log files only. Do not create support requests if file transfers fail when saved using this method. The recommended method is to use '<b>$t(onboardLoggingRebootMscText.message)</b>' (below) to activate the Mass Storage Mode, and access your flight controller as a storage device to download the log files."
+    },
+    "dataflashButtonSaveAndErase": {
+        "message": "Save & Erase",
+        "description": "Button text to save blackbox logs to file and then erase the flash"
     },
     "dataflashButtonErase": {
         "message": "Erase flash"
@@ -4446,7 +4447,7 @@
         "description": "Disable or enable D Term Filter Tuning Slider"
     },
     "pidTuningPidSlidersHelp": {
-        "message": "Sliders to adjust the aircraft flight characteristics (PID gains)<br /><br />Damping (D gain): Resists fast movement, minimises P oscillation.<br /><br />Tracking (P and I gain): Enchances the responsiveness of the aircraft, if too high may cause trilling or oscillation.<br /><br />Stick Response (Feedforward): Increases the responsiveness of the aircraft to faster stick movements.<br /><br />Drift - Wobble (I gain, expert):  Fine adjustment of I.<br /><br />Dynamic D (D Max, expert):  Sets the maximum amount that D can be boosted to during fast movements.<br /><br />Pitch Damping (Pitch:Roll D ratio, expert): Increases the amount of damping on pitch relative to roll.<br /><br />Pitch Tracking (Pitch:Roll P, I and F ratio, expert): Increases stabilising strenght on pitch relative to roll.<br /><br />Master Multiplier (all gains, expert): Raises or Lowers all the PID gains, keeping their proportions constant.",
+        "message": "Sliders to adjust the aircraft flight characteristics (PID gains)<br /><br />Damping (D gain): Resists fast movement, minimises P oscillation.<br /><br />Tracking (P and I gain): Enhances the responsiveness of the aircraft; if too high, may cause trilling or oscillation.<br /><br />Stick Response (Feedforward): Increases the responsiveness of the aircraft to faster stick movements.<br /><br />Drift - Wobble (I gain, expert):  Fine adjustment of I.<br /><br />Dynamic D (D Max, expert):  Sets the maximum amount that D can be boosted to during fast movements.<br /><br />Pitch Damping (Pitch:Roll D ratio, expert): Increases the amount of damping on pitch relative to roll.<br /><br />Pitch Tracking (Pitch:Roll P, I and F ratio, expert): Increases stabilising strength on pitch relative to roll.<br /><br />Master Multiplier (all gains, expert): Raises or lowers all the PID gains, keeping their proportions constant.",
         "description": "Overall helpicon message for PID tuning sliders"
     },
     "pidTuningSliderWarning": {
@@ -6069,12 +6070,12 @@
     "osdDescElementEscRpm": {
         "message": "RPM reported by ESC telemetry"
     },
-    "osdTextElementRemaningTimeEstimate": {
+    "osdTextElementRemainingTimeEstimate": {
         "message": "Timer: remaining time estimate",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementRemaningTimeEstimate" : {
-        "message": "Estimate of flight time remaning"
+    "osdDescElementRemainingTimeEstimate" : {
+        "message": "Estimate of flight time remaining"
     },
     "osdTextElementRtcDateTime": {
         "message": "RTC date and time",
@@ -7716,6 +7717,15 @@
     },
     "firmwareFlasherOSDProtocolNotSelectedContinue": {
         "message": "Continue without OSD protocol"
+    },
+    "firmwareFlasherOptionLabelVerifiedPartner": {
+        "message": "Verified Partner"
+    },
+    "firmwareFlasherOptionLabelVendorCommunity": {
+        "message": "Vendor / Community"
+    },
+    "firmwareFlasherOptionLabelLegacy": {
+        "message": "Legacy"
     },
     "coreBuild": {
         "message": "Core Only"

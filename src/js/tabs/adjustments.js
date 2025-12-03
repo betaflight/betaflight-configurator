@@ -39,6 +39,17 @@ adjustments.initialize = function (callback) {
         $(newAdjustment).attr("id", `adjustment-${adjustmentIndex}`);
         $(newAdjustment).data("index", adjustmentIndex);
 
+        // Set localized data-label attributes for mobile responsive layout
+        $(newAdjustment).find(".info").attr("data-label", i18n.getMessage("adjustmentsColumnEnable"));
+        $(newAdjustment).find(".channelInfo").attr("data-label", i18n.getMessage("adjustmentsColumnWhenChannel"));
+        $(newAdjustment).find(".range").attr("data-label", i18n.getMessage("adjustmentsColumnIsInRange"));
+        $(newAdjustment)
+            .find(".functionSelection")
+            .attr("data-label", i18n.getMessage("adjustmentsColumnThenApplyFunction"));
+        $(newAdjustment)
+            .find(".functionSwitchChannel")
+            .attr("data-label", i18n.getMessage("adjustmentsColumnViaChannel"));
+
         //
         // populate source channel select box
         //

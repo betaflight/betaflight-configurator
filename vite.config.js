@@ -50,6 +50,7 @@ function serveLocalesPlugin() {
 }
 
 export default defineConfig({
+    base: './',  // Important for production APK asset paths
     define: {
         __APP_VERSION__: JSON.stringify(pkg.version),
         __APP_PRODUCTNAME__: JSON.stringify(pkg.productName),
@@ -120,6 +121,7 @@ export default defineConfig({
     server: {
         port: 8000,
         strictPort: true,
+        host: "0.0.0.0", // Listen on all network interfaces for Android device access
     },
     preview: {
         port: 8080,

@@ -3462,14 +3462,15 @@
     "dataflashButtonSaveFile": {
         "message": "Salva flash su file ..."
     },
-    "dataflashButtonSaveFileDeprecated": {
-        "message": "Salva flash su file... (non supportato)"
-    },
     "dataflashSavetoFileNote": {
         "message": "Il salvataggio diretto della flash su file è lento e propensa a causare a errori \/ corruzione del file.<br>In alcuni casi funzionerà per piccoli file, ma questo non è supportato e le richieste di supporto per esso saranno chiuse senza commenti - utilizza la modalità di archiviazione di massa."
     },
     "dataflashSaveFileDepreciationHint": {
         "message": "Questo metodo è lento e propenso a causare errori \/ corruzione del file perché la stessa connessione MSP ha limitazioni fondamentali che la rendono inadatta per trasferimenti di file. Potrebbe funzionare solo per i piccoli file di log. Non creare richieste di supporto se i trasferimenti di file non vengono salvati utilizzando questo metodo. Il metodo raccomandato è quello di usare '<b>$t(onboardLoggingRebootMscText.message)<\/b>' (sotto) per attivare la modalità di archiviazione di massa, e accedere al tuo controllore di volo come dispositivo di archiviazione per scaricare i file di log."
+    },
+    "dataflashButtonSaveAndErase": {
+        "message": "Salva e Cancella",
+        "description": "Button text to save blackbox logs to file and then erase the flash"
     },
     "dataflashButtonErase": {
         "message": "Cancella flash"
@@ -4359,7 +4360,7 @@
         "description": "Disable or enable D Term Filter Tuning Slider"
     },
     "pidTuningPidSlidersHelp": {
-        "message": "Slider per regolare le caratteristiche di volo del quad (guadagni PID)<br \/><br \/>Damping (guadagno D): Resiste ai movimenti rapidi, minimizza le oscillazioni di P.<br \/><br \/>Tracking (guadagni P e I): Incrementa la responsività del quad, se troppo alto può causare trilling o oscillazioni.<br \/><br \/>Risposta stick (Feedforward): Aumenta la responsività del quad a movimenti rapidi degli stick.<br \/><br \/>Drift - Wobble (guadagni I, esperto): regolazione fine di I.<br \/><br \/>Damping Dinamico (D max, esperto): Setta il valore massimo a cui la D può essere aumentata durante i movimenti rapidi.<br \/><br \/>Damping Pitch (rapporto D Pitch:Roll, esperto): Aumenta la quantità di damping sul pitch relativamente al roll.<br \/><br \/>Pitch Tracking  (rapporti P, I ed F Pitch:Roll, esperto): Aumenta la forza stabilizzante sul pitch relativamente al roll.<br \/><br \/>Moltiplicatore Master (tutti i guadagni, esperto): Aumenta o Diminuisce tutti i guadagni PID, mantenendo costanti le loro proporzioni.",
+        "message": "Slider per regolare le caratteristiche di volo del quad (guadagni PID)<br \/><br \/>Damping (guadagno D): Resiste ai movimenti rapidi, minimizza le oscillazioni di P.<br \/><br \/>Tracking (guadagni P e I): Incrementa la responsività del quad, se troppo alto può causare vibrazioni o oscillazioni.<br \/><br \/>Risposta stick (Feedforward): Aumenta la responsività del quad a movimenti rapidi degli stick.<br \/><br \/>Drift - Wobble (guadagni I, esperto): regolazione accurata di I.<br \/><br \/>D Dinamico (D max, esperto): Setta il valore massimo a cui la D può essere aumentata durante i movimenti rapidi.<br \/><br \/>Pitch Damping (rapporto D Pitch:Roll, esperto): Aumenta la quantità di damping sul pitch relativa al roll.<br \/><br \/>Pitch Tracking  (rapporti P, I ed F Pitch:Roll, esperto): Aumenta la forza stabilizzante sul pitch relativamente al roll.<br \/><br \/>Moltiplicatore Master (tutti i guadagni, esperto): Aumenta o Diminuisce tutti i guadagni PID, mantenendo costanti le loro proporzioni.",
         "description": "Overall helpicon message for PID tuning sliders"
     },
     "pidTuningSliderWarning": {
@@ -5981,11 +5982,11 @@
     "osdDescElementEscRpm": {
         "message": "RPM riportati dalla telemetria ESC"
     },
-    "osdTextElementRemaningTimeEstimate": {
+    "osdTextElementRemainingTimeEstimate": {
         "message": "Timer: stima del tempo rimanente",
         "description": "One of the elements of the OSD"
     },
-    "osdDescElementRemaningTimeEstimate": {
+    "osdDescElementRemainingTimeEstimate": {
         "message": "Stima del tempo di volo rimanente"
     },
     "osdTextElementRtcDateTime": {
@@ -7625,6 +7626,15 @@
     },
     "firmwareFlasherOSDProtocolNotSelectedContinue": {
         "message": "Continua senza protocollo OSD"
+    },
+    "firmwareFlasherOptionLabelVerifiedPartner": {
+        "message": "Partner Verificato"
+    },
+    "firmwareFlasherOptionLabelVendorCommunity": {
+        "message": "Venditore \/ Community"
+    },
+    "firmwareFlasherOptionLabelLegacy": {
+        "message": "Legacy"
     },
     "coreBuild": {
         "message": "Solo Core"

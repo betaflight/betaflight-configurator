@@ -88,7 +88,7 @@
                 </ul>
                 <div id="expertMode">
                     <label>
-                        <input name="expertModeCheckbox" class="togglesmall" type="checkbox"/>
+                        <input name="expertModeCheckbox" class="togglesmall" type="checkbox" v-model="expertMode"/>
                         <span i18n="expertMode" class="expertModeText"></span>
                     </label>
                 </div>
@@ -137,27 +137,22 @@
                     <li class="tab_ports"><a href="#" i18n="tabPorts" class="tabicon ic_ports" i18n_title="tabPorts"></a></li>
                     <li class="tab_configuration"><a href="#" i18n="tabConfiguration" class="tabicon ic_config" i18n_title="tabConfiguration"></a></li>
                     <li class="tab_power"><a href="#" i18n="tabPower" class="tabicon ic_power" i18n_title="tabPower"></a></li>
-                    <li class="tab_failsafe"><a href="#" i18n="tabFailsafe" class="tabicon ic_failsafe" i18n_title="tabFailsafe"></a></li>
+                    <li class="tab_failsafe" v-show="expertMode"><a href="#" i18n="tabFailsafe" class="tabicon ic_failsafe" i18n_title="tabFailsafe"></a></li>
                     <li class="tab_presets"><a href="#" i18n="tabPresets" class="tabicon ic_wizzard" i18n_title="tabPresets"></a></li>
                     <li class="tab_pid_tuning"><a href="#" i18n="tabPidTuning" class="tabicon ic_pid" i18n_title="tabPidTuning"></a></li>
                     <li class="tab_receiver"><a href="#" i18n="tabReceiver" class="tabicon ic_rx" i18n_title="tabReceiver"></a></li>
                     <li class="tab_auxiliary"><a href="#" i18n="tabAuxiliary" class="tabicon ic_modes" i18n_title="tabAuxiliary"></a></li>
-                    <li class="tab_adjustments"><a href="#" i18n="tabAdjustments" class="tabicon ic_adjust" i18n_title="tabAdjustments"></a></li>
-                    <li class="tab_servos"><a href="#" i18n="tabServos" class="tabicon ic_servo" i18n_title="tabServos"></a></li>
-                    <li class="tab_gps"><a href="#" i18n="tabGPS" class="tabicon ic_gps" i18n_title="tabGPS"></a></li>
+                    <li class="tab_adjustments" v-show="expertMode"><a href="#" i18n="tabAdjustments" class="tabicon ic_adjust" i18n_title="tabAdjustments"></a></li>
+                    <li class="tab_servos" v-show="['USE_SERVOS','USE_WING'].some(opt => FC.CONFIG?.buildOptions?.includes(opt))"><a href="#" i18n="tabServos" class="tabicon ic_servo" i18n_title="tabServos"></a></li>
+                    <li class="tab_gps" v-show="FC.CONFIG?.buildOptions?.includes('USE_GPS')"><a href="#" i18n="tabGPS" class="tabicon ic_gps" i18n_title="tabGPS"></a></li>
                     <li class="tab_motors"><a href="#" i18n="tabMotorTesting" class="tabicon ic_motor" i18n_title="tabMotorTesting"></a></li>
-                    <li class="tab_osd"><a href="#" i18n="tabOsd" class="tabicon ic_osd" i18n_title="tabOsd"></a></li>
+                    <li class="tab_osd" v-show="FC.FEATURE_CONFIG?.features?.isEnabled && FC.FEATURE_CONFIG.features.isEnabled('OSD')"><a href="#" i18n="tabOsd" class="tabicon ic_osd" i18n_title="tabOsd"></a></li>
                     <li class="tab_vtx"><a href="#" i18n="tabVtx" class="tabicon ic_vtx" i18n_title="tabVtx"></a></li>
-                    <li class="tab_transponder"><a href="#" i18n="tabTransponder" class="tabicon ic_transponder" i18n_title="tabTransponder"></a></li>
-                    <li class="tab_led_strip"><a href="#" i18n="tabLedStrip" class="tabicon ic_led" i18n_title="tabLedStrip"></a></li>
-                    <li class="tab_sensors"><a href="#" i18n="tabRawSensorData" class="tabicon ic_sensors" i18n_title="tabRawSensorData"></a></li>
-                    <li class="tab_logging"><a href="#" i18n="tabLogging" class="tabicon ic_log" i18n_title="tabLogging"></a></li>
+                    <li class="tab_transponder" v-show="FC.FEATURE_CONFIG?.features?.isEnabled && FC.FEATURE_CONFIG.features.isEnabled('TRANSPONDER')"><a href="#" i18n="tabTransponder" class="tabicon ic_transponder" i18n_title="tabTransponder"></a></li>
+                    <li class="tab_led_strip" v-show="FC.FEATURE_CONFIG?.features?.isEnabled && FC.FEATURE_CONFIG.features.isEnabled('LED_STRIP')"><a href="#" i18n="tabLedStrip" class="tabicon ic_led" i18n_title="tabLedStrip"></a></li>
+                    <li class="tab_sensors" v-show="expertMode"><a href="#" i18n="tabRawSensorData" class="tabicon ic_sensors" i18n_title="tabRawSensorData"></a></li>
+                    <li class="tab_logging" v-show="expertMode"><a href="#" i18n="tabLogging" class="tabicon ic_log" i18n_title="tabLogging"></a></li>
                     <li class="tab_onboard_logging"><a href="#" i18n="tabOnboardLogging" class="tabicon ic_data" i18n_title="tabOnboardLogging"></a></li>
-                    <!-- spare icons
-                    <li class=""><a href="#"class="tabicon ic_mission">Mission (spare icon)</a></li>
-                    <li class=""><a href="#"class="tabicon ic_advanced">Advanced (spare icon)</a></li>
-                    <li class=""><a href="#"class="tabicon ic_wizzard">Wizzard (spare icon)</a></li>
-                    -->
                 </ul>
                 <ul class="mode-connected mode-connected-cli">
                     <li class="tab_cli"><a href="#" i18n="tabCLI" class="tabicon ic_cli" i18n_title="tabCLI"></a></li>
