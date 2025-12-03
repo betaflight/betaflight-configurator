@@ -104,7 +104,7 @@ class CapacitorTcp extends EventTarget {
         try {
             const url = new URL(path);
             const host = url.hostname;
-            const port = url.port.length ? parseInt(url.port, 10) : 80;
+            const port = url.port.length ? parseInt(url.port, 10) : 5761;
 
             console.log(`${this.logHead} Connecting to ${url}`);
 
