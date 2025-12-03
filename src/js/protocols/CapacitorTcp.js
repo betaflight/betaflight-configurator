@@ -23,22 +23,6 @@ function uint8ArrayToBase64(bytes) {
     return btoa(binary);
 }
 
-function normalizeToUint8Array(data) {
-    if (data instanceof Uint8Array) {
-        return data;
-    }
-    if (ArrayBuffer.isView(data)) {
-        return new Uint8Array(data.buffer, data.byteOffset, data.byteLength);
-    }
-    if (data instanceof ArrayBuffer) {
-        return new Uint8Array(data);
-    }
-    if (Array.isArray(data)) {
-        return Uint8Array.from(data);
-    }
-    throw new TypeError("Unsupported data type for TCP send");
-}
-
 class CapacitorTcp extends EventTarget {
     constructor() {
         super();
@@ -166,7 +150,7 @@ class CapacitorTcp extends EventTarget {
 
     async send(data, cb) {
         if (this.connected) {
-            const bytes = normalizeToUint8Array(data);
+            const bytes = new Uint8Array(data);
             try {
                 const payload = uint8ArrayToBase64(bytes);
                 const res = await this.plugin.send({ data: payload });
