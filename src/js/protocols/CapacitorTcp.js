@@ -127,6 +127,7 @@ class CapacitorTcp extends EventTarget {
             this.dispatchEvent(new CustomEvent("connect", { detail: this.address })); // TODO need to check result detail
         } catch (e) {
             console.error(`${this.logHead}Failed to connect to socket: ${e}`);
+            this.connected = false;
             this.dispatchEvent(new CustomEvent("connect", { detail: false }));
         }
     }
@@ -149,6 +150,7 @@ class CapacitorTcp extends EventTarget {
     }
 
     async send(data, cb) {
+        let actualBytesSent = 0;
         if (this.connected) {
             const bytes = new Uint8Array(data);
             try {
@@ -156,11 +158,11 @@ class CapacitorTcp extends EventTarget {
                 const res = await this.plugin.send({ data: payload });
 
                 if (res.success) {
-                    this.bytesSent += bytes.byteLength;
+                    actualBytesSent = bytes.byteLength;
                     if (cb) {
                         cb({
                             error: null,
-                            bytesSent: bytes.byteLength,
+                            bytesSent: actualBytesSent,
                         });
                     }
                 } else {
@@ -179,7 +181,7 @@ class CapacitorTcp extends EventTarget {
         }
 
         return {
-            bytesSent: 0,
+            bytesSent: actualBytesSent,
         };
     }
 }
