@@ -101,21 +101,12 @@ class CapacitorTcp extends EventTarget {
     }
 
     async connect(path, options) {
-        let host;
-        let port;
-
         try {
-            const normalizedPath = path.includes("://") ? path : `tcp://${path}`;
-            const url = new URL(normalizedPath);
-            host = url.hostname;
-            const parsedPort = url.port ? Number.parseInt(url.port, 10) : Number.NaN;
-            const fallbackPort = Number.isNaN(parsedPort) ? Number.parseInt(options?.port, 10) : parsedPort;
-            if (Number.isNaN(fallbackPort)) {
-                throw new Error(`Invalid port in path: ${path}`);
-            }
-            port = fallbackPort;
+            const url = new URL(path);
+            const host = url.hostname;
+            const port = url.port.length ? parseInt(url.port, 10) : 80;
 
-            console.log(`${this.logHead} Connecting to ${host}:${port}`);
+            console.log(`${this.logHead} Connecting to ${url}`);
 
             const result = await this.plugin.connect({ ip: host, port });
             if (result?.success) {
