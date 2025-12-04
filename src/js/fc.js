@@ -813,7 +813,7 @@ const FC = {
             serialRxTypes[0] = "NONE";
             serialRxTypes.push("SPEKTRUM1024");
         }
-        
+
         if (semver.gte(apiVersion, API_VERSION_1_47)) {
             serialRxTypes.push("MAVLINK");
         }
@@ -871,6 +871,13 @@ const FC = {
         }
 
         return FC.getSerialRxTypes();
+    },
+
+    checkBuildOption(option) {
+        if (this.CONFIG.buildOptions?.length) {
+            return this.CONFIG.buildOptions.includes(option);
+        }
+        return true; // assume all options are available if build options are not known
     },
 
     calculateHardwareName() {
