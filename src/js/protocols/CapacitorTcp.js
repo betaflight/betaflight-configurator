@@ -39,7 +39,6 @@ class CapacitorTcp extends EventTarget {
 
         this.address = "http://localhost:5761";
 
-        this.socket = null;
         this.plugin = BetaflightTcp;
 
         this.connect = this.connect.bind(this);
@@ -115,7 +114,7 @@ class CapacitorTcp extends EventTarget {
             } else {
                 throw new Error("Connect failed");
             }
-            this.dispatchEvent(new CustomEvent("connect", { detail: this.address })); // TODO need to check result detail
+            this.dispatchEvent(new CustomEvent("connect", { detail: this.address }));
         } catch (e) {
             console.error(`${this.logHead}Failed to connect to socket: ${e}`);
             this.connected = false;
@@ -124,20 +123,19 @@ class CapacitorTcp extends EventTarget {
     }
 
     async disconnect() {
+        this.connected = false;
+        this.bytesReceived = 0;
+        this.bytesSent = 0;
+
         try {
             const res = await this.plugin.disconnect();
             if (res.success) {
-                this.connected = false;
+                this.dispatchEvent(new CustomEvent("disconnect", { detail: true }));
             }
-            this.dispatchEvent(new CustomEvent("disconnect", { detail: true }));
         } catch (e) {
             console.error(`${this.logHead}Failed to close connection: ${e}`);
             this.dispatchEvent(new CustomEvent("disconnect", { detail: false }));
         }
-
-        this.connected = false;
-        this.bytesReceived = 0;
-        this.bytesSent = 0;
     }
 
     async send(data, cb) {
