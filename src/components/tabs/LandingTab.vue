@@ -2,9 +2,9 @@
     <BaseTab tab-name="landing">
         <div class="content_wrapper">
             <div class="content_top">
-                <div class="logowrapper" align="center">
+                <div class="logowrapper">
                     <img src="/images/bf_logo_white.svg" alt="" />
-                    <div align="center" v-html="$t('defaultWelcomeIntro')"></div>
+                    <div v-html="$t('defaultWelcomeIntro')"></div>
                 </div>
             </div>
             <div class="tab_sponsor" ref="sponsorContainer"></div>
@@ -122,6 +122,10 @@ export default defineComponent({
 </script>
 
 <style scoped>
+.logowrapper,
+.logowrapper > div {
+    text-align: center;
+}
 .selected_language {
     font-weight: bold;
 }
