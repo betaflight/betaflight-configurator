@@ -148,6 +148,15 @@ export default defineComponent({
         const servoConfigs = reactive([]);
         const servoData = reactive([]);
 
+        // Track local intervals for cleanup
+        const localIntervals = [];
+
+        // Helper to add interval and track it
+        const addLocalInterval = (name, code, period, first = false) => {
+            GUI.interval_add(name, code, period, first);
+            localIntervals.push(name);
+        };
+
         // Calculate aux channels from RC active channels
         const totalChannels = computed(() => FC.RC?.active_channels || 8);
         const auxChannelCount = computed(() => Math.max(0, totalChannels.value - 4));
@@ -278,10 +287,10 @@ export default defineComponent({
             }
 
             // Start servo data polling for visualization
-            GUI.interval_add("servo_data_pull", getServoData, 50);
+            addLocalInterval("servo_data_pull", getServoData, 50);
 
             // Status polling
-            GUI.interval_add("status_pull", () => MSP.send_message(MSPCodes.MSP_STATUS), 250, true);
+            addLocalInterval("status_pull", () => MSP.send_message(MSPCodes.MSP_STATUS), 250, true);
 
             GUI.content_ready();
         }
@@ -291,7 +300,9 @@ export default defineComponent({
         });
 
         onUnmounted(() => {
-            GUI.interval_kill_all();
+            // Clean up only our own intervals
+            localIntervals.forEach((name) => GUI.interval_remove(name));
+            localIntervals.length = 0;
         });
 
         return {
