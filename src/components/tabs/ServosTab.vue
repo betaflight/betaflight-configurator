@@ -216,8 +216,8 @@ export default defineComponent({
         function loadServoData() {
             // Check if we're actually connected to a FC
             if (!FC.CONFIG?.apiVersion) {
-                console.log("[ServosTab] No FC connected, using mock/fallback data");
-                initializeUI();
+                isSupported.value = false;
+                GUI.content_ready();
                 return;
             }
 
