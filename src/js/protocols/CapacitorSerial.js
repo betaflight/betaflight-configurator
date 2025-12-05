@@ -309,6 +309,21 @@ class CapacitorSerial extends EventTarget {
             return new Uint8Array(0);
         }
 
+        // Strip 0x prefix
+        if (hexString.startsWith("0x") || hexString.startsWith("0X")) {
+            hexString = hexString.slice(2);
+        }
+
+        // Validate characters
+        if (!/^[0-9a-fA-F]+$/.test(hexString)) {
+            throw new Error(`Invalid hex string: contains non-hex characters`);
+        }
+
+        // Validate length
+        if (hexString.length % 2 !== 0) {
+            throw new Error(`Invalid hex string: odd length (${hexString.length})`);
+        }
+
         const bytes = new Uint8Array(hexString.length / 2);
         for (let i = 0; i < hexString.length; i += 2) {
             bytes[i / 2] = Number.parseInt(hexString.substring(i, i + 2), 16);
