@@ -5,10 +5,12 @@ import BatteryIcon from "../components/quad-status/BatteryIcon.vue";
 import PortPicker from "../components/port-picker/PortPicker.vue";
 // Tab components
 import ServosTab from "../components/tabs/ServosTab.vue";
+import PortsTab from "../components/tabs/PortsTab.vue";
 
 // Registry of Vue tab components - used by main.js for dynamic mounting
 export const VueTabComponents = {
     servos: ServosTab,
+    ports: PortsTab,
 };
 
 // Create a Vue plugin that registers all components globally
@@ -22,5 +24,6 @@ export const BetaflightComponents = {
         app.component("PortPicker", PortPicker);
         // Register tab components
         app.component("ServosTab", ServosTab);
+        app.component("PortsTab", PortsTab);
     },
 };
