@@ -61,13 +61,13 @@ export function initializeSerialBackend() {
 
     EventBus.$on("port-handler:auto-select-serial-device", function () {
         if (
-            !GUI.connected_to &&
-            !GUI.connecting_to &&
-            !["cli", "firmware_flasher"].includes(GUI.active_tab) &&
-            PortHandler.portPicker.autoConnect &&
-            !isCliOnlyMode() &&
-            (connectionTimestamp === null || connectionTimestamp > 0) ||
-            (Date.now() - rebootTimestamp <= REBOOT_CONNECT_MAX_TIME_MS)
+            (!GUI.connected_to &&
+                !GUI.connecting_to &&
+                !["cli", "firmware_flasher"].includes(GUI.active_tab) &&
+                PortHandler.portPicker.autoConnect &&
+                !isCliOnlyMode() &&
+                (connectionTimestamp === null || connectionTimestamp > 0)) ||
+            Date.now() - rebootTimestamp <= REBOOT_CONNECT_MAX_TIME_MS
         ) {
             connectDisconnect();
         }
@@ -152,11 +152,16 @@ function connectDisconnect() {
                 serial.addEventListener("disconnect", disconnectHandler);
             }
 
-            serial.connect(
-                portName,
-                { baudRate: PortHandler.portPicker.selectedBauds },
-                selectedPort === "virtual" ? onOpenVirtual : undefined,
-            );
+            GUI.connect_lock = true;
+            serial
+                .connect(
+                    portName,
+                    { baudRate: PortHandler.portPicker.selectedBauds },
+                    selectedPort === "virtual" ? onOpenVirtual : undefined,
+                )
+                .finally(() => {
+                    GUI.connect_lock = false;
+                });
         }
 
         // show CLI panel on Control+I
