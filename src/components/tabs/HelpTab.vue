@@ -4,16 +4,16 @@
             <div class="grid-col col8">
                 <div class="gui_box">
                     <div class="gui_box_titlebar">
-                        <div class="spacer_box_title">{{ $t("defaultDocumentationHead") }}</div>
+                        <div class="spacer_box_title" v-html="$t('defaultDocumentationHead')"></div>
                     </div>
                     <div class="spacer">
-                        <p>{{ $t("defaultDocumentation") }}</p>
+                        <p v-html="$t('defaultDocumentation')"></p>
                         <ul>
                             <li>
-                                <span>{{ $t("defaultDocumentation1") }}</span>
+                                <span v-html="$t('defaultDocumentation1')"></span>
                             </li>
                             <li>
-                                <span>{{ $t("defaultDocumentation2") }}</span>
+                                <span v-html="$t('defaultDocumentation2')"></span>
                             </li>
                         </ul>
                     </div>
@@ -22,33 +22,33 @@
             <div class="grid-col col4">
                 <div class="gui_box">
                     <div class="gui_box_titlebar">
-                        <div class="spacer_box_title">{{ $t("defaultSupportHead") }}</div>
+                        <div class="spacer_box_title" v-html="$t('defaultSupportHead')"></div>
                     </div>
                     <div class="spacer">
-                        <p>{{ $t("defaultSupport") }}</p>
+                        <p v-html="$t('defaultSupport')"></p>
                         <div class="subline">
-                            <strong>{{ $t("defaultSupportSubline1") }}</strong>
+                            <strong v-html="$t('defaultSupportSubline1')"></strong>
                         </div>
                         <ul>
                             <li>
-                                <span>{{ $t("defaultSupport1") }}</span>
+                                <span v-html="$t('defaultSupport1')"></span>
                             </li>
                             <li>
-                                <span>{{ $t("defaultSupport2") }}</span>
+                                <span v-html="$t('defaultSupport2')"></span>
                             </li>
                             <li>
-                                <span>{{ $t("defaultSupport3") }}</span>
+                                <span v-html="$t('defaultSupport3')"></span>
                             </li>
                         </ul>
                         <div class="subline">
-                            <strong>{{ $t("defaultSupportSubline2") }}</strong>
+                            <strong v-html="$t('defaultSupportSubline2')"></strong>
                         </div>
                         <ul>
                             <li>
-                                <span>{{ $t("defaultSupport4") }}</span>
+                                <span v-html="$t('defaultSupport4')"></span>
                             </li>
                             <li>
-                                <span>{{ $t("defaultSupport5") }}</span>
+                                <span v-html="$t('defaultSupport5')"></span>
                             </li>
                         </ul>
                     </div>
