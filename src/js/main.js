@@ -13,6 +13,7 @@ import CliAutoComplete from "./CliAutoComplete.js";
 import DarkTheme, { setDarkTheme } from "./DarkTheme.js";
 import { isExpertModeEnabled } from "./utils/isExpertModeEnabled.js";
 import { updateTabList } from "./utils/updateTabList.js";
+import { mountVueTab } from "./vue_tab_mounter.js";
 import * as THREE from "three";
 import NotificationManager from "./utils/notifications.js";
 
@@ -230,7 +231,8 @@ function startProcess() {
 
                 switch (tab) {
                     case "landing":
-                        import("./tabs/landing").then(({ landing }) => landing.initialize(content_ready));
+                        // Vue tab - use mountVueTab instead of jQuery load
+                        mountVueTab("landing", content_ready);
                         break;
                     case "changelog":
                         import("./tabs/static_tab").then(({ staticTab }) =>
@@ -243,7 +245,8 @@ function startProcess() {
                         );
                         break;
                     case "options":
-                        import("./tabs/options").then(({ options }) => options.initialize(content_ready));
+                        // Vue tab - use mountVueTab instead of jQuery load
+                        mountVueTab("options", content_ready);
                         break;
                     case "firmware_flasher":
                         import("./tabs/firmware_flasher").then(({ firmware_flasher }) =>
@@ -251,7 +254,8 @@ function startProcess() {
                         );
                         break;
                     case "help":
-                        import("./tabs/help").then(({ help }) => help.initialize(content_ready));
+                        // Vue tab - use mountVueTab instead of jQuery load
+                        mountVueTab("help", content_ready);
                         break;
                     case "auxiliary":
                         import("./tabs/auxiliary").then(({ auxiliary }) => auxiliary.initialize(content_ready));
