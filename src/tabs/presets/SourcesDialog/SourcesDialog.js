@@ -74,7 +74,7 @@ export default class PresetsSourcesDialog {
     _createOfficialSource() {
         const officialSource = new PresetSource(
             "Betaflight Official Presets",
-            "https://api.betaflight.com/firmware-presets/",
+            "https://presets.betaflight.com/firmware-presets/",
             "",
         );
         officialSource.official = true;
