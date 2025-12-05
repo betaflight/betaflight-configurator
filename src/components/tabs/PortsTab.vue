@@ -458,11 +458,21 @@ export default defineComponent({
 
             for (const port of ports) {
                 const func = port.functions;
-                if (func.includes("RX_SERIAL")) flags.rxSerial = true;
-                if (func.some((e) => e.startsWith("TELEMETRY"))) flags.telemetry = true;
-                if (func.includes("BLACKBOX")) flags.blackbox = true;
-                if (func.includes("ESC_SENSOR")) flags.esc = true;
-                if (func.includes("GPS")) flags.gps = true;
+                if (func.includes("RX_SERIAL")) {
+                    flags.rxSerial = true;
+                }
+                if (func.some((e) => e.startsWith("TELEMETRY"))) {
+                    flags.telemetry = true;
+                }
+                if (func.includes("BLACKBOX")) {
+                    flags.blackbox = true;
+                }
+                if (func.includes("ESC_SENSOR")) {
+                    flags.esc = true;
+                }
+                if (func.includes("GPS")) {
+                    flags.gps = true;
+                }
             }
             return flags;
         };
