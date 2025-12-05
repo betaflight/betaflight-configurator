@@ -369,11 +369,21 @@ export default defineComponent({
             // Reconstruct FC.SERIAL_CONFIG.ports
             FC.SERIAL_CONFIG.ports = ports.map((p) => {
                 const functions = [];
-                if (p.msp) functions.push("MSP");
-                if (p.rxSerial) functions.push("RX_SERIAL");
-                if (p.telemetry) functions.push(p.telemetry);
-                if (p.sensor) functions.push(p.sensor);
-                if (p.peripheral) functions.push(p.peripheral);
+                if (p.msp) {
+                    functions.push("MSP");
+                }
+                if (p.rxSerial) {
+                    functions.push("RX_SERIAL");
+                }
+                if (p.telemetry) {
+                    functions.push(p.telemetry);
+                }
+                if (p.sensor) {
+                    functions.push(p.sensor);
+                }
+                if (p.peripheral) {
+                    functions.push(p.peripheral);
+                }
 
                 // Defaults for baudrates if AUTO (handled in component state)
 
