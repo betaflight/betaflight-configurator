@@ -3,28 +3,28 @@
         <div class="content_wrapper">
             <div class="content_top">
                 <div class="logowrapper" align="center">
-                    <img src="./images/bf_logo_white.svg" alt="" />
-                    <div align="center">{{ $t("defaultWelcomeIntro") }}</div>
+                    <img src="/images/bf_logo_white.svg" alt="" />
+                    <div align="center" v-html="$t('defaultWelcomeIntro')"></div>
                 </div>
             </div>
             <div class="tab_sponsor" ref="sponsorContainer"></div>
             <div class="content_mid grid-row">
                 <div class="column third_left text1 grid-col col4">
                     <div class="wrap">
-                        <h2>{{ $t("defaultWelcomeHead") }}</h2>
-                        <div>{{ $t("defaultWelcomeText") }}</div>
+                        <h2 v-html="$t('defaultWelcomeHead')"></h2>
+                        <div v-html="$t('defaultWelcomeText')"></div>
                     </div>
                 </div>
                 <div class="column third_center text2 grid-col col5">
                     <div class="wrap">
-                        <h2>{{ $t("defaultContributingHead") }}</h2>
-                        <div>{{ $t("defaultContributingText") }}</div>
+                        <h2 v-html="$t('defaultContributingHead')"></h2>
+                        <div v-html="$t('defaultContributingText')"></div>
                     </div>
                 </div>
                 <div class="column third_right text3 grid-col col3">
                     <div class="wrap2">
-                        <h3>{{ $t("defaultDonateHead") }}</h3>
-                        <div>{{ $t("defaultDonateText") }}</div>
+                        <h3 v-html="$t('defaultDonateHead')"></h3>
+                        <div v-html="$t('defaultDonateText')"></div>
                         <div class="donate">
                             <a
                                 href="https://paypal.me/betaflight"
@@ -32,28 +32,28 @@
                                 target="_blank"
                                 :title="$t('defaultDonate')"
                             >
-                                <img src="./images/btn-donate.png" alt="Paypal" height="30" />
+                                <img src="/images/btn-donate.png" alt="Paypal" height="30" />
                             </a>
                         </div>
-                        <div>{{ $t("defaultDonateBottom") }}</div>
+                        <div v-html="$t('defaultDonateBottom')"></div>
                     </div>
                 </div>
                 <div class="content_mid_bottom">
                     <div class="socialMediaParagraph">
                         <div class="logoSocialMedia">
-                            <img src="./images/flogo_RGB_HEX-1024.svg" alt="Facebook" class="facebookLogo" />
+                            <img src="/images/flogo_RGB_HEX-1024.svg" alt="Facebook" class="facebookLogo" />
                         </div>
-                        <div class="socialMediaText">{{ $t("defaultFacebookText") }}</div>
+                        <div class="socialMediaText" v-html="$t('defaultFacebookText')"></div>
                     </div>
                     <div class="socialMediaParagraph">
                         <div class="logoSocialMedia">
-                            <img src="./images/discord-logo-color.svg" alt="Discord" class="discordLogo" />
+                            <img src="/images/discord-logo-color.svg" alt="Discord" class="discordLogo" />
                         </div>
-                        <div class="socialMediaText">{{ $t("defaultDiscordText") }}</div>
+                        <div class="socialMediaText" v-html="$t('defaultDiscordText')"></div>
                     </div>
                 </div>
                 <div class="content_bottom">
-                    <div class="statsCollection">{{ $t("statisticsDisclaimer") }}</div>
+                    <div class="statsCollection" v-html="$t('statisticsDisclaimer')"></div>
                 </div>
                 <div class="content_foot">
                     <div class="languageSwitcher">
