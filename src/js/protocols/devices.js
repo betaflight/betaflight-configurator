@@ -55,6 +55,7 @@ export const serialDevices = [
     { vendorId: 1155, productId: 12886 }, // STM32 in HID mode
     { vendorId: 1155, productId: 14158 }, // 0483:374e STM Electronics STLink Virtual COM Port (NUCLEO boards)
     { vendorId: 1155, productId: 22336 }, // STM Electronics Virtual COM Port
+    { vendorId: 1161, productId: 57549 }, // Experimental VID/PID reproducing user issue (iFlight F745 AIO)
     { vendorId: 4292, productId: 60000 }, // CP210x
     { vendorId: 4292, productId: 60001 }, // CP210x
     { vendorId: 4292, productId: 60002 }, // CP210x
