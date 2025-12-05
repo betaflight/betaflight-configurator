@@ -71,7 +71,7 @@ configuration.initialize = function (callback) {
             )
             .then(() => MSP.promise(MSPCodes.MSP_ADVANCED_CONFIG))
             .then(() =>
-                semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)
+                semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46) && FC.checkBuildOption("USE_MAG")
                     ? MSP.promise(MSPCodes.MSP_COMPASS_CONFIG)
                     : Promise.resolve(true),
             )
