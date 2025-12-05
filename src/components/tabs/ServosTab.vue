@@ -168,12 +168,14 @@ export default defineComponent({
             const marginTop =
                 blockHeight - Math.min(Math.max(barHeight * (blockHeight / fullBlockScale), 0), blockHeight);
             const height = Math.min(Math.max(barHeight * (blockHeight / fullBlockScale), 0), blockHeight);
-            const color = parseInt(barHeight * 0.009);
+
+            // Calculate alpha based on bar height (0.0 to 1.0)
+            const alpha = Math.min(Math.max(barHeight / fullBlockScale, 0), 1).toFixed(2);
 
             return {
                 marginTop: `${marginTop}px`,
                 height: `${height}px`,
-                backgroundColor: `rgba(255,187,0,1${color})`,
+                backgroundColor: `rgba(255,187,0,${alpha})`,
             };
         }
 
