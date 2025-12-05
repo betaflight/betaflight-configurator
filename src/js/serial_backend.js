@@ -61,13 +61,13 @@ export function initializeSerialBackend() {
 
     EventBus.$on("port-handler:auto-select-serial-device", function () {
         if (
-            !GUI.connected_to &&
-            !GUI.connecting_to &&
-            !["cli", "firmware_flasher"].includes(GUI.active_tab) &&
-            PortHandler.portPicker.autoConnect &&
-            !isCliOnlyMode() &&
-            (connectionTimestamp === null || connectionTimestamp > 0) ||
-            (Date.now() - rebootTimestamp <= REBOOT_CONNECT_MAX_TIME_MS)
+            (!GUI.connected_to &&
+                !GUI.connecting_to &&
+                !["cli", "firmware_flasher"].includes(GUI.active_tab) &&
+                PortHandler.portPicker.autoConnect &&
+                !isCliOnlyMode() &&
+                (connectionTimestamp === null || connectionTimestamp > 0)) ||
+            Date.now() - rebootTimestamp <= REBOOT_CONNECT_MAX_TIME_MS
         ) {
             connectDisconnect();
         }
@@ -808,12 +808,10 @@ export function reinitializeConnection() {
     // Send reboot command to the flight controller
     MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false);
 
-    if (currentPort.startsWith("bluetooth")) {
-        if (!PortHandler.portPicker.autoConnect) {
-            return setTimeout(function () {
-                $("a.connection_button__link").trigger("click");
-            }, 1500);
-        }
+    if (currentPort.startsWith("bluetooth") || currentPort === "manual") {
+        return setTimeout(function () {
+            $("a.connection_button__link").trigger("click");
+        }, 1500);
     }
 
     // Show reboot progress modal except for cli and presets tab
