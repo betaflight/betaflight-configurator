@@ -453,7 +453,14 @@ export default defineComponent({
         const onTelemetryChange = (port) => {
             if (port.telemetry) {
                 const rule = functionRules.find((r) => r.name === port.telemetry);
-                if (rule) analyticsChanges["Telemetry"] = rule.displayName;
+                if (rule) {
+                    analyticsChanges["Telemetry"] = rule.displayName;
+                }
+
+                // Enforce mutual exclusivity
+                port.peripheral = "";
+                delete analyticsChanges["VtxControl"];
+                delete analyticsChanges["MspControl"];
             }
         };
 
@@ -466,6 +473,12 @@ export default defineComponent({
             if (port.peripheral && port.peripheral.includes("MSP")) {
                 port.msp = true;
                 analyticsChanges["MspControl"] = port.peripheral;
+            }
+
+            // Enforce mutual exclusivity
+            if (port.peripheral) {
+                port.telemetry = "";
+                delete analyticsChanges["Telemetry"];
             }
         };
 
