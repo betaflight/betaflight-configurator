@@ -323,17 +323,19 @@ export default defineComponent({
             return port;
         };
 
+        const handleSerialConfigLoaded = () => {
+            ports.length = 0;
+            FC.SERIAL_CONFIG.ports.forEach((p) => {
+                ports.push(transformPortData(p));
+            });
+            nextTick(() => {
+                GUI.content_ready();
+            });
+        };
+
         const loadConfig = () => {
             MSP.promise(MSPCodes.MSP_VTX_CONFIG).then(() => {
-                mspHelper.loadSerialConfig(() => {
-                    ports.length = 0;
-                    FC.SERIAL_CONFIG.ports.forEach((p) => {
-                        ports.push(transformPortData(p));
-                    });
-                    nextTick(() => {
-                        GUI.content_ready();
-                    });
-                });
+                mspHelper.loadSerialConfig(handleSerialConfigLoaded);
             });
         };
 
@@ -401,16 +403,18 @@ export default defineComponent({
             // see original file
             updateFeatures();
 
+            const saveEeprom = () => {
+                mspHelper.writeConfiguration(true, () => {
+                    gui_log(i18n.getMessage("portsEepromSave"));
+                });
+            };
+
             mspHelper.sendSerialConfig(() => {
                 MSP.send_message(
                     MSPCodes.MSP_SET_FEATURE_CONFIG,
                     mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG),
                     false,
-                    () => {
-                        mspHelper.writeConfiguration(true, () => {
-                            gui_log(i18n.getMessage("portsEepromSave"));
-                        });
-                    },
+                    saveEeprom,
                 );
             });
         };
@@ -425,16 +429,28 @@ export default defineComponent({
 
             for (const port of FC.SERIAL_CONFIG.ports) {
                 const func = port.functions;
-                if (func.includes("RX_SERIAL")) enableRxSerial = true;
-                if (func.some((e) => e.startsWith("TELEMETRY"))) enableTelemetry = true;
-                if (func.includes("BLACKBOX")) enableBlackbox = true;
-                if (func.includes("ESC_SENSOR")) enableEsc = true;
-                if (func.includes("GPS")) enableGps = true;
+                if (func.includes("RX_SERIAL")) {
+                    enableRxSerial = true;
+                }
+                if (func.some((e) => e.startsWith("TELEMETRY"))) {
+                    enableTelemetry = true;
+                }
+                if (func.includes("BLACKBOX")) {
+                    enableBlackbox = true;
+                }
+                if (func.includes("ESC_SENSOR")) {
+                    enableEsc = true;
+                }
+                if (func.includes("GPS")) {
+                    enableGps = true;
+                }
             }
 
             const featureConfig = FC.FEATURE_CONFIG.features;
             enableRxSerial ? featureConfig.enable("RX_SERIAL") : featureConfig.disable("RX_SERIAL");
-            if (enableTelemetry) featureConfig.enable("TELEMETRY"); // Note: never disabled in original?
+            if (enableTelemetry) {
+                featureConfig.enable("TELEMETRY");
+            }
             enableBlackbox ? featureConfig.enable("BLACKBOX") : featureConfig.disable("BLACKBOX");
             enableEsc ? featureConfig.enable("ESC_SENSOR") : featureConfig.disable("ESC_SENSOR");
             enableGps ? featureConfig.enable("GPS") : featureConfig.disable("GPS");

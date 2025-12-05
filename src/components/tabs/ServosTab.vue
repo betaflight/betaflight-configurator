@@ -22,7 +22,7 @@
                         <table class="fields">
                             <thead>
                                 <tr class="main">
-                                    <th width="110px">{{ $t("servosName") }}</th>
+                                    <th style="width: 110px">{{ $t("servosName") }}</th>
                                     <th>{{ $t("servosMin") }}</th>
                                     <th>{{ $t("servosMid") }}</th>
                                     <th>{{ $t("servosMax") }}</th>
@@ -141,9 +141,29 @@ import GUI from "../../js/gui";
 import FC from "../../js/fc";
 import MSP from "../../js/msp";
 import MSPCodes from "../../js/msp/MSPCodes";
-import { mspHelper } from "../../js/msp/MSPHelper";
+import mspHelper from "../../js/msp/mspHelper";
 import { gui_log } from "../../js/gui_log";
 import { i18n } from "../../js/localization";
+
+// Calculate bar style for servo visualization
+function getBarStyle(value) {
+    const rangeMin = 1000;
+    const rangeMax = 2000;
+    const blockHeight = 100;
+    const fullBlockScale = rangeMax - rangeMin;
+    const barHeight = value - rangeMin;
+    const marginTop = blockHeight - Math.min(Math.max(barHeight * (blockHeight / fullBlockScale), 0), blockHeight);
+    const height = Math.min(Math.max(barHeight * (blockHeight / fullBlockScale), 0), blockHeight);
+
+    // Calculate alpha based on bar height (0.0 to 1.0)
+    const alpha = Math.min(Math.max(barHeight / fullBlockScale, 0), 1).toFixed(2);
+
+    return {
+        marginTop: `${marginTop}px`,
+        height: `${height}px`,
+        backgroundColor: `rgba(255,187,0,${alpha})`,
+    };
+}
 
 export default defineComponent({
     name: "ServosTab",
@@ -173,27 +193,6 @@ export default defineComponent({
         const rateOptions = [];
         for (let i = 100; i > -101; i--) {
             rateOptions.push(i);
-        }
-
-        // Calculate bar style for servo visualization
-        function getBarStyle(value) {
-            const rangeMin = 1000;
-            const rangeMax = 2000;
-            const blockHeight = 100;
-            const fullBlockScale = rangeMax - rangeMin;
-            const barHeight = value - rangeMin;
-            const marginTop =
-                blockHeight - Math.min(Math.max(barHeight * (blockHeight / fullBlockScale), 0), blockHeight);
-            const height = Math.min(Math.max(barHeight * (blockHeight / fullBlockScale), 0), blockHeight);
-
-            // Calculate alpha based on bar height (0.0 to 1.0)
-            const alpha = Math.min(Math.max(barHeight / fullBlockScale, 0), 1).toFixed(2);
-
-            return {
-                marginTop: `${marginTop}px`,
-                height: `${height}px`,
-                backgroundColor: `rgba(255,187,0,${alpha})`,
-            };
         }
 
         // Handle channel forward checkbox (only one per servo)
@@ -250,7 +249,8 @@ export default defineComponent({
         }
 
         // Load all servo data from FC
-        function loadServoData() {
+        // Load all servo data from FC
+        async function loadServoData() {
             // Check if we're actually connected to a FC
             if (!FC.CONFIG?.apiVersion) {
                 isSupported.value = false;
@@ -258,15 +258,18 @@ export default defineComponent({
                 return;
             }
 
-            MSP.send_message(MSPCodes.MSP_SERVO_CONFIGURATIONS, false, false, () => {
-                MSP.send_message(MSPCodes.MSP_SERVO_MIX_RULES, false, false, () => {
-                    MSP.send_message(MSPCodes.MSP_RC, false, false, () => {
-                        MSP.send_message(MSPCodes.MSP_BOXNAMES, false, false, () => {
-                            initializeUI();
-                        });
-                    });
-                });
-            });
+            try {
+                await MSP.promise(MSPCodes.MSP_SERVO_CONFIGURATIONS);
+                await MSP.promise(MSPCodes.MSP_SERVO_MIX_RULES);
+                await MSP.promise(MSPCodes.MSP_RC);
+                await MSP.promise(MSPCodes.MSP_BOXNAMES);
+                initializeUI();
+            } catch (e) {
+                console.error("Failed to load servo data", e);
+                // Fallback or error handling
+                isSupported.value = false;
+                GUI.content_ready();
+            }
         }
 
         // Initialize UI after data is loaded

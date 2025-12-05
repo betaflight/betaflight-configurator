@@ -59,8 +59,8 @@ export function mountVueTab(tabName, contentReadyCallback) {
     currentTabApp.use(I18NextVue, { i18next });
 
     // Provide the global betaflight model
-    if (window.vm) {
-        currentTabApp.provide("betaflightModel", window.vm);
+    if (globalThis.vm) {
+        currentTabApp.provide("betaflightModel", globalThis.vm);
     }
 
     // Mount to content
