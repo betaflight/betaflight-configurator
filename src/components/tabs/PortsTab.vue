@@ -54,7 +54,21 @@
                                         v-model="port.msp"
                                         :disabled="port.identifier === 20"
                                     />
-                                    <label :for="`msp-${index}`"></label>
+                                    <label :for="`msp-${index}`">
+                                        <span
+                                            style="
+                                                position: absolute;
+                                                width: 1px;
+                                                height: 1px;
+                                                padding: 0;
+                                                margin: -1px;
+                                                overflow: hidden;
+                                                clip: rect(0, 0, 0, 0);
+                                                border: 0;
+                                            "
+                                            >MSP</span
+                                        >
+                                    </label>
                                 </span>
                                 <select class="msp_baudrate" v-model="port.msp_baudrate">
                                     <option v-for="rate in mspBaudRates" :key="rate" :value="rate">{{ rate }}</option>
@@ -70,7 +84,21 @@
                                         :id="`rx-${index}`"
                                         v-model="port.rxSerial"
                                     />
-                                    <label :for="`rx-${index}`"></label>
+                                    <label :for="`rx-${index}`">
+                                        <span
+                                            style="
+                                                position: absolute;
+                                                width: 1px;
+                                                height: 1px;
+                                                padding: 0;
+                                                margin: -1px;
+                                                overflow: hidden;
+                                                clip: rect(0, 0, 0, 0);
+                                                border: 0;
+                                            "
+                                            >{{ $t("portsSerialRx") }}</span
+                                        >
+                                    </label>
                                 </span>
                             </td>
 
@@ -419,41 +447,43 @@ export default defineComponent({
             });
         };
 
-        const updateFeatures = () => {
-            // Logic from original ports.js lines 440-498
-            let enableRxSerial = false;
-            let enableTelemetry = false;
-            let enableBlackbox = false;
-            let enableEsc = false;
-            let enableGps = false;
+        const getEnabledFeaturesFromPorts = (ports) => {
+            const flags = {
+                rxSerial: false,
+                telemetry: false,
+                blackbox: false,
+                esc: false,
+                gps: false,
+            };
 
-            for (const port of FC.SERIAL_CONFIG.ports) {
+            for (const port of ports) {
                 const func = port.functions;
-                if (func.includes("RX_SERIAL")) {
-                    enableRxSerial = true;
-                }
-                if (func.some((e) => e.startsWith("TELEMETRY"))) {
-                    enableTelemetry = true;
-                }
-                if (func.includes("BLACKBOX")) {
-                    enableBlackbox = true;
-                }
-                if (func.includes("ESC_SENSOR")) {
-                    enableEsc = true;
-                }
-                if (func.includes("GPS")) {
-                    enableGps = true;
-                }
+                if (func.includes("RX_SERIAL")) flags.rxSerial = true;
+                if (func.some((e) => e.startsWith("TELEMETRY"))) flags.telemetry = true;
+                if (func.includes("BLACKBOX")) flags.blackbox = true;
+                if (func.includes("ESC_SENSOR")) flags.esc = true;
+                if (func.includes("GPS")) flags.gps = true;
             }
+            return flags;
+        };
+
+        const updateFeatures = () => {
+            const { rxSerial, telemetry, blackbox, esc, gps } = getEnabledFeaturesFromPorts(FC.SERIAL_CONFIG.ports);
 
             const featureConfig = FC.FEATURE_CONFIG.features;
-            enableRxSerial ? featureConfig.enable("RX_SERIAL") : featureConfig.disable("RX_SERIAL");
-            if (enableTelemetry) {
+            rxSerial ? featureConfig.enable("RX_SERIAL") : featureConfig.disable("RX_SERIAL");
+
+            if (telemetry) {
                 featureConfig.enable("TELEMETRY");
             }
-            enableBlackbox ? featureConfig.enable("BLACKBOX") : featureConfig.disable("BLACKBOX");
-            enableEsc ? featureConfig.enable("ESC_SENSOR") : featureConfig.disable("ESC_SENSOR");
-            enableGps ? featureConfig.enable("GPS") : featureConfig.disable("GPS");
+            // Telemetry disable is handled by user explicitly or mutual exclusivity elsewhere?
+            // Original code didn't disable TELEMETRY if false?
+            // Original code: if (enableTelemetry) featureConfig.enable("TELEMETRY");
+            // It did NOT disable it. Preserving that behavior.
+
+            blackbox ? featureConfig.enable("BLACKBOX") : featureConfig.disable("BLACKBOX");
+            esc ? featureConfig.enable("ESC_SENSOR") : featureConfig.disable("ESC_SENSOR");
+            gps ? featureConfig.enable("GPS") : featureConfig.disable("GPS");
         };
 
         const vtxTableNotConfigured = computed(() => {
