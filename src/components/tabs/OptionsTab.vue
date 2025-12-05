@@ -4,7 +4,7 @@
             <!-- Main Options Box -->
             <div class="gui_box">
                 <div class="gui_box_titlebar">
-                    <div class="spacer_box_title">{{ $t("tabOptions") }}</div>
+                    <div class="spacer_box_title" v-html="$t('tabOptions')"></div>
                 </div>
                 <div class="spacer">
                     <!-- Remember Last Tab -->
@@ -12,7 +12,7 @@
                         <div>
                             <input type="checkbox" class="toggle" v-model="settings.rememberLastTab" />
                         </div>
-                        <span class="freelabel">{{ $t("rememberLastTab") }}</span>
+                        <span class="freelabel" v-html="$t('rememberLastTab')"></span>
                     </div>
 
                     <!-- Metered Connection -->
@@ -20,7 +20,7 @@
                         <div>
                             <input type="checkbox" class="toggle" v-model="settings.meteredConnection" />
                         </div>
-                        <span class="freelabel">{{ $t("meteredConnection") }}</span>
+                        <span class="freelabel" v-html="$t('meteredConnection')"></span>
                     </div>
 
                     <!-- Analytics Opt Out -->
@@ -28,7 +28,7 @@
                         <div>
                             <input type="checkbox" class="toggle" v-model="settings.analyticsOptOut" />
                         </div>
-                        <span class="freelabel">{{ $t("analyticsOptOut") }}</span>
+                        <span class="freelabel" v-html="$t('analyticsOptOut')"></span>
                     </div>
 
                     <!-- CLI Auto Complete -->
@@ -36,7 +36,7 @@
                         <div>
                             <input type="checkbox" class="toggle" v-model="settings.cliAutoComplete" />
                         </div>
-                        <span class="freelabel">{{ $t("cliAutoComplete") }}</span>
+                        <span class="freelabel" v-html="$t('cliAutoComplete')"></span>
                     </div>
 
                     <!-- Show Manual Mode -->
@@ -44,7 +44,7 @@
                         <div>
                             <input type="checkbox" class="toggle" v-model="settings.showManualMode" />
                         </div>
-                        <span class="freelabel">{{ $t("showManualMode") }}</span>
+                        <span class="freelabel" v-html="$t('showManualMode')"></span>
                     </div>
 
                     <!-- Show Virtual Mode -->
@@ -52,7 +52,7 @@
                         <div>
                             <input type="checkbox" class="toggle" v-model="settings.showVirtualMode" />
                         </div>
-                        <span class="freelabel">{{ $t("showVirtualMode") }}</span>
+                        <span class="freelabel" v-html="$t('showVirtualMode')"></span>
                     </div>
 
                     <!-- Use Legacy Rendering Model -->
@@ -60,7 +60,7 @@
                         <div>
                             <input type="checkbox" class="toggle" v-model="settings.useLegacyRenderingModel" />
                         </div>
-                        <span class="freelabel">{{ $t("useLegacyRenderingModel") }}</span>
+                        <span class="freelabel" v-html="$t('useLegacyRenderingModel')"></span>
                     </div>
 
                     <!-- Dark Theme -->
@@ -70,7 +70,7 @@
                             <option value="1">{{ $t("off") }}</option>
                             <option value="2">{{ $t("auto") }}</option>
                         </select>
-                        <span class="freelabel">{{ $t("darkTheme") }}</span>
+                        <span class="freelabel" v-html="$t('darkTheme')"></span>
                     </div>
 
                     <!-- Show Dev Tools On Startup -->
@@ -78,7 +78,7 @@
                         <div>
                             <input type="checkbox" class="toggle" v-model="settings.showDevToolsOnStartup" />
                         </div>
-                        <span class="freelabel">{{ $t("showDevToolsOnStartup") }}</span>
+                        <span class="freelabel" v-html="$t('showDevToolsOnStartup')"></span>
                     </div>
 
                     <!-- Show Notifications -->
@@ -91,7 +91,7 @@
                                 @change="handleNotificationsChange"
                             />
                         </div>
-                        <span class="freelabel">{{ $t("showNotifications") }}</span>
+                        <span class="freelabel" v-html="$t('showNotifications')"></span>
                     </div>
 
                     <!-- Backup On Flash -->
@@ -101,7 +101,7 @@
                             <option value="1">{{ $t("firmwareBackupEnabled") }}</option>
                             <option value="2">{{ $t("firmwareBackupAsk") }}</option>
                         </select>
-                        <span class="freelabel">{{ $t("firmwareBackupOnFlash") }}</span>
+                        <span class="freelabel" v-html="$t('firmwareBackupOnFlash')"></span>
                     </div>
 
                     <!-- User Language -->
@@ -115,7 +115,7 @@
                                 </option>
                             </select>
                         </span>
-                        <span>{{ $t("userLanguageSelect") }}</span>
+                        <span v-html="$t('userLanguageSelect')"></span>
                     </div>
                 </div>
             </div>
@@ -123,14 +123,14 @@
             <!-- Development Settings Box -->
             <div class="gui_box">
                 <div class="gui_box_titlebar">
-                    <div class="spacer_box_title">{{ $t("developmentSettings") }}</div>
+                    <div class="spacer_box_title" v-html="$t('developmentSettings')"></div>
                 </div>
                 <div class="spacer">
                     <div class="showAllSerialDevices margin-bottom">
                         <div>
                             <input type="checkbox" class="toggle" v-model="settings.showAllSerialDevices" />
                         </div>
-                        <span class="freelabel">{{ $t("showAllSerialDevices") }}</span>
+                        <span class="freelabel" v-html="$t('showAllSerialDevices')"></span>
                     </div>
 
                     <div class="developmentSettings margin-bottom">
@@ -138,7 +138,7 @@
                             <div>
                                 <input type="checkbox" class="toggle" v-model="settings.cliOnlyMode" />
                             </div>
-                            <span class="freelabel">{{ $t("cliOnlyMode") }}</span>
+                            <span class="freelabel" v-html="$t('cliOnlyMode')"></span>
                         </div>
                     </div>
                 </div>
@@ -147,14 +147,14 @@
             <!-- Warning Settings Box -->
             <div class="gui_box">
                 <div class="gui_box_titlebar">
-                    <div class="spacer_box_title">{{ $t("warningSettings") }}</div>
+                    <div class="spacer_box_title" v-html="$t('warningSettings')"></div>
                 </div>
                 <div class="spacer">
                     <div class="presetsWarningBackup margin-bottom">
                         <div>
                             <input type="checkbox" class="toggle" v-model="settings.showPresetsWarningBackup" />
                         </div>
-                        <span class="freelabel">{{ $t("presetsWarningBackup") }}</span>
+                        <span class="freelabel" v-html="$t('presetsWarningBackup')"></span>
                     </div>
                 </div>
             </div>
