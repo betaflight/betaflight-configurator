@@ -12,9 +12,10 @@ class CapacitorSerial extends EventTarget {
     constructor() {
         super();
 
-        if (!BetaflightSerial) {
+        this.pluginAvailable = !!BetaflightSerial;
+
+        if (!this.pluginAvailable) {
             console.error(`${logHead} Native BetaflightSerial plugin is not available`);
-            return;
         }
 
         this.connected = false;
@@ -36,15 +37,15 @@ class CapacitorSerial extends EventTarget {
         this.handleDeviceAttached = this.handleDeviceAttached.bind(this);
         this.handleDeviceDetached = this.handleDeviceDetached.bind(this);
 
-        // Listen for data received from native plugin
-        BetaflightSerial.addListener("dataReceived", this.handleDataReceived);
+        // Listen for data received from native plugin and load devices if plugin is available
+        if (this.pluginAvailable) {
+            BetaflightSerial.addListener("dataReceived", this.handleDataReceived);
+            BetaflightSerial.addListener("deviceAttached", this.handleDeviceAttached);
+            BetaflightSerial.addListener("deviceDetached", this.handleDeviceDetached);
 
-        // Listen for device attach/detach events
-        BetaflightSerial.addListener("deviceAttached", this.handleDeviceAttached);
-        BetaflightSerial.addListener("deviceDetached", this.handleDeviceDetached);
-
-        // Load initial device list
-        this.loadDevices();
+            // Load initial device list
+            this.loadDevices();
+        }
 
         console.log(`${logHead} CapacitorSerial initialized`);
     }
@@ -125,6 +126,10 @@ class CapacitorSerial extends EventTarget {
     }
 
     async loadDevices() {
+        if (!this.pluginAvailable) {
+            return;
+        }
+
         try {
             const result = await BetaflightSerial.getDevices();
             this.ports = result.devices.map((device) => this.createPort(device));
@@ -137,6 +142,10 @@ class CapacitorSerial extends EventTarget {
 
     async requestPermissionDevice() {
         let newPermissionPort = null;
+        if (!this.pluginAvailable) {
+            return null;
+        }
+
         try {
             console.log(`${logHead} Requesting USB permissions...`);
             const userSelectedPort = await BetaflightSerial.requestPermission();
@@ -159,6 +168,10 @@ class CapacitorSerial extends EventTarget {
     }
 
     async connect(path, options) {
+        if (!this.pluginAvailable) {
+            return false;
+        }
+
         const baudRate = options?.baudRate ?? 115200;
         // Prevent double connections
         if (this.connected) {
@@ -232,6 +245,10 @@ class CapacitorSerial extends EventTarget {
     }
 
     async disconnect() {
+        if (!this.pluginAvailable) {
+            return true;
+        }
+
         if (!this.connected) {
             return true;
         }
@@ -255,6 +272,13 @@ class CapacitorSerial extends EventTarget {
     }
 
     async send(data, callback) {
+        if (!this.pluginAvailable) {
+            if (callback) {
+                callback({ bytesSent: 0 });
+            }
+            return { bytesSent: 0 };
+        }
+
         if (!this.connected) {
             console.error(`${logHead} Failed to send data, not connected`);
             if (callback) {
@@ -293,6 +317,21 @@ class CapacitorSerial extends EventTarget {
     hexStringToUint8Array(hexString) {
         if (!hexString || hexString.length === 0) {
             return new Uint8Array(0);
+        }
+
+        // Strip 0x prefix
+        if (hexString.startsWith("0x") || hexString.startsWith("0X")) {
+            hexString = hexString.slice(2);
+        }
+
+        // Validate characters
+        if (!/^[0-9a-fA-F]+$/.test(hexString)) {
+            throw new Error(`Invalid hex string: contains non-hex characters`);
+        }
+
+        // Validate length
+        if (hexString.length % 2 !== 0) {
+            throw new Error(`Invalid hex string: odd length (${hexString.length})`);
         }
 
         const bytes = new Uint8Array(hexString.length / 2);
