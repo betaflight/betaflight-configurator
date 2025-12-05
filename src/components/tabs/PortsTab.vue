@@ -144,7 +144,7 @@
 </template>
 
 <script>
-import { defineComponent, reactive, onMounted, onUnmounted, computed, toRaw } from "vue";
+import { defineComponent, reactive, onMounted, onUnmounted, computed, toRaw, nextTick } from "vue";
 import BaseTab from "./BaseTab.vue";
 import GUI from "../../js/gui";
 import FC from "../../js/fc";
@@ -327,7 +327,9 @@ export default defineComponent({
                     FC.SERIAL_CONFIG.ports.forEach((p) => {
                         ports.push(transformPortData(p));
                     });
-                    GUI.content_ready();
+                    nextTick(() => {
+                        GUI.content_ready();
+                    });
                 });
             });
         };
