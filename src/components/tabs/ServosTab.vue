@@ -3,7 +3,15 @@
         <div class="content_wrapper">
             <div class="tab_title">{{ $t("tabServos") }}</div>
             <div class="cf_doc_version_bt">
-                <a id="button-documentation" href="" target="_blank"></a>
+                <a
+                    id="button-documentation"
+                    href="https://betaflight.com/docs/wiki/configurator/servos-tab"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    :aria-label="$t('betaflightSupportButton')"
+                >
+                    {{ $t("betaflightSupportButton") }}
+                </a>
             </div>
 
             <div class="grid-row">
