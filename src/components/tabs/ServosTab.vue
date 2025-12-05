@@ -30,13 +30,31 @@
                                 <tr v-for="(servo, index) in servoConfigs" :key="index">
                                     <td style="text-align: center">Servo {{ index + 1 }}</td>
                                     <td class="min">
-                                        <input type="number" min="500" max="2500" v-model.number="servo.min" />
+                                        <input
+                                            type="number"
+                                            min="500"
+                                            max="2500"
+                                            v-model.number="servo.min"
+                                            @change="onServoChange"
+                                        />
                                     </td>
                                     <td class="middle">
-                                        <input type="number" min="500" max="2500" v-model.number="servo.middle" />
+                                        <input
+                                            type="number"
+                                            min="500"
+                                            max="2500"
+                                            v-model.number="servo.middle"
+                                            @change="onServoChange"
+                                        />
                                     </td>
                                     <td class="max">
-                                        <input type="number" min="500" max="2500" v-model.number="servo.max" />
+                                        <input
+                                            type="number"
+                                            min="500"
+                                            max="2500"
+                                            v-model.number="servo.max"
+                                            @change="onServoChange"
+                                        />
                                     </td>
                                     <td v-for="ch in totalChannels" :key="ch" class="channel">
                                         <input
