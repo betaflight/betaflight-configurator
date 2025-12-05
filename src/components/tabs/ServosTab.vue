@@ -118,7 +118,7 @@
         </div>
 
         <!-- Save button toolbar -->
-        <div class="content_toolbar toolbar_fixed_bottom">
+        <div class="content_toolbar toolbar_fixed_bottom" v-if="isSupported">
             <div class="btn save_btn">
                 <a class="update" href="#" @click.prevent="saveServoConfig">{{ $t("servosButtonSave") }}</a>
             </div>
