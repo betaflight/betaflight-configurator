@@ -1,5 +1,5 @@
 <template>
-    <div :class="`tab-${tabName}`">
+    <div :class="[`tab-${tabName}`, extraClass]">
         <slot></slot>
     </div>
 </template>
@@ -22,6 +22,10 @@ export default defineComponent({
         tabName: {
             type: String,
             required: true,
+        },
+        extraClass: {
+            type: String,
+            default: "",
         },
     },
     emits: ["mounted", "cleanup"],

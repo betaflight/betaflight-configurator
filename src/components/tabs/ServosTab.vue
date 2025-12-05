@@ -1,5 +1,5 @@
 <template>
-    <BaseTab tab-name="servos">
+    <BaseTab tab-name="servos" :extra-class="isSupported ? 'supported' : ''">
         <div class="content_wrapper">
             <div class="tab_title">{{ $t("tabServos") }}</div>
             <div class="cf_doc_version_bt">
@@ -214,6 +214,13 @@ export default defineComponent({
 
         // Load all servo data from FC
         function loadServoData() {
+            // Check if we're actually connected to a FC
+            if (!FC.CONFIG?.apiVersion) {
+                console.log("[ServosTab] No FC connected, using mock/fallback data");
+                initializeUI();
+                return;
+            }
+
             MSP.send_message(MSPCodes.MSP_SERVO_CONFIGURATIONS, false, false, () => {
                 MSP.send_message(MSPCodes.MSP_SERVO_MIX_RULES, false, false, () => {
                     MSP.send_message(MSPCodes.MSP_RC, false, false, () => {
@@ -227,6 +234,7 @@ export default defineComponent({
 
         // Initialize UI after data is loaded
         function initializeUI() {
+            // Check if servo configuration is available
             if (!FC.SERVO_CONFIG || FC.SERVO_CONFIG.length === 0) {
                 isSupported.value = false;
                 GUI.content_ready();
@@ -235,10 +243,11 @@ export default defineComponent({
 
             isSupported.value = true;
 
-            // Copy FC data to local reactive state
+            // Clear and populate reactive servoConfigs array
+            servoConfigs.length = 0;
             for (let i = 0; i < 8; i++) {
                 if (FC.SERVO_CONFIG[i]) {
-                    servoConfigs[i] = reactive({
+                    servoConfigs.push({
                         min: FC.SERVO_CONFIG[i].min,
                         middle: FC.SERVO_CONFIG[i].middle,
                         max: FC.SERVO_CONFIG[i].max,
