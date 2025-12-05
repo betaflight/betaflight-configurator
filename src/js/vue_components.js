@@ -8,6 +8,7 @@ import HelpTab from "../components/tabs/HelpTab.vue";
 import LandingTab from "../components/tabs/LandingTab.vue";
 import OptionsTab from "../components/tabs/OptionsTab.vue";
 import PortsTab from "../components/tabs/PortsTab.vue";
+import ServosTab from "../components/tabs/ServosTab.vue";
 
 // Registry of Vue tab components - used by main.js for dynamic mounting
 export const VueTabComponents = {
@@ -15,6 +16,7 @@ export const VueTabComponents = {
     landing: LandingTab,
     options: OptionsTab,
     ports: PortsTab,
+    servos: ServosTab,
 };
 
 // Create a Vue plugin that registers all components globally
@@ -31,5 +33,6 @@ export const BetaflightComponents = {
         app.component("LandingTab", LandingTab);
         app.component("OptionsTab", OptionsTab);
         app.component("PortsTab", PortsTab);
+        app.component("ServosTab", ServosTab);
     },
 };
