@@ -59,8 +59,8 @@ export function mountVueTab(tabName, contentReadyCallback) {
     currentTabApp.use(I18NextVue, { i18next });
 
     // Provide the global betaflight model
-    if (window.vm) {
-        currentTabApp.provide("betaflightModel", window.vm);
+    if (globalThis.vm) {
+        currentTabApp.provide("betaflightModel", globalThis.vm);
     }
 
     // Mount to content
@@ -68,13 +68,13 @@ export function mountVueTab(tabName, contentReadyCallback) {
 
     console.log(`[Vue Tab] Mounted: ${tabName}`);
 
-    // Call content ready callback after next tick to ensure DOM is updated
-    if (contentReadyCallback) {
-        setTimeout(() => {
-            GUI.tab_switch_in_progress = false;
+    // Reset tab switch flag and call content ready callback after next tick
+    setTimeout(() => {
+        GUI.tab_switch_in_progress = false;
+        if (contentReadyCallback) {
             contentReadyCallback();
-        }, 0);
-    }
+        }
+    }, 0);
 
     return true;
 }
