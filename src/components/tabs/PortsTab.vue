@@ -166,7 +166,7 @@
             </div>
         </div>
 
-        <div class="content_toolbar toolbar_fixed_bottom">
+        <div class="content_toolbar toolbar_fixed_bottom" style="position: fixed">
             <div class="btn save_btn">
                 <a class="save" href="#" @click.prevent="saveConfig">{{ $t("configurationButtonSave") }}</a>
             </div>
