@@ -15,6 +15,7 @@ import { isExpertModeEnabled } from "./utils/isExpertModeEnabled.js";
 import { updateTabList } from "./utils/updateTabList.js";
 import * as THREE from "three";
 import NotificationManager from "./utils/notifications.js";
+import { mountVueTab } from "./vue_tab_mounter.js";
 
 import("./msp/debug/msp_debug_tools.js")
     .then(() => {
@@ -287,9 +288,7 @@ function startProcess() {
                         import("./tabs/setup_osd").then(({ setup_osd }) => setup_osd.initialize(content_ready));
                         break;
                     case "configuration":
-                        import("./tabs/configuration").then(({ configuration }) =>
-                            configuration.initialize(content_ready),
-                        );
+                        mountVueTab("configuration", content_ready);
                         break;
                     case "pid_tuning":
                         import("./tabs/pid_tuning").then(({ pid_tuning }) => pid_tuning.initialize(content_ready));
