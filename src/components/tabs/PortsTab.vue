@@ -5,10 +5,13 @@
             <div class="cf_doc_version_bt">
                 <a
                     id="button-documentation"
-                    href="https://github.com/betaflight/betaflight/wiki"
+                    href="https://betaflight.com/docs/wiki/configurator/ports-tab"
                     target="_blank"
                     rel="noopener noreferrer"
-                ></a>
+                    :aria-label="$t('betaflightSupportButton')"
+                >
+                    {{ $t("betaflightSupportButton") }}
+                </a>
             </div>
 
             <div class="require-support">
