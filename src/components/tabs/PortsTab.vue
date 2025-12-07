@@ -1,5 +1,5 @@
 <template>
-    <BaseTab tab-name="ports" extra-class="supported">
+    <BaseTab tab-name="ports">
         <div class="content_wrapper">
             <div class="tab_title" v-html="$t('tabPorts')"></div>
             <div class="cf_doc_version_bt">
@@ -55,19 +55,7 @@
                                         :disabled="port.identifier === 20"
                                     />
                                     <label :for="`msp-${index}`">
-                                        <span
-                                            style="
-                                                position: absolute;
-                                                width: 1px;
-                                                height: 1px;
-                                                padding: 0;
-                                                margin: -1px;
-                                                overflow: hidden;
-                                                clip: rect(0, 0, 0, 0);
-                                                border: 0;
-                                            "
-                                            >MSP</span
-                                        >
+                                        <span class="visually-hidden">MSP</span>
                                     </label>
                                 </span>
                                 <select class="msp_baudrate" v-model="port.msp_baudrate">
@@ -85,19 +73,7 @@
                                         v-model="port.rxSerial"
                                     />
                                     <label :for="`rx-${index}`">
-                                        <span
-                                            style="
-                                                position: absolute;
-                                                width: 1px;
-                                                height: 1px;
-                                                padding: 0;
-                                                margin: -1px;
-                                                overflow: hidden;
-                                                clip: rect(0, 0, 0, 0);
-                                                border: 0;
-                                            "
-                                            >{{ $t("portsSerialRx") }}</span
-                                        >
+                                        <span class="visually-hidden">{{ $t("portsSerialRx") }}</span>
                                     </label>
                                 </span>
                             </td>
@@ -555,3 +531,16 @@ export default defineComponent({
     },
 });
 </script>
+
+<style scoped>
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+</style>
