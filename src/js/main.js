@@ -16,7 +16,6 @@ import { updateTabList } from "./utils/updateTabList.js";
 import { mountVueTab } from "./vue_tab_mounter.js";
 import * as THREE from "three";
 import NotificationManager from "./utils/notifications.js";
-import { mountVueTab } from "./vue_tab_mounter.js";
 
 import("./msp/debug/msp_debug_tools.js")
     .then(() => {

@@ -40,8 +40,9 @@ export default defineComponent({
 
         onUnmounted(() => {
             // Clean up any intervals/timeouts when tab is destroyed
-            GUI.interval_kill_all();
-            GUI.timeout_kill_all();
+            // Global cleanup removed to allow tabs to manage their own intervals individually
+            // GUI.interval_kill_all();
+            // GUI.timeout_kill_all();
             emit("cleanup");
         });
 
