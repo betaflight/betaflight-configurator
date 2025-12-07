@@ -245,7 +245,8 @@ function startProcess() {
                         );
                         break;
                     case "options":
-                        import("./tabs/options").then(({ options }) => options.initialize(content_ready));
+                        // Vue tab - use mountVueTab instead of jQuery load
+                        mountVueTab("options", content_ready);
                         break;
                     case "firmware_flasher":
                         import("./tabs/firmware_flasher").then(({ firmware_flasher }) =>
