@@ -63,7 +63,7 @@ export function initializeSerialBackend() {
                 PortHandler.portPicker.autoConnect &&
                 !isCliOnlyMode() &&
                 (connectionTimestamp === null || connectionTimestamp > 0)) ||
-            Date.now() - GUI.reboot_timestamp <= GUI.REBOOT_CONNECT_MAX_TIME_MS
+            Date.now() - rebootTimestamp <= REBOOT_CONNECT_MAX_TIME_MS
         ) {
             connectDisconnect();
         }
@@ -121,13 +121,6 @@ function connectDisconnect() {
         } else {
             // prevent connection when we do not have permission
             if (selectedPort.startsWith("requestpermission")) {
-                return;
-            }
-
-            // When rebooting, adhere to the auto-connect setting
-            const REBOOT_GRACE_PERIOD_MS = 2000;
-            if (!PortHandler.portPicker.autoConnect && Date.now() - GUI.reboot_timestamp < REBOOT_GRACE_PERIOD_MS) {
-                console.log(`${logHead} Rebooting, not connecting`);
                 return;
             }
 
@@ -590,7 +583,7 @@ function finishOpen() {
     onConnect();
 
     GUI.selectDefaultTabWhenConnected();
-    GUI.reboot_timestamp = 0;
+    rebootTimestamp = 0;
 }
 
 function connectCli() {
@@ -772,3 +765,137 @@ function startLiveDataRefreshTimer() {
     clearLiveDataRefreshTimer();
     liveDataRefreshTimerId = setInterval(update_live_status, 250);
 }
+
+export function reinitializeConnection() {
+    if (CONFIGURATOR.virtualMode) {
+        connectDisconnect();
+        if (PortHandler.portPicker.autoConnect) {
+            return setTimeout(function () {
+                $("a.connection_button__link").trigger("click");
+            }, 500);
+        }
+    }
+
+    const currentPort = PortHandler.portPicker.selectedPort;
+
+    // Set the reboot timestamp to the current time
+    rebootTimestamp = Date.now();
+
+    // Send reboot command to the flight controller
+    MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false);
+
+    // Force connection invalid to ensure reboot dialog waits for reconnection
+    CONFIGURATOR.connectionValid = false;
+
+    if (currentPort.startsWith("bluetooth")) {
+        if (!PortHandler.portPicker.autoConnect) {
+            return setTimeout(function () {
+                $("a.connection_button__link").trigger("click");
+            }, 1500);
+        }
+    }
+
+    // Show reboot progress modal
+    showRebootDialog();
+}
+
+function showRebootDialog() {
+    gui_log(i18n.getMessage("deviceRebooting"));
+
+    // Show reboot progress modal
+    const rebootDialog = document.getElementById("rebootProgressDialog") || createRebootProgressDialog();
+    rebootDialog.querySelector(".reboot-progress-bar").style.width = "0%";
+    rebootDialog.querySelector(".reboot-status").textContent = i18n.getMessage("rebootFlightController");
+    rebootDialog.showModal();
+
+    // Update progress during reboot
+    let progress = 0;
+    const progressInterval = setInterval(() => {
+        progress += 5;
+        if (progress <= 100) {
+            rebootDialog.querySelector(".reboot-progress-bar").style.width = `${progress}%`;
+        }
+    }, 100);
+
+    // Check for successful connection every 100ms with a timeout
+    const connectionCheckInterval = setInterval(() => {
+        const connectionCheckTimeoutReached = Date.now() - rebootTimestamp > REBOOT_CONNECT_MAX_TIME_MS;
+        const noSerialReconnect = !PortHandler.portPicker.autoConnect && PortHandler.portAvailable;
+
+        if (CONFIGURATOR.connectionValid || connectionCheckTimeoutReached || noSerialReconnect) {
+            clearInterval(connectionCheckInterval);
+            clearInterval(progressInterval);
+
+            rebootDialog.querySelector(".reboot-progress-bar").style.width = "100%";
+            rebootDialog.querySelector(".reboot-status").textContent = i18n.getMessage("rebootFlightControllerReady");
+
+            // Close the dialog after showing "ready" message briefly
+            setTimeout(() => {
+                rebootDialog.close();
+            }, 1000);
+
+            if (connectionCheckTimeoutReached) {
+                console.log(`${logHead} Reboot timeout reached`);
+            } else {
+                gui_log(i18n.getMessage("deviceReady"));
+            }
+        }
+    }, 100);
+
+    // Helper function to create the reboot dialog if it doesn't exist
+    function createRebootProgressDialog() {
+        const dialog = document.createElement("dialog");
+        dialog.id = "rebootProgressDialog";
+        dialog.className = "dialogReboot";
+
+        dialog.innerHTML = `
+            <div class="content">
+                <div class="reboot-status">${i18n.getMessage("rebootFlightController")}</div>
+                <div class="reboot-progress-container">
+                    <div class="reboot-progress-bar"></div>
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(dialog);
+
+        // Add styles if not already defined
+        if (!document.getElementById("rebootProgressStyle")) {
+            const style = document.createElement("style");
+            style.id = "rebootProgressStyle";
+            style.textContent = `
+                .dialogReboot {
+                    border: 1px solid #3f4241;
+                    border-radius: 5px;
+                    background-color: #2d3233;
+                    color: #fff;
+                    padding: 20px;
+                    max-width: 400px;
+                }
+                .reboot-progress-container {
+                    width: 100%;
+                    background-color: #424546;
+                    border-radius: 3px;
+                    margin: 15px 0 5px;
+                    height: 10px;
+                }
+                .reboot-progress-bar {
+                    height: 100%;
+                    background-color: #ffbb00;
+                    border-radius: 3px;
+                    transition: width 0.1s ease-in-out;
+                    width: 0%;
+                }
+                .reboot-status {
+                    text-align: center;
+                    margin: 10px 0;
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
+        return dialog;
+    }
+}
+
+GUI.reinitializeConnection = reinitializeConnection;

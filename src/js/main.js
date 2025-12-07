@@ -13,7 +13,7 @@ import CliAutoComplete from "./CliAutoComplete.js";
 import DarkTheme, { setDarkTheme } from "./DarkTheme.js";
 import { isExpertModeEnabled } from "./utils/isExpertModeEnabled.js";
 import { updateTabList } from "./utils/updateTabList.js";
-import { mountVueTab } from "./vue_tab_mounter.js";
+import { mountVueTab, unmountVueTab } from "./vue_tab_mounter.js";
 import * as THREE from "three";
 import NotificationManager from "./utils/notifications.js";
 import { Capacitor } from "@capacitor/core";
@@ -32,12 +32,6 @@ import("./msp/debug/msp_debug_tools.js")
     .catch((err) => {
         console.warn("Failed to load MSP debug tools:", err);
     });
-
-if (typeof String.prototype.replaceAll === "undefined") {
-    String.prototype.replaceAll = function (match, replace) {
-        return this.replace(new RegExp(match, "g"), () => replace);
-    };
-}
 
 $(document).ready(function () {
     appReady();
@@ -221,6 +215,7 @@ function startProcess() {
 
                 // detach listeners and remove element data
                 const content = $("#content");
+                unmountVueTab();
                 content.empty();
 
                 // display loading screen
@@ -296,9 +291,7 @@ function startProcess() {
                         import("./tabs/setup_osd").then(({ setup_osd }) => setup_osd.initialize(content_ready));
                         break;
                     case "configuration":
-                        import("./tabs/configuration").then(({ configuration }) =>
-                            configuration.initialize(content_ready),
-                        );
+                        mountVueTab("configuration", content_ready);
                         break;
                     case "pid_tuning":
                         import("./tabs/pid_tuning").then(({ pid_tuning }) => pid_tuning.initialize(content_ready));
