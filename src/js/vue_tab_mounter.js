@@ -63,6 +63,9 @@ export function mountVueTab(tabName, contentReadyCallback) {
         currentTabApp.provide("betaflightModel", globalThis.vm);
     }
 
+    // Set active tab for legacy compatibility
+    GUI.active_tab = tabName;
+
     // Mount to content
     currentTabApp.mount(contentEl);
 

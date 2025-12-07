@@ -61,13 +61,13 @@ export function initializeSerialBackend() {
 
     EventBus.$on("port-handler:auto-select-serial-device", function () {
         if (
-            !GUI.connected_to &&
-            !GUI.connecting_to &&
-            !["cli", "firmware_flasher"].includes(GUI.active_tab) &&
-            PortHandler.portPicker.autoConnect &&
-            !isCliOnlyMode() &&
-            (connectionTimestamp === null || connectionTimestamp > 0) ||
-            (Date.now() - rebootTimestamp <= REBOOT_CONNECT_MAX_TIME_MS)
+            (!GUI.connected_to &&
+                !GUI.connecting_to &&
+                !["cli", "firmware_flasher"].includes(GUI.active_tab) &&
+                PortHandler.portPicker.autoConnect &&
+                !isCliOnlyMode() &&
+                (connectionTimestamp === null || connectionTimestamp > 0)) ||
+            Date.now() - rebootTimestamp <= REBOOT_CONNECT_MAX_TIME_MS
         ) {
             connectDisconnect();
         }
@@ -125,12 +125,6 @@ function connectDisconnect() {
         } else {
             // prevent connection when we do not have permission
             if (selectedPort.startsWith("requestpermission")) {
-                return;
-            }
-
-            // When rebooting, adhere to the auto-connect setting
-            if (!PortHandler.portPicker.autoConnect && Date.now() - rebootTimestamp < REBOOT_GRACE_PERIOD_MS) {
-                console.log(`${logHead} Rebooting, not connecting`);
                 return;
             }
 
@@ -608,6 +602,7 @@ function finishOpen() {
     onConnect();
 
     GUI.selectDefaultTabWhenConnected();
+    rebootTimestamp = 0;
 }
 
 function connectCli() {
@@ -808,6 +803,9 @@ export function reinitializeConnection() {
     // Send reboot command to the flight controller
     MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false);
 
+    // Force connection invalid to ensure reboot dialog waits for reconnection
+    CONFIGURATOR.connectionValid = false;
+
     if (currentPort.startsWith("bluetooth")) {
         if (!PortHandler.portPicker.autoConnect) {
             return setTimeout(function () {
@@ -816,14 +814,6 @@ export function reinitializeConnection() {
         }
     }
 
-    // Show reboot progress modal except for cli and presets tab
-    if (["cli", "presets"].includes(GUI.active_tab)) {
-        console.log(`${logHead} Rebooting in ${GUI.active_tab} tab, skipping reboot dialog`);
-        gui_log(i18n.getMessage("deviceRebooting"));
-        gui_log(i18n.getMessage("deviceReady"));
-
-        return;
-    }
     // Show reboot progress modal
     showRebootDialog();
 }
@@ -926,3 +916,5 @@ function showRebootDialog() {
         return dialog;
     }
 }
+
+GUI.reinitializeConnection = reinitializeConnection;
