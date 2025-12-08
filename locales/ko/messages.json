@@ -515,6 +515,9 @@
     "reportProblemsDialogFooter": {
         "message": "<span class=\"message-negative\"><strong>당신의 기체를 날리기 전에 이 문제들을 해결할 필요가 있습니다<\/span><\/strong>."
     },
+    "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
+        "message": "<span class=\"message-negative\">사용된 앱 버전($1)은 펌웨어 $2를 지원하지 않습니다<\/strong><\/span>.<br>$t(configuratorUpdateHelp.message)"
+    },
     "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
         "message": "<strong>선택된 모터 출력 프로토콜이 없습니다<\/strong>.<br>'$t(tabMotorTesting.message)' 탭의 '$t(configurationEscFeatures.message)'에서 ESC에 적합한 모터 출력 프로토콜을 선택하십시오.<br> $t(escProtocolDisabledMessage.message)"
     },
@@ -569,7 +572,7 @@
         "message": "설정 탭을 보기 전에 먼저 <strong>연결<\/strong>이 필요합니다."
     },
     "tabSwitchWaitForOperation": {
-        "message": "지금 당장 이것을 실행할 수 <span class=\"message-negative\">없습니다<\/span>. 현재 작업이 완료될 때까지 기다려 주십시오 ..."
+        "message": "지금 당장 이것을 실행할 수 <span class=\"message-negative\">없습니다<\/span>, 현재 작업이 완료될 때까지 기다려 주십시오 ..."
     },
     "tabSwitchUpgradeRequired": {
         "message": "$1 탭을 사용하기 전에 베타플라이트의 최신버전으로 펌웨어를 <strong>업그레이드<\/strong> 하여야 합니다."
@@ -1970,11 +1973,34 @@
     "receiverRcSmoothingManual": {
         "message": "수동"
     },
+    "receiverRcSmoothingAutoFactor": {
+        "message": "설정점 자동 인자",
+        "description": "Setpoint Auto Factor parameter for RC smoothing"
+    },
+    "receiverRcSmoothingAutoFactorHelp": {
+        "message": "설정점 자동 인자 계산을 조정하며, 10은 기본 환경인자 대 지연 비율입니다. 숫자를 늘리면 RC 입력이 더 부드러워지는 동시에 지연도 더해집니다. 이것은 신뢰할 수 없는 RC 연결 또는 시네마틱 비행에 유용할 수 있습니다.<br>숫자가 50에 가까워지면 입력 지연이 눈에 띄게 됩니다.<br>TX와 RX가 전원이 공급되는 동안 CLI 명령 rc_smoothing_info를 사용하여 자동으로 계산된 RC 스무딩 컷오프를 확인하십시오.",
+        "description": "Setpoint Auto Factor parameter help message"
+    },
+    "receiverRcSmoothingAutoFactorHelp2": {
+        "message": "설정점 RC 스무딩을 조정합니다. 30이 기본값입니다. 예를 들어 HD 프리스타일의 경우 60, 씨네마틱 비행의 경우 90-120과 같이 높은 값이 매끄러운 RC 입력을 더 부드럽게 합니다. 참고: 값이 50을 초과하면 상당한 스틱 지연이 발생합니다. 예를 들어 20-25와 같이 낮은 값은 일부 RC 제어 단계를 모터 신호로 전달하여 모터 열을 약간 증가시키지만 RC 지연을 약간 감소시킵니다. 이것은 레이싱에 유용할 수 있습니다.",
+        "description": "Setpoint Auto Factor parameter help message"
+    },
+    "receiverRcSmoothingAutoFactorThrottle": {
+        "message": "스로틀 자동 인자",
+        "description": "Throttle Auto Factor parameter for RC smoothing"
+    },
+    "receiverRcSmoothingAutoFactorThrottleHelp": {
+        "message": "스로틀 자동 인자 계산을 조정하며, 10은 기본 환경인자 대 지연 비율입니다. 숫자를 늘리면 스로틀 입력이 더 부드러워지는 동시에 지연도 더해집니다. 이것은 신뢰할 수 없는 RC 연결 또는 시네마틱 비행에 유용할 수 있습니다.<br>숫자가 50에 가까워지면 입력 지연이 눈에 띄게 됩니다.<br>TX와 RX가 전원이 공급되는 동안 CLI 명령 rc_smoothing_info를 사용하여 자동으로 계산된 RC 스무딩 컷오프를 확인하십시오.",
+        "description": "Throttle Auto Factor parameter help message"
+    },
     "receiverRcFeedforwardTypeSelect": {
         "message": "피드포워드 컷오프 형식"
     },
     "receiverRcSetpointTypeSelect": {
         "message": "셋포인트 컷오프 형식"
+    },
+    "receiverThrottleTypeSelect": {
+        "message": "스로틀 컷오프 형식"
     },
     "receiverRcSmoothingInterpolation": {
         "message": "보간"
@@ -1997,8 +2023,17 @@
     "receiverRcSmoothingFeedforwardManual": {
         "message": "피드포워드 필터 컷오프 주파수를 자동으로 계산할지(권장) 사용자가 수동으로 선택할지 선택합니다. \"수동\"을 사용하는 것은 Crossfire와 같은 비행 중 변경될 수 있는 수신 프로토콜에 권장되지 않습니다."
     },
+    "receiverRcSmoothingThrottleManual": {
+        "message": "RC 스무딩을 자동으로 계산할지(권장) 사용자가 수동으로 선택할지 선택합니다. \"수동\"을 사용하는 것은 Crossfire와 같은 비행 중 변경될 수 있는 수신 프로토콜에 권장되지 않습니다."
+    },
+    "rcSmoothingThrottleCutoffHelp": {
+        "message": "스로틀 스무딩 필터에 의해 사용되는 컷오프 주파수 (Hz)입니다. 낮은 값을 사용하면 입력이 부드러워지고 느린 수신기 프로토콜에 더 적합합니다. 대부분의 사용자는 이 값을 \"자동\"에 해당하는 0에 두어야합니다."
+    },
     "receiverRcSmoothingSetpointHz": {
         "message": "셋포인트 컷오프 주파수"
+    },
+    "receiverRcSmoothingThrottleCutoffHz": {
+        "message": "스로틀 컷오프 주파수"
     },
     "receiverRcSmoothingFeedforwardCutoff": {
         "message": "피드포워드 컷오프 주파수"
@@ -3437,6 +3472,10 @@
     "dataflashSaveFileDepreciationHint": {
         "message": "이 방법은 속도가 느리고 본질적으로 오류\/파일이 손상되기 쉽습니다. MSP 연결 자체는 파일 전송에 적합하지 않은 본질적이고 근본적인 한계를 가지고 있기 때문입니다. 그것은 작은 로그 파일에만 사용할 수 있습니다. 이 방법을 사용하여 저장할 때 파일 전송이 실패하면 지원 요청을 생성하지 마십시오. 권장 방법은 '<b>$t(onboardLoggingRebootMscText.message)<\/b>'(아래)를 사용하여 대용량 저장 모드를 활성화하고, 비행 컨트롤러를 저장 장치로 액세스하여 로그 파일을 다운로드 하십시오."
     },
+    "dataflashButtonSaveAndErase": {
+        "message": "저장 & 삭제",
+        "description": "Button text to save blackbox logs to file and then erase the flash"
+    },
     "dataflashButtonErase": {
         "message": "플래시 삭제"
     },
@@ -4323,6 +4362,10 @@
     "pidTuningDTermSliderEnabled": {
         "message": "D 텀 슬라이더 사용",
         "description": "Disable or enable D Term Filter Tuning Slider"
+    },
+    "pidTuningPidSlidersHelp": {
+        "message": "기체 비행 특성(PID 게인)을 조정하는 슬라이더<br \/><br \/>댐핑 (D 게인): 빠른 움직임에 저항하고, P 진동을 최소화합니다.<br \/><br \/>추적 (P 및 I 게인): 기체의 응답성을 강화시킵니다; 너무 높으면, 떨림이나 진동이 발생할 수 있습니다.<br \/><br \/>스틱 응답 (피드포워드): 더 빠른 스틱 움직임에 대한 기체의 응답성을 증가시킵니다.<br \/><br \/>드리프트 - 워블(I 게인, 전문가): I의 미세 조정.<br \/><br \/>다이나믹 D (D 최대, 전문가): 빠른 이동 중에 D가 부스트될 수 있는 최대 양을 설정합니다.<br \/><br \/>피치 댐핑 (피치:롤 D 비율, 전문가): 롤에 대한 피치의 댐핑 양을 증가시킵니다.<br \/><br \/>피치 추적 (피치:롤 P, I 및 F 비율, 전문가): 롤에 대한 피치의 안정화 강도를 증가시킵니다.<br \/><br \/>마스터 승수 (모든 게인, 전문가): 비율을 일정하게 유지하면서 모든 PID 게인을 높이거나 낮춥니다.",
+        "description": "Overall helpicon message for PID tuning sliders"
     },
     "pidTuningSliderWarning": {
         "message": "<span class=\"message-negative\">주의<\/span>: 현재 슬라이더 위치는 기체가 멀리 날아가거나, 모터 손상 또는 안전하지 않은 기체 동작이 발생할 수 있습니다. 신중하게 진행하십시오.",
@@ -5942,6 +5985,13 @@
     },
     "osdDescElementEscRpm": {
         "message": "ESC 텔레메트리에 의해 보고된 RPM"
+    },
+    "osdTextElementRemainingTimeEstimate": {
+        "message": "타이머: 남은 시간 추정",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementRemainingTimeEstimate": {
+        "message": "남은 비행시간 예상"
     },
     "osdTextElementRtcDateTime": {
         "message": "RTC 날짜 및 시간",
@@ -7580,6 +7630,15 @@
     },
     "firmwareFlasherOSDProtocolNotSelectedContinue": {
         "message": "OSD 프로토콜 없이 계속 진행"
+    },
+    "firmwareFlasherOptionLabelVerifiedPartner": {
+        "message": "인증된 파트너"
+    },
+    "firmwareFlasherOptionLabelVendorCommunity": {
+        "message": "공급자 \/ 커뮤니티"
+    },
+    "firmwareFlasherOptionLabelLegacy": {
+        "message": "레거시"
     },
     "coreBuild": {
         "message": "코어 빌드"
