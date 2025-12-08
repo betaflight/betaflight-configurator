@@ -125,9 +125,6 @@ class CapacitorSerial extends EventTarget {
     }
 
     async loadDevices() {
-        if (!this.pluginAvailable) {
-            return;
-        }
         try {
             const result = await BetaflightSerial.getDevices();
             this.ports = result.devices.map((device) => this.createPort(device));
@@ -140,9 +137,7 @@ class CapacitorSerial extends EventTarget {
 
     async requestPermissionDevice() {
         let newPermissionPort = null;
-        if (!this.pluginAvailable) {
-            return null;
-        }
+
         try {
             console.log(`${logHead} Requesting USB permissions...`);
             const userSelectedPort = await BetaflightSerial.requestPermission();
@@ -165,9 +160,6 @@ class CapacitorSerial extends EventTarget {
     }
 
     async connect(path, options) {
-        if (!this.pluginAvailable) {
-            return false;
-        }
         const baudRate = options?.baudRate ?? 115200;
         // Prevent double connections
         if (this.connected) {
@@ -241,9 +233,6 @@ class CapacitorSerial extends EventTarget {
     }
 
     async disconnect() {
-        if (!this.pluginAvailable) {
-            return true;
-        }
         if (!this.connected) {
             return true;
         }
@@ -267,12 +256,6 @@ class CapacitorSerial extends EventTarget {
     }
 
     async send(data, callback) {
-        if (!this.pluginAvailable) {
-            if (callback) {
-                callback({ bytesSent: 0 });
-            }
-            return { bytesSent: 0 };
-        }
         if (!this.connected) {
             console.error(`${logHead} Failed to send data, not connected`);
             if (callback) {
