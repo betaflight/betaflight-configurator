@@ -139,7 +139,7 @@ jobs:
 
       - name: Add deployment comment
         if: github.event_name == 'pull_request_target' || github.event_name == 'pull_request'
-        uses: thollander/actions-comment-pull-request@v3
+        uses: thollander/actions-comment-pull-request@v3.0.1
         with:
           message: |
             Preview URL: ${{ steps.deploy.outputs.pages-deployment-alias-url }}
