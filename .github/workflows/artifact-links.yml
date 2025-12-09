@@ -8,6 +8,9 @@ jobs:
   artifacts-url-comments:
     name: Add artifact links to PR and issues
     runs-on: ubuntu-latest
+    permissions:
+      actions: read        # Required to read artifacts from the workflow run
+      pull-requests: write # Required to post comments on PRs
     steps:
       - name: Add artifact links to PR and issues
         uses: tonyhallett/artifacts-url-comments@v1.1.0
