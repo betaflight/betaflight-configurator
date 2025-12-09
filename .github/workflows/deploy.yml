@@ -160,7 +160,9 @@ jobs:
           message: |
             ## 🎉 Do you want to test this code? Here you have an automated build:
             
-            - [Android APK: ${{ steps.apk.outputs.name }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+            **Download artifacts from this workflow run:**
+            - 🤖 [Android APK: ${{ steps.apk.outputs.name }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+            - 📦 [All artifacts](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
             
             ⚠️ **WARNING**: It may be unstable and result in corrupted configurations or data loss. Use only for testing!
           comment-tag: 'artifact-links'
