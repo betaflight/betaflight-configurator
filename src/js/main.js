@@ -264,7 +264,7 @@ function startProcess() {
                         import("./tabs/adjustments").then(({ adjustments }) => adjustments.initialize(content_ready));
                         break;
                     case "ports":
-                        import("./tabs/ports").then(({ ports }) => ports.initialize(content_ready));
+                        mountVueTab("ports", content_ready);
                         break;
                     case "led_strip":
                         import("./tabs/led_strip").then(({ led_strip }) => led_strip.initialize(content_ready));

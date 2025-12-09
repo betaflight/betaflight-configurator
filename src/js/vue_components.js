@@ -7,12 +7,14 @@ import PortPicker from "../components/port-picker/PortPicker.vue";
 import HelpTab from "../components/tabs/HelpTab.vue";
 import LandingTab from "../components/tabs/LandingTab.vue";
 import OptionsTab from "../components/tabs/OptionsTab.vue";
+import PortsTab from "../components/tabs/PortsTab.vue";
 
 // Registry of Vue tab components - used by main.js for dynamic mounting
 export const VueTabComponents = {
     help: HelpTab,
     landing: LandingTab,
     options: OptionsTab,
+    ports: PortsTab,
 };
 
 // Create a Vue plugin that registers all components globally
@@ -28,5 +30,6 @@ export const BetaflightComponents = {
         app.component("HelpTab", HelpTab);
         app.component("LandingTab", LandingTab);
         app.component("OptionsTab", OptionsTab);
+        app.component("PortsTab", PortsTab);
     },
 };
