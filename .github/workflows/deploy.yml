@@ -137,12 +137,17 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: pages deploy src/dist --project-name=${{ vars.CLOUDFLARE_PROJECT_NAME }} --branch=${{ env.BRANCH }} --commit-dirty=true
 
+      - name: Prepare deployment comment
+        run: |
+          echo "COMMENT_MSG<<EOF" >> $GITHUB_ENV
+          echo "Preview URL: ${{ steps.deploy.outputs.pages-deployment-alias-url }}" >> $GITHUB_ENV
+          echo "Android APK: [Download from artifacts](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
       - name: Add deployment comment
         if: github.event_name == 'pull_request_target' || github.event_name == 'pull_request'
         uses: thollander/actions-comment-pull-request@v3.0.1
         with:
-          message: |
-            Preview URL: ${{ steps.deploy.outputs.pages-deployment-alias-url }}
-            Android APK: [Download from artifacts](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+          message: ${{ env.COMMENT_MSG }}
           comment-tag: 'Preview URL'
           mode: recreate
