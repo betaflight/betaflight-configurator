@@ -302,7 +302,8 @@ function startProcess() {
                         import("./tabs/receiver").then(({ receiver }) => receiver.initialize(content_ready));
                         break;
                     case "servos":
-                        import("./tabs/servos").then(({ servos }) => servos.initialize(content_ready));
+                        // Vue tab - use mountVueTab instead of jQuery load
+                        mountVueTab("servos", content_ready);
                         break;
                     case "gps":
                         import("./tabs/gps").then(({ gps }) => gps.initialize(content_ready));
