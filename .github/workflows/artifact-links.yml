@@ -13,7 +13,7 @@ jobs:
       pull-requests: write
     # Only run for pull request events that succeeded
     if: >
-      github.event.workflow_run.event == 'pull_request_target' &&
+      github.event.workflow_run.event == 'pull_request' &&
       github.event.workflow_run.conclusion == 'success'
     steps:
       - name: Get PR number
@@ -31,7 +31,10 @@ jobs:
           REPO="${{ github.repository }}"
           
           # Get all artifacts from the workflow run
-          ARTIFACTS=$(gh api "/repos/$REPO/actions/runs/$WORKFLOW_RUN_ID/artifacts" --jq '.artifacts')
+          if ! ARTIFACTS=$(gh api "/repos/$REPO/actions/runs/$WORKFLOW_RUN_ID/artifacts" --jq '.artifacts'); then
+            echo "Error: Failed to fetch artifacts" >&2
+            exit 1
+          fi
           
           # Build the markdown list of artifacts
           ARTIFACT_LINKS=""
@@ -46,8 +49,8 @@ jobs:
           # Store in a file to preserve newlines
           echo "$ARTIFACTS" | jq -r '.[] | "- [\(.name)](https://github.com/${{ github.repository }}/actions/runs/${{ github.event.workflow_run.id }}/artifacts/\(.id))"' > artifacts.txt
           
-          # Read it back
-          ARTIFACT_LINKS=$(cat artifacts.txt)
+          # Build the markdown list of artifacts with download links
+          ARTIFACT_LINKS=$(echo "$ARTIFACTS" | jq -r '.[] | "- [\(.name)](\(.archive_download_url))"')
           echo "links<<EOF" >> $GITHUB_OUTPUT
           echo "$ARTIFACT_LINKS" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
