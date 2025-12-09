@@ -145,6 +145,26 @@ import { mspHelper } from "../../js/msp/MSPHelper";
 import { gui_log } from "../../js/gui_log";
 import { i18n } from "../../js/localization";
 
+// Calculate bar style for servo visualization
+function getBarStyle(value) {
+    const rangeMin = 1000;
+    const rangeMax = 2000;
+    const blockHeight = 100;
+    const fullBlockScale = rangeMax - rangeMin;
+    const barHeight = value - rangeMin;
+    const clamped = Math.min(Math.max(barHeight * (blockHeight / fullBlockScale), 0), blockHeight);
+    const marginTop = blockHeight - clamped;
+    const height = clamped;
+
+    const alpha = Math.min(Math.max(barHeight / fullBlockScale, 0), 1).toFixed(2);
+
+    return {
+        marginTop: `${marginTop}px`,
+        height: `${height}px`,
+        backgroundColor: `rgba(255,187,0,${alpha})`,
+    };
+}
+
 export default defineComponent({
     name: "ServosTab",
     components: {
@@ -175,27 +195,6 @@ export default defineComponent({
             rateOptions.push(i);
         }
 
-        // Calculate bar style for servo visualization
-        function getBarStyle(value) {
-            const rangeMin = 1000;
-            const rangeMax = 2000;
-            const blockHeight = 100;
-            const fullBlockScale = rangeMax - rangeMin;
-            const barHeight = value - rangeMin;
-            const marginTop =
-                blockHeight - Math.min(Math.max(barHeight * (blockHeight / fullBlockScale), 0), blockHeight);
-            const height = Math.min(Math.max(barHeight * (blockHeight / fullBlockScale), 0), blockHeight);
-
-            // Calculate alpha based on bar height (0.0 to 1.0)
-            const alpha = Math.min(Math.max(barHeight / fullBlockScale, 0), 1).toFixed(2);
-
-            return {
-                marginTop: `${marginTop}px`,
-                height: `${height}px`,
-                backgroundColor: `rgba(255,187,0,${alpha})`,
-            };
-        }
-
         // Handle channel forward checkbox (only one per servo)
         function setChannelForward(servoIndex, channelIndex, event) {
             if (event.target.checked) {
@@ -216,13 +215,28 @@ export default defineComponent({
 
         // Update FC.SERVO_CONFIG from local state and send to FC
         function updateServos(saveToEeprom) {
-            // Copy local state to FC
+            const SERVO_MIN = 500;
+            const SERVO_MAX = 2500;
+
+            // Copy local state to FC with clamping and keep Vue state in sync
             for (let i = 0; i < servoConfigs.length; i++) {
-                FC.SERVO_CONFIG[i].min = servoConfigs[i].min;
-                FC.SERVO_CONFIG[i].middle = servoConfigs[i].middle;
-                FC.SERVO_CONFIG[i].max = servoConfigs[i].max;
-                FC.SERVO_CONFIG[i].rate = servoConfigs[i].rate;
-                FC.SERVO_CONFIG[i].indexOfChannelToForward = servoConfigs[i].indexOfChannelToForward;
+                const src = servoConfigs[i];
+                const cfg = FC.SERVO_CONFIG[i];
+
+                const min = Math.min(Math.max(src.min ?? SERVO_MIN, SERVO_MIN), SERVO_MAX);
+                const middle = Math.min(Math.max(src.middle ?? SERVO_MIN, SERVO_MIN), SERVO_MAX);
+                const max = Math.min(Math.max(src.max ?? SERVO_MAX, SERVO_MIN), SERVO_MAX);
+
+                cfg.min = min;
+                cfg.middle = middle;
+                cfg.max = max;
+                cfg.rate = src.rate;
+                cfg.indexOfChannelToForward = src.indexOfChannelToForward ?? -1;
+
+                // reflect any clamping back into the reactive model
+                src.min = min;
+                src.middle = middle;
+                src.max = max;
             }
 
             // Send to FC
