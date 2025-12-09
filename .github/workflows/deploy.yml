@@ -137,7 +137,7 @@ jobs:
         with:
           message: |
              Preview URL: ${{ steps.deploy.outputs.pages-deployment-alias-url }}
-             Android APK: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+             Android APK: [Download from artifacts](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
              WARNING: It may be unstable and result in corrupted configurations or data loss. Use only for testing!
           comment-tag: 'Preview URL'
           mode: recreate
