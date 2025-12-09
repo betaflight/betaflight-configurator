@@ -47,17 +47,17 @@ jobs:
             os: ubuntu-latest
             releaseArgs: --android
 
-          - name: Linux
-            os: ubuntu-latest
-            releaseArgs: --linux64
+          # - name: Linux
+          #   os: ubuntu-latest
+          #   releaseArgs: --linux64
 
-          - name: macOS
-            os: macos-11
-            releaseArgs: --osx64
+          # - name: macOS
+          #   os: macos-11
+          #   releaseArgs: --osx64
 
-          - name: Windows
-            os: windows-2022
-            releaseArgs: --win64
+          # - name: Windows
+          #   os: windows-2022
+          #   releaseArgs: --win64
     steps:
       - uses: actions/checkout@v5
 
