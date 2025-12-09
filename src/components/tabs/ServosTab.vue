@@ -250,7 +250,7 @@ export default defineComponent({
         }
 
         // Load all servo data from FC
-        function loadServoData() {
+        async function loadServoData() {
             // Check if we're actually connected to a FC
             if (!FC.CONFIG?.apiVersion) {
                 isSupported.value = false;
@@ -258,15 +258,17 @@ export default defineComponent({
                 return;
             }
 
-            MSP.send_message(MSPCodes.MSP_SERVO_CONFIGURATIONS, false, false, () => {
-                MSP.send_message(MSPCodes.MSP_SERVO_MIX_RULES, false, false, () => {
-                    MSP.send_message(MSPCodes.MSP_RC, false, false, () => {
-                        MSP.send_message(MSPCodes.MSP_BOXNAMES, false, false, () => {
-                            initializeUI();
-                        });
-                    });
-                });
-            });
+            try {
+                await MSP.promise(MSPCodes.MSP_SERVO_CONFIGURATIONS);
+                await MSP.promise(MSPCodes.MSP_SERVO_MIX_RULES);
+                await MSP.promise(MSPCodes.MSP_RC);
+                await MSP.promise(MSPCodes.MSP_BOXNAMES);
+                initializeUI();
+            } catch (e) {
+                console.error("Failed to load servo configs", e);
+                isSupported.value = false;
+                GUI.content_ready(); // Ensure tab doesn't hang
+            }
         }
 
         // Initialize UI after data is loaded
