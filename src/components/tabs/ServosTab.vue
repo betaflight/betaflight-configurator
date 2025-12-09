@@ -22,7 +22,7 @@
                         <table class="fields">
                             <thead>
                                 <tr class="main">
-                                    <th width="110px">{{ $t("servosName") }}</th>
+                                    <th style="width: 110px">{{ $t("servosName") }}</th>
                                     <th>{{ $t("servosMin") }}</th>
                                     <th>{{ $t("servosMid") }}</th>
                                     <th>{{ $t("servosMax") }}</th>
