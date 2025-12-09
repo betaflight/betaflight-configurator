@@ -105,6 +105,12 @@ jobs:
           name: dist-files
           path: src/dist
 
+      - name: Download APK artifact
+        uses: actions/download-artifact@v5
+        with:
+          name: betaflight-configurator-apk
+          path: apk/
+
       - name: Set short git commit SHA
         id: vars
         run: |
