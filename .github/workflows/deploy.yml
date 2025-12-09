@@ -135,9 +135,6 @@ jobs:
         if: github.event_name == 'pull_request_target' || github.event_name == 'pull_request'
         uses: thollander/actions-comment-pull-request@v3
         with:
-          message: |
-             Preview URL: ${{ steps.deploy.outputs.pages-deployment-alias-url }}
-             Android APK: [Download from artifacts](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
-             WARNING: It may be unstable and result in corrupted configurations or data loss. Use only for testing!
+          message: "Preview URL: ${{ steps.deploy.outputs.pages-deployment-alias-url }}\nAndroid APK: [Download from artifacts](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
           comment-tag: 'Preview URL'
           mode: recreate
