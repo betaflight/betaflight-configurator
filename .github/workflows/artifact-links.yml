@@ -1,7 +1,7 @@
 name: Artifact links comments creator
 on:
   workflow_run:
-    workflows: ["PR", "Deployment (PR and Push)"]
+    workflows: ["Deployment (PR and Push)"]
     types: [completed]
 
 jobs:
@@ -9,15 +9,58 @@ jobs:
     name: Add artifact links to PR and issues
     runs-on: ubuntu-latest
     permissions:
-      actions: read        # Required to read artifacts from the workflow run
-      pull-requests: write # Required to post comments on PRs
+      actions: read
+      pull-requests: write
+    # Only run for pull request events that succeeded
+    if: >
+      github.event.workflow_run.event == 'pull_request_target' &&
+      github.event.workflow_run.conclusion == 'success'
     steps:
-      - name: Add artifact links to PR and issues
-        uses: tonyhallett/artifacts-url-comments@v1.1.0
+      - name: Get PR number
+        id: pr
+        run: |
+          PR_NUMBER=$(echo '${{ toJSON(github.event.workflow_run.pull_requests) }}' | jq -r '.[0].number')
+          echo "number=$PR_NUMBER" >> $GITHUB_OUTPUT
+
+      - name: Get artifact URLs
+        id: artifacts
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WORKFLOW_RUN_ID: ${{ github.event.workflow_run.id }}
+        run: |
+          REPO="${{ github.repository }}"
+          
+          # Get all artifacts from the workflow run
+          ARTIFACTS=$(gh api "/repos/$REPO/actions/runs/$WORKFLOW_RUN_ID/artifacts" --jq '.artifacts')
+          
+          # Build the markdown list of artifacts
+          ARTIFACT_LINKS=""
+          echo "$ARTIFACTS" | jq -r '.[] | "- [\(.name)](\(.archive_download_url))"' | while read -r line; do
+            if [ -z "$ARTIFACT_LINKS" ]; then
+              ARTIFACT_LINKS="$line"
+            else
+              ARTIFACT_LINKS="$ARTIFACT_LINKS"$'\n'"$line"
+            fi
+          done
+          
+          # Store in a file to preserve newlines
+          echo "$ARTIFACTS" | jq -r '.[] | "- [\(.name)](https://github.com/${{ github.repository }}/actions/runs/${{ github.event.workflow_run.id }}/artifacts/\(.id))"' > artifacts.txt
+          
+          # Read it back
+          ARTIFACT_LINKS=$(cat artifacts.txt)
+          echo "links<<EOF" >> $GITHUB_OUTPUT
+          echo "$ARTIFACT_LINKS" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Post comment with artifact links
+        uses: thollander/actions-comment-pull-request@v3
         with:
-          prefix: "Do you want to test this code? Here you have an automated build:"
-          suffix: "WARNING: It may be unstable and result in corrupted configurations or data loss. Use only for testing!"
-          format: name
-          addTo: pull
+          pr_number: ${{ steps.pr.outputs.number }}
+          message: |
+            ## 🎉 Do you want to test this code? Here you have an automated build:
+            
+            ${{ steps.artifacts.outputs.links }}
+            
+            ⚠️ **WARNING**: It may be unstable and result in corrupted configurations or data loss. Use only for testing!
+          comment-tag: 'artifact-links'
+          mode: recreate
