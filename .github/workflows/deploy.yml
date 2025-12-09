@@ -139,8 +139,17 @@ jobs:
 
       - name: Add deployment comment
         if: github.event_name == 'pull_request_target' || github.event_name == 'pull_request'
-        uses: thollander/actions-comment-pull-request@v3.0.1
+        uses: actions/github-script@v7
         with:
-          message: "Preview URL: ${{ steps.deploy.outputs.pages-deployment-alias-url }}\nAndroid APK: [Download from artifacts](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
-          comment-tag: 'Preview URL'
-          mode: recreate
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const previewUrl = '${{ steps.deploy.outputs.pages-deployment-alias-url }}';
+            const apkUrl = '${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}';
+            const message = `Preview URL: ${previewUrl}\nAndroid APK: [Download from artifacts](${apkUrl})`;
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: message
+            });
