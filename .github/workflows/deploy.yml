@@ -131,15 +131,6 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: pages deploy src/dist --project-name=${{ vars.CLOUDFLARE_PROJECT_NAME }} --branch=${{ env.BRANCH }} --commit-dirty=true
 
-      - name: Add deployment comment
-        if: github.event_name == 'pull_request_target' || github.event_name == 'pull_request'
-        uses: thollander/actions-comment-pull-request@v3
-        with:
-          message: |
-             Preview URL: ${{ steps.deploy.outputs.pages-deployment-alias-url }}
-          comment-tag: 'Preview URL'
-          mode: recreate
-
       - name: Download APK artifact
         uses: actions/download-artifact@v5
         with:
@@ -158,6 +149,8 @@ jobs:
         uses: thollander/actions-comment-pull-request@v3
         with:
           message: |
+            Preview URL: ${{ steps.deploy.outputs.pages-deployment-alias-url }}
+
             ## 🎉 Do you want to test this code? Here you have an automated build:
             
             **Download artifacts from this workflow run:**
