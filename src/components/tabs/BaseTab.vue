@@ -1,5 +1,5 @@
 <template>
-    <div :class="`tab-${tabName}`">
+    <div :class="[`tab-${tabName}`, extraClass]">
         <slot></slot>
     </div>
 </template>
@@ -23,6 +23,10 @@ export default defineComponent({
             type: String,
             required: true,
         },
+        extraClass: {
+            type: String,
+            default: "",
+        },
     },
     emits: ["mounted", "cleanup"],
     setup(props, { emit }) {
@@ -36,8 +40,9 @@ export default defineComponent({
 
         onUnmounted(() => {
             // Clean up any intervals/timeouts when tab is destroyed
-            GUI.interval_kill_all();
-            GUI.timeout_kill_all();
+            // Global cleanup removed to allow tabs to manage their own intervals individually
+            // GUI.interval_kill_all();
+            // GUI.timeout_kill_all();
             emit("cleanup");
         });
 
