@@ -389,6 +389,14 @@
                         </div>
                         <div class="spacer_box">
                             <table class="features-table">
+                                <thead class="visually-hidden">
+                                    <tr>
+                                        <th scope="col">{{ $t("configurationFeatureEnabled") }}</th>
+                                        <th scope="col">{{ $t("configurationFeatureName") }}</th>
+                                        <th scope="col">{{ $t("configurationFeatureDescription") }}</th>
+                                        <th scope="col">{{ $t("configurationFeatureHelp") }}</th>
+                                    </tr>
+                                </thead>
                                 <tbody>
                                     <tr v-for="feature in featuresList" :key="feature.bit">
                                         <template v-if="feature.mode !== 'select'">
@@ -442,7 +450,9 @@
                             <table class="dshot-beacon-table">
                                 <thead>
                                     <tr>
-                                        <!-- Header removed as no legacy key exists for 'Beacon Activation Conditions' -->
+                                        <th scope="col">{{ $t("configurationEnabled") }}</th>
+                                        <th scope="col">{{ $t("configurationCondition") }}</th>
+                                        <th scope="col">{{ $t("configurationDescription") }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -539,6 +549,8 @@ export default defineComponent({
             acc_hardware: 0,
             baro_hardware: 0,
             mag_hardware: 0,
+            sonar_hardware: 0,
+            opticalflow_hardware: 0,
         });
 
         const boardAlignment = reactive({
@@ -579,10 +591,13 @@ export default defineComponent({
         const showGyro1Align = ref(false);
         const showGyro2Align = ref(false);
         const showMagAlign = ref(false);
-        const showOtherSensors = ref(false);
         const showMagDeclination = ref(false);
         const showRangefinder = ref(false);
         const showOpticalFlow = ref(false);
+
+        const showOtherSensors = computed(() => {
+            return showMagDeclination.value || showRangefinder.value || showOpticalFlow.value;
+        });
         const sonarTypesList = ref([]);
         const opticalFlowTypesList = ref([]);
         const sensorAlignments = ref([
@@ -764,6 +779,8 @@ export default defineComponent({
             sensorConfig.acc_hardware = FC.SENSOR_CONFIG.acc_hardware;
             sensorConfig.baro_hardware = FC.SENSOR_CONFIG.baro_hardware;
             sensorConfig.mag_hardware = FC.SENSOR_CONFIG.mag_hardware;
+            sensorConfig.sonar_hardware = FC.SENSOR_CONFIG.sonar_hardware;
+            sensorConfig.opticalflow_hardware = FC.SENSOR_CONFIG.opticalflow_hardware;
 
             boardAlignment.roll = FC.BOARD_ALIGNMENT_CONFIG.roll;
             boardAlignment.pitch = FC.BOARD_ALIGNMENT_CONFIG.pitch;
@@ -829,12 +846,19 @@ export default defineComponent({
             showGyro1Align.value = true;
             // Legacy logic toggles alignment inputs based on detected gyros
 
-            // Mag Declination
-            if (have_sensor(FC.CONFIG.activeSensors, "mag") && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
-                showMagDeclination.value = true;
-                magDeclination.value = FC.COMPASS_CONFIG.mag_declination;
+            // Mag Declination & Alignment
+            if (have_sensor(FC.CONFIG.activeSensors, "mag")) {
+                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+                    showMagDeclination.value = true;
+                    magDeclination.value = FC.COMPASS_CONFIG.mag_declination;
+                }
+                // Show mag alignment for API >= 1.47
+                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+                    showMagAlign.value = true;
+                }
             } else {
                 showMagDeclination.value = false;
+                showMagAlign.value = false;
             }
 
             // Rangefinder / Optical Flow (API 1.47+)
