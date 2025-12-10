@@ -2933,49 +2933,25 @@ MspHelper.prototype.sendSerialConfig = function (callback) {
 };
 
 MspHelper.prototype.writeConfiguration = function (reboot, callback) {
-    // Quiet background traffic to avoid queue starvation on BLE
-    try {
-        GUI.interval_kill_all();
-        MSP.callbacks_cleanup();
-    } catch (e) {
-        console.warn("writeConfiguration: pre-save quieting failed:", e);
+    // We need some protection when testing motors on motors tab
+    if (!FC.CONFIG.armingDisabled) {
+        this.setArmingEnabled(false, false);
     }
 
-    const sendEeprom = () => {
-        let finished = false;
-        const finish = () => {
-            if (finished) return;
-            finished = true;
-
+    setTimeout(function () {
+        MSP.send_message(MSPCodes.MSP_EEPROM_WRITE, false, false, function () {
+            gui_log(i18n.getMessage("configurationEepromSaved"));
+            console.log("Configuration saved to EEPROM");
             if (reboot) {
                 GUI.tab_switch_cleanup(function () {
                     return reinitializeConnection();
                 });
             }
-            if (callback) callback();
-        };
-
-        // Fallback in case the EEPROM ack is missed under BLE load
-        const fallbackTimer = setTimeout(() => {
-            console.warn("MSP_EEPROM_WRITE ack timeout; proceeding to reboot via fallback.");
-            finish();
-        }, 3000); // conservative for Android BLE
-
-        MSP.send_message(MSPCodes.MSP_EEPROM_WRITE, false, false, function () {
-            clearTimeout(fallbackTimer);
-            gui_log(i18n.getMessage("configurationEepromSaved"));
-            console.log("Configuration saved to EEPROM");
-            finish();
+            if (callback) {
+                callback();
+            }
         });
-    };
-
-    // Keep your arming safety, but don’t block on it
-    if (!FC.CONFIG.armingDisabled) {
-        this.setArmingEnabled(false, false);
-        setTimeout(sendEeprom, 200); // current delay retained
-    } else {
-        setTimeout(sendEeprom, 200);
-    }
+    }, 100); // 100ms delay before sending MSP_EEPROM_WRITE to ensure that all settings have been received
 };
 
 let mspHelper;
