@@ -152,16 +152,11 @@ function connectDisconnect() {
                 serial.addEventListener("disconnect", disconnectHandler);
             }
 
-            GUI.connect_lock = true;
-            serial
-                .connect(
-                    portName,
-                    { baudRate: PortHandler.portPicker.selectedBauds },
-                    selectedPort === "virtual" ? onOpenVirtual : undefined,
-                )
-                .finally(() => {
-                    GUI.connect_lock = false;
-                });
+            serial.connect(
+                portName,
+                { baudRate: PortHandler.portPicker.selectedBauds },
+                selectedPort === "virtual" ? onOpenVirtual : undefined,
+            );
         }
 
         // show CLI panel on Control+I
