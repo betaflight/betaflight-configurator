@@ -153,8 +153,8 @@ jobs:
 
             ## 🎉 Do you want to test this code? Here you have an automated build:
             
-            - 🤖 **[Download Android APK: ${{ steps.apk.outputs.name }}](https://nightly.link/${{ github.repository }}/actions/runs/${{ github.run_id }}/betaflight-configurator-apk.zip)**
-            - 📦 **[Download all artifacts](https://nightly.link/${{ github.repository }}/actions/runs/${{ github.run_id }})**
+            - 🤖 **Android APK:** ${{ steps.apk.outputs.name }}
+            - 📦 **[Download all artifacts](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})**
             
             ⚠️ **WARNING**: It may be unstable and result in corrupted configurations or data loss. Use only for testing!
           comment-tag: 'deployment-comment'
