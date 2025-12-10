@@ -466,7 +466,22 @@ class GuiControl {
         if (["cli", "presets"].includes(this.active_tab)) {
             console.log(`[GUI] Rebooting in ${this.active_tab} tab, skipping reboot dialog`);
             gui_log(i18n.getMessage("deviceRebooting"));
-            gui_log(i18n.getMessage("deviceReady"));
+
+            const connectionCheckInterval = setInterval(() => {
+                const connectionCheckTimeoutReached =
+                    Date.now() - this.reboot_timestamp > this.REBOOT_CONNECT_MAX_TIME_MS;
+                const noSerialReconnect = !PortHandler.portPicker.autoConnect && PortHandler.portAvailable;
+
+                if (CONFIGURATOR.connectionValid || connectionCheckTimeoutReached || noSerialReconnect) {
+                    clearInterval(connectionCheckInterval);
+
+                    if (connectionCheckTimeoutReached) {
+                        console.log(`[GUI] Reboot timeout reached`);
+                    } else {
+                        gui_log(i18n.getMessage("deviceReady"));
+                    }
+                }
+            }, 100);
 
             return;
         }
