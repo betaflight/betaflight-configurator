@@ -601,6 +601,11 @@ function finishOpen() {
         if (FC.CONFIG.buildOptions.some((opt) => opt.includes("USE_WING")) && !GUI.allowedTabs.includes("servos")) {
             GUI.allowedTabs.push("servos");
         }
+
+        // CORE_BUILD should include OSD
+        if (FC.CONFIG.buildOptions.includes("CORE_BUILD")) {
+            GUI.allowedTabs.push("osd");
+        }
     } else {
         GUI.allowedTabs = Array.from(GUI.defaultAllowedFCTabsWhenConnected);
     }
