@@ -144,19 +144,18 @@ jobs:
           APK_NAME=$(basename "$APK_FILE")
           echo "name=$APK_NAME" >> $GITHUB_OUTPUT
 
-      - name: Add artifact links comment
+      - name: Add deployment comment
         if: github.event_name == 'pull_request_target' || github.event_name == 'pull_request'
         uses: thollander/actions-comment-pull-request@v3
         with:
           message: |
-            Preview URL: ${{ steps.deploy.outputs.pages-deployment-alias-url }}
+            **Preview URL:** ${{ steps.deploy.outputs.pages-deployment-alias-url }}
 
             ## 🎉 Do you want to test this code? Here you have an automated build:
             
-            **Download artifacts from this workflow run:**
-            - 🤖 [Android APK: ${{ steps.apk.outputs.name }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
-            - 📦 [All artifacts](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+            - 🤖 **[Download Android APK: ${{ steps.apk.outputs.name }}](https://nightly.link/${{ github.repository }}/actions/runs/${{ github.run_id }}/betaflight-configurator-apk.zip)**
+            - 📦 **[Download all artifacts](https://nightly.link/${{ github.repository }}/actions/runs/${{ github.run_id }})**
             
             ⚠️ **WARNING**: It may be unstable and result in corrupted configurations or data loss. Use only for testing!
-          comment-tag: 'artifact-links'
+          comment-tag: 'deployment-comment'
           mode: recreate
