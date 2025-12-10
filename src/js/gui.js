@@ -435,12 +435,14 @@ class GuiControl {
     }
     reinitializeConnection() {
         if (CONFIGURATOR.virtualMode) {
+            this.reboot_timestamp = Date.now();
             $("a.connection_button__link").trigger("click");
             if (PortHandler.portPicker.autoConnect) {
                 return setTimeout(function () {
                     $("a.connection_button__link").trigger("click");
                 }, 500);
             }
+            return;
         }
 
         const currentPort = PortHandler.portPicker.selectedPort;
