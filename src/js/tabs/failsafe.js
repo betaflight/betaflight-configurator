@@ -29,7 +29,11 @@ failsafe.initialize = function (callback) {
     }
 
     function load_gps_rescue() {
-        MSP.send_message(MSPCodes.MSP_GPS_RESCUE, false, false, get_box_names);
+        if (FC.checkBuildOption("USE_GPS")) {
+            MSP.send_message(MSPCodes.MSP_GPS_RESCUE, false, false, get_box_names);
+        } else {
+            get_box_names();
+        }
     }
 
     function get_box_names() {
@@ -65,7 +69,7 @@ failsafe.initialize = function (callback) {
     }
 
     function load_compass_config() {
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46) && FC.checkBuildOption("USE_MAG")) {
             MSP.send_message(MSPCodes.MSP_COMPASS_CONFIG, false, false, load_gps_config);
         } else {
             load_gps_config();

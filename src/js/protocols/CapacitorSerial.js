@@ -137,6 +137,7 @@ class CapacitorSerial extends EventTarget {
 
     async requestPermissionDevice() {
         let newPermissionPort = null;
+
         try {
             console.log(`${logHead} Requesting USB permissions...`);
             const userSelectedPort = await BetaflightSerial.requestPermission();
