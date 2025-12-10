@@ -3,7 +3,7 @@
   "productName": "Betaflight",
   "displayName": "Betaflight - Configuration and management application",
   "description": "Crossplatform configuration and management application for the Betaflight flight control firmware.",
-  "version": "2025.12.0-RC3",
+  "version": "2025.12.0-RC4",
   "type": "module",
   "main": "index.html",
   "scripts": {
