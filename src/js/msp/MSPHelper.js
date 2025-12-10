@@ -16,7 +16,6 @@ import { updateTabList } from "../utils/updateTabList";
 import { showErrorDialog } from "../utils/showErrorDialog";
 import GUI, { TABS } from "../gui";
 import { OSD } from "../tabs/osd";
-import { reinitializeConnection } from "../serial_backend";
 
 // Used for LED_STRIP
 const ledDirectionLetters = ["n", "e", "s", "w", "u", "d"]; // in LSB bit order
@@ -2944,7 +2943,7 @@ MspHelper.prototype.writeConfiguration = function (reboot, callback) {
             console.log("Configuration saved to EEPROM");
             if (reboot) {
                 GUI.tab_switch_cleanup(function () {
-                    return reinitializeConnection();
+                    return GUI.reinitializeConnection();
                 });
             }
             if (callback) {
