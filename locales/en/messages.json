@@ -1612,6 +1612,9 @@
     "configurationGyroCalOnFirstArm": {
         "message": "Calibrate Gyro on first arm"
     },
+    "configurationGyroCalOnFirstArmHelp": {
+        "message": "When enabled, the gyroscope will be calibrated on the first arm after power on. This can help reduce gyro drift during flight."
+    },
     "configurationMotorIdle": {
         "message": "Motor Idle (%)"
     },
