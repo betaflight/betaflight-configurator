@@ -1,7 +1,6 @@
 import GUI from "../../js/gui";
 import { i18n } from "../../js/localization";
 import CONFIGURATOR from "../../js/data_storage";
-import { reinitializeConnection } from "../../js/serial_backend";
 import { gui_log } from "../../js/gui_log";
 import { serial } from "../../js/serial";
 
@@ -235,7 +234,7 @@ export default class CliEngine {
                 CONFIGURATOR.cliEngineActive = false;
                 CONFIGURATOR.cliEngineValid = false;
                 gui_log(i18n.getMessage("cliReboot"));
-                reinitializeConnection();
+                GUI.reinitializeConnection();
             }
         }
 
