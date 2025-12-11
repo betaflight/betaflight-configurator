@@ -607,8 +607,13 @@ export default defineComponent({
         const showRangefinder = ref(false);
         const showOpticalFlow = ref(false);
 
+        // This section uses legacy alignment dropdowns (gyro_to_use, gyro_1_align, gyro_2_align, align_mag)
+        // which are only available for API < 1.47. For API >= 1.47, the firmware uses different mechanisms.
         const showSensorAlignment = computed(() => {
-            return showGyroToUse.value || showGyro1Align.value || showGyro2Align.value || showMagAlign.value;
+            return (
+                semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_47) &&
+                (showGyroToUse.value || showGyro1Align.value || showGyro2Align.value)
+            );
         });
         const showOtherSensors = computed(() => {
             return showMagDeclination.value || showRangefinder.value || showOpticalFlow.value;
