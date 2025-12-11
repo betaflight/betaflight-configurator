@@ -35,8 +35,6 @@ let liveDataRefreshTimerId = false;
 
 let isConnected = false;
 
-const REBOOT_GRACE_PERIOD_MS = 2000;
-
 function isCliOnlyMode() {
     return getConfig("cliOnlyMode")?.cliOnlyMode === true;
 }
@@ -127,7 +125,8 @@ function connectDisconnect() {
             }
 
             // When rebooting, adhere to the auto-connect setting
-            if (!PortHandler.portPicker.autoConnect && Date.now() - rebootTimestamp < REBOOT_GRACE_PERIOD_MS) {
+            const REBOOT_GRACE_PERIOD_MS = 2000;
+            if (!PortHandler.portPicker.autoConnect && Date.now() - GUI.reboot_timestamp < REBOOT_GRACE_PERIOD_MS) {
                 console.log(`${logHead} Rebooting, not connecting`);
                 return;
             }

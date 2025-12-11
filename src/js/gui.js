@@ -467,27 +467,34 @@ class GuiControl {
             console.log(`[GUI] Rebooting in ${this.active_tab} tab, skipping reboot dialog`);
             gui_log(i18n.getMessage("deviceRebooting"));
 
-            const connectionCheckInterval = setInterval(() => {
-                const connectionCheckTimeoutReached =
-                    Date.now() - this.reboot_timestamp > this.REBOOT_CONNECT_MAX_TIME_MS;
-                const noSerialReconnect = !PortHandler.portPicker.autoConnect && PortHandler.portAvailable;
-
-                if (CONFIGURATOR.connectionValid || connectionCheckTimeoutReached || noSerialReconnect) {
-                    clearInterval(connectionCheckInterval);
-
-                    if (connectionCheckTimeoutReached) {
-                        console.log(`[GUI] Reboot timeout reached`);
-                    } else {
-                        gui_log(i18n.getMessage("deviceReady"));
-                    }
+            this._waitForReconnection((timeoutReached) => {
+                if (timeoutReached) {
+                    console.log(`[GUI] Reboot timeout reached`);
+                } else {
+                    gui_log(i18n.getMessage("deviceReady"));
                 }
-            }, 100);
+            });
 
             return;
         }
 
         // Show reboot progress modal
         this.showRebootDialog();
+    }
+
+    _waitForReconnection(callback) {
+        const checkInterval = setInterval(() => {
+            const timeoutReached = Date.now() - this.reboot_timestamp > this.REBOOT_CONNECT_MAX_TIME_MS;
+            const noSerialReconnect = !PortHandler.portPicker.autoConnect && PortHandler.portAvailable;
+
+            if (CONFIGURATOR.connectionValid || timeoutReached || noSerialReconnect) {
+                clearInterval(checkInterval);
+                callback(timeoutReached);
+            }
+        }, 100);
+
+        // Return the interval ID so it can be cleared externally if needed (e.g. by progress bar logic)
+        return checkInterval;
     }
 
     showRebootDialog() {
@@ -516,23 +523,23 @@ class GuiControl {
                 style.id = "rebootProgressStyle";
                 style.textContent = `
                     .dialogReboot {
-                        border: 1px solid #3f4241;
+                        border: 1px solid var(--subtleAccent);
                         border-radius: 5px;
-                        background-color: #2d3233;
-                        color: #fff;
+                        background-color: var(--surface-100);
+                        color: var(--text);
                         padding: 20px;
                         max-width: 400px;
                     }
                     .reboot-progress-container {
                         width: 100%;
-                        background-color: #424546;
+                        background-color: var(--surface-0);
                         border-radius: 3px;
                         margin: 15px 0 5px;
                         height: 10px;
                     }
                     .reboot-progress-bar {
                         height: 100%;
-                        background-color: #ffbb00;
+                        background-color: var(--primary-500);
                         border-radius: 3px;
                         transition: width 0.1s ease-in-out;
                         width: 0%;
@@ -556,38 +563,34 @@ class GuiControl {
 
         // Update progress during reboot
         let progress = 0;
+        // Calculate increment to reach 100% exactly when timeout occurs (called every 100ms)
+        const progressIncrement = 100 / (this.REBOOT_CONNECT_MAX_TIME_MS / 100);
+
         const progressInterval = setInterval(() => {
-            progress += 5;
+            progress += progressIncrement;
             if (progress <= 100) {
                 rebootDialog.querySelector(".reboot-progress-bar").style.width = `${progress}%`;
             }
         }, 100);
 
-        // Check for successful connection every 100ms with a timeout
-        const connectionCheckInterval = setInterval(() => {
-            const connectionCheckTimeoutReached = Date.now() - this.reboot_timestamp > this.REBOOT_CONNECT_MAX_TIME_MS;
-            const noSerialReconnect = !PortHandler.portPicker.autoConnect && PortHandler.portAvailable;
+        // Check for successful connection using shared helper
+        this._waitForReconnection((timeoutReached) => {
+            clearInterval(progressInterval);
 
-            if (CONFIGURATOR.connectionValid || connectionCheckTimeoutReached || noSerialReconnect) {
-                clearInterval(connectionCheckInterval);
-                clearInterval(progressInterval);
+            rebootDialog.querySelector(".reboot-progress-bar").style.width = "100%";
+            rebootDialog.querySelector(".reboot-status").textContent = i18n.getMessage("rebootFlightControllerReady");
 
-                rebootDialog.querySelector(".reboot-progress-bar").style.width = "100%";
-                rebootDialog.querySelector(".reboot-status").textContent =
-                    i18n.getMessage("rebootFlightControllerReady");
+            // Close the dialog after showing "ready" message briefly
+            setTimeout(() => {
+                rebootDialog.close();
+            }, 1000);
 
-                // Close the dialog after showing "ready" message briefly
-                setTimeout(() => {
-                    rebootDialog.close();
-                }, 1000);
-
-                if (connectionCheckTimeoutReached) {
-                    console.log(`[GUI] Reboot timeout reached`);
-                } else {
-                    gui_log(i18n.getMessage("deviceReady"));
-                }
+            if (timeoutReached) {
+                console.log(`[GUI] Reboot timeout reached`);
+            } else {
+                gui_log(i18n.getMessage("deviceReady"));
             }
-        }, 100);
+        });
     }
 
     showCliPanel() {
