@@ -211,7 +211,7 @@
                                         <th scope="col">{{ $t("configurationFeatureEnabled") }}</th>
                                         <th scope="col">{{ $t("configurationFeatureName") }}</th>
                                         <th scope="col">{{ $t("configurationFeatureDescription") }}</th>
-                                        <th scope="col">{{ $t("configurationFeatureDescription") }}</th>
+                                        <th scope="col">{{ $t("configurationFeatureHelp") }}</th>
                                     </tr>
                                 </thead>
                                 <tbody :key="featureMask">
@@ -432,15 +432,17 @@
                             <table class="dshot-beacon-table">
                                 <thead>
                                     <tr>
-                                        <th class="col-enable">
+                                        <th scope="col" class="col-enable">
                                             {{ $t("configurationFeatureEnabled") }}
                                             <div
                                                 class="helpicon cf_tip"
                                                 :title="$t('configurationDshotBeaconHelp')"
                                             ></div>
                                         </th>
-                                        <th class="col-name">{{ $t("configurationFeatureName") }}</th>
-                                        <th class="col-description">{{ $t("configurationFeatureDescription") }}</th>
+                                        <th scope="col" class="col-name">{{ $t("configurationFeatureName") }}</th>
+                                        <th scope="col" class="col-description">
+                                            {{ $t("configurationFeatureDescription") }}
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody :key="dshotDisabledMask">

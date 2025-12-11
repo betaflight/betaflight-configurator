@@ -1414,6 +1414,9 @@
     "configurationFeatures": {
         "message": "Other Features"
     },
+    "configurationFeatureHelp": {
+        "message": "Help"
+    },
     "configurationReceiver": {
         "message": "Receiver"
     },
