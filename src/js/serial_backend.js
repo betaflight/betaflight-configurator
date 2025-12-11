@@ -787,7 +787,7 @@ export function reinitializeConnection() {
     // Force connection invalid to ensure reboot dialog waits for reconnection
     CONFIGURATOR.connectionValid = false;
 
-    if (currentPort.startsWith("bluetooth")) {
+    if (currentPort.startsWith("bluetooth") || currentPort === "manual") {
         if (!PortHandler.portPicker.autoConnect) {
             return setTimeout(function () {
                 $("a.connection_button__link").trigger("click");
