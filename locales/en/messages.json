@@ -1453,6 +1453,9 @@
     "configurationSpiRxHelp": {
         "message": "<strong>Note:</strong> The SPI RX provider will only work if the required hardware is on board or connected to an SPI bus."
     },
+    "configurationOtherFeatures": {
+        "message": "Other Features"
+    },
     "configurationOtherFeaturesHelp": {
         "message": "<strong>Note:</strong> Not all features are supported by all flight controllers. If you enable a specific feature, and it is disabled after you hit 'Save and Reboot', it means that this feature is not supported on your board."
     },

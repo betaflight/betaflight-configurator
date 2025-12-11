@@ -313,7 +313,7 @@
                         </div>
                         <div class="spacer_box">
                             <!-- GYRO ALIGNMENT -->
-                            <template v-if="sensorAlignment.gyro_to_use !== undefined">
+                            <template v-if="showGyroToUse">
                                 <div class="select">
                                     <select v-model.number="sensorAlignment.gyro_to_use">
                                         <option value="0">{{ $t("configurationSensorGyroToUseFirst") }}</option>
@@ -362,6 +362,7 @@
                     <div class="gui_box grey" v-if="showOtherSensors">
                         <div class="gui_box_titlebar">
                             <div class="spacer_box_title">{{ $t("configurationOtherFeatures") }}</div>
+                            <div class="helpicon cf_tip" :title="$t('configurationOtherFeaturesHelp')"></div>
                         </div>
                         <div class="spacer_box">
                             <!-- MAG DECLINATION -->
@@ -596,6 +597,9 @@ export default defineComponent({
         const showAutoDisarmDelay = ref(false);
         const hasSecondGyro = ref(false);
         const hasDualGyros = ref(false);
+        const showGyroToUse = computed(() => {
+            return semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_47) && sensorAlignment.gyro_to_use !== undefined;
+        });
         const showGyro1Align = ref(false);
         const showGyro2Align = ref(false);
         const showMagAlign = ref(false);
@@ -1103,6 +1107,7 @@ export default defineComponent({
             showRangefinder,
             showOpticalFlow,
             sonarTypesList,
+            showGyroToUse,
             opticalFlowTypesList,
             sensorAlignments,
             saveConfig,
