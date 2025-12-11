@@ -91,8 +91,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-span-1">
+
                     <!-- PERSONALIZATION -->
                     <div class="gui_box grey miscSettings">
                         <div class="gui_box_titlebar">
@@ -150,6 +149,107 @@
                         </div>
                     </div>
 
+                    <!-- ARMING -->
+                    <div class="gui_box grey arming" v-if="accHardwareEnabled">
+                        <div class="gui_box_titlebar">
+                            <div class="spacer_box_title">{{ $t("configurationArming") }}</div>
+                            <div class="helpicon cf_tip" :title="$t('configurationArmingHelp')"></div>
+                        </div>
+                        <div class="spacer_box">
+                            <div class="number">
+                                <label>
+                                    <input
+                                        type="number"
+                                        name="small_angle"
+                                        v-model.number="armingConfig.small_angle"
+                                        min="0"
+                                        max="180"
+                                    />
+                                    <span>{{ $t("configurationSmallAngle") }}</span>
+                                </label>
+                                <div class="helpicon cf_tip" :title="$t('configurationSmallAngleHelp')"></div>
+                            </div>
+
+                            <div class="select" v-if="showGyroCalOnFirstArm">
+                                <div>
+                                    <input
+                                        type="checkbox"
+                                        class="toggle"
+                                        id="gyroCalOnFirstArm"
+                                        v-model="armingConfig.gyro_cal_on_first_arm_bool"
+                                    />
+                                </div>
+                                <span class="freelabel">{{ $t("configurationGyroCalOnFirstArm") }}</span>
+                                <div class="helpicon cf_tip" :title="$t('configurationGyroCalOnFirstArmHelp')"></div>
+                            </div>
+
+                            <div class="number" v-if="showAutoDisarmDelay">
+                                <label>
+                                    <input
+                                        type="number"
+                                        name="auto_disarm_delay"
+                                        v-model.number="armingConfig.auto_disarm_delay"
+                                        min="0"
+                                        max="60"
+                                    />
+                                    <span>{{ $t("configurationAutoDisarmDelay") }}</span>
+                                </label>
+                                <div class="helpicon cf_tip" :title="$t('configurationAutoDisarmDelayHelp')"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FEATURES -->
+                    <div class="gui_box grey features">
+                        <div class="gui_box_titlebar">
+                            <div class="spacer_box_title">{{ $t("configurationFeatures") }}</div>
+                        </div>
+                        <div class="spacer_box">
+                            <table class="features-table">
+                                <thead class="visually-hidden">
+                                    <tr>
+                                        <th scope="col">{{ $t("configurationFeatureEnabled") }}</th>
+                                        <th scope="col">{{ $t("configurationFeatureName") }}</th>
+                                        <th scope="col">{{ $t("configurationFeatureDescription") }}</th>
+                                        <th scope="col">{{ $t("configurationFeatureDescription") }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody :key="featureMask">
+                                    <tr v-for="feature in featuresList" :key="feature.bit">
+                                        <template v-if="feature.mode !== 'select'">
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    class="feature toggle"
+                                                    :id="'feature' + feature.bit"
+                                                    :name="feature.name"
+                                                    :checked="isFeatureEnabled(feature)"
+                                                    @change="toggleFeature(feature, $event.target.checked)"
+                                                />
+                                            </td>
+                                            <td>
+                                                <div v-if="!feature.hideName">{{ feature.name }}</div>
+                                            </td>
+                                            <td>
+                                                <span class="xs">{{ $t("feature" + feature.name) }}</span>
+                                            </td>
+                                            <td>
+                                                <span class="sm-min">{{ $t("feature" + feature.name) }}</span>
+                                                <div
+                                                    v-if="feature.haveTip"
+                                                    class="helpicon cf_tip"
+                                                    :title="$t('feature' + feature.name + 'Tip')"
+                                                ></div>
+                                            </td>
+                                        </template>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-span-1">
                     <!-- BOARD ALIGNMENT -->
                     <div class="board acc">
                         <div class="gui_box grey">
@@ -205,89 +305,8 @@
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
 
-            <div class="grid-row grid-box col2">
-                <!-- ARMING -->
-                <div class="col-span-1">
-                    <div class="gui_box grey arming" v-if="accHardwareEnabled">
-                        <div class="gui_box_titlebar">
-                            <div class="spacer_box_title">{{ $t("configurationArming") }}</div>
-                            <div class="helpicon cf_tip" :title="$t('configurationArmingHelp')"></div>
-                        </div>
-                        <div class="spacer_box">
-                            <div class="number">
-                                <label>
-                                    <input
-                                        type="number"
-                                        name="small_angle"
-                                        v-model.number="armingConfig.small_angle"
-                                        min="0"
-                                        max="180"
-                                    />
-                                    <span>{{ $t("configurationSmallAngle") }}</span>
-                                </label>
-                                <div class="helpicon cf_tip" :title="$t('configurationSmallAngleHelp')"></div>
-                            </div>
-
-                            <div class="select" v-if="showGyroCalOnFirstArm">
-                                <div>
-                                    <input
-                                        type="checkbox"
-                                        class="toggle"
-                                        id="gyroCalOnFirstArm"
-                                        v-model="armingConfig.gyro_cal_on_first_arm_bool"
-                                    />
-                                </div>
-                                <span class="freelabel">{{ $t("configurationGyroCalOnFirstArm") }}</span>
-                                <div class="helpicon cf_tip" :title="$t('configurationGyroCalOnFirstArm')"></div>
-                            </div>
-
-                            <div class="number" v-if="showAutoDisarmDelay">
-                                <label>
-                                    <input
-                                        type="number"
-                                        name="auto_disarm_delay"
-                                        v-model.number="armingConfig.auto_disarm_delay"
-                                        min="0"
-                                        max="60"
-                                    />
-                                    <span>{{ $t("configurationAutoDisarmDelay") }}</span>
-                                </label>
-                                <div class="helpicon cf_tip" :title="$t('configurationAutoDisarmDelayHelp')"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- ACCELEROMETER TRIM -->
-                <div class="col-span-1">
-                    <div class="gui_box grey" v-if="accHardwareEnabled">
-                        <div class="gui_box_titlebar">
-                            <div class="spacer_box_title">{{ $t("initialSetupAccelTrimsHead") }}</div>
-                        </div>
-                        <div class="spacer_box">
-                            <div class="number">
-                                <label>
-                                    <input type="number" name="acc_trim_roll" v-model.number="accelTrims.roll" />
-                                    <span>{{ $t("configurationAccelTrimRoll") }}</span>
-                                </label>
-                            </div>
-                            <div class="number">
-                                <label>
-                                    <input type="number" name="acc_trim_pitch" v-model.number="accelTrims.pitch" />
-                                    <span>{{ $t("configurationAccelTrimPitch") }}</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- SENSOR ALIGNMENT (Complex) -->
-            <div class="grid-row grid-box col2">
-                <div class="col-span-1">
+                    <!-- SENSOR ALIGNMENT (Complex) -->
                     <div class="gui_box grey">
                         <div class="gui_box_titlebar">
                             <div class="spacer_box_title">{{ $t("configurationSensorAlignment") }}</div>
@@ -338,10 +357,8 @@
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- OTHER SENSORS -->
-                <div class="col-span-1">
+                    <!-- OTHER SENSORS -->
                     <div class="gui_box grey" v-if="showOtherSensors">
                         <div class="gui_box_titlebar">
                             <div class="spacer_box_title">{{ $t("configurationOtherFeatures") }}</div>
@@ -376,63 +393,28 @@
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
 
-            <!-- FEATURES & BEEPER ROW -->
-            <div class="grid-row grid-box col2">
-                <div class="col-span-1">
-                    <!-- FEATURES -->
-                    <div class="gui_box grey features">
+                    <!-- ACCELEROMETER TRIM -->
+                    <div class="gui_box grey" v-if="accHardwareEnabled">
                         <div class="gui_box_titlebar">
-                            <div class="spacer_box_title">{{ $t("configurationFeatures") }}</div>
+                            <div class="spacer_box_title">{{ $t("initialSetupAccelTrimsHead") }}</div>
                         </div>
                         <div class="spacer_box">
-                            <table class="features-table">
-                                <thead class="visually-hidden">
-                                    <tr>
-                                        <th scope="col">{{ $t("configurationFeatureEnabled") }}</th>
-                                        <th scope="col">{{ $t("configurationFeatureName") }}</th>
-                                        <th scope="col">{{ $t("configurationFeatureDescription") }}</th>
-                                        <th scope="col">{{ $t("configurationFeatureHelp") }}</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr v-for="feature in featuresList" :key="feature.bit">
-                                        <template v-if="feature.mode !== 'select'">
-                                            <td>
-                                                <input
-                                                    type="checkbox"
-                                                    class="feature toggle"
-                                                    :id="'feature' + feature.bit"
-                                                    :name="feature.name"
-                                                    :checked="isFeatureEnabled(feature)"
-                                                    @change="toggleFeature(feature, $event.target.checked)"
-                                                />
-                                            </td>
-                                            <td>
-                                                <div v-if="!feature.hideName">{{ feature.name }}</div>
-                                            </td>
-                                            <td>
-                                                <span class="xs">{{ $t("feature" + feature.name) }}</span>
-                                            </td>
-                                            <td>
-                                                <span class="sm-min">{{ $t("feature" + feature.name) }}</span>
-                                                <div
-                                                    v-if="feature.haveTip"
-                                                    class="helpicon cf_tip"
-                                                    :title="$t('feature' + feature.name + 'Tip')"
-                                                ></div>
-                                            </td>
-                                        </template>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <div class="number">
+                                <label>
+                                    <input type="number" name="acc_trim_roll" v-model.number="accelTrims.roll" />
+                                    <span>{{ $t("configurationAccelTrimRoll") }}</span>
+                                </label>
+                            </div>
+                            <div class="number">
+                                <label>
+                                    <input type="number" name="acc_trim_pitch" v-model.number="accelTrims.pitch" />
+                                    <span>{{ $t("configurationAccelTrimPitch") }}</span>
+                                </label>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="col-span-1">
                     <!-- DSHOT BEACON -->
                     <div class="gui_box grey dshotbeeper">
                         <div class="gui_box_titlebar">
@@ -450,12 +432,18 @@
                             <table class="dshot-beacon-table">
                                 <thead>
                                     <tr>
-                                        <th scope="col">{{ $t("configurationEnabled") }}</th>
-                                        <th scope="col">{{ $t("configurationCondition") }}</th>
-                                        <th scope="col">{{ $t("configurationDescription") }}</th>
+                                        <th class="col-enable">
+                                            {{ $t("configurationFeatureEnabled") }}
+                                            <div
+                                                class="helpicon cf_tip"
+                                                :title="$t('configurationDshotBeaconHelp')"
+                                            ></div>
+                                        </th>
+                                        <th class="col-name">{{ $t("configurationFeatureName") }}</th>
+                                        <th class="col-description">{{ $t("configurationFeatureDescription") }}</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody :key="dshotDisabledMask">
                                     <tr v-for="cond in dshotBeaconConditionsList" :key="cond.bit">
                                         <td>
                                             <input
@@ -486,26 +474,44 @@
                             <div class="spacer_box_title">{{ $t("configurationBeeper") }}</div>
                         </div>
                         <div class="spacer_box">
-                            <div class="beeper-configuration">
-                                <div
-                                    v-for="beeper in beepersList"
-                                    :key="beeper.bit"
-                                    class="beeper_item"
-                                    v-show="beeper.visible"
-                                >
-                                    <label>
-                                        <input
-                                            type="checkbox"
-                                            :checked="isBeeperEnabled(beeper)"
-                                            @change="toggleBeeper(beeper, $event.target.checked)"
-                                        />
-                                        <div style="display: inline-block; margin-left: 5px">{{ beeper.name }}</div>
-                                        <span style="margin-left: 5px; font-size: 10px; color: #888">{{
-                                            $t("beeper" + beeper.name)
-                                        }}</span>
-                                    </label>
-                                </div>
+                            <div class="beeper-controls">
+                                <button type="button" class="btn beeper-enable-all" @click="enableAllBeepers">
+                                    {{ $t("configurationBeeperEnableAll") }}
+                                </button>
+                                <button type="button" class="btn beeper-disable-all" @click="disableAllBeepers">
+                                    {{ $t("configurationBeeperDisableAll") }}
+                                </button>
                             </div>
+                            <table class="beeper-configuration-table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">{{ $t("configurationFeatureEnabled") }}</th>
+                                        <th scope="col">{{ $t("configurationFeatureName") }}</th>
+                                        <th scope="col">{{ $t("configurationFeatureDescription") }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="beeper-configuration" :key="beeperDisabledMask">
+                                    <tr v-for="beeper in beepersList" :key="beeper.bit" v-show="beeper.visible">
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                class="condition toggle"
+                                                :id="'beeper-' + beeper.bit"
+                                                :checked="isBeeperEnabled(beeper)"
+                                                @change="toggleBeeper(beeper, $event.target.checked)"
+                                            />
+                                        </td>
+                                        <td>
+                                            <div>{{ beeper.name }}</div>
+                                        </td>
+                                        <td>
+                                            <span :title="$t('beeper' + beeper.name)">{{
+                                                $t("beeper" + beeper.name)
+                                            }}</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -520,7 +526,7 @@
 </template>
 
 <script>
-import { defineComponent, ref, reactive, onMounted, computed } from "vue";
+import { defineComponent, ref, reactive, onMounted, computed, nextTick, watch } from "vue";
 import GUI from "../../js/gui";
 import FC from "../../js/fc";
 import MSP from "../../js/msp";
@@ -628,6 +634,13 @@ export default defineComponent({
         });
 
         const dshotBeaconTone = ref(0); // 0 = disabled
+        const beeperDisabledMask = ref(0);
+        const dshotDisabledMask = ref(0);
+
+        const featureMask = computed(() => {
+            if (!FC?.FEATURE_CONFIG?.features) return 0;
+            return FC.FEATURE_CONFIG.features._featureMask;
+        });
 
         // Methods for toggling bits
         const isFeatureEnabled = (feature) => {
@@ -651,45 +664,59 @@ export default defineComponent({
         const isBeeperEnabled = (beeper) => {
             if (!FC.BEEPER_CONFIG?.beepers) return false;
             // Note: Beeper logic uses DisabledMask, so checked means NOT disabled
-            return !bit_check(FC.BEEPER_CONFIG.beepers._beeperDisabledMask, beeper.bit);
+            return !bit_check(beeperDisabledMask.value, beeper.bit);
         };
 
         const toggleBeeper = (beeper, checked) => {
             if (!FC.BEEPER_CONFIG?.beepers) return;
             if (checked) {
                 // To enable, we CLEAR the disabled bit
-                FC.BEEPER_CONFIG.beepers._beeperDisabledMask = bit_clear(
-                    FC.BEEPER_CONFIG.beepers._beeperDisabledMask,
-                    beeper.bit,
-                );
+                beeperDisabledMask.value = bit_clear(beeperDisabledMask.value, beeper.bit);
             } else {
                 // To disable, we SET the disabled bit
-                FC.BEEPER_CONFIG.beepers._beeperDisabledMask = bit_set(
-                    FC.BEEPER_CONFIG.beepers._beeperDisabledMask,
-                    beeper.bit,
-                );
+                beeperDisabledMask.value = bit_set(beeperDisabledMask.value, beeper.bit);
             }
+            FC.BEEPER_CONFIG.beepers._beeperDisabledMask = beeperDisabledMask.value;
+        };
+
+        const enableAllBeepers = () => {
+            if (!FC.BEEPER_CONFIG?.beepers) return;
+            let mask = beeperDisabledMask.value;
+            beepersList.value.forEach((beeper) => {
+                if (beeper.visible !== false) {
+                    mask = bit_clear(mask, beeper.bit);
+                }
+            });
+            beeperDisabledMask.value = mask;
+            FC.BEEPER_CONFIG.beepers._beeperDisabledMask = mask;
+        };
+
+        const disableAllBeepers = () => {
+            if (!FC.BEEPER_CONFIG?.beepers) return;
+            let mask = beeperDisabledMask.value;
+            beepersList.value.forEach((beeper) => {
+                if (beeper.visible !== false) {
+                    mask = bit_set(mask, beeper.bit);
+                }
+            });
+            beeperDisabledMask.value = mask;
+            FC.BEEPER_CONFIG.beepers._beeperDisabledMask = mask;
         };
 
         const isDshotConditionEnabled = (cond) => {
             if (!FC.BEEPER_CONFIG?.dshotBeaconConditions) return false;
             // Same logic as beepers (DisabledMask)
-            return !bit_check(FC.BEEPER_CONFIG.dshotBeaconConditions._beeperDisabledMask, cond.bit);
+            return !bit_check(dshotDisabledMask.value, cond.bit);
         };
 
         const toggleDshotCondition = (cond, checked) => {
             if (!FC.BEEPER_CONFIG?.dshotBeaconConditions) return;
             if (checked) {
-                FC.BEEPER_CONFIG.dshotBeaconConditions._beeperDisabledMask = bit_clear(
-                    FC.BEEPER_CONFIG.dshotBeaconConditions._beeperDisabledMask,
-                    cond.bit,
-                );
+                dshotDisabledMask.value = bit_clear(dshotDisabledMask.value, cond.bit);
             } else {
-                FC.BEEPER_CONFIG.dshotBeaconConditions._beeperDisabledMask = bit_set(
-                    FC.BEEPER_CONFIG.dshotBeaconConditions._beeperDisabledMask,
-                    cond.bit,
-                );
+                dshotDisabledMask.value = bit_set(dshotDisabledMask.value, cond.bit);
             }
+            FC.BEEPER_CONFIG.dshotBeaconConditions._beeperDisabledMask = dshotDisabledMask.value;
         };
 
         // Computed Wrappers for Hardware Switches (logic inverted: 1 = disabled usually? legacy says: !== 1)
@@ -764,6 +791,8 @@ export default defineComponent({
                 }
 
                 initializeUI();
+                await nextTick();
+                GUI.switchery();
                 GUI.content_ready();
             } catch (e) {
                 console.error("Failed to load configuration", e);
@@ -805,6 +834,12 @@ export default defineComponent({
             // Load DShot Tone
             if (FC.BEEPER_CONFIG) {
                 dshotBeaconTone.value = FC.BEEPER_CONFIG.dshotBeaconTone;
+                if (FC.BEEPER_CONFIG.beepers) {
+                    beeperDisabledMask.value = FC.BEEPER_CONFIG.beepers._beeperDisabledMask;
+                }
+                if (FC.BEEPER_CONFIG.dshotBeaconConditions) {
+                    dshotDisabledMask.value = FC.BEEPER_CONFIG.dshotBeaconConditions._beeperDisabledMask;
+                }
             }
 
             // Arming Config
@@ -1015,6 +1050,12 @@ export default defineComponent({
             loadConfig();
         });
 
+        // Watch for beeper mask changes to reinitialize Switchery
+        watch([beeperDisabledMask, dshotDisabledMask, featureMask], async () => {
+            await nextTick();
+            GUI.switchery();
+        });
+
         return {
             pidAdvancedConfig,
             sensorConfig,
@@ -1033,10 +1074,15 @@ export default defineComponent({
             beepersList,
             dshotBeaconConditionsList,
             dshotBeaconTone,
+            beeperDisabledMask,
+            dshotDisabledMask,
+            featureMask,
             isFeatureEnabled,
             toggleFeature,
             isBeeperEnabled,
             toggleBeeper,
+            enableAllBeepers,
+            disableAllBeepers,
             isDshotConditionEnabled,
             toggleDshotCondition,
             armingConfig,
