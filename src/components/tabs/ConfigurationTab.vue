@@ -307,7 +307,7 @@
                     </div>
 
                     <!-- SENSOR ALIGNMENT (Complex) -->
-                    <div class="gui_box grey">
+                    <div class="gui_box grey" v-if="showSensorAlignment">
                         <div class="gui_box_titlebar">
                             <div class="spacer_box_title">{{ $t("configurationSensorAlignment") }}</div>
                         </div>
@@ -353,7 +353,7 @@
                                         {{ align }}
                                     </option>
                                 </select>
-                                <span>{{ $t("configurationSensorMagAlignment") }}</span>
+                                <span>{{ $t("configurationMagAlignment") }}</span>
                             </div>
                         </div>
                     </div>
@@ -390,7 +390,7 @@
                                         {{ type }}
                                     </option>
                                 </select>
-                                <span>{{ $t("configurationOpticalFlow") }}</span>
+                                <span>{{ $t("configurationOpticalflow") }}</span>
                             </div>
                         </div>
                     </div>
@@ -598,7 +598,7 @@ export default defineComponent({
         const hasSecondGyro = ref(false);
         const hasDualGyros = ref(false);
         const showGyroToUse = computed(() => {
-            return semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_47)
+            return semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_47);
         });
         const showGyro1Align = ref(false);
         const showGyro2Align = ref(false);
@@ -607,6 +607,9 @@ export default defineComponent({
         const showRangefinder = ref(false);
         const showOpticalFlow = ref(false);
 
+        const showSensorAlignment = computed(() => {
+            return showGyroToUse.value || showGyro1Align.value || showGyro2Align.value || showMagAlign.value;
+        });
         const showOtherSensors = computed(() => {
             return showMagDeclination.value || showRangefinder.value || showOpticalFlow.value;
         });
@@ -883,9 +886,15 @@ export default defineComponent({
             hasSecondGyro.value = (flags & GYRO_DETECTION_FLAGS.DETECTED_GYRO_2) !== 0;
             hasDualGyros.value = (flags & GYRO_DETECTION_FLAGS.DETECTED_DUAL_GYROS) !== 0;
 
-            showGyro2Align.value = hasSecondGyro.value;
-            showGyro1Align.value = true;
-            // Legacy logic toggles alignment inputs based on detected gyros
+            // Gyro alignment dropdowns are only available for API < 1.47
+            // In API 1.47+, the firmware uses gyro_enable_mask instead of individual gyro alignments
+            if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+                showGyro1Align.value = true;
+                showGyro2Align.value = hasSecondGyro.value;
+            } else {
+                showGyro1Align.value = false;
+                showGyro2Align.value = false;
+            }
 
             // Mag Declination & Alignment
             if (have_sensor(FC.CONFIG.activeSensors, "mag")) {
@@ -1102,6 +1111,7 @@ export default defineComponent({
             showGyro1Align,
             showGyro2Align,
             showMagAlign,
+            showSensorAlignment,
             showOtherSensors,
             showMagDeclination,
             showRangefinder,
