@@ -598,7 +598,7 @@ export default defineComponent({
         const hasSecondGyro = ref(false);
         const hasDualGyros = ref(false);
         const showGyroToUse = computed(() => {
-            return semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_47) && sensorAlignment.gyro_to_use !== undefined;
+            return semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_47)
         });
         const showGyro1Align = ref(false);
         const showGyro2Align = ref(false);
