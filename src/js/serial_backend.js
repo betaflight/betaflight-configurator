@@ -583,7 +583,6 @@ function finishOpen() {
     onConnect();
 
     GUI.selectDefaultTabWhenConnected();
-    rebootTimestamp = 0;
 }
 
 function connectCli() {
@@ -778,7 +777,6 @@ export function reinitializeConnection() {
 
     const currentPort = PortHandler.portPicker.selectedPort;
 
-    // Set the reboot timestamp to the current time
     rebootTimestamp = Date.now();
 
     // Send reboot command to the flight controller
@@ -791,7 +789,7 @@ export function reinitializeConnection() {
         if (!PortHandler.portPicker.autoConnect) {
             return setTimeout(function () {
                 $("a.connection_button__link").trigger("click");
-            }, 1500);
+            }, REBOOT_GRACE_PERIOD_MS);
         }
     }
 
@@ -898,4 +896,8 @@ function showRebootDialog() {
     }
 }
 
+/**
+ * Re-initializes the connection, typically after a reboot or configuration change.
+ * Exposed as a public API for Vue components.
+ */
 GUI.reinitializeConnection = reinitializeConnection;
