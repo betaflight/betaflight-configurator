@@ -3,7 +3,6 @@ import BFClipboard from "../Clipboard";
 import { generateFilename } from "../utils/generate_filename";
 import GUI, { TABS } from "../gui";
 import BuildApi from "../BuildApi";
-import { reinitializeConnection } from "../serial_backend";
 import CONFIGURATOR from "../data_storage";
 import CliAutoComplete from "../CliAutoComplete";
 import { gui_log } from "../gui_log";
@@ -475,7 +474,7 @@ cli.read = function (readInfo) {
             CONFIGURATOR.cliActive = false;
             CONFIGURATOR.cliValid = false;
             gui_log(i18n.getMessage("cliReboot"));
-            reinitializeConnection();
+            GUI.reinitializeConnection();
         }
     }
 
@@ -549,7 +548,7 @@ cli.cleanup = function (callback) {
     }
 
     this.send(getCliCommand("exit\r", this.cliBuffer), function () {
-        reinitializeConnection();
+        GUI.reinitializeConnection();
     });
 
     CONFIGURATOR.cliActive = false;
