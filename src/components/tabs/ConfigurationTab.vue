@@ -349,6 +349,7 @@
                             <!-- MAG ALIGNMENT -->
                             <div class="select" v-if="showMagAlign">
                                 <select v-model.number="sensorAlignment.align_mag">
+                                    <option :value="0">{{ $t("configurationSensorAlignmentDefaultOption") }}</option>
                                     <option v-for="(align, idx) in sensorAlignments" :key="idx" :value="idx + 1">
                                         {{ align }}
                                     </option>
@@ -607,12 +608,14 @@ export default defineComponent({
         const showRangefinder = ref(false);
         const showOpticalFlow = ref(false);
 
-        // This section uses legacy alignment dropdowns (gyro_to_use, gyro_1_align, gyro_2_align, align_mag)
-        // which are only available for API < 1.47. For API >= 1.47, the firmware uses different mechanisms.
+        // This section contains gyro alignment dropdowns (API < 1.47) and mag alignment (API >= 1.47)
         const showSensorAlignment = computed(() => {
+            // For API < 1.47: show if any gyro alignment options are available
+            // For API >= 1.47: show if mag alignment is available
             return (
-                semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_47) &&
-                (showGyroToUse.value || showGyro1Align.value || showGyro2Align.value)
+                (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_47) &&
+                    (showGyroToUse.value || showGyro1Align.value || showGyro2Align.value)) ||
+                showMagAlign.value
             );
         });
         const showOtherSensors = computed(() => {
