@@ -16,6 +16,12 @@ import { updateTabList } from "./utils/updateTabList.js";
 import { mountVueTab } from "./vue_tab_mounter.js";
 import * as THREE from "three";
 import NotificationManager from "./utils/notifications.js";
+import { Capacitor } from "@capacitor/core";
+
+// Silence Capacitor bridge debug spam on native platforms
+if (Capacitor?.isNativePlatform?.() && typeof Capacitor.isLoggingEnabled === "boolean") {
+    Capacitor.isLoggingEnabled = false;
+}
 
 import("./msp/debug/msp_debug_tools.js")
     .then(() => {
