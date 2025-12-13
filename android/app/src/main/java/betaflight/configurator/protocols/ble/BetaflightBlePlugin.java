@@ -101,6 +101,8 @@ public class BetaflightBlePlugin extends Plugin {
 	private boolean fallbackScan = false;
 	private List<UUID> requestedServices = new ArrayList<>();
 
+	private static final int DESIRED_MTU = 247;
+
 	private BleBridgeManager bleManager;
 	private String connectedAddress;
 
@@ -555,6 +557,7 @@ public class BetaflightBlePlugin extends Plugin {
 		private final UUID serviceUuid;
 		private final UUID writeUuid;
 		private final UUID notifyUuid;
+		private int negotiatedMtu = 23;
 
 		private BluetoothGattCharacteristic writeCharacteristic;
 		private BluetoothGattCharacteristic notifyCharacteristic;
@@ -597,6 +600,11 @@ public class BetaflightBlePlugin extends Plugin {
 
 			@Override
 			protected void initialize() {
+				requestMtu(DESIRED_MTU)
+					.with((device, mtu) -> negotiatedMtu = mtu)
+					.fail((device, status) -> Log.w(TAG, "MTU request failed with status " + status))
+					.enqueue();
+
 				if (notifyCharacteristic != null) {
 					enableNotifications(notifyCharacteristic).enqueue();
 				}
@@ -613,7 +621,8 @@ public class BetaflightBlePlugin extends Plugin {
 			if (writeCharacteristic == null) {
 				return null;
 			}
-			return writeCharacteristic(writeCharacteristic, data).split();
+			int chunkSize = Math.max(negotiatedMtu - 3, 20); // 3 bytes ATT overhead
+			return writeCharacteristic(writeCharacteristic, data).split(chunkSize);
 		}
 	}
 }
