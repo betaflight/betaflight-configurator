@@ -94,6 +94,10 @@
         "message": "--- I can't find my DFU device ---",
         "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access a DFU device."
     },
+    "portsEepromSaved": {
+        "message": "EEPROM data <span class=\"message-positive\">saved</span>",
+        "description": "Message shown when EEPROM data has been saved successfully"
+    },
     "bluetoothConnected": {
         "message": "Connected to Bluetooth device: $1"
     },
