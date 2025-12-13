@@ -481,12 +481,7 @@ const FC = {
             gyro_to_use: 0,
             gyro_1_align: 0,
             gyro_2_align: 0,
-            gyro_1_align_roll: 0,
-            gyro_1_align_pitch: 0,
-            gyro_1_align_yaw: 0,
-            gyro_2_align_roll: 0,
-            gyro_2_align_pitch: 0,
-            gyro_2_align_yaw: 0,
+
             mag_align_roll: 0,
             mag_align_pitch: 0,
             mag_align_yaw: 0,
