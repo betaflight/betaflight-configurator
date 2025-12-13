@@ -95,8 +95,8 @@
         "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access a DFU device."
     },
     "portsEepromSaved": {
-        "message": "EEPROM data <span class=\"message-positive\">saved</span>",
-        "description": "Message shown when EEPROM data has been saved successfully"
+        "message": "$t(eeprom_saved_ok.message)",
+        "description": "Don't translate!!!"
     },
     "bluetoothConnected": {
         "message": "Connected to Bluetooth device: $1"
@@ -1260,7 +1260,8 @@
         "message": "Settings restored to <strong>default</strong>"
     },
     "initialSetupEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">saved</span>"
+        "message": "$t(eeprom_saved_ok.message)",
+        "description": "Don't translate!!!"
     },
     "initialSetupNetworkInfo": {
         "message": "Network info"
@@ -1827,7 +1828,8 @@
         "message": "SPI Bus Receiver Provider"
     },
     "configurationEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">saved</span>"
+        "message": "$t(eeprom_saved_ok.message)",
+        "description": "Don't translate!!!"
     },
     "configurationButtonSave": {
         "message": "Save and Reboot"
@@ -2371,7 +2373,8 @@
         "message": "PID data <strong>refreshed</strong>"
     },
     "pidTuningEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">saved</span>"
+        "message": "$t(eeprom_saved_ok.message)",
+        "description": "Don't translate!!!"
     },
     "tuningHelp": {
         "message": "<b>Tuning tips</b><br /><span class=\"message-negative\">IMPORTANT:</span> It is important to verify motor temperatures during first flights. The higher the filter value gets the better it may fly, but you also will get more noise into the motors. <br>Default value of 100Hz is optimal, but for noiser setups you can try lowering Dterm filter to 50Hz and possibly also the gyro filter."
@@ -2507,7 +2510,8 @@
         "message": "RC Tuning data <strong>refreshed</strong>"
     },
     "receiverEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">saved</span>"
+        "message": "$t(eeprom_saved_ok.message)",
+        "description": "Don't translate!!!"
     },
     "receiverModelPreview": {
         "message": "Preview"
@@ -2895,7 +2899,8 @@
         "message": "Save"
     },
     "adjustmentsEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">saved</span>"
+        "message": "$t(eeprom_saved_ok.message)",
+        "description": "Don't translate!!!"
     },
     "transponderNotSupported": {
         "message": "Your flight controller's firmware does not support transponder functionality."
@@ -3004,7 +3009,8 @@
         "message": "Reverse"
     },
     "servosEepromSave": {
-        "message": "EEPROM <span class=\"message-positive\">saved</span>"
+        "message": "$t(eeprom_saved_ok.message)",
+        "description": "Don't translate!!!"
     },
     "gpsHead": {
         "message": "GPS"
