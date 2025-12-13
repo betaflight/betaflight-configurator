@@ -131,11 +131,31 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: pages deploy src/dist --project-name=${{ vars.CLOUDFLARE_PROJECT_NAME }} --branch=${{ env.BRANCH }} --commit-dirty=true
 
+      - name: Download APK artifact
+        uses: actions/download-artifact@v5
+        with:
+          name: betaflight-configurator-apk
+          path: apk-files
+
+      - name: Get APK filename
+        id: apk
+        run: |
+          APK_FILE=$(ls apk-files/*.apk | head -1)
+          APK_NAME=$(basename "$APK_FILE")
+          echo "name=$APK_NAME" >> $GITHUB_OUTPUT
+
       - name: Add deployment comment
         if: github.event_name == 'pull_request_target' || github.event_name == 'pull_request'
         uses: thollander/actions-comment-pull-request@v3
         with:
           message: |
-             Preview URL: ${{ steps.deploy.outputs.pages-deployment-alias-url }}
-          comment-tag: 'Preview URL'
+            **Preview URL:** ${{ steps.deploy.outputs.pages-deployment-alias-url }}
+
+            ## 🎉 Do you want to test this code? Here you have an automated build:
+            
+            - 🤖 **Android APK:** ${{ steps.apk.outputs.name }}
+            - 📦 **[Download all artifacts](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})**
+            
+            ⚠️ **WARNING**: It may be unstable and result in corrupted configurations or data loss. Use only for testing!
+          comment-tag: 'deployment-comment'
           mode: recreate
