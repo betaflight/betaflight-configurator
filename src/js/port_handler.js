@@ -159,16 +159,38 @@ PortHandler.requestDevicePermission = async function (protocol) {
             ? WEBUSBDFU.requestPermission()
             : serial.requestPermissionDevice(this.showAllSerialDevices, protocol));
 
+        const updatedPorts = await this.updateDeviceList(protocol);
+        const availablePorts = (() => {
+            switch (protocol) {
+                case "bluetooth":
+                    return this.currentBluetoothPorts;
+                case "usb":
+                    return this.currentUsbPorts;
+                case "serial":
+                    return this.currentSerialPorts;
+                default:
+                    return updatedPorts ?? [];
+            }
+        })();
+
         if (port) {
             console.log(`${this.logHead} Permission granted for ${protocol} device:`, port);
-
-            await this.updateDeviceList(protocol);
-
             this.selectActivePort(port);
-        } else {
-            console.log(`${this.logHead} Permission request cancelled or failed for ${protocol} device`);
-            this.portPicker.selectedPort = DEFAULT_PORT;
+            return;
         }
+
+        if (availablePorts?.length) {
+            const fallbackPort = availablePorts[0];
+            console.log(
+                `${this.logHead} Permission granted for ${protocol}, using first available device as fallback:`,
+                fallbackPort,
+            );
+            this.selectActivePort(fallbackPort);
+            return;
+        }
+
+        console.log(`${this.logHead} No ${protocol} devices found after permission request`);
+        this.portPicker.selectedPort = DEFAULT_PORT;
     } catch (error) {
         console.error(`${this.logHead} Error requesting permission for ${protocol} device:`, error);
     }
@@ -319,11 +341,28 @@ PortHandler.updateDeviceList = async function (deviceType) {
 
         // Update the appropriate properties based on device type
         switch (deviceType) {
-            case "bluetooth":
+            case "bluetooth": {
+                const hasConnectedBluetooth =
+                    serial.connected && serial.getConnectedPort()?.path?.startsWith("bluetooth");
+
+                if (
+                    orderedPorts.length === 0 &&
+                    this.currentBluetoothPorts.length &&
+                    (hasConnectedBluetooth || this.portPicker.selectedPort?.startsWith("bluetooth"))
+                ) {
+                    // Keep previous list if a connection/selection exists and scan returned empty to avoid losing the port
+                    console.log(
+                        `${this.logHead} Keeping existing bluetooth ports (scan empty but selection/connection active)`,
+                        this.currentBluetoothPorts,
+                    );
+                    return this.currentBluetoothPorts;
+                }
+
                 this.bluetoothAvailable = orderedPorts.length > 0;
                 this.currentBluetoothPorts = [...orderedPorts];
                 console.log(`${this.logHead} Found bluetooth port(s)`, orderedPorts);
                 break;
+            }
             case "usb":
                 this.dfuAvailable = orderedPorts.length > 0;
                 this.currentUsbPorts = [...orderedPorts];
