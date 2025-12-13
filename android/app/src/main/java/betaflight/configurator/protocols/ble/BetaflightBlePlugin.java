@@ -51,7 +51,7 @@ import no.nordicsemi.android.ble.data.Data;
 			strings = {
 				Manifest.permission.BLUETOOTH_SCAN,
 				Manifest.permission.BLUETOOTH_CONNECT,
-				Manifest.permission.ACCESS_FINE_LOCATION
+				Manifest.permission.ACCESS_COARSE_LOCATION
 			},
 			alias = "bluetooth"
 		)
@@ -60,8 +60,10 @@ import no.nordicsemi.android.ble.data.Data;
 public class BetaflightBlePlugin extends Plugin {
 	private static final String TAG = "BetaflightBle";
 	private static final long SCAN_DURATION_MS = 5_000L;
+	private static final long FALLBACK_SCAN_DURATION_MS = 4_000L;
 
 	private static final Map<String, KnownDevice> KNOWN_DEVICES = new HashMap<>();
+	private static final Map<String, KnownDevice> KNOWN_DEVICES_BY_NAME = new HashMap<>();
 
 	static {
 		addDevice("CC2541", "0000ffe0-0000-1000-8000-00805f9b34fb",
@@ -83,7 +85,9 @@ public class BetaflightBlePlugin extends Plugin {
 	}
 
 	private static void addDevice(String name, String service, String write, String notify) {
-		KNOWN_DEVICES.put(service.toLowerCase(), new KnownDevice(name, service, write, notify));
+		KnownDevice device = new KnownDevice(name, service, write, notify);
+		KNOWN_DEVICES.put(service.toLowerCase(), device);
+		KNOWN_DEVICES_BY_NAME.put(name.toLowerCase(), device);
 	}
 
 	private BluetoothAdapter adapter;
@@ -91,6 +95,8 @@ public class BetaflightBlePlugin extends Plugin {
 	private final Handler handler = new Handler(Looper.getMainLooper());
 	private final Map<String, DiscoveredDevice> discoveredDevices = new HashMap<>();
 	private boolean scanning = false;
+	private boolean fallbackScan = false;
+	private List<UUID> requestedServices = new ArrayList<>();
 
 	private BleBridgeManager bleManager;
 	private String connectedAddress;
@@ -107,8 +113,8 @@ public class BetaflightBlePlugin extends Plugin {
 
 		boolean basic = ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH) == PackageManager.PERMISSION_GRANTED;
 		boolean admin = ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_ADMIN) == PackageManager.PERMISSION_GRANTED;
-		boolean location = ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
-		return basic && admin && location;
+		boolean coarseLocation = ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+		return basic && admin && coarseLocation;
 	}
 
 	private boolean ensurePermissions(PluginCall call) {
@@ -152,9 +158,33 @@ public class BetaflightBlePlugin extends Plugin {
 		discoveredDevices.clear();
 		scanning = true;
 
+		requestedServices.clear();
+		JSArray serviceArray = call.getArray("serviceUuids");
+		if (serviceArray != null) {
+			try {
+				for (Object raw : serviceArray.toList()) {
+					if (raw instanceof String) {
+						try {
+							requestedServices.add(UUID.fromString(((String) raw).toLowerCase()));
+						} catch (IllegalArgumentException ignored) {
+							// Skip invalid UUID strings
+						}
+					}
+				}
+			} catch (Exception ignored) {
+				// Ignore malformed arrays; will fall back to known devices
+			}
+		}
+
+		if (requestedServices.isEmpty()) {
+			for (String service : KNOWN_DEVICES.keySet()) {
+				requestedServices.add(UUID.fromString(service));
+			}
+		}
+
 		List<ScanFilter> filters = new ArrayList<>();
-		for (String service : KNOWN_DEVICES.keySet()) {
-			filters.add(new ScanFilter.Builder().setServiceUuid(new ParcelUuid(UUID.fromString(service))).build());
+		for (UUID service : requestedServices) {
+			filters.add(new ScanFilter.Builder().setServiceUuid(new ParcelUuid(service)).build());
 		}
 
 		ScanSettings settings = new ScanSettings.Builder()
@@ -162,11 +192,16 @@ public class BetaflightBlePlugin extends Plugin {
 			.build();
 
 		scanner.startScan(filters, settings, scanCallback);
-		handler.postDelayed(() -> finishScan(call), SCAN_DURATION_MS);
+		handler.postDelayed(() -> finishScan(call, false), SCAN_DURATION_MS);
 	}
 
-	private void finishScan(PluginCall call) {
+	private void finishScan(PluginCall call, boolean fromFallback) {
 		stopScan();
+
+		if (discoveredDevices.isEmpty() && !fromFallback) {
+			startFallbackScan(call);
+			return;
+		}
 
 		JSArray devices = new JSArray();
 		for (DiscoveredDevice device : discoveredDevices.values()) {
@@ -183,6 +218,23 @@ public class BetaflightBlePlugin extends Plugin {
 		JSObject result = new JSObject();
 		result.put("devices", devices);
 		call.resolve(result);
+	}
+
+	private void startFallbackScan(PluginCall call) {
+		if (scanner == null) {
+			call.reject("Bluetooth LE scanner unavailable");
+			return;
+		}
+
+		fallbackScan = true;
+		scanning = true;
+
+		ScanSettings settings = new ScanSettings.Builder()
+			.setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
+			.build();
+
+		scanner.startScan(null, settings, fallbackScanCallback);
+		handler.postDelayed(() -> finishScan(call, true), FALLBACK_SCAN_DURATION_MS);
 	}
 
 	@PluginMethod
@@ -348,22 +400,24 @@ public class BetaflightBlePlugin extends Plugin {
 		if (scanner != null && scanning) {
 			try {
 				scanner.stopScan(scanCallback);
+				scanner.stopScan(fallbackScanCallback);
 			} catch (Exception ignored) {
 			}
 		}
 		scanning = false;
+		fallbackScan = false;
 	}
 
 	private final ScanCallback scanCallback = new ScanCallback() {
 		@Override
 		public void onScanResult(int callbackType, ScanResult result) {
-			handleResult(result);
+			handleResult(result, false);
 		}
 
 		@Override
 		public void onBatchScanResults(List<ScanResult> results) {
 			for (ScanResult result : results) {
-				handleResult(result);
+				handleResult(result, false);
 			}
 		}
 
@@ -373,26 +427,31 @@ public class BetaflightBlePlugin extends Plugin {
 		}
 	};
 
-	private void handleResult(ScanResult result) {
-		if (result == null || result.getDevice() == null || result.getScanRecord() == null) {
-			return;
+	private final ScanCallback fallbackScanCallback = new ScanCallback() {
+		@Override
+		public void onScanResult(int callbackType, ScanResult result) {
+			handleResult(result, true);
 		}
 
-		List<ParcelUuid> services = result.getScanRecord().getServiceUuids();
-		if (services == null || services.isEmpty()) {
-			return;
-		}
-
-		KnownDevice profile = null;
-		for (ParcelUuid uuid : services) {
-			if (uuid == null) continue;
-			String key = uuid.getUuid().toString().toLowerCase();
-			if (KNOWN_DEVICES.containsKey(key)) {
-				profile = KNOWN_DEVICES.get(key);
-				break;
+		@Override
+		public void onBatchScanResults(List<ScanResult> results) {
+			for (ScanResult result : results) {
+				handleResult(result, true);
 			}
 		}
 
+		@Override
+		public void onScanFailed(int errorCode) {
+			Log.e(TAG, "Fallback BLE scan failed: " + errorCode);
+		}
+	};
+
+	private void handleResult(ScanResult result, boolean allowNameMatch) {
+		if (result == null || result.getDevice() == null) {
+			return;
+		}
+
+		KnownDevice profile = findProfileForResult(result, allowNameMatch);
 		if (profile == null) {
 			return;
 		}
@@ -412,6 +471,47 @@ public class BetaflightBlePlugin extends Plugin {
 
 		DiscoveredDevice d = new DiscoveredDevice(address, name, result.getRssi(), profile);
 		discoveredDevices.put(address, d);
+	}
+
+	private KnownDevice findProfileForResult(ScanResult result, boolean allowNameMatch) {
+		if (result.getScanRecord() != null && result.getScanRecord().getServiceUuids() != null) {
+			for (ParcelUuid uuid : result.getScanRecord().getServiceUuids()) {
+				if (uuid == null) continue;
+				UUID service = uuid.getUuid();
+				if (service == null) continue;
+
+				// Accept any known profile if advertisement has one of our requested services
+				if (!requestedServices.isEmpty() && requestedServices.contains(service)) {
+					KnownDevice profile = KNOWN_DEVICES.get(service.toString().toLowerCase());
+					if (profile != null) {
+						return profile;
+					}
+				}
+
+				// Or accept any known device by service UUID if present
+				KnownDevice known = KNOWN_DEVICES.get(service.toString().toLowerCase());
+				if (known != null) {
+					return known;
+				}
+			}
+		}
+
+		if (allowNameMatch) {
+			String advertisedName = result.getDevice().getName();
+			if (advertisedName != null) {
+				String name = advertisedName.toLowerCase();
+				if (KNOWN_DEVICES_BY_NAME.containsKey(name)) {
+					return KNOWN_DEVICES_BY_NAME.get(name);
+				}
+			}
+
+			// As a last resort, accept the first known profile to allow manual connect attempts
+			if (!KNOWN_DEVICES.isEmpty()) {
+				return KNOWN_DEVICES.values().iterator().next();
+			}
+		}
+
+		return null;
 	}
 
 	void handleNotification(Data data) {
