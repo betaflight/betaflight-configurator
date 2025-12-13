@@ -231,10 +231,10 @@
                                                 <div v-if="!feature.hideName">{{ feature.name }}</div>
                                             </td>
                                             <td>
-                                                <span class="xs">{{ $t("feature" + feature.name) }}</span>
+                                                <span class="xs" v-html="$t('feature' + feature.name)"></span>
                                             </td>
                                             <td>
-                                                <span class="sm-min">{{ $t("feature" + feature.name) }}</span>
+                                                <span class="sm-min" v-html="$t('feature' + feature.name)"></span>
                                                 <div
                                                     v-if="feature.haveTip"
                                                     class="helpicon cf_tip"
@@ -306,55 +306,120 @@
                         </div>
                     </div>
 
-                    <!-- SENSOR ALIGNMENT (Complex) -->
+                    <!-- GYRO ALIGNMENT (Complex) -->
                     <div class="gui_box grey" v-if="showSensorAlignment">
                         <div class="gui_box_titlebar">
-                            <div class="spacer_box_title">{{ $t("configurationSensorAlignment") }}</div>
+                            <div class="spacer_box_title">{{ $t("configurationGyroAlignment") }}</div>
+                            <div class="helpicon cf_tip" :title="$t('configurationGyroAlignmentHelp')"></div>
                         </div>
                         <div class="spacer_box">
-                            <!-- GYRO ALIGNMENT -->
-                            <template v-if="showGyroToUse">
-                                <div class="select">
-                                    <select v-model.number="sensorAlignment.gyro_to_use">
-                                        <option value="0">{{ $t("configurationSensorGyroToUseFirst") }}</option>
-                                        <option value="1" v-if="hasSecondGyro">
-                                            {{ $t("configurationSensorGyroToUseSecond") }}
-                                        </option>
-                                        <option value="2" v-if="hasDualGyros">
-                                            {{ $t("configurationSensorGyroToUseBoth") }}
-                                        </option>
-                                    </select>
-                                    <span>{{ $t("configurationSensorGyroToUse") }}</span>
+                            <div class="grid-row col2">
+                                <div class="col-span-1">
+                                    <!-- GYRO ALIGNMENT -->
+                                    <div class="select" v-if="showGyroToUse">
+                                        <select v-model.number="sensorAlignment.gyro_to_use">
+                                            <option value="0">{{ $t("configurationSensorGyroToUseFirst") }}</option>
+                                            <option value="1" v-if="hasSecondGyro">
+                                                {{ $t("configurationSensorGyroToUseSecond") }}
+                                            </option>
+                                            <option value="2" v-if="hasDualGyros">
+                                                {{ $t("configurationSensorGyroToUseBoth") }}
+                                            </option>
+                                        </select>
+                                        <span>{{ $t("configurationSensorGyroToUse") }}</span>
+                                    </div>
                                 </div>
-                            </template>
+                                <div class="col-span-1">
+                                    <div class="select" v-if="showGyro1Align">
+                                        <select v-model.number="sensorAlignment.gyro_1_align">
+                                            <option
+                                                v-for="(align, idx) in sensorAlignments"
+                                                :key="idx"
+                                                :value="idx + 1"
+                                            >
+                                                {{ align }}
+                                            </option>
+                                        </select>
+                                        <span>{{ $t("configurationSensorAlignmentGyro1") }}</span>
+                                    </div>
 
-                            <div class="select" v-if="showGyro1Align">
-                                <select v-model.number="sensorAlignment.gyro_1_align">
-                                    <option v-for="(align, idx) in sensorAlignments" :key="idx" :value="idx + 1">
-                                        {{ align }}
-                                    </option>
-                                </select>
-                                <span>{{ $t("configurationGyroAlignment", { number: 1 }) }}</span>
-                            </div>
+                                    <div class="select" v-if="showGyro2Align">
+                                        <select v-model.number="sensorAlignment.gyro_2_align">
+                                            <option
+                                                v-for="(align, idx) in sensorAlignments"
+                                                :key="idx"
+                                                :value="idx + 1"
+                                            >
+                                                {{ align }}
+                                            </option>
+                                        </select>
+                                        <span>{{ $t("configurationSensorAlignmentGyro2") }}</span>
+                                    </div>
 
-                            <div class="select" v-if="showGyro2Align">
-                                <select v-model.number="sensorAlignment.gyro_2_align">
-                                    <option v-for="(align, idx) in sensorAlignments" :key="idx" :value="idx + 1">
-                                        {{ align }}
-                                    </option>
-                                </select>
-                                <span>{{ $t("configurationGyroAlignment", { number: 2 }) }}</span>
-                            </div>
+                                    <!-- MAG ALIGNMENT -->
+                                    <template v-if="showMagAlign">
+                                        <div class="select">
+                                            <select v-model.number="sensorAlignment.align_mag">
+                                                <option :value="0">
+                                                    {{ $t("configurationSensorAlignmentDefaultOption") }}
+                                                </option>
+                                                <option
+                                                    v-for="(align, idx) in sensorAlignments"
+                                                    :key="idx"
+                                                    :value="idx + 1"
+                                                >
+                                                    {{ align }}
+                                                </option>
+                                            </select>
+                                            <span>{{ $t("configurationMagAlignment") }}</span>
+                                        </div>
 
-                            <!-- MAG ALIGNMENT -->
-                            <div class="select" v-if="showMagAlign">
-                                <select v-model.number="sensorAlignment.align_mag">
-                                    <option :value="0">{{ $t("configurationSensorAlignmentDefaultOption") }}</option>
-                                    <option v-for="(align, idx) in sensorAlignments" :key="idx" :value="idx + 1">
-                                        {{ align }}
-                                    </option>
-                                </select>
-                                <span>{{ $t("configurationMagAlignment") }}</span>
+                                        <div class="sensor_align_content" v-if="sensorAlignment.align_mag === 9">
+                                            <div class="sensor_align_inputs">
+                                                <div class="alignicon roll"></div>
+                                                <label>
+                                                    <input
+                                                        type="number"
+                                                        v-model.number="sensorAlignment.mag_align_roll"
+                                                        step="0.1"
+                                                        min="-180"
+                                                        max="360"
+                                                        :aria-label="$t('configurationMagAlignmentRoll')"
+                                                    />
+                                                    <span>{{ $t("configurationMagAlignmentRoll") }}</span>
+                                                </label>
+                                            </div>
+                                            <div class="sensor_align_inputs">
+                                                <div class="alignicon pitch"></div>
+                                                <label>
+                                                    <input
+                                                        type="number"
+                                                        v-model.number="sensorAlignment.mag_align_pitch"
+                                                        step="0.1"
+                                                        min="-180"
+                                                        max="360"
+                                                        :aria-label="$t('configurationMagAlignmentPitch')"
+                                                    />
+                                                    <span>{{ $t("configurationMagAlignmentPitch") }}</span>
+                                                </label>
+                                            </div>
+                                            <div class="sensor_align_inputs">
+                                                <div class="alignicon yaw"></div>
+                                                <label>
+                                                    <input
+                                                        type="number"
+                                                        v-model.number="sensorAlignment.mag_align_yaw"
+                                                        step="0.1"
+                                                        min="-180"
+                                                        max="360"
+                                                        :aria-label="$t('configurationMagAlignmentYaw')"
+                                                    />
+                                                    <span>{{ $t("configurationMagAlignmentYaw") }}</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -429,6 +494,15 @@
                                     <option v-for="i in 5" :key="i" :value="i">{{ i }}</option>
                                 </select>
                                 <span>{{ $t("configurationDshotBeaconTone") }}</span>
+                            </div>
+
+                            <div class="beeper-controls">
+                                <button type="button" class="btn beeper-enable-all" @click="enableAllDshot">
+                                    {{ $t("configurationBeeperEnableAll") }}
+                                </button>
+                                <button type="button" class="btn beeper-disable-all" @click="disableAllDshot">
+                                    {{ $t("configurationBeeperDisableAll") }}
+                                </button>
                             </div>
 
                             <table class="dshot-beacon-table">
@@ -536,7 +610,6 @@ import FC from "../../js/fc";
 import MSP from "../../js/msp";
 import MSPCodes from "../../js/msp/MSPCodes";
 import { mspHelper } from "../../js/msp/MSPHelper.js";
-import { reinitializeConnection } from "../../js/serial_backend";
 import { gui_log } from "../../js/gui_log";
 import { i18n } from "../../js/localization";
 import { sensorTypes } from "../../js/sensor_types"; // Import for dropdown lists
@@ -591,6 +664,9 @@ export default defineComponent({
             gyro_1_align: 0,
             gyro_2_align: 0,
             align_mag: 0,
+            mag_align_roll: 0,
+            mag_align_pitch: 0,
+            mag_align_yaw: 0,
         });
 
         const magDeclination = ref(0);
@@ -632,6 +708,7 @@ export default defineComponent({
             "CW 90° flip",
             "CW 180° flip",
             "CW 270° flip",
+            i18n.getMessage("configurationSensorAlignmentCustom"),
         ]);
 
         // Features & Beepers State wrapper
@@ -734,6 +811,26 @@ export default defineComponent({
                 dshotDisabledMask.value = bit_set(dshotDisabledMask.value, cond.bit);
             }
             FC.BEEPER_CONFIG.dshotBeaconConditions._beeperDisabledMask = dshotDisabledMask.value;
+        };
+
+        const enableAllDshot = () => {
+            if (!FC.BEEPER_CONFIG?.dshotBeaconConditions) return;
+            let mask = dshotDisabledMask.value;
+            dshotBeaconConditionsList.value.forEach((cond) => {
+                mask = bit_clear(mask, cond.bit);
+            });
+            dshotDisabledMask.value = mask;
+            FC.BEEPER_CONFIG.dshotBeaconConditions._beeperDisabledMask = mask;
+        };
+
+        const disableAllDshot = () => {
+            if (!FC.BEEPER_CONFIG?.dshotBeaconConditions) return;
+            let mask = dshotDisabledMask.value;
+            dshotBeaconConditionsList.value.forEach((cond) => {
+                mask = bit_set(mask, cond.bit);
+            });
+            dshotDisabledMask.value = mask;
+            FC.BEEPER_CONFIG.dshotBeaconConditions._beeperDisabledMask = mask;
         };
 
         // Computed Wrappers for Hardware Switches (logic inverted: 1 = disabled usually? legacy says: !== 1)
@@ -883,6 +980,12 @@ export default defineComponent({
             sensorAlignment.gyro_2_align = FC.SENSOR_ALIGNMENT.gyro_2_align;
             sensorAlignment.align_mag = FC.SENSOR_ALIGNMENT.align_mag;
 
+            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+                sensorAlignment.mag_align_roll = FC.SENSOR_ALIGNMENT.mag_align_roll || 0;
+                sensorAlignment.mag_align_pitch = FC.SENSOR_ALIGNMENT.mag_align_pitch || 0;
+                sensorAlignment.mag_align_yaw = FC.SENSOR_ALIGNMENT.mag_align_yaw || 0;
+            }
+
             // Detect Gyros
             // Simplified detection logic compared to legacy for now, assume 1 unless flags say otherwise
             const GYRO_DETECTION_FLAGS = {
@@ -1004,6 +1107,12 @@ export default defineComponent({
                 FC.SENSOR_ALIGNMENT.gyro_2_align = sensorAlignment.gyro_2_align;
                 FC.SENSOR_ALIGNMENT.align_mag = sensorAlignment.align_mag;
 
+                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+                    FC.SENSOR_ALIGNMENT.mag_align_roll = sensorAlignment.mag_align_roll;
+                    FC.SENSOR_ALIGNMENT.mag_align_pitch = sensorAlignment.mag_align_pitch;
+                    FC.SENSOR_ALIGNMENT.mag_align_yaw = sensorAlignment.mag_align_yaw;
+                }
+
                 if (showMagDeclination.value) {
                     FC.COMPASS_CONFIG.mag_declination = magDeclination.value;
                 }
@@ -1060,7 +1169,7 @@ export default defineComponent({
                 // Save to EEPROM and Reboot
                 mspHelper.writeConfiguration(false, () => {
                     GUI.tab_switch_cleanup(() => {
-                        reinitializeConnection();
+                        GUI.reinitializeConnection();
                     });
                 });
             } catch (e) {
@@ -1083,6 +1192,8 @@ export default defineComponent({
             pidAdvancedConfig,
             sensorConfig,
             accHardwareEnabled,
+            enableAllDshot,
+            disableAllDshot,
             baroHardwareEnabled,
             magHardwareEnabled,
             gyroFrequencyDisplay,
