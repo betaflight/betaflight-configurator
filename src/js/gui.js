@@ -389,10 +389,28 @@ class GuiControl {
 
             buttonConfirm.off("click");
 
-            buttonConfirm.on("click", () => {
+            const confirmAction = () => {
                 dialog[0].close();
+            };
+
+            buttonConfirm.on("click", confirmAction);
+
+            // Add Enter key support for single-choice dialog
+            const handleKeydown = (e) => {
+                // Only trigger if Enter is pressed, dialog is open, and target is not an input/textarea
+                if (e.which === 13 && dialog[0].open && !$(e.target).is("input, textarea")) {
+                    e.preventDefault();
+                    confirmAction();
+                }
+            };
+
+            $(document).on("keydown.informationDialog", handleKeydown);
+
+            // Clean up event listener when dialog closes
+            dialog[0].addEventListener("close", () => {
+                $(document).off("keydown.informationDialog", handleKeydown);
                 resolve();
-            });
+            }, { once: true });
 
             dialog[0].showModal();
         });
