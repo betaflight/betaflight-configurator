@@ -82,6 +82,9 @@ public class BetaflightBlePlugin extends Plugin {
 			"0000abf1-0000-1000-8000-00805f9b34fb", "0000abf2-0000-1000-8000-00805f9b34fb");
 		addDevice("DroneBridge", "0000db32-0000-1000-8000-00805f9b34fb",
 			"0000db33-0000-1000-8000-00805f9b34fb", "0000db34-0000-1000-8000-00805f9b34fb");
+		// Extra name aliases that map to known profiles (helps when service UUIDs aren't advertised)
+		KNOWN_DEVICES_BY_NAME.put("speedybee f7v3", KNOWN_DEVICES.get("0000abf0-0000-1000-8000-00805f9b34fb"));
+		KNOWN_DEVICES_BY_NAME.put("speedybee", KNOWN_DEVICES.get("0000abf0-0000-1000-8000-00805f9b34fb"));
 	}
 
 	private static void addDevice(String name, String service, String write, String notify) {
@@ -503,11 +506,6 @@ public class BetaflightBlePlugin extends Plugin {
 				if (KNOWN_DEVICES_BY_NAME.containsKey(name)) {
 					return KNOWN_DEVICES_BY_NAME.get(name);
 				}
-			}
-
-			// As a last resort, accept the first known profile to allow manual connect attempts
-			if (!KNOWN_DEVICES.isEmpty()) {
-				return KNOWN_DEVICES.values().iterator().next();
 			}
 		}
 
