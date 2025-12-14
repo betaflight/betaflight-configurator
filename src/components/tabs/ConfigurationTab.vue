@@ -209,8 +209,8 @@
                                     </tr>
                                 </thead>
                                 <tbody :key="featureMask">
-                                    <tr v-for="feature in featuresList" :key="feature.bit">
-                                        <template v-if="feature.mode !== 'select'">
+                                    <template v-for="feature in featuresList" :key="feature.bit">
+                                        <tr v-if="feature.mode !== 'select'">
                                             <td>
                                                 <input
                                                     type="checkbox"
@@ -235,8 +235,8 @@
                                                     :title="$t('feature' + feature.name + 'Tip')"
                                                 ></div>
                                             </td>
-                                        </template>
-                                    </tr>
+                                        </tr>
+                                    </template>
                                 </tbody>
                             </table>
                         </div>
@@ -708,17 +708,23 @@ export default defineComponent({
 
         // Features & Beepers State wrapper
         const featuresList = computed(() => {
-            if (!FC.FEATURE_CONFIG?.features?._features) return [];
+            if (!FC.FEATURE_CONFIG?.features?._features) {
+                return [];
+            }
             return FC.FEATURE_CONFIG.features._features;
         });
 
         const beepersList = computed(() => {
-            if (!FC.BEEPER_CONFIG?.beepers?._beepers) return [];
+            if (!FC.BEEPER_CONFIG?.beepers?._beepers) {
+                return [];
+            }
             return FC.BEEPER_CONFIG.beepers._beepers;
         });
 
         const dshotBeaconConditionsList = computed(() => {
-            if (!FC.BEEPER_CONFIG?.dshotBeaconConditions?._beepers) return [];
+            if (!FC.BEEPER_CONFIG?.dshotBeaconConditions?._beepers) {
+                return [];
+            }
             return FC.BEEPER_CONFIG.dshotBeaconConditions._beepers;
         });
 
@@ -727,18 +733,24 @@ export default defineComponent({
         const dshotDisabledMask = ref(0);
 
         const featureMask = computed(() => {
-            if (!FC?.FEATURE_CONFIG?.features) return 0;
+            if (!FC?.FEATURE_CONFIG?.features) {
+                return 0;
+            }
             return FC.FEATURE_CONFIG.features._featureMask;
         });
 
         // Methods for toggling bits
         const isFeatureEnabled = (feature) => {
-            if (!FC.FEATURE_CONFIG?.features) return false;
+            if (!FC.FEATURE_CONFIG?.features) {
+                return false;
+            }
             return bit_check(FC.FEATURE_CONFIG.features._featureMask, feature.bit);
         };
 
         const toggleFeature = (feature, checked) => {
-            if (!FC.FEATURE_CONFIG?.features) return;
+            if (!FC.FEATURE_CONFIG?.features) {
+                return;
+            }
             if (checked) {
                 FC.FEATURE_CONFIG.features._featureMask = bit_set(FC.FEATURE_CONFIG.features._featureMask, feature.bit);
             } else {
@@ -751,13 +763,17 @@ export default defineComponent({
         };
 
         const isBeeperEnabled = (beeper) => {
-            if (!FC.BEEPER_CONFIG?.beepers) return false;
+            if (!FC.BEEPER_CONFIG?.beepers) {
+                return false;
+            }
             // Note: Beeper logic uses DisabledMask, so checked means NOT disabled
             return !bit_check(beeperDisabledMask.value, beeper.bit);
         };
 
         const toggleBeeper = (beeper, checked) => {
-            if (!FC.BEEPER_CONFIG?.beepers) return;
+            if (!FC.BEEPER_CONFIG?.beepers) {
+                return;
+            }
             if (checked) {
                 // To enable, we CLEAR the disabled bit
                 beeperDisabledMask.value = bit_clear(beeperDisabledMask.value, beeper.bit);
@@ -769,7 +785,9 @@ export default defineComponent({
         };
 
         const enableAllBeepers = () => {
-            if (!FC.BEEPER_CONFIG?.beepers) return;
+            if (!FC.BEEPER_CONFIG?.beepers) {
+                return;
+            }
             let mask = beeperDisabledMask.value;
             beepersList.value.forEach((beeper) => {
                 if (beeper.visible !== false) {
@@ -781,7 +799,9 @@ export default defineComponent({
         };
 
         const disableAllBeepers = () => {
-            if (!FC.BEEPER_CONFIG?.beepers) return;
+            if (!FC.BEEPER_CONFIG?.beepers) {
+                return;
+            }
             let mask = beeperDisabledMask.value;
             beepersList.value.forEach((beeper) => {
                 if (beeper.visible !== false) {
@@ -793,13 +813,17 @@ export default defineComponent({
         };
 
         const isDshotConditionEnabled = (cond) => {
-            if (!FC.BEEPER_CONFIG?.dshotBeaconConditions) return false;
+            if (!FC.BEEPER_CONFIG?.dshotBeaconConditions) {
+                return false;
+            }
             // Same logic as beepers (DisabledMask)
             return !bit_check(dshotDisabledMask.value, cond.bit);
         };
 
         const toggleDshotCondition = (cond, checked) => {
-            if (!FC.BEEPER_CONFIG?.dshotBeaconConditions) return;
+            if (!FC.BEEPER_CONFIG?.dshotBeaconConditions) {
+                return;
+            }
             if (checked) {
                 dshotDisabledMask.value = bit_clear(dshotDisabledMask.value, cond.bit);
             } else {
@@ -809,7 +833,9 @@ export default defineComponent({
         };
 
         const enableAllDshot = () => {
-            if (!FC.BEEPER_CONFIG?.dshotBeaconConditions) return;
+            if (!FC.BEEPER_CONFIG?.dshotBeaconConditions) {
+                return;
+            }
             let mask = dshotDisabledMask.value;
             dshotBeaconConditionsList.value.forEach((cond) => {
                 mask = bit_clear(mask, cond.bit);
@@ -819,7 +845,9 @@ export default defineComponent({
         };
 
         const disableAllDshot = () => {
-            if (!FC.BEEPER_CONFIG?.dshotBeaconConditions) return;
+            if (!FC.BEEPER_CONFIG?.dshotBeaconConditions) {
+                return;
+            }
             let mask = dshotDisabledMask.value;
             dshotBeaconConditionsList.value.forEach((cond) => {
                 mask = bit_set(mask, cond.bit);
@@ -955,11 +983,11 @@ export default defineComponent({
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
                 showGyroCalOnFirstArm.value = true;
                 armingConfig.gyro_cal_on_first_arm_bool = FC.ARMING_CONFIG.gyro_cal_on_first_arm === 1;
+                armingConfig.auto_disarm_delay = FC.ARMING_CONFIG.auto_disarm_delay;
 
                 if (isFeatureEnabled({ name: "MOTOR_STOP", bit: 4 })) {
                     // Check manually or reuse logic
                     showAutoDisarmDelay.value = true;
-                    armingConfig.auto_disarm_delay = FC.ARMING_CONFIG.auto_disarm_delay;
                 }
             }
 
