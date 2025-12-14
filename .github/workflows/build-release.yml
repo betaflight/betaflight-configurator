@@ -6,7 +6,6 @@ on:
   release:
     types: [published]
 
-## note: we will need to move the deploy.yml workflow to break it apart (build and deploy in separate workflows)
 jobs:
   modern_build:
     name: Build
@@ -24,20 +23,17 @@ jobs:
       - name: Code Checkout
         uses: actions/checkout@v5
 
-      - name: Fetch build artifacts
+      - name: Fetch build artifacts (APK only at this stage)
         uses: actions/download-artifact@v5
-
-      - name: List assets
-        run: ls -al betaflight-app-*/*
+        with:
+          name: betaflight-app-apk
+          path: android/app/build/outputs/apk/release/app-release.apk
 
       - name: Attach assets to release
         run: |
           set -x
           ASSETS=()
-          for asset in betaflight-app-*/*; do
-            ASSETS+=("$asset")
-            echo "$asset"
-          done
+          ASSETS+=("android/app/build/outputs/apk/release/app-release.apk")
           TAG_NAME="${GITHUB_REF##*/}"
           gh release upload "${TAG_NAME}" "${ASSETS[@]}"
         env:

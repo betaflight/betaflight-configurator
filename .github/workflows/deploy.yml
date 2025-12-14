@@ -1,4 +1,4 @@
-name: 'Deployment (PR and Push)'
+name: 'Deployment (PR and Push to master/maintenance)'
 on:
   pull_request_target:
     types: [opened, synchronize, reopened]
