@@ -119,7 +119,6 @@ jobs:
 
       - name: Set alias branch name for Cloudflare
         id: branch_name
-        if: github.event_name == 'push'
         run: |
           if [[ "${{ github.event_name }}" == "push" ]]; then
             BRANCH=${{ github.ref_name }}
