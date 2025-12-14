@@ -11,7 +11,7 @@
 [![Join us on Discord!](https://img.shields.io/discord/868013470023548938)](https://discord.gg/n4E6ak4u3c)
 
 
-Betaflight App is a crossplatform configuration tool for the Betaflight flight control system.
+Betaflight App is a crossplatform configuration and management application for the Betaflight flight control system.
 
 The Betaflight App is a Progressive Web Application (PWA). The most recent release of the Betaflight App is available at [app.betaflight.com](https://app.betaflight.com)
 
