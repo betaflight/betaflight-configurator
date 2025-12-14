@@ -117,7 +117,7 @@ jobs:
           calculatedSha=$(echo ${{ github.event.pull_request.head.sha }} | head -c 8)
           echo "COMMIT_SHORT_SHA=$calculatedSha" >> $GITHUB_ENV
 
-      - name: Set alias branch name for Cloudflare
+      - name: Set alias name for Cloudflare Deployment
         id: branch_name
         run: |
           if [[ "${{ github.event_name }}" == "push" ]]; then
@@ -128,7 +128,7 @@ jobs:
           echo "BRANCH=$BRANCH" >> $GITHUB_OUTPUT
 
           # Set a simple output to confirm the value
-          echo "Event: ${{ github.event_name }}, BRANCH: $BRANCH"
+          echo "EVENT: ${{ github.event_name }}, BRANCH: $BRANCH"
 
       - name: Deploy to Cloudflare
         id: deploy
@@ -143,11 +143,11 @@ jobs:
         uses: thollander/actions-comment-pull-request@v3
         with:
           message: |
-            ## 🎉 Do you want to test this code? Here you have an automated build:
+            🎉 Do you want to test this code? 🎉
 
             - 🌐 **[Progressive Web Application (PWA)](${{ steps.deploy.outputs.pages-deployment-alias-url }})**
             - 🤖 **[Android APK](${{ needs.build.outputs.apk_url }})**
 
-            ⚠️ **WARNING**: The build may be unstable and result in corrupted configurations or data loss. Use only for testing!
+            ⚠️ **CAUTION**: The build may be unstable and result in corrupted configurations or data loss. Use only for testing! ⚠️
           comment-tag: 'deployment-comment'
           mode: recreate
