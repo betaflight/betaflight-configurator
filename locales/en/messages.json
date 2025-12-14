@@ -7153,6 +7153,9 @@
     "configurationGyroSyncDenom": {
         "message": "Gyro update frequency"
     },
+    "configurationGyroFrequency": {
+        "message": "Gyro update frequency"
+    },
     "configurationPidProcessDenom": {
         "message": "PID loop frequency"
     },

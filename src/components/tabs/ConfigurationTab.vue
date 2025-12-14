@@ -32,7 +32,7 @@
                                 <div class="select">
                                     <input type="text" class="gyroFrequency" readonly :value="gyroFrequencyDisplay" />
 
-                                    <span>{{ $t("configurationGyroSyncDenom") }}</span>
+                                    <span>{{ $t("configurationGyroFrequency") }}</span>
                                 </div>
                                 <div class="select">
                                     <select
@@ -1046,11 +1046,11 @@ export default defineComponent({
             // Rangefinder / Optical Flow (API 1.47+)
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
                 const types = sensorTypes();
-                showRangefinder.value = true;
                 sonarTypesList.value = types.sonar.elements;
+                showRangefinder.value = sonarTypesList.value?.length > 0;
 
-                showOpticalFlow.value = true;
                 opticalFlowTypesList.value = types.opticalflow.elements;
+                showOpticalFlow.value = opticalFlowTypesList.value?.length > 0;
             }
         };
 
