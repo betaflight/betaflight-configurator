@@ -2,8 +2,9 @@ name: 'Build'
 
 on:
   workflow_call:
+# 📌 1. DEFINE INPUTS THE WORKFLOW ACCEPTS
     inputs:
-      sha:
+      commit_ref:
         description: 'The git SHA to checkout'
         required: true
         type: string
@@ -12,6 +13,22 @@ on:
         default: true
         required: false
         type: boolean
+# 📌 2. DEFINE SECRETS THE WORKFLOW ACCEPTS
+    secrets:
+      RELEASE_KEYSTORE:
+        description: 'Base64 encoded keystore file.'
+        required: true
+      RELEASE_KEYSTORE_PASSWORD:
+        description: 'Keystore password.'
+        required: true
+      # Add all other signing secrets here...
+      RELEASE_KEY_ALIAS:
+        description: 'Key alias.'
+        required: true
+      RELEASE_KEY_ALIAS_PASSWORD:
+        description: 'Key alias password.'
+        required: true
+# 🌟 3. DEFINE OUTPUTS THE WORKFLOW PRODUCES
     outputs:
       apk_url:
         description: 'URL to the uploaded APK artifact'
@@ -21,7 +38,6 @@ on:
         value: ${{ jobs.build.outputs.apk_name  }}
 
 jobs:
-  # Build the code (no secrets here)
   build:
     runs-on: ubuntu-latest
 
@@ -34,7 +50,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v5
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          ref: ${{ inputs.commit_ref }}
           persist-credentials: false  # Don't persist GitHub token
 
       - name: Cache node_modules

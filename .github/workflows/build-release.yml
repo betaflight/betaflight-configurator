@@ -13,7 +13,12 @@ jobs:
     if: startsWith(github.event.release.tag_name, '20')
     with:
       debug_build: false
-      sha: ${{ github.event.release.target_commitish }}
+      commit_ref: ${{ github.event.release.target_commitish }}
+    secrets:
+      RELEASE_KEYSTORE: ${{ secrets.RELEASE_KEYSTORE }}
+      RELEASE_KEYSTORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
+      RELEASE_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
+      RELEASE_KEY_ALIAS_PASSWORD: ${{ secrets.RELEASE_KEY_ALIAS_PASSWORD }}
 
   modern_release:
     name: Attach Release Artifacts

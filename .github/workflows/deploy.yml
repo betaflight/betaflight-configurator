@@ -17,7 +17,12 @@ jobs:
     uses: ./.github/workflows/build.yml
     with:
       debug_build: ${{ github.event_name == 'pull_request_target' || github.event_name == 'pull_request' }}
-      sha: ${{ github.event_name == 'pull_request_target' || github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+      commit_ref: ${{ github.event_name == 'pull_request_target' || github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+    secrets:
+      RELEASE_KEYSTORE: ${{ secrets.RELEASE_KEYSTORE }}
+      RELEASE_KEYSTORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
+      RELEASE_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
+      RELEASE_KEY_ALIAS_PASSWORD: ${{ secrets.RELEASE_KEY_ALIAS_PASSWORD }}
 
   # Deploy with secrets (no PR code checkout)
   deploy:
