@@ -15,6 +15,11 @@ jobs:
   # Job 1: Build the code (no secrets here)
   build:
     runs-on: ubuntu-latest
+
+    # 🌟 Define the outputs for the entire job
+    outputs:
+      apk_url: ${{ steps.apk_upload.outputs.artifact-url }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
@@ -75,9 +80,10 @@ jobs:
           popd >/dev/null
 
       - name: Upload APK as Artifact
+        id: apk_upload
         uses: actions/upload-artifact@v4
         with:
-          name: betaflight-configurator-apk
+          name: betaflight-app-apk
           path: android/app/build/outputs/apk/release/*.apk
 
       - name: Upload build artifact
@@ -111,17 +117,19 @@ jobs:
           calculatedSha=$(echo ${{ github.event.pull_request.head.sha }} | head -c 8)
           echo "COMMIT_SHORT_SHA=$calculatedSha" >> $GITHUB_ENV
 
-      - name: Set alias branch name for Cloudflare (if a push)
-        id: branch_push
+      - name: Set alias branch name for Cloudflare
+        id: branch_name
         if: github.event_name == 'push'
         run: |
-          echo "BRANCH=${{ github.ref_name }}" >> $GITHUB_ENV
+          if [[ "${{ github.event_name }}" == "push" ]]; then
+            BRANCH=${{ github.ref_name }}
+          else
+            BRANCH=PR${{ github.event.pull_request.number }}
+          fi
+          echo "BRANCH=$BRANCH" >> $GITHUB_OUTPUT
 
-      - name: Set alias branch name for Cloudflare (if a pull_request)
-        id: branch_pull
-        if: github.event_name == 'pull_request_target' || github.event_name == 'pull_request'
-        run: |
-          echo "BRANCH=PR${{ github.event.pull_request.number }}" >> $GITHUB_ENV
+          # Set a simple output to confirm the value
+          echo "Event: ${{ github.event_name }}, BRANCH: $BRANCH"
 
       - name: Deploy to Cloudflare
         id: deploy
@@ -129,33 +137,18 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy src/dist --project-name=${{ vars.CLOUDFLARE_PROJECT_NAME }} --branch=${{ env.BRANCH }} --commit-dirty=true
-
-      - name: Download APK artifact
-        uses: actions/download-artifact@v5
-        with:
-          name: betaflight-configurator-apk
-          path: apk-files
-
-      - name: Get APK filename
-        id: apk
-        run: |
-          APK_FILE=$(ls apk-files/*.apk | head -1)
-          APK_NAME=$(basename "$APK_FILE")
-          echo "name=$APK_NAME" >> $GITHUB_OUTPUT
+          command: pages deploy src/dist --project-name=${{ vars.CLOUDFLARE_PROJECT_NAME }} --branch=${{ steps.branch_name.outputs.BRANCH }} --commit-dirty=true
 
       - name: Add deployment comment
         if: github.event_name == 'pull_request_target' || github.event_name == 'pull_request'
         uses: thollander/actions-comment-pull-request@v3
         with:
           message: |
-            **Preview URL:** ${{ steps.deploy.outputs.pages-deployment-alias-url }}
-
             ## 🎉 Do you want to test this code? Here you have an automated build:
-            
-            - 🤖 **Android APK:** ${{ steps.apk.outputs.name }}
-            - 📦 **[Download all artifacts](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})**
-            
-            ⚠️ **WARNING**: It may be unstable and result in corrupted configurations or data loss. Use only for testing!
+
+            - 🌐 **[Progressive Web Application (PWA)](${{ steps.deploy.outputs.pages-deployment-alias-url }})**
+            - 🤖 **[Android APK](${{ needs.build.outputs.apk_url }})**
+
+            ⚠️ **WARNING**: The build may be unstable and result in corrupted configurations or data loss. Use only for testing!
           comment-tag: 'deployment-comment'
           mode: recreate
