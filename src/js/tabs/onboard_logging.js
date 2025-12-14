@@ -469,7 +469,7 @@ onboard_logging.initialize = function (callback) {
         $(".dataflash-saving").addClass("done");
 
         if (getConfig("showNotifications").showNotifications) {
-            NotificationManager.showNotification("Betaflight Configurator", {
+            NotificationManager.showNotification("Betaflight App", {
                 body: i18n.getMessage("flashDownloadDoneNotification"),
                 icon: "/images/pwa/favicon.ico",
             });
@@ -615,7 +615,7 @@ onboard_logging.initialize = function (callback) {
                         dialog.close();
                     }
                     if (getConfig("showNotifications").showNotifications) {
-                        NotificationManager.showNotification("Betaflight Configurator", {
+                        NotificationManager.showNotification("Betaflight App", {
                             body: i18n.getMessage("flashEraseDoneNotification"),
                             icon: "/images/pwa/favicon.ico",
                         });

@@ -1,4 +1,4 @@
-package betaflight.configurator.protocols.serial;
+package betaflight.app.protocols.serial;
 
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -33,8 +33,8 @@ import java.util.Map;
 
 /**
  * Capacitor plugin for USB Serial communication
- * Designed specifically for Betaflight Configurator with binary protocol support (MSP)
- * 
+ * Designed specifically for Betaflight App with binary protocol support (MSP)
+ *
  * Features:
  * - Automatic USB device permission handling
  * - Support for multiple USB-to-serial chipsets (FTDI, CP210x, CH34x, PL2303, etc.)
@@ -61,7 +61,7 @@ public class BetaflightSerialPlugin extends Plugin implements SerialInputOutputM
     private UsbSerialDriver currentDriver;
     private UsbDeviceConnection connection;
     private SerialInputOutputManager ioManager;
-    
+
     private final Map<String, UsbDevice> permissionRequestedDevices = new HashMap<>();
     private PluginCall pendingPermissionCall;
 
@@ -69,7 +69,7 @@ public class BetaflightSerialPlugin extends Plugin implements SerialInputOutputM
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            
+
             if (ACTION_USB_PERMISSION.equals(action)) {
                 handlePermissionResult(intent);
             } else if (UsbManager.ACTION_USB_DEVICE_ATTACHED.equals(action)) {
@@ -85,19 +85,19 @@ public class BetaflightSerialPlugin extends Plugin implements SerialInputOutputM
         super.load();
         sInstance = new java.lang.ref.WeakReference<>(this);
         usbManager = (UsbManager) getContext().getSystemService(Context.USB_SERVICE);
-        
+
         // Register USB broadcast receivers
         IntentFilter filter = new IntentFilter();
         filter.addAction(ACTION_USB_PERMISSION);
         filter.addAction(UsbManager.ACTION_USB_DEVICE_ATTACHED);
         filter.addAction(UsbManager.ACTION_USB_DEVICE_DETACHED);
-        
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             getContext().registerReceiver(usbReceiver, filter, Context.RECEIVER_NOT_EXPORTED);
         } else {
             getContext().registerReceiver(usbReceiver, filter);
         }
-        
+
         Log.d(TAG, "BetaflightSerial plugin loaded");
     }
 
@@ -125,7 +125,7 @@ public class BetaflightSerialPlugin extends Plugin implements SerialInputOutputM
             }
 
             List<UsbSerialDriver> availableDrivers = UsbSerialProber.getDefaultProber().findAllDrivers(usbManager);
-            
+
             if (availableDrivers.isEmpty()) {
                 JSObject result = new JSObject();
                 result.put("devices", new JSArray());
@@ -321,7 +321,7 @@ public class BetaflightSerialPlugin extends Plugin implements SerialInputOutputM
 
             // Convert hex string to bytes
             byte[] data = hexStringToByteArray(hexData);
-            
+
             // Write data to serial port
             serialPort.write(data, WRITE_WAIT_MILLIS);
 
@@ -352,7 +352,7 @@ public class BetaflightSerialPlugin extends Plugin implements SerialInputOutputM
 
             byte[] buffer = new byte[8192];
             int numBytes = serialPort.read(buffer, READ_WAIT_MILLIS);
-            
+
             String hexData = "";
             if (numBytes > 0) {
                 byte[] data = new byte[numBytes];
@@ -379,7 +379,7 @@ public class BetaflightSerialPlugin extends Plugin implements SerialInputOutputM
     public void onNewData(byte[] data) {
         // Convert received data to hex string and notify listeners
         String hexData = byteArrayToHexString(data);
-        
+
         JSObject eventData = new JSObject();
         eventData.put("data", hexData);
         notifyListeners("dataReceived", eventData);
@@ -489,12 +489,12 @@ public class BetaflightSerialPlugin extends Plugin implements SerialInputOutputM
         info.put("deviceName", device.getDeviceName());
         info.put("deviceClass", device.getDeviceClass());
         info.put("deviceSubclass", device.getDeviceSubclass());
-        
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             info.put("manufacturer", device.getManufacturerName());
             info.put("product", device.getProductName());
         }
-        
+
         return info;
     }
 
@@ -528,7 +528,7 @@ public class BetaflightSerialPlugin extends Plugin implements SerialInputOutputM
 
     private int parseParity(String parity) {
         if (parity == null) return UsbSerialPort.PARITY_NONE;
-        
+
         switch (parity.toLowerCase()) {
             case "even":
                 return UsbSerialPort.PARITY_EVEN;

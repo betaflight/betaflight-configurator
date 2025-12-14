@@ -911,7 +911,7 @@ class STM32Protocol {
 
                             // Show notification
                             if (getConfig("showNotifications").showNotifications) {
-                                NotificationManager.showNotification("Betaflight Configurator", {
+                                NotificationManager.showNotification("Betaflight App", {
                                     body: i18n.getMessage("programmingSuccessfulNotification"),
                                     icon: "/images/pwa/favicon.ico",
                                 });
@@ -929,7 +929,7 @@ class STM32Protocol {
 
                             // Show notification
                             if (getConfig("showNotifications").showNotifications) {
-                                NotificationManager.showNotification("Betaflight Configurator", {
+                                NotificationManager.showNotification("Betaflight App", {
                                     body: i18n.getMessage("programmingFailedNotification"),
                                     icon: "/images/pwa/favicon.ico",
                                 });

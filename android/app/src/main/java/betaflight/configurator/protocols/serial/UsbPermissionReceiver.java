@@ -1,4 +1,4 @@
-package betaflight.configurator.protocols.serial;
+package betaflight.app.protocols.serial;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -11,7 +11,7 @@ import android.util.Log;
  */
 public class UsbPermissionReceiver extends BroadcastReceiver {
     private static final String TAG = "BetaflightSerial";
-    
+
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.d(TAG, "UsbPermissionReceiver.onReceive called with action: " + intent.getAction());
