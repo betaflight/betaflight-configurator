@@ -21,9 +21,14 @@ jobs:
         id: set_commit_ref
         run: |
           if [[ "${{ github.event_name }}" == "push" ]]; then
-            echo "commit_ref=${{ github.sha }}" >> $GITHUB_OUTPUT
+            COMMIT_REF=${{ github.sha }}
           else
-            echo "commit_ref=${{ github.event.pull_request.head.sha }}" >> $GITHUB_OUTPUT
+            COMMIT_REF=${{ github.event.pull_request.head.sha }}
+          fi
+          echo "COMMIT_REF=$COMMIT_REF" >> $GITHUB_OUTPUT
+
+          # Set a simple output to confirm the value
+          echo "EVENT: ${{ github.event_name }}, COMMIT_REF=$COMMIT_REF"
 
   # Build the code (minimal secrets here)
   build:
@@ -32,7 +37,7 @@ jobs:
     uses: ./.github/workflows/build.yml
     with:
       debug_build: ${{ github.event_name == 'pull_request_target' || github.event_name == 'pull_request' }}
-      commit_ref: ${{ needs.commit_reference.outputs.commit_ref }}
+      commit_ref: ${{ needs.commit_reference.outputs.COMMIT_REF }}
     secrets:
       RELEASE_KEYSTORE: ${{ secrets.RELEASE_KEYSTORE }}
       RELEASE_KEYSTORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
