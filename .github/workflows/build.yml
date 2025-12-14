@@ -115,10 +115,10 @@ jobs:
           if [[ "$IS_DEBUG" == "true" ]]; then
             echo "--- DEBUG MODE ---"
             SHA=$(echo ${{ github.event.pull_request.head.sha }} | head -c 8)
-            apk_name=betaflight-app-$(VERSION)-$(SHA).apk
+            apk_name=betaflight-app-$VERSION-$SHA.apk
           else
             echo "--- RELEASE MODE ---"
-            apk_name=betaflight-app-$(VERSION).apk
+            apk_name=betaflight-app-$VERSION.apk
           fi
           cp android/app/build/outputs/apk/release/app-release.apk artifacts/$apk_name
           echo "apk_name=$apk_name" >> $GITHUB_OUTPUT
