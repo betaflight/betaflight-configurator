@@ -11,13 +11,28 @@ on:
       - '*-maintenance'
 
 jobs:
-  # Job 1: Build the code (no secrets here)
+  commit_reference:
+    name: Get Commit Reference
+    runs-on: ubuntu-latest
+    outputs:
+      commit_ref: ${{ steps.set_commit_ref.outputs.commit_ref }}
+    steps:
+      - name: Set Commit Reference
+        id: set_commit_ref
+        run: |
+          if [[ "${{ github.event_name }}" == "push" ]]; then
+            echo "commit_ref=${{ github.sha }}" >> $GITHUB_OUTPUT
+          else
+            echo "commit_ref=${{ github.event.pull_request.head.sha }}" >> $GITHUB_OUTPUT
+
+  # Build the code (minimal secrets here)
   build:
     name: Build
+    needs: commit_reference
     uses: ./.github/workflows/build.yml
     with:
       debug_build: ${{ github.event_name == 'pull_request_target' || github.event_name == 'pull_request' }}
-      commit_ref: ${{ github.event_name == 'pull_request_target' || github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+      commit_ref: ${{ needs.commit_reference.outputs.commit_ref }}
     secrets:
       RELEASE_KEYSTORE: ${{ secrets.RELEASE_KEYSTORE }}
       RELEASE_KEYSTORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
