@@ -1,5 +1,5 @@
 {
-  "name": "betaflight-app",
+  "name": "betaflight-configurator",
   "productName": "Betaflight",
   "displayName": "Betaflight - Configuration and management tool",
   "description": "Crossplatform configuration and management tool for the Betaflight flight control firmware.",
