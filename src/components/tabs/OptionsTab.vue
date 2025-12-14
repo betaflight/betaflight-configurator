@@ -108,7 +108,7 @@
                     <div class="userLanguage">
                         <span class="dropdown">
                             <select class="dropdown-select" id="userLanguage" v-model="settings.userLanguage">
-                                <option value="DEFAULT">{{ $t("language_default") }}</option>
+                                <option value="default">{{ $t("language_default") }}</option>
                                 <option disabled>------</option>
                                 <option v-for="lang in availableLanguages" :key="lang" :value="lang">
                                     {{ $t(`language_${lang}`) }}
