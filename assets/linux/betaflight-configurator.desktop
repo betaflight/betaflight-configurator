@@ -1,8 +1,8 @@
 [Desktop Entry]
-Name=Betaflight Configurator
-Comment=Crossplatform configuration tool for the Betaflight flight control system
-Exec=/opt/betaflight/betaflight-configurator/betaflight-configurator
-Icon=/opt/betaflight/betaflight-configurator/icon/bf_icon_128.png
+Name=Betaflight App
+Comment=Crossplatform configuration and management tool for the Betaflight flight control system
+Exec=/opt/betaflight/betaflight-app/betaflight-app
+Icon=/opt/betaflight/betaflight-app/icon/bf_icon_128.png
 Terminal=false
 Type=Application
 Categories=Utility

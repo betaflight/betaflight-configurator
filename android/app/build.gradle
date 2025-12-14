@@ -1,10 +1,10 @@
 apply plugin: 'com.android.application'
 
 android {
-    namespace "betaflight.configurator"
+    namespace "betaflight.app"
     compileSdk rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "betaflight.configurator"
+        applicationId "betaflight.app"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

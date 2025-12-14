@@ -1,7 +1,7 @@
 ; ------------------------------------------
-; Installer for Betaflight Configurator
+; Installer for Betaflight App
 ; ------------------------------------------
-; It receives from the command line with /D the parameters: 
+; It receives from the command line with /D the parameters:
 ; version
 ; archName
 ; archAllowed
@@ -9,18 +9,18 @@
 ; sourceFolder
 ; targetFolder
 
-#define ApplicationName "Betaflight Configurator"
+#define ApplicationName "Betaflight App"
 #define CompanyName "The Betaflight open source project"
 #define CompanyUrl "https://betaflight.com/"
-#define ExecutableFileName "betaflight-configurator.exe"
+#define ExecutableFileName "betaflight-app.exe"
 #define GroupName "Betaflight"
-#define InstallerFileName "betaflight-configurator_" + version + "_" + archName + "-installer"
-#define SourcePath "..\..\" + sourceFolder + "\betaflight-configurator\" + archName
-#define TargetFolderName "Betaflight-Configurator"
+#define InstallerFileName "betaflight-app_" + version + "_" + archName + "-installer"
+#define SourcePath "..\..\" + sourceFolder + "\betaflight-app\" + archName
+#define TargetFolderName "Betaflight-App"
 #define UpdatesUrl "https://github.com/betaflight/betaflight-configurator/releases"
 
 [CustomMessages]
-AppName=betaflight-configurator
+AppName=betaflight-app
 LaunchProgram=Start {#ApplicationName}
 
 [Files]
@@ -30,7 +30,7 @@ Source: "{#SourcePath}\*"; DestDir: "{app}"; Flags: recursesubdirs
 ; Programs group
 Name: "{group}\{#ApplicationName}"; Filename: "{app}\{#ExecutableFileName}";
 ; Desktop icon
-Name: "{autodesktop}\{#ApplicationName}"; Filename: "{app}\{#ExecutableFileName}"; 
+Name: "{autodesktop}\{#ApplicationName}"; Filename: "{app}\{#ExecutableFileName}";
 ; Non admin users, uninstall icon
 Name: "{group}\Uninstall {#ApplicationName}"; Filename: "{uninstallexe}"; Check: not IsAdminInstallMode
 
@@ -101,11 +101,11 @@ var
 begin
     Result := '';
     // Look into the different registry entries: win32, win64 and without user rights
-    if not RegQueryStringValue(HKLM, 'SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Betaflight Configurator', 'UninstallString', Result) then
+    if not RegQueryStringValue(HKLM, 'SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Betaflight App', 'UninstallString', Result) then
     begin
-        if not RegQueryStringValue(HKLM, 'SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Betaflight Configurator', 'UninstallString', Result) then
+        if not RegQueryStringValue(HKLM, 'SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Betaflight App', 'UninstallString', Result) then
         begin
-            RegQueryStringValue(HKCU, 'SOFTWARE\Betaflight\Betaflight Configurator', 'UninstallString', Result)
+            RegQueryStringValue(HKCU, 'SOFTWARE\Betaflight\Betaflight App', 'UninstallString', Result)
         end;
     end;
 end;
@@ -128,16 +128,14 @@ var
     ParameterStr : String;
     UninstPath : String;
 begin
-    
     Result := True;
 
     // Check if the application is already installed by the old NSIS installer, and uninstall it
     UninstPath := GetOldNsisUninstallerPath();
 
     // Found, start uninstall
-    if UninstPath <> '' then 
+    if UninstPath <> '' then
     begin
-        
         UninstPath := RemoveQuotes(UninstPath);
 
         // Add this parameter to not return until uninstall finished. The drawback is that the uninstaller file is not deleted
@@ -151,8 +149,8 @@ begin
         end
         else begin
             Result := False;
-            MsgBox('Error uninstalling old Configurator ' + SysErrorMessage(ResultCode) + '.', mbError, MB_OK);
-        end;        
+            MsgBox('Error uninstalling old App ' + SysErrorMessage(ResultCode) + '.', mbError, MB_OK);
+        end;
     end
     else begin
 
@@ -163,7 +161,7 @@ begin
             if not Exec('>', UninstPath, '', SW_SHOW, ewWaitUntilTerminated, ResultCode) then
             begin
                 Result := False;
-                MsgBox('Error uninstalling Configurator ' + SysErrorMessage(ResultCode) + '.', mbError, MB_OK);
+                MsgBox('Error uninstalling App ' + SysErrorMessage(ResultCode) + '.', mbError, MB_OK);
             end;
         end;
     end;
