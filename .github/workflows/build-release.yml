@@ -8,16 +8,18 @@ on:
 
 ## note: we will need to move the deploy.yml workflow to break it apart (build and deploy in separate workflows)
 jobs:
-  build:
+  modern_build:
     name: Build
     uses: ./.github/workflows/build.yml
+    if: startsWith(github.event.release.tag_name, '20')
     with:
       debug_build: false
 
-  release:
+  modern_release:
     name: Attach Release Artifacts
-    needs: build
+    needs: modern_build
     runs-on: ubuntu-latest
+    if: startsWith(github.event.release.tag_name, '20')
     steps:
       - name: Code Checkout
         uses: actions/checkout@v5
