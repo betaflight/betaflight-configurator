@@ -1,0 +1,118 @@
+name: 'Build'
+
+on:
+  workflow_call:
+    inputs:
+      debug_build:
+        description: 'Specifies if it is a debug build or a release build'
+        default: true
+        required: false
+        type: boolean
+    outputs:
+      apk_url:
+        description: 'URL to the uploaded APK artifact'
+        value: ${{ jobs.build.outputs.apk_url }}
+      apk_name:
+        description: 'Name of the APK file'
+        value: ${{ jobs.build.outputs.apk_name  }}
+
+jobs:
+  # Build the code (no secrets here)
+  build:
+    runs-on: ubuntu-latest
+
+    # 🌟 Define the outputs for the entire job
+    outputs:
+      apk_url: ${{ steps.apk_upload.outputs.artifact-url }}
+      apk_name: ${{ steps.apk_name_set.outputs.apk_name }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false  # Don't persist GitHub token
+
+      - name: Cache node_modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules/
+          key: node_modules-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
+
+      - name: Install node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version-file: '.nvmrc'
+
+      - run: npm install yarn -g
+      - run: yarn install
+      - run: yarn build
+
+      - name: Generate Capacitor Config
+        run: node capacitor.config.generator.mjs
+
+      - name: Sync Capacitor Android Project
+        run: npx cap sync android
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: gradle
+
+      - name: Build and Sign Android APK
+        env:
+          RELEASE_KEYSTORE_BASE64: ${{ secrets.RELEASE_KEYSTORE }}
+          RELEASE_KEYSTORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
+          RELEASE_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
+          RELEASE_KEY_ALIAS_PASSWORD: ${{ secrets.RELEASE_KEY_ALIAS_PASSWORD }}
+        run: |
+          : "${RELEASE_KEYSTORE_BASE64:?Set the RELEASE_KEYSTORE secret with your base64-encoded keystore}"
+          : "${RELEASE_KEYSTORE_PASSWORD:?Set the RELEASE_KEYSTORE_PASSWORD secret with your keystore password}"
+          : "${RELEASE_KEY_ALIAS:?Set the RELEASE_KEY_ALIAS secret with your key alias}"
+          : "${RELEASE_KEY_ALIAS_PASSWORD:?Set the RELEASE_KEY_ALIAS_PASSWORD secret with your key alias password}"
+
+          mkdir -p android/keystore
+          echo "$RELEASE_KEYSTORE_BASE64" | base64 --decode > android/keystore/release.jks
+
+          pushd android >/dev/null
+          ./gradlew clean
+          ./gradlew assembleRelease \
+            -Pandroid.injected.signing.store.file="$PWD/keystore/release.jks" \
+            -Pandroid.injected.signing.store.password="$RELEASE_KEYSTORE_PASSWORD" \
+            -Pandroid.injected.signing.key.alias="$RELEASE_KEY_ALIAS" \
+            -Pandroid.injected.signing.key.password="$RELEASE_KEY_ALIAS_PASSWORD"
+          popd >/dev/null
+
+      - name: Set APK name
+        id: apk_name_set
+        env:
+          IS_DEBUG: ${{ inputs.debug_build }}
+        run: |
+          VERSION=$(jq -r '.version' package.json)
+          mkdir -p artifacts
+          if [[ "$IS_DEBUG" == "true" ]]; then
+            echo "--- DEBUG MODE ---"
+            SHA=$(echo ${{ github.event.pull_request.head.sha }} | head -c 8)
+            apk_name=betaflight-app-$(VERSION)-$(SHA).apk
+          else
+            echo "--- RELEASE MODE ---"
+            apk_name=betaflight-app-$(VERSION).apk
+          fi
+          cp android/app/build/outputs/apk/release/app-release.apk artifacts/$apk_name
+          echo "apk_name=$apk_name" >> $GITHUB_OUTPUT
+
+      - name: Upload APK as Artifact
+        id: apk_upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: betaflight-app-apk
+          path: artifacts/${{ steps.apk_name_set.outputs.apk_name }}
+
+      - name: Upload build artifact
+        id: dist_upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-files
+          path: src/dist

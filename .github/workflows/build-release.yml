@@ -7,34 +7,33 @@ on:
     types: [published]
 
 jobs:
-  ci:
-    name: CI
-    uses: ./.github/workflows/ci.yml
+  modern_build:
+    name: Build
+    uses: ./.github/workflows/build.yml
+    if: startsWith(github.event.release.tag_name, '20')
     with:
       debug_build: false
 
-  release:
+  modern_release:
     name: Attach Release Artifacts
-    needs: ci
+    needs: modern_build
     runs-on: ubuntu-latest
+    if: startsWith(github.event.release.tag_name, '20')
     steps:
       - name: Code Checkout
         uses: actions/checkout@v5
 
-      - name: Fetch build artifacts
+      - name: Fetch build artifacts (APK only at this stage)
         uses: actions/download-artifact@v5
-
-      - name: List assets
-        run: ls -al Betaflight-*/*
+        with:
+          name: betaflight-app-apk
+          path: .
 
       - name: Attach assets to release
         run: |
           set -x
           ASSETS=()
-          for asset in Betaflight-*/*; do
-            ASSETS+=("$asset")
-            echo "$asset"
-          done
+          ASSETS+=("artifacts/${{ needs.modern_build.outputs.apk_name }}")
           TAG_NAME="${GITHUB_REF##*/}"
           gh release upload "${TAG_NAME}" "${ASSETS[@]}"
         env:
