@@ -27,7 +27,7 @@ jobs:
         uses: actions/download-artifact@v5
         with:
           name: betaflight-app-apk
-          path: artifacts/${{ needs.modern_build.outputs.apk_name }}
+          path: .
 
       - name: Attach assets to release
         run: |
