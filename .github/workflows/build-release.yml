@@ -6,6 +6,7 @@ on:
   release:
     types: [published]
 
+## note: we will need to move the deploy.yml workflow to break it apart (build and deploy in separate workflows)
 jobs:
   build:
     name: Build
