@@ -340,6 +340,51 @@
                                         <span>{{ $t("configurationSensorAlignmentGyro1") }}</span>
                                     </div>
 
+                                    <div class="sensor_align_content" v-if="sensorAlignment.gyro_1_align === 9">
+                                        <div class="sensor_align_inputs">
+                                            <div class="alignicon roll"></div>
+                                            <label>
+                                                <input
+                                                    type="number"
+                                                    v-model.number="sensorAlignment.gyro_1_align_roll"
+                                                    step="0.1"
+                                                    min="-180"
+                                                    max="360"
+                                                    :aria-label="$t('configurationGyro1AlignmentRoll')"
+                                                />
+                                                <span>{{ $t("configurationGyro1AlignmentRoll") }}</span>
+                                            </label>
+                                        </div>
+                                        <div class="sensor_align_inputs">
+                                            <div class="alignicon pitch"></div>
+                                            <label>
+                                                <input
+                                                    type="number"
+                                                    v-model.number="sensorAlignment.gyro_1_align_pitch"
+                                                    step="0.1"
+                                                    min="-180"
+                                                    max="360"
+                                                    :aria-label="$t('configurationGyro1AlignmentPitch')"
+                                                />
+                                                <span>{{ $t("configurationGyro1AlignmentPitch") }}</span>
+                                            </label>
+                                        </div>
+                                        <div class="sensor_align_inputs">
+                                            <div class="alignicon yaw"></div>
+                                            <label>
+                                                <input
+                                                    type="number"
+                                                    v-model.number="sensorAlignment.gyro_1_align_yaw"
+                                                    step="0.1"
+                                                    min="-180"
+                                                    max="360"
+                                                    :aria-label="$t('configurationGyro1AlignmentYaw')"
+                                                />
+                                                <span>{{ $t("configurationGyro1AlignmentYaw") }}</span>
+                                            </label>
+                                        </div>
+                                    </div>
+
                                     <div class="select" v-if="showGyro2Align">
                                         <select v-model.number="sensorAlignment.gyro_2_align">
                                             <option :value="0">
@@ -354,6 +399,51 @@
                                             </option>
                                         </select>
                                         <span>{{ $t("configurationSensorAlignmentGyro2") }}</span>
+                                    </div>
+
+                                    <div class="sensor_align_content" v-if="sensorAlignment.gyro_2_align === 9">
+                                        <div class="sensor_align_inputs">
+                                            <div class="alignicon roll"></div>
+                                            <label>
+                                                <input
+                                                    type="number"
+                                                    v-model.number="sensorAlignment.gyro_2_align_roll"
+                                                    step="0.1"
+                                                    min="-180"
+                                                    max="360"
+                                                    :aria-label="$t('configurationGyro2AlignmentRoll')"
+                                                />
+                                                <span>{{ $t("configurationGyro2AlignmentRoll") }}</span>
+                                            </label>
+                                        </div>
+                                        <div class="sensor_align_inputs">
+                                            <div class="alignicon pitch"></div>
+                                            <label>
+                                                <input
+                                                    type="number"
+                                                    v-model.number="sensorAlignment.gyro_2_align_pitch"
+                                                    step="0.1"
+                                                    min="-180"
+                                                    max="360"
+                                                    :aria-label="$t('configurationGyro2AlignmentPitch')"
+                                                />
+                                                <span>{{ $t("configurationGyro2AlignmentPitch") }}</span>
+                                            </label>
+                                        </div>
+                                        <div class="sensor_align_inputs">
+                                            <div class="alignicon yaw"></div>
+                                            <label>
+                                                <input
+                                                    type="number"
+                                                    v-model.number="sensorAlignment.gyro_2_align_yaw"
+                                                    step="0.1"
+                                                    min="-180"
+                                                    max="360"
+                                                    :aria-label="$t('configurationGyro2AlignmentYaw')"
+                                                />
+                                                <span>{{ $t("configurationGyro2AlignmentYaw") }}</span>
+                                            </label>
+                                        </div>
                                     </div>
 
                                     <!-- MAG ALIGNMENT -->
@@ -663,6 +753,12 @@ export default defineComponent({
             mag_align_roll: 0,
             mag_align_pitch: 0,
             mag_align_yaw: 0,
+            gyro_1_align_roll: 0,
+            gyro_1_align_pitch: 0,
+            gyro_1_align_yaw: 0,
+            gyro_2_align_roll: 0,
+            gyro_2_align_pitch: 0,
+            gyro_2_align_yaw: 0,
         });
 
         const magDeclination = ref(0);
@@ -1001,6 +1097,13 @@ export default defineComponent({
             sensorAlignment.gyro_2_align = FC.SENSOR_ALIGNMENT.gyro_2_align;
             sensorAlignment.align_mag = FC.SENSOR_ALIGNMENT.align_mag;
 
+            sensorAlignment.gyro_1_align_roll = FC.SENSOR_ALIGNMENT.gyro_1_align_roll;
+            sensorAlignment.gyro_1_align_pitch = FC.SENSOR_ALIGNMENT.gyro_1_align_pitch;
+            sensorAlignment.gyro_1_align_yaw = FC.SENSOR_ALIGNMENT.gyro_1_align_yaw;
+            sensorAlignment.gyro_2_align_roll = FC.SENSOR_ALIGNMENT.gyro_2_align_roll;
+            sensorAlignment.gyro_2_align_pitch = FC.SENSOR_ALIGNMENT.gyro_2_align_pitch;
+            sensorAlignment.gyro_2_align_yaw = FC.SENSOR_ALIGNMENT.gyro_2_align_yaw;
+
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
                 sensorAlignment.mag_align_roll = FC.SENSOR_ALIGNMENT.mag_align_roll || 0;
                 sensorAlignment.mag_align_pitch = FC.SENSOR_ALIGNMENT.mag_align_pitch || 0;
@@ -1126,6 +1229,13 @@ export default defineComponent({
                 FC.SENSOR_ALIGNMENT.gyro_1_align = sensorAlignment.gyro_1_align;
                 FC.SENSOR_ALIGNMENT.gyro_2_align = sensorAlignment.gyro_2_align;
                 FC.SENSOR_ALIGNMENT.align_mag = sensorAlignment.align_mag;
+
+                FC.SENSOR_ALIGNMENT.gyro_1_align_roll = sensorAlignment.gyro_1_align_roll;
+                FC.SENSOR_ALIGNMENT.gyro_1_align_pitch = sensorAlignment.gyro_1_align_pitch;
+                FC.SENSOR_ALIGNMENT.gyro_1_align_yaw = sensorAlignment.gyro_1_align_yaw;
+                FC.SENSOR_ALIGNMENT.gyro_2_align_roll = sensorAlignment.gyro_2_align_roll;
+                FC.SENSOR_ALIGNMENT.gyro_2_align_pitch = sensorAlignment.gyro_2_align_pitch;
+                FC.SENSOR_ALIGNMENT.gyro_2_align_yaw = sensorAlignment.gyro_2_align_yaw;
 
                 if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
                     FC.SENSOR_ALIGNMENT.mag_align_roll = sensorAlignment.mag_align_roll;
