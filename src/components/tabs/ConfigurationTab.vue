@@ -517,8 +517,8 @@
                     <!-- OTHER SENSORS -->
                     <div class="gui_box grey" v-if="showOtherSensors">
                         <div class="gui_box_titlebar">
-                            <div class="spacer_box_title">{{ $t("configurationOtherFeatures") }}</div>
-                            <div class="helpicon cf_tip" :title="$t('configurationOtherFeaturesHelp')"></div>
+                            <div class="spacer_box_title">{{ $t("configurationSensors") }}</div>
+                            <div class="helpicon cf_tip" :title="$t('configurationSensorsHelp')"></div>
                         </div>
                         <div class="spacer_box">
                             <!-- MAG DECLINATION -->
@@ -705,7 +705,7 @@ import { gui_log } from "../../js/gui_log";
 import { i18n } from "../../js/localization";
 import { sensorTypes } from "../../js/sensor_types"; // Import for dropdown lists
 import { have_sensor } from "../../js/sensor_helpers";
-import semver from "semver";
+import semver from "semver-min";
 import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "../../js/data_storage";
 import { bit_check, bit_set, bit_clear } from "../../js/bit";
 import { updateTabList } from "../../js/utils/updateTabList";
@@ -1377,3 +1377,7 @@ export default defineComponent({
     },
 });
 </script>
+
+<style lang="less" scoped>
+@import "../../css/tabs/configuration.less";
+</style>
