@@ -3,6 +3,10 @@ name: 'Build'
 on:
   workflow_call:
     inputs:
+      sha:
+        description: 'The git SHA to checkout'
+        required: true
+        type: string
       debug_build:
         description: 'Specifies if it is a debug build or a release build'
         default: true
@@ -30,7 +34,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v5
         with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          ref: ${{ inputs.sha }}
           persist-credentials: false  # Don't persist GitHub token
 
       - name: Cache node_modules

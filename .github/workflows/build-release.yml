@@ -13,6 +13,7 @@ jobs:
     if: startsWith(github.event.release.tag_name, '20')
     with:
       debug_build: false
+      sha: ${{ github.event.release.target_commitish }}
 
   modern_release:
     name: Attach Release Artifacts
