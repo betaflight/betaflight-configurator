@@ -7,15 +7,15 @@ on:
     types: [published]
 
 jobs:
-  ci:
-    name: CI
-    uses: ./.github/workflows/ci.yml
+  build:
+    name: Build
+    uses: ./.github/workflows/build.yml
     with:
       debug_build: false
 
   release:
     name: Attach Release Artifacts
-    needs: ci
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Code Checkout
@@ -25,13 +25,13 @@ jobs:
         uses: actions/download-artifact@v5
 
       - name: List assets
-        run: ls -al Betaflight-*/*
+        run: ls -al betaflight-app-*/*
 
       - name: Attach assets to release
         run: |
           set -x
           ASSETS=()
-          for asset in Betaflight-*/*; do
+          for asset in betaflight-app-*/*; do
             ASSETS+=("$asset")
             echo "$asset"
           done
