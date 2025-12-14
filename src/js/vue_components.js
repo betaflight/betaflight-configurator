@@ -8,6 +8,7 @@ import HelpTab from "../components/tabs/HelpTab.vue";
 import LandingTab from "../components/tabs/LandingTab.vue";
 import OptionsTab from "../components/tabs/OptionsTab.vue";
 import PortsTab from "../components/tabs/PortsTab.vue";
+import ConfigurationTab from "../components/tabs/ConfigurationTab.vue";
 import ServosTab from "../components/tabs/ServosTab.vue";
 
 // Registry of Vue tab components - used by main.js for dynamic mounting
@@ -16,6 +17,7 @@ export const VueTabComponents = {
     landing: LandingTab,
     options: OptionsTab,
     ports: PortsTab,
+    configuration: ConfigurationTab,
     servos: ServosTab,
 };
 
@@ -33,6 +35,7 @@ export const BetaflightComponents = {
         app.component("LandingTab", LandingTab);
         app.component("OptionsTab", OptionsTab);
         app.component("PortsTab", PortsTab);
+        app.component("ConfigurationTab", ConfigurationTab);
         app.component("ServosTab", ServosTab);
     },
 };
