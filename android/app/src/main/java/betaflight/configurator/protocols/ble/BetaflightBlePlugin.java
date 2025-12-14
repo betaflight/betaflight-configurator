@@ -47,13 +47,20 @@ import no.nordicsemi.android.ble.data.Data;
 @CapacitorPlugin(
 	name = "BetaflightBle",
 	permissions = {
+		// Android 12+ BLE permissions
 		@Permission(
 			strings = {
 				Manifest.permission.BLUETOOTH_SCAN,
-				Manifest.permission.BLUETOOTH_CONNECT,
-				Manifest.permission.ACCESS_COARSE_LOCATION
+				Manifest.permission.BLUETOOTH_CONNECT
 			},
 			alias = "bluetooth"
+		),
+		// Pre-Android 12 location-based BLE permission
+		@Permission(
+			strings = {
+				Manifest.permission.ACCESS_COARSE_LOCATION
+			},
+			alias = "bluetoothLegacy"
 		)
 	}
 )
@@ -127,7 +134,11 @@ public class BetaflightBlePlugin extends Plugin {
 			return true;
 		}
 
-		requestPermissionForAlias("bluetooth", call, "onBlePermissionResult");
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+			requestPermissionForAlias("bluetooth", call, "onBlePermissionResult");
+		} else {
+			requestPermissionForAlias("bluetoothLegacy", call, "onBlePermissionResult");
+		}
 		return false;
 	}
 

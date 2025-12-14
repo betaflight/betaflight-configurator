@@ -57,12 +57,14 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" android:maxSdkVersion="30" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" android:maxSdkVersion="30" />
     <uses-permission
         android:name="android.permission.BLUETOOTH_SCAN"
+        android:minSdkVersion="31"
         android:usesPermissionFlags="neverForLocation" />
     <uses-permission
-        android:name="android.permission.BLUETOOTH_CONNECT" />
+        android:name="android.permission.BLUETOOTH_CONNECT"
+        android:minSdkVersion="31" />
 
     <!-- USB Host feature -->
     <uses-feature android:name="android.hardware.usb.host" android:required="true" />
