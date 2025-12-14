@@ -27,13 +27,13 @@ jobs:
         uses: actions/download-artifact@v5
         with:
           name: betaflight-app-apk
-          path: android/app/build/outputs/apk/release/app-release.apk
+          path: artifacts/${{ needs.modern_build.outputs.apk_name }}
 
       - name: Attach assets to release
         run: |
           set -x
           ASSETS=()
-          ASSETS+=("android/app/build/outputs/apk/release/app-release.apk")
+          ASSETS+=("artifacts/${{ needs.modern_build.outputs.apk_name }}")
           TAG_NAME="${GITHUB_REF##*/}"
           gh release upload "${TAG_NAME}" "${ASSETS[@]}"
         env:

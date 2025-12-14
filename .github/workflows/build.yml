@@ -12,6 +12,9 @@ on:
       apk_url:
         description: 'URL to the uploaded APK artifact'
         value: ${{ jobs.build.outputs.apk_url }}
+      apk_name:
+        description: 'Name of the APK file'
+        value: ${{ jobs.build.outputs.apk_name  }}
 
 jobs:
   # Build the code (no secrets here)
@@ -21,6 +24,7 @@ jobs:
     # 🌟 Define the outputs for the entire job
     outputs:
       apk_url: ${{ steps.apk_upload.outputs.artifact-url }}
+      apk_name: ${{ steps.apk_name_set.outputs.apk_name }}
 
     steps:
       - name: Checkout code
@@ -81,12 +85,30 @@ jobs:
             -Pandroid.injected.signing.key.password="$RELEASE_KEY_ALIAS_PASSWORD"
           popd >/dev/null
 
+      - name: Set APK name
+        id: apk_name_set
+        env:
+          IS_DEBUG: ${{ inputs.debug_build }}
+        run: |
+          VERSION=$(jq -r '.version' package.json)
+          mkdir -p artifacts
+          if [[ "$IS_DEBUG" == "true" ]]; then
+            echo "--- DEBUG MODE ---"
+            SHA=$(echo ${{ github.event.pull_request.head.sha }} | head -c 8)
+            apk_name=betaflight-app-$(VERSION)-$(SHA).apk
+          else
+            echo "--- RELEASE MODE ---"
+            apk_name=betaflight-app-$(VERSION).apk
+          fi
+          cp android/app/build/outputs/apk/release/app-release.apk artifacts/$apk_name
+          echo "apk_name=$apk_name" >> $GITHUB_OUTPUT
+
       - name: Upload APK as Artifact
         id: apk_upload
         uses: actions/upload-artifact@v4
         with:
           name: betaflight-app-apk
-          path: android/app/build/outputs/apk/release/app-release.apk
+          path: artifacts/${{ steps.apk_name_set.outputs.apk_name }}
 
       - name: Upload build artifact
         id: dist_upload
