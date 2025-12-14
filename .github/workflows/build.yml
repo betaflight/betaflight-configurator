@@ -34,7 +34,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v5
         with:
-          ref: ${{ inputs.sha }}
+          ref: ${{ github.event.pull_request.head.sha }}
           persist-credentials: false  # Don't persist GitHub token
 
       - name: Cache node_modules
