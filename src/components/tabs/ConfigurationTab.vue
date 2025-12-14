@@ -14,7 +14,7 @@
                 </a>
             </div>
             <div class="note">
-                <p v-html="$t('configurationFeaturesHelp')"></p>
+                <p v-text="$t('configurationFeaturesHelp')"></p>
             </div>
 
             <div class="grid-row grid-box col2">
@@ -656,7 +656,11 @@
                                     </tr>
                                 </thead>
                                 <tbody class="beeper-configuration" :key="beeperDisabledMask">
-                                    <tr v-for="beeper in beepersList" :key="beeper.bit" v-show="beeper.visible">
+                                    <tr
+                                        v-for="beeper in beepersList"
+                                        :key="beeper.bit"
+                                        v-show="beeper.visible !== false"
+                                    >
                                         <td>
                                             <input
                                                 type="checkbox"
