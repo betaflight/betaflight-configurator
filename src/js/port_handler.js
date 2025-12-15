@@ -208,7 +208,7 @@ PortHandler.sortPorts = function (ports) {
 };
 
 PortHandler.selectActivePort = function (suggestedDevice = false) {
-    const deviceFilter = ["AT32", "CP210", "SPR", "STM", "SpeedyBee", "Nordic NRF"]; // include common BLE display names
+    const deviceFilter = ["AT32", "CP210", "SPR", "STM"];
     let selectedPort;
 
     // First check for active connections
@@ -342,22 +342,6 @@ PortHandler.updateDeviceList = async function (deviceType) {
         // Update the appropriate properties based on device type
         switch (deviceType) {
             case "bluetooth": {
-                const hasConnectedBluetooth =
-                    serial.connected && serial.getConnectedPort()?.path?.startsWith("bluetooth");
-
-                if (
-                    orderedPorts.length === 0 &&
-                    this.currentBluetoothPorts.length &&
-                    (hasConnectedBluetooth || this.portPicker.selectedPort?.startsWith("bluetooth"))
-                ) {
-                    // Keep previous list if a connection/selection exists and scan returned empty to avoid losing the port
-                    console.log(
-                        `${this.logHead} Keeping existing bluetooth ports (scan empty but selection/connection active)`,
-                        this.currentBluetoothPorts,
-                    );
-                    return this.currentBluetoothPorts;
-                }
-
                 this.bluetoothAvailable = orderedPorts.length > 0;
                 this.currentBluetoothPorts = [...orderedPorts];
                 console.log(`${this.logHead} Found bluetooth port(s)`, orderedPorts);
