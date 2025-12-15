@@ -7,11 +7,6 @@ import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothManager;
-import android.bluetooth.le.BluetoothLeScanner;
-import android.bluetooth.le.ScanCallback;
-import android.bluetooth.le.ScanFilter;
-import android.bluetooth.le.ScanResult;
-import android.bluetooth.le.ScanSettings;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -20,6 +15,7 @@ import android.os.Looper;
 import android.os.ParcelUuid;
 import android.util.Base64;
 import android.util.Log;
+import android.util.SparseArray;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -35,14 +31,21 @@ import com.getcapacitor.annotation.PermissionCallback;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import no.nordicsemi.android.ble.BleManager;
 import no.nordicsemi.android.ble.observer.ConnectionObserver;
 import no.nordicsemi.android.ble.WriteRequest;
 import no.nordicsemi.android.ble.data.Data;
+import no.nordicsemi.android.support.v18.scanner.BluetoothLeScannerCompat;
+import no.nordicsemi.android.support.v18.scanner.ScanCallback;
+import no.nordicsemi.android.support.v18.scanner.ScanFilter;
+import no.nordicsemi.android.support.v18.scanner.ScanResult;
+import no.nordicsemi.android.support.v18.scanner.ScanSettings;
 
 @CapacitorPlugin(
 	name = "BetaflightBle",
@@ -70,7 +73,6 @@ public class BetaflightBlePlugin extends Plugin {
 	private static final long FALLBACK_SCAN_DURATION_MS = 4_000L;
 
 	private static final Map<String, KnownDevice> KNOWN_DEVICES = new HashMap<>();
-	private static final Map<String, KnownDevice> KNOWN_DEVICES_BY_NAME = new HashMap<>();
 
 	static {
 		addDevice("CC2541", "0000ffe0-0000-1000-8000-00805f9b34fb",
@@ -87,23 +89,22 @@ public class BetaflightBlePlugin extends Plugin {
 			"00001001-0000-1000-8000-00805f9b34fb", "00001002-0000-1000-8000-00805f9b34fb");
 		addDevice("SpeedyBee V2", "0000abf0-0000-1000-8000-00805f9b34fb",
 			"0000abf1-0000-1000-8000-00805f9b34fb", "0000abf2-0000-1000-8000-00805f9b34fb");
+		addDevice("SpeedyBee FF00", "000000ff-0000-1000-8000-00805f9b34fb",
+			"0000ff01-0000-1000-8000-00805f9b34fb", "0000ff02-0000-1000-8000-00805f9b34fb");
 		addDevice("DroneBridge", "0000db32-0000-1000-8000-00805f9b34fb",
 			"0000db33-0000-1000-8000-00805f9b34fb", "0000db34-0000-1000-8000-00805f9b34fb");
-		// Extra name aliases that map to known profiles (helps when service UUIDs aren't advertised)
-		KNOWN_DEVICES_BY_NAME.put("speedybee f7v3", KNOWN_DEVICES.get("0000abf0-0000-1000-8000-00805f9b34fb"));
-		KNOWN_DEVICES_BY_NAME.put("speedybee", KNOWN_DEVICES.get("0000abf0-0000-1000-8000-00805f9b34fb"));
 	}
 
 	private static void addDevice(String name, String service, String write, String notify) {
 		KnownDevice device = new KnownDevice(name, service, write, notify);
 		KNOWN_DEVICES.put(service.toLowerCase(), device);
-		KNOWN_DEVICES_BY_NAME.put(name.toLowerCase(), device);
 	}
 
 	private BluetoothAdapter adapter;
-	private BluetoothLeScanner scanner;
+	private BluetoothLeScannerCompat scanner;
 	private final Handler handler = new Handler(Looper.getMainLooper());
 	private final Map<String, DiscoveredDevice> discoveredDevices = new HashMap<>();
+	private final Set<String> loggedUnknownAddresses = new HashSet<>();
 	private boolean scanning = false;
 	private boolean fallbackScan = false;
 	private List<UUID> requestedServices = new ArrayList<>();
@@ -165,13 +166,10 @@ public class BetaflightBlePlugin extends Plugin {
 			return;
 		}
 
-		scanner = adapter.getBluetoothLeScanner();
-		if (scanner == null) {
-			call.reject("Bluetooth LE scanner unavailable");
-			return;
-		}
+		scanner = BluetoothLeScannerCompat.getScanner();
 
 		discoveredDevices.clear();
+		loggedUnknownAddresses.clear();
 		scanning = true;
 
 		requestedServices.clear();
@@ -469,6 +467,11 @@ public class BetaflightBlePlugin extends Plugin {
 
 		KnownDevice profile = findProfileForResult(result, allowNameMatch);
 		if (profile == null) {
+			String address = result.getDevice().getAddress();
+			if (!loggedUnknownAddresses.contains(address)) {
+				logUnknownResult(result);
+				loggedUnknownAddresses.add(address);
+			}
 			return;
 		}
 
@@ -516,13 +519,57 @@ public class BetaflightBlePlugin extends Plugin {
 			String advertisedName = result.getDevice().getName();
 			if (advertisedName != null) {
 				String name = advertisedName.toLowerCase();
-				if (KNOWN_DEVICES_BY_NAME.containsKey(name)) {
-					return KNOWN_DEVICES_BY_NAME.get(name);
+				for (KnownDevice deviceProfile : KNOWN_DEVICES.values()) {
+					if (deviceProfile.name != null && name.contains(deviceProfile.name.toLowerCase())) {
+						return deviceProfile;
+					}
 				}
 			}
 		}
 
 		return null;
+	}
+
+	private void logUnknownResult(ScanResult result) {
+		String address = result.getDevice().getAddress();
+		String name = result.getDevice().getName();
+		List<String> services = new ArrayList<>();
+		List<String> serviceData = new ArrayList<>();
+		List<String> manufacturerData = new ArrayList<>();
+
+		if (result.getScanRecord() != null) {
+			if (result.getScanRecord().getServiceUuids() != null) {
+				for (ParcelUuid uuid : result.getScanRecord().getServiceUuids()) {
+					if (uuid != null && uuid.getUuid() != null) {
+						services.add(uuid.getUuid().toString());
+					}
+				}
+			}
+
+			if (result.getScanRecord().getServiceData() != null) {
+				for (Map.Entry<ParcelUuid, byte[]> entry : result.getScanRecord().getServiceData().entrySet()) {
+					ParcelUuid uuid = entry.getKey();
+					byte[] data = entry.getValue();
+					serviceData.add((uuid != null ? uuid.toString() : "unknown") + ":" + (data != null ? data.length : 0));
+				}
+			}
+
+			SparseArray<byte[]> mfg = result.getScanRecord().getManufacturerSpecificData();
+			if (mfg != null) {
+				for (int i = 0; i < mfg.size(); i++) {
+					int id = mfg.keyAt(i);
+					byte[] data = mfg.valueAt(i);
+					manufacturerData.add(id + ":" + (data != null ? data.length : 0));
+				}
+			}
+		}
+
+		Log.d(TAG, "Unknown BLE adv addr=" + address
+			+ " name=" + name
+			+ " rssi=" + result.getRssi()
+			+ " services=" + services
+			+ " mfg=" + manufacturerData
+			+ " serviceData=" + serviceData);
 	}
 
 	void handleNotification(Data data) {

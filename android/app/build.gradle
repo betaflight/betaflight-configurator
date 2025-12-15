@@ -37,6 +37,7 @@ dependencies {
     implementation "androidx.core:core-splashscreen:$coreSplashScreenVersion"
     implementation 'com.github.mik3y:usb-serial-for-android:3.9.0'
     implementation 'no.nordicsemi.android:ble:2.11.0'
+    implementation 'no.nordicsemi.android.support.v18:scanner:1.6.0'
     implementation project(':capacitor-android')
     testImplementation "junit:junit:$junitVersion"
     androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
