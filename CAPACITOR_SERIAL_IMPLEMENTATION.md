@@ -1,10 +1,10 @@
 src/js/protocols/CapacitorSerial.js                 # Protocol adapter
 
-# Betaflight Configurator - Custom Capacitor USB Serial Plugin
+# Betaflight App - Custom Capacitor USB Serial Plugin
 
 ## Overview
 
-This implementation creates a **custom Capacitor USB Serial plugin** specifically designed for Betaflight Configurator, replacing the patched `capacitor-plugin-usb-serial` with a clean, purpose-built solution.
+This implementation creates a **custom Capacitor USB Serial plugin** specifically designed for the Betaflight App, replacing the patched `capacitor-plugin-usb-serial` with a clean, purpose-built solution.
 
 ## 🎯 Key Improvements
 
@@ -19,10 +19,10 @@ This implementation creates a **custom Capacitor USB Serial plugin** specificall
 ### 🏗️ Architecture
 
 ```text
-betaflight-configurator/
+betaflight-app/
 ├── android/app/src/main/java/
-│   ├── betaflight/configurator/MainActivity.java    # Registers the plugin
-│   └── betaflight/configurator/protocols/serial/    # Native plugin source
+│   ├── betaflight/app/MainActivity.java    # Registers the plugin
+│   └── betaflight/app/protocols/serial/    # Native plugin source
 │       ├── BetaflightSerialPlugin.java
 │       └── UsbPermissionReceiver.java
 │
@@ -37,7 +37,7 @@ betaflight-configurator/
 
 ### Native Android Layer
 
-**File**: `android/app/src/main/java/betaflight/configurator/protocols/serial/BetaflightSerialPlugin.java`
+**File**: `android/app/src/main/java/betaflight/app/protocols/serial/BetaflightSerialPlugin.java`
 
 **Key Features**:
 - Uses `usb-serial-for-android` library (proven, mature library)

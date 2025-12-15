@@ -1,4 +1,4 @@
-package betaflight.configurator.protocols.tcp;
+package betaflight.app.protocols.tcp;
 
 import android.util.Base64;
 import android.util.Log;
@@ -71,13 +71,12 @@ public class BetaflightTcpPlugin extends Plugin {
             call.setKeepAlive(false);
             return;
         }
-        
+
         if (!compareAndSetState(ConnectionState.DISCONNECTED, ConnectionState.CONNECTING)) {
             call.reject(ERROR_ALREADY_CONNECTED);
             call.setKeepAlive(false);
             return;
         }
-
 
         new Thread(() -> {
             socketLock.lock();
@@ -109,7 +108,7 @@ public class BetaflightTcpPlugin extends Plugin {
             }
         }).start();
     }
-    
+
     @PluginMethod
     public void send(final PluginCall call) {
         String data = call.getString("data");
