@@ -69,8 +69,8 @@ import no.nordicsemi.android.support.v18.scanner.ScanSettings;
 )
 public class BetaflightBlePlugin extends Plugin {
 	private static final String TAG = "BetaflightBle";
-	private static final long SCAN_DURATION_MS = 5_000L;
-	private static final long FALLBACK_SCAN_DURATION_MS = 4_000L;
+	private static final long SCAN_DURATION_MS = 2_000L; // shorter primary window to enter fallback sooner
+	private static final long FALLBACK_SCAN_DURATION_MS = 3_000L; // faster overall discovery
 
 	private static final Map<String, KnownDevice> KNOWN_DEVICES = new HashMap<>();
 
@@ -196,17 +196,17 @@ public class BetaflightBlePlugin extends Plugin {
 			}
 		}
 
-		List<ScanFilter> filters = new ArrayList<>();
-		for (UUID service : requestedServices) {
-			filters.add(new ScanFilter.Builder().setServiceUuid(new ParcelUuid(service)).build());
-		}
-
 		ScanSettings settings = new ScanSettings.Builder()
 			.setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
 			.build();
 
-		scanner.startScan(filters, settings, scanCallback);
-		handler.postDelayed(() -> finishScan(call, false), SCAN_DURATION_MS);
+		try {
+			scanner.startScan(null, settings, scanCallback); // unfiltered for fastest discovery
+			handler.postDelayed(() -> finishScan(call, false), SCAN_DURATION_MS);
+		} catch (SecurityException se) {
+			scanning = false;
+			call.reject("BLE scan permission denied: " + se.getMessage());
+		}
 	}
 
 	private void finishScan(PluginCall call, boolean fromFallback) {
@@ -247,8 +247,13 @@ public class BetaflightBlePlugin extends Plugin {
 			.setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
 			.build();
 
-		scanner.startScan(null, settings, fallbackScanCallback);
-		handler.postDelayed(() -> finishScan(call, true), FALLBACK_SCAN_DURATION_MS);
+		try {
+			scanner.startScan(null, settings, fallbackScanCallback);
+			handler.postDelayed(() -> finishScan(call, true), FALLBACK_SCAN_DURATION_MS);
+		} catch (SecurityException se) {
+			scanning = false;
+			call.reject("BLE fallback scan permission denied: " + se.getMessage());
+		}
 	}
 
 	@PluginMethod
