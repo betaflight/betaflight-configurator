@@ -168,7 +168,6 @@ PortHandler.requestDevicePermission = async function (protocol) {
         } else {
             console.log(`${this.logHead} Permission request cancelled or failed for ${protocol} device`);
             this.portPicker.selectedPort = DEFAULT_PORT;
-            return;
         }
     } catch (error) {
         console.error(`${this.logHead} Error requesting permission for ${protocol} device:`, error);
