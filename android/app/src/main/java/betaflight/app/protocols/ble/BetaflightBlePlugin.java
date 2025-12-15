@@ -72,27 +72,56 @@ public class BetaflightBlePlugin extends Plugin {
 	private static final long SCAN_DURATION_MS = 2_000L; // shorter primary window to enter fallback sooner
 	private static final long FALLBACK_SCAN_DURATION_MS = 3_000L; // faster overall discovery
 
+	// Core profile UUID constants to keep registration concise
+	private static final String SERVICE_CC2541 = "0000ffe0-0000-1000-8000-00805f9b34fb";
+	private static final String WRITE_CC2541 = "0000ffe1-0000-1000-8000-00805f9b34fb";
+	private static final String NOTIFY_CC2541 = "0000ffe2-0000-1000-8000-00805f9b34fb";
+
+	private static final String SERVICE_HC05 = "00001101-0000-1000-8000-00805f9b34fb";
+	private static final String WRITE_HC05 = "00001101-0000-1000-8000-00805f9b34fb";
+	private static final String NOTIFY_HC05 = "00001101-0000-1000-8000-00805f9b34fb";
+
+	private static final String SERVICE_HM10 = "0000ffe1-0000-1000-8000-00805f9b34fb";
+	private static final String WRITE_HM10 = "0000ffe1-0000-1000-8000-00805f9b34fb";
+	private static final String NOTIFY_HM10 = "0000ffe1-0000-1000-8000-00805f9b34fb";
+
+	private static final String SERVICE_NORDIC_NUS = "6e400001-b5a3-f393-e0a9-e50e24dcca9e";
+	private static final String NOTIFY_NORDIC_NUS = "6e400003-b5a3-f393-e0a9-e50e24dcca9e";
+	private static final String WRITE_NORDIC_NUS = "6e400002-b5a3-f393-e0a9-e50e24dcca9e";
+
+	private static final String SERVICE_DRONEBRIDGE = "0000db32-0000-1000-8000-00805f9b34fb";
+	private static final String WRITE_DRONEBRIDGE = "0000db33-0000-1000-8000-00805f9b34fb";
+	private static final String NOTIFY_DRONEBRIDGE = "0000db34-0000-1000-8000-00805f9b34fb";
+
+	// SpeedyBee UUID constants to avoid scattered string literals
+	private static final String SERVICE_SPEEDYBEE_FF00 = "000000ff-0000-1000-8000-00805f9b34fb";
+	private static final String WRITE_SPEEDYBEE_FF00 = "0000ff01-0000-1000-8000-00805f9b34fb";
+	private static final String NOTIFY_SPEEDYBEE_FF00 = "0000ff02-0000-1000-8000-00805f9b34fb";
+
+	private static final String SERVICE_SPEEDYBEE_V2 = "0000abf0-0000-1000-8000-00805f9b34fb";
+	private static final String WRITE_SPEEDYBEE_V2 = "0000abf1-0000-1000-8000-00805f9b34fb";
+	private static final String NOTIFY_SPEEDYBEE_V2 = "0000abf2-0000-1000-8000-00805f9b34fb";
+
+	private static final String SERVICE_SPEEDYBEE_V1 = "00001000-0000-1000-8000-00805f9b34fb";
+	private static final String WRITE_SPEEDYBEE_V1 = "00001001-0000-1000-8000-00805f9b34fb";
+	private static final String NOTIFY_SPEEDYBEE_V1 = "00001002-0000-1000-8000-00805f9b34fb";
+
+	private static final UUID UUID_SPEEDYBEE_FF00 = UUID.fromString(SERVICE_SPEEDYBEE_FF00);
+	private static final UUID UUID_SPEEDYBEE_V2 = UUID.fromString(SERVICE_SPEEDYBEE_V2);
+	private static final UUID UUID_SPEEDYBEE_V1 = UUID.fromString(SERVICE_SPEEDYBEE_V1);
+
 	private static final Map<String, KnownDevice> KNOWN_DEVICES = new HashMap<>();
 
 	static {
-		addDevice("CC2541", "0000ffe0-0000-1000-8000-00805f9b34fb",
-			"0000ffe1-0000-1000-8000-00805f9b34fb", "0000ffe2-0000-1000-8000-00805f9b34fb");
-		addDevice("HC-05", "00001101-0000-1000-8000-00805f9b34fb",
-			"00001101-0000-1000-8000-00805f9b34fb", "00001101-0000-1000-8000-00805f9b34fb");
-		addDevice("HM-10", "0000ffe1-0000-1000-8000-00805f9b34fb",
-			"0000ffe1-0000-1000-8000-00805f9b34fb", "0000ffe1-0000-1000-8000-00805f9b34fb");
-		addDevice("HM-11", "6e400001-b5a3-f393-e0a9-e50e24dcca9e",
-			"6e400003-b5a3-f393-e0a9-e50e24dcca9e", "6e400002-b5a3-f393-e0a9-e50e24dcca9e");
-		addDevice("Nordic NRF", "6e400001-b5a3-f393-e0a9-e50e24dcca9e",
-			"6e400003-b5a3-f393-e0a9-e50e24dcca9e", "6e400002-b5a3-f393-e0a9-e50e24dcca9e");
-		addDevice("SpeedyBee V1", "00001000-0000-1000-8000-00805f9b34fb",
-			"00001001-0000-1000-8000-00805f9b34fb", "00001002-0000-1000-8000-00805f9b34fb");
-		addDevice("SpeedyBee V2", "0000abf0-0000-1000-8000-00805f9b34fb",
-			"0000abf1-0000-1000-8000-00805f9b34fb", "0000abf2-0000-1000-8000-00805f9b34fb");
-		addDevice("SpeedyBee FF00", "000000ff-0000-1000-8000-00805f9b34fb",
-			"0000ff01-0000-1000-8000-00805f9b34fb", "0000ff02-0000-1000-8000-00805f9b34fb");
-		addDevice("DroneBridge", "0000db32-0000-1000-8000-00805f9b34fb",
-			"0000db33-0000-1000-8000-00805f9b34fb", "0000db34-0000-1000-8000-00805f9b34fb");
+		addDevice("CC2541", SERVICE_CC2541, WRITE_CC2541, NOTIFY_CC2541);
+		addDevice("HC-05", SERVICE_HC05, WRITE_HC05, NOTIFY_HC05);
+		addDevice("HM-10", SERVICE_HM10, WRITE_HM10, NOTIFY_HM10);
+		addDevice("HM-11", SERVICE_NORDIC_NUS, NOTIFY_NORDIC_NUS, WRITE_NORDIC_NUS);
+		addDevice("Nordic NRF", SERVICE_NORDIC_NUS, NOTIFY_NORDIC_NUS, WRITE_NORDIC_NUS);
+		addDevice("SpeedyBee V1", SERVICE_SPEEDYBEE_V1, WRITE_SPEEDYBEE_V1, NOTIFY_SPEEDYBEE_V1);
+		addDevice("SpeedyBee V2", SERVICE_SPEEDYBEE_V2, WRITE_SPEEDYBEE_V2, NOTIFY_SPEEDYBEE_V2);
+		addDevice("SpeedyBee FF00", SERVICE_SPEEDYBEE_FF00, WRITE_SPEEDYBEE_FF00, NOTIFY_SPEEDYBEE_FF00);
+		addDevice("DroneBridge", SERVICE_DRONEBRIDGE, WRITE_DRONEBRIDGE, NOTIFY_DRONEBRIDGE);
 	}
 
 	private static void addDevice(String name, String service, String write, String notify) {
@@ -524,6 +553,7 @@ public class BetaflightBlePlugin extends Plugin {
 			String advertisedName = result.getDevice().getName();
 			if (advertisedName != null) {
 				String name = advertisedName.toLowerCase();
+
 				for (KnownDevice deviceProfile : KNOWN_DEVICES.values()) {
 					if (deviceProfile.name != null && name.contains(deviceProfile.name.toLowerCase())) {
 						return deviceProfile;
@@ -617,9 +647,10 @@ public class BetaflightBlePlugin extends Plugin {
 
 	private static class BleBridgeManager extends BleManager {
 		private final BetaflightBlePlugin plugin;
-		private final UUID serviceUuid;
-		private final UUID writeUuid;
-		private final UUID notifyUuid;
+		private UUID serviceUuid;
+		private UUID writeUuid;
+		private UUID notifyUuid;
+		private String profileName;
 		private int negotiatedMtu = 23;
 
 		private BluetoothGattCharacteristic writeCharacteristic;
@@ -631,6 +662,7 @@ public class BetaflightBlePlugin extends Plugin {
 			this.serviceUuid = UUID.fromString(profile.serviceUuid);
 			this.writeUuid = UUID.fromString(profile.writeUuid);
 			this.notifyUuid = UUID.fromString(profile.notifyUuid);
+			this.profileName = profile.name;
 		}
 
 		@NonNull
@@ -640,11 +672,35 @@ public class BetaflightBlePlugin extends Plugin {
 		}
 
 		private class ManagerGattCallback extends BleManagerGattCallback {
+			private BluetoothGattService chooseSpeedyBeeFallback(BluetoothGatt gatt) {
+				if (gatt.getService(UUID_SPEEDYBEE_FF00) != null) return gatt.getService(UUID_SPEEDYBEE_FF00);
+				if (gatt.getService(UUID_SPEEDYBEE_V2) != null) return gatt.getService(UUID_SPEEDYBEE_V2);
+				return gatt.getService(UUID_SPEEDYBEE_V1);
+			}
+
 			@Override
 			protected boolean isRequiredServiceSupported(@NonNull BluetoothGatt gatt) {
+				Log.d(TAG, "Validating GATT services for " + gatt.getDevice().getAddress());
 				BluetoothGattService service = gatt.getService(serviceUuid);
 				if (service == null) {
-					return false;
+					BluetoothGattService fallback = chooseSpeedyBeeFallback(gatt);
+					if (fallback == null) {
+						Log.w(TAG, "Service " + serviceUuid + " missing on " + gatt.getDevice().getAddress());
+						return false;
+					}
+
+					KnownDevice alt = KNOWN_DEVICES.get(fallback.getUuid().toString().toLowerCase());
+					if (alt == null) {
+						Log.w(TAG, "Fallback service " + fallback.getUuid() + " not in KNOWN_DEVICES on " + gatt.getDevice().getAddress());
+						return false;
+					}
+
+					Log.i(TAG, "Switching to fallback profile " + alt.name + " service=" + alt.serviceUuid + " for " + gatt.getDevice().getAddress());
+					serviceUuid = UUID.fromString(alt.serviceUuid);
+					writeUuid = UUID.fromString(alt.writeUuid);
+					notifyUuid = UUID.fromString(alt.notifyUuid);
+						profileName = alt.name;
+					service = fallback;
 				}
 
 				writeCharacteristic = service.getCharacteristic(writeUuid);
