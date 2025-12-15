@@ -632,7 +632,6 @@ public class BetaflightBlePlugin extends Plugin {
 			if (writeCharacteristic == null) {
 				return null;
 			}
-			int chunkSize = Math.max(negotiatedMtu - 3, 20); // 3 bytes ATT overhead
 			return writeCharacteristic(writeCharacteristic, data);
 		}
 	}
