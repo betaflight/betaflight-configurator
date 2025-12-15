@@ -699,7 +699,7 @@ public class BetaflightBlePlugin extends Plugin {
 					serviceUuid = UUID.fromString(alt.serviceUuid);
 					writeUuid = UUID.fromString(alt.writeUuid);
 					notifyUuid = UUID.fromString(alt.notifyUuid);
-						profileName = alt.name;
+					profileName = alt.name;
 					service = fallback;
 				}
 
