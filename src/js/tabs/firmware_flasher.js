@@ -9,7 +9,6 @@ import { tracking } from "../Analytics";
 import PortHandler from "../port_handler";
 import { gui_log } from "../gui_log";
 import semver from "semver";
-import { urlExists } from "../utils/common";
 import read_hex_file from "../workers/hex_parser.js";
 import Sponsor from "../Sponsor";
 import FileSystem from "../FileSystem";
@@ -1283,11 +1282,13 @@ firmware_flasher.initialize = async function (callback) {
         const targetSupportInfo = $("#targetSupportInfoUrl");
 
         targetSupportInfo.on("click", function () {
-            let urlSupport = "https://betaflight.com/docs/wiki/boards/archive/Missing"; // general board missing
-            const urlBoard = `https://betaflight.com/docs/wiki/boards/current/${self.selectedBoard}`; // board description
-            if (urlExists(urlBoard)) {
-                urlSupport = urlBoard;
-            }
+            const baseBoardUrl = "https://betaflight.com/docs/wiki/boards/current";
+            const hasBoardSelection = self?.selectedBoard !== "0";
+
+            const urlSupport = hasBoardSelection
+                ? `${baseBoardUrl}/${encodeURIComponent(self.selectedBoard)}` // selected board description
+                : "https://betaflight.com/docs/wiki/boards/archive/Missing"; // general board missing
+
             targetSupportInfo.attr("href", urlSupport);
         });
 
