@@ -1283,7 +1283,7 @@ firmware_flasher.initialize = async function (callback) {
 
         targetSupportInfo.on("click", function () {
             const baseBoardUrl = "https://betaflight.com/docs/wiki/boards/current";
-            const hasBoardSelection = self?.selectedBoard !== "0";
+            const hasBoardSelection = self.selectedBoard && self.selectedBoard !== "0";
 
             const urlSupport = hasBoardSelection
                 ? `${baseBoardUrl}/${encodeURIComponent(self.selectedBoard)}` // selected board description
