@@ -21,18 +21,18 @@ class VirtualSerial {
         this.connected = true;
         this.connectionId = VIRTUAL;
         this.bitrate = 115200;
+        return true;
     }
-    disconnect(callback) {
+    disconnect() {
         this.connected = false;
         this.outputBuffer = [];
         this.transmitting = false;
         if (this.connectionId) {
             this.connectionId = false;
             this.bitrate = 0;
-            if (callback) {
-                callback(true);
-            }
+            return true;
         }
+        return false;
     }
     getConnectedPort() {
         return this.connectionId;
