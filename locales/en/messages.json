@@ -1453,6 +1453,9 @@
     "configurationSpiRxHelp": {
         "message": "<strong>Note:</strong> The SPI RX provider will only work if the required hardware is on board or connected to an SPI bus."
     },
+    "configurationActiveImu": {
+        "message": "Active IMU"
+    },
     "configurationSensors": {
         "message": "Sensor Configuration"
     },

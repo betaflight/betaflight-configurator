@@ -14,7 +14,7 @@
                 </a>
             </div>
             <div class="note">
-                <p v-text="$t('configurationFeaturesHelp')"></p>
+                <p v-html="$t('configurationFeaturesHelp')"></p>
             </div>
 
             <div class="grid-row grid-box col2">
@@ -303,7 +303,7 @@
                     <!-- GYRO ALIGNMENT (Complex) -->
                     <div class="gui_box grey" v-if="showSensorAlignment">
                         <div class="gui_box_titlebar">
-                            <div class="spacer_box_title">{{ $t("configurationGyroAlignment") }}</div>
+                            <div class="spacer_box_title">{{ $t("configurationActiveImu") }}</div>
                             <div class="helpicon cf_tip" :title="$t('configurationGyroAlignmentHelp')"></div>
                         </div>
                         <div class="spacer_box">
@@ -445,70 +445,72 @@
                                             </label>
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-                                    <!-- MAG ALIGNMENT -->
-                                    <template v-if="showMagAlign">
-                                        <div class="select">
-                                            <select v-model.number="sensorAlignment.align_mag">
-                                                <option :value="0">
-                                                    {{ $t("configurationSensorAlignmentDefaultOption") }}
-                                                </option>
-                                                <option
-                                                    v-for="(align, idx) in sensorAlignments"
-                                                    :key="idx"
-                                                    :value="idx + 1"
-                                                >
-                                                    {{ align }}
-                                                </option>
-                                            </select>
-                                            <span>{{ $t("configurationMagAlignment") }}</span>
-                                        </div>
+                    <!-- MAGNETOMETER ALIGNMENT -->
+                    <div class="gui_box grey" v-if="showMagAlign">
+                        <div class="gui_box_titlebar">
+                            <div class="spacer_box_title">{{ $t("configurationMagAlignment") }}</div>
+                            <div class="helpicon cf_tip" :title="$t('configurationMagAlignmentHelp')"></div>
+                        </div>
+                        <div class="spacer_box">
+                            <div class="select">
+                                <select v-model.number="sensorAlignment.align_mag">
+                                    <option :value="0">
+                                        {{ $t("configurationSensorAlignmentDefaultOption") }}
+                                    </option>
+                                    <option v-for="(align, idx) in sensorAlignments" :key="idx" :value="idx + 1">
+                                        {{ align }}
+                                    </option>
+                                </select>
+                                <span>{{ $t("configurationMagAlignment") }}</span>
+                            </div>
 
-                                        <div class="sensor_align_content" v-if="sensorAlignment.align_mag === 9">
-                                            <div class="sensor_align_inputs">
-                                                <div class="alignicon roll"></div>
-                                                <label>
-                                                    <input
-                                                        type="number"
-                                                        v-model.number="sensorAlignment.mag_align_roll"
-                                                        step="0.1"
-                                                        min="-180"
-                                                        max="360"
-                                                        :aria-label="$t('configurationMagAlignmentRoll')"
-                                                    />
-                                                    <span>{{ $t("configurationMagAlignmentRoll") }}</span>
-                                                </label>
-                                            </div>
-                                            <div class="sensor_align_inputs">
-                                                <div class="alignicon pitch"></div>
-                                                <label>
-                                                    <input
-                                                        type="number"
-                                                        v-model.number="sensorAlignment.mag_align_pitch"
-                                                        step="0.1"
-                                                        min="-180"
-                                                        max="360"
-                                                        :aria-label="$t('configurationMagAlignmentPitch')"
-                                                    />
-                                                    <span>{{ $t("configurationMagAlignmentPitch") }}</span>
-                                                </label>
-                                            </div>
-                                            <div class="sensor_align_inputs">
-                                                <div class="alignicon yaw"></div>
-                                                <label>
-                                                    <input
-                                                        type="number"
-                                                        v-model.number="sensorAlignment.mag_align_yaw"
-                                                        step="0.1"
-                                                        min="-180"
-                                                        max="360"
-                                                        :aria-label="$t('configurationMagAlignmentYaw')"
-                                                    />
-                                                    <span>{{ $t("configurationMagAlignmentYaw") }}</span>
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </template>
+                            <div class="sensor_align_content" v-if="sensorAlignment.align_mag === 9">
+                                <div class="sensor_align_inputs">
+                                    <div class="alignicon roll"></div>
+                                    <label>
+                                        <input
+                                            type="number"
+                                            v-model.number="sensorAlignment.mag_align_roll"
+                                            step="0.1"
+                                            min="-180"
+                                            max="360"
+                                            :aria-label="$t('configurationMagAlignmentRoll')"
+                                        />
+                                        <span>{{ $t("configurationMagAlignmentRoll") }}</span>
+                                    </label>
+                                </div>
+                                <div class="sensor_align_inputs">
+                                    <div class="alignicon pitch"></div>
+                                    <label>
+                                        <input
+                                            type="number"
+                                            v-model.number="sensorAlignment.mag_align_pitch"
+                                            step="0.1"
+                                            min="-180"
+                                            max="360"
+                                            :aria-label="$t('configurationMagAlignmentPitch')"
+                                        />
+                                        <span>{{ $t("configurationMagAlignmentPitch") }}</span>
+                                    </label>
+                                </div>
+                                <div class="sensor_align_inputs">
+                                    <div class="alignicon yaw"></div>
+                                    <label>
+                                        <input
+                                            type="number"
+                                            v-model.number="sensorAlignment.mag_align_yaw"
+                                            step="0.1"
+                                            min="-180"
+                                            max="360"
+                                            :aria-label="$t('configurationMagAlignmentYaw')"
+                                        />
+                                        <span>{{ $t("configurationMagAlignmentYaw") }}</span>
+                                    </label>
                                 </div>
                             </div>
                         </div>
@@ -771,7 +773,7 @@ export default defineComponent({
         const hasSecondGyro = ref(false);
         const hasDualGyros = ref(false);
         const showGyroToUse = computed(() => {
-            return semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_47);
+            return true; // Active IMU selection (or display) is relevant for all supported versions
         });
         const showGyro1Align = ref(false);
         const showGyro2Align = ref(false);
@@ -782,11 +784,10 @@ export default defineComponent({
 
         // This section contains gyro alignment dropdowns (API < 1.47) and mag alignment (API >= 1.47)
         const showSensorAlignment = computed(() => {
-            // For API < 1.47: show if any gyro alignment options are available
-            // For API >= 1.47: show if mag alignment is available
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
-                return showMagAlign.value;
-            }
+            // Show Active IMU box if:
+            // 1. Gyro selection is available (showGyroToUse)
+            // 2. OR Legacy Gyro Alignment is available (showGyro1/2Align)
+            // 3. OR (Implicitly) Custom Gyro Inputs are desired (we default to showing this box for Gyro configs)
             return showGyroToUse.value || showGyro1Align.value || showGyro2Align.value;
         });
         const showOtherSensors = computed(() => {
