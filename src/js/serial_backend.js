@@ -102,13 +102,6 @@ async function sendConfigTracking() {
 function connectDisconnect() {
     const selectedPort = PortHandler.portPicker.selectedPort;
 
-    // selected port can be empty on new installations / devices on the first run - user has to request permission
-    console.log(`${logHead} connectDisconnect called, selectedPort:`, selectedPort);
-
-    if (!selectedPort) {
-        return;
-    }
-
     if (!GUI.connect_lock && selectedPort !== "noselection" && !selectedPort.path?.startsWith("usb")) {
         // GUI control overrides the user control
 
