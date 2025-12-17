@@ -9,7 +9,6 @@ class VirtualSerial {
     constructor() {
         this.connected = false;
         this.connectionId = false;
-        this.openCanceled = false;
         this.bitrate = 0;
         this.bytesReceived = 0;
         this.bytesSent = 0;
@@ -18,25 +17,22 @@ class VirtualSerial {
         this.transmitting = false;
         this.outputBuffer = [];
     }
-    connect(port, options, callback) {
-        if (!this.openCanceled) {
-            this.connected = true;
-            this.connectionId = VIRTUAL;
-            this.bitrate = 115200;
-            callback();
-        }
+    connect(port, options) {
+        this.connected = true;
+        this.connectionId = VIRTUAL;
+        this.bitrate = 115200;
+        return true;
     }
-    disconnect(callback) {
+    disconnect() {
         this.connected = false;
         this.outputBuffer = [];
         this.transmitting = false;
         if (this.connectionId) {
             this.connectionId = false;
             this.bitrate = 0;
-            if (callback) {
-                callback(true);
-            }
+            return true;
         }
+        return false;
     }
     getConnectedPort() {
         return this.connectionId;
