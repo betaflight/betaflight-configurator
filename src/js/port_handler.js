@@ -72,6 +72,7 @@ PortHandler.initialize = function () {
 
     // Keep USB listener separate as it's not part of the serial protocols
     WEBUSBDFU.addEventListener("addedDevice", (event) => this.addedUsbDevice(event.detail));
+    WEBUSBDFU.addEventListener("removedDevice", (event) => this.removedUsbDevice(event.detail));
 
     // Initial device discovery using the serial facade
     this.refreshAllDeviceLists();
@@ -141,6 +142,30 @@ PortHandler.addedUsbDevice = function (device) {
         if (selectedPort === device?.path) {
             // Send event when the port handler auto selects a new USB device
             EventBus.$emit("port-handler:auto-select-usb-device", selectedPort);
+        }
+    });
+};
+
+PortHandler.removedUsbDevice = function (device) {
+    console.log(`${this.logHead} USB device removal event received:`, device);
+
+    const devicePath = device?.path || (typeof device === "string" ? device : null);
+
+    if (!devicePath) {
+        console.warn(`${this.logHead} USB device removal event missing path information`, device);
+        this.updateDeviceList("usb").then(() => {
+            this.selectActivePort();
+        });
+        return;
+    }
+
+    const wasSelectedPort = this.portPicker.selectedPort === devicePath;
+
+    this.updateDeviceList("usb").then(() => {
+        this.selectActivePort();
+
+        if (wasSelectedPort) {
+            EventBus.$emit("port-handler:device-removed", devicePath);
         }
     });
 };

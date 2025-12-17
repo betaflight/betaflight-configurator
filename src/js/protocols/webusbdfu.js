@@ -83,7 +83,7 @@ class WEBUSBDFU_protocol extends EventTarget {
         }
 
         navigator.usb.addEventListener("connect", (e) => this.handleNewDevice(e.device));
-        navigator.usb.addEventListener("disconnect", (e) => this.handleNewDevice(e.device));
+        navigator.usb.addEventListener("disconnect", (e) => this.handleRemovedDevice(e.device));
     }
     handleNewDevice(device) {
         const added = this.createPort(device);
