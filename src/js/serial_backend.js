@@ -102,6 +102,11 @@ async function sendConfigTracking() {
 function connectDisconnect() {
     const selectedPort = PortHandler.portPicker.selectedPort;
 
+    // selected port can be empty on new installations / devices on the first run - user has to request permission
+    if (!selectedPort) {
+        return;
+    }
+
     if (!GUI.connect_lock && selectedPort !== "noselection" && !selectedPort.path?.startsWith("usb")) {
         // GUI control overrides the user control
 
@@ -332,21 +337,6 @@ function onOpen(openInfo) {
 
             if (FC.CONFIG.apiVersion.includes("null")) {
                 abortConnection();
-                return;
-            }
-
-            if (
-                !semver.satisfies(
-                    FC.CONFIG.apiVersion,
-                    `<=${semver.major(CONFIGURATOR.API_VERSION_MAX_SUPPORTED)}.${semver.minor(CONFIGURATOR.API_VERSION_MAX_SUPPORTED)}`,
-                )
-            ) {
-                showVersionMismatchAndCli(
-                    i18n.getMessage("reportProblemsDialogAPI_VERSION_MAX_SUPPORTED", [
-                        CONFIGURATOR.getDisplayVersion(),
-                        CONFIGURATOR.API_VERSION_MAX_SUPPORTED,
-                    ]),
-                );
                 return;
             }
 
