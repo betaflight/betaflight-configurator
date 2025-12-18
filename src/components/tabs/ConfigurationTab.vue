@@ -208,7 +208,7 @@
                                         <th scope="col">{{ $t("configurationFeatureHelp") }}</th>
                                     </tr>
                                 </thead>
-                                <tbody :key="featureMask">
+                                <tbody>
                                     <template v-for="feature in featuresList" :key="feature.bit">
                                         <tr v-if="feature.mode !== 'select'">
                                             <td>
@@ -610,7 +610,7 @@
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody :key="dshotDisabledMask">
+                                <tbody>
                                     <tr v-for="cond in dshotBeaconConditionsList" :key="cond.bit">
                                         <td>
                                             <input
@@ -657,7 +657,7 @@
                                         <th scope="col">{{ $t("configurationFeatureDescription") }}</th>
                                     </tr>
                                 </thead>
-                                <tbody class="beeper-configuration" :key="beeperDisabledMask">
+                                <tbody class="beeper-configuration">
                                     <tr
                                         v-for="beeper in beepersList"
                                         :key="beeper.bit"

@@ -255,6 +255,7 @@ class GuiControl {
         const COLOR_SWITCHERY_SECOND = "var(--switcherysecond)";
 
         $(".togglesmall").each(function (index, elem) {
+            if ($(elem).next(".switchery").length) return;
             const switchery = new Switchery(elem, {
                 size: "small",
                 color: COLOR_ACCENT,
@@ -267,6 +268,7 @@ class GuiControl {
         });
 
         $(".toggle").each(function (index, elem) {
+            if ($(elem).next(".switchery").length) return;
             const switchery = new Switchery(elem, {
                 color: COLOR_ACCENT,
                 secondaryColor: COLOR_SWITCHERY_SECOND,
@@ -278,6 +280,7 @@ class GuiControl {
         });
 
         $(".togglemedium").each(function (index, elem) {
+            if ($(elem).next(".switchery").length) return;
             const switchery = new Switchery(elem, {
                 className: "switcherymid",
                 color: COLOR_ACCENT,
