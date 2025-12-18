@@ -642,7 +642,8 @@ MspHelper.prototype.process_data = function (dataHandler) {
                         FC.SENSOR_ALIGNMENT.gyro_enable_mask = data.readU8();
 
                         // Read Mag alignment if data remains
-                        if (data.offset < data.byteLength) {
+                        // Read Mag alignment if data remains
+                        if (data.byteLength - data.offset >= 6) {
                             FC.SENSOR_ALIGNMENT.mag_align_roll = data.read16() / 10;
                             FC.SENSOR_ALIGNMENT.mag_align_pitch = data.read16() / 10;
                             FC.SENSOR_ALIGNMENT.mag_align_yaw = data.read16() / 10;
