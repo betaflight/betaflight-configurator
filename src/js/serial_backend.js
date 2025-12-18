@@ -330,7 +330,7 @@ function onOpen(openInfo) {
         MSP.send_message(MSPCodes.MSP_API_VERSION, false, false, function () {
             gui_log(i18n.getMessage("apiVersionReceived", FC.CONFIG.apiVersion));
 
-            if (FC.CONFIG.apiVersion.includes("null")) {
+            if (FC.CONFIG.apiVersion.includes("null") || FC.CONFIG.apiVersion === "0.0.0") {
                 abortConnection();
                 return;
             }
