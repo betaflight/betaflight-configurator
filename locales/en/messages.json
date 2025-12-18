@@ -197,8 +197,9 @@
     "language_default": {
         "message": "System Default"
     },
-    "language_default_pretty": {
-        "message": "System Default ($t(detectedLanguage))"
+    "language_DEFAULT": {
+        "message": "$t(language_default.message)",
+        "description": "Don't translate!!!"
     },
     "language_ca": {
         "message": "Catal\u00e0",
