@@ -29,8 +29,12 @@ import { ispConnected } from "./utils/connection";
 
 const logHead = "[SERIAL-BACKEND]";
 
+export const REBOOT_CONNECT_MAX_TIME_MS = 60000;
+export const REBOOT_GRACE_PERIOD_MS = 1500;
+
 let mspHelper;
 let connectionTimestamp = null;
+let rebootTimestamp = 0;
 let liveDataRefreshTimerId = false;
 
 let isConnected = false;
