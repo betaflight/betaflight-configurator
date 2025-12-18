@@ -639,10 +639,24 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     FC.SENSOR_ALIGNMENT.gyro_detection_flags = data.readU8();
 
                     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
-                        FC.SENSOR_ALIGNMENT.gyro_enable_mask = data.readU8(); // replacing gyro_to_use
-                        FC.SENSOR_ALIGNMENT.mag_align_roll = data.read16() / 10;
-                        FC.SENSOR_ALIGNMENT.mag_align_pitch = data.read16() / 10;
-                        FC.SENSOR_ALIGNMENT.mag_align_yaw = data.read16() / 10;
+                        FC.SENSOR_ALIGNMENT.gyro_enable_mask = data.readU8();
+
+                        // Read up to 8 gyros (alignment + offsets) if available in the buffer
+                        for (let i = 0; i < 8; i++) {
+                            if (data.offset < data.byteLength) {
+                                FC.SENSOR_ALIGNMENT.gyro_align[i] = data.readU8();
+                                FC.SENSOR_ALIGNMENT.gyro_align_roll[i] = data.read16() / 10;
+                                FC.SENSOR_ALIGNMENT.gyro_align_pitch[i] = data.read16() / 10;
+                                FC.SENSOR_ALIGNMENT.gyro_align_yaw[i] = data.read16() / 10;
+                            }
+                        }
+
+                        // Read Mag alignment if data remains
+                        if (data.offset < data.byteLength) {
+                            FC.SENSOR_ALIGNMENT.mag_align_roll = data.read16() / 10;
+                            FC.SENSOR_ALIGNMENT.mag_align_pitch = data.read16() / 10;
+                            FC.SENSOR_ALIGNMENT.mag_align_yaw = data.read16() / 10;
+                        }
                     } else {
                         FC.SENSOR_ALIGNMENT.gyro_to_use = data.readU8();
                         FC.SENSOR_ALIGNMENT.gyro_1_align = data.readU8();
