@@ -652,6 +652,16 @@ MspHelper.prototype.process_data = function (dataHandler) {
                         FC.SENSOR_ALIGNMENT.gyro_to_use = data.readU8();
                         FC.SENSOR_ALIGNMENT.gyro_1_align = data.readU8();
                         FC.SENSOR_ALIGNMENT.gyro_2_align = data.readU8();
+
+                        // Check if we have enough data for custom alignment values (2 gyros * 3 axes * 2 bytes = 12 bytes)
+                        if (data.byteLength - data.offset >= 12) {
+                            FC.SENSOR_ALIGNMENT.gyro_1_align_roll = data.read16() / 10;
+                            FC.SENSOR_ALIGNMENT.gyro_1_align_pitch = data.read16() / 10;
+                            FC.SENSOR_ALIGNMENT.gyro_1_align_yaw = data.read16() / 10;
+                            FC.SENSOR_ALIGNMENT.gyro_2_align_roll = data.read16() / 10;
+                            FC.SENSOR_ALIGNMENT.gyro_2_align_pitch = data.read16() / 10;
+                            FC.SENSOR_ALIGNMENT.gyro_2_align_yaw = data.read16() / 10;
+                        }
                     }
 
                     break;
@@ -2126,7 +2136,13 @@ MspHelper.prototype.crunch = function (code, modifierCode = undefined) {
                 buffer
                     .push8(FC.SENSOR_ALIGNMENT.gyro_to_use)
                     .push8(FC.SENSOR_ALIGNMENT.gyro_1_align)
-                    .push8(FC.SENSOR_ALIGNMENT.gyro_2_align);
+                    .push8(FC.SENSOR_ALIGNMENT.gyro_2_align)
+                    .push16(FC.SENSOR_ALIGNMENT.gyro_1_align_roll * 10)
+                    .push16(FC.SENSOR_ALIGNMENT.gyro_1_align_pitch * 10)
+                    .push16(FC.SENSOR_ALIGNMENT.gyro_1_align_yaw * 10)
+                    .push16(FC.SENSOR_ALIGNMENT.gyro_2_align_roll * 10)
+                    .push16(FC.SENSOR_ALIGNMENT.gyro_2_align_pitch * 10)
+                    .push16(FC.SENSOR_ALIGNMENT.gyro_2_align_yaw * 10);
             }
 
             break;
