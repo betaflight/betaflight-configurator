@@ -142,7 +142,7 @@ export function checkSerialSupport() {
 export function checkBluetoothSupport() {
     let result = false;
     if (isAndroid()) {
-        // Not implemented yet
+        result = true;
     } else if (navigator.bluetooth) {
         result = true;
     } else if (isIOS()) {
