@@ -209,34 +209,32 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <template v-for="feature in featuresList" :key="feature.bit">
-                                        <tr v-if="feature.mode !== 'select'">
-                                            <td>
-                                                <input
-                                                    type="checkbox"
-                                                    class="feature toggle"
-                                                    :id="'feature' + feature.bit"
-                                                    :name="feature.name"
-                                                    :checked="isFeatureEnabled(feature)"
-                                                    @change="toggleFeature(feature, $event.target.checked)"
-                                                />
-                                            </td>
-                                            <td>
-                                                <div v-if="!feature.hideName">{{ feature.name }}</div>
-                                            </td>
-                                            <td>
-                                                <span class="xs" v-html="$t('feature' + feature.name)"></span>
-                                            </td>
-                                            <td>
-                                                <span class="sm-min" v-html="$t('feature' + feature.name)"></span>
-                                                <div
-                                                    v-if="feature.haveTip"
-                                                    class="helpicon cf_tip"
-                                                    :title="$t('feature' + feature.name + 'Tip')"
-                                                ></div>
-                                            </td>
-                                        </tr>
-                                    </template>
+                                    <tr v-for="feature in featuresList" :key="feature.bit">
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                class="feature toggle"
+                                                :id="'feature' + feature.bit"
+                                                :name="feature.name"
+                                                :checked="isFeatureEnabled(feature)"
+                                                @change="toggleFeature(feature, $event.target.checked)"
+                                            />
+                                        </td>
+                                        <td>
+                                            <div>{{ feature.name }}</div>
+                                        </td>
+                                        <td>
+                                            <span class="xs" v-html="$t('feature' + feature.name)"></span>
+                                        </td>
+                                        <td>
+                                            <span class="sm-min" v-html="$t('feature' + feature.name)"></span>
+                                            <div
+                                                v-if="feature.haveTip"
+                                                class="helpicon cf_tip"
+                                                :title="$t('feature' + feature.name + 'Tip')"
+                                            ></div>
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -697,7 +695,7 @@
 </template>
 
 <script>
-import { defineComponent, ref, reactive, onMounted, computed, nextTick, watch } from "vue";
+import { defineComponent, ref, reactive, onMounted, computed, nextTick, watch, onUnmounted } from "vue";
 import GUI from "../../js/gui";
 import FC from "../../js/fc";
 import MSP from "../../js/msp";
@@ -707,7 +705,7 @@ import { gui_log } from "../../js/gui_log";
 import { i18n } from "../../js/localization";
 import { sensorTypes } from "../../js/sensor_types"; // Import for dropdown lists
 import { have_sensor } from "../../js/sensor_helpers";
-import semver from "semver-min";
+import semver from "semver";
 import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "../../js/data_storage";
 import { bit_check, bit_set, bit_clear } from "../../js/bit";
 import { updateTabList } from "../../js/utils/updateTabList";
@@ -739,6 +737,13 @@ export default defineComponent({
         const craftName = ref("");
         const pilotName = ref("");
         const showPilotName = ref(false);
+
+        const isSaving = ref(false);
+        const isMounted = ref(true);
+
+        onUnmounted(() => {
+            isMounted.value = false;
+        });
 
         const armingConfig = reactive({
             small_angle: 25,
@@ -812,7 +817,7 @@ export default defineComponent({
             if (!FC.FEATURE_CONFIG?.features?._features) {
                 return [];
             }
-            return FC.FEATURE_CONFIG.features._features;
+            return FC.FEATURE_CONFIG.features._features.filter((feature) => feature.mode !== "select");
         });
 
         const beepersList = computed(() => {
@@ -987,6 +992,7 @@ export default defineComponent({
         // Loading Logic
         const loadConfig = async () => {
             try {
+                if (!isMounted.value) return;
                 await Promise.resolve(); // Start chain
                 await MSP.promise(MSPCodes.MSP_FEATURE_CONFIG);
                 await MSP.promise(MSPCodes.MSP_BEEPER_CONFIG);
@@ -996,6 +1002,8 @@ export default defineComponent({
                 await MSP.promise(MSPCodes.MSP_RC_DEADBAND);
                 await MSP.promise(MSPCodes.MSP_SENSOR_CONFIG);
                 await MSP.promise(MSPCodes.MSP_SENSOR_ALIGNMENT);
+
+                if (!isMounted.value) return;
 
                 if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
                     await MSP.promise(MSPCodes.MSP_NAME);
@@ -1017,6 +1025,8 @@ export default defineComponent({
                     );
                 }
 
+                if (!isMounted.value) return;
+
                 await MSP.promise(MSPCodes.MSP_ADVANCED_CONFIG);
 
                 if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
@@ -1026,6 +1036,8 @@ export default defineComponent({
                 if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
                     await MSP.promise(MSPCodes.MSP2_GYRO_SENSOR);
                 }
+
+                if (!isMounted.value) return;
 
                 initializeUI();
                 await nextTick();
@@ -1194,6 +1206,10 @@ export default defineComponent({
         };
 
         const saveConfig = async () => {
+            if (isSaving.value) {
+                return;
+            }
+            isSaving.value = true;
             try {
                 console.log("Saving configuration...");
                 gui_log("Saving...");
@@ -1302,14 +1318,19 @@ export default defineComponent({
                 gui_log(i18n.getMessage("configurationSaved"));
 
                 // Save to EEPROM and Reboot
-                mspHelper.writeConfiguration(false, () => {
-                    GUI.tab_switch_cleanup(() => {
-                        GUI.reinitializeConnection();
+                await new Promise((resolve) => {
+                    mspHelper.writeConfiguration(false, () => {
+                        GUI.tab_switch_cleanup(() => {
+                            GUI.reinitializeConnection();
+                            resolve();
+                        });
                     });
                 });
             } catch (e) {
                 console.error("Failed to save configuration", e);
                 gui_log(i18n.getMessage("configurationSaveFailed"));
+            } finally {
+                isSaving.value = false;
             }
         };
 
