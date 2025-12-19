@@ -291,11 +291,13 @@ firmware_flasher.initialize = async function (callback) {
             const descriptorGroup = targetDescriptor?.group;
             const isQualified = descriptorGroup === "supported" || targetDescriptor?.partnerApproved === true;
 
-            targetQualificationLabel.text(
-                isQualified
-                    ? i18n.getMessage("firmwareFlasherOptionLabelVerifiedPartner")
-                    : i18n.getMessage("firmwareFlasherOptionLabelNotQualified"),
-            );
+            if (isQualified) {
+                targetQualificationNotice.addClass("gui_note").removeClass("gui_warning");
+                targetQualificationLabel.text(i18n.getMessage("firmwareFlasherOptionLabelVerifiedPartner"));
+            } else {
+                targetQualificationNotice.removeClass("gui_note").addClass("gui_warning");
+                targetQualificationLabel.text(i18n.getMessage("firmwareFlasherOptionLabelNotQualified"));
+            }
 
             targetQualificationNotice.show();
         }
