@@ -1550,27 +1550,27 @@
         "description": "Don't translate!!!"
     },
     "configurationGyro1AlignmentRoll": {
-        "message": "Roll Degrees",
+        "message": "$t(configurationBoardAlignmentRoll.message)",
         "description": "Don't translate!!!"
     },
     "configurationGyro1AlignmentPitch": {
-        "message": "Pitch Degrees",
+        "message": "$t(configurationBoardAlignmentPitch.message)",
         "description": "Don't translate!!!"
     },
     "configurationGyro1AlignmentYaw": {
-        "message": "Yaw Degrees",
+        "message": "$t(configurationBoardAlignmentYaw.message)",
         "description": "Don't translate!!!"
     },
     "configurationGyro2AlignmentRoll": {
-        "message": "Roll Degrees",
+        "message": "$t(configurationBoardAlignmentRoll.message)",
         "description": "Don't translate!!!"
     },
     "configurationGyro2AlignmentPitch": {
-        "message": "Pitch Degrees",
+        "message": "$t(configurationBoardAlignmentPitch.message)",
         "description": "Don't translate!!!"
     },
     "configurationGyro2AlignmentYaw": {
-        "message": "Yaw Degrees",
+        "message": "$t(configurationBoardAlignmentYaw.message)",
         "description": "Don't translate!!!"
     },
     "configurationSensorAlignmentGyro": {
@@ -7153,9 +7153,7 @@
         "message": "Sends ESC data to the FC via DShot telemetry.  Required by RPM Filtering and dynamic idle. <br> <br>Note: Requires a compatible ESC with appropriate firmware, eg JESC, Jazzmac, BLHeli-32.",
         "description": "Description of the Bidirectional DShot feature of the ESC/Motor"
     },
-    "configurationGyroSyncDenom": {
-        "message": "Gyro update frequency"
-    },
+
     "configurationGyroFrequency": {
         "message": "Gyro update frequency"
     },
