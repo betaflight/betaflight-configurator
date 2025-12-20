@@ -641,6 +641,20 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
                         FC.SENSOR_ALIGNMENT.gyro_enable_mask = data.readU8();
 
+                        // Initialize arrays
+                        FC.SENSOR_ALIGNMENT.gyro_align = [];
+                        FC.SENSOR_ALIGNMENT.gyro_align_roll = [];
+                        FC.SENSOR_ALIGNMENT.gyro_align_pitch = [];
+                        FC.SENSOR_ALIGNMENT.gyro_align_yaw = [];
+
+                        // Read 8 gyros
+                        for (let i = 0; i < 8; i++) {
+                            FC.SENSOR_ALIGNMENT.gyro_align.push(data.readU8());
+                            FC.SENSOR_ALIGNMENT.gyro_align_roll.push(data.read16() / 10);
+                            FC.SENSOR_ALIGNMENT.gyro_align_pitch.push(data.read16() / 10);
+                            FC.SENSOR_ALIGNMENT.gyro_align_yaw.push(data.read16() / 10);
+                        }
+
                         // Read Mag alignment if data remains
                         if (data.byteLength - data.offset >= 6) {
                             FC.SENSOR_ALIGNMENT.mag_align_roll = data.read16() / 10;
@@ -2126,8 +2140,17 @@ MspHelper.prototype.crunch = function (code, modifierCode = undefined) {
                 .push8(FC.SENSOR_ALIGNMENT.align_mag);
 
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+                buffer.push8(FC.SENSOR_ALIGNMENT.gyro_enable_mask);
+
+                for (let i = 0; i < 8; i++) {
+                    buffer
+                        .push8(FC.SENSOR_ALIGNMENT.gyro_align[i])
+                        .push16(FC.SENSOR_ALIGNMENT.gyro_align_roll[i] * 10)
+                        .push16(FC.SENSOR_ALIGNMENT.gyro_align_pitch[i] * 10)
+                        .push16(FC.SENSOR_ALIGNMENT.gyro_align_yaw[i] * 10);
+                }
+
                 buffer
-                    .push8(FC.SENSOR_ALIGNMENT.gyro_enable_mask) // replacing gyro_to_use
                     .push16(FC.SENSOR_ALIGNMENT.mag_align_roll * 10)
                     .push16(FC.SENSOR_ALIGNMENT.mag_align_pitch * 10)
                     .push16(FC.SENSOR_ALIGNMENT.mag_align_yaw * 10);

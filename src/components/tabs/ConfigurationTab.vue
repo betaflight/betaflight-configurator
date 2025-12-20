@@ -298,7 +298,114 @@
                         </div>
                     </div>
 
-                    <!-- GYRO ALIGNMENT (Complex) -->
+                    <!-- NEW MULTI-GYRO ALIGNMENT (API 1.47+) -->
+                    <div class="gui_box grey" v-if="showMultiGyro">
+                        <div class="gui_box_titlebar">
+                            <div class="spacer_box_title">{{ $t("configurationGyroAlignment") }}</div>
+                            <div class="helpicon cf_tip" :title="$t('configurationGyroAlignmentHelp')"></div>
+                        </div>
+                        <div class="spacer_box">
+                            <div
+                                v-for="gyro in gyroList"
+                                :key="gyro.index"
+                                class="gyro-row"
+                                style="margin-bottom: 10px; border-bottom: 1px solid #111; padding-bottom: 10px"
+                            >
+                                <div class="grid-row col2">
+                                    <div class="col-span-1">
+                                        <!-- Gyro Enable Toggle -->
+                                        <div class="select">
+                                            <div>
+                                                <input
+                                                    type="checkbox"
+                                                    class="toggle"
+                                                    :id="'gyro-enable-' + gyro.index"
+                                                    :checked="gyro.enabled"
+                                                    @change="toggleGyro(gyro.index, $event.target.checked)"
+                                                />
+                                            </div>
+                                            <span class="freelabel"
+                                                >{{ $t("sensorStatusGyroShort") }} {{ gyro.index + 1 }}</span
+                                            >
+                                        </div>
+                                    </div>
+                                    <div class="col-span-1">
+                                        <!-- Alignment Dropdown -->
+                                        <div class="select">
+                                            <select
+                                                :value="gyro.align"
+                                                @change="updateGyroAlign(gyro.index, parseInt($event.target.value))"
+                                            >
+                                                <option :value="0">
+                                                    {{ $t("configurationSensorAlignmentDefaultOption") }}
+                                                </option>
+                                                <option
+                                                    v-for="(align, idx) in sensorAlignments"
+                                                    :key="idx"
+                                                    :value="idx + 1"
+                                                >
+                                                    {{ align }}
+                                                </option>
+                                            </select>
+                                            <span>{{ $t("configurationSensorAlignment") }}</span>
+                                        </div>
+
+                                        <!-- Custom Alignment Inputs -->
+                                        <div class="sensor_align_content" v-if="gyro.align === 9">
+                                            <div class="sensor_align_inputs">
+                                                <div class="alignicon roll"></div>
+                                                <label>
+                                                    <input
+                                                        type="number"
+                                                        v-model.number="gyro.roll"
+                                                        step="0.1"
+                                                        min="-180"
+                                                        max="360"
+                                                        @change="
+                                                            sensorAlignment.gyro_align_roll[gyro.index] = gyro.roll
+                                                        "
+                                                    />
+                                                    <span>{{ $t("configurationGyroAlignmentRoll") }}</span>
+                                                </label>
+                                            </div>
+                                            <div class="sensor_align_inputs">
+                                                <div class="alignicon pitch"></div>
+                                                <label>
+                                                    <input
+                                                        type="number"
+                                                        v-model.number="gyro.pitch"
+                                                        step="0.1"
+                                                        min="-180"
+                                                        max="360"
+                                                        @change="
+                                                            sensorAlignment.gyro_align_pitch[gyro.index] = gyro.pitch
+                                                        "
+                                                    />
+                                                    <span>{{ $t("configurationGyroAlignmentPitch") }}</span>
+                                                </label>
+                                            </div>
+                                            <div class="sensor_align_inputs">
+                                                <div class="alignicon yaw"></div>
+                                                <label>
+                                                    <input
+                                                        type="number"
+                                                        v-model.number="gyro.yaw"
+                                                        step="0.1"
+                                                        min="-180"
+                                                        max="360"
+                                                        @change="sensorAlignment.gyro_align_yaw[gyro.index] = gyro.yaw"
+                                                    />
+                                                    <span>{{ $t("configurationGyroAlignmentYaw") }}</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- GYRO ALIGNMENT (Legacy) -->
                     <div class="gui_box grey" v-if="showSensorAlignment">
                         <div class="gui_box_titlebar">
                             <div class="spacer_box_title">{{ $t("configurationActiveImu") }}</div>
@@ -770,6 +877,12 @@ export default defineComponent({
             gyro_2_align_roll: 0,
             gyro_2_align_pitch: 0,
             gyro_2_align_yaw: 0,
+
+            gyro_align: [], // API 1.47+
+            gyro_enable_mask: 0, // API 1.47+
+            gyro_align_roll: [], // API 1.47+
+            gyro_align_pitch: [], // API 1.47+
+            gyro_align_yaw: [], // API 1.47+
         });
 
         const magDeclination = ref(0);
@@ -777,14 +890,55 @@ export default defineComponent({
         const showAutoDisarmDelay = ref(false);
         const hasSecondGyro = ref(false);
         const hasDualGyros = ref(false);
-        const showGyroToUse = computed(() => {
-            return true; // Active IMU selection (or display) is relevant for all supported versions
+        const showMultiGyro = ref(false); // API 1.47+ multi-gyro UI
+
+        const gyroList = computed(() => {
+            if (!showMultiGyro.value || !sensorAlignment.gyro_align) return [];
+
+            // Assume 8 gyros possible (or match array length)
+            const gyros = [];
+            for (let i = 0; i < 8; i++) {
+                // If the array doesn't have data for this index, break or skip
+                // Ideally this array is populated with 8 elements in loadConfig
+                if (sensorAlignment.gyro_align[i] === undefined) continue;
+
+                gyros.push({
+                    index: i,
+                    enabled: bit_check(sensorAlignment.gyro_enable_mask, i),
+                    align: sensorAlignment.gyro_align[i],
+                    roll: sensorAlignment.gyro_align_roll[i],
+                    pitch: sensorAlignment.gyro_align_pitch[i],
+                    yaw: sensorAlignment.gyro_align_yaw[i],
+                });
+            }
+            return gyros;
         });
+
+        const toggleGyro = (index, enabled) => {
+            if (enabled) {
+                sensorAlignment.gyro_enable_mask = bit_set(sensorAlignment.gyro_enable_mask, index);
+            } else {
+                sensorAlignment.gyro_enable_mask = bit_clear(sensorAlignment.gyro_enable_mask, index);
+            }
+        };
+
+        const updateGyroAlign = (index, value) => {
+            // Vue reactivity caveat with arrays:
+            // sensorAlignment.gyro_align[index] = value;
+            // Should verify if this triggers update, if not we might need to splice or recreate array
+            if (sensorAlignment.gyro_align) {
+                sensorAlignment.gyro_align[index] = value;
+            }
+        };
+
         const showGyro1Align = ref(false);
         const showGyro2Align = ref(false);
         const showMagAlign = ref(false);
         const showMagDeclination = ref(false);
         const showRangefinder = ref(false);
+        const showGyroToUse = computed(() => {
+            return semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_47);
+        });
         const showOpticalFlow = ref(false);
 
         // This section contains gyro alignment dropdowns (API < 1.47) and mag alignment (API >= 1.47)
@@ -1120,6 +1274,11 @@ export default defineComponent({
             sensorAlignment.gyro_2_align_roll = FC.SENSOR_ALIGNMENT.gyro_2_align_roll;
             sensorAlignment.gyro_2_align_pitch = FC.SENSOR_ALIGNMENT.gyro_2_align_pitch;
             sensorAlignment.gyro_2_align_yaw = FC.SENSOR_ALIGNMENT.gyro_2_align_yaw;
+            sensorAlignment.gyro_align = FC.SENSOR_ALIGNMENT.gyro_align || [];
+            sensorAlignment.gyro_enable_mask = FC.SENSOR_ALIGNMENT.gyro_enable_mask || 0;
+            sensorAlignment.gyro_align_roll = FC.SENSOR_ALIGNMENT.gyro_align_roll || [];
+            sensorAlignment.gyro_align_pitch = FC.SENSOR_ALIGNMENT.gyro_align_pitch || [];
+            sensorAlignment.gyro_align_yaw = FC.SENSOR_ALIGNMENT.gyro_align_yaw || [];
 
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
                 sensorAlignment.mag_align_roll = FC.SENSOR_ALIGNMENT.mag_align_roll || 0;
@@ -1140,12 +1299,15 @@ export default defineComponent({
 
             // Gyro alignment dropdowns are only available for API < 1.47
             // In API 1.47+, the firmware uses gyro_enable_mask instead of individual gyro alignments
+            // In API 1.47+, the firmware uses gyro_enable_mask instead of individual gyro alignments
             if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
                 showGyro1Align.value = true;
                 showGyro2Align.value = hasSecondGyro.value;
+                showMultiGyro.value = false;
             } else {
                 showGyro1Align.value = false;
                 showGyro2Align.value = false;
+                showMultiGyro.value = true;
             }
 
             // Mag Declination & Alignment
@@ -1251,12 +1413,21 @@ export default defineComponent({
                 FC.SENSOR_ALIGNMENT.gyro_2_align = sensorAlignment.gyro_2_align;
                 FC.SENSOR_ALIGNMENT.align_mag = sensorAlignment.align_mag;
 
-                FC.SENSOR_ALIGNMENT.gyro_1_align_roll = sensorAlignment.gyro_1_align_roll;
-                FC.SENSOR_ALIGNMENT.gyro_1_align_pitch = sensorAlignment.gyro_1_align_pitch;
-                FC.SENSOR_ALIGNMENT.gyro_1_align_yaw = sensorAlignment.gyro_1_align_yaw;
-                FC.SENSOR_ALIGNMENT.gyro_2_align_roll = sensorAlignment.gyro_2_align_roll;
-                FC.SENSOR_ALIGNMENT.gyro_2_align_pitch = sensorAlignment.gyro_2_align_pitch;
-                FC.SENSOR_ALIGNMENT.gyro_2_align_yaw = sensorAlignment.gyro_2_align_yaw;
+                if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+                    FC.SENSOR_ALIGNMENT.gyro_1_align_roll = sensorAlignment.gyro_1_align_roll;
+                    FC.SENSOR_ALIGNMENT.gyro_1_align_pitch = sensorAlignment.gyro_1_align_pitch;
+                    FC.SENSOR_ALIGNMENT.gyro_1_align_yaw = sensorAlignment.gyro_1_align_yaw;
+                    FC.SENSOR_ALIGNMENT.gyro_2_align_roll = sensorAlignment.gyro_2_align_roll;
+                    FC.SENSOR_ALIGNMENT.gyro_2_align_pitch = sensorAlignment.gyro_2_align_pitch;
+                    FC.SENSOR_ALIGNMENT.gyro_2_align_yaw = sensorAlignment.gyro_2_align_yaw;
+                } else {
+                    // API 1.47+ Multi-Gyro
+                    FC.SENSOR_ALIGNMENT.gyro_enable_mask = sensorAlignment.gyro_enable_mask;
+                    FC.SENSOR_ALIGNMENT.gyro_align = sensorAlignment.gyro_align;
+                    FC.SENSOR_ALIGNMENT.gyro_align_roll = sensorAlignment.gyro_align_roll;
+                    FC.SENSOR_ALIGNMENT.gyro_align_pitch = sensorAlignment.gyro_align_pitch;
+                    FC.SENSOR_ALIGNMENT.gyro_align_yaw = sensorAlignment.gyro_align_yaw;
+                }
 
                 if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
                     FC.SENSOR_ALIGNMENT.mag_align_roll = sensorAlignment.mag_align_roll;
@@ -1394,6 +1565,10 @@ export default defineComponent({
             showGyroToUse,
             opticalFlowTypesList,
             sensorAlignments,
+            showMultiGyro,
+            gyroList,
+            toggleGyro,
+            updateGyroAlign,
             saveConfig,
         };
     },
