@@ -29,15 +29,15 @@ import { ispConnected } from "./utils/connection";
 
 const logHead = "[SERIAL-BACKEND]";
 
-export const REBOOT_CONNECT_MAX_TIME_MS = 60000;
-export const REBOOT_GRACE_PERIOD_MS = 1500;
-
 let mspHelper;
 let connectionTimestamp = null;
-let rebootTimestamp = 0;
 let liveDataRefreshTimerId = false;
 
 let isConnected = false;
+
+const REBOOT_CONNECT_MAX_TIME_MS = 10000;
+const REBOOT_GRACE_PERIOD_MS = 2000;
+let rebootTimestamp = 0;
 
 function isCliOnlyMode() {
     return getConfig("cliOnlyMode")?.cliOnlyMode === true;
@@ -125,6 +125,12 @@ function connectDisconnect() {
         } else {
             // prevent connection when we do not have permission
             if (selectedPort.startsWith("requestpermission")) {
+                return;
+            }
+
+            // When rebooting, adhere to the auto-connect setting
+            if (!PortHandler.portPicker.autoConnect && Date.now() - rebootTimestamp < REBOOT_GRACE_PERIOD_MS) {
+                console.log(`${logHead} Rebooting, not connecting`);
                 return;
             }
 
@@ -781,22 +787,26 @@ export function reinitializeConnection() {
 
     const currentPort = PortHandler.portPicker.selectedPort;
 
+    // Set the reboot timestamp to the current time
     rebootTimestamp = Date.now();
 
     // Send reboot command to the flight controller
     MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false);
 
-    // Force connection invalid to ensure reboot dialog waits for reconnection
-    CONFIGURATOR.connectionValid = false;
-
     if (currentPort.startsWith("bluetooth") || currentPort === "manual") {
-        if (!PortHandler.portPicker.autoConnect) {
-            return setTimeout(function () {
-                $("a.connection_button__link").trigger("click");
-            }, REBOOT_GRACE_PERIOD_MS);
-        }
+        return setTimeout(function () {
+            $("a.connection_button__link").trigger("click");
+        }, 1500);
     }
 
+    // Show reboot progress modal except for cli and presets tab
+    if (["cli", "presets"].includes(GUI.active_tab)) {
+        console.log(`${logHead} Rebooting in ${GUI.active_tab} tab, skipping reboot dialog`);
+        gui_log(i18n.getMessage("deviceRebooting"));
+        gui_log(i18n.getMessage("deviceReady"));
+
+        return;
+    }
     // Show reboot progress modal
     showRebootDialog();
 }
@@ -899,9 +909,3 @@ function showRebootDialog() {
         return dialog;
     }
 }
-
-/**
- * Re-initializes the connection, typically after a reboot or configuration change.
- * Exposed as a public API for Vue components.
- */
-GUI.reinitializeConnection = reinitializeConnection;
