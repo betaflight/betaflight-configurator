@@ -330,23 +330,8 @@ function onOpen(openInfo) {
         MSP.send_message(MSPCodes.MSP_API_VERSION, false, false, function () {
             gui_log(i18n.getMessage("apiVersionReceived", FC.CONFIG.apiVersion));
 
-            if (FC.CONFIG.apiVersion.includes("null")) {
+            if (FC.CONFIG.apiVersion.includes("null") || FC.CONFIG.apiVersion === "0.0.0") {
                 abortConnection();
-                return;
-            }
-
-            if (
-                !semver.satisfies(
-                    FC.CONFIG.apiVersion,
-                    `<=${semver.major(CONFIGURATOR.API_VERSION_MAX_SUPPORTED)}.${semver.minor(CONFIGURATOR.API_VERSION_MAX_SUPPORTED)}`,
-                )
-            ) {
-                showVersionMismatchAndCli(
-                    i18n.getMessage("reportProblemsDialogAPI_VERSION_MAX_SUPPORTED", [
-                        CONFIGURATOR.getDisplayVersion(),
-                        CONFIGURATOR.API_VERSION_MAX_SUPPORTED,
-                    ]),
-                );
                 return;
             }
 
