@@ -591,7 +591,6 @@ firmware_flasher.initialize = async function (callback) {
                 }
 
                 self.targetDetail = detail;
-                updateTargetQualification(detail.target);
                 if (detail.cloudBuild === true) {
                     $("div.build_configuration").slideDown();
 
@@ -735,7 +734,7 @@ firmware_flasher.initialize = async function (callback) {
             self.enableLoadRemoteFileButton(false);
             let target = $(this).val();
 
-            updateTargetQualification(null);
+            updateTargetQualification(target);
 
             // exception for board flashed with local custom firmware
             if (target === null) {
