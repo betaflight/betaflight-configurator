@@ -16,6 +16,7 @@ import { updateTabList } from "../utils/updateTabList";
 import { showErrorDialog } from "../utils/showErrorDialog";
 import GUI, { TABS } from "../gui";
 import { OSD } from "../tabs/osd";
+import { reinitializeConnection } from "../serial_backend";
 
 // Used for LED_STRIP
 const ledDirectionLetters = ["n", "e", "s", "w", "u", "d"]; // in LSB bit order
@@ -639,42 +640,14 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     FC.SENSOR_ALIGNMENT.gyro_detection_flags = data.readU8();
 
                     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
-                        FC.SENSOR_ALIGNMENT.gyro_enable_mask = data.readU8();
-
-                        // Initialize arrays
-                        FC.SENSOR_ALIGNMENT.gyro_align = [];
-                        FC.SENSOR_ALIGNMENT.gyro_align_roll = [];
-                        FC.SENSOR_ALIGNMENT.gyro_align_pitch = [];
-                        FC.SENSOR_ALIGNMENT.gyro_align_yaw = [];
-
-                        // Read 8 gyros
-                        for (let i = 0; i < 8; i++) {
-                            FC.SENSOR_ALIGNMENT.gyro_align.push(data.readU8());
-                            FC.SENSOR_ALIGNMENT.gyro_align_roll.push(data.read16() / 10);
-                            FC.SENSOR_ALIGNMENT.gyro_align_pitch.push(data.read16() / 10);
-                            FC.SENSOR_ALIGNMENT.gyro_align_yaw.push(data.read16() / 10);
-                        }
-
-                        // Read Mag alignment if data remains
-                        if (data.byteLength - data.offset >= 6) {
-                            FC.SENSOR_ALIGNMENT.mag_align_roll = data.read16() / 10;
-                            FC.SENSOR_ALIGNMENT.mag_align_pitch = data.read16() / 10;
-                            FC.SENSOR_ALIGNMENT.mag_align_yaw = data.read16() / 10;
-                        }
+                        FC.SENSOR_ALIGNMENT.gyro_enable_mask = data.readU8(); // replacing gyro_to_use
+                        FC.SENSOR_ALIGNMENT.mag_align_roll = data.read16() / 10;
+                        FC.SENSOR_ALIGNMENT.mag_align_pitch = data.read16() / 10;
+                        FC.SENSOR_ALIGNMENT.mag_align_yaw = data.read16() / 10;
                     } else {
                         FC.SENSOR_ALIGNMENT.gyro_to_use = data.readU8();
                         FC.SENSOR_ALIGNMENT.gyro_1_align = data.readU8();
                         FC.SENSOR_ALIGNMENT.gyro_2_align = data.readU8();
-
-                        // Check if we have enough data for custom alignment values (2 gyros * 3 axes * 2 bytes = 12 bytes)
-                        if (data.byteLength - data.offset >= 12) {
-                            FC.SENSOR_ALIGNMENT.gyro_1_align_roll = data.read16() / 10;
-                            FC.SENSOR_ALIGNMENT.gyro_1_align_pitch = data.read16() / 10;
-                            FC.SENSOR_ALIGNMENT.gyro_1_align_yaw = data.read16() / 10;
-                            FC.SENSOR_ALIGNMENT.gyro_2_align_roll = data.read16() / 10;
-                            FC.SENSOR_ALIGNMENT.gyro_2_align_pitch = data.read16() / 10;
-                            FC.SENSOR_ALIGNMENT.gyro_2_align_yaw = data.read16() / 10;
-                        }
                     }
 
                     break;
@@ -2140,17 +2113,8 @@ MspHelper.prototype.crunch = function (code, modifierCode = undefined) {
                 .push8(FC.SENSOR_ALIGNMENT.align_mag);
 
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
-                buffer.push8(FC.SENSOR_ALIGNMENT.gyro_enable_mask);
-
-                for (let i = 0; i < 8; i++) {
-                    buffer
-                        .push8(FC.SENSOR_ALIGNMENT.gyro_align[i])
-                        .push16(FC.SENSOR_ALIGNMENT.gyro_align_roll[i] * 10)
-                        .push16(FC.SENSOR_ALIGNMENT.gyro_align_pitch[i] * 10)
-                        .push16(FC.SENSOR_ALIGNMENT.gyro_align_yaw[i] * 10);
-                }
-
                 buffer
+                    .push8(FC.SENSOR_ALIGNMENT.gyro_enable_mask) // replacing gyro_to_use
                     .push16(FC.SENSOR_ALIGNMENT.mag_align_roll * 10)
                     .push16(FC.SENSOR_ALIGNMENT.mag_align_pitch * 10)
                     .push16(FC.SENSOR_ALIGNMENT.mag_align_yaw * 10);
@@ -2158,13 +2122,7 @@ MspHelper.prototype.crunch = function (code, modifierCode = undefined) {
                 buffer
                     .push8(FC.SENSOR_ALIGNMENT.gyro_to_use)
                     .push8(FC.SENSOR_ALIGNMENT.gyro_1_align)
-                    .push8(FC.SENSOR_ALIGNMENT.gyro_2_align)
-                    .push16(FC.SENSOR_ALIGNMENT.gyro_1_align_roll * 10)
-                    .push16(FC.SENSOR_ALIGNMENT.gyro_1_align_pitch * 10)
-                    .push16(FC.SENSOR_ALIGNMENT.gyro_1_align_yaw * 10)
-                    .push16(FC.SENSOR_ALIGNMENT.gyro_2_align_roll * 10)
-                    .push16(FC.SENSOR_ALIGNMENT.gyro_2_align_pitch * 10)
-                    .push16(FC.SENSOR_ALIGNMENT.gyro_2_align_yaw * 10);
+                    .push8(FC.SENSOR_ALIGNMENT.gyro_2_align);
             }
 
             break;
@@ -2986,7 +2944,7 @@ MspHelper.prototype.writeConfiguration = function (reboot, callback) {
             console.log("Configuration saved to EEPROM");
             if (reboot) {
                 GUI.tab_switch_cleanup(function () {
-                    return GUI.reinitializeConnection();
+                    return reinitializeConnection();
                 });
             }
             if (callback) {

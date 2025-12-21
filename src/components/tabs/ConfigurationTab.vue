@@ -324,9 +324,7 @@
                                                     @change="toggleGyro(gyro.index, $event.target.checked)"
                                                 />
                                             </div>
-                                            <span class="freelabel"
-                                                >{{ $t("sensorStatusGyroShort") }} {{ gyro.index + 1 }}</span
-                                            >
+                                            <span class="freelabel">{{ gyro.name }}</span>
                                         </div>
                                     </div>
                                     <div class="col-span-1">
@@ -895,15 +893,29 @@ export default defineComponent({
         const gyroList = computed(() => {
             if (!showMultiGyro.value || !sensorAlignment.gyro_align) return [];
 
-            // Assume 8 gyros possible (or match array length)
+            const types = sensorTypes().gyro.elements;
+            const detectedHardware = FC.GYRO_SENSOR?.gyro_hardware || [];
+            // Use configured gyro count if available (assuming init logic populates it) or fallback
+            // Note: FC.GYRO_SENSOR might have more hardware entries than active gyros if logic differs,
+            // but usually valid gyros are determined by count.
+            const count = FC.GYRO_SENSOR?.gyro_count || 8; 
+
             const gyros = [];
-            for (let i = 0; i < 8; i++) {
-                // If the array doesn't have data for this index, break or skip
-                // Ideally this array is populated with 8 elements in loadConfig
+            for (let i = 0; i < count; i++) {
                 if (sensorAlignment.gyro_align[i] === undefined) continue;
+
+                const hardwareResult = detectedHardware[i];
+                let hardwareName;
+
+                if (hardwareResult !== undefined && types[hardwareResult]) {
+                    hardwareName = types[hardwareResult];
+                } else {
+                    hardwareName = `${i18n.getMessage("sensorStatusGyroShort")} ${i + 1}`;
+                }
 
                 gyros.push({
                     index: i,
+                    name: hardwareName,
                     enabled: bit_check(sensorAlignment.gyro_enable_mask, i),
                     align: sensorAlignment.gyro_align[i],
                     roll: sensorAlignment.gyro_align_roll[i],

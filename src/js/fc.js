@@ -479,20 +479,8 @@ const FC = {
             align_mag: 0,
             gyro_detection_flags: 0,
             gyro_to_use: 0,
-
             gyro_1_align: 0,
             gyro_2_align: 0,
-            gyro_1_align_roll: 0,
-            gyro_1_align_pitch: 0,
-            gyro_1_align_yaw: 0,
-            gyro_2_align_roll: 0,
-            gyro_2_align_pitch: 0,
-            gyro_2_align_yaw: 0,
-            gyro_align: [], // API 1.47+
-            gyro_enable_mask: 0, // API 1.47+
-            gyro_align_roll: [], // API 1.47+
-            gyro_align_pitch: [], // API 1.47+
-            gyro_align_yaw: [], // API 1.47+
             mag_align_roll: 0,
             mag_align_pitch: 0,
             mag_align_yaw: 0,
