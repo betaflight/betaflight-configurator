@@ -328,75 +328,7 @@
                                         </div>
                                     </div>
                                     <div class="col-span-1">
-                                        <!-- Alignment Dropdown -->
-                                        <div class="select">
-                                            <select
-                                                :value="gyro.align"
-                                                @change="updateGyroAlign(gyro.index, parseInt($event.target.value))"
-                                            >
-                                                <option :value="0">
-                                                    {{ $t("configurationSensorAlignmentDefaultOption") }}
-                                                </option>
-                                                <option
-                                                    v-for="(align, idx) in sensorAlignments"
-                                                    :key="idx"
-                                                    :value="idx + 1"
-                                                >
-                                                    {{ align }}
-                                                </option>
-                                            </select>
-                                            <span>{{ $t("configurationSensorAlignment") }}</span>
-                                        </div>
-
-                                        <!-- Custom Alignment Inputs -->
-                                        <div class="sensor_align_content" v-if="gyro.align === 9">
-                                            <div class="sensor_align_inputs">
-                                                <div class="alignicon roll"></div>
-                                                <label>
-                                                    <input
-                                                        type="number"
-                                                        v-model.number="gyro.roll"
-                                                        step="0.1"
-                                                        min="-180"
-                                                        max="360"
-                                                        @change="
-                                                            sensorAlignment.gyro_align_roll[gyro.index] = gyro.roll
-                                                        "
-                                                    />
-                                                    <span>{{ $t("configurationGyroAlignmentRoll") }}</span>
-                                                </label>
-                                            </div>
-                                            <div class="sensor_align_inputs">
-                                                <div class="alignicon pitch"></div>
-                                                <label>
-                                                    <input
-                                                        type="number"
-                                                        v-model.number="gyro.pitch"
-                                                        step="0.1"
-                                                        min="-180"
-                                                        max="360"
-                                                        @change="
-                                                            sensorAlignment.gyro_align_pitch[gyro.index] = gyro.pitch
-                                                        "
-                                                    />
-                                                    <span>{{ $t("configurationGyroAlignmentPitch") }}</span>
-                                                </label>
-                                            </div>
-                                            <div class="sensor_align_inputs">
-                                                <div class="alignicon yaw"></div>
-                                                <label>
-                                                    <input
-                                                        type="number"
-                                                        v-model.number="gyro.yaw"
-                                                        step="0.1"
-                                                        min="-180"
-                                                        max="360"
-                                                        @change="sensorAlignment.gyro_align_yaw[gyro.index] = gyro.yaw"
-                                                    />
-                                                    <span>{{ $t("configurationGyroAlignmentYaw") }}</span>
-                                                </label>
-                                            </div>
-                                        </div>
+                                        <!-- Alignment configuration removed for API 1.47+ -->
                                     </div>
                                 </div>
                             </div>
@@ -891,19 +823,17 @@ export default defineComponent({
         const showMultiGyro = ref(false); // API 1.47+ multi-gyro UI
 
         const gyroList = computed(() => {
-            if (!showMultiGyro.value || !sensorAlignment.gyro_align) return [];
+            if (!showMultiGyro.value) return [];
 
             const types = sensorTypes().gyro.elements;
             const detectedHardware = FC.GYRO_SENSOR?.gyro_hardware || [];
-            // Use configured gyro count if available (assuming init logic populates it) or fallback
-            // Note: FC.GYRO_SENSOR might have more hardware entries than active gyros if logic differs,
-            // but usually valid gyros are determined by count.
-            const count = FC.GYRO_SENSOR?.gyro_count || 8; 
+
+            // Use actual detected hardware count
+            const count = detectedHardware.length;
+            if (count === 0) return [];
 
             const gyros = [];
             for (let i = 0; i < count; i++) {
-                if (sensorAlignment.gyro_align[i] === undefined) continue;
-
                 const hardwareResult = detectedHardware[i];
                 let hardwareName;
 
@@ -917,10 +847,6 @@ export default defineComponent({
                     index: i,
                     name: hardwareName,
                     enabled: bit_check(sensorAlignment.gyro_enable_mask, i),
-                    align: sensorAlignment.gyro_align[i],
-                    roll: sensorAlignment.gyro_align_roll[i],
-                    pitch: sensorAlignment.gyro_align_pitch[i],
-                    yaw: sensorAlignment.gyro_align_yaw[i],
                 });
             }
             return gyros;
