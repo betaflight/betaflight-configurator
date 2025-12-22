@@ -91,6 +91,10 @@
         "message": "--- No trobo el meu dispositiu DFU ---",
         "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access a DFU device."
     },
+    "portsEepromSaved": {
+        "message": "$t(eeprom_saved_ok.message)",
+        "description": "Don't translate!!!"
+    },
     "bluetoothConnected": {
         "message": "Connecta't al dispositiu Bluetooth: $1"
     },
@@ -190,8 +194,9 @@
     "language_default": {
         "message": "Predeterminat de sistema"
     },
-    "language_default_pretty": {
-        "message": "Predeterminat del sistema ($t(detectedLanguage))"
+    "language_DEFAULT": {
+        "message": "$t(language_default.message)",
+        "description": "Don't translate!!!"
     },
     "language_pl": {
         "message": "Polonès",
@@ -1181,7 +1186,8 @@
         "message": "Configuració restaurada per <strong>defecte<\/strong>"
     },
     "initialSetupEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">desada<\/span>"
+        "message": "$t(eeprom_saved_ok.message)",
+        "description": "Don't translate!!!"
     },
     "initialSetupNetworkInfo": {
         "message": "Informació de la xarxa"
@@ -1745,7 +1751,8 @@
         "message": "Proveïdor del Receptor SPI Bus"
     },
     "configurationEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">desada<\/span>"
+        "message": "$t(eeprom_saved_ok.message)",
+        "description": "Don't translate!!!"
     },
     "configurationButtonSave": {
         "message": "Desa i Reinicia"
@@ -2288,7 +2295,8 @@
         "message": "PIDs <strong>actualitzats<\/strong>"
     },
     "pidTuningEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">desada<\/span>"
+        "message": "$t(eeprom_saved_ok.message)",
+        "description": "Don't translate!!!"
     },
     "tuningHelp": {
         "message": "<b>Consells d'ajustament<\/b><br \/><span class=\"message-negative\">IMPORTANT:<\/span> És important verificar la temperatura del motor durant els primers vols. Com més gran sigui el valor del filtre, millor volarà, però també tindràs més soroll als motors.<br>El valor predeterminat de 100Hz és òptim, però per a les configuracions de sorolloses pots provar de baixar el filtre Dterm a 50Hz i possiblement també el filtre del giròscop."
@@ -2424,7 +2432,8 @@
         "message": "Dades RC Tuning <strong>actualitzades<\/strong>"
     },
     "receiverEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">desada<\/span>"
+        "message": "$t(eeprom_saved_ok.message)",
+        "description": "Don't translate!!!"
     },
     "receiverModelPreview": {
         "message": "Previsualitza"
@@ -2812,7 +2821,8 @@
         "message": "Desa"
     },
     "adjustmentsEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">desada<\/span>"
+        "message": "$t(eeprom_saved_ok.message)",
+        "description": "Don't translate!!!"
     },
     "transponderNotSupported": {
         "message": "El firmware del teu controlador de vol no suporta la funcionalitat de transponder."
@@ -2921,7 +2931,8 @@
         "message": "Inverteix"
     },
     "servosEepromSave": {
-        "message": "EEPROM <span class=\"message-positive\">desada<\/span>"
+        "message": "$t(eeprom_saved_ok.message)",
+        "description": "Don't translate!!!"
     },
     "gpsHead": {
         "message": "GPS"
@@ -7282,7 +7293,7 @@
         "message": "Nom d’arxiu"
     },
     "dialogFileNameDescription": {
-        "message": "El fitxer es desarà a la carpeta \"Android\/data\/betaflight-configurator\/{{folder}}\" del vostre emmagatzematge intern."
+        "message": "El fitxer es desarà a la carpeta \"Android\/data\/betaflight-app\/{{folder}}\" del vostre emmagatzemament intern."
     },
     "dialogFileAlreadyExistsTitle": {
         "message": "Aquest fitxer ja existeix!"

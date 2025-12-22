@@ -190,8 +190,9 @@
     "language_default": {
         "message": "Domyślny systemowy"
     },
-    "language_default_pretty": {
-        "message": "Domyślny systemowy ($t(detectedLanguage))"
+    "language_DEFAULT": {
+        "message": "$t(language_default.message)",
+        "description": "Don't translate!!!"
     },
     "language_pl": {
         "message": "Polski",
@@ -1176,9 +1177,6 @@
     "initialSetupSettingsRestored": {
         "message": "Ustawienia przywrócone do <strong>domyślnych<\/strong>"
     },
-    "initialSetupEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">zapisany<\/span>"
-    },
     "initialSetupNetworkInfo": {
         "message": "Informacje o sieci"
     },
@@ -1740,9 +1738,6 @@
     "configurationSpiRX": {
         "message": "Rodzaj sygnału odbiornika SPI"
     },
-    "configurationEepromSaved": {
-        "message": "Pamięć EEPROM <span class=\"message-positive\">zapisana<\/span>"
-    },
     "configurationButtonSave": {
         "message": "Zapisz i uruchom ponownie"
     },
@@ -2283,9 +2278,6 @@
     "pidTuningDataRefreshed": {
         "message": "Dane PID <strong>Odświeżone <\/strong>"
     },
-    "pidTuningEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">zapisano<\/span>"
-    },
     "tuningHelp": {
         "message": "<b>Wskazówki<\/b><br \/><span class=\"message-negative\">WAŻNE:<\/span> Ważne jest sprawdzanie temperatury silnika podczas pierwszych lotów. Im wyższa wartość filtra, tym lepiej (płynniej) może się latać, ale jednocześnie sygnał serujący silnikami będzie bardziej agresywny aby wynikowo maszyna była bardziej stabilizowana (silnik będzie się grzał ponieważ wirnik z śmigłem ma swoją masę i pęd - szybkie zmiany obrotów potrzebują dostarczenia dużej ilości energii aby zmienić pęd). <br>Domyślna wartość 100 Hz jest optymalna, ale dla platformy z drganiami (z śmigła\/ z silnika) można spróbować obniżyć ustawienie filtru Dterm do 50Hz, a być może również ustawienie filtru żyroskopowego."
     },
@@ -2418,9 +2410,6 @@
     },
     "receiverDataRefreshed": {
         "message": "Dane dostrajania RC <strong>odświeżone<\/strong>"
-    },
-    "receiverEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">zapisano<\/span>"
     },
     "receiverModelPreview": {
         "message": "Podgląd"
@@ -2807,9 +2796,6 @@
     "adjustmentsSave": {
         "message": "Zapisz"
     },
-    "adjustmentsEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">zapisana<\/span>"
-    },
     "transponderNotSupported": {
         "message": "Firmowe oprogramowanie kontrolera lotu nie obsługuje funkcji transpondera."
     },
@@ -2915,9 +2901,6 @@
     },
     "servosReverse": {
         "message": "Odwrócone"
-    },
-    "servosEepromSave": {
-        "message": "EEPROM <span class=\"message-positive\">zapisano<\/span>"
     },
     "gpsHead": {
         "message": "GPS"
@@ -7276,9 +7259,6 @@
     },
     "dialogFileNameTitle": {
         "message": "Nazwa pliku"
-    },
-    "dialogFileNameDescription": {
-        "message": "Plik zostanie zapisany w folderze 'Android\/data\/betaflight-configurator\/{{folder}}' w pamięci wewnętrznej."
     },
     "dialogFileAlreadyExistsTitle": {
         "message": "Taki plik już istnieje!"

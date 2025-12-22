@@ -190,9 +190,6 @@
     "language_default": {
         "message": "システム初期値"
     },
-    "language_default_pretty": {
-        "message": "システム初期値 ($t(detectedLanguage))"
-    },
     "sensorDataFlashNotFound": {
         "message": "ログデータ保存用の<br>メモリが見つかりません",
         "description": "Text of the dataflash image in the header of the page."
@@ -1172,9 +1169,6 @@
     "initialSetupSettingsRestored": {
         "message": "<strong>デフォルト設定<\/strong>に戻す"
     },
-    "initialSetupEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">保存しました<\/span>"
-    },
     "initialSetupNetworkInfo": {
         "message": "ネットワーク情報"
     },
@@ -1736,9 +1730,6 @@
     "configurationSpiRX": {
         "message": "SPIバス受信プロトコル"
     },
-    "configurationEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">保存しました<\/span>"
-    },
     "configurationButtonSave": {
         "message": "保存して再起動"
     },
@@ -2279,9 +2270,6 @@
     "pidTuningDataRefreshed": {
         "message": "PIDデータ <strong>更新しました<\/strong>"
     },
-    "pidTuningEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">保存しました<\/span>"
-    },
     "tuningHelp": {
         "message": "<b>チューニングTips<\/b><br \/><span class=\"message-negative\">重要:<\/span> 最初のフライト中はモーターの温度を確認することが重要です。フィルター値が高くなるほど飛行が軽快となりますが、モーターにはより多くのノイズが発生します。<br>デフォルト値である100Hzが最適値となりますが、ノイズ低減設定ではD値フィルターを50Hzに、またはジャイロフィルターの値を下げてみてください。"
     },
@@ -2414,9 +2402,6 @@
     },
     "receiverDataRefreshed": {
         "message": "RCチューニングデータ <strong>更新しました<\/strong>"
-    },
-    "receiverEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">保存しました<\/span>"
     },
     "receiverModelPreview": {
         "message": "プレビュー"
@@ -2803,9 +2788,6 @@
     "adjustmentsSave": {
         "message": "保存"
     },
-    "adjustmentsEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">保存しました<\/span>"
-    },
     "transponderNotSupported": {
         "message": "このフライトコントローラのファームウェアは、トランスポンダー機能をサポートしていません。"
     },
@@ -2911,9 +2893,6 @@
     },
     "servosReverse": {
         "message": "リバース"
-    },
-    "servosEepromSave": {
-        "message": "EEPROM <span class=\"message-positive\">保存しました<\/span>"
     },
     "gpsHead": {
         "message": "GPS"
@@ -7272,9 +7251,6 @@
     },
     "dialogFileNameTitle": {
         "message": "ファイル名"
-    },
-    "dialogFileNameDescription": {
-        "message": "このファイルは内部ストレージの『Android\/data\/betaflight-configurator\/{{folder}}』フォルダに保存されます。"
     },
     "dialogFileAlreadyExistsTitle": {
         "message": "このファイルは既に存在します！"

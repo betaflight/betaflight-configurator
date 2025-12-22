@@ -190,9 +190,6 @@
     "language_default": {
         "message": "Системна за замовчуванням"
     },
-    "language_default_pretty": {
-        "message": " за замовчуванням ($t(detectedLanguage))"
-    },
     "sensorDataFlashNotFound": {
         "message": "Чіп пам'яті <br>не знайдено",
         "description": "Text of the dataflash image in the header of the page."
@@ -1172,9 +1169,6 @@
     "initialSetupSettingsRestored": {
         "message": "Налаштування відновлені до <strong>значень за замовчуванням<\/strong>"
     },
-    "initialSetupEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">збережено<\/span>"
-    },
     "initialSetupNetworkInfo": {
         "message": "Інформація про мережу"
     },
@@ -1736,9 +1730,6 @@
     "configurationSpiRX": {
         "message": "Постачальник приймача на шині SPI"
     },
-    "configurationEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">збережено<\/span>"
-    },
     "configurationButtonSave": {
         "message": "Зберегти та перезавантажити"
     },
@@ -2279,9 +2270,6 @@
     "pidTuningDataRefreshed": {
         "message": "Дані ПІД <strong>оновлено<\/strong>"
     },
-    "pidTuningEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">збережено<\/span>"
-    },
     "tuningHelp": {
         "message": "<b>Поради з налаштування<\/b><br \/><span class=\"message-negative\">ВАЖЛИВО:<\/span> Під час перших польотів важливо перевірити температуру моторів. Чим вище значення фільтра, тим краще дрон може літати, але ви також отримаєте більше шуму в мотори. <br>Оптимальним є значення за замовчуванням 100 Гц, але, для більш шумних збірок, можна спробувати знизити фільтр Д-складової до 50 Гц і, можливо, також фільтр гіроскопа."
     },
@@ -2414,9 +2402,6 @@
     },
     "receiverDataRefreshed": {
         "message": "Дані для тюнінгу пульта <strong>оновлено<\/strong>"
-    },
-    "receiverEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">збережено<\/span>"
     },
     "receiverModelPreview": {
         "message": "Попередній перегляд"
@@ -2803,9 +2788,6 @@
     "adjustmentsSave": {
         "message": "Зберегти"
     },
-    "adjustmentsEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">збережено<\/span>"
-    },
     "transponderNotSupported": {
         "message": "Прошивка вашого польотного контролера не підтримує функцію транспондера."
     },
@@ -2911,9 +2893,6 @@
     },
     "servosReverse": {
         "message": "Зворотний"
-    },
-    "servosEepromSave": {
-        "message": "EEPROM <span class=\"message-positive\">збережено<\/span>"
     },
     "gpsHead": {
         "message": "GPS"
@@ -3467,6 +3446,10 @@
     },
     "dataflashSaveFileDepreciationHint": {
         "message": "Цей метод є повільним і має властивості, які спричиняють похибки або пошкодження файлів, оскільки саме з'єднання MSP має внутріні, фундаментальні обмеження, які не роблять його придатним для передачі файлів. Він може працювати лише для невеликих файлів журналів. Якщо передача файлів не вдасться, використовуючи цей метод, не створюйте запитів в підтримку. Рекомендований метод - використовувати '<b>$t(onboardLoggingRebootMscText.message)<\/b>' (нижче), щоб активувати режим масового сховища та отримати доступ до вашого польотного контролера як до пристрою зберігання для завантаження файлів журналів."
+    },
+    "dataflashButtonSaveAndErase": {
+        "message": "Зберегти й стерти",
+        "description": "Button text to save blackbox logs to file and then erase the flash"
     },
     "dataflashButtonErase": {
         "message": "Стерти флешпамять"
@@ -4354,6 +4337,10 @@
     "pidTuningDTermSliderEnabled": {
         "message": "Використовуйте повзунок Д-складової",
         "description": "Disable or enable D Term Filter Tuning Slider"
+    },
+    "pidTuningPidSlidersHelp": {
+        "message": "Слайдери для налаштування характеристик польоту повітряного судна (ПІД-коефіцієнтів)<br \/><br \/>Демпфування (Д коефіцієнт): Запобігає швидким рухам, мінімізує коливання P.<br \/><br \/>Відслідковування (P та I коефіцієнти): Збільшує відгук повітряного судна; якщо значення занадто високе, може спричинити тремтіння або коливання.<br \/><br \/>Відгук на рух стіків (Упередження або Feed Forward): Підвищує відгук повітряного судна на швидкі рухи стіками.<br \/><br \/>Дрейф - Коливання (I коефіцієнт, експертний): Точна настройка I.<br \/><br \/>Динамічний Д (Д макс., експертний): Встановлює максимальне значення, до якого Д може бути збільшено під час швидких рухів.<br \/><br \/>Демпфер тангажа (Д співвідношення тангажа по відношенню до крену, експертний): Збільшує кількість затухання для тангажа по відношенню до крену.<br \/><br \/>Стабілізація тангажа (для тангажа, співвідношення P, I та F, експертний): Підвищує стабільність тангажа відносно крену.<br \/><br \/>Майстер-множник (всі коефіцієнти, експертний): Підвищує або знижує всі ПІД-коефіцієнти, зберігаючи їх пропорції незмінними.",
+        "description": "Overall helpicon message for PID tuning sliders"
     },
     "pidTuningSliderWarning": {
         "message": "<span class=\"message-negative\">УВАГА<\/span>: Поточне положення повзунків може спричинити самовільні польоти, пошкодження моторів або небезпечну поведінку повітряного судна. Будь ласка, будьте обережні під час подальших дій.",
@@ -5974,6 +5961,13 @@
     "osdDescElementEscRpm": {
         "message": "Оберти\/хв з телеметрії ESC"
     },
+    "osdTextElementRemainingTimeEstimate": {
+        "message": "Таймер: оцінка часу, що залишився",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementRemainingTimeEstimate": {
+        "message": "Приблизний час польоту, що залишився"
+    },
     "osdTextElementRtcDateTime": {
         "message": "Дата й час з джерела RTC",
         "description": "One of the elements of the OSD"
@@ -7259,7 +7253,7 @@
         "message": "Назва файлу"
     },
     "dialogFileNameDescription": {
-        "message": "Файл буде збережений в папці 'Android\/data\/betaflight-configurator\/{{folder}}' на вашому внутрішньому сховищі."
+        "message": "Файл буде збережений в папці 'Android\/data\/betaflight-app\/{{folder}}' на вашому внутрішньому сховищі."
     },
     "dialogFileAlreadyExistsTitle": {
         "message": "Такий файл вже існує!"
@@ -7611,6 +7605,15 @@
     },
     "firmwareFlasherOSDProtocolNotSelectedContinue": {
         "message": "Продовжити без протоколу OSD"
+    },
+    "firmwareFlasherOptionLabelVerifiedPartner": {
+        "message": "Перевірений партнер"
+    },
+    "firmwareFlasherOptionLabelVendorCommunity": {
+        "message": "Постачальник \/ Спільнота"
+    },
+    "firmwareFlasherOptionLabelLegacy": {
+        "message": "Застарілі"
     },
     "coreBuild": {
         "message": "Лише ядро"

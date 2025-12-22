@@ -190,9 +190,6 @@
     "language_default": {
         "message": "系统默认"
     },
-    "language_default_pretty": {
-        "message": "系统默认($t(detectedLanguage))"
-    },
     "sensorDataFlashNotFound": {
         "message": "未发现<br>闪存芯片",
         "description": "Text of the dataflash image in the header of the page."
@@ -1172,9 +1169,6 @@
     "initialSetupSettingsRestored": {
         "message": "恢复到<strong>默认<\/strong>设置"
     },
-    "initialSetupEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">已保存<\/span>"
-    },
     "initialSetupNetworkInfo": {
         "message": "网络信息"
     },
@@ -1699,9 +1693,6 @@
         "message": "设置单次返航点",
         "description": "Option to set the Home Point with the first arm only, not with each arm in the GPS Configuration"
     },
-    "configurationEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">已保存<\/span>"
-    },
     "configurationButtonSave": {
         "message": "保存并重启"
     },
@@ -2152,9 +2143,6 @@
     "pidTuningDataRefreshed": {
         "message": "PID 数据<strong>已刷新<\/strong>"
     },
-    "pidTuningEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">已保存<\/span>"
-    },
     "tuningHelp": {
         "message": "<b>调校技巧<\/b><br \/><span class=\"message-negative\">重要：<\/span>调校后的初次飞行需注意电机温度。滤波值越高，飞行效果可能越好，但也会导致更多的信号“噪音”进入电机。<br>100Hz 是默认较佳的数值，但对震动较严重的情况，你可以尝试把 Dterm 和 Gyro 滤波器降低到50Hz。"
     },
@@ -2265,9 +2253,6 @@
     },
     "receiverDataRefreshed": {
         "message": "RC 调整数据 <strong>已刷新<\/strong>"
-    },
-    "receiverEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">已保存<\/span>"
     },
     "receiverModelPreview": {
         "message": "预览"
@@ -2453,9 +2438,6 @@
     "adjustmentsSave": {
         "message": "保存"
     },
-    "adjustmentsEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">已保存<\/span>"
-    },
     "transponderNotSupported": {
         "message": "该飞控不支持比赛收发器"
     },
@@ -2554,9 +2536,6 @@
     },
     "servosReverse": {
         "message": "反向"
-    },
-    "servosEepromSave": {
-        "message": "EEPROM <span class=\"message-positive\">已保存<\/span>"
     },
     "gpsHead": {
         "message": "GPS"
@@ -6028,9 +6007,6 @@
     },
     "dialogFileNameTitle": {
         "message": "文件名"
-    },
-    "dialogFileNameDescription": {
-        "message": "该文件将存储在内部存储中位于 'Android\/data\/betaflight-configurator\/{{folder}}' 的文件夹中"
     },
     "dialogFileAlreadyExistsTitle": {
         "message": "该文件已经存在。"

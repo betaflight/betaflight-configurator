@@ -91,6 +91,10 @@
         "message": "--- Non trovo il dispositivo DFU ---",
         "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access a DFU device."
     },
+    "portsEepromSaved": {
+        "message": "$t(eeprom_saved_ok.message)",
+        "description": "Don't translate!!!"
+    },
     "bluetoothConnected": {
         "message": "Connesso al Bluetooth: $1"
     },
@@ -189,9 +193,6 @@
     },
     "language_default": {
         "message": "Lingua di sistema"
-    },
-    "language_default_pretty": {
-        "message": "Predefinita di sistema ($t(detectedLanguage))"
     },
     "sensorDataFlashNotFound": {
         "message": "Nessun chip trovato per <br> flashare i dati",
@@ -1173,7 +1174,8 @@
         "message": "Impostazioni <strong>predefinite<\/strong> ripristinate"
     },
     "initialSetupEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">salvata<\/span>"
+        "message": "$t(eeprom_saved_ok.message)",
+        "description": "Don't translate!!!"
     },
     "initialSetupNetworkInfo": {
         "message": "Informazioni di rete"
@@ -1737,7 +1739,8 @@
         "message": "Protocollo ricevente bus SPI"
     },
     "configurationEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">salvata<\/span>"
+        "message": "$t(eeprom_saved_ok.message)",
+        "description": "Don't translate!!!"
     },
     "configurationButtonSave": {
         "message": "Salva e riavvia"
@@ -2280,7 +2283,8 @@
         "message": "Dati PID <strong>aggiornati<\/strong>"
     },
     "pidTuningEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">salvata<\/span>"
+        "message": "$t(eeprom_saved_ok.message)",
+        "description": "Don't translate!!!"
     },
     "tuningHelp": {
         "message": "<b>Suggerimento per la messa a punto<\/b><br \/><span class=\"message-negative\">IMPORTANTE:<\/span> È importante verificare la temperatura dei motori durante i primi voli. Più alto è il valore del filtro, più dovrebbe volare meglio, ma avrai anche più rumore nei motori.<br>Il valore predefinito di 100Hz è ottimale, ma per setup più rumorosi puoi provare ad abbassare il filtro Dterm a 50Hz ed anche il filtro del giroscopio."
@@ -2416,7 +2420,8 @@
         "message": "Dati di messa a punto RC <strong>aggiornati<\/strong>"
     },
     "receiverEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">salvata<\/span>"
+        "message": "$t(eeprom_saved_ok.message)",
+        "description": "Don't translate!!!"
     },
     "receiverModelPreview": {
         "message": "Anteprima"
@@ -2804,7 +2809,8 @@
         "message": "Salva"
     },
     "adjustmentsEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">salvata<\/span>"
+        "message": "$t(eeprom_saved_ok.message)",
+        "description": "Don't translate!!!"
     },
     "transponderNotSupported": {
         "message": "Il firmware del tuo controllore di volo non supporta la funzionalità transponder."
@@ -2913,7 +2919,8 @@
         "message": "Inverti"
     },
     "servosEepromSave": {
-        "message": "EEPROM <span class=\"message-positive\">salvata<\/span>"
+        "message": "$t(eeprom_saved_ok.message)",
+        "description": "Don't translate!!!"
     },
     "gpsHead": {
         "message": "GPS"
@@ -7274,7 +7281,7 @@
         "message": "Nome file"
     },
     "dialogFileNameDescription": {
-        "message": "Il file verrà salvato nella cartella 'Android\/data\/betaflight-configurator\/{{folder}}' nella memoria interna."
+        "message": "Il file verrà salvato nella cartella 'Android\/data\/betaflight-configurator\/{{folder}}' della memoria interna."
     },
     "dialogFileAlreadyExistsTitle": {
         "message": "File già esistente!"

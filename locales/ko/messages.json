@@ -91,6 +91,10 @@
         "message": "--- 내 DFU 장치를 찾을 수 없습니다 ---",
         "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access a DFU device."
     },
+    "portsEepromSaved": {
+        "message": "$t(eeprom_saved_ok.message)",
+        "description": "Don't translate!!!"
+    },
     "bluetoothConnected": {
         "message": "블루투스 장치에 연결됨: $1"
     },
@@ -190,8 +194,9 @@
     "language_default": {
         "message": "시스템 기본"
     },
-    "language_default_pretty": {
-        "message": "시스템 기본 ($t(detectedLanguage))"
+    "language_DEFAULT": {
+        "message": "$t(language_default.message)",
+        "description": "Don't translate!!!"
     },
     "language_pl": {
         "message": "Polski",
@@ -676,7 +681,7 @@
         "message": "EEPROM <span class=\"message-positive\">저장됨<\/span>"
     },
     "defaultWelcomeIntro": {
-        "message": "비행 컨트롤러의 쉬운 업데이트, 환경설정 및 튜닝을 위한 도구인 <strong>베타플라이트 앱<\/strong>에 오신 것을 환영합니다."
+        "message": "비행 컨트롤러의 쉬운 업데이트, 환경설정 및 튜닝을 위한 도구인 <strong>베타플라이트 앱<\/strong>에 오신 것을 환영합니다.<\/br>(한글번역 : 짱아부지 JJangFPV)"
     },
     "defaultWelcomeHead": {
         "message": "하드웨어"
@@ -1177,7 +1182,8 @@
         "message": "설정이 <strong>기본값<\/strong>으로 복구됨"
     },
     "initialSetupEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">저장됨<\/span>"
+        "message": "$t(eeprom_saved_ok.message)",
+        "description": "Don't translate!!!"
     },
     "initialSetupNetworkInfo": {
         "message": "네트워크 정보"
@@ -1741,7 +1747,8 @@
         "message": "SPI 버스 수신기 공급자"
     },
     "configurationEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">저장됨<\/span>"
+        "message": "$t(eeprom_saved_ok.message)",
+        "description": "Don't translate!!!"
     },
     "configurationButtonSave": {
         "message": "저장 및 재부팅"
@@ -2284,7 +2291,8 @@
         "message": "PID 데이터 <strong>새로 고쳐짐<\/strong>"
     },
     "pidTuningEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">저장됨<\/span>"
+        "message": "$t(eeprom_saved_ok.message)",
+        "description": "Don't translate!!!"
     },
     "tuningHelp": {
         "message": "<b>튜닝 팁<\/b><br \/><span class=\"message-negative\">중요:<\/span> 첫 비행 중 모터 온도를 확인하는 것이 중요합니다. 필터 값이 높을수록 더 잘 날 수 있지만 모터에 더 많은 노이즈가 들리게 됩니다. <br> 기본값 100Hz가 최적이지만, 노이즈 설정을 위하여 D텀 필터를 50Hz로 낮출 수 있으며, 자이로 필터를 낮추는 것 또한 가능합니다."
@@ -2420,7 +2428,8 @@
         "message": "RC 튜닝 데이터 <strong>새로 고쳐짐<\/strong>"
     },
     "receiverEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">저장됨<\/span>"
+        "message": "$t(eeprom_saved_ok.message)",
+        "description": "Don't translate!!!"
     },
     "receiverModelPreview": {
         "message": "미리보기"
@@ -2808,7 +2817,8 @@
         "message": "저장"
     },
     "adjustmentsEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">저장됨<\/span>"
+        "message": "$t(eeprom_saved_ok.message)",
+        "description": "Don't translate!!!"
     },
     "transponderNotSupported": {
         "message": "당신의 비행 컨트롤러의 펌웨어는 트랜스폰더 기능을 지원하지 않습니다."
@@ -2917,7 +2927,8 @@
         "message": "역방향"
     },
     "servosEepromSave": {
-        "message": "EEPROM <span class=\"message-positive\">저장됨<\/span>"
+        "message": "$t(eeprom_saved_ok.message)",
+        "description": "Don't translate!!!"
     },
     "gpsHead": {
         "message": "GPS"
@@ -7278,7 +7289,7 @@
         "message": "파일 이름"
     },
     "dialogFileNameDescription": {
-        "message": "파일이 내부 스토리지의 'Android\/data\/betaflight-configator\/{{folder}}' 폴더에 저장됩니다."
+        "message": "파일이 내장 저장공간의 'Android\/data\/betaflight-app\/{{folder}}' 폴더에 저장됩니다."
     },
     "dialogFileAlreadyExistsTitle": {
         "message": "이 파일이 이미 존재 합니다!"
