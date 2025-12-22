@@ -7739,7 +7739,7 @@
         "message": "Legacy"
     },
     "firmwareFlasherOptionLabelNotQualified": {
-        "message": "⚠️ Non qualified target — flash at your own risk - not officially supported"
+        "message": "⚠️ Community / Manufacturer supported target — not officially supported ⚠️"
     },
     "coreBuild": {
         "message": "Core Only"
