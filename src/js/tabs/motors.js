@@ -17,7 +17,7 @@ import { updateTabList } from "../utils/updateTabList";
 import { isInt, getMixerImageSrc } from "../utils/common";
 import * as d3 from "d3";
 import $ from "jquery";
-import semver from "semver-min";
+import semver from "semver";
 import { API_VERSION_1_47 } from "../data_storage.js";
 
 const motors = {
