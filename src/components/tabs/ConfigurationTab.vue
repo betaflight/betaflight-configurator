@@ -861,7 +861,17 @@ export default defineComponent({
             if (enabled) {
                 sensorAlignment.gyro_enable_mask = bit_set(sensorAlignment.gyro_enable_mask, index);
             } else {
-                sensorAlignment.gyro_enable_mask = bit_clear(sensorAlignment.gyro_enable_mask, index);
+                const nextMask = bit_clear(sensorAlignment.gyro_enable_mask, index);
+
+                // Enforce: at least one gyro must remain enabled on API >= 1.47
+                if (nextMask === 0 && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+                    gui_log(i18n.getMessage("configurationGyroRequired"));
+                    // Reset checkbox state visually (since v-model isn't used here directly, we rely on re-rendering or manual intervention,
+                    // but since the mask isn't updated, the computed property 'gyroList' will re-evaluate to 'enabled: true')
+                    return;
+                }
+
+                sensorAlignment.gyro_enable_mask = nextMask;
             }
         };
 

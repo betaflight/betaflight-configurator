@@ -289,6 +289,9 @@
     "sensorStatusGyro": {
         "message": "Gyroscope"
     },
+    "configurationGyroRequired": {
+        "message": "At least one gyro must be enabled"
+    },
     "sensorStatusGyroShort": {
         "message": "Gyro",
         "description": "Text of the image in the top sensors icons. Please keep it short."
