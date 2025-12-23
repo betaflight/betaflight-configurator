@@ -168,9 +168,6 @@
     "language_default": {
         "message": "Padrão do sistema"
     },
-    "language_default_pretty": {
-        "message": "Padrão do sistema ($t(detectedLanguage))"
-    },
     "sensorDataFlashNotFound": {
         "message": "Nenhuma memória <br> flash detectada",
         "description": "Text of the dataflash image in the header of the page."
@@ -1048,9 +1045,6 @@
     "initialSetupSettingsRestored": {
         "message": "Configurações restauradas para os valores <strong>padrão<\/strong>"
     },
-    "initialSetupEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">salvo<\/span>"
-    },
     "initialSetupNetworkInfo": {
         "message": "Informações da Rede"
     },
@@ -1498,9 +1492,6 @@
     },
     "configurationSpiRX": {
         "message": "Fornecedor do receptor SPI BUS"
-    },
-    "configurationEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">salvo<\/span>"
     },
     "configurationButtonSave": {
         "message": "Salvar e reiniciar"
@@ -1983,9 +1974,6 @@
     "pidTuningDataRefreshed": {
         "message": "Dados do PID <strong>atualizados<\/strong>"
     },
-    "pidTuningEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">salvo<\/span>"
-    },
     "tuningHelp": {
         "message": "<b>Dicas de otimização<\/b><br \/><span class=\"message-negative\">IMPORTANTE:<\/span> Sempre verifique a temperatura dos motores durante os primeiros voos. Quanto maior o valor do filtro, melhor pode ser o voo, porém, mais ruído chegará aos motores. <br>O Valor padrão de 100Hz é ótimo, mas para aeronaves com mais ruídos, você pode tentar diminuir o filtro do termo D para 50Hz e possivelmente também o filtro do giroscópio."
     },
@@ -2112,9 +2100,6 @@
     },
     "receiverDataRefreshed": {
         "message": "Dados de afinação do RC <strong>atualizados<\/strong>"
-    },
-    "receiverEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">salvo<\/span>"
     },
     "receiverModelPreview": {
         "message": "Pré-visualizar"
@@ -2447,9 +2432,6 @@
     "adjustmentsSave": {
         "message": "Salvar"
     },
-    "adjustmentsEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">salvo<\/span>"
-    },
     "transponderNotSupported": {
         "message": "O firmware do seu controlador de voo não suporta a função de transponder."
     },
@@ -2555,9 +2537,6 @@
     },
     "servosReverse": {
         "message": "Reverso"
-    },
-    "servosEepromSave": {
-        "message": "EEPROM <span class=\"message-positive\">salvo<\/span>"
     },
     "gpsHead": {
         "message": "GPS"
@@ -6609,9 +6588,6 @@
     },
     "dialogFileNameTitle": {
         "message": "Nome do arquivo"
-    },
-    "dialogFileNameDescription": {
-        "message": "O arquivo será salvo na pasta 'Android\/data\/betaflight-configurator\/{{folder}}' no seu armazenamento interno."
     },
     "dialogFileAlreadyExistsTitle": {
         "message": "Este arquivo já existe!"

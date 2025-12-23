@@ -182,9 +182,6 @@
     "language_default": {
         "message": "Systemstandard"
     },
-    "language_default_pretty": {
-        "message": "Systemstandard ($t(detectedLanguage))"
-    },
     "sensorDataFlashNotFound": {
         "message": "Keine Speichermöglichkeit<br>Chip nicht gefunden",
         "description": "Text of the dataflash image in the header of the page."
@@ -1091,9 +1088,6 @@
     "initialSetupSettingsRestored": {
         "message": "<strong>Werkseinstellungen<\/strong> wiederhergestellt"
     },
-    "initialSetupEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">gespeichert<\/span>"
-    },
     "initialSetupNetworkInfo": {
         "message": "Netzwerk-Informationen"
     },
@@ -1563,9 +1557,6 @@
     },
     "configurationSpiRX": {
         "message": "SPI-Bus Empfänger"
-    },
-    "configurationEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">gespeichert<\/span>"
     },
     "configurationButtonSave": {
         "message": "Speichern und Neustarten"
@@ -2044,9 +2035,6 @@
     "pidTuningDataRefreshed": {
         "message": "PID Daten <strong>aktualisiert<\/strong>"
     },
-    "pidTuningEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">gespeichert<\/span>"
-    },
     "tuningHelp": {
         "message": "<b>Tuning tips<\/b><br \/><span class=\"message-negative\">Hinweis:<\/span> Es ist wichtig, bei den ersten Flügen, die Motortemperatur im Auge zu behalten. Je höher die Filterwerte, desto besser könnte er fliegen, aber es wird auch mehr Rauschen in die Motoren geben.<br>Die Standarteinstellung 100Hz ist optimal, für problematische Setups könnte man jedoch richtung 50Hz Dterm Filter (und eventuell auch beim Gyro-Filter) gehen."
     },
@@ -2173,9 +2161,6 @@
     },
     "receiverDataRefreshed": {
         "message": "RC Einstellungen <strong>neu geladen<\/strong>"
-    },
-    "receiverEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">gespeichert<\/span>"
     },
     "receiverModelPreview": {
         "message": "Vorschau"
@@ -2535,9 +2520,6 @@
     "adjustmentsSave": {
         "message": "Speichern"
     },
-    "adjustmentsEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">gespeichert<\/span>"
-    },
     "transponderNotSupported": {
         "message": "Dein Flugcontroller unterstützt das Transponder Feature nicht."
     },
@@ -2640,9 +2622,6 @@
     },
     "servosReverse": {
         "message": "Umgekehrt"
-    },
-    "servosEepromSave": {
-        "message": "EEPROM <span class=\"message-positive\">gespeichert<\/span>"
     },
     "gpsHead": {
         "message": "GPS"
@@ -6755,9 +6734,6 @@
     },
     "dialogFileNameTitle": {
         "message": "Dateiname"
-    },
-    "dialogFileNameDescription": {
-        "message": "Die Datei wird auf Ihrem internen Speicher in dem Ordner 'Android\/data\/betaflight-configurator\/{{folder}}' gespeichert."
     },
     "dialogFileAlreadyExistsTitle": {
         "message": "Diese Datei existiert bereits!"

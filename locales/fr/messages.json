@@ -28,8 +28,23 @@
     "noticeTitle": {
         "message": "Remarques"
     },
+    "search": {
+        "message": "Recherche"
+    },
     "dontShowAgain": {
         "message": "Ne plus me le montrer"
+    },
+    "pwaOnNeedRefreshTitle": {
+        "message": "L'application doit être mise à jour",
+        "description": "Title of the window that appears when the app needs to be refreshed to get the latest changes"
+    },
+    "pwaOnNeedRefreshText": {
+        "message": "Veuillez actualiser la page pour obtenir les dernières modifications. Toutes les modifications non enregistrées ainsi que toutes les opérations en cours seront perdues.<br><br>Voulez-vous actualiser maintenant ? Vous pouvez ne pas tenir compte de ce message et actualiser manuellement la page lorsque vous le souhaitez.",
+        "description": "Text of the window that appears when the app needs to be refreshed to get the latest changes"
+    },
+    "pwaOnOffilenReadyTitle": {
+        "message": "L'application est prête à être utilisée hors ligne",
+        "description": "Title of the window that appears when the app is ready to be installed and used offline"
     },
     "operationNotSupported": {
         "message": "Cette opération n’est pas prise en charge par votre matériel."
@@ -127,6 +142,10 @@
         "message": "Définir le délai d'expiration de connexion afin de permettre une initialisation plus longue au branchement ou au redémarrage de l'appareil",
         "description": "Change timeout on auto-connect and reboot so the bus has more time to initialize after being detected by the system"
     },
+    "developmentSettings": {
+        "message": "Réglages de développement",
+        "description": "Title for the development settings section"
+    },
     "showAllSerialDevices": {
         "message": "Afficher tous les périphériques série (pour les fabricants ou le développement)",
         "description": "Do not filter serial devices using VID\/PID values (for manufacturers or development)"
@@ -145,11 +164,11 @@
         "message": "Modifier la langue:",
         "description": "Try and be brief"
     },
+    "userLanguageSelect": {
+        "message": "Sélectionner la langue par défaut"
+    },
     "language_default": {
         "message": "Sélection par défaut"
-    },
-    "language_default_pretty": {
-        "message": "Sélection par défaut ($t(detectedLanguage))"
     },
     "sensorDataFlashNotFound": {
         "message": "Aucune donnée de flash<br>puce trouvée",
@@ -207,8 +226,14 @@
     "configuratorUpdateNotice": {
         "message": "Votre version du <b>Configurateur Betaflight<\/b> est obsolète.<br>$t(configuratorUpdateHelp.message)"
     },
+    "configuratorUpdateHelp": {
+        "message": "Lorsque Internet est disponible, l'application devrait automatiquement demander les mises à jour disponibles."
+    },
     "configuratorUpdateWebsite": {
         "message": "Aller sur le site de publication"
+    },
+    "rebootFlightController": {
+        "message": "Redémarrage du contrôleur de vol, rebranchez lorsque vous êtes prêt"
     },
     "rebootFlightControllerReady": {
         "message": "Le contrôleur de vol est prêt"
@@ -483,6 +508,9 @@
     "buildServerSupportRequestSubmission": {
         "message": "<br>*** Données de support soumises *** <br>ID : $1<br><br><br># Copier l'ID et le fournir à l'équipe de betaflight."
     },
+    "buildKey": {
+        "message": "Clé de compilation: <strong>$1<\/strong>"
+    },
     "supportWarningDialogTitle": {
         "message": "Confirmer l'envoi de données"
     },
@@ -521,6 +549,9 @@
     },
     "uniqueDeviceIdReceived": {
         "message": "ID unique du dispositif: <strong>0x$1<\/strong>"
+    },
+    "craftNameReceived": {
+        "message": "Nom de l'aéronef: <strong>$1<\/strong>"
     },
     "armingDisabled": {
         "message": "<strong>Désarmé<\/strong>"
@@ -585,6 +616,10 @@
     "statusbar_cpu_load": {
         "message": "Charge CPU:",
         "description": "CPU load text shown in the status bar"
+    },
+    "statusbar_connection_time": {
+        "message": "Connexion:",
+        "description": "Connection time text shown in the status bar"
     },
     "dfu_connect_message": {
         "message": "Veuillez utiliser le 'Firmware Flasheur' pour accéder aux dispositifs en DFU"
@@ -701,6 +736,9 @@
     "initialSetupButtonCalibratingText": {
         "message": "Calibrage"
     },
+    "initialSetupButtonReset": {
+        "message": "Réinitialiser les paramètres"
+    },
     "initialSetupButtonBackup": {
         "message": "Sauvegarde JSON"
     },
@@ -765,7 +803,7 @@
         "message": "Roll:"
     },
     "initialSetupMagHead": {
-        "message": "Magnetomètre"
+        "message": "Magnétomètre"
     },
     "initialSensorInfoHead": {
         "message": "Infos du capteur"
@@ -919,6 +957,14 @@
         "message": "Le filtrage basé sur RPM est activé mais un ou plusieurs ESC ne fournissent pas de télémétrie DSHOT valide. Vérifiez que les ESC sont capables et ont le firmware requis installé pour supporter la télémétrie DSHOT bidirectionnelle.",
         "description": "Message that pops up to describe the RPMFILTER arming disable flag"
     },
+    "initialSetupArmingDisableFlagsTooltipALTHOLD": {
+        "message": "Le maintien d'altitude est actif",
+        "description": "Message that pops up to describe the ALTHOLD arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipPOSHOLD": {
+        "message": "Le maintien de la position est actif",
+        "description": "Message that pops up to describe the POSHOLD arming disable flag"
+    },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "Un des autres drapeaux désarmés est actif lors de l'armement",
         "description": "Message that pops up to describe the ARM_SWITCH arming disable flag"
@@ -926,8 +972,25 @@
     "initialSetupGPSHead": {
         "message": "GPS"
     },
+    "initialSetupGPSHeadHelp": {
+        "message": "Affiche les infos GPS, si correctement activé dans l'onglet Ports, onglet Configuration et onglet GPS",
+        "description": "Message that pops up to describe the GPS section"
+    },
+    "initialSetupSonarHead": {
+        "message": "Sonar"
+    },
+    "initialSetupSonarHeadHelp": {
+        "message": "Affiche les informations du Sonar, si correctement activé dans l'onglet Configuration",
+        "description": "Message that pops up to describe the Sonar section"
+    },
+    "initialSetupAltitudeSonar": {
+        "message": "Altitude"
+    },
     "initialSetupInstrumentsHead": {
         "message": "Instruments"
+    },
+    "initialSetupInfoBuild": {
+        "message": "Info Firmware"
     },
     "initialSetupInfoBuildDate": {
         "message": "Date de compilation :"
@@ -950,6 +1013,9 @@
     "initialSetupInfoBuildOptions": {
         "message": "Options"
     },
+    "initialSetupInfoBuildLocal": {
+        "message": "Compilation locale"
+    },
     "initialSetupNotOnline": {
         "message": "Serveur indisponible"
     },
@@ -969,16 +1035,13 @@
         "message": "Calibrage de l'accéléromètre <span class=\"message-positive\">terminé<\/span>"
     },
     "initialSetupMagCalibStarted": {
-        "message": "Calibrage du magnetomètre commencé"
+        "message": "Calibrage du magnétomètre commencé"
     },
     "initialSetupMagCalibEnded": {
         "message": "Calibrage du magnétomètre <span class=\"message-positive\">terminé<\/span>"
     },
     "initialSetupSettingsRestored": {
         "message": "Restauration des paramètres par <strong>défaut<\/strong>"
-    },
-    "initialSetupEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">sauvegardée<\/span>"
     },
     "initialSetupNetworkInfo": {
         "message": "Infos réseau"
@@ -1016,6 +1079,9 @@
     },
     "featureMOTOR_STOP": {
         "message": "Ne pas faire tourner les moteurs lors de l'armement"
+    },
+    "featureMOTOR_STOPTip": {
+        "message": "Cette fonctionnalité est désactivée lorsque AIRMODE est activé"
     },
     "featureSERVO_TILT": {
         "message": "Servo gimbal"
@@ -1135,7 +1201,10 @@
         "message": "<strong>Note:<\/strong> le RX SPI ne fonctionne que si la carte est équipée ou connectée à un bus SPI."
     },
     "configurationOtherFeaturesHelp": {
-        "message": "<strong>Note:<\/strong>  toutes les options ne fonctionnent pas sur tous les cartes. Si une fonctionnalité est désactivée aprés avoir cliqué sur 'Sauvegarder puis redémarrer', c'est que votre carte n'est pas compatible."
+        "message": "<strong>Note:<\/strong> toutes les options ne fonctionnent pas sur toutes les cartes. Si une fonctionnalité est désactivée après avoir cliqué sur 'Sauvegarder puis redémarrer', c'est que votre carte n'est pas compatible."
+    },
+    "configurationBoardAlignment": {
+        "message": "Alignement de la carte"
     },
     "configurationBoardAlignmentRoll": {
         "message": "Degrés sur le Roll"
@@ -1145,6 +1214,12 @@
     },
     "configurationBoardAlignmentYaw": {
         "message": "Degrés sur le Yaw"
+    },
+    "configurationGyroAlignment": {
+        "message": "Alignement du Gyro"
+    },
+    "configurationMagAlignment": {
+        "message": "Alignement du magnétomètre"
     },
     "configurationSensorAlignmentGyro": {
         "message": "Alignement du Gyro"
@@ -1163,6 +1238,12 @@
     },
     "configurationSensorGyroToUseBoth": {
         "message": "Les deux"
+    },
+    "configurationSensorAlignment": {
+        "message": "Alignement du capteur"
+    },
+    "configurationGyroRequiredWarning": {
+        "message": "Au moins un gyro doit rester activé. Si vous désactivez tous les gyros, le contrôleur de vol ne fonctionnera pas correctement."
     },
     "configurationSensorAlignmentGyro1": {
         "message": "Premier GYRO"
@@ -1196,6 +1277,9 @@
     },
     "configurationReverseMotorSwitchHelp": {
         "message": "Cette option informe le contrôleur que le sens de rotation des moteurs et des hélices est inversé. <strong>Attention: <\/strong> l'option n'inverse pas le sens de rotation des moteurs. Pour cela il faut utiliser l'utilitaire de configuration des ESCs ou interchanger 2 des fils moteurs. Enfin, retirez les hélices et vérifiez que le sens de rotation des moteurs est conforme au schéma ci-dessus."
+    },
+    "configurationGyroCalOnFirstArm": {
+        "message": "Calibrer le Gyro à la première activation des moteurs"
     },
     "configurationMotorPoles": {
         "message": "Pôles moteur",
@@ -1302,6 +1386,12 @@
     "beeperRC_SMOOTHING_INIT_FAIL": {
         "message": "Bip à l'armement quand le lissage rc n'a pas initialisé les filtres"
     },
+    "configurationBeeperEnableAll": {
+        "message": "Tout activer"
+    },
+    "configurationBeeperDisableAll": {
+        "message": "Tout désactiver"
+    },
     "configuration3d": {
         "message": "Fonctions ESC\/Moteurs 3D"
     },
@@ -1339,7 +1429,7 @@
         "description": "Value for some options that show the speed of gyro, pid, etc. in kHz"
     },
     "configurationLoopTimeHelp": {
-        "message": "<strong>Note:<\/strong> Assurez vous que votre FC peut fonctionner à ces vitesses ! Vérifiez le CPU. Cela peut demander de re-tuner ses PID. TIP: Désactivez l'accéléromètre  et les autres capteurs pour gagner en performance."
+        "message": "<strong>Note:<\/strong> Assurez-vous que votre FC peut fonctionner à ces vitesses ! Vérifiez le CPU. Cela peut demander de re-tuner ses PID. TIP: Désactivez l'accéléromètre et les autres capteurs pour gagner en performance."
     },
     "configurationGPS": {
         "message": "Configuration du GPS"
@@ -1376,9 +1466,6 @@
     },
     "configurationSpiRX": {
         "message": "Récepteur Bus SPI"
-    },
-    "configurationEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">Sauvegardé<\/span>"
     },
     "configurationButtonSave": {
         "message": "Sauvegarder et Redémarrer"
@@ -1839,9 +1926,6 @@
     "pidTuningDataRefreshed": {
         "message": "PID données <strong>raffraîchit<\/strong>"
     },
-    "pidTuningEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">sauvegardée<\/span>"
-    },
     "tuningHelp": {
         "message": "<b>Conseils tuning<\/b><br \/><span class=\"message-negative\">IMPORTANT:<\/span> Il est important de contrôler les températures moteurs au premier vol. Des valeurs de filtre élevées peuvent introduire du bruit et des échauffements moteurs <br>La valeur par défaut de 100 Hz est optimale, mais pour des setups noisy vous pouvez essayer de baisser le filtre Dterm à 50 Hz."
     },
@@ -1936,9 +2020,6 @@
     },
     "receiverDataRefreshed": {
         "message": "Données de réglage de la Radio Commande <strong> actualisées <\/ strong>"
-    },
-    "receiverEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">enregistrée<\/span>"
     },
     "receiverModelPreview": {
         "message": "Prévisualisation"
@@ -2115,9 +2196,6 @@
     "adjustmentsSave": {
         "message": "Enregistrer"
     },
-    "adjustmentsEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">enregistrée<\/span>"
-    },
     "transponderNotSupported": {
         "message": "Le firmware de votre contrôleur de vol ne supporte pas la fonction transpondeur."
     },
@@ -2217,9 +2295,6 @@
     "servosReverse": {
         "message": "Inversé"
     },
-    "servosEepromSave": {
-        "message": "EEPROM <span class=\"message-positive\">sauvegardée<\/span>"
-    },
     "gpsHead": {
         "message": "GPS"
     },
@@ -2235,8 +2310,26 @@
     "gps3dFix": {
         "message": "Accroche:"
     },
+    "gpsFixTrue": {
+        "message": "Vrai"
+    },
+    "gpsFixFalse": {
+        "message": "Faux"
+    },
+    "gpsPositionUnit": {
+        "message": "deg",
+        "description": "Unit for GPS position."
+    },
     "gpsAltitude": {
         "message": "Altitude:"
+    },
+    "gpsLatitude": {
+        "message": "Latitude:",
+        "description": "Show GPS position - Latitude"
+    },
+    "gpsLongitude": {
+        "message": "Longitude:",
+        "description": "Show GPS position - Longitude"
     },
     "gpsSpeed": {
         "message": "Vitesse:"
@@ -2255,6 +2348,12 @@
     },
     "gpsSignalSatId": {
         "message": "Sat ID"
+    },
+    "gpsSignalStatus": {
+        "message": "Statut"
+    },
+    "gpsSignalQuality": {
+        "message": "Qualité"
     },
     "gnssQualityNoSignal": {
         "message": "aucun signal"
@@ -2276,6 +2375,9 @@
     },
     "gnssUsedUnused": {
         "message": "inutilisé"
+    },
+    "gnssUsedUsed": {
+        "message": "UTILISÉ"
     },
     "gnssHealthyUnknown": {
         "message": "inconnu"
@@ -2484,6 +2586,9 @@
     "escDshotDirectionDialog-SetDirectionHintSafety": {
         "message": "Les moteurs tourneront lors du réglage du sens !"
     },
+    "escDshotDirectionDialog-SettingsAutoSaved": {
+        "message": "La direction du moteur est sauvegardée lors de la sélection"
+    },
     "escDshotDirectionDialog-WrongProtocolText": {
         "message": "Ne fonctionne qu'avec des ESC DSHOT.<br \/>Vérifiez que votre ESC (contrôleur de vitesse électrique) prend en charge le protocole DSHOT et changez le dans l'onglet $t(tabMotorTesting.message)."
     },
@@ -2535,6 +2640,12 @@
     "sensorsGyroTitle": {
         "message": "Gyroscope - deg\/s"
     },
+    "sensorsAccelTitle": {
+        "message": "Accéléromètre - g"
+    },
+    "sensorsMagTitle": {
+        "message": "Magnétomètre"
+    },
     "sensorsAltitudeTitle": {
         "message": "Altitude - mètres"
     },
@@ -2548,7 +2659,7 @@
         "message": "Debug"
     },
     "cliInfo": {
-        "message": "<strong>Note:<\/strong> Quitter l'onglet CLI ou appuyer sur Déconnecter va <strong>automatiquement<\/strong> envoyer \"<strong>exit<\/strong>\" à la console de commande. Avec le dernier firmware, le contrôleur de vol va <strong>redémarrer<\/strong> et les changements non sauvegardés seront<strong>perdus<\/strong>.<p><strong><span class=\"message-negative\">Avertissement:<\/span><\/strong> Certaines commandes en CLI peuvent produirent des signaux aléatoires envoyés aux sorties moteurs. Ceux-ci, dans certains cas, feront tourner les moteurs si la batterie est connectée. Ainsi, il est fortement recommandé de s'assurer que<strong>la batterie soit déconnectée avant d'entrer des commandes en CLI<\/strong>."
+        "message": "<strong>Note:<\/strong> Quitter l'onglet CLI ou appuyer sur Déconnecter va <strong>automatiquement<\/strong> envoyer \"<strong>exit<\/strong>\" à la console de commande. Avec le dernier firmware, le contrôleur de vol va <strong>redémarrer<\/strong> et les changements non sauvegardés seront <strong>perdus<\/strong>.<p><strong><span class=\"message-negative\">Avertissement:<\/span><\/strong> Certaines commandes en CLI peuvent produirent des signaux aléatoires envoyés aux sorties moteurs. Ceux-ci, dans certains cas, feront tourner les moteurs si la batterie est connectée. Ainsi, il est fortement recommandé de s'assurer que <strong>la batterie soit déconnectée avant d'entrer des commandes en CLI<\/strong>."
     },
     "cliInputPlaceholder": {
         "message": "Écrivez votre commande ici. Appuyez sur Tab pour la saisie semi-automatique."
@@ -2588,6 +2699,9 @@
     },
     "cliConfirmSnippetBtn": {
         "message": "Exécuter"
+    },
+    "cliPanelTitle": {
+        "message": "Interface ligne de commande"
     },
     "loggingNote": {
         "message": "Les données sont enregistrées dans cet onglet <span class=\"message-negative\">uniquement<\/span>, quitter l'onglet <span class=\"message-negative\">arrête<\/span> l'enregistrement et l'application retourne en <strong>\"configurateur\"<\/strong>.<br \/> Peu importe la période de rafraîchissement, les données sont écrites <strong>chaque<\/strong> seconde afin de préserver les performances."
@@ -2830,7 +2944,7 @@
         "message": "Utiliser un firmware en développement"
     },
     "firmwareFlasherFlashDevelopmentFirmwareDescription": {
-        "message": "Flasher le dernier firmware (non testé)  en développement."
+        "message": "Flasher le dernier firmware (non testé) en développement."
     },
     "firmwareFlasherManualPort": {
         "message": "Port"
@@ -3084,6 +3198,10 @@
         "message": "GPS",
         "description": "One of the modes of the Led Strip"
     },
+    "ledStripFunctionAltitudeOption": {
+        "message": "Altitude",
+        "description": "One of the modes of the Led Strip"
+    },
     "ledStripFunctionRingOption": {
         "message": "Anneau",
         "description": "One of the modes of the Led Strip"
@@ -3177,6 +3295,10 @@
     "ledStripModeColorsModeGPSLocked": {
         "message": "GPS: attaché",
         "description": "One of the modes in Color Mode in Led Strip"
+    },
+    "ledStripModeGpsDefault": {
+        "message": "Par défaut",
+        "description": "One of the modes in GPS Mode in Led Strip"
     },
     "ledStripWiring": {
         "message": "Câblage de bande de LED",
@@ -3421,7 +3543,7 @@
         "description": "Gyro filter tuning slider label"
     },
     "pidTuningGyroFilterSliderHelp": {
-        "message": "Change les coupures du filtre gyro passe-bas.<br \/><br \/>Déplacer le curseur à gauche augmente le filtrage du gyro (fréquence de coupure plus basse).<br \/><br \/>Déplacer le curseur à droite réduit le filtrage du gyro (fréquence de coupure plus élevée).<br \/><br \/>Lorsque vous déplacez le curseur à droite pour améliorer le propwash, SOYEZ PRUDENT pour ne pas être excessif.  Vous autoriserez plus de bruit sur P et D et pouvez obtenir des décollages non-contrôlés ou de brûler les moteurs.<br \/><br \/>Vous devriez peut-être déplacer le curseur à gauche si vous avez des problèmes de raisonnance du cadre, de roulements à bille, d'hélices usées, moteurs chauds, etc...<br \/><br \/>Le filtre Gyro est appliqué avant, et en plus du filtrage D.",
+        "message": "Change les coupures du filtre gyro passe-bas.<br \/><br \/>Déplacer le curseur à gauche augmente le filtrage du gyro (fréquence de coupure plus basse).<br \/><br \/>Déplacer le curseur à droite réduit le filtrage du gyro (fréquence de coupure plus élevée).<br \/><br \/>Lorsque vous déplacez le curseur à droite pour améliorer le propwash, SOYEZ PRUDENT pour ne pas être excessif. Vous autoriserez plus de bruit sur P et D et pouvez obtenir des décollages non-contrôlés ou de brûler les moteurs.<br \/><br \/>Vous devriez peut-être déplacer le curseur à gauche si vous avez des problèmes de raisonnance du cadre, de roulements à bille, d'hélices usées, moteurs chauds, etc...<br \/><br \/>Le filtre Gyro est appliqué avant, et en plus du filtrage D.",
         "description": "Gyro filter tuning slider helpicon message"
     },
     "pidTuningGyroSliderEnabled": {
@@ -3569,7 +3691,7 @@
         "message": "Filtre coupe bande Gyro 1"
     },
     "pidTuningGyroNotchFilterHelp": {
-        "message": "Applique un filtre selectif statique (à fréquence constante) de la fréquence centrale spécifiée au Gyro . <br \/><br \/>Peut être utile pour les résonances isolées, fréquences constantes qui affectent à la fois P et D. <br \/><br \/>Pour être utile, la fréquence de résonance doit être constante sur la plage de vitesse.<br \/><br \/>La largeur de  la selection (Notch) est définie par la fréquence de coupure. La coupure devrait généralement être réglée entre 10 % et 40 % en dessous de la fréquence centrale. Utilisez la plage de filtre la plus serrée qui contrôle la résonance. Évitez de régler les filtres selectifs inférieurs à 100hz, sauf dans des circonstances particulières.<br \/><br \/>Les filtres selectifs statiques sont rarement requis en 4.3."
+        "message": "Applique un filtre sélectif statique (à fréquence constante) de la fréquence centrale spécifiée au Gyro . <br \/><br \/>Peut être utile pour les résonances isolées, fréquences constantes qui affectent à la fois P et D. <br \/><br \/>Pour être utile, la fréquence de résonance doit être constante sur la plage de vitesse.<br \/><br \/>La largeur de la selection (Notch) est définie par la fréquence de coupure. La fréquence de coupure devrait généralement être réglée entre 10 % et 40 % en dessous de la fréquence centrale. Utilisez la plage de filtre la plus serrée qui contrôle la résonance. Évitez de régler les filtres selectifs inférieurs à 100hz, sauf dans des circonstances particulières.<br \/><br \/>Les filtres selectifs statiques sont rarement requis en 4.3."
     },
     "pidTuningGyroNotchFilter2": {
         "message": "Filtre coupe bande Gyro 2"
@@ -3656,7 +3778,7 @@
         "message": "Passe-bas D Term 1"
     },
     "pidTuningDTermLowpassHelp": {
-        "message": "Le premier des filtres passe-bas sur le D-term. <br\/><br\/>En mode dynamique, le filtrage sera plus fort à basse puissance, avec moins de filtrage et de délais au fure et à mesure que les gaz augmentent. Ceci contribue à contrôler les frottements du moteur et les décollage non attendus lors de l'armement, tout en réduisant les délais et le propwash après le décollage. La passage de la coupure de basse à haute se produit plus tôt, lorsque les gaz agumentent, avec une valeur plus haute d'expo du passe bas D-term. <br\/><br\/>En mode statique, la fréquence de coupure est fixe. Ça n'est pas recommandé pour le filtrage de D. <br\/><br\/>Le type de filtre par défaut est PT1,  bien que certains utilisateurs n'utilisent qu'un simple filtre Biquad dynamique ici, sans un deuxième PT1. <br\/><br\/>Les changements qui mènent à moins de filtrage de D peuvent causer de sérieux problèmes de surchauffe du moteur ou des décollages incontrôlés lors de l'armement.",
+        "message": "Le premier des filtres passe-bas sur le D-term. <br \/><br \/>En mode dynamique, le filtrage sera plus fort à basse puissance, avec moins de filtrage et de délais au fur et à mesure que les gaz augmentent. Ceci contribue à contrôler les frottements du moteur et les décollage non attendus lors de l'armement, tout en réduisant les délais et le propwash après le décollage. La passage de la coupure de basse à haute se produit plus tôt, lorsque les gaz agumentent, avec une valeur plus haute d'expo du passe bas D-term. <br \/><br \/>En mode statique, la fréquence de coupure est fixe. Ça n'est pas recommandé pour le filtrage de D. <br \/><br \/>Le type de filtre par défaut est PT1, bien que certains utilisateurs n'utilisent qu'un simple filtre Biquad dynamique ici, sans un deuxième PT1. <br \/><br \/>Les changements qui mènent à moins de filtrage de D peuvent causer de sérieux problèmes de surchauffe du moteur ou des décollages incontrôlés lors de l'armement.",
         "description": "Help icon for the DTerm Lowpass 1 Filter"
     },
     "pidTuningDTermLowpassMode": {
@@ -3688,7 +3810,7 @@
         "message": "Filtre coupe bande du terme D"
     },
     "pidTuningDTermNotchFiltersGroupHelp": {
-        "message": "Applique un filtre statique (à fréquence constante) aux données D-Term, à la fréquence centrale spécifiée.<br \/><br \/>La largeur de la selection est réglée par la fréquence de coupure.  <br \/><br \/>Peut être utile pour les  fréquences de résonances constante isolées et amplifiées par D.<br \/><br \/>Gardez la coupure aussi près du centre que possible. Évitez de régler les filtres coupe bande en dessous de 100hz sauf sur les machines à petit RPM."
+        "message": "Applique un filtre statique (à fréquence constante) aux données D-Term, à la fréquence centrale spécifiée.<br \/><br \/>La largeur de la selection est réglée par la fréquence de coupure.<br \/><br \/>Peut être utile pour les  fréquences de résonances constante isolées et amplifiées par D.<br \/><br \/>Gardez la coupure aussi près du centre que possible. Évitez de régler les filtres coupe bande en dessous de 100hz sauf sur les machines à petit RPM."
     },
     "pidTuningYawLowpassFiltersGroup": {
         "message": "Filtres passe-bas Yaw"
@@ -3803,6 +3925,18 @@
     },
     "failsafeChannelFallbackSettingsHold": {
         "message": "<strong>Hold<\/strong> maintient la dernière bonne valeur reçue. <strong>Set<\/strong> utilise la valeur renseignée"
+    },
+    "failsafeChannelFallbackSettingsValueAuto": {
+        "message": "Auto",
+        "description": "Text for Auto option"
+    },
+    "failsafeChannelFallbackSettingsValueHold": {
+        "message": "Maintenir",
+        "description": "Text for Hold option"
+    },
+    "failsafeChannelFallbackSettingsValueSet": {
+        "message": "Définir",
+        "description": "Text for Set option"
     },
     "failsafeStageTwoSettingsTitle": {
         "message": "Stage 2 - Paramètres"
@@ -4210,6 +4344,30 @@
         "message": "Profil OSD {{profileNumber}}",
         "description": "Content of the selector for the OSD Profile in the preview"
     },
+    "osdSetupPreviewSelectFont": {
+        "message": "Police de caractères",
+        "description": "Content of the selector for the OSD Font in the preview"
+    },
+    "osdSetupFontManagerTitle": {
+        "message": "Gestionnaire de polices de l'OSD",
+        "description": "Dialog title"
+    },
+    "osdSetupFontTypeDefault": {
+        "message": "Par défaut",
+        "description": "Font Default"
+    },
+    "osdSetupFontTypeBold": {
+        "message": "Gras",
+        "description": "Font Bold"
+    },
+    "osdSetupFontTypeLarge": {
+        "message": "Grande",
+        "description": "Font Large"
+    },
+    "osdSetupFontTypeLargeExtra": {
+        "message": "Extra grande",
+        "description": "Font Large Extra"
+    },
     "osdSetupPreviewCheckZoom": {
         "message": "Zoom",
         "description": "Check to select a bigger display of the OSD preview in small screens"
@@ -4487,7 +4645,7 @@
         "message": "Distance de transmission vidéo rendue par les goggles"
     },
     "osdTextElementSysLQ": {
-        "message": "Goggle :  Qualité du lien",
+        "message": "Goggle: Qualité du lien",
         "description": "One of the system elements of the OSD"
     },
     "osdDescElementSysLQ": {
@@ -4534,6 +4692,22 @@
     },
     "osdDescElementAltitude": {
         "message": "Altitude ( clignote quand le seuil d'alarme est atteint)"
+    },
+    "osdTextElementCustomMsg0": {
+        "message": "Message personnalisé 1",
+        "description": "One of the elements of the OSD"
+    },
+    "osdTextElementCustomMsg1": {
+        "message": "Message personnalisé 2",
+        "description": "One of the elements of the OSD"
+    },
+    "osdTextElementCustomMsg2": {
+        "message": "Message personnalisé 3",
+        "description": "One of the elements of the OSD"
+    },
+    "osdTextElementCustomMsg3": {
+        "message": "Message personnalisé 4",
+        "description": "One of the elements of the OSD"
     },
     "osdTextElementOnTime": {
         "message": "Temps de fonctionnement",
@@ -5135,6 +5309,20 @@
     "osdDescStatMinRSNR": {
         "message": "Valeur minimum du RSNR"
     },
+    "osdTextStatBest3ConsecLaps": {
+        "message": "Meilleurs 3 tours consécutifs",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatBest3ConsecLaps": {
+        "message": "Meilleurs 3 tours consécutifs"
+    },
+    "osdTextStatBestLap": {
+        "message": "Meilleur tour",
+        "description": "One of the statistics that can be shown at the end of the flight in the OSD"
+    },
+    "osdDescStatBestLap": {
+        "message": "Meilleur tour"
+    },
     "osdTextStatUnknown": {
         "message": "Inconnu $1",
         "description": "One of the statistics that can be shown at the end of the flight in the OSD"
@@ -5208,6 +5396,10 @@
     "osdTimerAlarmOptionAltitude": {
         "message": "Altitude",
         "description": "Text of the altitude alarm"
+    },
+    "osdTimerAlarmOptionLinkQuality": {
+        "message": "Qualité de lien",
+        "description": "Text of the link quality alarm"
     },
     "osdWarningTextArmingDisabled": {
         "message": "Armement désactivé",
@@ -5366,7 +5558,7 @@
         "message": "Réglages OSD enregistrés"
     },
     "osdWritePermissions": {
-        "message": "Vous n'avez pas  <span class=\"message-negative\">les droits d'écriture<\/span> pour ce fichier"
+        "message": "Vous n'avez pas <span class=\"message-negative\">les droits en écriture<\/span> pour ce fichier"
     },
     "osdButtonSaved": {
         "message": "Enregistré"
@@ -5478,6 +5670,14 @@
     "vtxFrequencyHelp": {
         "message": "Vous pouvez choisir ici la fréquence de votre VTX si prise en charge",
         "description": "Help text for the frequency field of the VTX tab"
+    },
+    "vtxReadyTrue": {
+        "message": "Vrai",
+        "description": "vtx device are ready"
+    },
+    "vtxReadyFalse": {
+        "message": "Faux",
+        "description": "vtx device are not ready"
     },
     "vtxDeviceReady": {
         "message": "Périphérique - Prêt",
@@ -5680,10 +5880,10 @@
         "message": "Accéléromètre"
     },
     "configurationBaroHardware": {
-        "message": "Baromètre ( si supporté)"
+        "message": "Baromètre (si supporté)"
     },
     "configurationMagHardware": {
-        "message": "Magnétomètre ( si supporté)"
+        "message": "Magnétomètre (si supporté)"
     },
     "configurationSmallAngle": {
         "message": "Angle maximum pour armer [degrés]"
@@ -5904,9 +6104,6 @@
     },
     "dialogFileNameTitle": {
         "message": "Nom de fichier"
-    },
-    "dialogFileNameDescription": {
-        "message": "Le fichier sera sauvegardé dans le dossier 'Android\/data\/betaflight-configurator\/{{folder}}' de votre stockage interne."
     },
     "dialogFileAlreadyExistsTitle": {
         "message": "Ce fichier existe déjà!"
@@ -6198,8 +6395,20 @@
     "firmwareFlasherBuildMotorProtocols": {
         "message": "Protocole moteur"
     },
+    "firmwareFlasherBuildOsdProtocols": {
+        "message": "Protocole OSD"
+    },
     "firmwareFlasherConfigurationFile": {
         "message": "Nom du fichier de configuration :"
+    },
+    "firmwareFlasherRadioProtocolDescription": {
+        "message": "Sélectionnez le protocole radio que vous souhaitez inclure dans cette compilation. Notez qu'il s'agit d'une liste déroulante, mais qu'un seul élément peut être sélectionné."
+    },
+    "firmwareFlasherTelemetryProtocolDescription": {
+        "message": "Sélectionnez le protocole de télémétrie que vous souhaitez inclure dans cette compilation. Notez qu'il s'agit d'une liste déroulante, mais qu'un seul élément peut être sélectionné. Il y a aussi certains protocoles de télémétrie qui seront activés, indépendamment de votre sélection, en fonction du protocole radio sélectionné, par exemple CRSF."
+    },
+    "firmwareFlasherOptionLabelTelemetryProtocolIncluded": {
+        "message": "Inclus automatiquement"
     },
     "firmwareFlasherBranchDescription": {
         "message": "Particulièrement utile pour les développeurs, vous pouvez sélectionner une PR fusionnée, spécifier un commit sha, ou spécifier un PR 'encore à fusionner' en tapant # suivi du numéro de PR. #1234 (c'est un raccourci pour la branche 'pull\/1234\/head')."

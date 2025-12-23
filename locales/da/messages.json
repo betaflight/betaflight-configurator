@@ -91,6 +91,10 @@
         "message": "--- Jeg kan ikke finde min DFU forbindelse ---",
         "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access a DFU device."
     },
+    "portsEepromSaved": {
+        "message": "$t(eeprom_saved_ok.message)",
+        "description": "Don't translate!!!"
+    },
     "bluetoothConnected": {
         "message": "Forbundet til Bluetooth-enhed: $1"
     },
@@ -190,8 +194,9 @@
     "language_default": {
         "message": "Sprog som system standard"
     },
-    "language_default_pretty": {
-        "message": "Standard sprog fra windows ($t(detectedLanguage))"
+    "language_DEFAULT": {
+        "message": "$t(language_default.message)",
+        "description": "Don't translate!!!"
     },
     "language_pl": {
         "message": "Polski",
@@ -1177,7 +1182,8 @@
         "message": "Opsætninger sat til <strong>standardindstillinger<\/strong>"
     },
     "initialSetupEepromSaved": {
-        "message": "Konfiguration  <span class=\"message-positive\">gemt<\/span> i EEPROM"
+        "message": "$t(eeprom_saved_ok.message)",
+        "description": "Don't translate!!!"
     },
     "initialSetupNetworkInfo": {
         "message": "Oplysninger om netværk"
@@ -1741,7 +1747,8 @@
         "message": "Protokol ved SPI modtager konfiguration"
     },
     "configurationEepromSaved": {
-        "message": "Konfiguration  <span class=\"message-positive\">gemt<\/span> i EEPROM"
+        "message": "$t(eeprom_saved_ok.message)",
+        "description": "Don't translate!!!"
     },
     "configurationButtonSave": {
         "message": "Gem og genstart"
@@ -2284,7 +2291,8 @@
         "message": "PID-data <strong>opfrisket<\/strong>"
     },
     "pidTuningEepromSaved": {
-        "message": "Konfiguration  <span class=\"message-positive\">gemt<\/span> i EEPROM"
+        "message": "$t(eeprom_saved_ok.message)",
+        "description": "Don't translate!!!"
     },
     "tuningHelp": {
         "message": "<b>Tuningtips<\/b><br\/><span class=\"message-negative\">VIGTIGT:<\/span> Det er vigtigt at kontrollere motor temperaturer under de første flyvninger. Højere filterværdier kan give en bedre håndtering, men også mere støj i motorerne. <br>Standardværdien på 100Hz er optimal, men ved mere støjende opsætninger kan du prøve at sænke Dterm-filteret til 50Hz og muligvis også gyrofilteret."
@@ -2420,7 +2428,8 @@
         "message": "RC tuningdata <strong>opfrisket<\/strong>"
     },
     "receiverEepromSaved": {
-        "message": "Konfiguration  <span class=\"message-positive\">gemt<\/span> i EEPROM"
+        "message": "$t(eeprom_saved_ok.message)",
+        "description": "Don't translate!!!"
     },
     "receiverModelPreview": {
         "message": "Forhåndsvisning modtager"
@@ -2808,7 +2817,8 @@
         "message": "Gem"
     },
     "adjustmentsEepromSaved": {
-        "message": "Konfiguration  <span class=\"message-positive\">gemt<\/span> i EEPROM"
+        "message": "$t(eeprom_saved_ok.message)",
+        "description": "Don't translate!!!"
     },
     "transponderNotSupported": {
         "message": "<span class=\"message-negative\">Bemærk:<\/span> Din FC firmware understøtter ikke transponderfunktionalitet."
@@ -2917,7 +2927,8 @@
         "message": "Omvendt"
     },
     "servosEepromSave": {
-        "message": "Konfiguration  <span class=\"message-positive\">gemt<\/span> i EEPROM"
+        "message": "$t(eeprom_saved_ok.message)",
+        "description": "Don't translate!!!"
     },
     "gpsHead": {
         "message": "GPS status"

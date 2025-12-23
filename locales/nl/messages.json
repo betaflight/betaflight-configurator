@@ -94,9 +94,6 @@
     "language_default": {
         "message": "Systeem standaard"
     },
-    "language_default_pretty": {
-        "message": "Systeem standaard ($t(detectedLanguage))"
-    },
     "language_de": {
         "message": "Duits",
         "description": "Don't translate!!!"
@@ -772,9 +769,6 @@
     "initialSetupSettingsRestored": {
         "message": "Instellingen teruggezet naar <strong>standaard<\/strong>"
     },
-    "initialSetupEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">opgeslagen<\/span>"
-    },
     "featureNone": {
         "message": "&lt;Selecteer er Een&gt;"
     },
@@ -1116,9 +1110,6 @@
     "configurationSpiRX": {
         "message": "SPI Bus Ontvanger Provider"
     },
-    "configurationEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">opgeslagen<\/span>"
-    },
     "configurationButtonSave": {
         "message": "Sla op en herstart"
     },
@@ -1436,9 +1427,6 @@
     "pidTuningDataRefreshed": {
         "message": "PID gegevens <strong>vernieuwd<\/strong>"
     },
-    "pidTuningEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">opgeslagen<\/span>"
-    },
     "tuningHelp": {
         "message": "<b>Tuning tips<\/b><br \/><span class=\"message-negative\">BELANGRIJK:<\/span> Het is belangrijk om de motortemperatuur te verifiëren tijdens de eerste vluchten. Hoe hoger de filterwaarde des te beter je quad kan gaat vliegen. Echter krijgen je motoren ook meer ruis te voorduren.<br>De standaardwaarde van 100Hz is optimaal. Maar voor quads die meer ruis hebben kan je proberen om de D-Term filter te verlagen naar 50Hz en dit mogelijk ook toe te passen op de gyro-filter."
     },
@@ -1522,9 +1510,6 @@
     },
     "receiverDataRefreshed": {
         "message": "RC Tuning data <strong>vernieuwd<\/strong>"
-    },
-    "receiverEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">opgeslagen<\/span>"
     },
     "receiverModelPreview": {
         "message": "Voorbeeld"
@@ -1695,9 +1680,6 @@
     "adjustmentsSave": {
         "message": "Opslaan"
     },
-    "adjustmentsEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">opgeslagen<\/span>"
-    },
     "transponderNotSupported": {
         "message": "De firmware van uw vlucht-controller ondersteunt geen transponder functionaliteit."
     },
@@ -1796,9 +1778,6 @@
     },
     "servosReverse": {
         "message": "Omgekeerd"
-    },
-    "servosEepromSave": {
-        "message": "EEPROM <span class=\"message-positive\">opgeslagen<\/span>"
     },
     "gpsHead": {
         "message": "GPS"
