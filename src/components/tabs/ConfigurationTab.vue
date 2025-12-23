@@ -837,7 +837,7 @@ export default defineComponent({
                 const hardwareResult = detectedHardware[i];
                 let hardwareName;
 
-                if (hardwareResult !== undefined && types[hardwareResult]) {
+                if (hardwareResult !== undefined && types[hardwareResult] !== `AUTO`) {
                     hardwareName = types[hardwareResult];
                 } else {
                     hardwareName = `${i18n.getMessage("sensorStatusGyroShort")} ${i + 1}`;
