@@ -289,6 +289,9 @@
     "sensorStatusGyro": {
         "message": "Gyroscope"
     },
+    "configurationGyroRequired": {
+        "message": "At least one gyro must be enabled"
+    },
     "sensorStatusGyroShort": {
         "message": "Gyro",
         "description": "Text of the image in the top sensors icons. Please keep it short."
@@ -1420,6 +1423,9 @@
     "configurationFeatures": {
         "message": "Other Features"
     },
+    "configurationFeatureHelp": {
+        "message": "Help"
+    },
     "configurationReceiver": {
         "message": "Receiver"
     },
@@ -1450,8 +1456,14 @@
     "configurationSpiRxHelp": {
         "message": "<strong>Note:</strong> The SPI RX provider will only work if the required hardware is on board or connected to an SPI bus."
     },
-    "configurationOtherFeaturesHelp": {
-        "message": "<strong>Note:</strong> Not all features are supported by all flight controllers. If you enable a specific feature, and it is disabled after you hit 'Save and Reboot', it means that this feature is not supported on your board."
+    "configurationActiveImu": {
+        "message": "Active IMU"
+    },
+    "configurationSensors": {
+        "message": "Sensor Configuration"
+    },
+    "configurationSensorsHelp": {
+        "message": "Configure additional sensors and advanced features."
     },
     "configurationMagAlignmentHelp": {
         "message": "The magnetometer alignment is the orientation of the magnetometer sensor on the flight controller board. The default is usually correct, but if you have a custom build or a flight controller with a different magnetometer orientation, you may need to adjust this setting."
@@ -1540,6 +1552,30 @@
         "message": "$t(configurationBoardAlignmentYaw.message)",
         "description": "Don't translate!!!"
     },
+    "configurationGyro1AlignmentRoll": {
+        "message": "$t(configurationBoardAlignmentRoll.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyro1AlignmentPitch": {
+        "message": "$t(configurationBoardAlignmentPitch.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyro1AlignmentYaw": {
+        "message": "$t(configurationBoardAlignmentYaw.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyro2AlignmentRoll": {
+        "message": "$t(configurationBoardAlignmentRoll.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyro2AlignmentPitch": {
+        "message": "$t(configurationBoardAlignmentPitch.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyro2AlignmentYaw": {
+        "message": "$t(configurationBoardAlignmentYaw.message)",
+        "description": "Don't translate!!!"
+    },
     "configurationSensorAlignmentGyro": {
         "message": "GYRO Alignment"
     },
@@ -1576,6 +1612,10 @@
     "configurationSensorAlignmentDefaultOption": {
        "message": "Default"
     },
+    "configurationSensorAlignmentCustom": {
+        "message": "Custom"
+    },
+
     "configurationAccelTrims": {
         "message": "Accelerometer Trim"
     },
@@ -1605,6 +1645,9 @@
     },
     "configurationGyroCalOnFirstArm": {
         "message": "Calibrate Gyro on first arm"
+    },
+    "configurationGyroCalOnFirstArmHelp": {
+        "message": "When enabled, the gyroscope will be calibrated on the first arm after power on. This can help reduce gyro drift during flight."
     },
     "configurationMotorIdle": {
         "message": "Motor Idle (%)"
@@ -7113,7 +7156,8 @@
         "message": "Sends ESC data to the FC via DShot telemetry.  Required by RPM Filtering and dynamic idle. <br> <br>Note: Requires a compatible ESC with appropriate firmware, eg JESC, Jazzmac, BLHeli-32.",
         "description": "Description of the Bidirectional DShot feature of the ESC/Motor"
     },
-    "configurationGyroSyncDenom": {
+
+    "configurationGyroFrequency": {
         "message": "Gyro update frequency"
     },
     "configurationPidProcessDenom": {
