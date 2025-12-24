@@ -301,8 +301,8 @@
                     <!-- NEW MULTI-GYRO ALIGNMENT (API 1.47+) -->
                     <div class="gui_box grey" v-if="showMultiGyro">
                         <div class="gui_box_titlebar">
-                            <div class="spacer_box_title">{{ $t("configurationGyroAlignment") }}</div>
-                            <div class="helpicon cf_tip" :title="$t('configurationGyroAlignmentHelp')"></div>
+                            <div class="spacer_box_title">{{ $t("configurationGyroActiveIMU") }}</div>
+                            <div class="helpicon cf_tip" :title="$t('configurationGyroActiveIMUHelp')"></div>
                         </div>
                         <div class="spacer_box">
                             <div
