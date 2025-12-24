@@ -64,7 +64,6 @@
     "multiple-select": "^2.0.9",
     "ol": "^10.4.0",
     "select2": "^4.0.13",
-    "semver-min": "^0.7.2",
     "short-unique-id": "^5.2.0",
     "switchery-latest": "^0.8.2",
     "three": "^0.176.0",
