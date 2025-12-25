@@ -13,6 +13,7 @@ import { useDialogStore } from "@/stores/dialog";
 import YesNoDialog from "./YesNoDialog.vue";
 import InformationDialog from "./InformationDialog.vue";
 import WaitDialog from "./WaitDialog.vue";
+import RebootDialog from "./RebootDialog.vue";
 
 const dialogStore = useDialogStore();
 
@@ -20,5 +21,6 @@ const dialogComponents = {
     YesNoDialog,
     InformationDialog,
     WaitDialog,
+    RebootDialog,
 };
 </script>

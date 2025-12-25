@@ -23,9 +23,16 @@ export const useDialogStore = defineStore("dialog", () => {
         activeDialog.value = null;
     }
 
+    function updateProps(newProps) {
+        if (activeDialog.value) {
+            activeDialog.value.props = { ...activeDialog.value.props, ...newProps };
+        }
+    }
+
     return {
         activeDialog,
         open,
         close,
+        updateProps,
     };
 });
