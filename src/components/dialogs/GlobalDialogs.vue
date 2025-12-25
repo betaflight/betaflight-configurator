@@ -11,10 +11,14 @@
 <script setup>
 import { useDialogStore } from "@/stores/dialog";
 import YesNoDialog from "./YesNoDialog.vue";
+import InformationDialog from "./InformationDialog.vue";
+import WaitDialog from "./WaitDialog.vue";
 
 const dialogStore = useDialogStore();
 
 const dialogComponents = {
     YesNoDialog,
+    InformationDialog,
+    WaitDialog,
 };
 </script>
