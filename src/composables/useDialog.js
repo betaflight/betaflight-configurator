@@ -26,12 +26,50 @@ export function useDialog() {
         );
     };
 
+    const openInfo = (title, text, onConfirm, options = {}) => {
+        store.open(
+            "InformationDialog",
+            {
+                title,
+                text,
+                confirmText: options.confirmText || "OK",
+                ...options,
+            },
+            {
+                confirm: () => {
+                    if (onConfirm) onConfirm();
+                    store.close();
+                },
+            },
+        );
+    };
+
+    const openWait = (title, onCancel, options = {}) => {
+        store.open(
+            "WaitDialog",
+            {
+                title,
+                showCancel: !!onCancel,
+                cancelText: options.cancelText || "Cancel",
+                ...options,
+            },
+            {
+                cancel: () => {
+                    if (onCancel) onCancel();
+                    store.close();
+                },
+            },
+        );
+    };
+
     const close = () => {
         store.close();
     };
 
     return {
         openYesNo,
+        openInfo,
+        openWait,
         close,
     };
 }
