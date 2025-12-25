@@ -61,13 +61,13 @@ export function initializeSerialBackend() {
 
     EventBus.$on("port-handler:auto-select-serial-device", function () {
         if (
-            !GUI.connected_to &&
-            !GUI.connecting_to &&
-            !["cli", "firmware_flasher"].includes(GUI.active_tab) &&
-            PortHandler.portPicker.autoConnect &&
-            !isCliOnlyMode() &&
-            (connectionTimestamp === null || connectionTimestamp > 0) ||
-            (Date.now() - rebootTimestamp <= REBOOT_CONNECT_MAX_TIME_MS)
+            (!GUI.connected_to &&
+                !GUI.connecting_to &&
+                !["cli", "firmware_flasher"].includes(GUI.active_tab) &&
+                PortHandler.portPicker.autoConnect &&
+                !isCliOnlyMode() &&
+                (connectionTimestamp === null || connectionTimestamp > 0)) ||
+            Date.now() - rebootTimestamp <= REBOOT_CONNECT_MAX_TIME_MS
         ) {
             connectDisconnect();
         }
@@ -333,23 +333,8 @@ function onOpen(openInfo) {
         MSP.send_message(MSPCodes.MSP_API_VERSION, false, false, function () {
             gui_log(i18n.getMessage("apiVersionReceived", FC.CONFIG.apiVersion));
 
-            if (FC.CONFIG.apiVersion.includes("null")) {
+            if (FC.CONFIG.apiVersion.includes("null") || FC.CONFIG.apiVersion === "0.0.0") {
                 abortConnection();
-                return;
-            }
-
-            if (
-                !semver.satisfies(
-                    FC.CONFIG.apiVersion,
-                    `<=${semver.major(CONFIGURATOR.API_VERSION_MAX_SUPPORTED)}.${semver.minor(CONFIGURATOR.API_VERSION_MAX_SUPPORTED)}`,
-                )
-            ) {
-                showVersionMismatchAndCli(
-                    i18n.getMessage("reportProblemsDialogAPI_VERSION_MAX_SUPPORTED", [
-                        CONFIGURATOR.getDisplayVersion(),
-                        CONFIGURATOR.API_VERSION_MAX_SUPPORTED,
-                    ]),
-                );
                 return;
             }
 
@@ -808,12 +793,10 @@ export function reinitializeConnection() {
     // Send reboot command to the flight controller
     MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false);
 
-    if (currentPort.startsWith("bluetooth")) {
-        if (!PortHandler.portPicker.autoConnect) {
-            return setTimeout(function () {
-                $("a.connection_button__link").trigger("click");
-            }, 1500);
-        }
+    if (currentPort.startsWith("bluetooth") || currentPort === "manual") {
+        return setTimeout(function () {
+            $("a.connection_button__link").trigger("click");
+        }, 1500);
     }
 
     // Show reboot progress modal except for cli and presets tab

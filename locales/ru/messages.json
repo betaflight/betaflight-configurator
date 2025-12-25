@@ -190,9 +190,6 @@
     "language_default": {
         "message": "По умолчанию"
     },
-    "language_default_pretty": {
-        "message": "Системный по умолчанию ($t(detectedLanguage))"
-    },
     "sensorDataFlashNotFound": {
         "message": "Отсутствует <br>модуль памяти",
         "description": "Text of the dataflash image in the header of the page."
@@ -1140,9 +1137,6 @@
     "initialSetupSettingsRestored": {
         "message": "Установки восстановлены <strong>по умолчанию<\/strong>"
     },
-    "initialSetupEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">сохранён<\/span>"
-    },
     "initialSetupNetworkInfo": {
         "message": "Информация о соединении"
     },
@@ -1698,9 +1692,6 @@
     "configurationSpiRX": {
         "message": "Приемник с выходом шины SPI"
     },
-    "configurationEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">сохранено<\/span>"
-    },
     "configurationButtonSave": {
         "message": "Сохранить и Перезагрузить"
     },
@@ -2215,9 +2206,6 @@
     "pidTuningDataRefreshed": {
         "message": "Данные PID <strong>бновлены<\/strong>"
     },
-    "pidTuningEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">сохранено<\/span>"
-    },
     "tuningHelp": {
         "message": "<b>Советы по настройке<\/b><br \/><span class=\"message-negative\">Важно:<\/span> После настройки фильтров, во время первых полётов, убедитесь, что моторы не перегреваются. Более высокое значение фильтра может улучшить стабильность полёта, но, также, вносит больше шумов в моторы, что может вызвать их нагрев.<br>Значение по умолчанию 100 Гц является оптимальным, но для более шумных аппаратов вы можете снизить значение Dterm-фильтра до 50 Гц и, возможно, также понизить значение фильтра гироскопа."
     },
@@ -2350,9 +2338,6 @@
     },
     "receiverDataRefreshed": {
         "message": "Данные PID <strong>обновлены<\/strong>"
-    },
-    "receiverEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">сохранён<\/span>"
     },
     "receiverModelPreview": {
         "message": "Предпросмотр"
@@ -2735,9 +2720,6 @@
     "adjustmentsSave": {
         "message": "Сохранить"
     },
-    "adjustmentsEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">сохранён<\/span>"
-    },
     "transponderNotSupported": {
         "message": "Прошивка Вашего полетного контроллера не поддерживает работу транспондера."
     },
@@ -2843,9 +2825,6 @@
     },
     "servosReverse": {
         "message": "Инвертировать"
-    },
-    "servosEepromSave": {
-        "message": "EEPROM <span class=\"message-positive\">сохранён<\/span>"
     },
     "gpsHead": {
         "message": "GPS"
@@ -7151,9 +7130,6 @@
     },
     "dialogFileNameTitle": {
         "message": "Имя файла"
-    },
-    "dialogFileNameDescription": {
-        "message": "Файл будет сохранен в папке 'Android\/data\/betaflight-configurator\/{{folder}}' во внутреннем хранилище."
     },
     "dialogFileAlreadyExistsTitle": {
         "message": "Этот файл уже существует!"

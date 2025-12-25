@@ -180,7 +180,10 @@ const VirtualFC = {
 
         virtualFC.SENSOR_ALIGNMENT = { ...FC.SENSOR_ALIGNMENT };
         virtualFC.SENSOR_ALIGNMENT.gyro_to_use = 0;
-        virtualFC.SENSOR_ALIGNMENT.gyro_detection_flags = 1;
+        virtualFC.SENSOR_ALIGNMENT.gyro_enable_mask = (1 << 8) - 1; // Used for API v1.47+
+        virtualFC.SENSOR_ALIGNMENT.gyro_detection_flags = semver.gte(virtualFC.CONFIG.apiVersion, API_VERSION_1_47)
+            ? 3
+            : 1;
 
         virtualFC.SENSOR_DATA = { ...FC.SENSOR_DATA };
 
@@ -270,6 +273,10 @@ const VirtualFC = {
             sonar_hardware: 1, // HCSR04
             opticalflow_hardware: 1, // MT01
         };
+
+        // For API v1.47+, set dual gyro hardware IDs
+        virtualFC.GYRO_SENSOR.gyro_hardware[0] = 13;
+        virtualFC.GYRO_SENSOR.gyro_hardware[1] = 22;
 
         virtualFC.SENSOR_DATA.sonars = 231;
 

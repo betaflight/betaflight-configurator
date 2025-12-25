@@ -91,6 +91,10 @@
         "message": "--- Non trovo il dispositivo DFU ---",
         "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access a DFU device."
     },
+    "portsEepromSaved": {
+        "message": "$t(eeprom_saved_ok.message)",
+        "description": "Don't translate!!!"
+    },
     "bluetoothConnected": {
         "message": "Connesso al Bluetooth: $1"
     },
@@ -189,9 +193,6 @@
     },
     "language_default": {
         "message": "Lingua di sistema"
-    },
-    "language_default_pretty": {
-        "message": "Predefinita di sistema ($t(detectedLanguage))"
     },
     "sensorDataFlashNotFound": {
         "message": "Nessun chip trovato per <br> flashare i dati",
@@ -1173,7 +1174,8 @@
         "message": "Impostazioni <strong>predefinite<\/strong> ripristinate"
     },
     "initialSetupEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">salvata<\/span>"
+        "message": "$t(eeprom_saved_ok.message)",
+        "description": "Don't translate!!!"
     },
     "initialSetupNetworkInfo": {
         "message": "Informazioni di rete"
@@ -1737,7 +1739,8 @@
         "message": "Protocollo ricevente bus SPI"
     },
     "configurationEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">salvata<\/span>"
+        "message": "$t(eeprom_saved_ok.message)",
+        "description": "Don't translate!!!"
     },
     "configurationButtonSave": {
         "message": "Salva e riavvia"
@@ -2280,7 +2283,8 @@
         "message": "Dati PID <strong>aggiornati<\/strong>"
     },
     "pidTuningEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">salvata<\/span>"
+        "message": "$t(eeprom_saved_ok.message)",
+        "description": "Don't translate!!!"
     },
     "tuningHelp": {
         "message": "<b>Suggerimento per la messa a punto<\/b><br \/><span class=\"message-negative\">IMPORTANTE:<\/span> È importante verificare la temperatura dei motori durante i primi voli. Più alto è il valore del filtro, più dovrebbe volare meglio, ma avrai anche più rumore nei motori.<br>Il valore predefinito di 100Hz è ottimale, ma per setup più rumorosi puoi provare ad abbassare il filtro Dterm a 50Hz ed anche il filtro del giroscopio."
@@ -2416,7 +2420,8 @@
         "message": "Dati di messa a punto RC <strong>aggiornati<\/strong>"
     },
     "receiverEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">salvata<\/span>"
+        "message": "$t(eeprom_saved_ok.message)",
+        "description": "Don't translate!!!"
     },
     "receiverModelPreview": {
         "message": "Anteprima"
@@ -2804,7 +2809,8 @@
         "message": "Salva"
     },
     "adjustmentsEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">salvata<\/span>"
+        "message": "$t(eeprom_saved_ok.message)",
+        "description": "Don't translate!!!"
     },
     "transponderNotSupported": {
         "message": "Il firmware del tuo controllore di volo non supporta la funzionalità transponder."
@@ -2913,7 +2919,8 @@
         "message": "Inverti"
     },
     "servosEepromSave": {
-        "message": "EEPROM <span class=\"message-positive\">salvata<\/span>"
+        "message": "$t(eeprom_saved_ok.message)",
+        "description": "Don't translate!!!"
     },
     "gpsHead": {
         "message": "GPS"
@@ -3621,7 +3628,7 @@
         "message": "Seleziona o rileva automaticamente la scheda per vedere i relativi firmware disponibili online - Seleziona il firmware corretto per la tua scheda."
     },
     "firmwareFlasherOnlineSelectBoardHint": {
-        "message": "Betaflight App supporta il flashing di Unified Targets con le rispettive configurazioni specifiche della scheda in un solo passaggio.<br><br>Il concetto di Unified Targets significa che lo stesso file .hex del firmware può essere utilizzato per tutte le schede che usano lo stesso MCU.<br><br>Betaflight 4.4 introduce <strong>Cloud Build<\/strong><br><br>Con <strong>Cloud Build<\/strong> abbiamo bisogno di definire le opzioni hardware presenti sulla tua build.<br><br>Per far funzionare diverse schede con lo stesso firmware, un file di configurazione specifico viene distribuito accanto al firmware quando viene flashato un obiettivo unificato.<br><br>Con la build locale è possibile caricare un file di configurazione di destinazione unificato o scegliere una scheda prima di caricare un file .hex del firmware.<br><br>Se riscontri problemi utilizzando il firmware, considera di entrare in Discord o aprire <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel=\"noopener noreferrer\">un richiesta<\/a>."
+        "message": "Betaflight App supporta il flashing di Unified Targets con le rispettive configurazioni specifiche della scheda in un solo passaggio.<br><br>Il concetto di Unified Targets significa che lo stesso file .hex del firmware può essere utilizzato per tutte le schede che usano lo stesso MCU.<br><br>Betaflight 4.4 introduce <strong>Cloud Build<\/strong><br><br>Con <strong>Cloud Build<\/strong> abbiamo bisogno di definire le opzioni hardware presenti sulla tua build.<br><br>Per far funzionare diverse schede con lo stesso firmware, un file di configurazione specifico viene distribuito accanto al firmware quando viene flashato un obiettivo unificato.<br><br>Con la build locale è possibile caricare un file di configurazione di destinazione unificato o scegliere una scheda prima di caricare un file .hex del firmware.<br><br>Se riscontri problemi utilizzando il firmware, considera di entrare in Discord o aprire <a href=\"https:\/\/github.com\/betaflight\/betaflight\/issues\" target=\"_blank\" rel=\"noopener noreferrer\">una richiesta<\/a>."
     },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "Seleziona la versione del firmware per la tua scheda."
@@ -7274,7 +7281,7 @@
         "message": "Nome file"
     },
     "dialogFileNameDescription": {
-        "message": "Il file verrà salvato nella cartella 'Android\/data\/betaflight-configurator\/{{folder}}' nella memoria interna."
+        "message": "Il file verrà salvato nella cartella 'Android\/data\/betaflight-configurator\/{{folder}}' della memoria interna."
     },
     "dialogFileAlreadyExistsTitle": {
         "message": "File già esistente!"

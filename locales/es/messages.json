@@ -190,9 +190,6 @@
     "language_default": {
         "message": "Predeterminado del Sistema"
     },
-    "language_default_pretty": {
-        "message": "Predeterminado del Sistema ($t(detectedLanguage))"
-    },
     "sensorDataFlashNotFound": {
         "message": "Memoria flash<br>no disponible",
         "description": "Text of the dataflash image in the header of the page."
@@ -510,6 +507,9 @@
     },
     "reportProblemsDialogFooter": {
         "message": "<span class=\"message-negative\"><strong>Necesitas solucionar estos problemas antes de intentar volar tu aeronave<\/strong><\/span>."
+    },
+    "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
+        "message": "<span class=\"message-negative\"><strong>La versión de la aplicación usada ($1) no soporta el firmware $2<\/strong><\/span>.<br>$t(configuratorUpdateHelp.message)"
     },
     "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
         "message": "<strong>no hay ningún protocolo de salida de motor seleccionado<\/strong>.<br>Por favor, selecciona un protocolo de salida de motor apropiado para tus ESCs en '$t(configurationEscFeatures.message)' en la pestaña '$t(tabMotorTesting.message)'.<br> $t(escProtocolDisabledMessage.message)"
@@ -1169,9 +1169,6 @@
     "initialSetupSettingsRestored": {
         "message": "Ajustes <strong>por defecto<\/strong> restaurados"
     },
-    "initialSetupEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">guardada<\/span>"
-    },
     "initialSetupNetworkInfo": {
         "message": "Información de red"
     },
@@ -1733,9 +1730,6 @@
     "configurationSpiRX": {
         "message": "Proveedor del Receptor Bus SPI"
     },
-    "configurationEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">guardada<\/span>"
-    },
     "configurationButtonSave": {
         "message": "Guardar y Reiniciar"
     },
@@ -1966,11 +1960,34 @@
     "receiverRcSmoothingManual": {
         "message": "Manual"
     },
+    "receiverRcSmoothingAutoFactor": {
+        "message": "Factor Automático del Valor Objetivo",
+        "description": "Setpoint Auto Factor parameter for RC smoothing"
+    },
+    "receiverRcSmoothingAutoFactorHelp": {
+        "message": "Ajusta el cálculo del factor automático del valor objetivo, 10 es el factor por defecto para el ratio de retardo. Incrementar el número suavizará las entradas de RC, pero añadirá retardo. Esto puede ser útil para conexiones RC no fiables o para vuelo cinematográfico.<br>Cuidado con valores cercanos a 50, el retraso de entrada empieza a ser apreciable.<br>Usa el comando CLI rc_smoothing_info con el TX y el RX encendidos para ver los cortes calculados en modo automático para el suavizado RC.",
+        "description": "Setpoint Auto Factor parameter help message"
+    },
+    "receiverRcSmoothingAutoFactorHelp2": {
+        "message": "Ajusta el suavizado del valor objetivo del RC. 30 es el valor por defecto. Valores más altos suavizan más las entradas de RC - por ejemplo, 60 para freestyle HD o 90-120 para vuelo cinematográfico. Nota: Valores superiores a 50 causarán un retraso apreciable del mando. Valores más bajos, por ejemplo, 20-25, transferirán algunos de los pasos de control del RC en las señales del motor, aumentando ligeramente el calor del motor, pero reducirá el retardo del RC de forma drástica. Esto puede ser útil para carreras.",
+        "description": "Setpoint Auto Factor parameter help message"
+    },
+    "receiverRcSmoothingAutoFactorThrottle": {
+        "message": "Factor Automático del Acelerador",
+        "description": "Throttle Auto Factor parameter for RC smoothing"
+    },
+    "receiverRcSmoothingAutoFactorThrottleHelp": {
+        "message": "Ajusta el cálculo del factor del acelerador, 10 es el factor por defecto para el ratio de retardo. Incrementar el número suavizará las entradas de RC, pero añadirá retardo. Esto puede ser útil para conexiones RC no fiables o para vuelo cinematográfico.<br>Cuidado con valores cercanos a 50, el retraso de entrada empieza a ser apreciable.<br>Usa el comando CLI rc_smoothing_info con el TX y el RX encendidos para ver los cortes calculados en modo automático para el suavizado RC.",
+        "description": "Throttle Auto Factor parameter help message"
+    },
     "receiverRcFeedforwardTypeSelect": {
         "message": "Tipo de Corte de Prealimentación"
     },
     "receiverRcSetpointTypeSelect": {
         "message": "Tipo de Corte del Valor Objetivo"
+    },
+    "receiverThrottleTypeSelect": {
+        "message": "Tipo de Corte del Acelerador"
     },
     "receiverRcSmoothingInterpolation": {
         "message": "Interpolación"
@@ -1993,8 +2010,17 @@
     "receiverRcSmoothingFeedforwardManual": {
         "message": "Selecciona si la frecuencia de corte del filtro de prealimentación se calcula automáticamente (recomendado) o se selecciona manualmente por el usuario. El uso de \"manual\" no se recomienda para receptores con protocolos como Crossfire que pueden cambiar durante el vuelo."
     },
+    "receiverRcSmoothingThrottleManual": {
+        "message": "Selecciona si el suavizado del RC se calcula automáticamente (recomendado) o se selecciona manualmente por el usuario. El uso de \"manual\" no se recomienda para receptores con protocolos como Crossfire que pueden cambiar durante el vuelo."
+    },
+    "rcSmoothingThrottleCutoffHelp": {
+        "message": "La frecuencia de corte en Hz utilizada por filtro de suavizado del acelerador. Utilizando valores más bajos se obtienen entradas más suavizadas y es más apropiado para receptores con protocolos más lentos. La mayoría de usuarios debería dejar esto en 0 que corresponde a \"Auto\"."
+    },
     "receiverRcSmoothingSetpointHz": {
         "message": "Frecuencia de Corte de Valor Objetivo"
+    },
+    "receiverRcSmoothingThrottleCutoffHz": {
+        "message": "Frecuencia de Corte del Acelerador"
     },
     "receiverRcSmoothingFeedforwardCutoff": {
         "message": "Frecuencia de Corte de Prealimentación"
@@ -2244,9 +2270,6 @@
     "pidTuningDataRefreshed": {
         "message": "Datos PID <strong>refrescados<\/strong>"
     },
-    "pidTuningEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">guardada<\/span>"
-    },
     "tuningHelp": {
         "message": "<b>Consejos para ajustar<\/b><br \/><span class=\"message-negative\">IMPORTANTE:<\/span> Es importante verificar las temperaturas de los motores durante los primeros vuelos. Cuanto más alto sea el valor del filtro puede que vuele mejor, pero más ruido llegará a los motores. <br>El valor por defecto de 100Hz es óptimo, pero para montajes más ruidosos puedes probar a bajar el filtro D Term a 50Hz y posiblemente también el filtro del giro."
     },
@@ -2379,9 +2402,6 @@
     },
     "receiverDataRefreshed": {
         "message": "Datos de Ajustes de RC <strong>actualizados<\/strong>"
-    },
-    "receiverEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">guardada<\/span>"
     },
     "receiverModelPreview": {
         "message": "Vista Previa"
@@ -2768,9 +2788,6 @@
     "adjustmentsSave": {
         "message": "Guardar"
     },
-    "adjustmentsEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">guardada<\/span>"
-    },
     "transponderNotSupported": {
         "message": "El firmware de tu controlador de vuelo no soporta la funcionalidad de transpondedor."
     },
@@ -2876,9 +2893,6 @@
     },
     "servosReverse": {
         "message": "Invertir"
-    },
-    "servosEepromSave": {
-        "message": "EEPROM <span class=\"message-positive\">guardada<\/span>"
     },
     "gpsHead": {
         "message": "GPS"
@@ -3432,6 +3446,10 @@
     },
     "dataflashSaveFileDepreciationHint": {
         "message": "Este método es lento e inherentemente propenso a error \/ corrupción del archivo, porque la conexión MSP en sí misma tiene intrínsecas, limitaciones fundamentales que no la hacen adecuada para la transferencia de archivos. Puede que funcione para pequeños archivos de registro. No crees peticiones de soporte si las transferencias de archivos fallan al guardarse usando este método. El método recomendado es utilizar '<b>$t(onboardLoggingRebootMscText.message)<\/b>' (debajo) para activar el Modo de Almacenamiento Masivo y acceder a tu controlador de vuelo como un dispositivo de almacenamiento para descargar los archivos de registro."
+    },
+    "dataflashButtonSaveAndErase": {
+        "message": "Guardar y borrar",
+        "description": "Button text to save blackbox logs to file and then erase the flash"
     },
     "dataflashButtonErase": {
         "message": "Borrar flash"
@@ -4319,6 +4337,10 @@
     "pidTuningDTermSliderEnabled": {
         "message": "Usar deslizador del D Term",
         "description": "Disable or enable D Term Filter Tuning Slider"
+    },
+    "pidTuningPidSlidersHelp": {
+        "message": "Deslizadores para ajustar las características de vuelo de la aeronave (ganancias de PID)<br \/><br \/>Amortiguación (ganancia de D): Resiste el movimiento rápido, minimiza la oscilación de P.<br \/><br \/>Seguimiento (ganancias de P y D): Mejora la capacidad de respuesta de la aeronave, si es demasiado alto puede causar vibración u oscilación.<br \/><br \/>Respuesta de los mandos (Prealimentación): Aumenta la capacidad de respuesta de la aeronave a movimientos de mando más rápidos.<br \/><br \/>Rumbo - Oscilación (ganancia de I, experto): Ajuste fino de I.<br \/><br \/>D dinámica (D Max, experto): Establece la cantidad máxima a la que D puede ser impulsada durante movimientos rápidos.<br \/><br \/>Amortiguación de Pitch (ratio Pitch:Roll de D, experto): Aumenta la cantidad de amortiguación en el pitch relativo al roll.<br \/><br \/>Seguimiento de Pitch (ratio Pitch:Roll de P, I y F, experto): Aumenta la fuerza de estabilización en pitch relativo al roll.<br \/><br \/>Multiplicador Maestro (todas las ganancias, expertos): Aumenta o reduce todas las ganancias del PID, manteniendo constantes sus proporciones.",
+        "description": "Overall helpicon message for PID tuning sliders"
     },
     "pidTuningSliderWarning": {
         "message": "<span class=\"message-negative\">ATENCIÓN<\/span>: Los valores actuales de los deslizadores puede causar que se vaya volando, daño a los motores o comportamiento no seguro de la aeronave. Por favor procede con precaución.",
@@ -5939,6 +5961,13 @@
     "osdDescElementEscRpm": {
         "message": "RPM reportadas por la telemetría de los ESC"
     },
+    "osdTextElementRemainingTimeEstimate": {
+        "message": "Temporizador: tiempo restante estimado",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementRemainingTimeEstimate": {
+        "message": "Tiempo estimado de vuelo restante"
+    },
     "osdTextElementRtcDateTime": {
         "message": "RTC: fecha y hora",
         "description": "One of the elements of the OSD"
@@ -7224,7 +7253,7 @@
         "message": "Nombre del archivo"
     },
     "dialogFileNameDescription": {
-        "message": "El archivo se guardará en la carpeta 'Android\/data\/betaflight-configurator\/{{folder}}' en tu almacenamiento interno."
+        "message": "El archivo se guardará en la carpeta 'Android\/data\/betaflight-app\/{{folder}}' en tu almacenamiento interno."
     },
     "dialogFileAlreadyExistsTitle": {
         "message": "¡Este archivo ya existe!"
@@ -7576,6 +7605,15 @@
     },
     "firmwareFlasherOSDProtocolNotSelectedContinue": {
         "message": "Continuar sin protocolo OSD"
+    },
+    "firmwareFlasherOptionLabelVerifiedPartner": {
+        "message": "Socio Verificado"
+    },
+    "firmwareFlasherOptionLabelVendorCommunity": {
+        "message": "Vendedor \/ Comunidad"
+    },
+    "firmwareFlasherOptionLabelLegacy": {
+        "message": "Antiguo"
     },
     "coreBuild": {
         "message": "Versión base"

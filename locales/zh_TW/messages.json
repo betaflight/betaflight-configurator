@@ -83,9 +83,6 @@
     "language_default": {
         "message": "系統默認"
     },
-    "language_default_pretty": {
-        "message": "系統默認($t(detectedLanguage))"
-    },
     "sensorDataFlashNotFound": {
         "message": "未發現<br>快閃記憶體晶片",
         "description": "Text of the dataflash image in the header of the page."
@@ -723,9 +720,6 @@
     "initialSetupSettingsRestored": {
         "message": "恢復到<strong>默認<\/strong>設置"
     },
-    "initialSetupEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">已保存<\/span>"
-    },
     "featureNone": {
         "message": "&lt;請選擇&gt;"
     },
@@ -1067,9 +1061,6 @@
     "configurationSpiRX": {
         "message": "SPI 總線接口接收機協議"
     },
-    "configurationEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">已保存<\/span>"
-    },
     "configurationButtonSave": {
         "message": "保存並重啟"
     },
@@ -1360,9 +1351,6 @@
     "pidTuningDataRefreshed": {
         "message": "PID 數據<strong>已刷新<\/strong>"
     },
-    "pidTuningEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">已保存<\/span>"
-    },
     "tuningHelp": {
         "message": "<b>調校技巧<\/b><br \/><span class=\"message-negative\">重要：<\/span>調校後的初次飛行需注意電機溫度。濾波值越高，飛行效果可能越好，但也會導致更多的訊號“噪音”進入電機。<br>100Hz 是默認較佳的數值，但對震動較嚴重的情況，您可以嘗試把 Dterm 和 Gyro 濾波器降低到50Hz。"
     },
@@ -1440,9 +1428,6 @@
     },
     "receiverDataRefreshed": {
         "message": "RC 調整數據<strong>已刷新<\/strong>"
-    },
-    "receiverEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">已保存<\/span>"
     },
     "receiverModelPreview": {
         "message": "預覽"
@@ -1613,9 +1598,6 @@
     "adjustmentsSave": {
         "message": "保存"
     },
-    "adjustmentsEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">已保存<\/span>"
-    },
     "transponderNotSupported": {
         "message": "該飛控不支援比賽收發器"
     },
@@ -1714,9 +1696,6 @@
     },
     "servosReverse": {
         "message": "反向"
-    },
-    "servosEepromSave": {
-        "message": "EEPROM <span class=\"message-positive\">已保存<\/span>"
     },
     "gpsHead": {
         "message": "GPS"

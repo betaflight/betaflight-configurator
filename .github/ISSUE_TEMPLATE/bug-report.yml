@@ -1,5 +1,5 @@
 name: Bug Report
-description: Create a report to help us fix bugs in Betaflight Configurator.
+description: Create a report to help us fix bugs in Betaflight App.
 labels: ["Template: Bug"]
 body:
 
@@ -36,8 +36,8 @@ body:
 
   - type: input
     attributes:
-      label: Configurator version
-      description: Specify the version of the configurator (as displayed in the app).
+      label: App version
+      description: Specify the version of the app (as displayed in the app).
     validations:
       required: true
 

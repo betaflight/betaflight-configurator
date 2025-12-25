@@ -173,12 +173,13 @@ export default defineComponent({
 
         const onChangePort = (event) => {
             const value = event.target.value;
-            if (value === "requestpermissionserial") {
-                EventBus.$emit("ports-input:request-permission-serial");
-            } else if (value === "requestpermissionbluetooth") {
-                EventBus.$emit("ports-input:request-permission-bluetooth");
-            } else if (value === "requestpermissionusb") {
-                EventBus.$emit("ports-input:request-permission-usb");
+
+            if (value.startsWith("requestpermission")) {
+                // Extract "serial", "bluetooth", etc., and format the event name
+                const type = value.replace("requestpermission", "");
+                EventBus.$emit(`ports-input:request-permission-${type}`);
+                // Reset selection to "No Selection"
+                emit("update:modelValue", { ...props.modelValue, selectedPort: "noselection" });
             } else {
                 EventBus.$emit("ports-input:change", value);
             }

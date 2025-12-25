@@ -86,9 +86,6 @@
     "language_default": {
         "message": "Sistema Lehenetsia"
     },
-    "language_default_pretty": {
-        "message": "Sistema Lehenetsia ($t(detectedLanguage))"
-    },
     "sensorDataFlashNotFound": {
         "message": "Flash memoria <br> ez dago erabilgarri",
         "description": "Text of the dataflash image in the header of the page."
@@ -741,9 +738,6 @@
     "initialSetupSettingsRestored": {
         "message": "<strong>Lehenetsita<\/strong> ezarpenak ezarrita"
     },
-    "initialSetupEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">gordeta<\/span>"
-    },
     "featureNone": {
         "message": "&lt;Bat aukeratu&gt;"
     },
@@ -1085,9 +1079,6 @@
     "configurationSpiRX": {
         "message": "SPI Bus Hartzaileen Hornitzailea"
     },
-    "configurationEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">gorde<\/span>"
-    },
     "configurationButtonSave": {
         "message": "Gorde eta berrabiarazi"
     },
@@ -1378,9 +1369,6 @@
     "pidTuningDataRefreshed": {
         "message": "PID datuak <strong>berritu<\/strong>"
     },
-    "pidTuningEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">gorde<\/span>"
-    },
     "tuningHelp": {
         "message": "<b>Eguneratzeko aholkuak<\/b><br\/><span class=\"message-negative\">GARRANTZITSUA:<\/span> Garrantzitsua da lehen hegaldietan motorren tenperatura egiaztatzea. Iragazkiaren balioa zenbat eta handiagoa izan, orduan eta handiagoa izango da hegan egiteko, baina zarata gehiago lortuko duzu motorretan. <br>100Hz-ko balio lehenetsia ezin hobea da, baina zaratagarrien konfigurazioetarako Dterm iragazkia 50Hz-era jaistea probatu dezakezu eta, agian, giro iragazkia ere."
     },
@@ -1464,9 +1452,6 @@
     },
     "receiverDataRefreshed": {
         "message": "RC sintonizatzeko datuak <strong>berritu<\/strong>"
-    },
-    "receiverEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">gorde<\/span>"
     },
     "receiverModelPreview": {
         "message": "Aurrebista"
@@ -1637,9 +1622,6 @@
     "adjustmentsSave": {
         "message": "Gorde"
     },
-    "adjustmentsEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">gorde<\/span>"
-    },
     "transponderNotSupported": {
         "message": "Hegaldi-kontroladorearen firmwareak ez du transpondedor funtzionaltasunik onartzen."
     },
@@ -1738,9 +1720,6 @@
     },
     "servosReverse": {
         "message": "Alderantzikatu"
-    },
-    "servosEepromSave": {
-        "message": "EEPROM <span class=\"message-positive\">gorde<\/span>"
     },
     "gpsHead": {
         "message": "GPSa"

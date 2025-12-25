@@ -4,6 +4,8 @@ import Websocket from "./protocols/WebSocket.js";
 import VirtualSerial from "./protocols/VirtualSerial.js";
 import { isAndroid } from "./utils/checkCompatibility.js";
 import CapacitorSerial from "./protocols/CapacitorSerial.js";
+import CapacitorBle from "./protocols/CapacitorBle.js";
+import CapacitorTcp from "./protocols/CapacitorTcp.js";
 
 /**
  * Base Serial class that manages all protocol implementations
@@ -20,7 +22,11 @@ class Serial extends EventTarget {
         // Initialize protocols with metadata for easier lookup
 
         if (isAndroid()) {
-            this._protocols = [{ name: "serial", instance: new CapacitorSerial() }];
+            this._protocols = [
+                { name: "serial", instance: new CapacitorSerial() },
+                { name: "bluetooth", instance: new CapacitorBle() },
+                { name: "tcp", instance: new CapacitorTcp() },
+            ];
         } else {
             this._protocols = [
                 { name: "serial", instance: new WebSerial() },

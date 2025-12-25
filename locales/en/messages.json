@@ -94,6 +94,10 @@
         "message": "--- I can't find my DFU device ---",
         "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access a DFU device."
     },
+    "portsEepromSaved": {
+        "message": "$t(eeprom_saved_ok.message)",
+        "description": "Don't translate!!!"
+    },
     "bluetoothConnected": {
         "message": "Connected to Bluetooth device: $1"
     },
@@ -193,8 +197,9 @@
     "language_default": {
         "message": "System Default"
     },
-    "language_default_pretty": {
-        "message": "System Default ($t(detectedLanguage))"
+    "language_DEFAULT": {
+        "message": "$t(language_default.message)",
+        "description": "Don't translate!!!"
     },
     "language_ca": {
         "message": "Catal\u00e0",
@@ -283,6 +288,9 @@
     },
     "sensorStatusGyro": {
         "message": "Gyroscope"
+    },
+    "configurationGyroRequired": {
+        "message": "At least one gyro must be enabled"
     },
     "sensorStatusGyroShort": {
         "message": "Gyro",
@@ -1256,7 +1264,8 @@
         "message": "Settings restored to <strong>default</strong>"
     },
     "initialSetupEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">saved</span>"
+        "message": "$t(eeprom_saved_ok.message)",
+        "description": "Don't translate!!!"
     },
     "initialSetupNetworkInfo": {
         "message": "Network info"
@@ -1414,6 +1423,9 @@
     "configurationFeatures": {
         "message": "Other Features"
     },
+    "configurationFeatureHelp": {
+        "message": "Help"
+    },
     "configurationReceiver": {
         "message": "Receiver"
     },
@@ -1444,8 +1456,14 @@
     "configurationSpiRxHelp": {
         "message": "<strong>Note:</strong> The SPI RX provider will only work if the required hardware is on board or connected to an SPI bus."
     },
-    "configurationOtherFeaturesHelp": {
-        "message": "<strong>Note:</strong> Not all features are supported by all flight controllers. If you enable a specific feature, and it is disabled after you hit 'Save and Reboot', it means that this feature is not supported on your board."
+    "configurationActiveImu": {
+        "message": "Active IMU"
+    },
+    "configurationSensors": {
+        "message": "Sensor Configuration"
+    },
+    "configurationSensorsHelp": {
+        "message": "Configure additional sensors and advanced features."
     },
     "configurationMagAlignmentHelp": {
         "message": "The magnetometer alignment is the orientation of the magnetometer sensor on the flight controller board. The default is usually correct, but if you have a custom build or a flight controller with a different magnetometer orientation, you may need to adjust this setting."
@@ -1460,7 +1478,7 @@
         "message": "The magnetic declination is the angle between magnetic north and true north. It is different for every location on earth. You can find the declination for your location on the internet"
     },
     "configurationRangefinder": {
-        "message": "$t(initialSetupSensorSonar.message)",
+        "message": "Rangefinder",
         "description": "Don't translate!!!"
     },
     "configurationRangefinderHelp": {
@@ -1470,7 +1488,7 @@
         "message": "Type"
     },
     "configurationOpticalflow": {
-        "message": "$t(initialSetupSensorOpticalflow.message)",
+        "message": "Optical Flow",
         "description": "Don't translate!!!"
     },
     "configurationOpticalflowHelp": {
@@ -1534,6 +1552,30 @@
         "message": "$t(configurationBoardAlignmentYaw.message)",
         "description": "Don't translate!!!"
     },
+    "configurationGyro1AlignmentRoll": {
+        "message": "$t(configurationBoardAlignmentRoll.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyro1AlignmentPitch": {
+        "message": "$t(configurationBoardAlignmentPitch.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyro1AlignmentYaw": {
+        "message": "$t(configurationBoardAlignmentYaw.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyro2AlignmentRoll": {
+        "message": "$t(configurationBoardAlignmentRoll.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyro2AlignmentPitch": {
+        "message": "$t(configurationBoardAlignmentPitch.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyro2AlignmentYaw": {
+        "message": "$t(configurationBoardAlignmentYaw.message)",
+        "description": "Don't translate!!!"
+    },
     "configurationSensorAlignmentGyro": {
         "message": "GYRO Alignment"
     },
@@ -1570,6 +1612,10 @@
     "configurationSensorAlignmentDefaultOption": {
        "message": "Default"
     },
+    "configurationSensorAlignmentCustom": {
+        "message": "Custom"
+    },
+
     "configurationAccelTrims": {
         "message": "Accelerometer Trim"
     },
@@ -1599,6 +1645,9 @@
     },
     "configurationGyroCalOnFirstArm": {
         "message": "Calibrate Gyro on first arm"
+    },
+    "configurationGyroCalOnFirstArmHelp": {
+        "message": "When enabled, the gyroscope will be calibrated on the first arm after power on. This can help reduce gyro drift during flight."
     },
     "configurationMotorIdle": {
         "message": "Motor Idle (%)"
@@ -1823,7 +1872,8 @@
         "message": "SPI Bus Receiver Provider"
     },
     "configurationEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">saved</span>"
+        "message": "$t(eeprom_saved_ok.message)",
+        "description": "Don't translate!!!"
     },
     "configurationButtonSave": {
         "message": "Save and Reboot"
@@ -2367,7 +2417,8 @@
         "message": "PID data <strong>refreshed</strong>"
     },
     "pidTuningEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">saved</span>"
+        "message": "$t(eeprom_saved_ok.message)",
+        "description": "Don't translate!!!"
     },
     "tuningHelp": {
         "message": "<b>Tuning tips</b><br /><span class=\"message-negative\">IMPORTANT:</span> It is important to verify motor temperatures during first flights. The higher the filter value gets the better it may fly, but you also will get more noise into the motors. <br>Default value of 100Hz is optimal, but for noiser setups you can try lowering Dterm filter to 50Hz and possibly also the gyro filter."
@@ -2503,7 +2554,8 @@
         "message": "RC Tuning data <strong>refreshed</strong>"
     },
     "receiverEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">saved</span>"
+        "message": "$t(eeprom_saved_ok.message)",
+        "description": "Don't translate!!!"
     },
     "receiverModelPreview": {
         "message": "Preview"
@@ -2891,7 +2943,8 @@
         "message": "Save"
     },
     "adjustmentsEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">saved</span>"
+        "message": "$t(eeprom_saved_ok.message)",
+        "description": "Don't translate!!!"
     },
     "transponderNotSupported": {
         "message": "Your flight controller's firmware does not support transponder functionality."
@@ -3000,7 +3053,8 @@
         "message": "Reverse"
     },
     "servosEepromSave": {
-        "message": "EEPROM <span class=\"message-positive\">saved</span>"
+        "message": "$t(eeprom_saved_ok.message)",
+        "description": "Don't translate!!!"
     },
     "gpsHead": {
         "message": "GPS"
@@ -7102,7 +7156,8 @@
         "message": "Sends ESC data to the FC via DShot telemetry.  Required by RPM Filtering and dynamic idle. <br> <br>Note: Requires a compatible ESC with appropriate firmware, eg JESC, Jazzmac, BLHeli-32.",
         "description": "Description of the Bidirectional DShot feature of the ESC/Motor"
     },
-    "configurationGyroSyncDenom": {
+
+    "configurationGyroFrequency": {
         "message": "Gyro update frequency"
     },
     "configurationPidProcessDenom": {
@@ -7365,7 +7420,7 @@
         "message": "File name"
     },
     "dialogFileNameDescription": {
-        "message": "The file will be saved in the 'Android/data/betaflight-configurator/{{folder}}' folder in your internal storage."
+        "message": "The file will be saved in the 'Android/data/betaflight-app/{{folder}}' folder in your internal storage."
     },
     "dialogFileAlreadyExistsTitle": {
         "message": "This file already exists!"

@@ -83,7 +83,7 @@ class WEBUSBDFU_protocol extends EventTarget {
         }
 
         navigator.usb.addEventListener("connect", (e) => this.handleNewDevice(e.device));
-        navigator.usb.addEventListener("disconnect", (e) => this.handleNewDevice(e.device));
+        navigator.usb.addEventListener("disconnect", (e) => this.handleRemovedDevice(e.device));
     }
     handleNewDevice(device) {
         const added = this.createPort(device);
@@ -1211,7 +1211,7 @@ class WEBUSBDFU_protocol extends EventTarget {
 
                                 // Show notification
                                 if (getConfig("showNotifications").showNotifications) {
-                                    NotificationManager.showNotification("Betaflight Configurator", {
+                                    NotificationManager.showNotification("Betaflight App", {
                                         body: i18n.getMessage("programmingSuccessfulNotification"),
                                         icon: "/images/pwa/favicon.ico",
                                     });
@@ -1229,7 +1229,7 @@ class WEBUSBDFU_protocol extends EventTarget {
 
                                 // Show notification
                                 if (getConfig("showNotifications").showNotifications) {
-                                    NotificationManager.showNotification("Betaflight Configurator", {
+                                    NotificationManager.showNotification("Betaflight App", {
                                         body: i18n.getMessage("programmingFailedNotification"),
                                         icon: "/images/pwa/favicon.ico",
                                     });

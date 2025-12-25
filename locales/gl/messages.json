@@ -127,9 +127,6 @@
     "language_default": {
         "message": "Sistema por defecto"
     },
-    "language_default_pretty": {
-        "message": "Sistema Predeterminado ($t(detectedLanguage))"
-    },
     "sensorDataFlashNotFound": {
         "message": "Memoria flash <br> non dispoñible",
         "description": "Text of the dataflash image in the header of the page."
@@ -996,9 +993,6 @@
     "initialSetupSettingsRestored": {
         "message": "Axustes restaurados a <strong>valores por defecto<\/strong>"
     },
-    "initialSetupEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">gardada<\/span>"
-    },
     "featureNone": {
         "message": "&lt;Elixir un&gt;"
     },
@@ -1396,9 +1390,6 @@
     },
     "configurationSpiRX": {
         "message": "Provedor de receptores de bus SPI"
-    },
-    "configurationEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">guardada<\/span>"
     },
     "configurationButtonSave": {
         "message": "Gardar e Reiniciar"
@@ -1865,9 +1856,6 @@
     "pidTuningDataRefreshed": {
         "message": "Datos PID <strong>actualizados<\/strong>"
     },
-    "pidTuningEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">gardada<\/span>"
-    },
     "tuningHelp": {
         "message": "<b>Consellos de axuste<\/b><br\/><span class=\"message-negative\"> IMPORTANTE: <\/span> É importante verificar as temperaturas do motor durante os primeiros voos. Canto maior sexa o valor do filtro, mellor pode voar, pero tamén conseguirá máis ruído nos motores. <br> O valor predeterminado de 100Hz é óptimo, pero para configuracións de ruído pode intentar baixar o filtro Dterm a 50Hz e posiblemente tamén o filtro xiratorio."
     },
@@ -1988,9 +1976,6 @@
     },
     "receiverDataRefreshed": {
         "message": "Datos de Axustes de RC <strong>actualizados<\/strong>"
-    },
-    "receiverEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">gardada<\/span>"
     },
     "receiverModelPreview": {
         "message": "Vista Previa"
@@ -2323,9 +2308,6 @@
     "adjustmentsSave": {
         "message": "Gardar"
     },
-    "adjustmentsEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">guardada<\/span>"
-    },
     "transponderNotSupported": {
         "message": "O firmware do controlador de voo non admite a funcionalidade do transpondedor."
     },
@@ -2431,9 +2413,6 @@
     },
     "servosReverse": {
         "message": "Reverso"
-    },
-    "servosEepromSave": {
-        "message": "EEPROM <span class=\"message-positive\">gardada<\/span>"
     },
     "gpsHead": {
         "message": "GPS"
@@ -6414,9 +6393,6 @@
     },
     "dialogFileNameTitle": {
         "message": "Nome do ficheiro"
-    },
-    "dialogFileNameDescription": {
-        "message": "O ficheiro gardarase no cartafol 'Android\/data\/betaflight-configurator\/{{folder}}' no seu almacenamento interno."
     },
     "dialogFileAlreadyExistsTitle": {
         "message": "Este ficheiro xa existe!"

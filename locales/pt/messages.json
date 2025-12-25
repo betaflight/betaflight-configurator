@@ -91,6 +91,10 @@
         "message": "--- Não encontro o meu dispositivo DFU ---",
         "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access a DFU device."
     },
+    "portsEepromSaved": {
+        "message": "$t(eeprom_saved_ok.message)",
+        "description": "Don't translate!!!"
+    },
     "bluetoothConnected": {
         "message": "Ligado ao dispositivo Bluetooth: $1"
     },
@@ -190,8 +194,9 @@
     "language_default": {
         "message": "Padrão do sistema"
     },
-    "language_default_pretty": {
-        "message": "Padrão do sistema ($t(detectedLanguage))"
+    "language_DEFAULT": {
+        "message": "$t(language_default.message)",
+        "description": "Don't translate!!!"
     },
     "sensorDataFlashNotFound": {
         "message": "Nenhuma memória <br> flash detectada",
@@ -1173,7 +1178,8 @@
         "message": "Configurações restauradas para os valores <strong>padrão<\/strong>"
     },
     "initialSetupEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">gravada<\/span>"
+        "message": "$t(eeprom_saved_ok.message)",
+        "description": "Don't translate!!!"
     },
     "initialSetupNetworkInfo": {
         "message": "Informações da rede"
@@ -1737,7 +1743,8 @@
         "message": "Fornecedor do receptor SPI Bus"
     },
     "configurationEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">gravada<\/span>"
+        "message": "$t(eeprom_saved_ok.message)",
+        "description": "Don't translate!!!"
     },
     "configurationButtonSave": {
         "message": "Gravar e reiniciar"
@@ -2280,7 +2287,8 @@
         "message": "Dados do PID <strong>atualizados<\/strong>"
     },
     "pidTuningEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">gravada<\/span>"
+        "message": "$t(eeprom_saved_ok.message)",
+        "description": "Don't translate!!!"
     },
     "tuningHelp": {
         "message": "<b>Dicas de otimização<\/b><br \/><span class=\"message-negative\">IMPORTANTE:<\/span> É importante verificar a temperatura dos motores durante os primeiros voos. Quanto maior o valor do filtro, melhor pode ser o voo, porém, mais ruído chegará aos motores. <br>O valor padrão de 100Hz é ótimo, mas para aeronaves com mais ruídos, pode tentar diminuir o filtro do termo D para 50Hz e possivelmente também o filtro do giroscópio."
@@ -2416,7 +2424,8 @@
         "message": "Dados de afinação do RC <strong>atualizados<\/strong>"
     },
     "receiverEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">gravar<\/span>"
+        "message": "$t(eeprom_saved_ok.message)",
+        "description": "Don't translate!!!"
     },
     "receiverModelPreview": {
         "message": "Pré-visualizar"
@@ -2804,7 +2813,8 @@
         "message": "Gravar"
     },
     "adjustmentsEepromSaved": {
-        "message": "EEPROM <span class=\"message-positive\">gravada<\/span>"
+        "message": "$t(eeprom_saved_ok.message)",
+        "description": "Don't translate!!!"
     },
     "transponderNotSupported": {
         "message": "O firmware da sua controladora de voo não suporta a função de transponder."
@@ -2913,7 +2923,8 @@
         "message": "Inverter"
     },
     "servosEepromSave": {
-        "message": "EEPROM <span class=\"message-positive\">gravada<\/span>"
+        "message": "$t(eeprom_saved_ok.message)",
+        "description": "Don't translate!!!"
     },
     "gpsHead": {
         "message": "GPS"
@@ -7274,7 +7285,7 @@
         "message": "Nome do ficheiro"
     },
     "dialogFileNameDescription": {
-        "message": "O ficheiro será gravado na pasta 'Android\/data\/betaflight-configurator\/{{folder}}' no seu armazenamento interno."
+        "message": "O ficheiro será gravado na pasta 'Android\/data\/betaflight-app\/{{folder}}' no seu armazenamento interno."
     },
     "dialogFileAlreadyExistsTitle": {
         "message": "Este ficheiro já existe!"
