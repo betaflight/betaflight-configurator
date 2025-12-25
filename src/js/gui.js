@@ -1,4 +1,5 @@
 import { get as getConfig } from "./ConfigStorage";
+import { reactive } from "vue";
 import MSP from "./msp";
 import Switchery from "switchery-latest";
 import tippy from "tippy.js";
@@ -56,6 +57,8 @@ class GuiControl {
 
         // check which operating system is user running
         this.operating_system = getOS();
+
+        return reactive(this);
     }
     // Timer managing methods
     // name = string

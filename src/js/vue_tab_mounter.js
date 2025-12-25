@@ -5,6 +5,7 @@
  * This bridges the existing jQuery-based tab switching with Vue components.
  */
 import { createApp, h } from "vue";
+import { pinia } from "./pinia_instance.js";
 import i18next from "i18next";
 import I18NextVue from "i18next-vue";
 import { VueTabComponents } from "./vue_components.js";
@@ -57,6 +58,8 @@ export function mountVueTab(tabName, contentReadyCallback) {
 
     // Use i18n plugin
     currentTabApp.use(I18NextVue, { i18next });
+    currentTabApp.use(pinia);
+    currentTabApp.provide("gui", GUI);
 
     // Provide the global betaflight model
     if (globalThis.vm) {

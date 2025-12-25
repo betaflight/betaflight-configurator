@@ -725,7 +725,7 @@
         </div>
         <div class="content_toolbar toolbar_fixed_bottom" style="position: fixed">
             <div class="btn save_btn">
-                <a class="save" href="#" @click.prevent="saveConfig">{{ $t("configurationButtonSave") }}</a>
+                <a class="save" href="#" @click.prevent="saveConfig()">{{ $t("configurationButtonSave") }}</a>
             </div>
         </div>
     </div>
@@ -733,6 +733,11 @@
 
 <script>
 import { defineComponent, ref, reactive, onMounted, computed, nextTick, watch, onUnmounted } from "vue";
+import { useConnectionStore } from "@/stores/connection";
+import { useNavigationStore } from "@/stores/navigation";
+import { useFlightControllerStore } from "@/stores/fc";
+import { useDialog } from "@/composables/useDialog";
+import { useReboot } from "@/composables/useReboot";
 import GUI from "../../js/gui";
 import FC from "../../js/fc";
 import MSP from "../../js/msp";
@@ -751,6 +756,17 @@ export default defineComponent({
     name: "ConfigurationTab",
     setup() {
         // Reactive State
+        const connectionStore = useConnectionStore();
+        const navigationStore = useNavigationStore();
+        const fcStore = useFlightControllerStore();
+        const dialog = useDialog();
+        const { reboot } = useReboot();
+
+        // Helper to perform reboot after save
+        const performReboot = () => {
+            reboot();
+        };
+
         const pidAdvancedConfig = reactive({
             pid_process_denom: 1,
         });
@@ -826,7 +842,7 @@ export default defineComponent({
             if (!showMultiGyro.value) return [];
 
             const types = sensorTypes().gyro.elements;
-            const detectedHardware = FC.GYRO_SENSOR?.gyro_hardware || [];
+            const detectedHardware = fcStore.gyroSensor?.gyro_hardware || [];
 
             // Use actual detected hardware count
             const count = detectedHardware.length;
@@ -864,7 +880,7 @@ export default defineComponent({
                 const nextMask = bit_clear(sensorAlignment.gyro_enable_mask, index);
 
                 // Enforce: at least one gyro must remain enabled on API >= 1.47
-                if (nextMask === 0 && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+                if (nextMask === 0 && semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
                     gui_log(i18n.getMessage("configurationGyroRequired"));
                     // Reset checkbox state visually (since v-model isn't used here directly, we rely on re-rendering or manual intervention,
                     // but since the mask isn't updated, the computed property 'gyroList' will re-evaluate to 'enabled: true')
@@ -890,7 +906,7 @@ export default defineComponent({
         const showMagDeclination = ref(false);
         const showRangefinder = ref(false);
         const showGyroToUse = computed(() => {
-            return semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_47);
+            return semver.lt(fcStore.config.apiVersion, API_VERSION_1_47);
         });
         const showOpticalFlow = ref(false);
 
@@ -921,24 +937,24 @@ export default defineComponent({
 
         // Features & Beepers State wrapper
         const featuresList = computed(() => {
-            if (!FC.FEATURE_CONFIG?.features?._features) {
+            if (!fcStore.features?.features?._features) {
                 return [];
             }
-            return FC.FEATURE_CONFIG.features._features.filter((feature) => feature.mode !== "select");
+            return fcStore.features.features._features.filter((feature) => feature.mode !== "select");
         });
 
         const beepersList = computed(() => {
-            if (!FC.BEEPER_CONFIG?.beepers?._beepers) {
+            if (!fcStore.beepers?.beepers?._beepers) {
                 return [];
             }
-            return FC.BEEPER_CONFIG.beepers._beepers;
+            return fcStore.beepers.beepers._beepers;
         });
 
         const dshotBeaconConditionsList = computed(() => {
-            if (!FC.BEEPER_CONFIG?.dshotBeaconConditions?._beepers) {
+            if (!fcStore.beepers?.dshotBeaconConditions?._beepers) {
                 return [];
             }
-            return FC.BEEPER_CONFIG.dshotBeaconConditions._beepers;
+            return fcStore.beepers.dshotBeaconConditions._beepers;
         });
 
         const dshotBeaconTone = ref(0); // 0 = disabled
@@ -949,34 +965,31 @@ export default defineComponent({
             if (!FC?.FEATURE_CONFIG?.features) {
                 return 0;
             }
-            return FC.FEATURE_CONFIG.features._featureMask;
+            return fcStore.features.features._featureMask;
         });
 
         // Methods for toggling bits
         const isFeatureEnabled = (feature) => {
-            if (!FC.FEATURE_CONFIG?.features) {
+            if (!fcStore.features?.features) {
                 return false;
             }
-            return bit_check(FC.FEATURE_CONFIG.features._featureMask, feature.bit);
+            return bit_check(fcStore.features.features._featureMask, feature.bit);
         };
 
         const toggleFeature = (feature, checked) => {
-            if (!FC.FEATURE_CONFIG?.features) {
+            if (!fcStore.features?.features) {
                 return;
             }
             if (checked) {
-                FC.FEATURE_CONFIG.features._featureMask = bit_set(FC.FEATURE_CONFIG.features._featureMask, feature.bit);
+                fcStore.features.features._featureMask = bit_set(fcStore.features.features._featureMask, feature.bit);
             } else {
-                FC.FEATURE_CONFIG.features._featureMask = bit_clear(
-                    FC.FEATURE_CONFIG.features._featureMask,
-                    feature.bit,
-                );
+                fcStore.features.features._featureMask = bit_clear(fcStore.features.features._featureMask, feature.bit);
             }
-            updateTabList(FC.FEATURE_CONFIG.features);
+            updateTabList(fcStore.features.features);
         };
 
         const isBeeperEnabled = (beeper) => {
-            if (!FC.BEEPER_CONFIG?.beepers) {
+            if (!fcStore.beepers?.beepers) {
                 return false;
             }
             // Note: Beeper logic uses DisabledMask, so checked means NOT disabled
@@ -984,7 +997,7 @@ export default defineComponent({
         };
 
         const toggleBeeper = (beeper, checked) => {
-            if (!FC.BEEPER_CONFIG?.beepers) {
+            if (!fcStore.beepers?.beepers) {
                 return;
             }
             if (checked) {
@@ -994,11 +1007,11 @@ export default defineComponent({
                 // To disable, we SET the disabled bit
                 beeperDisabledMask.value = bit_set(beeperDisabledMask.value, beeper.bit);
             }
-            FC.BEEPER_CONFIG.beepers._beeperDisabledMask = beeperDisabledMask.value;
+            fcStore.beepers.beepers._beeperDisabledMask = beeperDisabledMask.value;
         };
 
         const enableAllBeepers = () => {
-            if (!FC.BEEPER_CONFIG?.beepers) {
+            if (!fcStore.beepers?.beepers) {
                 return;
             }
             let mask = beeperDisabledMask.value;
@@ -1008,11 +1021,11 @@ export default defineComponent({
                 }
             });
             beeperDisabledMask.value = mask;
-            FC.BEEPER_CONFIG.beepers._beeperDisabledMask = mask;
+            fcStore.beepers.beepers._beeperDisabledMask = mask;
         };
 
         const disableAllBeepers = () => {
-            if (!FC.BEEPER_CONFIG?.beepers) {
+            if (!fcStore.beepers?.beepers) {
                 return;
             }
             let mask = beeperDisabledMask.value;
@@ -1022,11 +1035,11 @@ export default defineComponent({
                 }
             });
             beeperDisabledMask.value = mask;
-            FC.BEEPER_CONFIG.beepers._beeperDisabledMask = mask;
+            fcStore.beepers.beepers._beeperDisabledMask = mask;
         };
 
         const isDshotConditionEnabled = (cond) => {
-            if (!FC.BEEPER_CONFIG?.dshotBeaconConditions) {
+            if (!fcStore.beepers?.dshotBeaconConditions) {
                 return false;
             }
             // Same logic as beepers (DisabledMask)
@@ -1034,7 +1047,7 @@ export default defineComponent({
         };
 
         const toggleDshotCondition = (cond, checked) => {
-            if (!FC.BEEPER_CONFIG?.dshotBeaconConditions) {
+            if (!fcStore.beepers?.dshotBeaconConditions) {
                 return;
             }
             if (checked) {
@@ -1042,11 +1055,11 @@ export default defineComponent({
             } else {
                 dshotDisabledMask.value = bit_set(dshotDisabledMask.value, cond.bit);
             }
-            FC.BEEPER_CONFIG.dshotBeaconConditions._beeperDisabledMask = dshotDisabledMask.value;
+            fcStore.beepers.dshotBeaconConditions._beeperDisabledMask = dshotDisabledMask.value;
         };
 
         const enableAllDshot = () => {
-            if (!FC.BEEPER_CONFIG?.dshotBeaconConditions) {
+            if (!fcStore.beepers?.dshotBeaconConditions) {
                 return;
             }
             let mask = dshotDisabledMask.value;
@@ -1054,11 +1067,11 @@ export default defineComponent({
                 mask = bit_clear(mask, cond.bit);
             });
             dshotDisabledMask.value = mask;
-            FC.BEEPER_CONFIG.dshotBeaconConditions._beeperDisabledMask = mask;
+            fcStore.beepers.dshotBeaconConditions._beeperDisabledMask = mask;
         };
 
         const disableAllDshot = () => {
-            if (!FC.BEEPER_CONFIG?.dshotBeaconConditions) {
+            if (!fcStore.beepers?.dshotBeaconConditions) {
                 return;
             }
             let mask = dshotDisabledMask.value;
@@ -1066,7 +1079,7 @@ export default defineComponent({
                 mask = bit_set(mask, cond.bit);
             });
             dshotDisabledMask.value = mask;
-            FC.BEEPER_CONFIG.dshotBeaconConditions._beeperDisabledMask = mask;
+            fcStore.beepers.dshotBeaconConditions._beeperDisabledMask = mask;
         };
 
         // Computed Wrappers for Hardware Switches (logic inverted: 1 = disabled usually? legacy says: !== 1)
@@ -1112,11 +1125,11 @@ export default defineComponent({
 
                 if (!isMounted.value) return;
 
-                if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+                if (semver.lt(fcStore.config.apiVersion, API_VERSION_1_45)) {
                     await MSP.promise(MSPCodes.MSP_NAME);
                 }
 
-                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+                if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)) {
                     await MSP.promise(
                         MSPCodes.MSP2_GET_TEXT,
                         mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.CRAFT_NAME),
@@ -1125,7 +1138,7 @@ export default defineComponent({
 
                 await MSP.promise(MSPCodes.MSP_RX_CONFIG);
 
-                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+                if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)) {
                     await MSP.promise(
                         MSPCodes.MSP2_GET_TEXT,
                         mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.PILOT_NAME),
@@ -1136,11 +1149,11 @@ export default defineComponent({
 
                 await MSP.promise(MSPCodes.MSP_ADVANCED_CONFIG);
 
-                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+                if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_46)) {
                     await MSP.promise(MSPCodes.MSP_COMPASS_CONFIG);
                 }
 
-                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+                if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
                     await MSP.promise(MSPCodes.MSP2_GYRO_SENSOR);
                 }
 
@@ -1166,41 +1179,41 @@ export default defineComponent({
             sensorConfig.sonar_hardware = FC.SENSOR_CONFIG.sonar_hardware;
             sensorConfig.opticalflow_hardware = FC.SENSOR_CONFIG.opticalflow_hardware;
 
-            boardAlignment.roll = FC.BOARD_ALIGNMENT_CONFIG.roll;
-            boardAlignment.pitch = FC.BOARD_ALIGNMENT_CONFIG.pitch;
-            boardAlignment.yaw = FC.BOARD_ALIGNMENT_CONFIG.yaw;
+            boardAlignment.roll = fcStore.boardAlignment.roll;
+            boardAlignment.pitch = fcStore.boardAlignment.pitch;
+            boardAlignment.yaw = fcStore.boardAlignment.yaw;
 
             fpvCamAngleDegrees.value = FC.RX_CONFIG.fpvCamAngleDegrees;
 
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
-                craftName.value = FC.CONFIG.craftName;
-                pilotName.value = FC.CONFIG.pilotName;
+            if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)) {
+                craftName.value = fcStore.config.craftName;
+                pilotName.value = fcStore.config.pilotName;
                 showPilotName.value = true;
             } else {
-                craftName.value = FC.CONFIG.name;
+                craftName.value = fcStore.config.name;
                 showPilotName.value = false;
             }
 
             // Gyro Frequency Logic
-            updateGyroDenom(FC.CONFIG.sampleRateHz);
+            updateGyroDenom(fcStore.config.sampleRateHz);
 
             updatePidDenomOptions();
 
             // Load DShot Tone
-            if (FC.BEEPER_CONFIG) {
-                dshotBeaconTone.value = FC.BEEPER_CONFIG.dshotBeaconTone;
-                if (FC.BEEPER_CONFIG.beepers) {
-                    beeperDisabledMask.value = FC.BEEPER_CONFIG.beepers._beeperDisabledMask;
+            if (fcStore.beepers) {
+                dshotBeaconTone.value = fcStore.beepers.dshotBeaconTone;
+                if (fcStore.beepers.beepers) {
+                    beeperDisabledMask.value = fcStore.beepers.beepers._beeperDisabledMask;
                 }
-                if (FC.BEEPER_CONFIG.dshotBeaconConditions) {
-                    dshotDisabledMask.value = FC.BEEPER_CONFIG.dshotBeaconConditions._beeperDisabledMask;
+                if (fcStore.beepers.dshotBeaconConditions) {
+                    dshotDisabledMask.value = fcStore.beepers.dshotBeaconConditions._beeperDisabledMask;
                 }
             }
 
             // Arming Config
             armingConfig.small_angle = FC.ARMING_CONFIG.small_angle;
 
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+            if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_46)) {
                 showGyroCalOnFirstArm.value = true;
                 armingConfig.gyro_cal_on_first_arm_bool = FC.ARMING_CONFIG.gyro_cal_on_first_arm === 1;
                 armingConfig.auto_disarm_delay = FC.ARMING_CONFIG.auto_disarm_delay;
@@ -1212,31 +1225,31 @@ export default defineComponent({
             }
 
             // Accel Trims
-            accelTrims.pitch = FC.CONFIG.accelerometerTrims[0];
-            accelTrims.roll = FC.CONFIG.accelerometerTrims[1];
+            accelTrims.pitch = fcStore.config.accelerometerTrims[0];
+            accelTrims.roll = fcStore.config.accelerometerTrims[1];
 
             // Sensor Alignment
-            sensorAlignment.gyro_to_use = FC.SENSOR_ALIGNMENT.gyro_to_use;
-            sensorAlignment.gyro_1_align = FC.SENSOR_ALIGNMENT.gyro_1_align;
-            sensorAlignment.gyro_2_align = FC.SENSOR_ALIGNMENT.gyro_2_align;
-            sensorAlignment.align_mag = FC.SENSOR_ALIGNMENT.align_mag;
+            sensorAlignment.gyro_to_use = fcStore.sensorAlignment.gyro_to_use;
+            sensorAlignment.gyro_1_align = fcStore.sensorAlignment.gyro_1_align;
+            sensorAlignment.gyro_2_align = fcStore.sensorAlignment.gyro_2_align;
+            sensorAlignment.align_mag = fcStore.sensorAlignment.align_mag;
 
-            sensorAlignment.gyro_1_align_roll = FC.SENSOR_ALIGNMENT.gyro_1_align_roll;
-            sensorAlignment.gyro_1_align_pitch = FC.SENSOR_ALIGNMENT.gyro_1_align_pitch;
-            sensorAlignment.gyro_1_align_yaw = FC.SENSOR_ALIGNMENT.gyro_1_align_yaw;
-            sensorAlignment.gyro_2_align_roll = FC.SENSOR_ALIGNMENT.gyro_2_align_roll;
-            sensorAlignment.gyro_2_align_pitch = FC.SENSOR_ALIGNMENT.gyro_2_align_pitch;
-            sensorAlignment.gyro_2_align_yaw = FC.SENSOR_ALIGNMENT.gyro_2_align_yaw;
-            sensorAlignment.gyro_align = FC.SENSOR_ALIGNMENT.gyro_align || [];
-            sensorAlignment.gyro_enable_mask = FC.SENSOR_ALIGNMENT.gyro_enable_mask || 0;
-            sensorAlignment.gyro_align_roll = FC.SENSOR_ALIGNMENT.gyro_align_roll || [];
-            sensorAlignment.gyro_align_pitch = FC.SENSOR_ALIGNMENT.gyro_align_pitch || [];
-            sensorAlignment.gyro_align_yaw = FC.SENSOR_ALIGNMENT.gyro_align_yaw || [];
+            sensorAlignment.gyro_1_align_roll = fcStore.sensorAlignment.gyro_1_align_roll;
+            sensorAlignment.gyro_1_align_pitch = fcStore.sensorAlignment.gyro_1_align_pitch;
+            sensorAlignment.gyro_1_align_yaw = fcStore.sensorAlignment.gyro_1_align_yaw;
+            sensorAlignment.gyro_2_align_roll = fcStore.sensorAlignment.gyro_2_align_roll;
+            sensorAlignment.gyro_2_align_pitch = fcStore.sensorAlignment.gyro_2_align_pitch;
+            sensorAlignment.gyro_2_align_yaw = fcStore.sensorAlignment.gyro_2_align_yaw;
+            sensorAlignment.gyro_align = fcStore.sensorAlignment.gyro_align || [];
+            sensorAlignment.gyro_enable_mask = fcStore.sensorAlignment.gyro_enable_mask || 0;
+            sensorAlignment.gyro_align_roll = fcStore.sensorAlignment.gyro_align_roll || [];
+            sensorAlignment.gyro_align_pitch = fcStore.sensorAlignment.gyro_align_pitch || [];
+            sensorAlignment.gyro_align_yaw = fcStore.sensorAlignment.gyro_align_yaw || [];
 
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
-                sensorAlignment.mag_align_roll = FC.SENSOR_ALIGNMENT.mag_align_roll || 0;
-                sensorAlignment.mag_align_pitch = FC.SENSOR_ALIGNMENT.mag_align_pitch || 0;
-                sensorAlignment.mag_align_yaw = FC.SENSOR_ALIGNMENT.mag_align_yaw || 0;
+            if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
+                sensorAlignment.mag_align_roll = fcStore.sensorAlignment.mag_align_roll || 0;
+                sensorAlignment.mag_align_pitch = fcStore.sensorAlignment.mag_align_pitch || 0;
+                sensorAlignment.mag_align_yaw = fcStore.sensorAlignment.mag_align_yaw || 0;
             }
 
             // Detect Gyros
@@ -1246,14 +1259,14 @@ export default defineComponent({
                 DETECTED_GYRO_2: 1 << 1,
                 DETECTED_DUAL_GYROS: 1 << 7,
             };
-            const flags = FC.SENSOR_ALIGNMENT.gyro_detection_flags || 0;
+            const flags = fcStore.sensorAlignment.gyro_detection_flags || 0;
             hasSecondGyro.value = (flags & GYRO_DETECTION_FLAGS.DETECTED_GYRO_2) !== 0;
             hasDualGyros.value = (flags & GYRO_DETECTION_FLAGS.DETECTED_DUAL_GYROS) !== 0;
 
             // Gyro alignment dropdowns are only available for API < 1.47
             // In API 1.47+, the firmware uses gyro_enable_mask instead of individual gyro alignments
             // In API 1.47+, the firmware uses gyro_enable_mask instead of individual gyro alignments
-            if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+            if (semver.lt(fcStore.config.apiVersion, API_VERSION_1_47)) {
                 showGyro1Align.value = true;
                 showGyro2Align.value = hasSecondGyro.value;
                 showMultiGyro.value = false;
@@ -1264,13 +1277,13 @@ export default defineComponent({
             }
 
             // Mag Declination & Alignment
-            if (have_sensor(FC.CONFIG.activeSensors, "mag")) {
-                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+            if (have_sensor(fcStore.config.activeSensors, "mag")) {
+                if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_46)) {
                     showMagDeclination.value = true;
                     magDeclination.value = FC.COMPASS_CONFIG.mag_declination;
                 }
                 // Show mag alignment for API >= 1.47
-                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+                if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
                     showMagAlign.value = true;
                 }
             } else {
@@ -1279,7 +1292,7 @@ export default defineComponent({
             }
 
             // Rangefinder / Optical Flow (API 1.47+)
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+            if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
                 const types = sensorTypes();
                 sonarTypesList.value = types.sonar.elements;
                 showRangefinder.value = sonarTypesList.value?.length > 0;
@@ -1302,7 +1315,7 @@ export default defineComponent({
 
         const updatePidDenomOptions = () => {
             // Mirror legacy logic
-            const pidBaseFreq = FC.CONFIG.sampleRateHz / 1000;
+            const pidBaseFreq = fcStore.config.sampleRateHz / 1000;
             const MAX_DENOM = 8;
             const options = [];
 
@@ -1335,64 +1348,64 @@ export default defineComponent({
                 FC.SENSOR_CONFIG.baro_hardware = sensorConfig.baro_hardware;
                 FC.SENSOR_CONFIG.mag_hardware = sensorConfig.mag_hardware;
 
-                FC.BOARD_ALIGNMENT_CONFIG.roll = boardAlignment.roll;
-                FC.BOARD_ALIGNMENT_CONFIG.pitch = boardAlignment.pitch;
-                FC.BOARD_ALIGNMENT_CONFIG.yaw = boardAlignment.yaw;
+                fcStore.boardAlignment.roll = boardAlignment.roll;
+                fcStore.boardAlignment.pitch = boardAlignment.pitch;
+                fcStore.boardAlignment.yaw = boardAlignment.yaw;
 
                 FC.RX_CONFIG.fpvCamAngleDegrees = fpvCamAngleDegrees.value;
 
-                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
-                    FC.CONFIG.craftName = craftName.value;
-                    FC.CONFIG.pilotName = pilotName.value;
+                if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)) {
+                    fcStore.config.craftName = craftName.value;
+                    fcStore.config.pilotName = pilotName.value;
                 } else {
-                    FC.CONFIG.name = craftName.value;
+                    fcStore.config.name = craftName.value;
                 }
 
-                if (FC.BEEPER_CONFIG) {
-                    FC.BEEPER_CONFIG.dshotBeaconTone = dshotBeaconTone.value;
+                if (fcStore.beepers) {
+                    fcStore.beepers.dshotBeaconTone = dshotBeaconTone.value;
                 }
 
                 FC.ARMING_CONFIG.small_angle = armingConfig.small_angle;
-                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+                if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_46)) {
                     FC.ARMING_CONFIG.gyro_cal_on_first_arm = armingConfig.gyro_cal_on_first_arm_bool ? 1 : 0;
                     FC.ARMING_CONFIG.auto_disarm_delay = armingConfig.auto_disarm_delay;
                 }
 
-                FC.CONFIG.accelerometerTrims[0] = accelTrims.pitch;
-                FC.CONFIG.accelerometerTrims[1] = accelTrims.roll;
+                fcStore.config.accelerometerTrims[0] = accelTrims.pitch;
+                fcStore.config.accelerometerTrims[1] = accelTrims.roll;
 
-                FC.SENSOR_ALIGNMENT.gyro_to_use = sensorAlignment.gyro_to_use;
-                FC.SENSOR_ALIGNMENT.gyro_1_align = sensorAlignment.gyro_1_align;
-                FC.SENSOR_ALIGNMENT.gyro_2_align = sensorAlignment.gyro_2_align;
-                FC.SENSOR_ALIGNMENT.align_mag = sensorAlignment.align_mag;
+                fcStore.sensorAlignment.gyro_to_use = sensorAlignment.gyro_to_use;
+                fcStore.sensorAlignment.gyro_1_align = sensorAlignment.gyro_1_align;
+                fcStore.sensorAlignment.gyro_2_align = sensorAlignment.gyro_2_align;
+                fcStore.sensorAlignment.align_mag = sensorAlignment.align_mag;
 
-                if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
-                    FC.SENSOR_ALIGNMENT.gyro_1_align_roll = sensorAlignment.gyro_1_align_roll;
-                    FC.SENSOR_ALIGNMENT.gyro_1_align_pitch = sensorAlignment.gyro_1_align_pitch;
-                    FC.SENSOR_ALIGNMENT.gyro_1_align_yaw = sensorAlignment.gyro_1_align_yaw;
-                    FC.SENSOR_ALIGNMENT.gyro_2_align_roll = sensorAlignment.gyro_2_align_roll;
-                    FC.SENSOR_ALIGNMENT.gyro_2_align_pitch = sensorAlignment.gyro_2_align_pitch;
-                    FC.SENSOR_ALIGNMENT.gyro_2_align_yaw = sensorAlignment.gyro_2_align_yaw;
+                if (semver.lt(fcStore.config.apiVersion, API_VERSION_1_47)) {
+                    fcStore.sensorAlignment.gyro_1_align_roll = sensorAlignment.gyro_1_align_roll;
+                    fcStore.sensorAlignment.gyro_1_align_pitch = sensorAlignment.gyro_1_align_pitch;
+                    fcStore.sensorAlignment.gyro_1_align_yaw = sensorAlignment.gyro_1_align_yaw;
+                    fcStore.sensorAlignment.gyro_2_align_roll = sensorAlignment.gyro_2_align_roll;
+                    fcStore.sensorAlignment.gyro_2_align_pitch = sensorAlignment.gyro_2_align_pitch;
+                    fcStore.sensorAlignment.gyro_2_align_yaw = sensorAlignment.gyro_2_align_yaw;
                 } else {
                     // API 1.47+ Multi-Gyro
-                    FC.SENSOR_ALIGNMENT.gyro_enable_mask = sensorAlignment.gyro_enable_mask;
-                    FC.SENSOR_ALIGNMENT.gyro_align = sensorAlignment.gyro_align;
-                    FC.SENSOR_ALIGNMENT.gyro_align_roll = sensorAlignment.gyro_align_roll;
-                    FC.SENSOR_ALIGNMENT.gyro_align_pitch = sensorAlignment.gyro_align_pitch;
-                    FC.SENSOR_ALIGNMENT.gyro_align_yaw = sensorAlignment.gyro_align_yaw;
+                    fcStore.sensorAlignment.gyro_enable_mask = sensorAlignment.gyro_enable_mask;
+                    fcStore.sensorAlignment.gyro_align = sensorAlignment.gyro_align;
+                    fcStore.sensorAlignment.gyro_align_roll = sensorAlignment.gyro_align_roll;
+                    fcStore.sensorAlignment.gyro_align_pitch = sensorAlignment.gyro_align_pitch;
+                    fcStore.sensorAlignment.gyro_align_yaw = sensorAlignment.gyro_align_yaw;
                 }
 
-                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
-                    FC.SENSOR_ALIGNMENT.mag_align_roll = sensorAlignment.mag_align_roll;
-                    FC.SENSOR_ALIGNMENT.mag_align_pitch = sensorAlignment.mag_align_pitch;
-                    FC.SENSOR_ALIGNMENT.mag_align_yaw = sensorAlignment.mag_align_yaw;
+                if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
+                    fcStore.sensorAlignment.mag_align_roll = sensorAlignment.mag_align_roll;
+                    fcStore.sensorAlignment.mag_align_pitch = sensorAlignment.mag_align_pitch;
+                    fcStore.sensorAlignment.mag_align_yaw = sensorAlignment.mag_align_yaw;
                 }
 
                 if (showMagDeclination.value) {
                     FC.COMPASS_CONFIG.mag_declination = magDeclination.value;
                 }
 
-                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+                if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
                     FC.SENSOR_CONFIG.sonar_hardware = sensorConfig.sonar_hardware;
                     FC.SENSOR_CONFIG.opticalflow_hardware = sensorConfig.opticalflow_hardware;
                 }
@@ -1400,7 +1413,7 @@ export default defineComponent({
                 // Send MSP commands
                 await MSP.promise(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG));
 
-                if (FC.BEEPER_CONFIG) {
+                if (fcStore.beepers) {
                     await MSP.promise(MSPCodes.MSP_SET_BEEPER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_BEEPER_CONFIG));
                 }
 
@@ -1416,7 +1429,7 @@ export default defineComponent({
                     mspHelper.crunch(MSPCodes.MSP_SET_SENSOR_ALIGNMENT),
                 );
 
-                if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+                if (semver.lt(fcStore.config.apiVersion, API_VERSION_1_45)) {
                     await MSP.promise(MSPCodes.MSP_SET_NAME, mspHelper.crunch(MSPCodes.MSP_SET_NAME));
                 } else {
                     await MSP.promise(
@@ -1432,7 +1445,7 @@ export default defineComponent({
                 await MSP.promise(MSPCodes.MSP_SET_RX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_RX_CONFIG));
                 await MSP.promise(MSPCodes.MSP_SET_ADVANCED_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ADVANCED_CONFIG));
 
-                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+                if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_46)) {
                     await MSP.promise(
                         MSPCodes.MSP_SET_COMPASS_CONFIG,
                         mspHelper.crunch(MSPCodes.MSP_SET_COMPASS_CONFIG),
@@ -1444,8 +1457,8 @@ export default defineComponent({
                 // Save to EEPROM and Reboot
                 await new Promise((resolve) => {
                     mspHelper.writeConfiguration(false, () => {
-                        GUI.tab_switch_cleanup(() => {
-                            GUI.reinitializeConnection();
+                        navigationStore.cleanup(() => {
+                            performReboot();
                             resolve();
                         });
                     });
@@ -1531,3 +1544,4 @@ export default defineComponent({
 <style lang="less" scoped>
 @import "../../css/tabs/configuration.less";
 </style>
+```

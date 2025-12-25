@@ -50,6 +50,14 @@ import "./main";
 
 import GUI from "./gui";
 import { registerSW } from "virtual:pwa-register";
+import { createApp } from "vue";
+import { pinia } from "./pinia_instance";
+import GlobalDialogs from "@/components/dialogs/GlobalDialogs.vue";
+
+// Mount Global Dialogs App
+const dialogApp = createApp(GlobalDialogs);
+dialogApp.use(pinia);
+dialogApp.mount("#dialog-container");
 
 const updateSW = registerSW({
     onNeedRefresh() {

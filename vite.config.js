@@ -50,7 +50,7 @@ function serveLocalesPlugin() {
 }
 
 export default defineConfig({
-    base: './',  // Important for production APK asset paths
+    base: "./", // Important for production APK asset paths
     define: {
         __APP_VERSION__: JSON.stringify(pkg.version),
         __APP_PRODUCTNAME__: JSON.stringify(pkg.productName),
@@ -114,6 +114,7 @@ export default defineConfig({
     root: "./src",
     resolve: {
         alias: {
+            "@": path.resolve(__dirname, "src"),
             "/src": path.resolve(process.cwd(), "src"),
             vue: path.resolve(__dirname, "node_modules/vue/dist/vue.esm-bundler.js"),
         },
