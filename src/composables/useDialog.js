@@ -15,12 +15,12 @@ export function useDialog() {
             },
             {
                 yes: () => {
-                    if (onYes) onYes();
                     store.close();
+                    if (onYes) onYes();
                 },
                 no: () => {
-                    if (onNo) onNo();
                     store.close();
+                    if (onNo) onNo();
                 },
             },
         );
@@ -37,8 +37,8 @@ export function useDialog() {
             },
             {
                 confirm: () => {
-                    if (onConfirm) onConfirm();
                     store.close();
+                    if (onConfirm) onConfirm();
                 },
             },
         );
@@ -55,8 +55,8 @@ export function useDialog() {
             },
             {
                 cancel: () => {
-                    if (onCancel) onCancel();
                     store.close();
+                    if (onCancel) onCancel();
                 },
             },
         );
