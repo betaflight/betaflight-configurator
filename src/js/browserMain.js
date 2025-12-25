@@ -51,6 +51,14 @@ import "./main";
 import GUI from "./gui";
 import { registerSW } from "virtual:pwa-register";
 import { isAndroid } from "./utils/checkCompatibility.js";
+import { createApp } from "vue";
+import { pinia } from "./pinia_instance";
+import GlobalDialogs from "@/components/dialogs/GlobalDialogs.vue";
+
+// Mount Global Dialogs App
+const dialogApp = createApp(GlobalDialogs);
+dialogApp.use(pinia);
+dialogApp.mount("#dialog-container");
 
 // Skip PWA update/offline prompts on Android native builds where they are unnecessary
 if (!isAndroid()) {
