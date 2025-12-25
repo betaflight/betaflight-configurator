@@ -501,7 +501,6 @@
                                         {{ align }}
                                     </option>
                                 </select>
-                                <span>{{ $t("configurationMagAlignment") }}</span>
                             </div>
 
                             <div class="sensor_align_content" v-if="sensorAlignment.align_mag === 9">
