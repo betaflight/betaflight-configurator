@@ -63,7 +63,6 @@ defineProps({
 
 .reboot-progress-bar {
     height: 100%;
-    background-color: var(--primary-500);
     transition: width 0.1s linear;
 }
 

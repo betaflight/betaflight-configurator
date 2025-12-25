@@ -724,7 +724,7 @@
         </div>
         <div class="content_toolbar toolbar_fixed_bottom" style="position: fixed">
             <div class="btn save_btn">
-                <a class="save" href="#" @click.prevent="saveConfig">{{ $t("configurationButtonSave") }}</a>
+                <a class="save" href="#" @click.prevent="saveConfig()">{{ $t("configurationButtonSave") }}</a>
             </div>
         </div>
     </div>
@@ -735,6 +735,8 @@ import { defineComponent, ref, reactive, onMounted, computed, nextTick, watch, o
 import { useConnectionStore } from "@/stores/connection";
 import { useNavigationStore } from "@/stores/navigation";
 import { useFlightControllerStore } from "@/stores/fc";
+import { useDialog } from "@/composables/useDialog";
+import { useReboot } from "@/composables/useReboot";
 import GUI from "../../js/gui";
 import FC from "../../js/fc";
 import MSP from "../../js/msp";
@@ -756,6 +758,14 @@ export default defineComponent({
         const connectionStore = useConnectionStore();
         const navigationStore = useNavigationStore();
         const fcStore = useFlightControllerStore();
+        const dialog = useDialog();
+        const { reboot } = useReboot();
+
+        // Helper to perform reboot after save
+        const performReboot = () => {
+            reboot();
+        };
+
         const pidAdvancedConfig = reactive({
             pid_process_denom: 1,
         });
@@ -1449,7 +1459,7 @@ export default defineComponent({
                 await new Promise((resolve) => {
                     mspHelper.writeConfiguration(false, () => {
                         navigationStore.cleanup(() => {
-                            connectionStore.reboot();
+                            performReboot();
                             resolve();
                         });
                     });
@@ -1535,3 +1545,4 @@ export default defineComponent({
 <style lang="less" scoped>
 @import "../../css/tabs/configuration.less";
 </style>
+```

@@ -1,12 +1,10 @@
 import { ref } from "vue";
 import { useDialogStore } from "@/stores/dialog";
-import MSP from "@/js/msp";
-import MSPCodes from "@/js/msp/MSPCodes";
+import { reinitializeConnection } from "@/js/serial_backend"; // Backend logic
 import CONFIGURATOR from "@/js/data_storage";
 import PortHandler from "@/js/port_handler";
 import { i18n } from "@/js/localization";
 import { gui_log } from "@/js/gui_log";
-import $ from "jquery";
 
 export function useReboot() {
     const dialogStore = useDialogStore();
@@ -32,36 +30,23 @@ export function useReboot() {
     const reboot = () => {
         if (isRebooting.value) return;
 
-        // 1. Handling Virtual Mode
-        if (CONFIGURATOR.virtualMode) {
-            $("a.connection_button__link").trigger("click");
-            if (PortHandler.portPicker.autoConnect) {
-                setTimeout(() => {
-                    $("a.connection_button__link").trigger("click");
-                }, 500);
-            }
-            return;
-        }
+        // Delegates the actual command sending and state setup (rebootTimestamp) to the backend.
+        // This ensures serial_backend.js knows to allow auto-connection after the reboot.
+        reinitializeConnection();
+
+        // Force invalid locally as well (backend does it too usually, but safe to sync)
+        CONFIGURATOR.connectionValid = false;
 
         const currentPort = PortHandler.portPicker.selectedPort;
         const rebootTimestamp = Date.now();
 
-        // 2. Send Command
-        MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false);
-        CONFIGURATOR.connectionValid = false; // Force invalid until reconnect
-
-        // 3. Handle Manual/Bluetooth (no auto-reconnect logic usually)
-        if (currentPort.startsWith("bluetooth") || currentPort === "manual") {
-            setTimeout(() => {
-                $("a.connection_button__link").trigger("click");
-            }, 1500);
+        // For Virtual/Manual/Bluetooth, reinitializeConnection handles the toggle logic via setTimeout/clicks.
+        // We do not show the Vue dialog for these cases to maintain legacy behavior (fast toggle).
+        if (CONFIGURATOR.virtualMode || currentPort.startsWith("bluetooth") || currentPort === "manual") {
             return;
         }
 
-        // 4. Show Dialog
-        // Note: Legacy skipped dialog for CLI/Presets. We'll enforce that via caller if needed,
-        // but here we assume if you call useReboot().reboot(), you want the UI.
-
+        // Show Dialog for standard serial connections
         gui_log(i18n.getMessage("deviceRebooting"));
 
         dialogStore.open("RebootDialog", {
@@ -71,7 +56,7 @@ export function useReboot() {
 
         isRebooting.value = true;
 
-        // 5. Progress Animation
+        // Progress Animation
         let progress = 0;
         const progressIncrement = 100 / (REBOOT_CONNECT_MAX_TIME_MS / 100);
 
@@ -82,7 +67,7 @@ export function useReboot() {
             }
         }, 100);
 
-        // 6. Wait for Reconnection
+        // Wait for Reconnection
         waitForReconnection(rebootTimestamp, (timeoutReached) => {
             clearInterval(progressInterval);
 
