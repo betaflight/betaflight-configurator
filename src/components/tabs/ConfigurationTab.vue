@@ -734,6 +734,7 @@
 <script>
 import { defineComponent, ref, reactive, onMounted, computed, nextTick, watch, onUnmounted } from "vue";
 import { useConnectionStore } from "@/stores/connection";
+import { useNavigationStore } from "@/stores/navigation";
 import GUI from "../../js/gui";
 import FC from "../../js/fc";
 import MSP from "../../js/msp";
@@ -753,6 +754,7 @@ export default defineComponent({
     setup() {
         // Reactive State
         const connectionStore = useConnectionStore();
+        const navigationStore = useNavigationStore();
         const pidAdvancedConfig = reactive({
             pid_process_denom: 1,
         });
@@ -1446,7 +1448,7 @@ export default defineComponent({
                 // Save to EEPROM and Reboot
                 await new Promise((resolve) => {
                     mspHelper.writeConfiguration(false, () => {
-                        GUI.tab_switch_cleanup(() => {
+                        navigationStore.cleanup(() => {
                             connectionStore.reboot();
                             resolve();
                         });
