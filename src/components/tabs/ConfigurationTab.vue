@@ -501,7 +501,6 @@
                                         {{ align }}
                                     </option>
                                 </select>
-                                <span>{{ $t("configurationMagAlignment") }}</span>
                             </div>
 
                             <div class="sensor_align_content" v-if="sensorAlignment.align_mag === 9">
@@ -919,12 +918,14 @@ export default defineComponent({
             i18n.getMessage("configurationSensorAlignmentCustom"),
         ]);
 
-        // Features & Beepers State wrapper
+        // Other Features & Beepers State wrapper
         const featuresList = computed(() => {
             if (!FC.FEATURE_CONFIG?.features?._features) {
                 return [];
             }
-            return FC.FEATURE_CONFIG.features._features.filter((feature) => feature.mode !== "select");
+            return FC.FEATURE_CONFIG.features._features.filter((feature) => {
+                return feature.mode !== "select" && feature.group === "other";
+            });
         });
 
         const beepersList = computed(() => {
