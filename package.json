@@ -118,10 +118,5 @@
   "resolutions": {
     "jquery": "3.6.3",
     "libxmljs2": "0.32.0"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "yarn lint"
-    }
   }
 }
