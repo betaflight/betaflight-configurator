@@ -33,7 +33,7 @@ jobs:
         uses: actions/download-artifact@v5
         with:
           name: betaflight-app-apk
-          path: .
+          path: artifacts
 
       - name: Attach assets to release
         run: |
