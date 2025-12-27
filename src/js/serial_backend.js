@@ -822,8 +822,11 @@ function showRebootDialog() {
 
     // Update progress during reboot
     let progress = 0;
+    // Calculate increment to reach 100% when the timeout elapses (runs every 100ms)
+    const progressIncrement = 100 / (REBOOT_CONNECT_MAX_TIME_MS / 100);
+
     const progressInterval = setInterval(() => {
-        progress += 5;
+        progress += progressIncrement;
         if (progress <= 100) {
             rebootDialog.querySelector(".reboot-progress-bar").style.width = `${progress}%`;
         }
