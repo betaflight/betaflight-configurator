@@ -6143,6 +6143,10 @@
         "message": "Short date",
         "description": "One of the variants of the RTC date and time element of the OSD"
     },
+    "osdTextElementRtcDateTimeVariantTimeOnly": {
+        "message": "Time only",
+        "description": "One of the variants of the RTC date and time element of the OSD"
+    },
     "osdDescElementRtcDateTime": {
         "message": "Real time clock date / time"
     },

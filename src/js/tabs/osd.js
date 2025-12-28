@@ -6,7 +6,7 @@ import VirtualFC from "../VirtualFC";
 import FC from "../fc";
 import MSP from "../msp";
 import MSPCodes from "../msp/MSPCodes";
-import CONFIGURATOR, { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "../data_storage";
+import CONFIGURATOR, { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47, API_VERSION_1_48 } from "../data_storage";
 import LogoManager from "../LogoManager";
 import { gui_log } from "../gui_log";
 import semver from "semver";
@@ -1294,7 +1294,14 @@ OSD.loadDisplayFields = function () {
             positionable: true,
             preview(osdData) {
                 const variantSelected = OSD.getVariantForPreview(osdData, "RTC_DATE_TIME");
-                return variantSelected === 0 ? "2025-11-11 16:20:00" : "11-11 16:20";
+                switch (variantSelected) {
+                    case 0:
+                        return "2025-11-11 16:20:00";
+                    case 1:
+                        return "11-11 16:20";
+                    case 2:
+                        return "16:20:00";
+                }
             },
         },
         ADJUSTMENT_RANGE: {
@@ -1784,6 +1791,10 @@ OSD.loadDisplayFields = function () {
             "osdTextElementRtcDateTimeVariantFullDate",
             "osdTextElementRtcDateTimeVariantShortDate",
         ];
+    }
+
+    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_48)) {
+        OSD.ALL_DISPLAY_FIELDS.RTC_DATE_TIME.variants.push("osdTextElementRtcDateTimeVariantTimeOnly");
     }
 };
 
