@@ -22,7 +22,7 @@
     "android:release": "vite build && node capacitor.config.generator.mjs && npx cap build android --release",
     "format": "prettier --write {src,test}/**/*.{js,vue,css,less}",
     "storybook": "start-storybook -p 6006",
-    "prepare": "husky install"
+    "prepare": "husky"
   },
   "window": {
     "icon": "images/bf_icon_128.png",
@@ -117,10 +117,5 @@
   },
   "resolutions": {
     "jquery": "3.6.3"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "yarn lint"
-    }
   }
 }
