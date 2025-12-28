@@ -145,24 +145,39 @@ ol {
     #presets_detailed_dialog {
         .content_toolbar {
             position: fixed;
-            height: 70px;
-            padding-bottom: 8px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100vw;
+            height: auto;
+            min-height: 80px;
+            padding: 10px;
+            box-sizing: border-box;
+            border-top: 1px solid var(--primary-500);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
         }
         .btn {
-            margin-left: 0px;
+            display: flex;
+            flex-direction: column;
             width: 100%;
+            align-items: center;
             .left-panel {
-                margin-left: 12px;
-                margin-bottom: 12px;
-                padding-left: 0px;
-                .regular-button {
-                    float: none;
-                    display: inline-block;
-                }
+                position: relative;
+                left: unset;
+                padding-left: 0;
+                margin: 0;
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 5px;
             }
         }
         .mainButton {
-            margin-top: 40px;
+            margin-top: 5px;
+            display: inline-block;
         }
     }
     #presets_options_panel {
