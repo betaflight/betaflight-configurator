@@ -269,6 +269,7 @@
 .tab-servos.supported {
     .require-support {
         display: block;
+        overflow-x: auto;
     }
     .require-upgrade {
         display: none;
@@ -293,13 +294,6 @@
         .gui_box {
             min-height: auto;
         }
-        .servoblock {
-            margin-bottom: 15px;
-            > .spacer {
-                display: flex;
-                flex-wrap: wrap;
-            }
-        }
         .left.motors {
             width: 100%;
             order: 1;
@@ -319,24 +313,10 @@
         }
         .m-block {
             width: calc((100% - 80px) / 9);
-            &:last-child {
-                margin-right: 0;
-            }
         }
         .servos {
             .m-block {
                 width: calc((100% - 70px) / 8);
-                &:last-child {
-                    margin-left: 0;
-                }
-            }
-            .titles {
-                li {
-                    width: calc((100% - 70px) / 8);
-                    &:last-child {
-                        margin-left: 0;
-                    }
-                }
             }
         }
         .servo_testing {
