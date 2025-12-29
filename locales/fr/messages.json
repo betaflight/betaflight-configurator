@@ -1200,9 +1200,6 @@
     "configurationSpiRxHelp": {
         "message": "<strong>Note:<\/strong> le RX SPI ne fonctionne que si la carte est équipée ou connectée à un bus SPI."
     },
-    "configurationOtherFeaturesHelp": {
-        "message": "<strong>Note:<\/strong> toutes les options ne fonctionnent pas sur toutes les cartes. Si une fonctionnalité est désactivée après avoir cliqué sur 'Sauvegarder puis redémarrer', c'est que votre carte n'est pas compatible."
-    },
     "configurationBoardAlignment": {
         "message": "Alignement de la carte"
     },
@@ -5860,9 +5857,6 @@
     "configurationDshotBidirHelp": {
         "message": "Envoie les données ESC à la FC via la télémétrie DShot. Nécessaire pour le filtrage RPM et idle dynamique. <br> <br>Note : Nécessite un ESC compatible avec le micrologiciel approprié, par exemple JESC, Jazzmac, BLHeli-32.",
         "description": "Description of the Bidirectional DShot feature of the ESC\/Motor"
-    },
-    "configurationGyroSyncDenom": {
-        "message": "Fréquence de rafraîchissement du Gyro"
     },
     "configurationPidProcessDenom": {
         "message": "Fréquence de la boucle PID"

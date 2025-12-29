@@ -843,9 +843,6 @@
     "configurationSpiRxHelp": {
         "message": "<strong>Oharra:<\/strong> SPI RX hornitzaileak funtzionatuko du beharrezko hardwarea taula gainean badago edo SPI bus batera konektatuta badago."
     },
-    "configurationOtherFeaturesHelp": {
-        "message": "<strong>Oharra:<\/strong> Aukera guztiak ez dira kontrolatzaile guztiek onartzen. Aukera jakin bat gaitzen baduzu eta 'Gorde eta berrabiarazi' sakatu ondoren itzaltzen bada, aukera hau ez da zure kontroladorean onartzen."
-    },
     "configurationBoardAlignmentRoll": {
         "message": "Roll graduak"
     },
@@ -4447,9 +4444,6 @@
     "configurationDshotBidirHelp": {
         "message": "ESC datuak hegaldi-kontroladoreari bidali DShot telemetriaren bidez. Funtzio hau RPM iragazkia eta Idle Dinamikoa erabiltzeko beharrezkoa da. <br> <br>Oharra: ESC firmware egokia behar duzu, adibidez JESC, JazzMac, BLHeli_32.",
         "description": "Description of the Bidirectional DShot feature of the ESC\/Motor"
-    },
-    "configurationGyroSyncDenom": {
-        "message": "Giroa eguneratzeko frekuentzia"
     },
     "configurationPidProcessDenom": {
         "message": "PID, zikloaren frekuentzia"

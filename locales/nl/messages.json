@@ -874,9 +874,6 @@
     "configurationSpiRxHelp": {
         "message": "<strong>Opmerking:<\/strong> De SPI RX provider werkt alleen als de vereiste hardware aan boord is of verbonden is met een SPI bus."
     },
-    "configurationOtherFeaturesHelp": {
-        "message": "<strong>Opmerking:<\/strong> Niet alle functies worden ondersteund door alle vluchtcontrollers. Als u een specifieke functie inschakelt en deze is uitgeschakeld nadat u op 'Sla op en herstart' klikt, betekent dit dat deze functie niet ondersteund wordt door uw vluchtcontroller."
-    },
     "configurationBoardAlignmentRoll": {
         "message": "Roll Graden"
     },
@@ -4678,9 +4675,6 @@
     "configurationDshotBidirHelp": {
         "message": "Stuurt ESC gegevens naar het FC via DShot telemetry. Dit is vereist voor RPM Filtering en dynamisch idle.<br> <br>Opmerking: Vereist een compatibel ESC met de juiste firmware, bijvoorbeeld JESC, Jazzmac, BLHeli-32.",
         "description": "Description of the Bidirectional DShot feature of the ESC\/Motor"
-    },
-    "configurationGyroSyncDenom": {
-        "message": "Gyro update frequentie"
     },
     "configurationPidProcessDenom": {
         "message": "PID loop frequentie"

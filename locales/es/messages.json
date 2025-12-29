@@ -1355,9 +1355,6 @@
     "configurationSpiRxHelp": {
         "message": "<strong>Nota:<\/strong> El proveedor RX SPI sólo funcionará si el hardware necesario está en placa o conectado al bus SPI."
     },
-    "configurationOtherFeaturesHelp": {
-        "message": "<strong>Nota:<\/strong> No todas las funcionalidades están soportadas por todos los controladores de vuelo. Si activas una funcionalidad específica, y se desactiva cuando pulsas 'Guardar y Reiniciar', significa que esa funcionalidad no está soportada por tu placa."
-    },
     "configurationMagAlignmentHelp": {
         "message": "La alineación del magnetómetro es la orientación del magnetómetro en la placa del controlador de vuelo. Generalmente el valor por defecto es correcto, pero si tienes una versión personalizada o un controlador de vuelo con una orientación diferente del magnetómetro, puede que necesites ajustar esta configuración."
     },
@@ -1370,19 +1367,11 @@
     "configurationMagDeclinationHelp": {
         "message": "La declinación magnética es el ángulo entre el norte magnético y el norte verdadero. Es diferente para cada ubicación en la Tierra. Puedes encontrar la declinación de tu ubicación en Internet"
     },
-    "configurationRangefinder": {
-        "message": "$t(initialSetupSensorSonar.message)",
-        "description": "Don't translate!!!"
-    },
     "configurationRangefinderHelp": {
         "message": "Activa el telémetro para medir distancia al suelo en cm"
     },
     "configurationRangefinderType": {
         "message": "Tipo"
-    },
-    "configurationOpticalflow": {
-        "message": "$t(initialSetupSensorOpticalflow.message)",
-        "description": "Don't translate!!!"
     },
     "configurationOpticalflowHelp": {
         "message": "Activar sensor de flujo óptico"
@@ -6989,9 +6978,6 @@
     "configurationDshotBidirHelp": {
         "message": "Envía datos del ESC al FC a través de la telemetría DShot. Es necesario para el Filtro RPM y el Ralentí Dinámico.<br> <br>Nota: Requiere un ESC compatible con el firmware apropiado, por ejemplo, JESC, Jazzmac, BLHeli-32.",
         "description": "Description of the Bidirectional DShot feature of the ESC\/Motor"
-    },
-    "configurationGyroSyncDenom": {
-        "message": "Giro, frecuencia de actualización"
     },
     "configurationPidProcessDenom": {
         "message": "PID, frecuencia del ciclo"

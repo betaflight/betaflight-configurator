@@ -1140,9 +1140,6 @@
     "configurationSpiRxHelp": {
         "message": "<strong>Nota:<\/strong> O provedor SPI RX só funcionará se o hardware necesario está na placa ou se conecta a un bus SPI."
     },
-    "configurationOtherFeaturesHelp": {
-        "message": "<strong>Nota:<\/strong> Non tódalas opcións son soportadas por tódalas controladoras. Se activa una opción específica, e se desactiva despois de pulsar 'Gardar e Reiniciar', significa que esta opción non está soportada na súa controladora."
-    },
     "configurationBoardAlignmentRoll": {
         "message": "Graos de Roll"
     },
@@ -6146,9 +6143,6 @@
     "configurationDshotBidirHelp": {
         "message": "Envía datos da ESC á FC mediante telemetría DShot. Obrigatorio por filtrado RPM e ralentí dinámico. <br> <br>Nota: Require un ESC compatible cun firmware apropiado, por exemplo JESC, Jazzmac, BLHeli-32.",
         "description": "Description of the Bidirectional DShot feature of the ESC\/Motor"
-    },
-    "configurationGyroSyncDenom": {
-        "message": "Frecuencia do xiroscopo actualizada"
     },
     "configurationPidProcessDenom": {
         "message": "Frecuencia do ciclo PID"

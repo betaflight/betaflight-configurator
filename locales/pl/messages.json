@@ -1363,9 +1363,6 @@
     "configurationSpiRxHelp": {
         "message": "<strong>Uwaga:<\/strong> Odbiornik typu SPI RX będzie działa tylko gdy odbiornik jest zintegrowany z kontrolerem lotu lub jest podłączony do magistrali SPI."
     },
-    "configurationOtherFeaturesHelp": {
-        "message": "<strong>Uwaga:<\/strong> Nie każda funkcja jest obsługiwana przez każdy kontroler lotu. Jeśli włączysz daną funkcję a po wciśnięciu 'Zapisz i uruchom ponownie' nie zostanie ona włączona to oznacza, że funkcja ta jest nieobsługiwana przez twój kontroler lotu."
-    },
     "configurationMagAlignmentHelp": {
         "message": "Ustawienie magnetometru to orientacja czujnika magnetometru na płycie kontrolera lotu. Wartość domyślna jest zwykle poprawna, ale jeśli masz niestandardową konstrukcję lub kontroler lotu z inną orientacją magnetometru, może być konieczne dostosowanie tego ustawienia."
     },
@@ -1378,19 +1375,11 @@
     "configurationMagDeclinationHelp": {
         "message": "Deklinacja magnetyczna jest kątem pomiędzy północą geograficzną a magnetyczną. Jest różna dla każdej lokalizacji na ziemi. Deklinację magnetyczną dla swojej lokalizacji możesz znaleźć w Internecie"
     },
-    "configurationRangefinder": {
-        "message": "$t(initialSetupSensorSonar.message)",
-        "description": "Don't translate!!!"
-    },
     "configurationRangefinderHelp": {
         "message": "Włącz dalmierz, aby zmierzyć odległość do ziemi w centymetrach"
     },
     "configurationRangefinderType": {
         "message": "Typ"
-    },
-    "configurationOpticalflow": {
-        "message": "$t(initialSetupSensorOpticalflow.message)",
-        "description": "Don't translate!!!"
     },
     "configurationOpticalflowHelp": {
         "message": "Włącz czujnik optyczny"
@@ -6997,9 +6986,6 @@
     "configurationDshotBidirHelp": {
         "message": "ESC wysyła dane zwrotne do Kontrolera lotu przez kanał telemetrii DShot, jest  to wymagane przez funkcje Filtrowania RPM oraz funkcje Dynamicznego biegu jałowego. <br><br>  Uwaga: Wymagany jest ESC, który posiada takie funkcje w oprogramowaniu np. JESC, Jazzmac, BLHeli-32.",
         "description": "Description of the Bidirectional DShot feature of the ESC\/Motor"
-    },
-    "configurationGyroSyncDenom": {
-        "message": "Częstotliwość aktualizacji żyroskopu"
     },
     "configurationPidProcessDenom": {
         "message": "Częstotliwość pętli PID"

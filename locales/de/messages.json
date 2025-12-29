@@ -1270,9 +1270,6 @@
     "configurationSpiRxHelp": {
         "message": "<strong>Hinweis:<\/strong> Der SPI Empfänger wird nur dann funktionieren, wenn eine passende Hardware an dem Board oder dem SPI Bus angeschlossen ist."
     },
-    "configurationOtherFeaturesHelp": {
-        "message": "<strong>Hinweis:<\/strong> Nicht alle Funktionen werden von allen FC unterstützt. Sollte eine ausgewählte Funktion nach dem Speichern und Neustart wieder deaktiviert sein, so wird diese nicht unterstützt."
-    },
     "configurationRangefinderHelp": {
         "message": "Entfernungsmesser zur Messung der Distanz zum Boden in cm aktivieren"
     },
@@ -6478,9 +6475,6 @@
     "configurationDshotBidirHelp": {
         "message": "Sendet ESC Daten an den FC via DShot Telemetrie. Wird von RPM Filterung und dynamischem Leerlauf benötigt. <br><br>Hinweis: Benötigt wird ein kompatibler ESC mit entsprechender Firmware, z.B. JESC, JazzMaverick, BLHeli-32.",
         "description": "Description of the Bidirectional DShot feature of the ESC\/Motor"
-    },
-    "configurationGyroSyncDenom": {
-        "message": "Gyro Update Frequenz"
     },
     "configurationPidProcessDenom": {
         "message": "PID Loop Frequenz"
