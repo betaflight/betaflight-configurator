@@ -303,3 +303,11 @@ meter[value] {
         }
     }
 }
+@media only screen and (max-width: 768px) {
+    /* Make the grid a column on small devices */
+    .grid-row.grid-box {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+}
