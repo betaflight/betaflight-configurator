@@ -217,6 +217,9 @@
     "sensorStatusGyro": {
         "message": "Giroscopi"
     },
+    "configurationGyroRequired": {
+        "message": "Cal activar com a mínim un giroscopi"
+    },
     "sensorStatusGyroShort": {
         "message": "Giro",
         "description": "Text of the image in the top sensors icons. Please keep it short."
@@ -1345,6 +1348,9 @@
     "configurationFeatures": {
         "message": "Altres Característiques"
     },
+    "configurationFeatureHelp": {
+        "message": "Ajuda"
+    },
     "configurationReceiver": {
         "message": "Receptor"
     },
@@ -1375,8 +1381,14 @@
     "configurationSpiRxHelp": {
         "message": "<strong>Nota:<\/strong> El proveïdor SPI RX només funcionarà si el maquinari necessari és a bord o està connectat a un bus SPI."
     },
-    "configurationOtherFeaturesHelp": {
-        "message": "<strong>Nota:<\/strong> No totes les controladores de vol admeten totes les funcions. Si habiliteu una funció específica i es desactiva després de prémer \"Desa i reinicia\", significa que aquesta funció no és compatible amb la vostra FC."
+    "configurationActiveImu": {
+        "message": "IMU actiu"
+    },
+    "configurationSensors": {
+        "message": "Configuració del sensor"
+    },
+    "configurationSensorsHelp": {
+        "message": "Configura sensors addicionals i funcions avançades."
     },
     "configurationMagAlignmentHelp": {
         "message": "L'alineació del magnetòmetre és l'orientació del sensor del magnetòmetre a la placa del controlador de vol. El valor predeterminat sol ser correcte, però si teniu una construcció personalitzada o un controlador de vol amb una orientació diferent del magnetòmetre, és possible que hàgiu d'ajustar aquesta configuració."
@@ -1391,7 +1403,7 @@
         "message": "La declinació magnètica és l'angle entre el nord magnètic i el nord veritable. És diferent per a cada lloc de la terra. Podeu trobar la declinació de la vostra ubicació a Internet"
     },
     "configurationRangefinder": {
-        "message": "$t(initialSetupSensorSonar.message)",
+        "message": "Rangefinder",
         "description": "Don't translate!!!"
     },
     "configurationRangefinderHelp": {
@@ -1401,7 +1413,7 @@
         "message": "Tipus"
     },
     "configurationOpticalflow": {
-        "message": "$t(initialSetupSensorOpticalflow.message)",
+        "message": "Optical Flow",
         "description": "Don't translate!!!"
     },
     "configurationOpticalflowHelp": {
@@ -1465,6 +1477,30 @@
         "message": "$t(configurationBoardAlignmentYaw.message)",
         "description": "Don't translate!!!"
     },
+    "configurationGyro1AlignmentRoll": {
+        "message": "$t(configurationBoardAlignmentRoll.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyro1AlignmentPitch": {
+        "message": "$t(configurationBoardAlignmentPitch.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyro1AlignmentYaw": {
+        "message": "$t(configurationBoardAlignmentYaw.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyro2AlignmentRoll": {
+        "message": "$t(configurationBoardAlignmentRoll.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyro2AlignmentPitch": {
+        "message": "$t(configurationBoardAlignmentPitch.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyro2AlignmentYaw": {
+        "message": "$t(configurationBoardAlignmentYaw.message)",
+        "description": "Don't translate!!!"
+    },
     "configurationSensorAlignmentGyro": {
         "message": "Alineament GYRO"
     },
@@ -1501,6 +1537,9 @@
     "configurationSensorAlignmentDefaultOption": {
         "message": "Predeterminat"
     },
+    "configurationSensorAlignmentCustom": {
+        "message": "Personalitzat"
+    },
     "configurationAccelTrims": {
         "message": "Alineament Trim"
     },
@@ -1530,6 +1569,9 @@
     },
     "configurationGyroCalOnFirstArm": {
         "message": "Calibra el Gyro al primer braç"
+    },
+    "configurationGyroCalOnFirstArmHelp": {
+        "message": "Quan està activat, el giroscopi es calibrarà al primer braç després de l'encesa. Això pot ajudar a reduir la deriva giroscòpica durant el vol."
     },
     "configurationMotorIdle": {
         "message": "Motor inactiu (%)"
@@ -7030,8 +7072,8 @@
         "message": "Envia dades de l’ESC a la FC mitjançant telemetria DShot. Necessari per RPM Filtering i Idle dinàmic.<br> <br>: Nota: requereix un ESC compatible amb el firmware adequat, per exemple, JESC, Jazzmac, BLHeli-32.",
         "description": "Description of the Bidirectional DShot feature of the ESC\/Motor"
     },
-    "configurationGyroSyncDenom": {
-        "message": "Freqüència d'actualització del Giroscopi"
+    "configurationGyroFrequency": {
+        "message": "Freqüència d'actualització del giroscopi"
     },
     "configurationPidProcessDenom": {
         "message": "Freqüencia de llaç del PID"

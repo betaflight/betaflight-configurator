@@ -1355,9 +1355,6 @@
     "configurationSpiRxHelp": {
         "message": "<strong>注:<\/strong> SPI受信プロトコルは、必要なハードウェアが搭載されているかSPIバスに接続されている場合にのみ動作します。"
     },
-    "configurationOtherFeaturesHelp": {
-        "message": "<strong>注:<\/strong> すべての機能がすべてのフライトコントローラでサポートされている訳ではありません。 特定の機能を有効にして [保存して再起動] した後でも無効になっている場合は、この機能がボード上でサポートされていないことを意味します。"
-    },
     "configurationMagAlignmentHelp": {
         "message": "コンパス アライメントは、FCボード上の磁気センサーの向きを指します。通常はデフォルト設定で正しい場合がほとんどですが、カスタムビルドや異なる向きの磁気センサーを持つフライトコントローラを使用している場合、この設定を調整する必要があるかもしれません。"
     },
@@ -1370,19 +1367,11 @@
     "configurationMagDeclinationHelp": {
         "message": "コンパス偏角は、磁北 (磁気北極) と真北 (地理的北極) の間の角度を指します。この角度は地球上の場所によって異なります。ご自身の位置での偏角は、インターネットで簡単に確認することができます。"
     },
-    "configurationRangefinder": {
-        "message": "$t(initialSetupSensorSonar.message)",
-        "description": "Don't translate!!!"
-    },
     "configurationRangefinderHelp": {
         "message": "距離計 (レンジファインダー) を有効にし、地面までの距離をcm単位で計測"
     },
     "configurationRangefinderType": {
         "message": "タイプ"
-    },
-    "configurationOpticalflow": {
-        "message": "$t(initialSetupSensorOpticalflow.message)",
-        "description": "Don't translate!!!"
     },
     "configurationOpticalflowHelp": {
         "message": "オプティカルフローセンサー 有効"
@@ -6989,9 +6978,6 @@
     "configurationDshotBidirHelp": {
         "message": "DShotテレメトリーを介してFCボードにESCデータを送信します。RPMフィルタリングと動的アイドル値で必要となります。<br><br>注: JESC、Jazzmac、BLHeli-32などの適切なファームウェアを搭載した互換性のあるESCが必要です。",
         "description": "Description of the Bidirectional DShot feature of the ESC\/Motor"
-    },
-    "configurationGyroSyncDenom": {
-        "message": "ジャイロ 演算周波数"
     },
     "configurationPidProcessDenom": {
         "message": "PIDループ 演算周波数"

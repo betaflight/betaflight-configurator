@@ -205,6 +205,9 @@
     "sensorStatusGyro": {
         "message": "Giroscopio"
     },
+    "configurationGyroRequired": {
+        "message": "Almeno un giroscopio deve essere abilitato"
+    },
     "sensorStatusGyroShort": {
         "message": "Gyro",
         "description": "Text of the image in the top sensors icons. Please keep it short."
@@ -1333,6 +1336,9 @@
     "configurationFeatures": {
         "message": "Altre Funzioni"
     },
+    "configurationFeatureHelp": {
+        "message": "Aiuto"
+    },
     "configurationReceiver": {
         "message": "Ricevente"
     },
@@ -1363,8 +1369,14 @@
     "configurationSpiRxHelp": {
         "message": "<strong>Nota:<\/strong> il provider SPI RX funzionerà solo se l'hardware necessario è incluso nella scheda o se collegato ad un bus SPI."
     },
-    "configurationOtherFeaturesHelp": {
-        "message": "<strong>Nota:<\/strong> Non tutte le funzionalità sono supportate da tutti i controller di volo. Se abiliti una impostazione specifica e risulta disabilitata dopo aver fatto 'Salva e Riavvia', vuol dire che questa impostazione non è supportata dalla tua scheda."
+    "configurationActiveImu": {
+        "message": "IMU Attiva"
+    },
+    "configurationSensors": {
+        "message": "Configurazione Sensore"
+    },
+    "configurationSensorsHelp": {
+        "message": "Configura sensori aggiuntivi e funzionalità avanzate."
     },
     "configurationMagAlignmentHelp": {
         "message": "L'allineamento del magnetometro è l'orientamento del sensore magnetometro sulla scheda del controllore di volo. Il valore predefinito è generalmente corretto, ma se si dispone di una build personalizzata o di un controllore di volo con un diverso orientamento, potrebbe essere necessario modificare questa impostazione."
@@ -1376,10 +1388,10 @@
         "message": "Gradi Declinazione"
     },
     "configurationMagDeclinationHelp": {
-        "message": "La declinazione magnetica è l'angolo tra nord magnetico e nord vero. È diverso per ogni posizione sulla terra. Puoi trovare la declinazione per la tua posizione su internet"
+        "message": "La declinazione magnetica è l'angolo tra nord magnetico e nord reale. È diverso per ogni posizione sulla terra. Puoi trovare la declinazione della tua posizione su internet"
     },
     "configurationRangefinder": {
-        "message": "$t(initialSetupSensorSonar.message)",
+        "message": "Rangefinder",
         "description": "Don't translate!!!"
     },
     "configurationRangefinderHelp": {
@@ -1389,7 +1401,7 @@
         "message": "Tipo"
     },
     "configurationOpticalflow": {
-        "message": "$t(initialSetupSensorOpticalflow.message)",
+        "message": "Optical Flow",
         "description": "Don't translate!!!"
     },
     "configurationOpticalflowHelp": {
@@ -1453,6 +1465,30 @@
         "message": "$t(configurationBoardAlignmentYaw.message)",
         "description": "Don't translate!!!"
     },
+    "configurationGyro1AlignmentRoll": {
+        "message": "$t(configurationBoardAlignmentRoll.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyro1AlignmentPitch": {
+        "message": "$t(configurationBoardAlignmentPitch.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyro1AlignmentYaw": {
+        "message": "$t(configurationBoardAlignmentYaw.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyro2AlignmentRoll": {
+        "message": "$t(configurationBoardAlignmentRoll.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyro2AlignmentPitch": {
+        "message": "$t(configurationBoardAlignmentPitch.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyro2AlignmentYaw": {
+        "message": "$t(configurationBoardAlignmentYaw.message)",
+        "description": "Don't translate!!!"
+    },
     "configurationSensorAlignmentGyro": {
         "message": "Allinea GYRO"
     },
@@ -1489,6 +1525,9 @@
     "configurationSensorAlignmentDefaultOption": {
         "message": "Predefinito"
     },
+    "configurationSensorAlignmentCustom": {
+        "message": "Personalizzato"
+    },
     "configurationAccelTrims": {
         "message": "Trim Accelerometro"
     },
@@ -1518,6 +1557,9 @@
     },
     "configurationGyroCalOnFirstArm": {
         "message": "Calibra il giroscopio al primo armamento"
+    },
+    "configurationGyroCalOnFirstArmHelp": {
+        "message": "Se abilitato, il giroscopio sarà calibrato al primo armamento dopo l'accensione. Questo può aiutare a ridurre la deriva del giroscopio durante il volo."
     },
     "configurationMotorIdle": {
         "message": "Minimo Motore (%)"
@@ -7018,7 +7060,7 @@
         "message": "Invia dati dall'ESC alla FC tramite la Telemetria Dshot. Richiesto dal Filtro RPM e dall'idle dinamico.<br><br>Nota: Richiede un ESC compatibile con un firmware appropriato, es. JESC, Jazzmac, BLHeli-32, AM32.",
         "description": "Description of the Bidirectional DShot feature of the ESC\/Motor"
     },
-    "configurationGyroSyncDenom": {
+    "configurationGyroFrequency": {
         "message": "Frequenza aggiornamento gyro"
     },
     "configurationPidProcessDenom": {

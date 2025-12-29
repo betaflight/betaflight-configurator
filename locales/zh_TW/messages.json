@@ -825,9 +825,6 @@
     "configurationSpiRxHelp": {
         "message": "<strong>注意:<\/strong> SPI 接收機只有通過 SPI 總線連接到飛控或板載了相應硬體時才能工作。"
     },
-    "configurationOtherFeaturesHelp": {
-        "message": "<strong>注意:<\/strong> 不是所有所有飛控都能支援所有的功能。如果你啟用了某個功能，但在“保存並重啟”以後，該功能被禁用，則說明你的飛控不支援該功能。"
-    },
     "configurationBoardAlignmentRoll": {
         "message": "橫滾 度"
     },
@@ -4370,9 +4367,6 @@
     "configurationDshotBidirHelp": {
         "message": "向飛控板發送電調數據。 RPM 濾波器和動態怠速需要這個功能。 <br><br>注意：需要使用兼容的電調固件，例如JESC、JazzMac、BLHeli_32。",
         "description": "Description of the Bidirectional DShot feature of the ESC\/Motor"
-    },
-    "configurationGyroSyncDenom": {
-        "message": "陀螺儀更新頻率"
     },
     "configurationPidProcessDenom": {
         "message": "PID 循環更新頻率"

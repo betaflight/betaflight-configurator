@@ -1323,9 +1323,6 @@
     "configurationSpiRxHelp": {
         "message": "<strong>Примечание:<\/strong> SPI RX вход будет работать только в том случае, если необходимое \"железо\" находится на плате или подключено к шине SPI."
     },
-    "configurationOtherFeaturesHelp": {
-        "message": "<strong>Примечание:<\/strong> Не все полётные контроллеры поддерживает все эти настройки. Если Вы включили специфические настройки и они отключились после нажатия \"Сохранить и Перезагрузить\", это означает, что полётный контроллер их не поддерживает."
-    },
     "configurationMagAlignmentHelp": {
         "message": "Выравнивание магнитометра — это ориентация датчика магнитометра на плате полётного контроллера. По умолчанию обычно задано верное значение, но если у вас кастомная сборка или полётный контроллер с другой ориентацией магнитометра, вам может потребоваться изменить эту настройку."
     },
@@ -1338,19 +1335,11 @@
     "configurationMagDeclinationHelp": {
         "message": "Магнитное склонение – это угол между магнитным северным и севером. Он отличается для каждого местоположения на земле. Вы можете найти отклонение для вашего местоположения в интернете"
     },
-    "configurationRangefinder": {
-        "message": "$t(initialSetupSensorSonar.message)",
-        "description": "Don't translate!!!"
-    },
     "configurationRangefinderHelp": {
         "message": "Включить сонар для измерения расстояния до земли в см"
     },
     "configurationRangefinderType": {
         "message": "Тип"
-    },
-    "configurationOpticalflow": {
-        "message": "$t(initialSetupSensorOpticalflow.message)",
-        "description": "Don't translate!!!"
     },
     "configurationOpticalflowHelp": {
         "message": "Включить датчик оптического потока"
@@ -6868,9 +6857,6 @@
     "configurationDshotBidirHelp": {
         "message": "Отправляет данные ESC на Полётный контроллер по телеметрии DShot. Требуется для работы RPM Фильтрации и динамического холостого хода. <br> <br>Примечание: Требуются совместимые ESC с соответствующей прошивкой, например JESC, Jazzmac, BLHeli-32.",
         "description": "Description of the Bidirectional DShot feature of the ESC\/Motor"
-    },
-    "configurationGyroSyncDenom": {
-        "message": "Частота обновления гироскопа"
     },
     "configurationPidProcessDenom": {
         "message": "Частота обновления цикла PID"

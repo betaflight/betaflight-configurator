@@ -213,12 +213,15 @@
     "sensorStatusGyro": {
         "message": "Gyroskop"
     },
+    "configurationGyroRequired": {
+        "message": "Mindst én gyro skal være aktiveret"
+    },
     "sensorStatusGyroShort": {
         "message": "Gyro",
         "description": "Text of the image in the top sensors icons. Please keep it short."
     },
     "sensorStatusAccel": {
-        "message": "Accelerometer"
+        "message": "Accelerometer (hvis understøttet)"
     },
     "sensorStatusAccelShort": {
         "message": "Accel",
@@ -921,7 +924,7 @@
         "message": "Gyroskop:"
     },
     "initialSetupSensorAcc": {
-        "message": "Accel:"
+        "message": "Accelerometer:"
     },
     "initialSetupSensorMag": {
         "message": "Magnetometer \/ Kompas:"
@@ -1254,7 +1257,7 @@
         "message": "Sonar afstandsmåler"
     },
     "featureSONARTip": {
-        "message": "Aktiver Sonar afstandsbestemmer for at måle afstand til overfladen i cm"
+        "message": "Aktiver afstand sensor for at måle afstand til overfladen i cm"
     },
     "featureTELEMETRY": {
         "message": "Telemetri protokol"
@@ -1341,6 +1344,9 @@
     "configurationFeatures": {
         "message": "Øvrige funktioner"
     },
+    "configurationFeatureHelp": {
+        "message": "Hjælp"
+    },
     "configurationReceiver": {
         "message": "Modtager"
     },
@@ -1371,8 +1377,14 @@
     "configurationSpiRxHelp": {
         "message": "<strong>Note:<\/strong> SPI RX konfiguration kræver at den nødvendige hardware er integreret i FC eller FC tilsluttet en SPI-bus."
     },
-    "configurationOtherFeaturesHelp": {
-        "message": "<strong>Bemærk:<\/strong> Ikke alle funktioner understøttes af alle FC \/ flight controllere. Aktiveres en bestemt funktion, og er den alligevel deaktiveret, efter du har trykket \"Gem og genstart\", er funktionen ikke understøttet af din FC."
+    "configurationActiveImu": {
+        "message": "Aktiv IMU"
+    },
+    "configurationSensors": {
+        "message": "Sensor konfirguration"
+    },
+    "configurationSensorsHelp": {
+        "message": "Konfiguration af flere sensorer og avancerede funktioner."
     },
     "configurationMagAlignmentHelp": {
         "message": "Magnetometer \/ Kompas indstilling er orienteringen af kompas retning på FC. Start indstiling er normalt korrekt, men hvis du har en brugerdefineret build eller en FC med en anden kompas retning, det kan være nødvendigt at ændre denne indstilling."
@@ -1387,17 +1399,17 @@
         "message": "Den magnetiske afvigelse er den lokale afvigelse der er mellem den nordretning, som et magnetkompas udpeger, og retningen til jordens geografiske nordpol eller også sagt som forskellen mellem magnetisk nord og ægte nord. Det er forskelligt for hver placering på jorden. Du kan finde den magnetiske afvigelse for din placering på internettet"
     },
     "configurationRangefinder": {
-        "message": "$t(initialSetupSensorSonar.message)",
+        "message": "Afstand sensor",
         "description": "Don't translate!!!"
     },
     "configurationRangefinderHelp": {
-        "message": "Aktivér afstandsmåler for afstanden til jorden i cm"
+        "message": "Aktiver afstand sensor for at måle afstand til overfladen i cm"
     },
     "configurationRangefinderType": {
         "message": "Type"
     },
     "configurationOpticalflow": {
-        "message": "$t(initialSetupSensorOpticalflow.message)",
+        "message": "Optisk sensor",
         "description": "Don't translate!!!"
     },
     "configurationOpticalflowHelp": {
@@ -1461,6 +1473,30 @@
         "message": "$t(configurationBoardAlignmentYaw.message)",
         "description": "Don't translate!!!"
     },
+    "configurationGyro1AlignmentRoll": {
+        "message": "$t(configurationBoardAlignmentRoll.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyro1AlignmentPitch": {
+        "message": "$t(configurationBoardAlignmentPitch.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyro1AlignmentYaw": {
+        "message": "$t(configurationBoardAlignmentYaw.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyro2AlignmentRoll": {
+        "message": "$t(configurationBoardAlignmentRoll.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyro2AlignmentPitch": {
+        "message": "$t(configurationBoardAlignmentPitch.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyro2AlignmentYaw": {
+        "message": "$t(configurationBoardAlignmentYaw.message)",
+        "description": "Don't translate!!!"
+    },
     "configurationSensorAlignmentGyro": {
         "message": "GYRO-justering"
     },
@@ -1497,6 +1533,9 @@
     "configurationSensorAlignmentDefaultOption": {
         "message": "Standard"
     },
+    "configurationSensorAlignmentCustom": {
+        "message": "Brugerdefineret"
+    },
     "configurationAccelTrims": {
         "message": "Accelerometer trim"
     },
@@ -1526,6 +1565,9 @@
     },
     "configurationGyroCalOnFirstArm": {
         "message": " Gyro kalibreres ved første aktivering"
+    },
+    "configurationGyroCalOnFirstArmHelp": {
+        "message": "Hvis aktiveret, vil gyroskopet blive kalibreret ved første aktivering af drone, efter strøm er tændt. Dette kan hjælpe med at reducere gyro afdrift under flyvningen."
     },
     "configurationMotorIdle": {
         "message": "Motor tomgang (%)"
@@ -3298,7 +3340,7 @@
         "message": "Gyroskop"
     },
     "sensorsAccelSelect": {
-        "message": "Accelerometer"
+        "message": "Accelerometer (hvis understøttet)"
     },
     "sensorsMagSelect": {
         "message": "Magnetometer"
@@ -7026,8 +7068,8 @@
         "message": "Sender ESC kommandoer til FC via DShot telemetri. Kræves ved RPM filtrering og dynamisk tomgang. <br> <br>Bemærk: Kræver en DShot kompatibel ESC med passende firmware, fx JESC, Jazzmac, BLHeli-32.",
         "description": "Description of the Bidirectional DShot feature of the ESC\/Motor"
     },
-    "configurationGyroSyncDenom": {
-        "message": "Gyro- opdateringsfrekvens"
+    "configurationGyroFrequency": {
+        "message": "Gyro opdateringsfrekvens"
     },
     "configurationPidProcessDenom": {
         "message": "PID loop frekvens"
@@ -7042,7 +7084,7 @@
         "message": "32 kHz gyro opdatering frekvens er kun muligt, hvis gyro chip understøtter det (pt. MPU6500, MPU9250, og ICM20xxx hvis tilsluttet via SPI). Hvis du er i tvivl, kan du se specifikationen for dit bord."
     },
     "configurationAccHardware": {
-        "message": "Accelerometer"
+        "message": "Accelerometer (hvis understøttet)"
     },
     "configurationBaroHardware": {
         "message": "Barometer (hvis understøttet)"
@@ -7145,7 +7187,7 @@
         "message": "Kan vises i loggen, filnavn for sikkkerhedskopi og OSD.<\/br>Indstilles via <b>craft_name<\/b> CLI variabel."
     },
     "configurationPilotName": {
-        "message": "Navn: Pilot"
+        "message": "Pilotnavn"
     },
     "configurationPilotNameHelp": {
         "message": "Mulig at vise i OSD.<\/br>Indstilles via <b>pilot_name<\/b> CLI variabel."

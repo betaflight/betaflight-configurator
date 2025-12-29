@@ -209,6 +209,9 @@
     "sensorStatusGyro": {
         "message": "Giroscópio"
     },
+    "configurationGyroRequired": {
+        "message": "Pelo menos um gyro deve estar ativado"
+    },
     "sensorStatusGyroShort": {
         "message": "Gyro",
         "description": "Text of the image in the top sensors icons. Please keep it short."
@@ -1337,6 +1340,9 @@
     "configurationFeatures": {
         "message": "Outras funcionalidades"
     },
+    "configurationFeatureHelp": {
+        "message": "Ajuda"
+    },
     "configurationReceiver": {
         "message": "Receptor"
     },
@@ -1367,8 +1373,14 @@
     "configurationSpiRxHelp": {
         "message": "<strong>Nota:<\/strong> O protocolo de SPI RX só funcionará se o hardware necessário estiver presente na placa ou ligado a um barramento SPI."
     },
-    "configurationOtherFeaturesHelp": {
-        "message": "<strong>Nota:<\/strong> Nem todas as funcionalidades são suportadas por todas as controladoras de voo. Se ativar uma funcionalidade específica, e ela for desativada depois de clicar em 'Gravar e Reiniciar', significa que essa funcionalidade não é suportada pela placa."
+    "configurationActiveImu": {
+        "message": "IMU ativo"
+    },
+    "configurationSensors": {
+        "message": "Configuração do Sensor"
+    },
+    "configurationSensorsHelp": {
+        "message": "Configure sensores adicionais e recursos avançados."
     },
     "configurationMagAlignmentHelp": {
         "message": "O alinhamento do magnetómetro é a orientação do sensor do magnetómetro na placa da controladora de voo. O pré-definido está habitualmente, mas se tem uma compilação personalizada ou uma controladora de voo com uma orientação de magnetómetro diferente, pode precisar de ajustar esta configuração."
@@ -1383,7 +1395,7 @@
         "message": "A declinação magnética é o ângulo entre o norte magnético e o norte verdadeiro. É diferente em cada local na Terra. Pode encontrar a declinação da sua localização na internet"
     },
     "configurationRangefinder": {
-        "message": "$t(initialSetupSensorSonar.message)",
+        "message": "Rangefinder",
         "description": "Don't translate!!!"
     },
     "configurationRangefinderHelp": {
@@ -1393,7 +1405,7 @@
         "message": "Tipo"
     },
     "configurationOpticalflow": {
-        "message": "$t(initialSetupSensorOpticalflow.message)",
+        "message": "Optical Flow",
         "description": "Don't translate!!!"
     },
     "configurationOpticalflowHelp": {
@@ -1457,6 +1469,30 @@
         "message": "$t(configurationBoardAlignmentYaw.message)",
         "description": "Don't translate!!!"
     },
+    "configurationGyro1AlignmentRoll": {
+        "message": "$t(configurationBoardAlignmentRoll.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyro1AlignmentPitch": {
+        "message": "$t(configurationBoardAlignmentPitch.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyro1AlignmentYaw": {
+        "message": "$t(configurationBoardAlignmentYaw.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyro2AlignmentRoll": {
+        "message": "$t(configurationBoardAlignmentRoll.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyro2AlignmentPitch": {
+        "message": "$t(configurationBoardAlignmentPitch.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyro2AlignmentYaw": {
+        "message": "$t(configurationBoardAlignmentYaw.message)",
+        "description": "Don't translate!!!"
+    },
     "configurationSensorAlignmentGyro": {
         "message": "Alinhamento do GYRO"
     },
@@ -1493,6 +1529,9 @@
     "configurationSensorAlignmentDefaultOption": {
         "message": "Padrão"
     },
+    "configurationSensorAlignmentCustom": {
+        "message": "Personalizado"
+    },
     "configurationAccelTrims": {
         "message": "Ajustes do acelerómetro"
     },
@@ -1522,6 +1561,9 @@
     },
     "configurationGyroCalOnFirstArm": {
         "message": "Calibrar Gyro no primeiro armar"
+    },
+    "configurationGyroCalOnFirstArmHelp": {
+        "message": "Quando ativado, o giroscópio será calibrado no primeiro armar após ligar. Isto pode ajudar a reduzir o desvio de gyro durante o voo."
     },
     "configurationMotorIdle": {
         "message": "Ralenti do Motor (%)"
@@ -7022,7 +7064,7 @@
         "message": "Envia dados do ESC para a FC via telemetria DShot. Necessário pela filtragem de RPM e pelo ralenti dinâmico. <br> <br>Nota: Requer um ESC compatível com firmware apropriado, por exemplo, JESC, Jazzmac, BLHeli-32.",
         "description": "Description of the Bidirectional DShot feature of the ESC\/Motor"
     },
-    "configurationGyroSyncDenom": {
+    "configurationGyroFrequency": {
         "message": "Frequência de atualização do Giroscópio"
     },
     "configurationPidProcessDenom": {

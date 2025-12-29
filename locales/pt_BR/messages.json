@@ -1224,9 +1224,6 @@
     "configurationSpiRxHelp": {
         "message": "<strong>Nota:<\/strong> O protocolo de SPI RX só funcionará se o hardware necessário estiver presente na placa ou ligado a um barramento SPI."
     },
-    "configurationOtherFeaturesHelp": {
-        "message": "<strong>Nota:<\/strong> Nem todas as funcionalidades são suportadas por todos os controladores de voo. Se ativar uma funcionalidade específica, e ela é desativada depois de clicar em 'Salvar e Reiniciar', significa que essa funcionalidade não é suportada pela placa."
-    },
     "configurationBoardAlignmentRoll": {
         "message": "Graus de Rotação (Roll)"
     },
@@ -6338,9 +6335,6 @@
     "configurationDshotBidirHelp": {
         "message": "Envia dados do ESC para o FC através da telemetria DShot. Obrigatório para o Filtro RPM e para o Modo Ocioso Dinâmico. <br> <br> Nota: Requer um ESC compatível e com firmware apropriado instalado, por exemplo, JESC, Jazzmac, BLHeli-32.",
         "description": "Description of the Bidirectional DShot feature of the ESC\/Motor"
-    },
-    "configurationGyroSyncDenom": {
-        "message": "Frequência de atualização do Giroscópio"
     },
     "configurationPidProcessDenom": {
         "message": "Frequência do loop PID"
