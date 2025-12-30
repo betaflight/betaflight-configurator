@@ -933,6 +933,4 @@ function update() {
     }
 }
 
-update();
-
 export default DEBUG;
