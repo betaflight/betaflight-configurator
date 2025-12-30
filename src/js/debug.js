@@ -806,14 +806,12 @@ const DEBUG = {
         "Altitude",
         "RSSI",
         "Gyro",
-        "Attitude",
         "Accelerometer",
         "Debug Log",
         "Motor",
         "GPS",
         "RPM",
         "Gyro (Unfiltered)",
-        "Servo"
     ],
 };
 

@@ -40,6 +40,7 @@ onboard_logging.initialize = function (callback) {
                 MSP.send_message(MSPCodes.MSP_SDCARD_SUMMARY, false, false, function () {
                     MSP.send_message(MSPCodes.MSP_BLACKBOX_CONFIG, false, false, function () {
                         MSP.send_message(MSPCodes.MSP_ADVANCED_CONFIG, false, false, function () {
+                            DEBUG.update();
                             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
                                 MSP.send_message(
                                     MSPCodes.MSP2_GET_TEXT,
