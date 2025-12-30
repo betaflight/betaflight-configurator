@@ -39,8 +39,6 @@ onboard_logging.initialize = function (callback) {
             MSP.send_message(MSPCodes.MSP_SDCARD_SUMMARY, false, false, function () {
                 MSP.send_message(MSPCodes.MSP_BLACKBOX_CONFIG, false, false, function () {
                     MSP.send_message(MSPCodes.MSP_ADVANCED_CONFIG, false, false, function () {
-                        // Ensure debug field definitions are up to date
-                        DEBUG.update();
                         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
                             MSP.send_message(
                                 MSPCodes.MSP2_GET_TEXT,
@@ -69,6 +67,9 @@ onboard_logging.initialize = function (callback) {
         $("#content").load("./tabs/onboard_logging.html", function () {
             // translate to user-selected language
             i18n.localizePage();
+
+            // Ensure debug field definitions are up to date
+            DEBUG.update();
 
             const dataflashPresent = FC.DATAFLASH.totalSize > 0;
             let blackboxSupport;
