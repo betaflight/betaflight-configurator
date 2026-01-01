@@ -49,7 +49,7 @@ class LoginManager {
 
         // Update UI based on login state
         await this.updateSessionUI();
-        this.updateTabVisibility();
+        await this.updateTabVisibility();
     }
 
     /**
@@ -219,7 +219,7 @@ class LoginManager {
             await this.fetchUserProfile();
             this.saveUserState();
             await this.updateSessionUI();
-            this.updateTabVisibility();
+            await this.updateTabVisibility();
             this.notifyLoginCallbacks();
 
             this.hideWaitingDialog();
@@ -233,8 +233,8 @@ class LoginManager {
     /**
      * Update tab visibility based on login state
      */
-    updateTabVisibility() {
-        if (this.isUserLoggedIn()) {
+    async updateTabVisibility() {
+        if (await this.isUserLoggedIn()) {
             $("#tabs ul.mode-loggedin").show();
         } else {
             $("#tabs ul.mode-loggedin").hide();
@@ -256,7 +256,7 @@ class LoginManager {
 
             this.saveUserState();
             await this.updateSessionUI();
-            this.updateTabVisibility();
+            await this.updateTabVisibility();
             this.notifyLoginCallbacks();
 
             this.hideWaitingDialog();
@@ -292,7 +292,7 @@ class LoginManager {
 
             this._profile = null;
             await this.updateSessionUI();
-            this.updateTabVisibility();
+            await this.updateTabVisibility();
             this.notifyLogoutCallbacks();
 
             // Always switch to landing/welcome tab on logout
@@ -309,7 +309,7 @@ class LoginManager {
      * Update the session UI based on login state
      */
     async updateSessionUI() {
-        if (this.isUserLoggedIn()) {
+        if (await this.isUserLoggedIn()) {
             $("#user-logged-out").hide();
             $("#user-logged-in").show();
 
@@ -415,8 +415,8 @@ class LoginManager {
     /**
      * Check if user is logged in
      */
-    isUserLoggedIn() {
-        return this._loginApi.isSignedIn();
+    async isUserLoggedIn() {
+        return await this._loginApi.isSignedIn();
     }
 
     /**
