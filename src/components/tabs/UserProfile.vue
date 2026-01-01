@@ -246,6 +246,10 @@ export default defineComponent({
                     address: this.editForm.address,
                     country: this.editForm.country,
                 });
+
+                if (!this.profile) {
+                    this.profile = {};
+                }
                 this.profile.name = this.editForm.name;
                 this.profile.address = this.editForm.address;
                 this.profile.country = this.editForm.country;
