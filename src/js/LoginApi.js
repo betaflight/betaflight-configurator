@@ -231,7 +231,6 @@ export default class LoginApi {
         this._accessToken = null;
         this._accessExpiry = null;
         this._userToken = null;
-        this._signedIn = false;
     }
 
     async removeCurrentToken() {
