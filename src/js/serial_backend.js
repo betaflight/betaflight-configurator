@@ -509,7 +509,7 @@ async function processBuildConfiguration() {
             try {
                 const options = await buildApi.requestBuildOptions(FC.CONFIG.buildKey);
                 if (options) {
-                    FC.CONFIG.buildOptions = options?.request?.options;
+                    FC.CONFIG.buildOptions = options?.request?.options ?? [];
                 }
             } catch (error) {
                 console.error("Failed to request build options: ", error);
