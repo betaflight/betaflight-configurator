@@ -17,6 +17,7 @@ import { mountVueTab, unmountVueTab } from "./vue_tab_mounter.js";
 import * as THREE from "three";
 import NotificationManager from "./utils/notifications.js";
 import { Capacitor } from "@capacitor/core";
+import loginManager from "./LoginManager.js";
 
 // Silence Capacitor bridge debug spam on native platforms
 if (Capacitor?.isNativePlatform?.() && typeof Capacitor.isLoggingEnabled === "boolean") {
@@ -101,6 +102,9 @@ function appReady() {
 function startProcess() {
     // translate to user-selected language
     i18n.localizePage();
+
+    // Initialize login manager
+    loginManager.initialize();
 
     gui_log(i18n.getMessage("infoVersionOs", { operatingSystem: GUI.operating_system }));
     gui_log(i18n.getMessage("infoVersionConfigurator", { configuratorVersion: CONFIGURATOR.getDisplayVersion() }));
@@ -326,7 +330,14 @@ function startProcess() {
                     case "presets":
                         import("../tabs/presets/presets").then(({ presets }) => presets.initialize(content_ready));
                         break;
-
+                    case "user_profile":
+                        // Vue tab - use mountVueTab instead of jQuery load
+                        mountVueTab("user_profile", content_ready);
+                        break;
+                    case "backups":
+                        // Vue tab - use mountVueTab instead of jQuery load
+                        mountVueTab("backups", content_ready);
+                        break;
                     default:
                         console.log(`Tab not found: ${tab}`);
                 }

@@ -7834,5 +7834,197 @@
     "osdSetupPreviewCheckRulers": {
         "message": "Rulers",
         "description": "Label for the checkbox to toggle OSD preview rulers around the preview"
+    },
+    "tabUserProfile": {
+        "message": "User Profile"
+    },
+    "profileNameTitle": {
+        "message": "Name:"
+    },
+    "profileEmailTitle": {
+        "message": "Email:"
+    },
+    "profileAddressTitle": {
+        "message": "Address:"
+    },
+    "profileCountryTitle": {
+        "message": "Country:"
+    },
+    "profileNotLoggedIn": {
+        "message": "Not Logged In"
+    },
+    "profileLoginMessage": {
+        "message": "Please log in to view your profile."
+    },
+    "tabBackups": {
+        "message": "Backups"
+    },
+    "viewProfile": {
+        "message": "View Profile"
+    },
+    "userPasskeyDeleteConfirm": {
+        "message": "Are you sure you want to delete this passkey?"
+    },
+    "userPasskeyDeleteSuccess": {
+        "message": "Passkey deleted successfully"
+    },
+    "userPasskeyDeleteFailed": {
+        "message": "Failed to delete passkey"
+    },
+    "userTokenDeleteConfirm": {
+        "message": "Are you sure you want to delete this token?"
+    },
+    "userTokenDeleteSuccess": {
+        "message": "Token deleted successfully"
+    },
+    "userTokenDeleteFailed": {
+        "message": "Failed to delete token"
+    },
+    "userProfileLoadFailed": {
+        "message": "Failed to load user profile"
+    },
+    "userProfileUpdateSuccess": {
+        "message": "Profile updated successfully"
+    },
+    "userProfileUpdateFailed": {
+        "message": "Failed to update profile"
+    },
+    "userBackupsLoadFailed": {
+        "message": "Failed to load backups"
+    },
+    "userBackupDownloadFailed": {
+        "message": "Failed to download backup"
+    },
+    "userBackupUpdateSuccess": {
+        "message": "Backup updated successfully"
+    },
+    "userBackupUpdateFailed": {
+        "message": "Failed to update backup"
+    },
+    "userBackupDeleteSuccess": {
+        "message": "Backup deleted successfully"
+    },
+    "userBackupDeleteFailed": {
+        "message": "Failed to delete backup"
+    },
+    "userPasskeyDelete": {
+        "message": "Delete"
+    },
+    "userPasskeyNoPasskeys": {
+        "message": "No passkeys available"
+    },
+    "userTokenDelete": {
+        "message": "Delete"
+    },
+    "userTokenNoTokens": {
+        "message": "No tokens available"
+    },
+    "profileBackupSuccess": {
+        "message": "Backup successful"
+    },
+    "profileBackupApiSuccess": {
+        "message": "Backup successfully saved to API"
+    },
+    "profileBackupApiFail": {
+        "message": "Backup failed to save to API"
+    },
+    "profileBackupEmptyResult": {
+        "message": "Backup unsuccessful"
+    },
+    "userPasskeyId": {
+        "message": "Id"
+    },
+    "userPasskeyCreated": {
+        "message": "Created"
+    },
+    "userPasskeyExpiry": {
+        "message": "Expiry"
+    },
+    "userPasskeyDetails": {
+        "message": "Details"
+    },
+    "userPasskeyActions": {
+        "message": "Actions"
+    },
+    "userTokenId": {
+        "message": "Id"
+    },
+    "userTokenCreated": {
+        "message": "Created"
+    },
+    "userTokenExpiry": {
+        "message": "Expiry"
+    },
+    "userTokenDetails": {
+        "message": "Details"
+    },
+    "userTokenActions": {
+        "message": "Actions"
+    },
+    "userBackupDate": {
+        "message": "Date"
+    },
+    "userBackupName": {
+        "message": "Name"
+    },
+    "userBackupDescription": {
+        "message": "Description"
+    },
+    "userBackupActions": {
+        "message": "Actions"
+    },
+    "user-session-login": {
+        "message": "Login"
+    },
+    "user-session-signOut": {
+        "message": "Sign Out"
+    },
+    "user-session-loginTitle": {
+        "message": "Login"
+    },
+    "user-session-emailLabel": {
+        "message": "Email"
+    },
+    "user-session-createPasskey": {
+        "message": "Create Passkey"
+    },
+    "user-session-usePasskey": {
+        "message": "Use Passkey"
+    },
+    "user-session-enterVerificationCode": {
+        "message": "Enter Verification Code"
+    },
+    "user-session-verificationCodeLabel": {
+        "message": "Code"
+    },
+    "user-session-submit": {
+        "message": "Submit"
+    },
+    "userLoggingIn": {
+        "message": "Logging in..."
+    },
+    "userSignedOut": {
+        "message": "Signed Out"
+    },
+    "userSignOutFailed": {
+        "message": "Failed to sign out"
+    },
+    "userLoginSuccess": {
+        "message": "Login successful"
+    },
+    "userLoginFailed": {
+        "message": "Login failed"
+    },
+    "userCreatePasskeyFailed": {
+        "message": "Failed to create passkey"
+    },
+    "userCreatePasskeySuccess": {
+        "message": "Passkey created successfully"
+    },
+    "userVerifyingCode": {
+        "message": "Verifying code..."
+    },
+    "userCreatingPasskey": {
+        "message": "Creating passkey..."
     }
 }
