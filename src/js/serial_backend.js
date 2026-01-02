@@ -507,9 +507,9 @@ async function processBuildConfiguration() {
         if (FC.CONFIG.buildKey.length === 32 && ispConnected()) {
             const buildApi = new BuildApi();
             try {
-                let options = await buildApi.requestBuildOptions(FC.CONFIG.buildKey);
+                const options = await buildApi.requestBuildOptions(FC.CONFIG.buildKey);
                 if (options) {
-                    FC.CONFIG.buildOptions = options.Request.Options;
+                    FC.CONFIG.buildOptions = options?.request?.options;
                 }
             } catch (error) {
                 console.error("Failed to request build options: ", error);

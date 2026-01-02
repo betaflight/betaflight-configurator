@@ -136,28 +136,7 @@ class AutoDetect {
 
             // store FC.CONFIG.buildKey as the object gets destroyed after disconnect
             TABS.firmware_flasher.cloudBuildKey = FC.CONFIG.buildKey;
-
-            // 3/21/2024 is the date when the build key was introduced
-            const supportedDate = new Date("3/21/2024");
-            const buildDate = new Date(FC.CONFIG.buildInfo);
-
-            if (
-                TABS.firmware_flasher.validateBuildKey() &&
-                (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_46) || buildDate < supportedDate)
-            ) {
-                try {
-                    let options = await TABS.firmware_flasher.buildApi.requestBuildOptions(
-                        TABS.firmware_flasher.cloudBuildKey,
-                    );
-                    if (options) {
-                        TABS.firmware_flasher.cloudBuildOptions = options.Request.Options;
-                    }
-                } catch (error) {
-                    console.error(`${this.logHead} Failed to request build options:`, error);
-                }
-            }
         }
-
         await this.getBoardInfo();
     }
 
