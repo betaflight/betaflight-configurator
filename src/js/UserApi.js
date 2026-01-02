@@ -19,10 +19,9 @@ export default class UserApi {
                 return { Authorization: `Bearer ${token}` };
             }
         } catch (_error) {
-            // Silently continue without auth headers
+            console.warn(`Unable to obtain access token for User API. ${_error}`);
         }
-
-        return {};
+        throw new LoginApi.TokenFailure("Unable to obtain access token for User API.");
     }
 
     /* Profile Functionality */

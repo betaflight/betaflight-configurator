@@ -11,7 +11,7 @@ export class TokenFailure extends Error {
 export default class LoginApi {
     _url = "https://login.betaflight.com";
     _accessToken = null;
-    _accessExpiry = null;
+    _accessExpiryMs = null;
     _userToken = null;
 
     userToken() {
@@ -27,6 +27,27 @@ export default class LoginApi {
     }
 
     async accessToken() {
+        if (!this._accessToken || !this._accessExpiryMs) {
+            const storedToken = getConfig("accessToken");
+            if (storedToken && typeof storedToken === "object") {
+                this._accessToken = storedToken.accessToken.token;
+                this._accessExpiryMs = storedToken.accessToken.expiry;
+            }
+        }
+
+        /* Consider token valid if it expires in more than 3 minutes */
+        if (this._accessToken && (this._accessExpiryMs ?? 0 > Date.now() + 3 * 60 * 1000)) {
+            return true;
+        }
+
+        if (this._accessExpiryMs) {
+            console.log(
+                `Access token is expired: ${new Date(this._accessExpiryMs).toISOString()} <= ${new Date().toISOString()} + 3 minutes`,
+            );
+        } else {
+            console.info("Access token is invalid.");
+        }
+
         const response = await fetch(`${this._url}/api/token`, {
             method: "POST",
             headers: {
@@ -56,44 +77,28 @@ export default class LoginApi {
             throw new Error(`Invalid expiry date format: ${result.expiry}`);
         }
 
+        if (expiryDate.getTime() < Date.now()) {
+            throw new Error(
+                `Received access token is already expired: ${new Date(this._accessExpiryMs).toISOString()}`,
+            );
+        }
+
         this._accessToken = result.token;
-        this._accessExpiry = expiryDate;
+        this._accessExpiryMs = expiryDate.getTime();
+        setConfig({ accessToken: { token: this._accessToken, expiry: this._accessExpiryMs } });
 
-        if (this._accessExpiry.getTime() < Date.now()) {
-            throw new Error(`Received access token is already expired: ${this._accessExpiry.toISOString()}`);
-        }
-        console.info("New access token issued, expiry:", this._accessExpiry.toISOString(), new Date().toISOString());
-    }
-
-    isAccessTokenValid() {
-        if (!this._accessToken || !this._accessExpiry) {
-            return false;
-        }
-
-        /* Consider token valid if it expires in more than 3 minutes */
-        if (this._accessExpiry.getTime() > Date.now() + 3 * 60 * 1000) {
-            return true;
-        }
-
-        console.info("Access token expired.");
-        return false;
+        console.info(`New access token issued, expiry: ${expiryDate.toISOString()}, now: ${new Date().toISOString()}`);
+        return true;
     }
 
     async checkToken() {
-        if (this.isAccessTokenValid()) {
-            return true;
-        }
-
         if (this.userToken()) {
-            console.info("User token loaded, attempting to obtain new access token.");
             try {
-                await this.accessToken();
+                if (await this.accessToken()) {
+                    return true;
+                }
             } catch (err) {
                 console.error("Failed to obtain access token:", err);
-            }
-
-            if (this.isAccessTokenValid()) {
-                return true;
             }
 
             console.info("Unable to obtain valid access token, signing out user.");
@@ -229,7 +234,7 @@ export default class LoginApi {
         removeConfig("userToken");
         await this.removeCurrentToken();
         this._accessToken = null;
-        this._accessExpiry = null;
+        this._accessExpiryMs = null;
         this._userToken = null;
     }
 
