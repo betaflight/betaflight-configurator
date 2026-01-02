@@ -231,7 +231,7 @@ export default defineComponent({
     },
     computed: {
         profilePhoto() {
-            if (this.profile.avatar) {
+            if (this.profile?.avatar) {
                 return this.profile.avatar;
             }
             return "images/default_avatar.png";
@@ -241,28 +241,38 @@ export default defineComponent({
         async loadProfile() {
             this.isLoading = true;
 
-            if (!loginManager.isUserLoggedIn()) {
+            try {
+                const isLoggedIn = await loginManager.isUserLoggedIn();
+                if (!isLoggedIn) {
+                    this.isLoggedIn = false;
+                    this.tokens = [];
+                    this.passkeys = [];
+                    this.isLoading = false;
+                    return;
+                }
+
+                this.isLoggedIn = true;
+                this.userApi = loginManager.getUserApi();
+
+                try {
+                    const data = await this.userApi.profile();
+                    this.profile = data;
+                } catch (error) {
+                    gui_log(`${i18n.getMessage("userProfileLoadFailed")}: ${error}`);
+                }
+
+                try {
+                    this.tokens = await this.userApi.getTokens();
+                } catch (error) {
+                    gui_log(`${i18n.getMessage("userTokenLoadFailed")}: ${error}`);
+                }
+            } catch (error) {
+                console.error("Error checking login state:", error);
                 this.isLoggedIn = false;
                 this.tokens = [];
                 this.passkeys = [];
                 this.isLoading = false;
                 return;
-            }
-
-            this.isLoggedIn = true;
-            this.userApi = loginManager.getUserApi();
-
-            try {
-                const data = await this.userApi.profile();
-                this.profile = data;
-            } catch (error) {
-                gui_log(`${i18n.getMessage("userProfileLoadFailed")}: ${error}`);
-            }
-
-            try {
-                this.tokens = await this.userApi.getTokens();
-            } catch (error) {
-                gui_log(`${i18n.getMessage("userTokenLoadFailed")}: ${error}`);
             }
 
             try {

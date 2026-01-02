@@ -55,7 +55,13 @@ export function useUserSession() {
 
     const handleClickOutside = (event) => {
         const userLoggedIn = document.getElementById("user-logged-in");
-        if (userLoggedIn && !userLoggedIn.contains(event.target)) {
+        const popup = document.getElementById("user-menu-popup");
+
+        // Check if click is inside either the user-logged-in container or the popup menu
+        const clickInsideSession = userLoggedIn && userLoggedIn.contains(event.target);
+        const clickInsidePopup = popup && popup.contains(event.target);
+
+        if (!clickInsideSession && !clickInsidePopup) {
             menuOpen.value = false;
         }
     };

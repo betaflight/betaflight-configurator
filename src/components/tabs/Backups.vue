@@ -178,15 +178,16 @@ export default defineComponent({
         async loadBackups() {
             this.isLoading = true;
 
-            if (!loginManager.isUserLoggedIn()) {
-                this.backups = [];
-                this.isLoading = false;
-                return;
-            }
-
-            this.userApi = loginManager.getUserApi();
-
             try {
+                const isLoggedIn = await loginManager.isUserLoggedIn();
+                if (!isLoggedIn) {
+                    this.backups = [];
+                    this.isLoading = false;
+                    return;
+                }
+
+                this.userApi = loginManager.getUserApi();
+
                 const backups = await this.userApi.getBackups();
                 this.backups = backups;
             } catch (error) {

@@ -242,7 +242,7 @@ class LoginManager {
      */
     async fetchUserProfile() {
         try {
-            if (this._loginApi.checkToken()) {
+            if (await this._loginApi.checkToken()) {
                 const profile = await this._userApi.profile();
                 if (profile) {
                     this._profile = profile;

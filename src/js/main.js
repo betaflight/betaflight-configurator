@@ -72,8 +72,8 @@ function appReady() {
 
     cleanupLocalStorage();
 
-    i18n.init(function () {
-        startProcess();
+    i18n.init(async function () {
+        await startProcess();
 
         checkSetupAnalytics(function (analyticsService) {
             analyticsService.sendEvent(analyticsService.EVENT_CATEGORIES.APPLICATION, "AppStart", {
@@ -99,12 +99,12 @@ function appReady() {
 }
 
 //Process to execute to real start the app
-function startProcess() {
+async function startProcess() {
     // translate to user-selected language
     i18n.localizePage();
 
     // Initialize login manager
-    loginManager.initialize();
+    await loginManager.initialize();
 
     gui_log(i18n.getMessage("infoVersionOs", { operatingSystem: GUI.operating_system }));
     gui_log(i18n.getMessage("infoVersionConfigurator", { configuratorVersion: CONFIGURATOR.getDisplayVersion() }));

@@ -17,15 +17,21 @@ export default class LoginApi {
     userToken() {
         if (!this._userToken) {
             const storedToken = getConfig("userToken");
-            if (!storedToken || typeof storedToken !== "object") {
+            if (!storedToken) {
                 return false;
             }
 
-            if (storedToken.userToken) {
+            // Handle both string format and object format
+            if (typeof storedToken === "string") {
+                this._userToken = storedToken;
+                console.info(`Loaded user token from storage (string format).`);
+                return true;
+            } else if (typeof storedToken === "object" && storedToken.userToken) {
                 this._userToken = storedToken.userToken;
-                console.info(`Loaded user token from storage.`);
+                console.info(`Loaded user token from storage (object format).`);
                 return true;
             }
+
             return false;
         }
         return true;
@@ -46,7 +52,7 @@ export default class LoginApi {
         }
 
         /* Consider token valid if it expires in more than 3 minutes */
-        if (this._accessToken && (this._accessExpiryMs ?? 0 > Date.now() + 3 * 60 * 1000)) {
+        if (this._accessToken && (this._accessExpiryMs ?? 0) > Date.now() + 3 * 60 * 1000) {
             return true;
         }
 
