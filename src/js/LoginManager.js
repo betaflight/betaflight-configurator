@@ -271,9 +271,11 @@ class LoginManager {
      */
     async fetchUserProfile() {
         try {
-            const profile = await this._userApi.profile();
-            if (profile) {
-                this._profile = profile;
+            if (this._loginApi.checkToken()) {
+                const profile = await this._userApi.profile();
+                if (profile) {
+                    this._profile = profile;
+                }
             }
         } catch (error) {
             console.warn("Failed to fetch user profile:", error);

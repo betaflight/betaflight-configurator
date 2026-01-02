@@ -60,7 +60,7 @@ export default class LoginApi {
         this._accessExpiry = expiryDate;
 
         if (this._accessExpiry.getTime() < Date.now()) {
-            throw new Error("Received access token is already expired", this._accessExpiry.toISOString());
+            throw new Error(`Received access token is already expired: ${this._accessExpiry.toISOString()}`);
         }
         console.info("New access token issued, expiry:", this._accessExpiry.toISOString(), new Date().toISOString());
     }
