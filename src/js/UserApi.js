@@ -30,7 +30,6 @@ export default class UserApi {
         const response = await fetch(`${this._url}/api/user`, {
             method: "GET",
             headers: {
-                "Content-Type": "application/json",
                 ...authHeaders,
             },
         });

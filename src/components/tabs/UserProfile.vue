@@ -5,7 +5,7 @@
 
             <!-- Loading State -->
             <div v-if="isLoading" class="data-loading">
-                <p>Waiting for data ...</p>
+                <p>{{ i18n.getMessage("dataWaitingForData") }}</p>
             </div>
 
             <!-- Not Logged In State -->
@@ -79,7 +79,7 @@
                                     &times;
                                 </button>
                                 <p>
-                                    <label for="edit-name">Name:</label>
+                                    <label for="edit-name">{{ i18n.getMessage("labelName") }}</label>
                                     <input v-model="editForm.name" type="text" id="edit-name" name="name" />
                                 </p>
                                 <p>
@@ -109,7 +109,7 @@
                                     href="#"
                                     @click.prevent="saveProfileChanges"
                                     class="save-profile_button regular-button"
-                                    i18n="Save Changes"
+                                    i18n="actionSaveChanges"
                                     >Save Changes</a
                                 >
                             </div>
@@ -146,7 +146,7 @@
                                                 href="#"
                                                 @click.prevent="deleteToken(token.id)"
                                                 class="delete-token"
-                                                i18n="userTokenDelete"
+                                                i18n="actionDelete"
                                                 >Delete</a
                                             >
                                         </td>
@@ -188,7 +188,7 @@
                                                 href="#"
                                                 @click.prevent="deletePasskey(passkey.id)"
                                                 class="delete-passkey"
-                                                i18n="userPasskeyDelete"
+                                                i18n="actionDelete"
                                                 >Delete</a
                                             >
                                         </td>
@@ -320,7 +320,7 @@ export default defineComponent({
             }
         },
         async deleteToken(tokenId) {
-            const confirmed = globalThis.confirm(i18n.getMessage("userTokenDeleteConfirm"));
+            const confirmed = globalThis.confirm(i18n.getMessage("confirmDelete", i18n.getMessage("itemToken")));
             if (!confirmed) {
                 return;
             }
@@ -338,7 +338,7 @@ export default defineComponent({
             }
         },
         async deletePasskey(passkeyId) {
-            const confirmed = globalThis.confirm(i18n.getMessage("userPasskeyDeleteConfirm"));
+            const confirmed = globalThis.confirm(i18n.getMessage("confirmDelete", i18n.getMessage("itemPasskey")));
             if (!confirmed) {
                 return;
             }

@@ -5,7 +5,7 @@
 
             <!-- Loading State -->
             <div v-if="isLoading" class="data-loading">
-                <p>Waiting for data ...</p>
+                <p>{{ i18n.getMessage("dataWaitingForData") }}</p>
             </div>
 
             <!-- Backups Content -->
@@ -34,7 +34,7 @@
                                     </thead>
                                     <tbody>
                                         <tr v-if="backups.length === 0">
-                                            <td colspan="4">No backups available</td>
+                                            <td colspan="4">{{ i18n.getMessage("backupNoBackupsAvailable") }}</td>
                                         </tr>
                                         <template v-for="(groupBackups, craft) in groupedBackups" :key="craft">
                                             <tr>
@@ -54,16 +54,19 @@
                                                         href="#"
                                                         @click.prevent="downloadBackup(backup)"
                                                         class="download-backup"
-                                                        >Download</a
+                                                        >{{ i18n.getMessage("actionDownload") }}</a
                                                     >
-                                                    <a href="#" @click.prevent="startEdit(backup)" class="edit-backup"
-                                                        >Edit</a
+                                                    <a
+                                                        href="#"
+                                                        @click.prevent="startEdit(backup)"
+                                                        class="edit-backup"
+                                                        >{{ i18n.getMessage("actionEdit") }}</a
                                                     >
                                                     <a
                                                         href="#"
                                                         @click.prevent="deleteBackup(backup.id)"
                                                         class="delete-backup"
-                                                        >Delete</a
+                                                        >{{ i18n.getMessage("actionDelete") }}</a
                                                     >
                                                 </td>
                                             </tr>
@@ -97,13 +100,15 @@
                                 >
                                     &times;
                                 </button>
-                                <h4>Edit Backup</h4>
+                                <h4>{{ i18n.getMessage("backupEditTitle") }}</h4>
                                 <p>
-                                    <label for="edit-backup-name">Name:</label>
+                                    <label for="edit-backup-name">{{ i18n.getMessage("labelName") }}</label>
                                     <input v-model="editForm.name" type="text" id="edit-backup-name" name="name" />
                                 </p>
                                 <p>
-                                    <label for="edit-backup-description">Description:</label>
+                                    <label for="edit-backup-description">{{
+                                        i18n.getMessage("backupDescriptionLabel")
+                                    }}</label>
                                     <textarea
                                         v-model="editForm.description"
                                         id="edit-backup-description"
@@ -111,15 +116,15 @@
                                     ></textarea>
                                 </p>
                                 <p>
-                                    <strong>Created Date:</strong> <span>{{ formatDate(editForm.created) }}</span>
+                                    <strong>{{ i18n.getMessage("labelCreatedDate") }}</strong>
+                                    <span>{{ formatDate(editForm.created) }}</span>
                                 </p>
                                 <div class="button-container">
                                     <a
                                         href="#"
                                         @click.prevent="saveBackupChanges"
                                         class="save-backup-changes_button regular-button"
-                                        i18n="Save Changes"
-                                        >Save Changes</a
+                                        >{{ i18n.getMessage("actionSaveChanges") }}</a
                                     >
                                 </div>
                             </div>
@@ -199,7 +204,7 @@ export default defineComponent({
         async createBackup() {
             try {
                 if (!this.userApi) {
-                    throw new Error("Not logged in");
+                    throw new Error(i18n.getMessage("notLoggedIn"));
                 }
 
                 const output = await new Promise((resolve, reject) => {
@@ -227,7 +232,7 @@ export default defineComponent({
         async downloadBackup(backup) {
             try {
                 if (!this.userApi) {
-                    throw new Error("Not logged in");
+                    throw new Error(i18n.getMessage("notLoggedIn"));
                 }
 
                 const response = await this.userApi.downloadBackupFile(backup.id);
@@ -275,7 +280,7 @@ export default defineComponent({
             }
         },
         async deleteBackup(backupId) {
-            const confirmed = globalThis.confirm("Are you sure you want to delete this backup?");
+            const confirmed = globalThis.confirm(i18n.getMessage("confirmDelete", i18n.getMessage("itemBackup")));
             if (!confirmed) {
                 return;
             }
@@ -300,7 +305,7 @@ export default defineComponent({
         },
         getSerialForCraft(craft) {
             const backup = this.backups.find((b) => b.key === craft);
-            return backup ? backup.serial || "mcu unknown" : "";
+            return backup ? backup.serial || i18n.getMessage("backupMcuUnknown") : "";
         },
     },
     async mounted() {

@@ -8026,5 +8026,53 @@
     },
     "userCreatingPasskey": {
         "message": "Creating passkey..."
+    },
+    "dataWaitingForData": {
+        "message": "Waiting for data ..."
+    },
+    "actionDownload": {
+        "message": "Download"
+    },
+    "actionEdit": {
+        "message": "Edit"
+    },
+    "actionDelete": {
+        "message": "Delete"
+    },
+    "actionSaveChanges": {
+        "message": "Save Changes"
+    },
+    "labelName": {
+        "message": "Name:"
+    },
+    "labelCreatedDate": {
+        "message": "Created Date:"
+    },
+    "confirmDelete": {
+        "message": "Are you sure you want to delete this $1?"
+    },
+    "itemBackup": {
+        "message": "backup"
+    },
+    "itemToken": {
+        "message": "token"
+    },
+    "itemPasskey": {
+        "message": "passkey"
+    },
+    "notLoggedIn": {
+        "message": "Not logged in"
+    },
+    "backupNoBackupsAvailable": {
+        "message": "No backups available"
+    },
+    "backupEditTitle": {
+        "message": "Edit Backup"
+    },
+    "backupDescriptionLabel": {
+        "message": "Description:"
+    },
+    "backupMcuUnknown": {
+        "message": "mcu unknown"
     }
 }
