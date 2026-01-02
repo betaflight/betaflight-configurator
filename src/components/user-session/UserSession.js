@@ -58,8 +58,8 @@ export function useUserSession() {
         const popup = document.getElementById("user-menu-popup");
 
         // Check if click is inside either the user-logged-in container or the popup menu
-        const clickInsideSession = userLoggedIn && userLoggedIn.contains(event.target);
-        const clickInsidePopup = popup && popup.contains(event.target);
+        const clickInsideSession = userLoggedIn?.contains(event.target);
+        const clickInsidePopup = popup?.contains(event.target);
 
         if (!clickInsideSession && !clickInsidePopup) {
             menuOpen.value = false;
@@ -83,8 +83,13 @@ export function useUserSession() {
 
     onUnmounted(() => {
         // Cleanup callbacks
-        if (unsubscribeLogin) unsubscribeLogin();
-        if (unsubscribeLogout) unsubscribeLogout();
+        if (unsubscribeLogin) {
+            unsubscribeLogin();
+        }
+
+        if (unsubscribeLogout) {
+            unsubscribeLogout();
+        }
 
         // Remove click outside listener
         document.removeEventListener("click", handleClickOutside);

@@ -27,6 +27,7 @@ export default class BuildApi {
             }
         } catch (_error) {
             // Silently continue without auth headers
+            console.log(`Unable to obtain access token for Build API. ${_error}`);
         }
 
         return {};

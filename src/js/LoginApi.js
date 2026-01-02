@@ -41,7 +41,7 @@ export default class LoginApi {
         if (!this._accessToken || !this._accessExpiryMs) {
             const storedToken = getConfig("accessToken");
             if (storedToken && typeof storedToken === "object") {
-                if (storedToken.accessToken && storedToken.accessToken.token && storedToken.accessToken.expiry) {
+                if (storedToken.accessToken?.token && storedToken.accessToken?.expiry) {
                     this._accessToken = storedToken.accessToken.token;
                     this._accessExpiryMs = storedToken.accessToken.expiry;
                     console.info(
@@ -54,14 +54,6 @@ export default class LoginApi {
         /* Consider token valid if it expires in more than 3 minutes */
         if (this._accessToken && (this._accessExpiryMs ?? 0) > Date.now() + 3 * 60 * 1000) {
             return true;
-        }
-
-        if (this._accessExpiryMs) {
-            console.info(
-                `Access token is expired: ${new Date(this._accessExpiryMs).toISOString()} <= ${new Date().toISOString()} + 3 minutes`,
-            );
-        } else {
-            console.info("Access token is invalid.");
         }
 
         const response = await fetch(`${this._url}/api/token`, {
@@ -89,8 +81,8 @@ export default class LoginApi {
 
         // Validate expiry date
         const expiryDate = new Date(result.expiry);
-        if (isNaN(expiryDate.getTime())) {
-            throw new Error(`Invalid expiry date format: ${result.expiry}`);
+        if (Number.isNaN(expiryDate.getTime())) {
+            throw new TypeError(`Invalid expiry date format: ${result.expiry}`);
         }
 
         if (expiryDate.getTime() < Date.now()) {
@@ -313,6 +305,7 @@ export default class LoginApi {
             }
         } catch (_error) {
             // Silently continue without auth headers
+            console.log(`Unable to obtain access token for Login API. ${_error}`);
         }
 
         return null;
