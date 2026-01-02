@@ -177,7 +177,7 @@ export default class UserApi {
         const response = await fetch(`${this._url}/api/backups/${backupId}/file`, {
             method: "GET",
             headers: {
-                "Content-Type": "text/plain",
+                Accept: "text/plain",
                 ...authHeaders,
             },
         });
