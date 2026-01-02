@@ -5,7 +5,7 @@
 
             <!-- Loading State -->
             <div v-if="isLoading" class="data-loading">
-                <p>{{ i18n.getMessage("dataWaitingForData") }}</p>
+                <p>{{ $t("dataWaitingForData") }}</p>
             </div>
 
             <!-- Not Logged In State -->
@@ -79,7 +79,7 @@
                                     &times;
                                 </button>
                                 <p>
-                                    <label for="edit-name">{{ i18n.getMessage("labelName") }}</label>
+                                    <label for="edit-name">{{ $t("labelName") }}</label>
                                     <input v-model="editForm.name" type="text" id="edit-name" name="name" />
                                 </p>
                                 <p>
@@ -205,7 +205,6 @@
 
 <script>
 import { defineComponent } from "vue";
-import { i18n } from "../../js/localization";
 import loginManager from "../../js/LoginManager";
 import { gui_log } from "../../js/gui_log";
 
@@ -258,13 +257,13 @@ export default defineComponent({
                     const data = await this.userApi.profile();
                     this.profile = data;
                 } catch (error) {
-                    gui_log(`${i18n.getMessage("userProfileLoadFailed")}: ${error}`);
+                    gui_log(`${this.$t("userProfileLoadFailed")}: ${error}`);
                 }
 
                 try {
                     this.tokens = await this.userApi.getTokens();
                 } catch (error) {
-                    gui_log(`${i18n.getMessage("userTokenLoadFailed")}: ${error}`);
+                    gui_log(`${this.$t("userTokenLoadFailed")}: ${error}`);
                 }
             } catch (error) {
                 console.error("Error checking login state:", error);
@@ -278,7 +277,7 @@ export default defineComponent({
             try {
                 this.passkeys = await this.userApi.getPasskeys();
             } catch (error) {
-                gui_log(`${i18n.getMessage("userPasskeyLoadFailed")}: ${error}`);
+                gui_log(`${this.$t("userPasskeyLoadFailed")}: ${error}`);
             }
 
             this.isLoading = false;
@@ -313,14 +312,14 @@ export default defineComponent({
                 this.profile.name = this.editForm.name;
                 this.profile.address = this.editForm.address;
                 this.profile.country = this.editForm.country;
-                gui_log(i18n.getMessage("userProfileUpdateSuccess"));
+                gui_log(this.$t("userProfileUpdateSuccess"));
                 this.isEditing = false;
             } catch (error) {
-                gui_log(`${i18n.getMessage("userProfileUpdateFailed")}: ${error}`);
+                gui_log(`${this.$t("userProfileUpdateFailed")}: ${error}`);
             }
         },
         async deleteToken(tokenId) {
-            const confirmed = globalThis.confirm(i18n.getMessage("confirmDelete", i18n.getMessage("itemToken")));
+            const confirmed = globalThis.confirm(this.$t("confirmDelete", { item: this.$t("itemToken") }));
             if (!confirmed) {
                 return;
             }
@@ -332,13 +331,13 @@ export default defineComponent({
             try {
                 await this.userApi.deleteToken(tokenId);
                 this.tokens = this.tokens.filter((tk) => tk.id !== tokenId);
-                gui_log(i18n.getMessage("userTokenDeleteSuccess"));
+                gui_log(this.$t("userTokenDeleteSuccess"));
             } catch (error) {
-                gui_log(`${i18n.getMessage("userTokenDeleteFailed")}: ${error}`);
+                gui_log(`${this.$t("userTokenDeleteFailed")}: ${error}`);
             }
         },
         async deletePasskey(passkeyId) {
-            const confirmed = globalThis.confirm(i18n.getMessage("confirmDelete", i18n.getMessage("itemPasskey")));
+            const confirmed = globalThis.confirm(this.$t("confirmDelete", { item: this.$t("itemPasskey") }));
             if (!confirmed) {
                 return;
             }
@@ -350,9 +349,9 @@ export default defineComponent({
             try {
                 await this.userApi.deletePasskey(passkeyId);
                 this.passkeys = this.passkeys.filter((pk) => pk.id !== passkeyId);
-                gui_log(i18n.getMessage("userPasskeyDeleteSuccess"));
+                gui_log(this.$t("userPasskeyDeleteSuccess"));
             } catch (error) {
-                gui_log(`${i18n.getMessage("userPasskeyDeleteFailed")}: ${error}`);
+                gui_log(`${this.$t("userPasskeyDeleteFailed")}: ${error}`);
             }
         },
         formatDate(dateString) {

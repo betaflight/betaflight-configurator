@@ -8049,7 +8049,7 @@
         "message": "Created Date:"
     },
     "confirmDelete": {
-        "message": "Are you sure you want to delete this $1?"
+        "message": "Are you sure you want to delete this {{item}}?"
     },
     "itemBackup": {
         "message": "backup"

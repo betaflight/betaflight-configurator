@@ -5,7 +5,7 @@
 
             <!-- Loading State -->
             <div v-if="isLoading" class="data-loading">
-                <p>{{ i18n.getMessage("dataWaitingForData") }}</p>
+                <p>{{ $t("dataWaitingForData") }}</p>
             </div>
 
             <!-- Backups Content -->
@@ -34,7 +34,7 @@
                                     </thead>
                                     <tbody>
                                         <tr v-if="backups.length === 0">
-                                            <td colspan="4">{{ i18n.getMessage("backupNoBackupsAvailable") }}</td>
+                                            <td colspan="4">{{ $t("backupNoBackupsAvailable") }}</td>
                                         </tr>
                                         <template v-for="(groupBackups, craft) in groupedBackups" :key="craft">
                                             <tr>
@@ -54,19 +54,19 @@
                                                         href="#"
                                                         @click.prevent="downloadBackup(backup)"
                                                         class="download-backup"
-                                                        >{{ i18n.getMessage("actionDownload") }}</a
+                                                        >{{ $t("actionDownload") }}</a
                                                     >
                                                     <a
                                                         href="#"
                                                         @click.prevent="startEdit(backup)"
                                                         class="edit-backup"
-                                                        >{{ i18n.getMessage("actionEdit") }}</a
+                                                        >{{ $t("actionEdit") }}</a
                                                     >
                                                     <a
                                                         href="#"
                                                         @click.prevent="deleteBackup(backup.id)"
                                                         class="delete-backup"
-                                                        >{{ i18n.getMessage("actionDelete") }}</a
+                                                        >{{ $t("actionDelete") }}</a
                                                     >
                                                 </td>
                                             </tr>
@@ -100,15 +100,13 @@
                                 >
                                     &times;
                                 </button>
-                                <h4>{{ i18n.getMessage("backupEditTitle") }}</h4>
+                                <h4>{{ $t("backupEditTitle") }}</h4>
                                 <p>
-                                    <label for="edit-backup-name">{{ i18n.getMessage("labelName") }}</label>
+                                    <label for="edit-backup-name">{{ $t("labelName") }}</label>
                                     <input v-model="editForm.name" type="text" id="edit-backup-name" name="name" />
                                 </p>
                                 <p>
-                                    <label for="edit-backup-description">{{
-                                        i18n.getMessage("backupDescriptionLabel")
-                                    }}</label>
+                                    <label for="edit-backup-description">{{ $t("backupDescriptionLabel") }}</label>
                                     <textarea
                                         v-model="editForm.description"
                                         id="edit-backup-description"
@@ -116,7 +114,7 @@
                                     ></textarea>
                                 </p>
                                 <p>
-                                    <strong>{{ i18n.getMessage("labelCreatedDate") }}</strong>
+                                    <strong>{{ $t("labelCreatedDate") }}</strong>
                                     <span>{{ formatDate(editForm.created) }}</span>
                                 </p>
                                 <div class="button-container">
@@ -124,7 +122,7 @@
                                         href="#"
                                         @click.prevent="saveBackupChanges"
                                         class="save-backup-changes_button regular-button"
-                                        >{{ i18n.getMessage("actionSaveChanges") }}</a
+                                        >{{ $t("actionSaveChanges") }}</a
                                     >
                                 </div>
                             </div>
@@ -138,7 +136,6 @@
 
 <script>
 import { defineComponent } from "vue";
-import { i18n } from "../../js/localization";
 import loginManager from "../../js/LoginManager";
 import { gui_log } from "../../js/gui_log";
 import MSP from "../../js/msp";
@@ -196,7 +193,7 @@ export default defineComponent({
                 const backups = await this.userApi.getBackups();
                 this.backups = backups;
             } catch (error) {
-                gui_log(`${i18n.getMessage("userBackupsLoadFailed")}: ${error}`);
+                gui_log(`${this.$t("userBackupsLoadFailed")}: ${error}`);
             }
 
             this.isLoading = false;
@@ -204,7 +201,7 @@ export default defineComponent({
         async createBackup() {
             try {
                 if (!this.userApi) {
-                    throw new Error(i18n.getMessage("notLoggedIn"));
+                    throw new Error(this.$t("notLoggedIn"));
                 }
 
                 const output = await new Promise((resolve, reject) => {
@@ -212,27 +209,27 @@ export default defineComponent({
                         if (output && output.length > 0) {
                             resolve(output);
                         } else {
-                            reject(new Error(i18n.getMessage("profileBackupEmptyResult") || "Empty backup result"));
+                            reject(new Error(this.$t("profileBackupEmptyResult") || "Empty backup result"));
                         }
                     });
                 });
 
-                gui_log(i18n.getMessage("profileBackupSuccess"));
+                gui_log(this.$t("profileBackupSuccess"));
                 const text = output.join("\n");
 
                 // Upload to API
                 await this.userApi.uploadBackup(text);
 
-                gui_log(i18n.getMessage("profileBackupApiSuccess"));
+                gui_log(this.$t("profileBackupApiSuccess"));
                 await this.loadBackups();
             } catch (error) {
-                gui_log(`${i18n.getMessage("profileBackupApiFail")}: ${error.message || error}`);
+                gui_log(`${this.$t("profileBackupApiFail")}: ${error.message || error}`);
             }
         },
         async downloadBackup(backup) {
             try {
                 if (!this.userApi) {
-                    throw new Error(i18n.getMessage("notLoggedIn"));
+                    throw new Error(this.$t("notLoggedIn"));
                 }
 
                 const response = await this.userApi.downloadBackupFile(backup.id);
@@ -248,7 +245,7 @@ export default defineComponent({
                 // Clean up the object URL to avoid memory leaks
                 globalThis.URL.revokeObjectURL(url);
             } catch (error) {
-                gui_log(`${i18n.getMessage("userBackupDownloadFailed")}: ${error}`);
+                gui_log(`${this.$t("userBackupDownloadFailed")}: ${error}`);
             }
         },
         startEdit(backup) {
@@ -272,15 +269,15 @@ export default defineComponent({
                     name: this.editForm.name,
                     description: this.editForm.description,
                 });
-                gui_log(i18n.getMessage("userBackupUpdateSuccess"));
+                gui_log(this.$t("userBackupUpdateSuccess"));
                 await this.loadBackups();
                 this.isEditing = false;
             } catch (error) {
-                gui_log(`${i18n.getMessage("userBackupUpdateFailed")}: ${error}`);
+                gui_log(`${this.$t("userBackupUpdateFailed")}: ${error}`);
             }
         },
         async deleteBackup(backupId) {
-            const confirmed = globalThis.confirm(i18n.getMessage("confirmDelete", i18n.getMessage("itemBackup")));
+            const confirmed = globalThis.confirm(this.$t("confirmDelete", { item: this.$t("itemBackup") }));
             if (!confirmed) {
                 return;
             }
@@ -291,10 +288,10 @@ export default defineComponent({
 
             try {
                 await this.userApi.deleteBackup(backupId);
-                gui_log(i18n.getMessage("userBackupDeleteSuccess"));
+                gui_log(this.$t("userBackupDeleteSuccess"));
                 await this.loadBackups();
             } catch (error) {
-                gui_log(`${i18n.getMessage("userBackupDeleteFailed")}: ${error}`);
+                gui_log(`${this.$t("userBackupDeleteFailed")}: ${error}`);
             }
         },
         formatDate(dateString) {
@@ -305,7 +302,7 @@ export default defineComponent({
         },
         getSerialForCraft(craft) {
             const backup = this.backups.find((b) => b.key === craft);
-            return backup ? backup.serial || i18n.getMessage("backupMcuUnknown") : "";
+            return backup ? backup.serial || this.$t("backupMcuUnknown") : "";
         },
     },
     async mounted() {
