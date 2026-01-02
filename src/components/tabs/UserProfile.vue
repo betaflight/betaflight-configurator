@@ -83,24 +83,20 @@
                                     <input v-model="editForm.name" type="text" id="edit-name" name="name" />
                                 </p>
                                 <p>
-                                    <label for="edit-address">Address:</label>
+                                    <label for="edit-address">{{ $t("labelAddress") }}</label>
                                     <input v-model="editForm.address" type="text" id="edit-address" name="address" />
                                 </p>
                                 <p>
-                                    <label for="edit-country">Country:</label>
+                                    <label for="edit-country">{{ $t("labelCountry") }}</label>
                                     <input v-model="editForm.country" type="text" id="edit-country" name="country" />
                                 </p>
                             </div>
 
                             <!-- Profile Display -->
                             <div v-else class="button-container">
-                                <a
-                                    href="#"
-                                    @click.prevent="startEdit"
-                                    class="edit-profile_button regular-button"
-                                    i18n="Edit Profile"
-                                    >Edit Profile</a
-                                >
+                                <a href="#" @click.prevent="startEdit" class="edit-profile_button regular-button">{{
+                                    $t("actionEditProfile")
+                                }}</a>
                             </div>
 
                             <!-- Save Button (only shown when editing) -->
@@ -120,7 +116,7 @@
                 <!-- Token Section -->
                 <div class="options col-span-3">
                     <div class="gui_box tokens">
-                        <h3>User Tokens</h3>
+                        <h3>{{ $t("sectionUserTokens") }}</h3>
                         <div class="token-list">
                             <table class="token-table">
                                 <thead>
@@ -160,7 +156,7 @@
                 <!-- Passkeys Section -->
                 <div class="options col-span-3">
                     <div class="gui_box passkeys">
-                        <h3>User Passkeys</h3>
+                        <h3>{{ $t("sectionUserPasskeys") }}</h3>
                         <div class="passkey-list">
                             <table class="passkey-table">
                                 <thead>

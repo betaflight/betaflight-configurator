@@ -8042,8 +8042,17 @@
     "actionSaveChanges": {
         "message": "Save Changes"
     },
+    "actionEditProfile": {
+        "message": "Edit Profile"
+    },
     "labelName": {
         "message": "Name:"
+    },
+    "labelAddress": {
+        "message": "Address:"
+    },
+    "labelCountry": {
+        "message": "Country:"
     },
     "labelCreatedDate": {
         "message": "Created Date:"
@@ -8074,5 +8083,11 @@
     },
     "backupMcuUnknown": {
         "message": "mcu unknown"
+    },
+    "sectionUserTokens": {
+        "message": "User Tokens"
+    },
+    "sectionUserPasskeys": {
+        "message": "User Passkeys"
     }
 }
