@@ -495,21 +495,21 @@ async function checkReportProblems() {
 }
 
 async function processBuildConfiguration() {
-    const supported = semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45);
+    const buildOptionsSupported = semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45);
 
-    if (supported) {
+    if (buildOptionsSupported) {
         // get build key from firmware
         await MSP.promise(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.BUILD_KEY));
         gui_log(i18n.getMessage("buildKey", FC.CONFIG.buildKey));
 
         // firmware 1_45 or higher is required to support cloud build options
         // firmware 1_46 or higher retrieves build options from the flight controller
-        if (FC.CONFIG.buildKey.length === 32 && ispConnected()) {
+        if (FC.CONFIG.buildKey.length === 32 && ispConnected() && semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
             const buildApi = new BuildApi();
             try {
-                let options = await buildApi.requestBuildOptions(FC.CONFIG.buildKey);
+                const options = await buildApi.requestBuildOptions(FC.CONFIG.buildKey);
                 if (options) {
-                    FC.CONFIG.buildOptions = options.Request.Options;
+                    FC.CONFIG.buildOptions = options?.request?.options ?? [];
                 }
             } catch (error) {
                 console.error("Failed to request build options: ", error);
