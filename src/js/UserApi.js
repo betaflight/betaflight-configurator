@@ -90,6 +90,36 @@ export default class UserApi {
         }
     }
 
+    /* User Passkey Management Functionality */
+    async getPasskeys() {
+        const authHeaders = await this._authHeaders();
+        const response = await fetch(`${this._url}/api/user/passkeys`, {
+            method: "GET",
+            headers: {
+                ...authHeaders,
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error(await response.text());
+        }
+        return await response.json();
+    }
+
+    async deletePasskey(passkeyId) {
+        const authHeaders = await this._authHeaders();
+        const response = await fetch(`${this._url}/api/user/passkeys/${passkeyId}`, {
+            method: "DELETE",
+            headers: {
+                ...authHeaders,
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error(await response.text());
+        }
+    }
+
     /* User Backup Functionality */
     async getBackups() {
         const authHeaders = await this._authHeaders();

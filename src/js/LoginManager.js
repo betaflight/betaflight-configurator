@@ -217,7 +217,6 @@ class LoginManager {
 
             // Fetch user profile data
             await this.fetchUserProfile();
-            this.saveUserState();
             await this.updateSessionUI();
             await this.updateTabVisibility();
             this.notifyLoginCallbacks();
@@ -254,7 +253,6 @@ class LoginManager {
             // Fetch user profile data
             await this.fetchUserProfile();
 
-            this.saveUserState();
             await this.updateSessionUI();
             await this.updateTabVisibility();
             this.notifyLoginCallbacks();

@@ -37,7 +37,7 @@ export default class LoginApi {
 
         if (response.status === 401) {
             console.warn("User login token invalid. Login required.");
-            this.signOut();
+            await this.signOut();
             throw new TokenFailure("Unable to obtain access token. Login required.");
         }
 
@@ -97,7 +97,7 @@ export default class LoginApi {
             }
 
             console.info("Unable to obtain valid access token, signing out user.");
-            this.signOut();
+            await this.signOut();
             return false;
         }
         return false;
@@ -225,12 +225,29 @@ export default class LoginApi {
         }
     }
 
-    signOut() {
+    async signOut() {
+        removeConfig("userToken");
+        await this.removeCurrentToken();
         this._accessToken = null;
         this._accessExpiry = null;
         this._userToken = null;
         this._signedIn = false;
-        removeConfig("userToken");
+    }
+
+    async removeCurrentToken() {
+        if (!this._userToken) {
+            return;
+        }
+        try {
+            await fetch(`${this._url}/api/user/tokens/current`, {
+                method: "DELETE",
+                headers: {
+                    Authorization: `Bearer ${this._userToken}`,
+                },
+            });
+        } catch (err) {
+            console.error("Failed to remove current token:", err);
+        }
     }
 
     async requestTemporaryPassword(email) {

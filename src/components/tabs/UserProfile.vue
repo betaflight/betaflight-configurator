@@ -156,6 +156,48 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Passkeys Section -->
+                <div class="options col-span-3">
+                    <div class="gui_box passkeys">
+                        <h3>User Passkeys</h3>
+                        <div class="passkey-list">
+                            <table class="passkey-table">
+                                <thead>
+                                    <tr>
+                                        <th i18n="userPasskeyId">Id</th>
+                                        <th i18n="userPasskeySignCounter">Sign Counter</th>
+                                        <th i18n="userPasskeyCreated">Created</th>
+                                        <th i18n="userPasskeyUpdated">Updated</th>
+                                        <th i18n="userPasskeyPlatform">Platform Info</th>
+                                        <th i18n="userPasskeyActions">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-if="passkeys.length === 0">
+                                        <td colspan="6" i18n="userPasskeyNoPasskeys">No passkeys available</td>
+                                    </tr>
+                                    <tr v-for="passkey in passkeys" :key="passkey.id">
+                                        <td>{{ passkey.id }}</td>
+                                        <td>{{ passkey.signCounter }}</td>
+                                        <td>{{ formatDate(passkey.createdAtUtc) }}</td>
+                                        <td>{{ formatDate(passkey.updatedAtUtc) }}</td>
+                                        <td>{{ passkey.client?.address || "-" }}</td>
+                                        <td>
+                                            <a
+                                                href="#"
+                                                @click.prevent="deletePasskey(passkey.id)"
+                                                class="delete-passkey"
+                                                i18n="userPasskeyDelete"
+                                                >Delete</a
+                                            >
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -183,6 +225,7 @@ export default defineComponent({
                 country: "",
             },
             tokens: [],
+            passkeys: [],
             userApi: null,
         };
     },
@@ -201,6 +244,7 @@ export default defineComponent({
             if (!loginManager.isUserLoggedIn()) {
                 this.isLoggedIn = false;
                 this.tokens = [];
+                this.passkeys = [];
                 this.isLoading = false;
                 return;
             }
@@ -219,6 +263,12 @@ export default defineComponent({
                 this.tokens = await this.userApi.getTokens();
             } catch (error) {
                 gui_log(`${i18n.getMessage("userTokenLoadFailed")}: ${error}`);
+            }
+
+            try {
+                this.passkeys = await this.userApi.getPasskeys();
+            } catch (error) {
+                gui_log(`${i18n.getMessage("userPasskeyLoadFailed")}: ${error}`);
             }
 
             this.isLoading = false;
@@ -275,6 +325,24 @@ export default defineComponent({
                 gui_log(i18n.getMessage("userTokenDeleteSuccess"));
             } catch (error) {
                 gui_log(`${i18n.getMessage("userTokenDeleteFailed")}: ${error}`);
+            }
+        },
+        async deletePasskey(passkeyId) {
+            const confirmed = globalThis.confirm(i18n.getMessage("userPasskeyDeleteConfirm"));
+            if (!confirmed) {
+                return;
+            }
+
+            if (!this.userApi) {
+                return;
+            }
+
+            try {
+                await this.userApi.deletePasskey(passkeyId);
+                this.passkeys = this.passkeys.filter((pk) => pk.id !== passkeyId);
+                gui_log(i18n.getMessage("userPasskeyDeleteSuccess"));
+            } catch (error) {
+                gui_log(`${i18n.getMessage("userPasskeyDeleteFailed")}: ${error}`);
             }
         },
         formatDate(dateString) {

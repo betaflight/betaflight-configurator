@@ -1829,8 +1829,8 @@ each(range(12), {
 }
 
 #user-session-container {
-    background-color: transparent;
-    border-radius: 0;
+    background-color: var(--surface-100);
+    border-radius: 10px;
     font-size: 13px;
     padding: 0;
     position: absolute;
@@ -1839,12 +1839,20 @@ each(range(12), {
     width: 16rem;
 
     #user-logged-out {
+        height: 64px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+
         a#open-login {
             display: flex;
             flex-direction: row;
             align-items: center;
             gap: 8px;
             padding: 0.5rem;
+            width: fit-content;
+            margin-left: 0;
+            margin-right: auto;
             color: var(--text);
             text-decoration: none;
             transition: all 0.2s ease;
@@ -1870,6 +1878,7 @@ each(range(12), {
     #user-logged-in {
         display: none;
         position: relative;
+        height: 64px;
 
         #user-menu-trigger {
             display: flex;
@@ -1887,8 +1896,8 @@ each(range(12), {
             }
 
             .user-avatar-icon {
-                width: 24px;
-                height: 24px;
+                width: 48px;
+                height: 48px;
                 border-radius: 50%;
                 object-fit: cover;
                 flex-shrink: 0;
@@ -1904,9 +1913,15 @@ each(range(12), {
         }
 
         // Hide username on small screens (same breakpoint as tab text), show only avatar
-        @media (max-width: 575px) {
-            #user-menu-trigger .username {
+        @media (max-width: 1055px) {
+            .username {
                 display: none;
+            }
+        }
+        // Show username when menu is revealed on mobile
+        @media (max-width: 575px) {
+            .tab_container.reveal & .username {
+                display: block;
             }
         }
 
@@ -1916,7 +1931,7 @@ each(range(12), {
             left: 0;
             background-color: var(--surface-100);
             border: 1px solid var(--surface-400);
-            border-radius: 4px;
+            border-radius: 10px;
             box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.3);
             min-width: 160px;
             z-index: 1000;
