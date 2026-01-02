@@ -274,8 +274,37 @@ firmware_flasher.initialize = async function (callback) {
             $("a.load_remote_file").text(i18n.getMessage("firmwareFlasherButtonLoadOnline"));
         }
 
+        const targetQualificationNotice = $("#targetQualificationNotice");
+        const targetQualificationLabel = $("#targetQualificationNotice .target-qualification-label");
+
+        function findTargetDescriptor(targetName) {
+            return self.targets?.find((descriptor) => descriptor.target === targetName);
+        }
+
+        function updateTargetQualification(targetName) {
+            if (!targetName || targetName === "0") {
+                targetQualificationNotice.hide();
+                return;
+            }
+
+            const targetDescriptor = findTargetDescriptor(targetName) ?? self.targetDetail;
+            const descriptorGroup = targetDescriptor?.group;
+            const isQualified = descriptorGroup === "supported" || targetDescriptor?.partnerApproved === true;
+
+            if (isQualified) {
+                targetQualificationNotice.addClass("gui_note").removeClass("gui_warning");
+                targetQualificationLabel.text(i18n.getMessage("firmwareFlasherOptionLabelVerifiedPartner"));
+            } else {
+                targetQualificationNotice.removeClass("gui_note").addClass("gui_warning");
+                targetQualificationLabel.text(i18n.getMessage("firmwareFlasherOptionLabelNotQualified"));
+            }
+
+            targetQualificationNotice.show();
+        }
+
         async function populateTargetList(targets) {
             if (!targets || !ispConnected()) {
+                updateTargetQualification(null);
                 $('select[name="board"]').empty().append('<option value="0">Offline</option>');
                 $('select[name="firmware_version"]').empty().append('<option value="0">Offline</option>');
 
@@ -603,6 +632,7 @@ firmware_flasher.initialize = async function (callback) {
             } catch (error) {
                 console.error("Failed to load target:", error);
                 loadFailed();
+                updateTargetQualification(null);
                 return;
             }
 
@@ -704,6 +734,8 @@ firmware_flasher.initialize = async function (callback) {
             self.enableLoadRemoteFileButton(false);
             let target = $(this).val();
 
+            updateTargetQualification(target);
+
             // exception for board flashed with local custom firmware
             if (target === null) {
                 target = "0";
@@ -739,6 +771,8 @@ firmware_flasher.initialize = async function (callback) {
                             )}</option>`,
                         ),
                     );
+
+                    updateTargetQualification(null);
                 } else {
                     // Show a loading message as there is a delay in loading a configuration
                     versions_e.empty();
@@ -1024,6 +1058,8 @@ firmware_flasher.initialize = async function (callback) {
                                     }),
                                     self.FLASH_MESSAGE_TYPES.NEUTRAL,
                                 );
+
+                                updateTargetQualification(null);
                             }
                         }
                     }

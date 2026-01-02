@@ -7774,13 +7774,16 @@
         "message": "Continue without OSD protocol"
     },
     "firmwareFlasherOptionLabelVerifiedPartner": {
-        "message": "Verified Partner"
+        "message": "✅ Verified Partner"
     },
     "firmwareFlasherOptionLabelVendorCommunity": {
-        "message": "Vendor / Community"
+        "message": "⚠️ Vendor / Community"
     },
     "firmwareFlasherOptionLabelLegacy": {
         "message": "Legacy"
+    },
+    "firmwareFlasherOptionLabelNotQualified": {
+        "message": "⚠️ Community / Manufacturer supported target — not officially supported ⚠️"
     },
     "coreBuild": {
         "message": "Core Only"
