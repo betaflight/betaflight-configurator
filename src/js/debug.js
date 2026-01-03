@@ -933,6 +933,7 @@ function update() {
     }
 }
 
-update();
+// Expose runtime updater so callers can refresh field definitions after connecting
+DEBUG.update = update;
 
 export default DEBUG;

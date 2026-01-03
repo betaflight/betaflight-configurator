@@ -34,28 +34,26 @@ onboard_logging.initialize = function (callback) {
         GUI.active_tab = "onboard_logging";
     }
 
-    if (CONFIGURATOR.connectionValid) {
-        MSP.send_message(MSPCodes.MSP_FEATURE_CONFIG, false, false, function () {
-            MSP.send_message(MSPCodes.MSP_DATAFLASH_SUMMARY, false, false, function () {
-                MSP.send_message(MSPCodes.MSP_SDCARD_SUMMARY, false, false, function () {
-                    MSP.send_message(MSPCodes.MSP_BLACKBOX_CONFIG, false, false, function () {
-                        MSP.send_message(MSPCodes.MSP_ADVANCED_CONFIG, false, false, function () {
-                            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
-                                MSP.send_message(
-                                    MSPCodes.MSP2_GET_TEXT,
-                                    mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.CRAFT_NAME),
-                                    false,
-                                    load_html,
-                                );
-                            } else {
-                                MSP.send_message(MSPCodes.MSP_NAME, false, false, load_html);
-                            }
-                        });
+    MSP.send_message(MSPCodes.MSP_FEATURE_CONFIG, false, false, function () {
+        MSP.send_message(MSPCodes.MSP_DATAFLASH_SUMMARY, false, false, function () {
+            MSP.send_message(MSPCodes.MSP_SDCARD_SUMMARY, false, false, function () {
+                MSP.send_message(MSPCodes.MSP_BLACKBOX_CONFIG, false, false, function () {
+                    MSP.send_message(MSPCodes.MSP_ADVANCED_CONFIG, false, false, function () {
+                        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+                            MSP.send_message(
+                                MSPCodes.MSP2_GET_TEXT,
+                                mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.CRAFT_NAME),
+                                false,
+                                load_html,
+                            );
+                        } else {
+                            MSP.send_message(MSPCodes.MSP_NAME, false, false, load_html);
+                        }
                     });
                 });
             });
         });
-    }
+    });
 
     function gcd(a, b) {
         if (b === 0) {
@@ -69,6 +67,9 @@ onboard_logging.initialize = function (callback) {
         $("#content").load("./tabs/onboard_logging.html", function () {
             // translate to user-selected language
             i18n.localizePage();
+
+            // Ensure debug field definitions are up to date
+            DEBUG.update();
 
             const dataflashPresent = FC.DATAFLASH.totalSize > 0;
             let blackboxSupport;
