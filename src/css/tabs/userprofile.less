@@ -1,0 +1,252 @@
+.tab-user_profile {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    color: #fff;
+}
+.profile {
+    margin-top: 20px;
+}
+.gui_box {
+    background-color: #3a3a3a;
+    border-radius: 5px;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+.passkey-table {
+    width: 100%;
+
+    th {
+        text-align: left;
+    }
+}
+.token-table {
+    width: 100%;
+
+    th {
+        text-align: left;
+    }
+}
+.profile-content {
+    display: flex;
+    align-items: flex-start;
+}
+.profile-photo {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #ffa724;
+    margin-right: 20px;
+}
+.profile-info {
+    flex-grow: 1;
+    p {
+        margin: 10px 0;
+        font-size: 14px;
+    }
+}
+.profile-info,
+.temp-password-form,
+.create-passkey-form,
+.signup-form,
+.login-form {
+    h3 {
+        padding-bottom: 5px;
+        border-bottom-color: darkgray;
+        border-bottom-style: solid;
+        border-width: 1px;
+    }
+    input {
+        width: 220px;
+    }
+    .title {
+        color: #ffa724;
+        font-weight: 600;
+        margin-right: 5px;
+        min-width: 60px;
+        display: inline-block;
+    }
+    .space {
+        margin-top: 10px;
+    }
+}
+.backup-table .title {
+    font-weight: bold;
+    color: #ffa724;
+    width: 100%;
+}
+.profile-photo img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+}
+
+.content_wrapper .data-loading {
+    min-height: 150px;
+    height: 50%;
+    p {
+        text-align: center;
+        margin-top: 100px;
+    }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .profile-content {
+        flex-direction: column;
+        align-items: center;
+    }
+    .profile-photo {
+        margin-right: 0;
+        margin-bottom: 20px;
+    }
+    .profile-info {
+        text-align: center;
+    }
+}
+/* Button styles (for consistency with the image) */
+.secondary-button,
+.regular-button {
+    padding: 4px 10px;
+    border-radius: 3px;
+    text-decoration: none;
+    font-weight: bold;
+    display: inline-block;
+    transition: background-color 0.3s;
+    min-width: 135px;
+    text-align: center;
+}
+.regular-button {
+    background-color: #ffa724;
+    color: #000;
+}
+.secondary-button {
+    background-color: #b6781c;
+    color: #000;
+}
+
+.regular-button:hover {
+    background-color: #ffb744;
+}
+
+.backup-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+.backup-table th,
+.backup-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+.backup-table th {
+    background-color: #525252;
+    font-weight: bold;
+}
+.backup-table tr:nth-child(even) {
+    background-color: #525252;
+}
+.backup-table tr:hover {
+    background-color: #757575;
+}
+
+.backup-table a {
+    margin-right: 10px;
+    text-decoration: none;
+    color: #ffa724;
+}
+.backup-table a:hover {
+    text-decoration: underline;
+}
+.backup-edit-form {
+    margin-top: 20px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    background-color: #f9f9f9;
+}
+.backup-edit-form label {
+    display: block;
+    margin-bottom: 5px;
+}
+.backup-edit-form input[type="text"],
+.backup-edit-form textarea {
+    width: 100%;
+    padding: 5px;
+    margin-bottom: 10px;
+}
+.backup-edit-form textarea {
+    height: 100px;
+}
+.button-container {
+    margin-top: 10px;
+
+    a {
+        margin-right: 10px;
+    }
+}
+.error-message {
+    color: #ff0000;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+.create-passkey-link {
+    margin-top: 10px;
+    text-align: center;
+}
+.create-passkey-link a {
+    color: #0066cc;
+    text-decoration: none;
+}
+.create-passkey-link a:hover {
+    text-decoration: underline;
+}
+.create-passkey-form,
+.temp-password-form {
+    margin-top: 20px;
+}
+.create-passkey-form h3,
+.temp-password-form h3 {
+    margin-bottom: 15px;
+}
+.create-passkey-form .number,
+.temp-password-form .number {
+    margin-bottom: 15px;
+}
+.create-passkey-form label,
+.temp-password-form label {
+    display: block;
+    margin-bottom: 5px;
+}
+.create-passkey-form input,
+.temp-password-form input {
+    width: 100%;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+.create-passkey-form .button-container,
+.temp-password-form .button-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+}
+.create-passkey-form .button-container a,
+.temp-password-form .button-container a {
+    flex: 1;
+    margin: 0 5px;
+}
+.profile-edit {
+    flex-grow: 1;
+}
+.profile-edit input {
+    width: 100%;
+    padding: 5px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+.profile-edit label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}

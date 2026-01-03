@@ -2,7 +2,7 @@
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 import path from "node:path";
-import { readFileSync } from "node:fs";
+import { readFileSync, existsSync } from "node:fs";
 import copy from "rollup-plugin-copy";
 import pkg from "./package.json";
 import * as child from "child_process";
@@ -10,6 +10,22 @@ import { VitePWA } from "vite-plugin-pwa";
 import { resolve } from "path";
 
 const commitHash = child.execSync("git rev-parse --short HEAD").toString().trim();
+
+// Check if SSL certificates exist
+const certPath = "./local.betaflight.com.pem";
+const keyPath = "./local.betaflight.com-key.pem";
+const certsExist = existsSync(certPath) && existsSync(keyPath);
+const serverPort = certsExist ? 8443 : 8080;
+
+if (certsExist) {
+    console.log("✓ SSL certificates found - HTTPS enabled");
+    console.log("  Server will be available at: https://local.betaflight.com:8443");
+} else {
+    console.log("⚠ SSL certificates not found - Running in HTTP mode");
+    console.log("  WebAuthn features will not be available without HTTPS");
+    console.log("  See WEBAUTHN_SETUP.md for certificate setup instructions");
+    console.log("  Server will be available at: http://localhost:8080");
+}
 
 function serveFileFromDirectory(directory) {
     return (req, res, next) => {
@@ -50,7 +66,7 @@ function serveLocalesPlugin() {
 }
 
 export default defineConfig({
-    base: './',  // Important for production APK asset paths
+    base: "./", // Important for production APK asset paths
     define: {
         __APP_VERSION__: JSON.stringify(pkg.version),
         __APP_PRODUCTNAME__: JSON.stringify(pkg.productName),
@@ -119,12 +135,19 @@ export default defineConfig({
         },
     },
     server: {
-        port: 8000,
+        port: serverPort,
         strictPort: true,
+        ...(certsExist && {
+            https: {
+                key: readFileSync(keyPath),
+                cert: readFileSync(certPath),
+            },
+        }),
         host: "0.0.0.0", // Listen on all network interfaces for Android device access
+        allowedHosts: certsExist ? ["local.betaflight.com"] : ["localhost"],
     },
     preview: {
-        port: 8080,
+        port: serverPort,
         strictPort: true,
     },
 });
