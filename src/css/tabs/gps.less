@@ -294,6 +294,12 @@ meter[value] {
         .gps_map {
             height: 403px;
         }
+        /* Make the grid a column on small devices */
+        .grid-row.grid-box {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
     }
     .tabs-gps {
         #loadmap {
