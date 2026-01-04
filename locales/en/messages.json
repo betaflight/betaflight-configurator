@@ -3118,7 +3118,7 @@
         "description": "Do not translate"
     },
     "gpsSignalStrHead": {
-        "message": "GPS Signal Strength"
+        "message": "GPS Signal Info"
     },
     "gpsSignalStrHeadHelp": {
         "message": "Show signal strength, quality and status for each discovered GPS source",
