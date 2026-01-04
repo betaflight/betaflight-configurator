@@ -1822,7 +1822,7 @@
         "message": "<strong>Note:</strong> Make sure your FC is able to operate at these speeds! Check CPU and cycletime stability. Changing this may require PID re-tuning. TIP: Disable Accelerometer and other sensors to gain more performance."
     },
     "configurationGPS": {
-        "message": "GPS Configuration"
+        "message": "Configuration"
     },
     "configurationGPSHelp": {
         "message": "Setup protocol for GPS device (remember to setup port in Port tab), use Auto baud (or setup speed at Port tab) and other configuration",
@@ -3057,14 +3057,14 @@
         "description": "Don't translate!!!"
     },
     "gpsHead": {
-        "message": "GPS"
+        "message": "General"
     },
     "gpsHeadHelp": {
         "message": "Show various information releated to GPS. Heading are only shown when Magnetometer are in use",
         "description": "Help text for gpsHead"
     },
     "gpsMapHead": {
-        "message": "Current GPS location"
+        "message": "Current location"
     },
     "gpsMapMessage1": {
         "message": "Please check your internet connection"
@@ -3118,7 +3118,7 @@
         "description": "Do not translate"
     },
     "gpsSignalStrHead": {
-        "message": "GPS Signal Info"
+        "message": "Signal Info"
     },
     "gpsSignalStrHeadHelp": {
         "message": "Show signal strength, quality and status for each discovered GPS source",
@@ -3135,9 +3135,6 @@
     },
     "gpsSignalSatId": {
         "message": "Sat ID"
-    },
-    "gpsSignalStatus": {
-        "message": "Status"
     },
     "gpsSignalQuality": {
         "message": "Quality"
