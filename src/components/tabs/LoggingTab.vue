@@ -56,7 +56,7 @@
             <div class="btn logging_btn">
                 <a
                     class="logging"
-                    :class="{ disabled: !fileEntry || isBusy }"
+                    :class="{ disabled: !canToggle }"
                     href="#"
                     @click.prevent="toggleLogging"
                     :aria-disabled="!canToggle"
