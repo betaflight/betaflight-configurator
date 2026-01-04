@@ -253,12 +253,19 @@ export default defineComponent({
         function crunchData() {
             let sample = millitime();
 
+            const formatCsvValue = (value) => {
+                if (Array.isArray(value)) {
+                    return value.map((item) => String(item)).join(",");
+                }
+                return String(value);
+            };
+
             requestedProperties.forEach((property) => {
                 switch (property) {
                     case "MSP_RAW_IMU":
-                        sample += `,${FC.SENSOR_DATA.gyroscope}`;
-                        sample += `,${FC.SENSOR_DATA.accelerometer}`;
-                        sample += `,${FC.SENSOR_DATA.magnetometer}`;
+                        sample += `,${formatCsvValue(FC.SENSOR_DATA.gyroscope)}`;
+                        sample += `,${formatCsvValue(FC.SENSOR_DATA.accelerometer)}`;
+                        sample += `,${formatCsvValue(FC.SENSOR_DATA.magnetometer)}`;
                         break;
                     case "MSP_ATTITUDE":
                         sample += `,${FC.SENSOR_DATA.kinematics[0]}`;
@@ -289,10 +296,10 @@ export default defineComponent({
                         }
                         break;
                     case "MSP_MOTOR":
-                        sample += `,${FC.MOTOR_DATA}`;
+                        sample += `,${formatCsvValue(FC.MOTOR_DATA)}`;
                         break;
                     case "MSP_DEBUG":
-                        sample += `,${FC.SENSOR_DATA.debug}`;
+                        sample += `,${formatCsvValue(FC.SENSOR_DATA.debug)}`;
                         break;
                 }
             });
