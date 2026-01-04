@@ -418,6 +418,14 @@ export default defineComponent({
 
                 isLogging.value = true;
             } catch (error) {
+                if (fileWriter.value) {
+                    try {
+                        await fileWriter.value.close();
+                    } catch (closeError) {
+                        console.error("Error closing file after start failure:", closeError);
+                    }
+                    fileWriter.value = null;
+                }
                 console.error("Failed to start logging:", error);
                 gui_log(i18n.getMessage("loggingErrorLogFile"));
             } finally {
