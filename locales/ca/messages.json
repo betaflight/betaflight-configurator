@@ -6062,6 +6062,10 @@
         "message": "Data curta",
         "description": "One of the variants of the RTC date and time element of the OSD"
     },
+    "osdTextElementRtcDateTimeVariantTimeOnly": {
+        "message": "Només temps",
+        "description": "One of the variants of the RTC date and time element of the OSD"
+    },
     "osdDescElementRtcDateTime": {
         "message": "Hora \/ data real"
     },
@@ -7689,13 +7693,16 @@
         "message": "Continueu sense protocol OSD"
     },
     "firmwareFlasherOptionLabelVerifiedPartner": {
-        "message": "Soci verificat"
+        "message": "✅ Soci verificat"
     },
     "firmwareFlasherOptionLabelVendorCommunity": {
-        "message": "Proveïdor \/ Comunitat"
+        "message": "⚠️ Proveïdor \/ Comunitat"
     },
     "firmwareFlasherOptionLabelLegacy": {
         "message": "Legacy"
+    },
+    "firmwareFlasherOptionLabelNotQualified": {
+        "message": "⚠️ Objectiu sostingut per la comunitat\/fabricant — no és oficialment compatible ⚠️"
     },
     "coreBuild": {
         "message": "Només el nucli"

@@ -7592,12 +7592,6 @@
     "firmwareFlasherOSDProtocolNotSelectedContinue": {
         "message": "Continuar sin protocolo OSD"
     },
-    "firmwareFlasherOptionLabelVerifiedPartner": {
-        "message": "Socio Verificado"
-    },
-    "firmwareFlasherOptionLabelVendorCommunity": {
-        "message": "Vendedor \/ Comunidad"
-    },
     "firmwareFlasherOptionLabelLegacy": {
         "message": "Antiguo"
     },

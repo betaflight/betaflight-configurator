@@ -201,6 +201,9 @@
     "sensorStatusGyro": {
         "message": "ジャイロスコープ"
     },
+    "configurationGyroRequired": {
+        "message": "少なくとも1つのジャイロを有効にする必要があります"
+    },
     "sensorStatusGyroShort": {
         "message": "Gyro",
         "description": "Text of the image in the top sensors icons. Please keep it short."
@@ -1325,6 +1328,9 @@
     "configurationFeatures": {
         "message": "その他の機能"
     },
+    "configurationFeatureHelp": {
+        "message": "ヘルプ"
+    },
     "configurationReceiver": {
         "message": "受信機"
     },
@@ -1355,6 +1361,15 @@
     "configurationSpiRxHelp": {
         "message": "<strong>注:<\/strong> SPI受信プロトコルは、必要なハードウェアが搭載されているかSPIバスに接続されている場合にのみ動作します。"
     },
+    "configurationActiveImu": {
+        "message": "IMU 有効"
+    },
+    "configurationSensors": {
+        "message": "センサー設定"
+    },
+    "configurationSensorsHelp": {
+        "message": "追加センサーや高度な機能を設定します。"
+    },
     "configurationMagAlignmentHelp": {
         "message": "コンパス アライメントは、FCボード上の磁気センサーの向きを指します。通常はデフォルト設定で正しい場合がほとんどですが、カスタムビルドや異なる向きの磁気センサーを持つフライトコントローラを使用している場合、この設定を調整する必要があるかもしれません。"
     },
@@ -1367,11 +1382,19 @@
     "configurationMagDeclinationHelp": {
         "message": "コンパス偏角は、磁北 (磁気北極) と真北 (地理的北極) の間の角度を指します。この角度は地球上の場所によって異なります。ご自身の位置での偏角は、インターネットで簡単に確認することができます。"
     },
+    "configurationRangefinder": {
+        "message": "レンジファインダー",
+        "description": "Don't translate!!!"
+    },
     "configurationRangefinderHelp": {
         "message": "距離計 (レンジファインダー) を有効にし、地面までの距離をcm単位で計測"
     },
     "configurationRangefinderType": {
         "message": "タイプ"
+    },
+    "configurationOpticalflow": {
+        "message": "オプティカルフロー",
+        "description": "Don't translate!!!"
     },
     "configurationOpticalflowHelp": {
         "message": "オプティカルフローセンサー 有効"
@@ -1434,6 +1457,30 @@
         "message": "$t(configurationBoardAlignmentYaw.message)",
         "description": "Don't translate!!!"
     },
+    "configurationGyro1AlignmentRoll": {
+        "message": "$t(configurationBoardAlignmentRoll.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyro1AlignmentPitch": {
+        "message": "$t(configurationBoardAlignmentPitch.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyro1AlignmentYaw": {
+        "message": "$t(configurationBoardAlignmentYaw.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyro2AlignmentRoll": {
+        "message": "$t(configurationBoardAlignmentRoll.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyro2AlignmentPitch": {
+        "message": "$t(configurationBoardAlignmentPitch.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyro2AlignmentYaw": {
+        "message": "$t(configurationBoardAlignmentYaw.message)",
+        "description": "Don't translate!!!"
+    },
     "configurationSensorAlignmentGyro": {
         "message": "ジャイロ アライメント"
     },
@@ -1470,6 +1517,9 @@
     "configurationSensorAlignmentDefaultOption": {
         "message": "デフォルト値"
     },
+    "configurationSensorAlignmentCustom": {
+        "message": "カスタム"
+    },
     "configurationAccelTrims": {
         "message": "加速度センサー トリム"
     },
@@ -1499,6 +1549,9 @@
     },
     "configurationGyroCalOnFirstArm": {
         "message": "初回アーム時にジャイロキャリブレーションを実施"
+    },
+    "configurationGyroCalOnFirstArmHelp": {
+        "message": "有効にすると、電源投入後の最初のアーム時にジャイロスコープのキャリブレーションが行われます。これにより、飛行中のジャイロドリフトを低減できます。"
     },
     "configurationMotorIdle": {
         "message": "モーター アイドル (%)"
@@ -6979,6 +7032,9 @@
         "message": "DShotテレメトリーを介してFCボードにESCデータを送信します。RPMフィルタリングと動的アイドル値で必要となります。<br><br>注: JESC、Jazzmac、BLHeli-32などの適切なファームウェアを搭載した互換性のあるESCが必要です。",
         "description": "Description of the Bidirectional DShot feature of the ESC\/Motor"
     },
+    "configurationGyroFrequency": {
+        "message": "ジャイロ 演算周波数"
+    },
     "configurationPidProcessDenom": {
         "message": "PIDループ 演算周波数"
     },
@@ -7237,6 +7293,9 @@
     },
     "dialogFileNameTitle": {
         "message": "ファイル名"
+    },
+    "dialogFileNameDescription": {
+        "message": "このファイルは内部ストレージの『Android\/data\/betaflight-app\/{{folder}}』フォルダに保存されます。"
     },
     "dialogFileAlreadyExistsTitle": {
         "message": "このファイルは既に存在します！"
@@ -7588,12 +7647,6 @@
     },
     "firmwareFlasherOSDProtocolNotSelectedContinue": {
         "message": "OSDプロトコル未選択のまま続ける"
-    },
-    "firmwareFlasherOptionLabelVerifiedPartner": {
-        "message": "認証されたパートナー"
-    },
-    "firmwareFlasherOptionLabelVendorCommunity": {
-        "message": "ベンダー \/ コミュニティ"
     },
     "firmwareFlasherOptionLabelLegacy": {
         "message": "レガシー"
