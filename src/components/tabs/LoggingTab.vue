@@ -8,8 +8,10 @@
                     :href="documentationHref"
                     target="_blank"
                     rel="noopener noreferrer"
-                    v-html="$t('betaflightSupportButton')"
-                ></a>
+                    :aria-label="$t('betaflightSupportButton')"
+                >
+                    {{ $t("betaflightSupportButton") }}
+                </a>
             </div>
             <div class="note">
                 <p v-html="$t('loggingNote')"></p>
@@ -48,10 +50,12 @@
 
         <div class="content_toolbar toolbar_fixed_bottom">
             <div class="btn file_btn">
-                <a class="log_file" href="#" @click.prevent="selectLogFile" v-html="$t('loggingButtonLogFile')"></a>
+                <a class="log_file" href="#" @click.prevent="selectLogFile" :aria-label="$t('loggingButtonLogFile')">
+                    {{ $t("loggingButtonLogFile") }}
+                </a>
             </div>
             <div class="btn back_btn">
-                <a class="back" href="#" v-html="$t('loggingBack')"></a>
+                <a class="back" href="#" :aria-label="$t('loggingBack')">{{ $t("loggingBack") }}</a>
             </div>
             <div class="btn logging_btn">
                 <a
@@ -166,6 +170,19 @@ const SPEED_OPTIONS = [10, 20, 30, 40, 50, 100, 250, 500, 1000, 2000, 5000];
 const LOG_POLL_INTERVAL = "log_data_poll";
 const LOG_WRITE_INTERVAL = "write_data";
 
+function sendInitialRequests() {
+    if (!CONFIGURATOR.connectionValid) {
+        GUI.content_ready();
+        return;
+    }
+
+    MSP.send_message(MSPCodes.MSP_RC, false, false, () => {
+        MSP.send_message(MSPCodes.MSP_MOTOR, false, false, () => {
+            GUI.content_ready();
+        });
+    });
+}
+
 export default defineComponent({
     name: "LoggingTab",
     components: {
@@ -201,19 +218,6 @@ export default defineComponent({
             isLogging.value ? i18n.getMessage("loggingStop") : i18n.getMessage("loggingStart"),
         );
         const canToggle = computed(() => (isLogging.value || !!fileEntry.value) && !isBusy.value);
-
-        function sendInitialRequests() {
-            if (!CONFIGURATOR.connectionValid) {
-                GUI.content_ready();
-                return;
-            }
-
-            MSP.send_message(MSPCodes.MSP_RC, false, false, () => {
-                MSP.send_message(MSPCodes.MSP_MOTOR, false, false, () => {
-                    GUI.content_ready();
-                });
-            });
-        }
 
         async function selectLogFile() {
             const prefix = "log";
@@ -364,7 +368,7 @@ export default defineComponent({
                         sendRequests();
                         hasPreviousRequest = true;
                     },
-                    parseInt(samplingInterval.value, 10),
+                    Number.parseInt(samplingInterval.value, 10),
                     true,
                 );
 
@@ -410,9 +414,9 @@ export default defineComponent({
             sendInitialRequests();
         });
 
-        onUnmounted(() => {
+        onUnmounted(async () => {
             isDestroyed = true;
-            stopLogging(true);
+            await stopLogging(true);
         });
 
         return {
