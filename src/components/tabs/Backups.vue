@@ -11,120 +11,91 @@
             <!-- Backups Content -->
             <div v-else class="grid-box col3">
                 <div class="options col-span-3">
-                    <div class="gui_box backups">
-                        <div class="spacer">
-                            <div v-if="isConnected" class="backup-controls" style="margin-bottom: 15px">
+                    <div v-if="isConnected" class="backup-controls">
+                        <a href="#" @click.prevent="createBackup" class="backup_button regular-button" i18n="Backup"
+                            >Backup</a
+                        >
+                    </div>
+                    <div class="backup-list">
+                        <table class="backup-table">
+                            <thead>
+                                <tr>
+                                    <th i18n="userBackupDate">Date</th>
+                                    <th i18n="userBackupName">Name</th>
+                                    <th i18n="userBackupDescription">Description</th>
+                                    <th i18n="userBackupActions">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-if="backups.length === 0">
+                                    <td colspan="4">{{ $t("backupNoBackupsAvailable") }}</td>
+                                </tr>
+                                <template v-for="(groupBackups, craft) in groupedBackups" :key="craft">
+                                    <tr>
+                                        <td colspan="4">
+                                            <span class="title">{{ craft }}</span>
+                                            <span v-if="getSerialForCraft(craft)" class="serial"
+                                                >[{{ getSerialForCraft(craft) }}]</span
+                                            >
+                                        </td>
+                                    </tr>
+                                    <tr v-for="backup in groupBackups" :key="backup.id">
+                                        <td>{{ formatDate(backup.created) }}</td>
+                                        <td>{{ backup.name }}</td>
+                                        <td>{{ backup.description || "" }}</td>
+                                        <td>
+                                            <a
+                                                href="#"
+                                                @click.prevent="downloadBackup(backup)"
+                                                class="download-backup"
+                                                >{{ $t("actionDownload") }}</a
+                                            >
+                                            <a href="#" @click.prevent="startEdit(backup)" class="edit-backup">{{
+                                                $t("actionEdit")
+                                            }}</a>
+                                            <a
+                                                href="#"
+                                                @click.prevent="deleteBackup(backup.id)"
+                                                class="delete-backup"
+                                                >{{ $t("actionDelete") }}</a
+                                            >
+                                        </td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Edit Form Modal -->
+                    <div v-if="isEditing" class="backup-edit-modal" @click.self="cancelEdit">
+                        <div class="backup-edit-form">
+                            <button class="backup-edit-close-button" aria-label="Close" @click.prevent="cancelEdit">
+                                &times;
+                            </button>
+                            <h4>{{ $t("backupEditTitle") }}</h4>
+                            <p>
+                                <label for="edit-backup-name">{{ $t("labelName") }}</label>
+                                <input v-model="editForm.name" type="text" id="edit-backup-name" name="name" />
+                            </p>
+                            <p>
+                                <label for="edit-backup-description">{{ $t("backupDescriptionLabel") }}</label>
+                                <textarea
+                                    v-model="editForm.description"
+                                    id="edit-backup-description"
+                                    name="description"
+                                ></textarea>
+                            </p>
+                            <p>
+                                <strong>{{ $t("labelCreatedDate") }}</strong>
+                                <span>{{ formatDate(editForm.created) }}</span>
+                            </p>
+                            <div class="button-container">
                                 <a
                                     href="#"
-                                    @click.prevent="createBackup"
-                                    class="backup_button regular-button"
-                                    i18n="Backup"
-                                    >Backup</a
+                                    @click.prevent="saveBackupChanges"
+                                    class="save-backup-changes_button regular-button"
+                                    >{{ $t("actionSaveChanges") }}</a
                                 >
-                            </div>
-                            <div class="backup-list">
-                                <table class="backup-table">
-                                    <thead>
-                                        <tr>
-                                            <th i18n="userBackupDate">Date</th>
-                                            <th i18n="userBackupName">Name</th>
-                                            <th i18n="userBackupDescription">Description</th>
-                                            <th i18n="userBackupActions">Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr v-if="backups.length === 0">
-                                            <td colspan="4">{{ $t("backupNoBackupsAvailable") }}</td>
-                                        </tr>
-                                        <template v-for="(groupBackups, craft) in groupedBackups" :key="craft">
-                                            <tr>
-                                                <td colspan="4">
-                                                    <span class="title">{{ craft }}</span>
-                                                    <span v-if="getSerialForCraft(craft)" class="serial"
-                                                        >[{{ getSerialForCraft(craft) }}]</span
-                                                    >
-                                                </td>
-                                            </tr>
-                                            <tr v-for="backup in groupBackups" :key="backup.id">
-                                                <td>{{ formatDate(backup.created) }}</td>
-                                                <td>{{ backup.name }}</td>
-                                                <td>{{ backup.description || "" }}</td>
-                                                <td>
-                                                    <a
-                                                        href="#"
-                                                        @click.prevent="downloadBackup(backup)"
-                                                        class="download-backup"
-                                                        >{{ $t("actionDownload") }}</a
-                                                    >
-                                                    <a
-                                                        href="#"
-                                                        @click.prevent="startEdit(backup)"
-                                                        class="edit-backup"
-                                                        >{{ $t("actionEdit") }}</a
-                                                    >
-                                                    <a
-                                                        href="#"
-                                                        @click.prevent="deleteBackup(backup.id)"
-                                                        class="delete-backup"
-                                                        >{{ $t("actionDelete") }}</a
-                                                    >
-                                                </td>
-                                            </tr>
-                                        </template>
-                                    </tbody>
-                                </table>
-                            </div>
-
-                            <!-- Edit Form -->
-                            <div v-if="isEditing" class="backup-edit-form" style="position: relative">
-                                <button
-                                    class="backup-edit-close-button"
-                                    aria-label="Close"
-                                    @click.prevent="cancelEdit"
-                                    style="
-                                        position: absolute;
-                                        top: 10px;
-                                        right: 10px;
-                                        background: none;
-                                        border: none;
-                                        font-size: 24px;
-                                        cursor: pointer;
-                                        padding: 0;
-                                        width: 30px;
-                                        height: 30px;
-                                        display: flex;
-                                        align-items: center;
-                                        justify-content: center;
-                                        color: var(--text);
-                                    "
-                                >
-                                    &times;
-                                </button>
-                                <h4>{{ $t("backupEditTitle") }}</h4>
-                                <p>
-                                    <label for="edit-backup-name">{{ $t("labelName") }}</label>
-                                    <input v-model="editForm.name" type="text" id="edit-backup-name" name="name" />
-                                </p>
-                                <p>
-                                    <label for="edit-backup-description">{{ $t("backupDescriptionLabel") }}</label>
-                                    <textarea
-                                        v-model="editForm.description"
-                                        id="edit-backup-description"
-                                        name="description"
-                                    ></textarea>
-                                </p>
-                                <p>
-                                    <strong>{{ $t("labelCreatedDate") }}</strong>
-                                    <span>{{ formatDate(editForm.created) }}</span>
-                                </p>
-                                <div class="button-container">
-                                    <a
-                                        href="#"
-                                        @click.prevent="saveBackupChanges"
-                                        class="save-backup-changes_button regular-button"
-                                        >{{ $t("actionSaveChanges") }}</a
-                                    >
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -329,3 +300,133 @@ export default defineComponent({
     },
 });
 </script>
+
+<style scoped>
+.content_wrapper .data-loading {
+    min-height: 150px;
+    height: 50%;
+    p {
+        text-align: center;
+        margin-top: 100px;
+    }
+}
+
+.backup-controls {
+    margin-bottom: 15px;
+}
+
+.backup-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--surface-400);
+}
+
+.backup-table th,
+.backup-table td {
+    border-bottom: 1px solid var(--surface-400);
+    border-right: 1px solid var(--surface-400);
+    padding: 8px;
+    text-align: left;
+}
+
+.backup-table th:last-child,
+.backup-table td:last-child {
+    border-right: none;
+}
+
+.backup-table tr:last-child td {
+    border-bottom: none;
+}
+
+.backup-table th {
+    background-color: var(--surface-500);
+    font-weight: bold;
+}
+
+.backup-table a {
+    margin-right: 10px;
+    text-decoration: none;
+    color: var(--primary-500);
+}
+
+.backup-table a:hover {
+    text-decoration: underline;
+}
+
+.backup-table .title {
+    font-weight: bold;
+    color: var(--primary-500);
+    width: 100%;
+}
+
+.backup-edit-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.backup-edit-form {
+    position: relative;
+    width: 90%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 20px;
+    border: 1px solid var(--surface-400);
+    background-color: var(--surface-200);
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.backup-edit-form label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.backup-edit-form input[type="text"],
+.backup-edit-form textarea {
+    width: 100%;
+    padding: 5px;
+    margin-bottom: 10px;
+}
+
+.backup-edit-form textarea {
+    height: 100px;
+}
+
+.backup-edit-close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text);
+}
+
+.button-container {
+    margin-top: 10px;
+}
+
+.button-container a {
+    margin-right: 10px;
+}
+</style>

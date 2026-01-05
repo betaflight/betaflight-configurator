@@ -53,62 +53,43 @@
                                 </p>
                             </div>
 
-                            <!-- Edit Form -->
-                            <div v-if="isEditing" class="profile-edit" style="position: relative">
-                                <button
-                                    class="profile-edit-close-button"
-                                    aria-label="Close"
-                                    @click.prevent="cancelEdit"
-                                    style="
-                                        position: absolute;
-                                        top: 10px;
-                                        right: 10px;
-                                        background: none;
-                                        border: none;
-                                        font-size: 24px;
-                                        cursor: pointer;
-                                        padding: 0;
-                                        width: 30px;
-                                        height: 30px;
-                                        display: flex;
-                                        align-items: center;
-                                        justify-content: center;
-                                        color: var(--text);
-                                    "
-                                >
-                                    &times;
-                                </button>
-                                <p>
-                                    <label for="edit-name">{{ $t("labelName") }}</label>
-                                    <input v-model="editForm.name" type="text" id="edit-name" name="name" />
-                                </p>
-                                <p>
-                                    <label for="edit-address">{{ $t("labelAddress") }}</label>
-                                    <input v-model="editForm.address" type="text" id="edit-address" name="address" />
-                                </p>
-                                <p>
-                                    <label for="edit-country">{{ $t("labelCountry") }}</label>
-                                    <input v-model="editForm.country" type="text" id="edit-country" name="country" />
-                                </p>
-                            </div>
-
                             <!-- Profile Display -->
-                            <div v-else class="button-container">
+                            <div class="button-container">
                                 <a href="#" @click.prevent="startEdit" class="edit-profile_button regular-button">{{
                                     $t("actionEditProfile")
                                 }}</a>
                             </div>
+                        </div>
+                    </div>
+                </div>
 
-                            <!-- Save Button (only shown when editing) -->
-                            <div v-if="isEditing" class="button-container">
-                                <a
-                                    href="#"
-                                    @click.prevent="saveProfileChanges"
-                                    class="save-profile_button regular-button"
-                                    i18n="actionSaveChanges"
-                                    >Save Changes</a
-                                >
-                            </div>
+                <!-- Edit Profile Modal -->
+                <div v-if="isEditing" class="profile-edit-modal" @click.self="cancelEdit">
+                    <div class="profile-edit-form">
+                        <button class="profile-edit-close-button" aria-label="Close" @click.prevent="cancelEdit">
+                            &times;
+                        </button>
+                        <h4>{{ $t("actionEditProfile") }}</h4>
+                        <p>
+                            <label for="edit-name">{{ $t("labelName") }}</label>
+                            <input v-model="editForm.name" type="text" id="edit-name" name="name" />
+                        </p>
+                        <p>
+                            <label for="edit-address">{{ $t("labelAddress") }}</label>
+                            <input v-model="editForm.address" type="text" id="edit-address" name="address" />
+                        </p>
+                        <p>
+                            <label for="edit-country">{{ $t("labelCountry") }}</label>
+                            <input v-model="editForm.country" type="text" id="edit-country" name="country" />
+                        </p>
+                        <div class="button-container">
+                            <a
+                                href="#"
+                                @click.prevent="saveProfileChanges"
+                                class="save-profile_button regular-button"
+                                i18n="actionSaveChanges"
+                                >Save Changes</a
+                            >
                         </div>
                     </div>
                 </div>
@@ -384,3 +365,290 @@ export default defineComponent({
     },
 });
 </script>
+
+<style scoped>
+.tab-user_profile {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    color: #fff;
+}
+.profile {
+    margin-top: 20px;
+}
+.passkey-table {
+    width: 100%;
+}
+.passkey-table th {
+    text-align: left;
+}
+.token-table {
+    width: 100%;
+}
+.token-table th {
+    text-align: left;
+}
+.profile-content {
+    display: flex;
+    align-items: flex-start;
+}
+.profile-photo {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--primary-500);
+    margin-right: 20px;
+}
+.profile-info {
+    flex-grow: 1;
+}
+.profile-info p {
+    margin: 10px 0;
+    font-size: 14px;
+}
+.profile-info h3,
+.temp-password-form h3,
+.create-passkey-form h3,
+.signup-form h3,
+.login-form h3 {
+    padding-bottom: 5px;
+    border-bottom-color: var(--surface-500);
+    border-bottom-style: solid;
+    border-width: 1px;
+}
+.profile-info input,
+.temp-password-form input,
+.create-passkey-form input,
+.signup-form input,
+.login-form input {
+    width: 220px;
+}
+.profile-info .title,
+.temp-password-form .title,
+.create-passkey-form .title,
+.signup-form .title,
+.login-form .title {
+    color: var(--primary-500);
+    font-weight: 600;
+    margin-right: 5px;
+    min-width: 60px;
+    display: inline-block;
+}
+.profile-info .space,
+.temp-password-form .space,
+.create-passkey-form .space,
+.signup-form .space,
+.login-form .space {
+    margin-top: 10px;
+}
+
+.profile-edit-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.profile-edit-form {
+    position: relative;
+    width: 90%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 20px;
+    border: 1px solid var(--surface-400);
+    background-color: var(--surface-200);
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.profile-edit-form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.profile-edit-form input {
+    width: 100%;
+    padding: 5px;
+    margin-bottom: 10px;
+    border: 1px solid var(--surface-400);
+    border-radius: 4px;
+}
+
+.profile-edit-close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text);
+}
+
+.backup-table .title {
+    font-weight: bold;
+    color: var(--primary-500);
+    width: 100%;
+}
+.profile-photo img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+}
+.content_wrapper .data-loading {
+    min-height: 150px;
+    height: 50%;
+    p {
+        text-align: center;
+        margin-top: 100px;
+    }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .profile-content {
+        flex-direction: column;
+        align-items: center;
+    }
+    .profile-photo {
+        margin-right: 0;
+        margin-bottom: 20px;
+    }
+    .profile-info {
+        text-align: center;
+    }
+}
+/* Button styles (for consistency with the image) */
+.secondary-button {
+    padding: 4px 10px;
+    border-radius: 3px;
+    text-decoration: none;
+    font-weight: bold;
+    display: inline-block;
+    transition: background-color 0.3s;
+    min-width: 135px;
+    text-align: center;
+    background-color: var(--primary-600);
+    color: var(--text);
+}
+
+.backup-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+.backup-table th,
+.backup-table td {
+    border: 1px solid var(--surface-400);
+    padding: 8px;
+    text-align: left;
+}
+.backup-table th {
+    background-color: var(--surface-500);
+    font-weight: bold;
+}
+.backup-table tr:nth-child(even) {
+    background-color: var(--surface-500);
+}
+.backup-table tr:hover {
+    background-color: var(--surface-600);
+}
+
+.backup-table a {
+    margin-right: 10px;
+    text-decoration: none;
+    color: var(--primary-500);
+}
+.backup-table a:hover {
+    text-decoration: underline;
+}
+.backup-edit-form {
+    margin-top: 20px;
+    padding: 20px;
+    border: 1px solid var(--surface-400);
+    background-color: var(--surface-200);
+}
+.backup-edit-form label {
+    display: block;
+    margin-bottom: 5px;
+}
+.backup-edit-form input[type="text"],
+.backup-edit-form textarea {
+    width: 100%;
+    padding: 5px;
+    margin-bottom: 10px;
+}
+.backup-edit-form textarea {
+    height: 100px;
+}
+.button-container {
+    margin-top: 10px;
+}
+.button-container a {
+    margin-right: 10px;
+}
+.error-message {
+    color: var(--error-500);
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+.create-passkey-link {
+    margin-top: 10px;
+    text-align: center;
+}
+.create-passkey-link a {
+    color: var(--primary-500);
+    text-decoration: none;
+}
+.create-passkey-link a:hover {
+    text-decoration: underline;
+}
+.create-passkey-form,
+.temp-password-form {
+    margin-top: 20px;
+}
+.create-passkey-form h3,
+.temp-password-form h3 {
+    margin-bottom: 15px;
+}
+.create-passkey-form .number,
+.temp-password-form .number {
+    margin-bottom: 15px;
+}
+.create-passkey-form label,
+.temp-password-form label {
+    display: block;
+    margin-bottom: 5px;
+}
+.create-passkey-form input,
+.temp-password-form input {
+    width: 100%;
+    padding: 5px;
+    border: 1px solid var(--surface-400);
+    border-radius: 4px;
+}
+.create-passkey-form .button-container,
+.temp-password-form .button-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+}
+.create-passkey-form .button-container a,
+.temp-password-form .button-container a {
+    flex: 1;
+    margin: 0 5px;
+}
+</style>
