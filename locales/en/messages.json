@@ -7838,20 +7838,8 @@
     "tabUserProfile": {
         "message": "User Profile"
     },
-    "profileNameTitle": {
-        "message": "Name:"
-    },
-    "profileEmailTitle": {
-        "message": "Email:"
-    },
-    "profileAddressTitle": {
-        "message": "Address:"
-    },
-    "profileCountryTitle": {
-        "message": "Country:"
-    },
-    "profileNotLoggedIn": {
-        "message": "Not Logged In"
+    "labelEmail": {
+        "message": "Email"
     },
     "profileLoginMessage": {
         "message": "Please log in to view your profile."
@@ -7859,20 +7847,11 @@
     "tabBackups": {
         "message": "Backups"
     },
-    "viewProfile": {
-        "message": "View Profile"
-    },
-    "userPasskeyDeleteConfirm": {
-        "message": "Are you sure you want to delete this passkey?"
-    },
     "userPasskeyDeleteSuccess": {
         "message": "Passkey deleted successfully"
     },
     "userPasskeyDeleteFailed": {
         "message": "Failed to delete passkey"
-    },
-    "userTokenDeleteConfirm": {
-        "message": "Are you sure you want to delete this token?"
     },
     "userTokenDeleteSuccess": {
         "message": "Token deleted successfully"
@@ -7882,6 +7861,12 @@
     },
     "userProfileLoadFailed": {
         "message": "Failed to load user profile"
+    },
+    "userTokenLoadFailed": {
+        "message": "Failed to load user tokens"
+    },
+    "userPasskeyLoadFailed": {
+        "message": "Failed to load user passkeys"
     },
     "userProfileUpdateSuccess": {
         "message": "Profile updated successfully"
@@ -7907,14 +7892,8 @@
     "userBackupDeleteFailed": {
         "message": "Failed to delete backup"
     },
-    "userPasskeyDelete": {
-        "message": "Delete"
-    },
     "userPasskeyNoPasskeys": {
         "message": "No passkeys available"
-    },
-    "userTokenDelete": {
-        "message": "Delete"
     },
     "userTokenNoTokens": {
         "message": "No tokens available"
@@ -7931,74 +7910,29 @@
     "profileBackupEmptyResult": {
         "message": "Backup unsuccessful"
     },
-    "userPasskeyId": {
-        "message": "Id"
+    "labelSignCounter": {
+        "message": "Sign Counter"
     },
-    "userPasskeyCreated": {
-        "message": "Created"
+    "userPasskeyPlatform": {
+        "message": "Platform Info"
     },
-    "userPasskeyExpiry": {
-        "message": "Expiry"
-    },
-    "userPasskeyDetails": {
-        "message": "Details"
-    },
-    "userPasskeyActions": {
-        "message": "Actions"
-    },
-    "userTokenId": {
-        "message": "Id"
-    },
-    "userTokenCreated": {
-        "message": "Created"
-    },
-    "userTokenExpiry": {
-        "message": "Expiry"
-    },
-    "userTokenDetails": {
-        "message": "Details"
-    },
-    "userTokenActions": {
-        "message": "Actions"
-    },
-    "userBackupDate": {
-        "message": "Date"
-    },
-    "userBackupName": {
-        "message": "Name"
-    },
-    "userBackupDescription": {
-        "message": "Description"
-    },
-    "userBackupActions": {
-        "message": "Actions"
-    },
-    "user-session-login": {
+    "labelLogin": {
         "message": "Login"
     },
-    "user-session-signOut": {
+    "labelSignOut": {
         "message": "Sign Out"
     },
-    "user-session-loginTitle": {
-        "message": "Login"
-    },
-    "user-session-emailLabel": {
-        "message": "Email"
-    },
-    "user-session-createPasskey": {
+    "labelCreatePasskey": {
         "message": "Create Passkey"
     },
-    "user-session-usePasskey": {
+    "labelUsePasskey": {
         "message": "Use Passkey"
     },
     "user-session-enterVerificationCode": {
         "message": "Enter Verification Code"
     },
-    "user-session-verificationCodeLabel": {
+    "labelCode": {
         "message": "Code"
-    },
-    "user-session-submit": {
-        "message": "Submit"
     },
     "userLoggingIn": {
         "message": "Logging in..."
@@ -8030,8 +7964,35 @@
     "dataWaitingForData": {
         "message": "Waiting for data ..."
     },
+    "labelId": {
+        "message": "Id"
+    },
+    "labelCreated": {
+        "message": "Created"
+    },
+    "labelUpdated": {
+        "message": "Updated"
+    },
+    "labelActions": {
+        "message": "Actions"
+    },
+    "labelDetails": {
+        "message": "Details"
+    },
+    "labelExpiry": {
+        "message": "Expiry"
+    },
+    "labelDescription": {
+        "message": "Description"
+    },
+    "labelDate": {
+        "message": "Date"
+    },
     "actionDownload": {
         "message": "Download"
+    },
+    "actionBackup": {
+        "message": "Backup"
     },
     "actionEdit": {
         "message": "Edit"
@@ -8039,23 +8000,20 @@
     "actionDelete": {
         "message": "Delete"
     },
-    "actionSaveChanges": {
-        "message": "Save Changes"
+    "actionSave": {
+        "message": "Save"
     },
-    "actionEditProfile": {
+    "titleEditProfile": {
         "message": "Edit Profile"
     },
     "labelName": {
-        "message": "Name:"
+        "message": "Name"
     },
     "labelAddress": {
-        "message": "Address:"
+        "message": "Address"
     },
     "labelCountry": {
-        "message": "Country:"
-    },
-    "labelCreatedDate": {
-        "message": "Created Date:"
+        "message": "Country"
     },
     "confirmDelete": {
         "message": "Are you sure you want to delete this {{item}}?"
@@ -8075,11 +8033,8 @@
     "backupNoBackupsAvailable": {
         "message": "No backups available"
     },
-    "backupEditTitle": {
+    "titleEditBackup": {
         "message": "Edit Backup"
-    },
-    "backupDescriptionLabel": {
-        "message": "Description:"
     },
     "backupMcuUnknown": {
         "message": "mcu unknown"

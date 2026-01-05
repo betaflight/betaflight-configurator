@@ -8,7 +8,7 @@
                     alt="User Default Avatar"
                     class="user-avatar-icon"
                 />
-                <span id="user-login-display" class="username">{{ $t("user-session-login") }}</span>
+                <span id="user-login-display" class="username">{{ $t("login") }}</span>
             </a>
         </div>
 
@@ -28,7 +28,7 @@
                 <div id="menu-username" class="menu-username">{{ displayName }}</div>
                 <a href="#" id="menu-signout" class="menu-item" @click.prevent="handleSignOut">
                     <i class="fas fa-sign-out-alt"></i>
-                    <span>{{ $t("user-session-signOut") }}</span>
+                    <span>{{ $t("labelSignOut") }}</span>
                 </a>
             </div>
         </Teleport>

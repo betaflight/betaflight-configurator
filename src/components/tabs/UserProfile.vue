@@ -14,7 +14,7 @@
                 <div class="options gui_box col-span-1">
                     <div class="spacer">
                         <div class="message-box">
-                            <h3 i18n="profileNotLoggedIn">Not Logged In</h3>
+                            <h3 i18n="notLoggedIn">Not Logged In</h3>
                             <p i18n="profileLoginMessage">Please log in to view your profile.</p>
                             <div class="button-container" style="text-align: center">
                                 <a href="#" @click.prevent="showLoginDialog" class="regular-button" i18n="login"
@@ -36,19 +36,17 @@
                             <img :src="profilePhoto" alt="Profile" class="profile-photo" />
                             <div class="profile-info">
                                 <p>
-                                    <span i18n="profileNameTitle" class="title">Name:</span
-                                    ><span>{{ profile.name }}</span>
+                                    <span i18n="labelName" class="title">Name:</span><span>{{ profile.name }}</span>
                                 </p>
                                 <p>
-                                    <span i18n="profileEmailTitle" class="title">Email:</span
-                                    ><span>{{ profile.email }}</span>
+                                    <span i18n="labelEmail" class="title">Email:</span><span>{{ profile.email }}</span>
                                 </p>
                                 <p>
-                                    <span i18n="profileAddressTitle" class="title">Address:</span
+                                    <span i18n="labelAddress" class="title">Address:</span
                                     ><span>{{ profile.address }}</span>
                                 </p>
                                 <p>
-                                    <span i18n="profileCountryTitle" class="title">Country:</span
+                                    <span i18n="labelCountry" class="title">Country:</span
                                     ><span>{{ profile.country }}</span>
                                 </p>
                             </div>
@@ -56,7 +54,7 @@
                             <!-- Profile Display -->
                             <div class="button-container">
                                 <a href="#" @click.prevent="startEdit" class="edit-profile_button regular-button">{{
-                                    $t("actionEditProfile")
+                                    $t("actionEdit")
                                 }}</a>
                             </div>
                         </div>
@@ -69,7 +67,7 @@
                         <button class="profile-edit-close-button" aria-label="Close" @click.prevent="cancelEdit">
                             &times;
                         </button>
-                        <h4>{{ $t("actionEditProfile") }}</h4>
+                        <h4>{{ $t("titleEditProfile") }}</h4>
                         <p>
                             <label for="edit-name">{{ $t("labelName") }}</label>
                             <input v-model="editForm.name" type="text" id="edit-name" name="name" />
@@ -87,7 +85,7 @@
                                 href="#"
                                 @click.prevent="saveProfileChanges"
                                 class="save-profile_button regular-button"
-                                i18n="actionSaveChanges"
+                                i18n="actionSave"
                                 >Save Changes</a
                             >
                         </div>
@@ -102,11 +100,11 @@
                             <table class="token-table">
                                 <thead>
                                     <tr>
-                                        <th i18n="userTokenId">Id</th>
-                                        <th i18n="userTokenCreated">Created</th>
-                                        <th i18n="userTokenExpiry">Expiry</th>
-                                        <th i18n="userTokenDetails">Details</th>
-                                        <th i18n="userTokenActions">Actions</th>
+                                        <th i18n="labelId">Id</th>
+                                        <th i18n="labelCreated">Created</th>
+                                        <th i18n="labelExpiry">Expiry</th>
+                                        <th i18n="labelDetails">Details</th>
+                                        <th i18n="labelActions">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -142,12 +140,12 @@
                             <table class="passkey-table">
                                 <thead>
                                     <tr>
-                                        <th i18n="userPasskeyId">Id</th>
+                                        <th i18n="labelId">Id</th>
                                         <th i18n="userPasskeySignCounter">Sign Counter</th>
-                                        <th i18n="userPasskeyCreated">Created</th>
-                                        <th i18n="userPasskeyUpdated">Updated</th>
+                                        <th i18n="labelCreated">Created</th>
+                                        <th i18n="labelUpdated">Updated</th>
                                         <th i18n="userPasskeyPlatform">Platform Info</th>
-                                        <th i18n="userPasskeyActions">Actions</th>
+                                        <th i18n="labelActions">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>

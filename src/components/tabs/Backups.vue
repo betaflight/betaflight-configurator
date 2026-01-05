@@ -12,7 +12,11 @@
             <div v-else class="grid-box col3">
                 <div class="options col-span-3">
                     <div v-if="isConnected" class="backup-controls">
-                        <a href="#" @click.prevent="createBackup" class="backup_button regular-button" i18n="Backup"
+                        <a
+                            href="#"
+                            @click.prevent="createBackup"
+                            class="backup_button regular-button"
+                            i18n="actionBackup"
                             >Backup</a
                         >
                     </div>
@@ -20,10 +24,10 @@
                         <table class="backup-table">
                             <thead>
                                 <tr>
-                                    <th i18n="userBackupDate">Date</th>
-                                    <th i18n="userBackupName">Name</th>
-                                    <th i18n="userBackupDescription">Description</th>
-                                    <th i18n="userBackupActions">Actions</th>
+                                    <th i18n="labelDate">Date</th>
+                                    <th i18n="labelName">Name</th>
+                                    <th i18n="labelDescription">Description</th>
+                                    <th i18n="labelActions">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -72,13 +76,13 @@
                             <button class="backup-edit-close-button" aria-label="Close" @click.prevent="cancelEdit">
                                 &times;
                             </button>
-                            <h4>{{ $t("backupEditTitle") }}</h4>
+                            <h4>{{ $t("titleEditBackup") }}</h4>
                             <p>
                                 <label for="edit-backup-name">{{ $t("labelName") }}</label>
                                 <input v-model="editForm.name" type="text" id="edit-backup-name" name="name" />
                             </p>
                             <p>
-                                <label for="edit-backup-description">{{ $t("backupDescriptionLabel") }}</label>
+                                <label for="edit-backup-description">{{ $t("labelDescription") }}</label>
                                 <textarea
                                     v-model="editForm.description"
                                     id="edit-backup-description"
@@ -86,7 +90,7 @@
                                 ></textarea>
                             </p>
                             <p>
-                                <strong>{{ $t("labelCreatedDate") }}</strong>
+                                <strong>{{ $t("labelCreated") }}</strong>
                                 <span>{{ formatDate(editForm.created) }}</span>
                             </p>
                             <div class="button-container">
@@ -94,7 +98,7 @@
                                     href="#"
                                     @click.prevent="saveBackupChanges"
                                     class="save-backup-changes_button regular-button"
-                                    >{{ $t("actionSaveChanges") }}</a
+                                    >{{ $t("actionSave") }}</a
                                 >
                             </div>
                         </div>
