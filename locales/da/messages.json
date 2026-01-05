@@ -6058,6 +6058,10 @@
         "message": "Enkel dato",
         "description": "One of the variants of the RTC date and time element of the OSD"
     },
+    "osdTextElementRtcDateTimeVariantTimeOnly": {
+        "message": "Kun tid",
+        "description": "One of the variants of the RTC date and time element of the OSD"
+    },
     "osdDescElementRtcDateTime": {
         "message": "Realtid ur dato \/ tid"
     },
@@ -7685,13 +7689,16 @@
         "message": "Fortsæt uden OSD protokol"
     },
     "firmwareFlasherOptionLabelVerifiedPartner": {
-        "message": "Verificeret Partner"
+        "message": "✅ Verificeret partner"
     },
     "firmwareFlasherOptionLabelVendorCommunity": {
-        "message": "Leverandør \/ Fællesskab"
+        "message": "⚠️ Leverandør \/ Sammenslutning"
     },
     "firmwareFlasherOptionLabelLegacy": {
         "message": "Ældre"
+    },
+    "firmwareFlasherOptionLabelNotQualified": {
+        "message": "⚠️ Sammenslutning \/ Producent roadmap — ikke officielt supporteret af betaflight ⚠️"
     },
     "coreBuild": {
         "message": "Kun grund komponenter"

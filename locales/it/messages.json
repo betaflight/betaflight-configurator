@@ -6050,6 +6050,10 @@
         "message": "Data breve",
         "description": "One of the variants of the RTC date and time element of the OSD"
     },
+    "osdTextElementRtcDateTimeVariantTimeOnly": {
+        "message": "Solo Orario",
+        "description": "One of the variants of the RTC date and time element of the OSD"
+    },
     "osdDescElementRtcDateTime": {
         "message": "Data \/ ora dell'orologio in tempo reale (RTC)"
     },
@@ -7677,13 +7681,16 @@
         "message": "Continua senza protocollo OSD"
     },
     "firmwareFlasherOptionLabelVerifiedPartner": {
-        "message": "Partner Verificato"
+        "message": "✅ Partner Verificato"
     },
     "firmwareFlasherOptionLabelVendorCommunity": {
-        "message": "Venditore \/ Community"
+        "message": "⚠️ Produttore \/ Comunità"
     },
     "firmwareFlasherOptionLabelLegacy": {
         "message": "Legacy"
+    },
+    "firmwareFlasherOptionLabelNotQualified": {
+        "message": "⚠️ Target supportato da Comunità \/ Produttore - non supportato ufficialmente ⚠️"
     },
     "coreBuild": {
         "message": "Solo Core"

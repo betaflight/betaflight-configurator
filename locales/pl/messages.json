@@ -209,6 +209,9 @@
     "sensorStatusGyro": {
         "message": "Żyroskop"
     },
+    "configurationGyroRequired": {
+        "message": "Co najmniej jeden żyroskop musi być włączony"
+    },
     "sensorStatusGyroShort": {
         "message": "Gyro",
         "description": "Text of the image in the top sensors icons. Please keep it short."
@@ -1333,6 +1336,9 @@
     "configurationFeatures": {
         "message": "Pozostałe funkcje"
     },
+    "configurationFeatureHelp": {
+        "message": "Pomoc"
+    },
     "configurationReceiver": {
         "message": "Odbiornik"
     },
@@ -1363,6 +1369,15 @@
     "configurationSpiRxHelp": {
         "message": "<strong>Uwaga:<\/strong> Odbiornik typu SPI RX będzie działa tylko gdy odbiornik jest zintegrowany z kontrolerem lotu lub jest podłączony do magistrali SPI."
     },
+    "configurationActiveImu": {
+        "message": "Aktywny IMU"
+    },
+    "configurationSensors": {
+        "message": "Konfiguracja czujnika"
+    },
+    "configurationSensorsHelp": {
+        "message": "Skonfiguruj dodatkowe czujniki i zaawansowane funkcje."
+    },
     "configurationMagAlignmentHelp": {
         "message": "Ustawienie magnetometru to orientacja czujnika magnetometru na płycie kontrolera lotu. Wartość domyślna jest zwykle poprawna, ale jeśli masz niestandardową konstrukcję lub kontroler lotu z inną orientacją magnetometru, może być konieczne dostosowanie tego ustawienia."
     },
@@ -1375,11 +1390,19 @@
     "configurationMagDeclinationHelp": {
         "message": "Deklinacja magnetyczna jest kątem pomiędzy północą geograficzną a magnetyczną. Jest różna dla każdej lokalizacji na ziemi. Deklinację magnetyczną dla swojej lokalizacji możesz znaleźć w Internecie"
     },
+    "configurationRangefinder": {
+        "message": "Dalmierz laserowy",
+        "description": "Don't translate!!!"
+    },
     "configurationRangefinderHelp": {
         "message": "Włącz dalmierz, aby zmierzyć odległość do ziemi w centymetrach"
     },
     "configurationRangefinderType": {
         "message": "Typ"
+    },
+    "configurationOpticalflow": {
+        "message": "Czujnik optyczny",
+        "description": "Don't translate!!!"
     },
     "configurationOpticalflowHelp": {
         "message": "Włącz czujnik optyczny"
@@ -1442,6 +1465,30 @@
         "message": "$t(configurationBoardAlignmentYaw.message)",
         "description": "Don't translate!!!"
     },
+    "configurationGyro1AlignmentRoll": {
+        "message": "$t(configurationBoardAlignmentRoll.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyro1AlignmentPitch": {
+        "message": "$t(configurationBoardAlignmentPitch.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyro1AlignmentYaw": {
+        "message": "$t(configurationBoardAlignmentYaw.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyro2AlignmentRoll": {
+        "message": "$t(configurationBoardAlignmentRoll.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyro2AlignmentPitch": {
+        "message": "$t(configurationBoardAlignmentPitch.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyro2AlignmentYaw": {
+        "message": "$t(configurationBoardAlignmentYaw.message)",
+        "description": "Don't translate!!!"
+    },
     "configurationSensorAlignmentGyro": {
         "message": "Ułożenie żyroskopu"
     },
@@ -1477,6 +1524,9 @@
     },
     "configurationSensorAlignmentDefaultOption": {
         "message": "Domyślne"
+    },
+    "configurationSensorAlignmentCustom": {
+        "message": "Własne"
     },
     "configurationAccelTrims": {
         "message": "Dostrajanie akcelerometru"
@@ -5977,6 +6027,10 @@
         "message": "Skrócona data",
         "description": "One of the variants of the RTC date and time element of the OSD"
     },
+    "osdTextElementRtcDateTimeVariantTimeOnly": {
+        "message": "Tylko godzina",
+        "description": "One of the variants of the RTC date and time element of the OSD"
+    },
     "osdDescElementRtcDateTime": {
         "message": "Zegar w czasie rzeczywistym Data\/godzina"
     },
@@ -6987,6 +7041,9 @@
         "message": "ESC wysyła dane zwrotne do Kontrolera lotu przez kanał telemetrii DShot, jest  to wymagane przez funkcje Filtrowania RPM oraz funkcje Dynamicznego biegu jałowego. <br><br>  Uwaga: Wymagany jest ESC, który posiada takie funkcje w oprogramowaniu np. JESC, Jazzmac, BLHeli-32.",
         "description": "Description of the Bidirectional DShot feature of the ESC\/Motor"
     },
+    "configurationGyroFrequency": {
+        "message": "Częstotliwość aktualizacji żyroskopu"
+    },
     "configurationPidProcessDenom": {
         "message": "Częstotliwość pętli PID"
     },
@@ -7596,6 +7653,18 @@
     },
     "firmwareFlasherOSDProtocolNotSelectedContinue": {
         "message": "Kontynuuj bez protokołu OSD"
+    },
+    "firmwareFlasherOptionLabelVerifiedPartner": {
+        "message": "✅ Zweryfikowany partner"
+    },
+    "firmwareFlasherOptionLabelVendorCommunity": {
+        "message": "⚠️ Dostawca \/ Społeczność"
+    },
+    "firmwareFlasherOptionLabelLegacy": {
+        "message": "Zastane"
+    },
+    "firmwareFlasherOptionLabelNotQualified": {
+        "message": "⚠️ cel wspierany przez Wspólnotę\/producenta – nie jest oficjalnie wspierany ⚠️"
     },
     "coreBuild": {
         "message": "Tylko rdzeń"

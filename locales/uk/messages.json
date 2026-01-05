@@ -201,6 +201,9 @@
     "sensorStatusGyro": {
         "message": "Гіроскоп"
     },
+    "configurationGyroRequired": {
+        "message": "Щонайменше один гіроскоп повинен бути увімкнений"
+    },
     "sensorStatusGyroShort": {
         "message": "Гіроскоп",
         "description": "Text of the image in the top sensors icons. Please keep it short."
@@ -1325,6 +1328,9 @@
     "configurationFeatures": {
         "message": "Інші функції"
     },
+    "configurationFeatureHelp": {
+        "message": "Допомога"
+    },
     "configurationReceiver": {
         "message": "Приймач"
     },
@@ -1355,6 +1361,15 @@
     "configurationSpiRxHelp": {
         "message": "<strong>Примітка:<\/strong> Провайдер SPI RX працюватиме, лише якщо необхідне обладнання є на платі або підключене до шини SPI."
     },
+    "configurationActiveImu": {
+        "message": "Активний ІВП"
+    },
+    "configurationSensors": {
+        "message": "Конфігурація датчиків"
+    },
+    "configurationSensorsHelp": {
+        "message": "Налаштувати додаткові датчики та розширені функції."
+    },
     "configurationMagAlignmentHelp": {
         "message": "Вирівнювання магнітометра — це орієнтація датчика магнітометра на платі польотного контролера. Значення за замовчуванням зазвичай правильне, але якщо ви маєте користувацьку збірку чи польотний контролер з іншою орієнтацією магнітометра, можливо потрібно буде змінити це налаштування."
     },
@@ -1367,11 +1382,19 @@
     "configurationMagDeclinationHelp": {
         "message": "Магнітне схилення — це кут між магнітним і географічним північними полюсами. Воно відрізняється для кожного місця на Землі. Ви можете знайти значення схилення для вашого розташування в інтернеті"
     },
+    "configurationRangefinder": {
+        "message": "Rangefinder",
+        "description": "Don't translate!!!"
+    },
     "configurationRangefinderHelp": {
         "message": "Увімкнути далекомір для вимірювання відстані до землі в см"
     },
     "configurationRangefinderType": {
         "message": "Тип"
+    },
+    "configurationOpticalflow": {
+        "message": "Optical Flow",
+        "description": "Don't translate!!!"
     },
     "configurationOpticalflowHelp": {
         "message": "Увімкнути датчик оптичного потоку"
@@ -1434,6 +1457,30 @@
         "message": "$t(configurationBoardAlignmentYaw.message)",
         "description": "Don't translate!!!"
     },
+    "configurationGyro1AlignmentRoll": {
+        "message": "$t(configurationBoardAlignmentRoll.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyro1AlignmentPitch": {
+        "message": "$t(configurationBoardAlignmentPitch.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyro1AlignmentYaw": {
+        "message": "$t(configurationBoardAlignmentYaw.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyro2AlignmentRoll": {
+        "message": "$t(configurationBoardAlignmentRoll.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyro2AlignmentPitch": {
+        "message": "$t(configurationBoardAlignmentPitch.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyro2AlignmentYaw": {
+        "message": "$t(configurationBoardAlignmentYaw.message)",
+        "description": "Don't translate!!!"
+    },
     "configurationSensorAlignmentGyro": {
         "message": "Вирівнювання гіроскопа"
     },
@@ -1470,6 +1517,9 @@
     "configurationSensorAlignmentDefaultOption": {
         "message": "За замовчуванням"
     },
+    "configurationSensorAlignmentCustom": {
+        "message": "Користувацьке"
+    },
     "configurationAccelTrims": {
         "message": "Корекція акселерометра"
     },
@@ -1499,6 +1549,9 @@
     },
     "configurationGyroCalOnFirstArm": {
         "message": "Калібрувати гіроскоп при першому взведенні"
+    },
+    "configurationGyroCalOnFirstArmHelp": {
+        "message": "Коли увімкнено, гіроскоп буде відкалібровано при першому взведенні після подачі живлення. Це може допомогти зменшити дрейф гіроскопа під час польоту."
     },
     "configurationMotorIdle": {
         "message": "Тяга холостого ходу (%)"
@@ -6979,6 +7032,9 @@
         "message": "Відправляє в польотний контролер дані з електронного контролера швидкості ESC через телеметрію DShot. Є необхідною умовою для фільтрації RPM і динамічного холостого ходу.  <br> <br>Примітка: вимагає сумісного ESC з підходящою прошивкою, н-д JESC, Jazzmac, BLHeli-32.",
         "description": "Description of the Bidirectional DShot feature of the ESC\/Motor"
     },
+    "configurationGyroFrequency": {
+        "message": "Частота оновлень гіроскопа"
+    },
     "configurationPidProcessDenom": {
         "message": "Частота циклу PID"
     },
@@ -7591,12 +7647,6 @@
     },
     "firmwareFlasherOSDProtocolNotSelectedContinue": {
         "message": "Продовжити без протоколу OSD"
-    },
-    "firmwareFlasherOptionLabelVerifiedPartner": {
-        "message": "Перевірений партнер"
-    },
-    "firmwareFlasherOptionLabelVendorCommunity": {
-        "message": "Постачальник \/ Спільнота"
     },
     "firmwareFlasherOptionLabelLegacy": {
         "message": "Застарілі"

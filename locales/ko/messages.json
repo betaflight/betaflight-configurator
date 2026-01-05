@@ -213,6 +213,9 @@
     "sensorStatusGyro": {
         "message": "자이로스코프"
     },
+    "configurationGyroRequired": {
+        "message": "최소 하나 이상의 자이로가 활성화되어야 합니다"
+    },
     "sensorStatusGyroShort": {
         "message": "Gyro",
         "description": "Text of the image in the top sensors icons. Please keep it short."
@@ -1341,6 +1344,9 @@
     "configurationFeatures": {
         "message": "다른 기능"
     },
+    "configurationFeatureHelp": {
+        "message": "도움말"
+    },
     "configurationReceiver": {
         "message": "수신기"
     },
@@ -1371,6 +1377,15 @@
     "configurationSpiRxHelp": {
         "message": "<strong>참고:<\/strong> SPI RX 공급자는 필요한 하드웨어가 탑재되어 있거나 SPI 버스에 연결된 경우에만 작동합니다."
     },
+    "configurationActiveImu": {
+        "message": "IMU 활성"
+    },
+    "configurationSensors": {
+        "message": "센서 환경설정"
+    },
+    "configurationSensorsHelp": {
+        "message": "추가 센서와 고급 기능을 구성합니다."
+    },
     "configurationMagAlignmentHelp": {
         "message": "자력계 정렬은 비행 컨트롤러 보드에 있는 자력계 센서의 방향입니다. 기본값은 일반적으로 맞지만, 맞춤형 빌드나 자력계 방향이 다른 비행 컨트롤러가 있는 경우 이 설정을 조정해야 할 수도 있습니다."
     },
@@ -1383,11 +1398,19 @@
     "configurationMagDeclinationHelp": {
         "message": "자기 편위는 자기 북쪽과 진 북쪽 사이의 각도입니다. 지구상의 모든 위치에 따라 다릅니다. 인터넷에서 자신의 위치에 대한 편위를 찾을 수 있습니다"
     },
+    "configurationRangefinder": {
+        "message": "레인지파인더",
+        "description": "Don't translate!!!"
+    },
     "configurationRangefinderHelp": {
         "message": "레인지파인더를 활성화해서 cm 단위로 지면까지의 거리를 측정할 수 있습니다"
     },
     "configurationRangefinderType": {
         "message": "형식"
+    },
+    "configurationOpticalflow": {
+        "message": "옵티컬 플로우",
+        "description": "Don't translate!!!"
     },
     "configurationOpticalflowHelp": {
         "message": "옵티컬 플로우 센서 활성화"
@@ -1450,6 +1473,30 @@
         "message": "$t(configurationBoardAlignmentYaw.message)",
         "description": "Don't translate!!!"
     },
+    "configurationGyro1AlignmentRoll": {
+        "message": "$t(configurationBoardAlignmentRoll.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyro1AlignmentPitch": {
+        "message": "$t(configurationBoardAlignmentPitch.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyro1AlignmentYaw": {
+        "message": "$t(configurationBoardAlignmentYaw.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyro2AlignmentRoll": {
+        "message": "$t(configurationBoardAlignmentRoll.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyro2AlignmentPitch": {
+        "message": "$t(configurationBoardAlignmentPitch.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyro2AlignmentYaw": {
+        "message": "$t(configurationBoardAlignmentYaw.message)",
+        "description": "Don't translate!!!"
+    },
     "configurationSensorAlignmentGyro": {
         "message": "자이로 정렬"
     },
@@ -1486,6 +1533,9 @@
     "configurationSensorAlignmentDefaultOption": {
         "message": "기본값"
     },
+    "configurationSensorAlignmentCustom": {
+        "message": "사용자정의"
+    },
     "configurationAccelTrims": {
         "message": "가속도계 트림"
     },
@@ -1515,6 +1565,9 @@
     },
     "configurationGyroCalOnFirstArm": {
         "message": "첫번째 아밍시 자이로 교정"
+    },
+    "configurationGyroCalOnFirstArmHelp": {
+        "message": "활성화되면 자이로스코프가 전원을 켠 후 첫 번째 아밍때 교정됩니다. 이렇게 하면 비행 중 자이로 드리프트를 줄이는 데 도움이 될 수 있습니다."
     },
     "configurationMotorIdle": {
         "message": "모터 공회전 (%)"
@@ -6005,6 +6058,10 @@
         "message": "약식 날짜",
         "description": "One of the variants of the RTC date and time element of the OSD"
     },
+    "osdTextElementRtcDateTimeVariantTimeOnly": {
+        "message": "시간만",
+        "description": "One of the variants of the RTC date and time element of the OSD"
+    },
     "osdDescElementRtcDateTime": {
         "message": "실시간 날짜 \/ 시간"
     },
@@ -7015,6 +7072,9 @@
         "message": "DShot 텔레메트리를 통해 FC에 ESC 데이터 전송하세요. RPM 필터링 및 다이나믹 아이들에 필요합니다. <br> <br>참고: JESC, Jazzmac, BLHeli-32와 같은 적절한 펌웨어와 호환되는 ESC가 필요합니다.\n\n컨텍스트편집",
         "description": "Description of the Bidirectional DShot feature of the ESC\/Motor"
     },
+    "configurationGyroFrequency": {
+        "message": "자이로 업데이트 주파수"
+    },
     "configurationPidProcessDenom": {
         "message": "PID 루프 주파수"
     },
@@ -7629,13 +7689,16 @@
         "message": "OSD 프로토콜 없이 계속 진행"
     },
     "firmwareFlasherOptionLabelVerifiedPartner": {
-        "message": "인증된 파트너"
+        "message": "✅ 인증된 파트너"
     },
     "firmwareFlasherOptionLabelVendorCommunity": {
-        "message": "공급자 \/ 커뮤니티"
+        "message": "⚠️ 공급자 \/ 커뮤니티"
     },
     "firmwareFlasherOptionLabelLegacy": {
         "message": "레거시"
+    },
+    "firmwareFlasherOptionLabelNotQualified": {
+        "message": "⚠️ 커뮤니티 \/ 제조업체 지원 타겟 - 공식적으로 지원되지 않음 ⚠️"
     },
     "coreBuild": {
         "message": "코어 빌드"

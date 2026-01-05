@@ -7043,12 +7043,6 @@
     "firmwareFlasherOSDProtocolNotSelectedContinue": {
         "message": "不选择 OSD 协议并继续进行"
     },
-    "firmwareFlasherOptionLabelVerifiedPartner": {
-        "message": "已认证合作方"
-    },
-    "firmwareFlasherOptionLabelVendorCommunity": {
-        "message": "供应商\/社区"
-    },
     "firmwareFlasherOptionLabelLegacy": {
         "message": "遗留"
     },
