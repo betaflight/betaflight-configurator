@@ -82,47 +82,84 @@ import MSPCodes from "../../js/msp/MSPCodes.js";
 import CONFIGURATOR from "../../js/data_storage.js";
 import { gui_log } from "../../js/gui_log.js";
 
-const PROPERTY_OPTIONS = [
-    {
-        code: "MSP_RAW_IMU",
+const PROPERTY_DEFINITIONS = {
+    MSP_RAW_IMU: {
         label: "MSP_RAW_IMU",
         description: "9 columns (gyro[x, y, z], accel[x, y, z], mag[x, y, z])",
+        columns: () => [
+            "gyroscopeX",
+            "gyroscopeY",
+            "gyroscopeZ",
+            "accelerometerX",
+            "accelerometerY",
+            "accelerometerZ",
+            "magnetometerX",
+            "magnetometerY",
+            "magnetometerZ",
+        ],
+        values: () => [...FC.SENSOR_DATA.gyroscope, ...FC.SENSOR_DATA.accelerometer, ...FC.SENSOR_DATA.magnetometer],
     },
-    {
-        code: "MSP_ATTITUDE",
+    MSP_ATTITUDE: {
         label: "MSP_ATTITUDE",
         description: "3 columns (kine[x, y, z])",
+        columns: () => ["kinematicsX", "kinematicsY", "kinematicsZ"],
+        values: () => [FC.SENSOR_DATA.kinematics[0], FC.SENSOR_DATA.kinematics[1], FC.SENSOR_DATA.kinematics[2]],
     },
-    {
-        code: "MSP_ALTITUDE",
+    MSP_ALTITUDE: {
         label: "MSP_ALTITUDE",
         description: "1 column (alt)",
+        columns: () => ["altitude"],
+        values: () => [FC.SENSOR_DATA.altitude],
     },
-    {
-        code: "MSP_RAW_GPS",
+    MSP_RAW_GPS: {
         label: "MSP_RAW_GPS",
         description: "7 columns (Fix, NumSat, Lat, Lon, Alt, Speed, GroundCourse)",
+        columns: () => ["gpsFix", "gpsNumSat", "gpsLat", "gpsLon", "gpsAlt", "gpsSpeed", "gpsGroundCourse"],
+        values: () => [
+            FC.GPS_DATA.fix,
+            FC.GPS_DATA.numSat,
+            FC.GPS_DATA.lat / 10000000,
+            FC.GPS_DATA.lon / 10000000,
+            FC.GPS_DATA.alt,
+            FC.GPS_DATA.speed,
+            FC.GPS_DATA.ground_course,
+        ],
     },
-    {
-        code: "MSP_ANALOG",
+    MSP_ANALOG: {
         label: "MSP_ANALOG",
         description: "4 columns (voltage, amperage, mAhdrawn, rssi)",
+        columns: () => ["voltage", "amperage", "mAhdrawn", "rssi"],
+        values: () => [FC.ANALOG.voltage, FC.ANALOG.amperage, FC.ANALOG.mAhdrawn, FC.ANALOG.rssi],
     },
-    {
-        code: "MSP_RC",
+    MSP_RC: {
         label: "MSP_RC",
         description: "8 columns (RC0, RC1, RC2, RC3, RC4, RC5, RC6, RC7)",
+        columns: () => Array.from({ length: FC.RC.active_channels }, (_, chan) => `RC${chan}`),
+        values: () => FC.RC.channels.slice(0, FC.RC.active_channels),
     },
-    {
-        code: "MSP_MOTOR",
+    MSP_MOTOR: {
         label: "MSP_MOTOR",
         description: "8 columns (Mot1, Mot2, Mot3, Mot4, Mot5, Mot6, Mot7, Mot8)",
+        columns: () => Array.from({ length: FC.MOTOR_DATA.length }, (_, motor) => `Motor${motor}`),
+        values: () => [...FC.MOTOR_DATA],
     },
-    {
-        code: "MSP_DEBUG",
+    MSP_DEBUG: {
         label: "MSP_DEBUG",
         description: "4 columns (Debug0, Debug1, Debug2, Debug3)",
+        columns: () => Array.from({ length: FC.SENSOR_DATA.debug.length }, (_, debug) => `Debug${debug}`),
+        values: () => [...FC.SENSOR_DATA.debug],
     },
+};
+
+const PROPERTY_ORDER = [
+    "MSP_RAW_IMU",
+    "MSP_ATTITUDE",
+    "MSP_ALTITUDE",
+    "MSP_RAW_GPS",
+    "MSP_ANALOG",
+    "MSP_RC",
+    "MSP_MOTOR",
+    "MSP_DEBUG",
 ];
 
 const SPEED_OPTIONS = [10, 20, 30, 40, 50, 100, 250, 500, 1000, 2000, 5000];
@@ -148,7 +185,14 @@ export default defineComponent({
         let hasPreviousRequest = false;
         let isDestroyed = false;
 
-        const propertyOptions = PROPERTY_OPTIONS;
+        const propertyOptions = PROPERTY_ORDER.map((code) => {
+            const definition = PROPERTY_DEFINITIONS[code];
+            return {
+                code,
+                label: definition.label,
+                description: definition.description,
+            };
+        });
         const speedOptions = SPEED_OPTIONS;
 
         const documentationHref = computed(() => "https://betaflight.com/docs/wiki/configurator/logging-tab");
@@ -189,122 +233,31 @@ export default defineComponent({
         }
 
         function buildHeader() {
-            let head = "timestamp";
+            const columns = ["timestamp"];
 
             requestedProperties.forEach((property) => {
-                switch (property) {
-                    case "MSP_RAW_IMU":
-                        head += "," + "gyroscopeX";
-                        head += "," + "gyroscopeY";
-                        head += "," + "gyroscopeZ";
-
-                        head += "," + "accelerometerX";
-                        head += "," + "accelerometerY";
-                        head += "," + "accelerometerZ";
-
-                        head += "," + "magnetometerX";
-                        head += "," + "magnetometerY";
-                        head += "," + "magnetometerZ";
-                        break;
-                    case "MSP_ATTITUDE":
-                        head += "," + "kinematicsX";
-                        head += "," + "kinematicsY";
-                        head += "," + "kinematicsZ";
-                        break;
-                    case "MSP_ALTITUDE":
-                        head += "," + "altitude";
-                        break;
-                    case "MSP_RAW_GPS":
-                        head += "," + "gpsFix";
-                        head += "," + "gpsNumSat";
-                        head += "," + "gpsLat";
-                        head += "," + "gpsLon";
-                        head += "," + "gpsAlt";
-                        head += "," + "gpsSpeed";
-                        head += "," + "gpsGroundCourse";
-                        break;
-                    case "MSP_ANALOG":
-                        head += "," + "voltage";
-                        head += "," + "amperage";
-                        head += "," + "mAhdrawn";
-                        head += "," + "rssi";
-                        break;
-                    case "MSP_RC":
-                        for (let chan = 0; chan < FC.RC.active_channels; chan++) {
-                            head += `${"," + "RC"}${chan}`;
-                        }
-                        break;
-                    case "MSP_MOTOR":
-                        for (let motor = 0; motor < FC.MOTOR_DATA.length; motor++) {
-                            head += `${"," + "Motor"}${motor}`;
-                        }
-                        break;
-                    case "MSP_DEBUG":
-                        for (let debug = 0; debug < FC.SENSOR_DATA.debug.length; debug++) {
-                            head += `${"," + "Debug"}${debug}`;
-                        }
-                        break;
+                const definition = PROPERTY_DEFINITIONS[property];
+                if (!definition) {
+                    return;
                 }
+                columns.push(...definition.columns());
             });
 
-            return `${head}\n`;
+            return `${columns.join(",")}\n`;
         }
 
         function crunchData() {
-            let sample = millitime();
-
-            const formatCsvValue = (value) => {
-                if (Array.isArray(value)) {
-                    return value.map((item) => String(item)).join(",");
-                }
-                return String(value);
-            };
+            const row = [millitime()];
 
             requestedProperties.forEach((property) => {
-                switch (property) {
-                    case "MSP_RAW_IMU":
-                        sample += `,${formatCsvValue(FC.SENSOR_DATA.gyroscope)}`;
-                        sample += `,${formatCsvValue(FC.SENSOR_DATA.accelerometer)}`;
-                        sample += `,${formatCsvValue(FC.SENSOR_DATA.magnetometer)}`;
-                        break;
-                    case "MSP_ATTITUDE":
-                        sample += `,${FC.SENSOR_DATA.kinematics[0]}`;
-                        sample += `,${FC.SENSOR_DATA.kinematics[1]}`;
-                        sample += `,${FC.SENSOR_DATA.kinematics[2]}`;
-                        break;
-                    case "MSP_ALTITUDE":
-                        sample += `,${FC.SENSOR_DATA.altitude}`;
-                        break;
-                    case "MSP_RAW_GPS":
-                        sample += `,${FC.GPS_DATA.fix}`;
-                        sample += `,${FC.GPS_DATA.numSat}`;
-                        sample += `,${FC.GPS_DATA.lat / 10000000}`;
-                        sample += `,${FC.GPS_DATA.lon / 10000000}`;
-                        sample += `,${FC.GPS_DATA.alt}`;
-                        sample += `,${FC.GPS_DATA.speed}`;
-                        sample += `,${FC.GPS_DATA.ground_course}`;
-                        break;
-                    case "MSP_ANALOG":
-                        sample += `,${FC.ANALOG.voltage}`;
-                        sample += `,${FC.ANALOG.amperage}`;
-                        sample += `,${FC.ANALOG.mAhdrawn}`;
-                        sample += `,${FC.ANALOG.rssi}`;
-                        break;
-                    case "MSP_RC":
-                        for (let chan = 0; chan < FC.RC.active_channels; chan++) {
-                            sample += `,${FC.RC.channels[chan]}`;
-                        }
-                        break;
-                    case "MSP_MOTOR":
-                        sample += `,${formatCsvValue(FC.MOTOR_DATA)}`;
-                        break;
-                    case "MSP_DEBUG":
-                        sample += `,${formatCsvValue(FC.SENSOR_DATA.debug)}`;
-                        break;
+                const definition = PROPERTY_DEFINITIONS[property];
+                if (!definition) {
+                    return;
                 }
+                row.push(...definition.values());
             });
 
-            logBuffer.push(sample);
+            logBuffer.push(row.join(","));
         }
 
         function appendToFile(data) {
