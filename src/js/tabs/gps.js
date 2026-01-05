@@ -226,16 +226,13 @@ gps.initialize = async function (callback) {
                     <td style="text-align: left;  width: 12%;" i18n="gpsSignalGnssId">${i18n.getMessage(
         "gpsSignalGnssId",
     )}</td>
-                    <td style="text-align: center;width: 10%;" i18n="gpsSignalSatId">${i18n.getMessage(
+                    <td style="text-align: center;width: 14%;" i18n="gpsSignalSatId">${i18n.getMessage(
         "gpsSignalSatId",
     )}</td>
-                    <td style="text-align: center;width: 25%;" i18n="gpsSignalStr">${i18n.getMessage(
+                    <td style="text-align: center;width: 30%;" i18n="gpsSignalStr">${i18n.getMessage(
         "gpsSignalStr",
     )}</td>
-                    <td style="text-align: left;  width: 17%;" i18n="gpsSignalStatus">${i18n.getMessage(
-        "gpsSignalStatus",
-    )}</td>
-                    <td style="text-align: left;  width: 33%;" i18n="gpsSignalQuality">${i18n.getMessage(
+                    <td style="text-align: left;  width: 44%;" i18n="gpsSignalQuality">${i18n.getMessage(
         "gpsSignalQuality",
     )}</td>
                 </tr>
@@ -260,11 +257,15 @@ gps.initialize = async function (callback) {
                         rowContent += `<td><meter value="${0}" max="55"></meter></td>`;
                         rowContent += `<td> </td>`;
                     } else {
-                        rowContent += `<td>${FC.GPS_DATA.svid[i]}</td>`;
+                        const satUsed = (FC.GPS_DATA.quality[i] & 0x8) >> 3;
+                        const satUsedLabel = i18n.getMessage(usedArray[satUsed]);
+                        const satStatusClass = satUsed ? " ready" : "";
+                        const satIdHtml = `<span class="colorToggle sat-id-pill${satStatusClass}" title="${satUsedLabel}">${FC.GPS_DATA.svid[i]}</span>`;
+
+                        rowContent += `<td>${satIdHtml}</td>`;
                         rowContent += `<td><meter value="${FC.GPS_DATA.cno[i]}" max="55"></meter></td>`;
 
                         const quality = i18n.getMessage(qualityArray[FC.GPS_DATA.quality[i] & 0x7]);
-                        const used = i18n.getMessage(usedArray[(FC.GPS_DATA.quality[i] & 0x8) >> 3]);
 
                         // Add color to the text
                         const lockedOrLow = quality.startsWith(i18n.getMessage("gnssQualityLocked")) ? "locked" : "low";
@@ -273,11 +274,7 @@ gps.initialize = async function (callback) {
                             : lockedOrLow;
                         const qualityHtml = `<span class="colorToggle ${qualityColor}">${quality}</span>`;
 
-                        const usedColor = used.startsWith(i18n.getMessage("gnssUsedUsed")) ? "ready" : "low";
-                        const usedHtml = `<span class="colorToggle ${usedColor}">${used}</span>`;
-
-                        rowContent += `<td style="text-align: left;  width: 17%;">${usedHtml}</td>
-                                       <td style="text-align: left;  width: 33%;">${qualityHtml}</td>`;
+                        rowContent += `<td style="text-align: left;  width: 44%;">${qualityHtml}</td>`;
                     }
                     eSsTable.append(`<tr>${rowContent}</tr>`);
                 }
