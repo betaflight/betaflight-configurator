@@ -384,7 +384,7 @@ export default defineComponent({
             } catch (error) {
                 if (fileWriter.value) {
                     try {
-                        await fileWriter.value.close();
+                        await FileSystem.closeFile(fileWriter.value);
                     } catch (closeError) {
                         console.error("Error closing file after start failure:", closeError);
                     }
