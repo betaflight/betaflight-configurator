@@ -17,7 +17,7 @@
                             <h3 i18n="notLoggedIn">Not Logged In</h3>
                             <p i18n="profileLoginMessage">Please log in to view your profile.</p>
                             <div class="button-container" style="text-align: center">
-                                <a href="#" @click.prevent="showLoginDialog" class="regular-button" i18n="login"
+                                <a href="#" @click.prevent="showLoginDialog" class="regular-button" i18n="labelLogin"
                                     >Login</a
                                 >
                             </div>
@@ -144,7 +144,7 @@
                                         <th i18n="userPasskeySignCounter">Sign Counter</th>
                                         <th i18n="labelCreated">Created</th>
                                         <th i18n="labelUpdated">Updated</th>
-                                        <th i18n="userPasskeyPlatform">Platform Info</th>
+                                        <th i18n="labelDetails">Platform Info</th>
                                         <th i18n="labelActions">Actions</th>
                                     </tr>
                                 </thead>

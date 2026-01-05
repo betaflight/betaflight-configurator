@@ -7913,9 +7913,6 @@
     "labelSignCounter": {
         "message": "Sign Counter"
     },
-    "userPasskeyPlatform": {
-        "message": "Platform Info"
-    },
     "labelLogin": {
         "message": "Login"
     },
@@ -7928,8 +7925,11 @@
     "labelUsePasskey": {
         "message": "Use Passkey"
     },
-    "user-session-enterVerificationCode": {
+    "userEnterVerificationCode": {
         "message": "Enter Verification Code"
+    },
+    "labelVerificationCode": {
+        "message": "Verification Code"
     },
     "labelCode": {
         "message": "Code"
@@ -8037,7 +8037,7 @@
         "message": "Edit Backup"
     },
     "backupMcuUnknown": {
-        "message": "mcu unknown"
+        "message": "MCU unknown"
     },
     "sectionUserTokens": {
         "message": "User Tokens"
