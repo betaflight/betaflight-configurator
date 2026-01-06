@@ -73,14 +73,6 @@
                                         </select>
                                         <span v-html="$t('configurationGPSProtocol')"></span>
                                     </div>
-                                    <div class="number gps_baudrate" v-if="showBaudRate">
-                                        <select class="gps_baudrate" v-model="gpsBaudrate">
-                                            <option v-for="rate in gpsBaudRates" :key="rate" :value="rate">
-                                                {{ rate }}
-                                            </option>
-                                        </select>
-                                        <span v-html="$t('configurationGPSBaudrate')"></span>
-                                    </div>
                                     <div class="number gps_auto_baud" v-if="showAutoBaud">
                                         <div>
                                             <input type="checkbox" class="toggle" v-model="autoBaudChecked" />
@@ -356,7 +348,6 @@ export default defineComponent({
         const signalRows = ref([]);
 
         const gpsProtocols = sensorTypes().gps.elements;
-        const gpsBaudRates = ["115200", "57600", "38400", "19200", "9600"];
         const gpsSbas = [
             i18n.getMessage("gpsSbasAutoDetect"),
             i18n.getMessage("gpsSbasEuropeanEGNOS"),
@@ -381,8 +372,6 @@ export default defineComponent({
             home_point_once: 0,
         });
 
-        const gpsBaudrate = ref("115200");
-
         const ubloxIndex = gpsProtocols.indexOf("UBLOX");
         const mspIndex = gpsProtocols.indexOf("MSP");
 
@@ -394,7 +383,6 @@ export default defineComponent({
         );
         const showUbloxGalileo = computed(() => showAutoConfig.value && gpsConfig.auto_config === 1);
         const showUbloxSbas = computed(() => showAutoConfig.value && gpsConfig.auto_config === 1);
-        const showBaudRate = computed(() => false);
         const showPositionalDop = computed(() => semver.gte(apiVersion.value, API_VERSION_1_46));
 
         const applySwitchery = () => {
@@ -734,7 +722,6 @@ export default defineComponent({
                 await MSP.promise(MSPCodes.MSP_GPS_CONFIG);
 
                 Object.assign(gpsConfig, FC.GPS_CONFIG || {});
-                gpsBaudrate.value = FC.GPS_CONFIG?.baudrate || gpsBaudrate.value;
 
                 isOnline.value = ispConnected();
                 isWaiting.value = true;
@@ -821,10 +808,8 @@ export default defineComponent({
             activeLayer,
             isFullscreen,
             gpsProtocols,
-            gpsBaudRates,
             gpsSbas,
             gpsConfig,
-            gpsBaudrate,
             gpsInfo,
             signalRows,
             hasGpsSensor,
@@ -837,7 +822,6 @@ export default defineComponent({
             showAutoConfig,
             showUbloxGalileo,
             showUbloxSbas,
-            showBaudRate,
             showPositionalDop,
             mapLink,
             showConnect,
