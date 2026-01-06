@@ -191,17 +191,17 @@
     <dialog id="dialogLogin" style="width: 360px; aspect-ratio: 16 / 9; padding: 20px; border: 1px solid var(--surface-600); border-radius: 8px;">
         <div style="display: flex; flex-direction: column; height: 100%;">
             <button class="dialog-close-button" aria-label="Close" style="position: absolute; top: 10px; right: 10px; background: none; border: none; font-size: 24px; cursor: pointer; padding: 0; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; color: var(--text);">&times;</button>
-            <h3 i18n="user-session-loginTitle" style="margin: 0 0 15px 0; text-align: center;">Login</h3>
+            <h3 i18n="titleLogin" style="margin: 0 0 15px 0; text-align: center;">Login</h3>
             <div class="content" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
                 <div class="input-group" style="margin-bottom: 15px;">
-                    <label for="login-email" i18n="user-session-emailLabel" style="display: block; margin-bottom: 5px; font-size: 12px;">Email</label>
+                    <label for="login-email" i18n="labelEmail" style="display: block; margin-bottom: 5px; font-size: 12px;">Email</label>
                     <input type="email" id="login-email" placeholder="Enter email address" style="width: 100%; padding: 8px; border: 1px solid var(--surface-500); border-radius: 4px; background-color: var(--surface-100); color: var(--text); box-sizing: border-box;">
                 </div>
             </div>
             <div class="buttons" style="display: flex; flex-direction: row; gap: 10px; justify-content: center; align-items: center; text-align: center;">
-                <a href="#" id="dialogLogin-passkey-create" class="regular-button" i18n="user-session-createPasskey" style="padding: 6px 12px; text-decoration: none; font-size: 12px; flex: 1; max-width: 120px;">Create Passkey</a>
+                <a href="#" id="dialogLogin-passkey-create" class="regular-button" i18n="labelCreatePasskey" style="padding: 6px 12px; text-decoration: none; font-size: 12px; flex: 1; max-width: 120px;">Create Passkey</a>
                 <span style="font-size: 12px; color: var(--text-secondary); display: flex; align-items: center; flex-shrink: 0;">OR</span>
-                <a href="#" id="dialogLogin-passkey-use" class="regular-button" i18n="user-session-usePasskey" style="padding: 6px 12px; text-decoration: none; font-size: 12px; flex: 1; max-width: 120px;">Use Passkey</a>
+                <a href="#" id="dialogLogin-passkey-use" class="regular-button" i18n="labelUsePasskey" style="padding: 6px 12px; text-decoration: none; font-size: 12px; flex: 1; max-width: 120px;">Use Passkey</a>
             </div>
         </div>
     </dialog>
@@ -314,7 +314,7 @@
     <dialog id="dialogVerificationCode" style="width: 360px; aspect-ratio: 16 / 9; padding: 20px; border: 1px solid var(--surface-600); border-radius: 8px;">
         <div style="display: flex; flex-direction: column; height: 100%;">
             <button class="dialog-close-button" aria-label="Close" style="position: absolute; top: 10px; right: 10px; background: none; border: none; font-size: 24px; cursor: pointer; padding: 0; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; color: var(--text);">&times;</button>
-            <h3 i18n="userEnterVerificationCode" style="margin: 0 0 15px 0; text-align: center;">Enter Verification Code</h3>
+            <h3 i18n="titleEnterVerificationCode" style="margin: 0 0 15px 0; text-align: center;">Enter Verification Code</h3>
             <div class="content" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
                 <div class="input-group" style="margin-bottom: 15px;">
                     <label for="verification-code-input" i18n="labelVerificationCode" style="display: block; margin-bottom: 5px; font-size: 12px;">Code</label>

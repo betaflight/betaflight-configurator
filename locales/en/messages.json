@@ -7925,7 +7925,7 @@
     "labelUsePasskey": {
         "message": "Use Passkey"
     },
-    "userEnterVerificationCode": {
+    "titleEnterVerificationCode": {
         "message": "Enter Verification Code"
     },
     "labelVerificationCode": {
@@ -8005,6 +8005,9 @@
     },
     "titleEditProfile": {
         "message": "Edit Profile"
+    },
+    "titleLogin": {
+        "messages": "Login"
     },
     "labelName": {
         "message": "Name"
