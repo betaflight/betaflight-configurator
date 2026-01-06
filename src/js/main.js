@@ -303,7 +303,7 @@ async function startProcess() {
                         mountVueTab("servos", content_ready);
                         break;
                     case "gps":
-                        import("./tabs/gps").then(({ gps }) => gps.initialize(content_ready));
+                        mountVueTab("gps", content_ready);
                         break;
                     case "motors":
                         import("./tabs/motors").then(({ motors }) => motors.initialize(content_ready));
