@@ -788,7 +788,7 @@ export default defineComponent({
             loadGpsConfig();
             document.addEventListener("fullscreenchange", handleFullscreenChange);
             document.addEventListener("webkitfullscreenchange", handleFullscreenChange);
-            document.addEventListener("msfullscreenchange", handleFullscreenChange);
+            document.addEventListener("MSFullscreenChange", handleFullscreenChange);
         });
 
         onUnmounted(() => {
@@ -796,7 +796,7 @@ export default defineComponent({
             localIntervals.length = 0;
             document.removeEventListener("fullscreenchange", handleFullscreenChange);
             document.removeEventListener("webkitfullscreenchange", handleFullscreenChange);
-            document.removeEventListener("msfullscreenchange", handleFullscreenChange);
+            document.removeEventListener("MSFullscreenChange", handleFullscreenChange);
             if (mapInstance.value?.destroy) {
                 mapInstance.value.destroy();
             }
