@@ -653,6 +653,15 @@ export default defineComponent({
                     const feature = mapInstance.value?.iconFeature;
                     const iconStyle = hasMag.value ? mapInstance.value.iconStyleMag : mapInstance.value.iconStyleGPS;
 
+                    const rerender = () => {
+                        if (!mapObj || !mapObj.getTargetElement || !mapObj.getTargetElement()) return;
+                        mapObj.updateSize();
+                        const renderer = mapObj.getRenderer && mapObj.getRenderer();
+                        if (renderer) {
+                            mapObj.renderSync();
+                        }
+                    };
+
                     if (iconStyle && feature && geometry && view && mapObj) {
                         iconStyle.getImage().setRotation(imuHeadingRadians);
                         feature.setStyle(iconStyle);
@@ -660,14 +669,8 @@ export default defineComponent({
                         view.setCenter(center);
                         geometry.setCoordinates(center);
                         // Ensure map relayout after showing
-                        requestAnimationFrame(() => {
-                            mapObj.updateSize();
-                            mapObj.renderSync();
-                        });
-                        setTimeout(() => {
-                            mapObj.updateSize();
-                            mapObj.renderSync();
-                        }, 50);
+                        requestAnimationFrame(rerender);
+                        setTimeout(rerender, 50);
                     }
                 } else if (mapInstance.value) {
                     mapInstance.value.iconFeature.setStyle(mapInstance.value.iconStyleNoFix);
@@ -804,8 +807,14 @@ export default defineComponent({
             if (visible) {
                 nextTick(() => {
                     initializeMap();
-                    mapInstance.value?.map?.updateSize();
-                    mapInstance.value?.map?.renderSync();
+                    const mapObj = mapInstance.value?.map;
+                    if (mapObj) {
+                        mapObj.updateSize();
+                        const renderer = mapObj.getRenderer && mapObj.getRenderer();
+                        if (renderer) {
+                            mapObj.renderSync();
+                        }
+                    }
                 });
             }
         });
