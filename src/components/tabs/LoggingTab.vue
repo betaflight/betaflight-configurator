@@ -143,7 +143,7 @@ const PROPERTY_DEFINITIONS = {
     },
     MSP_MOTOR: {
         label: "MSP_MOTOR",
-        description: "8 columns (Mot1, Mot2, Mot3, Mot4, Mot5, Mot6, Mot7, Mot8)",
+        description: "8 columns (Motor1, Motor2, Motor3, Motor4, Motor5, Motor6, Motor7, Motor8)",
         columns: () => Array.from({ length: FC.MOTOR_DATA.length }, (_, motor) => `Motor${motor}`),
         values: () => [...FC.MOTOR_DATA],
     },
