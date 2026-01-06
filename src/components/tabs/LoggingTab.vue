@@ -368,7 +368,7 @@ export default defineComponent({
                         sendRequests();
                         hasPreviousRequest = true;
                     },
-                    Number.parseInt(samplingInterval.value, 10),
+                    samplingInterval.value,
                     true,
                 );
 
@@ -398,7 +398,7 @@ export default defineComponent({
         }
 
         async function toggleLogging() {
-            if (!canToggle.value && !isLogging.value) {
+            if (!isLogging.value && !fileEntry.value) {
                 gui_log(i18n.getMessage("loggingErrorLogFile"));
                 return;
             }
