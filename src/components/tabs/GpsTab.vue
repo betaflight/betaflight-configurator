@@ -366,10 +366,10 @@ export default defineComponent({
             i18n.getMessage("gpsSbasNone"),
         ];
 
-        const apiVersion = computed(() => FC.CONFIG?.apiVersion || "0.0.0");
-        const hasGpsSensor = computed(() => have_sensor(FC.CONFIG?.activeSensors, "gps"));
+        const apiVersion = computed(() => FC.CONFIG.apiVersion);
+        const hasGpsSensor = computed(() => have_sensor(FC.CONFIG.activeSensors, "gps"));
         const hasMag = computed(
-            () => have_sensor(FC.CONFIG?.activeSensors, "mag") && semver.gte(apiVersion.value, API_VERSION_1_46),
+            () => have_sensor(FC.CONFIG.activeSensors, "mag") && semver.gte(apiVersion.value, API_VERSION_1_46),
         );
 
         const gpsConfig = reactive({
@@ -574,11 +574,10 @@ export default defineComponent({
                     }
 
                     const satUsed = (FC.GPS_DATA.quality[i] & 0x8) >> 3;
-                    const quality = i18n.getMessage(qualityArray[FC.GPS_DATA.quality[i] & 0x7]);
-                    const lockedOrLow = quality.startsWith(i18n.getMessage("gnssQualityLocked")) ? "locked" : "low";
-                    const qualityColor = quality.startsWith(i18n.getMessage("gnssQualityFullyLocked"))
-                        ? "ready"
-                        : lockedOrLow;
+                    const qualityValue = FC.GPS_DATA.quality[i] & 0x7;
+                    const quality = i18n.getMessage(qualityArray[qualityValue]);
+                    // qualityValue: 5,6,7 = fully locked, 4 = locked, others = low
+                    const qualityColor = qualityValue >= 5 ? "ready" : qualityValue === 4 ? "locked" : "low";
 
                     rows.push({
                         gnss: gnssArray[gnssId],
@@ -756,9 +755,6 @@ export default defineComponent({
         const saveConfig = async () => {
             Object.assign(FC.GPS_CONFIG, gpsConfig);
 
-            FC.GPS_CONFIG.auto_baud = gpsConfig.auto_baud;
-            FC.GPS_CONFIG.auto_config = gpsConfig.auto_config;
-
             await MSP.promise(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG));
             await MSP.promise(MSPCodes.MSP_SET_GPS_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_GPS_CONFIG));
 
@@ -802,7 +798,6 @@ export default defineComponent({
             }
         });
 
-        watch(activeLayer, (layer) => setLayer(layer));
         watch(showLoadMap, (visible) => {
             if (visible) {
                 nextTick(() => {
