@@ -57,8 +57,6 @@ class GuiControl {
 
         // check which operating system is user running
         this.operating_system = getOS();
-
-        return reactive(this);
     }
     // Timer managing methods
     // name = string
@@ -644,7 +642,12 @@ class GuiControl {
     }
 }
 
-const GUI = new GuiControl();
+export function createGui() {
+    const gui = new GuiControl();
+    return reactive(gui);
+}
+
+const GUI = createGui();
 
 export { TABS };
 export default GUI;
