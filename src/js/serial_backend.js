@@ -167,6 +167,7 @@ function connectDisconnect() {
                     GUI.active_tab !== "cli" &&
                     semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)
                 ) {
+                    console.log("Press Ctrl+I to open CLI panel");
                     GUI.showCliPanel();
                 }
             }
