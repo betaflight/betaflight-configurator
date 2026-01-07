@@ -48,7 +48,7 @@
             </div>
         </div>
 
-        <div class="content_toolbar toolbar_fixed_bottom">
+        <div class="content_toolbar toolbar_fixed_bottom" style="position: fixed">
             <div class="btn file_btn">
                 <a class="log_file" href="#" @click.prevent="selectLogFile" :aria-label="$t('loggingButtonLogFile')">
                     {{ $t("loggingButtonLogFile") }}
