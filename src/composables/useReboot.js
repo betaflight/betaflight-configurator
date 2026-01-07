@@ -1,4 +1,4 @@
-import { ref, onUnmounted } from "vue";
+import { ref } from "vue";
 import { useDialogStore } from "@/stores/dialog";
 import { reinitializeConnection } from "@/js/serial_backend"; // Backend logic
 import CONFIGURATOR from "@/js/data_storage";
@@ -15,10 +15,9 @@ export function useReboot() {
     let progressInterval = null;
     let checkInterval = null;
 
-    onUnmounted(() => {
-        if (progressInterval) clearInterval(progressInterval);
-        if (checkInterval) clearInterval(checkInterval);
-    });
+    // Intervals are not efficiently cleaned up on unmount because the reboot process
+    // transcends the component lifecycle (navigates to landing tab on disconnect).
+    // The intervals self-terminate when the reboot is complete or times out.
 
     // Internal helper to wait for reconnection
     const waitForReconnection = (rebootTimestamp, callback) => {
