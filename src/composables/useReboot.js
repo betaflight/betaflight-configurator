@@ -1,4 +1,4 @@
-import { ref } from "vue";
+import { ref, onUnmounted } from "vue";
 import { useDialogStore } from "@/stores/dialog";
 import { reinitializeConnection } from "@/js/serial_backend"; // Backend logic
 import CONFIGURATOR from "@/js/data_storage";
@@ -11,15 +11,25 @@ export function useReboot() {
     const isRebooting = ref(false);
     const REBOOT_CONNECT_MAX_TIME_MS = 10000;
 
+    // Track intervals for cleanup
+    let progressInterval = null;
+    let checkInterval = null;
+
+    onUnmounted(() => {
+        if (progressInterval) clearInterval(progressInterval);
+        if (checkInterval) clearInterval(checkInterval);
+    });
+
     // Internal helper to wait for reconnection
     const waitForReconnection = (rebootTimestamp, callback) => {
-        const checkInterval = setInterval(() => {
+        checkInterval = setInterval(() => {
             const timeoutReached = Date.now() - rebootTimestamp > REBOOT_CONNECT_MAX_TIME_MS;
             // Check global logic for reconnection availability
             const noSerialReconnect = !PortHandler.portPicker.autoConnect && PortHandler.portAvailable;
 
             if (CONFIGURATOR.connectionValid || timeoutReached || noSerialReconnect) {
                 clearInterval(checkInterval);
+                checkInterval = null;
                 callback(timeoutReached);
             }
         }, 100);
@@ -60,7 +70,7 @@ export function useReboot() {
         let progress = 0;
         const progressIncrement = 100 / (REBOOT_CONNECT_MAX_TIME_MS / 100);
 
-        const progressInterval = setInterval(() => {
+        progressInterval = setInterval(() => {
             progress += progressIncrement;
             if (progress <= 100) {
                 dialogStore.updateProps({ progress });
@@ -69,7 +79,10 @@ export function useReboot() {
 
         // Wait for Reconnection
         waitForReconnection(rebootTimestamp, (timeoutReached) => {
-            clearInterval(progressInterval);
+            if (progressInterval) {
+                clearInterval(progressInterval);
+                progressInterval = null;
+            }
 
             // Finish Up
             dialogStore.updateProps({
