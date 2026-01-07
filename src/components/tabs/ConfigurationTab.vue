@@ -879,7 +879,11 @@ export default defineComponent({
                 const nextMask = bit_clear(sensorAlignment.gyro_enable_mask, index);
 
                 // Enforce: at least one gyro must remain enabled on API >= 1.47
-                if (nextMask === 0 && semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
+                if (
+                    nextMask === 0 &&
+                    fcStore.config?.apiVersion &&
+                    semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)
+                ) {
                     gui_log(i18n.getMessage("configurationGyroRequired"));
                     // Reset checkbox state visually (since v-model isn't used here directly, we rely on re-rendering or manual intervention,
                     // but since the mask isn't updated, the computed property 'gyroList' will re-evaluate to 'enabled: true')
@@ -905,7 +909,7 @@ export default defineComponent({
         const showMagDeclination = ref(false);
         const showRangefinder = ref(false);
         const showGyroToUse = computed(() => {
-            return semver.lt(fcStore.config.apiVersion, API_VERSION_1_47);
+            return fcStore.config?.apiVersion && semver.lt(fcStore.config.apiVersion, API_VERSION_1_47);
         });
         const showOpticalFlow = ref(false);
 

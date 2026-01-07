@@ -13,6 +13,8 @@
 <script setup>
 defineProps({
     title: String,
+    // Note: 'text' is rendered using v-html to support bolding/links in i18n messages.
+    // Ensure that only trusted content (e.g. from i18n) is passed to this prop.
     text: String,
     yesText: String,
     noText: String,
