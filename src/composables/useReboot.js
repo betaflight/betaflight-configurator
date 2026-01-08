@@ -39,7 +39,7 @@ export function useReboot() {
 
         // Delegates the actual command sending and state setup (rebootTimestamp) to the backend.
         // This ensures serial_backend.js knows to allow auto-connection after the reboot.
-        reinitializeConnection();
+        reinitializeConnection(true);
 
         // Force invalid locally as well (backend does it too usually, but safe to sync)
         CONFIGURATOR.connectionValid = false;

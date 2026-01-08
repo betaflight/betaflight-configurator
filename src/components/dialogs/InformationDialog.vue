@@ -3,9 +3,13 @@
         <h3 class="dialogInformationTitle">{{ title }}</h3>
         <div class="dialogInformationContent" v-html="text"></div>
         <div class="buttons">
-            <a href="#" class="dialogInformation-confirmButton regular-button" @click.prevent="$emit('confirm')">{{
-                confirmText
-            }}</a>
+            <button
+                type="button"
+                class="dialogInformation-confirmButton regular-button"
+                @click.prevent="$emit('confirm')"
+            >
+                {{ confirmText }}
+            </button>
         </div>
     </dialog>
 </template>
