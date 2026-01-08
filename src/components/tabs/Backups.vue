@@ -36,11 +36,8 @@
                                 </tr>
                                 <template v-for="(groupBackups, craft) in groupedBackups" :key="craft">
                                     <tr>
-                                        <td colspan="4">
+                                        <td colspan="5">
                                             <span class="title">{{ craft }}</span>
-                                            <span v-if="getSerialForCraft(craft)" class="serial"
-                                                >[{{ getSerialForCraft(craft) }}]</span
-                                            >
                                         </td>
                                     </tr>
                                     <tr v-for="backup in groupBackups" :key="backup.id">

@@ -629,7 +629,7 @@
         "message" : "Using cached builds information for $1."
     },
     "buildServerSupportRequestSubmission": {
-        "message": "<br>*** Support data submitted *** <br>Id: $1<br><br><br># copy ID and provide to the betaflight team."
+        "message": "<br>*** Support data submitted *** <br>ID: $1<br><br><br># copy ID and provide to the betaflight team."
     },
     "buildKey": {
         "message": "Build Key: <strong>$1</strong>"
@@ -7965,7 +7965,7 @@
         "message": "Waiting for data ..."
     },
     "labelId": {
-        "message": "Id"
+        "message": "ID"
     },
     "labelCreated": {
         "message": "Created"

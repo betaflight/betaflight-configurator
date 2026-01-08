@@ -8,7 +8,7 @@
                     alt="User Default Avatar"
                     class="user-avatar-icon"
                 />
-                <span id="user-login-display" class="username">{{ $t("login") }}</span>
+                <span id="user-login-display" class="username">{{ $t("labelLogin") }}</span>
             </a>
         </div>
 
