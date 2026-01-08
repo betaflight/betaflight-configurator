@@ -32,8 +32,6 @@ export function useReboot() {
                 callback(timeoutReached);
             }
         }, 100);
-
-        return checkInterval;
     };
 
     const reboot = () => {
