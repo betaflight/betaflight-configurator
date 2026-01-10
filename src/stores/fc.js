@@ -37,6 +37,31 @@ export const useFlightControllerStore = defineStore("flightController", () => {
         set: (val) => (FC.BOARD_ALIGNMENT_CONFIG = val),
     });
 
+    const sensorData = computed({
+        get: () => FC.SENSOR_DATA,
+        set: (val) => (FC.SENSOR_DATA = val),
+    });
+
+    const gpsData = computed({
+        get: () => FC.GPS_DATA,
+        set: (val) => (FC.GPS_DATA = val),
+    });
+
+    const analogData = computed({
+        get: () => FC.ANALOG,
+        set: (val) => (FC.ANALOG = val),
+    });
+
+    const rc = computed({
+        get: () => FC.RC,
+        set: (val) => (FC.RC = val),
+    });
+
+    const motorData = computed({
+        get: () => FC.MOTOR_DATA,
+        set: (val) => (FC.MOTOR_DATA = val),
+    });
+
     // Computed Getters
     const apiVersion = computed(() => config.value.apiVersion);
 
@@ -56,6 +81,11 @@ export const useFlightControllerStore = defineStore("flightController", () => {
         gyroSensor,
         sensorAlignment,
         boardAlignment,
+        sensorData,
+        gpsData,
+        analogData,
+        rc,
+        motorData,
         apiVersion,
         isApiVersionSupported,
         isApiVersionLessThan,

@@ -312,7 +312,7 @@ async function startProcess() {
                         import("./tabs/sensors").then(({ sensors }) => sensors.initialize(content_ready));
                         break;
                     case "logging":
-                        import("./tabs/logging").then(({ logging }) => logging.initialize(content_ready));
+                        mountVueTab("logging", content_ready);
                         break;
                     case "onboard_logging":
                         import("./tabs/onboard_logging").then(({ onboard_logging }) =>
