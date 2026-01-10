@@ -1,5 +1,6 @@
 import { ref, computed, onMounted, onUnmounted, nextTick } from "vue";
 import loginManager from "../../js/LoginManager";
+import { i18n } from "../../js/localization";
 
 export function useUserSession() {
     const isLoggedIn = ref(false);
@@ -7,6 +8,8 @@ export function useUserSession() {
     const menuOpen = ref(false);
     const menuStyle = ref({});
     const loginEmail = ref("");
+    const loginError = ref(null);
+    const verificationError = ref(null);
     const verificationCode = ref("");
     const dialogLoginRef = ref(null);
     const dialogVerificationRef = ref(null);
@@ -73,6 +76,7 @@ export function useUserSession() {
 
     const openLoginDialog = () => {
         loginEmail.value = "";
+        loginError.value = null;
         if (dialogLoginRef.value) {
             dialogLoginRef.value.showModal();
         }
@@ -93,6 +97,7 @@ export function useUserSession() {
     const openVerificationDialog = (email) => {
         currentVerificationEmail.value = email;
         verificationCode.value = "";
+        verificationError.value = null;
         if (dialogVerificationRef.value) {
             dialogVerificationRef.value.showModal();
             // Focus input after dialog opens
@@ -121,18 +126,38 @@ export function useUserSession() {
 
     const handleUsePasskey = async () => {
         const email = loginEmail.value.trim();
-        closeLoginDialog();
 
-        if (email) {
+        if (!email) {
+            loginError.value = i18n.getMessage("labelEmail");
+            return;
+        }
+
+        try {
             await loginManager.loginWithPasskey(email);
+            closeLoginDialog();
+        } catch (error) {
+            loginError.value = i18n.getMessage("userLoginFailed");
+            // Keep the dialog open so the user can retry
+            if (dialogLoginRef.value && !dialogLoginRef.value.open) {
+                dialogLoginRef.value.showModal();
+            }
+            console.error("Login with passkey error:", error);
         }
     };
 
     const handleVerificationSubmit = async () => {
         const code = verificationCode.value.trim();
         if (code) {
-            closeVerificationDialog();
-            await loginManager.verifyAndCreatePasskey(currentVerificationEmail.value, code);
+            try {
+                await loginManager.verifyAndCreatePasskey(currentVerificationEmail.value, code);
+                closeVerificationDialog();
+            } catch (error) {
+                verificationError.value = i18n.getMessage("userCreatePasskeyFailed");
+                if (dialogVerificationRef.value && !dialogVerificationRef.value.open) {
+                    dialogVerificationRef.value.showModal();
+                }
+                console.error("Verify passkey error:", error);
+            }
         }
     };
 
@@ -179,6 +204,8 @@ export function useUserSession() {
         menuOpen,
         menuStyle,
         loginEmail,
+        loginError,
+        verificationError,
         verificationCode,
         dialogLoginRef,
         dialogVerificationRef,

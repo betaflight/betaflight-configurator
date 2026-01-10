@@ -50,6 +50,7 @@
                                 class="dialog-input"
                             />
                         </div>
+                        <p v-if="loginError" class="dialog-error">{{ loginError }}</p>
                     </div>
                     <div class="dialog-buttons dialog-buttons-split">
                         <a href="#" class="regular-button dialog-passkey-button" @click.prevent="handleCreatePasskey">{{
@@ -84,6 +85,7 @@
                                 @keypress.enter="handleVerificationSubmit"
                             />
                         </div>
+                        <p v-if="verificationError" class="dialog-error">{{ verificationError }}</p>
                     </div>
                     <div class="dialog-buttons">
                         <a
@@ -288,6 +290,12 @@ export default defineComponent({
 
 .dialog-input-group {
     margin-bottom: 15px;
+}
+
+.dialog-error {
+    color: var(--error-500);
+    font-size: 12px;
+    margin: 0 0 10px 0;
 }
 
 .dialog-label {
