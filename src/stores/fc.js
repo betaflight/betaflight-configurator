@@ -12,6 +12,11 @@ export const useFlightControllerStore = defineStore("flightController", () => {
         set: (val) => (FC.CONFIG = val),
     });
 
+    const gpsConfig = computed({
+        get: () => FC.GPS_CONFIG,
+        set: (val) => (FC.GPS_CONFIG = val),
+    });
+
     const features = computed({
         get: () => FC.FEATURE_CONFIG,
         set: (val) => (FC.FEATURE_CONFIG = val),
@@ -40,6 +45,11 @@ export const useFlightControllerStore = defineStore("flightController", () => {
     const sensorData = computed({
         get: () => FC.SENSOR_DATA,
         set: (val) => (FC.SENSOR_DATA = val),
+    });
+
+    const compassConfig = computed({
+        get: () => FC.COMPASS_CONFIG,
+        set: (val) => (FC.COMPASS_CONFIG = val),
     });
 
     const gpsData = computed({
@@ -76,9 +86,11 @@ export const useFlightControllerStore = defineStore("flightController", () => {
 
     return {
         config,
+        gpsConfig,
         features,
         beepers,
         gyroSensor,
+        compassConfig,
         sensorAlignment,
         boardAlignment,
         sensorData,
