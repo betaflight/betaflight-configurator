@@ -76,82 +76,12 @@ import { millitime } from "../../js/utils/common.js";
 import GUI from "../../js/gui";
 import { generateFilename } from "../../js/utils/generate_filename.js";
 import { i18n } from "../../js/localization";
-import FC from "../../js/fc.js";
 import FileSystem from "../../js/FileSystem";
 import MSP from "../../js/msp.js";
 import MSPCodes from "../../js/msp/MSPCodes.js";
 import { useFlightControllerStore } from "@/stores/fc";
 import { useConnectionStore } from "@/stores/connection";
 import { useDialog } from "@/composables/useDialog";
-
-const PROPERTY_DEFINITIONS = {
-    MSP_RAW_IMU: {
-        label: "MSP_RAW_IMU",
-        description: "9 columns (gyro[x, y, z], accel[x, y, z], mag[x, y, z])",
-        columns: () => [
-            "gyroscopeX",
-            "gyroscopeY",
-            "gyroscopeZ",
-            "accelerometerX",
-            "accelerometerY",
-            "accelerometerZ",
-            "magnetometerX",
-            "magnetometerY",
-            "magnetometerZ",
-        ],
-        values: () => [...FC.SENSOR_DATA.gyroscope, ...FC.SENSOR_DATA.accelerometer, ...FC.SENSOR_DATA.magnetometer],
-    },
-    MSP_ATTITUDE: {
-        label: "MSP_ATTITUDE",
-        description: "3 columns (kine[x, y, z])",
-        columns: () => ["kinematicsX", "kinematicsY", "kinematicsZ"],
-        values: () => [FC.SENSOR_DATA.kinematics[0], FC.SENSOR_DATA.kinematics[1], FC.SENSOR_DATA.kinematics[2]],
-    },
-    MSP_ALTITUDE: {
-        label: "MSP_ALTITUDE",
-        description: "1 column (alt)",
-        columns: () => ["altitude"],
-        values: () => [FC.SENSOR_DATA.altitude],
-    },
-    MSP_RAW_GPS: {
-        label: "MSP_RAW_GPS",
-        description: "7 columns (Fix, NumSat, Lat, Lon, Alt, Speed, GroundCourse)",
-        columns: () => ["gpsFix", "gpsNumSat", "gpsLat", "gpsLon", "gpsAlt", "gpsSpeed", "gpsGroundCourse"],
-        values: () => [
-            FC.GPS_DATA.fix,
-            FC.GPS_DATA.numSat,
-            FC.GPS_DATA.lat / 10000000,
-            FC.GPS_DATA.lon / 10000000,
-            FC.GPS_DATA.alt,
-            FC.GPS_DATA.speed,
-            FC.GPS_DATA.ground_course,
-        ],
-    },
-    MSP_ANALOG: {
-        label: "MSP_ANALOG",
-        description: "4 columns (voltage, amperage, mAhdrawn, rssi)",
-        columns: () => ["voltage", "amperage", "mAhdrawn", "rssi"],
-        values: () => [FC.ANALOG.voltage, FC.ANALOG.amperage, FC.ANALOG.mAhdrawn, FC.ANALOG.rssi],
-    },
-    MSP_RC: {
-        label: "MSP_RC",
-        description: "8 columns (RC0, RC1, RC2, RC3, RC4, RC5, RC6, RC7)",
-        columns: () => Array.from({ length: FC.RC.active_channels }, (_, chan) => `RC${chan}`),
-        values: () => FC.RC.channels.slice(0, FC.RC.active_channels),
-    },
-    MSP_MOTOR: {
-        label: "MSP_MOTOR",
-        description: "8 columns (Mot1, Mot2, Mot3, Mot4, Mot5, Mot6, Mot7, Mot8)",
-        columns: () => Array.from({ length: FC.MOTOR_DATA.length }, (_, motor) => `Motor${motor}`),
-        values: () => [...FC.MOTOR_DATA],
-    },
-    MSP_DEBUG: {
-        label: "MSP_DEBUG",
-        description: "4 columns (Debug0, Debug1, Debug2, Debug3)",
-        columns: () => Array.from({ length: FC.SENSOR_DATA.debug.length }, (_, debug) => `Debug${debug}`),
-        values: () => [...FC.SENSOR_DATA.debug],
-    },
-};
 
 const PROPERTY_ORDER = [
     "MSP_RAW_IMU",
@@ -205,8 +135,118 @@ export default defineComponent({
         let hasPreviousRequest = false;
         let isDestroyed = false;
 
+        const propertyDefinitions = {
+            MSP_RAW_IMU: {
+                label: "MSP_RAW_IMU",
+                description: "9 columns (gyro[x, y, z], accel[x, y, z], mag[x, y, z])",
+                columns: () => [
+                    "gyroscopeX",
+                    "gyroscopeY",
+                    "gyroscopeZ",
+                    "accelerometerX",
+                    "accelerometerY",
+                    "accelerometerZ",
+                    "magnetometerX",
+                    "magnetometerY",
+                    "magnetometerZ",
+                ],
+                values: () => {
+                    const data = fcStore.sensorData || {};
+                    return [...(data.gyroscope || []), ...(data.accelerometer || []), ...(data.magnetometer || [])];
+                },
+            },
+            MSP_ATTITUDE: {
+                label: "MSP_ATTITUDE",
+                description: "3 columns (kine[x, y, z])",
+                columns: () => ["kinematicsX", "kinematicsY", "kinematicsZ"],
+                values: () => {
+                    const data = fcStore.sensorData || {};
+                    const kinematics = data.kinematics || [];
+                    return [kinematics[0] ?? 0, kinematics[1] ?? 0, kinematics[2] ?? 0];
+                },
+            },
+            MSP_ALTITUDE: {
+                label: "MSP_ALTITUDE",
+                description: "1 column (alt)",
+                columns: () => ["altitude"],
+                values: () => {
+                    const data = fcStore.sensorData || {};
+                    return [data.altitude ?? 0];
+                },
+            },
+            MSP_RAW_GPS: {
+                label: "MSP_RAW_GPS",
+                description: "7 columns (Fix, NumSat, Lat, Lon, Alt, Speed, GroundCourse)",
+                columns: () => ["gpsFix", "gpsNumSat", "gpsLat", "gpsLon", "gpsAlt", "gpsSpeed", "gpsGroundCourse"],
+                values: () => {
+                    const gps = fcStore.gpsData || {};
+                    return [
+                        gps.fix ?? 0,
+                        gps.numSat ?? 0,
+                        (gps.lat ?? 0) / 10000000,
+                        (gps.lon ?? 0) / 10000000,
+                        gps.alt ?? 0,
+                        gps.speed ?? 0,
+                        gps.ground_course ?? 0,
+                    ];
+                },
+            },
+            MSP_ANALOG: {
+                label: "MSP_ANALOG",
+                description: "4 columns (voltage, amperage, mAhdrawn, rssi)",
+                columns: () => ["voltage", "amperage", "mAhdrawn", "rssi"],
+                values: () => {
+                    const analog = fcStore.analogData || {};
+                    return [analog.voltage ?? 0, analog.amperage ?? 0, analog.mAhdrawn ?? 0, analog.rssi ?? 0];
+                },
+            },
+            MSP_RC: {
+                label: "MSP_RC",
+                description: "8 columns (RC0, RC1, RC2, RC3, RC4, RC5, RC6, RC7)",
+                columns: () => {
+                    const rc = fcStore.rc || {};
+                    const channels = rc.channels || [];
+                    const count = rc.active_channels ?? channels.length;
+                    return Array.from({ length: count }, (_, chan) => `RC${chan}`);
+                },
+                values: () => {
+                    const rc = fcStore.rc || {};
+                    const channels = rc.channels || [];
+                    const count = rc.active_channels ?? channels.length;
+                    return channels.slice(0, count);
+                },
+            },
+            MSP_MOTOR: {
+                label: "MSP_MOTOR",
+                description: "8 columns (Mot1, Mot2, Mot3, Mot4, Mot5, Mot6, Mot7, Mot8)",
+                columns: () => {
+                    const motors = fcStore.motorData || [];
+                    const length = Array.isArray(motors) ? motors.length : 0;
+                    return Array.from({ length }, (_, motor) => `Motor${motor}`);
+                },
+                values: () => {
+                    const motors = fcStore.motorData || [];
+                    return Array.isArray(motors) ? [...motors] : [];
+                },
+            },
+            MSP_DEBUG: {
+                label: "MSP_DEBUG",
+                description: "4 columns (Debug0, Debug1, Debug2, Debug3)",
+                columns: () => {
+                    const data = fcStore.sensorData || {};
+                    const debug = data.debug || [];
+                    return Array.from({ length: debug.length }, (_, idx) => `Debug${idx}`);
+                },
+                values: () => {
+                    const data = fcStore.sensorData || {};
+                    const debug = data.debug || [];
+                    return [...debug];
+                },
+            },
+        };
+
         const propertyOptions = PROPERTY_ORDER.map((code) => {
-            const definition = PROPERTY_DEFINITIONS[code];
+            const definition = propertyDefinitions[code];
             return {
                 code,
                 label: definition.label,
@@ -243,7 +283,7 @@ export default defineComponent({
             const columns = ["timestamp"];
 
             requestedProperties.forEach((property) => {
-                const definition = PROPERTY_DEFINITIONS[property];
+                const definition = propertyDefinitions[property];
                 if (!definition) {
                     return;
                 }
@@ -257,7 +297,7 @@ export default defineComponent({
             const row = [millitime()];
 
             requestedProperties.forEach((property) => {
-                const definition = PROPERTY_DEFINITIONS[property];
+                const definition = propertyDefinitions[property];
                 if (!definition) {
                     return;
                 }
