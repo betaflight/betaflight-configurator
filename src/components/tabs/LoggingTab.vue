@@ -54,9 +54,6 @@
                     {{ $t("loggingButtonLogFile") }}
                 </a>
             </div>
-            <div class="btn back_btn">
-                <a class="back" href="#" :aria-label="$t('loggingBack')">{{ $t("loggingBack") }}</a>
-            </div>
             <div class="btn logging_btn">
                 <a
                     class="logging"
