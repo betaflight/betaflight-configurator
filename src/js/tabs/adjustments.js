@@ -291,7 +291,7 @@ adjustments.cleanup = function (callback) {
 
 adjustments.adjust_template = function () {
     const selectFunction = $("#functionSelectionSelect");
-    const elementsNumber = 32; // 'LED Dimmer' is the last adjustmentsFunction
+    const elementsNumber = 33; // 'Slider Master Multiplier' is the last adjustmentsFunction
 
     for (let i = 0; i < elementsNumber; i++) {
         selectFunction.append(new Option(i18n.getMessage(`adjustmentsFunction${i}`), i));
