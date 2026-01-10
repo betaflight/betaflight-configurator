@@ -64,6 +64,7 @@
     "multicast-dns": "^7.2.5",
     "multiple-select": "^2.0.9",
     "ol": "^10.4.0",
+    "pinia": "^3.0.4",
     "select2": "^4.0.13",
     "short-unique-id": "^5.2.0",
     "switchery-latest": "^0.8.2",
