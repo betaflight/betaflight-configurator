@@ -79,17 +79,17 @@ export default {
         display: none !important;
     }
     .tab_container .logo {
-        display: block;
+        display: flex;
         background-image: url(../../images/dark-wide-2.svg);
         background-repeat: no-repeat;
         background-position: center 20px;
         background-position-x: 12px;
         background-size: 80%;
         height: 120px;
-        width: auto;
-        margin-top: unset;
-        position: relative;
+        width: 100%;
         border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+        flex: 0 0 120px;
+        margin-bottom: 20px;
     }
     .dark-theme .tab_container .logo {
         background-image: url(../../images/light-wide-2.svg);

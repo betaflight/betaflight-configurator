@@ -404,6 +404,9 @@ input[type="number"] {
     .mode-connected {
         display: none;
     }
+    .mode-loggedin {
+        display: none;
+    }
 }
 #sensor-status {
     border-radius: 0.5rem;
@@ -680,6 +683,8 @@ input[type="number"] {
     overflow: auto;
     padding: 1rem;
     background-color: var(--surface-100);
+    display: flex;
+    flex-direction: column;
 }
 
 #content {
@@ -694,6 +699,8 @@ input[type="number"] {
     overflow-y: auto;
 }
 #tabs {
+    flex: 0 1 auto; /* Grows only to fit content, can shrink if needed */
+    overflow-y: auto; /* Allows scrolling if tabs exceed screen height */
     background-color: var(--surface-200);
     border-radius: 1rem;
     font-size: 13px;
@@ -702,6 +709,9 @@ input[type="number"] {
         display: none;
     }
     ul.mode-connected-cli {
+        display: none;
+    }
+    ul.mode-loggedin {
         display: none;
     }
     li {
@@ -780,6 +790,7 @@ input[type="number"] {
     wizzard: url(../images/icons/cf_icon_wizard_grey.svg);
     advanced: url(../images/icons/cf_icon_advanced_grey.svg);
     mission: url(../images/icons/cf_icon_mission_grey.svg);
+    user: url(../images/icons/icon_user_profile_grey.svg);
 };
 
 each(@tabIcons, {
@@ -1510,7 +1521,8 @@ table {
 .tab-servos,
 .tab-osd,
 .tab-power,
-.tab-vtx {
+.tab-vtx,
+.tab-user_profile {
     position: relative;
 }
 .properties {
@@ -1824,6 +1836,14 @@ each(range(12), {
         shape-rendering: crispEdges;
     }
 }
+
+.session-view {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+}
+
 @media not all and (max-width: 575px) {
     .visible-on-phone-only {
         display: none !important;
