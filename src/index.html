@@ -104,11 +104,11 @@
                 </div>
                 <div id="header_buttons">
                     <div class="firmware_flasher_button">
-                        <a class="firmware_flasher_button__link disabled" href="#"></a>
+                        <a class="firmware_flasher_button__link disabled" href="#" aria-label="Firmware Flasher"></a>
                         <div class="firmware_flasher_button__label" i18n="flashTab"></div>
                     </div>
                     <div class="connection_button">
-                        <a class="connection_button__link disabled" href="#"></a>
+                        <a class="connection_button__link disabled" href="#" aria-label="Connect"></a>
                         <div class="connection_button__label" i18n="connect"></div>
                     </div>
                 </div>
@@ -267,6 +267,19 @@
                             </li>
                         </ul>
                     </div>
+                    <ul class="mode-loggedin">
+                        <li class="tab_backups">
+                            <a href="#" class="tabicon ic_data" i18n_title="tabBackups">
+                                <span i18n="tabBackups">Backups</span>
+                            </a>
+                        </li>
+                        <li class="tab_user_profile">
+                            <a href="#" class="tabicon ic_user" i18n_title="tabUserProfile">
+                                <span i18n="tabUserProfile">User Profile</span>
+                            </a>
+                        </li>
+                    </ul>
+                    <user-session></user-session>
                     <div class="clear-both"></div>
                 </div>
                 <div id="content"></div>
@@ -290,6 +303,212 @@
                 </div>
             </div>
         </div>
+
+        <dialog
+            id="dialogLogin"
+            style="
+                width: 360px;
+                aspect-ratio: 16 / 9;
+                padding: 20px;
+                border: 1px solid var(--surface-600);
+                border-radius: 8px;
+            "
+        >
+            <div style="display: flex; flex-direction: column; height: 100%">
+                <button
+                    class="dialog-close-button"
+                    aria-label="Close"
+                    style="
+                        position: absolute;
+                        top: 10px;
+                        right: 10px;
+                        background: none;
+                        border: none;
+                        font-size: 24px;
+                        cursor: pointer;
+                        padding: 0;
+                        width: 30px;
+                        height: 30px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        color: var(--text);
+                    "
+                >
+                    &times;
+                </button>
+                <h3 i18n="titleLogin" style="margin: 0 0 15px 0; text-align: center">Login</h3>
+                <div class="content" style="flex: 1; display: flex; flex-direction: column; justify-content: center">
+                    <div class="input-group" style="margin-bottom: 15px">
+                        <label
+                            for="login-email"
+                            i18n="labelEmail"
+                            style="display: block; margin-bottom: 5px; font-size: 12px"
+                            >Email</label
+                        >
+                        <input
+                            type="email"
+                            id="login-email"
+                            placeholder="Enter email address"
+                            style="
+                                width: 100%;
+                                padding: 8px;
+                                border: 1px solid var(--surface-500);
+                                border-radius: 4px;
+                                background-color: var(--surface-100);
+                                color: var(--text);
+                                box-sizing: border-box;
+                            "
+                        />
+                    </div>
+                </div>
+                <div
+                    class="buttons"
+                    style="
+                        display: flex;
+                        flex-direction: row;
+                        gap: 10px;
+                        justify-content: center;
+                        align-items: center;
+                        text-align: center;
+                    "
+                >
+                    <a
+                        href="#"
+                        id="dialogLogin-passkey-create"
+                        class="regular-button"
+                        i18n="labelCreatePasskey"
+                        style="padding: 6px 12px; text-decoration: none; font-size: 12px; flex: 1; max-width: 120px"
+                        >Create Passkey</a
+                    >
+                    <span
+                        style="
+                            font-size: 12px;
+                            color: var(--text-secondary);
+                            display: flex;
+                            align-items: center;
+                            flex-shrink: 0;
+                        "
+                        >OR</span
+                    >
+                    <a
+                        href="#"
+                        id="dialogLogin-passkey-use"
+                        class="regular-button"
+                        i18n="labelUsePasskey"
+                        style="padding: 6px 12px; text-decoration: none; font-size: 12px; flex: 1; max-width: 120px"
+                        >Use Passkey</a
+                    >
+                </div>
+            </div>
+        </dialog>
+
+        <dialog
+            id="dialogWaiting"
+            style="border: 1px solid var(--surface-600); border-radius: 8px; padding: 30px; min-width: 300px"
+        >
+            <div style="text-align: center">
+                <div style="margin-bottom: 15px">
+                    <div
+                        style="
+                            border: 4px solid rgba(255, 255, 255, 0.2);
+                            border-top: 4px solid var(--primary-500);
+                            border-radius: 50%;
+                            width: 50px;
+                            height: 50px;
+                            animation: spin 1s linear infinite;
+                            margin: 0 auto;
+                        "
+                    ></div>
+                </div>
+                <p id="dialogWaiting-message" style="font-size: 14px; color: var(--text); margin: 0">
+                    Processing passkey authentication...
+                </p>
+            </div>
+            <style>
+                @keyframes spin {
+                    0% {
+                        transform: rotate(0deg);
+                    }
+                    100% {
+                        transform: rotate(360deg);
+                    }
+                }
+            </style>
+        </dialog>
+
+        <dialog
+            id="dialogVerificationCode"
+            style="
+                width: 360px;
+                aspect-ratio: 16 / 9;
+                padding: 20px;
+                border: 1px solid var(--surface-600);
+                border-radius: 8px;
+            "
+        >
+            <div style="display: flex; flex-direction: column; height: 100%">
+                <button
+                    class="dialog-close-button"
+                    aria-label="Close"
+                    style="
+                        position: absolute;
+                        top: 10px;
+                        right: 10px;
+                        background: none;
+                        border: none;
+                        font-size: 24px;
+                        cursor: pointer;
+                        padding: 0;
+                        width: 30px;
+                        height: 30px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        color: var(--text);
+                    "
+                >
+                    &times;
+                </button>
+                <h3 i18n="titleEnterVerificationCode" style="margin: 0 0 15px 0; text-align: center">
+                    Enter Verification Code
+                </h3>
+                <div class="content" style="flex: 1; display: flex; flex-direction: column; justify-content: center">
+                    <div class="input-group" style="margin-bottom: 15px">
+                        <label
+                            for="verification-code-input"
+                            i18n="labelVerificationCode"
+                            style="display: block; margin-bottom: 5px; font-size: 12px"
+                            >Code</label
+                        >
+                        <input
+                            type="text"
+                            id="verification-code-input"
+                            placeholder=""
+                            style="
+                                width: 100%;
+                                padding: 8px;
+                                border: 1px solid var(--surface-500);
+                                border-radius: 4px;
+                                background-color: var(--surface-100);
+                                color: var(--text);
+                                box-sizing: border-box;
+                            "
+                        />
+                    </div>
+                </div>
+                <div class="buttons" style="display: flex; justify-content: center">
+                    <a
+                        href="#"
+                        id="verification-code-submit"
+                        class="regular-button"
+                        i18n="submit"
+                        style="padding: 8px 24px; text-decoration: none"
+                        >Submit</a
+                    >
+                </div>
+            </div>
+        </dialog>
 
         <dialog class="dialogConfiguratorUpdate">
             <h3 i18n="noticeTitle"></h3>
