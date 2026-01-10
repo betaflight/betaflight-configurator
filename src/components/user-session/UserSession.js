@@ -79,13 +79,13 @@ export function useUserSession() {
     };
 
     const closeLoginDialog = () => {
-        if (dialogLoginRef.value && dialogLoginRef.value.open) {
+        if (dialogLoginRef.value?.open) {
             dialogLoginRef.value.close();
         }
     };
 
     const closeVerificationDialog = () => {
-        if (dialogVerificationRef.value && dialogVerificationRef.value.open) {
+        if (dialogVerificationRef.value?.open) {
             dialogVerificationRef.value.close();
         }
     };
