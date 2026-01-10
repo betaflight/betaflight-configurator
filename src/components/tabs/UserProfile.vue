@@ -367,7 +367,6 @@ export default defineComponent({
 <style scoped>
 .tab-user_profile {
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    color: #fff;
 }
 .profile {
     margin-top: 20px;
