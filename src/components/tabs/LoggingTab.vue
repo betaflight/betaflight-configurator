@@ -80,10 +80,9 @@ import FC from "../../js/fc.js";
 import FileSystem from "../../js/FileSystem";
 import MSP from "../../js/msp.js";
 import MSPCodes from "../../js/msp/MSPCodes.js";
-import CONFIGURATOR from "../../js/data_storage.js";
-import { gui_log } from "../../js/gui_log.js";
 import { useFlightControllerStore } from "@/stores/fc";
 import { useConnectionStore } from "@/stores/connection";
+import { useDialog } from "@/composables/useDialog";
 
 const PROPERTY_DEFINITIONS = {
     MSP_RAW_IMU: {
@@ -170,7 +169,8 @@ const LOG_POLL_INTERVAL = "log_data_poll";
 const LOG_WRITE_INTERVAL = "write_data";
 
 function sendInitialRequests() {
-    if (!CONFIGURATOR.connectionValid) {
+    const connectionStore = useConnectionStore();
+    if (!connectionStore.connectionValid) {
         GUI.content_ready();
         return;
     }
@@ -190,6 +190,7 @@ export default defineComponent({
     setup() {
         const fcStore = useFlightControllerStore();
         const connectionStore = useConnectionStore();
+        const dialog = useDialog();
 
         const selectedProperties = ref([]);
         const samplingInterval = ref(100);
@@ -331,17 +332,17 @@ export default defineComponent({
             }
 
             if (!connectionStore.connectedTo) {
-                gui_log(i18n.getMessage("loggingErrorNotConnected"));
+                dialog.openInfo("Error", i18n.getMessage("loggingErrorNotConnected"));
                 return;
             }
 
             if (!fileEntry.value) {
-                gui_log(i18n.getMessage("loggingErrorLogFile"));
+                dialog.openInfo("Error", i18n.getMessage("loggingErrorLogFile"));
                 return;
             }
 
             if (!selectedProperties.value.length) {
-                gui_log(i18n.getMessage("loggingErrorOneProperty"));
+                dialog.openInfo("Error", i18n.getMessage("loggingErrorOneProperty"));
                 return;
             }
 
@@ -393,7 +394,7 @@ export default defineComponent({
                     fileWriter.value = null;
                 }
                 console.error("Failed to start logging:", error);
-                gui_log(i18n.getMessage("loggingErrorLogFile"));
+                dialog.openInfo("Error", i18n.getMessage("loggingErrorLogFile"));
             } finally {
                 isBusy.value = false;
             }
@@ -401,7 +402,7 @@ export default defineComponent({
 
         async function toggleLogging() {
             if (!isLogging.value && !fileEntry.value) {
-                gui_log(i18n.getMessage("loggingErrorLogFile"));
+                dialog.openInfo("Error", i18n.getMessage("loggingErrorLogFile"));
                 return;
             }
 
