@@ -7845,6 +7845,12 @@
     "labelEmail": {
         "message": "Email"
     },
+    "placeholderEmailAddress": {
+        "message": "Enter email address"
+    },
+    "userEmailRequired": {
+        "message": "Email address is required"
+    },
     "profileLoginMessage": {
         "message": "Please log in to view your profile."
     },

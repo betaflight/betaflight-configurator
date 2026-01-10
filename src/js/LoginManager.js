@@ -14,6 +14,14 @@ class LoginManager {
     _profile = null;
     _onLoginCallbacks = [];
     _onLogoutCallbacks = [];
+    _dialogOpener = null;
+
+    /**
+     * Set the dialog opener callback from Vue component
+     */
+    setDialogOpener(callback) {
+        this._dialogOpener = callback;
+    }
 
     /**
      * Initialize the login manager and set up UI handlers
@@ -48,51 +56,10 @@ class LoginManager {
      * Show the login dialog
      */
     showLoginDialog() {
-        const dialog = $("#dialogLogin");
-        const emailInput = $("#login-email", dialog);
-        const buttonCreate = $("#dialogLogin-passkey-create");
-        const buttonUse = $("#dialogLogin-passkey-use");
-        const closeButton = $(".dialog-close-button", dialog);
-
-        // Clear email input
-        emailInput.val("");
-
-        // Remove old handlers
-        buttonCreate.off("click");
-        buttonUse.off("click");
-        closeButton.off("click");
-
-        // Create Passkey button
-        buttonCreate.on("click", async (e) => {
-            e.preventDefault();
-            const email = emailInput.val().trim();
-
-            // Close dialog immediately
-            if (dialog[0].open) {
-                dialog[0].close();
-            }
-
-            if (email) {
-                await this.createPasskey(email);
-            }
-        });
-
-        // Use Passkey button
-        buttonUse.on("click", async () => {
-            const email = emailInput.val().trim();
-            dialog[0].close();
-
-            if (email) {
-                await this.loginWithPasskey(email);
-            }
-        });
-
-        // Close button (X)
-        closeButton.on("click", () => {
-            dialog[0].close();
-        });
-
-        dialog[0].showModal();
+        // Call the Vue component's dialog opener if available
+        if (this._dialogOpener) {
+            this._dialogOpener();
+        }
     }
 
     /**
@@ -105,75 +72,11 @@ class LoginManager {
             // Request temporary password/verification code
             await this._loginApi.requestTemporaryPassword(email);
             this.hideWaitingDialog();
-
-            // Show verification code dialog
-            this.showVerificationDialog(email);
         } catch (error) {
             this.hideWaitingDialog();
             gui_log(`${i18n.getMessage("userCreatePasskeyFailed")}: ${error}`);
             console.error("Create passkey error:", error);
         }
-    }
-
-    /**
-     * Show verification code dialog for passkey creation
-     */
-    showVerificationDialog(email) {
-        const dialog = $("#dialogVerificationCode");
-        const dialogElement = dialog[0];
-        const codeInput = $("#verification-code-input");
-        const submitBtn = $("#verification-code-submit");
-        const closeBtn = $("#dialogVerificationCode .dialog-close-button");
-
-        // Clear previous input
-        codeInput.val("");
-
-        // Remove old handlers to prevent duplicates
-        submitBtn.off("click");
-        closeBtn.off("click");
-        codeInput.off("keypress");
-
-        // Show dialog
-        dialogElement.showModal();
-
-        // Focus on input when dialog opens
-        const focusHandler = () => {
-            codeInput.focus();
-            dialogElement.removeEventListener("transitionend", focusHandler);
-        };
-        dialogElement.addEventListener("transitionend", focusHandler);
-        // Fallback in case transitionend doesn't fire
-        requestAnimationFrame(() => codeInput.focus());
-
-        // Handle submit button
-        submitBtn.on("click", (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            const code = codeInput.val().trim();
-            if (code) {
-                if (dialogElement.open) {
-                    dialogElement.close();
-                }
-                this.verifyAndCreatePasskey(email, code);
-            }
-        });
-
-        // Handle close button
-        closeBtn.on("click", (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            if (dialogElement.open) {
-                dialogElement.close();
-            }
-        });
-
-        // Handle Enter key
-        codeInput.on("keypress", function (e) {
-            if (e.which === 13) {
-                e.preventDefault();
-                submitBtn.click();
-            }
-        });
     }
 
     /**

@@ -1,11 +1,20 @@
-import { ref, computed, onMounted, onUnmounted } from "vue";
+import { ref, computed, onMounted, onUnmounted, nextTick } from "vue";
 import loginManager from "../../js/LoginManager";
+import { i18n } from "../../js/localization";
 
 export function useUserSession() {
     const isLoggedIn = ref(false);
     const profile = ref(null);
     const menuOpen = ref(false);
     const menuStyle = ref({});
+    const loginEmail = ref("");
+    const loginError = ref(null);
+    const verificationError = ref(null);
+    const verificationCode = ref("");
+    const verificationInputRef = ref(null);
+    const dialogLoginRef = ref(null);
+    const dialogVerificationRef = ref(null);
+    const currentVerificationEmail = ref("");
 
     const displayName = computed(() => {
         return profile.value?.name || profile.value?.email || "";
@@ -16,7 +25,7 @@ export function useUserSession() {
     });
 
     const handleLoginClick = () => {
-        loginManager.showLoginDialog();
+        openLoginDialog();
     };
 
     const updateMenuPosition = () => {
@@ -66,6 +75,89 @@ export function useUserSession() {
         }
     };
 
+    const openLoginDialog = () => {
+        loginEmail.value = "";
+        loginError.value = null;
+        if (dialogLoginRef.value) {
+            dialogLoginRef.value.showModal();
+        }
+    };
+
+    const closeLoginDialog = () => {
+        if (dialogLoginRef.value?.open) {
+            dialogLoginRef.value.close();
+        }
+    };
+
+    const closeVerificationDialog = () => {
+        if (dialogVerificationRef.value?.open) {
+            dialogVerificationRef.value.close();
+        }
+    };
+
+    const openVerificationDialog = (email) => {
+        currentVerificationEmail.value = email;
+        verificationCode.value = "";
+        verificationError.value = null;
+        if (dialogVerificationRef.value) {
+            dialogVerificationRef.value.showModal();
+            // Focus input after dialog opens
+            nextTick(() => {
+                if (verificationInputRef.value) {
+                    verificationInputRef.value.focus();
+                }
+            });
+        }
+    };
+
+    const handleCreatePasskey = async () => {
+        const email = loginEmail.value.trim();
+
+        if (!email) {
+            loginError.value = i18n.getMessage("userEmailRequired");
+            return;
+        }
+
+        try {
+            await loginManager.createPasskey(email);
+            closeLoginDialog();
+            openVerificationDialog(email);
+        } catch (error) {
+            loginError.value = i18n.getMessage("userCreatePasskeyFailed");
+            console.error("Create passkey error:", error);
+        }
+    };
+
+    const handleUsePasskey = async () => {
+        const email = loginEmail.value.trim();
+
+        if (!email) {
+            loginError.value = i18n.getMessage("userEmailRequired");
+            return;
+        }
+
+        try {
+            await loginManager.loginWithPasskey(email);
+            closeLoginDialog();
+        } catch (error) {
+            loginError.value = i18n.getMessage("userLoginFailed");
+            console.error("Login with passkey error:", error);
+        }
+    };
+
+    const handleVerificationSubmit = async () => {
+        const code = verificationCode.value.trim();
+        if (code) {
+            try {
+                await loginManager.verifyAndCreatePasskey(currentVerificationEmail.value, code);
+                closeVerificationDialog();
+            } catch (error) {
+                verificationError.value = i18n.getMessage("userCreatePasskeyFailed");
+                console.error("Verify passkey error:", error);
+            }
+        }
+    };
+
     // Register callbacks for login/logout events
     let unsubscribeLogin;
     let unsubscribeLogout;
@@ -76,6 +168,9 @@ export function useUserSession() {
         // Register login/logout callbacks
         unsubscribeLogin = loginManager.onLogin(updateLoginState);
         unsubscribeLogout = loginManager.onLogout(updateLoginState);
+
+        // Register dialog open callback with LoginManager
+        loginManager.setDialogOpener(openLoginDialog);
 
         // Add click outside listener
         document.addEventListener("click", handleClickOutside);
@@ -91,6 +186,9 @@ export function useUserSession() {
             unsubscribeLogout();
         }
 
+        // Clear dialog opener
+        loginManager.setDialogOpener(null);
+
         // Remove click outside listener
         document.removeEventListener("click", handleClickOutside);
     });
@@ -102,8 +200,20 @@ export function useUserSession() {
         avatarUrl,
         menuOpen,
         menuStyle,
+        loginEmail,
+        loginError,
+        verificationError,
+        verificationCode,
+        verificationInputRef,
+        dialogLoginRef,
+        dialogVerificationRef,
         handleLoginClick,
         toggleMenu,
         handleSignOut,
+        closeLoginDialog,
+        closeVerificationDialog,
+        handleCreatePasskey,
+        handleUsePasskey,
+        handleVerificationSubmit,
     };
 }
