@@ -82,6 +82,8 @@ import MSP from "../../js/msp.js";
 import MSPCodes from "../../js/msp/MSPCodes.js";
 import CONFIGURATOR from "../../js/data_storage.js";
 import { gui_log } from "../../js/gui_log.js";
+import { useFlightControllerStore } from "@/stores/fc";
+import { useConnectionStore } from "@/stores/connection";
 
 const PROPERTY_DEFINITIONS = {
     MSP_RAW_IMU: {
@@ -186,6 +188,9 @@ export default defineComponent({
         BaseTab,
     },
     setup() {
+        const fcStore = useFlightControllerStore();
+        const connectionStore = useConnectionStore();
+
         const selectedProperties = ref([]);
         const samplingInterval = ref(100);
         const samplesSaved = ref(0);
@@ -325,7 +330,7 @@ export default defineComponent({
                 return;
             }
 
-            if (!GUI.connected_to) {
+            if (!connectionStore.connectedTo) {
                 gui_log(i18n.getMessage("loggingErrorNotConnected"));
                 return;
             }
