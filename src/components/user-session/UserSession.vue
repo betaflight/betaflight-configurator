@@ -78,6 +78,7 @@
                             }}</label>
                             <input
                                 v-model="verificationCode"
+                                ref="verificationInputRef"
                                 type="text"
                                 id="verification-code-input"
                                 placeholder=""

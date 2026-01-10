@@ -11,6 +11,7 @@ export function useUserSession() {
     const loginError = ref(null);
     const verificationError = ref(null);
     const verificationCode = ref("");
+    const verificationInputRef = ref(null);
     const dialogLoginRef = ref(null);
     const dialogVerificationRef = ref(null);
     const currentVerificationEmail = ref("");
@@ -102,9 +103,8 @@ export function useUserSession() {
             dialogVerificationRef.value.showModal();
             // Focus input after dialog opens
             nextTick(() => {
-                const input = document.getElementById("verification-code-input");
-                if (input) {
-                    input.focus();
+                if (verificationInputRef.value) {
+                    verificationInputRef.value.focus();
                 }
             });
         }
@@ -153,9 +153,6 @@ export function useUserSession() {
                 closeVerificationDialog();
             } catch (error) {
                 verificationError.value = i18n.getMessage("userCreatePasskeyFailed");
-                if (dialogVerificationRef.value && !dialogVerificationRef.value.open) {
-                    dialogVerificationRef.value.showModal();
-                }
                 console.error("Verify passkey error:", error);
             }
         }
@@ -207,6 +204,7 @@ export function useUserSession() {
         loginError,
         verificationError,
         verificationCode,
+        verificationInputRef,
         dialogLoginRef,
         dialogVerificationRef,
         handleLoginClick,
