@@ -59,6 +59,9 @@
     "storageDeviceNotReady": {
         "message": "The storage device is not ready. In the case of a microSD card, make sure it is properly recognised by your flight controller."
     },
+    "waiting_for_data": {
+        "message": "Waiting for data ..."
+    },
     "connect": {
         "message": "Connect"
     },
