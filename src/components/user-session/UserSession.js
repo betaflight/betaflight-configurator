@@ -114,7 +114,7 @@ export function useUserSession() {
         const email = loginEmail.value.trim();
 
         if (!email) {
-            loginError.value = i18n.getMessage("labelEmail");
+            loginError.value = i18n.getMessage("userEmailRequired");
             return;
         }
 
@@ -124,10 +124,6 @@ export function useUserSession() {
             openVerificationDialog(email);
         } catch (error) {
             loginError.value = i18n.getMessage("userCreatePasskeyFailed");
-            // Keep the dialog open so the user can retry with a different email
-            if (dialogLoginRef.value && !dialogLoginRef.value.open) {
-                dialogLoginRef.value.showModal();
-            }
             console.error("Create passkey error:", error);
         }
     };
