@@ -303,7 +303,6 @@
 import { defineComponent, ref, reactive, computed, onMounted, onUnmounted, nextTick, watch } from "vue";
 import BaseTab from "./BaseTab.vue";
 import GUI from "../../js/gui";
-import FC from "../../js/fc";
 import MSP from "../../js/msp";
 import MSPCodes from "../../js/msp/MSPCodes";
 import { mspHelper } from "../../js/msp/MSPHelper";
@@ -317,11 +316,20 @@ import semver from "semver";
 import { API_VERSION_1_46 } from "../../js/data_storage";
 import { i18n } from "../../js/localization";
 import { bit_check, bit_clear, bit_set } from "../../js/bit";
+import { useFlightControllerStore } from "@/stores/fc";
+import { useConnectionStore } from "@/stores/connection";
+import { useNavigationStore } from "@/stores/navigation";
+import { useDialogStore } from "@/stores/dialog";
 
 export default defineComponent({
     name: "GpsTab",
     components: { BaseTab },
     setup() {
+        const fcStore = useFlightControllerStore();
+        const connectionStore = useConnectionStore();
+        const navigationStore = useNavigationStore();
+        const dialogStore = useDialogStore();
+
         const mapRef = ref(null);
         const mapContainerRef = ref(null);
         const mapInstance = ref(null);
@@ -357,10 +365,10 @@ export default defineComponent({
             i18n.getMessage("gpsSbasNone"),
         ];
 
-        const apiVersion = computed(() => FC.CONFIG.apiVersion);
-        const hasGpsSensor = computed(() => have_sensor(FC.CONFIG.activeSensors, "gps"));
+        const apiVersion = computed(() => fcStore.config.apiVersion);
+        const hasGpsSensor = computed(() => have_sensor(fcStore.config.activeSensors, "gps"));
         const hasMag = computed(
-            () => have_sensor(FC.CONFIG.activeSensors, "mag") && semver.gte(apiVersion.value, API_VERSION_1_46),
+            () => have_sensor(fcStore.config.activeSensors, "mag") && semver.gte(apiVersion.value, API_VERSION_1_46),
         );
 
         const gpsConfig = reactive({
@@ -428,28 +436,25 @@ export default defineComponent({
         const showLoadMap = computed(() => isOnline.value && showMap.value);
 
         const gpsFeatures = computed(() => {
-            if (!FC.FEATURE_CONFIG?.features?._features) {
+            if (!fcStore.features?.features?._features) {
                 return [];
             }
-            return FC.FEATURE_CONFIG.features._features.filter((feature) => feature.group === "gps");
+            return fcStore.features.features._features.filter((feature) => feature.group === "gps");
         });
 
         const isFeatureEnabled = (feature) => {
-            if (!FC.FEATURE_CONFIG?.features) return false;
-            return bit_check(FC.FEATURE_CONFIG.features._featureMask, feature.bit);
+            if (!fcStore.features?.features) return false;
+            return bit_check(fcStore.features.features._featureMask, feature.bit);
         };
 
         const toggleFeature = (feature, checked) => {
-            if (!FC.FEATURE_CONFIG?.features) return;
+            if (!fcStore.features?.features) return;
             if (checked) {
-                FC.FEATURE_CONFIG.features._featureMask = bit_set(FC.FEATURE_CONFIG.features._featureMask, feature.bit);
+                fcStore.features.features._featureMask = bit_set(fcStore.features.features._featureMask, feature.bit);
             } else {
-                FC.FEATURE_CONFIG.features._featureMask = bit_clear(
-                    FC.FEATURE_CONFIG.features._featureMask,
-                    feature.bit,
-                );
+                fcStore.features.features._featureMask = bit_clear(fcStore.features.features._featureMask, feature.bit);
             }
-            updateTabList(FC.FEATURE_CONFIG.features);
+            updateTabList(fcStore.features.features);
         };
 
         const setLayer = (layerKey) => {
@@ -548,30 +553,31 @@ export default defineComponent({
                 return;
             }
 
-            const channels = FC.GPS_DATA?.chn?.length || 0;
+            const gpsData = fcStore.gpsData || {};
+            const channels = gpsData?.chn?.length || 0;
 
             if (channels > 16) {
                 const maxUIChannels = 32;
                 const channelCount = Math.min(maxUIChannels, channels) || 32;
 
                 for (let i = 0; i < channelCount; i++) {
-                    const gnssId = FC.GPS_DATA.chn[i];
+                    const gnssId = gpsData.chn[i];
                     if (gnssId >= 7) {
                         rows.push({ gnss: "-", satId: null, satUsed: false, cno: 0, quality: "", qualityClass: "" });
                         continue;
                     }
 
-                    const satUsed = (FC.GPS_DATA.quality[i] & 0x8) >> 3;
-                    const qualityValue = FC.GPS_DATA.quality[i] & 0x7;
+                    const satUsed = (gpsData.quality[i] & 0x8) >> 3;
+                    const qualityValue = gpsData.quality[i] & 0x7;
                     const quality = i18n.getMessage(qualityArray[qualityValue]);
                     // qualityValue: 5,6,7 = fully locked, 4 = locked, others = low
                     const qualityColor = qualityValue >= 5 ? "ready" : qualityValue === 4 ? "locked" : "low";
 
                     rows.push({
                         gnss: gnssArray[gnssId],
-                        satId: FC.GPS_DATA.svid[i],
+                        satId: gpsData.svid[i],
                         satUsed: !!satUsed,
-                        cno: FC.GPS_DATA.cno[i],
+                        cno: gpsData.cno[i],
                         quality,
                         qualityClass: qualityColor,
                     });
@@ -580,10 +586,10 @@ export default defineComponent({
                 for (let i = 0; i < channels; i++) {
                     rows.push({
                         gnss: "-",
-                        satId: FC.GPS_DATA.svid[i],
+                        satId: gpsData.svid[i],
                         satUsed: false,
-                        cno: FC.GPS_DATA.cno[i],
-                        quality: FC.GPS_DATA.quality[i],
+                        cno: gpsData.cno[i],
+                        quality: gpsData.quality[i],
                         qualityClass: "",
                     });
                 }
@@ -597,28 +603,32 @@ export default defineComponent({
         };
 
         const updateUi = () => {
-            const latitude = (FC.GPS_DATA?.latitude || 0) / 10000000;
-            const longitude = (FC.GPS_DATA?.longitude || 0) / 10000000;
-            const imuHeadingDegrees = FC.SENSOR_DATA?.kinematics?.[2] || 0;
-            const imuHeadingRadians = ((imuHeadingDegrees + 180) * Math.PI) / 180;
-            const gpsHeading = (FC.GPS_DATA?.ground_course || 0) / 10;
-            const alt = FC.GPS_DATA?.alt || 0;
+            const gpsData = fcStore.gpsData || {};
+            const sensorData = fcStore.sensorData || {};
+            const compassConfig = fcStore.compassConfig || {};
 
-            gpsInfo.fix = !!FC.GPS_DATA?.fix;
-            gpsInfo.sats = FC.GPS_DATA?.numSat || 0;
+            const latitude = (gpsData?.latitude || 0) / 10000000;
+            const longitude = (gpsData?.longitude || 0) / 10000000;
+            const imuHeadingDegrees = sensorData?.kinematics?.[2] || 0;
+            const imuHeadingRadians = ((imuHeadingDegrees + 180) * Math.PI) / 180;
+            const gpsHeading = (gpsData?.ground_course || 0) / 10;
+            const alt = gpsData?.alt || 0;
+
+            gpsInfo.fix = !!gpsData?.fix;
+            gpsInfo.sats = gpsData?.numSat || 0;
             gpsInfo.alt = alt;
-            gpsInfo.speed = FC.GPS_DATA?.speed || 0;
+            gpsInfo.speed = gpsData?.speed || 0;
             gpsInfo.headingImu = imuHeadingDegrees;
             gpsInfo.headingGps = gpsHeading;
             gpsInfo.latitude = latitude;
             gpsInfo.longitude = longitude;
-            gpsInfo.distToHome = FC.GPS_DATA?.distanceToHome || 0;
+            gpsInfo.distToHome = gpsData?.distanceToHome || 0;
 
             if (showPositionalDop.value) {
-                const positionalDop = Number(((FC.GPS_DATA?.positionalDop || 0) / 100).toFixed(2));
+                const positionalDop = Number(((gpsData?.positionalDop || 0) / 100).toFixed(2));
                 const { qualityColor, stars } = getPositionalDopQuality(positionalDop);
                 gpsInfo.positionalDopDisplay = `${stars} <span class="colorToggle ${qualityColor}">${positionalDop}</span>`;
-                gpsInfo.magDeclination = hasMag.value ? (FC.COMPASS_CONFIG?.mag_declination || 0).toFixed(1) : null;
+                gpsInfo.magDeclination = hasMag.value ? (compassConfig?.mag_declination || 0).toFixed(1) : null;
             } else {
                 gpsInfo.positionalDopDisplay = "";
                 gpsInfo.magDeclination = null;
@@ -718,10 +728,15 @@ export default defineComponent({
 
         const loadGpsConfig = async () => {
             try {
+                if (!connectionStore.connectionValid) {
+                    GUI.content_ready();
+                    return;
+                }
+
                 await MSP.promise(MSPCodes.MSP_FEATURE_CONFIG);
                 await MSP.promise(MSPCodes.MSP_GPS_CONFIG);
 
-                Object.assign(gpsConfig, FC.GPS_CONFIG || {});
+                Object.assign(gpsConfig, fcStore.gpsConfig || {});
 
                 isOnline.value = ispConnected();
                 isWaiting.value = true;
@@ -740,7 +755,7 @@ export default defineComponent({
         };
 
         const saveConfig = async () => {
-            Object.assign(FC.GPS_CONFIG, gpsConfig);
+            Object.assign(fcStore.gpsConfig, gpsConfig);
 
             await MSP.promise(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG));
             await MSP.promise(MSPCodes.MSP_SET_GPS_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_GPS_CONFIG));
@@ -774,7 +789,7 @@ export default defineComponent({
             document.addEventListener("MSFullscreenChange", handleFullscreenChange);
         });
 
-        onUnmounted(() => {
+        const teardown = () => {
             localIntervals.forEach((name) => GUI.interval_remove(name));
             localIntervals.length = 0;
             document.removeEventListener("fullscreenchange", handleFullscreenChange);
@@ -783,6 +798,12 @@ export default defineComponent({
             if (mapInstance.value?.destroy) {
                 mapInstance.value.destroy();
             }
+            dialogStore.close();
+        };
+
+        onUnmounted(() => {
+            navigationStore.cleanup(teardown);
+            teardown();
         });
 
         watch(showLoadMap, (visible) => {
