@@ -5,7 +5,7 @@
             <div class="cf_doc_version_bt">
                 <a
                     id="button-documentation"
-                    href="https://betaflight.com/docs/wiki/configurator/ports-tab"
+                    href="https://betaflight.com/docs/wiki/app/ports-tab"
                     target="_blank"
                     rel="noopener noreferrer"
                     :aria-label="$t('betaflightSupportButton')"

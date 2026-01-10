@@ -308,7 +308,7 @@ class GuiControl {
 
         $("div#content #button-documentation")
             .html(i18n.getMessage("betaflightSupportButton"))
-            .attr("href", `https://betaflight.com/docs/wiki/configurator/${tRex}-tab`);
+            .attr("href", `https://betaflight.com/docs/wiki/app/${tRex}-tab`);
 
         // loading tooltip
         $(function () {
