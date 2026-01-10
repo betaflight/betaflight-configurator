@@ -33,14 +33,17 @@
             </div>
 
             <!-- Login Dialog -->
-            <dialog id="dialogLogin" class="login-dialog">
+            <dialog ref="dialogLoginRef" class="login-dialog">
                 <div class="dialog-container">
-                    <button class="dialog-close-button" aria-label="Close">&times;</button>
+                    <button class="dialog-close-button" aria-label="Close" @click.prevent="closeLoginDialog">
+                        &times;
+                    </button>
                     <h3 class="dialog-title">{{ $t("titleLogin") }}</h3>
                     <div class="dialog-content">
                         <div class="dialog-input-group">
                             <label for="login-email" class="dialog-label">{{ $t("labelEmail") }}</label>
                             <input
+                                v-model="loginEmail"
                                 type="email"
                                 id="login-email"
                                 placeholder="Enter email address"
@@ -49,11 +52,11 @@
                         </div>
                     </div>
                     <div class="dialog-buttons dialog-buttons-split">
-                        <a href="#" id="dialogLogin-passkey-create" class="regular-button dialog-passkey-button">{{
+                        <a href="#" class="regular-button dialog-passkey-button" @click.prevent="handleCreatePasskey">{{
                             $t("labelCreatePasskey")
                         }}</a>
                         <span class="dialog-separator">OR</span>
-                        <a href="#" id="dialogLogin-passkey-use" class="regular-button dialog-passkey-button">{{
+                        <a href="#" class="regular-button dialog-passkey-button" @click.prevent="handleUsePasskey">{{
                             $t("labelUsePasskey")
                         }}</a>
                     </div>
@@ -61,22 +64,34 @@
             </dialog>
 
             <!-- Verification Code Dialog -->
-            <dialog id="dialogVerificationCode" class="login-dialog">
+            <dialog ref="dialogVerificationRef" class="login-dialog">
                 <div class="dialog-container">
-                    <button class="dialog-close-button" aria-label="Close">&times;</button>
+                    <button class="dialog-close-button" aria-label="Close" @click.prevent="closeVerificationDialog">
+                        &times;
+                    </button>
                     <h3 class="dialog-title">{{ $t("titleEnterVerificationCode") }}</h3>
                     <div class="dialog-content">
                         <div class="dialog-input-group">
                             <label for="verification-code-input" class="dialog-label">{{
                                 $t("labelVerificationCode")
                             }}</label>
-                            <input type="text" id="verification-code-input" placeholder="" class="dialog-input" />
+                            <input
+                                v-model="verificationCode"
+                                type="text"
+                                id="verification-code-input"
+                                placeholder=""
+                                class="dialog-input"
+                                @keypress.enter="handleVerificationSubmit"
+                            />
                         </div>
                     </div>
                     <div class="dialog-buttons">
-                        <a href="#" id="verification-code-submit" class="regular-button dialog-submit-button">{{
-                            $t("submit")
-                        }}</a>
+                        <a
+                            href="#"
+                            class="regular-button dialog-submit-button"
+                            @click.prevent="handleVerificationSubmit"
+                            >{{ $t("submit") }}</a
+                        >
                     </div>
                 </div>
             </dialog>

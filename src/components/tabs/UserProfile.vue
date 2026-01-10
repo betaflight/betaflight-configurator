@@ -208,7 +208,7 @@ export default defineComponent({
             if (this.profile?.avatar) {
                 return this.profile.avatar;
             }
-            return "images/default-user-avatar-loggedin.png";
+            return "/images/default-user-avatar-loggedin.png";
         },
     },
     methods: {
