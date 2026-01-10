@@ -28,7 +28,15 @@ class GuiControl {
         this.reboot_timestamp = 0;
         this.REBOOT_CONNECT_MAX_TIME_MS = 10000;
 
-        this.defaultAllowedTabsWhenDisconnected = ["landing", "firmware_flasher", "privacy_policy", "options", "help"];
+        this.defaultAllowedTabsWhenDisconnected = [
+            "landing",
+            "firmware_flasher",
+            "privacy_policy",
+            "options",
+            "help",
+            "user_profile",
+            "backups",
+        ];
 
         this.defaultAllowedTabs = [
             "setup",
@@ -302,7 +310,7 @@ class GuiControl {
             .html(i18n.getMessage("betaflightSupportButton"))
             .attr("href", `https://betaflight.com/docs/wiki/configurator/${tRex}-tab`);
 
-        // Create tooltips once page is "ready"
+        // loading tooltip
         $(function () {
             $(".cf_tip, .cf_tip_wide").each((_, element) => {
                 const jQueryElement = $(element);

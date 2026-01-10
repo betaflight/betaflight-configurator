@@ -629,7 +629,7 @@
         "message" : "Using cached builds information for $1."
     },
     "buildServerSupportRequestSubmission": {
-        "message": "<br>*** Support data submitted *** <br>Id: $1<br><br><br># copy ID and provide to the betaflight team."
+        "message": "<br>*** Support data submitted *** <br>ID: $1<br><br><br># copy ID and provide to the betaflight team."
     },
     "buildKey": {
         "message": "Build Key: <strong>$1</strong>"
@@ -7838,5 +7838,218 @@
     "osdSetupPreviewCheckRulers": {
         "message": "Rulers",
         "description": "Label for the checkbox to toggle OSD preview rulers around the preview"
+    },
+    "tabUserProfile": {
+        "message": "User Profile"
+    },
+    "labelEmail": {
+        "message": "Email"
+    },
+    "profileLoginMessage": {
+        "message": "Please log in to view your profile."
+    },
+    "tabBackups": {
+        "message": "Backups"
+    },
+    "userPasskeyDeleteSuccess": {
+        "message": "Passkey deleted successfully"
+    },
+    "userPasskeyDeleteFailed": {
+        "message": "Failed to delete passkey"
+    },
+    "userTokenDeleteSuccess": {
+        "message": "Token deleted successfully"
+    },
+    "userTokenDeleteFailed": {
+        "message": "Failed to delete token"
+    },
+    "userProfileLoadFailed": {
+        "message": "Failed to load user profile"
+    },
+    "userTokenLoadFailed": {
+        "message": "Failed to load user tokens"
+    },
+    "userPasskeyLoadFailed": {
+        "message": "Failed to load user passkeys"
+    },
+    "userProfileUpdateSuccess": {
+        "message": "Profile updated successfully"
+    },
+    "userProfileUpdateFailed": {
+        "message": "Failed to update profile"
+    },
+    "userBackupsLoadFailed": {
+        "message": "Failed to load backups"
+    },
+    "userBackupDownloadFailed": {
+        "message": "Failed to download backup"
+    },
+    "userBackupUpdateSuccess": {
+        "message": "Backup updated successfully"
+    },
+    "userBackupUpdateFailed": {
+        "message": "Failed to update backup"
+    },
+    "userBackupDeleteSuccess": {
+        "message": "Backup deleted successfully"
+    },
+    "userBackupDeleteFailed": {
+        "message": "Failed to delete backup"
+    },
+    "userPasskeyNoPasskeys": {
+        "message": "No passkeys available"
+    },
+    "userTokenNoTokens": {
+        "message": "No tokens available"
+    },
+    "profileBackupSuccess": {
+        "message": "Backup successful"
+    },
+    "profileBackupApiSuccess": {
+        "message": "Backup successfully saved to API"
+    },
+    "profileBackupApiFail": {
+        "message": "Backup failed to save to API"
+    },
+    "profileBackupEmptyResult": {
+        "message": "Backup unsuccessful"
+    },
+    "labelSignCounter": {
+        "message": "Sign Counter"
+    },
+    "labelLogin": {
+        "message": "Login"
+    },
+    "labelSignOut": {
+        "message": "Sign Out"
+    },
+    "labelCreatePasskey": {
+        "message": "Create Passkey"
+    },
+    "labelUsePasskey": {
+        "message": "Use Passkey"
+    },
+    "titleEnterVerificationCode": {
+        "message": "Enter Verification Code"
+    },
+    "labelVerificationCode": {
+        "message": "Verification Code"
+    },
+    "labelCode": {
+        "message": "Code"
+    },
+    "userLoggingIn": {
+        "message": "Logging in..."
+    },
+    "userSignedOut": {
+        "message": "Signed Out"
+    },
+    "userSignOutFailed": {
+        "message": "Failed to sign out"
+    },
+    "userLoginSuccess": {
+        "message": "Login successful"
+    },
+    "userLoginFailed": {
+        "message": "Login failed"
+    },
+    "userCreatePasskeyFailed": {
+        "message": "Failed to create passkey"
+    },
+    "userCreatePasskeySuccess": {
+        "message": "Passkey created successfully"
+    },
+    "userVerifyingCode": {
+        "message": "Verifying code..."
+    },
+    "userCreatingPasskey": {
+        "message": "Creating passkey..."
+    },
+    "dataWaitingForData": {
+        "message": "Waiting for data ..."
+    },
+    "labelId": {
+        "message": "ID"
+    },
+    "labelCreated": {
+        "message": "Created"
+    },
+    "labelUpdated": {
+        "message": "Updated"
+    },
+    "labelActions": {
+        "message": "Actions"
+    },
+    "labelDetails": {
+        "message": "Details"
+    },
+    "labelExpiry": {
+        "message": "Expiry"
+    },
+    "labelDescription": {
+        "message": "Description"
+    },
+    "labelDate": {
+        "message": "Date"
+    },
+    "actionDownload": {
+        "message": "Download"
+    },
+    "actionBackup": {
+        "message": "Backup"
+    },
+    "actionEdit": {
+        "message": "Edit"
+    },
+    "actionDelete": {
+        "message": "Delete"
+    },
+    "actionSave": {
+        "message": "Save"
+    },
+    "titleEditProfile": {
+        "message": "Edit Profile"
+    },
+    "titleLogin": {
+        "message": "Login"
+    },
+    "labelName": {
+        "message": "Name"
+    },
+    "labelAddress": {
+        "message": "Address"
+    },
+    "labelCountry": {
+        "message": "Country"
+    },
+    "confirmDelete": {
+        "message": "Are you sure you want to delete this {{item}}?"
+    },
+    "itemBackup": {
+        "message": "backup"
+    },
+    "itemToken": {
+        "message": "token"
+    },
+    "itemPasskey": {
+        "message": "passkey"
+    },
+    "notLoggedIn": {
+        "message": "Not logged in"
+    },
+    "backupNoBackupsAvailable": {
+        "message": "No backups available"
+    },
+    "titleEditBackup": {
+        "message": "Edit Backup"
+    },
+    "backupMcuUnknown": {
+        "message": "MCU unknown"
+    },
+    "sectionUserTokens": {
+        "message": "User Tokens"
+    },
+    "sectionUserPasskeys": {
+        "message": "User Passkeys"
     }
 }
