@@ -1,4 +1,5 @@
 import { get as getConfig } from "./ConfigStorage";
+import { reactive } from "vue";
 import MSP from "./msp";
 import Switchery from "switchery-latest";
 import tippy from "tippy.js";
@@ -649,7 +650,12 @@ class GuiControl {
     }
 }
 
-const GUI = new GuiControl();
+export function createGui() {
+    const gui = new GuiControl();
+    return reactive(gui);
+}
+
+const GUI = createGui();
 
 export { TABS };
 export default GUI;

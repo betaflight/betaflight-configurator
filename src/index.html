@@ -1,349 +1,635 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <head>
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
 
-    <script type="module" src="/src/js/utils/common.js?v=${Date.now()}"></script>
-    <script type="module" src="/src/js/browserMain.js?v=${Date.now()}"></script>
+        <script type="module" src="/src/js/utils/common.js"></script>
+        <script type="module" src="/src/js/browserMain.js"></script>
 
-    <title>Betaflight</title>
-    <meta name="description" content="Configuration and management tool for the Betaflight flight control firmware">
-    <link rel="icon" href="/images/pwa/favicon.ico">
-    <link rel="apple-touch-icon" href="/images/pwa/apple-touch-icon.png" sizes="128x128">
-    <meta name="theme-color" content="#eea600">
-</head>
-<body>
-<div id="main-wrapper">
-    <div id="background"></div>
-    <div id="side_menu_swipe"></div>
-    <div class="headerbar">
-        <div id="menu_btn">
-            <em class="fas fa-bars"></em>
-        </div>
-        <betaflight-logo
-            :configurator-version="CONFIGURATOR.getDisplayVersion()"
-            :firmware-version="FC.CONFIG.flightControllerVersion"
-            :firmware-id="FC.CONFIG.flightControllerIdentifier"
-            :hardware-id="FC.CONFIG.hardwareName"
-        ></betaflight-logo>
-        <port-picker
-            v-model="PortHandler.portPicker"
-            :connected-bluetooth-devices="PortHandler.currentBluetoothPorts"
-            :connected-serial-devices="PortHandler.currentSerialPorts"
-            :connected-usb-devices="PortHandler.currentUsbPorts"
-            :show-virtual-option="PortHandler.showVirtualMode"
-            :show-manual-option="PortHandler.showManualMode"
-            :show-bluetooth-option="PortHandler.showBluetoothOption"
-            :show-serial-option="PortHandler.showSerialOption"
-            :show-usb-option="PortHandler.showUsbOption"
-            :disabled="PortHandler.portPickerDisabled"
-        ></port-picker>
-        <div class="header-wrapper">
-            <div id="quad-status_wrapper">
-                <battery-icon
-                    :voltage="FC.ANALOG.voltage"
-                    :vbatmincellvoltage="FC.BATTERY_CONFIG.vbatmincellvoltage"
-                    :vbatmaxcellvoltage="FC.BATTERY_CONFIG.vbatmaxcellvoltage"
-                    :vbatwarningcellvoltage="FC.BATTERY_CONFIG.vbatwarningcellvoltage"
-                    :batteryState="FC.BATTERY_STATE?.batteryState"
-                >
-                </battery-icon>
-                <battery-legend
-                    :voltage="FC.ANALOG.voltage"
-                    :vbatmaxcellvoltage="FC.BATTERY_CONFIG.vbatmaxcellvoltage"
-                ></battery-legend>
-                <div class="bottomStatusIcons">
-                    <div class="armedicon cf_tip" i18n_title="mainHelpArmed"></div>
-                    <div class="failsafeicon cf_tip" i18n_title="mainHelpFailsafe"></div>
-                    <div class="linkicon cf_tip" i18n_title="mainHelpLink"></div>
+        <title>Betaflight</title>
+        <meta
+            name="description"
+            content="Configuration and management tool for the Betaflight flight control firmware"
+        />
+        <link rel="icon" href="/images/pwa/favicon.ico" />
+        <link rel="apple-touch-icon" href="/images/pwa/apple-touch-icon.png" sizes="128x128" />
+        <meta name="theme-color" content="#eea600" />
+    </head>
+    <body>
+        <div id="main-wrapper">
+            <div id="background"></div>
+            <div id="side_menu_swipe"></div>
+            <div class="headerbar">
+                <div id="menu_btn">
+                    <em class="fas fa-bars"></em>
+                </div>
+                <betaflight-logo
+                    :configurator-version="CONFIGURATOR.getDisplayVersion()"
+                    :firmware-version="FC.CONFIG.flightControllerVersion"
+                    :firmware-id="FC.CONFIG.flightControllerIdentifier"
+                    :hardware-id="FC.CONFIG.hardwareName"
+                ></betaflight-logo>
+                <port-picker
+                    v-model="PortHandler.portPicker"
+                    :connected-bluetooth-devices="PortHandler.currentBluetoothPorts"
+                    :connected-serial-devices="PortHandler.currentSerialPorts"
+                    :connected-usb-devices="PortHandler.currentUsbPorts"
+                    :show-virtual-option="PortHandler.showVirtualMode"
+                    :show-manual-option="PortHandler.showManualMode"
+                    :show-bluetooth-option="PortHandler.showBluetoothOption"
+                    :show-serial-option="PortHandler.showSerialOption"
+                    :show-usb-option="PortHandler.showUsbOption"
+                    :disabled="PortHandler.portPickerDisabled"
+                ></port-picker>
+                <div class="header-wrapper">
+                    <div id="quad-status_wrapper">
+                        <battery-icon
+                            :voltage="FC.ANALOG.voltage"
+                            :vbatmincellvoltage="FC.BATTERY_CONFIG.vbatmincellvoltage"
+                            :vbatmaxcellvoltage="FC.BATTERY_CONFIG.vbatmaxcellvoltage"
+                            :vbatwarningcellvoltage="FC.BATTERY_CONFIG.vbatwarningcellvoltage"
+                            :batteryState="FC.BATTERY_STATE?.batteryState"
+                        >
+                        </battery-icon>
+                        <battery-legend
+                            :voltage="FC.ANALOG.voltage"
+                            :vbatmaxcellvoltage="FC.BATTERY_CONFIG.vbatmaxcellvoltage"
+                        ></battery-legend>
+                        <div class="bottomStatusIcons">
+                            <div class="armedicon cf_tip" i18n_title="mainHelpArmed"></div>
+                            <div class="failsafeicon cf_tip" i18n_title="mainHelpFailsafe"></div>
+                            <div class="linkicon cf_tip" i18n_title="mainHelpLink"></div>
+                        </div>
+                    </div>
+                    <div id="sensor-status" class="sensor_state mode-connected">
+                        <ul>
+                            <li class="gyro" i18n_title="sensorStatusGyro">
+                                <div class="gyroicon" i18n="sensorStatusGyroShort"></div>
+                            </li>
+                            <li class="accel" i18n_title="sensorStatusAccel">
+                                <div class="accicon" i18n="sensorStatusAccelShort"></div>
+                            </li>
+                            <li class="mag" i18n_title="sensorStatusMag">
+                                <div class="magicon" i18n="sensorStatusMagShort"></div>
+                            </li>
+                            <li class="baro" i18n_title="sensorStatusBaro">
+                                <div class="baroicon" i18n="sensorStatusBaroShort"></div>
+                            </li>
+                            <li class="gps" i18n_title="sensorStatusGPS">
+                                <div class="gpsicon" i18n="sensorStatusGPSShort"></div>
+                            </li>
+                            <li class="sonar" i18n_title="sensorStatusSonar">
+                                <div class="sonaricon" i18n="sensorStatusSonarShort"></div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div id="dataflash_wrapper_global">
+                        <div class="noflash_global" i18n="sensorDataFlashNotFound"></div>
+                        <ul class="dataflash-contents_global">
+                            <div class="legend" i18n="sensorDataFlashFreeSpace"></div>
+                            <progress class="dataflash-progress_global" max="100"></progress>
+                        </ul>
+                        <div id="expertMode">
+                            <label>
+                                <input
+                                    name="expertModeCheckbox"
+                                    class="togglesmall"
+                                    type="checkbox"
+                                    v-model="expertMode"
+                                />
+                                <span i18n="expertMode" class="expertModeText"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div id="header_buttons">
+                    <div class="firmware_flasher_button">
+                        <a class="firmware_flasher_button__link disabled" href="#" aria-label="Firmware Flasher"></a>
+                        <div class="firmware_flasher_button__label" i18n="flashTab"></div>
+                    </div>
+                    <div class="connection_button">
+                        <a class="connection_button__link disabled" href="#" aria-label="Connect"></a>
+                        <div class="connection_button__label" i18n="connect"></div>
+                    </div>
+                </div>
+                <div id="reveal_btn">
+                    <em class="fas fa-chevron-down"></em>
                 </div>
             </div>
-            <div id="sensor-status" class="sensor_state mode-connected">
-                <ul>
-                    <li class="gyro" i18n_title="sensorStatusGyro">
-                        <div class="gyroicon" i18n="sensorStatusGyroShort"></div>
-                    </li>
-                    <li class="accel" i18n_title="sensorStatusAccel">
-                        <div class="accicon" i18n="sensorStatusAccelShort"></div>
-                    </li>
-                    <li class="mag" i18n_title="sensorStatusMag">
-                        <div class="magicon" i18n="sensorStatusMagShort"></div>
-                    </li>
-                    <li class="baro" i18n_title="sensorStatusBaro">
-                        <div class="baroicon" i18n="sensorStatusBaroShort"></div>
-                    </li>
-                    <li class="gps" i18n_title="sensorStatusGPS">
-                        <div class="gpsicon" i18n="sensorStatusGPSShort"></div>
-                    </li>
-                    <li class="sonar" i18n_title="sensorStatusSonar">
-                        <div class="sonaricon" i18n="sensorStatusSonarShort"></div>
-                    </li>
-                </ul>
-            </div>
-            <div id="dataflash_wrapper_global">
-                <div class="noflash_global" i18n="sensorDataFlashNotFound"></div>
-                <ul class="dataflash-contents_global">
-                    <div class="legend" i18n="sensorDataFlashFreeSpace"></div>
-                    <progress class="dataflash-progress_global" max="100"></progress>
-                </ul>
-                <div id="expertMode">
-                    <label>
-                        <input name="expertModeCheckbox" class="togglesmall" type="checkbox" v-model="expertMode"/>
-                        <span i18n="expertMode" class="expertModeText"></span>
-                    </label>
+            <div id="log">
+                <div class="logswitch">
+                    <a href="#" id="showlog" i18n="logActionShow"></a>
                 </div>
+                <div id="scrollicon"></div>
+                <div class="wrapper"></div>
             </div>
-        </div>
-        <div id="header_buttons">
-            <div class="firmware_flasher_button">
-                <a class="firmware_flasher_button__link disabled" href="#" aria-label="Firmware Flasher"></a>
-                <div class="firmware_flasher_button__label" i18n="flashTab"></div>
+            <div id="tab-content-container">
+                <div class="tab_container">
+                    <betaflight-logo
+                        :configurator-version="CONFIGURATOR.getDisplayVersion()"
+                        :firmware-version="FC.CONFIG.flightControllerVersion"
+                        :firmware-id="FC.CONFIG.flightControllerIdentifier"
+                        :hardware-id="FC.CONFIG.hardwareName"
+                    ></betaflight-logo>
+                    <div id="tabs">
+                        <ul class="mode-disconnected">
+                            <li class="tab_landing" id="tab_landing">
+                                <a href="#" i18n="tabLanding" class="tabicon ic_welcome" i18n_title="tabLanding"></a>
+                            </li>
+                            <li class="tab_privacy_policy">
+                                <a href="#" class="tabicon ic_help" i18n="tabPrivacyPolicy"></a>
+                            </li>
+                            <li class="tab_help" id="tab_help">
+                                <a href="#" i18n="tabHelp" class="tabicon ic_help" i18n_title="tabHelp"></a>
+                            </li>
+                            <li class="tab_options" id="tab_options">
+                                <a href="#" i18n="tabOptions" class="tabicon ic_config" i18n_title="tabOptions"></a>
+                            </li>
+                            <li class="tab_firmware_flasher" id="tabFirmware">
+                                <a
+                                    href="#"
+                                    i18n="tabFirmwareFlasher"
+                                    class="tabicon ic_flasher"
+                                    i18n_title="tabFirmwareFlasher"
+                                ></a>
+                            </li>
+                        </ul>
+                        <ul class="mode-connected">
+                            <li class="tab_setup">
+                                <a href="#" i18n="tabSetup" class="tabicon ic_setup" i18n_title="tabSetup"></a>
+                            </li>
+                            <li class="tab_setup_osd">
+                                <a href="#" i18n="tabSetupOSD" class="tabicon ic_setup" i18n_title="tabSetupOSD"></a>
+                            </li>
+                            <li class="tab_ports">
+                                <a href="#" i18n="tabPorts" class="tabicon ic_ports" i18n_title="tabPorts"></a>
+                            </li>
+                            <li class="tab_configuration">
+                                <a
+                                    href="#"
+                                    i18n="tabConfiguration"
+                                    class="tabicon ic_config"
+                                    i18n_title="tabConfiguration"
+                                ></a>
+                            </li>
+                            <li class="tab_power">
+                                <a href="#" i18n="tabPower" class="tabicon ic_power" i18n_title="tabPower"></a>
+                            </li>
+                            <li class="tab_failsafe" v-show="expertMode">
+                                <a href="#" i18n="tabFailsafe" class="tabicon ic_failsafe" i18n_title="tabFailsafe"></a>
+                            </li>
+                            <li class="tab_presets">
+                                <a href="#" i18n="tabPresets" class="tabicon ic_wizzard" i18n_title="tabPresets"></a>
+                            </li>
+                            <li class="tab_pid_tuning">
+                                <a href="#" i18n="tabPidTuning" class="tabicon ic_pid" i18n_title="tabPidTuning"></a>
+                            </li>
+                            <li class="tab_receiver">
+                                <a href="#" i18n="tabReceiver" class="tabicon ic_rx" i18n_title="tabReceiver"></a>
+                            </li>
+                            <li class="tab_auxiliary">
+                                <a href="#" i18n="tabAuxiliary" class="tabicon ic_modes" i18n_title="tabAuxiliary"></a>
+                            </li>
+                            <li class="tab_adjustments" v-show="expertMode">
+                                <a
+                                    href="#"
+                                    i18n="tabAdjustments"
+                                    class="tabicon ic_adjust"
+                                    i18n_title="tabAdjustments"
+                                ></a>
+                            </li>
+                            <li
+                                class="tab_servos"
+                                v-show="['USE_SERVOS','USE_WING'].some(opt => FC.CONFIG?.buildOptions?.includes(opt))"
+                            >
+                                <a href="#" i18n="tabServos" class="tabicon ic_servo" i18n_title="tabServos"></a>
+                            </li>
+                            <li class="tab_gps" v-show="FC.CONFIG?.buildOptions?.includes('USE_GPS')">
+                                <a href="#" i18n="tabGPS" class="tabicon ic_gps" i18n_title="tabGPS"></a>
+                            </li>
+                            <li class="tab_motors">
+                                <a
+                                    href="#"
+                                    i18n="tabMotorTesting"
+                                    class="tabicon ic_motor"
+                                    i18n_title="tabMotorTesting"
+                                ></a>
+                            </li>
+                            <li
+                                class="tab_osd"
+                                v-show="FC.FEATURE_CONFIG?.features?.isEnabled && FC.FEATURE_CONFIG.features.isEnabled('OSD')"
+                            >
+                                <a href="#" i18n="tabOsd" class="tabicon ic_osd" i18n_title="tabOsd"></a>
+                            </li>
+                            <li class="tab_vtx">
+                                <a href="#" i18n="tabVtx" class="tabicon ic_vtx" i18n_title="tabVtx"></a>
+                            </li>
+                            <li
+                                class="tab_transponder"
+                                v-show="FC.FEATURE_CONFIG?.features?.isEnabled && FC.FEATURE_CONFIG.features.isEnabled('TRANSPONDER')"
+                            >
+                                <a
+                                    href="#"
+                                    i18n="tabTransponder"
+                                    class="tabicon ic_transponder"
+                                    i18n_title="tabTransponder"
+                                ></a>
+                            </li>
+                            <li
+                                class="tab_led_strip"
+                                v-show="FC.FEATURE_CONFIG?.features?.isEnabled && FC.FEATURE_CONFIG.features.isEnabled('LED_STRIP')"
+                            >
+                                <a href="#" i18n="tabLedStrip" class="tabicon ic_led" i18n_title="tabLedStrip"></a>
+                            </li>
+                            <li class="tab_sensors" v-show="expertMode">
+                                <a
+                                    href="#"
+                                    i18n="tabRawSensorData"
+                                    class="tabicon ic_sensors"
+                                    i18n_title="tabRawSensorData"
+                                ></a>
+                            </li>
+                            <li class="tab_logging" v-show="expertMode">
+                                <a href="#" i18n="tabLogging" class="tabicon ic_log" i18n_title="tabLogging"></a>
+                            </li>
+                            <li class="tab_onboard_logging">
+                                <a
+                                    href="#"
+                                    i18n="tabOnboardLogging"
+                                    class="tabicon ic_data"
+                                    i18n_title="tabOnboardLogging"
+                                ></a>
+                            </li>
+                        </ul>
+                        <ul class="mode-connected mode-connected-cli">
+                            <li class="tab_cli">
+                                <a href="#" i18n="tabCLI" class="tabicon ic_cli" i18n_title="tabCLI"></a>
+                            </li>
+                        </ul>
+                    </div>
+                    <ul class="mode-loggedin">
+                        <li class="tab_backups">
+                            <a href="#" class="tabicon ic_data" i18n_title="tabBackups">
+                                <span i18n="tabBackups">Backups</span>
+                            </a>
+                        </li>
+                        <li class="tab_user_profile">
+                            <a href="#" class="tabicon ic_user" i18n_title="tabUserProfile">
+                                <span i18n="tabUserProfile">User Profile</span>
+                            </a>
+                        </li>
+                    </ul>
+                    <user-session></user-session>
+                    <div class="clear-both"></div>
+                </div>
+                <div id="content"></div>
             </div>
-            <div class="connection_button">
-                <a class="connection_button__link disabled" href="#" aria-label="Connect"></a>
-                <div class="connection_button__label" i18n="connect"></div>
-            </div>
-        </div>
-        <div id="reveal_btn">
-            <em class="fas fa-chevron-down"></em>
-        </div>
-    </div>
-    <div id="log">
-        <div class="logswitch">
-            <a href="#" id="showlog" i18n="logActionShow"></a>
-        </div>
-        <div id="scrollicon"></div>
-        <div class="wrapper"></div>
-    </div>
-    <div id="tab-content-container">
-        <div class="tab_container">
-            <betaflight-logo
+            <status-bar
+                :port-usage-down="PortUsage.port_usage_down"
+                :port-usage-up="PortUsage.port_usage_up"
+                :connection-timestamp="CONNECTION.timestamp"
+                :packet-error="MSP.packet_error"
+                :i2c-error="FC.CONFIG.i2cError"
+                :cycle-time="FC.CONFIG.cycleTime"
+                :cpu-load="FC.CONFIG.cpuload"
                 :configurator-version="CONFIGURATOR.getDisplayVersion()"
                 :firmware-version="FC.CONFIG.flightControllerVersion"
                 :firmware-id="FC.CONFIG.flightControllerIdentifier"
                 :hardware-id="FC.CONFIG.hardwareName"
-            ></betaflight-logo>
-            <div id="tabs">
-                <ul class="mode-disconnected">
-                    <li class="tab_landing" id="tab_landing"><a href="#" i18n="tabLanding" class="tabicon ic_welcome" i18n_title="tabLanding"></a></li>
-                    <li class="tab_privacy_policy"><a href="#" class="tabicon ic_help" i18n="tabPrivacyPolicy"></a></li>
-                    <li class="tab_help" id="tab_help"><a href="#" i18n="tabHelp" class="tabicon ic_help" i18n_title="tabHelp"></a></li>
-                    <li class="tab_options" id="tab_options"><a href="#" i18n="tabOptions" class="tabicon ic_config" i18n_title="tabOptions"></a></li>
-                    <li class="tab_firmware_flasher" id="tabFirmware"><a href="#" i18n="tabFirmwareFlasher" class="tabicon ic_flasher" i18n_title="tabFirmwareFlasher"></a></li>
-                </ul>
-                <ul class="mode-connected">
-                    <li class="tab_setup"><a href="#" i18n="tabSetup" class="tabicon ic_setup" i18n_title="tabSetup"></a></li>
-                    <li class="tab_setup_osd"><a href="#" i18n="tabSetupOSD" class="tabicon ic_setup" i18n_title="tabSetupOSD"></a></li>
-                    <li class="tab_ports"><a href="#" i18n="tabPorts" class="tabicon ic_ports" i18n_title="tabPorts"></a></li>
-                    <li class="tab_configuration"><a href="#" i18n="tabConfiguration" class="tabicon ic_config" i18n_title="tabConfiguration"></a></li>
-                    <li class="tab_power"><a href="#" i18n="tabPower" class="tabicon ic_power" i18n_title="tabPower"></a></li>
-                    <li class="tab_failsafe" v-show="expertMode"><a href="#" i18n="tabFailsafe" class="tabicon ic_failsafe" i18n_title="tabFailsafe"></a></li>
-                    <li class="tab_presets"><a href="#" i18n="tabPresets" class="tabicon ic_wizzard" i18n_title="tabPresets"></a></li>
-                    <li class="tab_pid_tuning"><a href="#" i18n="tabPidTuning" class="tabicon ic_pid" i18n_title="tabPidTuning"></a></li>
-                    <li class="tab_receiver"><a href="#" i18n="tabReceiver" class="tabicon ic_rx" i18n_title="tabReceiver"></a></li>
-                    <li class="tab_auxiliary"><a href="#" i18n="tabAuxiliary" class="tabicon ic_modes" i18n_title="tabAuxiliary"></a></li>
-                    <li class="tab_adjustments" v-show="expertMode"><a href="#" i18n="tabAdjustments" class="tabicon ic_adjust" i18n_title="tabAdjustments"></a></li>
-                    <li class="tab_servos" v-show="['USE_SERVOS','USE_WING'].some(opt => FC.CONFIG?.buildOptions?.includes(opt))"><a href="#" i18n="tabServos" class="tabicon ic_servo" i18n_title="tabServos"></a></li>
-                    <li class="tab_gps" v-show="FC.CONFIG?.buildOptions?.includes('USE_GPS')"><a href="#" i18n="tabGPS" class="tabicon ic_gps" i18n_title="tabGPS"></a></li>
-                    <li class="tab_motors"><a href="#" i18n="tabMotorTesting" class="tabicon ic_motor" i18n_title="tabMotorTesting"></a></li>
-                    <li class="tab_osd" v-show="FC.FEATURE_CONFIG?.features?.isEnabled && FC.FEATURE_CONFIG.features.isEnabled('OSD')"><a href="#" i18n="tabOsd" class="tabicon ic_osd" i18n_title="tabOsd"></a></li>
-                    <li class="tab_vtx"><a href="#" i18n="tabVtx" class="tabicon ic_vtx" i18n_title="tabVtx"></a></li>
-                    <li class="tab_transponder" v-show="FC.FEATURE_CONFIG?.features?.isEnabled && FC.FEATURE_CONFIG.features.isEnabled('TRANSPONDER')"><a href="#" i18n="tabTransponder" class="tabicon ic_transponder" i18n_title="tabTransponder"></a></li>
-                    <li class="tab_led_strip" v-show="FC.FEATURE_CONFIG?.features?.isEnabled && FC.FEATURE_CONFIG.features.isEnabled('LED_STRIP')"><a href="#" i18n="tabLedStrip" class="tabicon ic_led" i18n_title="tabLedStrip"></a></li>
-                    <li class="tab_sensors" v-show="expertMode"><a href="#" i18n="tabRawSensorData" class="tabicon ic_sensors" i18n_title="tabRawSensorData"></a></li>
-                    <li class="tab_logging" v-show="expertMode"><a href="#" i18n="tabLogging" class="tabicon ic_log" i18n_title="tabLogging"></a></li>
-                    <li class="tab_onboard_logging"><a href="#" i18n="tabOnboardLogging" class="tabicon ic_data" i18n_title="tabOnboardLogging"></a></li>
-                </ul>
-                <ul class="mode-connected mode-connected-cli">
-                    <li class="tab_cli"><a href="#" i18n="tabCLI" class="tabicon ic_cli" i18n_title="tabCLI"></a></li>
-                </ul>
-                <ul class="mode-loggedin">
-                    <li class="tab_backups"><a href="#" class="tabicon ic_data" i18n_title="tabBackups"><span i18n="tabBackups">Backups</span></a></li>
-                    <li class="tab_user_profile"><a href="#" class="tabicon ic_user" i18n_title="tabUserProfile"><span i18n="tabUserProfile">User Profile</span></a></li>
-                </ul>
-            </div>
-            <user-session></user-session>
-            <div class="clear-both"></div>
-        </div>
-        <div id="content"></div>
-    </div>
-    <status-bar
-            :port-usage-down="PortUsage.port_usage_down"
-            :port-usage-up="PortUsage.port_usage_up"
-            :connection-timestamp="CONNECTION.timestamp"
-            :packet-error="MSP.packet_error"
-            :i2c-error="FC.CONFIG.i2cError"
-            :cycle-time="FC.CONFIG.cycleTime"
-            :cpu-load="FC.CONFIG.cpuload"
-
-            :configurator-version="CONFIGURATOR.getDisplayVersion()"
-            :firmware-version="FC.CONFIG.flightControllerVersion"
-            :firmware-id="FC.CONFIG.flightControllerIdentifier"
-            :hardware-id="FC.CONFIG.hardwareName"
-    ></status-bar>
-    <div id="cache">
-        <div class="data-loading">
-            <p>Waiting for data ...</p>
-        </div>
-    </div>
-</div>
-
-    <dialog id="dialogLogin" style="width: 360px; aspect-ratio: 16 / 9; padding: 20px; border: 1px solid var(--surface-600); border-radius: 8px;">
-        <div style="display: flex; flex-direction: column; height: 100%;">
-            <button class="dialog-close-button" aria-label="Close" style="position: absolute; top: 10px; right: 10px; background: none; border: none; font-size: 24px; cursor: pointer; padding: 0; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; color: var(--text);">&times;</button>
-            <h3 i18n="titleLogin" style="margin: 0 0 15px 0; text-align: center;">Login</h3>
-            <div class="content" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
-                <div class="input-group" style="margin-bottom: 15px;">
-                    <label for="login-email" i18n="labelEmail" style="display: block; margin-bottom: 5px; font-size: 12px;">Email</label>
-                    <input type="email" id="login-email" placeholder="Enter email address" style="width: 100%; padding: 8px; border: 1px solid var(--surface-500); border-radius: 4px; background-color: var(--surface-100); color: var(--text); box-sizing: border-box;">
+            ></status-bar>
+            <div id="cache">
+                <div class="data-loading">
+                    <p i18n="dataWaitingForData">Waiting for data ...</p>
                 </div>
             </div>
-            <div class="buttons" style="display: flex; flex-direction: row; gap: 10px; justify-content: center; align-items: center; text-align: center;">
-                <a href="#" id="dialogLogin-passkey-create" class="regular-button" i18n="labelCreatePasskey" style="padding: 6px 12px; text-decoration: none; font-size: 12px; flex: 1; max-width: 120px;">Create Passkey</a>
-                <span style="font-size: 12px; color: var(--text-secondary); display: flex; align-items: center; flex-shrink: 0;">OR</span>
-                <a href="#" id="dialogLogin-passkey-use" class="regular-button" i18n="labelUsePasskey" style="padding: 6px 12px; text-decoration: none; font-size: 12px; flex: 1; max-width: 120px;">Use Passkey</a>
-            </div>
         </div>
-    </dialog>
 
-    <dialog class="dialogConfiguratorUpdate">
-        <h3 i18n="noticeTitle"></h3>
-        <div class="content">
-            <div class="dialogConfiguratorUpdate-content" style="margin-top: 10px"></div>
-        </div>
-        <div class="buttons">
-            <a href="#" class="dialogConfiguratorUpdate-websitebtn regular-button" i18n="configuratorUpdateWebsite"></a>
-            <a href="#" class="dialogConfiguratorUpdate-closebtn regular-button" i18n="close"></a>
-        </div>
-    </dialog>
-
-    <dialog class="dialogConnectWarning">
-        <h3 i18n="warningTitle"></h3>
-        <div class="content">
-            <div class="dialogConnectWarning-content" style="margin-top: 10px"></div>
-        </div>
-        <div class="buttons">
-            <a href="#" class="dialogConnectWarning-closebtn regular-button" i18n="close"></a>
-        </div>
-    </dialog>
-
-    <dialog id="dialogResetToCustomDefaults">
-        <h3 i18n="noticeTitle"></h3>
-        <div class="content">
-            <div id="dialogResetToCustomDefaults-content" i18n="resetToCustomDefaultsDialog"></div>
-        </div>
-        <div>
-            <span class="buttons">
-                <a href="#" id="dialogResetToCustomDefaults-acceptbtn" class="regular-button" i18n="resetToCustomDefaultsAccept"></a>
-            </span>
-            <span class="buttons">
-                <a href="#" id="dialogResetToCustomDefaults-cancelbtn" class="regular-button" i18n="cancel"></a>
-            </span>
-        </div>
-    </dialog>
-
-    <dialog id="dialogReportProblems">
-        <h3 i18n="warningTitle"></h3>
-        <div class="content">
-            <div id="dialogReportProblems-header" i18n="reportProblemsDialogHeader"></div>
-            <ul id="dialogReportProblems-list">
-                <!-- List elements added dynamically -->
-            </ul>
-            <div id="dialogReportProblems-footer" i18n="reportProblemsDialogFooter"></div>
-        </div>
-        <div>
-            <span class="buttons">
-                <a href="#" id="dialogReportProblems-closebtn" class="regular-button" i18n="close"></a>
-            </span>
-        </div>
-    </dialog>
-
-    <ul class="hidden"> <!-- Sonar says so -->
-        <li id="dialogReportProblems-listItemTemplate" class="dialogReportProblems-listItem"></li>
-    </ul>
-
-    <dialog class="dialogError">
-        <h3 i18n="errorTitle"></h3>
-        <div class="content">
-            <div class="dialogError-content" style="margin-top: 10px"></div>
-        </div>
-        <div class="buttons">
-            <a href="#" class="dialogError-closebtn regular-button" i18n="close"></a>
-        </div>
-    </dialog>
-
-    <dialog class="dialogYesNo">
-        <h3 class="dialogYesNoTitle"></h3>
-        <div class="dialogYesNoContent"></div>
-        <div class="buttons">
-            <a href="#" class="dialogYesNo-yesButton regular-button"></a>
-            <a href="#" class="dialogYesNo-noButton regular-button"></a>
-        </div>
-    </dialog>
-
-    <dialog class="dialogWait">
-        <div class="data-loading"></div>
-        <h3 class="dialogWaitTitle"></h3>
-        <div class="buttons">
-            <a href="#" class="dialogWait-cancelButton regular-button" i18n="cancel"></a>
-        </div>
-    </dialog>
-
-    <dialog class="dialogInformation">
-        <h3 class="dialogInformationTitle"></h3>
-        <div class="dialogInformationContent"></div>
-        <div class="buttons">
-            <a href="#" class="dialogInformation-confirmButton regular-button"></a>
-        </div>
-    </dialog>
-
-    <dialog id="dialogWaiting" style="border: 1px solid var(--surface-600); border-radius: 8px; padding: 30px; min-width: 300px;">
-        <div style="text-align: center;">
-            <div style="margin-bottom: 15px;">
-                <div style="border: 4px solid rgba(255, 255, 255, 0.2); border-top: 4px solid var(--primary-500); border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin: 0 auto;"></div>
-            </div>
-            <p id="dialogWaiting-message" style="font-size: 14px; color: var(--text); margin: 0;">Processing passkey authentication...</p>
-        </div>
-        <style>
-            @keyframes spin {
-                0% { transform: rotate(0deg); }
-                100% { transform: rotate(360deg); }
-            }
-        </style>
-    </dialog>
-    <dialog id="dialogVerificationCode" style="width: 360px; aspect-ratio: 16 / 9; padding: 20px; border: 1px solid var(--surface-600); border-radius: 8px;">
-        <div style="display: flex; flex-direction: column; height: 100%;">
-            <button class="dialog-close-button" aria-label="Close" style="position: absolute; top: 10px; right: 10px; background: none; border: none; font-size: 24px; cursor: pointer; padding: 0; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; color: var(--text);">&times;</button>
-            <h3 i18n="titleEnterVerificationCode" style="margin: 0 0 15px 0; text-align: center;">Enter Verification Code</h3>
-            <div class="content" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
-                <div class="input-group" style="margin-bottom: 15px;">
-                    <label for="verification-code-input" i18n="labelVerificationCode" style="display: block; margin-bottom: 5px; font-size: 12px;">Code</label>
-                    <input type="text" id="verification-code-input" placeholder="" style="width: 100%; padding: 8px; border: 1px solid var(--surface-500); border-radius: 4px; background-color: var(--surface-100); color: var(--text); box-sizing: border-box;">
+        <dialog
+            id="dialogLogin"
+            style="
+                width: 360px;
+                aspect-ratio: 16 / 9;
+                padding: 20px;
+                border: 1px solid var(--surface-600);
+                border-radius: 8px;
+            "
+        >
+            <div style="display: flex; flex-direction: column; height: 100%">
+                <button
+                    class="dialog-close-button"
+                    aria-label="Close"
+                    style="
+                        position: absolute;
+                        top: 10px;
+                        right: 10px;
+                        background: none;
+                        border: none;
+                        font-size: 24px;
+                        cursor: pointer;
+                        padding: 0;
+                        width: 30px;
+                        height: 30px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        color: var(--text);
+                    "
+                >
+                    &times;
+                </button>
+                <h3 i18n="titleLogin" style="margin: 0 0 15px 0; text-align: center">Login</h3>
+                <div class="content" style="flex: 1; display: flex; flex-direction: column; justify-content: center">
+                    <div class="input-group" style="margin-bottom: 15px">
+                        <label
+                            for="login-email"
+                            i18n="labelEmail"
+                            style="display: block; margin-bottom: 5px; font-size: 12px"
+                            >Email</label
+                        >
+                        <input
+                            type="email"
+                            id="login-email"
+                            placeholder="Enter email address"
+                            style="
+                                width: 100%;
+                                padding: 8px;
+                                border: 1px solid var(--surface-500);
+                                border-radius: 4px;
+                                background-color: var(--surface-100);
+                                color: var(--text);
+                                box-sizing: border-box;
+                            "
+                        />
+                    </div>
+                </div>
+                <div
+                    class="buttons"
+                    style="
+                        display: flex;
+                        flex-direction: row;
+                        gap: 10px;
+                        justify-content: center;
+                        align-items: center;
+                        text-align: center;
+                    "
+                >
+                    <a
+                        href="#"
+                        id="dialogLogin-passkey-create"
+                        class="regular-button"
+                        i18n="labelCreatePasskey"
+                        style="padding: 6px 12px; text-decoration: none; font-size: 12px; flex: 1; max-width: 120px"
+                        >Create Passkey</a
+                    >
+                    <span
+                        style="
+                            font-size: 12px;
+                            color: var(--text-secondary);
+                            display: flex;
+                            align-items: center;
+                            flex-shrink: 0;
+                        "
+                        >OR</span
+                    >
+                    <a
+                        href="#"
+                        id="dialogLogin-passkey-use"
+                        class="regular-button"
+                        i18n="labelUsePasskey"
+                        style="padding: 6px 12px; text-decoration: none; font-size: 12px; flex: 1; max-width: 120px"
+                        >Use Passkey</a
+                    >
                 </div>
             </div>
-            <div class="buttons" style="display: flex; justify-content: center;">
-                <a href="#" id="verification-code-submit" class="regular-button" i18n="submit" style="padding: 8px 24px; text-decoration: none;">Submit</a>
+        </dialog>
+
+        <dialog
+            id="dialogWaiting"
+            style="border: 1px solid var(--surface-600); border-radius: 8px; padding: 30px; min-width: 300px"
+        >
+            <div style="text-align: center">
+                <div style="margin-bottom: 15px">
+                    <div
+                        style="
+                            border: 4px solid rgba(255, 255, 255, 0.2);
+                            border-top: 4px solid var(--primary-500);
+                            border-radius: 50%;
+                            width: 50px;
+                            height: 50px;
+                            animation: spin 1s linear infinite;
+                            margin: 0 auto;
+                        "
+                    ></div>
+                </div>
+                <p id="dialogWaiting-message" style="font-size: 14px; color: var(--text); margin: 0">
+                    Processing passkey authentication...
+                </p>
             </div>
-        </div>
-    </dialog>
-    <dialog class="dialogInteractive">
-        <h3 class="dialogInteractiveTitle"></h3>
-        <div class="dialogInteractiveContent"></div>
+            <style>
+                @keyframes spin {
+                    0% {
+                        transform: rotate(0deg);
+                    }
+                    100% {
+                        transform: rotate(360deg);
+                    }
+                }
+            </style>
+        </dialog>
 
-        <div class="cli-response">
-            <textarea id="cli-response" readonly rows="32" cols="96"></textarea>
-            <div class="default_btn">
-                <a class="confirm" href="#" i18n="cliConfirmSnippetBtn"></a>
+        <dialog
+            id="dialogVerificationCode"
+            style="
+                width: 360px;
+                aspect-ratio: 16 / 9;
+                padding: 20px;
+                border: 1px solid var(--surface-600);
+                border-radius: 8px;
+            "
+        >
+            <div style="display: flex; flex-direction: column; height: 100%">
+                <button
+                    class="dialog-close-button"
+                    aria-label="Close"
+                    style="
+                        position: absolute;
+                        top: 10px;
+                        right: 10px;
+                        background: none;
+                        border: none;
+                        font-size: 24px;
+                        cursor: pointer;
+                        padding: 0;
+                        width: 30px;
+                        height: 30px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        color: var(--text);
+                    "
+                >
+                    &times;
+                </button>
+                <h3 i18n="titleEnterVerificationCode" style="margin: 0 0 15px 0; text-align: center">
+                    Enter Verification Code
+                </h3>
+                <div class="content" style="flex: 1; display: flex; flex-direction: column; justify-content: center">
+                    <div class="input-group" style="margin-bottom: 15px">
+                        <label
+                            for="verification-code-input"
+                            i18n="labelVerificationCode"
+                            style="display: block; margin-bottom: 5px; font-size: 12px"
+                            >Code</label
+                        >
+                        <input
+                            type="text"
+                            id="verification-code-input"
+                            placeholder=""
+                            style="
+                                width: 100%;
+                                padding: 8px;
+                                border: 1px solid var(--surface-500);
+                                border-radius: 4px;
+                                background-color: var(--surface-100);
+                                color: var(--text);
+                                box-sizing: border-box;
+                            "
+                        />
+                    </div>
+                </div>
+                <div class="buttons" style="display: flex; justify-content: center">
+                    <a
+                        href="#"
+                        id="verification-code-submit"
+                        class="regular-button"
+                        i18n="submit"
+                        style="padding: 8px 24px; text-decoration: none"
+                        >Submit</a
+                    >
+                </div>
             </div>
-        </div>
+        </dialog>
 
-        <div class="cli-command">
-            <input type="text" id="cli-command" i18n_placeholder="cliCommand">
-        </div>
+        <dialog class="dialogConfiguratorUpdate">
+            <h3 i18n="noticeTitle"></h3>
+            <div class="content">
+                <div class="dialogConfiguratorUpdate-content" style="margin-top: 10px"></div>
+            </div>
+            <div class="buttons">
+                <a
+                    href="#"
+                    class="dialogConfiguratorUpdate-websitebtn regular-button"
+                    i18n="configuratorUpdateWebsite"
+                ></a>
+                <a href="#" class="dialogConfiguratorUpdate-closebtn regular-button" i18n="close"></a>
+            </div>
+        </dialog>
 
-        <div class="buttons">
-            <a href="#" class="dialogInteractive-closeButton regular-button"></a>
-        </div>
-    </dialog>
-</body>
+        <dialog class="dialogConnectWarning">
+            <h3 i18n="warningTitle"></h3>
+            <div class="content">
+                <div class="dialogConnectWarning-content" style="margin-top: 10px"></div>
+            </div>
+            <div class="buttons">
+                <a href="#" class="dialogConnectWarning-closebtn regular-button" i18n="close"></a>
+            </div>
+        </dialog>
+
+        <dialog id="dialogResetToCustomDefaults">
+            <h3 i18n="noticeTitle"></h3>
+            <div class="content">
+                <div id="dialogResetToCustomDefaults-content" i18n="resetToCustomDefaultsDialog"></div>
+            </div>
+            <div>
+                <span class="buttons">
+                    <a
+                        href="#"
+                        id="dialogResetToCustomDefaults-acceptbtn"
+                        class="regular-button"
+                        i18n="resetToCustomDefaultsAccept"
+                    ></a>
+                </span>
+                <span class="buttons">
+                    <a href="#" id="dialogResetToCustomDefaults-cancelbtn" class="regular-button" i18n="cancel"></a>
+                </span>
+            </div>
+        </dialog>
+
+        <dialog id="dialogReportProblems">
+            <h3 i18n="warningTitle"></h3>
+            <div class="content">
+                <div id="dialogReportProblems-header" i18n="reportProblemsDialogHeader"></div>
+                <ul id="dialogReportProblems-list">
+                    <!-- List elements added dynamically -->
+                </ul>
+                <div id="dialogReportProblems-footer" i18n="reportProblemsDialogFooter"></div>
+            </div>
+            <div>
+                <span class="buttons">
+                    <a href="#" id="dialogReportProblems-closebtn" class="regular-button" i18n="close"></a>
+                </span>
+            </div>
+        </dialog>
+
+        <ul class="hidden">
+            <!-- Sonar says so -->
+            <li id="dialogReportProblems-listItemTemplate" class="dialogReportProblems-listItem"></li>
+        </ul>
+
+        <dialog class="dialogError">
+            <h3 i18n="errorTitle"></h3>
+            <div class="content">
+                <div class="dialogError-content" style="margin-top: 10px"></div>
+            </div>
+            <div class="buttons">
+                <a href="#" class="dialogError-closebtn regular-button" i18n="close"></a>
+            </div>
+        </dialog>
+
+        <dialog class="dialogYesNo">
+            <h3 class="dialogYesNoTitle"></h3>
+            <div class="dialogYesNoContent"></div>
+            <div class="buttons">
+                <a href="#" class="dialogYesNo-yesButton regular-button"></a>
+                <a href="#" class="dialogYesNo-noButton regular-button"></a>
+            </div>
+        </dialog>
+
+        <dialog class="dialogWait">
+            <div class="data-loading"></div>
+            <h3 class="dialogWaitTitle"></h3>
+            <div class="buttons">
+                <a href="#" class="dialogWait-cancelButton regular-button" i18n="cancel"></a>
+            </div>
+        </dialog>
+
+        <dialog class="dialogInformation">
+            <h3 class="dialogInformationTitle"></h3>
+            <div class="dialogInformationContent"></div>
+            <div class="buttons">
+                <a href="#" class="dialogInformation-confirmButton regular-button"></a>
+            </div>
+        </dialog>
+
+        <dialog class="dialogInteractive">
+            <h3 class="dialogInteractiveTitle"></h3>
+            <div class="dialogInteractiveContent"></div>
+
+            <div class="cli-response">
+                <textarea id="cli-response" readonly rows="32" cols="96"></textarea>
+                <div class="default_btn">
+                    <a class="confirm" href="#" i18n="cliConfirmSnippetBtn"></a>
+                </div>
+            </div>
+
+            <div class="cli-command">
+                <input type="text" id="cli-command" i18n_placeholder="cliCommand" />
+            </div>
+
+            <div class="buttons">
+                <a href="#" class="dialogInteractive-closeButton regular-button"></a>
+            </div>
+        </dialog>
+        <div id="dialog-container"></div>
+    </body>
 </html>
