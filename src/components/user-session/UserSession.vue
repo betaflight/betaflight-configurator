@@ -46,7 +46,7 @@
                                 v-model="loginEmail"
                                 type="email"
                                 id="login-email"
-                                placeholder="Enter email address"
+                                :placeholder="$t('placeholderEmailAddress')"
                                 class="dialog-input"
                             />
                         </div>

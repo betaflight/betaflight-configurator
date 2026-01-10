@@ -7845,6 +7845,9 @@
     "labelEmail": {
         "message": "Email"
     },
+    "placeholderEmailAddress": {
+        "message": "Enter email address"
+    },
     "profileLoginMessage": {
         "message": "Please log in to view your profile."
     },
