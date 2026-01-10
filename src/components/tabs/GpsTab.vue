@@ -172,63 +172,65 @@
                         </div>
                         <div class="spacer_box GPS_info">
                             <table class="cf_table">
-                                <tr>
-                                    <td v-html="$t('gps3dFix')"></td>
-                                    <td>
-                                        <span class="colorToggle" :class="{ ready: gpsInfo.fix }">{{
-                                            gpsInfo.fix ? $t("gpsFixTrue") : $t("gpsFixFalse")
-                                        }}</span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td v-html="$t('gpsSats')"></td>
-                                    <td class="sats">{{ gpsInfo.sats }}</td>
-                                </tr>
-                                <tr>
-                                    <td v-html="$t('gpsAltitude')"></td>
-                                    <td class="alt">{{ gpsInfo.alt }} m</td>
-                                </tr>
-                                <tr>
-                                    <td v-html="$t('gpsSpeed')"></td>
-                                    <td class="speed">{{ gpsInfo.speed }} cm/s</td>
-                                </tr>
-                                <tr>
-                                    <td v-html="$t('gpsHeading')"></td>
-                                    <td class="heading">
-                                        {{ gpsInfo.headingImu.toFixed(0) }} / {{ gpsInfo.headingGps.toFixed(0) }}
-                                        {{ $t("gpsPositionUnit") }}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td v-html="$t('gpsLatitude')"></td>
-                                    <td class="latitude">
-                                        <a :href="mapLink" target="_blank"
-                                            >{{ gpsInfo.latitude.toFixed(6) }} {{ $t("gpsPositionUnit") }}</a
-                                        >
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td v-html="$t('gpsLongitude')"></td>
-                                    <td class="longitude">
-                                        <a :href="mapLink" target="_blank"
-                                            >{{ gpsInfo.longitude.toFixed(6) }} {{ $t("gpsPositionUnit") }}</a
-                                        >
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td v-html="$t('gpsDistToHome')"></td>
-                                    <td class="distToHome">{{ gpsInfo.distToHome }} m</td>
-                                </tr>
-                                <tr v-if="showPositionalDop">
-                                    <td v-html="$t('gpsPositionalDop')"></td>
-                                    <td class="positionalDop" v-html="gpsInfo.positionalDopDisplay"></td>
-                                </tr>
-                                <tr v-if="showPositionalDop && hasMag">
-                                    <td v-html="$t('gpsMagneticDeclination')"></td>
-                                    <td class="magDeclination">
-                                        {{ gpsInfo.magDeclination }} {{ $t("gpsPositionUnit") }}
-                                    </td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <td v-html="$t('gps3dFix')"></td>
+                                        <td>
+                                            <span class="colorToggle" :class="{ ready: gpsInfo.fix }">{{
+                                                gpsInfo.fix ? $t("gpsFixTrue") : $t("gpsFixFalse")
+                                            }}</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td v-html="$t('gpsSats')"></td>
+                                        <td class="sats">{{ gpsInfo.sats }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td v-html="$t('gpsAltitude')"></td>
+                                        <td class="alt">{{ gpsInfo.alt }} m</td>
+                                    </tr>
+                                    <tr>
+                                        <td v-html="$t('gpsSpeed')"></td>
+                                        <td class="speed">{{ gpsInfo.speed }} cm/s</td>
+                                    </tr>
+                                    <tr>
+                                        <td v-html="$t('gpsHeading')"></td>
+                                        <td class="heading">
+                                            {{ gpsInfo.headingImu.toFixed(0) }} / {{ gpsInfo.headingGps.toFixed(0) }}
+                                            {{ $t("gpsPositionUnit") }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td v-html="$t('gpsLatitude')"></td>
+                                        <td class="latitude">
+                                            <a :href="mapLink" target="_blank"
+                                                >{{ gpsInfo.latitude.toFixed(6) }} {{ $t("gpsPositionUnit") }}</a
+                                            >
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td v-html="$t('gpsLongitude')"></td>
+                                        <td class="longitude">
+                                            <a :href="mapLink" target="_blank"
+                                                >{{ gpsInfo.longitude.toFixed(6) }} {{ $t("gpsPositionUnit") }}</a
+                                            >
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td v-html="$t('gpsDistToHome')"></td>
+                                        <td class="distToHome">{{ gpsInfo.distToHome }} m</td>
+                                    </tr>
+                                    <tr v-if="showPositionalDop">
+                                        <td v-html="$t('gpsPositionalDop')"></td>
+                                        <td class="positionalDop" v-html="gpsInfo.positionalDopDisplay"></td>
+                                    </tr>
+                                    <tr v-if="showPositionalDop && hasMag">
+                                        <td v-html="$t('gpsMagneticDeclination')"></td>
+                                        <td class="magDeclination">
+                                            {{ gpsInfo.magDeclination }} {{ $t("gpsPositionUnit") }}
+                                        </td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -803,7 +805,6 @@ export default defineComponent({
 
         onUnmounted(() => {
             navigationStore.cleanup(teardown);
-            teardown();
         });
 
         watch(showLoadMap, (visible) => {
