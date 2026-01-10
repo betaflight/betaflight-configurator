@@ -112,15 +112,23 @@ export function useUserSession() {
 
     const handleCreatePasskey = async () => {
         const email = loginEmail.value.trim();
-        closeLoginDialog();
 
-        if (email) {
-            try {
-                await loginManager.createPasskey(email);
-                openVerificationDialog(email);
-            } catch (error) {
-                console.error("Create passkey error:", error);
+        if (!email) {
+            loginError.value = i18n.getMessage("labelEmail");
+            return;
+        }
+
+        try {
+            await loginManager.createPasskey(email);
+            closeLoginDialog();
+            openVerificationDialog(email);
+        } catch (error) {
+            loginError.value = i18n.getMessage("userCreatePasskeyFailed");
+            // Keep the dialog open so the user can retry with a different email
+            if (dialogLoginRef.value && !dialogLoginRef.value.open) {
+                dialogLoginRef.value.showModal();
             }
+            console.error("Create passkey error:", error);
         }
     };
 
@@ -128,7 +136,7 @@ export function useUserSession() {
         const email = loginEmail.value.trim();
 
         if (!email) {
-            loginError.value = i18n.getMessage("labelEmail");
+            loginError.value = i18n.getMessage("userEmailRequired");
             return;
         }
 
@@ -137,10 +145,6 @@ export function useUserSession() {
             closeLoginDialog();
         } catch (error) {
             loginError.value = i18n.getMessage("userLoginFailed");
-            // Keep the dialog open so the user can retry
-            if (dialogLoginRef.value && !dialogLoginRef.value.open) {
-                dialogLoginRef.value.showModal();
-            }
             console.error("Login with passkey error:", error);
         }
     };
