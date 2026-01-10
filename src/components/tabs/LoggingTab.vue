@@ -50,7 +50,14 @@
 
         <div class="content_toolbar toolbar_fixed_bottom" style="position: fixed">
             <div class="btn file_btn">
-                <a class="log_file" href="#" @click.prevent="selectLogFile" :aria-label="$t('loggingButtonLogFile')">
+                <a
+                    class="log_file"
+                    :class="{ disabled: isLogging || isBusy }"
+                    href="#"
+                    @click.prevent="selectLogFile"
+                    :aria-label="$t('loggingButtonLogFile')"
+                    :aria-disabled="isLogging || isBusy"
+                >
                     {{ $t("loggingButtonLogFile") }}
                 </a>
             </div>
@@ -263,6 +270,9 @@ export default defineComponent({
         const canToggle = computed(() => (isLogging.value || !!fileEntry.value) && !isBusy.value);
 
         async function selectLogFile() {
+            if (isLogging.value || isBusy.value) {
+                return;
+            }
             const prefix = "log";
             const suffix = "csv";
             const filename = generateFilename(prefix, suffix);
