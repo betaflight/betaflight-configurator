@@ -157,6 +157,7 @@ function connectDisconnect() {
                 { baudRate: PortHandler.portPicker.selectedBauds },
                 selectedPort === "virtual" ? onOpenVirtual : undefined,
             );
+            console.log("Press Ctrl+I to open CLI panel");
         }
 
         // show CLI panel on Control+I
@@ -167,7 +168,6 @@ function connectDisconnect() {
                     GUI.active_tab !== "cli" &&
                     semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)
                 ) {
-                    console.log("Press Ctrl+I to open CLI panel");
                     GUI.showCliPanel();
                 }
             }
