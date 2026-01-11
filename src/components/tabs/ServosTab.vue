@@ -2,18 +2,7 @@
     <BaseTab tab-name="servos" :extra-class="isSupported ? 'supported' : ''">
         <div class="content_wrapper">
             <div class="tab_title">{{ $t("tabServos") }}</div>
-            <div class="cf_doc_version_bt">
-                <a
-                    id="button-documentation"
-                    href="https://betaflight.com/docs/wiki/app/servos-tab"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    :aria-label="$t('betaflightSupportButton')"
-                >
-                    {{ $t("betaflightSupportButton") }}
-                </a>
-            </div>
-
+            <WikiButton docUrl="servos" />
             <div class="grid-row">
                 <!-- Servo configuration table (when supported) -->
                 <div v-if="isSupported" class="require-support">
@@ -144,6 +133,7 @@ import MSPCodes from "../../js/msp/MSPCodes";
 import { mspHelper } from "../../js/msp/MSPHelper";
 import { gui_log } from "../../js/gui_log";
 import { i18n } from "../../js/localization";
+import WikiButton from "../WikiButton.vue";
 
 // Calculate bar style for servo visualization
 function getBarStyle(value) {
@@ -169,6 +159,7 @@ export default defineComponent({
     name: "ServosTab",
     components: {
         BaseTab,
+        WikiButton,
     },
     setup() {
         const isSupported = ref(false);
