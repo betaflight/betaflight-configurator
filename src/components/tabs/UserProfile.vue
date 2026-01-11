@@ -90,7 +90,9 @@
                                 :placeholder="$t('placeholderAvatarUrl')"
                             />
                         </p>
-                        <p v-if="editError" class="profile-edit-error">{{ editError }}</p>
+                        <p v-if="editError" class="profile-edit-error" role="alert" aria-live="polite">
+                            {{ editError }}
+                        </p>
                         <div class="button-container">
                             <a
                                 href="#"
