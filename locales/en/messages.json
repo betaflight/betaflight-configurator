@@ -4685,7 +4685,7 @@
         "message": "Cutoff Frequency [Hz]"
     },
     "pidTuningNotchFilterHelp": {
-        "message": "A notch filter is a symmetrical, narrow, high-cut filter with center and cutoff parameters.<br /><br />The Center value is the center frequency of the filter. The Cutoff value is the low-side -3dB cutoff frequency.<br /><br />For example, a Notch Cutoff of 160 with a Notch Center of 260 returns a wide notch with a -3dB range from 160-360Hz and strongest attenuation around 260Hz.",
+        "message": "A notch filter is a symmetrical, narrow, high-cut filter with center and cutoff parameters.<br /><br />The Center value is the center frequency of the filter. The Cutoff value is the low-side -3 dB cutoff frequency.<br /><br />For example, a Notch Cutoff of 160 with a Notch Center of 260 returns a wide notch with a -3 dB range from 160-360 Hz and strongest attenuation around 260 Hz.",
         "description": "Notch filter helpicon message"
     },
     "pidTuningDynamicNotchFilterGroup": {
@@ -7186,7 +7186,7 @@
         "message": "Maximum ARM Angle [degrees]"
     },
     "configurationSmallAngleHelp": {
-        "message": "Aircraft will not ARM if tilted more than specified number of degrees. Only applies if accelerometer is enabled. Setting to 180 will effectively disable check"
+        "message": "Aircraft will not ARM if tilted more than the specified number of degrees. Only applies if the accelerometer is enabled. Setting to 180 will effectively disable this check."
     },
     "configurationBatteryVoltage": {
         "message": "Battery Voltage"
@@ -7466,7 +7466,7 @@
         "message": "Update from the Google Play Store"
     },
     "cordovaWebviewEnable": {
-        "message": "Go into the tab of informations about your device in the settings and tap 10 times on the build version number to enable 'Developer options'. After that, search and go in the developer options and select <b>{{app}}</b> as webview provider."
+        "message": "Go to the device information section in Settings and tap the build number 10 times to enable 'Developer options'. Then open Developer options and select <b>{{app}}</b> as the WebView provider."
     },
     "cordovaWebviewEnableBtn": {
         "message": "Open settings"
