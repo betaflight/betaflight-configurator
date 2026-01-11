@@ -1675,7 +1675,7 @@
         "message": "Minimum Throttle (Lowest ESC value when armed)"
     },
     "configurationThrottleMinimumHelp": {
-        "message": "This is the 'idle' value that is sent to the ESCs when the aircraft is armed and the trottle stick is at minimum position. Increase the value to gain more idle speed. Also raise the value in case of desyncs!"
+        "message": "This is the 'idle' value that is sent to the ESCs when the aircraft is armed and the throttle stick is at minimum position. Increase the value to gain more idle speed. Also raise the value in case of desyncs!"
     },
     "configurationThrottleMaximum": {
         "message": "Maximum Throttle (Highest ESC value when armed)"
@@ -2187,7 +2187,7 @@
         "message": "With this parameter, D Setpoint Weight can be reduced near the center of the sticks, which results in smoother end of flips and rolls.<br> The value represents a point of stick deflection: 0 - stick centered, 1 - full deflection. When the stick is above that point, Setpoint Weight is kept constant at its configured value. When the stick is positioned below that point, Setpoint Weight is reduced proportionally, reaching 0 at the stick center position.<br>Value of 1 gives maximum smoothing effect, while value of 0 keeps the Setpoint Weight fixed at its configured value over the whole stick range."
     },
     "pidTuningDtermSetpointHelp": {
-        "message": "This parameter determines the stick accelerating effect within derivative component.<br> Value of 0 equals to old Measuemenent method where D only tracks gyro, while value of 1 equals to old Error method with equal gyro and stick tracking ratio.<br> Lower value equals to slower/smoother stick response, while higher value provides more stick acceleration response.<br>Note that RC interpolation is recommended to be enabled with higher values to prevent control kicks making noise."
+        "message": "This parameter determines the stick accelerating effect within derivative component.<br> Value of 0 equals to old Measurement method where D only tracks gyro, while value of 1 equals to old Error method with equal gyro and stick tracking ratio.<br> Lower value equals to slower/smoother stick response, while higher value provides more stick acceleration response.<br>Note that RC interpolation is recommended to be enabled with higher values to prevent control kicks making noise."
     },
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):<\/strong> The use of a D Setpoint transition greater than 0 and less than 0.1 is highly discouraged. Doing so may lead instability and reduced stick responsiveness as the sticks cross the centre point.<\/span>"
@@ -2580,7 +2580,7 @@
     },
     "auxiliaryDisabled": {
         "message": "(DISABLED)",
-        "descripton": "Text to add to the ARM mode (maybe others in the future) in the MODES TAB when it has been disabled for some external reason"
+        "description": "Text to add to the ARM mode (maybe others in the future) in the MODES TAB when it has been disabled for some external reason"
     },
     "auxiliaryAddRange": {
         "message": "Add Range"
@@ -3060,7 +3060,7 @@
         "message": "General"
     },
     "gpsHeadHelp": {
-        "message": "Show various information releated to GPS. Heading are only shown when Magnetometer are in use",
+        "message": "Show various information related to GPS. Heading are only shown when Magnetometer are in use",
         "description": "Help text for gpsHead"
     },
     "gpsMapHead": {
@@ -3954,7 +3954,7 @@
     },
     "firmwareFlasherBoardVerficationTargetNotAvailable": {
         "message": "App has detected the board: <strong>{{boardName}}</strong> but no official Betaflight target was found",
-        "description": "Board verification has succeeded, but the target is not available as offical Betaflight target."
+        "description": "Board verification has succeeded, but the target is not available as official Betaflight target."
     },
     "firmwareFlasherBoardVerificationFail": {
         "message": "The App <span class=\"message-negative\">failed</span> to verify the board. If this persists, try switching tabs and retry, reconnect the USB, or connect first if you might have forgotten to apply custom defaults.",
@@ -4574,7 +4574,7 @@
         "description": "P and I Gain (Stability) tuning slider label"
     },
     "pidTuningPIGainSliderHelp": {
-        "message": "Increase the Tracking slider to sharpen the aircraft's response to your commands and also outside influences; avoiding the nose of the aircraft going off course in any condition.<br /><br />Lower ‘Tracking’ values will have lots of bobbles and will go off course on stick moves and in prop wash. High ‘Tracking’ may result in oscillation and fast bounceback (hard to see, but you canhear). Excessive Tracking may result in oscillations and hot motors.",
+        "message": "Increase the Tracking slider to sharpen the aircraft's response to your commands and also outside influences; avoiding the nose of the aircraft going off course in any condition.<br /><br />Lower ‘Tracking’ values will have lots of bobbles and will go off course on stick moves and in prop wash. High ‘Tracking’ may result in oscillation and fast bounceback (hard to see, but you can hear). Excessive Tracking may result in oscillations and hot motors.",
         "description": "P and I gain tuning slider helpicon message"
     },
     "pidTuningResponseSlider": {
@@ -4685,7 +4685,7 @@
         "message": "Cutoff Frequency [Hz]"
     },
     "pidTuningNotchFilterHelp": {
-        "message": "A Notch Filter is a symmetrical, narrow, high-cut filter, with center and cutoff parmaeters.<br /><br />The Center value is the center frequency of the filter. The Cutoff value is the low-side -3dB cutoff frequency.<br /><br />For example, a Notch Cutoff of 160 with a Notch Center of 260 returns a wide notch with a -3dB range from 160-360Hz and strongest attenuation around 260hz.",
+        "message": "A Notch Filter is a symmetrical, narrow, high-cut filter, with center and cutoff parameters.<br /><br />The Center value is the center frequency of the filter. The Cutoff value is the low-side -3dB cutoff frequency.<br /><br />For example, a Notch Cutoff of 160 with a Notch Center of 260 returns a wide notch with a -3dB range from 160-360Hz and strongest attenuation around 260hz.",
         "description": "Notch filter helpicon message"
     },
     "pidTuningDynamicNotchFilterGroup": {
@@ -6822,7 +6822,7 @@
         "message": "Set the thresholds used for OSD elements with alarm states."
     },
     "osdSectionHelpStats": {
-        "message": "Set the values dispalyed on the post flight statistics screen."
+        "message": "Set the values displayed on the post flight statistics screen."
     },
     "osdSectionHelpWarnings": {
         "message": "Enable or disable warnings that are shown on the WARNINGS element."
@@ -7186,7 +7186,7 @@
         "message": "Maximum ARM Angle [degrees]"
     },
     "configurationSmallAngleHelp": {
-        "message": "Aircraft will not ARM if tilted more than specified number of degrees. Only applies if accelerometer is enabled. Setting to 180 will effectivly disable check"
+        "message": "Aircraft will not ARM if tilted more than specified number of degrees. Only applies if accelerometer is enabled. Setting to 180 will effectively disable check"
     },
     "configurationBatteryVoltage": {
         "message": "Battery Voltage"
@@ -7253,7 +7253,7 @@
         "message": "Measurement"
     },
     "pidTuningDeltaTip": {
-        "message": "<b>Derivative from Error</b> provides more direct stick response and is mostly prefered for Racing.<br /><br /><b>Derivative from Measurement</b> provides smoother stick response what is more usefull for freestyling"
+        "message": "<b>Derivative from Error</b> provides more direct stick response and is mostly preferred for Racing.<br /><br /><b>Derivative from Measurement</b> provides smoother stick response which is more useful for freestyling"
     },
     "pidTuningPidControllerTip": {
         "message": "<b>Legacy vs Betaflight (float):</b> PID scaling and PID logic is exactly the same. Not necessarily retune needed. Legacy is old betaflight evolved rewrite, which is basic PID controller based on integer math. Betaflight PID controller uses floating point math and has many new features specifically designed for multirotor applications <br> <b>Float vs Integer:</b> PID scaling and PID logic is exactly the same. No retune needed. F1 boards have no onboard FPU and floating point math increases CPU load and integer math will improve performance, but float math might gain slightly more precision."
@@ -7466,7 +7466,7 @@
         "message": "Update from the Google Play Store"
     },
     "cordovaWebviewEnable": {
-        "message": "Go into the tab of informations about your device in the settings and tap 10 times on the build version number to enable 'Developper options'. After that, search and go in the developper options and select <b>{{app}}</b> as webview provider."
+        "message": "Go into the tab of informations about your device in the settings and tap 10 times on the build version number to enable 'Developer options'. After that, search and go in the developer options and select <b>{{app}}</b> as webview provider."
     },
     "cordovaWebviewEnableBtn": {
         "message": "Open settings"
@@ -7584,11 +7584,11 @@
     },
     "presetsButtonSave": {
         "message": "Save and Reboot",
-        "description": "A button that saves all appied presets - analog to 'save' command in CLI"
+        "description": "A button that saves all applied presets - analog to 'save' command in CLI"
     },
     "presetsButtonCancel": {
         "message": "Cancel",
-        "description": "A button that restarts FC without saving appied presets - analog to 'exit' command in CLI"
+        "description": "A button that restarts FC without saving applied presets - analog to 'exit' command in CLI"
     },
     "presetsApplyingPresets": {
         "message": "Applying configuration...",
@@ -7635,7 +7635,7 @@
         "description": "Title for the waiting dialog when loading dump all into a file"
     },
     "dumpAllNotSavedWarning": {
-        "message": "Error occured while saving current configuration",
+        "message": "Error occurred while saving current configuration",
         "description": "Message appears on presets tab when saving current diff all into a file has failed"
     },
     "presetSources": {
@@ -7696,11 +7696,11 @@
     },
     "presetsNoPresetsFound": {
         "message": "No presets found for the given search parameters",
-        "description": "Message that apprears on presets tab if no presets were found"
+        "description": "Message that appears on presets tab if no presets were found"
     },
     "presetsTooManyPresetsFound": {
         "message": "Reached the maximum limit of the shown presets number",
-        "description": "Message that apprears on presets tab if too many presets found"
+        "description": "Message that appears on presets tab if too many presets found"
     },
     "presetsOptionsPlaceholder": {
         "message": "ATTENTION! Review the list of options",
