@@ -776,7 +776,7 @@ function startLiveDataRefreshTimer() {
     liveDataRefreshTimerId = setInterval(update_live_status, 250);
 }
 
-export function reinitializeConnection() {
+export function reinitializeConnection(suppressDialog = false) {
     if (CONFIGURATOR.virtualMode) {
         connectDisconnect();
         if (PortHandler.portPicker.autoConnect) {
@@ -809,7 +809,9 @@ export function reinitializeConnection() {
         return;
     }
     // Show reboot progress modal
-    showRebootDialog();
+    if (!suppressDialog) {
+        showRebootDialog();
+    }
 }
 
 function showRebootDialog() {

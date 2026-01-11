@@ -5,7 +5,9 @@ export const API_VERSION_1_46 = "1.46.0";
 export const API_VERSION_1_47 = "1.47.0";
 export const API_VERSION_1_48 = "1.48.0";
 
-const CONFIGURATOR = {
+import { reactive } from "vue";
+
+const CONFIGURATOR = reactive({
     // all versions are specified and compared using semantic versioning http://semver.org/
     API_VERSION_ACCEPTED: API_VERSION_1_44,
     API_VERSION_MAX_SUPPORTED: API_VERSION_1_48,
@@ -36,6 +38,6 @@ const CONFIGURATOR = {
     isDevVersion: function () {
         return this.version.includes("debug");
     },
-};
+});
 
 export default CONFIGURATOR;
