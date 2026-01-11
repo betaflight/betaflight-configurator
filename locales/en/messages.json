@@ -2187,7 +2187,7 @@
         "message": "With this parameter, D Setpoint Weight can be reduced near the center of the sticks, which results in smoother end of flips and rolls.<br> The value represents a point of stick deflection: 0 - stick centered, 1 - full deflection. When the stick is above that point, Setpoint Weight is kept constant at its configured value. When the stick is positioned below that point, Setpoint Weight is reduced proportionally, reaching 0 at the stick center position.<br>Value of 1 gives maximum smoothing effect, while value of 0 keeps the Setpoint Weight fixed at its configured value over the whole stick range."
     },
     "pidTuningDtermSetpointHelp": {
-        "message": "This parameter determines the stick accelerating effect within derivative component.<br> Value of 0 equals to old Measurement method where D only tracks gyro, while value of 1 equals to old Error method with equal gyro and stick tracking ratio.<br> Lower value equals to slower/smoother stick response, while higher value provides more stick acceleration response.<br>Note that RC interpolation is recommended to be enabled with higher values to prevent control kicks making noise."
+        "message": "This parameter determines the stick-acceleration effect within the derivative component.<br> A value of 0 is the old Measurement method where D only tracks the gyro. A value of 1 is the old Error method, which uses equal gyro and stick tracking ratio.<br> Lower values give a slower, smoother stick response, while higher values provide more stick acceleration response.<br>Note that RC interpolation is recommended when using higher values to prevent control kicks making noise."
     },
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):<\/strong> The use of a D Setpoint transition greater than 0 and less than 0.1 is highly discouraged. Doing so may lead instability and reduced stick responsiveness as the sticks cross the centre point.<\/span>"
@@ -3060,7 +3060,7 @@
         "message": "General"
     },
     "gpsHeadHelp": {
-        "message": "Show various information related to GPS. Heading are only shown when Magnetometer are in use",
+        "message": "Show various GPS information. Headings are only shown when a magnetometer is in use.",
         "description": "Help text for gpsHead"
     },
     "gpsMapHead": {
@@ -4685,7 +4685,7 @@
         "message": "Cutoff Frequency [Hz]"
     },
     "pidTuningNotchFilterHelp": {
-        "message": "A Notch Filter is a symmetrical, narrow, high-cut filter, with center and cutoff parameters.<br /><br />The Center value is the center frequency of the filter. The Cutoff value is the low-side -3dB cutoff frequency.<br /><br />For example, a Notch Cutoff of 160 with a Notch Center of 260 returns a wide notch with a -3dB range from 160-360Hz and strongest attenuation around 260hz.",
+        "message": "A notch filter is a symmetrical, narrow, high-cut filter with center and cutoff parameters.<br /><br />The Center value is the center frequency of the filter. The Cutoff value is the low-side -3dB cutoff frequency.<br /><br />For example, a Notch Cutoff of 160 with a Notch Center of 260 returns a wide notch with a -3dB range from 160-360Hz and strongest attenuation around 260Hz.",
         "description": "Notch filter helpicon message"
     },
     "pidTuningDynamicNotchFilterGroup": {
@@ -6822,7 +6822,7 @@
         "message": "Set the thresholds used for OSD elements with alarm states."
     },
     "osdSectionHelpStats": {
-        "message": "Set the values displayed on the post flight statistics screen."
+        "message": "Set the values displayed on the post-flight statistics screen."
     },
     "osdSectionHelpWarnings": {
         "message": "Enable or disable warnings that are shown on the WARNINGS element."
@@ -7584,11 +7584,11 @@
     },
     "presetsButtonSave": {
         "message": "Save and Reboot",
-        "description": "A button that saves all applied presets - analog to 'save' command in CLI"
+        "description": "A button that saves all applied presets - analogous to 'save' command in CLI"
     },
     "presetsButtonCancel": {
         "message": "Cancel",
-        "description": "A button that restarts FC without saving applied presets - analog to 'exit' command in CLI"
+        "description": "A button that restarts FC without saving applied presets - analogous to 'exit' command in CLI"
     },
     "presetsApplyingPresets": {
         "message": "Applying configuration...",
@@ -7635,7 +7635,7 @@
         "description": "Title for the waiting dialog when loading dump all into a file"
     },
     "dumpAllNotSavedWarning": {
-        "message": "Error occurred while saving current configuration",
+        "message": "An error occurred while saving current configuration",
         "description": "Message appears on presets tab when saving current diff all into a file has failed"
     },
     "presetSources": {
