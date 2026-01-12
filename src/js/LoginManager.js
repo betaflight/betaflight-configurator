@@ -15,12 +15,21 @@ class LoginManager {
     _onLoginCallbacks = [];
     _onLogoutCallbacks = [];
     _dialogOpener = null;
+    _waitingDialogController = null;
 
     /**
      * Set the dialog opener callback from Vue component
      */
     setDialogOpener(callback) {
         this._dialogOpener = callback;
+    }
+
+    /**
+     * Set a controller from Vue to manage the waiting dialog
+     * @param {{show: Function, hide: Function}|null} controller
+     */
+    setWaitingDialogController(controller) {
+        this._waitingDialogController = controller;
     }
 
     /**
@@ -35,20 +44,30 @@ class LoginManager {
 
     /**
      * Show waiting dialog
+     * @param {string} message Message to display
      */
     showWaitingDialog(message = "Processing passkey authentication...") {
-        const dialog = $("#dialogWaiting");
-        $("#dialogWaiting-message").text(message);
-        dialog[0].showModal();
+        // Only use Vue component controller
+        if (this._waitingDialogController && typeof this._waitingDialogController.show === "function") {
+            try {
+                this._waitingDialogController.show(message);
+            } catch (error) {
+                console.error("Error showing waiting dialog:", error);
+            }
+        }
     }
 
     /**
      * Hide waiting dialog
      */
     hideWaitingDialog() {
-        const dialog = $("#dialogWaiting");
-        if (dialog.length && dialog[0].open) {
-            dialog[0].close();
+        // Only use Vue component controller
+        if (this._waitingDialogController && typeof this._waitingDialogController.hide === "function") {
+            try {
+                this._waitingDialogController.hide();
+            } catch (error) {
+                console.error("Error hiding waiting dialog:", error);
+            }
         }
     }
 
@@ -84,10 +103,11 @@ class LoginManager {
      */
     async verifyAndCreatePasskey(email, code) {
         try {
-            this.showWaitingDialog(i18n.getMessage("userVerifyingCode"));
+            // Show non-blocking waiting dialog so OS/browser UI can surface
+            this.showWaitingDialog(i18n.getMessage("userVerifyingCode"), true);
 
             const result = await this._loginApi.createCredentialOptions(email, code);
-            await this._loginApi.createCredential(result.userId, result.options);
+            await this._loginApi.createCredential(result.key, result.options);
 
             gui_log(i18n.getMessage("userCreatePasskeySuccess"));
 
@@ -120,10 +140,11 @@ class LoginManager {
      */
     async loginWithPasskey(email) {
         try {
-            this.showWaitingDialog(i18n.getMessage("userLoggingIn"));
+            // Show non-blocking waiting dialog so OS/browser UI can surface
+            this.showWaitingDialog(i18n.getMessage("userLoggingIn"), true);
 
             const result = await this._loginApi.createAssertionOptions(email);
-            await this._loginApi.verifyAssertion(result.userId, result.options);
+            await this._loginApi.verifyAssertion(result.key, result.options);
 
             // Fetch user profile data
             await this.fetchUserProfile();
