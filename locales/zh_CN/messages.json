@@ -537,9 +537,6 @@
     "buildServerUsingCached": {
         "message": "使用已缓存的 $1 构建信息。"
     },
-    "buildServerSupportRequestSubmission": {
-        "message": "<br>*** 支持数据已提交 *** <br>Id: $1<br><br><br># 复制 ID 并提交到 betaflight 团队。"
-    },
     "buildKey": {
         "message": "构建标识： <strong>$1<\/strong>"
     },
@@ -1719,9 +1716,6 @@
     "configurationLoopTimeHelp": {
         "message": "<strong>注意：<\/strong>确保你的飞控有能力运行在这些频率上！检查 CPU 以及循环时间是否稳定。改变频率可能需要重新调校 PID 。提示：关闭加速度计和其他传感器可以节省运算资源以获得更高性能。"
     },
-    "configurationGPS": {
-        "message": "GPS 配置"
-    },
     "configurationGPSHelp": {
         "message": "为 GPS 设备设置协议（不要忘了在「端口」选项页中设置端口）、使用自动波特率（或者在「端口」选项页设置一个）和其他配置",
         "description": "Help text GPS configuration"
@@ -2810,15 +2804,9 @@
     "servosReverse": {
         "message": "反向"
     },
-    "gpsHead": {
-        "message": "GPS"
-    },
     "gpsHeadHelp": {
         "message": "显示与 GPS 相关的各种信息，航向仅在磁力计启用时显示",
         "description": "Help text for gpsHead"
-    },
-    "gpsMapHead": {
-        "message": "当前 GPS 位置"
     },
     "gpsMapMessage1": {
         "message": "请检查网络连接"
@@ -2868,9 +2856,6 @@
         "message": "$t(configurationMagDeclination)：",
         "description": "Do not translate"
     },
-    "gpsSignalStrHead": {
-        "message": "GPS 信号强度"
-    },
     "gpsSignalStrHeadHelp": {
         "message": "显示每个已发现 GPS 源的信号强度、质量和状态",
         "description": "Help text for gpsSignalStrHead"
@@ -2886,9 +2871,6 @@
     },
     "gpsSignalSatId": {
         "message": "卫星编号"
-    },
-    "gpsSignalStatus": {
-        "message": "状态"
     },
     "gpsSignalQuality": {
         "message": "质量"

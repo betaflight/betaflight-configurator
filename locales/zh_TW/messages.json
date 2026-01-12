@@ -1694,12 +1694,6 @@
     "servosReverse": {
         "message": "反向"
     },
-    "gpsHead": {
-        "message": "GPS"
-    },
-    "gpsMapHead": {
-        "message": "當前 GPS 位置"
-    },
     "gpsMapMessage1": {
         "message": "請檢查網路連接"
     },
@@ -1717,9 +1711,6 @@
     },
     "gpsDistToHome": {
         "message": "離起飛位置距離："
-    },
-    "gpsSignalStrHead": {
-        "message": "GPS 訊號強度"
     },
     "gpsSignalStr": {
         "message": "訊號強度"

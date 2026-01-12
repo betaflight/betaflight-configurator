@@ -554,7 +554,7 @@
         "message": "Fent servir 'informació des de memòria cau de versions $1."
     },
     "buildServerSupportRequestSubmission": {
-        "message": "<br>*** Dada de suport enviat *** <br>Id: $1<br><br><br># copia ID i informa al equip de betaflight."
+        "message": "<br>*** Dada de suport enviat *** <br>ID: $1<br><br><br># copia ID i informa al equip de betaflight."
     },
     "buildKey": {
         "message": "Clau de la compilació: <strong>$1<\/strong>"
@@ -1743,7 +1743,7 @@
         "message": "<strong>Nota:<\/strong> Assegureu-vos que la vostra controladora pot funcionar a aquestes velocitats. Comproveu l'estabilitat de la CPU i del cicle de temps. Si canvieu això, podreu requerir nous ajustos dels PID. CONSELL: Desactiveu l’acceleròmetre i altres sensors per obtenir més rendiment."
     },
     "configurationGPS": {
-        "message": "Configuració GPS"
+        "message": "Configuració"
     },
     "configurationGPSHelp": {
         "message": "Configureu el protocol per al dispositiu GPS (recordeu configurar el port a la pestanya Port), utilitzeu el baud automàtic (o configureu la velocitat a la pestanya Port) i altres configuracions",
@@ -2977,14 +2977,14 @@
         "description": "Don't translate!!!"
     },
     "gpsHead": {
-        "message": "GPS"
+        "message": "General"
     },
     "gpsHeadHelp": {
         "message": "Mostra informació diversa relacionada amb el GPS. Els títols només es mostren quan el magnetòmetre està en ús",
         "description": "Help text for gpsHead"
     },
     "gpsMapHead": {
-        "message": "Ubicació actual del GPS"
+        "message": "Ubicació actual"
     },
     "gpsMapMessage1": {
         "message": "Si us plau, revisa la connexió a Internet"
@@ -3038,7 +3038,7 @@
         "description": "Do not translate"
     },
     "gpsSignalStrHead": {
-        "message": "Potència senyal GPS"
+        "message": "Informació del senyal"
     },
     "gpsSignalStrHeadHelp": {
         "message": "Mostra la intensitat del senyal, la qualitat i l'estat de cada font GPS descoberta",
@@ -3055,9 +3055,6 @@
     },
     "gpsSignalSatId": {
         "message": "Sat ID"
-    },
-    "gpsSignalStatus": {
-        "message": "Estat"
     },
     "gpsSignalQuality": {
         "message": "Qualitat"
@@ -7756,5 +7753,224 @@
     "osdSetupPreviewCheckRulers": {
         "message": "Regles",
         "description": "Label for the checkbox to toggle OSD preview rulers around the preview"
+    },
+    "tabUserProfile": {
+        "message": "Perfil de l'usuari"
+    },
+    "labelEmail": {
+        "message": "Correu electrònic"
+    },
+    "placeholderEmailAddress": {
+        "message": "Introdueix la teva adreça de correu electrònic"
+    },
+    "userEmailRequired": {
+        "message": "L'adreça de correu electrònic és obligatòria"
+    },
+    "profileLoginMessage": {
+        "message": "Cal que inicieu la sessió per veure el vostre perfil."
+    },
+    "tabBackups": {
+        "message": "Còpies de seguretat"
+    },
+    "userPasskeyDeleteSuccess": {
+        "message": "La clau d'accés s'ha suprimit correctament"
+    },
+    "userPasskeyDeleteFailed": {
+        "message": "No s'ha pogut suprimir la clau d'accés"
+    },
+    "userTokenDeleteSuccess": {
+        "message": "La clau d'accés s'ha suprimit correctament"
+    },
+    "userTokenDeleteFailed": {
+        "message": "No s'ha pogut suprimir la clau d'accés"
+    },
+    "userProfileLoadFailed": {
+        "message": "No s'ha pogut carregar el perfil d'usuari"
+    },
+    "userTokenLoadFailed": {
+        "message": "No s'han pogut carregar les claus d'usuari"
+    },
+    "userPasskeyLoadFailed": {
+        "message": "No s'ha pogut carregar les claus d'usuari"
+    },
+    "userProfileUpdateSuccess": {
+        "message": "Perfil actualitzat amb èxit"
+    },
+    "userProfileUpdateFailed": {
+        "message": "No s'ha pogut actualitzar el perfil"
+    },
+    "userBackupsLoadFailed": {
+        "message": "No s'han pogut carregar les còpies de seguretat"
+    },
+    "userBackupDownloadFailed": {
+        "message": "No s'ha pogut descarregar la còpia de seguretat"
+    },
+    "userBackupUpdateSuccess": {
+        "message": "Perfil actualitzat amb èxit"
+    },
+    "userBackupUpdateFailed": {
+        "message": "No s'ha pogut actualitzar la còpia de seguretat"
+    },
+    "userBackupDeleteSuccess": {
+        "message": "S'ha eliminat la còpia de seguretat amb èxit"
+    },
+    "userBackupDeleteFailed": {
+        "message": "No s'ha pogut suprimir la còpia de seguretat"
+    },
+    "userPasskeyNoPasskeys": {
+        "message": "No hi ha contrasenyes disponibles"
+    },
+    "userTokenNoTokens": {
+        "message": "No hi ha contrasenyes disponibles"
+    },
+    "profileBackupSuccess": {
+        "message": "Còpia de seguretat realitzada"
+    },
+    "profileBackupApiSuccess": {
+        "message": "Còpia de seguretat desada correctament a l'API"
+    },
+    "profileBackupApiFail": {
+        "message": "No s'ha pogut desar la còpia de seguretat a l'API"
+    },
+    "profileBackupEmptyResult": {
+        "message": "Còpia de seguretat fallida"
+    },
+    "labelSignCounter": {
+        "message": "Comptador de senyals"
+    },
+    "labelLogin": {
+        "message": "Iniciar Sessió"
+    },
+    "labelSignOut": {
+        "message": "Tanca la sessió"
+    },
+    "labelCreatePasskey": {
+        "message": "Crea la clau d'accés"
+    },
+    "labelUsePasskey": {
+        "message": "Utilitza la clau d'accés"
+    },
+    "titleEnterVerificationCode": {
+        "message": "Introduïu el codi de verificació"
+    },
+    "labelVerificationCode": {
+        "message": "Codi de verificació"
+    },
+    "labelCode": {
+        "message": "Codi"
+    },
+    "userLoggingIn": {
+        "message": "S'està iniciant la sessió..."
+    },
+    "userSignedOut": {
+        "message": "Sessio tancada"
+    },
+    "userSignOutFailed": {
+        "message": "Error en tancar la sessió"
+    },
+    "userLoginSuccess": {
+        "message": "S'ha iniciat la sessió correctament"
+    },
+    "userLoginFailed": {
+        "message": "S'ha produït un error a l'accedir"
+    },
+    "userCreatePasskeyFailed": {
+        "message": "No s'ha pogut crear la clau d'accés"
+    },
+    "userCreatePasskeySuccess": {
+        "message": "Clau d'accés creada correctament"
+    },
+    "userVerifyingCode": {
+        "message": "Verificant codi..."
+    },
+    "userCreatingPasskey": {
+        "message": "S'està creant la clau de pas..."
+    },
+    "dataWaitingForData": {
+        "message": "Esperant dades..."
+    },
+    "labelId": {
+        "message": "ID"
+    },
+    "labelCreated": {
+        "message": "Creat"
+    },
+    "labelUpdated": {
+        "message": "Actualitzat"
+    },
+    "labelActions": {
+        "message": "Accions"
+    },
+    "labelDetails": {
+        "message": "Detalls"
+    },
+    "labelExpiry": {
+        "message": "Caducitat"
+    },
+    "labelDescription": {
+        "message": "Descripció"
+    },
+    "labelDate": {
+        "message": "Data"
+    },
+    "actionDownload": {
+        "message": "Descarrega"
+    },
+    "actionBackup": {
+        "message": "Còpia de Seguretat"
+    },
+    "actionEdit": {
+        "message": "Edita"
+    },
+    "actionDelete": {
+        "message": "Esborra"
+    },
+    "actionSave": {
+        "message": "Desa"
+    },
+    "titleEditProfile": {
+        "message": "Edita perfil"
+    },
+    "titleLogin": {
+        "message": "Iniciar Sessió"
+    },
+    "labelName": {
+        "message": "Nom"
+    },
+    "labelAddress": {
+        "message": "Adreça"
+    },
+    "labelCountry": {
+        "message": "País"
+    },
+    "confirmDelete": {
+        "message": "Està segur que vols esborrar aquest {{item}}?"
+    },
+    "itemBackup": {
+        "message": "Còpia de Seguretat"
+    },
+    "itemToken": {
+        "message": "clau"
+    },
+    "itemPasskey": {
+        "message": "clau d'accés"
+    },
+    "notLoggedIn": {
+        "message": "No heu iniciat sessió"
+    },
+    "backupNoBackupsAvailable": {
+        "message": "No hi ha cap còpia de seguretat disponible"
+    },
+    "titleEditBackup": {
+        "message": "Edita la còpia de seguretat"
+    },
+    "backupMcuUnknown": {
+        "message": "MCU desconegut"
+    },
+    "sectionUserTokens": {
+        "message": "Tokens d'usuari"
+    },
+    "sectionUserPasskeys": {
+        "message": "Claus de pas d'usuari"
     }
 }

@@ -430,9 +430,6 @@
     "buildServerUsingCached": {
         "message": "Usando información construida na caché para $1."
     },
-    "buildServerSupportRequestSubmission": {
-        "message": "<br>*** Datos de apoio enviados *** <br>Id: $1<br><br><br># copie o ID para proporcionarllo ó equipo de betaflight."
-    },
     "buildKey": {
         "message": "Chave de compilación: <strong>$1<\/strong>"
     },
@@ -1347,9 +1344,6 @@
     },
     "configurationLoopTimeHelp": {
         "message": "<strong>Nota:<\/strong> Asegúrese de que a súa FC poida funcionar a estas velocidades. Comprobe a estabilidade da CPU e do ciclo. Cambiar isto pode requirir a reordenación de PID. SUXERENCIA: desactivar o acelerómetro e outros sensores para obter máis rendemento."
-    },
-    "configurationGPS": {
-        "message": "Configuración do GPS"
     },
     "configurationGPSHelp": {
         "message": "Configurar o protocolo para o dispositivo GPS (lembre configurar o porto na pestana Porto), usar o baudio automático (ou configurar a velocidade na pestana Porto) e outra configuración",
@@ -2411,15 +2405,9 @@
     "servosReverse": {
         "message": "Reverso"
     },
-    "gpsHead": {
-        "message": "GPS"
-    },
     "gpsHeadHelp": {
         "message": "Mostrar información diversa relacionada co GPS. Os títulos só se mostran cando o magnetómetro está en uso",
         "description": "Help text for gpsHead"
-    },
-    "gpsMapHead": {
-        "message": "Localización GPS actual"
     },
     "gpsMapMessage1": {
         "message": "Por favor comprove a súa conexión a internet"
@@ -2460,9 +2448,6 @@
     "gpsPositionalDop": {
         "message": "DOP posicional:"
     },
-    "gpsSignalStrHead": {
-        "message": "Forza de sinal GPS"
-    },
     "gpsSignalStrHeadHelp": {
         "message": "Mostra a intensidade do sinal, a calidade e o estado de cada fonte GPS descuberta",
         "description": "Help text for gpsSignalStrHead"
@@ -2478,9 +2463,6 @@
     },
     "gpsSignalSatId": {
         "message": "Identificación satélite"
-    },
-    "gpsSignalStatus": {
-        "message": "Estado"
     },
     "gpsSignalQuality": {
         "message": "Calidade"

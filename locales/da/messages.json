@@ -550,7 +550,7 @@
         "message": "Benytter cache release information for $1."
     },
     "buildServerSupportRequestSubmission": {
-        "message": "<br>*** Logoplysninger sendt *** <br>Id: $1<br><br><br># medsend kopi af ID ved henvendelser til Betaflight team."
+        "message": "<br>*** Logoplysninger sendt *** <br>Id: $1<br><br><br># husk at medtage ID ved henvendelser til Betaflight team."
     },
     "buildKey": {
         "message": "Build ID: <strong>$1<\/strong>"
@@ -2973,14 +2973,14 @@
         "description": "Don't translate!!!"
     },
     "gpsHead": {
-        "message": "GPS status"
+        "message": "Generelt"
     },
     "gpsHeadHelp": {
         "message": "Angiver forskellig GPS information. Kurs vises kun hvis kompas anvendes.",
         "description": "Help text for gpsHead"
     },
     "gpsMapHead": {
-        "message": "Aktuel GPS position"
+        "message": "Nuværende placering"
     },
     "gpsMapMessage1": {
         "message": "Tjek Internetforbindelsen"
@@ -3034,7 +3034,7 @@
         "description": "Do not translate"
     },
     "gpsSignalStrHead": {
-        "message": "GPS signalstyrke"
+        "message": "Signal info"
     },
     "gpsSignalStrHeadHelp": {
         "message": "Angiver signal styrke, kvalitet og status for hver opdaget GPS station.",
@@ -3051,9 +3051,6 @@
     },
     "gpsSignalSatId": {
         "message": "Sat-ID"
-    },
-    "gpsSignalStatus": {
-        "message": "Status"
     },
     "gpsSignalQuality": {
         "message": "Kvalitet"
@@ -7752,5 +7749,224 @@
     "osdSetupPreviewCheckRulers": {
         "message": "Lineal",
         "description": "Label for the checkbox to toggle OSD preview rulers around the preview"
+    },
+    "tabUserProfile": {
+        "message": "Brugerprofil"
+    },
+    "labelEmail": {
+        "message": "Mail"
+    },
+    "placeholderEmailAddress": {
+        "message": "Angiv mail adresse"
+    },
+    "userEmailRequired": {
+        "message": "Mail adresse er obligatorisk"
+    },
+    "profileLoginMessage": {
+        "message": "Log ind for at se din profil."
+    },
+    "tabBackups": {
+        "message": "Sikkerhedskopier"
+    },
+    "userPasskeyDeleteSuccess": {
+        "message": "Adgangsnøgle blev slettet"
+    },
+    "userPasskeyDeleteFailed": {
+        "message": "Kunne ikke slette adgangsnøgle"
+    },
+    "userTokenDeleteSuccess": {
+        "message": "Token blev slettet"
+    },
+    "userTokenDeleteFailed": {
+        "message": "Kunne ikke slette token"
+    },
+    "userProfileLoadFailed": {
+        "message": "Kunne ikke indlæse brugerprofil"
+    },
+    "userTokenLoadFailed": {
+        "message": "Kunne ikke indlæse brugers tokens"
+    },
+    "userPasskeyLoadFailed": {
+        "message": "Kunne ikke indlæse brugers adgangsnøgler"
+    },
+    "userProfileUpdateSuccess": {
+        "message": "Profil opdateret"
+    },
+    "userProfileUpdateFailed": {
+        "message": "Kunne ikke opdatere profil"
+    },
+    "userBackupsLoadFailed": {
+        "message": "Kunne ikke indlæse sikkerhedskopier"
+    },
+    "userBackupDownloadFailed": {
+        "message": "Kunne ikke hente sikkerhedskopi"
+    },
+    "userBackupUpdateSuccess": {
+        "message": "Sikkerhedskopi opdateret"
+    },
+    "userBackupUpdateFailed": {
+        "message": "Kunne ikke opdatere sikkerhedskopi"
+    },
+    "userBackupDeleteSuccess": {
+        "message": "Sikkerhedskopi slettet"
+    },
+    "userBackupDeleteFailed": {
+        "message": "Kunne ikke slette sikkerhedskopi"
+    },
+    "userPasskeyNoPasskeys": {
+        "message": "Ingen adgangsnøgler tilgængelige"
+    },
+    "userTokenNoTokens": {
+        "message": "Ingen tokens tilgængelige"
+    },
+    "profileBackupSuccess": {
+        "message": "Sikkerhedskopiering ok"
+    },
+    "profileBackupApiSuccess": {
+        "message": "Sikkerhedskopi gemt ok til $P1$"
+    },
+    "profileBackupApiFail": {
+        "message": "Sikkerhedskopi kunne ikke gemmes gennem API"
+    },
+    "profileBackupEmptyResult": {
+        "message": "Sikkerhedskopiering fejlet"
+    },
+    "labelSignCounter": {
+        "message": "Underskrift"
+    },
+    "labelLogin": {
+        "message": "Login"
+    },
+    "labelSignOut": {
+        "message": "Log ud"
+    },
+    "labelCreatePasskey": {
+        "message": "Opret adgangsnøgle"
+    },
+    "labelUsePasskey": {
+        "message": "Anvend adgangsnøgle"
+    },
+    "titleEnterVerificationCode": {
+        "message": "Indtast verifikationskode"
+    },
+    "labelVerificationCode": {
+        "message": "Verifikationskode"
+    },
+    "labelCode": {
+        "message": "Kode"
+    },
+    "userLoggingIn": {
+        "message": "Logger ind..."
+    },
+    "userSignedOut": {
+        "message": "Logget ud"
+    },
+    "userSignOutFailed": {
+        "message": "Kunne ikke logge ud"
+    },
+    "userLoginSuccess": {
+        "message": "Login ok"
+    },
+    "userLoginFailed": {
+        "message": "Login fejlet"
+    },
+    "userCreatePasskeyFailed": {
+        "message": "Mislykkedes at oprette en adgangsnøgle"
+    },
+    "userCreatePasskeySuccess": {
+        "message": "Adgangsnøgle oprettet"
+    },
+    "userVerifyingCode": {
+        "message": "Verificerer kode..."
+    },
+    "userCreatingPasskey": {
+        "message": "Opret adgangsnøgle..."
+    },
+    "dataWaitingForData": {
+        "message": "Venter på data..."
+    },
+    "labelId": {
+        "message": "ID"
+    },
+    "labelCreated": {
+        "message": "Oprettet"
+    },
+    "labelUpdated": {
+        "message": "Opdateret"
+    },
+    "labelActions": {
+        "message": "Handlinger"
+    },
+    "labelDetails": {
+        "message": "Detaljer"
+    },
+    "labelExpiry": {
+        "message": "Udløb"
+    },
+    "labelDescription": {
+        "message": "Beskriveslse"
+    },
+    "labelDate": {
+        "message": "Dato"
+    },
+    "actionDownload": {
+        "message": "Hent"
+    },
+    "actionBackup": {
+        "message": "Sikkerhedskopi"
+    },
+    "actionEdit": {
+        "message": "Rediger"
+    },
+    "actionDelete": {
+        "message": "Slet"
+    },
+    "actionSave": {
+        "message": "Gem"
+    },
+    "titleEditProfile": {
+        "message": "Rediger profil"
+    },
+    "titleLogin": {
+        "message": "Login"
+    },
+    "labelName": {
+        "message": "Navn"
+    },
+    "labelAddress": {
+        "message": "Adresse"
+    },
+    "labelCountry": {
+        "message": "Land"
+    },
+    "confirmDelete": {
+        "message": "Er du sikker på, at du vil slette dette element {{item}} ?"
+    },
+    "itemBackup": {
+        "message": "sikkerhedskopi"
+    },
+    "itemToken": {
+        "message": "token"
+    },
+    "itemPasskey": {
+        "message": "adgangsnøgle"
+    },
+    "notLoggedIn": {
+        "message": "Ikke logget ind"
+    },
+    "backupNoBackupsAvailable": {
+        "message": "Ingen sikkerhedskopier tilgængelige"
+    },
+    "titleEditBackup": {
+        "message": "Rediger sikkerhedskopi"
+    },
+    "backupMcuUnknown": {
+        "message": "MCU ukendt"
+    },
+    "sectionUserTokens": {
+        "message": "Bruger tokens"
+    },
+    "sectionUserPasskeys": {
+        "message": "Bruger adgangsnøgler"
     }
 }

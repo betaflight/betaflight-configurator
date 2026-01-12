@@ -1731,7 +1731,7 @@
         "message": "<strong>Nota:<\/strong> Assicurati che il FC sia in grado di operare a queste velocità! controlla la stabilità della CPU e del tempo di ciclo. La modifica potrebbe richiedere una regolazione dei PID. SUGGERIMENTO: disabilita l'accelerometro e gli altri sensori per avere maggiori prestazioni."
     },
     "configurationGPS": {
-        "message": "Configurazione GPS"
+        "message": "Configurazione"
     },
     "configurationGPSHelp": {
         "message": "Imposta il protocollo per il dispositivo GPS (ricorda di configurare la porta nella scheda Porte), usa Auto (o setta la velocità nella scheda Porta) e altre configurazioni",
@@ -2965,14 +2965,14 @@
         "description": "Don't translate!!!"
     },
     "gpsHead": {
-        "message": "GPS"
+        "message": "Generale"
     },
     "gpsHeadHelp": {
         "message": "Mostra varie informazioni del GPS. La direzione viene mostrata solo se il Magnetometro è in uso",
         "description": "Help text for gpsHead"
     },
     "gpsMapHead": {
-        "message": "Posizione GPS attuale"
+        "message": "Posizione attuale"
     },
     "gpsMapMessage1": {
         "message": "Per favore controlla la tua connessione Internet"
@@ -3026,7 +3026,7 @@
         "description": "Do not translate"
     },
     "gpsSignalStrHead": {
-        "message": "Potenza del segnale GPS"
+        "message": "Info Segnale"
     },
     "gpsSignalStrHeadHelp": {
         "message": "Mostra la potenza, qualità e stato del segnale per ogni satellite GPS rilevato",
@@ -3043,9 +3043,6 @@
     },
     "gpsSignalSatId": {
         "message": "ID Sat"
-    },
-    "gpsSignalStatus": {
-        "message": "Stato"
     },
     "gpsSignalQuality": {
         "message": "Qualità"
@@ -7744,5 +7741,224 @@
     "osdSetupPreviewCheckRulers": {
         "message": "Righelli",
         "description": "Label for the checkbox to toggle OSD preview rulers around the preview"
+    },
+    "tabUserProfile": {
+        "message": "Profilo Utente"
+    },
+    "labelEmail": {
+        "message": "Email"
+    },
+    "placeholderEmailAddress": {
+        "message": "Indirizzo email"
+    },
+    "userEmailRequired": {
+        "message": "Indirizzo email è obbligatorio"
+    },
+    "profileLoginMessage": {
+        "message": "Effettua il login per visualizzare il tuo profilo."
+    },
+    "tabBackups": {
+        "message": "Backups"
+    },
+    "userPasskeyDeleteSuccess": {
+        "message": "Passkey cancellata con successo"
+    },
+    "userPasskeyDeleteFailed": {
+        "message": "Impossibile eliminare la passkey"
+    },
+    "userTokenDeleteSuccess": {
+        "message": "Token eliminato con successo"
+    },
+    "userTokenDeleteFailed": {
+        "message": "Impossibile eliminare il token"
+    },
+    "userProfileLoadFailed": {
+        "message": "Impossibile caricare il profilo utente"
+    },
+    "userTokenLoadFailed": {
+        "message": "Impossibile caricare i token utente"
+    },
+    "userPasskeyLoadFailed": {
+        "message": "Impossibile caricare la passkey utente"
+    },
+    "userProfileUpdateSuccess": {
+        "message": "Profilo aggiornato"
+    },
+    "userProfileUpdateFailed": {
+        "message": "Aggiornamento del profilo fallito"
+    },
+    "userBackupsLoadFailed": {
+        "message": "Impossibile caricare i backup"
+    },
+    "userBackupDownloadFailed": {
+        "message": "Impossibile scaricare il backup"
+    },
+    "userBackupUpdateSuccess": {
+        "message": "Backup aggiornato con successo"
+    },
+    "userBackupUpdateFailed": {
+        "message": "Impossibile aggiornare il backup"
+    },
+    "userBackupDeleteSuccess": {
+        "message": "Backup eliminato con successo"
+    },
+    "userBackupDeleteFailed": {
+        "message": "Impossibile cancellare il backup"
+    },
+    "userPasskeyNoPasskeys": {
+        "message": "Nessuna passkey disponibile"
+    },
+    "userTokenNoTokens": {
+        "message": "Nessun token disponibile"
+    },
+    "profileBackupSuccess": {
+        "message": "Backup completato con successo"
+    },
+    "profileBackupApiSuccess": {
+        "message": "Backup salvato con successo su API"
+    },
+    "profileBackupApiFail": {
+        "message": "Backup non salvato su API"
+    },
+    "profileBackupEmptyResult": {
+        "message": "Backup fallito"
+    },
+    "labelSignCounter": {
+        "message": "Conferma firma"
+    },
+    "labelLogin": {
+        "message": "Login"
+    },
+    "labelSignOut": {
+        "message": "Esci"
+    },
+    "labelCreatePasskey": {
+        "message": "Crea Passkey"
+    },
+    "labelUsePasskey": {
+        "message": "Usa Passkey"
+    },
+    "titleEnterVerificationCode": {
+        "message": "Inserisci Codice Di Verifica"
+    },
+    "labelVerificationCode": {
+        "message": "Codice di Verifica"
+    },
+    "labelCode": {
+        "message": "Codice"
+    },
+    "userLoggingIn": {
+        "message": "Accesso in corso..."
+    },
+    "userSignedOut": {
+        "message": "Disconnesso"
+    },
+    "userSignOutFailed": {
+        "message": "Impossibile disconnettersi"
+    },
+    "userLoginSuccess": {
+        "message": "Accesso effettuato con successo"
+    },
+    "userLoginFailed": {
+        "message": "Accesso fallito"
+    },
+    "userCreatePasskeyFailed": {
+        "message": "Impossibile creare la passkey"
+    },
+    "userCreatePasskeySuccess": {
+        "message": "Passkey creata con successo"
+    },
+    "userVerifyingCode": {
+        "message": "Verifica codice..."
+    },
+    "userCreatingPasskey": {
+        "message": "Creazione passkey..."
+    },
+    "dataWaitingForData": {
+        "message": "In attesa dei dati..."
+    },
+    "labelId": {
+        "message": "ID"
+    },
+    "labelCreated": {
+        "message": "Creato"
+    },
+    "labelUpdated": {
+        "message": "Aggiornato"
+    },
+    "labelActions": {
+        "message": "Azioni"
+    },
+    "labelDetails": {
+        "message": "Dettagli"
+    },
+    "labelExpiry": {
+        "message": "Scadenza"
+    },
+    "labelDescription": {
+        "message": "Descrizione"
+    },
+    "labelDate": {
+        "message": "Data"
+    },
+    "actionDownload": {
+        "message": "Scarica"
+    },
+    "actionBackup": {
+        "message": "Backup"
+    },
+    "actionEdit": {
+        "message": "Modifica"
+    },
+    "actionDelete": {
+        "message": "Cancella"
+    },
+    "actionSave": {
+        "message": "Salva"
+    },
+    "titleEditProfile": {
+        "message": "Modifica Profilo"
+    },
+    "titleLogin": {
+        "message": "Accedi"
+    },
+    "labelName": {
+        "message": "Nome"
+    },
+    "labelAddress": {
+        "message": "Indirizzo"
+    },
+    "labelCountry": {
+        "message": "Paese"
+    },
+    "confirmDelete": {
+        "message": "Sei sicuro di voler eliminare questo {{item}}?"
+    },
+    "itemBackup": {
+        "message": "backup"
+    },
+    "itemToken": {
+        "message": "token"
+    },
+    "itemPasskey": {
+        "message": "passkey"
+    },
+    "notLoggedIn": {
+        "message": "Accesso non effettuato"
+    },
+    "backupNoBackupsAvailable": {
+        "message": "Nessun backup disponibile"
+    },
+    "titleEditBackup": {
+        "message": "Modifica Backup"
+    },
+    "backupMcuUnknown": {
+        "message": "MCU sconosciuto"
+    },
+    "sectionUserTokens": {
+        "message": "Token Utente"
+    },
+    "sectionUserPasskeys": {
+        "message": "Password Utente"
     }
 }

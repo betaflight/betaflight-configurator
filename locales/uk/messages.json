@@ -538,7 +538,7 @@
         "message": "Використання кешованої інформації збірки для $1."
     },
     "buildServerSupportRequestSubmission": {
-        "message": "<br>*** Дані підтримки надіслано*** <br>Id: $1<br><br><br># скопіюйте ID і надайте команді betaflight."
+        "message": "<br>*** Дані для підтримки надіслано*** <br>Ідентифікатор: $1<br><br><br># скопіюйте ідентифікатор і надайте команді betaflight."
     },
     "buildKey": {
         "message": "Ключ збірки: <strong>$1<\/strong>"
@@ -1723,7 +1723,7 @@
         "message": "<strong>Примітка:<\/strong> Переконайтеся, що ваш FC може працювати на цих швидкостях! Перевірте стабільність ЦП та часу циклу. Зміна цих параметрів може вимагати переналаштування PID. Порада: Вимкніть акселерометр та інші датчики, щоб отримати більшу продуктивність."
     },
     "configurationGPS": {
-        "message": "Конфігурація GPS"
+        "message": "Конфігурація"
     },
     "configurationGPSHelp": {
         "message": "Налаштуйте протокол для пристрою GPS (не забудьте налаштувати порт на вкладці «Порти»), використовуйте автоматичні налаштування (або вкажіть швидкість на вкладці «Порти») та інші параметри",
@@ -2937,14 +2937,14 @@
         "message": "Зворотний"
     },
     "gpsHead": {
-        "message": "GPS"
+        "message": "Загальне"
     },
     "gpsHeadHelp": {
         "message": "Показати різну інформацію, пов'язану з GPS. Курс показуються лише тоді, коли використовується компас",
         "description": "Help text for gpsHead"
     },
     "gpsMapHead": {
-        "message": "Поточне GPS-розташування"
+        "message": "Поточне розташування"
     },
     "gpsMapMessage1": {
         "message": "Перевірте інтернет-з'єднання"
@@ -2998,7 +2998,7 @@
         "description": "Do not translate"
     },
     "gpsSignalStrHead": {
-        "message": "Рівень сигналу GPS"
+        "message": "Відомості про сигнал"
     },
     "gpsSignalStrHeadHelp": {
         "message": "Показувати рівень сигналу, якість та статус для кожного знайденого джерела GPS",
@@ -3015,9 +3015,6 @@
     },
     "gpsSignalSatId": {
         "message": "ID супутника"
-    },
-    "gpsSignalStatus": {
-        "message": "Стан"
     },
     "gpsSignalQuality": {
         "message": "Якість"
@@ -6022,6 +6019,10 @@
         "message": "Короткий формат дати",
         "description": "One of the variants of the RTC date and time element of the OSD"
     },
+    "osdTextElementRtcDateTimeVariantTimeOnly": {
+        "message": "Лише час",
+        "description": "One of the variants of the RTC date and time element of the OSD"
+    },
     "osdDescElementRtcDateTime": {
         "message": "Дата \/ час з годинника реального часу"
     },
@@ -7648,8 +7649,17 @@
     "firmwareFlasherOSDProtocolNotSelectedContinue": {
         "message": "Продовжити без протоколу OSD"
     },
+    "firmwareFlasherOptionLabelVerifiedPartner": {
+        "message": "✅ Перевірений партнер"
+    },
+    "firmwareFlasherOptionLabelVendorCommunity": {
+        "message": "⚠️ Постачальник \/ Спільнота"
+    },
     "firmwareFlasherOptionLabelLegacy": {
         "message": "Застарілі"
+    },
+    "firmwareFlasherOptionLabelNotQualified": {
+        "message": "⚠️ Пристрій, що підтримується спільнотою \/ виробником, - офіційно не підтримується ⚠️"
     },
     "coreBuild": {
         "message": "Лише ядро"
@@ -7703,5 +7713,224 @@
     "osdSetupPreviewCheckRulers": {
         "message": "Лінійки",
         "description": "Label for the checkbox to toggle OSD preview rulers around the preview"
+    },
+    "tabUserProfile": {
+        "message": "Профіль користувача"
+    },
+    "labelEmail": {
+        "message": "Електронна пошта"
+    },
+    "placeholderEmailAddress": {
+        "message": "Введіть адресу електронної пошти"
+    },
+    "userEmailRequired": {
+        "message": "Адреса електронної пошти обов'язкова"
+    },
+    "profileLoginMessage": {
+        "message": "Будь ласка, увійдіть, щоб переглянути свій профіль."
+    },
+    "tabBackups": {
+        "message": "Резервні копії"
+    },
+    "userPasskeyDeleteSuccess": {
+        "message": "Ключ доступу успішно видалено"
+    },
+    "userPasskeyDeleteFailed": {
+        "message": "Не вдалося видалити ключ доступу"
+    },
+    "userTokenDeleteSuccess": {
+        "message": "Токен успішно видалено"
+    },
+    "userTokenDeleteFailed": {
+        "message": "Не вдалося видалити токен"
+    },
+    "userProfileLoadFailed": {
+        "message": "Не вдалося завантажити профіль користувача"
+    },
+    "userTokenLoadFailed": {
+        "message": "Не вдалося завантажити токени користувача"
+    },
+    "userPasskeyLoadFailed": {
+        "message": "Не вдалося завантажити ключі доступу користувача"
+    },
+    "userProfileUpdateSuccess": {
+        "message": "Профіль успішно оновлено"
+    },
+    "userProfileUpdateFailed": {
+        "message": "Не вдалося оновити профіль"
+    },
+    "userBackupsLoadFailed": {
+        "message": "Не вдалося завантажити резервні копії"
+    },
+    "userBackupDownloadFailed": {
+        "message": "Не вдалося завантажити резервні копії"
+    },
+    "userBackupUpdateSuccess": {
+        "message": "Резервна копія успішно змінена"
+    },
+    "userBackupUpdateFailed": {
+        "message": "Не вдалося оновити резервну копію"
+    },
+    "userBackupDeleteSuccess": {
+        "message": "Резервну копію успішно видалено"
+    },
+    "userBackupDeleteFailed": {
+        "message": "Не вдалося видалити резервну копію"
+    },
+    "userPasskeyNoPasskeys": {
+        "message": "Відсутні ключі доступу"
+    },
+    "userTokenNoTokens": {
+        "message": "Токени відсутні"
+    },
+    "profileBackupSuccess": {
+        "message": "Резервну копію створено"
+    },
+    "profileBackupApiSuccess": {
+        "message": "Резервну копію успішно збережено в API"
+    },
+    "profileBackupApiFail": {
+        "message": "Резервну копію не вдалося зберегти в API"
+    },
+    "profileBackupEmptyResult": {
+        "message": "Не вдалося виконати резервне копіювання"
+    },
+    "labelSignCounter": {
+        "message": "Лічильник спроб"
+    },
+    "labelLogin": {
+        "message": "Логін"
+    },
+    "labelSignOut": {
+        "message": "Вийти"
+    },
+    "labelCreatePasskey": {
+        "message": "Створити ключ доступу"
+    },
+    "labelUsePasskey": {
+        "message": "Використовувати ключ доступу"
+    },
+    "titleEnterVerificationCode": {
+        "message": "Введіть код підтвердження"
+    },
+    "labelVerificationCode": {
+        "message": "Код підтвердження"
+    },
+    "labelCode": {
+        "message": "Код"
+    },
+    "userLoggingIn": {
+        "message": "Виконується вхід..."
+    },
+    "userSignedOut": {
+        "message": "Ви вийшли з профілю"
+    },
+    "userSignOutFailed": {
+        "message": "Не вдалося вийти"
+    },
+    "userLoginSuccess": {
+        "message": "Вхід вдало виконано"
+    },
+    "userLoginFailed": {
+        "message": "Помилка входу"
+    },
+    "userCreatePasskeyFailed": {
+        "message": "Не вдалося створити ключ доступу"
+    },
+    "userCreatePasskeySuccess": {
+        "message": "Ключ доступу успішно створено"
+    },
+    "userVerifyingCode": {
+        "message": "Перевірка коду..."
+    },
+    "userCreatingPasskey": {
+        "message": "Створення ключа доступу..."
+    },
+    "dataWaitingForData": {
+        "message": "Очікування даних ..."
+    },
+    "labelId": {
+        "message": "Ідентифікатор"
+    },
+    "labelCreated": {
+        "message": "Створено"
+    },
+    "labelUpdated": {
+        "message": "Оновлено"
+    },
+    "labelActions": {
+        "message": "Дії"
+    },
+    "labelDetails": {
+        "message": "Деталі"
+    },
+    "labelExpiry": {
+        "message": "Термін дії"
+    },
+    "labelDescription": {
+        "message": "Опис"
+    },
+    "labelDate": {
+        "message": "Дата"
+    },
+    "actionDownload": {
+        "message": "Завантажити"
+    },
+    "actionBackup": {
+        "message": "Резервне копіювання"
+    },
+    "actionEdit": {
+        "message": "Редагувати"
+    },
+    "actionDelete": {
+        "message": "Видалити"
+    },
+    "actionSave": {
+        "message": "Зберегти"
+    },
+    "titleEditProfile": {
+        "message": "Редагувати профіль"
+    },
+    "titleLogin": {
+        "message": "Логін"
+    },
+    "labelName": {
+        "message": "Ім'я"
+    },
+    "labelAddress": {
+        "message": "Адреса"
+    },
+    "labelCountry": {
+        "message": "Країна"
+    },
+    "confirmDelete": {
+        "message": "Ви впевнені, що ви хочете видалити {{item}}?"
+    },
+    "itemBackup": {
+        "message": "резервна копія"
+    },
+    "itemToken": {
+        "message": "токен"
+    },
+    "itemPasskey": {
+        "message": "ключ доступу"
+    },
+    "notLoggedIn": {
+        "message": "Ви не увійшли у систему"
+    },
+    "backupNoBackupsAvailable": {
+        "message": "Відсутні резервні копії"
+    },
+    "titleEditBackup": {
+        "message": "Редагувати резервну копію"
+    },
+    "backupMcuUnknown": {
+        "message": "Мікроконтролер невідомий"
+    },
+    "sectionUserTokens": {
+        "message": "Токени користувача"
+    },
+    "sectionUserPasskeys": {
+        "message": "Користувацькі ключі доступу"
     }
 }

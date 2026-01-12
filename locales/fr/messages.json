@@ -505,9 +505,6 @@
     "buildServerUsingCached": {
         "message": "Utilise les informations en cache pour $1."
     },
-    "buildServerSupportRequestSubmission": {
-        "message": "<br>*** Données de support soumises *** <br>ID : $1<br><br><br># Copier l'ID et le fournir à l'équipe de betaflight."
-    },
     "buildKey": {
         "message": "Clé de compilation: <strong>$1<\/strong>"
     },
@@ -1428,9 +1425,6 @@
     "configurationLoopTimeHelp": {
         "message": "<strong>Note:<\/strong> Assurez-vous que votre FC peut fonctionner à ces vitesses ! Vérifiez le CPU. Cela peut demander de re-tuner ses PID. TIP: Désactivez l'accéléromètre et les autres capteurs pour gagner en performance."
     },
-    "configurationGPS": {
-        "message": "Configuration du GPS"
-    },
     "configurationGPSProtocol": {
         "message": "Protocole"
     },
@@ -2292,12 +2286,6 @@
     "servosReverse": {
         "message": "Inversé"
     },
-    "gpsHead": {
-        "message": "GPS"
-    },
-    "gpsMapHead": {
-        "message": "Position GPS actuelle"
-    },
     "gpsMapMessage1": {
         "message": "Veuillez vérifier votre connexion Internet"
     },
@@ -2334,9 +2322,6 @@
     "gpsDistToHome": {
         "message": "Distance du point de décollage:"
     },
-    "gpsSignalStrHead": {
-        "message": "Force du signal GPS"
-    },
     "gpsSignalStr": {
         "message": "Force du signal"
     },
@@ -2345,9 +2330,6 @@
     },
     "gpsSignalSatId": {
         "message": "Sat ID"
-    },
-    "gpsSignalStatus": {
-        "message": "Statut"
     },
     "gpsSignalQuality": {
         "message": "Qualité"
