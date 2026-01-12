@@ -122,9 +122,8 @@ export default defineComponent({
     white-space: nowrap;
     gap: 0.5rem;
     bottom: 0;
-    width: calc(100% - 20px);
-    height: 20px;
-    line-height: 20px;
+    box-sizing: border-box;
+    width: 100%;
     padding: 0.5rem 1rem;
     background-color: var(--surface-300);
     .message {
