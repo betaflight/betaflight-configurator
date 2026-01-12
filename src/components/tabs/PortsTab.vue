@@ -153,7 +153,7 @@ import { i18n } from "../../js/localization";
 import { tracking } from "../../js/Analytics";
 import semver from "semver";
 import { API_VERSION_1_45, API_VERSION_1_47 } from "../../js/data_storage";
-import WikiButton from "../WikiButton.vue";
+import WikiButton from "../elements/WikiButton.vue";
 
 export default defineComponent({
     name: "PortsTab",

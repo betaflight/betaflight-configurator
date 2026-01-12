@@ -740,7 +740,7 @@ import semver from "semver";
 import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "../../js/data_storage";
 import { bit_check, bit_set, bit_clear } from "../../js/bit";
 import { updateTabList } from "../../js/utils/updateTabList";
-import WikiButton from "../WikiButton.vue";
+import WikiButton from "../elements/WikiButton.vue";
 
 export default defineComponent({
     name: "ConfigurationTab",

@@ -4,7 +4,7 @@ import StatusBar from "../components/status-bar/StatusBar.vue";
 import BatteryIcon from "../components/quad-status/BatteryIcon.vue";
 import PortPicker from "../components/port-picker/PortPicker.vue";
 import UserSession from "../components/user-session/UserSession.vue";
-import WikiButton from "../components/WikiButton.vue";
+import WikiButton from "../components/elements/WikiButton.vue";
 // Tab components
 import HelpTab from "../components/tabs/HelpTab.vue";
 import LandingTab from "../components/tabs/LandingTab.vue";

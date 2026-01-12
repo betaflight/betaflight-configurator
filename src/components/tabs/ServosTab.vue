@@ -133,7 +133,7 @@ import MSPCodes from "../../js/msp/MSPCodes";
 import { mspHelper } from "../../js/msp/MSPHelper";
 import { gui_log } from "../../js/gui_log";
 import { i18n } from "../../js/localization";
-import WikiButton from "../WikiButton.vue";
+import WikiButton from "../elements/WikiButton.vue";
 
 // Calculate bar style for servo visualization
 function getBarStyle(value) {

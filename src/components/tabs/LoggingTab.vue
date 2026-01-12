@@ -79,7 +79,7 @@ import MSPCodes from "../../js/msp/MSPCodes.js";
 import { useFlightControllerStore } from "@/stores/fc";
 import { useConnectionStore } from "@/stores/connection";
 import { useDialog } from "@/composables/useDialog";
-import WikiButton from "../WikiButton.vue";
+import WikiButton from "../elements/WikiButton.vue";
 
 const PROPERTY_ORDER = [
     "MSP_RAW_IMU",
