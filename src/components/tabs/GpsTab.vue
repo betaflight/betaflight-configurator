@@ -2,17 +2,7 @@
     <BaseTab tab-name="gps">
         <div class="content_wrapper">
             <div class="tab_title" v-html="$t('tabGPS')"></div>
-            <div class="cf_doc_version_bt">
-                <a
-                    id="button-documentation"
-                    href="https://betaflight.com/docs/wiki/configurator/gps-tab"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    :aria-label="$t('betaflightSupportButton')"
-                >
-                    {{ $t("betaflightSupportButton") }}
-                </a>
-            </div>
+            <WikiButton docUrl="gps" />
 
             <div class="grid-row grid-box col5">
                 <div class="col-span-2">
@@ -322,10 +312,14 @@ import { useFlightControllerStore } from "@/stores/fc";
 import { useConnectionStore } from "@/stores/connection";
 import { useNavigationStore } from "@/stores/navigation";
 import { useDialogStore } from "@/stores/dialog";
+import WikiButton from "../elements/WikiButton.vue";
 
 export default defineComponent({
     name: "GpsTab",
-    components: { BaseTab },
+    components: {
+        BaseTab,
+        WikiButton,
+    },
     setup() {
         const fcStore = useFlightControllerStore();
         const connectionStore = useConnectionStore();
