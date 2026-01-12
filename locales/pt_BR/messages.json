@@ -478,9 +478,6 @@
     "buildServerUsingCached": {
         "message": "Utilizando informações de compilação em cache para $1."
     },
-    "buildServerSupportRequestSubmission": {
-        "message": "<br>*** Dados de suporte enviados *** <br>Id: $1<br><br><br># copie o ID e envie para a equipe do betaflight."
-    },
     "buildKey": {
         "message": "Chave de build: <strong>$1<\/strong>"
     },
@@ -1443,9 +1440,6 @@
     },
     "configurationLoopTimeHelp": {
         "message": "<strong>Nota:<\/strong> Tenha a certeza de que o controlador é capaz de operar na velocidade selecionada! Verifique a estabilidade do CPU e o tempo de ciclo. Alterar este valor pode requerer uma nova afinação do PID. DICA: Desative o acelerômetro e outros sensores para ganhar mais performance."
-    },
-    "configurationGPS": {
-        "message": "Configuração do GPS"
     },
     "configurationGPSHelp": {
         "message": "Configure o protocolo para o dispositivo GPS (lembre-se também de o configurar na aba Porta), use o Baud Rate automático (ou configure a velocidade na aba Porta) entre outras configurações",
@@ -2535,15 +2529,9 @@
     "servosReverse": {
         "message": "Reverso"
     },
-    "gpsHead": {
-        "message": "GPS"
-    },
     "gpsHeadHelp": {
         "message": "Mostra várias informações relacionadas ao GPS. A direção somente é mostrado quando o magnetômetro está em uso",
         "description": "Help text for gpsHead"
-    },
-    "gpsMapHead": {
-        "message": "Localização GPS atual"
     },
     "gpsMapMessage1": {
         "message": "Verifique sua conexão com a internet"
@@ -2584,9 +2572,6 @@
     "gpsPositionalDop": {
         "message": "DOP Posicional:"
     },
-    "gpsSignalStrHead": {
-        "message": "Força do sinal GPS"
-    },
     "gpsSignalStrHeadHelp": {
         "message": "Mostre a intensidade, qualidade e status do sinal para cada fonte de GPS descoberta",
         "description": "Help text for gpsSignalStrHead"
@@ -2602,9 +2587,6 @@
     },
     "gpsSignalSatId": {
         "message": "ID Satélite"
-    },
-    "gpsSignalStatus": {
-        "message": "Status"
     },
     "gpsSignalQuality": {
         "message": "Qualidade"

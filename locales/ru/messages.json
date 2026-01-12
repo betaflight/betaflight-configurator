@@ -518,9 +518,6 @@
     "buildServerUsingCached": {
         "message": "Использование кэшированной информации о сборках для $1."
     },
-    "buildServerSupportRequestSubmission": {
-        "message": "<br>*** Данные отправлены *** <br>Id: $1<br><br><br># скопируйте ID и предоставьте его команде betaflight."
-    },
     "buildKey": {
         "message": "Ключ сборки: <strong>$1<\/strong>"
     },
@@ -1630,9 +1627,6 @@
     },
     "configurationLoopTimeHelp": {
         "message": "<strong>Примечание:<\/strong> Убедитесь, что Ваш FC способен работать на этих скоростях! Проверьте ЦП и стабильность времени цикла. Эти изменения могут потребовать подстройки PID. Совет: Отключите Акселерометр и другие сенсоры для повышения производительности."
-    },
-    "configurationGPS": {
-        "message": "Конфигурация GPS"
     },
     "configurationGPSHelp": {
         "message": "Протокол установленного GPS модуля (не забудьте установить порт во вкладке Порт), использовать автоопределение (или установить скорость на вкладке Порт), а также другую конфигурацию",
@@ -2815,15 +2809,9 @@
     "servosReverse": {
         "message": "Инвертировать"
     },
-    "gpsHead": {
-        "message": "GPS"
-    },
     "gpsHeadHelp": {
         "message": "Показать различную информацию, которая относится к GPS. Курс (Направление) отображается только при использовании Магнитометра",
         "description": "Help text for gpsHead"
-    },
-    "gpsMapHead": {
-        "message": "Текущее местоположение"
     },
     "gpsMapMessage1": {
         "message": "Пожалуйста, проверьте подключение к интернету"
@@ -2876,9 +2864,6 @@
         "message": "$t(configurationMagDeclination):",
         "description": "Do not translate"
     },
-    "gpsSignalStrHead": {
-        "message": "Мощность GPS сигнала"
-    },
     "gpsSignalStrHeadHelp": {
         "message": "Показывать уровень сигнала, качество и состояние каждого обнаруженного GPS источника",
         "description": "Help text for gpsSignalStrHead"
@@ -2894,9 +2879,6 @@
     },
     "gpsSignalSatId": {
         "message": "ID спут."
-    },
-    "gpsSignalStatus": {
-        "message": "Статус"
     },
     "gpsSignalQuality": {
         "message": "Качество"

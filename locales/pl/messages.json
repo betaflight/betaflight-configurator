@@ -80,11 +80,11 @@
         "description": "Configure a Virtual Flight Controller without the need of a physical FC."
     },
     "portsSelectPermission": {
-        "message": "--- Nie można znaleźć urządzenia USB ---",
+        "message": "--- Nie mogę znaleźć urządzenia USB ---",
         "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access the device."
     },
     "portsSelectPermissionBluetooth": {
-        "message": "--- Nie można znaleźć urządzenia Bluetooth---",
+        "message": "--- Nie mogę znaleźć urządzenia Bluetooth---",
         "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access a Bluetooth device."
     },
     "portsSelectPermissionDFU": {
@@ -546,7 +546,7 @@
         "message": "Użycie informacji o kompilacji z bufora dla $1."
     },
     "buildServerSupportRequestSubmission": {
-        "message": "<br>*** Zgłoszono problem *** <br>Id: $1<br><br><br># skopiuj identyfikator i prześlij zespołowi betaflight."
+        "message": "<br>*** Zgłoszono problem *** <br>ID: $1<br><br><br># skopiuj identyfikator i prześlij zespołowi betaflight."
     },
     "buildKey": {
         "message": "Zbuduj klucz: <strong>$1<\/strong>"
@@ -768,7 +768,7 @@
         "message": "Kalibracja akcelerometru"
     },
     "initialSetupCalibrateAccelText": {
-        "message": "Połóż kontroler lotu lub jednostke latającą na <strong>płaskiej<\/strong> powierzchni i kontynuuj kalibrację. Zwróć uwagę by płytka kontrolera lotu nie ruszała się podczas trwania kalibracji"
+        "message": "Połóż kontroler lotu lub jednostkę latającą na <strong>płaskiej<\/strong> powierzchni i kontynuuj kalibrację. Zwróć uwagę by płytka kontrolera lotu nie ruszała się podczas trwania kalibracji"
     },
     "initialSetupButtonCalibrateMag": {
         "message": "Kalibracja magnetometru"
@@ -1558,6 +1558,9 @@
     "configurationGyroCalOnFirstArm": {
         "message": "Skalibruj żyroskop przy pierwszym uzbrojeniu"
     },
+    "configurationGyroCalOnFirstArmHelp": {
+        "message": "Gdy włączone, żyroskop zostanie skalibrowany przy pierwszym uzbrojeniu po włączeniu. Może to pomóc w ograniczeniu znoszenia żyroskopu podczas lotu."
+    },
     "configurationMotorIdle": {
         "message": "Bieg Jałowy Silnika (%)"
     },
@@ -1584,10 +1587,10 @@
         "message": "Minimum przepustnicy (Najniższa wartość ESC gdy uzbrojony)"
     },
     "configurationThrottleMinimumHelp": {
-        "message": "Jest to wartość 'bezczynności', która jest wysyłana do ESC, gdy model jest uzbrojony i drążek przepustnicy jest w najniższym położeniu. Zwiększ wartość, aby uzyskać większą prędkość obrotową. Zwiększ wartość w przypadku desynchronizacji!"
+        "message": "Jest to wartość 'jałowa', która jest wysyłana do ESC, gdy model jest uzbrojony i drążek przepustnicy jest w najniższym położeniu. Zwiększ wartość, aby uzyskać większą prędkość obrotową. Zwiększ wartość w przypadku desynchronizacji!"
     },
     "configurationThrottleMaximum": {
-        "message": "Maksymalna wartość przepustnicy (Kiedy ESC jest uzbrojone)"
+        "message": "Maksymalna wartość przepustnicy (kiedy ESC jest uzbrojone)"
     },
     "configurationThrottleMinimumCommand": {
         "message": "Minimalna wartość przepustnicy( kiedy ESC jest rozbrojone)"
@@ -1602,16 +1605,16 @@
         "message": "<strong>Uwaga:<\/strong> Wybranie protokołu sterowania silnika nieobsługiwanego przez twoje ESC, może doprowadzić do <strong>niekontrolowanego uruchomienia silnika po podłączeniu akumulatora<\/strong>. Dlatego <strong>zawsze po zmianie protokołu sterującego silnikami upewnij się, że śmigła są zdjęte, gdy pierwszy raz podłączasz akumulator<\/strong>."
     },
     "configurationDshotBeeper": {
-        "message": "Konfiguracja sygnału dzwiękowego Dshot"
+        "message": "Konfiguracja sygnału dźwiękowego Dshot"
     },
     "configurationUseDshotBeeper": {
-        "message": "Użyj sygnału radiowego Dhsot (Pozwala użyć silników do generowania sygnału dzwiękowego gdy rozbrojony)"
+        "message": "Użyj sygnału dźwiękowego Dhsot (Pozwala użyć silników do generowania sygnału dzwiękowego gdy rozbrojony)"
     },
     "configurationDshotBeaconTone": {
         "message": "Sygnał dzwiękowy"
     },
     "configurationDshotBeaconHelp": {
-        "message": "Sygnał radiowy Dshot wykorzstuje układy ESC i silniki do generowania dźwięku. Oznacza to, że protokół Dshot nie może być użyty podczas gdy silniki są uruchomione. W Betaflight 3.4 i nowszych, gdy próbuje się uzbroić silniki występuje opóźnienie o 2 sekundy, zanim model zostanie uzbrojony. Ma to zapobiec przed zakłóceniem funkcji sygnału radiowego Dshot podczas wysyłania sygnału<\/strong> wysyłanego podczas uzbrajania. <br\/> <strong> Ostrzeżenie: <\/strong> Ponieważ sygnał Dshot przepływa przez silniki, gdy są aktywne, może to spowodować nadmierne nagrzewanie i uszkodzenie silników lub układów ESC, jeśli siła sygnału ostrzegawczego jest ustawiona zbyt wysoko. Użyj BLHeli Configurator lub BLHeli Suite, aby wyregulować i przetestować siłę sygnału."
+        "message": "Sygnał dźwiękowy Dshot wykorzystuje układy ESC i silniki do generowania dźwięku. Oznacza to, że sygnał dźwiękowy Dshot nie może być użyty podczas gdy silniki są uruchomione. W Betaflight 3.4 i nowszych, przy próbie uzbrojenia w momencie kiedy sygnał dźwiękowy Dshot aktywny, występuje 2 sekundowa zwłoka. Ma to zapobiec przed zakłóceniem głównych funkcji Dshot podczas aktywacji sygnału dźwiękowego podczas ubzrojenia.<br\/><strong>Ostrzeżenie:<\/strong> Ponieważ sygnał dźwiękowy Dshot powoduje przepływ prądy w silnikach, może to spowodować nadmierne nagrzewanie i uszkodzenie silników lub układów ESC, jeśli siła sygnału dźwiękowego jest ustawiona zbyt wysoko. Użyj BLHeli Configurator lub BLHeli Suite, aby wyregulować i przetestować siłę sygnału."
     },
     "configurationBeeper": {
         "message": "Ustawienia buzzer'a"
@@ -1728,7 +1731,7 @@
         "message": "<strong>Uwaga:<\/strong> Upewnij się że twój kontroler lotu może działać z wybraną prędkością! Sprawdź CPU i stabilność czasu cyklu. Zmiana tego parametru może wymagać ponownego ustawienia PID. Porada: Wyłącz akcelerometr i inne czujniki aby zyskać na wydajności."
     },
     "configurationGPS": {
-        "message": "Konfiguracja GPS"
+        "message": "Konfiguracja"
     },
     "configurationGPSHelp": {
         "message": "Skonfiguruj protokół dla urządzenia GPS (pamiętaj, aby skonfigurować odpowiedni UART w zakładce Pory), użyj Automatycznej prędkości odświeżania lub wybierz inną prędkość, którą obsługuje twój GPS",
@@ -2534,7 +2537,7 @@
         "description": "Help text to BEEPER ON mode"
     },
     "auxiliaryHelpMode_BEEPGPSSATELLITECOUNT": {
-        "message": "Włącza tryb POBIERANIA GPS SATELITE COUNT",
+        "message": "Włącza trybBEEP GPS SATELLITE COUNT",
         "description": "Help text to BEEP GPS SATELLITE COUNT mode"
     },
     "auxiliaryHelpMode_BLACKBOX": {
@@ -2942,14 +2945,14 @@
         "message": "Odwrócone"
     },
     "gpsHead": {
-        "message": "GPS"
+        "message": "Ogólne"
     },
     "gpsHeadHelp": {
         "message": "Pokaż różne informacje związane z GPS. Kierunki są wyświetlane tylko wtedy, gdy używany jest magnetometr",
         "description": "Help text for gpsHead"
     },
     "gpsMapHead": {
-        "message": "Aktualna lokalizacja GPS"
+        "message": "Obecna lokalizacja"
     },
     "gpsMapMessage1": {
         "message": "Sprawdź swoje połączenie internetowe"
@@ -3003,7 +3006,7 @@
         "description": "Do not translate"
     },
     "gpsSignalStrHead": {
-        "message": "Siła sygnału GPS"
+        "message": "Informacje o sygnale"
     },
     "gpsSignalStrHeadHelp": {
         "message": "Pokaż siłę sygnału oraz jakość i status dla każdego wykrytego połączenia GPS",
@@ -3020,9 +3023,6 @@
     },
     "gpsSignalSatId": {
         "message": "Sat ID"
-    },
-    "gpsSignalStatus": {
-        "message": "Status"
     },
     "gpsSignalQuality": {
         "message": "Jakość"
@@ -6869,7 +6869,7 @@
         "description": "Help text for the pit mode field of the VTX tab"
     },
     "vtxLowPowerDisarm": {
-        "message": "Rozbrojenie przy niskiej mocy",
+        "message": "Niska moc przy rozbrojeniu",
         "description": "Text of one of the fields of the VTX tab"
     },
     "vtxLowPowerDisarmHelp": {
@@ -7303,6 +7303,9 @@
     "dialogFileNameTitle": {
         "message": "Nazwa pliku"
     },
+    "dialogFileNameDescription": {
+        "message": "Plik zostanie zapisany w folderze 'Android\/data\/betaflight-configurator\/{{folder}}' w pamięci wewnętrznej."
+    },
     "dialogFileAlreadyExistsTitle": {
         "message": "Taki plik już istnieje!"
     },
@@ -7718,5 +7721,224 @@
     "osdSetupPreviewCheckRulers": {
         "message": "Linijki",
         "description": "Label for the checkbox to toggle OSD preview rulers around the preview"
+    },
+    "tabUserProfile": {
+        "message": "Profil użytkownika"
+    },
+    "labelEmail": {
+        "message": "Email"
+    },
+    "placeholderEmailAddress": {
+        "message": "Wprowadź adres e-mail"
+    },
+    "userEmailRequired": {
+        "message": "Adres e-mail jest wymagany"
+    },
+    "profileLoginMessage": {
+        "message": "Zaloguj się, aby zobaczyć swój profil."
+    },
+    "tabBackups": {
+        "message": "Kopia bezpie"
+    },
+    "userPasskeyDeleteSuccess": {
+        "message": "Usunięcie klucza zakończyło się sukcesem"
+    },
+    "userPasskeyDeleteFailed": {
+        "message": "Nie udało się usunąć klucza dostępu"
+    },
+    "userTokenDeleteSuccess": {
+        "message": "Token usunięty pomyślnie"
+    },
+    "userTokenDeleteFailed": {
+        "message": "Nie udało się usunąć tokenu"
+    },
+    "userProfileLoadFailed": {
+        "message": "Nie można załadować profilu użytkownika"
+    },
+    "userTokenLoadFailed": {
+        "message": "Nie udało się załadować tokenów użytkownika"
+    },
+    "userPasskeyLoadFailed": {
+        "message": "Nie udało się załadować kluczy użytkownika"
+    },
+    "userProfileUpdateSuccess": {
+        "message": "Pomyślnie zaktualizowano profil"
+    },
+    "userProfileUpdateFailed": {
+        "message": "Nie udało się zaktualizować profilu"
+    },
+    "userBackupsLoadFailed": {
+        "message": "Nie udało się załadować kopii zapasowej"
+    },
+    "userBackupDownloadFailed": {
+        "message": "Nie udało się pobrać kopii zapasowej"
+    },
+    "userBackupUpdateSuccess": {
+        "message": "Kopia zapasowa zaktualizowana pomyślnie"
+    },
+    "userBackupUpdateFailed": {
+        "message": "Nie udało się zaktualizować kopii zapasowej"
+    },
+    "userBackupDeleteSuccess": {
+        "message": "Kopia zapasowa została usunięta"
+    },
+    "userBackupDeleteFailed": {
+        "message": "Nie udało się usunąć kopii zapasowej"
+    },
+    "userPasskeyNoPasskeys": {
+        "message": "Brak dostępnych kluczy dostępu"
+    },
+    "userTokenNoTokens": {
+        "message": "Brak dostępnych tokenów"
+    },
+    "profileBackupSuccess": {
+        "message": "Kopia zapasowa wykonana"
+    },
+    "profileBackupApiSuccess": {
+        "message": "Kopia zapasowa została pomyślnie zapisana w API"
+    },
+    "profileBackupApiFail": {
+        "message": "Nie udało się zapisać kopii zapasowej do API"
+    },
+    "profileBackupEmptyResult": {
+        "message": "Kopia zapasowa nie powiodła się"
+    },
+    "labelSignCounter": {
+        "message": "Licznik znaków"
+    },
+    "labelLogin": {
+        "message": "Login"
+    },
+    "labelSignOut": {
+        "message": "Wyloguj się"
+    },
+    "labelCreatePasskey": {
+        "message": "Utwórz hasło"
+    },
+    "labelUsePasskey": {
+        "message": "Użyj klucza"
+    },
+    "titleEnterVerificationCode": {
+        "message": "Wprowadź kod weryfikacyjny"
+    },
+    "labelVerificationCode": {
+        "message": "Kod weryfikacyjny"
+    },
+    "labelCode": {
+        "message": "Kod"
+    },
+    "userLoggingIn": {
+        "message": "Logowanie do..."
+    },
+    "userSignedOut": {
+        "message": "Wylogowano"
+    },
+    "userSignOutFailed": {
+        "message": "Nie udało się wylogować"
+    },
+    "userLoginSuccess": {
+        "message": "Logowanie powiodło się"
+    },
+    "userLoginFailed": {
+        "message": "Logowanie nie powiodło się"
+    },
+    "userCreatePasskeyFailed": {
+        "message": "Nie udało się utworzyć klucza dostępu"
+    },
+    "userCreatePasskeySuccess": {
+        "message": "Klucz został utworzony pomyślnie"
+    },
+    "userVerifyingCode": {
+        "message": "Weryfikacja kodu..."
+    },
+    "userCreatingPasskey": {
+        "message": "Tworzenie klucza..."
+    },
+    "dataWaitingForData": {
+        "message": "Oczekiwanie na dane..."
+    },
+    "labelId": {
+        "message": "ID"
+    },
+    "labelCreated": {
+        "message": "Utworzono"
+    },
+    "labelUpdated": {
+        "message": "Zaktualizowano"
+    },
+    "labelActions": {
+        "message": "Akcje"
+    },
+    "labelDetails": {
+        "message": "Szczegóły"
+    },
+    "labelExpiry": {
+        "message": "Wygaśnięcie"
+    },
+    "labelDescription": {
+        "message": "Opis"
+    },
+    "labelDate": {
+        "message": "Data"
+    },
+    "actionDownload": {
+        "message": "Pobierz"
+    },
+    "actionBackup": {
+        "message": "Kopia zapasowa"
+    },
+    "actionEdit": {
+        "message": "Edytuj"
+    },
+    "actionDelete": {
+        "message": "Usuń"
+    },
+    "actionSave": {
+        "message": "Zapisz"
+    },
+    "titleEditProfile": {
+        "message": "Edytuj profil"
+    },
+    "titleLogin": {
+        "message": "Logowanie"
+    },
+    "labelName": {
+        "message": "Nazwa"
+    },
+    "labelAddress": {
+        "message": "Adres"
+    },
+    "labelCountry": {
+        "message": "Kraj"
+    },
+    "confirmDelete": {
+        "message": "Czy na pewno chcesz usunąć to {{item}}?"
+    },
+    "itemBackup": {
+        "message": "kopia zapasowa"
+    },
+    "itemToken": {
+        "message": "token"
+    },
+    "itemPasskey": {
+        "message": "klucz dostępu"
+    },
+    "notLoggedIn": {
+        "message": "Nie zalogowano"
+    },
+    "backupNoBackupsAvailable": {
+        "message": "Brak dostępnych kopii zapasowych"
+    },
+    "titleEditBackup": {
+        "message": "Edytuj kopię zapasową"
+    },
+    "backupMcuUnknown": {
+        "message": "MCU nieznane"
+    },
+    "sectionUserTokens": {
+        "message": "Token użytkownika"
+    },
+    "sectionUserPasskeys": {
+        "message": "Klucz użytkownika"
     }
 }

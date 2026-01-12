@@ -1776,12 +1776,6 @@
     "servosReverse": {
         "message": "Omgekeerd"
     },
-    "gpsHead": {
-        "message": "GPS"
-    },
-    "gpsMapHead": {
-        "message": "Gebruik GPS-locatie"
-    },
     "gpsMapMessage1": {
         "message": "Controller alstublieft uw internetverbinding"
     },
@@ -1799,9 +1793,6 @@
     },
     "gpsDistToHome": {
         "message": "Afst naar Home:"
-    },
-    "gpsSignalStrHead": {
-        "message": "GPS signaalsterkte"
     },
     "gpsSignalStr": {
         "message": "Signaalsterkte"

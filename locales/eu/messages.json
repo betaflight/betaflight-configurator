@@ -1718,12 +1718,6 @@
     "servosReverse": {
         "message": "Alderantzikatu"
     },
-    "gpsHead": {
-        "message": "GPSa"
-    },
-    "gpsMapHead": {
-        "message": "GPSaren uneko kokapena"
-    },
     "gpsMapMessage1": {
         "message": "Mesedez, egiaztatu zure Interneteko konexioa"
     },
@@ -1741,9 +1735,6 @@
     },
     "gpsDistToHome": {
         "message": "Dist. Etxera:"
-    },
-    "gpsSignalStrHead": {
-        "message": "GPS seinalearen indarra"
     },
     "gpsSignalStr": {
         "message": "Seinalearen indarra"

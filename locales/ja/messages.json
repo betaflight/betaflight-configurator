@@ -537,9 +537,6 @@
     "buildServerUsingCached": {
         "message": "$1 開発情報のキャッシュを参照します。"
     },
-    "buildServerSupportRequestSubmission": {
-        "message": "<br>*** サポートデータを送信しました *** <br>Id: $1<br><br><br># IDをコピーしてBetaflight開発チームに情報提供してください。"
-    },
     "buildKey": {
         "message": "Build Key: <strong>$1<\/strong>"
     },
@@ -1721,9 +1718,6 @@
     },
     "configurationLoopTimeHelp": {
         "message": "<strong>注:<\/strong> FCがこの速度で動作するか確認してください！CPUとサイクル時間の安定度を確認してください。この変更はPIDの再調整を必要とするかもしれません。TIP: パフォーマンスを上げるためには加速度センサーや他センサーを無効にします。"
-    },
-    "configurationGPS": {
-        "message": "GPS 設定"
     },
     "configurationGPSHelp": {
         "message": "GPSデバイスのプロトコルを設定し (【ポート】タブでポート設定することを忘れずに)、オートボー (または【ポート】タブで速度を設定) を使用し、その他の設定を行います。",
@@ -2936,15 +2930,9 @@
     "servosReverse": {
         "message": "リバース"
     },
-    "gpsHead": {
-        "message": "GPS"
-    },
     "gpsHeadHelp": {
         "message": "GPSに関連する様々な情報を表示します。方位はコンパス使用時のみ表示されます。",
         "description": "Help text for gpsHead"
-    },
-    "gpsMapHead": {
-        "message": "現在のGPS測位"
     },
     "gpsMapMessage1": {
         "message": "インターネット接続を確認してください"
@@ -2997,9 +2985,6 @@
         "message": "$t(configurationMagDeclination):",
         "description": "Do not translate"
     },
-    "gpsSignalStrHead": {
-        "message": "GPS強度"
-    },
     "gpsSignalStrHeadHelp": {
         "message": "検出された各GPS情報の信号強度、品質、状態を表示",
         "description": "Help text for gpsSignalStrHead"
@@ -3015,9 +3000,6 @@
     },
     "gpsSignalSatId": {
         "message": "衛星ID"
-    },
-    "gpsSignalStatus": {
-        "message": "状態"
     },
     "gpsSignalQuality": {
         "message": "品質"

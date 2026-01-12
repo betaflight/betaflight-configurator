@@ -1735,7 +1735,7 @@
         "message": "<strong>Nota:<\/strong> Assegure-se que a controladora é capaz de operar a estas velocidades! Verifique a estabilidade da CPU e do tempo de ciclo. Alterar este valor pode requerer uma nova afinação do PID. DICA: Desative o acelerómetro e outros sensores para ganhar mais performance."
     },
     "configurationGPS": {
-        "message": "Configuração do GPS"
+        "message": "Configuração"
     },
     "configurationGPSHelp": {
         "message": "Configura o protocolo para o dispositivo GPS (lembre-se de configurar a porta na aba Porta), usar o Auto baud (ou defina a velocidade de configuração na aba Porta) e outras configurações",
@@ -2969,14 +2969,14 @@
         "description": "Don't translate!!!"
     },
     "gpsHead": {
-        "message": "GPS"
+        "message": "Geral"
     },
     "gpsHeadHelp": {
         "message": "Mostra várias informações relacionadas com o GPS. Direção só é exibida quando o Magnetómetro está em uso",
         "description": "Help text for gpsHead"
     },
     "gpsMapHead": {
-        "message": "Localização GPS atual"
+        "message": "Localização atual"
     },
     "gpsMapMessage1": {
         "message": "Verifique a sua ligação de internet"
@@ -3030,7 +3030,7 @@
         "description": "Do not translate"
     },
     "gpsSignalStrHead": {
-        "message": "Força do Sinal GPS"
+        "message": "Informação de sinal"
     },
     "gpsSignalStrHeadHelp": {
         "message": "Mostra a força, qualidade e estado do sinal para cada fonte do GPS descoberta",
@@ -3047,9 +3047,6 @@
     },
     "gpsSignalSatId": {
         "message": "ID Satélite"
-    },
-    "gpsSignalStatus": {
-        "message": "Estado"
     },
     "gpsSignalQuality": {
         "message": "Qualidade"
@@ -7748,5 +7745,224 @@
     "osdSetupPreviewCheckRulers": {
         "message": "Réguas",
         "description": "Label for the checkbox to toggle OSD preview rulers around the preview"
+    },
+    "tabUserProfile": {
+        "message": "Perfil do Utilizador"
+    },
+    "labelEmail": {
+        "message": "Email"
+    },
+    "placeholderEmailAddress": {
+        "message": "Insira endereço de email"
+    },
+    "userEmailRequired": {
+        "message": "Endereço de email é obrigatório"
+    },
+    "profileLoginMessage": {
+        "message": "Faça login para ver o seu perfil."
+    },
+    "tabBackups": {
+        "message": "Cópias de Segurança"
+    },
+    "userPasskeyDeleteSuccess": {
+        "message": "Chave de acesso apagada com sucesso"
+    },
+    "userPasskeyDeleteFailed": {
+        "message": "Falha a apagar a chave de acesso"
+    },
+    "userTokenDeleteSuccess": {
+        "message": "Token apagado com sucesso"
+    },
+    "userTokenDeleteFailed": {
+        "message": "Falha a apagar token"
+    },
+    "userProfileLoadFailed": {
+        "message": "Falha ao carregar o perfil de utilizador"
+    },
+    "userTokenLoadFailed": {
+        "message": "Falha ao carregar tokens do utilizador"
+    },
+    "userPasskeyLoadFailed": {
+        "message": "Falha a carregar as chaves de acesso do utilizador"
+    },
+    "userProfileUpdateSuccess": {
+        "message": "Perfil atualizado com sucesso"
+    },
+    "userProfileUpdateFailed": {
+        "message": "Falha a atualizar o perfil"
+    },
+    "userBackupsLoadFailed": {
+        "message": "Falha a carregar as cópias de segurança"
+    },
+    "userBackupDownloadFailed": {
+        "message": "Falha no download das cópias de segurança"
+    },
+    "userBackupUpdateSuccess": {
+        "message": "Cópia de segurança atualizada com sucesso"
+    },
+    "userBackupUpdateFailed": {
+        "message": "Falha a atualizar a cópia de segurança"
+    },
+    "userBackupDeleteSuccess": {
+        "message": "Cópia de segurança eliminada com sucesso"
+    },
+    "userBackupDeleteFailed": {
+        "message": "Falha a apagar a cópia de segurança"
+    },
+    "userPasskeyNoPasskeys": {
+        "message": "Nenhumas chaves de acesso disponíveis"
+    },
+    "userTokenNoTokens": {
+        "message": "Nenhuns tokens disponíveis"
+    },
+    "profileBackupSuccess": {
+        "message": "Cópia de segurança efetuada com sucesso"
+    },
+    "profileBackupApiSuccess": {
+        "message": "Cópia de segurança guardada com sucesso na API"
+    },
+    "profileBackupApiFail": {
+        "message": "Cópia de segurança falhou a guardar na API"
+    },
+    "profileBackupEmptyResult": {
+        "message": "Cópia de segurança não efetuada"
+    },
+    "labelSignCounter": {
+        "message": "Contador de Sinais"
+    },
+    "labelLogin": {
+        "message": "Iniciar sessão"
+    },
+    "labelSignOut": {
+        "message": "Terminar sessão"
+    },
+    "labelCreatePasskey": {
+        "message": "Criar chave de acesso"
+    },
+    "labelUsePasskey": {
+        "message": "Usar Passkey"
+    },
+    "titleEnterVerificationCode": {
+        "message": "Introduza o código de verificação"
+    },
+    "labelVerificationCode": {
+        "message": "Código de Verificação"
+    },
+    "labelCode": {
+        "message": "Código"
+    },
+    "userLoggingIn": {
+        "message": "A iniciar sessão ..."
+    },
+    "userSignedOut": {
+        "message": "Sessão Terminada"
+    },
+    "userSignOutFailed": {
+        "message": "Falha a terminar sessão."
+    },
+    "userLoginSuccess": {
+        "message": "Início de sessão concluído"
+    },
+    "userLoginFailed": {
+        "message": "Falha no início de sessão"
+    },
+    "userCreatePasskeyFailed": {
+        "message": "Falha a criar chave de acesso"
+    },
+    "userCreatePasskeySuccess": {
+        "message": "Chave de acesso criada com sucesso"
+    },
+    "userVerifyingCode": {
+        "message": "Verificando código..."
+    },
+    "userCreatingPasskey": {
+        "message": "A criar chave de acesso..."
+    },
+    "dataWaitingForData": {
+        "message": "Aguardando dados..."
+    },
+    "labelId": {
+        "message": "ID"
+    },
+    "labelCreated": {
+        "message": "Criado"
+    },
+    "labelUpdated": {
+        "message": "Atualizado"
+    },
+    "labelActions": {
+        "message": "Ações"
+    },
+    "labelDetails": {
+        "message": "Detalhes"
+    },
+    "labelExpiry": {
+        "message": "Expira"
+    },
+    "labelDescription": {
+        "message": "Descrição"
+    },
+    "labelDate": {
+        "message": "Data"
+    },
+    "actionDownload": {
+        "message": "Download"
+    },
+    "actionBackup": {
+        "message": "Cópia de segurança"
+    },
+    "actionEdit": {
+        "message": "Editar"
+    },
+    "actionDelete": {
+        "message": "Apagar"
+    },
+    "actionSave": {
+        "message": "Gravar"
+    },
+    "titleEditProfile": {
+        "message": "Editar Perfil"
+    },
+    "titleLogin": {
+        "message": "Iniciar sessão"
+    },
+    "labelName": {
+        "message": "Nome"
+    },
+    "labelAddress": {
+        "message": "Endereço"
+    },
+    "labelCountry": {
+        "message": "País"
+    },
+    "confirmDelete": {
+        "message": "Tem a certeza que pretende eliminar este {{item}}?"
+    },
+    "itemBackup": {
+        "message": "cópia de segurança"
+    },
+    "itemToken": {
+        "message": "token"
+    },
+    "itemPasskey": {
+        "message": "chave de acesso"
+    },
+    "notLoggedIn": {
+        "message": "Sem sessão iniciada"
+    },
+    "backupNoBackupsAvailable": {
+        "message": "Não existem cópias de segurança disponíveis"
+    },
+    "titleEditBackup": {
+        "message": "Editar cópia de segurança"
+    },
+    "backupMcuUnknown": {
+        "message": "MCU desconhecida"
+    },
+    "sectionUserTokens": {
+        "message": "Tokens do Utilizador"
+    },
+    "sectionUserPasskeys": {
+        "message": "Chaves de acesso do Utilizador"
     }
 }

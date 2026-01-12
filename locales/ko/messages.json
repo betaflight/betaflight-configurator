@@ -549,9 +549,6 @@
     "buildServerUsingCached": {
         "message": "$1에 대한 캐시된 빌드 정보를 사용합니다."
     },
-    "buildServerSupportRequestSubmission": {
-        "message": "<br>*** 지원 데이터 제출 ***<br>Id:$1<br><br><br># ID를 복사해서 베타플라이트 팀에 제공하세요."
-    },
     "buildKey": {
         "message": "빌드 키: <strong>$1<\/strong>"
     },
@@ -1739,7 +1736,7 @@
         "message": "<strong>참고:<\/strong> FC가 이러한 속도로 동작할 수 있는지 확인하십시오! CPU 및 사이클 시간의 안정성을 점검하십시오. 이를 변경하면 PID 재조정이 필요할 수 있습니다. 팁: 가속도계 및 기타 센서를 비활성화하여 더 많은 성능을 얻으십시오."
     },
     "configurationGPS": {
-        "message": "GPS 환경설정"
+        "message": "환경설정"
     },
     "configurationGPSHelp": {
         "message": "GPS 장치에 대한 설정 프로토콜(포트 탭에서 포트 설정 기억), 오토 바우드(또는 포트 탭에서 속도 설정) 및 기타 구성",
@@ -2973,14 +2970,14 @@
         "description": "Don't translate!!!"
     },
     "gpsHead": {
-        "message": "GPS"
+        "message": "일반"
     },
     "gpsHeadHelp": {
         "message": "GPS와 관련된 다양한 정보를 표시합니다. 자기계를 사용하는 경우에만 제목이 표시됩니다",
         "description": "Help text for gpsHead"
     },
     "gpsMapHead": {
-        "message": "현재 GPS 위치"
+        "message": "현재 위치"
     },
     "gpsMapMessage1": {
         "message": "인터넷 연결 상태를 확인하십시오."
@@ -3034,7 +3031,7 @@
         "description": "Do not translate"
     },
     "gpsSignalStrHead": {
-        "message": "GPS 신호 강도"
+        "message": "신호 정보"
     },
     "gpsSignalStrHeadHelp": {
         "message": "각 발견된 GPS 소스의 신호 세기, 품질과 상태를 표시합니다",
@@ -3051,9 +3048,6 @@
     },
     "gpsSignalSatId": {
         "message": "위성 ID"
-    },
-    "gpsSignalStatus": {
-        "message": "상태"
     },
     "gpsSignalQuality": {
         "message": "품질"

@@ -534,9 +534,6 @@
     "buildServerUsingCached": {
         "message": "Usando información de compilaciones cacheada para $1."
     },
-    "buildServerSupportRequestSubmission": {
-        "message": "<br>*** Datos de soporte enviados *** <br>Id: $1<br><br><br># copiar ID para proporcionar al equipo Betaflight."
-    },
     "buildKey": {
         "message": "Clave de compilación: <strong>$1<\/strong>"
     },
@@ -1668,9 +1665,6 @@
     },
     "configurationLoopTimeHelp": {
         "message": "<strong>Nota:<\/strong> ¡Asegúrate de que tu FC es capaz de operar a estas velocidades! Comprueba la CPU y la estabilidad del tiempo por ciclo. Al cambiarlo puede ser necesario reajustar el PID. CONSEJO: Deshabilita el Acelerómetro y otros sensores para obtener más rendimiento."
-    },
-    "configurationGPS": {
-        "message": "Configuración del GPS"
     },
     "configurationGPSHelp": {
         "message": "Configura el protocolo para el dispositivo GPS (recuerda configurar el puerto en la pestaña Puertos), activa Velocidad automática (o configura la velocidad en la pestaña Puertos) y otras configuraciones",
@@ -2883,15 +2877,9 @@
     "servosReverse": {
         "message": "Invertir"
     },
-    "gpsHead": {
-        "message": "GPS"
-    },
     "gpsHeadHelp": {
         "message": "Muestra información variada relacionada con el GPS. El rumbo sólo se muestra cuando se utiliza un Magnetómetro",
         "description": "Help text for gpsHead"
-    },
-    "gpsMapHead": {
-        "message": "Localización GPS actual"
     },
     "gpsMapMessage1": {
         "message": "Por favor verifica tu conexión a internet"
@@ -2944,9 +2932,6 @@
         "message": "$t(configurationMagDeclination):",
         "description": "Do not translate"
     },
-    "gpsSignalStrHead": {
-        "message": "Fuerza Señal GPS"
-    },
     "gpsSignalStrHeadHelp": {
         "message": "Muestra la fuerza de la señal, calidad y estado para cada fuente GPS descubierta",
         "description": "Help text for gpsSignalStrHead"
@@ -2962,9 +2947,6 @@
     },
     "gpsSignalSatId": {
         "message": "ID Sat"
-    },
-    "gpsSignalStatus": {
-        "message": "Estado"
     },
     "gpsSignalQuality": {
         "message": "Calidad"

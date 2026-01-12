@@ -495,9 +495,6 @@
     "buildServerUsingCached": {
         "message": "Benutzt zwischengespeicherte Build-Informationen für $1."
     },
-    "buildServerSupportRequestSubmission": {
-        "message": "<br>*** Supportdaten übermittelt *** <br>ID: $1<br><br><br># ID kopieren und dem Betaflight-Team bereitstellen."
-    },
     "buildKey": {
         "message": "Build Key: <strong>$1<\/strong>"
     },
@@ -1515,9 +1512,6 @@
     },
     "configurationLoopTimeHelp": {
         "message": "<strong>Hinweis:<\/strong> Stelle sicher, dass dein FC mit dieser Geschwindigkeit arbeiten kann. Prüfe die CPU-Auslastung und die Zykluszeit-Stabilität. Änderungen führen möglicherweise dazu, dass die PIDs neu eingestellt werden müssen. Tipp: Deaktiviere Beschleuningungsmesser und unbenutzte Sensoren für eine bessere FC-Leistung."
-    },
-    "configurationGPS": {
-        "message": "GPS-Konfiguration"
     },
     "configurationGPSProtocol": {
         "message": "Protokoll"
@@ -2620,15 +2614,9 @@
     "servosReverse": {
         "message": "Umgekehrt"
     },
-    "gpsHead": {
-        "message": "GPS"
-    },
     "gpsHeadHelp": {
         "message": "Zeigt verschiedene Informationen zum GPS an. Die Ausrichtung wird nur angezeigt, wenn Magnetometer verwendet wird",
         "description": "Help text for gpsHead"
-    },
-    "gpsMapHead": {
-        "message": "Aktuelle GPS Position"
     },
     "gpsMapMessage1": {
         "message": "Bitte Internetverbindung prüfen"
@@ -2677,9 +2665,6 @@
     "gpsPositionalDop": {
         "message": "Positionaler DOP:"
     },
-    "gpsSignalStrHead": {
-        "message": "GPS Signal Stärke"
-    },
     "gpsSignalStrHeadHelp": {
         "message": "Zeige Signalstärke, Qualität und Status für jede entdeckte GPS-Quelle",
         "description": "Help text for gpsSignalStrHead"
@@ -2692,9 +2677,6 @@
     },
     "gpsSignalSatId": {
         "message": "Sat ID"
-    },
-    "gpsSignalStatus": {
-        "message": "Status"
     },
     "gpsSignalQuality": {
         "message": "Qualität"
