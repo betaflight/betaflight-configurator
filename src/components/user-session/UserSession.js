@@ -14,6 +14,8 @@ export function useUserSession() {
     const verificationInputRef = ref(null);
     const dialogLoginRef = ref(null);
     const dialogVerificationRef = ref(null);
+    const dialogWaitingRef = ref(null);
+    const waitingMessage = ref("");
     const currentVerificationEmail = ref("");
 
     const displayName = computed(() => {
@@ -110,6 +112,30 @@ export function useUserSession() {
         }
     };
 
+    // Waiting dialog controls (component-managed)
+    const showWaitingDialog = (message = i18n.getMessage("userLoggingIn")) => {
+        waitingMessage.value = message || i18n.getMessage("userLoggingIn");
+        const dlg = dialogWaitingRef.value;
+        if (!dlg) return;
+        try {
+            dlg.showModal();
+        } catch (_) {
+            if (!dlg.open) dlg.setAttribute("open", "open");
+        }
+    };
+
+    const hideWaitingDialog = () => {
+        const dlg = dialogWaitingRef.value;
+        if (!dlg) return;
+        if (dlg.open) {
+            try {
+                dlg.close();
+            } catch (_) {}
+        }
+        dlg.classList.remove("non-blocking");
+        dlg.removeAttribute("inert");
+    };
+
     const handleCreatePasskey = async () => {
         const email = loginEmail.value.trim();
 
@@ -119,10 +145,11 @@ export function useUserSession() {
         }
 
         try {
-            await loginManager.createPasskey(email);
             closeLoginDialog();
+            await loginManager.createPasskey(email);
             openVerificationDialog(email);
         } catch (error) {
+            openLoginDialog();
             loginError.value = i18n.getMessage("userCreatePasskeyFailed");
             console.error("Create passkey error:", error);
         }
@@ -131,15 +158,11 @@ export function useUserSession() {
     const handleUsePasskey = async () => {
         const email = loginEmail.value.trim();
 
-        if (!email) {
-            loginError.value = i18n.getMessage("userEmailRequired");
-            return;
-        }
-
         try {
-            await loginManager.loginWithPasskey(email);
             closeLoginDialog();
+            await loginManager.loginWithPasskey(email);
         } catch (error) {
+            openLoginDialog();
             loginError.value = i18n.getMessage("userLoginFailed");
             console.error("Login with passkey error:", error);
         }
@@ -149,9 +172,10 @@ export function useUserSession() {
         const code = verificationCode.value.trim();
         if (code) {
             try {
-                await loginManager.verifyAndCreatePasskey(currentVerificationEmail.value, code);
                 closeVerificationDialog();
+                await loginManager.verifyAndCreatePasskey(currentVerificationEmail.value, code);
             } catch (error) {
+                openVerificationDialog(currentVerificationEmail.value);
                 verificationError.value = i18n.getMessage("userCreatePasskeyFailed");
                 console.error("Verify passkey error:", error);
             }
@@ -171,6 +195,8 @@ export function useUserSession() {
 
         // Register dialog open callback with LoginManager
         loginManager.setDialogOpener(openLoginDialog);
+        // Register waiting dialog controller with LoginManager
+        loginManager.setWaitingDialogController({ show: showWaitingDialog, hide: hideWaitingDialog });
 
         // Add click outside listener
         document.addEventListener("click", handleClickOutside);
@@ -188,6 +214,7 @@ export function useUserSession() {
 
         // Clear dialog opener
         loginManager.setDialogOpener(null);
+        loginManager.setWaitingDialogController(null);
 
         // Remove click outside listener
         document.removeEventListener("click", handleClickOutside);
@@ -207,9 +234,13 @@ export function useUserSession() {
         verificationInputRef,
         dialogLoginRef,
         dialogVerificationRef,
+        dialogWaitingRef,
+        waitingMessage,
         handleLoginClick,
         toggleMenu,
         handleSignOut,
+        showWaitingDialog,
+        hideWaitingDialog,
         closeLoginDialog,
         closeVerificationDialog,
         handleCreatePasskey,

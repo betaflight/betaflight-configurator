@@ -130,15 +130,15 @@ export default class LoginApi {
             throw new Error(await response.text());
         }
 
-        const credentialOptionsResponse = await response.json();
+        const credentialOptions = await response.json();
 
         return {
-            options: credentialOptionsResponse.attestationOptions,
-            userId: credentialOptionsResponse.userId,
+            options: credentialOptions.options,
+            key: credentialOptions.key,
         };
     }
 
-    async createCredential(userId, options) {
+    async createCredential(key, options) {
         try {
             // SimpleWebAuthn handles the parsing and the navigator.credentials.create call
             // It returns a JSON-compatible object automatically.
@@ -150,8 +150,8 @@ export default class LoginApi {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    attestationResponse: attestationResponse,
-                    userId: userId,
+                    response: attestationResponse,
+                    key: key,
                 }),
             });
 
@@ -187,15 +187,15 @@ export default class LoginApi {
             throw new Error(await response.text());
         }
 
-        const assertionOptionsResponse = await response.json();
+        const assertionOptions = await response.json();
 
         return {
-            options: assertionOptionsResponse.assertionOptions,
-            userId: assertionOptionsResponse.userId,
+            options: assertionOptions.options,
+            key: assertionOptions.key,
         };
     }
 
-    async verifyAssertion(userId, options) {
+    async verifyAssertion(key, options) {
         this.checkMediationSupport();
 
         try {
@@ -210,8 +210,8 @@ export default class LoginApi {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    assertionResponse: assertionResponse,
-                    userId: userId,
+                    response: assertionResponse,
+                    key: key,
                 }),
             });
 

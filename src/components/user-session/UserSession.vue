@@ -98,6 +98,14 @@
                     </div>
                 </div>
             </dialog>
+
+            <!-- Waiting Dialog (component-managed, non-blocking capable) -->
+            <dialog ref="dialogWaitingRef" class="login-dialog waiting-dialog">
+                <div class="dialog-container waiting-container">
+                    <div class="waiting-spinner" aria-hidden="true"></div>
+                    <p class="waiting-message">{{ waitingMessage }}</p>
+                </div>
+            </dialog>
         </Teleport>
     </div>
 </template>
@@ -346,5 +354,38 @@ export default defineComponent({
 .dialog-submit-button {
     padding: 8px 24px;
     text-decoration: none;
+}
+</style>
+
+<style scoped>
+.waiting-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 120px;
+    gap: 12px;
+}
+.waiting-spinner {
+    border: 4px solid rgba(255, 255, 255, 0.2);
+    border-top: 4px solid var(--primary-500);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+}
+.waiting-message {
+    font-size: 14px;
+    color: var(--text);
+    margin: 0;
+    text-align: center;
+}
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }
 </style>
