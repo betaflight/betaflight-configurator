@@ -254,7 +254,6 @@ export default defineComponent({
         });
         const speedOptions = SPEED_OPTIONS;
 
-        const documentationHref = computed(() => "https://betaflight.com/docs/wiki/configurator/logging-tab");
         const logFileName = computed(() => fileEntry.value?.name ?? "");
         const startStopLabel = computed(() =>
             isLogging.value ? i18n.getMessage("loggingStop") : i18n.getMessage("loggingStart"),
@@ -473,7 +472,6 @@ export default defineComponent({
             fileEntry,
             isLogging,
             isBusy,
-            documentationHref,
             logFileName,
             startStopLabel,
             canToggle,
