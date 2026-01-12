@@ -7929,6 +7929,12 @@
     "labelSignOut": {
         "message": "Sign Out"
     },
+    "labelAvatarUrl": {
+        "message": "Avatar URL"
+    },
+    "placeholderAvatarUrl": {
+        "message": "Enter image URL for your avatar"
+    },
     "labelCreatePasskey": {
         "message": "Create Passkey"
     },

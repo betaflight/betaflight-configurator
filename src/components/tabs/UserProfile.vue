@@ -80,6 +80,19 @@
                             <label for="edit-country">{{ $t("labelCountry") }}</label>
                             <input v-model="editForm.country" type="text" id="edit-country" name="country" />
                         </p>
+                        <p>
+                            <label for="edit-avatar">{{ $t("labelAvatarUrl") }}</label>
+                            <input
+                                v-model="editForm.avatar"
+                                type="url"
+                                id="edit-avatar"
+                                name="avatar"
+                                :placeholder="$t('placeholderAvatarUrl')"
+                            />
+                        </p>
+                        <p v-if="editError" class="profile-edit-error" role="alert" aria-live="polite">
+                            {{ editError }}
+                        </p>
                         <div class="button-container">
                             <a
                                 href="#"
@@ -190,6 +203,7 @@ export default defineComponent({
             isLoading: true,
             isLoggedIn: false,
             isEditing: false,
+            editError: null,
             profile: null,
             unsubscribeLogin: null,
             unsubscribeLogout: null,
@@ -197,6 +211,7 @@ export default defineComponent({
                 name: "",
                 address: "",
                 country: "",
+                avatar: "",
             },
             tokens: [],
             passkeys: [],
@@ -264,10 +279,13 @@ export default defineComponent({
             this.editForm.name = this.profile.name || "";
             this.editForm.address = this.profile.address || "";
             this.editForm.country = this.profile.country || "";
+            this.editForm.avatar = this.profile.avatar || "";
+            this.editError = null;
             this.isEditing = true;
         },
         cancelEdit() {
             this.isEditing = false;
+            this.editError = null;
         },
         async saveProfileChanges() {
             if (!this.userApi) {
@@ -275,10 +293,12 @@ export default defineComponent({
             }
 
             try {
+                this.editError = null;
                 await this.userApi.updateProfile({
                     name: this.editForm.name,
                     address: this.editForm.address,
                     country: this.editForm.country,
+                    avatar: this.editForm.avatar,
                 });
 
                 if (!this.profile) {
@@ -287,10 +307,12 @@ export default defineComponent({
                 this.profile.name = this.editForm.name;
                 this.profile.address = this.editForm.address;
                 this.profile.country = this.editForm.country;
+                this.profile.avatar = this.editForm.avatar;
                 gui_log(this.$t("userProfileUpdateSuccess"));
                 this.isEditing = false;
             } catch (error) {
-                gui_log(`${this.$t("userProfileUpdateFailed")}: ${error}`);
+                this.editError = `${this.$t("userProfileUpdateFailed")}: ${error.message || error}`;
+                gui_log(this.editError);
             }
         },
         async deleteToken(tokenId) {
@@ -475,6 +497,15 @@ export default defineComponent({
     padding: 5px;
     margin-bottom: 10px;
     border: 1px solid var(--surface-400);
+    border-radius: 4px;
+}
+
+.profile-edit-error {
+    color: var(--error-500);
+    font-size: 12px;
+    margin: 10px 0;
+    padding: 8px;
+    background-color: rgba(255, 0, 0, 0.1);
     border-radius: 4px;
 }
 
