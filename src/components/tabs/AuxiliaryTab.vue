@@ -235,7 +235,7 @@ export default defineComponent({
         ]);
 
         const sliderPipValues = computed(() => {
-            if (typeof window !== "undefined" && window.innerWidth < 575) {
+            if (typeof globalThis.window !== "undefined" && globalThis.window.innerWidth < 575) {
                 return [1000, 1200, 1400, 1600, 1800, 2000];
             }
             return [900, 1000, 1200, 1400, 1500, 1600, 1800, 2000, 2100];
@@ -271,9 +271,15 @@ export default defineComponent({
         });
 
         const clampChannel = (value) => {
-            if (value === undefined || value === null || Number.isNaN(value)) return 1500;
-            if (value < CHANNEL_MIN) return CHANNEL_MIN;
-            if (value > CHANNEL_MAX) return CHANNEL_MAX;
+            if (value === undefined || value === null || Number.isNaN(value)) {
+                return 1500;
+            }
+            if (value < CHANNEL_MIN) {
+                return CHANNEL_MIN;
+            }
+            if (value > CHANNEL_MAX) {
+                return CHANNEL_MAX;
+            }
             return value;
         };
 
@@ -289,13 +295,9 @@ export default defineComponent({
 
         const markerStyle = (auxChannelIndex) => {
             const percent = rcMarkers[auxChannelIndex];
-            if (percent === undefined) return null;
-            return { left: `${percent}%` };
-        };
-
-        const markerLineStyle = (auxChannelIndex) => {
-            const percent = rcMarkers[auxChannelIndex];
-            if (percent === undefined) return null;
+            if (percent === undefined) {
+                return null;
+            }
             return { left: `${percent}%` };
         };
 
@@ -340,13 +342,17 @@ export default defineComponent({
 
         const isArmSwitchDisabled = () => {
             const { armingDisableCount = 0, armingDisableFlags = 0 } = fcStore.config || {};
-            if (armingDisableCount <= 0) return false;
+            if (armingDisableCount <= 0) {
+                return false;
+            }
             const armSwitchMask = 1 << (armingDisableCount - 1);
             return (armingDisableFlags & armSwitchMask) > 0;
         };
 
         const modeState = (mode) => {
-            if (!mode.entries.length) return "";
+            if (!mode.entries.length) {
+                return "";
+            }
             if (bit_check(fcStore.config.mode, mode.index)) {
                 return "on";
             }
@@ -388,7 +394,6 @@ export default defineComponent({
         const startDrag = (e, entry, type) => {
             e.preventDefault();
             const slider = e.target.closest(".slider-wrapper");
-            const rect = slider.getBoundingClientRect();
             const startX = e.clientX;
             const initialStart = entry.range.start;
             const initialEnd = entry.range.end;
@@ -398,7 +403,9 @@ export default defineComponent({
         };
 
         const onDragMove = (e) => {
-            if (!dragState) return;
+            if (!dragState) {
+                return;
+            }
 
             const rect = dragState.slider.getBoundingClientRect();
 
@@ -491,12 +498,16 @@ export default defineComponent({
 
             for (const { range, extra } of pairedRanges) {
                 const target = modeMap.get(range.id);
-                if (!target) continue;
+                if (!target) {
+                    continue;
+                }
                 const modeLogic = extra?.modeLogic ?? 0;
                 const linkedTo = extra?.linkedTo ?? 0;
 
                 if (range.id === 0 || linkedTo === 0) {
-                    if (range.range.start >= range.range.end) continue;
+                    if (range.range.start >= range.range.end) {
+                        continue;
+                    }
                     addRange(target, range.auxChannelIndex, modeLogic, range.range);
                 } else {
                     addLink(target, modeLogic, linkedTo);
@@ -579,7 +590,9 @@ export default defineComponent({
                     if (entry.kind === "range") {
                         const start = clampChannel(entry.range.start);
                         const end = clampChannel(entry.range.end);
-                        if (start >= end) return;
+                        if (start >= end) {
+                            return;
+                        }
                         nextModeRanges.push({
                             id: mode.id,
                             auxChannelIndex: entry.auxChannelIndex,
@@ -591,7 +604,9 @@ export default defineComponent({
                             linkedTo: 0,
                         });
                     } else if (entry.kind === "link") {
-                        if (!entry.linkedTo) return;
+                        if (!entry.linkedTo) {
+                            return;
+                        }
                         nextModeRanges.push({
                             id: mode.id,
                             auxChannelIndex: 0,
@@ -688,7 +703,6 @@ export default defineComponent({
             removeEntry,
             modeState,
             markerStyle,
-            markerLineStyle,
             rangeFillStyle,
             onRangeStartChange,
             onRangeEndChange,
