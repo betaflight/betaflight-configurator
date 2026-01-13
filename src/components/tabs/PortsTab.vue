@@ -2,17 +2,7 @@
     <BaseTab tab-name="ports">
         <div class="content_wrapper">
             <div class="tab_title" v-html="$t('tabPorts')"></div>
-            <div class="cf_doc_version_bt">
-                <a
-                    id="button-documentation"
-                    href="https://betaflight.com/docs/wiki/app/ports-tab"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    :aria-label="$t('betaflightSupportButton')"
-                >
-                    {{ $t("betaflightSupportButton") }}
-                </a>
-            </div>
+            <WikiButton docUrl="ports" />
 
             <div class="require-support">
                 <div class="note">
@@ -163,10 +153,14 @@ import { i18n } from "../../js/localization";
 import { tracking } from "../../js/Analytics";
 import semver from "semver";
 import { API_VERSION_1_45, API_VERSION_1_47 } from "../../js/data_storage";
+import WikiButton from "../elements/WikiButton.vue";
 
 export default defineComponent({
     name: "PortsTab",
-    components: { BaseTab },
+    components: {
+        BaseTab,
+        WikiButton,
+    },
     setup() {
         const ports = reactive([]);
         const analyticsChanges = reactive({});

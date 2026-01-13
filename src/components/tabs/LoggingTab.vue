@@ -2,17 +2,7 @@
     <BaseTab tab-name="logging">
         <div class="content_wrapper">
             <div class="tab_title" v-html="$t('tabLogging')"></div>
-            <div class="cf_doc_version_bt">
-                <a
-                    id="button-documentation"
-                    :href="documentationHref"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    :aria-label="$t('betaflightSupportButton')"
-                >
-                    {{ $t("betaflightSupportButton") }}
-                </a>
-            </div>
+            <WikiButton docUrl="logging" />
             <div class="note">
                 <p v-html="$t('loggingNote')"></p>
             </div>
@@ -89,6 +79,7 @@ import MSPCodes from "../../js/msp/MSPCodes.js";
 import { useFlightControllerStore } from "@/stores/fc";
 import { useConnectionStore } from "@/stores/connection";
 import { useDialog } from "@/composables/useDialog";
+import WikiButton from "../elements/WikiButton.vue";
 
 const PROPERTY_ORDER = [
     "MSP_RAW_IMU",
@@ -123,6 +114,7 @@ export default defineComponent({
     name: "LoggingTab",
     components: {
         BaseTab,
+        WikiButton,
     },
     setup() {
         const fcStore = useFlightControllerStore();
@@ -262,7 +254,6 @@ export default defineComponent({
         });
         const speedOptions = SPEED_OPTIONS;
 
-        const documentationHref = computed(() => "https://betaflight.com/docs/wiki/configurator/logging-tab");
         const logFileName = computed(() => fileEntry.value?.name ?? "");
         const startStopLabel = computed(() =>
             isLogging.value ? i18n.getMessage("loggingStop") : i18n.getMessage("loggingStart"),
@@ -481,7 +472,6 @@ export default defineComponent({
             fileEntry,
             isLogging,
             isBusy,
-            documentationHref,
             logFileName,
             startStopLabel,
             canToggle,

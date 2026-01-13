@@ -2,17 +2,7 @@
     <div class="tab-configuration">
         <div class="content_wrapper">
             <div class="tab_title">{{ $t("tabConfiguration") }}</div>
-            <div class="cf_doc_version_bt">
-                <a
-                    id="button-documentation"
-                    href="https://betaflight.com/docs/wiki/app/configuration-tab"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    :aria-label="$t('betaflightSupportButton')"
-                >
-                    {{ $t("betaflightSupportButton") }}
-                </a>
-            </div>
+            <WikiButton docUrl="configuration" />
             <div class="note">
                 <p v-html="$t('configurationFeaturesHelp')"></p>
             </div>
@@ -750,9 +740,13 @@ import semver from "semver";
 import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "../../js/data_storage";
 import { bit_check, bit_set, bit_clear } from "../../js/bit";
 import { updateTabList } from "../../js/utils/updateTabList";
+import WikiButton from "../elements/WikiButton.vue";
 
 export default defineComponent({
     name: "ConfigurationTab",
+    components: {
+        WikiButton,
+    },
     setup() {
         // Reactive State
         const connectionStore = useConnectionStore();
