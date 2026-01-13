@@ -191,17 +191,17 @@ async function startProcess() {
             const isTabAllowed = GUI.allowedTabs.includes(tab) || isLoginSectionTab;
 
             if (!isTabAllowed) {
-                if (tab === "firmware_flasher") {
-                    // Special handling for firmware flasher tab
-                    if (GUI.connected_to || GUI.connecting_to) {
-                        $("a.connection_button__link").trigger("click");
-                    }
-                    // This line is required but it triggers opening the firmware flasher tab again
-                    $("a.firmware_flasher_button__link").trigger("click");
-                } else {
+                if (tab !== "firmware_flasher") {
                     gui_log(i18n.getMessage("tabSwitchUpgradeRequired", [tabName]));
                     return;
                 }
+
+                // Special handling for firmware flasher tab
+                if (GUI.connected_to || GUI.connecting_to) {
+                    $("a.connection_button__link").trigger("click");
+                }
+                // This line is required but it triggers opening the firmware flasher tab again
+                $("a.firmware_flasher_button__link").trigger("click");
             }
 
             GUI.tab_switch_in_progress = true;
