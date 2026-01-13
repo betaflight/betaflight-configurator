@@ -186,7 +186,11 @@ async function startProcess() {
                 return;
             }
 
-            if (!GUI.allowedTabs.includes(tab)) {
+            // Check if tab is allowed (either in allowedTabs for mode-connected tabs, or mode-loggedin tabs for logged-in users)
+            const tabRequiresLogin = $(self).closest("ul").hasClass("mode-loggedin");
+            const isTabAllowed = GUI.allowedTabs.includes(tab) || tabRequiresLogin;
+
+            if (!isTabAllowed) {
                 if (tab === "firmware_flasher") {
                     // Special handling for firmware flasher tab
                     if (GUI.connected_to || GUI.connecting_to) {
