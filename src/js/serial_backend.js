@@ -157,6 +157,7 @@ function connectDisconnect() {
                 { baudRate: PortHandler.portPicker.selectedBauds },
                 selectedPort === "virtual" ? onOpenVirtual : undefined,
             );
+            console.log("Press Ctrl+I to open CLI panel");
         }
 
         // show CLI panel on Control+I
