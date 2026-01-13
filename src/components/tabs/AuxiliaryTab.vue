@@ -95,13 +95,23 @@
                                     </div>
 
                                     <div class="channel-slider">
-                                        <div class="slider-wrapper">
+                                        <div class="slider-wrapper" @mousedown="(e) => handleSliderClick(e, entry)">
                                             <div class="track-background"></div>
                                             <div class="track-fill" :style="rangeFillStyle(entry)"></div>
                                             <div
                                                 v-if="markerStyle(entry.auxChannelIndex)"
                                                 class="track-marker"
                                                 :style="markerStyle(entry.auxChannelIndex)"
+                                            ></div>
+                                            <div
+                                                class="range-handle handle-min"
+                                                :style="{ left: channelPercent(entry.range.start) + '%' }"
+                                                @mousedown.stop="(e) => startDrag(e, entry, 'start')"
+                                            ></div>
+                                            <div
+                                                class="range-handle handle-max"
+                                                :style="{ left: channelPercent(entry.range.end) + '%' }"
+                                                @mousedown.stop="(e) => startDrag(e, entry, 'end')"
                                             ></div>
                                         </div>
                                         <div class="pips-channel-range">
@@ -113,27 +123,6 @@
                                             >
                                                 {{ pip }}
                                             </div>
-                                        </div>
-                                        <div class="slider-inputs">
-                                            <input
-                                                v-model.number="entry.range.start"
-                                                type="number"
-                                                class="range-value"
-                                                :min="CHANNEL_MIN"
-                                                :max="CHANNEL_MAX"
-                                                :step="CHANNEL_STEP"
-                                                @change="onRangeStartChange(entry)"
-                                            />
-                                            <span>-</span>
-                                            <input
-                                                v-model.number="entry.range.end"
-                                                type="number"
-                                                class="range-value"
-                                                :min="CHANNEL_MIN"
-                                                :max="CHANNEL_MAX"
-                                                :step="CHANNEL_STEP"
-                                                @change="onRangeEndChange(entry)"
-                                            />
                                         </div>
                                     </div>
 
@@ -387,6 +376,57 @@ export default defineComponent({
             ensureRangeOrder(entry);
         };
 
+        let dragState = null;
+
+        const startDrag = (e, entry, type) => {
+            e.preventDefault();
+            const slider = e.target.closest(".slider-wrapper");
+            dragState = { entry, type, slider };
+            document.addEventListener("mousemove", onDragMove);
+            document.addEventListener("mouseup", stopDrag);
+        };
+
+        const onDragMove = (e) => {
+            if (!dragState) return;
+
+            const rect = dragState.slider.getBoundingClientRect();
+            const percent = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+            const rawValue = CHANNEL_MIN + percent * (CHANNEL_MAX - CHANNEL_MIN);
+            const value = Math.round(rawValue / CHANNEL_STEP) * CHANNEL_STEP;
+
+            if (dragState.type === "start") {
+                dragState.entry.range.start = value;
+                onRangeStartChange(dragState.entry);
+            } else {
+                dragState.entry.range.end = value;
+                onRangeEndChange(dragState.entry);
+            }
+        };
+
+        const stopDrag = () => {
+            document.removeEventListener("mousemove", onDragMove);
+            document.removeEventListener("mouseup", stopDrag);
+            dragState = null;
+        };
+
+        const handleSliderClick = (e, entry) => {
+            const rect = e.currentTarget.getBoundingClientRect();
+            const percent = (e.clientX - rect.left) / rect.width;
+            const rawValue = CHANNEL_MIN + percent * (CHANNEL_MAX - CHANNEL_MIN);
+            const value = Math.round(rawValue / CHANNEL_STEP) * CHANNEL_STEP;
+
+            const distToStart = Math.abs(value - entry.range.start);
+            const distToEnd = Math.abs(value - entry.range.end);
+
+            if (distToStart < distToEnd) {
+                entry.range.start = value;
+                onRangeStartChange(entry);
+            } else {
+                entry.range.end = value;
+                onRangeEndChange(entry);
+            }
+        };
+
         const buildModesFromFC = () => {
             modes.length = 0;
             entryUid = 0;
@@ -609,6 +649,9 @@ export default defineComponent({
             onRangeEndChange,
             pipStyle,
             saveModes,
+            startDrag,
+            handleSliderClick,
+            channelPercent,
         };
     },
 });
@@ -740,6 +783,30 @@ export default defineComponent({
     border-radius: 4px;
     color: var(--text-primary);
     font-size: 12px;
+}
+
+.range-handle {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--surface-200);
+    border: 3px solid var(--primary-500);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+    cursor: grab;
+    z-index: 10;
+}
+
+.range-handle:hover {
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.5);
+    transform: translate(-50%, -50%) scale(1.1);
+}
+
+.range-handle:active {
+    cursor: grabbing;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
 }
 
 .pips-channel-range {
