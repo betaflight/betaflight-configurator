@@ -117,7 +117,7 @@ export const useFlightControllerStore = defineStore("flightController", () => {
         gpsData,
         analogData,
         rc,
-        rc,
+
         motorData,
         pidAdvancedConfig,
         sensorConfig,
