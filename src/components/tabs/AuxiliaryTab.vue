@@ -657,6 +657,14 @@ export default defineComponent({
         });
 
         onUnmounted(() => {
+            // Clean up drag event listeners if drag is in progress
+            if (dragState) {
+                document.removeEventListener("mousemove", onDragMove);
+                document.removeEventListener("mouseup", stopDrag);
+                dragState = null;
+            }
+
+            // Clean up polling intervals
             localIntervals.forEach((name) => GUI.interval_remove(name));
             localIntervals.length = 0;
         });
