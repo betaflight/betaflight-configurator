@@ -185,10 +185,12 @@
 
 <script>
 import { defineComponent, reactive, ref, computed, onMounted, onUnmounted, watch } from "vue";
+import { useFlightControllerStore } from "@/stores/fc";
+import { useConnectionStore } from "@/stores/connection";
+import { useNavigationStore } from "@/stores/navigation";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "../elements/WikiButton.vue";
 import GUI from "../../js/gui";
-import FC from "../../js/fc";
 import MSP from "../../js/msp";
 import MSPCodes from "../../js/msp/MSPCodes";
 import { mspHelper } from "../../js/msp/MSPHelper";
@@ -212,6 +214,12 @@ export default defineComponent({
         WikiButton,
     },
     setup() {
+        // Initialize Pinia stores
+        const fcStore = useFlightControllerStore();
+        const connectionStore = useConnectionStore();
+        const navigationStore = useNavigationStore();
+
+        // Reactive State
         const modes = reactive([]);
         const hideUnused = ref(false);
         const auxChannelCount = ref(0);
@@ -243,8 +251,8 @@ export default defineComponent({
 
         const linkOptions = computed(() => {
             const opts = [{ value: 0, label: "" }];
-            for (let index = 1; index < FC.AUX_CONFIG.length; index++) {
-                opts.push({ value: FC.AUX_CONFIG_IDS[index], label: FC.AUX_CONFIG[index] });
+            for (let index = 1; index < fcStore.auxConfig.length; index++) {
+                opts.push({ value: fcStore.auxConfigIds[index], label: fcStore.auxConfig[index] });
             }
             return opts.sort((a, b) => a.label.localeCompare(b.label));
         });
@@ -331,7 +339,7 @@ export default defineComponent({
         };
 
         const isArmSwitchDisabled = () => {
-            const { armingDisableCount = 0, armingDisableFlags = 0 } = FC.CONFIG || {};
+            const { armingDisableCount = 0, armingDisableFlags = 0 } = fcStore.config || {};
             if (armingDisableCount <= 0) return false;
             const armSwitchMask = 1 << (armingDisableCount - 1);
             return (armingDisableFlags & armSwitchMask) > 0;
@@ -339,7 +347,7 @@ export default defineComponent({
 
         const modeState = (mode) => {
             if (!mode.entries.length) return "";
-            if (bit_check(FC.CONFIG.mode, mode.index)) {
+            if (bit_check(fcStore.config.mode, mode.index)) {
                 return "on";
             }
             if (mode.index === 0) {
@@ -461,9 +469,9 @@ export default defineComponent({
             entryUid = 0;
 
             const modeMap = new Map();
-            for (let index = 0; index < FC.AUX_CONFIG.length; index++) {
-                const modeId = FC.AUX_CONFIG_IDS[index];
-                const rawName = FC.AUX_CONFIG[index];
+            for (let index = 0; index < fcStore.auxConfig.length; index++) {
+                const modeId = fcStore.auxConfigIds[index];
+                const rawName = fcStore.auxConfig[index];
                 const adjustedName = adjustBoxNameIfPeripheralWithModeID(modeId, rawName);
                 const helpKey = `auxiliaryHelpMode_${inflection.camelize(rawName.replace(/\s+/g, ""))}`;
                 modeMap.set(modeId, {
@@ -476,9 +484,9 @@ export default defineComponent({
                 });
             }
 
-            const pairedRanges = FC.MODE_RANGES.map((range, idx) => ({
+            const pairedRanges = fcStore.modeRanges.map((range, idx) => ({
                 range,
-                extra: FC.MODE_RANGES_EXTRA[idx],
+                extra: fcStore.modeRangesExtra[idx],
             }));
 
             for (const { range, extra } of pairedRanges) {
@@ -495,7 +503,7 @@ export default defineComponent({
                 }
             }
 
-            FC.AUX_CONFIG_IDS.forEach((modeId) => {
+            fcStore.auxConfigIds.forEach((modeId) => {
                 const mode = modeMap.get(modeId);
                 if (mode) {
                     modes.push(mode);
@@ -549,7 +557,7 @@ export default defineComponent({
         };
 
         const updateMarkers = () => {
-            const rc = FC.RC || {};
+            const rc = fcStore.rc || {};
             const channels = rc.channels || [];
             const activeChannels = rc.active_channels || 0;
             auxChannelCount.value = Math.max(0, activeChannels - 4);
@@ -559,7 +567,7 @@ export default defineComponent({
                 rcMarkers[idx] = channelPercent(channels[idx + 4]);
             }
 
-            autoSelectChannel(channels, activeChannels, FC.RSSI_CONFIG?.channel || 0);
+            autoSelectChannel(channels, activeChannels, fcStore.rssiConfig?.channel || 0);
         };
 
         const saveModes = () => {
@@ -604,8 +612,8 @@ export default defineComponent({
                 nextModeRangesExtra.push({ id: 0, modeLogic: 0, linkedTo: 0 });
             }
 
-            FC.MODE_RANGES = nextModeRanges;
-            FC.MODE_RANGES_EXTRA = nextModeRangesExtra;
+            fcStore.modeRanges = nextModeRanges;
+            fcStore.modeRangesExtra = nextModeRangesExtra;
 
             mspHelper.sendModeRanges(() => {
                 mspHelper.writeConfiguration(false);
@@ -622,8 +630,8 @@ export default defineComponent({
                 await MSP.promise(MSPCodes.MSP_RC);
                 await new Promise((resolve) => mspHelper.loadSerialConfig(resolve));
 
-                requiredModeRangeCount.value = FC.MODE_RANGES.length;
-                auxChannelCount.value = Math.max(0, (FC.RC?.active_channels || 0) - 4);
+                requiredModeRangeCount.value = fcStore.modeRanges.length;
+                auxChannelCount.value = Math.max(0, (fcStore.rc?.active_channels || 0) - 4);
                 buildModesFromFC();
                 updateMarkers();
             } catch (error) {
