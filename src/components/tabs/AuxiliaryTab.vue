@@ -52,11 +52,6 @@
                         <template v-if="mode.entries.length">
                             <template v-for="(entry, entryIndex) in mode.entries" :key="entry.uid">
                                 <div v-if="entry.kind === 'range'" class="range">
-                                    <span
-                                        v-if="markerStyle(entry.auxChannelIndex)"
-                                        class="marker"
-                                        :style="markerStyle(entry.auxChannelIndex)"
-                                    ></span>
                                     <div class="channelInfo">
                                         <div class="channelName">
                                             <select v-model.number="entry.auxChannelIndex" class="channel">
@@ -103,11 +98,6 @@
                                                 @mousedown.stop="(e) => startDrag(e, entry, 'range')"
                                             ></div>
                                             <div
-                                                v-if="markerStyle(entry.auxChannelIndex)"
-                                                class="track-marker"
-                                                :style="markerStyle(entry.auxChannelIndex)"
-                                            ></div>
-                                            <div
                                                 class="range-handle handle-min"
                                                 :style="{ left: channelPercent(entry.range.start) + '%' }"
                                                 @mousedown.stop="(e) => startDrag(e, entry, 'start')"
@@ -127,6 +117,11 @@
                                             >
                                                 {{ pip }}
                                             </div>
+                                            <div
+                                                v-if="markerStyle(entry.auxChannelIndex)"
+                                                class="pip-marker"
+                                                :style="markerStyle(entry.auxChannelIndex)"
+                                            ></div>
                                         </div>
                                     </div>
 
@@ -726,20 +721,6 @@ export default defineComponent({
     cursor: grabbing;
 }
 
-.track-marker {
-    position: absolute;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: 10px;
-    height: 10px;
-    background: var(--primary-500);
-    border: 2px solid var(--surface-50);
-    border-radius: 50%;
-    z-index: 2;
-    box-shadow: 0 0 8px rgba(255, 187, 0, 0.8);
-    pointer-events: none;
-}
-
 .slider-input {
     position: absolute;
     top: 0;
@@ -871,5 +852,17 @@ export default defineComponent({
     width: 2px;
     height: 8px;
     background: var(--surface-600);
+}
+
+.pip-marker {
+    position: absolute;
+    bottom: 12px;
+    transform: translateX(-50%);
+    width: 3px;
+    height: 8px;
+    background: var(--primary-500);
+    box-shadow: 0 0 6px rgba(255, 187, 0, 0.9);
+    pointer-events: none;
+    z-index: 10;
 }
 </style>
