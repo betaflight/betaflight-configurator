@@ -97,7 +97,11 @@
                                     <div class="channel-slider">
                                         <div class="slider-wrapper" @mousedown="(e) => handleSliderClick(e, entry)">
                                             <div class="track-background"></div>
-                                            <div class="track-fill" :style="rangeFillStyle(entry)"></div>
+                                            <div
+                                                class="track-fill"
+                                                :style="rangeFillStyle(entry)"
+                                                @mousedown.stop="(e) => startDrag(e, entry, 'range')"
+                                            ></div>
                                             <div
                                                 v-if="markerStyle(entry.auxChannelIndex)"
                                                 class="track-marker"
@@ -381,7 +385,11 @@ export default defineComponent({
         const startDrag = (e, entry, type) => {
             e.preventDefault();
             const slider = e.target.closest(".slider-wrapper");
-            dragState = { entry, type, slider };
+            const rect = slider.getBoundingClientRect();
+            const startX = e.clientX;
+            const initialStart = entry.range.start;
+            const initialEnd = entry.range.end;
+            dragState = { entry, type, slider, startX, initialStart, initialEnd };
             document.addEventListener("mousemove", onDragMove);
             document.addEventListener("mouseup", stopDrag);
         };
@@ -390,16 +398,42 @@ export default defineComponent({
             if (!dragState) return;
 
             const rect = dragState.slider.getBoundingClientRect();
-            const percent = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-            const rawValue = CHANNEL_MIN + percent * (CHANNEL_MAX - CHANNEL_MIN);
-            const value = Math.round(rawValue / CHANNEL_STEP) * CHANNEL_STEP;
 
-            if (dragState.type === "start") {
-                dragState.entry.range.start = value;
-                onRangeStartChange(dragState.entry);
+            if (dragState.type === "range") {
+                // Dragging the entire range - move both handles together
+                const deltaX = e.clientX - dragState.startX;
+                const deltaPercent = deltaX / rect.width;
+                const deltaValue =
+                    Math.round((deltaPercent * (CHANNEL_MAX - CHANNEL_MIN)) / CHANNEL_STEP) * CHANNEL_STEP;
+
+                const newStart = Math.max(CHANNEL_MIN, Math.min(CHANNEL_MAX, dragState.initialStart + deltaValue));
+                const newEnd = Math.max(CHANNEL_MIN, Math.min(CHANNEL_MAX, dragState.initialEnd + deltaValue));
+
+                // Keep range width constant
+                const rangeWidth = dragState.initialEnd - dragState.initialStart;
+                if (newStart >= CHANNEL_MIN && newEnd <= CHANNEL_MAX) {
+                    dragState.entry.range.start = newStart;
+                    dragState.entry.range.end = newEnd;
+                } else if (newStart < CHANNEL_MIN) {
+                    dragState.entry.range.start = CHANNEL_MIN;
+                    dragState.entry.range.end = CHANNEL_MIN + rangeWidth;
+                } else if (newEnd > CHANNEL_MAX) {
+                    dragState.entry.range.end = CHANNEL_MAX;
+                    dragState.entry.range.start = CHANNEL_MAX - rangeWidth;
+                }
             } else {
-                dragState.entry.range.end = value;
-                onRangeEndChange(dragState.entry);
+                // Dragging individual handle
+                const percent = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+                const rawValue = CHANNEL_MIN + percent * (CHANNEL_MAX - CHANNEL_MIN);
+                const value = Math.round(rawValue / CHANNEL_STEP) * CHANNEL_STEP;
+
+                if (dragState.type === "start") {
+                    dragState.entry.range.start = value;
+                    onRangeStartChange(dragState.entry);
+                } else {
+                    dragState.entry.range.end = value;
+                    onRangeEndChange(dragState.entry);
+                }
             }
         };
 
@@ -685,7 +719,11 @@ export default defineComponent({
     background: var(--primary-500);
     border-radius: 4px;
     z-index: 1;
-    pointer-events: none;
+    cursor: grab;
+}
+
+.track-fill:active {
+    cursor: grabbing;
 }
 
 .track-marker {
