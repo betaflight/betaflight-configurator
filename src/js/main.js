@@ -187,8 +187,8 @@ async function startProcess() {
             }
 
             // Check if tab is allowed (either in allowedTabs for mode-connected tabs, or mode-loggedin tabs for logged-in users)
-            const tabRequiresLogin = $(self).closest("ul").hasClass("mode-loggedin");
-            const isTabAllowed = GUI.allowedTabs.includes(tab) || tabRequiresLogin;
+            const isLoginSectionTab = $(self).closest("ul").hasClass("mode-loggedin");
+            const isTabAllowed = GUI.allowedTabs.includes(tab) || isLoginSectionTab;
 
             if (!isTabAllowed) {
                 if (tab === "firmware_flasher") {
