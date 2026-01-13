@@ -186,8 +186,6 @@
 <script>
 import { defineComponent, reactive, ref, computed, onMounted, onUnmounted, watch } from "vue";
 import { useFlightControllerStore } from "@/stores/fc";
-import { useConnectionStore } from "@/stores/connection";
-import { useNavigationStore } from "@/stores/navigation";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "../elements/WikiButton.vue";
 import GUI from "../../js/gui";
@@ -216,8 +214,6 @@ export default defineComponent({
     setup() {
         // Initialize Pinia stores
         const fcStore = useFlightControllerStore();
-        const connectionStore = useConnectionStore();
-        const navigationStore = useNavigationStore();
 
         // Reactive State
         const modes = reactive([]);
@@ -235,7 +231,7 @@ export default defineComponent({
         ]);
 
         const sliderPipValues = computed(() => {
-            if (typeof globalThis.window !== "undefined" && globalThis.window.innerWidth < 575) {
+            if (globalThis.window !== undefined && globalThis.window.innerWidth < 575) {
                 return [1000, 1200, 1400, 1600, 1800, 2000];
             }
             return [900, 1000, 1200, 1400, 1500, 1600, 1800, 2000, 2100];
@@ -480,7 +476,7 @@ export default defineComponent({
                 const modeId = fcStore.auxConfigIds[index];
                 const rawName = fcStore.auxConfig[index];
                 const adjustedName = adjustBoxNameIfPeripheralWithModeID(modeId, rawName);
-                const helpKey = `auxiliaryHelpMode_${inflection.camelize(rawName.replace(/\s+/g, ""))}`;
+                const helpKey = `auxiliaryHelpMode_${inflection.camelize(rawName.replaceAll(/\s+/g, ""))}`;
                 modeMap.set(modeId, {
                     id: modeId,
                     index,
@@ -550,7 +546,7 @@ export default defineComponent({
             const diffs = rcChannels
                 .map((value, idx) => Math.abs(prevChannelsValues[idx] - value))
                 .slice(0, activeChannels);
-            const largest = diffs.reduce((x, y) => (x > y ? x : y), 0);
+            const largest = diffs.reduce((x, y) => Math.max(x, y), 0);
             if (largest < 100) {
                 return fillPrev();
             }
