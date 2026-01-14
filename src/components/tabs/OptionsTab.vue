@@ -133,13 +133,18 @@
                         <span class="freelabel" v-html="$t('showAllSerialDevices')"></span>
                     </div>
 
-                    <div class="developmentSettings margin-bottom">
-                        <div class="cliOnlyMode margin-bottom">
-                            <div>
-                                <input type="checkbox" class="toggle" v-model="settings.cliOnlyMode" />
-                            </div>
-                            <span class="freelabel" v-html="$t('cliOnlyMode')"></span>
+                    <div class="cliOnlyMode margin-bottom">
+                        <div>
+                            <input type="checkbox" class="toggle" v-model="settings.cliOnlyMode" />
                         </div>
+                        <span class="freelabel" v-html="$t('cliOnlyMode')"></span>
+                    </div>
+
+                    <div class="automaticDevOptions margin-bottom">
+                        <div>
+                            <input type="checkbox" class="toggle" v-model="settings.automaticDevOptions" />
+                        </div>
+                        <span class="freelabel" v-html="$t('automaticDevOptions')"></span>
                     </div>
                 </div>
             </div>
@@ -198,6 +203,7 @@ export default defineComponent({
             showAllSerialDevices: !!getConfig("showAllSerialDevices").showAllSerialDevices,
             cliOnlyMode: !!getConfig("cliOnlyMode", false).cliOnlyMode,
             showPresetsWarningBackup: !!getConfig("showPresetsWarningBackup").showPresetsWarningBackup,
+            automaticDevOptions: !!getConfig("automaticDevOptions", true).automaticDevOptions,
         });
 
         const availableLanguages = i18n.getLanguagesAvailables();
@@ -297,6 +303,11 @@ export default defineComponent({
         watch(
             () => settings.showPresetsWarningBackup,
             (value) => setConfig({ showPresetsWarningBackup: value }),
+        );
+
+        watch(
+            () => settings.automaticDevOptions,
+            (value) => setConfig({ automaticDevOptions: value }),
         );
 
         // Handle notifications permission flow

@@ -169,6 +169,10 @@
         "message": "Enable CLI only mode",
         "description": "Text for the option to enable or disable CLI only mode"
     },
+    "automaticDevOptions": {
+        "message": "Automatically enable development settings for preview builds",
+        "description": "Text for the option to automatically enable development settings for preview builds"
+    },
     "showManualMode": {
         "message": "Enable manual connection mode",
         "description": "Text for the option to enable or disable manual connection mode"

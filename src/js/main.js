@@ -136,6 +136,27 @@ async function startProcess() {
         });
     }
 
+    const windowHref = window.location.href;
+    const subdomain = windowHref.split("//")[1].split(".")[0];
+
+    const isDevelopmentUrl = subdomain.includes("pr") || windowHref.includes("localhost");
+
+    if (isDevelopmentUrl) {
+        console.log("Detected development URL");
+
+        const developmentOptions = {
+            showVirtualMode: true,
+            showManualMode: true,
+            showAllSerialDevices: true,
+        };
+
+        const automaticDevOptions = getConfig("automaticDevOptions", true).automaticDevOptions;
+        if (automaticDevOptions) {
+            console.log("Automatically enabling development settings");
+            setConfig(developmentOptions);
+        }
+    }
+
     // Tabs
     $("#tabs ul.mode-connected li").click(function () {
         // store the first class of the current tab (omit things like ".active")
