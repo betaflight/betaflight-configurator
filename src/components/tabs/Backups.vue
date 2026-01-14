@@ -177,7 +177,7 @@ export default defineComponent({
                 }
 
                 const output = await new Promise((resolve, reject) => {
-                    MSP.send_cli_command("dump all", (data) => {
+                    MSP.send_cli_command("diff all", (data) => {
                         if (data && Array.isArray(data) && data.length > 0) {
                             // Create a copy of the data since the original array gets cleared after callback
                             resolve([...data]);
