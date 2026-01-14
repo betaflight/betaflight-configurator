@@ -64,7 +64,7 @@
                                                 </option>
                                             </select>
                                         </div>
-                                        <div class="rangeLogic" v-show="entryIndex > 0">
+                                        <div class="rangeLogic" v-show="mode.entries.length > 1">
                                             <select v-model.number="entry.modeLogic" class="logic">
                                                 <option
                                                     v-for="logic in logicOptions"
@@ -150,7 +150,7 @@
                                                 </option>
                                             </select>
                                         </div>
-                                        <div class="linkLogic" v-show="entryIndex > 0">
+                                        <div class="linkLogic" v-show="mode.entries.length > 1">
                                             <select v-model.number="entry.modeLogic" class="logic">
                                                 <option
                                                     v-for="logic in logicOptions"
