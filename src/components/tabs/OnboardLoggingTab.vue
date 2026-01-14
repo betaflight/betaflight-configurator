@@ -1,298 +1,328 @@
 <template>
     <BaseTab tab-name="onboard_logging">
-        <div class="content_wrapper">
-            <div class="tab_title">{{ $t("tabOnboardLogging") }}</div>
-            <WikiButton docUrl="logging" />
+        <div
+            class="tab-onboard_logging"
+            :class="{
+                'serial-supported': true,
+                'dataflash-supported': dataflashSupported,
+                'dataflash-present': dataflashPresent,
+                'sdcard-supported': sdcardSupported,
+                'blackbox-config-supported': blackboxConfigSupported,
+                'blackbox-supported': blackboxSupport === 'yes',
+                'blackbox-maybe-supported': blackboxSupport === 'maybe',
+                'blackbox-unsupported': blackboxSupport === 'no',
+                'msc-supported': mscSupported,
+                'msc-not-ready': !mscReady,
+                'sdcard-error': sdcardState === MSP.SDCARD_STATE_FATAL,
+                'sdcard-initializing':
+                    sdcardState === MSP.SDCARD_STATE_CARD_INIT || sdcardState === MSP.SDCARD_STATE_FS_INIT,
+                'sdcard-ready': sdcardState === MSP.SDCARD_STATE_READY,
+            }"
+        >
+            <div class="content_wrapper">
+                <div class="tab_title">{{ $t("tabOnboardLogging") }}</div>
+                <WikiButton docUrl="logging" />
 
-            <div class="require-blackbox-unsupported note">
-                <p>{{ $t("blackboxNotSupported") }}</p>
-            </div>
-            <div class="require-blackbox-maybe-supported note">
-                <p>{{ $t("blackboxMaybeSupported") }}</p>
-            </div>
+                <div class="require-blackbox-unsupported note">
+                    <p>{{ $t("blackboxNotSupported") }}</p>
+                </div>
+                <div class="require-blackbox-maybe-supported note">
+                    <p>{{ $t("blackboxMaybeSupported") }}</p>
+                </div>
 
-            <div class="grid-box col1">
-                <div class="require-blackbox-supported grid-box col1">
-                    <div class="gui_box grey require-blackbox-config-supported">
-                        <div class="gui_box_titlebar">
-                            <div class="spacer_box_title">{{ $t("blackboxConfiguration") }}</div>
-                        </div>
-                        <div class="spacer_box">
-                            <div class="line blackboxDevice">
-                                <select v-model.number="blackboxDevice" name="blackbox_device">
-                                    <option :value="0">{{ $t("blackboxLoggingNone") }}</option>
-                                    <option v-if="dataflashSupported" :value="1">
-                                        {{ $t("blackboxLoggingFlash") }}
-                                    </option>
-                                    <option v-if="sdcardSupported" :value="2">{{ $t("blackboxLoggingSdCard") }}</option>
-                                    <option :value="3">{{ $t("blackboxLoggingSerial") }}</option>
-                                    <option v-if="virtualGyro" :value="4">{{ $t("blackboxLoggingVirtual") }}</option>
-                                </select>
-                                <span>{{ $t("onboardLoggingBlackbox") }}</span>
-                            </div>
-                            <div v-show="blackboxDevice !== 0" class="line blackboxRate">
-                                <select v-model.number="blackboxRate" name="blackbox_rate">
-                                    <option v-for="rate in loggingRates" :key="rate.value" :value="rate.value">
-                                        {{ rate.label }}
-                                    </option>
-                                </select>
-                                <span>{{ $t("onboardLoggingRateOfLogging") }}</span>
-                            </div>
-                            <div class="line blackboxDebugMode">
-                                <select v-model.number="debugMode" name="blackboxDebugMode">
-                                    <option v-for="(mode, index) in debugModes" :key="index" :value="index">
-                                        {{ mode }}
-                                    </option>
-                                </select>
-                                <span class="blackboxDebugModeText">{{ $t("onboardLoggingDebugMode") }}</span>
-                            </div>
-                            <div v-if="showDebugFields" class="gui_box grey">
-                                <div class="gui_box_titlebar">
-                                    <div class="spacer_box_title">{{ $t("onboardLoggingDebugFields") }}</div>
-                                </div>
-                                <table>
-                                    <tbody class="blackboxDebugFieldsTable" id="noline">
-                                        <tr v-for="(field, index) in debugFields" :key="index">
-                                            <td style="width: 40px">
-                                                <input
-                                                    :id="`blackboxDebugField${index}`"
-                                                    v-model="debugFieldsEnabled[index]"
-                                                    type="checkbox"
-                                                    class="toggle"
-                                                />
-                                            </td>
-                                            <td>
-                                                <label :for="`blackboxDebugField${index}`">{{ field }}</label>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="line">
-                                <a href="#" class="save-settings regular-button" @click.prevent="saveSettings">{{
-                                    $t("blackboxButtonSave")
-                                }}</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="gui_box grey">
-                        <div class="gui_box_titlebar" align="left">
-                            <div class="spacer_box_title">{{ $t("onboardLoggingSerialLogger") }}</div>
-                        </div>
-                        <div class="spacer_box">
-                            <p>{{ $t("serialLoggingSupportedNote") }}</p>
-                        </div>
-                    </div>
-
-                    <div class="gui_box grey require-dataflash-supported">
-                        <div class="gui_box_titlebar" align="left">
-                            <div class="spacer_box_title">{{ $t("onboardLoggingFlashLogger") }}</div>
-                        </div>
-                        <div class="spacer_box">
-                            <div class="require-dataflash-supported">
-                                <p>{{ $t("dataflashNote") }}</p>
-
-                                <dialog ref="eraseDialog" class="dataflash-confirm-erase">
-                                    <h3>{{ $t("dataflashConfirmEraseTitle") }}</h3>
-                                    <div class="dataflash-confirm-erase-note">
-                                        {{ $t("dataflashConfirmEraseNote") }}
-                                    </div>
-                                    <div class="dataflash-erase-progress">
-                                        <div class="data-loading">
-                                            <p>{{ $t("onboardLoggingEraseInProgress") }}</p>
-                                        </div>
-                                    </div>
-                                    <div class="buttons">
-                                        <a
-                                            href="#"
-                                            class="erase-flash-confirm regular-button"
-                                            @click.prevent="flashErase"
-                                        >
-                                            {{ $t("dataflashButtonEraseConfirm") }}
-                                        </a>
-                                        <a
-                                            href="#"
-                                            class="erase-flash-cancel regular-button"
-                                            @click.prevent="flashEraseCancel"
-                                        >
-                                            {{ $t("dataflashButtonEraseCancel") }}
-                                        </a>
-                                    </div>
-                                </dialog>
-
-                                <dialog ref="savingDialog" class="dataflash-saving">
-                                    <h3>{{ $t("dataflashSavingTitle") }}</h3>
-                                    <div class="dataflash-saving-before">
-                                        <div>{{ $t("dataflashSavingNote") }}</div>
-                                        <progress :value="saveProgress" min="0" max="100"></progress>
-                                        <div class="buttons">
-                                            <a
-                                                href="#"
-                                                class="save-flash-cancel regular-button"
-                                                @click.prevent="flashSaveCancel"
-                                            >
-                                                {{ $t("dataflashButtonSaveCancel") }}
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <div class="dataflash-saving-after">
-                                        <div>{{ $t("dataflashSavingNoteAfter") }}</div>
-                                        <div class="buttons">
-                                            <a
-                                                href="#"
-                                                class="save-flash-dismiss regular-button"
-                                                @click.prevent="dismissSavingDialog"
-                                            >
-                                                {{ $t("dataflashButtonSaveDismiss") }}
-                                            </a>
-                                        </div>
-                                    </div>
-                                </dialog>
-
-                                <ul class="dataflash-contents">
-                                    <li
-                                        class="dataflash-used"
-                                        :style="{
-                                            width: dataflashUsedPercent + '%',
-                                            display: dataflashUsedSize > 0 ? 'block' : 'none',
-                                        }"
-                                    >
-                                        <div>{{ $t("dataflashUsedSpace") }} {{ formatBytes(dataflashUsedSize) }}</div>
-                                    </li>
-                                    <li
-                                        class="dataflash-free"
-                                        :style="{
-                                            width: dataflashFreePercent + '%',
-                                            display: dataflashFreeSize > 0 ? 'block' : 'none',
-                                        }"
-                                    >
-                                        <div>{{ $t("dataflashFreeSpace") }} {{ formatBytes(dataflashFreeSize) }}</div>
-                                    </li>
-                                </ul>
-
-                                <div class="dataflash-buttons">
-                                    <a
-                                        class="regular-button erase-flash"
-                                        :class="{ disabled: dataflashUsedSize === 0 }"
-                                        href="#"
-                                        @click.prevent="askToEraseFlash"
-                                    >
-                                        {{ $t("dataflashButtonErase") }}
-                                    </a>
-                                    <a
-                                        class="regular-button require-msc-not-supported save-flash-erase"
-                                        :class="{ disabled: dataflashUsedSize === 0 }"
-                                        href="#"
-                                        @click.prevent="flashSaveBegin(true)"
-                                    >
-                                        {{ $t("dataflashButtonSaveAndErase") }}
-                                    </a>
-                                    <a
-                                        class="regular-button require-msc-not-supported save-flash"
-                                        :class="{ disabled: dataflashUsedSize === 0 }"
-                                        href="#"
-                                        @click.prevent="flashSaveBegin(false)"
-                                    >
-                                        {{ $t("dataflashButtonSaveFile") }}
-                                    </a>
-                                    <a
-                                        v-if="isExpertMode"
-                                        class="regular-button require-msc-supported save-flash-erase"
-                                        :class="{ disabled: dataflashUsedSize === 0 }"
-                                        href="#"
-                                        @click.prevent="flashSaveBegin(true)"
-                                    >
-                                        {{ $t("dataflashButtonSaveAndErase") }}
-                                    </a>
-                                    <a
-                                        v-if="isExpertMode"
-                                        class="regular-button require-msc-supported save-flash"
-                                        :class="{ disabled: dataflashUsedSize === 0 }"
-                                        href="#"
-                                        @click.prevent="flashSaveBegin(false)"
-                                    >
-                                        <span>{{ $t("dataflashButtonSaveFile") }}</span>
-                                        <span
-                                            class="helpicon cf_tip"
-                                            :title="$t('dataflashSaveFileDepreciationHint')"
-                                        ></span>
-                                    </a>
-                                    <p>{{ $t("dataflashSavetoFileNote") }}</p>
-                                </div>
-                            </div>
-
-                            <p class="require-dataflash-not-present">{{ $t("dataflashNotPresentNote") }}</p>
-                            <p class="require-dataflash-unsupported">{{ $t("dataflashFirmwareUpgradeRequired") }}</p>
-                        </div>
-                    </div>
-
-                    <div class="require-sdcard-supported">
-                        <div class="gui_box grey">
-                            <div class="gui_box_titlebar" align="left">
-                                <div class="spacer_box_title">{{ $t("onboardLoggingOnboardSDCard") }}</div>
+                <div class="grid-box col1">
+                    <div class="require-blackbox-supported grid-box col1">
+                        <div class="gui_box grey require-blackbox-config-supported">
+                            <div class="gui_box_titlebar">
+                                <div class="spacer_box_title">{{ $t("blackboxConfiguration") }}</div>
                             </div>
                             <div class="spacer_box">
-                                <div class="sdcard">
-                                    <div class="sdcard-icon"></div>
-                                    <div class="sdcard-status">{{ sdcardStatusText }}</div>
+                                <div class="line blackboxDevice">
+                                    <select v-model.number="blackboxDevice" name="blackbox_device">
+                                        <option :value="0">{{ $t("blackboxLoggingNone") }}</option>
+                                        <option v-if="dataflashSupported" :value="1">
+                                            {{ $t("blackboxLoggingFlash") }}
+                                        </option>
+                                        <option v-if="sdcardSupported" :value="2">
+                                            {{ $t("blackboxLoggingSdCard") }}
+                                        </option>
+                                        <option :value="3">{{ $t("blackboxLoggingSerial") }}</option>
+                                        <option v-if="virtualGyro" :value="4">
+                                            {{ $t("blackboxLoggingVirtual") }}
+                                        </option>
+                                    </select>
+                                    <span>{{ $t("onboardLoggingBlackbox") }}</span>
                                 </div>
-                                <p>{{ $t("sdcardNote") }}</p>
+                                <div v-show="blackboxDevice !== 0" class="line blackboxRate">
+                                    <select v-model.number="blackboxRate" name="blackbox_rate">
+                                        <option v-for="rate in loggingRates" :key="rate.value" :value="rate.value">
+                                            {{ rate.label }}
+                                        </option>
+                                    </select>
+                                    <span>{{ $t("onboardLoggingRateOfLogging") }}</span>
+                                </div>
+                                <div class="line blackboxDebugMode">
+                                    <select v-model.number="debugMode" name="blackboxDebugMode">
+                                        <option v-for="(mode, index) in debugModes" :key="index" :value="index">
+                                            {{ mode }}
+                                        </option>
+                                    </select>
+                                    <span class="blackboxDebugModeText">{{ $t("onboardLoggingDebugMode") }}</span>
+                                </div>
+                                <div v-if="showDebugFields" class="gui_box grey">
+                                    <div class="gui_box_titlebar">
+                                        <div class="spacer_box_title">{{ $t("onboardLoggingDebugFields") }}</div>
+                                    </div>
+                                    <table>
+                                        <tbody class="blackboxDebugFieldsTable" id="noline">
+                                            <tr v-for="(field, index) in debugFields" :key="index">
+                                                <td style="width: 40px">
+                                                    <input
+                                                        :id="`blackboxDebugField${index}`"
+                                                        v-model="debugFieldsEnabled[index]"
+                                                        type="checkbox"
+                                                        class="toggle"
+                                                    />
+                                                </td>
+                                                <td>
+                                                    <label :for="`blackboxDebugField${index}`">{{ field }}</label>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="line">
+                                    <a href="#" class="save-settings regular-button" @click.prevent="saveSettings">{{
+                                        $t("blackboxButtonSave")
+                                    }}</a>
+                                </div>
+                            </div>
+                        </div>
 
-                                <div class="require-sdcard-ready">
-                                    <ul class="sdcard-contents">
+                        <div class="gui_box grey">
+                            <div class="gui_box_titlebar" align="left">
+                                <div class="spacer_box_title">{{ $t("onboardLoggingSerialLogger") }}</div>
+                            </div>
+                            <div class="spacer_box">
+                                <p>{{ $t("serialLoggingSupportedNote") }}</p>
+                            </div>
+                        </div>
+
+                        <div class="gui_box grey require-dataflash-supported">
+                            <div class="gui_box_titlebar" align="left">
+                                <div class="spacer_box_title">{{ $t("onboardLoggingFlashLogger") }}</div>
+                            </div>
+                            <div class="spacer_box">
+                                <div class="require-dataflash-supported">
+                                    <p>{{ $t("dataflashNote") }}</p>
+
+                                    <dialog ref="eraseDialog" class="dataflash-confirm-erase">
+                                        <h3>{{ $t("dataflashConfirmEraseTitle") }}</h3>
+                                        <div class="dataflash-confirm-erase-note">
+                                            {{ $t("dataflashConfirmEraseNote") }}
+                                        </div>
+                                        <div class="dataflash-erase-progress">
+                                            <div class="data-loading">
+                                                <p>{{ $t("onboardLoggingEraseInProgress") }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="buttons">
+                                            <a
+                                                href="#"
+                                                class="erase-flash-confirm regular-button"
+                                                @click.prevent="flashErase"
+                                            >
+                                                {{ $t("dataflashButtonEraseConfirm") }}
+                                            </a>
+                                            <a
+                                                href="#"
+                                                class="erase-flash-cancel regular-button"
+                                                @click.prevent="flashEraseCancel"
+                                            >
+                                                {{ $t("dataflashButtonEraseCancel") }}
+                                            </a>
+                                        </div>
+                                    </dialog>
+
+                                    <dialog ref="savingDialog" class="dataflash-saving">
+                                        <h3>{{ $t("dataflashSavingTitle") }}</h3>
+                                        <div class="dataflash-saving-before">
+                                            <div>{{ $t("dataflashSavingNote") }}</div>
+                                            <progress :value="saveProgress" min="0" max="100"></progress>
+                                            <div class="buttons">
+                                                <a
+                                                    href="#"
+                                                    class="save-flash-cancel regular-button"
+                                                    @click.prevent="flashSaveCancel"
+                                                >
+                                                    {{ $t("dataflashButtonSaveCancel") }}
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="dataflash-saving-after">
+                                            <div>{{ $t("dataflashSavingNoteAfter") }}</div>
+                                            <div class="buttons">
+                                                <a
+                                                    href="#"
+                                                    class="save-flash-dismiss regular-button"
+                                                    @click.prevent="dismissSavingDialog"
+                                                >
+                                                    {{ $t("dataflashButtonSaveDismiss") }}
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </dialog>
+
+                                    <ul class="dataflash-contents">
                                         <li
-                                            class="sdcard-other"
+                                            class="dataflash-used"
                                             :style="{
-                                                width: sdcardUsedPercent + '%',
-                                                display: sdcardUsedKB > 0 ? 'block' : 'none',
+                                                width: dataflashUsedPercent + '%',
+                                                display: dataflashUsedSize > 0 ? 'block' : 'none',
                                             }"
                                         >
                                             <div>
-                                                {{ $t("dataflashUnavSpace") }} {{ formatKilobytes(sdcardUsedKB) }}
+                                                {{ $t("dataflashUsedSpace") }} {{ formatBytes(dataflashUsedSize) }}
                                             </div>
                                         </li>
                                         <li
-                                            class="sdcard-free"
+                                            class="dataflash-free"
                                             :style="{
-                                                width: sdcardFreePercent + '%',
-                                                display: sdcardFreeKB > 0 ? 'block' : 'none',
+                                                width: dataflashFreePercent + '%',
+                                                display: dataflashFreeSize > 0 ? 'block' : 'none',
                                             }"
                                         >
                                             <div>
-                                                {{ $t("dataflashLogsSpace") }} {{ formatKilobytes(sdcardFreeKB) }}
+                                                {{ $t("dataflashFreeSpace") }} {{ formatBytes(dataflashFreeSize) }}
                                             </div>
                                         </li>
                                     </ul>
+
+                                    <div class="dataflash-buttons">
+                                        <a
+                                            class="regular-button erase-flash"
+                                            :class="{ disabled: dataflashUsedSize === 0 }"
+                                            href="#"
+                                            @click.prevent="askToEraseFlash"
+                                        >
+                                            {{ $t("dataflashButtonErase") }}
+                                        </a>
+                                        <a
+                                            class="regular-button require-msc-not-supported save-flash-erase"
+                                            :class="{ disabled: dataflashUsedSize === 0 }"
+                                            href="#"
+                                            @click.prevent="flashSaveBegin(true)"
+                                        >
+                                            {{ $t("dataflashButtonSaveAndErase") }}
+                                        </a>
+                                        <a
+                                            class="regular-button require-msc-not-supported save-flash"
+                                            :class="{ disabled: dataflashUsedSize === 0 }"
+                                            href="#"
+                                            @click.prevent="flashSaveBegin(false)"
+                                        >
+                                            {{ $t("dataflashButtonSaveFile") }}
+                                        </a>
+                                        <a
+                                            v-if="isExpertMode"
+                                            class="regular-button require-msc-supported save-flash-erase"
+                                            :class="{ disabled: dataflashUsedSize === 0 }"
+                                            href="#"
+                                            @click.prevent="flashSaveBegin(true)"
+                                        >
+                                            {{ $t("dataflashButtonSaveAndErase") }}
+                                        </a>
+                                        <a
+                                            v-if="isExpertMode"
+                                            class="regular-button require-msc-supported save-flash"
+                                            :class="{ disabled: dataflashUsedSize === 0 }"
+                                            href="#"
+                                            @click.prevent="flashSaveBegin(false)"
+                                        >
+                                            <span>{{ $t("dataflashButtonSaveFile") }}</span>
+                                            <span
+                                                class="helpicon cf_tip"
+                                                :title="$t('dataflashSaveFileDepreciationHint')"
+                                            ></span>
+                                        </a>
+                                        <p>{{ $t("dataflashSavetoFileNote") }}</p>
+                                    </div>
+                                </div>
+
+                                <p class="require-dataflash-not-present">{{ $t("dataflashNotPresentNote") }}</p>
+                                <p class="require-dataflash-unsupported">
+                                    {{ $t("dataflashFirmwareUpgradeRequired") }}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="require-sdcard-supported">
+                            <div class="gui_box grey">
+                                <div class="gui_box_titlebar" align="left">
+                                    <div class="spacer_box_title">{{ $t("onboardLoggingOnboardSDCard") }}</div>
+                                </div>
+                                <div class="spacer_box">
+                                    <div class="sdcard">
+                                        <div class="sdcard-icon"></div>
+                                        <div class="sdcard-status">{{ sdcardStatusText }}</div>
+                                    </div>
+                                    <p>{{ $t("sdcardNote") }}</p>
+
+                                    <div class="require-sdcard-ready">
+                                        <ul class="sdcard-contents">
+                                            <li
+                                                class="sdcard-other"
+                                                :style="{
+                                                    width: sdcardUsedPercent + '%',
+                                                    display: sdcardUsedKB > 0 ? 'block' : 'none',
+                                                }"
+                                            >
+                                                <div>
+                                                    {{ $t("dataflashUnavSpace") }} {{ formatKilobytes(sdcardUsedKB) }}
+                                                </div>
+                                            </li>
+                                            <li
+                                                class="sdcard-free"
+                                                :style="{
+                                                    width: sdcardFreePercent + '%',
+                                                    display: sdcardFreeKB > 0 ? 'block' : 'none',
+                                                }"
+                                            >
+                                                <div>
+                                                    {{ $t("dataflashLogsSpace") }} {{ formatKilobytes(sdcardFreeKB) }}
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="gui_box grey require-msc-supported">
-                    <div class="gui_box_titlebar" align="left">
-                        <div class="spacer_box_title">{{ $t("onboardLoggingMsc") }}</div>
-                    </div>
-                    <div class="spacer_box">
-                        <div class="require-msc-supported">
-                            <div>
-                                <a
-                                    class="require-msc-ready regular-button onboardLoggingRebootMsc"
-                                    :class="{ disabled: !mscReady }"
-                                    href="#"
-                                    @click.prevent="rebootToMsc"
-                                >
-                                    {{ $t("onboardLoggingRebootMscText") }}
-                                </a>
-                            </div>
+                    <div class="gui_box grey require-msc-supported">
+                        <div class="gui_box_titlebar" align="left">
+                            <div class="spacer_box_title">{{ $t("onboardLoggingMsc") }}</div>
                         </div>
-                        <p>{{ $t("onboardLoggingMscNote") }}</p>
-                        <p class="require-msc-not-ready">{{ $t("onboardLoggingMscNotReady") }}</p>
+                        <div class="spacer_box">
+                            <div class="require-msc-supported">
+                                <div>
+                                    <a
+                                        class="require-msc-ready regular-button onboardLoggingRebootMsc"
+                                        :class="{ disabled: !mscReady }"
+                                        href="#"
+                                        @click.prevent="rebootToMsc"
+                                    >
+                                        {{ $t("onboardLoggingRebootMscText") }}
+                                    </a>
+                                </div>
+                            </div>
+                            <p>{{ $t("onboardLoggingMscNote") }}</p>
+                            <p class="require-msc-not-ready">{{ $t("onboardLoggingMscNotReady") }}</p>
+                        </div>
                     </div>
                 </div>
+                <div class="clear-both"></div>
             </div>
-            <div class="clear-both"></div>
         </div>
     </BaseTab>
 </template>
@@ -370,6 +400,12 @@ export default defineComponent({
 
         const loggingRates = computed(() => {
             const rates = [];
+
+            // Validate data is available before processing
+            if (!FC.CONFIG.sampleRateHz || !FC.PID_ADVANCED_CONFIG.pid_process_denom) {
+                return rates;
+            }
+
             const pidRate = FC.CONFIG.sampleRateHz / FC.PID_ADVANCED_CONFIG.pid_process_denom;
             const sampleRateNum = 5;
 
@@ -460,9 +496,18 @@ export default defineComponent({
             );
         });
 
-        // Methods
+        // Helper function for GCD calculation
         function gcd(a, b) {
-            if (b === 0) return a;
+            // Convert to integers and get absolute values
+            a = Math.abs(Math.floor(a));
+            b = Math.abs(Math.floor(b));
+
+            // Handle edge cases
+            if (!Number.isFinite(a) || !Number.isFinite(b)) return 1;
+            if (a === 0) return b || 1;
+            if (b === 0) return a || 1;
+
+            // Euclidean algorithm
             return gcd(b, a % b);
         }
 
@@ -805,6 +850,7 @@ export default defineComponent({
         });
 
         return {
+            MSP,
             eraseDialog,
             savingDialog,
             blackboxDevice,
@@ -832,6 +878,7 @@ export default defineComponent({
             sdcardFreeKB,
             sdcardFreePercent,
             sdcardStatusText,
+            sdcardState,
             mscReady,
             mscSupported,
             formatBytes,
