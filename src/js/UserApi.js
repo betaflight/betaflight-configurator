@@ -209,7 +209,7 @@ export default class UserApi {
     async updateBackup(backup) {
         const authHeaders = await this._authHeaders();
         const response = await fetch(`${this._url}/api/backups/${backup.Id}`, {
-            method: "POST",
+            method: "PUT",
             headers: {
                 "Content-Type": "application/json",
                 ...authHeaders,
