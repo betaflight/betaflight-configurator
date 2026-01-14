@@ -177,9 +177,10 @@ export default defineComponent({
                 }
 
                 const output = await new Promise((resolve, reject) => {
-                    MSP.send_cli_command("dump all", (output) => {
-                        if (output && output.length > 0) {
-                            resolve(output);
+                    MSP.send_cli_command("dump all", (data) => {
+                        if (data && Array.isArray(data) && data.length > 0) {
+                            // Create a copy of the data since the original array gets cleared after callback
+                            resolve([...data]);
                         } else {
                             reject(new Error(this.$t("profileBackupEmptyResult") || "Empty backup result"));
                         }
@@ -205,9 +206,18 @@ export default defineComponent({
                 }
 
                 const response = await this.userApi.downloadBackupFile(backup.id);
-                // response is an object { name, file }
+                // response is an object { name, file } where file is JSON string
+
+                // Parse the JSON and extract fileContents
+                let fileContent = response.file;
+                if (!fileContent || fileContent.length === 0) {
+                    throw new Error("Backup file is empty");
+                }
+
                 const filename = response.name || backup.name || "backup.txt";
-                const url = globalThis.URL.createObjectURL(response.file);
+                // Create a blob from the decoded text for download
+                const blob = new Blob([fileContent], { type: "text/plain" });
+                const url = globalThis.URL.createObjectURL(blob);
                 const link = document.createElement("a");
                 link.href = url;
                 link.setAttribute("download", filename);

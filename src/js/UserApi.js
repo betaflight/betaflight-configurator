@@ -187,7 +187,7 @@ export default class UserApi {
 
         // Parse filename from Content-Disposition header safely
         const contentDisposition = response.headers.get("Content-Disposition");
-        let filename = "download";
+        let filename = "backup.txt";
 
         if (contentDisposition?.includes("filename=")) {
             const parts = contentDisposition.split("filename=");
@@ -197,9 +197,12 @@ export default class UserApi {
             }
         }
 
+        // Return raw text content
+        const text = await response.text();
+
         return {
             name: filename,
-            file: await response.blob(),
+            file: text,
         };
     }
 
