@@ -137,9 +137,25 @@ async function startProcess() {
     }
 
     const windowHref = window.location.href;
-    const subdomain = windowHref.split("//")[1].split(".")[0];
+    let subdomain = "";
+    let isDevelopmentUrl = false;
 
-    const isDevelopmentUrl = subdomain.includes("pr") || windowHref.includes("localhost");
+    try {
+        const url = new URL(windowHref);
+        const hostname = url.hostname;
+
+        // Derive the left-most label as subdomain
+        if (hostname) {
+            const hostnameParts = hostname.split(".");
+            subdomain = hostnameParts[0] || "";
+        }
+
+        // Set isDevelopmentUrl to true only if hostname includes "localhost" OR subdomain matches /^pr\d+/i
+        isDevelopmentUrl = hostname.includes("localhost") || /^pr\d+/i.test(subdomain) || subdomain.includes("master");
+    } catch {
+        // Handle file:// or malformed URLs - fallback to checking href string
+        isDevelopmentUrl = windowHref.includes("localhost");
+    }
 
     if (isDevelopmentUrl) {
         console.log("Detected development URL");
