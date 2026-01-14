@@ -90,22 +90,29 @@
                                     </div>
 
                                     <div class="channel-slider">
-                                        <div class="slider-wrapper" @mousedown="(e) => handleSliderClick(e, entry)">
+                                        <div
+                                            class="slider-wrapper"
+                                            @mousedown="(e) => handleSliderClick(e, entry)"
+                                            @touchstart="(e) => handleSliderClick(e, entry)"
+                                        >
                                             <div class="track-background"></div>
                                             <div
                                                 class="track-fill"
                                                 :style="rangeFillStyle(entry)"
                                                 @mousedown.stop="(e) => startDrag(e, entry, 'range')"
+                                                @touchstart.stop="(e) => startDrag(e, entry, 'range')"
                                             ></div>
                                             <div
                                                 class="range-handle handle-min"
                                                 :style="{ left: channelPercent(entry.range.start) + '%' }"
                                                 @mousedown.stop="(e) => startDrag(e, entry, 'start')"
+                                                @touchstart.stop="(e) => startDrag(e, entry, 'start')"
                                             ></div>
                                             <div
                                                 class="range-handle handle-max"
                                                 :style="{ left: channelPercent(entry.range.end) + '%' }"
                                                 @mousedown.stop="(e) => startDrag(e, entry, 'end')"
+                                                @touchstart.stop="(e) => startDrag(e, entry, 'end')"
                                             ></div>
                                         </div>
                                         <div class="pips-channel-range">
@@ -387,15 +394,21 @@ export default defineComponent({
 
         let dragState = null;
 
+        const getEventX = (e) => {
+            return e.touches ? e.touches[0].clientX : e.clientX;
+        };
+
         const startDrag = (e, entry, type) => {
             e.preventDefault();
             const slider = e.target.closest(".slider-wrapper");
-            const startX = e.clientX;
+            const startX = getEventX(e);
             const initialStart = entry.range.start;
             const initialEnd = entry.range.end;
             dragState = { entry, type, slider, startX, initialStart, initialEnd };
             document.addEventListener("mousemove", onDragMove);
             document.addEventListener("mouseup", stopDrag);
+            document.addEventListener("touchmove", onDragMove);
+            document.addEventListener("touchend", stopDrag);
         };
 
         const onDragMove = (e) => {
@@ -407,7 +420,7 @@ export default defineComponent({
 
             if (dragState.type === "range") {
                 // Dragging the entire range - move both handles together
-                const deltaX = e.clientX - dragState.startX;
+                const deltaX = getEventX(e) - dragState.startX;
                 const deltaPercent = deltaX / rect.width;
                 const deltaValue =
                     Math.round((deltaPercent * (CHANNEL_MAX - CHANNEL_MIN)) / CHANNEL_STEP) * CHANNEL_STEP;
@@ -429,7 +442,7 @@ export default defineComponent({
                 }
             } else {
                 // Dragging individual handle
-                const percent = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+                const percent = Math.max(0, Math.min(1, (getEventX(e) - rect.left) / rect.width));
                 const rawValue = CHANNEL_MIN + percent * (CHANNEL_MAX - CHANNEL_MIN);
                 const value = Math.round(rawValue / CHANNEL_STEP) * CHANNEL_STEP;
 
@@ -446,12 +459,14 @@ export default defineComponent({
         const stopDrag = () => {
             document.removeEventListener("mousemove", onDragMove);
             document.removeEventListener("mouseup", stopDrag);
+            document.removeEventListener("touchmove", onDragMove);
+            document.removeEventListener("touchend", stopDrag);
             dragState = null;
         };
 
         const handleSliderClick = (e, entry) => {
             const rect = e.currentTarget.getBoundingClientRect();
-            const percent = (e.clientX - rect.left) / rect.width;
+            const percent = (getEventX(e) - rect.left) / rect.width;
             const rawValue = CHANNEL_MIN + percent * (CHANNEL_MAX - CHANNEL_MIN);
             const value = Math.round(rawValue / CHANNEL_STEP) * CHANNEL_STEP;
 
