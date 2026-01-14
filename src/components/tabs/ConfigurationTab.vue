@@ -728,7 +728,6 @@ import { useFlightControllerStore } from "@/stores/fc";
 import { useDialog } from "@/composables/useDialog";
 import { useReboot } from "@/composables/useReboot";
 import GUI from "../../js/gui";
-import FC from "../../js/fc";
 import MSP from "../../js/msp";
 import MSPCodes from "../../js/msp/MSPCodes";
 import { mspHelper } from "../../js/msp/MSPHelper.js";
@@ -961,7 +960,7 @@ export default defineComponent({
         const dshotDisabledMask = ref(0);
 
         const featureMask = computed(() => {
-            if (!FC?.FEATURE_CONFIG?.features) {
+            if (!fcStore.features?.features) {
                 return 0;
             }
             return fcStore.features.features._featureMask;
@@ -1170,19 +1169,19 @@ export default defineComponent({
 
         const initializeUI = () => {
             // Populate Reactive State
-            pidAdvancedConfig.pid_process_denom = FC.PID_ADVANCED_CONFIG.pid_process_denom;
+            pidAdvancedConfig.pid_process_denom = fcStore.pidAdvancedConfig.pid_process_denom;
 
-            sensorConfig.acc_hardware = FC.SENSOR_CONFIG.acc_hardware;
-            sensorConfig.baro_hardware = FC.SENSOR_CONFIG.baro_hardware;
-            sensorConfig.mag_hardware = FC.SENSOR_CONFIG.mag_hardware;
-            sensorConfig.sonar_hardware = FC.SENSOR_CONFIG.sonar_hardware;
-            sensorConfig.opticalflow_hardware = FC.SENSOR_CONFIG.opticalflow_hardware;
+            sensorConfig.acc_hardware = fcStore.sensorConfig.acc_hardware;
+            sensorConfig.baro_hardware = fcStore.sensorConfig.baro_hardware;
+            sensorConfig.mag_hardware = fcStore.sensorConfig.mag_hardware;
+            sensorConfig.sonar_hardware = fcStore.sensorConfig.sonar_hardware;
+            sensorConfig.opticalflow_hardware = fcStore.sensorConfig.opticalflow_hardware;
 
             boardAlignment.roll = fcStore.boardAlignment.roll;
             boardAlignment.pitch = fcStore.boardAlignment.pitch;
             boardAlignment.yaw = fcStore.boardAlignment.yaw;
 
-            fpvCamAngleDegrees.value = FC.RX_CONFIG.fpvCamAngleDegrees;
+            fpvCamAngleDegrees.value = fcStore.rxConfig.fpvCamAngleDegrees;
 
             if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)) {
                 craftName.value = fcStore.config.craftName;
@@ -1210,12 +1209,12 @@ export default defineComponent({
             }
 
             // Arming Config
-            armingConfig.small_angle = FC.ARMING_CONFIG.small_angle;
+            armingConfig.small_angle = fcStore.armingConfig.small_angle;
 
             if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_46)) {
                 showGyroCalOnFirstArm.value = true;
-                armingConfig.gyro_cal_on_first_arm_bool = FC.ARMING_CONFIG.gyro_cal_on_first_arm === 1;
-                armingConfig.auto_disarm_delay = FC.ARMING_CONFIG.auto_disarm_delay;
+                armingConfig.gyro_cal_on_first_arm_bool = fcStore.armingConfig.gyro_cal_on_first_arm === 1;
+                armingConfig.auto_disarm_delay = fcStore.armingConfig.auto_disarm_delay;
 
                 if (isFeatureEnabled({ name: "MOTOR_STOP", bit: 4 })) {
                     // Check manually or reuse logic
@@ -1279,7 +1278,7 @@ export default defineComponent({
             if (have_sensor(fcStore.config.activeSensors, "mag")) {
                 if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_46)) {
                     showMagDeclination.value = true;
-                    magDeclination.value = FC.COMPASS_CONFIG.mag_declination;
+                    magDeclination.value = fcStore.compassConfig.mag_declination;
                 }
                 // Show mag alignment for API >= 1.47
                 if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
@@ -1341,17 +1340,17 @@ export default defineComponent({
                 console.log("Saving configuration...");
                 gui_log("Saving...");
 
-                FC.PID_ADVANCED_CONFIG.pid_process_denom = pidAdvancedConfig.pid_process_denom;
+                fcStore.pidAdvancedConfig.pid_process_denom = pidAdvancedConfig.pid_process_denom;
 
-                FC.SENSOR_CONFIG.acc_hardware = sensorConfig.acc_hardware;
-                FC.SENSOR_CONFIG.baro_hardware = sensorConfig.baro_hardware;
-                FC.SENSOR_CONFIG.mag_hardware = sensorConfig.mag_hardware;
+                fcStore.sensorConfig.acc_hardware = sensorConfig.acc_hardware;
+                fcStore.sensorConfig.baro_hardware = sensorConfig.baro_hardware;
+                fcStore.sensorConfig.mag_hardware = sensorConfig.mag_hardware;
 
                 fcStore.boardAlignment.roll = boardAlignment.roll;
                 fcStore.boardAlignment.pitch = boardAlignment.pitch;
                 fcStore.boardAlignment.yaw = boardAlignment.yaw;
 
-                FC.RX_CONFIG.fpvCamAngleDegrees = fpvCamAngleDegrees.value;
+                fcStore.rxConfig.fpvCamAngleDegrees = fpvCamAngleDegrees.value;
 
                 if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)) {
                     fcStore.config.craftName = craftName.value;
@@ -1364,10 +1363,10 @@ export default defineComponent({
                     fcStore.beepers.dshotBeaconTone = dshotBeaconTone.value;
                 }
 
-                FC.ARMING_CONFIG.small_angle = armingConfig.small_angle;
+                fcStore.armingConfig.small_angle = armingConfig.small_angle;
                 if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_46)) {
-                    FC.ARMING_CONFIG.gyro_cal_on_first_arm = armingConfig.gyro_cal_on_first_arm_bool ? 1 : 0;
-                    FC.ARMING_CONFIG.auto_disarm_delay = armingConfig.auto_disarm_delay;
+                    fcStore.armingConfig.gyro_cal_on_first_arm = armingConfig.gyro_cal_on_first_arm_bool ? 1 : 0;
+                    fcStore.armingConfig.auto_disarm_delay = armingConfig.auto_disarm_delay;
                 }
 
                 fcStore.config.accelerometerTrims[0] = accelTrims.pitch;
@@ -1401,12 +1400,12 @@ export default defineComponent({
                 }
 
                 if (showMagDeclination.value) {
-                    FC.COMPASS_CONFIG.mag_declination = magDeclination.value;
+                    fcStore.compassConfig.mag_declination = magDeclination.value;
                 }
 
                 if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
-                    FC.SENSOR_CONFIG.sonar_hardware = sensorConfig.sonar_hardware;
-                    FC.SENSOR_CONFIG.opticalflow_hardware = sensorConfig.opticalflow_hardware;
+                    fcStore.sensorConfig.sonar_hardware = sensorConfig.sonar_hardware;
+                    fcStore.sensorConfig.opticalflow_hardware = sensorConfig.opticalflow_hardware;
                 }
 
                 // Send MSP commands

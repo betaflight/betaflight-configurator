@@ -72,6 +72,26 @@ export const useFlightControllerStore = defineStore("flightController", () => {
         set: (val) => (FC.MOTOR_DATA = val),
     });
 
+    const pidAdvancedConfig = computed({
+        get: () => FC.PID_ADVANCED_CONFIG,
+        set: (val) => (FC.PID_ADVANCED_CONFIG = val),
+    });
+
+    const sensorConfig = computed({
+        get: () => FC.SENSOR_CONFIG,
+        set: (val) => (FC.SENSOR_CONFIG = val),
+    });
+
+    const rxConfig = computed({
+        get: () => FC.RX_CONFIG,
+        set: (val) => (FC.RX_CONFIG = val),
+    });
+
+    const armingConfig = computed({
+        get: () => FC.ARMING_CONFIG,
+        set: (val) => (FC.ARMING_CONFIG = val),
+    });
+
     // Computed Getters
     const apiVersion = computed(() => config.value.apiVersion);
 
@@ -98,6 +118,10 @@ export const useFlightControllerStore = defineStore("flightController", () => {
         analogData,
         rc,
         motorData,
+        pidAdvancedConfig,
+        sensorConfig,
+        rxConfig,
+        armingConfig,
         apiVersion,
         isApiVersionSupported,
         isApiVersionLessThan,
