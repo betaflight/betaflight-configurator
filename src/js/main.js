@@ -18,6 +18,7 @@ import * as THREE from "three";
 import NotificationManager from "./utils/notifications.js";
 import { Capacitor } from "@capacitor/core";
 import loginManager from "./LoginManager.js";
+import PortHandler from "./port_handler.js";
 
 // Silence Capacitor bridge debug spam on native platforms
 if (Capacitor?.isNativePlatform?.() && typeof Capacitor.isLoggingEnabled === "boolean") {
@@ -170,6 +171,11 @@ async function startProcess() {
         if (automaticDevOptions) {
             console.log("Automatically enabling development settings");
             setConfig(developmentOptions);
+
+            // Immediately update PortHandler reactive properties
+            PortHandler.setShowVirtualMode(developmentOptions.showVirtualMode);
+            PortHandler.setShowManualMode(developmentOptions.showManualMode);
+            PortHandler.setShowAllSerialDevices(developmentOptions.showAllSerialDevices);
         }
     }
 
