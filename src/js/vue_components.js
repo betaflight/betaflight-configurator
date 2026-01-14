@@ -16,6 +16,7 @@ import UserProfileTab from "../components/tabs/UserProfile.vue";
 import BackupsTab from "../components/tabs/Backups.vue";
 import LoggingTab from "../components/tabs/LoggingTab.vue";
 import GpsTab from "../components/tabs/GpsTab.vue";
+import AuxiliaryTab from "../components/tabs/AuxiliaryTab.vue";
 
 // Registry of Vue tab components - used by main.js for dynamic mounting
 export const VueTabComponents = {
@@ -29,6 +30,7 @@ export const VueTabComponents = {
     backups: BackupsTab,
     logging: LoggingTab,
     gps: GpsTab,
+    auxiliary: AuxiliaryTab,
 };
 
 // Create a Vue plugin that registers all components globally
@@ -53,5 +55,6 @@ export const BetaflightComponents = {
         app.component("BackupsTab", BackupsTab);
         app.component("LoggingTab", LoggingTab);
         app.component("GpsTab", GpsTab);
+        app.component("AuxiliaryTab", AuxiliaryTab);
     },
 };

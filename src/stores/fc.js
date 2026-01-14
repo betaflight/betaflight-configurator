@@ -92,6 +92,31 @@ export const useFlightControllerStore = defineStore("flightController", () => {
         set: (val) => (FC.ARMING_CONFIG = val),
     });
 
+    const auxConfig = computed({
+        get: () => FC.AUX_CONFIG,
+        set: (val) => (FC.AUX_CONFIG = val),
+    });
+
+    const auxConfigIds = computed({
+        get: () => FC.AUX_CONFIG_IDS,
+        set: (val) => (FC.AUX_CONFIG_IDS = val),
+    });
+
+    const modeRanges = computed({
+        get: () => FC.MODE_RANGES,
+        set: (val) => (FC.MODE_RANGES = val),
+    });
+
+    const modeRangesExtra = computed({
+        get: () => FC.MODE_RANGES_EXTRA,
+        set: (val) => (FC.MODE_RANGES_EXTRA = val),
+    });
+
+    const rssiConfig = computed({
+        get: () => FC.RSSI_CONFIG,
+        set: (val) => (FC.RSSI_CONFIG = val),
+    });
+
     // Computed Getters
     const apiVersion = computed(() => config.value.apiVersion);
 
@@ -122,6 +147,11 @@ export const useFlightControllerStore = defineStore("flightController", () => {
         sensorConfig,
         rxConfig,
         armingConfig,
+        auxConfig,
+        auxConfigIds,
+        modeRanges,
+        modeRangesExtra,
+        rssiConfig,
         apiVersion,
         isApiVersionSupported,
         isApiVersionLessThan,

@@ -261,7 +261,7 @@ async function startProcess() {
                         mountVueTab("help", content_ready);
                         break;
                     case "auxiliary":
-                        import("./tabs/auxiliary").then(({ auxiliary }) => auxiliary.initialize(content_ready));
+                        mountVueTab("auxiliary", content_ready);
                         break;
                     case "adjustments":
                         import("./tabs/adjustments").then(({ adjustments }) => adjustments.initialize(content_ready));
