@@ -187,7 +187,7 @@ export default class UserApi {
 
         // Parse filename from Content-Disposition header safely
         const contentDisposition = response.headers.get("Content-Disposition");
-        let filename = "download";
+        let filename = "backup.txt";
 
         if (contentDisposition?.includes("filename=")) {
             const parts = contentDisposition.split("filename=");
@@ -197,16 +197,19 @@ export default class UserApi {
             }
         }
 
+        // Return raw text content
+        const text = await response.text();
+
         return {
             name: filename,
-            file: await response.blob(),
+            file: text,
         };
     }
 
     async updateBackup(backup) {
         const authHeaders = await this._authHeaders();
         const response = await fetch(`${this._url}/api/backups/${backup.Id}`, {
-            method: "POST",
+            method: "PUT",
             headers: {
                 "Content-Type": "application/json",
                 ...authHeaders,
