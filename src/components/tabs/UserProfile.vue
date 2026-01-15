@@ -155,7 +155,7 @@
                                     <tr>
                                         <th i18n="labelId">Id</th>
                                         <th i18n="labelCreated">Created</th>
-                                        <th i18n="labelUpdated">Updated</th>
+                                        <th i18n="labelLastUsed">Last Used</th>
                                         <th i18n="labelDetails">Platform Info</th>
                                         <th i18n="labelActions">Actions</th>
                                     </tr>

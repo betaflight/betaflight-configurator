@@ -7983,8 +7983,8 @@
     "labelCreated": {
         "message": "Created"
     },
-    "labelUpdated": {
-        "message": "Updated"
+    "labelLastUsed": {
+        "message": "Last Used"
     },
     "labelActions": {
         "message": "Actions"
