@@ -215,7 +215,6 @@
                                             {{ $t("dataflashButtonSaveFile") }}
                                         </a>
                                         <a
-                                            v-if="isExpertMode"
                                             class="regular-button require-msc-supported save-flash-erase"
                                             :class="{ disabled: dataflashUsedSize === 0 }"
                                             href="#"
@@ -224,7 +223,6 @@
                                             {{ $t("dataflashButtonSaveAndErase") }}
                                         </a>
                                         <a
-                                            v-if="isExpertMode"
                                             class="regular-button require-msc-supported save-flash"
                                             :class="{ disabled: dataflashUsedSize === 0 }"
                                             href="#"
