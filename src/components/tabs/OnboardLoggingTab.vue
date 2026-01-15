@@ -74,6 +74,12 @@
                                         <div class="spacer_box_title">{{ $t("onboardLoggingDebugFields") }}</div>
                                     </div>
                                     <table>
+                                        <thead>
+                                            <tr>
+                                                <th>{{ $t("onboardLoggingEnabled") }}</th>
+                                                <th>{{ $t("onboardLoggingField") }}</th>
+                                            </tr>
+                                        </thead>
                                         <tbody class="blackboxDebugFieldsTable" id="noline">
                                             <tr v-for="(field, index) in debugFields" :key="index">
                                                 <td style="width: 40px">
@@ -100,7 +106,7 @@
                         </div>
 
                         <div class="gui_box grey">
-                            <div class="gui_box_titlebar" align="left">
+                            <div class="gui_box_titlebar">
                                 <div class="spacer_box_title">{{ $t("onboardLoggingSerialLogger") }}</div>
                             </div>
                             <div class="spacer_box">
@@ -109,7 +115,7 @@
                         </div>
 
                         <div class="gui_box grey require-dataflash-supported">
-                            <div class="gui_box_titlebar" align="left">
+                            <div class="gui_box_titlebar">
                                 <div class="spacer_box_title">{{ $t("onboardLoggingFlashLogger") }}</div>
                             </div>
                             <div class="spacer_box">
@@ -258,7 +264,7 @@
 
                         <div class="require-sdcard-supported">
                             <div class="gui_box grey">
-                                <div class="gui_box_titlebar" align="left">
+                                <div class="gui_box_titlebar">
                                     <div class="spacer_box_title">{{ $t("onboardLoggingOnboardSDCard") }}</div>
                                 </div>
                                 <div class="spacer_box">
@@ -300,7 +306,7 @@
                     </div>
 
                     <div class="gui_box grey require-msc-supported">
-                        <div class="gui_box_titlebar" align="left">
+                        <div class="gui_box_titlebar">
                             <div class="spacer_box_title">{{ $t("onboardLoggingMsc") }}</div>
                         </div>
                         <div class="spacer_box">
@@ -349,6 +355,46 @@ import { get as getConfig } from "../../js/ConfigStorage";
 import { sensorTypes } from "../../js/sensor_types";
 
 const BLOCK_SIZE = 4096;
+
+// Helper function for GCD calculation
+function gcd(a, b) {
+    // Convert to integers and get absolute values
+    a = Math.abs(Math.floor(a));
+    b = Math.abs(Math.floor(b));
+
+    // Handle edge cases
+    if (!Number.isFinite(a) || !Number.isFinite(b)) {
+        return 1;
+    }
+    if (a === 0) {
+        return b || 1;
+    }
+    if (b === 0) {
+        return a || 1;
+    }
+
+    // Euclidean algorithm
+    return gcd(b, a % b);
+}
+
+function formatKilobytes(kilobytes) {
+    if (kilobytes < 1024) {
+        return `${Math.round(kilobytes)}kB`;
+    }
+    const megabytes = kilobytes / 1024;
+    if (megabytes < 900) {
+        return `${megabytes.toFixed(1)}MB`;
+    }
+    const gigabytes = megabytes / 1024;
+    return `${gigabytes.toFixed(1)}GB`;
+}
+
+function formatBytes(bytes) {
+    if (bytes < 1024) {
+        return `${bytes}B`;
+    }
+    return formatKilobytes(bytes / 1024);
+}
 
 export default defineComponent({
     name: "OnboardLoggingTab",
@@ -452,11 +498,15 @@ export default defineComponent({
         const dataflashTotalSize = computed(() => fcStore.dataflash?.totalSize || 0);
         const dataflashFreeSize = computed(() => dataflashTotalSize.value - dataflashUsedSize.value);
         const dataflashUsedPercent = computed(() => {
-            if (dataflashTotalSize.value === 0) return 0;
+            if (dataflashTotalSize.value === 0) {
+                return 0;
+            }
             return (dataflashUsedSize.value / dataflashTotalSize.value) * 100;
         });
         const dataflashFreePercent = computed(() => {
-            if (dataflashTotalSize.value === 0) return 0;
+            if (dataflashTotalSize.value === 0) {
+                return 0;
+            }
             return (dataflashFreeSize.value / dataflashTotalSize.value) * 100;
         });
 
@@ -464,11 +514,15 @@ export default defineComponent({
         const sdcardFreeKB = computed(() => fcStore.sdcard?.freeSizeKB || 0);
         const sdcardUsedKB = computed(() => sdcardTotalKB.value - sdcardFreeKB.value);
         const sdcardUsedPercent = computed(() => {
-            if (sdcardTotalKB.value === 0) return 0;
+            if (sdcardTotalKB.value === 0) {
+                return 0;
+            }
             return (sdcardUsedKB.value / sdcardTotalKB.value) * 100;
         });
         const sdcardFreePercent = computed(() => {
-            if (sdcardTotalKB.value === 0) return 0;
+            if (sdcardTotalKB.value === 0) {
+                return 0;
+            }
             return (sdcardFreeKB.value / sdcardTotalKB.value) * 100;
         });
 
@@ -502,42 +556,10 @@ export default defineComponent({
             );
         });
 
-        // Helper function for GCD calculation
-        function gcd(a, b) {
-            // Convert to integers and get absolute values
-            a = Math.abs(Math.floor(a));
-            b = Math.abs(Math.floor(b));
-
-            // Handle edge cases
-            if (!Number.isFinite(a) || !Number.isFinite(b)) return 1;
-            if (a === 0) return b || 1;
-            if (b === 0) return a || 1;
-
-            // Euclidean algorithm
-            return gcd(b, a % b);
-        }
-
-        function formatKilobytes(kilobytes) {
-            if (kilobytes < 1024) {
-                return `${Math.round(kilobytes)}kB`;
-            }
-            const megabytes = kilobytes / 1024;
-            if (megabytes < 900) {
-                return `${megabytes.toFixed(1)}MB`;
-            }
-            const gigabytes = megabytes / 1024;
-            return `${gigabytes.toFixed(1)}GB`;
-        }
-
-        function formatBytes(bytes) {
-            if (bytes < 1024) {
-                return `${bytes}B`;
-            }
-            return formatKilobytes(bytes / 1024);
-        }
-
         async function saveSettings() {
-            if (!fcStore.blackbox?.supported) return;
+            if (!fcStore.blackbox?.supported) {
+                return;
+            }
 
             fcStore.blackbox.blackboxSampleRate = blackboxRate.value;
             fcStore.blackbox.blackboxPDenom = blackboxRate.value;
@@ -561,7 +583,9 @@ export default defineComponent({
         }
 
         function askToEraseFlash() {
-            if (dataflashUsedSize.value === 0) return;
+            if (dataflashUsedSize.value === 0) {
+                return;
+            }
             eraseCancelled.value = false;
             eraseDialog.value?.showModal();
         }
@@ -613,13 +637,13 @@ export default defineComponent({
         }
 
         function markSavingDialogDone(startTime, totalBytes, totalBytesCompressed) {
-            const totalTime = (new Date().getTime() - startTime) / 1000;
+            const totalTime = (Date.now() - startTime) / 1000;
             console.log(
                 `Received ${totalBytes} bytes in ${totalTime.toFixed(2)}s (${(totalBytes / totalTime / 1024).toFixed(
                     2,
                 )}kB / s) with block size ${blockSize.value}.`,
             );
-            if (!isNaN(totalBytesCompressed)) {
+            if (!Number.isNaN(totalBytesCompressed)) {
                 console.log(
                     "Compressed into",
                     totalBytesCompressed,
@@ -661,7 +685,9 @@ export default defineComponent({
         }
 
         async function flashSaveBegin(alsoErase = false) {
-            if (!GUI.connected_to || dataflashUsedSize.value === 0) return;
+            if (!GUI.connected_to || dataflashUsedSize.value === 0) {
+                return;
+            }
 
             blockSize.value = BLOCK_SIZE;
 
@@ -710,13 +736,14 @@ export default defineComponent({
                                         if (!saveCancelled.value && alsoErase) {
                                             conditionallyEraseFlash(maxBytes, nextAddress);
                                         }
+                                        return;
+                                    }
+
+                                    if (writeError.value) {
+                                        dismissSavingDialog();
+                                        FileSystem.closeFile(openedFile);
                                     } else {
-                                        if (!writeError.value) {
-                                            mspHelper.dataflashRead(nextAddress, blockSize.value, onChunkRead);
-                                        } else {
-                                            dismissSavingDialog();
-                                            FileSystem.closeFile(openedFile);
-                                        }
+                                        mspHelper.dataflashRead(nextAddress, blockSize.value, onChunkRead);
                                     }
                                 });
                             } else {
@@ -733,7 +760,7 @@ export default defineComponent({
                         }
                     }
 
-                    const startTime = new Date().getTime();
+                    const startTime = Date.now();
                     openedFile = await FileSystem.openFile(fileWriter);
                     mspHelper.dataflashRead(nextAddress, blockSize.value, onChunkRead);
                 } catch (error) {
@@ -749,7 +776,9 @@ export default defineComponent({
         }
 
         function rebootToMsc() {
-            if (!mscReady.value) return;
+            if (!mscReady.value) {
+                return;
+            }
 
             const buffer = [];
             if (GUI.operating_system === "Linux") {
