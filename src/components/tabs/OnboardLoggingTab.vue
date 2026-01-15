@@ -828,6 +828,11 @@ export default defineComponent({
                     debugFieldsEnabled.value = DEBUG.enableFields.map((_, index) => {
                         return (FC.BLACKBOX.blackboxDisabledMask & (1 << index)) === 0;
                     });
+
+                    // Initialize Switchery for the checkboxes after DOM updates
+                    nextTick(() => {
+                        GUI.switchery();
+                    });
                 }
 
                 updateHtml();
