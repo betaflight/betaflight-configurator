@@ -336,7 +336,6 @@ import GUI from "../../js/gui";
 import MSP from "../../js/msp";
 import MSPCodes from "../../js/msp/MSPCodes";
 import { mspHelper } from "../../js/msp/MSPHelper";
-import FC from "../../js/fc";
 import CONFIGURATOR, { API_VERSION_1_45, API_VERSION_1_47 } from "../../js/data_storage";
 import { i18n } from "../../js/localization";
 import semver from "semver";
@@ -379,21 +378,26 @@ export default defineComponent({
         let sdcardTimer = null;
 
         // Computed
-        const dataflashSupported = computed(() => FC.DATAFLASH.supported);
-        const dataflashPresent = computed(() => FC.DATAFLASH.totalSize > 0);
-        const sdcardSupported = computed(() => FC.SDCARD.supported);
-        const blackboxConfigSupported = computed(() => FC.BLACKBOX.supported);
+        const dataflashSupported = computed(() => fcStore.dataflash?.supported);
+        const dataflashPresent = computed(() => (fcStore.dataflash?.totalSize || 0) > 0);
+        const sdcardSupported = computed(() => fcStore.sdcard?.supported);
+        const blackboxConfigSupported = computed(() => fcStore.blackbox?.supported);
         const isExpertMode = computed(() => isExpertModeEnabled());
 
         const virtualGyro = computed(() => {
             return (
-                semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47) &&
-                FC.SENSOR_CONFIG_ACTIVE.gyro_hardware == sensorTypes().gyro.elements.indexOf("VIRTUAL")
+                fcStore.config?.apiVersion &&
+                semver.gte(fcStore.config.apiVersion, API_VERSION_1_47) &&
+                fcStore.sensorConfig?.gyro_hardware_active == sensorTypes().gyro.elements.indexOf("VIRTUAL")
             );
         });
 
         const blackboxSupport = computed(() => {
-            if (FC.BLACKBOX.supported || FC.DATAFLASH.supported || FC.FEATURE_CONFIG.features.isEnabled("BLACKBOX")) {
+            if (
+                fcStore.blackbox?.supported ||
+                fcStore.dataflash?.supported ||
+                fcStore.features?.features?.isEnabled("BLACKBOX")
+            ) {
                 return "yes";
             }
             return "no";
@@ -403,11 +407,11 @@ export default defineComponent({
             const rates = [];
 
             // Validate data is available before processing
-            if (!FC.CONFIG.sampleRateHz || !FC.PID_ADVANCED_CONFIG.pid_process_denom) {
+            if (!fcStore.config?.sampleRateHz || !fcStore.pidAdvancedConfig?.pid_process_denom) {
                 return rates;
             }
 
-            const pidRate = FC.CONFIG.sampleRateHz / FC.PID_ADVANCED_CONFIG.pid_process_denom;
+            const pidRate = fcStore.config.sampleRateHz / fcStore.pidAdvancedConfig.pid_process_denom;
             const sampleRateNum = 5;
 
             for (let i = 0; i < sampleRateNum; i++) {
@@ -427,7 +431,8 @@ export default defineComponent({
 
         const debugModes = computed(() => {
             const modes = [];
-            for (let i = 0; i < FC.PID_ADVANCED_CONFIG.debugModeCount; i++) {
+            const debugModeCount = fcStore.pidAdvancedConfig?.debugModeCount || 0;
+            for (let i = 0; i < debugModeCount; i++) {
                 if (i < DEBUG.modes.length) {
                     modes.push(DEBUG.modes[i]);
                 } else {
@@ -438,13 +443,13 @@ export default defineComponent({
         });
 
         const showDebugFields = computed(() => {
-            return semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45);
+            return fcStore.config?.apiVersion && semver.gte(fcStore.config.apiVersion, API_VERSION_1_45);
         });
 
         const debugFields = computed(() => DEBUG.enableFields || []);
 
-        const dataflashUsedSize = computed(() => FC.DATAFLASH.usedSize);
-        const dataflashTotalSize = computed(() => FC.DATAFLASH.totalSize);
+        const dataflashUsedSize = computed(() => fcStore.dataflash?.usedSize || 0);
+        const dataflashTotalSize = computed(() => fcStore.dataflash?.totalSize || 0);
         const dataflashFreeSize = computed(() => dataflashTotalSize.value - dataflashUsedSize.value);
         const dataflashUsedPercent = computed(() => {
             if (dataflashTotalSize.value === 0) return 0;
@@ -455,8 +460,8 @@ export default defineComponent({
             return (dataflashFreeSize.value / dataflashTotalSize.value) * 100;
         });
 
-        const sdcardTotalKB = computed(() => FC.SDCARD.totalSizeKB);
-        const sdcardFreeKB = computed(() => FC.SDCARD.freeSizeKB);
+        const sdcardTotalKB = computed(() => fcStore.sdcard?.totalSizeKB || 0);
+        const sdcardFreeKB = computed(() => fcStore.sdcard?.freeSizeKB || 0);
         const sdcardUsedKB = computed(() => sdcardTotalKB.value - sdcardFreeKB.value);
         const sdcardUsedPercent = computed(() => {
             if (sdcardTotalKB.value === 0) return 0;
@@ -467,7 +472,7 @@ export default defineComponent({
             return (sdcardFreeKB.value / sdcardTotalKB.value) * 100;
         });
 
-        const sdcardState = computed(() => FC.SDCARD.state);
+        const sdcardState = computed(() => fcStore.sdcard?.state);
 
         const sdcardStatusText = computed(() => {
             switch (sdcardState.value) {
@@ -532,11 +537,11 @@ export default defineComponent({
         }
 
         async function saveSettings() {
-            if (!FC.BLACKBOX.supported) return;
+            if (!fcStore.blackbox?.supported) return;
 
-            FC.BLACKBOX.blackboxSampleRate = blackboxRate.value;
-            FC.BLACKBOX.blackboxPDenom = blackboxRate.value;
-            FC.BLACKBOX.blackboxDevice = blackboxDevice.value;
+            fcStore.blackbox.blackboxSampleRate = blackboxRate.value;
+            fcStore.blackbox.blackboxPDenom = blackboxRate.value;
+            fcStore.blackbox.blackboxDevice = blackboxDevice.value;
 
             // Update disabled mask from checkboxes
             let mask = 0;
@@ -545,11 +550,11 @@ export default defineComponent({
                     mask |= 1 << index;
                 }
             });
-            FC.BLACKBOX.blackboxDisabledMask = mask;
+            fcStore.blackbox.blackboxDisabledMask = mask;
 
             await MSP.promise(MSPCodes.MSP_SET_BLACKBOX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_BLACKBOX_CONFIG));
 
-            FC.PID_ADVANCED_CONFIG.debugMode = debugMode.value;
+            fcStore.pidAdvancedConfig.debugMode = debugMode.value;
             await MSP.promise(MSPCodes.MSP_SET_ADVANCED_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ADVANCED_CONFIG));
 
             mspHelper.writeConfiguration(true);
@@ -573,7 +578,7 @@ export default defineComponent({
         function pollForEraseCompletion() {
             flashUpdateSummary(() => {
                 if (CONFIGURATOR.connectionValid && !eraseCancelled.value) {
-                    if (FC.DATAFLASH.ready) {
+                    if (fcStore.dataflash?.ready) {
                         eraseDialog.value?.close();
                         if (getConfig("showNotifications").showNotifications) {
                             NotificationManager.showNotification("Betaflight App", {
@@ -662,7 +667,7 @@ export default defineComponent({
 
             // Refresh the occupied size
             flashUpdateSummary(async () => {
-                const maxBytes = FC.DATAFLASH.usedSize;
+                const maxBytes = fcStore.dataflash?.usedSize || 0;
                 let openedFile;
 
                 try {
@@ -793,7 +798,7 @@ export default defineComponent({
 
             if (typeof tracking !== "undefined") {
                 tracking.sendEvent(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, "DataLogging", {
-                    logSize: FC.DATAFLASH.usedSize,
+                    logSize: fcStore.dataflash?.usedSize || 0,
                     logStatus: loggingStatus,
                 });
             }
@@ -807,7 +812,7 @@ export default defineComponent({
                 await MSP.promise(MSPCodes.MSP_BLACKBOX_CONFIG);
                 await MSP.promise(MSPCodes.MSP_ADVANCED_CONFIG);
 
-                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+                if (fcStore.config?.apiVersion && semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)) {
                     await MSP.promise(
                         MSPCodes.MSP2_GET_TEXT,
                         mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.CRAFT_NAME),
@@ -820,14 +825,15 @@ export default defineComponent({
                 DEBUG.update();
 
                 // Populate UI state
-                blackboxDevice.value = FC.BLACKBOX.blackboxDevice;
-                blackboxRate.value = FC.BLACKBOX.blackboxSampleRate;
-                debugMode.value = FC.PID_ADVANCED_CONFIG.debugMode;
+                blackboxDevice.value = fcStore.blackbox?.blackboxDevice || 0;
+                blackboxRate.value = fcStore.blackbox?.blackboxSampleRate || 0;
+                debugMode.value = fcStore.pidAdvancedConfig?.debugMode || 0;
 
                 // Initialize debug fields checkboxes
                 if (showDebugFields.value) {
+                    const disabledMask = fcStore.blackbox?.blackboxDisabledMask || 0;
                     debugFieldsEnabled.value = DEBUG.enableFields.map((_, index) => {
-                        return (FC.BLACKBOX.blackboxDisabledMask & (1 << index)) === 0;
+                        return (disabledMask & (1 << index)) === 0;
                     });
 
                     // Initialize Switchery for the checkboxes after DOM updates
