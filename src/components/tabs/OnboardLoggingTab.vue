@@ -321,6 +321,7 @@
 <script>
 import { defineComponent, ref, computed, onMounted, onUnmounted, nextTick } from "vue";
 import { useFlightControllerStore } from "@/stores/fc";
+import { useConnectionStore } from "@/stores/connection";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "../elements/WikiButton.vue";
 import GUI from "../../js/gui";
@@ -389,6 +390,7 @@ export default defineComponent({
     },
     setup() {
         const fcStore = useFlightControllerStore();
+        const connectionStore = useConnectionStore();
 
         // Refs
         const eraseDialog = ref(null);
@@ -581,12 +583,14 @@ export default defineComponent({
         }
 
         function flashErase() {
+            connectionStore.pauseLiveData();
             MSP.send_message(MSPCodes.MSP_DATAFLASH_ERASE, false, false, pollForEraseCompletion);
         }
 
         function flashEraseCancel() {
             eraseCancelled.value = true;
             eraseDialog.value?.close();
+            connectionStore.resumeLiveData();
         }
 
         function pollForEraseCompletion() {
@@ -594,6 +598,7 @@ export default defineComponent({
                 if (CONFIGURATOR.connectionValid && !eraseCancelled.value) {
                     if (fcStore.dataflash?.ready) {
                         eraseDialog.value?.close();
+                        connectionStore.resumeLiveData();
                         if (getConfig("showNotifications").showNotifications) {
                             NotificationManager.showNotification("Betaflight App", {
                                 body: i18n.getMessage("flashEraseDoneNotification"),
