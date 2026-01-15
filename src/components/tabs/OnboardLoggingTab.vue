@@ -9,7 +9,6 @@
                 'sdcard-supported': sdcardSupported,
                 'blackbox-config-supported': blackboxConfigSupported,
                 'blackbox-supported': blackboxSupport === 'yes',
-                'blackbox-maybe-supported': blackboxSupport === 'maybe',
                 'blackbox-unsupported': blackboxSupport === 'no',
                 'msc-supported': mscSupported,
                 'msc-not-ready': !mscReady,
@@ -25,9 +24,6 @@
 
                 <div class="require-blackbox-unsupported note">
                     <p>{{ $t("blackboxNotSupported") }}</p>
-                </div>
-                <div class="require-blackbox-maybe-supported note">
-                    <p>{{ $t("blackboxMaybeSupported") }}</p>
                 </div>
 
                 <div class="grid-box col1">
