@@ -74,12 +74,7 @@
                                         <div class="spacer_box_title">{{ $t("onboardLoggingDebugFields") }}</div>
                                     </div>
                                     <div class="blackboxDebugFieldsTable">
-                                        <div
-                                            v-for="(field, index) in debugFields"
-                                            :key="index"
-                                            class="debug-field-row"
-                                            style="margin-bottom: 8px"
-                                        >
+                                        <div v-for="(field, index) in debugFields" :key="index" class="debug-field-row">
                                             <input
                                                 :id="`blackboxDebugField${index}`"
                                                 v-model="debugFieldsEnabled[index]"
