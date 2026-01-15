@@ -77,9 +77,10 @@
                                         <div v-for="(field, index) in debugFields" :key="index" class="debug-field-row">
                                             <input
                                                 :id="`blackboxDebugField${index}`"
-                                                v-model="debugFieldsEnabled[index]"
+                                                :checked="debugFieldsEnabled[index]"
                                                 type="checkbox"
                                                 class="toggle"
+                                                @change="updateDebugField(index, $event)"
                                             />
                                             <label :for="`blackboxDebugField${index}`">{{ field }}</label>
                                         </div>
@@ -544,6 +545,11 @@ export default defineComponent({
             );
         });
 
+        function updateDebugField(index, event) {
+            // Use splice to ensure Vue 3 reactivity
+            debugFieldsEnabled.value.splice(index, 1, event.target.checked);
+        }
+
         async function saveSettings() {
             if (!fcStore.blackbox?.supported) {
                 return;
@@ -855,8 +861,23 @@ export default defineComponent({
                         return (disabledMask & (1 << index)) === 0;
                     });
 
-                    // Initialize Switchery for the checkboxes after DOM updates
+                    // Destroy existing Switchery instances and recreate with loaded state
                     nextTick(() => {
+                        debugFieldsEnabled.value.forEach((_, index) => {
+                            const checkbox = document.getElementById(`blackboxDebugField${index}`);
+                            if (checkbox) {
+                                // Remove existing Switchery element
+                                const switcheryElement = checkbox.nextElementSibling;
+                                if (switcheryElement && switcheryElement.classList.contains("switchery")) {
+                                    switcheryElement.remove();
+                                }
+                                // Add the toggle class back so GUI.switchery() will reinitialize
+                                if (!checkbox.classList.contains("toggle")) {
+                                    checkbox.classList.add("toggle");
+                                }
+                            }
+                        });
+                        // Reinitialize Switchery with correct state
                         GUI.switchery();
                     });
                 }
@@ -914,6 +935,7 @@ export default defineComponent({
             mscSupported,
             formatBytes,
             formatKilobytes,
+            updateDebugField,
             saveSettings,
             askToEraseFlash,
             flashErase,
