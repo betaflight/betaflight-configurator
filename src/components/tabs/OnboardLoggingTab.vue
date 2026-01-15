@@ -328,7 +328,7 @@
 </template>
 
 <script>
-import { defineComponent, ref, computed, onMounted, onUnmounted, nextTick } from "vue";
+import { defineComponent, ref, computed, onMounted, onUnmounted, nextTick, watch } from "vue";
 import { useFlightControllerStore } from "@/stores/fc";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "../elements/WikiButton.vue";
@@ -848,6 +848,17 @@ export default defineComponent({
                 sdcardTimer = null;
             }
         });
+
+        // Initialize Switchery for debug field checkboxes when they are rendered
+        watch(
+            debugFieldsEnabled,
+            () => {
+                nextTick(() => {
+                    GUI.switchery();
+                });
+            },
+            { deep: true },
+        );
 
         return {
             MSP,
