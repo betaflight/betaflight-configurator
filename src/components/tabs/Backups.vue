@@ -40,7 +40,7 @@
                                             <span class="title">{{ craft }}</span>
                                         </td>
                                     </tr>
-                                    <tr v-for="backup in groupBackups" :key="backup.id">
+                                    <tr class="backup-row" v-for="backup in groupBackups" :key="backup.id">
                                         <td>{{ formatDate(backup.created) }}</td>
                                         <td>{{ backup.name }}</td>
                                         <td>{{ backup.description || "" }}</td>
@@ -328,20 +328,23 @@ export default defineComponent({
 
 .backup-table {
     width: 100%;
-    border-collapse: separate;
+    border-collapse: collapse;
     border-spacing: 0;
     margin-bottom: 20px;
-    border-radius: 8px;
-    overflow: hidden;
-    border: 1px solid var(--surface-400);
 }
 
 .backup-table th,
 .backup-table td {
-    border-bottom: 1px solid var(--surface-400);
-    border-right: 1px solid var(--surface-400);
     padding: 8px;
     text-align: left;
+}
+
+.backup-table th:first-child {
+    border-top-left-radius: 8px;
+}
+
+.backup-table th:last-child {
+    border-top-right-radius: 8px;
 }
 
 .backup-table th:last-child,
@@ -366,6 +369,9 @@ export default defineComponent({
 
 .backup-table a:hover {
     text-decoration: underline;
+}
+.backup-table .backup-row:hover {
+    background-color: var(--surface-600);
 }
 
 .backup-table .title {

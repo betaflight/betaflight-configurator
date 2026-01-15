@@ -110,7 +110,7 @@
                     <div class="gui_box tokens">
                         <h3>{{ $t("sectionUserTokens") }}</h3>
                         <div class="token-list">
-                            <table class="token-table">
+                            <table class="profile-table">
                                 <thead>
                                     <tr>
                                         <th i18n="labelId">Id</th>
@@ -150,7 +150,7 @@
                     <div class="gui_box passkeys">
                         <h3>{{ $t("sectionUserPasskeys") }}</h3>
                         <div class="passkey-list">
-                            <table class="passkey-table">
+                            <table class="profile-table">
                                 <thead>
                                     <tr>
                                         <th i18n="labelId">Id</th>
@@ -393,18 +393,41 @@ export default defineComponent({
 .profile {
     margin-top: 20px;
 }
-.passkey-table {
+.profile-table {
     width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
 }
-.passkey-table th {
+.profile-table th {
+    padding: 8px;
+    text-align: left;
+    background-color: var(--surface-500);
+    font-weight: bold;
+    border-color: var(--surface-500);
+}
+.profile-table th:first-child {
+    border-top-left-radius: 5px;
+}
+.profile-table th:last-child {
+    border-top-right-radius: 5px;
+}
+.profile-table td {
+    padding: 8px;
     text-align: left;
 }
-.token-table {
-    width: 100%;
+.profile-table tr:hover {
+    background-color: var(--surface-600);
 }
-.token-table th {
-    text-align: left;
+
+.profile-table a {
+    margin-right: 10px;
+    text-decoration: none;
+    color: var(--primary-500);
 }
+.profile-table a:hover {
+    text-decoration: underline;
+}
+
 .profile-content {
     display: flex;
     align-items: flex-start;
@@ -414,7 +437,7 @@ export default defineComponent({
     height: 100px;
     border-radius: 50%;
     object-fit: cover;
-    border: 3px solid var(--primary-500);
+    border: 3px solid var(--surface-500);
     margin-right: 20px;
 }
 .profile-info {
@@ -525,12 +548,6 @@ export default defineComponent({
     justify-content: center;
     color: var(--text);
 }
-
-.backup-table .title {
-    font-weight: bold;
-    color: var(--primary-500);
-    width: 100%;
-}
 .profile-photo img {
     width: 100px;
     height: 100px;
@@ -571,56 +588,6 @@ export default defineComponent({
     text-align: center;
     background-color: var(--primary-600);
     color: var(--text);
-}
-
-.backup-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-}
-.backup-table th,
-.backup-table td {
-    border: 1px solid var(--surface-400);
-    padding: 8px;
-    text-align: left;
-}
-.backup-table th {
-    background-color: var(--surface-500);
-    font-weight: bold;
-}
-.backup-table tr:nth-child(even) {
-    background-color: var(--surface-500);
-}
-.backup-table tr:hover {
-    background-color: var(--surface-600);
-}
-
-.backup-table a {
-    margin-right: 10px;
-    text-decoration: none;
-    color: var(--primary-500);
-}
-.backup-table a:hover {
-    text-decoration: underline;
-}
-.backup-edit-form {
-    margin-top: 20px;
-    padding: 20px;
-    border: 1px solid var(--surface-400);
-    background-color: var(--surface-200);
-}
-.backup-edit-form label {
-    display: block;
-    margin-bottom: 5px;
-}
-.backup-edit-form input[type="text"],
-.backup-edit-form textarea {
-    width: 100%;
-    padding: 5px;
-    margin-bottom: 10px;
-}
-.backup-edit-form textarea {
-    height: 100px;
 }
 .button-container {
     margin-top: 10px;
