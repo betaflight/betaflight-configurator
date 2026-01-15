@@ -236,7 +236,7 @@
                                                 :title="$t('dataflashSaveFileDepreciationHint')"
                                             ></span>
                                         </a>
-                                        <p>{{ $t("dataflashSavetoFileNote") }}</p>
+                                        <p v-html="$t('dataflashSavetoFileNote')"></p>
                                     </div>
                                 </div>
 
@@ -307,7 +307,7 @@
                                     </a>
                                 </div>
                             </div>
-                            <p>{{ $t("onboardLoggingMscNote") }}</p>
+                            <p v-html="$t('onboardLoggingMscNote')"></p>
                             <p class="require-msc-not-ready">{{ $t("onboardLoggingMscNotReady") }}</p>
                         </div>
                     </div>
