@@ -619,7 +619,9 @@ export default defineComponent({
 
         function flashUpdateSummary(onDone) {
             MSP.send_message(MSPCodes.MSP_DATAFLASH_SUMMARY, false, false, () => {
-                if (onDone) onDone();
+                if (onDone) {
+                    onDone();
+                }
             });
         }
 
