@@ -18,6 +18,7 @@ import * as THREE from "three";
 import NotificationManager from "./utils/notifications.js";
 import { Capacitor } from "@capacitor/core";
 import loginManager from "./LoginManager.js";
+import { enableDevelopmentOptions } from "./utils/developmentOptions.js";
 
 // Silence Capacitor bridge debug spam on native platforms
 if (Capacitor?.isNativePlatform?.() && typeof Capacitor.isLoggingEnabled === "boolean") {
@@ -134,6 +135,41 @@ async function startProcess() {
                 }, 100);
             });
         });
+    }
+
+    const windowHref = window.location.href;
+    let subdomain = "";
+    let isDevelopmentUrl = false;
+
+    try {
+        const url = new URL(windowHref);
+        const hostname = url.hostname;
+
+        // Derive the left-most label as subdomain
+        if (hostname) {
+            const hostnameParts = hostname.split(".");
+            subdomain = hostnameParts[0] || "";
+        }
+
+        // Set isDevelopmentUrl to true only if hostname includes "localhost" OR subdomain matches /^pr\d+/i
+        isDevelopmentUrl =
+            hostname.includes("localhost") ||
+            hostname.includes("127.0.0.1") ||
+            /^pr\d+/i.test(subdomain) ||
+            subdomain.includes("master");
+    } catch {
+        // Handle file:// or malformed URLs - fallback to checking href string
+        isDevelopmentUrl = windowHref.includes("localhost") || windowHref.includes("127.0.0.1");
+    }
+
+    if (isDevelopmentUrl) {
+        console.log("Detected development URL");
+
+        const automaticDevOptions = getConfig("automaticDevOptions", true).automaticDevOptions;
+        if (automaticDevOptions) {
+            console.log("Automatically enabling development settings");
+            enableDevelopmentOptions();
+        }
     }
 
     // Tabs
