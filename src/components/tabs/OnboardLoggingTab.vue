@@ -589,6 +589,7 @@ export default defineComponent({
 
         function flashErase() {
             connectionStore.pauseLiveData();
+            connectionStore.clearMspQueue();
             isErasing.value = true;
             MSP.send_message(MSPCodes.MSP_DATAFLASH_ERASE, false, false, pollForEraseCompletion);
         }
