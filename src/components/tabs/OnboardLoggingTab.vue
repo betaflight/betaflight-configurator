@@ -241,9 +241,10 @@
                                 </div>
 
                                 <p class="require-dataflash-not-present">{{ $t("dataflashNotPresentNote") }}</p>
-                                <p class="require-dataflash-unsupported">
-                                    {{ $t("dataflashFirmwareUpgradeRequired") }}
-                                </p>
+                                <p
+                                    class="require-dataflash-unsupported"
+                                    v-html="$t('dataflashFirmwareUpgradeRequired')"
+                                ></p>
                             </div>
                         </div>
 
