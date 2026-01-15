@@ -73,29 +73,22 @@
                                     <div class="gui_box_titlebar">
                                         <div class="spacer_box_title">{{ $t("onboardLoggingDebugFields") }}</div>
                                     </div>
-                                    <table>
-                                        <thead>
-                                            <tr>
-                                                <th>{{ $t("onboardLoggingEnabled") }}</th>
-                                                <th>{{ $t("onboardLoggingField") }}</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody class="blackboxDebugFieldsTable" id="noline">
-                                            <tr v-for="(field, index) in debugFields" :key="index">
-                                                <td style="width: 40px">
-                                                    <input
-                                                        :id="`blackboxDebugField${index}`"
-                                                        v-model="debugFieldsEnabled[index]"
-                                                        type="checkbox"
-                                                        class=""
-                                                    />
-                                                </td>
-                                                <td>
-                                                    <label :for="`blackboxDebugField${index}`">{{ field }}</label>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                                    <div class="blackboxDebugFieldsTable">
+                                        <div
+                                            v-for="(field, index) in debugFields"
+                                            :key="index"
+                                            class="debug-field-row"
+                                            style="margin-bottom: 8px"
+                                        >
+                                            <input
+                                                :id="`blackboxDebugField${index}`"
+                                                v-model="debugFieldsEnabled[index]"
+                                                type="checkbox"
+                                                class="toggle"
+                                            />
+                                            <label :for="`blackboxDebugField${index}`">{{ field }}</label>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="line">
                                     <a href="#" class="save-settings regular-button" @click.prevent="saveSettings">{{
