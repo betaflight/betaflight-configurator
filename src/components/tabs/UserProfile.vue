@@ -154,7 +154,6 @@
                                 <thead>
                                     <tr>
                                         <th i18n="labelId">Id</th>
-                                        <th i18n="userPasskeySignCounter">Sign Counter</th>
                                         <th i18n="labelCreated">Created</th>
                                         <th i18n="labelUpdated">Updated</th>
                                         <th i18n="labelDetails">Platform Info</th>
@@ -163,11 +162,10 @@
                                 </thead>
                                 <tbody>
                                     <tr v-if="passkeys.length === 0">
-                                        <td colspan="6" i18n="userPasskeyNoPasskeys">No passkeys available</td>
+                                        <td colspan="5" i18n="userPasskeyNoPasskeys">No passkeys available</td>
                                     </tr>
                                     <tr v-for="passkey in passkeys" :key="passkey.id">
                                         <td>{{ passkey.id }}</td>
-                                        <td>{{ passkey.signCounter }}</td>
                                         <td>{{ formatDate(passkey.createdAtUtc) }}</td>
                                         <td>{{ formatDate(passkey.updatedAtUtc) }}</td>
                                         <td>{{ passkey.client?.address || "-" }}</td>

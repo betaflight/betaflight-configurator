@@ -7920,9 +7920,6 @@
     "profileBackupEmptyResult": {
         "message": "Backup unsuccessful"
     },
-    "labelSignCounter": {
-        "message": "Sign Counter"
-    },
     "labelLogin": {
         "message": "Login"
     },
