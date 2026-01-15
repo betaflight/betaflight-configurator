@@ -40,15 +40,6 @@ const REBOOT_CONNECT_MAX_TIME_MS = 10000;
 const REBOOT_GRACE_PERIOD_MS = 2000;
 let rebootTimestamp = 0;
 
-// Lazy getter for connection store to avoid initialization timing issues
-function getConnectionStore() {
-    try {
-        return useConnectionStore();
-    } catch (e) {
-        return null;
-    }
-}
-
 function isCliOnlyMode() {
     return getConfig("cliOnlyMode")?.cliOnlyMode === true;
 }
@@ -768,9 +759,8 @@ export async function update_sensor_status() {
 
 async function update_live_status() {
     // Check if live data is paused via Pinia store
-    const connectionStore = getConnectionStore();
-    if (connectionStore?.liveDataPaused) {
-        console.log(`${logHead} Live data paused, skipping update`);
+    const connectionStore = useConnectionStore();
+    if (connectionStore.liveDataPaused) {
         return;
     }
 
