@@ -169,6 +169,7 @@ async function startProcess() {
             showVirtualMode: true,
             showManualMode: true,
             showAllSerialDevices: true,
+            backupOnFlash: 2,
         };
 
         const automaticDevOptions = getConfig("automaticDevOptions", true).automaticDevOptions;
