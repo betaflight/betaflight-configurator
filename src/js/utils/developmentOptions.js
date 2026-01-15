@@ -33,18 +33,16 @@ export function applyDevelopmentOptions(options) {
     // Save to config storage
     setConfig(options);
 
-    // Update PortHandler reactive properties
+    // Update PortHandler reactive properties using setter methods
     if (options.showVirtualMode !== undefined) {
-        PortHandler.showVirtualMode = options.showVirtualMode;
+        PortHandler.setShowVirtualMode(options.showVirtualMode);
     }
     if (options.showManualMode !== undefined) {
-        PortHandler.showManualMode = options.showManualMode;
+        PortHandler.setShowManualMode(options.showManualMode);
     }
     if (options.showAllSerialDevices !== undefined) {
-        PortHandler.showAllSerialDevices = options.showAllSerialDevices;
+        PortHandler.setShowAllSerialDevices(options.showAllSerialDevices);
     }
-
-    PortHandler.selectActivePort();
 }
 
 /**
