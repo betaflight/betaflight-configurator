@@ -152,10 +152,14 @@ async function startProcess() {
         }
 
         // Set isDevelopmentUrl to true only if hostname includes "localhost" OR subdomain matches /^pr\d+/i
-        isDevelopmentUrl = hostname.includes("localhost") || /^pr\d+/i.test(subdomain) || subdomain.includes("master");
+        isDevelopmentUrl =
+            hostname.includes("localhost") ||
+            hostname.includes("127.0.0.1") ||
+            /^pr\d+/i.test(subdomain) ||
+            subdomain.includes("master");
     } catch {
         // Handle file:// or malformed URLs - fallback to checking href string
-        isDevelopmentUrl = windowHref.includes("localhost");
+        isDevelopmentUrl = windowHref.includes("localhost") || windowHref.includes("127.0.0.1");
     }
 
     if (isDevelopmentUrl) {
