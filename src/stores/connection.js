@@ -1,8 +1,9 @@
 import { defineStore } from "pinia";
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import GUI from "../js/gui";
 import CONFIGURATOR from "../js/data_storage";
 import PortHandler from "../js/port_handler";
+import MSP from "../js/msp";
 
 export const useConnectionStore = defineStore("connection", () => {
     // Proxy state directly to legacy reactive objects
@@ -40,6 +41,21 @@ export const useConnectionStore = defineStore("connection", () => {
 
     const selectedPort = computed(() => PortHandler.portPicker.selectedPort);
 
+    // Live data refresh control
+    const liveDataPaused = ref(false);
+
+    function pauseLiveData() {
+        liveDataPaused.value = true;
+    }
+
+    function resumeLiveData() {
+        liveDataPaused.value = false;
+    }
+
+    function clearMspQueue() {
+        MSP.callbacks_cleanup();
+    }
+
     function reboot() {
         GUI.reinitializeConnection();
     }
@@ -49,7 +65,11 @@ export const useConnectionStore = defineStore("connection", () => {
         connectedTo,
         connectLock,
         connectionValid,
+        clearMspQueue,
         selectedPort,
+        liveDataPaused,
+        pauseLiveData,
+        resumeLiveData,
         reboot,
     };
 });

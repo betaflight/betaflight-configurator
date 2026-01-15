@@ -355,9 +355,7 @@ async function startProcess() {
                         mountVueTab("logging", content_ready);
                         break;
                     case "onboard_logging":
-                        import("./tabs/onboard_logging").then(({ onboard_logging }) =>
-                            onboard_logging.initialize(content_ready),
-                        );
+                        mountVueTab("onboard_logging", content_ready);
                         break;
                     case "cli":
                         import("./tabs/cli").then(({ cli }) => cli.initialize(content_ready));

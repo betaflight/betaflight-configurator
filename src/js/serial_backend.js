@@ -26,6 +26,7 @@ import BuildApi from "./BuildApi";
 import { serial } from "./serial.js";
 import { EventBus } from "../components/eventBus";
 import { ispConnected } from "./utils/connection";
+import { useConnectionStore } from "../stores/connection";
 
 const logHead = "[SERIAL-BACKEND]";
 
@@ -757,6 +758,12 @@ export async function update_sensor_status() {
 }
 
 async function update_live_status() {
+    // Check if live data is paused via Pinia store
+    const connectionStore = useConnectionStore();
+    if (connectionStore.liveDataPaused) {
+        return;
+    }
+
     // cli or presets tab do not use MSP connection
     if (GUI.active_tab !== "cli" && GUI.active_tab !== "presets") {
         await update_sensor_status();

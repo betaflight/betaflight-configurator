@@ -117,6 +117,21 @@ export const useFlightControllerStore = defineStore("flightController", () => {
         set: (val) => (FC.RSSI_CONFIG = val),
     });
 
+    const blackbox = computed({
+        get: () => FC.BLACKBOX,
+        set: (val) => (FC.BLACKBOX = val),
+    });
+
+    const dataflash = computed({
+        get: () => FC.DATAFLASH,
+        set: (val) => (FC.DATAFLASH = val),
+    });
+
+    const sdcard = computed({
+        get: () => FC.SDCARD,
+        set: (val) => (FC.SDCARD = val),
+    });
+
     // Computed Getters
     const apiVersion = computed(() => config.value.apiVersion);
 
@@ -152,6 +167,9 @@ export const useFlightControllerStore = defineStore("flightController", () => {
         modeRanges,
         modeRangesExtra,
         rssiConfig,
+        blackbox,
+        dataflash,
+        sdcard,
         apiVersion,
         isApiVersionSupported,
         isApiVersionLessThan,
