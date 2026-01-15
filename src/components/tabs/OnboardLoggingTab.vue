@@ -107,7 +107,11 @@
                                 <div class="require-dataflash-supported">
                                     <p>{{ $t("dataflashNote") }}</p>
 
-                                    <dialog ref="eraseDialog" class="dataflash-confirm-erase">
+                                    <dialog
+                                        ref="eraseDialog"
+                                        class="dataflash-confirm-erase"
+                                        :class="{ erasing: isErasing }"
+                                    >
                                         <h3>{{ $t("dataflashConfirmEraseTitle") }}</h3>
                                         <div class="dataflash-confirm-erase-note">
                                             {{ $t("dataflashConfirmEraseNote") }}
@@ -405,6 +409,7 @@ export default defineComponent({
         const saveProgress = ref(0);
         const saveCancelled = ref(false);
         const eraseCancelled = ref(false);
+        const isErasing = ref(false);
         const blockSize = ref(BLOCK_SIZE);
         const writeError = ref(false);
 
@@ -584,11 +589,13 @@ export default defineComponent({
 
         function flashErase() {
             connectionStore.pauseLiveData();
+            isErasing.value = true;
             MSP.send_message(MSPCodes.MSP_DATAFLASH_ERASE, false, false, pollForEraseCompletion);
         }
 
         function flashEraseCancel() {
             eraseCancelled.value = true;
+            isErasing.value = false;
             eraseDialog.value?.close();
             connectionStore.resumeLiveData();
         }
@@ -597,6 +604,7 @@ export default defineComponent({
             flashUpdateSummary(() => {
                 if (CONFIGURATOR.connectionValid && !eraseCancelled.value) {
                     if (fcStore.dataflash?.ready) {
+                        isErasing.value = false;
                         eraseDialog.value?.close();
                         connectionStore.resumeLiveData();
                         if (getConfig("showNotifications").showNotifications) {
@@ -911,6 +919,7 @@ export default defineComponent({
             debugMode,
             debugFieldsEnabled,
             saveProgress,
+            isErasing,
             dataflashSupported,
             dataflashPresent,
             sdcardSupported,
