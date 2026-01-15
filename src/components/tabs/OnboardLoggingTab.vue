@@ -368,7 +368,8 @@ export default defineComponent({
         const blackboxDevice = ref(0);
         const blackboxRate = ref(0);
         const debugMode = ref(0);
-        const debugFieldsEnabled = ref([]);
+        // Initialize all debug fields as enabled by default (empty array causes issues)
+        const debugFieldsEnabled = ref(DEBUG.enableFields ? DEBUG.enableFields.map(() => true) : []);
         const saveProgress = ref(0);
         const saveCancelled = ref(false);
         const eraseCancelled = ref(false);
