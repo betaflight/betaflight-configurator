@@ -81,7 +81,7 @@
                                                         :id="`blackboxDebugField${index}`"
                                                         v-model="debugFieldsEnabled[index]"
                                                         type="checkbox"
-                                                        class="toggle"
+                                                        class=""
                                                     />
                                                 </td>
                                                 <td>
