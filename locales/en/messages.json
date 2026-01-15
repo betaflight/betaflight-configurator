@@ -7920,9 +7920,6 @@
     "profileBackupEmptyResult": {
         "message": "Backup unsuccessful"
     },
-    "labelSignCounter": {
-        "message": "Sign Counter"
-    },
     "labelLogin": {
         "message": "Login"
     },
@@ -7986,8 +7983,8 @@
     "labelCreated": {
         "message": "Created"
     },
-    "labelUpdated": {
-        "message": "Updated"
+    "labelLastUsed": {
+        "message": "Last Used"
     },
     "labelActions": {
         "message": "Actions"
