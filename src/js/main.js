@@ -18,7 +18,7 @@ import * as THREE from "three";
 import NotificationManager from "./utils/notifications.js";
 import { Capacitor } from "@capacitor/core";
 import loginManager from "./LoginManager.js";
-import PortHandler from "./port_handler.js";
+import { enableDevelopmentOptions } from "./utils/developmentOptions.js";
 
 // Silence Capacitor bridge debug spam on native platforms
 if (Capacitor?.isNativePlatform?.() && typeof Capacitor.isLoggingEnabled === "boolean") {
@@ -165,22 +165,10 @@ async function startProcess() {
     if (isDevelopmentUrl) {
         console.log("Detected development URL");
 
-        const developmentOptions = {
-            showVirtualMode: true,
-            showManualMode: true,
-            showAllSerialDevices: true,
-            backupOnFlash: 2,
-        };
-
         const automaticDevOptions = getConfig("automaticDevOptions", true).automaticDevOptions;
         if (automaticDevOptions) {
             console.log("Automatically enabling development settings");
-            setConfig(developmentOptions);
-
-            // Immediately update PortHandler reactive properties
-            PortHandler.setShowVirtualMode(developmentOptions.showVirtualMode);
-            PortHandler.setShowManualMode(developmentOptions.showManualMode);
-            PortHandler.setShowAllSerialDevices(developmentOptions.showAllSerialDevices);
+            enableDevelopmentOptions();
         }
     }
 

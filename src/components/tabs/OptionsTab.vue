@@ -42,7 +42,12 @@
                     <!-- Show Manual Mode -->
                     <div class="showManualMode margin-bottom">
                         <div>
-                            <input type="checkbox" class="toggle" v-model="settings.showManualMode" />
+                            <input
+                                type="checkbox"
+                                class="toggle"
+                                v-model="settings.showManualMode"
+                                data-setting="showManualMode"
+                            />
                         </div>
                         <span class="freelabel" v-html="$t('showManualMode')"></span>
                     </div>
@@ -50,7 +55,12 @@
                     <!-- Show Virtual Mode -->
                     <div class="showVirtualMode margin-bottom">
                         <div>
-                            <input type="checkbox" class="toggle" v-model="settings.showVirtualMode" />
+                            <input
+                                type="checkbox"
+                                class="toggle"
+                                v-model="settings.showVirtualMode"
+                                data-setting="showVirtualMode"
+                            />
                         </div>
                         <span class="freelabel" v-html="$t('showVirtualMode')"></span>
                     </div>
@@ -128,7 +138,12 @@
                 <div class="spacer">
                     <div class="showAllSerialDevices margin-bottom">
                         <div>
-                            <input type="checkbox" class="toggle" v-model="settings.showAllSerialDevices" />
+                            <input
+                                type="checkbox"
+                                class="toggle"
+                                v-model="settings.showAllSerialDevices"
+                                data-setting="showAllSerialDevices"
+                            />
                         </div>
                         <span class="freelabel" v-html="$t('showAllSerialDevices')"></span>
                     </div>
@@ -168,7 +183,7 @@
 </template>
 
 <script>
-import { defineComponent, reactive, watch, onMounted } from "vue";
+import { defineComponent, reactive, watch, onMounted, nextTick } from "vue";
 import BaseTab from "./BaseTab.vue";
 import GUI from "../../js/gui";
 import { get as getConfig, set as setConfig } from "../../js/ConfigStorage";
@@ -179,6 +194,7 @@ import DarkTheme, { setDarkTheme } from "../../js/DarkTheme";
 import { checkSetupAnalytics } from "../../js/Analytics";
 import NotificationManager from "../../js/utils/notifications";
 import { ispConnected } from "../../js/utils/connection";
+import { DEFAULT_DEVELOPMENT_OPTIONS, resetDevelopmentOptions } from "../../js/utils/developmentOptions";
 
 export default defineComponent({
     name: "OptionsTab",
@@ -207,6 +223,23 @@ export default defineComponent({
         });
 
         const availableLanguages = i18n.getLanguagesAvailables();
+
+        // switchery workaround to refresh the toggles
+        const refreshDevelopmentToggles = () => {
+            nextTick(() => {
+                const toggleSelectors = [
+                    "[data-setting='showManualMode']",
+                    "[data-setting='showVirtualMode']",
+                    "[data-setting='showAllSerialDevices']",
+                ];
+                toggleSelectors.forEach((selector) => {
+                    const element = document.querySelector(selector);
+                    if (element) {
+                        element.dispatchEvent(new Event("change", { bubbles: true }));
+                    }
+                });
+            });
+        };
 
         // Watch each setting and persist changes
         watch(
@@ -307,7 +340,21 @@ export default defineComponent({
 
         watch(
             () => settings.automaticDevOptions,
-            (value) => setConfig({ automaticDevOptions: value }),
+            (value) => {
+                setConfig({ automaticDevOptions: value });
+
+                // When disabled, reset development options to defaults
+                if (!value) {
+                    resetDevelopmentOptions();
+
+                    // Update local reactive state to match
+                    settings.showVirtualMode = DEFAULT_DEVELOPMENT_OPTIONS.showVirtualMode;
+                    settings.showManualMode = DEFAULT_DEVELOPMENT_OPTIONS.showManualMode;
+                    settings.showAllSerialDevices = DEFAULT_DEVELOPMENT_OPTIONS.showAllSerialDevices;
+                    settings.backupOnFlash = DEFAULT_DEVELOPMENT_OPTIONS.backupOnFlash;
+                    refreshDevelopmentToggles();
+                }
+            },
         );
 
         // Handle notifications permission flow
