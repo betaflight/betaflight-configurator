@@ -31,7 +31,6 @@ class GuiControl {
         this.defaultAllowedTabsWhenDisconnected = [
             "landing",
             "firmware_flasher",
-            "privacy_policy",
             "options",
             "help",
             "user_profile",
