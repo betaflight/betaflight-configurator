@@ -132,7 +132,7 @@
 </template>
 
 <script>
-import { defineComponent, ref, reactive, computed, onMounted, onUnmounted } from "vue";
+import { defineComponent, ref, reactive, computed, onMounted, onUnmounted, nextTick } from "vue";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "../elements/WikiButton.vue";
 import GUI from "../../js/gui";
@@ -457,6 +457,8 @@ export default defineComponent({
         onMounted(async () => {
             await loadMSPData();
             initializeAdjustments();
+            await nextTick();
+            GUI.switchery();
             startRcDataPolling();
             GUI.content_ready();
         });
