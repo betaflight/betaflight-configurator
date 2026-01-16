@@ -9,7 +9,7 @@ import * as d3 from "d3";
 import $ from "jquery";
 import semver from "semver";
 import { API_VERSION_1_46 } from "../data_storage";
-import DEBUG from "../debug";
+import { getDebug } from "../debug";
 
 const sensors = {};
 
@@ -198,6 +198,7 @@ sensors.initialize = function (callback) {
     }
 
     function displayDebugColumnNames() {
+        const DEBUG = getDebug();
         const debugModeName = DEBUG.modes[FC.PID_ADVANCED_CONFIG.debugMode];
         const debugFields = DEBUG.fieldNames[debugModeName];
 

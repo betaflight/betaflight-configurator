@@ -337,7 +337,7 @@ import { i18n } from "../../js/localization";
 import semver from "semver";
 import { gui_log } from "../../js/gui_log";
 import { generateFilename } from "../../js/utils/generate_filename";
-import DEBUG from "../../js/debug";
+import { getDebug } from "../../js/debug";
 import FileSystem from "../../js/FileSystem";
 import { isExpertModeEnabled } from "../../js/utils/isExpertModeEnabled";
 import NotificationManager from "../../js/utils/notifications";
@@ -405,6 +405,7 @@ export default defineComponent({
         const blackboxRate = ref(0);
         const debugMode = ref(0);
         // Initialize all debug fields as enabled by default (empty array causes issues)
+        const DEBUG = getDebug();
         const debugFieldsEnabled = ref(DEBUG.enableFields ? DEBUG.enableFields.map(() => true) : []);
         const saveProgress = ref(0);
         const saveCancelled = ref(false);
@@ -855,9 +856,6 @@ export default defineComponent({
                 } else {
                     await MSP.promise(MSPCodes.MSP_NAME);
                 }
-
-                // Update debug definitions
-                DEBUG.update();
 
                 // Populate UI state
                 blackboxDevice.value = fcStore.blackbox?.blackboxDevice || 0;
