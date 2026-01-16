@@ -129,9 +129,9 @@ import GUI from "../../js/gui";
 import MSP from "../../js/msp";
 import MSPCodes from "../../js/msp/MSPCodes";
 import { mspHelper } from "../../js/msp/MSPHelper";
-import FC from "../../js/fc";
 import { i18n } from "../../js/localization";
 import { gui_log } from "../../js/gui_log";
+import { useFlightControllerStore } from "@/stores/fc";
 
 const CHANNEL_MIN = 900;
 const CHANNEL_MAX = 2100;
@@ -146,6 +146,8 @@ export default defineComponent({
         WikiButton,
     },
     setup() {
+        const fcStore = useFlightControllerStore();
+
         const adjustments = reactive([]);
         const auxChannelCount = ref(0);
         const rcChannelData = reactive({});
@@ -347,13 +349,13 @@ export default defineComponent({
         };
 
         const initializeAdjustments = () => {
-            auxChannelCount.value = FC.RC.active_channels - 4;
+            auxChannelCount.value = fcStore.rc.active_channels - 4;
 
             // Clear existing adjustments
             adjustments.splice(0, adjustments.length);
 
-            // Populate adjustments from FC data
-            FC.ADJUSTMENT_RANGES.forEach((range) => {
+            // Populate adjustments from fcStore
+            fcStore.adjustmentRanges.forEach((range) => {
                 const isEnabled = range.range?.start !== range.range?.end;
                 adjustments.push(
                     reactive({
@@ -372,9 +374,9 @@ export default defineComponent({
         };
 
         const updateRcData = () => {
-            const auxCount = FC.RC.active_channels - 4;
+            const auxCount = fcStore.rc.active_channels - 4;
             for (let auxChannelIndex = 0; auxChannelIndex < auxCount; auxChannelIndex++) {
-                rcChannelData[auxChannelIndex] = FC.RC.channels[auxChannelIndex + 4];
+                rcChannelData[auxChannelIndex] = fcStore.rc.channels[auxChannelIndex + 4];
             }
         };
 
@@ -400,9 +402,9 @@ export default defineComponent({
         };
 
         const saveAdjustments = () => {
-            const requiredAdjustmentRangeCount = FC.ADJUSTMENT_RANGES.length;
+            const requiredAdjustmentRangeCount = fcStore.adjustmentRanges.length;
 
-            FC.ADJUSTMENT_RANGES = [];
+            fcStore.adjustmentRanges = [];
 
             const defaultAdjustmentRange = {
                 slotIndex: 0,
@@ -417,7 +419,7 @@ export default defineComponent({
 
             adjustments.forEach((adjustment) => {
                 if (adjustment.enabled) {
-                    FC.ADJUSTMENT_RANGES.push({
+                    fcStore.adjustmentRanges.push({
                         slotIndex: 0,
                         auxChannelIndex: adjustment.auxChannelIndex,
                         range: {
@@ -428,13 +430,13 @@ export default defineComponent({
                         auxSwitchChannelIndex: adjustment.auxSwitchChannelIndex,
                     });
                 } else {
-                    FC.ADJUSTMENT_RANGES.push(defaultAdjustmentRange);
+                    fcStore.adjustmentRanges.push(defaultAdjustmentRange);
                 }
             });
 
             // Fill remaining slots if needed
-            for (let i = FC.ADJUSTMENT_RANGES.length; i < requiredAdjustmentRangeCount; i++) {
-                FC.ADJUSTMENT_RANGES.push(defaultAdjustmentRange);
+            for (let i = fcStore.adjustmentRanges.length; i < requiredAdjustmentRangeCount; i++) {
+                fcStore.adjustmentRanges.push(defaultAdjustmentRange);
             }
 
             mspHelper.sendAdjustmentRanges(() => {
