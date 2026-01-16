@@ -322,7 +322,7 @@ export const useDebugStore = defineStore("debug", () => {
                 "debug[all]": "Rangefinder",
                 "debug[0]": "not used",
                 "debug[1]": "Raw Altitude",
-                "debug[2]": "Calc Altituded",
+                "debug[2]": "Calc Altitude",
                 "debug[3]": "SNR",
             },
             RANGEFINDER_QUALITY: {
@@ -368,7 +368,7 @@ export const useDebugStore = defineStore("debug", () => {
                 "debug[0]": "Cable In",
                 "debug[1]": "VCP Connected",
             },
-            "SMART AUDIO": {
+            SMARTAUDIO: {
                 "debug[all]": "Smart Audio VTx",
                 "debug[0]": "Device + Version",
                 "debug[1]": "Channel",
@@ -766,7 +766,7 @@ export const useDebugStore = defineStore("debug", () => {
                 "debug[2]": "S Term [yaw]",
             },
             SPA: {
-                "debug[all": "SPA",
+                "debug[all]": "SPA",
                 "debug[0]": "Setpoint PID Attenuation [roll]",
                 "debug[1]": "Setpoint PID Attenuation [pitch]",
                 "debug[2]": "Setpoint PID Attenuation [yaw]",
