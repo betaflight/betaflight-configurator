@@ -502,19 +502,21 @@ export default defineComponent({
     top: 50%;
     left: 0;
     right: 0;
-    height: 4px;
-    background: #ccc;
+    height: 8px;
+    background: var(--surface-600);
     transform: translateY(-50%);
-    border-radius: 2px;
+    border-radius: 4px;
+    z-index: 0;
+    pointer-events: none;
 }
 
 .track-fill {
     position: absolute;
     top: 50%;
-    height: 4px;
-    background: #3a3;
+    height: 8px;
+    background: var(--primary-500);
     transform: translateY(-50%);
-    border-radius: 2px;
+    border-radius: 4px;
     cursor: grab;
     z-index: 1;
 }
@@ -526,24 +528,25 @@ export default defineComponent({
 .range-handle {
     position: absolute;
     top: 50%;
-    width: 16px;
-    height: 16px;
-    background: #fff;
-    border: 2px solid #3a3;
+    width: 18px;
+    height: 18px;
+    background: var(--surface-200);
+    border: 3px solid var(--primary-500);
     border-radius: 50%;
     transform: translate(-50%, -50%);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
     cursor: grab;
-    z-index: 2;
-    transition: box-shadow 0.2s;
+    z-index: 10;
 }
 
 .range-handle:hover {
-    box-shadow: 0 0 0 4px rgba(51, 170, 51, 0.2);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.5);
+    transform: translate(-50%, -50%) scale(1.1);
 }
 
 .range-handle:active {
     cursor: grabbing;
-    box-shadow: 0 0 0 6px rgba(51, 170, 51, 0.3);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
 }
 
 .marker {
