@@ -25,7 +25,6 @@ import "../tabs/presets/SourcesDialog/SourcesDialog.css";
 import "../tabs/presets/SourcesDialog/SourcePanel.css";
 import "../css/tabs/logging.less";
 import "../css/tabs/onboard_logging.less";
-import "../css/tabs/adjustments.less";
 import "../css/tabs/auxiliary.less";
 import "../css/tabs/failsafe.less";
 import "../css/tabs/osd.less";

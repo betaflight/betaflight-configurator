@@ -534,7 +534,7 @@ export default defineComponent({
     grid-template-columns: 80px 200px 1fr 250px 120px;
     gap: 16px;
     padding: 16px;
-    background: var(--surface-800);
+    background: var(--surface-200);
     align-items: center;
 }
 
