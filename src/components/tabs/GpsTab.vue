@@ -679,7 +679,7 @@ export default defineComponent({
         };
 
         const getMagData = () => {
-            if (semver.gte(apiVersion.value, API_VERSION_1_46)) {
+            if (hasMag.value) {
                 MSP.send_message(MSPCodes.MSP_COMPASS_CONFIG, false, false, updateUi);
             } else {
                 updateUi();
