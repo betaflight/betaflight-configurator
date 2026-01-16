@@ -19,6 +19,7 @@ import GpsTab from "../components/tabs/GpsTab.vue";
 import AuxiliaryTab from "../components/tabs/AuxiliaryTab.vue";
 import OnboardLoggingTab from "../components/tabs/OnboardLoggingTab.vue";
 import FirmwareFlasherTab from "../components/tabs/FirmwareFlasherTab.vue";
+import AdjustmentsTab from "../components/tabs/AdjustmentsTab.vue";
 
 // Registry of Vue tab components - used by main.js for dynamic mounting
 export const VueTabComponents = {
@@ -35,6 +36,7 @@ export const VueTabComponents = {
     auxiliary: AuxiliaryTab,
     onboard_logging: OnboardLoggingTab,
     firmware_flasher: FirmwareFlasherTab,
+    adjustments: AdjustmentsTab,
 };
 
 // Create a Vue plugin that registers all components globally
