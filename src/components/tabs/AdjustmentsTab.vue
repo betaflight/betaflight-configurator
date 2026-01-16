@@ -262,11 +262,16 @@ export default defineComponent({
                 end: adjustment.range.end,
             };
 
+            // Measure the actual slider width from the wrapper element
+            const sliderWrapper = e.target.closest(".slider-wrapper");
+            const sliderWidth = sliderWrapper ? sliderWrapper.offsetWidth : 300;
+
             dragState = {
                 adjustment,
                 dragType,
                 startX,
                 startRange,
+                sliderWidth,
             };
 
             const onMove = (e) => {
@@ -276,8 +281,7 @@ export default defineComponent({
 
                 const currentX = getEventX(e);
                 const deltaX = currentX - dragState.startX;
-                const sliderWidth = 300; // Approximate, good enough for delta calculation
-                const deltaValue = (deltaX / sliderWidth) * (CHANNEL_MAX - CHANNEL_MIN);
+                const deltaValue = (deltaX / dragState.sliderWidth) * (CHANNEL_MAX - CHANNEL_MIN);
                 const snappedDelta = snapToStep(deltaValue);
 
                 if (dragState.dragType === "start") {
