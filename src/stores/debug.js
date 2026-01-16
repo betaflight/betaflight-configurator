@@ -1,11 +1,15 @@
-import FC from "./fc.js";
-import { API_VERSION_1_46, API_VERSION_1_47 } from "./data_storage";
+import { defineStore } from "pinia";
+import { computed } from "vue";
+import { useFlightControllerStore } from "./fc";
 import semver from "semver";
-import { removeArrayElement, addArrayElement, replaceArrayElement, addArrayElementAfter } from "./utils/array";
+import { API_VERSION_1_46, API_VERSION_1_47 } from "../js/data_storage";
+import { removeArrayElement, addArrayElement, replaceArrayElement, addArrayElementAfter } from "../js/utils/array";
 
-export function getDebug() {
-    const DEBUG = {
-        modes: [
+export const useDebugStore = defineStore("debug", () => {
+    const fcStore = useFlightControllerStore();
+
+    const modes = computed(() => {
+        const baseModes = [
             "NONE",
             "CYCLETIME",
             "BATTERY",
@@ -102,9 +106,34 @@ export function getDebug() {
             "TASK",
             "GIMBAL",
             "WING_SETPOINT",
-        ],
+        ];
 
-        fieldNames: {
+        const apiVersion = fcStore.config?.apiVersion;
+        if (!apiVersion) {
+            return baseModes;
+        }
+
+        // Make a copy to modify
+        const result = [...baseModes];
+
+        if (semver.gte(apiVersion, API_VERSION_1_47)) {
+            replaceArrayElement(result, "GPS_RESCUE_THROTTLE_PID", "AUTOPILOT_ALTITUDE");
+            removeArrayElement(result, "GYRO_SCALED");
+            addArrayElementAfter(result, "RANGEFINDER_QUALITY", "OPTICALFLOW");
+            addArrayElement(result, "AUTOPILOT_POSITION");
+            addArrayElement(result, "CHIRP");
+            addArrayElement(result, "FLASH_TEST_PRBS");
+            addArrayElement(result, "MAVLINK_TELEMETRY");
+            replaceArrayElement(result, "DUAL_GYRO_RAW", "MULTI_GYRO_RAW");
+            replaceArrayElement(result, "DUAL_GYRO_DIFF", "MULTI_GYRO_DIFF");
+            replaceArrayElement(result, "DUAL_GYRO_SCALED", "MULTI_GYRO_SCALED");
+        }
+
+        return result;
+    });
+
+    const fieldNames = computed(() => {
+        const baseFieldNames = {
             NONE: {
                 "debug[all]": "Debug [all]",
                 "debug[0]": "Debug [0]",
@@ -500,73 +529,70 @@ export function getDebug() {
                 "debug[3]": "Min RPM",
             },
             FEEDFORWARD_LIMIT: {
-                "debug[all]": "Feedforward Limit [roll]",
-                "debug[0]": "Feedforward input [roll]",
-                "debug[1]": "Feedforward input [pitch]",
-                "debug[2]": "Feedforward limited [roll]",
+                "debug[all]": "Feedforward Limit",
+                "debug[0]": "Feedforward Limited [roll]",
+                "debug[1]": "Feedforward Limited [pitch]",
+                "debug[2]": "Feedforward Limited [yaw]",
+                "debug[3]": "Feedforward Average [roll]",
             },
             FEEDFORWARD: {
-                "debug[all]": "Feedforward [roll]",
-                "debug[0]": "Setpoint, un-smoothed [roll]",
-                "debug[1]": "Delta, smoothed [roll]",
-                "debug[2]": "Boost, smoothed [roll]",
-                "debug[3]": "rcCommand Delta [roll]",
+                "debug[all]": "Feedforward",
+                "debug[0]": "Feedforward Avg [roll]",
+                "debug[1]": "Feedforward Avg [pitch]",
+                "debug[2]": "Feedforward Avg [yaw]",
             },
             BLACKBOX_OUTPUT: {
                 "debug[all]": "Blackbox Output",
                 "debug[0]": "Blackbox Rate",
-                "debug[1]": "Blackbox Max Rate",
-                "debug[2]": "Dropouts",
-                "debug[3]": "Tx Bytes Free",
+                "debug[1]": "Blackbox Bytes Sent",
             },
             GYRO_SAMPLE: {
                 "debug[all]": "Gyro Sample",
-                "debug[0]": "Before downsampling",
-                "debug[1]": "After downsampling",
-                "debug[2]": "After RPM",
-                "debug[3]": "After all but Dyn Notch",
+                "debug[0]": "Gyro before downsampling [dbg-axis]",
+                "debug[1]": "Gyro after downsampling [dbg-axis]",
+                "debug[2]": "Gyro after RPM [dbg-axis]",
             },
             RX_TIMING: {
-                "debug[all]": "Receiver Timing (us)",
-                "debug[0]": "Frame Delta",
+                "debug[all]": "Rx Timing",
+                "debug[0]": "Delta (current frame time - average frame time)",
                 "debug[1]": "Frame Age",
+                "debug[2]": "Frame Jitter",
+                "debug[3]": "Frame Age standard deviation",
             },
             D_LPF: {
-                "debug[all]": "D-Term [D_LPF]",
-                "debug[0]": "Unfiltered D [roll]",
-                "debug[1]": "Unfiltered D [pitch]",
-                "debug[2]": "Filtered, with DMax [roll]",
-                "debug[3]": "Filtered, with DMax [pitch]",
+                "debug[all]": "D_LPF",
+                "debug[0]": "D Setpoint [roll]",
+                "debug[1]": "D Setpoint Unfiltered [roll]",
+                "debug[2]": "D Measurement [roll]",
+                "debug[3]": "D Measurement Unfiltered [roll]",
             },
             VTX_TRAMP: {
-                "debug[all]": "Tramp VTx",
+                "debug[all]": "VTX Tramp",
                 "debug[0]": "Status",
                 "debug[1]": "Reply Code",
                 "debug[2]": "Pit Mode",
                 "debug[3]": "Retry Count",
             },
             GHST: {
-                "debug[all]": "Ghost Rx",
+                "debug[all]": "GHST",
                 "debug[0]": "CRC Error Count",
                 "debug[1]": "Unknown Frame Count",
                 "debug[2]": "RSSI",
-                "debug[3]": "Link Quality",
+                "debug[3]": "LQ",
             },
             GHST_MSP: {
-                "debug[all]": "Ghost MSP",
-                "debug[0]": "MSP Frame Count",
-                "debug[1]": "MSP Frame Counter",
+                "debug[all]": "GHST MSP",
+                "debug[0]": "Packet Counter",
+                "debug[1]": "Packet Number",
+                "debug[2]": "Bytes Sent",
+                "debug[3]": "Status",
             },
             SCHEDULER_DETERMINISM: {
                 "debug[all]": "Scheduler Determinism",
-                "debug[0]": "Cycle Start time",
+                "debug[0]": "Cycle Time",
                 "debug[1]": "ID of Late Task",
                 "debug[2]": "Task Delay Time",
-                "debug[3]": "Gyro Clock Skew",
-                "debug[4]": "Minimum Gyro period in 100th of a us",
-                "debug[5]": "Maximum Gyro period in 100th of a us",
-                "debug[6]": "Span of Gyro period in 100th of a us",
-                "debug[7]": "Gyro cycle deviation in 100th of a us",
+                "debug[3]": "Gyro Skew Min",
             },
             TIMING_ACCURACY: {
                 "debug[all]": "Timing Accuracy",
@@ -574,71 +600,60 @@ export function getDebug() {
                 "debug[1]": "Late Tasks per second",
                 "debug[2]": "Total delay in last second",
                 "debug[3]": "Total Tasks per second",
-                "debug[4]": "Late Tasks per thousand",
             },
             RX_EXPRESSLRS_SPI: {
-                "debug[all]": "ExpressLRS SPI Rx",
+                "debug[all]": "Rx ExpressLRS SPI",
                 "debug[0]": "Lost Connection Count",
                 "debug[1]": "RSSI",
                 "debug[2]": "SNR",
                 "debug[3]": "Uplink LQ",
             },
             RX_EXPRESSLRS_PHASELOCK: {
-                "debug[all]": "ExpressLRS SPI Phaselock",
-                "debug[0]": "Phase offset",
+                "debug[all]": "Rx ExpressLRS Phaselock",
+                "debug[0]": "Phase offset in us",
                 "debug[1]": "Filtered phase offset",
-                "debug[2]": "Frequency Offset",
+                "debug[2]": "Frequency offset in hz",
                 "debug[3]": "Phase Shift",
             },
             RX_STATE_TIME: {
                 "debug[all]": "Rx State Time",
-                "debug[0]": "Time 0",
-                "debug[1]": "Time 1",
-                "debug[2]": "Time 2",
-                "debug[3]": "Time 3",
+                "debug[0]": "Time Spent In Failsafe",
+                "debug[1]": "Time Spent With Rx Loss",
+                "debug[2]": "Failsafe Count",
+                "debug[3]": "Rx Loss Count",
             },
             GPS_RESCUE_VELOCITY: {
                 "debug[all]": "GPS Rescue Velocity",
-                "debug[0]": "Velocity P",
-                "debug[1]": "Velocity D",
-                "debug[2]": "Velocity to Home",
-                "debug[3]": "Target Velocity",
+                "debug[0]": "P term",
+                "debug[1]": "D term",
+                "debug[2]": "Target Velocity",
+                "debug[3]": "Velocity",
             },
             GPS_RESCUE_HEADING: {
                 "debug[all]": "GPS Rescue Heading",
                 "debug[0]": "Ground Speed",
-                "debug[1]": "GPS Heading",
-                "debug[2]": "IMU Attitude",
-                "debug[3]": "Angle to home",
-                "debug[4]": "magYaw",
-                "debug[5]": "Roll MixAtt",
-                "debug[6]": "Roll Added",
-                "debug[7]": "Rescue Yaw Rate",
+                "debug[1]": "GPS Heading Error * 10",
+                "debug[2]": "Attitude",
+                "debug[3]": "Roll Angle Adjustment * 100",
             },
             GPS_RESCUE_TRACKING: {
                 "debug[all]": "GPS Rescue Tracking",
-                "debug[0]": "Velocity to home",
-                "debug[1]": "Target velocity",
-                "debug[2]": "Altitude",
-                "debug[3]": "Target altitude",
+                "debug[0]": "Velocity P",
+                "debug[1]": "Velocity D",
+                "debug[2]": "Position Index * 100",
+                "debug[3]": "Current Position Error",
             },
             GPS_CONNECTION: {
                 "debug[all]": "GPS Connection",
-                "debug[0]": "Nav Model",
-                "debug[1]": "GPS Nav interval",
-                "debug[2]": "Task timer",
-                "debug[3]": "Baud Rate / FC interval",
-                "debug[4]": "State*100 +SubState",
-                "debug[5]": "ExecuteTime",
-                "debug[6]": "Ack State",
-                "debug[7]": "Rx buffer size",
+                "debug[0]": "State",
+                "debug[1]": "Hardware State",
+                "debug[2]": "Connection State",
+                "debug[3]": "Ack State",
             },
             ATTITUDE: {
                 "debug[all]": "Attitude",
-                "debug[0]": "accADC X",
-                "debug[1]": "accADC Y",
-                "debug[2]": "Setpoint Roll",
-                "debug[3]": "Setpoint Pitch",
+                "debug[0]": "Roll Angle",
+                "debug[1]": "Pitch Angle",
             },
             VTX_MSP: {
                 "debug[all]": "VTX MSP",
@@ -648,7 +663,7 @@ export function getDebug() {
                 "debug[3]": "mspTelemetryDescriptor",
             },
             GPS_DOP: {
-                "debug[all]": "GPS Dilution of Precision",
+                "debug[all]": "GPS DOP",
                 "debug[0]": "Number of Satellites",
                 "debug[1]": "pDOP (positional - 3D)",
                 "debug[2]": "hDOP (horizontal - 2D)",
@@ -656,48 +671,48 @@ export function getDebug() {
             },
             FAILSAFE: {
                 "debug[all]": "Failsafe",
-                "debug[0]": "Failsafe Phase switch",
+                "debug[0]": "Failsafe Phase Switch",
                 "debug[1]": "Failsafe State",
-                "debug[2]": "Receiving data from Rx",
-                "debug[3]": "Failsafe Phase",
+                "debug[2]": "Receiving Channels",
+                "debug[3]": "Valid Channels",
             },
             GYRO_CALIBRATION: {
                 "debug[all]": "Gyro Calibration",
-                "debug[0]": "Gyro Calibration X",
-                "debug[1]": "Gyro Calibration Y",
-                "debug[2]": "Gyro Calibration Z",
-                "debug[3]": "Calibration Cycles remaining",
+                "debug[0]": "Calibrating Axis Flags",
+                "debug[1]": "Gyro pre cal [roll]",
+                "debug[2]": "Gyro post cal [roll]",
+                "debug[3]": "Gyro calibrated [roll]",
             },
             ANGLE_MODE: {
                 "debug[all]": "Angle Mode",
-                "debug[0]": "Angle Target",
-                "debug[1]": "Angle Error",
-                "debug[2]": "Angle Feedforward",
-                "debug[3]": "Angle Current",
+                "debug[0]": "Current Angle [roll]",
+                "debug[1]": "Angle Target [roll]",
+                "debug[2]": "Current Angle [pitch]",
+                "debug[3]": "Angle Target [pitch]",
             },
             ANGLE_TARGET: {
                 "debug[all]": "Angle Target",
-                "debug[0]": "Angle Target",
-                "debug[1]": "Sin Angle",
-                "debug[2]": "Current PID Setpoint",
-                "debug[3]": "Angle Current",
+                "debug[0]": "Target [roll]",
+                "debug[1]": "Target [pitch]",
+                "debug[2]": "Target FF [roll]",
+                "debug[3]": "Target FF [pitch]",
             },
             CURRENT_ANGLE: {
                 "debug[all]": "Current Angle",
-                "debug[0]": "Current Angle X",
-                "debug[1]": "Current Angle Y",
-                "debug[2]": "Current Angle Z",
+                "debug[0]": "Angle [roll] * 10",
+                "debug[1]": "Angle [pitch] * 10",
+                "debug[2]": "Heading",
             },
             DSHOT_TELEMETRY_COUNTS: {
-                "debug[all]": "DShot Telemetry Counts",
-                "debug[0]": "DShot Telemetry Debug[0] + 1",
-                "debug[1]": "DShot Telemetry Debug[1] + 1",
-                "debug[2]": "DShot Telemetry Debug[2] + 1",
-                "debug[3]": "Preamble Skip",
+                "debug[all]": "Dshot Telemetry Counts",
+                "debug[0]": "Frame Number - motor 0",
+                "debug[1]": "Valid Count - motor 0",
+                "debug[2]": "No Reply Count - motor 0",
+                "debug[3]": "Invalid CRC Count - motor 0",
             },
             RPM_LIMIT: {
                 "debug[all]": "RPM Limit",
-                "debug[0]": "Average RPM",
+                "debug[0]": "RPM Limit Active State",
                 "debug[1]": "Average RPM (unsmoothed)",
                 "debug[2]": "RPM Limit throttle scale",
                 "debug[3]": "Throttle",
@@ -785,20 +800,136 @@ export function getDebug() {
                 "debug[4]": "Current Setpoint [yaw]",
                 "debug[5]": "Adjusted Setpoint [yaw]",
             },
-            // CHIRP: {
-            //     "debug[all]": "Chirp",
-            //     "debug[0]": "Chirp sinarg",
-            // },
-            // FLASH_TEST_PRBS: {
-            //     "debug[all]": "Flash Test PRBS",
-            //     "debug[0]": "State",
-            //     "debug[1]": "Flash Length",
-            //     "debug[6]": "FlashLength / Pagesize",
-            //     "debug[7]": "Errors",
-            // },
-        },
+        };
 
-        enableFields: [
+        const apiVersion = fcStore.config?.apiVersion;
+        if (!apiVersion) {
+            return baseFieldNames;
+        }
+
+        // Make a copy to modify
+        const result = { ...baseFieldNames };
+
+        if (semver.gte(apiVersion, API_VERSION_1_46)) {
+            result.ATTITUDE = {
+                "debug[all]": "Attitude",
+                "debug[0]": "Roll Angle",
+                "debug[1]": "Pitch Angle",
+                "debug[2]": "Ground Speed Factor",
+                "debug[3]": "Heading Error",
+                "debug[4]": "Velocity to Home",
+                "debug[5]": "Ground Speed Error Ratio",
+                "debug[6]": "Pitch Forward Angle",
+                "debug[7]": "dcmKp Gain",
+            };
+            result.GPS_RESCUE_THROTTLE_PID = {
+                "debug[all]": "GPS Rescue throttle PID",
+                "debug[0]": "Throttle P",
+                "debug[1]": "Throttle D",
+                "debug[2]": "Altitude",
+                "debug[3]": "Target altitude",
+                "debug[4]": "Throttle I",
+                "debug[5]": "Tilt adjustment",
+                "debug[6]": "Throttle D before lp smoothing",
+                "debug[7]": "Throttle adjustment",
+            };
+        }
+
+        if (semver.gte(apiVersion, API_VERSION_1_47)) {
+            delete result.GPS_RESCUE_THROTTLE_PID;
+            delete result.GYRO_SCALED;
+
+            result.MULTI_GYRO_RAW = result.DUAL_GYRO_RAW;
+            result.MULTI_GYRO_DIFF = result.DUAL_GYRO_DIFF;
+            result.MULTI_GYRO_SCALED = result.DUAL_GYRO_SCALED;
+
+            delete result.DUAL_GYRO_RAW;
+            delete result.DUAL_GYRO_DIFF;
+            delete result.DUAL_GYRO_SCALED;
+
+            result.FFT_FREQ = {
+                "debug[all]": "Debug FFT FREQ",
+                "debug[0]": "Gyro Pre Dyn Notch [dbg-axis]",
+                "debug[1]": "Notch 1 Center Freq [dbg-axis]",
+                "debug[2]": "Notch 2 Center Freq [dbg-axis]",
+                "debug[3]": "Notch 3 Center Freq [dbg-axis]",
+                "debug[4]": "Notch 4 Center Freq [dbg-axis]",
+                "debug[5]": "Notch 5 Center Freq [dbg-axis]",
+                "debug[6]": "Notch 6 Center Freq [dbg-axis]",
+                "debug[7]": "Notch 7 Center Freq [dbg-axis]",
+            };
+
+            result.AUTOPILOT_ALTITUDE = {
+                "debug[all]": "Autopilot Altitude",
+                "debug[0]": "Autopilot Throttle",
+                "debug[1]": "Tilt Multiplier",
+                "debug[2]": "Zero Altitude cm",
+                "debug[3]": "Altitude cm",
+                "debug[4]": "Altitude P",
+                "debug[5]": "Altitude I",
+                "debug[6]": "Altitude D",
+                "debug[7]": "Altitude F",
+            };
+
+            result.TPA = {
+                "debug[all]": "TPA",
+                "debug[0]": "TPA Factor",
+                "debug[1]": "TPA Attitude Roll (Wing)",
+                "debug[2]": "TPA Attitude Pitch (Wing)",
+                "debug[3]": "TPA Calculated Throttle (Wing)",
+                "debug[4]": "TPA Speed (Wing)",
+                "debug[5]": "TPA Argument (Wing)",
+            };
+
+            result.OPTICALFLOW = {
+                "debug[all]": "Optical Flow",
+                "debug[0]": "Quality",
+                "debug[1]": "Raw flow rates X",
+                "debug[2]": "Raw flow rates Y",
+                "debug[3]": "Processed flow rates X",
+                "debug[4]": "Processed flow rates Y",
+                "debug[5]": "Delta time",
+            };
+
+            result.AUTOPILOT_POSITION = {
+                "debug[all]": "Autopilot Position",
+                "debug[0]": "Distance",
+                "debug[1]": "GPS Distance",
+                "debug[2]": "PID Sum EF",
+                "debug[3]": "Angle",
+                "debug[4]": "pidP",
+                "debug[5]": "pidI",
+                "debug[6]": "pidD",
+                "debug[7]": "pidA",
+            };
+
+            result.CHIRP = {
+                "debug[all]": "Chirp",
+                "debug[0]": "Chirp sinarg",
+            };
+
+            result.FLASH_TEST_PRBS = {
+                "debug[all]": "Flash Test PRBS",
+                "debug[0]": "State",
+                "debug[1]": "Flash Length",
+                "debug[6]": "FlashLength / Pagesize",
+                "debug[7]": "Errors",
+            };
+
+            result.MAVLINK_TELEMETRY = {
+                "debug[all]": "MAVLink Telemetry",
+                "debug[0]": "Telemetry state",
+                "debug[1]": "Last known TX buffer free space",
+                "debug[2]": "Estimated TX buffer free space",
+                "debug[3]": "Ticks",
+            };
+        }
+
+        return result;
+    });
+
+    const enableFields = computed(() => {
+        const baseFields = [
             "PID",
             "RC Commands",
             "Setpoint",
@@ -813,140 +944,26 @@ export function getDebug() {
             "GPS",
             "RPM",
             "Gyro (Unfiltered)",
-        ],
+        ];
+
+        const apiVersion = fcStore.config?.apiVersion;
+        if (!apiVersion) {
+            return baseFields;
+        }
+
+        const result = [...baseFields];
+
+        if (semver.gte(apiVersion, API_VERSION_1_47)) {
+            addArrayElementAfter(result, "Gyro", "Attitude");
+            addArrayElement(result, "Servo");
+        }
+
+        return result;
+    });
+
+    return {
+        modes,
+        fieldNames,
+        enableFields,
     };
-
-    // Update based on API version
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
-        DEBUG.fieldNames.ATTITUDE = {
-            "debug[all]": "Attitude",
-            "debug[0]": "Roll Angle",
-            "debug[1]": "Pitch Angle",
-            "debug[2]": "Ground Speed Factor",
-            "debug[3]": "Heading Error",
-            "debug[4]": "Velocity to Home",
-            "debug[5]": "Ground Speed Error Ratio",
-            "debug[6]": "Pitch Forward Angle",
-            "debug[7]": "dcmKp Gain",
-        };
-        DEBUG.fieldNames.GPS_RESCUE_THROTTLE_PID = {
-            "debug[all]": "GPS Rescue throttle PID",
-            "debug[0]": "Throttle P",
-            "debug[1]": "Throttle D",
-            "debug[2]": "Altitude",
-            "debug[3]": "Target altitude",
-            "debug[4]": "Throttle I",
-            "debug[5]": "Tilt adjustment",
-            "debug[6]": "Throttle D before lp smoothing",
-            "debug[7]": "Throttle adjustment",
-        };
-    }
-
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
-        replaceArrayElement(DEBUG.modes, "GPS_RESCUE_THROTTLE_PID", "AUTOPILOT_ALTITUDE");
-        removeArrayElement(DEBUG.modes, "GYRO_SCALED");
-        addArrayElementAfter(DEBUG.modes, "RANGEFINDER_QUALITY", "OPTICALFLOW");
-        addArrayElement(DEBUG.modes, "AUTOPILOT_POSITION");
-        addArrayElement(DEBUG.modes, "CHIRP");
-        addArrayElement(DEBUG.modes, "FLASH_TEST_PRBS");
-        addArrayElement(DEBUG.modes, "MAVLINK_TELEMETRY");
-        replaceArrayElement(DEBUG.modes, "DUAL_GYRO_RAW", "MULTI_GYRO_RAW");
-        replaceArrayElement(DEBUG.modes, "DUAL_GYRO_DIFF", "MULTI_GYRO_DIFF");
-        replaceArrayElement(DEBUG.modes, "DUAL_GYRO_SCALED", "MULTI_GYRO_SCALED");
-
-        delete DEBUG.fieldNames.GPS_RESCUE_THROTTLE_PID;
-        delete DEBUG.fieldNames.GYRO_SCALED;
-
-        DEBUG.fieldNames["MULTI_GYRO_RAW"] = DEBUG.fieldNames.DUAL_GYRO_RAW;
-        DEBUG.fieldNames["MULTI_GYRO_DIFF"] = DEBUG.fieldNames.DUAL_GYRO_DIFF;
-        DEBUG.fieldNames["MULTI_GYRO_SCALED"] = DEBUG.fieldNames.DUAL_GYRO_SCALED;
-
-        delete DEBUG.fieldNames.DUAL_GYRO_RAW;
-        delete DEBUG.fieldNames.DUAL_GYRO_DIFF;
-        delete DEBUG.fieldNames.DUAL_GYRO_SCALED;
-
-        DEBUG.fieldNames.FFT_FREQ = {
-            "debug[all]": "Debug FFT FREQ",
-            "debug[0]": "Gyro Pre Dyn Notch [dbg-axis]",
-            "debug[1]": "Notch 1 Center Freq [dbg-axis]",
-            "debug[2]": "Notch 2 Center Freq [dbg-axis]",
-            "debug[3]": "Notch 3 Center Freq [dbg-axis]",
-            "debug[4]": "Notch 4 Center Freq [dbg-axis]",
-            "debug[5]": "Notch 5 Center Freq [dbg-axis]",
-            "debug[6]": "Notch 6 Center Freq [dbg-axis]",
-            "debug[7]": "Notch 7 Center Freq [dbg-axis]",
-        };
-
-        DEBUG.fieldNames.AUTOPILOT_ALTITUDE = {
-            "debug[all]": "Autopilot Altitude",
-            "debug[0]": "Autopilot Throttle",
-            "debug[1]": "Tilt Multiplier",
-            "debug[2]": "Zero Altitude cm",
-            "debug[3]": "Altitude cm",
-            "debug[4]": "Altitude P",
-            "debug[5]": "Altitude I",
-            "debug[6]": "Altitude D",
-            "debug[7]": "Altitude F",
-        };
-
-        DEBUG.fieldNames.TPA = {
-            "debug[all]": "TPA",
-            "debug[0]": "TPA Factor",
-            "debug[1]": "TPA Attitude Roll (Wing)",
-            "debug[2]": "TPA Attitude Pitch (Wing)",
-            "debug[3]": "TPA Calculated Throttle (Wing)",
-            "debug[4]": "TPA Speed (Wing)",
-            "debug[5]": "TPA Argument (Wing)",
-        };
-
-        DEBUG.fieldNames.OPTICALFLOW = {
-            "debug[all]": "Optical Flow",
-            "debug[0]": "Quality",
-            "debug[1]": "Raw flow rates X",
-            "debug[2]": "Raw flow rates Y",
-            "debug[3]": "Processed flow rates X",
-            "debug[4]": "Processed flow rates Y",
-            "debug[5]": "Delta time",
-        };
-
-        DEBUG.fieldNames.AUTOPILOT_POSITION = {
-            "debug[all]": "Autopilot Position",
-            "debug[0]": "Distance",
-            "debug[1]": "GPS Distance",
-            "debug[2]": "PID Sum EF",
-            "debug[3]": "Angle",
-            "debug[4]": "pidP",
-            "debug[5]": "pidI",
-            "debug[6]": "pidD",
-            "debug[7]": "pidA",
-        };
-
-        DEBUG.fieldNames.CHIRP = {
-            "debug[all]": "Chirp",
-            "debug[0]": "Chirp sinarg",
-        };
-
-        DEBUG.fieldNames.FLASH_TEST_PRBS = {
-            "debug[all]": "Flash Test PRBS",
-            "debug[0]": "State",
-            "debug[1]": "Flash Length",
-            "debug[6]": "FlashLength / Pagesize",
-            "debug[7]": "Errors",
-        };
-
-        DEBUG.fieldNames.MAVLINK_TELEMETRY = {
-            "debug[all]": "MAVLink Telemetry",
-            "debug[0]": "Telemetry state",
-            "debug[1]": "Last known TX buffer free space",
-            "debug[2]": "Estimated TX buffer free space",
-            "debug[3]": "Ticks",
-        };
-
-        addArrayElementAfter(DEBUG.enableFields, "Gyro", "Attitude");
-        addArrayElement(DEBUG.enableFields, "Servo");
-    }
-
-    return DEBUG;
-}
-
-export default getDebug();
+});
