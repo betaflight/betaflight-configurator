@@ -218,6 +218,7 @@ export default defineComponent({
 
         // Drag handling
         let dragState = null;
+        let cleanupDragListeners = null;
 
         const getEventX = (e) => {
             return e.touches ? e.touches[0].clientX : e.clientX;
@@ -312,7 +313,19 @@ export default defineComponent({
                 }
             };
 
+            const cleanup = () => {
+                if (cleanupDragListeners) {
+                    cleanupDragListeners();
+                    cleanupDragListeners = null;
+                }
+            };
+
             const onEnd = () => {
+                cleanup();
+            };
+
+            // Store cleanup function
+            cleanupDragListeners = () => {
                 dragState = null;
                 document.removeEventListener("mousemove", onMove);
                 document.removeEventListener("mouseup", onEnd);
@@ -457,6 +470,9 @@ export default defineComponent({
 
         onUnmounted(() => {
             stopRcDataPolling();
+            if (cleanupDragListeners) {
+                cleanupDragListeners();
+            }
         });
 
         return {
