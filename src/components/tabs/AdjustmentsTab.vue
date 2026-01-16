@@ -419,17 +419,6 @@ export default defineComponent({
 
             fcStore.adjustmentRanges = [];
 
-            const defaultAdjustmentRange = {
-                slotIndex: 0,
-                auxChannelIndex: 0,
-                range: {
-                    start: 900,
-                    end: 900,
-                },
-                adjustmentFunction: 0,
-                auxSwitchChannelIndex: 0,
-            };
-
             adjustments.forEach((adjustment) => {
                 if (adjustment.enabled) {
                     fcStore.adjustmentRanges.push({
@@ -443,13 +432,31 @@ export default defineComponent({
                         auxSwitchChannelIndex: adjustment.auxSwitchChannelIndex,
                     });
                 } else {
-                    fcStore.adjustmentRanges.push(defaultAdjustmentRange);
+                    fcStore.adjustmentRanges.push({
+                        slotIndex: 0,
+                        auxChannelIndex: 0,
+                        range: {
+                            start: 900,
+                            end: 900,
+                        },
+                        adjustmentFunction: 0,
+                        auxSwitchChannelIndex: 0,
+                    });
                 }
             });
 
             // Fill remaining slots if needed
             for (let i = fcStore.adjustmentRanges.length; i < requiredAdjustmentRangeCount; i++) {
-                fcStore.adjustmentRanges.push(defaultAdjustmentRange);
+                fcStore.adjustmentRanges.push({
+                    slotIndex: 0,
+                    auxChannelIndex: 0,
+                    range: {
+                        start: 900,
+                        end: 900,
+                    },
+                    adjustmentFunction: 0,
+                    auxSwitchChannelIndex: 0,
+                });
             }
 
             mspHelper.sendAdjustmentRanges(() => {
