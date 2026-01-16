@@ -4,122 +4,112 @@
             <div class="tab_title">{{ $t("tabAdjustments") }}</div>
             <WikiButton docUrl="adjustments" />
 
-            <div class="overflow">
-                <table class="adjustments">
-                    <thead>
-                        <tr>
-                            <td class="column-enable">{{ $t("adjustmentsColumnEnable") }}</td>
-                            <td>{{ $t("adjustmentsColumnWhenChannel") }}</td>
-                            <td class="range">{{ $t("adjustmentsColumnIsInRange") }}</td>
-                            <td>{{ $t("adjustmentsColumnThenApplyFunction") }}</td>
-                            <td>{{ $t("adjustmentsColumnViaChannel") }}</td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr
-                            v-for="(adjustment, index) in adjustments"
-                            :key="index"
-                            :id="`adjustment-${index}`"
-                            class="adjustment"
-                            :data-label-enable="$t('adjustmentsColumnEnable')"
-                            :data-label-channel="$t('adjustmentsColumnWhenChannel')"
-                            :data-label-range="$t('adjustmentsColumnIsInRange')"
-                            :data-label-function="$t('adjustmentsColumnThenApplyFunction')"
-                            :data-label-via="$t('adjustmentsColumnViaChannel')"
-                        >
-                            <td class="info" :data-label="$t('adjustmentsColumnEnable')">
-                                <div class="enabling">
-                                    <input
-                                        type="checkbox"
-                                        v-model="adjustment.enabled"
-                                        @change="onEnableChange(adjustment)"
-                                        class="enable toggle"
-                                    />
-                                </div>
-                            </td>
-                            <td class="channelInfo" :data-label="$t('adjustmentsColumnWhenChannel')">
-                                <div>
-                                    <select
-                                        v-model.number="adjustment.auxChannelIndex"
-                                        class="channel"
-                                        :disabled="!adjustment.enabled"
-                                    >
-                                        <option v-for="ch in auxChannelCount" :key="ch" :value="ch - 1">
-                                            AUX {{ ch }}
-                                        </option>
-                                    </select>
-                                </div>
-                                <div class="limits">
-                                    <p class="lowerLimit">
-                                        <span>{{ $t("adjustmentsMin") }}</span
-                                        >: <span class="lowerLimitValue">{{ adjustment.range.start }}</span>
-                                    </p>
-                                    <p class="upperLimit">
-                                        <span>{{ $t("adjustmentsMax") }}</span
-                                        >: <span class="upperLimitValue">{{ adjustment.range.end }}</span>
-                                    </p>
-                                </div>
-                            </td>
-                            <td class="range" :data-label="$t('adjustmentsColumnIsInRange')">
-                                <div class="channel-slider">
+            <div class="adjustments-container">
+                <div class="adjustments-header">
+                    <div class="header-enable">{{ $t("adjustmentsColumnEnable") }}</div>
+                    <div class="header-channel">{{ $t("adjustmentsColumnWhenChannel") }}</div>
+                    <div class="header-range">{{ $t("adjustmentsColumnIsInRange") }}</div>
+                    <div class="header-function">{{ $t("adjustmentsColumnThenApplyFunction") }}</div>
+                    <div class="header-via">{{ $t("adjustmentsColumnViaChannel") }}</div>
+                </div>
+
+                <div class="adjustments-list">
+                    <div
+                        v-for="(adjustment, index) in adjustments"
+                        :key="index"
+                        :id="`adjustment-${index}`"
+                        class="adjustment"
+                    >
+                        <div class="adjustment-enable" :data-label="$t('adjustmentsColumnEnable')">
+                            <div class="enabling">
+                                <input
+                                    type="checkbox"
+                                    v-model="adjustment.enabled"
+                                    @change="onEnableChange(adjustment)"
+                                    class="enable toggle"
+                                />
+                            </div>
+                        </div>
+
+                        <div class="adjustment-channel" :data-label="$t('adjustmentsColumnWhenChannel')">
+                            <select
+                                v-model.number="adjustment.auxChannelIndex"
+                                class="channel"
+                                :disabled="!adjustment.enabled"
+                            >
+                                <option v-for="ch in auxChannelCount" :key="ch" :value="ch - 1">AUX {{ ch }}</option>
+                            </select>
+                            <div class="limits">
+                                <p class="lowerLimit">
+                                    <span>{{ $t("adjustmentsMin") }}</span
+                                    >: <span class="lowerLimitValue">{{ adjustment.range.start }}</span>
+                                </p>
+                                <p class="upperLimit">
+                                    <span>{{ $t("adjustmentsMax") }}</span
+                                    >: <span class="upperLimitValue">{{ adjustment.range.end }}</span>
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="adjustment-range" :data-label="$t('adjustmentsColumnIsInRange')">
+                            <div class="channel-slider">
+                                <div
+                                    class="slider-wrapper"
+                                    @mousedown="(e) => handleSliderClick(e, adjustment)"
+                                    @touchstart="(e) => handleSliderClick(e, adjustment)"
+                                >
+                                    <div class="track-background"></div>
                                     <div
-                                        class="slider-wrapper"
-                                        @mousedown="(e) => handleSliderClick(e, adjustment)"
-                                        @touchstart="(e) => handleSliderClick(e, adjustment)"
-                                    >
-                                        <div class="track-background"></div>
-                                        <div
-                                            class="track-fill"
-                                            :style="rangeFillStyle(adjustment)"
-                                            @mousedown.stop="(e) => startDrag(e, adjustment, 'range')"
-                                            @touchstart.stop="(e) => startDrag(e, adjustment, 'range')"
-                                        ></div>
-                                        <div
-                                            class="range-handle handle-min"
-                                            :style="{ left: channelPercent(adjustment.range.start) + '%' }"
-                                            @mousedown.stop="(e) => startDrag(e, adjustment, 'start')"
-                                            @touchstart.stop="(e) => startDrag(e, adjustment, 'start')"
-                                        ></div>
-                                        <div
-                                            class="range-handle handle-max"
-                                            :style="{ left: channelPercent(adjustment.range.end) + '%' }"
-                                            @mousedown.stop="(e) => startDrag(e, adjustment, 'end')"
-                                            @touchstart.stop="(e) => startDrag(e, adjustment, 'end')"
-                                        ></div>
-                                        <div class="marker" :style="markerStyle(adjustment.auxChannelIndex)"></div>
-                                    </div>
-                                    <div class="pips-channel-range">
-                                        <div v-for="pip in pipValues" :key="pip" class="pip" :style="pipStyle(pip)">
-                                            {{ pip }}
-                                        </div>
+                                        class="track-fill"
+                                        :style="rangeFillStyle(adjustment)"
+                                        @mousedown.stop="(e) => startDrag(e, adjustment, 'range')"
+                                        @touchstart.stop="(e) => startDrag(e, adjustment, 'range')"
+                                    ></div>
+                                    <div
+                                        class="range-handle handle-min"
+                                        :style="{ left: channelPercent(adjustment.range.start) + '%' }"
+                                        @mousedown.stop="(e) => startDrag(e, adjustment, 'start')"
+                                        @touchstart.stop="(e) => startDrag(e, adjustment, 'start')"
+                                    ></div>
+                                    <div
+                                        class="range-handle handle-max"
+                                        :style="{ left: channelPercent(adjustment.range.end) + '%' }"
+                                        @mousedown.stop="(e) => startDrag(e, adjustment, 'end')"
+                                        @touchstart.stop="(e) => startDrag(e, adjustment, 'end')"
+                                    ></div>
+                                    <div class="marker" :style="markerStyle(adjustment.auxChannelIndex)"></div>
+                                </div>
+                                <div class="pips-channel-range">
+                                    <div v-for="pip in pipValues" :key="pip" class="pip" :style="pipStyle(pip)">
+                                        {{ pip }}
                                     </div>
                                 </div>
-                            </td>
-                            <td class="functionSelection" :data-label="$t('adjustmentsColumnThenApplyFunction')">
-                                <select
-                                    v-model.number="adjustment.adjustmentFunction"
-                                    class="function"
-                                    :disabled="!adjustment.enabled"
-                                >
-                                    <option v-for="func in sortedFunctions" :key="func.value" :value="func.value">
-                                        {{ func.label }}
-                                    </option>
-                                </select>
-                            </td>
-                            <td class="functionSwitchChannel" :data-label="$t('adjustmentsColumnViaChannel')">
-                                <select
-                                    v-model.number="adjustment.auxSwitchChannelIndex"
-                                    class="channel"
-                                    :disabled="!adjustment.enabled"
-                                >
-                                    <option v-for="ch in auxChannelCount" :key="ch" :value="ch - 1">
-                                        AUX {{ ch }}
-                                    </option>
-                                </select>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                            </div>
+                        </div>
+
+                        <div class="adjustment-function" :data-label="$t('adjustmentsColumnThenApplyFunction')">
+                            <select
+                                v-model.number="adjustment.adjustmentFunction"
+                                class="function"
+                                :disabled="!adjustment.enabled"
+                            >
+                                <option v-for="func in sortedFunctions" :key="func.value" :value="func.value">
+                                    {{ func.label }}
+                                </option>
+                            </select>
+                        </div>
+
+                        <div class="adjustment-via" :data-label="$t('adjustmentsColumnViaChannel')">
+                            <select
+                                v-model.number="adjustment.auxSwitchChannelIndex"
+                                class="channel"
+                                :disabled="!adjustment.enabled"
+                            >
+                                <option v-for="ch in auxChannelCount" :key="ch" :value="ch - 1">AUX {{ ch }}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -486,6 +476,121 @@ export default defineComponent({
 </script>
 
 <style scoped>
+/* Adjustments container layout */
+.adjustments-container {
+    width: 100%;
+    margin: 20px 0;
+}
+
+.adjustments-header {
+    display: grid;
+    grid-template-columns: 80px 200px 1fr 250px 120px;
+    gap: 16px;
+    padding: 12px 16px;
+    background: var(--surface-700);
+    border-bottom: 2px solid var(--surface-600);
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.adjustments-header > div {
+    text-align: left;
+}
+
+.adjustments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    background: var(--surface-600);
+}
+
+.adjustment {
+    display: grid;
+    grid-template-columns: 80px 200px 1fr 250px 120px;
+    gap: 16px;
+    padding: 16px;
+    background: var(--surface-800);
+    align-items: center;
+}
+
+.adjustment:hover {
+    background: var(--surface-750);
+}
+
+.adjustment-enable {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.adjustment-channel {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.adjustment-channel select {
+    width: 100%;
+}
+
+.limits {
+    display: flex;
+    gap: 12px;
+    font-size: 11px;
+    color: var(--text-secondary);
+}
+
+.limits p {
+    margin: 0;
+}
+
+.adjustment-range {
+    min-width: 0;
+}
+
+.adjustment-function select,
+.adjustment-via select {
+    width: 100%;
+}
+
+select {
+    background: var(--surface-700);
+    border: 1px solid var(--surface-600);
+    color: var(--text-primary);
+    padding: 6px 8px;
+    border-radius: 4px;
+}
+
+select:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Responsive layout */
+@media (max-width: 1200px) {
+    .adjustments-header {
+        display: none;
+    }
+
+    .adjustment {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        padding: 16px;
+    }
+
+    .adjustment > div::before {
+        content: attr(data-label);
+        font-weight: 600;
+        display: block;
+        margin-bottom: 8px;
+        color: var(--text-secondary);
+    }
+
+    .adjustment-enable {
+        justify-content: flex-start;
+    }
+}
+
 /* Custom Vue slider styling - replaces noUiSlider */
 .channel-slider {
     position: relative;
@@ -573,14 +678,14 @@ export default defineComponent({
     position: absolute;
     transform: translateX(-50%);
     font-size: 10px;
-    color: #666;
+    color: var(--text-tertiary);
     white-space: nowrap;
 }
 
 /* Disable pointer events when adjustment is disabled */
-tr.adjustment:has(input.enable:not(:checked)) .slider-wrapper,
-tr.adjustment:has(input.enable:not(:checked)) .range-handle,
-tr.adjustment:has(input.enable:not(:checked)) .track-fill {
+.adjustment:has(input.enable:not(:checked)) .slider-wrapper,
+.adjustment:has(input.enable:not(:checked)) .range-handle,
+.adjustment:has(input.enable:not(:checked)) .track-fill {
     pointer-events: none;
     opacity: 0.5;
 }
