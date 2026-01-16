@@ -350,6 +350,10 @@ export default defineComponent({
                     adjustment.range.start = 1300;
                     adjustment.range.end = 1700;
                 }
+            } else {
+                // Reset to initial state when disabled
+                adjustment.range.start = 900;
+                adjustment.range.end = 900;
             }
         };
 
