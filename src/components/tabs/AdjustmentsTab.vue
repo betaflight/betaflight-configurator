@@ -61,24 +61,37 @@
                                 </div>
                             </td>
                             <td class="range" :data-label="$t('adjustmentsColumnIsInRange')">
-                                <div
-                                    class="channel-slider"
-                                    :ref="(el) => setSliderRef(el, index)"
-                                    :data-index="index"
-                                >
+                                <div class="channel-slider">
                                     <div
-                                        class="marker"
-                                        :style="markerStyle(adjustment.auxChannelIndex)"
-                                    ></div>
-                                </div>
-                                <div class="pips-channel-range">
-                                    <div
-                                        v-for="pip in pipValues"
-                                        :key="pip"
-                                        class="pip"
-                                        :style="pipStyle(pip)"
+                                        class="slider-wrapper"
+                                        @mousedown="(e) => handleSliderClick(e, adjustment)"
+                                        @touchstart="(e) => handleSliderClick(e, adjustment)"
                                     >
-                                        {{ pip }}
+                                        <div class="track-background"></div>
+                                        <div
+                                            class="track-fill"
+                                            :style="rangeFillStyle(adjustment)"
+                                            @mousedown.stop="(e) => startDrag(e, adjustment, 'range')"
+                                            @touchstart.stop="(e) => startDrag(e, adjustment, 'range')"
+                                        ></div>
+                                        <div
+                                            class="range-handle handle-min"
+                                            :style="{ left: channelPercent(adjustment.range.start) + '%' }"
+                                            @mousedown.stop="(e) => startDrag(e, adjustment, 'start')"
+                                            @touchstart.stop="(e) => startDrag(e, adjustment, 'start')"
+                                        ></div>
+                                        <div
+                                            class="range-handle handle-max"
+                                            :style="{ left: channelPercent(adjustment.range.end) + '%' }"
+                                            @mousedown.stop="(e) => startDrag(e, adjustment, 'end')"
+                                            @touchstart.stop="(e) => startDrag(e, adjustment, 'end')"
+                                        ></div>
+                                        <div class="marker" :style="markerStyle(adjustment.auxChannelIndex)"></div>
+                                    </div>
+                                    <div class="pips-channel-range">
+                                        <div v-for="pip in pipValues" :key="pip" class="pip" :style="pipStyle(pip)">
+                                            {{ pip }}
+                                        </div>
                                     </div>
                                 </div>
                             </td>
@@ -88,11 +101,7 @@
                                     class="function"
                                     :disabled="!adjustment.enabled"
                                 >
-                                    <option
-                                        v-for="func in sortedFunctions"
-                                        :key="func.value"
-                                        :value="func.value"
-                                    >
+                                    <option v-for="func in sortedFunctions" :key="func.value" :value="func.value">
                                         {{ func.label }}
                                     </option>
                                 </select>
@@ -123,7 +132,7 @@
 </template>
 
 <script>
-import { defineComponent, ref, reactive, computed, onMounted, onUnmounted, nextTick } from "vue";
+import { defineComponent, ref, reactive, computed, onMounted, onUnmounted } from "vue";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "../elements/WikiButton.vue";
 import GUI from "../../js/gui";
@@ -133,12 +142,11 @@ import { mspHelper } from "../../js/msp/MSPHelper";
 import FC from "../../js/fc";
 import { i18n } from "../../js/localization";
 import { gui_log } from "../../js/gui_log";
-import $ from "jquery";
-import "jquery-nouislider";
-import wNumb from "wnumb";
 
 const CHANNEL_MIN = 900;
 const CHANNEL_MAX = 2100;
+const CHANNEL_STEP = 25;
+const MIN_RANGE_GAP = 25;
 const PIP_VALUES = [900, 1000, 1200, 1400, 1500, 1600, 1800, 2000, 2100];
 
 export default defineComponent({
@@ -151,7 +159,6 @@ export default defineComponent({
         const adjustments = reactive([]);
         const auxChannelCount = ref(0);
         const rcChannelData = reactive({});
-        const sliderRefs = reactive({});
 
         const pipValues = computed(() => PIP_VALUES);
 
@@ -175,8 +182,15 @@ export default defineComponent({
             return [first, ...rest];
         });
 
+        const clampChannel = (value) => {
+            if (value === undefined || value === null || Number.isNaN(value)) {
+                return 1500;
+            }
+            return Math.max(CHANNEL_MIN, Math.min(CHANNEL_MAX, value));
+        };
+
         const channelPercent = (value) => {
-            const clamped = Math.max(CHANNEL_MIN, Math.min(CHANNEL_MAX, value));
+            const clamped = clampChannel(value);
             return ((clamped - CHANNEL_MIN) / (CHANNEL_MAX - CHANNEL_MIN)) * 100;
         };
 
@@ -187,85 +201,146 @@ export default defineComponent({
         const markerStyle = (auxChannelIndex) => {
             const channelValue = rcChannelData[auxChannelIndex];
             if (channelValue === undefined) {
-                return {};
+                return { display: "none" };
             }
             return { left: `${channelPercent(channelValue)}%` };
         };
 
-        const setSliderRef = (el, index) => {
-            if (el) {
-                sliderRefs[index] = el;
+        const rangeFillStyle = (adjustment) => {
+            const start = channelPercent(adjustment.range.start);
+            const end = channelPercent(adjustment.range.end);
+            return {
+                left: `${start}%`,
+                width: `${Math.max(end - start, 0)}%`,
+            };
+        };
+
+        const ensureRangeOrder = (adjustment) => {
+            if (adjustment.range.start > adjustment.range.end - MIN_RANGE_GAP) {
+                adjustment.range.start = Math.max(CHANNEL_MIN, adjustment.range.end - MIN_RANGE_GAP);
+            }
+            if (adjustment.range.end < adjustment.range.start + MIN_RANGE_GAP) {
+                adjustment.range.end = Math.min(CHANNEL_MAX, adjustment.range.start + MIN_RANGE_GAP);
             }
         };
 
-        const initializeSliders = async () => {
-            await nextTick();
+        // Drag handling
+        let dragState = null;
 
-            adjustments.forEach((adjustment, index) => {
-                const sliderElement = sliderRefs[index];
-                if (!sliderElement || !$(sliderElement).length) {
-                    return;
-                }
-
-                const $slider = $(sliderElement);
-
-                // Destroy existing slider if it exists
-                if ($slider.hasClass("noUi-target")) {
-                    $slider[0].noUiSlider.destroy();
-                }
-
-                const rangeValues = [adjustment.range.start, adjustment.range.end];
-
-                $slider.noUiSlider({
-                    start: rangeValues,
-                    behaviour: "snap-drag",
-                    margin: 25,
-                    step: 25,
-                    connect: true,
-                    range: {
-                        min: [CHANNEL_MIN],
-                        max: [CHANNEL_MAX],
-                    },
-                    format: wNumb({
-                        decimals: 0,
-                    }),
-                });
-
-                // Update adjustment when slider changes
-                $slider[0].noUiSlider.on("update", (values) => {
-                    adjustment.range.start = parseInt(values[0]);
-                    adjustment.range.end = parseInt(values[1]);
-                });
-
-                // Disable slider if not enabled
-                if (!adjustment.enabled) {
-                    $slider.attr("disabled", "disabled");
-                }
-            });
+        const getEventX = (e) => {
+            return e.touches ? e.touches[0].clientX : e.clientX;
         };
 
-        const onEnableChange = (adjustment) => {
-            const index = adjustments.indexOf(adjustment);
-            const sliderElement = sliderRefs[index];
+        const snapToStep = (value) => {
+            return Math.round(value / CHANNEL_STEP) * CHANNEL_STEP;
+        };
 
-            if (!sliderElement) {
+        const handleSliderClick = (e, adjustment) => {
+            if (!adjustment.enabled || dragState) {
                 return;
             }
 
-            const $slider = $(sliderElement);
+            const rect = e.currentTarget.getBoundingClientRect();
+            const clickX = getEventX(e);
+            const percent = ((clickX - rect.left) / rect.width) * 100;
+            const value = snapToStep(CHANNEL_MIN + (percent / 100) * (CHANNEL_MAX - CHANNEL_MIN));
 
+            const clamped = clampChannel(value);
+            const midPoint = (adjustment.range.start + adjustment.range.end) / 2;
+
+            if (clamped < midPoint) {
+                adjustment.range.start = clamped;
+            } else {
+                adjustment.range.end = clamped;
+            }
+            ensureRangeOrder(adjustment);
+        };
+
+        const startDrag = (e, adjustment, dragType) => {
+            if (!adjustment.enabled) {
+                return;
+            }
+
+            e.preventDefault();
+
+            const startX = getEventX(e);
+            const startRange = {
+                start: adjustment.range.start,
+                end: adjustment.range.end,
+            };
+
+            dragState = {
+                adjustment,
+                dragType,
+                startX,
+                startRange,
+            };
+
+            const onMove = (e) => {
+                if (!dragState) {
+                    return;
+                }
+
+                const currentX = getEventX(e);
+                const deltaX = currentX - dragState.startX;
+                const sliderWidth = 300; // Approximate, good enough for delta calculation
+                const deltaValue = (deltaX / sliderWidth) * (CHANNEL_MAX - CHANNEL_MIN);
+                const snappedDelta = snapToStep(deltaValue);
+
+                if (dragState.dragType === "start") {
+                    let newStart = dragState.startRange.start + snappedDelta;
+                    newStart = clampChannel(newStart);
+                    if (newStart > dragState.adjustment.range.end - MIN_RANGE_GAP) {
+                        newStart = dragState.adjustment.range.end - MIN_RANGE_GAP;
+                    }
+                    dragState.adjustment.range.start = newStart;
+                } else if (dragState.dragType === "end") {
+                    let newEnd = dragState.startRange.end + snappedDelta;
+                    newEnd = clampChannel(newEnd);
+                    if (newEnd < dragState.adjustment.range.start + MIN_RANGE_GAP) {
+                        newEnd = dragState.adjustment.range.start + MIN_RANGE_GAP;
+                    }
+                    dragState.adjustment.range.end = newEnd;
+                } else if (dragState.dragType === "range") {
+                    const rangeSize = dragState.startRange.end - dragState.startRange.start;
+                    let newStart = dragState.startRange.start + snappedDelta;
+                    let newEnd = dragState.startRange.end + snappedDelta;
+
+                    if (newStart < CHANNEL_MIN) {
+                        newStart = CHANNEL_MIN;
+                        newEnd = newStart + rangeSize;
+                    }
+                    if (newEnd > CHANNEL_MAX) {
+                        newEnd = CHANNEL_MAX;
+                        newStart = newEnd - rangeSize;
+                    }
+
+                    dragState.adjustment.range.start = clampChannel(newStart);
+                    dragState.adjustment.range.end = clampChannel(newEnd);
+                }
+            };
+
+            const onEnd = () => {
+                dragState = null;
+                document.removeEventListener("mousemove", onMove);
+                document.removeEventListener("mouseup", onEnd);
+                document.removeEventListener("touchmove", onMove);
+                document.removeEventListener("touchend", onEnd);
+            };
+
+            document.addEventListener("mousemove", onMove);
+            document.addEventListener("mouseup", onEnd);
+            document.addEventListener("touchmove", onMove);
+            document.addEventListener("touchend", onEnd);
+        };
+
+        const onEnableChange = (adjustment) => {
             if (adjustment.enabled) {
-                $slider.removeAttr("disabled");
                 // Set default range if both start and end are the same
                 if (adjustment.range.start === adjustment.range.end) {
                     adjustment.range.start = 1300;
                     adjustment.range.end = 1700;
-                    if ($slider[0].noUiSlider) {
-                        $slider[0].noUiSlider.set([1300, 1700]);
-                    }
                 }
-            } else {
-                $slider.attr("disabled", "disabled");
             }
         };
 
@@ -382,27 +457,12 @@ export default defineComponent({
         onMounted(async () => {
             await loadMSPData();
             initializeAdjustments();
-            await initializeSliders();
             startRcDataPolling();
             GUI.content_ready();
         });
 
         onUnmounted(() => {
             stopRcDataPolling();
-
-            // Clean up all sliders
-            Object.values(sliderRefs).forEach((sliderElement) => {
-                if (sliderElement) {
-                    const $slider = $(sliderElement);
-                    if ($slider.hasClass("noUi-target")) {
-                        try {
-                            $slider[0].noUiSlider.destroy();
-                        } catch (e) {
-                            // Ignore errors during cleanup
-                        }
-                    }
-                }
-            });
         });
 
         return {
@@ -412,8 +472,11 @@ export default defineComponent({
             pipValues,
             pipStyle,
             markerStyle,
-            setSliderRef,
+            rangeFillStyle,
+            channelPercent,
             onEnableChange,
+            handleSliderClick,
+            startDrag,
             saveAdjustments,
         };
     },
@@ -421,5 +484,99 @@ export default defineComponent({
 </script>
 
 <style scoped>
-/* Inherit styles from existing adjustments.html via global CSS */
+/* Custom Vue slider styling - replaces noUiSlider */
+.channel-slider {
+    position: relative;
+    width: 100%;
+}
+
+.slider-wrapper {
+    position: relative;
+    height: 18px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.track-background {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: #ccc;
+    transform: translateY(-50%);
+    border-radius: 2px;
+}
+
+.track-fill {
+    position: absolute;
+    top: 50%;
+    height: 4px;
+    background: #3a3;
+    transform: translateY(-50%);
+    border-radius: 2px;
+    cursor: grab;
+    z-index: 1;
+}
+
+.track-fill:active {
+    cursor: grabbing;
+}
+
+.range-handle {
+    position: absolute;
+    top: 50%;
+    width: 16px;
+    height: 16px;
+    background: #fff;
+    border: 2px solid #3a3;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    cursor: grab;
+    z-index: 2;
+    transition: box-shadow 0.2s;
+}
+
+.range-handle:hover {
+    box-shadow: 0 0 0 4px rgba(51, 170, 51, 0.2);
+}
+
+.range-handle:active {
+    cursor: grabbing;
+    box-shadow: 0 0 0 6px rgba(51, 170, 51, 0.3);
+}
+
+.marker {
+    position: absolute;
+    top: 50%;
+    width: 2px;
+    height: 24px;
+    background: #ff0;
+    transform: translate(-50%, -50%);
+    z-index: 3;
+    pointer-events: none;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+}
+
+.pips-channel-range {
+    position: relative;
+    height: 20px;
+    margin-top: 8px;
+}
+
+.pip {
+    position: absolute;
+    transform: translateX(-50%);
+    font-size: 10px;
+    color: #666;
+    white-space: nowrap;
+}
+
+/* Disable pointer events when adjustment is disabled */
+tr.adjustment:has(input.enable:not(:checked)) .slider-wrapper,
+tr.adjustment:has(input.enable:not(:checked)) .range-handle,
+tr.adjustment:has(input.enable:not(:checked)) .track-fill {
+    pointer-events: none;
+    opacity: 0.5;
+}
 </style>
