@@ -76,16 +76,18 @@
                 <div class="languageSwitcher">
                     <span>{{ $t("language_choice_message") }}</span
                     ><br />
-                    <a
-                        v-for="lang in availableLanguages"
-                        :key="lang"
-                        href="#"
-                        :lang="lang"
-                        :class="{ selected_language: lang === selectedLanguage }"
-                        @click.prevent="changeLanguage(lang)"
-                    >
-                        {{ $t(`language_${lang}`) }}
-                    </a>
+                    <div class="language-links">
+                        <a
+                            v-for="lang in availableLanguages"
+                            :key="lang"
+                            href="#"
+                            :lang="lang"
+                            :class="{ selected_language: lang === selectedLanguage }"
+                            @click.prevent="changeLanguage(lang)"
+                        >
+                            {{ $t(`language_${lang}`) }}
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -287,10 +289,16 @@ export default defineComponent({
         font-weight: bold;
     }
 
+    .language-links {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+    }
+
     a {
         font-weight: normal;
         white-space: nowrap;
-        margin-left: 8px;
 
         &:not(:last-child) {
             &:after {
