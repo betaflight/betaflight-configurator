@@ -103,7 +103,9 @@ export function useMotorTesting(configHasChanged, showWarningDialog) {
     const sendMotorCommand = (values) => {
         const buffer = [];
         for (let i = 0; i < values.length; i++) {
-            buffer.push16(values[i]);
+            const value = values[i];
+            buffer.push(value & 0xff);
+            buffer.push((value >> 8) & 0xff);
         }
         MSP.send_message(MSPCodes.MSP_SET_MOTOR, buffer);
     };

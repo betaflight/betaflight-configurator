@@ -41,7 +41,7 @@ export function useMotorsState() {
             feature12: fcStore.features.features.isEnabled("3D"),
             _3ddeadbandlow: fcStore.motor3dConfig.deadband3d_low,
             _3ddeadbandhigh: fcStore.motor3dConfig.deadband3d_high,
-            _3dneutral: fcStore.motor3dConfig.neutral3d,
+            _3dneutral: fcStore.motor3dConfig.neutral,
             minthrottle: fcStore.motorConfig.minthrottle,
             maxthrottle: fcStore.motorConfig.maxthrottle,
             mincommand: fcStore.motorConfig.mincommand,

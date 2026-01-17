@@ -505,7 +505,7 @@
                                                 :min="minSliderValue"
                                                 :max="maxSliderValue"
                                                 v-model.number="motorValues[i - 1]"
-                                                :disabled="!motorTestEnabled"
+                                                :disabled="!motorsTestingEnabled"
                                                 @input="onMotorSliderChange(i - 1)"
                                                 @wheel.prevent="onSliderWheel(i - 1, $event)"
                                             />
@@ -517,7 +517,7 @@
                                                 :min="minSliderValue"
                                                 :max="maxSliderValue"
                                                 v-model.number="masterValue"
-                                                :disabled="!motorTestEnabled"
+                                                :disabled="!motorsTestingEnabled"
                                                 @input="onMasterSliderChange"
                                                 @wheel.prevent="onSliderWheel(-1, $event)"
                                             />
@@ -539,7 +539,7 @@
                                     id="motorsEnableTestMode"
                                     type="checkbox"
                                     class="togglesmall"
-                                    v-model="motorTestEnabled"
+                                    v-model="motorsTestingEnabled"
                                 />
                                 <span class="motorsEnableTestMode" v-html="$t('motorsEnableControl')"></span>
                             </div>
@@ -743,10 +743,10 @@ onMounted(async () => {
     await MSP.promise(MSPCodes.MSP_PID_ADVANCED);
     await MSP.promise(MSPCodes.MSP_FEATURE_CONFIG);
     await MSP.promise(MSPCodes.MSP_MIXER_CONFIG);
+    await MSP.promise(MSPCodes.MSP_MOTOR_CONFIG);
     if (fcStore.motorConfig.use_dshot_telemetry || fcStore.motorConfig.use_esc_sensor) {
         await MSP.promise(MSPCodes.MSP_MOTOR_TELEMETRY);
     }
-    await MSP.promise(MSPCodes.MSP_MOTOR_CONFIG);
     await MSP.promise(MSPCodes.MSP_MOTOR_3D_CONFIG);
     await MSP.promise(MSPCodes.MSP2_MOTOR_OUTPUT_REORDERING);
     await MSP.promise(MSPCodes.MSP_ADVANCED_CONFIG);
@@ -1174,28 +1174,6 @@ onMounted(() => {
     };
 });
 
-// Watch for configuration changes
-watch(
-    [
-        () => fcStore.mixerConfig.mixer,
-        () => fcStore.mixerConfig.reverseMotorDir,
-        // Add other config fields
-    ],
-    () => {
-        // Check if any values differ from defaults
-        const hasChanges =
-            fcStore.mixerConfig.mixer !== defaultConfiguration.value.mixer ||
-            fcStore.mixerConfig.reverseMotorDir !== defaultConfiguration.value.reverseMotorDir;
-
-        configHasChanged.value = hasChanges;
-
-        // If motor test is enabled and config changed, stop it
-        if (hasChanges && motorTestEnabled.value) {
-            motorTestEnabled.value = false;
-        }
-    },
-);
-
 // Motor Reordering Availability Check - matches legacy motors.js logic
 const isMotorReorderingAvailable = computed(() => {
     const mixer = fcStore.mixerConfig.mixer;
@@ -1463,9 +1441,6 @@ const toggleFeature = (featureName, checked) => {
     // Let's assume it works for now.
 };
 
-// Motor Testing Logic
-const motorTestEnabled = ref(false);
-
 const numberOfValidOutputs = computed(() => {
     const mixer = fcStore.mixerConfig.mixer;
     if (mixer > 0 && mixer <= mixerList.length) {
@@ -1488,7 +1463,7 @@ const numberOfValidOutputs = computed(() => {
     return 4; // Default to 4 motors (quad)
 });
 
-const isMotorTesting = computed(() => motorTestEnabled.value);
+const isMotorTesting = computed(() => motorsTestingEnabled.value);
 
 const minSliderValue = computed(() => {
     if (digitalProtocolConfigured.value) {
@@ -1514,7 +1489,7 @@ const zeroThrottleValue = computed(() => {
 });
 
 watch(zeroThrottleValue, (val) => {
-    if (!motorTestEnabled.value) {
+    if (!motorsTestingEnabled.value) {
         motorValues.value.fill(val);
         masterValue.value = val;
     }
@@ -1531,7 +1506,7 @@ const onMasterSliderChange = () => {
 };
 
 const onSliderWheel = (index, event) => {
-    if (!motorTestEnabled.value) return;
+    if (!motorsTestingEnabled.value) return;
 
     // index -1 for master
     const step = 25;
@@ -1562,15 +1537,15 @@ let motorUpdateInterval = null;
 const ignoreKeys = ["PageUp", "PageDown", "End", "Home", "ArrowUp", "ArrowDown", "AltLeft", "AltRight", "Tab"];
 
 const disableMotorTestOnKey = (e) => {
-    if (motorTestEnabled.value) {
+    if (motorsTestingEnabled.value) {
         // Check if key is ignored
         if (!ignoreKeys.includes(e.code) && !ignoreKeys.includes(e.key)) {
-            motorTestEnabled.value = false;
+            motorsTestingEnabled.value = false;
         }
     }
 };
 
-watch(motorTestEnabled, (enabled) => {
+watch(motorsTestingEnabled, (enabled) => {
     if (enabled) {
         const buffer = [];
         buffer.push(DshotCommand.dshotCommandType_e.DSHOT_CMD_TYPE_BLOCKING);
@@ -1610,7 +1585,7 @@ watch(motorTestEnabled, (enabled) => {
 
 // Telemetry Logic
 const getMotorValue = (index) => {
-    if (motorTestEnabled.value) return motorValues.value[index];
+    if (motorsTestingEnabled.value) return motorValues.value[index];
     // If telemetry running, show telemetry data
     return fcStore.motorData[index] || minSliderValue.value;
 };
@@ -1667,7 +1642,7 @@ onUnmounted(() => {
     if (motorUpdateInterval) clearInterval(motorUpdateInterval);
     if (telemetryInterval) clearInterval(telemetryInterval);
     // ensure disarmed safety
-    if (motorTestEnabled.value) {
+    if (motorsTestingEnabled.value) {
         MSP.send_message(MSPCodes.MSP_SET_MOTOR, Array(8).fill(0), false, false);
     }
 });

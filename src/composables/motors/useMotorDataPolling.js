@@ -63,7 +63,7 @@ export function useMotorDataPolling(motorsTestingEnabled) {
         }
 
         // Poll every 50ms (20Hz) - matches original implementation
-        GUI.interval_add("motor_and_status_pull", getMotorData, 50, true);
+        pollingIntervalId = GUI.interval_add("motor_and_status_pull", getMotorData, 50, true);
     };
 
     /**

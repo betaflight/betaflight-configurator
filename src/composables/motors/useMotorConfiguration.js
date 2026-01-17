@@ -73,7 +73,7 @@ export function useMotorConfiguration(motorsState, motorsTestingEnabled, stopMot
         );
 
         watch(
-            () => fcStore.motor3dConfig.neutral3d,
+            () => fcStore.motor3dConfig.neutral,
             (newVal, oldVal) => handleChange("_3dneutral", newVal, oldVal),
         );
 
