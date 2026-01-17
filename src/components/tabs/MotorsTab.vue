@@ -138,12 +138,9 @@
                                                         :disabled="isFeatureEnabled('AIRMODE')"
                                                     />
                                                 </td>
-                                                <td><span v-html="$t('featureMOTOR_STOP')"></span></td>
+                                                <td>MOTOR_STOP</td>
                                                 <td>
-                                                    <div
-                                                        class="helpicon cf_tip"
-                                                        :title="$t('featureMOTOR_STOPTip')"
-                                                    ></div>
+                                                    <span v-html="$t('featureMOTOR_STOPTip')"></span>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -157,12 +154,9 @@
                                                         @change="toggleFeature('ESC_SENSOR', $event.target.checked)"
                                                     />
                                                 </td>
-                                                <td><span v-html="$t('featureESC_SENSOR')"></span></td>
+                                                <td>ESC_SENSOR</td>
                                                 <td>
-                                                    <div
-                                                        class="helpicon cf_tip"
-                                                        :title="$t('featureESC_SENSORTip')"
-                                                    ></div>
+                                                    <span v-html="$t('featureESC_SENSOR')"></span>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -299,7 +293,7 @@
                                                 </td>
                                                 <td><span v-html="$t('feature3D')"></span></td>
                                                 <td>
-                                                    <span v-html="$t('feature3DName')"></span>
+                                                    <span>3D</span>
                                                     <div class="helpicon cf_tip" :title="$t('feature3DTip')"></div>
                                                 </td>
                                             </tr>
@@ -455,25 +449,37 @@
 
                             <div class="motors">
                                 <ul class="grid-box col9 titles">
-                                    <li v-for="i in 8" :key="i" :title="$t('motorNumber' + i)">{{ i }}</li>
+                                    <li v-for="i in numberOfValidOutputs" :key="i" :title="$t('motorNumber' + i)">
+                                        {{ i }}
+                                    </li>
+                                    <li></li>
                                 </ul>
                                 <div class="bar-wrapper grid-box col9">
-                                    <div v-for="i in 8" :key="i" class="motor-col">
-                                        <div class="motor-bar-wrapper">
+                                    <div v-for="i in numberOfValidOutputs" :key="i" :class="'m-block motor-' + (i - 1)">
+                                        <div class="meter-bar">
+                                            <div class="label">{{ motorValues[i - 1] }}</div>
                                             <div
-                                                class="motor-bar"
-                                                :style="{ height: getMotorBarHeight(i - 1) + '%' }"
-                                            ></div>
+                                                class="indicator"
+                                                :style="{
+                                                    marginTop: 100 - getMotorBarHeight(i - 1) + 'px',
+                                                    height: getMotorBarHeight(i - 1) + 'px',
+                                                    backgroundColor:
+                                                        'rgba(255,187,0,' +
+                                                        (getMotorBarHeight(i - 1) * 0.009).toFixed(2) +
+                                                        ')',
+                                                }"
+                                            >
+                                                <div class="label"></div>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="motor-col"></div>
-                                    <!-- Spacer for master -->
+                                    <div class="m-block"></div>
                                 </div>
                             </div>
 
                             <div class="motor_testing">
                                 <ul class="grid-box col9 telemetry">
-                                    <li v-for="i in 8" :key="i">
+                                    <li v-for="i in numberOfValidOutputs" :key="i">
                                         <span
                                             :class="'motor-' + (i - 1) + ' cf_tip'"
                                             :title="$t('motorsTelemetryHelp')"
@@ -489,7 +495,7 @@
 
                                 <div class="sliders">
                                     <ul class="grid-box col9">
-                                        <li v-for="i in 8" :key="i">
+                                        <li v-for="i in numberOfValidOutputs" :key="i">
                                             <input
                                                 type="range"
                                                 class="motor-slider"
@@ -518,7 +524,7 @@
 
                                 <div class="values">
                                     <ul class="grid-box col9">
-                                        <li v-for="i in 8" :key="i">{{ motorValues[i - 1] }}</li>
+                                        <li v-for="i in numberOfValidOutputs" :key="i">{{ motorValues[i - 1] }}</li>
                                         <li style="font-weight: bold" v-html="$t('motorsMaster')"></li>
                                     </ul>
                                 </div>
@@ -544,7 +550,7 @@
 </template>
 
 <script setup>
-import { computed, ref, watch, onMounted, onUnmounted } from "vue";
+import { computed, ref, watch, onMounted, onUnmounted, nextTick } from "vue";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "@/components/elements/WikiButton.vue";
 import { useFlightControllerStore } from "@/stores/fc";
@@ -559,6 +565,7 @@ import * as d3 from "d3";
 import { get as getConfig, set as setConfig } from "@/js/ConfigStorage";
 import DshotCommand from "@/js/utils/DshotCommand";
 import { mspHelper } from "@/js/msp/MSPHelper";
+import GUI from "@/js/gui";
 
 const API_VERSION_1_47 = "1.47.0";
 
@@ -601,6 +608,11 @@ onMounted(async () => {
 
     // Start graph
     setupGraph();
+
+    // Initialize Switchery for toggle switches - wait for DOM to be fully updated
+    await nextTick();
+    await nextTick();
+    GUI.switchery();
 });
 
 // Sensor Graph Logic
@@ -1122,6 +1134,28 @@ const motorTestEnabled = ref(false);
 const motorValues = ref(Array(8).fill(1000));
 const masterValue = ref(1000);
 
+const numberOfValidOutputs = computed(() => {
+    const mixer = fcStore.mixerConfig.mixer;
+    if (mixer > 0 && mixer <= mixerList.length) {
+        const motorCount = mixerList[mixer - 1].motors;
+        // Use firmware supplied motor_count or the mixer's expected motor count
+        const firmwareCount = fcStore.motorConfig.motor_count;
+
+        // Check if motor data is available to validate
+        if (fcStore.motorData && fcStore.motorData.length > 0) {
+            for (let i = 0; i < fcStore.motorData.length; i++) {
+                if (fcStore.motorData[i] === 0) {
+                    return i > 0 ? i : motorCount;
+                }
+            }
+        }
+
+        // Return the minimum of firmware count and motor count
+        return Math.min(firmwareCount, motorCount);
+    }
+    return 4; // Default to 4 motors (quad)
+});
+
 const minSliderValue = computed(() => {
     if (digitalProtocolConfigured.value) {
         return 1000; // DShot Disarmed
@@ -1157,11 +1191,8 @@ const onMotorSliderChange = (index) => {
 };
 
 const onMasterSliderChange = () => {
-    for (let i = 0; i < 8; i++) {
-        if (motorValues.value[i] !== undefined) {
-            // Only update valid motors if needed, currently 8
-            motorValues.value[i] = masterValue.value;
-        }
+    for (let i = 0; i < numberOfValidOutputs.value; i++) {
+        motorValues.value[i] = masterValue.value;
     }
 };
 
@@ -1218,7 +1249,7 @@ watch(motorTestEnabled, (enabled) => {
         // Start sending motor updates
         motorUpdateInterval = setInterval(() => {
             const buffer = [];
-            for (let i = 0; i < 8; i++) {
+            for (let i = 0; i < numberOfValidOutputs.value; i++) {
                 buffer.push(motorValues.value[i]);
             }
             MSP.send_message(MSPCodes.MSP_SET_MOTOR, buffer, false, false);
@@ -1706,6 +1737,11 @@ onUnmounted(() => {
         list-style: none;
         outline: none;
         .sliders {
+            ul li {
+                display: flex;
+                align-items: flex-end;
+                justify-content: center;
+            }
             input {
                 cursor: ns-resize;
                 writing-mode: vertical-lr;
