@@ -58,6 +58,7 @@
                         @click.prevent="onStartButtonClicked"
                         v-html="i18nMessage('motorOutputReorderDialogAgree')"
                     ></a>
+                    <a href="#" class="regular-button" @click.prevent="close" v-html="i18nMessage('dialogCancel')"></a>
                 </div>
             </div>
         </div>
@@ -347,8 +348,8 @@ defineExpose({
     width: 90%;
     max-width: 900px;
     max-height: 90vh;
-    border: 1px solid var(--subtleAccent);
-    border-radius: 5px;
+    border: 2px solid #4d4d4d;
+    border-radius: 3px;
     background-color: var(--boxBackground);
     color: var(--defaultText);
     padding: 20px;

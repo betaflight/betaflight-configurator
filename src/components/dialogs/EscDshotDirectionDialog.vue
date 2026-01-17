@@ -3,16 +3,6 @@
         <div class="escDshotDirection-Component">
             <h3 class="escDshotDirection-ComponentHeader" v-html="i18nMessage('escDshotDirectionDialog-Title')"></h3>
 
-            <!-- Mixer Preview - Always visible -->
-            <div v-if="!hasConfigErrors" id="escDshotDirectionDialog-MixerPreview" class="grey">
-                <img
-                    id="escDshotDirectionDialog-MixerPreviewImg"
-                    :src="mixerPreviewSrc"
-                    alt="Mixer Preview"
-                    @error="(e) => console.error('Image load error:', e.target.src)"
-                />
-            </div>
-
             <!-- Configuration Errors -->
             <div v-if="hasConfigErrors" class="componentContent" id="escDshotDirectionDialog-ConfigErrors">
                 <div
@@ -33,6 +23,10 @@
                 class="componentContent"
                 id="escDshotDirectionDialog-MainContent"
             >
+                <div id="escDshotDirectionDialog-MixerPreview" class="grey">
+                    <img id="escDshotDirectionDialog-MixerPreviewImg" :src="mixerPreviewSrc" alt="Mixer Preview" />
+                </div>
+
                 <!-- Normal Mode -->
                 <div v-if="!wizardMode" id="escDshotDirectionDialog-NormalDialog" class="display-contents">
                     <h4
@@ -527,8 +521,8 @@ defineExpose({
     width: 90%;
     max-width: 800px;
     max-height: 90vh;
-    border: 1px solid var(--subtleAccent);
-    border-radius: 5px;
+    border: 2px solid #4d4d4d;
+    border-radius: 3px;
     background-color: var(--boxBackground);
     color: var(--defaultText);
     padding: 20px;
@@ -580,12 +574,24 @@ defineExpose({
 }
 
 #escDshotDirectionDialog-MixerPreview {
-    text-align: center;
-    margin: 20px 0;
+    width: 100%;
+    padding-top: 8px;
+    padding-bottom: 9px;
+    margin-bottom: 8px;
 }
 
-#escDshotDirectionDialog-MixerPreview img {
-    max-width: 300px;
-    height: auto;
+#escDshotDirectionDialog-MixerPreviewImg {
+    display: block;
+    width: 160px;
+    height: 160px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.grey {
+    background-color: #828885;
+    border: 1px solid #4d4d4d;
 }
 </style>
