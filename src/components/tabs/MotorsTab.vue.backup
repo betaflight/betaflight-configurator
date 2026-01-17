@@ -52,18 +52,16 @@
                                         href="#"
                                         id="motorOutputReorderDialogOpen"
                                         class="tool regular-button"
-                                        :class="{ disabled: buttonStates.toolsDisabled }"
                                         v-if="isMotorReorderingAvailable"
-                                        @click.prevent="!buttonStates.toolsDisabled && openMotorOutputReorderDialog()"
+                                        @click.prevent="openMotorOutputReorderDialog"
                                         v-html="$t('motorOutputReorderDialogOpen')"
                                     ></a>
                                     <a
                                         href="#"
                                         id="escDshotDirectionDialog-Open"
                                         class="tool regular-button"
-                                        :class="{ disabled: buttonStates.toolsDisabled }"
                                         v-if="digitalProtocolConfigured"
-                                        @click.prevent="!buttonStates.toolsDisabled && openEscDshotDirectionDialog()"
+                                        @click.prevent="openEscDshotDirectionDialog"
                                         v-html="$t('escDshotDirectionDialog-Open')"
                                     ></a>
                                 </div>
@@ -549,43 +547,28 @@
                 </div>
             </div>
 
-            <!-- Warning Dialog -->
-            <dialog id="dialog-settings-changed" ref="dialogSettingsChanged">
-                <div id="dialog-settings-changed-content-wrapper">
-                    <div id="dialog-settings-changed-content">{{ warningMessage }}</div>
-                    <div class="btn dialog-buttons">
-                        <a
-                            href="#"
-                            class="regular-button"
-                            @click.prevent="closeWarningDialog"
-                            v-html="$t('motorsDialogSettingsChangedOk')"
-                        ></a>
-                    </div>
+            <!-- Action Buttons -->
+            <div class="content_toolbar">
+                <div class="btn">
+                    <a 
+                        href="#" 
+                        class="save_btn" 
+                        :class="{ disabled: !configHasChanged }"
+                        @click.prevent="saveAndReboot"
+                    >
+                        <span v-html="$t('configurationButtonSave')"></span>
+                    </a>
                 </div>
-            </dialog>
-        </div>
-
-        <!-- Fixed Bottom Toolbar -->
-        <div class="content_toolbar toolbar_fixed_bottom" style="position: fixed">
-            <div class="btn save_btn">
-                <a
-                    class="save"
-                    href="#"
-                    :class="{ disabled: buttonStates.saveDisabled }"
-                    @click.prevent="!buttonStates.saveDisabled && saveAndReboot()"
-                >
-                    {{ $t("configurationButtonSave") }}
-                </a>
-            </div>
-            <div class="btn">
-                <a
-                    class="stop"
-                    href="#"
-                    :class="{ disabled: buttonStates.stopDisabled }"
-                    @click.prevent="!buttonStates.stopDisabled && stopMotors()"
-                >
-                    {{ $t("escDshotDirectionDialog-StopWizard") }}
-                </a>
+                <div class="btn">
+                    <a 
+                        href="#" 
+                        class="stopMotors_btn" 
+                        :class="{ disabled: !isMotorTesting }"
+                        @click.prevent="stopMotorsButton"
+                    >
+                        <span v-html="$t('escDshotDirectionDialog-StopWizard')"></span>
+                    </a>
+                </div>
             </div>
         </div>
     </BaseTab>
@@ -610,54 +593,10 @@ import { mspHelper } from "@/js/msp/MSPHelper";
 import { tracking } from "@/js/Analytics";
 import GUI from "@/js/gui";
 
-// Import composables for proper state management
-import { useMotorsState } from "@/composables/motors/useMotorsState";
-import { useMotorTesting } from "@/composables/motors/useMotorTesting";
-import { useMotorConfiguration } from "@/composables/motors/useMotorConfiguration";
-import { useMotorDataPolling } from "@/composables/motors/useMotorDataPolling";
-
 const API_VERSION_1_47 = "1.47.0";
 
 const fcStore = useFlightControllerStore();
 const dialog = useDialog();
-
-// Initialize motors state management
-const motorsState = useMotorsState();
-const { configHasChanged, trackChange, resetChanges } = motorsState;
-
-// Warning dialog
-const dialogSettingsChanged = ref(null);
-const warningMessage = ref("");
-
-const showWarningDialog = (message) => {
-    warningMessage.value = message;
-    dialogSettingsChanged.value?.showModal();
-};
-
-const closeWarningDialog = () => {
-    dialogSettingsChanged.value?.close();
-};
-
-// Initialize motor testing with safety features
-const { motorsTestingEnabled, motorValues, masterValue, sendMotorCommand, stopAllMotors } = useMotorTesting(
-    configHasChanged,
-    showWarningDialog,
-);
-
-// Initialize configuration tracking
-const { setupConfigWatchers } = useMotorConfiguration(motorsState, motorsTestingEnabled, () => {
-    motorsTestingEnabled.value = false;
-});
-
-// Initialize data polling
-const { motorTelemetry, powerStats } = useMotorDataPolling(motorsTestingEnabled);
-
-// Button states (central controller like original setContentButtons)
-const buttonStates = computed(() => ({
-    toolsDisabled: configHasChanged.value || motorsTestingEnabled.value,
-    saveDisabled: !configHasChanged.value,
-    stopDisabled: !motorsTestingEnabled.value,
-}));
 
 onMounted(async () => {
     // Request MSP data
@@ -673,12 +612,6 @@ onMounted(async () => {
     await MSP.promise(MSPCodes.MSP_ADVANCED_CONFIG);
     await MSP.promise(MSPCodes.MSP_FILTER_CONFIG);
     await MSP.promise(MSPCodes.MSP_ARMING_CONFIG);
-
-    // Initialize motors state (CRITICAL: must be after MSP data loaded)
-    motorsState.initializeDefaults();
-
-    // Setup configuration change watchers (CRITICAL: tracks all config changes)
-    setupConfigWatchers();
 
     updateMixerPreview();
 
@@ -1099,12 +1032,12 @@ watch(
     ],
     () => {
         // Check if any values differ from defaults
-        const hasChanges =
+        const hasChanges = 
             fcStore.mixerConfig.mixer !== defaultConfiguration.value.mixer ||
             fcStore.mixerConfig.reverseMotorDir !== defaultConfiguration.value.reverseMotorDir;
-
+        
         configHasChanged.value = hasChanges;
-
+        
         // If motor test is enabled and config changed, stop it
         if (hasChanges && motorTestEnabled.value) {
             motorTestEnabled.value = false;
@@ -1116,13 +1049,13 @@ watch(
 const isMotorReorderingAvailable = computed(() => {
     const mixer = fcStore.mixerConfig.mixer;
     if (!mixer || mixer < 1 || mixer > mixerList.length) {
-        console.log("[Motors] Reorder button hidden: invalid mixer", mixer);
+        console.log('[Motors] Reorder button hidden: invalid mixer', mixer);
         return false;
     }
 
     const mixerName = mixerList[mixer - 1]?.name;
     if (!mixerName) {
-        console.log("[Motors] Reorder button hidden: no mixer name");
+        console.log('[Motors] Reorder button hidden: no mixer name');
         return false;
     }
 
@@ -1145,14 +1078,13 @@ const isMotorReorderingAvailable = computed(() => {
         "Y6",
     ];
 
-    const result =
-        supportedMixers.includes(mixerName) && fcStore.motorOutputOrder && fcStore.motorOutputOrder.length > 0;
-    console.log("[Motors] Reorder button check:", {
+    const result = supportedMixers.includes(mixerName) && fcStore.motorOutputOrder && fcStore.motorOutputOrder.length > 0;
+    console.log('[Motors] Reorder button check:', {
         mixerName,
         isSupported: supportedMixers.includes(mixerName),
         hasMotorOutputOrder: !!fcStore.motorOutputOrder,
         motorOutputOrderLength: fcStore.motorOutputOrder?.length,
-        result,
+        result
     });
     return result;
 });
@@ -1215,38 +1147,44 @@ const saveAndReboot = async () => {
     if (!configHasChanged.value) {
         return;
     }
+    
+    // Send all motor configuration changes
+    await MSP.promise(MSPCodes.MSP_SET_MIXER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_MIXER_CONFIG));
+    await MSP.promise(MSPCodes.MSP_SET_MOTOR_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_MOTOR_CONFIG));
+    await MSP.promise(MSPCodes.MSP_SET_MOTOR_3D_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_MOTOR_3D_CONFIG));
+    await MSP.promise(MSPCodes.MSP_SET_ADVANCED_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ADVANCED_CONFIG));
+    await MSP.promise(MSPCodes.MSP_SET_ARMING_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ARMING_CONFIG));
+    await MSP.promise(MSPCodes.MSP_SET_FILTER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FILTER_CONFIG));
 
-    try {
-        // Send all motor configuration changes in sequence
-        await MSP.promise(MSPCodes.MSP_SET_MIXER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_MIXER_CONFIG));
-        await MSP.promise(MSPCodes.MSP_SET_MOTOR_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_MOTOR_CONFIG));
-        await MSP.promise(MSPCodes.MSP_SET_MOTOR_3D_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_MOTOR_3D_CONFIG));
-        await MSP.promise(MSPCodes.MSP_SET_ADVANCED_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ADVANCED_CONFIG));
-        await MSP.promise(MSPCodes.MSP_SET_ARMING_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_ARMING_CONFIG));
-        await MSP.promise(MSPCodes.MSP_SET_FILTER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FILTER_CONFIG));
-
-        // Send analytics if there were changes tracked
-        if (motorsState.analyticsChanges.value && Object.keys(motorsState.analyticsChanges.value).length > 0) {
-            tracking.sendSaveAndChangeEvents(
-                tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER,
-                motorsState.analyticsChanges.value,
-                "motors",
-            );
-        }
-
-        // Reset state (clears changes and updates defaults)
-        resetChanges();
-
-        // Save to EEPROM and reboot
-        mspHelper.writeConfiguration(true);
-    } catch (error) {
-        console.error("[Motors] Save failed:", error);
+    // Send analytics if there were changes tracked
+    if (analyticsChanges.value && Object.keys(analyticsChanges.value).length > 0) {
+        tracking.sendSaveAndChangeEvents(
+            tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER,
+            analyticsChanges.value,
+            'motors',
+        );
+        analyticsChanges.value = {};
     }
+    configHasChanged.value = false;
+    
+    // Update default configuration to new values
+    defaultConfiguration.value = {
+        mixer: fcStore.mixerConfig.mixer,
+        reverseMotorDir: fcStore.mixerConfig.reverseMotorDir,
+    };
+
+    // Save to EEPROM and reboot
+    mspHelper.writeConfiguration(true);
 };
 
-const stopMotors = () => {
-    // Stop motor testing (composable handles all cleanup)
-    motorsTestingEnabled.value = false;
+const stopMotorsButton = () => {
+    // Only stop if motors are testing
+    if (!isMotorTesting.value) {
+        return;
+    }
+    
+    // Stop motor testing by unchecking the test mode checkbox
+    motorTestEnabled.value = false;
 };
 
 // ESC Protocol Logic
@@ -1305,12 +1243,12 @@ const protocolConfigured = computed(() => {
 
 const digitalProtocolConfigured = computed(() => {
     if (!protocolConfigured.value) {
-        console.log("[Motors] Direction button hidden: protocol not configured");
+        console.log('[Motors] Direction button hidden: protocol not configured');
         return false;
     }
     const name = protocolName.value;
     const result = ["DSHOT150", "DSHOT300", "DSHOT600", "PROSHOT1000"].includes(name);
-    console.log("[Motors] Direction button check:", { protocolName: name, result });
+    console.log('[Motors] Direction button check:', { protocolName: name, result });
     return result;
 });
 
@@ -1381,6 +1319,10 @@ const toggleFeature = (featureName, checked) => {
 
 // Motor Testing Logic
 const motorTestEnabled = ref(false);
+const motorValues = ref(Array(8).fill(1000));
+const masterValue = ref(1000);
+const configHasChanged = ref(false);
+const analyticsChanges = ref({});
 
 const numberOfValidOutputs = computed(() => {
     const mixer = fcStore.mixerConfig.mixer;
