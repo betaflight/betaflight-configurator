@@ -360,7 +360,7 @@ async function startProcess() {
                     import("./tabs/motors").then(({ motors }) => motors.initialize(content_ready));
                     break;
                 case "sensors":
-                    import("./tabs/sensors").then(({ sensors }) => sensors.initialize(content_ready));
+                    mountVueTab("sensors", content_ready);
                     break;
                 case "logging":
                     mountVueTab("logging", content_ready);
