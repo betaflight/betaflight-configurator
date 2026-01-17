@@ -563,6 +563,28 @@
                     </div>
                 </div>
             </dialog>
+
+            <!-- Dynamic Notch Filters Dialog -->
+            <dialog id="dialog-dyn-filters" ref="dialogDynFilters">
+                <div class="dialog-content-wrapper">
+                    <div class="dialog-title" v-html="$t('dialogDynFiltersChangeTitle')"></div>
+                    <div class="dialog-text" v-html="$t('dialogDynFiltersChangeNote')"></div>
+                    <div class="btn dialog-buttons">
+                        <a
+                            href="#"
+                            class="regular-button"
+                            @click.prevent="applyDynFiltersChange"
+                            v-html="$t('presetsWarningDialogYesButton')"
+                        ></a>
+                        <a
+                            href="#"
+                            class="regular-button"
+                            @click.prevent="closeDynFiltersDialog"
+                            v-html="$t('presetsWarningDialogNoButton')"
+                        ></a>
+                    </div>
+                </div>
+            </dialog>
         </div>
 
         <!-- Fixed Bottom Toolbar -->
@@ -638,6 +660,38 @@ const closeWarningDialog = () => {
     dialogSettingsChanged.value?.close();
 };
 
+// Dynamic notch filter dialog
+const dialogDynFilters = ref(null);
+const previousDshotBidir = ref(false);
+const previousFilterDynQ = ref(null);
+const previousFilterDynCount = ref(null);
+
+const showDynFiltersDialog = () => {
+    dialogDynFilters.value?.showModal();
+};
+
+const closeDynFiltersDialog = () => {
+    dialogDynFilters.value?.close();
+};
+
+const applyDynFiltersChange = () => {
+    const FILTER_DEFAULT = {
+        dyn_notch_count_rpm: 1,
+        dyn_notch_q_rpm: 500,
+        dyn_notch_count: 3,
+        dyn_notch_q: 120,
+    };
+
+    if (fcStore.motorConfig.use_dshot_telemetry && !previousDshotBidir.value) {
+        fcStore.filterConfig.dyn_notch_count = FILTER_DEFAULT.dyn_notch_count_rpm;
+        fcStore.filterConfig.dyn_notch_q = FILTER_DEFAULT.dyn_notch_q_rpm;
+    } else if (!fcStore.motorConfig.use_dshot_telemetry && previousDshotBidir.value) {
+        fcStore.filterConfig.dyn_notch_count = FILTER_DEFAULT.dyn_notch_count;
+        fcStore.filterConfig.dyn_notch_q = FILTER_DEFAULT.dyn_notch_q;
+    }
+    closeDynFiltersDialog();
+};
+
 // Initialize motor testing with safety features
 const { motorsTestingEnabled, motorValues, masterValue, sendMotorCommand, stopAllMotors } = useMotorTesting(
     configHasChanged,
@@ -659,6 +713,31 @@ const buttonStates = computed(() => ({
     stopDisabled: !motorsTestingEnabled.value,
 }));
 
+// Watch for bidirectional DShot changes
+watch(
+    () => fcStore.motorConfig.use_dshot_telemetry,
+    (newValue, oldValue) => {
+        if (oldValue === undefined) return; // Skip initial load
+
+        const rpmFilterIsDisabled = fcStore.filterConfig.gyro_rpm_notch_harmonics === 0;
+
+        // Store previous values for potential restore
+        if (previousFilterDynQ.value === null) {
+            previousFilterDynQ.value = fcStore.filterConfig.dyn_notch_q;
+            previousFilterDynCount.value = fcStore.filterConfig.dyn_notch_count;
+        }
+
+        // Show dialog if dshotBidir changed and RPM filter is disabled
+        if (newValue !== previousDshotBidir.value && !rpmFilterIsDisabled) {
+            showDynFiltersDialog();
+        } else {
+            // Restore values if dialog not shown
+            fcStore.filterConfig.dyn_notch_count = previousFilterDynCount.value;
+            fcStore.filterConfig.dyn_notch_q = previousFilterDynQ.value;
+        }
+    },
+);
+
 onMounted(async () => {
     // Request MSP data
     await MSP.promise(MSPCodes.MSP_PID_ADVANCED);
@@ -679,6 +758,11 @@ onMounted(async () => {
 
     // Setup configuration change watchers (CRITICAL: tracks all config changes)
     setupConfigWatchers();
+
+    // Store initial dshotBidir value for comparison
+    previousDshotBidir.value = fcStore.motorConfig.use_dshot_telemetry;
+    previousFilterDynQ.value = fcStore.filterConfig.dyn_notch_q;
+    previousFilterDynCount.value = fcStore.filterConfig.dyn_notch_count;
 
     updateMixerPreview();
 
