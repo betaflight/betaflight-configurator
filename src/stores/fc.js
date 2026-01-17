@@ -152,6 +152,41 @@ export const useFlightControllerStore = defineStore("flightController", () => {
         set: (val) => (FC.SDCARD = val),
     });
 
+    const mixerConfig = computed({
+        get: () => FC.MIXER_CONFIG,
+        set: (val) => (FC.MIXER_CONFIG = val),
+    });
+
+    const motorConfig = computed({
+        get: () => FC.MOTOR_CONFIG,
+        set: (val) => (FC.MOTOR_CONFIG = val),
+    });
+
+    const motor3dConfig = computed({
+        get: () => FC.MOTOR_3D_CONFIG,
+        set: (val) => (FC.MOTOR_3D_CONFIG = val),
+    });
+
+    const motorOutputOrder = computed({
+        get: () => FC.MOTOR_OUTPUT_ORDER,
+        set: (val) => (FC.MOTOR_OUTPUT_ORDER = val),
+    });
+
+    const motorTelemetryData = computed({
+        get: () => FC.MOTOR_TELEMETRY_DATA,
+        set: (val) => (FC.MOTOR_TELEMETRY_DATA = val),
+    });
+
+    const advancedTuning = computed({
+        get: () => FC.ADVANCED_TUNING,
+        set: (val) => (FC.ADVANCED_TUNING = val),
+    });
+
+    const filterConfig = computed({
+        get: () => FC.FILTER_CONFIG,
+        set: (val) => (FC.FILTER_CONFIG = val),
+    });
+
     // Computed Getters
     const apiVersion = computed(() => config.value.apiVersion);
 
@@ -194,6 +229,13 @@ export const useFlightControllerStore = defineStore("flightController", () => {
         blackbox,
         dataflash,
         sdcard,
+        mixerConfig,
+        motorConfig,
+        motor3dConfig,
+        motorOutputOrder,
+        motorTelemetryData,
+        advancedTuning,
+        filterConfig,
         apiVersion,
         isApiVersionSupported,
         isApiVersionLessThan,

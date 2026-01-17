@@ -25,6 +25,7 @@ import CliTab from "../components/tabs/CliTab.vue";
 import PowerTab from "../components/tabs/PowerTab.vue";
 import SensorsTab from "../components/tabs/SensorsTab.vue";
 import FailsafeTab from "../components/tabs/FailsafeTab.vue";
+import MotorsTab from "../components/tabs/MotorsTab.vue";
 
 // Registry of Vue tab components - used by main.js for dynamic mounting
 export const VueTabComponents = {
@@ -46,6 +47,7 @@ export const VueTabComponents = {
     power: PowerTab,
     sensors: SensorsTab,
     failsafe: FailsafeTab,
+    motors: MotorsTab,
 };
 
 // Create a Vue plugin that registers all components globally
@@ -75,5 +77,6 @@ export const BetaflightComponents = {
         app.component("OnboardLoggingTab", OnboardLoggingTab);
         app.component("SensorsTab", SensorsTab);
         app.component("FailsafeTab", FailsafeTab);
+        app.component("MotorsTab", MotorsTab);
     },
 };
