@@ -52,12 +52,12 @@ export function useMotorConfiguration(motorsState, motorsTestingEnabled, stopMot
 
         // Features
         watch(
-            () => fcStore.features?.features?.isEnabled("MOTOR_STOP"),
+            () => fcStore.features?.features?.isEnabled?.("MOTOR_STOP") ?? false,
             (newVal, oldVal) => handleChange("feature4", newVal, oldVal),
         );
 
         watch(
-            () => fcStore.features?.features?.isEnabled("3D"),
+            () => fcStore.features?.features?.isEnabled?.("3D") ?? false,
             (newVal, oldVal) => handleChange("feature12", newVal, oldVal),
         );
 
@@ -106,7 +106,7 @@ export function useMotorConfiguration(motorsState, motorsTestingEnabled, stopMot
 
         // ESC Sensor (feature flag)
         watch(
-            () => fcStore.features?.features?.isEnabled("ESC_SENSOR"),
+            () => fcStore.features?.features?.isEnabled?.("ESC_SENSOR") ?? false,
             (newVal, oldVal) => handleChange("ESC_SENSOR", newVal, oldVal),
         );
     };
