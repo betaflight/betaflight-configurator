@@ -1207,15 +1207,7 @@ const isMotorReorderingAvailable = computed(() => {
         "Y6",
     ];
 
-    const result =
-        supportedMixers.includes(mixerName) && fcStore.motorOutputOrder && fcStore.motorOutputOrder.length > 0;
-    console.log("[Motors] Reorder button check:", {
-        mixerName,
-        isSupported: supportedMixers.includes(mixerName),
-        hasMotorOutputOrder: !!fcStore.motorOutputOrder,
-        motorOutputOrderLength: fcStore.motorOutputOrder?.length,
-        result,
-    });
+    const result = supportedMixers.includes(mixerName) && fcStore.motorOutputOrder?.length > 0;
     return result;
 });
 
@@ -1367,12 +1359,10 @@ const protocolConfigured = computed(() => {
 
 const digitalProtocolConfigured = computed(() => {
     if (!protocolConfigured.value) {
-        console.log("[Motors] Direction button hidden: protocol not configured");
         return false;
     }
     const name = protocolName.value;
     const result = ["DSHOT150", "DSHOT300", "DSHOT600", "PROSHOT1000"].includes(name);
-    console.log("[Motors] Direction button check:", { protocolName: name, result });
     return result;
 });
 
