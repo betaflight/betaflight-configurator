@@ -727,8 +727,8 @@ watch(
             previousFilterDynCount.value = fcStore.filterConfig.dyn_notch_count;
         }
 
-        // Show dialog if dshotBidir changed and RPM filter is disabled
-        if (newValue !== previousDshotBidir.value && !rpmFilterIsDisabled) {
+        // Show dialog only when ENABLING dshotBidir and RPM filter is disabled
+        if (newValue && !previousDshotBidir.value && !rpmFilterIsDisabled) {
             showDynFiltersDialog();
         } else {
             // Restore values if dialog not shown
