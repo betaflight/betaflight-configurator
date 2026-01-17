@@ -16,6 +16,7 @@ import YesNoDialog from "./YesNoDialog.vue";
 import InformationDialog from "./InformationDialog.vue";
 import WaitDialog from "./WaitDialog.vue";
 import RebootDialog from "./RebootDialog.vue";
+import EscDshotDirectionDialog from "./EscDshotDirectionDialog.vue";
 
 const dialogStore = useDialogStore();
 const currentDialogRef = ref(null);
@@ -25,6 +26,7 @@ const dialogComponents = {
     InformationDialog,
     WaitDialog,
     RebootDialog,
+    EscDshotDirectionDialog,
 };
 
 watch(

@@ -66,10 +66,15 @@ export function useDialog() {
         store.close();
     };
 
+    const open = (type, props = {}, listeners = {}) => {
+        store.open(type, props, listeners);
+    };
+
     return {
         openYesNo,
         openInfo,
         openWait,
         close,
+        open,
     };
 }

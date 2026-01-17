@@ -48,18 +48,20 @@
                                     </div>
                                 </div>
                                 <div class="btn motor_tool_buttons">
-                                    <a
+                                    <!-- TODO: Motor Output Reorder button hidden until migrated to Vue -->
+                                    <!-- <a
                                         href="#"
                                         id="motorOutputReorderDialogOpen"
                                         class="tool regular-button"
                                         v-if="isMotorReorderingAvailable"
                                         @click.prevent="openMotorOutputReorderDialog"
                                         v-html="$t('motorOutputReorderDialogOpen')"
-                                    ></a>
+                                    ></a> -->
                                     <a
                                         href="#"
                                         id="escDshotDirectionDialog-Open"
                                         class="tool regular-button"
+                                        v-if="digitalProtocolConfigured"
                                         @click.prevent="openEscDshotDirectionDialog"
                                         v-html="$t('escDshotDirectionDialog-Open')"
                                     ></a>
@@ -554,9 +556,9 @@ import { computed, ref, watch, onMounted, onUnmounted, nextTick } from "vue";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "@/components/elements/WikiButton.vue";
 import { useFlightControllerStore } from "@/stores/fc";
+import { useDialog } from "@/composables/useDialog";
 import { mixerList } from "@/js/model";
 import { getMixerImageSrc } from "@/js/utils/common";
-// Needed for some legacy dialogs if we still use them, or fetching SVG
 import EscProtocols from "@/js/utils/EscProtocols";
 import semver from "semver";
 import MSP from "@/js/msp";
@@ -570,6 +572,7 @@ import GUI from "@/js/gui";
 const API_VERSION_1_47 = "1.47.0";
 
 const fcStore = useFlightControllerStore();
+const dialog = useDialog();
 
 onMounted(async () => {
     // Request MSP data
@@ -846,7 +849,7 @@ function computeAndUpdateDisplay(sensor_data) {
             totalCount++;
         }
     }
-    const rms = Math.sqrt(totalSq / totalCount);
+    const rms = totalCount > 0 ? Math.sqrt(totalSq / totalCount) : 0;
 
     rawDataDisplay.value = {
         x: `${sensor_data[0].toFixed(2)} ( ${maxRead[0].toFixed(2)} )`,
@@ -942,6 +945,7 @@ onMounted(() => {
 onUnmounted(() => {
     if (pollingIntervalId) clearInterval(pollingIntervalId);
     if (powerPollingIntervalId) clearInterval(powerPollingIntervalId);
+    document.removeEventListener("keydown", disableMotorTestOnKey);
 });
 
 const reverseMotorDir = computed({
@@ -983,25 +987,73 @@ watch(
     { immediate: true },
 );
 
+// Motor Reordering Availability Check - matches legacy motors.js logic
 const isMotorReorderingAvailable = computed(() => {
-    // Logic from motors.js update_model
-    const mixerIndex = fcStore.mixerConfig.mixer - 1;
-    // Check if mixer exists in MotorOutputReorderConfig (requires importing it or replicating logic)
-    // For now, assuming if it's not custom and has motors, maybe?
-    // Actually, let's look at motors.js again roughly.
-    // mixerList[mixer - 1].name in motorOutputReorderConfig && ...
-    // I'll skip the `motorOutputReorderConfig` check for a moment and focus on the store data
-    return fcStore.motorOutputOrder && fcStore.motorOutputOrder.length > 0;
+    const mixer = fcStore.mixerConfig.mixer;
+    if (!mixer || mixer < 1 || mixer > mixerList.length) {
+        return false;
+    }
+
+    const mixerName = mixerList[mixer - 1]?.name;
+    if (!mixerName) {
+        return false;
+    }
+
+    // Check if mixer is supported by MotorOutputReorderConfig
+    // These are the mixer names that have configurations defined in MotorOutputReorderingConfig.js
+    const supportedMixers = [
+        "Quad X",
+        "Quad X 1234",
+        "Quad +",
+        "Tricopter",
+        "Hex +",
+        "Hex X",
+        "Octo Flat +",
+        "Octo Flat X",
+        "Octo X8",
+        "Bicopter",
+        "V-tail Quad",
+        "A-tail Quad",
+        "Y4",
+        "Y6",
+    ];
+
+    return supportedMixers.includes(mixerName) && fcStore.motorOutputOrder && fcStore.motorOutputOrder.length > 0;
 });
 
+// Legacy dialog handlers - these need to be migrated from jQuery components to Vue
+// The original MotorOutputReorderingComponent and EscDshotDirectionComponent are jQuery-based
+// and load Body.html templates. These need proper Vue migration.
 const openMotorOutputReorderDialog = () => {
-    console.log("Open Motor Output Reorder Dialog");
-    // TODO: Implement dialog opening logic
+    console.warn(
+        "Motor Output Reorder Dialog not yet implemented - requires migration of MotorOutputReorderingComponent from jQuery to Vue",
+    );
+    // TODO: Migrate MotorOutputReorderingComponent to Vue component
+    // Original implementation created new MotorOutputReorderingComponent(contentDiv, callback, config, motorStop, motorSpin)
+    // and loaded Body.html with jQuery dialog logic
 };
 
 const openEscDshotDirectionDialog = () => {
-    console.log("Open ESC Dshot Direction Dialog");
-    // TODO: Implement dialog opening logic
+    // Calculate motor configuration
+    const mixer = fcStore.mixerConfig.mixer;
+    const numberOfMotors = mixer > 0 && mixer <= mixerList.length ? mixerList[mixer - 1].motors : 0;
+
+    const motorConfig = {
+        escProtocolIsDshot: digitalProtocolConfigured.value,
+        numberOfMotors: numberOfMotors,
+        motorStopValue: minSliderValue.value,
+        motorSpinValue: Math.round((minSliderValue.value + maxSliderValue.value) / 2),
+    };
+
+    dialog.open(
+        "EscDshotDirectionDialog",
+        { motorConfig },
+        {
+            close: () => {
+                dialog.close();
+            },
+        },
+    );
 };
 
 // ESC Protocol Logic
