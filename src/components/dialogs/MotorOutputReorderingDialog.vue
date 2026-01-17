@@ -264,6 +264,7 @@ const onStartButtonClicked = async () => {
 
 const startOver = () => {
     showSaveButtons.value = false;
+    actionHintText.value = window.i18n.getMessage("motorOutputReorderDialogSelectSpinningMotor");
     startUserInteraction();
 };
 
