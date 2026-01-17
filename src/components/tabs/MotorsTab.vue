@@ -1485,13 +1485,39 @@ watch(zeroThrottleValue, (val) => {
     }
 });
 
+// Buffering for motor commands to prevent MSP queue overflow
+let bufferingSetMotor = [];
+let bufferDelay = null;
+
+const sendBufferedMotorCommand = () => {
+    if (bufferingSetMotor.length > 0) {
+        // Only send the last buffered values
+        const values = bufferingSetMotor.pop();
+        sendMotorCommand(values);
+        bufferingSetMotor = [];
+    }
+    bufferDelay = null;
+};
+
 const onMotorSliderChange = (index) => {
-    // Triggered by input event
+    // Buffer motor values and send after 10ms delay
+    bufferingSetMotor.push([...motorValues.value]);
+
+    if (!bufferDelay) {
+        bufferDelay = setTimeout(sendBufferedMotorCommand, 10);
+    }
 };
 
 const onMasterSliderChange = () => {
     for (let i = 0; i < numberOfValidOutputs.value; i++) {
         motorValues.value[i] = masterValue.value;
+    }
+
+    // Buffer motor values and send after 10ms delay
+    bufferingSetMotor.push([...motorValues.value]);
+
+    if (!bufferDelay) {
+        bufferDelay = setTimeout(sendBufferedMotorCommand, 10);
     }
 };
 
@@ -1523,7 +1549,6 @@ const onSliderWheel = (index, event) => {
     }
 };
 
-let motorUpdateInterval = null;
 const ignoreKeys = ["PageUp", "PageDown", "End", "Home", "ArrowUp", "ArrowDown", "AltLeft", "AltRight", "Tab"];
 
 const disableMotorTestOnKey = (e) => {
@@ -1545,26 +1570,20 @@ watch(motorsTestingEnabled, (enabled) => {
 
         MSP.send_message(MSPCodes.MSP2_SEND_DSHOT_COMMAND, buffer);
 
-        // Start sending motor updates
-        motorUpdateInterval = setInterval(() => {
-            const buffer = [];
-            for (let i = 0; i < numberOfValidOutputs.value; i++) {
-                buffer.push(motorValues.value[i]);
-            }
-            MSP.send_message(MSPCodes.MSP_SET_MOTOR, buffer, false, false);
-        }, 10); // 100hz updates
-
         document.addEventListener("keydown", disableMotorTestOnKey);
     } else {
-        if (motorUpdateInterval) {
-            clearInterval(motorUpdateInterval);
-            motorUpdateInterval = null;
-        }
         motorValues.value.fill(zeroThrottleValue.value);
         masterValue.value = zeroThrottleValue.value;
 
-        // Disarm
-        MSP.send_message(MSPCodes.MSP_SET_MOTOR, Array(8).fill(0), false, false);
+        // Clear any pending buffered commands
+        if (bufferDelay) {
+            clearTimeout(bufferDelay);
+            bufferDelay = null;
+            bufferingSetMotor = [];
+        }
+
+        // Stop all motors
+        sendMotorCommand(Array(8).fill(0));
 
         document.removeEventListener("keydown", disableMotorTestOnKey);
     }
@@ -1629,11 +1648,15 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-    if (motorUpdateInterval) clearInterval(motorUpdateInterval);
     if (telemetryInterval) clearInterval(telemetryInterval);
+    // Clear any pending buffered commands
+    if (bufferDelay) {
+        clearTimeout(bufferDelay);
+        bufferDelay = null;
+    }
     // ensure disarmed safety
     if (motorsTestingEnabled.value) {
-        MSP.send_message(MSPCodes.MSP_SET_MOTOR, Array(8).fill(0), false, false);
+        sendMotorCommand(Array(8).fill(0));
     }
 });
 </script>

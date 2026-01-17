@@ -18,12 +18,10 @@ export function useMotorConfiguration(motorsState, motorsTestingEnabled, stopMot
      */
     const handleChange = (key, newValue, oldValue) => {
         if (newValue !== oldValue) {
-            console.log(`[Motors] Config changed: ${key} = ${newValue} (was ${oldValue})`);
             motorsState.trackChange(key, newValue);
 
             // CRITICAL SAFETY: Stop motor testing if any config changes
             if (motorsTestingEnabled.value) {
-                console.warn("[Motors] Config changed during testing - stopping motors");
                 stopMotorTesting();
             }
         }
