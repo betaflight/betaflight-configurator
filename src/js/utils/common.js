@@ -34,7 +34,7 @@ export function isInt(n) {
 export function getMixerImageSrc(mixerIndex, reverseMotorDir) {
     const reverse = reverseMotorDir ? "_reversed" : "";
 
-    return `./resources/motor_order/${mixerList[mixerIndex - 1].image}${reverse}.svg`;
+    return `/resources/motor_order/${mixerList[mixerIndex - 1].image}${reverse}.svg`;
 }
 
 export function getTextWidth(text) {

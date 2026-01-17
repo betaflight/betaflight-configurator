@@ -1,19 +1,29 @@
 <template>
     <dialog ref="dialogRef" class="escDshotDirection-dialog">
         <div class="escDshotDirection-Component">
-            <h3 class="escDshotDirection-ComponentHeader" v-html="$t('escDshotDirectionDialog-Title')"></h3>
+            <h3 class="escDshotDirection-ComponentHeader" v-html="i18nMessage('escDshotDirectionDialog-Title')"></h3>
+
+            <!-- Mixer Preview - Always visible -->
+            <div v-if="!hasConfigErrors" id="escDshotDirectionDialog-MixerPreview" class="grey">
+                <img
+                    id="escDshotDirectionDialog-MixerPreviewImg"
+                    :src="mixerPreviewSrc"
+                    alt="Mixer Preview"
+                    @error="(e) => console.error('Image load error:', e.target.src)"
+                />
+            </div>
 
             <!-- Configuration Errors -->
             <div v-if="hasConfigErrors" class="componentContent" id="escDshotDirectionDialog-ConfigErrors">
                 <div
                     v-if="!escProtocolIsDshot"
                     class="escDshotDirectionErrorTextBlock"
-                    v-html="$t('escDshotDirectionDialog-WrongProtocolText')"
+                    v-html="i18nMessage('escDshotDirectionDialog-WrongProtocolText')"
                 ></div>
                 <div
                     v-if="numberOfMotors <= 0"
                     class="escDshotDirectionErrorTextBlock"
-                    v-html="$t('escDshotDirectionDialog-WrongMixerText')"
+                    v-html="i18nMessage('escDshotDirectionDialog-WrongMixerText')"
                 ></div>
             </div>
 
@@ -23,10 +33,6 @@
                 class="componentContent"
                 id="escDshotDirectionDialog-MainContent"
             >
-                <div id="escDshotDirectionDialog-MixerPreview" class="grey">
-                    <img :src="mixerPreviewSrc" alt="Mixer Preview" />
-                </div>
-
                 <!-- Normal Mode -->
                 <div v-if="!wizardMode" id="escDshotDirectionDialog-NormalDialog" class="display-contents">
                     <h4
@@ -34,7 +40,7 @@
                         :class="{ 'red-text': motorIsSpinning }"
                         v-html="actionHintText"
                     ></h4>
-                    <h4 v-html="$t('escDshotDirectionDialog-SelectMotorSafety')"></h4>
+                    <h4 v-html="i18nMessage('escDshotDirectionDialog-SelectMotorSafety')"></h4>
 
                     <div id="escDshotDirectionDialog-SelectMotorButtonsWrapper">
                         <a
@@ -65,7 +71,7 @@
                             :class="{ 'red-text': motorIsSpinning }"
                             v-html="secondHintText"
                         ></h4>
-                        <h4 v-html="$t('escDshotDirectionDialog-SetDirectionHintSafety')"></h4>
+                        <h4 v-html="i18nMessage('escDshotDirectionDialog-SetDirectionHintSafety')"></h4>
 
                         <div id="escDshotDirectionDialog-CommandsWrapper">
                             <a
@@ -91,7 +97,7 @@
                                 {{ reverseButtonText }}
                             </a>
                         </div>
-                        <h4 v-html="$t('escDshotDirectionDialog-SettingsAutoSaved')"></h4>
+                        <h4 v-html="i18nMessage('escDshotDirectionDialog-SettingsAutoSaved')"></h4>
                     </div>
                 </div>
 
@@ -102,12 +108,12 @@
                         href="#"
                         class="regular-button"
                         @click.prevent="onSpinWizardClick"
-                        v-html="$t('escDshotDirectionDialog-SpinWizard')"
+                        v-html="i18nMessage('escDshotDirectionDialog-SpinWizard')"
                     ></a>
 
                     <div v-if="wizardSpinning" id="escDshotDirectionDialog-SpinningWizard" class="display-contents">
-                        <h4 v-html="$t('escDshotDirectionDialog-WizardActionHint')"></h4>
-                        <h4 v-html="$t('escDshotDirectionDialog-WizardActionHintSecondLine')"></h4>
+                        <h4 v-html="i18nMessage('escDshotDirectionDialog-WizardActionHint')"></h4>
+                        <h4 v-html="i18nMessage('escDshotDirectionDialog-WizardActionHintSecondLine')"></h4>
 
                         <div id="escDshotDirectionDialog-WizardMotorButtons">
                             <a
@@ -126,9 +132,9 @@
                             href="#"
                             class="regular-button"
                             @click.prevent="onStopWizardClick"
-                            v-html="$t('escDshotDirectionDialog-StopWizard')"
+                            v-html="i18nMessage('escDshotDirectionDialog-StopWizard')"
                         ></a>
-                        <h4 v-html="$t('escDshotDirectionDialog-SettingsAutoSaved')"></h4>
+                        <h4 v-html="i18nMessage('escDshotDirectionDialog-SettingsAutoSaved')"></h4>
                     </div>
                 </div>
             </div>
@@ -142,7 +148,7 @@
                 <div>
                     <p
                         class="escDshotDirectionDialog-RiskNoticeText"
-                        v-html="$t('escDshotDirectionDialog-RiskNotice')"
+                        v-html="i18nMessage('escDshotDirectionDialog-RiskNotice')"
                     ></p>
                     <div class="escDshotDirectionToggleParentContainer">
                         <div class="escDshotDirectionToggleNarrow">
@@ -156,13 +162,13 @@
                         <div class="escDshotDirectionDialog-ToggleWide">
                             <span
                                 class="motorsEnableTestMode escDshotDirectionDialog-RiskNoticeText"
-                                v-html="$t('escDshotDirectionDialog-UnderstandRisks')"
+                                v-html="i18nMessage('escDshotDirectionDialog-UnderstandRisks')"
                             ></span>
                         </div>
                     </div>
                     <div
                         class="escDshotDirectionDialog-InformationNotice"
-                        v-html="$t('escDshotDirectionDialog-InformationNotice')"
+                        v-html="i18nMessage('escDshotDirectionDialog-InformationNotice')"
                     ></div>
 
                     <div
@@ -175,12 +181,12 @@
                                 href="#"
                                 class="regular-button escDshotDirectionDialog-StartButton"
                                 @click.prevent="startWizardMode"
-                                v-html="$t('escDshotDirectionDialog-StartWizard')"
+                                v-html="i18nMessage('escDshotDirectionDialog-StartWizard')"
                             ></a>
                         </div>
                         <div
                             class="escDshotDirectionDialog-Description"
-                            v-html="$t('escDshotDirectionDialog-WizardInformationNotice')"
+                            v-html="i18nMessage('escDshotDirectionDialog-WizardInformationNotice')"
                         ></div>
                     </div>
 
@@ -194,12 +200,12 @@
                                 href="#"
                                 class="regular-button escDshotDirectionDialog-StartButton"
                                 @click.prevent="startNormalMode"
-                                v-html="$t('escDshotDirectionDialog-Start')"
+                                v-html="i18nMessage('escDshotDirectionDialog-Start')"
                             ></a>
                         </div>
                         <div
                             class="escDshotDirectionDialog-Description"
-                            v-html="$t('escDshotDirectionDialog-NormalInformationNotice')"
+                            v-html="i18nMessage('escDshotDirectionDialog-NormalInformationNotice')"
                         ></div>
                     </div>
                 </div>
@@ -245,6 +251,11 @@ const currentSpinningButton = ref(-1);
 const spinningDirection = ref(null);
 const wizardMotorDirections = ref([]);
 
+// Translation helper
+const i18nMessage = (key) => {
+    return window.i18n.getMessage(key);
+};
+
 // Motor driver
 let motorDriver = null;
 let directionButtonTimeout = null;
@@ -258,7 +269,11 @@ const ALL_MOTORS = DshotCommand.ALL_MOTORS;
 
 // Mixer preview
 const mixerPreviewSrc = computed(() => {
-    return getMixerImageSrc(fcStore.mixerConfig.mixer, fcStore.mixerConfig.reverseMotorDir, fcStore.config.apiVersion);
+    const mixer = fcStore.mixerConfig?.mixer || 1;
+    const reverseMotorDir = fcStore.mixerConfig?.reverseMotorDir || false;
+    const src = getMixerImageSrc(mixer, reverseMotorDir);
+    console.log("Mixer image src:", src, "mixer:", mixer, "reverseMotorDir:", reverseMotorDir);
+    return src;
 });
 
 // Motor buttons

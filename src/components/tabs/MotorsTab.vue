@@ -48,15 +48,14 @@
                                     </div>
                                 </div>
                                 <div class="btn motor_tool_buttons">
-                                    <!-- TODO: Motor Output Reorder button hidden until migrated to Vue -->
-                                    <!-- <a
+                                    <a
                                         href="#"
                                         id="motorOutputReorderDialogOpen"
                                         class="tool regular-button"
                                         v-if="isMotorReorderingAvailable"
                                         @click.prevent="openMotorOutputReorderDialog"
                                         v-html="$t('motorOutputReorderDialogOpen')"
-                                    ></a> -->
+                                    ></a>
                                     <a
                                         href="#"
                                         id="escDshotDirectionDialog-Open"
@@ -1021,16 +1020,33 @@ const isMotorReorderingAvailable = computed(() => {
     return supportedMixers.includes(mixerName) && fcStore.motorOutputOrder && fcStore.motorOutputOrder.length > 0;
 });
 
-// Legacy dialog handlers - these need to be migrated from jQuery components to Vue
-// The original MotorOutputReorderingComponent and EscDshotDirectionComponent are jQuery-based
-// and load Body.html templates. These need proper Vue migration.
+// Motor dialog handlers
 const openMotorOutputReorderDialog = () => {
-    console.warn(
-        "Motor Output Reorder Dialog not yet implemented - requires migration of MotorOutputReorderingComponent from jQuery to Vue",
+    const mixer = fcStore.mixerConfig.mixer;
+    if (!mixer || mixer < 1 || mixer > mixerList.length) {
+        console.error("Invalid mixer configuration");
+        return;
+    }
+
+    const mixerName = mixerList[mixer - 1]?.name;
+    if (!mixerName) {
+        console.error("Mixer name not found");
+        return;
+    }
+
+    dialog.open(
+        "MotorOutputReorderingDialog",
+        {
+            droneConfiguration: mixerName,
+            motorStopValue: minSliderValue.value,
+            motorSpinValue: Math.round((minSliderValue.value + maxSliderValue.value) / 2),
+        },
+        {
+            close: () => {
+                dialog.close();
+            },
+        },
     );
-    // TODO: Migrate MotorOutputReorderingComponent to Vue component
-    // Original implementation created new MotorOutputReorderingComponent(contentDiv, callback, config, motorStop, motorSpin)
-    // and loaded Body.html with jQuery dialog logic
 };
 
 const openEscDshotDirectionDialog = () => {

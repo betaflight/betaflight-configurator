@@ -34,6 +34,18 @@ function serveFileFromDirectory(directory) {
 
         try {
             const fileContents = readFileSync(absolutePath, "utf-8");
+
+            // Set Content-Type based on file extension
+            if (filePath.endsWith(".svg")) {
+                res.setHeader("Content-Type", "image/svg+xml");
+            } else if (filePath.endsWith(".json")) {
+                res.setHeader("Content-Type", "application/json");
+            } else if (filePath.endsWith(".css")) {
+                res.setHeader("Content-Type", "text/css");
+            } else if (filePath.endsWith(".js")) {
+                res.setHeader("Content-Type", "application/javascript");
+            }
+
             res.end(fileContents);
         } catch (e) {
             // If file not found or any other error, pass to the next middleware
