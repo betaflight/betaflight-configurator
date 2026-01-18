@@ -198,6 +198,10 @@ MspHelper.prototype.process_data = function (dataHandler) {
     let char = "";
     let flags = 0;
 
+    // Reset DataView offset to 0 to ensure each message is parsed from the start
+    // This creates an instance property that shadows the shared prototype offset
+    data.offset = 0;
+
     if (!crcError) {
         if (!dataHandler.unsupported) {
             switch (code) {
@@ -581,6 +585,10 @@ MspHelper.prototype.process_data = function (dataHandler) {
                             buff.push(char);
                         }
                     }
+                    // Handle final buffered entry if firmware doesn't send trailing semicolon
+                    if (buff.length > 0) {
+                        FC.AUX_CONFIG.push(String.fromCharCode.apply(null, buff));
+                    }
                     break;
                 case MSPCodes.MSP_PIDNAMES:
                     FC.PID_NAMES = []; // empty the array as new data is coming in
@@ -597,6 +605,10 @@ MspHelper.prototype.process_data = function (dataHandler) {
                         } else {
                             buff.push(char);
                         }
+                    }
+                    // Handle final buffered entry if firmware doesn't send trailing semicolon
+                    if (buff.length > 0) {
+                        FC.PID_NAMES.push(String.fromCharCode.apply(null, buff));
                     }
                     break;
                 case MSPCodes.MSP_BOXIDS:
