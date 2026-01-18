@@ -128,7 +128,7 @@ export function useBoardSelection(params) {
         state.targets = targets;
 
         const result = getConfig("selected_board");
-        if (result.selected_board && state.boardOptions.find((b) => b.target === result.selected_board)) {
+        if (result.selected_board && state.boardOptions.some((b) => b.target === result.selected_board)) {
             state.selectedBoard = result.selected_board;
         }
     };
@@ -147,19 +147,19 @@ export function useBoardSelection(params) {
         state.boardOptions = [];
         state.firmwareVersionOptions = [];
 
-        if (!GUI.connect_lock) {
+        if (GUI.connect_lock) {
+            state.selectedBoard = undefined;
+        } else {
             try {
                 const targets = await buildApi.loadTargets();
                 await populateTargetList(targets);
 
-                if (currentlySelectedBoard && state.boardOptions.find((b) => b.target === selectedBoardTarget)) {
+                if (currentlySelectedBoard && state.boardOptions.some((b) => b.target === selectedBoardTarget)) {
                     state.selectedBoard = currentlySelectedBoard;
                 }
             } catch (error) {
                 console.error(`${logHead} Failed to load targets:`, error);
             }
-        } else {
-            state.selectedBoard = undefined;
         }
 
         // Re-filter firmware versions based on new build type if a board is selected
@@ -211,27 +211,30 @@ export function useBoardSelection(params) {
         if (!detectBoardElement?.classList.contains("disabled")) {
             detectBoardElement?.classList.add("disabled");
 
-            if (!GUI.connect_lock) {
-                // Pass a callback to AutoDetect that sets the selected board if found
-                AutoDetect.verifyBoard(async (detectedBoardName) => {
-                    let found = state.boardOptions.find((b) => b.target === detectedBoardName);
-                    if (!found) {
-                        // Try to find a match ignoring case and whitespace
-                        found = state.boardOptions.find(
-                            (b) => b.target.trim().toLowerCase() === String(detectedBoardName).trim().toLowerCase(),
-                        );
-                    }
-                    if (found) {
-                        state.selectedBoard = null;
-                        await nextTick();
-                        state.selectedBoard = found;
-                        await nextTick();
-                        await onBoardChange();
-                        return true;
-                    }
-                    return false;
-                });
+            if (GUI.connect_lock) {
+                setTimeout(() => detectBoardElement?.classList.remove("disabled"), 2000);
+                return;
             }
+
+            // Pass a callback to AutoDetect that sets the selected board if found
+            AutoDetect.verifyBoard(async (detectedBoardName) => {
+                let found = state.boardOptions.find((b) => b.target === detectedBoardName);
+                if (!found) {
+                    // Try to find a match ignoring case and whitespace
+                    found = state.boardOptions.find(
+                        (b) => b.target.trim().toLowerCase() === String(detectedBoardName).trim().toLowerCase(),
+                    );
+                }
+                if (found) {
+                    state.selectedBoard = null;
+                    await nextTick();
+                    state.selectedBoard = found;
+                    await nextTick();
+                    await onBoardChange();
+                    return true;
+                }
+                return false;
+            });
 
             setTimeout(() => detectBoardElement?.classList.remove("disabled"), 2000);
         }

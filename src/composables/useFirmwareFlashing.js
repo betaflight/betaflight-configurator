@@ -230,7 +230,7 @@ export function useFirmwareFlashing(params = {}) {
 
             let baud = 115200;
             if (flashManualBaud) {
-                baud = parseInt(flashManualBaudRate) || 115200;
+                baud = Number.parseInt(flashManualBaudRate) || 115200;
             }
 
             tracking.sendEvent(tracking.EVENT_CATEGORIES.FLASHING, "Flashing", {
@@ -517,13 +517,13 @@ export const cleanUnifiedConfigFile = (input, options) => {
             inComment = true;
         }
 
-        if (!inComment && input.charCodeAt(i) > 255) {
+        if (!inComment && input.codePointAt(i) > 255) {
             flashingMessage?.(t?.("firmwareFlasherConfigCorrupted"), flashMessageTypes?.INVALID);
             gui_log?.(t?.("firmwareFlasherConfigCorruptedLogMessage"));
             return null;
         }
 
-        if (input.charCodeAt(i) > 255) {
+        if (input.codePointAt(i) > 255) {
             output.push("_");
         } else {
             output.push(input.charAt(i));

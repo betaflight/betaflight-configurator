@@ -192,13 +192,15 @@ export function useCloudBuild(params) {
                 }
 
                 // Parse custom defines from input
-                if (customDefinesInput && customDefinesInput.value) {
+                if (customDefinesInput?.value) {
                     const customDefinesText = customDefinesInput.value.value || "";
                     customDefinesText
                         .split(" ")
                         .map((element) => element.trim())
                         .forEach((v) => {
-                            if (v) request.options.push(v);
+                            if (v) {
+                                request.options.push(v);
+                            }
                         });
                 }
             }
@@ -232,7 +234,7 @@ export function useCloudBuild(params) {
         let statusResponse = await buildApi.requestBuildStatus(response.key);
 
         // Check if build is already cached (instant success)
-        if (statusResponse && statusResponse.status === "success") {
+        if (statusResponse?.status === "success") {
             await processBuildSuccess(response, statusResponse, "Cached", isConfigLocal);
             return response;
         }

@@ -3,7 +3,14 @@
         <div class="content_wrapper">
             <div class="tab_title">{{ $t("tabFirmwareFlasher") }}</div>
             <div class="cf_doc_version_bt">
-                <a id="button-documentation" href="" target="_blank" rel="noopener noreferrer"></a>
+                <a
+                    id="button-documentation"
+                    href=""
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    :aria-label="$t('betaflightSupportButton')"
+                    >{{ $t("betaflightSupportButton") }}</a
+                >
             </div>
             <div ref="tabSponsor" class="tab_sponsor"></div>
             <div v-if="state.flashingInProgress" class="data-loading flashing-wait">
@@ -260,7 +267,6 @@
                                         ref="corebuildModeCheckbox"
                                         class="corebuild_mode vue-switch-input"
                                         type="checkbox"
-                                        name="coreBuildModeCheckbox"
                                         @change="handleCoreBuildModeChange"
                                     />
                                     <span class="vue-switch-slider" aria-hidden="true"></span>
@@ -563,7 +569,7 @@
 
         <div class="content_toolbar toolbar_fixed_bottom">
             <div class="info">
-                <a name="progressbar"></a>
+                <div id="progressbar"></div>
                 <progress ref="progressBar" class="progress" value="0" min="0" max="100"></progress>
                 <span
                     ref="progressLabel"
@@ -787,26 +793,7 @@ export default defineComponent({
 
         // Template refs for all interactive elements
         // Checkboxes
-        const expertModeCheckbox = ref(null);
-        const showDevelopmentReleasesCheckbox = ref(null);
-        const updatingCheckbox = ref(null);
-        const flashOnConnectCheckbox = ref(null);
-        const flashOnConnectWrapper = ref(null);
-        const eraseChipCheckbox = ref(null);
-        const flashManualBaudCheckbox = ref(null);
         const corebuildModeCheckbox = ref(null);
-
-        // Selects
-        const buildTypeSelect = ref(null);
-        const boardSelect = ref(null);
-        const firmwareVersionSelect = ref(null);
-        const flashManualBaudRate = ref(null);
-        const radioProtocolsSelect = ref(null);
-        const telemetryProtocolsSelect = ref(null);
-        const osdProtocolsSelect = ref(null);
-        const motorProtocolsSelect = ref(null);
-        const optionsSelect = ref(null);
-        const commitsSelect = ref(null);
 
         // Inputs
         const customDefinesInput = ref(null);
@@ -1422,7 +1409,9 @@ export default defineComponent({
                     $t("fileSystemPickerFiles", { typeof: fileType.toUpperCase() }),
                     `.${fileType.toLowerCase()}`,
                 );
-                if (!file) return false;
+                if (!file) {
+                    return false;
+                }
 
                 await FileSystem.writeFile(
                     file,
@@ -1527,7 +1516,9 @@ export default defineComponent({
             EventBus.$off("port-handler:auto-select-usb-device");
             EventBus.$off("port-handler:device-removed");
 
-            if (callback) callback();
+            if (callback) {
+                callback();
+            }
         };
 
         // Flashing methods
@@ -1784,7 +1775,7 @@ export default defineComponent({
             flashingMessage,
             flashProgress,
             FLASH_MESSAGE_TYPES,
-            getSelectedBuildType: () => parseInt(state.selectedBuildType, 10),
+            getSelectedBuildType: () => Number.parseInt(state.selectedBuildType, 10),
             logHead,
         });
 
@@ -1902,7 +1893,7 @@ export default defineComponent({
         };
 
         const handleFlashManualBaudRateChange = () => {
-            const baud = parseInt(state.flashManualBaudRate);
+            const baud = Number.parseInt(state.flashManualBaudRate);
             setConfig({ flash_manual_baud_rate: baud });
         };
 
@@ -1960,7 +1951,7 @@ export default defineComponent({
                 initiateFlashing,
                 flashMessageTypes: FLASH_MESSAGE_TYPES,
                 t: $t,
-                progressCallback: (payload) => {
+                progressCallback: () => {
                     /* callback reserved for future use */
                 },
             };
@@ -3011,12 +3002,17 @@ export default defineComponent({
     width: 100%;
     min-width: 240px;
     max-width: 440px;
+    position: relative;
+    z-index: 1002; /* Lower than board select, but active state will be above expert options */
 }
 
 :deep(.standard-select) {
     min-height: 28px;
     font-size: 12px;
     flex: 1;
+    z-index: 1001 !important;
+    font-family: "Open Sans", "Segoe UI", Tahoma, sans-serif;
+    position: relative;
 }
 
 /* Dark background and White text */
@@ -3047,16 +3043,29 @@ export default defineComponent({
 
 /* Dropdown list styling */
 :deep(.standard-select .multiselect__content-wrapper) {
+    position: absolute;
+    display: block;
     background: #222;
     border: 1px solid #444;
+    border-top: none;
+    z-index: 99999 !important; /* Extremely high to clear all elements including switchery (1000) */
+    max-height: 250px;
+    overflow-y: auto;
+    width: 100%;
+    left: 0;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.6);
 }
 
 :deep(.standard-select .multiselect__option) {
-    color: #fff;
+    font-size: 12px !important;
+    color: #fff !important;
+    padding: 8px 12px;
+    min-height: 30px;
 }
 
 :deep(.standard-select .multiselect__option--highlight) {
-    background: #0056b3;
+    background: #007bff !important; /* Australian Blue */
+    color: #fff !important;
 }
 
 /* 1. Reset the internal input to remove borders/outlines */
@@ -3086,26 +3095,12 @@ export default defineComponent({
     border: none !important;
 }
 
-/* 4. Ensure the tags container (the main box) remains the only border */
-:deep(.standard-select .multiselect__tags) {
-    min-height: 28px;
-    border: 1px solid #444; /* This is your only visible border */
-    background: #222;
-    padding: 0 30px 0 8px;
-}
-
-/* 5. Ensure the selected single value matches page font size */
+/* 4. Ensure the selected single value matches page font size */
 :deep(.standard-select .multiselect__single) {
     font-size: 12px !important;
     line-height: 26px;
     padding: 0 0 0 2px;
     margin-bottom: 0;
-}
-
-/* Ensure the wrapper is the top layer in its stacking context */
-.select-wrapper.fixed-width {
-    position: relative;
-    z-index: 1002; /* Lower than board select, but active state will be above expert options */
 }
 
 /* Firmware version dropdown should appear above expert options but below board select when both open */
@@ -3161,42 +3156,6 @@ export default defineComponent({
 
 :deep(.standard-select.multiselect--active .multiselect__content) {
     z-index: 10001 !important;
-}
-
-/* Force the Multiselect to overlap everything */
-:deep(.standard-select) {
-    z-index: 1001 !important;
-    font-family: "Open Sans", "Segoe UI", Tahoma, sans-serif;
-    position: relative;
-}
-
-/* Style the actual dropdown list (the content-wrapper) */
-:deep(.standard-select .multiselect__content-wrapper) {
-    position: absolute;
-    display: block;
-    background: #222; /* Matches your dark theme */
-    border: 1px solid #444;
-    border-top: none;
-    z-index: 99999 !important; /* Extremely high to clear all elements including switchery (1000) */
-    max-height: 250px;
-    overflow-y: auto;
-    width: 100%;
-    left: 0;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.6);
-}
-
-/* Ensure font size and colour persist in the list */
-:deep(.standard-select .multiselect__option) {
-    font-size: 12px !important;
-    color: #fff !important;
-    padding: 8px 12px;
-    min-height: 30px;
-}
-
-/* Highlighted item in the list */
-:deep(.standard-select .multiselect__option--highlight) {
-    background: #007bff !important; /* Australian Blue */
-    color: #fff !important;
 }
 
 :deep(.standard-select .multiselect__option--selected) {
