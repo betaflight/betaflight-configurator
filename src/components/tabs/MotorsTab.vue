@@ -1560,7 +1560,7 @@ const disableMotorTestOnKey = (e) => {
     }
 };
 
-watch(motorsTestingEnabled, (enabled) => {
+watch(motorsTestingEnabled, async (enabled) => {
     if (enabled) {
         const buffer = [];
         buffer.push(DshotCommand.dshotCommandType_e.DSHOT_CMD_TYPE_BLOCKING);
@@ -1584,6 +1584,23 @@ watch(motorsTestingEnabled, (enabled) => {
 
         // Stop all motors
         sendMotorCommand(Array(8).fill(0));
+
+        // Sync Switchery visual state with programmatic change
+        await nextTick();
+        const checkbox = document.getElementById("motorsEnableTestMode");
+        if (checkbox) {
+            // Remove existing Switchery element
+            const switcheryElement = checkbox.nextElementSibling;
+            if (switcheryElement && switcheryElement.classList.contains("switchery")) {
+                switcheryElement.remove();
+            }
+            // Add the toggle class back so GUI.switchery() will reinitialize
+            if (!checkbox.classList.contains("toggle")) {
+                checkbox.classList.add("toggle");
+            }
+            // Reinitialize Switchery with correct state
+            GUI.switchery();
+        }
 
         document.removeEventListener("keydown", disableMotorTestOnKey);
     }
