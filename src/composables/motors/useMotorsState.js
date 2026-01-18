@@ -48,6 +48,9 @@ export function useMotorsState() {
             motorPoles: fcStore.motorConfig.motor_poles,
             dshotbidir: fcStore.motorConfig.use_dshot_telemetry,
             ESC_SENSOR: fcStore.motorConfig.use_esc_sensor,
+            use_unsyncedPwm: fcStore.pidAdvancedConfig.use_unsyncedPwm,
+            motor_pwm_rate: fcStore.pidAdvancedConfig.motor_pwm_rate,
+            motorIdle: fcStore.pidAdvancedConfig.motorIdle,
         };
 
         // Store previous values for comparison
