@@ -222,6 +222,12 @@ async function startProcess() {
                 return;
             }
 
+            if (GUI.flashingInProgress) {
+                // tab switching disabled during firmware flashing
+                gui_log(i18n.getMessage("tabSwitchWaitForOperation"));
+                return;
+            }
+
             // Check if tab is allowed (either in allowedTabs for mode-connected tabs, or mode-loggedin tabs for logged-in users)
             const isLoginSectionTab = $(self).closest("ul").hasClass("mode-loggedin");
             const isTabAllowed = GUI.allowedTabs.includes(tab) || isLoginSectionTab;
@@ -288,9 +294,8 @@ async function startProcess() {
                         mountVueTab("options", content_ready);
                         break;
                     case "firmware_flasher":
-                        import("./tabs/firmware_flasher").then(({ firmware_flasher }) =>
-                            firmware_flasher.initialize(content_ready),
-                        );
+                        // Vue tab - use mountVueTab instead of jQuery load
+                        mountVueTab("firmware_flasher", content_ready);
                         break;
                     case "help":
                         // Vue tab - use mountVueTab instead of jQuery load

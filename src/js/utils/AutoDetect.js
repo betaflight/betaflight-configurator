@@ -1,7 +1,6 @@
 import PortHandler from "../port_handler";
 import { gui_log } from "../gui_log";
 import { i18n } from "../localization";
-import { TABS } from "../gui";
 import MspHelper from "../msp/MSPHelper";
 import FC from "../fc";
 import MSP from "../msp";
@@ -9,6 +8,7 @@ import MSPCodes from "../msp/MSPCodes";
 import semver from "semver";
 import { API_VERSION_1_45, API_VERSION_1_46 } from "../data_storage";
 import { serial } from "../serial";
+import BuildApi from "../BuildApi";
 
 /**
  *
@@ -33,21 +33,25 @@ class AutoDetect {
         MSP.read(event.detail);
     }
 
-    async verifyBoard() {
+    async verifyBoard(onBoardDetected) {
         const port = PortHandler.portPicker.selectedPort;
-
         if (!port.startsWith("virtual")) {
-            // Safely check firmware_flasher.targets (use optional chaining so this doesn't throw when undefined)
-            const isLoaded = TABS.firmware_flasher?.targets
-                ? Object.keys(TABS.firmware_flasher.targets).length > 0
-                : false;
             let result = false;
             let attempted = false;
-
+            // Ensure targets are loaded
+            if (!this._boardOptions || !Array.isArray(this._boardOptions) || this._boardOptions.length === 0) {
+                try {
+                    const buildApi = new BuildApi();
+                    this._boardOptions = await buildApi.loadTargets();
+                } catch (e) {
+                    gui_log(i18n.getMessage("firmwareFlasherNoTargetsLoaded"));
+                    return;
+                }
+            }
             try {
                 if (!PortHandler.portAvailable) {
                     gui_log(i18n.getMessage("firmwareFlasherNoValidPort"));
-                } else if (!isLoaded) {
+                } else if (!this._boardOptions || this._boardOptions.length === 0) {
                     gui_log(i18n.getMessage("firmwareFlasherNoTargetsLoaded"));
                 } else if (serial.connected || serial.connectionId) {
                     console.warn("Attempting to connect while there still is a connection", serial.connected);
@@ -55,6 +59,7 @@ class AutoDetect {
                 } else {
                     // We're about to attempt a connection: register listeners just-in-time
                     attempted = true;
+                    this._onBoardDetected = onBoardDetected;
                     serial.addEventListener("connect", this.boundHandleConnect, { once: true });
                     serial.addEventListener("disconnect", this.boundHandleDisconnect, { once: true });
 
@@ -91,39 +96,29 @@ class AutoDetect {
 
     onFinishClose() {
         const board = FC.CONFIG.boardName;
-
-        if (board) {
-            const boardSelect = $('select[name="board"]');
-            const boardSelectOptions = $('select[name="board"] option');
-            const target = boardSelect.val();
-
-            boardSelectOptions.each((_, e) => {
-                if ($(e).text() === board) {
-                    this.targetAvailable = true;
-                }
-            });
-
-            if (board !== target) {
-                boardSelect.val(board).trigger("change");
-            }
-
-            gui_log(
-                i18n.getMessage(
-                    this.targetAvailable
-                        ? "firmwareFlasherBoardVerificationSuccess"
-                        : "firmwareFlasherBoardVerficationTargetNotAvailable",
-                    { boardName: board },
-                ),
-            );
+        let found = false;
+        if (board && typeof this._onBoardDetected === "function") {
+            found = this._onBoardDetected(board);
+        } else if (board && this._boardOptions) {
+            // fallback: just check if board exists in loaded targets
+            found = this._boardOptions.some((b) => b.target === board);
         }
-
+        this.targetAvailable = !!found;
+        gui_log(
+            i18n.getMessage(
+                this.targetAvailable
+                    ? "firmwareFlasherBoardVerificationSuccess"
+                    : "firmwareFlasherBoardVerficationTargetNotAvailable",
+                { boardName: board },
+            ),
+        );
         this.cleanup();
     }
 
     async getBoardInfo() {
         await MSP.promise(MSPCodes.MSP_BOARD_INFO);
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
-            TABS.firmware_flasher.cloudBuildOptions = FC.CONFIG.buildOptions;
+            this.cloudBuildOptions = FC.CONFIG.buildOptions;
         }
         this.onFinishClose();
     }
@@ -134,8 +129,8 @@ class AutoDetect {
             await MSP.promise(MSPCodes.MSP2_GET_TEXT, mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.CRAFT_NAME));
             await MSP.promise(MSPCodes.MSP_BUILD_INFO);
 
-            // store FC.CONFIG.buildKey as the object gets destroyed after disconnect
-            TABS.firmware_flasher.cloudBuildKey = FC.CONFIG.buildKey;
+            // store FC.CONFIG.buildKey locally if needed
+            this.cloudBuildKey = FC.CONFIG.buildKey;
         }
         await this.getBoardInfo();
     }

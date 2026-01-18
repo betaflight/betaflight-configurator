@@ -28,14 +28,15 @@ export default class Sponsor {
                 return;
             }
         } catch (error) {
-            console.error("Failed to load sponsor tile: ", error);
+            console.error("[Sponsor] Failed to load sponsor tile: ", error);
         }
         this._div.hide();
     }
 
     async loadSponsorTile(name, div) {
         this._name = name;
-        this._div = div;
+        // Ensure we have a jQuery object for DOM manipulation
+        this._div = div instanceof jQuery ? div : $(div);
 
         GUI.interval_add(
             "sponsor",
