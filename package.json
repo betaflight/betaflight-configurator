@@ -73,7 +73,7 @@
     "tippy.js": "^6.3.7",
     "vite-plugin-pwa": "^1.0.3",
     "vue": "^3.5.13",
-    "vue-multiselect": "^3.0.0-beta.3"
+    "vue-multiselect": "^3.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.26.9",
