@@ -107,6 +107,24 @@ export function useMotorConfiguration(motorsState, motorsTestingEnabled, stopMot
             () => fcStore.features?.features?.isEnabled?.("ESC_SENSOR") ?? false,
             (newVal, oldVal) => handleChange("ESC_SENSOR", newVal, oldVal),
         );
+
+        // Unsynced PWM
+        watch(
+            () => fcStore.pidAdvancedConfig.use_unsyncedPwm,
+            (newVal, oldVal) => handleChange("use_unsyncedPwm", newVal, oldVal),
+        );
+
+        // Motor PWM rate
+        watch(
+            () => fcStore.pidAdvancedConfig.motor_pwm_rate,
+            (newVal, oldVal) => handleChange("motor_pwm_rate", newVal, oldVal),
+        );
+
+        // Motor idle percentage
+        watch(
+            () => fcStore.pidAdvancedConfig.motorIdle,
+            (newVal, oldVal) => handleChange("motorIdle", newVal, oldVal),
+        );
     };
 
     return {
