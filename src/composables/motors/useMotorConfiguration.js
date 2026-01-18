@@ -125,6 +125,12 @@ export function useMotorConfiguration(motorsState, motorsTestingEnabled, stopMot
             () => fcStore.pidAdvancedConfig.motorIdle,
             (newVal, oldVal) => handleChange("motorIdle", newVal, oldVal),
         );
+
+        // Idle min RPM
+        watch(
+            () => fcStore.advancedTuning.idleMinRpm,
+            (newVal, oldVal) => handleChange("idleMinRpm", newVal, oldVal),
+        );
     };
 
     return {

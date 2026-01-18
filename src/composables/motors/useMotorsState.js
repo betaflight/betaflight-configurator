@@ -51,6 +51,7 @@ export function useMotorsState() {
             use_unsyncedPwm: fcStore.pidAdvancedConfig.use_unsyncedPwm,
             motor_pwm_rate: fcStore.pidAdvancedConfig.motor_pwm_rate,
             motorIdle: fcStore.pidAdvancedConfig.motorIdle,
+            idleMinRpm: fcStore.advancedTuning.idleMinRpm,
         };
 
         // Store previous values for comparison
