@@ -60,7 +60,12 @@ export function useFirmwareFlashing(params = {}) {
             console.log(`${logHead} Using string data directly, length:`, intelHex.length);
         } else {
             // Convert binary data to string
-            const bytes = data instanceof Uint8Array ? data : data instanceof ArrayBuffer ? new Uint8Array(data) : null;
+            let bytes = null;
+            if (data instanceof Uint8Array) {
+                bytes = data;
+            } else if (data instanceof ArrayBuffer) {
+                bytes = new Uint8Array(data);
+            }
 
             if (!bytes || bytes.byteLength === 0) {
                 console.error(`${logHead} Failed: bytes is null or empty`);
@@ -146,7 +151,7 @@ export function useFirmwareFlashing(params = {}) {
      * Process firmware file (HEX or UF2) based on extension
      */
     const processFirmware = async (data, extension, options) => {
-        const { enableFlashButton, enableLoadRemoteFileButton, showLoadedFirmware, key } = options;
+        const { enableFlashButton, enableLoadRemoteFileButton, showLoadedFirmware, key, isLocalFile } = options;
 
         if (!data || !key) {
             flashingMessage?.($t?.("firmwareFlasherFailedToLoadOnlineFirmware"), FLASH_MESSAGE_TYPES?.NEUTRAL);
@@ -163,12 +168,14 @@ export function useFirmwareFlashing(params = {}) {
                     enableLoadRemoteFileButton,
                     showLoadedFirmware,
                     key,
+                    isLocalFile,
                 });
             } else if (fileExtension === "uf2") {
                 return await processUf2(data, {
                     enableLoadRemoteFileButton,
                     showLoadedFirmware,
                     key,
+                    isLocalFile,
                 });
             } else {
                 flashingMessage?.(

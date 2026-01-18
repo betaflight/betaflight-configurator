@@ -1218,6 +1218,10 @@ export default defineComponent({
             }));
         };
 
+        const sortReleases = (a, b) => {
+            return -semver.compareBuild(a.release, b.release);
+        };
+
         // Initialize UI setup on mount
         const setupUIHandlers = async () => {
             // Setup expert mode toggle
@@ -1265,7 +1269,7 @@ export default defineComponent({
 
             updateDfuExitButtonState();
 
-            await onBuildTypeChange(selectedBuildType);
+            await onBuildTypeChange();
 
             if (boardSelection.state.selectedBoard && boardSelection.state.selectedBoard !== "0") {
                 await onBoardChange();
@@ -1366,10 +1370,6 @@ export default defineComponent({
         };
 
         const populateReleases = async (target) => {
-            const sortReleases = function (a, b) {
-                return -semver.compareBuild(a.release, b.release);
-            };
-
             const releases = target.releases;
             if (releases && releases.length > 0) {
                 const build_type = state.selectedBuildType || 0;
@@ -1711,21 +1711,6 @@ export default defineComponent({
             if (response) {
                 state.targetDetail.file = response.file;
             }
-        };
-
-        const loadFirmwareWithRetry = async (url, fileLabel) => {
-            const attemptDownload = async () => await buildApi.loadTargetFirmware(url);
-
-            let firmware = await attemptDownload();
-            if (firmware) {
-                return firmware;
-            }
-
-            console.warn(`${logHead} Firmware download failed for ${fileLabel}, retrying in 4s`);
-            await new Promise((resolve) => setTimeout(resolve, 4000));
-
-            firmware = await attemptDownload();
-            return firmware;
         };
 
         const processFile = async (data, key) => {
