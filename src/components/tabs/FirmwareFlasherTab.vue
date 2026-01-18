@@ -620,7 +620,7 @@
         <dialog id="dialogUnstableFirmwareAcknowledgement">
             <h3>{{ $t("warningTitle") }}</h3>
             <div class="content">
-                <div>{{ $t("unstableFirmwareAcknowledgementDialog") }}</div>
+                <div v-html="$t('unstableFirmwareAcknowledgementDialog')"></div>
                 <div>
                     <label class="vue-switch-label">
                         <input
@@ -3201,5 +3201,28 @@ export default defineComponent({
     content: "– " !important;
     margin-right: 0.5rem !important;
     color: var(--text) !important;
+}
+
+/* Unstable firmware dialog content styling */
+#dialogUnstableFirmwareAcknowledgement {
+    .content {
+        margin-bottom: 1rem;
+
+        ul {
+            margin: 0.5rem 0;
+            padding-left: 1.5rem;
+            list-style-type: disc;
+        }
+
+        li {
+            margin: 0.25rem 0;
+            line-height: 1.5;
+        }
+
+        strong {
+            font-weight: bold;
+            color: var(--warning);
+        }
+    }
 }
 </style>
