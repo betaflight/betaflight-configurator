@@ -125,10 +125,7 @@
                                             :title="$t('firmwareFlasherOnlineSelectBoardDescription')"
                                             @click.prevent="handleDetectBoard"
                                         >
-                                            <span
-                                                ><div>{{ $t("firmwareFlasherDetectBoardButton") }}</div>
-                                                <em class="fas fa-search"></em
-                                            ></span>
+                                            <span>{{ $t("firmwareFlasherDetectBoardButton") }}</span>
                                         </a>
                                     </div>
                                 </div>
