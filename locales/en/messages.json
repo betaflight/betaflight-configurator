@@ -769,11 +769,17 @@
     "defaultWelcomeIntro": {
         "message": "Welcome to the <strong>Betaflight App</strong>, a utility designed to simplify updating, configuring and tuning of your flight controller."
     },
-    "defaultWelcomeHead": {
+    "defaultHardwareHead": {
         "message": "Hardware"
     },
-    "defaultWelcomeText": {
-        "message": "The application supports all hardware that can run Betaflight. Check flash tab for full list of hardware.<br /><br /> <a href=\"https://github.com/betaflight/blackbox-log-viewer/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Download Betaflight Blackbox Log Viewer</a><br /><br /><a href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Download Betaflight TX Lua Scripts</a><br /><br />The firmware source code can be downloaded from <a href=\"https://github.com/betaflight/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">here</a><br /><br />For legacy hardware using a CP210x USB to serial chip:<br />The latest <b>CP210x Drivers</b> can be downloaded from <a href=\"https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">here</a><br />The latest <b>Zadig</b> for Windows USB driver installation can be downloaded from <a href=\"http://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">here</a><br /><b>ImpulseRC Driver Fixer</b> can be downloaded <a href=\"https://impulserc.com/pages/downloads\" target=\"blank\" rel=\"noopener noreferrer\">here</a>"
+    "defaultHardwareText": {
+        "message": "The application supports all hardware that can run Betaflight. Check the Firmware flasher tab for full list of hardware.<br /><br />Useful hardware utilities / drivers:<ul><li>For legacy hardware using a CP210x USB to serial chip, the latest <b>CP210x Drivers</b> can be downloaded from <a href=\"https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">here</a></li><li>The latest <b>Zadig</b> for Windows USB driver installation can be downloaded from <a href=\"http://zadig.akeo.ie/\" target=\"_blank\" rel=\"noopener noreferrer\">here</a></li><li><b>ImpulseRC Driver Fixer</b> can be downloaded <a href=\"https://impulserc.com/pages/downloads\" target=\"_blank\" rel=\"noopener noreferrer\">here</a></li></ul>"
+    },
+    "defaultSoftwareHead": {
+        "message": "Software"
+    },
+    "defaultSoftwareText": {
+        "message": "Our <a href=\"https://blackbox.betaflight.com\" target=\"_blank\" rel=\"noopener noreferrer\">Blackbox Log Viewer</a> is available as an online app.<br /><br />Our collection of <a href=\"https://github.com/betaflight/betaflight-tx-lua-scripts/releases\" target=\"_blank\" rel=\"noopener noreferrer\">TX Lua Scripts</a> are available on GitHub.<br /><br />Our <a href=\"https://github.com/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">source code</a> for the firmware, this app, and the blackbox viewer can be downloaded from GitHub."
     },
     "defaultContributingHead": {
         "message": "Contributing"
@@ -787,17 +793,26 @@
     "defaultDiscordText": {
         "message": "Betaflight <a href=\"https://discord.betaflight.com/invite\" target=\"_blank\" rel=\"noopener noreferrer\">Discord Server</a>.<br />Share your flight experience, talk about Betaflight, help other people or get some help for yourself from the community."
     },
+    "defaultRedditText": {
+        "message": "Join our <a href=\"https://www.reddit.com/r/Betaflight/\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight Subreddit</a>.<br />Discuss features, ask questions, and connect with the Betaflight community on Reddit."
+    },
+    "defaultCommunityHead": {
+        "message": "Community"
+    },
+    "statisticsDisclaimerHead": {
+        "message": "Your Privacy"
+    },
     "statisticsDisclaimer": {
-        "message": "Betaflight App collects anonymous usage statistics. For example, this data includes (but is not limited to) the number of launches, geographical region of the users, types of flight controllers, firmware versions, usage of UI elements and tabs, etc. The summary of this data is shared <a href=\"https://datastudio.google.com/u/0/reporting/1pK1PFw0eWmsgl2npvuzwAqscVzlhJvuF\" target=\"_blank\" rel=\"noopener noreferrer\">here</a>. Collection is done in order to better understand how Betaflight App is being used, to understand community trends, and for possible UI improvements. Users can opt-out of data collection in the Options tab."
+        "message": "This Betaflight App collects anonymous usage statistics. This usage data could include the number of launches, geographical region of the users, types of flight controllers, firmware versions, usage of UI elements and tabs, etc. We collect this data in order to better understand how the App is being used and community trends. We do this to help us develop an improved UI and overall experience. Users can opt-out of data collection in the Options tab. For information about how we collect and use your data, please see our <a href=\"https://www.betaflight.com/privacy\" rel=\"noopener noreferrer\" target=\"_blank\">privacy policy</a>."
     },
     "defaultButtonFirmwareFlasher": {
         "message": "Firmware Flasher"
     },
     "defaultDonateHead": {
-        "message": "Open Source / Donation Notice"
+        "message": "Open Source Donations"
     },
     "defaultDonateText": {
-        "message": "<p><strong>Betaflight</strong> is a flight controller software that is <strong>open source</strong> and is available free of charge <strong>without warranty</strong> to all users.</p><p>If you found the Betaflight or Betaflight App useful, please consider <strong>supporting</strong> its development by donating.</p>"
+        "message": "<p><strong>Betaflight</strong> is <strong>open source</strong> software and is available free of charge <strong>without warranty</strong> to all users.</p><p>If you find Betaflight useful, please consider <strong>supporting</strong> its development by donating.</p>"
     },
     "defaultDonateBottom": {
         "message": "<p>If you want to contribute financially on an ongoing basis, you should consider becoming a patron for us on $t(patreonLink.message).</p>"

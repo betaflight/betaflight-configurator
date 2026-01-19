@@ -1629,9 +1629,6 @@
     "pidTuningDtermSetpointTransitionHelp": {
         "message": "Con este parámetro, D SetPoint o tamaño pode reducirse preto do centro dos sticks, o que resulta máis suave o final dos flips e rolls.<br> O valor representa un punto de deflexión do stick: 0 - Stick centrado, 1 - deflexión completa. Cando o stick está por riba dese punto, o tamaño de Setpoint mantense constante no seu valor configurado. Cando o stick está situado a continuación deste punto, o tamaño do Setpoint é reducido proporcionalmente, alcanzando 0 na posición do centro do stick.<br>Valor de 1 dá o efecto máximo de suavizado, mentres que o valor de 0 mantén o tamaño do Setpoint fixado no seu valor configurado sobre todo o rango do stick."
     },
-    "pidTuningDtermSetpointHelp": {
-        "message": "Este parámetro determina o efecto de aceleración do stick dentro do compoñente derivado.<br> Valor de 0 é igual ao antigo método de medida onde D só sigue ó Gyro, mentres que o valor de 1 equivale ao método de erro antigo con igual relación de seguimento de Gyro e Stick.<br> O valor máis baixo é igual a unha resposta máis lenta \/ máis suave, mentres que o valor superior proporciona máis resposta de aceleración de adherencia.<br>Nota paraa interpolación de RC recoméndase que se active con valores máis altos para evitar que os golpes do control fagan ruído."
-    },
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong> $t(warningTitle.message):<\/strong> Desaconséllase moito o uso dunha transición de punto de consecuencia maior que 0 e inferior a 0,1. Se o fai, pode levar a inestabilidade e reducir a capacidade de resposta dos stick mentres atravesan o punto central.<\/span>"
     },
@@ -1988,7 +1985,7 @@
     },
     "auxiliaryDisabled": {
         "message": "(DESACTIVO)",
-        "descripton": "Text to add to the ARM mode (maybe others in the future) in the MODES TAB when it has been disabled for some external reason"
+        "description": "Text to add to the ARM mode (maybe others in the future) in the MODES TAB when it has been disabled for some external reason"
     },
     "auxiliaryAddRange": {
         "message": "Engadir Rango"
@@ -2404,10 +2401,6 @@
     },
     "servosReverse": {
         "message": "Reverso"
-    },
-    "gpsHeadHelp": {
-        "message": "Mostrar información diversa relacionada co GPS. Os títulos só se mostran cando o magnetómetro está en uso",
-        "description": "Help text for gpsHead"
     },
     "gpsMapMessage1": {
         "message": "Por favor comprove a súa conexión a internet"
@@ -3867,10 +3860,6 @@
     },
     "pidTuningCutoffFrequency": {
         "message": "Frecuencia de corte [Hz]"
-    },
-    "pidTuningNotchFilterHelp": {
-        "message": "Un filtro Notch é un filtro simétrico, estreito e de corte alto, con parámetros e centro e corte.<br \/><br \/>O valor central é a frecuencia do centro do filtro. O valor de corte é -3dB por baixo da frecuencia de corte.<br \/><br \/>Por exemplo, un Notch cun corte de 160 cun centro de 260 devolve un notch de -3dB de rango entre 160-360Hz e unha maior atenuación ao redor de 260Hz.",
-        "description": "Notch filter helpicon message"
     },
     "pidTuningDynamicNotchFilterGroup": {
         "message": "Filtro dinámico de Notch"
@@ -5805,9 +5794,6 @@
     "osdSectionHelpAlarms": {
         "message": "Axusta os limiares empregados para os elementos do OSD con estado de alarma."
     },
-    "osdSectionHelpStats": {
-        "message": "Axusta os valores mostrados na pantalla de estadísticas post voo."
-    },
     "osdSectionHelpWarnings": {
         "message": "Activa ou desactiva avisos mostrados no elemento AVISOS."
     },
@@ -6214,9 +6200,6 @@
     "pidTuningDeltaMeasurement": {
         "message": "Medida"
     },
-    "pidTuningDeltaTip": {
-        "message": "<b>Derivado dede erro <\/b> proporciona unha resposta máis directa e prefírese principalmente para Racing.<br \/><br \/><b>Derivado de medición <\/b> proporciona unha resposta máis suave o que é máis útil para o freestyling"
-    },
     "pidTuningPidControllerTip": {
         "message": "<b>Tradicional vs Betaflight (planear):<\/b> A escala e a lóxica do PID son exactamente as mesmas. Non se necesita reaxustar. Tradicional é o antiguo betaflight evolucionado e reescrito, que é o controlador PID básico basado en matemáticas integradas. O controlador PID de Betaflight usa matemáticas en punto flotante e ten moitas novas funcionalidades especialmente diseñadas para aplicacións multirotor<br><b>Flotante vs Enteiro:<\/b> A escala e a lóxica do PID son exactamente as mesmas. No se necesita reaxustar. As placas F1 non teñen FPU integrada e o cálculo en punto flotante incrementa a carga de CPU e a matemática integral melloraría o rendimento, pero a matemática en punto flotante pode dar algo máis de precisión."
     },
@@ -6409,9 +6392,6 @@
     "cordovaWebviewUpdateBtn": {
         "message": "Actualizar dende Google Play Store"
     },
-    "cordovaWebviewEnable": {
-        "message": "Entre na pestana de información sobre o dispositivo na configuración e toque 10 veces no número de versión de compilación para habilitar \"Opcións de desenvolvedor\". Despois diso, busque e vaia as opcións de desenvolvedor e seleccione <b>{{app}}<\/b> como provedor de vista web."
-    },
     "cordovaWebviewEnableBtn": {
         "message": "Abrir axustes"
     },
@@ -6525,11 +6505,11 @@
     },
     "presetsButtonSave": {
         "message": "Gardar e Reiniciar",
-        "description": "A button that saves all appied presets - analog to 'save' command in CLI"
+        "description": "A button that saves all applied presets - analogous to 'save' command in CLI"
     },
     "presetsButtonCancel": {
         "message": "Cancelar",
-        "description": "A button that restarts FC without saving appied presets - analog to 'exit' command in CLI"
+        "description": "A button that restarts FC without saving applied presets - analogous to 'exit' command in CLI"
     },
     "presetsApplyingPresets": {
         "message": "Aplicando configuración...",
@@ -6574,10 +6554,6 @@
     "presetsLoadingDumpAll": {
         "message": "Cargando a configuración actual dende o controlador de voo",
         "description": "Title for the waiting dialog when loading dump all into a file"
-    },
-    "dumpAllNotSavedWarning": {
-        "message": "Produciuse un erro ao gardar a configuración actual",
-        "description": "Message appears on presets tab when saving current diff all into a file has failed"
     },
     "presetSources": {
         "message": "Fontes predefinidas...",
@@ -6633,11 +6609,11 @@
     },
     "presetsNoPresetsFound": {
         "message": "Non se atopou ningunha configuración predeterminada para os parámetros de busca indicados",
-        "description": "Message that apprears on presets tab if no presets were found"
+        "description": "Message that appears on presets tab if no presets were found"
     },
     "presetsTooManyPresetsFound": {
         "message": "Alcanzou o límite máximo do número de presets mostrados",
-        "description": "Message that apprears on presets tab if too many presets found"
+        "description": "Message that appears on presets tab if too many presets found"
     },
     "presetsOptionsPlaceholder": {
         "message": "¡ATENCIÓN! Revise a lista de opcións",

@@ -166,6 +166,10 @@
         "message": "Abilita modalità solo CLI",
         "description": "Text for the option to enable or disable CLI only mode"
     },
+    "automaticDevOptions": {
+        "message": "Abilita automaticamente le impostazioni di sviluppo per l' anteprima della build",
+        "description": "Text for the option to automatically enable development settings for preview builds"
+    },
     "showManualMode": {
         "message": "Abilita modalità di connessione manuale",
         "description": "Text for the option to enable or disable manual connection mode"
@@ -1587,7 +1591,7 @@
         "message": "Gas Minimo (Il più basso valore degli ESC quando armato)"
     },
     "configurationThrottleMinimumHelp": {
-        "message": "Questo è il valore 'minimo' che viene inviato agli ESC quando il modello è armato e lo stick del gas è in posizione minima. Aumenta il valore per ottenere più velocità al minimo. Aumenta anche il valore in caso di desincronizzazioni!"
+        "message": "Questo è il valore 'minimo' inviato agli ESC quando il modello è armato e lo stick del gas è in posizione minima. Aumenta il valore per ottenere più velocità al minimo. Aumenta anche il valore in caso di desincronizzazioni!"
     },
     "configurationThrottleMaximum": {
         "message": "Gas Massimo (Il più alto valore ESC quando armato)"
@@ -2095,7 +2099,7 @@
         "message": "Con questo parametro, il Peso del Setpoint D può essere ridotto vicino al centro degli stick, il che si traduce in una fine più fluida dei flip e dei roll. <br> Il valore rappresenta un punto di deviazione dello stick: 0 - stick centrato, 1 - deflessione completa. Quando lo stick è sopra quel punto, il Peso del Setpoint viene mantenuto costante sul suo valore configurato. Quando lo stick è posizionato al di sotto di quel punto, il Peso del Setpoint viene ridotto proporzionalmente, raggiungendo 0 nella posizione centrale dello stick.<br>Il valore di 1 dà il massimo effetto di fluidità, mentre il valore di 0 mantiene il Peso del Setpoint fisso sul suo valore configurato sull'intero intervallo dello stick."
     },
     "pidTuningDtermSetpointHelp": {
-        "message": "Questo parametro determina l'effetto di accelerazione dello stick all'interno del componente di derivata.<br> Il valore di 0 è uguale al vecchio metodo di misurazione dove D traccia solo il giroscopio, mentre il valore di 1 è uguale al vecchio metodo di errore con tracciamento di gyro e stick uguale.<br> Un valore più basso equivale a una risposta dello stick più lenta\/più fluida, mentre un valore più alto fornisce una maggiore risposta all'accelerazione dello stick.<br>È consigliato abilitare l'interpolazione RC con valori più alti per evitare che comandi veloci producano rumore."
+        "message": "Questo parametro determina l'effetto di accelerazione dello stick dentro il componente derivativo.<br> Il valore di 0 è uguale al vecchio metodo di misurazione dove D traccia solo il giroscopio, mentre il valore di 1 è uguale al vecchio metodo di errore che traccia un rapporto di gyro e stick uguale.<br> Un valore basso equivale a una risposta dello stick più lenta\/più fluida, mentre un valore più alto fornisce una maggiore risposta all'accelerazione dello stick.<br>È consigliato abilitare l'interpolazione RC con valori più alti per evitare che comandi veloci producano rumore."
     },
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):<\/strong> L'utilizzo di un D Setpoint transition più grande di 0 e minore di 0.1 è fortemente sconsigliato. Se lo fai può portare instabilità e ridurre la risposta degli stick quando si trova in posizioni centrali.<\/span>"
@@ -2488,7 +2492,7 @@
     },
     "auxiliaryDisabled": {
         "message": "(DISABILITATO)",
-        "descripton": "Text to add to the ARM mode (maybe others in the future) in the MODES TAB when it has been disabled for some external reason"
+        "description": "Text to add to the ARM mode (maybe others in the future) in the MODES TAB when it has been disabled for some external reason"
     },
     "auxiliaryAddRange": {
         "message": "Agg. intervallo"
@@ -2968,7 +2972,7 @@
         "message": "Generale"
     },
     "gpsHeadHelp": {
-        "message": "Mostra varie informazioni del GPS. La direzione viene mostrata solo se il Magnetometro è in uso",
+        "message": "Mostra varie informazioni del GPS. La direzione viene mostrata se il Magnetometro è in uso.",
         "description": "Help text for gpsHead"
     },
     "gpsMapHead": {
@@ -3862,7 +3866,7 @@
     },
     "firmwareFlasherBoardVerficationTargetNotAvailable": {
         "message": "L'app ha rilevato la scheda: <strong>{{boardName}}<\/strong> ma non è stato trovato un target ufficiale di Betaflight",
-        "description": "Board verification has succeeded, but the target is not available as offical Betaflight target."
+        "description": "Board verification has succeeded, but the target is not available as official Betaflight target."
     },
     "firmwareFlasherBoardVerificationFail": {
         "message": "L'app <span class=\"message-negative\">non è riuscita<\/span> a verificare la scheda. Se non funziona, prova a cambiare schede lentamente per riprovare, riconnettere l'usb o connettersi prima se hai dimenticato di applicare impostazioni personalizzate.",
@@ -4482,7 +4486,7 @@
         "description": "P and I Gain (Stability) tuning slider label"
     },
     "pidTuningPIGainSliderHelp": {
-        "message": "Aumenta lo slider del Tracking per affinare la risposta del modello ai tuoi comandi e alle influenze esterne; evita di far andare il naso del modello fuori rotta in qualsiasi condizione.<br \/><br \/>Valori di 'Tracking' minori daranno molti bobbles e faranno andare fuori rotta in movimenti di stick e propwash. Valori alti di 'Tracking' possono dare oscillazioni e rimbalzi veloci (difficili da vedere ma si possono sentire). Un tracking eccessivo può dare oscillazioni e motori caldi.",
+        "message": "Aumenta lo slider del Tracking per affinare la risposta del modello ai tuoi comandi e alle influenze esterne; evita di far andare la punta del modello fuori rotta in qualsiasi condizione.<br \/><br \/>Valori di 'Tracking' minori daranno molti bobbles e faranno andare fuori rotta in movimenti di stick e propwash. Valori alti di 'Tracking' possono dare oscillazioni e rimbalzi veloci (difficili da vedere ma si possono sentire). Un tracking eccessivo può dare oscillazioni e motori caldi.",
         "description": "P and I gain tuning slider helpicon message"
     },
     "pidTuningResponseSlider": {
@@ -4593,7 +4597,7 @@
         "message": "Frequenza di taglio [Hz]"
     },
     "pidTuningNotchFilterHelp": {
-        "message": "Un filtro Notch è un filtro simmetrico, stretto, ad alto taglio, con parametri di centro e cutoff.<br \/><br \/>Il valore Centro è la frequenza centrale del filtro. Il valore Cutoff è la frequenza di taglio bassa a -3dB.<br \/><br \/>Per esempio, un Cutoff Notch di 160 con un Centro Notch di 260 restituisce un notch largo con una gamma -3dB da 160-360Hz e un'attenuazione più forte a circa 260Hz.",
+        "message": "Un filtro Notch è un filtro simmetrico, limitato, ad alto taglio, con parametri di centro e cutoff.<br \/><br \/>Il valore centrale è la frequenza centrale del filtro. Il valore Cutoff è la frequenza di taglio bassa a -3 dB.<br \/><br \/>Per esempio, un Cutoff Notch di 160 con un Centro Notch di 260 restituisce un notch largo con una gamma -3 dB da 160-360Hz e un'attenuazione più forte a circa 260 Hz.",
         "description": "Notch filter helpicon message"
     },
     "pidTuningDynamicNotchFilterGroup": {
@@ -6726,7 +6730,7 @@
         "message": "Imposta le soglie utilizzate negli elementi OSD con stati di allarme."
     },
     "osdSectionHelpStats": {
-        "message": "Imposta i valori visualizzati nella schermata delle statistiche post volo"
+        "message": "Imposta i valori visualizzati nella schermata delle statistiche post volo."
     },
     "osdSectionHelpWarnings": {
         "message": "Abilita o disabilita gli avvisi che vengono mostrati negli elementi di AVVISO."
@@ -7089,7 +7093,7 @@
         "message": "Angolo massimo di armamento [gradi]"
     },
     "configurationSmallAngleHelp": {
-        "message": "L'aeromobile non si armerà se inclinato oltre il numero impostato di gradi. Si applica solo se l'accelerometro è abilitato. Impostandolo a 180 il controllo verrà disabilitato"
+        "message": "Il modello non si armerà se inclinato oltre il numero impostato di gradi. Viene applicato se l'accelerometro è abilitato. Impostandolo a 180 il controllo verrà disabilitato."
     },
     "configurationBatteryVoltage": {
         "message": "Tensione Batteria"
@@ -7156,7 +7160,7 @@
         "message": "Misurazione"
     },
     "pidTuningDeltaTip": {
-        "message": "La <b>Derivata dell'errore<\/b>fornisce una risposta più diretta agli stick ed è per lo più preferibile per le corse.<br \/><br \/>La <b>Derivata della misurazione<\/b> fornisce una risposta più fluida agli stick, più utile per il freestyle"
+        "message": "<b>Derivativo da errore<\/b>fornisce una risposta più diretta agli stick ed è per lo più preferibile per racing.<br \/><br \/><b>Derivativo da misurazione<\/b> fornisce una risposta più fluida agli stick, più utile per il freestyle"
     },
     "pidTuningPidControllerTip": {
         "message": "<b>Legacy vs Betaflight (float):<\/b> PID scaling e PID logic sono la stessa cosa. Il retuning può non essere necessario. Legacy è la riscrittura del vecchio Betaflight evoluto che è un semplice controller PID basato su numeri interi. Il controller PID di Betaflight usa calcoli in virgola mobile ed ha molte nuove funzioni disegnate specificamente per i multirotori <br> <b>Float vs Integer:<\/b> PID scaling e PID logic sono la stessa cosa. Il retuning non è necessario. Le schede F1 non hanno una FPU integrata, i calcoli in virgola mobile aumentato il carico della CPU. I calcoli in numeri interi migliorano le performance ma i calcoli in virgola mobile possono far guadagnare un po' di precisione."
@@ -7369,7 +7373,7 @@
         "message": "Aggiorna da Google Play Store"
     },
     "cordovaWebviewEnable": {
-        "message": "Vai nella scheda delle informazioni sul tuo dispositivo nelle impostazioni e tocca 10 volte il numero della versione build per abilitare le 'Opzioni sviluppatore'. Dopo di che vai nelle opzioni sviluppatore e seleziona <b>{{app}}<\/b> come provider webview."
+        "message": "Vai alla sezione informazioni sul dispositivo in Impostazioni e tocca il numero di build 10 volte per abilitare 'Opzioni sviluppatore'. Quindi apri le opzioni Sviluppatore e seleziona <b>{{app}}<\/b> come provider WebView."
     },
     "cordovaWebviewEnableBtn": {
         "message": "Apri impostazioni"
@@ -7487,11 +7491,11 @@
     },
     "presetsButtonSave": {
         "message": "Salva e Riavvia",
-        "description": "A button that saves all appied presets - analog to 'save' command in CLI"
+        "description": "A button that saves all applied presets - analogous to 'save' command in CLI"
     },
     "presetsButtonCancel": {
         "message": "Annulla",
-        "description": "A button that restarts FC without saving appied presets - analog to 'exit' command in CLI"
+        "description": "A button that restarts FC without saving applied presets - analogous to 'exit' command in CLI"
     },
     "presetsApplyingPresets": {
         "message": "Applicazione della configurazione...",
@@ -7599,11 +7603,11 @@
     },
     "presetsNoPresetsFound": {
         "message": "Nessun preset trovato nella ricerca",
-        "description": "Message that apprears on presets tab if no presets were found"
+        "description": "Message that appears on presets tab if no presets were found"
     },
     "presetsTooManyPresetsFound": {
         "message": "Raggiunto il limite massimo del numero di preset mostrati",
-        "description": "Message that apprears on presets tab if too many presets found"
+        "description": "Message that appears on presets tab if too many presets found"
     },
     "presetsOptionsPlaceholder": {
         "message": "ATTENZIONE! Rivedere l'elenco delle opzioni",
@@ -7823,14 +7827,17 @@
     "profileBackupEmptyResult": {
         "message": "Backup fallito"
     },
-    "labelSignCounter": {
-        "message": "Conferma firma"
-    },
     "labelLogin": {
         "message": "Login"
     },
     "labelSignOut": {
         "message": "Esci"
+    },
+    "labelAvatarUrl": {
+        "message": "URL Avatar"
+    },
+    "placeholderAvatarUrl": {
+        "message": "Inserisci l'URL dell'immagine per il tuo avatar"
     },
     "labelCreatePasskey": {
         "message": "Crea Passkey"
@@ -7883,8 +7890,8 @@
     "labelCreated": {
         "message": "Creato"
     },
-    "labelUpdated": {
-        "message": "Aggiornato"
+    "labelLastUsed": {
+        "message": "Ultimo Utilizzato"
     },
     "labelActions": {
         "message": "Azioni"

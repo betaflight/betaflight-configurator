@@ -1522,9 +1522,6 @@
     "configurationThrottleMinimum": {
         "message": "Acelerador Mínimo (valor más bajo de ESC al estar armado)"
     },
-    "configurationThrottleMinimumHelp": {
-        "message": "Este es el valor 'inactivo' que se envía a los ESCs cuando la aeronave está armada y el acelerador está en la posición de mínimo. Puedes incrementar el valor para obtener más velocidad cuando está inactivo. ¡Aumenta también el valor si sufres desincronizaciones!"
-    },
     "configurationThrottleMaximum": {
         "message": "Acelerador Máximo (valor más alto de ESC al estar armado)"
     },
@@ -2023,9 +2020,6 @@
     "pidTuningDtermSetpointTransitionHelp": {
         "message": "Con este parámetro, el Punto de Ajuste de Peso de D puede reducirse cuando las palancas están cerca del centro, lo cual provoca que el final de los flips y rolls sea más suave.<br>El valor representa un punto del movimiento de la palanca: 0 - palanca centrada, 1 - completamente desplazada. Cuando la palanca está por encima de ese punto, el Punto de Ajuste de Peso se mantiene constante en el valor configurado. Cuando la palanca se sitúa por debajo de ese punto, el Punto de Ajuste de Peso se reduce proporcionalmente, llegando a 0 en la posición central de la palanca. <br> El valor de 1 da el máximo efecto de suavizado, mientras que el valor de 0 mantiene el Punto de Ajuste de Peso fijo en su valor configurado sobre el rango completo de la palanca."
     },
-    "pidTuningDtermSetpointHelp": {
-        "message": "Este parámetro determina el efecto de aceleración de la palanca dentro del componente derivativo.<br> Un valor de 0 es igual al antiguo método de Medición donde D sólo sigue al giro, mientras 1 es igual al antiguo método de Error con seguimiento igual a giro y a radio de la palanca.<br> Un valor más bajo es igual a una respuesta de palanca más lenta y suave, mientras que valores más altos proporcionan más aceleración en la respuesta a la palanca.<br> Ten en cuenta que se recomienda activar Interpolación de RC con valores altos para evitar el ruido por golpes en el control."
-    },
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):<\/strong> El uso de un Punto de Ajuste de Transición de D mayor que 0 y menor que 0.1 está altamente desaconsejado. Puede causar inestabilidad y reducir la respuesta de los controles al cruzar el punto central.<\/span>"
     },
@@ -2409,7 +2403,7 @@
     },
     "auxiliaryDisabled": {
         "message": "(DESACTIVADO)",
-        "descripton": "Text to add to the ARM mode (maybe others in the future) in the MODES TAB when it has been disabled for some external reason"
+        "description": "Text to add to the ARM mode (maybe others in the future) in the MODES TAB when it has been disabled for some external reason"
     },
     "auxiliaryAddRange": {
         "message": "Añadir Rango"
@@ -2876,10 +2870,6 @@
     },
     "servosReverse": {
         "message": "Invertir"
-    },
-    "gpsHeadHelp": {
-        "message": "Muestra información variada relacionada con el GPS. El rumbo sólo se muestra cuando se utiliza un Magnetómetro",
-        "description": "Help text for gpsHead"
     },
     "gpsMapMessage1": {
         "message": "Por favor verifica tu conexión a internet"
@@ -3766,7 +3756,7 @@
     },
     "firmwareFlasherBoardVerficationTargetNotAvailable": {
         "message": "La aplicación ha detectado la placa: <strong>{{boardName}}<\/strong> pero no se ha encontrado ninguna placa oficial de Betaflight",
-        "description": "Board verification has succeeded, but the target is not available as offical Betaflight target."
+        "description": "Board verification has succeeded, but the target is not available as official Betaflight target."
     },
     "firmwareFlasherBoardVerificationFail": {
         "message": "La aplicación <span class=\"message-negative\">falló<\/span> al verificar la placa. Si el problema persiste, por favor intenta cambiar de pestaña y vuelve a intentarlo, reconecta el USB, o conéctate primero si has olvidado aplicar valores por defecto personalizados.",
@@ -4385,10 +4375,6 @@
         "message": "Seguimiento:<br \/><i><small>Ganancia de P e I<\/small><\/i>",
         "description": "P and I Gain (Stability) tuning slider label"
     },
-    "pidTuningPIGainSliderHelp": {
-        "message": "Aumenta el deslizador de seguimiento para agudizar la respuesta de las aeronaves a los mandos y mejorar también la respuesta a influencias externas; evitando que la nariz de la aeronave salga de curso bajo cualquier condición.<br \/><br \/>Los valores de seguimiento bajos sufrirán bamboleos y se saldrán de curso con movimientos del mando y rebotes rápidos (difíciles de ver, pero se pueden oír). El seguimiento muy alto puede resultar en oscilaciones y motores calientes.",
-        "description": "P and I gain tuning slider helpicon message"
-    },
     "pidTuningResponseSlider": {
         "message": "Respuesta del mando:<br \/><i><small>Ganancia de prealimentación<\/small><\/i>",
         "description": "Response tuning slider label"
@@ -4495,10 +4481,6 @@
     },
     "pidTuningCutoffFrequency": {
         "message": "Frecuencia de corte [Hz]"
-    },
-    "pidTuningNotchFilterHelp": {
-        "message": "Un Filtro Notch es un filtro simétrico, estrecho y de corte alto, con parámetros centro y corte.<br \/><br \/>El valor del centro es la frecuencia central del filtro. El valor de corte es el lado bajo de -3dB de la frecuencia de corte.<br \/><br \/>Por ejemplo, un notch con corte de 160 con un centro de 260 devuelve un notch de -3dB entre 160-360 Hz y la mayor atenuación alrededor de 260hz.",
-        "description": "Notch filter helpicon message"
     },
     "pidTuningDynamicNotchFilterGroup": {
         "message": "Filtro Notch Dinámico"
@@ -6625,9 +6607,6 @@
     "osdSectionHelpAlarms": {
         "message": "Ajusta los umbrales usados para elementos del OSD con estado de alarma."
     },
-    "osdSectionHelpStats": {
-        "message": "Ajusta los valores mostrados en la pantalla de estadísticas post vuelo."
-    },
     "osdSectionHelpWarnings": {
         "message": "Activa o desactiva avisos mostrados en el elemento AVISOS."
     },
@@ -6985,9 +6964,6 @@
     "configurationSmallAngle": {
         "message": "Ángulo de armado máximo [grados]"
     },
-    "configurationSmallAngleHelp": {
-        "message": "La aeronave no se armará si está ladeada más que el número de grados especificados. Sólo aplica si el acelerómetro está activado. Ajustarlo a 180 desactiva esta comprobación"
-    },
     "configurationBatteryVoltage": {
         "message": "Voltaje de la Batería"
     },
@@ -7051,9 +7027,6 @@
     },
     "pidTuningDeltaMeasurement": {
         "message": "Medida"
-    },
-    "pidTuningDeltaTip": {
-        "message": "<b>Derivativo desde Error<\/b> proporciona una respuesta más directa del stick y se prefiere para Carreras.<br \/><br \/><b>Derivativo desde Medida<\/b> proporciona una respuesta del stick más suave lo cual es más útil para freestyle"
     },
     "pidTuningPidControllerTip": {
         "message": "<b>Tradicional vs Betaflight (flotante):<\/b> La escala y la lógica del PID son exactamente las mismas. No se necesita reajustar. Tradicional es el antiguo betaflight evolucionado a rewrite, que es controlador PID básico basado en matemáticas de enteros. El controlador PID de Betaflight PID usa matemáticas en punto flotante y tiene muchas nuevas funcionalidades especialmente diseñadas para aplicaciones multirotor<br> <b>Flotante vs Entero:<\/b> La escala y la lógica del PID son exactamente las mismas. No se necesita reajustar. Las placas F1 no tienen FPU integrada y el cálculo en punto flotante incrementa la carga de CPU y la matemática entera mejoraría el rendimiento, pero la matemática en punto flotante puede dar algo más de precisión."
@@ -7265,9 +7238,6 @@
     "cordovaWebviewUpdateBtn": {
         "message": "Actualizar desde el Google Play Store"
     },
-    "cordovaWebviewEnable": {
-        "message": "Ve a la pestaña de información acerca de tu dispositivo en los ajustes y pulsa 10 veces en el número de compilación para activar las 'Opciones para desarrolladores'. Después de esto, busca en las opciones para desarrolladores y selecciona <b>{{app}}<\/b> como implementación de webview."
-    },
     "cordovaWebviewEnableBtn": {
         "message": "Abrir configuración"
     },
@@ -7384,11 +7354,11 @@
     },
     "presetsButtonSave": {
         "message": "Guardar y Reiniciar",
-        "description": "A button that saves all appied presets - analog to 'save' command in CLI"
+        "description": "A button that saves all applied presets - analogous to 'save' command in CLI"
     },
     "presetsButtonCancel": {
         "message": "Cancelar",
-        "description": "A button that restarts FC without saving appied presets - analog to 'exit' command in CLI"
+        "description": "A button that restarts FC without saving applied presets - analogous to 'exit' command in CLI"
     },
     "presetsApplyingPresets": {
         "message": "Aplicando configuración...",
@@ -7433,10 +7403,6 @@
     "presetsLoadingDumpAll": {
         "message": "Cargando la configuración actual desde el controlador de vuelo",
         "description": "Title for the waiting dialog when loading dump all into a file"
-    },
-    "dumpAllNotSavedWarning": {
-        "message": "Error al guardar la configuración",
-        "description": "Message appears on presets tab when saving current diff all into a file has failed"
     },
     "presetSources": {
         "message": "Fuentes de preajustes...",
@@ -7496,11 +7462,11 @@
     },
     "presetsNoPresetsFound": {
         "message": "No se encontraron preajustes para los parámetros de búsqueda dados",
-        "description": "Message that apprears on presets tab if no presets were found"
+        "description": "Message that appears on presets tab if no presets were found"
     },
     "presetsTooManyPresetsFound": {
         "message": "Alcanzado el número límite máximo de preajustes mostrado",
-        "description": "Message that apprears on presets tab if too many presets found"
+        "description": "Message that appears on presets tab if too many presets found"
     },
     "presetsOptionsPlaceholder": {
         "message": "¡ATENCIÓN! Revisa la lista de opciones",

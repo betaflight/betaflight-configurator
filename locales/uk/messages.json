@@ -1578,9 +1578,6 @@
     "configurationThrottleMinimum": {
         "message": "Мінімальна тяга (найнижче значення ESC коли заживлено)"
     },
-    "configurationThrottleMinimumHelp": {
-        "message": "Це значення \"холостого ходу\", яке надсилається до ESC, коли повітряне судно взведене, а стік тяги знаходиться в мінімальному положенні. Збільште значення, щоб отримати більшу швидкість на холостому ходу. Також збільшуйте значення у випадку десинхронізації!"
-    },
     "configurationThrottleMaximum": {
         "message": "Максимальна тяга (найвище значення ESC коли взведений)"
     },
@@ -2082,9 +2079,6 @@
     "pidTuningDtermSetpointTransitionHelp": {
         "message": "Цим параметром можна зменшити вагу заданого значення Д біля центру стіків, що призводить до більш плавних сальто та бочок.<br> Значення представляє точку відхилення стіка: 0 - стік в центрі, 1 - повне відхилення. Коли стік знаходиться вище цієї точки, вага заданого значення Д залишається постійною - дорівнює налаштованому значенню. Коли стік знаходиться нижче цієї точки, вага заданого значення Д зменшується пропорційно, досягаючи нуля у позиції центру стіка.<br>Значення 1 дає максимальний ефект згладжування, тоді як значення 0 тримає вагу заданого значення Д фіксованою - дорівнює налаштованому значенню на всьому діапазоні відхилень стіка."
     },
-    "pidTuningDtermSetpointHelp": {
-        "message": "Цей параметр визначає ефект прискорення стіку у диференційній складовій.<br> Значення 0 відповідає старому Вимірювальному методу, де Д-складова відстежує лише гіроскоп, тоді як значення 1 відповідає старому Помилковому методу з рівним співвідношенням відстеження гіроскопа та руху стіків.<br> Менше значення відповідає повільнішому\/м'якішому відгуку на рухи стіків, тоді як більше значення забезпечує більший відгук на прискорення стіків.<br> Зауважте, що інтерполяцію команд пульта рекомендується увімкнути при використанні більших значень, щоб запобігти появі шуму від регулятора."
-    },
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):<\/strong> Використання переходу заданого значення Д більше 0 і менше 0.1 вкрай не рекомендується. Це може призвести до нестабільності та зниження чутливості стіків, коли вони перетинають центральну точку.<\/span>"
     },
@@ -2468,7 +2462,7 @@
     },
     "auxiliaryDisabled": {
         "message": "(ВИМКНЕНО)",
-        "descripton": "Text to add to the ARM mode (maybe others in the future) in the MODES TAB when it has been disabled for some external reason"
+        "description": "Text to add to the ARM mode (maybe others in the future) in the MODES TAB when it has been disabled for some external reason"
     },
     "auxiliaryAddRange": {
         "message": "Додати діапазон"
@@ -2938,10 +2932,6 @@
     },
     "gpsHead": {
         "message": "Загальне"
-    },
-    "gpsHeadHelp": {
-        "message": "Показати різну інформацію, пов'язану з GPS. Курс показуються лише тоді, коли використовується компас",
-        "description": "Help text for gpsHead"
     },
     "gpsMapHead": {
         "message": "Поточне розташування"
@@ -3834,7 +3824,7 @@
     },
     "firmwareFlasherBoardVerficationTargetNotAvailable": {
         "message": "Застосунок виявив плату: <strong>{{boardName}}<\/strong>, але не було знайдено офіційної цільової прошивки Betaflight",
-        "description": "Board verification has succeeded, but the target is not available as offical Betaflight target."
+        "description": "Board verification has succeeded, but the target is not available as official Betaflight target."
     },
     "firmwareFlasherBoardVerificationFail": {
         "message": "Застосунок <span class=\"message-negative\">не зміг<\/span> перевірити плату. Якщо проблема не зникає, спробуйте переключити вкладки та повторити, перепід’єднайте USB або під’єднайтесь спочатку, якщо ви могли забути застосувати спеціальні налаштування за замовчуванням.",
@@ -4453,10 +4443,6 @@
         "message": "Слідування:<br \/><i><small>Коефіцієнти П та І<\/small><\/i>",
         "description": "P and I Gain (Stability) tuning slider label"
     },
-    "pidTuningPIGainSliderHelp": {
-        "message": "Збільшіть ползунок \"Слідування\" (анг. - Tracking), щоб покращити реакцію повітряного судна на ваші команди та зовнішні впливи, покращує курсову стійкість в будь-яких умовах.<br \/><br \/>Низькі значення \"Слідування\" (Tracking) можуть призводити до частого тремтіння та відхилення повітряного судна від курсу під час виконання команд стіків і під час propwash. Високе значення Слідування може спричинити коливання та швидкі відскоки (це може бути складно помітити, але його можна почути). Занадто велике значення \"Слідування\" може призвести до коливань та перегріву моторів.",
-        "description": "P and I gain tuning slider helpicon message"
-    },
     "pidTuningResponseSlider": {
         "message": "Реакція на стіки:<br \/><i><small>Коефіцієнт упередження<\/small><\/i>",
         "description": "Response tuning slider label"
@@ -4563,10 +4549,6 @@
     },
     "pidTuningCutoffFrequency": {
         "message": "Частота зрізу [Hz]"
-    },
-    "pidTuningNotchFilterHelp": {
-        "message": "Режекторний фільтр — це симетричний, вузький, високочастотний фільтр із значенням центру і значенням зрізу у якості параметрів.<br \/><br \/>Частота центру — це центральна частота фільтра. Значення зрізу вказує на нижню частоту, на якій послаблення сингалу -3 дБ.<br \/><br \/>Наприклад, зріз фільтра 160 з центром 260 створює широкий спектральний зріз з діапазоном -3 дБ від 160 до 360 Гц та найбільшим послабленням навколо 260 Гц.",
-        "description": "Notch filter helpicon message"
     },
     "pidTuningDynamicNotchFilterGroup": {
         "message": "Динамічний вузькосмуговий режекторний фільтр"
@@ -6697,9 +6679,6 @@
     "osdSectionHelpAlarms": {
         "message": "Встановіть порогові значення для елементів, що призводять до попередження на наекранному меню."
     },
-    "osdSectionHelpStats": {
-        "message": "Встановіть значення, що зображаються на екрані післяпольотної статистики."
-    },
     "osdSectionHelpWarnings": {
         "message": "Увімкнути або вимкнути попередження, які відображаються в елементі ПОПЕРЕДЖЕННЯ."
     },
@@ -7060,9 +7039,6 @@
     "configurationSmallAngle": {
         "message": "Макс. кут взведення [degrees]"
     },
-    "configurationSmallAngleHelp": {
-        "message": "Повітряне судно не буде взведено, якщо нахил перевищує вказану кількість градусів. Ця умова діє тільки у випадку, якщо акселерометр включений. Встановлення значення 180 фактично відключить перевірку"
-    },
     "configurationBatteryVoltage": {
         "message": "Напруга акумулятора"
     },
@@ -7126,9 +7102,6 @@
     },
     "pidTuningDeltaMeasurement": {
         "message": "Вимірювання"
-    },
-    "pidTuningDeltaTip": {
-        "message": "<b>Похідна від помилки<\/b> забезпечує більш пряму реакцію на рух стіків та переважно використовується в гонках.<br \/><br \/><b>Похідна від вимірювання<\/b> забезпечує більш плавну реакцію на рух стіків, що більш корисно для фрістайлу"
     },
     "pidTuningPidControllerTip": {
         "message": "<b>Старий алгоритм обчислення порівняно з Betaflight (зплаваючою комою):<\/b> Масштабування PID і логіка PID абсолютно однакові. Переналаштування не обов'язкове. Старий алгоритм — це старий betaflight, яке є базовим PID контролером на основі цілочисельної математики. PID контролер Betaflight використовує математику з плаваючою комою та має багато нових функцій, спеціально розроблених для багатороторних застосувань <br> <b>Плаваюча кома проти цілочисельних операцій:<\/b> Масштабування PID та логіка PID абсолютно однакові. Перенастроювати не потрібно. Плати F1 не мають вбудованого прискорювача обчислень з плаваючою комою, і математика з плаваючою комою збільшує навантаження на ЦП, а цілочисельна математика підвищить продуктивність, але математика з плаваючою комою може отримати трохи більшу точність."
@@ -7340,9 +7313,6 @@
     "cordovaWebviewUpdateBtn": {
         "message": "Оновлення з магазину Google Play"
     },
-    "cordovaWebviewEnable": {
-        "message": "Перейдіть на вкладку інформації про ваш пристрій в налаштуваннях та натисніть 10 разів по номеру збірки, щоб увімкнути \"Параметри розробника\". Після цього знайдіть і перейдіть у параметри розробника та виберіть <b>{{app}}<\/b> як постачальника веб-перегляду."
-    },
     "cordovaWebviewEnableBtn": {
         "message": "Відкрити налаштування"
     },
@@ -7459,11 +7429,11 @@
     },
     "presetsButtonSave": {
         "message": "Зберегти й перезавантажити",
-        "description": "A button that saves all appied presets - analog to 'save' command in CLI"
+        "description": "A button that saves all applied presets - analogous to 'save' command in CLI"
     },
     "presetsButtonCancel": {
         "message": "Скасувати",
-        "description": "A button that restarts FC without saving appied presets - analog to 'exit' command in CLI"
+        "description": "A button that restarts FC without saving applied presets - analogous to 'exit' command in CLI"
     },
     "presetsApplyingPresets": {
         "message": "Застосування конфігурації...",
@@ -7508,10 +7478,6 @@
     "presetsLoadingDumpAll": {
         "message": "Завантаження поточної конфігурації з польотного контролера",
         "description": "Title for the waiting dialog when loading dump all into a file"
-    },
-    "dumpAllNotSavedWarning": {
-        "message": "Сталася помилка під час збереження поточної конфігурації",
-        "description": "Message appears on presets tab when saving current diff all into a file has failed"
     },
     "presetSources": {
         "message": "Джерела попередніх налаштувань",
@@ -7571,11 +7537,11 @@
     },
     "presetsNoPresetsFound": {
         "message": "Для заданих параметрів пошуку, попередні налаштування не знайдено",
-        "description": "Message that apprears on presets tab if no presets were found"
+        "description": "Message that appears on presets tab if no presets were found"
     },
     "presetsTooManyPresetsFound": {
         "message": "Досягнуто максимального ліміта кількості показаних пресетів",
-        "description": "Message that apprears on presets tab if too many presets found"
+        "description": "Message that appears on presets tab if too many presets found"
     },
     "presetsOptionsPlaceholder": {
         "message": "УВАГА! Перегляньте список опцій",
@@ -7795,9 +7761,6 @@
     "profileBackupEmptyResult": {
         "message": "Не вдалося виконати резервне копіювання"
     },
-    "labelSignCounter": {
-        "message": "Лічильник спроб"
-    },
     "labelLogin": {
         "message": "Логін"
     },
@@ -7854,9 +7817,6 @@
     },
     "labelCreated": {
         "message": "Створено"
-    },
-    "labelUpdated": {
-        "message": "Оновлено"
     },
     "labelActions": {
         "message": "Дії"

@@ -337,7 +337,7 @@ import { i18n } from "../../js/localization";
 import semver from "semver";
 import { gui_log } from "../../js/gui_log";
 import { generateFilename } from "../../js/utils/generate_filename";
-import DEBUG from "../../js/debug";
+import { useDebugStore } from "../../stores/debug";
 import FileSystem from "../../js/FileSystem";
 import { isExpertModeEnabled } from "../../js/utils/isExpertModeEnabled";
 import NotificationManager from "../../js/utils/notifications";
@@ -395,6 +395,7 @@ export default defineComponent({
     setup() {
         const fcStore = useFlightControllerStore();
         const connectionStore = useConnectionStore();
+        const debugStore = useDebugStore();
 
         // Refs
         const eraseDialog = ref(null);
@@ -405,7 +406,7 @@ export default defineComponent({
         const blackboxRate = ref(0);
         const debugMode = ref(0);
         // Initialize all debug fields as enabled by default (empty array causes issues)
-        const debugFieldsEnabled = ref(DEBUG.enableFields ? DEBUG.enableFields.map(() => true) : []);
+        const debugFieldsEnabled = ref(debugStore.enableFields ? debugStore.enableFields.map(() => true) : []);
         const saveProgress = ref(0);
         const saveCancelled = ref(false);
         const eraseCancelled = ref(false);
@@ -471,8 +472,8 @@ export default defineComponent({
             const modes = [];
             const debugModeCount = fcStore.pidAdvancedConfig?.debugModeCount || 0;
             for (let i = 0; i < debugModeCount; i++) {
-                if (i < DEBUG.modes.length) {
-                    modes.push(DEBUG.modes[i]);
+                if (i < debugStore.modes.length) {
+                    modes.push(debugStore.modes[i]);
                 } else {
                     modes.push(i18n.getMessage("onboardLoggingDebugModeUnknown"));
                 }
@@ -484,7 +485,7 @@ export default defineComponent({
             return fcStore.config?.apiVersion && semver.gte(fcStore.config.apiVersion, API_VERSION_1_45);
         });
 
-        const debugFields = computed(() => DEBUG.enableFields || []);
+        const debugFields = computed(() => debugStore.enableFields);
 
         const dataflashUsedSize = computed(() => fcStore.dataflash?.usedSize || 0);
         const dataflashTotalSize = computed(() => fcStore.dataflash?.totalSize || 0);
@@ -856,9 +857,6 @@ export default defineComponent({
                     await MSP.promise(MSPCodes.MSP_NAME);
                 }
 
-                // Update debug definitions
-                DEBUG.update();
-
                 // Populate UI state
                 blackboxDevice.value = fcStore.blackbox?.blackboxDevice || 0;
                 blackboxRate.value = fcStore.blackbox?.blackboxSampleRate || 0;
@@ -867,7 +865,7 @@ export default defineComponent({
                 // Initialize debug fields checkboxes
                 if (showDebugFields.value) {
                     const disabledMask = fcStore.blackbox?.blackboxDisabledMask || 0;
-                    debugFieldsEnabled.value = DEBUG.enableFields.map((_, index) => {
+                    debugFieldsEnabled.value = debugStore.enableFields.map((_, index) => {
                         return (disabledMask & (1 << index)) === 0;
                     });
 

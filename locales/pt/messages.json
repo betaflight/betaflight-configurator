@@ -166,6 +166,10 @@
         "message": "Ativar modo de CLI apenas",
         "description": "Text for the option to enable or disable CLI only mode"
     },
+    "automaticDevOptions": {
+        "message": "Ativar automaticamente as definições de desenvolvimento para compilações preview",
+        "description": "Text for the option to automatically enable development settings for preview builds"
+    },
     "showManualMode": {
         "message": "Ativar modo de ligação manual",
         "description": "Text for the option to enable or disable manual connection mode"
@@ -2099,7 +2103,7 @@
         "message": "Com este parâmetro, o D Setpoint Weight pode ser reduzido perto do centro dos sticks, o que resulta em mais suavidade no fim de flips e rolls.<br> O valor representa um ponto de defleção do stick: 0 - stick centrado, 1 - defleção total. Quando o stick está acima desse ponto, o peso do Setpoint é mantido constante no seu valor configurado. Quando o stick está posicionado abaixo desse ponto, o peso do Setpoint é reduzido proporcionalmente, chegando a 0 na posição central do stick.<br>Valor de 1 dá efeito máximo de suavização, enquanto o valor de 0 mantém o peso do Setpoint fixo no seu valor configurado sobre todo o alcance do stick."
     },
     "pidTuningDtermSetpointHelp": {
-        "message": "Este parâmetro determina o efeito acelerador do stick dentro do componente derivado.<br> O valor de 0 é igual ao antigo método de medição, onde o D apenas segue o gyro, enquanto o valor de 1 é igual ao antigo método de erro com igual rácio de rastreio de gyro e sticks.<br> Um valor baixo é igual a uma resposta de stick mais lenta\/suave, enquanto um valor mais alto fornece mais resposta de aceleração de stick.<br>Note que é recomendado que a interpolação RC seja ativada com valores mais altos para evitar que os kicks de controle façam ruído."
+        "message": "Este parâmetro determina o efeito acelerador do stick dentro do componente derivado.<br> O valor de 0 é o antigo método de medição, onde o D apenas segue o gyro. O valor de 1 é igual ao antigo método de erro com igual rácio de rastreio de gyro e de stick.<br> Um valor baixo é igual a uma resposta de stick mais lenta\/suave, enquanto um valor mais alto fornece mais resposta de aceleração de stick.<br>Note que é recomendado que a interpolação RC seja ativada quando usar valores mais altos para evitar ruído nos kicks de controle."
     },
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):<\/strong> Usar a Transição do ponto D com um valor maior que 0 e menor do que 0.1 não é recomendado. Fazer isso pode causar instabilidade e resposta reduzida do stick conforme o stick atravessa a posição central.<\/span>"
@@ -2492,7 +2496,7 @@
     },
     "auxiliaryDisabled": {
         "message": "(Desativado)",
-        "descripton": "Text to add to the ARM mode (maybe others in the future) in the MODES TAB when it has been disabled for some external reason"
+        "description": "Text to add to the ARM mode (maybe others in the future) in the MODES TAB when it has been disabled for some external reason"
     },
     "auxiliaryAddRange": {
         "message": "Adicionar Intervalo"
@@ -2972,7 +2976,7 @@
         "message": "Geral"
     },
     "gpsHeadHelp": {
-        "message": "Mostra várias informações relacionadas com o GPS. Direção só é exibida quando o Magnetómetro está em uso",
+        "message": "Mostra várias informações de GPS. Direções só são exibidas quando o Magnetómetro está ativo.",
         "description": "Help text for gpsHead"
     },
     "gpsMapHead": {
@@ -3866,7 +3870,7 @@
     },
     "firmwareFlasherBoardVerficationTargetNotAvailable": {
         "message": "A aplicação detetou a placa: <strong>{{boardName}}<\/strong> mas não foi encontrado nenhum target oficial do Betaflight",
-        "description": "Board verification has succeeded, but the target is not available as offical Betaflight target."
+        "description": "Board verification has succeeded, but the target is not available as official Betaflight target."
     },
     "firmwareFlasherBoardVerificationFail": {
         "message": "A aplicação<span class=\"message-negative\">falhou<\/span> a verificar a placa. Se isto persistir, tente mudar de abas e tentar novamente, reconecte o USB, ou conecte primeiro se se pode ter esquecido de aplicar padrões personalizados.",
@@ -4486,7 +4490,7 @@
         "description": "P and I Gain (Stability) tuning slider label"
     },
     "pidTuningPIGainSliderHelp": {
-        "message": "Aumente o slider de Rastreio para melhorar a resposta do quad aos seus comandos e também às influências externas; evitando que o nariz do quad perca o rumo em qualquer condição.<br \/><br \/>Valores mais baixos de ‘Rastreio'’ terão muitos balanços e perderão o rumo em movimentos dos sticks e em propwash. 'Rastreio' elevado pode resultar em oscilação e rápido retorno (difícil de ver, mas pode ouvir). Rastreio excessivo pode resultar em oscilações e motores quentes.",
+        "message": "Aumente o slider de Rastreio para melhorar a resposta do aparelho aos seus comandos e também às influências externas; evitando que o nariz do aparelho perca o rumo em qualquer condição.<br \/><br \/>Valores mais baixos de ‘Rastreio'’ terão muitos balanços e perderão o rumo em movimentos dos sticks e em propwash. 'Rastreio' elevado pode resultar em oscilação e rápido retorno (difícil de ver, mas pode ouvir). Rastreio excessivo pode resultar em oscilações e motores quentes.",
         "description": "P and I gain tuning slider helpicon message"
     },
     "pidTuningResponseSlider": {
@@ -4597,7 +4601,7 @@
         "message": "Frequência de Corte [Hz]"
     },
     "pidTuningNotchFilterHelp": {
-        "message": "Um Filtro de Notch é um filtro simétrico, estreito e de alto-corte, com parâmetros centrais e de corte.<br \/><br \/>O valor do centro é a frequência central do filtro. O valor do corte é a frequência de corte baixa -3dB<br \/><br \/>Por exemplo, um corte de Notch de 160 com um centro de Notch de 260 retorna um notch largo com um intervalo de -3dB de 160-360Hz e uma maior atenuação em torno de 260hz.",
+        "message": "Um Filtro de Notch é um filtro simétrico, estreito, de alto-corte com parâmetros centrais e de corte.<br \/><br \/>O valor do centro é a frequência central do filtro. O valor do corte é a frequência de corte baixa -3 dB<br \/><br \/>Por exemplo, um corte de Notch de 160 com um centro de Notch de 260 retorna um notch largo com um intervalo de -3 dB de 160-360Hz e uma maior atenuação em torno de 260 hz.",
         "description": "Notch filter helpicon message"
     },
     "pidTuningDynamicNotchFilterGroup": {
@@ -6730,7 +6734,7 @@
         "message": "Define os limites usados para elementos do OSD com estados de alarme."
     },
     "osdSectionHelpStats": {
-        "message": "Define os valores exibidos no ecrã de estatísticas após voo."
+        "message": "Defina os valores exibidos na tela de estatísticas pós-vôo."
     },
     "osdSectionHelpWarnings": {
         "message": "Ative ou Desative os alertas que serão exibidos no elemento de AVISOS."
@@ -7093,7 +7097,7 @@
         "message": "Ângulo máximo permitido para Armar [degrees]"
     },
     "configurationSmallAngleHelp": {
-        "message": "A aeronave não irá ARMAR se estiver inclinada além do limite de graus especificado. Isto só será utilizado se o acelerómetro estiver ativo. Definir um ângulo de 180 irá efetivamente desativar esta verificação"
+        "message": "A aeronave não irá ARMAR se estiver inclinada além do limite de graus especificado. Apenas se aplica se o acelerómetro estiver ativo. Definir para 180 irá desativar esta verificação."
     },
     "configurationBatteryVoltage": {
         "message": "Voltagem da Bateria"
@@ -7160,7 +7164,7 @@
         "message": "Medição"
     },
     "pidTuningDeltaTip": {
-        "message": "<b>Derivativo a partir de erro<\/b> fornece uma resposta mais direta e é principalmente preferido para Corridas.<br \/><br \/><b>Derivativo a partir de Medição<\/b> fornece uma resposta mais suave pelo que é mais útil para freestyling"
+        "message": "<b>Derivativo a partir de erro<\/b> fornece uma resposta mais direta e é habitualmente preferido para Corridas.<br \/><br \/><b>Derivativo a partir de Medição<\/b> fornece uma resposta de stick mais suave que é mais útil para freestyling"
     },
     "pidTuningPidControllerTip": {
         "message": "<b>Legado vs Betaflight (flutuante):<\/b> A lógica e a escala do PID é exatamente a mesma. Não é necessário reajustar. O modo Legado é o antigo Betaflight Evolved Rewrite, que é um controlador PID básico baseado em matemática de números inteiros. O controlador PID Betaflight usa matemática de vírgula flutuante e tem várias novas funcionalidades especificamente desenhadas para multirotores<br><b>Inteiro vs Flutuante:<\/b> A lógica e a escala do PID é exatamente a mesma. Não é necessário reajustar. placas F1 não tem um FPU a bordo e a matemática de vírgula flutuante aumenta a carga de CPU; Matemática com inteiros melhora a performance, mas a matemática flutuante pode ganhar mais precisão."
@@ -7373,7 +7377,7 @@
         "message": "Instalar a partir da loja Google Play"
     },
     "cordovaWebviewEnable": {
-        "message": "Vá à aba de informações sobre o seu dispositivo nas configurações e toque 10 vezes no número de versão de compilação para habilitar 'Opções do desenvolvedor'. Depois, procure e vá às opções do desenvolvedor e selecione <b>{{app}}<\/b> como provedor de webview."
+        "message": "Vá para a seção de informações do dispositivo nas Configurações e toque no número de compilação 10 vezes para permitir 'Opções do desenvolvedor'. Depois abra as opções do desenvolvedor e selecione <b>{{app}}<\/b> como provedor do WebView."
     },
     "cordovaWebviewEnableBtn": {
         "message": "Abrir definições"
@@ -7491,11 +7495,11 @@
     },
     "presetsButtonSave": {
         "message": "Gravar e Reiniciar",
-        "description": "A button that saves all appied presets - analog to 'save' command in CLI"
+        "description": "A button that saves all applied presets - analogous to 'save' command in CLI"
     },
     "presetsButtonCancel": {
         "message": "Cancelar",
-        "description": "A button that restarts FC without saving appied presets - analog to 'exit' command in CLI"
+        "description": "A button that restarts FC without saving applied presets - analogous to 'exit' command in CLI"
     },
     "presetsApplyingPresets": {
         "message": "A aplicar a configuração...",
@@ -7603,11 +7607,11 @@
     },
     "presetsNoPresetsFound": {
         "message": "Não foram encontradas predefinições para os parâmetros de pesquisa",
-        "description": "Message that apprears on presets tab if no presets were found"
+        "description": "Message that appears on presets tab if no presets were found"
     },
     "presetsTooManyPresetsFound": {
         "message": "Atingiu o limite máximo de número de predefinições mostradas",
-        "description": "Message that apprears on presets tab if too many presets found"
+        "description": "Message that appears on presets tab if too many presets found"
     },
     "presetsOptionsPlaceholder": {
         "message": "ATENÇÃO! Reveja a lista de opções",
@@ -7827,14 +7831,17 @@
     "profileBackupEmptyResult": {
         "message": "Cópia de segurança não efetuada"
     },
-    "labelSignCounter": {
-        "message": "Contador de Sinais"
-    },
     "labelLogin": {
         "message": "Iniciar sessão"
     },
     "labelSignOut": {
         "message": "Terminar sessão"
+    },
+    "labelAvatarUrl": {
+        "message": "URL do Avatar"
+    },
+    "placeholderAvatarUrl": {
+        "message": "Insira o URL da imagem para o seu avatar"
     },
     "labelCreatePasskey": {
         "message": "Criar chave de acesso"
@@ -7887,8 +7894,8 @@
     "labelCreated": {
         "message": "Criado"
     },
-    "labelUpdated": {
-        "message": "Atualizado"
+    "labelLastUsed": {
+        "message": "Usado pela última vez"
     },
     "labelActions": {
         "message": "Ações"
