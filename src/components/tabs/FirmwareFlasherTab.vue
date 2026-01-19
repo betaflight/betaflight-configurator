@@ -614,8 +614,9 @@
             <div class="content">
                 <div v-html="$t('unstableFirmwareAcknowledgementDialog')"></div>
                 <div>
-                    <label class="vue-switch-label">
+                    <label class="vue-switch-label" for="dialogUnstableFirmwareAcknowledgement-acknowledge">
                         <input
+                            id="dialogUnstableFirmwareAcknowledgement-acknowledge"
                             v-model="state.dialogUnstableFirmwareAcknowledgementCheckbox"
                             name="dialogUnstableFirmwareAcknowledgement-acknowledge"
                             class="vue-switch-input"

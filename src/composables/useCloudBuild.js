@@ -197,7 +197,7 @@ export function useCloudBuild(params) {
                 customDefinesText
                     .split(" ")
                     .map((element) => element.trim())
-                    .filter((v) => v)
+                    .filter(Boolean)
                     .forEach((v) => request.options.push(v));
             }
         }
