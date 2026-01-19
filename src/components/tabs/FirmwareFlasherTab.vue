@@ -3,7 +3,7 @@
         <div class="content_wrapper">
             <div class="tab_title">{{ $t("tabFirmwareFlasher") }}</div>
             <WikiButton docUrl="firmware_flasher" />
-            <div ref="tabSponsor" class="tab_sponsor"></div>
+            <SponsorTile ref="sponsorTile" sponsor-type="flash" />
             <div v-if="state.flashingInProgress" class="data-loading flashing-wait">
                 <p>{{ state.progressLabelText }} {{ $t("firmwareFlasherPleaseWait") }}</p>
             </div>
@@ -695,12 +695,12 @@ import { tracking } from "../../js/Analytics";
 import PortHandler from "../../js/port_handler";
 import { gui_log } from "../../js/gui_log";
 import semver from "semver";
-import Sponsor from "../../js/Sponsor";
 import FileSystem from "../../js/FileSystem";
 import AutoBackup from "../../js/utils/AutoBackup.js";
 import { EventBus } from "../eventBus";
 import { ispConnected } from "../../js/utils/connection.js";
 import FC from "../../js/fc";
+import SponsorTile from "../sponsor/SponsorTile.vue";
 
 export default defineComponent({
     name: "FirmwareFlasherTab",
@@ -708,6 +708,7 @@ export default defineComponent({
         BaseTab,
         WikiButton,
         Multiselect,
+        SponsorTile,
     },
     setup() {
         // Get $t from Vue i18n if available, otherwise use fallback
@@ -820,8 +821,8 @@ export default defineComponent({
         const cloudTargetLogLink = ref(null);
         const cloudTargetStatusSpan = ref(null);
 
-        // Other refs
-        const tabSponsor = ref(null);
+        // Sponsor component ref
+        const sponsorTile = ref(null);
 
         // Verify board dialog refs
         const verifyBoardDialog = ref(null);
@@ -836,7 +837,6 @@ export default defineComponent({
         let dfuMonitorInterval = null;
 
         const buildApi = new BuildApi();
-        const sponsor = new Sponsor();
         const logHead = "[FIRMWARE_FLASHER]";
 
         const FLASH_MESSAGE_TYPES = {
@@ -862,10 +862,18 @@ export default defineComponent({
 
         const enableLoadRemoteFileButton = (enabled) => {
             state.loadRemoteButtonDisabled = !enabled;
+            // Resume sponsor when load buttons are re-enabled
+            if (enabled) {
+                sponsorTile.value?.resume();
+            }
         };
 
         const enableLoadFileButton = (enabled) => {
             state.loadFileButtonDisabled = !enabled;
+            // Resume sponsor when load buttons are re-enabled
+            if (enabled) {
+                sponsorTile.value?.resume();
+            }
         };
 
         const enableDfuExitButton = (enabled) => {
@@ -929,7 +937,7 @@ export default defineComponent({
                 flashingMessage($t("firmwareFlasherFirmwareNotLoaded"), FLASH_MESSAGE_TYPES.NEUTRAL);
             }
 
-            GUI.interval_resume("sponsor");
+            sponsorTile.value?.resume();
         };
 
         const preservePreFlashingState = () => {
@@ -1495,17 +1503,8 @@ export default defineComponent({
 
             GUI.content_ready(function () {});
 
-            // Localize and load sponsor content
+            // Localize content
             i18n.localizePage();
-
-            // Use setTimeout to give Vue time to populate the ref after async operations
-            setTimeout(() => {
-                if (tabSponsor.value) {
-                    // Technical debt: Sponsor.js can accept raw DOM element but jQuery is used here
-                    // for backward compatibility. Sponsor.loadSponsorTile internally checks for jQuery.
-                    sponsor.loadSponsorTile("flash", $(tabSponsor.value));
-                }
-            }, 100);
         });
 
         onBeforeUnmount(() => {
@@ -1542,6 +1541,9 @@ export default defineComponent({
                     ? boardSelection.state.selectedBoard
                     : boardSelection.state.selectedBoard?.target;
 
+            // Pause sponsor during flashing
+            sponsorTile.value?.pause();
+
             await firmwareFlashing.startFlashing({
                 config: state.config,
                 clearBoardConfig,
@@ -1576,7 +1578,6 @@ export default defineComponent({
                 enableFlashButton(true);
                 enableLoadRemoteFileButton(true);
                 enableLoadFileButton(true);
-                GUI.interval_resume("sponsor");
                 flashingMessage($t(message), FLASH_MESSAGE_TYPES.INVALID);
             };
 
@@ -1912,8 +1913,6 @@ export default defineComponent({
                 portAvailable: PortHandler.portAvailable,
                 dfuAvailable: PortHandler.dfuAvailable,
                 preservePreFlashingState,
-                pauseSponsorInterval: () => GUI.interval_pause("sponsor"),
-                resumeSponsorInterval: () => GUI.interval_resume("sponsor"),
                 enableFlashButton,
                 enableDfuExitButton,
                 enableLoadRemoteFileButton,
@@ -2136,9 +2135,9 @@ export default defineComponent({
             state,
             cloudBuild,
             boardSelection,
-            tabSponsor,
             FLASH_MESSAGE_TYPES,
             // Template refs
+            sponsorTile,
             customDefinesInput,
             detectBoardButton,
             exitDfuButton,

@@ -7,7 +7,7 @@
                     <div v-html="$t('defaultWelcomeIntro')"></div>
                 </div>
             </div>
-            <div class="tab_sponsor" ref="sponsorContainer"></div>
+            <SponsorTile sponsor-type="landing" />
             <div class="content_mid grid-row">
                 <div class="column third_left text1 grid-col col4">
                     <div class="wrap">
@@ -77,21 +77,18 @@
 
 <script>
 import { defineComponent, ref, onMounted } from "vue";
-import $ from "jquery";
 import BaseTab from "./BaseTab.vue";
+import SponsorTile from "../sponsor/SponsorTile.vue";
 import GUI from "../../js/gui";
 import { i18n } from "../../js/localization";
-import Sponsor from "../../js/Sponsor";
 
 export default defineComponent({
     name: "LandingTab",
     components: {
         BaseTab,
+        SponsorTile,
     },
     setup() {
-        const sponsorContainer = ref(null);
-        const sponsor = new Sponsor();
-
         // Get available languages including DEFAULT
         const availableLanguages = ref(["DEFAULT", ...i18n.getLanguagesAvailables()]);
         const selectedLanguage = ref(i18n.selectedLanguage);
@@ -104,15 +101,10 @@ export default defineComponent({
         }
 
         onMounted(() => {
-            // Load sponsor tile - wrap with jQuery for Sponsor.js compatibility
-            if (sponsorContainer.value) {
-                sponsor.loadSponsorTile("landing", $(sponsorContainer.value));
-            }
             GUI.content_ready();
         });
 
         return {
-            sponsorContainer,
             availableLanguages,
             selectedLanguage,
             changeLanguage,

@@ -283,8 +283,6 @@ export function useFirmwareFlashing(params = {}) {
                     resetFlashingState?.();
                 });
         }
-
-        GUI.interval_resume("sponsor");
     };
 
     /**
