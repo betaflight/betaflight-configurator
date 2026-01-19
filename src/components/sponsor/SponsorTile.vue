@@ -1,7 +1,9 @@
 <template>
-    <Transition name="fade">
-        <div v-if="isVisible" class="tab_sponsor" v-html="content"></div>
-    </Transition>
+    <div class="sponsor-container">
+        <Transition name="fade" mode="out-in">
+            <div v-if="isVisible" class="tab_sponsor" v-html="content"></div>
+        </Transition>
+    </div>
 </template>
 
 <script>
@@ -93,6 +95,11 @@ export default defineComponent({
 </script>
 
 <style scoped>
+.sponsor-container {
+    min-height: 90px;
+    position: relative;
+}
+
 .fade-enter-active,
 .fade-leave-active {
     transition: opacity 1.5s ease;
@@ -101,5 +108,11 @@ export default defineComponent({
 .fade-enter-from,
 .fade-leave-to {
     opacity: 0;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+    position: absolute;
+    width: 100%;
 }
 </style>
