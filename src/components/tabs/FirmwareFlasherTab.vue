@@ -1102,6 +1102,10 @@ export default defineComponent({
 
         const buildOptionsList = (optionKey, options) => {
             // Updated for Vue-based selects - just update state
+            console.log(
+                `${logHead} buildOptionsList - ${optionKey}:`,
+                options.map((o) => `${o.name} (value: ${o.value}, default: ${o.default})`),
+            );
             if (optionKey === "radioProtocols") {
                 state.radioProtocolOptions = options;
             } else if (optionKey === "telemetryProtocols") {
@@ -1153,6 +1157,30 @@ export default defineComponent({
 
             // extract osd protocols from general options and add to osdProtocols
             state.cloudBuildOptions = FC.CONFIG.buildOptions || [];
+            console.log(`${logHead} buildOptions - FC.CONFIG.buildOptions:`, state.cloudBuildOptions);
+            console.log(`${logHead} buildOptions - validateBuildKey():`, validateBuildKey());
+
+            // Mark all options as default if they're in cloudBuildOptions
+            data.radioProtocols = data.radioProtocols.map((option) => {
+                option.default = option.default || state.cloudBuildOptions?.includes(option.value);
+                return option;
+            });
+
+            data.telemetryProtocols = data.telemetryProtocols.map((option) => {
+                option.default = option.default || state.cloudBuildOptions?.includes(option.value);
+                return option;
+            });
+
+            data.motorProtocols = data.motorProtocols.map((option) => {
+                option.default = option.default || state.cloudBuildOptions?.includes(option.value);
+                return option;
+            });
+
+            data.generalOptions = data.generalOptions.map((option) => {
+                option.default = option.default || state.cloudBuildOptions?.includes(option.value);
+                return option;
+            });
+
             data.osdProtocols = data.generalOptions
                 .filter((option) => option.group === "OSD")
                 .map((option) => {
@@ -1175,29 +1203,60 @@ export default defineComponent({
 
             // Preselect options where default === true
             state.selectedOptions = data.generalOptions.filter((option) => option.default === true);
+            console.log(
+                `${logHead} buildOptions - preselecting general options:`,
+                state.selectedOptions.map((o) => o.name),
+            );
 
             // Preselect radio protocol with default === true
             const defaultRadioProtocol = data.radioProtocols.find((option) => option.default === true);
             if (defaultRadioProtocol) {
+                console.log(`${logHead} buildOptions - preselecting radio protocol:`, defaultRadioProtocol.name);
                 state.selectedRadioProtocol = defaultRadioProtocol;
+            } else {
+                console.log(
+                    `${logHead} buildOptions - no default radio protocol found. Available:`,
+                    data.radioProtocols.map((o) => `${o.name} (default: ${o.default})`),
+                );
             }
 
             // Preselect telemetry protocol with default === true
             const defaultTelemetryProtocol = data.telemetryProtocols.find((option) => option.default === true);
             if (defaultTelemetryProtocol) {
+                console.log(
+                    `${logHead} buildOptions - preselecting telemetry protocol:`,
+                    defaultTelemetryProtocol.name,
+                );
                 state.selectedTelemetryProtocol = defaultTelemetryProtocol;
+            } else {
+                console.log(
+                    `${logHead} buildOptions - no default telemetry protocol found. Available:`,
+                    data.telemetryProtocols.map((o) => `${o.name} (default: ${o.default})`),
+                );
             }
 
             // Preselect OSD protocol with default === true
             const defaultOsdProtocol = data.osdProtocols.find((option) => option.default === true);
             if (defaultOsdProtocol) {
+                console.log(`${logHead} buildOptions - preselecting OSD protocol:`, defaultOsdProtocol.name);
                 state.selectedOsdProtocol = defaultOsdProtocol;
+            } else {
+                console.log(
+                    `${logHead} buildOptions - no default OSD protocol found. Available:`,
+                    data.osdProtocols.map((o) => `${o.name} (default: ${o.default})`),
+                );
             }
 
             // Preselect motor protocol with default === true
             const defaultMotorProtocol = data.motorProtocols.find((option) => option.default === true);
             if (defaultMotorProtocol) {
+                console.log(`${logHead} buildOptions - preselecting motor protocol:`, defaultMotorProtocol.name);
                 state.selectedMotorProtocol = defaultMotorProtocol;
+            } else {
+                console.log(
+                    `${logHead} buildOptions - no default motor protocol found. Available:`,
+                    data.motorProtocols.map((o) => `${o.name} (default: ${o.default})`),
+                );
             }
 
             // Initialize OSD protocol color state
