@@ -36,8 +36,18 @@ export default defineComponent({
                     DarkTheme.enabled ? "dark" : "light",
                     props.sponsorType,
                 );
-                if (newContent) {
+                if (newContent && newContent !== content.value) {
+                    // Fade out
+                    isVisible.value = false;
+                    // Wait for fade out transition to complete
+                    await new Promise((resolve) => setTimeout(resolve, 1500));
+                    // Update content
                     content.value = newContent;
+                    // Fade in
+                    isVisible.value = true;
+                    return;
+                } else if (newContent) {
+                    // Same content, just ensure it's visible
                     isVisible.value = true;
                     return;
                 }
@@ -85,7 +95,7 @@ export default defineComponent({
 <style scoped>
 .fade-enter-active,
 .fade-leave-active {
-    transition: opacity 0.5s ease;
+    transition: opacity 1.5s ease;
 }
 
 .fade-enter-from,
