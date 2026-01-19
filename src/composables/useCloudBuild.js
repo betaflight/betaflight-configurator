@@ -139,9 +139,9 @@ export function useCloudBuild(params) {
     };
 
     /**
-     * Request a cloud build and poll for status
+     * Build request configuration with selected options
      */
-    const requestCloudBuild = async (targetDetail, additionalParams) => {
+    const buildRequestConfig = (targetDetail, additionalParams) => {
         const {
             coreBuildMode,
             selectedRadioProtocol,
@@ -152,10 +152,9 @@ export function useCloudBuild(params) {
             expertMode,
             selectedCommit,
             customDefinesInput,
-            isConfigLocal,
         } = additionalParams;
 
-        let request = {
+        const request = {
             target: targetDetail.target,
             release: targetDetail.release,
             options: [],
@@ -164,96 +163,88 @@ export function useCloudBuild(params) {
         const coreBuild = targetDetail.cloudBuild !== true || coreBuildMode;
         if (coreBuild === true) {
             request.options.push("CORE_BUILD");
-        } else {
-            request.options.push("CLOUD_BUILD");
+            return request;
+        }
 
-            // Add selected protocol options from state
-            if (selectedRadioProtocol) {
-                request.options.push(selectedRadioProtocol.value);
-            }
-            if (selectedTelemetryProtocol) {
-                request.options.push(selectedTelemetryProtocol.value);
-            }
-            if (Array.isArray(selectedOptions)) {
-                selectedOptions.forEach((option) => {
-                    request.options.push(option.value);
-                });
-            }
-            if (selectedOsdProtocol) {
-                request.options.push(selectedOsdProtocol.value);
-            }
-            if (selectedMotorProtocol) {
-                request.options.push(selectedMotorProtocol.value);
+        request.options.push("CLOUD_BUILD");
+
+        // Add selected protocol options
+        if (selectedRadioProtocol) request.options.push(selectedRadioProtocol.value);
+        if (selectedTelemetryProtocol) request.options.push(selectedTelemetryProtocol.value);
+        if (selectedOsdProtocol) request.options.push(selectedOsdProtocol.value);
+        if (selectedMotorProtocol) request.options.push(selectedMotorProtocol.value);
+
+        if (Array.isArray(selectedOptions)) {
+            selectedOptions.forEach((option) => request.options.push(option.value));
+        }
+
+        if (expertMode) {
+            if (targetDetail.releaseType === "Unstable") {
+                request.commit = selectedCommit;
             }
 
-            if (expertMode) {
-                if (targetDetail.releaseType === "Unstable") {
-                    request.commit = selectedCommit;
-                }
-
-                // Parse custom defines from input
-                if (customDefinesInput?.value) {
-                    const customDefinesText = customDefinesInput.value.value || "";
-                    customDefinesText
-                        .split(" ")
-                        .map((element) => element.trim())
-                        .forEach((v) => {
-                            if (v) {
-                                request.options.push(v);
-                            }
-                        });
-                }
+            // Parse custom defines from input
+            if (customDefinesInput?.value) {
+                const customDefinesText = customDefinesInput.value.value || "";
+                customDefinesText
+                    .split(" ")
+                    .map((element) => element.trim())
+                    .filter((v) => v)
+                    .forEach((v) => request.options.push(v));
             }
         }
 
-        console.info("[CLOUD_BUILD] Build request:", request);
-        let response = await buildApi.requestBuild(request);
-        if (!response) {
-            flashingMessage("Build request failed", FLASH_MESSAGE_TYPES.INVALID);
-            enableLoadRemoteFileButton(true);
-            return null;
-        }
+        return request;
+    };
 
-        console.info("[CLOUD_BUILD] Build response:", response);
-
-        // If not a cloud build, download directly
-        if (!targetDetail.cloudBuild) {
-            try {
-                const firmware = await loadFirmwareWithRetry(response.url, response.file);
-                if (firmware) {
-                    processFile(firmware, response.file);
-                }
-            } catch (error) {
-                console.error("[CLOUD_BUILD] Failed to load firmware:", error);
+    /**
+     * Download firmware for non-cloud builds
+     */
+    const downloadDirectFirmware = async (response) => {
+        try {
+            const firmware = await loadFirmwareWithRetry(response.url, response.file);
+            if (firmware) {
+                processFile(firmware, response.file);
             }
-            return response;
+        } catch (error) {
+            console.error("[CLOUD_BUILD] Failed to load firmware:", error);
+        }
+    };
+
+    /**
+     * Handle polling failure (timeout or cancellation)
+     */
+    const handlePollingFailure = (response, retries, retryTotal) => {
+        let suffix = "";
+        if (retries > retryTotal) {
+            suffix = "TimeOut";
+        }
+        if (state.cancelBuild) {
+            suffix = "Cancel";
         }
 
-        // Handle cloud build with polling
-        state.cancelBuild = false;
-        let statusResponse = await buildApi.requestBuildStatus(response.key);
+        const logUrl = `https://build.betaflight.com/api/builds/${response.key}/log`;
+        setCloudBuildLogLink($t(`firmwareFlasherCloudBuildLogUrl`), logUrl);
+        updateCloudBuildStatus($t(`firmwareFlasherCloudBuildFail${suffix}`), 0);
+        enableLoadRemoteFileButton(true);
+    };
 
-        // Check if build is already cached (instant success)
-        if (statusResponse?.status === "success") {
-            await processBuildSuccess(response, statusResponse, "Cached", isConfigLocal);
-            return response;
-        }
-
-        // Start polling for build status
-        enableCancelBuildButton(true);
+    /**
+     * Poll for cloud build status
+     */
+    const pollCloudBuildStatus = async (response, isConfigLocal) => {
         const retrySeconds = 5;
         let retries = 1;
         let processing = false;
         let timeout = 120;
-        const nominalBuildTime = 30; // 30 seconds nominal build time
-        const progressIncrement = 100 / (nominalBuildTime / retrySeconds); // Progress per 5-second interval
+        const nominalBuildTime = 30;
+        const progressIncrement = 100 / (nominalBuildTime / retrySeconds);
 
-        // Show initial queued status
         updateCloudBuildStatus($t("firmwareFlasherCloudBuildQueued"), 0);
 
         pollingTimer = setInterval(async () => {
             retries++;
-            let statusResponse = await buildApi.requestBuildStatus(response.key);
+            const statusResponse = await buildApi.requestBuildStatus(response.key);
 
             if (!statusResponse) {
                 console.warn("[CLOUD_BUILD] No status response received");
@@ -269,7 +260,8 @@ export function useCloudBuild(params) {
             }
             const retryTotal = timeout / retrySeconds;
 
-            if (statusResponse.status !== "queued" || retries > retryTotal || state.cancelBuild) {
+            const shouldStopPolling = statusResponse.status !== "queued" || retries > retryTotal || state.cancelBuild;
+            if (shouldStopPolling) {
                 enableCancelBuildButton(false);
                 stopPolling();
 
@@ -278,18 +270,7 @@ export function useCloudBuild(params) {
                     return;
                 }
 
-                let suffix = "";
-                if (retries > retryTotal) {
-                    suffix = "TimeOut";
-                }
-                if (state.cancelBuild) {
-                    suffix = "Cancel";
-                }
-
-                const logUrl = `https://build.betaflight.com/api/builds/${response.key}/log`;
-                setCloudBuildLogLink($t(`firmwareFlasherCloudBuildLogUrl`), logUrl);
-                updateCloudBuildStatus($t(`firmwareFlasherCloudBuildFail${suffix}`), 0);
-                enableLoadRemoteFileButton(true);
+                handlePollingFailure(response, retries, retryTotal);
                 return;
             }
 
@@ -298,10 +279,47 @@ export function useCloudBuild(params) {
             if (processing) {
                 updateCloudBuildStatus($t("firmwareFlasherCloudBuildProcessing"), pseudoProgress);
             } else {
-                // While queued, show steady progress towards full
                 updateCloudBuildStatus($t("firmwareFlasherCloudBuildQueued"), Math.min(retries * 5, 20));
             }
         }, retrySeconds * 1000);
+    };
+
+    /**
+     * Request a cloud build and poll for status
+     */
+    const requestCloudBuild = async (targetDetail, additionalParams) => {
+        const { isConfigLocal } = additionalParams;
+        const request = buildRequestConfig(targetDetail, additionalParams);
+
+        console.info("[CLOUD_BUILD] Build request:", request);
+        const response = await buildApi.requestBuild(request);
+        if (!response) {
+            flashingMessage("Build request failed", FLASH_MESSAGE_TYPES.INVALID);
+            enableLoadRemoteFileButton(true);
+            return null;
+        }
+
+        console.info("[CLOUD_BUILD] Build response:", response);
+
+        // If not a cloud build, download directly
+        if (!targetDetail.cloudBuild) {
+            await downloadDirectFirmware(response);
+            return response;
+        }
+
+        // Handle cloud build with polling
+        state.cancelBuild = false;
+        const statusResponse = await buildApi.requestBuildStatus(response.key);
+
+        // Check if build is already cached (instant success)
+        if (statusResponse?.status === "success") {
+            await processBuildSuccess(response, statusResponse, "Cached", isConfigLocal);
+            return response;
+        }
+
+        // Start polling for build status
+        enableCancelBuildButton(true);
+        await pollCloudBuildStatus(response, isConfigLocal);
 
         return response;
     };

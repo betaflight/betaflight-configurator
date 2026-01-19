@@ -199,191 +199,198 @@ async function startProcess() {
         }
     });
 
-    const ui_tabs = $("#tabs > ul");
-    $("a", "#tabs > ul").click(function () {
-        if ($(this).parent().hasClass("active") === false && !GUI.tab_switch_in_progress) {
-            // only initialize when the tab isn't already active
-            const self = this;
-            const tabClass = $(self).parent().prop("class");
-
-            const tabRequiresConnection = $(self).parent().hasClass("mode-connected");
-
-            const tab = tabClass.substring(4);
-            const tabName = $(self).text();
-
-            if (tabRequiresConnection && !CONFIGURATOR.connectionValid) {
-                gui_log(i18n.getMessage("tabSwitchConnectionRequired"));
-                return;
-            }
-
-            if (GUI.connect_lock) {
-                // tab switching disabled while operation is in progress
-                gui_log(i18n.getMessage("tabSwitchWaitForOperation"));
-                return;
-            }
-
-            if (GUI.flashingInProgress) {
-                // tab switching disabled during firmware flashing
-                gui_log(i18n.getMessage("tabSwitchWaitForOperation"));
-                return;
-            }
-
-            // Check if tab is allowed (either in allowedTabs for mode-connected tabs, or mode-loggedin tabs for logged-in users)
-            const isLoginSectionTab = $(self).closest("ul").hasClass("mode-loggedin");
-            const isTabAllowed = GUI.allowedTabs.includes(tab) || isLoginSectionTab;
-
-            if (!isTabAllowed) {
-                if (tab !== "firmware_flasher") {
-                    gui_log(i18n.getMessage("tabSwitchUpgradeRequired", [tabName]));
-                    return;
-                }
-
-                // Special handling for firmware flasher tab
-                if (GUI.connected_to || GUI.connecting_to) {
-                    $("a.connection_button__link").trigger("click");
-                }
-                // This line is required but it triggers opening the firmware flasher tab again
-                $("a.firmware_flasher_button__link").trigger("click");
-            }
-
-            GUI.tab_switch_in_progress = true;
-
-            GUI.tab_switch_cleanup(function () {
-                // disable active firmware flasher if it was active
-                if (
-                    $("a.firmware_flasher_button__label").hasClass("active") &&
-                    $("a.firmware_flasher_button__link").hasClass("active")
-                ) {
-                    $("a.firmware_flasher_button__label").removeClass("active");
-                    $("a.firmware_flasher_button__link").removeClass("active");
-                }
-                // disable previously active tab highlight
-                $("li", ui_tabs).removeClass("active");
-
-                // Highlight selected tab
-                $(self).parent().addClass("active");
-
-                // detach listeners and remove element data
-                const content = $("#content");
-                unmountVueTab();
-                content.empty();
-
-                // display loading screen
-                $("#cache .data-loading").clone().appendTo(content);
-
-                function content_ready() {
-                    GUI.tab_switch_in_progress = false;
-                }
-
-                checkSetupAnalytics(function (analyticsService) {
-                    analyticsService.sendAppView(tab);
-                });
-
-                switch (tab) {
-                    case "landing":
-                        // Vue tab - use mountVueTab instead of jQuery load
-                        mountVueTab("landing", content_ready);
-                        break;
-                    case "privacy_policy":
-                        import("./tabs/static_tab").then(({ staticTab }) =>
-                            staticTab.initialize("privacy_policy", content_ready),
-                        );
-                        break;
-                    case "options":
-                        // Vue tab - use mountVueTab instead of jQuery load
-                        mountVueTab("options", content_ready);
-                        break;
-                    case "firmware_flasher":
-                        // Vue tab - use mountVueTab instead of jQuery load
-                        mountVueTab("firmware_flasher", content_ready);
-                        break;
-                    case "help":
-                        // Vue tab - use mountVueTab instead of jQuery load
-                        mountVueTab("help", content_ready);
-                        break;
-                    case "auxiliary":
-                        mountVueTab("auxiliary", content_ready);
-                        break;
-                    case "adjustments":
-                        import("./tabs/adjustments").then(({ adjustments }) => adjustments.initialize(content_ready));
-                        break;
-                    case "ports":
-                        mountVueTab("ports", content_ready);
-                        break;
-                    case "led_strip":
-                        import("./tabs/led_strip").then(({ led_strip }) => led_strip.initialize(content_ready));
-                        break;
-                    case "failsafe":
-                        import("./tabs/failsafe").then(({ failsafe }) => failsafe.initialize(content_ready));
-                        break;
-                    case "transponder":
-                        import("./tabs/transponder").then(({ transponder }) => transponder.initialize(content_ready));
-                        break;
-                    case "osd":
-                        import("./tabs/osd").then(({ osd }) => osd.initialize(content_ready));
-                        break;
-                    case "vtx":
-                        import("./tabs/vtx").then(({ vtx }) => vtx.initialize(content_ready));
-                        break;
-                    case "power":
-                        import("./tabs/power").then(({ power }) => power.initialize(content_ready));
-                        break;
-                    case "setup":
-                        import("./tabs/setup").then(({ setup }) => setup.initialize(content_ready));
-                        break;
-                    case "setup_osd":
-                        import("./tabs/setup_osd").then(({ setup_osd }) => setup_osd.initialize(content_ready));
-                        break;
-                    case "configuration":
-                        mountVueTab("configuration", content_ready);
-                        break;
-                    case "pid_tuning":
-                        import("./tabs/pid_tuning").then(({ pid_tuning }) => pid_tuning.initialize(content_ready));
-                        break;
-                    case "receiver":
-                        import("./tabs/receiver").then(({ receiver }) => receiver.initialize(content_ready));
-                        break;
-                    case "servos":
-                        // Vue tab - use mountVueTab instead of jQuery load
-                        mountVueTab("servos", content_ready);
-                        break;
-                    case "gps":
-                        mountVueTab("gps", content_ready);
-                        break;
-                    case "motors":
-                        import("./tabs/motors").then(({ motors }) => motors.initialize(content_ready));
-                        break;
-                    case "sensors":
-                        import("./tabs/sensors").then(({ sensors }) => sensors.initialize(content_ready));
-                        break;
-                    case "logging":
-                        mountVueTab("logging", content_ready);
-                        break;
-                    case "onboard_logging":
-                        mountVueTab("onboard_logging", content_ready);
-                        break;
-                    case "cli":
-                        import("./tabs/cli").then(({ cli }) => cli.initialize(content_ready));
-                        break;
-                    case "presets":
-                        import("../tabs/presets/presets").then(({ presets }) => presets.initialize(content_ready));
-                        break;
-                    case "user_profile":
-                        // Vue tab - use mountVueTab instead of jQuery load
-                        mountVueTab("user_profile", content_ready);
-                        break;
-                    case "backups":
-                        // Vue tab - use mountVueTab instead of jQuery load
-                        mountVueTab("backups", content_ready);
-                        break;
-                    default:
-                        console.log(`Tab not found: ${tab}`);
-                }
-            });
+    const canSwitchTab = (tabRequiresConnection) => {
+        if (tabRequiresConnection && !CONFIGURATOR.connectionValid) {
+            gui_log(i18n.getMessage("tabSwitchConnectionRequired"));
+            return false;
         }
 
-        $(".tab_container").removeClass("reveal");
-        $("#background").hide();
+        if (GUI.connect_lock) {
+            gui_log(i18n.getMessage("tabSwitchWaitForOperation"));
+            return false;
+        }
+
+        if (GUI.flashingInProgress) {
+            gui_log(i18n.getMessage("tabSwitchWaitForOperation"));
+            return false;
+        }
+
+        return true;
+    };
+
+    const handleDisallowedTab = (tab, tabName, self) => {
+        if (tab !== "firmware_flasher") {
+            gui_log(i18n.getMessage("tabSwitchUpgradeRequired", [tabName]));
+            return false;
+        }
+
+        // Special handling for firmware flasher tab
+        if (GUI.connected_to || GUI.connecting_to) {
+            $("a.connection_button__link").trigger("click");
+        }
+        $("a.firmware_flasher_button__link").trigger("click");
+        return true;
+    };
+
+    const ui_tabs = $("#tabs > ul");
+    $("a", "#tabs > ul").click(function () {
+        if ($(this).parent().hasClass("active") || GUI.tab_switch_in_progress) {
+            return;
+        }
+
+        // only initialize when the tab isn't already active
+        const self = this;
+        const tabClass = $(self).parent().prop("class");
+        const tabRequiresConnection = $(self).parent().hasClass("mode-connected");
+        const tab = tabClass.substring(4);
+        const tabName = $(self).text();
+
+        if (!canSwitchTab(tabRequiresConnection)) {
+            return;
+        }
+
+        // Check if tab is allowed
+        const isLoginSectionTab = $(self).closest("ul").hasClass("mode-loggedin");
+        const isTabAllowed = GUI.allowedTabs.includes(tab) || isLoginSectionTab;
+
+        if (!isTabAllowed && !handleDisallowedTab(tab, tabName, self)) {
+            return;
+        }
+
+        GUI.tab_switch_in_progress = true;
+
+        GUI.tab_switch_cleanup(function () {
+            // disable active firmware flasher if it was active
+            if (
+                $("a.firmware_flasher_button__label").hasClass("active") &&
+                $("a.firmware_flasher_button__link").hasClass("active")
+            ) {
+                $("a.firmware_flasher_button__label").removeClass("active");
+                $("a.firmware_flasher_button__link").removeClass("active");
+            }
+            // disable previously active tab highlight
+            $("li", ui_tabs).removeClass("active");
+
+            // Highlight selected tab
+            $(self).parent().addClass("active");
+
+            // detach listeners and remove element data
+            const content = $("#content");
+            unmountVueTab();
+            content.empty();
+
+            // display loading screen
+            $("#cache .data-loading").clone().appendTo(content);
+
+            function content_ready() {
+                GUI.tab_switch_in_progress = false;
+            }
+
+            checkSetupAnalytics(function (analyticsService) {
+                analyticsService.sendAppView(tab);
+            });
+
+            switch (tab) {
+                case "landing":
+                    // Vue tab - use mountVueTab instead of jQuery load
+                    mountVueTab("landing", content_ready);
+                    break;
+                case "privacy_policy":
+                    import("./tabs/static_tab").then(({ staticTab }) =>
+                        staticTab.initialize("privacy_policy", content_ready),
+                    );
+                    break;
+                case "options":
+                    // Vue tab - use mountVueTab instead of jQuery load
+                    mountVueTab("options", content_ready);
+                    break;
+                case "firmware_flasher":
+                    // Vue tab - use mountVueTab instead of jQuery load
+                    mountVueTab("firmware_flasher", content_ready);
+                    break;
+                case "help":
+                    // Vue tab - use mountVueTab instead of jQuery load
+                    mountVueTab("help", content_ready);
+                    break;
+                case "auxiliary":
+                    mountVueTab("auxiliary", content_ready);
+                    break;
+                case "adjustments":
+                    import("./tabs/adjustments").then(({ adjustments }) => adjustments.initialize(content_ready));
+                    break;
+                case "ports":
+                    mountVueTab("ports", content_ready);
+                    break;
+                case "led_strip":
+                    import("./tabs/led_strip").then(({ led_strip }) => led_strip.initialize(content_ready));
+                    break;
+                case "failsafe":
+                    import("./tabs/failsafe").then(({ failsafe }) => failsafe.initialize(content_ready));
+                    break;
+                case "transponder":
+                    import("./tabs/transponder").then(({ transponder }) => transponder.initialize(content_ready));
+                    break;
+                case "osd":
+                    import("./tabs/osd").then(({ osd }) => osd.initialize(content_ready));
+                    break;
+                case "vtx":
+                    import("./tabs/vtx").then(({ vtx }) => vtx.initialize(content_ready));
+                    break;
+                case "power":
+                    import("./tabs/power").then(({ power }) => power.initialize(content_ready));
+                    break;
+                case "setup":
+                    import("./tabs/setup").then(({ setup }) => setup.initialize(content_ready));
+                    break;
+                case "setup_osd":
+                    import("./tabs/setup_osd").then(({ setup_osd }) => setup_osd.initialize(content_ready));
+                    break;
+                case "configuration":
+                    mountVueTab("configuration", content_ready);
+                    break;
+                case "pid_tuning":
+                    import("./tabs/pid_tuning").then(({ pid_tuning }) => pid_tuning.initialize(content_ready));
+                    break;
+                case "receiver":
+                    import("./tabs/receiver").then(({ receiver }) => receiver.initialize(content_ready));
+                    break;
+                case "servos":
+                    // Vue tab - use mountVueTab instead of jQuery load
+                    mountVueTab("servos", content_ready);
+                    break;
+                case "gps":
+                    mountVueTab("gps", content_ready);
+                    break;
+                case "motors":
+                    import("./tabs/motors").then(({ motors }) => motors.initialize(content_ready));
+                    break;
+                case "sensors":
+                    import("./tabs/sensors").then(({ sensors }) => sensors.initialize(content_ready));
+                    break;
+                case "logging":
+                    mountVueTab("logging", content_ready);
+                    break;
+                case "onboard_logging":
+                    mountVueTab("onboard_logging", content_ready);
+                    break;
+                case "cli":
+                    import("./tabs/cli").then(({ cli }) => cli.initialize(content_ready));
+                    break;
+                case "presets":
+                    import("../tabs/presets/presets").then(({ presets }) => presets.initialize(content_ready));
+                    break;
+                case "user_profile":
+                    // Vue tab - use mountVueTab instead of jQuery load
+                    mountVueTab("user_profile", content_ready);
+                    break;
+                case "backups":
+                    // Vue tab - use mountVueTab instead of jQuery load
+                    mountVueTab("backups", content_ready);
+                    break;
+                default:
+                    console.log(`Tab not found: ${tab}`);
+            }
+        });
     });
 
     $("#tabs ul.mode-disconnected li a:first").click();

@@ -33,47 +33,73 @@ class AutoDetect {
         MSP.read(event.detail);
     }
 
+    async loadTargetsIfNeeded() {
+        if (this._boardOptions && Array.isArray(this._boardOptions) && this._boardOptions.length > 0) {
+            return true;
+        }
+
+        try {
+            const buildApi = new BuildApi();
+            this._boardOptions = await buildApi.loadTargets();
+            return true;
+        } catch (e) {
+            console.error("Failed to load targets:", e);
+            gui_log(i18n.getMessage("firmwareFlasherNoTargetsLoaded"));
+            return false;
+        }
+    }
+
+    canAttemptConnection() {
+        if (!PortHandler.portAvailable) {
+            gui_log(i18n.getMessage("firmwareFlasherNoValidPort"));
+            return false;
+        }
+
+        if (!this._boardOptions || this._boardOptions.length === 0) {
+            gui_log(i18n.getMessage("firmwareFlasherNoTargetsLoaded"));
+            return false;
+        }
+
+        if (serial.connected || serial.connectionId) {
+            console.warn("Attempting to connect while there still is a connection", serial.connected);
+            gui_log(i18n.getMessage("serialPortOpenFail"));
+            return false;
+        }
+
+        return true;
+    }
+
     async verifyBoard(onBoardDetected) {
         const port = PortHandler.portPicker.selectedPort;
-        if (!port.startsWith("virtual")) {
-            let result = false;
-            let attempted = false;
-            // Ensure targets are loaded
-            if (!this._boardOptions || !Array.isArray(this._boardOptions) || this._boardOptions.length === 0) {
-                try {
-                    const buildApi = new BuildApi();
-                    this._boardOptions = await buildApi.loadTargets();
-                } catch (e) {
-                    gui_log(i18n.getMessage("firmwareFlasherNoTargetsLoaded"));
-                    return;
-                }
-            }
-            try {
-                if (!PortHandler.portAvailable) {
-                    gui_log(i18n.getMessage("firmwareFlasherNoValidPort"));
-                } else if (!this._boardOptions || this._boardOptions.length === 0) {
-                    gui_log(i18n.getMessage("firmwareFlasherNoTargetsLoaded"));
-                } else if (serial.connected || serial.connectionId) {
-                    console.warn("Attempting to connect while there still is a connection", serial.connected);
-                    gui_log(i18n.getMessage("serialPortOpenFail"));
-                } else {
-                    // We're about to attempt a connection: register listeners just-in-time
-                    attempted = true;
-                    this._onBoardDetected = onBoardDetected;
-                    serial.addEventListener("connect", this.boundHandleConnect, { once: true });
-                    serial.addEventListener("disconnect", this.boundHandleDisconnect, { once: true });
+        if (port.startsWith("virtual")) {
+            return;
+        }
 
-                    console.log("Connecting to serial port", port);
-                    gui_log(i18n.getMessage("firmwareFlasherDetectBoardQuery"));
-                    result = await serial.connect(port, { baudRate: PortHandler.portPicker.selectedBauds || 115200 });
-                }
-            } catch (error) {
-                console.error("Failed to connect:", error);
-            } finally {
-                // Only run cleanup when we actually attempted a connection and it failed
-                if (attempted && !result) {
-                    this.cleanup();
-                }
+        const targetsLoaded = await this.loadTargetsIfNeeded();
+        if (!targetsLoaded) {
+            return;
+        }
+
+        if (!this.canAttemptConnection()) {
+            return;
+        }
+
+        let result = false;
+        try {
+            // Register listeners just-in-time before connection attempt
+            this._onBoardDetected = onBoardDetected;
+            serial.addEventListener("connect", this.boundHandleConnect, { once: true });
+            serial.addEventListener("disconnect", this.boundHandleDisconnect, { once: true });
+
+            console.log("Connecting to serial port", port);
+            gui_log(i18n.getMessage("firmwareFlasherDetectBoardQuery"));
+            result = await serial.connect(port, { baudRate: PortHandler.portPicker.selectedBauds || 115200 });
+        } catch (error) {
+            console.error("Failed to connect:", error);
+        } finally {
+            // Only run cleanup when connection attempt failed
+            if (!result) {
+                this.cleanup();
             }
         }
     }

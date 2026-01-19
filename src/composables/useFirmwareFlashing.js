@@ -46,6 +46,47 @@ export function useFirmwareFlashing(params = {}) {
     };
 
     /**
+     * Convert data to bytes (Uint8Array)
+     */
+    const convertToBytes = (data) => {
+        if (data instanceof Uint8Array) {
+            return data;
+        }
+        if (data instanceof ArrayBuffer) {
+            return new Uint8Array(data);
+        }
+        return null;
+    };
+
+    /**
+     * Convert HEX data to string format
+     */
+    const convertHexDataToString = (data, options) => {
+        const { key, isLocalFile, enableLoadRemoteFileButton } = options;
+
+        // Handle string data directly (for local .hex files which are text)
+        if (typeof data === "string") {
+            console.log(`${logHead} Using string data directly, length:`, data.length);
+            return data;
+        }
+
+        // Convert binary data to string
+        const bytes = convertToBytes(data);
+        if (!bytes || bytes.byteLength === 0) {
+            console.error(`${logHead} Failed: bytes is null or empty`);
+            const errorMessage = isLocalFile
+                ? `Failed to load ${key}`
+                : $t?.("firmwareFlasherFailedToLoadOnlineFirmware");
+            flashingMessage?.(errorMessage, FLASH_MESSAGE_TYPES?.NEUTRAL);
+            enableLoadRemoteFileButton?.(true);
+            return null;
+        }
+
+        const decoder = new TextDecoder("utf-8");
+        return decoder.decode(bytes);
+    };
+
+    /**
      * Process HEX firmware data (from file or HTTP) and parse it
      */
     const processHex = async (data, options) => {
@@ -53,33 +94,7 @@ export function useFirmwareFlashing(params = {}) {
 
         console.log(`${logHead} processHex called with data type:`, typeof data);
 
-        // Handle string data directly (for local .hex files which are text)
-        let intelHex;
-        if (typeof data === "string") {
-            intelHex = data;
-            console.log(`${logHead} Using string data directly, length:`, intelHex.length);
-        } else {
-            // Convert binary data to string
-            let bytes = null;
-            if (data instanceof Uint8Array) {
-                bytes = data;
-            } else if (data instanceof ArrayBuffer) {
-                bytes = new Uint8Array(data);
-            }
-
-            if (!bytes || bytes.byteLength === 0) {
-                console.error(`${logHead} Failed: bytes is null or empty`);
-                const errorMessage = isLocalFile
-                    ? `Failed to load ${key}`
-                    : $t?.("firmwareFlasherFailedToLoadOnlineFirmware");
-                flashingMessage?.(errorMessage, FLASH_MESSAGE_TYPES?.NEUTRAL);
-                enableLoadRemoteFileButton?.(true);
-                return null;
-            }
-
-            const decoder = new TextDecoder("utf-8");
-            intelHex = decoder.decode(bytes);
-        }
+        const intelHex = convertHexDataToString(data, { key, isLocalFile, enableLoadRemoteFileButton });
 
         if (!intelHex || intelHex.length === 0) {
             console.error(`${logHead} Failed: intelHex is empty`);
@@ -105,6 +120,7 @@ export function useFirmwareFlashing(params = {}) {
                 return null;
             }
         } catch (error) {
+            console.error(`${logHead} Error parsing HEX:`, error);
             flashingMessage?.($t?.("firmwareFlasherHexCorrupted"), FLASH_MESSAGE_TYPES?.INVALID);
             enableFlashButton?.(false);
             return null;
@@ -118,20 +134,24 @@ export function useFirmwareFlashing(params = {}) {
         const { enableLoadRemoteFileButton, showLoadedFirmware, key, isLocalFile } = options;
 
         const toBytes = (buf) => {
-            return buf instanceof Uint8Array
-                ? buf
-                : buf instanceof ArrayBuffer
-                    ? new Uint8Array(buf)
-                    : buf.arrayBuffer
-                        ? new Uint8Array(buf.arrayBuffer ? undefined : buf)
-                        : buf;
+            if (buf instanceof Uint8Array) {
+                return buf;
+            }
+            if (buf instanceof ArrayBuffer) {
+                return new Uint8Array(buf);
+            }
+            // Return as-is for any other type (shouldn't happen since Blob is handled separately)
+            return buf;
         };
 
-        const bytes = data
-            ? data instanceof Blob
-                ? new Uint8Array(await data.arrayBuffer())
-                : toBytes(data)
-            : undefined;
+        let bytes;
+        if (!data) {
+            bytes = undefined;
+        } else if (data instanceof Blob) {
+            bytes = new Uint8Array(await data.arrayBuffer());
+        } else {
+            bytes = toBytes(data);
+        }
 
         if (!bytes || bytes.byteLength === 0) {
             const errorMessage = isLocalFile
@@ -196,7 +216,7 @@ export function useFirmwareFlashing(params = {}) {
     /**
      * Flash HEX firmware via selected port (DFU or Serial)
      */
-    const flashHexFirmware = async (options) => {
+    const flashHexFirmware = async (options = {}) => {
         const {
             firmware,
             eraseChip,
@@ -205,12 +225,18 @@ export function useFirmwareFlashing(params = {}) {
             flashManualBaudRate,
             filename,
             resetFlashingState,
+            selectedBoard,
+            localFirmwareLoaded,
+            showDialogVerifyBoard,
         } = options;
 
         const flashing_options = {
             flashingMessage,
             flashProgress,
             flashMessageTypes: FLASH_MESSAGE_TYPES,
+            selectedBoard,
+            localFirmwareLoaded,
+            showDialogVerifyBoard,
         };
 
         if (eraseChip) {
@@ -264,7 +290,7 @@ export function useFirmwareFlashing(params = {}) {
     /**
      * Executes the flashing sequence for HEX firmware, including optional config insertion
      */
-    const startFlashing = async (options) => {
+    const startFlashing = async (options = {}) => {
         const {
             config,
             clearBoardConfig,
@@ -275,6 +301,9 @@ export function useFirmwareFlashing(params = {}) {
             filename,
             resetFlashingState,
             setFlashOnConnect,
+            selectedBoard,
+            localFirmwareLoaded,
+            showDialogVerifyBoard,
         } = options;
 
         if (GUI.connect_lock) {
@@ -307,6 +336,9 @@ export function useFirmwareFlashing(params = {}) {
                 flashManualBaudRate,
                 filename,
                 resetFlashingState,
+                selectedBoard,
+                localFirmwareLoaded,
+                showDialogVerifyBoard,
             });
         } catch (e) {
             console.log(`${logHead} Flashing failed: ${e.message}`);
@@ -318,7 +350,7 @@ export function useFirmwareFlashing(params = {}) {
     /**
      * Orchestrates the flash workflow triggered by the Flash Firmware button
      */
-    const runFlashWorkflow = async (options) => {
+    const runFlashWorkflow = async (options = {}) => {
         const {
             connectLock,
             firmwareType,
@@ -425,20 +457,23 @@ export function useFirmwareFlashing(params = {}) {
     /**
      * Exit DFU mode
      */
-    const exitDfu = async (options) => {
+    const exitDfu = async (options = {}) => {
         const { dfuExitButtonDisabled, connectLock } = options;
 
         if (!dfuExitButtonDisabled && !connectLock) {
             try {
                 console.log(`${logHead} Closing DFU`);
-                DFU.requestPermission().then((device) => {
+                const device = await DFU.requestPermission();
+                if (device) {
                     DFU.connect(device.path, firmwareState.parsedHex, {
                         exitDfu: true,
                         flashingMessage,
                         flashProgress,
                         flashMessageTypes: FLASH_MESSAGE_TYPES,
                     });
-                });
+                } else {
+                    console.log(`${logHead} No DFU device selected`);
+                }
             } catch (e) {
                 console.log(`${logHead} Exiting DFU failed: ${e.message}`);
             }
@@ -448,8 +483,9 @@ export function useFirmwareFlashing(params = {}) {
     /**
      * Setup EventBus listeners for device events
      */
-    const setupFlashingEventListeners = (options) => {
-        const { flashOnConnect, onBoardChange, clearBufferedFirmware, updateDfuExitButtonState } = options;
+    const setupFlashingEventListeners = (options = {}) => {
+        const { flashOnConnect, onBoardChange, clearBufferedFirmware, updateDfuExitButtonState, initiateFlashing } =
+            options;
 
         const detectedUsbDevice = (device) => {
             const isFlashOnConnect = flashOnConnect;
@@ -468,6 +504,11 @@ export function useFirmwareFlashing(params = {}) {
                 STM32.rebootMode = 0;
                 if (wasReboot) {
                     GUI.connect_lock = false;
+                    // After device reboots to DFU, initiate flashing
+                    if (initiateFlashing) {
+                        console.log(`${logHead} Device rebooted to DFU, initiating flash`);
+                        initiateFlashing();
+                    }
                 }
             }
         };
@@ -481,6 +522,7 @@ export function useFirmwareFlashing(params = {}) {
 
             await onBoardChange("0");
             clearBufferedFirmware();
+            updateDfuExitButtonState?.();
         };
 
         return { detectedUsbDevice, onDeviceRemoved };

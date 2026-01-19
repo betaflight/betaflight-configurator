@@ -179,13 +179,16 @@ class STM32Protocol {
                 this.rebootMode = 1; // MSP_REBOOT_BOOTLOADER_ROM;
             }
 
-            const selectedBoard =
-                TABS.firmware_flasher.selectedBoard !== "0" ? TABS.firmware_flasher.selectedBoard : "NONE";
+            const selectedBoard = this.serialOptions.selectedBoard !== "0" ? this.serialOptions.selectedBoard : "NONE";
             const connectedBoard = FC.CONFIG.boardName ? FC.CONFIG.boardName : "UNKNOWN";
 
             try {
-                if (selectedBoard !== connectedBoard && !TABS.firmware_flasher.localFirmwareLoaded) {
-                    TABS.firmware_flasher.showDialogVerifyBoard(
+                if (
+                    selectedBoard !== connectedBoard &&
+                    !this.serialOptions.localFirmwareLoaded &&
+                    this.serialOptions.showDialogVerifyBoard
+                ) {
+                    this.serialOptions.showDialogVerifyBoard(
                         selectedBoard,
                         connectedBoard,
                         this.reboot.bind(this),

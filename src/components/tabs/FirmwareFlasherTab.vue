@@ -2,16 +2,7 @@
     <BaseTab tab-name="firmware_flasher">
         <div class="content_wrapper">
             <div class="tab_title">{{ $t("tabFirmwareFlasher") }}</div>
-            <div class="cf_doc_version_bt">
-                <a
-                    id="button-documentation"
-                    href=""
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    :aria-label="$t('betaflightSupportButton')"
-                    >{{ $t("betaflightSupportButton") }}</a
-                >
-            </div>
+            <WikiButton docUrl="firmware_flasher" />
             <div ref="tabSponsor" class="tab_sponsor"></div>
             <div v-if="state.flashingInProgress" class="data-loading flashing-wait">
                 <p>{{ state.progressLabelText }} {{ $t("firmwareFlasherPleaseWait") }}</p>
@@ -630,7 +621,7 @@
                             type="checkbox"
                         />
                         <span class="vue-switch-slider" aria-hidden="true"></span>
-                        <span class="vue-switch-text">{{ $t("unstableFirmwareAcknowledgement") }}</span>
+                        <span class="vue-switch-text" v-html="$t('unstableFirmwareAcknowledgement')"></span>
                     </label>
                 </div>
             </div>
@@ -660,11 +651,12 @@
             </div>
         </dialog>
 
-        <dialog id="dialog-verify-board">
+        <dialog ref="verifyBoardDialog" id="dialog-verify-board">
             <div id="dialog-verify-board-content-wrapper">
-                <div id="dialog-verify-board-content"></div>
+                <div ref="verifyBoardContent" id="dialog-verify-board-content"></div>
                 <div class="btn dialog-buttons">
                     <a
+                        ref="verifyBoardAbortButton"
                         href="#"
                         id="dialog-verify-board-abort-confirmbtn"
                         class="regular-button"
@@ -672,6 +664,7 @@
                         >{{ $t("firmwareFlasherButtonAbort") }}</a
                     >
                     <a
+                        ref="verifyBoardContinueButton"
                         href="#"
                         id="dialog-verify-board-continue-confirmbtn"
                         class="regular-button"
@@ -687,6 +680,7 @@
 <script>
 import { defineComponent, reactive, ref, onMounted, onBeforeUnmount, inject, nextTick } from "vue";
 import BaseTab from "./BaseTab.vue";
+import WikiButton from "../elements/WikiButton.vue";
 import Multiselect from "vue-multiselect";
 import "vue-multiselect/dist/vue-multiselect.css";
 import { i18n } from "../../js/localization";
@@ -712,6 +706,7 @@ export default defineComponent({
     name: "FirmwareFlasherTab",
     components: {
         BaseTab,
+        WikiButton,
         Multiselect,
     },
     setup() {
@@ -827,6 +822,12 @@ export default defineComponent({
 
         // Other refs
         const tabSponsor = ref(null);
+
+        // Verify board dialog refs
+        const verifyBoardDialog = ref(null);
+        const verifyBoardContent = ref(null);
+        const verifyBoardAbortButton = ref(null);
+        const verifyBoardContinueButton = ref(null);
         let dfuMonitorInterval = null;
 
         const buildApi = new BuildApi();
@@ -948,8 +949,9 @@ export default defineComponent({
 
         const setBoardConfig = (config, filename) => {
             state.config = config.join("\n");
-            state.isConfigLocal = filename !== undefined;
-            state.configFilename = filename !== undefined ? filename : null;
+            const hasFilename = filename !== undefined;
+            state.isConfigLocal = hasFilename;
+            state.configFilename = hasFilename ? filename : null;
         };
 
         const clearBufferedFirmware = () => {
@@ -1296,6 +1298,34 @@ export default defineComponent({
                     ? boardSelection.state.selectedBoard
                     : boardSelection.state.selectedBoard?.target;
 
+            const loadCommitsForUnstableRelease = async (detail) => {
+                const commits = await buildApi.loadCommits(detail.release);
+                if (commits) {
+                    state.commitOptions = commits.map((commit) => ({
+                        label: commit.message.split("\n")[0],
+                        value: commit.sha,
+                    }));
+                }
+                state.commitSelectionVisible = true;
+            };
+
+            const handleCloudBuildConfiguration = async (detail) => {
+                state.buildConfigVisible = true;
+
+                const expertMode = state.expertMode;
+                if (expertMode && detail.releaseType === "Unstable") {
+                    await loadCommitsForUnstableRelease(detail);
+                } else {
+                    state.commitSelectionVisible = false;
+                }
+
+                state.expertOptionsVisible = expertMode;
+                // Need to reset core build mode
+                if (corebuildModeCheckbox.value) {
+                    corebuildModeCheckbox.value.dispatchEvent(new Event("change", { bubbles: true }));
+                }
+            };
+
             const loadTargetDetail = async (detail) => {
                 if (!detail) {
                     enableLoadRemoteFileButton(false);
@@ -1303,32 +1333,9 @@ export default defineComponent({
                 }
 
                 state.targetDetail = detail;
+
                 if (detail.cloudBuild === true) {
-                    // Show build configuration when firmware version is selected
-                    state.buildConfigVisible = true;
-
-                    const expertMode = state.expertMode;
-                    if (expertMode) {
-                        if (detail.releaseType === "Unstable") {
-                            let commits = await buildApi.loadCommits(detail.release);
-                            if (commits) {
-                                state.commitOptions = commits.map((commit) => ({
-                                    label: commit.message.split("\n")[0],
-                                    value: commit.sha,
-                                }));
-                            }
-
-                            state.commitSelectionVisible = true;
-                        } else {
-                            state.commitSelectionVisible = false;
-                        }
-                    }
-
-                    state.expertOptionsVisible = expertMode;
-                    // Need to reset core build mode
-                    if (corebuildModeCheckbox.value) {
-                        corebuildModeCheckbox.value.dispatchEvent(new Event("change", { bubbles: true }));
-                    }
+                    await handleCloudBuildConfiguration(detail);
                 }
 
                 if (detail.configuration && !state.isConfigLocal) {
@@ -1430,11 +1437,12 @@ export default defineComponent({
                 onBoardChange,
                 clearBufferedFirmware,
                 updateDfuExitButtonState,
+                initiateFlashing,
                 logHead,
             });
 
             EventBus.$on("port-handler:auto-select-usb-device", detectedUsbDevice);
-            EventBus.$off("port-handler:device-removed", onDeviceRemoved);
+            EventBus.$on("port-handler:device-removed", onDeviceRemoved);
 
             return { detectedUsbDevice, onDeviceRemoved };
         };
@@ -1523,6 +1531,11 @@ export default defineComponent({
 
         // Flashing methods
         const startFlashing = async () => {
+            const selectedBoardTarget =
+                typeof boardSelection.state.selectedBoard === "string"
+                    ? boardSelection.state.selectedBoard
+                    : boardSelection.state.selectedBoard?.target;
+
             await firmwareFlashing.startFlashing({
                 config: state.config,
                 clearBoardConfig,
@@ -1533,6 +1546,10 @@ export default defineComponent({
                 flashManualBaudRate: state.flashManualBaudRate,
                 filename: state.filename,
                 resetFlashingState,
+                // Board verification options
+                selectedBoard: selectedBoardTarget,
+                localFirmwareLoaded: state.localFirmwareLoaded,
+                showDialogVerifyBoard,
                 // UI callbacks
                 flashingMessage,
                 flashProgress,
@@ -1594,7 +1611,7 @@ export default defineComponent({
             if (!result[storageTag] || Date.now() - result[storageTag] > DAY_MS) {
                 showAcknowledgementDialog(setAcknowledgementTimestamp);
             } else {
-                firmwareFlashing.startFlashing();
+                startFlashing();
             }
         };
 
@@ -1625,7 +1642,7 @@ export default defineComponent({
                     if (acknowledgementCallback) {
                         acknowledgementCallback();
                     }
-                    firmwareFlashing.startFlashing();
+                    startFlashing();
                 }
             };
 
@@ -1652,10 +1669,13 @@ export default defineComponent({
         };
 
         const initiateFlashing = async () => {
-            if (state.developmentFirmwareLoaded) {
+            const isUnstableFirmware =
+                state.developmentFirmwareLoaded || state.targetDetail?.releaseType === "Unstable";
+
+            if (isUnstableFirmware) {
                 checkShowAcknowledgementDialog();
             } else {
-                await firmwareFlashing.startFlashing();
+                await startFlashing();
             }
         };
 
@@ -1884,10 +1904,10 @@ export default defineComponent({
 
         const handleCoreBuildModeChange = () => {
             state.hideInCoreBuildMode = !state.coreBuildMode;
-            if (!state.coreBuildMode) {
-                state.expertOptionsVisible = state.expertMode;
-            } else {
+            if (state.coreBuildMode) {
                 state.expertOptionsVisible = false;
+            } else {
+                state.expertOptionsVisible = state.expertMode;
             }
         };
 
@@ -1986,6 +2006,54 @@ export default defineComponent({
             }
         };
 
+        const processFirmwareFile = async (file, extension, data) => {
+            state.localFirmwareLoaded = true;
+            const result = await firmwareFlashing.processFirmware(data, extension, {
+                flashingMessage,
+                enableFlashButton,
+                enableLoadRemoteFileButton: () => {}, // Don't enable remote button for local files
+                showLoadedFirmware,
+                t: $t,
+                flashMessageTypes: FLASH_MESSAGE_TYPES,
+                key: file.name,
+                logHead,
+                isLocalFile: true,
+            });
+            if (result) {
+                state.firmware_type = result.firmwareType;
+            }
+            enableLoadFileButton(true);
+        };
+
+        const processConfigFile = (file, data) => {
+            clearBufferedFirmware();
+            const config = cleanUnifiedConfigFileWrapper(data);
+            if (config === null) {
+                return;
+            }
+
+            setBoardConfig(config, file.name);
+
+            if (state.isConfigLocal && !firmwareFlashing.getParsedHex()) {
+                flashingMessage($t("firmwareFlasherLoadedConfig"), FLASH_MESSAGE_TYPES.NEUTRAL);
+                return;
+            }
+
+            const shouldEnableFlash =
+                (state.isConfigLocal && firmwareFlashing.getParsedHex() && !state.localFirmwareLoaded) ||
+                state.localFirmwareLoaded;
+            if (shouldEnableFlash) {
+                enableFlashButton(true);
+                flashingMessage(
+                    $t("firmwareFlasherFirmwareLocalLoaded", {
+                        filename: file.name,
+                        bytes: firmwareFlashing.getParsedHex()?.bytes_total || 0,
+                    }),
+                    FLASH_MESSAGE_TYPES.NEUTRAL,
+                );
+            }
+        };
+
         const handleLoadFile = async () => {
             if (state.loadFileButtonDisabled) {
                 return;
@@ -2009,65 +2077,13 @@ export default defineComponent({
 
                 if (extension === "uf2") {
                     const data = await FileSystem.readFileAsBlob(file);
-                    state.localFirmwareLoaded = true;
-                    const result = await firmwareFlashing.processFirmware(data, extension, {
-                        flashingMessage,
-                        enableFlashButton,
-                        enableLoadRemoteFileButton: () => {}, // Don't enable remote button for local files
-                        showLoadedFirmware,
-                        t: $t,
-                        flashMessageTypes: FLASH_MESSAGE_TYPES,
-                        key: file.name,
-                        logHead,
-                        isLocalFile: true,
-                    });
-                    if (result) {
-                        state.firmware_type = result.firmwareType;
-                    }
-                    enableLoadFileButton(true);
+                    await processFirmwareFile(file, extension, data);
                 } else if (extension === "hex") {
                     const data = await FileSystem.readFile(file);
-                    state.localFirmwareLoaded = true;
-                    const result = await firmwareFlashing.processFirmware(data, extension, {
-                        flashingMessage,
-                        enableFlashButton,
-                        enableLoadRemoteFileButton: () => {}, // Don't enable remote button for local files
-                        showLoadedFirmware,
-                        t: $t,
-                        flashMessageTypes: FLASH_MESSAGE_TYPES,
-                        key: file.name,
-                        logHead,
-                        isLocalFile: true,
-                    });
-                    if (result) {
-                        state.firmware_type = result.firmwareType;
-                    }
-                    enableLoadFileButton(true);
+                    await processFirmwareFile(file, extension, data);
                 } else {
                     const data = await FileSystem.readFile(file);
-                    clearBufferedFirmware();
-                    let config = cleanUnifiedConfigFileWrapper(data);
-                    if (config !== null) {
-                        setBoardConfig(config, file.name);
-
-                        if (state.isConfigLocal && !firmwareFlashing.getParsedHex()) {
-                            flashingMessage($t("firmwareFlasherLoadedConfig"), FLASH_MESSAGE_TYPES.NEUTRAL);
-                        }
-
-                        if (
-                            (state.isConfigLocal && firmwareFlashing.getParsedHex() && !state.localFirmwareLoaded) ||
-                            state.localFirmwareLoaded
-                        ) {
-                            enableFlashButton(true);
-                            flashingMessage(
-                                $t("firmwareFlasherFirmwareLocalLoaded", {
-                                    filename: file.name,
-                                    bytes: firmwareFlashing.getParsedHex()?.bytes_total || 0,
-                                }),
-                                FLASH_MESSAGE_TYPES.NEUTRAL,
-                            );
-                        }
-                    }
+                    processConfigFile(file, data);
                 }
             } catch (error) {
                 console.error("Error reading file:", error);
@@ -2094,16 +2110,44 @@ export default defineComponent({
         };
 
         const handleVerifyBoardAbort = () => {
-            const dialog = document.getElementById("dialog-verify-board");
-            if (dialog) {
-                dialog.close();
+            if (verifyBoardDialog.value) {
+                verifyBoardDialog.value.close();
             }
         };
 
         const handleVerifyBoardContinue = () => {
-            const continueButton = document.getElementById("dialog-verify-board-continue-confirmbtn");
-            if (continueButton) {
-                continueButton.click();
+            if (verifyBoardContinueButton.value) {
+                verifyBoardContinueButton.value.click();
+            }
+        };
+
+        const showDialogVerifyBoard = (selected, verified, onAccept, onAbort) => {
+            if (verifyBoardContent.value) {
+                verifyBoardContent.value.innerHTML = $t("firmwareFlasherVerifyBoard", {
+                    selected_board: selected,
+                    verified_board: verified,
+                });
+            }
+
+            if (verifyBoardDialog.value && !verifyBoardDialog.value.hasAttribute("open")) {
+                verifyBoardDialog.value.showModal();
+
+                const handleContinue = () => {
+                    verifyBoardDialog.value?.close();
+                    verifyBoardContinueButton.value?.removeEventListener("click", handleContinue);
+                    verifyBoardAbortButton.value?.removeEventListener("click", handleAbort);
+                    onAccept();
+                };
+
+                const handleAbort = () => {
+                    verifyBoardDialog.value?.close();
+                    verifyBoardContinueButton.value?.removeEventListener("click", handleContinue);
+                    verifyBoardAbortButton.value?.removeEventListener("click", handleAbort);
+                    onAbort();
+                };
+
+                verifyBoardContinueButton.value?.addEventListener("click", handleContinue);
+                verifyBoardAbortButton.value?.addEventListener("click", handleAbort);
             }
         };
 
@@ -2141,6 +2185,10 @@ export default defineComponent({
             cloudTargetInfoDiv,
             cloudTargetLogLink,
             cloudTargetStatusSpan,
+            verifyBoardDialog,
+            verifyBoardContent,
+            verifyBoardAbortButton,
+            verifyBoardContinueButton,
             // Functions
             enableFlashButton,
             enableLoadRemoteFileButton,
@@ -3049,7 +3097,7 @@ export default defineComponent({
 }
 
 :deep(.standard-select .multiselect__option--highlight) {
-    background: #007bff !important; /* Australian Blue */
+    background: #0056b3 !important; /* Darker blue for better contrast */
     color: #fff !important;
 }
 
