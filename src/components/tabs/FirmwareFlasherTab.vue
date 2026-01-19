@@ -3021,13 +3021,13 @@ export default defineComponent({
     position: relative;
 }
 
-/* Dark background and White text */
+/* Multi Selects */
 :deep(.standard-select .multiselect__tags) {
     min-height: 28px;
     padding: 0 30px 0 8px;
-    border: 1px solid #444;
+    border: 1px solid var(--surface-500);
     border-radius: 3px;
-    background: #222;
+    background: var(--surface-200);
     display: flex;
     align-items: center;
 }
@@ -3035,7 +3035,7 @@ export default defineComponent({
 :deep(.standard-select .multiselect__single),
 :deep(.standard-select .multiselect__input),
 :deep(.standard-select .multiselect__placeholder) {
-    color: #fff !important;
+    color: var(--text) !important;
     background: transparent !important;
     line-height: 26px;
     margin-bottom: 0;
@@ -3051,8 +3051,8 @@ export default defineComponent({
 :deep(.standard-select .multiselect__content-wrapper) {
     position: absolute;
     display: block;
-    background: #222;
-    border: 1px solid #444;
+    background: var(--surface-400);
+    border: 1px solid var(--surface-600);
     border-top: none;
     z-index: 99999 !important; /* Extremely high to clear all elements including switchery (1000) */
     max-height: 250px;
@@ -3064,14 +3064,14 @@ export default defineComponent({
 
 :deep(.standard-select .multiselect__option) {
     font-size: 12px !important;
-    color: #fff !important;
+    color: var(--text) !important;
     padding: 8px 12px;
     min-height: 30px;
 }
 
 :deep(.standard-select .multiselect__option--highlight) {
-    background: #0056b3 !important; /* Darker blue for better contrast */
-    color: #fff !important;
+    background: var(--surface-300) !important; /* Darker blue for better contrast */
+    color: var(--text) !important;
 }
 
 /* 1. Reset the internal input to remove borders/outlines */
@@ -3080,13 +3080,13 @@ export default defineComponent({
     outline: none !important;
     box-shadow: none !important;
     background: transparent !important;
-    color: #fff !important;
+    color: var(--text) !important;
     font-size: 12px !important;
 }
 
 /* 2. Target the placeholder text specifically */
 :deep(.standard-select .multiselect__placeholder) {
-    color: #fff !important;
+    color: var(--text) !important;
     font-size: 12px !important;
     margin-bottom: 0;
     padding-top: 0;
@@ -3096,7 +3096,7 @@ export default defineComponent({
 
 /* 3. Target the native placeholder inside the search input */
 :deep(.standard-select .multiselect__input::placeholder) {
-    color: #fff !important;
+    color: var(--text) !important;
     font-size: 12px !important;
     border: none !important;
 }
@@ -3165,20 +3165,20 @@ export default defineComponent({
 }
 
 :deep(.standard-select .multiselect__option--selected) {
-    background: var(--surface-400) !important;
+    background: var(--surface-300) !important;
     color: var(--text) !important;
     font-weight: normal;
 }
 
 :deep(.standard-select .multiselect__option--selected.multiselect__option--highlight) {
-    background: var(--surface-600) !important;
+    background: var(--surface-500) !important;
     color: var(--surface-50) !important;
 }
 
 /* Group headers (Legacy, Supported, etc.) */
 :deep(.standard-select .multiselect__option--group) {
-    background: #333 !important;
-    color: #aaa !important;
+    background: var(--surface-600) !important;
+    color: var(--text) !important;
     font-size: 10px !important;
     font-weight: bold;
 }
