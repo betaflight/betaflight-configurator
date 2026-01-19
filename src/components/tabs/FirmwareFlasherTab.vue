@@ -608,7 +608,11 @@
             </div>
         </div>
 
-        <dialog id="dialogUnstableFirmwareAcknowledgement">
+        <dialog
+            ref="unstableFirmwareDialog"
+            id="dialogUnstableFirmwareAcknowledgement"
+            @close="handleUnstableFirmwareDialogClose"
+        >
             <h3>{{ $t("warningTitle") }}</h3>
             <div class="content">
                 <div v-html="$t('unstableFirmwareAcknowledgementDialog')"></div>
@@ -651,12 +655,11 @@
             </div>
         </dialog>
 
-        <dialog ref="verifyBoardDialog" id="dialog-verify-board">
+        <dialog ref="verifyBoardDialog" id="dialog-verify-board" @close="handleVerifyBoardDialogClose">
             <div id="dialog-verify-board-content-wrapper">
                 <div ref="verifyBoardContent" id="dialog-verify-board-content"></div>
                 <div class="btn dialog-buttons">
                     <a
-                        ref="verifyBoardAbortButton"
                         href="#"
                         id="dialog-verify-board-abort-confirmbtn"
                         class="regular-button"
@@ -664,7 +667,6 @@
                         >{{ $t("firmwareFlasherButtonAbort") }}</a
                     >
                     <a
-                        ref="verifyBoardContinueButton"
                         href="#"
                         id="dialog-verify-board-continue-confirmbtn"
                         class="regular-button"
@@ -826,8 +828,13 @@ export default defineComponent({
         // Verify board dialog refs
         const verifyBoardDialog = ref(null);
         const verifyBoardContent = ref(null);
-        const verifyBoardAbortButton = ref(null);
-        const verifyBoardContinueButton = ref(null);
+        const verifyBoardOnAcceptCallback = ref(null);
+        const verifyBoardOnAbortCallback = ref(null);
+
+        // Unstable firmware dialog refs
+        const unstableFirmwareDialog = ref(null);
+        const unstableFirmwareAcknowledgementCallback = ref(null);
+
         let dfuMonitorInterval = null;
 
         const buildApi = new BuildApi();
@@ -1616,56 +1623,18 @@ export default defineComponent({
         };
 
         const showAcknowledgementDialog = (acknowledgementCallback) => {
-            const dialog = document.getElementById("dialogUnstableFirmwareAcknowledgement");
-            const flashButtonElement = document.getElementById("dialogUnstableFirmwareAcknowledgement-flashbtn");
-            const acknowledgeCheckboxElement = document.querySelector(
-                'input[name="dialogUnstableFirmwareAcknowledgement-acknowledge"]',
-            );
-            const cancelButtonElement = document.getElementById("dialogUnstableFirmwareAcknowledgement-cancelbtn");
-
-            if (!dialog || !flashButtonElement || !acknowledgeCheckboxElement || !cancelButtonElement) {
-                console.error("Dialog elements not found");
+            if (!unstableFirmwareDialog.value) {
+                console.error("Dialog element not found");
                 return;
             }
 
-            const onCheckboxChange = () => {
-                if (acknowledgeCheckboxElement.checked) {
-                    flashButtonElement.classList.remove("disabled");
-                } else {
-                    flashButtonElement.classList.add("disabled");
-                }
-            };
+            unstableFirmwareAcknowledgementCallback.value = acknowledgementCallback;
+            unstableFirmwareDialog.value.showModal();
+        };
 
-            const onFlashClick = () => {
-                dialog.close();
-                if (acknowledgeCheckboxElement.checked) {
-                    if (acknowledgementCallback) {
-                        acknowledgementCallback();
-                    }
-                    startFlashing();
-                }
-            };
-
-            const onCancelClick = () => {
-                dialog.close();
-            };
-
-            const onDialogClose = () => {
-                acknowledgeCheckboxElement.checked = false;
-                onCheckboxChange();
-                // Clean up listeners
-                acknowledgeCheckboxElement.removeEventListener("change", onCheckboxChange);
-                flashButtonElement.removeEventListener("click", onFlashClick);
-                cancelButtonElement.removeEventListener("click", onCancelClick);
-                dialog.removeEventListener("close", onDialogClose);
-            };
-
-            acknowledgeCheckboxElement.addEventListener("change", onCheckboxChange);
-            flashButtonElement.addEventListener("click", onFlashClick);
-            cancelButtonElement.addEventListener("click", onCancelClick);
-            dialog.addEventListener("close", onDialogClose);
-
-            dialog.showModal();
+        const handleUnstableFirmwareDialogClose = () => {
+            state.dialogUnstableFirmwareAcknowledgementCheckbox = false;
+            unstableFirmwareAcknowledgementCallback.value = null;
         };
 
         const initiateFlashing = async () => {
@@ -2093,19 +2062,25 @@ export default defineComponent({
         };
 
         const handleUnstableFirmwareFlash = () => {
-            if (state.dialogUnstableFirmwareAcknowledgementCheckbox) {
-                const flashButtonElement = document.getElementById("dialogUnstableFirmwareAcknowledgement-flashbtn");
-                if (flashButtonElement) {
-                    flashButtonElement.click();
-                }
+            if (!state.dialogUnstableFirmwareAcknowledgementCheckbox) {
+                return;
             }
+
+            if (unstableFirmwareDialog.value) {
+                unstableFirmwareDialog.value.close();
+            }
+
+            if (unstableFirmwareAcknowledgementCallback.value) {
+                unstableFirmwareAcknowledgementCallback.value();
+            }
+
+            startFlashing();
         };
 
         const handleUnstableFirmwareCancel = () => {
             state.dialogUnstableFirmwareAcknowledgementCheckbox = false;
-            const dialog = document.getElementById("dialogUnstableFirmwareAcknowledgement");
-            if (dialog) {
-                dialog.close();
+            if (unstableFirmwareDialog.value) {
+                unstableFirmwareDialog.value.close();
             }
         };
 
@@ -2113,12 +2088,25 @@ export default defineComponent({
             if (verifyBoardDialog.value) {
                 verifyBoardDialog.value.close();
             }
+
+            if (verifyBoardOnAbortCallback.value) {
+                verifyBoardOnAbortCallback.value();
+            }
         };
 
         const handleVerifyBoardContinue = () => {
-            if (verifyBoardContinueButton.value) {
-                verifyBoardContinueButton.value.click();
+            if (verifyBoardDialog.value) {
+                verifyBoardDialog.value.close();
             }
+
+            if (verifyBoardOnAcceptCallback.value) {
+                verifyBoardOnAcceptCallback.value();
+            }
+        };
+
+        const handleVerifyBoardDialogClose = () => {
+            verifyBoardOnAcceptCallback.value = null;
+            verifyBoardOnAbortCallback.value = null;
         };
 
         const showDialogVerifyBoard = (selected, verified, onAccept, onAbort) => {
@@ -2130,24 +2118,9 @@ export default defineComponent({
             }
 
             if (verifyBoardDialog.value && !verifyBoardDialog.value.hasAttribute("open")) {
+                verifyBoardOnAcceptCallback.value = onAccept;
+                verifyBoardOnAbortCallback.value = onAbort;
                 verifyBoardDialog.value.showModal();
-
-                const handleContinue = () => {
-                    verifyBoardDialog.value?.close();
-                    verifyBoardContinueButton.value?.removeEventListener("click", handleContinue);
-                    verifyBoardAbortButton.value?.removeEventListener("click", handleAbort);
-                    onAccept();
-                };
-
-                const handleAbort = () => {
-                    verifyBoardDialog.value?.close();
-                    verifyBoardContinueButton.value?.removeEventListener("click", handleContinue);
-                    verifyBoardAbortButton.value?.removeEventListener("click", handleAbort);
-                    onAbort();
-                };
-
-                verifyBoardContinueButton.value?.addEventListener("click", handleContinue);
-                verifyBoardAbortButton.value?.addEventListener("click", handleAbort);
             }
         };
 
@@ -2187,8 +2160,6 @@ export default defineComponent({
             cloudTargetStatusSpan,
             verifyBoardDialog,
             verifyBoardContent,
-            verifyBoardAbortButton,
-            verifyBoardContinueButton,
             // Functions
             enableFlashButton,
             enableLoadRemoteFileButton,
@@ -2225,8 +2196,10 @@ export default defineComponent({
             handleDetectBoard,
             handleUnstableFirmwareFlash,
             handleUnstableFirmwareCancel,
+            handleUnstableFirmwareDialogClose,
             handleVerifyBoardAbort,
             handleVerifyBoardContinue,
+            handleVerifyBoardDialogClose,
             handleProgressLabelClick,
         };
     },
