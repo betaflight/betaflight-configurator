@@ -241,7 +241,7 @@ async function startProcess() {
         // only initialize when the tab isn't already active
         const self = this;
         const tabClass = $(self).parent().prop("class");
-        const tabRequiresConnection = $(self).parent().hasClass("mode-connected");
+        const tabRequiresConnection = $(self).closest("ul").hasClass("mode-connected");
         const tab = tabClass.substring(4);
         const tabName = $(self).text();
 

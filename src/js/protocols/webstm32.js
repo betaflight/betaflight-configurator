@@ -179,7 +179,10 @@ class STM32Protocol {
                 this.rebootMode = 1; // MSP_REBOOT_BOOTLOADER_ROM;
             }
 
-            const selectedBoard = this.serialOptions.selectedBoard !== "0" ? this.serialOptions.selectedBoard : "NONE";
+            const selectedBoard =
+                this.serialOptions.selectedBoard && this.serialOptions.selectedBoard !== "0"
+                    ? this.serialOptions.selectedBoard
+                    : "NONE";
             const connectedBoard = FC.CONFIG.boardName ? FC.CONFIG.boardName : "UNKNOWN";
 
             try {

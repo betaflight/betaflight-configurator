@@ -521,7 +521,7 @@ export function useFirmwareFlashing(params = {}) {
             }
 
             await onBoardChange("0");
-            clearBufferedFirmware();
+            clearBufferedFirmware?.();
             updateDfuExitButtonState?.();
         };
 

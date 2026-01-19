@@ -169,10 +169,18 @@ export function useCloudBuild(params) {
         request.options.push("CLOUD_BUILD");
 
         // Add selected protocol options
-        if (selectedRadioProtocol) request.options.push(selectedRadioProtocol.value);
-        if (selectedTelemetryProtocol) request.options.push(selectedTelemetryProtocol.value);
-        if (selectedOsdProtocol) request.options.push(selectedOsdProtocol.value);
-        if (selectedMotorProtocol) request.options.push(selectedMotorProtocol.value);
+        if (selectedRadioProtocol) {
+            request.options.push(selectedRadioProtocol.value);
+        }
+        if (selectedTelemetryProtocol) {
+            request.options.push(selectedTelemetryProtocol.value);
+        }
+        if (selectedOsdProtocol) {
+            request.options.push(selectedOsdProtocol.value);
+        }
+        if (selectedMotorProtocol) {
+            request.options.push(selectedMotorProtocol.value);
+        }
 
         if (Array.isArray(selectedOptions)) {
             selectedOptions.forEach((option) => request.options.push(option.value));
