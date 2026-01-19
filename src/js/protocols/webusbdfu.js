@@ -192,6 +192,7 @@ class WEBUSBDFU_protocol extends EventTarget {
             .catch((error) => {
                 console.log(`${this.logHead} Failed to open USB device:`, error);
                 gui_log(i18n.getMessage("usbDeviceOpenFail"));
+                this.cleanup();
             });
     }
     closeDevice() {

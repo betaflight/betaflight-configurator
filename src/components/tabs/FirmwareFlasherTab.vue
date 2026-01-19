@@ -1350,6 +1350,7 @@ export default defineComponent({
                 }
 
                 enableLoadRemoteFileButton(true);
+                enableLoadFileButton(true);
             };
 
             try {
