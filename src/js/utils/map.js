@@ -32,20 +32,26 @@ export function initMap(options = {}) {
         zoom: defaultZoom,
     });
 
+    const devicePixelRatio = window.devicePixelRatio || 1;
+
     const layers = {
         street: new Tile({
-            source: new OSM(),
+            source: new OSM({
+                tilePixelRatio: devicePixelRatio,
+            }),
             visible: defaultLayer === "street",
         }),
         satellite: new Tile({
             source: new XYZ({
                 url: "https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}",
+                tilePixelRatio: devicePixelRatio,
             }),
             visible: defaultLayer === "satellite",
         }),
         hybrid: new Tile({
             source: new XYZ({
                 url: "https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}",
+                tilePixelRatio: devicePixelRatio,
             }),
             visible: defaultLayer === "hybrid",
         }),
