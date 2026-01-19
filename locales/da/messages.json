@@ -1595,7 +1595,7 @@
         "message": "Minimal gas (laveste ESC-værdi, når aktiveret)"
     },
     "configurationThrottleMinimumHelp": {
-        "message": "Dette er tomgangsniveauet, der sendes til ESC'erne, når fartøjet er aktiveret, og gas pind er i minimumsposition. Forøg værdien for højere tomgangshastighed. Forøg også værdien i tilfælde af desyncs!"
+        "message": "Dette er tomgangsniveauet, der sendes til ESC'erne, når fartøjet er aktiveret, og gas pind er i minimumsposition. Forøg værdien for højere tomgangshastighed. Forøg også værdien i tilfælde af motorer som går ud af synkronisering!"
     },
     "configurationThrottleMaximum": {
         "message": "Maksimal gas (højeste ESC-værdi, når aktiveret)"
@@ -2103,7 +2103,7 @@
         "message": "Med denne parameter kan D Setpoint reduceres tæt ved pindenes centerpositioner, hvilket betyder en mere glidende afslutning på flips og rolls.<br> Værdien repræsenterer et punkt af pindudslaget: 0 - pind centreret, 1 - fuldt udslag. Når pinden er over dette punkt, holdes Setpoint-vægtningen konstant på den opsattte værdi. Når pinden er placeret under dette punkt, reduceres Setpoint-vægtningen proportionalt og når 0 ved pindens centerposition. <br> Værdien 1 giver maksimal udjævningseffekt, mens værdien 0 holder Setpoint-vægtningen på den opsatte værdi over hele pind udfalds område."
     },
     "pidTuningDtermSetpointHelp": {
-        "message": "Denne parameter afgør pindaccelerationseffekt indenfor en afledt komponent.<br> Værdien 0 modsvarer den gamle måle metode, hvor D kun styres af gyro, mens værdien 1 modsvarer den gamle fejlmetode med samme gyro- og pind respons.<br> Lavere værdi modsvarer langsommere\/jævnere pindrespons, mens højere værdi giver øget pindaccelerationsrespons.<br> Bemærk, at RC-interpolation ambefales aktiveret ved højere værdier for at forhindre støj fra bratte kontrolpulser."
+        "message": "Denne parameter afgør pindaccelerations effekt indenfor en afledt komponent.<br> Værdien 0 modsvarer den gamle måle metode, hvor D kun styres af gyro, mens værdien 1 modsvarer den gamle fejlmetode med samme gyro- og pind respons.<br> Lavere værdi modsvarer langsommere\/jævnere pindrespons, mens højere værdi giver øget pindaccelerations respons.<br> Bemærk, at RC-interpolation ambefales aktiveret ved højere værdier for at forhindre støj fra bratte kontrolpulser."
     },
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):<\/strong> Brug af en D Setpoint-overgang højere end 0 og lavere end 0.1 frarådes kraftigt, da dette kan medføre ustabilitet samt reduceret pindrespons, når pindene krydser centerpositionerne.<\/span>"
@@ -2496,7 +2496,7 @@
     },
     "auxiliaryDisabled": {
         "message": "(SLÅET FRA)",
-        "descripton": "Text to add to the ARM mode (maybe others in the future) in the MODES TAB when it has been disabled for some external reason"
+        "description": "Text to add to the ARM mode (maybe others in the future) in the MODES TAB when it has been disabled for some external reason"
     },
     "auxiliaryAddRange": {
         "message": "Tilknyt kanal område"
@@ -2976,7 +2976,7 @@
         "message": "Generelt"
     },
     "gpsHeadHelp": {
-        "message": "Angiver forskellig GPS information. Kurs vises kun hvis kompas anvendes.",
+        "message": "Vis forskellige GPS oplysninger. Kurs vises kun, hvis magnetometer anvendes.",
         "description": "Help text for gpsHead"
     },
     "gpsMapHead": {
@@ -3870,7 +3870,7 @@
     },
     "firmwareFlasherBoardVerficationTargetNotAvailable": {
         "message": "App har fundet FC: <strong>{{boardName}}<\/strong>, men der blev ikke fundet et officielt Betaflight firmware image",
-        "description": "Board verification has succeeded, but the target is not available as offical Betaflight target."
+        "description": "Board verification has succeeded, but the target is not available as official Betaflight target."
     },
     "firmwareFlasherBoardVerificationFail": {
         "message": "App <span class=\"message-negative\">mislykkedes<\/span> med at bestemme FC, hvis dette ikke virker, så skift fane og prøv så igen. Eller etabler en ny USB-forbindelse og opret forbindelse, eller måske har du ikke acceperet konfiguration med standardopsætninger efter brænding af nyt image.",
@@ -4490,7 +4490,7 @@
         "description": "P and I Gain (Stability) tuning slider label"
     },
     "pidTuningPIGainSliderHelp": {
-        "message": "Forøg sporings skyder for at skærpe fartøjets respons på dine kommandoer og også eksterne indflydelser; undgå at næsen på fartøjer går ud af kurs i enhver tilstand.<br \/><br \/>Lavere sporings værdier vil give mange hop, tab af ønsket kurs ved pind bevægelser og i propel turbulens. Høje sporings værdier kan resultere i svingninger og hurtig tilbagehop (svært at se, men du kan høre dem). Overdreven sporing kan resultere i uønsket resonnans og for varme motorer.",
+        "message": "Forøg sporings skyder for at skærpe fartøjets respons på dine kommandoer og fra eksterne påvirkninger, så næsen på fartøjet aldrig går ud af kurs.<br \/><br \/>Lavere sporings værdier vil give mange hop, tab af ønsket kurs når pind flyttes og give probel turbulens. Høje sporings værdier kan resultere i motor svingninger og hurtig tilbagehop (svært at se, men du kan høre dem). Overdreven sporing kan resultere i uønsket høj resonnans og varme motorer.",
         "description": "P and I gain tuning slider helpicon message"
     },
     "pidTuningResponseSlider": {
@@ -4599,10 +4599,6 @@
     },
     "pidTuningCutoffFrequency": {
         "message": "Afskæringsfrekvens [Hz]"
-    },
-    "pidTuningNotchFilterHelp": {
-        "message": "Et hak filter er et symmetrisk, smalt, high-cut filter, med center og afskærings parmaetre.<br \/><br \/>Den midterste værdi er filterets midterfrekvens. Afskærings værdien er lav-side -3dB afskærings frekvensen.<br \/><br \/>For eksempel en Notch afskæring på 160 med et Notch Center på 260 returnerer et bredt hak med en -3dB rækkevidde fra 160-360Hz og stærkeste dæmpning omkring 260hz.",
-        "description": "Notch filter helpicon message"
     },
     "pidTuningDynamicNotchFilterGroup": {
         "message": "Dynamisk Notch filter"
@@ -6734,7 +6730,7 @@
         "message": "Indstil grænser for alarmtilstande til OSD elementer."
     },
     "osdSectionHelpStats": {
-        "message": "Indstil værdier, der er vises på skærmen som postflyvningsstatistikker."
+        "message": "Statistik, der efter flyvning vises på skærmen."
     },
     "osdSectionHelpWarnings": {
         "message": "Aktivér eller deaktivér advarsler, der vises på ADVARSELs- elementet."
@@ -7097,7 +7093,7 @@
         "message": "Maksimal vinkel [grader] hvorunder fartøj kan aktiveres"
     },
     "configurationSmallAngleHelp": {
-        "message": "Fartøj vil ikke <b>aktiveres<\/b>, hvis det er vippet mere end den angivne vinkel i grader. Gælder kun, hvis accelerometer er aktivt.<br>Indstilling til 180 vil deaktivere tjek"
+        "message": "Fartøj vil ikke AKTIVERES, hvis det er vippet mere end den anigvne vinkel i grader. Gælder kun, hvis accelerometer er aktivt. Er værdien 180 vil kontrol deaktiveres helt."
     },
     "configurationBatteryVoltage": {
         "message": "Batteri spænding"
@@ -7162,9 +7158,6 @@
     },
     "pidTuningDeltaMeasurement": {
         "message": "Måling"
-    },
-    "pidTuningDeltaTip": {
-        "message": "<b>Derivativ fra Fejl<\/b> giver mere direkte stick respons og er for det meste foretrukket til Racing.<br \/><br \/><b>Derivative fra Måling<\/b> giver glattere stick respons, hvad der er mere nyttigt til freestyling"
     },
     "pidTuningPidControllerTip": {
         "message": "<b>Legacy kontra Betaflight (flydende):<\/b> PID-skalering og -logik er nøjagtig den samme. Gentuning er ikke absolut nødvendig. Legacy er gammel betaflight-udviklet omskrivning, der er basis PID-controller baseret på heltal beregninger. Betaflight PID-controller benytter flydende decimal beregninger og har mange nye funktioner, som er specielt designet til multirotorbrug <br> <b>Flydende decimal kontra heltal:<\/b> PID-skalering og -logik er identisk. Ingen gentuning behøves. F1-boards har ingen indbygget FPU og flydende decimal proccessor og forøger derfor CPU-belastningen og heltals beregniger forbedrer derfor ydeevnen, men flydende deccimal beregninger kan give bedre præcision."
@@ -7376,9 +7369,6 @@
     "cordovaWebviewUpdateBtn": {
         "message": "Opdatér fra Google Play Butik"
     },
-    "cordovaWebviewEnable": {
-        "message": "Åbn fanen Initiel indstilling og tryk 10 gange på build versionsnummeret for at aktivere 'Udvikling tilvalg'. Derefter skal du her vælge <b>{{app}}<\/b>."
-    },
     "cordovaWebviewEnableBtn": {
         "message": "Åbn indstillinger"
     },
@@ -7495,11 +7485,11 @@
     },
     "presetsButtonSave": {
         "message": "Gem og genstart",
-        "description": "A button that saves all appied presets - analog to 'save' command in CLI"
+        "description": "A button that saves all applied presets - analogous to 'save' command in CLI"
     },
     "presetsButtonCancel": {
         "message": "Fortryd",
-        "description": "A button that restarts FC without saving appied presets - analog to 'exit' command in CLI"
+        "description": "A button that restarts FC without saving applied presets - analogous to 'exit' command in CLI"
     },
     "presetsApplyingPresets": {
         "message": "Anvender opsætning...",
@@ -7546,7 +7536,7 @@
         "description": "Title for the waiting dialog when loading dump all into a file"
     },
     "dumpAllNotSavedWarning": {
-        "message": "Der opstod en fejl under gem af nuværende opsætning",
+        "message": "Der opstod en fejl ved gemning af nuværende konfiguration",
         "description": "Message appears on presets tab when saving current diff all into a file has failed"
     },
     "presetSources": {
@@ -7607,11 +7597,11 @@
     },
     "presetsNoPresetsFound": {
         "message": "Ingen predefineret opsætning med dine søgeparametere",
-        "description": "Message that apprears on presets tab if no presets were found"
+        "description": "Message that appears on presets tab if no presets were found"
     },
     "presetsTooManyPresetsFound": {
         "message": "Nået den øverste grænse for antal visninger af predefineret opsætning",
-        "description": "Message that apprears on presets tab if too many presets found"
+        "description": "Message that appears on presets tab if too many presets found"
     },
     "presetsOptionsPlaceholder": {
         "message": "BEMÆRK! Gennemgå listen over muligheder",
@@ -7831,14 +7821,17 @@
     "profileBackupEmptyResult": {
         "message": "Sikkerhedskopiering fejlet"
     },
-    "labelSignCounter": {
-        "message": "Underskrift"
-    },
     "labelLogin": {
         "message": "Login"
     },
     "labelSignOut": {
         "message": "Log ud"
+    },
+    "labelAvatarUrl": {
+        "message": "Avatar URL"
+    },
+    "placeholderAvatarUrl": {
+        "message": "Angiv URL for din avatar"
     },
     "labelCreatePasskey": {
         "message": "Opret adgangsnøgle"
@@ -7891,8 +7884,8 @@
     "labelCreated": {
         "message": "Oprettet"
     },
-    "labelUpdated": {
-        "message": "Opdateret"
+    "labelLastUsed": {
+        "message": "Sidst anvendt"
     },
     "labelActions": {
         "message": "Handlinger"

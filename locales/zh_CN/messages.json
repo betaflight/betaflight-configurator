@@ -1572,9 +1572,6 @@
     "configurationThrottleMinimum": {
         "message": "最小油门（解锁时飞控输出给电调的最低油门数值）"
     },
-    "configurationThrottleMinimumHelp": {
-        "message": "这里的”怠速“值指当飞行器已解锁且油门摇杆在最低位时，会被发送到 ESC 的数值。增加这个数值能获得更高的电机怠速转速。如果电机发生失步也要增加这个数值！"
-    },
     "configurationThrottleMaximum": {
         "message": "最大油门（飞控发给电调的最大值）"
     },
@@ -2029,9 +2026,6 @@
     "pidTuningDtermSetpointTransitionHelp": {
         "message": "通过这个参数， D 设定点权重可以被降低到接近摇杆中点，使翻滚动作的结束更平滑一些。<br> 该值表示摇杆偏移量：0代表摇杆居中，1代表摇杆打满。当摇杆实际位置大于该值时，设定点权重保持在用户设定的数字不变。当摇杆实际位置小于该值时，设定点权重会按比例下降，在摇杆居中时降低到0。<br> 设置为1可以获得最平滑的效果，而设置为0将保持设定点权重在全程都保持在用户设定的数字不变。"
     },
-    "pidTuningDtermSetpointHelp": {
-        "message": "该参数在导数范围里影响摇杆的“加速”效果。<br> 0等同于旧的 D 只追踪陀螺仪的“测量”方法，1等同于同时追踪陀螺仪和摇杆的”误差“方法。<br> 较低的值提供较为平滑缓和的摇杆响应，较高的值则使摇杆的反应（加速）更迅猛。<br> 注意使用较高值时，建议同时启用 RC 插值以避免信号噪声。"
-    },
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):<\/strong> 强烈不建议将D设定点转换设置为0到0.1之间的值。这样做可能会导致不稳定，以及降低摇杆在穿过中点时的响应速度。<\/span>"
     },
@@ -2397,7 +2391,7 @@
     },
     "auxiliaryDisabled": {
         "message": "(已禁用)",
-        "descripton": "Text to add to the ARM mode (maybe others in the future) in the MODES TAB when it has been disabled for some external reason"
+        "description": "Text to add to the ARM mode (maybe others in the future) in the MODES TAB when it has been disabled for some external reason"
     },
     "auxiliaryAddRange": {
         "message": "添加范围"
@@ -2803,10 +2797,6 @@
     },
     "servosReverse": {
         "message": "反向"
-    },
-    "gpsHeadHelp": {
-        "message": "显示与 GPS 相关的各种信息，航向仅在磁力计启用时显示",
-        "description": "Help text for gpsHead"
     },
     "gpsMapMessage1": {
         "message": "请检查网络连接"
@@ -3683,7 +3673,7 @@
     },
     "firmwareFlasherBoardVerficationTargetNotAvailable": {
         "message": "应用已发现电路板： <strong>{{boardName}}<\/strong> 但找不到与之对应的官方 Betaflight 目标",
-        "description": "Board verification has succeeded, but the target is not available as offical Betaflight target."
+        "description": "Board verification has succeeded, but the target is not available as official Betaflight target."
     },
     "firmwareFlasherBoardVerificationFail": {
         "message": "应用程序 <span class=\"message-negative\">未能<\/span>验证飞控板。如果该问题一直存在，切走再返回选项页并重新尝试、或重新连接 USB、又或者你可能忘记应用自定义默认设置。",
@@ -4331,10 +4321,6 @@
     },
     "pidTuningCutoffFrequency": {
         "message": "截止频率 [Hz]"
-    },
-    "pidTuningNotchFilterHelp": {
-        "message": "陷波滤波器是一种对称的、狭窄的、带通滤波器，由中心值和截止频率两个变量所控制。<br \/><br \/>中心值是滤波器的中心频率。截止频率对应的是 -3dB 点所对应的频率。<br \/><br \/>例如，一个中心频率 260Hz、截止频率 160Hz 的陷波滤波器，对应的是 -3dB 范围为 160-360Hz 并在 260Hz 附近强力衰减的陷波滤波器。",
-        "description": "Notch filter helpicon message"
     },
     "pidTuningDynamicNotchFilterGroup": {
         "message": "动态陷波滤波器"
@@ -6112,9 +6098,6 @@
     "osdSectionHelpAlarms": {
         "message": "设置OSD报警阈值"
     },
-    "osdSectionHelpStats": {
-        "message": "设置飞行结束上锁后屏幕上显示的统计信息"
-    },
     "osdSectionHelpWarnings": {
         "message": "显示或隐藏显示在警告区域的警告信息"
     },
@@ -6449,9 +6432,6 @@
     "configurationSmallAngle": {
         "message": "最大允许解锁角度 [degrees]"
     },
-    "configurationSmallAngleHelp": {
-        "message": "如果飞行器倾斜的角度大于指定的允许解锁角度，飞控将会不允许解锁。只有启用了加速度计该功能才能工作。设置为180度则无条件允许解锁"
-    },
     "configurationBatteryVoltage": {
         "message": "电池电压"
     },
@@ -6515,9 +6495,6 @@
     },
     "pidTuningDeltaMeasurement": {
         "message": "测量方式"
-    },
-    "pidTuningDeltaTip": {
-        "message": "<b>误差导数模式<\/b>提供更加直接的摇杆反应，适合竞速比赛。<br \/><br \/><b>测量导数模式<\/b> 提供更平滑摇杆的反应，适合花式飞行。"
     },
     "pidTuningPidControllerTip": {
         "message": "<b>传统 vs Betaflight (浮点数):<\/b> PID 比例和 PID 逻辑是完全一样的。理论上，在两者之间进行切换不需要重新调参。传统的也是betaflight参与的重写算法，使用整数进行计算。Betaflight PID 控制器使用浮点数进行计算，并专门为多轴飞行器设计了许多新功能<br> <b>浮点 vs 整数:<\/b> PID 比例和PID逻辑完全一样的. 理论上，在两者之间进行切换不需要重新调参。F1芯片缺乏FPU，使用浮点运算将会增加CPU负荷，使用整数运算会得到更加好的运行效果。但是浮点运算会获得稍高的精准度。"
@@ -6720,9 +6697,6 @@
     "cordovaWebviewUpdateBtn": {
         "message": "从 Google Play 更新"
     },
-    "cordovaWebviewEnable": {
-        "message": "在设置中进入您的设备信息页面，点击构建版本数字10次以启用“开发者选项”。 在此之后，搜索并进入开发者选项，并选择 <b>{{app}}<\/b> 作为 webview 提供者。"
-    },
     "cordovaWebviewEnableBtn": {
         "message": "打开设置"
     },
@@ -6839,11 +6813,11 @@
     },
     "presetsButtonSave": {
         "message": "保存并重启",
-        "description": "A button that saves all appied presets - analog to 'save' command in CLI"
+        "description": "A button that saves all applied presets - analogous to 'save' command in CLI"
     },
     "presetsButtonCancel": {
         "message": "取消",
-        "description": "A button that restarts FC without saving appied presets - analog to 'exit' command in CLI"
+        "description": "A button that restarts FC without saving applied presets - analogous to 'exit' command in CLI"
     },
     "presetsApplyingPresets": {
         "message": "正在应用配置...",
@@ -6888,10 +6862,6 @@
     "presetsLoadingDumpAll": {
         "message": "从飞控加载当前配置",
         "description": "Title for the waiting dialog when loading dump all into a file"
-    },
-    "dumpAllNotSavedWarning": {
-        "message": "保存当前配置时出错",
-        "description": "Message appears on presets tab when saving current diff all into a file has failed"
     },
     "presetSources": {
         "message": "预设源...",
@@ -6947,11 +6917,11 @@
     },
     "presetsNoPresetsFound": {
         "message": "没有找到符合搜索条件的预设",
-        "description": "Message that apprears on presets tab if no presets were found"
+        "description": "Message that appears on presets tab if no presets were found"
     },
     "presetsTooManyPresetsFound": {
         "message": "已达到可显示预设数的最大限制",
-        "description": "Message that apprears on presets tab if too many presets found"
+        "description": "Message that appears on presets tab if too many presets found"
     },
     "presetsOptionsPlaceholder": {
         "message": "注意！请查看选项列表",

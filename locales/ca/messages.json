@@ -166,6 +166,10 @@
         "message": "Activa el mode CLI només",
         "description": "Text for the option to enable or disable CLI only mode"
     },
+    "automaticDevOptions": {
+        "message": "Habilita automàticament la configuració de desenvolupament per a les compilacions previas",
+        "description": "Text for the option to automatically enable development settings for preview builds"
+    },
     "showManualMode": {
         "message": "Activa el mode de connexió manual",
         "description": "Text for the option to enable or disable manual connection mode"
@@ -2500,7 +2504,7 @@
     },
     "auxiliaryDisabled": {
         "message": "(DESACTIVAT)",
-        "descripton": "Text to add to the ARM mode (maybe others in the future) in the MODES TAB when it has been disabled for some external reason"
+        "description": "Text to add to the ARM mode (maybe others in the future) in the MODES TAB when it has been disabled for some external reason"
     },
     "auxiliaryAddRange": {
         "message": "Afegeix Rang"
@@ -2980,7 +2984,7 @@
         "message": "General"
     },
     "gpsHeadHelp": {
-        "message": "Mostra informació diversa relacionada amb el GPS. Els títols només es mostren quan el magnetòmetre està en ús",
+        "message": "Mostra informació diversa relacionada amb el GPS. Els títols només es mostren quan el magnetòmetre està en ús.",
         "description": "Help text for gpsHead"
     },
     "gpsMapHead": {
@@ -3874,7 +3878,7 @@
     },
     "firmwareFlasherBoardVerficationTargetNotAvailable": {
         "message": "L' App ha detectat la controladora: <strong>{{boardName}}<\/strong> però no s'ha trobat cap versió oficial de Betaflight",
-        "description": "Board verification has succeeded, but the target is not available as offical Betaflight target."
+        "description": "Board verification has succeeded, but the target is not available as official Betaflight target."
     },
     "firmwareFlasherBoardVerificationFail": {
         "message": "La App <span class=\"message-negative\">ha fallat<\/span>al verificar la placa, si això no funciona, proveu de canviar lentament de pestanya per tornar-ho a provar, feu una nova connexió usb o connecteu-vos primer si és possible que hàgiu oblidat aplicar els ajustos personalitzats per defecte.",
@@ -4605,7 +4609,7 @@
         "message": "Freqüència de tall [Hz]"
     },
     "pidTuningNotchFilterHelp": {
-        "message": "Un filtre Notch és un filtre simètric, estret i de tall alt, amb paràmetres centrals i de tall.<br \/><br \/>El valor central és la freqüència central del filtre. El valor de tall és la freqüència de tall de -3dB del costat baix.<br \/><br \/>Per exemple, un tall d'osca de 160 amb un centre de tall de 260 retorna una osca àmplia amb un rang de -3 dB de 160 a 360 Hz i el més fort. atenuació al voltant de 260 Hz.",
+        "message": "Un filtre Notch és un filtre simètric, estret i de tall alt, amb paràmetres centrals i de tall.<br \/><br \/>El valor central és la freqüència central del filtre. El valor de tall és la freqüència de tall de -3dB del costat baix.<br \/><br \/>Per exemple, un tall d'osca de 160 amb un centre de tall de 260 retorna una osca àmplia amb un rang de -3 dB des de 160-360 Hz i atenuació més forta al voltant de 260 Hz.",
         "description": "Notch filter helpicon message"
     },
     "pidTuningDynamicNotchFilterGroup": {
@@ -6738,7 +6742,7 @@
         "message": "Configura els llindars que fan servir els elements de l'OSD amb estats d'alarma."
     },
     "osdSectionHelpStats": {
-        "message": "Configura els valors que es mostren a la pantalla després del vol."
+        "message": "Configura els valors que es mostren a la pantalla d'estadístiques després del vol."
     },
     "osdSectionHelpWarnings": {
         "message": "Habilita o deshabilita avisos que es mostren a l'element d'AVISOS"
@@ -7101,7 +7105,7 @@
         "message": "Angle máxim d'armat [graus]"
     },
     "configurationSmallAngleHelp": {
-        "message": "El dron no armarà si està inclinada certs graus. Només aplica si l'acceleròmetre està habilitat. Posar-ho a 180º deshabilitarà la comprovació"
+        "message": "El dron no armarà si està inclinat més dels graus especificats. Només aplica si l'acceleròmetre està habilitat. Posar-ho a 180° deshabilitarà la comprovació."
     },
     "configurationBatteryVoltage": {
         "message": "Voltatge de Bateria"
@@ -7168,7 +7172,7 @@
         "message": "Mesurament"
     },
     "pidTuningDeltaTip": {
-        "message": "<b>Derivativa de l'Error<\/b> et dona resposta més directa del sticks i és preferible per curses.<br \/><br \/><b>Derivativa de la Mesura<\/b> et dona una resposta més suau i és preferible per freestyle"
+        "message": "<b>Derivativa de l'Error<\/b> et dona resposta més directa dels estics i és preferible per curses.<br \/><br \/><b>Derivativa de la Mesura<\/b> et dona una resposta més suau i és preferible per Freestyle"
     },
     "pidTuningPidControllerTip": {
         "message": "<b>Legacy vs Betaflight (flotant):<\/b> L'escalat PID i la lògica PID són exactament iguals. No es necessari el re-escalat. Legacy és una vella versió reescrita evolutiva betaflight, que és un controlador de PID bàsic basat en matemàtiques integrals. El controlador PID de Betaflight utilitza matemàtiques de punt flotant i té moltes noves funcions dissenyades específicament per a aplicacions multirotor <br> <b> Float vs Integer: <\/b> L'escalat PID i la lògica PID són exactament iguals. No es necessari el re-escalat. Les FC F1 no tenen FPU a bord i la matemàtica del punt flotant augmenta la càrrega de la CPU i la matemàtica del sencer millorarà el rendiment, però la matemàtica flotant pot obtenir una mica més de precisió."
@@ -7381,7 +7385,7 @@
         "message": "Actualitza des de Google Play Store"
     },
     "cordovaWebviewEnable": {
-        "message": "Aneu a la pestanya d'informació del vostre dispositiu a la configuració i toqueu deu vegades el número de versió de creació per habilitar \"Opcions de desenvolupador\". Després d'això, busqueu i aneu a les opcions de desenvolupador i seleccioneu <b>{{app}}<\/b> com a proveïdor de visor web."
+        "message": "Aneu a la secció d'informació del dispositiu a Configuració i toqueu el número de compilació 10 vegades per activar les \"Opcions de desenvolupador\". A continuació, obriu les Opcions de desenvolupador i seleccioneu <b>{{app}}<\/b> com a proveïdor de WebView."
     },
     "cordovaWebviewEnableBtn": {
         "message": "Obre configuració"
@@ -7499,11 +7503,11 @@
     },
     "presetsButtonSave": {
         "message": "Desa i reinicia",
-        "description": "A button that saves all appied presets - analog to 'save' command in CLI"
+        "description": "A button that saves all applied presets - analogous to 'save' command in CLI"
     },
     "presetsButtonCancel": {
         "message": "Canceŀlar",
-        "description": "A button that restarts FC without saving appied presets - analog to 'exit' command in CLI"
+        "description": "A button that restarts FC without saving applied presets - analogous to 'exit' command in CLI"
     },
     "presetsApplyingPresets": {
         "message": "Aplicant configuració...",
@@ -7611,11 +7615,11 @@
     },
     "presetsNoPresetsFound": {
         "message": "No s'han trobat preajustos per als paràmetres de cerca entrats",
-        "description": "Message that apprears on presets tab if no presets were found"
+        "description": "Message that appears on presets tab if no presets were found"
     },
     "presetsTooManyPresetsFound": {
         "message": "S'ha assolit el límit màxim del nombre de preajustos mostrats",
-        "description": "Message that apprears on presets tab if too many presets found"
+        "description": "Message that appears on presets tab if too many presets found"
     },
     "presetsOptionsPlaceholder": {
         "message": "ATENCIÓ! Reviseu la llista d'opcions",
@@ -7835,14 +7839,17 @@
     "profileBackupEmptyResult": {
         "message": "Còpia de seguretat fallida"
     },
-    "labelSignCounter": {
-        "message": "Comptador de senyals"
-    },
     "labelLogin": {
         "message": "Iniciar Sessió"
     },
     "labelSignOut": {
         "message": "Tanca la sessió"
+    },
+    "labelAvatarUrl": {
+        "message": "URL de l'avatar"
+    },
+    "placeholderAvatarUrl": {
+        "message": "Introdueix l'URL de la imatge del teu avatar"
     },
     "labelCreatePasskey": {
         "message": "Crea la clau d'accés"
@@ -7895,8 +7902,8 @@
     "labelCreated": {
         "message": "Creat"
     },
-    "labelUpdated": {
-        "message": "Actualitzat"
+    "labelLastUsed": {
+        "message": "Usada per darrera vegada"
     },
     "labelActions": {
         "message": "Accions"

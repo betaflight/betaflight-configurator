@@ -1446,7 +1446,7 @@
     },
     "auxiliaryDisabled": {
         "message": "(已禁用)",
-        "descripton": "Text to add to the ARM mode (maybe others in the future) in the MODES TAB when it has been disabled for some external reason"
+        "description": "Text to add to the ARM mode (maybe others in the future) in the MODES TAB when it has been disabled for some external reason"
     },
     "auxiliaryAddRange": {
         "message": "添加範圍"
@@ -4086,9 +4086,6 @@
     "osdSectionHelpAlarms": {
         "message": "設置OSD報警閾值"
     },
-    "osdSectionHelpStats": {
-        "message": "設置飛行結束上鎖後熒幕上顯示的統計訊息"
-    },
     "osdSectionHelpWarnings": {
         "message": "顯示或隱藏顯示在警告區域的警告訊息"
     },
@@ -4626,9 +4623,6 @@
     },
     "cordovaWebviewUpdateBtn": {
         "message": "從 Google Play 商店更新"
-    },
-    "cordovaWebviewEnable": {
-        "message": "在設置中進入您的設備信息頁面，點擊構建版本數字10次以啟用“開發者選項”。在此之後，搜索並進入開發者選項，並選擇 <b>{{app}}<\/b> 作為 webview 提供者。"
     },
     "cordovaWebviewEnableBtn": {
         "message": "開啟設定"

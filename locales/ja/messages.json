@@ -1575,9 +1575,6 @@
     "configurationThrottleMinimum": {
         "message": "最小スロットル値 (アーム時の最小ESC値)"
     },
-    "configurationThrottleMinimumHelp": {
-        "message": "機体がアームし、スロットルスティックが最小位置にあるときにESCに送信される [アイドル値] です。より安定したアイドリング速度を得るために値を増加させてください。また非同期の場合は値を上げてください！"
-    },
     "configurationThrottleMaximum": {
         "message": "最大スロットル値 (アーム時の最大ESC値)"
     },
@@ -2076,9 +2073,6 @@
     "pidTuningDtermSetpointTransitionHelp": {
         "message": "このパラメータを使用すると、D値セットポイントの影響力をスティックの中央付近で減らすことができ、その結果フリップおよびロール時のエンドアクションがスムーズになります。<br>この値はスティック偏向点を表します。0-スティック中心、1-完全偏向です。スティックがその値を上回ると、設定された値での影響力は一定に保たれます。スティックがその値以下に位置すると、設定値の影響力は比例して減少し、スティック中心位置で0になります。<br>1の値はスムージング効果を最大にし、0の値はスティック範囲全体にわたって設定された値に固定します。"
     },
-    "pidTuningDtermSetpointHelp": {
-        "message": "このパラメータは、D値におけるスティック加速効果を決定します。<br>値が0の場合は、D値がジャイロのみを追従した古い測定方式、値が1の場合はジャイロとスティック操作範囲を追従した古いエラー検出方式と同一です。<br>値が小さいほどスティックの反応はゆっくり \/ スムースに、値が大きいほどスティック加速反応が大きくなります。<br>なお、制御キックバックノイズを防ぐために、RC補間は高めの値とすることを推奨します。"
-    },
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):<\/strong> 0より大きく0.1より小さいD値セットポイントの設定はしないでください。スティックが中心を横切るときに不安定となり、スティックレスポンスが低下する可能性があります。<\/span>"
     },
@@ -2462,7 +2456,7 @@
     },
     "auxiliaryDisabled": {
         "message": "(無効)",
-        "descripton": "Text to add to the ARM mode (maybe others in the future) in the MODES TAB when it has been disabled for some external reason"
+        "description": "Text to add to the ARM mode (maybe others in the future) in the MODES TAB when it has been disabled for some external reason"
     },
     "auxiliaryAddRange": {
         "message": "範囲追加"
@@ -2929,10 +2923,6 @@
     },
     "servosReverse": {
         "message": "リバース"
-    },
-    "gpsHeadHelp": {
-        "message": "GPSに関連する様々な情報を表示します。方位はコンパス使用時のみ表示されます。",
-        "description": "Help text for gpsHead"
     },
     "gpsMapMessage1": {
         "message": "インターネット接続を確認してください"
@@ -3819,7 +3809,7 @@
     },
     "firmwareFlasherBoardVerficationTargetNotAvailable": {
         "message": "Betaflight AppはFCボードを検出: <strong>{{boardName}}<\/strong> しかしながらBetaflightにて公式ターゲットが見つかりませんでした",
-        "description": "Board verification has succeeded, but the target is not available as offical Betaflight target."
+        "description": "Board verification has succeeded, but the target is not available as official Betaflight target."
     },
     "firmwareFlasherBoardVerificationFail": {
         "message": "Betaflight Appはボードの検証に<span class=\"message-negative\">失敗<\/span>しました。この問題が続く場合は、タブを切り替えて再試行するか、USBを再接続してください。また、カスタムデフォルトの適用を忘れている可能性がある場合は、先に接続してから再試行してください。",
@@ -4438,10 +4428,6 @@
         "message": "トラッキング:<br \/><i><small>P & I 強度<\/small><\/i>",
         "description": "P and I Gain (Stability) tuning slider label"
     },
-    "pidTuningPIGainSliderHelp": {
-        "message": "トラッキングスライダーを上げると、ご自身の操作や外部からの影響に対して機体の反応が機敏になり、どのような状況でも機体のノーズがコースから外れるのを避けることができるでしょう。<br \/><br \/>『トラッキング』の値が低いと、多くの揺れが発生しスティックの動きやプロップウォッシュでコースから外れてしまいます。『トラッキング』の値が高いと、振動と速いバウンスバックが発生します。(見えないかもしれませんが聞こえるでしょう)『トラッキング』の値が高すぎると、振動が発生したり、モーターが熱くなったりします。",
-        "description": "P and I gain tuning slider helpicon message"
-    },
     "pidTuningResponseSlider": {
         "message": "スティックレスポンス:<br \/><i><small>FF 強度<\/small><\/i>",
         "description": "Response tuning slider label"
@@ -4548,10 +4534,6 @@
     },
     "pidTuningCutoffFrequency": {
         "message": "カットオフ周波数 [Hz]"
-    },
-    "pidTuningNotchFilterHelp": {
-        "message": "ノッチフィルターは、中央値とカットオフ値のパラメータを持つ対称的で幅の狭いハイカットフィルターです。<br \/><br \/>中央値はフィルターの中心周波数です。カットオフ値は両端の-3dBカットオフ周波数です。<br \/><br \/>例えばノッチのカットオフ値を160、ノッチ中央値を260とすると、160～360Hzの範囲で-3dBのワイドノッチとなり、260Hz付近で最も減衰が大きくなります。",
-        "description": "Notch filter helpicon message"
     },
     "pidTuningDynamicNotchFilterGroup": {
         "message": "動的ノッチフィルター"
@@ -6678,9 +6660,6 @@
     "osdSectionHelpAlarms": {
         "message": "アラーム状態をOSDに表示させるしきい値を設定します。"
     },
-    "osdSectionHelpStats": {
-        "message": "フライト統計情報を画面表示させる値を設定します。"
-    },
     "osdSectionHelpWarnings": {
         "message": "WARNINGS に表示される警告を有効または無効にします。"
     },
@@ -7041,9 +7020,6 @@
     "configurationSmallAngle": {
         "message": "アーム最大角 [degrees]"
     },
-    "configurationSmallAngleHelp": {
-        "message": "指定された角度以上に傾斜していると機体はアームできません。 加速度センサーが有効な場合にのみ適用されます。180に設定すると有効チェックが無効になります。"
-    },
     "configurationBatteryVoltage": {
         "message": "バッテリー電圧"
     },
@@ -7107,9 +7083,6 @@
     },
     "pidTuningDeltaMeasurement": {
         "message": "測定"
-    },
-    "pidTuningDeltaTip": {
-        "message": "<b>Derivative from Error<\/b>は、よりダイレクトなスティックレスポンスを提供し、レースでの使用に適しています。 <br \/><br \/><b>Derivative from Measurement<\/b>は、よりスムーズなスティックレスポンスを提供し、フリースタイルでの使用に適しています。"
     },
     "pidTuningPidControllerTip": {
         "message": "<b>Legacy vs Betaflight (float):<\/b> PIDスケーリングとPIDロジックはまったく同じ仕様です。必ずしも再調整は必要ありません。Legacyは、整数演算に基づく基本的なPIDコントローラである旧ベータ版の進化型演算方式です。 Betaflight PIDコントローラは浮動小数点演算を使用し、マルチローター用に特別に設計された多くの新機能を備えています。<br><b>Float vs Integer:<\/b> PIDスケーリングとPIDロジックはまったく同じ仕様です。再調整は必要ありません。F1ボードにはオンボードFPUがないため、浮動小数点演算によってCPU負荷が増加するため、整数演算にて性能が向上しますが、浮動小数点演算の方がわずかに精度が向上します。"
@@ -7321,9 +7294,6 @@
     "cordovaWebviewUpdateBtn": {
         "message": "Google Playストアから更新"
     },
-    "cordovaWebviewEnable": {
-        "message": "設定でデバイス情報タブに移動し、ビルドバージョン番号を10回タップし『開発者向けオプション』を有効にしてください。その後、開発者向けオプションを検索し、WebView Providerとして<b>{{app}}<\/b>を選択します。"
-    },
     "cordovaWebviewEnableBtn": {
         "message": "設定を開く"
     },
@@ -7440,11 +7410,11 @@
     },
     "presetsButtonSave": {
         "message": "保存して再起動",
-        "description": "A button that saves all appied presets - analog to 'save' command in CLI"
+        "description": "A button that saves all applied presets - analogous to 'save' command in CLI"
     },
     "presetsButtonCancel": {
         "message": "キャンセル",
-        "description": "A button that restarts FC without saving appied presets - analog to 'exit' command in CLI"
+        "description": "A button that restarts FC without saving applied presets - analogous to 'exit' command in CLI"
     },
     "presetsApplyingPresets": {
         "message": "設定を適用しています...",
@@ -7489,10 +7459,6 @@
     "presetsLoadingDumpAll": {
         "message": "フライトコントローラから現在の設定を読み込みます",
         "description": "Title for the waiting dialog when loading dump all into a file"
-    },
-    "dumpAllNotSavedWarning": {
-        "message": "現在の設定を保存中にエラーが発生しました",
-        "description": "Message appears on presets tab when saving current diff all into a file has failed"
     },
     "presetSources": {
         "message": "プリセットソース...",
@@ -7552,11 +7518,11 @@
     },
     "presetsNoPresetsFound": {
         "message": "指定された検索パラメータに該当するプリセットが見つかりません",
-        "description": "Message that apprears on presets tab if no presets were found"
+        "description": "Message that appears on presets tab if no presets were found"
     },
     "presetsTooManyPresetsFound": {
         "message": "表示されるプリセット数の上限に達しました",
-        "description": "Message that apprears on presets tab if too many presets found"
+        "description": "Message that appears on presets tab if too many presets found"
     },
     "presetsOptionsPlaceholder": {
         "message": "注意！オプションのリストを確認してください",

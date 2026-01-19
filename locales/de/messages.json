@@ -1378,9 +1378,6 @@
     "configurationThrottleMinimum": {
         "message": "Minimum Gas (kleinster Wert für die Regler falls gearmt)"
     },
-    "configurationThrottleMinimumHelp": {
-        "message": "Das ist der \"Leerlaufwert\" der an die Regler geschickt wird, wenn das Fluggerät gearmt ist und der Schub auf der minimalen Position ist. Wert erhöhen, um einen schnelleren Leerlauf zu bekommen. Bei Desyncs ebenfalls den Wert erhöhen!"
-    },
     "configurationThrottleMaximum": {
         "message": "Maximum Gas (größter Wert für die Regler falls gearmt)"
     },
@@ -1808,9 +1805,6 @@
     "pidTuningDtermSetpointTransitionHelp": {
         "message": "Mit diesem Parameter kann man die D-Term Gewichtung um die Mittelstellung der Sticks reduzieren und damit ein weicheres Beenden von Flips und Rolls erreichen.<br> Der Wert bedeutet einen Punkt des Sticks von 0 - mittig bis 1 - voller Ausschlag. Ist das Sticksginal oberhalb dieses Wertes, wird der Gewichtungswert angewendet. Ist das Sticksginal kleiner der Gewichtung, wird die Gewichtung proportional reduziert und erreicht 0 in der Nullstellung des Sticks.<br> Ein Wert von 1 ergibt den maximalen Glättungseffekt, ein Wert von 0 hält D-Term Gewichtung über den gesammten Bewegungsbereich auf seinem eingestellten Wert."
     },
-    "pidTuningDtermSetpointHelp": {
-        "message": "Gibt an wie hart der PID Controller bei Eingaben der Sticks vom Zentrum weg reagieren soll. 0 bedeutet das es keinen Unterschied zwischen Stick Eingaben und Abweichungen durch die Umgebung (z. B. Wind gibt). Kleinere Werte führen zu einem sauberen und \"smootheren\" Quad, höhere Werte führen zu einem direkterem Fluggefühl und einer verbesserten Stick-Empfindlichkeit. <br \/> <b>Bemerkung:<\/b>Bei hohen Werten wird das Aktivieren der RC Interpolation empfohlen um ein Überreagieren(Overshoot) zu verhindern."
-    },
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):<\/strong> The use of a D Setpoint transition greater than 0 and less than 0.1 is highly discouraged. Doing so may lead instability and reduced stick responsiveness as the sticks cross the centre point.<\/span>"
     },
@@ -2173,7 +2167,7 @@
     },
     "auxiliaryDisabled": {
         "message": "(DEAKTIVIERT)",
-        "descripton": "Text to add to the ARM mode (maybe others in the future) in the MODES TAB when it has been disabled for some external reason"
+        "description": "Text to add to the ARM mode (maybe others in the future) in the MODES TAB when it has been disabled for some external reason"
     },
     "auxiliaryAddRange": {
         "message": "Bereich hinzufügen"
@@ -2613,10 +2607,6 @@
     },
     "servosReverse": {
         "message": "Umgekehrt"
-    },
-    "gpsHeadHelp": {
-        "message": "Zeigt verschiedene Informationen zum GPS an. Die Ausrichtung wird nur angezeigt, wenn Magnetometer verwendet wird",
-        "description": "Help text for gpsHead"
     },
     "gpsMapMessage1": {
         "message": "Bitte Internetverbindung prüfen"
@@ -4099,10 +4089,6 @@
     },
     "pidTuningCutoffFrequency": {
         "message": "Grenzfrequenz [Hz]"
-    },
-    "pidTuningNotchFilterHelp": {
-        "message": "Ein Kerb(Notch)-Filter ist ein symetrischer, schmaler Filter in einem engen Frequenzband, mit Mittel- und Grenzfrequenz.<br \/><br \/>Der Mittelwert ist die mittlere Frequenz des Filters. Die Grenzfrequenz beschreibt die Frequenz -3dB niedriger als der Mittelwert.<br \/><br \/>Beispiel ein Notch Grenze bei 160 Hz mit einem mittleren Frequenz von 260 Hz gibt eine Bandbreite mit -3dB Bereich von 160-360Hz und die stärkste Dämpfung bei 260hz.",
-        "description": "Notch filter helpicon message"
     },
     "pidTuningDynamicNotchFilterGroup": {
         "message": "Dynamischer Notch-Filter"
@@ -6134,9 +6120,6 @@
     "osdSectionHelpAlarms": {
         "message": "Einstellung der Schwellwerte für OSD-Elemente mit Alarmstatus."
     },
-    "osdSectionHelpStats": {
-        "message": "Werte die vor dem Flug angezeigt werden sollen"
-    },
     "osdSectionHelpWarnings": {
         "message": "Warnungen aktivieren oder deaktivieren die angezeigt werden."
     },
@@ -6482,9 +6465,6 @@
     "configurationSmallAngle": {
         "message": "Zum Armen maximal zulässiger Winkel"
     },
-    "configurationSmallAngleHelp": {
-        "message": "Das Fluggerät wird nicht armen wenn dieser Wert überschritten ist. Nur möglich bei aktiviertem Beschleunigungssensor. Ein Wert von 180 deaktiviert diese Funktion."
-    },
     "configurationBatteryVoltage": {
         "message": "Batterie Spannung"
     },
@@ -6548,9 +6528,6 @@
     },
     "pidTuningDeltaMeasurement": {
         "message": "Messung"
-    },
-    "pidTuningDeltaTip": {
-        "message": "<b>Ableitung vom Fehler<\/b> erzeugt direktere Stick-Empfindlichkeit und ist bevorzugt für Racing.<br \/><br \/><b>Ableitung von Messung<\/b> erzeugt weichere Stick-Empfindlichkeit und ist nützlicher für Freeestyle"
     },
     "pidTuningPidControllerTip": {
         "message": "<b>Legacy vs Betaflight (float):<\/b> PID Skalierung und PID Logik sind exakt gleich. Nicht notwendigerweise Neueinstellen notwendig. Legacy is das alte in Betaflight gewachsene rewrite, ein einfacher Integer-Arithmetik basierter Regler. Der Betaflight PID Regler nutzt Fleißkomma Arithmetik und hat viele neue Funktionen speziell für Multi-Rotor Anwendungen entwickelt.  <br> <b>Float vs Integer:<\/b> PID Skalierung und PID Logik sind exakt gleich. Kein Neueinstellen notwendig. F1 Boards haben keine FPU an Bord, somit belasten Fließkomma-Berechnungen die CPU Auslastung, und Integer Berechnungen verbessern die Performance. Jedoch liefert Fließkommaarithmetik die etwas höhere Genuigkeit."
@@ -6750,9 +6727,6 @@
     "cordovaWebviewUpdateBtn": {
         "message": "Aus dem Google Play Store aktualisieren"
     },
-    "cordovaWebviewEnable": {
-        "message": "Gehe in die Registerkarte mit Informationen über dein Gerät in den Einstellungen und tippe 10 Mal auf die Build-Versionsnummer, um 'Entwickler-Optionen' zu aktivieren. Danach gehe in die Entwickleroptionen und wähle <b>{{app}}<\/b> als Webview-Anbieter."
-    },
     "cordovaWebviewEnableBtn": {
         "message": "Einstellungen öffnen"
     },
@@ -6866,11 +6840,11 @@
     },
     "presetsButtonSave": {
         "message": "Speichern und Neustarten",
-        "description": "A button that saves all appied presets - analog to 'save' command in CLI"
+        "description": "A button that saves all applied presets - analogous to 'save' command in CLI"
     },
     "presetsButtonCancel": {
         "message": "Abbrechen",
-        "description": "A button that restarts FC without saving appied presets - analog to 'exit' command in CLI"
+        "description": "A button that restarts FC without saving applied presets - analogous to 'exit' command in CLI"
     },
     "presetsApplyingPresets": {
         "message": "Konfiguration wird angewendet...",
@@ -6915,10 +6889,6 @@
     "presetsLoadingDumpAll": {
         "message": "Lade aktuelle Konfiguration vom Flug-Controller",
         "description": "Title for the waiting dialog when loading dump all into a file"
-    },
-    "dumpAllNotSavedWarning": {
-        "message": "Beim Speichern der Konfiguration ist ein Fehler aufgetreten",
-        "description": "Message appears on presets tab when saving current diff all into a file has failed"
     },
     "presetSources": {
         "message": "Voreingestellte Quellen...",
@@ -6978,11 +6948,11 @@
     },
     "presetsNoPresetsFound": {
         "message": "Keine Voreinstellungen für die angegebenen Suchparameter gefunden",
-        "description": "Message that apprears on presets tab if no presets were found"
+        "description": "Message that appears on presets tab if no presets were found"
     },
     "presetsTooManyPresetsFound": {
         "message": "Maximale Anzahl der angezeigten Presets erreicht",
-        "description": "Message that apprears on presets tab if too many presets found"
+        "description": "Message that appears on presets tab if too many presets found"
     },
     "presetsOptionsPlaceholder": {
         "message": "ACHTUNG! Überprüfe die Liste der Optionen",
