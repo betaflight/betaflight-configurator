@@ -1138,7 +1138,7 @@ export default defineComponent({
         };
 
         const buildOptions = (data) => {
-            if (!ispConnected()) {
+            if (!data) {
                 return;
             }
 
@@ -1602,7 +1602,7 @@ export default defineComponent({
             });
         };
 
-        const checkShowAcknowledgementDialog = () => {
+        const checkShowAcknowledgementDialog = async () => {
             const DAY_MS = 86400 * 1000;
             const storageTag = "lastDevelopmentWarningTimestamp";
 
@@ -1614,13 +1614,15 @@ export default defineComponent({
 
             const result = getStorage(storageTag);
             if (!result[storageTag] || Date.now() - result[storageTag] > DAY_MS) {
-                showAcknowledgementDialog(setAcknowledgementTimestamp);
+                await showAcknowledgementDialog(setAcknowledgementTimestamp);
             } else {
-                startFlashing();
+                await startFlashing();
             }
         };
 
-        const showAcknowledgementDialog = (acknowledgementCallback) => {
+        const showAcknowledgementDialog = async (acknowledgementCallback) => {
+            await nextTick();
+
             if (!unstableFirmwareDialog.value) {
                 console.error("Dialog element not found");
                 return;
@@ -1640,7 +1642,7 @@ export default defineComponent({
                 state.developmentFirmwareLoaded || state.targetDetail?.releaseType === "Unstable";
 
             if (isUnstableFirmware) {
-                checkShowAcknowledgementDialog();
+                await checkShowAcknowledgementDialog();
             } else {
                 await startFlashing();
             }
