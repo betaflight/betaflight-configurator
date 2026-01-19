@@ -3287,4 +3287,19 @@ export default defineComponent({
         }
     }
 }
+
+/* Unstable firmware dialog list styling */
+#dialogUnstableFirmwareAcknowledgement {
+    :deep(ul) {
+        margin-left: 1.5rem;
+        margin-top: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    :deep(li) {
+        list-style: disc;
+        margin-bottom: 0.25rem;
+        margin-left: 0.5rem;
+    }
+}
 </style>
