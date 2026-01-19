@@ -2160,6 +2160,7 @@ export default defineComponent({
             cloudTargetStatusSpan,
             verifyBoardDialog,
             verifyBoardContent,
+            unstableFirmwareDialog,
             // Functions
             enableFlashButton,
             enableLoadRemoteFileButton,
