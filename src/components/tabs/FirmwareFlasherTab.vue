@@ -630,11 +630,7 @@
             <div class="dialog_toolbar">
                 <div class="btn">
                     <a
-                        :class="[
-                            'disabled',
-                            'regular-button',
-                            { disabled: !state.dialogUnstableFirmwareAcknowledgementCheckbox },
-                        ]"
+                        :class="['regular-button', { disabled: !state.dialogUnstableFirmwareAcknowledgementCheckbox }]"
                         href="#"
                         id="dialogUnstableFirmwareAcknowledgement-flashbtn"
                         @click.prevent="handleUnstableFirmwareFlash"
