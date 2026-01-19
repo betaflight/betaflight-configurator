@@ -166,6 +166,10 @@
         "message": "CLI 단독모드 활성화",
         "description": "Text for the option to enable or disable CLI only mode"
     },
+    "automaticDevOptions": {
+        "message": "미리보기 빌드에 대한 개발 설정을 자동으로 활성화합니다",
+        "description": "Text for the option to automatically enable development settings for preview builds"
+    },
     "showManualMode": {
         "message": "수동 연결 모드 활성화",
         "description": "Text for the option to enable or disable manual connection mode"
@@ -548,6 +552,9 @@
     },
     "buildServerUsingCached": {
         "message": "$1에 대한 캐시된 빌드 정보를 사용합니다."
+    },
+    "buildServerSupportRequestSubmission": {
+        "message": "<br>*** 지원 데이터 제출 ***<br>ID:$1<br><br><br># ID를 복사해서 베타플라이트 팀에 제공하세요."
     },
     "buildKey": {
         "message": "빌드 키: <strong>$1<\/strong>"
@@ -1327,7 +1334,7 @@
         "message": "다이나믹 자이로 노치 필터링"
     },
     "configurationFeatureEnabled": {
-        "message": "활성화됨"
+        "message": "활성화"
     },
     "configurationFeatureName": {
         "message": "기능"
@@ -1339,7 +1346,7 @@
         "message": "믹서"
     },
     "configurationFeatures": {
-        "message": "다른 기능"
+        "message": "기타 기능"
     },
     "configurationFeatureHelp": {
         "message": "도움말"
@@ -1585,7 +1592,7 @@
         "description": "Help text for the Motor poles field of the ESC\/Motor configuration"
     },
     "configurationMotorIdleRpmHelp": {
-        "message": "이 값은 활성 PID 프로파일의 다이나믹 아이들 값입니다. 다이나믹 아이들이 0으로 설정되면 정적 모터 아이들만 적용됩니다. PID 튜닝 탭에서 다이나믹 아이들 설정을 변경합니다.",
+        "message": "이 값은 활성 PID 프로필의 다이나믹 아이들 값입니다. 다이나믹 아이들이 0으로 설정되면 정적 모터 아이들만 적용됩니다. PID 튜닝 탭에서 다이나믹 아이들 설정을 변경합니다.",
         "description": "Help text for dynamic idle setting"
     },
     "configurationThrottleMinimum": {
@@ -1622,7 +1629,7 @@
         "message": "Dshot 비콘은 ESC와 모터를 사용하여 소리를 재생합니다. 이는 모터가 회전 중일때는 Dshot 비콘을 사용할 수 없다는 것을 의미합니다. 베타플라이트 3.4와 최신에서는 Dshot 비콘이 활성화 중일때 아밍을 시도하는 경우, 기체가 아밍되기 전에 마지막 Dshot 비콘 톤 이후 2초의 딜레이가 생깁니다. 이는 Dshot 비콘 기능이 아밍시 Dshot 명령이 보내지는 것을 방해하는 것을 막기 위함입니다.<br\/><strong>경고:<\/strong>Dshot 비콘은 활성화할 경우 당신의 모터를 통해 작동되기 때문에 만약 비콘 강도가 매우 높게 설정되어 있다면, 당신의 모터나 ESC에 과열과 손상을 일으킬 수 있습니다. BLHeli 컨피규레이터나 BLheli Suite를 사용하여 비콘 강도를 조정하고 테스트하세요."
     },
     "configurationBeeper": {
-        "message": "비퍼 설정"
+        "message": "비퍼 환경설정"
     },
     "beeperGYRO_CALIBRATED": {
         "message": "자이로가 교정되면 신호음을 울립니다."
@@ -1691,7 +1698,7 @@
         "message": "아밍시 rc 스무딩이 필터를 초기화하지 않은 때 비프음"
     },
     "configurationBeeperEnableAll": {
-        "message": "모두 사용"
+        "message": "전체 선택"
     },
     "configurationBeeperDisableAll": {
         "message": "전체 해제"
@@ -1835,7 +1842,7 @@
         "message": "저장 및 재부팅"
     },
     "portsTelemetryDisabled": {
-        "message": "비활성화됨"
+        "message": "비활성화"
     },
     "portsFunction_MSP": {
         "message": "MSP"
@@ -1898,10 +1905,10 @@
         "message": "VTX (MSP + 디스플레이포트)"
     },
     "pidTuningProfileOption": {
-        "message": "프로파일 $1"
+        "message": "프로필 $1"
     },
     "pidTuningRateProfileOption": {
-        "message": "레이트프로파일 $1"
+        "message": "레이트프로필 $1"
     },
     "portsFunction_LIDAR_TF": {
         "message": "Benewake LIDAR"
@@ -1910,25 +1917,25 @@
         "message": "<span class=\"message-negative\">PID 변경 컨트롤러가 비활성화됨 - 당신은 CLI를 통하여 변경할 수 있습니다.<\/span> 당신은 API 버전  <span class=\"message-negative\">$1<\/span>의 펌웨어를 가지고 있으나, 이 기능은  <span class=\"message-positive\">$2<\/span>를 필요로 합니다."
     },
     "pidTuningSubTabPid": {
-        "message": "PID 프로파일 설정"
+        "message": "PID 프로필 설정"
     },
     "pidTuningSubTabRates": {
-        "message": "레이트프로파일 설정"
+        "message": "레이트프로필 설정"
     },
     "pidTuningSubTabFilter": {
         "message": "필터 설정"
     },
     "pidProfileName": {
-        "message": "PID 프로파일 이름"
+        "message": "PID 프로필 이름"
     },
     "pidProfileNameHelp": {
-        "message": "조정된 조건을 설명할 수 있는 PID 프로파일 이름: 더 가벼운\/더 무거운 배터리, 액션 카메라\/노 액션 카메라, 더 높은 고도 등."
+        "message": "조정된 조건을 설명할 수 있는 PID 프로필 이름: 더 가벼운\/더 무거운 배터리, 액션 카메라\/노 액션 카메라, 더 높은 고도 등."
     },
     "rateProfileName": {
-        "message": "레이트 프로파일 이름"
+        "message": "레이트 프로필 이름"
     },
     "rateProfileNameHelp": {
-        "message": "비행 유형을 설명할 수 있는 레이트 프로파일 이름: 씨네, 레이스, 프리스타일 등."
+        "message": "비행 유형을 설명할 수 있는 레이트 프로필 이름: 씨네, 레이스, 프리스타일 등."
     },
     "pidTuningShowAllPids": {
         "message": "모든 PID 보기"
@@ -1937,7 +1944,7 @@
         "message": "사용하지 않는 PID 숨기기"
     },
     "pidTuningNonProfilePidSettings": {
-        "message": "프로파일 독립적 PID 컨트롤러 설정"
+        "message": "프로필 독립적 PID 컨트롤러 설정"
     },
     "pidTuningAntiGravity": {
         "message": "안티 그라비티"
@@ -1970,7 +1977,7 @@
         "message": "안티 그라비티는 스로틀이 빠르게 변화하는 동안과 직후에 I (4.3은 P도) 를 증가시켜 스로틀 펌프 중 자세 안정성을 높입니다.<br><br>높은 게인 값은 낮은 권위의 기계 또는 무게 중심이 틀어진 기계에서 안정성을 향상시킬 수 있습니다."
     },
     "pidTuningDerivative": {
-        "message": "<b>D<\/b>미분",
+        "message": "<b>D<\/b>(미분)",
         "description": "Table header of the Derivative feature in the PIDs tab"
     },
     "pidTuningDMaxFeatureTitle": {
@@ -2100,7 +2107,7 @@
         "message": "이 파라미터를 사용하면, D 설정점 가중치가 스틱의 중립 근처에서 감소하여 플립과 롤이 부드럽게 끝납니다.<br> 값은 스틱의 편향을 나타냅니다: 0 - 스틱 중립, 1 - 전체 편향. 스틱이 그 지점보다 높을 때, 설정점 가중치는 설정된 값으로 일정하게 유지됩니다. 스틱이 그 지점 아래에 위치하면, 설정점 가중치는 스틱 중심점에서 0에 도달하는 것에 비례하여 감소합니다.<br>값 1은 최대 스무딩 효과를 주며, 값 0은 설정점 가중치를 전체 스틱 범위에 걸쳐 설정된 값으로 고정합니다."
     },
     "pidTuningDtermSetpointHelp": {
-        "message": "이 파라미터는 미분 요소 내 스틱 가속 효과를 결정합니다. <br> 0은 D가 오직 자이로만을 추적하는 이전 측정 방법과 동일합니다. 반면에 1은 동일한 자이로와 스틱 추적 레이트를 갖는 이전 오류 방법과 같습니다. <br> 값이 낮을 수록 스틱 반응이 더욱 느리고\/부드러워지며, 반면에 값이 높을 수록 스틱 가속 응답을 더 많이 제공합니다. <br>RC 신호보간은 컨트롤 킥이 노이즈를 발생시키지 않도록 더 높은 값으로 설정하는 것이 좋습니다."
+        "message": "이 파라미터는 미분 요소 내 스틱 가속 효과를 결정합니다. <br> 0은 D가 오직 자이로만을 추적하는 이전 측정 방법이며, 1은 동일한 자이로와 스틱 추적 레이트를 사용하는 이전 오류 방법입니다. <br> 값이 낮을 수록 더욱 느리고, 부드러운 스틱 반응을 제공하며, 높은 값은 더 많은 스틱 가속 응답을 제공합니다. <br>RC 신호보간은 컨트롤 킥이 노이즈를 발생시키지 않기 위해 더 높은 값을 사용하는 것을 권장합니다."
     },
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):<\/strong> 0 보다 크고 0.1 보다 작은 D 설정값 전환의 사용은 불안정을 유발시킬 수 있으며, 중립포인트에서 만나는 스틱의 반응성이 감소될 수 있습니다.<\/span>"
@@ -2121,7 +2128,7 @@
         "message": "부드러움"
     },
     "pidTuningFeedforwardSmoothnessHelp": {
-        "message": "피드포워드 트레이스에서 노이즈를 감쇠하려면 피드포워드 스무딩이 필수적입니다.<br><br>부드러운 추적을 제공하는 가장 작은 값이 가장 좋습니다.<br><br>기본값 25는 50-150Hz RC 링크에 적합합니다. 250Hz RC 링크의 경우 40-50을 사용합니다.  500Hz 링크의 경우 60-65를 사용하십시오."
+        "message": "피드포워드 트레이스의 노이즈를 줄이기 위해서는 피드포워드 스무딩이 필수적입니다.<br><br>부드러운 추적을 제공하는 가장 작은 값이 가장 좋습니다.<br><br>기본값 25는 50-150Hz RC 링크에 적합합니다. 250Hz RC 링크의 경우 40-50을 사용합니다.  500Hz 링크의 경우 60-65를 사용하십시오."
     },
     "pidTuningFeedforwardAveraging": {
         "message": "평균"
@@ -2163,14 +2170,14 @@
         "message": "스틱이 중앙에 가까워지면 선형적으로 피드포워드를 감소시킵니다. <br><br>4.2 이전 버전에서는 중앙 스틱 위치 주변에서 보다 부드러운 스틱 반응을 제공하기 위해 전환을 사용할 수 있습니다.<br><br> 4.3에서 전환은 지터 감소 함수에 의해 '대체'되었으므로 권장되지 않습니다.<br><br>값이 0이면 전환이 비활성화됩니다.  0.3의 값은 스틱이 데드 센터에 있을 때 0으로 피드포워드를 차단하지만 스틱이 중심에서 30% 이상 벗어나면 완전 정상으로 증가합니다."
     },
     "pidTuningProportional": {
-        "message": "<b>P<\/b>비례"
+        "message": "<b>P<\/b>(비례)"
     },
     "pidTuningProportionalHelp": {
         "message": "기계가 스틱을 얼마나 단단히 추적하는지(설정점)를 제어합니다.<br \/><br \/>더 높은 값(게인)은 더 엄격한 추적을 제공하지만, D를 기준으로 너무 높을 경우 오버슈트를 일으킬 수 있으며 스로틀 회전 시 진동을 일으킬 수 있습니다.  P를 자동차의 스프링이라고 생각하세요.",
         "description": "Proportional Term helpicon message on PID table titlebar"
     },
     "pidTuningIntegral": {
-        "message": "<b>I<\/b>적분"
+        "message": "<b>I<\/b>(적분)"
     },
     "pidTuningIntegralHelp": {
         "message": "작은 오프셋 지속을 제어합니다.<br><br>P와 비슷하지만 오차가 0이 될 때까지 점진적으로 천천히 누적됩니다.  무게중심 틀어짐 또는 바람과 같은 지속적인 외부 영향과 같은 장기적인 편향에 중요합니다.<br \/><br \/>더 높은 게인은 특히 차례대로 더 엄격한 추적을 제공하지만, 기체가 딱딱하게 느껴질 수 있습니다.<br><br>낮은 권위의 빌드 또는 P에 대한 비율이 높은 경우 느린 진동을 일으킬 수 있습니다.",
@@ -2188,7 +2195,7 @@
         "description": "Derivative Term helpicon message on PID table titlebar"
     },
     "pidTuningFeedforward": {
-        "message": "<b>F<\/b>피드포워드"
+        "message": "<b>F<\/b>(피드포워드)"
     },
     "pidTuningFeedforwardHelp": {
         "message": "스틱 입력에서 순수하게 파생된 추가 드라이브 요소로, 빠른 스틱 동작으로 신속하게 기동을 유도할 수 있습니다.<br><br>FF는 진동을 일으킬 수 없고, 유사한 스틱 응답에 대해 낮은 P를 허용하며, 스틱 입력에 대한 D의 자연적인 반발을 상쇄합니다.<br><br>값이 낮거나 0이면 스틱 입력에 대한 반응이 더 부드럽지만 지연됩니다.",
@@ -2279,28 +2286,28 @@
         "message": "새로고침"
     },
     "pidTuningProfileHead": {
-        "message": "프로파일"
+        "message": "프로필"
     },
     "pidTuningControllerHead": {
         "message": "PID 컨트롤러"
     },
     "pidTuningCopyProfile": {
-        "message": "프로파일 복사"
+        "message": "프로필 복사"
     },
     "pidTuningCopyRateProfile": {
-        "message": "레이트프로파일 복사"
+        "message": "레이트프로필 복사"
     },
     "dialogCopyProfileText": {
-        "message": "현재 프로파일에서 값을 복사"
+        "message": "현재 프로필에서 값을 복사"
     },
     "dialogCopyRateProfileText": {
-        "message": "현재 레이트프로파일에서 값을 복사"
+        "message": "현재 레이트프로필에서 값을 복사"
     },
     "dialogCopyProfileTitle": {
-        "message": "프로파일 값 복사"
+        "message": "프로필 값 복사"
     },
     "dialogCopyProfileNote": {
-        "message": "대상 프로파일의 모든 값들이 지워지고 덮어쓰기됩니다."
+        "message": "대상 프로필의 모든 값들이 지워지고 덮어쓰기됩니다"
     },
     "dialogCopyProfileConfirm": {
         "message": "복사"
@@ -2309,22 +2316,22 @@
         "message": "취소"
     },
     "pidTuningResetPidProfile": {
-        "message": "이 프로파일 초기화"
+        "message": "이 프로필 초기화"
     },
     "pidTuningPidProfileReset": {
-        "message": "현재 PID 프로파일에 대한 기본값이 로드됨"
+        "message": "현재 PID 프로필에 대한 기본값이 로드되었습니다."
     },
     "pidTuningReceivedProfile": {
-        "message": "비행 컨트롤러 설정 프로파일:  <strong class=\"message-positive\">$1<\/strong>"
+        "message": "비행 컨트롤러 설정 프로필: <strong class=\"message-positive\">$1<\/strong>"
     },
     "pidTuningReceivedRateProfile": {
-        "message": "비행 컨트롤러 설정 레이트 프로파일:  <strong class=\"message-positive\">$1<\/strong>"
+        "message": "비행 컨트롤러 설정 레이트 프로필: <strong class=\"message-positive\">$1<\/strong>"
     },
     "pidTuningLoadedProfile": {
-        "message": "로드 된 프로파일:  <strong class=\"message-positive\">$1<\/strong>"
+        "message": "로드 된 프로필: <strong class=\"message-positive\">$1<\/strong>"
     },
     "pidTuningLoadedRateProfile": {
-        "message": "로드 된 레이트 프로파일: <strong class=\"message-positive\">$1<\/strong>"
+        "message": "로드 된 레이트 프로필: <strong class=\"message-positive\">$1<\/strong>"
     },
     "pidTuningDataRefreshed": {
         "message": "PID 데이터 <strong>새로 고쳐짐<\/strong>"
@@ -2337,7 +2344,7 @@
         "message": "<b>튜닝 팁<\/b><br \/><span class=\"message-negative\">중요:<\/span> 첫 비행 중 모터 온도를 확인하는 것이 중요합니다. 필터 값이 높을수록 더 잘 날 수 있지만 모터에 더 많은 노이즈가 들리게 됩니다. <br> 기본값 100Hz가 최적이지만, 노이즈 설정을 위하여 D텀 필터를 50Hz로 낮출 수 있으며, 자이로 필터를 낮추는 것 또한 가능합니다."
     },
     "tuningHelpSliders": {
-        "message": "슬라이더를 사용하여 필터를 조정합니다. 수동으로 변경하려면 슬라이더를 꺼야 합니다.<br>슬라이더를 오른쪽으로 이동하면 컷오프 값이 높아지고 프롭워시가 개선되지만, 모터에 더 많은 소음이 전달되어 더 뜨거워집니다.<br>rpm 필터링을 사용하는 대부분의 클린 빌드는 자이로 저역통과 슬라이더를 매우 우측으로 또는 단지 저역통과 2만 활성화하고 슬라이더를 중앙에 둬도 좋습니다.<br><strong>경고:<\/strong> D 슬라이더를 오른쪽으로 이동할 때는 매우 주의하십시오! 변경 후마다 모터 온도를 점검하십시오!<br><strong>참고:<\/strong> 프로파일을 변경하면 D-텀 필터 설정만 변경됩니다. 자이로 필터 설정은 모든 프로파일에 대해 동일합니다.",
+        "message": "슬라이더를 사용하여 필터를 조정합니다. 수동으로 변경하려면 슬라이더를 꺼야 합니다.<br>슬라이더를 오른쪽으로 이동하면 컷오프 값이 높아지고 프롭워시가 개선되지만, 모터에 더 많은 소음이 전달되어 더 뜨거워집니다.<br>rpm 필터링을 사용하는 대부분의 클린 빌드는 자이로 저역통과 슬라이더를 매우 우측으로 또는 단지 저역통과 2만 활성화하고 슬라이더를 중앙에 둬도 좋습니다.<br><strong>경고:<\/strong> D 슬라이더를 오른쪽으로 이동할 때는 매우 주의하십시오! 변경 후마다 모터 온도를 점검하십시오!<br><strong>참고:<\/strong> 프로필을 변경하면 D-텀 필터 설정만 변경됩니다. 자이로 필터 설정은 모든 프로필에 대해 동일합니다.",
         "description": "Filter tuning subtab note"
     },
     "filterWarning": {
@@ -2417,7 +2424,7 @@
         "message": "RSSI 채널"
     },
     "receiverRssiChannelDisabledOption": {
-        "message": "비활성화됨"
+        "message": "비활성화"
     },
     "receiverRefreshRateTitle": {
         "message": "레이트 그래프 새로고침"
@@ -2493,7 +2500,7 @@
     },
     "auxiliaryDisabled": {
         "message": "(사용불가)",
-        "descripton": "Text to add to the ARM mode (maybe others in the future) in the MODES TAB when it has been disabled for some external reason"
+        "description": "Text to add to the ARM mode (maybe others in the future) in the MODES TAB when it has been disabled for some external reason"
     },
     "auxiliaryAddRange": {
         "message": "범위 추가"
@@ -2590,7 +2597,7 @@
         "description": "Help text to CAMSTAB mode"
     },
     "auxiliaryHelpMode_FAILSAFE": {
-        "message": "페일세이프 단계 2를 수동으로 입력",
+        "message": "페일세이프 2단계를 수동으로 입력",
         "description": "Help text to FAILSAFE mode"
     },
     "auxiliaryHelpMode_FLIPOVERAFTERCRASH": {
@@ -2793,7 +2800,7 @@
         "message": "요 D 조정"
     },
     "adjustmentsFunction12": {
-        "message": "레이트 프로파일 선택"
+        "message": "레이트 프로필 선택"
     },
     "adjustmentsFunction13": {
         "message": "피치 레이트"
@@ -2973,7 +2980,7 @@
         "message": "일반"
     },
     "gpsHeadHelp": {
-        "message": "GPS와 관련된 다양한 정보를 표시합니다. 자기계를 사용하는 경우에만 제목이 표시됩니다",
+        "message": "다양한 GPS 정보를 표시합니다. 자기계를 사용하는 경우에만 제목이 표시됩니다.",
         "description": "Help text for gpsHead"
     },
     "gpsMapHead": {
@@ -3065,16 +3072,16 @@
         "message": "사용불가"
     },
     "gnssQualityLocked": {
-        "message": "고정됨"
+        "message": "고정"
     },
     "gnssQualityFullyLocked": {
-        "message": "완전히 고정됨"
+        "message": "완전히 고정"
     },
     "gnssUsedUnused": {
         "message": "미사용"
     },
     "gnssUsedUsed": {
-        "message": "사용됨"
+        "message": "사용"
     },
     "gnssHealthyUnknown": {
         "message": "알 수 없음"
@@ -3867,7 +3874,7 @@
     },
     "firmwareFlasherBoardVerficationTargetNotAvailable": {
         "message": "앱이 보드를 감지했습니다: <strong>{{boardName}}<\/strong> 그러나 공식 베타라이트 타겟을 찾을 수 없습니다",
-        "description": "Board verification has succeeded, but the target is not available as offical Betaflight target."
+        "description": "Board verification has succeeded, but the target is not available as official Betaflight target."
     },
     "firmwareFlasherBoardVerificationFail": {
         "message": "앱이 보드를 확인하지 <span class=\"message-negative\">못했습니다<\/span>. 이 문제가 지속되면 탭을 전환하고 다시 시도하거나 USB를 다시 연결하거나 사용자 지정 기본값 적용을 잊어버린 경우 먼저 연결하세요.",
@@ -3914,10 +3921,10 @@
         "description": "Ignore creating a backup before actual flashing takes place"
     },
     "firmwareBackupEnabled": {
-        "message": "백업이 활성화됨"
+        "message": "백업 활성화"
     },
     "firmwareBackupDisabled": {
-        "message": "백업이 비활성화됨"
+        "message": "백업 비활성화"
     },
     "firmwareBackupAsk": {
         "message": "백업하기 전 묻기"
@@ -4119,7 +4126,7 @@
         "description": "One of the modes in Color Mode in Led Strip"
     },
     "ledStripModeColorsModeGPSLocked": {
-        "message": "GPS: 고정됨",
+        "message": "GPS: 고정",
         "description": "One of the modes in Color Mode in Led Strip"
     },
     "ledStripModeGpsDefault": {
@@ -4330,10 +4337,10 @@
         "message": "모터 드라이브 신호당 감소율(백분율).<br><br>고 KV 모터에 더 높은 셀 카운트 배터리를 사용할 때 ESC 전류와 모터 열을 감소시킵니다.<br><br>4S 모터, 프롭 및 튜닝이 있는 기체에 6S 배터리를 사용할 경우 66%; 3S용 기체에 4S 배터리를 사용할 경우 75%를 사용합니다.<br><br>모든 구성 요소가 사용 중인 배터리의 전압을 지원할 수 있는지 확인하십시오."
     },
     "pidTuningCellCount": {
-        "message": "셀 수 - 자동 프로파일 전환용"
+        "message": "셀 수 - 자동 프로필 전환용"
     },
     "pidTuningCellCountHelp": {
-        "message": "연결된 배터리의 셀 수와 동일한 셀 수를 가진 첫 번째 프로파일을 자동으로 활성화합니다.<br><br><ul><li><b>전환<\/b>: 셀 수가 일치하는 프로파일이 있으면 항상 프로파일로 전환합니다.<\/li><li><b>비활성화<\/b>: 자동 프로파일 전환을 비활성화합니다<\/li><b>1S-8S<\/b>: 이 프로파일에 사용할 프로파일 셀 수를 선택하세요<\/li><\/ul>"
+        "message": "연결된 배터리의 셀 수와 동일한 셀 수를 가진 첫 번째 프로필을 자동으로 활성화합니다.<br><br><ul><li><b>전환<\/b>: 항상 셀 수가 일치하는 프로필로 전환합니다.<\/li><li><b>비활성화<\/b>: 자동 프로필 전환을 비활성화합니다<\/li><b>1S-8S<\/b>: 이 프로파일에 사용할 프로파일 셀 수를 선택하세요<\/li><\/ul>"
     },
     "pidTuningCellCountChange": {
         "message": "전환",
@@ -4368,7 +4375,7 @@
         "message": "8S"
     },
     "pidTuningNonProfileFilterSettings": {
-        "message": "프로파일 독립적 필터 설정"
+        "message": "프로필 독립적 필터 설정"
     },
     "pidTuningFilterSlidersHelp": {
         "message": "이 슬라이더는 자이로 및 D-텀 필터를 조정합니다.<br \/><br \/>더 강한 필터링:<br \/> - 슬리이더를 왼쪽으로<br> - 더 낮은 컷오프 주파수.<br \/><br \/> 더 강한 필터링은 더 많은 노이즈를 제거하여 모터를 더 시원하게 유지하지만, 자이로 신호를 더 지연시키고 프로프워시를 악화시키거나 공명 진동을 일으킬 수 있습니다. 반응성이 낮은 기체(예: X-Class)는 더 강한 필터링이 적합합니다. <br><br>더 적은 필터링:<br \/> - 슬라이더를 오른쪽으로<br \/> - 더 높은 컷오프 주파수 <br><br>더 적은 필터링은 자이로 신호 지연을 줄이고 종종 프롭워시를 향상시킵니다. 자이로 저역통과 필터를 오른쪽으로 이동시키는 것은 보통 괜찮지만, D 필터를 오른쪽으로 이동시킬 필요는 없으며 매우 뜨거운 모터를 쉽게 만들 수 있습니다.",
@@ -4598,7 +4605,7 @@
         "message": "컷오프 주파수 [Hz]"
     },
     "pidTuningNotchFilterHelp": {
-        "message": "노치 필터는 중앙 및 컷오프 파라미터가 있는 대칭의 좁은 하이컷 필터입니다.<br \/><br \/>중심 값은 필터의 중심 주파수입니다. 컷오프 값은 로우사이드 -3dB 컷오프 주파수입니다.<br \/><br \/>예를 들어, 노치 중심이 260이고 노치 컷오프가 160이면 160~360Hz의 -3dB 범위와 260Hz 전후로 가장 강한 감쇠를 가지는 넓은 노치를 반환합니다.",
+        "message": "노치 필터는 중앙 및 컷오프 파라미터가 있는 대칭의 좁은 하이컷 필터입니다.<br \/><br \/>중심 값은 필터의 중심 주파수입니다. 컷오프 값은 로우사이드 -3 dB 컷오프 주파수입니다.<br \/><br \/>예를 들어, 노치 중심이 260이고 노치 컷오프가 160이면 160-360 Hz의 -3 dB 범위와 260 Hz 전후로 가장 강한 감쇠를 가지는 넓은 노치를 반환합니다.",
         "description": "Notch filter helpicon message"
     },
     "pidTuningDynamicNotchFilterGroup": {
@@ -4671,7 +4678,7 @@
         "description": "Help text for one of the parameters of the RPM Filter"
     },
     "pidTuningFilterSettings": {
-        "message": "프로파일 종속 필터 설정"
+        "message": "프로필 종속 필터 설정"
     },
     "pidTuningDTermLowpass": {
         "message": "D 텀 저역통과 1"
@@ -4836,13 +4843,13 @@
         "message": "수신기 페일세이프"
     },
     "failsafeFeaturesHelpNew": {
-        "message": "페일세이프에는 두 단계가 있습니다. <strong>단계 1<\/strong>은 비행 채널의 펄스 길이가 유효하지 않거나 수신기가 페일세이프 모드를 보고하거나 수신기에서 아무 신호도 없는 경우 적용되며, 채널 폴백 설정이  <span class=\"message-negative\">모든 채널<\/span>에 적용되고 복구에 짧은 시간이 걸립니다. <strong>단계 2<\/strong>는 기체가  <span class=\"message-negative\">아밍이 된<\/span> 동안 환경설정된 시간보다 오류 상태가 오래 걸릴 때 적용됩니다. 선택한 절차에 의해 무시되지 않는 한 모든 채널은 적용된 채널 폴백 설정으로 유지됩니다.<br \/><strong>노트:<\/strong> 단계 1에 들어가기에 앞서 채널 폴백 설정은 유효하지 않은 펄스가 있는 개별 AUX 채널에도 적용됩니다."
+        "message": "페일세이프에는 두 단계가 있습니다. <strong>1단계<\/strong>는 비행 채널의 펄스 길이가 유효하지 않거나 수신기가 페일세이프 모드를 보고하거나 수신기에서 아무 신호도 없는 경우 적용되며, 채널 폴백 설정이 <span class=\"message-negative\">모든 채널<\/span>에 적용되고 복구에 짧은 시간이 걸립니다. <strong>2단계<\/strong>는 기체가 <span class=\"message-negative\">아밍이 된<\/span> 동안 환경설정된 시간보다 오류 상태가 오래 걸릴 때 적용됩니다. 선택한 절차에 의해 무시되지 않는 한 모든 채널은 적용된 채널 폴백 설정으로 유지됩니다.<br \/><strong>노트:<\/strong> 1단계에 들어가기에 앞서 채널 폴백 설정은 유효하지 않은 펄스가 있는 개별 AUX 채널에도 적용됩니다."
     },
     "failsafePulsrangeTitle": {
         "message": "유효한 펄스 범위 설정"
     },
     "failsafePulsrangeHelp": {
-        "message": "최소값보다 짧거나 최대값보다 긴 펄스는 유효하지 않으며, AUX 채널에 대한 개별 채널 폴백 설정 적용 또는 비행 채널에 대한 단계 1 입력으로 트리거됩니다."
+        "message": "최소값보다 짧거나 최대값보다 긴 펄스는 유효하지 않으며, AUX 채널에 대해 개별 채널 폴백 설정을 적용하거나 비행 채널에 대해 1단계로 진입하도록 트리거합니다"
     },
     "failsafeRxMinUsecItem": {
         "message": "최소 길이"
@@ -4875,7 +4882,7 @@
         "description": "Text for Set option"
     },
     "failsafeStageTwoSettingsTitle": {
-        "message": "단계 2 - 설정"
+        "message": "2 단계 - 설정"
     },
     "failsafeDelayItem": {
         "message": "신호 손실 후 1단계 페일세이프에서 시간 [seconds]"
@@ -4899,7 +4906,7 @@
         "message": "모터가 꺼지고 기체가 해제될 때까지 착륙 모드로 유지할 시간"
     },
     "failsafeSubTitle1": {
-        "message": "단계 2 - 페일세이프 절차"
+        "message": "2 단계 - 페일세이프 절차"
     },
     "failsafeProcedureItemSelect1": {
         "message": "착륙"
@@ -4969,7 +4976,7 @@
         "message": "스로틀 호버 - <span class=\"message-negative\">중요: 이 값을 정확하게 설정하세요<\/span>"
     },
     "failsafeGpsRescueThrottleHoverHelp": {
-        "message": "올바른 값을 찾으려면 Failsafe 스위치 동작을 2단계로 설정하고 단계 2 Failsafe 절차를 착륙으로 설정한 후 기체가 호버 또는 천천히 하강할 때까지 착륙에 사용되는 스로틀 값을 조정합니다.  그런 다음 GPS 레스큐 스로틀 호버 및 스로틀에 대한 단계 1 채널 피드백 값을 이 값으로 설정합니다."
+        "message": "올바른 값을 찾으려면 페일세이프 스위치 동작을 2단계로 설정하고, 2단계 페일세이프 절차를 착륙으로 설정한 후 기체가 호버 또는 천천히 하강할 때까지 착륙에 사용되는 스로틀 값을 조정합니다.  그런 다음 GPS 레스큐 스로틀 호버 및 스로틀에 대한 1단계 채널 피드백 값을 이 값으로 설정합니다."
     },
     "failsafeGpsRescueItemMinDth": {
         "message": "홈까지 최소 거리 (미터)"
@@ -5011,13 +5018,13 @@
         "message": "페일세이프 스위치 동작"
     },
     "failsafeSwitchModeHelp": {
-        "message": "이 옵션은 페일세이프가 AUX 스위치를 통해 활성화되었을 때 무엇이 일어나는지 결정합니다:<br\/><strong>단계 1<\/strong>은 단계 1 페일세이프를 활성화합니다. 정확한 신호 손실 페일세이프 동작을 시뮬레이션 하려는 경우 유용 합니다.<br\/><strong>단계 2<\/strong>는 단계 1을 생략하고 즉시 단계 2 절차를 활성화합니다.<br\/><strong>Kill<\/strong>은 즉시 디스아밍합니다. (당신의 기체는 충돌할 것입니다.)"
+        "message": "이 옵션은 페일세이프가 AUX 스위치를 통해 활성화되었을 때 무엇이 일어나는지 결정합니다:<br\/><strong>1단계<\/strong>은 1단계 페일세이프를 활성화합니다. 정확한 신호 손실 페일세이프 동작을 시뮬레이션 하려는 경우 유용 합니다.<br\/><strong>2단계<\/strong>는 1단계를 생략하고 즉시 2단계 절차를 활성화합니다.<br\/><strong>Kill<\/strong>은 즉시 디스아밍합니다. (당신의 기체는 충돌할 것입니다.)"
     },
     "failsafeSwitchOptionStage1": {
-        "message": "단계 1"
+        "message": "1 단계"
     },
     "failsafeSwitchOptionStage2": {
-        "message": "단계 2"
+        "message": "2 단계"
     },
     "failsafeSwitchOptionKill": {
         "message": "Kill"
@@ -5317,7 +5324,7 @@
         "message": "일부 비행 컨트롤러는 온보드 <a href=\"https:\/\/www.youtube.com\/watch?v=ikKH_6SQ-Tk\" target=\"_blank\" rel=\"noopener noreferrer\">MinimOSD<\/a>를 가지고 있습니다. 이는 <a href=\"https:\/\/github.com\/ShikOfTheRa\/scarab-osd\/releases\/latest\" target='_blank'>scarab-osd<\/a>를 통해 플래시하고 설정할 수 있습니다. 그러나 MinimOSD는 이 인터페이스를 통해서 설정할수 없습니다."
     },
     "osdSetupProfilesTitle": {
-        "message": "OSD 프로파일 번호",
+        "message": "OSD 프로필 번호",
         "description": "Description of the header of the OSD elements column associated to each profile"
     },
     "osdSetupElementsTitle": {
@@ -5332,11 +5339,11 @@
         "description": "Label of the selector for the OSD Profile in the preview. KEEP IT SHORT!!!"
     },
     "osdSetupPreviewForTitle": {
-        "message": "여기서 프로파일이나 폰트를 바꿔도 비행컨트롤러의 프로파일이나 폰트가 바뀌진 않고, 단지 미리보기 창에만 영향을 끼칩니다. 그것을 변경하기를 원한다면, '$t(osdSetupSelectedProfileTitle.message)' 옵션이나 '$t(osdSetupFontManager.message)' 버튼을 각각 사용해야 합니다.",
+        "message": "여기서 프로필이나 폰트를 바꿔도 비행컨트롤러의 프로필이나 폰트가 바뀌진 않고, 단지 미리보기 창에만 영향을 끼칩니다. 그것을 변경하기를 원한다면, '$t(osdSetupSelectedProfileTitle.message)' 옵션이나 '$t(osdSetupFontManager.message)' 버튼을 각각 사용해야 합니다.",
         "description": "Help content for the OSD profile and font PREVIEW"
     },
     "osdSetupSelectedProfileTitle": {
-        "message": "사용중인 OSD 프로파일",
+        "message": "사용중인 OSD 프로필",
         "description": "Title of the box to select the current active OSD profile"
     },
     "osdSetupSelectedProfileLabel": {
@@ -5344,7 +5351,7 @@
         "description": "Label for the selection of the curren active OSD profile"
     },
     "osdSetupPreviewSelectProfileElement": {
-        "message": "OSD 프로파일 {{profileNumber}}",
+        "message": "OSD 프로필 {{profileNumber}}",
         "description": "Content of the selector for the OSD Profile in the preview"
     },
     "osdSetupPreviewSelectFont": {
@@ -5913,11 +5920,11 @@
         "message": "순간 전력 소비"
     },
     "osdTextElementPIDRateProfile": {
-        "message": "프로파일: PID와 레이트",
+        "message": "프로필: PID와 레이트",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementPIDRateProfile": {
-        "message": "활성된 PID 및 레이트 프로파일의 수치 표시"
+        "message": "활성된 PID 및 레이트 프로필의 수치 표시"
     },
     "osdTextElementBatteryWarning": {
         "message": "배터리 경고",
@@ -6172,25 +6179,25 @@
         "message": "ESC 텔레메트리에 의해 보고된 RPM 주파수"
     },
     "osdTextElementRateProfileName": {
-        "message": "프로파일: 레이트 프로파일 이름",
+        "message": "프로필: 레이트 프로필 이름",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementRateProfileName": {
-        "message": "현재 레이트 프로파일 이름을 보여줍니다"
+        "message": "현재 레이트 프로필 이름을 보여줍니다"
     },
     "osdTextElementPidProfileName": {
-        "message": "프로파일: PID 프로파일 이름",
+        "message": "프로필: PID 프로필 이름",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementPidProfileName": {
-        "message": "현재 PID 프로파일 이름을 보여줍니다"
+        "message": "현재 PID 프로필 이름을 보여줍니다"
     },
     "osdTextElementOsdProfileName": {
-        "message": "프로파일: OSD 프로파일 이름",
+        "message": "프로필: OSD 프로필 이름",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementOsdProfileName": {
-        "message": "\"osd_profile_1_name\", \"osd_profile_2_name\" 그리고 \"osd_profile_3_name\" CLI 변수에서 설정된 OSD 프로파일 이름"
+        "message": "\"osd_profile_1_name\", \"osd_profile_2_name\" 그리고 \"osd_profile_3_name\" CLI 변수에서 설정된 OSD 프로필 이름"
     },
     "osdTextElementRssiDbmValue": {
         "message": "RSSI dBm 수치",
@@ -6576,7 +6583,7 @@
         "description": "Text of the RSSI dBm alarm"
     },
     "osdWarningTextArmingDisabled": {
-        "message": "아밍이 비활성화됨",
+        "message": "아밍 비활성화",
         "description": "One of the warnings that can be selected to be shown in the OSD"
     },
     "osdWarningArmingDisabled": {
@@ -6660,7 +6667,7 @@
         "message": "GPS 레스큐가 사용할 수 없을 때 및 활성화할 수 없을 때 경고합니다"
     },
     "osdWarningTextGpsRescueDisabled": {
-        "message": "GPS 레스큐 비활성화됨",
+        "message": "GPS 레스큐 비활성화",
         "description": "One of the warnings that can be selected to be shown in the OSD"
     },
     "osdWarningGpsRescueDisabled": {
@@ -7133,16 +7140,16 @@
         "message": "레거시 Multiwii MSP 전류 출력 지원"
     },
     "pidTuningProfile": {
-        "message": "프로파일"
+        "message": "프로필"
     },
     "pidTuningProfileTip": {
-        "message": "최대 3개(일부 컨트롤러의 경우 2개까지)의 다른 프로파일을 비행 컨트롤러에 저장할 수 있습니다. 프로파일에는이 탭의 모든 설정이 포함됩니다. 현장에서 간단한 스틱 명령(온라인 지침 참조)을 사용하여 프로파일을 전환 할 수 있습니다."
+        "message": "최대 3개(일부 컨트롤러의 경우 2개까지)의 다른 프로필을 비행 컨트롤러에 저장할 수 있습니다. 프로필에는이 탭의 모든 설정이 포함됩니다. 현장에서 간단한 스틱 명령(온라인 지침 참조)을 사용하여 프로필을 전환 할 수 있습니다."
     },
     "pidTuningRateProfile": {
-        "message": "레이트 프로파일"
+        "message": "레이트프로필"
     },
     "pidTuningRateProfileTip": {
-        "message": "프로파일 당 최대 3개의 다른 레이트 프로파일을 비행 컨트롤러에 저장할 수 있습니다. 레이트 프로프일에는 'RC 레이트', '레이트', 'RC Expo', '스로틀'및 'TPA'에 대한 설정이 포함됩니다. '조정' 탭에서 '레이트 프로파일 선택'을 위한 3가지 위치 스위치를 설정하여 비행 중 레이트 프로파일 간을 전환 할 수 있습니다."
+        "message": "프로필 당 최대 3개의 다른 레이트 프로필을 비행 컨트롤러에 저장할 수 있습니다. 레이트 프로필에는 'RC 레이트', '레이트', 'RC Expo', '스로틀'및 'TPA'에 대한 설정이 포함됩니다. '조정' 탭에서 '레이트 프로필 선택'을 위한 3가지 위치 스위치를 설정하여 비행 중 레이트 프로필 간을 전환 할 수 있습니다."
     },
     "pidTuningRateSetup": {
         "message": "기본\/아크로 레이트"
@@ -7161,7 +7168,7 @@
         "message": "측정"
     },
     "pidTuningDeltaTip": {
-        "message": "<b>오류로 부터 구하는 미분<\/b>은 더 직접적인 스틱 응답을 제공하며, 보통 레이싱에 적합합니다.<br \/><br \/><b>측정으로 부터 구하는 미분<\/b>은 더 부드러운 스틱 응답을 제공하기 때문에 프리스타일에 더욱 적합합니다."
+        "message": "<b>오류로 부터 구하는 미분<\/b>은 더 직접적인 스틱 응답을 제공하며, 보통 레이싱에 적합합니다.<br \/><br \/><b>측정으로 부터 구하는 미분<\/b>은 더 부드러운 스틱 응답을 제공하기 때문에 프리스타일에 더욱 적합합니다"
     },
     "pidTuningPidControllerTip": {
         "message": "<b>레거시 vs 베타플라이트 (부동 소수점):<\/b> PID 스케일링과 PID 로직은 정확히 동일합니다. 반드시 다시 조정할 필요는 없습니다. 레거시(legacy)는 정수 수학에 기초를 한 기본 PID 컨트롤러로써 오래된 베타플라이트의 진화 된 리라이트 버전입니다. 베타플라이트 PID 컨트롤러는 부동 소수점 연산을 사용하며, 멀티로터 어플리케이션을 위해 특별히 설계된 많은 새로운 기능을 제공합니다. <br> <b>부동 소수점 vs 정수:<\/b> PID 스케일링 및 PID 로직은 동일합니다. 리튠이 필요 없습니다. F1 보드에는 온보드 FPU가 없고 부동 소수점 연산으로 인해 CPU 부하가 증가하고 정수 연산으로 성능이 향상되지만, 부동 소수점 연산은 약간 더 정밀해질 수 있습니다."
@@ -7374,7 +7381,7 @@
         "message": "구글 플레이 스토어에서 업데이트"
     },
     "cordovaWebviewEnable": {
-        "message": "설정에서 디바이스에 대한 정보 탭으로 이동하여 빌드 버전 번호를 10번 눌러 '개발자 옵션'을 활성화하십시오. 그런 다음 개발자 옵션을 검색하고 들어가 웹뷰 제공자로 <b>{{app}}<\/b>를 선택하십시오."
+        "message": "설정의 디바이스 정보 섹션으로 이동하여 빌드 번호를 10번 탭하여 '개발자 옵션'을 활성화합니다. 그런 다음 개발자 옵션을 열고 <b>{{app}}<\/b>를 WebView 제공자로 선택합니다."
     },
     "cordovaWebviewEnableBtn": {
         "message": "설정 열기"
@@ -7386,7 +7393,7 @@
         "message": "웹뷰 응용 프로그램이 설치 \/ 활성화되지 않음"
     },
     "cordovaWebviewUsed": {
-        "message": "사용됨"
+        "message": "사용"
     },
     "cordovaExitAppTitle": {
         "message": "확인"
@@ -7492,11 +7499,11 @@
     },
     "presetsButtonSave": {
         "message": "저장 및 재부팅",
-        "description": "A button that saves all appied presets - analog to 'save' command in CLI"
+        "description": "A button that saves all applied presets - analogous to 'save' command in CLI"
     },
     "presetsButtonCancel": {
         "message": "취소",
-        "description": "A button that restarts FC without saving appied presets - analog to 'exit' command in CLI"
+        "description": "A button that restarts FC without saving applied presets - analogous to 'exit' command in CLI"
     },
     "presetsApplyingPresets": {
         "message": "환경설정을 적용하는 중...",
@@ -7575,7 +7582,7 @@
         "description": "Presets tab, sources dialog, button to make selected source active"
     },
     "presetsSourcesDialogMakeSourceDisable": {
-        "message": "생성이 비활성화됨",
+        "message": "비활성화",
         "description": "Presets tab, sources dialog, button to make selected source disabled"
     },
     "presetsSourcesDialogDeleteSource": {
@@ -7604,11 +7611,11 @@
     },
     "presetsNoPresetsFound": {
         "message": "지정된 검색 매개 변수에 대한 프리셋을 찾을 수 없습니다",
-        "description": "Message that apprears on presets tab if no presets were found"
+        "description": "Message that appears on presets tab if no presets were found"
     },
     "presetsTooManyPresetsFound": {
         "message": "표시된 프리셋 수의 최대 한계에 도달했습니다",
-        "description": "Message that apprears on presets tab if too many presets found"
+        "description": "Message that appears on presets tab if too many presets found"
     },
     "presetsOptionsPlaceholder": {
         "message": "주의! 옵션의 목록을 검토하세요",
@@ -7746,5 +7753,227 @@
     "osdSetupPreviewCheckRulers": {
         "message": "눈금자",
         "description": "Label for the checkbox to toggle OSD preview rulers around the preview"
+    },
+    "tabUserProfile": {
+        "message": "사용자 프로필"
+    },
+    "labelEmail": {
+        "message": "이메일"
+    },
+    "placeholderEmailAddress": {
+        "message": "이메일 주소 입력"
+    },
+    "userEmailRequired": {
+        "message": "이메일 주소가 필요합니다"
+    },
+    "profileLoginMessage": {
+        "message": "프로필을 보려면 로그인해 주세요."
+    },
+    "tabBackups": {
+        "message": "백업"
+    },
+    "userPasskeyDeleteSuccess": {
+        "message": "패스키가 성공적으로 삭제되었습니다"
+    },
+    "userPasskeyDeleteFailed": {
+        "message": "패스키를 삭제하지 못했습니다"
+    },
+    "userTokenDeleteSuccess": {
+        "message": "토큰이 성공적으로 삭제되었습니다"
+    },
+    "userTokenDeleteFailed": {
+        "message": "토큰을 삭제하지 못했습니다"
+    },
+    "userProfileLoadFailed": {
+        "message": "사용자 프로필을 불러오지 못했습니다"
+    },
+    "userTokenLoadFailed": {
+        "message": "사용자 토큰을 불러오지 못했습니다"
+    },
+    "userPasskeyLoadFailed": {
+        "message": "사용자 패스키를 불러오지 못했습니다"
+    },
+    "userProfileUpdateSuccess": {
+        "message": "프로필이 성공적으로 업데이트되었습니다"
+    },
+    "userProfileUpdateFailed": {
+        "message": "프로필을 업데이트하지 못했습니다"
+    },
+    "userBackupsLoadFailed": {
+        "message": "백업을 불러오지 못했습니다"
+    },
+    "userBackupDownloadFailed": {
+        "message": "백업을 다운로드하지 못했습니다"
+    },
+    "userBackupUpdateSuccess": {
+        "message": "백업이 성공적으로 업데이트되었습니다"
+    },
+    "userBackupUpdateFailed": {
+        "message": "백업을 업데이트하지 못했습니다"
+    },
+    "userBackupDeleteSuccess": {
+        "message": "백업을 성공적으로 삭제했습니다"
+    },
+    "userBackupDeleteFailed": {
+        "message": "백업을 삭제하지 못했습니다"
+    },
+    "userPasskeyNoPasskeys": {
+        "message": "사용 가능한 패스키 없음"
+    },
+    "userTokenNoTokens": {
+        "message": "사용 가능한 토큰 없음"
+    },
+    "profileBackupSuccess": {
+        "message": "백업 성공"
+    },
+    "profileBackupApiSuccess": {
+        "message": "백업을 성공적으로 API에 저장하였습니다"
+    },
+    "profileBackupApiFail": {
+        "message": "백업을 API에 저장하지 못했습니다"
+    },
+    "profileBackupEmptyResult": {
+        "message": "백업 성공"
+    },
+    "labelLogin": {
+        "message": "로그인"
+    },
+    "labelSignOut": {
+        "message": "로그아웃"
+    },
+    "labelAvatarUrl": {
+        "message": "아바타 URL"
+    },
+    "placeholderAvatarUrl": {
+        "message": "당신의 아바타의 이미지 URL 입력하세요"
+    },
+    "labelCreatePasskey": {
+        "message": "패스키 생성"
+    },
+    "labelUsePasskey": {
+        "message": "패스키 사용"
+    },
+    "titleEnterVerificationCode": {
+        "message": "인증 코드 입력"
+    },
+    "labelVerificationCode": {
+        "message": "인증 코드"
+    },
+    "labelCode": {
+        "message": "코드"
+    },
+    "userLoggingIn": {
+        "message": "로그인 중..."
+    },
+    "userSignedOut": {
+        "message": "로그아웃됨"
+    },
+    "userSignOutFailed": {
+        "message": "로그아웃에 실패하였습니다"
+    },
+    "userLoginSuccess": {
+        "message": "로그인 성공"
+    },
+    "userLoginFailed": {
+        "message": "로그인 실패"
+    },
+    "userCreatePasskeyFailed": {
+        "message": "패스키를 생성하지 못했습니다"
+    },
+    "userCreatePasskeySuccess": {
+        "message": "패스키를 성공적으로 생성했습니다"
+    },
+    "userVerifyingCode": {
+        "message": "코드 인증중..."
+    },
+    "userCreatingPasskey": {
+        "message": "패스키 생성중..."
+    },
+    "dataWaitingForData": {
+        "message": "데이터를 기다리는 중 ..."
+    },
+    "labelId": {
+        "message": "ID"
+    },
+    "labelCreated": {
+        "message": "생성됨"
+    },
+    "labelLastUsed": {
+        "message": "마지막 사용"
+    },
+    "labelActions": {
+        "message": "액션"
+    },
+    "labelDetails": {
+        "message": "세부 사항"
+    },
+    "labelExpiry": {
+        "message": "만료"
+    },
+    "labelDescription": {
+        "message": "설명"
+    },
+    "labelDate": {
+        "message": "일자"
+    },
+    "actionDownload": {
+        "message": "다운로드"
+    },
+    "actionBackup": {
+        "message": "백업"
+    },
+    "actionEdit": {
+        "message": "편집"
+    },
+    "actionDelete": {
+        "message": "삭제"
+    },
+    "actionSave": {
+        "message": "저장"
+    },
+    "titleEditProfile": {
+        "message": "프로필 편집"
+    },
+    "titleLogin": {
+        "message": "로그인"
+    },
+    "labelName": {
+        "message": "이름"
+    },
+    "labelAddress": {
+        "message": "주소"
+    },
+    "labelCountry": {
+        "message": "국가"
+    },
+    "confirmDelete": {
+        "message": "이 {{item}}을 삭제하시겠습니까?"
+    },
+    "itemBackup": {
+        "message": "백업"
+    },
+    "itemToken": {
+        "message": "토큰"
+    },
+    "itemPasskey": {
+        "message": "패스키"
+    },
+    "notLoggedIn": {
+        "message": "로그인 안 됨"
+    },
+    "backupNoBackupsAvailable": {
+        "message": "사용 가능한 백업 없음"
+    },
+    "titleEditBackup": {
+        "message": "백업 편집"
+    },
+    "backupMcuUnknown": {
+        "message": "MCU 알 수 없음"
+    },
+    "sectionUserTokens": {
+        "message": "사용자 토큰"
+    },
+    "sectionUserPasskeys": {
+        "message": "사용자 패스키"
     }
 }

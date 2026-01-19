@@ -2090,9 +2090,6 @@
     "pidTuningDtermSetpointTransitionHelp": {
         "message": "Za pomocą tego parametru można zmniejszyć siłę wychylenia w pobliżu środka drążków, co skutkuje gładszym zakończeniem przewrotów i beczek.<br> Wartośći reprezentujące punkt wychylenia drążka: 0 - drążek wyśrodkowany, 1 - pełne wychylenie. Gdy drążek znajduje się powyżej tego punktu, wychylenie jest utrzymywane na stałym poziomie skonfigurowanej wartości. Gdy drążek znajduje się poniżej tego punktu, sila zadana jest proporcjonalnie zmniejszana, osiągając 0 w środkowej pozycji drążka.<br>Wartość 1 zapewnia maksymalny efekt wygładzenia, a wartość 0 utrzymuje ustawioną siłę na ustawionej wartości w całym zakresie wychylenia drążka."
     },
-    "pidTuningDtermSetpointHelp": {
-        "message": "Ten parametr określa efekt przyspieszenia drążka w składowej pochodnej.<br> Wartość 0 odpowiada starej metodzie pomiarowej, w której D śledzi tylko żyroskop, natomiast wartość 1 odpowiada starej metodzie błędu z równym współczynnikiem śledzenia żyroskopu i drążka.<br> Niższa wartość odpowiada wolniejszej\/płynniejszej reakcji drążka, podczas gdy wyższa wartość zapewnia lepszą reakcję na przyspieszenie drążka.<br>Pamiętaj, że zaleca się włączenie interpolacji RC przy wyższych wartościach, aby zapobiec szumowi."
-    },
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class = \"message-negative\"> <strong> $t(warningTitle.message): <\/strong> Odradza się stosowania wartości zadanej D większej niż 0 i mniejszej niż 0,1. Takie postępowanie może prowadzić do niestabilności i zmniejszenia reakcji drążka, gdy drążki przekroczą punkt środkowy. <\/span>"
     },
@@ -2476,7 +2473,7 @@
     },
     "auxiliaryDisabled": {
         "message": "(NIESPRAWNY)",
-        "descripton": "Text to add to the ARM mode (maybe others in the future) in the MODES TAB when it has been disabled for some external reason"
+        "description": "Text to add to the ARM mode (maybe others in the future) in the MODES TAB when it has been disabled for some external reason"
     },
     "auxiliaryAddRange": {
         "message": "Dodaj Zakres"
@@ -2948,7 +2945,7 @@
         "message": "Ogólne"
     },
     "gpsHeadHelp": {
-        "message": "Pokaż różne informacje związane z GPS. Kierunki są wyświetlane tylko wtedy, gdy używany jest magnetometr",
+        "message": "Pokaż różne informacje GPS. Kierunki są wyświetlane tylko wtedy, gdy używany jest magnetometr.",
         "description": "Help text for gpsHead"
     },
     "gpsMapHead": {
@@ -3842,7 +3839,7 @@
     },
     "firmwareFlasherBoardVerficationTargetNotAvailable": {
         "message": "Aplikacja wykryła board: <strong>{{boardName}}<\/strong>, ale nie znaleziono oficjalnego celu Betaflight",
-        "description": "Board verification has succeeded, but the target is not available as offical Betaflight target."
+        "description": "Board verification has succeeded, but the target is not available as official Betaflight target."
     },
     "firmwareFlasherBoardVerificationFail": {
         "message": "Aplikacja <span class=\"message-negative\">nie powiodła się<\/span> w celu zweryfikowania działu. Jeśli ta opcja będzie się powtarzała, spróbuj zmienić zakładki i ponowić próbę, podłącz się ponownie lub połącz najpierw jeśli zapomniałeś zastosować niestandardowe ustawienia domyślne.",
@@ -4573,7 +4570,7 @@
         "message": "Częstotliwość odcięcia [Hz]"
     },
     "pidTuningNotchFilterHelp": {
-        "message": "Filtr typu Notch to symetryczny, wąski, wysoko obcinany filtr o parametrach środka i odcięcia.<br \/><br \/>Wartość środka to częstotliwość środkowa filtra. Wartość odcięcia to dolna częstotliwość odcięcia -3dB.<br \/><br \/>Na przykład filtr typu Notch Cutoff o wartości 160 i wartości środkowej 260 daje szerokie wycięcie o zakresie -3dB od 160 do 360 Hz i największym tłumieniu w okolicy 260 Hz.",
+        "message": "Filtr typu Notch to symetryczny, wąski, wysoko obcinany filtr o parametrach środka i odcięcia.<br \/><br \/>Wartość środka to częstotliwość środkowa filtra. Wartość odcięcia to dolna częstotliwość odcięcia -3 dB.<br \/><br \/>Na przykład filtr typu Notch Cutoff o wartości 160 i wartości środkowej 260 daje szerokie wycięcie o zakresie -3 dB od 160-360 Hz i największym tłumieniu w okolicy 260 Hz.",
         "description": "Notch filter helpicon message"
     },
     "pidTuningDynamicNotchFilterGroup": {
@@ -6706,7 +6703,7 @@
         "message": "Ustaw progi używane dla elementów OSD ze stanami alarmowymi."
     },
     "osdSectionHelpStats": {
-        "message": "Ustaw wartości wyświetlane na ekranie po zakończonym locie."
+        "message": "Ustaw wartości wyświetlane na ekranie statystyk po locie."
     },
     "osdSectionHelpWarnings": {
         "message": "Włącz lub wyłącz ostrzeżenia pokazywane w elemencie ostrzeżeń."
@@ -7068,9 +7065,6 @@
     "configurationSmallAngle": {
         "message": "Maksymalny kąt uzbrojenia [w stopniach]"
     },
-    "configurationSmallAngleHelp": {
-        "message": "Model nie zostanie uzbrojony, jeśli jego przechylenie przekroczy podaną tutaj liczbę stopni. Dotyczy to tylko sytuacji, gdy akcelerometr jest włączony. Ustawienie wartości na 180 stopni skutecznie wyłączy to zabezpieczenie"
-    },
     "configurationBatteryVoltage": {
         "message": "Napięcie akumulatora"
     },
@@ -7134,9 +7128,6 @@
     },
     "pidTuningDeltaMeasurement": {
         "message": "Pomiar"
-    },
-    "pidTuningDeltaTip": {
-        "message": "<b>Pochodna liczona na podstawie Błędu<\/b> zapewnia bardziej bezpośrednią odpowiedź na drążki i jest przeważnie preferowana w bardziej agresywnym stylu lotu.<br \/><br \/><b>Pochodna na podstawie Pomiaru<\/b> zapewnia bardziej płynną odpowiedź na drążki, co jest przydatne dla osób ceniących styl mniej agresywny"
     },
     "pidTuningPidControllerTip": {
         "message": "<b>Stara \"Legacy(integer)\" kontra nowa wersja Betaflight (float):<\/b> Ustawienia i silnik PID są dokładnie takie same. Nie jest konieczne ponowne strojenie kontrolera PID. \"Legacy\" to stary silnik PID który jest podstawowym kontrolerem PID, został zmodernizowany i jest oparty na arytmetyce całkowitoliczbowej(integer). Natomiast kontroler PID Betaflight wykorzystuje matematykę zmiennoprzecinkową i posiada wiele nowych funkcji zaprojektowanych specjalnie dla aplikacji wielofunkcyjnych <br> <b>zmiennoprzecinkowy \"Float\" vs całkowitoliczbowy\"Integer\":<\/b> skalowanie PID i logika PID są dokładnie takie same. mikrokontrolery serii F1 (czyli też płytki mające w nazwie F1) nie mają sprzętowego FPU. Arytmetyka zmiennoprzecinkowa zwiększa obciążenie procesora dlatego zastosowano całkowitoliczbowe obliczenia aby odciążyć CPU i przyspieszyć proces liczenia PID.\nJednakże obliczenia przeprowadzane w arytmetyce zmiennoprzecinkowej (w czym pomaga koprocesor FPU(floating point unit)) oferują dużo lepszą dokładność uzyskanego wyniku."
@@ -7348,9 +7339,6 @@
     "cordovaWebviewUpdateBtn": {
         "message": "Aktualizuj ze sklepu Google Play Store"
     },
-    "cordovaWebviewEnable": {
-        "message": "Przejdź do zakładki z informacjami o twoim urządzeniu mobilnym i naciśnij 10 razy numer wersji kompilacji - aby włączyć 'Opcje programisty'. Następnie odszukaj i przejdź do opcji programisty i wybierz <b>{{app}}<\/b> jako dostawcę widoku internetowego."
-    },
     "cordovaWebviewEnableBtn": {
         "message": "Otwórz ustawienia"
     },
@@ -7467,11 +7455,11 @@
     },
     "presetsButtonSave": {
         "message": "Zapisz i uruchom ponownie",
-        "description": "A button that saves all appied presets - analog to 'save' command in CLI"
+        "description": "A button that saves all applied presets - analogous to 'save' command in CLI"
     },
     "presetsButtonCancel": {
         "message": "Anuluj",
-        "description": "A button that restarts FC without saving appied presets - analog to 'exit' command in CLI"
+        "description": "A button that restarts FC without saving applied presets - analogous to 'exit' command in CLI"
     },
     "presetsApplyingPresets": {
         "message": "Zapisywanie konfiguracji...",
@@ -7516,10 +7504,6 @@
     "presetsLoadingDumpAll": {
         "message": "Wczytywanie bieżącej konfiguracji z kontrolera lotu",
         "description": "Title for the waiting dialog when loading dump all into a file"
-    },
-    "dumpAllNotSavedWarning": {
-        "message": "Wystąpił błąd podczas zapisywania bieżącej konfiguracji",
-        "description": "Message appears on presets tab when saving current diff all into a file has failed"
     },
     "presetSources": {
         "message": "Źródła szablonów...",
@@ -7579,11 +7563,11 @@
     },
     "presetsNoPresetsFound": {
         "message": "Nie znaleziono ustawień wstępnych dla podanych parametrów wyszukiwania",
-        "description": "Message that apprears on presets tab if no presets were found"
+        "description": "Message that appears on presets tab if no presets were found"
     },
     "presetsTooManyPresetsFound": {
         "message": "Osiągnięto maksymalny limit wyświetlanych predefiniowanych ustawień",
-        "description": "Message that apprears on presets tab if too many presets found"
+        "description": "Message that appears on presets tab if too many presets found"
     },
     "presetsOptionsPlaceholder": {
         "message": "UWAGA! Przejrzyj listę opcji",
@@ -7803,9 +7787,6 @@
     "profileBackupEmptyResult": {
         "message": "Kopia zapasowa nie powiodła się"
     },
-    "labelSignCounter": {
-        "message": "Licznik znaków"
-    },
     "labelLogin": {
         "message": "Login"
     },
@@ -7863,8 +7844,8 @@
     "labelCreated": {
         "message": "Utworzono"
     },
-    "labelUpdated": {
-        "message": "Zaktualizowano"
+    "labelLastUsed": {
+        "message": "Ostatnio używane"
     },
     "labelActions": {
         "message": "Akcje"

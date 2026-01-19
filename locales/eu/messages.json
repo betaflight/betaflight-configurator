@@ -1470,7 +1470,7 @@
     },
     "auxiliaryDisabled": {
         "message": "(OFF)",
-        "descripton": "Text to add to the ARM mode (maybe others in the future) in the MODES TAB when it has been disabled for some external reason"
+        "description": "Text to add to the ARM mode (maybe others in the future) in the MODES TAB when it has been disabled for some external reason"
     },
     "auxiliaryAddRange": {
         "message": "Barrutia erantzi"
@@ -4163,9 +4163,6 @@
     "osdSectionHelpAlarms": {
         "message": "OSD alarmaren atalasea ezarri."
     },
-    "osdSectionHelpStats": {
-        "message": "Post-hegaldien estatistiken pantailan baleratutako balioak ezarri."
-    },
     "osdSectionHelpWarnings": {
         "message": "OHARRAK elementuan agertzen diren mezuak aktibatu edo desaktibatu."
     },
@@ -4703,9 +4700,6 @@
     },
     "cordovaWebviewUpdateBtn": {
         "message": "Google Play Store-tik eguneratu"
-    },
-    "cordovaWebviewEnable": {
-        "message": "Gailuaren inguruko informazio ezarpenak fitxara sartu eta eraikitako bertsioaren zenbakian 10 aldiz ukitu 'Garatzaileentzako aukerak' gaitzeko. Horren ondoren, bilatu eta joan garatzaileen aukeretara eta <b>{{app}}<\/b> hautatu webview hornitzaile gisa."
     },
     "cordovaWebviewEnableBtn": {
         "message": "Ezarpenak ireki"

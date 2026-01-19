@@ -1528,7 +1528,7 @@
     },
     "auxiliaryDisabled": {
         "message": "(UITGESCHAKELD)",
-        "descripton": "Text to add to the ARM mode (maybe others in the future) in the MODES TAB when it has been disabled for some external reason"
+        "description": "Text to add to the ARM mode (maybe others in the future) in the MODES TAB when it has been disabled for some external reason"
     },
     "auxiliaryAddRange": {
         "message": "Voeg bereik toe"
@@ -4386,9 +4386,6 @@
     "osdSectionHelpAlarms": {
         "message": "Stel de drempelwaarden in voor OSD elementen met alarmstaten."
     },
-    "osdSectionHelpStats": {
-        "message": "Stel de waarden in die zichtbaar zijn op het post-flight statistieken scherm."
-    },
     "osdSectionHelpWarnings": {
         "message": "Schakel waarschuwingen in of uit die worden weergegeven op het WAARSCHUWINGEN-element."
     },
@@ -4755,9 +4752,6 @@
     "pidTuningDeltaMeasurement": {
         "message": "Meting"
     },
-    "pidTuningDeltaTip": {
-        "message": "<b>Afgeleide van Fout<\/b> zorgt voor een directere stick-respons en heeft vooral de voorkeur bij racen.<br \/><br \/><b>Afgeleide van Meting<\/b> zorgt voor een soepelere stick-respons, wat handiger is voor freestylen"
-    },
     "pidTuningPidControllerTip": {
         "message": "<b>Legacy vs Betaflight (float):<\/b> PID-schaling en PID-logica zijn bij beide precies hetzelfde. Het is daardoor niet noodzakelijk om opnieuw te PID-tunen. Legacy is de oude betaflight welke werkt met een PID-controller die op basis van integers werkt. De nieuwe Betaflight PID-controller maakt gebruik van floating point berekeningen. <br><b>Float vs Integer:<\/b> PID-schaalverdeling en PID-logica werken bij beide precies hetzelfde. Er is geen extra tuning benodigd. Integer berekeningen zijn eenvoudiger en is minder belastend voor de CPU. Bij F1 boards heeft dit de voorkeur. Berekeningen met behulp van Floats kost de CPU meer maar daar krijg je meer precisie voor terug."
     },
@@ -4937,9 +4931,6 @@
     },
     "cordovaWebviewUpdateBtn": {
         "message": "Update vanuit de Google Play Store"
-    },
-    "cordovaWebviewEnable": {
-        "message": "Ga naar het tabblad met informatie over uw apparaat in de instellingen en tik 10 keer op het buildversienummer om de 'Developper-opties' in te schakelen. Zoek daarna naar de ontwikkelaaropties en selecteer <b>{{app}}<\/b> als webviewprovider."
     },
     "cordovaWebviewEnableBtn": {
         "message": "Instellingen openen"
