@@ -66,7 +66,7 @@
                 <g class="axis y" transform="translate(40, 10)"></g>
             </svg>
             <div class="plot_control">
-                <div class="title">{{ title }}</div>
+                <div class="title"><span v-html="title"></span></div>
                 <dl>
                     <template v-if="showRefreshRate">
                         <dt v-html="$t('sensorsRefresh')"></dt>
