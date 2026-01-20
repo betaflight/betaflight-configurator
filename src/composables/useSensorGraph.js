@@ -60,7 +60,9 @@ export function useSensorGraph() {
     function updateGraphHelperSize(helpers) {
         const element = d3.select(helpers.selector);
         const node = element.node();
-        if (!node) return;
+        if (!node) {
+            return;
+        }
 
         const rect = node.getBoundingClientRect();
         helpers.width = Math.max(0, rect.width - margin.left - margin.right);
@@ -192,17 +194,33 @@ export function useSensorGraph() {
     }
 
     function updateScales(scales) {
-        if (gyroHelpers) gyroHelpers.scaleYMax.value = scales.gyro;
-        if (accelHelpers) accelHelpers.scaleYMax.value = scales.accel;
-        if (magHelpers) magHelpers.scaleYMax.value = scales.mag;
+        if (gyroHelpers) {
+            gyroHelpers.scaleYMax.value = scales.gyro;
+        }
+        if (accelHelpers) {
+            accelHelpers.scaleYMax.value = scales.accel;
+        }
+        if (magHelpers) {
+            magHelpers.scaleYMax.value = scales.mag;
+        }
     }
 
     function updateGraphs() {
-        if (gyroHelpers) drawGraph(gyroHelpers, samples_gyro_i);
-        if (accelHelpers) drawGraph(accelHelpers, samples_accel_i);
-        if (magHelpers) drawGraph(magHelpers, samples_mag_i);
-        if (altitudeHelpers) drawGraph(altitudeHelpers, samples_altitude_i);
-        if (sonarHelpers) drawGraph(sonarHelpers, samples_sonar_i);
+        if (gyroHelpers) {
+            drawGraph(gyroHelpers, samples_gyro_i);
+        }
+        if (accelHelpers) {
+            drawGraph(accelHelpers, samples_accel_i);
+        }
+        if (magHelpers) {
+            drawGraph(magHelpers, samples_mag_i);
+        }
+        if (altitudeHelpers) {
+            drawGraph(altitudeHelpers, samples_altitude_i);
+        }
+        if (sonarHelpers) {
+            drawGraph(sonarHelpers, samples_sonar_i);
+        }
         debugHelpers.forEach((helper) => drawGraph(helper, samples_debug_i));
     }
 
@@ -227,7 +245,9 @@ export function useSensorGraph() {
     }
 
     function addDebugSample(index, data) {
-        if (!debug_data.value[index]) return;
+        if (!debug_data.value[index]) {
+            return;
+        }
         // Don't increment counter here - will be done once after all columns are updated
         addSampleToData(debug_data.value[index], samples_debug_i, data);
     }
