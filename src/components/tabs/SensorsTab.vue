@@ -161,7 +161,7 @@
             <div class="wrapper debug" v-show="checkboxes[5]">
                 <div class="gui_box grey">
                     <div class="graph-grid">
-                        <DebugGraph
+                        <SensorGraph
                             v-for="i in debugColumns"
                             :key="i"
                             :ref="
@@ -169,7 +169,9 @@
                                     if (el) debugSvgs[i - 1] = el;
                                 }
                             "
+                            sensor-type="debug"
                             :svg-id="`debug${i - 1}`"
+                            :visible="true"
                             :title="debugTitles[i - 1]"
                             :show-refresh-rate="i === 1"
                             :rate="rates.debug"
@@ -179,7 +181,8 @@
                                     onRateScaleChange();
                                 }
                             "
-                            :display-value="debugDisplay[i - 1]"
+                            :display-values="[debugDisplay[i - 1]]"
+                            :is-debug="true"
                         />
                     </div>
                 </div>
@@ -197,7 +200,6 @@ import { have_sensor } from "../../js/sensor_helpers";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "@/components/elements/WikiButton.vue";
 import SensorGraph from "./SensorGraph.vue";
-import DebugGraph from "./DebugGraph.vue";
 import GUI from "../../js/gui";
 import MSP from "../../js/msp";
 import MSPCodes from "../../js/msp/MSPCodes";

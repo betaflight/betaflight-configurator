@@ -1,6 +1,6 @@
 <template>
-    <div class="wrapper" :class="sensorType" v-show="visible">
-        <div class="gui_box grey">
+    <div class="wrapper" :class="[sensorType, { 'debug-item': isDebug }]" v-show="visible">
+        <div v-if="!isDebug" class="gui_box grey">
             <div class="graph-grid">
                 <svg :id="svgId" ref="svgElement" class="sensor-graph">
                     <g class="grid x" transform="translate(40, 120)"></g>
@@ -51,24 +51,43 @@
                 </div>
             </div>
         </div>
+        <!-- Debug layout (no grey box wrapper) -->
+        <template v-else>
+            <svg :id="svgId" ref="svgElement" class="sensor-graph">
+                <g class="grid x" transform="translate(40, 120)"></g>
+                <g class="grid y" transform="translate(40, 10)"></g>
+                <g class="data" transform="translate(41, 10)"></g>
+                <g class="axis x" transform="translate(40, 120)"></g>
+                <g class="axis y" transform="translate(40, 10)"></g>
+            </svg>
+            <div class="plot_control">
+                <div class="title">{{ title }}</div>
+                <dl>
+                    <template v-if="showRefreshRate">
+                        <dt v-html="$t('sensorsRefresh')"></dt>
+                        <dd class="rate">
+                            <select :value="rate" @change="$emit('update:rate', Number($event.target.value))">
+                                <option
+                                    v-for="option in REFRESH_RATE_OPTIONS"
+                                    :key="option.value"
+                                    :value="option.value"
+                                >
+                                    {{ option.label }}
+                                </option>
+                            </select>
+                        </dd>
+                    </template>
+                    <dt>X:</dt>
+                    <dd class="x">{{ displayValues[0] }}</dd>
+                </dl>
+            </div>
+        </template>
     </div>
 </template>
 
 <script setup>
 import { ref } from "vue";
-
-// Common refresh rate options used across all sensors
-const REFRESH_RATE_OPTIONS = [
-    { value: 10, label: "10 ms" },
-    { value: 20, label: "20 ms" },
-    { value: 30, label: "30 ms" },
-    { value: 40, label: "40 ms" },
-    { value: 50, label: "50 ms" },
-    { value: 100, label: "100 ms" },
-    { value: 250, label: "250 ms" },
-    { value: 500, label: "500 ms" },
-    { value: 1000, label: "1000 ms" },
-];
+import { REFRESH_RATE_OPTIONS } from "./sensors/constants";
 
 const svgElement = ref(null);
 
@@ -113,6 +132,10 @@ defineProps({
         type: Array,
         required: true,
     },
+    isDebug: {
+        type: Boolean,
+        default: false,
+    },
 });
 
 defineEmits(["update:rate", "update:scale"]);
@@ -130,6 +153,12 @@ defineExpose({ svgElement });
     display: flex;
     flex-wrap: wrap;
     width: 100%;
+}
+
+.debug-item {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
 }
 
 .plot_control {
