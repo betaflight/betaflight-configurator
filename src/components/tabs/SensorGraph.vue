@@ -1,5 +1,6 @@
 <template>
     <div class="wrapper" :class="[sensorType, { 'debug-item': isDebug }]" v-show="visible">
+        <!-- Conditional wrapper for non-debug (grey box) -->
         <div v-if="!isDebug" class="gui_box grey">
             <div class="graph-grid">
                 <svg :id="svgId" ref="svgElement" class="sensor-graph">
@@ -15,26 +16,30 @@
                         <div v-if="hint" class="helpicon cf_tip" :title="hint"></div>
                     </div>
                     <dl>
-                        <dt v-if="showRefreshRate" v-html="$t('sensorsRefresh')"></dt>
-                        <dd v-if="showRefreshRate" class="rate">
-                            <select :value="rate" @change="$emit('update:rate', Number($event.target.value))">
-                                <option
-                                    v-for="option in REFRESH_RATE_OPTIONS"
-                                    :key="option.value"
-                                    :value="option.value"
-                                >
-                                    {{ option.label }}
-                                </option>
-                            </select>
-                        </dd>
-                        <dt v-if="scaleOptions" v-html="$t('sensorsScale')"></dt>
-                        <dd v-if="scaleOptions" class="scale">
-                            <select :value="scale" @change="$emit('update:scale', Number($event.target.value))">
-                                <option v-for="option in scaleOptions" :key="option" :value="option">
-                                    {{ option }}
-                                </option>
-                            </select>
-                        </dd>
+                        <template v-if="showRefreshRate">
+                            <dt v-html="$t('sensorsRefresh')"></dt>
+                            <dd class="rate">
+                                <select :value="rate" `@change`="$emit('update:rate', Number($event.target.value))">
+                                    <option
+                                        v-for="option in REFRESH_RATE_OPTIONS"
+                                        :key="option.value"
+                                        :value="option.value"
+                                    >
+                                        {{ option.label }}
+                                    </option>
+                                </select>
+                            </dd>
+                        </template>
+                        <template v-if="scaleOptions">
+                            <dt v-html="$t('sensorsScale')"></dt>
+                            <dd class="scale">
+                                <select :value="scale" `@change`="$emit('update:scale', Number($event.target.value))">
+                                    <option v-for="option in scaleOptions" :key="option" :value="option">
+                                        {{ option }}
+                                    </option>
+                                </select>
+                            </dd>
+                        </template>
                         <template v-if="displayValues.length === 3">
                             <dt>X:</dt>
                             <dd class="x">{{ displayValues[0] }}</dd>
@@ -51,7 +56,7 @@
                 </div>
             </div>
         </div>
-        <!-- Debug layout (no grey box wrapper) -->
+        <!-- Debug layout (no wrapper, simplified controls) -->
         <template v-else>
             <svg :id="svgId" ref="svgElement" class="sensor-graph">
                 <g class="grid x" transform="translate(40, 120)"></g>
@@ -66,7 +71,7 @@
                     <template v-if="showRefreshRate">
                         <dt v-html="$t('sensorsRefresh')"></dt>
                         <dd class="rate">
-                            <select :value="rate" @change="$emit('update:rate', Number($event.target.value))">
+                            <select :value="rate" `@change`="$emit('update:rate', Number($event.target.value))">
                                 <option
                                     v-for="option in REFRESH_RATE_OPTIONS"
                                     :key="option.value"
@@ -92,54 +97,20 @@ import { REFRESH_RATE_OPTIONS } from "./sensors/constants";
 const svgElement = ref(null);
 
 defineProps({
-    sensorType: {
-        type: String,
-        required: true,
-    },
-    svgId: {
-        type: String,
-        required: true,
-    },
-    visible: {
-        type: Boolean,
-        default: true,
-    },
-    title: {
-        type: String,
-        required: true,
-    },
-    hint: {
-        type: String,
-        default: null,
-    },
-    showRefreshRate: {
-        type: Boolean,
-        default: true,
-    },
-    rate: {
-        type: Number,
-        default: 50,
-    },
-    scale: {
-        type: Number,
-        default: null,
-    },
-    scaleOptions: {
-        type: Array,
-        default: null,
-    },
-    displayValues: {
-        type: Array,
-        required: true,
-    },
-    isDebug: {
-        type: Boolean,
-        default: false,
-    },
+    sensorType: { type: String, required: true },
+    svgId: { type: String, required: true },
+    visible: { type: Boolean, default: true },
+    title: { type: String, required: true },
+    hint: { type: String, default: null },
+    showRefreshRate: { type: Boolean, default: true },
+    rate: { type: Number, default: 50 },
+    scale: { type: Number, default: null },
+    scaleOptions: { type: Array, default: null },
+    displayValues: { type: Array, required: true },
+    isDebug: { type: Boolean, default: false },
 });
 
 defineEmits(["update:rate", "update:scale"]);
-
 defineExpose({ svgElement });
 </script>
 
