@@ -47,74 +47,22 @@
                 </div>
             </div>
 
-            <!-- Gyroscope -->
+            <!-- Sensors -->
             <SensorGraph
-                ref="gyroSvg"
-                sensor-type="gyro"
-                svg-id="gyro"
-                :visible="checkboxes[0]"
-                :title="$t('sensorsGyroTitle')"
-                :rate="rates.gyro"
-                @update:rate="updateRate('gyro', $event)"
-                :scale="scales.gyro"
-                @update:scale="updateScale('gyro', $event)"
-                :scale-options="GYRO_SCALE_OPTIONS"
-                :display-values="[gyroDisplay.x, gyroDisplay.y, gyroDisplay.z]"
-            />
-
-            <!-- Accelerometer -->
-            <SensorGraph
-                ref="accelSvg"
-                sensor-type="accel"
-                svg-id="accel"
-                :visible="checkboxes[1]"
-                :title="$t('sensorsAccelTitle')"
-                :rate="rates.accel"
-                @update:rate="updateRate('accel', $event)"
-                :scale="scales.accel"
-                @update:scale="updateScale('accel', $event)"
-                :scale-options="ACCEL_SCALE_OPTIONS"
-                :display-values="[accelDisplay.x, accelDisplay.y, accelDisplay.z]"
-            />
-
-            <!-- Magnetometer -->
-            <SensorGraph
-                ref="magSvg"
-                sensor-type="mag"
-                svg-id="mag"
-                :visible="checkboxes[2]"
-                :title="$t('sensorsMagTitle')"
-                :rate="rates.mag"
-                @update:rate="updateRate('mag', $event)"
-                :scale="scales.mag"
-                @update:scale="updateScale('mag', $event)"
-                :scale-options="MAG_SCALE_OPTIONS"
-                :display-values="[magDisplay.x, magDisplay.y, magDisplay.z]"
-            />
-
-            <!-- Altitude -->
-            <SensorGraph
-                ref="altitudeSvg"
-                sensor-type="altitude"
-                svg-id="altitude"
-                :visible="checkboxes[3]"
-                :title="$t('sensorsAltitudeTitle')"
-                :hint="$t('sensorsAltitudeHint')"
-                :rate="rates.altitude"
-                @update:rate="updateRate('altitude', $event)"
-                :display-values="[altitudeDisplay]"
-            />
-
-            <!-- Sonar -->
-            <SensorGraph
-                ref="sonarSvg"
-                sensor-type="sonar"
-                svg-id="sonar"
-                :visible="checkboxes[4]"
-                :title="$t('sensorsSonarTitle')"
-                :rate="rates.sonar"
-                @update:rate="updateRate('sonar', $event)"
-                :display-values="[sonarDisplay]"
+                v-for="sensor in sensorConfigs"
+                :key="sensor.type"
+                :ref="(el) => setSensorRef(sensor.type, el)"
+                :sensor-type="sensor.type"
+                :svg-id="sensor.type"
+                :visible="checkboxes[sensor.checkboxIndex]"
+                :title="$t(sensor.titleKey)"
+                :hint="sensor.hintKey ? $t(sensor.hintKey) : null"
+                :rate="rates[sensor.type]"
+                @update:rate="updateRate(sensor.type, $event)"
+                :scale="sensor.hasScale ? scales[sensor.type] : null"
+                @update:scale="sensor.hasScale ? updateScale(sensor.type, $event) : null"
+                :scale-options="sensor.scaleOptions"
+                :display-values="sensor.getDisplayValues()"
             />
 
             <!-- Debug -->
@@ -165,6 +113,85 @@ import { API_VERSION_1_46 } from "../../js/data_storage";
 
 const fcStore = useFlightControllerStore();
 const debugStore = useDebugStore();
+
+// SVG refs
+const gyroSvg = ref(null);
+const accelSvg = ref(null);
+const magSvg = ref(null);
+const altitudeSvg = ref(null);
+const sonarSvg = ref(null);
+const debugSvgs = ref([]);
+
+const setSensorRef = (type, el) => {
+    switch (type) {
+        case "gyro":
+            gyroSvg.value = el;
+            break;
+        case "accel":
+            accelSvg.value = el;
+            break;
+        case "mag":
+            magSvg.value = el;
+            break;
+        case "altitude":
+            altitudeSvg.value = el;
+            break;
+        case "sonar":
+            sonarSvg.value = el;
+            break;
+    }
+};
+
+// Display values
+const gyroDisplay = reactive({ x: "0", y: "0", z: "0" });
+const accelDisplay = reactive({ x: "0", y: "0", z: "0" });
+const magDisplay = reactive({ x: "0", y: "0", z: "0" });
+const altitudeDisplay = ref("0");
+const sonarDisplay = ref("0");
+const debugDisplay = ref(Array(8).fill("0"));
+
+// Sensor configuration array to eliminate template duplication
+const sensorConfigs = [
+    {
+        type: "gyro",
+        checkboxIndex: 0,
+        titleKey: "sensorsGyroTitle",
+        hasScale: true,
+        scaleOptions: GYRO_SCALE_OPTIONS,
+        getDisplayValues: () => [gyroDisplay.x, gyroDisplay.y, gyroDisplay.z],
+    },
+    {
+        type: "accel",
+        checkboxIndex: 1,
+        titleKey: "sensorsAccelTitle",
+        hasScale: true,
+        scaleOptions: ACCEL_SCALE_OPTIONS,
+        getDisplayValues: () => [accelDisplay.x, accelDisplay.y, accelDisplay.z],
+    },
+    {
+        type: "mag",
+        checkboxIndex: 2,
+        titleKey: "sensorsMagTitle",
+        hasScale: true,
+        scaleOptions: MAG_SCALE_OPTIONS,
+        getDisplayValues: () => [magDisplay.x, magDisplay.y, magDisplay.z],
+    },
+    {
+        type: "altitude",
+        checkboxIndex: 3,
+        titleKey: "sensorsAltitudeTitle",
+        hintKey: "sensorsAltitudeHint",
+        hasScale: false,
+        getDisplayValues: () => [altitudeDisplay.value],
+    },
+    {
+        type: "sonar",
+        checkboxIndex: 4,
+        titleKey: "sensorsSonarTitle",
+        hasScale: false,
+        getDisplayValues: () => [sonarDisplay.value],
+    },
+];
 
 // Sensor availability
 const hasGyro = computed(() => {
@@ -221,26 +248,11 @@ const scales = reactive({
 // Debug columns
 const debugColumns = ref(4);
 
-// Display values
-const gyroDisplay = reactive({ x: "0", y: "0", z: "0" });
-const accelDisplay = reactive({ x: "0", y: "0", z: "0" });
-const magDisplay = reactive({ x: "0", y: "0", z: "0" });
-const altitudeDisplay = ref("0");
-const sonarDisplay = ref("0");
-const debugDisplay = ref(Array(8).fill("0"));
 const debugTitles = ref(
     Array(8)
         .fill("")
         .map((_, i) => `Debug ${i}`),
 );
-
-// SVG refs
-const gyroSvg = ref(null);
-const accelSvg = ref(null);
-const magSvg = ref(null);
-const altitudeSvg = ref(null);
-const sonarSvg = ref(null);
-const debugSvgs = ref([]);
 
 // Graph data
 let samples_gyro_i = 0;
