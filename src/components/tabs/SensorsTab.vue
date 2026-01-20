@@ -55,20 +55,10 @@
                 :visible="checkboxes[0]"
                 :title="$t('sensorsGyroTitle')"
                 :rate="rates.gyro"
-                @update:rate="
-                    (v) => {
-                        rates.gyro = v;
-                        onRateScaleChange();
-                    }
-                "
+                @update:rate="updateRate('gyro', $event)"
                 :scale="scales.gyro"
-                @update:scale="
-                    (v) => {
-                        scales.gyro = v;
-                        onRateScaleChange();
-                    }
-                "
-                :scale-options="[1, 2, 3, 4, 5, 10, 25, 50, 100, 200, 300, 400, 500, 1000, 2000]"
+                @update:scale="updateScale('gyro', $event)"
+                :scale-options="GYRO_SCALE_OPTIONS"
                 :display-values="[gyroDisplay.x, gyroDisplay.y, gyroDisplay.z]"
             />
 
@@ -80,20 +70,10 @@
                 :visible="checkboxes[1]"
                 :title="$t('sensorsAccelTitle')"
                 :rate="rates.accel"
-                @update:rate="
-                    (v) => {
-                        rates.accel = v;
-                        onRateScaleChange();
-                    }
-                "
+                @update:rate="updateRate('accel', $event)"
                 :scale="scales.accel"
-                @update:scale="
-                    (v) => {
-                        scales.accel = v;
-                        onRateScaleChange();
-                    }
-                "
-                :scale-options="[0.5, 1, 2]"
+                @update:scale="updateScale('accel', $event)"
+                :scale-options="ACCEL_SCALE_OPTIONS"
                 :display-values="[accelDisplay.x, accelDisplay.y, accelDisplay.z]"
             />
 
@@ -105,20 +85,10 @@
                 :visible="checkboxes[2]"
                 :title="$t('sensorsMagTitle')"
                 :rate="rates.mag"
-                @update:rate="
-                    (v) => {
-                        rates.mag = v;
-                        onRateScaleChange();
-                    }
-                "
+                @update:rate="updateRate('mag', $event)"
                 :scale="scales.mag"
-                @update:scale="
-                    (v) => {
-                        scales.mag = v;
-                        onRateScaleChange();
-                    }
-                "
-                :scale-options="[100, 200, 500, 1000, 2000, 5000, 10000]"
+                @update:scale="updateScale('mag', $event)"
+                :scale-options="MAG_SCALE_OPTIONS"
                 :display-values="[magDisplay.x, magDisplay.y, magDisplay.z]"
             />
 
@@ -131,12 +101,7 @@
                 :title="$t('sensorsAltitudeTitle')"
                 :hint="$t('sensorsAltitudeHint')"
                 :rate="rates.altitude"
-                @update:rate="
-                    (v) => {
-                        rates.altitude = v;
-                        onRateScaleChange();
-                    }
-                "
+                @update:rate="updateRate('altitude', $event)"
                 :display-values="[altitudeDisplay]"
             />
 
@@ -148,12 +113,7 @@
                 :visible="checkboxes[4]"
                 :title="$t('sensorsSonarTitle')"
                 :rate="rates.sonar"
-                @update:rate="
-                    (v) => {
-                        rates.sonar = v;
-                        onRateScaleChange();
-                    }
-                "
+                @update:rate="updateRate('sonar', $event)"
                 :display-values="[sonarDisplay]"
             />
 
@@ -175,12 +135,7 @@
                             :title="debugTitles[i - 1]"
                             :show-refresh-rate="i === 1"
                             :rate="rates.debug"
-                            @update:rate="
-                                (v) => {
-                                    rates.debug = v;
-                                    onRateScaleChange();
-                                }
-                            "
+                            @update:rate="updateRate('debug', $event)"
                             :display-values="[debugDisplay[i - 1]]"
                             :is-debug="true"
                         />
@@ -197,6 +152,7 @@ import { useFlightControllerStore } from "@/stores/fc";
 import { useDebugStore } from "@/stores/debug";
 import { get as getConfig, set as setConfig } from "../../js/ConfigStorage";
 import { have_sensor } from "../../js/sensor_helpers";
+import { GYRO_SCALE_OPTIONS, ACCEL_SCALE_OPTIONS, MAG_SCALE_OPTIONS } from "./sensors/constants";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "@/components/elements/WikiButton.vue";
 import SensorGraph from "./SensorGraph.vue";
@@ -574,6 +530,16 @@ function update_debug_graphs() {
 function onCheckboxChange() {
     setConfig({ graphs_enabled: [...checkboxes.value] });
     initializeTimers();
+}
+
+function updateRate(sensor, value) {
+    rates[sensor] = value;
+    onRateScaleChange();
+}
+
+function updateScale(sensor, value) {
+    scales[sensor] = value;
+    onRateScaleChange();
 }
 
 function onRateScaleChange() {
