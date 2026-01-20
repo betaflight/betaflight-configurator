@@ -1,6 +1,6 @@
 import semver from "semver";
 import FC from "./fc";
-import { API_VERSION_1_47 } from "./data_storage";
+import { API_VERSION_1_47, API_VERSION_1_48 } from "./data_storage";
 import { removeArrayElement, addArrayElement, addArrayElementsAfter } from "./utils/array";
 
 export function sensorTypes() {
@@ -120,6 +120,11 @@ export function sensorTypes() {
         addArrayElementsAfter(accElements, "LSM6DSV16X", ["IIM42653", "ICM45605", "ICM45686", "ICM40609D", "IIM42652"]);
 
         addArrayElement(gpsElements, "VIRTUAL");
+    }
+
+    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_48)) {
+        addArrayElementsAfter(gyroElements, "IIM42652", ["LSM6DSK320X"]);
+        addArrayElementsAfter(accElements, "IIM42652", ["LSM6DSK320X"]);
     }
 
     return sensorTypes;
