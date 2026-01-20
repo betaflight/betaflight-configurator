@@ -112,6 +112,11 @@ export const useFlightControllerStore = defineStore("flightController", () => {
         set: (val) => (FC.MODE_RANGES_EXTRA = val),
     });
 
+    const adjustmentRanges = computed({
+        get: () => FC.ADJUSTMENT_RANGES,
+        set: (val) => (FC.ADJUSTMENT_RANGES = val),
+    });
+
     const rssiConfig = computed({
         get: () => FC.RSSI_CONFIG,
         set: (val) => (FC.RSSI_CONFIG = val),
@@ -166,6 +171,7 @@ export const useFlightControllerStore = defineStore("flightController", () => {
         auxConfigIds,
         modeRanges,
         modeRangesExtra,
+        adjustmentRanges,
         rssiConfig,
         blackbox,
         dataflash,
