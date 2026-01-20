@@ -652,7 +652,7 @@ onMounted(async () => {
 });
 
 onBeforeUnmount(() => {
-    GUI.interval_kill_all(["status_pull", "IMU_pull", "altitude_pull", "sonar_pull", "debug_pull"]);
+    GUI.interval_kill_all();
 });
 </script>
 
