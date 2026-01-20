@@ -31,10 +31,18 @@ export const useSensorsStore = defineStore("sensors", {
         loadFromConfig() {
             const config = getConfig("sensors_tab");
             if (config) {
-                if (config.checkboxes) this.checkboxes = config.checkboxes;
-                if (config.rates) Object.assign(this.rates, config.rates);
-                if (config.scales) Object.assign(this.scales, config.scales);
-                if (config.debugColumns) this.debugColumns = config.debugColumns;
+                if (config.checkboxes) {
+                    this.checkboxes = config.checkboxes;
+                }
+                if (config.rates) {
+                    Object.assign(this.rates, config.rates);
+                }
+                if (config.scales) {
+                    Object.assign(this.scales, config.scales);
+                }
+                if (config.debugColumns) {
+                    this.debugColumns = config.debugColumns;
+                }
             }
         },
 

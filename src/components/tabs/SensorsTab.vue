@@ -167,7 +167,7 @@ const accelDisplay = reactive({ x: "0", y: "0", z: "0" });
 const magDisplay = reactive({ x: "0", y: "0", z: "0" });
 const altitudeDisplay = ref("0");
 const sonarDisplay = ref("0");
-const debugDisplay = ref(Array(8).fill("0"));
+const debugDisplay = ref(new Array(8).fill("0"));
 
 // Sensor configuration array to eliminate template duplication
 const sensorConfigs = [
@@ -246,11 +246,7 @@ const hasSonar = computed(() => {
 });
 
 // Debug titles
-const debugTitles = ref(
-    Array(8)
-        .fill("")
-        .map((_, i) => `Debug ${i}`),
-);
+const debugTitles = ref(new Array(8).fill("").map((_, i) => `Debug ${i}`));
 
 function initSensorData() {
     for (let i = 0; i < 3; i++) {
@@ -420,11 +416,19 @@ onMounted(async () => {
     }
 
     // If no saved checkbox states, set defaults based on available sensors
-    if (!checkboxes.value.some((v) => v)) {
-        if (hasGyro.value) checkboxes.value[0] = true;
-        if (hasAccel.value) checkboxes.value[1] = true;
-        if (hasMag.value) checkboxes.value[2] = true;
-        if (hasAltitude.value) checkboxes.value[3] = true;
+    if (!checkboxes.value.some(Boolean)) {
+        if (hasGyro.value) {
+            checkboxes.value[0] = true;
+        }
+        if (hasAccel.value) {
+            checkboxes.value[1] = true;
+        }
+        if (hasMag.value) {
+            checkboxes.value[2] = true;
+        }
+        if (hasAltitude.value) {
+            checkboxes.value[3] = true;
+        }
     }
 
     // Initialize graph helpers - wait for next tick to ensure refs are set
