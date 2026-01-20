@@ -1,0 +1,166 @@
+<template>
+    <div class="debug-item">
+        <svg :id="svgId" ref="svgElement" class="sensor-graph">
+            <g class="grid x" transform="translate(40, 120)"></g>
+            <g class="grid y" transform="translate(40, 10)"></g>
+            <g class="data" transform="translate(41, 10)"></g>
+            <g class="axis x" transform="translate(40, 120)"></g>
+            <g class="axis y" transform="translate(40, 10)"></g>
+        </svg>
+        <div class="plot_control" :class="svgId">
+            <div class="title">
+                {{ title }}
+            </div>
+            <dl v-if="showRefreshRate">
+                <dt v-html="$t('sensorsRefresh')"></dt>
+                <dd class="rate">
+                    <select :value="rate" @change="$emit('update:rate', Number($event.target.value))">
+                        <option v-for="option in REFRESH_RATE_OPTIONS" :key="option.value" :value="option.value">
+                            {{ option.label }}
+                        </option>
+                    </select>
+                </dd>
+                <dt>X:</dt>
+                <dd class="x">{{ displayValue }}</dd>
+            </dl>
+            <dl v-else>
+                <dt>X:</dt>
+                <dd class="x">{{ displayValue }}</dd>
+            </dl>
+        </div>
+    </div>
+</template>
+
+<script setup>
+import { ref } from "vue";
+
+// Common refresh rate options used across all sensors
+const REFRESH_RATE_OPTIONS = [
+    { value: 10, label: "10 ms" },
+    { value: 20, label: "20 ms" },
+    { value: 30, label: "30 ms" },
+    { value: 40, label: "40 ms" },
+    { value: 50, label: "50 ms" },
+    { value: 100, label: "100 ms" },
+    { value: 250, label: "250 ms" },
+    { value: 500, label: "500 ms" },
+    { value: 1000, label: "1000 ms" },
+];
+
+const svgElement = ref(null);
+
+defineProps({
+    svgId: {
+        type: String,
+        required: true,
+    },
+    title: {
+        type: String,
+        required: true,
+    },
+    showRefreshRate: {
+        type: Boolean,
+        default: false,
+    },
+    rate: {
+        type: Number,
+        default: 500,
+    },
+    displayValue: {
+        type: String,
+        required: true,
+    },
+});
+
+defineEmits(["update:rate"]);
+
+defineExpose({ svgElement });
+</script>
+
+<style scoped>
+.debug-item {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.plot_control {
+    width: fit-content;
+    min-width: 200px;
+    flex-shrink: 0;
+}
+
+.plot_control .title {
+    font-weight: bold;
+    margin-bottom: 0.75rem;
+}
+
+.plot_control dl {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.25rem;
+}
+
+.plot_control dt,
+.plot_control dd {
+    display: flex;
+    align-items: center;
+}
+
+.plot_control dt {
+    font-weight: bold;
+}
+
+.plot_control select {
+    min-width: 100%;
+}
+
+.plot_control .x {
+    border-radius: 0.25rem;
+    padding: 0.25rem;
+    text-align: center;
+}
+
+.sensor-graph {
+    width: 100%;
+    height: 140px;
+    flex: 1;
+}
+
+:deep(.grid .tick) {
+    stroke: silver;
+    stroke-width: 1px;
+    shape-rendering: crispEdges;
+}
+
+:deep(.grid path) {
+    stroke-width: 0;
+}
+
+:deep(.data .line) {
+    stroke-width: 2px;
+    fill: none;
+}
+
+:deep(text) {
+    stroke: none;
+    fill: var(--text);
+    font-size: 10px;
+}
+
+:deep(.line:nth-child(1)) {
+    stroke: #00a8f0;
+}
+
+:deep(.line:nth-child(2)) {
+    stroke: #c0d800;
+}
+
+:deep(.line:nth-child(3)) {
+    stroke: #cb4b4b;
+}
+
+:deep(.line:nth-child(4)) {
+    stroke: #4da74d;
+}
+</style>

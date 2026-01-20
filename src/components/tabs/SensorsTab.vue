@@ -48,290 +48,139 @@
             </div>
 
             <!-- Gyroscope -->
-            <div class="wrapper gyro" v-show="checkboxes[0]">
-                <div class="gui_box grey">
-                    <div class="graph-grid">
-                        <svg id="gyro" ref="gyroSvg" class="sensor-graph">
-                            <g class="grid x" transform="translate(40, 120)"></g>
-                            <g class="grid y" transform="translate(40, 10)"></g>
-                            <g class="data" transform="translate(41, 10)"></g>
-                            <g class="axis x" transform="translate(40, 120)"></g>
-                            <g class="axis y" transform="translate(40, 10)"></g>
-                        </svg>
-                        <div class="plot_control">
-                            <div class="title" v-html="$t('sensorsGyroTitle')"></div>
-                            <dl>
-                                <dt v-html="$t('sensorsRefresh')"></dt>
-                                <dd class="rate">
-                                    <select v-model.number="rates.gyro" @change="onRateScaleChange">
-                                        <option :value="10">10 ms</option>
-                                        <option :value="20">20 ms</option>
-                                        <option :value="30">30 ms</option>
-                                        <option :value="40">40 ms</option>
-                                        <option :value="50">50 ms</option>
-                                        <option :value="100">100 ms</option>
-                                        <option :value="250">250 ms</option>
-                                        <option :value="500">500 ms</option>
-                                        <option :value="1000">1000 ms</option>
-                                    </select>
-                                </dd>
-                                <dt v-html="$t('sensorsScale')"></dt>
-                                <dd class="scale">
-                                    <select v-model.number="scales.gyro" @change="onRateScaleChange">
-                                        <option :value="1">1</option>
-                                        <option :value="2">2</option>
-                                        <option :value="3">3</option>
-                                        <option :value="4">4</option>
-                                        <option :value="5">5</option>
-                                        <option :value="10">10</option>
-                                        <option :value="25">25</option>
-                                        <option :value="50">50</option>
-                                        <option :value="100">100</option>
-                                        <option :value="200">200</option>
-                                        <option :value="300">300</option>
-                                        <option :value="400">400</option>
-                                        <option :value="500">500</option>
-                                        <option :value="1000">1000</option>
-                                        <option :value="2000">2000</option>
-                                    </select>
-                                </dd>
-                                <dt>X:</dt>
-                                <dd class="x">{{ gyroDisplay.x }}</dd>
-                                <dt>Y:</dt>
-                                <dd class="y">{{ gyroDisplay.y }}</dd>
-                                <dt>Z:</dt>
-                                <dd class="z">{{ gyroDisplay.z }}</dd>
-                            </dl>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <SensorGraph
+                ref="gyroSvg"
+                sensor-type="gyro"
+                svg-id="gyro"
+                :visible="checkboxes[0]"
+                :title="$t('sensorsGyroTitle')"
+                :rate="rates.gyro"
+                @update:rate="
+                    (v) => {
+                        rates.gyro = v;
+                        onRateScaleChange();
+                    }
+                "
+                :scale="scales.gyro"
+                @update:scale="
+                    (v) => {
+                        scales.gyro = v;
+                        onRateScaleChange();
+                    }
+                "
+                :scale-options="[1, 2, 3, 4, 5, 10, 25, 50, 100, 200, 300, 400, 500, 1000, 2000]"
+                :display-values="[gyroDisplay.x, gyroDisplay.y, gyroDisplay.z]"
+            />
 
             <!-- Accelerometer -->
-            <div class="wrapper accel" v-show="checkboxes[1]">
-                <div class="gui_box grey">
-                    <div class="graph-grid">
-                        <svg id="accel" ref="accelSvg" class="sensor-graph">
-                            <g class="grid x" transform="translate(40, 120)"></g>
-                            <g class="grid y" transform="translate(40, 10)"></g>
-                            <g class="data" transform="translate(41, 10)"></g>
-                            <g class="axis x" transform="translate(40, 120)"></g>
-                            <g class="axis y" transform="translate(40, 10)"></g>
-                        </svg>
-                        <div class="plot_control">
-                            <div class="title" v-html="$t('sensorsAccelTitle')"></div>
-                            <dl>
-                                <dt v-html="$t('sensorsRefresh')"></dt>
-                                <dd class="rate">
-                                    <select v-model.number="rates.accel" @change="onRateScaleChange">
-                                        <option :value="10">10 ms</option>
-                                        <option :value="20">20 ms</option>
-                                        <option :value="30">30 ms</option>
-                                        <option :value="40">40 ms</option>
-                                        <option :value="50">50 ms</option>
-                                        <option :value="100">100 ms</option>
-                                        <option :value="250">250 ms</option>
-                                        <option :value="500">500 ms</option>
-                                        <option :value="1000">1000 ms</option>
-                                    </select>
-                                </dd>
-                                <dt v-html="$t('sensorsScale')"></dt>
-                                <dd class="scale">
-                                    <select v-model.number="scales.accel" @change="onRateScaleChange">
-                                        <option :value="0.5">0.5</option>
-                                        <option :value="1">1</option>
-                                        <option :value="2">2</option>
-                                    </select>
-                                </dd>
-                                <dt>X:</dt>
-                                <dd class="x">{{ accelDisplay.x }}</dd>
-                                <dt>Y:</dt>
-                                <dd class="y">{{ accelDisplay.y }}</dd>
-                                <dt>Z:</dt>
-                                <dd class="z">{{ accelDisplay.z }}</dd>
-                            </dl>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <SensorGraph
+                ref="accelSvg"
+                sensor-type="accel"
+                svg-id="accel"
+                :visible="checkboxes[1]"
+                :title="$t('sensorsAccelTitle')"
+                :rate="rates.accel"
+                @update:rate="
+                    (v) => {
+                        rates.accel = v;
+                        onRateScaleChange();
+                    }
+                "
+                :scale="scales.accel"
+                @update:scale="
+                    (v) => {
+                        scales.accel = v;
+                        onRateScaleChange();
+                    }
+                "
+                :scale-options="[0.5, 1, 2]"
+                :display-values="[accelDisplay.x, accelDisplay.y, accelDisplay.z]"
+            />
 
             <!-- Magnetometer -->
-            <div class="wrapper mag" v-show="checkboxes[2]">
-                <div class="gui_box grey">
-                    <div class="graph-grid">
-                        <svg id="mag" ref="magSvg" class="sensor-graph">
-                            <g class="grid x" transform="translate(40, 120)"></g>
-                            <g class="grid y" transform="translate(40, 10)"></g>
-                            <g class="data" transform="translate(41, 10)"></g>
-                            <g class="axis x" transform="translate(40, 120)"></g>
-                            <g class="axis y" transform="translate(40, 10)"></g>
-                        </svg>
-                        <div class="plot_control">
-                            <div class="title" v-html="$t('sensorsMagTitle')"></div>
-                            <dl>
-                                <dt v-html="$t('sensorsRefresh')"></dt>
-                                <dd class="rate">
-                                    <select v-model.number="rates.mag" @change="onRateScaleChange">
-                                        <option :value="10">10 ms</option>
-                                        <option :value="20">20 ms</option>
-                                        <option :value="30">30 ms</option>
-                                        <option :value="40">40 ms</option>
-                                        <option :value="50">50 ms</option>
-                                        <option :value="100">100 ms</option>
-                                        <option :value="250">250 ms</option>
-                                        <option :value="500">500 ms</option>
-                                        <option :value="1000">1000 ms</option>
-                                    </select>
-                                </dd>
-                                <dt v-html="$t('sensorsScale')"></dt>
-                                <dd class="scale">
-                                    <select v-model.number="scales.mag" @change="onRateScaleChange">
-                                        <option :value="100">100</option>
-                                        <option :value="200">200</option>
-                                        <option :value="500">500</option>
-                                        <option :value="1000">1000</option>
-                                        <option :value="2000">2000</option>
-                                        <option :value="5000">5000</option>
-                                        <option :value="10000">10000</option>
-                                    </select>
-                                </dd>
-                                <dt>X:</dt>
-                                <dd class="x">{{ magDisplay.x }}</dd>
-                                <dt>Y:</dt>
-                                <dd class="y">{{ magDisplay.y }}</dd>
-                                <dt>Z:</dt>
-                                <dd class="z">{{ magDisplay.z }}</dd>
-                            </dl>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <SensorGraph
+                ref="magSvg"
+                sensor-type="mag"
+                svg-id="mag"
+                :visible="checkboxes[2]"
+                :title="$t('sensorsMagTitle')"
+                :rate="rates.mag"
+                @update:rate="
+                    (v) => {
+                        rates.mag = v;
+                        onRateScaleChange();
+                    }
+                "
+                :scale="scales.mag"
+                @update:scale="
+                    (v) => {
+                        scales.mag = v;
+                        onRateScaleChange();
+                    }
+                "
+                :scale-options="[100, 200, 500, 1000, 2000, 5000, 10000]"
+                :display-values="[magDisplay.x, magDisplay.y, magDisplay.z]"
+            />
 
             <!-- Altitude -->
-            <div class="wrapper altitude" v-show="checkboxes[3]">
-                <div class="gui_box grey">
-                    <div class="graph-grid">
-                        <svg id="altitude" ref="altitudeSvg" class="sensor-graph">
-                            <g class="grid x" transform="translate(40, 120)"></g>
-                            <g class="grid y" transform="translate(40, 10)"></g>
-                            <g class="data" transform="translate(41, 10)"></g>
-                            <g class="axis x" transform="translate(40, 120)"></g>
-                            <g class="axis y" transform="translate(40, 10)"></g>
-                        </svg>
-                        <div class="plot_control">
-                            <div class="title">
-                                <span v-html="$t('sensorsAltitudeTitle')"></span>
-                                <div class="helpicon cf_tip" :title="$t('sensorsAltitudeHint')"></div>
-                            </div>
-                            <dl>
-                                <dt v-html="$t('sensorsRefresh')"></dt>
-                                <dd class="rate">
-                                    <select v-model.number="rates.altitude" @change="onRateScaleChange">
-                                        <option :value="10">10 ms</option>
-                                        <option :value="20">20 ms</option>
-                                        <option :value="30">30 ms</option>
-                                        <option :value="40">40 ms</option>
-                                        <option :value="50">50 ms</option>
-                                        <option :value="100">100 ms</option>
-                                        <option :value="250">250 ms</option>
-                                        <option :value="500">500 ms</option>
-                                        <option :value="1000">1000 ms</option>
-                                    </select>
-                                </dd>
-                                <dt>X:</dt>
-                                <dd class="x">{{ altitudeDisplay }}</dd>
-                            </dl>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <SensorGraph
+                ref="altitudeSvg"
+                sensor-type="altitude"
+                svg-id="altitude"
+                :visible="checkboxes[3]"
+                :title="$t('sensorsAltitudeTitle')"
+                :hint="$t('sensorsAltitudeHint')"
+                :rate="rates.altitude"
+                @update:rate="
+                    (v) => {
+                        rates.altitude = v;
+                        onRateScaleChange();
+                    }
+                "
+                :display-values="[altitudeDisplay]"
+            />
 
             <!-- Sonar -->
-            <div class="wrapper sonar" v-show="checkboxes[4]">
-                <div class="gui_box grey">
-                    <div class="graph-grid">
-                        <svg id="sonar" ref="sonarSvg" class="sensor-graph">
-                            <g class="grid x" transform="translate(40, 120)"></g>
-                            <g class="grid y" transform="translate(40, 10)"></g>
-                            <g class="data" transform="translate(41, 10)"></g>
-                            <g class="axis x" transform="translate(40, 120)"></g>
-                            <g class="axis y" transform="translate(40, 10)"></g>
-                        </svg>
-                        <div class="plot_control">
-                            <div class="title" v-html="$t('sensorsSonarTitle')"></div>
-                            <dl>
-                                <dt v-html="$t('sensorsRefresh')"></dt>
-                                <dd class="rate">
-                                    <select v-model.number="rates.sonar" @change="onRateScaleChange">
-                                        <option :value="10">10 ms</option>
-                                        <option :value="20">20 ms</option>
-                                        <option :value="30">30 ms</option>
-                                        <option :value="40">40 ms</option>
-                                        <option :value="50">50 ms</option>
-                                        <option :value="100">100 ms</option>
-                                        <option :value="250">250 ms</option>
-                                        <option :value="500">500 ms</option>
-                                        <option :value="1000">1000 ms</option>
-                                    </select>
-                                </dd>
-                                <dt>X:</dt>
-                                <dd class="x">{{ sonarDisplay }}</dd>
-                            </dl>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <SensorGraph
+                ref="sonarSvg"
+                sensor-type="sonar"
+                svg-id="sonar"
+                :visible="checkboxes[4]"
+                :title="$t('sensorsSonarTitle')"
+                :rate="rates.sonar"
+                @update:rate="
+                    (v) => {
+                        rates.sonar = v;
+                        onRateScaleChange();
+                    }
+                "
+                :display-values="[sonarDisplay]"
+            />
 
             <!-- Debug -->
             <div class="wrapper debug" v-show="checkboxes[5]">
                 <div class="gui_box grey">
                     <div class="graph-grid">
-                        <template v-for="i in debugColumns" :key="i">
-                            <div class="debug-item">
-                                <svg
-                                    :id="`debug${i - 1}`"
-                                    :ref="
-                                        (el) => {
-                                            if (el) debugSvgs[i - 1] = el;
-                                        }
-                                    "
-                                    class="sensor-graph"
-                                >
-                                    <g class="grid x" transform="translate(40, 120)"></g>
-                                    <g class="grid y" transform="translate(40, 10)"></g>
-                                    <g class="data" transform="translate(41, 10)"></g>
-                                    <g class="axis x" transform="translate(40, 120)"></g>
-                                    <g class="axis y" transform="translate(40, 10)"></g>
-                                </svg>
-                                <div class="plot_control" :class="`debug${i - 1}`">
-                                    <div class="title">
-                                        {{ debugTitles[i - 1] }}
-                                    </div>
-                                    <dl v-if="i === 1">
-                                        <dt v-html="$t('sensorsRefresh')"></dt>
-                                        <dd class="rate">
-                                            <select v-model.number="rates.debug" @change="onRateScaleChange">
-                                                <option :value="10">10 ms</option>
-                                                <option :value="20">20 ms</option>
-                                                <option :value="30">30 ms</option>
-                                                <option :value="40">40 ms</option>
-                                                <option :value="50">50 ms</option>
-                                                <option :value="100">100 ms</option>
-                                                <option :value="250">250 ms</option>
-                                                <option :value="500">500 ms</option>
-                                                <option :value="1000">1000 ms</option>
-                                            </select>
-                                        </dd>
-                                        <dt>X:</dt>
-                                        <dd class="x">{{ debugDisplay[i - 1] }}</dd>
-                                    </dl>
-                                    <dl v-else>
-                                        <dt>X:</dt>
-                                        <dd class="x">{{ debugDisplay[i - 1] }}</dd>
-                                    </dl>
-                                </div>
-                            </div>
-                        </template>
+                        <DebugGraph
+                            v-for="i in debugColumns"
+                            :key="i"
+                            :ref="
+                                (el) => {
+                                    if (el) debugSvgs[i - 1] = el;
+                                }
+                            "
+                            :svg-id="`debug${i - 1}`"
+                            :title="debugTitles[i - 1]"
+                            :show-refresh-rate="i === 1"
+                            :rate="rates.debug"
+                            @update:rate="
+                                (v) => {
+                                    rates.debug = v;
+                                    onRateScaleChange();
+                                }
+                            "
+                            :display-value="debugDisplay[i - 1]"
+                        />
                     </div>
                 </div>
             </div>
@@ -347,6 +196,8 @@ import { get as getConfig, set as setConfig } from "../../js/ConfigStorage";
 import { have_sensor } from "../../js/sensor_helpers";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "@/components/elements/WikiButton.vue";
+import SensorGraph from "./SensorGraph.vue";
+import DebugGraph from "./DebugGraph.vue";
 import GUI from "../../js/gui";
 import MSP from "../../js/msp";
 import MSPCodes from "../../js/msp/MSPCodes";
@@ -839,126 +690,10 @@ onBeforeUnmount(() => {
     height: 18px;
 }
 
-.info .first {
-    margin: 0 5px 0 0;
-}
-
-.wrapper .gui_box {
-    display: flex;
-    flex-direction: row-reverse;
-}
-
-.graph-grid {
-    display: flex;
-    flex-wrap: wrap;
-    width: 100%;
-}
-
 .debug .graph-grid {
     display: grid;
     grid-template-columns: 1fr;
     gap: 10px;
     width: 100%;
-}
-
-.debug-item {
-    display: flex;
-    flex-direction: row;
-    gap: 10px;
-}
-
-.plot_control {
-    width: fit-content;
-    min-width: 200px;
-    flex-shrink: 0;
-}
-
-.plot_control .title {
-    font-weight: bold;
-    margin-bottom: 0.75rem;
-}
-
-.plot_control .helpicon {
-    margin: 2px 4px;
-}
-
-.plot_control dl {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.25rem;
-}
-
-.plot_control dt,
-.plot_control dd {
-    display: flex;
-    align-items: center;
-}
-
-.plot_control dt {
-    font-weight: bold;
-}
-
-.plot_control select {
-    min-width: 100%;
-}
-
-.plot_control .x,
-.plot_control .y,
-.plot_control .z {
-    border-radius: 0.25rem;
-    padding: 0.25rem;
-    text-align: center;
-}
-
-.sensor-graph {
-    width: 100%;
-    height: 140px;
-    flex: 1;
-}
-
-.debug .sensor-graph {
-    grid-column: span 1;
-    flex: 1;
-}
-
-.debug .plot_control {
-    grid-column: span 1;
-}
-
-:deep(.grid .tick) {
-    stroke: silver;
-    stroke-width: 1px;
-    shape-rendering: crispEdges;
-}
-
-:deep(.grid path) {
-    stroke-width: 0;
-}
-
-:deep(.data .line) {
-    stroke-width: 2px;
-    fill: none;
-}
-
-:deep(text) {
-    stroke: none;
-    fill: var(--text);
-    font-size: 10px;
-}
-
-:deep(.line:nth-child(1)) {
-    stroke: #00a8f0;
-}
-
-:deep(.line:nth-child(2)) {
-    stroke: #c0d800;
-}
-
-:deep(.line:nth-child(3)) {
-    stroke: #cb4b4b;
-}
-
-:deep(.line:nth-child(4)) {
-    stroke: #4da74d;
 }
 </style>
