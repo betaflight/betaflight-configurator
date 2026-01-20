@@ -96,23 +96,42 @@
 
 <script setup>
 import { ref, reactive, computed, onMounted, onBeforeUnmount, nextTick } from "vue";
+import { storeToRefs } from "pinia";
 import { useFlightControllerStore } from "@/stores/fc";
 import { useDebugStore } from "@/stores/debug";
-import { get as getConfig, set as setConfig } from "../../js/ConfigStorage";
+import { useSensorsStore } from "@/stores/sensors";
+import { useSensorGraph } from "@/composables/useSensorGraph";
 import { have_sensor } from "../../js/sensor_helpers";
 import { GYRO_SCALE_OPTIONS, ACCEL_SCALE_OPTIONS, MAG_SCALE_OPTIONS } from "./sensors/constants";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "@/components/elements/WikiButton.vue";
-import SensorGraph from "./SensorGraph.vue";
+import SensorGraph from "./sensors/SensorGraph.vue";
 import GUI from "../../js/gui";
 import MSP from "../../js/msp";
 import MSPCodes from "../../js/msp/MSPCodes";
-import * as d3 from "d3";
 import semver from "semver";
 import { API_VERSION_1_46 } from "../../js/data_storage";
 
 const fcStore = useFlightControllerStore();
 const debugStore = useDebugStore();
+const sensorsStore = useSensorsStore();
+
+// Get reactive refs from store
+const { checkboxes, rates, scales, debugColumns } = storeToRefs(sensorsStore);
+
+// Initialize composable for graph management
+const {
+    addGyroSample,
+    addAccelSample,
+    addMagSample,
+    addAltitudeSample,
+    addSonarSample,
+    addDebugSample,
+    incrementDebugCounter,
+    updateScales: updateGraphScales,
+    updateGraphs,
+    initializeGraphs,
+} = useSensorGraph();
 
 // SVG refs
 const gyroSvg = ref(null);
@@ -226,57 +245,12 @@ const hasSonar = computed(() => {
     );
 });
 
-// Checkbox states
-const checkboxes = ref([false, false, false, false, false, false]);
-
-// Rates and scales
-const rates = reactive({
-    gyro: 50,
-    accel: 50,
-    mag: 50,
-    altitude: 100,
-    sonar: 100,
-    debug: 500,
-});
-
-const scales = reactive({
-    gyro: 2000,
-    accel: 2,
-    mag: 2000,
-});
-
-// Debug columns
-const debugColumns = ref(4);
-
+// Debug titles
 const debugTitles = ref(
     Array(8)
         .fill("")
         .map((_, i) => `Debug ${i}`),
 );
-
-// Graph data
-let samples_gyro_i = 0;
-let samples_accel_i = 0;
-let samples_mag_i = 0;
-let samples_altitude_i = 0;
-let samples_sonar_i = 0;
-let samples_debug_i = 0;
-
-let gyro_data = [];
-let accel_data = [];
-let mag_data = [];
-let altitude_data = [];
-let sonar_data = [];
-let debug_data = [];
-
-let gyroHelpers = null;
-let accelHelpers = null;
-let magHelpers = null;
-let altitudeHelpers = null;
-let sonarHelpers = null;
-let debugHelpers = [];
-
-const margin = { top: 20, right: 10, bottom: 10, left: 40 };
 
 function initSensorData() {
     for (let i = 0; i < 3; i++) {
@@ -292,140 +266,10 @@ function initSensorData() {
     }
 }
 
-function initDataArray(length) {
-    const data = new Array(length);
-    for (let i = 0; i < length; i++) {
-        data[i] = [];
-        data[i].min = -1;
-        data[i].max = 1;
-    }
-    return data;
-}
-
-function addSampleToData(data, sampleNumber, sensorData) {
-    for (let i = 0; i < data.length; i++) {
-        const dataPoint = sensorData[i];
-        data[i].push([sampleNumber, dataPoint]);
-        if (dataPoint < data[i].min) {
-            data[i].min = dataPoint;
-        }
-        if (dataPoint > data[i].max) {
-            data[i].max = dataPoint;
-        }
-    }
-    while (data[0].length > 300) {
-        for (let i = 0; i < data.length; i++) {
-            data[i].shift();
-        }
-    }
-    return sampleNumber + 1;
-}
-
-function updateGraphHelperSize(helpers) {
-    const element = d3.select(helpers.selector);
-    const node = element.node();
-    if (!node) return;
-
-    const rect = node.getBoundingClientRect();
-    helpers.width = rect.width - margin.left - margin.right;
-    helpers.height = rect.height - margin.top - margin.bottom;
-
-    helpers.widthScale.range([0, helpers.width]);
-    helpers.heightScale.range([helpers.height, 0]);
-
-    helpers.xGrid.tickSize(-helpers.height, 0, 0);
-    helpers.yGrid.tickSize(-helpers.width, 0, 0);
-}
-
-function initGraphHelpers(selector, sampleNumber, heightDomain) {
-    const helpers = {
-        selector: selector,
-        dynamicHeightDomain: !heightDomain,
-    };
-
-    helpers.widthScale = d3
-        .scaleLinear()
-        .clamp(true)
-        .domain([sampleNumber - 299, sampleNumber]);
-
-    helpers.heightScale = d3
-        .scaleLinear()
-        .clamp(true)
-        .domain(heightDomain || [1, -1]);
-
-    helpers.xGrid = d3.axisBottom();
-    helpers.yGrid = d3.axisLeft();
-
-    helpers.width = 0;
-    helpers.height = 0;
-
-    helpers.xGrid.scale(helpers.widthScale).ticks(5).tickFormat("");
-    helpers.yGrid.scale(helpers.heightScale).ticks(5).tickFormat("");
-
-    helpers.xAxis = d3
-        .axisBottom()
-        .scale(helpers.widthScale)
-        .ticks(5)
-        .tickFormat((d) => d);
-
-    helpers.yAxis = d3
-        .axisLeft()
-        .scale(helpers.heightScale)
-        .ticks(5)
-        .tickFormat((d) => d);
-
-    helpers.line = d3
-        .line()
-        .x((d) => helpers.widthScale(d[0]))
-        .y((d) => helpers.heightScale(d[1]));
-
-    return helpers;
-}
-
-function drawGraph(graphHelpers, data, sampleNumber) {
-    const svg = d3.select(graphHelpers.selector);
-    if (!svg.node()) return;
-
-    if (graphHelpers.dynamicHeightDomain) {
-        const limits = [];
-        data.forEach((datum) => {
-            limits.push(datum.min);
-            limits.push(datum.max);
-        });
-        graphHelpers.heightScale.domain(d3.extent(limits));
-    }
-    graphHelpers.widthScale.domain([sampleNumber - 299, sampleNumber]);
-
-    svg.select(".x.grid").call(graphHelpers.xGrid);
-    svg.select(".y.grid").call(graphHelpers.yGrid);
-    svg.select(".x.axis").call(graphHelpers.xAxis);
-    svg.select(".y.axis").call(graphHelpers.yAxis);
-
-    const group = svg.select("g.data");
-    const lines = group.selectAll("path").data(data, (d, i) => i);
-    lines.enter().append("path").attr("class", "line");
-    lines.attr("d", graphHelpers.line);
-}
-
-function displayDebugColumnNames() {
-    const debugModeName = debugStore.modes[fcStore.pidAdvancedConfig.debugMode];
-    const debugFields = debugStore.fieldNames[debugModeName];
-
-    for (let i = 0; i < debugColumns.value; i++) {
-        let msg = `Debug ${i} unknown`;
-        if (debugFields) {
-            msg = debugFields[`debug[${i}]`] ?? `Debug ${i} not used`;
-        }
-
-        debugTitles.value[i] = msg;
-        debugDisplay.value[i] = "0";
-    }
-}
-
 function initializeTimers() {
     GUI.interval_kill_all(["status_pull"]);
 
-    const fastest = Math.max(rates.gyro, rates.accel, rates.mag);
+    const fastest = Math.max(rates.value.gyro, rates.value.accel, rates.value.mag);
 
     // IMU data (gyro, accel, mag)
     if (checkboxes.value[0] || checkboxes.value[1] || checkboxes.value[2]) {
@@ -446,7 +290,7 @@ function initializeTimers() {
             () => {
                 MSP.send_message(MSPCodes.MSP_ALTITUDE, false, false, update_altitude_graph);
             },
-            rates.altitude,
+            rates.value.altitude,
             true,
         );
     }
@@ -458,7 +302,7 @@ function initializeTimers() {
             () => {
                 MSP.send_message(MSPCodes.MSP_SONAR, false, false, update_sonar_graphs);
             },
-            rates.sonar,
+            rates.value.sonar,
             true,
         );
     }
@@ -470,26 +314,22 @@ function initializeTimers() {
             () => {
                 MSP.send_message(MSPCodes.MSP_DEBUG, false, false, update_debug_graphs);
             },
-            rates.debug,
+            rates.value.debug,
             true,
         );
     }
 }
 
 function update_imu_graphs() {
-    if (checkboxes.value[0] && gyroHelpers) {
-        updateGraphHelperSize(gyroHelpers);
-        samples_gyro_i = addSampleToData(gyro_data, samples_gyro_i, fcStore.sensorData.gyroscope);
-        drawGraph(gyroHelpers, gyro_data, samples_gyro_i);
+    if (checkboxes.value[0]) {
+        addGyroSample(fcStore.sensorData.gyroscope);
         gyroDisplay.x = fcStore.sensorData.gyroscope[0].toFixed(2);
         gyroDisplay.y = fcStore.sensorData.gyroscope[1].toFixed(2);
         gyroDisplay.z = fcStore.sensorData.gyroscope[2].toFixed(2);
     }
 
-    if (checkboxes.value[1] && accelHelpers) {
-        updateGraphHelperSize(accelHelpers);
-        samples_accel_i = addSampleToData(accel_data, samples_accel_i, fcStore.sensorData.accelerometer);
-        drawGraph(accelHelpers, accel_data, samples_accel_i);
+    if (checkboxes.value[1]) {
+        addAccelSample(fcStore.sensorData.accelerometer);
 
         const x = fcStore.sensorData.accelerometer[0].toFixed(2);
         const y = fcStore.sensorData.accelerometer[1].toFixed(2);
@@ -502,120 +342,85 @@ function update_imu_graphs() {
         accelDisplay.z = `${z}`;
     }
 
-    if (checkboxes.value[2] && magHelpers) {
-        updateGraphHelperSize(magHelpers);
-        samples_mag_i = addSampleToData(mag_data, samples_mag_i, fcStore.sensorData.magnetometer);
-        drawGraph(magHelpers, mag_data, samples_mag_i);
+    if (checkboxes.value[2]) {
+        addMagSample(fcStore.sensorData.magnetometer);
         magDisplay.x = fcStore.sensorData.magnetometer[0].toFixed(0);
         magDisplay.y = fcStore.sensorData.magnetometer[1].toFixed(0);
         magDisplay.z = fcStore.sensorData.magnetometer[2].toFixed(0);
     }
+
+    updateGraphs();
 }
 
 function update_altitude_graph() {
-    if (!altitudeHelpers) return;
-    updateGraphHelperSize(altitudeHelpers);
-    samples_altitude_i = addSampleToData(altitude_data, samples_altitude_i, [fcStore.sensorData.altitude]);
-    drawGraph(altitudeHelpers, altitude_data, samples_altitude_i);
+    addAltitudeSample([fcStore.sensorData.altitude]);
     altitudeDisplay.value = fcStore.sensorData.altitude.toFixed(2);
+    updateGraphs();
 }
 
 function update_sonar_graphs() {
-    if (!sonarHelpers) return;
-    updateGraphHelperSize(sonarHelpers);
-    samples_sonar_i = addSampleToData(sonar_data, samples_sonar_i, [fcStore.sensorData.sonar]);
-    drawGraph(sonarHelpers, sonar_data, samples_sonar_i);
+    addSonarSample([fcStore.sensorData.sonar]);
     sonarDisplay.value = fcStore.sensorData.sonar.toFixed(2);
+    updateGraphs();
 }
 
 function update_debug_graphs() {
     for (let i = 0; i < debugColumns.value; i++) {
-        if (!debugHelpers[i]) continue;
-        updateGraphHelperSize(debugHelpers[i]);
-        addSampleToData(debug_data[i], samples_debug_i, [fcStore.sensorData.debug[i]]);
-        drawGraph(debugHelpers[i], debug_data[i], samples_debug_i);
+        addDebugSample(i, [fcStore.sensorData.debug[i]]);
         debugDisplay.value[i] = fcStore.sensorData.debug[i].toString();
     }
-    samples_debug_i++;
+    incrementDebugCounter();
+    updateGraphs();
+}
+
+function displayDebugColumnNames() {
+    const debugModeName = debugStore.modes[fcStore.pidAdvancedConfig.debugMode];
+    const debugFields = debugStore.fieldNames[debugModeName];
+
+    for (let i = 0; i < debugColumns.value; i++) {
+        let msg = `Debug ${i} unknown`;
+        if (debugFields) {
+            msg = debugFields[`debug[${i}]`] ?? `Debug ${i} not used`;
+        }
+
+        debugTitles.value[i] = msg;
+        debugDisplay.value[i] = "0";
+    }
 }
 
 function onCheckboxChange() {
-    setConfig({ graphs_enabled: [...checkboxes.value] });
+    sensorsStore.saveToConfig();
     initializeTimers();
 }
 
 function updateRate(sensor, value) {
-    rates[sensor] = value;
-    onRateScaleChange();
+    sensorsStore.updateRate(sensor, value);
+    initializeTimers();
 }
 
 function updateScale(sensor, value) {
-    scales[sensor] = value;
-    onRateScaleChange();
-}
-
-function onRateScaleChange() {
-    setConfig({
-        sensor_settings: {
-            rates: { ...rates },
-            scales: { ...scales },
-        },
-    });
-
-    // Re-initialize graph helpers with new scales
-    gyroHelpers = initGraphHelpers("#gyro", samples_gyro_i, [-scales.gyro, scales.gyro]);
-    accelHelpers = initGraphHelpers("#accel", samples_accel_i, [-scales.accel, scales.accel]);
-    magHelpers = initGraphHelpers("#mag", samples_mag_i, [-scales.mag, scales.mag]);
-
+    sensorsStore.updateScale(sensor, value);
+    updateGraphScales(scales.value);
     initializeTimers();
 }
 
 onMounted(async () => {
+    // Load sensor configuration from store
+    sensorsStore.loadFromConfig();
+
     // Initialize sensor data
     initSensorData();
 
     // Determine debug columns based on API version
     if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_46)) {
-        debugColumns.value = 8;
+        sensorsStore.debugColumns = 8;
         await MSP.send_message(MSPCodes.MSP_ADVANCED_CONFIG, false, false, displayDebugColumnNames);
     } else {
-        debugColumns.value = 4;
+        sensorsStore.debugColumns = 4;
     }
 
-    // Initialize data arrays
-    gyro_data = initDataArray(3);
-    accel_data = initDataArray(3);
-    mag_data = initDataArray(3);
-    altitude_data = initDataArray(1);
-    sonar_data = initDataArray(1);
-    debug_data = [];
-    for (let i = 0; i < debugColumns.value; i++) {
-        debug_data.push(initDataArray(1));
-    }
-
-    // Load saved settings
-    const result = getConfig("sensor_settings");
-    if (result.sensor_settings) {
-        rates.gyro = result.sensor_settings.rates.gyro;
-        rates.accel = result.sensor_settings.rates.accel;
-        rates.mag = result.sensor_settings.rates.mag;
-        rates.altitude = result.sensor_settings.rates.altitude;
-        rates.sonar = result.sensor_settings.rates.sonar;
-        rates.debug = result.sensor_settings.rates.debug;
-
-        scales.gyro = result.sensor_settings.scales.gyro;
-        scales.accel = result.sensor_settings.scales.accel;
-        scales.mag = result.sensor_settings.scales.mag;
-    }
-
-    // Load saved checkbox states
-    const resultGraphs = getConfig("graphs_enabled");
-    if (resultGraphs.graphs_enabled) {
-        for (let i = 0; i < resultGraphs.graphs_enabled.length; i++) {
-            checkboxes.value[i] = resultGraphs.graphs_enabled[i];
-        }
-    } else {
-        // Default: enable first 4 graphs if sensors are available
+    // If no saved checkbox states, set defaults based on available sensors
+    if (!checkboxes.value.some((v) => v)) {
         if (hasGyro.value) checkboxes.value[0] = true;
         if (hasAccel.value) checkboxes.value[1] = true;
         if (hasMag.value) checkboxes.value[2] = true;
@@ -625,17 +430,10 @@ onMounted(async () => {
     // Initialize graph helpers - wait for next tick to ensure refs are set
     await nextTick();
 
-    gyroHelpers = initGraphHelpers("#gyro", samples_gyro_i, [-scales.gyro, scales.gyro]);
-    accelHelpers = initGraphHelpers("#accel", samples_accel_i, [-scales.accel, scales.accel]);
-    magHelpers = initGraphHelpers("#mag", samples_mag_i, [-scales.mag, scales.mag]);
-    altitudeHelpers = initGraphHelpers("#altitude", samples_altitude_i);
-    sonarHelpers = initGraphHelpers("#sonar", samples_sonar_i);
+    initializeGraphs(null, debugColumns.value);
 
-    debugHelpers = [];
-
-    for (let i = 0; i < debugColumns.value; i++) {
-        debugHelpers.push(initGraphHelpers(`#debug${i}`, samples_debug_i));
-    }
+    // Set initial scales from store
+    updateGraphScales(scales.value);
 
     // Start polling
     initializeTimers();

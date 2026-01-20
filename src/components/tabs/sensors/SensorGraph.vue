@@ -92,7 +92,7 @@
 
 <script setup>
 import { ref } from "vue";
-import { REFRESH_RATE_OPTIONS } from "./sensors/constants";
+import { REFRESH_RATE_OPTIONS } from "./constants";
 
 const svgElement = ref(null);
 
