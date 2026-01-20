@@ -58,33 +58,35 @@
         </div>
         <!-- Debug layout (no wrapper, simplified controls) -->
         <template v-else>
-            <svg :id="svgId" ref="svgElement" class="sensor-graph">
-                <g class="grid x" transform="translate(40, 120)"></g>
-                <g class="grid y" transform="translate(40, 10)"></g>
-                <g class="data" transform="translate(41, 10)"></g>
-                <g class="axis x" transform="translate(40, 120)"></g>
-                <g class="axis y" transform="translate(40, 10)"></g>
-            </svg>
-            <div class="plot_control">
-                <div class="title"><span v-html="title"></span></div>
-                <dl>
-                    <template v-if="showRefreshRate">
-                        <dt v-html="$t('sensorsRefresh')"></dt>
-                        <dd class="rate">
-                            <select :value="rate" @change="$emit('update:rate', Number($event.target.value))">
-                                <option
-                                    v-for="option in REFRESH_RATE_OPTIONS"
-                                    :key="option.value"
-                                    :value="option.value"
-                                >
-                                    {{ option.label }}
-                                </option>
-                            </select>
-                        </dd>
-                    </template>
-                    <dt>X:</dt>
-                    <dd class="x">{{ displayValues[0] }}</dd>
-                </dl>
+            <div class="graph-grid">
+                <svg :id="svgId" ref="svgElement" class="sensor-graph">
+                    <g class="grid x" transform="translate(40, 120)"></g>
+                    <g class="grid y" transform="translate(40, 10)"></g>
+                    <g class="data" transform="translate(41, 10)"></g>
+                    <g class="axis x" transform="translate(40, 120)"></g>
+                    <g class="axis y" transform="translate(40, 10)"></g>
+                </svg>
+                <div class="plot_control">
+                    <div class="title"><span v-html="title"></span></div>
+                    <dl>
+                        <template v-if="showRefreshRate">
+                            <dt v-html="$t('sensorsRefresh')"></dt>
+                            <dd class="rate">
+                                <select :value="rate" @change="$emit('update:rate', Number($event.target.value))">
+                                    <option
+                                        v-for="option in REFRESH_RATE_OPTIONS"
+                                        :key="option.value"
+                                        :value="option.value"
+                                    >
+                                        {{ option.label }}
+                                    </option>
+                                </select>
+                            </dd>
+                        </template>
+                        <dt>X:</dt>
+                        <dd class="x">{{ displayValues[0] }}</dd>
+                    </dl>
+                </div>
             </div>
         </template>
     </div>
