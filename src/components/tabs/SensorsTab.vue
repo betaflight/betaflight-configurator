@@ -357,7 +357,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, onMounted, onBeforeUnmount } from "vue";
+import { ref, reactive, computed, onMounted, onBeforeUnmount, nextTick } from "vue";
 import { useFlightControllerStore } from "@/stores/fc";
 import { useDebugStore } from "@/stores/debug";
 import { get as getConfig, set as setConfig } from "../../js/ConfigStorage";
@@ -809,21 +809,22 @@ onMounted(async () => {
     }
 
     // Initialize graph helpers - wait for next tick to ensure refs are set
-    setTimeout(() => {
-        gyroHelpers = initGraphHelpers("#gyro", samples_gyro_i, [-scales.gyro, scales.gyro]);
-        accelHelpers = initGraphHelpers("#accel", samples_accel_i, [-scales.accel, scales.accel]);
-        magHelpers = initGraphHelpers("#mag", samples_mag_i, [-scales.mag, scales.mag]);
-        altitudeHelpers = initGraphHelpers("#altitude", samples_altitude_i);
-        sonarHelpers = initGraphHelpers("#sonar", samples_sonar_i);
+    await nextTick();
 
-        debugHelpers = [];
-        for (let i = 0; i < debugColumns.value; i++) {
-            debugHelpers.push(initGraphHelpers(`#debug${i}`, samples_debug_i));
-        }
+    gyroHelpers = initGraphHelpers("#gyro", samples_gyro_i, [-scales.gyro, scales.gyro]);
+    accelHelpers = initGraphHelpers("#accel", samples_accel_i, [-scales.accel, scales.accel]);
+    magHelpers = initGraphHelpers("#mag", samples_mag_i, [-scales.mag, scales.mag]);
+    altitudeHelpers = initGraphHelpers("#altitude", samples_altitude_i);
+    sonarHelpers = initGraphHelpers("#sonar", samples_sonar_i);
 
-        // Start polling
-        initializeTimers();
-    }, 100);
+    debugHelpers = [];
+
+    for (let i = 0; i < debugColumns.value; i++) {
+        debugHelpers.push(initGraphHelpers(`#debug${i}`, samples_debug_i));
+    }
+
+    // Start polling
+    initializeTimers();
 
     // Status polling
     GUI.interval_add(
