@@ -271,7 +271,7 @@
                                 <div class="grid-box col2">
                                     <div class="select-group">
                                         <strong>{{ $t("firmwareFlasherBuildRadioProtocols") }}</strong>
-                                        <div id="radioProtocolInfo" class="select-wrapper">
+                                        <div id="radioProtocolInfo" class="select-wrapper-simple">
                                             <Multiselect
                                                 v-model="state.selectedRadioProtocol"
                                                 :options="state.radioProtocolOptions"
@@ -279,7 +279,7 @@
                                                 placeholder="Select protocol"
                                                 track-by="value"
                                                 label="name"
-                                                @input="onRadioProtocolChange"
+                                                @select="onRadioProtocolChange"
                                                 class="standard-select"
                                             />
                                         </div>
@@ -290,7 +290,11 @@
                                     </div>
                                     <div class="select-group">
                                         <strong>{{ $t("firmwareFlasherBuildTelemetryProtocols") }}</strong>
-                                        <div id="telemetryProtocolInfo" class="select-wrapper">
+                                        <div
+                                            id="telemetryProtocolInfo"
+                                            class="select-wrapper-simple"
+                                            :class="{ 'no-board-selected': state.telemetryProtocolDisabled }"
+                                        >
                                             <Multiselect
                                                 v-model="state.selectedTelemetryProtocol"
                                                 :options="state.telemetryProtocolOptions"
@@ -315,7 +319,7 @@
                                         <strong>{{ $t("firmwareFlasherBuildOsdProtocols") }}</strong>
                                         <div
                                             id="osdProtocolInfo"
-                                            class="select-wrapper"
+                                            class="select-wrapper-simple"
                                             :class="{ 'osd-needs-attention': state.osdProtocolNeedsAttention }"
                                         >
                                             <Multiselect
@@ -336,7 +340,7 @@
                                     </div>
                                     <div class="select-group">
                                         <strong>{{ $t("firmwareFlasherBuildMotorProtocols") }}</strong>
-                                        <div id="motorProtocolInfo" class="select-wrapper">
+                                        <div id="motorProtocolInfo" class="select-wrapper-simple">
                                             <Multiselect
                                                 v-model="state.selectedMotorProtocol"
                                                 :options="state.motorProtocolOptions"
@@ -359,7 +363,7 @@
                                 <div class="grid-box col1">
                                     <div class="select-group">
                                         <strong>{{ $t("firmwareFlasherBuildOptions") }}</strong>
-                                        <div id="optionsInfo" class="select-wrapper">
+                                        <div id="optionsInfo" class="select-wrapper-simple">
                                             <Multiselect
                                                 v-model="state.selectedOptions"
                                                 :options="state.optionsListOptions"
@@ -383,7 +387,7 @@
                                 <div class="grid-box col1">
                                     <div class="select-group">
                                         <strong>{{ $t("firmwareFlasherBuildCustomDefines") }}</strong>
-                                        <div id="customDefinesInfo" class="build-options-wrapper">
+                                        <div id="customDefinesInfo" class="select-wrapper-simple">
                                             <input ref="customDefinesInput" id="customDefines" name="customDefines" />
                                             <div
                                                 class="helpicon cf_tip_wide"
@@ -393,7 +397,7 @@
                                     </div>
                                     <div v-show="state.commitSelectionVisible" class="commitSelection select-group">
                                         <strong>{{ $t("firmwareFlasherBranch") }}</strong>
-                                        <div id="branchInfo" class="select-wrapper">
+                                        <div id="branchInfo" class="select-wrapper-simple">
                                             <Multiselect
                                                 v-model="state.selectedCommit"
                                                 :options="state.commitOptions"
@@ -751,6 +755,7 @@ export default defineComponent({
             loadRemoteButtonDisabled: true,
             loadFileButtonDisabled: false,
             dfuExitButtonDisabled: true,
+            telemetryProtocolDisabled: false,
             // UI State - Visibility flags
             releaseInfoVisible: false,
             buildConfigVisible: false,
@@ -1098,10 +1103,6 @@ export default defineComponent({
 
         const buildOptionsList = (optionKey, options) => {
             // Updated for Vue-based selects - just update state
-            console.log(
-                `${logHead} buildOptionsList - ${optionKey}:`,
-                options.map((o) => `${o.name} (value: ${o.value}, default: ${o.default})`),
-            );
             if (optionKey === "radioProtocols") {
                 state.radioProtocolOptions = options;
             } else if (optionKey === "telemetryProtocols") {
@@ -1117,15 +1118,42 @@ export default defineComponent({
 
         const toggleTelemetryProtocolInfo = () => {
             const radioProtocol = state.selectedRadioProtocol;
-            const hasTelemetryEnabledByDefault = [
-                "USE_SERIALRX_CRSF",
-                "USE_SERIALRX_FPORT",
-                "USE_SERIALRX_GHST",
-                "USE_SERIALRX_JETIEXBUS",
-            ].includes(radioProtocol);
+            // Check if the selected radio protocol includes telemetry by default
+            const hasTelemetryEnabledByDefault = radioProtocol?.includesTelemetry === true;
+
+            state.telemetryProtocolDisabled = hasTelemetryEnabledByDefault;
 
             if (hasTelemetryEnabledByDefault) {
-                state.selectedTelemetryProtocol = "-1";
+                // Check if "Automatically Included" option already exists
+                let autoIncludedOption = state.telemetryProtocolOptions.find((option) => option.value === "-1");
+
+                if (!autoIncludedOption) {
+                    // Add the "Automatically Included" option at the beginning
+                    autoIncludedOption = {
+                        value: "-1",
+                        name: $t("firmwareFlasherOptionLabelTelemetryProtocolIncluded"),
+                    };
+                    state.telemetryProtocolOptions.unshift(autoIncludedOption);
+                } else {
+                    // Update the existing option text
+                    autoIncludedOption.name = $t("firmwareFlasherOptionLabelTelemetryProtocolIncluded");
+                }
+
+                state.selectedTelemetryProtocol = autoIncludedOption;
+            } else {
+                // Remove the "Automatically Included" option if it exists
+                const autoIncludedIndex = state.telemetryProtocolOptions.findIndex((option) => option.value === "-1");
+                if (autoIncludedIndex !== -1) {
+                    state.telemetryProtocolOptions.splice(autoIncludedIndex, 1);
+
+                    // If the current selection was "Automatically Included", select the default option
+                    if (state.selectedTelemetryProtocol?.value === "-1") {
+                        const defaultTelemetryProtocol = state.telemetryProtocolOptions.find(
+                            (option) => option.default === true,
+                        );
+                        state.selectedTelemetryProtocol = defaultTelemetryProtocol || state.telemetryProtocolOptions[0];
+                    }
+                }
             }
         };
 
@@ -1153,8 +1181,6 @@ export default defineComponent({
 
             // extract osd protocols from general options and add to osdProtocols
             state.cloudBuildOptions = FC.CONFIG.buildOptions || [];
-            console.log(`${logHead} buildOptions - FC.CONFIG.buildOptions:`, state.cloudBuildOptions);
-            console.log(`${logHead} buildOptions - validateBuildKey():`, validateBuildKey());
 
             // Mark all options as default if they're in cloudBuildOptions
             data.radioProtocols = data.radioProtocols.map((option) => {
@@ -1199,60 +1225,29 @@ export default defineComponent({
 
             // Preselect options where default === true
             state.selectedOptions = data.generalOptions.filter((option) => option.default === true);
-            console.log(
-                `${logHead} buildOptions - preselecting general options:`,
-                state.selectedOptions.map((o) => o.name),
-            );
 
             // Preselect radio protocol with default === true
             const defaultRadioProtocol = data.radioProtocols.find((option) => option.default === true);
             if (defaultRadioProtocol) {
-                console.log(`${logHead} buildOptions - preselecting radio protocol:`, defaultRadioProtocol.name);
                 state.selectedRadioProtocol = defaultRadioProtocol;
-            } else {
-                console.log(
-                    `${logHead} buildOptions - no default radio protocol found. Available:`,
-                    data.radioProtocols.map((o) => `${o.name} (default: ${o.default})`),
-                );
             }
 
             // Preselect telemetry protocol with default === true
             const defaultTelemetryProtocol = data.telemetryProtocols.find((option) => option.default === true);
             if (defaultTelemetryProtocol) {
-                console.log(
-                    `${logHead} buildOptions - preselecting telemetry protocol:`,
-                    defaultTelemetryProtocol.name,
-                );
                 state.selectedTelemetryProtocol = defaultTelemetryProtocol;
-            } else {
-                console.log(
-                    `${logHead} buildOptions - no default telemetry protocol found. Available:`,
-                    data.telemetryProtocols.map((o) => `${o.name} (default: ${o.default})`),
-                );
             }
 
             // Preselect OSD protocol with default === true
             const defaultOsdProtocol = data.osdProtocols.find((option) => option.default === true);
             if (defaultOsdProtocol) {
-                console.log(`${logHead} buildOptions - preselecting OSD protocol:`, defaultOsdProtocol.name);
                 state.selectedOsdProtocol = defaultOsdProtocol;
-            } else {
-                console.log(
-                    `${logHead} buildOptions - no default OSD protocol found. Available:`,
-                    data.osdProtocols.map((o) => `${o.name} (default: ${o.default})`),
-                );
             }
 
             // Preselect motor protocol with default === true
             const defaultMotorProtocol = data.motorProtocols.find((option) => option.default === true);
             if (defaultMotorProtocol) {
-                console.log(`${logHead} buildOptions - preselecting motor protocol:`, defaultMotorProtocol.name);
                 state.selectedMotorProtocol = defaultMotorProtocol;
-            } else {
-                console.log(
-                    `${logHead} buildOptions - no default motor protocol found. Available:`,
-                    data.motorProtocols.map((o) => `${o.name} (default: ${o.default})`),
-                );
             }
 
             // Initialize OSD protocol color state
@@ -2645,7 +2640,7 @@ export default defineComponent({
             white-space: nowrap;
         }
         #customDefines {
-            width: calc(100% - 2rem) !important;
+            width: calc(100% - 1.5rem) !important;
         }
         /* Vue-native switch styling to mimic Switchery */
         #build_configuration_toggle_label.vue-switch-label {

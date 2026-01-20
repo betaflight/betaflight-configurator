@@ -184,6 +184,8 @@ export function useBoardSelection(params) {
         const targetSupportUrl = getSupportUrlForTarget(value);
         enableLoadRemoteFileButton(false);
 
+        updateTargetQualification(value);
+
         if (!value || value === "0") {
             state.firmwareVersionOptions = [];
             state.selectedFirmwareVersion = undefined;
