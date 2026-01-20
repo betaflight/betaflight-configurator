@@ -19,7 +19,7 @@
                         <template v-if="showRefreshRate">
                             <dt v-html="$t('sensorsRefresh')"></dt>
                             <dd class="rate">
-                                <select :value="rate" `@change`="$emit('update:rate', Number($event.target.value))">
+                                <select :value="rate" @change="$emit('update:rate', Number($event.target.value))">
                                     <option
                                         v-for="option in REFRESH_RATE_OPTIONS"
                                         :key="option.value"
@@ -33,7 +33,7 @@
                         <template v-if="scaleOptions">
                             <dt v-html="$t('sensorsScale')"></dt>
                             <dd class="scale">
-                                <select :value="scale" `@change`="$emit('update:scale', Number($event.target.value))">
+                                <select :value="scale" @change="$emit('update:scale', Number($event.target.value))">
                                     <option v-for="option in scaleOptions" :key="option" :value="option">
                                         {{ option }}
                                     </option>
@@ -71,7 +71,7 @@
                     <template v-if="showRefreshRate">
                         <dt v-html="$t('sensorsRefresh')"></dt>
                         <dd class="rate">
-                            <select :value="rate" `@change`="$emit('update:rate', Number($event.target.value))">
+                            <select :value="rate" @change="$emit('update:rate', Number($event.target.value))">
                                 <option
                                     v-for="option in REFRESH_RATE_OPTIONS"
                                     :key="option.value"
