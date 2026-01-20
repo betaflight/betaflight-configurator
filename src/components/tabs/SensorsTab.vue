@@ -859,10 +859,6 @@ onBeforeUnmount(() => {
     margin: 0 5px 0 0;
 }
 
-.wrapper {
-    /* v-show will handle visibility */
-}
-
 .wrapper .gui_box {
     display: flex;
     flex-direction: row-reverse;
@@ -964,6 +960,18 @@ onBeforeUnmount(() => {
     stroke: none;
     fill: var(--text);
     font-size: 10px;
+}
+
+:deep(.line:nth-child(1)) {
+    stroke: #00a8f0;
+}
+
+:deep(.line:nth-child(2)) {
+    stroke: #c0d800;
+}
+
+:deep(.line:nth-child(3)) {
+    stroke: #cb4b4b;
 }
 
 :deep(.line:nth-child(4)) {
