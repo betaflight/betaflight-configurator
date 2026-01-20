@@ -10,56 +10,39 @@
             <div class="gui_box">
                 <div class="info">
                     <div class="checkboxes">
-                        <label>
-                            <input
-                                type="checkbox"
-                                v-model="checkboxes[0]"
-                                :disabled="!hasGyro"
-                                class="first"
-                                @change="onCheckboxChange"
-                            />
-                            <span v-html="$t('sensorsGyroSelect')"></span>
-                        </label>
-                        <label>
-                            <input
-                                type="checkbox"
-                                v-model="checkboxes[1]"
-                                :disabled="!hasAccel"
-                                @change="onCheckboxChange"
-                            />
-                            <span v-html="$t('sensorsAccelSelect')"></span>
-                        </label>
-                        <label>
-                            <input
-                                type="checkbox"
-                                v-model="checkboxes[2]"
-                                :disabled="!hasMag"
-                                @change="onCheckboxChange"
-                            />
-                            <span v-html="$t('sensorsMagSelect')"></span>
-                        </label>
-                        <label>
-                            <input
-                                type="checkbox"
-                                v-model="checkboxes[3]"
-                                :disabled="!hasAltitude"
-                                @change="onCheckboxChange"
-                            />
-                            <span v-html="$t('sensorsAltitudeSelect')"></span>
-                        </label>
-                        <label>
-                            <input
-                                type="checkbox"
-                                v-model="checkboxes[4]"
-                                :disabled="!hasSonar"
-                                @change="onCheckboxChange"
-                            />
-                            <span v-html="$t('sensorsSonarSelect')"></span>
-                        </label>
-                        <label>
-                            <input type="checkbox" v-model="checkboxes[5]" @change="onCheckboxChange" />
-                            <span v-html="$t('sensorsDebugSelect')"></span>
-                        </label>
+                        <input
+                            type="checkbox"
+                            v-model="checkboxes[0]"
+                            :disabled="!hasGyro"
+                            class="first"
+                            @change="onCheckboxChange"
+                        />
+                        <span v-html="$t('sensorsGyroSelect')"></span>
+                        <input
+                            type="checkbox"
+                            v-model="checkboxes[1]"
+                            :disabled="!hasAccel"
+                            @change="onCheckboxChange"
+                        />
+                        <span v-html="$t('sensorsAccelSelect')"></span>
+                        <input type="checkbox" v-model="checkboxes[2]" :disabled="!hasMag" @change="onCheckboxChange" />
+                        <span v-html="$t('sensorsMagSelect')"></span>
+                        <input
+                            type="checkbox"
+                            v-model="checkboxes[3]"
+                            :disabled="!hasAltitude"
+                            @change="onCheckboxChange"
+                        />
+                        <span v-html="$t('sensorsAltitudeSelect')"></span>
+                        <input
+                            type="checkbox"
+                            v-model="checkboxes[4]"
+                            :disabled="!hasSonar"
+                            @change="onCheckboxChange"
+                        />
+                        <span v-html="$t('sensorsSonarSelect')"></span>
+                        <input type="checkbox" v-model="checkboxes[5]" @change="onCheckboxChange" />
+                        <span v-html="$t('sensorsDebugSelect')"></span>
                     </div>
                 </div>
             </div>
