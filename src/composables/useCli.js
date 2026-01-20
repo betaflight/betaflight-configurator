@@ -37,7 +37,7 @@ function cliBufferCharsToDelete(command, buffer) {
 }
 
 function commandWithBackSpaces(command, buffer, noOfCharsToDelete) {
-    const backspace = String.fromCharCode(127);
+    const backspace = String.fromCodePoint(127);
     return backspace.repeat(noOfCharsToDelete) + command.substring(buffer.length - noOfCharsToDelete, command.length);
 }
 
@@ -51,6 +51,38 @@ function getCliCommand(command, cliBuffer) {
     const noOfCharsToDelete = cliBufferCharsToDelete(command, buffer);
 
     return commandWithBackSpaces(command, buffer, noOfCharsToDelete);
+}
+
+function onCopyFailed(ex) {
+    console.warn(ex);
+}
+
+async function submitSupportData(data, state, clearHistory, executeCommands, writeToOutput) {
+    clearHistory();
+    const api = new BuildApi();
+
+    let commands = await api.getSupportCommands();
+    if (!commands) {
+        alert("An error has occurred");
+        return;
+    }
+
+    commands = [`###\n# Problem description\n# ${data}\n###`, ...commands];
+    await executeCommands(commands.join("\n"));
+    const delay = setInterval(async () => {
+        const time = Date.now();
+        if (state.lastArrival < time - 250) {
+            clearInterval(delay);
+            const text = state.outputHistory;
+            let key = await api.submitSupportData(text);
+            if (!key) {
+                writeToOutput(i18n.getMessage("buildServerSupportRequestSubmission", ["** error **"]));
+                return;
+            }
+            state.lastSupportId = key;
+            writeToOutput(i18n.getMessage("buildServerSupportRequestSubmission", [key]));
+        }
+    }, 250);
 }
 
 export function useCli() {
@@ -149,7 +181,7 @@ export function useCli() {
         const bufView = new Uint8Array(bufferOut);
 
         for (let cKey = 0; cKey < line.length; cKey++) {
-            bufView[cKey] = line.charCodeAt(cKey);
+            bufView[cKey] = line.codePointAt(cKey);
         }
 
         serial.send(bufferOut, callback);
@@ -244,43 +276,13 @@ export function useCli() {
             }, 1500);
         }
 
-        function onCopyFailed(ex) {
-            console.warn(ex);
-        }
-
         BFClipboard.writeText(text, onCopySuccessful, onCopyFailed);
     };
 
     const submitSupportRequest = async () => {
-        async function submitSupportData(data) {
-            clearHistory();
-            const api = new BuildApi();
-
-            let commands = await api.getSupportCommands();
-            if (!commands) {
-                alert("An error has occurred");
-                return;
-            }
-
-            commands = [`###\n# Problem description\n# ${data}\n###`, ...commands];
-            await executeCommands(commands.join("\n"));
-            const delay = setInterval(async () => {
-                const time = new Date().getTime();
-                if (state.lastArrival < time - 250) {
-                    clearInterval(delay);
-                    const text = state.outputHistory;
-                    let key = await api.submitSupportData(text);
-                    if (!key) {
-                        writeToOutput(i18n.getMessage("buildServerSupportRequestSubmission", ["** error **"]));
-                        return;
-                    }
-                    state.lastSupportId = key;
-                    writeToOutput(i18n.getMessage("buildServerSupportRequestSubmission", [key]));
-                }
-            }, 250);
-        }
-
-        showSupportWarningDialog(submitSupportData);
+        showSupportWarningDialog((data) =>
+            submitSupportData(data, state, clearHistory, executeCommands, writeToOutput),
+        );
     };
 
     const showSupportWarningDialog = (onAccept) => {
@@ -367,6 +369,61 @@ export function useCli() {
         }
     };
 
+    const processCharacterInCliMode = (charCode, currentChar) => {
+        switch (charCode) {
+            case lineFeedCode:
+                if (GUI.operating_system === "Windows") {
+                    writeLineToOutput(state.cliBuffer);
+                    state.cliBuffer = "";
+                }
+                break;
+            case carriageReturnCode:
+                if (GUI.operating_system !== "Windows") {
+                    writeLineToOutput(state.cliBuffer);
+                    state.cliBuffer = "";
+                }
+                break;
+            case 60:
+                state.cliBuffer += "&lt";
+                break;
+            case 62:
+                state.cliBuffer += "&gt";
+                break;
+            case backspaceCode:
+                state.cliBuffer = state.cliBuffer.slice(0, -1);
+                state.outputHistory = state.outputHistory.slice(0, -1);
+                return true; // signal to continue
+            default:
+                state.cliBuffer += currentChar;
+        }
+        return false;
+    };
+
+    const checkForReboot = () => {
+        if (state.cliBuffer === "Rebooting") {
+            CONFIGURATOR.cliActive = false;
+            CONFIGURATOR.cliValid = false;
+            gui_log(i18n.getMessage("cliReboot"));
+            GUI.reinitializeConnection();
+        }
+    };
+
+    const validateCliEntry = (validateText) => {
+        if (!CONFIGURATOR.cliValid && validateText.includes("CLI")) {
+            gui_log(i18n.getMessage(getConfig("cliOnlyMode")?.cliOnlyMode ? "cliDevEnter" : "cliEnter"));
+            CONFIGURATOR.cliValid = true;
+            // begin output history with the prompt (last line of welcome message)
+            // this is to match the content of the history with what the user sees on this tab
+            const lastLine = validateText.split("\n").pop();
+            state.outputHistory = lastLine;
+
+            if (CliAutoComplete.isEnabled() && !CliAutoComplete.isBuilding()) {
+                // start building autoComplete
+                CliAutoComplete.builderStart();
+            }
+        }
+    };
+
     const read = (readInfo) => {
         /*  Some info about handling line feeds and carriage return
 
@@ -382,9 +439,10 @@ export function useCli() {
         let validateText = "";
         let sequenceCharsToSkip = 0;
 
-        for (let i = 0; i < data.length; i++) {
-            const currentChar = String.fromCharCode(data[i]);
-            const isCRLF = currentChar.charCodeAt() === lineFeedCode || currentChar.charCodeAt() === carriageReturnCode;
+        for (const byte of data) {
+            const currentChar = String.fromCodePoint(byte);
+            const currentCode = currentChar.codePointAt(0);
+            const isCRLF = currentCode === lineFeedCode || currentCode === carriageReturnCode;
 
             if (!CONFIGURATOR.cliValid && (isCRLF || state.startProcessing)) {
                 // try to catch part of valid CLI enter message (firmware message starts with CRLF)
@@ -396,7 +454,7 @@ export function useCli() {
 
             const escapeSequenceCode = 27;
             const escapeSequenceCharLength = 3;
-            if (data[i] === escapeSequenceCode && !sequenceCharsToSkip) {
+            if (byte === escapeSequenceCode && !sequenceCharsToSkip) {
                 // ESC + other
                 sequenceCharsToSkip = escapeSequenceCharLength;
             }
@@ -407,32 +465,9 @@ export function useCli() {
             }
 
             if (CONFIGURATOR.cliValid) {
-                switch (data[i]) {
-                    case lineFeedCode:
-                        if (GUI.operating_system === "Windows") {
-                            writeLineToOutput(state.cliBuffer);
-                            state.cliBuffer = "";
-                        }
-                        break;
-                    case carriageReturnCode:
-                        if (GUI.operating_system !== "Windows") {
-                            writeLineToOutput(state.cliBuffer);
-                            state.cliBuffer = "";
-                        }
-                        break;
-                    case 60:
-                        state.cliBuffer += "&lt";
-                        break;
-                    case 62:
-                        state.cliBuffer += "&gt";
-                        break;
-                    case backspaceCode:
-                        state.cliBuffer = state.cliBuffer.slice(0, -1);
-                        state.outputHistory = state.outputHistory.slice(0, -1);
-                        continue;
-
-                    default:
-                        state.cliBuffer += currentChar;
+                const shouldContinue = processCharacterInCliMode(byte, currentChar);
+                if (shouldContinue) {
+                    continue;
                 }
             }
 
@@ -441,29 +476,12 @@ export function useCli() {
                 state.outputHistory += currentChar;
             }
 
-            if (state.cliBuffer === "Rebooting") {
-                CONFIGURATOR.cliActive = false;
-                CONFIGURATOR.cliValid = false;
-                gui_log(i18n.getMessage("cliReboot"));
-                GUI.reinitializeConnection();
-            }
+            checkForReboot();
         }
 
-        state.lastArrival = new Date().getTime();
+        state.lastArrival = Date.now();
 
-        if (!CONFIGURATOR.cliValid && validateText.indexOf("CLI") !== -1) {
-            gui_log(i18n.getMessage(getConfig("cliOnlyMode")?.cliOnlyMode ? "cliDevEnter" : "cliEnter"));
-            CONFIGURATOR.cliValid = true;
-            // begin output history with the prompt (last line of welcome message)
-            // this is to match the content of the history with what the user sees on this tab
-            const lastLine = validateText.split("\n").pop();
-            state.outputHistory = lastLine;
-
-            if (CliAutoComplete.isEnabled() && !CliAutoComplete.isBuilding()) {
-                // start building autoComplete
-                CliAutoComplete.builderStart();
-            }
-        }
+        validateCliEntry(validateText);
 
         // fallback to native autocomplete
         if (!CliAutoComplete.isEnabled()) {
@@ -500,13 +518,11 @@ export function useCli() {
     };
 
     const cleanup = () => {
-        if (!(CONFIGURATOR.connectionValid && CONFIGURATOR.cliValid && CONFIGURATOR.cliActive)) {
-            return;
+        if (CONFIGURATOR.connectionValid && CONFIGURATOR.cliValid && CONFIGURATOR.cliActive) {
+            send(getCliCommand("exit\r", state.cliBuffer), function () {
+                GUI.reinitializeConnection();
+            });
         }
-
-        send(getCliCommand("exit\r", state.cliBuffer), function () {
-            GUI.reinitializeConnection();
-        });
 
         CONFIGURATOR.cliActive = false;
         CONFIGURATOR.cliValid = false;

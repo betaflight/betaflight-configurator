@@ -116,7 +116,9 @@ export default defineComponent({
                 read: cli.read,
                 cleanup: (callback) => {
                     cli.cleanup();
-                    if (callback) callback();
+                    if (callback) {
+                        callback();
+                    }
                 },
             };
 

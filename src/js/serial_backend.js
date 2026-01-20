@@ -693,9 +693,7 @@ export function read_serial(info) {
     if (CONFIGURATOR.cliActive) {
         MSP.clearListeners();
         MSP.disconnect_cleanup();
-        if (TABS.cli && TABS.cli.read) {
-            TABS.cli.read(info);
-        }
+        TABS.cli?.read?.(info);
     } else if (CONFIGURATOR.cliEngineActive) {
         TABS.presets.read(info);
     } else {
