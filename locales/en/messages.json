@@ -3680,6 +3680,12 @@
     "sdcardStatusUnknown": {
         "message": "Unknown state $1"
     },
+    "firmwareFlasherPleaseWait": {
+        "message": "Please wait"
+    },
+    "firmwareFlasherBoardSelectionHead": {
+    "message": "Board Selection"
+    },
     "firmwareFlasherBranch": {
         "message": "Select Pull Request or Commit"
     },
@@ -3715,10 +3721,13 @@
         "message": "Cloud Build Details:"
     },
     "firmwareFlasherCloudBuildLogUrl": {
-        "message": "Show Log."
+        "message": "Show Log"
     },
     "firmwareFlasherCloudBuildStatus": {
         "message": "Status:"
+    },
+    "firmwareFlasherCloudBuildQueued": {
+        "message": "queued"
     },
     "firmwareFlasherCloudBuildPending": {
         "message": "pending"
@@ -3886,13 +3895,13 @@
         "message": "Message:"
     },
     "firmwareFlasherWarningText": {
-        "message": "Please do <span class=\"message-negative\">not</span> try to flash <strong>non-Betaflight</strong> hardware with this firmware flasher.<br />Do <span class=\"message-negative\">not</span> <strong>disconnect</strong> the board or <strong>turn off</strong> your computer while flashing.<br /><br /><strong>Note: </strong>STM32 bootloader is stored in ROM, it cannot be bricked.<br /><strong>Note: </strong><span class=\"message-negative\">Auto-Connect</span> is always disabled while you are inside firmware flasher.<br /><strong>Note: </strong>Make sure you have a backup; some upgrades/downgrades will wipe your configuration.<br /><strong>Note:</strong> If you have problems flashing <strong>try disconnecting all cables from your FC</strong> first, try rebooting, upgrade drivers.<br /><strong>Note:</strong> When flashing boards that have directly connected USB sockets (most newer boards) ensure you have read the USB Flashing section of the Betaflight manual and have the correct software and drivers installed"
+        "message": "Please do <span class=\"message-negative\">not</span> try to flash <strong>non-Betaflight</strong> hardware with this firmware flasher.<br />Do <span class=\"message-negative\">not</span> <strong>disconnect</strong> the board or <strong>turn off</strong> your computer while flashing.<br /><br /><strong>Note:</strong><ul><li>STM32 bootloader is stored in ROM, it cannot be bricked.</li><li><span class=\"message-negative\">Auto-Connect</span> is always disabled while you are inside firmware flasher.</li><li>Make sure you have a backup; some upgrades/downgrades will wipe your configuration.</li><li>If you have problems flashing <strong>try disconnecting all cables from your FC</strong> first, try rebooting, upgrade drivers.</li><li>When flashing boards that have directly connected USB sockets (most newer boards) ensure you have read the USB Flashing section of the Betaflight manual and have the correct software and drivers installed</li></ul>"
     },
     "firmwareFlasherRecoveryHead": {
         "message": "<strong>Recovery / Lost communication</strong>"
     },
     "firmwareFlasherRecoveryText": {
-        "message": "If you have lost communication with your board follow these steps to restore communication: <ul><li>Power off</li><li>Enable 'No reboot sequence', enable 'Full chip erase'.</li><li>Jumper the BOOT pins or hold BOOT button.</li><li>Power on (activity LED will NOT flash if done correctly).</li><li>Install all STM32 drivers and Zadig if required (see <a href=\"https://betaflight.com/docs/wiki/guides/current/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">USB Flashing</a> section of Betaflight manual).</li><li>Close the App, then restart it.</li><li>Release BOOT button if your FC has one.</li><li>Flash with correct firmware (using manual baud rate if specified in your FC's manual).</li><li>Power off.</li><li>Remove BOOT jumper.</li><li>Power on (activity LED should flash).</li><li>Connect normally.</li></ul>"
+        "message": "If you have lost communication with your board follow these steps to restore communication:<ul><li>Power off</li><li>Enable 'No reboot sequence', enable 'Full chip erase'.</li><li>Jumper the BOOT pins or hold BOOT button.</li><li>Power on (activity LED will NOT flash if done correctly).</li><li>Install all STM32 drivers and Zadig if required (see <a href=\"https://betaflight.com/docs/wiki/guides/current/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">USB Flashing</a> section of Betaflight manual).</li><li>Close the App, then restart it.</li><li>Release BOOT button if your FC has one.</li><li>Flash with correct firmware (using manual baud rate if specified in your FC's manual).</li><li>Power off.</li><li>Remove BOOT jumper.</li><li>Power on (activity LED should flash).</li><li>Connect normally.</li></ul>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Leave Firmware Flasher"
@@ -3998,7 +4007,7 @@
         "message": "You are about to flash a <strong>development build of the firmware</strong>. These builds are a work in progress, and any of the following can be the case:<strong><ul><li>the firmware does not work at all;</li><li>the firmware is not flyable;</li><li>there are safety issues with the firmware, for example flyaways</li><li>the firmware can cause the flight controller to become unresponsive, or damaged</li></ul></strong>If you proceed with flashing this firmware, <strong>you are assuming full responsibility for the risk of any of the above happening</strong>. Furthermore you acknowledge that it is necessary to perform <strong>thorough bench tests with props off</strong> before any attempts to fly this firmware."
     },
     "unstableFirmwareAcknowledgement": {
-        "message": "I have read the above and <strong>I assume full responsibility<strong> for flashing unstable firmware"
+        "message": "I have read the above and <strong>I assume full responsibility</strong> for flashing unstable firmware"
     },
     "unstableFirmwareAcknowledgementFlash": {
         "message": "Flash"

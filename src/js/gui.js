@@ -18,6 +18,7 @@ class GuiControl {
         this.connecting_to = false;
         this.connected_to = false;
         this.connect_lock = false;
+        this.flashingInProgress = false;
         this.active_tab = null;
         this.tab_switch_in_progress = false;
         this.operating_system = null;

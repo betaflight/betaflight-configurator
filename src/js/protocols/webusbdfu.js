@@ -13,7 +13,7 @@
     that being said, it seems that certain level of CLRSTATUS is required before running another type of operation for
     example switching from DNLOAD to UPLOAD, etc, clearning the state so device is in dfuIDLE is highly recommended.
 */
-import GUI, { TABS } from "../gui";
+import GUI from "../gui";
 import { i18n } from "../localization";
 import { gui_log } from "../gui_log";
 import { usbDevices } from "./devices";
@@ -132,31 +132,52 @@ class WEBUSBDFU_protocol extends EventTarget {
     }
     async connect(devicePath, hex, options, callback) {
         this.hex = hex;
+        this.bareBoard = options?.bareBoard;
         this.callback = callback;
 
         this.options = {
             erase_chip: false,
             exitDfu: false,
+            flashingMessage: options?.flashingMessage,
+            flashProgress: options?.flashProgress,
+            flashMessageTypes: options?.flashMessageTypes,
         };
 
-        if (options.exitDfu) {
+        if (options?.exitDfu) {
             this.options.exitDfu = true;
-        } else if (options.erase_chip) {
+        } else if (options?.erase_chip) {
             this.options.erase_chip = true;
         }
+
+        // Calculate progress weight based on whether erase is enabled
+        // If erase: 0-33% erase, 33-66% flash, 66-100% verify
+        // If no erase: 0-50% flash, 50-100% verify
+        this.progressWeights = this.options.erase_chip
+            ? { erase: [0, 33], flash: [33, 66], verify: [66, 100] }
+            : { erase: null, flash: [0, 50], verify: [50, 100] };
 
         // reset and set some variables before we start
         this.upload_time_start = new Date().getTime();
         this.verify_hex = [];
 
         // reset progress bar to initial state
-        TABS.firmware_flasher.flashingMessage(null, TABS.firmware_flasher.FLASH_MESSAGE_TYPES.NEUTRAL).flashProgress(0);
+        this.options?.flashingMessage?.(null, this.options?.flashMessageTypes?.NEUTRAL);
+        this.options?.flashProgress?.(0);
 
         const devices = await this.getDevices();
         const deviceFound = devices.find((device) => device.path === devicePath);
         this.usbDevice = deviceFound.port;
         return this.openDevice();
     }
+
+    flashingMessage(message, type) {
+        this.options?.flashingMessage?.(message, type);
+    }
+
+    flashProgress(progress) {
+        this.options?.flashProgress?.(progress);
+    }
+
     openDevice() {
         this.usbDevice
             .open()
@@ -171,6 +192,7 @@ class WEBUSBDFU_protocol extends EventTarget {
             .catch((error) => {
                 console.log(`${this.logHead} Failed to open USB device:`, error);
                 gui_log(i18n.getMessage("usbDeviceOpenFail"));
+                this.cleanup();
             });
     }
     closeDevice() {
@@ -664,10 +686,10 @@ class WEBUSBDFU_protocol extends EventTarget {
                             this.chipInfo = chipInfo;
                             this.flash_layout = chipInfo.internal_flash;
 
-                            if (TABS.firmware_flasher.parsed_hex.bytes_total > chipInfo.internal_flash.total_size) {
-                                const firmwareSize = TABS.firmware_flasher.parsed_hex.bytes_total;
+                            if (this.hex.bytes_total > chipInfo.internal_flash.total_size) {
+                                const firmwareSize = this.hex.bytes_total;
                                 const boardSize = chipInfo.internal_flash.total_size;
-                                const bareBoard = TABS.firmware_flasher.bareBoard;
+                                const bareBoard = this.bareBoard;
                                 console.log(
                                     `${this.logHead} Firmware size ${firmwareSize} exceeds board memory size ${boardSize} (${bareBoard})`,
                                 );
@@ -703,9 +725,9 @@ class WEBUSBDFU_protocol extends EventTarget {
 
                             if (unusableBlocks.length > 0) {
                                 gui_log(i18n.getMessage("dfu_hex_address_errors"));
-                                TABS.firmware_flasher.flashingMessage(
+                                this.flashingMessage(
                                     i18n.getMessage("dfu_hex_address_errors"),
-                                    TABS.firmware_flasher.FLASH_MESSAGE_TYPES.INVALID,
+                                    this.options?.flashMessageTypes?.INVALID,
                                 );
                                 this.leave();
                             } else {
@@ -731,10 +753,7 @@ class WEBUSBDFU_protocol extends EventTarget {
                     console.log(`${this.logHead} Initiate read unprotect`);
                     const messageReadProtected = i18n.getMessage("stm32ReadProtected");
                     gui_log(messageReadProtected);
-                    TABS.firmware_flasher.flashingMessage(
-                        messageReadProtected,
-                        TABS.firmware_flasher.FLASH_MESSAGE_TYPES.ACTION,
-                    );
+                    this.flashingMessage(messageReadProtected, this.options?.flashMessageTypes?.ACTION);
 
                     this.controlTransfer("out", this.request.DNLOAD, 0, 0, 0, [0x92], () => {
                         this.controlTransfer("in", this.request.GETSTATUS, 0, 0, 6, 0, (data) => {
@@ -745,9 +764,7 @@ class WEBUSBDFU_protocol extends EventTarget {
                                 let timeSpentWaiting = 0;
                                 const incr = 1000; // one sec increments
                                 const waitForErase = setInterval(() => {
-                                    TABS.firmware_flasher.flashProgress(
-                                        Math.min(timeSpentWaiting / total_delay, 1) * 100,
-                                    );
+                                    this.flashProgress(Math.min(timeSpentWaiting / total_delay, 1) * 100);
 
                                     if (timeSpentWaiting < total_delay) {
                                         timeSpentWaiting += incr;
@@ -774,12 +791,11 @@ class WEBUSBDFU_protocol extends EventTarget {
                                                         i18n.getMessage("stm32UnprotectUnplug");
                                                     gui_log(messageUnprotectUnplug);
 
-                                                    TABS.firmware_flasher
-                                                        .flashingMessage(
-                                                            messageUnprotectUnplug,
-                                                            TABS.firmware_flasher.FLASH_MESSAGE_TYPES.ACTION,
-                                                        )
-                                                        .flashProgress(0);
+                                                    this.flashingMessage(
+                                                        messageUnprotectUnplug,
+                                                        this.options?.flashMessageTypes?.ACTION,
+                                                    );
+                                                    this.flashProgress(0);
                                                 } else {
                                                     // unprotecting the flight controller did not work. It did not reboot.
                                                     console.log(
@@ -787,9 +803,9 @@ class WEBUSBDFU_protocol extends EventTarget {
                                                     );
 
                                                     gui_log(i18n.getMessage("stm32UnprotectFailed"));
-                                                    TABS.firmware_flasher.flashingMessage(
+                                                    this.flashingMessage(
                                                         i18n.getMessage("stm32UnprotectFailed"),
-                                                        TABS.firmware_flasher.FLASH_MESSAGE_TYPES.INVALID,
+                                                        this.options?.flashMessageTypes?.INVALID,
                                                     );
                                                     console.log(`${this.logHead} `, data);
                                                     this.cleanup();
@@ -802,9 +818,9 @@ class WEBUSBDFU_protocol extends EventTarget {
                                 console.log(`${this.logHead} Failed to initiate unprotect memory command`);
                                 let messageUnprotectInitFailed = i18n.getMessage("stm32UnprotectInitFailed");
                                 gui_log(messageUnprotectInitFailed);
-                                TABS.firmware_flasher.flashingMessage(
+                                this.flashingMessage(
                                     messageUnprotectInitFailed,
-                                    TABS.firmware_flasher.FLASH_MESSAGE_TYPES.INVALID,
+                                    this.options?.flashMessageTypes?.INVALID,
                                 );
                                 this.cleanup();
                             }
@@ -914,25 +930,23 @@ class WEBUSBDFU_protocol extends EventTarget {
 
                 if (erase_pages.length === 0) {
                     console.log(`${this.logHead} Aborting, No flash pages to erase`);
-                    TABS.firmware_flasher.flashingMessage(
-                        i18n.getMessage("stm32InvalidHex"),
-                        TABS.firmware_flasher.FLASH_MESSAGE_TYPES.INVALID,
-                    );
+                    this.flashingMessage(i18n.getMessage("stm32InvalidHex"), this.options?.flashMessageTypes?.INVALID);
                     this.cleanup();
                     break;
                 }
 
-                TABS.firmware_flasher.flashingMessage(
-                    i18n.getMessage("stm32Erase"),
-                    TABS.firmware_flasher.FLASH_MESSAGE_TYPES.NEUTRAL,
-                );
+                this.flashingMessage(i18n.getMessage("stm32Erase"), this.options?.flashMessageTypes?.NEUTRAL);
                 console.log(`${this.logHead} Executing local chip erase`, erase_pages);
 
                 let page = 0;
                 let total_erased = 0; // bytes
 
                 const erase_page_next = () => {
-                    TABS.firmware_flasher.flashProgress(((page + 1) / erase_pages.length) * 100);
+                    // Calculate progress within erase phase (0-33%)
+                    const eraseStart = this.progressWeights.erase[0];
+                    const eraseRange = this.progressWeights.erase[1] - this.progressWeights.erase[0];
+                    const eraseProgress = ((page + 1) / erase_pages.length) * eraseRange;
+                    this.flashProgress(eraseStart + eraseProgress);
                     page++;
 
                     if (page === erase_pages.length) {
@@ -1035,10 +1049,7 @@ class WEBUSBDFU_protocol extends EventTarget {
                 // upload
                 // we dont need to clear the state as we are already using DFU_DNLOAD
                 console.log(`${this.logHead} Writing data ...`);
-                TABS.firmware_flasher.flashingMessage(
-                    i18n.getMessage("stm32Flashing"),
-                    TABS.firmware_flasher.FLASH_MESSAGE_TYPES.NEUTRAL,
-                );
+                this.flashingMessage(i18n.getMessage("stm32Flashing"), this.options?.flashMessageTypes?.NEUTRAL);
 
                 blocks = this.hex.data.length - 1;
                 let flashing_block = 0;
@@ -1073,9 +1084,12 @@ class WEBUSBDFU_protocol extends EventTarget {
                                         this.controlTransfer("in", this.request.GETSTATUS, 0, 0, 6, 0, (data) => {
                                             if (data[4] === this.state.dfuDNLOAD_IDLE) {
                                                 // update progress bar
-                                                TABS.firmware_flasher.flashProgress(
-                                                    (bytes_flashed_total / (this.hex.bytes_total * 2)) * 100,
-                                                );
+                                                const flashStart = this.progressWeights.flash[0];
+                                                const flashRange =
+                                                    this.progressWeights.flash[1] - this.progressWeights.flash[0];
+                                                const flashProgress =
+                                                    (bytes_flashed_total / this.hex.bytes_total) * flashRange;
+                                                this.flashProgress(flashStart + flashProgress);
 
                                                 // flash another page
                                                 write();
@@ -1129,10 +1143,7 @@ class WEBUSBDFU_protocol extends EventTarget {
             case 5: {
                 // verify
                 console.log(`${this.logHead} Verifying data ...`);
-                TABS.firmware_flasher.flashingMessage(
-                    i18n.getMessage("stm32Verifying"),
-                    TABS.firmware_flasher.FLASH_MESSAGE_TYPES.NEUTRAL,
-                );
+                this.flashingMessage(i18n.getMessage("stm32Verifying"), this.options?.flashMessageTypes?.NEUTRAL);
 
                 blocks = this.hex.data.length - 1;
                 let reading_block = 0;
@@ -1171,9 +1182,10 @@ class WEBUSBDFU_protocol extends EventTarget {
                             bytes_verified_total += bytes_to_read;
 
                             // update progress bar
-                            TABS.firmware_flasher.flashProgress(
-                                ((this.hex.bytes_total + bytes_verified_total) / (this.hex.bytes_total * 2)) * 100,
-                            );
+                            const verifyStart = this.progressWeights.verify[0];
+                            const verifyRange = this.progressWeights.verify[1] - this.progressWeights.verify[0];
+                            const verifyProgress = (bytes_verified_total / this.hex.bytes_total) * verifyRange;
+                            this.flashProgress(verifyStart + verifyProgress);
 
                             // verify another page
                             read();
@@ -1204,9 +1216,9 @@ class WEBUSBDFU_protocol extends EventTarget {
                             if (verify) {
                                 console.log(`${this.logHead} Programming: SUCCESSFUL`);
                                 // update progress bar
-                                TABS.firmware_flasher.flashingMessage(
+                                this.flashingMessage(
                                     i18n.getMessage("stm32ProgrammingSuccessful"),
-                                    TABS.firmware_flasher.FLASH_MESSAGE_TYPES.VALID,
+                                    this.options?.flashMessageTypes?.VALID,
                                 );
 
                                 // Show notification
@@ -1222,9 +1234,9 @@ class WEBUSBDFU_protocol extends EventTarget {
                             } else {
                                 console.log(`${this.logHead} Programming: FAILED`);
                                 // update progress bar
-                                TABS.firmware_flasher.flashingMessage(
+                                this.flashingMessage(
                                     i18n.getMessage("stm32ProgrammingFailed"),
-                                    TABS.firmware_flasher.FLASH_MESSAGE_TYPES.INVALID,
+                                    this.options?.flashMessageTypes?.INVALID,
                                 );
 
                                 // Show notification
