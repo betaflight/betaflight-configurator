@@ -63,24 +63,31 @@ export function useSensorGraph() {
         if (!node) return;
 
         const rect = node.getBoundingClientRect();
-        helpers.width = rect.width - margin.left - margin.right;
-        helpers.height = rect.height - margin.top - margin.bottom;
+        helpers.width = Math.max(0, rect.width - margin.left - margin.right);
+        helpers.height = Math.max(0, rect.height - margin.top - margin.bottom);
 
+        // Always initialize scales to prevent undefined errors
         helpers.scaleX = d3.scaleLinear().domain([0, 300]).range([0, helpers.width]);
         helpers.scaleY = d3.scaleLinear().range([helpers.height, 0]);
 
-        helpers.clipId = `${helpers.selector.replace("#", "")  }_clip`;
-        helpers.clip = element
-            .select("defs")
-            .selectAll(`#${helpers.clipId}`)
-            .data([0])
-            .join("clipPath")
-            .attr("id", helpers.clipId)
-            .selectAll("rect")
-            .data([0])
-            .join("rect")
-            .attr("width", helpers.width)
-            .attr("height", helpers.height);
+        helpers.clipId = `${helpers.selector.replace("#", "")}_clip`;
+
+        // Only create clipPath rect if dimensions are valid
+        if (helpers.width > 0 && helpers.height > 0) {
+            helpers.clip = element
+                .selectAll("defs")
+                .data([0])
+                .join("defs")
+                .selectAll(`#${helpers.clipId}`)
+                .data([0])
+                .join("clipPath")
+                .attr("id", helpers.clipId)
+                .selectAll("rect")
+                .data([0])
+                .join("rect")
+                .attr("width", helpers.width)
+                .attr("height", helpers.height);
+        }
     }
 
     function initGraph(selector, sampleCount, heightRef, dataRef) {
@@ -89,38 +96,27 @@ export function useSensorGraph() {
             data: dataRef,
             scaleYMax: heightRef,
         };
-
         updateGraphHelperSize(helpers);
-
         const element = d3.select(helpers.selector);
-
         element.selectAll("defs").data([0]).join("defs");
-
         const xAxis = d3
             .axisBottom()
             .scale(helpers.scaleX)
             .tickFormat((d) => d);
-
         const yAxis = d3
             .axisLeft()
             .scale(helpers.scaleY)
             .tickFormat((d) => d);
-
         const xGrid = d3.axisBottom().scale(helpers.scaleX).tickFormat("").tickSize(-helpers.height, 0, 0);
-
         const yGrid = d3.axisLeft().scale(helpers.scaleY).tickFormat("").tickSize(-helpers.width, 0, 0);
-
         element.select(".grid.x").call(xGrid).selectAll("line").attr("clip-path", `url(#${helpers.clipId})`);
         element.select(".grid.y").call(yGrid).selectAll("line").attr("clip-path", `url(#${helpers.clipId})`);
-
         element.select(".axis.x").call(xAxis);
         element.select(".axis.y").call(yAxis);
-
         const line = d3
             .line()
             .x((d) => helpers.scaleX(d[0]))
             .y((d) => helpers.scaleY(d[1]));
-
         element
             .select(".data")
             .selectAll(".line")
@@ -129,7 +125,6 @@ export function useSensorGraph() {
             .attr("class", "line")
             .attr("clip-path", `url(#${helpers.clipId})`)
             .attr("d", line);
-
         return helpers;
     }
 
