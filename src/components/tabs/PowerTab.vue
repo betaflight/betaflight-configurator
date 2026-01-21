@@ -66,7 +66,7 @@
                                                 </div>
 
                                                 <div class="number">
-                                                    <label for="mincellvoltage">
+                                                    <label>
                                                         <input
                                                             id="mincellvoltage"
                                                             type="number"
@@ -84,7 +84,7 @@
                                                     ></span>
                                                 </div>
                                                 <div class="number">
-                                                    <label for="maxcellvoltage">
+                                                    <label>
                                                         <input
                                                             id="maxcellvoltage"
                                                             type="number"
@@ -102,7 +102,7 @@
                                                     ></span>
                                                 </div>
                                                 <div class="number">
-                                                    <label for="warningcellvoltage">
+                                                    <label>
                                                         <input
                                                             id="warningcellvoltage"
                                                             type="number"
@@ -120,7 +120,7 @@
                                                     ></span>
                                                 </div>
                                                 <div class="number">
-                                                    <label for="capacity">
+                                                    <label>
                                                         <input
                                                             id="capacity"
                                                             type="number"
@@ -174,7 +174,7 @@
                                         <td class="configuration" v-if="voltageConfigs[index]">
                                             <div class="voltage-configuration">
                                                 <div class="number">
-                                                    <label :for="`vbatscale-${index}`">
+                                                    <label>
                                                         <input
                                                             :id="`vbatscale-${index}`"
                                                             type="number"
@@ -194,7 +194,7 @@
                                                     </label>
                                                 </div>
                                                 <div class="number">
-                                                    <label :for="`vbatresdivval-${index}`">
+                                                    <label>
                                                         <input
                                                             :id="`vbatresdivval-${index}`"
                                                             type="number"
@@ -208,7 +208,7 @@
                                                     </label>
                                                 </div>
                                                 <div class="number">
-                                                    <label :for="`vbatresdivmultiplier-${index}`">
+                                                    <label>
                                                         <input
                                                             :id="`vbatresdivmultiplier-${index}`"
                                                             type="number"
@@ -310,7 +310,7 @@
                                         <td class="configuration" v-if="currentConfigs[index]">
                                             <div class="amperage-configuration">
                                                 <div class="number">
-                                                    <label :for="`amperagescale-${index}`">
+                                                    <label>
                                                         <input
                                                             :id="`amperagescale-${index}`"
                                                             type="number"
@@ -330,7 +330,7 @@
                                                     </label>
                                                 </div>
                                                 <div class="number">
-                                                    <label :for="`amperageoffset-${index}`">
+                                                    <label>
                                                         <input
                                                             :id="`amperageoffset-${index}`"
                                                             type="number"
@@ -398,7 +398,7 @@
                 </div>
                 <div class="vbatcalibration" v-show="calibrationVisibility.showVbat">
                     <div class="number">
-                        <label for="vbatcalibration">
+                        <label>
                             <input
                                 id="vbatcalibration"
                                 type="number"
@@ -414,7 +414,7 @@
                 </div>
                 <div class="amperagecalibration" v-show="calibrationVisibility.showAmperage">
                     <div class="number">
-                        <label for="amperagecalibration">
+                        <label>
                             <input
                                 id="amperagecalibration"
                                 type="number"
