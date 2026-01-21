@@ -382,117 +382,115 @@
         </div>
 
         <!-- Calibration Manager Dialog -->
-        <dialog closedby="any" id="calibrationmanagerdialog" class="html-dialog">
-            <div id="calibrationmanagercontent" class="html-dialog-content">
-                <div class="note">
-                    <p v-html="$t('powerCalibrationManagerHelp')"></p>
-                </div>
-                <div class="note">
-                    <p v-html="$t('powerCalibrationManagerNote')"></p>
-                </div>
-                <div class="note nocalib" v-show="calibrationVisibility.showNoCalib">
-                    <p v-html="$t('powerCalibrationManagerWarning')"></p>
-                </div>
-                <div class="note srcchange" v-show="calibrationVisibility.showSrcChange">
-                    <p v-html="$t('powerCalibrationManagerSourceNote')"></p>
-                </div>
-                <div class="vbatcalibration" v-show="calibrationVisibility.showVbat">
-                    <div class="number">
-                        <label>
-                            <input
-                                id="vbatcalibration"
-                                type="number"
-                                name="vbatcalibration"
-                                step="0.01"
-                                min="0"
-                                max="255"
-                                v-model.number="vbatcalibrationValue"
-                            />
-                            <span v-html="$t('powerVoltageCalibration')"></span>
-                        </label>
-                    </div>
-                </div>
-                <div class="amperagecalibration" v-show="calibrationVisibility.showAmperage">
-                    <div class="number">
-                        <label>
-                            <input
-                                id="amperagecalibration"
-                                type="number"
-                                name="amperagecalibration"
-                                step="0.01"
-                                min="0"
-                                max="255"
-                                v-model.number="amperagecalibrationValue"
-                            />
-                            <span v-html="$t('powerAmperageCalibration')"></span>
-                        </label>
-                    </div>
-                </div>
-                <div class="default_btn margin-top5" v-show="calibrationVisibility.showCalibrate">
-                    <a
-                        class="calibrate"
-                        id="calibrate"
-                        href="#"
-                        :aria-label="$t('powerCalibrationSave')"
-                        @click.prevent="calibrate"
-                        v-html="$t('powerCalibrationSave')"
-                    ></a>
+        <Dialog v-model="showCalibrationManagerDialog" :title="$t('powerCalibrationManagerTitle')">
+            <div class="note">
+                <p v-html="$t('powerCalibrationManagerHelp')"></p>
+            </div>
+            <div class="note">
+                <p v-html="$t('powerCalibrationManagerNote')"></p>
+            </div>
+            <div class="note nocalib" v-show="calibrationVisibility.showNoCalib">
+                <p v-html="$t('powerCalibrationManagerWarning')"></p>
+            </div>
+            <div class="note srcchange" v-show="calibrationVisibility.showSrcChange">
+                <p v-html="$t('powerCalibrationManagerSourceNote')"></p>
+            </div>
+            <div class="vbatcalibration" v-show="calibrationVisibility.showVbat">
+                <div class="number">
+                    <label>
+                        <input
+                            id="vbatcalibration"
+                            type="number"
+                            name="vbatcalibration"
+                            step="0.01"
+                            min="0"
+                            max="255"
+                            v-model.number="vbatcalibrationValue"
+                        />
+                        <span v-html="$t('powerVoltageCalibration')"></span>
+                    </label>
                 </div>
             </div>
-        </dialog>
+            <div class="amperagecalibration" v-show="calibrationVisibility.showAmperage">
+                <div class="number">
+                    <label>
+                        <input
+                            id="amperagecalibration"
+                            type="number"
+                            name="amperagecalibration"
+                            step="0.01"
+                            min="0"
+                            max="255"
+                            v-model.number="amperagecalibrationValue"
+                        />
+                        <span v-html="$t('powerAmperageCalibration')"></span>
+                    </label>
+                </div>
+            </div>
+            <div class="default_btn margin-top5" v-show="calibrationVisibility.showCalibrate">
+                <a
+                    class="calibrate"
+                    href="#"
+                    :aria-label="$t('powerCalibrationSave')"
+                    @click.prevent="handleCalibrate"
+                    v-html="$t('powerCalibrationSave')"
+                ></a>
+            </div>
+        </Dialog>
 
         <!-- Calibration Confirmation Dialog -->
-        <dialog closedby="any" id="calibrationmanagerconfirmdialog" class="html-dialog">
-            <div id="calibrationmanagerconfirmcontent" class="html-dialog-content">
-                <div class="note">
-                    <p v-html="$t('powerCalibrationConfirmHelp')"></p>
-                </div>
-                <div class="vbatcalibration" v-show="vbatscalechanged">
-                    <div class="number tab_title">
-                        <label>
-                            <span v-html="$t('powerVoltageCalibratedScale')"></span>
-                            <output name="vbatnewscale">{{ vbatnewscale }}</output>
-                        </label>
-                    </div>
-                </div>
-                <div class="amperagecalibration" v-show="amperagescalechanged">
-                    <div class="number tab_title">
-                        <label>
-                            <span v-html="$t('powerAmperageCalibratedScale')"></span>
-                            <output name="amperagenewscale">{{ amperagenewscale }}</output>
-                        </label>
-                    </div>
-                </div>
-
-                <div class="default_btn margin-top5">
-                    <a
-                        class="applycalibration"
-                        id="applycalibration"
-                        href="#"
-                        :aria-label="$t('powerCalibrationApply')"
-                        @click.prevent="applyCalibration"
-                        v-html="$t('powerCalibrationApply')"
-                    ></a>
-                </div>
-                <div class="default_btn">
-                    <a
-                        class="discardcalibration"
-                        id="discardcalibration"
-                        href="#"
-                        :aria-label="$t('powerCalibrationDiscard')"
-                        @click.prevent="discardCalibration"
-                        v-html="$t('powerCalibrationDiscard')"
-                    ></a>
+        <Dialog
+            v-model="showCalibrationConfirmDialog"
+            :title="$t('powerCalibrationManagerConfirmationTitle')"
+            @close="handleCalibrationConfirmClose"
+        >
+            <div class="note">
+                <p v-html="$t('powerCalibrationConfirmHelp')"></p>
+            </div>
+            <div class="vbatcalibration" v-show="vbatscalechanged">
+                <div class="number tab_title">
+                    <label>
+                        <span v-html="$t('powerVoltageCalibratedScale')"></span>
+                        <output name="vbatnewscale">{{ vbatnewscale }}</output>
+                    </label>
                 </div>
             </div>
-        </dialog>
+            <div class="amperagecalibration" v-show="amperagescalechanged">
+                <div class="number tab_title">
+                    <label>
+                        <span v-html="$t('powerAmperageCalibratedScale')"></span>
+                        <output name="amperagenewscale">{{ amperagenewscale }}</output>
+                    </label>
+                </div>
+            </div>
+
+            <div class="default_btn margin-top5">
+                <a
+                    class="applycalibration"
+                    href="#"
+                    :aria-label="$t('powerCalibrationApply')"
+                    @click.prevent="handleApplyCalibration"
+                    v-html="$t('powerCalibrationApply')"
+                ></a>
+            </div>
+            <div class="default_btn">
+                <a
+                    class="discardcalibration"
+                    href="#"
+                    :aria-label="$t('powerCalibrationDiscard')"
+                    @click.prevent="handleDiscardCalibration"
+                    v-html="$t('powerCalibrationDiscard')"
+                ></a>
+            </div>
+        </Dialog>
     </BaseTab>
 </template>
 
 <script>
-import { defineComponent, onMounted, onUnmounted, computed, nextTick } from "vue";
+import { defineComponent, onMounted, onUnmounted, computed, nextTick, ref } from "vue";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "../elements/WikiButton.vue";
+import Dialog from "../elements/Dialog.vue";
 import GUI from "../../js/gui";
 import { i18n } from "../../js/localization";
 import { usePower } from "../../composables/usePower";
@@ -502,6 +500,7 @@ export default defineComponent({
     components: {
         BaseTab,
         WikiButton,
+        Dialog,
     },
     setup() {
         const {
@@ -527,8 +526,6 @@ export default defineComponent({
             onCurrentMeterSourceChange,
             onVoltageScaleChange,
             onAmperageScaleChange,
-            initializeCalibrationDialogs,
-            openCalibrationManager,
             getCalibrationVisibility,
             calibrate,
             applyCalibration,
@@ -540,9 +537,14 @@ export default defineComponent({
             amperagescalechanged,
             vbatnewscale,
             amperagenewscale,
+            sourceschanged,
         } = usePower();
 
         const calibrationVisibility = computed(() => getCalibrationVisibility());
+
+        // Dialog visibility state
+        const showCalibrationManagerDialog = ref(false);
+        const showCalibrationConfirmDialog = ref(false);
 
         // Track local intervals
         const localIntervals = [];
@@ -556,7 +558,6 @@ export default defineComponent({
 
             nextTick(() => {
                 i18n.localizePage();
-                initializeCalibrationDialogs(() => loadData());
                 GUI.content_ready();
             });
 
@@ -571,6 +572,34 @@ export default defineComponent({
 
         const handleSave = () => {
             saveConfig(() => loadData());
+        };
+
+        const openCalibrationManager = () => {
+            sourceschanged.value = false;
+            showCalibrationManagerDialog.value = true;
+        };
+
+        const handleCalibrate = () => {
+            calibrate();
+            if (vbatscalechanged.value || amperagescalechanged.value) {
+                showCalibrationConfirmDialog.value = true;
+            }
+        };
+
+        const handleApplyCalibration = () => {
+            applyCalibration();
+            showCalibrationConfirmDialog.value = false;
+        };
+
+        const handleDiscardCalibration = () => {
+            discardCalibration();
+            showCalibrationConfirmDialog.value = false;
+        };
+
+        const handleCalibrationConfirmClose = () => {
+            if (vbatscalechanged.value || amperagescalechanged.value) {
+                showCalibrationManagerDialog.value = false;
+            }
         };
 
         return {
@@ -596,9 +625,6 @@ export default defineComponent({
             onAmperageScaleChange,
             openCalibrationManager,
             calibrationVisibility,
-            calibrate,
-            applyCalibration,
-            discardCalibration,
             handleSave,
             vbatcalibrationValue,
             amperagecalibrationValue,
@@ -606,6 +632,12 @@ export default defineComponent({
             amperagescalechanged,
             vbatnewscale,
             amperagenewscale,
+            showCalibrationManagerDialog,
+            showCalibrationConfirmDialog,
+            handleCalibrate,
+            handleApplyCalibration,
+            handleDiscardCalibration,
+            handleCalibrationConfirmClose,
         };
     },
 });

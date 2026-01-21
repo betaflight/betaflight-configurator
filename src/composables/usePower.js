@@ -5,7 +5,6 @@ import { mspHelper } from "../js/msp/MSPHelper";
 import FC from "../js/fc";
 import MSP from "../js/msp";
 import MSPCodes from "../js/msp/MSPCodes";
-import { initializeModalDialog } from "../js/utils/initializeModalDialog";
 
 export function usePower() {
     const supported = ref(true);
@@ -30,10 +29,7 @@ export function usePower() {
     const currentConfigs = reactive([]);
 
     // Calibration state
-    const calibrationManager = ref(null);
-    const calibrationManagerConfirmation = ref(null);
     const sourceschanged = ref(false);
-    const calibrationconfirmed = ref(false);
     const vbatscalechanged = ref(false);
     const amperagescalechanged = ref(false);
     const vbatnewscale = ref(0);
@@ -231,33 +227,6 @@ export function usePower() {
         }
     };
 
-    // Initialize calibration dialogs
-    const initializeCalibrationDialogs = (reinitialize) => {
-        calibrationManager.value = initializeModalDialog(
-            "#calibrationmanager",
-            "#calibrationmanagerdialog",
-            "powerCalibrationManagerTitle",
-            null,
-            () => calibrationconfirmed.value || reinitialize(),
-        );
-
-        calibrationManagerConfirmation.value = initializeModalDialog(
-            "#calibrate",
-            "#calibrationmanagerconfirmdialog",
-            "powerCalibrationManagerConfirmationTitle",
-            null,
-            () => calibrationManager.value.close(),
-        );
-    };
-
-    // Open calibration manager
-    const openCalibrationManager = () => {
-        sourceschanged.value = false;
-        if (calibrationManager.value) {
-            calibrationManager.value.open();
-        }
-    };
-
     // Check calibration visibility
     const getCalibrationVisibility = () => {
         const showVbat = batteryConfig.voltageMeterSource === 1 && batteryState.voltage > 0.1;
@@ -339,16 +308,6 @@ export function usePower() {
 
         vbatscalechanged.value = calibrateVoltage();
         amperagescalechanged.value = calibrateAmperage();
-
-        if (!calibrationManagerConfirmation.value) {
-            return;
-        }
-
-        if (vbatscalechanged.value || amperagescalechanged.value) {
-            calibrationManagerConfirmation.value.open();
-        } else {
-            calibrationManagerConfirmation.value.close();
-        }
     };
 
     // Apply calibration
@@ -360,18 +319,13 @@ export function usePower() {
         if (amperagescalechanged.value) {
             analyticsChanges["PowerAmperageUpdated"] = "Calibrated";
         }
-
-        calibrationconfirmed.value = true;
-        if (calibrationManagerConfirmation.value) {
-            calibrationManagerConfirmation.value.close();
-        }
     };
 
     // Discard calibration
     const discardCalibration = () => {
-        if (calibrationManagerConfirmation.value) {
-            calibrationManagerConfirmation.value.close();
-        }
+        // Reset calibration changes
+        vbatscalechanged.value = false;
+        amperagescalechanged.value = false;
     };
 
     // Save configuration
@@ -439,8 +393,6 @@ export function usePower() {
         onCurrentMeterSourceChange,
         onVoltageScaleChange,
         onAmperageScaleChange,
-        initializeCalibrationDialogs,
-        openCalibrationManager,
         getCalibrationVisibility,
         calibrate,
         applyCalibration,
@@ -452,5 +404,6 @@ export function usePower() {
         amperagescalechanged,
         vbatnewscale,
         amperagenewscale,
+        sourceschanged,
     };
 }
