@@ -73,9 +73,11 @@ export function usePower() {
             i18n.getMessage("powerBatteryCurrentMeterTypeAdc"),
         ];
         if (haveFc) {
-            types.push(i18n.getMessage("powerBatteryCurrentMeterTypeVirtual"));
-            types.push(i18n.getMessage("powerBatteryCurrentMeterTypeEsc"));
-            types.push(i18n.getMessage("powerBatteryCurrentMeterTypeMsp"));
+            types.push(
+                i18n.getMessage("powerBatteryCurrentMeterTypeVirtual"),
+                i18n.getMessage("powerBatteryCurrentMeterTypeEsc"),
+                i18n.getMessage("powerBatteryCurrentMeterTypeMsp"),
+            );
         }
         return types;
     });
@@ -201,14 +203,14 @@ export function usePower() {
 
     // Handle voltage meter source change
     const onVoltageMeterSourceChange = (value) => {
-        batteryConfig.voltageMeterSource = parseInt(value);
+        batteryConfig.voltageMeterSource = Number.parseInt(value, 10);
         FC.BATTERY_CONFIG.voltageMeterSource = batteryConfig.voltageMeterSource;
         sourceschanged.value = true;
     };
 
     // Handle current meter source change
     const onCurrentMeterSourceChange = (value) => {
-        batteryConfig.currentMeterSource = parseInt(value);
+        batteryConfig.currentMeterSource = Number.parseInt(value, 10);
         FC.BATTERY_CONFIG.currentMeterSource = batteryConfig.currentMeterSource;
         sourceschanged.value = true;
     };
@@ -275,58 +277,77 @@ export function usePower() {
         };
     };
 
+    // Helper function to calibrate voltage
+    const calibrateVoltage = () => {
+        if (batteryConfig.voltageMeterSource !== 1) {
+            return false;
+        }
+
+        const vbatcalibration = Number.parseFloat(vbatcalibrationValue.value);
+        if (vbatcalibration === 0) {
+            return false;
+        }
+
+        const newScale = Math.round(voltageConfigs[0].vbatscale * (vbatcalibration / voltageMeters[0].voltage));
+        if (newScale < 10 || newScale > 255) {
+            return false;
+        }
+
+        vbatnewscale.value = newScale;
+        voltageConfigs[0].vbatscale = newScale;
+        FC.VOLTAGE_METER_CONFIGS[0].vbatscale = newScale;
+        return true;
+    };
+
+    // Helper function to calibrate amperage
+    const calibrateAmperage = () => {
+        const ampsource = batteryConfig.currentMeterSource;
+        if (ampsource !== 1 && ampsource !== 2) {
+            return false;
+        }
+
+        const amperagecalibration = Number.parseFloat(amperagecalibrationValue.value);
+        const amperageoffset = currentConfigs[ampsource - 1].offset / 1000;
+
+        if (amperagecalibration === 0) {
+            return false;
+        }
+
+        if (currentMeters[ampsource - 1].amperage === amperageoffset || amperagecalibration === amperageoffset) {
+            return false;
+        }
+
+        const newScale = Math.round(
+            currentConfigs[ampsource - 1].scale *
+                ((currentMeters[ampsource - 1].amperage - amperageoffset) / (amperagecalibration - amperageoffset)),
+        );
+
+        if (newScale <= -16000 || newScale >= 16000 || newScale === 0) {
+            return false;
+        }
+
+        amperagenewscale.value = newScale;
+        currentConfigs[ampsource - 1].scale = newScale;
+        FC.CURRENT_METER_CONFIGS[ampsource - 1].scale = newScale;
+        return true;
+    };
+
     // Calibrate
     const calibrate = () => {
         vbatscalechanged.value = false;
         amperagescalechanged.value = false;
 
-        // Voltage calibration
-        if (batteryConfig.voltageMeterSource === 1) {
-            const vbatcalibration = parseFloat(vbatcalibrationValue.value);
-            if (vbatcalibration !== 0) {
-                const newScale = Math.round(voltageConfigs[0].vbatscale * (vbatcalibration / voltageMeters[0].voltage));
-                if (newScale >= 10 && newScale <= 255) {
-                    vbatnewscale.value = newScale;
-                    voltageConfigs[0].vbatscale = newScale;
-                    FC.VOLTAGE_METER_CONFIGS[0].vbatscale = newScale;
-                    vbatscalechanged.value = true;
-                }
-            }
-        }
+        vbatscalechanged.value = calibrateVoltage();
+        amperagescalechanged.value = calibrateAmperage();
 
-        // Amperage calibration
-        const ampsource = batteryConfig.currentMeterSource;
-        if (ampsource === 1 || ampsource === 2) {
-            const amperagecalibration = parseFloat(amperagecalibrationValue.value);
-            const amperageoffset = currentConfigs[ampsource - 1].offset / 1000;
-            if (amperagecalibration !== 0) {
-                if (
-                    currentMeters[ampsource - 1].amperage !== amperageoffset &&
-                    amperagecalibration !== amperageoffset
-                ) {
-                    const newScale = Math.round(
-                        currentConfigs[ampsource - 1].scale *
-                            ((currentMeters[ampsource - 1].amperage - amperageoffset) /
-                                (amperagecalibration - amperageoffset)),
-                    );
-                    if (newScale > -16000 && newScale < 16000 && newScale !== 0) {
-                        amperagenewscale.value = newScale;
-                        currentConfigs[ampsource - 1].scale = newScale;
-                        FC.CURRENT_METER_CONFIGS[ampsource - 1].scale = newScale;
-                        amperagescalechanged.value = true;
-                    }
-                }
-            }
+        if (!calibrationManagerConfirmation.value) {
+            return;
         }
 
         if (vbatscalechanged.value || amperagescalechanged.value) {
-            if (calibrationManagerConfirmation.value) {
-                calibrationManagerConfirmation.value.open();
-            }
+            calibrationManagerConfirmation.value.open();
         } else {
-            if (calibrationManagerConfirmation.value) {
-                calibrationManagerConfirmation.value.close();
-            }
+            calibrationManagerConfirmation.value.close();
         }
     };
 

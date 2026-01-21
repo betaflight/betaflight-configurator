@@ -1,5 +1,5 @@
 <template>
-    <BaseTab tab-name="power">
+    <BaseTab tab-name="power" :extra-class="supported ? 'supported' : ''">
         <div class="content_wrapper">
             <!-- Title and Documentation -->
             <div class="cf_column">
@@ -17,6 +17,11 @@
                         </div>
                         <div class="spacer_box battery">
                             <table class="cf_table no-border">
+                                <thead class="visually-hidden">
+                                    <tr>
+                                        <th>Configuration</th>
+                                    </tr>
+                                </thead>
                                 <tbody class="battery-config">
                                     <tr>
                                         <td class="configuration">
@@ -61,8 +66,9 @@
                                                 </div>
 
                                                 <div class="number">
-                                                    <label>
+                                                    <label for="mincellvoltage">
                                                         <input
+                                                            id="mincellvoltage"
                                                             type="number"
                                                             name="mincellvoltage"
                                                             step="0.01"
@@ -78,8 +84,9 @@
                                                     ></span>
                                                 </div>
                                                 <div class="number">
-                                                    <label>
+                                                    <label for="maxcellvoltage">
                                                         <input
+                                                            id="maxcellvoltage"
                                                             type="number"
                                                             name="maxcellvoltage"
                                                             step="0.01"
@@ -95,8 +102,9 @@
                                                     ></span>
                                                 </div>
                                                 <div class="number">
-                                                    <label>
+                                                    <label for="warningcellvoltage">
                                                         <input
+                                                            id="warningcellvoltage"
                                                             type="number"
                                                             name="warningcellvoltage"
                                                             step="0.01"
@@ -112,8 +120,9 @@
                                                     ></span>
                                                 </div>
                                                 <div class="number">
-                                                    <label>
+                                                    <label for="capacity">
                                                         <input
+                                                            id="capacity"
                                                             type="number"
                                                             name="capacity"
                                                             step="1"
@@ -143,6 +152,13 @@
 
                         <div class="spacer_box">
                             <table class="cf_table no-border full-width">
+                                <thead class="visually-hidden">
+                                    <tr>
+                                        <th>Meter</th>
+                                        <th>Value</th>
+                                        <th>Configuration</th>
+                                    </tr>
+                                </thead>
                                 <tbody class="voltage-meters">
                                     <tr
                                         v-for="(meter, index) in voltageMeters"
@@ -158,8 +174,9 @@
                                         <td class="configuration" v-if="voltageConfigs[index]">
                                             <div class="voltage-configuration">
                                                 <div class="number">
-                                                    <label>
+                                                    <label :for="`vbatscale-${index}`">
                                                         <input
+                                                            :id="`vbatscale-${index}`"
                                                             type="number"
                                                             :name="`vbatscale-${index}`"
                                                             step="1"
@@ -177,8 +194,9 @@
                                                     </label>
                                                 </div>
                                                 <div class="number">
-                                                    <label>
+                                                    <label :for="`vbatresdivval-${index}`">
                                                         <input
+                                                            :id="`vbatresdivval-${index}`"
                                                             type="number"
                                                             :name="`vbatresdivval-${index}`"
                                                             step="1"
@@ -190,8 +208,9 @@
                                                     </label>
                                                 </div>
                                                 <div class="number">
-                                                    <label>
+                                                    <label :for="`vbatresdivmultiplier-${index}`">
                                                         <input
+                                                            :id="`vbatresdivmultiplier-${index}`"
                                                             type="number"
                                                             :name="`vbatresdivmultiplier-${index}`"
                                                             step="1"
@@ -220,6 +239,12 @@
                         </div>
                         <div class="spacer_box battery">
                             <table class="cf_table no-border">
+                                <thead class="visually-hidden">
+                                    <tr>
+                                        <th>Property</th>
+                                        <th>Value</th>
+                                    </tr>
+                                </thead>
                                 <tbody class="battery-state">
                                     <tr class="connection-state" id="battery-connection-state">
                                         <td v-html="$t('powerBatteryConnected')"></td>
@@ -263,6 +288,13 @@
 
                         <div class="spacer_box">
                             <table class="cf_table no-border full-width">
+                                <thead class="visually-hidden">
+                                    <tr>
+                                        <th>Meter</th>
+                                        <th>Value</th>
+                                        <th>Configuration</th>
+                                    </tr>
+                                </thead>
                                 <tbody class="amperage-meters">
                                     <tr
                                         v-for="(meter, index) in currentMeters"
@@ -278,8 +310,9 @@
                                         <td class="configuration" v-if="currentConfigs[index]">
                                             <div class="amperage-configuration">
                                                 <div class="number">
-                                                    <label>
+                                                    <label :for="`amperagescale-${index}`">
                                                         <input
+                                                            :id="`amperagescale-${index}`"
                                                             type="number"
                                                             :name="`amperagescale-${index}`"
                                                             step="1"
@@ -297,8 +330,9 @@
                                                     </label>
                                                 </div>
                                                 <div class="number">
-                                                    <label>
+                                                    <label :for="`amperageoffset-${index}`">
                                                         <input
+                                                            :id="`amperageoffset-${index}`"
                                                             type="number"
                                                             :name="`amperageoffset-${index}`"
                                                             step="1"
@@ -331,12 +365,19 @@
                     class="calibrationmanager"
                     id="calibrationmanager"
                     href="#"
+                    :aria-label="$t('powerCalibrationManagerButton')"
                     @click.prevent="openCalibrationManager"
                     v-html="$t('powerCalibrationManagerButton')"
                 ></a>
             </div>
             <div class="btn save_btn">
-                <a class="save" href="#" @click.prevent="handleSave" v-html="$t('powerButtonSave')"></a>
+                <a
+                    class="save"
+                    href="#"
+                    :aria-label="$t('powerButtonSave')"
+                    @click.prevent="handleSave"
+                    v-html="$t('powerButtonSave')"
+                ></a>
             </div>
         </div>
 
@@ -357,8 +398,9 @@
                 </div>
                 <div class="vbatcalibration" v-show="calibrationVisibility.showVbat">
                     <div class="number">
-                        <label>
+                        <label for="vbatcalibration">
                             <input
+                                id="vbatcalibration"
                                 type="number"
                                 name="vbatcalibration"
                                 step="0.01"
@@ -372,8 +414,9 @@
                 </div>
                 <div class="amperagecalibration" v-show="calibrationVisibility.showAmperage">
                     <div class="number">
-                        <label>
+                        <label for="amperagecalibration">
                             <input
+                                id="amperagecalibration"
                                 type="number"
                                 name="amperagecalibration"
                                 step="0.01"
@@ -390,6 +433,7 @@
                         class="calibrate"
                         id="calibrate"
                         href="#"
+                        :aria-label="$t('powerCalibrationSave')"
                         @click.prevent="calibrate"
                         v-html="$t('powerCalibrationSave')"
                     ></a>
@@ -425,6 +469,7 @@
                         class="applycalibration"
                         id="applycalibration"
                         href="#"
+                        :aria-label="$t('powerCalibrationApply')"
                         @click.prevent="applyCalibration"
                         v-html="$t('powerCalibrationApply')"
                     ></a>
@@ -434,6 +479,7 @@
                         class="discardcalibration"
                         id="discardcalibration"
                         href="#"
+                        :aria-label="$t('powerCalibrationDiscard')"
                         @click.prevent="discardCalibration"
                         v-html="$t('powerCalibrationDiscard')"
                     ></a>
@@ -566,6 +612,18 @@ export default defineComponent({
 </script>
 
 <style scoped>
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
 .content_toolbar.toolbar_fixed_bottom {
     position: fixed;
     bottom: 2rem;
