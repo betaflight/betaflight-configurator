@@ -518,6 +518,10 @@ export function useCli() {
     };
 
     const cleanup = () => {
+        // Remove any pending CLI timeouts
+        GUI.timeout_remove("CLI_send_slowly");
+        GUI.timeout_remove("enter_cli");
+
         if (CONFIGURATOR.connectionValid && CONFIGURATOR.cliValid && CONFIGURATOR.cliActive) {
             send(getCliCommand("exit\r", state.cliBuffer), function () {
                 GUI.reinitializeConnection();
