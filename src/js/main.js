@@ -332,7 +332,7 @@ async function startProcess() {
                     import("./tabs/vtx").then(({ vtx }) => vtx.initialize(content_ready));
                     break;
                 case "power":
-                    import("./tabs/power").then(({ power }) => power.initialize(content_ready));
+                    mountVueTab("power", content_ready);
                     break;
                 case "setup":
                     import("./tabs/setup").then(({ setup }) => setup.initialize(content_ready));
