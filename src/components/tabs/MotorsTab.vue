@@ -608,10 +608,10 @@
         <div class="content_toolbar toolbar_fixed_bottom" style="position: fixed">
             <div class="btn save_btn">
                 <button
-                    class="save"
+                    class="regular-button save"
                     :class="{ disabled: buttonStates.saveDisabled }"
                     :disabled="buttonStates.saveDisabled"
-                    @click="saveAndReboot()"
+                    @click="saveAndReboot(true)"
                 >
                     {{ $t("configurationButtonSave") }}
                 </button>
@@ -1303,7 +1303,7 @@ const openEscDshotDirectionDialog = () => {
 };
 
 // Action Toolbar Buttons
-const saveAndReboot = async () => {
+const saveAndReboot = async (reboot = true) => {
     // Don't save if no changes
     if (!configHasChanged.value) {
         return;
@@ -1330,8 +1330,8 @@ const saveAndReboot = async () => {
         // Reset state (clears changes and updates defaults)
         resetChanges();
 
-        // Save to EEPROM and reboot
-        mspHelper.writeConfiguration(true);
+        // Save to EEPROM and optionally reboot
+        mspHelper.writeConfiguration(reboot);
     } catch (error) {
         console.error("[Motors] Save failed:", error);
     }
@@ -2008,6 +2008,17 @@ onUnmounted(() => {
             display: inline-block;
             text-align: left;
             width: 50px;
+        }
+    }
+    .stop {
+        background-color: var(--error-500);
+        border: 1px solid var(--error-600);
+        color: #fff;
+        &.disabled {
+            background-color: var(--surface-300);
+            border: 1px solid var(--surface-400);
+            color: var(--text);
+            cursor: default;
         }
     }
     svg {
