@@ -1652,8 +1652,7 @@ watch(motorsTestingEnabled, async (enabled) => {
         document.removeEventListener("keydown", disableMotorTestOnKey);
     }
 
-    // We need to tell the backend/MSP helper that we are arming/testing
-    mspHelper.setArmingEnabled(enabled, enabled);
+    // Arming state is handled by useMotorTesting composable
 });
 
 // Telemetry Logic
