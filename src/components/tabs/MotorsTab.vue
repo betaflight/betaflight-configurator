@@ -1661,7 +1661,7 @@ watch(motorsTestingEnabled, async (enabled) => {
         }
 
         // Stop all motors
-        sendMotorCommand(new Array(8).fill(0));
+        sendMotorCommand(new Array(8).fill(minSliderValue.value));
 
         // Sync Switchery visual state with programmatic change
         await nextTick();
