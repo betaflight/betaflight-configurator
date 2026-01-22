@@ -257,9 +257,7 @@ const ALL_MOTORS = DshotCommand.ALL_MOTORS;
 const mixerPreviewSrc = computed(() => {
     const mixer = fcStore.mixerConfig?.mixer || 1;
     const reverseMotorDir = fcStore.mixerConfig?.reverseMotorDir || false;
-    const src = getMixerImageSrc(mixer, reverseMotorDir);
-    console.log("Mixer image src:", src, "mixer:", mixer, "reverseMotorDir:", reverseMotorDir);
-    return src;
+    return getMixerImageSrc(mixer, reverseMotorDir);
 });
 
 // Motor buttons

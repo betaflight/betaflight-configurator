@@ -713,6 +713,7 @@ const applyDynFiltersChange = () => {
 const { motorsTestingEnabled, motorValues, masterValue, sendMotorCommand, stopAllMotors } = useMotorTesting(
     configHasChanged,
     showWarningDialog,
+    digitalProtocolConfigured,
 );
 
 // Initialize configuration tracking
@@ -1310,6 +1311,9 @@ const saveAndReboot = async (reboot = true) => {
     }
 
     try {
+        // Send feature config FIRST (for MOTOR_STOP, ESC_SENSOR, 3D features)
+        await MSP.promise(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG));
+
         // Send all motor configuration changes in sequence
         await MSP.promise(MSPCodes.MSP_SET_MIXER_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_MIXER_CONFIG));
         await MSP.promise(MSPCodes.MSP_SET_MOTOR_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_MOTOR_CONFIG));

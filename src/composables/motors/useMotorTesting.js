@@ -11,7 +11,7 @@ import { mspHelper } from "@/js/msp/MSPHelper";
 import DshotCommand from "@/js/utils/DshotCommand";
 import { i18n } from "@/js/localization";
 
-export function useMotorTesting(configHasChanged, showWarningDialog) {
+export function useMotorTesting(configHasChanged, showWarningDialog, digitalProtocolConfigured) {
     const motorsTestingEnabled = ref(false);
     const motorValues = ref(new Array(8).fill(1000));
     const masterValue = ref(1000);
@@ -36,13 +36,15 @@ export function useMotorTesting(configHasChanged, showWarningDialog) {
      * - Disables arming
      */
     const enableMotorTesting = () => {
-        // Send DShot extended telemetry enable command
-        const buffer = [];
-        buffer.push8(DshotCommand.dshotCommandType_e.DSHOT_CMD_TYPE_BLOCKING);
-        buffer.push8(255); // Send to all ESCs
-        buffer.push8(1); // 1 command
-        buffer.push8(13); // Enable extended dshot telemetry
-        MSP.send_message(MSPCodes.MSP2_SEND_DSHOT_COMMAND, buffer);
+        // Only send DShot command for digital protocols
+        if (digitalProtocolConfigured?.value ?? digitalProtocolConfigured) {
+            const buffer = [];
+            buffer.push8(DshotCommand.dshotCommandType_e.DSHOT_CMD_TYPE_BLOCKING);
+            buffer.push8(255); // Send to all ESCs
+            buffer.push8(1); // 1 command
+            buffer.push8(13); // Enable extended dshot telemetry
+            MSP.send_message(MSPCodes.MSP2_SEND_DSHOT_COMMAND, buffer);
+        }
 
         // Add keyboard safety listener
         document.addEventListener("keydown", disableMotorTest);
