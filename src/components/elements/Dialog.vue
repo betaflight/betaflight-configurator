@@ -48,7 +48,7 @@ const emit = defineEmits(["update:modelValue", "close"]);
 const dialogRef = ref(null);
 
 const close = () => {
-    if (dialogRef.value) {
+    if (dialogRef.value?.open) {
         dialogRef.value.close();
     }
 };
@@ -61,23 +61,31 @@ const handleClose = () => {
 watch(
     () => props.modelValue,
     (newValue) => {
-        if (!dialogRef.value) return;
+        if (!dialogRef.value) {
+            return;
+        }
 
         if (newValue) {
-            dialogRef.value.showModal();
+            // Only call showModal if dialog is not already open
+            if (!dialogRef.value.open) {
+                dialogRef.value.showModal();
+            }
             // Reset scrolling
             const content = dialogRef.value.querySelector(".dialog-content");
             if (content) {
                 content.scrollTop = 0;
             }
         } else {
-            dialogRef.value.close();
+            // Only call close if dialog is currently open
+            if (dialogRef.value.open) {
+                dialogRef.value.close();
+            }
         }
     },
 );
 
 onMounted(() => {
-    if (props.modelValue && dialogRef.value) {
+    if (props.modelValue && dialogRef.value && !dialogRef.value.open) {
         dialogRef.value.showModal();
     }
 });

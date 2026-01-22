@@ -579,9 +579,13 @@ export default defineComponent({
             showCalibrationManagerDialog.value = true;
         };
 
-        const handleCalibrate = () => {
+        const handleCalibrate = async () => {
             calibrate();
             if (vbatscalechanged.value || amperagescalechanged.value) {
+                // Close manager dialog first to avoid InvalidStateError
+                showCalibrationManagerDialog.value = false;
+                // Wait for dialog to close before opening confirmation
+                await nextTick();
                 showCalibrationConfirmDialog.value = true;
             }
         };
