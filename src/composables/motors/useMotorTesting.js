@@ -117,8 +117,7 @@ export function useMotorTesting(configHasChanged, showWarningDialog, digitalProt
         const buffer = [];
         for (let i = 0; i < values.length; i++) {
             const value = values[i];
-            buffer.push(value & 0xff);
-            buffer.push((value >> 8) & 0xff);
+            buffer.push(value & 0xff, (value >> 8) & 0xff);
         }
         MSP.send_message(MSPCodes.MSP_SET_MOTOR, buffer);
     };
