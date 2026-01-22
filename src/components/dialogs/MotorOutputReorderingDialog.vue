@@ -191,7 +191,9 @@ const startMotorJerking = (motorIndex) => {
 
 // Motor click callback
 const onMotorClick = (motorIndex) => {
-    if (!motorOutputReorderCanvas) return;
+    if (!motorOutputReorderCanvas) {
+        return;
+    }
 
     motorOutputReorderCanvas.readyMotors.push(motorIndex);
     currentJerkingMotor++;
@@ -222,7 +224,9 @@ const spinMotorCallback = (motorIndex) => {
 
 // Calculate new motor output reorder
 const calculateNewMotorOutputReorder = () => {
-    if (!motorOutputReorderCanvas) return;
+    if (!motorOutputReorderCanvas) {
+        return;
+    }
 
     newMotorOutputReorder = [];
 
@@ -232,7 +236,9 @@ const calculateNewMotorOutputReorder = () => {
 };
 
 const remapMotorIndex = (motorIndex) => {
-    if (!motorOutputReorderCanvas) return motorIndex;
+    if (!motorOutputReorderCanvas) {
+        return motorIndex;
+    }
     return fcStore.motorOutputOrder[motorOutputReorderCanvas.readyMotors.indexOf(motorIndex)];
 };
 
@@ -321,7 +327,9 @@ const cleanup = () => {
 // Handle ESC key and emergency stop on any key
 const handleKeyDown = (e) => {
     // Only handle keydown when dialog is open
-    if (!dialogRef.value?.open) return;
+    if (!dialogRef.value?.open) {
+        return;
+    }
 
     if (e.key === "Escape") {
         close();
