@@ -1,13 +1,17 @@
 import { reactive, ref, computed } from "vue";
+import semver from "semver";
 import { i18n } from "../js/localization";
 import { tracking } from "../js/Analytics";
 import { mspHelper } from "../js/msp/MSPHelper";
+import { API_VERSION_1_44 } from "../js/data_storage";
 import FC from "../js/fc";
 import MSP from "../js/msp";
 import MSPCodes from "../js/msp/MSPCodes";
 
 export function usePower() {
-    const supported = ref(true);
+    const supported = computed(() => {
+        return FC.CONFIG?.apiVersion && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44);
+    });
     const analyticsChanges = reactive({});
     const batteryState = reactive({
         cellCount: 0,

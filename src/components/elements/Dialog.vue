@@ -75,11 +75,9 @@ watch(
             if (content) {
                 content.scrollTop = 0;
             }
-        } else {
+        } else if (dialogRef.value.open) {
             // Only call close if dialog is currently open
-            if (dialogRef.value.open) {
-                dialogRef.value.close();
-            }
+            dialogRef.value.close();
         }
     },
 );
