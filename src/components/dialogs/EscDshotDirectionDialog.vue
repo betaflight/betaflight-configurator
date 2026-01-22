@@ -495,7 +495,7 @@ const handleKeyDown = (e) => {
 };
 
 // Handle dialog cancel (backdrop click, ESC)
-const handleCancel = (e) => {
+const handleCancel = (_e) => {
     close();
 };
 

@@ -10,7 +10,7 @@ import MSP from "@/js/msp";
 import MSPCodes from "@/js/msp/MSPCodes";
 import GUI from "@/js/gui";
 
-export function useMotorDataPolling(motorsTestingEnabled) {
+export function useMotorDataPolling(_motorsTestingEnabled) {
     const fcStore = useFlightControllerStore();
 
     const motorTelemetry = ref([]);

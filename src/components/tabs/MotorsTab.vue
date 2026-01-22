@@ -721,7 +721,7 @@ const { setupConfigWatchers } = useMotorConfiguration(motorsState, motorsTesting
 });
 
 // Initialize data polling
-const { motorTelemetry, powerStats } = useMotorDataPolling(motorsTestingEnabled);
+useMotorDataPolling(motorsTestingEnabled);
 
 // Button states (central controller like original setContentButtons)
 const buttonStates = computed(() => ({
@@ -1033,11 +1033,7 @@ function addSampleToData(data, sampleNumber, sensorData) {
 }
 
 function computeAndUpdateDisplay(sensor_data) {
-    let sum = 0.0;
     // Assuming 3 axes
-    for (const val of sensor_data) {
-        sum += val * val;
-    }
     // RMS over the buffer is cleaner, but motors.js does RMS of current window?
     // motors.js:
     /*
@@ -1498,8 +1494,6 @@ const numberOfValidOutputs = computed(() => {
     return 4; // Default to 4 motors (quad)
 });
 
-const isMotorTesting = computed(() => motorsTestingEnabled.value);
-
 const minSliderValue = computed(() => {
     if (digitalProtocolConfigured.value) {
         return 1000; // DShot Disarmed
@@ -1570,7 +1564,7 @@ const onMasterSliderChange = () => {
     }
 };
 
-const onSliderWheel = (index, event) => {
+const onSliderWheel = (_index, event) => {
     if (!motorsTestingEnabled.value) return;
 
     // index -1 for master
