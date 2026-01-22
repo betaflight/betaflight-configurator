@@ -115,8 +115,7 @@ export function useMotorTesting(configHasChanged, showWarningDialog, digitalProt
      */
     const sendMotorCommand = (values) => {
         const buffer = [];
-        for (let i = 0; i < values.length; i++) {
-            const value = values[i];
+        for (const value of values) {
             buffer.push(value & 0xff, (value >> 8) & 0xff);
         }
         MSP.send_message(MSPCodes.MSP_SET_MOTOR, buffer);
