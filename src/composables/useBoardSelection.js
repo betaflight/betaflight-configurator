@@ -68,7 +68,7 @@ export function useBoardSelection(params) {
                 const orderB = groupOrder[b] ?? 999;
                 return orderA - orderB;
             })
-            .map(([key, data]) => ({
+            .map(([_key, data]) => ({
                 name: data.label,
                 boards: data.boards.sort((a, b) => a.target.localeCompare(b.target)),
             }));

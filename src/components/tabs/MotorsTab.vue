@@ -1100,12 +1100,8 @@ function drawGraph(helpers, data, sampleNumber) {
 
     helpers.widthScale.domain([sampleNumber - 299, sampleNumber]);
     if (helpers.dynamicHeightDomain) {
-        const limits = [];
-        data.forEach((datum) => {
-            limits.push(datum.min);
-            limits.push(datum.max);
-        });
-        helpers.heightScale.domain(d3.extent(limits));
+        const allValues = data.flatMap((datum) => [datum.min, datum.max]);
+        helpers.heightScale.domain(d3.extent(allValues));
     } else {
         // Domain set in init
     }

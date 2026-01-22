@@ -722,10 +722,8 @@
 
 <script>
 import { defineComponent, ref, reactive, onMounted, computed, nextTick, watch, onUnmounted } from "vue";
-import { useConnectionStore } from "@/stores/connection";
 import { useNavigationStore } from "@/stores/navigation";
 import { useFlightControllerStore } from "@/stores/fc";
-import { useDialog } from "@/composables/useDialog";
 import { useReboot } from "@/composables/useReboot";
 import GUI from "../../js/gui";
 import MSP from "../../js/msp";
@@ -748,10 +746,8 @@ export default defineComponent({
     },
     setup() {
         // Reactive State
-        const connectionStore = useConnectionStore();
         const navigationStore = useNavigationStore();
         const fcStore = useFlightControllerStore();
-        const dialog = useDialog();
         const { reboot } = useReboot();
 
         // Helper to perform reboot after save
