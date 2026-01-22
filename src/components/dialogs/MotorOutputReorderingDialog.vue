@@ -314,6 +314,9 @@ const cleanup = () => {
 
 // Handle ESC key and emergency stop on any key
 const handleKeyDown = (e) => {
+    // Only handle keydown when dialog is open
+    if (!dialogRef.value?.open) return;
+
     if (e.key === "Escape") {
         close();
     } else if (showMainContent.value && !["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)) {
@@ -326,6 +329,7 @@ const handleKeyDown = (e) => {
 const handleCancel = (e) => {
     e.preventDefault();
     cleanup();
+    close();
 };
 
 // Lifecycle
