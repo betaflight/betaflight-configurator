@@ -20,7 +20,7 @@ defineProps({
     },
     cancelText: {
         type: String,
-        default: () => (typeof $t === "function" ? $t("dialogCancel") : "Cancel"),
+        default: () => window.i18n?.getMessage("dialogCancel") || "Cancel",
     },
 });
 

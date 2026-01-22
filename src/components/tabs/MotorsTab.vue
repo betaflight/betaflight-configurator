@@ -1650,18 +1650,8 @@ const getTelemetryHtml = (index) => {
     return html;
 };
 
-let telemetryInterval = null;
-
 onMounted(() => {
-    // Start polling loop for telemetry
-    telemetryInterval = setInterval(() => {
-        // Fetch Motor Data
-        MSP.send_message(MSPCodes.MSP_MOTOR, false, false, () => {});
-
-        if (fcStore.motorConfig.use_dshot_telemetry || isFeatureEnabled("ESC_SENSOR")) {
-            MSP.send_message(MSPCodes.MSP_MOTOR_TELEMETRY, false, false, () => {});
-        }
-    }, 50); // 20hz
+    // Polling is handled by useMotorDataPolling()
 });
 
 onUnmounted(() => {
