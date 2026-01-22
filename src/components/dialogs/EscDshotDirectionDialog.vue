@@ -127,6 +127,16 @@
                 </div>
             </div>
 
+            <!-- Close Button -->
+            <div v-if="showMainContent" class="componentContent" id="escDshotDirectionDialog-CloseButton">
+                <button
+                    id="escDshotDirectionDialog-closebtn"
+                    class="regular-button"
+                    @click.prevent="close"
+                    v-html="i18nMessage('close')"
+                ></button>
+            </div>
+
             <!-- Warning/Start Screen -->
             <div
                 v-if="!hasConfigErrors && !showMainContent"

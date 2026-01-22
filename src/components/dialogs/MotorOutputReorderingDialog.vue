@@ -23,6 +23,16 @@
                 </div>
             </div>
 
+            <!-- Close Button -->
+            <div v-if="showMainContent" class="componentContent" id="dialogMotorOutputReorderCloseButton">
+                <button
+                    id="dialogMotorOutputReorder-closebtn"
+                    class="regular-button"
+                    @click.prevent="close"
+                    v-html="i18nMessage('close')"
+                ></button>
+            </div>
+
             <!-- Warning/Start Screen -->
             <div v-if="!showMainContent" class="componentContent" id="dialogMotorOutputReorderWarning">
                 <div class="notice">
