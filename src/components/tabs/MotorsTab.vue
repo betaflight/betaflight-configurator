@@ -1568,7 +1568,7 @@ const onMasterSliderChange = () => {
     }
 };
 
-const onSliderWheel = (_index, event) => {
+const onSliderWheel = (index, event) => {
     if (!motorsTestingEnabled.value) return;
 
     // index -1 for master
