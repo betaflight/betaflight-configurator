@@ -1337,13 +1337,11 @@ onMounted(() => {
 const isMotorReorderingAvailable = computed(() => {
     const mixer = fcStore.mixerConfig.mixer;
     if (!mixer || mixer < 1 || mixer > mixerList.length) {
-        console.log("[Motors] Reorder button hidden: invalid mixer", mixer);
         return false;
     }
 
     const mixerName = mixerList[mixer - 1]?.name;
     if (!mixerName) {
-        console.log("[Motors] Reorder button hidden: no mixer name");
         return false;
     }
 
