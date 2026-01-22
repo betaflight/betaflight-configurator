@@ -722,8 +722,12 @@ const sortedEscProtocolOptions = computed(() => {
     const protocols = availableEscProtocols.value.map((name, index) => ({ name, value: index }));
     const disabledText = "DISABLED";
     return protocols.sort((a, b) => {
-        if (a.name === disabledText) return -1;
-        if (b.name === disabledText) return 1;
+        if (a.name === disabledText) {
+            return -1;
+        }
+        if (b.name === disabledText) {
+            return 1;
+        }
         return a.name.localeCompare(b.name, undefined, { sensitivity: "base" });
     });
 });
@@ -734,7 +738,9 @@ const sortedEscProtocolOptions = computed(() => {
 // If I use sorted array, I must explicitely use the stored value.
 
 const isProtocolDisabled = (protocolName) => {
-    if (protocolName === "DISABLED") return false;
+    if (protocolName === "DISABLED") {
+        return false;
+    }
     const buildOptions = fcStore.config.buildOptions;
     if (buildOptions && buildOptions.length > 0) {
         return !buildOptions.some((option) => protocolName.includes(option.substring(4)));
@@ -836,7 +842,9 @@ const buttonStates = computed(() => ({
 watch(
     () => fcStore.motorConfig.use_dshot_telemetry,
     (newValue, oldValue) => {
-        if (oldValue === undefined) return; // Skip initial load
+        if (oldValue === undefined) {
+            return;
+        } // Skip initial load
 
         const rpmFilterIsDisabled = fcStore.filterConfig.gyro_rpm_notch_harmonics === 0;
 
@@ -1086,7 +1094,9 @@ function initGraphHelpers(sampleNumber, heightDomain) {
 }
 
 function drawGraph(helpers, data, sampleNumber) {
-    if (!graphSvg.value) return;
+    if (!graphSvg.value) {
+        return;
+    }
     const svg = d3.select(graphSvg.value);
 
     updateGraphHelperSize(helpers); // Ensure size is current
@@ -1123,8 +1133,12 @@ function addSampleToData(data, sampleNumber, sensorData) {
         const dataPoint = sensorData[i];
         data[i].push([sampleNumber, dataPoint]);
         // Min/Max tracking for dynamic domain if needed
-        if (dataPoint < data[i].min) data[i].min = dataPoint;
-        if (dataPoint > data[i].max) data[i].max = dataPoint;
+        if (dataPoint < data[i].min) {
+            data[i].min = dataPoint;
+        }
+        if (dataPoint > data[i].max) {
+            data[i].max = dataPoint;
+        }
     }
     while (data[0].length > 300) {
         for (const item of data) {
@@ -1203,7 +1217,9 @@ const updateAccelGraph = () => {
 };
 
 const setupGraph = () => {
-    if (imuPollingIntervalId) clearInterval(imuPollingIntervalId);
+    if (imuPollingIntervalId) {
+        clearInterval(imuPollingIntervalId);
+    }
 
     // Clear existing graph content
     if (graphSvg.value) {
@@ -1253,8 +1269,12 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-    if (imuPollingIntervalId) clearInterval(imuPollingIntervalId);
-    if (powerPollingIntervalId) clearInterval(powerPollingIntervalId);
+    if (imuPollingIntervalId) {
+        clearInterval(imuPollingIntervalId);
+    }
+    if (powerPollingIntervalId) {
+        clearInterval(powerPollingIntervalId);
+    }
     // Force motor stop when leaving tab
     if (motorsTestingEnabled.value) {
         stopAllMotors();
@@ -1582,7 +1602,9 @@ const onMasterSliderChange = () => {
 };
 
 const onSliderWheel = (index, event) => {
-    if (!motorsTestingEnabled.value) return;
+    if (!motorsTestingEnabled.value) {
+        return;
+    }
 
     // index -1 for master
     const step = 25;
@@ -1668,7 +1690,9 @@ watch(motorsTestingEnabled, async (enabled) => {
 
 // Telemetry Logic
 const getMotorValue = (index) => {
-    if (motorsTestingEnabled.value) return motorValues.value[index];
+    if (motorsTestingEnabled.value) {
+        return motorValues.value[index];
+    }
     // If telemetry running, show telemetry data
     return fcStore.motorData[index] || minSliderValue.value;
 };
@@ -1678,13 +1702,19 @@ const getMotorBarHeight = (index) => {
     const min = minSliderValue.value;
     const max = maxSliderValue.value;
     const range = max - min;
-    if (range === 0) return 0;
+    if (range === 0) {
+        return 0;
+    }
     return Math.max(0, Math.min(100, ((val - min) / range) * 100));
 };
 
 const getTelemetryHtml = (index) => {
-    if (!fcStore.motorConfig.use_dshot_telemetry && !isFeatureEnabled("ESC_SENSOR")) return "&nbsp;";
-    if (!fcStore.motorTelemetryData || !fcStore.motorTelemetryData.rpm) return "&nbsp;";
+    if (!fcStore.motorConfig.use_dshot_telemetry && !isFeatureEnabled("ESC_SENSOR")) {
+        return "&nbsp;";
+    }
+    if (!fcStore.motorTelemetryData || !fcStore.motorTelemetryData.rpm) {
+        return "&nbsp;";
+    }
 
     const rpm = fcStore.motorTelemetryData.rpm[index];
     let rpmText = rpm;
