@@ -523,14 +523,16 @@ defineExpose({
     max-height: 90vh;
     border: 2px solid #4d4d4d;
     border-radius: 3px;
-    background-color: rgba(40, 40, 40, 0.97); /* More opaque background */
+    background-color: rgba(30, 30, 30, 0.98); /* Even more opaque for readability */
     color: var(--defaultText);
     padding: 20px;
     overflow-y: auto;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.45);
 }
 
 .escDshotDirection-dialog::backdrop {
-    background-color: rgba(0, 0, 0, 0.7); /* Slightly more opaque backdrop */
+    background-color: rgba(0, 0, 0, 0.85); /* More opaque backdrop for better contrast */
+    backdrop-filter: blur(6px); /* Add blur for readability */
 }
 
 .display-contents {
