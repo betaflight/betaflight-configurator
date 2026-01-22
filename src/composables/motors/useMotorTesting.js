@@ -104,6 +104,8 @@ export function useMotorTesting(configHasChanged, showWarningDialog, digitalProt
     // Cleanup on unmount
     onUnmounted(() => {
         if (motorsTestingEnabled.value) {
+            // Restore arming state before removing event listener
+            mspHelper.setArmingEnabled(true, true);
             document.removeEventListener("keydown", disableMotorTest);
         }
     });
