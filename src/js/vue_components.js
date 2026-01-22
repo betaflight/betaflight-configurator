@@ -48,6 +48,7 @@ export const VueTabComponents = {
     sensors: SensorsTab,
     failsafe: FailsafeTab,
     motors: MotorsTab,
+    // Move motors before pid_tuning if present in the future
 };
 
 // Create a Vue plugin that registers all components globally

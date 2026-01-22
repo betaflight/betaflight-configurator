@@ -7792,6 +7792,11 @@ vue-loader@^17.4.2:
     hash-sum "^2.0.0"
     watchpack "^2.4.0"
 
+vue-multiselect@^3.0.0:
+  version "3.4.0"
+  resolved "https://registry.yarnpkg.com/vue-multiselect/-/vue-multiselect-3.4.0.tgz#cabe054c639a1e7475171ee4cb2f0724b86f271f"
+  integrity sha512-NtaL1/VOsGsvM+H0EZswy1E+RcA5yeCpCxrhT28CBwKu9D1WbMSXBfIDNDw0v+T4enVRfOD5X7u2gyIJWCFX9w==
+
 vue-template-compiler@^2.7.16:
   version "2.7.16"
   resolved "https://registry.yarnpkg.com/vue-template-compiler/-/vue-template-compiler-2.7.16.tgz#c81b2d47753264c77ac03b9966a46637482bb03b"

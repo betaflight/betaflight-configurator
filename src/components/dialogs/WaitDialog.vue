@@ -20,7 +20,7 @@ defineProps({
     },
     cancelText: {
         type: String,
-        default: "Cancel",
+        default: () => (typeof $t === "function" ? $t("dialogCancel") : "Cancel"),
     },
 });
 
