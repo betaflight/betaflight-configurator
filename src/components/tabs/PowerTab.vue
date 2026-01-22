@@ -27,111 +27,111 @@
                                         <td class="configuration">
                                             <div class="battery-configuration">
                                                 <div class="select vbatmonitoring">
-                                                    <label>
-                                                        <select
-                                                            id="batterymetersourceSelect"
-                                                            class="batterymetersource"
-                                                            v-model="batteryConfig.voltageMeterSource"
-                                                            @change="onVoltageMeterSourceChange($event.target.value)"
-                                                        >
-                                                            <option
-                                                                v-for="(type, index) in batteryMeterTypes"
-                                                                :key="index"
-                                                                :value="index"
-                                                            >
-                                                                {{ type }}
-                                                            </option>
-                                                        </select>
+                                                    <label for="batterymetersourceSelect">
                                                         <span v-html="$t('powerBatteryVoltageMeterSource')"></span>
                                                     </label>
+                                                    <select
+                                                        id="batterymetersourceSelect"
+                                                        class="batterymetersource"
+                                                        v-model="batteryConfig.voltageMeterSource"
+                                                        @change="onVoltageMeterSourceChange($event.target.value)"
+                                                    >
+                                                        <option
+                                                            v-for="(type, index) in batteryMeterTypes"
+                                                            :key="index"
+                                                            :value="index"
+                                                        >
+                                                            {{ type }}
+                                                        </option>
+                                                    </select>
                                                 </div>
                                                 <div class="select currentMonitoring">
-                                                    <label>
-                                                        <select
-                                                            id="currentmetersourceSelect"
-                                                            class="currentmetersource"
-                                                            v-model="batteryConfig.currentMeterSource"
-                                                            @change="onCurrentMeterSourceChange($event.target.value)"
-                                                        >
-                                                            <option
-                                                                v-for="(type, index) in currentMeterTypes"
-                                                                :key="index"
-                                                                :value="index"
-                                                            >
-                                                                {{ type }}
-                                                            </option>
-                                                        </select>
+                                                    <label for="currentmetersourceSelect">
                                                         <span v-html="$t('powerBatteryCurrentMeterSource')"></span>
                                                     </label>
+                                                    <select
+                                                        id="currentmetersourceSelect"
+                                                        class="currentmetersource"
+                                                        v-model="batteryConfig.currentMeterSource"
+                                                        @change="onCurrentMeterSourceChange($event.target.value)"
+                                                    >
+                                                        <option
+                                                            v-for="(type, index) in currentMeterTypes"
+                                                            :key="index"
+                                                            :value="index"
+                                                        >
+                                                            {{ type }}
+                                                        </option>
+                                                    </select>
                                                 </div>
 
                                                 <div class="number">
-                                                    <label>
-                                                        <input
-                                                            id="mincellvoltage"
-                                                            type="number"
-                                                            name="mincellvoltage"
-                                                            step="0.01"
-                                                            min="1"
-                                                            max="5"
-                                                            v-model.number="batteryConfig.vbatmincellvoltage"
-                                                        />
+                                                    <label for="mincellvoltage">
                                                         <span v-html="$t('powerBatteryMinimum')"></span>
                                                     </label>
+                                                    <input
+                                                        id="mincellvoltage"
+                                                        type="number"
+                                                        name="mincellvoltage"
+                                                        step="0.01"
+                                                        min="1"
+                                                        max="5"
+                                                        v-model.number="batteryConfig.vbatmincellvoltage"
+                                                    />
                                                     <span
                                                         class="helpicon cf_tip"
                                                         :title="$t('powerBatteryMinimumHelp')"
                                                     ></span>
                                                 </div>
                                                 <div class="number">
-                                                    <label>
-                                                        <input
-                                                            id="maxcellvoltage"
-                                                            type="number"
-                                                            name="maxcellvoltage"
-                                                            step="0.01"
-                                                            min="1"
-                                                            max="5"
-                                                            v-model.number="batteryConfig.vbatmaxcellvoltage"
-                                                        />
+                                                    <label for="maxcellvoltage">
                                                         <span v-html="$t('powerBatteryMaximum')"></span>
                                                     </label>
+                                                    <input
+                                                        id="maxcellvoltage"
+                                                        type="number"
+                                                        name="maxcellvoltage"
+                                                        step="0.01"
+                                                        min="1"
+                                                        max="5"
+                                                        v-model.number="batteryConfig.vbatmaxcellvoltage"
+                                                    />
                                                     <span
                                                         class="helpicon cf_tip"
                                                         :title="$t('powerBatteryMaximumHelp')"
                                                     ></span>
                                                 </div>
                                                 <div class="number">
-                                                    <label>
-                                                        <input
-                                                            id="warningcellvoltage"
-                                                            type="number"
-                                                            name="warningcellvoltage"
-                                                            step="0.01"
-                                                            min="1"
-                                                            max="5"
-                                                            v-model.number="batteryConfig.vbatwarningcellvoltage"
-                                                        />
+                                                    <label for="warningcellvoltage">
                                                         <span v-html="$t('powerBatteryWarning')"></span>
                                                     </label>
+                                                    <input
+                                                        id="warningcellvoltage"
+                                                        type="number"
+                                                        name="warningcellvoltage"
+                                                        step="0.01"
+                                                        min="1"
+                                                        max="5"
+                                                        v-model.number="batteryConfig.vbatwarningcellvoltage"
+                                                    />
                                                     <span
                                                         class="helpicon cf_tip"
                                                         :title="$t('powerBatteryWarningHelp')"
                                                     ></span>
                                                 </div>
                                                 <div class="number">
-                                                    <label>
-                                                        <input
-                                                            id="capacity"
-                                                            type="number"
-                                                            name="capacity"
-                                                            step="1"
-                                                            min="0"
-                                                            max="20000"
-                                                            v-model.number="batteryConfig.capacity"
-                                                        />
+                                                    <label for="capacity">
                                                         <span v-html="$t('powerBatteryCapacity')"></span>
                                                     </label>
+                                                    <input
+                                                        id="capacity"
+                                                        type="number"
+                                                        name="capacity"
+                                                        step="1"
+                                                        min="0"
+                                                        max="20000"
+                                                        v-model.number="batteryConfig.capacity"
+                                                    />
                                                 </div>
                                             </div>
                                         </td>
@@ -174,52 +174,49 @@
                                         <td class="configuration" v-if="voltageConfigs[index]">
                                             <div class="voltage-configuration">
                                                 <div class="number">
-                                                    <label>
-                                                        <input
-                                                            :id="`vbatscale-${index}`"
-                                                            type="number"
-                                                            :name="`vbatscale-${index}`"
-                                                            step="1"
-                                                            min="10"
-                                                            max="255"
-                                                            v-model.number="voltageConfigs[index].vbatscale"
-                                                            @change="
-                                                                onVoltageScaleChange(
-                                                                    index,
-                                                                    voltageConfigs[index].vbatscale,
-                                                                )
-                                                            "
-                                                        />
+                                                    <label :for="`vbatscale-${index}`">
                                                         <span v-html="$t('powerVoltageScale')"></span>
                                                     </label>
+                                                    <input
+                                                        :id="`vbatscale-${index}`"
+                                                        type="number"
+                                                        :name="`vbatscale-${index}`"
+                                                        step="1"
+                                                        min="10"
+                                                        max="255"
+                                                        v-model.number="voltageConfigs[index].vbatscale"
+                                                        @change="
+                                                            onVoltageScaleChange(index, voltageConfigs[index].vbatscale)
+                                                        "
+                                                    />
                                                 </div>
                                                 <div class="number">
-                                                    <label>
-                                                        <input
-                                                            :id="`vbatresdivval-${index}`"
-                                                            type="number"
-                                                            :name="`vbatresdivval-${index}`"
-                                                            step="1"
-                                                            min="1"
-                                                            max="255"
-                                                            v-model.number="voltageConfigs[index].vbatresdivval"
-                                                        />
+                                                    <label :for="`vbatresdivval-${index}`">
                                                         <span v-html="$t('powerVoltageDivider')"></span>
                                                     </label>
+                                                    <input
+                                                        :id="`vbatresdivval-${index}`"
+                                                        type="number"
+                                                        :name="`vbatresdivval-${index}`"
+                                                        step="1"
+                                                        min="1"
+                                                        max="255"
+                                                        v-model.number="voltageConfigs[index].vbatresdivval"
+                                                    />
                                                 </div>
                                                 <div class="number">
-                                                    <label>
-                                                        <input
-                                                            :id="`vbatresdivmultiplier-${index}`"
-                                                            type="number"
-                                                            :name="`vbatresdivmultiplier-${index}`"
-                                                            step="1"
-                                                            min="1"
-                                                            max="255"
-                                                            v-model.number="voltageConfigs[index].vbatresdivmultiplier"
-                                                        />
+                                                    <label :for="`vbatresdivmultiplier-${index}`">
                                                         <span v-html="$t('powerVoltageMultiplier')"></span>
                                                     </label>
+                                                    <input
+                                                        :id="`vbatresdivmultiplier-${index}`"
+                                                        type="number"
+                                                        :name="`vbatresdivmultiplier-${index}`"
+                                                        step="1"
+                                                        min="1"
+                                                        max="255"
+                                                        v-model.number="voltageConfigs[index].vbatresdivmultiplier"
+                                                    />
                                                 </div>
                                             </div>
                                         </td>
@@ -310,38 +307,35 @@
                                         <td class="configuration" v-if="currentConfigs[index]">
                                             <div class="amperage-configuration">
                                                 <div class="number">
-                                                    <label>
-                                                        <input
-                                                            :id="`amperagescale-${index}`"
-                                                            type="number"
-                                                            :name="`amperagescale-${index}`"
-                                                            step="1"
-                                                            min="-16000"
-                                                            max="16000"
-                                                            v-model.number="currentConfigs[index].scale"
-                                                            @change="
-                                                                onAmperageScaleChange(
-                                                                    index,
-                                                                    currentConfigs[index].scale,
-                                                                )
-                                                            "
-                                                        />
+                                                    <label :for="`amperagescale-${index}`">
                                                         <span v-html="$t('powerAmperageScale')"></span>
                                                     </label>
+                                                    <input
+                                                        :id="`amperagescale-${index}`"
+                                                        type="number"
+                                                        :name="`amperagescale-${index}`"
+                                                        step="1"
+                                                        min="-16000"
+                                                        max="16000"
+                                                        v-model.number="currentConfigs[index].scale"
+                                                        @change="
+                                                            onAmperageScaleChange(index, currentConfigs[index].scale)
+                                                        "
+                                                    />
                                                 </div>
                                                 <div class="number">
-                                                    <label>
-                                                        <input
-                                                            :id="`amperageoffset-${index}`"
-                                                            type="number"
-                                                            :name="`amperageoffset-${index}`"
-                                                            step="1"
-                                                            min="-32000"
-                                                            max="32000"
-                                                            v-model.number="currentConfigs[index].offset"
-                                                        />
+                                                    <label :for="`amperageoffset-${index}`">
                                                         <span v-html="$t('powerAmperageOffset')"></span>
                                                     </label>
+                                                    <input
+                                                        :id="`amperageoffset-${index}`"
+                                                        type="number"
+                                                        :name="`amperageoffset-${index}`"
+                                                        step="1"
+                                                        min="-32000"
+                                                        max="32000"
+                                                        v-model.number="currentConfigs[index].offset"
+                                                    />
                                                 </div>
                                             </div>
                                         </td>
@@ -397,34 +391,34 @@
             </div>
             <div class="vbatcalibration" v-show="calibrationVisibility.showVbat">
                 <div class="number">
-                    <label>
-                        <input
-                            id="vbatcalibration"
-                            type="number"
-                            name="vbatcalibration"
-                            step="0.01"
-                            min="0"
-                            max="255"
-                            v-model.number="vbatcalibrationValue"
-                        />
+                    <label for="vbatcalibration">
                         <span v-html="$t('powerVoltageCalibration')"></span>
                     </label>
+                    <input
+                        id="vbatcalibration"
+                        type="number"
+                        name="vbatcalibration"
+                        step="0.01"
+                        min="0"
+                        max="255"
+                        v-model.number="vbatcalibrationValue"
+                    />
                 </div>
             </div>
             <div class="amperagecalibration" v-show="calibrationVisibility.showAmperage">
                 <div class="number">
-                    <label>
-                        <input
-                            id="amperagecalibration"
-                            type="number"
-                            name="amperagecalibration"
-                            step="0.01"
-                            min="0"
-                            max="255"
-                            v-model.number="amperagecalibrationValue"
-                        />
+                    <label for="amperagecalibration">
                         <span v-html="$t('powerAmperageCalibration')"></span>
                     </label>
+                    <input
+                        id="amperagecalibration"
+                        type="number"
+                        name="amperagecalibration"
+                        step="0.01"
+                        min="0"
+                        max="255"
+                        v-model.number="amperagecalibrationValue"
+                    />
                 </div>
             </div>
             <div class="default_btn margin-top5" v-show="calibrationVisibility.showCalibrate">
@@ -693,10 +687,6 @@ table.full-width {
     padding-bottom: 0.5rem;
     border-bottom: 1px solid var(--surface-500);
     width: 100%;
-}
-
-.select label span {
-    padding-left: 1rem;
 }
 
 .select:last-child {
