@@ -1412,6 +1412,19 @@ const saveAndReboot = async (reboot = true) => {
     }
 
     try {
+        // CRITICAL SAFETY: Stop motor testing and explicitly stop all motors before saving
+        // This prevents motors from spinning after reboot due to DShot beacon commands
+        if (motorsTestingEnabled.value) {
+            motorsTestingEnabled.value = false;
+            // Give a small delay for motor testing disable to complete
+            await new Promise((resolve) => setTimeout(resolve, 50));
+        }
+
+        // Explicitly stop all motors to ensure no spinning after reboot
+        stopAllMotors(minSliderValue.value);
+        // Give time for motor stop command to be processed
+        await new Promise((resolve) => setTimeout(resolve, 100));
+
         // Send feature config FIRST (for MOTOR_STOP, ESC_SENSOR, 3D features)
         await MSP.promise(MSPCodes.MSP_SET_FEATURE_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_FEATURE_CONFIG));
 
@@ -1704,9 +1717,9 @@ onUnmounted(() => {
         clearTimeout(bufferDelay);
         bufferDelay = null;
     }
-    // ensure disarmed safety
+    // ensure disarmed safety - use proper stop values, not 0
     if (motorsTestingEnabled.value) {
-        sendMotorCommand(new Array(8).fill(0));
+        sendMotorCommand(new Array(8).fill(minSliderValue.value));
     }
 });
 </script>

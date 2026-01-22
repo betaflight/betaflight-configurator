@@ -57,6 +57,7 @@ export function useMotorTesting(configHasChanged, showWarningDialog, digitalProt
      * Disable motor testing
      * - Removes keyboard listener
      * - Re-enables arming
+     * - Sends DShot motor stop command for digital protocols
      * - Stops all motors
      */
     const disableMotorTesting = () => {
@@ -66,8 +67,18 @@ export function useMotorTesting(configHasChanged, showWarningDialog, digitalProt
         // Re-enable arming
         mspHelper.setArmingEnabled(true, true);
 
-        // Stop all motors by sending stop values
-        // This will be handled by the motor slider watchers
+        // For digital protocols, send motor stop command to prevent spinning after reboot
+        if (digitalProtocolConfigured?.value ?? digitalProtocolConfigured) {
+            const buffer = [];
+            buffer.push8(DshotCommand.dshotCommandType_e.DSHOT_CMD_TYPE_BLOCKING);
+            buffer.push8(DshotCommand.ALL_MOTORS); // Send to all ESCs
+            buffer.push8(1); // 1 command
+            buffer.push8(DshotCommand.dshotCommands_e.DSHOT_CMD_MOTOR_STOP); // Motor stop command
+            MSP.send_message(MSPCodes.MSP2_SEND_DSHOT_COMMAND, buffer);
+        }
+
+        // Explicitly stop all motors to prevent spinning after reboot
+        stopAllMotors();
     };
 
     /**
