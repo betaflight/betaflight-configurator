@@ -10,18 +10,16 @@
                     <h4 id="motorOutputReorderActionHint">{{ actionHintText }}</h4>
                 </div>
                 <div v-if="showSaveButtons" id="motorOutputReorderSaveStartOverButtonsPanel">
-                    <a
-                        href="#"
+                    <button
                         class="regular-button left"
                         @click.prevent="save"
                         v-html="i18nMessage('motorsRemapDialogSave')"
-                    ></a>
-                    <a
-                        href="#"
+                    ></button>
+                    <button
                         class="regular-button left"
                         @click.prevent="startOver"
                         v-html="i18nMessage('motorsRemapDialogStartOver')"
-                    ></a>
+                    ></button>
                 </div>
             </div>
 
@@ -51,14 +49,13 @@
                     ></div>
                 </div>
                 <div class="buttons">
-                    <a
+                    <button
                         v-if="safetyAgreed"
-                        href="#"
                         class="regular-button"
                         @click.prevent="onStartButtonClicked"
                         v-html="i18nMessage('motorOutputReorderDialogAgree')"
-                    ></a>
-                    <a href="#" class="regular-button" @click.prevent="close" v-html="i18nMessage('cancel')"></a>
+                    ></button>
+                    <button class="regular-button" @click.prevent="close" v-html="i18nMessage('cancel')"></button>
                 </div>
             </div>
         </div>
@@ -120,7 +117,7 @@ const JERKING_PAUSE_DURATION = 500;
 
 // Translation helper
 const i18nMessage = (key) => {
-    return window.i18n.getMessage(key);
+    return globalThis.i18n.getMessage(key);
 };
 
 // Initialize config
@@ -195,7 +192,7 @@ const onMotorClick = (motorIndex) => {
         startMotorJerking(currentJerkingMotor);
     } else {
         stopAnyMotorJerking();
-        actionHintText.value = window.i18n.getMessage("motorOutputReorderDialogRemapIsDone");
+        actionHintText.value = globalThis.i18n.getMessage("motorOutputReorderDialogRemapIsDone");
         calculateNewMotorOutputReorder();
         motorOutputReorderCanvas.remappingReady = true;
         showSaveButtons.value = true;
@@ -241,7 +238,7 @@ const startUserInteraction = () => {
         motorOutputReorderCanvas.startOver();
     } else {
         // Initialize canvas
-        const $canvas = window.$(canvasRef.value);
+        const $canvas = globalThis.$(canvasRef.value);
         motorOutputReorderCanvas = new MotorOutputReorderCanvas(
             $canvas,
             props.droneConfiguration,
@@ -255,7 +252,6 @@ const startUserInteraction = () => {
 
 // Button handlers
 const onStartButtonClicked = async () => {
-    actionHintText.value = window.i18n.getMessage("motorOutputReorderDialogSelectSpinningMotor");
     showMainContent.value = true;
     // Wait for DOM to update and canvas to be rendered
     await nextTick();
@@ -264,7 +260,7 @@ const onStartButtonClicked = async () => {
 
 const startOver = () => {
     showSaveButtons.value = false;
-    actionHintText.value = window.i18n.getMessage("motorOutputReorderDialogSelectSpinningMotor");
+    actionHintText.value = globalThis.i18n.getMessage("motorOutputReorderDialogSelectSpinningMotor");
     startUserInteraction();
 };
 

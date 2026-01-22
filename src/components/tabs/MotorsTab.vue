@@ -48,24 +48,24 @@
                                     </div>
                                 </div>
                                 <div class="btn motor_tool_buttons">
-                                    <a
-                                        href="#"
+                                    <button
                                         id="motorOutputReorderDialogOpen"
                                         class="tool regular-button"
                                         :class="{ disabled: buttonStates.toolsDisabled }"
+                                        :disabled="buttonStates.toolsDisabled"
                                         v-if="isMotorReorderingAvailable"
-                                        @click.prevent="!buttonStates.toolsDisabled && openMotorOutputReorderDialog()"
+                                        @click="openMotorOutputReorderDialog()"
                                         v-html="$t('motorOutputReorderDialogOpen')"
-                                    ></a>
-                                    <a
-                                        href="#"
+                                    ></button>
+                                    <button
                                         id="escDshotDirectionDialog-Open"
                                         class="tool regular-button"
                                         :class="{ disabled: buttonStates.toolsDisabled }"
+                                        :disabled="buttonStates.toolsDisabled"
                                         v-if="digitalProtocolConfigured"
-                                        @click.prevent="!buttonStates.toolsDisabled && openEscDshotDirectionDialog()"
+                                        @click="openEscDshotDirectionDialog()"
                                         v-html="$t('escDshotDirectionDialog-Open')"
-                                    ></a>
+                                    ></button>
                                 </div>
                             </div>
                         </div>
@@ -368,13 +368,12 @@
                                         <div class="table">
                                             <div class="sensor row">
                                                 <div class="left-cell motor-button">
-                                                    <a
+                                                    <button
                                                         class="reset_max"
-                                                        href="#"
-                                                        @click.prevent="resetMaxValues"
+                                                        @click="resetMaxValues"
                                                         :title="$t('motorsResetMaximum')"
                                                         v-html="$t('motorsResetMaximumButton')"
-                                                    ></a>
+                                                    ></button>
                                                 </div>
                                                 <div class="right-cell">
                                                     <select name="sensor_choice" v-model="sensorType">
@@ -554,12 +553,11 @@
                 <div id="dialog-settings-changed-content-wrapper">
                     <div id="dialog-settings-changed-content">{{ warningMessage }}</div>
                     <div class="btn dialog-buttons">
-                        <a
-                            href="#"
+                        <button
                             class="regular-button"
-                            @click.prevent="closeWarningDialog"
+                            @click="closeWarningDialog"
                             v-html="$t('motorsDialogSettingsChangedOk')"
-                        ></a>
+                        ></button>
                     </div>
                 </div>
             </dialog>
@@ -570,18 +568,16 @@
                     <div class="dialog-title" v-html="$t('dialogDynFiltersChangeTitle')"></div>
                     <div class="dialog-text" v-html="$t('dialogDynFiltersChangeNote')"></div>
                     <div class="btn dialog-buttons">
-                        <a
-                            href="#"
+                        <button
                             class="regular-button"
-                            @click.prevent="applyDynFiltersChange"
+                            @click="applyDynFiltersChange"
                             v-html="$t('presetsWarningDialogYesButton')"
-                        ></a>
-                        <a
-                            href="#"
+                        ></button>
+                        <button
                             class="regular-button"
-                            @click.prevent="closeDynFiltersDialog"
+                            @click="closeDynFiltersDialog"
                             v-html="$t('presetsWarningDialogNoButton')"
-                        ></a>
+                        ></button>
                     </div>
                 </div>
             </dialog>
@@ -590,24 +586,24 @@
         <!-- Fixed Bottom Toolbar -->
         <div class="content_toolbar toolbar_fixed_bottom" style="position: fixed">
             <div class="btn save_btn">
-                <a
+                <button
                     class="save"
-                    href="#"
                     :class="{ disabled: buttonStates.saveDisabled }"
-                    @click.prevent="!buttonStates.saveDisabled && saveAndReboot()"
+                    :disabled="buttonStates.saveDisabled"
+                    @click="saveAndReboot()"
                 >
                     {{ $t("configurationButtonSave") }}
-                </a>
+                </button>
             </div>
             <div class="btn">
-                <a
+                <button
                     class="stop"
-                    href="#"
                     :class="{ disabled: buttonStates.stopDisabled }"
-                    @click.prevent="!buttonStates.stopDisabled && stopMotors()"
+                    :disabled="buttonStates.stopDisabled"
+                    @click="stopMotors()"
                 >
                     {{ $t("escDshotDirectionDialog-StopWizard") }}
-                </a>
+                </button>
             </div>
         </div>
     </BaseTab>
@@ -910,7 +906,6 @@ function initDataArray(length) {
 }
 
 function updateGraphHelperSize(helpers) {
-    const width = 450; // Fixed width matching SVG in CSS or parent
     // Typically we would get clientWidth of container, but let's assume fixed or check ref
     const element = graphSvg.value;
     const clientWidth = element ? element.clientWidth || 450 : 450;
@@ -1033,9 +1028,9 @@ function computeAndUpdateDisplay(sensor_data) {
 
     let totalSq = 0;
     let totalCount = 0;
-    for (let i = 0; i < graphData.length; i++) {
-        for (let j = 0; j < graphData[i].length; j++) {
-            totalSq += graphData[i][j][1] * graphData[i][j][1];
+    for (const axisData of graphData) {
+        for (const point of axisData) {
+            totalSq += point[1] * point[1];
             totalCount++;
         }
     }
@@ -1582,12 +1577,12 @@ const onSliderWheel = (index, event) => {
     }
 };
 
-const ignoreKeys = ["PageUp", "PageDown", "End", "Home", "ArrowUp", "ArrowDown", "AltLeft", "AltRight", "Tab"];
+const ignoreKeys = new Set(["PageUp", "PageDown", "End", "Home", "ArrowUp", "ArrowDown", "AltLeft", "AltRight", "Tab"]);
 
 const disableMotorTestOnKey = (e) => {
     if (motorsTestingEnabled.value) {
         // Check if key is ignored
-        if (!ignoreKeys.includes(e.code) && !ignoreKeys.includes(e.key)) {
+        if (!ignoreKeys.has(e.code) && !ignoreKeys.has(e.key)) {
             motorsTestingEnabled.value = false;
         }
     }
@@ -1597,10 +1592,7 @@ watch(motorsTestingEnabled, async (enabled) => {
     if (enabled) {
         if (digitalProtocolConfigured.value) {
             const buffer = [];
-            buffer.push(DshotCommand.dshotCommandType_e.DSHOT_CMD_TYPE_BLOCKING);
-            buffer.push(255); // Send to all escs
-            buffer.push(1); // 1 command
-            buffer.push(13); // Enable extended dshot telemetry
+            buffer.push(DshotCommand.dshotCommandType_e.DSHOT_CMD_TYPE_BLOCKING, 255, 1, 13);
             MSP.send_message(MSPCodes.MSP2_SEND_DSHOT_COMMAND, buffer);
         }
 
@@ -1617,7 +1609,7 @@ watch(motorsTestingEnabled, async (enabled) => {
         }
 
         // Stop all motors
-        sendMotorCommand(Array(8).fill(0));
+        sendMotorCommand(new Array(8).fill(0));
 
         // Sync Switchery visual state with programmatic change
         await nextTick();
@@ -1696,7 +1688,7 @@ onUnmounted(() => {
     }
     // ensure disarmed safety
     if (motorsTestingEnabled.value) {
-        sendMotorCommand(Array(8).fill(0));
+        sendMotorCommand(new Array(8).fill(0));
     }
 });
 </script>

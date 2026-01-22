@@ -13,17 +13,17 @@ import { i18n } from "@/js/localization";
 
 export function useMotorTesting(configHasChanged, showWarningDialog) {
     const motorsTestingEnabled = ref(false);
-    const motorValues = ref(Array(8).fill(1000));
+    const motorValues = ref(new Array(8).fill(1000));
     const masterValue = ref(1000);
 
     // Safety: Keys that don't trigger motor stop
-    const ignoreKeys = ["PageUp", "PageDown", "End", "Home", "ArrowUp", "ArrowDown", "AltLeft", "AltRight"];
+    const ignoreKeys = new Set(["PageUp", "PageDown", "End", "Home", "ArrowUp", "ArrowDown", "AltLeft", "AltRight"]);
 
     /**
      * Keyboard safety handler - stops motors on any key press
      */
     const disableMotorTest = (e) => {
-        if (motorsTestingEnabled.value && !ignoreKeys.includes(e.code)) {
+        if (motorsTestingEnabled.value && !ignoreKeys.has(e.code)) {
             console.log("[Motors] Emergency stop triggered by keyboard");
             motorsTestingEnabled.value = false;
         }
@@ -114,7 +114,7 @@ export function useMotorTesting(configHasChanged, showWarningDialog) {
      * Stop all motors immediately
      */
     const stopAllMotors = (stopValue = 1000) => {
-        const values = Array(8).fill(stopValue);
+        const values = new Array(8).fill(stopValue);
         sendMotorCommand(values);
         motorValues.value = values;
         masterValue.value = stopValue;

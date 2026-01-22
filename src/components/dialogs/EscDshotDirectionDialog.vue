@@ -37,10 +37,9 @@
                     <h4 v-html="i18nMessage('escDshotDirectionDialog-SelectMotorSafety')"></h4>
 
                     <div id="escDshotDirectionDialog-SelectMotorButtonsWrapper">
-                        <a
+                        <button
                             v-for="(motor, index) in motorButtons"
                             :key="index"
-                            href="#"
                             class="regular-button"
                             :class="{
                                 pushed: index !== selectedMotor,
@@ -52,7 +51,7 @@
                             @click.prevent
                         >
                             {{ motor }}
-                        </a>
+                        </button>
                     </div>
 
                     <div
@@ -68,8 +67,7 @@
                         <h4 v-html="i18nMessage('escDshotDirectionDialog-SetDirectionHintSafety')"></h4>
 
                         <div id="escDshotDirectionDialog-CommandsWrapper">
-                            <a
-                                href="#"
+                            <button
                                 class="regular-button"
                                 :class="{ highlighted: spinningDirection === 'normal' }"
                                 @mousedown="onDirectionButtonDown('normal')"
@@ -78,9 +76,8 @@
                                 @click.prevent
                             >
                                 {{ normalButtonText }}
-                            </a>
-                            <a
-                                href="#"
+                            </button>
+                            <button
                                 class="regular-button"
                                 :class="{ highlighted: spinningDirection === 'reverse' }"
                                 @mousedown="onDirectionButtonDown('reverse')"
@@ -89,7 +86,7 @@
                                 @click.prevent
                             >
                                 {{ reverseButtonText }}
-                            </a>
+                            </button>
                         </div>
                         <h4 v-html="i18nMessage('escDshotDirectionDialog-SettingsAutoSaved')"></h4>
                     </div>
@@ -97,37 +94,34 @@
 
                 <!-- Wizard Mode -->
                 <div v-if="wizardMode" id="escDshotDirectionDialog-WizardDialog" class="display-contents">
-                    <a
+                    <button
                         v-if="!wizardSpinning"
-                        href="#"
                         class="regular-button"
                         @click.prevent="onSpinWizardClick"
                         v-html="i18nMessage('escDshotDirectionDialog-SpinWizard')"
-                    ></a>
+                    ></button>
 
                     <div v-if="wizardSpinning" id="escDshotDirectionDialog-SpinningWizard" class="display-contents">
                         <h4 v-html="i18nMessage('escDshotDirectionDialog-WizardActionHint')"></h4>
                         <h4 v-html="i18nMessage('escDshotDirectionDialog-WizardActionHintSecondLine')"></h4>
 
                         <div id="escDshotDirectionDialog-WizardMotorButtons">
-                            <a
+                            <button
                                 v-for="(motor, index) in wizardMotorButtons"
                                 :key="index"
-                                href="#"
                                 class="regular-button"
                                 :class="{ pushed: wizardMotorDirections[index] }"
                                 @click.prevent="onWizardMotorClick(index)"
                             >
                                 {{ motor }}
-                            </a>
+                            </button>
                         </div>
 
-                        <a
-                            href="#"
+                        <button
                             class="regular-button"
                             @click.prevent="onStopWizardClick"
                             v-html="i18nMessage('escDshotDirectionDialog-StopWizard')"
-                        ></a>
+                        ></button>
                         <h4 v-html="i18nMessage('escDshotDirectionDialog-SettingsAutoSaved')"></h4>
                     </div>
                 </div>
@@ -171,12 +165,11 @@
                         class="escDshotDirectionDialog-StartBlock"
                     >
                         <div class="escDshotDirectionDialog-Buttons">
-                            <a
-                                href="#"
+                            <button
                                 class="regular-button escDshotDirectionDialog-StartButton"
                                 @click.prevent="startWizardMode"
                                 v-html="i18nMessage('escDshotDirectionDialog-StartWizard')"
-                            ></a>
+                            ></button>
                         </div>
                         <div
                             class="escDshotDirectionDialog-Description"
@@ -190,12 +183,11 @@
                         class="escDshotDirectionDialog-StartBlock"
                     >
                         <div class="escDshotDirectionDialog-Buttons">
-                            <a
-                                href="#"
+                            <button
                                 class="regular-button escDshotDirectionDialog-StartButton"
                                 @click.prevent="startNormalMode"
                                 v-html="i18nMessage('escDshotDirectionDialog-Start')"
-                            ></a>
+                            ></button>
                         </div>
                         <div
                             class="escDshotDirectionDialog-Description"
@@ -247,7 +239,7 @@ const wizardMotorDirections = ref([]);
 
 // Translation helper
 const i18nMessage = (key) => {
-    return window.i18n.getMessage(key);
+    return globalThis.i18n.getMessage(key);
 };
 
 // Motor driver
@@ -291,20 +283,20 @@ const wizardMotorButtons = computed(() => {
 // Text states
 const actionHintText = computed(() => {
     if (motorIsSpinning.value) {
-        return window.i18n.getMessage("escDshotDirectionDialog-ReleaseButtonToStop");
+        return globalThis.i18n.getMessage("escDshotDirectionDialog-ReleaseButtonToStop");
     }
-    return window.i18n.getMessage("escDshotDirectionDialog-SelectMotor");
+    return globalThis.i18n.getMessage("escDshotDirectionDialog-SelectMotor");
 });
 
 const secondHintText = computed(() => {
     if (motorIsSpinning.value) {
-        return window.i18n.getMessage("escDshotDirectionDialog-ReleaseButtonToStop");
+        return globalThis.i18n.getMessage("escDshotDirectionDialog-ReleaseButtonToStop");
     }
-    return window.i18n.getMessage("escDshotDirectionDialog-SetDirectionHint");
+    return globalThis.i18n.getMessage("escDshotDirectionDialog-SetDirectionHint");
 });
 
-const normalButtonText = ref(window.i18n.getMessage("escDshotDirectionDialog-CommandNormal"));
-const reverseButtonText = ref(window.i18n.getMessage("escDshotDirectionDialog-CommandReverse"));
+const normalButtonText = ref(globalThis.i18n.getMessage("escDshotDirectionDialog-CommandNormal"));
+const reverseButtonText = ref(globalThis.i18n.getMessage("escDshotDirectionDialog-CommandReverse"));
 
 // Motor button handlers
 const onMotorButtonDown = (index) => {
@@ -345,9 +337,9 @@ const onDirectionButtonDown = (direction) => {
     motorDriver.spinMotor(selectedMotor.value);
 
     if (direction === "normal") {
-        normalButtonText.value = window.i18n.getMessage("escDshotDirectionDialog-ReleaseToStop");
+        normalButtonText.value = globalThis.i18n.getMessage("escDshotDirectionDialog-ReleaseToStop");
     } else {
-        reverseButtonText.value = window.i18n.getMessage("escDshotDirectionDialog-ReleaseToStop");
+        reverseButtonText.value = globalThis.i18n.getMessage("escDshotDirectionDialog-ReleaseToStop");
     }
 };
 
@@ -356,8 +348,8 @@ const onDirectionButtonUp = () => {
         motorDriver.stopAllMotors();
         spinningDirection.value = null;
 
-        normalButtonText.value = window.i18n.getMessage("escDshotDirectionDialog-CommandNormal");
-        reverseButtonText.value = window.i18n.getMessage("escDshotDirectionDialog-CommandReverse");
+        normalButtonText.value = globalThis.i18n.getMessage("escDshotDirectionDialog-CommandNormal");
+        reverseButtonText.value = globalThis.i18n.getMessage("escDshotDirectionDialog-CommandReverse");
 
         deactivateDirectionButtons();
         activateDirectionButtons(BUTTON_TIMEOUT_MS);
