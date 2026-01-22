@@ -1,5 +1,5 @@
 <template>
-    <dialog ref="dialogRef" class="escDshotDirection-dialog">
+    <dialog ref="dialogRef" class="escDshotDirection-dialog" @cancel="handleCancel">
         <div class="escDshotDirection-Component">
             <h3 class="escDshotDirection-ComponentHeader" v-html="i18nMessage('escDshotDirectionDialog-Title')"></h3>
 
@@ -477,13 +477,35 @@ const cleanup = () => {
     showSecondAction.value = false;
     currentSpinningButton.value = -1;
     spinningDirection.value = null;
+
+    // Sync Switchery visual state after resetting safetyAgreed
+    const checkbox = document.getElementById("escDshotDirectionDialog-safetyCheckbox");
+    if (checkbox) {
+        // Remove existing Switchery element
+        const switcheryElement = checkbox.nextElementSibling;
+        if (switcheryElement && switcheryElement.classList.contains("switchery")) {
+            switcheryElement.remove();
+        }
+        // Add the toggle class back so GUI.switchery() will reinitialize
+        if (!checkbox.classList.contains("toggle")) {
+            checkbox.classList.add("toggle");
+        }
+        // Reinitialize Switchery with correct state
+        GUI.switchery();
+    }
 };
 
 // Handle ESC key
 const handleKeyDown = (e) => {
-    if (e.key === "Escape") {
+    if (e.key === "Escape" && dialogRef.value?.open) {
         close();
     }
+};
+
+// Handle dialog cancel (backdrop click, ESC)
+const handleCancel = (e) => {
+    e.preventDefault();
+    cleanup();
 };
 
 // Lifecycle

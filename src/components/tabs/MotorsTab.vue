@@ -728,13 +728,14 @@ watch(
         }
 
         // Show dialog only when ENABLING dshotBidir and RPM filter is disabled
-        if (newValue && !previousDshotBidir.value && !rpmFilterIsDisabled) {
+        if (newValue && !oldValue && !rpmFilterIsDisabled) {
             showDynFiltersDialog();
         } else {
             // Restore values if dialog not shown
             fcStore.filterConfig.dyn_notch_count = previousFilterDynCount.value;
             fcStore.filterConfig.dyn_notch_q = previousFilterDynQ.value;
         }
+        previousDshotBidir.value = newValue;
     },
 );
 
@@ -1425,6 +1426,8 @@ const toggleFeature = (featureName, checked) => {
     } else {
         featuresHelper.disable(featureName);
     }
+    // Track the change for config change detection
+    trackChange(featureName, checked);
     // We might need to trigger an update to make sure Vue detects change if the helper modifies internal state but not the ref directly in a way Vue sees?
     // Pinia store `features` refers to `FC.FEATURE_CONFIG`.
     // The `featureMask` is inside.
@@ -1565,13 +1568,14 @@ const disableMotorTestOnKey = (e) => {
 
 watch(motorsTestingEnabled, async (enabled) => {
     if (enabled) {
-        const buffer = [];
-        buffer.push(DshotCommand.dshotCommandType_e.DSHOT_CMD_TYPE_BLOCKING);
-        buffer.push(255); // Send to all escs
-        buffer.push(1); // 1 command
-        buffer.push(13); // Enable extended dshot telemetry
-
-        MSP.send_message(MSPCodes.MSP2_SEND_DSHOT_COMMAND, buffer);
+        if (digitalProtocolConfigured.value) {
+            const buffer = [];
+            buffer.push(DshotCommand.dshotCommandType_e.DSHOT_CMD_TYPE_BLOCKING);
+            buffer.push(255); // Send to all escs
+            buffer.push(1); // 1 command
+            buffer.push(13); // Enable extended dshot telemetry
+            MSP.send_message(MSPCodes.MSP2_SEND_DSHOT_COMMAND, buffer);
+        }
 
         document.addEventListener("keydown", disableMotorTestOnKey);
     } else {
