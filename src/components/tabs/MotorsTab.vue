@@ -878,7 +878,7 @@ let samples = 0;
 let maxRead = [0, 0, 0];
 let accelOffset = [0, 0, 0];
 let accelOffsetEstablished = false;
-let pollingIntervalId = null;
+let imuPollingIntervalId = null;
 let powerPollingIntervalId = null;
 
 const rawDataDisplay = ref({ x: "0", y: "0", z: "0", rms: "0" });
@@ -1075,7 +1075,13 @@ const updateAccelGraph = () => {
 };
 
 const setupGraph = () => {
-    if (pollingIntervalId) clearInterval(pollingIntervalId);
+    if (imuPollingIntervalId) clearInterval(imuPollingIntervalId);
+
+    // Clear existing graph content
+    if (graphSvg.value) {
+        const svg = d3.select(graphSvg.value);
+        svg.selectAll("g.data path").remove(); // Clear existing lines
+    }
 
     // Reset data
     samples = 0;
@@ -1085,11 +1091,11 @@ const setupGraph = () => {
     updateGraphHelperSize(graphHelpers);
 
     if (sensorType.value === "gyro") {
-        pollingIntervalId = setInterval(() => {
+        imuPollingIntervalId = setInterval(() => {
             MSP.send_message(MSPCodes.MSP_RAW_IMU, false, false, updateGyroGraph);
         }, sensorRate.value);
     } else {
-        pollingIntervalId = setInterval(() => {
+        imuPollingIntervalId = setInterval(() => {
             MSP.send_message(MSPCodes.MSP_RAW_IMU, false, false, updateAccelGraph);
         }, sensorRate.value);
     }
@@ -1119,8 +1125,12 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-    if (pollingIntervalId) clearInterval(pollingIntervalId);
+    if (imuPollingIntervalId) clearInterval(imuPollingIntervalId);
     if (powerPollingIntervalId) clearInterval(powerPollingIntervalId);
+    // Force motor stop when leaving tab
+    if (motorsTestingEnabled.value) {
+        stopAllMotors();
+    }
     document.removeEventListener("keydown", disableMotorTestOnKey);
 });
 
@@ -1231,7 +1241,7 @@ const openMotorOutputReorderDialog = () => {
         {
             droneConfiguration: mixerName,
             motorStopValue: minSliderValue.value,
-            motorSpinValue: Math.round((minSliderValue.value + maxSliderValue.value) / 2),
+            motorSpinValue: idleThrottleValue.value,
         },
         {
             close: () => {
@@ -1246,14 +1256,13 @@ const openEscDshotDirectionDialog = () => {
     const mixer = fcStore.mixerConfig.mixer;
     const numberOfMotors = mixer > 0 && mixer <= mixerList.length ? mixerList[mixer - 1].motors : 0;
 
-    // Use the same spin value as the master slider (current test value) for safety
-    // This matches the value used for normal motor testing
+    // Use the idle throttle value for safe motor spinning
+    // This matches the original formula: zeroThrottleValue + (motorIdle * 1000) / 100
     const motorConfig = {
         escProtocolIsDshot: digitalProtocolConfigured.value,
         numberOfMotors: numberOfMotors,
         motorStopValue: minSliderValue.value,
-        motorSpinValue:
-            motorsState.masterSliderValue?.value ?? Math.round((minSliderValue.value + maxSliderValue.value) / 2),
+        motorSpinValue: idleThrottleValue.value,
     };
 
     dialog.open(
@@ -1482,6 +1491,10 @@ const zeroThrottleValue = computed(() => {
         return neutral > 1575 || neutral < 1425 ? 1500 : neutral;
     }
     return minSliderValue.value;
+});
+
+const idleThrottleValue = computed(() => {
+    return zeroThrottleValue.value + (fcStore.pidAdvancedConfig.motorIdle * 1000) / 100;
 });
 
 watch(zeroThrottleValue, (val) => {

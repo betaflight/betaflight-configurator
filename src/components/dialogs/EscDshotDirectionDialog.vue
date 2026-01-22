@@ -23,7 +23,7 @@
                 class="componentContent"
                 id="escDshotDirectionDialog-MainContent"
             >
-                <div id="escDshotDirectionDialog-MixerPreview" class="grey">
+                <div id="escDshotDirectionDialog-MixerPreview">
                     <img id="escDshotDirectionDialog-MixerPreviewImg" :src="mixerPreviewSrc" alt="Mixer Preview" />
                 </div>
 
@@ -612,10 +612,5 @@ defineExpose({
     margin-right: auto;
     margin-top: auto;
     margin-bottom: auto;
-}
-
-.grey {
-    background-color: #828885;
-    border: 1px solid #4d4d4d;
 }
 </style>

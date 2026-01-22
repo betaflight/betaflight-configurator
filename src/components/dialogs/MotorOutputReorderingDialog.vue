@@ -1,5 +1,5 @@
 <template>
-    <dialog ref="dialogRef" class="motorOutputReordering-dialog">
+    <dialog ref="dialogRef" class="motorOutputReordering-dialog" @cancel="handleCancel">
         <div class="motorOutputReorderComponent">
             <h3 class="motorOutputReorderComponentHeader" v-html="i18nMessage('motorsRemapDialogTitle')"></h3>
 
@@ -312,11 +312,20 @@ const cleanup = () => {
     newMotorOutputReorder = [];
 };
 
-// Handle ESC key
+// Handle ESC key and emergency stop on any key
 const handleKeyDown = (e) => {
     if (e.key === "Escape") {
         close();
+    } else if (showMainContent.value && !["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)) {
+        // Emergency stop on any non-navigation key
+        cleanup();
     }
+};
+
+// Handle dialog cancel (backdrop click, ESC)
+const handleCancel = (e) => {
+    e.preventDefault();
+    cleanup();
 };
 
 // Lifecycle
