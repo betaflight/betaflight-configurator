@@ -58,7 +58,7 @@
                         @click.prevent="onStartButtonClicked"
                         v-html="i18nMessage('motorOutputReorderDialogAgree')"
                     ></a>
-                    <a href="#" class="regular-button" @click.prevent="close" v-html="i18nMessage('dialogCancel')"></a>
+                    <a href="#" class="regular-button" @click.prevent="close" v-html="i18nMessage('cancel')"></a>
                 </div>
             </div>
         </div>
