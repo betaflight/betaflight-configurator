@@ -709,6 +709,107 @@ const applyDynFiltersChange = () => {
     closeDynFiltersDialog();
 };
 
+// ESC Protocol Logic
+const availableEscProtocols = computed(() => {
+    return EscProtocols.GetAvailableProtocols(fcStore.config.apiVersion);
+});
+
+// Since we need to enable/disable options and potentially sort them (DISABLED first)
+// But to keep it simple and working with index, I might not sort.
+// Legacy 'sortSelect' puts "DISABLED" at top.
+// I will replicate the sort order for display, but bind to index.
+const sortedEscProtocolOptions = computed(() => {
+    const protocols = availableEscProtocols.value.map((name, index) => ({ name, value: index }));
+    const disabledText = "DISABLED";
+    return protocols.sort((a, b) => {
+        if (a.name === disabledText) return -1;
+        if (b.name === disabledText) return 1;
+        return a.name.localeCompare(b.name, undefined, { sensitivity: "base" });
+    });
+});
+
+// Note: I used `availableEscProtocols` in the template above (v-for="(protocol, index) in availableEscProtocols").
+// I should update the template to use `sortedEscProtocolOptions` if I want sorting.
+// But the template used index as value, which works if I iterate over the original array.
+// If I use sorted array, I must explicitely use the stored value.
+
+const isProtocolDisabled = (protocolName) => {
+    if (protocolName === "DISABLED") return false;
+    const buildOptions = fcStore.config.buildOptions;
+    if (buildOptions && buildOptions.length > 0) {
+        return !buildOptions.some((option) => protocolName.includes(option.substring(4)));
+    }
+    return false;
+};
+
+const selectedEscProtocol = computed({
+    get: () => fcStore.pidAdvancedConfig.fast_pwm_protocol,
+    set: (val) => {
+        fcStore.pidAdvancedConfig.fast_pwm_protocol = val;
+    },
+});
+
+const onProtocolChange = () => {
+    // legacy motors.js triggers 'updateVisibility' here.
+    // Vue reactivity handles visibility via computed properties below.
+    // We might need analytics tracking here later.
+};
+
+const protocolName = computed(() => {
+    return availableEscProtocols.value[selectedEscProtocol.value];
+});
+
+const protocolConfigured = computed(() => {
+    return protocolName.value !== "DISABLED";
+});
+
+const digitalProtocolConfigured = computed(() => {
+    if (!protocolConfigured.value) {
+        return false;
+    }
+    const name = protocolName.value;
+    const result = ["DSHOT150", "DSHOT300", "DSHOT600", "PROSHOT1000"].includes(name);
+    return result;
+});
+
+const analogProtocolConfigured = computed(() => {
+    return protocolConfigured.value && !digitalProtocolConfigured.value;
+});
+
+const rpmFeaturesVisible = computed(() => {
+    return (
+        (digitalProtocolConfigured.value && fcStore.motorConfig.use_dshot_telemetry) || isFeatureEnabled("ESC_SENSOR")
+    );
+});
+
+const showAnalogSettings = computed(() => {
+    return analogProtocolConfigured.value;
+});
+
+const showMinThrottle = computed(() => {
+    return analogProtocolConfigured.value && semver.lt(fcStore.config.apiVersion, API_VERSION_1_47);
+});
+
+const showMotorIdle = computed(() => {
+    return (
+        protocolConfigured.value ||
+        (digitalProtocolConfigured.value &&
+            fcStore.motorConfig.use_dshot_telemetry &&
+            fcStore.advancedTuning.idleMinRpm)
+    );
+});
+
+const showIdleMinRpm = computed(() => {
+    return protocolConfigured.value && digitalProtocolConfigured.value && fcStore.motorConfig.use_dshot_telemetry;
+});
+
+const useUnsyncedPwm = computed({
+    get: () => fcStore.pidAdvancedConfig.use_unsyncedPwm !== 0,
+    set: (val) => {
+        fcStore.pidAdvancedConfig.use_unsyncedPwm = val ? 1 : 0;
+    },
+});
+
 // Initialize motor testing with safety features
 const { motorsTestingEnabled, motorValues, masterValue, sendMotorCommand, stopAllMotors } = useMotorTesting(
     configHasChanged,
@@ -1345,107 +1446,6 @@ const stopMotors = () => {
     // Stop motor testing (composable handles all cleanup)
     motorsTestingEnabled.value = false;
 };
-
-// ESC Protocol Logic
-const availableEscProtocols = computed(() => {
-    return EscProtocols.GetAvailableProtocols(fcStore.config.apiVersion);
-});
-
-// Since we need to enable/disable options and potentially sort them (DISABLED first)
-// But to keep it simple and working with index, I might not sort.
-// Legacy 'sortSelect' puts "DISABLED" at top.
-// I will replicate the sort order for display, but bind to index.
-const sortedEscProtocolOptions = computed(() => {
-    const protocols = availableEscProtocols.value.map((name, index) => ({ name, value: index }));
-    const disabledText = "DISABLED";
-    return protocols.sort((a, b) => {
-        if (a.name === disabledText) return -1;
-        if (b.name === disabledText) return 1;
-        return a.name.localeCompare(b.name, undefined, { sensitivity: "base" });
-    });
-});
-
-// Note: I used `availableEscProtocols` in the template above (v-for="(protocol, index) in availableEscProtocols").
-// I should update the template to use `sortedEscProtocolOptions` if I want sorting.
-// But the template used index as value, which works if I iterate over the original array.
-// If I use sorted array, I must explicitely use the stored value.
-
-const isProtocolDisabled = (protocolName) => {
-    if (protocolName === "DISABLED") return false;
-    const buildOptions = fcStore.config.buildOptions;
-    if (buildOptions && buildOptions.length > 0) {
-        return !buildOptions.some((option) => protocolName.includes(option.substring(4)));
-    }
-    return false;
-};
-
-const selectedEscProtocol = computed({
-    get: () => fcStore.pidAdvancedConfig.fast_pwm_protocol,
-    set: (val) => {
-        fcStore.pidAdvancedConfig.fast_pwm_protocol = val;
-    },
-});
-
-const onProtocolChange = () => {
-    // legacy motors.js triggers 'updateVisibility' here.
-    // Vue reactivity handles visibility via computed properties below.
-    // We might need analytics tracking here later.
-};
-
-const protocolName = computed(() => {
-    return availableEscProtocols.value[selectedEscProtocol.value];
-});
-
-const protocolConfigured = computed(() => {
-    return protocolName.value !== "DISABLED";
-});
-
-const digitalProtocolConfigured = computed(() => {
-    if (!protocolConfigured.value) {
-        return false;
-    }
-    const name = protocolName.value;
-    const result = ["DSHOT150", "DSHOT300", "DSHOT600", "PROSHOT1000"].includes(name);
-    return result;
-});
-
-const analogProtocolConfigured = computed(() => {
-    return protocolConfigured.value && !digitalProtocolConfigured.value;
-});
-
-const rpmFeaturesVisible = computed(() => {
-    return (
-        (digitalProtocolConfigured.value && fcStore.motorConfig.use_dshot_telemetry) || isFeatureEnabled("ESC_SENSOR")
-    );
-});
-
-const showAnalogSettings = computed(() => {
-    return analogProtocolConfigured.value;
-});
-
-const showMinThrottle = computed(() => {
-    return analogProtocolConfigured.value && semver.lt(fcStore.config.apiVersion, API_VERSION_1_47);
-});
-
-const showMotorIdle = computed(() => {
-    return (
-        protocolConfigured.value ||
-        (digitalProtocolConfigured.value &&
-            fcStore.motorConfig.use_dshot_telemetry &&
-            fcStore.advancedTuning.idleMinRpm)
-    );
-});
-
-const showIdleMinRpm = computed(() => {
-    return protocolConfigured.value && digitalProtocolConfigured.value && fcStore.motorConfig.use_dshot_telemetry;
-});
-
-const useUnsyncedPwm = computed({
-    get: () => fcStore.pidAdvancedConfig.use_unsyncedPwm !== 0,
-    set: (val) => {
-        fcStore.pidAdvancedConfig.use_unsyncedPwm = val ? 1 : 0;
-    },
-});
 
 // Feature Logic
 const isFeatureEnabled = (featureName) => {
