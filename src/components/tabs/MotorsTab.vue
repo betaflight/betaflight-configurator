@@ -28,12 +28,14 @@
                                     </select>
                                     <div class="motor_direction_reversed">
                                         <div style="float: left; height: 20px; margin-right: 15px; margin-left: 3px">
-                                            <input
-                                                type="checkbox"
-                                                id="reverseMotorSwitch"
-                                                class="toggle"
-                                                v-model="reverseMotorDir"
-                                            />
+                                            <label>
+                                                <input
+                                                    type="checkbox"
+                                                    id="reverseMotorSwitch"
+                                                    class="toggle"
+                                                    v-model="reverseMotorDir"
+                                                />
+                                            </label>
                                         </div>
                                         <span class="freelabel" v-html="$t('configurationReverseMotorSwitch')"></span>
                                         <div
@@ -104,12 +106,14 @@
                                     </div>
                                     <div class="number checkboxPwm" v-if="showAnalogSettings">
                                         <div>
-                                            <input
-                                                type="checkbox"
-                                                id="unsyncedPWMSwitch"
-                                                class="toggle"
-                                                v-model="useUnsyncedPwm"
-                                            />
+                                            <label>
+                                                <input
+                                                    type="checkbox"
+                                                    id="unsyncedPWMSwitch"
+                                                    class="toggle"
+                                                    v-model="useUnsyncedPwm"
+                                                />
+                                            </label>
                                         </div>
                                         <span class="freelabel" v-html="$t('configurationunsyndePwm')"></span>
                                     </div>
@@ -130,16 +134,25 @@
                                     </div>
 
                                     <table class="featuresMultiple">
+                                        <thead>
+                                            <tr>
+                                                <th>Enable</th>
+                                                <th>Feature</th>
+                                                <th>Description</th>
+                                            </tr>
+                                        </thead>
                                         <tbody class="features escMotorStop" v-if="protocolConfigured">
                                             <tr>
                                                 <td>
-                                                    <input
-                                                        type="checkbox"
-                                                        class="toggle"
-                                                        :checked="isFeatureEnabled('MOTOR_STOP')"
-                                                        @change="toggleFeature('MOTOR_STOP', $event.target.checked)"
-                                                        :disabled="isFeatureEnabled('AIRMODE')"
-                                                    />
+                                                    <label>
+                                                        <input
+                                                            type="checkbox"
+                                                            class="toggle"
+                                                            :checked="isFeatureEnabled('MOTOR_STOP')"
+                                                            @change="toggleFeature('MOTOR_STOP', $event.target.checked)"
+                                                            :disabled="isFeatureEnabled('AIRMODE')"
+                                                        />
+                                                    </label>
                                                 </td>
                                                 <td>MOTOR_STOP</td>
                                                 <td>
@@ -150,12 +163,14 @@
                                         <tbody class="features escSensor" v-if="digitalProtocolConfigured">
                                             <tr>
                                                 <td>
-                                                    <input
-                                                        type="checkbox"
-                                                        class="toggle"
-                                                        :checked="isFeatureEnabled('ESC_SENSOR')"
-                                                        @change="toggleFeature('ESC_SENSOR', $event.target.checked)"
-                                                    />
+                                                    <label>
+                                                        <input
+                                                            type="checkbox"
+                                                            class="toggle"
+                                                            :checked="isFeatureEnabled('ESC_SENSOR')"
+                                                            @change="toggleFeature('ESC_SENSOR', $event.target.checked)"
+                                                        />
+                                                    </label>
                                                 </td>
                                                 <td>ESC_SENSOR</td>
                                                 <td>
@@ -166,12 +181,14 @@
                                     </table>
                                     <div class="number checkboxDshotBidir" v-if="digitalProtocolConfigured">
                                         <div>
-                                            <input
-                                                type="checkbox"
-                                                id="dshotBidir"
-                                                class="toggle"
-                                                v-model="fcStore.motorConfig.use_dshot_telemetry"
-                                            />
+                                            <label>
+                                                <input
+                                                    type="checkbox"
+                                                    id="dshotBidir"
+                                                    class="toggle"
+                                                    v-model="fcStore.motorConfig.use_dshot_telemetry"
+                                                />
+                                            </label>
                                         </div>
                                         <span class="freelabel" v-html="$t('configurationDshotBidir')"></span>
                                         <div class="helpicon cf_tip" :title="$t('configurationDshotBidirHelp')"></div>
@@ -287,12 +304,14 @@
                                         <tbody class="features 3D" id="features_3d" style="margin-bottom: 10px">
                                             <tr>
                                                 <td>
-                                                    <input
-                                                        type="checkbox"
-                                                        class="toggle"
-                                                        :checked="isFeatureEnabled('3D')"
-                                                        @change="toggleFeature('3D', $event.target.checked)"
-                                                    />
+                                                    <label>
+                                                        <input
+                                                            type="checkbox"
+                                                            class="toggle"
+                                                            :checked="isFeatureEnabled('3D')"
+                                                            @change="toggleFeature('3D', $event.target.checked)"
+                                                        />
+                                                    </label>
                                                 </td>
                                                 <td><span v-html="$t('feature3D')"></span></td>
                                                 <td>
@@ -534,13 +553,15 @@
 
                             <div class="danger">
                                 <p v-html="$t('motorsNotice')"></p>
-                                <input
-                                    id="motorsEnableTestMode"
-                                    type="checkbox"
-                                    class="togglesmall"
-                                    v-model="motorsTestingEnabled"
-                                />
-                                <span class="motorsEnableTestMode" v-html="$t('motorsEnableControl')"></span>
+                                <label>
+                                    <input
+                                        id="motorsEnableTestMode"
+                                        type="checkbox"
+                                        class="togglesmall"
+                                        v-model="motorsTestingEnabled"
+                                    />
+                                    <span class="motorsEnableTestMode" v-html="$t('motorsEnableControl')"></span>
+                                </label>
                             </div>
                         </div>
                     </div>
