@@ -322,13 +322,18 @@ textarea#preview {
 /* Autocomplete dropdown styles */
 :deep(.cli-textcomplete-dropdown) {
     border: 1px solid var(--surface-500);
-    background-color: var(--surface-300);
+    background-color: var(--surface-300) !important;
     border-radius: 5px;
     max-height: 50%;
     overflow: auto;
     list-style: none;
     padding: 0;
     margin: 0;
+}
+
+/* Ensure textcomplete dropdown also has background (library might add this class) */
+:deep(.textcomplete-dropdown) {
+    background-color: var(--surface-300) !important;
 }
 
 :deep(.cli-textcomplete-dropdown::-webkit-scrollbar) {
