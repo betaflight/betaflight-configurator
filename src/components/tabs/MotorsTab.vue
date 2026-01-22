@@ -482,12 +482,9 @@
                                             <div
                                                 class="indicator"
                                                 :style="{
-                                                    marginTop: 100 - getMotorBarHeight(i - 1) + 'px',
-                                                    height: getMotorBarHeight(i - 1) + 'px',
-                                                    backgroundColor:
-                                                        'rgba(255,187,0,' +
-                                                        (getMotorBarHeight(i - 1) * 0.009).toFixed(2) +
-                                                        ')',
+                                                    marginTop: `${100 - getMotorBarHeight(i - 1)}px`,
+                                                    height: `${getMotorBarHeight(i - 1)}px`,
+                                                    backgroundColor: `rgba(255,187,0,${(getMotorBarHeight(i - 1) * 0.009).toFixed(2)})`,
                                                 }"
                                             >
                                                 <div class="label"></div>
@@ -502,7 +499,7 @@
                                 <ul class="grid-box col9 telemetry">
                                     <li v-for="i in numberOfValidOutputs" :key="i">
                                         <span
-                                            :class="'motor-' + (i - 1) + ' cf_tip'"
+                                            :class="`motor-${i - 1} cf_tip`"
                                             :title="$t('motorsTelemetryHelp')"
                                             v-html="getTelemetryHtml(i - 1)"
                                         ></span>
@@ -1577,7 +1574,7 @@ const sendBufferedMotorCommand = () => {
     bufferDelay = null;
 };
 
-const onMotorSliderChange = (index) => {
+const onMotorSliderChange = () => {
     // Buffer motor values and send after 10ms delay
     bufferingSetMotor.push([...motorValues.value]);
 
@@ -1625,7 +1622,7 @@ const onSliderWheel = (index, event) => {
         onMasterSliderChange();
     } else {
         motorValues.value[index] = newVal;
-        onMotorSliderChange(index);
+        onMotorSliderChange();
     }
 };
 
