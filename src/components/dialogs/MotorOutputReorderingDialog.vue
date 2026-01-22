@@ -364,14 +364,14 @@ defineExpose({
     max-height: 90vh;
     border: 2px solid #4d4d4d;
     border-radius: 3px;
-    background-color: rgba(40, 40, 40, 0.97); /* More opaque background */
+    background-color: rgb(40, 40, 40); /* Fully opaque background */
     color: var(--defaultText);
     padding: 20px;
     overflow-y: auto;
 }
 
 .motorOutputReordering-dialog::backdrop {
-    background-color: rgba(0, 0, 0, 0.7); /* Slightly more opaque backdrop */
+    background-color: rgba(0, 0, 0, 0.9); /* More opaque backdrop */
 }
 
 .componentContent {

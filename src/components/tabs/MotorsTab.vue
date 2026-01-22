@@ -887,6 +887,15 @@ const powerValues = ref({ voltage: "0.00", amperage: "0.00", mAhDrawn: "0" });
 const resetMaxValues = () => {
     maxRead = [0, 0, 0];
     accelOffsetEstablished = false;
+
+    // Clear graph visual
+    if (graphData && graphHelpers) {
+        for (let i = 0; i < graphData.length; i++) {
+            graphData[i] = [];
+        }
+        samples = 0;
+        drawGraph(graphHelpers, graphData, samples);
+    }
 };
 
 // D3 Helpers
