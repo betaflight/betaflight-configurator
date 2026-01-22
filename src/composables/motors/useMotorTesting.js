@@ -24,7 +24,6 @@ export function useMotorTesting(configHasChanged, showWarningDialog, digitalProt
      */
     const disableMotorTest = (e) => {
         if (motorsTestingEnabled.value && !ignoreKeys.has(e.code)) {
-            console.log("[Motors] Emergency stop triggered by keyboard");
             motorsTestingEnabled.value = false;
         }
     };
@@ -112,8 +111,7 @@ export function useMotorTesting(configHasChanged, showWarningDialog, digitalProt
 
     /**
      * Send motor values to FC
-     * @param {number} motorIndex - Motor index (0-7) or -1 for all
-     * @param {number} value - Motor value (1000-2000)
+     * `@param` {number[]} values - Motor values (length 8), each 1000-2000
      */
     const sendMotorCommand = (values) => {
         const buffer = [];
