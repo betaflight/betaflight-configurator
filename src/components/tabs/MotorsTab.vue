@@ -1245,11 +1245,14 @@ const openEscDshotDirectionDialog = () => {
     const mixer = fcStore.mixerConfig.mixer;
     const numberOfMotors = mixer > 0 && mixer <= mixerList.length ? mixerList[mixer - 1].motors : 0;
 
+    // Use the same spin value as the master slider (current test value) for safety
+    // This matches the value used for normal motor testing
     const motorConfig = {
         escProtocolIsDshot: digitalProtocolConfigured.value,
         numberOfMotors: numberOfMotors,
         motorStopValue: minSliderValue.value,
-        motorSpinValue: Math.round((minSliderValue.value + maxSliderValue.value) / 2),
+        motorSpinValue:
+            motorsState.masterSliderValue?.value ?? Math.round((minSliderValue.value + maxSliderValue.value) / 2),
     };
 
     dialog.open(
@@ -1655,7 +1658,6 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-    if (telemetryInterval) clearInterval(telemetryInterval);
     // Clear any pending buffered commands
     if (bufferDelay) {
         clearTimeout(bufferDelay);
