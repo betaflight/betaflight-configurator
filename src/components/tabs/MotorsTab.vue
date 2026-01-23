@@ -28,16 +28,18 @@
                                     </select>
                                     <div class="motor_direction_reversed">
                                         <div style="float: left; height: 20px; margin-right: 15px; margin-left: 3px">
-                                            <label>
-                                                <input
-                                                    type="checkbox"
-                                                    id="reverseMotorSwitch"
-                                                    class="toggle"
-                                                    v-model="reverseMotorDir"
-                                                />
-                                            </label>
+                                            <input
+                                                type="checkbox"
+                                                id="reverseMotorSwitch"
+                                                class="toggle"
+                                                v-model="reverseMotorDir"
+                                            />
+                                            <label
+                                                for="reverseMotorSwitch"
+                                                class="freelabel"
+                                                v-html="$t('configurationReverseMotorSwitch')"
+                                            ></label>
                                         </div>
-                                        <span class="freelabel" v-html="$t('configurationReverseMotorSwitch')"></span>
                                         <div
                                             class="helpicon cf_tip"
                                             :title="$t('configurationReverseMotorSwitchHelp')"
@@ -82,8 +84,9 @@
                                         <p v-html="$t('configurationEscProtocolDisabled')"></p>
                                     </div>
                                     <div class="selectProtocol">
-                                        <label>
+                                        <label for="escProtocolSelect">
                                             <select
+                                                id="escProtocolSelect"
                                                 class="escprotocol"
                                                 v-model="selectedEscProtocol"
                                                 @change="onProtocolChange"
@@ -106,21 +109,24 @@
                                     </div>
                                     <div class="number checkboxPwm" v-if="showAnalogSettings">
                                         <div>
-                                            <label>
-                                                <input
-                                                    type="checkbox"
-                                                    id="unsyncedPWMSwitch"
-                                                    class="toggle"
-                                                    v-model="useUnsyncedPwm"
-                                                />
-                                            </label>
+                                            <input
+                                                type="checkbox"
+                                                id="unsyncedPWMSwitch"
+                                                class="toggle"
+                                                v-model="useUnsyncedPwm"
+                                            />
+                                            <label
+                                                for="unsyncedPWMSwitch"
+                                                class="freelabel"
+                                                v-html="$t('configurationunsyndePwm')"
+                                            ></label>
                                         </div>
-                                        <span class="freelabel" v-html="$t('configurationunsyndePwm')"></span>
                                     </div>
                                     <div class="number unsyncedpwmfreq" v-if="showAnalogSettings && useUnsyncedPwm">
-                                        <label>
+                                        <label for="unsyncedpwmfreq">
                                             <div class="numberspacer">
                                                 <input
+                                                    id="unsyncedpwmfreq"
                                                     type="number"
                                                     name="unsyncedpwmfreq"
                                                     min="200"
@@ -181,107 +187,133 @@
                                     </table>
                                     <div class="number checkboxDshotBidir" v-if="digitalProtocolConfigured">
                                         <div>
-                                            <label>
-                                                <input
-                                                    type="checkbox"
-                                                    id="dshotBidir"
-                                                    class="toggle"
-                                                    v-model="fcStore.motorConfig.use_dshot_telemetry"
-                                                />
-                                            </label>
+                                            <input
+                                                type="checkbox"
+                                                id="dshotBidir"
+                                                class="toggle"
+                                                v-model="fcStore.motorConfig.use_dshot_telemetry"
+                                            />
+                                            <label
+                                                for="dshotBidir"
+                                                class="freelabel"
+                                                v-html="$t('configurationDshotBidir')"
+                                            ></label>
                                         </div>
-                                        <span class="freelabel" v-html="$t('configurationDshotBidir')"></span>
                                         <div class="helpicon cf_tip" :title="$t('configurationDshotBidirHelp')"></div>
                                     </div>
                                     <div class="number motorPoles" v-if="protocolConfigured && rpmFeaturesVisible">
-                                        <div class="numberspacer">
-                                            <input
-                                                type="number"
-                                                name="motorPoles"
-                                                min="4"
-                                                max="255"
-                                                step="1"
-                                                v-model.number="fcStore.motorConfig.motor_poles"
-                                            />
-                                        </div>
-                                        <span v-html="$t('configurationMotorPolesLong')"></span>
-                                        <div class="helpicon cf_tip" :title="$t('configurationMotorPolesHelp')"></div>
+                                        <label for="motorPoles">
+                                            <div class="numberspacer">
+                                                <input
+                                                    id="motorPoles"
+                                                    type="number"
+                                                    name="motorPoles"
+                                                    min="4"
+                                                    max="255"
+                                                    step="1"
+                                                    v-model.number="fcStore.motorConfig.motor_poles"
+                                                />
+                                            </div>
+                                            <span v-html="$t('configurationMotorPolesLong')"></span>
+                                            <div
+                                                class="helpicon cf_tip"
+                                                :title="$t('configurationMotorPolesHelp')"
+                                            ></div>
+                                        </label>
                                     </div>
                                     <div class="number motorIdle" v-if="showMotorIdle">
-                                        <div class="numberspacer">
-                                            <input
-                                                type="number"
-                                                name="motorIdle"
-                                                min="0.0"
-                                                max="20.0"
-                                                step="0.1"
-                                                v-model.number="fcStore.pidAdvancedConfig.motorIdle"
-                                            />
-                                        </div>
-                                        <span v-html="$t('configurationMotorIdle')"></span>
-                                        <div
-                                            class="helpicon cf_tip_wide"
-                                            :title="$t('configurationMotorIdleHelp')"
-                                        ></div>
+                                        <label for="motorIdle">
+                                            <div class="numberspacer">
+                                                <input
+                                                    id="motorIdle"
+                                                    type="number"
+                                                    name="motorIdle"
+                                                    min="0.0"
+                                                    max="20.0"
+                                                    step="0.1"
+                                                    v-model.number="fcStore.pidAdvancedConfig.motorIdle"
+                                                />
+                                            </div>
+                                            <span v-html="$t('configurationMotorIdle')"></span>
+                                            <div
+                                                class="helpicon cf_tip_wide"
+                                                :title="$t('configurationMotorIdleHelp')"
+                                            ></div>
+                                        </label>
                                     </div>
                                     <div class="number idleMinRpm" v-if="showIdleMinRpm">
-                                        <div class="numberspacer noarrows">
-                                            <input
-                                                type="number"
-                                                name="idleMinRpm"
-                                                min="0"
-                                                max="100"
-                                                step="1"
-                                                readonly
-                                                v-model.number="fcStore.advancedTuning.idleMinRpm"
-                                            />
-                                        </div>
-                                        <span v-html="$t('pidTuningIdleMinRpm')"></span>
-                                        <div class="helpicon cf_tip" :title="$t('configurationMotorIdleRpmHelp')"></div>
+                                        <label for="idleMinRpm">
+                                            <div class="numberspacer noarrows">
+                                                <input
+                                                    id="idleMinRpm"
+                                                    type="number"
+                                                    name="idleMinRpm"
+                                                    min="0"
+                                                    max="100"
+                                                    step="1"
+                                                    readonly
+                                                    v-model.number="fcStore.advancedTuning.idleMinRpm"
+                                                />
+                                            </div>
+                                            <span v-html="$t('pidTuningIdleMinRpm')"></span>
+                                            <div
+                                                class="helpicon cf_tip"
+                                                :title="$t('configurationMotorIdleRpmHelp')"
+                                            ></div>
+                                        </label>
                                     </div>
                                     <div class="number mincommand" v-if="showAnalogSettings">
-                                        <div class="numberspacer">
-                                            <input
-                                                type="number"
-                                                name="mincommand"
-                                                min="0"
-                                                max="2000"
-                                                v-model.number="fcStore.motorConfig.mincommand"
-                                            />
-                                        </div>
-                                        <span v-html="$t('configurationThrottleMinimumCommand')"></span>
-                                        <div
-                                            class="helpicon cf_tip"
-                                            :title="$t('configurationThrottleMinimumCommandHelp')"
-                                        ></div>
+                                        <label for="mincommand">
+                                            <div class="numberspacer">
+                                                <input
+                                                    id="mincommand"
+                                                    type="number"
+                                                    name="mincommand"
+                                                    min="0"
+                                                    max="2000"
+                                                    v-model.number="fcStore.motorConfig.mincommand"
+                                                />
+                                            </div>
+                                            <span v-html="$t('configurationThrottleMinimumCommand')"></span>
+                                            <div
+                                                class="helpicon cf_tip"
+                                                :title="$t('configurationThrottleMinimumCommandHelp')"
+                                            ></div>
+                                        </label>
                                     </div>
                                     <div class="number minthrottle" v-if="showMinThrottle">
-                                        <div class="numberspacer">
-                                            <input
-                                                type="number"
-                                                name="minthrottle"
-                                                min="0"
-                                                max="2000"
-                                                v-model.number="fcStore.motorConfig.minthrottle"
-                                            />
-                                        </div>
-                                        <span v-html="$t('configurationThrottleMinimum')"></span>
-                                        <div
-                                            class="helpicon cf_tip"
-                                            :title="$t('configurationThrottleMinimumHelp')"
-                                        ></div>
+                                        <label for="minthrottle">
+                                            <div class="numberspacer">
+                                                <input
+                                                    id="minthrottle"
+                                                    type="number"
+                                                    name="minthrottle"
+                                                    min="0"
+                                                    max="2000"
+                                                    v-model.number="fcStore.motorConfig.minthrottle"
+                                                />
+                                            </div>
+                                            <span v-html="$t('configurationThrottleMinimum')"></span>
+                                            <div
+                                                class="helpicon cf_tip"
+                                                :title="$t('configurationThrottleMinimumHelp')"
+                                            ></div>
+                                        </label>
                                     </div>
                                     <div class="number maxthrottle" v-if="showAnalogSettings">
-                                        <div class="numberspacer">
-                                            <input
-                                                type="number"
-                                                name="maxthrottle"
-                                                min="0"
-                                                max="2000"
-                                                v-model.number="fcStore.motorConfig.maxthrottle"
-                                            />
-                                        </div>
-                                        <span v-html="$t('configurationThrottleMaximum')"></span>
+                                        <label for="maxthrottle">
+                                            <div class="numberspacer">
+                                                <input
+                                                    id="maxthrottle"
+                                                    type="number"
+                                                    name="maxthrottle"
+                                                    min="0"
+                                                    max="2000"
+                                                    v-model.number="fcStore.motorConfig.maxthrottle"
+                                                />
+                                            </div>
+                                            <span v-html="$t('configurationThrottleMaximum')"></span>
+                                        </label>
                                     </div>
                                 </div>
                             </div>
@@ -323,8 +355,9 @@
                                     </table>
                                     <div class="_3dSettings" v-if="isFeatureEnabled('3D')">
                                         <div class="number">
-                                            <label>
+                                            <label for="_3ddeadbandlow">
                                                 <input
+                                                    id="_3ddeadbandlow"
                                                     type="number"
                                                     name="_3ddeadbandlow"
                                                     step="1"
@@ -336,8 +369,9 @@
                                             </label>
                                         </div>
                                         <div class="number">
-                                            <label>
+                                            <label for="_3ddeadbandhigh">
                                                 <input
+                                                    id="_3ddeadbandhigh"
                                                     type="number"
                                                     name="_3ddeadbandhigh"
                                                     step="1"
@@ -349,8 +383,9 @@
                                             </label>
                                         </div>
                                         <div class="number">
-                                            <label>
+                                            <label for="_3dneutral">
                                                 <input
+                                                    id="_3dneutral"
                                                     type="number"
                                                     name="_3dneutral"
                                                     step="1"
@@ -550,7 +585,7 @@
 
                             <div class="danger">
                                 <p v-html="$t('motorsNotice')"></p>
-                                <label>
+                                <label for="motorsEnableTestMode">
                                     <input
                                         id="motorsEnableTestMode"
                                         type="checkbox"
@@ -1239,7 +1274,9 @@ const setupGraph = () => {
 };
 
 const setupPowerPolling = () => {
-    if (powerPollingIntervalId) clearInterval(powerPollingIntervalId);
+    if (powerPollingIntervalId) {
+        clearInterval(powerPollingIntervalId);
+    }
     powerPollingIntervalId = setInterval(() => {
         if (fcStore.analogData.last_received_timestamp) {
             powerValues.value = {
