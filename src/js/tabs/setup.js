@@ -11,9 +11,7 @@ import MSPCodes from "../msp/MSPCodes";
 import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47, API_VERSION_1_48 } from "../data_storage";
 import { gui_log } from "../gui_log";
 import $ from "jquery";
-import { ispConnected } from "../utils/connection";
-import { sensorTypes } from "../sensor_types";
-import { addArrayElementsAfter, replaceArrayElement } from "../utils/array";
+import { cli } from "../tabs/cli";
 
 const setup = {
     yaw_fix: 0.0,
@@ -312,21 +310,21 @@ setup.initialize = function (callback) {
                 if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
                     MSP.send_message(MSPCodes.MSP2_GYRO_SENSOR, false, false, function () {
                         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_48)) {
-                            // Fetch sensor names for API 1.48+
-                            const sensorPages = [0, 1, 2, 3, 4, 5, 6]; // gyro, acc, baro, mag, gps, sonar, opticalflow
-                            let fetchIndex = 0;
-                            function fetchNextSensorNames() {
-                                if (fetchIndex < sensorPages.length) {
-                                    MSP.send_message(MSPCodes.MSP2_SENSOR_NAMES, [sensorPages[fetchIndex]], false, function () {
-                                        fetchIndex++;
-                                        fetchNextSensorNames();
-                                    });
-                                } else {
-                                    // All sensor names fetched, now display
-                                    displaySensorInfo();
-                                }
-                            }
-                            fetchNextSensorNames();
+                            // Fetch sensor names for API 1.48+ using CLI command
+                            cli.sendCommand("sensor_names", function (response) {
+                                // Parse the response and populate FC.SENSOR_NAMES
+                                const lines = response.trim().split('\n');
+                                FC.SENSOR_NAMES = {};
+                                lines.forEach(line => {
+                                    const parts = line.split(':');
+                                    if (parts.length === 2) {
+                                        const sensorType = parts[0].trim();
+                                        const names = parts[1].trim().split(',');
+                                        FC.SENSOR_NAMES[sensorType] = names.map(name => name.trim());
+                                    }
+                                });
+                                displaySensorInfo();
+                            });
                         } else {
                             displaySensorInfo();
                         }

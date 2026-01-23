@@ -1265,37 +1265,6 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     }
                     break;
 
-                case MSPCodes.MSP2_SENSOR_NAMES:
-                    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_48)) {
-                        const page = data.readU8();
-                        const sensorNamesStr = data.readString();
-                        const sensorNames = sensorNamesStr.split(',');
-                        switch (page) {
-                            case 0:
-                                FC.SENSOR_NAMES.gyro = sensorNames;
-                                break;
-                            case 1:
-                                FC.SENSOR_NAMES.acc = sensorNames;
-                                break;
-                            case 2:
-                                FC.SENSOR_NAMES.baro = sensorNames;
-                                break;
-                            case 3:
-                                FC.SENSOR_NAMES.mag = sensorNames;
-                                break;
-                            case 4:
-                                FC.SENSOR_NAMES.gps = sensorNames;
-                                break;
-                            case 5:
-                                FC.SENSOR_NAMES.sonar = sensorNames;
-                                break;
-                            case 6:
-                                FC.SENSOR_NAMES.opticalflow = sensorNames;
-                                break;
-                        }
-                    }
-                    break;
-
                 case MSPCodes.MSP_LED_STRIP_CONFIG:
                     FC.LED_STRIP = [];
 
