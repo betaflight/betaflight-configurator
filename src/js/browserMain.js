@@ -28,7 +28,6 @@ import "../css/tabs/auxiliary.less";
 import "../css/tabs/failsafe.less";
 import "../css/tabs/osd.less";
 import "../css/tabs/vtx.less";
-import "../css/tabs/power.less";
 import "../css/tabs/transponder.less";
 import "../css/tabs/options.less";
 import "../css/opensans_webfontkit/fonts.css";
