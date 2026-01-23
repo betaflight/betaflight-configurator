@@ -107,9 +107,8 @@ export function sensorTypes() {
     const accElements = sensorTypes.acc.elements;
     const gpsElements = sensorTypes.gps.elements;
 
-    // remove deprecated sensors or add new ones, but only for hard-coded (not dynamic)
-    const usingDynamic = FC.SENSOR_NAMES && FC.SENSOR_NAMES.gyro.length > 0;
-    if (!usingDynamic && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+    // remove deprecated sensors or add new ones, only for API 1.47 (not for 1.48+ which uses dynamic names)
+    if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_48) && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
         removeArrayElement(gyroElements, "L3G4200D");
         removeArrayElement(gyroElements, "MPU3050");
         addArrayElementsAfter(gyroElements, "LSM6DSV16X", ["IIM42653", "ICM45605", "ICM45686", "ICM40609D", "IIM42652"]);
