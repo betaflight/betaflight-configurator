@@ -332,7 +332,7 @@ async function startProcess() {
                     import("./tabs/vtx").then(({ vtx }) => vtx.initialize(content_ready));
                     break;
                 case "power":
-                    import("./tabs/power").then(({ power }) => power.initialize(content_ready));
+                    mountVueTab("power", content_ready);
                     break;
                 case "setup":
                     import("./tabs/setup").then(({ setup }) => setup.initialize(content_ready));
@@ -360,7 +360,7 @@ async function startProcess() {
                     import("./tabs/motors").then(({ motors }) => motors.initialize(content_ready));
                     break;
                 case "sensors":
-                    import("./tabs/sensors").then(({ sensors }) => sensors.initialize(content_ready));
+                    mountVueTab("sensors", content_ready);
                     break;
                 case "logging":
                     mountVueTab("logging", content_ready);

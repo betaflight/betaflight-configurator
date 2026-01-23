@@ -5,6 +5,7 @@ import BatteryIcon from "../components/quad-status/BatteryIcon.vue";
 import PortPicker from "../components/port-picker/PortPicker.vue";
 import UserSession from "../components/user-session/UserSession.vue";
 import WikiButton from "../components/elements/WikiButton.vue";
+import Dialog from "../components/elements/Dialog.vue";
 // Tab components
 import HelpTab from "../components/tabs/HelpTab.vue";
 import LandingTab from "../components/tabs/LandingTab.vue";
@@ -21,6 +22,8 @@ import OnboardLoggingTab from "../components/tabs/OnboardLoggingTab.vue";
 import FirmwareFlasherTab from "../components/tabs/FirmwareFlasherTab.vue";
 import AdjustmentsTab from "../components/tabs/AdjustmentsTab.vue";
 import CliTab from "../components/tabs/CliTab.vue";
+import PowerTab from "../components/tabs/PowerTab.vue";
+import SensorsTab from "../components/tabs/SensorsTab.vue";
 
 // Registry of Vue tab components - used by main.js for dynamic mounting
 export const VueTabComponents = {
@@ -39,6 +42,8 @@ export const VueTabComponents = {
     firmware_flasher: FirmwareFlasherTab,
     adjustments: AdjustmentsTab,
     cli: CliTab,
+    power: PowerTab,
+    sensors: SensorsTab,
 };
 
 // Create a Vue plugin that registers all components globally
@@ -52,6 +57,7 @@ export const BetaflightComponents = {
         app.component("PortPicker", PortPicker);
         app.component("UserSession", UserSession);
         app.component("WikiButton", WikiButton);
+        app.component("Dialog", Dialog);
         // Register tab components
         app.component("HelpTab", HelpTab);
         app.component("LandingTab", LandingTab);
@@ -65,5 +71,6 @@ export const BetaflightComponents = {
         app.component("GpsTab", GpsTab);
         app.component("AuxiliaryTab", AuxiliaryTab);
         app.component("OnboardLoggingTab", OnboardLoggingTab);
+        app.component("SensorsTab", SensorsTab);
     },
 };
