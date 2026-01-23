@@ -11,7 +11,6 @@ import MSPCodes from "../msp/MSPCodes";
 import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47, API_VERSION_1_48 } from "../data_storage";
 import { gui_log } from "../gui_log";
 import $ from "jquery";
-import { cli } from "../tabs/cli";
 
 const setup = {
     yaw_fix: 0.0,
@@ -311,9 +310,10 @@ setup.initialize = function (callback) {
                     MSP.send_message(MSPCodes.MSP2_GYRO_SENSOR, false, false, function () {
                         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_48)) {
                             // Fetch sensor names for API 1.48+ using CLI command
-                            cli.sendCommand("sensor_names", function (response) {
-                                // Parse the response and populate FC.SENSOR_NAMES
-                                const lines = response.trim().split('\n');
+                            MSP.send_cli_command("sensor_names", function (output) {
+                                // Parse the CLI output and populate FC.SENSOR_NAMES
+                                const text = output.join('\n');
+                                const lines = text.trim().split('\n');
                                 FC.SENSOR_NAMES = {};
                                 lines.forEach(line => {
                                     const parts = line.split(':');
