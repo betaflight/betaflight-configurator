@@ -57,8 +57,25 @@ CliAutoComplete.setEnabled = function (enable) {
     }
 };
 
-CliAutoComplete.initialize = function ($textarea, sendLine, writeToOutput) {
-    this.$textarea = $textarea;
+/**
+ * Initialize CliAutoComplete
+ * @param {jQuery|Function} textareaOrGetter - jQuery element or a function that returns the jQuery element
+ * @param {Function} sendLine - Function to send a line to CLI
+ * @param {Function} writeToOutput - Function to write output to CLI
+ */
+CliAutoComplete.initialize = function (textareaOrGetter, sendLine, writeToOutput) {
+    // Support both direct jQuery element and getter function
+    if (typeof textareaOrGetter === "function") {
+        this.getTextarea = textareaOrGetter;
+        Object.defineProperty(this, "$textarea", {
+            get: function () {
+                return this.getTextarea();
+            },
+            configurable: true,
+        });
+    } else {
+        this.$textarea = textareaOrGetter;
+    }
     this.forceOpen = false;
     this.sendLine = sendLine;
     this.writeToOutput = writeToOutput;
