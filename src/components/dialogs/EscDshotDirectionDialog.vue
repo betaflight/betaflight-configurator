@@ -333,7 +333,9 @@ const onMotorButtonUp = (index) => {
 
 // Direction button handlers
 const onDirectionButtonDown = (direction) => {
-    if (!motorIsSpinning.value) return;
+    if (!motorIsSpinning.value) {
+        return;
+    }
 
     const dshotCommand =
         direction === "normal"
@@ -387,7 +389,7 @@ const clearDirectionButtonTimeout = () => {
 // Wizard mode handlers
 const onSpinWizardClick = () => {
     wizardSpinning.value = true;
-    wizardMotorDirections.value = Array(numberOfMotors.value).fill(false);
+    wizardMotorDirections.value = new Array(numberOfMotors.value).fill(false);
 
     motorDriver.setEscSpinDirection(ALL_MOTORS, DshotCommand.dshotCommands_e.DSHOT_CMD_SPIN_DIRECTION_1);
     motorDriver.spinAllMotors();

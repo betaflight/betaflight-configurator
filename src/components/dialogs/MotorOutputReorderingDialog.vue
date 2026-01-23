@@ -144,8 +144,7 @@ const spinMotor = (motorIndex) => {
 
     for (let i = 0; i < numberOfMotors; i++) {
         const value = i === motorIndex ? props.motorSpinValue : props.motorStopValue;
-        buffer.push(value & 0xff); // low byte
-        buffer.push((value >> 8) & 0xff); // high byte
+        buffer.push(value & 0xff, (value >> 8) & 0xff);
     }
 
     MSP.send_message(MSPCodes.MSP_SET_MOTOR, buffer);

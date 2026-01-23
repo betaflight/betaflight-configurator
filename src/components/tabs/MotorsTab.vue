@@ -123,7 +123,7 @@
                                         </div>
                                     </div>
                                     <div class="number unsyncedpwmfreq" v-if="showAnalogSettings && useUnsyncedPwm">
-                                        <label for="unsyncedpwmfreq">
+                                        <label>
                                             <div class="numberspacer">
                                                 <input
                                                     id="unsyncedpwmfreq"
@@ -150,8 +150,9 @@
                                         <tbody class="features escMotorStop" v-if="protocolConfigured">
                                             <tr>
                                                 <td>
-                                                    <label>
+                                                    <label for="motorStop">
                                                         <input
+                                                            id="motorStop"
                                                             type="checkbox"
                                                             class="toggle"
                                                             :checked="isFeatureEnabled('MOTOR_STOP')"
@@ -169,8 +170,9 @@
                                         <tbody class="features escSensor" v-if="digitalProtocolConfigured">
                                             <tr>
                                                 <td>
-                                                    <label>
+                                                    <label for="escSensor">
                                                         <input
+                                                            id="escSensor"
                                                             type="checkbox"
                                                             class="toggle"
                                                             :checked="isFeatureEnabled('ESC_SENSOR')"
@@ -202,7 +204,7 @@
                                         <div class="helpicon cf_tip" :title="$t('configurationDshotBidirHelp')"></div>
                                     </div>
                                     <div class="number motorPoles" v-if="protocolConfigured && rpmFeaturesVisible">
-                                        <label for="motorPoles">
+                                        <label>
                                             <div class="numberspacer">
                                                 <input
                                                     id="motorPoles"
@@ -222,7 +224,7 @@
                                         </label>
                                     </div>
                                     <div class="number motorIdle" v-if="showMotorIdle">
-                                        <label for="motorIdle">
+                                        <label>
                                             <div class="numberspacer">
                                                 <input
                                                     id="motorIdle"
@@ -242,7 +244,7 @@
                                         </label>
                                     </div>
                                     <div class="number idleMinRpm" v-if="showIdleMinRpm">
-                                        <label for="idleMinRpm">
+                                        <label>
                                             <div class="numberspacer noarrows">
                                                 <input
                                                     id="idleMinRpm"
@@ -263,7 +265,7 @@
                                         </label>
                                     </div>
                                     <div class="number mincommand" v-if="showAnalogSettings">
-                                        <label for="mincommand">
+                                        <label>
                                             <div class="numberspacer">
                                                 <input
                                                     id="mincommand"
@@ -282,7 +284,7 @@
                                         </label>
                                     </div>
                                     <div class="number minthrottle" v-if="showMinThrottle">
-                                        <label for="minthrottle">
+                                        <label>
                                             <div class="numberspacer">
                                                 <input
                                                     id="minthrottle"
@@ -301,7 +303,7 @@
                                         </label>
                                     </div>
                                     <div class="number maxthrottle" v-if="showAnalogSettings">
-                                        <label for="maxthrottle">
+                                        <label>
                                             <div class="numberspacer">
                                                 <input
                                                     id="maxthrottle"
@@ -336,8 +338,9 @@
                                         <tbody class="features 3D" id="features_3d" style="margin-bottom: 10px">
                                             <tr>
                                                 <td>
-                                                    <label>
+                                                    <label for="3dFeature">
                                                         <input
+                                                            id="3dFeature"
                                                             type="checkbox"
                                                             class="toggle"
                                                             :checked="isFeatureEnabled('3D')"
@@ -355,7 +358,7 @@
                                     </table>
                                     <div class="_3dSettings" v-if="isFeatureEnabled('3D')">
                                         <div class="number">
-                                            <label for="_3ddeadbandlow">
+                                            <label>
                                                 <input
                                                     id="_3ddeadbandlow"
                                                     type="number"
@@ -369,7 +372,7 @@
                                             </label>
                                         </div>
                                         <div class="number">
-                                            <label for="_3ddeadbandhigh">
+                                            <label>
                                                 <input
                                                     id="_3ddeadbandhigh"
                                                     type="number"
@@ -383,7 +386,7 @@
                                             </label>
                                         </div>
                                         <div class="number">
-                                            <label for="_3dneutral">
+                                            <label>
                                                 <input
                                                     id="_3dneutral"
                                                     type="number"
@@ -585,7 +588,7 @@
 
                             <div class="danger">
                                 <p v-html="$t('motorsNotice')"></p>
-                                <label for="motorsEnableTestMode">
+                                <label>
                                     <input
                                         id="motorsEnableTestMode"
                                         type="checkbox"
@@ -1544,17 +1547,19 @@ const numberOfValidOutputs = computed(() => {
         // Use firmware supplied motor_count or the mixer's expected motor count
         const firmwareCount = fcStore.motorConfig.motor_count;
 
+        let validCount = motorCount;
         // Check if motor data is available to validate
         if (fcStore.motorData && fcStore.motorData.length > 0) {
             for (let i = 0; i < fcStore.motorData.length; i++) {
                 if (fcStore.motorData[i] === 0) {
-                    return i > 0 ? i : motorCount;
+                    validCount = i > 0 ? i : motorCount;
+                    break;
                 }
             }
         }
 
         // Return the minimum of firmware count and motor count
-        return Math.min(firmwareCount, motorCount);
+        return Math.min(firmwareCount, validCount);
     }
     return 4; // Default to 4 motors (quad)
 });
