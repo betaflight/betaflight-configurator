@@ -8,7 +8,7 @@ import semver from "semver";
 import vtxDeviceStatusFactory from "../utils/VtxDeviceStatus/VtxDeviceStatusFactory";
 import MSP from "../msp";
 import MSPCodes from "./MSPCodes";
-import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47, API_VERSION_1_48 } from "../data_storage";
+import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "../data_storage";
 import EscProtocols from "../utils/EscProtocols";
 import huffmanDecodeBuf from "../huffman";
 import { defaultHuffmanTree, defaultHuffmanLenIndex } from "../default_huffman_tree";
