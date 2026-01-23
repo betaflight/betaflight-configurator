@@ -143,11 +143,9 @@ const spinMotor = (motorIndex) => {
     const numberOfMotors = config[props.droneConfiguration].Motors.length;
 
     for (let i = 0; i < numberOfMotors; i++) {
-        if (i === motorIndex) {
-            buffer.push16(props.motorSpinValue);
-        } else {
-            buffer.push16(props.motorStopValue);
-        }
+        const value = i === motorIndex ? props.motorSpinValue : props.motorStopValue;
+        buffer.push(value & 0xff); // low byte
+        buffer.push((value >> 8) & 0xff); // high byte
     }
 
     MSP.send_message(MSPCodes.MSP_SET_MOTOR, buffer);

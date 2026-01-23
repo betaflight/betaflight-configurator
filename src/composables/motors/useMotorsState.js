@@ -68,11 +68,10 @@ export function useMotorsState() {
      */
     const trackChange = (item, value) => {
         if (item in defaultConfiguration.value) {
-            if (value !== defaultConfiguration.value[item]) {
-                configChanges.value[item] = value;
-            } else {
-                // Value reverted to default, remove from changes
+            if (value === defaultConfiguration.value[item]) {
                 delete configChanges.value[item];
+            } else {
+                configChanges.value[item] = value;
             }
         } else {
             console.warn(`Unknown config item tracked: ${item}`);
