@@ -1,13 +1,13 @@
 import semver from "semver";
 import FC from "./fc";
-import { API_VERSION_1_47 } from "./data_storage";
+import { API_VERSION_1_47, API_VERSION_1_48 } from "./data_storage";
 import { removeArrayElement, addArrayElement, addArrayElementsAfter } from "./utils/array";
 
 export function sensorTypes() {
     const sensorTypes = {
         acc: {
             name: "Accelerometer",
-            elements: [
+            elements: FC.SENSOR_NAMES && FC.SENSOR_NAMES.acc.length > 0 ? FC.SENSOR_NAMES.acc : [
                 "AUTO",
                 "NONE",
                 "ADXL345",
@@ -34,7 +34,7 @@ export function sensorTypes() {
         },
         gyro: {
             name: "Gyroscope",
-            elements: [
+            elements: FC.SENSOR_NAMES && FC.SENSOR_NAMES.gyro.length > 0 ? FC.SENSOR_NAMES.gyro : [
                 "AUTO",
                 "NONE",
                 "MPU6050",
@@ -60,7 +60,7 @@ export function sensorTypes() {
         },
         baro: {
             name: "Barometer",
-            elements: [
+            elements: FC.SENSOR_NAMES && FC.SENSOR_NAMES.baro.length > 0 ? FC.SENSOR_NAMES.baro : [
                 "DEFAULT",
                 "NONE",
                 "BMP085",
@@ -76,7 +76,7 @@ export function sensorTypes() {
         },
         mag: {
             name: "Magnetometer",
-            elements: [
+            elements: FC.SENSOR_NAMES && FC.SENSOR_NAMES.mag.length > 0 ? FC.SENSOR_NAMES.mag : [
                 "DEFAULT",
                 "NONE",
                 "HMC5883",
@@ -91,15 +91,15 @@ export function sensorTypes() {
         },
         gps: {
             name: "GPS",
-            elements: ["NMEA", "UBLOX", "MSP"],
+            elements: FC.SENSOR_NAMES && FC.SENSOR_NAMES.gps.length > 0 ? FC.SENSOR_NAMES.gps : ["NMEA", "UBLOX", "MSP"],
         },
         sonar: {
             name: "Sonar",
-            elements: ["NONE", "HCSR04", "TFMINI", "TF02", "MTF01", "MTF02", "MTF01P", "MTF02P", "TFNOVA"],
+            elements: FC.SENSOR_NAMES && FC.SENSOR_NAMES.sonar.length > 0 ? FC.SENSOR_NAMES.sonar : ["NONE", "HCSR04", "TFMINI", "TF02", "MTF01", "MTF02", "MTF01P", "MTF02P", "TFNOVA"],
         },
         opticalflow: {
             name: "Optical Flow",
-            elements: ["NONE", "MT"],
+            elements: FC.SENSOR_NAMES && FC.SENSOR_NAMES.opticalflow.length > 0 ? FC.SENSOR_NAMES.opticalflow : ["NONE", "MT"],
         },
     };
 
@@ -107,8 +107,9 @@ export function sensorTypes() {
     const accElements = sensorTypes.acc.elements;
     const gpsElements = sensorTypes.gps.elements;
 
-    // remove deprecated sensors or add new ones
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+    // remove deprecated sensors or add new ones, but only for hard-coded (not dynamic)
+    const usingDynamic = FC.SENSOR_NAMES && FC.SENSOR_NAMES.gyro.length > 0;
+    if (!usingDynamic && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
         removeArrayElement(gyroElements, "L3G4200D");
         removeArrayElement(gyroElements, "MPU3050");
         addArrayElementsAfter(gyroElements, "LSM6DSV16X", ["IIM42653", "ICM45605", "ICM45686", "ICM40609D", "IIM42652"]);

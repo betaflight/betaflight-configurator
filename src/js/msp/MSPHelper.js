@@ -8,7 +8,7 @@ import semver from "semver";
 import vtxDeviceStatusFactory from "../utils/VtxDeviceStatus/VtxDeviceStatusFactory";
 import MSP from "../msp";
 import MSPCodes from "./MSPCodes";
-import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "../data_storage";
+import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47, API_VERSION_1_48 } from "../data_storage";
 import EscProtocols from "../utils/EscProtocols";
 import huffmanDecodeBuf from "../huffman";
 import { defaultHuffmanTree, defaultHuffmanLenIndex } from "../default_huffman_tree";
@@ -1261,6 +1261,37 @@ MspHelper.prototype.process_data = function (dataHandler) {
                         FC.GYRO_SENSOR.gyro_count = data.readU8();
                         for (let i = 0; i < FC.GYRO_SENSOR.gyro_count; i++) {
                             FC.GYRO_SENSOR.gyro_hardware[i] = data.readU8();
+                        }
+                    }
+                    break;
+
+                case MSPCodes.MSP2_SENSOR_NAMES:
+                    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_48)) {
+                        const page = data.readU8();
+                        const sensorNamesStr = data.readString();
+                        const sensorNames = sensorNamesStr.split(',');
+                        switch (page) {
+                            case 0:
+                                FC.SENSOR_NAMES.gyro = sensorNames;
+                                break;
+                            case 1:
+                                FC.SENSOR_NAMES.acc = sensorNames;
+                                break;
+                            case 2:
+                                FC.SENSOR_NAMES.baro = sensorNames;
+                                break;
+                            case 3:
+                                FC.SENSOR_NAMES.mag = sensorNames;
+                                break;
+                            case 4:
+                                FC.SENSOR_NAMES.gps = sensorNames;
+                                break;
+                            case 5:
+                                FC.SENSOR_NAMES.sonar = sensorNames;
+                                break;
+                            case 6:
+                                FC.SENSOR_NAMES.opticalflow = sensorNames;
+                                break;
                         }
                     }
                     break;

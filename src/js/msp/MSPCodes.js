@@ -201,6 +201,7 @@ const MSPCodes = {
     MSP2_SENSOR_CONFIG_ACTIVE: 0x300a,
     MSP2_MCU_INFO: 0x300c,
     MSP2_GYRO_SENSOR: 0x300d,
+    MSP2_SENSOR_NAMES: 0x300e,
 
     // MSP2_GET_TEXT and MSP2_SET_TEXT variable types
     PILOT_NAME: 1,
