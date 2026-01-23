@@ -11,10 +11,25 @@ import MSPCodes from "../msp/MSPCodes";
 import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47, API_VERSION_1_48 } from "../data_storage";
 import { gui_log } from "../gui_log";
 import $ from "jquery";
+import { ispConnected } from "../utils/connection";
+import { sensorTypes } from "../sensor_types";
+import { addArrayElementsAfter, replaceArrayElement } from "../utils/array";
 
 const setup = {
     yaw_fix: 0.0,
 };
+
+function parseHardwareOutput(output) {
+    const text = output.join("\n");
+    const lines = text.split("\n");
+    for (const line of lines) {
+        if (line.startsWith("Allowed values: ")) {
+            const values = line.substring("Allowed values: ".length).split(", ");
+            return values;
+        }
+    }
+    return [];
+}
 
 setup.initialize = function (callback) {
     const self = this;
@@ -309,22 +324,42 @@ setup.initialize = function (callback) {
                 if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
                     MSP.send_message(MSPCodes.MSP2_GYRO_SENSOR, false, false, function () {
                         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_48)) {
-                            // Fetch sensor names for API 1.48+ using CLI command
-                            MSP.send_cli_command("sensor_names", function (output) {
-                                // Parse the CLI output and populate FC.SENSOR_NAMES
-                                const text = output.join('\n');
-                                const lines = text.trim().split('\n');
-                                FC.SENSOR_NAMES = {};
-                                lines.forEach(line => {
-                                    const parts = line.split(':');
-                                    if (parts.length === 2) {
-                                        const sensorType = parts[0].trim();
-                                        const names = parts[1].trim().split(',');
-                                        FC.SENSOR_NAMES[sensorType] = names.map(name => name.trim());
-                                    }
-                                });
-                                displaySensorInfo();
-                            });
+                            // Fetch sensor names for API 1.48+ using existing CLI commands
+                            const sensorCommands = [
+                                { type: "acc", command: "get acc_hardware" },
+                                { type: "gyro", command: "get gyro_hardware" },
+                                { type: "baro", command: "get baro_hardware" },
+                                { type: "mag", command: "get mag_hardware" },
+                                { type: "gps", command: "get gps_provider" },
+                                { type: "sonar", command: "get rangefinder_hardware" },
+                                { type: "opticalflow", command: "get opticalflow_hardware" },
+                            ];
+                            let fetchIndex = 0;
+                            FC.SENSOR_NAMES = {
+                                acc: [],
+                                gyro: [],
+                                baro: [],
+                                mag: [],
+                                gps: [],
+                                sonar: [],
+                                opticalflow: [],
+                            };
+                            function fetchNextSensorHardware() {
+                                if (fetchIndex < sensorCommands.length) {
+                                    const sensor = sensorCommands[fetchIndex];
+                                    MSP.send_cli_command(sensor.command, function (output) {
+                                        console.log(`CLI output for ${sensor.command}:`, output);
+                                        // Parse the CLI output
+                                        FC.SENSOR_NAMES[sensor.type] = parseHardwareOutput(output);
+                                        fetchIndex++;
+                                        fetchNextSensorHardware();
+                                    });
+                                } else {
+                                    // All sensor hardware fetched, now display
+                                    displaySensorInfo();
+                                }
+                            }
+                            fetchNextSensorHardware();
                         } else {
                             displaySensorInfo();
                         }
@@ -351,14 +386,24 @@ setup.initialize = function (callback) {
                         );
                     }
 
-                    addSensorInfo(FC.SENSOR_CONFIG_ACTIVE.acc_hardware, sensor_acc_e, "acc", sensorTypes().acc.elements);
+                    addSensorInfo(
+                        FC.SENSOR_CONFIG_ACTIVE.acc_hardware,
+                        sensor_acc_e,
+                        "acc",
+                        sensorTypes().acc.elements,
+                    );
                     addSensorInfo(
                         FC.SENSOR_CONFIG_ACTIVE.baro_hardware,
                         sensor_baro_e,
                         "baro",
                         sensorTypes().baro.elements,
                     );
-                    addSensorInfo(FC.SENSOR_CONFIG_ACTIVE.mag_hardware, sensor_mag_e, "mag", sensorTypes().mag.elements);
+                    addSensorInfo(
+                        FC.SENSOR_CONFIG_ACTIVE.mag_hardware,
+                        sensor_mag_e,
+                        "mag",
+                        sensorTypes().mag.elements,
+                    );
                     addSensorInfo(
                         FC.SENSOR_CONFIG_ACTIVE.sonar_hardware,
                         sensor_sonar_e,
