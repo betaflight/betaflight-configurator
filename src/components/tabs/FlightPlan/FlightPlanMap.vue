@@ -121,13 +121,7 @@ const setupMapLayers = () => {
         return;
     }
 
-    // Create waypoint marker layer with numbered circles
-    waypointLayer.value = new LayerVector({
-        source: new SourceVector(),
-    });
-    mapInstance.value.map.addLayer(waypointLayer.value);
-
-    // Create path line layer (magenta line)
+    // Create path line layer (magenta line) - add first so it renders behind waypoints
     pathLayer.value = new LayerVector({
         source: new SourceVector(),
         style: new Style({
@@ -138,6 +132,12 @@ const setupMapLayers = () => {
         }),
     });
     mapInstance.value.map.addLayer(pathLayer.value);
+
+    // Create waypoint marker layer with numbered circles - add second so it renders on top
+    waypointLayer.value = new LayerVector({
+        source: new SourceVector(),
+    });
+    mapInstance.value.map.addLayer(waypointLayer.value);
 
     // Get reference to the default DragPan interaction
     mapInstance.value.map.getInteractions().forEach((interaction) => {
