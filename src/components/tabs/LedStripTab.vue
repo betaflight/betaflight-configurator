@@ -388,7 +388,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, onMounted, watch } from "vue";
+import { ref, reactive, computed, watch } from "vue";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "../elements/WikiButton.vue";
 import LedGrid from "./led_strip/LedGrid.vue";
@@ -1011,11 +1011,6 @@ function removeOverlayFromSelected(overlay) {
 // Watch aux channel
 watch(auxChannelValue, (newVal) => {
     setModeColor(7, 0, Number.parseInt(newVal, 10));
-});
-
-// Mounted hook
-onMounted(() => {
-    onTabMounted();
 });
 </script>
 

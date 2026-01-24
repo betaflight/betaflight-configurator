@@ -97,8 +97,8 @@ const showColorOverlay = computed(() => {
 
 // Color style for overlay
 const colorStyle = computed(() => {
-    const colors = props.ledColors.value;
-    if (!colors || !colors[props.led.colorIndex]) {
+    const colors = props.ledColors;
+    if (!Array.isArray(colors) || !colors[props.led.colorIndex]) {
         return "";
     }
     return props.hsvToColor(colors[props.led.colorIndex]);

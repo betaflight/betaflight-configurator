@@ -91,6 +91,26 @@ function isVtxActive(activeFunction) {
     return activeFunctions.includes(activeFunction);
 }
 
+// Save configuration to flight controller
+async function saveConfig() {
+    // Refactored to reduce nesting
+    return new Promise((resolve) => {
+        const saveColors = () => {
+            mspHelper.sendLedStripColors(saveModeColors);
+        };
+
+        const saveModeColors = () => {
+            mspHelper.sendLedStripModeColors(writeConfig);
+        };
+
+        const writeConfig = () => {
+            mspHelper.writeConfiguration(false, resolve);
+        };
+
+        mspHelper.sendLedStripConfig(saveColors);
+    });
+}
+
 export function useLedStrip() {
     const wireMode = ref(false);
     const selectedColorIndex = ref(null);
@@ -121,26 +141,6 @@ export function useLedStrip() {
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
             await MSP.promise(MSPCodes.MSP2_GET_LED_STRIP_CONFIG_VALUES);
         }
-    }
-
-    // Save configuration to flight controller
-    async function saveConfig() {
-        // Refactored to reduce nesting
-        return new Promise((resolve) => {
-            const saveColors = () => {
-                mspHelper.sendLedStripColors(saveModeColors);
-            };
-
-            const saveModeColors = () => {
-                mspHelper.sendLedStripModeColors(writeConfig);
-            };
-
-            const writeConfig = () => {
-                mspHelper.writeConfiguration(false, resolve);
-            };
-
-            mspHelper.sendLedStripConfig(saveColors);
-        });
     }
 
     // Find LED at specific grid coordinates
