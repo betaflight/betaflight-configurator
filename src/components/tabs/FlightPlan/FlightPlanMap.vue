@@ -44,6 +44,20 @@ const isDragging = ref(false);
 const dragStartCoordinate = ref(null);
 const isLoading = ref(true);
 
+// Helper function to initialize map with given coordinates
+const initializeMapAtLocation = (latitude, longitude, logMessage) => {
+    mapInstance.value = initMap({
+        target: mapRef.value,
+        defaultZoom: 15, // Zoom level 15 shows approximately 1 nautical mile (1852m) in view
+        defaultLat: latitude,
+        defaultLon: longitude,
+        defaultLayer: "satellite",
+    });
+
+    console.log(logMessage);
+    setupMapLayers();
+};
+
 // Initialize map and layers
 onMounted(() => {
     if (!mapRef.value) {
@@ -52,8 +66,6 @@ onMounted(() => {
     }
 
     // Get user's location and initialize map
-    // Zoom level 15 shows approximately 1 nautical mile (1852m) in view
-    const defaultZoom = 15;
     const fallbackLat = 0;
     const fallbackLon = 0;
 
@@ -63,33 +75,11 @@ onMounted(() => {
             (position) => {
                 const { latitude, longitude } = position.coords;
                 console.log("User location obtained:", latitude, longitude);
-
-                // Initialize map at user's location
-                mapInstance.value = initMap({
-                    target: mapRef.value,
-                    defaultZoom: defaultZoom,
-                    defaultLat: latitude,
-                    defaultLon: longitude,
-                    defaultLayer: "satellite",
-                });
-
-                console.log("Map initialized at user location");
-                setupMapLayers();
+                initializeMapAtLocation(latitude, longitude, "Map initialized at user location");
             },
             (error) => {
                 console.warn("Geolocation failed, using fallback:", error.message);
-
-                // Initialize map at fallback location
-                mapInstance.value = initMap({
-                    target: mapRef.value,
-                    defaultZoom: defaultZoom,
-                    defaultLat: fallbackLat,
-                    defaultLon: fallbackLon,
-                    defaultLayer: "satellite",
-                });
-
-                console.log("Map initialized at fallback location");
-                setupMapLayers();
+                initializeMapAtLocation(fallbackLat, fallbackLon, "Map initialized at fallback location");
             },
             {
                 enableHighAccuracy: true,
@@ -99,18 +89,7 @@ onMounted(() => {
         );
     } else {
         console.warn("Geolocation not supported, using fallback");
-
-        // Initialize map at fallback location
-        mapInstance.value = initMap({
-            target: mapRef.value,
-            defaultZoom: defaultZoom,
-            defaultLat: fallbackLat,
-            defaultLon: fallbackLon,
-            defaultLayer: "satellite",
-        });
-
-        console.log("Map initialized at fallback location");
-        setupMapLayers();
+        initializeMapAtLocation(fallbackLat, fallbackLon, "Map initialized at fallback location");
     }
 });
 
@@ -245,11 +224,6 @@ const setupMapLayers = () => {
 
     // Click handler - add new waypoint when clicking on empty map
     mapInstance.value.map.on("click", (event) => {
-        // Don't add waypoint if we were dragging
-        if (isDragging.value) {
-            return;
-        }
-
         // Check if a waypoint marker was clicked
         const waypointClicked = mapInstance.value.map.hasFeatureAtPixel(event.pixel, {
             layerFilter: (layer) => layer === waypointLayer.value,
@@ -343,7 +317,7 @@ const updateMapFeatures = (autoFit = true) => {
 
         // Check if this waypoint is selected or being dragged
         const isSelected = selectedWaypointUid.value === wp.uid;
-        const isDragging = draggingWaypointUid.value === wp.uid;
+        const isBeingDragged = draggingWaypointUid.value === wp.uid;
 
         // Determine color: green for dragging, orange for selected, blue for normal
         let fillColor = "#0080FF"; // Blue for normal
@@ -351,7 +325,7 @@ const updateMapFeatures = (autoFit = true) => {
         let strokeWidth = 2;
         let fontSize = "bold 12px sans-serif";
 
-        if (isDragging) {
+        if (isBeingDragged) {
             fillColor = "#00FF00"; // Green for dragging
             radius = 16;
             strokeWidth = 3;
