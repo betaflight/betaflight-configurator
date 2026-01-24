@@ -481,20 +481,23 @@ const cleanup = () => {
     spinningDirection.value = null;
 
     // Sync Switchery visual state after resetting safetyAgreed
-    const checkbox = document.getElementById("escDshotDirectionDialog-safetyCheckbox");
-    if (checkbox) {
-        // Remove existing Switchery element
-        const switcheryElement = checkbox.nextElementSibling;
-        if (switcheryElement && switcheryElement.classList.contains("switchery")) {
-            switcheryElement.remove();
+    // Use nextTick to ensure DOM is updated before reinitializing Switchery
+    nextTick(() => {
+        const checkbox = document.getElementById("escDshotDirectionDialog-safetyCheckbox");
+        if (checkbox) {
+            // Remove existing Switchery element
+            const switcheryElement = checkbox.nextElementSibling;
+            if (switcheryElement && switcheryElement.classList.contains("switchery")) {
+                switcheryElement.remove();
+            }
+            // Add the toggle class back so GUI.switchery() will reinitialize
+            if (!checkbox.classList.contains("toggle")) {
+                checkbox.classList.add("toggle");
+            }
+            // Reinitialize Switchery with correct state
+            GUI.switchery();
         }
-        // Add the toggle class back so GUI.switchery() will reinitialize
-        if (!checkbox.classList.contains("toggle")) {
-            checkbox.classList.add("toggle");
-        }
-        // Reinitialize Switchery with correct state
-        GUI.switchery();
-    }
+    });
 };
 
 // Handle ESC key
