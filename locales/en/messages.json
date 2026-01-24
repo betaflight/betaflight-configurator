@@ -2695,6 +2695,10 @@
         "message": "Enables Camera Stabilisation mode",
         "description": "Help text to CAMSTAB mode"
     },
+    "auxiliaryHelpMode_CHIRP": {
+        "message": "Enables Chirp mode",
+        "description": "Help text for CHIRP mode"
+    },
     "auxiliaryHelpMode_FAILSAFE": {
         "message": "Enter failsafe stage 2 manually",
         "description": "Help text to FAILSAFE mode"
