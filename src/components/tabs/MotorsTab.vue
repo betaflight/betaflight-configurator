@@ -188,20 +188,19 @@
                                         </tbody>
                                     </table>
                                     <div class="number checkboxDshotBidir" v-if="digitalProtocolConfigured">
-                                        <div>
+                                        <label for="dshotBidir">
                                             <input
                                                 type="checkbox"
                                                 id="dshotBidir"
                                                 class="toggle"
                                                 v-model="fcStore.motorConfig.use_dshot_telemetry"
                                             />
-                                            <label
-                                                for="dshotBidir"
-                                                class="freelabel"
-                                                v-html="$t('configurationDshotBidir')"
-                                            ></label>
-                                        </div>
-                                        <div class="helpicon cf_tip" :title="$t('configurationDshotBidirHelp')"></div>
+                                            <span v-html="$t('configurationDshotBidir')"></span>
+                                            <div
+                                                class="helpicon cf_tip"
+                                                :title="$t('configurationDshotBidirHelp')"
+                                            ></div>
+                                        </label>
                                     </div>
                                     <div class="number motorPoles" v-if="protocolConfigured && rpmFeaturesVisible">
                                         <label for="motorPoles">
