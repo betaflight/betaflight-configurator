@@ -131,6 +131,9 @@ export function useSensorGraph() {
     }
 
     function drawGraph(helpers, sampleNumber) {
+        // Update size in case the SVG was not sized at init
+        updateGraphHelperSize(helpers);
+
         // Update X scale domain for sliding window (matches original behavior)
         helpers.scaleX.domain([sampleNumber - 299, sampleNumber]);
 

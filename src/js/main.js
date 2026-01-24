@@ -332,7 +332,7 @@ async function startProcess() {
                     import("./tabs/vtx").then(({ vtx }) => vtx.initialize(content_ready));
                     break;
                 case "power":
-                    import("./tabs/power").then(({ power }) => power.initialize(content_ready));
+                    mountVueTab("power", content_ready);
                     break;
                 case "setup":
                     import("./tabs/setup").then(({ setup }) => setup.initialize(content_ready));
@@ -369,7 +369,7 @@ async function startProcess() {
                     mountVueTab("onboard_logging", content_ready);
                     break;
                 case "cli":
-                    import("./tabs/cli").then(({ cli }) => cli.initialize(content_ready));
+                    mountVueTab("cli", content_ready);
                     break;
                 case "presets":
                     import("../tabs/presets/presets").then(({ presets }) => presets.initialize(content_ready));
