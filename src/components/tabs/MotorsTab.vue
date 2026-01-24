@@ -1567,7 +1567,7 @@ const getActualMotorCount = (expectedMotorCount) => {
     }
 
     // Find first zero value to determine valid count
-    const firstZeroIndex = fcStore.motorData.findIndex((value) => value === 0);
+    const firstZeroIndex = fcStore.motorData.indexOf(0);
 
     if (firstZeroIndex === -1) {
         return expectedMotorCount; // No zero found, all motors valid
