@@ -116,8 +116,22 @@ export function initMap(options = {}) {
     map.addLayer(currentPositionLayer);
 
     const destroy = () => {
-        map.setTarget(null);
+        // Clear vector source features
         vectorSource.clear();
+
+        // Get all layers and dispose of them
+        const allLayers = map.getLayers().getArray().slice(); // Clone array to avoid mutation during iteration
+        allLayers.forEach((layer) => {
+            map.removeLayer(layer);
+            // Dispose of layer's source if it exists
+            const source = layer.getSource();
+            if (source && typeof source.dispose === "function") {
+                source.dispose();
+            }
+        });
+
+        // Dispose of the map (handles view, interactions, event listeners, controls, etc.)
+        map.dispose();
     };
 
     return {
