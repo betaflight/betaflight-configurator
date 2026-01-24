@@ -56,7 +56,7 @@
                     <!-- X-axis grid lines and labels -->
                     <g class="x-axis">
                         <line
-                            v-for="(point, index) in profilePoints"
+                            v-for="(point, index) in scaledProfilePoints"
                             :key="`x-${index}`"
                             :x1="point.x"
                             :y1="padding.top"
@@ -65,7 +65,7 @@
                             class="grid-line-light"
                         />
                         <text
-                            v-for="(point, index) in profilePoints"
+                            v-for="(point, index) in scaledProfilePoints"
                             :key="`x-label-${index}`"
                             :x="point.x"
                             :y="chartHeight - padding.bottom + 15"
@@ -110,7 +110,7 @@
                     <!-- Waypoint markers -->
                     <g class="waypoint-markers">
                         <circle
-                            v-for="(point, index) in profilePoints"
+                            v-for="(point, index) in scaledProfilePoints"
                             :key="`marker-${index}`"
                             :cx="point.x"
                             :cy="point.y"
@@ -120,7 +120,7 @@
                             @mouseenter="handleMarkerHover(point, index)"
                         />
                         <text
-                            v-for="(point, index) in profilePoints"
+                            v-for="(point, index) in scaledProfilePoints"
                             :key="`label-${index}`"
                             :x="point.x"
                             :y="point.y - 8"
@@ -358,25 +358,22 @@ const scaleY = (altitude) => {
     return chartHeight - padding.bottom - ((altitude - paddedMin) / paddedRange) * plotHeight;
 };
 
+// Profile points with scaled x/y coordinates for rendering
+const scaledProfilePoints = computed(() => {
+    return profilePoints.value.map((point) => ({
+        ...point,
+        x: scaleX(point.distance),
+        y: scaleY(point.altitude),
+    }));
+});
+
 // Calculate SVG path for elevation line
 const linePath = computed(() => {
-    if (profilePoints.value.length === 0) {
+    if (scaledProfilePoints.value.length === 0) {
         return "";
     }
 
-    const points = profilePoints.value.map((point) => {
-        const x = scaleX(point.distance);
-        const y = scaleY(point.altitude);
-        return { x, y, ...point };
-    });
-
-    // Store scaled points for marker rendering
-    profilePoints.value.forEach((point, index) => {
-        point.x = points[index].x;
-        point.y = points[index].y;
-    });
-
-    const pathParts = points.map((point, index) => {
+    const pathParts = scaledProfilePoints.value.map((point, index) => {
         const command = index === 0 ? "M" : "L";
         return `${command} ${point.x} ${point.y}`;
     });
@@ -386,15 +383,12 @@ const linePath = computed(() => {
 
 // Calculate SVG path for area fill
 const areaPath = computed(() => {
-    if (profilePoints.value.length === 0) {
+    if (scaledProfilePoints.value.length === 0) {
         return "";
     }
 
     const baseY = chartHeight - padding.bottom;
-    const points = profilePoints.value.map((point) => ({
-        x: scaleX(point.distance),
-        y: scaleY(point.altitude),
-    }));
+    const points = scaledProfilePoints.value;
 
     const topPath = points
         .map((point, index) => {
