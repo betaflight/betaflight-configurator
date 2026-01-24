@@ -27,7 +27,6 @@
 
 <script setup>
 import { computed } from "vue";
-import { useLedStrip } from "@/composables/useLedStrip";
 
 const props = defineProps({
     led: {
@@ -46,9 +45,15 @@ const props = defineProps({
         type: Boolean,
         default: false,
     },
+    hsvToColor: {
+        type: Function,
+        required: true,
+    },
+    ledColors: {
+        type: Object,
+        required: true,
+    },
 });
-
-const { hsvToColor, ledColors } = useLedStrip();
 
 // Computed classes for LED cell
 const ledClasses = computed(() => {
@@ -92,7 +97,11 @@ const showColorOverlay = computed(() => {
 
 // Color style for overlay
 const colorStyle = computed(() => {
-    return hsvToColor(ledColors.value[props.led.colorIndex]);
+    const colors = props.ledColors.value;
+    if (!colors || !colors[props.led.colorIndex]) {
+        return "";
+    }
+    return props.hsvToColor(colors[props.led.colorIndex]);
 });
 </script>
 

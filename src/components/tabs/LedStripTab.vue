@@ -1,5 +1,5 @@
 <template>
-    <BaseTab tab-name="led-strip" @mounted="onMounted">
+    <BaseTab tab-name="led-strip" @mounted="onTabMounted">
         <div class="content_wrapper">
             <div class="tab_title" v-html="$t('tabLedStrip')"></div>
             <WikiButton doc-url="led-strip" />
@@ -15,6 +15,8 @@
                     :grid-leds="gridLeds"
                     :wire-mode="wireMode"
                     :selected-indices="selectedIndices"
+                    :hsv-to-color="hsvToColor"
+                    :led-colors="ledColors"
                     @selection-change="onSelectionChange"
                     @selection-end="onSelectionEnd"
                 />
@@ -77,13 +79,19 @@
                     <div class="checkbox">
                         <input
                             type="checkbox"
+                            id="throttleHue"
                             name="ThrottleHue"
                             class="toggle function-t"
                             v-model="modifiers.throttleHue"
                             @change="onModifierChange('t')"
                         />
-                        <label>
-                            <select class="auxSelect" v-model="auxChannelValue">
+                        <label for="throttleHue">
+                            <select
+                                id="auxSelectThrottle"
+                                class="auxSelect"
+                                v-model="auxChannelValue"
+                                aria-label="Aux Channel"
+                            >
                                 <option value="0" v-html="$t('controlAxisRoll')"></option>
                                 <option value="1" v-html="$t('controlAxisPitch')"></option>
                                 <option value="2" v-html="$t('controlAxisYaw')"></option>
@@ -104,34 +112,37 @@
                     <div class="checkbox">
                         <input
                             type="checkbox"
+                            id="larsonScanner"
                             name="LarsonScanner"
                             class="toggle function-o"
                             v-model="modifiers.larsonScanner"
                             @change="onModifierChange('o')"
                         />
-                        <label><span v-html="$t('ledStripLarsonOverlay')"></span></label>
+                        <label for="larsonScanner"><span v-html="$t('ledStripLarsonOverlay')"></span></label>
                     </div>
 
                     <div class="checkbox">
                         <input
                             type="checkbox"
+                            id="blink"
                             name="blink"
                             class="toggle function-b"
                             v-model="modifiers.blink"
                             @change="onModifierChange('b')"
                         />
-                        <label><span v-html="$t('ledStripBlinkAlwaysOverlay')"></span></label>
+                        <label for="blink"><span v-html="$t('ledStripBlinkAlwaysOverlay')"></span></label>
                     </div>
 
                     <div class="checkbox rainbowOverlay" v-show="showRainbow">
                         <input
                             type="checkbox"
+                            id="rainbow"
                             name="Rainbow"
                             class="toggle function-y"
                             v-model="modifiers.rainbow"
                             @change="onModifierChange('y')"
                         />
-                        <label><span v-html="$t('ledStripRainbowOverlay')"></span></label>
+                        <label for="rainbow"><span v-html="$t('ledStripRainbowOverlay')"></span></label>
                         <div class="sliders-group" v-show="modifiers.rainbow">
                             <span v-html="$t('ledStripRainbowDeltaSliderTitle')"></span>
                             <div class="slider-control">
@@ -173,32 +184,35 @@
                     <div class="checkbox warningOverlay" v-show="showWarning">
                         <input
                             type="checkbox"
+                            id="warnings"
                             name="Warnings"
                             class="toggle function-w"
                             v-model="overlayStates.warnings"
                             @change="onOverlayChange('w')"
                         />
-                        <label><span v-html="$t('ledStripWarningsOverlay')"></span></label>
+                        <label for="warnings"><span v-html="$t('ledStripWarningsOverlay')"></span></label>
                     </div>
                     <div class="checkbox indicatorOverlay">
                         <input
                             type="checkbox"
+                            id="indicator"
                             name="Indicator"
                             class="toggle function-i"
                             v-model="overlayStates.indicator"
                             @change="onOverlayChange('i')"
                         />
-                        <label><span v-html="$t('ledStripIndecatorOverlay')"></span></label>
+                        <label for="indicator"><span v-html="$t('ledStripIndecatorOverlay')"></span></label>
                     </div>
                     <div class="checkbox vtxOverlay" v-show="showVtx">
                         <input
                             type="checkbox"
+                            id="vtx"
                             name="Vtx"
                             class="toggle function-v"
                             v-model="overlayStates.vtx"
                             @change="onOverlayChange('v')"
                         />
-                        <label><span v-html="$t('ledStripVtxOverlay')"></span></label>
+                        <label for="vtx"><span v-html="$t('ledStripVtxOverlay')"></span></label>
                     </div>
                 </div>
 
@@ -242,8 +256,9 @@
                     <div class="colorDefineSliders" ref="colorDefineSliders">
                         <div v-html="$t('ledStripColorSetupTitle')"></div>
                         <div class="colorDefineSliderContainer">
-                            <label class="colorDefineSliderLabel" v-html="$t('ledStripH')"></label>
+                            <label for="colorSliderH" class="colorDefineSliderLabel" v-html="$t('ledStripH')"></label>
                             <input
+                                id="colorSliderH"
                                 class="sliderHSV"
                                 type="range"
                                 min="0"
@@ -251,11 +266,12 @@
                                 v-model.number="colorHSV.h"
                                 @input="onColorSliderChange"
                             />
-                            <label class="colorDefineSliderValue Hvalue">{{ colorHSV.h }}</label>
+                            <span class="colorDefineSliderValue Hvalue">{{ colorHSV.h }}</span>
                         </div>
                         <div class="colorDefineSliderContainer">
-                            <label class="colorDefineSliderLabel" v-html="$t('ledStripS')"></label>
+                            <label for="colorSliderS" class="colorDefineSliderLabel" v-html="$t('ledStripS')"></label>
                             <input
+                                id="colorSliderS"
                                 class="sliderHSV"
                                 type="range"
                                 min="0"
@@ -263,11 +279,12 @@
                                 v-model.number="colorHSV.s"
                                 @input="onColorSliderChange"
                             />
-                            <label class="colorDefineSliderValue Svalue">{{ colorHSV.s }}</label>
+                            <span class="colorDefineSliderValue Svalue">{{ colorHSV.s }}</span>
                         </div>
                         <div class="colorDefineSliderContainer">
-                            <label class="colorDefineSliderLabel" v-html="$t('ledStripV')"></label>
+                            <label for="colorSliderV" class="colorDefineSliderLabel" v-html="$t('ledStripV')"></label>
                             <input
+                                id="colorSliderV"
                                 class="sliderHSV"
                                 type="range"
                                 min="0"
@@ -275,7 +292,7 @@
                                 v-model.number="colorHSV.v"
                                 @input="onColorSliderChange"
                             />
-                            <label class="colorDefineSliderValue Vvalue">{{ colorHSV.v }}</label>
+                            <span class="colorDefineSliderValue Vvalue">{{ colorHSV.v }}</span>
                         </div>
                     </div>
                     <button
@@ -362,7 +379,9 @@
         <!-- Bottom Toolbar -->
         <div class="content_toolbar toolbar_fixed_bottom">
             <div class="btn save_btn">
-                <a class="save" href="#" @click.prevent="save" v-html="saveButtonText"></a>
+                <a class="save" href="#" @click.prevent="save">
+                    <span v-html="saveButtonText"></span>
+                </a>
             </div>
         </div>
     </BaseTab>
@@ -532,7 +551,7 @@ const onTabMounted = async () => {
         await loadData();
         initializeGrid();
         loadConfigValues();
-        GUI.content_ready(() => {});
+        GUI.content_ready();
     } catch (error) {
         console.error("Failed to load LED strip data:", error);
     }
@@ -584,11 +603,9 @@ function loadConfigValues() {
 // Selection handlers for custom grid
 function onSelectionChange(newSelection) {
     selectedIndices.value = newSelection;
-    console.log("Selection changed:", newSelection.size, "LEDs selected");
 }
 
 function onSelectionEnd() {
-    console.log("Selection ended, processing selection...");
     handleSelectionComplete();
 }
 
@@ -647,10 +664,7 @@ function handleSelectionComplete() {
 
 // Clear functions
 function clearSelected() {
-    console.log("Clear selected called, selection size:", selectedIndices.value.size);
-
     if (selectedIndices.value.size === 0) {
-        console.log("No selection, skipping clear");
         return;
     }
 
@@ -671,13 +685,10 @@ function clearSelected() {
         modifiers[key] = false;
     });
 
-    console.log("Cleared", selectedIndices.value.size, "LEDs");
     buildLedStripFromGrid(gridLeds);
 }
 
 function clearAll() {
-    console.log("Clear all called");
-
     gridLeds.forEach((led) => {
         led.functions = [];
         led.directions = [];
@@ -698,7 +709,6 @@ function clearAll() {
     // Clear selection
     selectedIndices.value = new Set();
 
-    console.log("Cleared all LEDs");
     buildLedStripFromGrid(gridLeds);
 }
 
@@ -739,10 +749,8 @@ function toggleDirection(dir) {
             if (dirIndex !== -1) {
                 gridLeds[index].directions.splice(dirIndex, 1);
             }
-        } else {
-            if (!gridLeds[index].directions.includes(dir)) {
-                gridLeds[index].directions.push(dir);
-            }
+        } else if (!gridLeds[index].directions.includes(dir)) {
+            gridLeds[index].directions.push(dir);
         }
     });
 
@@ -815,12 +823,10 @@ function onOverlayChange(overlay) {
 
 // Color selection
 function selectColor(colorIndex) {
-    console.log("Color selected:", colorIndex, "for", selectedIndices.value.size, "LEDs");
     selectedColorIndex.value = colorIndex;
 
     if (selectedIndices.value.size > 0) {
         selectedIndices.value.forEach((index) => {
-            console.log("Setting color", colorIndex, "for LED", index);
             gridLeds[index].colorIndex = colorIndex;
         });
         buildLedStripFromGrid(gridLeds);
@@ -1004,12 +1010,7 @@ function removeOverlayFromSelected(overlay) {
 
 // Watch aux channel
 watch(auxChannelValue, (newVal) => {
-    setModeColor(7, 0, parseInt(newVal));
-});
-
-// Watch selection changes for debugging
-watch(hasSelection, (newVal) => {
-    console.log("hasSelection changed:", newVal, "Selection size:", selectedIndices.value.size);
+    setModeColor(7, 0, Number.parseInt(newVal, 10));
 });
 
 // Mounted hook

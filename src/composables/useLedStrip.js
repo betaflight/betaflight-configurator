@@ -6,6 +6,91 @@ import { mspHelper } from "@/js/msp/MSPHelper";
 import semver from "semver";
 import { API_VERSION_1_46 } from "@/js/data_storage";
 
+// Helper functions moved to outer scope
+function getGridPosition(index) {
+    const gridNumber = index + 1;
+    const row = Math.ceil(gridNumber / 16) - 1;
+    let col = ((gridNumber / 16) % 1) * 16 - 1;
+    if (col < 0) {
+        col = 15;
+    }
+    return { x: col, y: row };
+}
+
+function buildUsedWireNumbers(gridState) {
+    const usedWireNumbers = [];
+    gridState.forEach((led) => {
+        const wireNumber = Number.parseInt(led.wireNumber, 10);
+        if (wireNumber >= 0 && !Number.isNaN(wireNumber)) {
+            usedWireNumbers.push(wireNumber);
+        }
+    });
+    usedWireNumbers.sort((a, b) => a - b);
+    return usedWireNumbers;
+}
+
+function hsvToColor(input) {
+    if (!input) {
+        return "";
+    }
+
+    let HSV = { h: Number(input.h), s: Number(input.s), v: Number(input.v) };
+
+    if (HSV.s === 0 && HSV.v === 0) {
+        return "";
+    }
+
+    HSV = { h: HSV.h, s: 1 - HSV.s / 255, v: HSV.v / 255 };
+
+    const HSL = { h: 0, s: 0, l: 0 };
+    HSL.h = HSV.h;
+    HSL.l = ((2 - HSV.s) * HSV.v) / 2;
+
+    if (HSL.l && HSL.l < 1) {
+        if (HSL.l < 0.5) {
+            HSL.s = (HSV.s * HSV.v) / (HSL.l * 2);
+        } else {
+            HSL.s = (HSV.s * HSV.v) / (2 - HSL.l * 2);
+        }
+    }
+
+    return `hsl(${HSL.h},${HSL.s * 100}%,${HSL.l * 100}%)`;
+}
+
+function areModifiersActive(activeFunction) {
+    return ["function-c", "function-a", "function-f"].includes(activeFunction);
+}
+
+function areOverlaysActive(activeFunction) {
+    const activeFunctions = [
+        "",
+        "function-c",
+        "function-a",
+        "function-f",
+        "function-p",
+        "function-e",
+        "function-u",
+        "function-s",
+        "function-l",
+        "function-r",
+        "function-y",
+        "function-o",
+        "function-b",
+        "function-g",
+    ];
+    return activeFunctions.includes(activeFunction);
+}
+
+function isWarningActive(activeFunction) {
+    const inactiveFunctions = ["function-l", "function-s", "function-g"];
+    return !inactiveFunctions.includes(activeFunction);
+}
+
+function isVtxActive(activeFunction) {
+    const activeFunctions = ["function-v", "function-c", "function-a", "function-f"];
+    return activeFunctions.includes(activeFunction);
+}
+
 export function useLedStrip() {
     const wireMode = ref(false);
     const selectedColorIndex = ref(null);
@@ -40,14 +125,21 @@ export function useLedStrip() {
 
     // Save configuration to flight controller
     async function saveConfig() {
-        await new Promise((resolve) => {
-            mspHelper.sendLedStripConfig(() => {
-                mspHelper.sendLedStripColors(() => {
-                    mspHelper.sendLedStripModeColors(() => {
-                        mspHelper.writeConfiguration(false, resolve);
-                    });
-                });
-            });
+        // Refactored to reduce nesting
+        return new Promise((resolve) => {
+            const saveColors = () => {
+                mspHelper.sendLedStripColors(saveModeColors);
+            };
+
+            const saveModeColors = () => {
+                mspHelper.sendLedStripModeColors(writeConfig);
+            };
+
+            const writeConfig = () => {
+                mspHelper.writeConfiguration(false, resolve);
+            };
+
+            mspHelper.sendLedStripConfig(saveColors);
         });
     }
 
@@ -60,17 +152,6 @@ export function useLedStrip() {
             }
         }
         return undefined;
-    }
-
-    // Get grid position from index
-    function getGridPosition(index) {
-        const gridNumber = index + 1;
-        const row = Math.ceil(gridNumber / 16) - 1;
-        let col = ((gridNumber / 16) % 1) * 16 - 1;
-        if (col < 0) {
-            col = 15;
-        }
-        return { x: col, y: row };
     }
 
     // Build LED strip from grid state
@@ -109,19 +190,6 @@ export function useLedStrip() {
         FC.LED_STRIP = newLedStrip;
     }
 
-    // Calculate used wire numbers
-    function buildUsedWireNumbers(gridState) {
-        const usedWireNumbers = [];
-        gridState.forEach((led) => {
-            const wireNumber = parseInt(led.wireNumber);
-            if (wireNumber >= 0 && !isNaN(wireNumber)) {
-                usedWireNumbers.push(wireNumber);
-            }
-        });
-        usedWireNumbers.sort((a, b) => a - b);
-        return usedWireNumbers;
-    }
-
     // Get next available wire number
     function getNextWireNumber(gridState) {
         const usedWireNumbers = buildUsedWireNumbers(gridState);
@@ -132,35 +200,6 @@ export function useLedStrip() {
             }
         }
         return nextWireNumber;
-    }
-
-    // Convert HSV to CSS color
-    function hsvToColor(input) {
-        if (!input) {
-            return "";
-        }
-
-        let HSV = { h: Number(input.h), s: Number(input.s), v: Number(input.v) };
-
-        if (HSV.s === 0 && HSV.v === 0) {
-            return "";
-        }
-
-        HSV = { h: HSV.h, s: 1 - HSV.s / 255, v: HSV.v / 255 };
-
-        const HSL = { h: 0, s: 0, l: 0 };
-        HSL.h = HSV.h;
-        HSL.l = ((2 - HSV.s) * HSV.v) / 2;
-
-        if (HSL.l && HSL.l < 1) {
-            if (HSL.l < 0.5) {
-                HSL.s = (HSV.s * HSV.v) / (HSL.l * 2);
-            } else {
-                HSL.s = (HSV.s * HSV.v) / (2 - HSL.l * 2);
-            }
-        }
-
-        return `hsl(${HSL.h},${HSL.s * 100}%,${HSL.l * 100}%)`;
     }
 
     // Get mode color
@@ -184,50 +223,12 @@ export function useLedStrip() {
         return false;
     }
 
-    // Check if modifiers are active for function
-    function areModifiersActive(activeFunction) {
-        return ["function-c", "function-a", "function-f"].includes(activeFunction);
-    }
-
-    // Check if overlays are active for function
-    function areOverlaysActive(activeFunction) {
-        const activeFunctions = [
-            "",
-            "function-c",
-            "function-a",
-            "function-f",
-            "function-p",
-            "function-e",
-            "function-u",
-            "function-s",
-            "function-l",
-            "function-r",
-            "function-y",
-            "function-o",
-            "function-b",
-            "function-g",
-        ];
-        return activeFunctions.includes(activeFunction);
-    }
-
     // Check if rainbow is active for function
     function isRainbowActive(activeFunction) {
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
             return ["function-c", "function-a", "function-f"].includes(activeFunction);
         }
         return false;
-    }
-
-    // Check if warning overlay is active for function
-    function isWarningActive(activeFunction) {
-        const inactiveFunctions = ["function-l", "function-s", "function-g"];
-        return !inactiveFunctions.includes(activeFunction);
-    }
-
-    // Check if VTX overlay is active for function
-    function isVtxActive(activeFunction) {
-        const activeFunctions = ["function-v", "function-c", "function-a", "function-f"];
-        return activeFunctions.includes(activeFunction);
     }
 
     // Update LED config values (brightness, rainbow delta/freq)

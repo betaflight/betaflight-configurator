@@ -15,6 +15,8 @@
             :index="index"
             :wire-mode="wireMode"
             :is-selected="selectedIndices.has(index)"
+            :hsv-to-color="hsvToColor"
+            :led-colors="ledColors"
             :data-index="index"
             @mouseenter="onPointMouseEnter"
         />
@@ -25,7 +27,7 @@
 </template>
 
 <script setup>
-import { ref, computed, defineProps, defineEmits } from "vue";
+import { ref, computed, defineProps, defineEmits, onMounted, onUnmounted } from "vue";
 import LedGridPoint from "./LedGridPoint.vue";
 
 const props = defineProps({
@@ -39,6 +41,14 @@ const props = defineProps({
     },
     selectedIndices: {
         type: Set,
+        required: true,
+    },
+    hsvToColor: {
+        type: Function,
+        required: true,
+    },
+    ledColors: {
+        type: Object,
         required: true,
     },
 });
@@ -96,8 +106,8 @@ const onMouseDown = (e) => {
     // Check if we clicked on a point
     const target = e.target.closest("[data-index]");
     if (target) {
-        const index = parseInt(target.getAttribute("data-index"));
-        if (!isNaN(index)) {
+        const index = Number.parseInt(target.dataset.index, 10);
+        if (!Number.isNaN(index)) {
             const newSelection = new Set(initialSelection.value);
             if (isShiftPressed.value && props.selectedIndices.has(index)) {
                 newSelection.delete(index);
@@ -148,8 +158,8 @@ const updateSelection = () => {
     const points = gridContainer.value.querySelectorAll("[data-index]");
 
     points.forEach((point) => {
-        const index = parseInt(point.getAttribute("data-index"));
-        if (isNaN(index)) {
+        const index = Number.parseInt(point.dataset.index, 10);
+        if (Number.isNaN(index)) {
             return;
         }
 
@@ -220,16 +230,14 @@ const selectionBoxStyle = computed(() => {
 });
 
 // Mount/unmount event listeners
-import { onMounted, onUnmounted } from "vue";
-
 onMounted(() => {
-    window.addEventListener("keydown", handleKeyDown);
-    window.addEventListener("keyup", handleKeyUp);
+    globalThis.addEventListener("keydown", handleKeyDown);
+    globalThis.addEventListener("keyup", handleKeyUp);
 });
 
 onUnmounted(() => {
-    window.removeEventListener("keydown", handleKeyDown);
-    window.removeEventListener("keyup", handleKeyUp);
+    globalThis.removeEventListener("keydown", handleKeyDown);
+    globalThis.removeEventListener("keyup", handleKeyUp);
 });
 </script>
 
