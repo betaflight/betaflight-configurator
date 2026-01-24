@@ -17,7 +17,17 @@ export function useMotorTesting(configHasChanged, showWarningDialog, digitalProt
     const masterValue = ref(1000);
 
     // Safety: Keys that don't trigger motor stop
-    const ignoreKeys = new Set(["PageUp", "PageDown", "End", "Home", "ArrowUp", "ArrowDown", "AltLeft", "AltRight"]);
+    const ignoreKeys = new Set([
+        "PageUp",
+        "PageDown",
+        "End",
+        "Home",
+        "ArrowUp",
+        "ArrowDown",
+        "AltLeft",
+        "AltRight",
+        "Tab",
+    ]);
 
     /**
      * Keyboard safety handler - stops motors on any key press
