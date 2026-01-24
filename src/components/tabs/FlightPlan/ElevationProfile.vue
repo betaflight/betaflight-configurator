@@ -485,15 +485,17 @@ const handleMouseLeave = () => {
 
 // Fetch ground elevation at 0.2nm intervals along the flight path
 const fetchGroundElevation = async () => {
+    // Increment sequence token and capture it for this fetch BEFORE any early returns
+    // This invalidates any in-flight responses from previous fetches
+    elevationFetchSeq.value++;
+    const currentSeq = elevationFetchSeq.value;
+
     if (waypoints.value.length === 0) {
         groundElevation.value = 0;
         terrainSamples.value = [];
+        isFetchingElevation.value = false;
         return;
     }
-
-    // Increment sequence token and capture it for this fetch
-    elevationFetchSeq.value++;
-    const currentSeq = elevationFetchSeq.value;
 
     isFetchingElevation.value = true;
 

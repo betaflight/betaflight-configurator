@@ -201,14 +201,15 @@ const setupMapLayers = () => {
     // Handle pointer up - end dragging
     mapInstance.value.map.on("pointerup", (event) => {
         if (isDragging.value && draggingWaypointUid.value) {
-            // Check if we actually moved
-            const movedDistance = Math.sqrt(
-                Math.pow(event.coordinate[0] - dragStartCoordinate.value[0], 2) +
-                    Math.pow(event.coordinate[1] - dragStartCoordinate.value[1], 2),
+            // Check if we actually moved (using pixel distance for consistent UI behavior)
+            const startPixel = mapInstance.value.map.getPixelFromCoordinate(dragStartCoordinate.value);
+            const endPixel = mapInstance.value.map.getPixelFromCoordinate(event.coordinate);
+            const pixelDistance = Math.sqrt(
+                Math.pow(endPixel[0] - startPixel[0], 2) + Math.pow(endPixel[1] - startPixel[1], 2),
             );
 
-            if (movedDistance > 1) {
-                // Moved more than 1 pixel - any movement counts as drag
+            if (pixelDistance > 3) {
+                // Moved more than 3 pixels - treat as drag
                 // Get final coordinates
                 const coords = toLonLat(event.coordinate);
                 const latitude = coords[1];
