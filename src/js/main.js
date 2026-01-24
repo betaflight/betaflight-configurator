@@ -356,6 +356,9 @@ async function startProcess() {
                 case "gps":
                     mountVueTab("gps", content_ready);
                     break;
+                case "flight_plan":
+                    mountVueTab("flight_plan", content_ready);
+                    break;
                 case "motors":
                     import("./tabs/motors").then(({ motors }) => motors.initialize(content_ready));
                     break;

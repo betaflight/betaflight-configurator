@@ -89,17 +89,6 @@
                             <div class="legend" i18n="sensorDataFlashFreeSpace"></div>
                             <progress class="dataflash-progress_global" max="100"></progress>
                         </ul>
-                        <div id="expertMode">
-                            <label>
-                                <input
-                                    name="expertModeCheckbox"
-                                    class="togglesmall"
-                                    type="checkbox"
-                                    v-model="expertMode"
-                                />
-                                <span i18n="expertMode" class="expertModeText"></span>
-                            </label>
-                        </div>
                     </div>
                 </div>
                 <div id="header_buttons">
@@ -149,6 +138,9 @@
                                     class="tabicon ic_flasher"
                                     i18n_title="tabFirmwareFlasher"
                                 ></a>
+                            </li>
+                            <li class="tab_flight_plan" id="tab_flight_plan" v-show="expertMode">
+                                <a href="#" i18n="tabFlightPlan" class="tabicon ic_gps" i18n_title="tabFlightPlan"></a>
                             </li>
                         </ul>
                         <ul class="mode-connected">

@@ -15,6 +15,7 @@ import PortHandler from "../js/port_handler.js";
 import PortUsage from "../js/port_usage.js";
 import CONFIGURATOR from "../js/data_storage.js";
 import { BetaflightComponents } from "../js/vue_components.js";
+import { get as getConfig } from "../js/ConfigStorage.js";
 
 // Connection tracking object
 const CONNECTION = reactive({
@@ -39,7 +40,8 @@ const betaflightModel = reactive({
     PortHandler,
     CONNECTION,
     // Reactive expert mode flag to drive tab visibility via Vue
-    expertMode: false,
+    // Load from ConfigStorage on init
+    expertMode: !!getConfig("expertMode").expertMode,
 });
 
 tippy.setDefaultProps({
