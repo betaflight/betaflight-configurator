@@ -178,6 +178,32 @@ export function useFlightPlan() {
         return true;
     };
 
+    // Reorder waypoints (for drag-and-drop)
+    const reorderWaypoints = (fromUid, toUid) => {
+        const fromIndex = state.waypoints.findIndex((wp) => wp.uid === fromUid);
+        const toIndex = state.waypoints.findIndex((wp) => wp.uid === toUid);
+
+        if (fromIndex === -1 || toIndex === -1) {
+            console.error("Waypoint not found for reordering");
+            return false;
+        }
+
+        // Remove the waypoint from its current position
+        const [movedWaypoint] = state.waypoints.splice(fromIndex, 1);
+
+        // Insert it at the new position
+        state.waypoints.splice(toIndex, 0, movedWaypoint);
+
+        // Update order properties for all waypoints
+        state.waypoints.forEach((wp, idx) => {
+            wp.order = idx;
+        });
+
+        savePlan();
+        console.log("Reordered waypoint:", fromUid, "to position:", toIndex);
+        return true;
+    };
+
     // Clear all waypoints
     const clearPlan = () => {
         state.waypoints = [];
@@ -247,6 +273,7 @@ export function useFlightPlan() {
         addWaypointAtLocation,
         updateWaypoint,
         removeWaypoint,
+        reorderWaypoints,
         clearPlan,
         selectWaypoint,
         editWaypoint,

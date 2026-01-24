@@ -21,8 +21,17 @@
                         v-for="waypoint in sortedWaypoints"
                         :key="waypoint.uid"
                         class="waypoint-item"
-                        :class="{ selected: selectedWaypointUid === waypoint.uid }"
+                        :class="{
+                            selected: selectedWaypointUid === waypoint.uid,
+                            'drag-over': dragOverUid === waypoint.uid,
+                        }"
+                        draggable="true"
                         @click="selectWaypoint(waypoint.uid)"
+                        @dragstart="handleDragStart($event, waypoint.uid)"
+                        @dragover="handleDragOver($event, waypoint.uid)"
+                        @dragleave="handleDragLeave($event)"
+                        @drop="handleDrop($event, waypoint.uid)"
+                        @dragend="handleDragEnd($event)"
                     >
                         <div class="waypoint-order">{{ waypoint.order + 1 }}</div>
                         <div class="waypoint-info">
@@ -85,11 +94,16 @@ const {
     editWaypoint,
     openAddWaypoint,
     removeWaypoint,
+    reorderWaypoints,
     getWaypointTypeLabel,
 } = useFlightPlan();
 
 const showDeleteDialog = ref(false);
 const waypointToDelete = ref(null);
+
+// Drag and drop state
+const draggedUid = ref(null);
+const dragOverUid = ref(null);
 
 const handleAddWaypoint = () => {
     openAddWaypoint();
@@ -119,6 +133,53 @@ const getPatternLabel = (pattern) => {
         orbit: i18n.getMessage("flightPlanPatternOrbit"),
     };
     return labels[pattern] || pattern;
+};
+
+// Drag and drop handlers
+const handleDragStart = (event, uid) => {
+    draggedUid.value = uid;
+    event.dataTransfer.effectAllowed = "move";
+    event.dataTransfer.setData("text/plain", uid);
+
+    // Add a slight delay to allow the drag to start before styling changes
+    setTimeout(() => {
+        event.target.classList.add("dragging");
+    }, 0);
+};
+
+const handleDragOver = (event, uid) => {
+    event.preventDefault();
+    event.dataTransfer.dropEffect = "move";
+
+    if (draggedUid.value !== uid) {
+        dragOverUid.value = uid;
+    }
+};
+
+const handleDragLeave = (event) => {
+    // Only clear dragOver if we're leaving the waypoint item entirely
+    if (event.currentTarget.contains(event.relatedTarget)) {
+        return;
+    }
+    dragOverUid.value = null;
+};
+
+const handleDrop = (event, targetUid) => {
+    event.preventDefault();
+
+    if (draggedUid.value && draggedUid.value !== targetUid) {
+        reorderWaypoints(draggedUid.value, targetUid);
+    }
+
+    // Clean up
+    draggedUid.value = null;
+    dragOverUid.value = null;
+};
+
+const handleDragEnd = (event) => {
+    event.target.classList.remove("dragging");
+    draggedUid.value = null;
+    dragOverUid.value = null;
 };
 </script>
 
@@ -186,8 +247,24 @@ const getPatternLabel = (pattern) => {
     background: var(--surface-50);
     border-bottom: 1px solid var(--surface-500);
     color: var(--text);
-    cursor: pointer;
-    transition: background 0.2s;
+    cursor: grab;
+    transition:
+        background 0.2s,
+        opacity 0.2s,
+        transform 0.2s;
+}
+
+.waypoint-item:active {
+    cursor: grabbing;
+}
+
+.waypoint-item.dragging {
+    opacity: 0.4;
+}
+
+.waypoint-item.drag-over {
+    border-top: 3px solid var(--primary-500);
+    transform: translateY(2px);
 }
 
 .waypoint-item:first-child {
