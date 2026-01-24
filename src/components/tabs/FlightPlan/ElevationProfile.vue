@@ -227,12 +227,24 @@ const calculateDistance = (lat1, lon1, lat2, lon2) => {
 // Interpolate a point along a great circle path
 // fraction is between 0 (start) and 1 (end)
 const interpolatePoint = (lat1, lon1, lat2, lon2, fraction) => {
+    // Calculate distance first to check for zero/near-zero case
+    const distance = calculateDistance(lat1, lon1, lat2, lon2);
+
+    // Guard against division by zero for identical or very close waypoints
+    if (distance < 0.001) {
+        // Less than 1mm - return start coordinates
+        return {
+            latitude: lat1,
+            longitude: lon1,
+        };
+    }
+
     const φ1 = (lat1 * Math.PI) / 180;
     const λ1 = (lon1 * Math.PI) / 180;
     const φ2 = (lat2 * Math.PI) / 180;
     const λ2 = (lon2 * Math.PI) / 180;
 
-    const d = calculateDistance(lat1, lon1, lat2, lon2) / 6371000; // Angular distance in radians
+    const d = distance / 6371000; // Angular distance in radians
 
     const a = Math.sin((1 - fraction) * d) / Math.sin(d);
     const b = Math.sin(fraction * d) / Math.sin(d);

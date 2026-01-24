@@ -141,9 +141,14 @@ const handleDragStart = (event, uid) => {
     event.dataTransfer.effectAllowed = "move";
     event.dataTransfer.setData("text/plain", uid);
 
+    // Capture element synchronously before setTimeout (event.currentTarget becomes null inside timeout)
+    const el = event.currentTarget;
+
     // Add a slight delay to allow the drag to start before styling changes
     setTimeout(() => {
-        event.currentTarget.classList.add("dragging");
+        if (el) {
+            el.classList.add("dragging");
+        }
     }, 0);
 };
 

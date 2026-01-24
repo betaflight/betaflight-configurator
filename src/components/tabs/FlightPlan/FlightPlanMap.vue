@@ -409,8 +409,12 @@ const updateMapFeatures = (autoFit = true) => {
     }
 };
 
-// Watch waypoints and update map
-watch(() => waypoints.value, updateMapFeatures, { deep: true });
+// Watch waypoints and update map (don't auto-fit to prevent zoom changes during drag/edit)
+watch(
+    () => waypoints.value,
+    () => updateMapFeatures(false),
+    { deep: true },
+);
 
 // Watch dragging state and update map to show green marker
 watch(
