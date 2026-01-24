@@ -544,10 +544,10 @@ defineExpose({
     width: 90%;
     max-width: 800px;
     max-height: 90vh;
-    border: 2px solid #4d4d4d;
+    border: 2px solid var(--surface-600);
     border-radius: 3px;
-    background-color: rgb(30, 30, 30); /* Fully opaque background */
-    color: var(--defaultText);
+    background-color: var(--surface-100);
+    color: var(--text);
     padding: 20px;
     overflow-y: auto;
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.45);
@@ -563,7 +563,7 @@ defineExpose({
 }
 
 .red-text {
-    color: #e60000;
+    color: var(--error-500);
 }
 
 .regular-button {
@@ -584,7 +584,7 @@ defineExpose({
 }
 
 .escDshotDirectionErrorTextBlock {
-    color: #e60000;
+    color: var(--error-500);
     font-weight: bold;
     margin: 10px 0;
 }
