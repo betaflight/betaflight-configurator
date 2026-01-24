@@ -392,10 +392,10 @@ defineExpose({
     width: 90%;
     max-width: 900px;
     max-height: 90vh;
-    border: 2px solid #4d4d4d;
+    border: 2px solid var(--surface-600);
     border-radius: 3px;
-    background-color: rgb(40, 40, 40); /* Fully opaque background */
-    color: var(--defaultText);
+    background-color: var(--surface-100);
+    color: var(--text);
     padding: 20px;
     overflow-y: auto;
 }
