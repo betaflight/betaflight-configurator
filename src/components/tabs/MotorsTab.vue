@@ -160,7 +160,6 @@
                                                             :disabled="isFeatureEnabled('AIRMODE')"
                                                         />
                                                     </label>
-                                                    <span>&nbsp;</span>
                                                 </td>
                                                 <td>MOTOR_STOP</td>
                                                 <td>
@@ -180,7 +179,6 @@
                                                             @change="toggleFeature('ESC_SENSOR', $event.target.checked)"
                                                         />
                                                     </label>
-                                                    <span>&nbsp;</span>
                                                 </td>
                                                 <td>ESC_SENSOR</td>
                                                 <td>
