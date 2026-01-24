@@ -1861,7 +1861,16 @@ export default defineComponent({
 
         const onCommitTag = (searchQuery) => {
             // Handle custom PR number or commit hash input
-            let formattedValue = searchQuery.trim();
+            if (!searchQuery) {
+                return;
+            }
+
+            const formattedValue = searchQuery.trim();
+
+            // Prevent empty/whitespace submissions
+            if (!formattedValue) {
+                return;
+            }
 
             // Check if it's a PR number (with or without #)
             const prMatch = formattedValue.match(/^#?(\d+)$/);
