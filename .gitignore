@@ -53,3 +53,6 @@ capacitor-plugins/*/android/bin/
 
 
 /*.pem
+/CLAUDE.md
+/.claude
+/AGENTS.md
