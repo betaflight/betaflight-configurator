@@ -15,7 +15,6 @@ import "../css/tabs/receiver.less";
 import "../css/tabs/servos.less";
 import "../css/tabs/gps.less";
 import "../css/tabs/motors.less";
-import "../css/tabs/led_strip.less";
 import "../css/tabs/cli.less";
 import "../tabs/presets/presets.less";
 import "../tabs/presets/TitlePanel/PresetTitlePanel.css";
