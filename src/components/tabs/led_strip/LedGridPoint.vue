@@ -50,7 +50,7 @@ const props = defineProps({
         required: true,
     },
     ledColors: {
-        type: Object,
+        type: Array,
         required: true,
     },
 });
