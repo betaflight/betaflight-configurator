@@ -3329,6 +3329,15 @@
     "flightPlanMaxGroundElev": {
         "message": "Max Ground Elev"
     },
+    "flightPlanAvgGround": {
+        "message": "Avg Ground"
+    },
+    "flightPlanAlt": {
+        "message": "Alt"
+    },
+    "flightPlanDist": {
+        "message": "Dist"
+    },
     "motorsVoltage": {
         "message": "Voltage:"
     },

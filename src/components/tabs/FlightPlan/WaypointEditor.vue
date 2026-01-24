@@ -1,6 +1,6 @@
 <template>
     <Dialog v-model="showEditorDialog" :title="editMode ? $t('flightPlanEditWaypoint') : $t('flightPlanAddWaypoint')">
-        <form @submit.prevent="handleSave">
+        <form ref="formElement" @submit.prevent="handleSave">
             <!-- Latitude -->
             <div class="form-row">
                 <div class="input-column">
@@ -122,12 +122,18 @@
 </template>
 
 <script setup>
-import { reactive, computed, watch } from "vue";
+import { reactive, computed, watch, ref } from "vue";
 import Dialog from "@/components/elements/Dialog.vue";
 import { useFlightPlan } from "@/composables/useFlightPlan";
 
 const { editingWaypointUid, editingWaypoint, showEditorDialog, addWaypoint, updateWaypoint, cancelEdit } =
     useFlightPlan();
+
+// Form element ref for validation
+const formElement = ref(null);
+
+// Timeout ID for delayed reset to prevent race conditions on quick reopen
+let closeResetTimeoutId = null;
 
 // Form state
 const form = reactive({
@@ -159,15 +165,24 @@ watch(
     () => showEditorDialog.value,
     (isOpen, wasOpen) => {
         if (isOpen && !editingWaypointUid.value) {
-            // Dialog opened in add mode, reset form to defaults
+            // Dialog opened in add mode, clear any pending reset and reset form to defaults
+            if (closeResetTimeoutId !== null) {
+                clearTimeout(closeResetTimeoutId);
+                closeResetTimeoutId = null;
+            }
             resetForm();
         } else if (!isOpen && wasOpen) {
-            // Dialog closed, clean up state after a delay to avoid title flicker during close animation
-            setTimeout(() => {
+            // Dialog closed, clear any existing timeout before scheduling new one
+            if (closeResetTimeoutId !== null) {
+                clearTimeout(closeResetTimeoutId);
+            }
+            // Clean up state after a delay to avoid title flicker during close animation
+            closeResetTimeoutId = setTimeout(() => {
                 resetForm();
                 if (editingWaypointUid.value) {
                     cancelEdit();
                 }
+                closeResetTimeoutId = null;
             }, 200);
         }
     },
@@ -185,6 +200,12 @@ const resetForm = () => {
 
 // Handle save
 const handleSave = () => {
+    // Perform HTML5 validation before saving
+    if (!formElement.value?.reportValidity()) {
+        // Validation failed, browser will show validation messages
+        return;
+    }
+
     if (editMode.value) {
         // Update existing waypoint
         const success = updateWaypoint(editingWaypointUid.value, {

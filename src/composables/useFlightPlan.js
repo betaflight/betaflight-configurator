@@ -72,12 +72,16 @@ export function useFlightPlan() {
     // Save flight plan to localStorage
     const savePlan = () => {
         try {
+            // Read existing plan to preserve createdAt timestamp
+            const existing = getConfig(STORAGE_KEY);
+            const existingCreatedAt = existing?.flightPlans?.currentPlan?.createdAt;
+
             const planData = {
                 [STORAGE_KEY]: {
                     currentPlan: {
                         name: "Default Plan",
                         waypoints: state.waypoints,
-                        createdAt: new Date().toISOString(),
+                        createdAt: existingCreatedAt ?? new Date().toISOString(),
                         updatedAt: new Date().toISOString(),
                     },
                 },
@@ -181,7 +185,7 @@ export function useFlightPlan() {
     // Reorder waypoints (for drag-and-drop)
     const reorderWaypoints = (fromUid, toUid) => {
         const fromIndex = state.waypoints.findIndex((wp) => wp.uid === fromUid);
-        const toIndex = state.waypoints.findIndex((wp) => wp.uid === toUid);
+        let toIndex = state.waypoints.findIndex((wp) => wp.uid === toUid);
 
         if (fromIndex === -1 || toIndex === -1) {
             console.error("Waypoint not found for reordering");
@@ -190,6 +194,11 @@ export function useFlightPlan() {
 
         // Remove the waypoint from its current position
         const [movedWaypoint] = state.waypoints.splice(fromIndex, 1);
+
+        // When moving downward, adjust toIndex to account for the removed item
+        if (fromIndex < toIndex) {
+            toIndex--;
+        }
 
         // Insert it at the new position
         state.waypoints.splice(toIndex, 0, movedWaypoint);

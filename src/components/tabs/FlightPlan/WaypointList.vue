@@ -143,7 +143,7 @@ const handleDragStart = (event, uid) => {
 
     // Add a slight delay to allow the drag to start before styling changes
     setTimeout(() => {
-        event.target.classList.add("dragging");
+        event.currentTarget.classList.add("dragging");
     }, 0);
 };
 
@@ -177,7 +177,7 @@ const handleDrop = (event, targetUid) => {
 };
 
 const handleDragEnd = (event) => {
-    event.target.classList.remove("dragging");
+    event.currentTarget.classList.remove("dragging");
     draggedUid.value = null;
     dragOverUid.value = null;
 };

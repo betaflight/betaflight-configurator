@@ -98,7 +98,7 @@
                         class="ground-label"
                         text-anchor="end"
                     >
-                        Avg Ground
+                        {{ $t("flightPlanAvgGround") }}
                     </text>
 
                     <!-- Elevation area fill -->
@@ -155,7 +155,7 @@
                             class="tooltip-text"
                             text-anchor="middle"
                         >
-                            Alt: {{ hoveredPoint.altitude }}ft
+                            {{ $t("flightPlanAlt") }}: {{ hoveredPoint.altitude }}ft
                         </text>
                         <text
                             :x="hoveredPoint.tooltipX"
@@ -163,7 +163,7 @@
                             class="tooltip-text"
                             text-anchor="middle"
                         >
-                            Dist: {{ formatDistance(hoveredPoint.distance) }}
+                            {{ $t("flightPlanDist") }}: {{ formatDistance(hoveredPoint.distance) }}
                         </text>
                     </g>
                 </svg>
@@ -200,6 +200,7 @@ const padding = {
 const groundElevation = ref(0); // Average ground elevation for display
 const terrainSamples = ref([]); // Terrain samples with {distance, elevation, lat, lon}
 const isFetchingElevation = ref(false);
+const elevationFetchSeq = ref(0); // Monotonic sequence to prevent race conditions
 
 // Terrain sampling interval in nautical miles
 const TERRAIN_SAMPLE_INTERVAL_NM = 0.2;
@@ -311,10 +312,15 @@ const maxGroundElevation = computed(() => {
     return Math.round(Math.max(...terrainSamples.value.map((sample) => sample.elevation)));
 });
 
+// Combined maximum for y-axis scaling (considers both flight path and terrain)
+const combinedMax = computed(() => {
+    return Math.max(maxAltitude.value, maxGroundElevation.value);
+});
+
 // Y-axis ticks
 const yAxisTicks = computed(() => {
     const min = 0; // Always start at sea level (0 ft AMSL)
-    const max = maxAltitude.value;
+    const max = combinedMax.value;
     const range = max - min;
     const tickCount = 5;
     const step = Math.ceil(range / (tickCount - 1) / 10) * 10 || 50; // Round to nearest 10
@@ -340,7 +346,7 @@ const scaleX = (distance) => {
 
 const scaleY = (altitude) => {
     const min = 0; // Always start at sea level (0 ft AMSL)
-    const max = maxAltitude.value;
+    const max = combinedMax.value; // Use combined max to include terrain heights
     const range = max - min || 100; // Default range if all altitudes are the same
     const plotHeight = chartHeight - padding.top - padding.bottom;
 
@@ -399,7 +405,7 @@ const areaPath = computed(() => {
 
     const bottomPath = [`L ${points[points.length - 1].x} ${baseY}`, `L ${points[0].x} ${baseY}`, "Z"].join(" ");
 
-    return `${topPath  } ${  bottomPath}`;
+    return `${topPath} ${bottomPath}`;
 });
 
 // Calculate SVG path for terrain line using sampled elevations
@@ -446,7 +452,7 @@ const terrainAreaPath = computed(() => {
 
     const bottomPath = [`L ${points[points.length - 1].x} ${baseY}`, `L ${points[0].x} ${baseY}`, "Z"].join(" ");
 
-    return `${topPath  } ${  bottomPath}`;
+    return `${topPath} ${bottomPath}`;
 });
 
 // Event handlers
@@ -478,6 +484,10 @@ const fetchGroundElevation = async () => {
         terrainSamples.value = [];
         return;
     }
+
+    // Increment sequence token and capture it for this fetch
+    elevationFetchSeq.value++;
+    const currentSeq = elevationFetchSeq.value;
 
     isFetchingElevation.value = true;
 
@@ -571,26 +581,37 @@ const fetchGroundElevation = async () => {
             }
         }
 
-        // Combine samples with elevations
-        terrainSamples.value = samples.map((sample, index) => ({
-            ...sample,
-            elevation: allElevations[index] || 0,
-        }));
+        // Only apply updates if this is still the latest fetch
+        if (currentSeq === elevationFetchSeq.value) {
+            // Combine samples with elevations
+            terrainSamples.value = samples.map((sample, index) => ({
+                ...sample,
+                elevation: allElevations[index] || 0,
+            }));
 
-        // Calculate average ground elevation for display
-        if (allElevations.length > 0) {
-            const sum = allElevations.reduce((acc, val) => acc + val, 0);
-            groundElevation.value = Math.round(sum / allElevations.length);
-            console.log(
-                `Terrain elevations fetched: ${allElevations.length} samples, avg ${groundElevation.value}ft AMSL`,
-            );
+            // Calculate average ground elevation for display
+            if (allElevations.length > 0) {
+                const sum = allElevations.reduce((acc, val) => acc + val, 0);
+                groundElevation.value = Math.round(sum / allElevations.length);
+                console.log(
+                    `Terrain elevations fetched: ${allElevations.length} samples, avg ${groundElevation.value}ft AMSL`,
+                );
+            }
+        } else {
+            console.log(`Discarding stale elevation data (seq ${currentSeq} vs current ${elevationFetchSeq.value})`);
         }
     } catch (error) {
         console.error("Failed to fetch ground elevation:", error);
-        groundElevation.value = 0;
-        terrainSamples.value = [];
+        // Only clear data if this is still the latest fetch
+        if (currentSeq === elevationFetchSeq.value) {
+            groundElevation.value = 0;
+            terrainSamples.value = [];
+        }
     } finally {
-        isFetchingElevation.value = false;
+        // Only clear loading flag if this is still the latest fetch
+        if (currentSeq === elevationFetchSeq.value) {
+            isFetchingElevation.value = false;
+        }
     }
 };
 
