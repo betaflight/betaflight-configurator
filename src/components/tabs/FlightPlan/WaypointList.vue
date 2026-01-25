@@ -39,7 +39,8 @@
                                 {{ waypoint.latitude.toFixed(6) }}°, {{ waypoint.longitude.toFixed(6) }}°
                             </div>
                             <div class="waypoint-details">
-                                {{ waypoint.altitude }}ft AMSL - {{ getWaypointTypeLabel(waypoint.type) }}
+                                {{ waypoint.altitude }}ft AMSL - {{ waypoint.speed }}kts -
+                                {{ getWaypointTypeLabel(waypoint.type) }}
                                 <span v-if="waypoint.type === 'hold'" class="hold-details">
                                     ({{ waypoint.duration }}min, {{ getPatternLabel(waypoint.pattern) }})
                                 </span>

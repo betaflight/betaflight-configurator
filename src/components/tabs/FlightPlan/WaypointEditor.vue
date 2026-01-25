@@ -185,13 +185,16 @@ watch(editingWaypoint, (waypoint) => {
 watch(
     () => showEditorDialog.value,
     (isOpen, wasOpen) => {
-        if (isOpen && !editingWaypointUid.value) {
-            // Dialog opened in add mode, clear any pending reset and reset form to defaults
+        if (isOpen) {
+            // Dialog opened, clear any pending reset from previous close
             if (closeResetTimeoutId !== null) {
                 clearTimeout(closeResetTimeoutId);
                 closeResetTimeoutId = null;
             }
-            resetForm();
+            // Reset form to defaults if opening in add mode
+            if (!editingWaypointUid.value) {
+                resetForm();
+            }
         } else if (!isOpen && wasOpen) {
             // Dialog closed, clear any existing timeout before scheduling new one
             if (closeResetTimeoutId !== null) {
