@@ -24,6 +24,7 @@ import AdjustmentsTab from "../components/tabs/AdjustmentsTab.vue";
 import CliTab from "../components/tabs/CliTab.vue";
 import PowerTab from "../components/tabs/PowerTab.vue";
 import SensorsTab from "../components/tabs/SensorsTab.vue";
+import LedStripTab from "../components/tabs/LedStripTab.vue";
 import FailsafeTab from "../components/tabs/FailsafeTab.vue";
 
 // Registry of Vue tab components - used by main.js for dynamic mounting
@@ -45,6 +46,7 @@ export const VueTabComponents = {
     cli: CliTab,
     power: PowerTab,
     sensors: SensorsTab,
+    led_strip: LedStripTab,
     failsafe: FailsafeTab,
 };
 
@@ -74,6 +76,7 @@ export const BetaflightComponents = {
         app.component("AuxiliaryTab", AuxiliaryTab);
         app.component("OnboardLoggingTab", OnboardLoggingTab);
         app.component("SensorsTab", SensorsTab);
+        app.component("LedStripTab", LedStripTab);
         app.component("FailsafeTab", FailsafeTab);
     },
 };
