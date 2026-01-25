@@ -1353,6 +1353,7 @@ motors.initialize = async function (callback) {
 
         $("#escDshotDirectionDialog-Open").click(function () {
             $(document).on("keydown", onDocumentKeyPress);
+            escDshotDirectionComponent.open();
             domEscDshotDirectionDialog[0].showModal();
         });
 
