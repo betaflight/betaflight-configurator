@@ -320,7 +320,7 @@ async function startProcess() {
                     mountVueTab("led_strip", content_ready);
                     break;
                 case "failsafe":
-                    import("./tabs/failsafe").then(({ failsafe }) => failsafe.initialize(content_ready));
+                    mountVueTab("failsafe", content_ready);
                     break;
                 case "transponder":
                     import("./tabs/transponder").then(({ transponder }) => transponder.initialize(content_ready));
