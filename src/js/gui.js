@@ -320,6 +320,7 @@ class GuiControl {
                 if (attrTitle && !element._tippy) {
                     tippy(element, {
                         content: attrTitle,
+                        allowHTML: true,
                     });
                     jQueryElement.removeAttr("title");
                 }

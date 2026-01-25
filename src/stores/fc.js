@@ -122,6 +122,21 @@ export const useFlightControllerStore = defineStore("flightController", () => {
         set: (val) => (FC.RSSI_CONFIG = val),
     });
 
+    const failsafeConfig = computed({
+        get: () => FC.FAILSAFE_CONFIG,
+        set: (val) => (FC.FAILSAFE_CONFIG = val),
+    });
+
+    const gpsRescue = computed({
+        get: () => FC.GPS_RESCUE,
+        set: (val) => (FC.GPS_RESCUE = val),
+    });
+
+    const rxFailConfig = computed({
+        get: () => FC.RXFAIL_CONFIG,
+        set: (val) => (FC.RXFAIL_CONFIG = val),
+    });
+
     const blackbox = computed({
         get: () => FC.BLACKBOX,
         set: (val) => (FC.BLACKBOX = val),
@@ -173,6 +188,9 @@ export const useFlightControllerStore = defineStore("flightController", () => {
         modeRangesExtra,
         adjustmentRanges,
         rssiConfig,
+        failsafeConfig,
+        gpsRescue,
+        rxFailConfig,
         blackbox,
         dataflash,
         sdcard,
