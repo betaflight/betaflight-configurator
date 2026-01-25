@@ -110,6 +110,15 @@ export function useMotorTesting(configHasChanged, showWarningDialog, digitalProt
         }
     });
 
+    /**
+     * Watch for configuration changes and stop motor testing if active
+     */
+    watch(configHasChanged, (changed) => {
+        if (changed && motorsTestingEnabled.value) {
+            motorsTestingEnabled.value = false;
+        }
+    });
+
     // Cleanup on unmount
     onUnmounted(() => {
         if (motorsTestingEnabled.value) {
