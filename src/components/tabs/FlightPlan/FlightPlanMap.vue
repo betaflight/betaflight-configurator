@@ -61,13 +61,16 @@ const initializeMapAtLocation = (latitude, longitude, logMessage) => {
 // Fetch location from IP-based geolocation API
 const fetchIPLocation = async () => {
     try {
-        const response = await fetch("http://ip-api.com/json");
+        const response = await fetch("https://get.geojs.io/v1/ip/geo.json");
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        if (data.status === "success" && data.lat && data.lon) {
-            return { latitude: data.lat, longitude: data.lon };
+        if (data.latitude && data.longitude) {
+            return {
+                latitude: Number(data.latitude),
+                longitude: Number(data.longitude),
+            };
         }
         throw new Error("Invalid response from IP geolocation API");
     } catch (error) {

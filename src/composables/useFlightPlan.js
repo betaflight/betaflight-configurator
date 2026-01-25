@@ -104,13 +104,13 @@ export function useFlightPlan() {
 
         const waypoint = {
             uid: generateUid(),
-            latitude: waypointData.latitude || 0,
-            longitude: waypointData.longitude || 0,
-            altitude: waypointData.altitude || DEFAULT_ALTITUDE,
-            speed: waypointData.speed || DEFAULT_SPEED,
-            type: waypointData.type || DEFAULT_TYPE,
-            duration: waypointData.duration || 0,
-            pattern: waypointData.pattern || "circle",
+            latitude: waypointData.latitude ?? 0,
+            longitude: waypointData.longitude ?? 0,
+            altitude: waypointData.altitude ?? DEFAULT_ALTITUDE,
+            speed: waypointData.speed ?? DEFAULT_SPEED,
+            type: waypointData.type ?? DEFAULT_TYPE,
+            duration: waypointData.duration ?? 0,
+            pattern: waypointData.pattern ?? "circle",
             order: state.waypoints.length,
         };
 

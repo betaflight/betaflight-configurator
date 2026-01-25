@@ -372,7 +372,8 @@ const totalFlightTime = computed(() => {
         const distanceNM = distanceMeters * METERS_TO_NAUTICAL_MILES;
 
         // Use current waypoint's speed for this segment (speed in knots)
-        const speed = wp.speed || 10; // Default to 10 knots if not set
+        // Guard against zero or negative speed by using a minimum of 1 knot
+        const speed = (wp.speed ?? 10) <= 0 ? 1 : (wp.speed ?? 10);
 
         // Calculate time in hours (distance in NM / speed in knots = hours)
         const segmentTime = distanceNM / speed;
@@ -380,8 +381,14 @@ const totalFlightTime = computed(() => {
     }
 
     // Format as h:mm
-    const hours = Math.floor(totalHours);
-    const minutes = Math.round((totalHours - hours) * 60);
+    let hours = Math.floor(totalHours);
+    let minutes = Math.round((totalHours - hours) * 60);
+
+    // Handle rollover when minutes === 60
+    if (minutes === 60) {
+        hours += 1;
+        minutes = 0;
+    }
 
     return `${hours}:${minutes.toString().padStart(2, "0")}`;
 });
