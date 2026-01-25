@@ -9,6 +9,9 @@
                     <strong>{{ $t("flightPlanDistance") }}:</strong> {{ formatDistance(totalDistance) }}
                 </span>
                 <span class="stat">
+                    <strong>{{ $t("flightPlanFlightTime") }}:</strong> {{ totalFlightTime }}
+                </span>
+                <span class="stat">
                     <strong>{{ $t("flightPlanMinAlt") }}:</strong> {{ minAltitude }}ft
                 </span>
                 <span class="stat">
@@ -44,7 +47,7 @@
                         <text
                             v-for="tick in yAxisTicks"
                             :key="`y-label-${tick.value}`"
-                            :x="padding.left - 5"
+                            :x="padding.left - 9"
                             :y="tick.y + 3"
                             class="axis-label"
                             text-anchor="end"
@@ -99,6 +102,25 @@
                         text-anchor="end"
                     >
                         {{ $t("flightPlanAvgGround") }}
+                    </text>
+
+                    <!-- Maximum ground elevation reference line -->
+                    <line
+                        v-if="maxGroundElevation > 0"
+                        :x1="padding.left"
+                        :y1="scaleY(maxGroundElevation)"
+                        :x2="chartWidth - padding.right"
+                        :y2="scaleY(maxGroundElevation)"
+                        class="max-ground-line"
+                    />
+                    <text
+                        v-if="maxGroundElevation > 0"
+                        :x="chartWidth - padding.right - 5"
+                        :y="scaleY(maxGroundElevation) - 3"
+                        class="max-ground-label"
+                        text-anchor="end"
+                    >
+                        {{ $t("flightPlanMaxGround") }}
                     </text>
 
                     <!-- Elevation area fill -->
@@ -202,8 +224,16 @@ const terrainSamples = ref([]); // Terrain samples with {distance, elevation, la
 const isFetchingElevation = ref(false);
 const elevationFetchSeq = ref(0); // Monotonic sequence to prevent race conditions
 
-// Terrain sampling interval in nautical miles
-const TERRAIN_SAMPLE_INTERVAL_NM = 0.2;
+// Segment-level caching for terrain data
+// Key: "uid1-uid2", Value: { samples: [...], fromPos: {lat, lon}, toPos: {lat, lon} }
+const segmentCache = ref(new Map());
+
+// Terrain sampling configuration
+const MIN_SAMPLE_INTERVAL_METERS = 50; // Minimum distance between samples (50m resolution)
+const MAX_SAMPLES_PER_SEGMENT = 50; // Maximum samples between waypoints
+
+// Generate cache key for a segment between two waypoints
+const getSegmentKey = (fromUid, toUid) => `${fromUid}-${toUid}`;
 
 // Conversion constants
 const METERS_TO_FEET = 3.28084;
@@ -322,6 +352,38 @@ const maxGroundElevation = computed(() => {
         return 0;
     }
     return Math.round(Math.max(...terrainSamples.value.map((sample) => sample.elevation)));
+});
+
+// Total flight time (based on speed at each waypoint for the next segment)
+const totalFlightTime = computed(() => {
+    if (waypoints.value.length < 2) {
+        return "0:00";
+    }
+
+    let totalHours = 0;
+
+    // For each segment from waypoint i to waypoint i+1
+    for (let i = 0; i < waypoints.value.length - 1; i++) {
+        const wp = waypoints.value[i];
+        const nextWp = waypoints.value[i + 1];
+
+        // Calculate segment distance in nautical miles
+        const distanceMeters = calculateDistance(wp.latitude, wp.longitude, nextWp.latitude, nextWp.longitude);
+        const distanceNM = distanceMeters * METERS_TO_NAUTICAL_MILES;
+
+        // Use current waypoint's speed for this segment (speed in knots)
+        const speed = wp.speed || 10; // Default to 10 knots if not set
+
+        // Calculate time in hours (distance in NM / speed in knots = hours)
+        const segmentTime = distanceNM / speed;
+        totalHours += segmentTime;
+    }
+
+    // Format as h:mm
+    const hours = Math.floor(totalHours);
+    const minutes = Math.round((totalHours - hours) * 60);
+
+    return `${hours}:${minutes.toString().padStart(2, "0")}`;
 });
 
 // Combined maximum for y-axis scaling (considers both flight path and terrain)
@@ -483,7 +545,25 @@ const handleMouseLeave = () => {
     hoveredPoint.value = null;
 };
 
-// Fetch ground elevation at 0.2nm intervals along the flight path
+// Check if a segment's waypoints have moved (positions changed)
+const hasSegmentMoved = (segmentKey, fromPos, toPos) => {
+    const cached = segmentCache.value.get(segmentKey);
+    if (!cached) {
+        return true; // Not cached, needs fetching
+    }
+
+    // Check if positions match (with small tolerance for floating point comparison)
+    const tolerance = 0.000001; // ~0.1m tolerance
+    const fromMoved =
+        Math.abs(cached.fromPos.lat - fromPos.lat) > tolerance ||
+        Math.abs(cached.fromPos.lon - fromPos.lon) > tolerance;
+    const toMoved =
+        Math.abs(cached.toPos.lat - toPos.lat) > tolerance || Math.abs(cached.toPos.lon - toPos.lon) > tolerance;
+
+    return fromMoved || toMoved;
+};
+
+// Fetch ground elevation with segment-level caching
 const fetchGroundElevation = async () => {
     // Increment sequence token and capture it for this fetch BEFORE any early returns
     // This invalidates any in-flight responses from previous fetches
@@ -500,109 +580,191 @@ const fetchGroundElevation = async () => {
     isFetchingElevation.value = true;
 
     try {
-        // Generate terrain samples at 0.2nm intervals along the entire flight path
-        const samples = [];
+        // Process segments: check cache and identify which need fetching
+        const segmentsToFetch = []; // { key, fromWp, toWp, fromIndex, toIndex }
+        const allSegmentSamples = []; // Final merged samples with distance offsets
+
         let cumulativeDistance = 0;
 
         for (let i = 0; i < waypoints.value.length; i++) {
             const wp = waypoints.value[i];
 
             if (i === 0) {
-                // Add first waypoint
-                samples.push({
-                    latitude: wp.latitude,
-                    longitude: wp.longitude,
-                    distance: 0,
+                // First waypoint - no segment to process yet
+                continue;
+            }
+
+            const prevWp = waypoints.value[i - 1];
+            const segmentKey = getSegmentKey(prevWp.uid, wp.uid);
+            const segmentDistance = calculateDistance(prevWp.latitude, prevWp.longitude, wp.latitude, wp.longitude);
+
+            const fromPos = { lat: prevWp.latitude, lon: prevWp.longitude };
+            const toPos = { lat: wp.latitude, lon: wp.longitude };
+
+            // Check if segment is cached and hasn't moved
+            if (hasSegmentMoved(segmentKey, fromPos, toPos)) {
+                // Need to fetch this segment
+                segmentsToFetch.push({
+                    key: segmentKey,
+                    fromWp: prevWp,
+                    toWp: wp,
+                    fromIndex: i - 1,
+                    toIndex: i,
+                    segmentDistance,
+                    startDistance: cumulativeDistance,
                 });
             } else {
-                const prevWp = waypoints.value[i - 1];
-                const segmentDistance = calculateDistance(prevWp.latitude, prevWp.longitude, wp.latitude, wp.longitude);
+                // Use cached segment samples, adjusting distance offsets
+                const cached = segmentCache.value.get(segmentKey);
+                const adjustedSamples = cached.samples.map((sample) => ({
+                    ...sample,
+                    distance: cumulativeDistance + sample.relativeDistance,
+                }));
+                allSegmentSamples.push(...adjustedSamples);
+            }
 
-                const segmentDistanceNM = segmentDistance * METERS_TO_NAUTICAL_MILES;
+            cumulativeDistance += segmentDistance;
+        }
 
-                // Generate samples along this segment
-                const numSamples = Math.floor(segmentDistanceNM / TERRAIN_SAMPLE_INTERVAL_NM);
+        // Fetch elevation data for new/changed segments
+        if (segmentsToFetch.length > 0) {
+            console.log(`Fetching terrain for ${segmentsToFetch.length} new/changed segments`);
 
+            // Generate samples for segments that need fetching
+            const samplesToFetch = [];
+            const segmentSampleRanges = []; // Track which samples belong to which segment
+
+            for (const segment of segmentsToFetch) {
+                const startIdx = samplesToFetch.length;
+
+                // Calculate number of samples based on constraints
+                const samplesFrom50m = Math.floor(segment.segmentDistance / MIN_SAMPLE_INTERVAL_METERS);
+                const samplesFromMax = MAX_SAMPLES_PER_SEGMENT;
+                const numSamples = Math.max(0, Math.min(samplesFrom50m, samplesFromMax));
+
+                // Add start waypoint
+                samplesToFetch.push({
+                    latitude: segment.fromWp.latitude,
+                    longitude: segment.fromWp.longitude,
+                    relativeDistance: 0,
+                });
+
+                // Generate intermediate samples
                 for (let j = 1; j <= numSamples; j++) {
-                    const fraction = (j * TERRAIN_SAMPLE_INTERVAL_NM) / segmentDistanceNM;
+                    const fraction = j / (numSamples + 1);
                     const point = interpolatePoint(
-                        prevWp.latitude,
-                        prevWp.longitude,
-                        wp.latitude,
-                        wp.longitude,
+                        segment.fromWp.latitude,
+                        segment.fromWp.longitude,
+                        segment.toWp.latitude,
+                        segment.toWp.longitude,
                         fraction,
                     );
 
-                    const sampleDistance = cumulativeDistance + fraction * segmentDistance;
-                    samples.push({
+                    samplesToFetch.push({
                         latitude: point.latitude,
                         longitude: point.longitude,
-                        distance: sampleDistance,
+                        relativeDistance: fraction * segment.segmentDistance,
                     });
                 }
 
-                // Add current waypoint
-                cumulativeDistance += segmentDistance;
-                samples.push({
-                    latitude: wp.latitude,
-                    longitude: wp.longitude,
-                    distance: cumulativeDistance,
+                // Add end waypoint
+                samplesToFetch.push({
+                    latitude: segment.toWp.latitude,
+                    longitude: segment.toWp.longitude,
+                    relativeDistance: segment.segmentDistance,
+                });
+
+                const endIdx = samplesToFetch.length;
+                segmentSampleRanges.push({ segment, startIdx, endIdx });
+            }
+
+            console.log(`Fetching ${samplesToFetch.length} elevation points via API`);
+
+            // Fetch elevations for all samples (API accepts up to 100 locations per request)
+            const allElevations = [];
+            const batchSize = 100;
+
+            for (let i = 0; i < samplesToFetch.length; i += batchSize) {
+                const batch = samplesToFetch.slice(i, i + batchSize);
+                const locations = batch.map((s) => ({
+                    latitude: s.latitude,
+                    longitude: s.longitude,
+                }));
+
+                const response = await fetch("https://api.open-elevation.com/api/v1/lookup", {
+                    method: "POST",
+                    headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ locations }),
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                if (data.results && data.results.length > 0) {
+                    allElevations.push(...data.results.map((result) => Math.round(result.elevation * METERS_TO_FEET)));
+                }
+
+                // Small delay between batches to avoid rate limiting
+                if (i + batchSize < samplesToFetch.length) {
+                    await new Promise((resolve) => setTimeout(resolve, 100));
+                }
+            }
+
+            // Store fetched segments in cache and add to final samples
+            for (const { segment, startIdx, endIdx } of segmentSampleRanges) {
+                const segmentSamples = [];
+
+                for (let i = startIdx; i < endIdx; i++) {
+                    const sample = samplesToFetch[i];
+                    const elevation = allElevations[i] || 0;
+
+                    // Store with relative distance for caching
+                    segmentSamples.push({
+                        latitude: sample.latitude,
+                        longitude: sample.longitude,
+                        relativeDistance: sample.relativeDistance,
+                        elevation: elevation,
+                    });
+
+                    // Add to final samples with absolute distance
+                    allSegmentSamples.push({
+                        latitude: sample.latitude,
+                        longitude: sample.longitude,
+                        distance: segment.startDistance + sample.relativeDistance,
+                        elevation: elevation,
+                    });
+                }
+
+                // Update cache
+                segmentCache.value.set(segment.key, {
+                    samples: segmentSamples,
+                    fromPos: { lat: segment.fromWp.latitude, lon: segment.fromWp.longitude },
+                    toPos: { lat: segment.toWp.latitude, lon: segment.toWp.longitude },
                 });
             }
-        }
-
-        console.log(`Generated ${samples.length} terrain samples at ${TERRAIN_SAMPLE_INTERVAL_NM}nm intervals`);
-
-        // Fetch elevations for all samples (API accepts up to 100 locations per request)
-        const allElevations = [];
-        const batchSize = 100;
-
-        for (let i = 0; i < samples.length; i += batchSize) {
-            const batch = samples.slice(i, i + batchSize);
-            const locations = batch.map((s) => ({
-                latitude: s.latitude,
-                longitude: s.longitude,
-            }));
-
-            const response = await fetch("https://api.open-elevation.com/api/v1/lookup", {
-                method: "POST",
-                headers: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ locations }),
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            const data = await response.json();
-
-            if (data.results && data.results.length > 0) {
-                allElevations.push(...data.results.map((result) => Math.round(result.elevation * METERS_TO_FEET)));
-            }
-
-            // Small delay between batches to avoid rate limiting
-            if (i + batchSize < samples.length) {
-                await new Promise((resolve) => setTimeout(resolve, 100));
-            }
+        } else {
+            console.log("All segments cached, no API calls needed");
         }
 
         // Only apply updates if this is still the latest fetch
         if (currentSeq === elevationFetchSeq.value) {
-            // Combine samples with elevations
-            terrainSamples.value = samples.map((sample, index) => ({
-                ...sample,
-                elevation: allElevations[index] || 0,
-            }));
+            // Sort samples by distance to ensure proper ordering
+            allSegmentSamples.sort((a, b) => a.distance - b.distance);
+
+            terrainSamples.value = allSegmentSamples;
 
             // Calculate average ground elevation for display
-            if (allElevations.length > 0) {
-                const sum = allElevations.reduce((acc, val) => acc + val, 0);
-                groundElevation.value = Math.round(sum / allElevations.length);
+            if (allSegmentSamples.length > 0) {
+                const sum = allSegmentSamples.reduce((acc, sample) => acc + sample.elevation, 0);
+                groundElevation.value = Math.round(sum / allSegmentSamples.length);
                 console.log(
-                    `Terrain elevations fetched: ${allElevations.length} samples, avg ${groundElevation.value}ft AMSL`,
+                    `Terrain profile updated: ${allSegmentSamples.length} samples, avg ${groundElevation.value}ft AMSL`,
                 );
             }
         } else {
@@ -743,6 +905,20 @@ watch(
 
 .ground-label {
     fill: var(--surface-700);
+    font-size: 7px;
+    font-family: sans-serif;
+    font-weight: bold;
+}
+
+.max-ground-line {
+    stroke: var(--error-500);
+    stroke-width: 1;
+    stroke-dasharray: 2, 2;
+    opacity: 0.7;
+}
+
+.max-ground-label {
+    fill: var(--error-500);
     font-size: 7px;
     font-family: sans-serif;
     font-weight: bold;

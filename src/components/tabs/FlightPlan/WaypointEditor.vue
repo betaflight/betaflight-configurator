@@ -58,6 +58,25 @@
                 <div class="extra-column-2"></div>
             </div>
 
+            <!-- Speed -->
+            <div class="form-row">
+                <div class="input-column">
+                    <input
+                        type="number"
+                        v-model.number="form.speed"
+                        step="0.1"
+                        min="0"
+                        max="500"
+                        required
+                        :aria-label="$t('flightPlanSpeed')"
+                    />
+                </div>
+                <div class="label-column" v-html="$t('flightPlanSpeed')"></div>
+                <div class="separator"></div>
+                <div class="extra-column-1"></div>
+                <div class="extra-column-2"></div>
+            </div>
+
             <!-- Type -->
             <div class="form-row">
                 <div class="input-column">
@@ -140,6 +159,7 @@ const form = reactive({
     latitude: 0,
     longitude: 0,
     altitude: 400,
+    speed: 10,
     type: "flyover",
     duration: 1,
     pattern: "circle",
@@ -154,6 +174,7 @@ watch(editingWaypoint, (waypoint) => {
         form.latitude = Number(waypoint.latitude.toFixed(6));
         form.longitude = Number(waypoint.longitude.toFixed(6));
         form.altitude = waypoint.altitude;
+        form.speed = waypoint.speed;
         form.type = waypoint.type;
         form.duration = waypoint.duration;
         form.pattern = waypoint.pattern;
@@ -193,6 +214,7 @@ const resetForm = () => {
     form.latitude = 0;
     form.longitude = 0;
     form.altitude = 400;
+    form.speed = 10;
     form.type = "flyover";
     form.duration = 1;
     form.pattern = "circle";
@@ -212,6 +234,7 @@ const handleSave = () => {
             latitude: form.latitude,
             longitude: form.longitude,
             altitude: form.altitude,
+            speed: form.speed,
             type: form.type,
             duration: form.duration,
             pattern: form.pattern,
@@ -226,6 +249,7 @@ const handleSave = () => {
             latitude: form.latitude,
             longitude: form.longitude,
             altitude: form.altitude,
+            speed: form.speed,
             type: form.type,
             duration: form.duration,
             pattern: form.pattern,

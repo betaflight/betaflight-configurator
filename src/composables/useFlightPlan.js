@@ -6,6 +6,7 @@ import { i18n } from "../js/localization";
 const STORAGE_KEY = "flightPlans";
 const DEFAULT_ALTITUDE = 400;
 const DEFAULT_TYPE = "flyover";
+const DEFAULT_SPEED = 10; // knots
 
 // Shared state - singleton pattern ensures all components share the same state
 const state = reactive({
@@ -106,6 +107,7 @@ export function useFlightPlan() {
             latitude: waypointData.latitude || 0,
             longitude: waypointData.longitude || 0,
             altitude: waypointData.altitude || DEFAULT_ALTITUDE,
+            speed: waypointData.speed || DEFAULT_SPEED,
             type: waypointData.type || DEFAULT_TYPE,
             duration: waypointData.duration || 0,
             pattern: waypointData.pattern || "circle",

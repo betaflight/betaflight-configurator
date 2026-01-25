@@ -3230,6 +3230,9 @@
     "flightPlanAltitude": {
         "message": "Altitude <span class=\"units\">ft AMSL</span>"
     },
+    "flightPlanSpeed": {
+        "message": "Speed <span class=\"units\">knots</span>"
+    },
     "flightPlanType": {
         "message": "Waypoint Type"
     },
@@ -3314,6 +3317,9 @@
     "flightPlanDistance": {
         "message": "Total Distance"
     },
+    "flightPlanFlightTime": {
+        "message": "Flight Time"
+    },
     "flightPlanMinAlt": {
         "message": "Min Altitude"
     },
@@ -3331,6 +3337,9 @@
     },
     "flightPlanAvgGround": {
         "message": "Avg Ground"
+    },
+    "flightPlanMaxGround": {
+        "message": "Max Ground"
     },
     "flightPlanAlt": {
         "message": "Alt"
