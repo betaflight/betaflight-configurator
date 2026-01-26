@@ -115,45 +115,46 @@ body[data-theme="contrast"] {
     --error-500: #ff3333;
     --error-600: #cc0000;
 
+    --switcherysecond: var(--surface-400);
+
     #tabs li.active a {
         color: #000;
         background-color: var(--primary-500);
     }
-    @tabIcons: {
-        setup: url(../images/icons/cf_icon_setup_grey.svg);
-        ports: url(../images/icons/cf_icon_ports_grey.svg);
-        config: url(../images/icons/cf_icon_config_grey.svg);
-        pid: url(../images/icons/cf_icon_pid_grey.svg);
-        rx: url(../images/icons/cf_icon_rx_grey.svg);
-        modes: url(../images/icons/cf_icon_modes_grey.svg);
-        adjust: url(../images/icons/cf_icon_adjust_grey.svg);
-        servo: url(../images/icons/cf_icon_servo_grey.svg);
-        gps: url(../images/icons/cf_icon_gps_grey.svg);
-        led: url(../images/icons/cf_icon_led_grey.svg);
-        sensors: url(../images/icons/cf_icon_sensors_grey.svg);
-        log: url(../images/icons/cf_icon_log_grey.svg);
-        data: url(../images/icons/cf_icon_data_grey.svg);
-        cli: url(../images/icons/cf_icon_cli_grey.svg);
-        motor: url(../images/icons/cf_icon_motor_grey.svg);
-        welcome: url(../images/icons/cf_icon_welcome_grey.svg);
-        help: url(../images/icons/cf_icon_help_grey.svg);
-        flasher: url(../images/icons/cf_icon_flasher_grey.svg);
-        transponder: url(../images/icons/cf_icon_transponder_grey.svg);
-        osd: url(../images/icons/icon_osd_white.svg);
-        vtx: url(../images/icons/cf_icon_vtx_grey.svg);
-        power: url(../images/icons/cf_icon_power_grey.svg);
-        failsafe: url(../images/icons/cf_icon_failsafe_grey.svg);
-        backup: url(../images/icons/cf_icon_backup_grey.svg);
-        wizzard: url(../images/icons/cf_icon_wizard_grey.svg);
-        advanced: url(../images/icons/cf_icon_advanced_grey.svg);
-        mission: url(../images/icons/cf_icon_mission_grey.svg);
-        user: url(../images/icons/icon_user_profile_grey.svg);
-    };
-    each(@tabIcons, {
-        li.active .ic_@{key}::before {
-            background-color: var(--surface-100);
-        }
-    });
+
+    li.active
+        :is(
+            .ic_setup,
+            .ic_ports,
+            .ic_config,
+            .ic_pid,
+            .ic_rx,
+            .ic_modes,
+            .ic_adjust,
+            .ic_servo,
+            .ic_gps,
+            .ic_led,
+            .ic_sensors,
+            .ic_log,
+            .ic_data,
+            .ic_cli,
+            .ic_motor,
+            .ic_welcome,
+            .ic_help,
+            .ic_flasher,
+            .ic_transponder,
+            .ic_osd,
+            .ic_vtx,
+            .ic_power,
+            .ic_failsafe,
+            .ic_backup,
+            .ic_wizzard,
+            .ic_advanced,
+            .ic_mission,
+            .ic_user
+        )::before {
+        background-color: var(--surface-100);
+    }
 
     .darkgrey_box {
         color: var(--surface-100);
@@ -162,6 +163,4 @@ body[data-theme="contrast"] {
     .btn a.disabled {
         color: var(--surface-100) !important;
     }
-
-    --switcherysecond: var(--surface-400);
 }
