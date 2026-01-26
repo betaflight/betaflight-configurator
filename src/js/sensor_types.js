@@ -14,7 +14,8 @@ function parseHardwareOutput(output) {
     const lines = text.split("\n");
     for (const line of lines) {
         if (line.startsWith("Allowed values: ")) {
-            const values = line.substring("Allowed values: ".length).split(", ");
+            const valuesStr = line.substring("Allowed values: ".length);
+            const values = valuesStr.split(", ");
             return values;
         }
     }
@@ -50,10 +51,10 @@ export async function fetchSensorNames() {
     for (const sensor of sensorCommands) {
         try {
             const output = await new Promise((resolve, reject) => {
-                const timeout = setTimeout(() => reject(new Error("CLI command timeout")), 2000);
-                MSP.send_cli_command(sensor.command, (output) => {
+                const timeout = setTimeout(() => reject(new Error("CLI command timeout")), 5000);
+                MSP.send_cli_command(sensor.command, (response) => {
                     clearTimeout(timeout);
-                    resolve(output);
+                    resolve([...response]); // Make a copy to avoid reference issues
                 });
             });
             FC.SENSOR_NAMES[sensor.type] = parseHardwareOutput(output);
@@ -65,127 +66,107 @@ export async function fetchSensorNames() {
 }
 
 /**
- * Returns sensor type definitions with display names and available hardware options.
- * For API 1.48+, uses dynamically fetched sensor names if available, otherwise falls back to hardcoded lists.
- * For older APIs, applies version-specific modifications to the sensor lists.
+ * Legacy sensor types function for older API versions.
+ * Returns sensor type definitions with hardcoded lists and version-specific modifications.
  * @returns {Object} Object containing sensor type definitions with name and elements properties
  */
-export function sensorTypes() {
+function sensorTypesLegacy() {
     const sensorTypes = {
         acc: {
             name: "Accelerometer",
-            elements:
-                FC.SENSOR_NAMES && FC.SENSOR_NAMES.acc.length > 0
-                    ? FC.SENSOR_NAMES.acc
-                    : [
-                        "AUTO",
-                        "NONE",
-                        "ADXL345",
-                        "MPU6050",
-                        "MMA8452",
-                        "BMA280",
-                        "LSM303DLHC",
-                        "MPU6000",
-                        "MPU6500",
-                        "MPU9250",
-                        "ICM20601",
-                        "ICM20602",
-                        "ICM20608G",
-                        "ICM20649",
-                        "ICM20689",
-                        "ICM42605",
-                        "ICM42688P",
-                        "BMI160",
-                        "BMI270",
-                        "LSM6DSO",
-                        "LSM6DSV16X",
-                        "VIRTUAL",
-                    ],
+            elements: [
+                "AUTO",
+                "NONE",
+                "ADXL345",
+                "MPU6050",
+                "MMA8452",
+                "BMA280",
+                "LSM303DLHC",
+                "MPU6000",
+                "MPU6500",
+                "MPU9250",
+                "ICM20601",
+                "ICM20602",
+                "ICM20608G",
+                "ICM20649",
+                "ICM20689",
+                "ICM42605",
+                "ICM42688P",
+                "BMI160",
+                "BMI270",
+                "LSM6DSO",
+                "LSM6DSV16X",
+                "VIRTUAL",
+            ],
         },
         gyro: {
             name: "Gyroscope",
-            elements:
-                FC.SENSOR_NAMES && FC.SENSOR_NAMES.gyro.length > 0
-                    ? FC.SENSOR_NAMES.gyro
-                    : [
-                        "AUTO",
-                        "NONE",
-                        "MPU6050",
-                        "L3G4200D",
-                        "MPU3050",
-                        "L3GD20",
-                        "MPU6000",
-                        "MPU6500",
-                        "MPU9250",
-                        "ICM20601",
-                        "ICM20602",
-                        "ICM20608G",
-                        "ICM20649",
-                        "ICM20689",
-                        "ICM42605",
-                        "ICM42688P",
-                        "BMI160",
-                        "BMI270",
-                        "LSM6DSO",
-                        "LSM6DSV16X",
-                        "VIRTUAL",
-                    ],
+            elements: [
+                "AUTO",
+                "NONE",
+                "MPU6050",
+                "L3G4200D",
+                "MPU3050",
+                "L3GD20",
+                "MPU6000",
+                "MPU6500",
+                "MPU9250",
+                "ICM20601",
+                "ICM20602",
+                "ICM20608G",
+                "ICM20649",
+                "ICM20689",
+                "ICM42605",
+                "ICM42688P",
+                "BMI160",
+                "BMI270",
+                "LSM6DSO",
+                "LSM6DSV16X",
+                "VIRTUAL",
+            ],
         },
         baro: {
             name: "Barometer",
-            elements:
-                FC.SENSOR_NAMES && FC.SENSOR_NAMES.baro.length > 0
-                    ? FC.SENSOR_NAMES.baro
-                    : [
-                        "DEFAULT",
-                        "NONE",
-                        "BMP085",
-                        "MS5611",
-                        "BMP280",
-                        "LPS",
-                        "QMP6988",
-                        "BMP388",
-                        "DPS310",
-                        "2SMPB_02B",
-                        "VIRTUAL",
-                    ],
+            elements: [
+                "DEFAULT",
+                "NONE",
+                "BMP085",
+                "MS5611",
+                "BMP280",
+                "LPS",
+                "QMP6988",
+                "BMP388",
+                "DPS310",
+                "2SMPB_02B",
+                "VIRTUAL",
+            ],
         },
         mag: {
             name: "Magnetometer",
-            elements:
-                FC.SENSOR_NAMES && FC.SENSOR_NAMES.mag.length > 0
-                    ? FC.SENSOR_NAMES.mag
-                    : [
-                        "DEFAULT",
-                        "NONE",
-                        "HMC5883",
-                        "AK8975",
-                        "AK8963",
-                        "QMC5883",
-                        "LIS2MDL",
-                        "LIS3MDL",
-                        "MPU925X_AK8963",
-                        "IST8310",
-                    ],
+            elements: [
+                "DEFAULT",
+                "NONE",
+                "HMC5883",
+                "AK8975",
+                "AK8963",
+                "QMC5883",
+                "LIS2MDL",
+                "LIS3MDL",
+                "MPU925X_AK8963",
+                "IST8310",
+            ],
         },
         gps: {
             name: "GPS",
-            elements:
-                FC.SENSOR_NAMES && FC.SENSOR_NAMES.gps.length > 0 ? FC.SENSOR_NAMES.gps : ["NMEA", "UBLOX", "MSP"],
+            elements: ["NMEA", "UBLOX", "MSP"],
         },
         sonar: {
             name: "Sonar",
-            elements:
-                FC.SENSOR_NAMES && FC.SENSOR_NAMES.sonar.length > 0
-                    ? FC.SENSOR_NAMES.sonar
-                    : ["NONE", "HCSR04", "TFMINI", "TF02", "MTF01", "MTF02", "MTF01P", "MTF02P", "TFNOVA"],
+            elements: ["NONE", "HCSR04", "TFMINI", "TF02", "MTF01", "MTF02", "MTF01P", "MTF02P", "TFNOVA"],
         },
         opticalflow: {
             name: "Optical Flow",
-            elements:
-                FC.SENSOR_NAMES && FC.SENSOR_NAMES.opticalflow.length > 0
-                    ? FC.SENSOR_NAMES.opticalflow
-                    : ["NONE", "MT"],
+            elements: ["NONE", "MT"],
         },
     };
 
@@ -215,4 +196,70 @@ export function sensorTypes() {
     }
 
     return sensorTypes;
+}
+
+/**
+ * Returns sensor type definitions with display names and available hardware options.
+ * For API 1.48+, automatically fetches dynamic sensor names from the flight controller if not already available.
+ * For older APIs, uses hardcoded lists with version-specific modifications.
+ * @returns {Promise<Object>} Promise that resolves to an object containing sensor type definitions with name and elements properties
+ */
+export async function sensorTypes() {
+    // For API 1.48+, fetch dynamic sensor names if not already fetched
+    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_48)) {
+        // Check if we already have sensor names
+        const hasSensorNames = FC.SENSOR_NAMES && Object.values(FC.SENSOR_NAMES).some((arr) => arr.length > 0);
+
+        if (!hasSensorNames) {
+            await fetchSensorNames();
+        }
+
+        // Ensure FC.SENSOR_NAMES exists (defensive programming)
+        if (!FC.SENSOR_NAMES) {
+            FC.SENSOR_NAMES = {
+                acc: [],
+                gyro: [],
+                baro: [],
+                mag: [],
+                gps: [],
+                sonar: [],
+                opticalflow: [],
+            };
+        }
+
+        // Return types using the fetched sensor names
+        return {
+            acc: {
+                name: "Accelerometer",
+                elements: FC.SENSOR_NAMES.acc || [],
+            },
+            gyro: {
+                name: "Gyroscope",
+                elements: FC.SENSOR_NAMES.gyro || [],
+            },
+            baro: {
+                name: "Barometer",
+                elements: FC.SENSOR_NAMES.baro || [],
+            },
+            mag: {
+                name: "Magnetometer",
+                elements: FC.SENSOR_NAMES.mag || [],
+            },
+            gps: {
+                name: "GPS",
+                elements: FC.SENSOR_NAMES.gps || [],
+            },
+            sonar: {
+                name: "Sonar",
+                elements: FC.SENSOR_NAMES.sonar || [],
+            },
+            opticalflow: {
+                name: "Optical Flow",
+                elements: FC.SENSOR_NAMES.opticalflow || [],
+            },
+        };
+    } else {
+        // For older APIs, use the legacy function synchronously
+        return sensorTypesLegacy();
+    }
 }

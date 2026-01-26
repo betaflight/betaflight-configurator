@@ -12,7 +12,7 @@ import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47, API_VERSION_1_48 
 import { gui_log } from "../gui_log";
 import $ from "jquery";
 import { ispConnected } from "../utils/connection";
-import { sensorTypes, fetchSensorNames } from "../sensor_types";
+import { sensorTypes } from "../sensor_types";
 import { addArrayElementsAfter, replaceArrayElement } from "../utils/array";
 
 const setup = {
@@ -309,23 +309,14 @@ setup.initialize = function (callback) {
             }
 
             MSP.send_message(MSPCodes.MSP2_SENSOR_CONFIG_ACTIVE, false, false, async function () {
-                if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
-                    displaySensorInfo();
-                } else if (semver.eq(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
-                    MSP.send_message(MSPCodes.MSP2_GYRO_SENSOR, false, false, displaySensorInfo);
-                } else if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_48)) {
-                    MSP.send_message(MSPCodes.MSP2_GYRO_SENSOR, false, false, async function () {
-                        await fetchSensorNames();
-                        displaySensorInfo();
-                    });
-                }
+                async function displaySensorInfo() {
+                    const types = await sensorTypes();
 
-                function displaySensorInfo() {
                     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
                         let gyroInfoList = [];
                         for (let i = 0; i < FC.GYRO_SENSOR.gyro_count; i++) {
                             if ((FC.SENSOR_ALIGNMENT.gyro_enable_mask & (1 << i)) !== 0) {
-                                gyroInfoList.push(sensorTypes().gyro.elements[FC.GYRO_SENSOR.gyro_hardware[i]]);
+                                gyroInfoList.push(types.gyro.elements[FC.GYRO_SENSOR.gyro_hardware[i]]);
                             }
                         }
                         sensor_gyro_e.html(gyroInfoList.join(" "));
@@ -334,33 +325,18 @@ setup.initialize = function (callback) {
                             FC.SENSOR_CONFIG_ACTIVE.gyro_hardware,
                             sensor_gyro_e,
                             "gyro",
-                            sensorTypes().gyro.elements,
+                            types.gyro.elements,
                         );
                     }
 
-                    addSensorInfo(
-                        FC.SENSOR_CONFIG_ACTIVE.acc_hardware,
-                        sensor_acc_e,
-                        "acc",
-                        sensorTypes().acc.elements,
-                    );
-                    addSensorInfo(
-                        FC.SENSOR_CONFIG_ACTIVE.baro_hardware,
-                        sensor_baro_e,
-                        "baro",
-                        sensorTypes().baro.elements,
-                    );
-                    addSensorInfo(
-                        FC.SENSOR_CONFIG_ACTIVE.mag_hardware,
-                        sensor_mag_e,
-                        "mag",
-                        sensorTypes().mag.elements,
-                    );
+                    addSensorInfo(FC.SENSOR_CONFIG_ACTIVE.acc_hardware, sensor_acc_e, "acc", types.acc.elements);
+                    addSensorInfo(FC.SENSOR_CONFIG_ACTIVE.baro_hardware, sensor_baro_e, "baro", types.baro.elements);
+                    addSensorInfo(FC.SENSOR_CONFIG_ACTIVE.mag_hardware, sensor_mag_e, "mag", types.mag.elements);
                     addSensorInfo(
                         FC.SENSOR_CONFIG_ACTIVE.sonar_hardware,
                         sensor_sonar_e,
                         "sonar",
-                        sensorTypes().sonar.elements,
+                        types.sonar.elements,
                     );
 
                     // opticalflow sensor is available since 1.47
@@ -369,9 +345,21 @@ setup.initialize = function (callback) {
                             FC.SENSOR_CONFIG_ACTIVE.opticalflow_hardware,
                             sensor_opticalflow_e,
                             "opticalflow",
-                            sensorTypes().opticalflow.elements,
+                            types.opticalflow.elements,
                         );
                     }
+                }
+
+                if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+                    await displaySensorInfo();
+                } else if (semver.eq(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+                    MSP.send_message(MSPCodes.MSP2_GYRO_SENSOR, false, false, async function () {
+                        await displaySensorInfo();
+                    });
+                } else if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_48)) {
+                    MSP.send_message(MSPCodes.MSP2_GYRO_SENSOR, false, false, async function () {
+                        await displaySensorInfo();
+                    });
                 }
             });
         };

@@ -733,10 +733,10 @@ import MSPCodes from "../../js/msp/MSPCodes";
 import { mspHelper } from "../../js/msp/MSPHelper.js";
 import { gui_log } from "../../js/gui_log";
 import { i18n } from "../../js/localization";
-import { sensorTypes, fetchSensorNames } from "../../js/sensor_types"; // Import for dropdown lists
+import { sensorTypes } from "../../js/sensor_types"; // Import for dropdown lists
 import { have_sensor } from "../../js/sensor_helpers";
 import semver from "semver";
-import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47, API_VERSION_1_48 } from "../../js/data_storage";
+import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "../../js/data_storage";
 import { bit_check, bit_set, bit_clear } from "../../js/bit";
 import { updateTabList } from "../../js/utils/updateTabList";
 import WikiButton from "../elements/WikiButton.vue";
@@ -830,10 +830,20 @@ export default defineComponent({
         const hasDualGyros = ref(false);
         const showMultiGyro = ref(false); // API 1.47+ multi-gyro UI
 
+        // Sensor types - populated asynchronously
+        const sensorTypesData = reactive({
+            gyro: { name: "Gyroscope", elements: [] },
+            acc: { name: "Accelerometer", elements: [] },
+            baro: { name: "Barometer", elements: [] },
+            mag: { name: "Magnetometer", elements: [] },
+            sonar: { name: "Rangefinder", elements: [] },
+            opticalflow: { name: "Optical Flow", elements: [] },
+        });
+
         const gyroList = computed(() => {
             if (!showMultiGyro.value) return [];
 
-            const types = sensorTypes().gyro.elements;
+            const types = sensorTypesData.gyro.elements;
             const detectedHardware = fcStore.gyroSensor?.gyro_hardware || [];
 
             // Use actual detected hardware count
@@ -1168,6 +1178,15 @@ export default defineComponent({
         };
 
         const initializeUI = async () => {
+            // Populate sensor types first (async operation)
+            const types = await sensorTypes();
+            sensorTypesData.gyro = types.gyro;
+            sensorTypesData.acc = types.acc;
+            sensorTypesData.baro = types.baro;
+            sensorTypesData.mag = types.mag;
+            sensorTypesData.sonar = types.sonar;
+            sensorTypesData.opticalflow = types.opticalflow;
+
             // Populate Reactive State
             pidAdvancedConfig.pid_process_denom = fcStore.pidAdvancedConfig.pid_process_denom;
 
@@ -1290,21 +1309,11 @@ export default defineComponent({
             }
 
             // Rangefinder / Optical Flow (API 1.47+)
-            if (semver.eq(fcStore.config.apiVersion, API_VERSION_1_47)) {
-                const types = sensorTypes();
-                sonarTypesList.value = types.sonar.elements;
+            if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
+                sonarTypesList.value = sensorTypesData.sonar.elements;
                 showRangefinder.value = sonarTypesList.value?.length > 0;
 
-                opticalFlowTypesList.value = types.opticalflow.elements;
-                showOpticalFlow.value = opticalFlowTypesList.value?.length > 0;
-            } else if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_48)) {
-                await fetchSensorNames();
-
-                const types = sensorTypes();
-                sonarTypesList.value = types.sonar.elements;
-                showRangefinder.value = sonarTypesList.value?.length > 0;
-
-                opticalFlowTypesList.value = types.opticalflow.elements;
+                opticalFlowTypesList.value = sensorTypesData.opticalflow.elements;
                 showOpticalFlow.value = opticalFlowTypesList.value?.length > 0;
             }
         };
