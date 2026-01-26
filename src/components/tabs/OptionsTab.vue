@@ -316,6 +316,14 @@ export default defineComponent({
         watch(
             () => settings.darkTheme,
             (value) => {
+                // Contrast theme requires dark mode - prevent user from changing it
+                if (settings.colorTheme === "contrast") {
+                    settings.darkTheme = 0;
+                    setConfig({ darkTheme: 0 });
+                    setDarkTheme(0);
+                    return;
+                }
+
                 setConfig({ darkTheme: value });
                 setDarkTheme(value);
             },
