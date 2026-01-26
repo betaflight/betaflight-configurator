@@ -3,7 +3,7 @@ import "../../libraries/jquery.nouislider.min.css";
 import "../../libraries/jquery.nouislider.pips.min.css";
 import "../../libraries/flightindicators.css";
 
-import "../css/theme.less";
+import "../css/theme.css";
 import "../css/main.less";
 import "../css/tabs/static_tab.less";
 import "../css/tabs/setup.less";
