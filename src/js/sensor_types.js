@@ -50,7 +50,7 @@ export async function fetchSensorNames() {
 
     for (const sensor of sensorCommands) {
         try {
-            const output = await new Promise((resolve, reject) => {
+            const output = await new Promise((resolve) => {
                 MSP.send_cli_command(sensor.command, (response) => {
                     resolve([...response]); // Make a copy to avoid reference issues
                 });
