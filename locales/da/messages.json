@@ -166,6 +166,10 @@
         "message": "Aktiver kun CLI tilstand",
         "description": "Text for the option to enable or disable CLI only mode"
     },
+    "automaticDevOptions": {
+        "message": "Aktiver automatisk udviklings indstillinger for udviklings releases \/ byg",
+        "description": "Text for the option to automatically enable development settings for preview builds"
+    },
     "showManualMode": {
         "message": "Aktiver forbindelse manuelt",
         "description": "Text for the option to enable or disable manual connection mode"
@@ -686,11 +690,11 @@
     "defaultWelcomeIntro": {
         "message": "Velkommen til <strong>Betaflight app<\/strong>, et værktøj til opdatering, opsætning og tuning af din flight controller (FC)."
     },
-    "defaultWelcomeHead": {
+    "defaultHardwareHead": {
         "message": "Hardware"
     },
-    "defaultWelcomeText": {
-        "message": "Programmet understøtter hardware, der kan køre Betaflight. Tjek fanen Brænd firmware for liste over hardware muligheder.<br \/><br \/> <a href=\"https:\/\/github.com\/betaflight\/blackbox-log-viewer\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Hent Betaflight Blackbox Log Viewer<\/a><br \/><br \/><a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Hent Betaflight TX Lua Scripts<\/a><br \/><br \/>Firmware kildekode kan downloades <a href=\"https:\/\/github.com\/betaflight\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">her<\/a><br \/><br \/>Den seneste <b>STM USB VCP driver<\/b> kan downloades <a href=\"http:\/\/www.st.com\/web\/en\/catalog\/tools\/PF257938\" target=\"_blank\" rel=\"noopener noreferrer\">her<\/a><br \/>Ældre hardware brug en CP210x USB til seriel chip:<br \/>Den seneste <b>CP210x Drivers<\/b> kan downloades <a href=\"https:\/\/www.silabs.com\/products\/development-tools\/software\/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">her<\/a><br \/>Den seneste <b>Zadig<\/b> til Windows USB driverinstallation kan downloades <a href=\"http:\/\/zadig.akeo.ie\/\" target=\"_blank\" rel=\"noopener noreferrer\">her<\/a><br \/><b>ImpulseRC Driver Fixer<\/b> kan downloades <a href=\"https:\/\/impulserc.com\/pages\/downloads\" target=\"blank\" rel=\"noopener noreferrer\">her<\/a> <\/a>"
+    "defaultSoftwareHead": {
+        "message": "Software"
     },
     "defaultContributingHead": {
         "message": "Bidrag"
@@ -705,16 +709,10 @@
         "message": "Betaflight <a href=\"https:\/\/discord.betaflight.com\/invite\" target=\"_blank\" rel=\"noopener noreferrer\">Discord Server<\/a>.<br \/>Del din flyve oplevelse, skriv om Betaflight, hjælp andre eller få hjælp til dig selv fra Betaflight fællesskabet."
     },
     "statisticsDisclaimer": {
-        "message": "Betaflight app indsamler anonym brugsstatistik. For eksempel omfatter disse data (men er ikke begrænset til) antallet af release udgivelser, geografiske region af brugerne, FC type, firmwareversioner, brug af UI-elementer og faner osv. Resuméet af disse data er delt <a href=\"https:\/\/datastudio.google.com\/u\/0\/reporting\/1pK1PFw0eWmsgl2npvuzwAqscVzlhJvuF\" target=\"_blank\" rel=\"noopener noreferrer\">her<\/a>. Indsamlingen skal anvendes til bedre at forstå, hvordan Betaflight app bliver brugt, for at forstå tendenser og for mulige UI forbedringer. Brugere kan fravælge dataindsamling i fanen Indstillinger."
+        "message": "Denne Betaflight App indsamler anonym brugsstatistik. Disse brugsdata kan omfatte antallet af lanceringer, geografisk region af brugerne, typer af FC, firmwareversioner, klik i app, faner osv. Vi indsamler disse data for bedre at forstå, anvendelse af app, og måske generelle tendenser. Vi gør dette for at hjælpe os med at udvikle en forbedret brugergrænseflade og samle erfaring. Brugere kan fravælge dataindsamling i fanen Valgmuligheder. For information om, hvordan vi indsamler og bruger dine data, se vores <a href=\"https:\/\/www.betaflight.com\/privacy\" rel=\"noopener noreferrer\" target=\"_blank\">privacy policy<\/a>."
     },
     "defaultButtonFirmwareFlasher": {
         "message": "Brænd firmware"
-    },
-    "defaultDonateHead": {
-        "message": "Vedrørende Open Source og støtte med donation"
-    },
-    "defaultDonateText": {
-        "message": "<p><strong>Betaflight<\/strong> er <strong>open source<\/strong> programmel til opsætning af flight controller (FC) som er tilgængelig uden beregning, for alle brugere, men også <strong>uden garanti<\/strong>.<\/p><p>Hvis du fandt Betaflight eller Betaflight app nyttig, så overvej venligst at <strong>støtte<\/strong> udviklingen ved en donation.<\/p>"
     },
     "defaultDonateBottom": {
         "message": "<p>Hvis du løbende vil støtte op om projektet, bør du overveje a blive patreon for os på $t(patreonLink.message).<\/p>"
@@ -3577,6 +3575,9 @@
     "sdcardStatusUnknown": {
         "message": "Ukendt tilstand $1"
     },
+    "firmwareFlasherPleaseWait": {
+        "message": "Vent et øjeblik"
+    },
     "firmwareFlasherBranch": {
         "message": "Vælg github Pull Request (PR #) eller commit"
     },
@@ -3612,10 +3613,13 @@
         "message": "Release i skyen - detajler:"
     },
     "firmwareFlasherCloudBuildLogUrl": {
-        "message": "Vis log."
+        "message": "Vis log"
     },
     "firmwareFlasherCloudBuildStatus": {
         "message": "Status:"
+    },
+    "firmwareFlasherCloudBuildQueued": {
+        "message": "sat i kø"
     },
     "firmwareFlasherCloudBuildPending": {
         "message": "afventer ..."
@@ -3782,14 +3786,11 @@
     "firmwareFlasherMessage": {
         "message": "Besked:"
     },
-    "firmwareFlasherWarningText": {
-        "message": "Du bør <span class=\"message-negative\">ikke<\/span> brænde <strong>ikke-Betaflight \/ ikke-complient Betaflight<\/strong> hardware med denne firmware brænder.<br \/>Du må <span class=\"message-negative\">ikke<\/span> <strong>frakoble<\/strong> FC eller <strong>slukke<\/strong> din pc under brænding.<br \/><br \/><strong>Bemærk: <\/strong>STM32 bootloader er gemt i ROM, som ikke kan ændres.<br \/><strong>Bemærk: <\/strong><span class=\"message-negative\">Autotilslut<\/span> er altid deaktiveret, mens du er inde i firmware brænder.<br \/><strong>Bemærk: <\/strong>Sørg for at du har en sikkerhedskopi af din FC konfiguration; nogle opgraderinger\/nedgraderinger vil slette\/ændre din konfiguration.<br \/><strong>Bemærk:<\/strong> Hvis du har problemer efter brænding, <strong>prøv først at frakoble alle kabler fra din FC<\/strong>, prøv genstart, prøv at genindstaller\/opgrader drivere.<br \/><strong>Bemærk:<\/strong> Når du brænder FC, som er direkte tilsluttet USB (de fleste nyere FC), sørg for at have læst afsnittet USB Flashing i Betaflight manual og at du har installeret den korrekte software og drivere"
-    },
     "firmwareFlasherRecoveryHead": {
         "message": "<strong>Gendannelse \/ tabt kommunikation<\/strong>"
     },
     "firmwareFlasherRecoveryText": {
-        "message": "Hvis du har mistet kommunikationen med din FC, skal du følge disse trin for at gendanne kommunikation: <ul><li>Sluk FC.<\/li><li>Aktiver 'Ingen genstartssekvens', aktiver 'Slet alt på chip'.<\/li><li>Hold FC BOOT knap nede eller sæt BOOT jumper til sluttet.<\/li><li>Tænd FC (aktivitet LED blinker IKKE, hvis det er gjort korrekt).<\/li><li>Installer alle STM32 drivere og Zadig om nødvendigt, se evt.  <a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">USB Flashing<\/a> sektion i Betaflight manual (engelsk).<\/li><li>Genstart app (luk \/ åben)<\/li><li>Slip BOOT-knappen eller fjern jumper over BOOT kontakt, på din FC.<\/li><li>Flash med korrekt firmware (ved hjælp af manuel baud hastighed, hvis angivet i din FC's manual).<\/li><li>Sluk FC.<\/li><li>Hvis der er en BOOT jumper, fjern den.<\/li><li>Tænd FC (aktivitet LED skal blinke).<\/li><li>Forbind FC normalt.<\/li><\/ul>"
+        "message": "Hvis du har mistet kommunikationen med din FC, skal du følge disse trin for at gendanne kommunikation: <ul><li>Sluk FC.<\/li><li>Aktiver 'Ingen genstartssekvens', aktiver 'Slet alt på chip'.<\/li><li>Hold FC BOOT knap nede eller sæt BOOT jumper til sluttet.<\/li><li>Tænd FC (aktivitet LED blinker IKKE, hvis det er gjort korrekt).<\/li><li>Installer alle STM32 drivere og Zadig om nødvendigt, se evt. <a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">USB Flashing<\/a> sektion i Betaflight manual (engelsk).<\/li><li>Genstart app (luk \/ åben)<\/li><li>Slip BOOT-knappen eller fjern jumper over BOOT kontakt, på din FC.<\/li><li>Flash med korrekt firmware (ved hjælp af manuel baud hastighed, hvis angivet i din FC's manual).<\/li><li>Sluk FC.<\/li><li>Hvis der er en BOOT jumper, fjern den.<\/li><li>Tænd FC (aktivitet LED skal blinke).<\/li><li>Forbind FC normalt.<\/li><\/ul>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Forlad Firmware brænder"
@@ -3895,7 +3896,7 @@
         "message": "Du er ved at installere en <strong>firmware et udviklings Build<\/strong>. Da udviklingen er undervejs, er der risiko for at du kan opleve:<strong><ul><li>firmwaren slet ikke  fungerer <\/li><li>firmwaren ikke kan bruges til flyvning<\/li><li>der er sikkerhedsproblemer med firmwaren for eksempel at fartøjet flyver væk<\/li><li>firmwaren kan bevirke, at FC ikke reagerer eller bliver beskadiget<\/li><\/ul><\/strong>Hvis du fortsætter med dette Build, <strong>påtager du dig det fulde ansvar i risikoen for, at noget af ovenstående sker<\/strong>. Desuden anerkender du, at det er nødvendigt at udføre <strong>grundige test UDEN propeller<\/strong> , før du forsøger at flyve med den firmware som kommer med dette Build."
     },
     "unstableFirmwareAcknowledgement": {
-        "message": "Jeg har læst ovenstående og <strong>Jeg påtager mig det fulde ansvar<strong> for at anvende en udviklings firmware release"
+        "message": "Jeg har læst ovenstående og <strong>Jeg påtager mig det fulde ansvar<\/strong> for at anvende en udviklings firmware release"
     },
     "unstableFirmwareAcknowledgementFlash": {
         "message": "Brænd firmware"
@@ -7368,6 +7369,9 @@
     },
     "cordovaWebviewUpdateBtn": {
         "message": "Opdatér fra Google Play Butik"
+    },
+    "cordovaWebviewEnable": {
+        "message": "Gå til enhedens informationssektion i Indstillinger og tryk på byggenummeret 10 gange for at aktivere 'Udviklerindstillinger'. Åbn derefter udviklerindstillinger og vælg <b>{{app}}<\/b> som webView-udbyder."
     },
     "cordovaWebviewEnableBtn": {
         "message": "Åbn indstillinger"

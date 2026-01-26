@@ -674,12 +674,6 @@
     "defaultWelcomeIntro": {
         "message": "Ласкаво просимо до <strong>застосунку Betaflight<\/strong> - програми, призначеної для спрощення оновлення, конфігурації та налаштування вашого польотного контролера."
     },
-    "defaultWelcomeHead": {
-        "message": "Апаратне забезпечення"
-    },
-    "defaultWelcomeText": {
-        "message": "Застосунок підтримує все обладнання, яке може запускати Betaflight. Перегляньте вкладку програматора, щоб отримати повний список обладнання.<br \/><br \/> <a href=\"https:\/\/github.com\/betaflight\/blackbox-log-viewer\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Завантажити Betaflight Blackbox Log Viewer<\/a><br \/><br \/><a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Завантажити Betaflight TX Lua Scripts<\/a><br \/><br \/>Вихідний код застосунка можна завантажити <a href=\"https:\/\/github.com\/betaflight\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">тут<\/a><br \/><br \/>Для застарілого обладнання з контролером CP210x USB:<br \/>Останні <b>CP210x Драйвери<\/b> можна завантажити <a href=\"https:\/\/www.silabs.com\/products\/development-tools\/software\/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">тут<\/a><br \/>Останній <b>Zadig<\/b> для встановлення USB-драйвера Windows можна завантажити <a href=\"http:\/\/zadig.akeo.ie\/\" target=\"_blank\" rel=\"noopener noreferrer\">тут<\/a><br \/><b>ImpulseRC Driver Fixer<\/b> можна завантажити <a href=\"https:\/\/impulserc.com\/pages\/downloads\" target=\"blank\" rel=\"noopener noreferrer\">тут<\/a>"
-    },
     "defaultContributingHead": {
         "message": "Сприяння"
     },
@@ -692,17 +686,8 @@
     "defaultDiscordText": {
         "message": "Сервер Betaflight на <a href=\"https:\/\/discord.betaflight.com\/invite\" target=\"_blank\" rel=\"noopener noreferrer\">Discord<\/a>.<br \/>Діліться своїм досвідом польотів, обговорюйте Betaflight, допомагайте іншим або отримуйте допомогу від спільноти."
     },
-    "statisticsDisclaimer": {
-        "message": "Застосунок Betaflight збирає анонімну статистику використання. Наприклад, ці дані включають (але не обмежуються) кількість запусків, географічний регіон користувачів, типи контролерів польоту, версії прошивок, використання елементів і вкладок інтерфейсу тощо. Зведена інформація про ці дані наведена <a href=\"https:\/\/datastudio.google.com\/u\/0\/reporting\/1pK1PFw0eWmsgl2npvuzwAqscVzlhJvuF\" target=\"_blank\" rel=\"noopener noreferrer\">тут<\/a>. Збір інформації здійснюється для кращого розуміння того, як використовується застосунок Betaflight, а також для виявлення тенденцій у спільноті та можливого вдосконалення інтерфейсу. Користувачі можуть відмовитися від збору даних на вкладці \"Опції\"."
-    },
     "defaultButtonFirmwareFlasher": {
         "message": "Програматор"
-    },
-    "defaultDonateHead": {
-        "message": "Відкритий код \/ Повідомлення про пожертву"
-    },
-    "defaultDonateText": {
-        "message": "<p><strong>Betaflight<\/strong> - це програмне забезпечення для польотного контролера, яке є <strong>відкритим кодом<\/strong> і доступне безкоштовно <strong>без гарантії<\/strong> для всіх користувачів.<\/p><p>Якщо вважаєте, що прошивка Betaflight або застосунок Betaflight були корисними для вас, будь ласка, розгляньте можливість <strong>підтримати<\/strong> їх розробку пожертвуванням.<\/p>"
     },
     "defaultDonateBottom": {
         "message": "<p>Якщо хочете сприяти фінансово на постійній основі, можете розглянути можливість стати нашим патроном на $t(patreonLink.message).<\/p>"
@@ -3565,9 +3550,6 @@
     "firmwareFlasherCloudBuildDetails": {
         "message": "Деталі хмарної збірки:"
     },
-    "firmwareFlasherCloudBuildLogUrl": {
-        "message": "Показати журнал."
-    },
     "firmwareFlasherCloudBuildStatus": {
         "message": "Стан:"
     },
@@ -3736,14 +3718,8 @@
     "firmwareFlasherMessage": {
         "message": "Повідомлення:"
     },
-    "firmwareFlasherWarningText": {
-        "message": "Будь ласка, <span class=\"message-negative\">не<\/span> намагайтесь прошивати <strong>не Betaflight<\/strong> обладнання за допомогою цього програматора.<br \/> <span class=\"message-negative\">Не<\/span> <strong>відключайте<\/strong> плату та <strong>не вимикайте<\/strong> комп'ютер під час прошивки.<br \/><br \/><strong>Примітка:<\/strong> Завантажувач (bootloader) STM32 зберігається в ПЗУ, і його неможливо пошкодити.<br \/><strong>Примітка:<\/strong> <span class=\"message-negative\">Автоматичне підключення<\/span> завжди вимкнене, поки ви знаходитесь в програматорі.<br \/><strong>Примітка:<\/strong> Переконайтесь, що у вас є резервна копія конфігурації, оскільки деякі оновлення\/пониження версії зітруть вашу конфігурацію.<br \/><strong>Примітка:<\/strong> Якщо у вас виникають проблеми з прошиванням, спробуйте спочатку від'єднати всі кабелі з вашої плати польотного контролера, перезавантажити комп'ютер та оновити драйвери.<br \/><strong>Примітка:<\/strong> При прошивці плат, які мають пряме підключення USB роз'ємів (більшість новіших плат), переконайтесь, що ви прочитали розділ USB Flashing у посібнику Betaflight та встановили правильне програмне забезпечення та драйвери"
-    },
     "firmwareFlasherRecoveryHead": {
         "message": "<strong>Відновлення \/ Втрата зв'язку<\/strong>"
-    },
-    "firmwareFlasherRecoveryText": {
-        "message": "Якщо зв’язок із платою втрачено, виконайте такі кроки, щоб відновити зв’язок: <ul><li>Вимкніть живлення.<\/li><li>Увімкніть «Польотник уже в режимі завантажувача», увімкніть «Повністю очистити мікроконтролер».<\/li><li>Замкніть контакти BOOT або утримуйте кнопку BOOT.<\/li><li>Увімкніть живлення (індикатор активності НЕ блимає, якщо все зроблено правильно).<\/li><li>Установіть усі драйвери STM32 і Zadig, якщо потрібно (див. <a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">Прошивання через USB<\/a> у посібнику Betaflight).<\/li><li>Закрийте застосунок, перезапустіть його.<\/li><li>Відпустіть кнопку BOOT, якщо вона є на вашому польотнику.<\/li><li>Прошийте правильною прошивкою (з використанням ручної швидкості передачі даних, якщо вказано у посібнику коритувача до вашого польотного контролера).<\/li><li>Вимкніть живлення.<\/li><li>Зніміть перемичку BOOT.<\/li><li>Увімкніть живлення (світлодіод активності має блимати).<\/li><li>Підключіться нормально.<\/li><\/ul>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Вийти з програматора"
@@ -3847,9 +3823,6 @@
     },
     "unstableFirmwareAcknowledgementDialog": {
         "message": "Ви збираєтесь прошити <strong>розробницьку версію прошивки<\/strong>. Ця версія знаходяться в процесі розробки, і може мати будь-яку з наступних проблем:<strong><ul><li>прошивка взагалі не працює;<\/li><li>прошивка не придатна для польоту;<\/li><li>є проблеми з безпекою пов'язані з прошивкою, наприклад, самовільні польоти;<\/li><li>прошивка може призвести до того, що польотний контролер стане несправним або буде пошкоджений<\/li><\/ul><\/strong>Якщо продовжите процес прошивки цієї версії прошивки, <strong>ви несете повну відповідальність за ризик, пов'язаний з будь-якою з цих проблем<\/strong>. Крім того, ви погоджуєтесь на те, що необхідно провести <strong>ретельні тестування на столі без пропелерів<\/strong> перед будь-якою спробою польоту з цією прошивкою."
-    },
-    "unstableFirmwareAcknowledgement": {
-        "message": "Я прочитав вищезазначене і <strong>беру на себе повну відповідальність<strong> за перепрошивку нестабільного програмного забезпечення"
     },
     "unstableFirmwareAcknowledgementFlash": {
         "message": "Прошити"

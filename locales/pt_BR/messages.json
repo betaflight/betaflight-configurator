@@ -599,12 +599,6 @@
     "eeprom_saved_ok": {
         "message": "EEPROM <span class=\"message-positive\">salvo<\/span>"
     },
-    "defaultWelcomeHead": {
-        "message": "Hardware"
-    },
-    "defaultWelcomeText": {
-        "message": "A aplicação suporta todo o hardware que possa executar o Betaflight. Verifique a aba Atualizar para obter uma lista completa de hardware.<br \/><br \/> <a href=\"https:\/\/github.com\/betaflight\/blackbox-log-viewer\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Download Betaflight Blackbox Viewer<\/a><br \/><br \/><a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Download Betaflight TX Lua Scripts<\/a><br \/><br \/>O download do código fonte do firmware pode ser feito <a href=\"https:\/\/github.com\/betaflight\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">aqui<\/a><br \/><br \/>Para hardware antigo que utilize o USB CP210x para comunicação serial:<br \/>Faça o download dos <b>drivers do CP210x<\/b> mais recentes <a href=\"https:\/\/www.silabs.com\/products\/development-tools\/software\/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">aqui<\/a><br \/>Faça o download do mais recente driver USB <b>Zadig<\/b> para Windows <a href=\"http:\/\/zadig.akeo.ie\/\" target=\"_blank\" rel=\"noopener noreferrer\">aqui<\/a><br \/>Faça o download do <b>ImpulseRC Driver Fixer<\/b> <a href=\"https:\/\/impulserc.com\/pages\/downloads\" target=\"blank\" rel=\"noopener noreferrer\">aqui<\/a>"
-    },
     "defaultContributingHead": {
         "message": "Contribuir"
     },
@@ -616,9 +610,6 @@
     },
     "defaultButtonFirmwareFlasher": {
         "message": "Atualizador de firmware"
-    },
-    "defaultDonateHead": {
-        "message": "Código Fonte \/ Nota de Doação"
     },
     "defaultDonateBottom": {
         "message": "<p>Se deseja ajudar este projeto financeiramente de forma continua, considere tornar-se nosso benfeitor através do site $t(patreonLink.message).<\/p>"
@@ -3116,9 +3107,6 @@
     "firmwareFlasherCloudBuildDetails": {
         "message": "Detalhes da versão da nuvem:"
     },
-    "firmwareFlasherCloudBuildLogUrl": {
-        "message": "Exibir log."
-    },
     "firmwareFlasherCloudBuildStatus": {
         "message": "Status:"
     },
@@ -3284,9 +3272,6 @@
     "firmwareFlasherMessage": {
         "message": "Mensagem:"
     },
-    "firmwareFlasherWarningText": {
-        "message": "Por favor <span class=\"message-negative\">não<\/span> tente atualizar hardware <strong>não-betaflight<\/strong> utilizando este atualizador de firmware.<br \/><span class=\"message-negative\">Não<\/span><strong> desconecte<\/strong> a placa ou <strong>desligue<\/strong> seu computador durante a atualização<br \/><br \/><strong>Nota: <\/strong>o bootloader do STM32 é salvo na ROM, não é possível danificá-lo.<br \/><strong>Nota: <\/strong><span class=\"message-negative\">Auto-Conectar<\/span> está sempre desativado enquanto você está na tela de atualização.<br \/><strong>Nota: <\/strong>Tenha a certeza de que você tem um backup; algumas atualizações podem limpar as suas configurações.<br \/><strong>Nota:<\/strong> Se não conseguir atualizar, <strong> tente primeiro desconectar todos os cabos do seu controlador de voo<\/strong>, tente reiniciar o dispositivo ou atualizar seus drivers.<br \/><strong>Nota:<\/strong> Quando for atualizar placas com uma conexão USB direta (como a maioria das placas recentes) tenha a certeza de que você leu a seção de atualização por USB (USB Flashing) do manual do Betaflight e que também os drivers e softwares corretos estão instalados"
-    },
     "firmwareFlasherRecoveryHead": {
         "message": "<strong>Recuperação \/ Comunicação perdida<\/strong>"
     },
@@ -3362,9 +3347,6 @@
     },
     "unstableFirmwareAcknowledgementDialog": {
         "message": "Você está prestes a instalar uma <strong>versão em desenvolvimento<\/strong> do firmware. Estas compilações são um trabalho em andamento e qualquer uma das consequências a seguir podem acontecer:<strong><ul><li>o firmware não funciona de forma alguma.<\/li><li>é impossivel voar.<\/li><li>há problemas de segurança como a perda de controle durante o voo.<\/li><li>o controlador de voo pode ficar sem resposta ou danificado.<\/li><\/ul><\/strong>Se decidir prosseguir com a instalação deste firmware, <strong>você está assumindo total responsabilidade pelos riscos de qualquer uma das consequências acima<\/strong>. Além disso, você reconhece que é necessário executar os <strong>testes de bancada completos, sem as hélices<\/strong>, antes de qualquer tentativa de voar com esta versão."
-    },
-    "unstableFirmwareAcknowledgement": {
-        "message": "Eu li o texto acima e <strong>assumo total responsabilidade<strong> por instalar um firmware instável"
     },
     "unstableFirmwareAcknowledgementFlash": {
         "message": "Atualizar"

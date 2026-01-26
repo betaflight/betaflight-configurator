@@ -668,12 +668,6 @@
     "defaultWelcomeIntro": {
         "message": "Bienvenido a <strong>Betaflight App<\/strong>, una utilidad diseñada para simplificar el actualizar, configurar y ajustar tu controlador de vuelo."
     },
-    "defaultWelcomeHead": {
-        "message": "Hardware"
-    },
-    "defaultWelcomeText": {
-        "message": "La aplicación soporta todo el hardware que puede ejecutar Betaflight. Mira el apartado Instalar Firmware para una lista completa del hardware.<br \/><br \/> <a href=\"https:\/\/github.com\/betaflight\/blackbox-log-viewer\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Descargar Betaflight Blackbox Log Viewer<\/a><br \/><br \/><a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Descargar Betaflight TX Lua Scripts<\/a><br \/><br \/>El código fuente del firmware puede descargarse desde <a href=\"https:\/\/github.com\/betaflight\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">aquí<\/a><br \/><br \/>Para hardware antiguo que use un chip USB CP210x a serie:<br \/>Los últimos <b>Drivers CP210x<\/b> pueden descargarse desde <a href=\"https:\/\/www.silabs.com\/products\/development-tools\/software\/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">aquí<\/a><br \/>El último driver <b>Zadig<\/b> para instalación del driver USB de Windows puede descargarse desde <a href=\"http:\/\/zadig.akeo.ie\/\" target=\"_blank\" rel=\"noopener noreferrer\">aquí<\/a><br \/><b>Solucionador de Driver de ImpulseRC<\/b> puede ser descargado <a href=\"https:\/\/impulserc.com\/pages\/downloads\" target=\"blank\" rel=\"noopener noreferrer\">aquí<\/a>"
-    },
     "defaultContributingHead": {
         "message": "Contribuir"
     },
@@ -686,17 +680,8 @@
     "defaultDiscordText": {
         "message": "<a href=\"https:\/\/discord.betaflight.com\/invite\" target=\"_blank\" rel=\"noopener noreferrer\">Servidor Discord<\/a> de Betaflight.<br \/>Comparte tu experiencia de vuelo, habla sobre Betaflight, ayuda a otras personas o recibe ayuda de la comunidad."
     },
-    "statisticsDisclaimer": {
-        "message": "Betaflight App recopila estadísticas de uso anónimas. Por ejemplo, estos datos incluyen (pero no se limitan a) el número de ejecuciones, la región geográfica de los usuarios, tipos de controladores de vuelo, versiones de firmware, uso de elementos y pestañas, etc. El resumen de estos datos se comparte <a href=\"https:\/\/datastudio.google.com\/u\/0\/reporting\/1pK1PFw0eWmsgl2npvuzwAqscVzlhJvuF\" target=\"_blank\" rel=\"noopener noreferrer\">aquí<\/a>. La recolección se hace para entender mejor cómo se utiliza el Configurador Betaflight, para entender las tendencias de la comunidad, y para posibles mejoras en la interfaz de usuario. Los usuarios pueden dejar de recolectar datos en la pestaña Opciones."
-    },
     "defaultButtonFirmwareFlasher": {
         "message": "Instalar Firmware"
-    },
-    "defaultDonateHead": {
-        "message": "Software Libre \/ Aviso de Donación"
-    },
-    "defaultDonateText": {
-        "message": "<p><strong>Betaflight<\/strong> es un software controlador de vuelo que es <strong>software libre<\/strong> y está disponible gratuitamente <strong>sin garantía<\/strong> para todos los usuarios.<\/p><p>Si encuentras Betaflight o Betaflight App útil, por favor considera <strong>ayudar<\/strong> al desarrollo donando.<\/p>"
     },
     "defaultDonateBottom": {
         "message": "<p>Si deseas contribuir financieramente de manera regular, deberías considerar convertirte en patrocinador nuestro en $t(patreonLink.message). <\/p >"
@@ -3497,9 +3482,6 @@
     "firmwareFlasherCloudBuildDetails": {
         "message": "Detalles de la compilación en la nube:"
     },
-    "firmwareFlasherCloudBuildLogUrl": {
-        "message": "Mostrar registro."
-    },
     "firmwareFlasherCloudBuildStatus": {
         "message": "Estado:"
     },
@@ -3668,14 +3650,8 @@
     "firmwareFlasherMessage": {
         "message": "Mensaje:"
     },
-    "firmwareFlasherWarningText": {
-        "message": "Por favor <span class=\"message-negative\">no<\/span> intentes usar este instalador de firmware en hardware <strong>no-Betaflight<\/strong>.<br \/><span class=\"message-negative\">No<\/span> <strong>desconectes<\/strong> la placa o <strong>apagues<\/strong> tu ordenador mientras se está instalando.<br \/><br \/><strong>Nota: <\/strong>El gestor de arranque del STM32 está almacenado en ROM, por lo que no puede quedarse inutilizado.<br \/><strong>Nota: <\/strong><span class=\"message-negative\">Auto-Conectar<\/span> siempre está desactivado mientras estés dentro del instalador de firmware.<br \/><strong>Nota: <\/strong>Asegúrate de que tienes una copia de seguridad; algunas actualizaciones borrarán tu configuración.<br \/><strong>Nota:<\/strong> Si tienes problemas al instalar <strong>intenta desconectar todos los cable de tu FC<\/strong> primero, intenta reiniciar, actualizar drivers.<br \/><strong>Nota:<\/strong> Al instalar en placas que tienen directamente conectados puertos USB (la mayoría de placas nuevas) asegúrate de que has leído la sección de Instalación por USB del manual de Betaflight y tienes el software y drivers correctos instalados."
-    },
     "firmwareFlasherRecoveryHead": {
         "message": "<strong>Recuperación \/ Pérdida de comunicación<\/strong>"
-    },
-    "firmwareFlasherRecoveryText": {
-        "message": "Si has perdido la comunicación con tu placa sigue estos pasos para restaurar la comunicación: <ul><li>Apagar.<\/li><li>Activar 'No reiniciar', activar 'Borrado completo del chip'.<\/li><li>Unir los pins BOOT o pulsar el botón BOOT.<\/li><li>Encender (el LED de actividad NO parpadeará si se hace correctamente).<\/li><li>Instalar todos los drivers para STM32 y Zadig si es necesario (ver sección <a href=\"https:\/\/betaflight.com\/docs\/wiki\/archive\/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">Instalación por USB<\/a> del manual).<\/li><li>Cerrar la aplicación, reiniciar la aplicación.<\/li><li>Soltar botón BOOT si tu FC tiene uno.<\/li><li>Instalar el firmware correcto (configurando la velocidad de transmisión si viene especificada en el manual de tu FC).<\/li><li>Apagar.<\/li><li>Liberar pins BOOT.<\/li><li>Encender (el LED de actividad debe parpadear).<\/li><li>Conectar normalmente.<\/li><\/ul>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Abandonar el Instalador de Firmware"
@@ -3779,9 +3755,6 @@
     },
     "unstableFirmwareAcknowledgementDialog": {
         "message": "Estás a punto de instalar una <strong>versión en desarrollo del firmware<\/strong>. Estas versiones son un trabajo en curso, y puede que suceda cualquiera de estas situaciones:<strong><ul><li>el firmware no funcione en absoluto;<\/li><li>el firmware no sea volable;<\/li><li>haya problemas de seguridad con el firmware, por ejemplo que se vaya volando;<\/li><li>el firmware puede causar que la controladora no responda, o quede dañada;<\/li><\/ul><\/strong>Si decides instalar este firmware, <strong>estás asumiendo toda la responsabilidad por el riesgo de que cualquiera de las situaciones anteriores suceda<\/strong>. Además reconoces que es necesario realizar <strong>pruebas completas de banco sin hélices<\/strong> antes de cualquier intento de volar este firmware."
-    },
-    "unstableFirmwareAcknowledgement": {
-        "message": "He leído lo anterior y <strong>asumo toda la responsabilidad<strong> de instalar firmware inestable"
     },
     "unstableFirmwareAcknowledgementFlash": {
         "message": "Instalar"

@@ -668,12 +668,6 @@
     "defaultWelcomeIntro": {
         "message": "Добро пожаловать в приложение <strong>Betaflight<\/strong>, которое упрощает обновление, настройку и конфигурацию полетного контроллера."
     },
-    "defaultWelcomeHead": {
-        "message": "Аппаратная часть"
-    },
-    "defaultWelcomeText": {
-        "message": "Этот конфигуратор поддерживает все полетные контроллеры, на которых может быть запущен Betaflight. Полный список поддерживаемых полетных контроллеров находится на вкладке Обновления Прошивки.<br \/><br \/> <a href=\"https:\/\/github.com\/betaflight\/blackbox-log-viewer\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Скачать Betaflight Blackbox Log Viewer<\/a><br \/><br \/><a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Скачать Betaflight TX Lua скрипты<\/a><br \/><br \/>Исходный код прошивок можно скачать <a href=\"https:\/\/github.com\/betaflight\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">здесь<\/a><br \/><br \/>Для устаревших устройств, использующих USB контроллер CP210x:<br \/>Последние <b>CP210x драйвера<\/b> можно скачать <a href=\"https:\/\/www.silabs.com\/products\/development-tools\/software\/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">здесь<\/a><br \/>Установщик последних USB драйверов <b>Zadig<\/b> для Windows можно скачать <a href=\"http:\/\/zadig.akeo.ie\/\" target=\"_blank\" rel=\"noopener noreferrer\">здесь<\/a><br \/><b>Исправления драйверов ImpulseRC<\/b> можно скачать <a href=\"https:\/\/impulserc.com\/pages\/downloads\" target=\"blank\" rel=\"noopener noreferrer\">отсюда<\/a>"
-    },
     "defaultContributingHead": {
         "message": "Содействие"
     },
@@ -688,12 +682,6 @@
     },
     "defaultButtonFirmwareFlasher": {
         "message": "Программатор"
-    },
-    "defaultDonateHead": {
-        "message": "Открытый код \/ Пожертвование"
-    },
-    "defaultDonateText": {
-        "message": "<strong>Betaflight<\/strong> программное обеспечение для полетного контроллера <strong>с открытым исходным кодом<\/strong> и доступное для свободной модификации <strong>без гарантий<\/strong>для всех пользователей.<br \/>Если вы находите Betaflight и Betaflight Конфигуратор полезным то <strong>поддержите<\/strong> проект пожертвованиями."
     },
     "defaultDonateBottom": {
         "message": "<p>Если вы хотите осуществлять финансовую помощь на постоянной основе, вы можете стать нашим покровителем на $t(patreonLink.message).<\/p>"
@@ -3503,9 +3491,6 @@
     "firmwareFlasherCloudBuildDetails": {
         "message": "Информация о сборке в облаке:"
     },
-    "firmwareFlasherCloudBuildLogUrl": {
-        "message": "Показать журнал."
-    },
     "firmwareFlasherCloudBuildStatus": {
         "message": "Статус:"
     },
@@ -3674,14 +3659,8 @@
     "firmwareFlasherMessage": {
         "message": "Сообщение:"
     },
-    "firmwareFlasherWarningText": {
-        "message": "Пожалуйста, <span class=\"message-negative\">не пытайтесь прошивать <\/span> <strong>не поддерживаемые<\/strong> Betaflight-ом контроллеры этим программатором.<br \/><span class=\"message-negative\">Не <\/span><strong>отключайте<\/strong> кабель от полётного контроллера и <strong>не выключайте<\/strong> ваш компьютер во время прошивки.<br \/><br \/><strong>Примечание:<\/strong> STM32-загрузчик хранится в ROM-памяти, его нельзя стереть.<br \/><strong>Примечание:<\/strong><span class=\"message-negative\"> Подключаться автоматически<\/span> всегда выключено во вкладке \"Программатор\".<br \/><strong>Примечание:<\/strong> Убедитесь, что Вы сделали резервную копию, т. к. различные обновления и возвраты к предыдущей версии могут стереть Ваши настройки. <br \/><strong>Примечание:<\/strong> Если при прошивке возникают проблемы, то попробуйте сперва <strong>отключить все сторонние кабели от полётного контроллера<\/strong>, перезагрузите компьютер, обновите chrome, обновите драйверы.<br \/><strong>Примечание:<\/strong> При прошивке полётных контроллеров непосредственно через USB кабель (особенно новых моделей контроллеров) обязательно ознакомьтесь с разделом USB Flashing в инструкции Betaflight и убедитесь, что у Вас установлены нужные программы и драйвера"
-    },
     "firmwareFlasherRecoveryHead": {
         "message": "<strong>Потеря связи \/ Восстановление связи<\/strong>"
-    },
-    "firmwareFlasherRecoveryText": {
-        "message": "Если возникла потеря связи с вашим устройством, то выполните следующие действия, чтобы восстановить связь:<ul><li>Отключите питание<\/li><li>Включите \"Без перезагрузки\", включите \"Полное стирание чипа\".<\/li><li>Замкните контакты \"BOOT\" или удерживайте кнопку BOOT нажатой.<\/li><li>Включите питание (светодиод НЕ будет мигать, если всё сделано правильно).<\/li><li>Установите STM32 драйверы и Zadig, если это необходимо (см. раздел <a href=\"https:\/\/github.com\/betaflight\/betaflight\/wiki\/Installing-Betaflight\"target=\"_blank\">USB Flashing<\/a> в инструкции Betaflight).<\/li><li>Закройте Конфигуратор и перезапустите его.<\/li><li>Отпустите кнопку \"BOOT\", если на вашем FC она есть.<\/li><li>Залейте нужную прошивку (укажите вручную битрейт, если он указан в инструкции вашего полётного контроллера).<\/li><li>Отключите питание<\/li><li> Снимите \"BOOT\" джампер.<\/li><li>Включите питание (светодиод должен мигать).<\/li><li>Пробуйте подключиться.<\/li><\/ul>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Покинуть программатор"
@@ -3775,9 +3754,6 @@
     },
     "unstableFirmwareAcknowledgementDialog": {
         "message": "Вы собираетесь загрузить <strong> сборку прошивки для разработчиков<\/strong>. Такие сборки находятся в процессе разработки, и могут иметь любые из следующих особенностей: <strong><ul><li>прошивка не работает вообще;<\/li><li>прошивка не пригодна для полётов;<\/li><li>Есть проблемы с безопасностью прошивки, например flyaways<\/li><li> прошивка может привести к \"зависанию\" контроллера, либо вовсе его испортить<\/li><\/ul><\/strong>Если вы всё таки решили использовать данную прошивку, вы согласны с тем, что <strong>вы берете на себя полную ответственность за любй из вышеперечисленных рисков<\/strong>. Кроме того, Вы понимаете, что перед любыми попытками взлететь с этой прошивкой необходимо выполнить <strong>тщательные стендовые проверки с установленными пропеллерами<\/strong>."
-    },
-    "unstableFirmwareAcknowledgement": {
-        "message": "Я прочитал вышеуказанное и <strong>я беру на себя полную ответственность<strong> за установку нестабильной версии прошивки"
     },
     "unstableFirmwareAcknowledgementFlash": {
         "message": "Прошить"
