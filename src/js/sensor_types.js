@@ -24,9 +24,9 @@ function parseHardwareOutput(output) {
 /**
  * Fetches sensor hardware names from the flight controller for API 1.48+.
  * This function queries the FC for available sensor hardware options and populates FC.SENSOR_NAMES.
- * @param {Function} callback - Function to call when all sensor names have been fetched
+ * @returns {Promise<void>} Promise that resolves when all sensor names have been fetched
  */
-export function fetchSensorNames(callback) {
+export async function fetchSensorNames() {
     const sensorCommands = [
         { type: "acc", command: "get acc_hardware" },
         { type: "gyro", command: "get gyro_hardware" },
@@ -36,7 +36,7 @@ export function fetchSensorNames(callback) {
         { type: "sonar", command: "get rangefinder_hardware" },
         { type: "opticalflow", command: "get opticalflow_hardware" },
     ];
-    let fetchIndex = 0;
+
     FC.SENSOR_NAMES = {
         acc: [],
         gyro: [],
@@ -46,22 +46,22 @@ export function fetchSensorNames(callback) {
         sonar: [],
         opticalflow: [],
     };
-    function fetchNextSensorHardware() {
-        if (fetchIndex < sensorCommands.length) {
-            const sensor = sensorCommands[fetchIndex];
-            MSP.send_cli_command(sensor.command, function (output) {
-                console.log(`CLI output for ${sensor.command}:`, output);
-                // Parse the CLI output
-                FC.SENSOR_NAMES[sensor.type] = parseHardwareOutput(output);
-                fetchIndex++;
-                fetchNextSensorHardware();
+
+    for (const sensor of sensorCommands) {
+        try {
+            const output = await new Promise((resolve, reject) => {
+                const timeout = setTimeout(() => reject(new Error("CLI command timeout")), 2000);
+                MSP.send_cli_command(sensor.command, (output) => {
+                    clearTimeout(timeout);
+                    resolve(output);
+                });
             });
-        } else {
-            // All sensor hardware fetched, now call callback
-            callback();
+            FC.SENSOR_NAMES[sensor.type] = parseHardwareOutput(output);
+        } catch (error) {
+            console.warn(`Failed to fetch ${sensor.type} sensor names: ${error.message}`);
+            // Continue with empty array for this sensor type
         }
     }
-    fetchNextSensorHardware();
 }
 
 /**

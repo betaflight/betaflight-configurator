@@ -296,7 +296,7 @@ setup.initialize = function (callback) {
             }
         };
 
-        const showSensorInfo = function () {
+        const showSensorInfo = async function () {
             // Add sensor info to the sensor info box
             function addSensorInfo(sensor, sensorElement, sensorType, sensorElements) {
                 if (sensor == 0xff) {
@@ -308,14 +308,15 @@ setup.initialize = function (callback) {
                 }
             }
 
-            MSP.send_message(MSPCodes.MSP2_SENSOR_CONFIG_ACTIVE, false, false, function () {
+            MSP.send_message(MSPCodes.MSP2_SENSOR_CONFIG_ACTIVE, false, false, async function () {
                 if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
                     displaySensorInfo();
                 } else if (semver.eq(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
                     MSP.send_message(MSPCodes.MSP2_GYRO_SENSOR, false, false, displaySensorInfo);
                 } else if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_48)) {
-                    MSP.send_message(MSPCodes.MSP2_GYRO_SENSOR, false, false, function () {
-                        fetchSensorNames(displaySensorInfo);
+                    MSP.send_message(MSPCodes.MSP2_GYRO_SENSOR, false, false, async function () {
+                        await fetchSensorNames();
+                        displaySensorInfo();
                     });
                 }
 

@@ -1298,9 +1298,7 @@ export default defineComponent({
                 opticalFlowTypesList.value = types.opticalflow.elements;
                 showOpticalFlow.value = opticalFlowTypesList.value?.length > 0;
             } else if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_48)) {
-                await new Promise((resolve) => {
-                    fetchSensorNames(resolve);
-                });
+                await fetchSensorNames();
 
                 const types = sensorTypes();
                 sonarTypesList.value = types.sonar.elements;
