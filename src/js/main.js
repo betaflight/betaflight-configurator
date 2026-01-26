@@ -530,6 +530,17 @@ async function startProcess() {
         setDarkTheme(result.darkTheme);
     }
 
+    // Apply color theme from config (default to "yellow")
+    result = getConfig("colorTheme");
+    const colorTheme = result.colorTheme ?? "yellow";
+    document.body.dataset.theme = colorTheme;
+
+    // Contrast theme requires dark mode
+    if (colorTheme === "contrast") {
+        setDarkTheme(0);
+        setConfig({ darkTheme: 0 });
+    }
+
     window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function () {
         DarkTheme.autoSet();
     });

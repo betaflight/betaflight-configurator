@@ -1,0 +1,167 @@
+/**
+* Main theme colors
+* This file is left as css on purpose to make it easier to work without
+* the need to compile the less files and still can be use in storybook
+*/
+
+body {
+    --primary-50: #fff8f3;
+    --primary-100: #fff1e5;
+    --primary-200: #ffe4c8;
+    --primary-300: #ffd6a5;
+    --primary-400: #ffc877;
+    --primary-500: #ffbb00;
+    --primary-600: #e8a803;
+    --primary-700: #d29600;
+    --primary-800: #bb8401;
+    --primary-900: #a57200;
+    --primary-950: #9c6b00;
+
+    --primary-transparent-1: rgba(255, 187, 0, 0.1);
+    --primary-transparent-2: rgba(255, 187, 0, 0.2);
+    --primary-transparent-3: rgba(255, 187, 0, 0.3);
+    --primary-transparent-4: rgba(255, 187, 0, 0.4);
+
+    --surface-50: hsl(0, 0%, 100%);
+    --surface-100: hsl(0, 0%, 98%);
+    --surface-200: hsl(0, 0%, 95%);
+    --surface-300: hsl(0, 0%, 92%);
+    --surface-400: hsl(0, 0%, 84%);
+    --surface-500: hsl(0, 0%, 75%);
+    --surface-600: hsl(0, 0%, 65%);
+    --surface-700: hsl(0, 0%, 55%);
+    --surface-800: hsl(0, 0%, 40%);
+    --surface-900: hsl(0, 0%, 30%);
+    --surface-950: hsl(0, 0%, 20%);
+
+    --text: hsl(0, 0%, 0%);
+
+    --error-400: #ee2b55;
+    --error-500: #e2123f;
+    --error-600: #c10f36;
+
+    --error-transparent-1: rgba(226, 18, 63, 0.1);
+    --error-transparent-2: rgba(226, 18, 63, 0.2);
+    --error-transparent-3: rgba(226, 18, 63, 0.3);
+    --error-transparent-4: rgba(226, 18, 63, 0.4);
+
+    --success-400: #adf042;
+    --success-500: #96e212;
+    --success-600: #79b210;
+
+    --success-transparent-1: rgba(112, 226, 18, 0.1);
+    --success-transparent-2: rgba(112, 226, 18, 0.2);
+    --success-transparent-3: rgba(112, 226, 18, 0.3);
+    --success-transparent-4: rgba(112, 226, 18, 0.4);
+
+    --warning-500: #ff6600;
+    --warning-600: #e65c00;
+
+    --switcherysecond: var(--surface-400);
+
+    --primary-action: var(--success-500);
+    --primary-action-border: var(--success-600);
+    --primary-action-hover: var(--success-400);
+}
+
+body.dark-theme {
+    --surface-50: hsl(0, 0%, 4%);
+    --surface-100: hsl(0, 0%, 8%);
+    --surface-200: hsl(0, 0%, 12%);
+    --surface-300: hsl(0, 0%, 14%);
+    --surface-400: hsl(0, 0%, 20%);
+    --surface-500: hsl(0, 0%, 24%);
+    --surface-600: hsl(0, 0%, 35%);
+    --surface-700: hsl(0, 0%, 45%);
+    --surface-800: hsl(0, 0%, 60%);
+    --surface-900: hsl(0, 0%, 70%);
+    --surface-950: hsl(0, 0%, 80%);
+
+    --text: hsl(0, 0%, 95%);
+}
+
+body[data-theme="amber"] {
+    --primary-50: #fffbe8;
+    --primary-100: #fff5d3;
+    --primary-200: #ffeba9;
+    --primary-300: #ffdf76;
+    --primary-400: #ffd03d;
+    --primary-500: #ffa724;
+    --primary-600: #e69400;
+    --primary-700: #cc8200;
+    --primary-800: #a86700;
+    --primary-900: #7a4600;
+    --primary-950: #5c2f00;
+
+    --primary-transparent-1: rgba(255, 167, 36, 0.1);
+    --primary-transparent-2: rgba(255, 167, 36, 0.2);
+    --primary-transparent-3: rgba(255, 167, 36, 0.3);
+    --primary-transparent-4: rgba(255, 167, 36, 0.4);
+}
+
+body[data-theme="contrast"] {
+    --surface-50: #000000;
+    --surface-100: #000000;
+    --surface-200: #141414;
+    --surface-300: #141414;
+    --surface-400: #808080;
+    --surface-500: #808080;
+
+    --success-400: #75ff75;
+    --success-500: #00ff00;
+    --success-600: #00cc00;
+
+    --error-400: #ff7575;
+    --error-500: #ff3333;
+    --error-600: #cc0000;
+
+    #tabs li.active a {
+        color: #000;
+        background-color: var(--primary-500);
+    }
+    @tabIcons: {
+        setup: url(../images/icons/cf_icon_setup_grey.svg);
+        ports: url(../images/icons/cf_icon_ports_grey.svg);
+        config: url(../images/icons/cf_icon_config_grey.svg);
+        pid: url(../images/icons/cf_icon_pid_grey.svg);
+        rx: url(../images/icons/cf_icon_rx_grey.svg);
+        modes: url(../images/icons/cf_icon_modes_grey.svg);
+        adjust: url(../images/icons/cf_icon_adjust_grey.svg);
+        servo: url(../images/icons/cf_icon_servo_grey.svg);
+        gps: url(../images/icons/cf_icon_gps_grey.svg);
+        led: url(../images/icons/cf_icon_led_grey.svg);
+        sensors: url(../images/icons/cf_icon_sensors_grey.svg);
+        log: url(../images/icons/cf_icon_log_grey.svg);
+        data: url(../images/icons/cf_icon_data_grey.svg);
+        cli: url(../images/icons/cf_icon_cli_grey.svg);
+        motor: url(../images/icons/cf_icon_motor_grey.svg);
+        welcome: url(../images/icons/cf_icon_welcome_grey.svg);
+        help: url(../images/icons/cf_icon_help_grey.svg);
+        flasher: url(../images/icons/cf_icon_flasher_grey.svg);
+        transponder: url(../images/icons/cf_icon_transponder_grey.svg);
+        osd: url(../images/icons/icon_osd_white.svg);
+        vtx: url(../images/icons/cf_icon_vtx_grey.svg);
+        power: url(../images/icons/cf_icon_power_grey.svg);
+        failsafe: url(../images/icons/cf_icon_failsafe_grey.svg);
+        backup: url(../images/icons/cf_icon_backup_grey.svg);
+        wizzard: url(../images/icons/cf_icon_wizard_grey.svg);
+        advanced: url(../images/icons/cf_icon_advanced_grey.svg);
+        mission: url(../images/icons/cf_icon_mission_grey.svg);
+        user: url(../images/icons/icon_user_profile_grey.svg);
+    };
+    each(@tabIcons, {
+        li.active .ic_@{key}::before {
+            background-color: var(--surface-100);
+        }
+    });
+
+    .darkgrey_box {
+        color: var(--surface-100);
+    }
+
+    .btn a.disabled {
+        color: var(--surface-100) !important;
+    }
+
+    --switcherysecond: var(--surface-400);
+}
