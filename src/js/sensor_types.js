@@ -1,105 +1,175 @@
 import semver from "semver";
 import FC from "./fc";
+import MSP from "./msp";
 import { API_VERSION_1_47, API_VERSION_1_48 } from "./data_storage";
 import { removeArrayElement, addArrayElement, addArrayElementsAfter } from "./utils/array";
+
+function parseHardwareOutput(output) {
+    const text = output.join("\n");
+    const lines = text.split("\n");
+    for (const line of lines) {
+        if (line.startsWith("Allowed values: ")) {
+            const values = line.substring("Allowed values: ".length).split(", ");
+            return values;
+        }
+    }
+    return [];
+}
+
+export function fetchSensorNames(callback) {
+    const sensorCommands = [
+        { type: "acc", command: "get acc_hardware" },
+        { type: "gyro", command: "get gyro_hardware" },
+        { type: "baro", command: "get baro_hardware" },
+        { type: "mag", command: "get mag_hardware" },
+        { type: "gps", command: "get gps_provider" },
+        { type: "sonar", command: "get rangefinder_hardware" },
+        { type: "opticalflow", command: "get opticalflow_hardware" },
+    ];
+    let fetchIndex = 0;
+    FC.SENSOR_NAMES = {
+        acc: [],
+        gyro: [],
+        baro: [],
+        mag: [],
+        gps: [],
+        sonar: [],
+        opticalflow: [],
+    };
+    function fetchNextSensorHardware() {
+        if (fetchIndex < sensorCommands.length) {
+            const sensor = sensorCommands[fetchIndex];
+            MSP.send_cli_command(sensor.command, function (output) {
+                console.log(`CLI output for ${sensor.command}:`, output);
+                // Parse the CLI output
+                FC.SENSOR_NAMES[sensor.type] = parseHardwareOutput(output);
+                fetchIndex++;
+                fetchNextSensorHardware();
+            });
+        } else {
+            // All sensor hardware fetched, now call callback
+            callback();
+        }
+    }
+    fetchNextSensorHardware();
+}
 
 export function sensorTypes() {
     const sensorTypes = {
         acc: {
             name: "Accelerometer",
-            elements: FC.SENSOR_NAMES && FC.SENSOR_NAMES.acc.length > 0 ? FC.SENSOR_NAMES.acc : [
-                "AUTO",
-                "NONE",
-                "ADXL345",
-                "MPU6050",
-                "MMA8452",
-                "BMA280",
-                "LSM303DLHC",
-                "MPU6000",
-                "MPU6500",
-                "MPU9250",
-                "ICM20601",
-                "ICM20602",
-                "ICM20608G",
-                "ICM20649",
-                "ICM20689",
-                "ICM42605",
-                "ICM42688P",
-                "BMI160",
-                "BMI270",
-                "LSM6DSO",
-                "LSM6DSV16X",
-                "VIRTUAL",
-            ],
+            elements:
+                FC.SENSOR_NAMES && FC.SENSOR_NAMES.acc.length > 0
+                    ? FC.SENSOR_NAMES.acc
+                    : [
+                        "AUTO",
+                        "NONE",
+                        "ADXL345",
+                        "MPU6050",
+                        "MMA8452",
+                        "BMA280",
+                        "LSM303DLHC",
+                        "MPU6000",
+                        "MPU6500",
+                        "MPU9250",
+                        "ICM20601",
+                        "ICM20602",
+                        "ICM20608G",
+                        "ICM20649",
+                        "ICM20689",
+                        "ICM42605",
+                        "ICM42688P",
+                        "BMI160",
+                        "BMI270",
+                        "LSM6DSO",
+                        "LSM6DSV16X",
+                        "VIRTUAL",
+                    ],
         },
         gyro: {
             name: "Gyroscope",
-            elements: FC.SENSOR_NAMES && FC.SENSOR_NAMES.gyro.length > 0 ? FC.SENSOR_NAMES.gyro : [
-                "AUTO",
-                "NONE",
-                "MPU6050",
-                "L3G4200D",
-                "MPU3050",
-                "L3GD20",
-                "MPU6000",
-                "MPU6500",
-                "MPU9250",
-                "ICM20601",
-                "ICM20602",
-                "ICM20608G",
-                "ICM20649",
-                "ICM20689",
-                "ICM42605",
-                "ICM42688P",
-                "BMI160",
-                "BMI270",
-                "LSM6DSO",
-                "LSM6DSV16X",
-                "VIRTUAL",
-            ],
+            elements:
+                FC.SENSOR_NAMES && FC.SENSOR_NAMES.gyro.length > 0
+                    ? FC.SENSOR_NAMES.gyro
+                    : [
+                        "AUTO",
+                        "NONE",
+                        "MPU6050",
+                        "L3G4200D",
+                        "MPU3050",
+                        "L3GD20",
+                        "MPU6000",
+                        "MPU6500",
+                        "MPU9250",
+                        "ICM20601",
+                        "ICM20602",
+                        "ICM20608G",
+                        "ICM20649",
+                        "ICM20689",
+                        "ICM42605",
+                        "ICM42688P",
+                        "BMI160",
+                        "BMI270",
+                        "LSM6DSO",
+                        "LSM6DSV16X",
+                        "VIRTUAL",
+                    ],
         },
         baro: {
             name: "Barometer",
-            elements: FC.SENSOR_NAMES && FC.SENSOR_NAMES.baro.length > 0 ? FC.SENSOR_NAMES.baro : [
-                "DEFAULT",
-                "NONE",
-                "BMP085",
-                "MS5611",
-                "BMP280",
-                "LPS",
-                "QMP6988",
-                "BMP388",
-                "DPS310",
-                "2SMPB_02B",
-                "VIRTUAL",
-            ],
+            elements:
+                FC.SENSOR_NAMES && FC.SENSOR_NAMES.baro.length > 0
+                    ? FC.SENSOR_NAMES.baro
+                    : [
+                        "DEFAULT",
+                        "NONE",
+                        "BMP085",
+                        "MS5611",
+                        "BMP280",
+                        "LPS",
+                        "QMP6988",
+                        "BMP388",
+                        "DPS310",
+                        "2SMPB_02B",
+                        "VIRTUAL",
+                    ],
         },
         mag: {
             name: "Magnetometer",
-            elements: FC.SENSOR_NAMES && FC.SENSOR_NAMES.mag.length > 0 ? FC.SENSOR_NAMES.mag : [
-                "DEFAULT",
-                "NONE",
-                "HMC5883",
-                "AK8975",
-                "AK8963",
-                "QMC5883",
-                "LIS2MDL",
-                "LIS3MDL",
-                "MPU925X_AK8963",
-                "IST8310",
-            ],
+            elements:
+                FC.SENSOR_NAMES && FC.SENSOR_NAMES.mag.length > 0
+                    ? FC.SENSOR_NAMES.mag
+                    : [
+                        "DEFAULT",
+                        "NONE",
+                        "HMC5883",
+                        "AK8975",
+                        "AK8963",
+                        "QMC5883",
+                        "LIS2MDL",
+                        "LIS3MDL",
+                        "MPU925X_AK8963",
+                        "IST8310",
+                    ],
         },
         gps: {
             name: "GPS",
-            elements: FC.SENSOR_NAMES && FC.SENSOR_NAMES.gps.length > 0 ? FC.SENSOR_NAMES.gps : ["NMEA", "UBLOX", "MSP"],
+            elements:
+                FC.SENSOR_NAMES && FC.SENSOR_NAMES.gps.length > 0 ? FC.SENSOR_NAMES.gps : ["NMEA", "UBLOX", "MSP"],
         },
         sonar: {
             name: "Sonar",
-            elements: FC.SENSOR_NAMES && FC.SENSOR_NAMES.sonar.length > 0 ? FC.SENSOR_NAMES.sonar : ["NONE", "HCSR04", "TFMINI", "TF02", "MTF01", "MTF02", "MTF01P", "MTF02P", "TFNOVA"],
+            elements:
+                FC.SENSOR_NAMES && FC.SENSOR_NAMES.sonar.length > 0
+                    ? FC.SENSOR_NAMES.sonar
+                    : ["NONE", "HCSR04", "TFMINI", "TF02", "MTF01", "MTF02", "MTF01P", "MTF02P", "TFNOVA"],
         },
         opticalflow: {
             name: "Optical Flow",
-            elements: FC.SENSOR_NAMES && FC.SENSOR_NAMES.opticalflow.length > 0 ? FC.SENSOR_NAMES.opticalflow : ["NONE", "MT"],
+            elements:
+                FC.SENSOR_NAMES && FC.SENSOR_NAMES.opticalflow.length > 0
+                    ? FC.SENSOR_NAMES.opticalflow
+                    : ["NONE", "MT"],
         },
     };
 
@@ -111,7 +181,13 @@ export function sensorTypes() {
     if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_48) && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
         removeArrayElement(gyroElements, "L3G4200D");
         removeArrayElement(gyroElements, "MPU3050");
-        addArrayElementsAfter(gyroElements, "LSM6DSV16X", ["IIM42653", "ICM45605", "ICM45686", "ICM40609D", "IIM42652"]);
+        addArrayElementsAfter(gyroElements, "LSM6DSV16X", [
+            "IIM42653",
+            "ICM45605",
+            "ICM45686",
+            "ICM40609D",
+            "IIM42652",
+        ]);
 
         removeArrayElement(accElements, "ADXL345");
         removeArrayElement(accElements, "MMA8452");

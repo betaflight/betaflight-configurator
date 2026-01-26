@@ -12,24 +12,12 @@ import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47, API_VERSION_1_48 
 import { gui_log } from "../gui_log";
 import $ from "jquery";
 import { ispConnected } from "../utils/connection";
-import { sensorTypes } from "../sensor_types";
+import { sensorTypes, fetchSensorNames } from "../sensor_types";
 import { addArrayElementsAfter, replaceArrayElement } from "../utils/array";
 
 const setup = {
     yaw_fix: 0.0,
 };
-
-function parseHardwareOutput(output) {
-    const text = output.join("\n");
-    const lines = text.split("\n");
-    for (const line of lines) {
-        if (line.startsWith("Allowed values: ")) {
-            const values = line.substring("Allowed values: ".length).split(", ");
-            return values;
-        }
-    }
-    return [];
-}
 
 setup.initialize = function (callback) {
     const self = this;
@@ -321,51 +309,14 @@ setup.initialize = function (callback) {
             }
 
             MSP.send_message(MSPCodes.MSP2_SENSOR_CONFIG_ACTIVE, false, false, function () {
-                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
-                    MSP.send_message(MSPCodes.MSP2_GYRO_SENSOR, false, false, function () {
-                        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_48)) {
-                            // Fetch sensor names for API 1.48+ using existing CLI commands
-                            const sensorCommands = [
-                                { type: "acc", command: "get acc_hardware" },
-                                { type: "gyro", command: "get gyro_hardware" },
-                                { type: "baro", command: "get baro_hardware" },
-                                { type: "mag", command: "get mag_hardware" },
-                                { type: "gps", command: "get gps_provider" },
-                                { type: "sonar", command: "get rangefinder_hardware" },
-                                { type: "opticalflow", command: "get opticalflow_hardware" },
-                            ];
-                            let fetchIndex = 0;
-                            FC.SENSOR_NAMES = {
-                                acc: [],
-                                gyro: [],
-                                baro: [],
-                                mag: [],
-                                gps: [],
-                                sonar: [],
-                                opticalflow: [],
-                            };
-                            function fetchNextSensorHardware() {
-                                if (fetchIndex < sensorCommands.length) {
-                                    const sensor = sensorCommands[fetchIndex];
-                                    MSP.send_cli_command(sensor.command, function (output) {
-                                        console.log(`CLI output for ${sensor.command}:`, output);
-                                        // Parse the CLI output
-                                        FC.SENSOR_NAMES[sensor.type] = parseHardwareOutput(output);
-                                        fetchIndex++;
-                                        fetchNextSensorHardware();
-                                    });
-                                } else {
-                                    // All sensor hardware fetched, now display
-                                    displaySensorInfo();
-                                }
-                            }
-                            fetchNextSensorHardware();
-                        } else {
-                            displaySensorInfo();
-                        }
-                    });
-                } else {
+                if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
                     displaySensorInfo();
+                } else if (semver.eq(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+                    MSP.send_message(MSPCodes.MSP2_GYRO_SENSOR, false, false, displaySensorInfo);
+                } else if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_48)) {
+                    MSP.send_message(MSPCodes.MSP2_GYRO_SENSOR, false, false, function () {
+                        fetchSensorNames(displaySensorInfo);
+                    });
                 }
 
                 function displaySensorInfo() {
