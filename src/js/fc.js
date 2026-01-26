@@ -162,6 +162,7 @@ const FC = {
     FEATURE_CONFIG: null,
     FILTER_CONFIG: null,
     GYRO_SENSOR: null,
+    SENSOR_NAMES: null,
     GPS_CONFIG: null,
     COMPASS_CONFIG: null,
     GPS_DATA: null,
@@ -608,6 +609,16 @@ const FC = {
         this.GYRO_SENSOR = {
             gyro_count: 0,
             gyro_hardware: [],
+        };
+
+        this.SENSOR_NAMES = {
+            acc: [],
+            gyro: [],
+            baro: [],
+            mag: [],
+            gps: [],
+            sonar: [],
+            opticalflow: [],
         };
 
         this.RX_CONFIG = {
