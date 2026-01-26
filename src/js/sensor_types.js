@@ -4,6 +4,11 @@ import MSP from "./msp";
 import { API_VERSION_1_47, API_VERSION_1_48 } from "./data_storage";
 import { removeArrayElement, addArrayElement, addArrayElementsAfter } from "./utils/array";
 
+/**
+ * Parses CLI command output to extract allowed hardware values.
+ * @param {string[]} output - Array of output lines from CLI command
+ * @returns {string[]} Array of allowed hardware values
+ */
 function parseHardwareOutput(output) {
     const text = output.join("\n");
     const lines = text.split("\n");
@@ -16,6 +21,11 @@ function parseHardwareOutput(output) {
     return [];
 }
 
+/**
+ * Fetches sensor hardware names from the flight controller for API 1.48+.
+ * This function queries the FC for available sensor hardware options and populates FC.SENSOR_NAMES.
+ * @param {Function} callback - Function to call when all sensor names have been fetched
+ */
 export function fetchSensorNames(callback) {
     const sensorCommands = [
         { type: "acc", command: "get acc_hardware" },
@@ -54,6 +64,12 @@ export function fetchSensorNames(callback) {
     fetchNextSensorHardware();
 }
 
+/**
+ * Returns sensor type definitions with display names and available hardware options.
+ * For API 1.48+, uses dynamically fetched sensor names if available, otherwise falls back to hardcoded lists.
+ * For older APIs, applies version-specific modifications to the sensor lists.
+ * @returns {Object} Object containing sensor type definitions with name and elements properties
+ */
 export function sensorTypes() {
     const sensorTypes = {
         acc: {
@@ -178,7 +194,7 @@ export function sensorTypes() {
     const gpsElements = sensorTypes.gps.elements;
 
     // remove deprecated sensors or add new ones, only for API 1.47 (not for 1.48+ which uses dynamic names)
-    if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_48) && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+    if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_48) && semver.eq(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
         removeArrayElement(gyroElements, "L3G4200D");
         removeArrayElement(gyroElements, "MPU3050");
         addArrayElementsAfter(gyroElements, "LSM6DSV16X", [
