@@ -51,9 +51,7 @@ export async function fetchSensorNames() {
     for (const sensor of sensorCommands) {
         try {
             const output = await new Promise((resolve, reject) => {
-                const timeout = setTimeout(() => reject(new Error("CLI command timeout")), 5000);
                 MSP.send_cli_command(sensor.command, (response) => {
-                    clearTimeout(timeout);
                     resolve([...response]); // Make a copy to avoid reference issues
                 });
             });
