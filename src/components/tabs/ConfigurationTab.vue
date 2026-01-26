@@ -1157,7 +1157,7 @@ export default defineComponent({
 
                 if (!isMounted.value) return;
 
-                initializeUI();
+                await initializeUI();
                 await nextTick();
                 GUI.switchery();
                 GUI.content_ready();
