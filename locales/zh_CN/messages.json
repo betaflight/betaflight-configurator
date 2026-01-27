@@ -671,12 +671,6 @@
     "defaultWelcomeIntro": {
         "message": "欢迎使用<strong> Betaflight 应用<\/strong>，一个为简化固件升级、设置和调校飞控而生的工具。"
     },
-    "defaultWelcomeHead": {
-        "message": "硬件"
-    },
-    "defaultWelcomeText": {
-        "message": "此应用程序支持所有可以运行 Betaflight 的硬件。检查「固件烧写工具」选项页以获取完整的硬件列表。<br \/><br \/> <a href=\"https:\/\/github.com\/betaflight\/blackbox-log-viewer\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">下载 Betaflight 黑匣子日志查看器<\/a><br \/><br \/><a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">下载 Betaflight TX Lua Scripts<\/a><br \/><br \/>本固件源代码可以从 <a href=\"https:\/\/github.com\/betaflight\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">这里下载<\/a> <br \/><br \/>对于使用 CP210x USB 转串口芯片的旧款硬件：<br \/>最新的<b> CP210x 驱动程序<\/b>可以从<a href=\"https:\/\/www.silabs.com\/products\/development-tools\/software\/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">这里下载<\/a> <br \/>最新的用于 Windows USB 驱动程序安装的<b> Zadig <\/b>可以从 <a href=\"http:\/\/zadig.akeo.ie\/\" target=\"_blank\" rel=\"noopener noreferrer\">这里下载<\/a> <br \/><b>ImpulseRC Driver Fixer <\/b>可以从 <a href=\"https:\/\/github.com\/ImpulseRC\/ImpulseRC_Driver_Fixer\" target=\"blank\" rel=\"noopener noreferrer\">这里下载<\/a>"
-    },
     "defaultContributingHead": {
         "message": "参与开发"
     },
@@ -689,17 +683,8 @@
     "defaultDiscordText": {
         "message": "Betaflight <a href=\"https:\/\/discord.betaflight.com\/invite\" target=\"_blank\" rel=\"noopener noreferrer\">Discord 服务器<\/a>。<br \/>分享您的飞行经验，讨论 Betaflight，帮助其他人或从社区中为自己获得一些帮助。"
     },
-    "statisticsDisclaimer": {
-        "message": "Betaflight 应用收集匿名的使用情况统计信息。包括（但不限于）启动次数、用户的地理区域、飞行控制器的类型、固件版本、UI 元素和选项页的使用情况等等以及其他未在此处说明的数据。此类数据汇总展示<a href=\"https:\/\/datastudio.google.com\/u\/0\/reporting\/1pK1PFw0eWmsgl2npvuzwAqscVzlhJvuF\" target=\"_blank\" rel=\"noopener noreferrer\">在这里<\/a>。数据收集是为了更好地了解 Betaflight 应用使用方式、了解社区趋势以及可能的 UI 改进。用户可以在「选项」选项页中选择退出数据收集。"
-    },
     "defaultButtonFirmwareFlasher": {
         "message": "固件烧写器"
-    },
-    "defaultDonateHead": {
-        "message": "开源\/捐赠说明"
-    },
-    "defaultDonateText": {
-        "message": "<p><strong>Betaflight<\/strong> 是一个<strong>开源<\/strong>的飞控软件，可供所有人免费使用但<strong>不提供担保<\/strong>。<\/p><p>如果你认为 Betaflight 或 Betaflight 应用对你有帮助，请考虑通过捐赠来<strong>支持<\/strong>它的开发。<\/p>"
     },
     "defaultDonateBottom": {
         "message": "<p>如果你想持续捐助资金，请考虑在$t(patreonLink.message)上赞助我们。<\/p>"
@@ -3414,9 +3399,6 @@
     "firmwareFlasherCloudBuildDetails": {
         "message": "云构建详细信息："
     },
-    "firmwareFlasherCloudBuildLogUrl": {
-        "message": "显示日志"
-    },
     "firmwareFlasherCloudBuildStatus": {
         "message": "状态："
     },
@@ -3585,14 +3567,8 @@
     "firmwareFlasherMessage": {
         "message": "信息："
     },
-    "firmwareFlasherWarningText": {
-        "message": "请<span class=\"message-negative\">不要<\/span>在此刷写<strong> Betaflight 不支持的飞控板<\/strong>。<br \/>刷写时，<span class=\"message-negative\">不要<\/span><strong>断开<\/strong>飞控板或<strong>关闭电脑<\/strong>。<br \/><br \/><strong>注意：<\/strong>STM32 的 bootloader 储存在 ROM 区域，所以不会有变砖可能。<br \/><strong>注意：<\/strong>进入「固件烧写工具」后，<span class=\"message-negative\">自动连接<\/span>始终处于禁用。<br \/><strong>注意：<\/strong>务必备份好你的数据；升级\/降级后可能会清空你的设置项。<br \/><strong>注意：<\/strong>如果刷写遇到问题，首先<strong>拔掉连接到飞控的所有连线<\/strong> ，接着重启飞控，升级驱动。<br \/><strong>注意：<\/strong>当直接使用飞控板 USB 接口进行刷写时（多数较新的飞控板都是如此），确保你已经阅读 Betaflight 手册中 USB Flashing 这一部分，并确保驱动和软件已正确安装。"
-    },
     "firmwareFlasherRecoveryHead": {
         "message": "<strong> 恢复\/丢失通信 <\/strong>"
-    },
-    "firmwareFlasherRecoveryText": {
-        "message": "如果无法与飞控板建立通讯，你可以按照如下步骤来恢复：<ul><li>断电<\/li><li>启用“无重启序列”、启用“全盘擦除”。<\/li><li>短接 BOOT 引脚，或者按住 BOOT 按键。<\/li><li>上电(如果操作正确，飞控的“活动”灯不会闪烁)。<\/li><li>如果有必要，安装完整 STM32 驱动和 Zadig（参阅 Betaflight 手册<a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">USB Flashing<\/a> 部分）。<\/li><li>关闭此应用，并重新打开。<\/li><li>如果存在 BOOT 按钮，将原本按住的 BOOT 按键松开。<\/li><li>烧写正确的固件（使用飞控制造商所规定的波特率）。<\/li><li>断电。<\/li><li>移除 BOOT 引脚的短接。<\/li><li>上电(飞控“活动”灯应该会闪烁).<\/li><li>正常连接。<\/li><\/ul>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "关闭固件烧写"
@@ -3696,9 +3672,6 @@
     },
     "unstableFirmwareAcknowledgementDialog": {
         "message": "你将要刷入一个<strong>基于开发版本构建的固件<\/strong>。 此固件仍在开发中，可能会出现以下问题：<strong><ul><li>固件完全不工作； <\/li><li>固件无法飞行； <\/li><li>固件存在安全性问题，比如飞行器失控<\/li><li>固件可能会造成飞控变砖，甚至损坏； <\/li><\/ul><\/strong>如果继续刷入此固件，<strong>你将对上述所有风险承担全部责任<\/strong>。 此外，你需要明白，尝试起飞之前，必须进行<strong>彻底的测试并在测试时卸下螺旋桨<\/strong>。"
-    },
-    "unstableFirmwareAcknowledgement": {
-        "message": "我已阅读上述声明并且<strong>我自愿承担刷入不稳定版本固件的一切后果<strong>"
     },
     "unstableFirmwareAcknowledgementFlash": {
         "message": "闪存"

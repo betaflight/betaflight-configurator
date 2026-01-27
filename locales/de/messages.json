@@ -619,12 +619,6 @@
     "eeprom_saved_ok": {
         "message": "EEPROM <span class=\"message-positive\">gespeichert<\/span>"
     },
-    "defaultWelcomeHead": {
-        "message": "Hardware"
-    },
-    "defaultWelcomeText": {
-        "message": "Diese Anwendung unterstützt sämtliche Hardware, auf der Betaflight läuft. Klicke auf den Flash-Tab, um die vollständige Liste der unterstützten Hardware anzuzeigen.\n<br \/>\n<br \/> \n<a href=\"https:\/\/github.com\/betaflight\/blackbox-log-viewer\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Lade den Betaflight-Blackbox-Viewer herunter.<\/a>\n<br \/>\n<br \/> \n<a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Lade die Betaflight TX Lua Scripte herunter.<\/a>\n<br \/><br \/>Der Betaflight-Firmware <a href=\"https:\/\/github.com\/betaflight\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">Quellcode<\/a>.<br \/><br \/>Die neusten <b>STM USB VCP Treiber<\/b> können <a href=\"http:\/\/www.st.com\/web\/en\/catalog\/tools\/PF257938\" target=\"_blank\" rel=\"noopener noreferrer\">hier<\/a> heruntergeladen werden.<br \/>Für Hardware, die einen CP210x USB-zu-Seriell-Chip benutzt:<br \/>Die neusten <b>CP210x Treiber<\/b> können von <a href=\"https:\/\/www.silabs.com\/products\/development-tools\/software\/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">hier<\/a> heruntergeladen werden.<br \/>Die neusten <b>Zadig<\/b> Windows-USB-Treiber-Installationsdatei kann von <a href=\"http:\/\/zadig.akeo.ie\/\" target=\"_blank\" rel=\"noopener noreferrer\">dieser<\/a> Seite heruntergeladen werden.<br \/>"
-    },
     "defaultContributingHead": {
         "message": "Mitmachen"
     },
@@ -636,9 +630,6 @@
     },
     "defaultButtonFirmwareFlasher": {
         "message": "Firmware Flasher"
-    },
-    "defaultDonateHead": {
-        "message": "Open Source-\/Spenden-Hinweis"
     },
     "defaultDonateBottom": {
         "message": "<p>Über $t(patreonLink.message) kannst du uns auch kontinuierlich finanziell unterstützen.<\/p>"
@@ -3200,9 +3191,6 @@
     "firmwareFlasherCloudBuildDetails": {
         "message": "Cloud-Build Details:"
     },
-    "firmwareFlasherCloudBuildLogUrl": {
-        "message": "Protokoll anzeigen."
-    },
     "firmwareFlasherCloudBuildStatus": {
         "message": "Status:"
     },
@@ -3365,9 +3353,6 @@
     "firmwareFlasherMessage": {
         "message": "Nachricht:"
     },
-    "firmwareFlasherWarningText": {
-        "message": "<span class=\"message-negative\">Vermeide<\/span> mit diesem Firmware-Flasher <strong>non-Betaflight<\/strong> Hardware zu flashen.<br \/>Den FC während des Flashens <span class=\"message-negative\">nicht<\/span> <strong>ausstecken<\/strong> und den Computer <span class=\"message-negative\">nicht<\/span> <strong>abschalten<\/strong>. <br \/><br \/><strong>Hinweis: <\/strong>Der STM32-Bootloader ist im ROM gespeichert und kann nicht zerstört werden.<br \/><strong>Hinweis: <\/strong><span class=\"message-negative\">Automatisch Verbinden<\/span> ist immer ausgeschaltet, während du den Firmware-Flasher verwendest.<br \/><strong>Hinweis: <\/strong>Stelle sicher, dass du ein Backup deiner Konfiguration hast; einige Upgrades\/Downgrades werden diese eventuell löschen.<br \/><strong>Hinweis:<\/strong> Falls es Probleme beim Flashen gibt, stelle sicher, dass <strong>keine anderen Geräte an den seriellen Ports deines FC angeschlossen sind<\/strong>, reboote den Computer und aktualisiere deine Treiber.<br \/><strong>Hinweis:<\/strong> Wenn du Firmware auf einem mit dem USB-Port verbundenem FC installierst (die meisten modernen FC) stelle sicher, dass du den Abschnitt \"USB Flashing\" des Betaflight-Handbuches gelesen hast, und dass korrekte Treiber und Software installiert sind."
-    },
     "firmwareFlasherRecoveryHead": {
         "message": "<strong>Wiederherstellung \/ abgebrochene Kommunikation<\/strong>"
     },
@@ -3440,9 +3425,6 @@
     },
     "unstableFirmwareAcknowledgementDialog": {
         "message": "Du versuchst eine <strong>Entwicklungsversion der Firmware<\/strong>zu flashen. Diese Versionen sind nicht final und es können folgende Fehler auftreten:<strong><ul><li> die Firmware funktioniert überhaupt nicht;<\/li><li>die Firmware ist nicht fliegbar;<\/li><li>es gibt Sicherheitsprobleme mit der Firmware, zum Beispiel Kontrollverlust im Flug \/ Flyaways<\/li><li>die Firmware kann dazu führen, dass der Flight-Controller nicht reagiert, oder beschädigt wird <\/li><\/ul><\/strong>Wenn du mit dem Flashen dieser Firmware fortfährst <strong>übernimmst Du die volle Verantwortung für das Risiko, dass eines der oben genannten Probleme auftritt.<\/strong> Darüber hinaus bestätigst du, dass es unbedingt notwendig ist, <strong>gründliche Bench-Tests ohne Propeller<\/strong> durchzuführen, bevor du mit dieser Firmware fliegst."
-    },
-    "unstableFirmwareAcknowledgement": {
-        "message": "Ich habe Obenstehendes gelesen und <strong>ich übernehme die volle Verantwortung<strong> für das Flashen der instabilen Firmware"
     },
     "unstableFirmwareAcknowledgementFlash": {
         "message": "Flashen"

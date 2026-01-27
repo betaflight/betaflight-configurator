@@ -694,11 +694,17 @@
     "defaultWelcomeIntro": {
         "message": "Benvingut a <strong>App Betaflight<\/strong>, una aplicació dissenyada per a simplificar l'actualització, configuració i posada a punt de la teva controladora de vol."
     },
-    "defaultWelcomeHead": {
+    "defaultHardwareHead": {
         "message": "Maquinari"
     },
-    "defaultWelcomeText": {
-        "message": "L'aplicació és compatible amb tot el maquinari que pot executar Betaflight. Comproveu la pestanya Flash per obtenir la llista completa de maquinari.<br \/><br \/> <a href=\"https:\/\/github.com\/betaflight\/blackbox-log-viewer\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Descarregueu Betaflight Blackbox Log Viewer<\/a><br \/><br \/><a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel =\"noopener noreferrer\">Descarregueu scripts Betaflight TX Lua<\/a><br \/><br \/>El codi font del microprogramari es pot descarregar des de <a href=\"https:\/\/github.com\/betaflight\/betaflight\" target= \"_blank\" rel=\"noopener noreferrer\">aquí<\/a><br \/><br \/>Per al maquinari heretat que utilitza un xip USB a sèrie CP210x:<br \/>Els <b>controladors CP210x<\/b> més recents es poden baixar des de <a href=\"https:\/\/www.silabs.com\/products\/development-tools\/software\/usb-to-uart-bridge-vcp-drivers \" target=\"_blank\" rel=\"noopener noreferrer\">aquí<\/a><br \/>El La darrera instal·lació del controlador USB de <b>Zadig<\/b> per a Windows es pot descarregar des d'<a href=\"http:\/\/zadig.akeo.ie\/\" target=\"_blank\" rel=\"noopener noreferrer\">aquí<\/a ><br \/><b>ImpulseRC Driver Fixer<\/b> es pot descarregar <a href=\"https:\/\/impulserc.com\/pages\/downloads\" target=\"blank\" rel=\"noopener noreferrer\">aquí<\/a>"
+    "defaultHardwareText": {
+        "message": "L'aplicació admet tot el maquinari que pot executar Betaflight. Consulteu la pestanya \"Microsoftware flasher\" per obtenir la llista completa del maquinari.<br \/><br \/>Utilitats\/controladors de maquinari útils:<ul><li>Per al maquinari antic que utilitza un xip USB CP210x, els <b>controladors CP210x<\/b> més recents es poden descarregar des de <a href=\"https:\/\/www.silabs.com\/products\/development-tools\/software\/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">aquí<\/a><\/li><li>La instal·lació més recent del controlador USB de <b>Zadig<\/b> per a Windows es pot descarregar des de <a href=\"http:\/\/zadig.akeo.ie\/\" target=\"_blank\" rel=\"noopener noreferrer\">aquí<\/a><\/li><li><b>ImpulseRC Driver Fixer<\/b> es pot descarregar <a href=\"https:\/\/github.com\/ImpulseRC\/ImpulseRC_Driver_Fixer\" target=\"_blank\" rel=\"noopener noreferrer\">aquí<\/a><\/li><\/ul>"
+    },
+    "defaultSoftwareHead": {
+        "message": "Programari"
+    },
+    "defaultSoftwareText": {
+        "message": "El nostre <a href=\"https:\/\/blackbox.betaflight.com\" target=\"_blank\" rel=\"noopener noreferrer\">Visualitzador de registres de Blackbox<\/a> està disponible com a aplicació en línia.<br \/><br \/>La nostra col·lecció de <a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Scripts TX Lua<\/a> està disponible a GitHub.<br \/><br \/>El nostre <a href=\"https:\/\/github.com\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">codi font<\/a> per al firmware, aquesta aplicació i el visor de Blackbox es pot descarregar des de GitHub."
     },
     "defaultContributingHead": {
         "message": "Contribuir"
@@ -712,14 +718,23 @@
     "defaultDiscordText": {
         "message": "Betaflight <a href=\"https:\/\/discord.betaflight.com\/invite\" target=\"_blank\" rel=\"noopener noreferrer\">Servidor de Discord<\/a>.<br \/>Comparteix la teva experiència de vol, parla sobre Betaflight, ajudar a altres persones o obtenir ajuda per a tu mateix de la comunitat."
     },
+    "defaultRedditText": {
+        "message": "Uneix-te al nostre <a href=\"https:\/\/www.reddit.com\/r\/Betaflight\/\" target=\"_blank\" rel=\"noopener noreferrer\">Subreddit Betaflight<\/a>.<br \/>Parla de les funcions, fes preguntes i connecta amb la comunitat Betaflight a Reddit."
+    },
+    "defaultCommunityHead": {
+        "message": "Comunitat"
+    },
+    "statisticsDisclaimerHead": {
+        "message": "La teva privadesa"
+    },
     "statisticsDisclaimer": {
-        "message": "El App Betaflight recopila estadístiques d'ús anònimes. Per exemple, aquestes dades inclouen (però no es limiten a) el nombre de llançaments, la regió geogràfica dels usuaris, els tipus de controladors de vol, les versions del microprogramari, l'ús d'elements i pestanyes de la IU, etc. El resum d'aquestes dades es comparteix <a href=\"https:\/\/datastudio.google.com\/u\/0\/reporting\/1pK1PFw0eWmsgl2npvuzwAqscVzlhJvuF\" target=\"_blank\" rel=\"noopener noreferrer\">aquí<\/a>. La recollida es fa per entendre millor com s'utilitza el App Betaflight, per entendre les tendències de la comunitat i per a possibles millores de la interfície d'usuari. Els usuaris poden desactivar la recollida de dades a la pestanya Opcions."
+        "message": "Aquesta aplicació Betaflight recopila estadístiques d'ús anònimes. Aquestes dades d'ús poden incloure el nombre de llançaments, la regió geogràfica dels usuaris, els tipus de controladors de vol, les versions de firmware, l'ús d'elements i pestanyes de la interfície d'usuari, etc. Recopilem aquestes dades per entendre millor com s'utilitza l'aplicació i les tendències de la comunitat. Ho fem per ajudar-nos a desenvolupar una interfície d'usuari i una experiència general millorades. Els usuaris poden desactivar la recopilació de dades a la pestanya Opcions. Per obtenir informació sobre com recopilem i utilitzem les vostres dades, consulteu la nostra <a href=\"https:\/\/www.betaflight.com\/privacy\" rel=\"noopener noreferrer\" target=\"_blank\">política de privadesa<\/a>."
     },
     "defaultButtonFirmwareFlasher": {
         "message": "Flashejador de Firmware"
     },
     "defaultDonateHead": {
-        "message": "Codi Lliure \/ Avís de Donació"
+        "message": "Donacions de codi obert"
     },
     "defaultDonateText": {
         "message": "<p><strong>Betaflight<\/strong> és un programari de control de vols que és <strong>de codi obert<\/strong> i està disponible de forma gratuïta <strong>sense garantia<\/strong> per a tots els usuaris.<\/p><p>Si heu pensat que Betaflight o App Betaflight són útils, considereu <strong> donar suport<\/strong> al seu desenvolupament donant.<\/p>"
@@ -2600,6 +2615,10 @@
         "message": "Activa el mode d'estabilització de la càmera",
         "description": "Help text to CAMSTAB mode"
     },
+    "auxiliaryHelpMode_CHIRP": {
+        "message": "Activa el mode Chirp",
+        "description": "Help text for CHIRP mode"
+    },
     "auxiliaryHelpMode_FAILSAFE": {
         "message": "Introduïu el Failsafe 2 manualment",
         "description": "Help text to FAILSAFE mode"
@@ -3585,6 +3604,12 @@
     "sdcardStatusUnknown": {
         "message": "Estat desconegut $1"
     },
+    "firmwareFlasherPleaseWait": {
+        "message": "Espereu, si us plau"
+    },
+    "firmwareFlasherBoardSelectionHead": {
+        "message": "Selecció de Placa"
+    },
     "firmwareFlasherBranch": {
         "message": "Seleccioneu Pull Request o Commit"
     },
@@ -3620,10 +3645,13 @@
         "message": "Detalls de l'estructura del nuvol:"
     },
     "firmwareFlasherCloudBuildLogUrl": {
-        "message": "Mostrar Log."
+        "message": "Mostrar Log"
     },
     "firmwareFlasherCloudBuildStatus": {
         "message": "Estat:"
+    },
+    "firmwareFlasherCloudBuildQueued": {
+        "message": "en cua"
     },
     "firmwareFlasherCloudBuildPending": {
         "message": "pendent"
@@ -3791,13 +3819,13 @@
         "message": "Missatge:"
     },
     "firmwareFlasherWarningText": {
-        "message": "Si us plau, <span class=\"message-negative\">no<\/span> intenteu flashejar el maquinari <strong>no-Betaflight<\/strong> amb aquest firmware flasher.<br \/><span class=\"message-negative\">No<\/span> <strong>desconnecteu<\/strong> la FC o <strong>desactiveu<\/strong> l'ordinador mentre flasheja.<br \/><br \/><strong>Nota: <\/strong>STM32 bootloader s'emmagatzema en ROM, no es pot brickejar.<br \/><strong>Nota: <\/strong><span class=\"message-negative\">Connectar automàticament<\/span> sempre està desactivat mentre es troba dins del firmware flasher.<br \/><strong>Nota: <\/strong>Assegureu-vos que teniu una còpia de seguretat; les actualitzacions \/ downgrades esborraran la teva configuració.<br \/><strong>Nota:<\/strong> si teniu problemes per flashejar <strong>proveu de desconnectar tots els cables del FC<\/strong> primer, intenteu reiniciar, actualitzeu controladors.<br \/> <strong>Nota:<\/strong> Quan flashejis les placas que connecten directament als ports USB (la majoria de les controladores més noves), assegureu-vos de llegir la secció USB Flashing del manual Betaflight i instal·lar el programari i controladors correctes"
+        "message": "Si us plau, <span class=\"message-negative\">no<\/span> intenteu flashejar maquinari <strong>que no sigui Betaflight<\/strong> amb aquest flashejador de firmware.<br \/>No <strong>desconnecteu<\/strong> la placa ni <strong>apagueu<\/strong> l'ordinador mentre s'està flashejant.<br \/><br \/><strong>Nota:<\/strong><ul><li>el carregador d'arrencada STM32 s'emmagatzema a la ROM, no es pot bloquejar.<\/li><li><span class=\"message-negative\">La connexió automàtica<\/span> sempre està desactivada mentre esteu dins del flashejador de firmware.<\/li><li>Assegureu-vos de tenir una còpia de seguretat; Algunes actualitzacions\/versions anteriors esborraran la configuració.<\/li><li>Si teniu problemes per flashejar, <strong>proveu de desconnectar tots els cables del vostre FC<\/strong> primer, proveu de reiniciar i actualitzeu els controladors.<\/li><li>Quan flasheu plaques que tenen endolls USB connectats directament (la majoria de plaques més noves), assegureu-vos d'haver llegit la secció de Flasheig USB del manual de Betaflight i de tenir instal·lats el programari i els controladors correctes.<\/li><\/ul>"
     },
     "firmwareFlasherRecoveryHead": {
         "message": "<strong>Recuperació \/ Comunicació perduda<\/strong>"
     },
     "firmwareFlasherRecoveryText": {
-        "message": "Si has perdut comunicació amb la teva controladora segueix aquests passos per restaurar les comunicacions: <ul><li>Apaga<\/li><li>Habilita \"Sense seqüència de reinici\", habilita \"Esborrat total del xip\".<\/li><li>Creua els pins de boot o prem el botó.<\/li><li>Engega (El led d'activitat no ha de parpellejar si ho has fet correctament).<\/li><li>Instaŀla els drivers STM32 i Zadig si es requereix (mira a la secció de <a href=\"https:\/\/github.com\/betaflight\/betaflight\/wiki\/Installing-Betaflight\"target=\"_blank\" rel=\"noopener noreferrer\">flasheig USB<\/a> del manual).<\/li><li>Tanca el configurador, Reinicia el configurador.<\/li><li>Deixa anar el botó de Boot si en tens.<\/li><li>Flasheja el firmware correcte (Amb velocitat de bauds manual si així ho necessites).<\/li><li>Apaga.<\/li><li>Treu el boot dels pins.<\/li><li>Engega (El led d'activitat ha de parpellejar).<\/li><li>Connecta amb normalitat.<\/li><\/ul>"
+        "message": "Si heu perdut la comunicació amb la placa, seguiu aquests passos per restaurar-la:<ul><li>Apagueu l'alimentació<\/li><li>Activeu \"Sense seqüència de reinici\", activeu \"Esborrat complet del xip\".<\/li><li>Connecteu els pins BOOT o manteniu premut el botó BOOT.<\/li><li>Enceneu-lo (el LED d'activitat NO parpellejarà si es fa correctament).<\/li><li>Instal·leu tots els controladors STM32 i Zadig si cal (vegeu la secció <a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">Flash USB<\/a> del manual de Betaflight).<\/li><li>Tanqueu l'aplicació i reinicieu-la.<\/li><li>Deixeu anar el botó BOOT si el vostre FC en té un.<\/li><li>Flash amb el firmware correcte (utilitzant la velocitat de baud manual si s'especifica al manual del vostre FC).<\/li><li>Apagueu l'alimentació.<\/li><li>Traieu el jumper BOOT.<\/li><li>Enceneu-lo (el LED d'activitat hauria de flaix).<\/li><li>Connecta't normalment.<\/li><\/ul>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Surt del flashejador de Firmware"
@@ -3903,7 +3931,7 @@
         "message": "Esteu a punt de mostrar una <strong>build de desenvolupament del microprogramari<\/strong>. Aquestes compilacions són un treball en curs, i qualsevol dels següents casos pot ser:<strong><ul><li>el microprogramari no funciona en absolut;<\/li><li>el microprogramari no es pot volar;<\/li><li>hi ha problemes de seguretat amb el microprogramari, per exemple, les fugues volants<\/li><li>el microprogramari pot fer que el controlador de vol no respongui o es faci malbé<\/li><\/ul><\/strong>Si continueu amb el parpelleig d'aquest microprogramari, <strong>assumeu tota la responsabilitat del risc que passi qualsevol dels anteriors<\/strong>. A més, reconeixeu que cal dur a terme <strong>proves de banc exhaustives amb els accessoris apagats<\/strong> abans d'intentar fer volar aquest programari."
     },
     "unstableFirmwareAcknowledgement": {
-        "message": "He llegit l'anterior i <strong> assumeixo tota la responsabilitat<strong> per actuatltzar el firmware inestable"
+        "message": "He llegit l'anterior i <strong>assumeixo tota la responsabilitat<\/strong> per instal·lar un maquinari inestable"
     },
     "unstableFirmwareAcknowledgementFlash": {
         "message": "Flash"

@@ -464,9 +464,6 @@
     "eeprom_saved_ok": {
         "message": "EEPROM <span class=\"message-positive\">已保存<\/span>"
     },
-    "defaultWelcomeHead": {
-        "message": "硬體"
-    },
     "defaultContributingHead": {
         "message": "參與開發"
     },
@@ -475,9 +472,6 @@
     },
     "defaultButtonFirmwareFlasher": {
         "message": "固件燒寫器"
-    },
-    "defaultDonateHead": {
-        "message": "開源\/捐贈說明"
     },
     "defaultDonateBottom": {
         "message": "<p>如果你想持續捐助資金，請考慮在$t(patreonLink.message)上贊助我們。<\/p>"
