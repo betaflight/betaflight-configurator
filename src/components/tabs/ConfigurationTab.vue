@@ -826,10 +826,13 @@ export default defineComponent({
         const hasDualGyros = ref(false);
         const showMultiGyro = ref(false); // API 1.47+ multi-gyro UI
 
+        // Sensor types - populated asynchronously
+        const sensorTypesData = ref(null);
+
         const gyroList = computed(() => {
             if (!showMultiGyro.value) return [];
 
-            const types = sensorTypes().gyro.elements;
+            const types = sensorTypesData.value?.gyro.elements || [];
             const detectedHardware = fcStore.gyroSensor?.gyro_hardware || [];
 
             // Use actual detected hardware count
@@ -1153,7 +1156,7 @@ export default defineComponent({
 
                 if (!isMounted.value) return;
 
-                initializeUI();
+                await initializeUI();
                 await nextTick();
                 GUI.switchery();
                 GUI.content_ready();
@@ -1163,7 +1166,10 @@ export default defineComponent({
             }
         };
 
-        const initializeUI = () => {
+        const initializeUI = async () => {
+            // Populate sensor types first (async operation)
+            sensorTypesData.value = await sensorTypes();
+
             // Populate Reactive State
             pidAdvancedConfig.pid_process_denom = fcStore.pidAdvancedConfig.pid_process_denom;
 
@@ -1287,12 +1293,11 @@ export default defineComponent({
 
             // Rangefinder / Optical Flow (API 1.47+)
             if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
-                const types = sensorTypes();
-                sonarTypesList.value = types.sonar.elements;
-                showRangefinder.value = sonarTypesList.value?.length > 0;
+                sonarTypesList.value = sensorTypesData.value?.sonar.elements || [];
+                showRangefinder.value = sonarTypesList.value.length > 0;
 
-                opticalFlowTypesList.value = types.opticalflow.elements;
-                showOpticalFlow.value = opticalFlowTypesList.value?.length > 0;
+                opticalFlowTypesList.value = sensorTypesData.value?.opticalflow.elements || [];
+                showOpticalFlow.value = opticalFlowTypesList.value.length > 0;
             }
         };
 
