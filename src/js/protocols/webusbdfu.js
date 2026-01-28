@@ -379,6 +379,14 @@ class WEBUSBDFU_protocol extends EventTarget {
                         wTransferSize: (buf[6] << 8) | buf[5],
                         bcdDFUVersion: buf[7],
                     };
+
+                    // For GD32H7xx: Check for invalid transfer size (0) which causes stalls
+                    if (descriptor.wTransferSize === 0) {
+                        // Treat as error to trigger fallback
+                        callback(descriptor, 1);
+                        return;
+                    }
+
                     callback(descriptor, 0);
                 } else {
                     throw new Error(result.status);
@@ -417,6 +425,10 @@ class WEBUSBDFU_protocol extends EventTarget {
                 //AT32F43xxG
                 if (str === "@Option byte   /0x1FFFC000/01*512 g") {
                     str = "@Option bytes   /0x1FFFC000/01*512 g";
+                }
+                // GD32H7xx: Normalize "@InternalFlash" (no space) to "@Internal Flash"
+                if (str.startsWith("@InternalFlash")) {
+                    str = str.replace("@InternalFlash", "@Internal Flash");
                 }
                 // split main into [location, start_addr, sectors]
                 const tmp0 = str.replace(/[^\x20-\x7E]+/g, "");
@@ -746,6 +758,14 @@ class WEBUSBDFU_protocol extends EventTarget {
             case 1: {
                 if (typeof this.chipInfo.option_bytes === "undefined") {
                     console.log(`${this.logHead} Failed to detect option bytes`);
+
+                    // For GD32H7xx(could not read option bytes info): Skip read protection check if option_bytes descriptor doesn't exist
+                    if (this.usbDevice && this.usbDevice.productName === "GD32-USB_DFU") {
+                        console.log(`${this.logHead} GD32H7 DFU Bootloader detected, skipping read protection check`);
+                        this.upload_procedure(2);
+                        break;
+                    }
+
                     this.cleanup();
                 }
 
