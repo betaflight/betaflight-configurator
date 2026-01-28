@@ -62,6 +62,11 @@ export const useFlightControllerStore = defineStore("flightController", () => {
         set: (val) => (FC.ANALOG = val),
     });
 
+    const mcuInfo = computed({
+        get: () => FC.MCU_INFO,
+        set: (val) => (FC.MCU_INFO = val),
+    });
+
     const rc = computed({
         get: () => FC.RC,
         set: (val) => (FC.RC = val),
@@ -80,6 +85,11 @@ export const useFlightControllerStore = defineStore("flightController", () => {
     const sensorConfig = computed({
         get: () => FC.SENSOR_CONFIG,
         set: (val) => (FC.SENSOR_CONFIG = val),
+    });
+
+    const sensorConfigActive = computed({
+        get: () => FC.SENSOR_CONFIG_ACTIVE,
+        set: (val) => (FC.SENSOR_CONFIG_ACTIVE = val),
     });
 
     const rxConfig = computed({
@@ -211,10 +221,12 @@ export const useFlightControllerStore = defineStore("flightController", () => {
         sensorData,
         gpsData,
         analogData,
+        mcuInfo,
         rc,
         motorData,
         pidAdvancedConfig,
         sensorConfig,
+        sensorConfigActive,
         rxConfig,
         armingConfig,
         auxConfig,
