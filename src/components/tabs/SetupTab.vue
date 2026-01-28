@@ -124,8 +124,8 @@
 
                 <div class="col-span-1 grid-box col1">
                     <!-- Instruments -->
-                    <div class="gui_box grey instrumentsbox" align="center">
-                        <div class="gui_box_titlebar" align="left">
+                    <div class="gui_box grey instrumentsbox">
+                        <div class="gui_box_titlebar">
                             <div class="spacer_box_title" v-html="$t('initialSetupInstrumentsHead')"></div>
                             <div class="helpicon cf_tip" :title="$t('initialSetupInstrumentsHeadHelp')"></div>
                         </div>
@@ -139,14 +139,7 @@
                             <div class="helpicon cf_tip" :title="$t('initialSetupGPSHeadHelp')"></div>
                         </div>
                         <div class="spacer_box GPS_info">
-                            <table
-                                width="100%"
-                                border="0"
-                                cellpadding="0"
-                                cellspacing="0"
-                                class="cf_table"
-                                role="presentation"
-                            >
+                            <table class="cf_table">
                                 <tbody>
                                     <tr>
                                         <td v-html="$t('gps3dFix')"></td>
@@ -186,14 +179,7 @@
                             <div class="helpicon cf_tip" :title="$t('initialSetupSonarHeadHelp')"></div>
                         </div>
                         <div class="spacer_box">
-                            <table
-                                width="100%"
-                                border="0"
-                                cellpadding="0"
-                                cellspacing="0"
-                                class="cf_table"
-                                role="presentation"
-                            >
+                            <table class="cf_table" role="presentation">
                                 <tbody>
                                     <tr>
                                         <td id="sonarAltitude" v-html="$t('initialSetupAltitudeSonar')"></td>
@@ -211,14 +197,7 @@
                             <div class="helpicon cf_tip" :title="$t('initialSetupInfoHeadHelp')"></div>
                         </div>
                         <div class="spacer_box">
-                            <table
-                                width="100%"
-                                border="0"
-                                cellpadding="0"
-                                cellspacing="0"
-                                class="cf_table system_info"
-                                role="presentation"
-                            >
+                            <table class="cf_table system_info">
                                 <tbody>
                                     <tr>
                                         <td
@@ -284,14 +263,7 @@
                             <div class="helpicon cf_tip" :title="$t('initialSensorInfoHeadHelp')"></div>
                         </div>
                         <div class="spacer_box">
-                            <table
-                                width="100%"
-                                border="0"
-                                cellpadding="0"
-                                cellspacing="0"
-                                class="cf_table"
-                                role="presentation"
-                            >
+                            <table class="cf_table">
                                 <tbody>
                                     <tr>
                                         <td id="sensor_gyro_hw" v-html="$t('initialSetupSensorGyro')"></td>
@@ -465,10 +437,9 @@ import GUI from "@/js/gui";
 import { i18n } from "@/js/localization";
 
 const fcStore = useFlightControllerStore();
-const connectionStore = useConnectionStore();
 
 // Reactive state
-const yawFix = ref(0.0);
+const yawFix = ref(0);
 const accelCalibrating = ref(false);
 const magCalibrating = ref(false);
 const resetDialog = ref(null);
@@ -715,7 +686,7 @@ const buildFirmware = computed(() => {
     if (buildOptionsValid || buildKeyValid) {
         const buildOptions = buildOptionsValid
             ? `<span class="buildInfoBtn" title="${i18n.getMessage("initialSetupInfoBuildOptionList")}">
-                <a class="buildOptions" href="#" @click.prevent="showBuildOptions"><strong>${i18n.getMessage("initialSetupInfoBuildOptions")}</strong></a></span>`
+                <a class="buildOptions" href="#" @click.prevent="_showBuildOptions"><strong>${i18n.getMessage("initialSetupInfoBuildOptions")}</strong></a></span>`
             : "";
 
         const buildDownload = buildKeyValid
@@ -814,7 +785,7 @@ const confirmReset = () => {
     MSP.send_message(MSPCodes.MSP_RESET_CONF, false, false, () => {
         gui_log(i18n.getMessage("initialSetupSettingsRestored"));
         // Refresh the page to reinitialize
-        window.location.reload();
+        globalThis.location.reload();
     });
 };
 
@@ -837,7 +808,7 @@ const resetYaw = () => {
     console.log(`YAW reset to 0 deg, fix: ${yawFix.value} deg`);
 };
 
-const showBuildOptions = () => {
+const _showBuildOptions = () => {
     buildInfoDialogTitle.value = `<h3>${i18n.getMessage("initialSetupInfoBuildOptionList")}</h3>`;
     let buildOptionList = `<div class="dialogBuildInfoGrid-container">`;
     for (const buildOption of fcStore.config.buildOptions) {
@@ -900,21 +871,28 @@ const getSlowData = () => {
 };
 
 onMounted(async () => {
-    // Initialize MSP data
-    MSP.send_message(MSPCodes.MSP_ACC_TRIM, false, false, () => {
-        MSP.send_message(MSPCodes.MSP_STATUS_EX, false, false, () => {
-            MSP.send_message(MSPCodes.MSP2_MCU_INFO, false, false, () => {
-                MSP.send_message(MSPCodes.MSP_MIXER_CONFIG, false, false, () => {
-                    MSP.send_message(MSPCodes.MSP_SENSOR_ALIGNMENT, false, false, () => {
-                        // Fetch sensor types after basic data is loaded
-                        sensorTypes().then((types) => {
-                            sensorTypesData.value = types;
+    // Initialize MSP data sequentially to reduce nesting
+    const initializeMSPData = () => {
+        return new Promise((resolve) => {
+            MSP.send_message(MSPCodes.MSP_ACC_TRIM, false, false, () => {
+                MSP.send_message(MSPCodes.MSP_STATUS_EX, false, false, () => {
+                    MSP.send_message(MSPCodes.MSP2_MCU_INFO, false, false, () => {
+                        MSP.send_message(MSPCodes.MSP_MIXER_CONFIG, false, false, () => {
+                            MSP.send_message(MSPCodes.MSP_SENSOR_ALIGNMENT, false, false, () => {
+                                // Fetch sensor types after basic data is loaded
+                                sensorTypes().then((types) => {
+                                    sensorTypesData.value = types;
+                                    resolve();
+                                });
+                            });
                         });
                     });
                 });
             });
         });
-    });
+    };
+
+    await initializeMSPData();
 
     // Initialize 3D model
     initModel();
