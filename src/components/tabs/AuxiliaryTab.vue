@@ -525,12 +525,11 @@ export default defineComponent({
                 }
             }
 
-            fcStore.auxConfigIds.forEach((modeId) => {
+            for (let index = 0; index < fcStore.auxConfig.length; index++) {
+                const modeId = fcStore.auxConfigIds[index];
                 const mode = modeMap.get(modeId);
-                if (mode) {
-                    modes.push(mode);
-                }
-            });
+                if (mode) modes.push(mode);
+            }
 
             updateInfoWidth();
         };
