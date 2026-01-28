@@ -428,6 +428,7 @@ import Model from "@/js/model";
 import $ from "jquery";
 import GUI from "@/js/gui";
 import { i18n } from "@/js/localization";
+import semver from "semver";
 
 const fcStore = useFlightControllerStore();
 
