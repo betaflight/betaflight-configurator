@@ -129,7 +129,8 @@
                             <div class="spacer_box_title" v-html="$t('initialSetupInstrumentsHead')"></div>
                             <div class="helpicon cf_tip" :title="$t('initialSetupInstrumentsHeadHelp')"></div>
                         </div>
-                        <span id="attitude"></span> <span id="heading"></span>
+                        <div ref="attitudeIndicator" class="instrument attitude"></div>
+                        <div ref="headingIndicator" class="instrument heading"></div>
                     </div>
 
                     <!-- GPS Info -->
@@ -425,7 +426,6 @@ import { gui_log } from "@/js/gui_log";
 import { sensorTypes } from "@/js/sensor_types";
 import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "@/js/data_storage";
 import Model from "@/js/model";
-import $ from "jquery";
 import GUI from "@/js/gui";
 import { i18n } from "@/js/localization";
 import semver from "semver";
@@ -443,10 +443,14 @@ const buildInfoDialogTitle = ref("");
 const buildInfoDialogContent = ref("");
 const sensorTypesData = ref(null);
 
+// Vue refs for DOM elements
+const attitudeIndicator = ref(null);
+const headingIndicator = ref(null);
+const canvasWrapper = ref(null);
+const canvas = ref(null);
+
 // Model and instruments
 let model = null;
-let attitudeIndicator = null;
-let headingIndicator = null;
 
 // Intervals
 let fastDataInterval = null;
@@ -821,24 +825,52 @@ const closeBuildInfoDialog = () => {
 };
 
 const initializeInstruments = () => {
-    const options = { size: 90, showBox: false, img_directory: "images/flightindicators/" };
-    attitudeIndicator = $.flightIndicator("#attitude", "attitude", options);
-    headingIndicator = $.flightIndicator("#heading", "heading", options);
+    // Simple placeholder for flight indicators - can be enhanced later
+    if (attitudeIndicator.value) {
+        attitudeIndicator.value.innerHTML = `
+            <div class="attitude-display">
+                <div class="attitude-values">
+                    <div>Roll: <span class="roll-value">0°</span></div>
+                    <div>Pitch: <span class="pitch-value">0°</span></div>
+                </div>
+            </div>
+        `;
+    }
+
+    if (headingIndicator.value) {
+        headingIndicator.value.innerHTML = `
+            <div class="heading-display">
+                <div class="heading-value">0°</div>
+            </div>
+        `;
+    }
 };
 
 const updateInstruments = () => {
-    if (attitudeIndicator) {
-        attitudeIndicator.setRoll(fcStore.sensorData.kinematics[0]);
-        attitudeIndicator.setPitch(fcStore.sensorData.kinematics[1]);
+    if (attitudeIndicator.value) {
+        const rollValue = attitudeIndicator.value.querySelector(".roll-value");
+        const pitchValue = attitudeIndicator.value.querySelector(".pitch-value");
+        if (rollValue) rollValue.textContent = `${fcStore.sensorData.kinematics[0].toFixed(1)}°`;
+        if (pitchValue) pitchValue.textContent = `${fcStore.sensorData.kinematics[1].toFixed(1)}°`;
     }
-    if (headingIndicator) {
-        headingIndicator.setHeading(fcStore.sensorData.kinematics[2]);
+
+    if (headingIndicator.value) {
+        const headingValue = headingIndicator.value.querySelector(".heading-value");
+        if (headingValue) headingValue.textContent = `${fcStore.sensorData.kinematics[2].toFixed(1)}°`;
     }
 };
 
 const initModel = () => {
-    model = new Model($(".model-and-info #canvas_wrapper"), $(".model-and-info #canvas"));
-    $(window).on("resize", $.proxy(model.resize, model));
+    if (canvasWrapper.value && canvas.value) {
+        model = new Model(canvasWrapper.value, canvas.value);
+        window.addEventListener("resize", handleResize);
+    }
+};
+
+const handleResize = () => {
+    if (model) {
+        model.resize();
+    }
 };
 
 const renderModel = () => {
@@ -907,14 +939,35 @@ onUnmounted(() => {
     if (fastDataInterval) GUI.interval_remove("setup_data_pull_fast");
     if (slowDataInterval) GUI.interval_remove("setup_data_pull_slow");
 
+    // Clean up event listeners
+    window.removeEventListener("resize", handleResize);
+
     // Clean up model
     if (model) {
-        $(window).off("resize", $.proxy(model.resize, model));
         model.dispose();
     }
 });
 </script>
 
 <style scoped>
-/* Tab-specific styles can be added here */
+/* Tab-specific styles */
+.instrument {
+    display: inline-block;
+    margin: 5px;
+    padding: 10px;
+    background: #f0f0f0;
+    border-radius: 5px;
+    text-align: center;
+    min-width: 80px;
+}
+
+.attitude-display .attitude-values {
+    font-size: 12px;
+}
+
+.heading-display .heading-value {
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+}
 </style>
