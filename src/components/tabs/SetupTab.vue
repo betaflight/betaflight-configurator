@@ -721,7 +721,8 @@ const calibrateAccel = () => {
     if (!hasAccelSensor.value) return;
 
     accelCalibrating.value = true;
-    GUI.interval_pause("setup_data_pull");
+    GUI.interval_pause("setup_data_pull_fast");
+    GUI.interval_pause("setup_data_pull_slow");
 
     MSP.send_message(MSPCodes.MSP_ACC_CALIBRATION, false, false, () => {
         gui_log(i18n.getMessage("initialSetupAccelCalibStarted"));
@@ -730,7 +731,8 @@ const calibrateAccel = () => {
     GUI.timeout_add(
         "button_reset",
         () => {
-            GUI.interval_resume("setup_data_pull");
+            GUI.interval_resume("setup_data_pull_fast");
+            GUI.interval_resume("setup_data_pull_slow");
             gui_log(i18n.getMessage("initialSetupAccelCalibEnded"));
             accelCalibrating.value = false;
         },
