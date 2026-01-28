@@ -304,14 +304,7 @@
                             <div class="helpicon cf_tip" :title="$t('initialSetupInfoFirmwareHelp')"></div>
                         </div>
                         <div class="spacer_box">
-                            <table
-                                width="100%"
-                                border="0"
-                                cellpadding="0"
-                                cellspacing="0"
-                                class="cf_table"
-                                role="presentation"
-                            >
+                            <table class="cf_table">
                                 <tbody>
                                     <tr>
                                         <td id="api-version" v-html="$t('initialSetupInfoAPIversion')"></td>
