@@ -26,6 +26,7 @@ import PowerTab from "../components/tabs/PowerTab.vue";
 import SensorsTab from "../components/tabs/SensorsTab.vue";
 import FailsafeTab from "../components/tabs/FailsafeTab.vue";
 import MotorsTab from "../components/tabs/MotorsTab.vue";
+import ReceiverTab from "../components/tabs/ReceiverTab.vue";
 
 // Registry of Vue tab components - used by main.js for dynamic mounting
 export const VueTabComponents = {
@@ -48,6 +49,7 @@ export const VueTabComponents = {
     sensors: SensorsTab,
     failsafe: FailsafeTab,
     motors: MotorsTab,
+    receiver: ReceiverTab,
     // Move motors before pid_tuning if present in the future
 };
 
@@ -79,5 +81,6 @@ export const BetaflightComponents = {
         app.component("SensorsTab", SensorsTab);
         app.component("FailsafeTab", FailsafeTab);
         app.component("MotorsTab", MotorsTab);
+        app.component("ReceiverTab", ReceiverTab);
     },
 };
