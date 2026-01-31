@@ -335,7 +335,6 @@ async function startProcess() {
                     mountVueTab("power", content_ready);
                     break;
                 case "setup":
-                    // Converted to Vue SFC - mount via mountVueTab
                     mountVueTab("setup", content_ready);
                     break;
                 case "setup_osd":
