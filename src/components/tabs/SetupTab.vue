@@ -1197,7 +1197,6 @@ function openBuildOptionsDialog() {
     }
 }
 #accel_calib_running {
-    display: none;
     width: 100%;
     position: relative;
     padding: 5px 0 5px 0;
@@ -1213,7 +1212,6 @@ function openBuildOptionsDialog() {
     text-decoration: none;
 }
 #mag_calib_running {
-    display: none;
     width: 100%;
     position: relative;
     padding: 5px 0 5px 0;
