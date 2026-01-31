@@ -187,6 +187,21 @@ export const useFlightControllerStore = defineStore("flightController", () => {
         set: (val) => (FC.FILTER_CONFIG = val),
     });
 
+    const rcDeadbandConfig = computed({
+        get: () => FC.RC_DEADBAND_CONFIG,
+        set: (val) => (FC.RC_DEADBAND_CONFIG = val),
+    });
+
+    const rcMap = computed({
+        get: () => FC.RC_MAP,
+        set: (val) => (FC.RC_MAP = val),
+    });
+
+    const rcTuning = computed({
+        get: () => FC.RC_TUNING,
+        set: (val) => (FC.RC_TUNING = val),
+    });
+
     // Computed Getters
     const apiVersion = computed(() => config.value.apiVersion);
 
@@ -236,6 +251,9 @@ export const useFlightControllerStore = defineStore("flightController", () => {
         motorTelemetryData,
         advancedTuning,
         filterConfig,
+        rcDeadbandConfig,
+        rcMap,
+        rcTuning,
         apiVersion,
         isApiVersionSupported,
         isApiVersionLessThan,

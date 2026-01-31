@@ -347,7 +347,7 @@ async function startProcess() {
                     import("./tabs/pid_tuning").then(({ pid_tuning }) => pid_tuning.initialize(content_ready));
                     break;
                 case "receiver":
-                    import("./tabs/receiver").then(({ receiver }) => receiver.initialize(content_ready));
+                    mountVueTab("receiver", content_ready);
                     break;
                 case "servos":
                     // Vue tab - use mountVueTab instead of jQuery load
