@@ -13,10 +13,11 @@
                         <div id="accel_calib_rest">
                             <a
                                 class="calibrateAccel"
-                                id="default_btn green"
+                                :class="{ disabled: state.disabledAccel, calibrating: state.calibratingAccel }"
                                 href="#"
-                                i18n="initialSetupButtonCalibrateAccel"
-                            ></a>
+                                @click.prevent="onCalibrateAccel"
+                                >{{ i18n.getMessage("initialSetupButtonCalibrateAccel") }}</a
+                            >
                         </div>
                         <div id="accel_calib_running">
                             <div class="data-loading-setup">
@@ -35,7 +36,13 @@
                 <div class="grid-col col3">
                     <div class="default_btn">
                         <div id="mag_calib_rest">
-                            <a class="calibrateMag" href="#" i18n="initialSetupButtonCalibrateMag"></a>
+                            <a
+                                class="calibrateMag"
+                                :class="{ disabled: state.disabledMag, calibrating: state.calibratingMag }"
+                                href="#"
+                                @click.prevent="onCalibrateMag"
+                                >{{ i18n.getMessage("initialSetupButtonCalibrateMag") }}</a
+                            >
                         </div>
                         <div id="mag_calib_running">
                             <div class="data-loading-setup">
@@ -78,20 +85,25 @@
             <div class="grid-row grid-box col4">
                 <div class="col-span-3 model-and-info">
                     <div id="interactive_block">
-                        <div id="canvas_wrapper" class="background_paper">
-                            <canvas id="canvas"></canvas>
+                        <div id="canvas_wrapper" class="background_paper" ref="canvasWrapper">
+                            <canvas id="canvas" ref="canvas"></canvas>
                             <div class="attitude_info">
                                 <dl>
                                     <dt i18n="initialSetupHeading"></dt>
-                                    <dd class="heading">&nbsp;</dd>
+                                    <dd class="heading">{{ state.attitude.heading }}</dd>
                                     <dt i18n="initialSetupPitch"></dt>
-                                    <dd class="pitch">&nbsp;</dd>
+                                    <dd class="pitch">{{ state.attitude.pitch }}</dd>
                                     <dt i18n="initialSetupRoll"></dt>
-                                    <dd class="roll">&nbsp;</dd>
+                                    <dd class="roll">{{ state.attitude.roll }}</dd>
                                 </dl>
                             </div>
                         </div>
-                        <a class="reset sm-min" href="#" i18n="initialSetupButtonResetZaxis"></a>
+                        <a
+                            class="reset sm-min"
+                            href="#"
+                            i18n="initialSetupButtonResetZaxis"
+                            @click.prevent="resetZaxis"
+                        ></a>
                     </div>
                 </div>
                 <div class="col-span-1 grid-box col1">
@@ -123,15 +135,19 @@
                                     </tr>
                                     <tr>
                                         <td i18n="gpsSats"></td>
-                                        <td class="gpsSats"></td>
+                                        <td class="gpsSats">{{ state.gpsSats }}</td>
                                     </tr>
                                     <tr>
                                         <td i18n="gpsLatitude"></td>
-                                        <td class="latitude"><a href="#" target="_blank">0.0000 deg</a></td>
+                                        <td class="latitude">
+                                            <a :href="state.gpsUrl" target="_blank">{{ state.latitude }}</a>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td i18n="gpsLongitude"></td>
-                                        <td class="longitude"><a href="#" target="_blank">0.0000 deg</a></td>
+                                        <td class="longitude">
+                                            <a :href="state.gpsUrl" target="_blank">{{ state.longitude }}</a>
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -154,7 +170,7 @@
                                 <tbody>
                                     <tr>
                                         <td id="sonarAltitude" i18n="initialSetupAltitudeSonar"></td>
-                                        <td class="sonarAltitude">0.0 cm</td>
+                                        <td class="sonarAltitude">{{ state.sonar }}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -181,31 +197,43 @@
                                             i18n="initialSetupArmingDisableFlags"
                                             class="cf_tip"
                                         ></td>
-                                        <td class="arming-disable-flags"></td>
+                                        <td class="arming-disable-flags">
+                                            <span
+                                                v-for="(flag, idx) in state.armingFlags"
+                                                :key="flag.id"
+                                                v-show="flag.visible"
+                                                class="cf_tip disarm-flag"
+                                                :title="flag.tooltip"
+                                                >{{ flag.name }}</span
+                                            >
+                                            <span v-show="state.armingAllowed" id="initialSetupArmingAllowed">{{
+                                                i18n.getMessage("initialSetupArmingAllowed")
+                                            }}</span>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td i18n="initialSetupBattery"></td>
-                                        <td class="bat-voltage">0 V</td>
+                                        <td class="bat-voltage">{{ state.batVoltage }}</td>
                                     </tr>
                                     <tr>
                                         <td i18n="initialSetupDrawn"></td>
-                                        <td class="bat-mah-drawn">0 mAh</td>
+                                        <td class="bat-mah-drawn">{{ state.batMahDrawn }}</td>
                                     </tr>
                                     <tr>
                                         <td i18n="initialSetupDrawing"></td>
-                                        <td class="bat-mah-drawing">0.00 A</td>
+                                        <td class="bat-mah-drawing">{{ state.batMahDrawing }}</td>
                                     </tr>
                                     <tr class="noboarder">
                                         <td i18n="initialSetupRSSI"></td>
-                                        <td class="rssi">0 %</td>
+                                        <td class="rssi">{{ state.rssi }}</td>
                                     </tr>
                                     <tr>
                                         <td id="mcu" i18n="initialSetupMCU"></td>
-                                        <td class="mcu"></td>
+                                        <td class="mcu">{{ state.mcu }}</td>
                                     </tr>
                                     <tr>
                                         <td id="cpu-temp" i18n="initialSetupCpuTemp"></td>
-                                        <td class="cpu-temp">0 &#8451;</td>
+                                        <td class="cpu-temp">{{ state.cpuTemp }}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -228,27 +256,27 @@
                                 <tbody>
                                     <tr>
                                         <td id="sensor_gyro_hw" i18n="initialSetupSensorGyro"></td>
-                                        <td class="sensor_gyro_hw"></td>
+                                        <td class="sensor_gyro_hw">{{ state.sensorGyro }}</td>
                                     </tr>
                                     <tr>
                                         <td id="sensor_acc_hw" i18n="initialSetupSensorAcc"></td>
-                                        <td class="sensor_acc_hw"></td>
+                                        <td class="sensor_acc_hw">{{ state.sensorAcc }}</td>
                                     </tr>
                                     <tr>
                                         <td id="sensor-mag-hw" i18n="initialSetupSensorMag"></td>
-                                        <td class="sensor_mag_hw"></td>
+                                        <td class="sensor_mag_hw">{{ state.sensorMag }}</td>
                                     </tr>
                                     <tr>
                                         <td id="sensor_baro_hw" i18n="initialSetupSensorBaro"></td>
-                                        <td class="sensor_baro_hw"></td>
+                                        <td class="sensor_baro_hw">{{ state.sensorBaro }}</td>
                                     </tr>
                                     <tr>
                                         <td id="sensor-sonar-hw" i18n="initialSetupSensorSonar"></td>
-                                        <td class="sensor_sonar_hw"></td>
+                                        <td class="sensor_sonar_hw">{{ state.sensorSonar }}</td>
                                     </tr>
                                     <tr>
                                         <td id="sensor-opticalflow-hw" i18n="initialSetupSensorOpticalflow"></td>
-                                        <td class="sensor_opticalflow_hw"></td>
+                                        <td class="sensor_opticalflow_hw">{{ state.sensorOpticalflow }}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -271,23 +299,59 @@
                                 <tbody>
                                     <tr>
                                         <td id="api-version" i18n="initialSetupInfoAPIversion"></td>
-                                        <td class="api-version"></td>
+                                        <td class="api-version">{{ state.apiVersion }}</td>
                                     </tr>
                                     <tr>
                                         <td id="build-date" i18n="initialSetupInfoBuildDate"></td>
-                                        <td class="build-date"></td>
+                                        <td class="build-date">{{ state.buildDate }}</td>
                                     </tr>
                                     <tr>
                                         <td id="build-type" i18n="initialSetupInfoBuildType"></td>
-                                        <td class="build-type"></td>
+                                        <td class="build-type">{{ state.buildType }}</td>
                                     </tr>
                                     <tr>
                                         <td id="build-info" i18n="initialSetupInfoBuildInfo"></td>
-                                        <td class="build-info"></td>
+                                        <td class="build-info">
+                                            <template v-if="state.buildInfoButtons && state.buildInfoButtons.length">
+                                                <span
+                                                    v-for="btn in state.buildInfoButtons"
+                                                    :key="btn.type"
+                                                    class="buildInfoBtn"
+                                                >
+                                                    <a :href="btn.href" target="_blank" :title="btn.title"
+                                                        ><strong>{{ btn.label }}</strong></a
+                                                    >
+                                                </span>
+                                            </template>
+                                            <template v-else>
+                                                <span v-html="state.buildInfoHtml"></span>
+                                            </template>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td id="build-firmware" i18n="initialSetupInfoBuildFirmware"></td>
-                                        <td class="build-firmware"></td>
+                                        <td class="build-firmware">
+                                            <span v-if="state.buildOptionsValid" class="buildInfoBtn">
+                                                <a
+                                                    href="#"
+                                                    :title="i18n.getMessage('initialSetupInfoBuildOptionList')"
+                                                    @click.prevent="openBuildOptionsDialog"
+                                                    ><strong>{{
+                                                        i18n.getMessage("initialSetupInfoBuildOptions")
+                                                    }}</strong></a
+                                                >
+                                            </span>
+                                            <span v-if="state.buildKeyValid" class="buildInfoBtn">
+                                                <a
+                                                    :href="state.buildRoot + '/hex'"
+                                                    target="_blank"
+                                                    :title="i18n.getMessage('initialSetupInfoBuildDownload')"
+                                                    ><strong>{{
+                                                        i18n.getMessage("initialSetupInfoBuildDownload")
+                                                    }}</strong></a
+                                                >
+                                            </span>
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -310,19 +374,19 @@
                                 <tbody>
                                     <tr>
                                         <td id="network-status" i18n="initialSetupNetworkInfoStatus"></td>
-                                        <td class="network-status"></td>
+                                        <td class="network-status">{{ state.networkStatus }}</td>
                                     </tr>
                                     <tr>
                                         <td id="network-type" i18n="initialSetupNetworkType"></td>
-                                        <td class="network-type"></td>
+                                        <td class="network-type">{{ state.networkType }}</td>
                                     </tr>
                                     <tr>
                                         <td id="network-downlink" i18n="initialSetupNetworkDownlink"></td>
-                                        <td class="network-downlink"></td>
+                                        <td class="network-downlink">{{ state.networkDownlink }}</td>
                                     </tr>
                                     <tr>
                                         <td id="network-rtt" i18n="initialSetupNetworkRtt"></td>
-                                        <td class="network-rtt"></td>
+                                        <td class="network-rtt">{{ state.networkRtt }}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -356,7 +420,7 @@
 </template>
 
 <script setup>
-import { onMounted, onBeforeUnmount, ref } from "vue";
+import { onMounted, onBeforeUnmount, ref, reactive } from "vue";
 import { i18n } from "../../js/localization";
 import semver from "semver";
 import { isExpertModeEnabled } from "../../js/utils/isExpertModeEnabled";
@@ -377,6 +441,164 @@ import { addArrayElementsAfter, replaceArrayElement } from "../../js/utils/array
 const yaw_fix = ref(0.0);
 
 let modelInstance = null;
+// Local reactive state to replace jQuery DOM updates
+const state = reactive({
+    batVoltage: "0 V",
+    batMahDrawn: "0 mAh",
+    batMahDrawing: "0.00 A",
+    rssi: "0 %",
+    cpuTemp: "0 °C",
+    armingAllowed: true,
+    armingFlags: [],
+    gpsFix: false,
+    gpsSats: 0,
+    latitude: "0.0000",
+    longitude: "0.0000",
+    sonar: "0.0 cm",
+    mcu: "",
+    sensorGyro: "",
+    sensorAcc: "",
+    sensorMag: "",
+    sensorBaro: "",
+    sensorSonar: "",
+    sensorOpticalflow: "",
+    apiVersion: "",
+    buildDate: "",
+    buildType: "",
+    buildInfo: "",
+    buildFirmware: "",
+    networkStatus: "",
+    networkType: "",
+    networkDownlink: "",
+    networkRtt: "",
+    attitude: { roll: 0, pitch: 0, heading: 0 },
+    calibratingAccel: false,
+    calibratingMag: false,
+    disabledAccel: false,
+    disabledMag: false,
+    showSonarBox: true,
+    buildInfoHtml: "",
+    buildOptionsValid: false,
+    buildKeyValid: false,
+    buildRoot: "",
+    buildOptionsArray: [],
+    networkDownlink: "",
+    networkRtt: "",
+});
+
+const localIntervals = [];
+function addLocalInterval(name, fn, period, first = false) {
+    GUI.interval_add(name, fn, period, first);
+    localIntervals.push(name);
+}
+
+let mountedFlag = true;
+const isExpert = ref(isExpertModeEnabled());
+const dialogConfirmResetRef = ref(null);
+const dialogBuildInfoRef = ref(null);
+
+function resetZaxis() {
+    yaw_fix.value = FC.SENSOR_DATA.kinematics[2] * -1.0;
+    console.log(`YAW reset to 0 deg, fix: ${yaw_fix.value} deg`);
+}
+
+function onRebootBootloader() {
+    const buffer = [];
+    buffer.push(
+        FC.boardHasFlashBootloader() ? mspHelper.REBOOT_TYPES.BOOTLOADER_FLASH : mspHelper.REBOOT_TYPES.BOOTLOADER,
+    );
+    MSP.send_message(MSPCodes.MSP_SET_REBOOT, buffer, false);
+}
+
+function onCalibrateAccel() {
+    if (state.calibratingAccel || state.disabledAccel) return;
+    state.calibratingAccel = true;
+    GUI.interval_pause("setup_data_pull");
+    MSP.send_message(MSPCodes.MSP_ACC_CALIBRATION, false, false, function () {
+        if (!mountedFlag) return;
+        gui_log(i18n.getMessage("initialSetupAccelCalibStarted"));
+        state.calibratingAccel = true;
+        state.accelRunning = true;
+    });
+
+    GUI.timeout_add(
+        "button_reset",
+        function () {
+            GUI.interval_resume("setup_data_pull");
+            gui_log(i18n.getMessage("initialSetupAccelCalibEnded"));
+            state.calibratingAccel = false;
+            state.accelRunning = false;
+        },
+        2000,
+    );
+}
+
+function onCalibrateMag() {
+    if (state.calibratingMag || state.disabledMag) return;
+    state.calibratingMag = true;
+    MSP.send_message(MSPCodes.MSP_MAG_CALIBRATION, false, false, function () {
+        if (!mountedFlag) return;
+        gui_log(i18n.getMessage("initialSetupMagCalibStarted"));
+        state.calibratingMag = true;
+        state.magRunning = true;
+    });
+
+    function magCalibResetButton() {
+        gui_log(i18n.getMessage("initialSetupMagCalibEnded"));
+        state.calibratingMag = false;
+        state.magRunning = false;
+    }
+
+    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+        let cycle = 0;
+        const cycleMax = 45;
+        const interval = 1000;
+        const intervalId = setInterval(function () {
+            if (cycle >= cycleMax || (FC.CONFIG.armingDisableFlags & (1 << 12)) === 0) {
+                clearInterval(intervalId);
+                magCalibResetButton();
+            }
+            cycle++;
+        }, interval);
+    } else {
+        GUI.timeout_add("button_reset", magCalibResetButton, 30000);
+    }
+}
+
+function showConfirmReset() {
+    if (dialogConfirmResetRef.value) dialogConfirmResetRef.value.showModal();
+}
+
+function cancelConfirmReset() {
+    if (dialogConfirmResetRef.value) dialogConfirmResetRef.value.close();
+}
+
+function confirmReset() {
+    if (dialogConfirmResetRef.value) dialogConfirmResetRef.value.close();
+    MSP.send_message(MSPCodes.MSP_RESET_CONF, false, false, function () {
+        gui_log(i18n.getMessage("initialSetupSettingsRestored"));
+        GUI.tab_switch_cleanup(function () {
+            if (TABS.setup) TABS.setup.initialize();
+        });
+    });
+}
+
+function showDialogBuildInfo(title, message) {
+    if (!dialogBuildInfoRef.value) return;
+    const dialog = dialogBuildInfoRef.value;
+    const titleEl = dialog.querySelector(".dialogBuildInfo-title");
+    const contentEl = dialog.querySelector(".dialogBuildInfo-content");
+    if (titleEl) titleEl.innerHTML = title;
+    if (contentEl) contentEl.innerHTML = message;
+    if (!dialog.hasAttribute("open")) dialog.showModal();
+}
+
+function closeBuildInfo() {
+    if (dialogBuildInfoRef.value) dialogBuildInfoRef.value.close();
+}
+const canvasWrapper = ref(null);
+const canvasEl = ref(null);
+let boundModelResize = null;
 
 function initialize() {
     // follow legacy initialization chain
@@ -411,170 +633,24 @@ function process_html() {
     // initialize 3D Model
     initModel();
 
-    $("span.roll").text(i18n.getMessage("initialSetupAttitude", [0]));
-    $("span.pitch").text(i18n.getMessage("initialSetupAttitude", [0]));
-    $("span.heading").text(i18n.getMessage("initialSetupAttitude", [0]));
+    state.attitude.roll = i18n.getMessage("initialSetupAttitude", [0]);
+    state.attitude.pitch = i18n.getMessage("initialSetupAttitude", [0]);
+    state.attitude.heading = i18n.getMessage("initialSetupAttitude", [0]);
 
-    if (!have_sensor(FC.CONFIG.activeSensors, "acc")) {
-        $("a.calibrateAccel").addClass("disabled");
-        $("default_btn").addClass("disabled");
-    }
-
-    if (!have_sensor(FC.CONFIG.activeSensors, "mag")) {
-        $("a.calibrateMag").addClass("disabled");
-        $("default_btn").addClass("disabled");
-    }
+    // set disabled state from sensors
+    state.disabledAccel = !have_sensor(FC.CONFIG.activeSensors, "acc");
+    state.disabledMag = !have_sensor(FC.CONFIG.activeSensors, "mag");
 
     initializeInstruments();
 
-    $("#arming-disable-flag").attr("title", i18n.getMessage("initialSetupArmingDisableFlagsTooltip"));
+    // set expert mode visibility
+    isExpert.value = isExpertModeEnabled();
 
-    $(".initialSetupReset").toggle(isExpertModeEnabled());
-    $(".initialSetupRebootBootloader").toggle(isExpertModeEnabled());
+    // no direct DOM dialog wiring here; dialogs use Vue refs and methods
+    // set initial reset button label via reactive yaw value
+    // reset button text will be rendered from template using `yaw_fix`
 
-    $("a.rebootBootloader")
-        .off("click")
-        .on("click", function () {
-            const buffer = [];
-            buffer.push(
-                FC.boardHasFlashBootloader()
-                    ? mspHelper.REBOOT_TYPES.BOOTLOADER_FLASH
-                    : mspHelper.REBOOT_TYPES.BOOTLOADER,
-            );
-            MSP.send_message(MSPCodes.MSP_SET_REBOOT, buffer, false);
-        });
-
-    // UI Hooks
-    $("a.calibrateAccel")
-        .off("click")
-        .on("click", function () {
-            const _self = $(this);
-
-            if (!_self.hasClass("calibrating")) {
-                _self.addClass("calibrating");
-                GUI.interval_pause("setup_data_pull");
-                MSP.send_message(MSPCodes.MSP_ACC_CALIBRATION, false, false, function () {
-                    gui_log(i18n.getMessage("initialSetupAccelCalibStarted"));
-                    $("#accel_calib_running").show();
-                    $("#accel_calib_rest").hide();
-                });
-
-                GUI.timeout_add(
-                    "button_reset",
-                    function () {
-                        GUI.interval_resume("setup_data_pull");
-
-                        gui_log(i18n.getMessage("initialSetupAccelCalibEnded"));
-                        _self.removeClass("calibrating");
-                        $("#accel_calib_running").hide();
-                        $("#accel_calib_rest").show();
-                    },
-                    2000,
-                );
-            }
-        });
-
-    $("a.calibrateMag")
-        .off("click")
-        .on("click", function () {
-            const _self = $(this);
-
-            if (!_self.hasClass("calibrating") && !_self.hasClass("disabled")) {
-                _self.addClass("calibrating");
-
-                MSP.send_message(MSPCodes.MSP_MAG_CALIBRATION, false, false, function () {
-                    gui_log(i18n.getMessage("initialSetupMagCalibStarted"));
-                    $("#mag_calib_running").show();
-                    $("#mag_calib_rest").hide();
-                });
-
-                function magCalibResetButton() {
-                    gui_log(i18n.getMessage("initialSetupMagCalibEnded"));
-                    _self.removeClass("calibrating");
-                    $("#mag_calib_running").hide();
-                    $("#mag_calib_rest").show();
-                }
-
-                if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
-                    let cycle = 0;
-                    const cycleMax = 45;
-                    const interval = 1000;
-                    const intervalId = setInterval(function () {
-                        if (cycle >= cycleMax || (FC.CONFIG.armingDisableFlags & (1 << 12)) === 0) {
-                            clearInterval(intervalId);
-                            magCalibResetButton();
-                        }
-                        cycle++;
-                    }, interval);
-                } else {
-                    GUI.timeout_add("button_reset", magCalibResetButton, 30000);
-                }
-            }
-        });
-
-    const dialogConfirmReset = $(".dialogConfirmReset")[0];
-
-    $("a.resetSettings")
-        .off("click")
-        .on("click", function () {
-            dialogConfirmReset.showModal();
-        });
-
-    $(".dialogConfirmReset-cancelbtn")
-        .off("click")
-        .on("click", function () {
-            dialogConfirmReset.close();
-        });
-
-    $(".dialogConfirmReset-confirmbtn")
-        .off("click")
-        .on("click", function () {
-            dialogConfirmReset.close();
-            MSP.send_message(MSPCodes.MSP_RESET_CONF, false, false, function () {
-                gui_log(i18n.getMessage("initialSetupSettingsRestored"));
-
-                GUI.tab_switch_cleanup(function () {
-                    // Reinitialize tab
-                    if (TABS.setup) TABS.setup.initialize();
-                });
-            });
-        });
-
-    $("div#interactive_block > a.reset").text(i18n.getMessage("initialSetupButtonResetZaxisValue", [yaw_fix.value]));
-
-    $("div#interactive_block > a.reset")
-        .off("click")
-        .on("click", function () {
-            yaw_fix.value = FC.SENSOR_DATA.kinematics[2] * -1.0;
-            $(this).text(i18n.getMessage("initialSetupButtonResetZaxisValue", [yaw_fix.value]));
-            console.log(`YAW reset to 0 deg, fix: ${yaw_fix.value} deg`);
-        });
-
-    // cached elements
-    const bat_voltage_e = $(".bat-voltage"),
-        bat_mah_drawn_e = $(".bat-mah-drawn"),
-        bat_mah_drawing_e = $(".bat-mah-drawing"),
-        rssi_e = $(".rssi"),
-        cputemp_e = $(".cpu-temp"),
-        arming_disable_flags_e = $(".arming-disable-flags"),
-        gpsFix_e = $(".GPS_info span.colorToggle"),
-        gpsSats_e = $(".gpsSats"),
-        roll_e = $("dd.roll"),
-        pitch_e = $("dd.pitch"),
-        heading_e = $("dd.heading"),
-        sonar_e = $(".sonarAltitude"),
-        mcu_e = $(".mcu"),
-        sensor_gyro_e = $(".sensor_gyro_hw"),
-        sensor_acc_e = $(".sensor_acc_hw"),
-        sensor_mag_e = $(".sensor_mag_hw"),
-        sensor_baro_e = $(".sensor_baro_hw"),
-        sensor_sonar_e = $(".sensor_sonar_hw"),
-        sensor_opticalflow_e = $(".sensor_opticalflow_hw"),
-        msp_api_e = $(".api-version"),
-        build_date_e = $(".build-date"),
-        build_type_e = $(".build-type"),
-        build_info_e = $(".build-info"),
-        build_firmware_e = $(".build-firmware");
+    // Using reactive state instead of cached jQuery elements
 
     const prepareDisarmFlags = function () {
         let disarmFlagElements = [
@@ -613,46 +689,37 @@ function process_html() {
             addArrayElementsAfter(disarmFlagElements, "MOTOR_PROTOCOL", ["CRASHFLIP", "ALTHOLD", "POSHOLD"]);
         }
 
-        arming_disable_flags_e.append(
-            '<span id="initialSetupArmingAllowed" i18n="initialSetupArmingAllowed" style="display: none;"></span>',
-        );
+        // Build arming flags state instead of manipulating DOM
+        state.armingFlags.length = 0;
 
         for (let i = 0; i < FC.CONFIG.armingDisableCount; i++) {
             if (i < disarmFlagElements.length - 1) {
-                const messageKey = `initialSetupArmingDisableFlagsTooltip${disarmFlagElements[i]}`;
-                arming_disable_flags_e.append(
-                    `<span id="initialSetupArmingDisableFlags${i}" class="cf_tip disarm-flag" title="${i18n.getMessage(
-                        messageKey,
-                    )}" style="display: none;">${disarmFlagElements[i]}</span>`,
-                );
+                const rawName = disarmFlagElements[i];
+                const messageKey = `initialSetupArmingDisableFlagsTooltip${rawName}`;
+                // display 'FAILSAFE MSP' for MSP flag to match desired label
+                const displayName = rawName === "MSP" ? "FAILSAFE MSP" : rawName;
+                state.armingFlags.push({
+                    id: `initialSetupArmingDisableFlags${i}`,
+                    name: displayName,
+                    tooltip: i18n.getMessage(messageKey),
+                    visible: false,
+                });
             } else if (i == FC.CONFIG.armingDisableCount - 1) {
-                arming_disable_flags_e.append(
-                    `<span id="initialSetupArmingDisableFlags${i}" class="cf_tip disarm-flag" title="${i18n.getMessage(
-                        "initialSetupArmingDisableFlagsTooltipARM_SWITCH",
-                    )}" style="display: none;">ARM_SWITCH</span>`,
-                );
+                state.armingFlags.push({
+                    id: `initialSetupArmingDisableFlags${i}`,
+                    name: "ARM_SWITCH",
+                    tooltip: i18n.getMessage("initialSetupArmingDisableFlagsTooltipARM_SWITCH"),
+                    visible: false,
+                });
             } else {
-                arming_disable_flags_e.append(
-                    `<span id="initialSetupArmingDisableFlags${i}" class="disarm-flag" style="display: none;">${
-                        i + 1
-                    }</span>`,
-                );
+                state.armingFlags.push({ id: `initialSetupArmingDisableFlags${i}`, name: `${i + 1}`, visible: false });
             }
         }
     };
 
     const showSensorInfo = async function () {
-        function addSensorInfo(sensor, sensorElement, sensorType, sensorElements) {
-            if (sensor == 0xff) {
-                sensorElement.text(i18n.getMessage("initialSetupNotInBuild"));
-            } else if (have_sensor(FC.CONFIG.activeSensors, sensorType)) {
-                sensorElement.text(sensorElements[sensor]);
-            } else {
-                sensorElement.text(i18n.getMessage("initialSetupNotDetected"));
-            }
-        }
-
-        async function displaySensorInfo() {
+        // follow legacy callback flow to request sensor config and gyro sensor when needed
+        const displaySensorInfo = async function () {
             const types = await sensorTypes();
 
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
@@ -662,66 +729,110 @@ function process_html() {
                         gyroInfoList.push(types.gyro.elements[FC.GYRO_SENSOR.gyro_hardware[i]]);
                     }
                 }
-                sensor_gyro_e.html(gyroInfoList.join(" "));
+                state.sensorGyro = gyroInfoList.join(" ");
             } else {
-                addSensorInfo(FC.SENSOR_CONFIG_ACTIVE.gyro_hardware, sensor_gyro_e, "gyro", types.gyro.elements);
+                const g = FC.SENSOR_CONFIG_ACTIVE.gyro_hardware;
+                state.sensorGyro =
+                    g === 0xff
+                        ? i18n.getMessage("initialSetupNotInBuild")
+                        : have_sensor(FC.CONFIG.activeSensors, "gyro")
+                            ? types.gyro.elements[g]
+                            : i18n.getMessage("initialSetupNotDetected");
             }
 
-            addSensorInfo(FC.SENSOR_CONFIG_ACTIVE.acc_hardware, sensor_acc_e, "acc", types.acc.elements);
-            addSensorInfo(FC.SENSOR_CONFIG_ACTIVE.baro_hardware, sensor_baro_e, "baro", types.baro.elements);
-            addSensorInfo(FC.SENSOR_CONFIG_ACTIVE.mag_hardware, sensor_mag_e, "mag", types.mag.elements);
-            addSensorInfo(FC.SENSOR_CONFIG_ACTIVE.sonar_hardware, sensor_sonar_e, "sonar", types.sonar.elements);
+            const a = FC.SENSOR_CONFIG_ACTIVE.acc_hardware;
+            if (a === 0xff) {
+                state.sensorAcc = i18n.getMessage("initialSetupNotInBuild");
+            } else if (!have_sensor(FC.CONFIG.activeSensors, "acc")) {
+                state.sensorAcc = i18n.getMessage("initialSetupNotDetected");
+            } else {
+                let name = types.acc.elements[a] || "AUTO";
+                if (
+                    (name === "AUTO" || name === "DEFAULT") &&
+                    FC.SENSOR_NAMES &&
+                    FC.SENSOR_NAMES.acc &&
+                    FC.SENSOR_NAMES.acc[a]
+                ) {
+                    name = FC.SENSOR_NAMES.acc[a];
+                }
+                state.sensorAcc = name;
+            }
+
+            const b = FC.SENSOR_CONFIG_ACTIVE.baro_hardware;
+            if (b === 0xff) {
+                state.sensorBaro = i18n.getMessage("initialSetupNotInBuild");
+            } else if (!have_sensor(FC.CONFIG.activeSensors, "baro")) {
+                state.sensorBaro = i18n.getMessage("initialSetupNotDetected");
+            } else {
+                let nameB = types.baro.elements[b] || "DEFAULT";
+                if (
+                    (nameB === "AUTO" || nameB === "DEFAULT") &&
+                    FC.SENSOR_NAMES &&
+                    FC.SENSOR_NAMES.baro &&
+                    FC.SENSOR_NAMES.baro[b]
+                ) {
+                    nameB = FC.SENSOR_NAMES.baro[b];
+                }
+                state.sensorBaro = nameB;
+            }
+
+            const m = FC.SENSOR_CONFIG_ACTIVE.mag_hardware;
+            state.sensorMag =
+                m === 0xff
+                    ? i18n.getMessage("initialSetupNotInBuild")
+                    : have_sensor(FC.CONFIG.activeSensors, "mag")
+                        ? types.mag.elements[m]
+                        : i18n.getMessage("initialSetupNotDetected");
+
+            const s = FC.SENSOR_CONFIG_ACTIVE.sonar_hardware;
+            state.sensorSonar =
+                s === 0xff
+                    ? i18n.getMessage("initialSetupNotInBuild")
+                    : have_sensor(FC.CONFIG.activeSensors, "sonar")
+                        ? types.sonar.elements[s]
+                        : i18n.getMessage("initialSetupNotDetected");
 
             if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
-                addSensorInfo(
-                    FC.SENSOR_CONFIG_ACTIVE.opticalflow_hardware,
-                    sensor_opticalflow_e,
-                    "opticalflow",
-                    types.opticalflow.elements,
-                );
+                const o = FC.SENSOR_CONFIG_ACTIVE.opticalflow_hardware;
+                state.sensorOpticalflow =
+                    o === 0xff
+                        ? i18n.getMessage("initialSetupNotInBuild")
+                        : have_sensor(FC.CONFIG.activeSensors, "opticalflow")
+                            ? types.opticalflow.elements[o]
+                            : i18n.getMessage("initialSetupNotDetected");
             }
-        }
+        };
 
-        MSP.send_message(MSPCodes.MSP2_SENSOR_CONFIG_ACTIVE, false, false, async function () {
+        MSP.send_message(MSPCodes.MSP2_SENSOR_CONFIG_ACTIVE, false, false, function () {
             if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
-                await displaySensorInfo();
+                displaySensorInfo();
             } else {
-                MSP.send_message(MSPCodes.MSP2_GYRO_SENSOR, false, false, async function () {
-                    await displaySensorInfo();
+                MSP.send_message(MSPCodes.MSP2_GYRO_SENSOR, false, false, function () {
+                    displaySensorInfo();
                 });
             }
         });
     };
 
     const hideSensorInfo = function () {
-        $("#sensorInfoBox").hide();
+        state.sensorGyro = i18n.getMessage("initialSetupNotInBuild");
+        state.sensorAcc = i18n.getMessage("initialSetupNotInBuild");
+        state.sensorBaro = i18n.getMessage("initialSetupNotInBuild");
+        state.sensorMag = i18n.getMessage("initialSetupNotInBuild");
+        state.sensorSonar = i18n.getMessage("initialSetupNotInBuild");
+        state.sensorOpticalflow = i18n.getMessage("initialSetupNotInBuild");
     };
 
     const showBuildType = function () {
-        build_type_e.html(
+        state.buildType =
             FC.CONFIG.buildKey.length === 32
                 ? i18n.getMessage("initialSetupInfoBuildCloud")
-                : i18n.getMessage("initialSetupInfoBuildLocal"),
-        );
+                : i18n.getMessage("initialSetupInfoBuildLocal");
     };
 
     const hideBuildType = function () {
-        build_type_e.parent().hide();
+        state.buildType = "";
     };
-
-    function showDialogBuildInfo(title, message) {
-        const dialog = $(".dialogBuildInfo")[0];
-
-        $(".dialogBuildInfo-title").html(title);
-        $(".dialogBuildInfo-content").html(message);
-
-        if (!dialog.hasAttribute("open")) {
-            dialog.showModal();
-            $(".dialogBuildInfo-closebtn").on("click", function () {
-                dialog.close();
-            });
-        }
-    }
 
     const getBuildRootBaseUri = function () {
         return `https://build.betaflight.com/api/builds/${FC.CONFIG.buildKey}`;
@@ -730,32 +841,39 @@ function process_html() {
     const showBuildInfo = function () {
         const isIspConnected = ispConnected();
         const buildKeyValid = FC.CONFIG.buildKey.length === 32;
+        const buildRoot = getBuildRootBaseUri();
+        state.buildKeyValid = buildKeyValid;
+        state.buildRoot = buildRoot;
 
+        // prefer rendering buttons via Vue template to ensure styles apply
         if (buildKeyValid && isIspConnected) {
-            const buildRoot = getBuildRootBaseUri();
-
-            const buildConfig = `<span class="buildInfoBtn" title="${i18n.getMessage(
-                "initialSetupInfoBuildConfig",
-            )}: ${buildRoot}/json"><a href="${buildRoot}/json" target="_blank"><strong>${i18n.getMessage(
-                "initialSetupInfoBuildConfig",
-            )}</strong></a></span>`;
-
-            const buildLog = `<span class="buildInfoBtn" title="${i18n.getMessage(
-                "initialSetupInfoBuildLog",
-            )}: ${buildRoot}/log"><a href="${buildRoot}/log" target="_blank"><strong>${i18n.getMessage(
-                "initialSetupInfoBuildLog",
-            )}</strong></a></span>`;
-
-            build_info_e.html(`${buildConfig} ${buildLog}`);
+            state.buildInfoButtons = [
+                {
+                    type: "log",
+                    href: `${buildRoot}/log`,
+                    title: `${i18n.getMessage("initialSetupInfoBuildLog")}: ${buildRoot}/log`,
+                    label: i18n.getMessage("initialSetupInfoBuildLog"),
+                },
+                {
+                    type: "config",
+                    href: `${buildRoot}/json`,
+                    title: `${i18n.getMessage("initialSetupInfoBuildConfig")}: ${buildRoot}/json`,
+                    label: i18n.getMessage("initialSetupInfoBuildConfig"),
+                },
+            ];
+            state.buildInfoHtml = "";
         } else {
-            build_info_e.html(
-                isIspConnected ? i18n.getMessage("initialSetupNoBuildInfo") : i18n.getMessage("initialSetupNotOnline"),
-            );
+            state.buildInfoButtons = [];
+            state.buildInfoHtml = isIspConnected
+                ? i18n.getMessage("initialSetupNoBuildInfo")
+                : i18n.getMessage("initialSetupNotOnline");
         }
     };
 
     const hideBuildInfo = function () {
-        build_info_e.parent().hide();
+        state.buildInfoHtml = "";
+        state.buildInfoButtons = [];
+        state.buildKeyValid = false;
     };
 
     const showBuildFirmware = function () {
@@ -767,47 +885,15 @@ function process_html() {
         const buildKeyValid = FC.CONFIG.buildKey.length === 32;
         const buildRoot = getBuildRootBaseUri();
 
-        if (buildOptionsValid || buildKeyValid) {
-            const buildOptions = buildOptionsValid
-                ? `<span class="buildInfoBtn" title="${i18n.getMessage("initialSetupInfoBuildOptionList")}"><a class="buildOptions" href="#"><strong>${i18n.getMessage(
-                    "initialSetupInfoBuildOptions",
-                )}</strong></a></span>`
-                : "";
-
-            const buildDownload = buildKeyValid
-                ? `<span class="buildInfoBtn" title="${i18n.getMessage("initialSetupInfoBuildDownload")}: ${buildRoot}/hex"><a href="${buildRoot}/hex" target="_blank"><strong>${i18n.getMessage(
-                    "initialSetupInfoBuildDownload",
-                )}</strong></a></span>`
-                : "";
-
-            build_firmware_e.html(`${buildOptions} ${buildDownload}`);
-
-            if (buildOptionsValid) {
-                let buildOptionList = `<div class="dialogBuildInfoGrid-container">`;
-                for (const buildOptionElement of FC.CONFIG.buildOptions) {
-                    buildOptionList += `<div class="dialogBuildInfoGrid-item">${buildOptionElement}</div>`;
-                }
-                buildOptionList += `</div>`;
-
-                $("a.buildOptions")
-                    .off("click")
-                    .on("click", async function () {
-                        showDialogBuildInfo(
-                            `<h3>${i18n.getMessage("initialSetupInfoBuildOptionList")}</h3>`,
-                            buildOptionList,
-                        );
-                    });
-            }
-        } else {
-            build_firmware_e.html(
-                isIspConnected ? i18n.getMessage("initialSetupNoBuildInfo") : i18n.getMessage("initialSetupNotOnline"),
-            );
-        }
+        state.buildOptionsValid = !!buildOptionsValid;
+        state.buildKeyValid = !!buildKeyValid;
+        state.buildRoot = buildRoot;
+        state.buildOptionsArray = buildOptionsValid ? FC.CONFIG.buildOptions : [];
     };
 
     function showFirmwareInfo() {
-        msp_api_e.text(FC.CONFIG.apiVersion);
-        build_date_e.text(FC.CONFIG.buildInfo);
+        state.apiVersion = FC.CONFIG.apiVersion;
+        state.buildDate = FC.CONFIG.buildInfo;
 
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
             showBuildType();
@@ -815,8 +901,9 @@ function process_html() {
             showBuildFirmware();
         } else {
             hideBuildType();
-            hideBuildInfo();
-            hideBuildFirmware();
+            state.buildInfoHtml = "";
+            state.buildOptionsValid = false;
+            state.buildKeyValid = false;
         }
     }
 
@@ -838,10 +925,10 @@ function process_html() {
             statusText = i18n.getMessage("initialSetupNetworkInfoStatusOnline");
         }
 
-        $(".network-status").text(statusText);
-        $(".network-type").text(type);
-        $(".network-downlink").text(`${downlink} Mbps`);
-        $(".network-rtt").text(`${rtt} ms`);
+        state.networkStatus = statusText;
+        state.networkType = type;
+        state.networkDownlink = `${downlink} Mbps`;
+        state.networkRtt = `${rtt} ms`;
     }
 
     prepareDisarmFlags();
@@ -854,57 +941,51 @@ function process_html() {
     showNetworkStatus();
 
     if (!have_sensor(FC.CONFIG.activeSensors, "sonar")) {
-        $(".sonarBox").hide();
+        state.showSonarBox = false;
     }
 
     function get_slow_data() {
-        $("#initialSetupArmingAllowed").toggle(FC.CONFIG.armingDisableFlags === 0);
+        state.armingAllowed = FC.CONFIG.armingDisableFlags === 0;
 
         for (let i = 0; i < FC.CONFIG.armingDisableCount; i++) {
-            $(`#initialSetupArmingDisableFlags${i}`).css(
-                "display",
-                (FC.CONFIG.armingDisableFlags & (1 << i)) === 0 ? "none" : "inline-block",
-            );
+            if (state.armingFlags[i]) state.armingFlags[i].visible = (FC.CONFIG.armingDisableFlags & (1 << i)) !== 0;
         }
 
-        bat_voltage_e.text(i18n.getMessage("initialSetupBatteryValue", [FC.ANALOG.voltage]));
-        bat_mah_drawn_e.text(i18n.getMessage("initialSetupBatteryMahValue", [FC.ANALOG.mAhdrawn]));
-        bat_mah_drawing_e.text(i18n.getMessage("initialSetupBatteryAValue", [FC.ANALOG.amperage.toFixed(2)]));
-        rssi_e.text(i18n.getMessage("initialSetupRSSIValue", [((FC.ANALOG.rssi / 1023) * 100).toFixed(0)]));
+        state.batVoltage = i18n.getMessage("initialSetupBatteryValue", [FC.ANALOG.voltage]);
+        state.batMahDrawn = i18n.getMessage("initialSetupBatteryMahValue", [FC.ANALOG.mAhdrawn]);
+        state.batMahDrawing = i18n.getMessage("initialSetupBatteryAValue", [FC.ANALOG.amperage.toFixed(2)]);
+        state.rssi = i18n.getMessage("initialSetupRSSIValue", [((FC.ANALOG.rssi / 1023) * 100).toFixed(0)]);
 
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46) && FC.CONFIG.cpuTemp) {
-            cputemp_e.html(`${FC.CONFIG.cpuTemp.toFixed(0)} &#8451;`);
+            state.cpuTemp = `${FC.CONFIG.cpuTemp.toFixed(0)} \u2103`;
         } else {
-            cputemp_e.text(i18n.getMessage("initialSetupCpuTempNotSupported"));
+            state.cpuTemp = i18n.getMessage("initialSetupCpuTempNotSupported");
         }
 
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
-            mcu_e.text(FC.MCU_INFO.name);
+            state.mcu = FC.MCU_INFO.name;
         } else {
-            mcu_e.parent().hide();
+            state.mcu = "";
         }
 
-        gpsFix_e.text(FC.GPS_DATA.fix ? i18n.getMessage("gpsFixTrue") : i18n.getMessage("gpsFixFalse"));
-        gpsFix_e.toggleClass("ready", FC.GPS_DATA.fix != 0);
-        gpsSats_e.text(FC.GPS_DATA.numSat);
+        state.gpsFix = FC.GPS_DATA.fix !== 0;
+        state.gpsSats = FC.GPS_DATA.numSat;
 
         const latitude = FC.GPS_DATA.latitude / 10000000;
         const longitude = FC.GPS_DATA.longitude / 10000000;
         const url = `https://maps.google.com/?q=${latitude},${longitude}`;
         const gpsUnitText = i18n.getMessage("gpsPositionUnit");
-        $(".GPS_info td.latitude a")
-            .prop("href", url)
-            .text(`${latitude.toFixed(4)} ${gpsUnitText}`);
-        $(".GPS_info td.longitude a")
-            .prop("href", url)
-            .text(`${longitude.toFixed(4)} ${gpsUnitText}`);
+        state.latitude = `${latitude.toFixed(4)} ${gpsUnitText}`;
+        state.longitude = `${longitude.toFixed(4)} ${gpsUnitText}`;
+        state.gpsUrl = url;
     }
 
     function get_fast_data() {
         MSP.send_message(MSPCodes.MSP_ATTITUDE, false, false, function () {
-            roll_e.text(i18n.getMessage("initialSetupAttitude", [FC.SENSOR_DATA.kinematics[0]]));
-            pitch_e.text(i18n.getMessage("initialSetupAttitude", [FC.SENSOR_DATA.kinematics[1]]));
-            heading_e.text(i18n.getMessage("initialSetupAttitude", [FC.SENSOR_DATA.kinematics[2]]));
+            if (!mountedFlag) return;
+            state.attitude.roll = i18n.getMessage("initialSetupAttitude", [FC.SENSOR_DATA.kinematics[0]]);
+            state.attitude.pitch = i18n.getMessage("initialSetupAttitude", [FC.SENSOR_DATA.kinematics[1]]);
+            state.attitude.heading = i18n.getMessage("initialSetupAttitude", [FC.SENSOR_DATA.kinematics[2]]);
 
             renderModel();
             // updateInstruments is defined in initializeInstruments
@@ -913,13 +994,14 @@ function process_html() {
 
         if (have_sensor(FC.CONFIG.activeSensors, "sonar")) {
             MSP.send_message(MSPCodes.MSP_SONAR, false, false, function () {
-                sonar_e.text(`${FC.SENSOR_DATA.sonar.toFixed(1)} cm`);
+                if (!mountedFlag) return;
+                state.sonar = `${FC.SENSOR_DATA.sonar.toFixed(1)} cm`;
             });
         }
     }
 
-    GUI.interval_add("setup_data_pull_fast", get_fast_data, 33, true);
-    GUI.interval_add("setup_data_pull_slow", get_slow_data, 250, true);
+    addLocalInterval("setup_data_pull_fast", get_fast_data, 33, true);
+    addLocalInterval("setup_data_pull_slow", get_slow_data, 250, true);
 
     // notify GUI that content is ready
     GUI.content_ready(() => {});
@@ -939,8 +1021,14 @@ function initializeInstruments() {
 }
 
 function initModel() {
-    modelInstance = new Model($(".model-and-info #canvas_wrapper"), $(".model-and-info #canvas"));
-    $(window).on("resize", $.proxy(modelInstance.resize, modelInstance));
+    // Use DOM refs for the model canvas and wrapper
+    const wrapperDom = canvasWrapper.value || document.querySelector(".model-and-info #canvas_wrapper");
+    const canvasDom = canvasEl.value || document.querySelector(".model-and-info #canvas");
+    const wrapper = $(wrapperDom);
+    const canvas = $(canvasDom);
+    modelInstance = new Model(wrapper, canvas);
+    boundModelResize = modelInstance.resize.bind(modelInstance);
+    window.addEventListener("resize", boundModelResize);
 }
 
 function renderModel() {
@@ -953,7 +1041,10 @@ function renderModel() {
 
 function cleanup() {
     if (modelInstance) {
-        $(window).off("resize", $.proxy(modelInstance.resize, modelInstance));
+        if (boundModelResize) {
+            window.removeEventListener("resize", boundModelResize);
+            boundModelResize = null;
+        }
         if (typeof modelInstance.dispose === "function") modelInstance.dispose();
         modelInstance = null;
     }
@@ -961,15 +1052,31 @@ function cleanup() {
 
 onMounted(() => {
     // start the MSP initialization chain
+    mountedFlag = true;
     initialize();
 });
 
 onBeforeUnmount(() => {
+    mountedFlag = false;
     cleanup();
     // clear intervals used by this tab
-    GUI.interval_remove("setup_data_pull_fast");
-    GUI.interval_remove("setup_data_pull_slow");
+    try {
+        for (const name of localIntervals) {
+            GUI.interval_remove(name);
+        }
+    } catch (e) {}
 });
+
+function openBuildOptionsDialog() {
+    if (!state.buildOptionsArray || state.buildOptionsArray.length === 0) return;
+    let buildOptionList = `<div class="dialogBuildInfoGrid-container">`;
+    for (const buildOptionElement of state.buildOptionsArray) {
+        buildOptionList += `<div class="dialogBuildInfoGrid-item">${buildOptionElement}</div>`;
+    }
+    buildOptionList += `</div>`;
+
+    showDialogBuildInfo(`<h3>${i18n.getMessage("initialSetupInfoBuildOptionList")}</h3>`, buildOptionList);
+}
 </script>
 
 <style lang="less" scoped>
