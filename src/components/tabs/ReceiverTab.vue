@@ -873,14 +873,14 @@ function elrsBindingPhraseToBytes(text) {
 }
 
 function lookupElrsBindingPhrase(uidString) {
-    const bindingPhraseMap = getConfig("binding_phrase_map").binding_phrase_map || {};
+    const bindingPhraseMap = getConfig("binding_phrase_map")?.binding_phrase_map ?? {};
     return bindingPhraseMap[uidString] ?? "";
 }
 
 function saveElrsBindingPhrase(uidString, bindingPhrase) {
-    const bindingPhraseMap = getConfig("binding_phrase_map").binding_phrase_map ?? {};
+    const bindingPhraseMap = getConfig("binding_phrase_map")?.binding_phrase_map ?? {};
     bindingPhraseMap[uidString] = bindingPhrase;
-    setConfig({ binding_phrase_map: bindingPhraseMap });
+    setConfig({ binding_phrase_map: { binding_phrase_map: bindingPhraseMap } });
 }
 
 // Channel map helpers
@@ -962,7 +962,7 @@ function onRxModeChange() {
         if (selectedBit !== -1) {
             features.value.features._featureMask = bit_set(features.value.features._featureMask, selectedBit);
         }
-        updateTabList(features.value);
+        updateTabList(features.value.features);
         needReboot.value = true;
     }
 }
@@ -1056,8 +1056,8 @@ async function loadConfig() {
 
         // Load saved refresh rate
         const savedRate = getConfig("rx_refresh_rate");
-        if (savedRate?.rxRefreshRate) {
-            refreshRate.value = savedRate.rxRefreshRate;
+        if (savedRate?.rx_refresh_rate) {
+            refreshRate.value = savedRate.rx_refresh_rate;
         }
     } catch (e) {
         console.error("Failed to load Receiver configuration", e);
@@ -1274,6 +1274,9 @@ watch(refreshRate, (newRate) => {
 
 // Lifecycle
 onMounted(async () => {
+    // Reset rendering flag on mount
+    keepRendering = true;
+
     await loadConfig();
     await nextTick();
 
