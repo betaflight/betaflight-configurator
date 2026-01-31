@@ -461,7 +461,7 @@ import { i18n } from "../../js/localization";
 import semver from "semver";
 import { useFlightControllerStore } from "../../stores/fc";
 import { isExpertModeEnabled } from "../../js/utils/isExpertModeEnabled";
-import GUI, { TABS } from "../../js/gui";
+import GUI from "../../js/gui";
 import { have_sensor } from "../../js/sensor_helpers";
 import { mspHelper } from "../../js/msp/MSPHelper";
 import FC from "../../js/fc";
@@ -621,7 +621,8 @@ function confirmReset() {
     MSP.send_message(MSPCodes.MSP_RESET_CONF, false, false, function () {
         gui_log(i18n.getMessage("initialSetupSettingsRestored"));
         GUI.tab_switch_cleanup(function () {
-            if (TABS.setup) TABS.setup.initialize();
+            // Re-initialize the Setup tab component directly (avoid legacy TABS reference)
+            initialize();
         });
     });
 }
