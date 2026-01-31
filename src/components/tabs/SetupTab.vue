@@ -60,7 +60,12 @@
             <div class="grid-row">
                 <div class="grid-col col3">
                     <div class="default_btn initialSetupReset">
-                        <a class="resetSettings" href="#" i18n="initialSetupButtonReset"></a>
+                        <a
+                            class="resetSettings"
+                            href="#"
+                            @click.prevent="showConfirmReset"
+                            i18n="initialSetupButtonReset"
+                        ></a>
                     </div>
                 </div>
                 <div class="grid-col col9">
@@ -72,7 +77,12 @@
             <div class="grid-row">
                 <div class="grid-col col3">
                     <div class="default_btn initialSetupRebootBootloader">
-                        <a class="rebootBootloader" href="#" i18n="initialSetupButtonRebootBootloader"></a>
+                        <a
+                            class="rebootBootloader"
+                            href="#"
+                            @click.prevent="onRebootBootloader"
+                            i18n="initialSetupButtonRebootBootloader"
+                        ></a>
                     </div>
                 </div>
                 <div class="grid-col col9">
@@ -396,24 +406,39 @@
             </div>
         </div>
 
-        <dialog class="dialogConfirmReset">
+        <dialog class="dialogConfirmReset" ref="dialogConfirmReset">
             <h3 i18n="dialogConfirmResetTitle"></h3>
             <div class="content">
                 <div i18n="dialogConfirmResetNote" style="margin-top: 10px"></div>
             </div>
             <div class="buttons">
-                <a href="#" class="dialogConfirmReset-confirmbtn danger-button" i18n="dialogConfirmResetConfirm"></a>
-                <a href="#" class="dialogConfirmReset-cancelbtn regular-button" i18n="dialogConfirmResetClose"></a>
+                <a
+                    href="#"
+                    class="dialogConfirmReset-confirmbtn danger-button"
+                    @click.prevent="confirmReset"
+                    i18n="dialogConfirmResetConfirm"
+                ></a>
+                <a
+                    href="#"
+                    class="dialogConfirmReset-cancelbtn regular-button"
+                    @click.prevent="cancelConfirmReset"
+                    i18n="dialogConfirmResetClose"
+                ></a>
             </div>
         </dialog>
 
-        <dialog class="dialogBuildInfo">
+        <dialog class="dialogBuildInfo" ref="dialogBuildInfo">
             <div class="dialogBuildInfo-title"></div>
             <div class="contentBuildInfo">
                 <div class="dialogBuildInfo-content" style="margin-top: 10px"></div>
             </div>
             <div class="dialogButtons">
-                <a href="#" class="dialogBuildInfo-closebtn regular-button" i18n="close"></a>
+                <a
+                    href="#"
+                    class="dialogBuildInfo-closebtn regular-button"
+                    @click.prevent="closeBuildInfo"
+                    i18n="close"
+                ></a>
             </div>
         </dialog>
     </div>
@@ -497,8 +522,8 @@ function addLocalInterval(name, fn, period, first = false) {
 
 let mountedFlag = true;
 const isExpert = ref(isExpertModeEnabled());
-const dialogConfirmResetRef = ref(null);
-const dialogBuildInfoRef = ref(null);
+const dialogConfirmReset = ref(null);
+const dialogBuildInfo = ref(null);
 
 function resetZaxis() {
     yaw_fix.value = fcStore.sensorData.kinematics[2] * -1.0;
@@ -569,15 +594,15 @@ function onCalibrateMag() {
 }
 
 function showConfirmReset() {
-    if (dialogConfirmResetRef.value) dialogConfirmResetRef.value.showModal();
+    if (dialogConfirmReset.value) dialogConfirmReset.value.showModal();
 }
 
 function cancelConfirmReset() {
-    if (dialogConfirmResetRef.value) dialogConfirmResetRef.value.close();
+    if (dialogConfirmReset.value) dialogConfirmReset.value.close();
 }
 
 function confirmReset() {
-    if (dialogConfirmResetRef.value) dialogConfirmResetRef.value.close();
+    if (dialogConfirmReset.value) dialogConfirmReset.value.close();
     MSP.send_message(MSPCodes.MSP_RESET_CONF, false, false, function () {
         gui_log(i18n.getMessage("initialSetupSettingsRestored"));
         GUI.tab_switch_cleanup(function () {
@@ -587,8 +612,8 @@ function confirmReset() {
 }
 
 function showDialogBuildInfo(title, message) {
-    if (!dialogBuildInfoRef.value) return;
-    const dialog = dialogBuildInfoRef.value;
+    if (!dialogBuildInfo.value) return;
+    const dialog = dialogBuildInfo.value;
     const titleEl = dialog.querySelector(".dialogBuildInfo-title");
     const contentEl = dialog.querySelector(".dialogBuildInfo-content");
     if (titleEl) titleEl.innerHTML = title;
@@ -597,7 +622,7 @@ function showDialogBuildInfo(title, message) {
 }
 
 function closeBuildInfo() {
-    if (dialogBuildInfoRef.value) dialogBuildInfoRef.value.close();
+    if (dialogBuildInfo.value) dialogBuildInfo.value.close();
 }
 const canvasWrapper = ref(null);
 const canvasEl = ref(null);
