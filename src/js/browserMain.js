@@ -11,7 +11,6 @@ import "../css/tabs/help.less";
 import "../css/tabs/ports.less";
 import "../css/tabs/configuration.less";
 import "../css/tabs/pid_tuning.less";
-import "../css/tabs/receiver.less";
 import "../css/tabs/servos.less";
 import "../css/tabs/gps.less";
 import "../css/tabs/led_strip.less";
