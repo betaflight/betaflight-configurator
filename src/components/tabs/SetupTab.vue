@@ -10,7 +10,7 @@
             <div class="grid-row">
                 <div class="grid-col col3">
                     <div class="default_btn">
-                        <div id="accel_calib_rest">
+                        <div id="accel_calib_rest" v-show="!state.calibratingAccel">
                             <a
                                 class="calibrateAccel"
                                 :class="{ disabled: state.disabledAccel, calibrating: state.calibratingAccel }"
@@ -19,7 +19,7 @@
                                 >{{ i18n.getMessage("initialSetupButtonCalibrateAccel") }}</a
                             >
                         </div>
-                        <div id="accel_calib_running">
+                        <div id="accel_calib_running" v-show="state.calibratingAccel">
                             <div class="data-loading-setup">
                                 <p i18n="initialSetupButtonCalibratingText"></p>
                             </div>
@@ -35,7 +35,7 @@
             <div class="grid-row">
                 <div class="grid-col col3">
                     <div class="default_btn">
-                        <div id="mag_calib_rest">
+                        <div id="mag_calib_rest" v-show="!state.calibratingMag">
                             <a
                                 class="calibrateMag"
                                 :class="{ disabled: state.disabledMag, calibrating: state.calibratingMag }"
@@ -44,7 +44,7 @@
                                 >{{ i18n.getMessage("initialSetupButtonCalibrateMag") }}</a
                             >
                         </div>
-                        <div id="mag_calib_running">
+                        <div id="mag_calib_running" v-show="state.calibratingMag">
                             <div class="data-loading-setup">
                                 <p i18n="initialSetupButtonCalibratingText"></p>
                             </div>
