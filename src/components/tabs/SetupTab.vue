@@ -552,7 +552,9 @@ function onRebootBootloader() {
 function onCalibrateAccel() {
     if (state.calibratingAccel || state.disabledAccel) return;
     state.calibratingAccel = true;
-    GUI.interval_pause("setup_data_pull");
+    // Pause both fast and slow setup data polling so calibration gets uninterrupted data
+    GUI.interval_pause("setup_data_pull_fast");
+    GUI.interval_pause("setup_data_pull_slow");
     MSP.send_message(MSPCodes.MSP_ACC_CALIBRATION, false, false, function () {
         if (!mountedFlag) return;
         gui_log(i18n.getMessage("initialSetupAccelCalibStarted"));
@@ -563,7 +565,9 @@ function onCalibrateAccel() {
     GUI.timeout_add(
         "button_reset",
         function () {
-            GUI.interval_resume("setup_data_pull");
+            // Resume both polling intervals after calibration completes
+            GUI.interval_resume("setup_data_pull_fast");
+            GUI.interval_resume("setup_data_pull_slow");
             gui_log(i18n.getMessage("initialSetupAccelCalibEnded"));
             state.calibratingAccel = false;
             state.accelRunning = false;
