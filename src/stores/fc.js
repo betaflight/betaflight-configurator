@@ -82,6 +82,21 @@ export const useFlightControllerStore = defineStore("flightController", () => {
         set: (val) => (FC.SENSOR_CONFIG = val),
     });
 
+    const sensorConfigActive = computed({
+        get: () => FC.SENSOR_CONFIG_ACTIVE,
+        set: (val) => (FC.SENSOR_CONFIG_ACTIVE = val),
+    });
+
+    const sensorNames = computed({
+        get: () => FC.SENSOR_NAMES,
+        set: (val) => (FC.SENSOR_NAMES = val),
+    });
+
+    const mcuInfo = computed({
+        get: () => FC.MCU_INFO,
+        set: (val) => (FC.MCU_INFO = val),
+    });
+
     const rxConfig = computed({
         get: () => FC.RX_CONFIG,
         set: (val) => (FC.RX_CONFIG = val),
@@ -207,11 +222,11 @@ export const useFlightControllerStore = defineStore("flightController", () => {
 
     // Helpers
     function isApiVersionSupported(version) {
-        return semver.gte(apiVersion.value, version);
+        return semver.gte(config.value.apiVersion, version);
     }
 
     function isApiVersionLessThan(version) {
-        return semver.lt(apiVersion.value, version);
+        return semver.lt(config.value.apiVersion, version);
     }
 
     return {
@@ -255,6 +270,9 @@ export const useFlightControllerStore = defineStore("flightController", () => {
         rcMap,
         rcTuning,
         apiVersion,
+        sensorConfigActive,
+        sensorNames,
+        mcuInfo,
         isApiVersionSupported,
         isApiVersionLessThan,
     };
