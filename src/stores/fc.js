@@ -212,11 +212,11 @@ export const useFlightControllerStore = defineStore("flightController", () => {
 
     // Helpers
     function isApiVersionSupported(version) {
-        return semver.gte(apiVersion.value, version);
+        return semver.gte(config.value.apiVersion, version);
     }
 
     function isApiVersionLessThan(version) {
-        return semver.lt(apiVersion.value, version);
+        return semver.lt(config.value.apiVersion, version);
     }
 
     return {
@@ -261,6 +261,9 @@ export const useFlightControllerStore = defineStore("flightController", () => {
         rcMap,
         rcTuning,
         apiVersion,
+        sensorConfigActive,
+        sensorNames,
+        mcuInfo,
         isApiVersionSupported,
         isApiVersionLessThan,
     };

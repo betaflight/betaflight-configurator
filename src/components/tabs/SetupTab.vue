@@ -423,6 +423,7 @@
 import { onMounted, onBeforeUnmount, ref, reactive } from "vue";
 import { i18n } from "../../js/localization";
 import semver from "semver";
+import { useFlightControllerStore } from "../../stores/fc";
 import { isExpertModeEnabled } from "../../js/utils/isExpertModeEnabled";
 import GUI, { TABS } from "../../js/gui";
 import { have_sensor } from "../../js/sensor_helpers";
@@ -486,6 +487,8 @@ const state = reactive({
     networkRtt: "",
 });
 
+const fcStore = useFlightControllerStore();
+
 const localIntervals = [];
 function addLocalInterval(name, fn, period, first = false) {
     GUI.interval_add(name, fn, period, first);
@@ -498,7 +501,7 @@ const dialogConfirmResetRef = ref(null);
 const dialogBuildInfoRef = ref(null);
 
 function resetZaxis() {
-    yaw_fix.value = FC.SENSOR_DATA.kinematics[2] * -1.0;
+    yaw_fix.value = fcStore.sensorData.kinematics[2] * -1.0;
     console.log(`YAW reset to 0 deg, fix: ${yaw_fix.value} deg`);
 }
 
@@ -549,12 +552,12 @@ function onCalibrateMag() {
         state.magRunning = false;
     }
 
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+    if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_46)) {
         let cycle = 0;
         const cycleMax = 45;
         const interval = 1000;
         const intervalId = setInterval(function () {
-            if (cycle >= cycleMax || (FC.CONFIG.armingDisableFlags & (1 << 12)) === 0) {
+            if (cycle >= cycleMax || (fcStore.config.armingDisableFlags & (1 << 12)) === 0) {
                 clearInterval(intervalId);
                 magCalibResetButton();
             }
@@ -638,8 +641,8 @@ function process_html() {
     state.attitude.heading = i18n.getMessage("initialSetupAttitude", [0]);
 
     // set disabled state from sensors
-    state.disabledAccel = !have_sensor(FC.CONFIG.activeSensors, "acc");
-    state.disabledMag = !have_sensor(FC.CONFIG.activeSensors, "mag");
+    state.disabledAccel = !have_sensor(fcStore.config.activeSensors, "acc");
+    state.disabledMag = !have_sensor(fcStore.config.activeSensors, "mag");
 
     initializeInstruments();
 
@@ -681,18 +684,19 @@ function process_html() {
             "MOTOR_PROTOCOL",
         ];
 
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+        const cfg = fcStore.config;
+        if (semver.gte(cfg.apiVersion, API_VERSION_1_46)) {
             replaceArrayElement(disarmFlagElements, "RPMFILTER", "DSHOT_TELEM");
         }
 
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+        if (semver.gte(cfg.apiVersion, API_VERSION_1_47)) {
             addArrayElementsAfter(disarmFlagElements, "MOTOR_PROTOCOL", ["CRASHFLIP", "ALTHOLD", "POSHOLD"]);
         }
 
         // Build arming flags state instead of manipulating DOM
         state.armingFlags.length = 0;
 
-        for (let i = 0; i < FC.CONFIG.armingDisableCount; i++) {
+        for (let i = 0; i < cfg.armingDisableCount; i++) {
             if (i < disarmFlagElements.length - 1) {
                 const rawName = disarmFlagElements[i];
                 const messageKey = `initialSetupArmingDisableFlagsTooltip${rawName}`;
@@ -704,7 +708,7 @@ function process_html() {
                     tooltip: i18n.getMessage(messageKey),
                     visible: false,
                 });
-            } else if (i == FC.CONFIG.armingDisableCount - 1) {
+            } else if (i == cfg.armingDisableCount - 1) {
                 state.armingFlags.push({
                     id: `initialSetupArmingDisableFlags${i}`,
                     name: "ARM_SWITCH",
@@ -722,89 +726,89 @@ function process_html() {
         const displaySensorInfo = async function () {
             const types = await sensorTypes();
 
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+            if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
                 let gyroInfoList = [];
-                for (let i = 0; i < FC.GYRO_SENSOR.gyro_count; i++) {
-                    if ((FC.SENSOR_ALIGNMENT.gyro_enable_mask & (1 << i)) !== 0) {
-                        gyroInfoList.push(types.gyro.elements[FC.GYRO_SENSOR.gyro_hardware[i]]);
+                for (let i = 0; i < fcStore.gyroSensor.gyro_count; i++) {
+                    if ((fcStore.sensorAlignment.gyro_enable_mask & (1 << i)) !== 0) {
+                        gyroInfoList.push(types.gyro.elements[fcStore.gyroSensor.gyro_hardware[i]]);
                     }
                 }
                 state.sensorGyro = gyroInfoList.join(" ");
             } else {
-                const g = FC.SENSOR_CONFIG_ACTIVE.gyro_hardware;
+                const g = fcStore.sensorConfigActive.gyro_hardware;
                 state.sensorGyro =
                     g === 0xff
                         ? i18n.getMessage("initialSetupNotInBuild")
-                        : have_sensor(FC.CONFIG.activeSensors, "gyro")
+                        : have_sensor(fcStore.config.activeSensors, "gyro")
                             ? types.gyro.elements[g]
                             : i18n.getMessage("initialSetupNotDetected");
             }
 
-            const a = FC.SENSOR_CONFIG_ACTIVE.acc_hardware;
+            const a = fcStore.sensorConfigActive.acc_hardware;
             if (a === 0xff) {
                 state.sensorAcc = i18n.getMessage("initialSetupNotInBuild");
-            } else if (!have_sensor(FC.CONFIG.activeSensors, "acc")) {
+            } else if (!have_sensor(fcStore.config.activeSensors, "acc")) {
                 state.sensorAcc = i18n.getMessage("initialSetupNotDetected");
             } else {
                 let name = types.acc.elements[a] || "AUTO";
                 if (
                     (name === "AUTO" || name === "DEFAULT") &&
-                    FC.SENSOR_NAMES &&
-                    FC.SENSOR_NAMES.acc &&
-                    FC.SENSOR_NAMES.acc[a]
+                    fcStore.sensorNames &&
+                    fcStore.sensorNames.acc &&
+                    fcStore.sensorNames.acc[a]
                 ) {
-                    name = FC.SENSOR_NAMES.acc[a];
+                    name = fcStore.sensorNames.acc[a];
                 }
                 state.sensorAcc = name;
             }
 
-            const b = FC.SENSOR_CONFIG_ACTIVE.baro_hardware;
+            const b = fcStore.sensorConfigActive.baro_hardware;
             if (b === 0xff) {
                 state.sensorBaro = i18n.getMessage("initialSetupNotInBuild");
-            } else if (!have_sensor(FC.CONFIG.activeSensors, "baro")) {
+            } else if (!have_sensor(fcStore.config.activeSensors, "baro")) {
                 state.sensorBaro = i18n.getMessage("initialSetupNotDetected");
             } else {
                 let nameB = types.baro.elements[b] || "DEFAULT";
                 if (
                     (nameB === "AUTO" || nameB === "DEFAULT") &&
-                    FC.SENSOR_NAMES &&
-                    FC.SENSOR_NAMES.baro &&
-                    FC.SENSOR_NAMES.baro[b]
+                    fcStore.sensorNames &&
+                    fcStore.sensorNames.baro &&
+                    fcStore.sensorNames.baro[b]
                 ) {
-                    nameB = FC.SENSOR_NAMES.baro[b];
+                    nameB = fcStore.sensorNames.baro[b];
                 }
                 state.sensorBaro = nameB;
             }
 
-            const m = FC.SENSOR_CONFIG_ACTIVE.mag_hardware;
+            const m = fcStore.sensorConfigActive.mag_hardware;
             state.sensorMag =
                 m === 0xff
                     ? i18n.getMessage("initialSetupNotInBuild")
-                    : have_sensor(FC.CONFIG.activeSensors, "mag")
+                    : have_sensor(fcStore.config.activeSensors, "mag")
                         ? types.mag.elements[m]
                         : i18n.getMessage("initialSetupNotDetected");
 
-            const s = FC.SENSOR_CONFIG_ACTIVE.sonar_hardware;
+            const s = fcStore.sensorConfigActive.sonar_hardware;
             state.sensorSonar =
                 s === 0xff
                     ? i18n.getMessage("initialSetupNotInBuild")
-                    : have_sensor(FC.CONFIG.activeSensors, "sonar")
+                    : have_sensor(fcStore.config.activeSensors, "sonar")
                         ? types.sonar.elements[s]
                         : i18n.getMessage("initialSetupNotDetected");
 
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
-                const o = FC.SENSOR_CONFIG_ACTIVE.opticalflow_hardware;
+            if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
+                const o = fcStore.sensorConfigActive.opticalflow_hardware;
                 state.sensorOpticalflow =
                     o === 0xff
                         ? i18n.getMessage("initialSetupNotInBuild")
-                        : have_sensor(FC.CONFIG.activeSensors, "opticalflow")
+                        : have_sensor(fcStore.config.activeSensors, "opticalflow")
                             ? types.opticalflow.elements[o]
                             : i18n.getMessage("initialSetupNotDetected");
             }
         };
 
         MSP.send_message(MSPCodes.MSP2_SENSOR_CONFIG_ACTIVE, false, false, function () {
-            if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+            if (semver.lt(fcStore.config.apiVersion, API_VERSION_1_47)) {
                 displaySensorInfo();
             } else {
                 MSP.send_message(MSPCodes.MSP2_GYRO_SENSOR, false, false, function () {
@@ -825,7 +829,7 @@ function process_html() {
 
     const showBuildType = function () {
         state.buildType =
-            FC.CONFIG.buildKey.length === 32
+            fcStore.config.buildKey.length === 32
                 ? i18n.getMessage("initialSetupInfoBuildCloud")
                 : i18n.getMessage("initialSetupInfoBuildLocal");
     };
@@ -835,12 +839,12 @@ function process_html() {
     };
 
     const getBuildRootBaseUri = function () {
-        return `https://build.betaflight.com/api/builds/${FC.CONFIG.buildKey}`;
+        return `https://build.betaflight.com/api/builds/${fcStore.config.buildKey}`;
     };
 
     const showBuildInfo = function () {
         const isIspConnected = ispConnected();
-        const buildKeyValid = FC.CONFIG.buildKey.length === 32;
+        const buildKeyValid = fcStore.config.buildKey.length === 32;
         const buildRoot = getBuildRootBaseUri();
         state.buildKeyValid = buildKeyValid;
         state.buildRoot = buildRoot;
@@ -879,23 +883,23 @@ function process_html() {
     const showBuildFirmware = function () {
         const isIspConnected = ispConnected();
         const buildOptionsValid =
-            ((semver.eq(FC.CONFIG.apiVersion, API_VERSION_1_45) && isIspConnected) ||
-                semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) &&
-            FC.CONFIG.buildOptions.length;
-        const buildKeyValid = FC.CONFIG.buildKey.length === 32;
+            ((semver.eq(fcStore.config.apiVersion, API_VERSION_1_45) && isIspConnected) ||
+                semver.gte(fcStore.config.apiVersion, API_VERSION_1_46)) &&
+            fcStore.config.buildOptions.length;
+        const buildKeyValid = fcStore.config.buildKey.length === 32;
         const buildRoot = getBuildRootBaseUri();
 
         state.buildOptionsValid = !!buildOptionsValid;
         state.buildKeyValid = !!buildKeyValid;
         state.buildRoot = buildRoot;
-        state.buildOptionsArray = buildOptionsValid ? FC.CONFIG.buildOptions : [];
+        state.buildOptionsArray = buildOptionsValid ? fcStore.config.buildOptions : [];
     };
 
     function showFirmwareInfo() {
-        state.apiVersion = FC.CONFIG.apiVersion;
-        state.buildDate = FC.CONFIG.buildInfo;
+        state.apiVersion = fcStore.config.apiVersion;
+        state.buildDate = fcStore.config.buildInfo;
 
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)) {
             showBuildType();
             showBuildInfo();
             showBuildFirmware();
@@ -932,7 +936,7 @@ function process_html() {
     }
 
     prepareDisarmFlags();
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
+    if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_46)) {
         showSensorInfo();
     } else {
         hideSensorInfo();
@@ -940,15 +944,16 @@ function process_html() {
     showFirmwareInfo();
     showNetworkStatus();
 
-    if (!have_sensor(FC.CONFIG.activeSensors, "sonar")) {
+    if (!have_sensor(fcStore.config.activeSensors, "sonar")) {
         state.showSonarBox = false;
     }
 
     function get_slow_data() {
-        state.armingAllowed = FC.CONFIG.armingDisableFlags === 0;
+        state.armingAllowed = fcStore.config.armingDisableFlags === 0;
 
-        for (let i = 0; i < FC.CONFIG.armingDisableCount; i++) {
-            if (state.armingFlags[i]) state.armingFlags[i].visible = (FC.CONFIG.armingDisableFlags & (1 << i)) !== 0;
+        for (let i = 0; i < fcStore.config.armingDisableCount; i++) {
+            if (state.armingFlags[i])
+                state.armingFlags[i].visible = (fcStore.config.armingDisableFlags & (1 << i)) !== 0;
         }
 
         state.batVoltage = i18n.getMessage("initialSetupBatteryValue", [FC.ANALOG.voltage]);
@@ -956,23 +961,23 @@ function process_html() {
         state.batMahDrawing = i18n.getMessage("initialSetupBatteryAValue", [FC.ANALOG.amperage.toFixed(2)]);
         state.rssi = i18n.getMessage("initialSetupRSSIValue", [((FC.ANALOG.rssi / 1023) * 100).toFixed(0)]);
 
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46) && FC.CONFIG.cpuTemp) {
-            state.cpuTemp = `${FC.CONFIG.cpuTemp.toFixed(0)} \u2103`;
+        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_46) && fcStore.config.cpuTemp) {
+            state.cpuTemp = `${fcStore.config.cpuTemp.toFixed(0)} \u2103`;
         } else {
             state.cpuTemp = i18n.getMessage("initialSetupCpuTempNotSupported");
         }
 
-        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
-            state.mcu = FC.MCU_INFO.name;
+        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
+            state.mcu = fcStore.mcuInfo.name;
         } else {
             state.mcu = "";
         }
 
-        state.gpsFix = FC.GPS_DATA.fix !== 0;
-        state.gpsSats = FC.GPS_DATA.numSat;
+        state.gpsFix = fcStore.gpsData.fix !== 0;
+        state.gpsSats = fcStore.gpsData.numSat;
 
-        const latitude = FC.GPS_DATA.latitude / 10000000;
-        const longitude = FC.GPS_DATA.longitude / 10000000;
+        const latitude = fcStore.gpsData.latitude / 10000000;
+        const longitude = fcStore.gpsData.longitude / 10000000;
         const url = `https://maps.google.com/?q=${latitude},${longitude}`;
         const gpsUnitText = i18n.getMessage("gpsPositionUnit");
         state.latitude = `${latitude.toFixed(4)} ${gpsUnitText}`;
@@ -983,19 +988,19 @@ function process_html() {
     function get_fast_data() {
         MSP.send_message(MSPCodes.MSP_ATTITUDE, false, false, function () {
             if (!mountedFlag) return;
-            state.attitude.roll = i18n.getMessage("initialSetupAttitude", [FC.SENSOR_DATA.kinematics[0]]);
-            state.attitude.pitch = i18n.getMessage("initialSetupAttitude", [FC.SENSOR_DATA.kinematics[1]]);
-            state.attitude.heading = i18n.getMessage("initialSetupAttitude", [FC.SENSOR_DATA.kinematics[2]]);
+            state.attitude.roll = i18n.getMessage("initialSetupAttitude", [fcStore.sensorData.kinematics[0]]);
+            state.attitude.pitch = i18n.getMessage("initialSetupAttitude", [fcStore.sensorData.kinematics[1]]);
+            state.attitude.heading = i18n.getMessage("initialSetupAttitude", [fcStore.sensorData.kinematics[2]]);
 
             renderModel();
             // updateInstruments is defined in initializeInstruments
             if (typeof window.updateInstruments === "function") window.updateInstruments();
         });
 
-        if (have_sensor(FC.CONFIG.activeSensors, "sonar")) {
+        if (have_sensor(fcStore.config.activeSensors, "sonar")) {
             MSP.send_message(MSPCodes.MSP_SONAR, false, false, function () {
                 if (!mountedFlag) return;
-                state.sonar = `${FC.SENSOR_DATA.sonar.toFixed(1)} cm`;
+                state.sonar = `${fcStore.sensorData.sonar.toFixed(1)} cm`;
             });
         }
     }
@@ -1014,9 +1019,9 @@ function initializeInstruments() {
 
     // expose update function similar to legacy behavior
     window.updateInstruments = function () {
-        attitude.setRoll(FC.SENSOR_DATA.kinematics[0]);
-        attitude.setPitch(FC.SENSOR_DATA.kinematics[1]);
-        heading.setHeading(FC.SENSOR_DATA.kinematics[2]);
+        attitude.setRoll(fcStore.sensorData.kinematics[0]);
+        attitude.setPitch(fcStore.sensorData.kinematics[1]);
+        heading.setHeading(fcStore.sensorData.kinematics[2]);
     };
 }
 
@@ -1033,9 +1038,9 @@ function initModel() {
 
 function renderModel() {
     if (!modelInstance) return;
-    const x = FC.SENSOR_DATA.kinematics[1] * -1.0 * 0.017453292519943295;
-    const y = (FC.SENSOR_DATA.kinematics[2] * -1.0 - yaw_fix.value) * 0.017453292519943295;
-    const z = FC.SENSOR_DATA.kinematics[0] * -1.0 * 0.017453292519943295;
+    const x = fcStore.sensorData.kinematics[1] * -1.0 * 0.017453292519943295;
+    const y = (fcStore.sensorData.kinematics[2] * -1.0 - yaw_fix.value) * 0.017453292519943295;
+    const z = fcStore.sensorData.kinematics[0] * -1.0 * 0.017453292519943295;
     modelInstance.rotateTo(x, y, z);
 }
 
