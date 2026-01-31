@@ -519,8 +519,6 @@ const state = reactive({
     buildKeyValid: false,
     buildRoot: "",
     buildOptionsArray: [],
-    networkDownlink: "",
-    networkRtt: "",
 });
 
 const fcStore = useFlightControllerStore();
