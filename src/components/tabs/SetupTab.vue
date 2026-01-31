@@ -141,7 +141,18 @@
                                 <tbody>
                                     <tr>
                                         <td i18n="gps3dFix"></td>
-                                        <td><span class="colorToggle" i18n="gpsFixFalse"></span></td>
+                                        <td>
+                                            <span
+                                                class="colorToggle"
+                                                :class="{ fix: state.gpsFix, 'no-fix': !state.gpsFix }"
+                                            >
+                                                {{
+                                                    state.gpsFix
+                                                        ? i18n.getMessage("gpsFixTrue")
+                                                        : i18n.getMessage("gpsFixFalse")
+                                                }}
+                                            </span>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td i18n="gpsSats"></td>
@@ -163,7 +174,7 @@
                             </table>
                         </div>
                     </div>
-                    <div class="gui_box grey sonarBox">
+                    <div class="gui_box grey sonarBox" v-show="state.showSonarBox">
                         <div class="gui_box_titlebar">
                             <div class="spacer_box_title" i18n="initialSetupSonarHead"></div>
                             <div class="helpicon cf_tip" i18n_title="initialSetupSonarHeadHelp"></div>
