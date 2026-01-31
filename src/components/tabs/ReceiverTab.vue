@@ -710,7 +710,6 @@ const features = computed(() => fcStore.features);
 
 // Need to access FC directly for some missing store properties
 const rcDeadbandConfig = computed(() => FC.RC_DEADBAND_CONFIG);
-const rcMap = computed(() => FC.RC_MAP);
 
 // Decode HTML entities in translations (some use &lt; etc)
 function decodeHtmlEntities(text) {
@@ -880,7 +879,7 @@ function lookupElrsBindingPhrase(uidString) {
 function saveElrsBindingPhrase(uidString, bindingPhrase) {
     const bindingPhraseMap = getConfig("binding_phrase_map")?.binding_phrase_map ?? {};
     bindingPhraseMap[uidString] = bindingPhrase;
-    setConfig({ binding_phrase_map: { binding_phrase_map: bindingPhraseMap } });
+    setConfig({ binding_phrase_map: bindingPhraseMap });
 }
 
 // Channel map helpers
@@ -1253,8 +1252,7 @@ function updateRxPlot() {
 
     const data = svg.select("g.data");
     const lines = data.selectAll("path").data(rxPlotData);
-    lines.enter().append("path").attr("class", "line");
-    lines.attr("d", line);
+    lines.enter().append("path").attr("class", "line").merge(lines).attr("d", line);
     lines.exit().remove();
 
     samples++;
