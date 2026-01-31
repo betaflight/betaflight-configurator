@@ -56,11 +56,7 @@
                                     v-model="selectedRxMode"
                                     @change="onRxModeChange"
                                 >
-                                    <option
-                                        v-for="mode in rxModeOptions"
-                                        :key="mode.value"
-                                        :value="mode.value"
-                                    >
+                                    <option v-for="mode in rxModeOptions" :key="mode.value" :value="mode.value">
                                         {{ mode.label }}
                                     </option>
                                 </select>
@@ -84,10 +80,10 @@
                                 </select>
                                 <span v-html="$t('configurationSerialRX')"></span>
                                 <div class="note someRXTypesDisabled" v-if="showSomeRxTypesDisabled">
-                                    {{ $t('someRXTypesDisabled') }}
+                                    {{ $t("someRXTypesDisabled") }}
                                 </div>
                                 <div class="note gui_warning serialRXNotSupported" v-if="showSerialRxNotSupported">
-                                    {{ $t('serialRXNotSupported') }}
+                                    {{ $t("serialRXNotSupported") }}
                                 </div>
                             </div>
 
@@ -148,7 +144,7 @@
                                                     @change="toggleTelemetry"
                                                 />
                                             </td>
-                                            <td>{{ $t('featureTELEMETRY') }}</td>
+                                            <td>{{ $t("featureTELEMETRY") }}</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -174,7 +170,7 @@
                                                     @change="toggleRssiAdc"
                                                 />
                                             </td>
-                                            <td>{{ $t('featureRSSI_ADC') }}</td>
+                                            <td>{{ $t("featureRSSI_ADC") }}</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -187,7 +183,7 @@
                                 <div class="spacer_box_title" v-html="$t('receiverRssiChannel')"></div>
                             </div>
                             <select name="rssi_channel" v-model.number="rssiConfig.channel">
-                                <option value="0">{{ $t('receiverRssiChannelDisabledOption') }}</option>
+                                <option value="0">{{ $t("receiverRssiChannelDisabledOption") }}</option>
                                 <option v-for="i in rssiChannelOptions" :key="i" :value="i">
                                     {{ $t(`controlAxisAux${i - 4}`) }}
                                 </option>
@@ -209,7 +205,7 @@
                                     @focusout="validateChannelMap"
                                 />
                                 <select class="hybrid_helper" name="rcmap_helper" @change="applyChannelMapPreset">
-                                    <option value="">{{ $t('receiverChannelDefaultOption') }}</option>
+                                    <option value="">{{ $t("receiverChannelDefaultOption") }}</option>
                                     <option value="AETR1234">FrSky / Futaba / Hitec (AETR1234)</option>
                                     <option value="TAER1234">Spektrum / Graupner / JR (TAER1234)</option>
                                 </select>
@@ -318,204 +314,207 @@
                         </div>
                         <table class="rcSmoothing-table">
                             <tbody>
-                            <tr class="rc-smoothing-type">
-                                <td>
-                                    <select name="rcSmoothing-select" v-model.number="rxConfig.rcSmoothing">
-                                        <option value="0">{{ $t('off') }}</option>
-                                        <option value="1">{{ $t('on') }}</option>
-                                    </select>
-                                </td>
-                                <td colspan="2">
-                                    <label>
-                                        <span v-html="$t('receiverRcSmoothing')"></span>
-                                    </label>
-                                </td>
-                            </tr>
-                            <template v-if="rxConfig.rcSmoothing === 1">
-                                <!-- Setpoint Manual/Auto -->
-                                <tr class="rcSmoothing-setpoint-manual">
+                                <tr class="rc-smoothing-type">
                                     <td>
-                                        <select
-                                            name="rcSmoothing-setpoint-manual-select"
-                                            v-model="setpointManualMode"
-                                        >
-                                            <option value="0">{{ $t('receiverRcSmoothingAuto') }}</option>
-                                            <option value="1">{{ $t('receiverRcSmoothingManual') }}</option>
+                                        <select name="rcSmoothing-select" v-model.number="rxConfig.rcSmoothing">
+                                            <option value="0">{{ $t("off") }}</option>
+                                            <option value="1">{{ $t("on") }}</option>
                                         </select>
                                     </td>
-                                    <td>
+                                    <td colspan="2">
                                         <label>
-                                            <span v-html="$t('receiverRcSetpointTypeSelect')"></span>
+                                            <span v-html="$t('receiverRcSmoothing')"></span>
                                         </label>
                                     </td>
-                                    <td>
-                                        <div
-                                            class="helpicon cf_tip"
-                                            :title="$t('receiverRcSmoothingSetpointManual')"
-                                        ></div>
-                                    </td>
                                 </tr>
-                                <tr class="rcSmoothing-setpoint-manual" v-if="setpointManualMode === '1'">
-                                    <td class="rcSmoothing-setpoint-cutoff">
-                                        <input
-                                            type="number"
-                                            name="rcSmoothingSetpointHz-number"
-                                            step="1"
-                                            min="0"
-                                            max="255"
-                                            v-model.number="rxConfig.rcSmoothingSetpointCutoff"
-                                        />
-                                    </td>
-                                    <td class="rcSmoothing-setpoint-cutoff" colspan="2">
-                                        <label>
-                                            <span v-html="$t('receiverRcSmoothingSetpointHz')"></span>
-                                        </label>
-                                        <div class="helpicon cf_tip" :title="$t('rcSmoothingSetpointCutoffHelp')"></div>
-                                    </td>
-                                </tr>
-
-                                <!-- Auto Factor -->
-                                <tr class="rcSmoothing-auto-factor" v-if="showAutoFactor">
-                                    <td>
-                                        <input
-                                            type="number"
-                                            name="rcSmoothingAutoFactor-number"
-                                            step="1"
-                                            min="0"
-                                            max="250"
-                                            v-model.number="rxConfig.rcSmoothingAutoFactor"
-                                        />
-                                    </td>
-                                    <td>
-                                        <label>
-                                            <span v-html="$t('receiverRcSmoothingAutoFactor')"></span>
-                                        </label>
-                                    </td>
-                                    <td>
-                                        <div
-                                            class="helpicon cf_tip receiverRcSmoothingAutoFactorHelp"
-                                            :title="$t('receiverRcSmoothingAutoFactorHelp2')"
-                                        ></div>
-                                    </td>
-                                </tr>
-
-                                <!-- Throttle Manual/Auto (API >= 1.47) -->
-                                <template v-if="showThrottleSmoothingOptions">
-                                    <tr class="rcSmoothing-throttle-manual">
+                                <template v-if="rxConfig.rcSmoothing === 1">
+                                    <!-- Setpoint Manual/Auto -->
+                                    <tr class="rcSmoothing-setpoint-manual">
                                         <td>
                                             <select
-                                                name="rcSmoothing-throttle-manual-select"
-                                                v-model="throttleManualMode"
+                                                name="rcSmoothing-setpoint-manual-select"
+                                                v-model="setpointManualMode"
                                             >
-                                                <option value="0">{{ $t('receiverRcSmoothingAuto') }}</option>
-                                                <option value="1">{{ $t('receiverRcSmoothingManual') }}</option>
+                                                <option value="0">{{ $t("receiverRcSmoothingAuto") }}</option>
+                                                <option value="1">{{ $t("receiverRcSmoothingManual") }}</option>
                                             </select>
                                         </td>
                                         <td>
                                             <label>
-                                                <span v-html="$t('receiverThrottleTypeSelect')"></span>
+                                                <span v-html="$t('receiverRcSetpointTypeSelect')"></span>
                                             </label>
                                         </td>
                                         <td>
                                             <div
                                                 class="helpicon cf_tip"
-                                                :title="$t('receiverRcSmoothingThrottleManual')"
+                                                :title="$t('receiverRcSmoothingSetpointManual')"
                                             ></div>
                                         </td>
                                     </tr>
-                                    <tr class="rcSmoothing-throttle-manual" v-if="throttleManualMode === '1'">
-                                        <td class="rcSmoothing-throttle-cutoff">
+                                    <tr class="rcSmoothing-setpoint-manual" v-if="setpointManualMode === '1'">
+                                        <td class="rcSmoothing-setpoint-cutoff">
                                             <input
                                                 type="number"
-                                                name="rcSmoothingThrottleCutoffHz-number"
+                                                name="rcSmoothingSetpointHz-number"
                                                 step="1"
                                                 min="0"
                                                 max="255"
-                                                v-model.number="rxConfig.rcSmoothingThrottleCutoff"
+                                                v-model.number="rxConfig.rcSmoothingSetpointCutoff"
                                             />
                                         </td>
-                                        <td class="rcSmoothing-throttle-cutoff" colspan="2">
+                                        <td class="rcSmoothing-setpoint-cutoff" colspan="2">
                                             <label>
-                                                <span v-html="$t('receiverRcSmoothingThrottleCutoffHz')"></span>
+                                                <span v-html="$t('receiverRcSmoothingSetpointHz')"></span>
                                             </label>
                                             <div
                                                 class="helpicon cf_tip"
-                                                :title="$t('rcSmoothingThrottleCutoffHelp')"
+                                                :title="$t('rcSmoothingSetpointCutoffHelp')"
                                             ></div>
                                         </td>
                                     </tr>
-                                    <tr class="rcSmoothing-auto-factor-throttle" v-if="showThrottleAutoFactor">
+
+                                    <!-- Auto Factor -->
+                                    <tr class="rcSmoothing-auto-factor" v-if="showAutoFactor">
                                         <td>
                                             <input
                                                 type="number"
-                                                name="rcSmoothingAutoFactorThrottle-number"
+                                                name="rcSmoothingAutoFactor-number"
                                                 step="1"
                                                 min="0"
                                                 max="250"
-                                                v-model.number="rxConfig.rcSmoothingAutoFactorThrottle"
+                                                v-model.number="rxConfig.rcSmoothingAutoFactor"
                                             />
                                         </td>
                                         <td>
                                             <label>
-                                                <span v-html="$t('receiverRcSmoothingAutoFactorThrottle')"></span>
+                                                <span v-html="$t('receiverRcSmoothingAutoFactor')"></span>
                                             </label>
                                         </td>
                                         <td>
                                             <div
-                                                class="helpicon cf_tip receiverRcSmoothingAutoFactorThrottleHelp"
-                                                :title="$t('receiverRcSmoothingAutoFactorThrottleHelp')"
+                                                class="helpicon cf_tip receiverRcSmoothingAutoFactorHelp"
+                                                :title="$t('receiverRcSmoothingAutoFactorHelp2')"
                                             ></div>
                                         </td>
                                     </tr>
-                                </template>
 
-                                <!-- Feedforward (API < 1.47) -->
-                                <template v-else>
-                                    <tr class="rcSmoothing-feedforward-manual">
-                                        <td>
-                                            <select
-                                                name="rcSmoothing-feedforward-select"
-                                                v-model="feedforwardManualMode"
-                                            >
-                                                <option value="0">{{ $t('receiverRcSmoothingAuto') }}</option>
-                                                <option value="1">{{ $t('receiverRcSmoothingManual') }}</option>
-                                            </select>
-                                        </td>
-                                        <td>
-                                            <label>
-                                                <span v-html="$t('receiverRcFeedforwardTypeSelect')"></span>
-                                            </label>
-                                        </td>
-                                        <td>
-                                            <div
-                                                class="helpicon cf_tip"
-                                                :title="$t('receiverRcSmoothingFeedforwardManual')"
-                                            ></div>
-                                        </td>
-                                    </tr>
-                                    <tr class="rcSmoothing-feedforward-manual" v-if="feedforwardManualMode === '1'">
-                                        <td class="rcSmoothing-feedforward-cutoff">
-                                            <input
-                                                type="number"
-                                                name="rcSmoothingFeedforwardCutoff-number"
-                                                step="1"
-                                                min="1"
-                                                max="255"
-                                                v-model.number="rxConfig.rcSmoothingFeedforwardCutoff"
-                                            />
-                                        </td>
-                                        <td colspan="2" class="rcSmoothing-feedforward-cutoff">
-                                            <label>
-                                                <span v-html="$t('receiverRcSmoothingFeedforwardCutoff')"></span>
-                                            </label>
-                                            <div
-                                                class="helpicon cf_tip"
-                                                :title="$t('rcSmoothingFeedforwardCutoffHelp')"
-                                            ></div>
-                                        </td>
-                                    </tr>
+                                    <!-- Throttle Manual/Auto (API >= 1.47) -->
+                                    <template v-if="showThrottleSmoothingOptions">
+                                        <tr class="rcSmoothing-throttle-manual">
+                                            <td>
+                                                <select
+                                                    name="rcSmoothing-throttle-manual-select"
+                                                    v-model="throttleManualMode"
+                                                >
+                                                    <option value="0">{{ $t("receiverRcSmoothingAuto") }}</option>
+                                                    <option value="1">{{ $t("receiverRcSmoothingManual") }}</option>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <label>
+                                                    <span v-html="$t('receiverThrottleTypeSelect')"></span>
+                                                </label>
+                                            </td>
+                                            <td>
+                                                <div
+                                                    class="helpicon cf_tip"
+                                                    :title="$t('receiverRcSmoothingThrottleManual')"
+                                                ></div>
+                                            </td>
+                                        </tr>
+                                        <tr class="rcSmoothing-throttle-manual" v-if="throttleManualMode === '1'">
+                                            <td class="rcSmoothing-throttle-cutoff">
+                                                <input
+                                                    type="number"
+                                                    name="rcSmoothingThrottleCutoffHz-number"
+                                                    step="1"
+                                                    min="0"
+                                                    max="255"
+                                                    v-model.number="rxConfig.rcSmoothingThrottleCutoff"
+                                                />
+                                            </td>
+                                            <td class="rcSmoothing-throttle-cutoff" colspan="2">
+                                                <label>
+                                                    <span v-html="$t('receiverRcSmoothingThrottleCutoffHz')"></span>
+                                                </label>
+                                                <div
+                                                    class="helpicon cf_tip"
+                                                    :title="$t('rcSmoothingThrottleCutoffHelp')"
+                                                ></div>
+                                            </td>
+                                        </tr>
+                                        <tr class="rcSmoothing-auto-factor-throttle" v-if="showThrottleAutoFactor">
+                                            <td>
+                                                <input
+                                                    type="number"
+                                                    name="rcSmoothingAutoFactorThrottle-number"
+                                                    step="1"
+                                                    min="0"
+                                                    max="250"
+                                                    v-model.number="rxConfig.rcSmoothingAutoFactorThrottle"
+                                                />
+                                            </td>
+                                            <td>
+                                                <label>
+                                                    <span v-html="$t('receiverRcSmoothingAutoFactorThrottle')"></span>
+                                                </label>
+                                            </td>
+                                            <td>
+                                                <div
+                                                    class="helpicon cf_tip receiverRcSmoothingAutoFactorThrottleHelp"
+                                                    :title="$t('receiverRcSmoothingAutoFactorThrottleHelp')"
+                                                ></div>
+                                            </td>
+                                        </tr>
+                                    </template>
+
+                                    <!-- Feedforward (API < 1.47) -->
+                                    <template v-else>
+                                        <tr class="rcSmoothing-feedforward-manual">
+                                            <td>
+                                                <select
+                                                    name="rcSmoothing-feedforward-select"
+                                                    v-model="feedforwardManualMode"
+                                                >
+                                                    <option value="0">{{ $t("receiverRcSmoothingAuto") }}</option>
+                                                    <option value="1">{{ $t("receiverRcSmoothingManual") }}</option>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <label>
+                                                    <span v-html="$t('receiverRcFeedforwardTypeSelect')"></span>
+                                                </label>
+                                            </td>
+                                            <td>
+                                                <div
+                                                    class="helpicon cf_tip"
+                                                    :title="$t('receiverRcSmoothingFeedforwardManual')"
+                                                ></div>
+                                            </td>
+                                        </tr>
+                                        <tr class="rcSmoothing-feedforward-manual" v-if="feedforwardManualMode === '1'">
+                                            <td class="rcSmoothing-feedforward-cutoff">
+                                                <input
+                                                    type="number"
+                                                    name="rcSmoothingFeedforwardCutoff-number"
+                                                    step="1"
+                                                    min="1"
+                                                    max="255"
+                                                    v-model.number="rxConfig.rcSmoothingFeedforwardCutoff"
+                                                />
+                                            </td>
+                                            <td colspan="2" class="rcSmoothing-feedforward-cutoff">
+                                                <label>
+                                                    <span v-html="$t('receiverRcSmoothingFeedforwardCutoff')"></span>
+                                                </label>
+                                                <div
+                                                    class="helpicon cf_tip"
+                                                    :title="$t('rcSmoothingFeedforwardCutoffHelp')"
+                                                ></div>
+                                            </td>
+                                        </tr>
+                                    </template>
                                 </template>
-                            </template>
                             </tbody>
                         </table>
                     </div>
@@ -539,7 +538,7 @@
                                 <div class="sensor row">
                                     <div class="left-cell receiver-button">
                                         <a class="reset_rate" href="#" @click.prevent="resetRefreshRate">
-                                            {{ $t('receiverResetRefreshRate') }}
+                                            {{ $t("receiverResetRefreshRate") }}
                                         </a>
                                     </div>
                                     <div class="right-cell">
@@ -581,30 +580,30 @@
         </div>
 
         <!-- Bottom Toolbar -->
-        <div class="content_toolbar toolbar_fixed_bottom">
+        <div class="content_toolbar toolbar_fixed_bottom" style="position: fixed">
             <div class="btn sticks_btn" v-if="showSticksButton">
                 <a class="sticks" href="#" @click.prevent="openSticksWindow">
-                    {{ $t('receiverButtonSticks') }}
+                    {{ $t("receiverButtonSticks") }}
                 </a>
             </div>
             <div class="btn bind_btn" v-if="showBindButton">
                 <a class="bind" href="#" @click.prevent="sendBind">
-                    {{ $t('receiverButtonBind') }}
+                    {{ $t("receiverButtonBind") }}
                 </a>
             </div>
             <div class="btn refresh_btn">
                 <a class="refresh" href="#" @click.prevent="refreshTab">
-                    {{ $t('receiverButtonRefresh') }}
+                    {{ $t("receiverButtonRefresh") }}
                 </a>
             </div>
             <div class="btn update_btn" v-if="!needReboot">
                 <a class="update" href="#" @click.prevent="saveConfig(false)">
-                    {{ $t('receiverButtonSave') }}
+                    {{ $t("receiverButtonSave") }}
                 </a>
             </div>
             <div class="btn save_btn" v-else>
                 <a class="save" href="#" @click.prevent="saveConfig(true)">
-                    {{ $t('configurationButtonSave') }}
+                    {{ $t("configurationButtonSave") }}
                 </a>
             </div>
         </div>
@@ -627,17 +626,18 @@ import FC from "@/js/fc";
 import Model from "@/js/model";
 import RateCurve from "@/js/RateCurve";
 import { degToRad } from "@/js/utils/common";
-import { bit_check } from "@/js/bit";
+import { bit_check, bit_set, bit_clear } from "@/js/bit";
 import { get as getConfig, set as setConfig } from "@/js/ConfigStorage";
 import { updateTabList } from "@/js/utils/updateTabList";
 import { gui_log } from "@/js/gui_log";
 import DarkTheme from "@/js/DarkTheme";
 import windowWatcherUtil from "@/js/utils/window_watchers";
-import CONFIGURATOR, { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "@/js/data_storage";
+import CONFIGURATOR, { API_VERSION_1_45, API_VERSION_1_47 } from "@/js/data_storage";
 import CryptoES from "crypto-es";
 import semver from "semver";
 import * as THREE from "three";
 import * as d3 from "d3";
+import $ from "jquery";
 
 const t = (key) => i18n.getMessage(key);
 const fcStore = useFlightControllerStore();
@@ -712,23 +712,29 @@ const features = computed(() => fcStore.features);
 const rcDeadbandConfig = computed(() => FC.RC_DEADBAND_CONFIG);
 const rcMap = computed(() => FC.RC_MAP);
 
+// Decode HTML entities in translations (some use &lt; etc)
+function decodeHtmlEntities(text) {
+    if (!text) return text;
+    const textarea = document.createElement("textarea");
+    textarea.innerHTML = text;
+    return textarea.value;
+}
+
 // RX Mode options (generated from features)
 const rxModeOptions = computed(() => {
-    const options = [];
-    if (features.value?.features) {
-        // This iterates over feature groups to find RX modes
-        const featureNames = features.value.features._featureNames || {};
-        // Common RX features: NONE, RX_PPM, RX_SERIAL, RX_PARALLEL_PWM, RX_MSP, RX_SPI
-        options.push({ value: 0, label: t("featureNone") });
-        if (featureNames["RX_PPM"] !== undefined) options.push({ value: featureNames["RX_PPM"], label: "RX_PPM" });
-        if (featureNames["RX_SERIAL"] !== undefined)
-            options.push({ value: featureNames["RX_SERIAL"], label: "RX_SERIAL" });
-        if (featureNames["RX_PARALLEL_PWM"] !== undefined)
-            options.push({ value: featureNames["RX_PARALLEL_PWM"], label: "RX_PARALLEL_PWM" });
-        if (featureNames["RX_MSP"] !== undefined) options.push({ value: featureNames["RX_MSP"], label: "RX_MSP" });
-        if (featureNames["RX_SPI"] !== undefined) options.push({ value: featureNames["RX_SPI"], label: "RX_SPI" });
+    const options = [{ value: -1, label: decodeHtmlEntities(t("featureNone")) }];
+    if (features.value?.features?._features) {
+        // Features with mode === "select" are RX mode options
+        for (const feature of features.value.features._features) {
+            if (feature.mode === "select" && feature.group === "rxMode") {
+                options.push({
+                    value: feature.bit,
+                    label: decodeHtmlEntities(t(`feature${feature.name}`)) || feature.name,
+                });
+            }
+        }
     }
-    return options.length > 0 ? options : [{ value: 0, label: "Loading..." }];
+    return options;
 });
 
 // Serial RX types with enabled status
@@ -782,7 +788,9 @@ const showElrsModelId = computed(
 const showThrottleSmoothingOptions = computed(() => semver.gte(fcStore.config.apiVersion, API_VERSION_1_47));
 
 const showAutoFactor = computed(
-    () => setpointManualMode.value === "0" || (feedforwardManualMode.value === "0" && !showThrottleSmoothingOptions.value),
+    () =>
+        setpointManualMode.value === "0" ||
+        (feedforwardManualMode.value === "0" && !showThrottleSmoothingOptions.value),
 );
 
 const showThrottleAutoFactor = computed(() => throttleManualMode.value === "0");
@@ -813,12 +821,7 @@ const rssiChannelOptions = computed(() => {
 // Channel bars data
 const channelBars = computed(() => {
     const bars = [];
-    const barNames = [
-        t("controlAxisRoll"),
-        t("controlAxisPitch"),
-        t("controlAxisYaw"),
-        t("controlAxisThrottle"),
-    ];
+    const barNames = [t("controlAxisRoll"), t("controlAxisPitch"), t("controlAxisYaw"), t("controlAxisThrottle")];
     const channels = rc.value?.channels || [];
     const activeChannels = rc.value?.active_channels || 8;
     const numBars = activeChannels > 0 ? activeChannels : 8;
@@ -946,10 +949,20 @@ function toggleRssiAdc(event) {
 }
 
 function onRxModeChange() {
-    // Update feature config based on selected RX mode
-    if (features.value?.features?.updateData) {
-        features.value.features.updateData({ name: "rxMode", value: selectedRxMode.value });
-        updateTabList(features.value.features);
+    // Update feature mask based on selected RX mode
+    if (features.value?.features?._features) {
+        const selectedBit = selectedRxMode.value;
+        // Clear all RX mode bits first, then set the selected one
+        for (const feature of features.value.features._features) {
+            if (feature.mode === "select" && feature.group === "rxMode") {
+                features.value.features._featureMask = bit_clear(features.value.features._featureMask, feature.bit);
+            }
+        }
+        // Set the selected RX mode bit (if not "None" which is -1)
+        if (selectedBit !== -1) {
+            features.value.features._featureMask = bit_set(features.value.features._featureMask, selectedBit);
+        }
+        updateTabList(features.value);
         needReboot.value = true;
     }
 }
@@ -1008,6 +1021,21 @@ async function loadConfig() {
 
         // Update local state from FC
         updateChannelMapFromRcMap();
+
+        // Initialize selectedRxMode from feature mask
+        if (features.value?.features?._features) {
+            const featureMask = features.value.features._featureMask;
+            let foundRxMode = -1;
+            for (const feature of features.value.features._features) {
+                if (feature.mode === "select" && feature.group === "rxMode") {
+                    if (bit_check(featureMask, feature.bit)) {
+                        foundRxMode = feature.bit;
+                        break;
+                    }
+                }
+            }
+            selectedRxMode.value = foundRxMode;
+        }
 
         // Load ELRS binding phrase if applicable
         if (elrsBindingPhraseEnabled.value && rxConfig.value?.elrsUid) {
@@ -1101,7 +1129,8 @@ async function saveConfig(withReboot = false) {
 // Model preview
 function initModelPreview() {
     if (!modelPreviewContainer.value || !modelCanvas.value) return;
-    model = new Model(modelPreviewContainer.value, modelCanvas.value);
+    // Model constructor expects jQuery-wrapped elements
+    model = new Model($(modelPreviewContainer.value), $(modelCanvas.value));
     rateCurve = new RateCurve(false);
     currentRates = rateCurve.getCurrentRates();
     window.addEventListener("resize", handleModelResize);
@@ -1201,7 +1230,10 @@ function updateRxPlot() {
     const width = plotElement.clientWidth - margin.left - margin.right;
     const height = plotElement.clientHeight - margin.top - margin.bottom;
 
-    const widthScale = d3.scaleLinear().domain([samples - 299, samples]).range([0, width]);
+    const widthScale = d3
+        .scaleLinear()
+        .domain([samples - 299, samples])
+        .range([0, width]);
     const heightScale = d3.scaleLinear().domain([800, 2200]).range([height, 0]);
 
     const xGrid = d3.axisBottom().scale(widthScale).tickSize(-height).tickFormat("");
@@ -1250,9 +1282,14 @@ onMounted(async () => {
     renderModel();
 
     // Start model preview polling
-    GUI.interval_add("receiver_pull_for_model_preview", () => {
-        MSP.send_message(MSPCodes.MSP_RC, false, false);
-    }, 33, false);
+    GUI.interval_add(
+        "receiver_pull_for_model_preview",
+        () => {
+            MSP.send_message(MSPCodes.MSP_RC, false, false);
+        },
+        33,
+        false,
+    );
 
     // Setup and start RC plot
     setupRxPlot();
