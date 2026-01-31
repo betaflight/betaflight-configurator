@@ -972,7 +972,185 @@ onBeforeUnmount(() => {
 });
 </script>
 
-<style scoped>
+<style lang="less" scoped>
+.tab-setup {
+    #interactive_block {
+        position: relative;
+        background-color: var(--surface-200);
+        border-radius: 1rem;
+        border: 2px solid var(--surface-400);
+        a.reset {
+            position: absolute;
+            display: block;
+            top: 1rem;
+            right: 1rem;
+            border-radius: 0.5rem;
+            bottom: 10px;
+            height: 28px;
+            line-height: 28px;
+            padding: 0 15px 0 15px;
+            text-align: center;
+            font-weight: bold;
+            background-color: var(--surface-400);
+            z-index: 100;
+            &:hover {
+                background-color: var(--surface-500);
+            }
+        }
+    }
+    .model-and-info {
+        margin-top: 0.75rem;
+
+        #canvas_wrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            max-height: 32rem;
+            top: 0;
+            left: 0;
+            border-radius: 1rem;
+        }
+    }
+    @media only screen and (max-width: 1055px) {
+        .grid-box {
+            grid-template-columns: 1fr !important;
+        }
+        .col-span-3 {
+            display: grid !important;
+            grid-column: span 1 !important;
+        }
+        .col-span-1 {
+            display: grid !important;
+            grid-template-columns: repeat(2, 1fr) !important;
+        }
+        #canvas_wrapper {
+            max-height: 20rem !important;
+        }
+    }
+
+    @media all and (max-width: 575px) {
+        .grid-box {
+            grid-template-columns: 1fr !important;
+        }
+    }
+    .instrumentsbox {
+        flex-direction: row;
+        justify-content: center;
+    }
+
+    .system_info {
+        td {
+            width: 50%;
+            vertical-align: baseline;
+        }
+    }
+}
+#accel_calib_running {
+    display: none;
+    width: 100%;
+    position: relative;
+    padding: 5px 0 5px 0;
+    text-align: center;
+    background-color: var(--surface-300);
+    border-radius: 0.5rem;
+    border: 1px solid var(--primary-500);
+    color: var(--primary-500);
+    font-weight: bold;
+    font-size: 12px;
+    line-height: 13px;
+    transition: all ease 0.2s;
+    text-decoration: none;
+}
+#mag_calib_running {
+    display: none;
+    width: 100%;
+    position: relative;
+    padding: 5px 0 5px 0;
+    text-align: center;
+    background-color: var(--surface-300);
+    border-radius: 0.5rem;
+    border: 1px solid var(--primary-500);
+    color: var(--primary-500);
+    font-weight: bold;
+    font-size: 12px;
+    line-height: 13px;
+    transition: all ease 0.2s;
+    text-decoration: none;
+}
+#canvas {
+    width: 100% !important;
+    height: 100% !important;
+}
+.attitude_info {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    margin: 0;
+    font-weight: normal;
+    color: var(--surface-950);
+    dl {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+}
+.dialogBuildInfo {
+    transition: all 0.2s;
+    overflow-x: hidden;
+    overflow-y: auto;
+    width: min-content;
+    height: min-content;
+}
+.dialogBuildInfoGrid-container {
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-gap: 5px;
+}
+.dialogBuildInfoGrid-item {
+    padding: 5px 5px 3px 5px;
+    user-select: text;
+}
+.block.info {
+    .fields {
+        padding: 5px 5px 3px 5px;
+    }
+    dt {
+        width: 99px;
+        height: 20px;
+        line-height: 20px;
+    }
+    dd {
+        width: 76px;
+        height: 20px;
+        line-height: 20px;
+        margin-left: 99px;
+    }
+}
+.block.gps {
+    width: 185px;
+    margin-bottom: 10px;
+    .fields {
+        padding: 5px 5px 3px 5px;
+    }
+    dt {
+        width: 85px;
+        height: 20px;
+        margin-bottom: 2px;
+        line-height: 20px;
+    }
+}
+.block.instruments {
+    width: 285px;
+    align-content: center;
+    text-align: center;
+}
+.buttons {
+    bottom: 20px;
+}
+.disarm-flag {
+    padding-right: 5px;
+}
+
+/* small local override */
 .tab-setup {
     padding: 8px;
 }
