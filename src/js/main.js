@@ -335,7 +335,8 @@ async function startProcess() {
                     mountVueTab("power", content_ready);
                     break;
                 case "setup":
-                    import("./tabs/setup").then(({ setup }) => setup.initialize(content_ready));
+                    // Converted to Vue SFC - mount via mountVueTab
+                    mountVueTab("setup", content_ready);
                     break;
                 case "setup_osd":
                     import("./tabs/setup_osd").then(({ setup_osd }) => setup_osd.initialize(content_ready));
