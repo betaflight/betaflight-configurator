@@ -207,7 +207,7 @@ export const useFlightControllerStore = defineStore("flightController", () => {
         set: (val) => (FC.RC_TUNING = val),
     });
 
-    // Computed Getters
+    // Computed getters
     const apiVersion = computed(() => config.value.apiVersion);
 
     // Helpers
