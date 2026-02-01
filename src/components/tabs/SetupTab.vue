@@ -135,41 +135,31 @@
                             <div class="helpicon cf_tip" i18n_title="initialSetupGPSHeadHelp"></div>
                         </div>
                         <div class="spacer_box GPS_info">
-                            <table border="0" class="cf_table" role="presentation">
-                                <tbody>
-                                    <tr>
-                                        <td i18n="gps3dFix"></td>
-                                        <td>
-                                            <span
-                                                class="colorToggle"
-                                                :class="{ fix: state.gpsFix, 'no-fix': !state.gpsFix }"
-                                            >
-                                                {{
-                                                    state.gpsFix
-                                                        ? i18n.getMessage("gpsFixTrue")
-                                                        : i18n.getMessage("gpsFixFalse")
-                                                }}
-                                            </span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td i18n="gpsSats"></td>
-                                        <td class="gpsSats">{{ state.gpsSats }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td i18n="gpsLatitude"></td>
-                                        <td class="latitude">
-                                            <a :href="state.gpsUrl" target="_blank">{{ state.latitude }}</a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td i18n="gpsLongitude"></td>
-                                        <td class="longitude">
-                                            <a :href="state.gpsUrl" target="_blank">{{ state.longitude }}</a>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <dl class="cf-info-grid">
+                                <dt i18n="gps3dFix"></dt>
+                                <dd>
+                                    <span class="colorToggle" :class="{ fix: state.gpsFix, 'no-fix': !state.gpsFix }">
+                                        {{
+                                            state.gpsFix
+                                                ? i18n.getMessage("gpsFixTrue")
+                                                : i18n.getMessage("gpsFixFalse")
+                                        }}
+                                    </span>
+                                </dd>
+
+                                <dt i18n="gpsSats"></dt>
+                                <dd class="gpsSats">{{ state.gpsSats }}</dd>
+
+                                <dt i18n="gpsLatitude"></dt>
+                                <dd class="latitude">
+                                    <a :href="state.gpsUrl" target="_blank">{{ state.latitude }}</a>
+                                </dd>
+
+                                <dt i18n="gpsLongitude"></dt>
+                                <dd class="longitude">
+                                    <a :href="state.gpsUrl" target="_blank">{{ state.longitude }}</a>
+                                </dd>
+                            </dl>
                         </div>
                     </div>
                     <div class="gui_box grey sonarBox" v-show="state.showSonarBox">
@@ -178,14 +168,10 @@
                             <div class="helpicon cf_tip" i18n_title="initialSetupSonarHeadHelp"></div>
                         </div>
                         <div class="spacer_box">
-                            <table border="0" class="cf_table" role="presentation">
-                                <tbody>
-                                    <tr>
-                                        <td id="sonarAltitude" i18n="initialSetupAltitudeSonar"></td>
-                                        <td class="sonarAltitude">{{ state.sonar }}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <dl class="cf-info-grid">
+                                <dt id="sonarAltitude" i18n="initialSetupAltitudeSonar"></dt>
+                                <dd class="sonarAltitude">{{ state.sonar }}</dd>
+                            </dl>
                         </div>
                     </div>
                     <div class="gui_box grey">
@@ -194,54 +180,40 @@
                             <div class="helpicon cf_tip" i18n_title="initialSetupInfoHeadHelp"></div>
                         </div>
                         <div class="spacer_box">
-                            <table border="0" class="cf_table system_info" role="presentation">
-                                <tbody>
-                                    <tr>
-                                        <td
-                                            id="arming-disable-flag"
-                                            i18n="initialSetupArmingDisableFlags"
-                                            class="cf_tip"
-                                        ></td>
-                                        <td class="arming-disable-flags">
-                                            <span
-                                                v-for="(flag, idx) in state.armingFlags"
-                                                :key="flag.id"
-                                                v-show="flag.visible"
-                                                class="cf_tip disarm-flag"
-                                                :title="flag.tooltip"
-                                                >{{ flag.name }}</span
-                                            >
-                                            <span v-show="state.armingAllowed" id="initialSetupArmingAllowed">{{
-                                                i18n.getMessage("initialSetupArmingAllowed")
-                                            }}</span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td i18n="initialSetupBattery"></td>
-                                        <td class="bat-voltage">{{ state.batVoltage }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td i18n="initialSetupDrawn"></td>
-                                        <td class="bat-mah-drawn">{{ state.batMahDrawn }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td i18n="initialSetupDrawing"></td>
-                                        <td class="bat-mah-drawing">{{ state.batMahDrawing }}</td>
-                                    </tr>
-                                    <tr class="noboarder">
-                                        <td i18n="initialSetupRSSI"></td>
-                                        <td class="rssi">{{ state.rssi }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td id="mcu" i18n="initialSetupMCU"></td>
-                                        <td class="mcu">{{ state.mcu }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td id="cpu-temp" i18n="initialSetupCpuTemp"></td>
-                                        <td class="cpu-temp">{{ state.cpuTemp }}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <dl class="cf-info-grid system_info">
+                                <dt id="arming-disable-flag" i18n="initialSetupArmingDisableFlags" class="cf_tip"></dt>
+                                <dd class="arming-disable-flags">
+                                    <span
+                                        v-for="(flag, idx) in state.armingFlags"
+                                        :key="flag.id"
+                                        v-show="flag.visible"
+                                        class="cf_tip disarm-flag"
+                                        :title="flag.tooltip"
+                                        >{{ flag.name }}</span
+                                    >
+                                    <span v-show="state.armingAllowed" id="initialSetupArmingAllowed">{{
+                                        i18n.getMessage("initialSetupArmingAllowed")
+                                    }}</span>
+                                </dd>
+
+                                <dt i18n="initialSetupBattery"></dt>
+                                <dd class="bat-voltage">{{ state.batVoltage }}</dd>
+
+                                <dt i18n="initialSetupDrawn"></dt>
+                                <dd class="bat-mah-drawn">{{ state.batMahDrawn }}</dd>
+
+                                <dt i18n="initialSetupDrawing"></dt>
+                                <dd class="bat-mah-drawing">{{ state.batMahDrawing }}</dd>
+
+                                <dt i18n="initialSetupRSSI" class="noboarder"></dt>
+                                <dd class="rssi">{{ state.rssi }}</dd>
+
+                                <dt id="mcu" i18n="initialSetupMCU"></dt>
+                                <dd class="mcu">{{ state.mcu }}</dd>
+
+                                <dt id="cpu-temp" i18n="initialSetupCpuTemp"></dt>
+                                <dd class="cpu-temp">{{ state.cpuTemp }}</dd>
+                            </dl>
                         </div>
                     </div>
                     <div class="gui_box grey" id="sensorInfoBox">
@@ -250,34 +222,25 @@
                             <div class="helpicon cf_tip" i18n_title="initialSensorInfoHeadHelp"></div>
                         </div>
                         <div class="spacer_box">
-                            <table border="0" class="cf_table" role="presentation">
-                                <tbody>
-                                    <tr>
-                                        <td id="sensor_gyro_hw" i18n="initialSetupSensorGyro"></td>
-                                        <td class="sensor_gyro_hw">{{ state.sensorGyro }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td id="sensor_acc_hw" i18n="initialSetupSensorAcc"></td>
-                                        <td class="sensor_acc_hw">{{ state.sensorAcc }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td id="sensor-mag-hw" i18n="initialSetupSensorMag"></td>
-                                        <td class="sensor_mag_hw">{{ state.sensorMag }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td id="sensor_baro_hw" i18n="initialSetupSensorBaro"></td>
-                                        <td class="sensor_baro_hw">{{ state.sensorBaro }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td id="sensor-sonar-hw" i18n="initialSetupSensorSonar"></td>
-                                        <td class="sensor_sonar_hw">{{ state.sensorSonar }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td id="sensor-opticalflow-hw" i18n="initialSetupSensorOpticalflow"></td>
-                                        <td class="sensor_opticalflow_hw">{{ state.sensorOpticalflow }}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <dl class="cf-info-grid">
+                                <dt id="sensor_gyro_hw" i18n="initialSetupSensorGyro"></dt>
+                                <dd class="sensor_gyro_hw">{{ state.sensorGyro }}</dd>
+
+                                <dt id="sensor_acc_hw" i18n="initialSetupSensorAcc"></dt>
+                                <dd class="sensor_acc_hw">{{ state.sensorAcc }}</dd>
+
+                                <dt id="sensor-mag-hw" i18n="initialSetupSensorMag"></dt>
+                                <dd class="sensor_mag_hw">{{ state.sensorMag }}</dd>
+
+                                <dt id="sensor_baro_hw" i18n="initialSetupSensorBaro"></dt>
+                                <dd class="sensor_baro_hw">{{ state.sensorBaro }}</dd>
+
+                                <dt id="sensor-sonar-hw" i18n="initialSetupSensorSonar"></dt>
+                                <dd class="sensor_sonar_hw">{{ state.sensorSonar }}</dd>
+
+                                <dt id="sensor-opticalflow-hw" i18n="initialSetupSensorOpticalflow"></dt>
+                                <dd class="sensor_opticalflow_hw">{{ state.sensorOpticalflow }}</dd>
+                            </dl>
                         </div>
                     </div>
                     <div class="gui_box grey">
@@ -286,66 +249,54 @@
                             <div class="helpicon cf_tip" i18n_title="initialSetupInfoFirmwareHelp"></div>
                         </div>
                         <div class="spacer_box">
-                            <table border="0" class="cf_table" role="presentation">
-                                <tbody>
-                                    <tr>
-                                        <td id="api-version" i18n="initialSetupInfoAPIversion"></td>
-                                        <td class="api-version">{{ state.apiVersion }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td id="build-date" i18n="initialSetupInfoBuildDate"></td>
-                                        <td class="build-date">{{ state.buildDate }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td id="build-type" i18n="initialSetupInfoBuildType"></td>
-                                        <td class="build-type">{{ state.buildType }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td id="build-info" i18n="initialSetupInfoBuildInfo"></td>
-                                        <td class="build-info">
-                                            <template v-if="state.buildInfoButtons && state.buildInfoButtons.length">
-                                                <span
-                                                    v-for="btn in state.buildInfoButtons"
-                                                    :key="btn.type"
-                                                    class="buildInfoBtn"
-                                                >
-                                                    <a :href="btn.href" target="_blank" :title="btn.title"
-                                                        ><strong>{{ btn.label }}</strong></a
-                                                    >
-                                                </span>
-                                            </template>
-                                            <template v-else>
-                                                <span v-html="state.buildInfoHtml"></span>
-                                            </template>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td id="build-firmware" i18n="initialSetupInfoBuildFirmware"></td>
-                                        <td class="build-firmware">
-                                            <span v-if="state.buildOptionsValid" class="buildInfoBtn">
-                                                <a
-                                                    href="#"
-                                                    :title="i18n.getMessage('initialSetupInfoBuildOptionList')"
-                                                    @click.prevent="openBuildOptionsDialog"
-                                                    ><strong>{{
-                                                        i18n.getMessage("initialSetupInfoBuildOptions")
-                                                    }}</strong></a
-                                                >
-                                            </span>
-                                            <span v-if="state.buildKeyValid" class="buildInfoBtn">
-                                                <a
-                                                    :href="state.buildRoot + '/hex'"
-                                                    target="_blank"
-                                                    :title="i18n.getMessage('initialSetupInfoBuildDownload')"
-                                                    ><strong>{{
-                                                        i18n.getMessage("initialSetupInfoBuildDownload")
-                                                    }}</strong></a
-                                                >
-                                            </span>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <dl class="cf-info-grid">
+                                <dt id="api-version" i18n="initialSetupInfoAPIversion"></dt>
+                                <dd class="api-version">{{ state.apiVersion }}</dd>
+
+                                <dt id="build-date" i18n="initialSetupInfoBuildDate"></dt>
+                                <dd class="build-date">{{ state.buildDate }}</dd>
+
+                                <dt id="build-type" i18n="initialSetupInfoBuildType"></dt>
+                                <dd class="build-type">{{ state.buildType }}</dd>
+
+                                <dt id="build-info" i18n="initialSetupInfoBuildInfo"></dt>
+                                <dd class="build-info">
+                                    <template v-if="state.buildInfoButtons && state.buildInfoButtons.length">
+                                        <span
+                                            v-for="btn in state.buildInfoButtons"
+                                            :key="btn.type"
+                                            class="buildInfoBtn"
+                                        >
+                                            <a :href="btn.href" target="_blank" :title="btn.title"
+                                                ><strong>{{ btn.label }}</strong></a
+                                            >
+                                        </span>
+                                    </template>
+                                    <template v-else>
+                                        <span v-html="state.buildInfoHtml"></span>
+                                    </template>
+                                </dd>
+
+                                <dt id="build-firmware" i18n="initialSetupInfoBuildFirmware"></dt>
+                                <dd class="build-firmware">
+                                    <span v-if="state.buildOptionsValid" class="buildInfoBtn">
+                                        <a
+                                            href="#"
+                                            :title="i18n.getMessage('initialSetupInfoBuildOptionList')"
+                                            @click.prevent="openBuildOptionsDialog"
+                                            ><strong>{{ i18n.getMessage("initialSetupInfoBuildOptions") }}</strong></a
+                                        >
+                                    </span>
+                                    <span v-if="state.buildKeyValid" class="buildInfoBtn">
+                                        <a
+                                            :href="state.buildRoot + '/hex'"
+                                            target="_blank"
+                                            :title="i18n.getMessage('initialSetupInfoBuildDownload')"
+                                            ><strong>{{ i18n.getMessage("initialSetupInfoBuildDownload") }}</strong></a
+                                        >
+                                    </span>
+                                </dd>
+                            </dl>
                         </div>
                     </div>
                     <div class="gui_box grey">
@@ -354,26 +305,19 @@
                             <div class="helpicon cf_tip" i18n_title="initialSetupNetworkInfoHelp"></div>
                         </div>
                         <div class="spacer_box">
-                            <table border="0" class="cf_table" role="presentation">
-                                <tbody>
-                                    <tr>
-                                        <td id="network-status" i18n="initialSetupNetworkInfoStatus"></td>
-                                        <td class="network-status">{{ state.networkStatus }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td id="network-type" i18n="initialSetupNetworkType"></td>
-                                        <td class="network-type">{{ state.networkType }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td id="network-downlink" i18n="initialSetupNetworkDownlink"></td>
-                                        <td class="network-downlink">{{ state.networkDownlink }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td id="network-rtt" i18n="initialSetupNetworkRtt"></td>
-                                        <td class="network-rtt">{{ state.networkRtt }}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <dl class="cf-info-grid">
+                                <dt id="network-status" i18n="initialSetupNetworkInfoStatus"></dt>
+                                <dd class="network-status">{{ state.networkStatus }}</dd>
+
+                                <dt id="network-type" i18n="initialSetupNetworkType"></dt>
+                                <dd class="network-type">{{ state.networkType }}</dd>
+
+                                <dt id="network-downlink" i18n="initialSetupNetworkDownlink"></dt>
+                                <dd class="network-downlink">{{ state.networkDownlink }}</dd>
+
+                                <dt id="network-rtt" i18n="initialSetupNetworkRtt"></dt>
+                                <dd class="network-rtt">{{ state.networkRtt }}</dd>
+                            </dl>
                         </div>
                     </div>
                 </div>
@@ -1396,5 +1340,21 @@ function openBuildOptionsDialog() {
 }
 .disarm-flag {
     padding-right: 5px;
+}
+
+/* semantic label/value grid used to replace layout tables for accessibility */
+.cf-info-grid {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 0.25rem 1rem;
+    align-items: center;
+    width: 100%;
+}
+.cf-info-grid dt {
+    font-weight: bold;
+    margin: 0;
+}
+.cf-info-grid dd {
+    margin: 0;
 }
 </style>
