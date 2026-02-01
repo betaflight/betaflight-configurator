@@ -218,7 +218,7 @@ async function startProcess() {
         return true;
     };
 
-    const handleDisallowedTab = (tab, tabName, self) => {
+    const handleDisallowedTab = (tab, tabName) => {
         if (tab !== "firmware_flasher") {
             gui_log(i18n.getMessage("tabSwitchUpgradeRequired", [tabName]));
             return false;
@@ -253,7 +253,7 @@ async function startProcess() {
         const isLoginSectionTab = $(self).closest("ul").hasClass("mode-loggedin");
         const isTabAllowed = GUI.allowedTabs.includes(tab) || isLoginSectionTab;
 
-        if (!isTabAllowed && !handleDisallowedTab(tab, tabName, self)) {
+        if (!isTabAllowed && !handleDisallowedTab(tab, tabName)) {
             return;
         }
 

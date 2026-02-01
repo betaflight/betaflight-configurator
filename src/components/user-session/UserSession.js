@@ -119,7 +119,7 @@ export function useUserSession() {
         if (!dlg) return;
         try {
             dlg.showModal();
-        } catch (_) {
+        } catch {
             if (!dlg.open) dlg.setAttribute("open", "open");
         }
     };
@@ -130,7 +130,7 @@ export function useUserSession() {
         if (dlg.open) {
             try {
                 dlg.close();
-            } catch (_) {}
+            } catch {}
         }
         dlg.classList.remove("non-blocking");
         dlg.removeAttribute("inert");
