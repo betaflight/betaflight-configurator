@@ -135,9 +135,15 @@
                             <div class="helpicon cf_tip" i18n_title="initialSetupGPSHeadHelp"></div>
                         </div>
                         <div class="spacer_box GPS_info">
-                            <dl class="cf-info-grid">
-                                <dt i18n="gps3dFix"></dt>
-                                <dd>
+                            <InfoGrid
+                                :items="[
+                                    { id: 'gps3dFix', i18n: 'gps3dFix', slotName: 'gps3dFix' },
+                                    { id: 'gpsSats', i18n: 'gpsSats', value: state.gpsSats, class: 'gpsSats' },
+                                    { id: 'gpsLatitude', i18n: 'gpsLatitude', slotName: 'gpsLatitude' },
+                                    { id: 'gpsLongitude', i18n: 'gpsLongitude', slotName: 'gpsLongitude' },
+                                ]"
+                            >
+                                <template #gps3dFix>
                                     <span class="colorToggle" :class="{ fix: state.gpsFix, 'no-fix': !state.gpsFix }">
                                         {{
                                             state.gpsFix
@@ -145,21 +151,14 @@
                                                 : i18n.getMessage("gpsFixFalse")
                                         }}
                                     </span>
-                                </dd>
-
-                                <dt i18n="gpsSats"></dt>
-                                <dd class="gpsSats">{{ state.gpsSats }}</dd>
-
-                                <dt i18n="gpsLatitude"></dt>
-                                <dd class="latitude">
+                                </template>
+                                <template #gpsLatitude>
                                     <a :href="state.gpsUrl" target="_blank">{{ state.latitude }}</a>
-                                </dd>
-
-                                <dt i18n="gpsLongitude"></dt>
-                                <dd class="longitude">
+                                </template>
+                                <template #gpsLongitude>
                                     <a :href="state.gpsUrl" target="_blank">{{ state.longitude }}</a>
-                                </dd>
-                            </dl>
+                                </template>
+                            </InfoGrid>
                         </div>
                     </div>
                     <div class="gui_box grey sonarBox" v-show="state.showSonarBox">
@@ -168,10 +167,16 @@
                             <div class="helpicon cf_tip" i18n_title="initialSetupSonarHeadHelp"></div>
                         </div>
                         <div class="spacer_box">
-                            <dl class="cf-info-grid">
-                                <dt id="sonarAltitude" i18n="initialSetupAltitudeSonar"></dt>
-                                <dd class="sonarAltitude">{{ state.sonar }}</dd>
-                            </dl>
+                            <InfoGrid
+                                :items="[
+                                    {
+                                        id: 'sonarAltitude',
+                                        i18n: 'initialSetupAltitudeSonar',
+                                        value: state.sonar,
+                                        class: 'sonarAltitude',
+                                    },
+                                ]"
+                            />
                         </div>
                     </div>
                     <div class="gui_box grey">
@@ -180,9 +185,32 @@
                             <div class="helpicon cf_tip" i18n_title="initialSetupInfoHeadHelp"></div>
                         </div>
                         <div class="spacer_box">
-                            <dl class="cf-info-grid system_info">
-                                <dt id="arming-disable-flag" i18n="initialSetupArmingDisableFlags" class="cf_tip"></dt>
-                                <dd class="arming-disable-flags">
+                            <InfoGrid
+                                :items="[
+                                    {
+                                        id: 'arming-disable-flag',
+                                        i18n: 'initialSetupArmingDisableFlags',
+                                        slotName: 'arming-disable-flag',
+                                    },
+                                    { i18n: 'initialSetupBattery', value: state.batVoltage, class: 'bat-voltage' },
+                                    { i18n: 'initialSetupDrawn', value: state.batMahDrawn, class: 'bat-mah-drawn' },
+                                    {
+                                        i18n: 'initialSetupDrawing',
+                                        value: state.batMahDrawing,
+                                        class: 'bat-mah-drawing',
+                                    },
+                                    { i18n: 'initialSetupRSSI', value: state.rssi, class: 'rssi' },
+                                    { id: 'mcu', i18n: 'initialSetupMCU', value: state.mcu, class: 'mcu' },
+                                    {
+                                        id: 'cpu-temp',
+                                        i18n: 'initialSetupCpuTemp',
+                                        value: state.cpuTemp,
+                                        class: 'cpu-temp',
+                                    },
+                                ]"
+                                gridClass="system_info"
+                            >
+                                <template #arming-disable-flag>
                                     <span
                                         v-for="(flag, idx) in state.armingFlags"
                                         :key="flag.id"
@@ -194,26 +222,8 @@
                                     <span v-show="state.armingAllowed" id="initialSetupArmingAllowed">{{
                                         i18n.getMessage("initialSetupArmingAllowed")
                                     }}</span>
-                                </dd>
-
-                                <dt i18n="initialSetupBattery"></dt>
-                                <dd class="bat-voltage">{{ state.batVoltage }}</dd>
-
-                                <dt i18n="initialSetupDrawn"></dt>
-                                <dd class="bat-mah-drawn">{{ state.batMahDrawn }}</dd>
-
-                                <dt i18n="initialSetupDrawing"></dt>
-                                <dd class="bat-mah-drawing">{{ state.batMahDrawing }}</dd>
-
-                                <dt i18n="initialSetupRSSI" class="noboarder"></dt>
-                                <dd class="rssi">{{ state.rssi }}</dd>
-
-                                <dt id="mcu" i18n="initialSetupMCU"></dt>
-                                <dd class="mcu">{{ state.mcu }}</dd>
-
-                                <dt id="cpu-temp" i18n="initialSetupCpuTemp"></dt>
-                                <dd class="cpu-temp">{{ state.cpuTemp }}</dd>
-                            </dl>
+                                </template>
+                            </InfoGrid>
                         </div>
                     </div>
                     <div class="gui_box grey" id="sensorInfoBox">
@@ -222,25 +232,46 @@
                             <div class="helpicon cf_tip" i18n_title="initialSensorInfoHeadHelp"></div>
                         </div>
                         <div class="spacer_box">
-                            <dl class="cf-info-grid">
-                                <dt id="sensor_gyro_hw" i18n="initialSetupSensorGyro"></dt>
-                                <dd class="sensor_gyro_hw">{{ state.sensorGyro }}</dd>
-
-                                <dt id="sensor_acc_hw" i18n="initialSetupSensorAcc"></dt>
-                                <dd class="sensor_acc_hw">{{ state.sensorAcc }}</dd>
-
-                                <dt id="sensor-mag-hw" i18n="initialSetupSensorMag"></dt>
-                                <dd class="sensor_mag_hw">{{ state.sensorMag }}</dd>
-
-                                <dt id="sensor_baro_hw" i18n="initialSetupSensorBaro"></dt>
-                                <dd class="sensor_baro_hw">{{ state.sensorBaro }}</dd>
-
-                                <dt id="sensor-sonar-hw" i18n="initialSetupSensorSonar"></dt>
-                                <dd class="sensor_sonar_hw">{{ state.sensorSonar }}</dd>
-
-                                <dt id="sensor-opticalflow-hw" i18n="initialSetupSensorOpticalflow"></dt>
-                                <dd class="sensor_opticalflow_hw">{{ state.sensorOpticalflow }}</dd>
-                            </dl>
+                            <InfoGrid
+                                :items="[
+                                    {
+                                        id: 'sensor_gyro_hw',
+                                        i18n: 'initialSetupSensorGyro',
+                                        value: state.sensorGyro,
+                                        class: 'sensor_gyro_hw',
+                                    },
+                                    {
+                                        id: 'sensor_acc_hw',
+                                        i18n: 'initialSetupSensorAcc',
+                                        value: state.sensorAcc,
+                                        class: 'sensor_acc_hw',
+                                    },
+                                    {
+                                        id: 'sensor-mag-hw',
+                                        i18n: 'initialSetupSensorMag',
+                                        value: state.sensorMag,
+                                        class: 'sensor_mag_hw',
+                                    },
+                                    {
+                                        id: 'sensor_baro_hw',
+                                        i18n: 'initialSetupSensorBaro',
+                                        value: state.sensorBaro,
+                                        class: 'sensor_baro_hw',
+                                    },
+                                    {
+                                        id: 'sensor-sonar-hw',
+                                        i18n: 'initialSetupSensorSonar',
+                                        value: state.sensorSonar,
+                                        class: 'sensor_sonar_hw',
+                                    },
+                                    {
+                                        id: 'sensor-opticalflow-hw',
+                                        i18n: 'initialSetupSensorOpticalflow',
+                                        value: state.sensorOpticalflow,
+                                        class: 'sensor_opticalflow_hw',
+                                    },
+                                ]"
+                            />
                         </div>
                     </div>
                     <div class="gui_box grey">
@@ -249,18 +280,35 @@
                             <div class="helpicon cf_tip" i18n_title="initialSetupInfoFirmwareHelp"></div>
                         </div>
                         <div class="spacer_box">
-                            <dl class="cf-info-grid">
-                                <dt id="api-version" i18n="initialSetupInfoAPIversion"></dt>
-                                <dd class="api-version">{{ state.apiVersion }}</dd>
-
-                                <dt id="build-date" i18n="initialSetupInfoBuildDate"></dt>
-                                <dd class="build-date">{{ state.buildDate }}</dd>
-
-                                <dt id="build-type" i18n="initialSetupInfoBuildType"></dt>
-                                <dd class="build-type">{{ state.buildType }}</dd>
-
-                                <dt id="build-info" i18n="initialSetupInfoBuildInfo"></dt>
-                                <dd class="build-info">
+                            <InfoGrid
+                                :items="[
+                                    {
+                                        id: 'api-version',
+                                        i18n: 'initialSetupInfoAPIversion',
+                                        value: state.apiVersion,
+                                        class: 'api-version',
+                                    },
+                                    {
+                                        id: 'build-date',
+                                        i18n: 'initialSetupInfoBuildDate',
+                                        value: state.buildDate,
+                                        class: 'build-date',
+                                    },
+                                    {
+                                        id: 'build-type',
+                                        i18n: 'initialSetupInfoBuildType',
+                                        value: state.buildType,
+                                        class: 'build-type',
+                                    },
+                                    { id: 'build-info', i18n: 'initialSetupInfoBuildInfo', slotName: 'build-info' },
+                                    {
+                                        id: 'build-firmware',
+                                        i18n: 'initialSetupInfoBuildFirmware',
+                                        slotName: 'build-firmware',
+                                    },
+                                ]"
+                            >
+                                <template #build-info>
                                     <template v-if="state.buildInfoButtons && state.buildInfoButtons.length">
                                         <span
                                             v-for="btn in state.buildInfoButtons"
@@ -275,10 +323,9 @@
                                     <template v-else>
                                         <span v-html="state.buildInfoHtml"></span>
                                     </template>
-                                </dd>
+                                </template>
 
-                                <dt id="build-firmware" i18n="initialSetupInfoBuildFirmware"></dt>
-                                <dd class="build-firmware">
+                                <template #build-firmware>
                                     <span v-if="state.buildOptionsValid" class="buildInfoBtn">
                                         <a
                                             href="#"
@@ -295,8 +342,8 @@
                                             ><strong>{{ i18n.getMessage("initialSetupInfoBuildDownload") }}</strong></a
                                         >
                                     </span>
-                                </dd>
-                            </dl>
+                                </template>
+                            </InfoGrid>
                         </div>
                     </div>
                     <div class="gui_box grey">
@@ -305,19 +352,34 @@
                             <div class="helpicon cf_tip" i18n_title="initialSetupNetworkInfoHelp"></div>
                         </div>
                         <div class="spacer_box">
-                            <dl class="cf-info-grid">
-                                <dt id="network-status" i18n="initialSetupNetworkInfoStatus"></dt>
-                                <dd class="network-status">{{ state.networkStatus }}</dd>
-
-                                <dt id="network-type" i18n="initialSetupNetworkType"></dt>
-                                <dd class="network-type">{{ state.networkType }}</dd>
-
-                                <dt id="network-downlink" i18n="initialSetupNetworkDownlink"></dt>
-                                <dd class="network-downlink">{{ state.networkDownlink }}</dd>
-
-                                <dt id="network-rtt" i18n="initialSetupNetworkRtt"></dt>
-                                <dd class="network-rtt">{{ state.networkRtt }}</dd>
-                            </dl>
+                            <InfoGrid
+                                :items="[
+                                    {
+                                        id: 'network-status',
+                                        i18n: 'initialSetupNetworkInfoStatus',
+                                        value: state.networkStatus,
+                                        class: 'network-status',
+                                    },
+                                    {
+                                        id: 'network-type',
+                                        i18n: 'initialSetupNetworkType',
+                                        value: state.networkType,
+                                        class: 'network-type',
+                                    },
+                                    {
+                                        id: 'network-downlink',
+                                        i18n: 'initialSetupNetworkDownlink',
+                                        value: state.networkDownlink,
+                                        class: 'network-downlink',
+                                    },
+                                    {
+                                        id: 'network-rtt',
+                                        i18n: 'initialSetupNetworkRtt',
+                                        value: state.networkRtt,
+                                        class: 'network-rtt',
+                                    },
+                                ]"
+                            />
                         </div>
                     </div>
                 </div>
@@ -368,6 +430,7 @@
 <script setup>
 import { onMounted, onBeforeUnmount, ref, reactive } from "vue";
 import { i18n } from "../../js/localization";
+import InfoGrid from "@/components/InfoGrid.vue";
 import semver from "semver";
 import { useFlightControllerStore } from "../../stores/fc";
 import { isExpertModeEnabled } from "../../js/utils/isExpertModeEnabled";
