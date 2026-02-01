@@ -4,11 +4,7 @@
         <div class="content_wrapper">
             <!-- should be the first DIV on each tab -->
             <div class="tab_title" i18n="tabSetup">Setup</div>
-            <div class="cf_doc_version_bt">
-                <a id="button-documentation" href="" target="_blank" aria-label="Documentation">
-                    <span class="visually-hidden">Documentation</span>
-                </a>
-            </div>
+            <WikiButton docUrl="setup" />
             <div class="grid-row">
                 <div class="grid-col col3">
                     <div class="default_btn">
@@ -431,6 +427,7 @@
 import { onMounted, onBeforeUnmount, ref, reactive } from "vue";
 import { i18n } from "../../js/localization";
 import InfoGrid from "@/components/InfoGrid.vue";
+import WikiButton from "@/components/elements/WikiButton.vue";
 import semver from "semver";
 import { useFlightControllerStore } from "../../stores/fc";
 import { isExpertModeEnabled } from "../../js/utils/isExpertModeEnabled";
