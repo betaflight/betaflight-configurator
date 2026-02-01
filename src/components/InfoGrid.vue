@@ -20,7 +20,7 @@
 import { defineProps } from "vue";
 import { i18n } from "../js/localization";
 
-const props = defineProps({
+defineProps({
     items: {
         type: Array,
         default: () => [],
