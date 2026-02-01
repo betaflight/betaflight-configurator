@@ -5,7 +5,9 @@
             <!-- should be the first DIV on each tab -->
             <div class="tab_title" i18n="tabSetup">Setup</div>
             <div class="cf_doc_version_bt">
-                <a id="button-documentation" href="" target="_blank"></a>
+                <a id="button-documentation" href="" target="_blank" aria-label="Documentation">
+                    <span class="visually-hidden">Documentation</span>
+                </a>
             </div>
             <div class="grid-row">
                 <div class="grid-col col3">
@@ -65,7 +67,8 @@
                             href="#"
                             @click.prevent="showConfirmReset"
                             i18n="initialSetupButtonReset"
-                        ></a>
+                            >{{ i18n.getMessage("initialSetupButtonReset") }}</a
+                        >
                     </div>
                 </div>
                 <div class="grid-col col9">
@@ -82,7 +85,8 @@
                             href="#"
                             @click.prevent="onRebootBootloader"
                             i18n="initialSetupButtonRebootBootloader"
-                        ></a>
+                            >{{ i18n.getMessage("initialSetupButtonRebootBootloader") }}</a
+                        >
                     </div>
                 </div>
                 <div class="grid-col col9">
@@ -113,12 +117,13 @@
                             href="#"
                             i18n="initialSetupButtonResetZaxis"
                             @click.prevent="resetZaxis"
-                        ></a>
+                            >{{ i18n.getMessage("initialSetupButtonResetZaxis") }}</a
+                        >
                     </div>
                 </div>
                 <div class="col-span-1 grid-box col1">
-                    <div class="gui_box grey instrumentsbox" align="center">
-                        <div class="gui_box_titlebar" align="left">
+                    <div class="gui_box grey instrumentsbox">
+                        <div class="gui_box_titlebar">
                             <div class="spacer_box_title" i18n="initialSetupInstrumentsHead"></div>
                             <div class="helpicon cf_tip" i18n_title="initialSetupInstrumentsHeadHelp"></div>
                         </div>
@@ -130,14 +135,7 @@
                             <div class="helpicon cf_tip" i18n_title="initialSetupGPSHeadHelp"></div>
                         </div>
                         <div class="spacer_box GPS_info">
-                            <table
-                                width="100%"
-                                border="0"
-                                cellpadding="0"
-                                cellspacing="0"
-                                class="cf_table"
-                                role="presentation"
-                            >
+                            <table border="0" class="cf_table" role="presentation">
                                 <tbody>
                                     <tr>
                                         <td i18n="gps3dFix"></td>
@@ -180,14 +178,7 @@
                             <div class="helpicon cf_tip" i18n_title="initialSetupSonarHeadHelp"></div>
                         </div>
                         <div class="spacer_box">
-                            <table
-                                width="100%"
-                                border="0"
-                                cellpadding="0"
-                                cellspacing="0"
-                                class="cf_table"
-                                role="presentation"
-                            >
+                            <table border="0" class="cf_table" role="presentation">
                                 <tbody>
                                     <tr>
                                         <td id="sonarAltitude" i18n="initialSetupAltitudeSonar"></td>
@@ -203,14 +194,7 @@
                             <div class="helpicon cf_tip" i18n_title="initialSetupInfoHeadHelp"></div>
                         </div>
                         <div class="spacer_box">
-                            <table
-                                width="100%"
-                                border="0"
-                                cellpadding="0"
-                                cellspacing="0"
-                                class="cf_table system_info"
-                                role="presentation"
-                            >
+                            <table border="0" class="cf_table system_info" role="presentation">
                                 <tbody>
                                     <tr>
                                         <td
@@ -266,14 +250,7 @@
                             <div class="helpicon cf_tip" i18n_title="initialSensorInfoHeadHelp"></div>
                         </div>
                         <div class="spacer_box">
-                            <table
-                                width="100%"
-                                border="0"
-                                cellpadding="0"
-                                cellspacing="0"
-                                class="cf_table"
-                                role="presentation"
-                            >
+                            <table border="0" class="cf_table" role="presentation">
                                 <tbody>
                                     <tr>
                                         <td id="sensor_gyro_hw" i18n="initialSetupSensorGyro"></td>
@@ -309,14 +286,7 @@
                             <div class="helpicon cf_tip" i18n_title="initialSetupInfoFirmwareHelp"></div>
                         </div>
                         <div class="spacer_box">
-                            <table
-                                width="100%"
-                                border="0"
-                                cellpadding="0"
-                                cellspacing="0"
-                                class="cf_table"
-                                role="presentation"
-                            >
+                            <table border="0" class="cf_table" role="presentation">
                                 <tbody>
                                     <tr>
                                         <td id="api-version" i18n="initialSetupInfoAPIversion"></td>
@@ -384,14 +354,7 @@
                             <div class="helpicon cf_tip" i18n_title="initialSetupNetworkInfoHelp"></div>
                         </div>
                         <div class="spacer_box">
-                            <table
-                                width="100%"
-                                border="0"
-                                cellpadding="0"
-                                cellspacing="0"
-                                class="cf_table"
-                                role="presentation"
-                            >
+                            <table border="0" class="cf_table" role="presentation">
                                 <tbody>
                                     <tr>
                                         <td id="network-status" i18n="initialSetupNetworkInfoStatus"></td>
@@ -418,7 +381,7 @@
         </div>
 
         <dialog class="dialogConfirmReset" ref="dialogConfirmReset">
-            <h3 i18n="dialogConfirmResetTitle"></h3>
+            <h3>{{ i18n.getMessage("dialogConfirmResetTitle") }}</h3>
             <div class="content">
                 <div i18n="dialogConfirmResetNote" style="margin-top: 10px"></div>
             </div>
@@ -428,13 +391,15 @@
                     class="dialogConfirmReset-confirmbtn danger-button"
                     @click.prevent="confirmReset"
                     i18n="dialogConfirmResetConfirm"
-                ></a>
+                    >{{ i18n.getMessage("dialogConfirmResetConfirm") }}</a
+                >
                 <a
                     href="#"
                     class="dialogConfirmReset-cancelbtn regular-button"
                     @click.prevent="cancelConfirmReset"
                     i18n="dialogConfirmResetClose"
-                ></a>
+                    >{{ i18n.getMessage("dialogConfirmResetClose") }}</a
+                >
             </div>
         </dialog>
 
@@ -449,7 +414,8 @@
                     class="dialogBuildInfo-closebtn regular-button"
                     @click.prevent="closeBuildInfo"
                     i18n="close"
-                ></a>
+                    >{{ i18n.getMessage("close") }}</a
+                >
             </div>
         </dialog>
     </div>
@@ -475,23 +441,23 @@ import { ispConnected } from "../../js/utils/connection";
 import { sensorTypes } from "../../js/sensor_types";
 import { addArrayElementsAfter, replaceArrayElement } from "../../js/utils/array";
 
-const yaw_fix = ref(0.0);
+const yaw_fix = ref(0);
 
 let modelInstance = null;
 // Local reactive state to replace jQuery DOM updates
 const state = reactive({
     batVoltage: "0 V",
     batMahDrawn: "0 mAh",
-    batMahDrawing: "0.00 A",
+    batMahDrawing: "0 A",
     rssi: "0 %",
     cpuTemp: "0 °C",
     armingAllowed: true,
     armingFlags: [],
     gpsFix: false,
     gpsSats: 0,
-    latitude: "0.0000",
-    longitude: "0.0000",
-    sonar: "0.0 cm",
+    latitude: "0",
+    longitude: "0",
+    sonar: "0 cm",
     mcu: "",
     sensorGyro: "",
     sensorAcc: "",
@@ -535,7 +501,7 @@ const dialogConfirmReset = ref(null);
 const dialogBuildInfo = ref(null);
 
 function resetZaxis() {
-    yaw_fix.value = fcStore.sensorData.kinematics[2] * -1.0;
+    yaw_fix.value = fcStore.sensorData.kinematics[2] * -1;
     console.log(`YAW reset to 0 deg, fix: ${yaw_fix.value} deg`);
 }
 
@@ -548,13 +514,17 @@ function onRebootBootloader() {
 }
 
 function onCalibrateAccel() {
-    if (state.calibratingAccel || state.disabledAccel) return;
+    if (state.calibratingAccel || state.disabledAccel) {
+        return;
+    }
     state.calibratingAccel = true;
     // Pause both fast and slow setup data polling so calibration gets uninterrupted data
     GUI.interval_pause("setup_data_pull_fast");
     GUI.interval_pause("setup_data_pull_slow");
     MSP.send_message(MSPCodes.MSP_ACC_CALIBRATION, false, false, function () {
-        if (!mountedFlag) return;
+        if (!mountedFlag) {
+            return;
+        }
         gui_log(i18n.getMessage("initialSetupAccelCalibStarted"));
         state.calibratingAccel = true;
         state.accelRunning = true;
@@ -575,10 +545,14 @@ function onCalibrateAccel() {
 }
 
 function onCalibrateMag() {
-    if (state.calibratingMag || state.disabledMag) return;
+    if (state.calibratingMag || state.disabledMag) {
+        return;
+    }
     state.calibratingMag = true;
     MSP.send_message(MSPCodes.MSP_MAG_CALIBRATION, false, false, function () {
-        if (!mountedFlag) return;
+        if (!mountedFlag) {
+            return;
+        }
         gui_log(i18n.getMessage("initialSetupMagCalibStarted"));
         state.calibratingMag = true;
         state.magRunning = true;
@@ -626,7 +600,9 @@ function confirmReset() {
 }
 
 function showDialogBuildInfo(title, message) {
-    if (!dialogBuildInfo.value) return;
+    if (!dialogBuildInfo.value) {
+        return;
+    }
     const dialog = dialogBuildInfo.value;
     const titleEl = dialog.querySelector(".dialogBuildInfo-title");
     const contentEl = dialog.querySelector(".dialogBuildInfo-content");
@@ -1026,7 +1002,9 @@ function process_html() {
 
     function get_fast_data() {
         MSP.send_message(MSPCodes.MSP_ATTITUDE, false, false, function () {
-            if (!mountedFlag) return;
+            if (!mountedFlag) {
+                return;
+            }
             state.attitude.roll = i18n.getMessage("initialSetupAttitude", [fcStore.sensorData.kinematics[0]]);
             state.attitude.pitch = i18n.getMessage("initialSetupAttitude", [fcStore.sensorData.kinematics[1]]);
             state.attitude.heading = i18n.getMessage("initialSetupAttitude", [fcStore.sensorData.kinematics[2]]);
@@ -1038,7 +1016,9 @@ function process_html() {
 
         if (have_sensor(fcStore.config.activeSensors, "sonar")) {
             MSP.send_message(MSPCodes.MSP_SONAR, false, false, function () {
-                if (!mountedFlag) return;
+                if (!mountedFlag) {
+                    return;
+                }
                 state.sonar = `${fcStore.sensorData.sonar.toFixed(1)} cm`;
             });
         }
@@ -1076,10 +1056,12 @@ function initModel() {
 }
 
 function renderModel() {
-    if (!modelInstance) return;
-    const x = fcStore.sensorData.kinematics[1] * -1.0 * 0.017453292519943295;
-    const y = (fcStore.sensorData.kinematics[2] * -1.0 - yaw_fix.value) * 0.017453292519943295;
-    const z = fcStore.sensorData.kinematics[0] * -1.0 * 0.017453292519943295;
+    if (!modelInstance) {
+        return;
+    }
+    const x = fcStore.sensorData.kinematics[1] * -1 * 0.017453292519943295;
+    const y = (fcStore.sensorData.kinematics[2] * -1 - yaw_fix.value) * 0.017453292519943295;
+    const z = fcStore.sensorData.kinematics[0] * -1 * 0.017453292519943295;
     modelInstance.rotateTo(x, y, z);
 }
 
@@ -1112,7 +1094,9 @@ onBeforeUnmount(() => {
 });
 
 function openBuildOptionsDialog() {
-    if (!state.buildOptionsArray || state.buildOptionsArray.length === 0) return;
+    if (!state.buildOptionsArray || state.buildOptionsArray.length === 0) {
+        return;
+    }
     let buildOptionList = `<div class="dialogBuildInfoGrid-container">`;
     for (const buildOptionElement of state.buildOptionsArray) {
         buildOptionList += `<div class="dialogBuildInfoGrid-item">${buildOptionElement}</div>`;
@@ -1297,10 +1281,5 @@ function openBuildOptionsDialog() {
 }
 .disarm-flag {
     padding-right: 5px;
-}
-
-/* small local override */
-.tab-setup {
-    padding: 8px;
 }
 </style>
