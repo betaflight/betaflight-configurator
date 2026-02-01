@@ -94,7 +94,7 @@
                 <div class="col-span-3 model-and-info">
                     <div id="interactive_block">
                         <div id="canvas_wrapper" class="background_paper" ref="canvasWrapper">
-                            <canvas id="canvas" ref="canvas"></canvas>
+                            <canvas id="canvas" ref="canvasEl"></canvas>
                             <div class="attitude_info">
                                 <dl>
                                     <dt i18n="initialSetupHeading"></dt>
@@ -1050,9 +1050,13 @@ function initializeInstruments() {
 }
 
 function initModel() {
-    // Use DOM refs for the model canvas and wrapper
-    const wrapperDom = canvasWrapper.value || document.querySelector(".model-and-info #canvas_wrapper");
-    const canvasDom = canvasEl.value || document.querySelector(".model-and-info #canvas");
+    // Use template refs for the model canvas and wrapper (no querySelector fallback)
+    const wrapperDom = canvasWrapper.value;
+    const canvasDom = canvasEl.value;
+    if (!wrapperDom || !canvasDom) {
+        console.warn("Model canvas or wrapper not found; skipping model initialization.");
+        return;
+    }
     const wrapper = $(wrapperDom);
     const canvas = $(canvasDom);
     modelInstance = new Model(wrapper, canvas);
