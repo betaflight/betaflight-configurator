@@ -438,7 +438,6 @@ import Model from "../../js/model";
 import MSPCodes from "../../js/msp/MSPCodes";
 import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "../../js/data_storage";
 import { gui_log } from "../../js/gui_log";
-import $ from "jquery";
 import { ispConnected } from "../../js/utils/connection";
 import { sensorTypes } from "../../js/sensor_types";
 import { addArrayElementsAfter, replaceArrayElement } from "../../js/utils/array";
@@ -929,94 +928,6 @@ function process_html() {
             state.buildInfoHtml = "";
             state.buildOptionsValid = false;
             state.buildKeyValid = false;
-        }
-    }
-
-    async function displaySensorInfo() {
-        const types = await sensorTypes();
-
-        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
-            let gyroInfoList = [];
-            for (let i = 0; i < fcStore.gyroSensor.gyro_count; i++) {
-                if ((fcStore.sensorAlignment.gyro_enable_mask & (1 << i)) !== 0) {
-                    gyroInfoList.push(types.gyro.elements[fcStore.gyroSensor.gyro_hardware[i]]);
-                }
-            }
-            state.sensorGyro = gyroInfoList.join(" ");
-        } else {
-            const g = fcStore.sensorConfigActive.gyro_hardware;
-            if (g === 0xff) {
-                state.sensorGyro = i18n.getMessage("initialSetupNotInBuild");
-            } else if (have_sensor(fcStore.config.activeSensors, "gyro")) {
-                state.sensorGyro = types.gyro.elements[g];
-            } else {
-                state.sensorGyro = i18n.getMessage("initialSetupNotDetected");
-            }
-        }
-
-        const a = fcStore.sensorConfigActive.acc_hardware;
-        if (a === 0xff) {
-            state.sensorAcc = i18n.getMessage("initialSetupNotInBuild");
-        } else if (!have_sensor(fcStore.config.activeSensors, "acc")) {
-            state.sensorAcc = i18n.getMessage("initialSetupNotDetected");
-        } else {
-            let name = types.acc.elements[a] || "AUTO";
-            if (
-                (name === "AUTO" || name === "DEFAULT") &&
-                fcStore.sensorNames &&
-                fcStore.sensorNames.acc &&
-                fcStore.sensorNames.acc[a]
-            ) {
-                name = fcStore.sensorNames.acc[a];
-            }
-            state.sensorAcc = name;
-        }
-
-        const b = fcStore.sensorConfigActive.baro_hardware;
-        if (b === 0xff) {
-            state.sensorBaro = i18n.getMessage("initialSetupNotInBuild");
-        } else if (!have_sensor(fcStore.config.activeSensors, "baro")) {
-            state.sensorBaro = i18n.getMessage("initialSetupNotDetected");
-        } else {
-            let nameB = types.baro.elements[b] || "DEFAULT";
-            if (
-                (nameB === "AUTO" || nameB === "DEFAULT") &&
-                fcStore.sensorNames &&
-                fcStore.sensorNames.baro &&
-                fcStore.sensorNames.baro[b]
-            ) {
-                nameB = fcStore.sensorNames.baro[b];
-            }
-            state.sensorBaro = nameB;
-        }
-
-        const m = fcStore.sensorConfigActive.mag_hardware;
-        if (m === 0xff) {
-            state.sensorMag = i18n.getMessage("initialSetupNotInBuild");
-        } else if (have_sensor(fcStore.config.activeSensors, "mag")) {
-            state.sensorMag = types.mag.elements[m];
-        } else {
-            state.sensorMag = i18n.getMessage("initialSetupNotDetected");
-        }
-
-        const s = fcStore.sensorConfigActive.sonar_hardware;
-        if (s === 0xff) {
-            state.sensorSonar = i18n.getMessage("initialSetupNotInBuild");
-        } else if (have_sensor(fcStore.config.activeSensors, "sonar")) {
-            state.sensorSonar = types.sonar.elements[s];
-        } else {
-            state.sensorSonar = i18n.getMessage("initialSetupNotDetected");
-        }
-
-        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
-            const o = fcStore.sensorConfigActive.opticalflow_hardware;
-            if (o === 0xff) {
-                state.sensorOpticalflow = i18n.getMessage("initialSetupNotInBuild");
-            } else if (have_sensor(fcStore.config.activeSensors, "opticalflow")) {
-                state.sensorOpticalflow = types.opticalflow.elements[o];
-            } else {
-                state.sensorOpticalflow = i18n.getMessage("initialSetupNotDetected");
-            }
         }
     }
 
