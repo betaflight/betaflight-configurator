@@ -1,8 +1,6 @@
 <template>
-    <!-- Ported from src/tabs/setup.html -->
     <div class="tab-setup">
         <div class="content_wrapper">
-            <!-- should be the first DIV on each tab -->
             <div class="tab_title" i18n="tabSetup">Setup</div>
             <WikiButton docUrl="setup" />
             <div class="grid-row">
@@ -639,30 +637,20 @@ let boundModelResize = null;
 let magCalibInterval = null;
 let magCalibTimeoutName = null;
 
-function initialize() {
-    // follow legacy initialization chain
-    function load_status() {
-        MSP.send_message(MSPCodes.MSP_STATUS_EX, false, false, mcu_info);
+async function initialize() {
+    try {
+        await MSP.promise(MSPCodes.MSP_ACC_TRIM, false);
+        await MSP.promise(MSPCodes.MSP_STATUS_EX, false);
+        await MSP.promise(MSPCodes.MSP2_MCU_INFO, false);
+        await MSP.promise(MSPCodes.MSP_MIXER_CONFIG, false);
+        await MSP.promise(MSPCodes.MSP_SENSOR_ALIGNMENT, false);
+    } catch (e) {
+        // preserve behavior but at least log unexpected errors
+        console.warn("Error during Setup initialize sequence:", e);
     }
 
-    function mcu_info() {
-        MSP.send_message(MSPCodes.MSP2_MCU_INFO, false, false, load_mixer_config);
-    }
-
-    function load_mixer_config() {
-        MSP.send_message(MSPCodes.MSP_MIXER_CONFIG, false, false, load_gyro_sensor);
-    }
-
-    function load_gyro_sensor() {
-        MSP.send_message(MSPCodes.MSP_SENSOR_ALIGNMENT, false, false, load_html);
-    }
-
-    function load_html() {
-        // For SFC we don't need to load HTML, just process it
-        process_html();
-    }
-
-    MSP.send_message(MSPCodes.MSP_ACC_TRIM, false, false, load_status);
+    // For SFC we don't need to load HTML, just process it
+    process_html();
 }
 
 function process_html() {
