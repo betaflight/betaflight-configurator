@@ -559,6 +559,16 @@ function onCalibrateMag() {
     });
 
     function magCalibResetButton() {
+        // clear any running mag calibration timers
+        if (magCalibInterval) {
+            clearInterval(magCalibInterval);
+            magCalibInterval = null;
+        }
+        if (magCalibTimeoutName) {
+            GUI.timeout_remove(magCalibTimeoutName);
+            magCalibTimeoutName = null;
+        }
+
         gui_log(i18n.getMessage("initialSetupMagCalibEnded"));
         state.calibratingMag = false;
         state.magRunning = false;
@@ -568,15 +578,19 @@ function onCalibrateMag() {
         let cycle = 0;
         const cycleMax = 45;
         const interval = 1000;
-        const intervalId = setInterval(function () {
+        // store the interval id so it can be cleared if the component unmounts
+        magCalibInterval = setInterval(function () {
             if (cycle >= cycleMax || (fcStore.config.armingDisableFlags & (1 << 12)) === 0) {
-                clearInterval(intervalId);
+                clearInterval(magCalibInterval);
+                magCalibInterval = null;
                 magCalibResetButton();
             }
             cycle++;
         }, interval);
     } else {
-        GUI.timeout_add("button_reset", magCalibResetButton, 30000);
+        // use a dedicated name so we can remove it safely on unmount
+        magCalibTimeoutName = "mag_button_reset";
+        GUI.timeout_add(magCalibTimeoutName, magCalibResetButton, 30000);
     }
 }
 
@@ -617,6 +631,9 @@ function closeBuildInfo() {
 const canvasWrapper = ref(null);
 const canvasEl = ref(null);
 let boundModelResize = null;
+// mag calibration timers (kept across handler scope so they can be cleared on unmount)
+let magCalibInterval = null;
+let magCalibTimeoutName = null;
 
 function initialize() {
     // follow legacy initialization chain
@@ -1175,7 +1192,20 @@ onBeforeUnmount(() => {
         for (const name of localIntervals) {
             GUI.interval_remove(name);
         }
-    } catch (e) {}
+    } catch (e) {
+        // preserve existing behavior but at least log unexpected errors
+        console.warn("Error clearing local intervals:", e);
+    }
+
+    // ensure mag calibration timers are cleared to avoid callbacks after unmount
+    if (magCalibInterval) {
+        clearInterval(magCalibInterval);
+        magCalibInterval = null;
+    }
+    if (magCalibTimeoutName) {
+        GUI.timeout_remove(magCalibTimeoutName);
+        magCalibTimeoutName = null;
+    }
 });
 
 function openBuildOptionsDialog() {
