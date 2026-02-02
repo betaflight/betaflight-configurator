@@ -875,15 +875,11 @@ function process_html() {
     };
 
     const showSensorInfo = async function () {
-        MSP.send_message(MSPCodes.MSP2_SENSOR_CONFIG_ACTIVE, false, false, function () {
-            if (semver.lt(fcStore.config.apiVersion, API_VERSION_1_47)) {
-                displaySensorInfo();
-            } else {
-                MSP.send_message(MSPCodes.MSP2_GYRO_SENSOR, false, false, function () {
-                    displaySensorInfo();
-                });
-            }
-        });
+        await MSP.promise(MSPCodes.MSP2_SENSOR_CONFIG_ACTIVE, false);
+        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
+            await MSP.promise(MSPCodes.MSP2_GYRO_SENSOR, false);
+        }
+        await displaySensorInfo();
     };
 
     const hideSensorInfo = function () {
