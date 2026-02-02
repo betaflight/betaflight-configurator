@@ -634,12 +634,14 @@ function onCalibrateAccel() {
     GUI.timeout_add(
         "button_reset",
         function () {
-            // Resume both polling intervals after calibration completes
-            GUI.interval_resume("setup_data_pull_fast");
-            GUI.interval_resume("setup_data_pull_slow");
-            gui_log(i18n.getMessage("initialSetupAccelCalibEnded"));
-            state.calibratingAccel = false;
-            state.accelRunning = false;
+            if (mountedFlag) {
+                // Resume both polling intervals after calibration completes
+                GUI.interval_resume("setup_data_pull_fast");
+                GUI.interval_resume("setup_data_pull_slow");
+                gui_log(i18n.getMessage("initialSetupAccelCalibEnded"));
+                state.calibratingAccel = false;
+                state.accelRunning = false;
+            }
         },
         2000,
     );
