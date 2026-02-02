@@ -488,6 +488,107 @@ const state = reactive({
 
 const fcStore = useFlightControllerStore();
 
+const disarmFlagElements = [
+    "NO_GYRO",
+    "FAILSAFE",
+    "RX_FAILSAFE",
+    "NOT_DISARMED",
+    "BOXFAILSAFE",
+    "RUNAWAY_TAKEOFF",
+    "CRASH_DETECTED",
+    "THROTTLE",
+    "ANGLE",
+    "BOOT_GRACE_TIME",
+    "NOPREARM",
+    "LOAD",
+    "CALIBRATING",
+    "CLI",
+    "CMS_MENU",
+    "BST",
+    "MSP",
+    "PARALYZE",
+    "GPS",
+    "RESC",
+    "RPMFILTER",
+    "REBOOT_REQUIRED",
+    "DSHOT_BITBANG",
+    "ACC_CALIBRATION",
+    "MOTOR_PROTOCOL",
+];
+
+const prepareDisarmFlags = function () {
+    const cfg = fcStore.config;
+    if (semver.gte(cfg.apiVersion, API_VERSION_1_46)) {
+        replaceArrayElement(disarmFlagElements, "RPMFILTER", "DSHOT_TELEM");
+    }
+
+    if (semver.gte(cfg.apiVersion, API_VERSION_1_47)) {
+        addArrayElementsAfter(disarmFlagElements, "MOTOR_PROTOCOL", ["CRASHFLIP", "ALTHOLD", "POSHOLD"]);
+    }
+
+    // Build arming flags state instead of manipulating DOM
+    const flags = Array.from({ length: cfg.armingDisableCount }, (_, i) => {
+        const isLastBit = i === cfg.armingDisableCount - 1;
+        const knownName = disarmFlagElements[i];
+
+        // 1. Determine the raw name and whether it is a fallback numeric ID
+        // We prioritize the "ARM_SWITCH" for the last bit, then known elements, then numeric fallback.
+        let rawName;
+        let isFallback = false;
+
+        if (isLastBit) {
+            rawName = "ARM_SWITCH";
+        } else if (knownName) {
+            rawName = knownName;
+        } else {
+            rawName = `${i + 1}`;
+            isFallback = true;
+        }
+
+        // 2. Handle display name overrides (e.g., RX_FAILSAFE -> RXLOSS)
+        const nameMap = { RX_FAILSAFE: "RXLOSS", NOT_DISARMED: "BAD_RX_RECOVERY" };
+        const displayName = nameMap[rawName] || rawName;
+
+        // 3. Construct tooltip, if it's a fallback, we use the base key; otherwise, we append the rawName.
+        const messageKey = isFallback
+            ? "initialSetupArmingDisableFlagsTooltip"
+            : `initialSetupArmingDisableFlagsTooltip${rawName}`;
+
+        return reactive({
+            id: `initialSetupArmingDisableFlags${i}`,
+            name: displayName,
+            tooltip: i18n.getMessage(messageKey),
+            visible: false,
+        });
+    });
+
+    fcStore.setArmingFlags(flags);
+
+    // Initial update
+    fcStore.updateArmingFlags(cfg.armingDisableFlags);
+};
+
+// Watch for armingDisableCount changes to rebuild the arming flags array
+watch(
+    () => fcStore.config.armingDisableCount,
+    (newCount) => {
+        if (newCount > 0) {
+            prepareDisarmFlags();
+        }
+    },
+);
+
+watch(
+    () => fcStore.config.armingDisableFlags,
+    (newVal) => {
+        fcStore.updateArmingFlags(newVal);
+    },
+);
+
+if (fcStore.config.armingDisableCount > 0) {
+    prepareDisarmFlags();
+}
+
 const localIntervals = [];
 function addLocalInterval(name, fn, period, first = false) {
     GUI.interval_add(name, fn, period, first);
@@ -688,107 +789,6 @@ function process_html() {
     // no direct DOM dialog wiring here; dialogs use Vue refs and methods
     // set initial reset button label via reactive yaw value
     // reset button text will be rendered from template using `yaw_fix`
-
-    const disarmFlagElements = [
-        "NO_GYRO",
-        "FAILSAFE",
-        "RX_FAILSAFE",
-        "NOT_DISARMED",
-        "BOXFAILSAFE",
-        "RUNAWAY_TAKEOFF",
-        "CRASH_DETECTED",
-        "THROTTLE",
-        "ANGLE",
-        "BOOT_GRACE_TIME",
-        "NOPREARM",
-        "LOAD",
-        "CALIBRATING",
-        "CLI",
-        "CMS_MENU",
-        "BST",
-        "MSP",
-        "PARALYZE",
-        "GPS",
-        "RESC",
-        "RPMFILTER",
-        "REBOOT_REQUIRED",
-        "DSHOT_BITBANG",
-        "ACC_CALIBRATION",
-        "MOTOR_PROTOCOL",
-    ];
-
-    const prepareDisarmFlags = function () {
-        const cfg = fcStore.config;
-        if (semver.gte(cfg.apiVersion, API_VERSION_1_46)) {
-            replaceArrayElement(disarmFlagElements, "RPMFILTER", "DSHOT_TELEM");
-        }
-
-        if (semver.gte(cfg.apiVersion, API_VERSION_1_47)) {
-            addArrayElementsAfter(disarmFlagElements, "MOTOR_PROTOCOL", ["CRASHFLIP", "ALTHOLD", "POSHOLD"]);
-        }
-
-        // Build arming flags state instead of manipulating DOM
-        const flags = Array.from({ length: cfg.armingDisableCount }, (_, i) => {
-            const isLastBit = i === cfg.armingDisableCount - 1;
-            const knownName = disarmFlagElements[i];
-
-            // 1. Determine the raw name and whether it is a fallback numeric ID
-            // We prioritize the "ARM_SWITCH" for the last bit, then known elements, then numeric fallback.
-            let rawName;
-            let isFallback = false;
-
-            if (isLastBit) {
-                rawName = "ARM_SWITCH";
-            } else if (knownName) {
-                rawName = knownName;
-            } else {
-                rawName = `${i + 1}`;
-                isFallback = true;
-            }
-
-            // 2. Handle display name overrides (e.g., RX_FAILSAFE -> RXLOSS)
-            const nameMap = { RX_FAILSAFE: "RXLOSS", NOT_DISARMED: "BAD_RX_RECOVERY" };
-            const displayName = nameMap[rawName] || rawName;
-
-            // 3. Construct tooltip, if it's a fallback, we use the base key; otherwise, we append the rawName.
-            const messageKey = isFallback
-                ? "initialSetupArmingDisableFlagsTooltip"
-                : `initialSetupArmingDisableFlagsTooltip${rawName}`;
-
-            return reactive({
-                id: `initialSetupArmingDisableFlags${i}`,
-                name: displayName,
-                tooltip: i18n.getMessage(messageKey),
-                visible: false,
-            });
-        });
-
-        fcStore.setArmingFlags(flags);
-
-        // Initial update
-        fcStore.updateArmingFlags(cfg.armingDisableFlags);
-    };
-
-    // Watch for armingDisableCount changes to rebuild the arming flags array
-    watch(
-        () => fcStore.config.armingDisableCount,
-        (newCount) => {
-            if (newCount > 0) {
-                prepareDisarmFlags();
-            }
-        },
-    );
-
-    watch(
-        () => fcStore.config.armingDisableFlags,
-        (newVal) => {
-            fcStore.updateArmingFlags(newVal);
-        },
-    );
-
-    if (fcStore.config.armingDisableCount > 0) {
-        prepareDisarmFlags();
-    }
 
     const displaySensorInfo = async function () {
         const types = await sensorTypes();
