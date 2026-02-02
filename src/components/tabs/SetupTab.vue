@@ -622,12 +622,11 @@ function onCalibrateAccel() {
     GUI.interval_pause("setup_data_pull_fast");
     GUI.interval_pause("setup_data_pull_slow");
     MSP.send_message(MSPCodes.MSP_ACC_CALIBRATION, false, false, function () {
-        if (!mountedFlag) {
-            return;
+        if (mountedFlag) {
+            gui_log(i18n.getMessage("initialSetupAccelCalibStarted"));
+            state.calibratingAccel = true;
+            state.accelRunning = true;
         }
-        gui_log(i18n.getMessage("initialSetupAccelCalibStarted"));
-        state.calibratingAccel = true;
-        state.accelRunning = true;
     });
 
     GUI.timeout_add(
@@ -650,12 +649,11 @@ function onCalibrateMag() {
     }
     state.calibratingMag = true;
     MSP.send_message(MSPCodes.MSP_MAG_CALIBRATION, false, false, function () {
-        if (!mountedFlag) {
-            return;
+        if (mountedFlag) {
+            gui_log(i18n.getMessage("initialSetupMagCalibStarted"));
+            state.calibratingMag = true;
+            state.magRunning = true;
         }
-        gui_log(i18n.getMessage("initialSetupMagCalibStarted"));
-        state.calibratingMag = true;
-        state.magRunning = true;
     });
 
     function magCalibResetButton() {
@@ -1043,24 +1041,22 @@ function process_html() {
 
     function get_fast_data() {
         MSP.send_message(MSPCodes.MSP_ATTITUDE, false, false, function () {
-            if (!mountedFlag) {
-                return;
-            }
-            state.attitude.roll = i18n.getMessage("initialSetupAttitude", [fcStore.sensorData.kinematics[0]]);
-            state.attitude.pitch = i18n.getMessage("initialSetupAttitude", [fcStore.sensorData.kinematics[1]]);
-            state.attitude.heading = i18n.getMessage("initialSetupAttitude", [fcStore.sensorData.kinematics[2]]);
+            if (mountedFlag) {
+                state.attitude.roll = i18n.getMessage("initialSetupAttitude", [fcStore.sensorData.kinematics[0]]);
+                state.attitude.pitch = i18n.getMessage("initialSetupAttitude", [fcStore.sensorData.kinematics[1]]);
+                state.attitude.heading = i18n.getMessage("initialSetupAttitude", [fcStore.sensorData.kinematics[2]]);
 
-            renderModel();
-            // updateInstruments is defined in initializeInstruments
-            globalThis.updateInstruments();
+                renderModel();
+                // updateInstruments is defined in initializeInstruments
+                globalThis.updateInstruments();
+            }
         });
 
         if (have_sensor(fcStore.config.activeSensors, "sonar")) {
             MSP.send_message(MSPCodes.MSP_SONAR, false, false, function () {
-                if (!mountedFlag) {
-                    return;
+                if (mountedFlag) {
+                    state.sonar = `${fcStore.sensorData.sonar.toFixed(1)} cm`;
                 }
-                state.sonar = `${fcStore.sensorData.sonar.toFixed(1)} cm`;
             });
         }
     }
