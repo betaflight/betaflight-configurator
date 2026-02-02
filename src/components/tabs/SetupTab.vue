@@ -1124,8 +1124,13 @@ function openBuildOptionsDialog() {
     if (!state.buildOptionsArray || state.buildOptionsArray.length === 0) {
         return;
     }
+
+    const sortedOptions = [...state.buildOptionsArray].sort((a, b) =>
+        a.localeCompare(b, undefined, { numeric: true, sensitivity: "base" }),
+    );
+
     let buildOptionList = `<div class="dialogBuildInfoGrid-container">`;
-    for (const buildOptionElement of state.buildOptionsArray) {
+    for (const buildOptionElement of sortedOptions) {
         buildOptionList += `<div class="dialogBuildInfoGrid-item">${buildOptionElement}</div>`;
     }
     buildOptionList += `</div>`;
