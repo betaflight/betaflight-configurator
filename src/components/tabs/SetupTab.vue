@@ -1342,6 +1342,7 @@ function openBuildOptionsDialog() {
 }
 .disarm-flag {
     padding-right: 5px;
+    display: inline-block;
 }
 
 /* semantic label/value grid used to replace layout tables for accessibility */
@@ -1349,7 +1350,7 @@ function openBuildOptionsDialog() {
     display: grid;
     grid-template-columns: max-content 1fr;
     gap: 0.25rem 1rem;
-    align-items: center;
+    align-items: baseline;
     width: 100%;
 }
 .cf-info-grid dt {
@@ -1358,5 +1359,7 @@ function openBuildOptionsDialog() {
 }
 .cf-info-grid dd {
     margin: 0;
+    min-width: 0;
+    overflow-wrap: break-word;
 }
 </style>
