@@ -384,8 +384,8 @@ export default defineComponent({
         const ubloxIndex = computed(() => gpsProtocols.value.indexOf("UBLOX"));
         const mspIndex = computed(() => gpsProtocols.value.indexOf("MSP"));
 
-        const ubloxSelected = computed(() => gpsConfig.provider === ubloxIndex);
-        const mspSelected = computed(() => gpsConfig.provider === mspIndex);
+        const ubloxSelected = computed(() => gpsConfig.provider === ubloxIndex.value);
+        const mspSelected = computed(() => gpsConfig.provider === mspIndex.value);
         const showAutoConfig = computed(() => ubloxSelected.value);
         const showAutoBaud = computed(
             () => (ubloxSelected.value || mspSelected.value) && semver.lt(apiVersion.value, API_VERSION_1_46),
