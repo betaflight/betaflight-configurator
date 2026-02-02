@@ -82,6 +82,11 @@ export const useFlightControllerStore = defineStore("flightController", () => {
         set: (val) => (FC.SENSOR_CONFIG = val),
     });
 
+    const sensorConfigActive = computed({
+        get: () => FC.SENSOR_CONFIG_ACTIVE,
+        set: (val) => (FC.SENSOR_CONFIG_ACTIVE = val),
+    });
+
     const rxConfig = computed({
         get: () => FC.RX_CONFIG,
         set: (val) => (FC.RX_CONFIG = val),
@@ -230,6 +235,7 @@ export const useFlightControllerStore = defineStore("flightController", () => {
         motorData,
         pidAdvancedConfig,
         sensorConfig,
+        sensorConfigActive,
         rxConfig,
         armingConfig,
         auxConfig,

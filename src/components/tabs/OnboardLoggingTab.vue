@@ -423,13 +423,17 @@ export default defineComponent({
         const blackboxConfigSupported = computed(() => fcStore.blackbox?.supported);
         const isExpertMode = computed(() => isExpertModeEnabled());
 
-        const virtualGyro = computed(() => {
-            return (
-                fcStore.config?.apiVersion &&
-                semver.gte(fcStore.config.apiVersion, API_VERSION_1_47) &&
-                fcStore.sensorConfig?.gyro_hardware_active == sensorTypes().gyro.elements.indexOf("VIRTUAL")
-            );
-        });
+        const virtualGyro = ref(false);
+
+        const updateVirtualGyro = async () => {
+            if (!fcStore.config?.apiVersion || semver.lt(fcStore.config.apiVersion, API_VERSION_1_47)) {
+                virtualGyro.value = false;
+                return;
+            }
+            const types = await sensorTypes();
+            const index = types.gyro.elements.indexOf("VIRTUAL");
+            virtualGyro.value = fcStore.sensorConfigActive?.gyro_hardware === index;
+        };
 
         const blackboxSupport = computed(() => {
             if (
@@ -847,6 +851,8 @@ export default defineComponent({
                 await MSP.promise(MSPCodes.MSP_SDCARD_SUMMARY);
                 await MSP.promise(MSPCodes.MSP_BLACKBOX_CONFIG);
                 await MSP.promise(MSPCodes.MSP_ADVANCED_CONFIG);
+                await MSP.promise(MSPCodes.MSP_SENSOR_CONFIG);
+                await MSP.promise(MSPCodes.MSP2_SENSOR_CONFIG_ACTIVE);
 
                 if (fcStore.config?.apiVersion && semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)) {
                     await MSP.promise(
@@ -890,6 +896,7 @@ export default defineComponent({
                     });
                 }
 
+                updateVirtualGyro();
                 updateHtml();
             } catch (error) {
                 console.error("Failed to load onboard logging data", error);
