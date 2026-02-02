@@ -723,11 +723,9 @@ function process_html() {
             if (i < disarmFlagElements.length - 1) {
                 const rawName = disarmFlagElements[i];
                 const messageKey = `initialSetupArmingDisableFlagsTooltip${rawName}`;
-                // display 'FAILSAFE MSP' for MSP flag to match desired label
-                const displayName = rawName === "MSP" ? "FAILSAFE MSP" : rawName;
                 state.armingFlags.push({
                     id: `initialSetupArmingDisableFlags${i}`,
-                    name: displayName,
+                    name: rawName,
                     tooltip: i18n.getMessage(messageKey),
                     visible: false,
                 });
