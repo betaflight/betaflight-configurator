@@ -571,7 +571,7 @@ const prepareDisarmFlags = function () {
 };
 
 // Watch for armingDisableCount changes to rebuild the arming flags array
-watch(
+const stopArmingCount = watch(
     () => fcStore.config.armingDisableCount,
     (newCount) => {
         if (newCount > 0) {
@@ -580,7 +580,7 @@ watch(
     },
 );
 
-watch(
+const stopArmingFlags = watch(
     () => fcStore.config.armingDisableFlags,
     (newVal) => {
         fcStore.updateArmingFlags(newVal);
@@ -1150,6 +1150,8 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
     mountedFlag = false;
+    stopArmingCount();
+    stopArmingFlags();
     cleanup();
 });
 
