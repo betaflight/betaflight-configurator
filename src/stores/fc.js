@@ -1,11 +1,26 @@
 import { defineStore } from "pinia";
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import FC from "../js/fc";
 import semver from "semver";
 
 export const useFlightControllerStore = defineStore("flightController", () => {
     // Proxy state directly to legacy reactive objects
     // FC is already reactive (export default reactive(FC)), so we just need to expose it
+
+    const armingFlags = ref([]);
+
+    function setArmingFlags(flags) {
+        armingFlags.value = flags;
+    }
+
+    function updateArmingFlags(bitmask) {
+        if (!armingFlags.value.length) return;
+        armingFlags.value.forEach((flag, index) => {
+            // Bitwise AND: Check if the i-th bit is set
+            // (1 << index) creates a mask like 0001, 0010, 0100, etc.
+            flag.visible = (bitmask & (1 << index)) !== 0;
+        });
+    }
 
     const config = computed({
         get: () => FC.CONFIG,
@@ -210,6 +225,16 @@ export const useFlightControllerStore = defineStore("flightController", () => {
     // Computed getters
     const apiVersion = computed(() => config.value.apiVersion);
 
+    const isReadyToArm = computed(() => {
+        // Arming is disabled if any flag is visible,
+        // EXCEPT for the very last bit (ARM_SWITCH), which is usually expected.
+        return armingFlags.value.filter((f) => f.name !== "ARM_SWITCH").every((f) => !f.visible);
+    });
+
+    const activeFlagNames = computed(() => {
+        return armingFlags.value.filter((f) => f.visible).map((f) => f.name);
+    });
+
     // Helpers
     function isApiVersionSupported(version) {
         return semver.gte(config.value.apiVersion, version);
@@ -264,6 +289,11 @@ export const useFlightControllerStore = defineStore("flightController", () => {
         sensorConfigActive,
         sensorNames,
         mcuInfo,
+        armingFlags,
+        setArmingFlags,
+        updateArmingFlags,
+        isReadyToArm,
+        activeFlagNames,
         isApiVersionSupported,
         isApiVersionLessThan,
     };
