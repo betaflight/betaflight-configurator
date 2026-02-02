@@ -154,6 +154,10 @@
         "message": "Imposta il timeout della connessione per consentire una inizializzazione più lunga durante il plugin o il riavvio",
         "description": "Change timeout on auto-connect and reboot so the bus has more time to initialize after being detected by the system"
     },
+    "languageAndAppearanceSettings": {
+        "message": "Lingua e aspetto",
+        "description": "Title for the language and appearance settings section"
+    },
     "developmentSettings": {
         "message": "Impostazioni Avanzate",
         "description": "Title for the development settings section"
@@ -692,7 +696,7 @@
         "message": "Software"
     },
     "defaultSoftwareText": {
-        "message": "Il nostro <a href=\"https:\/\/blackbox.betaflight.com\" target=\"_blank\" rel=\"noopener noreferrer\">Visualizzatore di Log Blackbox<\/a> è disponibile come app online.<br \/><br \/>La nostra collezione di <a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">TX Lua Scripts<\/a> è disponibile su GitHub.<br \/><br \/>Il nostro codice sorgente <a href=\"https:\/\/github.com\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\"><\/a> per il firmware, questa app e il visualizzatore di blackbox possono essere scaricati da GitHub."
+        "message": "Il <a href=\"https:\/\/blackbox.betaflight.com\" target=\"_blank\" rel=\"noopener noreferrer\">Visualizzatore di Log Blackbox<\/a> è disponibile come app.<br \/><br \/>La nostra collezione di <a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">TX Lua Scripts<\/a> è disponibile su GitHub.<br \/><br \/>Il nostro codice sorgente <a href=\"https:\/\/github.com\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\"><\/a> per il firmware, questa app e il visualizzatore di blackbox possono essere scaricati da GitHub.<a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">."
     },
     "defaultContributingHead": {
         "message": "Contribuisci"
@@ -716,7 +720,7 @@
         "message": "La tua privacy"
     },
     "statisticsDisclaimer": {
-        "message": "Questa app Betaflight raccoglie statistiche anonime sull'utilizzo. Questi dati di utilizzo potrebbero includere il numero di lanci, regione geografica degli utenti, tipi di controllori di volo, versioni del firmware, utilizzo di elementi e schede dell'interfaccia utente, ecc. Raccogliamo questi dati al fine di capire meglio come l'app viene utilizzata e le tendenze della comunità. Questo ci aiuta a sviluppare un'interfaccia utente migliorata e l'uso in generale. Gli utenti possono rinunciare alla raccolta dati nella scheda Opzioni. Per informazioni su come raccogliamo e utilizziamo i tuoi dati, consulta la nostra <a href=\"https:\/\/www.betaflight.com\/privacy\" rel=\"noopener noreferrer\" target=\"_blank\">informazione sulla privacy<\/a>."
+        "message": "Questa app Betaflight raccoglie statistiche anonime sull'utilizzo. I dati di utilizzo potrebbero includere il numero di lanci, regione geografica degli utenti, tipi di controllori di volo, versioni del firmware, utilizzo di elementi e schede dell'interfaccia utente, ecc. Raccogliamo questi dati al fine di capire meglio come l'app viene utilizzata e le tendenze della comunità. Questo ci aiuta a sviluppare un'interfaccia utente migliorata e l'uso in generale. Gli utenti possono rinunciare alla raccolta dati nella scheda Opzioni. Per informazioni su come raccogliamo e utilizziamo i tuoi dati, consulta la nostra <a href=\"https:\/\/www.betaflight.com\/privacy\" rel=\"noopener noreferrer\" target=\"_blank\">informazione sulla privacy<\/a>."
     },
     "defaultButtonFirmwareFlasher": {
         "message": "Firmware Flasher"
@@ -7291,6 +7295,22 @@
     },
     "darkTheme": {
         "message": "Abilita tema scuro"
+    },
+    "colorTheme": {
+        "message": "Tema Colore",
+        "description": "Color theme settings"
+    },
+    "colorThemeYellow": {
+        "message": "Giallo (predefinito)",
+        "description": "Default yellow color theme"
+    },
+    "colorThemeAmber": {
+        "message": "Ambra",
+        "description": "Amber color theme"
+    },
+    "colorThemeContrast": {
+        "message": "Alto Contrasto",
+        "description": "Contrast color theme"
     },
     "pidTuningRatesType": {
         "message": "Tipo di rates"

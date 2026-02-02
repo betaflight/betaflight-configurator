@@ -154,6 +154,10 @@
         "message": "디바이스 플러그인 또는 재부팅 시 더 긴 초기화를 허용하도록 연결 시간 타임아웃 설정",
         "description": "Change timeout on auto-connect and reboot so the bus has more time to initialize after being detected by the system"
     },
+    "languageAndAppearanceSettings": {
+        "message": "언어와 외관",
+        "description": "Title for the language and appearance settings section"
+    },
     "developmentSettings": {
         "message": "개발 설정",
         "description": "Title for the development settings section"
@@ -7299,6 +7303,22 @@
     },
     "darkTheme": {
         "message": "어두운 테마 사용"
+    },
+    "colorTheme": {
+        "message": "색상 테마",
+        "description": "Color theme settings"
+    },
+    "colorThemeYellow": {
+        "message": "노랑 (기본)",
+        "description": "Default yellow color theme"
+    },
+    "colorThemeAmber": {
+        "message": "엠버",
+        "description": "Amber color theme"
+    },
+    "colorThemeContrast": {
+        "message": "고대비",
+        "description": "Contrast color theme"
     },
     "pidTuningRatesType": {
         "message": "레이트 형식"

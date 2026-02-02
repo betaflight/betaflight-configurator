@@ -150,6 +150,10 @@
         "message": "接続タイムアウトを設定し、デバイスプラグインのより長めの初期化や再起動を許可する",
         "description": "Change timeout on auto-connect and reboot so the bus has more time to initialize after being detected by the system"
     },
+    "languageAndAppearanceSettings": {
+        "message": "言語と外観",
+        "description": "Title for the language and appearance settings section"
+    },
     "developmentSettings": {
         "message": "開発者向け設定",
         "description": "Title for the development settings section"
@@ -7263,6 +7267,22 @@
     },
     "darkTheme": {
         "message": "ダークテーマを有効"
+    },
+    "colorTheme": {
+        "message": "カラーテーマ",
+        "description": "Color theme settings"
+    },
+    "colorThemeYellow": {
+        "message": "イエロー (デフォルト)",
+        "description": "Default yellow color theme"
+    },
+    "colorThemeAmber": {
+        "message": "アンバー",
+        "description": "Amber color theme"
+    },
+    "colorThemeContrast": {
+        "message": "ハイコントラスト",
+        "description": "Contrast color theme"
     },
     "pidTuningRatesType": {
         "message": "レートタイプ"

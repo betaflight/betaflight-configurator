@@ -150,6 +150,10 @@
         "message": "Ustaw limit czasu połączenia, aby umożliwić dłuższą inicjalizację podłączenia urządzenia lub ponownego uruchomienia",
         "description": "Change timeout on auto-connect and reboot so the bus has more time to initialize after being detected by the system"
     },
+    "languageAndAppearanceSettings": {
+        "message": "Język i Wygląd",
+        "description": "Title for the language and appearance settings section"
+    },
     "developmentSettings": {
         "message": "Ustawienia deweloperskie",
         "description": "Title for the development settings section"
@@ -7264,6 +7268,22 @@
     },
     "darkTheme": {
         "message": "Włącz tryb ciemny"
+    },
+    "colorTheme": {
+        "message": "Kolor motywu",
+        "description": "Color theme settings"
+    },
+    "colorThemeYellow": {
+        "message": "Żółty (domyślnie)",
+        "description": "Default yellow color theme"
+    },
+    "colorThemeAmber": {
+        "message": "Bursztynowy",
+        "description": "Amber color theme"
+    },
+    "colorThemeContrast": {
+        "message": "Wysoki Kontrast",
+        "description": "Contrast color theme"
     },
     "pidTuningRatesType": {
         "message": "Rodzaj Rate"
