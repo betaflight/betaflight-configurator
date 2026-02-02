@@ -731,16 +731,35 @@ function process_html() {
 
         // Build arming flags state instead of manipulating DOM
         state.armingFlags = Array.from({ length: cfg.armingDisableCount }, (_, i) => {
-            const isArmSwitch = i === cfg.armingDisableCount - 1;
-            const isKnownFlag = i < disarmFlagElements.length - 1;
+            const isLastBit = i === cfg.armingDisableCount - 1;
+            const knownName = disarmFlagElements[i];
 
-            // Use name from array, "ARM_SWITCH" for the last bit, or the index number as fallback
-            const name = isArmSwitch ? "ARM_SWITCH" : isKnownFlag ? disarmFlagElements[i] : `${i + 1}`;
-            const messageKey = `initialSetupArmingDisableFlagsTooltip${name}`;
+            // 1. Determine the raw name and whether it is a fallback numeric ID
+            // We prioritize the "ARM_SWITCH" for the last bit, then known elements, then numeric fallback.
+            let rawName;
+            let isFallback = false;
+
+            if (isLastBit) {
+                rawName = "ARM_SWITCH";
+            } else if (knownName) {
+                rawName = knownName;
+            } else {
+                rawName = `${i + 1}`;
+                isFallback = true;
+            }
+
+            // 2. Handle display name overrides (e.g., RX_FAILSAFE -> RXLOSS)
+            const nameMap = { RX_FAILSAFE: "RXLOSS" };
+            const displayName = nameMap[rawName] || rawName;
+
+            // 3. Construct tooltip, if it's a fallback, we use the base key; otherwise, we append the rawName.
+            const messageKey = isFallback
+                ? "initialSetupArmingDisableFlagsTooltip"
+                : `initialSetupArmingDisableFlagsTooltip${rawName}`;
 
             return {
                 id: `initialSetupArmingDisableFlags${i}`,
-                name,
+                name: displayName,
                 tooltip: i18n.getMessage(messageKey),
                 visible: false,
             };
