@@ -206,14 +206,14 @@
                             >
                                 <template #arming-disable-flag>
                                     <span
-                                        v-for="(flag, idx) in state.armingFlags"
+                                        v-for="(flag, idx) in fcStore.armingFlags"
                                         :key="flag.id"
                                         v-show="flag.visible"
                                         class="cf_tip disarm-flag"
                                         :title="flag.tooltip"
                                         >{{ flag.name }}</span
                                     >
-                                    <span v-show="state.armingAllowed" id="initialSetupArmingAllowed">{{
+                                    <span v-show="fcStore.isReadyToArm" id="initialSetupArmingAllowed">{{
                                         i18n.getMessage("initialSetupArmingAllowed")
                                     }}</span>
                                 </template>
@@ -422,7 +422,7 @@
 </template>
 
 <script setup>
-import { onMounted, onBeforeUnmount, ref, reactive } from "vue";
+import { onMounted, onBeforeUnmount, ref, reactive, watch } from "vue";
 import { i18n } from "../../js/localization";
 import InfoGrid from "@/components/InfoGrid.vue";
 import WikiButton from "@/components/elements/WikiButton.vue";
@@ -452,8 +452,6 @@ const state = reactive({
     batMahDrawing: "0 A",
     rssi: "0 %",
     cpuTemp: "0 °C",
-    armingAllowed: true,
-    armingFlags: [],
     gpsFix: false,
     gpsSats: 0,
     latitude: "0",
@@ -730,7 +728,7 @@ function process_html() {
         }
 
         // Build arming flags state instead of manipulating DOM
-        state.armingFlags = Array.from({ length: cfg.armingDisableCount }, (_, i) => {
+        const flags = Array.from({ length: cfg.armingDisableCount }, (_, i) => {
             const isLastBit = i === cfg.armingDisableCount - 1;
             const knownName = disarmFlagElements[i];
 
@@ -749,7 +747,7 @@ function process_html() {
             }
 
             // 2. Handle display name overrides (e.g., RX_FAILSAFE -> RXLOSS)
-            const nameMap = { RX_FAILSAFE: "RXLOSS" };
+            const nameMap = { RX_FAILSAFE: "RXLOSS", NOT_DISARMED: "BAD_RX_RECOVERY" };
             const displayName = nameMap[rawName] || rawName;
 
             // 3. Construct tooltip, if it's a fallback, we use the base key; otherwise, we append the rawName.
@@ -757,14 +755,40 @@ function process_html() {
                 ? "initialSetupArmingDisableFlagsTooltip"
                 : `initialSetupArmingDisableFlagsTooltip${rawName}`;
 
-            return {
+            return reactive({
                 id: `initialSetupArmingDisableFlags${i}`,
                 name: displayName,
                 tooltip: i18n.getMessage(messageKey),
                 visible: false,
-            };
+            });
         });
+
+        fcStore.setArmingFlags(flags);
+
+        // Initial update
+        fcStore.updateArmingFlags(cfg.armingDisableFlags);
     };
+
+    // Watch for armingDisableCount changes to rebuild the arming flags array
+    watch(
+        () => fcStore.config.armingDisableCount,
+        (newCount) => {
+            if (newCount > 0) {
+                prepareDisarmFlags();
+            }
+        },
+    );
+
+    watch(
+        () => fcStore.config.armingDisableFlags,
+        (newVal) => {
+            fcStore.updateArmingFlags(newVal);
+        },
+    );
+
+    if (fcStore.config.armingDisableCount > 0) {
+        prepareDisarmFlags();
+    }
 
     const displaySensorInfo = async function () {
         const types = await sensorTypes();
@@ -990,13 +1014,7 @@ function process_html() {
     }
 
     function get_slow_data() {
-        state.armingAllowed = fcStore.config.armingDisableFlags === 0;
-
-        for (let i = 0; i < fcStore.config.armingDisableCount; i++) {
-            if (state.armingFlags[i]) {
-                state.armingFlags[i].visible = (fcStore.config.armingDisableFlags & (1 << i)) !== 0;
-            }
-        }
+        fcStore.updateArmingFlags(fcStore.config.armingDisableFlags);
 
         state.batVoltage = i18n.getMessage("initialSetupBatteryValue", [FC.ANALOG.voltage]);
         state.batMahDrawn = i18n.getMessage("initialSetupBatteryMahValue", [FC.ANALOG.mAhdrawn]);
