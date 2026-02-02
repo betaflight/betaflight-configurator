@@ -776,9 +776,9 @@ function process_html() {
     // initialize 3D Model
     initModel();
 
-    state.attitude.roll = i18n.getMessage("initialSetupAttitude", [0]);
-    state.attitude.pitch = i18n.getMessage("initialSetupAttitude", [0]);
-    state.attitude.heading = i18n.getMessage("initialSetupAttitude", [0]);
+    state.attitude.roll = i18n.getMessage("initialSetupAttitude", [(0).toFixed(1)]);
+    state.attitude.pitch = i18n.getMessage("initialSetupAttitude", [(0).toFixed(1)]);
+    state.attitude.heading = i18n.getMessage("initialSetupAttitude", [(0).toFixed(1)]);
 
     // set disabled state from sensors
     state.disabledAccel = !have_sensor(fcStore.config.activeSensors, "acc");
@@ -1052,9 +1052,19 @@ function process_html() {
     function get_fast_data() {
         MSP.send_message(MSPCodes.MSP_ATTITUDE, false, false, function () {
             if (mountedFlag) {
-                state.attitude.roll = i18n.getMessage("initialSetupAttitude", [fcStore.sensorData.kinematics[0]]);
-                state.attitude.pitch = i18n.getMessage("initialSetupAttitude", [fcStore.sensorData.kinematics[1]]);
-                state.attitude.heading = i18n.getMessage("initialSetupAttitude", [fcStore.sensorData.kinematics[2]]);
+                const formatAttitude = (val) => {
+                    const fixed = val.toFixed(1);
+                    return parseFloat(fixed) >= 0 ? ` ${fixed}` : fixed;
+                };
+                state.attitude.roll = i18n.getMessage("initialSetupAttitude", [
+                    formatAttitude(fcStore.sensorData.kinematics[0]),
+                ]);
+                state.attitude.pitch = i18n.getMessage("initialSetupAttitude", [
+                    formatAttitude(fcStore.sensorData.kinematics[1]),
+                ]);
+                state.attitude.heading = i18n.getMessage("initialSetupAttitude", [
+                    formatAttitude(fcStore.sensorData.kinematics[2]),
+                ]);
 
                 renderModel();
                 // updateInstruments is defined in initializeInstruments
@@ -1298,6 +1308,9 @@ function openBuildOptionsDialog() {
     dl {
         display: grid;
         grid-template-columns: 1fr 1fr;
+    }
+    dd {
+        white-space: pre;
     }
 }
 .dialogBuildInfo {
