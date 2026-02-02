@@ -757,92 +757,91 @@ function process_html() {
         }
     };
 
+    const displaySensorInfo = async function () {
+        const types = await sensorTypes();
+
+        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
+            let gyroInfoList = [];
+            for (let i = 0; i < fcStore.gyroSensor.gyro_count; i++) {
+                if ((fcStore.sensorAlignment.gyro_enable_mask & (1 << i)) !== 0) {
+                    gyroInfoList.push(types.gyro.elements[fcStore.gyroSensor.gyro_hardware[i]]);
+                }
+            }
+            state.sensorGyro = gyroInfoList.join(" ");
+        } else {
+            const g = fcStore.sensorConfigActive.gyro_hardware;
+            state.sensorGyro =
+                g === 0xff
+                    ? i18n.getMessage("initialSetupNotInBuild")
+                    : have_sensor(fcStore.config.activeSensors, "gyro")
+                        ? types.gyro.elements[g]
+                        : i18n.getMessage("initialSetupNotDetected");
+        }
+
+        const a = fcStore.sensorConfigActive.acc_hardware;
+        if (a === 0xff) {
+            state.sensorAcc = i18n.getMessage("initialSetupNotInBuild");
+        } else if (!have_sensor(fcStore.config.activeSensors, "acc")) {
+            state.sensorAcc = i18n.getMessage("initialSetupNotDetected");
+        } else {
+            let name = types.acc.elements[a] || "AUTO";
+            if (
+                (name === "AUTO" || name === "DEFAULT") &&
+                fcStore.sensorNames &&
+                fcStore.sensorNames.acc &&
+                fcStore.sensorNames.acc[a]
+            ) {
+                name = fcStore.sensorNames.acc[a];
+            }
+            state.sensorAcc = name;
+        }
+
+        const b = fcStore.sensorConfigActive.baro_hardware;
+        if (b === 0xff) {
+            state.sensorBaro = i18n.getMessage("initialSetupNotInBuild");
+        } else if (!have_sensor(fcStore.config.activeSensors, "baro")) {
+            state.sensorBaro = i18n.getMessage("initialSetupNotDetected");
+        } else {
+            let nameB = types.baro.elements[b] || "DEFAULT";
+            if (
+                (nameB === "AUTO" || nameB === "DEFAULT") &&
+                fcStore.sensorNames &&
+                fcStore.sensorNames.baro &&
+                fcStore.sensorNames.baro[b]
+            ) {
+                nameB = fcStore.sensorNames.baro[b];
+            }
+            state.sensorBaro = nameB;
+        }
+
+        const m = fcStore.sensorConfigActive.mag_hardware;
+        state.sensorMag =
+            m === 0xff
+                ? i18n.getMessage("initialSetupNotInBuild")
+                : have_sensor(fcStore.config.activeSensors, "mag")
+                    ? types.mag.elements[m]
+                    : i18n.getMessage("initialSetupNotDetected");
+
+        const s = fcStore.sensorConfigActive.sonar_hardware;
+        state.sensorSonar =
+            s === 0xff
+                ? i18n.getMessage("initialSetupNotInBuild")
+                : have_sensor(fcStore.config.activeSensors, "sonar")
+                    ? types.sonar.elements[s]
+                    : i18n.getMessage("initialSetupNotDetected");
+
+        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
+            const o = fcStore.sensorConfigActive.opticalflow_hardware;
+            state.sensorOpticalflow =
+                o === 0xff
+                    ? i18n.getMessage("initialSetupNotInBuild")
+                    : have_sensor(fcStore.config.activeSensors, "opticalflow")
+                        ? types.opticalflow.elements[o]
+                        : i18n.getMessage("initialSetupNotDetected");
+        }
+    };
+
     const showSensorInfo = async function () {
-        // follow legacy callback flow to request sensor config and gyro sensor when needed
-        const displaySensorInfo = async function () {
-            const types = await sensorTypes();
-
-            if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
-                let gyroInfoList = [];
-                for (let i = 0; i < fcStore.gyroSensor.gyro_count; i++) {
-                    if ((fcStore.sensorAlignment.gyro_enable_mask & (1 << i)) !== 0) {
-                        gyroInfoList.push(types.gyro.elements[fcStore.gyroSensor.gyro_hardware[i]]);
-                    }
-                }
-                state.sensorGyro = gyroInfoList.join(" ");
-            } else {
-                const g = fcStore.sensorConfigActive.gyro_hardware;
-                state.sensorGyro =
-                    g === 0xff
-                        ? i18n.getMessage("initialSetupNotInBuild")
-                        : have_sensor(fcStore.config.activeSensors, "gyro")
-                            ? types.gyro.elements[g]
-                            : i18n.getMessage("initialSetupNotDetected");
-            }
-
-            const a = fcStore.sensorConfigActive.acc_hardware;
-            if (a === 0xff) {
-                state.sensorAcc = i18n.getMessage("initialSetupNotInBuild");
-            } else if (!have_sensor(fcStore.config.activeSensors, "acc")) {
-                state.sensorAcc = i18n.getMessage("initialSetupNotDetected");
-            } else {
-                let name = types.acc.elements[a] || "AUTO";
-                if (
-                    (name === "AUTO" || name === "DEFAULT") &&
-                    fcStore.sensorNames &&
-                    fcStore.sensorNames.acc &&
-                    fcStore.sensorNames.acc[a]
-                ) {
-                    name = fcStore.sensorNames.acc[a];
-                }
-                state.sensorAcc = name;
-            }
-
-            const b = fcStore.sensorConfigActive.baro_hardware;
-            if (b === 0xff) {
-                state.sensorBaro = i18n.getMessage("initialSetupNotInBuild");
-            } else if (!have_sensor(fcStore.config.activeSensors, "baro")) {
-                state.sensorBaro = i18n.getMessage("initialSetupNotDetected");
-            } else {
-                let nameB = types.baro.elements[b] || "DEFAULT";
-                if (
-                    (nameB === "AUTO" || nameB === "DEFAULT") &&
-                    fcStore.sensorNames &&
-                    fcStore.sensorNames.baro &&
-                    fcStore.sensorNames.baro[b]
-                ) {
-                    nameB = fcStore.sensorNames.baro[b];
-                }
-                state.sensorBaro = nameB;
-            }
-
-            const m = fcStore.sensorConfigActive.mag_hardware;
-            state.sensorMag =
-                m === 0xff
-                    ? i18n.getMessage("initialSetupNotInBuild")
-                    : have_sensor(fcStore.config.activeSensors, "mag")
-                        ? types.mag.elements[m]
-                        : i18n.getMessage("initialSetupNotDetected");
-
-            const s = fcStore.sensorConfigActive.sonar_hardware;
-            state.sensorSonar =
-                s === 0xff
-                    ? i18n.getMessage("initialSetupNotInBuild")
-                    : have_sensor(fcStore.config.activeSensors, "sonar")
-                        ? types.sonar.elements[s]
-                        : i18n.getMessage("initialSetupNotDetected");
-
-            if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
-                const o = fcStore.sensorConfigActive.opticalflow_hardware;
-                state.sensorOpticalflow =
-                    o === 0xff
-                        ? i18n.getMessage("initialSetupNotInBuild")
-                        : have_sensor(fcStore.config.activeSensors, "opticalflow")
-                            ? types.opticalflow.elements[o]
-                            : i18n.getMessage("initialSetupNotDetected");
-            }
-        };
-
         MSP.send_message(MSPCodes.MSP2_SENSOR_CONFIG_ACTIVE, false, false, function () {
             if (semver.lt(fcStore.config.apiVersion, API_VERSION_1_47)) {
                 displaySensorInfo();
