@@ -852,7 +852,6 @@ export default defineComponent({
                 await MSP.promise(MSPCodes.MSP_BLACKBOX_CONFIG);
                 await MSP.promise(MSPCodes.MSP_ADVANCED_CONFIG);
                 await MSP.promise(MSPCodes.MSP_SENSOR_CONFIG);
-                await MSP.promise(MSPCodes.MSP2_SENSOR_CONFIG_ACTIVE);
 
                 if (fcStore.config?.apiVersion && semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)) {
                     await MSP.promise(
@@ -861,6 +860,10 @@ export default defineComponent({
                     );
                 } else {
                     await MSP.promise(MSPCodes.MSP_NAME);
+                }
+
+                if (fcStore.config?.apiVersion && semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {
+                    await MSP.promise(MSPCodes.MSP2_SENSOR_CONFIG_ACTIVE);
                 }
 
                 // Populate UI state
