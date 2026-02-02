@@ -518,18 +518,20 @@ const disarmFlagElements = [
 
 const prepareDisarmFlags = function () {
     const cfg = fcStore.config;
+    const elements = [...disarmFlagElements];
+
     if (semver.gte(cfg.apiVersion, API_VERSION_1_46)) {
-        replaceArrayElement(disarmFlagElements, "RPMFILTER", "DSHOT_TELEM");
+        replaceArrayElement(elements, "RPMFILTER", "DSHOT_TELEM");
     }
 
     if (semver.gte(cfg.apiVersion, API_VERSION_1_47)) {
-        addArrayElementsAfter(disarmFlagElements, "MOTOR_PROTOCOL", ["CRASHFLIP", "ALTHOLD", "POSHOLD"]);
+        addArrayElementsAfter(elements, "MOTOR_PROTOCOL", ["CRASHFLIP", "ALTHOLD", "POSHOLD"]);
     }
 
     // Build arming flags state instead of manipulating DOM
     const flags = Array.from({ length: cfg.armingDisableCount }, (_, i) => {
         const isLastBit = i === cfg.armingDisableCount - 1;
-        const knownName = disarmFlagElements[i];
+        const knownName = elements[i];
 
         // 1. Determine the raw name and whether it is a fallback numeric ID
         // We prioritize the "ARM_SWITCH" for the last bit, then known elements, then numeric fallback.
