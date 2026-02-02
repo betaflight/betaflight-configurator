@@ -18,6 +18,7 @@ import * as THREE from "three";
 import NotificationManager from "./utils/notifications.js";
 import { Capacitor } from "@capacitor/core";
 import loginManager from "./LoginManager.js";
+import { EventBus } from "../components/eventBus.js";
 import { enableDevelopmentOptions } from "./utils/developmentOptions.js";
 
 // Silence Capacitor bridge debug spam on native platforms
@@ -515,6 +516,8 @@ async function startProcess() {
         if (GUI.active_tab) {
             TABS[GUI.active_tab]?.expertModeChanged?.(checked);
         }
+
+        EventBus.$emit("expert-mode-change", checked);
 
         setConfig({ expertMode: checked });
     });

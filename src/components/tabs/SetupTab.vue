@@ -53,7 +53,7 @@
                     </div>
                 </div>
             </div>
-            <div class="grid-row">
+            <div class="grid-row" v-show="isExpert">
                 <div class="grid-col col3">
                     <div class="default_btn initialSetupReset">
                         <a
@@ -71,7 +71,7 @@
                     </div>
                 </div>
             </div>
-            <div class="grid-row">
+            <div class="grid-row" v-show="isExpert">
                 <div class="grid-col col3">
                     <div class="default_btn initialSetupRebootBootloader">
                         <a
@@ -429,6 +429,7 @@ import WikiButton from "@/components/elements/WikiButton.vue";
 import semver from "semver";
 import { useFlightControllerStore } from "../../stores/fc";
 import { isExpertModeEnabled } from "../../js/utils/isExpertModeEnabled";
+import { EventBus } from "@/components/eventBus";
 import GUI from "../../js/gui";
 import { have_sensor } from "../../js/sensor_helpers";
 import { mspHelper } from "../../js/msp/MSPHelper";
@@ -596,6 +597,10 @@ function addLocalInterval(name, fn, period, first = false) {
     GUI.interval_add(name, fn, period, first);
     localIntervals.push(name);
 }
+
+const updateExpertMode = (enabled) => {
+    isExpert.value = enabled;
+};
 
 let mountedFlag = true;
 const isExpert = ref(isExpertModeEnabled());
@@ -1162,6 +1167,7 @@ function cleanup() {
 onMounted(() => {
     // start the MSP initialization chain
     mountedFlag = true;
+    EventBus.$on("expert-mode-change", updateExpertMode);
     initialize();
 });
 
@@ -1169,6 +1175,7 @@ onBeforeUnmount(() => {
     mountedFlag = false;
     stopArmingCount();
     stopArmingFlags();
+    EventBus.$off("expert-mode-change", updateExpertMode);
     cleanup();
 });
 
