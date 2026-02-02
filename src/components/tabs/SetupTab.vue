@@ -980,12 +980,17 @@ function process_html() {
 
         const connection = navigator.connection;
         const type = connection?.effectiveType || "Unknown";
-        const downlink = connection?.downlink || "Unknown";
-        const rtt = connection?.rtt || "Unknown";
+        const downlink = connection?.downlink ?? "Unknown";
+        const rtt = connection?.rtt ?? "Unknown";
 
         if (!networkStatus || !navigator.onLine || type === "none") {
             statusText = i18n.getMessage("initialSetupNetworkInfoStatusOffline");
-        } else if (type === "slow-2g" || type === "2g" || downlink < 0.115 || rtt > 1000) {
+        } else if (
+            type === "slow-2g" ||
+            type === "2g" ||
+            (typeof downlink === "number" && downlink < 0.115) ||
+            (typeof rtt === "number" && rtt > 1000)
+        ) {
             statusText = i18n.getMessage("initialSetupNetworkInfoStatusSlow");
         } else {
             statusText = i18n.getMessage("initialSetupNetworkInfoStatusOnline");
@@ -993,8 +998,8 @@ function process_html() {
 
         state.networkStatus = statusText;
         state.networkType = type;
-        state.networkDownlink = `${downlink} Mbps`;
-        state.networkRtt = `${rtt} ms`;
+        state.networkDownlink = typeof downlink === "number" ? `${downlink} Mbps` : "Unknown";
+        state.networkRtt = typeof rtt === "number" ? `${rtt} ms` : "Unknown";
     }
 
     prepareDisarmFlags();
