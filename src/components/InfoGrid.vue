@@ -17,7 +17,6 @@
 </template>
 
 <script setup>
-import { defineProps } from "vue";
 import { i18n } from "../js/localization";
 
 defineProps({
