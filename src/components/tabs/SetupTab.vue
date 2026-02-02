@@ -972,8 +972,9 @@ function process_html() {
         state.armingAllowed = fcStore.config.armingDisableFlags === 0;
 
         for (let i = 0; i < fcStore.config.armingDisableCount; i++) {
-            if (state.armingFlags[i])
+            if (state.armingFlags[i]) {
                 state.armingFlags[i].visible = (fcStore.config.armingDisableFlags & (1 << i)) !== 0;
+            }
         }
 
         state.batVoltage = i18n.getMessage("initialSetupBatteryValue", [FC.ANALOG.voltage]);
