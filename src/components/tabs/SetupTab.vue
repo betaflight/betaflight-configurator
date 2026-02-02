@@ -628,10 +628,10 @@ function showDialogBuildInfo(title, message) {
     const titleEl = dialog.querySelector(".dialogBuildInfo-title");
     const contentEl = dialog.querySelector(".dialogBuildInfo-content");
     if (titleEl) {
-        titleEl.textContent = title;
+        titleEl.innerHTML = title;
     }
     if (contentEl) {
-        contentEl.textContent = message;
+        contentEl.innerHTML = message;
     }
     if (!dialog.hasAttribute("open")) {
         dialog.showModal();
