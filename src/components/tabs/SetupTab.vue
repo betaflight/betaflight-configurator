@@ -1361,7 +1361,7 @@ function openBuildOptionsDialog() {
 /* semantic label/value grid used to replace layout tables for accessibility */
 .cf-info-grid {
     display: grid;
-    grid-template-columns: max-content 1fr;
+    grid-template-columns: 1fr 1fr;
     gap: 0.25rem 1rem;
     align-items: baseline;
     width: 100%;
