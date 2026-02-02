@@ -751,6 +751,7 @@ let magCalibInterval = null;
 let magCalibTimeoutName = null;
 
 async function initialize() {
+    cleanup();
     try {
         await MSP.promise(MSPCodes.MSP_ACC_TRIM, false);
         await MSP.promise(MSPCodes.MSP_STATUS_EX, false);
@@ -1119,24 +1120,14 @@ function cleanup() {
         }
         modelInstance = null;
     }
-}
 
-onMounted(() => {
-    // start the MSP initialization chain
-    mountedFlag = true;
-    initialize();
-});
-
-onBeforeUnmount(() => {
-    mountedFlag = false;
-    cleanup();
     // clear intervals used by this tab
     try {
-        for (const name of localIntervals) {
-            GUI.interval_remove(name);
+        while (localIntervals.length > 0) {
+            GUI.interval_remove(localIntervals.pop());
         }
     } catch (e) {
-        // preserve existing behavior but at least log unexpected errors
+        // preserve behavior but at least log unexpected errors
         console.warn("Error clearing local intervals:", e);
     }
 
@@ -1149,6 +1140,17 @@ onBeforeUnmount(() => {
         GUI.timeout_remove(magCalibTimeoutName);
         magCalibTimeoutName = null;
     }
+}
+
+onMounted(() => {
+    // start the MSP initialization chain
+    mountedFlag = true;
+    initialize();
+});
+
+onBeforeUnmount(() => {
+    mountedFlag = false;
+    cleanup();
 });
 
 function openBuildOptionsDialog() {
