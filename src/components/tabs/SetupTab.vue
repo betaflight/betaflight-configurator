@@ -596,15 +596,21 @@ function onCalibrateMag() {
 }
 
 function showConfirmReset() {
-    if (dialogConfirmReset.value) dialogConfirmReset.value.showModal();
+    if (dialogConfirmReset.value) {
+        dialogConfirmReset.value.showModal();
+    }
 }
 
 function cancelConfirmReset() {
-    if (dialogConfirmReset.value) dialogConfirmReset.value.close();
+    if (dialogConfirmReset.value) {
+        dialogConfirmReset.value.close();
+    }
 }
 
 function confirmReset() {
-    if (dialogConfirmReset.value) dialogConfirmReset.value.close();
+    if (dialogConfirmReset.value) {
+        dialogConfirmReset.value.close();
+    }
     MSP.send_message(MSPCodes.MSP_RESET_CONF, false, false, function () {
         gui_log(i18n.getMessage("initialSetupSettingsRestored"));
         GUI.tab_switch_cleanup(function () {
@@ -621,14 +627,23 @@ function showDialogBuildInfo(title, message) {
     const dialog = dialogBuildInfo.value;
     const titleEl = dialog.querySelector(".dialogBuildInfo-title");
     const contentEl = dialog.querySelector(".dialogBuildInfo-content");
-    if (titleEl) titleEl.innerHTML = title;
-    if (contentEl) contentEl.innerHTML = message;
-    if (!dialog.hasAttribute("open")) dialog.showModal();
+    if (titleEl) {
+        titleEl.textContent = title;
+    }
+    if (contentEl) {
+        contentEl.textContent = message;
+    }
+    if (!dialog.hasAttribute("open")) {
+        dialog.showModal();
+    }
 }
 
 function closeBuildInfo() {
-    if (dialogBuildInfo.value) dialogBuildInfo.value.close();
+    if (dialogBuildInfo.value) {
+        dialogBuildInfo.value.close();
+    }
 }
+
 const canvasWrapper = ref(null);
 const canvasEl = ref(null);
 let boundModelResize = null;
@@ -1015,7 +1030,7 @@ function process_html() {
 
             renderModel();
             // updateInstruments is defined in initializeInstruments
-            if (typeof window.updateInstruments === "function") window.updateInstruments();
+            globalThis.updateInstruments();
         });
 
         if (have_sensor(fcStore.config.activeSensors, "sonar")) {
@@ -1041,7 +1056,7 @@ function initializeInstruments() {
     const heading = $.flightIndicator("#heading", "heading", options);
 
     // expose update function similar to legacy behavior
-    window.updateInstruments = function () {
+    globalThis.updateInstruments = function () {
         attitude.setRoll(fcStore.sensorData.kinematics[0]);
         attitude.setPitch(fcStore.sensorData.kinematics[1]);
         heading.setHeading(fcStore.sensorData.kinematics[2]);
@@ -1079,7 +1094,9 @@ function cleanup() {
             window.removeEventListener("resize", boundModelResize);
             boundModelResize = null;
         }
-        if (typeof modelInstance.dispose === "function") modelInstance.dispose();
+        if (typeof modelInstance.dispose === "function") {
+            modelInstance.dispose();
+        }
         modelInstance = null;
     }
 }
