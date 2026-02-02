@@ -691,37 +691,35 @@ function process_html() {
     // set initial reset button label via reactive yaw value
     // reset button text will be rendered from template using `yaw_fix`
 
-    // Using reactive state instead of cached jQuery elements
+    const disarmFlagElements = [
+        "NO_GYRO",
+        "FAILSAFE",
+        "RX_FAILSAFE",
+        "NOT_DISARMED",
+        "BOXFAILSAFE",
+        "RUNAWAY_TAKEOFF",
+        "CRASH_DETECTED",
+        "THROTTLE",
+        "ANGLE",
+        "BOOT_GRACE_TIME",
+        "NOPREARM",
+        "LOAD",
+        "CALIBRATING",
+        "CLI",
+        "CMS_MENU",
+        "BST",
+        "MSP",
+        "PARALYZE",
+        "GPS",
+        "RESC",
+        "RPMFILTER",
+        "REBOOT_REQUIRED",
+        "DSHOT_BITBANG",
+        "ACC_CALIBRATION",
+        "MOTOR_PROTOCOL",
+    ];
 
     const prepareDisarmFlags = function () {
-        let disarmFlagElements = [
-            "NO_GYRO",
-            "FAILSAFE",
-            "RX_FAILSAFE",
-            "NOT_DISARMED",
-            "BOXFAILSAFE",
-            "RUNAWAY_TAKEOFF",
-            "CRASH_DETECTED",
-            "THROTTLE",
-            "ANGLE",
-            "BOOT_GRACE_TIME",
-            "NOPREARM",
-            "LOAD",
-            "CALIBRATING",
-            "CLI",
-            "CMS_MENU",
-            "BST",
-            "MSP",
-            "PARALYZE",
-            "GPS",
-            "RESC",
-            "RPMFILTER",
-            "REBOOT_REQUIRED",
-            "DSHOT_BITBANG",
-            "ACC_CALIBRATION",
-            "MOTOR_PROTOCOL",
-        ];
-
         const cfg = fcStore.config;
         if (semver.gte(cfg.apiVersion, API_VERSION_1_46)) {
             replaceArrayElement(disarmFlagElements, "RPMFILTER", "DSHOT_TELEM");
@@ -732,29 +730,21 @@ function process_html() {
         }
 
         // Build arming flags state instead of manipulating DOM
-        state.armingFlags.length = 0;
+        state.armingFlags = Array.from({ length: cfg.armingDisableCount }, (_, i) => {
+            const isArmSwitch = i === cfg.armingDisableCount - 1;
+            const isKnownFlag = i < disarmFlagElements.length - 1;
 
-        for (let i = 0; i < cfg.armingDisableCount; i++) {
-            if (i < disarmFlagElements.length - 1) {
-                const rawName = disarmFlagElements[i];
-                const messageKey = `initialSetupArmingDisableFlagsTooltip${rawName}`;
-                state.armingFlags.push({
-                    id: `initialSetupArmingDisableFlags${i}`,
-                    name: rawName,
-                    tooltip: i18n.getMessage(messageKey),
-                    visible: false,
-                });
-            } else if (i == cfg.armingDisableCount - 1) {
-                state.armingFlags.push({
-                    id: `initialSetupArmingDisableFlags${i}`,
-                    name: "ARM_SWITCH",
-                    tooltip: i18n.getMessage("initialSetupArmingDisableFlagsTooltipARM_SWITCH"),
-                    visible: false,
-                });
-            } else {
-                state.armingFlags.push({ id: `initialSetupArmingDisableFlags${i}`, name: `${i + 1}`, visible: false });
-            }
-        }
+            // Use name from array, "ARM_SWITCH" for the last bit, or the index number as fallback
+            const name = isArmSwitch ? "ARM_SWITCH" : isKnownFlag ? disarmFlagElements[i] : `${i + 1}`;
+            const messageKey = `initialSetupArmingDisableFlagsTooltip${name}`;
+
+            return {
+                id: `initialSetupArmingDisableFlags${i}`,
+                name,
+                tooltip: i18n.getMessage(messageKey),
+                visible: false,
+            };
+        });
     };
 
     const displaySensorInfo = async function () {
