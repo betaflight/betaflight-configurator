@@ -154,6 +154,10 @@
         "message": "Indstil forbindelsens timeout for at tillade længere initialisering på plugin eller genstart",
         "description": "Change timeout on auto-connect and reboot so the bus has more time to initialize after being detected by the system"
     },
+    "languageAndAppearanceSettings": {
+        "message": "Sprog og udseende",
+        "description": "Title for the language and appearance settings section"
+    },
     "developmentSettings": {
         "message": "Indstillinger udvikling",
         "description": "Title for the development settings section"
@@ -7261,6 +7265,22 @@
     },
     "darkTheme": {
         "message": "Brug mørkt tema for Configuration"
+    },
+    "colorTheme": {
+        "message": "Farve tema",
+        "description": "Color theme settings"
+    },
+    "colorThemeYellow": {
+        "message": "Gul (standard)",
+        "description": "Default yellow color theme"
+    },
+    "colorThemeAmber": {
+        "message": "Ravgul",
+        "description": "Amber color theme"
+    },
+    "colorThemeContrast": {
+        "message": "Stor kontrast",
+        "description": "Contrast color theme"
     },
     "pidTuningRatesType": {
         "message": "Hastighed type"

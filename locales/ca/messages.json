@@ -154,6 +154,10 @@
         "message": "Establiu el temps d'espera de la connexió per permetre una inicialització més llarga al connectar del dispositiu o reiniciar-lo",
         "description": "Change timeout on auto-connect and reboot so the bus has more time to initialize after being detected by the system"
     },
+    "languageAndAppearanceSettings": {
+        "message": "Idioma i aparença",
+        "description": "Title for the language and appearance settings section"
+    },
     "developmentSettings": {
         "message": "Configuració de desenvolupament",
         "description": "Title for the development settings section"
@@ -7303,6 +7307,22 @@
     },
     "darkTheme": {
         "message": "Activa el tema fosc"
+    },
+    "colorTheme": {
+        "message": "Tema de color",
+        "description": "Color theme settings"
+    },
+    "colorThemeYellow": {
+        "message": "Groc (per defecte)",
+        "description": "Default yellow color theme"
+    },
+    "colorThemeAmber": {
+        "message": "Ambar",
+        "description": "Amber color theme"
+    },
+    "colorThemeContrast": {
+        "message": "Alt contrast",
+        "description": "Contrast color theme"
     },
     "pidTuningRatesType": {
         "message": "Tipus de Rates"
