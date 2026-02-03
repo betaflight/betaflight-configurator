@@ -345,7 +345,7 @@ async function startProcess() {
                     mountVueTab("configuration", content_ready);
                     break;
                 case "pid_tuning":
-                    import("./tabs/pid_tuning").then(({ pid_tuning }) => pid_tuning.initialize(content_ready));
+                    mountVueTab("pid_tuning", content_ready);
                     break;
                 case "receiver":
                     mountVueTab("receiver", content_ready);
@@ -514,6 +514,12 @@ async function startProcess() {
         }
 
         if (GUI.active_tab) {
+            console.log(
+                `[Main] Calling expertModeChanged(${checked}) on tab:`,
+                GUI.active_tab,
+                "TABS entry:",
+                TABS[GUI.active_tab],
+            );
             TABS[GUI.active_tab]?.expertModeChanged?.(checked);
         }
 

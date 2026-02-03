@@ -4579,6 +4579,10 @@
         "message": "<strong>Note:</strong> Slider(s) are disabled because current values are outside the Basic Mode adjustment range. Switch to Expert Mode to make changes",
         "description": "Slider expert settings detected while in non-expert mode"
     },
+    "pidTuningPidControllerAdvancedSettings": {
+        "message": "PID Controller Advanced Settings",
+        "description": "PID Controller Advanced Settings section title"
+    },
     "pidTuningSliderLow": {
         "message": "Low",
         "description": "Tuning Slider Low header"
