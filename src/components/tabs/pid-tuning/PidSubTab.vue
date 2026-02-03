@@ -354,6 +354,57 @@
                     <p v-html="$t('pidTuningSlidersExpertSettingsDetectedNote')"></p>
                 </div>
             </div>
+
+            <!-- Angle/Horizon Section -->
+            <div class="gui_box grey">
+                <table class="pid_titlebar">
+                    <tr>
+                        <th class="third"></th>
+                        <th class="third" style="width: 33%">{{ $t("pidTuningStrength") }}</th>
+                        <th class="third" style="width: 33%">{{ $t("pidTuningTransition") }}</th>
+                    </tr>
+                </table>
+                <table class="pid_tuning">
+                    <tr>
+                        <td class="third">{{ $t("pidTuningAngle") }}</td>
+                        <td class="third">
+                            <input type="number" v-model.number="pidLevel[0]" step="1" min="0" max="255" />
+                        </td>
+                        <td class="third"></td>
+                    </tr>
+                    <tr>
+                        <td class="third">{{ $t("pidTuningHorizon") }}</td>
+                        <td class="third">
+                            <input type="number" v-model.number="pidLevel[1]" step="1" min="0" max="255" />
+                        </td>
+                        <td class="third">
+                            <input type="number" v-model.number="pidLevel[2]" step="1" min="0" max="255" />
+                        </td>
+                    </tr>
+                </table>
+                <table class="pid_titlebar pid_titlebar_extended pid_sensitivity">
+                    <tr>
+                        <th class="third"></th>
+                        <th class="third" style="width: 33%">{{ $t("pidTuningLevelAngleLimit") }}</th>
+                        <th class="third" style="width: 33%"></th>
+                    </tr>
+                </table>
+                <table class="pid_tuning pid_sensitivity">
+                    <tr>
+                        <td class="third"></td>
+                        <td class="third">
+                            <input
+                                type="number"
+                                v-model.number="advancedTuning.levelAngleLimit"
+                                step="1"
+                                min="10"
+                                max="200"
+                            />
+                        </td>
+                        <td class="third"></td>
+                    </tr>
+                </table>
+            </div>
         </div>
         <!-- END LEFT COLUMN -->
 
@@ -417,6 +468,13 @@ const pidYaw = computed({
     get: () => FC.PIDS[2],
     set: (val) => {
         FC.PIDS[2] = val;
+    },
+});
+
+const pidLevel = computed({
+    get: () => FC.PIDS[3],
+    set: (val) => {
+        FC.PIDS[3] = val;
     },
 });
 
