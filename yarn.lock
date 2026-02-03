@@ -3123,9 +3123,9 @@ compress-commons@^6.0.2:
     readable-stream "^4.0.0"
 
 compressing@^1.10.1:
-  version "1.10.1"
-  resolved "https://registry.yarnpkg.com/compressing/-/compressing-1.10.1.tgz#46f1cae6d8a1845e84a955239b419bac91c566a3"
-  integrity sha512-XXwUffcVjqv8NGSQu1ttp6eMmuZ3zZEAec28Rt30o/vkXE20jXhowRQ9LXLY4uOgFkxXrNzApLobpam53Dc1AA==
+  version "1.10.4"
+  resolved "https://registry.yarnpkg.com/compressing/-/compressing-1.10.4.tgz#a26122c058b80146f8cbe22598903869a5b634e3"
+  integrity sha512-0gPqeoSNKM0wFq1GmihyLoRzxMsEn4fQo92Ttf8noe9X8U77U1DOvH4If5v6iF5TPa5sUyk5zWI0spoZJfzp2g==
   dependencies:
     "@eggjs/yauzl" "^2.11.0"
     flushwritable "^1.0.0"
