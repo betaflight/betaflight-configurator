@@ -397,9 +397,14 @@ let keepRendering = true;
 
 // Rate Profile Name
 const rateProfileName = computed({
-    get: () => FC.CONFIG.name || "",
+    get: () => {
+        if (!FC.CONFIG.rateProfileNames || FC.CONFIG.rateProfile === undefined) return "";
+        return FC.CONFIG.rateProfileNames[FC.CONFIG.rateProfile] || "";
+    },
     set: (value) => {
-        FC.CONFIG.name = value;
+        if (FC.CONFIG.rateProfileNames && FC.CONFIG.rateProfile !== undefined) {
+            FC.CONFIG.rateProfileNames[FC.CONFIG.rateProfile] = value;
+        }
     },
 });
 
@@ -1634,6 +1639,11 @@ onUnmounted(() => {
         clearInterval(rcUpdateInterval);
         rcUpdateInterval = null;
     }
+});
+
+// Expose rateProfileName for parent component to save
+defineExpose({
+    rateProfileName,
 });
 </script>
 
