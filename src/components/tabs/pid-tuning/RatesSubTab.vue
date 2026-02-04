@@ -1105,27 +1105,22 @@ function drawBalloonLabel(ctx, text, x, y, align, colors, balloonsDirty) {
 
     // Check that the balloon does not already overlap (like master)
     for (let i = 0; i < balloonsDirty.length; i++) {
-        for (let i = 0; i < balloonsDirty.length; i++) {
+        if (
+            (x >= balloonsDirty[i].left && x <= balloonsDirty[i].right) ||
+            (x + width >= balloonsDirty[i].left && x + width <= balloonsDirty[i].right)
+        ) {
+            // does it overlap horizontally
             if (
-                (x >= balloonsDirty[i].left && x <= balloonsDirty[i].right) ||
-                (x + width >= balloonsDirty[i].left && x + width <= balloonsDirty[i].right)
+                (y >= balloonsDirty[i].top && y <= balloonsDirty[i].bottom) ||
+                (y + height >= balloonsDirty[i].top && y + height <= balloonsDirty[i].bottom)
             ) {
-                // does it overlap horizontally
-                if (
-                    (y >= balloonsDirty[i].top && y <= balloonsDirty[i].bottom) ||
-                    (y + height >= balloonsDirty[i].top && y + height <= balloonsDirty[i].bottom)
-                ) {
-                    // this overlaps another balloon
-                    // snap above or snap below
-                    if (
-                        y <= (balloonsDirty[i].bottom - balloonsDirty[i].top) / 2 &&
-                        balloonsDirty[i].top - height > 0
-                    ) {
-                        y = balloonsDirty[i].top - height;
-                    } else {
-                        // snap down
-                        y = balloonsDirty[i].bottom;
-                    }
+                // this overlaps another balloon
+                // snap above or snap below
+                if (y <= (balloonsDirty[i].bottom - balloonsDirty[i].top) / 2 && balloonsDirty[i].top - height > 0) {
+                    y = balloonsDirty[i].top - height;
+                } else {
+                    // snap down
+                    y = balloonsDirty[i].bottom;
                 }
             }
         }
