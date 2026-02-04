@@ -652,8 +652,11 @@
 </template>
 
 <script setup>
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import FC from "@/js/fc";
+import MSP from "@/js/msp";
+import MSPCodes from "@/js/msp/MSPCodes";
+import { mspHelper } from "@/js/msp/MSPHelper";
 
 // Store previous non-zero values to restore when re-enabling filters
 const previousValues = ref({
@@ -701,14 +704,16 @@ const dtermSliderMode = computed({
 });
 
 // Filter Sliders
+// Note: slider_gyro_filter_multiplier is stored as 0-200 (100 = 1.0x)
+// UI displays as 0.1-2.0 for user convenience
 const gyroFilterMultiplier = computed({
     get: () => {
         if (!FC || !FC.TUNING_SLIDERS) return 1.0;
-        return FC.TUNING_SLIDERS.slider_gyro_filter || 1.0;
+        return (FC.TUNING_SLIDERS.slider_gyro_filter_multiplier || 100) / 100;
     },
     set: (value) => {
         if (FC && FC.TUNING_SLIDERS) {
-            FC.TUNING_SLIDERS.slider_gyro_filter = value;
+            FC.TUNING_SLIDERS.slider_gyro_filter_multiplier = Math.round(value * 100);
         }
     },
 });
@@ -716,11 +721,11 @@ const gyroFilterMultiplier = computed({
 const dtermFilterMultiplier = computed({
     get: () => {
         if (!FC || !FC.TUNING_SLIDERS) return 1.0;
-        return FC.TUNING_SLIDERS.slider_dterm_filter || 1.0;
+        return (FC.TUNING_SLIDERS.slider_dterm_filter_multiplier || 100) / 100;
     },
     set: (value) => {
         if (FC && FC.TUNING_SLIDERS) {
-            FC.TUNING_SLIDERS.slider_dterm_filter = value;
+            FC.TUNING_SLIDERS.slider_dterm_filter_multiplier = Math.round(value * 100);
         }
     },
 });
@@ -1359,6 +1364,68 @@ const yaw_lowpass_hz = computed({
         }
     },
 });
+
+// Flags to prevent recursive watcher triggers during MSP calculations
+const isCalculatingGyroFilters = ref(false);
+const isCalculatingDtermFilters = ref(false);
+
+// Watchers for filter sliders to trigger MSP calculations
+// When slider changes, send MSP command to firmware to calculate new filter values
+watch(
+    () => gyroFilterMultiplier.value,
+    (newValue, oldValue) => {
+        if (!FC || !FC.TUNING_SLIDERS || !FC.FILTER_CONFIG) return;
+
+        // Prevent recursive triggers
+        if (isCalculatingGyroFilters.value) return;
+
+        // Only trigger if value actually changed (avoid programmatic updates)
+        if (Math.abs(newValue - oldValue) < 0.001) return;
+
+        isCalculatingGyroFilters.value = true;
+
+        // Update slider_gyro_filter to indicate slider is active
+        FC.TUNING_SLIDERS.slider_gyro_filter = 1;
+
+        // Send MSP command to calculate new gyro filter values based on multiplier
+        // The firmware will multiply base filter frequencies by this multiplier
+        MSP.promise(MSPCodes.MSP_CALCULATE_SIMPLIFIED_GYRO, mspHelper.crunch(MSPCodes.MSP_CALCULATE_SIMPLIFIED_GYRO))
+            .catch((error) => {
+                console.error("Failed to calculate simplified gyro filters:", error);
+            })
+            .finally(() => {
+                isCalculatingGyroFilters.value = false;
+            });
+    },
+);
+
+watch(
+    () => dtermFilterMultiplier.value,
+    (newValue, oldValue) => {
+        if (!FC || !FC.TUNING_SLIDERS || !FC.FILTER_CONFIG) return;
+
+        // Prevent recursive triggers
+        if (isCalculatingDtermFilters.value) return;
+
+        // Only trigger if value actually changed (avoid programmatic updates)
+        if (Math.abs(newValue - oldValue) < 0.001) return;
+
+        isCalculatingDtermFilters.value = true;
+
+        // Update slider_dterm_filter to indicate slider is active
+        FC.TUNING_SLIDERS.slider_dterm_filter = 1;
+
+        // Send MSP command to calculate new dterm filter values based on multiplier
+        // The firmware will multiply base filter frequencies by this multiplier
+        MSP.promise(MSPCodes.MSP_CALCULATE_SIMPLIFIED_DTERM, mspHelper.crunch(MSPCodes.MSP_CALCULATE_SIMPLIFIED_DTERM))
+            .catch((error) => {
+                console.error("Failed to calculate simplified dterm filters:", error);
+            })
+            .finally(() => {
+                isCalculatingDtermFilters.value = false;
+            });
+    },
+);
 </script>
 
 <style scoped>
