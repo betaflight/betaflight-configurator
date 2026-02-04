@@ -514,12 +514,6 @@ async function startProcess() {
         }
 
         if (GUI.active_tab) {
-            console.log(
-                `[Main] Calling expertModeChanged(${checked}) on tab:`,
-                GUI.active_tab,
-                "TABS entry:",
-                TABS[GUI.active_tab],
-            );
             TABS[GUI.active_tab]?.expertModeChanged?.(checked);
         }
 
