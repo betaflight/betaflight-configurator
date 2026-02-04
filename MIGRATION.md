@@ -3617,7 +3617,126 @@ const gyroLowpassEnabled = computed({
 - Matches original jQuery implementation behavior exactly
 - Provides better user experience
 
-### 13.6 Known Issues and TODOs
+### 13.6 Code Quality Fixes (CodeRabbitAI Review)
+
+**Date:** February 4, 2026
+
+Following CodeRabbitAI review, the following issues were identified and fixed:
+
+#### Issue 1: FilterSubTab - Unusable D-term Lowpass Max Frequency Input
+**Problem:** The `dterm_lowpass_dyn_max_hz` input had both `min="1000"` and `max="1000"`, making it impossible for users to adjust the value.
+
+**Location:** [FilterSubTab.vue](src/components/tabs/pid-tuning/FilterSubTab.vue) lines 501-508
+
+**Original Code:**
+```vue
+<input
+    type="number"
+    v-model.number="dterm_lowpass_dyn_max_hz"
+    step="1"
+    min="1000"
+    max="1000"
+/>
+```
+
+**Fix Applied:**
+```vue
+<input
+    type="number"
+    v-model.number="dterm_lowpass_dyn_max_hz"
+    step="10"
+    min="200"
+    max="2000"
+/>
+```
+
+**Rationale:**
+- Set `min="200"` to allow values lower than the typical default (but above min frequency)
+- Set `max="2000"` as a sensible upper bound for D-term lowpass filters
+- Changed `step="10"` for easier adjustment of larger values
+- Range now matches typical flight controller capabilities
+
+#### Issue 2: PidSubTab - setTimeout Race Condition
+**Problem:** The `onSliderChange` handler was creating multiple setTimeout calls without clearing previous ones, causing `isUserInteracting.value` to potentially be reset too early when rapidly adjusting sliders.
+
+**Location:** [PidSubTab.vue](src/components/tabs/pid-tuning/PidSubTab.vue) lines 1294-1315
+
+**Original Code:**
+```javascript
+function onSliderChange() {
+    isUserInteracting.value = true;
+    // ... update sliders ...
+    setTimeout(() => {
+        isUserInteracting.value = false;
+    }, 500);
+}
+```
+
+**Fix Applied:**
+```javascript
+// Track timeout to prevent race conditions
+let userInteractionTimeout = null;
+
+function onSliderChange() {
+    isUserInteracting.value = true;
+    // ... update sliders ...
+    
+    // Clear previous timeout and set new one to prevent race conditions
+    if (userInteractionTimeout !== null) {
+        clearTimeout(userInteractionTimeout);
+    }
+    userInteractionTimeout = setTimeout(() => {
+        isUserInteracting.value = false;
+        userInteractionTimeout = null;
+    }, 500);
+}
+
+// Clean up timeout on component unmount
+onUnmounted(() => {
+    if (userInteractionTimeout !== null) {
+        clearTimeout(userInteractionTimeout);
+        userInteractionTimeout = null;
+    }
+});
+```
+
+**Rationale:**
+- Component-scoped `userInteractionTimeout` variable tracks the current timeout ID
+- Each call to `onSliderChange` clears the previous timeout before setting a new one
+- Only the most recent timeout will reset `isUserInteracting.value`
+- Proper cleanup in `onUnmounted` prevents memory leaks
+- Added `onUnmounted` to Vue imports
+
+#### Issue 3: RatesSubTab - Incomplete Throttle Curve Watcher
+**Problem:** The throttle curve watcher was missing `throttleLimitType` and `throttleLimitPercent` dependencies, causing the curve not to redraw when these values changed.
+
+**Location:** [RatesSubTab.vue](src/components/tabs/pid-tuning/RatesSubTab.vue) lines 1527-1531
+
+**Original Code:**
+```javascript
+watch([throttleMid, throttleHover, throttleExpo], () => {
+    nextTick(() => {
+        drawThrottleCurve();
+    });
+});
+```
+
+**Fix Applied:**
+```javascript
+watch([throttleMid, throttleHover, throttleExpo, throttleLimitType, throttleLimitPercent], () => {
+    nextTick(() => {
+        drawThrottleCurve();
+    });
+});
+```
+
+**Rationale:**
+- `throttleLimitType` and `throttleLimitPercent` affect the throttle curve visualization
+- These values should trigger a redraw just like the other throttle settings
+- Now matches all dependencies used by `drawThrottleCurve()` function
+- Ensures throttle curve stays in sync with all related settings
+
+### 13.7 Known Issues and TODOs
 
 **Switchery Toggle Switches:**
 - **ISSUE:** Switches appear as plain checkboxes instead of Switchery toggles when using direct FC import
