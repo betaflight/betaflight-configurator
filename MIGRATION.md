@@ -5238,3 +5238,82 @@ if (canvas.width === 0 || canvas.height === 0) return;
 Rate curve canvases set dimensions correctly (1000x1000), but throttle curve is sized dynamically based on container, so proper sizing is critical.
 
 ---
+
+## Issue #21: Yaw Max Angular Velocity Using Wrong Deadband
+
+**Location:** [src/components/tabs/pid-tuning/RatesSubTab.vue](src/components/tabs/pid-tuning/RatesSubTab.vue#L663-675)
+
+**Problem:**
+The `calculateMaxAngularVel` function always used the generic deadband:
+```javascript
+function calculateMaxAngularVel(rate, rcRate, rcExpo, limit) {
+    const deadband = FC.RC_DEADBAND_CONFIG?.deadband || 0;  // Generic deadband for all axes
+    // ...
+}
+```
+
+**Issues:**
+- Yaw has a separate deadband value: `yaw_deadband`
+- All calculations (roll, pitch, yaw) used the same generic deadband
+- Yaw max angular velocity was calculated incorrectly
+- Affects yaw rate display and warning threshold
+
+**Why Separate Deadbands?**
+In FC firmware:
+- `deadband`: Used for roll and pitch sticks
+- `yaw_deadband`: Used specifically for yaw stick (often different value)
+- Deadband affects the min stick movement before response
+- Different deadbands = different rate curve calculations
+
+**Solution:**
+Added optional `deadband` parameter with fallback:
+
+1. Updated function signature:
+```javascript
+function calculateMaxAngularVel(rate, rcRate, rcExpo, limit, deadband) {
+    // Use provided deadband or fall back to generic deadband
+    const db = deadband !== undefined ? deadband : (FC.RC_DEADBAND_CONFIG?.deadband || 0);
+    const maxAngularVel = rateCurve.getMaxAngularVel(
+        rate,
+        rcRate,
+        rcExpo,
+        true, // superexpo
+        db,  // Now uses the correct deadband
+        limit,
+    );
+    return Math.round(maxAngularVel);
+}
+```
+
+2. Updated yaw calculations to pass `yawDeadband`:
+   - `centerSensitivityYaw`: Pass `rates.yawDeadband`
+   - `maxAngularVelYaw`: Pass `rates.yawDeadband`
+   - `numericMaxAngularVelYaw`: Pass `rates.yawDeadband`
+
+3. Roll/pitch calculations unchanged (use default):
+   - Don't pass deadband parameter
+   - Falls back to generic `FC.RC_DEADBAND_CONFIG?.deadband`
+   - This is correct behavior for roll and pitch
+
+**Data Source:**
+`currentRates.value` from `RateCurve.getCurrentRates()` contains:
+- `deadband`: Generic deadband (roll/pitch)
+- `yawDeadband`: Yaw-specific deadband from `FC.RC_DEADBAND_CONFIG.yaw_deadband`
+
+**Impact:**
+- Yaw max angular velocity now calculated correctly
+- Yaw rate display shows accurate values
+- Warning threshold (1800°/s) now accurate for yaw
+- Rate curves on canvas unaffected (they already used correct deadbands)
+
+**Testing:**
+1. Set different deadband values for generic vs yaw
+2. Check yaw max angular velocity display changes appropriately
+3. Verify roll/pitch display unchanged
+4. Test warning appears at correct yaw rate values
+5. Compare with original configurator behavior
+
+**Related Code:**
+The canvas drawing functions (`drawRateCurves`, `updateRatesLabels`) already passed the correct deadbands to `rateCurve.getMaxAngularVel()` directly - they were not affected by this bug.
+
+---
