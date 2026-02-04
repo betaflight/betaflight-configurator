@@ -79,10 +79,7 @@
                         :expert-mode="expertModeEnabled"
                         :show-all-pids="showAllPids"
                     />
-                    <!-- Rates and Filter tabs will be added later -->
-                    <div v-if="activeSubtab === 'rates'" class="subtab-rates">
-                        <p>Rates tab coming soon...</p>
-                    </div>
+                    <RatesSubTab v-if="activeSubtab === 'rates'" />
                     <div v-if="activeSubtab === 'filter'" class="subtab-filter">
                         <p>Filter tab coming soon...</p>
                     </div>
@@ -112,6 +109,7 @@ import { useFlightControllerStore } from "@/stores/fc";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "@/components/elements/WikiButton.vue";
 import PidSubTab from "./pid-tuning/PidSubTab.vue";
+import RatesSubTab from "./pid-tuning/RatesSubTab.vue";
 import GUI from "@/js/gui";
 import MSP from "@/js/msp";
 import MSPCodes from "@/js/msp/MSPCodes";
