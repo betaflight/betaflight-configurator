@@ -3736,7 +3736,135 @@ watch([throttleMid, throttleHover, throttleExpo, throttleLimitType, throttleLimi
 - Now matches all dependencies used by `drawThrottleCurve()` function
 - Ensures throttle curve stays in sync with all related settings
 
-### 13.7 Known Issues and TODOs
+### 13.7 Critical Bug Fixes (CodeRabbitAI Review #2)
+
+**Date:** February 4, 2026
+
+Following second CodeRabbitAI review, two critical data binding bugs were identified and fixed:
+
+#### Issue 4: PidSubTab - Wrong TPA Field Bindings
+**Problem:** TPA (Throttle PID Attenuation) inputs were bound to incorrect RC_TUNING fields instead of ADVANCED_TUNING fields (API 1.45+).
+
+**Location:** [PidSubTab.vue](src/components/tabs/pid-tuning/PidSubTab.vue) lines 876-915
+
+**Original (Incorrect) Code:**
+```vue
+<!-- TPA Mode bound to wrong field -->
+<select id="tpaMode" v-model.number="rcTuning.dynamic_THR_PID">
+
+<!-- TPA Rate bound to BREAKPOINT field! -->
+<input id="tpaRate" v-model.number="rcTuning.dynamic_THR_breakpoint" />
+
+<!-- TPA Breakpoint bound to non-existent field -->
+<input id="tpaBreakpoint" v-model.number="rcTuning.TPA_BREAKPOINT" />
+```
+
+**Fix Applied:**
+```vue
+<!-- Correct bindings to FC.ADVANCED_TUNING -->
+<select id="tpaMode" v-model.number="tpaMode">
+<input id="tpaRate" v-model.number="tpaRate" />
+<input id="tpaBreakpoint" v-model.number="tpaBreakpoint" />
+```
+
+```javascript
+// TPA settings (API 1.45+) - stored in FC.ADVANCED_TUNING
+const tpaMode = computed({
+    get: () => FC.ADVANCED_TUNING?.tpaMode ?? 0,
+    set: (val) => {
+        if (FC.ADVANCED_TUNING) FC.ADVANCED_TUNING.tpaMode = val;
+    },
+});
+
+const tpaRate = computed({
+    get: () => {
+        // Display as percentage (0-100)
+        return Math.round((FC.ADVANCED_TUNING?.tpaRate ?? 0) * 100);
+    },
+    set: (val) => {
+        // Store as decimal (0-1)
+        if (FC.ADVANCED_TUNING) FC.ADVANCED_TUNING.tpaRate = val / 100;
+    },
+});
+
+const tpaBreakpoint = computed({
+    get: () => FC.ADVANCED_TUNING?.tpaBreakpoint ?? 1500,
+    set: (val) => {
+        if (FC.ADVANCED_TUNING) FC.ADVANCED_TUNING.tpaBreakpoint = val;
+    },
+});
+```
+
+**Verification Against Original:**
+From [pid_tuning.js](src/js/tabs/pid_tuning.js) lines 136-140, 910-912:
+```javascript
+// LOAD
+$('select[id="tpaMode"]').val(FC.ADVANCED_TUNING.tpaMode);
+$('input[id="tpaRate"]').val(FC.ADVANCED_TUNING.tpaRate * 100);
+$('input[id="tpaBreakpoint"]').val(FC.ADVANCED_TUNING.tpaBreakpoint);
+
+// SAVE
+FC.ADVANCED_TUNING.tpaMode = $('select[id="tpaMode"]').val();
+FC.ADVANCED_TUNING.tpaRate = parseInt($('input[id="tpaRate"]').val()) / 100;
+FC.ADVANCED_TUNING.tpaBreakpoint = parseInt($('input[id="tpaBreakpoint"]').val());
+```
+
+**Rationale:**
+- In API 1.45+, TPA moved from `RC_TUNING` to `ADVANCED_TUNING` with new field names
+- `tpaMode` (not `dynamic_THR_PID`) - 0=PD, 1=D
+- `tpaRate` (not bound to anything) - stored as decimal (0-1), displayed as percentage (0-100)
+- `tpaBreakpoint` (not `TPA_BREAKPOINT`) - throttle position where TPA starts
+- Original code clearly shows scaling: `* 100` for display, `/ 100` for storage
+
+#### Issue 5: PidSubTab - Profile Name Not Saved
+**Problem:** The `profileName` ref was never written back to `FC.CONFIG.pidProfileNames`, so profile name edits were lost.
+
+**Location:** [PidSubTab.vue](src/components/tabs/pid-tuning/PidSubTab.vue) line 1064
+
+**Fix Applied:**
+```javascript
+// In PidSubTab.vue - expose profileName
+defineExpose({
+    forceUpdateSliders,
+    profileName,  // Added
+});
+
+// In PidTuningTab.vue - save profile name before MSP calls
+async function save() {
+    if (!hasChanges.value) return;
+
+    try {
+        // Save PID profile name (API 1.45+)
+        if (pidSubTab.value?.profileName && FC.CONFIG.pidProfileNames) {
+            FC.CONFIG.pidProfileNames[FC.CONFIG.profile] = pidSubTab.value.profileName.trim();
+        }
+        
+        // ... rest of save logic
+    }
+}
+```
+
+**Verification Against Original:**
+From [pid_tuning.js](src/js/tabs/pid_tuning.js) lines 97, 830:
+```javascript
+// LOAD
+$('input[name="pidProfileName"]').val(FC.CONFIG.pidProfileNames[FC.CONFIG.profile]);
+
+// SAVE
+FC.CONFIG.pidProfileNames[FC.CONFIG.profile] = $('input[name="pidProfileName"]').val().trim();
+```
+
+**Rationale:**
+- Profile names are stored in `FC.CONFIG.pidProfileNames` array indexed by profile number
+- Must be written before MSP calls to ensure they're included in the save
+- Trim whitespace to match original behavior
+- Only save when API 1.45+ and profile names array exists
+
+**Related Issue Found:**
+- RatesSubTab has incorrect binding: `FC.CONFIG.name` instead of `FC.CONFIG.rateProfileNames[FC.CONFIG.rateProfile]`
+- Documented for future fix (not included in this commit)
+
+### 13.8 Known Issues and TODOs
 
 **Switchery Toggle Switches:**
 - **ISSUE:** Switches appear as plain checkboxes instead of Switchery toggles when using direct FC import

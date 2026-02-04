@@ -888,26 +888,19 @@
                     <tbody>
                         <tr>
                             <td>
-                                <select id="tpaMode" v-model.number="rcTuning.dynamic_THR_PID">
+                                <select id="tpaMode" v-model.number="tpaMode">
                                     <option :value="0">{{ $t("pidTuningTPAPD") }}</option>
                                     <option :value="1">{{ $t("pidTuningTPAD") }}</option>
                                 </select>
                             </td>
                             <td>
-                                <input
-                                    type="number"
-                                    id="tpaRate"
-                                    v-model.number="rcTuning.dynamic_THR_breakpoint"
-                                    step="1"
-                                    min="0"
-                                    max="100"
-                                />
+                                <input type="number" id="tpaRate" v-model.number="tpaRate" step="1" min="0" max="100" />
                             </td>
                             <td class="tpa-breakpoint">
                                 <input
                                     type="number"
                                     id="tpaBreakpoint"
-                                    v-model.number="rcTuning.TPA_BREAKPOINT"
+                                    v-model.number="tpaBreakpoint"
                                     step="10"
                                     min="750"
                                     max="2250"
@@ -1097,6 +1090,32 @@ const pidLevel = computed({
 
 // Advanced tuning - reactive reference
 const advancedTuning = computed(() => FC.ADVANCED_TUNING);
+
+// TPA settings (API 1.45+) - stored in FC.ADVANCED_TUNING
+const tpaMode = computed({
+    get: () => FC.ADVANCED_TUNING?.tpaMode ?? 0,
+    set: (val) => {
+        if (FC.ADVANCED_TUNING) FC.ADVANCED_TUNING.tpaMode = val;
+    },
+});
+
+const tpaRate = computed({
+    get: () => {
+        // Display as percentage (0-100)
+        return Math.round((FC.ADVANCED_TUNING?.tpaRate ?? 0) * 100);
+    },
+    set: (val) => {
+        // Store as decimal (0-1)
+        if (FC.ADVANCED_TUNING) FC.ADVANCED_TUNING.tpaRate = val / 100;
+    },
+});
+
+const tpaBreakpoint = computed({
+    get: () => FC.ADVANCED_TUNING?.tpaBreakpoint ?? 1500,
+    set: (val) => {
+        if (FC.ADVANCED_TUNING) FC.ADVANCED_TUNING.tpaBreakpoint = val;
+    },
+});
 
 // RC Tuning - reactive reference
 const rcTuning = computed(() => FC.RC_TUNING);
@@ -1356,6 +1375,7 @@ function forceUpdateSliders() {
 
 defineExpose({
     forceUpdateSliders,
+    profileName,
 });
 
 // Initialize sliders when component mounts

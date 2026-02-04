@@ -132,6 +132,7 @@ const pidController = ref(0);
 const hasChanges = ref(false);
 const isMounted = ref(false);
 const pidSubTab = ref(null);
+const ratesSubTab = ref(null);
 
 // Original values for revert
 const originalPids = ref([]);
@@ -270,6 +271,12 @@ async function save() {
     if (!hasChanges.value) return;
 
     try {
+        // Save PID profile name (API 1.45+)
+        if (pidSubTab.value?.profileName && FC.CONFIG.pidProfileNames) {
+            FC.CONFIG.pidProfileNames[FC.CONFIG.profile] = pidSubTab.value.profileName.trim();
+        }
+        // Note: Rate profile name saving will be added when RatesSubTab binding is fixed
+
         // Save PID controller
         if (showPidController.value) {
             await MSP.promise(MSPCodes.MSP_SET_PID_CONTROLLER, mspHelper.crunch(MSPCodes.MSP_SET_PID_CONTROLLER));
