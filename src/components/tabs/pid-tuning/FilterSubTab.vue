@@ -502,9 +502,9 @@
                                     <input
                                         type="number"
                                         v-model.number="dterm_lowpass_dyn_max_hz"
-                                        step="1"
-                                        min="1000"
-                                        max="1000"
+                                        step="10"
+                                        min="200"
+                                        max="2000"
                                     />
                                     <label>
                                         <span>Max Cutoff Frequency [Hz]</span>
