@@ -5044,3 +5044,74 @@ Always verify the actual data types and null/empty cases when implementing logic
 **Status:** FIXED ✅ (properly this time)
 
 ---
+
+## Issue #18: Untracked Initial Draw setTimeout
+
+**Location:** [src/components/tabs/pid-tuning/RatesSubTab.vue](src/components/tabs/pid-tuning/RatesSubTab.vue#L1628)
+
+**Problem:**
+The `setTimeout` call for delaying the initial draw was not tracked:
+```javascript
+setTimeout(() => {
+    nextTick(() => {
+        drawRateCurves();
+        drawThrottleCurve();
+        updateRatesLabels();
+    });
+}, 100);
+```
+
+**Issues:**
+- If component unmounts before 100ms, callback fires anyway
+- Drawing functions try to access null refs (`rateCurveLayer0.value`, etc.)
+- Could cause errors if FC data is cleaned up
+- Same category of bug as Issue #16 (modelInitTimeout)
+
+**Solution:**
+Tracked the timeout and cleared it on unmount:
+
+1. Added `initTimeout` variable declaration:
+```javascript
+let initTimeout = null; // For setTimeout initial draw delay
+```
+
+2. Assigned setTimeout to variable:
+```javascript
+initTimeout = setTimeout(() => {
+    nextTick(() => {
+        drawRateCurves();
+        drawThrottleCurve();
+        updateRatesLabels();
+    });
+}, 100);
+```
+
+3. Cleared timeout in `onUnmounted`:
+```javascript
+// Clear initial draw timeout
+if (initTimeout) {
+    clearTimeout(initTimeout);
+    initTimeout = null;
+}
+```
+
+**Why This Matters:**
+- 100ms window where unmount could happen (user switches tabs quickly)
+- Drawing functions already have null guards, but better to prevent execution
+- Consistent with other timer management (rcUpdateInterval, modelInitTimeout, initModelTimeoutId)
+- Prevents potential console errors during rapid tab switching
+
+**Testing:**
+1. Open PID Tuning tab → Rates subtab
+2. Immediately switch away (within 100ms)
+3. Verify no errors in console
+4. Verify cleanup is complete (check memory with DevTools)
+
+**Related Issues:**
+- Issue #16: modelInitTimeout (nested setTimeout not tracked)
+- Issue #12: initModelTimeoutId (timer variable reuse)
+
+**Lesson Learned:**
+ALL setTimeout/setInterval calls MUST be tracked and cleared. No exceptions. This is the third timer management bug in this migration - need to do a comprehensive audit of ALL timer usage.
+
+---

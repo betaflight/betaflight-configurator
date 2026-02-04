@@ -393,6 +393,7 @@ let model = null;
 let rcUpdateInterval = null; // For setInterval RC updates
 let initModelTimeoutId = null; // For setTimeout initModel retries
 let modelInitTimeout = null; // For setTimeout after model creation
+let initTimeout = null; // For setTimeout initial draw delay
 let animationFrameId = null;
 let lastTimestamp = 0;
 let keepRendering = true;
@@ -1625,7 +1626,7 @@ onMounted(() => {
     }
 
     // Delay initial draw to ensure data is loaded
-    setTimeout(() => {
+    initTimeout = setTimeout(() => {
         nextTick(() => {
             drawRateCurves();
             drawThrottleCurve();
@@ -1663,6 +1664,12 @@ onUnmounted(() => {
     if (modelInitTimeout) {
         clearTimeout(modelInitTimeout);
         modelInitTimeout = null;
+    }
+
+    // Clear initial draw timeout
+    if (initTimeout) {
+        clearTimeout(initTimeout);
+        initTimeout = null;
     }
 
     // Dispose 3D model
