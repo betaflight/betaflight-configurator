@@ -390,7 +390,8 @@ const ratesPreviewContainer = ref(null);
 
 // 3D Model
 let model = null;
-let rcUpdateInterval = null;
+let rcUpdateInterval = null; // For setInterval RC updates
+let initModelTimeoutId = null; // For setTimeout initModel retries
 let animationFrameId = null;
 let lastTimestamp = 0;
 let keepRendering = true;
@@ -979,11 +980,6 @@ function updateRatesLabels() {
     // Sort them in descending order so the largest value is at the top always (like master)
     balloons.sort((a, b) => b.value - a.value);
 
-    // Draw the balloons
-    for (const balloon of balloons) {
-        balloon.draw();
-    }
-
     // Draw angle mode labels if applicable
     if (isBetaflightRates.value || ratesType.value === 3) {
         // Betaflight or Actual
@@ -1561,20 +1557,26 @@ onMounted(() => {
             }
 
             if (!FC.MIXER_CONFIG || FC.MIXER_CONFIG.mixer === undefined) {
-                // Assign timeout to rcUpdateInterval so it can be cleared on unmount
-                rcUpdateInterval = setTimeout(initModel, 100);
+                // Use separate timeout ID for init retries
+                initModelTimeoutId = setTimeout(initModel, 100);
                 return;
             }
 
             // Ensure container has dimensions
             const containerRect = ratesPreviewContainer.value.getBoundingClientRect();
             if (containerRect.width === 0 || containerRect.height === 0) {
-                // Assign timeout to rcUpdateInterval so it can be cleared on unmount
-                rcUpdateInterval = setTimeout(initModel, 100);
+                // Use separate timeout ID for init retries
+                initModelTimeoutId = setTimeout(initModel, 100);
                 return;
             }
 
             try {
+                // Clear init timeout since we're successfully initializing
+                if (initModelTimeoutId) {
+                    clearTimeout(initModelTimeoutId);
+                    initModelTimeoutId = null;
+                }
+
                 model = new Model($(ratesPreviewContainer.value), $(ratesPreviewCanvas.value));
 
                 // Model automatically loads based on FC.MIXER_CONFIG.mixer
@@ -1644,11 +1646,15 @@ onUnmounted(() => {
         model = null;
     }
 
-    // Clear all timers (rcUpdateInterval handles both setInterval and setTimeout)
-    // This prevents initModel retries and RC updates from running after unmount
+    // Clear initModel retry timeout
+    if (initModelTimeoutId) {
+        clearTimeout(initModelTimeoutId);
+        initModelTimeoutId = null;
+    }
+
+    // Clear RC update interval
     if (rcUpdateInterval) {
         clearInterval(rcUpdateInterval);
-        clearTimeout(rcUpdateInterval); // Also clear if it's a setTimeout
         rcUpdateInterval = null;
     }
 });

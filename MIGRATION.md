@@ -4709,3 +4709,82 @@ const tpaBreakpoint = computed({
 **Status:** FIXED ✅
 
 ---
+## 15. CodeRabbitAI Review #5 - Critical Migration Bugs
+
+### Issue #12: Variable Reuse Bug in RatesSubTab initModel
+**Date:** February 4, 2026
+**Source:** CodeRabbitAI pull request review comment
+**Component:** [RatesSubTab.vue](src/components/tabs/pid-tuning/RatesSubTab.vue)
+
+**Problem:**
+The `rcUpdateInterval` variable was being reused for two different purposes:
+1. `setTimeout()` for `initModel()` retry logic
+2. `setInterval()` for recurring RC stick position updates
+
+This creates a race condition where timeout IDs get overwritten, orphaning pending timeouts that could fire after component unmount.
+
+**Solution:**
+Introduced separate variable `initModelTimeoutId` exclusively for `initModel()` retries. Clear init timeout on successful initialization and in onUnmounted cleanup.
+
+**Files Modified:**
+- [RatesSubTab.vue](src/components/tabs/pid-tuning/RatesSubTab.vue) lines 393, 1561-1595, 1632-1658
+
+**Status:** FIXED ✅
+
+---
+
+### Issue #13: Duplicate Balloon Rendering in RatesSubTab
+**Date:** February 4, 2026
+**Source:** CodeRabbitAI pull request review comment
+**Component:** [RatesSubTab.vue](src/components/tabs/pid-tuning/RatesSubTab.vue)
+
+**Problem:**
+The code rendered balloons twice by iterating over the `balloons` array before and after `drawAngleModeLabels()`. This caused performance issues and visual artifacts.
+
+**Solution:**
+Removed the first balloon drawing loop, keeping only the one after `drawAngleModeLabels()` for proper layering.
+
+**Files Modified:**
+- [RatesSubTab.vue](src/components/tabs/pid-tuning/RatesSubTab.vue) lines 982-995
+
+**Status:** FIXED ✅
+
+---
+
+### Issue #14: Undefined Variable in copyProfile Function
+**Date:** February 4, 2026
+**Source:** CodeRabbitAI pull request review comment
+**Component:** [PidTuningTab.vue](src/components/tabs/PidTuningTab.vue)
+
+**Problem:**
+The `copyProfile()` function used undefined variable `profile.value` instead of `currentProfile.value`, causing TypeError and wrong profile being copied.
+
+**Solution:**
+Replaced all occurrences of `profile.value` with `currentProfile.value` to match the declared reactive ref.
+
+**Files Modified:**
+- [PidTuningTab.vue](src/components/tabs/PidTuningTab.vue) lines 253-285
+
+**Status:** FIXED ✅
+
+---
+
+### Issue #15: Undefined Variable in copyRateProfile Function
+**Date:** February 4, 2026
+**Source:** CodeRabbitAI pull request review comment
+**Component:** [PidTuningTab.vue](src/components/tabs/PidTuningTab.vue)
+
+**Problem:**
+Same issue as #14, but in `copyRateProfile()` function. Used undefined `rateProfile.value` instead of `currentRateProfile.value`.
+
+**Solution:**
+Replaced all occurrences of `rateProfile.value` with `currentRateProfile.value`.
+
+**Files Modified:**
+- [PidTuningTab.vue](src/components/tabs/PidTuningTab.vue) lines 287-319
+
+**Status:** FIXED ✅
+
+---
+
+**Total Issues Fixed This Session:** 15 (Issues #1-#15)
