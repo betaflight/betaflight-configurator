@@ -18,6 +18,7 @@ import * as THREE from "three";
 import NotificationManager from "./utils/notifications.js";
 import { Capacitor } from "@capacitor/core";
 import loginManager from "./LoginManager.js";
+import { EventBus } from "../components/eventBus.js";
 import { enableDevelopmentOptions } from "./utils/developmentOptions.js";
 
 // Silence Capacitor bridge debug spam on native platforms
@@ -218,7 +219,7 @@ async function startProcess() {
         return true;
     };
 
-    const handleDisallowedTab = (tab, tabName, self) => {
+    const handleDisallowedTab = (tab, tabName) => {
         if (tab !== "firmware_flasher") {
             gui_log(i18n.getMessage("tabSwitchUpgradeRequired", [tabName]));
             return false;
@@ -253,7 +254,7 @@ async function startProcess() {
         const isLoginSectionTab = $(self).closest("ul").hasClass("mode-loggedin");
         const isTabAllowed = GUI.allowedTabs.includes(tab) || isLoginSectionTab;
 
-        if (!isTabAllowed && !handleDisallowedTab(tab, tabName, self)) {
+        if (!isTabAllowed && !handleDisallowedTab(tab, tabName)) {
             return;
         }
 
@@ -335,7 +336,7 @@ async function startProcess() {
                     mountVueTab("power", content_ready);
                     break;
                 case "setup":
-                    import("./tabs/setup").then(({ setup }) => setup.initialize(content_ready));
+                    mountVueTab("setup", content_ready);
                     break;
                 case "setup_osd":
                     import("./tabs/setup_osd").then(({ setup_osd }) => setup_osd.initialize(content_ready));
@@ -515,6 +516,8 @@ async function startProcess() {
         if (GUI.active_tab) {
             TABS[GUI.active_tab]?.expertModeChanged?.(checked);
         }
+
+        EventBus.$emit("expert-mode-change", checked);
 
         setConfig({ expertMode: checked });
     });

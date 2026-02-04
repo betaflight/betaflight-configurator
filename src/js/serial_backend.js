@@ -26,6 +26,7 @@ import BuildApi from "./BuildApi";
 import { serial } from "./serial.js";
 import { EventBus } from "../components/eventBus";
 import { ispConnected } from "./utils/connection";
+import { unmountVueTab } from "./vue_tab_mounter";
 import { useConnectionStore } from "../stores/connection";
 
 const logHead = "[SERIAL-BACKEND]";
@@ -212,7 +213,13 @@ function finishClose(finishedCallback) {
     sensor_status();
 
     if (wasConnected) {
-        // detach listeners and remove element data
+        // Ensure any mounted Vue tab is unmounted before we remove DOM to avoid Vue runtime errors
+        try {
+            unmountVueTab();
+        } catch (e) {
+            console.warn("unmountVueTab failed:", e);
+        }
+
         $("#content").empty();
 
         // close cliPanel if left open

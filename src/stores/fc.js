@@ -1,11 +1,27 @@
 import { defineStore } from "pinia";
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import FC from "../js/fc";
 import semver from "semver";
 
 export const useFlightControllerStore = defineStore("flightController", () => {
     // Proxy state directly to legacy reactive objects
     // FC is already reactive (export default reactive(FC)), so we just need to expose it
+
+    const armingFlags = ref([]);
+
+    function setArmingFlags(flags) {
+        armingFlags.value = flags;
+    }
+
+    function updateArmingFlags(bitmask) {
+        if (armingFlags.value.length) {
+            armingFlags.value.forEach((flag, index) => {
+                // Bitwise AND: Check if the i-th bit is set
+                // (1 << index) creates a mask like 0001, 0010, 0100, etc.
+                flag.visible = (bitmask & (1 << index)) !== 0;
+            });
+        }
+    }
 
     const config = computed({
         get: () => FC.CONFIG,
@@ -80,6 +96,21 @@ export const useFlightControllerStore = defineStore("flightController", () => {
     const sensorConfig = computed({
         get: () => FC.SENSOR_CONFIG,
         set: (val) => (FC.SENSOR_CONFIG = val),
+    });
+
+    const sensorConfigActive = computed({
+        get: () => FC.SENSOR_CONFIG_ACTIVE,
+        set: (val) => (FC.SENSOR_CONFIG_ACTIVE = val),
+    });
+
+    const sensorNames = computed({
+        get: () => FC.SENSOR_NAMES,
+        set: (val) => (FC.SENSOR_NAMES = val),
+    });
+
+    const mcuInfo = computed({
+        get: () => FC.MCU_INFO,
+        set: (val) => (FC.MCU_INFO = val),
     });
 
     const rxConfig = computed({
@@ -202,16 +233,26 @@ export const useFlightControllerStore = defineStore("flightController", () => {
         set: (val) => (FC.RC_TUNING = val),
     });
 
-    // Computed Getters
+    // Computed getters
     const apiVersion = computed(() => config.value.apiVersion);
+
+    const isReadyToArm = computed(() => {
+        // Arming is disabled if any flag is visible,
+        // EXCEPT for the very last bit (ARM_SWITCH), which is usually expected.
+        return armingFlags.value.filter((f) => f.name !== "ARM_SWITCH").every((f) => !f.visible);
+    });
+
+    const activeFlagNames = computed(() => {
+        return armingFlags.value.filter((f) => f.visible).map((f) => f.name);
+    });
 
     // Helpers
     function isApiVersionSupported(version) {
-        return semver.gte(apiVersion.value, version);
+        return semver.gte(config.value.apiVersion, version);
     }
 
     function isApiVersionLessThan(version) {
-        return semver.lt(apiVersion.value, version);
+        return semver.lt(config.value.apiVersion, version);
     }
 
     return {
@@ -255,6 +296,14 @@ export const useFlightControllerStore = defineStore("flightController", () => {
         rcMap,
         rcTuning,
         apiVersion,
+        sensorConfigActive,
+        sensorNames,
+        mcuInfo,
+        armingFlags,
+        setArmingFlags,
+        updateArmingFlags,
+        isReadyToArm,
+        activeFlagNames,
         isApiVersionSupported,
         isApiVersionLessThan,
     };
