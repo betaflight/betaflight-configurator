@@ -663,11 +663,12 @@ import MSP from "@/js/msp";
 import MSPCodes from "@/js/msp/MSPCodes";
 import { mspHelper } from "@/js/msp/MSPHelper";
 
-// Store previous non-zero values to restore when re-enabling filters
+// Store previous non-zero values AND mode to restore when re-enabling filters
 const previousValues = ref({
     gyroLowpassHz: 100,
     gyroLowpassDynMin: 200,
     gyroLowpassDynMax: 500,
+    lastGyroLowpassMode: 1, // 0 = static, 1 = dynamic
     gyroLowpass2Hz: 250,
     gyroNotch1Hz: 400,
     gyroNotch1Cutoff: 300,
@@ -677,10 +678,11 @@ const previousValues = ref({
     dtermLowpassHz: 100,
     dtermLowpassDynMin: 100,
     dtermLowpassDynMax: 250,
+    lastDtermLowpassMode: 1, // 0 = static, 1 = dynamic
     dtermLowpass2Hz: 250,
     dtermNotchHz: 260,
     dtermNotchCutoff: 160,
-    dynNotchCount: 5,
+    lastDynNotchMode: 1, // Track if dynamic notch was enabled
 });
 
 // Slider Modes (ON/OFF toggles for gyro and dterm sliders)
@@ -811,23 +813,26 @@ const gyroLowpassEnabled = computed({
     set: (value) => {
         if (!FC || !FC.FILTER_CONFIG) return;
         if (value) {
-            // Re-enabling: restore previous values based on mode
-            const wasDynamic = previousValues.value.gyroLowpassDynMin > 0;
-            if (wasDynamic) {
+            // Re-enabling: restore based on explicitly saved mode
+            if (previousValues.value.lastGyroLowpassMode === 1) {
+                // Restore dynamic mode
                 FC.FILTER_CONFIG.gyro_lowpass_dyn_min_hz = previousValues.value.gyroLowpassDynMin;
                 FC.FILTER_CONFIG.gyro_lowpass_dyn_max_hz = previousValues.value.gyroLowpassDynMax;
                 FC.FILTER_CONFIG.gyro_lowpass_hz = 0;
             } else {
+                // Restore static mode
                 FC.FILTER_CONFIG.gyro_lowpass_hz = previousValues.value.gyroLowpassHz;
                 FC.FILTER_CONFIG.gyro_lowpass_dyn_min_hz = 0;
                 FC.FILTER_CONFIG.gyro_lowpass_dyn_max_hz = 0;
             }
         } else {
-            // Disabling: save current values
+            // Disabling: save current mode and values explicitly
             if (FC.FILTER_CONFIG.gyro_lowpass_dyn_min_hz > 0) {
+                previousValues.value.lastGyroLowpassMode = 1; // Was dynamic
                 previousValues.value.gyroLowpassDynMin = FC.FILTER_CONFIG.gyro_lowpass_dyn_min_hz;
                 previousValues.value.gyroLowpassDynMax = FC.FILTER_CONFIG.gyro_lowpass_dyn_max_hz;
             } else if (FC.FILTER_CONFIG.gyro_lowpass_hz > 0) {
+                previousValues.value.lastGyroLowpassMode = 0; // Was static
                 previousValues.value.gyroLowpassHz = FC.FILTER_CONFIG.gyro_lowpass_hz;
             }
             FC.FILTER_CONFIG.gyro_lowpass_hz = 0;
@@ -1186,23 +1191,26 @@ const dtermLowpassEnabled = computed({
     set: (value) => {
         if (!FC || !FC.FILTER_CONFIG) return;
         if (value) {
-            // Re-enabling: restore previous values based on mode
-            const wasDynamic = previousValues.value.dtermLowpassDynMin > 0;
-            if (wasDynamic) {
+            // Re-enabling: restore based on explicitly saved mode
+            if (previousValues.value.lastDtermLowpassMode === 1) {
+                // Restore dynamic mode
                 FC.FILTER_CONFIG.dterm_lowpass_dyn_min_hz = previousValues.value.dtermLowpassDynMin;
                 FC.FILTER_CONFIG.dterm_lowpass_dyn_max_hz = previousValues.value.dtermLowpassDynMax;
                 FC.FILTER_CONFIG.dterm_lowpass_hz = 0;
             } else {
+                // Restore static mode
                 FC.FILTER_CONFIG.dterm_lowpass_hz = previousValues.value.dtermLowpassHz;
                 FC.FILTER_CONFIG.dterm_lowpass_dyn_min_hz = 0;
                 FC.FILTER_CONFIG.dterm_lowpass_dyn_max_hz = 0;
             }
         } else {
-            // Disabling: save current values
+            // Disabling: save current mode and values explicitly
             if (FC.FILTER_CONFIG.dterm_lowpass_dyn_min_hz > 0) {
+                previousValues.value.lastDtermLowpassMode = 1; // Was dynamic
                 previousValues.value.dtermLowpassDynMin = FC.FILTER_CONFIG.dterm_lowpass_dyn_min_hz;
                 previousValues.value.dtermLowpassDynMax = FC.FILTER_CONFIG.dterm_lowpass_dyn_max_hz;
             } else if (FC.FILTER_CONFIG.dterm_lowpass_hz > 0) {
+                previousValues.value.lastDtermLowpassMode = 0; // Was static
                 previousValues.value.dtermLowpassHz = FC.FILTER_CONFIG.dterm_lowpass_hz;
             }
             FC.FILTER_CONFIG.dterm_lowpass_hz = 0;
