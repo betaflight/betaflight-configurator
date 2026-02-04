@@ -3749,6 +3749,296 @@ Following second CodeRabbitAI review, two critical data binding bugs were identi
 
 **Original (Incorrect) Code:**
 ```vue
+<!-- Wrong bindings -->
+<select v-model.number="rcTuning.dynamic_THR_PID">
+<input v-model.number="rcTuning.dynamic_THR_breakpoint">
+<input v-model.number="rcTuning.TPA_BREAKPOINT">
+```
+
+**Fix Applied:**
+```vue
+<!-- Correct bindings to ADVANCED_TUNING -->
+<select v-model.number="advancedTuning.tpaMode">
+<input v-model.number="tpaRate" min="0" max="100">
+<input v-model.number="advancedTuning.tpaBreakpoint">
+```
+
+**Rationale:**
+- API 1.45+ moved TPA settings from RC_TUNING to ADVANCED_TUNING
+- `tpaMode`: 0=PD mode, 1=D-only mode (was `dynamic_THR_PID`)
+- `tpaRate`: 0-1.0 range displayed as 0-100% with scaling (was `dynamic_THR_breakpoint`)
+- `tpaBreakpoint`: 750-2250 range (correct field name)
+- Added computed property `tpaRate` with scaling: `value * 100` for display, `value / 100` for storage
+- Critical fix - wrong fields would cause incorrect TPA behavior
+
+#### Issue 5: PidSubTab - Wrong Profile Name Field
+**Problem:** Profile name save was writing to wrong field `FC.CONFIG.name` instead of the correct `FC.CONFIG.pidProfileNames[profile]` array.
+
+**Location:** [PidTuningTab.vue](src/components/tabs/PidTuningTab.vue) lines 285-291
+
+**Original (Incorrect) Code:**
+```javascript
+// Wrong - overwrites craft name!
+FC.CONFIG.name = pidSubTab.value.profileName;
+```
+
+**Fix Applied:**
+```javascript
+// Correct - writes to pidProfileNames array
+if (pidSubTab.value?.profileName !== undefined) {
+    FC.CONFIG.pidProfileNames[profile.value] = pidSubTab.value.profileName;
+}
+```
+
+**Rationale:**
+- `FC.CONFIG.name` is the craft name, not PID profile name
+- PID profile names stored in `FC.CONFIG.pidProfileNames[]` array (indices 0-2)
+- Similarly for rate profiles: use `FC.CONFIG.rateProfileNames[]` array
+- Added null checks to prevent errors when component not yet mounted
+- Critical fix - would overwrite craft name with profile name!
+
+#### Issue 6: RatesSubTab - Wrong Rate Profile Name Field
+**Problem:** Rate profile name bound to wrong field `FC.CONFIG.name` instead of correct `FC.CONFIG.rateProfileNames[rateProfile]` array.
+
+**Location:** [RatesSubTab.vue](src/components/tabs/pid-tuning/RatesSubTab.vue) lines 1392-1399
+
+**Original (Incorrect) Code:**
+```javascript
+const rateProfileName = computed({
+    get: () => FC.CONFIG?.name || '',
+    set: (value) => {
+        if (FC.CONFIG) {
+            FC.CONFIG.name = value;
+        }
+    }
+});
+```
+
+**Fix Applied:**
+```javascript
+const rateProfileName = computed({
+    get: () => {
+        const idx = FC.CONFIG?.rateprofile || 0;
+        return FC.CONFIG?.rateProfileNames?.[idx] || '';
+    },
+    set: (value) => {
+        if (FC.CONFIG) {
+            const idx = FC.CONFIG.rateprofile || 0;
+            FC.CONFIG.rateProfileNames[idx] = value;
+        }
+    }
+});
+```
+
+**Added to PidTuningTab save function:**
+```javascript
+// Save rate profile name from RatesSubTab
+if (ratesSubTab.value?.rateProfileName !== undefined) {
+    FC.CONFIG.rateProfileNames[rateProfile.value] = ratesSubTab.value.rateProfileName;
+}
+```
+
+**Rationale:**
+- Rate profile names stored in `FC.CONFIG.rateProfileNames[]` array (indices 0-5)
+- Must use current rate profile index from `FC.CONFIG.rateprofile`
+- Added `defineExpose({ rateProfileName })` to RatesSubTab for parent access
+- Critical fix - would overwrite craft name with rate profile name!
+
+### 13.8 Filter Slider Multipliers Fix (Issue 7)
+
+**Date:** February 4, 2026
+
+**Problem:** Filter sliders (Gyro Filter Multiplier, D-term Filter Multiplier) were not updating filter frequency values like the original implementation.
+
+**User Report:** "OO - major issue: Sliders do not update gyro / dterm values as original implementation"
+
+**Screenshot Evidence:** User provided screenshot showing:
+- Gyro Filter Slider: 1.15
+- D-term Filter Slider: 0.80
+- But filter frequency values were NOT being multiplied
+
+**Root Cause Analysis:**
+
+1. **Wrong Field Bindings:**
+   - Vue was binding to `slider_gyro_filter` and `slider_dterm_filter` (enable flags)
+   - Should bind to `slider_gyro_filter_multiplier` and `slider_dterm_filter_multiplier`
+   - Multipliers stored as 0-200 (100 = 1.0x multiplier)
+
+2. **Missing MSP Calculation:**
+   - Original jQuery called `MSP_CALCULATE_SIMPLIFIED_GYRO` / `MSP_CALCULATE_SIMPLIFIED_DTERM`
+   - Firmware calculates new filter values based on multiplier
+   - Vue implementation was missing this MSP integration
+
+3. **Missing Watchers:**
+   - No Vue watchers to trigger MSP calculation when sliders changed
+   - Would cause infinite reactive loop without proper guards
+
+**Fix Applied:**
+
+#### Step 1: Import MSP Dependencies
+```javascript
+import { computed, ref, watch } from "vue";
+import FC from "@/js/fc";
+import MSP from "@/js/msp";
+import MSPCodes from "@/js/msp/MSPCodes";
+import { mspHelper } from "@/js/msp/MSPHelper";
+```
+
+**Key Learning:** Must use named export `{ mspHelper }` not default export - it's the instance, not the class.
+
+#### Step 2: Fix Computed Properties with Scaling
+```javascript
+// Filter Sliders
+// Note: slider_gyro_filter_multiplier is stored as 0-200 (100 = 1.0x)
+// UI displays as 0.1-2.0 for user convenience
+const gyroFilterMultiplier = computed({
+    get: () => {
+        if (!FC || !FC.TUNING_SLIDERS) return 1.0;
+        return (FC.TUNING_SLIDERS.slider_gyro_filter_multiplier || 100) / 100;
+    },
+    set: (value) => {
+        if (FC && FC.TUNING_SLIDERS) {
+            FC.TUNING_SLIDERS.slider_gyro_filter_multiplier = Math.round(value * 100);
+        }
+    },
+});
+
+const dtermFilterMultiplier = computed({
+    get: () => {
+        if (!FC || !FC.TUNING_SLIDERS) return 1.0;
+        return (FC.TUNING_SLIDERS.slider_dterm_filter_multiplier || 100) / 100;
+    },
+    set: (value) => {
+        if (FC && FC.TUNING_SLIDERS) {
+            FC.TUNING_SLIDERS.slider_dterm_filter_multiplier = Math.round(value * 100);
+        }
+    },
+});
+```
+
+#### Step 3: Add Watchers with Loop Prevention
+```javascript
+// Flags to prevent recursive watcher triggers during MSP calculations
+const isCalculatingGyroFilters = ref(false);
+const isCalculatingDtermFilters = ref(false);
+
+// Watchers for filter sliders to trigger MSP calculations
+watch(
+    () => gyroFilterMultiplier.value,
+    (newValue, oldValue) => {
+        if (!FC || !FC.TUNING_SLIDERS || !FC.FILTER_CONFIG) return;
+        
+        // Prevent recursive triggers
+        if (isCalculatingGyroFilters.value) return;
+        
+        // Only trigger if value actually changed (avoid programmatic updates)
+        if (Math.abs(newValue - oldValue) < 0.001) return;
+
+        isCalculatingGyroFilters.value = true;
+
+        // Update slider_gyro_filter to indicate slider is active
+        FC.TUNING_SLIDERS.slider_gyro_filter = 1;
+
+        // Send MSP command to calculate new gyro filter values based on multiplier
+        MSP.promise(MSPCodes.MSP_CALCULATE_SIMPLIFIED_GYRO, mspHelper.crunch(MSPCodes.MSP_CALCULATE_SIMPLIFIED_GYRO))
+            .catch((error) => {
+                console.error("Failed to calculate simplified gyro filters:", error);
+            })
+            .finally(() => {
+                isCalculatingGyroFilters.value = false;
+            });
+    },
+);
+
+watch(
+    () => dtermFilterMultiplier.value,
+    (newValue, oldValue) => {
+        if (!FC || !FC.TUNING_SLIDERS || !FC.FILTER_CONFIG) return;
+        
+        // Prevent recursive triggers
+        if (isCalculatingDtermFilters.value) return;
+        
+        // Only trigger if value actually changed
+        if (Math.abs(newValue - oldValue) < 0.001) return;
+
+        isCalculatingDtermFilters.value = true;
+
+        // Update slider_dterm_filter to indicate slider is active
+        FC.TUNING_SLIDERS.slider_dterm_filter = 1;
+
+        // Send MSP command to calculate new dterm filter values based on multiplier
+        MSP.promise(MSPCodes.MSP_CALCULATE_SIMPLIFIED_DTERM, mspHelper.crunch(MSPCodes.MSP_CALCULATE_SIMPLIFIED_DTERM))
+            .catch((error) => {
+                console.error("Failed to calculate simplified dterm filters:", error);
+            })
+            .finally(() => {
+                isCalculatingDtermFilters.value = false;
+            });
+    },
+);
+```
+
+**How It Works:**
+
+1. **User moves slider** → Triggers computed setter → Updates `slider_gyro_filter_multiplier`
+2. **Watcher detects change** → Checks if already calculating (prevent loop)
+3. **Sends MSP command** → `MSP_CALCULATE_SIMPLIFIED_GYRO` with current slider value
+4. **Firmware calculates** → Multiplies base filter frequencies by multiplier
+5. **MSP response** → Updates `FC.FILTER_CONFIG` with new calculated values
+6. **Vue reactivity** → Filter input fields update automatically to show new values
+
+**Loop Prevention Strategy:**
+- `isCalculatingGyroFilters` flag prevents re-entry during MSP call
+- Check `Math.abs(newValue - oldValue) < 0.001` prevents noise
+- `finally()` block ensures flag is reset even on error
+- MSP response updates FC but doesn't trigger watcher (flag is set)
+
+**Testing Results:**
+- ✅ Moving gyro slider updates all gyro filter frequencies
+- ✅ Moving dterm slider updates all dterm filter frequencies  
+- ✅ No infinite loops or excessive MSP calls
+- ✅ Values update smoothly in real-time
+- ✅ Multipliers persist across saves
+
+**MSP Flow:**
+```
+User Input → Vue Computed Setter → FC.TUNING_SLIDERS
+                                         ↓
+                                   Watcher Triggers
+                                         ↓
+                          MSP_CALCULATE_SIMPLIFIED_GYRO (code 143)
+                                         ↓
+                                  Firmware Calculates
+                                         ↓
+                        Returns updated FC.FILTER_CONFIG values
+                                         ↓
+                        Vue displays new filter frequencies
+```
+
+**Key Technical Details:**
+- `MSPCodes.MSP_CALCULATE_SIMPLIFIED_GYRO` = 143
+- `MSPCodes.MSP_CALCULATE_SIMPLIFIED_DTERM` = 144
+- `mspHelper.crunch()` serializes current FC data for MSP command
+- Firmware does the heavy lifting - no Vue calculations needed
+- Same pattern as original TuningSliders.js implementation
+
+---
+
+**Phase 4 Completion Date:** February 4, 2026  
+**Phase 4 Duration:** ~6 hours  
+**Phase 4 Result:** SUCCESS ✅ with 7 critical bugs fixed
+
+**Issues Resolved:**
+1. ✅ D-term lowpass max frequency range fixed (1000-1000 → 200-2000)
+2. ✅ setTimeout race condition fixed with timeout tracking and cleanup
+3. ✅ Throttle curve watcher now includes all dependencies
+4. ✅ TPA field bindings corrected (RC_TUNING → ADVANCED_TUNING)
+5. ✅ PID profile name save fixed (CONFIG.name → pidProfileNames array)
+6. ✅ Rate profile name binding fixed (CONFIG.name → rateProfileNames array)
+7. ✅ Filter slider multipliers now trigger MSP calculations to update filter values
+
+**Combined Progress:** Phases 1-4 Complete - All 3 sub-tabs fully migrated with all bugs fixed!
+```vue
 <!-- TPA Mode bound to wrong field -->
 <select id="tpaMode" v-model.number="rcTuning.dynamic_THR_PID">
 
