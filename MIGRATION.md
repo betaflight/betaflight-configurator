@@ -4511,3 +4511,201 @@ FC.CONFIG.rateProfileNames[FC.CONFIG.rateProfile] = $('input[name="rateProfileNa
 **Phase 4 Result:** SUCCESS ✅
 
 **Combined Progress:** Phases 1-4 Complete - All major sub-tabs migrated!
+
+---
+
+## 14. Post-Phase 4 Bug Fixes
+
+### Issue #10: Profile Name Not Persisting (CodeRabbitAI Review #4)
+**Date:** February 4, 2026
+**Source:** CodeRabbitAI pull request review comment
+**Component:** [PidSubTab.vue](src/components/tabs/pid-tuning/PidSubTab.vue)
+
+**Problem:**
+User edits to PID profile name were not being persisted back to `FC.CONFIG.pidProfileNames`. The `profileName` ref was only initialized from `FC.CONFIG` on mount but lacked a watcher to sync changes back.
+
+**Original Implementation (pid_tuning.js:830):**
+```javascript
+// Save profile name
+FC.CONFIG.pidProfileNames[FC.CONFIG.profile] = $('input[name="pidProfileName"]').val().trim();
+```
+
+**Vue Migration Gap:**
+The save function in PidTuningTab.vue correctly reads from `pidSubTab.value.profileName`, but the PidSubTab component didn't watch the ref to sync changes back to FC.CONFIG:
+
+```javascript
+// Only read, never write back
+const profileName = ref("");
+// ... on mount:
+profileName.value = FC.CONFIG.pidProfileNames[FC.CONFIG.profile] || "";
+```
+
+**Solution:**
+Added watcher to sync `profileName` changes to `FC.CONFIG.pidProfileNames` immediately:
+
+```javascript
+// Watch profile name changes and sync to FC.CONFIG
+watch(profileName, (newValue) => {
+    if (showProfileName.value && FC.CONFIG.pidProfileNames) {
+        FC.CONFIG.pidProfileNames[FC.CONFIG.profile] = newValue;
+    }
+});
+```
+
+**Files Modified:**
+- [PidSubTab.vue](src/components/tabs/pid-tuning/PidSubTab.vue) lines 1341-1347
+
+**Testing:**
+1. Edit PID profile name in input field
+2. Switch to another profile
+3. Switch back - name should be preserved
+4. Save configuration
+5. Reload page - name should persist
+
+**Status:** FIXED ✅
+
+---
+
+### Issue #11: TPA Settings Missing API Version Gating (CodeRabbitAI Review #4)
+**Date:** February 4, 2026
+**Source:** CodeRabbitAI pull request review comment
+**Component:** [PidSubTab.vue](src/components/tabs/pid-tuning/PidSubTab.vue)
+
+**Problem:**
+TPA (Throttle PID Attenuation) settings were only implemented for API >= 1.45 using `FC.ADVANCED_TUNING`, but the code didn't handle older API versions that use `FC.RC_TUNING`. This would cause data loss or incorrect values on legacy firmware.
+
+**Original Implementation (pid_tuning.js:136-143, 909-916):**
+```javascript
+// LOAD
+if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+    // API >= 1.45: TPA moved to profile (ADVANCED_TUNING)
+    $('select[id="tpaMode"]').val(FC.ADVANCED_TUNING.tpaMode);
+    $('input[id="tpaRate"]').val(FC.ADVANCED_TUNING.tpaRate * 100);
+    $('input[id="tpaBreakpoint"]').val(FC.ADVANCED_TUNING.tpaBreakpoint);
+} else {
+    // API < 1.45: TPA in global settings (RC_TUNING)
+    $('.tpa-old input[name="tpa"]').val(FC.RC_TUNING.dynamic_THR_PID.toFixed(2));
+    $('.tpa-old input[name="tpa-breakpoint"]').val(FC.RC_TUNING.dynamic_THR_breakpoint);
+}
+
+// SAVE
+if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+    FC.ADVANCED_TUNING.tpaMode = $('select[id="tpaMode"]').val();
+    FC.ADVANCED_TUNING.tpaRate = parseInt($('input[id="tpaRate"]').val()) / 100;
+    FC.ADVANCED_TUNING.tpaBreakpoint = parseInt($('input[id="tpaBreakpoint"]').val());
+} else {
+    FC.RC_TUNING.dynamic_THR_PID = parseFloat($('.tpa-old input[name="tpa"]').val());
+    FC.RC_TUNING.dynamic_THR_breakpoint = parseInt($('.tpa-old input[name="tpa-breakpoint"]').val());
+}
+```
+
+**Vue Migration Gap:**
+Original Vue code only handled API >= 1.45:
+```javascript
+const tpaMode = computed({
+    get: () => FC.ADVANCED_TUNING?.tpaMode ?? 0,
+    set: (val) => {
+        if (FC.ADVANCED_TUNING) FC.ADVANCED_TUNING.tpaMode = val;
+    },
+});
+// ... similar for tpaRate and tpaBreakpoint - all only using ADVANCED_TUNING
+```
+
+**Data Structure Differences:**
+- **API >= 1.45:**
+  - Location: `FC.ADVANCED_TUNING` (profile-specific)
+  - Fields: `tpaMode` (0=PD, 1=D), `tpaRate` (decimal 0-1), `tpaBreakpoint` (RPM)
+  
+- **API < 1.45:**
+  - Location: `FC.RC_TUNING` (global)
+  - Fields: `dynamic_THR_PID` (decimal, always PD mode), `dynamic_THR_breakpoint` (RPM)
+  - No tpaMode field (always uses PD mode)
+
+**Solution:**
+Added API version check and dual-source computed properties:
+
+```javascript
+// TPA settings with API version gating
+const usesAdvancedTpa = computed(() => {
+    return semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45);
+});
+
+const tpaMode = computed({
+    get: () => {
+        if (usesAdvancedTpa.value) {
+            return FC.ADVANCED_TUNING?.tpaMode ?? 0;
+        }
+        // For API < 1.45, tpaMode doesn't exist - always return 0 (PD mode)
+        return 0;
+    },
+    set: (val) => {
+        if (usesAdvancedTpa.value && FC.ADVANCED_TUNING) {
+            FC.ADVANCED_TUNING.tpaMode = val;
+        }
+        // For API < 1.45, tpaMode is not supported
+    },
+});
+
+const tpaRate = computed({
+    get: () => {
+        if (usesAdvancedTpa.value) {
+            // API >= 1.45: tpaRate stored as decimal (0-1), display as percentage
+            return Math.round((FC.ADVANCED_TUNING?.tpaRate ?? 0) * 100);
+        } else {
+            // API < 1.45: dynamic_THR_PID stored as decimal, display as percentage
+            return Math.round((FC.RC_TUNING?.dynamic_THR_PID ?? 0) * 100);
+        }
+    },
+    set: (val) => {
+        if (usesAdvancedTpa.value && FC.ADVANCED_TUNING) {
+            FC.ADVANCED_TUNING.tpaRate = val / 100;
+        } else if (FC.RC_TUNING) {
+            FC.RC_TUNING.dynamic_THR_PID = val / 100;
+        }
+    },
+});
+
+const tpaBreakpoint = computed({
+    get: () => {
+        if (usesAdvancedTpa.value) {
+            return FC.ADVANCED_TUNING?.tpaBreakpoint ?? 1500;
+        } else {
+            return FC.RC_TUNING?.dynamic_THR_breakpoint ?? 1500;
+        }
+    },
+    set: (val) => {
+        if (usesAdvancedTpa.value && FC.ADVANCED_TUNING) {
+            FC.ADVANCED_TUNING.tpaBreakpoint = val;
+        } else if (FC.RC_TUNING) {
+            FC.RC_TUNING.dynamic_THR_breakpoint = val;
+        }
+    },
+});
+```
+
+**Files Modified:**
+- [PidSubTab.vue](src/components/tabs/pid-tuning/PidSubTab.vue) lines 1093-1158
+
+**Testing:**
+1. **Modern Firmware (API >= 1.45):**
+   - Connect to Betaflight 4.3+ flight controller
+   - Verify TPA mode selector shows PD/D options
+   - Change TPA settings and save
+   - Reload and verify values persist in FC.ADVANCED_TUNING
+   
+2. **Legacy Firmware (API < 1.45):**
+   - Connect to Betaflight 4.2 or earlier flight controller
+   - Verify TPA mode selector is disabled (always PD)
+   - Change TPA rate/breakpoint and save
+   - Reload and verify values persist in FC.RC_TUNING
+   - Verify tpaMode changes don't affect RC_TUNING
+
+**Why This Matters:**
+- Prevents data corruption on legacy firmware
+- Maintains backward compatibility with older flight controllers
+- Ensures proper field mapping based on API version
+- Follows same pattern as original jQuery implementation
+
+**Status:** FIXED ✅
+
+---
