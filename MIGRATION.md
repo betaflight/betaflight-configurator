@@ -40,6 +40,31 @@
 **Files Affected:**
 - `src/components/tabs/pid-tuning/PidSubTab.vue` - All property bindings fixed
 
+### Slider Danger Zone Warnings
+
+**Issue:** The Vue migration omitted the red danger zone warnings that appear when slider values exceed safe limits.
+
+**Original Implementation:** TuningSliders.js contained `updateSlidersWarning()` and `updateFilterSlidersWarning()` functions that showed red "CAUTION" messages when PID/Filter values were dangerously high or low.
+
+**PID Warning Thresholds:**
+- P gain > 70
+- I gain > 2.5 × P gain  
+- D gain or D_MAX exceeds safe limits (varies by API version)
+
+**Filter Warning Thresholds:**
+- Gyro filter multiplier < 0.45 or > 1.55
+- D-term filter multiplier < 0.75 or > 1.25
+
+**Fix Applied (February 5, 2026):**
+- Added `slidersInDangerZone` computed property to PidSubTab.vue
+- Added `filterSlidersInDangerZone` computed property to FilterSubTab.vue
+- Both use exact thresholds from TuningSliders.js
+- Warnings appear as red danger divs above slider sections
+
+**Files Affected:**
+- `src/components/tabs/pid-tuning/PidSubTab.vue` - Added PID slider warning
+- `src/components/tabs/pid-tuning/FilterSubTab.vue` - Added filter slider warning
+
 ---
 
 ## Executive Summary

@@ -69,6 +69,11 @@
                     </tr>
                 </tbody>
             </table>
+
+            <!-- Danger Zone Warning -->
+            <div v-if="filterSlidersInDangerZone" class="danger slidersWarning">
+                <p v-html="$t('pidTuningSliderWarning')"></p>
+            </div>
         </div>
 
         <!-- Two Column Layout -->
@@ -728,6 +733,21 @@ const dtermFilterMultiplier = computed({
             FC.TUNING_SLIDERS.slider_dterm_filter_multiplier = Math.round(value * 100);
         }
     },
+});
+
+// Check if filter sliders are in danger zone (too little filtering)
+const filterSlidersInDangerZone = computed(() => {
+    const WARNING_FILTER_GYRO_LOW_GAIN = 0.45;
+    const WARNING_FILTER_GYRO_HIGH_GAIN = 1.55;
+    const WARNING_FILTER_DTERM_LOW_GAIN = 0.75;
+    const WARNING_FILTER_DTERM_HIGH_GAIN = 1.25;
+
+    return (
+        gyroFilterMultiplier.value >= WARNING_FILTER_GYRO_HIGH_GAIN ||
+        gyroFilterMultiplier.value <= WARNING_FILTER_GYRO_LOW_GAIN ||
+        dtermFilterMultiplier.value >= WARNING_FILTER_DTERM_HIGH_GAIN ||
+        dtermFilterMultiplier.value <= WARNING_FILTER_DTERM_LOW_GAIN
+    );
 });
 
 // Gyro Lowpass Mode (0 = static, 1 = dynamic)
