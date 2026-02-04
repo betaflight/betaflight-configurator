@@ -254,7 +254,7 @@ async function copyProfile() {
     // Create options for profiles excluding current one
     const options = [];
     for (let i = 0; i < 3; i++) {
-        if (i !== profile.value) {
+        if (i !== currentProfile.value) {
             const name = FC.CONFIG.pidProfileNames?.[i] || `Profile ${i + 1}`;
             options.push({ value: i, label: name });
         }
@@ -272,12 +272,12 @@ async function copyProfile() {
     // Set up copy profile data
     FC.COPY_PROFILE = FC.COPY_PROFILE || {};
     FC.COPY_PROFILE.type = 0; // 0 = PID profile
-    FC.COPY_PROFILE.srcProfile = profile.value;
+    FC.COPY_PROFILE.srcProfile = currentProfile.value;
     FC.COPY_PROFILE.dstProfile = targetProfile;
 
     try {
         await MSP.promise(MSPCodes.MSP_COPY_PROFILE, mspHelper.crunch(MSPCodes.MSP_COPY_PROFILE));
-        console.log(`[PidTuningTab] Copied profile ${profile.value} to ${targetProfile}`);
+        console.log(`[PidTuningTab] Copied profile ${currentProfile.value} to ${targetProfile}`);
         // Optionally reload data or show success message
     } catch (error) {
         console.error("[PidTuningTab] Failed to copy profile:", error);
@@ -288,7 +288,7 @@ async function copyRateProfile() {
     // Create options for rate profiles excluding current one
     const options = [];
     for (let i = 0; i < 6; i++) {
-        if (i !== rateProfile.value) {
+        if (i !== currentRateProfile.value) {
             const name = FC.CONFIG.rateProfileNames?.[i] || `Rate Profile ${i + 1}`;
             options.push({ value: i, label: name });
         }
@@ -306,12 +306,12 @@ async function copyRateProfile() {
     // Set up copy profile data
     FC.COPY_PROFILE = FC.COPY_PROFILE || {};
     FC.COPY_PROFILE.type = 1; // 1 = Rate profile
-    FC.COPY_PROFILE.srcProfile = rateProfile.value;
+    FC.COPY_PROFILE.srcProfile = currentRateProfile.value;
     FC.COPY_PROFILE.dstProfile = targetProfile;
 
     try {
         await MSP.promise(MSPCodes.MSP_COPY_PROFILE, mspHelper.crunch(MSPCodes.MSP_COPY_PROFILE));
-        console.log(`[PidTuningTab] Copied rate profile ${rateProfile.value} to ${targetProfile}`);
+        console.log(`[PidTuningTab] Copied rate profile ${currentRateProfile.value} to ${targetProfile}`);
         // Optionally reload data or show success message
     } catch (error) {
         console.error("[PidTuningTab] Failed to copy rate profile:", error);
