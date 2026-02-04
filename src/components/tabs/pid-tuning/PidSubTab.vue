@@ -1043,7 +1043,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted, nextTick } from "vue";
+import { ref, computed, watch, onMounted, onUnmounted, nextTick } from "vue";
 import FC from "@/js/fc";
 import TuningSliders from "@/js/TuningSliders";
 import semver from "semver";
@@ -1291,6 +1291,9 @@ async function initializeSliders() {
     await nextTick();
 }
 
+// Track timeout to prevent race conditions
+let userInteractionTimeout = null;
+
 // Slider change handler
 function onSliderChange() {
     isUserInteracting.value = true;
@@ -1308,9 +1311,13 @@ function onSliderChange() {
     // Calculate new PIDs
     TuningSliders.calculateNewPids();
 
-    // Reset flag after a longer delay to prevent watcher interference
-    setTimeout(() => {
+    // Clear previous timeout and set new one to prevent race conditions
+    if (userInteractionTimeout !== null) {
+        clearTimeout(userInteractionTimeout);
+    }
+    userInteractionTimeout = setTimeout(() => {
         isUserInteracting.value = false;
+        userInteractionTimeout = null;
     }, 500);
 }
 
@@ -1354,6 +1361,14 @@ defineExpose({
 // Initialize sliders when component mounts
 onMounted(() => {
     initializeSliders();
+});
+
+// Clean up timeout on component unmount
+onUnmounted(() => {
+    if (userInteractionTimeout !== null) {
+        clearTimeout(userInteractionTimeout);
+        userInteractionTimeout = null;
+    }
 });
 </script>
 

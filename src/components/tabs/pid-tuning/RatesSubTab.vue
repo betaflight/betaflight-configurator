@@ -867,9 +867,9 @@ function updateRatesLabels() {
     const balloonsDirty = [];
 
     // Draw balloon labels at the curve positions (like master)
-    const maxAngularVelRoll = `${maxAngularVels.roll.toFixed(0)  } deg/s`;
-    const maxAngularVelPitch = `${maxAngularVels.pitch.toFixed(0)  } deg/s`;
-    const maxAngularVelYaw = `${maxAngularVels.yaw.toFixed(0)  } deg/s`;
+    const maxAngularVelRoll = `${maxAngularVels.roll.toFixed(0)} deg/s`;
+    const maxAngularVelPitch = `${maxAngularVels.pitch.toFixed(0)} deg/s`;
+    const maxAngularVelYaw = `${maxAngularVels.yaw.toFixed(0)} deg/s`;
 
     // Create an array of balloons to draw (like master)
     const balloons = [
@@ -1524,7 +1524,7 @@ watch([ratesType, rcRate, rcRatePitch, rcRateYaw, rollRate, pitchRate, yawRate, 
     });
 });
 
-watch([throttleMid, throttleHover, throttleExpo], () => {
+watch([throttleMid, throttleHover, throttleExpo, throttleLimitType, throttleLimitPercent], () => {
     nextTick(() => {
         drawThrottleCurve();
     });
