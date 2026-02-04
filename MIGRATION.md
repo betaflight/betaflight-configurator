@@ -65,6 +65,27 @@
 - `src/components/tabs/pid-tuning/PidSubTab.vue` - Added PID slider warning
 - `src/components/tabs/pid-tuning/FilterSubTab.vue` - Added filter slider warning
 
+### Filter Mode Toggle Restoration
+
+**Issue:** When toggling a filter off and back on, the code always restored dynamic mode even if the user was previously in static mode.
+
+**Root Cause:** The `previousValues` ref was initialized with non-zero default values (e.g., `gyroLowpassDynMin: 200`). When re-enabling a filter, the code inferred the mode by checking if these values were non-zero, which they always were due to the initialization, so it always restored dynamic mode.
+
+**Original Behavior:** The original jQuery implementation didn't preserve mode perfectly either - when disabling a filter, all FC values were set to 0, so on re-enable it would check the FC values and default to dynamic if all were 0.
+
+**Fix Applied (February 5, 2026):**
+- Added explicit mode tracking fields:
+  * `lastGyroLowpassMode` (0 = static, 1 = dynamic)
+  * `lastDtermLowpassMode` (0 = static, 1 = dynamic)
+- When disabling a filter, save the current mode explicitly
+- When re-enabling, restore the explicitly saved mode
+- No longer infers mode from non-zero values in previousValues
+
+**Impact:** Users now get their last-used mode restored (static or dynamic) when toggling filters on/off, matching expected behavior.
+
+**Files Affected:**
+- `src/components/tabs/pid-tuning/FilterSubTab.vue` - Fixed gyroLowpassEnabled and dtermLowpassEnabled setters
+
 ---
 
 ## Executive Summary
