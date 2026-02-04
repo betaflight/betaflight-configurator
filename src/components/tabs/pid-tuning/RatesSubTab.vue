@@ -380,6 +380,11 @@ import $ from "jquery";
 import FC from "@/js/fc";
 import RateCurve from "@/js/RateCurve";
 import Model from "@/js/model";
+import betaflightLogo from "@/images/rate_logos/betaflight.svg";
+import raceflightLogo from "@/images/rate_logos/raceflight.svg";
+import kissLogo from "@/images/rate_logos/kiss.svg";
+import actualLogo from "@/images/rate_logos/actual.svg";
+import quickratesLogo from "@/images/rate_logos/quickrates.svg";
 
 // Canvas refs
 const rateCurveLayer0 = ref(null);
@@ -421,13 +426,7 @@ const ratesType = computed({
 
 // Rates Logo Source
 const ratesLogoSrc = computed(() => {
-    const logos = [
-        "../images/rate_logos/betaflight.svg",
-        "../images/rate_logos/raceflight.svg",
-        "../images/rate_logos/kiss.svg",
-        "../images/rate_logos/actual.svg",
-        "../images/rate_logos/quick.svg",
-    ];
+    const logos = [betaflightLogo, raceflightLogo, kissLogo, actualLogo, quickratesLogo];
     return logos[ratesType.value] || logos[0];
 });
 
@@ -1217,8 +1216,11 @@ function drawThrottleCurve() {
     const canvas = throttleCurveCanvas.value;
     const context = canvas.getContext("2d");
 
-    // Set canvas dimensions
+    // Set canvas dimensions from DOM dimensions to prevent blurry scaling
     const rect = canvas.getBoundingClientRect();
+    if (!rect.height || !rect.width || rect.height === 0 || rect.width === 0) return;
+
+    canvas.height = rect.height;
     canvas.width = canvas.height * (rect.width / rect.height);
     if (canvas.width === 0 || canvas.height === 0) return;
 

@@ -5115,3 +5115,126 @@ if (initTimeout) {
 ALL setTimeout/setInterval calls MUST be tracked and cleared. No exceptions. This is the third timer management bug in this migration - need to do a comprehensive audit of ALL timer usage.
 
 ---
+
+## Issue #19: Rate Logos Using String Paths and Wrong Filename
+
+**Location:** [src/components/tabs/pid-tuning/RatesSubTab.vue](src/components/tabs/pid-tuning/RatesSubTab.vue#L423-432)
+
+**Problem:**
+The `ratesLogoSrc` computed property used raw string paths:
+```javascript
+const logos = [
+    "../images/rate_logos/betaflight.svg",
+    "../images/rate_logos/raceflight.svg",
+    "../images/rate_logos/kiss.svg",
+    "../images/rate_logos/actual.svg",
+    "../images/rate_logos/quick.svg",  // WRONG FILENAME!
+];
+```
+
+**Issues:**
+- Raw string paths bypass Vite's asset handling
+- Images not included in build optimization
+- Wrong filename: "quick.svg" doesn't exist - should be "quickrates.svg"
+- No build-time validation of asset existence
+- Relative paths fragile to component location changes
+
+**Solution:**
+Import SVG files as modules:
+
+1. Added imports at top of script:
+```javascript
+import betaflightLogo from "@/images/rate_logos/betaflight.svg";
+import raceflightLogo from "@/images/rate_logos/raceflight.svg";
+import kissLogo from "@/images/rate_logos/kiss.svg";
+import actualLogo from "@/images/rate_logos/actual.svg";
+import quickratesLogo from "@/images/rate_logos/quickrates.svg";
+```
+
+2. Updated logos array to use imported modules:
+```javascript
+const logos = [
+    betaflightLogo,
+    raceflightLogo,
+    kissLogo,
+    actualLogo,
+    quickratesLogo,
+];
+```
+
+**Benefits:**
+- Vite processes and optimizes SVG assets at build time
+- Build fails if SVG file doesn't exist (catches typos early)
+- Correct hashed filenames for cache busting
+- Assets properly included in production bundle
+- Type safety with module imports
+
+**Testing:**
+1. Select each rate type (Betaflight, Raceflight, KISS, Actual, Quick)
+2. Verify correct logo displays for each type
+3. Check that Quick rates shows "quickrates.svg" (was broken before)
+4. Verify build includes all SVG assets
+
+---
+
+## Issue #20: Throttle Curve Canvas Sizing Causes Blurry Rendering
+
+**Location:** [src/components/tabs/pid-tuning/RatesSubTab.vue](src/components/tabs/pid-tuning/RatesSubTab.vue#L1217-1223)
+
+**Problem:**
+Canvas sizing used the wrong dimension:
+```javascript
+const rect = canvas.getBoundingClientRect();
+canvas.width = canvas.height * (rect.width / rect.height);
+```
+
+**Issues:**
+- Used default `canvas.height` (300px) instead of DOM height
+- This caused aspect ratio calculation to be wrong
+- Result: Blurry, stretched throttle curve rendering
+- Could produce invalid widths if canvas.height was 0
+
+**Root Cause:**
+Canvas elements have **two** dimensions:
+1. **DOM size** (CSS): What you see on screen (`rect.width`, `rect.height`)
+2. **Drawing buffer size**: Actual pixel resolution (`canvas.width`, `canvas.height`)
+
+The code was mixing these - using default buffer height with DOM width ratio.
+
+**Solution:**
+Set canvas dimensions from DOM dimensions first:
+
+```javascript
+// Set canvas dimensions from DOM dimensions to prevent blurry scaling
+const rect = canvas.getBoundingClientRect();
+if (!rect.height || !rect.width || rect.height === 0 || rect.width === 0) return;
+
+canvas.height = rect.height;  // Set buffer height to DOM height
+canvas.width = canvas.height * (rect.width / rect.height);  // Now aspect ratio is correct
+if (canvas.width === 0 || canvas.height === 0) return;
+```
+
+**Why This Matters:**
+- Sharp rendering: Drawing buffer matches display size
+- Correct aspect ratio: Both dimensions derived from DOM
+- Early return guards: Prevent invalid context sizing
+- No stretched curves: Throttle curve displays correctly
+
+**Technical Details:**
+- Canvas default buffer size: 300x150 pixels
+- DOM size set by CSS: Can be different from buffer
+- Browser scales buffer to fit DOM if sizes don't match
+- Scaling causes blurry rendering if buffer is wrong size
+- **Best practice**: Always match buffer size to DOM size for 1:1 pixel ratio
+
+**Testing:**
+1. Open Rates subtab
+2. Check throttle curve canvas is sharp (not blurry)
+3. Resize window - curve should remain sharp
+4. Verify curve aspect ratio is correct (not stretched)
+5. Test with different window sizes
+
+**Related Code:**
+Rate curve canvases set dimensions correctly (1000x1000), but throttle curve is sized dynamically based on container, so proper sizing is critical.
+
+---
