@@ -437,9 +437,9 @@ const isBetaflightRates = computed(() => ratesType.value === 0);
 const showMaxRateWarning = computed(() => {
     const MAX_RATE_WARNING = 1800;
     return (
-        parseInt(maxAngularVelRoll.value) > MAX_RATE_WARNING ||
-        parseInt(maxAngularVelPitch.value) > MAX_RATE_WARNING ||
-        parseInt(maxAngularVelYaw.value) > MAX_RATE_WARNING
+        numericMaxAngularVelRoll.value > MAX_RATE_WARNING ||
+        numericMaxAngularVelPitch.value > MAX_RATE_WARNING ||
+        numericMaxAngularVelYaw.value > MAX_RATE_WARNING
     );
 });
 
@@ -622,7 +622,7 @@ const centerSensitivityYaw = computed(() => {
     return `${centerSensitivity} - ${maxAngularVel}`;
 });
 
-// Max Angular Velocity (Non-Betaflight Rates)
+// Max Angular Velocity (Non-Betaflight Rates) - String versions for display
 const maxAngularVelRoll = computed(() => {
     if (isBetaflightRates.value) return "";
     return calculateMaxAngularVel(rollRate.value, rcRate.value, rcExpo.value, FC.RC_TUNING.roll_rate_limit).toString();
@@ -646,6 +646,19 @@ const maxAngularVelYaw = computed(() => {
         rcYawExpo.value,
         FC.RC_TUNING.yaw_rate_limit,
     ).toString();
+});
+
+// Numeric Max Angular Velocity (All rate types) - Used for warning checks
+const numericMaxAngularVelRoll = computed(() => {
+    return calculateMaxAngularVel(rollRate.value, rcRate.value, rcExpo.value, FC.RC_TUNING.roll_rate_limit);
+});
+
+const numericMaxAngularVelPitch = computed(() => {
+    return calculateMaxAngularVel(pitchRate.value, rcRatePitch.value, rcPitchExpo.value, FC.RC_TUNING.pitch_rate_limit);
+});
+
+const numericMaxAngularVelYaw = computed(() => {
+    return calculateMaxAngularVel(yawRate.value, rcRateYaw.value, rcYawExpo.value, FC.RC_TUNING.yaw_rate_limit);
 });
 
 function calculateMaxAngularVel(rate, rcRate, rcExpo, limit) {
