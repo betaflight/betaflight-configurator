@@ -1555,16 +1555,22 @@ onMounted(() => {
     if (ratesPreviewContainer.value && ratesPreviewCanvas.value) {
         // Check if FC.MIXER_CONFIG is available, if not wait a bit
         const initModel = () => {
+            // Guard: Return early if refs are null (component unmounted)
+            if (!ratesPreviewContainer.value || !ratesPreviewCanvas.value) {
+                return;
+            }
+
             if (!FC.MIXER_CONFIG || FC.MIXER_CONFIG.mixer === undefined) {
-                // Retry after a short delay
-                setTimeout(initModel, 100);
+                // Assign timeout to rcUpdateInterval so it can be cleared on unmount
+                rcUpdateInterval = setTimeout(initModel, 100);
                 return;
             }
 
             // Ensure container has dimensions
             const containerRect = ratesPreviewContainer.value.getBoundingClientRect();
             if (containerRect.width === 0 || containerRect.height === 0) {
-                setTimeout(initModel, 100);
+                // Assign timeout to rcUpdateInterval so it can be cleared on unmount
+                rcUpdateInterval = setTimeout(initModel, 100);
                 return;
             }
 
@@ -1622,21 +1628,27 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
+    // Stop rendering immediately
     keepRendering = false;
 
+    // Cancel animation frame
     if (animationFrameId) {
         cancelAnimationFrame(animationFrameId);
         animationFrameId = null;
     }
 
+    // Dispose 3D model
     if (model) {
         window.removeEventListener("resize", handleModelResize);
         model.dispose();
         model = null;
     }
 
+    // Clear all timers (rcUpdateInterval handles both setInterval and setTimeout)
+    // This prevents initModel retries and RC updates from running after unmount
     if (rcUpdateInterval) {
         clearInterval(rcUpdateInterval);
+        clearTimeout(rcUpdateInterval); // Also clear if it's a setTimeout
         rcUpdateInterval = null;
     }
 });
