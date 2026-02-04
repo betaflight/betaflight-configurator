@@ -954,9 +954,7 @@ function updateRatesLabels() {
     ];
 
     // Add current RC stick values on the left side (like master)
-    // TODO: Fix left-side balloon positioning - they should stay at fixed Y positions (150, 250, 350)
-    // Currently overlap detection is moving them. Need to investigate why 'none' alignment isn't
-    // preventing the movement. May need to draw them after sorting, or use separate balloonsDirty array.
+    // Calculate stick values first, then add to balloons array AFTER sorting
     if (FC.RC && FC.RC.channels && FC.RC.channels[0] && FC.RC.channels[1] && FC.RC.channels[2]) {
         // Calculate current stick angular velocities
         const currentRollRate = rateCurve.drawStickPosition(
@@ -998,17 +996,59 @@ function updateRatesLabels() {
             "#8080FF",
         );
 
-        // Draw current values as balloons on the left side immediately (before sorting)
-        // Don't add to balloons array to avoid sorting/reordering
-        drawBalloonLabel(ctx, `${currentRollRate} deg/s`, 10, 150, "none", BALLOON_COLORS.roll, balloonsDirty);
+        // Sort right-side balloons first (like master)
+        balloons.sort((a, b) => b.value - a.value);
 
-        drawBalloonLabel(ctx, `${currentPitchRate} deg/s`, 10, 250, "none", BALLOON_COLORS.pitch, balloonsDirty);
-
-        drawBalloonLabel(ctx, `${currentYawRate} deg/s`, 10, 350, "none", BALLOON_COLORS.yaw, balloonsDirty);
+        // NOW add left-side balloons to array AFTER sorting (like master)
+        // This prevents them from being reordered
+        balloons.push(
+            {
+                value: parseInt(currentRollRate),
+                draw: () => {
+                    drawBalloonLabel(
+                        ctx,
+                        `${currentRollRate} deg/s`,
+                        10,
+                        150,
+                        "none",
+                        BALLOON_COLORS.roll,
+                        balloonsDirty,
+                    );
+                },
+            },
+            {
+                value: parseInt(currentPitchRate),
+                draw: () => {
+                    drawBalloonLabel(
+                        ctx,
+                        `${currentPitchRate} deg/s`,
+                        10,
+                        250,
+                        "none",
+                        BALLOON_COLORS.pitch,
+                        balloonsDirty,
+                    );
+                },
+            },
+            {
+                value: parseInt(currentYawRate),
+                draw: () => {
+                    drawBalloonLabel(
+                        ctx,
+                        `${currentYawRate} deg/s`,
+                        10,
+                        350,
+                        "none",
+                        BALLOON_COLORS.yaw,
+                        balloonsDirty,
+                    );
+                },
+            },
+        );
+    } else {
+        // Still need to sort even if no RC values
+        balloons.sort((a, b) => b.value - a.value);
     }
-
-    // Sort them in descending order so the largest value is at the top always (like master)
-    balloons.sort((a, b) => b.value - a.value);
 
     // Draw angle mode labels if applicable
     if (isBetaflightRates.value || ratesType.value === 3) {
@@ -1055,26 +1095,16 @@ function drawBalloonLabel(ctx, text, x, y, align, colors, balloonsDirty) {
 
     // Adjust the coordinates for balloon background (like master)
     x += (align === "right" ? -(width + DEFAULT_OFFSET) : 0) + (align === "left" ? DEFAULT_OFFSET : 0);
+    y -= height / 2;
 
-    // Center Y position for dynamic balloons, but preserve exact Y for fixed balloons
-    if (align !== "none") {
-        y -= height / 2;
-
-        // Clamp Y to canvas bounds for dynamic balloons only
-        if (y < 0) {
-            y = 0;
-        } else if (y > ctx.canvas.height) {
-            y = ctx.canvas.height;
-        }
-    } else {
-        // For fixed-position balloons (align="none"), adjust Y to account for balloon height
-        // but don't clamp to canvas bounds - use exact specified Y position
-        y -= height / 2;
+    if (y < 0) {
+        y = 0;
+    } else if (y > ctx.canvas.height) {
+        y = ctx.canvas.height;
     }
 
     // Check that the balloon does not already overlap (like master)
-    // Skip overlap detection for 'none' alignment (left-side balloons)
-    if (align !== "none") {
+    for (let i = 0; i < balloonsDirty.length; i++) {
         for (let i = 0; i < balloonsDirty.length; i++) {
             if (
                 (x >= balloonsDirty[i].left && x <= balloonsDirty[i].right) ||
@@ -1099,10 +1129,10 @@ function drawBalloonLabel(ctx, text, x, y, align, colors, balloonsDirty) {
                 }
             }
         }
-
-        // Only record position for overlap detection if not 'none' alignment
-        balloonsDirty.push({ left: x, right: x + width, top: y - DEFAULT_MARGIN, bottom: y + height + DEFAULT_MARGIN });
     }
+
+    // Record position for overlap detection (like master)
+    balloonsDirty.push({ left: x, right: x + width, top: y - DEFAULT_MARGIN, bottom: y + height + DEFAULT_MARGIN });
 
     // Draw rounded rectangle balloon with pointer (like master)
     const pointerLength = (height - 2 * DEFAULT_RADIUS) / 6;
