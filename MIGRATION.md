@@ -4788,3 +4788,85 @@ Replaced all occurrences of `rateProfile.value` with `currentRateProfile.value`.
 ---
 
 **Total Issues Fixed This Session:** 15 (Issues #1-#15)
+
+### Issue #16: Untracked Nested setTimeout in RatesSubTab
+**Date:** February 4, 2026
+**Source:** CodeRabbitAI pull request review comment
+**Component:** [RatesSubTab.vue](src/components/tabs/pid-tuning/RatesSubTab.vue)
+
+**Problem:**
+After successfully creating the 3D model, the code uses a nested `setTimeout()` (line 1584) to delay adding the resize event listener and starting the animation loop by 100ms. However, this timeout was not being tracked, creating a potential memory leak scenario:
+
+1. Model creates successfully
+2. Nested setTimeout schedules callback for 100ms later
+3. Component unmounts before 100ms elapsed
+4. Callback still fires after unmount
+5. Adds resize event listener that can never be removed (memory leak)
+6. Starts animation loop via `requestAnimationFrame()` (memory leak)
+
+**Original Implementation:**
+```javascript
+model = new Model($(ratesPreviewContainer.value), $(ratesPreviewCanvas.value));
+
+// Untracked setTimeout - can run after unmount!
+setTimeout(() => {
+    window.addEventListener("resize", handleModelResize);
+    lastTimestamp = performance.now();
+    animationFrameId = requestAnimationFrame(renderModel);
+}, 100);
+```
+
+**Why This Happens:**
+The 100ms delay is needed to give the 3D model time to initialize its renderer before starting the animation loop. However, in fast navigation scenarios (user quickly switches tabs), the component can unmount during this delay period.
+
+**Solution:**
+Introduced `modelInitTimeout` variable to track the nested setTimeout:
+
+```javascript
+// Variable declaration
+let modelInitTimeout = null; // For setTimeout after model creation
+
+// In initModel after successful model creation
+model = new Model($(ratesPreviewContainer.value), $(ratesPreviewCanvas.value));
+
+modelInitTimeout = setTimeout(() => {
+    modelInitTimeout = null; // Clear reference once callback runs
+    
+    window.addEventListener("resize", handleModelResize);
+    lastTimestamp = performance.now();
+    animationFrameId = requestAnimationFrame(renderModel);
+}, 100);
+
+// In onUnmounted - clear BEFORE disposing model
+if (modelInitTimeout) {
+    clearTimeout(modelInitTimeout);
+    modelInitTimeout = null;
+}
+```
+
+**Cleanup Order Matters:**
+The cleanup order in `onUnmounted` is now:
+1. Stop rendering flag (`keepRendering = false`)
+2. Cancel any pending animation frame
+3. **Clear model init timeout** (prevents resize listener + animation from starting)
+4. Remove resize listener + dispose model (only if it was created)
+5. Clear initModel retry timeout
+6. Clear RC update interval
+
+This ensures the nested timeout is cleared before we try to clean up the model, preventing the timeout callback from running after cleanup.
+
+**Files Modified:**
+- [RatesSubTab.vue](src/components/tabs/pid-tuning/RatesSubTab.vue) lines 393, 1581-1590, 1641-1649
+
+**Testing Scenario:**
+1. Connect to flight controller
+2. Navigate to PID Tuning tab → Rates sub-tab
+3. Immediately switch to another tab (within 100ms)
+4. Without fix: Resize listener leaks, animation frame continues
+5. With fix: Timeout cleared, no callbacks fire after unmount
+
+**Status:** FIXED ✅
+
+---
+
+**Total Issues Fixed This Session:** 16 (Issues #1-#16)
