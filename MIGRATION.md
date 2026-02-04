@@ -3860,9 +3860,68 @@ FC.CONFIG.pidProfileNames[FC.CONFIG.profile] = $('input[name="pidProfileName"]')
 - Trim whitespace to match original behavior
 - Only save when API 1.45+ and profile names array exists
 
-**Related Issue Found:**
-- RatesSubTab has incorrect binding: `FC.CONFIG.name` instead of `FC.CONFIG.rateProfileNames[FC.CONFIG.rateProfile]`
-- Documented for future fix (not included in this commit)
+#### Issue 6: RatesSubTab - Wrong Rate Profile Name Binding
+**Problem:** Rate profile name was bound to `FC.CONFIG.name` instead of the `rateProfileNames` array.
+
+**Location:** [RatesSubTab.vue](src/components/tabs/pid-tuning/RatesSubTab.vue) line 399
+
+**Original (Incorrect) Code:**
+```javascript
+const rateProfileName = computed({
+    get: () => FC.CONFIG.name || "",
+    set: (value) => {
+        FC.CONFIG.name = value;
+    },
+});
+```
+
+**Fix Applied:**
+```javascript
+// Rate Profile Name
+const rateProfileName = computed({
+    get: () => {
+        if (!FC.CONFIG.rateProfileNames || FC.CONFIG.rateProfile === undefined) return "";
+        return FC.CONFIG.rateProfileNames[FC.CONFIG.rateProfile] || "";
+    },
+    set: (value) => {
+        if (FC.CONFIG.rateProfileNames && FC.CONFIG.rateProfile !== undefined) {
+            FC.CONFIG.rateProfileNames[FC.CONFIG.rateProfile] = value;
+        }
+    },
+});
+
+// Expose for parent component
+defineExpose({
+    rateProfileName,
+});
+```
+
+**In PidTuningTab.vue:**
+```vue
+<!-- Template: add ref -->
+<RatesSubTab ref="ratesSubTab" v-if="activeSubtab === 'rates'" />
+
+<!-- Save function -->
+if (ratesSubTab.value?.rateProfileName && FC.CONFIG.rateProfileNames) {
+    FC.CONFIG.rateProfileNames[FC.CONFIG.rateProfile] = ratesSubTab.value.rateProfileName.trim();
+}
+```
+
+**Verification Against Original:**
+From [pid_tuning.js](src/js/tabs/pid_tuning.js) lines 99, 831:
+```javascript
+// LOAD
+$('input[name="rateProfileName"]').val(FC.CONFIG.rateProfileNames[FC.CONFIG.rateProfile]);
+
+// SAVE
+FC.CONFIG.rateProfileNames[FC.CONFIG.rateProfile] = $('input[name="rateProfileName"]').val().trim();
+```
+
+**Rationale:**
+- Rate profile names stored in `FC.CONFIG.rateProfileNames` array indexed by rate profile number
+- `FC.CONFIG.name` is a different field entirely (general configuration name)
+- Must use same pattern as PID profile names for consistency
+- Both profile name arrays exist in API 1.45+
 
 ### 13.8 Known Issues and TODOs
 

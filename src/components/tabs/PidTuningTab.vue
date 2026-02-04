@@ -79,7 +79,7 @@
                         :expert-mode="expertModeEnabled"
                         :show-all-pids="showAllPids"
                     />
-                    <RatesSubTab v-if="activeSubtab === 'rates'" />
+                    <RatesSubTab ref="ratesSubTab" v-if="activeSubtab === 'rates'" />
                     <FilterSubTab v-if="activeSubtab === 'filter'" />
                 </form>
             </div>
@@ -271,11 +271,13 @@ async function save() {
     if (!hasChanges.value) return;
 
     try {
-        // Save PID profile name (API 1.45+)
+        // Save profile names (API 1.45+)
         if (pidSubTab.value?.profileName && FC.CONFIG.pidProfileNames) {
             FC.CONFIG.pidProfileNames[FC.CONFIG.profile] = pidSubTab.value.profileName.trim();
         }
-        // Note: Rate profile name saving will be added when RatesSubTab binding is fixed
+        if (ratesSubTab.value?.rateProfileName && FC.CONFIG.rateProfileNames) {
+            FC.CONFIG.rateProfileNames[FC.CONFIG.rateProfile] = ratesSubTab.value.rateProfileName.trim();
+        }
 
         // Save PID controller
         if (showPidController.value) {
