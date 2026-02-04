@@ -363,6 +363,11 @@
                     <div class="helpicon cf_tip" :title="$t('pidTuningMasterSliderHelp')"></div>
                 </div>
 
+                <!-- Danger Zone Warning -->
+                <div v-if="slidersInDangerZone" class="danger slidersWarning">
+                    <p v-html="$t('pidTuningSliderWarning')"></p>
+                </div>
+
                 <!-- Warning Messages (Non-Expert Mode) -->
                 <!-- Always show range restriction note when not in expert mode and sliders are on -->
                 <div v-if="!props.expertMode && sliderPidsMode > 0" class="note expertSettingsDetectedNote">
@@ -1290,6 +1295,26 @@ const showPitchPISlider = computed(() => {
 
 const showMasterSlider = computed(() => {
     return props.expertMode;
+});
+
+// Check if sliders are in danger zone (high PID/D values)
+const slidersInDangerZone = computed(() => {
+    const WARNING_P_GAIN = 70;
+    const WARNING_D_MAX_GAIN = 60;
+    const WARNING_I_GAIN = 2.5 * FC.PIDS[0][0];
+    const WARNING_D_GAIN = 42;
+
+    const enableWarning = semver.lt(FC.CONFIG.apiVersion, "1.47.0")
+        ? FC.PIDS[0][0] > WARNING_P_GAIN ||
+          FC.PIDS[0][1] > WARNING_I_GAIN ||
+          FC.PIDS[0][2] > WARNING_D_MAX_GAIN ||
+          FC.ADVANCED_TUNING.dMaxRoll > WARNING_D_GAIN
+        : FC.PIDS[0][0] > WARNING_P_GAIN ||
+          FC.PIDS[0][1] > WARNING_I_GAIN ||
+          FC.PIDS[0][2] > WARNING_D_GAIN ||
+          FC.ADVANCED_TUNING.dMaxRoll > WARNING_D_MAX_GAIN;
+
+    return enableWarning && sliderPidsMode.value > 0;
 });
 
 // Check if any sliders are outside non-expert range
