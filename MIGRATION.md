@@ -4870,3 +4870,80 @@ This ensures the nested timeout is cleared before we try to clean up the model, 
 ---
 
 **Total Issues Fixed This Session:** 16 (Issues #1-#16)
+
+### Issue #17: showMaxRateWarning Always Returns False
+**Date:** February 4, 2026
+**Source:** CodeRabbitAI pull request review comment
+**Component:** [RatesSubTab.vue](src/components/tabs/pid-tuning/RatesSubTab.vue)
+
+**Problem:**
+The `showMaxRateWarning` computed property was hardcoded to return `false` with a TODO comment, meaning the warning message never displayed even when axis angular velocities exceeded safe limits.
+
+**Original Implementation (pid_tuning.js:2770-2775):**
+```javascript
+// show warning message if any axis angular velocity exceeds 1800d/s
+const MAX_RATE_WARNING = 1800;
+const warningRates =
+    parseInt(maxAngularVelRoll) > MAX_RATE_WARNING ||
+    parseInt(maxAngularVelPitch) > MAX_RATE_WARNING ||
+    parseInt(maxAngularVelYaw) > MAX_RATE_WARNING;
+$(".maxRateWarning").toggle(warningRates);
+```
+
+**Vue Migration Gap:**
+```javascript
+const showMaxRateWarning = computed(() => {
+    // TODO: Implement warning logic based on rate limits
+    return false; // ❌ Always false - warning never shows
+});
+```
+
+**Why 1800°/s Limit:**
+Angular velocities above 1800 degrees per second can:
+- Exceed gyro sensor capabilities (most gyros max out at 2000°/s)
+- Cause control issues due to sensor saturation
+- Lead to unpredictable flight behavior in extreme maneuvers
+- Indicate misconfigured rates that are too aggressive
+
+**Solution:**
+Implemented the same logic as original, checking if any axis exceeds 1800°/s:
+
+```javascript
+const showMaxRateWarning = computed(() => {
+    const MAX_RATE_WARNING = 1800;
+    return (
+        parseInt(maxAngularVelRoll.value) > MAX_RATE_WARNING ||
+        parseInt(maxAngularVelPitch.value) > MAX_RATE_WARNING ||
+        parseInt(maxAngularVelYaw.value) > MAX_RATE_WARNING
+    );
+});
+```
+
+**Important Notes:**
+- `maxAngularVel*` are computed properties that return strings (from `.toString()`)
+- Must use `parseInt()` before comparison to convert string to number
+- Warning shows for ANY axis exceeding limit (OR logic, not AND)
+- For Betaflight rates, `maxAngularVel*` return empty strings, `parseInt("")` returns `NaN`, and `NaN > 1800` is `false` (correct behavior)
+
+**Template Usage:**
+```vue
+<div class="maxRateWarning" v-if="showMaxRateWarning">
+    Warning: One or more axes exceed 1800°/s. Consider reducing rates.
+</div>
+```
+
+**Files Modified:**
+- [RatesSubTab.vue](src/components/tabs/pid-tuning/RatesSubTab.vue) lines 436-444
+
+**Testing:**
+1. Set non-Betaflight rates (Actual, RaceFlight, etc.)
+2. Increase rate values to produce >1800°/s angular velocity
+3. Verify warning message appears
+4. Reduce rates below 1800°/s on all axes
+5. Verify warning disappears
+
+**Status:** FIXED ✅
+
+---
+
+**Total Issues Fixed This Session:** 17 (Issues #1-#17)
