@@ -1055,12 +1055,21 @@ function drawBalloonLabel(ctx, text, x, y, align, colors, balloonsDirty) {
 
     // Adjust the coordinates for balloon background (like master)
     x += (align === "right" ? -(width + DEFAULT_OFFSET) : 0) + (align === "left" ? DEFAULT_OFFSET : 0);
-    y -= height / 2;
 
-    if (y < 0) {
-        y = 0;
-    } else if (y > ctx.canvas.height) {
-        y = ctx.canvas.height;
+    // Center Y position for dynamic balloons, but preserve exact Y for fixed balloons
+    if (align !== "none") {
+        y -= height / 2;
+
+        // Clamp Y to canvas bounds for dynamic balloons only
+        if (y < 0) {
+            y = 0;
+        } else if (y > ctx.canvas.height) {
+            y = ctx.canvas.height;
+        }
+    } else {
+        // For fixed-position balloons (align="none"), adjust Y to account for balloon height
+        // but don't clamp to canvas bounds - use exact specified Y position
+        y -= height / 2;
     }
 
     // Check that the balloon does not already overlap (like master)
