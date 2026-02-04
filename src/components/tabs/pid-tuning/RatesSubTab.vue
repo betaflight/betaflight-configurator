@@ -433,10 +433,14 @@ const ratesLogoSrc = computed(() => {
 // Is Betaflight Rates
 const isBetaflightRates = computed(() => ratesType.value === 0);
 
-// Show Max Rate Warning
+// Show Max Rate Warning - show if any axis exceeds 1800°/s
 const showMaxRateWarning = computed(() => {
-    // TODO: Implement warning logic based on rate limits
-    return false;
+    const MAX_RATE_WARNING = 1800;
+    return (
+        parseInt(maxAngularVelRoll.value) > MAX_RATE_WARNING ||
+        parseInt(maxAngularVelPitch.value) > MAX_RATE_WARNING ||
+        parseInt(maxAngularVelYaw.value) > MAX_RATE_WARNING
+    );
 });
 
 // Helper to get scale factor based on rates type
