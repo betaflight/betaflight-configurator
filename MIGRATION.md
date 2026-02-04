@@ -2,10 +2,43 @@
 
 **Date:** February 3, 2026  
 **Version:** 2.0 (Complete Restart)  
-**Status:** Planning Phase  
+**Status:** In Progress  
 **Related Issues:**
 - [#4812 - Track Vue/Pinia Tab Migration Progress](https://github.com/betaflight/betaflight-configurator/issues/4812)
 - [#4800 - Replace legacy FC/GUI singletons with independent Pinia stores](https://github.com/betaflight/betaflight-configurator/issues/4800)
+- [#4848 - PID Tuning Vue Migration PR](https://github.com/betaflight/betaflight-configurator/pull/4848)
+
+---
+
+## ⚠️ Critical Migration Issues
+
+### FC Property Name Mismatches
+
+**Issue:** During Vue migration, several FC.ADVANCED_TUNING property names were incorrectly converted from snake_case to camelCase, causing empty dropdowns and broken switches.
+
+**Root Cause:** The FC object uses snake_case for many properties (e.g., `vbat_sag_compensation`, `feedforward_boost`), but the Vue migration assumed camelCase naming.
+
+**Properties Fixed (February 5, 2026):**
+1. `itermRelaxAxes` → `itermRelax` - iterm relax axes dropdown was empty
+2. `antiGravityGain` - Fixed deprecated `itermAcceleratorGain` usage (API < 1.45 property)
+3. `autoProfileCellCount` (was: `cellCount`) - autoprofile cell count dropdown
+4. `vbat_sag_compensation` (was: `vbatSagCompensation`) - vbat sag switch and value
+5. `thrustLinearization` (was: `thrustLinear`) - thrust linearization switch and value
+6. `feedforward_jitter_factor` (was: `feedforwardJitterFactor`)
+7. `feedforward_smooth_factor` (was: `feedforwardSmoothFactor`)
+8. `feedforward_averaging` (was: `feedforwardAveraging`)
+9. `feedforward_boost` (was: `feedforwardBoost`)
+10. `feedforward_max_rate_limit` (was: `feedforwardMaxRateLimit`)
+
+**Prevention Strategy:**
+- ✅ Always cross-reference property names with `src/js/fc.js` definition
+- ✅ Test ALL form bindings against a real flight controller
+- ✅ Check both v-model bindings AND computed property getters/setters
+- ✅ Verify switches correctly toggle on/off with actual FC data
+- ⚠️ Don't assume camelCase - FC uses mixed naming conventions
+
+**Files Affected:**
+- `src/components/tabs/pid-tuning/PidSubTab.vue` - All property bindings fixed
 
 ---
 
