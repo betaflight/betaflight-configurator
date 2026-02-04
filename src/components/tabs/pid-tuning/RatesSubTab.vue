@@ -612,11 +612,13 @@ const centerSensitivityPitch = computed(() => {
 
 const centerSensitivityYaw = computed(() => {
     if (!isBetaflightRates.value) return "";
+    const rates = currentRates.value;
     const maxAngularVel = calculateMaxAngularVel(
         yawRate.value,
         rcRateYaw.value,
         rcYawExpo.value,
         FC.RC_TUNING.yaw_rate_limit,
+        rates.yawDeadband,
     );
     const centerSensitivity = getAcroSensitivityFraction(rcYawExpo.value, rcRateYaw.value);
     return `${centerSensitivity} - ${maxAngularVel}`;
@@ -640,11 +642,13 @@ const maxAngularVelPitch = computed(() => {
 
 const maxAngularVelYaw = computed(() => {
     if (isBetaflightRates.value) return "";
+    const rates = currentRates.value;
     return calculateMaxAngularVel(
         yawRate.value,
         rcRateYaw.value,
         rcYawExpo.value,
         FC.RC_TUNING.yaw_rate_limit,
+        rates.yawDeadband,
     ).toString();
 });
 
@@ -658,17 +662,25 @@ const numericMaxAngularVelPitch = computed(() => {
 });
 
 const numericMaxAngularVelYaw = computed(() => {
-    return calculateMaxAngularVel(yawRate.value, rcRateYaw.value, rcYawExpo.value, FC.RC_TUNING.yaw_rate_limit);
+    const rates = currentRates.value;
+    return calculateMaxAngularVel(
+        yawRate.value,
+        rcRateYaw.value,
+        rcYawExpo.value,
+        FC.RC_TUNING.yaw_rate_limit,
+        rates.yawDeadband,
+    );
 });
 
-function calculateMaxAngularVel(rate, rcRate, rcExpo, limit) {
-    const deadband = FC.RC_DEADBAND_CONFIG?.deadband || 0;
+function calculateMaxAngularVel(rate, rcRate, rcExpo, limit, deadband) {
+    // Use provided deadband or fall back to generic deadband
+    const db = deadband !== undefined ? deadband : FC.RC_DEADBAND_CONFIG?.deadband || 0;
     const maxAngularVel = rateCurve.getMaxAngularVel(
         rate,
         rcRate,
         rcExpo,
         true, // superexpo
-        deadband,
+        db,
         limit,
     );
     return Math.round(maxAngularVel);
