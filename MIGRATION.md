@@ -4947,3 +4947,100 @@ const showMaxRateWarning = computed(() => {
 ---
 
 **Total Issues Fixed This Session:** 17 (Issues #1-#17)
+
+### Issue #17 Correction: showMaxRateWarning Now Works for All Rate Types
+**Date:** February 4, 2026
+**Source:** User feedback - "be skeptical"
+**Component:** [RatesSubTab.vue](src/components/tabs/pid-tuning/RatesSubTab.vue)
+
+**Problem with Original Fix:**
+The initial Issue #17 fix still had a critical bug: it used `parseInt()` on string values that return empty strings for Betaflight rates:
+- `maxAngularVelRoll/Pitch/Yaw` return `""` when `isBetaflightRates.value === true`
+- `parseInt("")` returns `NaN`
+- `NaN > 1800` evaluates to `false`
+- **Result: Warning never showed for Betaflight rates, even when exceeding 1800°/s!**
+
+**Why This Matters:**
+Betaflight is the DEFAULT rate type (type 0). The majority of users use Betaflight rates, so the warning was broken for the most common use case.
+
+**Root Cause Analysis:**
+The string-based `maxAngularVel*` computed properties were designed for display purposes:
+```javascript
+const maxAngularVelRoll = computed(() => {
+    if (isBetaflightRates.value) return "";  // Empty for Betaflight rates!
+    return calculateMaxAngularVel(...).toString();
+});
+```
+
+For Betaflight rates, the max angular velocity is shown in the `centerSensitivity*` fields as `"[center] - [max]"` format, not in a separate column.
+
+**Solution:**
+Created separate numeric computed properties that work for ALL rate types:
+
+```javascript
+// Numeric versions - NO rate type checking, always return number
+const numericMaxAngularVelRoll = computed(() => {
+    return calculateMaxAngularVel(rollRate.value, rcRate.value, rcExpo.value, FC.RC_TUNING.roll_rate_limit);
+});
+
+const numericMaxAngularVelPitch = computed(() => {
+    return calculateMaxAngularVel(
+        pitchRate.value,
+        rcRatePitch.value,
+        rcPitchExpo.value,
+        FC.RC_TUNING.pitch_rate_limit,
+    );
+});
+
+const numericMaxAngularVelYaw = computed(() => {
+    return calculateMaxAngularVel(
+        yawRate.value,
+        rcRateYaw.value,
+        rcYawExpo.value,
+        FC.RC_TUNING.yaw_rate_limit,
+    );
+});
+
+// Fixed warning check
+const showMaxRateWarning = computed(() => {
+    const MAX_RATE_WARNING = 1800;
+    return (
+        numericMaxAngularVelRoll.value > MAX_RATE_WARNING ||
+        numericMaxAngularVelPitch.value > MAX_RATE_WARNING ||
+        numericMaxAngularVelYaw.value > MAX_RATE_WARNING
+    );
+});
+```
+
+**Key Insights:**
+1. `calculateMaxAngularVel()` works the same for all rate types
+2. The difference is only in how values are DISPLAYED, not calculated
+3. For safety checks, always use numeric values, never parsed strings
+4. Separate display logic from business logic
+
+**Files Modified:**
+- [RatesSubTab.vue](src/components/tabs/pid-tuning/RatesSubTab.vue) lines 625-669, 436-444
+
+**Testing (Critical):**
+1. **Betaflight Rates (type 0 - DEFAULT):**
+   - Set Roll/Pitch/Yaw rates to high values (e.g., rate=1.50, rc_rate=2.00)
+   - Observe center sensitivity shows "XXX - YYYY" format
+   - When YYYY (max angular vel) > 1800, warning MUST appear
+   - This is the PRIMARY test case!
+
+2. **Non-Betaflight Rates (Actual, RaceFlight, etc.):**
+   - Set rates to produce >1800°/s
+   - Observe maxAngularVel* columns show numeric values
+   - Warning must appear when any axis >1800
+
+3. **Edge Cases:**
+   - Switch between rate types while rates are high
+   - Warning should remain visible if any axis >1800
+   - Warning should work immediately after changing rate type
+
+**Lesson Learned:**
+Always verify the actual data types and null/empty cases when implementing logic. The original fix assumed string values would always contain numbers, but didn't account for the empty string case in Betaflight rates.
+
+**Status:** FIXED ✅ (properly this time)
+
+---
