@@ -250,16 +250,89 @@ async function onRateProfileChange() {
     await loadData();
 }
 
-function copyProfile() {
-    // TODO: Implement copy profile dialog
+async function copyProfile() {
+    // Create options for profiles excluding current one
+    const options = [];
+    for (let i = 0; i < 3; i++) {
+        if (i !== profile.value) {
+            const name = FC.CONFIG.pidProfileNames?.[i] || `Profile ${i + 1}`;
+            options.push({ value: i, label: name });
+        }
+    }
+
+    if (options.length === 0) {
+        console.warn("[PidTuningTab] No other profiles available to copy to");
+        return;
+    }
+
+    // For now, copy to the first available profile (next profile)
+    // TODO: Show dialog to let user select target profile
+    const targetProfile = options[0].value;
+
+    // Set up copy profile data
+    FC.COPY_PROFILE = FC.COPY_PROFILE || {};
+    FC.COPY_PROFILE.type = 0; // 0 = PID profile
+    FC.COPY_PROFILE.srcProfile = profile.value;
+    FC.COPY_PROFILE.dstProfile = targetProfile;
+
+    try {
+        await MSP.promise(MSPCodes.MSP_COPY_PROFILE, mspHelper.crunch(MSPCodes.MSP_COPY_PROFILE));
+        console.log(`[PidTuningTab] Copied profile ${profile.value} to ${targetProfile}`);
+        // Optionally reload data or show success message
+    } catch (error) {
+        console.error("[PidTuningTab] Failed to copy profile:", error);
+    }
 }
 
-function copyRateProfile() {
-    // TODO: Implement copy rate profile dialog
+async function copyRateProfile() {
+    // Create options for rate profiles excluding current one
+    const options = [];
+    for (let i = 0; i < 6; i++) {
+        if (i !== rateProfile.value) {
+            const name = FC.CONFIG.rateProfileNames?.[i] || `Rate Profile ${i + 1}`;
+            options.push({ value: i, label: name });
+        }
+    }
+
+    if (options.length === 0) {
+        console.warn("[PidTuningTab] No other rate profiles available to copy to");
+        return;
+    }
+
+    // For now, copy to the first available profile (next profile)
+    // TODO: Show dialog to let user select target rate profile
+    const targetProfile = options[0].value;
+
+    // Set up copy profile data
+    FC.COPY_PROFILE = FC.COPY_PROFILE || {};
+    FC.COPY_PROFILE.type = 1; // 1 = Rate profile
+    FC.COPY_PROFILE.srcProfile = rateProfile.value;
+    FC.COPY_PROFILE.dstProfile = targetProfile;
+
+    try {
+        await MSP.promise(MSPCodes.MSP_COPY_PROFILE, mspHelper.crunch(MSPCodes.MSP_COPY_PROFILE));
+        console.log(`[PidTuningTab] Copied rate profile ${rateProfile.value} to ${targetProfile}`);
+        // Optionally reload data or show success message
+    } catch (error) {
+        console.error("[PidTuningTab] Failed to copy rate profile:", error);
+    }
 }
 
-function resetProfile() {
-    // TODO: Implement reset profile confirmation dialog
+async function resetProfile() {
+    // TODO: Show confirmation dialog
+    // For now, proceed directly with reset
+    const confirmed = confirm("Reset current PID profile to defaults?");
+    if (!confirmed) return;
+
+    try {
+        await MSP.promise(MSPCodes.MSP_SET_RESET_CURR_PID);
+        console.log("[PidTuningTab] PID profile reset to defaults");
+
+        // Reload data to show reset values
+        await loadData();
+    } catch (error) {
+        console.error("[PidTuningTab] Failed to reset profile:", error);
+    }
 }
 
 function toggleShowAllPids() {
