@@ -1091,29 +1091,64 @@ const pidLevel = computed({
 // Advanced tuning - reactive reference
 const advancedTuning = computed(() => FC.ADVANCED_TUNING);
 
-// TPA settings (API 1.45+) - stored in FC.ADVANCED_TUNING
+// TPA settings with API version gating
+// API >= 1.45: Use ADVANCED_TUNING (tpaMode, tpaRate, tpaBreakpoint)
+// API < 1.45: Use RC_TUNING (dynamic_THR_PID, dynamic_THR_breakpoint)
+const usesAdvancedTpa = computed(() => {
+    return semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45);
+});
+
 const tpaMode = computed({
-    get: () => FC.ADVANCED_TUNING?.tpaMode ?? 0,
+    get: () => {
+        if (usesAdvancedTpa.value) {
+            return FC.ADVANCED_TUNING?.tpaMode ?? 0;
+        }
+        // For API < 1.45, tpaMode doesn't exist - always return 0 (PD mode)
+        return 0;
+    },
     set: (val) => {
-        if (FC.ADVANCED_TUNING) FC.ADVANCED_TUNING.tpaMode = val;
+        if (usesAdvancedTpa.value && FC.ADVANCED_TUNING) {
+            FC.ADVANCED_TUNING.tpaMode = val;
+        }
+        // For API < 1.45, tpaMode is not supported
     },
 });
 
 const tpaRate = computed({
     get: () => {
-        // Display as percentage (0-100)
-        return Math.round((FC.ADVANCED_TUNING?.tpaRate ?? 0) * 100);
+        if (usesAdvancedTpa.value) {
+            // API >= 1.45: tpaRate is stored as decimal (0-1), display as percentage (0-100)
+            return Math.round((FC.ADVANCED_TUNING?.tpaRate ?? 0) * 100);
+        } else {
+            // API < 1.45: dynamic_THR_PID is stored as decimal, display as percentage
+            return Math.round((FC.RC_TUNING?.dynamic_THR_PID ?? 0) * 100);
+        }
     },
     set: (val) => {
-        // Store as decimal (0-1)
-        if (FC.ADVANCED_TUNING) FC.ADVANCED_TUNING.tpaRate = val / 100;
+        if (usesAdvancedTpa.value && FC.ADVANCED_TUNING) {
+            // Store as decimal (0-1)
+            FC.ADVANCED_TUNING.tpaRate = val / 100;
+        } else if (FC.RC_TUNING) {
+            // Store as decimal
+            FC.RC_TUNING.dynamic_THR_PID = val / 100;
+        }
     },
 });
 
 const tpaBreakpoint = computed({
-    get: () => FC.ADVANCED_TUNING?.tpaBreakpoint ?? 1500,
+    get: () => {
+        if (usesAdvancedTpa.value) {
+            return FC.ADVANCED_TUNING?.tpaBreakpoint ?? 1500;
+        } else {
+            return FC.RC_TUNING?.dynamic_THR_breakpoint ?? 1500;
+        }
+    },
     set: (val) => {
-        if (FC.ADVANCED_TUNING) FC.ADVANCED_TUNING.tpaBreakpoint = val;
+        if (usesAdvancedTpa.value && FC.ADVANCED_TUNING) {
+            FC.ADVANCED_TUNING.tpaBreakpoint = val;
+        } else if (FC.RC_TUNING) {
+            FC.RC_TUNING.dynamic_THR_breakpoint = val;
+        }
     },
 });
 
@@ -1344,6 +1379,13 @@ function onSliderModeChange() {
     TuningSliders.sliderPidsMode = sliderPidsMode.value;
     onSliderChange();
 }
+
+// Watch profile name changes and sync to FC.CONFIG
+watch(profileName, (newValue) => {
+    if (showProfileName.value && FC.CONFIG.pidProfileNames) {
+        FC.CONFIG.pidProfileNames[FC.CONFIG.profile] = newValue;
+    }
+});
 
 // Watch expert mode changes
 watch(
