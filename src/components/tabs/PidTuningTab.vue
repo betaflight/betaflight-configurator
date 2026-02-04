@@ -80,9 +80,7 @@
                         :show-all-pids="showAllPids"
                     />
                     <RatesSubTab v-if="activeSubtab === 'rates'" />
-                    <div v-if="activeSubtab === 'filter'" class="subtab-filter">
-                        <p>Filter tab coming soon...</p>
-                    </div>
+                    <FilterSubTab v-if="activeSubtab === 'filter'" />
                 </form>
             </div>
 
@@ -110,6 +108,7 @@ import BaseTab from "./BaseTab.vue";
 import WikiButton from "@/components/elements/WikiButton.vue";
 import PidSubTab from "./pid-tuning/PidSubTab.vue";
 import RatesSubTab from "./pid-tuning/RatesSubTab.vue";
+import FilterSubTab from "./pid-tuning/FilterSubTab.vue";
 import GUI from "@/js/gui";
 import MSP from "@/js/msp";
 import MSPCodes from "@/js/msp/MSPCodes";
@@ -351,6 +350,15 @@ watch(
     () => expertModeEnabled.value,
     (newValue) => {
         TuningSliders.setExpertMode(newValue);
+    },
+);
+
+// Watch for sub-tab changes to re-initialize Switchery for new DOM elements
+watch(
+    () => activeSubtab.value,
+    async () => {
+        await nextTick();
+        GUI.switchery();
     },
 );
 
