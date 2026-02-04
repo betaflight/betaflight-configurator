@@ -392,6 +392,7 @@ const ratesPreviewContainer = ref(null);
 let model = null;
 let rcUpdateInterval = null; // For setInterval RC updates
 let initModelTimeoutId = null; // For setTimeout initModel retries
+let modelInitTimeout = null; // For setTimeout after model creation
 let animationFrameId = null;
 let lastTimestamp = 0;
 let keepRendering = true;
@@ -1581,7 +1582,9 @@ onMounted(() => {
 
                 // Model automatically loads based on FC.MIXER_CONFIG.mixer
                 // Give the model a moment to initialize its renderer
-                setTimeout(() => {
+                modelInitTimeout = setTimeout(() => {
+                    modelInitTimeout = null; // Clear reference once callback runs
+
                     // Add window resize handler
                     window.addEventListener("resize", handleModelResize);
 
@@ -1637,6 +1640,12 @@ onUnmounted(() => {
     if (animationFrameId) {
         cancelAnimationFrame(animationFrameId);
         animationFrameId = null;
+    }
+
+    // Clear model initialization timeout (prevents resize listener and animation from starting)
+    if (modelInitTimeout) {
+        clearTimeout(modelInitTimeout);
+        modelInitTimeout = null;
     }
 
     // Dispose 3D model
