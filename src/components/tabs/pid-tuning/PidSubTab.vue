@@ -456,7 +456,7 @@
                                     <input
                                         type="number"
                                         name="feedforwardJitterFactor"
-                                        v-model.number="advancedTuning.feedforwardJitterFactor"
+                                        v-model.number="advancedTuning.feedforward_jitter_factor"
                                         step="1"
                                         min="0"
                                         max="20"
@@ -471,7 +471,7 @@
                                     <input
                                         type="number"
                                         name="feedforwardSmoothFactor"
-                                        v-model.number="advancedTuning.feedforwardSmoothFactor"
+                                        v-model.number="advancedTuning.feedforward_smooth_factor"
                                         step="1"
                                         min="0"
                                         max="95"
@@ -488,7 +488,7 @@
                                 <span class="feedforwardOption feedforwardAveraging suboption">
                                     <select
                                         id="feedforwardAveraging"
-                                        v-model.number="advancedTuning.feedforwardAveraging"
+                                        v-model.number="advancedTuning.feedforward_averaging"
                                     >
                                         <option :value="0">{{ $t("pidTuningOptionOff") }}</option>
                                         <option :value="1">
@@ -511,7 +511,7 @@
                                     <input
                                         type="number"
                                         name="feedforwardBoost"
-                                        v-model.number="advancedTuning.feedforwardBoost"
+                                        v-model.number="advancedTuning.feedforward_boost"
                                         step="1"
                                         min="0"
                                         max="50"
@@ -526,7 +526,7 @@
                                     <input
                                         type="number"
                                         name="feedforwardMaxRateLimit"
-                                        v-model.number="advancedTuning.feedforwardMaxRateLimit"
+                                        v-model.number="advancedTuning.feedforward_max_rate_limit"
                                         step="1"
                                         min="0"
                                         max="150"
@@ -570,7 +570,7 @@
                                 <span v-html="$t('pidTuningItermRelax')"></span>
 
                                 <span class="suboption" v-if="itermRelaxEnabled">
-                                    <select id="itermrelaxAxes" v-model.number="advancedTuning.itermRelaxAxes">
+                                    <select id="itermrelaxAxes" v-model.number="advancedTuning.itermRelax">
                                         <option :value="1">{{ $t("pidTuningOptionRP") }}</option>
                                         <option :value="2">{{ $t("pidTuningOptionRPY") }}</option>
                                         <option :value="3">{{ $t("pidTuningItermRelaxAxesOptionRPInc") }}</option>
@@ -828,7 +828,7 @@
                                     <input
                                         type="number"
                                         name="vbatSagValue"
-                                        v-model.number="advancedTuning.vbatSagCompensation"
+                                        v-model.number="advancedTuning.vbat_sag_compensation"
                                         step="1"
                                         min="1"
                                         max="150"
@@ -858,7 +858,7 @@
                                     <input
                                         type="number"
                                         name="thrustLinearValue"
-                                        v-model.number="advancedTuning.thrustLinear"
+                                        v-model.number="advancedTuning.thrustLinearization"
                                         step="1"
                                         min="1"
                                         max="150"
@@ -925,7 +925,7 @@
                         <!-- Cell Count -->
                         <tr class="cellCount">
                             <td>
-                                <select name="cellCount" v-model.number="advancedTuning.cellCount">
+                                <select name="cellCount" v-model.number="advancedTuning.autoProfileCellCount">
                                     <option :value="-1">{{ $t("pidTuningCellCountChange") }}</option>
                                     <option :value="0">{{ $t("pidTuningCellCountStay") }}</option>
                                     <option :value="1">{{ $t("pidTuningCellCount1S") }}</option>
@@ -1177,21 +1177,21 @@ const itermRelaxEnabled = computed({
 });
 
 const antiGravityEnabled = computed({
-    get: () => FC.ADVANCED_TUNING.itermAcceleratorGain !== 1000,
+    get: () => FC.ADVANCED_TUNING.antiGravityGain !== 0,
     set: (val) => {
         if (val) {
-            FC.ADVANCED_TUNING.itermAcceleratorGain = FC.ADVANCED_TUNING.itermAcceleratorGain || 3500;
+            FC.ADVANCED_TUNING.antiGravityGain = FC.ADVANCED_TUNING.antiGravityGain || 80;
         } else {
-            FC.ADVANCED_TUNING.itermAcceleratorGain = 1000;
+            FC.ADVANCED_TUNING.antiGravityGain = 0;
         }
     },
 });
 
-// Anti-gravity gain display value (divided by 1000 for display)
+// Anti-gravity gain display value (divided by 10 for display)
 const antiGravityGainValue = computed({
-    get: () => (FC.ADVANCED_TUNING.itermAcceleratorGain / 1000).toFixed(1),
+    get: () => (FC.ADVANCED_TUNING.antiGravityGain / 10).toFixed(1),
     set: (val) => {
-        FC.ADVANCED_TUNING.itermAcceleratorGain = Math.round(parseFloat(val) * 1000);
+        FC.ADVANCED_TUNING.antiGravityGain = Math.round(parseFloat(val) * 10);
     },
 });
 
@@ -1203,16 +1203,16 @@ const itermRotationEnabled = computed({
 });
 
 const vbatSagEnabled = computed({
-    get: () => FC.ADVANCED_TUNING.vbatSagCompensation !== 0,
+    get: () => FC.ADVANCED_TUNING.vbat_sag_compensation !== 0,
     set: (val) => {
-        FC.ADVANCED_TUNING.vbatSagCompensation = val ? FC.ADVANCED_TUNING.vbatSagCompensation || 75 : 0;
+        FC.ADVANCED_TUNING.vbat_sag_compensation = val ? FC.ADVANCED_TUNING.vbat_sag_compensation || 75 : 0;
     },
 });
 
 const thrustLinearEnabled = computed({
-    get: () => FC.ADVANCED_TUNING.thrustLinear !== 0,
+    get: () => FC.ADVANCED_TUNING.thrustLinearization !== 0,
     set: (val) => {
-        FC.ADVANCED_TUNING.thrustLinear = val ? FC.ADVANCED_TUNING.thrustLinear || 100 : 0;
+        FC.ADVANCED_TUNING.thrustLinearization = val ? FC.ADVANCED_TUNING.thrustLinearization || 100 : 0;
     },
 });
 
