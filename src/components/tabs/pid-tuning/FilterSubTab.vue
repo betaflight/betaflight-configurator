@@ -9,9 +9,9 @@
                     <tr>
                         <th scope="col" class="sm-min"></th>
                         <th></th>
-                        <th>More Filtering</th>
-                        <th>Default Filtering</th>
-                        <th>Less Filtering</th>
+                        <th>{{ $t("pidTuningSliderHighFiltering") }}</th>
+                        <th>{{ $t("pidTuningSliderDefaultFiltering") }}</th>
+                        <th>{{ $t("pidTuningSliderLowFiltering") }}</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -21,12 +21,12 @@
                 <tbody>
                     <tr class="xs sliderHeaders">
                         <td colspan="5">
-                            <span>Gyro Filter Slider</span>
+                            <span>{{ $t("pidTuningGyroFilterSlider") }}</span>
                         </td>
                     </tr>
                     <tr class="sliderGyroFilter">
                         <td class="sm-min">
-                            <span>Gyro Filter Slider</span>
+                            <span>{{ $t("pidTuningGyroFilterSlider") }}</span>
                         </td>
                         <td>
                             <output>{{ gyroFilterMultiplier.toFixed(2) }}</output>
@@ -45,12 +45,12 @@
                     </tr>
                     <tr class="xs sliderHeaders">
                         <td colspan="5">
-                            <span>D-term Filter Slider</span>
+                            <span>{{ $t("pidTuningDTermFilterSlider") }}</span>
                         </td>
                     </tr>
                     <tr class="sliderDTermFilter">
                         <td class="sm-min">
-                            <span>D-term Filter Slider</span>
+                            <span>{{ $t("pidTuningDTermFilterSlider") }}</span>
                         </td>
                         <td>
                             <output>{{ dtermFilterMultiplier.toFixed(2) }}</output>
@@ -83,9 +83,9 @@
                 <table class="pid_titlebar new_rates">
                     <thead>
                         <tr>
-                            <th>Profile independent Filter Settings</th>
+                            <th>{{ $t("pidTuningNonProfileFilterSettings") }}</th>
                             <td>
-                                <span>Use Gyro Slider</span>
+                                <span>{{ $t("pidTuningGyroFilterSlider") }}</span>
                                 <select v-model.number="gyroSliderMode" class="sliderMode">
                                     <option :value="0">OFF</option>
                                     <option :value="1">ON</option>
@@ -101,7 +101,7 @@
                         <tr>
                             <th colspan="2">
                                 <div class="pid_mode">
-                                    <div>Gyro Lowpass Filters</div>
+                                    <div>{{ $t("pidTuningGyroLowpassFiltersGroup") }}</div>
                                 </div>
                             </th>
                         </tr>
@@ -222,7 +222,7 @@
                         <tr>
                             <th colspan="2">
                                 <div class="pid_mode">
-                                    <div>Gyro Notch Filters</div>
+                                    <div>{{ $t("pidTuningGyroNotchFiltersGroup") }}</div>
                                 </div>
                             </th>
                         </tr>
@@ -357,7 +357,7 @@
                         <tr class="newFilter dynamicNotch">
                             <th class="dynamicNotch" colspan="2">
                                 <div class="pid_mode dynamicNotch">
-                                    <div>Dynamic Notch Filter</div>
+                                    <div>{{ $t("pidTuningDynamicNotchFilterGroup") }}</div>
                                 </div>
                             </th>
                         </tr>
@@ -427,9 +427,9 @@
                 <table class="pid_titlebar new_rates">
                     <thead>
                         <tr>
-                            <th>Profile dependent Filter Settings</th>
+                            <th>{{ $t("pidTuningFilterSettings") }}</th>
                             <td>
-                                <span>Use D Term Slider</span>
+                                <span>{{ $t("pidTuningDTermFilterSlider") }}</span>
                                 <select v-model.number="dtermSliderMode" class="sliderMode">
                                     <option :value="0">OFF</option>
                                     <option :value="1">ON</option>
@@ -762,18 +762,27 @@ const gyroLowpassMode = computed({
     set: (value) => {
         if (!FC || !FC.FILTER_CONFIG) return;
         if (value === 1) {
-            // Switch to dynamic
+            // Switch to dynamic - cache static value first
+            if (FC.FILTER_CONFIG.gyro_lowpass_hz > 0) {
+                previousValues.value.gyroLowpassHz = FC.FILTER_CONFIG.gyro_lowpass_hz;
+            }
             FC.FILTER_CONFIG.gyro_lowpass_hz = 0;
+            // Restore or initialize dynamic values
             if (FC.FILTER_CONFIG.gyro_lowpass_dyn_min_hz === 0) {
-                FC.FILTER_CONFIG.gyro_lowpass_dyn_min_hz = 200;
-                FC.FILTER_CONFIG.gyro_lowpass_dyn_max_hz = 500;
+                FC.FILTER_CONFIG.gyro_lowpass_dyn_min_hz = previousValues.value.gyroLowpassDynMin || 200;
+                FC.FILTER_CONFIG.gyro_lowpass_dyn_max_hz = previousValues.value.gyroLowpassDynMax || 500;
             }
         } else {
-            // Switch to static
+            // Switch to static - cache dynamic values first
+            if (FC.FILTER_CONFIG.gyro_lowpass_dyn_min_hz > 0) {
+                previousValues.value.gyroLowpassDynMin = FC.FILTER_CONFIG.gyro_lowpass_dyn_min_hz;
+                previousValues.value.gyroLowpassDynMax = FC.FILTER_CONFIG.gyro_lowpass_dyn_max_hz;
+            }
             FC.FILTER_CONFIG.gyro_lowpass_dyn_min_hz = 0;
             FC.FILTER_CONFIG.gyro_lowpass_dyn_max_hz = 0;
+            // Restore or initialize static value
             if (FC.FILTER_CONFIG.gyro_lowpass_hz === 0) {
-                FC.FILTER_CONFIG.gyro_lowpass_hz = 100;
+                FC.FILTER_CONFIG.gyro_lowpass_hz = previousValues.value.gyroLowpassHz || 100;
             }
         }
     },
@@ -788,18 +797,27 @@ const dtermLowpassMode = computed({
     set: (value) => {
         if (!FC || !FC.FILTER_CONFIG) return;
         if (value === 1) {
-            // Switch to dynamic
+            // Switch to dynamic - cache static value first
+            if (FC.FILTER_CONFIG.dterm_lowpass_hz > 0) {
+                previousValues.value.dtermLowpassHz = FC.FILTER_CONFIG.dterm_lowpass_hz;
+            }
             FC.FILTER_CONFIG.dterm_lowpass_hz = 0;
+            // Restore or initialize dynamic values
             if (FC.FILTER_CONFIG.dterm_lowpass_dyn_min_hz === 0) {
-                FC.FILTER_CONFIG.dterm_lowpass_dyn_min_hz = 100;
-                FC.FILTER_CONFIG.dterm_lowpass_dyn_max_hz = 250;
+                FC.FILTER_CONFIG.dterm_lowpass_dyn_min_hz = previousValues.value.dtermLowpassDynMin || 100;
+                FC.FILTER_CONFIG.dterm_lowpass_dyn_max_hz = previousValues.value.dtermLowpassDynMax || 250;
             }
         } else {
-            // Switch to static
+            // Switch to static - cache dynamic values first
+            if (FC.FILTER_CONFIG.dterm_lowpass_dyn_min_hz > 0) {
+                previousValues.value.dtermLowpassDynMin = FC.FILTER_CONFIG.dterm_lowpass_dyn_min_hz;
+                previousValues.value.dtermLowpassDynMax = FC.FILTER_CONFIG.dterm_lowpass_dyn_max_hz;
+            }
             FC.FILTER_CONFIG.dterm_lowpass_dyn_min_hz = 0;
             FC.FILTER_CONFIG.dterm_lowpass_dyn_max_hz = 0;
+            // Restore or initialize static value
             if (FC.FILTER_CONFIG.dterm_lowpass_hz === 0) {
-                FC.FILTER_CONFIG.dterm_lowpass_hz = 100;
+                FC.FILTER_CONFIG.dterm_lowpass_hz = previousValues.value.dtermLowpassHz || 100;
             }
         }
     },
@@ -1277,7 +1295,7 @@ const dterm_lowpass_dyn_max_hz = computed({
 const dyn_lpf_curve_expo = computed({
     get: () => {
         if (!FC || !FC.FILTER_CONFIG) return 5;
-        return FC.FILTER_CONFIG.dyn_lpf_curve_expo || 5;
+        return FC.FILTER_CONFIG.dyn_lpf_curve_expo ?? 5;
     },
     set: (value) => {
         if (FC && FC.FILTER_CONFIG) {
