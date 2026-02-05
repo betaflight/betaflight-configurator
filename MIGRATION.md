@@ -86,6 +86,87 @@
 **Files Affected:**
 - `src/components/tabs/pid-tuning/FilterSubTab.vue` - Fixed gyroLowpassEnabled and dtermLowpassEnabled setters
 
+### Lessons Learned from CodeRabbitAI Review (February 5, 2026)
+
+**Issue:** CodeRabbitAI identified three categories of issues that should have been caught during migration planning and execution:
+
+#### 1. Missing Internationalization (i18n)
+**Problem:** Hard-coded English strings in FilterSubTab.vue instead of using `$t(...)` i18n keys.
+- Filter slider headers ("More Filtering", "Default Filtering", "Less Filtering")
+- Column headers ("Profile independent Filter Settings", "Profile dependent Filter Settings")
+- Section headers ("Gyro Lowpass Filters", "Gyro Notch Filters", "Dynamic Notch Filter")
+- UI labels ("Use Gyro Slider", "Use D Term Slider")
+
+**Root Cause:** Failed to systematically verify i18n coverage when migrating from jQuery/HTML templates that already had proper `data-i18n` attributes.
+
+**Fix Applied:**
+- Replaced all hard-coded English strings with existing i18n keys (e.g., `$t('pidTuningGyroLowpassFiltersGroup')`)
+- All keys already existed in `locales/en/messages.json` from original implementation
+- No new translations needed - just proper usage of existing keys
+
+**Prevention:**
+- ✅ During planning, create i18n checklist by grepping for all user-facing text
+- ✅ Compare original HTML `data-i18n` attributes to Vue template strings
+- ✅ Add i18n validation to pre-commit hooks or linting rules
+- ✅ Test with non-English locale to catch missing translations early
+
+#### 2. Filter Mode Toggle Value Preservation (Asymmetric Caching)
+**Problem:** Mode toggle code cached values before switching, but the gyroLowpassMode and dtermLowpassMode setters unconditionally zeroed values, discarding user settings on static→dynamic→static toggles.
+
+**Original Issue:** Lines 756-806 in FilterSubTab.vue zeroed out the "other mode's" values without caching them first, so if a user:
+1. Set static gyro filter to 150 Hz
+2. Switched to dynamic (200-500 Hz range)
+3. Switched back to static
+...the original 150 Hz was lost and replaced with default 100 Hz.
+
+**Root Cause:** Missed the asymmetry in the code flow:
+- gyroLowpassEnabled setter properly cached values before disabling
+- gyroLowpassMode setter (STATIC/DYNAMIC toggle) didn't cache before switching
+
+**Fix Applied:**
+- Modified gyroLowpassMode and dtermLowpassMode setters to cache current values BEFORE zeroing the other mode
+- When switching to dynamic: cache static value first, then zero it
+- When switching to static: cache dynamic values first, then zero them
+- Restored values use cached previousValues with fallback to defaults
+
+**Impact:** User can now toggle modes freely without losing their tuned values. This is an improvement over the original jQuery implementation.
+
+**Prevention:**
+- ✅ Document all state preservation patterns during planning
+- ✅ Create test scenarios for every toggle/enable/disable flow
+- ✅ Review all computed setters that modify multiple FC properties
+- ✅ Draw state transition diagrams to catch asymmetric flows
+
+#### 3. Nullish Coalescing for Valid Zero Values
+**Problem:** `dyn_lpf_curve_expo` getter used `|| 5` which made valid `0` input display as `5`.
+
+**Code Issue:** Line 1280:
+```javascript
+return FC.FILTER_CONFIG.dyn_lpf_curve_expo || 5;
+```
+The input allows `min="0"`, but JavaScript's `||` operator treats `0` as falsy, so `0 || 5` returns `5`.
+
+**Fix Applied:**
+- Changed to nullish coalescing: `FC.FILTER_CONFIG.dyn_lpf_curve_expo ?? 5`
+- Now only returns `5` if value is `null` or `undefined`, preserving valid `0`
+
+**Prevention:**
+- ✅ Use nullish coalescing (`??`) for all numeric defaults where 0 is valid
+- ✅ Review all `|| defaultValue` patterns in computed properties
+- ✅ Add unit tests for boundary values (0, undefined, null, NaN)
+- ✅ Lint rule to flag `|| number` patterns in Vue computed properties
+
+#### Planning Takeaway
+These issues highlight gaps in migration planning:
+1. **No i18n verification checklist** - Should have compared all `data-i18n` to `$t()` usage
+2. **No state preservation test plan** - Should have tested all toggle sequences
+3. **No boundary value testing** - Should have tested edge cases (0, min, max values)
+
+**Going Forward:**
+- Add "Migration Quality Checklist" section to MIGRATION.md
+- Include: i18n coverage, state preservation scenarios, boundary testing, computed property patterns
+- Validate checklist completion before marking migration "done"
+
 ---
 
 ## Executive Summary
