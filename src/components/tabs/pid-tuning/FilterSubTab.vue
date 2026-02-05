@@ -682,6 +682,7 @@ const previousValues = ref({
     dtermLowpass2Hz: 250,
     dtermNotchHz: 260,
     dtermNotchCutoff: 160,
+    dynNotchCount: 3, // Default dynamic notch count
     lastDynNotchMode: 1, // Track if dynamic notch was enabled
 });
 
