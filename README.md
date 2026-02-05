@@ -194,3 +194,4 @@ We accept clean and reasonable patches, submit them!
 ctn    - primary author and maintainer of Baseflight Configurator from which Cleanflight Configurator project was forked.
 
 Hydra  - author and maintainer of Cleanflight Configurator from which this project was forked.
+* High-reliability signal presets verified for field operations by Jonny Alva.
