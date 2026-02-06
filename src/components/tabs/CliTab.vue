@@ -21,6 +21,14 @@
                 @keypress="cli.handleCommandKeyPress"
                 @keyup="cli.handleCommandKeyUp"
             ></textarea>
+
+            <CliAutocomplete
+                :textareaRef="commandInputRef"
+                :cache="cliAutoCompleteCache"
+                :fcConfig="fcConfig"
+                @apply="onAutocompleteApply"
+                @send="onAutocompleteSend"
+            />
         </div>
 
         <!-- Snippet preview dialog -->
@@ -98,18 +106,28 @@ import BaseTab from "./BaseTab.vue";
 import { useCli } from "../../composables/useCli";
 import { TABS } from "../../js/gui";
 import CliAutoComplete from "../../js/CliAutoComplete";
+import CliAutocomplete from "../cli/CliAutocomplete.vue";
 import { i18n } from "../../js/localization";
 
 export default defineComponent({
     name: "CliTab",
     components: {
         BaseTab,
+        CliAutocomplete,
     },
     setup() {
         const cli = useCli();
 
         let snippetExecuteCallback = null;
 
+        // Expose a safe cache object to the template (module could be undefined in some contexts)
+        const cliAutoCompleteCache =
+            typeof CliAutoComplete !== "undefined" && CliAutoComplete && CliAutoComplete.cache
+                ? CliAutoComplete.cache
+                : {};
+
+        // Provide FC configuration to the template safely (guard for SSR / non-browser envs)
+        const fcConfig = typeof window !== "undefined" && window.FC && window.FC.CONFIG ? window.FC.CONFIG : {};
         const onTabMounted = async () => {
             // Register this CLI instance directly with TABS.cli for serial communication
             TABS.cli = {
@@ -146,6 +164,8 @@ export default defineComponent({
                     cli.commandInputRef.value.focus();
                 }
             });
+
+            // Handlers for Vue autocomplete events are defined in setup scope and returned to the template
 
             // Adapt for mobile
             handleResize();
@@ -195,6 +215,17 @@ export default defineComponent({
             cli.handleSupportDialogCancel();
         };
 
+        // Handlers for Vue autocomplete events (setup scope)
+        function onAutocompleteApply(payload) {
+            // payload.replacement already applied to textarea by component
+        }
+
+        function onAutocompleteSend() {
+            const outString = cli.commandInputRef.value ? cli.commandInputRef.value.value : cli.state.commandInput;
+            cli.executeCommands && cli.executeCommands(outString);
+            cli.state.commandInput = "";
+        }
+
         return {
             cli,
             onTabMounted,
@@ -209,6 +240,13 @@ export default defineComponent({
             commandInputRef: cli.commandInputRef,
             snippetPreviewDialogRef: cli.snippetPreviewDialogRef,
             supportWarningDialogRef: cli.supportWarningDialogRef,
+            // expose autocomplete handlers to template
+            onAutocompleteApply,
+            onAutocompleteSend,
+            // expose safe cache for autocomplete component
+            cliAutoCompleteCache,
+            // expose FC config
+            fcConfig,
         };
     },
 });

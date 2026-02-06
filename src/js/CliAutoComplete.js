@@ -474,7 +474,7 @@ CliAutoComplete._initTextcomplete = function () {
                         callback(arr);
                     },
                     cache.settings,
-                    3,
+                    0,
                 );
             },
         }),
@@ -484,7 +484,7 @@ CliAutoComplete._initTextcomplete = function () {
             match: /^(\s*set\s+)(\w*)$/i,
             search: function (term, callback) {
                 sendOnEnter = false;
-                searcher(term, callback, cache.settings, 3);
+                searcher(term, callback, cache.settings, 0);
             },
         }),
 
@@ -610,7 +610,7 @@ CliAutoComplete._initTextcomplete = function () {
                         }
                     },
                     arr,
-                    1,
+                    0,
                 );
             },
             replace: function (value) {
@@ -704,7 +704,7 @@ CliAutoComplete._initTextcomplete = function () {
                 if (!match[3]) {
                     arr = ["-", "list"].concat(arr);
                 }
-                searcher(term, callback, arr, 1);
+                searcher(term, callback, arr, 0);
             },
             replace: function (value) {
                 if (value === "-") {
@@ -721,7 +721,7 @@ CliAutoComplete._initTextcomplete = function () {
             match: /^(\s*mixer\s+)(\w*)$/i,
             search: function (term, callback) {
                 sendOnEnter = true;
-                searcher(term, callback, cache.mixers, 1);
+                searcher(term, callback, cache.mixers, 0);
             },
         }),
     ]);
@@ -732,7 +732,7 @@ CliAutoComplete._initTextcomplete = function () {
             match: /^(\s*resource\s+show\s+)(\w*)$/i,
             search: function (term, callback) {
                 sendOnEnter = true;
-                searcher(term, callback, ["all"], 1, true);
+                searcher(term, callback, ["all"], 0, true);
             },
             template: highlighterPrefix,
         }),
@@ -756,7 +756,7 @@ CliAutoComplete._initTextcomplete = function () {
             match: /^(\s*diff\s+)(\w*)$/i,
             search: function (term, callback) {
                 sendOnEnter = true;
-                searcher(term, callback, diffArgs1, 1, true);
+                searcher(term, callback, diffArgs1, 0, true);
             },
             template: highlighterPrefix,
         }),
@@ -766,7 +766,7 @@ CliAutoComplete._initTextcomplete = function () {
             match: /^(\s*diff\s+\w+\s+)(\w*)$/i,
             search: function (term, callback) {
                 sendOnEnter = true;
-                searcher(term, callback, diffArgs2, 1, true);
+                searcher(term, callback, diffArgs2, 0, true);
             },
             template: highlighterPrefix,
         }),
