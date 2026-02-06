@@ -27,7 +27,8 @@ CliAutoComplete.isBuilding = function () {
 };
 
 CliAutoComplete.isOpen = function () {
-    return $(".cli-textcomplete-dropdown").is(":visible");
+    // Check both the plugin's standard dropdown and our custom class
+    return $(".cli-textcomplete-dropdown").is(":visible") || $(".textcomplete-dropdown").is(":visible");
 };
 
 /**
@@ -37,7 +38,11 @@ CliAutoComplete.openLater = function (force) {
     const self = this;
     setTimeout(function () {
         self.forceOpen = !!force;
-        self.$textarea.textcomplete("trigger");
+        try {
+            self.$textarea.textcomplete("trigger");
+        } catch (e) {
+            console.error("CliAutoComplete: failed to trigger textcomplete", e);
+        }
         self.forceOpen = false;
     }, 0);
 };
@@ -264,17 +269,23 @@ CliAutoComplete._initTextcomplete = function () {
 
         callback(res);
 
+        // Only trigger the synthetic Tab selection if no fallback replacement was applied
         if (self.forceOpen && res.length === 1) {
-            // hacky: if we came here because of Tab and there's only one match
-            // trigger Tab again, so that textcomplete should immediately select the only result
-            // instead of showing the menu
-            $textarea.trigger($.Event("keydown", { keyCode: 9 }));
+            if (!self._fallbackApplied) {
+                // hacky: if we came here because of Tab and there's only one match
+                // trigger Tab again so that textcomplete should immediately select the only result
+                // Use normalized event properties (keyCode, which, key) to be compatible with handlers
+                $textarea.trigger($.Event("keydown", { keyCode: 9, which: 9, key: "Tab" }));
+            }
+            // reset flag
+            self._fallbackApplied = false;
         }
     };
 
     const contexter = function (text) {
         const val = $textarea.val();
-        if (val.length === text.length || val[text.length].match(/\s/)) {
+        const result = val.length === text.length || val[text.length].match(/\s/);
+        if (result) {
             return true;
         }
         return false; // do not show autocomplete if in the middle of a word
@@ -297,6 +308,15 @@ CliAutoComplete._initTextcomplete = function () {
                 // since this handler [onKeydown] is triggered before replace()
                 if (e.which === 13) {
                     setTimeout(function () {
+                        try {
+                            // Ensure the underlying textarea's 'input' event fires so frameworks (Vue) update v-model
+                            // after textcomplete's replacement. This prevents stale command text being executed
+                            // when Enter is pressed twice (accept then execute).
+                            $textarea.trigger("input");
+                        } catch (err) {
+                            // swallow
+                        }
+
                         if (sendOnEnter) {
                             // fake "enter" to run the textarea's handler
                             $textarea.trigger($.Event("keypress", { which: 13 }));
@@ -383,7 +403,58 @@ CliAutoComplete._initTextcomplete = function () {
             match: /^(\s*)(\w*)$/,
             search: function (term, callback) {
                 sendOnEnter = false;
-                searcher(term, callback, cache.commands, false, true);
+
+                // Capture strategy context for use inside the wrapped callback
+                const strategyThis = this;
+
+                // Wrap callback to provide single-match fallback when forceOpen is used
+                searcher(
+                    term,
+                    function (res) {
+                        callback(res);
+
+                        try {
+                            if (self.forceOpen && res.length === 1) {
+                                const value = res[0];
+                                const replacementTemplate = strategyThis.replace
+                                    ? strategyThis.replace.call(strategyThis, value)
+                                    : basicReplacer(value);
+
+                                if (typeof replacementTemplate === "string") {
+                                    const currentVal = $textarea.val();
+                                    const m = (strategyThis.match && strategyThis.match.exec(currentVal)) || [];
+                                    const replacement = replacementTemplate.replace(/\$(\d+)/g, function (_, n) {
+                                        return m[parseInt(n, 10)] || "";
+                                    });
+
+                                    $textarea.val(replacement);
+                                    try {
+                                        $textarea[0].selectionStart = $textarea[0].selectionEnd = replacement.length;
+                                    } catch (e) {}
+
+                                    // trigger input event so Vue v-model picks up the changed value
+                                    try {
+                                        $textarea.trigger("input");
+                                    } catch (err) {
+                                        // ignore
+                                    }
+
+                                    // mark that we applied a fallback replacement so searcher won't re-trigger the synthetic Tab
+                                    self._fallbackApplied = true;
+
+                                    if (sendOnEnter) {
+                                        $textarea.trigger($.Event("keypress", { which: 13 }));
+                                    }
+                                }
+                            }
+                        } catch (error) {
+                            // fallback error suppressed
+                        }
+                    },
+                    cache.commands,
+                    false,
+                    true,
+                );
             },
             template: highlighterPrefix,
         }),
@@ -482,7 +553,65 @@ CliAutoComplete._initTextcomplete = function () {
                 } else {
                     arr = ["list"].concat(arr);
                 }
-                searcher(term, callback, arr, 1);
+
+                // Wrap callback to provide a single-match fallback when forceOpen is used
+                // capture strategy context
+                const strategyThis = this;
+
+                searcher(
+                    term,
+                    function (res) {
+                        callback(res);
+
+                        try {
+                            // If user forced open (Tab) and there's exactly one match, apply it directly as a fallback.
+                            if (self.forceOpen && res.length === 1) {
+                                const value = res[0];
+
+                                // Call replace() to allow it to set sendOnEnter as it would normally do
+                                const replacementTemplate = strategyThis.replace
+                                    ? strategyThis.replace.call(strategyThis, value)
+                                    : basicReplacer(value);
+
+                                if (typeof replacementTemplate === "string") {
+                                    // Attempt to substitute $n placeholders using the strategy's match regex
+                                    const currentVal = $textarea.val();
+                                    const m = (strategyThis.match && strategyThis.match.exec(currentVal)) || [];
+                                    const replacement = replacementTemplate.replace(/\$(\d+)/g, function (_, n) {
+                                        return m[parseInt(n, 10)] || "";
+                                    });
+
+                                    // Set the textarea to the replaced value and move cursor to end
+                                    $textarea.val(replacement);
+                                    try {
+                                        $textarea[0].selectionStart = $textarea[0].selectionEnd = replacement.length;
+                                    } catch (e) {
+                                        // ignore
+                                    }
+
+                                    // trigger input event so Vue v-model picks up the changed value
+                                    try {
+                                        $textarea.trigger("input");
+                                    } catch (err) {
+                                        // ignore
+                                    }
+
+                                    // mark that we applied a fallback to prevent searcher from re-triggering synthetic Tab
+                                    self._fallbackApplied = true;
+
+                                    // If replace() set sendOnEnter, trigger synthetic keypress so CLI processes the completed command
+                                    if (sendOnEnter) {
+                                        $textarea.trigger($.Event("keypress", { which: 13 }));
+                                    }
+                                }
+                            }
+                        } catch (error) {
+                            // fallback error suppressed
+                        }
+                    },
+                    arr,
+                    1,
+                );
             },
             replace: function (value) {
                 if (value in cache.resourcesCount) {
@@ -526,6 +655,7 @@ CliAutoComplete._initTextcomplete = function () {
             match: /^(\s*resource\s+\w+\s+(\d*\s+)?)(\w*)$/i,
             search: function (term, callback) {
                 sendOnEnter = !!term;
+
                 if (term) {
                     if ("none".startsWith(term)) {
                         callback(["none"]);
@@ -547,6 +677,7 @@ CliAutoComplete._initTextcomplete = function () {
                     sendOnEnter = true;
                     return "$1none ";
                 }
+                // For placeholder pin selections we don't replace here; log for diagnostics
                 return undefined;
             },
             context: function (text) {
