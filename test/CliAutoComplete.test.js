@@ -2,7 +2,10 @@ import { describe, it, expect, beforeEach } from "vitest";
 import CliAutoComplete from "../src/js/CliAutoComplete";
 import FC from "../src/js/fc";
 
-// Minimal mock jQuery textarea with a fake textcomplete plugin
+// Rewritten, consolidated test suite for CLI autocomplete behavior. Tests exercise
+// the real strategies registered by CliAutoComplete._initTextcomplete using a
+// lightweight mock textarea that emulates the minimal jQuery.textcomplete API.
+
 function createMockTextarea() {
     const mock = {
         _options: null,
@@ -10,70 +13,59 @@ function createMockTextarea() {
         lastCallbackResults: [],
         valStr: "",
         length: 1,
-        // emulate jQuery element index access for $textarea[0]
+        triggeredEvents: [],
         0: { selectionStart: 0, selectionEnd: 0 },
-        // simple jQuery-like val() getter/setter
         val(value) {
             if (value === undefined) return this.valStr;
             this.valStr = value;
             return this;
         },
         textcomplete(...args) {
-            // Usage 1: textcomplete([], options)
             if (Array.isArray(args[0]) && typeof args[1] === "object") {
                 this._options = args[1];
                 return this;
             }
-
-            // Usage 2: textcomplete('register', [strategies])
             if (args[0] === "register" && Array.isArray(args[1])) {
                 this._strategies = this._strategies.concat(args[1]);
                 return this;
             }
-
             return this;
         },
         on() {
-            // no-op for tests
             return this;
         },
-        // Simulate trigger called by CliAutoComplete.openLater
-        trigger() {
+        trigger(event) {
+            if (!event) return;
+            if (typeof event === "string") {
+                this.triggeredEvents.push({ type: event });
+                return;
+            }
+            if (event && typeof event === "object") {
+                this.triggeredEvents.push({ type: event.type || null, which: event.which || null });
+            }
+        },
+        triggerSearches() {
             this.lastCallbackResults = [];
             for (const s of this._strategies) {
                 try {
-                    // For each strategy try to match against whole input string
                     const match = this.valStr.match(s.match);
                     if (match) {
-                        // compute term - follow the code's pattern: most strategies use group 2
-                        const term = match[2] !== undefined ? match[2] : "";
-
-                        // call strategy.search as it was defined in the init
-                        const cb = (res) => {
-                            this.lastCallbackResults.push({ strategy: s, results: res, match });
-                        };
-
-                        // Call the searcher according to its expected arity to better emulate real textcomplete
-                        // If it expects 3 args, pass match as third param
-                        if (s.search.length >= 3) {
-                            s.search.call(s, term, cb, match);
-                        } else {
-                            s.search.call(s, term, cb);
-                        }
+                        const idx = s.index || 2;
+                        const term = match[idx] !== undefined ? match[idx] : "";
+                        const cb = (res) => this.lastCallbackResults.push({ strategy: s, results: res, match });
+                        if (s.search.length >= 3) s.search.call(s, term, cb, match);
+                        else s.search.call(s, term, cb);
                     }
                 } catch (e) {
-                    // match may be out of scope here, avoid referencing it
                     this.lastCallbackResults.push({ strategy: s, error: e, match: null });
                 }
             }
         },
     };
-
     return mock;
 }
 
 beforeEach(() => {
-    // reset any state
     CliAutoComplete.cache = {
         commands: [],
         resources: [],
@@ -87,92 +79,110 @@ beforeEach(() => {
     CliAutoComplete.builder = { state: "reset", numFails: 0 };
 });
 
-describe("CliAutoComplete strategies (unit tests with mock)", () => {
+describe("CliAutoComplete strategies (refactored tests)", () => {
     it("registers strategies on _initTextcomplete", () => {
         const mock = createMockTextarea();
         CliAutoComplete.$textarea = mock;
         CliAutoComplete.cache.commands = ["status", "set", "get", "save"];
-
         CliAutoComplete._initTextcomplete();
-
         expect(mock._strategies.length).toBeGreaterThan(0);
     });
 
-    it('suggests "status" for input "st" (command strategy)', () => {
+    it('command strategy suggests "status" for input "st"', () => {
         const mock = createMockTextarea();
         CliAutoComplete.$textarea = mock;
         CliAutoComplete.cache.commands = ["status", "set", "get", "save"];
-
         CliAutoComplete._initTextcomplete();
-
-        // Instead of triggering all strategies (some cause regex issues in test environment),
-        // invoke the command strategy directly.
-        const cmdStrategy = mock._strategies.find((s) => s.match && s.match.source === "^(\\s*)(\\w*)$");
-        expect(cmdStrategy).toBeTruthy();
-
+        // Force-open so searcher runs even when dropdown is not visible
         CliAutoComplete.forceOpen = true;
-        const cb = (res) => {
-            mock.lastCallbackResults.push({ strategy: cmdStrategy, results: res });
-        };
-        cmdStrategy.search.call(cmdStrategy, "st", cb);
+        mock.valStr = "st";
+        mock.triggerSearches();
         CliAutoComplete.forceOpen = false;
-
         const found = mock.lastCallbackResults.some((r) => r.results && r.results.some((x) => x === "status"));
-        // Accept either direct suggestion result or the fallback replacement that applies the completed text
-        const fallbackApplied = mock.val && mock.val() && mock.val().toLowerCase().startsWith("status");
-        expect(found || fallbackApplied).toBe(true);
+        expect(found).toBe(true);
     });
 
-    it('suggests "show" for input "resource sh" (resource strategy)', () => {
+    it('resource strategy includes "show" for FC >= 4.0.0', () => {
         const mock = createMockTextarea();
         CliAutoComplete.$textarea = mock;
         CliAutoComplete.cache.resources = ["show", "FOO"];
-        // emulate FC version >= 4.0.0 so "show" is available
-        // _initTextcomplete uses FC.CONFIG.flightControllerVersion - set it on the imported FC module
         FC.CONFIG = FC.CONFIG || {};
         FC.CONFIG.flightControllerVersion = "4.0.0";
-
         CliAutoComplete._initTextcomplete();
-
         mock.valStr = "resource sh";
-        mock.trigger();
-
-        // Debug: dump results when failing
-        if (!mock.lastCallbackResults.some((r) => r.results && r.results.some((x) => x === "show"))) {
-            // debug: command results missing
-        }
-
+        mock.triggerSearches();
         const found = mock.lastCallbackResults.some((r) => r.results && r.results.some((x) => x === "show"));
         expect(found).toBe(true);
     });
 
-    it('applies single-match command fallback for "re" -> "resource" when forced', () => {
+    it('single-match command fallback applies replacement for "re" -> "resource" when forced', () => {
         const mock = createMockTextarea();
         CliAutoComplete.$textarea = mock;
-
-        // make only 'resource' available so it's a single match for 're'
         CliAutoComplete.cache.commands = ["resource"];
-
         CliAutoComplete._initTextcomplete();
-
         mock.valStr = "re";
-
-        // emulate user pressed Tab to force open
         CliAutoComplete.forceOpen = true;
-
-        // find command strategy and invoke it directly
-        const cmdStrategy = mock._strategies.find((s) => s.match && s.match.source === "^(\\s*)(\\w*)$");
-        expect(cmdStrategy).toBeTruthy();
-
-        // call search which should trigger the wrapped callback and fallback replacement
-        cmdStrategy.search.call(cmdStrategy, "re", (res) => {
-            // callback intentionally empty; fallback logic runs inside
-        });
-
+        const cmd = mock._strategies.find((s) => s.match && s.match.source === "^(\\s*)(\\w*)$");
+        expect(cmd).toBeTruthy();
+        cmd.search.call(cmd, "re", () => {});
         CliAutoComplete.forceOpen = false;
+        expect(mock.val().toLowerCase().startsWith("resource")).toBe(true);
+    });
 
-        // the fallback should have applied the replacement (accept small variations)
-        const v = mock.val();
-        expect(v.startsWith("resource")).toBe(true);
+    it('resource fallback triggers send-on-enter for "show" on force-open', () => {
+        const mock = createMockTextarea();
+        CliAutoComplete.$textarea = mock;
+        CliAutoComplete.cache.resources = [];
+        FC.CONFIG = FC.CONFIG || {};
+        FC.CONFIG.flightControllerVersion = "4.0.0";
+        CliAutoComplete._initTextcomplete();
+        mock.valStr = "resource sh";
+        CliAutoComplete.forceOpen = true;
+        mock.triggerSearches();
+        CliAutoComplete.forceOpen = false;
+        expect(mock.val().toLowerCase().startsWith("resource show")).toBe(true);
+        const kp = mock.triggeredEvents.find((e) => e.type === "keypress" || e.which === 13 || e.type === "input");
+        expect(kp).toBeTruthy();
+    });
+
+    it("get/set strategies search settings immediately", () => {
+        const mock = createMockTextarea();
+        CliAutoComplete.$textarea = mock;
+        CliAutoComplete.cache.settings = ["gyro", "acc_hor"];
+        CliAutoComplete._initTextcomplete();
+        const get = mock._strategies.find((s) => s.match && s.match.source === "^(\\s*get\\s+)(\\w*)$");
+        const set = mock._strategies.find((s) => s.match && s.match.source === "^(\\s*set\\s+)(\\w*)$");
+        expect(get).toBeTruthy();
+        expect(set).toBeTruthy();
+        let r1 = null;
+        get.search.call(get, "g", (res) => (r1 = res));
+        expect(r1).toContain("gyro");
+        let r2 = null;
+        set.search.call(set, "a", (res) => (r2 = res));
+        expect(r2).toContain("acc_hor");
+    });
+
+    it('resource index provides placeholder like "<1-N>"', () => {
+        const mock = createMockTextarea();
+        CliAutoComplete.$textarea = mock;
+        CliAutoComplete.cache.resourcesCount = { FOO: 3 };
+        CliAutoComplete._initTextcomplete();
+        const ri = mock._strategies.find((s) => s.match && s.match.source === "^(\\s*resource\\s+(\\w+)\\s+)(\\d*)$");
+        expect(ri).toBeTruthy();
+        let res = null;
+        ri.search.call(ri, "", (arr) => (res = arr), ["resource FOO ", "resource FOO ", "FOO"]);
+        expect(res && res[0]).toMatch(/(?:&lt;|<)1-\d+(?:&gt;|>)/);
+    });
+
+    it('feature strategy offers "-" and "list" when sign missing', () => {
+        const mock = createMockTextarea();
+        CliAutoComplete.$textarea = mock;
+        CliAutoComplete._initTextcomplete();
+        mock.valStr = "feature ";
+        mock.triggerSearches();
+        const found = mock.lastCallbackResults.some(
+            (r) => r.results && (r.results.includes("-") || r.results.includes("list")),
+        );
+        expect(found).toBe(true);
     });
 });
