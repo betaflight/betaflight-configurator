@@ -22,13 +22,7 @@
                 @keyup="cli.handleCommandKeyUp"
             ></textarea>
 
-            <CliAutocomplete
-                :textareaRef="commandInputRef"
-                :cache="cliAutoCompleteCache"
-                :fcConfig="fcConfig"
-                @apply="onAutocompleteApply"
-                @send="onAutocompleteSend"
-            />
+            <CliAutocomplete :textareaRef="commandInputRef" @apply="onAutocompleteApply" @send="onAutocompleteSend" />
         </div>
 
         <!-- Snippet preview dialog -->
@@ -108,6 +102,7 @@ import { TABS } from "../../js/gui";
 import CliAutoComplete from "../../js/CliAutoComplete";
 import CliAutocomplete from "../cli/CliAutocomplete.vue";
 import { i18n } from "../../js/localization";
+import { useCliAutocompleteStore } from "../../stores/cliAutocomplete";
 
 export default defineComponent({
     name: "CliTab",
@@ -120,14 +115,7 @@ export default defineComponent({
 
         let snippetExecuteCallback = null;
 
-        // Expose a safe cache object to the template (module could be undefined in some contexts)
-        const cliAutoCompleteCache =
-            typeof CliAutoComplete !== "undefined" && CliAutoComplete && CliAutoComplete.cache
-                ? CliAutoComplete.cache
-                : {};
-
-        // Provide FC configuration to the template safely (guard for SSR / non-browser envs)
-        const fcConfig = typeof window !== "undefined" && window.FC && window.FC.CONFIG ? window.FC.CONFIG : {};
+        // Note: Autocomplete cache and FC config are now provided via Pinia store
         const onTabMounted = async () => {
             // Register this CLI instance directly with TABS.cli for serial communication
             TABS.cli = {
@@ -149,6 +137,8 @@ export default defineComponent({
             }
 
             // Set up autocomplete event handlers (using jQuery event system)
+            const cliAutoStore = useCliAutocompleteStore();
+
             $(CliAutoComplete).on("build:start", () => {
                 if (cli.commandInputRef.value) {
                     cli.state.commandInput = "";
@@ -158,6 +148,11 @@ export default defineComponent({
             });
 
             $(CliAutoComplete).on("build:stop", () => {
+                // Sync the store from the legacy module when build completes
+                try {
+                    cliAutoStore.syncFromCli();
+                } catch (e) {}
+
                 if (cli.commandInputRef.value) {
                     cli.commandInputRef.value.placeholder = i18n.getMessage("cliInputPlaceholder");
                     cli.commandInputRef.value.disabled = false;
@@ -243,10 +238,6 @@ export default defineComponent({
             // expose autocomplete handlers to template
             onAutocompleteApply,
             onAutocompleteSend,
-            // expose safe cache for autocomplete component
-            cliAutoCompleteCache,
-            // expose FC config
-            fcConfig,
         };
     },
 });

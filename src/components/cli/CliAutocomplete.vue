@@ -15,6 +15,8 @@
 
 <script>
 import { defineComponent, reactive, onBeforeUnmount, nextTick, watch } from "vue";
+import { useCliAutocompleteStore } from "../../stores/cliAutocomplete";
+import { useFlightControllerStore } from "../../stores/fc";
 
 export default defineComponent({
     name: "CliAutocomplete",
@@ -25,9 +27,8 @@ export default defineComponent({
             default: null,
             validator: (v) => v === null || typeof v === "object",
         },
-        cache: { type: Object, required: false, default: () => ({}) },
-        fcConfig: { type: Object, required: false, default: () => ({}) },
     },
+    // Use Pinia store for cache and FC config instead of receiving them as props
     emits: ["apply", "send"],
     setup(props, { emit }) {
         const state = reactive({
@@ -38,6 +39,15 @@ export default defineComponent({
             sendOnEnter: false,
             forceOpen: false,
         });
+
+        // Pinia stores
+        const store = useCliAutocompleteStore();
+        const fcStore = useFlightControllerStore();
+
+        // Ensure store has the latest cache from legacy module (if any)
+        try {
+            store.syncFromCli();
+        } catch (e) {}
 
         // Simple highlighter
         function highlight(value, term) {
@@ -53,7 +63,7 @@ export default defineComponent({
                 match: /^\s*(\w*)$/,
                 search(term, cb) {
                     state.sendOnEnter = false;
-                    const arr = props.cache?.commands || [];
+                    const arr = store.cache?.commands || [];
                     cb(filterMatches(arr, term, true));
                 },
                 replace(value, match) {
@@ -65,7 +75,7 @@ export default defineComponent({
                 match: /^(\s*get\s+)(\w*)$/i,
                 search(term, cb) {
                     state.sendOnEnter = true;
-                    const arr = props.cache?.settings || [];
+                    const arr = store.cache?.settings || [];
                     cb(filterMatches(arr, term, false));
                 },
             },
@@ -74,7 +84,7 @@ export default defineComponent({
                 match: /^(\s*set\s+)(\w*)$/i,
                 search(term, cb) {
                     state.sendOnEnter = false;
-                    const arr = props.cache?.settings || [];
+                    const arr = store.cache?.settings || [];
                     cb(filterMatches(arr, term, false));
                 },
             },
@@ -95,11 +105,13 @@ export default defineComponent({
                 match: /^(\s*resource\s+)(\w*)$/i,
                 search(term, cb) {
                     state.sendOnEnter = false;
-                    let arr = props.cache?.resources || [];
-                    const v = (props.fcConfig && props.fcConfig.flightControllerVersion) || "0.0.0";
+                    let arr = store.cache?.resources || [];
+                    const v =
+                        (fcStore.config && fcStore.config.apiVersion) ||
+                        (fcStore.config && fcStore.config.flightControllerVersion) ||
+                        "0.0.0";
                     const is4p = (function () {
                         try {
-                            // simple semver-like compare per original behaviour
                             return String(v).split(".")[0] >= 4;
                         } catch (e) {
                             return false;
@@ -117,7 +129,7 @@ export default defineComponent({
                 id: "resourceIndex",
                 match: /^(\s*resource\s+(\w+)\s+)(\d*)$/i,
                 search(term, cb, match) {
-                    const count = props.cache?.resourcesCount?.[match[2].toUpperCase()] || 0;
+                    const count = store.cache?.resourcesCount?.[match[2].toUpperCase()] || 0;
                     cb([`<1-${count}>`]);
                 },
                 replace() {
@@ -148,7 +160,7 @@ export default defineComponent({
                 match: /^(\s*(feature|beeper)\s+(-?))(\w*)$/i,
                 search(term, cb, match) {
                     state.sendOnEnter = !!term;
-                    let arr = props.cache?.[match[2].toLowerCase()] || [];
+                    let arr = store.cache?.[match[2].toLowerCase()] || [];
                     if (!match[3]) arr = ["-", "list"].concat(arr);
                     cb(filterMatches(arr, term, false));
                 },
@@ -165,7 +177,7 @@ export default defineComponent({
                 match: /^(\s*mixer\s+)(\w*)$/i,
                 search(term, cb) {
                     state.sendOnEnter = true;
-                    const arr = props.cache?.mixers || [];
+                    const arr = store.cache?.mixers || [];
                     cb(filterMatches(arr, term, false));
                 },
             },
