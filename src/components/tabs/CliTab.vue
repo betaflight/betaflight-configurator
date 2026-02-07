@@ -21,6 +21,8 @@
                 @keypress="cli.handleCommandKeyPress"
                 @keyup="cli.handleCommandKeyUp"
             ></textarea>
+
+            <CliAutocomplete :textareaRef="commandInputRef" @apply="onAutocompleteApply" @send="onAutocompleteSend" />
         </div>
 
         <!-- Snippet preview dialog -->
@@ -98,18 +100,22 @@ import BaseTab from "./BaseTab.vue";
 import { useCli } from "../../composables/useCli";
 import { TABS } from "../../js/gui";
 import CliAutoComplete from "../../js/CliAutoComplete";
+import CliAutocomplete from "../cli/CliAutocomplete.vue";
 import { i18n } from "../../js/localization";
+import { useCliAutocompleteStore } from "../../stores/cliAutocomplete";
 
 export default defineComponent({
     name: "CliTab",
     components: {
         BaseTab,
+        CliAutocomplete,
     },
     setup() {
         const cli = useCli();
 
         let snippetExecuteCallback = null;
 
+        // Note: Autocomplete cache and FC config are now provided via Pinia store
         const onTabMounted = async () => {
             // Register this CLI instance directly with TABS.cli for serial communication
             TABS.cli = {
@@ -131,6 +137,8 @@ export default defineComponent({
             }
 
             // Set up autocomplete event handlers (using jQuery event system)
+            const cliAutoStore = useCliAutocompleteStore();
+
             $(CliAutoComplete).on("build:start", () => {
                 if (cli.commandInputRef.value) {
                     cli.state.commandInput = "";
@@ -140,12 +148,19 @@ export default defineComponent({
             });
 
             $(CliAutoComplete).on("build:stop", () => {
+                // Sync the store from the legacy module when build completes
+                try {
+                    cliAutoStore.syncFromCli();
+                } catch (e) {}
+
                 if (cli.commandInputRef.value) {
                     cli.commandInputRef.value.placeholder = i18n.getMessage("cliInputPlaceholder");
                     cli.commandInputRef.value.disabled = false;
                     cli.commandInputRef.value.focus();
                 }
             });
+
+            // Handlers for Vue autocomplete events are defined in setup scope and returned to the template
 
             // Adapt for mobile
             handleResize();
@@ -195,6 +210,17 @@ export default defineComponent({
             cli.handleSupportDialogCancel();
         };
 
+        // Handlers for Vue autocomplete events (setup scope)
+        function onAutocompleteApply(payload) {
+            // payload.replacement already applied to textarea by component
+        }
+
+        function onAutocompleteSend() {
+            const outString = cli.commandInputRef.value ? cli.commandInputRef.value.value : cli.state.commandInput;
+            cli.executeCommands && cli.executeCommands(outString);
+            cli.state.commandInput = "";
+        }
+
         return {
             cli,
             onTabMounted,
@@ -209,6 +235,9 @@ export default defineComponent({
             commandInputRef: cli.commandInputRef,
             snippetPreviewDialogRef: cli.snippetPreviewDialogRef,
             supportWarningDialogRef: cli.supportWarningDialogRef,
+            // expose autocomplete handlers to template
+            onAutocompleteApply,
+            onAutocompleteSend,
         };
     },
 });
