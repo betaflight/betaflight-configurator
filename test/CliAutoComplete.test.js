@@ -1,4 +1,6 @@
 import { describe, it, expect, beforeEach } from "vitest";
+import { setActivePinia, createPinia } from "pinia";
+import { useCliAutocompleteStore } from "../src/stores/cliAutocomplete";
 import CliAutoComplete from "../src/js/CliAutoComplete";
 import FC from "../src/js/fc";
 
@@ -184,5 +186,31 @@ describe("CliAutoComplete strategies (refactored tests)", () => {
             (r) => r.results && (r.results.includes("-") || r.results.includes("list")),
         );
         expect(found).toBe(true);
+    });
+});
+
+// Consolidated Pinia store tests for CLI autocomplete
+describe("cliAutocomplete Pinia store (consolidated)", () => {
+    beforeEach(() => {
+        setActivePinia(createPinia());
+        try {
+            globalThis.CliAutoComplete = undefined;
+        } catch (e) {}
+    });
+
+    it("syncFromCli copies cache and builder from legacy module", () => {
+        const store = useCliAutocompleteStore();
+        // Prepare legacy module
+        globalThis.CliAutoComplete = {
+            cache: { commands: ["foo"], resources: ["BAR"], resourcesCount: { BAR: 2 } },
+            builder: { state: "done", numFails: 0 },
+        };
+
+        store.syncFromCli();
+
+        expect(store.cache.commands).toContain("foo");
+        expect(store.cache.resources).toContain("BAR");
+        expect(store.cache.resourcesCount.BAR).toBe(2);
+        expect(store.builder.state).toBe("done");
     });
 });
