@@ -8,7 +8,7 @@ const Features = function (config) {
     const self = this;
 
     const features = [
-        { bit: 0, group: "rxMode", mode: "select", name: "RX_PPM" },
+        { bit: 0, group: "rxMode", mode: "select", name: "RX_PPM", dependsOn: "RX_PPM" },
         { bit: 2, group: "other", name: "INFLIGHT_ACC_CAL" },
         { bit: 3, group: "rxMode", mode: "select", name: "RX_SERIAL" },
         { bit: 4, group: "escMotorStop", name: "MOTOR_STOP", haveTip: true },
@@ -67,10 +67,7 @@ const Features = function (config) {
             if (
                 config.buildOptions.some(
                     (opt) =>
-                        opt.includes("CRSF") ||
-                        opt.includes("GHST") ||
-                        opt.includes("FPORT") ||
-                        opt.includes("JETI"),
+                        opt.includes("CRSF") || opt.includes("GHST") || opt.includes("FPORT") || opt.includes("JETI"),
                 )
             ) {
                 enableTelemetry = true;

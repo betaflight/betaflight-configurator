@@ -3,8 +3,10 @@
         <h3 class="dialogYesNoTitle">{{ title }}</h3>
         <div class="dialogYesNoContent" v-html="text"></div>
         <div class="buttons">
-            <a href="#" class="dialogYesNo-yesButton regular-button" @click.prevent="$emit('yes')">{{ yesText }}</a>
-            <a href="#" class="dialogYesNo-noButton regular-button" @click.prevent="$emit('no')">{{ noText }}</a>
+            <button type="button" class="dialogYesNo-yesButton regular-button" @click="$emit('yes')">
+                {{ yesText }}
+            </button>
+            <button type="button" class="dialogYesNo-noButton regular-button" @click="$emit('no')">{{ noText }}</button>
         </div>
     </dialog>
     <div class="dialog-backdrop"></div>

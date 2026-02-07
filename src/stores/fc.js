@@ -82,6 +82,11 @@ export const useFlightControllerStore = defineStore("flightController", () => {
         set: (val) => (FC.SENSOR_CONFIG = val),
     });
 
+    const sensorConfigActive = computed({
+        get: () => FC.SENSOR_CONFIG_ACTIVE,
+        set: (val) => (FC.SENSOR_CONFIG_ACTIVE = val),
+    });
+
     const rxConfig = computed({
         get: () => FC.RX_CONFIG,
         set: (val) => (FC.RX_CONFIG = val),
@@ -152,6 +157,56 @@ export const useFlightControllerStore = defineStore("flightController", () => {
         set: (val) => (FC.SDCARD = val),
     });
 
+    const mixerConfig = computed({
+        get: () => FC.MIXER_CONFIG,
+        set: (val) => (FC.MIXER_CONFIG = val),
+    });
+
+    const motorConfig = computed({
+        get: () => FC.MOTOR_CONFIG,
+        set: (val) => (FC.MOTOR_CONFIG = val),
+    });
+
+    const motor3dConfig = computed({
+        get: () => FC.MOTOR_3D_CONFIG,
+        set: (val) => (FC.MOTOR_3D_CONFIG = val),
+    });
+
+    const motorOutputOrder = computed({
+        get: () => FC.MOTOR_OUTPUT_ORDER,
+        set: (val) => (FC.MOTOR_OUTPUT_ORDER = val),
+    });
+
+    const motorTelemetryData = computed({
+        get: () => FC.MOTOR_TELEMETRY_DATA,
+        set: (val) => (FC.MOTOR_TELEMETRY_DATA = val),
+    });
+
+    const advancedTuning = computed({
+        get: () => FC.ADVANCED_TUNING,
+        set: (val) => (FC.ADVANCED_TUNING = val),
+    });
+
+    const filterConfig = computed({
+        get: () => FC.FILTER_CONFIG,
+        set: (val) => (FC.FILTER_CONFIG = val),
+    });
+
+    const rcDeadbandConfig = computed({
+        get: () => FC.RC_DEADBAND_CONFIG,
+        set: (val) => (FC.RC_DEADBAND_CONFIG = val),
+    });
+
+    const rcMap = computed({
+        get: () => FC.RC_MAP,
+        set: (val) => (FC.RC_MAP = val),
+    });
+
+    const rcTuning = computed({
+        get: () => FC.RC_TUNING,
+        set: (val) => (FC.RC_TUNING = val),
+    });
+
     // Computed Getters
     const apiVersion = computed(() => config.value.apiVersion);
 
@@ -180,6 +235,7 @@ export const useFlightControllerStore = defineStore("flightController", () => {
         motorData,
         pidAdvancedConfig,
         sensorConfig,
+        sensorConfigActive,
         rxConfig,
         armingConfig,
         auxConfig,
@@ -194,6 +250,16 @@ export const useFlightControllerStore = defineStore("flightController", () => {
         blackbox,
         dataflash,
         sdcard,
+        mixerConfig,
+        motorConfig,
+        motor3dConfig,
+        motorOutputOrder,
+        motorTelemetryData,
+        advancedTuning,
+        filterConfig,
+        rcDeadbandConfig,
+        rcMap,
+        rcTuning,
         apiVersion,
         isApiVersionSupported,
         isApiVersionLessThan,

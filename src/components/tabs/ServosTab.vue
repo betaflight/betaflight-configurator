@@ -94,15 +94,15 @@
                             <div class="servos">
                                 <div class="title2">{{ $t("servosText") }}</div>
                                 <ul class="titles">
-                                    <li v-for="i in 8" :key="i" :title="$t(`servoNumber${9 - i}`)">{{ 9 - i }}</li>
+                                    <li v-for="i in 8" :key="i" :title="$t(`servoNumber${i}`)">{{ i }}</li>
                                 </ul>
                                 <div class="bar-wrapper">
-                                    <div v-for="i in 8" :key="i" :class="`m-block servo-${8 - i}`">
+                                    <div v-for="i in 8" :key="i" :class="`m-block servo-${i - 1}`">
                                         <div class="meter-bar">
-                                            <div class="label">{{ servoData[8 - i] || 1500 }}</div>
-                                            <div class="indicator" :style="getBarStyle(servoData[8 - i] || 1500)">
+                                            <div class="indicator" :style="getBarStyle(servoData[i - 1] || 1500)">
                                                 <div class="label"></div>
                                             </div>
+                                            <div class="label">{{ servoData[i - 1] || 1500 }}</div>
                                         </div>
                                     </div>
                                 </div>

@@ -65,24 +65,6 @@
                         <span class="freelabel" v-html="$t('showVirtualMode')"></span>
                     </div>
 
-                    <!-- Use Legacy Rendering Model -->
-                    <div class="useLegacyRenderingModel margin-bottom">
-                        <div>
-                            <input type="checkbox" class="toggle" v-model="settings.useLegacyRenderingModel" />
-                        </div>
-                        <span class="freelabel" v-html="$t('useLegacyRenderingModel')"></span>
-                    </div>
-
-                    <!-- Dark Theme -->
-                    <div class="darkTheme margin-bottom">
-                        <select id="darkThemeSelect" v-model.number="settings.darkTheme">
-                            <option value="0">{{ $t("on") }}</option>
-                            <option value="1">{{ $t("off") }}</option>
-                            <option value="2">{{ $t("auto") }}</option>
-                        </select>
-                        <span class="freelabel" v-html="$t('darkTheme')"></span>
-                    </div>
-
                     <!-- Show Dev Tools On Startup -->
                     <div class="showDevToolsOnStartup margin-bottom">
                         <div>
@@ -113,6 +95,42 @@
                         </select>
                         <span class="freelabel" v-html="$t('firmwareBackupOnFlash')"></span>
                     </div>
+                </div>
+            </div>
+
+            <!-- Language and Appearance Box -->
+            <div class="gui_box">
+                <div class="gui_box_titlebar">
+                    <div class="spacer_box_title" v-html="$t('languageAndAppearanceSettings')"></div>
+                </div>
+                <div class="spacer">
+                    <!-- Use Legacy Rendering Model -->
+                    <div class="useLegacyRenderingModel margin-bottom">
+                        <div>
+                            <input type="checkbox" class="toggle" v-model="settings.useLegacyRenderingModel" />
+                        </div>
+                        <span class="freelabel" v-html="$t('useLegacyRenderingModel')"></span>
+                    </div>
+
+                    <!-- Dark Theme -->
+                    <div class="darkTheme margin-bottom">
+                        <select id="darkThemeSelect" v-model.number="settings.darkTheme">
+                            <option value="0">{{ $t("on") }}</option>
+                            <option value="1">{{ $t("off") }}</option>
+                            <option value="2">{{ $t("auto") }}</option>
+                        </select>
+                        <span class="freelabel" v-html="$t('darkTheme')"></span>
+                    </div>
+
+                    <!-- Color Theme -->
+                    <div class="colorTheme margin-bottom">
+                        <select id="colorThemeSelect" v-model="settings.colorTheme">
+                            <option value="yellow">{{ $t("colorThemeYellow") }}</option>
+                            <option value="amber">{{ $t("colorThemeAmber") }}</option>
+                            <option value="contrast">{{ $t("colorThemeContrast") }}</option>
+                        </select>
+                        <span class="freelabel" v-html="$t('colorTheme')"></span>
+                    </div>
 
                     <!-- User Language -->
                     <div class="userLanguage">
@@ -125,7 +143,7 @@
                                 </option>
                             </select>
                         </span>
-                        <span v-html="$t('userLanguageSelect')"></span>
+                        <span v-html="$t('userLanguageSelect')" class="freelabel"></span>
                     </div>
                 </div>
             </div>
@@ -212,6 +230,7 @@ export default defineComponent({
             showVirtualMode: !!getConfig("showVirtualMode").showVirtualMode,
             useLegacyRenderingModel: !!getConfig("useLegacyRenderingModel").useLegacyRenderingModel,
             darkTheme: DarkTheme.configSetting,
+            colorTheme: getConfig("colorTheme", "yellow").colorTheme ?? "yellow",
             showDevToolsOnStartup: !!getConfig("showDevToolsOnStartup").showDevToolsOnStartup,
             showNotifications: !!getConfig("showNotifications").showNotifications,
             backupOnFlash: getConfig("backupOnFlash", 1).backupOnFlash ?? 1,
@@ -297,8 +316,31 @@ export default defineComponent({
         watch(
             () => settings.darkTheme,
             (value) => {
+                // Contrast theme requires dark mode - prevent user from changing it
+                if (settings.colorTheme === "contrast") {
+                    settings.darkTheme = 0;
+                    setConfig({ darkTheme: 0 });
+                    setDarkTheme(0);
+                    return;
+                }
+
                 setConfig({ darkTheme: value });
                 setDarkTheme(value);
+            },
+        );
+
+        watch(
+            () => settings.colorTheme,
+            (value) => {
+                setConfig({ colorTheme: value });
+                document.body.dataset.theme = value;
+
+                // Contrast theme requires dark mode
+                if (value === "contrast") {
+                    settings.darkTheme = 0; // 0 = dark mode on
+                    setConfig({ darkTheme: 0 });
+                    setDarkTheme(0);
+                }
             },
         );
 

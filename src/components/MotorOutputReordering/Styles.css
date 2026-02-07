@@ -67,4 +67,13 @@
 #motorOutputReorderSaveStartOverButtonsPanel {
     position: absolute;
     bottom: 4px;
+    left: 0;
+    right: 0;
+    padding: 0 10px;
+    box-sizing: border-box;
+}
+
+#dialogMotorOutputReorderCloseButton {
+    margin-top: 50px;
+    text-align: center;
 }

@@ -162,6 +162,10 @@
         "message": "Включить режим только командной строки",
         "description": "Text for the option to enable or disable CLI only mode"
     },
+    "automaticDevOptions": {
+        "message": "Автоматически включать настройки разработки для предпросмотра сборки",
+        "description": "Text for the option to automatically enable development settings for preview builds"
+    },
     "showManualMode": {
         "message": "Включить режим ручного подключения",
         "description": "Text for the option to enable or disable manual connection mode"
@@ -511,6 +515,9 @@
     "reportProblemsDialogFooter": {
         "message": "<span class=\"message-negative\"><strong>Необходимо устранить эти проблемы, прежде чем взлетать<\/span><\/strong>."
     },
+    "reportProblemsDialogAPI_VERSION_MAX_SUPPORTED": {
+        "message": "<span class=\"message-negative\"><strong>Используемая версия приложения ($1) не поддерживает прошивку $2<\/strong><\/span>.<br>$t(configuratorUpdateHelp.message)"
+    },
     "reportProblemsDialogMOTOR_PROTOCOL_DISABLED": {
         "message": "<strong>не выбран протокол управления двигателями<\/strong>.<br>Пожалуйста, выберите протокол управления двигателями, соответствующий вашему ESC в '$t(configurationEscFeatures.message)' на вкладке '$t(tabMotorTesting.message)'.<br>$t(escProtocolDisabledMessage.message)"
     },
@@ -533,6 +540,9 @@
     },
     "buildServerUsingCached": {
         "message": "Использование кэшированной информации о сборках для $1."
+    },
+    "buildServerSupportRequestSubmission": {
+        "message": "<br>*** Сервисные данные отправлены *** <br>ID: $1<br><br><br># скопируйте ID и предоставьте его команде betaflight."
     },
     "buildKey": {
         "message": "Ключ сборки: <strong>$1<\/strong>"
@@ -668,11 +678,14 @@
     "defaultWelcomeIntro": {
         "message": "Добро пожаловать в приложение <strong>Betaflight<\/strong>, которое упрощает обновление, настройку и конфигурацию полетного контроллера."
     },
-    "defaultWelcomeHead": {
-        "message": "Аппаратная часть"
+    "defaultHardwareHead": {
+        "message": "Аппаратное обеспечение"
     },
-    "defaultWelcomeText": {
-        "message": "Этот конфигуратор поддерживает все полетные контроллеры, на которых может быть запущен Betaflight. Полный список поддерживаемых полетных контроллеров находится на вкладке Обновления Прошивки.<br \/><br \/> <a href=\"https:\/\/github.com\/betaflight\/blackbox-log-viewer\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Скачать Betaflight Blackbox Log Viewer<\/a><br \/><br \/><a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Скачать Betaflight TX Lua скрипты<\/a><br \/><br \/>Исходный код прошивок можно скачать <a href=\"https:\/\/github.com\/betaflight\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">здесь<\/a><br \/><br \/>Для устаревших устройств, использующих USB контроллер CP210x:<br \/>Последние <b>CP210x драйвера<\/b> можно скачать <a href=\"https:\/\/www.silabs.com\/products\/development-tools\/software\/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">здесь<\/a><br \/>Установщик последних USB драйверов <b>Zadig<\/b> для Windows можно скачать <a href=\"http:\/\/zadig.akeo.ie\/\" target=\"_blank\" rel=\"noopener noreferrer\">здесь<\/a><br \/><b>Исправления драйверов ImpulseRC<\/b> можно скачать <a href=\"https:\/\/impulserc.com\/pages\/downloads\" target=\"blank\" rel=\"noopener noreferrer\">отсюда<\/a>"
+    "defaultHardwareText": {
+        "message": "Программа поддерживает все устройства, которые могут запускать Betaflight. Проверьте вкладку Прошивка программатора для получения полного списка аппаратных средств.<br \/><br \/>Полезные аппаратные утилиты \/ драйверы:<ul><li>для устаревшего оборудования использующего микросхемы CP210x для переходника USB в последовательный порт, последние <b>драйверы CP210x<\/b> можно загрузить с <a href=\"https:\/\/www.silabs.com\/products\/development-tools\/software\/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">здесь<\/a><\/li><li>Последняя версия <b>Zadig<\/b> для установки USB драйвера Windows можно загрузить с <a href=\"http:\/\/zadig.akeo.ie\/\" target=\"_blank\" rel=\"noopener noreferrer\">здесь<\/a><\/li><li><b>Исправление для драйвера ImpulseRC<\/b> можно загрузить <a href=\"https:\/\/github.com\/ImpulseRC\/ImpulseRC_Driver_Fixer\" target=\"_blank\" rel=\"noopener noreferrer\">здесь<\/a><\/li><\/ul>"
+    },
+    "defaultSoftwareHead": {
+        "message": "Программное обеспечение"
     },
     "defaultContributingHead": {
         "message": "Содействие"
@@ -686,14 +699,20 @@
     "defaultDiscordText": {
         "message": "Betaflight <a href=\"https:\/\/discord.betaflight.com\/invite\" target=\"_blank\" rel=\"noopener noreferrer\">сервер Discord<\/a>.<br \/>Делись опытом полетов, обсуждай Betaflight, помогай другим людям и узнавай новое для себя."
     },
+    "defaultCommunityHead": {
+        "message": "Сообщество"
+    },
+    "statisticsDisclaimerHead": {
+        "message": "Ваша конфиденциальность"
+    },
     "defaultButtonFirmwareFlasher": {
         "message": "Программатор"
     },
     "defaultDonateHead": {
-        "message": "Открытый код \/ Пожертвование"
+        "message": "Пожертвования для ПО с открытым исходным кодом"
     },
     "defaultDonateText": {
-        "message": "<strong>Betaflight<\/strong> программное обеспечение для полетного контроллера <strong>с открытым исходным кодом<\/strong> и доступное для свободной модификации <strong>без гарантий<\/strong>для всех пользователей.<br \/>Если вы находите Betaflight и Betaflight Конфигуратор полезным то <strong>поддержите<\/strong> проект пожертвованиями."
+        "message": "<p><strong>Betaflight<\/strong> это программное обеспечение <strong>с открытым исходным кодом<\/strong> доступное для всех пользователей бесплатно и <strong>без гарантий<\/strong>.<\/p><p>Если вам пригодился Betaflight, пожалуйста, <strong>поддержите<\/strong> проект пожертвованиями.<\/p>"
     },
     "defaultDonateBottom": {
         "message": "<p>Если вы хотите осуществлять финансовую помощь на постоянной основе, вы можете стать нашим покровителем на $t(patreonLink.message).<\/p>"
@@ -1358,6 +1377,9 @@
     "configurationSensors": {
         "message": "Настройка датчиков"
     },
+    "configurationSensorsHelp": {
+        "message": "Настройте дополнительные датчики и расширенные функции."
+    },
     "configurationMagAlignmentHelp": {
         "message": "Выравнивание магнитометра — это ориентация датчика магнитометра на плате полётного контроллера. По умолчанию обычно задано верное значение, но если у вас кастомная сборка или полётный контроллер с другой ориентацией магнитометра, вам может потребоваться изменить эту настройку."
     },
@@ -1442,6 +1464,30 @@
         "description": "Don't translate!!!"
     },
     "configurationMagAlignmentYaw": {
+        "message": "$t(configurationBoardAlignmentYaw.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyro1AlignmentRoll": {
+        "message": "$t(configurationBoardAlignmentRoll.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyro1AlignmentPitch": {
+        "message": "$t(configurationBoardAlignmentPitch.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyro1AlignmentYaw": {
+        "message": "$t(configurationBoardAlignmentYaw.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyro2AlignmentRoll": {
+        "message": "$t(configurationBoardAlignmentRoll.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyro2AlignmentPitch": {
+        "message": "$t(configurationBoardAlignmentPitch.message)",
+        "description": "Don't translate!!!"
+    },
+    "configurationGyro2AlignmentYaw": {
         "message": "$t(configurationBoardAlignmentYaw.message)",
         "description": "Don't translate!!!"
     },
@@ -1541,6 +1587,9 @@
     },
     "configurationThrottleMinimum": {
         "message": "Минимальное значение газа (Минимальное значение, посылаемое к ESC при арминге)"
+    },
+    "configurationThrottleMinimumHelp": {
+        "message": "Это значение 'холостого хода', посылаемое в регулятор оборотов моторов во время арминга при нулевом значении газа. Увеличьте это значение для увеличения минимальной скорости моторов (холостой ход). Также повысьте это значение при возникновении рассинхронизации!"
     },
     "configurationThrottleMaximum": {
         "message": "Максимальный газ (Максимальное значение, которое можно послать на ESC во время арминга)"
@@ -1996,6 +2045,9 @@
     },
     "receiverRcSmoothingFeedforwardManual": {
         "message": "Выбор, будет ли частота среза фильтра feedforward рассчитана автоматически (рекомендуется) или выбрана пользователем. Выбор \"Ручной\" не рекомендуется для протоколов приемника типа Crossfire, которые могут меняться в полете."
+    },
+    "receiverRcSmoothingThrottleManual": {
+        "message": "Выбирает, будет ли автоматически сглаживаться частота входящего сигнала (рекомендуется) или выбрана вручную пользователем. Установка «Вручную» не рекомендуется для протоколов приемников, таких как Crossfire, которые могут меняться в полете."
     },
     "receiverRcSmoothingSetpointHz": {
         "message": "Частота среза заданного значения"
@@ -3469,6 +3521,12 @@
     "sdcardStatusUnknown": {
         "message": "Неизвестное состояние $1"
     },
+    "firmwareFlasherPleaseWait": {
+        "message": "Пожалуйста, подождите"
+    },
+    "firmwareFlasherBoardSelectionHead": {
+        "message": "Выбор платы"
+    },
     "firmwareFlasherBranch": {
         "message": "Выберите Pull Request или коммит"
     },
@@ -3504,10 +3562,13 @@
         "message": "Информация о сборке в облаке:"
     },
     "firmwareFlasherCloudBuildLogUrl": {
-        "message": "Показать журнал."
+        "message": "Показать журнал"
     },
     "firmwareFlasherCloudBuildStatus": {
         "message": "Статус:"
+    },
+    "firmwareFlasherCloudBuildQueued": {
+        "message": "в очереди"
     },
     "firmwareFlasherCloudBuildPending": {
         "message": "ожидание"
@@ -3675,13 +3736,10 @@
         "message": "Сообщение:"
     },
     "firmwareFlasherWarningText": {
-        "message": "Пожалуйста, <span class=\"message-negative\">не пытайтесь прошивать <\/span> <strong>не поддерживаемые<\/strong> Betaflight-ом контроллеры этим программатором.<br \/><span class=\"message-negative\">Не <\/span><strong>отключайте<\/strong> кабель от полётного контроллера и <strong>не выключайте<\/strong> ваш компьютер во время прошивки.<br \/><br \/><strong>Примечание:<\/strong> STM32-загрузчик хранится в ROM-памяти, его нельзя стереть.<br \/><strong>Примечание:<\/strong><span class=\"message-negative\"> Подключаться автоматически<\/span> всегда выключено во вкладке \"Программатор\".<br \/><strong>Примечание:<\/strong> Убедитесь, что Вы сделали резервную копию, т. к. различные обновления и возвраты к предыдущей версии могут стереть Ваши настройки. <br \/><strong>Примечание:<\/strong> Если при прошивке возникают проблемы, то попробуйте сперва <strong>отключить все сторонние кабели от полётного контроллера<\/strong>, перезагрузите компьютер, обновите chrome, обновите драйверы.<br \/><strong>Примечание:<\/strong> При прошивке полётных контроллеров непосредственно через USB кабель (особенно новых моделей контроллеров) обязательно ознакомьтесь с разделом USB Flashing в инструкции Betaflight и убедитесь, что у Вас установлены нужные программы и драйвера"
+        "message": "Пожалуйста, <span class=\"message-negative\">не пытайтесь прошивать <\/span> <strong>не поддерживаемые<\/strong> Betaflight-ом контроллеры этим программатором.<br \/><span class=\"message-negative\">Не <\/span><strong>отключайте<\/strong> кабель от полётного контроллера и <strong>не выключайте<\/strong> ваш компьютер во время прошивки.<br \/><br \/><strong>Примечание:<\/strong><ul><li> STM32-загрузчик хранится в ROM-памяти, его нельзя затереть.<\/li><li><span class=\"message-negative\"> Подключаться автоматически<\/span> всегда выключено во вкладке \"Программатор\".<\/li><li>Убедитесь, что Вы сделали резервную копию, т.к. различные обновления и возвраты к предыдущей версии могут стереть Ваши настройки.<\/li><li>Если при прошивке возникают проблемы, то попробуйте сперва <strong>отключить все сторонние кабели от полётного контроллера<\/strong>, перезагрузите компьютер, обновите chrome, обновите драйверы.<\/li><li> При прошивке полётных контроллеров непосредственно через USB кабель (большинство новых плат) обязательно ознакомьтесь с разделом \"Прошивка по USB\" в инструкции Betaflight и убедитесь, что у Вас установлены нужные программы и драйвера<\/li><\/ul>"
     },
     "firmwareFlasherRecoveryHead": {
         "message": "<strong>Потеря связи \/ Восстановление связи<\/strong>"
-    },
-    "firmwareFlasherRecoveryText": {
-        "message": "Если возникла потеря связи с вашим устройством, то выполните следующие действия, чтобы восстановить связь:<ul><li>Отключите питание<\/li><li>Включите \"Без перезагрузки\", включите \"Полное стирание чипа\".<\/li><li>Замкните контакты \"BOOT\" или удерживайте кнопку BOOT нажатой.<\/li><li>Включите питание (светодиод НЕ будет мигать, если всё сделано правильно).<\/li><li>Установите STM32 драйверы и Zadig, если это необходимо (см. раздел <a href=\"https:\/\/github.com\/betaflight\/betaflight\/wiki\/Installing-Betaflight\"target=\"_blank\">USB Flashing<\/a> в инструкции Betaflight).<\/li><li>Закройте Конфигуратор и перезапустите его.<\/li><li>Отпустите кнопку \"BOOT\", если на вашем FC она есть.<\/li><li>Залейте нужную прошивку (укажите вручную битрейт, если он указан в инструкции вашего полётного контроллера).<\/li><li>Отключите питание<\/li><li> Снимите \"BOOT\" джампер.<\/li><li>Включите питание (светодиод должен мигать).<\/li><li>Пробуйте подключиться.<\/li><\/ul>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Покинуть программатор"
@@ -3775,9 +3833,6 @@
     },
     "unstableFirmwareAcknowledgementDialog": {
         "message": "Вы собираетесь загрузить <strong> сборку прошивки для разработчиков<\/strong>. Такие сборки находятся в процессе разработки, и могут иметь любые из следующих особенностей: <strong><ul><li>прошивка не работает вообще;<\/li><li>прошивка не пригодна для полётов;<\/li><li>Есть проблемы с безопасностью прошивки, например flyaways<\/li><li> прошивка может привести к \"зависанию\" контроллера, либо вовсе его испортить<\/li><\/ul><\/strong>Если вы всё таки решили использовать данную прошивку, вы согласны с тем, что <strong>вы берете на себя полную ответственность за любй из вышеперечисленных рисков<\/strong>. Кроме того, Вы понимаете, что перед любыми попытками взлететь с этой прошивкой необходимо выполнить <strong>тщательные стендовые проверки с установленными пропеллерами<\/strong>."
-    },
-    "unstableFirmwareAcknowledgement": {
-        "message": "Я прочитал вышеуказанное и <strong>я беру на себя полную ответственность<strong> за установку нестабильной версии прошивки"
     },
     "unstableFirmwareAcknowledgementFlash": {
         "message": "Прошить"
@@ -7400,6 +7455,10 @@
         "message": "Загрузка текущей конфигурации из контроллера полета",
         "description": "Title for the waiting dialog when loading dump all into a file"
     },
+    "dumpAllNotSavedWarning": {
+        "message": "Произошла ошибка при сохранении текущей конфигурации",
+        "description": "Message appears on presets tab when saving current diff all into a file has failed"
+    },
     "presetSources": {
         "message": "Источники предустановок...",
         "description": "A button to show preset sources dialog"
@@ -7607,6 +7666,9 @@
     "tabBackups": {
         "message": "Резервные копии"
     },
+    "userBackupsLoadFailed": {
+        "message": "Не удалось загрузить резервную копию"
+    },
     "userBackupDownloadFailed": {
         "message": "Не удалось скачать резервную копию"
     },
@@ -7645,6 +7707,9 @@
     },
     "labelSignOut": {
         "message": "Выйти"
+    },
+    "placeholderAvatarUrl": {
+        "message": "Введите URL изображения для вашей аватарки"
     },
     "labelCreatePasskey": {
         "message": "Создать ключ доступа"
@@ -7696,6 +7761,9 @@
     },
     "labelCreated": {
         "message": "Создано"
+    },
+    "labelLastUsed": {
+        "message": "Последнее использование"
     },
     "labelActions": {
         "message": "Действия"
