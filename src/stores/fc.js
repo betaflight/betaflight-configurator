@@ -226,6 +226,10 @@ export const useFlightControllerStore = defineStore("flightController", () => {
     // Computed getters
     const apiVersion = computed(() => config.value.apiVersion);
 
+    const sensorNames = computed(() => FC.SENSOR_NAMES);
+
+    const mcuInfo = computed(() => FC.MCU_INFO);
+
     const isReadyToArm = computed(() => {
         // Arming is disabled if any flag is visible,
         // EXCEPT for the very last bit (ARM_SWITCH), which is usually expected.
@@ -287,7 +291,6 @@ export const useFlightControllerStore = defineStore("flightController", () => {
         rcMap,
         rcTuning,
         apiVersion,
-        sensorConfigActive,
         sensorNames,
         mcuInfo,
         armingFlags,
