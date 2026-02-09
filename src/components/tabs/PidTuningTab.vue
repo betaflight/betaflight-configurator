@@ -119,8 +119,10 @@ import semver from "semver";
 import { API_VERSION_1_41, API_VERSION_1_45, API_VERSION_1_47 } from "@/js/data_storage";
 import { isExpertModeEnabled } from "@/js/utils/isExpertModeEnabled";
 import { tabState } from "@/js/tab_state";
+import { useDialog } from "@/composables/useDialog";
 
 const fcStore = useFlightControllerStore();
+const dialog = useDialog();
 
 // State - use global reactive state for expert mode
 const expertModeEnabled = computed(() => tabState.expertMode);
@@ -265,23 +267,33 @@ async function copyProfile() {
         return;
     }
 
-    // For now, copy to the first available profile (next profile)
-    // TODO: Show dialog to let user select target profile
-    const targetProfile = options[0].value;
+    // Show profile selection dialog
+    dialog.openProfileSelection(
+        "Copy PID Profile",
+        "Select the target profile to copy to:",
+        options,
+        async (selectedIndex) => {
+            // User confirmed selection
+            const targetProfile = selectedIndex;
 
-    // Set up copy profile data
-    FC.COPY_PROFILE = FC.COPY_PROFILE || {};
-    FC.COPY_PROFILE.type = 0; // 0 = PID profile
-    FC.COPY_PROFILE.srcProfile = currentProfile.value;
-    FC.COPY_PROFILE.dstProfile = targetProfile;
+            // Set up copy profile data
+            FC.COPY_PROFILE = FC.COPY_PROFILE || {};
+            FC.COPY_PROFILE.type = 0; // 0 = PID profile
+            FC.COPY_PROFILE.srcProfile = currentProfile.value;
+            FC.COPY_PROFILE.dstProfile = targetProfile;
 
-    try {
-        await MSP.promise(MSPCodes.MSP_COPY_PROFILE, mspHelper.crunch(MSPCodes.MSP_COPY_PROFILE));
-        console.log(`[PidTuningTab] Copied profile ${currentProfile.value} to ${targetProfile}`);
-        // Optionally reload data or show success message
-    } catch (error) {
-        console.error("[PidTuningTab] Failed to copy profile:", error);
-    }
+            try {
+                await MSP.promise(MSPCodes.MSP_COPY_PROFILE, mspHelper.crunch(MSPCodes.MSP_COPY_PROFILE));
+                console.log(`[PidTuningTab] Copied profile ${currentProfile.value} to ${targetProfile}`);
+                // Optionally reload data or show success message
+            } catch (error) {
+                console.error("[PidTuningTab] Failed to copy profile:", error);
+            }
+        },
+        () => {
+            // User cancelled - do nothing
+        },
+    );
 }
 
 async function copyRateProfile() {
@@ -299,23 +311,33 @@ async function copyRateProfile() {
         return;
     }
 
-    // For now, copy to the first available profile (next profile)
-    // TODO: Show dialog to let user select target rate profile
-    const targetProfile = options[0].value;
+    // Show rate profile selection dialog
+    dialog.openProfileSelection(
+        "Copy Rate Profile",
+        "Select the target rate profile to copy to:",
+        options,
+        async (selectedIndex) => {
+            // User confirmed selection
+            const targetProfile = selectedIndex;
 
-    // Set up copy profile data
-    FC.COPY_PROFILE = FC.COPY_PROFILE || {};
-    FC.COPY_PROFILE.type = 1; // 1 = Rate profile
-    FC.COPY_PROFILE.srcProfile = currentRateProfile.value;
-    FC.COPY_PROFILE.dstProfile = targetProfile;
+            // Set up copy profile data
+            FC.COPY_PROFILE = FC.COPY_PROFILE || {};
+            FC.COPY_PROFILE.type = 1; // 1 = Rate profile
+            FC.COPY_PROFILE.srcProfile = currentRateProfile.value;
+            FC.COPY_PROFILE.dstProfile = targetProfile;
 
-    try {
-        await MSP.promise(MSPCodes.MSP_COPY_PROFILE, mspHelper.crunch(MSPCodes.MSP_COPY_PROFILE));
-        console.log(`[PidTuningTab] Copied rate profile ${currentRateProfile.value} to ${targetProfile}`);
-        // Optionally reload data or show success message
-    } catch (error) {
-        console.error("[PidTuningTab] Failed to copy rate profile:", error);
-    }
+            try {
+                await MSP.promise(MSPCodes.MSP_COPY_PROFILE, mspHelper.crunch(MSPCodes.MSP_COPY_PROFILE));
+                console.log(`[PidTuningTab] Copied rate profile ${currentRateProfile.value} to ${targetProfile}`);
+                // Optionally reload data or show success message
+            } catch (error) {
+                console.error("[PidTuningTab] Failed to copy rate profile:", error);
+            }
+        },
+        () => {
+            // User cancelled - do nothing
+        },
+    );
 }
 
 async function resetProfile() {

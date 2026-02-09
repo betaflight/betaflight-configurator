@@ -62,6 +62,37 @@ export function useDialog() {
         );
     };
 
+    const openProfileSelection = (
+        title,
+        message,
+        options,
+        onConfirm,
+        onCancel,
+        confirmText = "OK",
+        cancelText = "Cancel",
+    ) => {
+        store.open(
+            "ProfileSelectionDialog",
+            {
+                title,
+                message,
+                options,
+                confirmText,
+                cancelText,
+            },
+            {
+                confirm: (selectedValue) => {
+                    store.close();
+                    if (onConfirm) onConfirm(selectedValue);
+                },
+                cancel: () => {
+                    store.close();
+                    if (onCancel) onCancel();
+                },
+            },
+        );
+    };
+
     const close = () => {
         store.close();
     };
@@ -74,6 +105,7 @@ export function useDialog() {
         openYesNo,
         openInfo,
         openWait,
+        openProfileSelection,
         close,
         open,
     };
