@@ -861,11 +861,6 @@ const gyroLowpassEnabled = computed({
     },
 });
 
-const gyroLowpassDynamic = computed(() => {
-    if (!FC || !FC.FILTER_CONFIG) return false;
-    return FC.FILTER_CONFIG.gyro_lowpass_dyn_min_hz !== 0;
-});
-
 const gyro_lowpass_hz = computed({
     get: () => {
         if (!FC || !FC.FILTER_CONFIG) return 0;
@@ -1177,30 +1172,6 @@ const dyn_notch_max_hz = computed({
     },
 });
 
-const dyn_notch_range = computed({
-    get: () => {
-        if (!FC || !FC.FILTER_CONFIG) return 3;
-        return FC.FILTER_CONFIG.dyn_notch_range || 3;
-    },
-    set: (value) => {
-        if (FC && FC.FILTER_CONFIG) {
-            FC.FILTER_CONFIG.dyn_notch_range = value;
-        }
-    },
-});
-
-const dyn_notch_width_percent = computed({
-    get: () => {
-        if (!FC || !FC.FILTER_CONFIG) return 8;
-        return FC.FILTER_CONFIG.dyn_notch_width_percent || 8;
-    },
-    set: (value) => {
-        if (FC && FC.FILTER_CONFIG) {
-            FC.FILTER_CONFIG.dyn_notch_width_percent = value;
-        }
-    },
-});
-
 // D-term Lowpass
 const dtermLowpassEnabled = computed({
     get: () => {
@@ -1237,11 +1208,6 @@ const dtermLowpassEnabled = computed({
             FC.FILTER_CONFIG.dterm_lowpass_dyn_max_hz = 0;
         }
     },
-});
-
-const dtermLowpassDynamic = computed(() => {
-    if (!FC || !FC.FILTER_CONFIG) return false;
-    return FC.FILTER_CONFIG.dterm_lowpass_dyn_min_hz !== 0;
 });
 
 const dterm_lowpass_hz = computed({

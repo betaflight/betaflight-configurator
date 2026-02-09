@@ -1581,13 +1581,6 @@ function drawThrottleCurve() {
     }
 }
 
-function draw3DRatesPreview() {
-    if (!ratesPreviewCanvas.value || !model) return;
-
-    // This function is called continuously via requestAnimationFrame
-    // It rotates the 3D model based on current RC input
-}
-
 function handleModelResize() {
     if (model && model.resize) {
         model.resize();
