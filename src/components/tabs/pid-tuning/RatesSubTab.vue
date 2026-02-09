@@ -943,10 +943,12 @@ function updateRatesLabels() {
     // Calculate scaling exactly like master
     const curveHeight = canvas.height;
     const curveWidth = canvas.width;
-    const windowScale = 400 / canvas.clientHeight;
+    const clientHeight = canvas.clientHeight || 1; // Guard against zero
+    const clientWidth = canvas.clientWidth || 1; // Guard against zero
+    const windowScale = 400 / clientHeight;
     const rateScale = curveHeight / 2 / maxRate;
-    const lineScale = canvas.width / canvas.clientWidth;
-    const textScale = canvas.clientHeight / canvas.clientWidth;
+    const lineScale = canvas.width / clientWidth;
+    const textScale = clientHeight / clientWidth;
 
     // Set font size based on window scaling like master
     if (windowScale <= 1) {
