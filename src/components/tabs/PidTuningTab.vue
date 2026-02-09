@@ -444,6 +444,14 @@ watch(
     },
 );
 
+// Watch pidController changes and sync to FC.PID.controller
+watch(
+    () => pidController.value,
+    (newValue) => {
+        FC.PID.controller = newValue;
+    },
+);
+
 // Cleanup callback - called from gui.js tab_switch_cleanup when switching away from this tab
 function cleanup(callback) {
     // Any cleanup needed before unmounting
