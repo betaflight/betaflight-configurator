@@ -1056,10 +1056,19 @@ const props = defineProps({
         type: Boolean,
         default: false,
     },
+    profileName: {
+        type: String,
+        default: "",
+    },
 });
 
+const emit = defineEmits(["update:profileName"]);
+
 // Profile name
-const profileName = ref("");
+const profileName = computed({
+    get: () => props.profileName,
+    set: (value) => emit("update:profileName", value),
+});
 const showProfileName = computed(() => {
     return semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45);
 });
@@ -1362,10 +1371,6 @@ async function initializeSliders() {
     sliderPitchPIGain.value = TuningSliders.sliderPitchPIGain;
     sliderMasterMultiplier.value = TuningSliders.sliderMasterMultiplier;
 
-    if (showProfileName.value && FC.CONFIG.pidProfileNames) {
-        profileName.value = FC.CONFIG.pidProfileNames[FC.CONFIG.profile] || "";
-    }
-
     // Force Vue to update the DOM
     await nextTick();
 }
@@ -1405,13 +1410,6 @@ function onSliderModeChange() {
     onSliderChange();
 }
 
-// Watch profile name changes and sync to FC.CONFIG
-watch(profileName, (newValue) => {
-    if (showProfileName.value && FC.CONFIG.pidProfileNames) {
-        FC.CONFIG.pidProfileNames[FC.CONFIG.profile] = newValue;
-    }
-});
-
 // Watch expert mode changes
 watch(
     () => props.expertMode,
@@ -1442,7 +1440,6 @@ function forceUpdateSliders() {
 
 defineExpose({
     forceUpdateSliders,
-    profileName,
 });
 
 // Initialize sliders when component mounts

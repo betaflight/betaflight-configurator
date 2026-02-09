@@ -404,6 +404,15 @@ import kissLogo from "@/images/rate_logos/kiss.svg";
 import actualLogo from "@/images/rate_logos/actual.svg";
 import quickratesLogo from "@/images/rate_logos/quickrates.svg";
 
+const props = defineProps({
+    rateProfileName: {
+        type: String,
+        default: "",
+    },
+});
+
+const emit = defineEmits(["update:rateProfileName"]);
+
 // Canvas refs
 const rateCurveLayer0 = ref(null);
 const rateCurveLayer1 = ref(null);
@@ -423,12 +432,8 @@ let keepRendering = true;
 
 // Rate Profile Name
 const rateProfileName = computed({
-    get: () => FC.CONFIG.rateProfileNames?.[FC.CONFIG.rateProfile] ?? "",
-    set: (value) => {
-        if (FC.CONFIG.rateProfileNames && FC.CONFIG.rateProfile !== undefined) {
-            FC.CONFIG.rateProfileNames[FC.CONFIG.rateProfile] = value;
-        }
-    },
+    get: () => props.rateProfileName,
+    set: (value) => emit("update:rateProfileName", value),
 });
 
 // Rates Type
@@ -1812,11 +1817,6 @@ onUnmounted(() => {
         clearInterval(rcUpdateInterval);
         rcUpdateInterval = null;
     }
-});
-
-// Expose rateProfileName for parent component to save
-defineExpose({
-    rateProfileName,
 });
 </script>
 
