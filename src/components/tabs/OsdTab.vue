@@ -106,6 +106,26 @@
                                             >
                                                 ...
                                             </button>
+                                            <!-- Preset position grid popover -->
+                                            <div
+                                                v-if="presetMenuField === field"
+                                                class="preset-popover"
+                                                @click.stop
+                                            >
+                                                <div class="preset-popover-title">Choose Position</div>
+                                                <div class="preset-grid">
+                                                    <div
+                                                        v-for="cell in presetGridCells"
+                                                        :key="`${cell.col}-${cell.row}`"
+                                                        class="preset-grid-cell"
+                                                        :style="{ gridColumn: cell.col + 1, gridRow: cell.row + 1 }"
+                                                        :title="cell.label"
+                                                        @click="applyPresetPosition(field, cell.key)"
+                                                    >
+                                                        <span class="preset-cell-dot"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -468,6 +488,7 @@ import { i18n } from "@/js/localization";
 import MSP from "@/js/msp";
 import MSPCodes from "@/js/msp/MSPCodes";
 import { OSD } from "@/js/tabs/osd";
+import { positionConfigs, getPresetGridCells } from "@/js/tabs/osd_positions";
 import GUI from "@/js/gui";
 import { tracking } from "@/js/Analytics";
 
@@ -496,9 +517,11 @@ const uploadProgress = ref(0);
 const uploadProgressLabel = ref("");
 const fontVersionInfo = ref("");
 const isSaving = ref(false);
+const presetMenuField = ref(null);
+const presetGridCells = getPresetGridCells();
 
 // Preview composable
-const { previewRows, updatePreviewBuffer, searchLimitsElement } = useOsdPreview();
+const { previewRows, previewBuffer, updatePreviewBuffer, searchLimitsElement } = useOsdPreview();
 
 // Ruler composable
 const { drawRulers } = useOsdRuler(rulerCanvas, previewContainerOuter, showRulers);
@@ -744,10 +767,96 @@ function onCellMouseLeave(cell) {
     }
 }
 
-// Open preset position menu
-function openPresetMenu(field, _event) {
-    // TODO: Implement context menu for preset positions
-    console.log("Open preset menu for", field.name);
+// Preset position system
+function openPresetMenu(field, event) {
+    event.stopPropagation();
+    presetMenuField.value = presetMenuField.value === field ? null : field;
+}
+
+function closePresetMenu() {
+    presetMenuField.value = null;
+}
+
+function applyPresetPosition(field, positionKey) {
+    if (!positionKey) return;
+
+    const config = positionConfigs[positionKey];
+    if (!config) return;
+
+    const displaySize = osdStore.displaySize;
+    const preview = field.preview;
+
+    let elementWidth = typeof preview === 'string' ? preview.length : 1;
+    let elementHeight = 1;
+    let adjustOffsetX = 0;
+    let adjustOffsetY = 0;
+
+    if (Array.isArray(preview)) {
+        const limits = searchLimitsElement(preview);
+        elementWidth = limits.maxX - limits.minX + 1;
+        elementHeight = limits.maxY - limits.minY + 1;
+        adjustOffsetX = limits.minX;
+        adjustOffsetY = limits.minY;
+    }
+
+    const target = config.coords(elementWidth, elementHeight, displaySize);
+
+    // Clamp target within bounds
+    if (target.x < 1) target.x = 1;
+    if (target.y < 1) target.y = 1;
+    if (target.x + elementWidth > displaySize.x - 1) {
+        target.x = Math.max(1, displaySize.x - elementWidth - 1);
+    }
+    if (target.y + elementHeight > displaySize.y - 1) {
+        target.y = Math.max(1, displaySize.y - elementHeight - 1);
+    }
+
+    // Find available position with growth logic
+    let finalPosition = null;
+    const grow = config.grow || { x: 0, y: 0 };
+
+    for (let offset = 0; offset < Math.max(displaySize.x, displaySize.y); offset++) {
+        const testX = target.x + grow.x * offset;
+        const testY = target.y + grow.y * offset;
+
+        // Bounds check
+        if (testX < 1 || testX + elementWidth > displaySize.x - 1 ||
+            testY < 1 || testY > displaySize.y - 2) {
+            break;
+        }
+
+        // Collision check against current preview buffer
+        let canPlace = true;
+        const buf = previewBuffer.value;
+        for (let row = 0; row < elementHeight && canPlace; row++) {
+            for (let col = 0; col < elementWidth && canPlace; col++) {
+                const checkPos = (testY + row) * displaySize.x + testX + col;
+                const cell = buf[checkPos];
+                if (cell?.field?.index != null &&
+                    cell.field.index !== field.index &&
+                    !(Array.isArray(cell.field.preview) || Array.isArray(preview))) {
+                    canPlace = false;
+                }
+            }
+        }
+
+        if (canPlace) {
+            finalPosition = testY * displaySize.x + testX;
+            finalPosition -= adjustOffsetX;
+            finalPosition -= adjustOffsetY * displaySize.x;
+            break;
+        }
+    }
+
+    if (finalPosition !== null) {
+        field.position = finalPosition;
+        trackChange("position", field.name);
+        updatePreview();
+    } else {
+        console.warn("Unable to place element - not enough space available");
+    }
+
+    closePresetMenu();
 }
 
 // Update preview rendering
@@ -827,14 +936,17 @@ watch(activeProfile, (newVal) => {
 });
 
 // Lifecycle
+const handleClickOutside = () => closePresetMenu();
+
 onMounted(async () => {
+    document.addEventListener('click', handleClickOutside);
     await loadConfig();
     await nextTick();
     GUI.content_ready();
 });
 
 onUnmounted(() => {
-    // Cleanup
+    document.removeEventListener('click', handleClickOutside);
     analyticsChanges.value = {};
 });
 </script>
@@ -893,7 +1005,9 @@ onUnmounted(() => {
 
 .position-controls {
     display: flex;
+    align-items: center;
     gap: 4px;
+    position: relative;
 }
 
 .position-input {
@@ -903,6 +1017,62 @@ onUnmounted(() => {
 .preset-btn {
     padding: 2px 6px;
     cursor: pointer;
+    position: relative;
+}
+
+.preset-popover {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    z-index: 100;
+    background: var(--box-background, #fff);
+    border: 1px solid var(--box-border, #ccc);
+    border-radius: 4px;
+    padding: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    min-width: 120px;
+}
+
+.preset-popover-title {
+    font-size: 11px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 6px;
+    color: var(--text-color, #333);
+}
+
+.preset-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+    gap: 3px;
+}
+
+.preset-grid-cell {
+    width: 28px;
+    height: 20px;
+    border: 1px solid var(--box-border, #ddd);
+    border-radius: 3px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s;
+}
+
+.preset-grid-cell:hover {
+    background: var(--accent-color, #3498db);
+}
+
+.preset-cell-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--box-border, #999);
+}
+
+.preset-grid-cell:hover .preset-cell-dot {
+    background: #fff;
 }
 
 /* Search box */
