@@ -164,7 +164,9 @@ const pidControllers = computed(() => {
 // MSP Data Loading
 async function loadData() {
     try {
-        if (!isMounted.value) return;
+        if (!isMounted.value) {
+            return;
+        }
 
         // Load all PID tuning related MSP data
         await MSP.promise(MSPCodes.MSP_PID_CONTROLLER);
@@ -203,7 +205,9 @@ async function loadData() {
             rateProfileName.value = FC.CONFIG.rateProfileNames?.[FC.CONFIG.rateProfile] || "";
         }
 
-        if (!isMounted.value) return;
+        if (!isMounted.value) {
+            return;
+        }
 
         // Initialize UI state
         initializeUI();
@@ -352,10 +356,10 @@ async function copyRateProfile() {
 }
 
 async function resetProfile() {
-    // TODO: Show confirmation dialog
-    // For now, proceed directly with reset
     const confirmed = confirm("Reset current PID profile to defaults?");
-    if (!confirmed) return;
+    if (!confirmed) {
+        return;
+    }
 
     try {
         await MSP.promise(MSPCodes.MSP_SET_RESET_CURR_PID);
@@ -374,7 +378,9 @@ function toggleShowAllPids() {
 
 // Save/Revert
 async function save() {
-    if (!hasChanges.value) return;
+    if (!hasChanges.value) {
+        return;
+    }
 
     try {
         // Save profile names (API 1.45+)
@@ -440,7 +446,9 @@ async function save() {
 }
 
 function revert() {
-    if (!hasChanges.value) return;
+    if (!hasChanges.value) {
+        return;
+    }
 
     if (confirm("Revert all changes?")) {
         // Suppress watchers from re-flagging hasChanges while we restore.
@@ -466,7 +474,9 @@ function revert() {
 // Called by form @input/@change (covers all user-driven edits) and by child
 // @change emits (covers programmatic FC mutations such as slider calculations).
 function onFormChanged() {
-    if (!isMounted.value || isReverting.value) return;
+    if (!isMounted.value || isReverting.value) {
+        return;
+    }
     pidTuningStore.checkForChanges(pidProfileName.value, rateProfileName.value);
 }
 

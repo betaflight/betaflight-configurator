@@ -32,6 +32,8 @@ export const usePidTuningStore = defineStore("pidTuning", () => {
      * Call after every MSP load / profile switch.
      */
     function storeOriginals(pidProfileName = "", rateProfileName = "") {
+        // Use JSON-based cloning instead of structuredClone because FC is a Vue reactive() proxy
+        // which structuredClone cannot handle (throws DataCloneError)
         originalPids.value = JSON.parse(JSON.stringify(FC.PIDS));
         originalAdvancedTuning.value = JSON.parse(JSON.stringify(FC.ADVANCED_TUNING));
         originalRcTuning.value = JSON.parse(JSON.stringify(FC.RC_TUNING));
@@ -71,6 +73,7 @@ export const usePidTuningStore = defineStore("pidTuning", () => {
      * Returns the original profile names so the caller can reset its local refs.
      */
     function revertToOriginals() {
+        // Use JSON-based cloning (see storeOriginals comment)
         FC.PIDS = JSON.parse(JSON.stringify(originalPids.value));
         Object.assign(FC.ADVANCED_TUNING, JSON.parse(JSON.stringify(originalAdvancedTuning.value)));
         Object.assign(FC.RC_TUNING, JSON.parse(JSON.stringify(originalRcTuning.value)));
