@@ -408,7 +408,14 @@
                         <div class="font-picker">
                             <h1 class="tab_title" v-html="$t('osdSetupFontPresets')"></h1>
                             <label class="font-manager-version-info">{{ fontVersionInfo }}</label>
-                            <div class="content_wrapper font-preview" ref="fontPreviewContainer"></div>
+                            <div class="content_wrapper font-preview" ref="fontPreviewContainer">
+                                <img
+                                    v-for="(url, charIdx) in fontCharacterUrls"
+                                    :key="charIdx"
+                                    :src="url"
+                                    :title="'0x' + charIdx.toString(16)"
+                                />
+                            </div>
                             <div class="fontpresets_wrapper">
                                 <label v-html="$t('osdSetupFontPresetsSelector')"></label>
                                 <select v-model.number="selectedFontPreset" class="fontpresets">
@@ -487,8 +494,9 @@ import WikiButton from "@/components/elements/WikiButton.vue";
 import { i18n } from "@/js/localization";
 import MSP from "@/js/msp";
 import MSPCodes from "@/js/msp/MSPCodes";
-import { OSD } from "@/js/tabs/osd";
+import { OSD, FONT, SYM } from "@/js/tabs/osd";
 import { positionConfigs, getPresetGridCells } from "@/js/tabs/osd_positions";
+import LogoManager from "@/js/LogoManager";
 import GUI from "@/js/gui";
 import { tracking } from "@/js/Analytics";
 
@@ -913,17 +921,92 @@ async function saveConfig() {
 }
 
 // Font Manager
+const fontCharacterUrls = computed(() => {
+    // Trigger reactivity on fontDataVersion
+    fontDataVersion.value;
+    if (!FONT.data?.character_image_urls?.length) return [];
+    return FONT.data.character_image_urls.slice(0, SYM.LOGO || 256);
+});
+
+const fontDataVersion = ref(0);
+
 function openFontManager() {
+    FONT.initData();
+    // Initialize LogoManager if not already
+    LogoManager.init(FONT, SYM.LOGO);
+    // Load default font on first open if no font loaded
+    if (!FONT.data.character_image_urls.length && fontTypes.value.length > 0) {
+        selectedFontPreset.value = 0;
+        loadFontPreset(0);
+    }
     fontManagerDialog.value?.showModal?.();
 }
 
+function loadFontPreset(index) {
+    const font = fontTypes.value[index];
+    if (!font) return;
+
+    const fontVer = 2;
+    fontVersionInfo.value = i18n.getMessage(`osdDescribeFontVersion${fontVer}`);
+
+    fetch(`./resources/osd/${fontVer}/${font.file}.mcm`)
+        .then(res => res.text())
+        .then(data => {
+            FONT.parseMCMFontFile(data);
+            fontDataVersion.value++;
+            LogoManager.drawPreview();
+            updatePreview();
+        })
+        .catch(err => console.error('Failed to load font preset:', err));
+}
+
 function replaceLogoImage() {
-    // TODO: Implement logo replacement
+    if (GUI.connect_lock) return;
+
+    LogoManager.openImage()
+        .then((ctx) => {
+            LogoManager.replaceLogoInFont(ctx);
+            LogoManager.drawPreview();
+            LogoManager.showUploadHint();
+            fontDataVersion.value++;
+        })
+        .catch((error) => console.error(error));
 }
 
 async function flashFont() {
-    // TODO: Implement font flashing
+    if (GUI.connect_lock) return;
+
+    uploadProgress.value = 0;
+    uploadProgressLabel.value = i18n.getMessage('osdSetupUploadingFont');
+
+    // Create a shim that mimics jQuery's $progress.val() for FONT.upload
+    const progressShim = {
+        val(v) {
+            if (v !== undefined) {
+                uploadProgress.value = v;
+                return progressShim;
+            }
+            return uploadProgress.value;
+        },
+    };
+
+    try {
+        await FONT.upload(progressShim);
+        uploadProgressLabel.value = i18n.getMessage('osdSetupUploadingFontEnd', {
+            length: FONT.data.characters.length,
+        });
+    } catch (err) {
+        console.error('Font upload failed:', err);
+        uploadProgressLabel.value = 'Upload failed';
+    }
 }
+
+// Watch for font preset changes
+watch(selectedFontPreset, (newVal) => {
+    if (newVal >= 0) {
+        loadFontPreset(newVal);
+    }
+});
 
 // Watch for profile changes
 watch(previewProfile, (newVal) => {
