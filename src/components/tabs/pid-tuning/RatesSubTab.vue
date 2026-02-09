@@ -406,8 +406,9 @@ let keepRendering = true;
 // Rate Profile Name
 const rateProfileName = computed({
     get: () => {
-        if (!FC.CONFIG.rateProfileNames || FC.CONFIG.rateProfile === undefined) return "";
-        return FC.CONFIG.rateProfileNames[FC.CONFIG.rateProfile] || "";
+        if (FC.CONFIG.rateProfileNames && FC.CONFIG.rateProfile !== undefined) {
+            FC.CONFIG.rateProfileNames[FC.CONFIG.rateProfile] || "";
+        }
     },
     set: (value) => {
         if (FC.CONFIG.rateProfileNames && FC.CONFIG.rateProfile !== undefined) {
