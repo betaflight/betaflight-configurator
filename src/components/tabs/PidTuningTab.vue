@@ -405,6 +405,22 @@ async function save() {
         // Save simplified tuning (sliders)
         await MSP.promise(MSPCodes.MSP_SET_SIMPLIFIED_TUNING, mspHelper.crunch(MSPCodes.MSP_SET_SIMPLIFIED_TUNING));
 
+        // Save profile names to firmware (API 1.45+)
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+            if (pidProfileName.value && FC.CONFIG.pidProfileNames) {
+                await MSP.promise(
+                    MSPCodes.MSP2_SET_TEXT,
+                    mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSPCodes.PID_PROFILE_NAME),
+                );
+            }
+            if (rateProfileName.value && FC.CONFIG.rateProfileNames) {
+                await MSP.promise(
+                    MSPCodes.MSP2_SET_TEXT,
+                    mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSPCodes.RATE_PROFILE_NAME),
+                );
+            }
+        }
+
         // Write to EEPROM
         await MSP.promise(MSPCodes.MSP_EEPROM_WRITE);
 
