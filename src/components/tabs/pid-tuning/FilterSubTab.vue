@@ -1476,21 +1476,21 @@ watch(
 </script>
 
 <style scoped>
-.tab-filters {
+.subtab-filter {
     padding: 20px;
     display: flex;
     flex-direction: column;
     gap: 20px;
 }
 
-.filter-section {
+.gui_box.grey {
     border: 1px solid var(--surface-300);
     border-radius: 4px;
     padding: 15px;
     background: var(--surface-50);
 }
 
-.filter-section h3 {
+.gui_box.grey h3 {
     margin-top: 0;
     margin-bottom: 15px;
     color: var(--text-primary);
@@ -1509,21 +1509,21 @@ watch(
     height: 16px;
 }
 
-.filter-options {
+.suboption {
     display: flex;
     flex-direction: column;
     gap: 10px;
     padding-left: 24px;
 }
 
-.filter-options label {
+.suboption label {
     font-weight: 500;
     color: var(--text-primary);
     margin-top: 8px;
 }
 
-.filter-options input[type="number"],
-.filter-options select {
+.suboption input[type="number"],
+.suboption select {
     padding: 6px 10px;
     border: 1px solid var(--surface-300);
     border-radius: 4px;
@@ -1544,9 +1544,9 @@ watch(
     font-weight: 500;
 }
 
-.slider-container input[type="range"] {
-    flex: 1;
-    max-width: 300px;
+.tuningSlider {
+    width: 100%;
+    max-width: none;
 }
 
 .slider-container span {
