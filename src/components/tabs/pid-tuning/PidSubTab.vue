@@ -1062,7 +1062,7 @@ const props = defineProps({
     },
 });
 
-const emit = defineEmits(["update:profileName"]);
+const emit = defineEmits(["update:profileName", "change"]);
 
 // Profile name
 const profileName = computed({
@@ -1394,6 +1394,9 @@ function onSliderChange() {
 
     // Calculate new PIDs
     TuningSliders.calculateNewPids();
+
+    // Notify parent that FC data was mutated programmatically
+    emit("change");
 
     // Clear previous timeout and set new one to prevent race conditions
     if (userInteractionTimeout !== null) {

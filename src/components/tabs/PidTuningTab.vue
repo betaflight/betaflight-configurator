@@ -72,13 +72,14 @@
 
             <!-- Tab Content -->
             <div class="tabarea">
-                <form name="pid-tuning" id="pid-tuning">
+                <form name="pid-tuning" id="pid-tuning" @input="onFormChanged" @change="onFormChanged">
                     <PidSubTab
                         ref="pidSubTab"
                         v-if="activeSubtab === 'pid'"
                         :expert-mode="expertModeEnabled"
                         :show-all-pids="showAllPids"
                         v-model:profile-name="pidProfileName"
+                        @change="onFormChanged"
                     />
                     <RatesSubTab
                         ref="ratesSubTab"
@@ -109,6 +110,7 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted, nextTick, watch } from "vue";
 import { useFlightControllerStore } from "@/stores/fc";
+import { usePidTuningStore } from "@/stores/pidTuning";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "@/components/elements/WikiButton.vue";
 import PidSubTab from "./pid-tuning/PidSubTab.vue";
@@ -127,6 +129,7 @@ import { tabState } from "@/js/tab_state";
 import { useDialog } from "@/composables/useDialog";
 
 const fcStore = useFlightControllerStore();
+const pidTuningStore = usePidTuningStore();
 const dialog = useDialog();
 
 // State - use global reactive state for expert mode
@@ -136,7 +139,6 @@ const showAllPids = ref(false);
 const currentProfile = ref(0);
 const currentRateProfile = ref(0);
 const pidController = ref(0);
-const hasChanges = ref(false);
 const isMounted = ref(false);
 const pidSubTab = ref(null);
 const ratesSubTab = ref(null);
@@ -145,12 +147,12 @@ const ratesSubTab = ref(null);
 const pidProfileName = ref("");
 const rateProfileName = ref("");
 
-// Original values for revert
-const originalPids = ref([]);
-const originalAdvancedTuning = ref({});
-const originalRcTuning = ref({});
-const originalFilterConfig = ref({});
-const originalTuningSliders = ref({});
+// Guard flag: suppress onFormChanged during revert to prevent watchers from
+// immediately re-flagging hasChanges while we restore values.
+const isReverting = ref(false);
+
+// hasChanges is owned by the Pinia store
+const hasChanges = computed(() => pidTuningStore.hasChanges);
 
 // Computed
 const showPidController = computed(() => {
@@ -208,11 +210,12 @@ async function loadData() {
         // Initialize UI state
         initializeUI();
 
+        // Initialize TuningSliders.js (must happen before snapshot so
+        // slider-validated values are captured as originals)
+        TuningSliders.initialize();
+
         // Store original values for revert
         storeOriginalValues();
-
-        // Initialize TuningSliders.js
-        TuningSliders.initialize();
 
         // Initialize Switchery AFTER data loaded and DOM updated
         await nextTick();
@@ -238,12 +241,7 @@ function initializeUI() {
 }
 
 function storeOriginalValues() {
-    // Deep clone original values for revert functionality
-    originalPids.value = FC.PIDS.map((pid) => [...pid]);
-    originalAdvancedTuning.value = { ...FC.ADVANCED_TUNING };
-    originalRcTuning.value = { ...FC.RC_TUNING };
-    originalFilterConfig.value = { ...FC.FILTER_CONFIG };
-    originalTuningSliders.value = { ...FC.TUNING_SLIDERS };
+    pidTuningStore.storeOriginals(pidProfileName.value, rateProfileName.value);
 }
 
 // Profile Management
@@ -422,7 +420,6 @@ async function save() {
 
         // Update original values
         storeOriginalValues();
-        hasChanges.value = false;
     } catch (e) {
         console.error("[PidTuning] Save failed:", e);
     }
@@ -432,37 +429,32 @@ function revert() {
     if (!hasChanges.value) return;
 
     if (confirm("Revert all changes?")) {
-        // Restore original values
-        FC.PIDS = originalPids.value.map((pid) => [...pid]);
-        Object.assign(FC.ADVANCED_TUNING, originalAdvancedTuning.value);
-        Object.assign(FC.RC_TUNING, originalRcTuning.value);
-        Object.assign(FC.FILTER_CONFIG, originalFilterConfig.value);
-        Object.assign(FC.TUNING_SLIDERS, originalTuningSliders.value);
+        // Suppress watchers from re-flagging hasChanges while we restore.
+        isReverting.value = true;
+
+        const origNames = pidTuningStore.revertToOriginals();
+        pidProfileName.value = origNames.pidProfileName;
+        rateProfileName.value = origNames.rateProfileName;
 
         // Reinitialize sliders
         TuningSliders.initialize();
 
-        hasChanges.value = false;
+        // Force PidSubTab to sync its local slider refs from TuningSliders.js
+        if (pidSubTab.value && pidSubTab.value.forceUpdateSliders) {
+            pidSubTab.value.forceUpdateSliders();
+        }
+
+        isReverting.value = false;
     }
 }
 
-// Watch for changes - detect when FC data is modified
-watch(
-    () => [FC.PIDS, FC.ADVANCED_TUNING, FC.RC_TUNING, FC.FILTER_CONFIG, FC.TUNING_SLIDERS],
-    () => {
-        if (!isMounted.value) return;
-
-        // Check if anything changed from original values
-        const pidsChanged = JSON.stringify(FC.PIDS) !== JSON.stringify(originalPids.value);
-        const advancedChanged = JSON.stringify(FC.ADVANCED_TUNING) !== JSON.stringify(originalAdvancedTuning.value);
-        const rcTuningChanged = JSON.stringify(FC.RC_TUNING) !== JSON.stringify(originalRcTuning.value);
-        const filterChanged = JSON.stringify(FC.FILTER_CONFIG) !== JSON.stringify(originalFilterConfig.value);
-        const slidersChanged = JSON.stringify(FC.TUNING_SLIDERS) !== JSON.stringify(originalTuningSliders.value);
-
-        hasChanges.value = pidsChanged || advancedChanged || rcTuningChanged || filterChanged || slidersChanged;
-    },
-    { deep: true },
-);
+// Notify the store to re-check for changes.
+// Called by form @input/@change (covers all user-driven edits) and by child
+// @change emits (covers programmatic FC mutations such as slider calculations).
+function onFormChanged() {
+    if (!isMounted.value || isReverting.value) return;
+    pidTuningStore.checkForChanges(pidProfileName.value, rateProfileName.value);
+}
 
 // Watch expert mode changes
 watch(
@@ -489,13 +481,14 @@ watch(
     },
 );
 
-// Watch profile name changes and sync to FC.CONFIG
+// Watch profile name changes: sync to FC.CONFIG and re-check for changes
 watch(
     () => pidProfileName.value,
     (newValue) => {
         if (FC.CONFIG.pidProfileNames) {
             FC.CONFIG.pidProfileNames[FC.CONFIG.profile] = newValue;
         }
+        onFormChanged();
     },
 );
 
@@ -505,6 +498,7 @@ watch(
         if (FC.CONFIG.rateProfileNames) {
             FC.CONFIG.rateProfileNames[FC.CONFIG.rateProfile] = newValue;
         }
+        onFormChanged();
     },
 );
 
