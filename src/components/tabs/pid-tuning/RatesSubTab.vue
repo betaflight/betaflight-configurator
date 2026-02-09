@@ -606,8 +606,8 @@ const throttleExpo = computed({
 // Rate Curve Helper
 const rateCurve = new RateCurve(false);
 
-// Get current rates with proper scaling based on rates type
-const currentRates = computed(() => rateCurve.getCurrentRates());
+// Get current rates with proper scaling based on rates type - always returns fresh data
+const getCurrentRatesSnapshot = () => rateCurve.getCurrentRates();
 
 // Helper functions for rate calculations
 const RC_RATE_INCREMENTAL = 14.54;
@@ -647,7 +647,7 @@ const centerSensitivityPitch = computed(() => {
 
 const centerSensitivityYaw = computed(() => {
     if (!isBetaflightRates.value) return "";
-    const rates = currentRates.value;
+    const rates = getCurrentRatesSnapshot();
     const maxAngularVel = calculateMaxAngularVel(
         yawRate.value,
         rcRateYaw.value,
@@ -677,7 +677,7 @@ const maxAngularVelPitch = computed(() => {
 
 const maxAngularVelYaw = computed(() => {
     if (isBetaflightRates.value) return "";
-    const rates = currentRates.value;
+    const rates = getCurrentRatesSnapshot();
     return calculateMaxAngularVel(
         yawRate.value,
         rcRateYaw.value,
@@ -697,7 +697,7 @@ const numericMaxAngularVelPitch = computed(() => {
 });
 
 const numericMaxAngularVelYaw = computed(() => {
-    const rates = currentRates.value;
+    const rates = getCurrentRatesSnapshot();
     return calculateMaxAngularVel(
         yawRate.value,
         rcRateYaw.value,
@@ -778,7 +778,7 @@ function drawRateCurves() {
     }
 
     // Get scaled rates for drawing
-    const rates = currentRates.value;
+    const rates = getCurrentRatesSnapshot();
 
     // Calculate max angular velocity using scaled values
     const maxAngularVels = [
@@ -903,7 +903,7 @@ function updateRatesLabels() {
     // Clear canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    const rates = currentRates.value;
+    const rates = getCurrentRatesSnapshot();
 
     // Verify we have valid rate data
     if (!rates || typeof rates.roll_rate === "undefined") {
@@ -1605,7 +1605,7 @@ function renderModel(timestamp) {
 
     // Check if we have RC data with valid channel values
     if (FC.RC && FC.RC.channels && FC.RC.channels[0] && FC.RC.channels[1] && FC.RC.channels[2]) {
-        const rates = currentRates.value;
+        const rates = getCurrentRatesSnapshot();
 
         // Calculate rotation for each axis based on RC input
         const degToRad = (deg) => deg * (Math.PI / 180);
