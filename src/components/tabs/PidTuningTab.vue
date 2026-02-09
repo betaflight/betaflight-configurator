@@ -109,7 +109,6 @@
 
 <script setup>
 import { ref, computed, onMounted, onUnmounted, nextTick, watch } from "vue";
-import { useFlightControllerStore } from "@/stores/fc";
 import { usePidTuningStore } from "@/stores/pidTuning";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "@/components/elements/WikiButton.vue";
@@ -128,7 +127,6 @@ import { isExpertModeEnabled } from "@/js/utils/isExpertModeEnabled";
 import { tabState } from "@/js/tab_state";
 import { useDialog } from "@/composables/useDialog";
 
-const fcStore = useFlightControllerStore();
 const pidTuningStore = usePidTuningStore();
 const dialog = useDialog();
 

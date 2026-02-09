@@ -1166,20 +1166,12 @@ const tpaBreakpoint = computed({
     },
 });
 
-// RC Tuning - reactive reference
-const rcTuning = computed(() => FC.RC_TUNING);
-
 // Feedforward transition display value (divided by 100 for display)
 const feedforwardTransitionValue = computed({
     get: () => (FC.ADVANCED_TUNING.feedforwardTransition / 100).toFixed(2),
     set: (val) => {
         FC.ADVANCED_TUNING.feedforwardTransition = Math.round(parseFloat(val) * 100);
     },
-});
-
-// Show Dynamic Damping for API >= 1.48
-const showDynamicDamping = computed(() => {
-    return semver.gte(FC.CONFIG.apiVersion, "1.48.0");
 });
 
 // PID Controller Settings - Checkbox computed refs
