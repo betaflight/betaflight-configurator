@@ -165,7 +165,7 @@
                             </div>
 
                             <div class="display-layout">
-                                <div class="preview-container" :class="{ zoomed: previewZoom }">
+                                <div ref="previewContainerOuter" class="preview-container" :class="{ zoomed: previewZoom }">
                                     <canvas ref="rulerCanvas" class="ruler-overlay" v-show="showRulers"></canvas>
                                     <div
                                         ref="previewContainer"
@@ -174,19 +174,21 @@
                                         @drop.prevent="onDrop"
                                         @dragleave="onDragLeave"
                                     >
-                                        <!-- Preview elements rendered here -->
-                                        <template v-for="(char, idx) in previewBuffer" :key="idx">
-                                            <span
-                                                v-if="char.field"
-                                                class="preview-char"
-                                                :class="getPreviewCharClass(char)"
-                                                :style="getPreviewCharStyle(char, idx)"
-                                                :draggable="char.field?.positionable"
-                                                @dragstart="onDragStart($event, char.field, idx)"
+                                        <!-- Preview elements rendered as rows/cells -->
+                                        <div class="row" v-for="(row, rIdx) in previewRows" :key="rIdx">
+                                            <div
+                                                v-for="(cell, cIdx) in row"
+                                                :key="cIdx"
+                                                class="char"
+                                                :class="getPreviewCellClass(cell)"
+                                                :data-x="cIdx"
+                                                :data-y="rIdx"
+                                                :draggable="cell.field?.positionable"
+                                                @dragstart="onDragStart($event, cell.field, cell.field ? cell.field.position : -1)"
                                             >
-                                                <img v-if="char.img" :src="char.img" draggable="false" />
-                                            </span>
-                                        </template>
+                                                <img v-if="cell.img" :src="cell.img" draggable="false" />
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -455,6 +457,8 @@ import { useOsdStore } from "@/stores/osd";
 import { useFlightControllerStore } from "@/stores/fc";
 import { useNavigationStore } from "@/stores/navigation";
 import { useReboot } from "@/composables/useReboot";
+import { useOsdPreview } from "@/composables/useOsdPreview";
+import { useOsdRuler } from "@/composables/useOsdRuler";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "@/components/elements/WikiButton.vue";
 import { i18n } from "@/js/localization";
@@ -471,6 +475,7 @@ const { reboot: _reboot } = useReboot();
 
 // Refs for DOM elements
 const previewContainer = ref(null);
+const previewContainerOuter = ref(null);
 const rulerCanvas = ref(null);
 const fontManagerDialog = ref(null);
 const fontPreviewContainer = ref(null);
@@ -489,8 +494,11 @@ const uploadProgressLabel = ref("");
 const fontVersionInfo = ref("");
 const isSaving = ref(false);
 
-// Preview buffer for canvas rendering
-const previewBuffer = ref([]);
+// Preview composable
+const { previewRows, updatePreviewBuffer } = useOsdPreview();
+
+// Ruler composable
+const { drawRulers } = useOsdRuler(rulerCanvas, previewContainerOuter, showRulers);
 
 // Current drag state
 const dragState = ref({
@@ -587,23 +595,18 @@ function trackChange(type, name) {
 }
 
 // Get preview character class
-function getPreviewCharClass(char) {
-    return {
-        "preview-element": true,
-        draggable: char.field?.positionable,
-        highlighted: char.field === highlightedField.value,
+function getPreviewCellClass(cell) {
+    const classes = {
+        "preview-element": !!cell.field,
+        draggable: cell.field?.positionable,
+        highlighted: cell.field === highlightedField.value,
     };
-}
-
-// Get preview character style
-function getPreviewCharStyle(char, idx) {
-    const cols = osdStore.displaySize.x;
-    const x = idx % cols;
-    const y = Math.floor(idx / cols);
-    return {
-        left: `${x * 12}px`,
-        top: `${y * 18}px`,
-    };
+    
+    if (cell.field) {
+        classes[`field-${cell.field.index}`] = true;
+    }
+    
+    return classes;
 }
 
 // Drag and drop handlers
@@ -652,22 +655,19 @@ function openPresetMenu(field, _event) {
 
 // Update preview rendering
 function updatePreview() {
-    // This will be implemented by the preview composable
-    // For now, sync to legacy and let OSD module handle it
+    // Reactivity handled by useOsdPreview composable watching the store
+    // Sync to legacy if needed for other tabs/logic
     osdStore.syncToLegacy();
-    OSD.updateOsdView?.();
 }
 
 // Load OSD configuration from FC
+// Load OSD configuration from FC
 async function loadConfig() {
     try {
-        // Request OSD config via MSP
-        await MSP.promise(MSPCodes.MSP_OSD_CONFIG);
+        // Fetch OSD config via Store
+        await osdStore.fetchOsdConfig();
 
-        // Sync from legacy OSD data
-        osdStore.syncFromLegacy();
-
-        // Set initial profile
+        // Set initial profile from store state
         previewProfile.value = osdStore.osdProfiles.selected || 0;
         activeProfile.value = osdStore.osdProfiles.selected || 0;
 
@@ -678,19 +678,17 @@ async function loadConfig() {
 }
 
 // Save OSD configuration to FC
+// Save OSD configuration to FC
 async function saveConfig() {
     if (isSaving.value) return;
     isSaving.value = true;
 
     try {
-        // Sync store to legacy OSD.data
+        // Sync store to legacy OSD.data (keeps legacy preview/analytics consistent)
         osdStore.syncToLegacy();
 
-        // Send OSD config via MSP
-        // OSD.msp operations are complex - delegate to legacy for now
-        await new Promise((resolve, reject) => {
-            OSD.GUI?.saveConfig?.()?.then(resolve).catch(reject) || resolve();
-        });
+        // Save via Store Action
+        await osdStore.saveOsdConfig();
 
         // Track analytics
         const changes = analyticsChanges.value;
@@ -840,24 +838,17 @@ onUnmounted(() => {
     height: 100%;
 }
 
-.preview-char {
-    position: absolute;
-    width: 12px;
-    height: 18px;
-}
-
-.preview-char img {
-    width: 100%;
-    height: 100%;
-    image-rendering: pixelated;
-}
-
-.preview-char.highlighted {
+/* Grid cell highlighting */
+.char.highlighted {
     outline: 2px solid var(--accent-color);
 }
 
-.preview-char.draggable {
+.char.draggable {
     cursor: grab;
+}
+
+.char img {
+    image-rendering: pixelated;
 }
 
 .ruler-overlay {
