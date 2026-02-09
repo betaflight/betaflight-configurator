@@ -443,20 +443,41 @@ const showMaxRateWarning = computed(() => {
     );
 });
 
+// Add a type for rates for better readability
+const RatesType = {
+    BETAFLIGHT: 0,
+    RACEFLIGHT: 1,
+    KISS: 2,
+    ACTUAL: 3,
+    QUICKRATES: 4,
+};
+
 // Helper to get scale factor based on rates type
 const getScaleFactor = () => {
     const type = FC.RC_TUNING.rates_type;
-    if (type === 3) return 1000; // ACTUAL
-    if (type === 1) return 100; // RACEFLIGHT (rc_rate only)
-    if (type === 4) return 1000; // QUICKRATES
+    if (type === RatesType.RACEFLIGHT) {
+        return 100;
+    }
+    if (type === RatesType.ACTUAL) {
+        return 1000;
+    }
+    if (type === RatesType.QUICKRATES) {
+        return 1000;
+    }
     return 1; // BETAFLIGHT, KISS
 };
 
 const getRateScaleFactor = () => {
     const type = FC.RC_TUNING.rates_type;
-    if (type === 1) return 1000; // RACEFLIGHT (rate)
-    if (type === 3) return 1000; // ACTUAL
-    if (type === 4) return 1000; // QUICKRATES
+    if (type === RatesType.RACEFLIGHT) {
+        return 1000;
+    }
+    if (type === RatesType.ACTUAL) {
+        return 1000;
+    }
+    if (type === RatesType.QUICKRATES) {
+        return 1000;
+    }
     return 1; // BETAFLIGHT, KISS
 };
 
