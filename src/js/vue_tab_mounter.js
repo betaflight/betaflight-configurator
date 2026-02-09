@@ -77,7 +77,11 @@ export function mountVueTab(tabName, contentReadyCallback) {
     // This provides the cleanup and expertModeChanged methods that gui.js and main.js expect
     const tabAdapter = {
         cleanup: (callback) => {
-            if (callback) callback();
+            if (componentInstance.cleanup) {
+                componentInstance.cleanup(callback);
+            } else if (callback) {
+                callback();
+            }
         },
         expertModeChanged: (enabled) => {
             // Update global reactive state that Vue components watch
