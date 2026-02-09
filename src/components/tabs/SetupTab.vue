@@ -1059,7 +1059,7 @@ function process_html() {
             if (mountedFlag) {
                 const formatAttitude = (val) => {
                     const fixed = val.toFixed(1);
-                    return parseFloat(fixed) >= 0 ? ` ${fixed}` : fixed;
+                    return Number.parseFloat(fixed) >= 0 ? ` ${fixed}` : fixed;
                 };
                 state.attitude.roll = i18n.getMessage("initialSetupAttitude", [
                     formatAttitude(fcStore.sensorData.kinematics[0]),
