@@ -4358,4 +4358,4 @@ osd.cleanup = function (callback) {
 };
 
 TABS.osd = osd;
-export { osd, OSD };
+export { osd, OSD, FONT, SYM };
