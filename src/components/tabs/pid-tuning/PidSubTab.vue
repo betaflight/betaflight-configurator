@@ -883,7 +883,7 @@
                 <table class="pid_titlebar tpa-header" aria-labelledby="tpa-header">
                     <tbody>
                         <tr>
-                            <th>{{ $t("pidTuningTPAMode") }}</th>
+                            <th v-if="usesAdvancedTpa">{{ $t("pidTuningTPAMode") }}</th>
                             <th>{{ $t("pidTuningTPARate") }}</th>
                             <th>{{ $t("pidTuningTPABreakPoint") }}</th>
                         </tr>
@@ -892,7 +892,7 @@
                 <table class="tpa-settings" aria-labelledby="tpa-settings" role="presentation">
                     <tbody>
                         <tr>
-                            <td>
+                            <td v-if="usesAdvancedTpa">
                                 <select id="tpaMode" v-model.number="tpaMode">
                                     <option :value="0">{{ $t("pidTuningTPAPD") }}</option>
                                     <option :value="1">{{ $t("pidTuningTPAD") }}</option>
