@@ -317,7 +317,7 @@ async function startProcess() {
                     mountVueTab("ports", content_ready);
                     break;
                 case "led_strip":
-                    import("./tabs/led_strip").then(({ led_strip }) => led_strip.initialize(content_ready));
+                    mountVueTab("led_strip", content_ready);
                     break;
                 case "failsafe":
                     mountVueTab("failsafe", content_ready);
