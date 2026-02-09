@@ -78,8 +78,13 @@
                         v-if="activeSubtab === 'pid'"
                         :expert-mode="expertModeEnabled"
                         :show-all-pids="showAllPids"
+                        v-model:profile-name="pidProfileName"
                     />
-                    <RatesSubTab ref="ratesSubTab" v-if="activeSubtab === 'rates'" />
+                    <RatesSubTab
+                        ref="ratesSubTab"
+                        v-if="activeSubtab === 'rates'"
+                        v-model:rate-profile-name="rateProfileName"
+                    />
                     <FilterSubTab v-if="activeSubtab === 'filter'" />
                 </form>
             </div>
@@ -136,6 +141,10 @@ const isMounted = ref(false);
 const pidSubTab = ref(null);
 const ratesSubTab = ref(null);
 
+// Profile name state lifted from child components
+const pidProfileName = ref("");
+const rateProfileName = ref("");
+
 // Original values for revert
 const originalPids = ref([]);
 const originalAdvancedTuning = ref({});
@@ -187,6 +196,12 @@ async function loadData() {
         await MSP.promise(MSPCodes.MSP_SIMPLIFIED_TUNING);
         await MSP.promise(MSPCodes.MSP_ADVANCED_CONFIG);
         await MSP.promise(MSPCodes.MSP_MIXER_CONFIG);
+
+        // Initialize profile names from FC.CONFIG
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
+            pidProfileName.value = FC.CONFIG.pidProfileNames?.[FC.CONFIG.profile] || "";
+            rateProfileName.value = FC.CONFIG.rateProfileNames?.[FC.CONFIG.rateProfile] || "";
+        }
 
         if (!isMounted.value) return;
 
@@ -367,11 +382,11 @@ async function save() {
 
     try {
         // Save profile names (API 1.45+)
-        if (pidSubTab.value?.profileName && FC.CONFIG.pidProfileNames) {
-            FC.CONFIG.pidProfileNames[FC.CONFIG.profile] = pidSubTab.value.profileName.trim();
+        if (pidProfileName.value && FC.CONFIG.pidProfileNames) {
+            FC.CONFIG.pidProfileNames[FC.CONFIG.profile] = pidProfileName.value.trim();
         }
-        if (ratesSubTab.value?.rateProfileName && FC.CONFIG.rateProfileNames) {
-            FC.CONFIG.rateProfileNames[FC.CONFIG.rateProfile] = ratesSubTab.value.rateProfileName.trim();
+        if (rateProfileName.value && FC.CONFIG.rateProfileNames) {
+            FC.CONFIG.rateProfileNames[FC.CONFIG.rateProfile] = rateProfileName.value.trim();
         }
 
         // Save PID controller
@@ -471,6 +486,25 @@ watch(
     () => pidController.value,
     (newValue) => {
         FC.PID.controller = newValue;
+    },
+);
+
+// Watch profile name changes and sync to FC.CONFIG
+watch(
+    () => pidProfileName.value,
+    (newValue) => {
+        if (FC.CONFIG.pidProfileNames) {
+            FC.CONFIG.pidProfileNames[FC.CONFIG.profile] = newValue;
+        }
+    },
+);
+
+watch(
+    () => rateProfileName.value,
+    (newValue) => {
+        if (FC.CONFIG.rateProfileNames) {
+            FC.CONFIG.rateProfileNames[FC.CONFIG.rateProfile] = newValue;
+        }
     },
 );
 
