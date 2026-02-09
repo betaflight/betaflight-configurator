@@ -17,7 +17,7 @@
             <button
                 type="button"
                 class="dialogProfileSelection-confirmButton regular-button"
-                :disabled="!selectedValue"
+                :disabled="selectedValue === null"
                 @click.prevent="confirm"
             >
                 {{ confirmText }}
