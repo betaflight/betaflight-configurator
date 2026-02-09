@@ -170,9 +170,6 @@
                                     <div
                                         ref="previewContainer"
                                         class="preview"
-                                        @dragover.prevent="onDragOver"
-                                        @drop.prevent="onDrop"
-                                        @dragleave="onDragLeave"
                                     >
                                         <!-- Preview elements rendered as rows/cells -->
                                         <div class="row" v-for="(row, rIdx) in previewRows" :key="rIdx">
@@ -183,8 +180,14 @@
                                                 :class="getPreviewCellClass(cell)"
                                                 :data-x="cIdx"
                                                 :data-y="rIdx"
+                                                :data-position="rIdx * osdStore.displaySize.x + cIdx"
                                                 :draggable="cell.field?.positionable"
-                                                @dragstart="onDragStart($event, cell.field, cell.field ? cell.field.position : -1)"
+                                                @dragstart="onDragStart($event, cell)"
+                                                @dragover.prevent="onDragOverCell($event)"
+                                                @dragleave="onDragLeaveCell($event)"
+                                                @drop.prevent="onDropCell($event)"
+                                                @mouseenter="onCellMouseEnter(cell)"
+                                                @mouseleave="onCellMouseLeave(cell)"
                                             >
                                                 <img v-if="cell.img" :src="cell.img" draggable="false" />
                                             </div>
@@ -495,7 +498,7 @@ const fontVersionInfo = ref("");
 const isSaving = ref(false);
 
 // Preview composable
-const { previewRows, updatePreviewBuffer } = useOsdPreview();
+const { previewRows, updatePreviewBuffer, searchLimitsElement } = useOsdPreview();
 
 // Ruler composable
 const { drawRulers } = useOsdRuler(rulerCanvas, previewContainerOuter, showRulers);
@@ -610,41 +613,135 @@ function getPreviewCellClass(cell) {
 }
 
 // Drag and drop handlers
-function onDragStart(event, field, idx) {
+function onDragStart(event, cell) {
+    const field = cell.field;
     if (!field?.positionable) return;
-    dragState.value.field = field;
-    dragState.value.startIdx = idx;
+
+    const displayItem = osdStore.displayItems[field.index];
+    if (!displayItem) return;
+
+    let xPos = parseInt(event.currentTarget.dataset.x);
+    let yPos = parseInt(event.currentTarget.dataset.y);
+    let offsetX = 6;
+    let offsetY = 9;
+
+    // For array-type previews, adjust offset to account for element bounds
+    if (Array.isArray(displayItem.preview)) {
+        const limits = searchLimitsElement(displayItem.preview);
+        xPos -= limits.minX;
+        yPos -= limits.minY;
+        offsetX += xPos * 12;
+        offsetY += yPos * 18;
+    }
+
     event.dataTransfer.effectAllowed = "move";
-    event.dataTransfer.setData("text/plain", field.name);
+    event.dataTransfer.setData("text/plain", String(field.index));
+    event.dataTransfer.setData("x", String(event.currentTarget.dataset.x));
+    event.dataTransfer.setData("y", String(event.currentTarget.dataset.y));
+
+    // Set drag image if available and not on Linux
+    if (field.preview_img && navigator.platform.indexOf("Linux") === -1) {
+        event.dataTransfer.setDragImage(field.preview_img, offsetX, offsetY);
+    }
+
+    dragState.value.field = field;
+    dragState.value.startIdx = field.position;
 }
 
-function onDragOver(event) {
+function onDragOverCell(event) {
     event.dataTransfer.dropEffect = "move";
+    event.currentTarget.style.background = "rgba(0,0,0,.5)";
 }
 
-function onDragLeave() {
-    // Clear any drag hover styles
+function onDragLeaveCell(event) {
+    event.currentTarget.removeAttribute("style");
 }
 
-function onDrop(event) {
-    const field = dragState.value.field;
-    if (!field) return;
+function onDropCell(event) {
+    event.currentTarget.removeAttribute("style");
 
-    const container = previewContainer.value;
-    if (!container) return;
+    const fieldId = parseInt(event.dataTransfer.getData("text/plain"));
+    const displayItem = osdStore.displayItems[fieldId];
+    if (!displayItem) return;
 
-    const rect = container.getBoundingClientRect();
-    const x = Math.floor((event.clientX - rect.left) / 12);
-    const y = Math.floor((event.clientY - rect.top) / 18);
-    const newPosition = y * osdStore.displaySize.x + x;
+    const displaySize = osdStore.displaySize;
+    let position = parseInt(event.currentTarget.dataset.position);
+    const cursorX = position % displaySize.x;
 
-    // Update field position
-    field.position = newPosition;
-    trackChange("position", field.name);
+    // For array-type previews, adjust position based on drag offset
+    if (Array.isArray(displayItem.preview)) {
+        const x = parseInt(event.dataTransfer.getData("x"));
+        const y = parseInt(event.dataTransfer.getData("y"));
+        position -= x;
+        position -= y * displaySize.x;
+    }
+
+    // Position clamping to prevent overflow
+    if (!displayItem.ignoreSize) {
+        if (!Array.isArray(displayItem.preview)) {
+            // Standard string preview
+            const overflowsLine = displaySize.x - ((position % displaySize.x) + displayItem.preview.length);
+            if (overflowsLine < 0) {
+                position += overflowsLine;
+            }
+        } else {
+            // Array-type preview
+            const arrayElements = displayItem.preview;
+            const limits = searchLimitsElement(arrayElements);
+            const selectedPositionX = position % displaySize.x;
+            let selectedPositionY = Math.trunc(position / displaySize.x);
+
+            if (typeof arrayElements[0] === 'string') {
+                if (position < 0) return;
+                if (selectedPositionX > cursorX) {
+                    // Detected wrap around
+                    position += displaySize.x - selectedPositionX;
+                    selectedPositionY++;
+                } else if (selectedPositionX + limits.maxX > displaySize.x) {
+                    // Right border beyond screen edge
+                    position -= selectedPositionX + limits.maxX - displaySize.x;
+                }
+                if (selectedPositionY < 0) {
+                    position += Math.abs(selectedPositionY) * displaySize.x;
+                } else if (selectedPositionY + limits.maxY > displaySize.y) {
+                    position -= (selectedPositionY + limits.maxY - displaySize.y) * displaySize.x;
+                }
+            } else {
+                // Object array elements
+                if (limits.minX < 0 && selectedPositionX + limits.minX < 0) {
+                    position += Math.abs(selectedPositionX + limits.minX);
+                } else if (limits.maxX > 0 && selectedPositionX + limits.maxX >= displaySize.x) {
+                    position -= selectedPositionX + limits.maxX + 1 - displaySize.x;
+                }
+                if (limits.minY < 0 && selectedPositionY + limits.minY < 0) {
+                    position += Math.abs(selectedPositionY + limits.minY) * displaySize.x;
+                } else if (limits.maxY > 0 && selectedPositionY + limits.maxY >= displaySize.y) {
+                    position -= (selectedPositionY + limits.maxY - displaySize.y + 1) * displaySize.x;
+                }
+            }
+        }
+    }
+
+    // Update display item position
+    displayItem.position = position;
+    trackChange("position", displayItem.name);
     updatePreview();
 
     dragState.value.field = null;
     dragState.value.startIdx = -1;
+}
+
+// Mouse hover cross-highlighting
+function onCellMouseEnter(cell) {
+    if (cell.field) {
+        highlightedField.value = cell.field;
+    }
+}
+
+function onCellMouseLeave(cell) {
+    if (highlightedField.value === cell.field) {
+        highlightedField.value = null;
+    }
 }
 
 // Open preset position menu

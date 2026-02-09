@@ -199,6 +199,7 @@ export function useOsdPreview() {
   return {
     previewBuffer,
     previewRows,
-    updatePreviewBuffer
+    updatePreviewBuffer,
+    searchLimitsElement
   }
 }
