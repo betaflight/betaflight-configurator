@@ -97,22 +97,28 @@
                                 <input
                                     type="number"
                                     v-model.number="rcRate"
-                                    :step="isBetaflightRates ? 0.01 : 1"
-                                    :min="isBetaflightRates ? 0.01 : 1"
-                                    :max="isBetaflightRates ? 2.55 : 255"
+                                    :step="rcRateLimits.step"
+                                    :min="rcRateLimits.min"
+                                    :max="rcRateLimits.max"
                                 />
                             </td>
                             <td class="roll_rate">
                                 <input
                                     type="number"
                                     v-model.number="rollRate"
-                                    :step="isBetaflightRates ? 0.01 : 1"
-                                    :min="0"
-                                    :max="isBetaflightRates ? 1.0 : 1000"
+                                    :step="rateLimits.step"
+                                    :min="rateLimits.min"
+                                    :max="rateLimits.max"
                                 />
                             </td>
                             <td>
-                                <input type="number" v-model.number="rcExpo" step="0.01" min="0" max="1" />
+                                <input
+                                    type="number"
+                                    v-model.number="rcExpo"
+                                    :step="expoLimits.step"
+                                    :min="expoLimits.min"
+                                    :max="expoLimits.max"
+                                />
                             </td>
                             <td v-if="isBetaflightRates" class="new_rates acroCenterSensitivityRoll">
                                 {{ centerSensitivityRoll }}
@@ -129,22 +135,28 @@
                                 <input
                                     type="number"
                                     v-model.number="rcRatePitch"
-                                    :step="isBetaflightRates ? 0.01 : 1"
-                                    :min="isBetaflightRates ? 0.01 : 1"
-                                    :max="isBetaflightRates ? 2.55 : 255"
+                                    :step="rcRateLimits.step"
+                                    :min="rcRateLimits.min"
+                                    :max="rcRateLimits.max"
                                 />
                             </td>
                             <td class="pitch_rate">
                                 <input
                                     type="number"
                                     v-model.number="pitchRate"
-                                    :step="isBetaflightRates ? 0.01 : 1"
-                                    :min="0"
-                                    :max="isBetaflightRates ? 1.0 : 1000"
+                                    :step="rateLimits.step"
+                                    :min="rateLimits.min"
+                                    :max="rateLimits.max"
                                 />
                             </td>
                             <td>
-                                <input type="number" v-model.number="rcPitchExpo" step="0.01" min="0" max="1" />
+                                <input
+                                    type="number"
+                                    v-model.number="rcPitchExpo"
+                                    :step="expoLimits.step"
+                                    :min="expoLimits.min"
+                                    :max="expoLimits.max"
+                                />
                             </td>
                             <td v-if="isBetaflightRates" class="new_rates acroCenterSensitivityPitch">
                                 {{ centerSensitivityPitch }}
@@ -161,22 +173,28 @@
                                 <input
                                     type="number"
                                     v-model.number="rcRateYaw"
-                                    :step="isBetaflightRates ? 0.01 : 1"
-                                    :min="isBetaflightRates ? 0.01 : 1"
-                                    :max="isBetaflightRates ? 2.55 : 255"
+                                    :step="rcRateLimits.step"
+                                    :min="rcRateLimits.min"
+                                    :max="rcRateLimits.max"
                                 />
                             </td>
                             <td>
                                 <input
                                     type="number"
                                     v-model.number="yawRate"
-                                    :step="isBetaflightRates ? 0.01 : 1"
-                                    :min="0"
-                                    :max="isBetaflightRates ? 2.55 : 1000"
+                                    :step="rateLimits.step"
+                                    :min="rateLimits.min"
+                                    :max="rateLimits.max"
                                 />
                             </td>
                             <td>
-                                <input type="number" v-model.number="rcYawExpo" step="0.01" min="0" max="1" />
+                                <input
+                                    type="number"
+                                    v-model.number="rcYawExpo"
+                                    :step="expoLimits.step"
+                                    :min="expoLimits.min"
+                                    :max="expoLimits.max"
+                                />
                             </td>
                             <td v-if="isBetaflightRates" class="new_rates acroCenterSensitivityYaw">
                                 {{ centerSensitivityYaw }}
@@ -432,7 +450,7 @@ const ratesLogoSrc = computed(() => {
 });
 
 // Is Betaflight Rates
-const isBetaflightRates = computed(() => ratesType.value === 0);
+const isBetaflightRates = computed(() => ratesType.value === RatesType.BETAFLIGHT);
 
 // Show Max Rate Warning - show if any axis exceeds 1800°/s
 const showMaxRateWarning = computed(() => {
@@ -457,6 +475,18 @@ const RatesType = {
 const getScaleFactor = () => {
     const type = FC.RC_TUNING.rates_type;
     if (type === RatesType.RACEFLIGHT) {
+        return 1000;
+    }
+    if (type === RatesType.ACTUAL) {
+        return 1000;
+    }
+    // QUICKRATES, BETAFLIGHT, KISS
+    return 1;
+};
+
+const getRateScaleFactor = () => {
+    const type = FC.RC_TUNING.rates_type;
+    if (type === RatesType.RACEFLIGHT) {
         return 100;
     }
     if (type === RatesType.ACTUAL) {
@@ -465,21 +495,8 @@ const getScaleFactor = () => {
     if (type === RatesType.QUICKRATES) {
         return 1000;
     }
-    return 1; // BETAFLIGHT, KISS
-};
-
-const getRateScaleFactor = () => {
-    const type = FC.RC_TUNING.rates_type;
-    if (type === RatesType.RACEFLIGHT) {
-        return 1000;
-    }
-    if (type === RatesType.ACTUAL) {
-        return 1000;
-    }
-    if (type === RatesType.QUICKRATES) {
-        return 1000;
-    }
-    return 1; // BETAFLIGHT, KISS
+    // BETAFLIGHT, KISS
+    return 1;
 };
 
 // RC Rate (Roll) - scaled for display
@@ -692,6 +709,43 @@ const numericMaxAngularVelYaw = computed(() => {
         FC.RC_TUNING.yaw_rate_limit,
         rates.yawDeadband,
     );
+});
+
+// Input limits based on rates type
+const rcRateLimits = computed(() => {
+    const type = ratesType.value;
+    if (type === RatesType.RACEFLIGHT) {
+        return { max: 2000, min: 10, step: 10 };
+    }
+    if (type === RatesType.ACTUAL) {
+        return { max: 2000, min: 10, step: 10 };
+    }
+    // BETAFLIGHT, KISS, QUICKRATES
+    return { max: 2.55, min: 0.01, step: 0.01 };
+});
+
+const rateLimits = computed(() => {
+    const type = ratesType.value;
+    if (type === RatesType.RACEFLIGHT) {
+        return { max: 255, min: 0, step: 1 };
+    }
+    if (type === RatesType.KISS) {
+        return { max: 0.99, min: 0, step: 0.01 };
+    }
+    if (type === RatesType.ACTUAL || type === RatesType.QUICKRATES) {
+        return { max: 2000, min: 10, step: 10 };
+    }
+    // BETAFLIGHT
+    return { max: 1.0, min: 0, step: 0.01 };
+});
+
+const expoLimits = computed(() => {
+    const type = ratesType.value;
+    if (type === RatesType.RACEFLIGHT || type === RatesType.ACTUAL || type === RatesType.QUICKRATES) {
+        return { max: 100, min: 0, step: 1 };
+    }
+    // BETAFLIGHT, KISS
+    return { max: 1.0, min: 0, step: 0.01 };
 });
 
 function calculateMaxAngularVel(rate, rcRate, rcExpo, limit, deadband) {
@@ -1073,7 +1127,7 @@ function updateRatesLabels() {
     }
 
     // Draw angle mode labels if applicable
-    if (isBetaflightRates.value || ratesType.value === 3) {
+    if (isBetaflightRates.value || ratesType.value === RatesType.ACTUAL) {
         // Betaflight or Actual
         drawAngleModeLabels(ctx, canvas, rates, balloonsDirty);
     }
@@ -1194,7 +1248,7 @@ function drawAngleModeLabels(ctx, canvas, rates, balloonsDirty) {
     const textScale = ctx.canvas.clientHeight / ctx.canvas.clientWidth;
 
     // Draw "Angle Mode" label at the bottom right (like master)
-    if (ratesType.value === 3) {
+    if (ratesType.value === RatesType.ACTUAL) {
         // Actual rates
         drawAxisLabel(ctx, "Angle Mode", (canvas.width - 10) / textScale, canvas.height - 250, "right");
 
