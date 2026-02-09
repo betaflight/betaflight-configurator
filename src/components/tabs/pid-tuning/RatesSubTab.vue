@@ -111,7 +111,7 @@
                                     :max="isBetaflightRates ? 1.0 : 1000"
                                 />
                             </td>
-                            <td class="inputBackground">
+                            <td>
                                 <input type="number" v-model.number="rcExpo" step="0.01" min="0" max="1" />
                             </td>
                             <td v-if="isBetaflightRates" class="new_rates acroCenterSensitivityRoll">
