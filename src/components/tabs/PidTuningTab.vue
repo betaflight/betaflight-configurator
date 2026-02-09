@@ -383,11 +383,11 @@ async function save() {
     }
 
     try {
-        // Save profile names (API 1.45+)
-        if (pidProfileName.value && FC.CONFIG.pidProfileNames) {
+        // Save profile names to FC.CONFIG (API 1.45+)
+        if (FC.CONFIG.pidProfileNames) {
             FC.CONFIG.pidProfileNames[FC.CONFIG.profile] = pidProfileName.value.trim();
         }
-        if (rateProfileName.value && FC.CONFIG.rateProfileNames) {
+        if (FC.CONFIG.rateProfileNames) {
             FC.CONFIG.rateProfileNames[FC.CONFIG.rateProfile] = rateProfileName.value.trim();
         }
 
@@ -413,13 +413,13 @@ async function save() {
 
         // Save profile names to firmware (API 1.45+)
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45)) {
-            if (pidProfileName.value && FC.CONFIG.pidProfileNames) {
+            if (FC.CONFIG.pidProfileNames) {
                 await MSP.promise(
                     MSPCodes.MSP2_SET_TEXT,
                     mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSPCodes.PID_PROFILE_NAME),
                 );
             }
-            if (rateProfileName.value && FC.CONFIG.rateProfileNames) {
+            if (FC.CONFIG.rateProfileNames) {
                 await MSP.promise(
                     MSPCodes.MSP2_SET_TEXT,
                     mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSPCodes.RATE_PROFILE_NAME),
