@@ -481,8 +481,7 @@ function cleanup(callback) {
     if (callback) callback();
 }
 
-// No need to expose methods - using global reactive state via tabState
-// defineExpose is not needed anymore
+defineExpose({ cleanup });
 
 // Lifecycle
 onMounted(async () => {
