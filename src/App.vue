@@ -7,7 +7,6 @@
                 <div id="menu_btn">
                     <em class="fas fa-bars"></em>
                 </div>
-                <UButton>Test</UButton>
                 <betaflight-logo
                     :configurator-version="CONFIGURATOR.getDisplayVersion()"
                     :firmware-version="FC.CONFIG.flightControllerVersion"
