@@ -492,8 +492,6 @@ import { useOsdRuler } from "@/composables/useOsdRuler";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "@/components/elements/WikiButton.vue";
 import { i18n } from "@/js/localization";
-import MSP from "@/js/msp";
-import MSPCodes from "@/js/msp/MSPCodes";
 import { OSD, FONT, SYM } from "@/js/tabs/osd";
 import { positionConfigs, getPresetGridCells } from "@/js/tabs/osd_positions";
 import LogoManager from "@/js/LogoManager";

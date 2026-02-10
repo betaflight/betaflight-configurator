@@ -77,7 +77,7 @@ export function useOsdRuler(canvasRef, containerRef, showRulers) {
             cellW, cellH,
             left, top, right, bottom,
             rows, colsInRow,
-            signPad
+            signPad,
         }
     }
 
@@ -92,49 +92,49 @@ export function useOsdRuler(canvasRef, containerRef, showRulers) {
     }
 
     function drawHorizontalAxis(ctx, params, axis) {
-         const { cols, containerRect, colsInRow } = params
-         const config = RulerConfig
-         let centerIndex = Math.floor(cols / 2)
-         let minOffset = -centerIndex
-         let maxOffset = centerIndex
-         const isDark = document.body.classList.contains("dark-theme")
+        const { cols, containerRect, colsInRow } = params
+        const config = RulerConfig
+        let centerIndex = Math.floor(cols / 2)
+        let minOffset = -centerIndex
+        let maxOffset = centerIndex
+        const isDark = document.body.classList.contains("dark-theme")
 
-         for (let i = 0; i < cols; i++) {
-             let offset = i - centerIndex + (cols % 2 === 0 ? 1 : 0)
-             const x = colCenterX(i, containerRect, colsInRow)
-             const isCenter = offset === 0
-             const isMajor = offset % 5 === 0 || isCenter
-             const majorColor = isMajor ? config.colorMajor : config.colorMinor
-             const tick = isMajor ? config.tickMajor : config.tickMinor
+        for (let i = 0; i < cols; i++) {
+            let offset = i - centerIndex + (cols % 2 === 0 ? 1 : 0)
+            const x = colCenterX(i, containerRect, colsInRow)
+            const isCenter = offset === 0
+            const isMajor = offset % 5 === 0 || isCenter
+            const majorColor = isMajor ? config.colorMajor : config.colorMinor
+            const tick = isMajor ? config.tickMajor : config.tickMinor
              
-             ctx.strokeStyle = isCenter ? config.colorCenter : majorColor
-             ctx.lineWidth = 1
-             ctx.beginPath()
+            ctx.strokeStyle = isCenter ? config.colorCenter : majorColor
+            ctx.lineWidth = 1
+            ctx.beginPath()
              
-             let y0, y1, labelY
-             if (axis === "top") {
-                 y0 = Math.max(0, params.top - config.edgeGap)
-                 y1 = Math.max(0, y0 - tick)
-                 labelY = Math.max(config.minEdgePadding, y1 - config.topLabelOffset)
-             } else {
-                 y0 = Math.min(params.ch, params.bottom + 1)
-                 y1 = Math.min(params.ch, params.bottom + tick)
-                 const maxLabelY = params.ch - 12
-                 labelY = Math.min(maxLabelY, y1 + config.bottomLabelOffset)
-             }
+            let y0, y1, labelY
+            if (axis === "top") {
+                y0 = Math.max(0, params.top - config.edgeGap)
+                y1 = Math.max(0, y0 - tick)
+                labelY = Math.max(config.minEdgePadding, y1 - config.topLabelOffset)
+            } else {
+                y0 = Math.min(params.ch, params.bottom + 1)
+                y1 = Math.min(params.ch, params.bottom + tick)
+                const maxLabelY = params.ch - 12
+                labelY = Math.min(maxLabelY, y1 + config.bottomLabelOffset)
+            }
              
-             ctx.moveTo(x + 0.5, y0 + 0.5)
-             ctx.lineTo(x + 0.5, y1 + 0.5)
-             ctx.stroke()
+            ctx.moveTo(x + 0.5, y0 + 0.5)
+            ctx.lineTo(x + 0.5, y1 + 0.5)
+            ctx.stroke()
              
-             if (isMajor && offset >= minOffset && offset <= maxOffset) {
-                 ctx.fillStyle = isDark ? "#fff" : "#000"
-                 ctx.save()
-                 ctx.textBaseline = axis === "top" ? "bottom" : "top"
-                 ctx.fillText(offset.toString(), x, labelY)
-                 ctx.restore()
-             }
-         }
+            if (isMajor && offset >= minOffset && offset <= maxOffset) {
+                ctx.fillStyle = isDark ? "#fff" : "#000"
+                ctx.save()
+                ctx.textBaseline = axis === "top" ? "bottom" : "top"
+                ctx.fillText(offset.toString(), x, labelY)
+                ctx.restore()
+            }
+        }
     }
 
     function drawVerticalAxis(ctx, params, axis) {
@@ -234,6 +234,6 @@ export function useOsdRuler(canvasRef, containerRef, showRulers) {
     })
 
     return {
-        drawRulers
+        drawRulers,
     }
 }
