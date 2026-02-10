@@ -1,6 +1,6 @@
 <template>
     <UApp>
-        <div>
+        <div class="app-wrapper">
             <div id="background"></div>
             <div id="side_menu_swipe"></div>
             <div class="headerbar">
@@ -335,5 +335,15 @@ const expertMode = computed({
     100% {
         transform: rotate(360deg);
     }
+}
+</style>
+
+<style>
+/* Main app content wrapper - flex column to push status bar to bottom */
+.app-wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    min-height: 0; /* Allow flex children to shrink below content size */
 }
 </style>

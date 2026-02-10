@@ -1,8 +1,4 @@
 * {
-    margin: 0;
-    padding: 0;
-    border: 0;
-    list-style: none;
     outline: none;
     user-select: none;
     -webkit-user-drag: none;
@@ -271,7 +267,6 @@ input[type="number"] {
     z-index: 1999;
 }
 .headerbar {
-    height: 5rem;
     display: flex;
     align-items: start;
     padding: 1rem;
@@ -679,7 +674,7 @@ input[type="number"] {
 }
 .tab_container {
     transition: all 0.2s;
-    width: 17rem;
+    width: 18rem;
     overflow: auto;
     padding: 1rem;
     background-color: var(--surface-100);
@@ -723,7 +718,7 @@ input[type="number"] {
         }
         a {
             font-weight: normal;
-            padding: 0.25rem 1rem;
+            padding: 1rem 1rem;
             background-color: transparent;
             color: var(--text);
             border-radius: 999px;
@@ -971,6 +966,7 @@ dialog {
 }
 .img_sponsor {
     object-fit: contain;
+    display: inline-block;
     margin: 5px 15px;
     max-height: 45px;
     width: 150px;
@@ -1099,8 +1095,8 @@ dialog {
     &.content_toolbar {
         display: flex;
         flex-wrap: wrap;
-        position: absolute;
-        bottom: 1.5rem;
+        position: fixed;
+        bottom: 34px;
         right: 0;
     }
 }

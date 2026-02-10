@@ -676,11 +676,6 @@ export default defineComponent({
     border-width: 0;
 }
 
-.content_toolbar.toolbar_fixed_bottom {
-    position: fixed;
-    bottom: 2rem;
-}
-
 table.no-border {
     border: 0;
     border-collapse: collapse;
