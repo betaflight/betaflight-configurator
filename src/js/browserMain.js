@@ -37,6 +37,7 @@ import "select2/dist/css/select2.min.css";
 import "multiple-select/dist/multiple-select.min.css";
 import "../components/EscDshotDirection/Styles.css";
 import "../css/dark-theme.less";
+import "../css/nuxt-ui.css";
 import "./main";
 
 import GUI from "./gui";
