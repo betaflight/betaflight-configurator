@@ -6,6 +6,7 @@ import "../js/localization.js";
 import "../js/injected_methods";
 import i18next from "i18next";
 import { createApp, reactive } from "vue";
+import ui from "@nuxt/ui/vue-plugin";
 import tippy from "tippy.js";
 import "tippy.js/dist/tippy.css";
 import I18NextVue from "i18next-vue";
@@ -63,7 +64,7 @@ i18next.on("initialized", function () {
         },
     });
 
-    app.use(I18NextVue, { i18next }).use(BetaflightComponents).mount("#main-wrapper");
+    app.use(I18NextVue, { i18next }).use(BetaflightComponents).use(ui).mount("#main-wrapper");
 
     if (process.env.NODE_ENV === "development") {
         console.log("Development mode enabled, installing Vue tools");
