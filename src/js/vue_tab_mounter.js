@@ -10,6 +10,7 @@ import i18next from "i18next";
 import I18NextVue from "i18next-vue";
 import { VueTabComponents } from "./vue_components.js";
 import GUI from "./gui.js";
+import ui from "@nuxt/ui/vue-plugin";
 
 // Store the current mounted Vue app instance for cleanup
 let currentTabApp = null;
@@ -59,6 +60,7 @@ export function mountVueTab(tabName, contentReadyCallback) {
     // Use i18n plugin
     currentTabApp.use(I18NextVue, { i18next });
     currentTabApp.use(pinia);
+    currentTabApp.use(ui);
     currentTabApp.provide("gui", GUI);
 
     // Provide the global betaflight model

@@ -10,10 +10,10 @@ import "../css/tabs/help.less";
 import "../css/tabs/ports.less";
 import "../css/tabs/configuration.less";
 import "../css/tabs/pid_tuning.less";
-import "../css/tabs/receiver.less";
+// import "../css/tabs/receiver.less";
 import "../css/tabs/servos.less";
 import "../css/tabs/gps.less";
-import "../css/tabs/motors.less";
+// import "../css/tabs/motors.less";
 import "../tabs/presets/presets.less";
 import "../tabs/presets/TitlePanel/PresetTitlePanel.css";
 import "../tabs/presets/DetailedDialog/PresetsDetailedDialog.less";
@@ -37,6 +37,7 @@ import "select2/dist/css/select2.min.css";
 import "multiple-select/dist/multiple-select.min.css";
 import "../components/EscDshotDirection/Styles.css";
 import "../css/dark-theme.less";
+import "../css/nuxt-ui.css";
 import "./main";
 
 import GUI from "./gui";
@@ -45,10 +46,12 @@ import { isAndroid } from "./utils/checkCompatibility.js";
 import { createApp } from "vue";
 import { pinia } from "./pinia_instance";
 import GlobalDialogs from "@/components/dialogs/GlobalDialogs.vue";
+import ui from "@nuxt/ui/vue-plugin";
 
 // Mount Global Dialogs App
 const dialogApp = createApp(GlobalDialogs);
 dialogApp.use(pinia);
+dialogApp.use(ui);
 dialogApp.mount("#dialog-container");
 
 // Skip PWA update/offline prompts on Android native builds where they are unnecessary
