@@ -44,7 +44,7 @@
                                     <input
                                         type="text"
                                         v-model="elementSearchQuery"
-                                        :placeholder="$t('osdSetupElementsSearch') || 'Search...'"
+                                        :placeholder="$t('search') + '...'"
                                         class="search-input"
                                     />
                                 </div>
@@ -84,45 +84,66 @@
                                             class="variant-selector"
                                         >
                                             <option v-for="(variant, vIdx) in field.variants" :key="vIdx" :value="vIdx">
-                                                {{ variant }}
+                                                {{ $t(variant) }}
                                             </option>
                                         </select>
 
-                                        <!-- Position input and preset button -->
+                                        <!-- Preset button only (position input removed to match legacy) -->
                                         <div
-                                            v-if="field.positionable && isFieldVisible(field)"
+                                            v-if="field.positionable"
                                             class="position-controls"
                                         >
-                                            <input
-                                                type="number"
-                                                v-model.number="field.position"
-                                                @change="onPositionChange(field)"
-                                                class="position-input"
-                                            />
-                                            <button
-                                                class="preset-btn"
+                                            <div
+                                                class="preset-pos-btn"
                                                 @click="openPresetMenu(field, $event)"
-                                                title="Preset positions"
+                                                :title="$t('osdLayoutOpenPresetMenu')"
                                             >
                                                 ...
-                                            </button>
-                                            <!-- Preset position grid popover -->
+                                            </div>
+                                            <!-- Context Menu (Level 1) -->
                                             <div
                                                 v-if="presetMenuField === field"
-                                                class="preset-popover"
+                                                class="context-menu show"
                                                 @click.stop
                                             >
-                                                <div class="preset-popover-title">Choose Position</div>
-                                                <div class="preset-grid">
+                                                <div class="context-menu-item">
                                                     <div
-                                                        v-for="cell in presetGridCells"
-                                                        :key="`${cell.col}-${cell.row}`"
-                                                        class="preset-grid-cell"
-                                                        :style="{ gridColumn: cell.col + 1, gridRow: cell.row + 1 }"
-                                                        :title="cell.label"
-                                                        @click="applyPresetPosition(field, cell.key)"
+                                                        class="context-menu-item-display"
+                                                        @click="showPresetSubmenu = !showPresetSubmenu"
                                                     >
-                                                        <span class="preset-cell-dot"></span>
+                                                        <span>Align to position</span>
+                                                        <span>
+                                                            ▶
+                                                            <span class="context-menu-item-content-wrapper">
+                                                                <!-- Submenu (Level 2 - Grid) -->
+                                                                <div
+                                                                    class="context-menu-item-content"
+                                                                    :class="{ show: showPresetSubmenu }"
+                                                                    @click.stop
+                                                                >
+                                                                    <div id="preset-pos-grid-wrapper">
+                                                                        <div class="preset-popover-title">Choose Position</div>
+                                                                        <div class="preset-grid">
+                                                                            <div
+                                                                                v-for="cell in presetGridCells"
+                                                                                :key="`${cell.col}-${cell.row}`"
+                                                                                class="preset-grid-cell"
+                                                                                :style="{
+                                                                                    gridColumn: cell.col + 1,
+                                                                                    gridRow: cell.row + 1,
+                                                                                }"
+                                                                                :title="cell.label"
+                                                                                @click="
+                                                                                    applyPresetPosition(field, cell.key)
+                                                                                "
+                                                                            >
+                                                                                <span class="preset-cell-dot"></span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </span>
+                                                        </span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -136,39 +157,37 @@
                     <!-- Preview Column -->
                     <div class="col-span-2 osd-preview">
                         <div class="gui_box grey preview-parent requires-osd-feature">
-                            <div class="gui_box_titlebar image">
+                            <div class="gui_box_titlebar image preview-controls-bar">
                                 <div class="spacer_box_title">
-                                    <span class="cf_tip" :title="$t('osdSetupPreviewForTitle')">
+                                    <span class="preview-controls-wrapper">
                                         <label v-html="$t('osdSetupPreviewSelectProfileTitle')"></label>
-                                        <select v-model.number="previewProfile" class="osdprofile-selector small">
+                                        <select
+                                            v-model.number="previewProfile"
+                                            class="osdprofile-selector small dark-select"
+                                        >
                                             <option
                                                 v-for="idx in osdStore.numberOfProfiles"
                                                 :key="idx"
                                                 :value="idx - 1"
                                             >
-                                                {{ idx }}
+                                                {{ $t('osdSetupPreviewSelectProfileElement', { profileNumber: idx }) }}
                                             </option>
                                         </select>
 
                                         <label v-html="$t('osdSetupPreviewSelectFont')"></label>
-                                        <select v-model.number="selectedFont" class="osdfont-selector small">
-                                            <option v-for="(font, idx) in fontTypes" :key="idx" :value="idx">
+                                        <select
+                                            v-model.number="selectedFont"
+                                            class="osdfont-selector small dark-select"
+                                        >
+                                            <option
+                                                v-for="(font, idx) in fontTypes"
+                                                :key="idx"
+                                                :value="idx"
+                                            >
                                                 {{ $t(font.name) }}
                                             </option>
                                         </select>
-
-                                        <span class="osd-preview-zoom-group">
-                                            <input
-                                                type="checkbox"
-                                                id="osd-preview-zoom-selector"
-                                                v-model="previewZoom"
-                                            />
-                                            <label
-                                                for="osd-preview-zoom-selector"
-                                                v-html="$t('osdSetupPreviewCheckZoom')"
-                                            ></label>
-                                        </span>
-
+                                        
                                         <span class="osd-preview-rulers-group">
                                             <input
                                                 type="checkbox"
@@ -185,11 +204,14 @@
                             </div>
 
                             <div class="display-layout">
-                                <div ref="previewContainerOuter" class="preview-container" :class="{ zoomed: previewZoom }">
-                                    <canvas ref="rulerCanvas" class="ruler-overlay" v-show="showRulers"></canvas>
+                                <div ref="previewContainerOuter" class="preview-container">
+                                    <canvas ref="rulerCanvas" class="ruler-overlay" v-show="effectiveShowRulers"></canvas>
                                     <div
                                         ref="previewContainer"
                                         class="preview"
+                                        @mousedown="onPreviewMouseDown"
+                                        @mouseup="onPreviewMouseUp"
+                                        @mouseleave="onPreviewMouseUp"
                                     >
                                         <!-- Preview elements rendered as rows/cells -->
                                         <div class="row" v-for="(row, rIdx) in previewRows" :key="rIdx">
@@ -206,10 +228,11 @@
                                                 @dragover.prevent="onDragOverCell($event)"
                                                 @dragleave="onDragLeaveCell($event)"
                                                 @drop.prevent="onDropCell($event)"
+                                                @dragend="onPreviewMouseUp"
                                                 @mouseenter="onCellMouseEnter(cell)"
                                                 @mouseleave="onCellMouseLeave(cell)"
                                             >
-                                                <img v-if="cell.img" :src="cell.img" draggable="false" />
+                                                <img :src="cell.img || 'data:image/svg+xml;utf8,<svg width=\'12\' height=\'18\' xmlns=\'http://www.w3.org/2000/svg\'></svg>'" draggable="false" />
                                             </div>
                                         </div>
                                     </div>
@@ -233,7 +256,7 @@
                                 <label v-html="$t('osdSetupSelectedProfileLabel')"></label>
                                 <select v-model.number="activeProfile" class="osdprofile-active">
                                     <option v-for="idx in osdStore.numberOfProfiles" :key="idx" :value="idx - 1">
-                                        {{ idx }}
+                                        {{ $t('osdSetupPreviewSelectProfileElement', { profileNumber: idx }) }}
                                     </option>
                                 </select>
                             </div>
@@ -295,41 +318,53 @@
                             </div>
                             <div class="spacer_box">
                                 <div id="timer-fields" class="switchable-fields">
-                                    <div v-for="(timer, idx) in osdStore.timers" :key="idx" class="timer-config">
-                                        <label class="timer-label">{{
-                                            $t("osdTimerLabel", { index: idx + 1 }) || `Timer ${idx + 1}`
-                                        }}</label>
-                                        <div class="timer-controls">
-                                            <select
-                                                v-model.number="timer.src"
-                                                @change="updatePreview"
-                                                class="timer-source"
-                                            >
-                                                <option v-for="(src, sIdx) in timerSources" :key="sIdx" :value="sIdx">
-                                                    {{ $t(src) }}
-                                                </option>
-                                            </select>
-                                            <select
-                                                v-model.number="timer.precision"
-                                                @change="updatePreview"
-                                                class="timer-precision"
-                                            >
-                                                <option
-                                                    v-for="(prec, pIdx) in timerPrecisions"
-                                                    :key="pIdx"
-                                                    :value="pIdx"
+                                    <div
+                                        v-for="(timer, idx) in osdStore.timers"
+                                        :key="idx"
+                                        class="timer-config"
+                                    >
+                                        <div class="timer-index">{{ idx + 1 }}</div>
+                                        <div class="timer-fields">
+                                            <div class="timer-row">
+                                                <label>{{ $t("osdTimerSource") }}</label>
+                                                <select
+                                                    v-model.number="timer.src"
+                                                    @change="updatePreview"
                                                 >
-                                                    {{ prec }}
-                                                </option>
-                                            </select>
-                                            <input
-                                                type="number"
-                                                v-model.number="timer.alarm"
-                                                min="0"
-                                                max="600"
-                                                class="timer-alarm"
-                                                @change="updatePreview"
-                                            />
+                                                    <option
+                                                        v-for="(src, sIdx) in timerSources"
+                                                        :key="sIdx"
+                                                        :value="sIdx"
+                                                    >
+                                                        {{ $t(src) }}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            <div class="timer-row">
+                                                <label>{{ $t("osdTimerPrecision") }}</label>
+                                                <select
+                                                    v-model.number="timer.precision"
+                                                    @change="updatePreview"
+                                                >
+                                                    <option
+                                                        v-for="(prec, pIdx) in timerPrecisions"
+                                                        :key="pIdx"
+                                                        :value="pIdx"
+                                                    >
+                                                        {{ $t(prec) }}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            <div class="timer-row">
+                                                <label>{{ $t("osdTimerAlarm") }}</label>
+                                                <input
+                                                    type="number"
+                                                    v-model.number="timer.alarm"
+                                                    min="0"
+                                                    max="600"
+                                                    @change="updatePreview"
+                                                />
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -370,11 +405,9 @@
                             </div>
                             <div class="spacer_box">
                                 <div id="warnings-fields" class="switchable-fields">
-                                    <div v-for="(warning, idx) in osdStore.warnings" :key="idx" class="warning-field">
-                                        <label class="checkbox-label">
-                                            <input type="checkbox" v-model="warning.enabled" @change="updatePreview" />
-                                            <span class="cf_tip" :title="$t(warning.desc)">{{ $t(warning.text) }}</span>
-                                        </label>
+                                    <div v-for="(warning, idx) in osdStore.warnings" :key="idx" class="switchable-field" :class="[`field-${warning.index}`, { osd_tip: warning.desc }]" :title="warning.desc ? $t(warning.desc) : undefined">
+                                        <input type="checkbox" :name="warning.name" class="togglesmall" v-model="warning.enabled" @change="updatePreview" />
+                                        <label :for="warning.name" class="char-label">{{ $t(warning.text) }}</label>
                                     </div>
                                 </div>
                             </div>
@@ -390,11 +423,9 @@
                             </div>
                             <div class="spacer_box">
                                 <div id="post-flight-stat-fields" class="switchable-fields">
-                                    <div v-for="(stat, idx) in osdStore.statItems" :key="idx" class="stat-field">
-                                        <label class="checkbox-label">
-                                            <input type="checkbox" v-model="stat.enabled" @change="updatePreview" />
-                                            <span class="cf_tip" :title="$t(stat.desc)">{{ $t(stat.text) }}</span>
-                                        </label>
+                                    <div v-for="(stat, idx) in osdStore.statItems" :key="idx" class="switchable-field" :class="[`field-${stat.index}`, { osd_tip: stat.desc }]" :title="stat.desc ? $t(stat.desc) : undefined">
+                                        <input type="checkbox" :name="stat.name" class="togglesmall" v-model="stat.enabled" @change="updatePreview" />
+                                        <label :for="stat.name" class="char-label">{{ $t(stat.text) }}</label>
                                     </div>
                                 </div>
                             </div>
@@ -470,7 +501,7 @@
         </div>
 
         <!-- Bottom Toolbar -->
-        <div class="content_toolbar toolbar_fixed_bottom supported">
+        <div class="content_toolbar toolbar_fixed_bottom supported" style="position: fixed">
             <div class="btn" v-if="osdStore.state.isMax7456FontDeviceDetected">
                 <a class="fonts" @click="openFontManager" v-html="$t('osdSetupFontManager')"></a>
             </div>
@@ -515,7 +546,7 @@ const logoPreview = ref(null);
 const elementSearchQuery = ref("");
 const previewProfile = ref(0);
 const selectedFont = ref(0);
-const previewZoom = ref(false);
+// const previewZoom = ref(false); // Removed
 const showRulers = ref(false);
 const activeProfile = ref(0);
 const selectedFontPreset = ref(-1);
@@ -523,14 +554,27 @@ const uploadProgress = ref(0);
 const uploadProgressLabel = ref("");
 const fontVersionInfo = ref("");
 const isSaving = ref(false);
+// State for popover
 const presetMenuField = ref(null);
+const showPresetSubmenu = ref(false); // Track click state for submenu
 const presetGridCells = getPresetGridCells();
 
 // Preview composable
 const { previewRows, previewBuffer, updatePreviewBuffer, searchLimitsElement } = useOsdPreview();
 
 // Ruler composable
-const { drawRulers } = useOsdRuler(rulerCanvas, previewContainerOuter, showRulers);
+const isDraggingGrid = ref(false);
+const effectiveShowRulers = computed(() => showRulers.value);
+const { drawRulers } = useOsdRuler(rulerCanvas, previewContainerOuter, effectiveShowRulers);
+
+// Handlers for temporary grid visibility
+const onPreviewMouseDown = () => {
+    isDraggingGrid.value = true;
+};
+
+const onPreviewMouseUp = () => {
+    isDraggingGrid.value = false;
+};
 
 // Current drag state
 const dragState = ref({
@@ -547,12 +591,16 @@ const analyticsChanges = ref({});
 // Constants from OSD module
 const videoTypes = ["AUTO", "PAL", "NTSC", "HD"];
 const unitTypes = ["IMPERIAL", "METRIC", "BRITISH"];
-const timerPrecisions = ["SECOND", "HUNDREDTH", "TENTH"];
+const timerPrecisions = [
+    "osdTimerPrecisionOptionSecond",
+    "osdTimerPrecisionOptionHundredth",
+    "osdTimerPrecisionOptionTenth",
+];
 const timerSources = [
-    "osdTimerSourceOnTime",
-    "osdTimerSourceTotalArmedTime",
-    "osdTimerSourceLastArmedTime",
-    "osdTimerSourceOnArmTime",
+    "osdTimerSourceOptionOnTime",
+    "osdTimerSourceOptionTotalArmedTime",
+    "osdTimerSourceOptionLastArmedTime",
+    "osdTimerSourceOptionOnArmTime",
 ];
 
 // Font types from OSD constants
@@ -631,7 +679,7 @@ function getPreviewCellClass(cell) {
     const classes = {
         "preview-element": !!cell.field,
         draggable: cell.field?.positionable,
-        highlighted: cell.field === highlightedField.value,
+        highlighted: cell.field != null && cell.field === highlightedField.value,
     };
     
     if (cell.field) {
@@ -675,6 +723,7 @@ function onDragStart(event, cell) {
 
     dragState.value.field = field;
     dragState.value.startIdx = field.position;
+    isDraggingGrid.value = true;
 }
 
 function onDragOverCell(event) {
@@ -776,6 +825,8 @@ function onCellMouseLeave(cell) {
 // Preset position system
 function openPresetMenu(field, event) {
     event.stopPropagation();
+    // Reset submenu state when opening main menu
+    showPresetSubmenu.value = false;
     presetMenuField.value = presetMenuField.value === field ? null : field;
 }
 
@@ -953,7 +1004,8 @@ function loadFontPreset(index) {
             FONT.parseMCMFontFile(data);
             fontDataVersion.value++;
             LogoManager.drawPreview();
-            updatePreview();
+            // Re-render preview with new font character images
+            updatePreviewBuffer();
         })
         .catch(err => console.error('Failed to load font preset:', err));
 }
@@ -1012,6 +1064,14 @@ watch(previewProfile, (newVal) => {
     updatePreview();
 });
 
+// Watch for font selection in header
+watch(selectedFont, (newVal) => {
+    // Sync preset selection for UI consistency
+    selectedFontPreset.value = newVal;
+    // Directly load the font (avoids issue if selectedFontPreset was already this value)
+    loadFontPreset(newVal);
+});
+
 watch(activeProfile, (newVal) => {
     osdStore.osdProfiles.selected = newVal;
 });
@@ -1021,6 +1081,8 @@ const handleClickOutside = () => closePresetMenu();
 
 onMounted(async () => {
     document.addEventListener('click', handleClickOutside);
+    // Initialize LogoManager to inject logo size i18n resources
+    LogoManager.init(FONT, SYM.LOGO);
     await loadConfig();
     await nextTick();
     GUI.content_ready();
@@ -1034,28 +1096,210 @@ onUnmounted(() => {
 
 <style scoped>
 .content_wrapper {
-    padding-bottom: 60px; /* Space for fixed toolbar */
+    padding-bottom: 60px;
 }
 
-/* Element fields */
+/* Base styles */
+:deep(input[type="checkbox"]) {
+    width: 18px;
+    height: 18px;
+}
+
+:deep(select) {
+    background: var(--surface-200);
+    color: var(--text);
+    border: 1px solid var(--surface-500);
+    border-radius: 3px;
+    padding: 2px;
+}
+
+:deep(input) {
+    background: var(--surface-200);
+    color: var(--text);
+    border: 1px solid var(--surface-500);
+    border-radius: 3px;
+}
+
+/* Info Progress Bars */
+.info {
+    display: grid;
+    grid-template-areas: "area";
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.info .progressLabel {
+    grid-area: area;
+    width: 100%;
+    height: 26px;
+    line-height: 26px;
+    text-align: center;
+    color: white;
+    font-weight: bold;
+}
+
+.info .progressLabel a {
+    color: white;
+}
+
+.info .progressLabel a:hover {
+    text-decoration: underline;
+}
+
+.info .progress {
+    grid-area: area;
+    width: 100%;
+    height: 26px;
+    border-radius: 5px;
+    border: 1px solid var(--surface-500);
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.info .progress::-webkit-progress-bar {
+    background-color: var(--text);
+    border-radius: 4px;
+    box-shadow: inset 0 0 5px #2f2f2f;
+}
+
+.info .progress::-webkit-progress-value {
+    background-color: #f86008;
+    border-radius: 4px;
+}
+
+.info .progress.valid::-webkit-progress-bar,
+.info .progress.valid::-webkit-progress-value {
+    background-color: #56ac1d;
+    border-radius: 4px;
+}
+
+.info .progress.invalid::-webkit-progress-bar,
+.info .progress.invalid::-webkit-progress-value {
+    background-color: #a62e32;
+    border-radius: 4px;
+}
+
+/* Options */
+.options {
+    position: relative;
+    margin-bottom: 10px;
+    line-height: 18px;
+    text-align: left;
+}
+
+.options label input {
+    margin-top: 2px;
+}
+
+.options label span {
+    font-weight: bold;
+    margin-left: 6px;
+}
+
+.options select {
+    width: 300px;
+    height: 20px;
+    border: 1px solid var(--surface-500);
+}
+
+.options .releases select {
+    width: 280px;
+}
+
+.options .description {
+    position: relative;
+    left: 0;
+    font-style: italic;
+    color: #818181;
+}
+
+.options .flash_on_connect_wrapper {
+    display: none;
+}
+
+.options .manual_baud_rate select {
+    width: 75px;
+    margin-left: 19px;
+}
+
+.option.releases {
+    margin: 0 0 2px 0;
+    line-height: 20px;
+}
+
+/* Display Layout / Elements */
+.display-layout {
+    height: 100%;
+}
+
+.display-layout label {
+    margin: 0.25em 0.1em;
+    display: inline-block;
+}
+
+.display-layout input {
+    margin: 0.1em 1em;
+}
+
+.display-layout input.position {
+    width: 5em;
+    border-bottom: 1px solid var(--surface-500);
+}
+
+/* Switchable Fields (Core Element List) */
 .switchable-fields {
-    max-height: 600px;
-    overflow-y: auto;
+    margin-top: 5px;
+    margin-bottom: 8px;
+    width: 100%;
+    /* Removed overflow/height constraints to allow absolute position popups to overflow */
 }
 
-.display-field {
-    display: flex;
-    align-items: center;
-    padding: 4px 8px;
-    border-bottom: 1px solid var(--box-border);
-    gap: 8px;
+.switchable-fields .elements-search-field,
+.element-search {
+    margin: 0 0 5px 0.5rem;
 }
 
-.display-field:hover,
+.switchable-field,
+.display-field { /* Keep compatibility with template class */
+    flex: 1;
+    display: flex; /* Added for alignment */
+    align-items: center; /* Added for alignment */
+    padding: 3px;
+    border: 1px solid transparent;
+    border-bottom: 1px solid var(--surface-500);
+}
+
+.switchable-field input,
+.display-field input {
+    border-radius: 3px;
+    border: 1px solid var(--surface-500);
+    padding: 2px;
+}
+
+.switchable-field label,
+.display-field .field-label {
+    margin-left: 5px;
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.switchable-field:last-child,
+.display-field:last-child {
+    border-bottom: 0;
+}
+
+.switchable-field.mouseover,
+.switchable-field.highlighted,
+.display-field.mouseover,
 .display-field.highlighted {
-    background: var(--table-altBackground);
+    background: var(--surface-200);
+    /* border: 1px solid var(--surface-500); Removed per user request */
+    /* font-weight: 800; Removed per user request */
 }
 
+/* Profile Checkboxes */
 .profile-checkboxes {
     display: flex;
     gap: 4px;
@@ -1073,211 +1317,445 @@ onUnmounted(() => {
     font-weight: bold;
 }
 
-.field-label {
-    flex: 1;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
+/* Variant Selector */
 .variant-selector {
     width: 100px;
 }
 
-.position-controls {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    position: relative;
+/* Preview Area */
+.preview-parent {
+    position: sticky;
+    top: 1.5rem;
 }
 
-.position-input {
-    width: 60px;
-}
-
-.preset-btn {
-    padding: 2px 6px;
-    cursor: pointer;
-    position: relative;
-}
-
-.preset-popover {
-    position: absolute;
-    top: 100%;
-    right: 0;
-    z-index: 100;
-    background: var(--box-background, #fff);
-    border: 1px solid var(--box-border, #ccc);
-    border-radius: 4px;
-    padding: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    min-width: 120px;
-}
-
-.preset-popover-title {
-    font-size: 11px;
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: 6px;
-    color: var(--text-color, #333);
-}
-
-.preset-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(5, 1fr);
-    gap: 3px;
-}
-
-.preset-grid-cell {
-    width: 28px;
-    height: 20px;
-    border: 1px solid var(--box-border, #ddd);
-    border-radius: 3px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.15s;
-}
-
-.preset-grid-cell:hover {
-    background: var(--accent-color, #3498db);
-}
-
-.preset-cell-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--box-border, #999);
-}
-
-.preset-grid-cell:hover .preset-cell-dot {
-    background: #fff;
-}
-
-/* Search box */
-.element-search {
-    padding: 8px;
-    border-bottom: 1px solid var(--box-border);
-}
-
-.search-input {
-    width: 100%;
-    padding: 4px 8px;
-}
-
-/* Preview area */
 .preview-container {
     position: relative;
-    min-height: 300px;
-    background: #000;
-    overflow: hidden;
-}
-
-.preview-container.zoomed {
-    transform: scale(1.5);
-    transform-origin: top left;
-}
-
-.preview {
-    position: relative;
+    display: block;
     width: 100%;
     height: 100%;
-}
-
-/* Grid cell highlighting */
-.char.highlighted {
-    outline: 2px solid var(--accent-color);
-}
-
-.char.draggable {
-    cursor: grab;
-}
-
-.char img {
-    image-rendering: pixelated;
 }
 
 .ruler-overlay {
     position: absolute;
     top: 0;
     left: 0;
-    pointer-events: none;
+    width: 100%;
+    height: 100%;
     z-index: 10;
+    pointer-events: none;
 }
 
-/* Video types */
-.video-types,
-.units {
+.preview {
+    background: url(../../images/osd-bg-1.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    margin-top: 20px;
+    margin-left: 20px;
+}
+
+.gui_box_titlebar label {
+    max-width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+    white-space: nowrap;
+    vertical-align: text-bottom;
+}
+
+.gui_box_bottombar {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.preview-parent .row {
     display: flex;
-    flex-direction: column;
-    gap: 4px;
 }
 
-.video-type-option,
-.unit-option {
+.char {
+    display: flex;
+    padding: 0;
+    margin: 0;
+    flex: 1 1 auto;
+    flex-wrap: nowrap;
+    border: 1px solid transparent;
+}
+
+.char[draggable="true"] {
+    cursor: move;
+}
+
+.char img {
+    flex: 1 1 auto;
+    max-width: 100%;
+    height: auto;
+    image-rendering: pixelated;
+}
+
+.char.mouseover {
+    background: rgba(255, 255, 255, 0.4);
+}
+
+.char.highlighted {
+    background: rgba(255, 255, 255, 0.4);
+}
+
+.char.dragging {
+    background: rgba(255, 255, 255, 0.4);
+}
+
+/* Crosshair and grid lines on mouse-down (legacy :active behavior) */
+.preview-parent:active::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 40%;
+    border-top: 0.3em dashed var(--gimbalCrosshair);
+    width: 20%;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+.preview-parent:active::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 40%;
+    border-top: 0.3em dashed var(--gimbalCrosshair);
+    width: 20%;
+    transform: translateY(-50%) rotate(90deg);
+    pointer-events: none;
+}
+
+.preview-parent:active .char {
+    border: 1px dashed rgba(55, 55, 55, 0.5);
+}
+
+.osd-feature .gui_box_titlebar {
+    left: 0;
+}
+
+/* Preview Controls Bar */
+.preview-controls-bar {
+    background-color: var(--primary-500) !important;
+    border-radius: 20px;
+    padding: 5px 15px !important;
+    margin-bottom: 10px;
+    height: auto !important;
+    border: none !important;
     display: flex;
     align-items: center;
-    gap: 8px;
 }
 
-/* Timer config */
-.timer-config {
-    padding: 8px 0;
-    border-bottom: 1px solid var(--box-border);
+.preview-controls-bar .spacer_box_title {
+    width: 100%;
 }
 
-.timer-controls {
+.preview-controls-wrapper {
     display: flex;
-    gap: 4px;
-    margin-top: 4px;
+    align-items: center;
+    width: 100%;
+    color: #000; /* Dark text on gold background */
+    font-weight: 600;
 }
 
-.timer-source {
+.preview-controls-wrapper label {
+    margin-right: 5px;
+    white-space: nowrap;
+}
+
+.preview-controls-wrapper select.dark-select {
+    background-color: var(--surface-800);
+    color: #ffffff; /* Force white text for readability against dark background */
+    border: 1px solid var(--surface-900);
+    border-radius: 4px;
+    padding: 2px 5px;
+    margin-right: 10px;
+    height: 24px;
+}
+
+.osd-preview-rulers-group {
+    margin-left: auto; /* Push to right */
+    display: flex;
+    align-items: center;
+}
+
+.osd-preview-rulers-group input {
+    margin-right: 5px;
+}
+
+/* Fix specificity for legacy overrides */
+.gui_box_titlebar.image.preview-controls-bar {
+    line-height: normal;
+}
+
+/* Preset Button - Explicitly Legacy */
+.preset-pos-btn {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--surface-500, #999);
+    color: var(--text, #fff);
+    border: 1px solid var(--primary-800, #666);
+    transition: background-color 0.25s, transform 0.25s;
+    border-radius: 2px;
+    font-size: 10px;
+    line-height: 0;
+    margin-left: 4px;
+}
+
+.preset-pos-btn:hover {
+    background-color: var(--surface-700, #666);
+    transform: scale(1.1);
+}
+
+.preset-pos-btn:active {
+    transform: scale(0.9);
+}
+
+/* Position Controls Container - Anchor for absolute menu */
+.position-controls {
+    position: relative;
+    display: flex; /* Ensure button aligns */
+    align-items: center;
+    justify-content: center;
+    margin-left: auto; /* Push to right of flex container */
+    flex-shrink: 0;
+}
+
+/* Context Menu Structure (Matches Legacy osd.less) */
+.context-menu {
+    position: absolute;
+    display: inline-block;
+    min-width: 140px; /* Legacy width */
+    top: -5px; /* Slight offset up to align nicely with button center */
+    left: 100%; /* Align to right of button container */
+    margin-left: 5px; /* Space from button */
+    padding: 2px;
+    background-color: var(--surface-50); /* Legacy background */
+    border: 1px solid var(--surface-500);
+    border-radius: 3px;
+    z-index: 10001; /* Legacy z-index */
+    transition: opacity 0.2s;
+    opacity: 1;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+}
+
+.context-menu-item {
+    position: relative;
+}
+
+/* The list "item" */
+.context-menu-item-display {
+    position: relative;
+    padding: 4px 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    font-size: 11px; /* Legacy font size match */
+    transition: all 0.15s;
+    border-radius: 2px;
+    color: var(--text);
+    white-space: nowrap;
+}
+
+.context-menu-item-display:hover {
+    background-color: var(--surface-700);
+    color: #fff;
+}
+
+/* Submenu Content (The Grid) */
+.context-menu-item-content {
+    position: absolute;
+    /* Position relative to the .context-menu-item-display (parent of this tree) */
+    /* Since it's nested deep in spans, we need to ensure it breaks out correctly */
+    left: 100%; 
+    top: -5px;
+    margin-left: 5px;
+    display: none;
+    opacity: 0;
+    /* pointer-events handled by show class */
+    z-index: 10002;
+}
+
+.context-menu-item-content.show {
+    display: block;
+    opacity: 1;
+    pointer-events: all;
+}
+
+/* Preset Button - Explicitly Legacy */
+.preset-pos-btn {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--surface-500, #999);
+    color: var(--text, #fff);
+    border: 1px solid var(--primary-800, #666);
+    transition: background-color 0.25s, transform 0.25s;
+    border-radius: 2px;
+    font-size: 10px;
+    line-height: 0;
+    /* Margin removed to allow precise absolute positioning of menu */
+}
+
+.preset-pos-btn:hover {
+    background-color: var(--surface-700, #666);
+    transform: scale(1.1);
+}
+
+.preset-pos-btn:active {
+    transform: scale(0.9);
+}
+
+/* Preset Popover Grid Container */
+#preset-pos-grid-wrapper {
+    background-color: var(--surface-50);
+    border-radius: 5px;
+    padding: 10px;
+    gap: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.preset-popover-title {
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 6px;
+    color: var(--text);
+    /* Legacy didn't have specific title class in this context but keeping for structure */
+}
+
+.preset-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+    gap: 6px;
+    width: 150px;
+    height: 120px;
+    padding: 10px;
+    background-color: var(--surface-100);
+    border-radius: 5px;
+    border: 2px solid var(--surface-700);
+}
+
+.preset-grid-cell {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    font-size: 8px;
+    cursor: pointer;
+    background-color: var(--primary-500);
+    border-radius: 5px;
+    transition: transform 0.25s;
+    color: var(--text);
+}
+
+
+/* Hover transform removed per user request */
+
+/* Tooltip for cell */
+.preset-grid-cell .preset-pos-cell-tooltip {
+    position: absolute;
+    top: -25px;
+    font-size: 8px;
+    white-space: nowrap;
+    color: var(--text);
+    background-color: color-mix(in srgb, var(--surface-300) 70%, var(--primary-500) 30%);
+    opacity: 0;
+    transition: opacity 0.25s;
+    pointer-events: none;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.preset-grid-cell:hover .preset-pos-cell-tooltip {
+    opacity: 1;
+}
+
+.preset-cell-dot {
+    content: "";
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: currentColor;
+    border-radius: 50%;
+    opacity: 0.8;
+}
+
+
+/* Timers */
+.timer-config {
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--surface-500);
+}
+
+.timer-config:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.timer-row {
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.timer-row label {
     flex: 1;
 }
 
-.timer-precision {
-    width: 100px;
+.timer-row select,
+.timer-row input {
+    width: 140px;
 }
 
-.timer-alarm {
-    width: 60px;
+/* Alarms */
+.alarms label {
+    display: block;
+    width: 100%;
+    border-bottom: 1px solid var(--surface-500);
+    margin-top: 5px;
+    padding-bottom: 5px;
 }
 
-/* Alarm config */
-.alarm-config {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 4px 0;
+.alarms label:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
 }
 
-.alarm-config input {
-    width: 80px;
+.alarms input {
+    width: 55px;
+    padding-left: 3px;
+    height: 18px;
+    line-height: 20px;
+    text-align: left;
+    border-radius: 3px;
+    margin-right: 11px;
+    font-size: 11px;
+    font-weight: normal;
 }
 
-/* Warning/Stat fields */
 .warning-field,
 .stat-field {
-    padding: 4px 0;
+    margin-bottom: 4px;
 }
 
-.checkbox-label {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-/* Toolbar */
-.content_toolbar {
-    display: flex;
-    justify-content: flex-end;
-    gap: 8px;
-}
-
-/* Font Manager Dialog */
+/* Font Manager */
 .font-picker {
     padding: 20px;
 }
@@ -1290,33 +1768,117 @@ onUnmounted(() => {
 }
 
 .fontpresets {
-    flex: 1;
+    background: var(--surface-200);
+    color: var(--text);
+    border: 1px solid var(--surface-500);
+    border-radius: 3px;
 }
 
 #font-logo {
     display: flex;
-    gap: 16px;
-    margin: 16px 0;
+    margin-bottom: 2em;
 }
 
 #font-logo-preview-container {
-    width: 288px;
-    height: 144px;
-    background: #000;
-    border: 1px solid var(--box-border);
+    background: rgba(0, 255, 0, 0.4);
+    margin-bottom: 10px;
+    padding: 10px;
+}
+
+#font-logo-preview {
+    background: rgba(0, 255, 0, 1);
+    line-height: 0;
+    margin: auto;
 }
 
 #font-logo-info {
     flex: 1;
+    margin-left: 2em;
+    line-height: 150%;
 }
 
-.progress {
-    width: 100%;
-    height: 20px;
+#font-logo-info h3 {
+    margin-bottom: 0.2em;
 }
 
-.progressLabel {
-    text-align: center;
-    margin-top: 4px;
+#font-logo-info ul li:before {
+    content: "\2022\20";
+}
+
+#font-logo-info ul li.valid {
+    color: #00a011;
+}
+
+#font-logo-info ul li.valid:before {
+    content: "\2714\20";
+}
+
+#font-logo-info ul li.invalid {
+    color: #a01100;
+}
+
+#font-logo-info ul li.invalid:before {
+    content: "\2715\20";
+}
+
+button {
+    padding: 4px 10px !important;
+    font-weight: 600;
+    font-size: 9pt !important;
+    cursor: pointer;
+}
+
+/* Spacers */
+.spacer_box div label {
+    display: inline-flex;
+    gap: 3px;
+    margin-right: 10px;
+}
+
+/* Timers */
+.timer-option {
+    padding: 2px;
+    display: inline !important;
+}
+
+.timers-container .timer-detail {
+    padding-left: 15px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+}
+
+.timers-container label {
+    margin-right: 5px !important;
+    display: inline-block;
+    width: 80px;
+}
+
+.timers-container input,
+.timers-container select {
+    width: 150px;
+}
+
+/* Media Queries */
+@media all and (max-width: 1455px) {
+    .grid-box .col-span-2 {
+        grid-column: span 4;
+        grid-row-start: 1;
+        grid-row-end: 1;
+    }
+    .grid-box .col-span-1 {
+        grid-column: span 2;
+    }
+}
+
+@media all and (max-width: 575px) {
+    .grid-box.col4 {
+        grid-template-columns: 1fr;
+    }
+    .grid-box.col4 .col-span-2 {
+        grid-column: span 1;
+    }
+    .grid-box.col4 .col-span-1 {
+        grid-column: span 1;
+    }
 }
 </style>

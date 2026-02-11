@@ -24,6 +24,27 @@ const RulerConfig = {
 export function useOsdRuler(canvasRef, containerRef, showRulers) {
     let resizeTimer = null
 
+    /**
+     * Matches legacy OSD.initializeRulers() - dynamically adjust margins/padding
+     * on the preview and container elements to create space for ruler labels.
+     */
+    function applyRulerMargins(enabled) {
+        const container = containerRef.value
+        if (!container) return
+        const preview = container.querySelector('.preview')
+        if (!preview) return
+
+        if (enabled) {
+            container.style.paddingTop = '26px'
+            preview.style.marginRight = '30px'
+            preview.style.marginLeft = '30px'
+        } else {
+            container.style.paddingTop = ''
+            preview.style.marginRight = ''
+            preview.style.marginLeft = ''
+        }
+    }
+
     function getContext(canvas, container) {
         if (!canvas || !container) return null
 
@@ -189,7 +210,12 @@ export function useOsdRuler(canvasRef, containerRef, showRulers) {
     }
 
     function drawRulers() {
-        if (!showRulers.value) return
+        if (!showRulers.value) {
+            applyRulerMargins(false)
+            return
+        }
+
+        applyRulerMargins(true)
         
         const canvas = canvasRef.value
         const container = containerRef.value
@@ -216,6 +242,7 @@ export function useOsdRuler(canvasRef, containerRef, showRulers) {
         if (val) {
             requestAnimationFrame(drawRulers)
         } else {
+            applyRulerMargins(false)
             const canvas = canvasRef.value
             if (canvas) {
                 const ctx = canvas.getContext("2d")
