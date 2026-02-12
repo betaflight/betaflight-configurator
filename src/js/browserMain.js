@@ -12,7 +12,6 @@ import "../css/tabs/configuration.less";
 import "../css/tabs/pid_tuning.less";
 import "../css/tabs/servos.less";
 import "../css/tabs/gps.less";
-import "../css/tabs/motors.less";
 import "../tabs/presets/presets.less";
 import "../tabs/presets/TitlePanel/PresetTitlePanel.css";
 import "../tabs/presets/DetailedDialog/PresetsDetailedDialog.less";
