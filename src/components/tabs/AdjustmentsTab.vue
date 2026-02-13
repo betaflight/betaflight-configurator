@@ -154,10 +154,10 @@ export default defineComponent({
 
         const pipValues = computed(() => PIP_VALUES);
 
-        // Generate function options (0-31, 'LED Dimmer' is the last)
+        // Generate function options (0-32, 'Slider Master Multiplier' is the last)
         const functionOptions = computed(() => {
             const options = [];
-            for (let i = 0; i < 32; i++) {
+            for (let i = 0; i < 33; i++) {
                 options.push({
                     value: i,
                     label: i18n.getMessage(`adjustmentsFunction${i}`),
