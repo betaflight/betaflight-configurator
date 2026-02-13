@@ -312,6 +312,18 @@ export function useCli() {
     };
 
     const handleCommandKeyDown = (event) => {
+        // Debug: log key events relevant to autocomplete
+        if (event.which === tabKeyCode || event.which === enterKeyCode) {
+            // key event (tab/enter) occurred
+        }
+
+        // Ignore synthetic Tab events triggered by textcomplete which use jQuery.trigger
+        // to select the only candidate. These synthetic events have `isTrusted === false`
+        // and should not be intercepted here, otherwise we prevent the selection.
+        if (event.which === tabKeyCode && event.isTrusted === false) {
+            return;
+        }
+
         if (event.which === tabKeyCode) {
             // prevent default tabbing behaviour
             event.preventDefault();
@@ -332,21 +344,50 @@ export function useCli() {
         }
 
         if (event.which === enterKeyCode) {
+            // If autocomplete dropdown is open, let textcomplete handle Enter (replacement may happen)
+            if (CliAutoComplete.isOpen()) {
+                return;
+            }
+
             event.preventDefault(); // prevent the adding of new line
 
             if (CliAutoComplete.isBuilding()) {
                 return; // silently ignore commands if autocomplete is still building
             }
 
-            const outString = state.commandInput;
-            executeCommands(outString);
+            // Read the live textarea value (DOM) to avoid race where textcomplete replaced
+            // the value but Vue's v-model (state.commandInput) hasn't been updated yet.
+            const currentInput =
+                commandInputRef.value && commandInputRef.value.value !== undefined
+                    ? commandInputRef.value.value
+                    : state.commandInput;
+
+            executeCommands(currentInput);
             state.commandInput = "";
         }
     };
 
     const handleCommandKeyPress = (event) => {
         // Deprecated: keypress event - keeping for compatibility but main logic moved to keydown
-        // This prevents any default keypress behavior
+        // Handle synthetic Enter keypress from textcomplete (isTrusted === false) to send command after replacement
+        if (event.which === enterKeyCode && event.isTrusted === false) {
+            event.preventDefault();
+            if (CliAutoComplete.isBuilding()) {
+                return; // silently ignore commands if autocomplete is still building
+            }
+
+            // Use live DOM value when processing synthetic Enter from textcomplete
+            const currentInputSynthetic =
+                commandInputRef.value && commandInputRef.value.value !== undefined
+                    ? commandInputRef.value.value
+                    : state.commandInput;
+
+            executeCommands(currentInputSynthetic);
+            state.commandInput = "";
+            return;
+        }
+
+        // Prevent default Enter keypress from adding newline when user presses Enter manually while no dropdown
         if (event.which === enterKeyCode) {
             event.preventDefault();
         }
