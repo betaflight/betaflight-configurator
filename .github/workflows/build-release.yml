@@ -82,27 +82,41 @@ jobs:
           echo "Environment will be: ${ENV_NAME}"
 
   check_latest:
-    name: Check if Latest Release
-    needs: check_tag
+    name: Check if Latest Release (with retry)
+    needs: [check_tag, modern_build]
     if: needs.check_tag.outputs.should_run == 'true'
     runs-on: ubuntu-latest
     outputs:
       is_latest: ${{ steps.check.outputs.is_latest }}
     steps:
-      - name: Check if this is the latest release
+      - name: Check if this is the latest release with retry
         id: check
         run: |
           CURRENT_TAG="${{ github.event.release.tag_name }}"
-          # Get the latest release tag from GitHub API
-          LATEST_TAG=$(gh api repos/${{ github.repository }}/releases/latest --jq '.tag_name')
+          MAX_RETRIES=5
+          RETRY_DELAY=10
 
-          if [ "$CURRENT_TAG" = "$LATEST_TAG" ]; then
-            echo "is_latest=true" >> $GITHUB_OUTPUT
-            echo "✓ This is the latest release: $CURRENT_TAG"
-          else
-            echo "is_latest=false" >> $GITHUB_OUTPUT
-            echo "✗ Not the latest release. Current: $CURRENT_TAG, Latest: $LATEST_TAG"
-          fi
+          for i in $(seq 1 $MAX_RETRIES); do
+            echo "Attempt $i/$MAX_RETRIES: Checking latest release..."
+
+            # Get the latest release tag from GitHub API
+            LATEST_TAG=$(gh api repos/${{ github.repository }}/releases/latest --jq '.tag_name')
+
+            echo "Current: $CURRENT_TAG, Latest from API: $LATEST_TAG"
+
+            if [ "$CURRENT_TAG" = "$LATEST_TAG" ]; then
+              echo "is_latest=true" >> $GITHUB_OUTPUT
+              echo "✓ This is the latest release: $CURRENT_TAG (confirmed after $i attempt(s))"
+              exit 0
+            elif [ $i -lt $MAX_RETRIES ]; then
+              echo "⏳ Tags don't match yet, waiting ${RETRY_DELAY}s before retry..."
+              sleep $RETRY_DELAY
+            fi
+          done
+
+          # After all retries, it's not the latest
+          echo "is_latest=false" >> $GITHUB_OUTPUT
+          echo "✗ Not the latest release after $MAX_RETRIES attempts. Current: $CURRENT_TAG, Latest: $LATEST_TAG"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
