@@ -1,0 +1,54 @@
+name: Deploy to Cloudflare
+
+on:
+  workflow_call:
+    inputs:
+      branch_name:
+        description: 'Cloudflare Pages branch name to deploy to'
+        required: true
+        type: string
+      environment_name:
+        description: 'GitHub environment name for deployment tracking (optional)'
+        required: false
+        type: string
+        default: ''
+    secrets:
+      CLOUDFLARE_API_TOKEN:
+        required: true
+      CLOUDFLARE_ACCOUNT_ID:
+        required: true
+    outputs:
+      deployment_url:
+        description: 'The URL of the Cloudflare Pages deployment'
+        value: ${{ jobs.deploy.outputs.deployment_url }}
+      deployment_alias_url:
+        description: 'The alias URL of the Cloudflare Pages deployment'
+        value: ${{ jobs.deploy.outputs.deployment_alias_url }}
+
+jobs:
+  deploy:
+    name: Deploy to Cloudflare Pages
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      deployments: write
+    environment:
+      name: ${{ inputs.environment_name != '' && inputs.environment_name || github.ref_name }}
+    outputs:
+      deployment_url: ${{ steps.deploy.outputs.pages-deployment-url }}
+      deployment_alias_url: ${{ steps.deploy.outputs.pages-deployment-alias-url }}
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v5
+        with:
+          name: dist-files
+          path: src/dist
+
+      - name: Deploy to Cloudflare Pages
+        id: deploy
+        uses: cloudflare/wrangler-action@da0e0dfe58b7a431659754fdf3f186c529afbe65  # v3.14.1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy src/dist --project-name=${{ vars.CLOUDFLARE_PROJECT_NAME }} --branch=${{ inputs.branch_name }} --commit-dirty=true
