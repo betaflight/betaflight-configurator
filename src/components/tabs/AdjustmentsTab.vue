@@ -11,6 +11,8 @@
                     <div class="header-range">{{ $t("adjustmentsColumnIsInRange") }}</div>
                     <div class="header-function">{{ $t("adjustmentsColumnThenApplyFunction") }}</div>
                     <div class="header-via">{{ $t("adjustmentsColumnViaChannel") }}</div>
+                    <div class="header-center">{{ $t("adjustmentsColumnAdjustmentCenter") }}</div>
+                    <div class="header-scale">{{ $t("adjustmentsColumnAdjustmentScale") }}</div>
                 </div>
 
                 <div class="adjustments-list">
@@ -107,6 +109,28 @@
                             >
                                 <option v-for="ch in auxChannelCount" :key="ch" :value="ch - 1">AUX {{ ch }}</option>
                             </select>
+                        </div>
+
+                        <div class="adjustment-center" :data-label="$t('adjustmentsColumnAdjustmentCenter')">
+                            <input
+                                type="number"
+                                v-model.number="adjustment.adjustmentCenter"
+                                class="center-input"
+                                :disabled="!adjustment.enabled"
+                                min="0"
+                                max="255"
+                            />
+                        </div>
+
+                        <div class="adjustment-scale" :data-label="$t('adjustmentsColumnAdjustmentScale')">
+                            <input
+                                type="number"
+                                v-model.number="adjustment.adjustmentScale"
+                                class="scale-input"
+                                :disabled="!adjustment.enabled"
+                                min="0"
+                                max="255"
+                            />
                         </div>
                     </div>
                 </div>
@@ -388,6 +412,8 @@ export default defineComponent({
                         },
                         adjustmentFunction: range.adjustmentFunction || 0,
                         auxSwitchChannelIndex: range.auxSwitchChannelIndex || 0,
+                        adjustmentCenter: range.adjustmentCenter || 0,
+                        adjustmentScale: range.adjustmentScale || 0,
                         enabled: isEnabled,
                     }),
                 );
@@ -438,6 +464,8 @@ export default defineComponent({
                         },
                         adjustmentFunction: adjustment.adjustmentFunction,
                         auxSwitchChannelIndex: adjustment.auxSwitchChannelIndex,
+                        adjustmentCenter: adjustment.adjustmentCenter || 0,
+                        adjustmentScale: adjustment.adjustmentScale || 0,
                     });
                 } else {
                     fcStore.adjustmentRanges.push({
@@ -449,6 +477,8 @@ export default defineComponent({
                         },
                         adjustmentFunction: 0,
                         auxSwitchChannelIndex: 0,
+                        adjustmentCenter: 0,
+                        adjustmentScale: 0,
                     });
                 }
             });
@@ -464,6 +494,8 @@ export default defineComponent({
                     },
                     adjustmentFunction: 0,
                     auxSwitchChannelIndex: 0,
+                    adjustmentCenter: 0,
+                    adjustmentScale: 0,
                 });
             }
 
@@ -517,7 +549,7 @@ export default defineComponent({
 
 .adjustments-header {
     display: grid;
-    grid-template-columns: 80px 200px 1fr 250px 120px;
+    grid-template-columns: 80px 80px 1fr 200px 80px 60px 60px;
     gap: 16px;
     padding: 12px 16px;
     background: var(--surface-700);
@@ -539,7 +571,7 @@ export default defineComponent({
 
 .adjustment {
     display: grid;
-    grid-template-columns: 80px 200px 1fr 250px 120px;
+    grid-template-columns: 80px 80px 1fr 200px 80px 60px 60px;
     gap: 16px;
     padding: 16px;
     background: var(--surface-200);
@@ -584,6 +616,29 @@ export default defineComponent({
 .adjustment-function select,
 .adjustment-via select {
     width: 100%;
+}
+
+.adjustment-center,
+.adjustment-scale {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.adjustment-center input,
+.adjustment-scale input {
+    width: 100%;
+    background: var(--surface-700);
+    border: 1px solid var(--surface-600);
+    color: var(--text-primary);
+    padding: 6px 8px;
+    border-radius: 4px;
+}
+
+.adjustment-center input:disabled,
+.adjustment-scale input:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
 select {
