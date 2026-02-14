@@ -96,7 +96,7 @@
                                             <div
                                                 class="preset-pos-btn"
                                                 @click="openPresetMenu(field, $event)"
-                                                :title="$t('osdLayoutOpenPresetMenu')"
+                                                :title="$t('presetsOptions')"
                                             >
                                                 ...
                                             </div>
@@ -163,7 +163,7 @@
                                         <label v-html="$t('osdSetupPreviewSelectProfileTitle')"></label>
                                         <select
                                             v-model.number="previewProfile"
-                                            class="osdprofile-selector small dark-select"
+                                            class="osdprofile-selector small"
                                         >
                                             <option
                                                 v-for="idx in osdStore.numberOfProfiles"
@@ -177,7 +177,7 @@
                                         <label v-html="$t('osdSetupPreviewSelectFont')"></label>
                                         <select
                                             v-model.number="selectedFont"
-                                            class="osdfont-selector small dark-select"
+                                            class="osdfont-selector small"
                                         >
                                             <option
                                                 v-for="(font, idx) in fontTypes"
@@ -325,7 +325,7 @@
                                     >
                                         <div class="timer-index">{{ idx + 1 }}</div>
                                         <div class="timer-fields">
-                                            <div class="timer-row">
+                                            <div class="timer-row osd_tip" :title="$t('osdTimerSourceTooltip')">
                                                 <label>{{ $t("osdTimerSource") }}</label>
                                                 <select
                                                     v-model.number="timer.src"
@@ -340,7 +340,7 @@
                                                     </option>
                                                 </select>
                                             </div>
-                                            <div class="timer-row">
+                                            <div class="timer-row osd_tip" :title="$t('osdTimerPrecisionTooltip')">
                                                 <label>{{ $t("osdTimerPrecision") }}</label>
                                                 <select
                                                     v-model.number="timer.precision"
@@ -355,7 +355,7 @@
                                                     </option>
                                                 </select>
                                             </div>
-                                            <div class="timer-row">
+                                            <div class="timer-row osd_tip" :title="$t('osdTimerAlarmTooltip')">
                                                 <label>{{ $t("osdTimerAlarm") }}</label>
                                                 <input
                                                     type="number"
@@ -373,7 +373,7 @@
 
                         <!-- Alarms -->
                         <div
-                            v-if="osdStore.state.haveOsdFeature && osdStore.alarms.length > 0"
+                            v-if="osdStore.state.haveOsdFeature && alarmEntries.length > 0"
                             class="gui_box grey alarms-container requires-osd-feature"
                         >
                             <div class="gui_box_titlebar cf_tip">
@@ -381,8 +381,8 @@
                             </div>
                             <div class="spacer_box">
                                 <div class="alarms">
-                                    <div v-for="(alarm, idx) in osdStore.alarms" :key="idx" class="alarm-config">
-                                        <label>{{ $t(alarm.text) }}</label>
+                                    <div v-for="(alarm, key) in alarmEntries" :key="key" class="alarm-config">
+                                        <label>{{ alarm.display_name }}</label>
                                         <input
                                             type="number"
                                             v-model.number="alarm.value"
@@ -405,7 +405,7 @@
                             </div>
                             <div class="spacer_box">
                                 <div id="warnings-fields" class="switchable-fields">
-                                    <div v-for="(warning, idx) in osdStore.warnings" :key="idx" class="switchable-field" :class="[`field-${warning.index}`, { osd_tip: warning.desc }]" :title="warning.desc ? $t(warning.desc) : undefined">
+                                    <div v-for="(warning, idx) in osdStore.warnings" :key="idx" class="switchable-field" :class="[`field-${warning.index}`, { 'osd_tip': warning.desc }]" :title="warning.desc ? $t(warning.desc) : undefined">
                                         <input type="checkbox" :name="warning.name" class="togglesmall" v-model="warning.enabled" @change="updatePreview" />
                                         <label :for="warning.name" class="char-label">{{ $t(warning.text) }}</label>
                                     </div>
@@ -423,7 +423,7 @@
                             </div>
                             <div class="spacer_box">
                                 <div id="post-flight-stat-fields" class="switchable-fields">
-                                    <div v-for="(stat, idx) in osdStore.statItems" :key="idx" class="switchable-field" :class="[`field-${stat.index}`, { osd_tip: stat.desc }]" :title="stat.desc ? $t(stat.desc) : undefined">
+                                    <div v-for="(stat, idx) in osdStore.statItems" :key="idx" class="switchable-field" :class="[`field-${stat.index}`, { 'osd_tip': stat.desc }]" :title="stat.desc ? $t(stat.desc) : undefined">
                                         <input type="checkbox" :name="stat.name" class="togglesmall" v-model="stat.enabled" @change="updatePreview" />
                                         <label :for="stat.name" class="char-label">{{ $t(stat.text) }}</label>
                                     </div>
@@ -502,11 +502,16 @@
 
         <!-- Bottom Toolbar -->
         <div class="content_toolbar toolbar_fixed_bottom supported" style="position: fixed">
-            <div class="btn" v-if="osdStore.state.isMax7456FontDeviceDetected">
-                <a class="fonts" @click="openFontManager" v-html="$t('osdSetupFontManager')"></a>
+            <div class="btn">
+                <a
+                    class="fonts"
+                    :class="{ disabled: !osdStore.state.isMax7456FontDeviceDetected }"
+                    @click="openFontManager"
+                    v-html="i18n.getMessage('osdSetupFontManagerTitle')"
+                ></a>
             </div>
             <div class="btn save">
-                <a class="active save" href="#" @click.prevent="saveConfig" v-html="$t('osdSetupSave')"></a>
+                <a class="active save" href="#" @click.prevent="saveConfig">{{ saveButtonText }}</a>
             </div>
         </div>
     </BaseTab>
@@ -527,6 +532,7 @@ import { OSD, FONT, SYM } from "@/js/tabs/osd";
 import { positionConfigs, getPresetGridCells } from "@/js/tabs/osd_positions";
 import LogoManager from "@/js/LogoManager";
 import GUI from "@/js/gui";
+import { gui_log } from "@/js/gui_log";
 import { tracking } from "@/js/Analytics";
 
 const osdStore = useOsdStore();
@@ -554,6 +560,7 @@ const uploadProgress = ref(0);
 const uploadProgressLabel = ref("");
 const fontVersionInfo = ref("");
 const isSaving = ref(false);
+const saveButtonText = ref(i18n.getMessage("osdSetupSave"));
 // State for popover
 const presetMenuField = ref(null);
 const showPresetSubmenu = ref(false); // Track click state for submenu
@@ -565,6 +572,18 @@ const { previewRows, previewBuffer, updatePreviewBuffer, searchLimitsElement } =
 // Ruler composable
 const isDraggingGrid = ref(false);
 const effectiveShowRulers = computed(() => showRulers.value);
+
+// Convert alarms object to array for template iteration
+const alarmEntries = computed(() => {
+    const alarmsObj = osdStore.alarms;
+    if (!alarmsObj || typeof alarmsObj !== 'object' || Array.isArray(alarmsObj)) {
+        return [];
+    }
+    return Object.entries(alarmsObj).map(([key, alarm]) => ({
+        key,
+        ...alarm,
+    }));
+});
 const { drawRulers } = useOsdRuler(rulerCanvas, previewContainerOuter, effectiveShowRulers);
 
 // Handlers for temporary grid visibility
@@ -960,10 +979,14 @@ async function saveConfig() {
         }
 
         // Show success
-        GUI.log(i18n.getMessage("osdSettingsSaved"));
+        gui_log(i18n.getMessage("osdSettingsSaved"));
+        saveButtonText.value = i18n.getMessage("osdButtonSaved");
+        setTimeout(() => {
+            saveButtonText.value = i18n.getMessage("osdSetupSave");
+        }, 2000);
     } catch (error) {
         console.error("Failed to save OSD configuration:", error);
-        GUI.log(i18n.getMessage("osdSettingsSaveError"));
+        gui_log(i18n.getMessage("error", { errorMessage: "Failed to save OSD configuration" }));
     } finally {
         isSaving.value = false;
     }
@@ -980,6 +1003,9 @@ const fontCharacterUrls = computed(() => {
 const fontDataVersion = ref(0);
 
 function openFontManager() {
+    if (!osdStore.state.isMax7456FontDeviceDetected) {
+        return;
+    }
     FONT.initData();
     // Initialize LogoManager if not already
     LogoManager.init(FONT, SYM.LOGO);

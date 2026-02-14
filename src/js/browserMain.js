@@ -23,7 +23,7 @@ import "../css/tabs/logging.less";
 import "../css/tabs/onboard_logging.less";
 import "../css/tabs/auxiliary.less";
 import "../css/tabs/failsafe.less";
-import "../css/tabs/osd.less";
+
 import "../css/tabs/vtx.less";
 import "../css/tabs/transponder.less";
 import "../css/tabs/options.less";
