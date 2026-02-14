@@ -81,7 +81,7 @@ export const positionConfigs = {
     RMC: {
         label: "Right Middle",
         coords: (w, h, ds) => ({
-            x: ds.x - 1 - w,
+            x: Math.max(1, ds.x - w - 1),
             y: Math.floor((ds.y - h) / 2),
         }),
         grow: { x: 0, y: 1 },

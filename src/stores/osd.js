@@ -6,11 +6,7 @@ import MSPCodes from "../js/msp/MSPCodes";
 import { OSD_CONSTANTS } from "../js/tabs/osd_constants";
 import semver from "semver";
 import { useFlightControllerStore } from "./fc";
-import CONFIGURATOR, {
-    API_VERSION_1_45,
-    API_VERSION_1_46,
-    API_VERSION_1_47,
-} from "../js/data_storage";
+import CONFIGURATOR, { API_VERSION_1_46, API_VERSION_1_47 } from "../js/data_storage";
 
 export const useOsdStore = defineStore("osd", () => {
     // Core OSD data state
@@ -51,6 +47,7 @@ export const useOsdStore = defineStore("osd", () => {
     const parameters = reactive({
         cameraFrameWidth: 24,
         cameraFrameHeight: 11,
+        overlayRadioMode: 0,
     });
 
     // Currently selected preview profile
@@ -261,7 +258,7 @@ export const useOsdStore = defineStore("osd", () => {
     }
 
     const fetchOsdConfig = async () => {
-        const fcStore = useFlightControllerStore(); // Ensure FC store is initialized if needed
+        const _fcStore = useFlightControllerStore(); // Ensure FC store is initialized if needed
 
         try {
             // 1. Ensure font data structures are initialized
@@ -277,7 +274,7 @@ export const useOsdStore = defineStore("osd", () => {
             // Initialize display fields and choose based on API version
             OSD.loadDisplayFields();
             OSD.chooseFields();
-            
+
             // 3. Decode
             if (CONFIGURATOR.virtualMode) {
                 // Set up virtual OSD data (state, parameters, profiles, etc.)
@@ -297,35 +294,35 @@ export const useOsdStore = defineStore("osd", () => {
             alarms.value = OSD.data.alarms ? JSON.parse(JSON.stringify(OSD.data.alarms)) : {};
             statItems.value = [...OSD.data.statItems];
             warnings.value = [...OSD.data.warnings];
-            
+
             // Timers need deep cloning/mapping
-            timers.value = OSD.data.timers.map(t => ({...t}));
-            
-            // Display items need special handling? 
+            timers.value = OSD.data.timers.map((t) => ({ ...t }));
+
+            // Display items need special handling?
             // OSD.data.displayItems are objects with position, visibility.
             // We clone them to be safe.
-            displayItems.value = OSD.data.displayItems.map(item => ({...item}));
-            
+            displayItems.value = OSD.data.displayItems.map((item) => ({ ...item }));
+
             // Sync parameters
             if (OSD.data.parameters) {
                 parameters.cameraFrameWidth = OSD.data.parameters.cameraFrameWidth;
                 parameters.cameraFrameHeight = OSD.data.parameters.cameraFrameHeight;
             }
-            
+
             // Sync profiles
             if (OSD.data.osd_profiles) {
                 osdProfiles.value = {
                     number: OSD.data.osd_profiles.number,
-                    selected: OSD.data.osd_profiles.selected
+                    selected: OSD.data.osd_profiles.selected,
                 };
             }
-            
+
             // Sync state flags
             if (OSD.data.state) {
-                 // Update reactive state object
-                 Object.assign(state, OSD.data.state);
+                // Update reactive state object
+                Object.assign(state, OSD.data.state);
             }
-            
+
             updateDisplaySize();
 
             // Load default font if not already loaded
@@ -338,10 +335,9 @@ export const useOsdStore = defineStore("osd", () => {
                     console.warn("Failed to load default OSD font:", fontError);
                 }
             }
-
         } catch (e) {
             console.error("Failed to fetch OSD config", e);
-            throw e; 
+            throw e;
         }
     };
 
@@ -362,11 +358,7 @@ export const useOsdStore = defineStore("osd", () => {
                 const ypos = (position - xpos) / displaySize.x;
 
                 return (
-                    packed_visible |
-                    variantSelected |
-                    ((ypos & 0x001f) << 5) |
-                    ((xpos & 0x0020) << 5) |
-                    (xpos & 0x001f)
+                    packed_visible | variantSelected | ((ypos & 0x001f) << 5) | ((xpos & 0x0020) << 5) | (xpos & 0x001f)
                 );
             },
             timer(timer) {
@@ -486,7 +478,7 @@ export const useOsdStore = defineStore("osd", () => {
             for (const item of displayItems.value) {
                 promises.push(MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, encodeLayout(item)));
             }
-            
+
             // 3. Timers
             for (const timer of timers.value) {
                 promises.push(MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, encodeTimer(timer)));
@@ -498,14 +490,13 @@ export const useOsdStore = defineStore("osd", () => {
             // No, push16 = 2 bytes. push8 = 1 byte.
             // [index(1), enabled(2), 0(1)] = 4 bytes.
             for (const stat of statItems.value) {
-                 promises.push(MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, encodeStatistics(stat)));
+                promises.push(MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, encodeStatistics(stat)));
             }
-            
+
             await Promise.all(promises);
-            
+
             // Sync back to legacy OSD.data?
             syncToLegacy();
-            
         } catch (e) {
             console.error("Failed to save OSD config", e);
             throw e;

@@ -1,6 +1,3 @@
-
-import { i18n } from "../localization";
-
 export const OSD_CONSTANTS = {
     VISIBLE: 0x0800,
     VARIANTS: 0xc000,

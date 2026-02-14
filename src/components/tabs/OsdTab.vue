@@ -89,10 +89,7 @@
                                         </select>
 
                                         <!-- Preset button only (position input removed to match legacy) -->
-                                        <div
-                                            v-if="field.positionable"
-                                            class="position-controls"
-                                        >
+                                        <div v-if="field.positionable" class="position-controls">
                                             <div
                                                 class="preset-pos-btn"
                                                 @click="openPresetMenu(field, $event)"
@@ -101,11 +98,7 @@
                                                 ...
                                             </div>
                                             <!-- Context Menu (Level 1) -->
-                                            <div
-                                                v-if="presetMenuField === field"
-                                                class="context-menu show"
-                                                @click.stop
-                                            >
+                                            <div v-if="presetMenuField === field" class="context-menu show" @click.stop>
                                                 <div class="context-menu-item">
                                                     <div
                                                         class="context-menu-item-display"
@@ -122,7 +115,9 @@
                                                                     @click.stop
                                                                 >
                                                                     <div id="preset-pos-grid-wrapper">
-                                                                        <div class="preset-popover-title">Choose Position</div>
+                                                                        <div class="preset-popover-title">
+                                                                            Choose Position
+                                                                        </div>
                                                                         <div class="preset-grid">
                                                                             <div
                                                                                 v-for="cell in presetGridCells"
@@ -161,33 +156,23 @@
                                 <div class="spacer_box_title">
                                     <span class="preview-controls-wrapper">
                                         <label v-html="$t('osdSetupPreviewSelectProfileTitle')"></label>
-                                        <select
-                                            v-model.number="previewProfile"
-                                            class="osdprofile-selector small"
-                                        >
+                                        <select v-model.number="previewProfile" class="osdprofile-selector small">
                                             <option
                                                 v-for="idx in osdStore.numberOfProfiles"
                                                 :key="idx"
                                                 :value="idx - 1"
                                             >
-                                                {{ $t('osdSetupPreviewSelectProfileElement', { profileNumber: idx }) }}
+                                                {{ $t("osdSetupPreviewSelectProfileElement", { profileNumber: idx }) }}
                                             </option>
                                         </select>
 
                                         <label v-html="$t('osdSetupPreviewSelectFont')"></label>
-                                        <select
-                                            v-model.number="selectedFont"
-                                            class="osdfont-selector small"
-                                        >
-                                            <option
-                                                v-for="(font, idx) in fontTypes"
-                                                :key="idx"
-                                                :value="idx"
-                                            >
+                                        <select v-model.number="selectedFont" class="osdfont-selector small">
+                                            <option v-for="(font, idx) in fontTypes" :key="idx" :value="idx">
                                                 {{ $t(font.name) }}
                                             </option>
                                         </select>
-                                        
+
                                         <span class="osd-preview-rulers-group">
                                             <input
                                                 type="checkbox"
@@ -205,7 +190,11 @@
 
                             <div class="display-layout">
                                 <div ref="previewContainerOuter" class="preview-container">
-                                    <canvas ref="rulerCanvas" class="ruler-overlay" v-show="effectiveShowRulers"></canvas>
+                                    <canvas
+                                        ref="rulerCanvas"
+                                        class="ruler-overlay"
+                                        v-show="effectiveShowRulers"
+                                    ></canvas>
                                     <div
                                         ref="previewContainer"
                                         class="preview"
@@ -232,7 +221,13 @@
                                                 @mouseenter="onCellMouseEnter(cell)"
                                                 @mouseleave="onCellMouseLeave(cell)"
                                             >
-                                                <img :src="cell.img || 'data:image/svg+xml;utf8,<svg width=\'12\' height=\'18\' xmlns=\'http://www.w3.org/2000/svg\'></svg>'" draggable="false" />
+                                                <img
+                                                    :src="
+                                                        cell.img ||
+                                                        'data:image/svg+xml;utf8,<svg width=\'12\' height=\'18\' xmlns=\'http://www.w3.org/2000/svg\'></svg>'
+                                                    "
+                                                    draggable="false"
+                                                />
                                             </div>
                                         </div>
                                     </div>
@@ -256,7 +251,7 @@
                                 <label v-html="$t('osdSetupSelectedProfileLabel')"></label>
                                 <select v-model.number="activeProfile" class="osdprofile-active">
                                     <option v-for="idx in osdStore.numberOfProfiles" :key="idx" :value="idx - 1">
-                                        {{ $t('osdSetupPreviewSelectProfileElement', { profileNumber: idx }) }}
+                                        {{ $t("osdSetupPreviewSelectProfileElement", { profileNumber: idx }) }}
                                     </option>
                                 </select>
                             </div>
@@ -318,19 +313,12 @@
                             </div>
                             <div class="spacer_box">
                                 <div id="timer-fields" class="switchable-fields">
-                                    <div
-                                        v-for="(timer, idx) in osdStore.timers"
-                                        :key="idx"
-                                        class="timer-config"
-                                    >
+                                    <div v-for="(timer, idx) in osdStore.timers" :key="idx" class="timer-config">
                                         <div class="timer-index">{{ idx + 1 }}</div>
                                         <div class="timer-fields">
                                             <div class="timer-row osd_tip" :title="$t('osdTimerSourceTooltip')">
                                                 <label>{{ $t("osdTimerSource") }}</label>
-                                                <select
-                                                    v-model.number="timer.src"
-                                                    @change="updatePreview"
-                                                >
+                                                <select v-model.number="timer.src" @change="updatePreview">
                                                     <option
                                                         v-for="(src, sIdx) in timerSources"
                                                         :key="sIdx"
@@ -342,10 +330,7 @@
                                             </div>
                                             <div class="timer-row osd_tip" :title="$t('osdTimerPrecisionTooltip')">
                                                 <label>{{ $t("osdTimerPrecision") }}</label>
-                                                <select
-                                                    v-model.number="timer.precision"
-                                                    @change="updatePreview"
-                                                >
+                                                <select v-model.number="timer.precision" @change="updatePreview">
                                                     <option
                                                         v-for="(prec, pIdx) in timerPrecisions"
                                                         :key="pIdx"
@@ -405,8 +390,20 @@
                             </div>
                             <div class="spacer_box">
                                 <div id="warnings-fields" class="switchable-fields">
-                                    <div v-for="(warning, idx) in osdStore.warnings" :key="idx" class="switchable-field" :class="[`field-${warning.index}`, { 'osd_tip': warning.desc }]" :title="warning.desc ? $t(warning.desc) : undefined">
-                                        <input type="checkbox" :name="warning.name" class="togglesmall" v-model="warning.enabled" @change="updatePreview" />
+                                    <div
+                                        v-for="(warning, idx) in osdStore.warnings"
+                                        :key="idx"
+                                        class="switchable-field"
+                                        :class="[`field-${warning.index}`, { osd_tip: warning.desc }]"
+                                        :title="warning.desc ? $t(warning.desc) : undefined"
+                                    >
+                                        <input
+                                            type="checkbox"
+                                            :name="warning.name"
+                                            class="togglesmall"
+                                            v-model="warning.enabled"
+                                            @change="updatePreview"
+                                        />
                                         <label :for="warning.name" class="char-label">{{ $t(warning.text) }}</label>
                                     </div>
                                 </div>
@@ -423,8 +420,20 @@
                             </div>
                             <div class="spacer_box">
                                 <div id="post-flight-stat-fields" class="switchable-fields">
-                                    <div v-for="(stat, idx) in osdStore.statItems" :key="idx" class="switchable-field" :class="[`field-${stat.index}`, { 'osd_tip': stat.desc }]" :title="stat.desc ? $t(stat.desc) : undefined">
-                                        <input type="checkbox" :name="stat.name" class="togglesmall" v-model="stat.enabled" @change="updatePreview" />
+                                    <div
+                                        v-for="(stat, idx) in osdStore.statItems"
+                                        :key="idx"
+                                        class="switchable-field"
+                                        :class="[`field-${stat.index}`, { osd_tip: stat.desc }]"
+                                        :title="stat.desc ? $t(stat.desc) : undefined"
+                                    >
+                                        <input
+                                            type="checkbox"
+                                            :name="stat.name"
+                                            class="togglesmall"
+                                            v-model="stat.enabled"
+                                            @change="updatePreview"
+                                        />
                                         <label :for="stat.name" class="char-label">{{ $t(stat.text) }}</label>
                                     </div>
                                 </div>
@@ -576,7 +585,7 @@ const effectiveShowRulers = computed(() => showRulers.value);
 // Convert alarms object to array for template iteration
 const alarmEntries = computed(() => {
     const alarmsObj = osdStore.alarms;
-    if (!alarmsObj || typeof alarmsObj !== 'object' || Array.isArray(alarmsObj)) {
+    if (!alarmsObj || typeof alarmsObj !== "object" || Array.isArray(alarmsObj)) {
         return [];
     }
     return Object.entries(alarmsObj).map(([key, alarm]) => ({
@@ -700,11 +709,11 @@ function getPreviewCellClass(cell) {
         draggable: cell.field?.positionable,
         highlighted: cell.field != null && cell.field === highlightedField.value,
     };
-    
+
     if (cell.field) {
         classes[`field-${cell.field.index}`] = true;
     }
-    
+
     return classes;
 }
 
@@ -788,7 +797,7 @@ function onDropCell(event) {
             const selectedPositionX = position % displaySize.x;
             let selectedPositionY = Math.trunc(position / displaySize.x);
 
-            if (typeof arrayElements[0] === 'string') {
+            if (typeof arrayElements[0] === "string") {
                 if (position < 0) return;
                 if (selectedPositionX > cursorX) {
                     // Detected wrap around
@@ -862,7 +871,7 @@ function applyPresetPosition(field, positionKey) {
     const displaySize = osdStore.displaySize;
     const preview = field.preview;
 
-    let elementWidth = typeof preview === 'string' ? preview.length : 1;
+    let elementWidth = typeof preview === "string" ? preview.length : 1;
     let elementHeight = 1;
     let adjustOffsetX = 0;
     let adjustOffsetY = 0;
@@ -896,8 +905,7 @@ function applyPresetPosition(field, positionKey) {
         const testY = target.y + grow.y * offset;
 
         // Bounds check
-        if (testX < 1 || testX + elementWidth > displaySize.x - 1 ||
-            testY < 1 || testY > displaySize.y - 2) {
+        if (testX < 1 || testX + elementWidth > displaySize.x - 1 || testY < 1 || testY > displaySize.y - 2) {
             break;
         }
 
@@ -908,9 +916,11 @@ function applyPresetPosition(field, positionKey) {
             for (let col = 0; col < elementWidth && canPlace; col++) {
                 const checkPos = (testY + row) * displaySize.x + testX + col;
                 const cell = buf[checkPos];
-                if (cell?.field?.index != null &&
+                if (
+                    cell?.field?.index != null &&
                     cell.field.index !== field.index &&
-                    !(Array.isArray(cell.field.preview) || Array.isArray(preview))) {
+                    !(Array.isArray(cell.field.preview) || Array.isArray(preview))
+                ) {
                     canPlace = false;
                 }
             }
@@ -1025,15 +1035,15 @@ function loadFontPreset(index) {
     fontVersionInfo.value = i18n.getMessage(`osdDescribeFontVersion${fontVer}`);
 
     fetch(`./resources/osd/${fontVer}/${font.file}.mcm`)
-        .then(res => res.text())
-        .then(data => {
+        .then((res) => res.text())
+        .then((data) => {
             FONT.parseMCMFontFile(data);
             fontDataVersion.value++;
             LogoManager.drawPreview();
             // Re-render preview with new font character images
             updatePreviewBuffer();
         })
-        .catch(err => console.error('Failed to load font preset:', err));
+        .catch((err) => console.error("Failed to load font preset:", err));
 }
 
 function replaceLogoImage() {
@@ -1053,7 +1063,7 @@ async function flashFont() {
     if (GUI.connect_lock) return;
 
     uploadProgress.value = 0;
-    uploadProgressLabel.value = i18n.getMessage('osdSetupUploadingFont');
+    uploadProgressLabel.value = i18n.getMessage("osdSetupUploadingFont");
 
     // Create a shim that mimics jQuery's $progress.val() for FONT.upload
     const progressShim = {
@@ -1068,12 +1078,12 @@ async function flashFont() {
 
     try {
         await FONT.upload(progressShim);
-        uploadProgressLabel.value = i18n.getMessage('osdSetupUploadingFontEnd', {
+        uploadProgressLabel.value = i18n.getMessage("osdSetupUploadingFontEnd", {
             length: FONT.data.characters.length,
         });
     } catch (err) {
-        console.error('Font upload failed:', err);
-        uploadProgressLabel.value = 'Upload failed';
+        console.error("Font upload failed:", err);
+        uploadProgressLabel.value = "Upload failed";
     }
 }
 
@@ -1106,7 +1116,7 @@ watch(activeProfile, (newVal) => {
 const handleClickOutside = () => closePresetMenu();
 
 onMounted(async () => {
-    document.addEventListener('click', handleClickOutside);
+    document.addEventListener("click", handleClickOutside);
     // Initialize LogoManager to inject logo size i18n resources
     LogoManager.init(FONT, SYM.LOGO);
     await loadConfig();
@@ -1115,7 +1125,7 @@ onMounted(async () => {
 });
 
 onUnmounted(() => {
-    document.removeEventListener('click', handleClickOutside);
+    document.removeEventListener("click", handleClickOutside);
     analyticsChanges.value = {};
 });
 </script>
@@ -1286,7 +1296,8 @@ onUnmounted(() => {
 }
 
 .switchable-field,
-.display-field { /* Keep compatibility with template class */
+.display-field {
+    /* Keep compatibility with template class */
     flex: 1;
     display: flex; /* Added for alignment */
     align-items: center; /* Added for alignment */
@@ -1525,7 +1536,9 @@ onUnmounted(() => {
     background-color: var(--surface-500, #999);
     color: var(--text, #fff);
     border: 1px solid var(--primary-800, #666);
-    transition: background-color 0.25s, transform 0.25s;
+    transition:
+        background-color 0.25s,
+        transform 0.25s;
     border-radius: 2px;
     font-size: 10px;
     line-height: 0;
@@ -1566,7 +1579,7 @@ onUnmounted(() => {
     z-index: 10001; /* Legacy z-index */
     transition: opacity 0.2s;
     opacity: 1;
-    box-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
 }
 
 .context-menu-item {
@@ -1598,7 +1611,7 @@ onUnmounted(() => {
     position: absolute;
     /* Position relative to the .context-menu-item-display (parent of this tree) */
     /* Since it's nested deep in spans, we need to ensure it breaks out correctly */
-    left: 100%; 
+    left: 100%;
     top: -5px;
     margin-left: 5px;
     display: none;
@@ -1614,31 +1627,6 @@ onUnmounted(() => {
 }
 
 /* Preset Button - Explicitly Legacy */
-.preset-pos-btn {
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: var(--surface-500, #999);
-    color: var(--text, #fff);
-    border: 1px solid var(--primary-800, #666);
-    transition: background-color 0.25s, transform 0.25s;
-    border-radius: 2px;
-    font-size: 10px;
-    line-height: 0;
-    /* Margin removed to allow precise absolute positioning of menu */
-}
-
-.preset-pos-btn:hover {
-    background-color: var(--surface-700, #666);
-    transform: scale(1.1);
-}
-
-.preset-pos-btn:active {
-    transform: scale(0.9);
-}
 
 /* Preset Popover Grid Container */
 #preset-pos-grid-wrapper {
@@ -1688,7 +1676,6 @@ onUnmounted(() => {
     color: var(--text);
 }
 
-
 /* Hover transform removed per user request */
 
 /* Tooltip for cell */
@@ -1719,7 +1706,6 @@ onUnmounted(() => {
     border-radius: 50%;
     opacity: 0.8;
 }
-
 
 /* Timers */
 .timer-config {
