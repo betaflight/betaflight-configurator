@@ -39,7 +39,7 @@ Instructions for building high-quality VueJS 3 applications with the Composition
 ### Component Design
 
 - Adhere to the single responsibility principle for components
-- Use PascalCase for component names and kebab-case for file names
+- Use PascalCase for component names and PascalCase for file names
 - Keep components small and focused on one concern
 - Use `<script setup>` syntax for brevity and performance
 - Validate props with TypeScript; use runtime checks only when necessary
