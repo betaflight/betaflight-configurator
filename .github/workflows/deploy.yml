@@ -73,7 +73,6 @@ jobs:
     with:
       branch_name: ${{ needs.prepare_branch.outputs.branch_name }}
       environment_name: ${{ github.ref_name }}
-      project_name: ${{ vars.CLOUDFLARE_PROJECT_NAME }}
     secrets:
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}

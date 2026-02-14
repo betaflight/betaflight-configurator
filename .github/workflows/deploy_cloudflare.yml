@@ -12,10 +12,6 @@ on:
         required: false
         type: string
         default: ''
-      project_name:
-        description: 'Cloudflare Pages project name'
-        required: true
-        type: string
     secrets:
       CLOUDFLARE_API_TOKEN:
         required: true
@@ -55,4 +51,4 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy src/dist --project-name=${{ inputs.project_name }} --branch=${{ inputs.branch_name }} --commit-dirty=true
+          command: pages deploy src/dist --project-name=${{ vars.CLOUDFLARE_PROJECT_NAME }} --branch=${{ inputs.branch_name }} --commit-dirty=true

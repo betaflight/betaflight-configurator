@@ -131,7 +131,6 @@ jobs:
     with:
       branch_name: ${{ needs.prepare_environment.outputs.env_name }}
       environment_name: ${{ needs.prepare_environment.outputs.env_name }}
-      project_name: ${{ vars.CLOUDFLARE_PROJECT_NAME }}
     secrets:
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
@@ -143,9 +142,8 @@ jobs:
     if: needs.check_latest.outputs.is_latest == 'true'
     uses: ./.github/workflows/deploy_cloudflare.yml
     with:
-      branch_name: ${{ vars.CLOUDFLARE_BRANCH_NAME }}
+      branch_name: "release"
       environment_name: "release"
-      project_name: ${{ vars.CLOUDFLARE_PROJECT_NAME }}
     secrets:
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
