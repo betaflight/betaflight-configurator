@@ -1011,7 +1011,7 @@ MspHelper.prototype.process_data = function (dataHandler) {
                 case MSPCodes.MSP_ADJUSTMENT_RANGES:
                     FC.ADJUSTMENT_RANGES = []; // empty the array as new data is coming in
 
-                    const adjustmentRangeCount = data.byteLength / 6; // 6 bytes per item.
+                    const adjustmentRangeCount = data.byteLength / 8; // 8 bytes per item.
 
                     for (let i = 0; i < adjustmentRangeCount; i++) {
                         const adjustmentRange = {
@@ -1023,6 +1023,8 @@ MspHelper.prototype.process_data = function (dataHandler) {
                             },
                             adjustmentFunction: data.readU8(),
                             auxSwitchChannelIndex: data.readU8(),
+                            adjustmentCenter: data.readU8(),
+                            adjustmentScale: data.readU8(),
                         };
                         FC.ADJUSTMENT_RANGES.push(adjustmentRange);
                     }
@@ -2633,7 +2635,9 @@ MspHelper.prototype.sendAdjustmentRanges = function (onCompleteCallback) {
             .push8((adjustmentRange.range.start - 900) / 25)
             .push8((adjustmentRange.range.end - 900) / 25)
             .push8(adjustmentRange.adjustmentFunction)
-            .push8(adjustmentRange.auxSwitchChannelIndex);
+            .push8(adjustmentRange.auxSwitchChannelIndex)
+            .push8(adjustmentRange.adjustmentCenter || 0)
+            .push8(adjustmentRange.adjustmentScale || 0);
 
         // prepare for next iteration
         adjustmentRangeIndex++;

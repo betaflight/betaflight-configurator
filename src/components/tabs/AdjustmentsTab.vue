@@ -10,6 +10,8 @@
                     <div class="header-channel">{{ $t("adjustmentsColumnWhenChannel") }}</div>
                     <div class="header-range">{{ $t("adjustmentsColumnIsInRange") }}</div>
                     <div class="header-function">{{ $t("adjustmentsColumnThenApplyFunction") }}</div>
+                    <div class="header-center">{{ $t("adjustmentsColumnCenter") }}</div>
+                    <div class="header-scale">{{ $t("adjustmentsColumnScale") }}</div>
                     <div class="header-via">{{ $t("adjustmentsColumnViaChannel") }}</div>
                 </div>
 
@@ -97,6 +99,28 @@
                                     {{ func.label }}
                                 </option>
                             </select>
+                        </div>
+
+                        <div class="adjustment-center" :data-label="$t('adjustmentsColumnCenter')">
+                            <input
+                                type="number"
+                                v-model.number="adjustment.adjustmentCenter"
+                                :disabled="!adjustment.enabled"
+                                min="0"
+                                max="255"
+                                step="1"
+                            />
+                        </div>
+
+                        <div class="adjustment-scale" :data-label="$t('adjustmentsColumnScale')">
+                            <input
+                                type="number"
+                                v-model.number="adjustment.adjustmentScale"
+                                :disabled="!adjustment.enabled"
+                                min="0"
+                                max="255"
+                                step="1"
+                            />
                         </div>
 
                         <div class="adjustment-via" :data-label="$t('adjustmentsColumnViaChannel')">
@@ -388,6 +412,8 @@ export default defineComponent({
                         },
                         adjustmentFunction: range.adjustmentFunction || 0,
                         auxSwitchChannelIndex: range.auxSwitchChannelIndex || 0,
+                        adjustmentCenter: range.adjustmentCenter || 0,
+                        adjustmentScale: range.adjustmentScale || 0,
                         enabled: isEnabled,
                     }),
                 );
@@ -438,6 +464,8 @@ export default defineComponent({
                         },
                         adjustmentFunction: adjustment.adjustmentFunction,
                         auxSwitchChannelIndex: adjustment.auxSwitchChannelIndex,
+                        adjustmentCenter: adjustment.adjustmentCenter,
+                        adjustmentScale: adjustment.adjustmentScale,
                     });
                 } else {
                     fcStore.adjustmentRanges.push({
@@ -449,6 +477,8 @@ export default defineComponent({
                         },
                         adjustmentFunction: 0,
                         auxSwitchChannelIndex: 0,
+                        adjustmentCenter: 0,
+                        adjustmentScale: 0,
                     });
                 }
             });
@@ -517,7 +547,7 @@ export default defineComponent({
 
 .adjustments-header {
     display: grid;
-    grid-template-columns: 80px 200px 1fr 250px 120px;
+    grid-template-columns: 80px 200px 1fr 180px 100px 100px 120px;
     gap: 16px;
     padding: 12px 16px;
     background: var(--surface-700);
@@ -539,7 +569,7 @@ export default defineComponent({
 
 .adjustment {
     display: grid;
-    grid-template-columns: 80px 200px 1fr 250px 120px;
+    grid-template-columns: 80px 200px 1fr 180px 100px 100px 120px;
     gap: 16px;
     padding: 16px;
     background: var(--surface-200);
@@ -584,6 +614,22 @@ export default defineComponent({
 .adjustment-function select,
 .adjustment-via select {
     width: 100%;
+}
+
+.adjustment-center input,
+.adjustment-scale input {
+    width: 100%;
+    background: var(--surface-700);
+    border: 1px solid var(--surface-600);
+    color: var(--text-primary);
+    padding: 6px 8px;
+    border-radius: 4px;
+}
+
+.adjustment-center input:disabled,
+.adjustment-scale input:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
 select {
