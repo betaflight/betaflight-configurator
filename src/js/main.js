@@ -326,7 +326,7 @@ async function startProcess() {
                     import("./tabs/transponder").then(({ transponder }) => transponder.initialize(content_ready));
                     break;
                 case "osd":
-                    import("./tabs/osd").then(({ osd }) => osd.initialize(content_ready));
+                    mountVueTab("osd", content_ready);
                     break;
                 case "vtx":
                     import("./tabs/vtx").then(({ vtx }) => vtx.initialize(content_ready));

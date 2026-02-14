@@ -321,7 +321,11 @@ FONT.parseMCMFontFile = function (dataFontFile) {
     FONT.data.characters_bytes.length = 0;
     FONT.data.character_image_urls.length = 0;
     // reset logo image info when font data is changed
-    LogoManager.resetImageInfo();
+    try {
+        LogoManager.resetImageInfo();
+    } catch (e) {
+        // LogoManager may not be available in Vue tab context
+    }
     // make sure the font file is valid
     if (data.shift().trim() !== "MAX7456") {
         const msg = "that font file doesnt have the MAX7456 header, giving up";
@@ -382,8 +386,8 @@ FONT.openFontFile = function () {
  */
 const characterBitmapDataUri = function (charAddress) {
     // Validate input
-    if (!(charAddress in FONT.data.characters)) {
-        console.log("charAddress", charAddress, " is not in ", FONT.data.characters.length);
+    if (!FONT.data.characters[charAddress]) {
+        return "";
     }
 
     // Create data URI prefix and SVG wrapper
@@ -411,6 +415,9 @@ const characterBitmapDataUri = function (charAddress) {
 };
 
 FONT.draw = function (charAddress) {
+    if (!FONT.data || !FONT.data.character_image_urls) {
+        return "";
+    }
     let cached = FONT.data.character_image_urls[charAddress];
     if (!cached) {
         cached = FONT.data.character_image_urls[charAddress] = characterBitmapDataUri(charAddress);
@@ -2604,7 +2611,8 @@ OSD.msp = {
 
             // Known warning field
             if (i < OSD.constants.WARNINGS.length) {
-                d.warnings.push($.extend(OSD.constants.WARNINGS[i], { enabled }));
+                const warning = $.extend(OSD.constants.WARNINGS[i], { enabled, index: i });
+                d.warnings.push(warning);
 
                 // Push Unknown Warning field
             } else {
@@ -2614,6 +2622,7 @@ OSD.msp = {
                     text: ["osdWarningTextUnknown", warningNumber],
                     desc: "osdWarningUnknown",
                     enabled,
+                    index: i,
                 });
             }
         }
@@ -2707,7 +2716,8 @@ OSD.msp = {
 
             // Known warning field
             if (i < warningCount) {
-                d.warnings.push($.extend(OSD.constants.WARNINGS[i], { enabled }));
+                const warning = $.extend(OSD.constants.WARNINGS[i], { enabled, index: i });
+                d.warnings.push(warning);
 
                 // Push Unknown Warning field
             } else {
@@ -2717,6 +2727,7 @@ OSD.msp = {
                     text: ["osdWarningTextUnknown", warningNumber],
                     desc: "osdWarningUnknown",
                     enabled,
+                    index: i,
                 });
             }
         }

@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { ref, computed, reactive } from "vue";
-import { OSD } from "../js/tabs/osd";
+import { OSD, FONT } from "../js/tabs/osd";
 import MSP from "../js/msp";
 import MSPCodes from "../js/msp/MSPCodes";
 import { OSD_CONSTANTS } from "../js/tabs/osd_constants";
@@ -264,6 +264,9 @@ export const useOsdStore = defineStore("osd", () => {
         const fcStore = useFlightControllerStore(); // Ensure FC store is initialized if needed
 
         try {
+            // 1. Ensure font data structures are initialized
+            FONT.initData();
+
             // 2. Fetch data from MSP
             let info;
             if (!CONFIGURATOR.virtualMode) {
@@ -271,11 +274,16 @@ export const useOsdStore = defineStore("osd", () => {
             }
 
             // Legacy logic for compatibility
-            // Initialize fields based on API version
+            // Initialize display fields and choose based on API version
+            OSD.loadDisplayFields();
             OSD.chooseFields();
             
             // 3. Decode
             if (CONFIGURATOR.virtualMode) {
+                // Set up virtual OSD data (state, parameters, profiles, etc.)
+                const { default: VirtualFC } = await import("../js/VirtualFC.js");
+                VirtualFC.setupVirtualOSD();
+
                 if (OSD.msp.decodeVirtual) {
                     OSD.msp.decodeVirtual();
                 }
@@ -319,6 +327,17 @@ export const useOsdStore = defineStore("osd", () => {
             }
             
             updateDisplaySize();
+
+            // Load default font if not already loaded
+            if (FONT.data && FONT.data.characters.length === 0) {
+                try {
+                    const response = await fetch("./resources/osd/2/default.mcm");
+                    const data = await response.text();
+                    FONT.parseMCMFontFile(data);
+                } catch (fontError) {
+                    console.warn("Failed to load default OSD font:", fontError);
+                }
+            }
 
         } catch (e) {
             console.error("Failed to fetch OSD config", e);
