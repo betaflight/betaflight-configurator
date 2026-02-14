@@ -7,10 +7,28 @@ on:
     types: [published]
 
 jobs:
+  check_tag:
+    name: Check Modern Tag Format
+    runs-on: ubuntu-latest
+    outputs:
+      should_run: ${{ steps.check.outputs.should_run }}
+    steps:
+      - name: Check if tag starts with 20
+        id: check
+        run: |
+          if [[ "${{ github.event.release.tag_name }}" == 20* ]]; then
+            echo "should_run=true" >> $GITHUB_OUTPUT
+            echo "✓ Tag format is valid: ${{ github.event.release.tag_name }}"
+          else
+            echo "should_run=false" >> $GITHUB_OUTPUT
+            echo "✗ Tag does not start with '20': ${{ github.event.release.tag_name }}"
+          fi
+
   modern_build:
     name: Build
+    needs: check_tag
+    if: needs.check_tag.outputs.should_run == 'true'
     uses: ./.github/workflows/build.yml
-    if: startsWith(github.event.release.tag_name, '20')
     with:
       debug_build: false
       commit_ref: ${{ github.event.release.target_commitish }}
@@ -24,7 +42,6 @@ jobs:
     name: Attach Release Artifacts
     needs: modern_build
     runs-on: ubuntu-latest
-    if: startsWith(github.event.release.tag_name, '20')
     steps:
       - name: Code Checkout
         uses: actions/checkout@v5
@@ -44,3 +61,106 @@ jobs:
           gh release upload "${TAG_NAME}" "${ASSETS[@]}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  prepare_environment:
+    name: Prepare Environment Name
+    needs: check_tag
+    if: needs.check_tag.outputs.should_run == 'true'
+    runs-on: ubuntu-latest
+    outputs:
+      env_name: ${{ steps.version.outputs.env_name }}
+    steps:
+      - name: Extract version for environment
+        id: version
+        run: |
+          TAG="${{ github.event.release.tag_name }}"
+          # Extract first two parts (e.g., 2025.12.1 -> 2025.12)
+          VERSION=$(echo "$TAG" | cut -d. -f1,2)
+          # Append -maintenence
+          ENV_NAME="${VERSION}-maintenence"
+          echo "env_name=${ENV_NAME}" >> $GITHUB_OUTPUT
+          echo "Environment will be: ${ENV_NAME}"
+
+  check_latest:
+    name: Check if Latest Release
+    needs: check_tag
+    if: needs.check_tag.outputs.should_run == 'true'
+    runs-on: ubuntu-latest
+    outputs:
+      is_latest: ${{ steps.check.outputs.is_latest }}
+    steps:
+      - name: Check if this is the latest release
+        id: check
+        run: |
+          CURRENT_TAG="${{ github.event.release.tag_name }}"
+          # Get the latest release tag from GitHub API
+          LATEST_TAG=$(gh api repos/${{ github.repository }}/releases/latest --jq '.tag_name')
+
+          if [ "$CURRENT_TAG" = "$LATEST_TAG" ]; then
+            echo "is_latest=true" >> $GITHUB_OUTPUT
+            echo "✓ This is the latest release: $CURRENT_TAG"
+          else
+            echo "is_latest=false" >> $GITHUB_OUTPUT
+            echo "✗ Not the latest release. Current: $CURRENT_TAG, Latest: $LATEST_TAG"
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # Deploy with secrets
+  modern_deploy:
+    name: Deploy
+    needs: [modern_build, prepare_environment]
+    permissions:
+      actions: read
+      contents: read
+      deployments: write
+      issues: write
+      pull-requests: write
+
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ needs.prepare_environment.outputs.env_name }}
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v5
+        with:
+          name: dist-files
+          path: src/dist
+
+      - name: Deploy to Cloudflare
+        id: deploy
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy src/dist --project-name=${{ vars.CLOUDFLARE_PROJECT_NAME }} --branch=${{ needs.prepare_environment.outputs.env_name }} --commit-dirty=true
+
+  # Deploy to https://app.betaflight.com if latest release
+  modern_deploy_latest:
+    name: Deploy Latest
+    needs: [modern_build, check_latest]
+    if: needs.check_latest.outputs.is_latest == 'true'
+    permissions:
+      actions: read
+      contents: read
+      deployments: write
+      issues: write
+      pull-requests: write
+
+    runs-on: ubuntu-latest
+    environment:
+      name: "release"
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v5
+        with:
+          name: dist-files
+          path: src/dist
+
+      - name: Deploy to Cloudflare
+        id: deploy
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy src/dist --project-name=${{ vars.CLOUDFLARE_PROJECT_NAME }} --branch=${{ vars.CLOUDFLARE_BRANCH_NAME }} --commit-dirty=true
