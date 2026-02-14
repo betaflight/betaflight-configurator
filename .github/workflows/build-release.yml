@@ -106,61 +106,29 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  # Deploy with secrets
+  # Deploy to versioned maintenance branch
   modern_deploy:
-    name: Deploy
+    name: Deploy to Maintenance Branch
     needs: [modern_build, prepare_environment]
-    permissions:
-      actions: read
-      contents: read
-      deployments: write
-      issues: write
-      pull-requests: write
-
-    runs-on: ubuntu-latest
-    environment:
-      name: ${{ needs.prepare_environment.outputs.env_name }}
-    steps:
-      - name: Download build artifact
-        uses: actions/download-artifact@v5
-        with:
-          name: dist-files
-          path: src/dist
-
-      - name: Deploy to Cloudflare
-        id: deploy
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy src/dist --project-name=${{ vars.CLOUDFLARE_PROJECT_NAME }} --branch=${{ needs.prepare_environment.outputs.env_name }} --commit-dirty=true
+    uses: ./.github/workflows/deploy_cloudflare.yml
+    with:
+      branch_name: ${{ needs.prepare_environment.outputs.env_name }}
+      environment_name: ${{ needs.prepare_environment.outputs.env_name }}
+      project_name: ${{ vars.CLOUDFLARE_PROJECT_NAME }}
+    secrets:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
 
   # Deploy to https://app.betaflight.com if latest release
   modern_deploy_latest:
-    name: Deploy Latest
+    name: Deploy Latest to Production
     needs: [modern_build, check_latest]
     if: needs.check_latest.outputs.is_latest == 'true'
-    permissions:
-      actions: read
-      contents: read
-      deployments: write
-      issues: write
-      pull-requests: write
-
-    runs-on: ubuntu-latest
-    environment:
-      name: "release"
-    steps:
-      - name: Download build artifact
-        uses: actions/download-artifact@v5
-        with:
-          name: dist-files
-          path: src/dist
-
-      - name: Deploy to Cloudflare
-        id: deploy
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy src/dist --project-name=${{ vars.CLOUDFLARE_PROJECT_NAME }} --branch=${{ vars.CLOUDFLARE_BRANCH_NAME }} --commit-dirty=true
+    uses: ./.github/workflows/deploy_cloudflare.yml
+    with:
+      branch_name: ${{ vars.CLOUDFLARE_BRANCH_NAME }}
+      environment_name: "release"
+      project_name: ${{ vars.CLOUDFLARE_PROJECT_NAME }}
+    secrets:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
