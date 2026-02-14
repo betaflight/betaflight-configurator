@@ -39,13 +39,12 @@ export function useReboot() {
 
         // Delegates the actual command sending and state setup (rebootTimestamp) to the backend.
         // This ensures serial_backend.js knows to allow auto-connection after the reboot.
-        reinitializeConnection(true);
+        const rebootTimestamp = reinitializeConnection(true);
 
         // Force invalid locally as well (backend does it too usually, but safe to sync)
         CONFIGURATOR.connectionValid = false;
 
         const currentPort = PortHandler.portPicker.selectedPort;
-        const rebootTimestamp = Date.now();
 
         // For Virtual/Manual/Bluetooth, reinitializeConnection handles the toggle logic via setTimeout/clicks.
         // We do not show the Vue dialog for these cases to maintain legacy behavior (fast toggle).

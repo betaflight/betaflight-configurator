@@ -150,6 +150,10 @@
         "message": "Установите тайм-аут соединения, чтобы разрешить более длительную инициализацию при подключении или перезагрузке устройства",
         "description": "Change timeout on auto-connect and reboot so the bus has more time to initialize after being detected by the system"
     },
+    "languageAndAppearanceSettings": {
+        "message": "Язык и интерфейс",
+        "description": "Title for the language and appearance settings section"
+    },
     "developmentSettings": {
         "message": "Настройки для разработки",
         "description": "Title for the development settings section"
@@ -699,11 +703,17 @@
     "defaultDiscordText": {
         "message": "Betaflight <a href=\"https:\/\/discord.betaflight.com\/invite\" target=\"_blank\" rel=\"noopener noreferrer\">сервер Discord<\/a>.<br \/>Делись опытом полетов, обсуждай Betaflight, помогай другим людям и узнавай новое для себя."
     },
+    "defaultRedditText": {
+        "message": "Вступайте в наш <a href=\"https:\/\/www.reddit.com\/r\/Betaflight\/\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight Subreddit<\/a>.<br \/>Обсуждайте, задавайте вопросы, и присоединяйтесь к нашему Betaflight сообществу на Reddit."
+    },
     "defaultCommunityHead": {
         "message": "Сообщество"
     },
     "statisticsDisclaimerHead": {
         "message": "Ваша конфиденциальность"
+    },
+    "statisticsDisclaimer": {
+        "message": "Это приложение Betaflight собирает анонимную статистику использования. Эти данные могут включать количество запусков, географический регион пользователей, типы контроллеров полёта, версии прошивки, использование элементов интерфейса и вкладок и т.д. Мы собираем эти данные, чтобы лучше понять, как используется приложение и какие существуют тенденции в сообществе. Это помогает нам разрабатывать улучшенный интерфейс и повышать общий пользовательский опыт. Пользователи могут отключить сбор данных во вкладке «Опции». Информацию о том, как мы собираем и используем ваши данные, см. в нашей <a href=\"https:\/\/www.betaflight.com\/privacy\" rel=\"noopener noreferrer\" target=\"_blank\">политике конфиденциальности<\/a>."
     },
     "defaultButtonFirmwareFlasher": {
         "message": "Программатор"
@@ -7184,6 +7194,10 @@
     "darkTheme": {
         "message": "Включить тёмную тему"
     },
+    "colorThemeContrast": {
+        "message": "Высокий контраст",
+        "description": "Contrast color theme"
+    },
     "pidTuningRatesType": {
         "message": "Тип коэффициентов"
     },
@@ -7595,6 +7609,9 @@
     "firmwareFlasherOSDProtocolNotSelectedContinue": {
         "message": "Продолжить без протокола OSD"
     },
+    "firmwareFlasherOptionLabelVerifiedPartner": {
+        "message": "✅ Проверенный партнер"
+    },
     "firmwareFlasherOptionLabelVendorCommunity": {
         "message": "⚠️ Поставщик \/ Сообщество"
     },
@@ -7666,6 +7683,18 @@
     "tabBackups": {
         "message": "Резервные копии"
     },
+    "userTokenDeleteFailed": {
+        "message": "Ошибка удаления токена"
+    },
+    "userTokenLoadFailed": {
+        "message": "Неудачная загрузка токенов"
+    },
+    "userPasskeyLoadFailed": {
+        "message": "Неудачная загрузка ключей доступа"
+    },
+    "userProfileUpdateSuccess": {
+        "message": "Профиль успешно обновлён"
+    },
     "userBackupsLoadFailed": {
         "message": "Не удалось загрузить резервную копию"
     },
@@ -7707,6 +7736,9 @@
     },
     "labelSignOut": {
         "message": "Выйти"
+    },
+    "labelAvatarUrl": {
+        "message": "Ссылка на аватар"
     },
     "placeholderAvatarUrl": {
         "message": "Введите URL изображения для вашей аватарки"
