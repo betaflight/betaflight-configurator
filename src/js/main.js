@@ -357,6 +357,9 @@ async function startProcess() {
                 case "gps":
                     mountVueTab("gps", content_ready);
                     break;
+                case "flight_plan":
+                    mountVueTab("flight_plan", content_ready);
+                    break;
                 case "motors":
                     mountVueTab("motors", content_ready);
                     break;
