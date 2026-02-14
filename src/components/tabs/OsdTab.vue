@@ -227,6 +227,7 @@
                                                         'data:image/svg+xml;utf8,<svg width=\'12\' height=\'18\' xmlns=\'http://www.w3.org/2000/svg\'></svg>'
                                                     "
                                                     draggable="false"
+                                                    alt="Preview Element"
                                                 />
                                             </div>
                                         </div>
@@ -454,6 +455,7 @@
                                     :key="charIdx"
                                     :src="url"
                                     :title="'0x' + charIdx.toString(16)"
+                                    alt="Font Character"
                                 />
                             </div>
                             <div class="fontpresets_wrapper">
@@ -492,6 +494,8 @@
                                     class="replace_logo"
                                     @click="replaceLogoImage"
                                     v-html="$t('osdSetupCustomLogoOpenImageButton')"
+                                    href="#"
+                                    role="button"
                                 ></a>
                             </div>
 
@@ -501,7 +505,13 @@
                             </div>
 
                             <div class="default_btn green">
-                                <a class="flash_font active" @click="flashFont" v-html="$t('osdSetupUploadFont')"></a>
+                                <a
+                                    class="flash_font active"
+                                    @click="flashFont"
+                                    v-html="$t('osdSetupUploadFont')"
+                                    href="#"
+                                    role="button"
+                                ></a>
                             </div>
                         </div>
                     </div>
@@ -517,10 +527,12 @@
                     :class="{ disabled: !osdStore.state.isMax7456FontDeviceDetected }"
                     @click="openFontManager"
                     v-html="i18n.getMessage('osdSetupFontManagerTitle')"
+                    href="#"
+                    role="button"
                 ></a>
             </div>
             <div class="btn save">
-                <a class="active save" href="#" @click.prevent="saveConfig">{{ saveButtonText }}</a>
+                <a class="active save" href="#" @click.prevent="saveConfig" role="button">{{ saveButtonText }}</a>
             </div>
         </div>
     </BaseTab>
@@ -561,7 +573,7 @@ const logoPreview = ref(null);
 const elementSearchQuery = ref("");
 const previewProfile = ref(0);
 const selectedFont = ref(0);
-// const previewZoom = ref(false); // Removed
+
 const showRulers = ref(false);
 const activeProfile = ref(0);
 const selectedFontPreset = ref(-1);
@@ -720,13 +732,17 @@ function getPreviewCellClass(cell) {
 // Drag and drop handlers
 function onDragStart(event, cell) {
     const field = cell.field;
-    if (!field?.positionable) return;
+    if (!field?.positionable) {
+        return;
+    }
 
     const displayItem = osdStore.displayItems[field.index];
-    if (!displayItem) return;
+    if (!displayItem) {
+        return;
+    }
 
-    let xPos = parseInt(event.currentTarget.dataset.x);
-    let yPos = parseInt(event.currentTarget.dataset.y);
+    let xPos = Number.parseInt(event.currentTarget.dataset.x);
+    let yPos = Number.parseInt(event.currentTarget.dataset.y);
     let offsetX = 6;
     let offsetY = 9;
 
@@ -745,7 +761,7 @@ function onDragStart(event, cell) {
     event.dataTransfer.setData("y", String(event.currentTarget.dataset.y));
 
     // Set drag image if available and not on Linux
-    if (field.preview_img && navigator.platform.indexOf("Linux") === -1) {
+    if (field.preview_img && !navigator.platform.includes("Linux")) {
         event.dataTransfer.setDragImage(field.preview_img, offsetX, offsetY);
     }
 
@@ -766,18 +782,20 @@ function onDragLeaveCell(event) {
 function onDropCell(event) {
     event.currentTarget.removeAttribute("style");
 
-    const fieldId = parseInt(event.dataTransfer.getData("text/plain"));
+    const fieldId = Number.parseInt(event.dataTransfer.getData("text/plain"));
     const displayItem = osdStore.displayItems[fieldId];
-    if (!displayItem) return;
+    if (!displayItem) {
+        return;
+    }
 
     const displaySize = osdStore.displaySize;
-    let position = parseInt(event.currentTarget.dataset.position);
+    let position = Number.parseInt(event.currentTarget.dataset.position);
     const cursorX = position % displaySize.x;
 
     // For array-type previews, adjust position based on drag offset
     if (Array.isArray(displayItem.preview)) {
-        const x = parseInt(event.dataTransfer.getData("x"));
-        const y = parseInt(event.dataTransfer.getData("y"));
+        const x = Number.parseInt(event.dataTransfer.getData("x"));
+        const y = Number.parseInt(event.dataTransfer.getData("y"));
         position -= x;
         position -= y * displaySize.x;
     }
@@ -798,7 +816,9 @@ function onDropCell(event) {
             let selectedPositionY = Math.trunc(position / displaySize.x);
 
             if (typeof arrayElements[0] === "string") {
-                if (position < 0) return;
+                if (position < 0) {
+                    return;
+                }
                 if (selectedPositionX > cursorX) {
                     // Detected wrap around
                     position += displaySize.x - selectedPositionX;
@@ -863,10 +883,14 @@ function closePresetMenu() {
 }
 
 function applyPresetPosition(field, positionKey) {
-    if (!positionKey) return;
+    if (!positionKey) {
+        return;
+    }
 
     const config = positionConfigs[positionKey];
-    if (!config) return;
+    if (!config) {
+        return;
+    }
 
     const displaySize = osdStore.displaySize;
     const preview = field.preview;
@@ -972,7 +996,9 @@ async function loadConfig() {
 // Save OSD configuration to FC
 // Save OSD configuration to FC
 async function saveConfig() {
-    if (isSaving.value) return;
+    if (isSaving.value) {
+        return;
+    }
     isSaving.value = true;
 
     try {
@@ -1006,7 +1032,9 @@ async function saveConfig() {
 const fontCharacterUrls = computed(() => {
     // Trigger reactivity on fontDataVersion
     fontDataVersion.value;
-    if (!FONT.data?.character_image_urls?.length) return [];
+    if (!FONT.data?.character_image_urls?.length) {
+        return [];
+    }
     return FONT.data.character_image_urls.slice(0, SYM.LOGO || 256);
 });
 
@@ -1029,7 +1057,9 @@ function openFontManager() {
 
 function loadFontPreset(index) {
     const font = fontTypes.value[index];
-    if (!font) return;
+    if (!font) {
+        return;
+    }
 
     const fontVer = 2;
     fontVersionInfo.value = i18n.getMessage(`osdDescribeFontVersion${fontVer}`);
@@ -1047,7 +1077,9 @@ function loadFontPreset(index) {
 }
 
 function replaceLogoImage() {
-    if (GUI.connect_lock) return;
+    if (GUI.connect_lock) {
+        return;
+    }
 
     LogoManager.openImage()
         .then((ctx) => {
@@ -1060,7 +1092,9 @@ function replaceLogoImage() {
 }
 
 async function flashFont() {
-    if (GUI.connect_lock) return;
+    if (GUI.connect_lock) {
+        return;
+    }
 
     uploadProgress.value = 0;
     uploadProgressLabel.value = i18n.getMessage("osdSetupUploadingFont");
