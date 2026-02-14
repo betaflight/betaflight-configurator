@@ -161,16 +161,17 @@ const FC = {
     FC_CONFIG: null,
     FEATURE_CONFIG: null,
     FILTER_CONFIG: null,
-    GYRO_SENSOR: null,
+    GYRO_SENSOR: {},
+    SENSOR_NAMES: {},
     GPS_CONFIG: null,
     COMPASS_CONFIG: null,
-    GPS_DATA: null,
+    GPS_DATA: { fix: 0, numSat: 0, latitude: 0, longitude: 0 },
     GPS_RESCUE: null,
     LED_COLORS: null,
     LED_MODE_COLORS: null,
     LED_STRIP: null,
     LED_CONFIG_VALUES: [],
-    MCU_INFO: null,
+    MCU_INFO: {},
     MISC: null, // DEPRECATED
     MIXER_CONFIG: null,
     MODE_RANGES: null,
@@ -194,9 +195,9 @@ const FC = {
     RXFAIL_CONFIG: null,
     RX_CONFIG: null,
     SDCARD: null,
-    SENSOR_ALIGNMENT: null,
+    SENSOR_ALIGNMENT: {},
     SENSOR_CONFIG: null,
-    SENSOR_CONFIG_ACTIVE: null,
+    SENSOR_CONFIG_ACTIVE: {},
     SENSOR_DATA: null,
     SERIAL_CONFIG: null,
     SERVO_CONFIG: null,
@@ -608,6 +609,16 @@ const FC = {
         this.GYRO_SENSOR = {
             gyro_count: 0,
             gyro_hardware: [],
+        };
+
+        this.SENSOR_NAMES = {
+            acc: [],
+            gyro: [],
+            baro: [],
+            mag: [],
+            gps: [],
+            sonar: [],
+            opticalflow: [],
         };
 
         this.RX_CONFIG = {

@@ -17,7 +17,7 @@ class VirtualSerial {
         this.transmitting = false;
         this.outputBuffer = [];
     }
-    connect(port, options) {
+    connect(_port, _options) {
         this.connected = true;
         this.connectionId = VIRTUAL;
         this.bitrate = 115200;

@@ -18,6 +18,7 @@ import * as THREE from "three";
 import NotificationManager from "./utils/notifications.js";
 import { Capacitor } from "@capacitor/core";
 import loginManager from "./LoginManager.js";
+import { EventBus } from "../components/eventBus.js";
 import { enableDevelopmentOptions } from "./utils/developmentOptions.js";
 
 // Silence Capacitor bridge debug spam on native platforms
@@ -218,7 +219,7 @@ async function startProcess() {
         return true;
     };
 
-    const handleDisallowedTab = (tab, tabName, self) => {
+    const handleDisallowedTab = (tab, tabName) => {
         if (tab !== "firmware_flasher") {
             gui_log(i18n.getMessage("tabSwitchUpgradeRequired", [tabName]));
             return false;
@@ -253,7 +254,7 @@ async function startProcess() {
         const isLoginSectionTab = $(self).closest("ul").hasClass("mode-loggedin");
         const isTabAllowed = GUI.allowedTabs.includes(tab) || isLoginSectionTab;
 
-        if (!isTabAllowed && !handleDisallowedTab(tab, tabName, self)) {
+        if (!isTabAllowed && !handleDisallowedTab(tab, tabName)) {
             return;
         }
 
@@ -317,7 +318,7 @@ async function startProcess() {
                     mountVueTab("ports", content_ready);
                     break;
                 case "led_strip":
-                    import("./tabs/led_strip").then(({ led_strip }) => led_strip.initialize(content_ready));
+                    mountVueTab("led_strip", content_ready);
                     break;
                 case "failsafe":
                     mountVueTab("failsafe", content_ready);
@@ -335,7 +336,7 @@ async function startProcess() {
                     mountVueTab("power", content_ready);
                     break;
                 case "setup":
-                    import("./tabs/setup").then(({ setup }) => setup.initialize(content_ready));
+                    mountVueTab("setup", content_ready);
                     break;
                 case "setup_osd":
                     import("./tabs/setup_osd").then(({ setup_osd }) => setup_osd.initialize(content_ready));
@@ -347,7 +348,7 @@ async function startProcess() {
                     import("./tabs/pid_tuning").then(({ pid_tuning }) => pid_tuning.initialize(content_ready));
                     break;
                 case "receiver":
-                    import("./tabs/receiver").then(({ receiver }) => receiver.initialize(content_ready));
+                    mountVueTab("receiver", content_ready);
                     break;
                 case "servos":
                     // Vue tab - use mountVueTab instead of jQuery load
@@ -360,7 +361,7 @@ async function startProcess() {
                     mountVueTab("flight_plan", content_ready);
                     break;
                 case "motors":
-                    import("./tabs/motors").then(({ motors }) => motors.initialize(content_ready));
+                    mountVueTab("motors", content_ready);
                     break;
                 case "sensors":
                     mountVueTab("sensors", content_ready);
@@ -519,6 +520,8 @@ async function startProcess() {
             TABS[GUI.active_tab]?.expertModeChanged?.(checked);
         }
 
+        EventBus.$emit("expert-mode-change", checked);
+
         setConfig({ expertMode: checked });
     });
 
@@ -531,6 +534,17 @@ async function startProcess() {
         setDarkTheme(2);
     } else {
         setDarkTheme(result.darkTheme);
+    }
+
+    // Apply color theme from config (default to "yellow")
+    result = getConfig("colorTheme");
+    const colorTheme = result.colorTheme ?? "yellow";
+    document.body.dataset.theme = colorTheme;
+
+    // Contrast theme requires dark mode
+    if (colorTheme === "contrast") {
+        setDarkTheme(0);
+        setConfig({ darkTheme: 0 });
     }
 
     window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function () {

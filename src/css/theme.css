@@ -5,22 +5,22 @@
 */
 
 body {
-    --primary-50: #fffbe8;
-    --primary-100: #fff5d3;
-    --primary-200: #ffeba9;
-    --primary-300: #ffdf76;
-    --primary-400: #ffd03d;
-    --primary-500: #ffa724;
-    --primary-600: #e69400;
-    --primary-700: #cc8200;
-    --primary-800: #a86700;
-    --primary-900: #7a4600;
-    --primary-950: #5c2f00;
+    --primary-50: #fff8f3;
+    --primary-100: #fff1e5;
+    --primary-200: #ffe4c8;
+    --primary-300: #ffd6a5;
+    --primary-400: #ffc877;
+    --primary-500: #ffbb00;
+    --primary-600: #e8a803;
+    --primary-700: #d29600;
+    --primary-800: #bb8401;
+    --primary-900: #a57200;
+    --primary-950: #9c6b00;
 
-    --primary-transparent-1: rgba(255, 167, 36, 0.1);
-    --primary-transparent-2: rgba(255, 167, 36, 0.2);
-    --primary-transparent-3: rgba(255, 167, 36, 0.3);
-    --primary-transparent-4: rgba(255, 167, 36, 0.4);
+    --primary-transparent-1: rgba(255, 187, 0, 0.1);
+    --primary-transparent-2: rgba(255, 187, 0, 0.2);
+    --primary-transparent-3: rgba(255, 187, 0, 0.3);
+    --primary-transparent-4: rgba(255, 187, 0, 0.4);
 
     --surface-50: hsl(0, 0%, 100%);
     --surface-100: hsl(0, 0%, 98%);
@@ -45,9 +45,9 @@ body {
     --error-transparent-3: rgba(226, 18, 63, 0.3);
     --error-transparent-4: rgba(226, 18, 63, 0.4);
 
-    --success-400: #90f042;
-    --success-500: #70e212;
-    --success-600: #5cb10f;
+    --success-400: #adf042;
+    --success-500: #96e212;
+    --success-600: #79b210;
 
     --success-transparent-1: rgba(112, 226, 18, 0.1);
     --success-transparent-2: rgba(112, 226, 18, 0.2);
@@ -66,9 +66,9 @@ body {
 
 body.dark-theme {
     --surface-50: hsl(0, 0%, 4%);
-    --surface-100: #181818;
-    --surface-200: hsl(0, 0%, 13%);
-    --surface-300: hsl(0, 0%, 15%);
+    --surface-100: hsl(0, 0%, 8%);
+    --surface-200: hsl(0, 0%, 12%);
+    --surface-300: hsl(0, 0%, 14%);
     --surface-400: hsl(0, 0%, 20%);
     --surface-500: hsl(0, 0%, 24%);
     --surface-600: hsl(0, 0%, 35%);
@@ -78,4 +78,89 @@ body.dark-theme {
     --surface-950: hsl(0, 0%, 80%);
 
     --text: hsl(0, 0%, 95%);
+}
+
+body[data-theme="amber"] {
+    --primary-50: #fffbe8;
+    --primary-100: #fff5d3;
+    --primary-200: #ffeba9;
+    --primary-300: #ffdf76;
+    --primary-400: #ffd03d;
+    --primary-500: #ffa724;
+    --primary-600: #e69400;
+    --primary-700: #cc8200;
+    --primary-800: #a86700;
+    --primary-900: #7a4600;
+    --primary-950: #5c2f00;
+
+    --primary-transparent-1: rgba(255, 167, 36, 0.1);
+    --primary-transparent-2: rgba(255, 167, 36, 0.2);
+    --primary-transparent-3: rgba(255, 167, 36, 0.3);
+    --primary-transparent-4: rgba(255, 167, 36, 0.4);
+}
+
+body[data-theme="contrast"] {
+    --surface-50: #000000;
+    --surface-100: #000000;
+    --surface-200: #141414;
+    --surface-300: #141414;
+    --surface-400: #808080;
+    --surface-500: #808080;
+
+    --success-400: #75ff75;
+    --success-500: #00ff00;
+    --success-600: #00cc00;
+
+    --error-400: #ff7575;
+    --error-500: #ff3333;
+    --error-600: #cc0000;
+
+    --switcherysecond: var(--surface-400);
+
+    #tabs li.active a {
+        color: #000;
+        background-color: var(--primary-500);
+    }
+
+    li.active
+        :is(
+            .ic_setup,
+            .ic_ports,
+            .ic_config,
+            .ic_pid,
+            .ic_rx,
+            .ic_modes,
+            .ic_adjust,
+            .ic_servo,
+            .ic_gps,
+            .ic_led,
+            .ic_sensors,
+            .ic_log,
+            .ic_data,
+            .ic_cli,
+            .ic_motor,
+            .ic_welcome,
+            .ic_help,
+            .ic_flasher,
+            .ic_transponder,
+            .ic_osd,
+            .ic_vtx,
+            .ic_power,
+            .ic_failsafe,
+            .ic_backup,
+            .ic_wizzard,
+            .ic_advanced,
+            .ic_mission,
+            .ic_user
+        )::before {
+        background-color: var(--surface-100);
+    }
+
+    .darkgrey_box {
+        color: var(--surface-100);
+    }
+
+    .btn a.disabled {
+        color: var(--surface-100) !important;
+    }
 }

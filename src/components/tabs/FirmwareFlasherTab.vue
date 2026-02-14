@@ -402,10 +402,14 @@
                                                 v-model="state.selectedCommit"
                                                 :options="state.commitOptions"
                                                 :show-labels="false"
-                                                placeholder="Select branch"
+                                                :searchable="true"
+                                                :taggable="true"
+                                                :internal-search="true"
+                                                placeholder="Select branch or enter PR # / commit hash"
                                                 track-by="value"
                                                 label="label"
                                                 @input="onCommitChange"
+                                                @tag="onCommitTag"
                                                 class="standard-select"
                                             />
                                         </div>
@@ -1743,7 +1747,7 @@ export default defineComponent({
                 selectedOsdProtocol: state.selectedOsdProtocol,
                 selectedMotorProtocol: state.selectedMotorProtocol,
                 expertMode: state.expertMode,
-                selectedCommit: state.selectedCommit,
+                selectedCommit: state.selectedCommit?.value,
                 customDefinesInput: customDefinesInput.value,
                 isConfigLocal: state.isConfigLocal,
             };
@@ -1853,6 +1857,41 @@ export default defineComponent({
 
         const onCommitChange = (value) => {
             state.selectedCommit = value;
+        };
+
+        const onCommitTag = (searchQuery) => {
+            // Handle custom PR number or commit hash input
+            if (!searchQuery) {
+                return;
+            }
+
+            const formattedValue = searchQuery.trim();
+
+            // Prevent empty/whitespace submissions
+            if (!formattedValue) {
+                return;
+            }
+
+            // Check if it's a PR number (with or without #)
+            const prMatch = formattedValue.match(/^#?(\d+)$/);
+            if (prMatch) {
+                // Format as PR branch reference
+                const prNumber = prMatch[1];
+                const newOption = {
+                    label: `PR #${prNumber}`,
+                    value: `pull/${prNumber}/head`,
+                };
+                state.commitOptions.push(newOption);
+                state.selectedCommit = newOption;
+            } else {
+                // Treat as commit hash or branch name
+                const newOption = {
+                    label: formattedValue,
+                    value: formattedValue,
+                };
+                state.commitOptions.push(newOption);
+                state.selectedCommit = newOption;
+            }
         };
 
         // UI State change handlers
@@ -2233,6 +2272,7 @@ export default defineComponent({
             onMotorProtocolChange,
             onOptionsChange,
             onCommitChange,
+            onCommitTag,
             handleExpertModeChange,
             handleShowDevelopmentReleasesChange,
             handleNoRebootChange,

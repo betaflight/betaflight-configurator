@@ -33,7 +33,49 @@ function serveFileFromDirectory(directory) {
         const absolutePath = path.resolve(process.cwd(), directory, filePath);
 
         try {
-            const fileContents = readFileSync(absolutePath, "utf-8");
+            // Define binary file extensions that should not be read as UTF-8
+            const binaryExtensions = [
+                ".png",
+                ".jpg",
+                ".jpeg",
+                ".gif",
+                ".webp",
+                ".ico",
+                ".bmp",
+                ".tiff",
+                ".tif",
+                ".svg",
+                ".woff",
+                ".woff2",
+                ".ttf",
+                ".eot",
+            ];
+            const isBinary = binaryExtensions.some((ext) => filePath.toLowerCase().endsWith(ext));
+
+            // Read file with appropriate encoding
+            const fileContents = isBinary ? readFileSync(absolutePath) : readFileSync(absolutePath, "utf-8");
+
+            // Set Content-Type based on file extension
+            if (filePath.endsWith(".svg")) {
+                res.setHeader("Content-Type", "image/svg+xml");
+            } else if (filePath.endsWith(".png")) {
+                res.setHeader("Content-Type", "image/png");
+            } else if (filePath.endsWith(".jpg") || filePath.endsWith(".jpeg")) {
+                res.setHeader("Content-Type", "image/jpeg");
+            } else if (filePath.endsWith(".gif")) {
+                res.setHeader("Content-Type", "image/gif");
+            } else if (filePath.endsWith(".webp")) {
+                res.setHeader("Content-Type", "image/webp");
+            } else if (filePath.endsWith(".ico")) {
+                res.setHeader("Content-Type", "image/x-icon");
+            } else if (filePath.endsWith(".json")) {
+                res.setHeader("Content-Type", "application/json");
+            } else if (filePath.endsWith(".css")) {
+                res.setHeader("Content-Type", "text/css");
+            } else if (filePath.endsWith(".js")) {
+                res.setHeader("Content-Type", "application/javascript");
+            }
+
             res.end(fileContents);
         } catch (e) {
             // If file not found or any other error, pass to the next middleware
@@ -102,7 +144,7 @@ export default defineConfig({
         VitePWA({
             registerType: "prompt",
             workbox: {
-                globPatterns: ["**/*.{js,css,html,ico,png,svg,json,mcm}"],
+                globPatterns: ["**/*.{js,css,html,ico,png,svg,json,mcm,gltf}"],
                 // 5MB
                 maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
             },

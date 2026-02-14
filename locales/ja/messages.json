@@ -150,6 +150,10 @@
         "message": "接続タイムアウトを設定し、デバイスプラグインのより長めの初期化や再起動を許可する",
         "description": "Change timeout on auto-connect and reboot so the bus has more time to initialize after being detected by the system"
     },
+    "languageAndAppearanceSettings": {
+        "message": "言語と外観",
+        "description": "Title for the language and appearance settings section"
+    },
     "developmentSettings": {
         "message": "開発者向け設定",
         "description": "Title for the development settings section"
@@ -161,6 +165,10 @@
     "cliOnlyMode": {
         "message": "CLI 限定モードを有効",
         "description": "Text for the option to enable or disable CLI only mode"
+    },
+    "automaticDevOptions": {
+        "message": "プレビュービルドの開発設定を自動的に有効",
+        "description": "Text for the option to automatically enable development settings for preview builds"
     },
     "showManualMode": {
         "message": "手動接続モード 有効",
@@ -537,6 +545,9 @@
     "buildServerUsingCached": {
         "message": "$1 開発情報のキャッシュを参照します。"
     },
+    "buildServerSupportRequestSubmission": {
+        "message": "<br>*** サポートデータを送信しました *** <br>ID: $1<br><br><br># IDをコピーしてBetaflight開発チームに情報提供してください。"
+    },
     "buildKey": {
         "message": "Build Key: <strong>$1<\/strong>"
     },
@@ -671,11 +682,17 @@
     "defaultWelcomeIntro": {
         "message": "<strong>Betaflight App<\/strong>へようこそ。<br \/>このユーティリティは、フライトコントローラの設定やチューニングを簡単に更新できるよう設計されています。"
     },
-    "defaultWelcomeHead": {
+    "defaultHardwareHead": {
         "message": "ハードウェア"
     },
-    "defaultWelcomeText": {
-        "message": "このアプリケーションは、Betaflightを実行可能なハードウェアすべてをサポートします。対応ハードウェア一覧は [ファームフラッシャー] タブをご確認ください。<br \/><br \/><a href=\"https:\/\/github.com\/betaflight\/blackbox-log-viewer\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight Blackbox Log Viewerをダウンロード<\/a><br \/><br \/><a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight TX Lua Scriptsをダウンロード<\/a><br \/><br \/>ファームウェアのソースコードのダウンロード先は<a href=\"https:\/\/github.com\/betaflight\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">こちら<\/a><br \/><br \/>CP210X USBシリアルチップを使用するレガシーハードウェアの場合:<br \/>最新の<b>CP210Xドライバ<\/b>のダウンロード先は<a href=\"https:\/\/www.silabs.com\/products\/development-tools\/software\/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">こちら<\/a><br \/>最新のWindows用<b>Zadig<\/b>USBドライバインストーラのダウンロード先は<a href=\"http:\/\/zadig.akeo.ie\/\" target=\"_blank\" rel=\"noopener noreferrer\">こちら<\/a><br \/><b>ImpulseRC Driver Fixer<\/b>のダウンロード先は<a href=\"https:\/\/impulserc.com\/pages\/downloads\" target=\"blank\" rel=\"noopener noreferrer\">こちら<\/a>"
+    "defaultHardwareText": {
+        "message": "このアプリケーションは、Betaflightが動作するすべてのハードウェアをサポートしています。対応ハードウェアの一覧については【ファームフラッシャー】タブをご確認ください。<br \/><br \/>役立つハードウェアユーティリティ \/ ドライバ:<ul><li>CP210x USB–シリアルチップを使用したレガシーハードウェアの場合、最新の<b>CP210xドライバ<\/b>は <a href=\"https:\/\/www.silabs.com\/products\/development-tools\/software\/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">こちら<\/a> からダウンロードできます。<\/li><li>Windows用 USBドライバをインストールするための最新の <b>Zadig<\/b> は <a href=\"http:\/\/zadig.akeo.ie\/\" target=\"_blank\" rel=\"noopener noreferrer\">こちら<\/a> からダウンロードできます。<\/li><li><b>ImpulseRC Driver Fixer<\/b>は <a href=\"https:\/\/github.com\/ImpulseRC\/ImpulseRC_Driver_Fixer\" target=\"_blank\" rel=\"noopener noreferrer\">こちら<\/a> からダウンロードできます。<\/li><\/ul>"
+    },
+    "defaultSoftwareHead": {
+        "message": "ソフトウェア"
+    },
+    "defaultSoftwareText": {
+        "message": "こちらの <a href=\"https:\/\/blackbox.betaflight.com\" target=\"_blank\" rel=\"noopener noreferrer\">Blackbox Log Viewer<\/a> は、オンラインアプリとして利用できます。<br \/><br \/>\n<a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">TX LUA スクリプト<\/a> の各種スクリプトは、GitHub 上で公開されています。<br \/><br \/>ファームウェア、本アプリ、ならびにBlackbox Viewerの <a href=\"https:\/\/github.com\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">ソースコード<\/a> は、GitHub からダウンロードできます。"
     },
     "defaultContributingHead": {
         "message": "開発への協力・貢献"
@@ -689,17 +706,26 @@
     "defaultDiscordText": {
         "message": "Betaflight <a href=\"https:\/\/discord.betaflight.com\/invite\" target=\"_blank\" rel=\"noopener noreferrer\">Discord Server<\/a>.<br \/>貴方の飛行体験を共有したり、Betaflightについて話したり、他の人を救済しコミュニティから自分自身助けを得たりすることができます。"
     },
+    "defaultRedditText": {
+        "message": "<a href=\"https:\/\/www.reddit.com\/r\/Betaflight\/\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight Subreddit<\/a> に参加しましょう。<br \/>機能についての議論や質問、情報交換を通じ、Reddit上でのBetaflightコミュニティとつながることができます。"
+    },
+    "defaultCommunityHead": {
+        "message": "コミュニティ"
+    },
+    "statisticsDisclaimerHead": {
+        "message": "プライバシーポリシー"
+    },
     "statisticsDisclaimer": {
-        "message": "Betaflight Appは匿名における利用統計データを収集します。例えばこのデータには、起動回数、ユーザの地理的な地域、フライトコントローラの種類、ファームウェアバージョン、UI要素やタブの使用状況等が含まれます。(ただし、これらに限定されるものではありません) このデータの要約は <a href=\"https:\/\/datastudio.google.com\/u\/0\/reporting\/1pK1PFw0eWmsgl2npvuzwAqscVzlhJvuF\" target=\"_blank\" rel=\"noopener noreferrer\">こちら<\/a> で共有されています。データ収集はBetaflight Configuratorがどのように使用されているかをより良く理解し、コミュニティの傾向を把握し、UIを改善するために行われます。またユーザは、オプションタブにてデータ収集の停止を選択可能です。"
+        "message": "このBetaflight Appは、匿名の利用統計情報を収集します。収集されるデータには、アプリの起動回数、ユーザの地理的地域、使用されているフライトコントローラの種類、ファームウェアのバージョン、UI要素やタブの利用状況などが含まれる場合があります。これらのデータは、アプリがどのように使用されているかや、コミュニティ全体の利用傾向を把握するために収集されます。これにより、UIの改善や、全体的な操作性の向上に役立てられます。ユーザは【オプション】タブから、データ収集を無効にすることができます。データの収集および利用方法の詳細については <a href=\"https:\/\/www.betaflight.com\/privacy\" rel=\"noopener noreferrer\" target=\"_blank\">プライバシーポリシー<\/a> をご確認ください。"
     },
     "defaultButtonFirmwareFlasher": {
         "message": "ファームフラッシャー"
     },
     "defaultDonateHead": {
-        "message": "オープンソース \/ 寄付について"
+        "message": "オープンソースへの寄付"
     },
     "defaultDonateText": {
-        "message": "<p><strong>Betaflight<\/strong>は<strong>オープンソース<\/strong>であり、すべてのユーザに対し保証なしで<strong>無償<\/strong>にて提供されるフライトコントローラソフトウェアです。<\/p><p>もし、あなたがBetaflightやBetaflight Appが役立つものと感じたら、寄付による開発の<strong>サポート<\/strong>をご検討ください。<\/p>"
+        "message": "<p><strong>Betaflight<\/strong>は <strong>オープンソース<\/strong> ソフトウェアであり、すべてのユーザーに対して <strong>無償・無保証<\/strong> で提供されています。<\/p><p>Betaflightが役立つものと感じられた場合は、ぜひ <strong>寄付<\/strong> による開発のサポートをご検討ください。<\/p>"
     },
     "defaultDonateBottom": {
         "message": "<p>引き続き経済的に貢献したい場合は <a href='https:\/\/www.patreon.com\/betaflight'>Patreon<\/a> で私達の支援者になることをご検討ください。<\/p>"
@@ -1575,6 +1601,9 @@
     "configurationThrottleMinimum": {
         "message": "最小スロットル値 (アーム時の最小ESC値)"
     },
+    "configurationThrottleMinimumHelp": {
+        "message": "機体がアームし、スロットルスティックが最小位置にあるときにESCに送信される [アイドル値] です。より安定したアイドリング速度を得るために値を増加させてください。また非同期の場合は値を上げてください！"
+    },
     "configurationThrottleMaximum": {
         "message": "最大スロットル値 (アーム時の最大ESC値)"
     },
@@ -1715,6 +1744,9 @@
     },
     "configurationLoopTimeHelp": {
         "message": "<strong>注:<\/strong> FCがこの速度で動作するか確認してください！CPUとサイクル時間の安定度を確認してください。この変更はPIDの再調整を必要とするかもしれません。TIP: パフォーマンスを上げるためには加速度センサーや他センサーを無効にします。"
+    },
+    "configurationGPS": {
+        "message": "設定"
     },
     "configurationGPSHelp": {
         "message": "GPSデバイスのプロトコルを設定し (【ポート】タブでポート設定することを忘れずに)、オートボー (または【ポート】タブで速度を設定) を使用し、その他の設定を行います。",
@@ -2072,6 +2104,9 @@
     },
     "pidTuningDtermSetpointTransitionHelp": {
         "message": "このパラメータを使用すると、D値セットポイントの影響力をスティックの中央付近で減らすことができ、その結果フリップおよびロール時のエンドアクションがスムーズになります。<br>この値はスティック偏向点を表します。0-スティック中心、1-完全偏向です。スティックがその値を上回ると、設定された値での影響力は一定に保たれます。スティックがその値以下に位置すると、設定値の影響力は比例して減少し、スティック中心位置で0になります。<br>1の値はスムージング効果を最大にし、0の値はスティック範囲全体にわたって設定された値に固定します。"
+    },
+    "pidTuningDtermSetpointHelp": {
+        "message": "このパラメータは、D値におけるスティック加速効果を決定します。<br>値が 0 の場合は、D値がジャイロのみを追従する従来の計測方式、値が 1 の場合はジャイロとスティックを同じ比率で追従させる従来のエラー検出方式になります。<br>値が小さいほどスティックの反応はゆっくり \/ スムースに、値が大きいほどスティック加速反応が大きくなります。<br>なお、高い値を使用する場合は、制御キックバックノイズの発生を防ぐために、RC補間 [RC Interpolation] の有効化を推奨します。"
     },
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):<\/strong> 0より大きく0.1より小さいD値セットポイントの設定はしないでください。スティックが中心を横切るときに不安定となり、スティックレスポンスが低下する可能性があります。<\/span>"
@@ -2552,6 +2587,10 @@
         "message": "カメラ スタビライザーモードを有効にします",
         "description": "Help text to CAMSTAB mode"
     },
+    "auxiliaryHelpMode_CHIRP": {
+        "message": "Chirpモード有効",
+        "description": "Help text for CHIRP mode"
+    },
     "auxiliaryHelpMode_FAILSAFE": {
         "message": "フェイルセーフ ステージ2へ手動で切り替えます",
         "description": "Help text to FAILSAFE mode"
@@ -2924,6 +2963,16 @@
     "servosReverse": {
         "message": "リバース"
     },
+    "gpsHead": {
+        "message": "全般"
+    },
+    "gpsHeadHelp": {
+        "message": "各種GPS情報を表示します。見出しは、コンパスを使用している場合にのみ表示されます。",
+        "description": "Help text for gpsHead"
+    },
+    "gpsMapHead": {
+        "message": "現在地"
+    },
     "gpsMapMessage1": {
         "message": "インターネット接続を確認してください"
     },
@@ -2974,6 +3023,9 @@
     "gpsMagneticDeclination": {
         "message": "$t(configurationMagDeclination):",
         "description": "Do not translate"
+    },
+    "gpsSignalStrHead": {
+        "message": "シグナル情報"
     },
     "gpsSignalStrHeadHelp": {
         "message": "検出された各GPS情報の信号強度、品質、状態を表示",
@@ -3516,6 +3568,12 @@
     "sdcardStatusUnknown": {
         "message": "不明な状態 $1"
     },
+    "firmwareFlasherPleaseWait": {
+        "message": "しばらくお待ちください"
+    },
+    "firmwareFlasherBoardSelectionHead": {
+        "message": "FCボードの選択"
+    },
     "firmwareFlasherBranch": {
         "message": "プルリクエストまたはコミットを選択"
     },
@@ -3551,10 +3609,13 @@
         "message": "クラウドビルド 詳細:"
     },
     "firmwareFlasherCloudBuildLogUrl": {
-        "message": "ログ表示."
+        "message": "ログを表示"
     },
     "firmwareFlasherCloudBuildStatus": {
         "message": "状態:"
+    },
+    "firmwareFlasherCloudBuildQueued": {
+        "message": "処理待ち"
     },
     "firmwareFlasherCloudBuildPending": {
         "message": "保留中"
@@ -3722,7 +3783,7 @@
         "message": "メッセージ:"
     },
     "firmwareFlasherWarningText": {
-        "message": "このファームフラッシャーで<strong>Betaflight以外<\/strong>のフラッシュイメージを<span class=\"message-negative\">書き換えないで<\/span>下さい。<br \/>書き換えをしている間はボードを<strong>取り外したり<\/strong>コンピュータの<strong>電源を切ったり<\/strong><span class=\"message-negative\">しないで<\/span>下さい。<br \/><br \/><strong>注:<\/strong> STM32ブートローダーはROMに格納されており、別途生成や改修はできません。<br \/><strong>注:<\/strong> ファームフラッシャーモードの間は、<span class=\"message-negative\">自動接続<\/span>は常に無効になっています。<br \/><strong>注:<\/strong> バックアップがあることを確認して下さい。アップグレード／ダウングレードでいくつかの設定が消去される場合があります。<br \/><strong>注:<\/strong> 書き換えに問題がある場合は、<strong>FCからすべてのケーブルを取り外し<\/strong>最初に再起動を行いドライバのアップグレードをお試し下さい。<br \/><strong>注:<\/strong> (大部分の最新FCボードに) 直接USBソケットを搭載しているFCボードに対してファームウェアを書き換えるときは、Betaflightマニュアルの [USB Flashing] 章を読み、正しいソフトウェアとドライバをインストールして下さい。"
+        "message": "<span class=\"message-negative\">やらないで！<\/span> このファームフラッシャーを使用して、<strong>Betaflight 非対応<\/strong>のハードウェアへ書き込みはしないでください。<br \/><span class=\"message-negative\">やらないで！<\/span>書き込み中はコンピュータからFCボードを<strong>取り外したり<\/strong>、<strong>電源を切ったり<\/strong>しないでください。<br \/><br \/><strong>注: <\/strong><ul><li>STM32ブートローダーはROMに格納されているため、致命的な故障となることはありません。<\/li><li><span class=\"message-negative\">自動接続<\/span> は、ファームフラッシャー使用中は常に無効になります。<\/li><li>必ずバックアップを作成してください。アップグレード \/ ダウングレードによっては設定が消去される場合があります。<\/li><li>書き込みに問題がある場合は、まず <strong>FC からすべてのケーブルを取り外し<\/strong>、再起動やドライバの更新を試してください。<\/li><li>USBコネクタが基板に直接実装されているボード（近年の多くのFCボード）を書き込む場合は、Betaflightマニュアルの『USB Flashing』の章を確認し、正しいソフトウェアおよびドライバがインストールされていることを確認してください。<\/li><\/ul>"
     },
     "firmwareFlasherRecoveryHead": {
         "message": "<strong>リカバリー \/ 通信ロスト<\/strong>"
@@ -4428,6 +4489,10 @@
         "message": "トラッキング:<br \/><i><small>P & I 強度<\/small><\/i>",
         "description": "P and I Gain (Stability) tuning slider label"
     },
+    "pidTuningPIGainSliderHelp": {
+        "message": "トラッキングスライダーを上げると、ご自身の操作や外部からの影響に対して機体の反応が機敏になり、どのような状況でも機体のノーズがコースから外れるのを避けることができるでしょう。<br \/><br \/>『トラッキング』の値が低いと、多くの揺れが発生しスティックの動きやプロップウォッシュでコースから外れてしまいます。『トラッキング』の値が高いと、振動と速いバウンスバックが発生します。(見えないかもしれませんが聞こえるでしょう)『トラッキング』の値が高すぎると、振動が発生したり、モーターが熱くなったりします。",
+        "description": "P and I gain tuning slider helpicon message"
+    },
     "pidTuningResponseSlider": {
         "message": "スティックレスポンス:<br \/><i><small>FF 強度<\/small><\/i>",
         "description": "Response tuning slider label"
@@ -4534,6 +4599,10 @@
     },
     "pidTuningCutoffFrequency": {
         "message": "カットオフ周波数 [Hz]"
+    },
+    "pidTuningNotchFilterHelp": {
+        "message": "ノッチフィルターは、中央値とカットオフ値のパラメータを持つ対称的で幅の狭いハイカットフィルターです。<br \/><br \/>中央値はフィルターの中心周波数です。カットオフ値は両端の- 3 dBカットオフ周波数です。<br \/><br \/>例えばノッチのカットオフ値を 160 、ノッチ中央値を 260 とすると、160～360Hzの範囲で -3 dBのワイドノッチとなり、260 Hz付近で最も減衰が大きくなります。",
+        "description": "Notch filter helpicon message"
     },
     "pidTuningDynamicNotchFilterGroup": {
         "message": "動的ノッチフィルター"
@@ -5986,6 +6055,10 @@
         "message": "日時 [短表示]",
         "description": "One of the variants of the RTC date and time element of the OSD"
     },
+    "osdTextElementRtcDateTimeVariantTimeOnly": {
+        "message": "時刻のみ",
+        "description": "One of the variants of the RTC date and time element of the OSD"
+    },
     "osdDescElementRtcDateTime": {
         "message": "ハードウェアクロック 日付 \/ 時間"
     },
@@ -6660,6 +6733,9 @@
     "osdSectionHelpAlarms": {
         "message": "アラーム状態をOSDに表示させるしきい値を設定します。"
     },
+    "osdSectionHelpStats": {
+        "message": "フライト統計情報を画面表示させる値を設定します。"
+    },
     "osdSectionHelpWarnings": {
         "message": "WARNINGS に表示される警告を有効または無効にします。"
     },
@@ -7020,6 +7096,9 @@
     "configurationSmallAngle": {
         "message": "アーム最大角 [degrees]"
     },
+    "configurationSmallAngleHelp": {
+        "message": "指定された角度以上に傾斜していると機体はアームできません。 加速度センサーが有効な場合にのみ適用されます。 180 に設定すると、このチェックが無効になります。"
+    },
     "configurationBatteryVoltage": {
         "message": "バッテリー電圧"
     },
@@ -7083,6 +7162,9 @@
     },
     "pidTuningDeltaMeasurement": {
         "message": "測定"
+    },
+    "pidTuningDeltaTip": {
+        "message": "<b>Derivative from Error<\/b>は、よりダイレクトなスティックレスポンスを提供し、レースでの使用に適しています。 <br \/><br \/><b>Derivative from Measurement<\/b>は、よりスムーズなスティックレスポンスを提供し、フリースタイルでの使用に適しています"
     },
     "pidTuningPidControllerTip": {
         "message": "<b>Legacy vs Betaflight (float):<\/b> PIDスケーリングとPIDロジックはまったく同じ仕様です。必ずしも再調整は必要ありません。Legacyは、整数演算に基づく基本的なPIDコントローラである旧ベータ版の進化型演算方式です。 Betaflight PIDコントローラは浮動小数点演算を使用し、マルチローター用に特別に設計された多くの新機能を備えています。<br><b>Float vs Integer:<\/b> PIDスケーリングとPIDロジックはまったく同じ仕様です。再調整は必要ありません。F1ボードにはオンボードFPUがないため、浮動小数点演算によってCPU負荷が増加するため、整数演算にて性能が向上しますが、浮動小数点演算の方がわずかに精度が向上します。"
@@ -7185,6 +7267,22 @@
     },
     "darkTheme": {
         "message": "ダークテーマを有効"
+    },
+    "colorTheme": {
+        "message": "カラーテーマ",
+        "description": "Color theme settings"
+    },
+    "colorThemeYellow": {
+        "message": "イエロー (デフォルト)",
+        "description": "Default yellow color theme"
+    },
+    "colorThemeAmber": {
+        "message": "アンバー",
+        "description": "Amber color theme"
+    },
+    "colorThemeContrast": {
+        "message": "ハイコントラスト",
+        "description": "Contrast color theme"
     },
     "pidTuningRatesType": {
         "message": "レートタイプ"
@@ -7293,6 +7391,9 @@
     },
     "cordovaWebviewUpdateBtn": {
         "message": "Google Playストアから更新"
+    },
+    "cordovaWebviewEnable": {
+        "message": "設定の【端末情報】セクションを開き、ビルド番号を 10 回タップして【開発者向けオプション】を有効にします。その後【開発者向けオプション】を開き、WebView プロバイダとして <b>{{app}}<\/b>を選択してください。"
     },
     "cordovaWebviewEnableBtn": {
         "message": "設定を開く"
@@ -7460,6 +7561,10 @@
         "message": "フライトコントローラから現在の設定を読み込みます",
         "description": "Title for the waiting dialog when loading dump all into a file"
     },
+    "dumpAllNotSavedWarning": {
+        "message": "現在の設定を保存中にエラーが発生しました",
+        "description": "Message appears on presets tab when saving current diff all into a file has failed"
+    },
     "presetSources": {
         "message": "プリセットソース...",
         "description": "A button to show preset sources dialog"
@@ -7596,8 +7701,17 @@
     "firmwareFlasherOSDProtocolNotSelectedContinue": {
         "message": "OSDプロトコル未選択のまま続ける"
     },
+    "firmwareFlasherOptionLabelVerifiedPartner": {
+        "message": "✅ 認証されたパートナー"
+    },
+    "firmwareFlasherOptionLabelVendorCommunity": {
+        "message": "⚠️ ベンダー \/ コミュニティ"
+    },
     "firmwareFlasherOptionLabelLegacy": {
         "message": "レガシー"
+    },
+    "firmwareFlasherOptionLabelNotQualified": {
+        "message": "⚠️ コミュニティ\/メーカーがサポートするターゲット — 公式にサポートされていません ⚠️"
     },
     "coreBuild": {
         "message": "コア部のみ"
@@ -7651,5 +7765,227 @@
     "osdSetupPreviewCheckRulers": {
         "message": "ルーラー",
         "description": "Label for the checkbox to toggle OSD preview rulers around the preview"
+    },
+    "tabUserProfile": {
+        "message": "ユーザ プロファイル"
+    },
+    "labelEmail": {
+        "message": "Email"
+    },
+    "placeholderEmailAddress": {
+        "message": "メールアドレスを入力してください"
+    },
+    "userEmailRequired": {
+        "message": "メールアドレスは必須項目です"
+    },
+    "profileLoginMessage": {
+        "message": "プロファイルを表示するにはログインしてください。"
+    },
+    "tabBackups": {
+        "message": "バックアップ"
+    },
+    "userPasskeyDeleteSuccess": {
+        "message": "パスキーを削除しました"
+    },
+    "userPasskeyDeleteFailed": {
+        "message": "パスキーの削除に失敗しました"
+    },
+    "userTokenDeleteSuccess": {
+        "message": "トークンが正常に削除されました"
+    },
+    "userTokenDeleteFailed": {
+        "message": "トークンの削除に失敗しました"
+    },
+    "userProfileLoadFailed": {
+        "message": "ユーザプロファイルの読み込みに失敗しました"
+    },
+    "userTokenLoadFailed": {
+        "message": "ユーザ トークンの読み込みに失敗しました"
+    },
+    "userPasskeyLoadFailed": {
+        "message": "ユーザ パスキーの読み込みに失敗しました"
+    },
+    "userProfileUpdateSuccess": {
+        "message": "プロファイルが正常に更新されました"
+    },
+    "userProfileUpdateFailed": {
+        "message": "プロファイルの更新に失敗しました"
+    },
+    "userBackupsLoadFailed": {
+        "message": "バックアップの読み込みに失敗しました"
+    },
+    "userBackupDownloadFailed": {
+        "message": "バックアップのダウンロードに失敗しました"
+    },
+    "userBackupUpdateSuccess": {
+        "message": "バックアップが正常に更新されました"
+    },
+    "userBackupUpdateFailed": {
+        "message": "バックアップの更新に失敗しました"
+    },
+    "userBackupDeleteSuccess": {
+        "message": "バックアップが正常に削除されました"
+    },
+    "userBackupDeleteFailed": {
+        "message": "バックアップの削除に失敗しました"
+    },
+    "userPasskeyNoPasskeys": {
+        "message": "利用可能なパスキーがありません"
+    },
+    "userTokenNoTokens": {
+        "message": "利用可能なトークンがありません"
+    },
+    "profileBackupSuccess": {
+        "message": "バックアップに成功しました"
+    },
+    "profileBackupApiSuccess": {
+        "message": "APIにバックアップを保存しました"
+    },
+    "profileBackupApiFail": {
+        "message": "バックアップをAPIに保存できませんでした"
+    },
+    "profileBackupEmptyResult": {
+        "message": "バックアップに失敗しました"
+    },
+    "labelLogin": {
+        "message": "ログイン"
+    },
+    "labelSignOut": {
+        "message": "サインアウト"
+    },
+    "labelAvatarUrl": {
+        "message": "アバター URL"
+    },
+    "placeholderAvatarUrl": {
+        "message": "アバターの画像URLを入力してください"
+    },
+    "labelCreatePasskey": {
+        "message": "パスキーを作成"
+    },
+    "labelUsePasskey": {
+        "message": "パスキーを使用"
+    },
+    "titleEnterVerificationCode": {
+        "message": "認証コードを入力"
+    },
+    "labelVerificationCode": {
+        "message": "認証コード"
+    },
+    "labelCode": {
+        "message": "コード"
+    },
+    "userLoggingIn": {
+        "message": "ログイン中..."
+    },
+    "userSignedOut": {
+        "message": "サインアウトしました"
+    },
+    "userSignOutFailed": {
+        "message": "サインアウトに失敗しました"
+    },
+    "userLoginSuccess": {
+        "message": "ログインに成功しました"
+    },
+    "userLoginFailed": {
+        "message": "ログインに失敗しました"
+    },
+    "userCreatePasskeyFailed": {
+        "message": "パスキーの生成に失敗しました"
+    },
+    "userCreatePasskeySuccess": {
+        "message": "パスワードが正常に作成されました"
+    },
+    "userVerifyingCode": {
+        "message": "コードを確認しています..."
+    },
+    "userCreatingPasskey": {
+        "message": "パスキーを作成中..."
+    },
+    "dataWaitingForData": {
+        "message": "データに書き込み中..."
+    },
+    "labelId": {
+        "message": "ID"
+    },
+    "labelCreated": {
+        "message": "作成日時"
+    },
+    "labelLastUsed": {
+        "message": "最終使用日時"
+    },
+    "labelActions": {
+        "message": "動作履歴"
+    },
+    "labelDetails": {
+        "message": "詳細"
+    },
+    "labelExpiry": {
+        "message": "有効期限"
+    },
+    "labelDescription": {
+        "message": "説明"
+    },
+    "labelDate": {
+        "message": "日時"
+    },
+    "actionDownload": {
+        "message": "ダウンロード"
+    },
+    "actionBackup": {
+        "message": "バックアップ"
+    },
+    "actionEdit": {
+        "message": "編集"
+    },
+    "actionDelete": {
+        "message": "削除"
+    },
+    "actionSave": {
+        "message": "保存"
+    },
+    "titleEditProfile": {
+        "message": "プロファイルの編集"
+    },
+    "titleLogin": {
+        "message": "ログイン"
+    },
+    "labelName": {
+        "message": "名称"
+    },
+    "labelAddress": {
+        "message": "住所"
+    },
+    "labelCountry": {
+        "message": "国\/地域"
+    },
+    "confirmDelete": {
+        "message": "この {{item}} を削除してもよろしいですか？"
+    },
+    "itemBackup": {
+        "message": "バックアップ"
+    },
+    "itemToken": {
+        "message": "トークン"
+    },
+    "itemPasskey": {
+        "message": "パスキー"
+    },
+    "notLoggedIn": {
+        "message": "ログインしていません"
+    },
+    "backupNoBackupsAvailable": {
+        "message": "利用可能なバックアップはありません"
+    },
+    "titleEditBackup": {
+        "message": "バックアップの編集"
+    },
+    "backupMcuUnknown": {
+        "message": "MCU 不明"
+    },
+    "sectionUserTokens": {
+        "message": "ユーザ トークン"
+    },
+    "sectionUserPasskeys": {
+        "message": "ユーザ パスキー"
     }
 }

@@ -154,6 +154,10 @@
         "message": "디바이스 플러그인 또는 재부팅 시 더 긴 초기화를 허용하도록 연결 시간 타임아웃 설정",
         "description": "Change timeout on auto-connect and reboot so the bus has more time to initialize after being detected by the system"
     },
+    "languageAndAppearanceSettings": {
+        "message": "언어와 외관",
+        "description": "Title for the language and appearance settings section"
+    },
     "developmentSettings": {
         "message": "개발 설정",
         "description": "Title for the development settings section"
@@ -690,11 +694,17 @@
     "defaultWelcomeIntro": {
         "message": "비행 컨트롤러의 쉬운 업데이트, 환경설정 및 튜닝을 위한 도구인 <strong>베타플라이트 앱<\/strong>에 오신 것을 환영합니다.<\/br>(한글번역 : 짱아부지 JJangFPV)"
     },
-    "defaultWelcomeHead": {
+    "defaultHardwareHead": {
         "message": "하드웨어"
     },
-    "defaultWelcomeText": {
-        "message": "어플리케이션은 베타플라이트를 실행할 수 있는 모든 하드웨어를 지원합니다. 하드웨어 전체 목록의 플래시 탭을 확인하세요.<br \/><br \/><a href=\"https:\/\/github.com\/betaflight\/blackbox-log-viewer\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">베타플라이트 블랙박스 로그 뷰어 다운로드<\/a><br \/><br \/><a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">베타플라이트 TX Lua 스크립트 다운로드<\/a><br \/><br \/>펌웨어 소스 코드는 <a href=\"https:\/\/github.com\/betaflight\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">여기서<\/a> 다운받을 수 있습니다.<br \/><br \/>CP210x USB를 시리얼 칩으로 사용하는 레거시 하드웨어:<br \/>최신 <b>CP210x 드라이버<\/b>는 <a href=\"https:\/\/www.silabs.com\/products\/development-tools\/software\/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">여기서<\/a> 다운받을 수 있습니다.<br \/>최신 윈도우 USB 드라이버 설치를 위한 <b>Zadig<\/b>는 <a href=\"http:\/\/zadig.akeo.ie\/\" target=\"_blank\" rel=\"noopener noreferrer\">여기서<\/a> 다운받을 수 있습니다.<br \/><b>ImpulseRC 드라이버 픽서<\/b>는 <a href=\"https:\/\/impulserc.com\/pages\/downloads\" target=\"blank\" rel=\"noopener noreferrer\">여기서<\/a> 다운받을 수 있습니다."
+    "defaultHardwareText": {
+        "message": "애플리케이션은 베타플라이트를 실행할 수 있는 모든 하드웨어를 지원합니다. 펌웨어 플래셔 탭에서 전체 하드웨어 목록을 확인하세요.<br \/><br \/>유용한 하드웨어 유틸리티 \/ 드라이버:<ul><li>CP210x USB 시리얼 칩을 사용하는 기존 하드웨어의 경우, 최신 <b>CP210x 드라이버<\/b>를 <a href=\"https:\/\/www.silabs.com\/products\/development-tools\/software\/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">여기<\/a>에서 다운로드할 수 있습니다<\/li><li>Windows USB 드라이버 설치를 위한 최신 <b>Zadig<\/b>는 <a href=\"http:\/\/zadig.akeo.ie\/\" target=\"_blank\" rel=\"noopener noreferrer\">여기<\/a>에서 다운로드할 수 있습니다<\/li><li><b>ImpulseRC 드라이버 픽서<\/b>는 <a href=\"https:\/\/github.com\/ImpulseRC\/ImpulseRC_Driver_Fixer\" target=\"_blank\" rel=\"noopener noreferrer\">여기<\/a>에서 다운로드할 수 있습니다<\/li><\/ul>"
+    },
+    "defaultSoftwareHead": {
+        "message": "소프트웨어"
+    },
+    "defaultSoftwareText": {
+        "message": "<a href=\"https:\/\/blackbox.betaflight.com\" target=\"_blank\" rel=\"noopener noreferrer\">블랙박스 로그 뷰어<\/a>는 온라인 앱에서 이용이 가능합니다.<br \/><br \/><a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">TX Lua 스크립트<\/a> 모음은 GitHub에서 이용이 가능합니다.<br \/><br \/>펌웨어, 이 앱과 블랙박스 뷰어를 위한 <a href=\"https:\/\/github.com\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">소스 코드<\/a>는 GitHub에서 다운로드 할 수 있습니다."
     },
     "defaultContributingHead": {
         "message": "기여하기"
@@ -708,17 +718,26 @@
     "defaultDiscordText": {
         "message": "베타플라이트 <a href=\"https:\/\/discord.betaflight.com\/invite\" target=\"_blank\" rel=\"noopener noreferrer\">디스코드 서버<\/a>.<br \/>당신의 비행 경험을 공유하고, 베타플라이트에 대해 얘기하고, 다른 사람들을 돕거나 커뮤니티로부터 스스로 도움을 얻으세요."
     },
+    "defaultRedditText": {
+        "message": "<a href=\"https:\/\/www.reddit.com\/r\/Betaflight\/\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight Subreddit<\/a>에 참여하세요.<br \/>기능에 대해 토론하고, 질문하고, Reddit의 베타플라이트 커뮤니티와 연결하세요."
+    },
+    "defaultCommunityHead": {
+        "message": "커뮤니티"
+    },
+    "statisticsDisclaimerHead": {
+        "message": "개인정보"
+    },
     "statisticsDisclaimer": {
-        "message": "베타플라이트 앱은 익명의 사용 통계를 수집합니다. 예를 들어, 이 데이터에는 실행 횟수, 사용자의 지리적 지역, 비행 컨트롤러 유형, 펌웨어 버전, UI 요소 및 탭 사용 등이 포함됩니다(이것들로 제한되지는 않습니다). 이 데이터의 요약은 <a href=\"https:\/\/datastudio.google.com\/u\/0\/reporting\/1pK1PFw0eWmsgl2npvuzwAqscVzlhJvuF\" target=\"_blank\" rel=\"noopener noreferrer\">여기<\/a>에 공유됩니다. 베타플라이트 앱이 어떻게 사용되고 있는지를 더 잘 이해하고 커뮤니티 추세를 이해하며 가능한 UI 개선을 위해 수집이 수행됩니다. 사용자는 옵션 탭에서 데이터 수집을 거부할 수 있습니다."
+        "message": "이 베타플라이트 앱은 익명 사용 통계를 수집합니다. 이 사용 데이터에는 실행 횟수, 사용자의 지리적 지역, 비행 조종사 유형, 펌웨어 버전, UI 요소 및 탭 사용 등이 포함될 수 있습니다. 우리는 앱이 어떻게 사용되고 있는지와 커뮤니티 동향을 더 잘 이해하기 위해 이 데이터를 수집합니다. 우리는 향상된 UI와 전반적인 경험을 개발하는 데 도움을 주기 위해 이 작업을 수행합니다. 사용자는 옵션 탭에서 데이터 수집을 선택하지 않을 수 있습니다. 데이터 수집 및 사용 방법에 대한 자세한 내용은 <a href=\"https:\/\/www.betaflight.com\/privacy\" rel=\"noopener noreferrer\" target=\"_blank\">개인정보 보호 정책<\/a>을 참조하세요."
     },
     "defaultButtonFirmwareFlasher": {
         "message": "펌웨어 플래시 도구"
     },
     "defaultDonateHead": {
-        "message": "오픈 소스 \/ 기부 알림"
+        "message": "오픈 소스 기부"
     },
     "defaultDonateText": {
-        "message": "<p><strong>베타플라이트<\/strong>는 비행 컨트롤러 소프트웨어로 <strong>오픈 소스<\/strong>이며 모든 사용자들이 <strong>보증없이<\/strong> 무료로 사용할 수 있습니다.<\/p><p>베타플라이트 또는 베타플라이트 앱이 유용하다고 판단되면, 기부하는 방법으로 개발을 <strong>지원하는<\/strong> 것을 고려하시기 바랍니다.<\/p>"
+        "message": "<p><strong>베타플라이트<\/strong>는 <strong>오픈 소스<\/strong> 소프트웨어로 모든 사용자들이 <strong>보증없이<\/strong> 무료로 사용할 수 있습니다.<\/p><p>베타플라이트가 유용하다고 판단되면, 기부하는 방법으로 개발을 <strong>지원하는<\/strong> 것을 고려하시기 바랍니다.<\/p>"
     },
     "defaultDonateBottom": {
         "message": "<p>지속적으로 재정적으로 기여 하려는 경우 $t(patreonLink.message)에서 우리의 수호자가 되는 것을 고려하세요.<\/p>"
@@ -2596,6 +2615,10 @@
         "message": "카메라 안정화 모드 활성화",
         "description": "Help text to CAMSTAB mode"
     },
+    "auxiliaryHelpMode_CHIRP": {
+        "message": "처프 모드 사용",
+        "description": "Help text for CHIRP mode"
+    },
     "auxiliaryHelpMode_FAILSAFE": {
         "message": "페일세이프 2단계를 수동으로 입력",
         "description": "Help text to FAILSAFE mode"
@@ -3581,6 +3604,12 @@
     "sdcardStatusUnknown": {
         "message": "알 수 없는 상태 $1"
     },
+    "firmwareFlasherPleaseWait": {
+        "message": "잠시 기다려주세요"
+    },
+    "firmwareFlasherBoardSelectionHead": {
+        "message": "보드 선택"
+    },
     "firmwareFlasherBranch": {
         "message": "풀 리퀘스트 또는 커밋 선택"
     },
@@ -3616,10 +3645,13 @@
         "message": "클라우드 빌드 상세정보:"
     },
     "firmwareFlasherCloudBuildLogUrl": {
-        "message": "로그 보기."
+        "message": "로그 보기"
     },
     "firmwareFlasherCloudBuildStatus": {
         "message": "상태:"
+    },
+    "firmwareFlasherCloudBuildQueued": {
+        "message": "대기중"
     },
     "firmwareFlasherCloudBuildPending": {
         "message": "대기 중"
@@ -3787,13 +3819,13 @@
         "message": "메시지:"
     },
     "firmwareFlasherWarningText": {
-        "message": "이 펌웨어 플래시 도구로 <strong>베타플라이트가 아닌<\/strong> 하드웨어를 플래시하지 <span class=\"message-negative\">마십시오<\/span>.<br \/>플래시하는 중에 보드의 <strong>연결을 끊거나<\/strong> 컴퓨터의 <strong>전원을 끄지<\/strong> <span class=\"message-negative\">마십시오<\/span>.<br \/><br \/><strong>참고: <\/strong>STM32 부트로더는 ROM에 저장되어 있어, 벽돌상태가 될 수 없습니다.<br \/><strong>참고: <\/strong><span class=\"message-negative\">자동-연결<\/span>은 당신이 펌웨어 플래시 도구에 있는 동안 항상 비활성화됩니다.<br \/><strong>참고: <\/strong>반드시 백업을 하십시오; 일부 업그레이드\/다운그레이드는 당신의 환경설정을 지워질 것입니다.<br \/><strong>참고:<\/strong> 플래시하는 데 문제가 있는 경우 먼저 <strong>FC에서 모든 케이블의 연결을 끊고<\/strong>, 재부팅, 드라이브 업그레이드를 시도하십시오.<br \/><strong>참고:<\/strong> 직접 연결된 USB 소켓(대부분의 새로운 보드들) 이 있는 보드를 플래시할 경우, 베타플라이트 매뉴얼의 USB 플래싱 섹션을 읽고 올바른 소프트웨어 및 드라이버를 설치했는지 확인하십시오."
+        "message": "이 펌웨어 플래시 도구로 <strong>베타플라이트가 아닌<\/strong> 하드웨어를 플래시하지 <span class=\"message-negative\">마십시오<\/span>.<br \/>플래시하는 중에 보드의 <strong>연결을 끊거나<\/strong> 컴퓨터의 <strong>전원을 끄지<\/strong> <span class=\"message-negative\">마십시오<\/span>.<br \/><br \/><strong>노트<\/strong><ul><li>STM32 부트로더는 ROM에 저장되어 있어, 벽돌상태가 될 수 없습니다.<\/li><li><span class=\"message-negative\">자동-연결<\/span>은 당신이 펌웨어 플래시 도구에 있는 동안 항상 비활성화됩니다.<\/li><li>반드시 백업을 하십시오; 일부 업그레이드\/다운그레이드는 당신의 환경설정을 지워질 것입니다.<\/li><li>플래시하는 데 문제가 있는 경우 먼저 <strong>FC에서 모든 케이블의 연결을 끊고<\/strong>, 재부팅, 드라이브 업그레이드를 시도하십시오.<\/li><li>직접 연결된 USB 소켓(대부분의 새로운 보드들) 이 있는 보드를 플래시할 경우, 베타플라이트 매뉴얼의 USB 플래싱 섹션을 읽고 올바른 소프트웨어 및 드라이버를 설치했는지 확인하십시오<\/li><\/ul>"
     },
     "firmwareFlasherRecoveryHead": {
         "message": "<strong>통신 복구 \/ 손실<\/strong>"
     },
     "firmwareFlasherRecoveryText": {
-        "message": "보드와의 통신이 끊어진 경우 다음 단계에 따라 통신을 복구하십시오: <ul><li>전원을 끄십시오.<\/li><li>'재부팅 절차 없음', '칩 전부 삭제'를 활성화 하십시오.<\/li><li>부트 핀을 점프하거나 부트 버튼을 누르고 계십시오.<\/li><li>전원을 켜십시오.(제대로 완료되면 작동 중인 LED가 깜박거리지 않습니다)<\/li><li>필요한 경우 STM32 드라이버와 Zadig를 설치하십시오. (베타플라이트 매뉴얼의 <a href=\"https:\/\/betaflight.com\/docs\/wiki\/archive\/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">USB 플래싱<\/a> 섹션을 보십시오.)<\/li><li>앱을 닫고, 다시 시작하십시오.<\/li><li>FC에 BOOT 버튼이 있으면 해제하십시오.<\/li><li>올바른 펌웨어로 플래시 하십시오. (당신의 FC 매뉴얼에 명시된 경우 수동 전송 속도를 사용하여).<\/li><li>전원을 끄십시오.<\/li><li>BOOT 점퍼를 제거하십시오.<\/li><li>전원을 켜십시오. (작동 중인 LED가 깜박입니다.).<\/li><li>정상적으로 연결하십시오.<\/li><\/ul>"
+        "message": "보드와의 통신이 끊어진 경우 다음 단계에 따라 통신을 복구하십시오; <ul><li>전원을 끄십시오.<\/li><li>'재부팅 절차 없음', '칩 전부 삭제'를 활성화 하십시오.<\/li><li>부트 핀을 점프하거나 부트 버튼을 누르고 계십시오.<\/li><li>전원을 켜십시오.(제대로 완료되면 작동 중인 LED가 깜박거리지 않습니다)<\/li><li>필요한 경우 STM32 드라이버와 Zadig를 설치하십시오. (베타플라이트 매뉴얼의 <a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">USB 플래싱<\/a> 섹션을 보십시오.)<\/li><li>앱을 닫고, 다시 시작하십시오.<\/li><li>FC에 BOOT 버튼이 있으면 해제하십시오.<\/li><li>올바른 펌웨어로 플래시 하십시오. (당신의 FC 매뉴얼에 명시된 경우 수동 전송 속도를 사용하여).<\/li><li>전원을 끄십시오.<\/li><li>BOOT 점퍼를 제거하십시오.<\/li><li>전원을 켜십시오. (작동 중인 LED가 깜박입니다.).<\/li><li>정상적으로 연결하십시오.<\/li><\/ul>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "펌웨어 플래시 도구 나가기"
@@ -3899,7 +3931,7 @@
         "message": "당신은 이제 막 <strong>펌웨어의 개발 빌드<\/strong>을 플래시하려고 합니다. 이러한 빌드는 진행 중인 작업이며, 다음 중 하나의 경우가 될 수 있습니다:<strong><ul><li>펌웨어가 전혀작동하지 않습니다;<\/li><li>펌웨어는 비행할 수 없습니다;<\/li><li>폭주이륙(flyaways) 같은 펌웨어에 안전 문제가 있습니다;<\/li><li>펌웨어는 비행 컨트롤러를 응답하지 않거나 손상을 줄 수 있습니다.<\/li><\/ul><\/strong>만약 당신이 이 펌웨어를 계속 플래시한다면, <strong>당신은 위와 같은 일이 일어날 위험에 대해 모든 책임을 져야 할 것입니다.<\/strong> 또한 당신은 이 펌웨어를 띄우려고 시도하기 전에 <strong>프롭을 제거하고 벤치 테스트를<\/strong> 수행해야 한다는 것을 인지하여야 합니다."
     },
     "unstableFirmwareAcknowledgement": {
-        "message": "나는 위의 내용을 읽었으며 불안정한 펌웨어를 플래시하는 것에 대하여 <strong>모든 책임을 집니다<strong>."
+        "message": "나는 위의 내용을 읽었으며 불안정한 펌웨어를 플래시하는 것에 대하여 <strong>모든 책임을 집니다<\/strong>"
     },
     "unstableFirmwareAcknowledgementFlash": {
         "message": "플래시"
@@ -7271,6 +7303,22 @@
     },
     "darkTheme": {
         "message": "어두운 테마 사용"
+    },
+    "colorTheme": {
+        "message": "색상 테마",
+        "description": "Color theme settings"
+    },
+    "colorThemeYellow": {
+        "message": "노랑 (기본)",
+        "description": "Default yellow color theme"
+    },
+    "colorThemeAmber": {
+        "message": "엠버",
+        "description": "Amber color theme"
+    },
+    "colorThemeContrast": {
+        "message": "고대비",
+        "description": "Contrast color theme"
     },
     "pidTuningRatesType": {
         "message": "레이트 형식"

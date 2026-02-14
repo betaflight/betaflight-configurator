@@ -26,6 +26,7 @@ import BuildApi from "./BuildApi";
 import { serial } from "./serial.js";
 import { EventBus } from "../components/eventBus";
 import { ispConnected } from "./utils/connection";
+import { unmountVueTab } from "./vue_tab_mounter";
 import { useConnectionStore } from "../stores/connection";
 
 const logHead = "[SERIAL-BACKEND]";
@@ -212,7 +213,13 @@ function finishClose(finishedCallback) {
     sensor_status();
 
     if (wasConnected) {
-        // detach listeners and remove element data
+        // Ensure any mounted Vue tab is unmounted before we remove DOM to avoid Vue runtime errors
+        try {
+            unmountVueTab();
+        } catch (e) {
+            console.warn("unmountVueTab failed:", e);
+        }
+
         $("#content").empty();
 
         // close cliPanel if left open
@@ -784,27 +791,30 @@ function startLiveDataRefreshTimer() {
 }
 
 export function reinitializeConnection(suppressDialog = false) {
+    // Set the reboot timestamp to the current time
+    rebootTimestamp = Date.now();
+
     if (CONFIGURATOR.virtualMode) {
         connectDisconnect();
         if (PortHandler.portPicker.autoConnect) {
-            return setTimeout(function () {
+            setTimeout(function () {
                 $("a.connection_button__link").trigger("click");
             }, 500);
+            return rebootTimestamp;
         }
+        return rebootTimestamp;
     }
 
     const currentPort = PortHandler.portPicker.selectedPort;
-
-    // Set the reboot timestamp to the current time
-    rebootTimestamp = Date.now();
 
     // Send reboot command to the flight controller
     MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false);
 
     if (currentPort.startsWith("bluetooth") || currentPort === "manual") {
-        return setTimeout(function () {
+        setTimeout(function () {
             $("a.connection_button__link").trigger("click");
         }, 1500);
+        return rebootTimestamp;
     }
 
     // Show reboot progress modal except for cli and presets tab
@@ -813,12 +823,14 @@ export function reinitializeConnection(suppressDialog = false) {
         gui_log(i18n.getMessage("deviceRebooting"));
         gui_log(i18n.getMessage("deviceReady"));
 
-        return;
+        return rebootTimestamp;
     }
     // Show reboot progress modal
     if (!suppressDialog) {
         showRebootDialog();
     }
+
+    return rebootTimestamp;
 }
 
 function showRebootDialog() {

@@ -482,9 +482,6 @@
     "eeprom_saved_ok": {
         "message": "EEPROM <span class=\"message-positive\">gordeta<\/span>"
     },
-    "defaultWelcomeHead": {
-        "message": "Hardware"
-    },
     "defaultContributingHead": {
         "message": "Hartu parte"
     },
@@ -493,9 +490,6 @@
     },
     "defaultButtonFirmwareFlasher": {
         "message": "Firmware Flasheatzailea"
-    },
-    "defaultDonateHead": {
-        "message": "Kode Irekia \/ dohaintza abisua"
     },
     "defaultDonateBottom": {
         "message": "<p>Era erregular baten ekonomikoki laguntzeko idea baduzu, kontuan euki beharko zenuen \"Patron\" bilakatzea gure Patreon portalean $t(patreonLink.message)<\/p>"

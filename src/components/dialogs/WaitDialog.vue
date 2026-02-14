@@ -3,9 +3,9 @@
         <div class="data-loading"></div>
         <h3 class="dialogWaitTitle">{{ title }}</h3>
         <div class="buttons" v-if="showCancel">
-            <a href="#" class="dialogWait-cancelButton regular-button" @click.prevent="$emit('cancel')">{{
-                cancelText
-            }}</a>
+            <button type="button" class="dialogWait-cancelButton regular-button" @click="$emit('cancel')">
+                {{ cancelText }}
+            </button>
         </div>
     </dialog>
     <div class="dialog-backdrop"></div>
@@ -20,7 +20,7 @@ defineProps({
     },
     cancelText: {
         type: String,
-        default: "Cancel",
+        default: () => globalThis.i18n?.getMessage("cancel"),
     },
 });
 

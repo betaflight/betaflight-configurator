@@ -54,7 +54,7 @@
         "message": "Nie można wykonać tej operacji na twoim urządzeniu."
     },
     "storageDeviceNotReady": {
-        "message": "Urządzenie pamięci masowej jest niegotowe do użycia. Jeśli korzystasz z karty microSD, sprawdź, czy kontroler lotu ją poprawnie rozpoznaje."
+        "message": "Urządzenie pamięci nie jest gotowe. Jeśli używasz karty microSD, sprawdź, czy kontroler lotu prawidłowo ją wykrywa."
     },
     "connect": {
         "message": "Połącz"
@@ -80,11 +80,11 @@
         "description": "Configure a Virtual Flight Controller without the need of a physical FC."
     },
     "portsSelectPermission": {
-        "message": "--- Nie mogę znaleźć urządzenia USB ---",
+        "message": "--- Nie mogę znaleźć mojego urządzenia USB ---",
         "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access the device."
     },
     "portsSelectPermissionBluetooth": {
-        "message": "--- Nie mogę znaleźć urządzenia Bluetooth---",
+        "message": "--- Nie mogę znaleźć mojego urządzenia Bluetooth---",
         "description": "Option in the port selection dropdown to allow the user to give permissions to the system to access a Bluetooth device."
     },
     "portsSelectPermissionDFU": {
@@ -140,15 +140,19 @@
         "message": "Po wykryciu połączenia otwórz ostatnio używaną kartę"
     },
     "meteredConnection": {
-        "message": "Wyłącz dostęp do internetu (za pomocą liczników lub powolnych połączeń)",
+        "message": "Wyłącz dostęp do internetu (połączenia taryfowe lub zbyt wolne)",
         "description": "Text for the option to disable internet access for metered connection or to disable data over slow connections"
     },
     "analyticsOptOut": {
-        "message": "Zrezygnuj ze zbierania anonimowych danych statystycznych"
+        "message": "Wyłącz anonimowe zbieranie statystyk"
     },
     "connectionTimeout": {
         "message": "Ustaw limit czasu połączenia, aby umożliwić dłuższą inicjalizację podłączenia urządzenia lub ponownego uruchomienia",
         "description": "Change timeout on auto-connect and reboot so the bus has more time to initialize after being detected by the system"
+    },
+    "languageAndAppearanceSettings": {
+        "message": "Język i Wygląd",
+        "description": "Title for the language and appearance settings section"
     },
     "developmentSettings": {
         "message": "Ustawienia deweloperskie",
@@ -162,12 +166,16 @@
         "message": "Włącz tryb tylko CLI",
         "description": "Text for the option to enable or disable CLI only mode"
     },
+    "automaticDevOptions": {
+        "message": "Automatycznie włącz ustawienia deweloperskie dla wersji podglądowych",
+        "description": "Text for the option to automatically enable development settings for preview builds"
+    },
     "showManualMode": {
-        "message": "Włącz tryb ręczny połączenia",
+        "message": "Włącz tryb ręcznego połączenia",
         "description": "Text for the option to enable or disable manual connection mode"
     },
     "showVirtualMode": {
-        "message": "Włącz tryb połączenia wirtualnego",
+        "message": "Włącz tryb wirtualnego połączenia",
         "description": "Text for the option to enable or disable the virtual FC"
     },
     "useLegacyRenderingModel": {
@@ -188,7 +196,7 @@
         "message": "Wybierz język domyślny"
     },
     "language_default": {
-        "message": "Domyślny systemowy"
+        "message": "domyślny systemowy"
     },
     "language_DEFAULT": {
         "message": "$t(language_default.message)",
@@ -646,7 +654,7 @@
         "description": "Packet error text shown in the status bar"
     },
     "statusbar_i2c_error": {
-        "message": "Błąd I2C:",
+        "message": "Błąd I²C:",
         "description": "CPU load text shown in the status bar"
     },
     "statusbar_cycle_time": {
@@ -682,11 +690,17 @@
     "defaultWelcomeIntro": {
         "message": "Witamy w aplikacji <strong>Betaflight<\/strong>, narzędziu opracowanym w celu uproszczenia aktualizacji, konfiguracji i dostrajania kontrolera lotu."
     },
-    "defaultWelcomeHead": {
+    "defaultHardwareHead": {
         "message": "Sprzęt"
     },
-    "defaultWelcomeText": {
-        "message": "Ten program obsługuje każdy sprzęt komputerowy, pracujący na Betaflight. Pełną listę sprzętu znajdziesz w zakładce Wgraj Oprogramowanie.<br \/><br \/> <a href=\"https:\/\/github.com\/betaflight\/blackbox-log-viewer\/releases\" target=\"_blank\" rel=\"noopener noreferrer \">Pobierz program Betaflight Blackbox Log Viewer<\/a><br \/><br \/><a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel =\"noopener noreferrer\">Pobierz Lua skrypt Betaflight dla nadajnika<\/a><br \/><br \/>Kod źródłowy oprogramowania układowego można pobrać <a href=\"https:\/\/github.com\/betaflight\/betaflight\" target= \"_blank\" rel=\"noopener noreferrer\">tutaj<\/a><br \/><br \/>Dla starszego sprzętu korzystającego z portu szeregowego USB CP210x:<br \/>Najnowsze <b>sterowniki CP210x<\/b> można pobrać <a href=\"https:\/\/www.silabs.com\/products\/development-tools\/software\/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\"> tutaj<\/a><br \/>Najnowsze sterowniki USB <b>Zadig<\/b> dla systemu Windows można pobrać <a href=\"http:\/\/zadig.akeo.ie\/\" target=\"_blank\" rel =\"noopener noreferrer\">tutaj<\/a><br \/><b>ImpulseRC Driver Fixer<\/b> można pobrać <a href=\"https:\/\/impulserc.com\/pages\/downloads\" target=\"blank\" rel=\"noopener noreferrer\">tutaj<\/a>"
+    "defaultHardwareText": {
+        "message": "Aplikacja obsługuje cały sprzęt kompatybilny z Betaflight. Pełną listę urządzeń znajdziesz w zakładce Wgraj Oprogramowanie.<br \/><br \/>Przydatne narzędzia i sterowniki:<ul><li>Dla starszego sprzętu z kontrolerem CP210x USB na port szeregowy najnowsze <b>sterowniki CP210x<\/b> można pobrać <a href=\"https:\/\/www.silabs.com\/products\/development-tools\/software\/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">tutaj<\/a><\/li><li>Najnowszą wersję <b>Zadig<\/b> do instalacji sterowników USB w systemie Windows można pobrać <a href=\"http:\/\/zadig.akeo.ie\/\" target=\"_blank\" rel=\"noopener noreferrer\">tutaj<\/a><\/li><li><b>ImpulseRC Driver Fixer<\/b> można pobrać <a href=\"https:\/\/github.com\/ImpulseRC\/ImpulseRC_Driver_Fixer\" target=\"_blank\" rel=\"noopener noreferrer\">tutaj<\/a><\/li><\/ul>"
+    },
+    "defaultSoftwareHead": {
+        "message": "Oprogramowanie"
+    },
+    "defaultSoftwareText": {
+        "message": "Nasz <a href=\"https:\/\/blackbox.betaflight.com\" target=\"_blank\" rel=\"noopener noreferrer\">Blackbox Log Viewer<\/a> jest dostępny jako aplikacja online.<br \/><br \/>Kolekcja naszych <a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Lua Scripts dla nadajników<\/a> znajduje się na GitHub.<br \/><br \/>Nasz <a href=\"https:\/\/github.com\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">kod źródłowy<\/a> oprogramowania układowego, tej aplikacji oraz Blackbox Log Viewera można pobrać z GitHub."
     },
     "defaultContributingHead": {
         "message": "Współtworzenie"
@@ -700,17 +714,26 @@
     "defaultDiscordText": {
         "message": "Betaflight <a href=\"https:\/\/discord.betaflight.com\/invite\" target=\"_blank\" rel=\"noopener noreferrer\">Serwer na Discordzie<\/a>.<br \/> Podziel się doświadczeniami z lotów, porozmawiaj o Betaflight i pomóż innym osobom albo sam uzyskaj pomoc."
     },
+    "defaultRedditText": {
+        "message": "Dołącz do naszego <a href=\"https:\/\/www.reddit.com\/r\/Betaflight\/\" target=\"_blank\" rel=\"noopener noreferrer\">Subreddita<\/a>.<br \/>Rozmawiaj o funkcjach, zadawaj pytania i buduj relacje ze społecznością Betaflight na Reddicie."
+    },
+    "defaultCommunityHead": {
+        "message": "Społeczność"
+    },
+    "statisticsDisclaimerHead": {
+        "message": "Twoja prywatność"
+    },
     "statisticsDisclaimer": {
-        "message": "Aplikacja Betaflight zbiera anonimowe statystyki użytkowania. Na przykład dane te obejmują (ale nie ograniczają się do) liczbę uruchomień, region geograficzny użytkowników, typy kontrolerów lotu, wersje oprogramowania firmware, wykorzystanie elementów interfejsu użytkownika, kart itp. Podsumowanie tych danych jest dostępne <a href=\"https:\/\/datastudio.google.com\/u\/0\/reporting\/1pK1PFw0eWmsgl2npvuzwAqscVzlhJvuF\" target=\"_blank\" rel=\"noopener noreferrer\">tutaj<\/a>. Kolekcja jest wykonywana w celu lepszego zrozumienia, w jaki sposób aplikacja Betaflight jest używana, zrozumienia trendów społeczności i możliwych ulepszeń interfejsu użytkownika. Użytkownicy mogą wyłączyć zbieranie danych w zakładce Opcje."
+        "message": "Aplikacja Betaflight zbiera anonimowe dane o użytkowaniu. Mogą one obejmować liczbę uruchomień, region geograficzny użytkownika, typ kontrolera lotu, wersję oprogramowania oraz korzystanie z elementów interfejsu i zakładek. Dane te pomagają nam lepiej zrozumieć, jak aplikacja jest używana, śledzić trendy w społeczności oraz ulepszać interfejs i ogólne doświadczenie użytkownika. Użytkownicy mogą wyłączyć zbieranie danych w zakładce Ustawienia. Więcej informacji o tym, jak zbieramy i wykorzystujemy Twoje dane, znajdziesz w naszej <a href=\"https:\/\/www.betaflight.com\/privacy\" rel=\"noopener noreferrer\" target=\"_blank\">polityce prywatności<\/a>."
     },
     "defaultButtonFirmwareFlasher": {
         "message": "Wgraj Oprogramowanie"
     },
     "defaultDonateHead": {
-        "message": "Informacja o Open Source \/ Darowiznach"
+        "message": "Darowizny na rozwój Open Source"
     },
     "defaultDonateText": {
-        "message": "<p><strong>Betaflight<\/strong> jest oprogramowaniem kontrolera lotu, które jest <strong>open source<\/strong> i jest dostępne bezpłatnie <strong>bez gwarancji<\/strong> dla wszystkich użytkowników.<\/p><p>Jeśli uważasz, że aplikacja Betaflight lub Betaflight jest przydatna, rozważ <strong>wspieranie<\/strong> poprzez dotację.<\/p>"
+        "message": "<p><strong>Betaflight<\/strong> to oprogramowanie <strong>open source<\/strong>, dostępne dla wszystkich użytkowników bezpłatnie i <strong>bez gwarancji<\/strong>.<\/p><p>Jeśli uważasz Betaflight za przydatne, możesz <strong>wesprzeć<\/strong> jego rozwój, dokonując dobrowolnej darowizny.<\/p>"
     },
     "defaultDonateBottom": {
         "message": "<p>Jeśli chcesz nas regularnie wspierać finansowo, rozważ zostanie naszym patronem na $t(patreonLink.message).<\/p>"
@@ -1608,7 +1631,7 @@
         "message": "Konfiguracja sygnału dźwiękowego Dshot"
     },
     "configurationUseDshotBeeper": {
-        "message": "Użyj sygnału dźwiękowego Dhsot (Pozwala użyć silników do generowania sygnału dzwiękowego gdy rozbrojony)"
+        "message": "Użyj sygnału dźwiękowego Dshot (silniki wydają sygnały dźwiękowe po rozbrojeniu)"
     },
     "configurationDshotBeaconTone": {
         "message": "Sygnał dzwiękowy"
@@ -1713,7 +1736,7 @@
         "message": "Łączny czas lotu"
     },
     "configurationCalculatedCyclesSec": {
-        "message": "Cykle\/Sekundy [Hz]"
+        "message": "Cykle\/Sekundę [Hz]"
     },
     "configurationSpeedGyroNoGyro": {
         "message": "Brak żyroskopu",
@@ -2341,7 +2364,7 @@
         "message": "ID zgodności modelu"
     },
     "receiverHelp": {
-        "message": "&#8226;  <b><strong><a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">Zawsze sprawdź, czy Failsafe działa prawidłowo!<\/a><\/strong><\/b> Ustawienia znajdują się w zakładce Procedura Fail-safe, która wymaga trybu eksperta.<br> &#8226; <b>Użyj najnowszego firmware dla twojego nadajnika Tx!<\/b><br> &#8226; <strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">Wyłącz filtr ADC<\/a><\/strong> w Nadajniku, jeśli używasz OpenTx lub EdgeTx.<br>Podstawowa konfiguracja: poprawnie skonfiguruj ustawienia odbiornika. Wybierz poprawną „Mapę kanałów” dla swojego radia. Sprawdź, czy Roll, Pitch i inne wykresy słupkowe poruszają się poprawnie. Dostosuj wartości punktu końcowego lub zakresu kanału w nadajniku od ~1000 do ~2000 i ustaw punkt środkowy na 1500. Aby uzyskać więcej informacji przeczytaj dokumentację <strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx\" target=\"_blank\" rel=\"noopener noreferrer\"><\/a><\/strong>."
+        "message": "&#8226;  <b><strong><a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Failsafe#testing-failsafe\" target=\"_blank\" rel=\"noopener noreferrer\">Zawsze sprawdzaj, czy Fail-Safe działa poprawnie!<\/a><\/strong><\/b> Konfigurację ustawień przeprowadzisz w zakładce Procedura Fail-Safe, która pojawi się po włączeniu Trybu Eksperta.<br> &#8226; <b>Upewnij się, że oprogramowanie nadajnika jest aktualne!<\/b><br> &#8226; <strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx#disabling-the-opentxedgetx-adc-filter\" target=\"_blank\" rel=\"noopener noreferrer\">Wyłącz sprzętowy filtr ADC<\/a><\/strong> w nadajniku, jeśli używasz OpenTx lub EdgeTx.<br>Podstawowa konfiguracja: poprawnie skonfiguruj ustawienia w zakładce Odbiornik. Wybierz tę samą „Kolejność Kanałów”, jaką masz w radiu. Sprawdź, czy graficzne wskaźniki Roll, Pitch i pozostałych kanałów przesuwają się poprawnie. Ustaw punkty końcowe kanałów w nadajniku na ~1000 i ~2000, a punkt środkowy na 1500. Aby uzyskać więcej informacji przeczytaj <strong><a href=\"https:\/\/betaflight.com\/docs\/development\/Rx\" target=\"_blank\" rel=\"noopener noreferrer\">dokumentację<\/a><\/strong>."
     },
     "receiverThrottleMid": {
         "message": "Przepustnica MID"
@@ -2389,13 +2412,13 @@
         "message": "Są to wartości podawane w mikro sekundach(us). Aby zwiększyć zakres martwy drążka gazu, zwiększ tą wartość.<strong>Ustawienia tylko dla Gazu w trybie 3D.<\/strong>"
     },
     "receiverChannelMap": {
-        "message": "Mapa kanałów"
+        "message": "Kolejność Kanałów"
     },
     "receiverChannelDefaultOption": {
         "message": "Domyślne"
     },
     "receiverChannelMapTitle": {
-        "message": "Możesz zdefiniować własną mapę kanałów klikając w pole"
+        "message": "Możesz zdefiniować własną kolejność kanałów klikając w pole"
     },
     "receiverRssiChannel": {
         "message": "Kanał RSSI"
@@ -2710,13 +2733,13 @@
         "message": "kiedy kanał"
     },
     "adjustmentsColumnIsInRange": {
-        "message": "Zakres"
+        "message": "jest w zakresie"
     },
     "adjustmentsColumnThenApplyFunction": {
         "message": "następnie zastosuj"
     },
     "adjustmentsColumnViaChannel": {
-        "message": "przez kanał"
+        "message": "kanałem"
     },
     "adjustmentsSlot0": {
         "message": "Slot 1"
@@ -3546,6 +3569,12 @@
     "sdcardStatusUnknown": {
         "message": "Nieznany stan $1"
     },
+    "firmwareFlasherPleaseWait": {
+        "message": "Proszę czekać"
+    },
+    "firmwareFlasherBoardSelectionHead": {
+        "message": "Wybór kontrolera lotu"
+    },
     "firmwareFlasherBranch": {
         "message": "Wybierz opcję Żądanie ściągnięcia lub Zatwierdź"
     },
@@ -3581,10 +3610,13 @@
         "message": "Szczegóły kompilacji w chmurze:"
     },
     "firmwareFlasherCloudBuildLogUrl": {
-        "message": "Pokaż logi."
+        "message": "Pokaż log"
     },
     "firmwareFlasherCloudBuildStatus": {
         "message": "Status:"
+    },
+    "firmwareFlasherCloudBuildQueued": {
+        "message": "w kolejce"
     },
     "firmwareFlasherCloudBuildPending": {
         "message": "oczekujący"
@@ -3752,13 +3784,13 @@
         "message": "Wiadomość:"
     },
     "firmwareFlasherWarningText": {
-        "message": "Postępuj według wytycznych oraz <span class = \"message-negative\"> nie <\/span> próbuj wgrywać oprogramowania<strong> innego niż Betaflight <\/strong> za pomocą tego oprogramowania. <br \/> Pamiętaj<span class = \"message-negative\" > nie <\/span> <strong> odłączaj <\/strong> kontrolera lotu oraz <strong> nie wyłączaj <\/strong> komputera podczas wgrywania oprogramowania. <br \/> <br \/> <strong> Uwaga: <\/strong> Bootloader STM32 jest przechowywany w ROM-ie dlatego nie może być blokowany. <br \/> <strong> Uwaga: <\/strong> <span class = \"message-negative\"> Automatyczne połączenie <\/span> jest zawsze wyłączone, gdy jesteś w trybie wgrywania oprogramowania. <br \/> <strong> Uwaga: <\/strong> Upewnij się, że masz kopię zapasową, niektóre aktualizacje mogą usunąć twoją konfigurację. <br \/> <strong> Uwaga: <\/strong> Jeśli masz problem z wgrywaniem oprogramowania<strong> spróbuj odłączyć wszystkie przewody od kontrolera lotu <\/strong> następnie spróbuj ponownie uruchomić komputer oraz zaktualizować sterowniki. <br \/> <strong> Uwaga: <\/strong> Podczas wgrywania oprogramowania do płytek bezpośrednio podłączonych do gniazd USB (większość nowszych płytek) upewnij się, że przeczytałeś sekcję Wgrywanie oprogramowania w instrukcji Betaflight i zainstalowałeś odpowiednie oprogramowanie i sterowniki"
+        "message": "Proszę <span class=\"message-negative\">nie<\/span> próbuj używać tego programu do wgrywania oprogramowania na urządzenia <strong>niekompatybilne z Betaflight<\/strong>.<br \/><span class=\"message-negative\">Nie<\/span><strong>odłączaj<\/strong> kontrolera lotu oraz <strong>nie wyłączaj<\/strong> komputera w trakcie wgrywania oprogramowania.<br \/><br \/><strong>Uwaga:<\/strong><ul><li>Bootloader STM32 znajduje się w pamięci ROM i nie można go uszkodzić.<\/li><li><span class=\"message-negative\">Automatyczne połączenie<\/span> pozostaje nieaktywne podczas korzystania z zakładki Wgraj Oprogramowanie.<\/li><li>Wykonaj kopię zapasową — aktualizacja lub cofnięcie wersji może wyczyścić zapisaną konfigurację.<\/li><li>W razie niepowodzenia wgrywania <strong>odłącz wszystkie kable od kontrolera lotu<\/strong>, uruchom komputer ponownie i zaktualizuj sterowniki.<\/li><li>Wgrywając oprogramowanie na kontrolery lotu z bezpośrednio podłączonym USB (większość nowszych), zapoznaj się z sekcją USB Flashing w instrukcji Betaflight i upewnij się, że masz właściwe oprogramowanie oraz sterowniki.<\/li><\/ul>"
     },
     "firmwareFlasherRecoveryHead": {
-        "message": "<strong>Problemy z połączeniem FC<\/strong>"
+        "message": "<strong>Przywracanie połączenia \/ utrata komunikacji<\/strong>"
     },
     "firmwareFlasherRecoveryText": {
-        "message": "Jeśli utraciłeś łączność z płytką kontrolera lotu, wykonaj poniższe kroki, aby ją przywrócić: <ul> <li>Wyłącz zasilanie.<\/li> <li>Włącz opcje „Bez ponownego uruchamiania” oraz „Pełne czyszczenie pamięci”.<\/li> <li>Zewrzyj piny BOOT lub przytrzymaj przycisk BOOT na płytce.<\/li> <li>Włącz zasilanie (jeśli wszystko przebiegło poprawnie, dioda LED aktywności NIE BĘDZIE migać).<\/li> <li>Zainstaluj wszystkie sterowniki STM32 oraz program Zadig, jeśli to wymagane (zobacz sekcję <a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">USB Flashing<\/a> w instrukcji Betaflight).<\/li> <li>Zamknij program, a następnie uruchom go ponownie.<\/li> <li>Zwolnij przycisk BOOT, jeśli Twoja płytka go posiada.<\/li> <li>Wgraj odpowiednie oprogramowanie (użyj ręcznego ustawienia szybkości transmisji – baud rate – jeśli zostało to wskazane w instrukcji Twojej płytki).<\/li> <li>Wyłącz zasilanie.<\/li> <li>Usuń zworkę BOOT.<\/li> <li>Włącz zasilanie (dioda LED aktywności powinna zacząć migać).<\/li> <li>Połącz się w normalny sposób.<\/li> <\/ul>"
+        "message": "W przypadku utraty komunikacji z kontrolerem lotu, wykonaj poniższe kroki, aby ją przywrócić:<ul><li>Wyłącz zasilanie.<\/li><li>Włącz opcje: \"Bez ponownego uruchamiania\" i \"Pełne czyszczenie pamięci\".<\/li><li>Zewrzyj piny BOOT lub przytrzymaj przycisk BOOT na płytce.<\/li><li>Włącz zasilanie (jeśli wszystko wykonano poprawnie, dioda LED aktywności NIE POWINNA migać).<\/li><li>Zainstaluj wszystkie sterowniki STM32 i użyj narzędzia Zadig, jeśli to wymagane (patrz sekcja <a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">USB Flashing<\/a> w instrukcji Betaflight).<\/li><li>Zamknij i uruchom ponownie aplikację.<\/li><li>Zwolnij przycisk BOOT, jeśli kontroler lotu go ma.<\/li><li>Wgraj odpowiednie oprogramowanie (ręcznie ustaw prędkość transmisji, jeśli jest określona w instrukcji kontrolera lotu).<\/li><li>Wyłącz zasilanie.<\/li><li>Rozłącz piny BOOT.<\/li><li>Włącz zasilanie (dioda LED aktywności powinna migać).<\/li><li>Połącz się z kontrolerem lotu.<\/li><\/ul>"
     },
     "firmwareFlasherButtonLeave": {
         "message": "Urzyj opcji wgrywania oprogramowania"
@@ -3864,7 +3896,7 @@
         "message": "Zamierzasz wgrać <strong>deweloperską kompilację oprogramowania układowego<\/strong>. Ciągle trwają prace nad tą wersją oprogramowania, a każda z poniższych sytuacji może mieć miejsce:<strong><ul><li>oprogramowanie w ogóle nie będzie działć<\/li><li>oprogramowanie będzie miało problemy ze sterowaniem lotem<\/li><li>wystąpią problemy z bezpieczeństwem, na przykład podczas lotu<\/li><li>oprogramowanie może spowodować, że kontroler lotu stanie się nieprzewidywalny i doprowadzi do uszkodzenia jednostki latającej lub czyjegoś zdrowia<\/li><\/ul><\/strong>Jeśli kontynuujesz wgrywanie tego oprogramowania, <strong>ponosisz pełną odpowiedzialność za ryzyko którejkolwiek z powyższych sytuacji<\/strong>. Ponadto przyznajesz, że dokonasz <strong>dokładnych testów funkcji ze zdjętymi śmigłami<\/strong> przed jakimikolwiek próbami latania na tym oprogramowaniu."
     },
     "unstableFirmwareAcknowledgement": {
-        "message": "Przeczytałem powyższe i <strong>biorę pełną odpowiedzialność<strong> za wgrywanie niestabilnego oprogramowania"
+        "message": "Przeczytałem powyższe i <strong>biorę pełną odpowiedzialność<\/strong> za wgrywanie niestabilnego oprogramowania"
     },
     "unstableFirmwareAcknowledgementFlash": {
         "message": "Wgraj"
@@ -4865,7 +4897,7 @@
         "message": "Wartość przepustnicy użyta podczas lądowania"
     },
     "failsafeOffDelayItem": {
-        "message": "Opóźnienie wyłączenia silnika podczas Failsafe [sekund]"
+        "message": "Opóźnienie wyłączenia silników podczas Fail-Safe [sekundy]"
     },
     "failsafeOffDelayHelp": {
         "message": "Czas pozostawania w trybie lądowania do momentu wyłączenia silników i wyłączenia jednostki"
@@ -4977,13 +5009,13 @@
         "message": "Zaznacz tę opcję, aby ustawić przełącznik odpowiedzialny za failsafe (Zakładka Tryby). Będziesz go mógł użyć tego testowania funkcji awaryjnego lądowania. <strong>Uwaga:<\/strong> Uzbrojenie silników jest niemożliwe, gdy przełącznik odpowiedzialny za funkcje failsafe jest w pozycji włączonej"
     },
     "failsafeSwitchTitle": {
-        "message": "PRZEŁĄCZNIK FAILSAFE"
+        "message": "AKTYWOWANIE FAIL-SAFE PRZEŁĄCZNIKIEM"
     },
     "failsafeSwitchModeItem": {
-        "message": "Wybrany typ Failsafe"
+        "message": "Efekt Fail-Safe wywołany przełącznikiem"
     },
     "failsafeSwitchModeHelp": {
-        "message": "Ta opcja określa, co się dzieje, gdy procedura Fail-Safe jest aktywowana przez przełącznik AUX:<br\/><strong>Etap 1<\/strong> aktywuje Etap 1 Fail-Safe. Jest to przydatne, jeśli chcesz symulować właściwe zachowanie w wyniku utraty sygnału.<br\/><strong>Etap 2<\/strong> pomija Etap 1 i natychmiast aktywuje procedurę Etapu 2<br\/><strong>Upadek<\/strong> rozbraja natychmiast (twój model spadnie na ziemię)"
+        "message": "Ta opcja określa, co się dzieje po aktywacji Fail-Safe za pomocą przełącznika AUX:<br\/><strong>Etap 1<\/strong> aktywuje Etap 1 Fail-Safe. Jest to przydatne, jeśli chcesz zasymulować zachowanie failsafe przy rzeczywistej utracie sygnału.<br\/><strong>Etap 2<\/strong> pomija Etap 1 i natychmiast uruchamia procedurę Etapu 2<br\/><strong>Upadek<\/strong> natychmiast rozbraja (Twój model spadnie)"
     },
     "failsafeSwitchOptionStage1": {
         "message": "Etap 1"
@@ -7065,6 +7097,9 @@
     "configurationSmallAngle": {
         "message": "Maksymalny kąt uzbrojenia [w stopniach]"
     },
+    "configurationSmallAngleHelp": {
+        "message": "Model nie uzbroi się, jeśli jest przechylony ponad ustaloną liczbę stopni. Funkcja działa tylko przy włączonym akcelerometrze. Ustawienie 180 wyłącza zabezpieczenie."
+    },
     "configurationBatteryVoltage": {
         "message": "Napięcie akumulatora"
     },
@@ -7128,6 +7163,9 @@
     },
     "pidTuningDeltaMeasurement": {
         "message": "Pomiar"
+    },
+    "pidTuningDeltaTip": {
+        "message": "<b>Pochodna od błędu<\/b> zapewnia dokładniejszą odpowiedź na drążki, jest preferowana podczas wyścigów.<br \/><br \/><b>Pochodna od pomiaru<\/b> zapewnia płynniejszą odpowiedź na drążki, przydatniejszą do freestyle'u"
     },
     "pidTuningPidControllerTip": {
         "message": "<b>Stara \"Legacy(integer)\" kontra nowa wersja Betaflight (float):<\/b> Ustawienia i silnik PID są dokładnie takie same. Nie jest konieczne ponowne strojenie kontrolera PID. \"Legacy\" to stary silnik PID który jest podstawowym kontrolerem PID, został zmodernizowany i jest oparty na arytmetyce całkowitoliczbowej(integer). Natomiast kontroler PID Betaflight wykorzystuje matematykę zmiennoprzecinkową i posiada wiele nowych funkcji zaprojektowanych specjalnie dla aplikacji wielofunkcyjnych <br> <b>zmiennoprzecinkowy \"Float\" vs całkowitoliczbowy\"Integer\":<\/b> skalowanie PID i logika PID są dokładnie takie same. mikrokontrolery serii F1 (czyli też płytki mające w nazwie F1) nie mają sprzętowego FPU. Arytmetyka zmiennoprzecinkowa zwiększa obciążenie procesora dlatego zastosowano całkowitoliczbowe obliczenia aby odciążyć CPU i przyspieszyć proces liczenia PID.\nJednakże obliczenia przeprowadzane w arytmetyce zmiennoprzecinkowej (w czym pomaga koprocesor FPU(floating point unit)) oferują dużo lepszą dokładność uzyskanego wyniku."
@@ -7226,10 +7264,26 @@
         "message": "Automatycznie podpowiadaj komendy w Wierszu Poleceń CLI"
     },
     "firmwareBackupOnFlash": {
-        "message": "Zanim wgrasz nowe oprogramowanie, stwórz kopię zapasową"
+        "message": "Tworzenie kopii zapasowej przed wgrywaniem oprogramowania"
     },
     "darkTheme": {
-        "message": "Włącz ciemny motyw"
+        "message": "Włącz tryb ciemny"
+    },
+    "colorTheme": {
+        "message": "Kolor motywu",
+        "description": "Color theme settings"
+    },
+    "colorThemeYellow": {
+        "message": "Żółty (domyślnie)",
+        "description": "Default yellow color theme"
+    },
+    "colorThemeAmber": {
+        "message": "Bursztynowy",
+        "description": "Amber color theme"
+    },
+    "colorThemeContrast": {
+        "message": "Wysoki Kontrast",
+        "description": "Contrast color theme"
     },
     "pidTuningRatesType": {
         "message": "Rodzaj Rate"
@@ -7338,6 +7392,9 @@
     },
     "cordovaWebviewUpdateBtn": {
         "message": "Aktualizuj ze sklepu Google Play Store"
+    },
+    "cordovaWebviewEnable": {
+        "message": "W Ustawieniach przejdź do sekcji informacji o urządzeniu i stuknij numer kompilacji 10 razy, aby włączyć „Opcje programistyczne”. Następnie otwórz Opcje programistyczne i wybierz <b>{{app}}<\/b> jako dostawcę WebView."
     },
     "cordovaWebviewEnableBtn": {
         "message": "Otwórz ustawienia"
@@ -7504,6 +7561,10 @@
     "presetsLoadingDumpAll": {
         "message": "Wczytywanie bieżącej konfiguracji z kontrolera lotu",
         "description": "Title for the waiting dialog when loading dump all into a file"
+    },
+    "dumpAllNotSavedWarning": {
+        "message": "Wystąpił błąd podczas zapisywania bieżącej konfiguracji",
+        "description": "Message appears on presets tab when saving current diff all into a file has failed"
     },
     "presetSources": {
         "message": "Źródła szablonów...",
@@ -7792,6 +7853,12 @@
     },
     "labelSignOut": {
         "message": "Wyloguj się"
+    },
+    "labelAvatarUrl": {
+        "message": "Adres URL awatara"
+    },
+    "placeholderAvatarUrl": {
+        "message": "Wprowadź adres URL obrazu dla swojego awatara"
     },
     "labelCreatePasskey": {
         "message": "Utwórz hasło"

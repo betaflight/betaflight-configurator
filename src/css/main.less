@@ -1424,6 +1424,12 @@ dialog {
     &:hover {
         background-color: var(--error-400);
     }
+    &.disabled {
+        background-color: var(--surface-500);
+        border: 1px solid var(--surface-400);
+        color: var(--surface-900);
+        cursor: default;
+    }
 }
 .danger-button.pushed {
     background-color: var(--error-400);

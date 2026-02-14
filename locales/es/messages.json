@@ -150,6 +150,10 @@
         "message": "Establece el tiempo de espera de la conexión para permitir una inicialización más larga del dispositivo al conectar o reiniciar",
         "description": "Change timeout on auto-connect and reboot so the bus has more time to initialize after being detected by the system"
     },
+    "languageAndAppearanceSettings": {
+        "message": "Idioma y apariencia",
+        "description": "Title for the language and appearance settings section"
+    },
     "developmentSettings": {
         "message": "Ajustes de desarrollo",
         "description": "Title for the development settings section"
@@ -161,6 +165,10 @@
     "cliOnlyMode": {
         "message": "Activar modo CLI",
         "description": "Text for the option to enable or disable CLI only mode"
+    },
+    "automaticDevOptions": {
+        "message": "Activar automáticamente las opciones de desarrollo para las versiones de vista previa",
+        "description": "Text for the option to automatically enable development settings for preview builds"
     },
     "showManualMode": {
         "message": "Activar modo de conexión manual",
@@ -200,6 +208,9 @@
     },
     "sensorStatusGyro": {
         "message": "Giroscopio"
+    },
+    "configurationGyroRequired": {
+        "message": "Al menos un giro debe estar habilitado"
     },
     "sensorStatusGyroShort": {
         "message": "Giro",
@@ -534,6 +545,9 @@
     "buildServerUsingCached": {
         "message": "Usando información de compilaciones cacheada para $1."
     },
+    "buildServerSupportRequestSubmission": {
+        "message": "<br>*** Datos de soporte enviados *** <br>ID: $1<br><br><br># copia el ID para proporcionarlo al equipo Betaflight."
+    },
     "buildKey": {
         "message": "Clave de compilación: <strong>$1<\/strong>"
     },
@@ -668,11 +682,17 @@
     "defaultWelcomeIntro": {
         "message": "Bienvenido a <strong>Betaflight App<\/strong>, una utilidad diseñada para simplificar el actualizar, configurar y ajustar tu controlador de vuelo."
     },
-    "defaultWelcomeHead": {
+    "defaultHardwareHead": {
         "message": "Hardware"
     },
-    "defaultWelcomeText": {
-        "message": "La aplicación soporta todo el hardware que puede ejecutar Betaflight. Mira el apartado Instalar Firmware para una lista completa del hardware.<br \/><br \/> <a href=\"https:\/\/github.com\/betaflight\/blackbox-log-viewer\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Descargar Betaflight Blackbox Log Viewer<\/a><br \/><br \/><a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">Descargar Betaflight TX Lua Scripts<\/a><br \/><br \/>El código fuente del firmware puede descargarse desde <a href=\"https:\/\/github.com\/betaflight\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">aquí<\/a><br \/><br \/>Para hardware antiguo que use un chip USB CP210x a serie:<br \/>Los últimos <b>Drivers CP210x<\/b> pueden descargarse desde <a href=\"https:\/\/www.silabs.com\/products\/development-tools\/software\/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">aquí<\/a><br \/>El último driver <b>Zadig<\/b> para instalación del driver USB de Windows puede descargarse desde <a href=\"http:\/\/zadig.akeo.ie\/\" target=\"_blank\" rel=\"noopener noreferrer\">aquí<\/a><br \/><b>Solucionador de Driver de ImpulseRC<\/b> puede ser descargado <a href=\"https:\/\/impulserc.com\/pages\/downloads\" target=\"blank\" rel=\"noopener noreferrer\">aquí<\/a>"
+    "defaultHardwareText": {
+        "message": "La aplicación soporta todo el hardware que puede ejecutar Betaflight. Revisa la pestaña Instalar Firmware para ver la lista completa de hardware.<br \/><br \/>Utilidades de hardware \/ controladores:<ul><li>Para hardware heredado usando un chip USB CP210x a serial, los últimos drivers <b>CP210x<\/b> se puede descargar desde <a href=\"https:\/\/www.silabs.com\/products\/development-tools\/software\/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">aquí<\/a><\/li><li>Los últimos de <b>Zadig<\/b> para la instalación del controlador USB Windows se puede descargar desde <a href=\"http:\/\/zadig.akeo.ie\/\" target=\"_blank\" rel=\"noopener noreferrer\">aquí<\/a><\/li><li><b>ImpulseRC Driver Fixer<\/b> se puede descargar <a href=\"https:\/\/github.com\/ImpulseRC\/ImpulseRC_Driver_Fixer\" target=\"_blank\" rel=\"noopener noreferrer\">aquí<\/a><\/li><\/ul>"
+    },
+    "defaultSoftwareHead": {
+        "message": "Software"
+    },
+    "defaultSoftwareText": {
+        "message": "Nuestro <a href=\"https:\/\/blackbox.betaflight.com\" target=\"_blank\" rel=\"noopener noreferrer\">Visor de Log de Blackbox<\/a> está disponible como una aplicación en línea.<br \/><br \/>Nuestra colección de <a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">TX Lua Scripts<\/a> están disponibles en GitHub.<br \/><br \/>Nuestro código fuente <a href=\"https:\/\/github.com\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\"><\/a> para el firmware, esta aplicación y el visor de blackbox se pueden descargar desde GitHub."
     },
     "defaultContributingHead": {
         "message": "Contribuir"
@@ -686,14 +706,23 @@
     "defaultDiscordText": {
         "message": "<a href=\"https:\/\/discord.betaflight.com\/invite\" target=\"_blank\" rel=\"noopener noreferrer\">Servidor Discord<\/a> de Betaflight.<br \/>Comparte tu experiencia de vuelo, habla sobre Betaflight, ayuda a otras personas o recibe ayuda de la comunidad."
     },
+    "defaultRedditText": {
+        "message": "Únete a <a href=\"https:\/\/www.reddit.com\/r\/Betaflight\/\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight Subreddit<\/a>.<br \/>Discute funcionalidades, haz preguntas, y conecta con la comunidad de Betaflight en Reddit."
+    },
+    "defaultCommunityHead": {
+        "message": "Comunidad"
+    },
+    "statisticsDisclaimerHead": {
+        "message": "Tu privacidad"
+    },
     "statisticsDisclaimer": {
-        "message": "Betaflight App recopila estadísticas de uso anónimas. Por ejemplo, estos datos incluyen (pero no se limitan a) el número de ejecuciones, la región geográfica de los usuarios, tipos de controladores de vuelo, versiones de firmware, uso de elementos y pestañas, etc. El resumen de estos datos se comparte <a href=\"https:\/\/datastudio.google.com\/u\/0\/reporting\/1pK1PFw0eWmsgl2npvuzwAqscVzlhJvuF\" target=\"_blank\" rel=\"noopener noreferrer\">aquí<\/a>. La recolección se hace para entender mejor cómo se utiliza el Configurador Betaflight, para entender las tendencias de la comunidad, y para posibles mejoras en la interfaz de usuario. Los usuarios pueden dejar de recolectar datos en la pestaña Opciones."
+        "message": "Esta aplicación Betaflight recoge estadísticas de uso anónimas. Estos datos de uso podrían incluir el número de ejecuciones, región geográfica de los usuarios, tipos de controladores de vuelo, versiones de firmware, uso de elementos y pestañas, etc. Recopilamos estos datos para comprender mejor cómo se utiliza la aplicación y las tendencias de la comunidad. Hacemos esto para ayudarnos a desarrollar una mejor experiencia e interfaz de usuario. Los usuarios pueden dejar de recolectar datos en la pestaña Opciones. Para obtener información sobre cómo recopilamos y utilizamos tus datos, consulta nuestra <a href=\"https:\/\/www.betaflight.com\/privacy\" rel=\"noopener noreferrer\" target=\"_blank\">política de privacidad<\/a>."
     },
     "defaultButtonFirmwareFlasher": {
         "message": "Instalar Firmware"
     },
     "defaultDonateHead": {
-        "message": "Software Libre \/ Aviso de Donación"
+        "message": "Donaciones de código abierto"
     },
     "defaultDonateText": {
         "message": "<p><strong>Betaflight<\/strong> es un software controlador de vuelo que es <strong>software libre<\/strong> y está disponible gratuitamente <strong>sin garantía<\/strong> para todos los usuarios.<\/p><p>Si encuentras Betaflight o Betaflight App útil, por favor considera <strong>ayudar<\/strong> al desarrollo donando.<\/p>"
@@ -1322,6 +1351,9 @@
     "configurationFeatures": {
         "message": "Otras Funcionalidades"
     },
+    "configurationFeatureHelp": {
+        "message": "Ayuda"
+    },
     "configurationReceiver": {
         "message": "Receptor"
     },
@@ -1352,6 +1384,15 @@
     "configurationSpiRxHelp": {
         "message": "<strong>Nota:<\/strong> El proveedor RX SPI sólo funcionará si el hardware necesario está en placa o conectado al bus SPI."
     },
+    "configurationActiveImu": {
+        "message": "Activar IMU"
+    },
+    "configurationSensors": {
+        "message": "Configuración del sensor"
+    },
+    "configurationSensorsHelp": {
+        "message": "Configurar sensores adicionales y características avanzadas."
+    },
     "configurationMagAlignmentHelp": {
         "message": "La alineación del magnetómetro es la orientación del magnetómetro en la placa del controlador de vuelo. Generalmente el valor por defecto es correcto, pero si tienes una versión personalizada o un controlador de vuelo con una orientación diferente del magnetómetro, puede que necesites ajustar esta configuración."
     },
@@ -1364,11 +1405,19 @@
     "configurationMagDeclinationHelp": {
         "message": "La declinación magnética es el ángulo entre el norte magnético y el norte verdadero. Es diferente para cada ubicación en la Tierra. Puedes encontrar la declinación de tu ubicación en Internet"
     },
+    "configurationRangefinder": {
+        "message": "Telémetro",
+        "description": "Don't translate!!!"
+    },
     "configurationRangefinderHelp": {
         "message": "Activa el telémetro para medir distancia al suelo en cm"
     },
     "configurationRangefinderType": {
         "message": "Tipo"
+    },
+    "configurationOpticalflow": {
+        "message": "Flujo óptico",
+        "description": "Don't translate!!!"
     },
     "configurationOpticalflowHelp": {
         "message": "Activar sensor de flujo óptico"
@@ -1467,6 +1516,9 @@
     "configurationSensorAlignmentDefaultOption": {
         "message": "Predeterminado"
     },
+    "configurationSensorAlignmentCustom": {
+        "message": "Personalizado"
+    },
     "configurationAccelTrims": {
         "message": "Trimado Acelerómetro"
     },
@@ -1497,6 +1549,9 @@
     "configurationGyroCalOnFirstArm": {
         "message": "Calibrar Giro en el primer armado"
     },
+    "configurationGyroCalOnFirstArmHelp": {
+        "message": "Cuando está activado, el giroscopio se calibrará en el primer armado después del encendido. Esto puede ayudar a reducir la deriva del giroscopio durante el vuelo."
+    },
     "configurationMotorIdle": {
         "message": "Ralentí motor (%)"
     },
@@ -1521,6 +1576,9 @@
     },
     "configurationThrottleMinimum": {
         "message": "Acelerador Mínimo (valor más bajo de ESC al estar armado)"
+    },
+    "configurationThrottleMinimumHelp": {
+        "message": "Este es el valor 'inactivo' que se envía a los ESCs cuando la aeronave está armada y el acelerador está en la posición de mínimo. Puedes incrementar el valor para obtener más velocidad cuando está inactivo. ¡Aumenta también el valor si sufres desincronizaciones!"
     },
     "configurationThrottleMaximum": {
         "message": "Acelerador Máximo (valor más alto de ESC al estar armado)"
@@ -1662,6 +1720,9 @@
     },
     "configurationLoopTimeHelp": {
         "message": "<strong>Nota:<\/strong> ¡Asegúrate de que tu FC es capaz de operar a estas velocidades! Comprueba la CPU y la estabilidad del tiempo por ciclo. Al cambiarlo puede ser necesario reajustar el PID. CONSEJO: Deshabilita el Acelerómetro y otros sensores para obtener más rendimiento."
+    },
+    "configurationGPS": {
+        "message": "Configuración"
     },
     "configurationGPSHelp": {
         "message": "Configura el protocolo para el dispositivo GPS (recuerda configurar el puerto en la pestaña Puertos), activa Velocidad automática (o configura la velocidad en la pestaña Puertos) y otras configuraciones",
@@ -2019,6 +2080,9 @@
     },
     "pidTuningDtermSetpointTransitionHelp": {
         "message": "Con este parámetro, el Punto de Ajuste de Peso de D puede reducirse cuando las palancas están cerca del centro, lo cual provoca que el final de los flips y rolls sea más suave.<br>El valor representa un punto del movimiento de la palanca: 0 - palanca centrada, 1 - completamente desplazada. Cuando la palanca está por encima de ese punto, el Punto de Ajuste de Peso se mantiene constante en el valor configurado. Cuando la palanca se sitúa por debajo de ese punto, el Punto de Ajuste de Peso se reduce proporcionalmente, llegando a 0 en la posición central de la palanca. <br> El valor de 1 da el máximo efecto de suavizado, mientras que el valor de 0 mantiene el Punto de Ajuste de Peso fijo en su valor configurado sobre el rango completo de la palanca."
+    },
+    "pidTuningDtermSetpointHelp": {
+        "message": "Este parámetro determina el efecto de aceleración de la palanca dentro del componente derivativo.<br> Un valor de 0 es igual al antiguo método de Medición donde D sólo sigue al giro, mientras 1 es igual al antiguo método de Error con seguimiento igual a giro y a radio de la palanca.<br> Un valor más bajo es igual a una respuesta de palanca más lenta y suave, mientras que valores más altos proporcionan más aceleración en la respuesta a la palanca.<br> Ten en cuenta que se recomienda activar Interpolación de RC con valores altos para evitar el ruido por golpes en el control."
     },
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):<\/strong> El uso de un Punto de Ajuste de Transición de D mayor que 0 y menor que 0.1 está altamente desaconsejado. Puede causar inestabilidad y reducir la respuesta de los controles al cruzar el punto central.<\/span>"
@@ -2499,6 +2563,10 @@
         "message": "Activar modo de estabilización de cámara",
         "description": "Help text to CAMSTAB mode"
     },
+    "auxiliaryHelpMode_CHIRP": {
+        "message": "Activar modo Chirp",
+        "description": "Help text for CHIRP mode"
+    },
     "auxiliaryHelpMode_FAILSAFE": {
         "message": "Entra en modo de seguridad etapa 2 manualmente",
         "description": "Help text to FAILSAFE mode"
@@ -2871,6 +2939,16 @@
     "servosReverse": {
         "message": "Invertir"
     },
+    "gpsHead": {
+        "message": "General"
+    },
+    "gpsHeadHelp": {
+        "message": "Muestra información variada relacionada con el GPS. El rumbo sólo se muestra cuando se utiliza un Magnetómetro.",
+        "description": "Help text for gpsHead"
+    },
+    "gpsMapHead": {
+        "message": "Ubicación actual"
+    },
     "gpsMapMessage1": {
         "message": "Por favor verifica tu conexión a internet"
     },
@@ -2921,6 +2999,9 @@
     "gpsMagneticDeclination": {
         "message": "$t(configurationMagDeclination):",
         "description": "Do not translate"
+    },
+    "gpsSignalStrHead": {
+        "message": "Información de señal"
     },
     "gpsSignalStrHeadHelp": {
         "message": "Muestra la fuerza de la señal, calidad y estado para cada fuente GPS descubierta",
@@ -3463,6 +3544,12 @@
     "sdcardStatusUnknown": {
         "message": "Estado desconocido $1"
     },
+    "firmwareFlasherPleaseWait": {
+        "message": "Espera por favor"
+    },
+    "firmwareFlasherBoardSelectionHead": {
+        "message": "Selección de placa"
+    },
     "firmwareFlasherBranch": {
         "message": "Selecciona Pull Request o Commit"
     },
@@ -3498,10 +3585,13 @@
         "message": "Detalles de la compilación en la nube:"
     },
     "firmwareFlasherCloudBuildLogUrl": {
-        "message": "Mostrar registro."
+        "message": "Mostrar registro"
     },
     "firmwareFlasherCloudBuildStatus": {
         "message": "Estado:"
+    },
+    "firmwareFlasherCloudBuildQueued": {
+        "message": "en cola"
     },
     "firmwareFlasherCloudBuildPending": {
         "message": "pendiente"
@@ -3669,7 +3759,7 @@
         "message": "Mensaje:"
     },
     "firmwareFlasherWarningText": {
-        "message": "Por favor <span class=\"message-negative\">no<\/span> intentes usar este instalador de firmware en hardware <strong>no-Betaflight<\/strong>.<br \/><span class=\"message-negative\">No<\/span> <strong>desconectes<\/strong> la placa o <strong>apagues<\/strong> tu ordenador mientras se está instalando.<br \/><br \/><strong>Nota: <\/strong>El gestor de arranque del STM32 está almacenado en ROM, por lo que no puede quedarse inutilizado.<br \/><strong>Nota: <\/strong><span class=\"message-negative\">Auto-Conectar<\/span> siempre está desactivado mientras estés dentro del instalador de firmware.<br \/><strong>Nota: <\/strong>Asegúrate de que tienes una copia de seguridad; algunas actualizaciones borrarán tu configuración.<br \/><strong>Nota:<\/strong> Si tienes problemas al instalar <strong>intenta desconectar todos los cable de tu FC<\/strong> primero, intenta reiniciar, actualizar drivers.<br \/><strong>Nota:<\/strong> Al instalar en placas que tienen directamente conectados puertos USB (la mayoría de placas nuevas) asegúrate de que has leído la sección de Instalación por USB del manual de Betaflight y tienes el software y drivers correctos instalados."
+        "message": "Por favor <span class=\"message-negative\">no<\/span> intentes usar este instalador de firmware en hardware <strong>no-Betaflight<\/strong>.<br \/><span class=\"message-negative\">No<\/span> <strong>desconectes<\/strong> la placa o <strong>apagues<\/strong> tu ordenador mientras se está instalando.<br \/><br \/><strong>Nota: <\/strong>El gestor de arranque del STM32 está almacenado en ROM, por lo que no puede quedarse inutilizado.<br \/><strong>Nota: <\/strong><span class=\"message-negative\">Auto-Conectar<\/span> siempre está desactivado mientras estés dentro del instalador de firmware.<br \/><strong>Nota: <\/strong>Asegúrate de que tienes una copia de seguridad; algunas actualizaciones borrarán tu configuración.<br \/><strong>Nota:<\/strong> Si tienes problemas al instalar <strong>intenta desconectar todos los cable de tu FC<\/strong> primero, intenta reiniciar, actualizar drivers.<br \/><strong>Nota:<\/strong> Al instalar en placas que tienen directamente conectados puertos USB (la mayoría de placas nuevas) asegúrate de que has leído la sección de Instalación por USB del manual de Betaflight y tienes el software y drivers correctos instalados"
     },
     "firmwareFlasherRecoveryHead": {
         "message": "<strong>Recuperación \/ Pérdida de comunicación<\/strong>"
@@ -3781,7 +3871,7 @@
         "message": "Estás a punto de instalar una <strong>versión en desarrollo del firmware<\/strong>. Estas versiones son un trabajo en curso, y puede que suceda cualquiera de estas situaciones:<strong><ul><li>el firmware no funcione en absoluto;<\/li><li>el firmware no sea volable;<\/li><li>haya problemas de seguridad con el firmware, por ejemplo que se vaya volando;<\/li><li>el firmware puede causar que la controladora no responda, o quede dañada;<\/li><\/ul><\/strong>Si decides instalar este firmware, <strong>estás asumiendo toda la responsabilidad por el riesgo de que cualquiera de las situaciones anteriores suceda<\/strong>. Además reconoces que es necesario realizar <strong>pruebas completas de banco sin hélices<\/strong> antes de cualquier intento de volar este firmware."
     },
     "unstableFirmwareAcknowledgement": {
-        "message": "He leído lo anterior y <strong>asumo toda la responsabilidad<strong> de instalar firmware inestable"
+        "message": "He leído lo anterior y <strong>asumo toda la responsabilidad<\/strong> de instalar firmware inestable"
     },
     "unstableFirmwareAcknowledgementFlash": {
         "message": "Instalar"
@@ -4375,6 +4465,10 @@
         "message": "Seguimiento:<br \/><i><small>Ganancia de P e I<\/small><\/i>",
         "description": "P and I Gain (Stability) tuning slider label"
     },
+    "pidTuningPIGainSliderHelp": {
+        "message": "Aumenta el deslizador de seguimiento para agudizar la respuesta de las aeronaves a los mandos y mejorar también la respuesta a influencias externas; evitando que la nariz de la aeronave salga de curso bajo cualquier condición.<br \/><br \/>Los valores de seguimiento bajos sufrirán bamboleos y se saldrán de curso con movimientos del mando y rebotes rápidos (difíciles de ver, pero se pueden oír). El seguimiento muy alto puede resultar en oscilaciones y motores calientes.",
+        "description": "P and I gain tuning slider helpicon message"
+    },
     "pidTuningResponseSlider": {
         "message": "Respuesta del mando:<br \/><i><small>Ganancia de prealimentación<\/small><\/i>",
         "description": "Response tuning slider label"
@@ -4481,6 +4575,10 @@
     },
     "pidTuningCutoffFrequency": {
         "message": "Frecuencia de corte [Hz]"
+    },
+    "pidTuningNotchFilterHelp": {
+        "message": "Un Filtro Notch es un filtro simétrico, estrecho y de corte alto, con parámetros centro y corte.<br \/><br \/>El valor del centro es la frecuencia central del filtro. El valor de corte es el lado bajo de -3dB de la frecuencia de corte.<br \/><br \/>Por ejemplo, un notch con corte de 160 con un centro de 260 devuelve un notch de -3dB entre 160-360 Hz y la mayor atenuación alrededor de 260hz.",
+        "description": "Notch filter helpicon message"
     },
     "pidTuningDynamicNotchFilterGroup": {
         "message": "Filtro Notch Dinámico"
@@ -5933,6 +6031,10 @@
         "message": "Fecha corta",
         "description": "One of the variants of the RTC date and time element of the OSD"
     },
+    "osdTextElementRtcDateTimeVariantTimeOnly": {
+        "message": "Sólo hora",
+        "description": "One of the variants of the RTC date and time element of the OSD"
+    },
     "osdDescElementRtcDateTime": {
         "message": "Fecha \/ Hora en tiempo real"
     },
@@ -6607,6 +6709,9 @@
     "osdSectionHelpAlarms": {
         "message": "Ajusta los umbrales usados para elementos del OSD con estado de alarma."
     },
+    "osdSectionHelpStats": {
+        "message": "Ajusta los valores mostrados en la pantalla de estadísticas post vuelo."
+    },
     "osdSectionHelpWarnings": {
         "message": "Activa o desactiva avisos mostrados en el elemento AVISOS."
     },
@@ -6940,6 +7045,9 @@
         "message": "Envía datos del ESC al FC a través de la telemetría DShot. Es necesario para el Filtro RPM y el Ralentí Dinámico.<br> <br>Nota: Requiere un ESC compatible con el firmware apropiado, por ejemplo, JESC, Jazzmac, BLHeli-32.",
         "description": "Description of the Bidirectional DShot feature of the ESC\/Motor"
     },
+    "configurationGyroFrequency": {
+        "message": "Giro, frecuencia de actualización"
+    },
     "configurationPidProcessDenom": {
         "message": "PID, frecuencia del ciclo"
     },
@@ -6963,6 +7071,9 @@
     },
     "configurationSmallAngle": {
         "message": "Ángulo de armado máximo [grados]"
+    },
+    "configurationSmallAngleHelp": {
+        "message": "La aeronave no se armará si está ladeada más que el número de grados especificados. Sólo aplica si el acelerómetro está activado. Ajustarlo a 180 desactiva esta comprobación."
     },
     "configurationBatteryVoltage": {
         "message": "Voltaje de la Batería"
@@ -7027,6 +7138,9 @@
     },
     "pidTuningDeltaMeasurement": {
         "message": "Medida"
+    },
+    "pidTuningDeltaTip": {
+        "message": "<b>Derivativo desde Error<\/b> proporciona una respuesta más directa del stick y se prefiere para Carreras.<br \/><br \/><b>Derivativo desde Medida<\/b> proporciona una respuesta del stick más suave lo cual es más útil para freestyle"
     },
     "pidTuningPidControllerTip": {
         "message": "<b>Tradicional vs Betaflight (flotante):<\/b> La escala y la lógica del PID son exactamente las mismas. No se necesita reajustar. Tradicional es el antiguo betaflight evolucionado a rewrite, que es controlador PID básico basado en matemáticas de enteros. El controlador PID de Betaflight PID usa matemáticas en punto flotante y tiene muchas nuevas funcionalidades especialmente diseñadas para aplicaciones multirotor<br> <b>Flotante vs Entero:<\/b> La escala y la lógica del PID son exactamente las mismas. No se necesita reajustar. Las placas F1 no tienen FPU integrada y el cálculo en punto flotante incrementa la carga de CPU y la matemática entera mejoraría el rendimiento, pero la matemática en punto flotante puede dar algo más de precisión."
@@ -7129,6 +7243,22 @@
     },
     "darkTheme": {
         "message": "Activar tema oscuro"
+    },
+    "colorTheme": {
+        "message": "Tema de color",
+        "description": "Color theme settings"
+    },
+    "colorThemeYellow": {
+        "message": "Amarillo (por defecto)",
+        "description": "Default yellow color theme"
+    },
+    "colorThemeAmber": {
+        "message": "Ámbar",
+        "description": "Amber color theme"
+    },
+    "colorThemeContrast": {
+        "message": "Alto contraste",
+        "description": "Contrast color theme"
     },
     "pidTuningRatesType": {
         "message": "Tipo de Tasas"
@@ -7237,6 +7367,9 @@
     },
     "cordovaWebviewUpdateBtn": {
         "message": "Actualizar desde el Google Play Store"
+    },
+    "cordovaWebviewEnable": {
+        "message": "Vaya a la sección de información del dispositivo en Ajustes y pulsa el número de compilación 10 veces para habilitar 'Opciones de desarrollador'. Luego abre las opciones de desarrollador y selecciona <b>{{app}}<\/b> como proveedor de WebView."
     },
     "cordovaWebviewEnableBtn": {
         "message": "Abrir configuración"
@@ -7404,6 +7537,10 @@
         "message": "Cargando la configuración actual desde el controlador de vuelo",
         "description": "Title for the waiting dialog when loading dump all into a file"
     },
+    "dumpAllNotSavedWarning": {
+        "message": "Se ha producido un error al guardar la configuración actual",
+        "description": "Message appears on presets tab when saving current diff all into a file has failed"
+    },
     "presetSources": {
         "message": "Fuentes de preajustes...",
         "description": "A button to show preset sources dialog"
@@ -7540,8 +7677,17 @@
     "firmwareFlasherOSDProtocolNotSelectedContinue": {
         "message": "Continuar sin protocolo OSD"
     },
+    "firmwareFlasherOptionLabelVerifiedPartner": {
+        "message": "✅ Socio Verificado"
+    },
+    "firmwareFlasherOptionLabelVendorCommunity": {
+        "message": "⚠️ Vendedor \/ Comunidad"
+    },
     "firmwareFlasherOptionLabelLegacy": {
         "message": "Antiguo"
+    },
+    "firmwareFlasherOptionLabelNotQualified": {
+        "message": "⚠️ Placa soportada por la Comunidad \/ Fabricante — no soportada oficialmente ⚠️"
     },
     "coreBuild": {
         "message": "Versión base"
@@ -7595,5 +7741,227 @@
     "osdSetupPreviewCheckRulers": {
         "message": "Reglas",
         "description": "Label for the checkbox to toggle OSD preview rulers around the preview"
+    },
+    "tabUserProfile": {
+        "message": "Perfil de usuario"
+    },
+    "labelEmail": {
+        "message": "Correo electrónico"
+    },
+    "placeholderEmailAddress": {
+        "message": "Introduce la dirección de correo electrónico"
+    },
+    "userEmailRequired": {
+        "message": "Se requiere una dirección de correo electrónico"
+    },
+    "profileLoginMessage": {
+        "message": "Inicia sesión para ver tu perfil."
+    },
+    "tabBackups": {
+        "message": "Copias de seguridad"
+    },
+    "userPasskeyDeleteSuccess": {
+        "message": "Llave de acceso eliminada correctamente"
+    },
+    "userPasskeyDeleteFailed": {
+        "message": "Error al eliminar llave de acceso"
+    },
+    "userTokenDeleteSuccess": {
+        "message": "Token eliminado correctamente"
+    },
+    "userTokenDeleteFailed": {
+        "message": "Error al eliminar la llave de acceso"
+    },
+    "userProfileLoadFailed": {
+        "message": "No se pudo cargar el perfil de usuario"
+    },
+    "userTokenLoadFailed": {
+        "message": "No se pudo cargar los tokens de usuario"
+    },
+    "userPasskeyLoadFailed": {
+        "message": "No se han podido cargar las llaves de usuario"
+    },
+    "userProfileUpdateSuccess": {
+        "message": "Perfil actualizado correctamente"
+    },
+    "userProfileUpdateFailed": {
+        "message": "Error al actualizar el perfil"
+    },
+    "userBackupsLoadFailed": {
+        "message": "No se pudieron cargar las copias de seguridad"
+    },
+    "userBackupDownloadFailed": {
+        "message": "No se pudieron descargar las copias de seguridad"
+    },
+    "userBackupUpdateSuccess": {
+        "message": "Copia de seguridad actualizada correctamente"
+    },
+    "userBackupUpdateFailed": {
+        "message": "Error al actualizar la copia de seguridad"
+    },
+    "userBackupDeleteSuccess": {
+        "message": "Copia de seguridad eliminada correctamente"
+    },
+    "userBackupDeleteFailed": {
+        "message": "Error al eliminar copia de seguridad"
+    },
+    "userPasskeyNoPasskeys": {
+        "message": "No hay llaves de acceso disponibles"
+    },
+    "userTokenNoTokens": {
+        "message": "No hay tokens disponibles"
+    },
+    "profileBackupSuccess": {
+        "message": "Copia de seguridad realizada"
+    },
+    "profileBackupApiSuccess": {
+        "message": "Copia de seguridad guardada correctamente en la API"
+    },
+    "profileBackupApiFail": {
+        "message": "Error al guardar la copia de seguridad en la API"
+    },
+    "profileBackupEmptyResult": {
+        "message": "Copia de seguridad fallida"
+    },
+    "labelLogin": {
+        "message": "Iniciar sesión"
+    },
+    "labelSignOut": {
+        "message": "Cerrar sesión"
+    },
+    "labelAvatarUrl": {
+        "message": "URL del avatar"
+    },
+    "placeholderAvatarUrl": {
+        "message": "Introduce la URL de la imagen para tu avatar"
+    },
+    "labelCreatePasskey": {
+        "message": "Crear llave de acceso"
+    },
+    "labelUsePasskey": {
+        "message": "Usar llave de acceso"
+    },
+    "titleEnterVerificationCode": {
+        "message": "Introduce el código de verificación"
+    },
+    "labelVerificationCode": {
+        "message": "Código de verificación"
+    },
+    "labelCode": {
+        "message": "Código"
+    },
+    "userLoggingIn": {
+        "message": "Iniciando sesión..."
+    },
+    "userSignedOut": {
+        "message": "Sesión cerrada"
+    },
+    "userSignOutFailed": {
+        "message": "Error al cerrar la sesión"
+    },
+    "userLoginSuccess": {
+        "message": "Sesión iniciada correctamente"
+    },
+    "userLoginFailed": {
+        "message": "Error al iniciar sesión"
+    },
+    "userCreatePasskeyFailed": {
+        "message": "Fallo al crear la llave de acceso"
+    },
+    "userCreatePasskeySuccess": {
+        "message": "Llave de acceso creada correctamente"
+    },
+    "userVerifyingCode": {
+        "message": "Verificando código..."
+    },
+    "userCreatingPasskey": {
+        "message": "Creando llave de acceso..."
+    },
+    "dataWaitingForData": {
+        "message": "Esperando datos..."
+    },
+    "labelId": {
+        "message": "ID"
+    },
+    "labelCreated": {
+        "message": "Creado"
+    },
+    "labelLastUsed": {
+        "message": "Usado por última vez"
+    },
+    "labelActions": {
+        "message": "Acciones"
+    },
+    "labelDetails": {
+        "message": "Detalles"
+    },
+    "labelExpiry": {
+        "message": "Vencimiento"
+    },
+    "labelDescription": {
+        "message": "Descripción"
+    },
+    "labelDate": {
+        "message": "Fecha"
+    },
+    "actionDownload": {
+        "message": "Descarga"
+    },
+    "actionBackup": {
+        "message": "Copia de seguridad"
+    },
+    "actionEdit": {
+        "message": "Editar"
+    },
+    "actionDelete": {
+        "message": "Borrar"
+    },
+    "actionSave": {
+        "message": "Guardar"
+    },
+    "titleEditProfile": {
+        "message": "Editar perfil"
+    },
+    "titleLogin": {
+        "message": "Iniciar sesión"
+    },
+    "labelName": {
+        "message": "Nombre"
+    },
+    "labelAddress": {
+        "message": "Dirección"
+    },
+    "labelCountry": {
+        "message": "País"
+    },
+    "confirmDelete": {
+        "message": "¿Estás seguro de que quieres eliminar este {{item}}?"
+    },
+    "itemBackup": {
+        "message": "copia de seguridad"
+    },
+    "itemToken": {
+        "message": "token"
+    },
+    "itemPasskey": {
+        "message": "llave de acceso"
+    },
+    "notLoggedIn": {
+        "message": "No has iniciado sesión"
+    },
+    "backupNoBackupsAvailable": {
+        "message": "No hay copias de seguridad disponibles"
+    },
+    "titleEditBackup": {
+        "message": "Editar copia de seguridad"
+    },
+    "backupMcuUnknown": {
+        "message": "MCU desconocido"
+    },
+    "sectionUserTokens": {
+        "message": "Tokens de usuario"
+    },
+    "sectionUserPasskeys": {
+        "message": "Llaves de acceso del usuario"
     }
 }

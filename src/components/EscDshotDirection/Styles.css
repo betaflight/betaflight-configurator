@@ -78,7 +78,7 @@
 }
 
 #escDshotDirectionDialog-MainContent .red-text {
-    color: #ee0000;
+    color: var(--error-500);
 }
 
 #escDshotDirectionDialog-ActionHint,

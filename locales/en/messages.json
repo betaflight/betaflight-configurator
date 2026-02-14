@@ -172,6 +172,10 @@
         "message": "Set connection timeout to allow longer initialisation on device plugin or reboot",
         "description": "Change timeout on auto-connect and reboot so the bus has more time to initialize after being detected by the system"
     },
+    "languageAndAppearanceSettings": {
+        "message": "Language and Appearance",
+        "description": "Title for the language and appearance settings section"
+    },
     "developmentSettings": {
         "message": "Development Settings",
         "description": "Title for the development settings section"
@@ -395,7 +399,6 @@
     "tabOptions": {
         "message": "Options"
     },
-
     "tabSetup": {
         "message": "Setup"
     },
@@ -7544,6 +7547,22 @@
     },
     "darkTheme": {
         "message": "Enable dark theme"
+    },
+    "colorTheme": {
+        "message": "Color Theme",
+        "description": "Color theme settings"
+    },
+    "colorThemeYellow": {
+        "message": "Yellow (default)",
+        "description": "Default yellow color theme"
+    },
+    "colorThemeAmber": {
+        "message": "Amber",
+        "description": "Amber color theme"
+    },
+    "colorThemeContrast": {
+        "message": "High Contrast",
+        "description": "Contrast color theme"
     },
     "pidTuningRatesType": {
         "message": "Rates Type"
