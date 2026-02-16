@@ -1669,7 +1669,7 @@
         "message": "Afgiv ringetone, når GPS er låst og klar"
     },
     "beeperDISARM_REPEAT": {
-        "message": "Biplyd mens pind holdes i deaktiveringsposition"
+        "message": "Summen mens pind holdes i deaktiveringsposition"
     },
     "beeperARMED": {
         "message": "Advarselbip, når FC aktiveres med motorer stoppet i tomgang (gentages, indtil FC aktiveres eller gas øges)"
@@ -7163,6 +7163,9 @@
     },
     "pidTuningDeltaMeasurement": {
         "message": "Måling"
+    },
+    "pidTuningDeltaTip": {
+        "message": "<b>Afledt fra fejl<\/b> giver mere direkte svar fra pind og foretrækkes oftest til ræs.<br \/><br \/>\n<b>Afledt fra måling<\/b> giver en blødere svar fra pind, hvilket er mere velegnet til freestyle"
     },
     "pidTuningPidControllerTip": {
         "message": "<b>Legacy kontra Betaflight (flydende):<\/b> PID-skalering og -logik er nøjagtig den samme. Gentuning er ikke absolut nødvendig. Legacy er gammel betaflight-udviklet omskrivning, der er basis PID-controller baseret på heltal beregninger. Betaflight PID-controller benytter flydende decimal beregninger og har mange nye funktioner, som er specielt designet til multirotorbrug <br> <b>Flydende decimal kontra heltal:<\/b> PID-skalering og -logik er identisk. Ingen gentuning behøves. F1-boards har ingen indbygget FPU og flydende decimal proccessor og forøger derfor CPU-belastningen og heltals beregniger forbedrer derfor ydeevnen, men flydende deccimal beregninger kan give bedre præcision."
