@@ -323,7 +323,7 @@ FONT.parseMCMFontFile = function (dataFontFile) {
     // reset logo image info when font data is changed
     try {
         LogoManager.resetImageInfo();
-    } catch (e) {
+    } catch {
         // LogoManager may not be available in Vue tab context
     }
     // make sure the font file is valid
@@ -336,10 +336,9 @@ FONT.parseMCMFontFile = function (dataFontFile) {
     const characterBytes = [];
     // hexstring is for debugging
     FONT.data.hexstring = [];
-    for (let i = 0; i < data.length; i++) {
-        const line = data[i];
+    for (const line of data) {
         // hexstring is for debugging
-        FONT.data.hexstring.push(`0x${parseInt(line, 2).toString(16)}`);
+        FONT.data.hexstring.push(`0x${Number.parseInt(line, 2).toString(16)}`);
         // every 64 bytes (line) is a char, we're counting chars though, which are 2 bits
         if (characterBits.length === FONT.constants.SIZES.MAX_NVM_FONT_CHAR_FIELD_SIZE * (8 / 2)) {
             FONT.pushChar(characterBytes, characterBits);
@@ -347,10 +346,10 @@ FONT.parseMCMFontFile = function (dataFontFile) {
             characterBytes.length = 0;
         }
         for (let y = 0; y < 8; y = y + 2) {
-            const v = parseInt(line.slice(y, y + 2), 2);
+            const v = Number.parseInt(line.slice(y, y + 2), 2);
             characterBits.push(v);
         }
-        characterBytes.push(parseInt(line, 2));
+        characterBytes.push(Number.parseInt(line, 2));
     }
     // push the last char
     FONT.pushChar(characterBytes, characterBits);
@@ -462,7 +461,7 @@ FONT.preview = function ($el) {
 };
 
 FONT.symbol = function (hexVal) {
-    return hexVal === "" || hexVal === null ? "" : String.fromCharCode(hexVal);
+    return hexVal === "" || hexVal === null ? "" : String.fromCodePoint(hexVal);
 };
 
 OSD.getNumberOfProfiles = function () {
@@ -647,7 +646,7 @@ OSD.generateTemperaturePreview = function (osdData, temperature) {
 };
 
 OSD.generateLQPreview = function () {
-    const crsfIndex = FC.getSerialRxTypes().findIndex((name) => name === "CRSF");
+    const crsfIndex = FC.getSerialRxTypes().indexOf("CRSF");
     const isXF = crsfIndex === FC.RX_CONFIG.serialrx_provider;
     return FONT.symbol(SYM.LINK_QUALITY) + (isXF ? "2:100" : "8");
 };
@@ -738,8 +737,7 @@ OSD.drawCameraFramePreview = function () {
         const frameUp = { x, y: 0, sym };
         const frameDown = { x, y: FRAME_HEIGHT - 1, sym };
 
-        cameraFrame.push(frameUp);
-        cameraFrame.push(frameDown);
+        cameraFrame.push(frameUp, frameDown);
     }
 
     for (let y = 1; y < FRAME_HEIGHT - 1; y++) {
@@ -747,8 +745,7 @@ OSD.drawCameraFramePreview = function () {
         const frameLeft = { x: 0, y, sym };
         const frameRight = { x: FRAME_WIDTH - 1, y, sym };
 
-        cameraFrame.push(frameLeft);
-        cameraFrame.push(frameRight);
+        cameraFrame.push(frameLeft, frameRight);
     }
 
     return cameraFrame;
@@ -1792,8 +1789,10 @@ OSD.loadDisplayFields = function () {
 
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
         if (have_sensor(FC.CONFIG.activeSensors, "gps")) {
-            OSD.ALL_DISPLAY_FIELDS.ALTITUDE.variants.push("osdTextElementAltitudeVariant1DecimalASL");
-            OSD.ALL_DISPLAY_FIELDS.ALTITUDE.variants.push("osdTextElementAltitudeVariantNoDecimalASL");
+            OSD.ALL_DISPLAY_FIELDS.ALTITUDE.variants.push(
+                "osdTextElementAltitudeVariant1DecimalASL",
+                "osdTextElementAltitudeVariantNoDecimalASL",
+            );
         }
         OSD.ALL_DISPLAY_FIELDS.RTC_DATE_TIME.variants = [
             "osdTextElementRtcDateTimeVariantFullDate",
@@ -1821,20 +1820,20 @@ OSD.searchLimitsElement = function (arrayElements) {
         return limits;
     }
 
-    if (arrayElements[0].constructor === String) {
+    if (typeof arrayElements[0] === "string") {
         limits.maxY = arrayElements.length;
         limits.minY = 0;
         limits.minX = 0;
-        arrayElements.forEach(function (valor) {
+        for (const valor of arrayElements) {
             limits.maxX = Math.max(valor.length, limits.maxX);
-        });
+        }
     } else {
-        arrayElements.forEach(function (valor) {
+        for (const valor of arrayElements) {
             limits.minX = Math.min(valor.x, limits.minX);
             limits.maxX = Math.max(valor.x, limits.maxX);
             limits.minY = Math.min(valor.y, limits.minY);
             limits.maxY = Math.max(valor.y, limits.maxY);
-        });
+        }
     }
 
     return limits;
@@ -2796,7 +2795,7 @@ OSD.GUI.preview = {
     onDrop(e) {
         const ev = e.originalEvent;
 
-        const fieldId = parseInt(ev.dataTransfer.getData("text/plain"));
+        const fieldId = Number.parseInt(ev.dataTransfer.getData("text/plain"));
         const displayItem = OSD.data.displayItems[fieldId];
         let position = $(this).removeAttr("style").data("position");
         const cursor = position;
@@ -2806,8 +2805,8 @@ OSD.GUI.preview = {
 
         if (displayItem.preview.constructor === Array) {
             console.log(`Initial Drop Position: ${position}`);
-            const x = parseInt(ev.dataTransfer.getData("x"));
-            const y = parseInt(ev.dataTransfer.getData("y"));
+            const x = Number.parseInt(ev.dataTransfer.getData("x"));
+            const y = Number.parseInt(ev.dataTransfer.getData("y"));
             console.log(`XY Co-ords: ${x}-${y}`);
             position -= x;
             position -= y * OSD.data.displaySize.x;
@@ -3035,6 +3034,43 @@ OSD.presetPosition.setupGrid = function () {
     contextMenuListObject.content = $grid;
 };
 
+OSD.findAvailablePosition = function (target, elementWidth, elementHeight, fieldChanged, grow) {
+    for (let offset = 0; offset < Math.max(OSD.data.displaySize.x, OSD.data.displaySize.y); offset++) {
+        const testX = target.x + grow.x * offset;
+        const testY = target.y + grow.y * offset;
+
+        if (
+            testX < 1 ||
+            testX + elementWidth > OSD.data.displaySize.x - 1 ||
+            testY < 1 ||
+            testY > OSD.data.displaySize.y - 2
+        ) {
+            break;
+        }
+
+        let canPlace = true;
+        for (let row = 0; row < elementHeight && canPlace; row++) {
+            for (let col = 0; col < elementWidth && canPlace; col++) {
+                const checkPos = (testY + row) * OSD.data.displaySize.x + testX + col;
+                const cell = OSD.data.preview[checkPos];
+
+                if (
+                    cell?.[0]?.index != null &&
+                    cell[0].index !== fieldChanged.index &&
+                    !(cell?.[0]?.preview.constructor === Array || fieldChanged.preview.constructor === Array)
+                ) {
+                    canPlace = false;
+                }
+            }
+        }
+
+        if (canPlace) {
+            return testY * OSD.data.displaySize.x + testX;
+        }
+    }
+    return null;
+};
+
 OSD.presetPosition.applyPosition = function (fieldChanged, positionKey) {
     const config = positionConfigs[positionKey];
     if (!config) {
@@ -3081,40 +3117,12 @@ OSD.presetPosition.applyPosition = function (fieldChanged, positionKey) {
         target.y = Math.max(1, OSD.data.displaySize.y - elementHeight - 1);
     }
     // Find available position with growth logic
-    for (let offset = 0; offset < Math.max(OSD.data.displaySize.x, OSD.data.displaySize.y); offset++) {
-        const testX = target.x + config.grow.x * offset;
-        const testY = target.y + config.grow.y * offset;
-        if (
-            testX < 1 ||
-            testX + elementWidth > OSD.data.displaySize.x - 1 ||
-            testY < 1 ||
-            testY > OSD.data.displaySize.y - 2
-        )
-            break;
-        let canPlace = true;
-        for (let row = 0; row < elementHeight && canPlace; row++) {
-            for (let col = 0; col < elementWidth && canPlace; col++) {
-                const checkPos = (testY + row) * OSD.data.displaySize.x + testX + col;
-                const cell = OSD.data.preview[checkPos];
+    finalPosition = OSD.findAvailablePosition(target, elementWidth, elementHeight, fieldChanged, config.grow);
 
-                if (
-                    cell?.[0]?.index != null &&
-                    cell[0].index !== fieldChanged.index &&
-                    !(cell?.[0]?.preview.constructor === Array || fieldChanged.preview.constructor === Array)
-                ) {
-                    canPlace = false;
-                }
-            }
-        }
-        if (canPlace) {
-            finalPosition = testY * OSD.data.displaySize.x + testX;
-
-            // Needed for advanced elements or else they won't be where we expect them to be.
-            finalPosition -= adjustOffsetX;
-            finalPosition -= adjustOffsetY * OSD.data.displaySize.x;
-
-            break;
-        }
+    if (finalPosition !== null) {
+        // Needed for advanced elements or else they won't be where we expect them to be.
+        finalPosition -= adjustOffsetX;
+        finalPosition -= adjustOffsetY * OSD.data.displaySize.x;
     }
     if (finalPosition !== null) {
         fieldChanged.position = finalPosition;
@@ -3291,18 +3299,17 @@ osd.initialize = function (callback) {
 
                 // video mode
                 const $videoTypes = $(".video-types").empty();
-                for (let i = 0; i < OSD.constants.VIDEO_TYPES.length; i++) {
+                for (const [i, type] of OSD.constants.VIDEO_TYPES.entries()) {
                     // Disable SD or HD option depending on the build
                     let disabled = false;
                     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) && FC.CONFIG.buildOptions.length) {
-                        if (OSD.constants.VIDEO_TYPES[i] !== "HD" && !FC.CONFIG.buildOptions.includes("USE_OSD_SD")) {
+                        if (type !== "HD" && !FC.CONFIG.buildOptions.includes("USE_OSD_SD")) {
                             disabled = true;
                         }
-                        if (OSD.constants.VIDEO_TYPES[i] === "HD" && !FC.CONFIG.buildOptions.includes("USE_OSD_HD")) {
+                        if (type === "HD" && !FC.CONFIG.buildOptions.includes("USE_OSD_HD")) {
                             disabled = true;
                         }
                     }
-                    const type = OSD.constants.VIDEO_TYPES[i];
                     let videoFormatOptionText = i18n.getMessage(
                         `osdSetupVideoFormatOption${inflection.camelize(type.toLowerCase())}`,
                     );
@@ -3329,8 +3336,7 @@ osd.initialize = function (callback) {
                 // units
                 $(".units-container").show();
                 const $unitMode = $(".units").empty();
-                for (let i = 0; i < OSD.constants.UNIT_TYPES.length; i++) {
-                    const type = OSD.constants.UNIT_TYPES[i];
+                for (const [i, type] of OSD.constants.UNIT_TYPES.entries()) {
                     const setupUnitOptionText = i18n.getMessage(
                         `osdSetupUnitsOption${inflection.camelize(type.toLowerCase())}`,
                     );
@@ -3691,7 +3697,7 @@ osd.initialize = function (callback) {
                             .data("field", field)
                             .on("change", function () {
                                 const fieldChanged = $(this).data("field");
-                                fieldChanged.variant = parseInt($(this).val());
+                                fieldChanged.variant = Number.parseInt($(this).val());
                                 MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, OSD.msp.encodeLayout(fieldChanged)).then(
                                     function () {
                                         updateOsdView();
@@ -3719,7 +3725,7 @@ osd.initialize = function (callback) {
                                 .change(
                                     debounce(function () {
                                         const fieldChanged = $(this).data("field");
-                                        const position = parseInt($(this).val());
+                                        const position = Number.parseInt($(this).val());
                                         fieldChanged.position = position;
                                         MSP.promise(
                                             MSPCodes.MSP_SET_OSD_CONFIG,
@@ -3923,7 +3929,7 @@ osd.initialize = function (callback) {
 
         $(".osdprofile-selector").change(updateOsdView);
         $(".osdprofile-active").change(function () {
-            OSD.data.osd_profiles.selected = parseInt($(this).val());
+            OSD.data.osd_profiles.selected = Number.parseInt($(this).val());
             MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, OSD.msp.encodeOther()).then(function () {
                 updateOsdView();
             });

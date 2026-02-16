@@ -155,8 +155,15 @@
                             <div class="gui_box_titlebar image preview-controls-bar">
                                 <div class="spacer_box_title">
                                     <span class="preview-controls-wrapper">
-                                        <label v-html="$t('osdSetupPreviewSelectProfileTitle')"></label>
-                                        <select v-model.number="previewProfile" class="osdprofile-selector small">
+                                        <label
+                                            for="osd-preview-profile"
+                                            v-html="$t('osdSetupPreviewSelectProfileTitle')"
+                                        ></label>
+                                        <select
+                                            id="osd-preview-profile"
+                                            v-model.number="previewProfile"
+                                            class="osdprofile-selector small"
+                                        >
                                             <option
                                                 v-for="idx in osdStore.numberOfProfiles"
                                                 :key="idx"
@@ -166,8 +173,12 @@
                                             </option>
                                         </select>
 
-                                        <label v-html="$t('osdSetupPreviewSelectFont')"></label>
-                                        <select v-model.number="selectedFont" class="osdfont-selector small">
+                                        <label for="osd-preview-font" v-html="$t('osdSetupPreviewSelectFont')"></label>
+                                        <select
+                                            id="osd-preview-font"
+                                            v-model.number="selectedFont"
+                                            class="osdfont-selector small"
+                                        >
                                             <option v-for="(font, idx) in fontTypes" :key="idx" :value="idx">
                                                 {{ $t(font.name) }}
                                             </option>
@@ -249,8 +260,12 @@
                                 <div class="spacer_box_title" v-html="$t('osdSetupSelectedProfileTitle')"></div>
                             </div>
                             <div class="spacer_box">
-                                <label v-html="$t('osdSetupSelectedProfileLabel')"></label>
-                                <select v-model.number="activeProfile" class="osdprofile-active">
+                                <label for="osd-active-profile" v-html="$t('osdSetupSelectedProfileLabel')"></label>
+                                <select
+                                    id="osd-active-profile"
+                                    v-model.number="activeProfile"
+                                    class="osdprofile-active"
+                                >
                                     <option v-for="idx in osdStore.numberOfProfiles" :key="idx" :value="idx - 1">
                                         {{ $t("osdSetupPreviewSelectProfileElement", { profileNumber: idx }) }}
                                     </option>
@@ -318,8 +333,12 @@
                                         <div class="timer-index">{{ idx + 1 }}</div>
                                         <div class="timer-fields">
                                             <div class="timer-row osd_tip" :title="$t('osdTimerSourceTooltip')">
-                                                <label>{{ $t("osdTimerSource") }}</label>
-                                                <select v-model.number="timer.src" @change="updatePreview">
+                                                <label :for="'osd-timer-src-' + idx">{{ $t("osdTimerSource") }}</label>
+                                                <select
+                                                    :id="'osd-timer-src-' + idx"
+                                                    v-model.number="timer.src"
+                                                    @change="updatePreview"
+                                                >
                                                     <option
                                                         v-for="(src, sIdx) in timerSources"
                                                         :key="sIdx"
@@ -330,8 +349,14 @@
                                                 </select>
                                             </div>
                                             <div class="timer-row osd_tip" :title="$t('osdTimerPrecisionTooltip')">
-                                                <label>{{ $t("osdTimerPrecision") }}</label>
-                                                <select v-model.number="timer.precision" @change="updatePreview">
+                                                <label :for="'osd-timer-prec-' + idx">{{
+                                                    $t("osdTimerPrecision")
+                                                }}</label>
+                                                <select
+                                                    :id="'osd-timer-prec-' + idx"
+                                                    v-model.number="timer.precision"
+                                                    @change="updatePreview"
+                                                >
                                                     <option
                                                         v-for="(prec, pIdx) in timerPrecisions"
                                                         :key="pIdx"
@@ -342,9 +367,10 @@
                                                 </select>
                                             </div>
                                             <div class="timer-row osd_tip" :title="$t('osdTimerAlarmTooltip')">
-                                                <label>{{ $t("osdTimerAlarm") }}</label>
+                                                <label :for="'osd-timer-alarm-' + idx">{{ $t("osdTimerAlarm") }}</label>
                                                 <input
                                                     type="number"
+                                                    :id="'osd-timer-alarm-' + idx"
                                                     v-model.number="timer.alarm"
                                                     min="0"
                                                     max="600"
@@ -368,9 +394,10 @@
                             <div class="spacer_box">
                                 <div class="alarms">
                                     <div v-for="(alarm, key) in alarmEntries" :key="key" class="alarm-config">
-                                        <label>{{ alarm.display_name }}</label>
+                                        <label :for="'osd-alarm-' + key">{{ alarm.display_name }}</label>
                                         <input
                                             type="number"
+                                            :id="'osd-alarm-' + key"
                                             v-model.number="alarm.value"
                                             :min="alarm.min || 0"
                                             :max="alarm.max || 9999"
@@ -448,7 +475,7 @@
                     <div class="html-dialog-content">
                         <div class="font-picker">
                             <h1 class="tab_title" v-html="$t('osdSetupFontPresets')"></h1>
-                            <label class="font-manager-version-info">{{ fontVersionInfo }}</label>
+                            <span class="font-manager-version-info">{{ fontVersionInfo }}</span>
                             <div class="content_wrapper font-preview" ref="fontPreviewContainer">
                                 <img
                                     v-for="(url, charIdx) in fontCharacterUrls"
@@ -459,8 +486,8 @@
                                 />
                             </div>
                             <div class="fontpresets_wrapper">
-                                <label v-html="$t('osdSetupFontPresetsSelector')"></label>
-                                <select v-model.number="selectedFontPreset" class="fontpresets">
+                                <label for="osd-font-preset" v-html="$t('osdSetupFontPresetsSelector')"></label>
+                                <select id="osd-font-preset" v-model.number="selectedFontPreset" class="fontpresets">
                                     <option
                                         :value="-1"
                                         disabled
@@ -490,15 +517,14 @@
                             </div>
 
                             <div class="default_btn">
-                                <a
+                                <button
+                                    type="button"
                                     class="replace_logo"
                                     @click="replaceLogoImage()"
                                     @keydown.enter.prevent="replaceLogoImage()"
                                     @keydown.space.prevent="replaceLogoImage()"
                                     v-html="$t('osdSetupCustomLogoOpenImageButton')"
-                                    href="#"
-                                    role="button"
-                                ></a>
+                                ></button>
                             </div>
 
                             <div class="info">
@@ -507,15 +533,14 @@
                             </div>
 
                             <div class="default_btn green">
-                                <a
+                                <button
+                                    type="button"
                                     class="flash_font active"
                                     @click="flashFont()"
                                     @keydown.enter.prevent="flashFont()"
                                     @keydown.space.prevent="flashFont()"
                                     v-html="$t('osdSetupUploadFont')"
-                                    href="#"
-                                    role="button"
-                                ></a>
+                                ></button>
                             </div>
                         </div>
                     </div>
@@ -526,27 +551,26 @@
         <!-- Bottom Toolbar -->
         <div class="content_toolbar toolbar_fixed_bottom supported" style="position: fixed">
             <div class="btn">
-                <a
+                <button
+                    type="button"
                     class="fonts"
                     :class="{ disabled: !osdStore.state.isMax7456FontDeviceDetected }"
                     @click="openFontManager()"
                     @keydown.enter.prevent="openFontManager()"
                     @keydown.space.prevent="openFontManager()"
                     v-html="i18n.getMessage('osdSetupFontManagerTitle')"
-                    href="#"
-                    role="button"
-                ></a>
+                ></button>
             </div>
             <div class="btn save">
-                <a
+                <button
+                    type="button"
                     class="active save"
-                    href="#"
                     @click.prevent="saveConfig()"
                     @keydown.enter.prevent="saveConfig()"
                     @keydown.space.prevent="saveConfig()"
-                    role="button"
-                    >{{ saveButtonText }}</a
                 >
+                    {{ saveButtonText }}
+                </button>
             </div>
         </div>
     </BaseTab>
@@ -619,7 +643,7 @@ const alarmEntries = computed(() => {
         ...alarm,
     }));
 });
-const { drawRulers } = useOsdRuler(rulerCanvas, previewContainerOuter, effectiveShowRulers);
+useOsdRuler(rulerCanvas, previewContainerOuter, effectiveShowRulers);
 
 // Handlers for temporary grid visibility
 const onPreviewMouseDown = () => {
@@ -673,11 +697,6 @@ const filteredDisplayItems = computed(() => {
     });
 });
 
-// Check if a field is visible in current preview profile
-function isFieldVisible(field) {
-    return field.isVisible[previewProfile.value];
-}
-
 // Check if field is highlighted
 function isFieldHighlighted(field) {
     return highlightedField.value === field;
@@ -705,12 +724,6 @@ function toggleFieldVisibility(fieldIndex, profileIndex, event) {
 // Handle variant change
 function onVariantChange(field) {
     trackChange("variant", field.name);
-    updatePreview();
-}
-
-// Handle position change
-function onPositionChange(field) {
-    trackChange("position", field.name);
     updatePreview();
 }
 
@@ -814,50 +827,50 @@ function onDropCell(event) {
         position -= y * displaySize.x;
     }
 
-    // Position clamping to prevent overflow
-    if (!displayItem.ignoreSize) {
-        if (!Array.isArray(displayItem.preview)) {
-            // Standard string preview
-            const overflowsLine = displaySize.x - ((position % displaySize.x) + displayItem.preview.length);
-            if (overflowsLine < 0) {
-                position += overflowsLine;
+    if (displayItem.ignoreSize) {
+        return;
+    }
+    if (!Array.isArray(displayItem.preview)) {
+        // Standard string preview
+        const overflowsLine = displaySize.x - ((position % displaySize.x) + displayItem.preview.length);
+        if (overflowsLine < 0) {
+            position += overflowsLine;
+        }
+    } else {
+        // Array-type preview
+        const arrayElements = displayItem.preview;
+        const limits = searchLimitsElement(arrayElements);
+        const selectedPositionX = position % displaySize.x;
+        let selectedPositionY = Math.trunc(position / displaySize.x);
+
+        if (typeof arrayElements[0] === "string") {
+            if (position < 0) {
+                return;
+            }
+            if (selectedPositionX > cursorX) {
+                // Detected wrap around
+                position += displaySize.x - selectedPositionX;
+                selectedPositionY++;
+            } else if (selectedPositionX + limits.maxX > displaySize.x) {
+                // Right border beyond screen edge
+                position -= selectedPositionX + limits.maxX - displaySize.x;
+            }
+            if (selectedPositionY < 0) {
+                position += Math.abs(selectedPositionY) * displaySize.x;
+            } else if (selectedPositionY + limits.maxY > displaySize.y) {
+                position -= (selectedPositionY + limits.maxY - displaySize.y) * displaySize.x;
             }
         } else {
-            // Array-type preview
-            const arrayElements = displayItem.preview;
-            const limits = searchLimitsElement(arrayElements);
-            const selectedPositionX = position % displaySize.x;
-            let selectedPositionY = Math.trunc(position / displaySize.x);
-
-            if (typeof arrayElements[0] === "string") {
-                if (position < 0) {
-                    return;
-                }
-                if (selectedPositionX > cursorX) {
-                    // Detected wrap around
-                    position += displaySize.x - selectedPositionX;
-                    selectedPositionY++;
-                } else if (selectedPositionX + limits.maxX > displaySize.x) {
-                    // Right border beyond screen edge
-                    position -= selectedPositionX + limits.maxX - displaySize.x;
-                }
-                if (selectedPositionY < 0) {
-                    position += Math.abs(selectedPositionY) * displaySize.x;
-                } else if (selectedPositionY + limits.maxY > displaySize.y) {
-                    position -= (selectedPositionY + limits.maxY - displaySize.y) * displaySize.x;
-                }
-            } else {
-                // Object array elements
-                if (limits.minX < 0 && selectedPositionX + limits.minX < 0) {
-                    position += Math.abs(selectedPositionX + limits.minX);
-                } else if (limits.maxX > 0 && selectedPositionX + limits.maxX >= displaySize.x) {
-                    position -= selectedPositionX + limits.maxX + 1 - displaySize.x;
-                }
-                if (limits.minY < 0 && selectedPositionY + limits.minY < 0) {
-                    position += Math.abs(selectedPositionY + limits.minY) * displaySize.x;
-                } else if (limits.maxY > 0 && selectedPositionY + limits.maxY >= displaySize.y) {
-                    position -= (selectedPositionY + limits.maxY - displaySize.y + 1) * displaySize.x;
-                }
+            // Object array elements
+            if (limits.minX < 0 && selectedPositionX + limits.minX < 0) {
+                position += Math.abs(selectedPositionX + limits.minX);
+            } else if (limits.maxX > 0 && selectedPositionX + limits.maxX >= displaySize.x) {
+                position -= selectedPositionX + limits.maxX + 1 - displaySize.x;
+            }
+            if (limits.minY < 0 && selectedPositionY + limits.minY < 0) {
+                position += Math.abs(selectedPositionY + limits.minY) * displaySize.x;
+            } else if (limits.maxY > 0 && selectedPositionY + limits.maxY >= displaySize.y) {
+                position -= (selectedPositionY + limits.maxY - displaySize.y + 1) * displaySize.x;
             }
         }
     }
@@ -934,10 +947,43 @@ function applyPresetPosition(field, positionKey) {
         target.y = Math.max(1, displaySize.y - elementHeight - 1);
     }
 
-    // Find available position with growth logic
-    let finalPosition = null;
-    const grow = config.grow || { x: 0, y: 0 };
+    // Check collisions and find first available position
+    const finalPosition = findAvailablePosition(
+        target,
+        config.grow,
+        elementWidth,
+        elementHeight,
+        displaySize,
+        previewBuffer.value,
+        field,
+        adjustOffsetX,
+        adjustOffsetY,
+    );
 
+    if (finalPosition === null) {
+        console.warn("Unable to place element - not enough space available");
+        closePresetMenu();
+        return;
+    }
+
+    field.position = finalPosition;
+    trackChange("position", field.name);
+    updatePreview();
+
+    closePresetMenu();
+}
+
+function findAvailablePosition(
+    target,
+    grow,
+    elementWidth,
+    elementHeight,
+    displaySize,
+    previewBufferData,
+    field,
+    adjustOffsetX = 0,
+    adjustOffsetY = 0,
+) {
     for (let offset = 0; offset < Math.max(displaySize.x, displaySize.y); offset++) {
         const testX = target.x + grow.x * offset;
         const testY = target.y + grow.y * offset;
@@ -949,15 +995,14 @@ function applyPresetPosition(field, positionKey) {
 
         // Collision check against current preview buffer
         let canPlace = true;
-        const buf = previewBuffer.value;
         for (let row = 0; row < elementHeight && canPlace; row++) {
             for (let col = 0; col < elementWidth && canPlace; col++) {
                 const checkPos = (testY + row) * displaySize.x + testX + col;
-                const cell = buf[checkPos];
+                const cell = previewBufferData[checkPos];
                 if (
                     cell?.field?.index != null &&
                     cell.field.index !== field.index &&
-                    !(Array.isArray(cell.field.preview) || Array.isArray(preview))
+                    !(Array.isArray(cell.field.preview) || Array.isArray(field.preview))
                 ) {
                     canPlace = false;
                 }
@@ -965,22 +1010,13 @@ function applyPresetPosition(field, positionKey) {
         }
 
         if (canPlace) {
-            finalPosition = testY * displaySize.x + testX;
-            finalPosition -= adjustOffsetX;
-            finalPosition -= adjustOffsetY * displaySize.x;
-            break;
+            let finalPos = testY * displaySize.x + testX;
+            finalPos -= adjustOffsetX;
+            finalPos -= adjustOffsetY * displaySize.x;
+            return finalPos;
         }
     }
-
-    if (finalPosition !== null) {
-        field.position = finalPosition;
-        trackChange("position", field.name);
-        updatePreview();
-    } else {
-        console.warn("Unable to place element - not enough space available");
-    }
-
-    closePresetMenu();
+    return null;
 }
 
 // Update preview rendering
@@ -1045,6 +1081,7 @@ async function saveConfig() {
 // Font Manager
 const fontCharacterUrls = computed(() => {
     // Trigger reactivity on fontDataVersion
+
     fontDataVersion.value;
     if (!FONT.data?.character_image_urls?.length) {
         return [];
