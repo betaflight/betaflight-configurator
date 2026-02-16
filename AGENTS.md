@@ -39,7 +39,7 @@ Instructions for building high-quality VueJS 3 applications with the Composition
 ### Component Design
 
 - Adhere to the single responsibility principle for components
-- Use PascalCase for component names and PascalCase for file names
+- Use PascalCase for component names and file names
 - Keep components small and focused on one concern
 - Use `<script setup>` syntax for brevity and performance
 - Validate props with TypeScript; use runtime checks only when necessary
@@ -60,7 +60,7 @@ Instructions for building high-quality VueJS 3 applications with the Composition
 - Use `watch` and `watchEffect` with precise dependency lists
 - Cleanup side effects in `onUnmounted` or `watch` cleanup callbacks
 - Use `provide`/`inject` sparingly for deep dependency injection
-- Use `useAsyncData` or third-party data utilities (Vue Query)
+- Use Vue Query, plain fetch with reactive state, or other composables. Note: `useAsyncData` is specific to Nuxt and not available here.
 
 ### Styling
 
@@ -83,7 +83,7 @@ Instructions for building high-quality VueJS 3 applications with the Composition
 
 ### Data Fetching
 
-- Use composables like `useFetch` (Nuxt) or libraries like Vue Query
+- Implement a project-specific data-fetching composable (e.g., a custom useFetch built with the Vue 3 Composition API and the browser Fetch API) or explicitly pick and document a supported library.
 - Handle loading, error, and success states explicitly
 - Cancel stale requests on component unmount or param change
 - Implement optimistic updates with rollbacks on failure
@@ -99,7 +99,7 @@ Instructions for building high-quality VueJS 3 applications with the Composition
 
 ### Forms and Validation
 
-- Use libraries like VeeValidate or @vueuse/form for declarative validation
+- Use validation libraries or build custom validation composables for declarative validation
 - Build forms with controlled `v-model` bindings
 - Validate on blur or input with debouncing for performance
 - Handle file uploads and complex multi-step forms in composables
