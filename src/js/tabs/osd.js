@@ -2465,7 +2465,8 @@ OSD.msp = {
                 $.extend(
                     {
                         name: c.name,
-                        text: suffix ? [c.text, suffix] : c.text,
+                        text: c.text,
+                        textParams: suffix ? { 1: suffix } : undefined,
                         desc: c.desc,
                         index: j,
                         draw_order: c.draw_order,

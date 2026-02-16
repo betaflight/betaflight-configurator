@@ -73,7 +73,7 @@
                                         <span
                                             class="field-label cf_tip"
                                             :title="$t(field.desc)"
-                                            v-html="$t(field.text)"
+                                            v-html="$t(field.text, field.textParams)"
                                         ></span>
 
                                         <!-- Variant selector -->
@@ -492,7 +492,9 @@
                             <div class="default_btn">
                                 <a
                                     class="replace_logo"
-                                    @click="replaceLogoImage"
+                                    @click="replaceLogoImage()"
+                                    @keydown.enter.prevent="replaceLogoImage()"
+                                    @keydown.space.prevent="replaceLogoImage()"
                                     v-html="$t('osdSetupCustomLogoOpenImageButton')"
                                     href="#"
                                     role="button"
@@ -507,7 +509,9 @@
                             <div class="default_btn green">
                                 <a
                                     class="flash_font active"
-                                    @click="flashFont"
+                                    @click="flashFont()"
+                                    @keydown.enter.prevent="flashFont()"
+                                    @keydown.space.prevent="flashFont()"
                                     v-html="$t('osdSetupUploadFont')"
                                     href="#"
                                     role="button"
@@ -525,14 +529,24 @@
                 <a
                     class="fonts"
                     :class="{ disabled: !osdStore.state.isMax7456FontDeviceDetected }"
-                    @click="openFontManager"
+                    @click="openFontManager()"
+                    @keydown.enter.prevent="openFontManager()"
+                    @keydown.space.prevent="openFontManager()"
                     v-html="i18n.getMessage('osdSetupFontManagerTitle')"
                     href="#"
                     role="button"
                 ></a>
             </div>
             <div class="btn save">
-                <a class="active save" href="#" @click.prevent="saveConfig" role="button">{{ saveButtonText }}</a>
+                <a
+                    class="active save"
+                    href="#"
+                    @click.prevent="saveConfig()"
+                    @keydown.enter.prevent="saveConfig()"
+                    @keydown.space.prevent="saveConfig()"
+                    role="button"
+                    >{{ saveButtonText }}</a
+                >
             </div>
         </div>
     </BaseTab>
@@ -653,7 +667,7 @@ const filteredDisplayItems = computed(() => {
         return osdStore.displayItems;
     }
     return osdStore.displayItems.filter((field) => {
-        const text = i18n.getMessage(field.text)?.toLowerCase() || "";
+        const text = i18n.getMessage(field.text, field.textParams)?.toLowerCase() || "";
         const name = field.name?.toLowerCase() || "";
         return text.includes(query) || name.includes(query);
     });
