@@ -412,16 +412,18 @@
                             </div>
                             <div class="spacer_box">
                                 <div class="alarms">
-                                    <div v-for="(alarm, key) in alarmEntries" :key="key" class="alarm-config">
-                                        <label :for="'osd-alarm-' + key">{{ alarm.display_name }}</label>
-                                        <input
-                                            type="number"
-                                            :id="'osd-alarm-' + key"
-                                            v-model.number="alarm.value"
-                                            :min="alarm.min || 0"
-                                            :max="alarm.max || 9999"
-                                            @change="onAlarmChange"
-                                        />
+                                    <div v-for="entry in alarmEntries" :key="entry.key" class="alarm-config">
+                                        <label :for="'osd-alarm-' + entry.key">
+                                            <input
+                                                type="number"
+                                                :id="'osd-alarm-' + entry.key"
+                                                v-model.number="entry.alarm.value"
+                                                :min="entry.alarm.min || 0"
+                                                :max="entry.alarm.max || 9999"
+                                                @change="onAlarmChange"
+                                            />
+                                            <span>{{ entry.alarm.display_name }}</span>
+                                        </label>
                                     </div>
                                 </div>
                             </div>
@@ -672,10 +674,7 @@ const alarmEntries = computed(() => {
     if (!alarmsObj || typeof alarmsObj !== "object" || Array.isArray(alarmsObj)) {
         return [];
     }
-    return Object.entries(alarmsObj).map(([key, alarm]) => ({
-        key,
-        ...alarm,
-    }));
+    return Object.entries(alarmsObj).map(([key, alarm]) => ({ key, alarm }));
 });
 useOsdRuler(rulerCanvas, previewContainerOuter, effectiveShowRulers);
 
@@ -2001,11 +2000,13 @@ onUnmounted(() => {
 
 /* Alarms */
 .alarms label {
-    display: block;
+    display: flex;
+    align-items: center;
+    gap: 10px;
     width: 100%;
     border-bottom: 1px solid var(--surface-500);
-    margin-top: 5px;
-    padding-bottom: 5px;
+    margin-top: 0;
+    padding: 5px 0;
 }
 
 .alarms label:last-child {
@@ -2020,7 +2021,7 @@ onUnmounted(() => {
     line-height: 20px;
     text-align: left;
     border-radius: 3px;
-    margin-right: 11px;
+    margin-right: 0;
     font-size: 11px;
     font-weight: normal;
 }
