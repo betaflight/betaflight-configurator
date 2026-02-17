@@ -196,7 +196,7 @@ function sensorTypesLegacy() {
     }
 
     // Update GNSS Provider
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47) {
+    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
         addArrayElement(gpsElements, "VIRTUAL");
     }
 
