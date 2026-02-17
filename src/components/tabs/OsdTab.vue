@@ -6,20 +6,25 @@
 
             <!-- Warning: No OSD Chip Detected -->
             <div
-                v-if="!osdStore.state.isMax7456FontDeviceDetected && osdStore.state.haveMax7456Video"
+                v-if="
+                    hasLoadedConfig &&
+                    osdStore.state.haveMax7456FontDeviceConfigured &&
+                    !osdStore.state.isMax7456FontDeviceDetected &&
+                    !osdStore.state.haveAirbotTheiaOsdDevice
+                "
                 class="noOsdChipDetect"
             >
                 <p class="note" v-html="$t('osdSetupNoOsdChipDetectWarning')"></p>
             </div>
 
             <!-- Warning: Unsupported -->
-            <div v-if="!osdStore.isSupported" class="unsupported">
+            <div v-if="hasLoadedConfig && !osdStore.isSupported" class="unsupported">
                 <p class="note" v-html="$t('osdSetupUnsupportedNote1')"></p>
                 <p class="note" v-html="$t('osdSetupUnsupportedNote2')"></p>
             </div>
 
             <!-- Supported OSD Content -->
-            <div v-if="osdStore.isSupported" class="supported">
+            <div v-if="hasLoadedConfig && osdStore.isSupported" class="supported">
                 <div style="margin-bottom: 10px">
                     <p class="note" v-html="$t('osdSetupPreviewHelp')"></p>
                 </div>
@@ -28,7 +33,11 @@
                     <!-- Elements Column -->
                     <div class="col-span-1 elements requires-osd-feature osd-feature">
                         <div class="gui_box grey">
-                            <div class="gui_box_titlebar" style="margin-bottom: 0px">
+                            <div
+                                class="gui_box_titlebar cf_tip"
+                                style="margin-bottom: 0px"
+                                :title="$t('osdSectionHelpElements')"
+                            >
                                 <div class="spacer_box_title">
                                     <span class="osd-profiles-header cf_tip" :title="$t('osdSetupProfilesTitle')">
                                         <template v-for="profileIdx in osdStore.numberOfProfiles" :key="profileIdx">
@@ -51,7 +60,7 @@
                                 <div id="element-fields" class="switchable-fields">
                                     <div
                                         v-for="(field, index) in filteredDisplayItems"
-                                        :key="field.name"
+                                        :key="field.index"
                                         class="switchable-field display-field"
                                         :class="{ highlighted: isFieldHighlighted(field) }"
                                         @mouseenter="highlightField(field)"
@@ -154,7 +163,7 @@
                         <div class="gui_box grey preview-parent requires-osd-feature">
                             <div class="gui_box_titlebar image preview-controls-bar">
                                 <div class="spacer_box_title">
-                                    <span class="preview-controls-wrapper">
+                                    <span class="preview-controls-wrapper" :title="$t('osdSetupPreviewForTitle')">
                                         <label
                                             for="osd-preview-profile"
                                             v-html="$t('osdSetupPreviewSelectProfileTitle')"
@@ -278,19 +287,25 @@
                             v-if="osdStore.state.haveMax7456Video"
                             class="gui_box videomode-container grey requires-max7456"
                         >
-                            <div class="gui_box_titlebar cf_tip">
+                            <div class="gui_box_titlebar cf_tip" :title="$t('osdSectionHelpVideoMode')">
                                 <div class="spacer_box_title" v-html="$t('osdSetupVideoFormatTitle')"></div>
                             </div>
                             <div class="spacer_box">
                                 <div class="video-types">
-                                    <label v-for="(type, idx) in videoTypes" :key="idx" class="video-type-option">
+                                    <label
+                                        v-for="option in videoTypeOptions"
+                                        :key="option.value"
+                                        class="video-type-option"
+                                        :class="{ disabled: option.disabled }"
+                                    >
                                         <input
                                             type="radio"
-                                            :value="idx"
+                                            :value="option.value"
+                                            :disabled="option.disabled"
                                             v-model.number="osdStore.videoSystem"
                                             @change="onVideoSystemChange"
                                         />
-                                        <span>{{ type }}</span>
+                                        <span>{{ $t(option.label) }}</span>
                                     </label>
                                 </div>
                             </div>
@@ -301,19 +316,19 @@
                             v-if="osdStore.state.haveOsdFeature"
                             class="gui_box grey units-container requires-osd-feature"
                         >
-                            <div class="gui_box_titlebar cf_tip">
+                            <div class="gui_box_titlebar cf_tip" :title="$t('osdSectionHelpUnits')">
                                 <div class="spacer_box_title" v-html="$t('osdSetupUnitsTitle')"></div>
                             </div>
                             <div class="spacer_box">
                                 <div class="units">
-                                    <label v-for="(unit, idx) in unitTypes" :key="idx" class="unit-option">
+                                    <label v-for="unit in unitTypeOptions" :key="unit.value" class="unit-option">
                                         <input
                                             type="radio"
-                                            :value="idx"
+                                            :value="unit.value"
                                             v-model.number="osdStore.unitMode"
-                                            @change="updatePreview"
+                                            @change="onUnitModeChange"
                                         />
-                                        <span>{{ unit }}</span>
+                                        <span>{{ $t(unit.label) }}</span>
                                     </label>
                                 </div>
                             </div>
@@ -324,7 +339,11 @@
                             v-if="osdStore.state.haveOsdFeature && osdStore.timers.length > 0"
                             class="gui_box grey timers-container requires-osd-feature"
                         >
-                            <div class="gui_box_titlebar cf_tip" style="margin-bottom: 0px">
+                            <div
+                                class="gui_box_titlebar cf_tip"
+                                style="margin-bottom: 0px"
+                                :title="$t('osdSectionHelpTimers')"
+                            >
                                 <div class="spacer_box_title" v-html="$t('osdSetupTimersTitle')"></div>
                             </div>
                             <div class="spacer_box">
@@ -337,7 +356,7 @@
                                                 <select
                                                     :id="'osd-timer-src-' + idx"
                                                     v-model.number="timer.src"
-                                                    @change="updatePreview"
+                                                    @change="onTimerChange(timer)"
                                                 >
                                                     <option
                                                         v-for="(src, sIdx) in timerSources"
@@ -355,7 +374,7 @@
                                                 <select
                                                     :id="'osd-timer-prec-' + idx"
                                                     v-model.number="timer.precision"
-                                                    @change="updatePreview"
+                                                    @change="onTimerChange(timer)"
                                                 >
                                                     <option
                                                         v-for="(prec, pIdx) in timerPrecisions"
@@ -374,7 +393,7 @@
                                                     v-model.number="timer.alarm"
                                                     min="0"
                                                     max="600"
-                                                    @change="updatePreview"
+                                                    @change="onTimerChange(timer)"
                                                 />
                                             </div>
                                         </div>
@@ -388,7 +407,7 @@
                             v-if="osdStore.state.haveOsdFeature && alarmEntries.length > 0"
                             class="gui_box grey alarms-container requires-osd-feature"
                         >
-                            <div class="gui_box_titlebar cf_tip">
+                            <div class="gui_box_titlebar cf_tip" :title="$t('osdSectionHelpAlarms')">
                                 <div class="spacer_box_title" v-html="$t('osdSetupAlarmsTitle')"></div>
                             </div>
                             <div class="spacer_box">
@@ -401,7 +420,7 @@
                                             v-model.number="alarm.value"
                                             :min="alarm.min || 0"
                                             :max="alarm.max || 9999"
-                                            @change="updatePreview"
+                                            @change="onAlarmChange"
                                         />
                                     </div>
                                 </div>
@@ -410,17 +429,21 @@
 
                         <!-- Warnings -->
                         <div
-                            v-if="osdStore.state.haveOsdFeature && osdStore.warnings.length > 0"
+                            v-if="osdStore.state.haveOsdFeature && sortedWarnings.length > 0"
                             class="gui_box grey warnings-container requires-osd-feature"
                         >
-                            <div class="gui_box_titlebar cf_tip" style="margin-bottom: 0px">
+                            <div
+                                class="gui_box_titlebar cf_tip"
+                                style="margin-bottom: 0px"
+                                :title="$t('osdSectionHelpWarnings')"
+                            >
                                 <div class="spacer_box_title" v-html="$t('osdSetupWarningsTitle')"></div>
                             </div>
                             <div class="spacer_box">
                                 <div id="warnings-fields" class="switchable-fields">
                                     <div
-                                        v-for="(warning, idx) in osdStore.warnings"
-                                        :key="idx"
+                                        v-for="warning in sortedWarnings"
+                                        :key="warning.index"
                                         class="switchable-field"
                                         :class="[`field-${warning.index}`, { osd_tip: warning.desc }]"
                                         :title="warning.desc ? $t(warning.desc) : undefined"
@@ -430,9 +453,11 @@
                                             :name="warning.name"
                                             class="togglesmall"
                                             v-model="warning.enabled"
-                                            @change="updatePreview"
+                                            @change="onWarningChange"
                                         />
-                                        <label :for="warning.name" class="char-label">{{ $t(warning.text) }}</label>
+                                        <label :for="warning.name" class="char-label">{{
+                                            $t(warning.text, warning.textParams)
+                                        }}</label>
                                     </div>
                                 </div>
                             </div>
@@ -440,17 +465,21 @@
 
                         <!-- Post-flight Stats -->
                         <div
-                            v-if="osdStore.state.haveOsdFeature && osdStore.statItems.length > 0"
+                            v-if="osdStore.state.haveOsdFeature && sortedStatItems.length > 0"
                             class="gui_box grey stats-container requires-osd-feature"
                         >
-                            <div class="gui_box_titlebar" style="margin-bottom: 0px">
+                            <div
+                                class="gui_box_titlebar cf_tip"
+                                style="margin-bottom: 0px"
+                                :title="$t('osdSectionHelpStats')"
+                            >
                                 <div class="spacer_box_title" v-html="$t('osdSetupStatsTitle')"></div>
                             </div>
                             <div class="spacer_box">
                                 <div id="post-flight-stat-fields" class="switchable-fields">
                                     <div
-                                        v-for="(stat, idx) in osdStore.statItems"
-                                        :key="idx"
+                                        v-for="stat in sortedStatItems"
+                                        :key="stat.index"
                                         class="switchable-field"
                                         :class="[`field-${stat.index}`, { osd_tip: stat.desc }]"
                                         :title="stat.desc ? $t(stat.desc) : undefined"
@@ -460,9 +489,11 @@
                                             :name="stat.name"
                                             class="togglesmall"
                                             v-model="stat.enabled"
-                                            @change="updatePreview"
+                                            @change="onStatChange(stat)"
                                         />
-                                        <label :for="stat.name" class="char-label">{{ $t(stat.text) }}</label>
+                                        <label :for="stat.name" class="char-label">{{
+                                            $t(stat.text, stat.textParams)
+                                        }}</label>
                                     </div>
                                 </div>
                             </div>
@@ -593,6 +624,8 @@ import LogoManager from "@/js/LogoManager";
 import GUI from "@/js/gui";
 import { gui_log } from "@/js/gui_log";
 import { tracking } from "@/js/Analytics";
+import semver from "semver";
+import { API_VERSION_1_45 } from "@/js/data_storage";
 
 const osdStore = useOsdStore();
 const _fcStore = useFlightControllerStore();
@@ -620,6 +653,7 @@ const uploadProgressLabel = ref("");
 const fontVersionInfo = ref("");
 const isSaving = ref(false);
 const saveButtonText = ref(i18n.getMessage("osdSetupSave"));
+const hasLoadedConfig = ref(false);
 // State for popover
 const presetMenuField = ref(null);
 const showPresetSubmenu = ref(false); // Track click state for submenu
@@ -667,8 +701,43 @@ const highlightedField = ref(null);
 const analyticsChanges = ref({});
 
 // Constants from OSD module
-const videoTypes = ["AUTO", "PAL", "NTSC", "HD"];
-const unitTypes = ["IMPERIAL", "METRIC", "BRITISH"];
+const videoTypeOptions = computed(() => {
+    const types = ["AUTO", "PAL", "NTSC", "HD"];
+    const labelKeys = {
+        AUTO: "osdSetupVideoFormatOptionAuto",
+        PAL: "osdSetupVideoFormatOptionPal",
+        NTSC: "osdSetupVideoFormatOptionNtsc",
+        HD: "osdSetupVideoFormatOptionHd",
+    };
+    const buildOptions = _fcStore.config?.buildOptions || [];
+    const apiVersion = _fcStore.config?.apiVersion;
+    const hasBuildOptionGating = apiVersion && semver.gte(apiVersion, API_VERSION_1_45) && buildOptions.length > 0;
+
+    return types.map((type, value) => {
+        let disabled = false;
+        if (hasBuildOptionGating) {
+            if (type !== "HD" && !buildOptions.includes("USE_OSD_SD")) {
+                disabled = true;
+            }
+            if (type === "HD" && !buildOptions.includes("USE_OSD_HD")) {
+                disabled = true;
+            }
+        }
+
+        return {
+            type,
+            value,
+            label: labelKeys[type],
+            disabled,
+        };
+    });
+});
+
+const unitTypeOptions = [
+    { value: 0, label: "osdSetupUnitsOptionImperial" },
+    { value: 1, label: "osdSetupUnitsOptionMetric" },
+    { value: 2, label: "osdSetupUnitsOptionBritish" },
+];
 const timerPrecisions = [
     "osdTimerPrecisionOptionSecond",
     "osdTimerPrecisionOptionHundredth",
@@ -684,17 +753,44 @@ const timerSources = [
 // Font types from OSD constants
 const fontTypes = computed(() => OSD.constants?.FONT_TYPES || []);
 
+function getLocalizedFieldText(field) {
+    return i18n.getMessage(field.text, field.textParams) || "";
+}
+
+function compareLocalizedFields(a, b) {
+    if (a.name === "UNKNOWN" && b.name !== "UNKNOWN") {
+        return 1;
+    }
+    if (a.name !== "UNKNOWN" && b.name === "UNKNOWN") {
+        return -1;
+    }
+
+    const locale = i18n.getCurrentLocale().replace("_", "-");
+    const textA = getLocalizedFieldText(a);
+    const textB = getLocalizedFieldText(b);
+    return textA.localeCompare(textB, locale, { sensitivity: "base" });
+}
+
 // Filtered display items based on search
 const filteredDisplayItems = computed(() => {
     const query = elementSearchQuery.value.toLowerCase();
-    if (!query) {
-        return osdStore.displayItems;
-    }
-    return osdStore.displayItems.filter((field) => {
+    const filtered = osdStore.displayItems.filter((field) => {
+        if (!field.name) {
+            return false;
+        }
         const text = i18n.getMessage(field.text, field.textParams)?.toLowerCase() || "";
         const name = field.name?.toLowerCase() || "";
-        return text.includes(query) || name.includes(query);
+        return !query || text.includes(query) || name.includes(query);
     });
+    return [...filtered].sort(compareLocalizedFields);
+});
+
+const sortedWarnings = computed(() => {
+    return osdStore.warnings.filter((warning) => warning.name).sort(compareLocalizedFields);
+});
+
+const sortedStatItems = computed(() => {
+    return osdStore.statItems.filter((stat) => stat.name).sort(compareLocalizedFields);
 });
 
 // Check if field is highlighted
@@ -718,18 +814,62 @@ function unhighlightField() {
 function toggleFieldVisibility(fieldIndex, profileIndex, event) {
     osdStore.updateDisplayItemVisibility(fieldIndex, profileIndex, event.target.checked);
     trackChange("displayItem", osdStore.displayItems[fieldIndex].name);
+    osdStore.saveDisplayItem(osdStore.displayItems[fieldIndex]).catch((error) => {
+        console.error("Failed to update display item visibility:", error);
+    });
     updatePreview();
 }
 
 // Handle variant change
 function onVariantChange(field) {
     trackChange("variant", field.name);
+    osdStore.saveDisplayItem(field).catch((error) => {
+        console.error("Failed to update display item variant:", error);
+    });
     updatePreview();
 }
 
 // Handle video system change
 function onVideoSystemChange() {
     osdStore.updateDisplaySize();
+    osdStore.saveOtherConfig().catch((error) => {
+        console.error("Failed to update OSD video system:", error);
+    });
+    updatePreview();
+}
+
+function onUnitModeChange() {
+    osdStore.saveOtherConfig().catch((error) => {
+        console.error("Failed to update OSD unit mode:", error);
+    });
+    updatePreview();
+}
+
+function onTimerChange(timer) {
+    osdStore.saveTimerConfig(timer).catch((error) => {
+        console.error("Failed to update OSD timer:", error);
+    });
+    updatePreview();
+}
+
+function onAlarmChange() {
+    osdStore.saveOtherConfig().catch((error) => {
+        console.error("Failed to update OSD alarms:", error);
+    });
+    updatePreview();
+}
+
+function onWarningChange() {
+    osdStore.saveOtherConfig().catch((error) => {
+        console.error("Failed to update OSD warnings:", error);
+    });
+    updatePreview();
+}
+
+function onStatChange(stat) {
+    osdStore.saveStatisticItem(stat).catch((error) => {
+        console.error("Failed to update OSD statistic:", error);
+    });
     updatePreview();
 }
 
@@ -878,6 +1018,9 @@ function onDropCell(event) {
     // Update display item position
     displayItem.position = position;
     trackChange("position", displayItem.name);
+    osdStore.saveDisplayItem(displayItem).catch((error) => {
+        console.error("Failed to update display item position:", error);
+    });
     updatePreview();
 
     dragState.value.field = null;
@@ -968,6 +1111,9 @@ function applyPresetPosition(field, positionKey) {
 
     field.position = finalPosition;
     trackChange("position", field.name);
+    osdStore.saveDisplayItem(field).catch((error) => {
+        console.error("Failed to apply preset position:", error);
+    });
     updatePreview();
 
     closePresetMenu();
@@ -1040,6 +1186,8 @@ async function loadConfig() {
         updatePreview();
     } catch (error) {
         console.error("Failed to load OSD configuration:", error);
+    } finally {
+        hasLoadedConfig.value = true;
     }
 }
 
@@ -1055,13 +1203,13 @@ async function saveConfig() {
         // Sync store to legacy OSD.data (keeps legacy preview/analytics consistent)
         osdStore.syncToLegacy();
 
-        // Save via Store Action
-        await osdStore.saveOsdConfig();
+        // Legacy parity: Save button commits pending in-memory config to EEPROM.
+        await osdStore.saveToEeprom();
 
         // Track analytics
         const changes = analyticsChanges.value;
         if (Object.keys(changes).length > 0) {
-            tracking.sendSaveAndChangeEvents(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, { name: "osd" }, changes);
+            tracking.sendSaveAndChangeEvents(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, changes, "osd");
         }
 
         // Show success
@@ -1127,6 +1275,19 @@ function loadFontPreset(index) {
         .catch((err) => console.error("Failed to load font preset:", err));
 }
 
+function applyLegacyMobilePreviewZoom() {
+    if (!previewContainer.value) {
+        return;
+    }
+
+    if (window.innerWidth < 390) {
+        const previewZoom = (window.innerWidth - 30) / 360;
+        previewContainer.value.style.zoom = String(previewZoom);
+    } else {
+        previewContainer.value.style.zoom = "";
+    }
+}
+
 function replaceLogoImage() {
     if (GUI.connect_lock) {
         return;
@@ -1189,12 +1350,16 @@ watch(previewProfile, (newVal) => {
 watch(selectedFont, (newVal) => {
     // Sync preset selection for UI consistency
     selectedFontPreset.value = newVal;
-    // Directly load the font (avoids issue if selectedFontPreset was already this value)
-    loadFontPreset(newVal);
+    // selectedFontPreset watcher performs loading
 });
 
 watch(activeProfile, (newVal) => {
     osdStore.osdProfiles.selected = newVal;
+    if (hasLoadedConfig.value) {
+        osdStore.saveOtherConfig().catch((error) => {
+            console.error("Failed to update active OSD profile:", error);
+        });
+    }
 });
 
 // Lifecycle
@@ -1202,10 +1367,12 @@ const handleClickOutside = () => closePresetMenu();
 
 onMounted(async () => {
     document.addEventListener("click", handleClickOutside);
+    SYM.loadSymbols();
     // Initialize LogoManager to inject logo size i18n resources
     LogoManager.init(FONT, SYM.LOGO);
     await loadConfig();
     await nextTick();
+    applyLegacyMobilePreviewZoom();
     GUI.content_ready();
 });
 
@@ -1365,6 +1532,10 @@ onUnmounted(() => {
 .display-layout input.position {
     width: 5em;
     border-bottom: 1px solid var(--surface-500);
+}
+
+.video-type-option.disabled span {
+    color: #afafaf;
 }
 
 /* Switchable Fields (Core Element List) */
@@ -1575,23 +1746,29 @@ onUnmounted(() => {
 .preview-controls-wrapper {
     display: flex;
     align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
     width: 100%;
     color: #000; /* Dark text on gold background */
     font-weight: 600;
 }
 
 .preview-controls-wrapper label {
-    margin-right: 5px;
+    margin-right: 0;
     white-space: nowrap;
+    max-width: none;
+    overflow: visible;
+    text-overflow: clip;
 }
 
+.preview-controls-wrapper select,
 .preview-controls-wrapper select.dark-select {
     background-color: var(--surface-800);
     color: #ffffff; /* Force white text for readability against dark background */
     border: 1px solid var(--surface-900);
     border-radius: 4px;
     padding: 2px 5px;
-    margin-right: 10px;
+    margin-right: 0;
     height: 24px;
 }
 
@@ -1599,10 +1776,11 @@ onUnmounted(() => {
     margin-left: auto; /* Push to right */
     display: flex;
     align-items: center;
+    gap: 6px;
 }
 
 .osd-preview-rulers-group input {
-    margin-right: 5px;
+    margin-right: 0;
 }
 
 /* Fix specificity for legacy overrides */

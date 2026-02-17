@@ -2571,7 +2571,8 @@ OSD.msp = {
                 const statisticNumber = i - OSD.constants.STATISTIC_FIELDS.length + 1;
                 d.statItems.push({
                     name: "UNKNOWN",
-                    text: ["osdTextStatUnknown", statisticNumber],
+                    text: "osdTextStatUnknown",
+                    textParams: { 1: statisticNumber },
                     desc: "osdDescStatUnknown",
                     index: i,
                     enabled: v === 1,
@@ -2619,7 +2620,8 @@ OSD.msp = {
                 const warningNumber = i - OSD.constants.WARNINGS.length + 1;
                 d.warnings.push({
                     name: "UNKNOWN",
-                    text: ["osdWarningTextUnknown", warningNumber],
+                    text: "osdWarningTextUnknown",
+                    textParams: { 1: warningNumber },
                     desc: "osdWarningUnknown",
                     enabled,
                     index: i,
@@ -2686,7 +2688,8 @@ OSD.msp = {
                 const statisticNumber = i - expectedStatsCount + 1;
                 d.statItems.push({
                     name: "UNKNOWN",
-                    text: ["osdTextStatUnknown", statisticNumber],
+                    text: "osdTextStatUnknown",
+                    textParams: { 1: statisticNumber },
                     desc: "osdDescStatUnknown",
                     index: i,
                     enabled: v === 1,
@@ -2724,7 +2727,8 @@ OSD.msp = {
                 const warningNumber = i - warningCount + 1;
                 d.warnings.push({
                     name: "UNKNOWN",
-                    text: ["osdWarningTextUnknown", warningNumber],
+                    text: "osdWarningTextUnknown",
+                    textParams: { 1: warningNumber },
                     desc: "osdWarningUnknown",
                     enabled,
                     index: i,
@@ -3238,7 +3242,9 @@ osd.initialize = function (callback) {
         function titleizeField(field) {
             let finalFieldName = null;
             if (field.text) {
-                if (Array.isArray(field.text) && i18n.existsMessage(field.text[0])) {
+                if (field.textParams && i18n.existsMessage(field.text)) {
+                    finalFieldName = i18n.getMessage(field.text, field.textParams);
+                } else if (Array.isArray(field.text) && i18n.existsMessage(field.text[0])) {
                     finalFieldName = i18n.getMessage(field.text[0], field.text.slice(1));
                 } else {
                     finalFieldName = i18n.getMessage(field.text);

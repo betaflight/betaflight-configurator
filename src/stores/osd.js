@@ -1,12 +1,12 @@
 import { defineStore } from "pinia";
 import { ref, computed, reactive } from "vue";
-import { OSD, FONT } from "../js/tabs/osd";
+import { OSD, FONT, SYM } from "../js/tabs/osd";
 import MSP from "../js/msp";
 import MSPCodes from "../js/msp/MSPCodes";
 import { OSD_CONSTANTS } from "../js/tabs/osd_constants";
 import semver from "semver";
 import { useFlightControllerStore } from "./fc";
-import CONFIGURATOR, { API_VERSION_1_46, API_VERSION_1_47 } from "../js/data_storage";
+import CONFIGURATOR, { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "../js/data_storage";
 
 export const useOsdStore = defineStore("osd", () => {
     // Core OSD data state
@@ -27,6 +27,7 @@ export const useOsdStore = defineStore("osd", () => {
 
     // OSD state flags
     const state = reactive({
+        haveSomeOsd: false,
         haveMax7456Video: false,
         haveMax7456Configured: false,
         haveMax7456FontDeviceConfigured: false,
@@ -84,7 +85,7 @@ export const useOsdStore = defineStore("osd", () => {
 
     const isHdVideoSystem = computed(() => videoSystem.value === 3);
 
-    const isSupported = computed(() => state.haveMax7456Video || state.isMspDevice);
+    const isSupported = computed(() => Boolean(state.haveSomeOsd));
 
     // Actions
     function initData() {
@@ -261,12 +262,18 @@ export const useOsdStore = defineStore("osd", () => {
         const _fcStore = useFlightControllerStore(); // Ensure FC store is initialized if needed
 
         try {
+            // Match legacy OSD initialization order (symbols before display field previews).
+            SYM.loadSymbols();
+
             // 1. Ensure font data structures are initialized
             FONT.initData();
 
             // 2. Fetch data from MSP
             let info;
             if (!CONFIGURATOR.virtualMode) {
+                if (_fcStore.config?.apiVersion && semver.gte(_fcStore.config.apiVersion, API_VERSION_1_45)) {
+                    await MSP.promise(MSPCodes.MSP_OSD_CANVAS);
+                }
                 info = await MSP.promise(MSPCodes.MSP_OSD_CONFIG);
             }
 
@@ -286,6 +293,10 @@ export const useOsdStore = defineStore("osd", () => {
                 }
             } else {
                 OSD.msp.decode(info);
+            }
+
+            if (!CONFIGURATOR.virtualMode) {
+                await MSP.promise(MSPCodes.MSP_RX_CONFIG);
             }
 
             // Sync global OSD.data to Pinia State
@@ -467,33 +478,40 @@ export const useOsdStore = defineStore("osd", () => {
         return MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, encodeLayout(item));
     };
 
+    const saveOtherConfig = async () => {
+        return MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, encodeOther());
+    };
+
+    const saveTimerConfig = async (timer) => {
+        return MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, encodeTimer(timer));
+    };
+
+    const saveStatisticItem = async (stat) => {
+        return MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, encodeStatistics(stat));
+    };
+
+    const saveToEeprom = async () => {
+        return MSP.promise(MSPCodes.MSP_EEPROM_WRITE);
+    };
+
     const saveOsdConfig = async () => {
         try {
-            const promises = [];
+            // Keep writes ordered. MSP callback matching is keyed by command code.
+            await MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, encodeOther());
 
-            // 1. General Config
-            promises.push(MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, encodeOther()));
-
-            // 2. Layout
             for (const item of displayItems.value) {
-                promises.push(MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, encodeLayout(item)));
+                await MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, encodeLayout(item));
             }
 
-            // 3. Timers
             for (const timer of timers.value) {
-                promises.push(MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, encodeTimer(timer)));
+                await MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, encodeTimer(timer));
             }
 
-            // 4. Statistics
-            // Unlike other items, statistics loop in decode handled specific count.
-            // encodeStatistics logic seems to return 4 bytes: [index, enabled_low, enabled_high, 0]?
-            // No, push16 = 2 bytes. push8 = 1 byte.
-            // [index(1), enabled(2), 0(1)] = 4 bytes.
             for (const stat of statItems.value) {
-                promises.push(MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, encodeStatistics(stat)));
+                await MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, encodeStatistics(stat));
             }
 
-            await Promise.all(promises);
+            await MSP.promise(MSPCodes.MSP_EEPROM_WRITE);
 
             // Sync back to legacy OSD.data?
             syncToLegacy();
@@ -558,6 +576,10 @@ export const useOsdStore = defineStore("osd", () => {
         syncFromLegacy,
         fetchOsdConfig,
         saveDisplayItem,
+        saveOtherConfig,
+        saveTimerConfig,
+        saveStatisticItem,
+        saveToEeprom,
         saveOsdConfig,
     };
 });
