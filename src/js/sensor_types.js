@@ -172,10 +172,18 @@ function sensorTypesLegacy() {
     const accElements = sensorTypes.acc.elements;
     const gpsElements = sensorTypes.gps.elements;
 
-    // remove deprecated sensors or add new ones, only for API 1.47 (not for 1.48+ which uses dynamic names)
-    if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_48) && semver.eq(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+    // remove deprecated sensors (API 1.47)
+    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47) {
         removeArrayElement(gyroElements, "L3G4200D");
         removeArrayElement(gyroElements, "MPU3050");
+        removeArrayElement(accElements, "ADXL345");
+        removeArrayElement(accElements, "MMA8452");
+        removeArrayElement(accElements, "BMA280");
+        removeArrayElement(accElements, "LSM303DLHC");
+    }
+
+    // Add new sensors, only for API 1.47 (API 1.48+ uses dynamic names)
+    if (semver.eq(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
         addArrayElementsAfter(gyroElements, "LSM6DSV16X", [
             "IIM42653",
             "ICM45605",
@@ -184,12 +192,11 @@ function sensorTypesLegacy() {
             "IIM42652",
         ]);
 
-        removeArrayElement(accElements, "ADXL345");
-        removeArrayElement(accElements, "MMA8452");
-        removeArrayElement(accElements, "BMA280");
-        removeArrayElement(accElements, "LSM303DLHC");
         addArrayElementsAfter(accElements, "LSM6DSV16X", ["IIM42653", "ICM45605", "ICM45686", "ICM40609D", "IIM42652"]);
+    }
 
+    // Update GNSS Provider
+    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47) {
         addArrayElement(gpsElements, "VIRTUAL");
     }
 
