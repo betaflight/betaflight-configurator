@@ -173,7 +173,7 @@ function sensorTypesLegacy() {
     const gpsElements = sensorTypes.gps.elements;
 
     // remove deprecated sensors (API 1.47)
-    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47) {
+    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
         removeArrayElement(gyroElements, "L3G4200D");
         removeArrayElement(gyroElements, "MPU3050");
         removeArrayElement(accElements, "ADXL345");
