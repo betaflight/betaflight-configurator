@@ -255,7 +255,6 @@
                                         ref="corebuildModeCheckbox"
                                         class="corebuild_mode vue-switch-input"
                                         type="checkbox"
-                                        @change="handleCoreBuildModeChange"
                                     />
                                     <span class="vue-switch-slider" aria-hidden="true"></span>
                                     <span id="build_configuration_toggle_label_text" class="vue-switch-text">{{
@@ -267,7 +266,7 @@
                             <div class="spacer_box_title" v-html="$t('firmwareFlasherBuildConfigurationHead')"></div>
                         </div>
                         <div class="grid-box col1">
-                            <div class="spacer hide-in-core-build-mode">
+                            <div v-show="!state.coreBuildMode" class="spacer">
                                 <div class="grid-box col2">
                                     <div class="select-group">
                                         <strong>{{ $t("firmwareFlasherBuildRadioProtocols") }}</strong>
@@ -313,7 +312,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="spacer hide-in-core-build-mode">
+                            <div v-show="!state.coreBuildMode" class="spacer">
                                 <div class="grid-box col2">
                                     <div class="select-group">
                                         <strong>{{ $t("firmwareFlasherBuildOsdProtocols") }}</strong>
@@ -359,7 +358,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="spacer hide-in-core-build-mode">
+                            <div v-show="!state.coreBuildMode" class="spacer">
                                 <div class="grid-box col1">
                                     <div class="select-group">
                                         <strong>{{ $t("firmwareFlasherBuildOptions") }}</strong>
@@ -383,7 +382,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="expertOptions spacer hide-in-core-build-mode">
+                            <div v-show="!state.coreBuildMode" class="expertOptions spacer">
                                 <div class="grid-box col1">
                                     <div class="select-group">
                                         <strong>{{ $t("firmwareFlasherBuildCustomDefines") }}</strong>
@@ -769,7 +768,6 @@ export default defineComponent({
             targetQualificationVisible: false,
             expertOptionsVisible: false,
             buildTypeRowVisible: false,
-            hideInCoreBuildMode: true,
             commitSelectionVisible: false,
             // UI State - Text content
             targetQualificationText: "",
@@ -1328,7 +1326,6 @@ export default defineComponent({
 
             // Setup expert options visibility
             state.expertOptionsVisible = state.expertMode;
-            state.hideInCoreBuildMode = true;
 
             // Restore selected build type and trigger initial load
             const selectedBuildType = getConfig("selected_build_type").selected_build_type || 0;
@@ -1709,6 +1706,11 @@ export default defineComponent({
 
         // Remote build and firmware loading
         const enforceOSDSelection = async () => {
+            // Skip OSD selection enforcement in core build mode
+            if (state.coreBuildMode) {
+                return true;
+            }
+
             const selectedRelease = boardSelection.state.selectedFirmwareVersion || "";
             const selectedFirmware = boardSelection.state.firmwareVersionOptions?.find(
                 (option) => option.release === selectedRelease,
@@ -1898,7 +1900,6 @@ export default defineComponent({
         const handleExpertModeChange = () => {
             setConfig({ expertMode: state.expertMode });
             state.expertOptionsVisible = state.expertMode;
-            state.hideInCoreBuildMode = !state.coreBuildMode;
 
             // Update build types based on expert mode
             if (state.expertMode) {
@@ -1960,15 +1961,6 @@ export default defineComponent({
         const handleFlashManualBaudRateChange = () => {
             const baud = Number.parseInt(state.flashManualBaudRate);
             setConfig({ flash_manual_baud_rate: baud });
-        };
-
-        const handleCoreBuildModeChange = () => {
-            state.hideInCoreBuildMode = !state.coreBuildMode;
-            if (state.coreBuildMode) {
-                state.expertOptionsVisible = false;
-            } else {
-                state.expertOptionsVisible = state.expertMode;
-            }
         };
 
         // Click event handlers for buttons
@@ -2279,7 +2271,6 @@ export default defineComponent({
             handleEraseChipChange,
             handleFlashManualBaudChange,
             handleFlashManualBaudRateChange,
-            handleCoreBuildModeChange,
             handleExitDfu,
             handleFlashFirmware,
             handleLoadRemoteFile,
