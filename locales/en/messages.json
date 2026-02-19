@@ -2668,6 +2668,10 @@
         "message": "<a href=\"https://betaflight.com/docs/wiki/guides/current/position-hold-v4-6#altitude-hold\" target=\"_blank\" rel=\"noopener noreferrer\">Altitude Hold</a> actively regulates the aircraft's altitude using external sensors combined with Angle Mode (Stable Mode).",
         "description": "Help text for ALTITUDE HOLD mode"
     },
+    "auxiliaryHelpMode_AUTOPILOT": {
+        "message": "Autopilot mode enables autonomous flight control, combining altitude hold and position hold to maintain a stable hover or follow a planned flight path.",
+        "description": "Help text for AUTOPILOT mode"
+    },
     "auxiliaryHelpMode_BEEPER": {
         "message": "Enable beeping - useful for locating a crashed aircraft",
         "description": "Help text to BEEPER mode"
