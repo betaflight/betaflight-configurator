@@ -263,13 +263,21 @@ class GuiControl {
         const COLOR_ACCENT = "var(--primary-500)";
         const COLOR_SWITCHERY_SECOND = "var(--switcherysecond)";
 
+        $("[data-switchery]").each(function (index, elem) {
+            elem.switchery?.setPosition();
+        });
+
         $(".togglesmall").each(function (index, elem) {
-            if ($(elem).next(".switchery").length) return;
+            if ($(elem).next(".switchery").length) {
+                elem.switchery?.setPosition();
+                return;
+            }
             const switchery = new Switchery(elem, {
                 size: "small",
                 color: COLOR_ACCENT,
                 secondaryColor: COLOR_SWITCHERY_SECOND,
             });
+            elem.switchery = switchery;
             $(elem).on("change", function () {
                 switchery.setPosition();
             });
@@ -277,11 +285,15 @@ class GuiControl {
         });
 
         $(".toggle").each(function (index, elem) {
-            if ($(elem).next(".switchery").length) return;
+            if ($(elem).next(".switchery").length) {
+                elem.switchery?.setPosition();
+                return;
+            }
             const switchery = new Switchery(elem, {
                 color: COLOR_ACCENT,
                 secondaryColor: COLOR_SWITCHERY_SECOND,
             });
+            elem.switchery = switchery;
             $(elem).on("change", function () {
                 switchery.setPosition();
             });
@@ -289,12 +301,16 @@ class GuiControl {
         });
 
         $(".togglemedium").each(function (index, elem) {
-            if ($(elem).next(".switchery").length) return;
+            if ($(elem).next(".switchery").length) {
+                elem.switchery?.setPosition();
+                return;
+            }
             const switchery = new Switchery(elem, {
                 className: "switcherymid",
                 color: COLOR_ACCENT,
                 secondaryColor: COLOR_SWITCHERY_SECOND,
             });
+            elem.switchery = switchery;
             $(elem).on("change", function () {
                 switchery.setPosition();
             });
