@@ -267,54 +267,32 @@ class GuiControl {
             elem.switchery?.setPosition();
         });
 
-        $(".togglesmall").each(function (index, elem) {
-            if ($(elem).next(".switchery").length) {
-                elem.switchery?.setPosition();
-                return;
-            }
-            const switchery = new Switchery(elem, {
-                size: "small",
-                color: COLOR_ACCENT,
-                secondaryColor: COLOR_SWITCHERY_SECOND,
-            });
-            elem.switchery = switchery;
-            $(elem).on("change", function () {
-                switchery.setPosition();
-            });
-            $(elem).removeClass("togglesmall");
-        });
+        const setupSwitchery = (selector, className, extraOptions = {}) => {
+            $(selector).each(function (index, elem) {
+                if ($(elem).next(".switchery").length) {
+                    elem.switchery?.setPosition();
+                    return;
+                }
 
-        $(".toggle").each(function (index, elem) {
-            if ($(elem).next(".switchery").length) {
-                elem.switchery?.setPosition();
-                return;
-            }
-            const switchery = new Switchery(elem, {
-                color: COLOR_ACCENT,
-                secondaryColor: COLOR_SWITCHERY_SECOND,
+                const switchery = new Switchery(elem, {
+                    ...extraOptions,
+                    color: COLOR_ACCENT,
+                    secondaryColor: COLOR_SWITCHERY_SECOND,
+                });
+                elem.switchery = switchery;
+                $(elem).on("change", function () {
+                    switchery.setPosition();
+                });
+                $(elem).removeClass(className);
             });
-            elem.switchery = switchery;
-            $(elem).on("change", function () {
-                switchery.setPosition();
-            });
-            $(elem).removeClass("toggle");
-        });
+        };
 
-        $(".togglemedium").each(function (index, elem) {
-            if ($(elem).next(".switchery").length) {
-                elem.switchery?.setPosition();
-                return;
-            }
-            const switchery = new Switchery(elem, {
-                className: "switcherymid",
-                color: COLOR_ACCENT,
-                secondaryColor: COLOR_SWITCHERY_SECOND,
-            });
-            elem.switchery = switchery;
-            $(elem).on("change", function () {
-                switchery.setPosition();
-            });
-            $(elem).removeClass("togglemedium");
+        setupSwitchery(".togglesmall", "togglesmall", {
+            size: "small",
+        });
+        setupSwitchery(".toggle", "toggle");
+        setupSwitchery(".togglemedium", "togglemedium", {
+            className: "switcherymid",
         });
     }
     content_ready(callback) {
