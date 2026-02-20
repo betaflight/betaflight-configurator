@@ -269,7 +269,11 @@ class GuiControl {
 
         const setupSwitchery = (selector, className, extraOptions = {}) => {
             $(selector).each(function (index, elem) {
-                if ($(elem).next(".switchery").length) {
+                const existingSwitcherySelector = extraOptions.className
+                    ? `.switchery, .${extraOptions.className}`
+                    : ".switchery";
+
+                if ($(elem).next(existingSwitcherySelector).length) {
                     elem.switchery?.setPosition();
                     return;
                 }
