@@ -1011,7 +1011,7 @@ MspHelper.prototype.process_data = function (dataHandler) {
                 case MSPCodes.MSP_ADJUSTMENT_RANGES:
                     FC.ADJUSTMENT_RANGES = []; // empty the array as new data is coming in
 
-                    const bytesPerItem = semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_48) ? 8 : 6; // 8 bytes per item if >= V1.48 (adjustmentCenter and adjustmentScale were added), otherwise 6 bytes per item
+                    const bytesPerItem = semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_48) ? 10 : 6; // 10 bytes per item if >= V1.48 (adjustmentCenter and adjustmentScale were added), otherwise 6 bytes per item
                     const adjustmentRangeCount = data.byteLength / bytesPerItem;
 
                     for (let i = 0; i < adjustmentRangeCount; i++) {
