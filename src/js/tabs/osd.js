@@ -414,7 +414,7 @@ const characterBitmapDataUri = function (charAddress) {
 };
 
 FONT.draw = function (charAddress) {
-    if (!FONT.data || !FONT.data.character_image_urls) {
+    if (!FONT.data?.character_image_urls) {
         return "";
     }
     let cached = FONT.data.character_image_urls[charAddress];
@@ -3038,37 +3038,43 @@ OSD.presetPosition.setupGrid = function () {
     contextMenuListObject.content = $grid;
 };
 
+function isPositionWithinGridBounds(testX, testY, elementWidth) {
+    return (
+        testX >= 1 &&
+        testX + elementWidth <= OSD.data.displaySize.x - 1 &&
+        testY >= 1 &&
+        testY <= OSD.data.displaySize.y - 2
+    );
+}
+
+function hasCollisionAtPosition(testX, testY, elementWidth, elementHeight, fieldChanged) {
+    for (let row = 0; row < elementHeight; row++) {
+        for (let col = 0; col < elementWidth; col++) {
+            const checkPos = (testY + row) * OSD.data.displaySize.x + testX + col;
+            const cell = OSD.data.preview[checkPos];
+            const occupiedByOtherField =
+                cell?.[0]?.index != null &&
+                cell[0].index !== fieldChanged.index &&
+                !(cell?.[0]?.preview.constructor === Array || fieldChanged.preview.constructor === Array);
+
+            if (occupiedByOtherField) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 OSD.findAvailablePosition = function (target, elementWidth, elementHeight, fieldChanged, grow) {
     for (let offset = 0; offset < Math.max(OSD.data.displaySize.x, OSD.data.displaySize.y); offset++) {
         const testX = target.x + grow.x * offset;
         const testY = target.y + grow.y * offset;
 
-        if (
-            testX < 1 ||
-            testX + elementWidth > OSD.data.displaySize.x - 1 ||
-            testY < 1 ||
-            testY > OSD.data.displaySize.y - 2
-        ) {
+        if (!isPositionWithinGridBounds(testX, testY, elementWidth)) {
             break;
         }
 
-        let canPlace = true;
-        for (let row = 0; row < elementHeight && canPlace; row++) {
-            for (let col = 0; col < elementWidth && canPlace; col++) {
-                const checkPos = (testY + row) * OSD.data.displaySize.x + testX + col;
-                const cell = OSD.data.preview[checkPos];
-
-                if (
-                    cell?.[0]?.index != null &&
-                    cell[0].index !== fieldChanged.index &&
-                    !(cell?.[0]?.preview.constructor === Array || fieldChanged.preview.constructor === Array)
-                ) {
-                    canPlace = false;
-                }
-            }
-        }
-
-        if (canPlace) {
+        if (!hasCollisionAtPosition(testX, testY, elementWidth, elementHeight, fieldChanged)) {
             return testY * OSD.data.displaySize.x + testX;
         }
     }

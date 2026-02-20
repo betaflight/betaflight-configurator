@@ -945,6 +945,76 @@ function onDragLeaveCell(event) {
     event.currentTarget.removeAttribute("style");
 }
 
+function isStringArrayPreview(preview) {
+    return Array.isArray(preview) && typeof preview[0] === "string";
+}
+
+function applyArrayDragOffset(displayItem, position, event, displaySize) {
+    if (!Array.isArray(displayItem.preview)) {
+        return position;
+    }
+
+    const x = Number.parseInt(event.dataTransfer.getData("x"));
+    const y = Number.parseInt(event.dataTransfer.getData("y"));
+    return position - x - y * displaySize.x;
+}
+
+function clampStringPreviewPosition(displayItem, position, displaySize) {
+    const overflowsLine = displaySize.x - ((position % displaySize.x) + displayItem.preview.length);
+    if (overflowsLine < 0) {
+        return position + overflowsLine;
+    }
+    return position;
+}
+
+function clampStringArrayPreviewPosition(position, displaySize, cursorX, limits) {
+    const selectedPositionX = position % displaySize.x;
+    let selectedPositionY = Math.trunc(position / displaySize.x);
+
+    if (position < 0) {
+        return null;
+    }
+    if (selectedPositionX > cursorX) {
+        position += displaySize.x - selectedPositionX;
+        selectedPositionY++;
+    } else if (selectedPositionX + limits.maxX > displaySize.x) {
+        position -= selectedPositionX + limits.maxX - displaySize.x;
+    }
+    if (selectedPositionY < 0) {
+        position += Math.abs(selectedPositionY) * displaySize.x;
+    } else if (selectedPositionY + limits.maxY > displaySize.y) {
+        position -= (selectedPositionY + limits.maxY - displaySize.y) * displaySize.x;
+    }
+
+    return position;
+}
+
+function clampObjectArrayPreviewPosition(position, displaySize, limits) {
+    const selectedPositionX = position % displaySize.x;
+    const selectedPositionY = Math.trunc(position / displaySize.x);
+
+    if (limits.minX < 0 && selectedPositionX + limits.minX < 0) {
+        position += Math.abs(selectedPositionX + limits.minX);
+    } else if (limits.maxX > 0 && selectedPositionX + limits.maxX >= displaySize.x) {
+        position -= selectedPositionX + limits.maxX + 1 - displaySize.x;
+    }
+    if (limits.minY < 0 && selectedPositionY + limits.minY < 0) {
+        position += Math.abs(selectedPositionY + limits.minY) * displaySize.x;
+    } else if (limits.maxY > 0 && selectedPositionY + limits.maxY >= displaySize.y) {
+        position -= (selectedPositionY + limits.maxY - displaySize.y + 1) * displaySize.x;
+    }
+
+    return position;
+}
+
+function clampArrayPreviewPosition(displayItem, position, displaySize, cursorX) {
+    const limits = searchLimitsElement(displayItem.preview);
+    if (isStringArrayPreview(displayItem.preview)) {
+        return clampStringArrayPreviewPosition(position, displaySize, cursorX, limits);
+    }
+    return clampObjectArrayPreviewPosition(position, displaySize, limits);
+}
+
 function onDropCell(event) {
     event.currentTarget.removeAttribute("style");
 
@@ -958,60 +1028,19 @@ function onDropCell(event) {
     let position = Number.parseInt(event.currentTarget.dataset.position);
     const cursorX = position % displaySize.x;
 
-    // For array-type previews, adjust position based on drag offset
-    if (Array.isArray(displayItem.preview)) {
-        const x = Number.parseInt(event.dataTransfer.getData("x"));
-        const y = Number.parseInt(event.dataTransfer.getData("y"));
-        position -= x;
-        position -= y * displaySize.x;
-    }
+    position = applyArrayDragOffset(displayItem, position, event, displaySize);
 
     if (displayItem.ignoreSize) {
         return;
     }
-    if (!Array.isArray(displayItem.preview)) {
-        // Standard string preview
-        const overflowsLine = displaySize.x - ((position % displaySize.x) + displayItem.preview.length);
-        if (overflowsLine < 0) {
-            position += overflowsLine;
+
+    if (Array.isArray(displayItem.preview)) {
+        position = clampArrayPreviewPosition(displayItem, position, displaySize, cursorX);
+        if (position === null) {
+            return;
         }
     } else {
-        // Array-type preview
-        const arrayElements = displayItem.preview;
-        const limits = searchLimitsElement(arrayElements);
-        const selectedPositionX = position % displaySize.x;
-        let selectedPositionY = Math.trunc(position / displaySize.x);
-
-        if (typeof arrayElements[0] === "string") {
-            if (position < 0) {
-                return;
-            }
-            if (selectedPositionX > cursorX) {
-                // Detected wrap around
-                position += displaySize.x - selectedPositionX;
-                selectedPositionY++;
-            } else if (selectedPositionX + limits.maxX > displaySize.x) {
-                // Right border beyond screen edge
-                position -= selectedPositionX + limits.maxX - displaySize.x;
-            }
-            if (selectedPositionY < 0) {
-                position += Math.abs(selectedPositionY) * displaySize.x;
-            } else if (selectedPositionY + limits.maxY > displaySize.y) {
-                position -= (selectedPositionY + limits.maxY - displaySize.y) * displaySize.x;
-            }
-        } else {
-            // Object array elements
-            if (limits.minX < 0 && selectedPositionX + limits.minX < 0) {
-                position += Math.abs(selectedPositionX + limits.minX);
-            } else if (limits.maxX > 0 && selectedPositionX + limits.maxX >= displaySize.x) {
-                position -= selectedPositionX + limits.maxX + 1 - displaySize.x;
-            }
-            if (limits.minY < 0 && selectedPositionY + limits.minY < 0) {
-                position += Math.abs(selectedPositionY + limits.minY) * displaySize.x;
-            } else if (limits.maxY > 0 && selectedPositionY + limits.maxY >= displaySize.y) {
-                position -= (selectedPositionY + limits.maxY - displaySize.y + 1) * displaySize.x;
-            }
-        }
+        position = clampStringPreviewPosition(displayItem, position, displaySize);
     }
 
     // Update display item position
@@ -1080,8 +1109,12 @@ function applyPresetPosition(field, positionKey) {
     const target = config.coords(elementWidth, elementHeight, displaySize);
 
     // Clamp target within bounds
-    if (target.x < 1) target.x = 1;
-    if (target.y < 1) target.y = 1;
+    if (target.x < 1) {
+        target.x = 1;
+    }
+    if (target.y < 1) {
+        target.y = 1;
+    }
     if (target.x + elementWidth > displaySize.x - 1) {
         target.x = Math.max(1, displaySize.x - elementWidth - 1);
     }
@@ -1090,17 +1123,17 @@ function applyPresetPosition(field, positionKey) {
     }
 
     // Check collisions and find first available position
-    const finalPosition = findAvailablePosition(
+    const finalPosition = findAvailablePosition({
         target,
-        config.grow,
+        grow: config.grow,
         elementWidth,
         elementHeight,
         displaySize,
-        previewBuffer.value,
+        previewBufferData: previewBuffer.value,
         field,
         adjustOffsetX,
         adjustOffsetY,
-    );
+    });
 
     if (finalPosition === null) {
         console.warn("Unable to place element - not enough space available");
@@ -1118,7 +1151,29 @@ function applyPresetPosition(field, positionKey) {
     closePresetMenu();
 }
 
-function findAvailablePosition(
+function isCandidateWithinBounds(testX, testY, elementWidth, displaySize) {
+    return testX >= 1 && testX + elementWidth <= displaySize.x - 1 && testY >= 1 && testY <= displaySize.y - 2;
+}
+
+function canPlaceAtCandidate({ testX, testY, elementWidth, elementHeight, displaySize, previewBufferData, field }) {
+    for (let row = 0; row < elementHeight; row++) {
+        for (let col = 0; col < elementWidth; col++) {
+            const checkPos = (testY + row) * displaySize.x + testX + col;
+            const cell = previewBufferData[checkPos];
+            const isOccupiedByOtherField =
+                cell?.field?.index != null &&
+                cell.field.index !== field.index &&
+                !(Array.isArray(cell.field.preview) || Array.isArray(field.preview));
+
+            if (isOccupiedByOtherField) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+function findAvailablePosition({
     target,
     grow,
     elementWidth,
@@ -1128,33 +1183,26 @@ function findAvailablePosition(
     field,
     adjustOffsetX = 0,
     adjustOffsetY = 0,
-) {
+}) {
     for (let offset = 0; offset < Math.max(displaySize.x, displaySize.y); offset++) {
         const testX = target.x + grow.x * offset;
         const testY = target.y + grow.y * offset;
 
-        // Bounds check
-        if (testX < 1 || testX + elementWidth > displaySize.x - 1 || testY < 1 || testY > displaySize.y - 2) {
+        if (!isCandidateWithinBounds(testX, testY, elementWidth, displaySize)) {
             break;
         }
 
-        // Collision check against current preview buffer
-        let canPlace = true;
-        for (let row = 0; row < elementHeight && canPlace; row++) {
-            for (let col = 0; col < elementWidth && canPlace; col++) {
-                const checkPos = (testY + row) * displaySize.x + testX + col;
-                const cell = previewBufferData[checkPos];
-                if (
-                    cell?.field?.index != null &&
-                    cell.field.index !== field.index &&
-                    !(Array.isArray(cell.field.preview) || Array.isArray(field.preview))
-                ) {
-                    canPlace = false;
-                }
-            }
-        }
-
-        if (canPlace) {
+        if (
+            canPlaceAtCandidate({
+                testX,
+                testY,
+                elementWidth,
+                elementHeight,
+                displaySize,
+                previewBufferData,
+                field,
+            })
+        ) {
             let finalPos = testY * displaySize.x + testX;
             finalPos -= adjustOffsetX;
             finalPos -= adjustOffsetY * displaySize.x;
@@ -1227,9 +1275,11 @@ async function saveConfig() {
 
 // Font Manager
 const fontCharacterUrls = computed(() => {
-    // Trigger reactivity on fontDataVersion
-
-    fontDataVersion.value;
+    // Force recomputation when font data is refreshed out-of-band.
+    const fontVersion = fontDataVersion.value;
+    if (fontVersion < 0) {
+        return [];
+    }
     if (!FONT.data?.character_image_urls?.length) {
         return [];
     }

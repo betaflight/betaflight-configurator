@@ -75,6 +75,82 @@ function drawByOrder(buffer, selectedPosition, field, charCode, x, y) {
     };
 }
 
+function createEmptyPreviewBuffer(displaySize) {
+    const buffer = new Array(displaySize.total);
+    const emptyChar = " ".codePointAt(0);
+    const emptyImg = FONT.draw(emptyChar);
+
+    for (let i = 0; i < displaySize.total; i++) {
+        buffer[i] = {
+            field: null,
+            charCode: emptyChar,
+            x: null,
+            y: null,
+            img: emptyImg,
+        };
+    }
+
+    return buffer;
+}
+
+function normalizeSelectedPosition(position, totalSize) {
+    if (position < 0) {
+        position += totalSize;
+    }
+    if (position >= totalSize) {
+        position %= totalSize;
+    }
+    return position;
+}
+
+function drawStringPreview(buffer, field, selectedPosition) {
+    for (let i = 0; i < field.preview.length; i++) {
+        const charCode = field.preview.codePointAt(i);
+        drawByOrder(buffer, selectedPosition, field, charCode, i, 1);
+        selectedPosition++;
+    }
+    return selectedPosition;
+}
+
+function drawStringArrayPreview(buffer, field, displaySize, selectedPosition) {
+    const arrayElements = field.preview;
+    for (let i = 0; i < arrayElements.length; i++) {
+        const element = arrayElements[i];
+        for (let j = 0; j < element.length; j++) {
+            const charCode = element.codePointAt(j);
+            drawByOrder(buffer, selectedPosition, field, charCode, j, i);
+            selectedPosition++;
+        }
+        selectedPosition = selectedPosition - element.length + displaySize.x;
+    }
+}
+
+function drawObjectArrayPreview(buffer, field, displaySize, selectedPosition) {
+    for (const element of field.preview) {
+        const charCode = element.sym;
+        const pos = selectedPosition + element.x + element.y * displaySize.x;
+        drawByOrder(buffer, pos, field, charCode, element.x, element.y);
+    }
+}
+
+function drawFieldPreview(buffer, field, displaySize, selectedPosition) {
+    if (typeof field.preview === "string") {
+        drawStringPreview(buffer, field, selectedPosition);
+        return;
+    }
+
+    if (!Array.isArray(field.preview)) {
+        return;
+    }
+
+    if (field.preview.length > 0 && typeof field.preview[0] === "string") {
+        drawStringArrayPreview(buffer, field, displaySize, selectedPosition);
+        return;
+    }
+
+    drawObjectArrayPreview(buffer, field, displaySize, selectedPosition);
+}
+
 export function useOsdPreview() {
     const store = useOsdStore();
     const previewBuffer = ref([]);
@@ -84,85 +160,19 @@ export function useOsdPreview() {
         const displaySize = store.displaySize;
         const currentProfile = store.currentPreviewProfile;
         const displayItems = store.displayItems;
-
-        // Initialize buffer with empty spaces
-        const newBuffer = new Array(displaySize.total);
-        const emptyChar = " ".codePointAt(0);
-        const emptyImg = FONT.draw(emptyChar);
-
-        for (let i = 0; i < displaySize.total; i++) {
-            newBuffer[i] = {
-                field: null,
-                charCode: emptyChar,
-                x: null,
-                y: null,
-                img: emptyImg,
-            };
-        }
+        const newBuffer = createEmptyPreviewBuffer(displaySize);
 
         // Iterate over all display items
         for (const field of displayItems) {
-            // Skip if not visible in current profile
-            if (!field.isVisible || !field.isVisible[currentProfile]) {
+            if (!field.isVisible?.[currentProfile]) {
                 continue;
             }
-
-            // Skip if no preview data
             if (!field.preview) {
                 continue;
             }
 
-            let selectedPosition = field.position;
-            if (selectedPosition < 0) {
-                selectedPosition += displaySize.total;
-            }
-
-            // Wrap around if out of bounds (legacy behavior)
-            if (selectedPosition >= displaySize.total) {
-                selectedPosition = selectedPosition % displaySize.total;
-            }
-
-            // Render preview to buffer
-            if (typeof field.preview === "string") {
-                for (let i = 0; i < field.preview.length; i++) {
-                    const charCode = field.preview.codePointAt(i);
-                    drawByOrder(newBuffer, selectedPosition, field, charCode, i, 1);
-                    selectedPosition++;
-                }
-            } else if (Array.isArray(field.preview)) {
-                // Complex element (array of strings or objects)
-                // Legacy code logic:
-                if (field.preview.length > 0 && typeof field.preview[0] === "string") {
-                    // Array of strings (multi-line text?)
-                    const arrayElements = field.preview;
-                    for (let i = 0; i < arrayElements.length; i++) {
-                        const element = arrayElements[i];
-                        for (let j = 0; j < element.length; j++) {
-                            const charCode = element.codePointAt(j);
-                            // offset calculation might differ for multi-line strings in legacy?
-                            // Legacy uses: selectedPosition, field, charCode, j, i
-                            drawByOrder(newBuffer, selectedPosition, field, charCode, j, i);
-                            selectedPosition++;
-                        }
-                        // Move to next line
-                        selectedPosition = selectedPosition - element.length + displaySize.x;
-                    }
-                } else {
-                    // Array of objects {x, y, sym}
-                    // const limits = searchLimitsElement(field.preview);
-                    // let offsetX = 0;
-                    // let offsetY = 0;
-                    // if (limits.minX < 0) offsetX = -limits.minX;
-                    // if (limits.minY < 0) offsetY = -limits.minY;
-                    // Removed unused offset assignments
-
-                    for (const element of field.preview) {
-                        const charCode = element.sym;
-                        const pos = selectedPosition + element.x + element.y * displaySize.x;
-                        drawByOrder(newBuffer, pos, field, charCode, element.x, element.y);
-                    }
-                }
-            }
+            const selectedPosition = normalizeSelectedPosition(field.position, displaySize.total);
+            drawFieldPreview(newBuffer, field, displaySize, selectedPosition);
         }
 
         previewBuffer.value = newBuffer;
@@ -172,7 +182,9 @@ export function useOsdPreview() {
     const previewRows = computed(() => {
         const rows = [];
         const width = store.displaySize.x;
-        if (!width || previewBuffer.value.length === 0) return rows;
+        if (!width || previewBuffer.value.length === 0) {
+            return rows;
+        }
 
         for (let i = 0; i < previewBuffer.value.length; i += width) {
             rows.push(previewBuffer.value.slice(i, i + width));

@@ -8,6 +8,18 @@ import semver from "semver";
 import { useFlightControllerStore } from "./fc";
 import CONFIGURATOR, { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "../js/data_storage";
 
+function encodeStatisticsPayload(statItem, isVirtualMode, virtualMode) {
+    if (isVirtualMode && virtualMode) {
+        virtualMode.statisticsState[statItem.index] = statItem.enabled;
+    }
+
+    const buffer = [];
+    buffer.push8(statItem.index);
+    buffer.push16(statItem.enabled ? 1 : 0);
+    buffer.push8(0);
+    return buffer;
+}
+
 export const useOsdStore = defineStore("osd", () => {
     // Core OSD data state
     const videoSystem = ref(null);
@@ -201,8 +213,9 @@ export const useOsdStore = defineStore("osd", () => {
     // Clear preview buffer
     function clearPreview() {
         preview.value = [];
+        const blankCharCode = " ".codePointAt(0);
         for (let i = 0; i < displaySize.total; i++) {
-            preview.value.push([null, " ".charCodeAt(0), null, null]);
+            preview.value.push([null, blankCharCode, null, null]);
         }
     }
 
@@ -258,94 +271,89 @@ export const useOsdStore = defineStore("osd", () => {
         }
     }
 
-    const fetchOsdConfig = async () => {
-        const _fcStore = useFlightControllerStore(); // Ensure FC store is initialized if needed
+    async function fetchOsdInfo(fcStore) {
+        if (CONFIGURATOR.virtualMode) {
+            return undefined;
+        }
+
+        if (fcStore.config?.apiVersion && semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)) {
+            await MSP.promise(MSPCodes.MSP_OSD_CANVAS);
+        }
+
+        return MSP.promise(MSPCodes.MSP_OSD_CONFIG);
+    }
+
+    async function decodeOsdData(info) {
+        OSD.loadDisplayFields();
+        OSD.chooseFields();
+
+        if (CONFIGURATOR.virtualMode) {
+            const { default: VirtualFC } = await import("../js/VirtualFC.js");
+            VirtualFC.setupVirtualOSD();
+
+            if (OSD.msp.decodeVirtual) {
+                OSD.msp.decodeVirtual();
+            }
+            return;
+        }
+
+        OSD.msp.decode(info);
+        await MSP.promise(MSPCodes.MSP_RX_CONFIG);
+    }
+
+    function syncStoreFromDecodedOsdData() {
+        videoSystem.value = OSD.data.video_system;
+        unitMode.value = OSD.data.unit_mode;
+        alarms.value = OSD.data.alarms ? structuredClone(OSD.data.alarms) : {};
+        statItems.value = [...OSD.data.statItems];
+        warnings.value = [...OSD.data.warnings];
+        timers.value = OSD.data.timers.map((t) => ({ ...t }));
+        displayItems.value = OSD.data.displayItems.map((item) => ({ ...item }));
+
+        if (OSD.data.parameters) {
+            parameters.cameraFrameWidth = OSD.data.parameters.cameraFrameWidth;
+            parameters.cameraFrameHeight = OSD.data.parameters.cameraFrameHeight;
+        }
+
+        if (OSD.data.osd_profiles) {
+            osdProfiles.value = {
+                number: OSD.data.osd_profiles.number,
+                selected: OSD.data.osd_profiles.selected,
+            };
+        }
+
+        if (OSD.data.state) {
+            Object.assign(state, OSD.data.state);
+        }
+
+        updateDisplaySize();
+    }
+
+    async function ensureDefaultFontLoaded() {
+        if (FONT.data?.characters.length !== 0) {
+            return;
+        }
 
         try {
-            // Match legacy OSD initialization order (symbols before display field previews).
-            SYM.loadSymbols();
+            const response = await fetch("./resources/osd/2/default.mcm");
+            const data = await response.text();
+            FONT.parseMCMFontFile(data);
+        } catch (fontError) {
+            console.warn("Failed to load default OSD font:", fontError);
+        }
+    }
 
-            // 1. Ensure font data structures are initialized
+    const fetchOsdConfig = async () => {
+        const fcStore = useFlightControllerStore();
+
+        try {
+            SYM.loadSymbols();
             FONT.initData();
 
-            // 2. Fetch data from MSP
-            let info;
-            if (!CONFIGURATOR.virtualMode) {
-                if (_fcStore.config?.apiVersion && semver.gte(_fcStore.config.apiVersion, API_VERSION_1_45)) {
-                    await MSP.promise(MSPCodes.MSP_OSD_CANVAS);
-                }
-                info = await MSP.promise(MSPCodes.MSP_OSD_CONFIG);
-            }
-
-            // Legacy logic for compatibility
-            // Initialize display fields and choose based on API version
-            OSD.loadDisplayFields();
-            OSD.chooseFields();
-
-            // 3. Decode
-            if (CONFIGURATOR.virtualMode) {
-                // Set up virtual OSD data (state, parameters, profiles, etc.)
-                const { default: VirtualFC } = await import("../js/VirtualFC.js");
-                VirtualFC.setupVirtualOSD();
-
-                if (OSD.msp.decodeVirtual) {
-                    OSD.msp.decodeVirtual();
-                }
-            } else {
-                OSD.msp.decode(info);
-            }
-
-            if (!CONFIGURATOR.virtualMode) {
-                await MSP.promise(MSPCodes.MSP_RX_CONFIG);
-            }
-
-            // Sync global OSD.data to Pinia State
-            videoSystem.value = OSD.data.video_system;
-            unitMode.value = OSD.data.unit_mode;
-            alarms.value = OSD.data.alarms ? JSON.parse(JSON.stringify(OSD.data.alarms)) : {};
-            statItems.value = [...OSD.data.statItems];
-            warnings.value = [...OSD.data.warnings];
-
-            // Timers need deep cloning/mapping
-            timers.value = OSD.data.timers.map((t) => ({ ...t }));
-
-            // Display items need special handling?
-            // OSD.data.displayItems are objects with position, visibility.
-            // We clone them to be safe.
-            displayItems.value = OSD.data.displayItems.map((item) => ({ ...item }));
-
-            // Sync parameters
-            if (OSD.data.parameters) {
-                parameters.cameraFrameWidth = OSD.data.parameters.cameraFrameWidth;
-                parameters.cameraFrameHeight = OSD.data.parameters.cameraFrameHeight;
-            }
-
-            // Sync profiles
-            if (OSD.data.osd_profiles) {
-                osdProfiles.value = {
-                    number: OSD.data.osd_profiles.number,
-                    selected: OSD.data.osd_profiles.selected,
-                };
-            }
-
-            // Sync state flags
-            if (OSD.data.state) {
-                // Update reactive state object
-                Object.assign(state, OSD.data.state);
-            }
-
-            updateDisplaySize();
-
-            // Load default font if not already loaded
-            if (FONT.data && FONT.data.characters.length === 0) {
-                try {
-                    const response = await fetch("./resources/osd/2/default.mcm");
-                    const data = await response.text();
-                    FONT.parseMCMFontFile(data);
-                } catch (fontError) {
-                    console.warn("Failed to load default OSD font:", fontError);
-                }
-            }
+            const info = await fetchOsdInfo(fcStore);
+            await decodeOsdData(info);
+            syncStoreFromDecodedOsdData();
+            await ensureDefaultFontLoaded();
         } catch (e) {
             console.error("Failed to fetch OSD config", e);
             throw e;
@@ -378,6 +386,18 @@ export const useOsdStore = defineStore("osd", () => {
         },
     };
 
+    function getAlarmValue(key) {
+        return alarms.value[key]?.value ?? 0;
+    }
+
+    function pushAlarm8(result, key) {
+        result.push8(getAlarmValue(key));
+    }
+
+    function pushAlarm16(result, key) {
+        result.push16(getAlarmValue(key));
+    }
+
     function encodeOther() {
         const fcStore = useFlightControllerStore();
         const apiVersion = fcStore.config.apiVersion;
@@ -385,17 +405,11 @@ export const useOsdStore = defineStore("osd", () => {
         const result = [-1, videoSystem.value];
         if (state.haveOsdFeature) {
             result.push8(unitMode.value);
-            // watch out, order matters! match the firmware
-            if (alarms.value.rssi) result.push8(alarms.value.rssi.value);
-            else result.push8(0);
-
-            if (alarms.value.cap) result.push16(alarms.value.cap.value);
-            else result.push16(0);
+            pushAlarm8(result, "rssi");
+            pushAlarm16(result, "cap");
 
             result.push16(0); // This value is unused by the firmware with configurable timers
-
-            if (alarms.value.alt) result.push16(alarms.value.alt.value);
-            else result.push16(0);
+            pushAlarm16(result, "alt");
 
             let warningFlags = 0;
             // warnings is array of objects { enabled: bool }
@@ -420,13 +434,11 @@ export const useOsdStore = defineStore("osd", () => {
             result.push8(parameters.cameraFrameHeight);
 
             if (semver.gte(apiVersion, API_VERSION_1_46)) {
-                if (alarms.value.link_quality) result.push16(alarms.value.link_quality.value);
-                else result.push16(0);
+                pushAlarm16(result, "link_quality");
             }
 
             if (semver.gte(apiVersion, API_VERSION_1_47)) {
-                if (alarms.value.rssi_dbm) result.push16(alarms.value.rssi_dbm.value);
-                else result.push16(0);
+                pushAlarm16(result, "rssi_dbm");
             }
         }
         return result;
@@ -445,7 +457,9 @@ export const useOsdStore = defineStore("osd", () => {
 
     function encodeTimer(timer) {
         if (CONFIGURATOR.virtualMode && OSD.virtualMode) {
-            if (!OSD.virtualMode.timerData[timer.index]) OSD.virtualMode.timerData[timer.index] = {};
+            if (!OSD.virtualMode.timerData[timer.index]) {
+                OSD.virtualMode.timerData[timer.index] = {};
+            }
             OSD.virtualMode.timerData[timer.index].src = timer.src;
             OSD.virtualMode.timerData[timer.index].precision = timer.precision;
             OSD.virtualMode.timerData[timer.index].alarm = timer.alarm;
@@ -453,23 +467,6 @@ export const useOsdStore = defineStore("osd", () => {
 
         const buffer = [-2, timer.index];
         buffer.push16(helpers.pack.timer(timer));
-        return buffer;
-    }
-
-    function encodeStatistics(statItem) {
-        if (CONFIGURATOR.virtualMode && OSD.virtualMode) {
-            OSD.virtualMode.statisticsState[statItem.index] = statItem.enabled;
-        }
-
-        // Statistics use a specific format: index, enabled, padding/0
-        // Based on snippet 389 line 2420
-        const buffer = [];
-        buffer.push8(statItem.index);
-        buffer.push16(statItem.enabled ? 1 : 0); // Boolean to check? Snippet says `statItem.enabled` which is likely boolean. Push16 takes number.
-        // Legacy code: `buffer.push16(statItem.enabled);` -> JS boolean coerces to 1/0? No, usually not in bitwise or direct val?
-        // Wait, `push16` likely expects number. `true` might become 1.
-        // But cleaner to ternary.
-        buffer.push8(0);
         return buffer;
     }
 
@@ -487,7 +484,10 @@ export const useOsdStore = defineStore("osd", () => {
     };
 
     const saveStatisticItem = async (stat) => {
-        return MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, encodeStatistics(stat));
+        return MSP.promise(
+            MSPCodes.MSP_SET_OSD_CONFIG,
+            encodeStatisticsPayload(stat, CONFIGURATOR.virtualMode, OSD.virtualMode),
+        );
     };
 
     const saveToEeprom = async () => {
@@ -508,7 +508,10 @@ export const useOsdStore = defineStore("osd", () => {
             }
 
             for (const stat of statItems.value) {
-                await MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, encodeStatistics(stat));
+                await MSP.promise(
+                    MSPCodes.MSP_SET_OSD_CONFIG,
+                    encodeStatisticsPayload(stat, CONFIGURATOR.virtualMode, OSD.virtualMode),
+                );
             }
 
             await MSP.promise(MSPCodes.MSP_EEPROM_WRITE);
