@@ -2636,7 +2636,7 @@ MspHelper.prototype.sendAdjustmentRanges = function (onCompleteCallback) {
             .push8((adjustmentRange.range.start - 900) / 25)
             .push8((adjustmentRange.range.end - 900) / 25)
             .push8(adjustmentRange.adjustmentFunction)
-            .push8(adjustmentRange.auxSwitchChannelIndex)
+            .push8(adjustmentRange.auxSwitchChannelIndex);
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_48)) {
             buffer
                 .push16(adjustmentRange.adjustmentCenter || 0)
