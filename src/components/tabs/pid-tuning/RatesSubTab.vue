@@ -507,7 +507,7 @@ const rateLabel = computed(() => {
         case RatesType.QUICKRATES:
             return i18n.getMessage("pidTuningRateQuickRates");
         case RatesType.KISS:
-            return i18n.getMessage("pidTuningRcRateRaceflight");
+            return i18n.getMessage("pidTuningRate");
         default:
             return i18n.getMessage("pidTuningRate");
     }
