@@ -1278,8 +1278,7 @@ function updateRatesLabels() {
     }
 
     // Draw angle mode labels if applicable
-    if (isBetaflightRates.value || ratesType.value === RatesType.ACTUAL) {
-        // Betaflight or Actual
+    if (ratesType.value === RatesType.ACTUAL) {
         drawAngleModeLabels(ctx, canvas, rates, balloonsDirty);
     }
 
