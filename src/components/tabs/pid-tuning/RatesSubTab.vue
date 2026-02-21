@@ -116,7 +116,7 @@
                             <td>
                                 <input
                                     type="number"
-                                    :value="rcExpo.toFixed(2)"
+                                    :value="rcExpo.toFixed(expoPrecision)"
                                     @input="rcExpo = parseFloat($event.target.value)"
                                     :step="expoLimits.step"
                                     :min="expoLimits.min"
@@ -157,7 +157,7 @@
                             <td>
                                 <input
                                     type="number"
-                                    :value="rcPitchExpo.toFixed(2)"
+                                    :value="rcPitchExpo.toFixed(expoPrecision)"
                                     @input="rcPitchExpo = parseFloat($event.target.value)"
                                     :step="expoLimits.step"
                                     :min="expoLimits.min"
@@ -198,7 +198,7 @@
                             <td>
                                 <input
                                     type="number"
-                                    :value="rcYawExpo.toFixed(2)"
+                                    :value="rcYawExpo.toFixed(expoPrecision)"
                                     @input="rcYawExpo = parseFloat($event.target.value)"
                                     :step="expoLimits.step"
                                     :min="expoLimits.min"
@@ -536,6 +536,18 @@ const fourthColumnLabel = computed(() => {
     }
 });
 
+// Precision for expo inputs based on rates type
+const expoPrecision = computed(() => {
+    switch (ratesType.value) {
+        case RatesType.RACEFLIGHT:
+        case RatesType.ACTUAL:
+        case RatesType.QUICKRATES:
+            return 0;
+        default:
+            return 2;
+    }
+});
+
 // Precision for rate inputs based on rates type
 const ratePrecision = computed(() => {
     switch (ratesType.value) {
@@ -622,25 +634,85 @@ const yawRate = computed({
 
 // RC Expo
 const rcExpo = computed({
-    get: () => FC.RC_TUNING.RC_EXPO,
+    get: () => {
+        const type = ratesType.value;
+        switch (type) {
+            case RatesType.RACEFLIGHT:
+            case RatesType.ACTUAL:
+            case RatesType.QUICKRATES:
+                return FC.RC_TUNING.RC_EXPO * 100;
+            default:
+                return FC.RC_TUNING.RC_EXPO;
+        }
+    },
     set: (value) => {
-        FC.RC_TUNING.RC_EXPO = value;
+        const type = ratesType.value;
+        switch (type) {
+            case RatesType.RACEFLIGHT:
+            case RatesType.ACTUAL:
+            case RatesType.QUICKRATES:
+                FC.RC_TUNING.RC_EXPO = value / 100;
+                break;
+            default:
+                FC.RC_TUNING.RC_EXPO = value;
+                break;
+        }
     },
 });
 
 // RC Pitch Expo
 const rcPitchExpo = computed({
-    get: () => FC.RC_TUNING.RC_PITCH_EXPO,
+    get: () => {
+        const type = ratesType.value;
+        switch (type) {
+            case RatesType.RACEFLIGHT:
+            case RatesType.ACTUAL:
+            case RatesType.QUICKRATES:
+                return FC.RC_TUNING.RC_PITCH_EXPO * 100;
+            default:
+                return FC.RC_TUNING.RC_PITCH_EXPO;
+        }
+    },
     set: (value) => {
-        FC.RC_TUNING.RC_PITCH_EXPO = value;
+        const type = ratesType.value;
+        switch (type) {
+            case RatesType.RACEFLIGHT:
+            case RatesType.ACTUAL:
+            case RatesType.QUICKRATES:
+                FC.RC_TUNING.RC_PITCH_EXPO = value / 100;
+                break;
+            default:
+                FC.RC_TUNING.RC_PITCH_EXPO = value;
+                break;
+        }
     },
 });
 
 // RC Yaw Expo
 const rcYawExpo = computed({
-    get: () => FC.RC_TUNING.RC_YAW_EXPO,
+    get: () => {
+        const type = ratesType.value;
+        switch (type) {
+            case RatesType.RACEFLIGHT:
+            case RatesType.ACTUAL:
+            case RatesType.QUICKRATES:
+                return FC.RC_TUNING.RC_YAW_EXPO * 100;
+            default:
+                return FC.RC_TUNING.RC_YAW_EXPO;
+        }
+    },
     set: (value) => {
-        FC.RC_TUNING.RC_YAW_EXPO = value;
+        const type = ratesType.value;
+        switch (type) {
+            case RatesType.RACEFLIGHT:
+            case RatesType.ACTUAL:
+            case RatesType.QUICKRATES:
+                FC.RC_TUNING.RC_YAW_EXPO = value / 100;
+                break;
+            default:
+                FC.RC_TUNING.RC_YAW_EXPO = value;
+                break;
+        }
     },
 });
 
@@ -813,6 +885,11 @@ const rateLimits = computed(() => {
 });
 
 const expoLimits = computed(() => {
+    const type = ratesType.value;
+    if (type === RatesType.RACEFLIGHT || type === RatesType.ACTUAL || type === RatesType.QUICKRATES) {
+        return { max: 100, min: 0, step: 1 };
+    }
+    // BETAFLIGHT, KISS
     return { max: 1.0, min: 0, step: 0.01 };
 });
 
