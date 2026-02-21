@@ -530,7 +530,9 @@ watch(
 function cleanup(callback) {
     // Any cleanup needed before unmounting
     // Call the callback to signal cleanup is complete
-    if (callback) callback();
+    if (callback) {
+        callback();
+    }
 }
 
 defineExpose({ cleanup });
