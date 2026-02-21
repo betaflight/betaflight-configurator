@@ -1225,8 +1225,6 @@ export default defineComponent({
 
             updatePidDenomOptions();
 
-            syncBeeperStateFromStore();
-
             // Arming Config
             armingConfig.small_angle = fcStore.armingConfig.small_angle;
 
