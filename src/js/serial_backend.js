@@ -657,9 +657,12 @@ function onConnect() {
         .show();
 
     if (FC.CONFIG.flightControllerVersion !== "" && !isCliOnlyMode()) {
-        FC.FEATURE_CONFIG.features = new Features(FC.CONFIG);
-        FC.BEEPER_CONFIG.beepers = new Beepers(FC.CONFIG);
-        FC.BEEPER_CONFIG.dshotBeaconConditions = new Beepers(FC.CONFIG, ["RX_LOST", "RX_SET"]);
+        // In virtual mode, VirtualFC already configured features/beepers – don't overwrite
+        if (!CONFIGURATOR.virtualMode) {
+            FC.FEATURE_CONFIG.features = new Features(FC.CONFIG);
+            FC.BEEPER_CONFIG.beepers = new Beepers(FC.CONFIG);
+            FC.BEEPER_CONFIG.dshotBeaconConditions = new Beepers(FC.CONFIG, ["RX_LOST", "RX_SET"]);
+        }
 
         $("#tabs ul.mode-connected").show();
 
