@@ -1972,12 +1972,11 @@ const setDefaultsForRatesType = (type) => {
     }
 };
 
-// Set initial defaults for current rates type
-setDefaultsForRatesType(ratesType.value);
-
-// Watch for rates type changes and set default values
-watch(ratesType, (newType) => {
-    setDefaultsForRatesType(newType);
+// Watch for rates type changes and set default values (only on an actual user change, not on initial mount)
+watch(ratesType, (newType, oldType) => {
+    if (oldType !== undefined && newType !== oldType) {
+        setDefaultsForRatesType(newType);
+    }
 });
 
 onUnmounted(() => {
