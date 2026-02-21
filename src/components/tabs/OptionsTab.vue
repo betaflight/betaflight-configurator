@@ -7,6 +7,14 @@
                     <div class="spacer_box_title" v-html="$t('tabOptions')"></div>
                 </div>
                 <div class="spacer">
+                    <!-- Expert Mode -->
+                    <div class="expertMode margin-bottom">
+                        <div>
+                            <input type="checkbox" class="toggle" v-model="settings.expertMode" />
+                        </div>
+                        <span class="freelabel" v-html="$t('expertMode')"></span>
+                    </div>
+
                     <!-- Remember Last Tab -->
                     <div class="rememberLastTab margin-bottom">
                         <div>
@@ -228,6 +236,7 @@ export default defineComponent({
             cliAutoComplete: CliAutoComplete.configEnabled,
             showManualMode: !!getConfig("showManualMode").showManualMode,
             showVirtualMode: !!getConfig("showVirtualMode").showVirtualMode,
+            expertMode: !!getConfig("expertMode").expertMode,
             useLegacyRenderingModel: !!getConfig("useLegacyRenderingModel").useLegacyRenderingModel,
             darkTheme: DarkTheme.configSetting,
             colorTheme: getConfig("colorTheme", "yellow").colorTheme ?? "yellow",
@@ -305,6 +314,17 @@ export default defineComponent({
             (value) => {
                 setConfig({ showVirtualMode: value });
                 PortHandler.setShowVirtualMode(value);
+            },
+        );
+
+        watch(
+            () => settings.expertMode,
+            (value) => {
+                setConfig({ expertMode: value });
+                // Update global Vue expertMode state
+                if (window.vm) {
+                    window.vm.expertMode = value;
+                }
             },
         );
 
@@ -436,6 +456,10 @@ export default defineComponent({
         }
 
         onMounted(() => {
+            // Sync expert mode with global Vue state
+            if (window.vm) {
+                window.vm.expertMode = settings.expertMode;
+            }
             GUI.content_ready();
         });
 
