@@ -963,7 +963,9 @@ export default defineComponent({
                 return;
             }
 
-            dshotBeaconTone.value = fcStore.beepers.dshotBeaconTone;
+            if (fcStore.beepers.dshotBeaconTone != null) {
+                dshotBeaconTone.value = fcStore.beepers.dshotBeaconTone;
+            }
 
             if (fcStore.beepers.beepers) {
                 beeperDisabledMask.value = fcStore.beepers.beepers._beeperDisabledMask;
