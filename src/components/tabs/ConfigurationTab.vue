@@ -1129,7 +1129,6 @@ export default defineComponent({
                 await Promise.resolve(); // Start chain
                 await MSP.promise(MSPCodes.MSP_FEATURE_CONFIG);
                 await MSP.promise(MSPCodes.MSP_BEEPER_CONFIG);
-                syncBeeperStateFromStore();
                 await MSP.promise(MSPCodes.MSP_BOARD_ALIGNMENT_CONFIG);
                 await MSP.promise(MSPCodes.MSP_ACC_TRIM);
                 await MSP.promise(MSPCodes.MSP_ARMING_CONFIG);
