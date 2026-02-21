@@ -119,24 +119,24 @@
                                 </span>
                             </td>
                             <td colspan="2">
-                                <span>Gyro Lowpass</span>
+                                <span>{{ $t("pidTuningGyroLowpass") }}</span>
 
                                 <span v-if="gyroLowpassEnabled" class="suboption gyroLowpassFilterModeGroup">
                                     <span class="inputValue">
                                         <select v-model.number="gyroLowpassMode">
-                                            <option :value="0">STATIC</option>
-                                            <option :value="1">DYNAMIC</option>
+                                            <option :value="0">{{ $t("pidTuningStatic") }}</option>
+                                            <option :value="1">{{ $t("pidTuningDynamic") }}</option>
                                         </select>
                                     </span>
                                     <label>
-                                        <span>Mode</span>
+                                        <span>{{ $t("pidTuningMode") }}</span>
                                     </label>
                                 </span>
 
                                 <span v-if="gyroLowpassEnabled && gyroLowpassMode === 0" class="suboption static">
                                     <input type="number" v-model.number="gyro_lowpass_hz" step="1" min="1" max="1000" />
                                     <label>
-                                        <span>Static Cutoff Frequency [Hz]</span>
+                                        <span>{{ $t("pidTuningStaticCutoffFrequencyHz") }}</span>
                                     </label>
                                 </span>
 
@@ -149,7 +149,7 @@
                                         max="1000"
                                     />
                                     <label>
-                                        <span>Min Cutoff Frequency [Hz]</span>
+                                        <span>{{ $t("pidTuningMinCutoffFrequencyHz") }}</span>
                                     </label>
                                 </span>
 
@@ -162,17 +162,17 @@
                                         max="1000"
                                     />
                                     <label>
-                                        <span>Max Cutoff Frequency [Hz]</span>
+                                        <span>{{ $t("pidTuningMaxCutoffFrequencyHz") }}</span>
                                     </label>
                                 </span>
 
                                 <span v-if="gyroLowpassEnabled" class="suboption">
                                     <select v-model.number="gyro_lowpass_type">
-                                        <option :value="0">PT1</option>
-                                        <option :value="1">BIQUAD</option>
+                                        <option :value="0">{{ $t("pidTuningPT1") }}</option>
+                                        <option :value="1">{{ $t("pidTuningBiquad") }}</option>
                                     </select>
                                     <label>
-                                        <span>Filter Type</span>
+                                        <span>{{ $t("pidTuningFilterType") }}</span>
                                     </label>
                                 </span>
                             </td>
@@ -191,7 +191,7 @@
                                 </span>
                             </td>
                             <td colspan="2">
-                                <span>Gyro Lowpass 2</span>
+                                <span>{{ $t("pidTuningGyroLowpass2") }}</span>
 
                                 <span v-if="gyroLowpass2Enabled" class="suboption">
                                     <input
@@ -202,17 +202,17 @@
                                         max="1000"
                                     />
                                     <label>
-                                        <span>Static Cutoff Frequency [Hz]</span>
+                                        <span>{{ $t("pidTuningStaticCutoffFrequencyHz") }}</span>
                                     </label>
                                 </span>
 
                                 <span v-if="gyroLowpass2Enabled" class="suboption">
                                     <select v-model.number="gyro_lowpass2_type">
-                                        <option :value="0">PT1</option>
-                                        <option :value="1">BIQUAD</option>
+                                        <option :value="0">{{ $t("pidTuningPT1") }}</option>
+                                        <option :value="1">{{ $t("pidTuningBiquad") }}</option>
                                     </select>
                                     <label>
-                                        <span>Filter Type</span>
+                                        <span>{{ $t("pidTuningFilterType") }}</span>
                                     </label>
                                 </span>
                             </td>
