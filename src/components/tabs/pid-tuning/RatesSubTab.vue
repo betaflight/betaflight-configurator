@@ -540,7 +540,6 @@ const fourthColumnLabel = computed(() => {
 const expoPrecision = computed(() => {
     switch (ratesType.value) {
         case RatesType.RACEFLIGHT:
-        case RatesType.ACTUAL:
             return 0;
         default:
             return 2;
@@ -892,10 +891,8 @@ const rateLimits = computed(() => {
 const expoLimits = computed(() => {
     switch (ratesType.value) {
         case RatesType.RACEFLIGHT:
-        case RatesType.ACTUAL:
             return { max: 100, min: 0, step: 1 };
         default:
-            // BETAFLIGHT, KISS, QUICKRATES
             return { max: 1.0, min: 0, step: 0.01 };
     }
 });
