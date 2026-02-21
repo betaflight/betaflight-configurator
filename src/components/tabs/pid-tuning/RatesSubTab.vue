@@ -71,15 +71,15 @@
                     <tbody>
                         <tr class="pid_titlebar">
                             <th class="name"></th>
-                            <th class="rc_rate" v-text="$t('pidTuningRcRate')"></th>
-                            <th class="rate" v-text="$t('pidTuningRate')"></th>
-                            <th class="rc_expo" v-text="$t('pidTuningRcExpo')"></th>
+                            <th class="rc_rate" v-text="rcRateLabel"></th>
+                            <th class="rate" v-text="rateLabel"></th>
+                            <th class="rc_expo" v-text="rcExpoLabel"></th>
                             <th
                                 v-if="isBetaflightRates"
                                 class="new_rates centerSensitivity"
-                                v-text="$t('pidTuningRcRateActual')"
+                                v-text="fourthColumnLabel"
                             ></th>
-                            <th v-else class="new_rates maxVel" v-text="$t('pidTuningMaxVel')"></th>
+                            <th v-else class="new_rates maxVel" v-text="fourthColumnLabel"></th>
                         </tr>
                         <tr class="pid_titlebar2">
                             <th colspan="5">
@@ -114,7 +114,8 @@
                             <td>
                                 <input
                                     type="number"
-                                    v-model.number="rcExpo"
+                                    :value="rcExpo.toFixed(2)"
+                                    @input="rcExpo = parseFloat($event.target.value)"
                                     :step="expoLimits.step"
                                     :min="expoLimits.min"
                                     :max="expoLimits.max"
@@ -152,7 +153,8 @@
                             <td>
                                 <input
                                     type="number"
-                                    v-model.number="rcPitchExpo"
+                                    :value="rcPitchExpo.toFixed(2)"
+                                    @input="rcPitchExpo = parseFloat($event.target.value)"
                                     :step="expoLimits.step"
                                     :min="expoLimits.min"
                                     :max="expoLimits.max"
@@ -190,7 +192,8 @@
                             <td>
                                 <input
                                     type="number"
-                                    v-model.number="rcYawExpo"
+                                    :value="rcYawExpo.toFixed(2)"
+                                    @input="rcYawExpo = parseFloat($event.target.value)"
                                     :step="expoLimits.step"
                                     :min="expoLimits.min"
                                     :max="expoLimits.max"
@@ -394,6 +397,7 @@
 
 <script setup>
 import { ref, computed, watch, onMounted, onUnmounted, nextTick } from "vue";
+import { i18n } from "@/js/localization";
 import $ from "jquery";
 import FC from "@/js/fc";
 import RateCurve from "@/js/RateCurve";
@@ -472,32 +476,83 @@ const RatesType = {
     QUICKRATES: 4,
 };
 
+// Dynamic labels based on rates type
+const rcRateLabel = computed(() => {
+    switch (ratesType.value) {
+        case RatesType.RACEFLIGHT:
+            return i18n.getMessage("pidTuningRcRateRaceflight");
+        case RatesType.ACTUAL:
+            return i18n.getMessage("pidTuningRcRateActual");
+        case RatesType.QUICKRATES:
+            return i18n.getMessage("pidTuningRcRate");
+        case RatesType.KISS:
+            return i18n.getMessage("pidTuningRcRate");
+        default:
+            return i18n.getMessage("pidTuningRcRate");
+    }
+});
+
+const rateLabel = computed(() => {
+    switch (ratesType.value) {
+        case RatesType.RACEFLIGHT:
+            return i18n.getMessage("pidTuningRateRaceflight");
+        case RatesType.ACTUAL:
+            return i18n.getMessage("pidTuningRateQuickRates");
+        case RatesType.QUICKRATES:
+            return i18n.getMessage("pidTuningRateQuickRates");
+        case RatesType.KISS:
+            return i18n.getMessage("pidTuningRcRateRaceflight");
+        default:
+            return i18n.getMessage("pidTuningRate");
+    }
+});
+
+const rcExpoLabel = computed(() => {
+    switch (ratesType.value) {
+        case RatesType.RACEFLIGHT:
+            return i18n.getMessage("pidTuningRcExpoRaceflight");
+        case RatesType.ACTUAL:
+            return i18n.getMessage("pidTuningRcExpoRaceflight");
+        case RatesType.QUICKRATES:
+            return i18n.getMessage("pidTuningRcExpoRaceflight");
+        case RatesType.KISS:
+            return i18n.getMessage("pidTuningRcExpoKISS");
+        default:
+            return i18n.getMessage("pidTuningRcExpo");
+    }
+});
+
+const fourthColumnLabel = computed(() => {
+    if (isBetaflightRates.value) {
+        return i18n.getMessage("pidTuningRcRateActual");
+    } else {
+        return i18n.getMessage("pidTuningMaxVel");
+    }
+});
+
 // Helper to get scale factor based on rates type
 const getScaleFactor = () => {
     const type = FC.RC_TUNING.rates_type;
-    if (type === RatesType.RACEFLIGHT) {
-        return 1000;
+    switch (type) {
+        case RatesType.RACEFLIGHT:
+        case RatesType.ACTUAL:
+            return 1000;
+        default:
+            return 1;
     }
-    if (type === RatesType.ACTUAL) {
-        return 1000;
-    }
-    // QUICKRATES, BETAFLIGHT, KISS
-    return 1;
 };
 
 const getRateScaleFactor = () => {
     const type = FC.RC_TUNING.rates_type;
-    if (type === RatesType.RACEFLIGHT) {
-        return 100;
+    switch (type) {
+        case RatesType.RACEFLIGHT:
+            return 100;
+        case RatesType.ACTUAL:
+        case RatesType.QUICKRATES:
+            return 1000;
+        default:
+            return 1;
     }
-    if (type === RatesType.ACTUAL) {
-        return 1000;
-    }
-    if (type === RatesType.QUICKRATES) {
-        return 1000;
-    }
-    // BETAFLIGHT, KISS
-    return 1;
 };
 
 // RC Rate (Roll) - scaled for display
@@ -741,11 +796,6 @@ const rateLimits = computed(() => {
 });
 
 const expoLimits = computed(() => {
-    const type = ratesType.value;
-    if (type === RatesType.RACEFLIGHT || type === RatesType.ACTUAL || type === RatesType.QUICKRATES) {
-        return { max: 100, min: 0, step: 1 };
-    }
-    // BETAFLIGHT, KISS
     return { max: 1.0, min: 0, step: 0.01 };
 });
 
@@ -1768,6 +1818,49 @@ onMounted(() => {
             updateRatesLabels();
         }
     }, 100); // Update 10 times per second
+});
+
+// Watch for rates type changes and set default values
+watch(ratesType, (newType) => {
+    switch (newType) {
+        case RatesType.RACEFLIGHT:
+            FC.RC_TUNING.RC_RATE = 0.37;
+            FC.RC_TUNING.roll_rate = 0.8;
+            FC.RC_TUNING.pitch_rate = 0.8;
+            FC.RC_TUNING.yaw_rate = 0.8;
+            FC.RC_TUNING.RC_EXPO = 0.5;
+            FC.RC_TUNING.RC_PITCH_EXPO = 0.5;
+            FC.RC_TUNING.RC_YAW_EXPO = 0.5;
+            break;
+        case RatesType.ACTUAL:
+            FC.RC_TUNING.RC_RATE = 0.07;
+            FC.RC_TUNING.roll_rate = 0.67;
+            FC.RC_TUNING.pitch_rate = 0.67;
+            FC.RC_TUNING.yaw_rate = 0.67;
+            FC.RC_TUNING.RC_EXPO = 0;
+            FC.RC_TUNING.RC_PITCH_EXPO = 0;
+            FC.RC_TUNING.RC_YAW_EXPO = 0;
+            break;
+        case RatesType.QUICKRATES:
+            FC.RC_TUNING.RC_RATE = 1.0;
+            FC.RC_TUNING.roll_rate = 0.67;
+            FC.RC_TUNING.pitch_rate = 0.67;
+            FC.RC_TUNING.yaw_rate = 0.67;
+            FC.RC_TUNING.RC_EXPO = 0;
+            FC.RC_TUNING.RC_PITCH_EXPO = 0;
+            FC.RC_TUNING.RC_YAW_EXPO = 0;
+            break;
+        case RatesType.BETAFLIGHT:
+        case RatesType.KISS:
+            FC.RC_TUNING.RC_RATE = 1.0;
+            FC.RC_TUNING.roll_rate = 0.7;
+            FC.RC_TUNING.pitch_rate = 0.7;
+            FC.RC_TUNING.yaw_rate = 0.7;
+            FC.RC_TUNING.RC_EXPO = 0;
+            FC.RC_TUNING.RC_PITCH_EXPO = 0;
+            FC.RC_TUNING.RC_YAW_EXPO = 0;
+            break;
+    }
 });
 
 onUnmounted(() => {
