@@ -790,11 +790,11 @@ const centerSensitivityPitch = computed(() => {
     if (!isBetaflightRates.value) return "";
     const maxAngularVel = calculateMaxAngularVel(
         pitchRate.value,
-        rcRate.value,
+        rcRatePitch.value,
         rcPitchExpo.value,
         FC.RC_TUNING.pitch_rate_limit,
     );
-    const centerSensitivity = getAcroSensitivityFraction(rcPitchExpo.value, rcRate.value);
+    const centerSensitivity = getAcroSensitivityFraction(rcPitchExpo.value, rcRatePitch.value);
     return `${centerSensitivity} - ${maxAngularVel}`;
 });
 
@@ -803,12 +803,12 @@ const centerSensitivityYaw = computed(() => {
     const rates = getCurrentRatesSnapshot();
     const maxAngularVel = calculateMaxAngularVel(
         yawRate.value,
-        rcRate.value,
+        rcRateYaw.value,
         rcYawExpo.value,
         FC.RC_TUNING.yaw_rate_limit,
         rates.yawDeadband,
     );
-    const centerSensitivity = getAcroSensitivityFraction(rcYawExpo.value, rcRate.value);
+    const centerSensitivity = getAcroSensitivityFraction(rcYawExpo.value, rcRateYaw.value);
     return `${centerSensitivity} - ${maxAngularVel}`;
 });
 
@@ -822,7 +822,7 @@ const maxAngularVelPitch = computed(() => {
     if (isBetaflightRates.value) return "";
     return calculateMaxAngularVel(
         pitchRate.value,
-        rcRate.value,
+        rcRatePitch.value,
         rcPitchExpo.value,
         FC.RC_TUNING.pitch_rate_limit,
     ).toString();
@@ -833,7 +833,7 @@ const maxAngularVelYaw = computed(() => {
     const rates = getCurrentRatesSnapshot();
     return calculateMaxAngularVel(
         yawRate.value,
-        rcRate.value,
+        rcRateYaw.value,
         rcYawExpo.value,
         FC.RC_TUNING.yaw_rate_limit,
         rates.yawDeadband,
