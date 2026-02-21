@@ -96,7 +96,7 @@
                             <td class="rc_rate">
                                 <input
                                     type="number"
-                                    :value="rcRate.toFixed(ratePrecision)"
+                                    :value="rcRate.toFixed(rcRatePrecision)"
                                     @input="rcRate = parseFloat($event.target.value)"
                                     :step="rcRateLimits.step"
                                     :min="rcRateLimits.min"
@@ -137,7 +137,7 @@
                             <td>
                                 <input
                                     type="number"
-                                    :value="rcRatePitch.toFixed(ratePrecision)"
+                                    :value="rcRatePitch.toFixed(rcRatePrecision)"
                                     @input="rcRatePitch = parseFloat($event.target.value)"
                                     :step="rcRateLimits.step"
                                     :min="rcRateLimits.min"
@@ -178,7 +178,7 @@
                             <td>
                                 <input
                                     type="number"
-                                    :value="rcRateYaw.toFixed(ratePrecision)"
+                                    :value="rcRateYaw.toFixed(rcRatePrecision)"
                                     @input="rcRateYaw = parseFloat($event.target.value)"
                                     :step="rcRateLimits.step"
                                     :min="rcRateLimits.min"
@@ -541,7 +541,6 @@ const expoPrecision = computed(() => {
     switch (ratesType.value) {
         case RatesType.RACEFLIGHT:
         case RatesType.ACTUAL:
-        case RatesType.QUICKRATES:
             return 0;
         default:
             return 2;
@@ -553,6 +552,18 @@ const ratePrecision = computed(() => {
     switch (ratesType.value) {
         case RatesType.BETAFLIGHT:
         case RatesType.KISS:
+            return 2;
+        default:
+            return 0;
+    }
+});
+
+// Precision for RC rate inputs based on rates type
+const rcRatePrecision = computed(() => {
+    switch (ratesType.value) {
+        case RatesType.BETAFLIGHT:
+        case RatesType.KISS:
+        case RatesType.QUICKRATES:
             return 2;
         default:
             return 0;
@@ -639,7 +650,6 @@ const rcExpo = computed({
         switch (type) {
             case RatesType.RACEFLIGHT:
             case RatesType.ACTUAL:
-            case RatesType.QUICKRATES:
                 return FC.RC_TUNING.RC_EXPO * 100;
             default:
                 return FC.RC_TUNING.RC_EXPO;
@@ -650,7 +660,6 @@ const rcExpo = computed({
         switch (type) {
             case RatesType.RACEFLIGHT:
             case RatesType.ACTUAL:
-            case RatesType.QUICKRATES:
                 FC.RC_TUNING.RC_EXPO = value / 100;
                 break;
             default:
@@ -667,7 +676,6 @@ const rcPitchExpo = computed({
         switch (type) {
             case RatesType.RACEFLIGHT:
             case RatesType.ACTUAL:
-            case RatesType.QUICKRATES:
                 return FC.RC_TUNING.RC_PITCH_EXPO * 100;
             default:
                 return FC.RC_TUNING.RC_PITCH_EXPO;
@@ -678,7 +686,6 @@ const rcPitchExpo = computed({
         switch (type) {
             case RatesType.RACEFLIGHT:
             case RatesType.ACTUAL:
-            case RatesType.QUICKRATES:
                 FC.RC_TUNING.RC_PITCH_EXPO = value / 100;
                 break;
             default:
@@ -695,7 +702,6 @@ const rcYawExpo = computed({
         switch (type) {
             case RatesType.RACEFLIGHT:
             case RatesType.ACTUAL:
-            case RatesType.QUICKRATES:
                 return FC.RC_TUNING.RC_YAW_EXPO * 100;
             default:
                 return FC.RC_TUNING.RC_YAW_EXPO;
@@ -706,7 +712,6 @@ const rcYawExpo = computed({
         switch (type) {
             case RatesType.RACEFLIGHT:
             case RatesType.ACTUAL:
-            case RatesType.QUICKRATES:
                 FC.RC_TUNING.RC_YAW_EXPO = value / 100;
                 break;
             default:
@@ -885,12 +890,14 @@ const rateLimits = computed(() => {
 });
 
 const expoLimits = computed(() => {
-    const type = ratesType.value;
-    if (type === RatesType.RACEFLIGHT || type === RatesType.ACTUAL || type === RatesType.QUICKRATES) {
-        return { max: 100, min: 0, step: 1 };
+    switch (ratesType.value) {
+        case RatesType.RACEFLIGHT:
+        case RatesType.ACTUAL:
+            return { max: 100, min: 0, step: 1 };
+        default:
+            // BETAFLIGHT, KISS, QUICKRATES
+            return { max: 1.0, min: 0, step: 0.01 };
     }
-    // BETAFLIGHT, KISS
-    return { max: 1.0, min: 0, step: 0.01 };
 });
 
 function calculateMaxAngularVel(rate, rcRate, rcExpo, limit, deadband) {
