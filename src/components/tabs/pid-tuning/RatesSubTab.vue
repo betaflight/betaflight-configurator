@@ -96,7 +96,8 @@
                             <td class="rc_rate">
                                 <input
                                     type="number"
-                                    v-model.number="rcRate"
+                                    :value="rcRate.toFixed(ratePrecision)"
+                                    @input="rcRate = parseFloat($event.target.value)"
                                     :step="rcRateLimits.step"
                                     :min="rcRateLimits.min"
                                     :max="rcRateLimits.max"
@@ -105,7 +106,8 @@
                             <td class="roll_rate">
                                 <input
                                     type="number"
-                                    v-model.number="rollRate"
+                                    :value="rollRate.toFixed(ratePrecision)"
+                                    @input="rollRate = parseFloat($event.target.value)"
                                     :step="rateLimits.step"
                                     :min="rateLimits.min"
                                     :max="rateLimits.max"
@@ -135,7 +137,8 @@
                             <td>
                                 <input
                                     type="number"
-                                    v-model.number="rcRatePitch"
+                                    :value="rcRatePitch.toFixed(ratePrecision)"
+                                    @input="rcRatePitch = parseFloat($event.target.value)"
                                     :step="rcRateLimits.step"
                                     :min="rcRateLimits.min"
                                     :max="rcRateLimits.max"
@@ -144,7 +147,8 @@
                             <td class="pitch_rate">
                                 <input
                                     type="number"
-                                    v-model.number="pitchRate"
+                                    :value="pitchRate.toFixed(ratePrecision)"
+                                    @input="pitchRate = parseFloat($event.target.value)"
                                     :step="rateLimits.step"
                                     :min="rateLimits.min"
                                     :max="rateLimits.max"
@@ -174,7 +178,8 @@
                             <td>
                                 <input
                                     type="number"
-                                    v-model.number="rcRateYaw"
+                                    :value="rcRateYaw.toFixed(ratePrecision)"
+                                    @input="rcRateYaw = parseFloat($event.target.value)"
                                     :step="rcRateLimits.step"
                                     :min="rcRateLimits.min"
                                     :max="rcRateLimits.max"
@@ -183,7 +188,8 @@
                             <td>
                                 <input
                                     type="number"
-                                    v-model.number="yawRate"
+                                    :value="yawRate.toFixed(ratePrecision)"
+                                    @input="yawRate = parseFloat($event.target.value)"
                                     :step="rateLimits.step"
                                     :min="rateLimits.min"
                                     :max="rateLimits.max"
@@ -530,6 +536,17 @@ const fourthColumnLabel = computed(() => {
     }
 });
 
+// Precision for rate inputs based on rates type
+const ratePrecision = computed(() => {
+    switch (ratesType.value) {
+        case RatesType.BETAFLIGHT:
+        case RatesType.KISS:
+            return 2;
+        default:
+            return 0;
+    }
+});
+
 // Helper to get scale factor based on rates type
 const getScaleFactor = () => {
     const type = FC.RC_TUNING.rates_type;
@@ -697,11 +714,11 @@ const centerSensitivityPitch = computed(() => {
     if (!isBetaflightRates.value) return "";
     const maxAngularVel = calculateMaxAngularVel(
         pitchRate.value,
-        rcRatePitch.value,
+        rcRate.value,
         rcPitchExpo.value,
         FC.RC_TUNING.pitch_rate_limit,
     );
-    const centerSensitivity = getAcroSensitivityFraction(rcPitchExpo.value, rcRatePitch.value);
+    const centerSensitivity = getAcroSensitivityFraction(rcPitchExpo.value, rcRate.value);
     return `${centerSensitivity} - ${maxAngularVel}`;
 });
 
@@ -710,12 +727,12 @@ const centerSensitivityYaw = computed(() => {
     const rates = getCurrentRatesSnapshot();
     const maxAngularVel = calculateMaxAngularVel(
         yawRate.value,
-        rcRateYaw.value,
+        rcRate.value,
         rcYawExpo.value,
         FC.RC_TUNING.yaw_rate_limit,
         rates.yawDeadband,
     );
-    const centerSensitivity = getAcroSensitivityFraction(rcYawExpo.value, rcRateYaw.value);
+    const centerSensitivity = getAcroSensitivityFraction(rcYawExpo.value, rcRate.value);
     return `${centerSensitivity} - ${maxAngularVel}`;
 });
 
@@ -729,7 +746,7 @@ const maxAngularVelPitch = computed(() => {
     if (isBetaflightRates.value) return "";
     return calculateMaxAngularVel(
         pitchRate.value,
-        rcRatePitch.value,
+        rcRate.value,
         rcPitchExpo.value,
         FC.RC_TUNING.pitch_rate_limit,
     ).toString();
@@ -740,7 +757,7 @@ const maxAngularVelYaw = computed(() => {
     const rates = getCurrentRatesSnapshot();
     return calculateMaxAngularVel(
         yawRate.value,
-        rcRateYaw.value,
+        rcRate.value,
         rcYawExpo.value,
         FC.RC_TUNING.yaw_rate_limit,
         rates.yawDeadband,
@@ -1820,11 +1837,13 @@ onMounted(() => {
     }, 100); // Update 10 times per second
 });
 
-// Watch for rates type changes and set default values
-watch(ratesType, (newType) => {
-    switch (newType) {
+// Set defaults for rates type
+const setDefaultsForRatesType = (type) => {
+    switch (type) {
         case RatesType.RACEFLIGHT:
             FC.RC_TUNING.RC_RATE = 0.37;
+            FC.RC_TUNING.rcPitchRate = 0.37;
+            FC.RC_TUNING.rcYawRate = 0.37;
             FC.RC_TUNING.roll_rate = 0.8;
             FC.RC_TUNING.pitch_rate = 0.8;
             FC.RC_TUNING.yaw_rate = 0.8;
@@ -1834,6 +1853,8 @@ watch(ratesType, (newType) => {
             break;
         case RatesType.ACTUAL:
             FC.RC_TUNING.RC_RATE = 0.07;
+            FC.RC_TUNING.rcPitchRate = 0.07;
+            FC.RC_TUNING.rcYawRate = 0.07;
             FC.RC_TUNING.roll_rate = 0.67;
             FC.RC_TUNING.pitch_rate = 0.67;
             FC.RC_TUNING.yaw_rate = 0.67;
@@ -1843,6 +1864,8 @@ watch(ratesType, (newType) => {
             break;
         case RatesType.QUICKRATES:
             FC.RC_TUNING.RC_RATE = 1.0;
+            FC.RC_TUNING.rcPitchRate = 1.0;
+            FC.RC_TUNING.rcYawRate = 1.0;
             FC.RC_TUNING.roll_rate = 0.67;
             FC.RC_TUNING.pitch_rate = 0.67;
             FC.RC_TUNING.yaw_rate = 0.67;
@@ -1853,6 +1876,8 @@ watch(ratesType, (newType) => {
         case RatesType.BETAFLIGHT:
         case RatesType.KISS:
             FC.RC_TUNING.RC_RATE = 1.0;
+            FC.RC_TUNING.rcPitchRate = 1.0;
+            FC.RC_TUNING.rcYawRate = 1.0;
             FC.RC_TUNING.roll_rate = 0.7;
             FC.RC_TUNING.pitch_rate = 0.7;
             FC.RC_TUNING.yaw_rate = 0.7;
@@ -1861,6 +1886,14 @@ watch(ratesType, (newType) => {
             FC.RC_TUNING.RC_YAW_EXPO = 0;
             break;
     }
+};
+
+// Set initial defaults for current rates type
+setDefaultsForRatesType(ratesType.value);
+
+// Watch for rates type changes and set default values
+watch(ratesType, (newType) => {
+    setDefaultsForRatesType(newType);
 });
 
 onUnmounted(() => {
