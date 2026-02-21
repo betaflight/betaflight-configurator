@@ -8,7 +8,7 @@ import semver from "semver";
 import vtxDeviceStatusFactory from "../utils/VtxDeviceStatus/VtxDeviceStatusFactory";
 import MSP from "../msp";
 import MSPCodes from "./MSPCodes";
-import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "../data_storage";
+import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47, API_VERSION_1_48 } from "../data_storage";
 import EscProtocols from "../utils/EscProtocols";
 import huffmanDecodeBuf from "../huffman";
 import { defaultHuffmanTree, defaultHuffmanLenIndex } from "../default_huffman_tree";
@@ -1011,7 +1011,8 @@ MspHelper.prototype.process_data = function (dataHandler) {
                 case MSPCodes.MSP_ADJUSTMENT_RANGES:
                     FC.ADJUSTMENT_RANGES = []; // empty the array as new data is coming in
 
-                    const adjustmentRangeCount = data.byteLength / 6; // 6 bytes per item.
+                    const bytesPerItem = semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_48) ? 10 : 6; // 10 bytes per item if >= V1.48 (adjustmentCenter and adjustmentScale were added), otherwise 6 bytes per item
+                    const adjustmentRangeCount = data.byteLength / bytesPerItem;
 
                     for (let i = 0; i < adjustmentRangeCount; i++) {
                         const adjustmentRange = {
@@ -1023,6 +1024,8 @@ MspHelper.prototype.process_data = function (dataHandler) {
                             },
                             adjustmentFunction: data.readU8(),
                             auxSwitchChannelIndex: data.readU8(),
+                            adjustmentCenter: semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_48) ? data.readU16() : 0,
+                            adjustmentScale: semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_48) ? data.readU16() : 0,
                         };
                         FC.ADJUSTMENT_RANGES.push(adjustmentRange);
                     }
@@ -2634,6 +2637,11 @@ MspHelper.prototype.sendAdjustmentRanges = function (onCompleteCallback) {
             .push8((adjustmentRange.range.end - 900) / 25)
             .push8(adjustmentRange.adjustmentFunction)
             .push8(adjustmentRange.auxSwitchChannelIndex);
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_48)) {
+            buffer
+                .push16(adjustmentRange.adjustmentCenter || 0)
+                .push16(adjustmentRange.adjustmentScale || 0);
+        }
 
         // prepare for next iteration
         adjustmentRangeIndex++;

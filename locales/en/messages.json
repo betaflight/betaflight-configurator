@@ -2851,6 +2851,12 @@
     "adjustmentsColumnViaChannel": {
         "message": "via channel"
     },
+    "adjustmentsColumnAdjustmentCenter": {
+        "message": "w/ center (val.)"
+    },
+    "adjustmentsColumnAdjustmentScale": {
+        "message": "and range|scale (val.|%)"
+    },
     "adjustmentsSlot0": {
         "message": "Slot 1"
     },
