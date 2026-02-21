@@ -648,7 +648,6 @@ const rcExpo = computed({
         const type = ratesType.value;
         switch (type) {
             case RatesType.RACEFLIGHT:
-            case RatesType.ACTUAL:
                 return FC.RC_TUNING.RC_EXPO * 100;
             default:
                 return FC.RC_TUNING.RC_EXPO;
@@ -658,7 +657,6 @@ const rcExpo = computed({
         const type = ratesType.value;
         switch (type) {
             case RatesType.RACEFLIGHT:
-            case RatesType.ACTUAL:
                 FC.RC_TUNING.RC_EXPO = value / 100;
                 break;
             default:
@@ -674,7 +672,6 @@ const rcPitchExpo = computed({
         const type = ratesType.value;
         switch (type) {
             case RatesType.RACEFLIGHT:
-            case RatesType.ACTUAL:
                 return FC.RC_TUNING.RC_PITCH_EXPO * 100;
             default:
                 return FC.RC_TUNING.RC_PITCH_EXPO;
@@ -684,7 +681,6 @@ const rcPitchExpo = computed({
         const type = ratesType.value;
         switch (type) {
             case RatesType.RACEFLIGHT:
-            case RatesType.ACTUAL:
                 FC.RC_TUNING.RC_PITCH_EXPO = value / 100;
                 break;
             default:
@@ -700,7 +696,6 @@ const rcYawExpo = computed({
         const type = ratesType.value;
         switch (type) {
             case RatesType.RACEFLIGHT:
-            case RatesType.ACTUAL:
                 return FC.RC_TUNING.RC_YAW_EXPO * 100;
             default:
                 return FC.RC_TUNING.RC_YAW_EXPO;
@@ -710,7 +705,6 @@ const rcYawExpo = computed({
         const type = ratesType.value;
         switch (type) {
             case RatesType.RACEFLIGHT:
-            case RatesType.ACTUAL:
                 FC.RC_TUNING.RC_YAW_EXPO = value / 100;
                 break;
             default:
