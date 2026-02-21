@@ -689,16 +689,12 @@ const previousValues = ref({
 // Slider Modes (ON/OFF toggles for gyro and dterm sliders)
 const gyroSliderMode = computed({
     get: () => FC.TUNING_SLIDERS.slider_gyro_filter_mode ?? 1,
-    set: (value) => {
-        FC.TUNING_SLIDERS.slider_gyro_filter_mode = value;
-    },
+    set: (value) => (FC.TUNING_SLIDERS.slider_gyro_filter_mode = value),
 });
 
 const dtermSliderMode = computed({
     get: () => FC.TUNING_SLIDERS.slider_dterm_filter_mode ?? 1,
-    set: (value) => {
-        FC.TUNING_SLIDERS.slider_dterm_filter_mode = value;
-    },
+    set: (value) => (FC.TUNING_SLIDERS.slider_dterm_filter_mode = value),
 });
 
 // Filter Sliders
@@ -706,16 +702,12 @@ const dtermSliderMode = computed({
 // UI displays as 0.1-2.0 for user convenience
 const gyroFilterMultiplier = computed({
     get: () => (FC.TUNING_SLIDERS.slider_gyro_filter_multiplier || 100) / 100,
-    set: (value) => {
-        FC.TUNING_SLIDERS.slider_gyro_filter_multiplier = Math.round(value * 100);
-    },
+    set: (value) => (FC.TUNING_SLIDERS.slider_gyro_filter_multiplier = Math.round(value * 100)),
 });
 
 const dtermFilterMultiplier = computed({
     get: () => (FC.TUNING_SLIDERS.slider_dterm_filter_multiplier || 100) / 100,
-    set: (value) => {
-        FC.TUNING_SLIDERS.slider_dterm_filter_multiplier = Math.round(value * 100);
-    },
+    set: (value) => (FC.TUNING_SLIDERS.slider_dterm_filter_multiplier = Math.round(value * 100)),
 });
 
 // Check if filter sliders are in danger zone (too little filtering)
@@ -831,20 +823,12 @@ const gyroLowpassEnabled = computed({
 
 const gyro_lowpass_hz = computed({
     get: () => FC.FILTER_CONFIG.gyro_lowpass_hz || 0,
-    set: (value) => {
-        if (FC && FC.FILTER_CONFIG) {
-            FC.FILTER_CONFIG.gyro_lowpass_hz = value;
-        }
-    },
+    set: (value) => (FC.FILTER_CONFIG.gyro_lowpass_hz = value),
 });
 
 const gyro_lowpass_type = computed({
     get: () => FC.FILTER_CONFIG.gyro_lowpass_type || 0,
-    set: (value) => {
-        if (FC && FC.FILTER_CONFIG) {
-            FC.FILTER_CONFIG.gyro_lowpass_type = value;
-        }
-    },
+    set: (value) => (FC.FILTER_CONFIG.gyro_lowpass_type = value),
 });
 
 const gyro_lowpass_dyn_min_hz = computed({
@@ -948,10 +932,7 @@ const gyro_notch2_cutoff = computed({
 });
 
 // RPM Filter
-const dshotTelemetryEnabled = computed(() => {
-    if (!FC || !FC.MOTOR_CONFIG) return false;
-    return FC.MOTOR_CONFIG.use_dshot_telemetry || false;
-});
+const dshotTelemetryEnabled = computed(() => FC.MOTOR_CONFIG.use_dshot_telemetry || false);
 
 const rpmFilterEnabled = computed({
     get: () => FC.FILTER_CONFIG.gyro_rpm_notch_harmonics !== 0,
@@ -981,12 +962,8 @@ const gyro_rpm_notch_min_hz = computed({
 
 // Dynamic Notch Filter
 const dynamicNotchEnabled = computed({
-    get: () => {
-        if (!FC || !FC.FILTER_CONFIG) return false;
-        return FC.FILTER_CONFIG.dyn_notch_count !== 0;
-    },
+    get: () => FC.FILTER_CONFIG.dyn_notch_count !== 0,
     set: (value) => {
-        if (!FC || !FC.FILTER_CONFIG) return;
         if (value) {
             // Re-enabling: restore previous notch count
             FC.FILTER_CONFIG.dyn_notch_count = previousValues.value.dynNotchCount;
@@ -1153,13 +1130,15 @@ const isCalculatingDtermFilters = ref(false);
 watch(
     () => gyroFilterMultiplier.value,
     (newValue, oldValue) => {
-        if (!FC || !FC.TUNING_SLIDERS || !FC.FILTER_CONFIG) return;
-
         // Prevent recursive triggers
-        if (isCalculatingGyroFilters.value) return;
+        if (isCalculatingGyroFilters.value) {
+            return;
+        }
 
         // Only trigger if value actually changed (avoid programmatic updates)
-        if (Math.abs(newValue - oldValue) < 0.001) return;
+        if (Math.abs(newValue - oldValue) < 0.001) {
+            return;
+        }
 
         isCalculatingGyroFilters.value = true;
 
@@ -1181,13 +1160,15 @@ watch(
 watch(
     () => dtermFilterMultiplier.value,
     (newValue, oldValue) => {
-        if (!FC || !FC.TUNING_SLIDERS || !FC.FILTER_CONFIG) return;
-
         // Prevent recursive triggers
-        if (isCalculatingDtermFilters.value) return;
+        if (isCalculatingDtermFilters.value) {
+            return;
+        }
 
         // Only trigger if value actually changed (avoid programmatic updates)
-        if (Math.abs(newValue - oldValue) < 0.001) return;
+        if (Math.abs(newValue - oldValue) < 0.001) {
+            return;
+        }
 
         isCalculatingDtermFilters.value = true;
 
