@@ -284,8 +284,8 @@ async function copyProfile() {
 
     // Show profile selection dialog
     dialog.openProfileSelection(
-        "Copy PID Profile",
-        "Select the target profile to copy to:",
+        $t("pidTuningCopyProfileDialogTitle"),
+        $t("pidTuningCopyProfileDialogPrompt"),
         options,
         async (selectedIndex) => {
             // User confirmed selection
@@ -328,8 +328,8 @@ async function copyRateProfile() {
 
     // Show rate profile selection dialog
     dialog.openProfileSelection(
-        "Copy Rate Profile",
-        "Select the target rate profile to copy to:",
+        $t("pidTuningCopyRateProfileDialogTitle"),
+        $t("pidTuningCopyRateProfileDialogPrompt"),
         options,
         async (selectedIndex) => {
             // User confirmed selection
