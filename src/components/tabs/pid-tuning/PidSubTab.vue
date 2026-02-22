@@ -1169,17 +1169,13 @@ const tpaBreakpoint = computed({
 // Feedforward transition display value (divided by 100 for display)
 const feedforwardTransitionValue = computed({
     get: () => (FC.ADVANCED_TUNING.feedforwardTransition / 100).toFixed(2),
-    set: (val) => {
-        FC.ADVANCED_TUNING.feedforwardTransition = Math.round(parseFloat(val) * 100);
-    },
+    set: (val) => (FC.ADVANCED_TUNING.feedforwardTransition = Math.round(Number.parseFloat(val) * 100)),
 });
 
 // PID Controller Settings - Checkbox computed refs
 const itermRelaxEnabled = computed({
     get: () => FC.ADVANCED_TUNING.itermRelax !== 0,
-    set: (val) => {
-        FC.ADVANCED_TUNING.itermRelax = val ? FC.ADVANCED_TUNING.itermRelax || 1 : 0;
-    },
+    set: (val) => (FC.ADVANCED_TUNING.itermRelax = val ? FC.ADVANCED_TUNING.itermRelax || 1 : 0),
 });
 
 const antiGravityEnabled = computed({
@@ -1196,56 +1192,44 @@ const antiGravityEnabled = computed({
 // Anti-gravity gain display value (divided by 10 for display)
 const antiGravityGainValue = computed({
     get: () => (FC.ADVANCED_TUNING.antiGravityGain / 10).toFixed(1),
-    set: (val) => {
-        FC.ADVANCED_TUNING.antiGravityGain = Math.round(parseFloat(val) * 10);
-    },
+    set: (val) => (FC.ADVANCED_TUNING.antiGravityGain = Math.round(Number.parseFloat(val) * 10)),
 });
 
 const itermRotationEnabled = computed({
     get: () => FC.ADVANCED_TUNING.itermRotation !== 0,
-    set: (val) => {
-        FC.ADVANCED_TUNING.itermRotation = val ? 1 : 0;
-    },
+    set: (val) => (FC.ADVANCED_TUNING.itermRotation = val ? 1 : 0),
 });
 
 const vbatSagEnabled = computed({
     get: () => FC.ADVANCED_TUNING.vbat_sag_compensation !== 0,
-    set: (val) => {
-        FC.ADVANCED_TUNING.vbat_sag_compensation = val ? FC.ADVANCED_TUNING.vbat_sag_compensation || 75 : 0;
-    },
+    set: (val) => (FC.ADVANCED_TUNING.vbat_sag_compensation = val ? FC.ADVANCED_TUNING.vbat_sag_compensation || 75 : 0),
 });
 
 const thrustLinearEnabled = computed({
     get: () => FC.ADVANCED_TUNING.thrustLinearization !== 0,
-    set: (val) => {
-        FC.ADVANCED_TUNING.thrustLinearization = val ? FC.ADVANCED_TUNING.thrustLinearization || 100 : 0;
-    },
+    set: (val) => (FC.ADVANCED_TUNING.thrustLinearization = val ? FC.ADVANCED_TUNING.thrustLinearization || 100 : 0),
 });
 
 const smartFeedforwardEnabled = computed({
     get: () => FC.ADVANCED_TUNING.smartFeedforward !== 0,
-    set: (val) => {
-        FC.ADVANCED_TUNING.smartFeedforward = val ? 1 : 0;
-    },
+    set: (val) => (FC.ADVANCED_TUNING.smartFeedforward = val ? 1 : 0),
 });
 
 const integratedYawEnabled = computed({
     get: () => FC.ADVANCED_TUNING.useIntegratedYaw !== 0,
-    set: (val) => {
-        FC.ADVANCED_TUNING.useIntegratedYaw = val ? 1 : 0;
-    },
+    set: (val) => (FC.ADVANCED_TUNING.useIntegratedYaw = val ? 1 : 0),
 });
 
 // Sliders - bridge to TuningSliders.js (values are 0.0-2.0)
 const sliderPidsMode = ref(2);
-const sliderDGain = ref(1.0);
-const sliderPIGain = ref(1.0);
-const sliderFeedforwardGain = ref(1.0);
-const sliderDMaxGain = ref(1.0);
-const sliderIGain = ref(1.0);
-const sliderRollPitchRatio = ref(1.0);
-const sliderPitchPIGain = ref(1.0);
-const sliderMasterMultiplier = ref(1.0);
+const sliderDGain = ref(1);
+const sliderPIGain = ref(1);
+const sliderFeedforwardGain = ref(1);
+const sliderDMaxGain = ref(1);
+const sliderIGain = ref(1);
+const sliderRollPitchRatio = ref(1);
+const sliderPitchPIGain = ref(1);
+const sliderMasterMultiplier = ref(1);
 
 // Flag to prevent watcher from overriding user input
 const isUserInteracting = ref(false);
@@ -1335,19 +1319,19 @@ const hasBasicSlidersOutsideRange = computed(() => {
 
 const hasAdvancedSlidersChanged = computed(() => {
     return (
-        sliderDMaxGain.value !== 1.0 ||
-        sliderIGain.value !== 1.0 ||
-        sliderRollPitchRatio.value !== 1.0 ||
-        sliderPitchPIGain.value !== 1.0 ||
-        sliderMasterMultiplier.value !== 1.0
+        sliderDMaxGain.value !== 1 ||
+        sliderIGain.value !== 1 ||
+        sliderRollPitchRatio.value !== 1 ||
+        sliderPitchPIGain.value !== 1 ||
+        sliderMasterMultiplier.value !== 1
     );
 });
 
 // Show warning when not in expert mode and sliders are outside range or changed
 const showExpertSettingsWarning = computed(() => {
-    if (props.expertMode) return false;
-    if (!sliderPidsMode.value) return false;
-
+    if (props.expertMode || !sliderPidsMode.value) {
+        return false;
+    }
     return hasBasicSlidersOutsideRange.value || hasAdvancedSlidersChanged.value;
 });
 
