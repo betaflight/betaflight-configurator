@@ -245,7 +245,7 @@
                                 <span v-if="gyroNotch1Enabled" class="suboption">
                                     <input type="number" v-model.number="gyro_notch_hz" step="1" min="1" max="16000" />
                                     <label>
-                                        <span>{{ $t("pidTuningGyroNotchCenterFrequency") }}</span>
+                                        <span>{{ $t("pidTuningCenterFrequency") }}</span>
                                     </label>
                                 </span>
 
@@ -258,7 +258,7 @@
                                         max="16000"
                                     />
                                     <label>
-                                        <span>{{ $t("pidTuningGyroNotchCutoffFrequency") }}</span>
+                                        <span>{{ $t("pidTuningCutoffFrequency") }}</span>
                                     </label>
                                 </span>
                             </td>
@@ -282,7 +282,7 @@
                                 <span v-if="gyroNotch2Enabled" class="suboption">
                                     <input type="number" v-model.number="gyro_notch2_hz" step="1" min="1" max="16000" />
                                     <label>
-                                        <span>{{ $t("pidTuningGyroNotchCenterFrequency") }}</span>
+                                        <span>{{ $t("pidTuningCenterFrequency") }}</span>
                                     </label>
                                 </span>
 
@@ -295,7 +295,7 @@
                                         max="16000"
                                     />
                                     <label>
-                                        <span>{{ $t("pidTuningGyroNotchCutoffFrequency") }}</span>
+                                        <span>{{ $t("pidTuningCutoffFrequency") }}</span>
                                     </label>
                                 </span>
                             </td>
@@ -608,7 +608,7 @@
                                 <span v-if="dtermNotchEnabled" class="suboption">
                                     <input type="number" v-model.number="dterm_notch_hz" step="1" min="1" max="16000" />
                                     <label>
-                                        <span>{{ $t("pidTuningDTermNotchFilterCenterFrequency") }}</span>
+                                        <span>{{ $t("pidTuningCenterFrequency") }}</span>
                                     </label>
                                 </span>
 
@@ -621,7 +621,7 @@
                                         max="16000"
                                     />
                                     <label>
-                                        <span>{{ $t("pidTuningDTermNotchFilterCutoffFrequency") }}</span>
+                                        <span>{{ $t("pidTuningCutoffFrequency") }}</span>
                                     </label>
                                 </span>
                             </td>
