@@ -1164,6 +1164,8 @@ function cleanup() {
     }
 }
 
+defineExpose({ cleanup });
+
 onMounted(() => {
     // start the MSP initialization chain
     mountedFlag = true;
