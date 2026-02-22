@@ -1242,7 +1242,9 @@ watch(
     border-radius: 4px;
     background: var(--surface-0);
     color: var(--text-primary);
-    max-width: 200px;
+    min-width: fit-content;
+    width: auto;
+    max-width: none;
 }
 
 .slider-container {
