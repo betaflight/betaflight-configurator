@@ -537,14 +537,7 @@ const fourthColumnLabel = computed(() => {
 });
 
 // Precision for expo inputs based on rates type
-const expoPrecision = computed(() => {
-    switch (ratesType.value) {
-        case RatesType.RACEFLIGHT:
-            return 0;
-        default:
-            return 2;
-    }
-});
+const expoPrecision = computed(() => (ratesType.value === RatesType.RACEFLIGHT ? 0 : 2));
 
 // Precision for rate inputs based on rates type
 const ratePrecision = computed(() => {
@@ -1049,7 +1042,7 @@ function updateRatesLabels() {
         ctx,
         `${maxRate.toFixed(0)} deg/s`,
         (curveWidth / 2 - 10) / textScale,
-        parseInt(ctx.font) * 1.2,
+        Number.parseInt(ctx.font) * 1.2,
         "right",
     );
 
@@ -1460,7 +1453,6 @@ function drawThrottleCurve() {
         const t2 = (-B - Math.sqrt(disc)) / (2 * A);
 
         if (t1 >= 0 && t1 <= 1) {
-            if (t2 >= 0 && t2 <= 1) return t1;
             return t1;
         } else if (t2 >= 0 && t2 <= 1) {
             return t2;
@@ -1543,7 +1535,7 @@ function drawThrottleCurve() {
     const thrX = thrPercent * canvasWidth;
 
     // Draw curve based on limit type
-    if (limitType === THROTTLE_LIMIT_TYPES.CLIP && limitPercent < 1.0) {
+    if (limitType === THROTTLE_LIMIT_TYPES.CLIP && limitPercent < 1) {
         const throttleClipY = canvasHeight * (1 - limitPercent);
 
         let intersectT, intersectX;
@@ -1601,7 +1593,7 @@ function drawThrottleCurve() {
         }
         thrpos = { x: original_thrpos.x, y: Math.max(throttleClipY, original_thrpos.y) };
     } else {
-        let scaleFactor = 1.0;
+        let scaleFactor = 1;
         if (limitType === THROTTLE_LIMIT_TYPES.SCALE) {
             scaleFactor = limitPercent;
         }
@@ -1654,8 +1646,8 @@ function drawThrottleCurve() {
         context.font = `${fontSize}pt Verdana, Arial, sans-serif`;
         context.fillStyle = "#888888";
 
-        let realInputThr = thrPercent * 100.0;
-        let outputThr = Math.max(0, Math.min(100, (1 - thrpos.y / canvasHeight) * 100.0));
+        let realInputThr = thrPercent * 100;
+        let outputThr = Math.max(0, Math.min(100, (1 - thrpos.y / canvasHeight) * 100));
         let thrlabel = `${Math.round(realInputThr)}%` + ` = ${Math.round(outputThr)}%`;
 
         let textX = 5;
@@ -1677,7 +1669,9 @@ function handleModelResize() {
 }
 
 function renderModel(timestamp) {
-    if (!model || !keepRendering) return;
+    if (!model || !keepRendering) {
+        return;
+    }
 
     // Early return if model geometry isn't loaded yet
     if (!model.model) {
@@ -1881,9 +1875,9 @@ const setDefaultsForRatesType = (type) => {
             FC.RC_TUNING.RC_YAW_EXPO = 0;
             break;
         case RatesType.QUICKRATES:
-            FC.RC_TUNING.RC_RATE = 1.0;
-            FC.RC_TUNING.rcPitchRate = 1.0;
-            FC.RC_TUNING.rcYawRate = 1.0;
+            FC.RC_TUNING.RC_RATE = 1;
+            FC.RC_TUNING.rcPitchRate = 1;
+            FC.RC_TUNING.rcYawRate = 1;
             FC.RC_TUNING.roll_rate = 0.67;
             FC.RC_TUNING.pitch_rate = 0.67;
             FC.RC_TUNING.yaw_rate = 0.67;
@@ -1893,9 +1887,9 @@ const setDefaultsForRatesType = (type) => {
             break;
         case RatesType.BETAFLIGHT:
         case RatesType.KISS:
-            FC.RC_TUNING.RC_RATE = 1.0;
-            FC.RC_TUNING.rcPitchRate = 1.0;
-            FC.RC_TUNING.rcYawRate = 1.0;
+            FC.RC_TUNING.RC_RATE = 1;
+            FC.RC_TUNING.rcPitchRate = 1;
+            FC.RC_TUNING.rcYawRate = 1;
             FC.RC_TUNING.roll_rate = 0.7;
             FC.RC_TUNING.pitch_rate = 0.7;
             FC.RC_TUNING.yaw_rate = 0.7;
