@@ -2857,6 +2857,14 @@
     "adjustmentsColumnAdjustmentScale": {
         "message": "and range|scale (val.|%)"
     },
+    "adjustmentsCenterHelp": {
+        "message": "Sets the mid-point or reference value used by the adjustment function.<br /><br /><strong>Slider Adjustments:</strong><br />For slider adjustments, set Adjustment Center to 0. The current slider position will be utilized for the adjustment up/down.<br /><br /><strong>Selection Adjustments:</strong><br />Set Adjustment Center to 0, or to a specific microsecond (uS) value if you want to offset the switch reference point from 1500uS when initiating the RC adjustment.<br /><br /><strong>Stepped Adjustments:</strong><br />Set Adjustment Center to 0 for the current value of the item being adjusted to be utilized.<br /><br /><strong>Absolute Adjustments:</strong><br />To use the Absolute adjustment method, you must set both Adjustment Center and Scale to specify the desired value and range. The range is calculated as: Center ± Scale. For example, setting Adjustment Center to 50 and Adjustment Scale to 25 creates a range from 25 to 75, with the center position (switch or POT) mapped to 50.<br /><br />Visit <a href=\"https://www.betaflight.com/docs/development/Inflight-Adjustments\" target=\"_blank\" rel=\"noopener noreferrer\">this page</a> for more info.",
+        "description": "Tooltip help text for the Adjustment Center column"
+    },
+    "adjustmentsScaleHelp": {
+        "message": "Controls the scaling or range of the adjustment; higher values increase the adjustment range or sensitivity.<br /><br /><strong>Slider Adjustments:</strong><br />For Slider adjustments, Adjustment Scale controls the scaling/sensitivity of the adjustment. A value of 50 equals 50% of the slider range. Setting to 0 utilizes the default scale for sliders.<br /><br /><strong>Selection Adjustments:</strong><br />For Selection adjustments, set Adjustment Scale to 0 for default behavior, or specify a microsecond (uS) value to limit the range. For example: Set Adjustment Center to 1000 (uS) and Adjustment Scale to 500 (uS) to utilize a 3-position switch as a 2-position switch.<br /><br /><strong>Stepped and Absolute Adjustments:</strong><br />For Stepped and Absolute adjustments, Adjustment Scale defines the range above and below the Adjustment Center. For example, a value of 25 creates an adjustment range of ±25 from the Adjustment Center value, or from the current value if Adjustment Center is set to 0.<br /><strong>Note:</strong> To use the Absolute adjustment method with a potentiometer, an Adjustment Scale value must be specified.<br /><br />Visit <a href=\"https://www.betaflight.com/docs/development/Inflight-Adjustments\" target=\"_blank\" rel=\"noopener noreferrer\">this page</a> for more info.",
+        "description": "Tooltip help text for the Adjustment Scale column"
+    },
     "adjustmentsSlot0": {
         "message": "Slot 1"
     },

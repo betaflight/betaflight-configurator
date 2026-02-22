@@ -11,8 +11,14 @@
                     <div class="header-range">{{ $t("adjustmentsColumnIsInRange") }}</div>
                     <div class="header-function">{{ $t("adjustmentsColumnThenApplyFunction") }}</div>
                     <div class="header-via">{{ $t("adjustmentsColumnViaChannel") }}</div>
-                    <div class="header-center">{{ $t("adjustmentsColumnAdjustmentCenter") }}</div>
-                    <div class="header-scale">{{ $t("adjustmentsColumnAdjustmentScale") }}</div>
+                    <div class="header-center">
+                        {{ $t("adjustmentsColumnAdjustmentCenter") }}
+                        <div class="helpicon cf_tip" i18n_title="adjustmentsCenterHelp"></div>
+                    </div>
+                    <div class="header-scale">
+                        {{ $t("adjustmentsColumnAdjustmentScale") }}
+                        <div class="helpicon cf_tip" i18n_title="adjustmentsScaleHelp"></div>
+                    </div>
                 </div>
 
                 <div class="adjustments-list">
@@ -118,7 +124,7 @@
                                 class="center-input"
                                 :disabled="!adjustment.enabled"
                                 min="0"
-                                max="255"
+                                max="2000"
                             />
                         </div>
 
@@ -129,7 +135,7 @@
                                 class="scale-input"
                                 :disabled="!adjustment.enabled"
                                 min="0"
-                                max="255"
+                                max="2000"
                             />
                         </div>
                     </div>
@@ -510,6 +516,8 @@ export default defineComponent({
             await loadMSPData();
             initializeAdjustments();
             await nextTick();
+            // Ensure i18n attributes are applied to DOM (i18n_title -> title)
+            i18n.localizePage();
             GUI.switchery();
             startRcDataPolling();
             GUI.content_ready();
