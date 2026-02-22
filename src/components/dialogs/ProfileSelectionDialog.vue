@@ -157,7 +157,7 @@ defineExpose({
 
 .dialogProfileSelection-confirmButton {
     background: var(--accent, #007bff);
-    color: white;
+    color: var(--buttonText, #fff);
 }
 
 .dialogProfileSelection-confirmButton:hover:not(:disabled) {

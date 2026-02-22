@@ -1180,13 +1180,7 @@ const itermRelaxEnabled = computed({
 
 const antiGravityEnabled = computed({
     get: () => FC.ADVANCED_TUNING.antiGravityGain !== 0,
-    set: (val) => {
-        if (val) {
-            FC.ADVANCED_TUNING.antiGravityGain = FC.ADVANCED_TUNING.antiGravityGain || 80;
-        } else {
-            FC.ADVANCED_TUNING.antiGravityGain = 0;
-        }
-    },
+    set: (val) => (FC.ADVANCED_TUNING.antiGravityGain = val ? FC.ADVANCED_TUNING.antiGravityGain || 80 : 0),
 });
 
 // Anti-gravity gain display value (divided by 10 for display)
