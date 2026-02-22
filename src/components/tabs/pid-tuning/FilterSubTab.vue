@@ -170,6 +170,8 @@
                                     <select v-model.number="gyro_lowpass_type">
                                         <option :value="0">PT1</option>
                                         <option :value="1">BIQUAD</option>
+                                        <option :value="2">PT2</option>
+                                        <option :value="3">PT3</option>
                                     </select>
                                     <label>
                                         <span>{{ $t("pidTuningLowpassFilterType") }}</span>
@@ -210,6 +212,8 @@
                                     <select v-model.number="gyro_lowpass2_type">
                                         <option :value="0">PT1</option>
                                         <option :value="1">BIQUAD</option>
+                                        <option :value="2">PT2</option>
+                                        <option :value="3">PT3</option>
                                     </select>
                                     <label>
                                         <span>{{ $t("pidTuningLowpassFilterType") }}</span>
@@ -533,6 +537,8 @@
                                     <select v-model.number="dterm_lowpass_type">
                                         <option :value="0">PT1</option>
                                         <option :value="1">BIQUAD</option>
+                                        <option :value="2">PT2</option>
+                                        <option :value="3">PT3</option>
                                     </select>
                                     <label>
                                         <span>{{ $t("pidTuningLowpassFilterType") }}</span>
@@ -573,6 +579,8 @@
                                     <select v-model.number="dterm_lowpass2_type">
                                         <option :value="0">PT1</option>
                                         <option :value="1">BIQUAD</option>
+                                        <option :value="2">PT2</option>
+                                        <option :value="3">PT3</option>
                                     </select>
                                     <label>
                                         <span>{{ $t("pidTuningLowpassFilterType") }}</span>
