@@ -265,7 +265,7 @@
             </div>
         </div>
 
-        <!-- MIDDLE COLUMN -->
+        <!-- RIGHT COLUMN -->
         <div class="cf_column">
             <!-- Throttle Limit -->
             <div class="gui_box throttle_limit spacer_left">
@@ -375,10 +375,6 @@
                     </tbody>
                 </table>
             </div>
-        </div>
-
-        <!-- RIGHT COLUMN -->
-        <div class="cf_column">
             <div class="gui_box ratePreview grey spacer_left">
                 <table class="pid_titlebar">
                     <thead>
