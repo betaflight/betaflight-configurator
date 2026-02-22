@@ -597,72 +597,48 @@ const getRateScaleFactor = () => {
 // RC Rate (Roll) - scaled for display
 const rcRate = computed({
     get: () => FC.RC_TUNING.RC_RATE * getScaleFactor(),
-    set: (value) => {
-        FC.RC_TUNING.RC_RATE = value / getScaleFactor();
-    },
+    set: (value) => (FC.RC_TUNING.RC_RATE = value / getScaleFactor()),
 });
 
 // RC Rate Pitch - scaled for display
 const rcRatePitch = computed({
     get: () => FC.RC_TUNING.rcPitchRate * getScaleFactor(),
-    set: (value) => {
-        FC.RC_TUNING.rcPitchRate = value / getScaleFactor();
-    },
+    set: (value) => (FC.RC_TUNING.rcPitchRate = value / getScaleFactor()),
 });
 
 // RC Rate Yaw - scaled for display
 const rcRateYaw = computed({
     get: () => FC.RC_TUNING.rcYawRate * getScaleFactor(),
-    set: (value) => {
-        FC.RC_TUNING.rcYawRate = value / getScaleFactor();
-    },
+    set: (value) => (FC.RC_TUNING.rcYawRate = value / getScaleFactor()),
 });
 
 // Roll Rate - scaled for display
 const rollRate = computed({
     get: () => FC.RC_TUNING.roll_rate * getRateScaleFactor(),
-    set: (value) => {
-        FC.RC_TUNING.roll_rate = value / getRateScaleFactor();
-    },
+    set: (value) => (FC.RC_TUNING.roll_rate = value / getRateScaleFactor()),
 });
 
 // Pitch Rate - scaled for display
 const pitchRate = computed({
     get: () => FC.RC_TUNING.pitch_rate * getRateScaleFactor(),
-    set: (value) => {
-        FC.RC_TUNING.pitch_rate = value / getRateScaleFactor();
-    },
+    set: (value) => (FC.RC_TUNING.pitch_rate = value / getRateScaleFactor()),
 });
 
 // Yaw Rate - scaled for display
 const yawRate = computed({
     get: () => FC.RC_TUNING.yaw_rate * getRateScaleFactor(),
-    set: (value) => {
-        FC.RC_TUNING.yaw_rate = value / getRateScaleFactor();
-    },
+    set: (value) => (FC.RC_TUNING.yaw_rate = value / getRateScaleFactor()),
 });
 
 // RC Expo
 const rcExpo = computed({
     get: () => {
         const type = ratesType.value;
-        switch (type) {
-            case RatesType.RACEFLIGHT:
-                return FC.RC_TUNING.RC_EXPO * 100;
-            default:
-                return FC.RC_TUNING.RC_EXPO;
-        }
+        return type === RatesType.RACEFLIGHT ? FC.RC_TUNING.RC_EXPO * 100 : FC.RC_TUNING.RC_EXPO;
     },
     set: (value) => {
         const type = ratesType.value;
-        switch (type) {
-            case RatesType.RACEFLIGHT:
-                FC.RC_TUNING.RC_EXPO = value / 100;
-                break;
-            default:
-                FC.RC_TUNING.RC_EXPO = value;
-                break;
-        }
+        FC.RC_TUNING.RC_EXPO = type === RatesType.RACEFLIGHT ? value / 100 : value;
     },
 });
 
@@ -670,23 +646,11 @@ const rcExpo = computed({
 const rcPitchExpo = computed({
     get: () => {
         const type = ratesType.value;
-        switch (type) {
-            case RatesType.RACEFLIGHT:
-                return FC.RC_TUNING.RC_PITCH_EXPO * 100;
-            default:
-                return FC.RC_TUNING.RC_PITCH_EXPO;
-        }
+        return type === RatesType.RACEFLIGHT ? FC.RC_TUNING.RC_PITCH_EXPO * 100 : FC.RC_TUNING.RC_PITCH_EXPO;
     },
     set: (value) => {
         const type = ratesType.value;
-        switch (type) {
-            case RatesType.RACEFLIGHT:
-                FC.RC_TUNING.RC_PITCH_EXPO = value / 100;
-                break;
-            default:
-                FC.RC_TUNING.RC_PITCH_EXPO = value;
-                break;
-        }
+        FC.RC_TUNING.RC_PITCH_EXPO = type === RatesType.RACEFLIGHT ? value / 100 : value;
     },
 });
 
@@ -694,60 +658,38 @@ const rcPitchExpo = computed({
 const rcYawExpo = computed({
     get: () => {
         const type = ratesType.value;
-        switch (type) {
-            case RatesType.RACEFLIGHT:
-                return FC.RC_TUNING.RC_YAW_EXPO * 100;
-            default:
-                return FC.RC_TUNING.RC_YAW_EXPO;
-        }
+        return type === RatesType.RACEFLIGHT ? FC.RC_TUNING.RC_YAW_EXPO * 100 : FC.RC_TUNING.RC_YAW_EXPO;
     },
     set: (value) => {
         const type = ratesType.value;
-        switch (type) {
-            case RatesType.RACEFLIGHT:
-                FC.RC_TUNING.RC_YAW_EXPO = value / 100;
-                break;
-            default:
-                FC.RC_TUNING.RC_YAW_EXPO = value;
-                break;
-        }
+        FC.RC_TUNING.RC_YAW_EXPO = type === RatesType.RACEFLIGHT ? value / 100 : value;
     },
 });
 
 // Throttle Settings
 const throttleLimitType = computed({
     get: () => FC.RC_TUNING.throttleLimitType,
-    set: (value) => {
-        FC.RC_TUNING.throttleLimitType = value;
-    },
+    set: (value) => (FC.RC_TUNING.throttleLimitType = value),
 });
 
 const throttleLimitPercent = computed({
     get: () => FC.RC_TUNING.throttleLimitPercent,
-    set: (value) => {
-        FC.RC_TUNING.throttleLimitPercent = value;
-    },
+    set: (value) => (FC.RC_TUNING.throttleLimitPercent = Number.parseFloat(value)),
 });
 
 const throttleMid = computed({
     get: () => FC.RC_TUNING.throttle_MID ?? 0,
-    set: (value) => {
-        FC.RC_TUNING.throttle_MID = parseFloat(value);
-    },
+    set: (value) => (FC.RC_TUNING.throttle_MID = Number.parseFloat(value)),
 });
 
 const throttleHover = computed({
     get: () => FC.RC_TUNING.throttle_HOVER ?? 0.5,
-    set: (value) => {
-        FC.RC_TUNING.throttle_HOVER = parseFloat(value);
-    },
+    set: (value) => (FC.RC_TUNING.throttle_HOVER = Number.parseFloat(value)),
 });
 
 const throttleExpo = computed({
     get: () => FC.RC_TUNING.throttle_EXPO ?? 0,
-    set: (value) => {
-        FC.RC_TUNING.throttle_EXPO = parseFloat(value);
-    },
+    set: (value) => (FC.RC_TUNING.throttle_EXPO = Number.parseFloat(value)),
 });
 
 // Rate Curve Helper
@@ -760,7 +702,7 @@ const getCurrentRatesSnapshot = () => rateCurve.getCurrentRates();
 const RC_RATE_INCREMENTAL = 14.54;
 
 function getRcRateModified(rate) {
-    return rate > 2.0 ? (rate - 2.0) * RC_RATE_INCREMENTAL + 2.0 : rate;
+    return rate > 2 ? (rate - 2) * RC_RATE_INCREMENTAL + 2 : rate;
 }
 
 function getAcroSensitivityFraction(exponent, rate) {
@@ -769,7 +711,6 @@ function getAcroSensitivityFraction(exponent, rate) {
 
 // Center Sensitivity (Betaflight Rates)
 const centerSensitivityRoll = computed(() => {
-    if (!isBetaflightRates.value) return "";
     const maxAngularVel = calculateMaxAngularVel(
         rollRate.value,
         rcRate.value,
@@ -781,7 +722,6 @@ const centerSensitivityRoll = computed(() => {
 });
 
 const centerSensitivityPitch = computed(() => {
-    if (!isBetaflightRates.value) return "";
     const maxAngularVel = calculateMaxAngularVel(
         pitchRate.value,
         rcRatePitch.value,
@@ -793,7 +733,6 @@ const centerSensitivityPitch = computed(() => {
 });
 
 const centerSensitivityYaw = computed(() => {
-    if (!isBetaflightRates.value) return "";
     const rates = getCurrentRatesSnapshot();
     const maxAngularVel = calculateMaxAngularVel(
         yawRate.value,
@@ -808,12 +747,10 @@ const centerSensitivityYaw = computed(() => {
 
 // Max Angular Velocity (Non-Betaflight Rates) - String versions for display
 const maxAngularVelRoll = computed(() => {
-    if (isBetaflightRates.value) return "";
     return calculateMaxAngularVel(rollRate.value, rcRate.value, rcExpo.value, FC.RC_TUNING.roll_rate_limit).toString();
 });
 
 const maxAngularVelPitch = computed(() => {
-    if (isBetaflightRates.value) return "";
     return calculateMaxAngularVel(
         pitchRate.value,
         rcRatePitch.value,
@@ -823,7 +760,6 @@ const maxAngularVelPitch = computed(() => {
 });
 
 const maxAngularVelYaw = computed(() => {
-    if (isBetaflightRates.value) return "";
     const rates = getCurrentRatesSnapshot();
     return calculateMaxAngularVel(
         yawRate.value,
@@ -879,21 +815,16 @@ const rateLimits = computed(() => {
         return { max: 2000, min: 10, step: 10 };
     }
     // BETAFLIGHT
-    return { max: 1.0, min: 0, step: 0.01 };
+    return { max: 1, min: 0, step: 0.01 };
 });
 
 const expoLimits = computed(() => {
-    switch (ratesType.value) {
-        case RatesType.RACEFLIGHT:
-            return { max: 100, min: 0, step: 1 };
-        default:
-            return { max: 1.0, min: 0, step: 0.01 };
-    }
+    return ratesType.value === RatesType.RACEFLIGHT ? { max: 100, min: 0, step: 1 } : { max: 1, min: 0, step: 0.01 };
 });
 
 function calculateMaxAngularVel(rate, rcRate, rcExpo, limit, deadband) {
     // Use provided deadband or fall back to generic deadband
-    const db = deadband !== undefined ? deadband : FC.RC_DEADBAND_CONFIG?.deadband || 0;
+    const db = deadband === undefined ? FC.RC_DEADBAND_CONFIG?.deadband || 0 : deadband;
     const maxAngularVel = rateCurve.getMaxAngularVel(
         rate,
         rcRate,
@@ -907,7 +838,9 @@ function calculateMaxAngularVel(rate, rcRate, rcExpo, limit, deadband) {
 
 // Canvas Drawing Functions
 function drawRateCurves() {
-    if (!rateCurveLayer0.value) return;
+    if (!rateCurveLayer0.value) {
+        return;
+    }
 
     const canvas = rateCurveLayer0.value;
     const ctx = canvas.getContext("2d");
@@ -920,9 +853,9 @@ function drawRateCurves() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     // Ensure we have valid rate data
-    if (!FC.RC_TUNING || rcRate.value === undefined) {
-        return;
-    }
+    // if (!FC.RC_TUNING || rcRate.value === undefined) {
+    //     return;
+    // }
 
     // Get scaled rates for drawing
     const rates = getCurrentRatesSnapshot();
@@ -1053,7 +986,7 @@ function updateRatesLabels() {
     const rates = getCurrentRatesSnapshot();
 
     // Verify we have valid rate data
-    if (!rates || typeof rates.roll_rate === "undefined") {
+    if (!rates || rates.roll_rate === undefined) {
         return;
     }
 
@@ -1224,7 +1157,7 @@ function updateRatesLabels() {
         // This prevents them from being reordered
         balloons.push(
             {
-                value: parseInt(currentRollRate),
+                value: Number.parseInt(currentRollRate),
                 draw: () => {
                     drawBalloonLabel(
                         ctx,
@@ -1238,7 +1171,7 @@ function updateRatesLabels() {
                 },
             },
             {
-                value: parseInt(currentPitchRate),
+                value: Number.parseInt(currentPitchRate),
                 draw: () => {
                     drawBalloonLabel(
                         ctx,
@@ -1252,7 +1185,7 @@ function updateRatesLabels() {
                 },
             },
             {
-                value: parseInt(currentYawRate),
+                value: Number.parseInt(currentYawRate),
                 draw: () => {
                     drawBalloonLabel(
                         ctx,
@@ -1296,7 +1229,7 @@ function drawBalloonLabel(ctx, text, x, y, align, colors, balloonsDirty) {
     const DEFAULT_MARGIN = 5;
     const DEFAULT_RADIUS = 10;
 
-    const fontSize = parseInt(ctx.font);
+    const fontSize = Number.parseInt(ctx.font);
 
     // Calculate the width and height required for the balloon (like master)
     const width = ctx.measureText(text).width * 1.2;
@@ -1324,23 +1257,20 @@ function drawBalloonLabel(ctx, text, x, y, align, colors, balloonsDirty) {
     }
 
     // Check that the balloon does not already overlap (like master)
-    for (let i = 0; i < balloonsDirty.length; i++) {
-        if (
-            (x >= balloonsDirty[i].left && x <= balloonsDirty[i].right) ||
-            (x + width >= balloonsDirty[i].left && x + width <= balloonsDirty[i].right)
-        ) {
+    for (const balloon of balloonsDirty) {
+        if ((x >= balloon.left && x <= balloon.right) || (x + width >= balloon.left && x + width <= balloon.right)) {
             // does it overlap horizontally
             if (
-                (y >= balloonsDirty[i].top && y <= balloonsDirty[i].bottom) ||
-                (y + height >= balloonsDirty[i].top && y + height <= balloonsDirty[i].bottom)
+                (y >= balloon.top && y <= balloon.bottom) ||
+                (y + height >= balloon.top && y + height <= balloon.bottom)
             ) {
                 // this overlaps another balloon
                 // snap above or snap below
-                if (y <= (balloonsDirty[i].bottom - balloonsDirty[i].top) / 2 && balloonsDirty[i].top - height > 0) {
-                    y = balloonsDirty[i].top - height;
+                if (y <= (balloon.bottom - balloon.top) / 2 && balloon.top - height > 0) {
+                    y = balloon.top - height;
                 } else {
                     // snap down
-                    y = balloonsDirty[i].bottom;
+                    y = balloon.bottom;
                 }
             }
         }
@@ -1477,18 +1407,24 @@ function drawAxes(ctx, width, height) {
 }
 
 function drawThrottleCurve() {
-    if (!throttleCurveCanvas.value) return;
+    if (!throttleCurveCanvas.value) {
+        return;
+    }
 
     const canvas = throttleCurveCanvas.value;
     const context = canvas.getContext("2d");
 
     // Set canvas dimensions from DOM dimensions to prevent blurry scaling
     const rect = canvas.getBoundingClientRect();
-    if (!rect.height || !rect.width || rect.height === 0 || rect.width === 0) return;
+    if (!rect.height || !rect.width || rect.height === 0 || rect.width === 0) {
+        return;
+    }
 
     canvas.height = rect.height;
     canvas.width = canvas.height * (rect.width / rect.height);
-    if (canvas.width === 0 || canvas.height === 0) return;
+    if (canvas.width === 0 || canvas.height === 0) {
+        return;
+    }
 
     const canvasHeight = canvas.height;
     const canvasWidth = canvas.width;
@@ -1512,8 +1448,7 @@ function drawThrottleCurve() {
         const C = startY - y;
 
         if (Math.abs(A) < 1e-6) {
-            if (Math.abs(B) < 1e-6) return 0;
-            return -C / B;
+            return Math.abs(B) < 1e-6 ? 0 : -C / B;
         }
 
         const disc = B * B - 4 * A * C;
@@ -1539,21 +1474,30 @@ function drawThrottleCurve() {
         const b = 2 * (cx - x0);
         const c = x0 - x;
         if (Math.abs(a) < 1e-6) {
-            if (Math.abs(b) < 1e-6) return 0;
+            if (Math.abs(b) < 1e-6) {
+                return 0;
+            }
             return -c / b;
         }
         const disc = b * b - 4 * a * c;
-        if (disc < 0) return 0;
+        if (disc < 0) {
+            return 0;
+        }
         const t1 = (-b + Math.sqrt(disc)) / (2 * a);
         const t2 = (-b - Math.sqrt(disc)) / (2 * a);
 
-        const t1_valid = !isNaN(t1) && 0 <= t1 && t1 <= 1;
-        const t2_valid = !isNaN(t2) && 0 <= t2 && t2 <= 1;
+        const t1_valid = !Number.isNaN(t1) && 0 <= t1 && t1 <= 1;
+        const t2_valid = !Number.isNaN(t2) && 0 <= t2 && t2 <= 1;
 
-        if (t1_valid && t2_valid) return t1;
-        else if (t1_valid) return t1;
-        else if (t2_valid) return t2;
-        else return Math.abs(x - x0) < Math.abs(x - x1) ? 0 : 1;
+        if (t1_valid && t2_valid) {
+            return t1;
+        } else if (t1_valid) {
+            return t1;
+        } else if (t2_valid) {
+            return t2;
+        } else {
+            return Math.abs(x - x0) < Math.abs(x - x1) ? 0 : 1;
+        }
     }
 
     const THROTTLE_LIMIT_TYPES = { OFF: 0, SCALE: 1, CLIP: 2 };
@@ -1567,9 +1511,9 @@ function drawThrottleCurve() {
 
     // Validate values
     if (
-        isNaN(mid) ||
-        isNaN(expo) ||
-        isNaN(hover) ||
+        Number.isNaN(mid) ||
+        Number.isNaN(expo) ||
+        Number.isNaN(hover) ||
         mid < 0 ||
         mid > 1 ||
         expo < 0 ||
