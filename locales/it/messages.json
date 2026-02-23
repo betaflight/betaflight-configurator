@@ -2874,6 +2874,9 @@
     "adjustmentsFunction31": {
         "message": "Regola Luminosità Led"
     },
+    "adjustmentsFunction32": {
+        "message": "Moltiplicatore Master"
+    },
     "adjustmentsSave": {
         "message": "Salva"
     },

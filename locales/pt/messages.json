@@ -2878,6 +2878,9 @@
     "adjustmentsFunction31": {
         "message": "Ajuste do brilho do LED"
     },
+    "adjustmentsFunction32": {
+        "message": "Slider Multiplicador Mestre"
+    },
     "adjustmentsSave": {
         "message": "Gravar"
     },
