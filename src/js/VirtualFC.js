@@ -95,6 +95,8 @@ const VirtualFC = {
                 },
                 adjustmentFunction: 0,
                 auxSwitchChannelIndex: 0,
+                adjustmentCenter: 0,
+                adjustmentScale: 0,
             };
         }
 
