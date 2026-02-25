@@ -95,7 +95,7 @@
                                 </thead>
                                 <tbody>
                                     <tr v-for="motor in motorResources" :key="motor.index">
-                                        <td>Motor {{ motor.index + 1 }}</td>
+                                        <td>{{ $t("servosResourceMotorLabel") }} {{ motor.index + 1 }}</td>
                                         <td>
                                             <select
                                                 class="resource-select"
@@ -123,7 +123,7 @@
                                 </thead>
                                 <tbody>
                                     <tr v-for="servo in servoResources" :key="servo.index">
-                                        <td>Servo {{ servo.index + 1 }}</td>
+                                        <td>{{ $t("servosResourceServoLabel") }} {{ servo.index + 1 }}</td>
                                         <td>
                                             <select
                                                 class="resource-select"
@@ -242,27 +242,25 @@ export default defineComponent({
         // Track local intervals for cleanup
         const localIntervals = [];
 
+        // Store the initial pins from firmware so they remain selectable after edits
+        const initialPins = ref([]);
+
         // Available pins for resource assignment (common STM32 pins used for motors/servos)
         // This list includes typical timer-capable pins on F4/F7/H7 boards
         const availablePins = computed(() => {
-            const pins = [];
-            // Collect all currently assigned pins from motor and servo resources
-            const assignedPins = new Set();
+            const pins = new Set(initialPins.value);
+            // Also include any currently assigned pins from motor and servo resources
             for (const motor of motorResources) {
                 if (motor.pin && motor.pin !== "NONE") {
-                    assignedPins.add(motor.pin);
+                    pins.add(motor.pin);
                 }
             }
             for (const servo of servoResources) {
                 if (servo.pin && servo.pin !== "NONE") {
-                    assignedPins.add(servo.pin);
+                    pins.add(servo.pin);
                 }
             }
-            // Add all assigned pins to the list so they can be selected/swapped
-            for (const pin of assignedPins) {
-                pins.push(pin);
-            }
-            return pins.sort();
+            return Array.from(pins).sort();
         });
 
         // Helper to add interval and track it
@@ -383,52 +381,58 @@ export default defineComponent({
 
         // Load resource assignment data into reactive arrays
         function loadResourceData() {
+            // Seed initial pins from firmware data so they remain selectable after edits
+            const pins = new Set();
+
             if (FC.MOTOR_RESOURCES && FC.MOTOR_RESOURCES.length > 0) {
                 motorResources.length = 0;
                 for (const resource of FC.MOTOR_RESOURCES) {
                     motorResources.push({ ...resource });
+                    if (resource.pin && resource.pin !== "NONE") {
+                        pins.add(resource.pin);
+                    }
                 }
             }
             if (FC.SERVO_RESOURCES && FC.SERVO_RESOURCES.length > 0) {
                 servoResources.length = 0;
                 for (const resource of FC.SERVO_RESOURCES) {
                     servoResources.push({ ...resource });
+                    if (resource.pin && resource.pin !== "NONE") {
+                        pins.add(resource.pin);
+                    }
                 }
             }
+
+            initialPins.value = Array.from(pins).sort();
             hasResourceData.value = motorResources.length > 0 || servoResources.length > 0;
             resourcesModified.value = false;
         }
 
-        // Handle motor pin change
-        function onMotorPinChange(index, event) {
+        // Handle resource pin change (shared helper for motor and servo)
+        function onResourcePinChange(resourceType, resources, index, event) {
             const newPin = event.target.value;
             const ioTag = newPin === "NONE" ? 0 : mspHelper.pinToIoTag(newPin);
 
             // Update local state immediately
-            motorResources[index].pin = newPin;
-            motorResources[index].ioTag = ioTag;
+            resources[index].pin = newPin;
+            resources[index].ioTag = ioTag;
             resourcesModified.value = true;
 
             // Send to FC
-            mspHelper.setMotorServoResource(0, index, ioTag, () => {
-                console.log(`Motor ${index + 1} pin set to ${newPin}`);
+            const label = resourceType === 0 ? "Motor" : "Servo";
+            mspHelper.setMotorServoResource(resourceType, index, ioTag, () => {
+                console.log(`${label} ${index + 1} pin set to ${newPin}`);
             });
+        }
+
+        // Handle motor pin change
+        function onMotorPinChange(index, event) {
+            onResourcePinChange(0, motorResources, index, event);
         }
 
         // Handle servo pin change
         function onServoPinChange(index, event) {
-            const newPin = event.target.value;
-            const ioTag = newPin === "NONE" ? 0 : mspHelper.pinToIoTag(newPin);
-
-            // Update local state immediately
-            servoResources[index].pin = newPin;
-            servoResources[index].ioTag = ioTag;
-            resourcesModified.value = true;
-
-            // Send to FC
-            mspHelper.setMotorServoResource(1, index, ioTag, () => {
-                console.log(`Servo ${index + 1} pin set to ${newPin}`);
-            });
+            onResourcePinChange(1, servoResources, index, event);
         }
 
         // Initialize UI after data is loaded

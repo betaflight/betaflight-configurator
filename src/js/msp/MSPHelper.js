@@ -645,6 +645,10 @@ MspHelper.prototype.process_data = function (dataHandler) {
                                 box: data.readU8(),
                             });
                         }
+                    } else if (data.byteLength > 0) {
+                        console.warn(
+                            `MSP_SERVO_MIX_RULES: unexpected data length ${data.byteLength} (not a multiple of 7)`,
+                        );
                     }
                     break;
 
@@ -3080,6 +3084,10 @@ MspHelper.prototype.pinToIoTag = function (pinName) {
     }
     const portId = match[1].toUpperCase().charCodeAt(0) - "A".charCodeAt(0);
     const pinNumber = parseInt(match[2], 10);
+    // Validate bounds: portId 0-25 (A-Z), pinNumber 0-15 (4-bit encoding)
+    if (portId < 0 || portId > 25 || pinNumber < 0 || pinNumber > 15) {
+        return 0;
+    }
     return ((portId + 1) << 4) | pinNumber;
 };
 
