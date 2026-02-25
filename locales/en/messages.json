@@ -3099,6 +3099,30 @@
         "message": "$t(eeprom_saved_ok.message)",
         "description": "Don't translate!!!"
     },
+    "servosResourceAssignments": {
+        "message": "Resource Assignments"
+    },
+    "servosResourceNotAvailable": {
+        "message": "Resource data not available. Your firmware may not support the MSP2_MOTOR_SERVO_RESOURCE command."
+    },
+    "servosMotorResources": {
+        "message": "Motor Pins"
+    },
+    "servosServoResources": {
+        "message": "Servo Pins"
+    },
+    "servosResourceIndex": {
+        "message": "Index"
+    },
+    "servosResourcePin": {
+        "message": "Pin"
+    },
+    "servosResourceHint": {
+        "message": "To change pin assignments, use the CLI command: resource SERVO <index> <pin> (e.g., resource SERVO 1 A08)."
+    },
+    "servosResourceEditHint": {
+        "message": "Select a pin from the dropdown to reassign motor or servo outputs. Changes are applied immediately but require Save and a reboot to take effect."
+    },
     "gpsHead": {
         "message": "General"
     },

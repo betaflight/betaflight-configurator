@@ -278,6 +278,30 @@ MspHelper.prototype.process_data = function (dataHandler) {
                         FC.MOTOR_OUTPUT_ORDER[i] = data.readU8();
                     }
                     break;
+                case MSPCodes.MSP2_MOTOR_SERVO_RESOURCE:
+                    {
+                        FC.MOTOR_RESOURCES = [];
+                        FC.SERVO_RESOURCES = [];
+                        const motorCount = data.readU8();
+                        const servoCount = data.readU8();
+                        for (let i = 0; i < motorCount; i++) {
+                            const ioTag = data.readU8();
+                            FC.MOTOR_RESOURCES.push({
+                                index: i,
+                                ioTag: ioTag,
+                                pin: ioTag ? this.ioTagToPin(ioTag) : "NONE",
+                            });
+                        }
+                        for (let i = 0; i < servoCount; i++) {
+                            const ioTag = data.readU8();
+                            FC.SERVO_RESOURCES.push({
+                                index: i,
+                                ioTag: ioTag,
+                                pin: ioTag ? this.ioTagToPin(ioTag) : "NONE",
+                            });
+                        }
+                    }
+                    break;
                 case MSPCodes.MSP2_GET_VTX_DEVICE_STATUS:
                     FC.VTX_DEVICE_STATUS = null;
                     const dataLength = data.byteLength;
@@ -607,6 +631,21 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     }
                     break;
                 case MSPCodes.MSP_SERVO_MIX_RULES:
+                    FC.SERVO_RULES = [];
+                    // Each rule is 7 bytes: targetChannel, inputSource, rate, speed, min, max, box
+                    if (data.byteLength % 7 === 0) {
+                        for (let i = 0; i < data.byteLength; i += 7) {
+                            FC.SERVO_RULES.push({
+                                targetChannel: data.readU8(),
+                                inputSource: data.readU8(),
+                                rate: data.read8(), // signed
+                                speed: data.readU8(),
+                                min: data.readU8(),
+                                max: data.readU8(),
+                                box: data.readU8(),
+                            });
+                        }
+                    }
                     break;
 
                 case MSPCodes.MSP_SERVO_CONFIGURATIONS:
@@ -2579,6 +2618,40 @@ MspHelper.prototype.sendServoConfigurations = function (onCompleteCallback) {
     }
 };
 
+MspHelper.prototype.sendServoMixRules = function (onCompleteCallback) {
+    let nextFunction = send_next_servo_mix_rule;
+
+    let ruleIndex = 0;
+
+    if (FC.SERVO_RULES.length === 0) {
+        onCompleteCallback();
+    } else {
+        nextFunction();
+    }
+
+    function send_next_servo_mix_rule() {
+        const buffer = [];
+        const rule = FC.SERVO_RULES[ruleIndex];
+
+        buffer
+            .push8(ruleIndex)
+            .push8(rule.targetChannel)
+            .push8(rule.inputSource)
+            .push8(rule.rate) // signed, but push8 handles it
+            .push8(rule.speed)
+            .push8(rule.min)
+            .push8(rule.max)
+            .push8(rule.box);
+
+        ruleIndex++;
+        if (ruleIndex === FC.SERVO_RULES.length) {
+            nextFunction = onCompleteCallback;
+        }
+
+        MSP.send_message(MSPCodes.MSP_SET_SERVO_MIX_RULE, buffer, false, nextFunction);
+    }
+};
+
 MspHelper.prototype.sendModeRanges = function (onCompleteCallback) {
     let nextFunction = send_next_mode_range;
 
@@ -2638,9 +2711,7 @@ MspHelper.prototype.sendAdjustmentRanges = function (onCompleteCallback) {
             .push8(adjustmentRange.adjustmentFunction)
             .push8(adjustmentRange.auxSwitchChannelIndex);
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_48)) {
-            buffer
-                .push16(adjustmentRange.adjustmentCenter || 0)
-                .push16(adjustmentRange.adjustmentScale || 0);
+            buffer.push16(adjustmentRange.adjustmentCenter || 0).push16(adjustmentRange.adjustmentScale || 0);
         }
 
         // prepare for next iteration
@@ -2960,6 +3031,56 @@ MspHelper.prototype.writeConfiguration = function (reboot, callback) {
             }
         });
     }, 100); // 100ms delay before sending MSP_EEPROM_WRITE to ensure that all settings have been received
+};
+
+/**
+ * Set a motor or servo resource pin assignment
+ * @param {number} resourceType - 0 = MOTOR, 1 = SERVO
+ * @param {number} index - The motor/servo index (0-based)
+ * @param {number} ioTag - The ioTag value (use pinToIoTag to convert from pin name)
+ * @param {function} callback - Called when complete
+ */
+MspHelper.prototype.setMotorServoResource = function (resourceType, index, ioTag, callback) {
+    const buffer = [];
+    buffer.push8(resourceType); // 0 = MOTOR, 1 = SERVO
+    buffer.push8(index);
+    buffer.push8(ioTag);
+
+    MSP.send_message(MSPCodes.MSP2_SET_MOTOR_SERVO_RESOURCE, buffer, false, callback);
+};
+
+/**
+ * Convert an ioTag to a human-readable pin name (e.g., "A08", "B03")
+ * ioTag encoding: ((portId + 1) << 4) | pinNumber
+ * where portId: 0=A, 1=B, 2=C, etc.
+ */
+MspHelper.prototype.ioTagToPin = function (ioTag) {
+    if (!ioTag) {
+        return "NONE";
+    }
+    const portId = (ioTag >> 4) - 1;
+    const pinNumber = ioTag & 0x0f;
+    if (portId < 0 || portId > 25) {
+        return "INVALID";
+    }
+    const portLetter = String.fromCharCode("A".charCodeAt(0) + portId);
+    return `${portLetter}${pinNumber.toString().padStart(2, "0")}`;
+};
+
+/**
+ * Convert a pin name (e.g., "A08", "B03") to an ioTag
+ */
+MspHelper.prototype.pinToIoTag = function (pinName) {
+    if (!pinName || pinName === "NONE") {
+        return 0;
+    }
+    const match = pinName.match(/^([A-Z])(\d{1,2})$/i);
+    if (!match) {
+        return 0;
+    }
+    const portId = match[1].toUpperCase().charCodeAt(0) - "A".charCodeAt(0);
+    const pinNumber = parseInt(match[2], 10);
+    return ((portId + 1) << 4) | pinNumber;
 };
 
 let mspHelper;
