@@ -71,79 +71,6 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="spacer"></div>
-                    <div class="live">
-                        <input type="checkbox" class="togglemedium" v-model="liveMode" />
-                        <span>{{ $t("servosLiveMode") }}</span>
-                    </div>
-
-                    <!-- Resource Assignments Section -->
-                    <div class="spacer"></div>
-                    <div class="title">{{ $t("servosResourceAssignments") }}</div>
-                    <div class="note" v-if="!hasResourceData">
-                        <p>{{ $t("servosResourceNotAvailable") }}</p>
-                    </div>
-                    <div v-else class="resource-grid">
-                        <div class="resource-section">
-                            <h4>{{ $t("servosMotorResources") }}</h4>
-                            <table class="resource-table">
-                                <thead>
-                                    <tr>
-                                        <th>{{ $t("servosResourceIndex") }}</th>
-                                        <th>{{ $t("servosResourcePin") }}</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr v-for="motor in motorResources" :key="motor.index">
-                                        <td>{{ $t("servosResourceMotorLabel") }} {{ motor.index + 1 }}</td>
-                                        <td>
-                                            <select
-                                                class="resource-select"
-                                                :value="motor.pin"
-                                                @change="onMotorPinChange(motor.index, $event)"
-                                            >
-                                                <option value="NONE">NONE</option>
-                                                <option v-for="pin in availablePins" :key="pin" :value="pin">
-                                                    {{ pin }}
-                                                </option>
-                                            </select>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="resource-section">
-                            <h4>{{ $t("servosServoResources") }}</h4>
-                            <table class="resource-table">
-                                <thead>
-                                    <tr>
-                                        <th>{{ $t("servosResourceIndex") }}</th>
-                                        <th>{{ $t("servosResourcePin") }}</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr v-for="servo in servoResources" :key="servo.index">
-                                        <td>{{ $t("servosResourceServoLabel") }} {{ servo.index + 1 }}</td>
-                                        <td>
-                                            <select
-                                                class="resource-select"
-                                                :value="servo.pin"
-                                                @change="onServoPinChange(servo.index, $event)"
-                                            >
-                                                <option value="NONE">NONE</option>
-                                                <option v-for="pin in availablePins" :key="pin" :value="pin">
-                                                    {{ pin }}
-                                                </option>
-                                            </select>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <div class="note" v-if="hasResourceData">
-                        <p>{{ $t("servosResourceEditHint") }}</p>
-                    </div>
                 </div>
 
                 <!-- Upgrade required message -->
@@ -152,15 +79,15 @@
                 </div>
             </div>
 
-            <div class="spacer"></div>
-
-            <!-- Servo visualization bars -->
-            <div class="grid-row" v-if="isSupported">
-                <div class="grid-col col6">
-                    <div class="gui_box servoblock">
-                        <div class="spacer">
+            <!-- Servo visualization bars and Resource Assignments side by side -->
+            <div class="grid-row grid-box col2" v-if="isSupported">
+                <div class="col-span-1">
+                    <div class="gui_box grey servoblock">
+                        <div class="gui_box_titlebar">
+                            <div class="spacer_box_title">{{ $t("servosText") }}</div>
+                        </div>
+                        <div class="spacer_box">
                             <div class="servos">
-                                <div class="title2">{{ $t("servosText") }}</div>
                                 <ul class="titles">
                                     <li v-for="i in 8" :key="i" :title="$t(`servoNumber${i}`)">{{ i }}</li>
                                 </ul>
@@ -176,6 +103,83 @@
                                 </div>
                             </div>
                             <div class="clear-both"></div>
+                            <div class="live">
+                                <input type="checkbox" class="togglemedium" v-model="liveMode" />
+                                <span>{{ $t("servosLiveMode") }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-span-1">
+                    <div class="gui_box grey">
+                        <div class="gui_box_titlebar">
+                            <div class="spacer_box_title">{{ $t("servosResourceAssignments") }}</div>
+                        </div>
+                        <div class="spacer_box">
+                            <div class="note" v-if="!hasResourceData">
+                                <p>{{ $t("servosResourceNotAvailable") }}</p>
+                            </div>
+                            <div v-else class="resource-grid">
+                                <div class="resource-section">
+                                    <h4>{{ $t("servosMotorResources") }}</h4>
+                                    <table class="resource-table">
+                                        <thead>
+                                            <tr>
+                                                <th>{{ $t("servosResourceIndex") }}</th>
+                                                <th>{{ $t("servosResourcePin") }}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="motor in motorResources" :key="motor.index">
+                                                <td>{{ $t("servosResourceMotorLabel") }} {{ motor.index + 1 }}</td>
+                                                <td>
+                                                    <select
+                                                        class="resource-select"
+                                                        :value="motor.pin"
+                                                        @change="onMotorPinChange(motor.index, $event)"
+                                                    >
+                                                        <option value="NONE">NONE</option>
+                                                        <option v-for="pin in availablePins" :key="pin" :value="pin">
+                                                            {{ pin }}
+                                                        </option>
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="resource-section">
+                                    <h4>{{ $t("servosServoResources") }}</h4>
+                                    <table class="resource-table">
+                                        <thead>
+                                            <tr>
+                                                <th>{{ $t("servosResourceIndex") }}</th>
+                                                <th>{{ $t("servosResourcePin") }}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="servo in servoResources" :key="servo.index">
+                                                <td>{{ $t("servosResourceServoLabel") }} {{ servo.index + 1 }}</td>
+                                                <td>
+                                                    <select
+                                                        class="resource-select"
+                                                        :value="servo.pin"
+                                                        @change="onServoPinChange(servo.index, $event)"
+                                                    >
+                                                        <option value="NONE">NONE</option>
+                                                        <option v-for="pin in availablePins" :key="pin" :value="pin">
+                                                            {{ pin }}
+                                                        </option>
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="note" v-if="hasResourceData">
+                                <p>{{ $t("servosResourceEditHint") }}</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -192,7 +196,7 @@
 </template>
 
 <script>
-import { defineComponent, ref, reactive, computed, onMounted, onUnmounted } from "vue";
+import { defineComponent, ref, reactive, computed, onMounted, onUnmounted, nextTick } from "vue";
 import BaseTab from "./BaseTab.vue";
 import GUI from "../../js/gui";
 import FC from "../../js/fc";
@@ -467,6 +471,13 @@ export default defineComponent({
             addLocalInterval("status_pull", () => MSP.send_message(MSPCodes.MSP_STATUS), 250, true);
 
             GUI.content_ready();
+
+            // Initialize Switchery for toggle switches after DOM is ready
+            nextTick(() => {
+                nextTick(() => {
+                    GUI.switchery();
+                });
+            });
         }
 
         onMounted(() => {
@@ -508,6 +519,12 @@ export default defineComponent({
 .bar-wrapper {
     display: flex;
     flex-direction: row;
+}
+
+.live {
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px solid var(--surface-400);
 }
 
 /* Resource assignment styles */
