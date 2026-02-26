@@ -43,6 +43,7 @@ export function useBoardSelection(params) {
         selectedBoard: undefined,
         firmwareVersionOptions: [],
         selectedFirmwareVersion: undefined,
+        cloudBuildOptions: [],
     });
 
     /**
@@ -231,10 +232,8 @@ export function useBoardSelection(params) {
                     state.selectedBoard = null;
                     await nextTick();
                     state.selectedBoard = found;
-                    // Set cloudBuildOptions from AutoDetect if available
-                    if (state.cloudBuildOptions !== undefined) {
-                        state.cloudBuildOptions = AutoDetect.cloudBuildOptions || [];
-                    }
+                    // Always sync from AutoDetect
+                    state.cloudBuildOptions = AutoDetect.cloudBuildOptions ? AutoDetect.cloudBuildOptions : [];
                     await nextTick();
                     await onBoardChange();
                     return true;

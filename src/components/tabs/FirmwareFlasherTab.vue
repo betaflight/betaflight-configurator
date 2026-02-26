@@ -1181,8 +1181,11 @@ export default defineComponent({
                 return;
             }
 
-            // Use autodetect-provided cloudBuildOptions if available, otherwise fallback
-            state.cloudBuildOptions = FC.CONFIG.buildOptions || [];
+            // Use autodetect-provided cloudBuildOptions from boardSelection if available, otherwise fallback
+            state.cloudBuildOptions =
+                boardSelection.state.cloudBuildOptions && boardSelection.state.cloudBuildOptions.length > 0
+                    ? boardSelection.state.cloudBuildOptions
+                    : FC.CONFIG.buildOptions || [];
 
             // Mark all options as default if they're in cloudBuildOptions
             data.radioProtocols = data.radioProtocols.map((option) => {
