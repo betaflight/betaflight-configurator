@@ -630,28 +630,6 @@ MspHelper.prototype.process_data = function (dataHandler) {
                         FC.AUX_CONFIG_IDS.push(data.readU8());
                     }
                     break;
-                case MSPCodes.MSP_SERVO_MIX_RULES:
-                    FC.SERVO_RULES = [];
-                    // Each rule is 7 bytes: targetChannel, inputSource, rate, speed, min, max, box
-                    if (data.byteLength % 7 === 0) {
-                        for (let i = 0; i < data.byteLength; i += 7) {
-                            FC.SERVO_RULES.push({
-                                targetChannel: data.readU8(),
-                                inputSource: data.readU8(),
-                                rate: data.read8(), // signed
-                                speed: data.readU8(),
-                                min: data.readU8(),
-                                max: data.readU8(),
-                                box: data.readU8(),
-                            });
-                        }
-                    } else if (data.byteLength > 0) {
-                        console.warn(
-                            `MSP_SERVO_MIX_RULES: unexpected data length ${data.byteLength} (not a multiple of 7)`,
-                        );
-                    }
-                    break;
-
                 case MSPCodes.MSP_SERVO_CONFIGURATIONS:
                     FC.SERVO_CONFIG = []; // empty the array as new data is coming in
                     if (data.byteLength % 12 == 0) {
@@ -2619,40 +2597,6 @@ MspHelper.prototype.sendServoConfigurations = function (onCompleteCallback) {
         }
 
         MSP.send_message(MSPCodes.MSP_SET_SERVO_CONFIGURATION, buffer, false, nextFunction);
-    }
-};
-
-MspHelper.prototype.sendServoMixRules = function (onCompleteCallback) {
-    let nextFunction = send_next_servo_mix_rule;
-
-    let ruleIndex = 0;
-
-    if (FC.SERVO_RULES.length === 0) {
-        onCompleteCallback();
-    } else {
-        nextFunction();
-    }
-
-    function send_next_servo_mix_rule() {
-        const buffer = [];
-        const rule = FC.SERVO_RULES[ruleIndex];
-
-        buffer
-            .push8(ruleIndex)
-            .push8(rule.targetChannel)
-            .push8(rule.inputSource)
-            .push8(rule.rate) // signed, but push8 handles it
-            .push8(rule.speed)
-            .push8(rule.min)
-            .push8(rule.max)
-            .push8(rule.box);
-
-        ruleIndex++;
-        if (ruleIndex === FC.SERVO_RULES.length) {
-            nextFunction = onCompleteCallback;
-        }
-
-        MSP.send_message(MSPCodes.MSP_SET_SERVO_MIX_RULE, buffer, false, nextFunction);
     }
 };
 
