@@ -252,6 +252,7 @@ export function useBoardSelection(params) {
         state.selectedBoard = undefined;
         state.boardOptions = [];
         state.firmwareVersionOptions = [];
+        state.cloudBuildOptions = [];
     };
 
     return {
