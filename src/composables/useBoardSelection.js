@@ -233,7 +233,7 @@ export function useBoardSelection(params) {
                     await nextTick();
                     state.selectedBoard = found;
                     // Always sync from AutoDetect
-                    state.cloudBuildOptions = AutoDetect.cloudBuildOptions ? AutoDetect.cloudBuildOptions : [];
+                    state.cloudBuildOptions = AutoDetect.cloudBuildOptions || [];
                     await nextTick();
                     await onBoardChange();
                     return true;
