@@ -231,6 +231,10 @@ export function useBoardSelection(params) {
                     state.selectedBoard = null;
                     await nextTick();
                     state.selectedBoard = found;
+                    // Set cloudBuildOptions from AutoDetect if available
+                    if (typeof state.cloudBuildOptions !== "undefined") {
+                        state.cloudBuildOptions = AutoDetect.cloudBuildOptions || [];
+                    }
                     await nextTick();
                     await onBoardChange();
                     return true;

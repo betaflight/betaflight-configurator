@@ -1181,7 +1181,7 @@ export default defineComponent({
                 return;
             }
 
-            // extract osd protocols from general options and add to osdProtocols
+            // Use autodetect-provided cloudBuildOptions if available, otherwise fallback
             state.cloudBuildOptions = FC.CONFIG.buildOptions || [];
 
             // Mark all options as default if they're in cloudBuildOptions
@@ -1201,7 +1201,12 @@ export default defineComponent({
             });
 
             data.generalOptions = data.generalOptions.map((option) => {
-                option.default = option.default || state.cloudBuildOptions?.includes(option.value);
+                // If using autodetect (cloudBuildOptions set), only mark as default if present in cloudBuildOptions
+                if (state.cloudBuildOptions && state.cloudBuildOptions.length > 0) {
+                    option.default = state.cloudBuildOptions.includes(option.value);
+                } else {
+                    option.default = option.default || false;
+                }
                 return option;
             });
 
