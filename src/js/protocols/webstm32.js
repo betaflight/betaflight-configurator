@@ -84,10 +84,6 @@ class STM32Protocol {
      */
     handleError(resetRebootMode = true) {
         GUI.connect_lock = false;
-        if (this.dfuPermissionTimeout) {
-            clearTimeout(this.dfuPermissionTimeout);
-            this.dfuPermissionTimeout = null;
-        }
         if (resetRebootMode) {
             this.rebootMode = 0;
         }
@@ -135,28 +131,9 @@ class STM32Protocol {
                             ) {
                                 TABS.firmware_flasher.showDfuPermission();
                             } else {
-                                // Fallback: attempt requestPermission after a short delay (may fail without user gesture)
-                                this.dfuPermissionTimeout = setTimeout(() => {
-                                    DFU.requestPermission()
-                                        .then((device) => {
-                                            if (device != null) {
-                                                console.log(`${this.logHead} DFU request permission granted`, device);
-                                            } else {
-                                                console.error(`${this.logHead} DFU request permission denied`);
-                                                this.handleError();
-                                            }
-                                        })
-                                        .catch((err) => {
-                                            console.error(`${this.logHead} DFU request permission failed`, err);
-                                            this.handleError();
-                                        })
-                                        .finally(() => {
-                                            if (this.dfuPermissionTimeout) {
-                                                clearTimeout(this.dfuPermissionTimeout);
-                                                this.dfuPermissionTimeout = null;
-                                            }
-                                        });
-                                }, 3000);
+                                // No UI available to request DFU permission; avoid non-gesture fallback.
+                                console.warn(`${this.logHead} No UI available to request DFU permission`);
+                                this.handleError();
                             }
                         } catch (err) {
                             console.error(`${this.logHead} Error notifying UI about DFU auth`, err);
