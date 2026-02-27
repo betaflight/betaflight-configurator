@@ -955,17 +955,17 @@ export default defineComponent({
         // Called by webstm32 when a DFU device requires user authorization
         const requestDfuPermission = async () => {
             try {
-                state.dfuAuthRequired = false;
                 const device = await DFU.requestPermission();
                 if (device) {
                     console.log("DFU permission granted via UI", device);
+                    state.dfuAuthRequired = false;
                 } else {
                     console.log("DFU permission not granted by user");
+                    state.dfuAuthRequired = true; // allow retry
                 }
             } catch (e) {
                 console.error("DFU permission request failed", e);
-            } finally {
-                state.dfuAuthRequired = false;
+                state.dfuAuthRequired = true; // allow retry
             }
         };
 
