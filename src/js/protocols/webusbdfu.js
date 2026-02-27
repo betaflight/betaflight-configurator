@@ -141,7 +141,7 @@ class WEBUSBDFU_protocol extends EventTarget {
                 const ports = await navigator.usb.getDevices();
                 // Use usbDevices.filters to decide which DFU devices we consider.
                 // Simplify: require both vendorId and productId to be present and match.
-                const filters = (usbDevices && usbDevices.filters) || [];
+                const filters = usbDevices?.filters || [];
                 const dfuPort = ports.find((p) => {
                     return filters.some((f) => p.vendorId === f.vendorId && p.productId === f.productId);
                 });

@@ -121,13 +121,12 @@ class STM32Protocol {
                     }
                 })
                 .catch((e) => {
-                    if (e && e.message === "DFU_AUTH_REQUIRED") {
+                    if (e?.message === "DFU_AUTH_REQUIRED") {
                         console.warn(`${this.logHead} DFU requires user authorization`);
                         // If UI exposes a helper to show a permission button, call it.
                         try {
                             if (
-                                TABS &&
-                                TABS.firmware_flasher &&
+                                TABS?.firmware_flasher &&
                                 typeof TABS.firmware_flasher.showDfuPermission === "function"
                             ) {
                                 TABS.firmware_flasher.showDfuPermission();
