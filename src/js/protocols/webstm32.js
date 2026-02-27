@@ -109,26 +109,55 @@ class STM32Protocol {
         serial.removeEventListener("disconnect", (event) => this.handleDisconnect(event.detail));
 
         if (disconnectionResult && this.rebootMode) {
-            // If the firmware_flasher does not start flashing, we need to ask for permission to flash
-            setTimeout(() => {
-                if (this.rebootMode) {
-                    console.log(`${this.logHead} STM32 Requesting permission for device`);
-
-                    DFU.requestPermission()
-                        .then((device) => {
-                            if (device != null) {
-                                console.log(`${this.logHead} DFU request permission granted`, device);
+            // Try to detect an already-authorized DFU device first. If none found within
+            // timeout, notify the UI so the user can click to grant permission (required
+            // by browsers for navigator.usb.requestDevice).
+            DFU.waitForDfu(5000)
+                .then((device) => {
+                    if (device) {
+                        console.log(`${this.logHead} DFU device found and authorized`, device);
+                    } else {
+                        console.log(`${this.logHead} No DFU device auto-authorized`);
+                    }
+                })
+                .catch((e) => {
+                    if (e && e.message === "DFU_AUTH_REQUIRED") {
+                        console.warn(`${this.logHead} DFU requires user authorization`);
+                        // If UI exposes a helper to show a permission button, call it.
+                        try {
+                            if (
+                                TABS &&
+                                TABS.firmware_flasher &&
+                                typeof TABS.firmware_flasher.showDfuPermission === "function"
+                            ) {
+                                TABS.firmware_flasher.showDfuPermission();
                             } else {
-                                console.error(`${this.logHead} DFU request permission denied`);
-                                this.handleError();
+                                // Fallback: attempt requestPermission after a short delay (may fail without user gesture)
+                                setTimeout(() => {
+                                    DFU.requestPermission()
+                                        .then((device) => {
+                                            if (device != null) {
+                                                console.log(`${this.logHead} DFU request permission granted`, device);
+                                            } else {
+                                                console.error(`${this.logHead} DFU request permission denied`);
+                                                this.handleError();
+                                            }
+                                        })
+                                        .catch((err) => {
+                                            console.error(`${this.logHead} DFU request permission failed`, err);
+                                            this.handleError();
+                                        });
+                                }, 3000);
                             }
-                        })
-                        .catch((e) => {
-                            console.error(`${this.logHead} DFU request permission failed`, e);
+                        } catch (err) {
+                            console.error(`${this.logHead} Error notifying UI about DFU auth`, err);
                             this.handleError();
-                        });
-                }
-            }, 3000);
+                        }
+                    } else {
+                        console.error(`${this.logHead} DFU wait failed`, e);
+                        this.handleError();
+                    }
+                });
         } else {
             this.handleError(false);
         }

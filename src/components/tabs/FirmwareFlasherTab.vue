@@ -7,7 +7,13 @@
             <div v-if="state.flashingInProgress" class="data-loading flashing-wait">
                 <p>{{ state.progressLabelText }} {{ $t("firmwareFlasherPleaseWait") }}</p>
             </div>
-            <template v-else>
+            <!-- Centered DFU permission button shown under the spinner -->
+            <div v-if="state.dfuAuthRequired" class="dfu-auth-request" style="text-align: center; margin-top: 16px">
+                <button type="button" class="button dfu-permission" @click="requestDfuPermission">
+                    {{ $t("firmwareFlasherClickToConnectDfu") || "Click to connect DFU" }}
+                </button>
+            </div>
+            <template v-if="!state.dfuAuthRequired">
                 <div class="grid-box-spacer"></div>
                 <div class="grid-box col2">
                     <div class="options gui_box col-span-1">
@@ -704,6 +710,7 @@ import { EventBus } from "../eventBus";
 import { ispConnected } from "../../js/utils/connection.js";
 import FC from "../../js/fc";
 import SponsorTile from "../sponsor/SponsorTile.vue";
+import DFU from "../../js/protocols/webusbdfu";
 
 export default defineComponent({
     name: "FirmwareFlasherTab",
@@ -788,6 +795,8 @@ export default defineComponent({
             // Dialog states
             dialogUnstableFirmwareAcknowledgementCheckbox: false,
             flashingInProgress: false,
+            // UI State - DFU authorization required (show button to request permissions)
+            dfuAuthRequired: false,
         });
 
         // Template refs for all interactive elements
@@ -941,6 +950,23 @@ export default defineComponent({
             }
 
             sponsorTile.value?.resume();
+        };
+
+        // Called by webstm32 when a DFU device requires user authorization
+        const requestDfuPermission = async () => {
+            try {
+                state.dfuAuthRequired = false;
+                const device = await DFU.requestPermission();
+                if (device) {
+                    console.log("DFU permission granted via UI", device);
+                } else {
+                    console.log("DFU permission not granted by user");
+                }
+            } catch (e) {
+                console.error("DFU permission request failed", e);
+            } finally {
+                state.dfuAuthRequired = false;
+            }
         };
 
         const preservePreFlashingState = () => {
@@ -1540,6 +1566,14 @@ export default defineComponent({
                 flashingMessage,
                 flashProgress,
                 cleanup,
+                showDfuPermission: () => {
+                    state.dfuAuthRequired = true;
+                    return TABS.firmware_flasher;
+                },
+                hideDfuPermission: () => {
+                    state.dfuAuthRequired = false;
+                    return TABS.firmware_flasher;
+                },
                 FLASH_MESSAGE_TYPES,
                 get parsed_hex() {
                     return firmwareFlashing.getParsedHex();
@@ -2236,6 +2270,7 @@ export default defineComponent({
             targetMCUSpan,
             releaseDateSpan,
             configFilenameSpan,
+            requestDfuPermission,
             cloudTargetInfoDiv,
             cloudTargetLogLink,
             cloudTargetStatusSpan,
@@ -3289,6 +3324,22 @@ export default defineComponent({
     content: "– " !important;
     margin-right: 0.5rem !important;
     color: var(--text) !important;
+}
+
+/* DFU permission button accent styling */
+:deep(.dfu-auth-request .dfu-permission) {
+    background: #8bc34a !important; /* green */
+    border-color: #8bc34a !important;
+    color: #111 !important;
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2) inset;
+}
+
+:deep(.dfu-auth-request .dfu-permission:hover) {
+    filter: brightness(0.95);
+}
+
+:deep(.dfu-auth-request p) {
+    margin-bottom: 8px !important;
 }
 
 /* Unstable firmware dialog content styling */
