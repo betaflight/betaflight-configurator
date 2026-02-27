@@ -16,7 +16,7 @@ import MSPCodes from "../msp/MSPCodes";
 import PortUsage from "../port_usage";
 import $ from "jquery";
 import { serial } from "../serial";
-import DFU from "../protocols/webusbdfu";
+import DFU, { DFU_AUTH_REQUIRED } from "../protocols/webusbdfu";
 import { read_serial } from "../serial_backend";
 import NotificationManager from "../utils/notifications";
 import { get as getConfig } from "../ConfigStorage";
@@ -121,7 +121,7 @@ class STM32Protocol {
                     }
                 })
                 .catch((e) => {
-                    if (e?.message === "DFU_AUTH_REQUIRED") {
+                    if (e?.message === DFU_AUTH_REQUIRED) {
                         console.warn(`${this.logHead} DFU requires user authorization`);
                         // If UI exposes a helper to show a permission button, call it.
                         try {

@@ -20,6 +20,9 @@ import { usbDevices } from "./devices";
 import NotificationManager from "../utils/notifications";
 import { get as getConfig } from "../ConfigStorage";
 
+// Error constant used when an already-authorized DFU device isn't found
+export const DFU_AUTH_REQUIRED = "DFU_AUTH_REQUIRED";
+
 class WEBUSBDFU_protocol extends EventTarget {
     constructor() {
         super();
@@ -130,7 +133,7 @@ class WEBUSBDFU_protocol extends EventTarget {
 
     /**
      * Wait for a DFU device to appear among already-authorized USB devices.
-     * If none appear within `timeout`, rejects with an Error("DFU_AUTH_REQUIRED").
+     * If none appear within `timeout`, rejects with an Error(DFU_AUTH_REQUIRED).
      * This allows the caller to present a user gesture to call `requestDevice`.
      */
     async waitForDfu(timeout = 10000, interval = 500) {
@@ -157,7 +160,7 @@ class WEBUSBDFU_protocol extends EventTarget {
         }
 
         // No already-authorized DFU device found within timeout: caller must ask user
-        throw new Error("DFU_AUTH_REQUIRED");
+        throw new Error(DFU_AUTH_REQUIRED);
     }
     getConnectedPort() {
         return this.usbDevice ? `usb_${this.usbDevice.serialNumber}` : null;
