@@ -2886,6 +2886,9 @@
     "adjustmentsFunction31": {
         "message": "Ajust de la intensitat LED"
     },
+    "adjustmentsFunction32": {
+        "message": "Multiplicador mestre lliscant"
+    },
     "adjustmentsSave": {
         "message": "Desa"
     },
