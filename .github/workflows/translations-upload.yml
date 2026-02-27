@@ -32,3 +32,6 @@ jobs:
         upload_translations: false
 
         download_translations: false
+              - name: crowdin-action
+                uses: crowdin/github-action@v1.15.2
+            
