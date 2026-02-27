@@ -345,7 +345,7 @@ async function startProcess() {
                     mountVueTab("configuration", content_ready);
                     break;
                 case "pid_tuning":
-                    import("./tabs/pid_tuning").then(({ pid_tuning }) => pid_tuning.initialize(content_ready));
+                    mountVueTab("pid_tuning", content_ready);
                     break;
                 case "receiver":
                     mountVueTab("receiver", content_ready);
