@@ -16,7 +16,7 @@ import MSPCodes from "../msp/MSPCodes";
 import PortUsage from "../port_usage";
 import $ from "jquery";
 import { serial } from "../serial";
-import DFU, { DFU_AUTH_REQUIRED } from "../protocols/webusbdfu";
+import DFU, { DFU_AUTH_REQUIRED, DFUAuthRequiredError } from "../protocols/webusbdfu";
 import { read_serial } from "../serial_backend";
 import NotificationManager from "../utils/notifications";
 import { get as getConfig } from "../ConfigStorage";
@@ -84,6 +84,10 @@ class STM32Protocol {
      */
     handleError(resetRebootMode = true) {
         GUI.connect_lock = false;
+        if (this.dfuPermissionTimeout) {
+            clearTimeout(this.dfuPermissionTimeout);
+            this.dfuPermissionTimeout = null;
+        }
         if (resetRebootMode) {
             this.rebootMode = 0;
         }
@@ -121,7 +125,7 @@ class STM32Protocol {
                     }
                 })
                 .catch((e) => {
-                    if (e?.message === DFU_AUTH_REQUIRED) {
+                    if (e?.code === DFU_AUTH_REQUIRED || e instanceof DFUAuthRequiredError) {
                         console.warn(`${this.logHead} DFU requires user authorization`);
                         // If UI exposes a helper to show a permission button, call it.
                         try {
@@ -132,7 +136,7 @@ class STM32Protocol {
                                 TABS.firmware_flasher.showDfuPermission();
                             } else {
                                 // Fallback: attempt requestPermission after a short delay (may fail without user gesture)
-                                setTimeout(() => {
+                                this.dfuPermissionTimeout = setTimeout(() => {
                                     DFU.requestPermission()
                                         .then((device) => {
                                             if (device != null) {
@@ -145,6 +149,12 @@ class STM32Protocol {
                                         .catch((err) => {
                                             console.error(`${this.logHead} DFU request permission failed`, err);
                                             this.handleError();
+                                        })
+                                        .finally(() => {
+                                            if (this.dfuPermissionTimeout) {
+                                                clearTimeout(this.dfuPermissionTimeout);
+                                                this.dfuPermissionTimeout = null;
+                                            }
                                         });
                                 }, 3000);
                             }

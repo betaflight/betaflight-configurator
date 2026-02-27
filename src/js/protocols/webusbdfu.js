@@ -23,6 +23,13 @@ import { get as getConfig } from "../ConfigStorage";
 // Error constant used when an already-authorized DFU device isn't found
 export const DFU_AUTH_REQUIRED = "DFU_AUTH_REQUIRED";
 
+export class DFUAuthRequiredError extends Error {
+    constructor() {
+        super(DFU_AUTH_REQUIRED);
+        this.name = "DFUAuthRequiredError";
+        this.code = DFU_AUTH_REQUIRED;
+    }
+}
 class WEBUSBDFU_protocol extends EventTarget {
     constructor() {
         super();
@@ -160,7 +167,7 @@ class WEBUSBDFU_protocol extends EventTarget {
         }
 
         // No already-authorized DFU device found within timeout: caller must ask user
-        throw new Error(DFU_AUTH_REQUIRED);
+        throw new DFUAuthRequiredError();
     }
     getConnectedPort() {
         return this.usbDevice ? `usb_${this.usbDevice.serialNumber}` : null;
