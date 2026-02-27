@@ -8,7 +8,7 @@
                 <p>{{ state.progressLabelText }} {{ $t("firmwareFlasherPleaseWait") }}</p>
             </div>
             <!-- Centered DFU permission button shown under the spinner -->
-            <div v-if="state.dfuAuthRequired" class="dfu-auth-request" style="text-align: center; margin-top: 16px">
+            <div v-if="state.dfuAuthRequired" class="dfu-auth-request">
                 <button type="button" class="button dfu-permission" @click="requestDfuPermission">
                     {{ $t("firmwareFlasherClickToConnectDfu") || "Click to connect DFU" }}
                 </button>
@@ -3327,18 +3327,23 @@ export default defineComponent({
 }
 
 /* DFU permission button accent styling */
-:deep(.dfu-auth-request .dfu-permission) {
-    background: #8bc34a !important; /* green */
-    border-color: #8bc34a !important;
-    color: #111 !important;
+.dfu-auth-request {
+    text-align: center;
+    margin-top: 16px;
+}
+
+.dfu-auth-request .dfu-permission {
+    background: var(--success-600, var(--primary-500)) !important;
+    border-color: var(--success-600, var(--primary-500)) !important;
+    color: var(--text-high, var(--black)) !important;
     box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2) inset;
 }
 
-:deep(.dfu-auth-request .dfu-permission:hover) {
+.dfu-auth-request .dfu-permission:hover {
     filter: brightness(0.95);
 }
 
-:deep(.dfu-auth-request p) {
+.dfu-auth-request p {
     margin-bottom: 8px !important;
 }
 
