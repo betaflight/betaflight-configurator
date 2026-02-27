@@ -81,6 +81,7 @@ export const vendorIdNames = {
     11836: "AT32",
     12619: "Geehy Semiconductor",
     11914: "Raspberry Pi Pico",
+    10473: "GDMicroelectronics",
 };
 
 export const webSerialDevices = serialDevices.map(({ vendorId, productId }) => ({
