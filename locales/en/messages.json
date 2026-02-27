@@ -2987,6 +2987,9 @@
 	"adjustmentsFunction31": {
         "message": "LED Brightness Adjust"
     },
+    "adjustmentsFunction32": {
+        "message": "Slider Master Multiplier"
+    },
     "adjustmentsSave": {
         "message": "Save"
     },

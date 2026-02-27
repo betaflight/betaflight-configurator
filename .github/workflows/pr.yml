@@ -10,6 +10,27 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  check_branch:
+    name: Check Legacy Branch Validity
+    runs-on: ubuntu-latest
+    outputs:
+      should_run: ${{ steps.check.outputs.should_run }}
+    steps:
+      - name: Check if base branch does not start with 20
+        id: check
+        env:
+          BASE_BRANCH: ${{ github.base_ref }}
+        run: |
+          if [[ "$BASE_BRANCH" != 20* ]]; then
+            echo "should_run=true" >> $GITHUB_OUTPUT
+            echo "✓ Base branch is valid for PR workflow: $BASE_BRANCH"
+          else
+            echo "should_run=false" >> $GITHUB_OUTPUT
+            echo "✗ Base branch starts with '20', skipping PR workflow: $BASE_BRANCH"
+          fi
+
   ci:
     name: CI
+    needs: check_branch
+    if: needs.check_branch.outputs.should_run == 'true'
     uses: ./.github/workflows/ci.yml
