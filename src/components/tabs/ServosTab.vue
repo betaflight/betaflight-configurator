@@ -71,11 +71,6 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="spacer"></div>
-                    <div class="live">
-                        <input type="checkbox" class="togglemedium" v-model="liveMode" />
-                        <span>{{ $t("servosLiveMode") }}</span>
-                    </div>
                 </div>
 
                 <!-- Upgrade required message -->
@@ -84,15 +79,15 @@
                 </div>
             </div>
 
-            <div class="spacer"></div>
-
-            <!-- Servo visualization bars -->
-            <div class="grid-row" v-if="isSupported">
-                <div class="grid-col col6">
-                    <div class="gui_box servoblock">
-                        <div class="spacer">
+            <!-- Servo visualization bars and Resource Assignments side by side -->
+            <div class="grid-row grid-box col2" v-if="isSupported">
+                <div class="col-span-1">
+                    <div class="gui_box grey servoblock">
+                        <div class="gui_box_titlebar">
+                            <div class="spacer_box_title">{{ $t("servosText") }}</div>
+                        </div>
+                        <div class="spacer_box">
                             <div class="servos">
-                                <div class="title2">{{ $t("servosText") }}</div>
                                 <ul class="titles">
                                     <li v-for="i in 8" :key="i" :title="$t(`servoNumber${i}`)">{{ i }}</li>
                                 </ul>
@@ -108,6 +103,83 @@
                                 </div>
                             </div>
                             <div class="clear-both"></div>
+                            <div class="live">
+                                <input type="checkbox" class="togglemedium" v-model="liveMode" />
+                                <span>{{ $t("servosLiveMode") }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-span-1">
+                    <div class="gui_box grey">
+                        <div class="gui_box_titlebar">
+                            <div class="spacer_box_title">{{ $t("servosResourceAssignments") }}</div>
+                        </div>
+                        <div class="spacer_box">
+                            <div class="note" v-if="!hasResourceData">
+                                <p>{{ $t("servosResourceNotAvailable") }}</p>
+                            </div>
+                            <div v-else class="resource-grid">
+                                <div class="resource-section">
+                                    <h4>{{ $t("servosMotorResources") }}</h4>
+                                    <table class="resource-table">
+                                        <thead>
+                                            <tr>
+                                                <th>{{ $t("servosResourceIndex") }}</th>
+                                                <th>{{ $t("servosResourcePin") }}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="motor in motorResources" :key="motor.index">
+                                                <td>{{ $t("servosResourceMotorLabel") }} {{ motor.index + 1 }}</td>
+                                                <td>
+                                                    <select
+                                                        class="resource-select"
+                                                        :value="motor.pin"
+                                                        @change="onMotorPinChange(motor.index, $event)"
+                                                    >
+                                                        <option value="NONE">NONE</option>
+                                                        <option v-for="pin in availablePins" :key="pin" :value="pin">
+                                                            {{ pin }}
+                                                        </option>
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="resource-section">
+                                    <h4>{{ $t("servosServoResources") }}</h4>
+                                    <table class="resource-table">
+                                        <thead>
+                                            <tr>
+                                                <th>{{ $t("servosResourceIndex") }}</th>
+                                                <th>{{ $t("servosResourcePin") }}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="servo in servoResources" :key="servo.index">
+                                                <td>{{ $t("servosResourceServoLabel") }} {{ servo.index + 1 }}</td>
+                                                <td>
+                                                    <select
+                                                        class="resource-select"
+                                                        :value="servo.pin"
+                                                        @change="onServoPinChange(servo.index, $event)"
+                                                    >
+                                                        <option value="NONE">NONE</option>
+                                                        <option v-for="pin in availablePins" :key="pin" :value="pin">
+                                                            {{ pin }}
+                                                        </option>
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="note" v-if="hasResourceData">
+                                <p>{{ $t("servosResourceEditHint") }}</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -124,7 +196,7 @@
 </template>
 
 <script>
-import { defineComponent, ref, reactive, computed, onMounted, onUnmounted } from "vue";
+import { defineComponent, ref, reactive, computed, onMounted, onUnmounted, nextTick } from "vue";
 import BaseTab from "./BaseTab.vue";
 import GUI from "../../js/gui";
 import FC from "../../js/fc";
@@ -166,9 +238,34 @@ export default defineComponent({
         const liveMode = ref(false);
         const servoConfigs = reactive([]);
         const servoData = reactive([]);
+        const motorResources = reactive([]);
+        const servoResources = reactive([]);
+        const hasResourceData = ref(false);
+        const resourcesModified = ref(false);
 
         // Track local intervals for cleanup
         const localIntervals = [];
+
+        // Store the initial pins from firmware so they remain selectable after edits
+        const initialPins = ref([]);
+
+        // Available pins for resource assignment (common STM32 pins used for motors/servos)
+        // This list includes typical timer-capable pins on F4/F7/H7 boards
+        const availablePins = computed(() => {
+            const pins = new Set(initialPins.value);
+            // Also include any currently assigned pins from motor and servo resources
+            for (const motor of motorResources) {
+                if (motor.pin && motor.pin !== "NONE") {
+                    pins.add(motor.pin);
+                }
+            }
+            for (const servo of servoResources) {
+                if (servo.pin && servo.pin !== "NONE") {
+                    pins.add(servo.pin);
+                }
+            }
+            return Array.from(pins).sort();
+        });
 
         // Helper to add interval and track it
         const addLocalInterval = (name, code, period, first = false) => {
@@ -268,12 +365,78 @@ export default defineComponent({
                 await MSP.promise(MSPCodes.MSP_SERVO_MIX_RULES);
                 await MSP.promise(MSPCodes.MSP_RC);
                 await MSP.promise(MSPCodes.MSP_BOXNAMES);
+
+                // Try to load resource data (may not be available on older firmware)
+                try {
+                    await MSP.promise(MSPCodes.MSP2_MOTOR_SERVO_RESOURCE);
+                    loadResourceData();
+                } catch {
+                    console.log("Resource data not available (firmware may not support MSP2_MOTOR_SERVO_RESOURCE)");
+                    hasResourceData.value = false;
+                }
+
                 initializeUI();
             } catch (e) {
                 console.error("Failed to load servo configs", e);
                 isSupported.value = false;
                 GUI.content_ready(); // Ensure tab doesn't hang
             }
+        }
+
+        // Load resource assignment data into reactive arrays
+        function loadResourceData() {
+            // Seed initial pins from firmware data so they remain selectable after edits
+            const pins = new Set();
+
+            if (FC.MOTOR_RESOURCES && FC.MOTOR_RESOURCES.length > 0) {
+                motorResources.length = 0;
+                for (const resource of FC.MOTOR_RESOURCES) {
+                    motorResources.push({ ...resource });
+                    if (resource.pin && resource.pin !== "NONE") {
+                        pins.add(resource.pin);
+                    }
+                }
+            }
+            if (FC.SERVO_RESOURCES && FC.SERVO_RESOURCES.length > 0) {
+                servoResources.length = 0;
+                for (const resource of FC.SERVO_RESOURCES) {
+                    servoResources.push({ ...resource });
+                    if (resource.pin && resource.pin !== "NONE") {
+                        pins.add(resource.pin);
+                    }
+                }
+            }
+
+            initialPins.value = Array.from(pins).sort();
+            hasResourceData.value = motorResources.length > 0 || servoResources.length > 0;
+            resourcesModified.value = false;
+        }
+
+        // Handle resource pin change (shared helper for motor and servo)
+        function onResourcePinChange(resourceType, resources, index, event) {
+            const newPin = event.target.value;
+            const ioTag = newPin === "NONE" ? 0 : mspHelper.pinToIoTag(newPin);
+
+            // Update local state immediately
+            resources[index].pin = newPin;
+            resources[index].ioTag = ioTag;
+            resourcesModified.value = true;
+
+            // Send to FC
+            const label = resourceType === 0 ? "Motor" : "Servo";
+            mspHelper.setMotorServoResource(resourceType, index, ioTag, () => {
+                console.log(`${label} ${index + 1} pin set to ${newPin}`);
+            });
+        }
+
+        // Handle motor pin change
+        function onMotorPinChange(index, event) {
+            onResourcePinChange(0, motorResources, index, event);
+        }
+
+        // Handle servo pin change
+        function onServoPinChange(index, event) {
+            onResourcePinChange(1, servoResources, index, event);
         }
 
         // Initialize UI after data is loaded
@@ -308,6 +471,13 @@ export default defineComponent({
             addLocalInterval("status_pull", () => MSP.send_message(MSPCodes.MSP_STATUS), 250, true);
 
             GUI.content_ready();
+
+            // Initialize Switchery for toggle switches after DOM is ready
+            nextTick(() => {
+                nextTick(() => {
+                    GUI.switchery();
+                });
+            });
         }
 
         onMounted(() => {
@@ -325,12 +495,19 @@ export default defineComponent({
             liveMode,
             servoConfigs,
             servoData,
+            motorResources,
+            servoResources,
+            hasResourceData,
+            resourcesModified,
+            availablePins,
             totalChannels,
             auxChannelCount,
             rateOptions,
             getBarStyle,
             setChannelForward,
             onServoChange,
+            onMotorPinChange,
+            onServoPinChange,
             saveServoConfig,
         };
     },
@@ -342,5 +519,77 @@ export default defineComponent({
 .bar-wrapper {
     display: flex;
     flex-direction: row;
+}
+
+.live {
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px solid var(--surface-400);
+}
+
+/* Resource assignment styles */
+.resource-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 15px;
+}
+
+.resource-section {
+    flex: 1;
+    min-width: 200px;
+}
+
+.resource-section h4 {
+    margin: 0 0 10px 0;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.resource-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+}
+
+.resource-table th,
+.resource-table td {
+    border: 1px solid var(--surface-500);
+    padding: 4px 8px;
+    text-align: center;
+}
+
+.resource-table th {
+    background-color: var(--surface-400);
+    font-weight: bold;
+}
+
+.resource-table tr:nth-child(even) {
+    background-color: var(--surface-200);
+}
+
+.resource-table .pin-none {
+    color: var(--text-muted, #888);
+    font-style: italic;
+}
+
+.resource-select {
+    width: 100%;
+    padding: 2px 4px;
+    font-size: 12px;
+    border: 1px solid var(--surface-500);
+    border-radius: 3px;
+    background-color: var(--surface-100);
+    cursor: pointer;
+}
+
+.resource-select:hover {
+    border-color: var(--primary-color, #ffbb00);
+}
+
+.resource-select:focus {
+    outline: none;
+    border-color: var(--primary-color, #ffbb00);
+    box-shadow: 0 0 3px var(--primary-color, #ffbb00);
 }
 </style>
