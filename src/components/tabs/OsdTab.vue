@@ -505,6 +505,17 @@
 
                 <!-- Font Manager Dialog -->
                 <dialog ref="fontManagerDialog" id="fontmanagerdialog" class="html-dialog" style="width: 750px">
+                    <div style="display: flex; height: 47px; background: var(--surface-300); border-bottom: 1px solid var(--surface-950);">
+                        <div style="flex: 1; display: flex; align-items: center;">
+                            <div style="padding: 15px;" v-html="$t('osdSetupFontManagerTitle')"></div>
+                        </div>
+                        <div @click="closeFontManager" style="flex: 0 0 47px; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+                            <svg width="10" height="10" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                                <line x1="0" y1="0" x2="10" y2="10" stroke="var(--surface-950)" stroke-width="2"/>
+                                <line x1="0" y1="10" x2="10" y2="0" stroke="var(--surface-950)" stroke-width="2"/>
+                            </svg>
+                        </div>
+                    </div>
                     <div class="html-dialog-content">
                         <div class="font-picker">
                             <h1 class="tab_title" v-html="$t('osdSetupFontPresets')"></h1>
@@ -522,6 +533,7 @@
                                 <label for="osd-font-preset" v-html="$t('osdSetupFontPresetsSelector')"></label>
                                 <select id="osd-font-preset" v-model.number="selectedFontPreset" class="fontpresets">
                                     <option
+                                        v-show="selectedFontPreset === -1"
                                         :value="-1"
                                         disabled
                                         v-html="$t('osdSetupFontPresetsSelectorCustomOption')"
@@ -531,6 +543,7 @@
                                     </option>
                                 </select>
                                 <span v-html="$t('osdSetupFontPresetsSelectorOr')"></span>
+                                <button type="button" class="load_font_file" @click="loadCustomFontFile()" v-html="$t('osdSetupOpenFont')"></button>
                             </div>
 
                             <!-- Logo customization -->
@@ -1287,6 +1300,22 @@ const fontCharacterUrls = computed(() => {
 });
 
 const fontDataVersion = ref(0);
+
+function closeFontManager() {
+    fontManagerDialog.value?.close();
+}
+
+function loadCustomFontFile() {
+    FONT.openFontFile()
+        .then(() => {
+            LogoManager.drawPreview();
+            fontDataVersion.value++;
+            updatePreviewBuffer();
+            fontVersionInfo.value = i18n.getMessage("osdDescribeFontVersionCUSTOM");
+            selectedFontPreset.value = -1;
+        })
+        .catch((err) => console.error("Failed to load custom font file:", err));
+}
 
 function openFontManager() {
     if (!osdStore.state.isMax7456FontDeviceDetected) {
@@ -2206,5 +2235,23 @@ button {
     .grid-box.col4 .col-span-1 {
         grid-column: span 1;
     }
+}
+
+/* Font Manager - font preview and presets */
+.font-preview {
+    padding-bottom: 1.25rem;
+}
+.fontpresets_wrapper {
+    padding: 1rem 0;
+}
+.fontpresets {
+    background: var(--surface-200);
+    color: var(--text);
+    border: 1px solid var(--surface-500);
+    border-radius: 3px;
+}
+#font-logo-info-upload-hint {
+    margin-top: 1em;
+    display: none;
 }
 </style>
