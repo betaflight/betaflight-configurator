@@ -3298,6 +3298,27 @@
     "flightPlanCleared": {
         "message": "Flight plan cleared"
     },
+    "flightPlanLoadFromFC": {
+        "message": "Load from FC"
+    },
+    "flightPlanLoadedFromFC": {
+        "message": "Flight plan loaded from flight controller"
+    },
+    "flightPlanSavedToFC": {
+        "message": "Flight plan saved to flight controller"
+    },
+    "flightPlanFCLoadError": {
+        "message": "Failed to load flight plan from flight controller"
+    },
+    "flightPlanFCSaveError": {
+        "message": "Failed to save flight plan to flight controller"
+    },
+    "flightPlanFCEmpty": {
+        "message": "No waypoints found on flight controller"
+    },
+    "flightPlanClearedFC": {
+        "message": "Flight plan cleared on flight controller"
+    },
     "flightPlanLoadError": {
         "message": "Failed to load flight plan"
     },

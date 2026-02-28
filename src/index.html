@@ -139,9 +139,6 @@
                                     i18n_title="tabFirmwareFlasher"
                                 ></a>
                             </li>
-                            <li class="tab_flight_plan" id="tab_flight_plan" v-show="expertMode">
-                                <a href="#" i18n="tabFlightPlan" class="tabicon ic_route" i18n_title="tabFlightPlan"></a>
-                            </li>
                         </ul>
                         <ul class="mode-connected">
                             <li class="tab_setup">
@@ -237,6 +234,9 @@
                                     class="tabicon ic_sensors"
                                     i18n_title="tabRawSensorData"
                                 ></a>
+                            </li>
+                            <li class="tab_flight_plan" v-show="expertMode">
+                                <a href="#" i18n="tabFlightPlan" class="tabicon ic_route" i18n_title="tabFlightPlan"></a>
                             </li>
                             <li class="tab_logging" v-show="expertMode">
                                 <a href="#" i18n="tabLogging" class="tabicon ic_log" i18n_title="tabLogging"></a>

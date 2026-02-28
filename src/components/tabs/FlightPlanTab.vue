@@ -46,6 +46,9 @@
             <div class="btn clear-button">
                 <a href="#" @click.prevent="handleClear" v-html="$t('flightPlanClear')"></a>
             </div>
+            <div class="btn load-button">
+                <a href="#" @click.prevent="handleLoad" v-html="$t('flightPlanLoadFromFC')"></a>
+            </div>
             <div class="btn save-button">
                 <a href="#" @click.prevent="handleSave" v-html="$t('save')"></a>
             </div>
@@ -67,18 +70,20 @@ import GUI from "@/js/gui";
 import { gui_log } from "@/js/gui_log";
 import { i18n } from "@/js/localization";
 
-const { loadPlan, savePlan, clearPlan, waypoints } = useFlightPlan();
+const { loadFromFC, saveToFC, clearOnFC, clearPlan, waypoints } = useFlightPlan();
 const showClearDialog = ref(false);
 
-onMounted(() => {
-    console.log("FlightPlanTab mounted");
-    loadPlan();
+onMounted(async () => {
+    await loadFromFC();
     GUI.content_ready();
 });
 
-const handleSave = () => {
-    savePlan();
-    gui_log(i18n.getMessage("flightPlanSaved"));
+const handleSave = async () => {
+    await saveToFC();
+};
+
+const handleLoad = async () => {
+    await loadFromFC();
 };
 
 const handleClear = () => {
@@ -90,8 +95,9 @@ const handleClear = () => {
     showClearDialog.value = true;
 };
 
-const confirmClear = () => {
+const confirmClear = async () => {
     clearPlan();
+    await clearOnFC();
     showClearDialog.value = false;
 };
 </script>

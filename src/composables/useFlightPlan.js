@@ -2,11 +2,46 @@ import { reactive, computed } from "vue";
 import { get as getConfig, set as setConfig } from "../js/ConfigStorage";
 import { gui_log } from "../js/gui_log";
 import { i18n } from "../js/localization";
+import MSP from "../js/msp";
 
 const STORAGE_KEY = "flightPlans";
 const DEFAULT_ALTITUDE = 400;
 const DEFAULT_TYPE = "flyover";
 const DEFAULT_SPEED = 10; // knots
+
+// Unit conversion constants (configurator ↔ firmware)
+const FEET_TO_CM = 30.48;
+const KNOTS_TO_CMS = 51.4444;
+const MINUTES_TO_DECISECONDS = 600;
+
+// Type mapping (configurator → firmware)
+const TYPE_TO_CLI = {
+    flyover: "FLYOVER",
+    flyby: "FLYBY",
+    hold: "HOLD",
+    land: "LAND",
+};
+
+// Type mapping (firmware → configurator)
+const CLI_TO_TYPE = {
+    FLYOVER: "flyover",
+    FLYBY: "flyby",
+    HOLD: "hold",
+    LAND: "land",
+};
+
+// Pattern mapping (configurator → firmware)
+const PATTERN_TO_CLI = {
+    circle: "ORBIT",
+    orbit: "ORBIT",
+    figure8: "FIGURE8",
+};
+
+// Pattern mapping (firmware → configurator)
+const CLI_TO_PATTERN = {
+    ORBIT: "orbit",
+    FIGURE8: "figure8",
+};
 
 // Shared state - singleton pattern ensures all components share the same state
 const state = reactive({
@@ -251,6 +286,138 @@ export function useFlightPlan() {
         console.log("Cancelled editing");
     };
 
+    // Send a CLI command and return the response lines as a Promise
+    const sendCliCommand = (cmd) => {
+        return new Promise((resolve, reject) => {
+            MSP.send_cli_command(cmd, (data) => {
+                if (data && Array.isArray(data) && data.length > 0) {
+                    resolve([...data]);
+                } else {
+                    reject(new Error(`Empty response for: ${cmd}`));
+                }
+            });
+        });
+    };
+
+    // Parse a "waypoint insert ..." CLI line into a waypoint object
+    const parseWaypointLine = (line) => {
+        const trimmed = line.trim();
+        if (!trimmed.startsWith("waypoint insert ")) {
+            return null;
+        }
+
+        const parts = trimmed.split(/\s+/);
+        // Expected: waypoint insert <idx> <lat> <lon> <alt> <spd> <type> <dur> <pat>
+        if (parts.length < 10) {
+            return null;
+        }
+
+        const altCm = parseInt(parts[5], 10);
+        const speedCms = parseInt(parts[6], 10);
+        const durationDs = parseInt(parts[8], 10);
+        const typeName = parts[7].toUpperCase();
+        const patternName = parts[9].toUpperCase();
+
+        return {
+            uid: generateUid(),
+            latitude: parseFloat(parts[3]),
+            longitude: parseFloat(parts[4]),
+            altitude: Math.round(altCm / FEET_TO_CM),
+            speed: Math.round((speedCms / KNOTS_TO_CMS) * 10) / 10,
+            type: CLI_TO_TYPE[typeName] ?? DEFAULT_TYPE,
+            duration: Math.round((durationDs / MINUTES_TO_DECISECONDS) * 10) / 10,
+            pattern: CLI_TO_PATTERN[patternName] ?? "orbit",
+            order: parseInt(parts[2], 10),
+        };
+    };
+
+    // Convert a waypoint to a CLI insert command string
+    const waypointToCliCommand = (wp, index) => {
+        const lat = wp.latitude.toFixed(7);
+        const lon = wp.longitude.toFixed(7);
+        const altCm = Math.round(wp.altitude * FEET_TO_CM);
+        const speedCms = Math.round(wp.speed * KNOTS_TO_CMS);
+        const typeCli = TYPE_TO_CLI[wp.type] ?? "FLYOVER";
+        const durationDs = Math.round(wp.duration * MINUTES_TO_DECISECONDS);
+        const patternCli = PATTERN_TO_CLI[wp.pattern] ?? "ORBIT";
+
+        return `waypoint insert ${index} ${lat} ${lon} ${altCm} ${speedCms} ${typeCli} ${durationDs} ${patternCli}`;
+    };
+
+    // Load waypoints from flight controller via CLI
+    const loadFromFC = async () => {
+        try {
+            const response = await sendCliCommand("waypoint list");
+
+            const waypoints = [];
+            for (const line of response) {
+                const wp = parseWaypointLine(line);
+                if (wp) {
+                    wp.order = waypoints.length;
+                    waypoints.push(wp);
+                }
+            }
+
+            state.waypoints = waypoints;
+            state.selectedWaypointUid = null;
+            state.editingWaypointUid = null;
+
+            if (waypoints.length > 0) {
+                gui_log(i18n.getMessage("flightPlanLoadedFromFC"));
+            } else {
+                gui_log(i18n.getMessage("flightPlanFCEmpty"));
+            }
+
+            // Cache to localStorage
+            savePlan();
+            console.log(`Loaded ${waypoints.length} waypoints from FC`);
+        } catch (error) {
+            console.error("Failed to load flight plan from FC:", error);
+            gui_log(i18n.getMessage("flightPlanFCLoadError"));
+            // Fall back to localStorage
+            loadPlan();
+        }
+    };
+
+    // Save waypoints to flight controller via CLI
+    const saveToFC = async () => {
+        try {
+            const sorted = [...state.waypoints].sort((a, b) => a.order - b.order);
+
+            // Clear existing waypoints on FC
+            await sendCliCommand("waypoint clear");
+
+            // Insert each waypoint
+            for (let i = 0; i < sorted.length; i++) {
+                await sendCliCommand(waypointToCliCommand(sorted[i], i));
+            }
+
+            // Persist to EEPROM
+            await sendCliCommand("save");
+
+            gui_log(i18n.getMessage("flightPlanSavedToFC"));
+
+            // Also cache to localStorage
+            savePlan();
+            console.log(`Saved ${sorted.length} waypoints to FC`);
+        } catch (error) {
+            console.error("Failed to save flight plan to FC:", error);
+            gui_log(i18n.getMessage("flightPlanFCSaveError"));
+        }
+    };
+
+    // Clear waypoints on the flight controller
+    const clearOnFC = async () => {
+        try {
+            await sendCliCommand("waypoint clear");
+            await sendCliCommand("save");
+            gui_log(i18n.getMessage("flightPlanClearedFC"));
+        } catch (error) {
+            console.error("Failed to clear flight plan on FC:", error);
+            gui_log(i18n.getMessage("flightPlanFCSaveError"));
+        }
+    };
+
     // Get waypoint type label for display
     const getWaypointTypeLabel = (type) => {
         const labels = {
@@ -280,6 +447,9 @@ export function useFlightPlan() {
         // Methods
         loadPlan,
         savePlan,
+        loadFromFC,
+        saveToFC,
+        clearOnFC,
         addWaypoint,
         addWaypointAtLocation,
         updateWaypoint,
