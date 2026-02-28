@@ -505,14 +505,30 @@
 
                 <!-- Font Manager Dialog -->
                 <dialog ref="fontManagerDialog" id="fontmanagerdialog" class="html-dialog" style="width: 750px">
-                    <div style="display: flex; height: 47px; background: var(--surface-300); border-bottom: 1px solid var(--surface-950);">
-                        <div style="flex: 1; display: flex; align-items: center;">
-                            <div style="padding: 15px;" v-html="$t('osdSetupFontManagerTitle')"></div>
+                    <div
+                        style="
+                            display: flex;
+                            height: 47px;
+                            background: var(--surface-300);
+                            border-bottom: 1px solid var(--surface-950);
+                        "
+                    >
+                        <div style="flex: 1; display: flex; align-items: center">
+                            <div style="padding: 15px" v-html="$t('osdSetupFontManagerTitle')"></div>
                         </div>
-                        <div @click="closeFontManager" style="flex: 0 0 47px; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+                        <div
+                            @click="closeFontManager"
+                            style="
+                                flex: 0 0 47px;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                cursor: pointer;
+                            "
+                        >
                             <svg width="10" height="10" version="1.1" xmlns="http://www.w3.org/2000/svg">
-                                <line x1="0" y1="0" x2="10" y2="10" stroke="var(--surface-950)" stroke-width="2"/>
-                                <line x1="0" y1="10" x2="10" y2="0" stroke="var(--surface-950)" stroke-width="2"/>
+                                <line x1="0" y1="0" x2="10" y2="10" stroke="var(--surface-950)" stroke-width="2" />
+                                <line x1="0" y1="10" x2="10" y2="0" stroke="var(--surface-950)" stroke-width="2" />
                             </svg>
                         </div>
                     </div>
@@ -543,7 +559,12 @@
                                     </option>
                                 </select>
                                 <span v-html="$t('osdSetupFontPresetsSelectorOr')"></span>
-                                <button type="button" class="load_font_file" @click="loadCustomFontFile()" v-html="$t('osdSetupOpenFont')"></button>
+                                <button
+                                    type="button"
+                                    class="load_font_file"
+                                    @click="loadCustomFontFile()"
+                                    v-html="$t('osdSetupOpenFont')"
+                                ></button>
                             </div>
 
                             <!-- Logo customization -->
@@ -662,7 +683,7 @@ const selectedFont = ref(0);
 
 const showRulers = ref(false);
 const activeProfile = ref(0);
-const selectedFontPreset = ref(-1);
+const selectedFontPreset = ref(selectedFont.value);
 const uploadProgress = ref(0);
 const uploadProgressLabel = ref("");
 const fontVersionInfo = ref("");

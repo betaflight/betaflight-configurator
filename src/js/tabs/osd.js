@@ -446,7 +446,7 @@ FONT.upload = function ($progress) {
             console.log(`Uploaded all ${FONT.data.characters.length} characters`);
             gui_log(i18n.getMessage("osdSetupUploadingFontEnd", { length: FONT.data.characters.length }));
 
-            OSD.GUI.fontManager.close();
+            OSD.GUI?.fontManager?.close?.();
 
             return MSP.promise(MSPCodes.MSP_SET_REBOOT);
         });
