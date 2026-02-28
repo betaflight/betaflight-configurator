@@ -128,6 +128,21 @@
     "submit": {
         "message": "Submit"
     },
+    "delete": {
+        "message": "Delete"
+    },
+    "edit": {
+        "message": "Edit"
+    },
+    "add": {
+        "message": "Add"
+    },
+    "update": {
+        "message": "Update"
+    },
+    "save": {
+        "message": "Save"
+    },
     "autoConnectEnabled": {
         "message": "Auto-Connect: Enabled - App automatically tries to connect when new port is detected"
     },
@@ -425,6 +440,9 @@
     },
     "tabGPS": {
         "message": "GPS"
+    },
+    "tabFlightPlan": {
+        "message": "Flight Plan"
     },
     "tabMotorTesting": {
         "message": "Motors"
@@ -2650,6 +2668,10 @@
         "message": "<a href=\"https://betaflight.com/docs/wiki/guides/current/position-hold-v4-6#altitude-hold\" target=\"_blank\" rel=\"noopener noreferrer\">Altitude Hold</a> actively regulates the aircraft's altitude using external sensors combined with Angle Mode (Stable Mode).",
         "description": "Help text for ALTITUDE HOLD mode"
     },
+    "auxiliaryHelpMode_AUTOPILOT": {
+        "message": "Autopilot mode enables autonomous flight control, combining altitude hold and position hold to maintain a stable hover or follow a planned flight path.",
+        "description": "Help text for AUTOPILOT mode"
+    },
     "auxiliaryHelpMode_BEEPER": {
         "message": "Enable beeping - useful for locating a crashed aircraft",
         "description": "Help text to BEEPER mode"
@@ -3214,6 +3236,165 @@
     },
     "gnssHealthyUnhealthy": {
         "message": "unhealthy"
+    },
+    "flightPlanWaypointList": {
+        "message": "Waypoint List"
+    },
+    "flightPlanNoWaypoints": {
+        "message": "No waypoints defined. Click on the map or use the form to add waypoints."
+    },
+    "flightPlanAddWaypoint": {
+        "message": "Add Waypoint"
+    },
+    "flightPlanEditWaypoint": {
+        "message": "Edit Waypoint"
+    },
+    "flightPlanLatitude": {
+        "message": "Latitude <span class=\"units\">°</span>"
+    },
+    "flightPlanLongitude": {
+        "message": "Longitude <span class=\"units\">°</span>"
+    },
+    "flightPlanAltitude": {
+        "message": "Altitude <span class=\"units\">ft AMSL</span>"
+    },
+    "flightPlanSpeed": {
+        "message": "Speed <span class=\"units\">knots</span>"
+    },
+    "flightPlanType": {
+        "message": "Waypoint Type"
+    },
+    "flightPlanTypeFlyover": {
+        "message": "Fly Over"
+    },
+    "flightPlanTypeFlyby": {
+        "message": "Fly By"
+    },
+    "flightPlanTypeHold": {
+        "message": "Fly Hold"
+    },
+    "flightPlanTypeLand": {
+        "message": "Land"
+    },
+    "flightPlanDuration": {
+        "message": "Hold Duration <span class=\"units\">min</span>"
+    },
+    "flightPlanPattern": {
+        "message": "Hold Pattern"
+    },
+    "flightPlanPatternCircle": {
+        "message": "Circle"
+    },
+    "flightPlanPatternFigure8": {
+        "message": "Figure-8"
+    },
+    "flightPlanPatternOrbit": {
+        "message": "Orbit"
+    },
+    "flightPlanMap": {
+        "message": "Flight Plan Map"
+    },
+    "flightPlanMapInstructions": {
+        "message": "Click to add waypoints. Drag waypoint markers to move them."
+    },
+    "flightPlanLoading": {
+        "message": "Please wait..."
+    },
+    "flightPlanClear": {
+        "message": "Clear Plan"
+    },
+    "flightPlanLoaded": {
+        "message": "Flight plan loaded successfully"
+    },
+    "flightPlanSaved": {
+        "message": "Flight plan saved successfully"
+    },
+    "flightPlanCleared": {
+        "message": "Flight plan cleared"
+    },
+    "flightPlanLoadFromFC": {
+        "message": "Load from FC"
+    },
+    "flightPlanLoadedFromFC": {
+        "message": "Flight plan loaded from flight controller"
+    },
+    "flightPlanSavedToFC": {
+        "message": "Flight plan saved to flight controller"
+    },
+    "flightPlanFCLoadError": {
+        "message": "Failed to load flight plan from flight controller"
+    },
+    "flightPlanFCSaveError": {
+        "message": "Failed to save flight plan to flight controller"
+    },
+    "flightPlanFCEmpty": {
+        "message": "No waypoints found on flight controller"
+    },
+    "flightPlanClearedFC": {
+        "message": "Flight plan cleared on flight controller"
+    },
+    "flightPlanLoadError": {
+        "message": "Failed to load flight plan"
+    },
+    "flightPlanSaveError": {
+        "message": "Failed to save flight plan"
+    },
+    "flightPlanInvalidLatitude": {
+        "message": "Invalid latitude (must be between -90 and 90)"
+    },
+    "flightPlanInvalidLongitude": {
+        "message": "Invalid longitude (must be between -180 and 180)"
+    },
+    "flightPlanConfirmDelete": {
+        "message": "Are you sure you want to delete this waypoint?"
+    },
+    "flightPlanDeleteWaypointTitle": {
+        "message": "Delete Waypoint"
+    },
+    "flightPlanDeleteWaypointConfirm": {
+        "message": "Are you sure you want to delete this waypoint? This action cannot be undone."
+    },
+    "flightPlanConfirmClear": {
+        "message": "Are you sure you want to clear all waypoints? This action cannot be undone."
+    },
+    "flightPlanClearTitle": {
+        "message": "Clear Flight Plan"
+    },
+    "flightPlanElevationProfile": {
+        "message": "Elevation Profile"
+    },
+    "flightPlanDistance": {
+        "message": "Total Distance"
+    },
+    "flightPlanFlightTime": {
+        "message": "Flight Time"
+    },
+    "flightPlanMinAlt": {
+        "message": "Min Altitude"
+    },
+    "flightPlanMaxAlt": {
+        "message": "Max Altitude"
+    },
+    "flightPlanNoWaypointsForProfile": {
+        "message": "Add waypoints to see the elevation profile"
+    },
+    "flightPlanGroundElev": {
+        "message": "Ground Elev"
+    },
+    "flightPlanMaxGroundElev": {
+        "message": "Max Ground Elev"
+    },
+    "flightPlanAvgGround": {
+        "message": "Avg Ground"
+    },
+    "flightPlanMaxGround": {
+        "message": "Max Ground"
+    },
+    "flightPlanAlt": {
+        "message": "Alt"
+    },
+    "flightPlanDist": {
+        "message": "Dist"
     },
     "motorsVoltage": {
         "message": "Voltage:"
