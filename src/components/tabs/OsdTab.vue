@@ -1345,10 +1345,18 @@ function openFontManager() {
     FONT.initData();
     // Initialize LogoManager if not already
     LogoManager.init(FONT, SYM.LOGO);
-    // Load default font on first open if no font loaded
+    // Load selected/default preset on first open if no font is loaded yet.
     if (!FONT.data.character_image_urls.length && fontTypes.value.length > 0) {
-        selectedFontPreset.value = 0;
-        loadFontPreset(0);
+        const presetToLoad = selectedFontPreset.value >= 0 ? selectedFontPreset.value : 0;
+        selectedFontPreset.value = presetToLoad;
+        loadFontPreset(presetToLoad);
+    } else {
+        // Keep dialog previews in sync when font data was loaded earlier (e.g. during tab init).
+        LogoManager.drawPreview();
+        fontDataVersion.value++;
+        if (selectedFontPreset.value >= 0) {
+            fontVersionInfo.value = i18n.getMessage("osdDescribeFontVersion2");
+        }
     }
     fontManagerDialog.value?.showModal?.();
 }
@@ -1848,11 +1856,12 @@ onUnmounted(() => {
     gap: 8px;
     flex-wrap: wrap;
     width: 100%;
-    color: #000; /* Dark text on gold background */
-    font-weight: 600;
+    color: #141414;
+    font-weight: 700;
 }
 
 .preview-controls-wrapper label {
+    color: #141414;
     margin-right: 0;
     white-space: nowrap;
     max-width: none;
@@ -1862,13 +1871,19 @@ onUnmounted(() => {
 
 .preview-controls-wrapper select,
 .preview-controls-wrapper select.dark-select {
-    background-color: var(--surface-800);
-    color: #ffffff; /* Force white text for readability against dark background */
-    border: 1px solid var(--surface-900);
+    background-color: #262626 !important;
+    color: #f8f8f8 !important;
+    border: 1px solid #1b1b1b !important;
     border-radius: 4px;
     padding: 2px 5px;
     margin-right: 0;
     height: 24px;
+    font-weight: 600;
+}
+
+.preview-controls-wrapper select option {
+    background-color: #262626;
+    color: #f8f8f8;
 }
 
 .osd-preview-rulers-group {
