@@ -84,13 +84,13 @@
                         <tr class="ROLL">
                             <td class="pid_roll" style="background-color: #e24761">ROLL</td>
                             <td class="pid_data">
-                                <input type="number" v-model.number="pidRoll[0]" step="1" min="0" max="250" />
+                                <input type="number" v-model.number="pidRollP" step="1" min="0" max="250" />
                             </td>
                             <td class="pid_data">
-                                <input type="number" v-model.number="pidRoll[1]" step="1" min="0" max="250" />
+                                <input type="number" v-model.number="pidRollI" step="1" min="0" max="250" />
                             </td>
                             <td class="pid_data">
-                                <input type="number" v-model.number="pidRoll[2]" step="1" min="0" max="250" />
+                                <input type="number" v-model.number="pidRollD" step="1" min="0" max="250" />
                             </td>
                             <td class="pid_data">
                                 <input
@@ -116,13 +116,13 @@
                         <tr class="PITCH">
                             <td class="pid_pitch" style="background-color: #49c747">PITCH</td>
                             <td class="pid_data">
-                                <input type="number" v-model.number="pidPitch[0]" step="1" min="0" max="250" />
+                                <input type="number" v-model.number="pidPitchP" step="1" min="0" max="250" />
                             </td>
                             <td class="pid_data">
-                                <input type="number" v-model.number="pidPitch[1]" step="1" min="0" max="250" />
+                                <input type="number" v-model.number="pidPitchI" step="1" min="0" max="250" />
                             </td>
                             <td class="pid_data">
-                                <input type="number" v-model.number="pidPitch[2]" step="1" min="0" max="250" />
+                                <input type="number" v-model.number="pidPitchD" step="1" min="0" max="250" />
                             </td>
                             <td class="pid_data">
                                 <input
@@ -148,13 +148,13 @@
                         <tr class="YAW">
                             <td class="pid_yaw" style="background-color: #477ac7">YAW</td>
                             <td class="pid_data">
-                                <input type="number" v-model.number="pidYaw[0]" step="1" min="0" max="250" />
+                                <input type="number" v-model.number="pidYawP" step="1" min="0" max="250" />
                             </td>
                             <td class="pid_data">
-                                <input type="number" v-model.number="pidYaw[1]" step="1" min="0" max="250" />
+                                <input type="number" v-model.number="pidYawI" step="1" min="0" max="250" />
                             </td>
                             <td class="pid_data">
-                                <input type="number" v-model.number="pidYaw[2]" step="1" min="0" max="250" />
+                                <input type="number" v-model.number="pidYawD" step="1" min="0" max="250" />
                             </td>
                             <td class="pid_data">
                                 <input
@@ -991,17 +991,23 @@
                             <tr>
                                 <td class="third">{{ $t("pidTuningAngle") }}</td>
                                 <td class="third">
-                                    <input type="number" v-model.number="pidLevel[0]" step="1" min="0" max="255" />
+                                    <input type="number" v-model.number="pidLevelAngle" step="1" min="0" max="255" />
                                 </td>
                                 <td class="third"></td>
                             </tr>
                             <tr>
                                 <td class="third">{{ $t("pidTuningHorizon") }}</td>
                                 <td class="third">
-                                    <input type="number" v-model.number="pidLevel[1]" step="1" min="0" max="255" />
+                                    <input type="number" v-model.number="pidLevelHorizon" step="1" min="0" max="255" />
                                 </td>
                                 <td class="third">
-                                    <input type="number" v-model.number="pidLevel[2]" step="1" min="0" max="255" />
+                                    <input
+                                        type="number"
+                                        v-model.number="pidLevelTransition"
+                                        step="1"
+                                        min="0"
+                                        max="255"
+                                    />
                                 </td>
                             </tr>
                         </tbody>
@@ -1072,32 +1078,83 @@ const showProfileName = computed(() => {
     return semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45);
 });
 
-// PIDs - Direct reactive references to FC.PIDS
-const pidRoll = computed({
-    get: () => FC.PIDS[0],
+// PIDs - Individual per-cell computed properties to avoid array destruction.
+// v-model.number writes a single number, so using array-level computeds would
+// replace the sub-array reference with that number. Instead, read/write each
+// element directly.
+const pidRollP = computed({
+    get: () => FC.PIDS[0][0],
     set: (val) => {
-        FC.PIDS[0] = val;
+        FC.PIDS[0][0] = val;
+    },
+});
+const pidRollI = computed({
+    get: () => FC.PIDS[0][1],
+    set: (val) => {
+        FC.PIDS[0][1] = val;
+    },
+});
+const pidRollD = computed({
+    get: () => FC.PIDS[0][2],
+    set: (val) => {
+        FC.PIDS[0][2] = val;
     },
 });
 
-const pidPitch = computed({
-    get: () => FC.PIDS[1],
+const pidPitchP = computed({
+    get: () => FC.PIDS[1][0],
     set: (val) => {
-        FC.PIDS[1] = val;
+        FC.PIDS[1][0] = val;
+    },
+});
+const pidPitchI = computed({
+    get: () => FC.PIDS[1][1],
+    set: (val) => {
+        FC.PIDS[1][1] = val;
+    },
+});
+const pidPitchD = computed({
+    get: () => FC.PIDS[1][2],
+    set: (val) => {
+        FC.PIDS[1][2] = val;
     },
 });
 
-const pidYaw = computed({
-    get: () => FC.PIDS[2],
+const pidYawP = computed({
+    get: () => FC.PIDS[2][0],
     set: (val) => {
-        FC.PIDS[2] = val;
+        FC.PIDS[2][0] = val;
+    },
+});
+const pidYawI = computed({
+    get: () => FC.PIDS[2][1],
+    set: (val) => {
+        FC.PIDS[2][1] = val;
+    },
+});
+const pidYawD = computed({
+    get: () => FC.PIDS[2][2],
+    set: (val) => {
+        FC.PIDS[2][2] = val;
     },
 });
 
-const pidLevel = computed({
-    get: () => FC.PIDS[3],
+const pidLevelAngle = computed({
+    get: () => FC.PIDS[3][0],
     set: (val) => {
-        FC.PIDS[3] = val;
+        FC.PIDS[3][0] = val;
+    },
+});
+const pidLevelHorizon = computed({
+    get: () => FC.PIDS[3][1],
+    set: (val) => {
+        FC.PIDS[3][1] = val;
+    },
+});
+const pidLevelTransition = computed({
+    get: () => FC.PIDS[3][2],
+    set: (val) => {
+        FC.PIDS[3][2] = val;
     },
 });
 

@@ -665,7 +665,7 @@
 </template>
 
 <script setup>
-import { computed, ref, watch } from "vue";
+import { computed, ref, watch, onUnmounted } from "vue";
 import FC from "@/js/fc";
 import MSP from "@/js/msp";
 import MSPCodes from "@/js/msp/MSPCodes";
@@ -830,22 +830,22 @@ const gyroLowpassEnabled = computed({
 });
 
 const gyro_lowpass_hz = computed({
-    get: () => FC.FILTER_CONFIG.gyro_lowpass_hz || 0,
+    get: () => FC.FILTER_CONFIG.gyro_lowpass_hz ?? 0,
     set: (value) => (FC.FILTER_CONFIG.gyro_lowpass_hz = value),
 });
 
 const gyro_lowpass_type = computed({
-    get: () => FC.FILTER_CONFIG.gyro_lowpass_type || 0,
+    get: () => FC.FILTER_CONFIG.gyro_lowpass_type ?? 0,
     set: (value) => (FC.FILTER_CONFIG.gyro_lowpass_type = value),
 });
 
 const gyro_lowpass_dyn_min_hz = computed({
-    get: () => FC.FILTER_CONFIG.gyro_lowpass_dyn_min_hz || 0,
+    get: () => FC.FILTER_CONFIG.gyro_lowpass_dyn_min_hz ?? 0,
     set: (value) => (FC.FILTER_CONFIG.gyro_lowpass_dyn_min_hz = value),
 });
 
 const gyro_lowpass_dyn_max_hz = computed({
-    get: () => FC.FILTER_CONFIG.gyro_lowpass_dyn_max_hz || 0,
+    get: () => FC.FILTER_CONFIG.gyro_lowpass_dyn_max_hz ?? 0,
     set: (value) => (FC.FILTER_CONFIG.gyro_lowpass_dyn_max_hz = value),
 });
 
@@ -867,12 +867,12 @@ const gyroLowpass2Enabled = computed({
 });
 
 const gyro_lowpass2_hz = computed({
-    get: () => FC.FILTER_CONFIG.gyro_lowpass2_hz || 0,
+    get: () => FC.FILTER_CONFIG.gyro_lowpass2_hz ?? 0,
     set: (value) => (FC.FILTER_CONFIG.gyro_lowpass2_hz = value),
 });
 
 const gyro_lowpass2_type = computed({
-    get: () => FC.FILTER_CONFIG.gyro_lowpass2_type || 0,
+    get: () => FC.FILTER_CONFIG.gyro_lowpass2_type ?? 0,
     set: (value) => (FC.FILTER_CONFIG.gyro_lowpass2_type = value),
 });
 
@@ -899,12 +899,12 @@ const gyroNotch1Enabled = computed({
 });
 
 const gyro_notch_hz = computed({
-    get: () => FC.FILTER_CONFIG.gyro_notch_hz || 0,
+    get: () => FC.FILTER_CONFIG.gyro_notch_hz ?? 0,
     set: (value) => (FC.FILTER_CONFIG.gyro_notch_hz = value),
 });
 
 const gyro_notch_cutoff = computed({
-    get: () => FC.FILTER_CONFIG.gyro_notch_cutoff || 0,
+    get: () => FC.FILTER_CONFIG.gyro_notch_cutoff ?? 0,
     set: (value) => (FC.FILTER_CONFIG.gyro_notch_cutoff = value),
 });
 
@@ -930,17 +930,17 @@ const gyroNotch2Enabled = computed({
 });
 
 const gyro_notch2_hz = computed({
-    get: () => FC.FILTER_CONFIG.gyro_notch2_hz || 0,
+    get: () => FC.FILTER_CONFIG.gyro_notch2_hz ?? 0,
     set: (value) => (FC.FILTER_CONFIG.gyro_notch2_hz = value),
 });
 
 const gyro_notch2_cutoff = computed({
-    get: () => FC.FILTER_CONFIG.gyro_notch2_cutoff || 0,
+    get: () => FC.FILTER_CONFIG.gyro_notch2_cutoff ?? 0,
     set: (value) => (FC.FILTER_CONFIG.gyro_notch2_cutoff = value),
 });
 
 // RPM Filter
-const dshotTelemetryEnabled = computed(() => FC.MOTOR_CONFIG.use_dshot_telemetry || false);
+const dshotTelemetryEnabled = computed(() => FC.MOTOR_CONFIG.use_dshot_telemetry ?? false);
 
 const rpmFilterEnabled = computed({
     get: () => FC.FILTER_CONFIG.gyro_rpm_notch_harmonics !== 0,
@@ -959,7 +959,7 @@ const rpmFilterEnabled = computed({
 });
 
 const gyro_rpm_notch_harmonics = computed({
-    get: () => FC.FILTER_CONFIG.gyro_rpm_notch_harmonics || 0,
+    get: () => FC.FILTER_CONFIG.gyro_rpm_notch_harmonics ?? 0,
     set: (value) => (FC.FILTER_CONFIG.gyro_rpm_notch_harmonics = value),
 });
 
@@ -986,7 +986,7 @@ const dynamicNotchEnabled = computed({
 });
 
 const dyn_notch_count = computed({
-    get: () => FC.FILTER_CONFIG.dyn_notch_count || 0,
+    get: () => FC.FILTER_CONFIG.dyn_notch_count ?? 0,
     set: (value) => (FC.FILTER_CONFIG.dyn_notch_count = value),
 });
 
@@ -1040,22 +1040,22 @@ const dtermLowpassEnabled = computed({
 });
 
 const dterm_lowpass_hz = computed({
-    get: () => FC.FILTER_CONFIG.dterm_lowpass_hz || 0,
+    get: () => FC.FILTER_CONFIG.dterm_lowpass_hz ?? 0,
     set: (value) => (FC.FILTER_CONFIG.dterm_lowpass_hz = value),
 });
 
 const dterm_lowpass_type = computed({
-    get: () => FC.FILTER_CONFIG.dterm_lowpass_type || 0,
+    get: () => FC.FILTER_CONFIG.dterm_lowpass_type ?? 0,
     set: (value) => (FC.FILTER_CONFIG.dterm_lowpass_type = value),
 });
 
 const dterm_lowpass_dyn_min_hz = computed({
-    get: () => FC.FILTER_CONFIG.dterm_lowpass_dyn_min_hz || 0,
+    get: () => FC.FILTER_CONFIG.dterm_lowpass_dyn_min_hz ?? 0,
     set: (value) => (FC.FILTER_CONFIG.dterm_lowpass_dyn_min_hz = value),
 });
 
 const dterm_lowpass_dyn_max_hz = computed({
-    get: () => FC.FILTER_CONFIG.dterm_lowpass_dyn_max_hz || 0,
+    get: () => FC.FILTER_CONFIG.dterm_lowpass_dyn_max_hz ?? 0,
     set: (value) => (FC.FILTER_CONFIG.dterm_lowpass_dyn_max_hz = value),
 });
 
@@ -1082,12 +1082,12 @@ const dtermLowpass2Enabled = computed({
 });
 
 const dterm_lowpass2_hz = computed({
-    get: () => FC.FILTER_CONFIG.dterm_lowpass2_hz || 0,
+    get: () => FC.FILTER_CONFIG.dterm_lowpass2_hz ?? 0,
     set: (value) => (FC.FILTER_CONFIG.dterm_lowpass2_hz = value),
 });
 
 const dterm_lowpass2_type = computed({
-    get: () => FC.FILTER_CONFIG.dterm_lowpass2_type || 0,
+    get: () => FC.FILTER_CONFIG.dterm_lowpass2_type ?? 0,
     set: (value) => (FC.FILTER_CONFIG.dterm_lowpass2_type = value),
 });
 
@@ -1114,18 +1114,18 @@ const dtermNotchEnabled = computed({
 });
 
 const dterm_notch_hz = computed({
-    get: () => FC.FILTER_CONFIG.dterm_notch_hz || 0,
+    get: () => FC.FILTER_CONFIG.dterm_notch_hz ?? 0,
     set: (value) => (FC.FILTER_CONFIG.dterm_notch_hz = value),
 });
 
 const dterm_notch_cutoff = computed({
-    get: () => FC.FILTER_CONFIG.dterm_notch_cutoff || 0,
+    get: () => FC.FILTER_CONFIG.dterm_notch_cutoff ?? 0,
     set: (value) => (FC.FILTER_CONFIG.dterm_notch_cutoff = value),
 });
 
 // Yaw Lowpass Filter
 const yaw_lowpass_hz = computed({
-    get: () => FC.FILTER_CONFIG.yaw_lowpass_hz || 0,
+    get: () => FC.FILTER_CONFIG.yaw_lowpass_hz ?? 0,
     set: (value) => (FC.FILTER_CONFIG.yaw_lowpass_hz = value),
 });
 
@@ -1133,8 +1133,19 @@ const yaw_lowpass_hz = computed({
 const isCalculatingGyroFilters = ref(false);
 const isCalculatingDtermFilters = ref(false);
 
+// Debounce timers for filter sliders to avoid flooding the serial link
+let gyroFilterDebounceTimer = null;
+let dtermFilterDebounceTimer = null;
+const FILTER_SLIDER_DEBOUNCE_MS = 250;
+
+// Cleanup debounce timers on unmount
+onUnmounted(() => {
+    clearTimeout(gyroFilterDebounceTimer);
+    clearTimeout(dtermFilterDebounceTimer);
+});
+
 // Watchers for filter sliders to trigger MSP calculations
-// When slider changes, send MSP command to firmware to calculate new filter values
+// Debounced to prevent burst of MSP commands when dragging the range input
 watch(
     () => gyroFilterMultiplier.value,
     (newValue, oldValue) => {
@@ -1148,20 +1159,26 @@ watch(
             return;
         }
 
-        isCalculatingGyroFilters.value = true;
+        clearTimeout(gyroFilterDebounceTimer);
+        gyroFilterDebounceTimer = setTimeout(() => {
+            isCalculatingGyroFilters.value = true;
 
-        // Update slider_gyro_filter to indicate slider is active
-        FC.TUNING_SLIDERS.slider_gyro_filter = 1;
+            // Update slider_gyro_filter to indicate slider is active
+            FC.TUNING_SLIDERS.slider_gyro_filter = 1;
 
-        // Send MSP command to calculate new gyro filter values based on multiplier
-        // The firmware will multiply base filter frequencies by this multiplier
-        MSP.promise(MSPCodes.MSP_CALCULATE_SIMPLIFIED_GYRO, mspHelper.crunch(MSPCodes.MSP_CALCULATE_SIMPLIFIED_GYRO))
-            .catch((error) => {
-                console.error("Failed to calculate simplified gyro filters:", error);
-            })
-            .finally(() => {
-                isCalculatingGyroFilters.value = false;
-            });
+            // Send MSP command to calculate new gyro filter values based on multiplier
+            // The firmware will multiply base filter frequencies by this multiplier
+            MSP.promise(
+                MSPCodes.MSP_CALCULATE_SIMPLIFIED_GYRO,
+                mspHelper.crunch(MSPCodes.MSP_CALCULATE_SIMPLIFIED_GYRO),
+            )
+                .catch((error) => {
+                    console.error("Failed to calculate simplified gyro filters:", error);
+                })
+                .finally(() => {
+                    isCalculatingGyroFilters.value = false;
+                });
+        }, FILTER_SLIDER_DEBOUNCE_MS);
     },
 );
 
@@ -1178,20 +1195,26 @@ watch(
             return;
         }
 
-        isCalculatingDtermFilters.value = true;
+        clearTimeout(dtermFilterDebounceTimer);
+        dtermFilterDebounceTimer = setTimeout(() => {
+            isCalculatingDtermFilters.value = true;
 
-        // Update slider_dterm_filter to indicate slider is active
-        FC.TUNING_SLIDERS.slider_dterm_filter = 1;
+            // Update slider_dterm_filter to indicate slider is active
+            FC.TUNING_SLIDERS.slider_dterm_filter = 1;
 
-        // Send MSP command to calculate new dterm filter values based on multiplier
-        // The firmware will multiply base filter frequencies by this multiplier
-        MSP.promise(MSPCodes.MSP_CALCULATE_SIMPLIFIED_DTERM, mspHelper.crunch(MSPCodes.MSP_CALCULATE_SIMPLIFIED_DTERM))
-            .catch((error) => {
-                console.error("Failed to calculate simplified dterm filters:", error);
-            })
-            .finally(() => {
-                isCalculatingDtermFilters.value = false;
-            });
+            // Send MSP command to calculate new dterm filter values based on multiplier
+            // The firmware will multiply base filter frequencies by this multiplier
+            MSP.promise(
+                MSPCodes.MSP_CALCULATE_SIMPLIFIED_DTERM,
+                mspHelper.crunch(MSPCodes.MSP_CALCULATE_SIMPLIFIED_DTERM),
+            )
+                .catch((error) => {
+                    console.error("Failed to calculate simplified dterm filters:", error);
+                })
+                .finally(() => {
+                    isCalculatingDtermFilters.value = false;
+                });
+        }, FILTER_SLIDER_DEBOUNCE_MS);
     },
 );
 </script>

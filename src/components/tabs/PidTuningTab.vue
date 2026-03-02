@@ -126,7 +126,9 @@ import { API_VERSION_1_41, API_VERSION_1_45, API_VERSION_1_47 } from "@/js/data_
 import { isExpertModeEnabled } from "@/js/utils/isExpertModeEnabled";
 import { tabState } from "@/js/tab_state";
 import { useDialog } from "@/composables/useDialog";
+import { useTranslation } from "i18next-vue";
 
+const { t } = useTranslation();
 const pidTuningStore = usePidTuningStore();
 const dialog = useDialog();
 
@@ -284,8 +286,8 @@ async function copyProfile() {
 
     // Show profile selection dialog
     dialog.openProfileSelection(
-        $t("pidTuningCopyProfileDialogTitle"),
-        $t("pidTuningCopyProfileDialogPrompt"),
+        t("pidTuningCopyProfileDialogTitle"),
+        t("pidTuningCopyProfileDialogPrompt"),
         options,
         async (selectedIndex) => {
             // User confirmed selection
@@ -328,8 +330,8 @@ async function copyRateProfile() {
 
     // Show rate profile selection dialog
     dialog.openProfileSelection(
-        $t("pidTuningCopyRateProfileDialogTitle"),
-        $t("pidTuningCopyRateProfileDialogPrompt"),
+        t("pidTuningCopyRateProfileDialogTitle"),
+        t("pidTuningCopyRateProfileDialogPrompt"),
         options,
         async (selectedIndex) => {
             // User confirmed selection
@@ -355,21 +357,22 @@ async function copyRateProfile() {
     );
 }
 
-async function resetProfile() {
-    const confirmed = confirm("Reset current PID profile to defaults?");
-    if (!confirmed) {
-        return;
-    }
+function resetProfile() {
+    dialog.openYesNo(
+        t("pidTuningResetPidProfile"),
+        t("pidTuningResetPidProfileConfirm", { defaultValue: "Reset current PID profile to defaults?" }),
+        async () => {
+            try {
+                await MSP.promise(MSPCodes.MSP_SET_RESET_CURR_PID);
+                console.log("[PidTuningTab] PID profile reset to defaults");
 
-    try {
-        await MSP.promise(MSPCodes.MSP_SET_RESET_CURR_PID);
-        console.log("[PidTuningTab] PID profile reset to defaults");
-
-        // Reload data to show reset values
-        await loadData();
-    } catch (error) {
-        console.error("[PidTuningTab] Failed to reset profile:", error);
-    }
+                // Reload data to show reset values
+                await loadData();
+            } catch (error) {
+                console.error("[PidTuningTab] Failed to reset profile:", error);
+            }
+        },
+    );
 }
 
 function toggleShowAllPids() {
@@ -450,24 +453,28 @@ function revert() {
         return;
     }
 
-    if (confirm("Revert all changes?")) {
-        // Suppress watchers from re-flagging hasChanges while we restore.
-        isReverting.value = true;
+    dialog.openYesNo(
+        t("pidTuningButtonRefresh"),
+        t("pidTuningRevertConfirm", { defaultValue: "Revert all changes?" }),
+        () => {
+            // Suppress watchers from re-flagging hasChanges while we restore.
+            isReverting.value = true;
 
-        const origNames = pidTuningStore.revertToOriginals();
-        pidProfileName.value = origNames.pidProfileName;
-        rateProfileName.value = origNames.rateProfileName;
+            const origNames = pidTuningStore.revertToOriginals();
+            pidProfileName.value = origNames.pidProfileName;
+            rateProfileName.value = origNames.rateProfileName;
 
-        // Reinitialize sliders
-        TuningSliders.initialize();
+            // Reinitialize sliders
+            TuningSliders.initialize();
 
-        // Force PidSubTab to sync its local slider refs from TuningSliders.js
-        if (pidSubTab.value && pidSubTab.value.forceUpdateSliders) {
-            pidSubTab.value.forceUpdateSliders();
-        }
+            // Force PidSubTab to sync its local slider refs from TuningSliders.js
+            if (pidSubTab.value && pidSubTab.value.forceUpdateSliders) {
+                pidSubTab.value.forceUpdateSliders();
+            }
 
-        isReverting.value = false;
-    }
+            isReverting.value = false;
+        },
+    );
 }
 
 // Notify the store to re-check for changes.
