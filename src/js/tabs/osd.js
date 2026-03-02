@@ -1077,6 +1077,42 @@ OSD.loadDisplayFields = function () {
             positionable: true,
             preview: "DBG     0     0     0     0",
         },
+        PIDS_MASTER_MULTIPLIER: {
+            name: "PIDS_MASTER_MULTIPLIER",
+            text: "osdTextElementPidsMasterMultiplier",
+            desc: "osdDescElementPidsMasterMultiplier",
+            defaultPosition: -1,
+            draw_order: 161,
+            positionable: true,
+            preview: "Master Multiplier: [||||||||  ] 1.80 | RD: 24",
+        },
+        PIDS_TUNING_SLIDERS: {
+            name: "PIDS_TUNING_SLIDERS",
+            text: "osdTextElementPidsTuningSliders",
+            desc: "osdDescElementPidsTuningSliders",
+            defaultPosition: -1,
+            draw_order: 162,
+            positionable: true,
+            preview: [
+                "Damping: [||||||    ] 1.60 | RD: 24",
+                "Tracking: [||||||||| ] 1.80 | RP: 48",
+                "Stick Response: [|||||     ] 1.10 | RFF: 120",
+                "D Max Gain: [||||||    ] 1.50 | RDmax: 30",
+                "Drift/Wobble: [||||      ] 0.80 | RI: 36",
+                "Pitch Damping: [||||||    ] 1.50 | PD: 22",
+                "Pitch Tracking: [||||||    ] 1.20 | PP: 44",
+                "Master Multiplier: [||||||||| ] 1.80",
+            ],
+        },
+        FILTER_SLIDERS: {
+            name: "FILTER_SLIDERS",
+            text: "osdTextElementFilterSliders",
+            desc: "osdDescElementFilterSliders",
+            defaultPosition: -1,
+            draw_order: 163,
+            positionable: true,
+            preview: ["Gyro Filter: [||||||||  ] 1.80 | G-LPF1: 150", "DTerm Filter: [||||||    ] 1.10 | D-LPF1: 100"],
+        },
         PID_ROLL: {
             name: "PID_ROLL",
             text: "osdTextElementPIDRoll",
@@ -2146,6 +2182,10 @@ OSD.chooseFields = function () {
         F.GPS_SPEED,
         F.GPS_SATS,
         F.ALTITUDE,
+        // show either SLIDER OSD elements depending on the MSP version
+        ...(semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_48)
+            ? [F.PIDS_MASTER_MULTIPLIER, F.PIDS_TUNING_SLIDERS, F.FILTER_SLIDERS]
+            : []),
         F.PID_ROLL,
         F.PID_PITCH,
         F.PID_YAW,

@@ -5897,6 +5897,27 @@
     "osdDescElementAltitude": {
         "message": "Current altitude (flashes when above alarm threshold)"
     },
+    "osdTextElementPidsMasterMultiplier": {
+        "message": "PIDs Master Multiplier",
+        "description": "PID master multiplier element of the OSD"
+    },
+    "osdDescElementPidsMasterMultiplier": {
+        "message": "Shows the simplified sliders master multiplier with bar and associated strategic gain value"
+    },
+    "osdTextElementPidsTuningSliders": {
+        "message": "PIDs Tuning Sliders",
+        "description": "PID tuning slider elements of the OSD"
+    },
+    "osdDescElementPidsTuningSliders": {
+        "message": "Shows simplified PID tuning slider positions, values, and associated strategic gain values"
+    },
+    "osdTextElementFilterSliders": {
+        "message": "Filter Sliders",
+        "description": "Filter slider elements of the OSD"
+    },
+    "osdDescElementFilterSliders": {
+        "message": "Shows simplified filter slider positions, values, and associated filter frequencies"
+    },
     "osdTextElementAltitudeVariant1DecimalAGL": {
         "message": "AGL with 1 decimal",
         "description": "One of the variants of the altitude element of the OSD"
