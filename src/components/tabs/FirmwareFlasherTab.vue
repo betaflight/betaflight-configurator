@@ -1201,7 +1201,11 @@ export default defineComponent({
             });
 
             data.generalOptions = data.generalOptions.map((option) => {
-                option.default = option.default || state.cloudBuildOptions?.includes(option.value);
+                // If using autodetect (cloudBuildOptions set), only mark as default if present in cloudBuildOptions
+                option.default =
+                    state.cloudBuildOptions.length > 0
+                        ? state.cloudBuildOptions.includes(option.value)
+                        : option.default || false;
                 return option;
             });
 
