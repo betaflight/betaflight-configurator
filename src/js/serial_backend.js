@@ -657,7 +657,7 @@ function onConnect() {
         .show();
 
     if (FC.CONFIG.flightControllerVersion !== "" && !isCliOnlyMode()) {
-        // In virtual mode, VirtualFC already configured features/beepers – don't overwrite
+        if (!CONFIGURATOR.virtualMode && PortHandler.portPicker.selectedPort !== 'virtual') {
         if (!CONFIGURATOR.virtualMode) {
             FC.FEATURE_CONFIG.features = new Features(FC.CONFIG);
             FC.BEEPER_CONFIG.beepers = new Beepers(FC.CONFIG);
