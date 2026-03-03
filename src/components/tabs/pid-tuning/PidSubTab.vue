@@ -661,43 +661,7 @@
                                 </span>
                             </td>
                         </tr>
-
-                        <!-- Dynamic Damping (if API >= 1.48) -->
-                        <!-- TODO: Not yet implemented in firmware - keys don't exist
-                    <tr class="dynamicDamping" v-if="showDynamicDamping">
-                        <td>
-                            <span v-html="$t('pidTuningDynamicDamping')"></span>
-                        </td>
-                        <td colspan="3">
-                            <span class="suboption">
-                                <input
-                                    type="number"
-                                    name="dynamicDampingGain"
-                                    v-model.number="rcTuning.dynamicDampingGain"
-                                    step="1"
-                                    min="0"
-                                    max="250"
-                                />
-                                <label>
-                                    <span v-html="$t('pidTuningDynamicDampingGain')"></span>
-                                </label>
-                            </span>
-                            <span class="suboption">
-                                <input
-                                    type="number"
-                                    name="dynamicDampingAdvance"
-                                    v-model.number="rcTuning.dynamicDampingAdvance"
-                                    step="1"
-                                    min="0"
-                                    max="250"
-                                />
-                                <label>
-                                    <span v-html="$t('pidTuningDynamicDampingAdvance')"></span>
-                                </label>
-                            </span>
-                        </td>
-                    </tr>
-                    --></tbody>
+                    </tbody>
                 </table>
             </div>
 
