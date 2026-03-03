@@ -1264,6 +1264,18 @@ async function loadConfig() {
         previewProfile.value = osdStore.osdProfiles.selected || 0;
         activeProfile.value = osdStore.osdProfiles.selected || 0;
 
+        // Sync font state from memory
+        if (FONT.data?.loaded_font_file) {
+            const loadedIndex = fontTypes.value.findIndex((f) => f.file === FONT.data.loaded_font_file);
+            if (loadedIndex !== -1 && loadedIndex !== selectedFont.value) {
+                selectedFont.value = loadedIndex;
+                selectedFontPreset.value = loadedIndex;
+            } else if (loadedIndex === -1 && selectedFont.value !== -1) {
+                selectedFont.value = -1;
+                selectedFontPreset.value = -1;
+            }
+        }
+
         updatePreview();
     } catch (error) {
         console.error("Failed to load OSD configuration:", error);
@@ -1321,12 +1333,15 @@ const fontCharacterUrls = computed(() => {
 });
 
 const fontDataVersion = ref(0);
+let lastFontPresetRequestId = 0;
 
 function closeFontManager() {
     fontManagerDialog.value?.close();
 }
 
 function loadCustomFontFile() {
+    // Cancel any in-flight preset load so custom font stays authoritative.
+    lastFontPresetRequestId++;
     FONT.openFontFile()
         .then(() => {
             LogoManager.drawPreview();
@@ -1370,10 +1385,24 @@ function loadFontPreset(index) {
     const fontVer = 2;
     fontVersionInfo.value = i18n.getMessage(`osdDescribeFontVersion${fontVer}`);
 
+    // If this font is already loaded in memory, just trigger reactivity
+    if (FONT.data?.loaded_font_file === font.file && FONT.data?.characters?.length > 0) {
+        fontDataVersion.value++;
+        LogoManager.drawPreview();
+        updatePreviewBuffer();
+        return;
+    }
+
+    const requestId = ++lastFontPresetRequestId;
+
     fetch(`./resources/osd/${fontVer}/${font.file}.mcm`)
         .then((res) => res.text())
         .then((data) => {
+            if (requestId !== lastFontPresetRequestId) {
+                return;
+            }
             FONT.parseMCMFontFile(data);
+            FONT.data.loaded_font_file = font.file;
             fontDataVersion.value++;
             LogoManager.drawPreview();
             // Re-render preview with new font character images
@@ -1443,6 +1472,9 @@ async function flashFont() {
 // Watch for font preset changes
 watch(selectedFontPreset, (newVal) => {
     if (newVal >= 0) {
+        if (selectedFont.value !== newVal) {
+            selectedFont.value = newVal;
+        }
         loadFontPreset(newVal);
     }
 });
