@@ -87,8 +87,8 @@
                             <td>
                                 <span>{{ $t("pidTuningGyroFilterSlider") }}</span>
                                 <select v-model.number="gyroSliderMode" class="sliderMode">
-                                    <option :value="0">OFF</option>
-                                    <option :value="1">ON</option>
+                                    <option :value="0">{{ $t("pidTuningOptionOff") }}</option>
+                                    <option :value="1">{{ $t("pidTuningOptionOn") }}</option>
                                 </select>
                             </td>
                         </tr>
@@ -244,7 +244,7 @@
                                 </span>
                             </td>
                             <td colspan="2">
-                                <span>Notch Filter 1</span>
+                                <span>{{ $t("pidTuningGyroNotchFilter") }}</span>
 
                                 <span v-if="gyroNotch1Enabled" class="suboption">
                                     <input type="number" v-model.number="gyro_notch_hz" step="1" min="1" max="16000" />
@@ -281,7 +281,7 @@
                                 </span>
                             </td>
                             <td colspan="2">
-                                <span>Notch Filter 2</span>
+                                <span>{{ $t("pidTuningGyroNotchFilter2") }}</span>
 
                                 <span v-if="gyroNotch2Enabled" class="suboption">
                                     <input type="number" v-model.number="gyro_notch2_hz" step="1" min="1" max="16000" />
@@ -327,7 +327,7 @@
                                 </span>
                             </td>
                             <td colspan="2">
-                                <span>Gyro RPM Filter</span>
+                                <span>{{ $t("pidTuningRpmFilterGroup") }}</span>
 
                                 <span v-if="rpmFilterEnabled" class="suboption">
                                     <input
@@ -379,7 +379,7 @@
                                 </span>
                             </td>
                             <td colspan="2">
-                                <span>Dynamic Notch Filter</span>
+                                <span>{{ $t("pidTuningDynamicNotchFilterGroup") }}</span>
 
                                 <span v-if="dynamicNotchEnabled" class="suboption">
                                     <input type="number" v-model.number="dyn_notch_count" step="1" min="1" max="5" />
@@ -435,8 +435,8 @@
                             <td>
                                 <span>{{ $t("pidTuningDTermFilterSlider") }}</span>
                                 <select v-model.number="dtermSliderMode" class="sliderMode">
-                                    <option :value="0">OFF</option>
-                                    <option :value="1">ON</option>
+                                    <option :value="0">{{ $t("pidTuningOptionOff") }}</option>
+                                    <option :value="1">{{ $t("pidTuningOptionOn") }}</option>
                                 </select>
                             </td>
                         </tr>
@@ -560,7 +560,7 @@
                                 </span>
                             </td>
                             <td colspan="2">
-                                <span>D Term Lowpass 2</span>
+                                <span>{{ $t("pidTuningDTermLowpass2") }}</span>
 
                                 <span v-if="dtermLowpass2Enabled" class="suboption">
                                     <input
@@ -611,7 +611,7 @@
                                 </span>
                             </td>
                             <td colspan="2">
-                                <span>D Term Notch Filter</span>
+                                <span>{{ $t("pidTuningDTermNotchFiltersGroup") }}</span>
 
                                 <span v-if="dtermNotchEnabled" class="suboption">
                                     <input type="number" v-model.number="dterm_notch_hz" step="1" min="1" max="16000" />
