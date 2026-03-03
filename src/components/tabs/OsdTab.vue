@@ -59,14 +59,13 @@
                                 </div>
                                 <div id="element-fields" class="switchable-fields">
                                     <div
-                                        v-for="(field, index) in filteredDisplayItems"
+                                        v-for="field in filteredDisplayItems"
                                         :key="field.index"
                                         class="switchable-field display-field"
                                         :class="{ highlighted: isFieldHighlighted(field) }"
                                         @mouseenter="highlightField(field)"
                                         @mouseleave="unhighlightField(field)"
-                                    v-for="field in filteredDisplayItems"
-                                        <!-- Multi-profile checkboxes -->
+                                    >
                                         <div class="profile-checkboxes">
                                             <template v-for="profileIdx in osdStore.numberOfProfiles" :key="profileIdx">
                                                 <input
