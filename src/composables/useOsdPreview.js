@@ -1,6 +1,6 @@
 import { ref, computed, watch } from "vue";
 import { useOsdStore } from "@/stores/osd";
-import { FONT } from "@/js/tabs/osd.js";
+import { FONT } from "@/js/utils/osdFont";
 
 // Helper: Search limits of an element (ported from legacy OSD.searchLimitsElement)
 // Moved to outer scope to reduce complexity

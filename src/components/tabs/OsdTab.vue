@@ -564,6 +564,7 @@
                                     @click="loadCustomFontFile()"
                                     v-html="$t('osdSetupOpenFont')"
                                 ></button>
+                                <span class="font-format-hint">(.mcm)</span>
                             </div>
 
                             <!-- Logo customization -->
@@ -653,7 +654,9 @@ import { useOsdRuler } from "@/composables/useOsdRuler";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "@/components/elements/WikiButton.vue";
 import { i18n } from "@/js/localization";
-import { OSD, FONT, SYM } from "@/js/tabs/osd";
+import { OSD } from "@/js/tabs/osd";
+import { FONT, SYM } from "@/js/utils/osdFont";
+import { OSD_CONSTANTS } from "@/js/tabs/osd_constants";
 import { positionConfigs, getPresetGridCells } from "@/js/tabs/osd_positions";
 import LogoManager from "@/js/LogoManager";
 import GUI from "@/js/gui";
@@ -783,7 +786,7 @@ const timerSources = [
 ];
 
 // Font types from OSD constants
-const fontTypes = computed(() => OSD.constants?.FONT_TYPES || []);
+const fontTypes = computed(() => OSD_CONSTANTS.FONT_TYPES || []);
 
 function getLocalizedFieldText(field) {
     return i18n.getMessage(field.text, field.textParams) || "";
@@ -1442,6 +1445,21 @@ async function flashFont() {
         return;
     }
 
+    // If "User supplied font" is selected but no custom font file has been loaded yet,
+    // prompt the user to pick a file before proceeding to upload.
+    if (selectedFontPreset.value === -1 && (!FONT.data.loaded_font_file || fontTypes.value.some((f) => f.file === FONT.data.loaded_font_file))) {
+        try {
+            await FONT.openFontFile();
+            LogoManager.drawPreview();
+            fontDataVersion.value++;
+            updatePreviewBuffer();
+            fontVersionInfo.value = i18n.getMessage("osdDescribeFontVersionCUSTOM");
+        } catch (err) {
+            console.error("User cancelled custom font selection or error occurred", err);
+            return; // Cancel the upload process
+        }
+    }
+
     uploadProgress.value = 0;
     uploadProgressLabel.value = i18n.getMessage("osdSetupUploadingFont");
 
@@ -1458,6 +1476,7 @@ async function flashFont() {
 
     try {
         await FONT.upload(progressShim);
+        uploadProgress.value = 100;
         uploadProgressLabel.value = i18n.getMessage("osdSetupUploadingFontEnd", {
             length: FONT.data.characters.length,
         });
@@ -1467,12 +1486,11 @@ async function flashFont() {
     }
 }
 
-// Watch for font preset changes
 watch(selectedFontPreset, (newVal) => {
+    if (selectedFont.value !== newVal) {
+        selectedFont.value = newVal;
+    }
     if (newVal >= 0) {
-        if (selectedFont.value !== newVal) {
-            selectedFont.value = newVal;
-        }
         loadFontPreset(newVal);
     }
 });
@@ -2187,6 +2205,11 @@ onUnmounted(() => {
     gap: 8px;
     margin: 16px 0;
     padding: 1rem 0;
+}
+
+.font-format-hint {
+    font-size: 0.85em;
+    opacity: 0.6;
 }
 
 .fontpresets {

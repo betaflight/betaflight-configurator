@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import { ref, computed, reactive } from "vue";
-import { OSD, FONT, SYM } from "../js/tabs/osd";
+import { OSD } from "../js/tabs/osd";
+import { FONT, SYM } from "../js/utils/osdFont";
 import MSP from "../js/msp";
 import MSPCodes from "../js/msp/MSPCodes";
 import { OSD_CONSTANTS } from "../js/tabs/osd_constants";

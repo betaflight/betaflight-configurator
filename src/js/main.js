@@ -338,9 +338,7 @@ async function startProcess() {
                 case "setup":
                     mountVueTab("setup", content_ready);
                     break;
-                case "setup_osd":
-                    import("./tabs/setup_osd").then(({ setup_osd }) => setup_osd.initialize(content_ready));
-                    break;
+
                 case "configuration":
                     mountVueTab("configuration", content_ready);
                     break;
