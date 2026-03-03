@@ -658,7 +658,6 @@ function onConnect() {
 
     if (FC.CONFIG.flightControllerVersion !== "" && !isCliOnlyMode()) {
         if (!CONFIGURATOR.virtualMode && PortHandler.portPicker.selectedPort !== 'virtual') {
-        if (!CONFIGURATOR.virtualMode) {
             FC.FEATURE_CONFIG.features = new Features(FC.CONFIG);
             FC.BEEPER_CONFIG.beepers = new Beepers(FC.CONFIG);
             FC.BEEPER_CONFIG.dshotBeaconConditions = new Beepers(FC.CONFIG, ["RX_LOST", "RX_SET"]);
