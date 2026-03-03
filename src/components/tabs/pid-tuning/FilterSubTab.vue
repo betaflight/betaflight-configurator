@@ -665,7 +665,7 @@
 </template>
 
 <script setup>
-import { computed, ref, watch, onUnmounted } from "vue";
+import { computed, ref, watch } from "vue";
 import FC from "@/js/fc";
 import MSP from "@/js/msp";
 import MSPCodes from "@/js/msp/MSPCodes";
@@ -706,17 +706,12 @@ const dtermSliderMode = computed({
 });
 
 // Filter Sliders
-// Note: slider_gyro_filter_multiplier is stored as 0-200 (100 = 1.0x)
-// UI displays as 0.1-2.0 for user convenience
-const gyroFilterMultiplier = computed({
-    get: () => (FC.TUNING_SLIDERS.slider_gyro_filter_multiplier || 100) / 100,
-    set: (value) => (FC.TUNING_SLIDERS.slider_gyro_filter_multiplier = Math.round(value * 100)),
-});
-
-const dtermFilterMultiplier = computed({
-    get: () => (FC.TUNING_SLIDERS.slider_dterm_filter_multiplier || 100) / 100,
-    set: (value) => (FC.TUNING_SLIDERS.slider_dterm_filter_multiplier = Math.round(value * 100)),
-});
+// Local refs for slider positions — decoupled from FC state so MSP responses
+// writing back to FC.TUNING_SLIDERS don't cause the slider to bounce.
+// Master uses TuningSliders.sliderGyroFilterMultiplier / sliderDTermFilterMultiplier
+// for the same purpose.
+const gyroFilterMultiplier = ref((FC.TUNING_SLIDERS.slider_gyro_filter_multiplier || 100) / 100);
+const dtermFilterMultiplier = ref((FC.TUNING_SLIDERS.slider_dterm_filter_multiplier || 100) / 100);
 
 // Check if filter sliders are in danger zone (too little filtering)
 const filterSlidersInDangerZone = computed(() => {
@@ -1129,94 +1124,40 @@ const yaw_lowpass_hz = computed({
     set: (value) => (FC.FILTER_CONFIG.yaw_lowpass_hz = value),
 });
 
-// Flags to prevent recursive watcher triggers during MSP calculations
-const isCalculatingGyroFilters = ref(false);
-const isCalculatingDtermFilters = ref(false);
+// Watchers for filter sliders to trigger MSP calculations
+// Master fires MSP directly on every input — MSP's serial queue handles sequencing
+watch(gyroFilterMultiplier, (newValue, oldValue) => {
+    if (Math.abs(newValue - oldValue) < 0.001) {
+        return;
+    }
 
-// Debounce timers for filter sliders to avoid flooding the serial link
-let gyroFilterDebounceTimer = null;
-let dtermFilterDebounceTimer = null;
-const FILTER_SLIDER_DEBOUNCE_MS = 250;
+    // Sync local slider position → FC state before MSP send (like master)
+    FC.TUNING_SLIDERS.slider_gyro_filter = 1;
+    FC.TUNING_SLIDERS.slider_gyro_filter_multiplier = Math.round(newValue * 100);
 
-// Cleanup debounce timers on unmount
-onUnmounted(() => {
-    clearTimeout(gyroFilterDebounceTimer);
-    clearTimeout(dtermFilterDebounceTimer);
+    MSP.promise(MSPCodes.MSP_CALCULATE_SIMPLIFIED_GYRO, mspHelper.crunch(MSPCodes.MSP_CALCULATE_SIMPLIFIED_GYRO)).catch(
+        (error) => {
+            console.error("Failed to calculate simplified gyro filters:", error);
+        },
+    );
 });
 
-// Watchers for filter sliders to trigger MSP calculations
-// Debounced to prevent burst of MSP commands when dragging the range input
-watch(
-    () => gyroFilterMultiplier.value,
-    (newValue, oldValue) => {
-        // Prevent recursive triggers
-        if (isCalculatingGyroFilters.value) {
-            return;
-        }
+watch(dtermFilterMultiplier, (newValue, oldValue) => {
+    if (Math.abs(newValue - oldValue) < 0.001) {
+        return;
+    }
 
-        // Only trigger if value actually changed (avoid programmatic updates)
-        if (Math.abs(newValue - oldValue) < 0.001) {
-            return;
-        }
+    // Sync local slider position → FC state before MSP send (like master)
+    FC.TUNING_SLIDERS.slider_dterm_filter = 1;
+    FC.TUNING_SLIDERS.slider_dterm_filter_multiplier = Math.round(newValue * 100);
 
-        clearTimeout(gyroFilterDebounceTimer);
-        gyroFilterDebounceTimer = setTimeout(() => {
-            isCalculatingGyroFilters.value = true;
-
-            // Update slider_gyro_filter to indicate slider is active
-            FC.TUNING_SLIDERS.slider_gyro_filter = 1;
-
-            // Send MSP command to calculate new gyro filter values based on multiplier
-            // The firmware will multiply base filter frequencies by this multiplier
-            MSP.promise(
-                MSPCodes.MSP_CALCULATE_SIMPLIFIED_GYRO,
-                mspHelper.crunch(MSPCodes.MSP_CALCULATE_SIMPLIFIED_GYRO),
-            )
-                .catch((error) => {
-                    console.error("Failed to calculate simplified gyro filters:", error);
-                })
-                .finally(() => {
-                    isCalculatingGyroFilters.value = false;
-                });
-        }, FILTER_SLIDER_DEBOUNCE_MS);
-    },
-);
-
-watch(
-    () => dtermFilterMultiplier.value,
-    (newValue, oldValue) => {
-        // Prevent recursive triggers
-        if (isCalculatingDtermFilters.value) {
-            return;
-        }
-
-        // Only trigger if value actually changed (avoid programmatic updates)
-        if (Math.abs(newValue - oldValue) < 0.001) {
-            return;
-        }
-
-        clearTimeout(dtermFilterDebounceTimer);
-        dtermFilterDebounceTimer = setTimeout(() => {
-            isCalculatingDtermFilters.value = true;
-
-            // Update slider_dterm_filter to indicate slider is active
-            FC.TUNING_SLIDERS.slider_dterm_filter = 1;
-
-            // Send MSP command to calculate new dterm filter values based on multiplier
-            // The firmware will multiply base filter frequencies by this multiplier
-            MSP.promise(
-                MSPCodes.MSP_CALCULATE_SIMPLIFIED_DTERM,
-                mspHelper.crunch(MSPCodes.MSP_CALCULATE_SIMPLIFIED_DTERM),
-            )
-                .catch((error) => {
-                    console.error("Failed to calculate simplified dterm filters:", error);
-                })
-                .finally(() => {
-                    isCalculatingDtermFilters.value = false;
-                });
-        }, FILTER_SLIDER_DEBOUNCE_MS);
-    },
-);
+    MSP.promise(
+        MSPCodes.MSP_CALCULATE_SIMPLIFIED_DTERM,
+        mspHelper.crunch(MSPCodes.MSP_CALCULATE_SIMPLIFIED_DTERM),
+    ).catch((error) => {
+        console.error("Failed to calculate simplified dterm filters:", error);
+    });
+});
 </script>
 
 <style scoped>
