@@ -38,7 +38,9 @@ export function useDialog() {
             {
                 confirm: () => {
                     store.close();
-                    if (onConfirm) onConfirm();
+                    if (onConfirm) {
+                        onConfirm();
+                    }
                 },
             },
         );
@@ -56,7 +58,9 @@ export function useDialog() {
             {
                 cancel: () => {
                     store.close();
-                    if (onCancel) onCancel();
+                    if (onCancel) {
+                        onCancel();
+                    }
                 },
             },
         );
