@@ -402,6 +402,8 @@ import { ref, computed, watch, onMounted, onUnmounted, nextTick } from "vue";
 import { i18n } from "@/js/localization";
 import $ from "jquery";
 import FC from "@/js/fc";
+import MSP from "@/js/msp";
+import MSPCodes from "@/js/msp/MSPCodes";
 import RateCurve from "@/js/RateCurve";
 import Model from "@/js/model";
 import betaflightLogo from "@/images/rate_logos/betaflight.svg";
@@ -435,6 +437,7 @@ let initTimeout = null; // For setTimeout initial draw delay
 let animationFrameId = null;
 let lastTimestamp = 0;
 let keepRendering = true;
+let prevRcChannels = [0, 0, 0];
 
 // Rate Profile Name
 const rateProfileName = computed({
@@ -1678,50 +1681,61 @@ function renderModel(timestamp) {
     const delta = timestamp - lastTimestamp;
     lastTimestamp = timestamp;
 
+    const channels = FC.RC?.channels;
+    const ch0 = channels?.[0];
+    const ch1 = channels?.[1];
+    const ch2 = channels?.[2];
+
     // Check if we have RC data with valid channel values
-    if (FC.RC && FC.RC.channels && FC.RC.channels[0] && FC.RC.channels[1] && FC.RC.channels[2]) {
-        const rates = getCurrentRatesSnapshot();
+    if (ch0 && ch1 && ch2) {
+        // Only recalculate rotation when RC inputs have changed
+        if (ch0 !== prevRcChannels[0] || ch1 !== prevRcChannels[1] || ch2 !== prevRcChannels[2]) {
+            prevRcChannels = [ch0, ch1, ch2];
 
-        // Calculate rotation for each axis based on RC input
-        const degToRad = (deg) => deg * (Math.PI / 180);
+            const rates = getCurrentRatesSnapshot();
+            const degToRad = (deg) => deg * (Math.PI / 180);
 
-        const roll =
-            (delta / 1000) *
-            rateCurve.rcCommandRawToDegreesPerSecond(
-                FC.RC.channels[0],
-                rates.roll_rate,
-                rates.rc_rate,
-                rates.rc_expo,
-                rates.superexpo,
-                rates.deadband,
-                rates.roll_rate_limit,
-            );
+            const roll =
+                (delta / 1000) *
+                rateCurve.rcCommandRawToDegreesPerSecond(
+                    ch0,
+                    rates.roll_rate,
+                    rates.rc_rate,
+                    rates.rc_expo,
+                    rates.superexpo,
+                    rates.deadband,
+                    rates.roll_rate_limit,
+                );
 
-        const pitch =
-            (delta / 1000) *
-            rateCurve.rcCommandRawToDegreesPerSecond(
-                FC.RC.channels[1],
-                rates.pitch_rate,
-                rates.rc_rate_pitch,
-                rates.rc_pitch_expo,
-                rates.superexpo,
-                rates.deadband,
-                rates.pitch_rate_limit,
-            );
+            const pitch =
+                (delta / 1000) *
+                rateCurve.rcCommandRawToDegreesPerSecond(
+                    ch1,
+                    rates.pitch_rate,
+                    rates.rc_rate_pitch,
+                    rates.rc_pitch_expo,
+                    rates.superexpo,
+                    rates.deadband,
+                    rates.pitch_rate_limit,
+                );
 
-        const yaw =
-            (delta / 1000) *
-            rateCurve.rcCommandRawToDegreesPerSecond(
-                FC.RC.channels[2],
-                rates.yaw_rate,
-                rates.rc_rate_yaw,
-                rates.rc_yaw_expo,
-                rates.superexpo,
-                rates.yawDeadband,
-                rates.yaw_rate_limit,
-            );
+            const yaw =
+                (delta / 1000) *
+                rateCurve.rcCommandRawToDegreesPerSecond(
+                    ch2,
+                    rates.yaw_rate,
+                    rates.rc_rate_yaw,
+                    rates.rc_yaw_expo,
+                    rates.superexpo,
+                    rates.yawDeadband,
+                    rates.yaw_rate_limit,
+                );
 
-        model.rotateBy(-degToRad(pitch), -degToRad(yaw), -degToRad(roll));
+            model.rotateBy(-degToRad(pitch), -degToRad(yaw), -degToRad(roll));
+        } else {
+            // RC data unchanged - just re-render current state
+            model.render();
+        }
     } else {
         // No RC data - just render the static model
         model.render();
@@ -1837,11 +1851,13 @@ onMounted(() => {
         updateRatesLabels();
     });
 
-    // Set up interval to update RC stick positions
+    // Poll MSP_RC for live stick data and update rate curve labels
     rcUpdateInterval = setInterval(() => {
-        if (FC.RC && FC.RC.channels && rateCurveLayer1.value) {
-            updateRatesLabels();
-        }
+        MSP.send_message(MSPCodes.MSP_RC, false, false, () => {
+            if (rateCurveLayer1.value) {
+                updateRatesLabels();
+            }
+        });
     }, 100); // Update 10 times per second
 });
 
