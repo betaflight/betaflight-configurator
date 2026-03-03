@@ -18,7 +18,7 @@
                     <tbody>
                         <tr>
                             <td>
-                                <input type="text" v-model="rateProfileName" maxlength="8" />
+                                <input type="text" v-model="rateProfileNameModel" maxlength="8" />
                             </td>
                         </tr>
                     </tbody>
@@ -439,7 +439,7 @@ let lastTimestamp = 0;
 let keepRendering = true;
 
 // Rate Profile Name
-const rateProfileName = computed({
+const rateProfileNameModel = computed({
     get: () => props.rateProfileName,
     set: (value) => emit("update:rateProfileName", value),
 });
