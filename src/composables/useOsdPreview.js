@@ -192,22 +192,26 @@ export function useOsdPreview() {
         return rows;
     });
 
-    // Initial update
-    updatePreviewBuffer();
+    // Initial update — only run if font data is already loaded to avoid empty renders.
+    // The OsdTab component calls updatePreviewBuffer() explicitly after loading the font.
+    if (FONT.data?.characters?.length) {
+        updatePreviewBuffer();
+    }
 
-    // Watch for changes that require re-rendering
+    // Watch for changes that require re-rendering.
+    // Use deep: false — the component calls updatePreviewBuffer() imperatively after
+    // mutations, so we only need to react to reference replacements (e.g. full reload).
     watch(
         [
             () => store.displayItems,
             () => store.currentPreviewProfile,
             () => store.displaySize.total,
             () => store.displaySize.x,
-            // Also watch videoSystem change if it triggers displaySize update
         ],
         () => {
             updatePreviewBuffer();
         },
-        { deep: true },
+        { deep: false },
     );
 
     return {

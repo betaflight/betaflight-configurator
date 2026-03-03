@@ -1,7 +1,7 @@
 <template>
     <BaseTab tab-name="osd">
         <div class="content_wrapper">
-            <div class="tab_title" v-html="$t('osdSetupTitle')"></div>
+            <div class="tab_title">{{ $t('osdSetupTitle') }}</div>
             <WikiButton docUrl="OSD" />
 
             <!-- Warning: No OSD Chip Detected -->
@@ -44,7 +44,7 @@
                                             <span class="profile-label">{{ profileIdx }}</span>
                                         </template>
                                     </span>
-                                    <span v-html="$t('osdSetupElementsTitle')"></span>
+                                    <span>{{ $t('osdSetupElementsTitle') }}</span>
                                 </div>
                             </div>
                             <div class="spacer_box">
@@ -113,7 +113,7 @@
                                                         class="context-menu-item-display"
                                                         @click="showPresetSubmenu = !showPresetSubmenu"
                                                     >
-                                                        <span>Align to position</span>
+                                                        <span>{{ $t('osdPresetPositionAlignTitle') }}</span>
                                                         <span>
                                                             ▶
                                                             <span class="context-menu-item-content-wrapper">
@@ -125,7 +125,7 @@
                                                                 >
                                                                     <div id="preset-pos-grid-wrapper">
                                                                         <div class="preset-popover-title">
-                                                                            Choose Position
+                                                                            {{ $t('osdPresetPositionChooseTitle') }}
                                                                         </div>
                                                                         <div class="preset-grid">
                                                                             <div
@@ -256,7 +256,7 @@
                             </div>
 
                             <div class="gui_box_bottombar">
-                                <div class="spacer_box_title" v-html="$t('osdSetupPreviewTitle')"></div>
+                                <div class="spacer_box_title">{{ $t('osdSetupPreviewTitle') }}</div>
                             </div>
                         </div>
                     </div>
@@ -266,10 +266,10 @@
                         <!-- Active Profile Selector -->
                         <div class="gui_box osdprofile-selected-container grey">
                             <div class="gui_box_titlebar cf_tip">
-                                <div class="spacer_box_title" v-html="$t('osdSetupSelectedProfileTitle')"></div>
+                                <div class="spacer_box_title">{{ $t('osdSetupSelectedProfileTitle') }}</div>
                             </div>
                             <div class="spacer_box">
-                                <label for="osd-active-profile" v-html="$t('osdSetupSelectedProfileLabel')"></label>
+                                <label for="osd-active-profile">{{ $t('osdSetupSelectedProfileLabel') }}</label>
                                 <select
                                     id="osd-active-profile"
                                     v-model.number="activeProfile"
@@ -288,7 +288,7 @@
                             class="gui_box videomode-container grey requires-max7456"
                         >
                             <div class="gui_box_titlebar cf_tip" :title="$t('osdSectionHelpVideoMode')">
-                                <div class="spacer_box_title" v-html="$t('osdSetupVideoFormatTitle')"></div>
+                                <div class="spacer_box_title">{{ $t('osdSetupVideoFormatTitle') }}</div>
                             </div>
                             <div class="spacer_box">
                                 <div class="video-types">
@@ -317,7 +317,7 @@
                             class="gui_box grey units-container requires-osd-feature"
                         >
                             <div class="gui_box_titlebar cf_tip" :title="$t('osdSectionHelpUnits')">
-                                <div class="spacer_box_title" v-html="$t('osdSetupUnitsTitle')"></div>
+                                <div class="spacer_box_title">{{ $t('osdSetupUnitsTitle') }}</div>
                             </div>
                             <div class="spacer_box">
                                 <div class="units">
@@ -344,7 +344,7 @@
                                 style="margin-bottom: 0px"
                                 :title="$t('osdSectionHelpTimers')"
                             >
-                                <div class="spacer_box_title" v-html="$t('osdSetupTimersTitle')"></div>
+                                <div class="spacer_box_title">{{ $t('osdSetupTimersTitle') }}</div>
                             </div>
                             <div class="spacer_box">
                                 <div id="timer-fields" class="switchable-fields">
@@ -408,7 +408,7 @@
                             class="gui_box grey alarms-container requires-osd-feature"
                         >
                             <div class="gui_box_titlebar cf_tip" :title="$t('osdSectionHelpAlarms')">
-                                <div class="spacer_box_title" v-html="$t('osdSetupAlarmsTitle')"></div>
+                                <div class="spacer_box_title">{{ $t('osdSetupAlarmsTitle') }}</div>
                             </div>
                             <div class="spacer_box">
                                 <div class="alarms">
@@ -439,7 +439,7 @@
                                 style="margin-bottom: 0px"
                                 :title="$t('osdSectionHelpWarnings')"
                             >
-                                <div class="spacer_box_title" v-html="$t('osdSetupWarningsTitle')"></div>
+                                <div class="spacer_box_title">{{ $t('osdSetupWarningsTitle') }}</div>
                             </div>
                             <div class="spacer_box">
                                 <div id="warnings-fields" class="switchable-fields">
@@ -475,7 +475,7 @@
                                 style="margin-bottom: 0px"
                                 :title="$t('osdSectionHelpStats')"
                             >
-                                <div class="spacer_box_title" v-html="$t('osdSetupStatsTitle')"></div>
+                                <div class="spacer_box_title">{{ $t('osdSetupStatsTitle') }}</div>
                             </div>
                             <div class="spacer_box">
                                 <div id="post-flight-stat-fields" class="switchable-fields">
@@ -534,7 +534,7 @@
                     </div>
                     <div class="html-dialog-content">
                         <div class="font-picker">
-                            <h1 class="tab_title" v-html="$t('osdSetupFontPresets')"></h1>
+                            <h1 class="tab_title">{{ $t('osdSetupFontPresets') }}</h1>
                             <span class="font-manager-version-info">{{ fontVersionInfo }}</span>
                             <div class="content_wrapper font-preview" ref="fontPreviewContainer">
                                 <img
@@ -546,7 +546,7 @@
                                 />
                             </div>
                             <div class="fontpresets_wrapper">
-                                <label for="osd-font-preset" v-html="$t('osdSetupFontPresetsSelector')"></label>
+                                <label for="osd-font-preset">{{ $t('osdSetupFontPresetsSelector') }}</label>
                                 <select id="osd-font-preset" v-model.number="selectedFontPreset" class="fontpresets">
                                     <option
                                         v-show="selectedFontPreset === -1"
@@ -568,7 +568,7 @@
                             </div>
 
                             <!-- Logo customization -->
-                            <h1 class="tab_title" v-html="$t('osdSetupCustomLogoTitle')"></h1>
+                            <h1 class="tab_title">{{ $t('osdSetupCustomLogoTitle') }}</h1>
                             <div id="font-logo">
                                 <div id="font-logo-preview-container">
                                     <div id="font-logo-preview" ref="logoPreview"></div>
