@@ -1347,11 +1347,9 @@ function drawAngleModeLabels(ctx, canvas, rates, balloonsDirty) {
 
         // Calculate offset for balloon placement
         const getOffsetForBalloon = (value) => {
-            return (
-                canvas.width -
-                Math.ceil(ctx.measureText(value).width) / (ctx.canvas.clientWidth / ctx.canvas.clientHeight) -
-                40
-            );
+            const offset =
+                Math.ceil(ctx.measureText(value).width) / (ctx.canvas.clientWidth / ctx.canvas.clientHeight) + 40;
+            return (canvas.width - offset) / textScale;
         };
 
         const angleCenterSensRollOffset = getOffsetForBalloon(angleCenterSensRollText);
