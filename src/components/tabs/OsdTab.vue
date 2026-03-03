@@ -65,7 +65,7 @@
                                         :class="{ highlighted: isFieldHighlighted(field) }"
                                         @mouseenter="highlightField(field)"
                                         @mouseleave="unhighlightField(field)"
-                                    >
+                                    v-for="field in filteredDisplayItems"
                                         <!-- Multi-profile checkboxes -->
                                         <div class="profile-checkboxes">
                                             <template v-for="profileIdx in osdStore.numberOfProfiles" :key="profileIdx">
