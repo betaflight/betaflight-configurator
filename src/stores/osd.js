@@ -20,6 +20,50 @@ function encodeStatisticsPayload(statItem, isVirtualMode, virtualMode) {
     return buffer;
 }
 
+async function fetchOsdInfo(fcStore) {
+    if (CONFIGURATOR.virtualMode) {
+        return undefined;
+    }
+
+    if (fcStore.config?.apiVersion && semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)) {
+        await MSP.promise(MSPCodes.MSP_OSD_CANVAS);
+    }
+
+    return MSP.promise(MSPCodes.MSP_OSD_CONFIG);
+}
+
+async function decodeOsdData(info) {
+    OSD.loadDisplayFields();
+    OSD.chooseFields();
+
+    if (CONFIGURATOR.virtualMode) {
+        const { default: VirtualFC } = await import("../js/VirtualFC.js");
+        VirtualFC.setupVirtualOSD();
+
+        if (OSD.msp.decodeVirtual) {
+            OSD.msp.decodeVirtual();
+        }
+        return;
+    }
+
+    OSD.msp.decode(info);
+    await MSP.promise(MSPCodes.MSP_RX_CONFIG);
+}
+
+async function ensureDefaultFontLoaded() {
+    if (FONT.data?.characters.length !== 0) {
+        return;
+    }
+
+    try {
+        const response = await fetch("./resources/osd/2/default.mcm");
+        const data = await response.text();
+        FONT.parseMCMFontFile(data);
+    } catch (fontError) {
+        console.warn("Failed to load default OSD font:", fontError);
+    }
+}
+
 export const useOsdStore = defineStore("osd", () => {
     // Core OSD data state
     const videoSystem = ref(null);
@@ -271,36 +315,6 @@ export const useOsdStore = defineStore("osd", () => {
         }
     }
 
-    async function fetchOsdInfo(fcStore) {
-        if (CONFIGURATOR.virtualMode) {
-            return undefined;
-        }
-
-        if (fcStore.config?.apiVersion && semver.gte(fcStore.config.apiVersion, API_VERSION_1_45)) {
-            await MSP.promise(MSPCodes.MSP_OSD_CANVAS);
-        }
-
-        return MSP.promise(MSPCodes.MSP_OSD_CONFIG);
-    }
-
-    async function decodeOsdData(info) {
-        OSD.loadDisplayFields();
-        OSD.chooseFields();
-
-        if (CONFIGURATOR.virtualMode) {
-            const { default: VirtualFC } = await import("../js/VirtualFC.js");
-            VirtualFC.setupVirtualOSD();
-
-            if (OSD.msp.decodeVirtual) {
-                OSD.msp.decodeVirtual();
-            }
-            return;
-        }
-
-        OSD.msp.decode(info);
-        await MSP.promise(MSPCodes.MSP_RX_CONFIG);
-    }
-
     function syncStoreFromDecodedOsdData() {
         videoSystem.value = OSD.data.video_system;
         unitMode.value = OSD.data.unit_mode;
@@ -327,20 +341,6 @@ export const useOsdStore = defineStore("osd", () => {
         }
 
         updateDisplaySize();
-    }
-
-    async function ensureDefaultFontLoaded() {
-        if (FONT.data?.characters.length !== 0) {
-            return;
-        }
-
-        try {
-            const response = await fetch("./resources/osd/2/default.mcm");
-            const data = await response.text();
-            FONT.parseMCMFontFile(data);
-        } catch (fontError) {
-            console.warn("Failed to load default OSD font:", fontError);
-        }
     }
 
     const fetchOsdConfig = async () => {

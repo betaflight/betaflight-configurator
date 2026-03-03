@@ -177,11 +177,16 @@ function drawHorizontalAxis(ctx, params, axis) {
         const isCenter = offset === 0;
         const isMajor = offset % 5 === 0 || isCenter;
         const tick = isMajor ? RulerConfig.tickMajor : RulerConfig.tickMinor;
-        const axisColor = isCenter
-            ? RulerConfig.colorCenter
-            : isMajor
-                ? RulerConfig.colorMajor
-                : RulerConfig.colorMinor;
+
+        let axisColor;
+        if (isCenter) {
+            axisColor = RulerConfig.colorCenter;
+        } else if (isMajor) {
+            axisColor = RulerConfig.colorMajor;
+        } else {
+            axisColor = RulerConfig.colorMinor;
+        }
+
         const { y0, y1, labelY } = getHorizontalAxisGeometry(axis, params, tick);
 
         drawHorizontalTick(ctx, x, y0, y1, axisColor);
@@ -237,11 +242,16 @@ function drawVerticalAxis(ctx, params, axis) {
         const isMajor =
             Math.abs(offset) % RulerConfig.verticalLabelStep === 0 || i === 0 || i === params.rowsCount - 1 || isCenter;
         const tick = isMajor ? RulerConfig.vertTickMajor : RulerConfig.tickMinor;
-        const axisColor = isCenter
-            ? RulerConfig.colorCenter
-            : isMajor
-                ? RulerConfig.colorMajor
-                : RulerConfig.colorMinor;
+
+        let axisColor;
+        if (isCenter) {
+            axisColor = RulerConfig.colorCenter;
+        } else if (isMajor) {
+            axisColor = RulerConfig.colorMajor;
+        } else {
+            axisColor = RulerConfig.colorMinor;
+        }
+
         const { x0, x1 } = getVerticalAxisGeometry(axis, params.left, params.right, params.cw, tick);
 
         drawVerticalTick(ctx, x0, x1, y, axisColor);

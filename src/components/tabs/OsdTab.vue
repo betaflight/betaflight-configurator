@@ -1362,7 +1362,7 @@ function openFontManager() {
     LogoManager.init(FONT, SYM.LOGO);
     // Load selected/default preset on first open if no font is loaded yet.
     if (!FONT.data.character_image_urls.length && fontTypes.value.length > 0) {
-        const presetToLoad = selectedFontPreset.value >= 0 ? selectedFontPreset.value : 0;
+        const presetToLoad = Math.max(0, selectedFontPreset.value);
         selectedFontPreset.value = presetToLoad;
         loadFontPreset(presetToLoad);
     } else {
@@ -2188,6 +2188,7 @@ onUnmounted(() => {
     align-items: center;
     gap: 8px;
     margin: 16px 0;
+    padding: 1rem 0;
 }
 
 .fontpresets {
@@ -2305,19 +2306,6 @@ button {
     }
 }
 
-/* Font Manager - font preview and presets */
-.font-preview {
-    padding-bottom: 1.25rem;
-}
-.fontpresets_wrapper {
-    padding: 1rem 0;
-}
-.fontpresets {
-    background: var(--surface-200);
-    color: var(--text);
-    border: 1px solid var(--surface-500);
-    border-radius: 3px;
-}
 #font-logo-info-upload-hint {
     margin-top: 1em;
     display: none;
