@@ -225,28 +225,28 @@
         "message": "최소 하나 이상의 자이로가 활성화되어야 합니다"
     },
     "sensorStatusGyroShort": {
-        "message": "Gyro",
+        "message": "자이로",
         "description": "Text of the image in the top sensors icons. Please keep it short."
     },
     "sensorStatusAccel": {
         "message": "가속도계"
     },
     "sensorStatusAccelShort": {
-        "message": "Accel",
+        "message": "가속도계",
         "description": "Text of the image in the top sensors icons. Please keep it short."
     },
     "sensorStatusMag": {
         "message": "자력계"
     },
     "sensorStatusMagShort": {
-        "message": "Mag",
+        "message": "자력계",
         "description": "Text of the image in the top sensors icons. Please keep it short."
     },
     "sensorStatusBaro": {
         "message": "기압계"
     },
     "sensorStatusBaroShort": {
-        "message": "Baro",
+        "message": "기압계",
         "description": "Text of the image in the top sensors icons. Please keep it short."
     },
     "sensorStatusGPS": {
@@ -260,7 +260,7 @@
         "message": "초음파 \/ 레인지 파인더"
     },
     "sensorStatusSonarShort": {
-        "message": "Sonar",
+        "message": "초음파",
         "description": "Text of the image in the top sensors icons. Please keep it short."
     },
     "checkForConfiguratorUnstableVersions": {
@@ -1277,7 +1277,7 @@
         "description": "Message that pops up to describe the GPS feature"
     },
     "featureSONAR": {
-        "message": "초음파센서"
+        "message": "초음파"
     },
     "featureSONARTip": {
         "message": "초음파센서를 활성화해서 cm 단위로 지면까지의 거리를 측정할 수 있습니다"
@@ -1687,7 +1687,7 @@
         "message": "비행중 가속도계 교정이 실패하였습니다."
     },
     "beeperREADY_BEEP": {
-        "message": "GPS 신호가 고정되고 준비되면 링톤을 울립니다."
+        "message": "GPS 위성신호가 잡히고 준비되면 링톤을 울립니다"
     },
     "beeperDISARM_REPEAT": {
         "message": "디스아밍 위치에서 스틱이 고정되어 있는 동안 신호음을 울립니다."
@@ -3016,10 +3016,10 @@
         "message": "인터넷 연결 상태를 확인하십시오."
     },
     "gpsMapMessage2": {
-        "message": "GPS 3D fix를 기다리는 중…"
+        "message": "GPS 3D 고정을 기다리는 중…"
     },
     "gps3dFix": {
-        "message": "3D Fix:"
+        "message": "3D 고정:"
     },
     "gpsFixTrue": {
         "message": "참"
@@ -3074,7 +3074,7 @@
         "message": "신호 강도"
     },
     "gpsSignalLost": {
-        "message": "GPS 모듈의 연결이 확인되면 GPS 아이콘이 켜집니다.<br \/><br \/>처음에는 적색이 켜지며 3D fix가 달성되면 노란색으로 변경됩니다.<br \/><br \/>만약 GPS 아이콘이 켜지지 않는다면, 연결과 환경설정을 점검하고, GPS 모듈에 전원이 공급되는지 확인하세요.<br \/><br \/>GPS 연결상태에 대한 더 많은 정보는 CLI 'status' 명령으로 확인이 가능합니다."
+        "message": "GPS 모듈의 연결이 확인되면 GPS 아이콘이 켜집니다.<br \/><br \/>처음에는 적색이 켜지며 3D 고정이 달성되면 노란색으로 변경됩니다.<br \/><br \/>만약 GPS 아이콘이 켜지지 않는다면, 연결과 환경설정을 점검하고, GPS 모듈에 전원이 공급되는지 확인하세요.<br \/><br \/>GPS 연결상태에 대한 더 많은 정보는 CLI 'status' 명령으로 확인이 가능합니다."
     },
     "gpsSignalGnssId": {
         "message": "Gnss ID"
@@ -3098,10 +3098,10 @@
         "message": "사용불가"
     },
     "gnssQualityLocked": {
-        "message": "고정"
+        "message": "잠김"
     },
     "gnssQualityFullyLocked": {
-        "message": "완전히 고정"
+        "message": "완전히 잠김"
     },
     "gnssUsedUnused": {
         "message": "미사용"
@@ -4097,11 +4097,11 @@
         "description": "One of the modes in Color Mode in Led Strip"
     },
     "ledStripModeColorsModeMag": {
-        "message": "Mag",
+        "message": "자력계",
         "description": "One of the modes in Color Mode in Led Strip"
     },
     "ledStripModeColorsModeBaro": {
-        "message": "Baro",
+        "message": "기압계",
         "description": "One of the modes in Color Mode in Led Strip"
     },
     "ledStripDirN": {
@@ -4161,7 +4161,7 @@
         "description": "One of the modes in Color Mode in Led Strip"
     },
     "ledStripModeColorsModeGPSLocked": {
-        "message": "GPS: 고정",
+        "message": "GPS: 잠김",
         "description": "One of the modes in Color Mode in Led Strip"
     },
     "ledStripModeGpsDefault": {
@@ -5023,7 +5023,7 @@
         "message": "최소위성수"
     },
     "failsafeGpsRescueItemAllowArmingWithoutFix": {
-        "message": "Fix 없이 아밍 허용 - <span class=\"message-negative\">경고: fix 없음 = 페일세이프시 디스아밍됨!<\/span>"
+        "message": "GPS 고정 없이 아밍 허용 - <span class=\"message-negative\">경고: GPS 고정 없음 = 페일세이프시 디스아밍됨!<\/span>"
     },
     "failsafeGpsRescueArmWithoutFixHelp": {
         "message": "권장되지 않습니다. 홈 포인트를 설정하지 않고도 아밍을 허용하지만, 기체가 아밍을 해제하고 진정한 Rx 손실 페일 세이프와 충돌합니다.  스위치를 사용하여 테스트할 경우 해제까지 짧은 시간 동안 아무 작업도 수행하지 않습니다."
@@ -5880,7 +5880,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementGPSSats": {
-        "message": "GPS fix를 제공하는 위성 수"
+        "message": "GPS 고정을 제공하는 위성 수"
     },
     "osdTextElementGPSLon": {
         "message": "GPS 경도",
@@ -6260,7 +6260,7 @@
         "description": "One of the elements of the OSD"
     },
     "osdDescElementEfficiency": {
-        "message": "순간 배터리 소비량을 mAh\/거리 단위로 표시. (유효한 GPS fix 필요)"
+        "message": "순간 배터리 소비량을 mAh\/거리 단위로 표시. (유효한 GPS 고정 필요)"
     },
     "osdTextTotalFlights": {
         "message": "총 비행 횟수",

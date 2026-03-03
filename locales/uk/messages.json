@@ -150,6 +150,10 @@
         "message": "Встановіть затримку підключення, щоб дозволити довшу ініціалізацію після підключення пристрою або перезавантаження",
         "description": "Change timeout on auto-connect and reboot so the bus has more time to initialize after being detected by the system"
     },
+    "languageAndAppearanceSettings": {
+        "message": "Мова та вигляд",
+        "description": "Title for the language and appearance settings section"
+    },
     "developmentSettings": {
         "message": "Налаштування розробки",
         "description": "Title for the development settings section"
@@ -161,6 +165,10 @@
     "cliOnlyMode": {
         "message": "Увімкнути режим лише командного рядка",
         "description": "Text for the option to enable or disable CLI only mode"
+    },
+    "automaticDevOptions": {
+        "message": "Автоматично вмикати налаштування розробки для ознайомчих збірок",
+        "description": "Text for the option to automatically enable development settings for preview builds"
     },
     "showManualMode": {
         "message": "Увімкнути режим ручного з'єднання",
@@ -674,6 +682,12 @@
     "defaultWelcomeIntro": {
         "message": "Ласкаво просимо до <strong>застосунку Betaflight<\/strong> - програми, призначеної для спрощення оновлення, конфігурації та налаштування вашого польотного контролера."
     },
+    "defaultHardwareHead": {
+        "message": "Апаратне забезпечення"
+    },
+    "defaultSoftwareHead": {
+        "message": "Програмне забезпечення"
+    },
     "defaultContributingHead": {
         "message": "Сприяння"
     },
@@ -685,6 +699,12 @@
     },
     "defaultDiscordText": {
         "message": "Сервер Betaflight на <a href=\"https:\/\/discord.betaflight.com\/invite\" target=\"_blank\" rel=\"noopener noreferrer\">Discord<\/a>.<br \/>Діліться своїм досвідом польотів, обговорюйте Betaflight, допомагайте іншим або отримуйте допомогу від спільноти."
+    },
+    "defaultCommunityHead": {
+        "message": "Спільнота"
+    },
+    "statisticsDisclaimerHead": {
+        "message": "Ваша конфіденційність"
     },
     "defaultButtonFirmwareFlasher": {
         "message": "Програматор"
@@ -3516,6 +3536,12 @@
     "sdcardStatusUnknown": {
         "message": "Невідомий стан $1"
     },
+    "firmwareFlasherPleaseWait": {
+        "message": "Будь ласка, зачекайте"
+    },
+    "firmwareFlasherBoardSelectionHead": {
+        "message": "Вибір плати"
+    },
     "firmwareFlasherBranch": {
         "message": "Оберіть запит на злиття або коміт"
     },
@@ -3550,8 +3576,14 @@
     "firmwareFlasherCloudBuildDetails": {
         "message": "Деталі хмарної збірки:"
     },
+    "firmwareFlasherCloudBuildLogUrl": {
+        "message": "Показати журнал"
+    },
     "firmwareFlasherCloudBuildStatus": {
         "message": "Стан:"
+    },
+    "firmwareFlasherCloudBuildQueued": {
+        "message": "у черзі"
     },
     "firmwareFlasherCloudBuildPending": {
         "message": "очікується"
@@ -4522,6 +4554,10 @@
     },
     "pidTuningCutoffFrequency": {
         "message": "Частота зрізу [Hz]"
+    },
+    "pidTuningNotchFilterHelp": {
+        "message": "Режекторний фільтр — це симетричний, вузький, високочастотний фільтр із значенням центру і значенням зрізу у якості параметрів.<br \/><br \/>Частота центру — це центральна частота фільтра. Значення зрізу вказує на нижню частоту, на якій послаблення сингалу -3 дБ.<br \/><br \/>Наприклад, зріз фільтра 160 з центром 260 створює широкий спектральний зріз з діапазоном -3 дБ від 160 до 360 Гц та найбільшим послабленням навколо 260 Гц.",
+        "description": "Notch filter helpicon message"
     },
     "pidTuningDynamicNotchFilterGroup": {
         "message": "Динамічний вузькосмуговий режекторний фільтр"
@@ -6652,6 +6688,9 @@
     "osdSectionHelpAlarms": {
         "message": "Встановіть порогові значення для елементів, що призводять до попередження на наекранному меню."
     },
+    "osdSectionHelpStats": {
+        "message": "Встановіть значення, які показуються на екрані післяпольотної статистики."
+    },
     "osdSectionHelpWarnings": {
         "message": "Увімкнути або вимкнути попередження, які відображаються в елементі ПОПЕРЕДЖЕННЯ."
     },
@@ -7012,6 +7051,9 @@
     "configurationSmallAngle": {
         "message": "Макс. кут взведення [degrees]"
     },
+    "configurationSmallAngleHelp": {
+        "message": "Повітряне судно не буде взведено, якщо нахил перевищує вказану кількість градусів. Ця умова діє тільки у випадку, якщо акселерометр увімкнений. Встановлення значення 180 фактично відключить перевірку."
+    },
     "configurationBatteryVoltage": {
         "message": "Напруга акумулятора"
     },
@@ -7178,6 +7220,22 @@
     "darkTheme": {
         "message": "Увімкнути темну тему"
     },
+    "colorTheme": {
+        "message": "Колірна тема",
+        "description": "Color theme settings"
+    },
+    "colorThemeYellow": {
+        "message": "Жовта (за замовчуванням)",
+        "description": "Default yellow color theme"
+    },
+    "colorThemeAmber": {
+        "message": "Бурштинова",
+        "description": "Amber color theme"
+    },
+    "colorThemeContrast": {
+        "message": "Висококонтрастна",
+        "description": "Contrast color theme"
+    },
     "pidTuningRatesType": {
         "message": "Тип коефіцієнтів"
     },
@@ -7285,6 +7343,9 @@
     },
     "cordovaWebviewUpdateBtn": {
         "message": "Оновлення з магазину Google Play"
+    },
+    "cordovaWebviewEnable": {
+        "message": "Перейдіть до секції з відомостями про пристрій у налаштуваннях і натисніть на номер збірки 10 разів, щоб увімкнути \"Налаштування розробника\". Потім відкрийте налаштування розробника і виберіть <b>{{app}}<\/b> як засіб WebView."
     },
     "cordovaWebviewEnableBtn": {
         "message": "Відкрити налаштування"
@@ -7451,6 +7512,10 @@
     "presetsLoadingDumpAll": {
         "message": "Завантаження поточної конфігурації з польотного контролера",
         "description": "Title for the waiting dialog when loading dump all into a file"
+    },
+    "dumpAllNotSavedWarning": {
+        "message": "Сталася помилка під час збереження поточної конфігурації",
+        "description": "Message appears on presets tab when saving current diff all into a file has failed"
     },
     "presetSources": {
         "message": "Джерела попередніх налаштувань",
@@ -7739,6 +7804,9 @@
     },
     "labelSignOut": {
         "message": "Вийти"
+    },
+    "placeholderAvatarUrl": {
+        "message": "Введіть URL зображення для вашого аватару"
     },
     "labelCreatePasskey": {
         "message": "Створити ключ доступу"
