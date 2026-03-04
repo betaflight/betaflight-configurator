@@ -2360,6 +2360,9 @@ MspHelper.prototype.crunch = function (code, modifierCode = undefined) {
         case MSPCodes.MSP2_SET_BATTERY_PROFILE: {
             const bpIdx = modifierCode;
             const bp = FC.BATTERY_PROFILES[bpIdx];
+            if (!bp) {
+                throw new Error(`Missing battery profile at index ${bpIdx}`);
+            }
             buffer
                 .push8(bpIdx)
                 .push16(Math.round(bp.vbatmincellvoltage * 100))
