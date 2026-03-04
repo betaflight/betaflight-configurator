@@ -91,7 +91,7 @@
             </div>
 
             <!-- Save/Revert Buttons -->
-            <div class="content_toolbar">
+            <div class="content_toolbar toolbar_fixed_bottom" style="position: fixed">
                 <div class="btn save_btn">
                     <a href="#" @click.prevent="save" :class="{ disabled: !hasChanges }">
                         <span>{{ $t("pidTuningButtonSave") }}</span>
