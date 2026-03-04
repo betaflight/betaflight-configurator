@@ -137,14 +137,14 @@ export function usePower() {
     // Change active battery profile
     const changeBatteryProfile = async (profileIndex) => {
         const connectionStore = useConnectionStore();
-
-        // Pause global and local polling to prevent MSP_STATUS_EX from
-        // overwriting FC.CONFIG.batteryProfile with stale data during the switch
-        connectionStore.pauseLiveData();
-        GUI.interval_pause("power_data_pull_slow");
+        const previousProfile = activeBatteryProfile.value;
 
         try {
-            activeBatteryProfile.value = profileIndex;
+            // Pause global and local polling to prevent MSP_STATUS_EX from
+            // overwriting FC.CONFIG.batteryProfile with stale data during the switch
+            connectionStore.pauseLiveData();
+            GUI.interval_pause("power_data_pull_slow");
+
             const BATTERYPROFILE_MASK = 0x40;
             await MSP.promise(MSPCodes.MSP_SELECT_SETTING, [profileIndex | BATTERYPROFILE_MASK]);
             await MSP.promise(MSPCodes.MSP_STATUS_EX);
@@ -152,6 +152,9 @@ export function usePower() {
             await loadBatteryProfiles();
             await MSP.promise(MSPCodes.MSP_BATTERY_CONFIG);
             updateStateFromFC();
+        } catch (error) {
+            activeBatteryProfile.value = previousProfile;
+            throw error;
         } finally {
             connectionStore.resumeLiveData();
             GUI.interval_resume("power_data_pull_slow");
