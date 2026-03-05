@@ -1240,95 +1240,83 @@ function drawAxisLabel(ctx, text, x, y, align, color) {
     ctx.fillText(text, x, y);
 }
 
+function resolveBalloonOverlap(x, y, width, height, balloonsDirty) {
+    for (const balloon of balloonsDirty) {
+        const overlapsH =
+            (x >= balloon.left && x <= balloon.right) || (x + width >= balloon.left && x + width <= balloon.right);
+        const overlapsV =
+            (y >= balloon.top && y <= balloon.bottom) || (y + height >= balloon.top && y + height <= balloon.bottom);
+
+        if (overlapsH && overlapsV) {
+            if (y <= (balloon.bottom - balloon.top) / 2 && balloon.top - height > 0) {
+                y = balloon.top - height;
+            } else {
+                y = balloon.bottom;
+            }
+        }
+    }
+    return y;
+}
+
+function drawBalloonPath(ctx, x, y, width, height, pointerY, align, radius, offset) {
+    const pointerLength = (height - 2 * radius) / 6;
+
+    ctx.beginPath();
+    ctx.moveTo(x + radius, y);
+    ctx.lineTo(x + width - radius, y);
+    ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+
+    if (align === "right") {
+        ctx.lineTo(x + width, y + radius + pointerLength);
+        ctx.lineTo(x + width + offset, pointerY);
+        ctx.lineTo(x + width, y + height - radius - pointerLength);
+    }
+    ctx.lineTo(x + width, y + height - radius);
+
+    ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+    ctx.lineTo(x + radius, y + height);
+    ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+
+    if (align === "left") {
+        ctx.lineTo(x, y + height - radius - pointerLength);
+        ctx.lineTo(x - offset, pointerY);
+        ctx.lineTo(x, y + radius + pointerLength);
+    }
+    ctx.lineTo(x, y + radius);
+
+    ctx.quadraticCurveTo(x, y, x + radius, y);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+}
+
 function drawBalloonLabel(ctx, text, x, y, align, colors, balloonsDirty) {
     const DEFAULT_OFFSET = 125;
     const DEFAULT_MARGIN = 5;
     const DEFAULT_RADIUS = 10;
 
     const fontSize = Number.parseInt(ctx.font);
-
-    // Calculate the width and height required for the balloon (like master)
     const width = ctx.measureText(text).width * 1.2;
     const height = fontSize * 1.5;
-    const pointerY = y; // Store original y for pointer positioning
+    const pointerY = y;
 
-    // Setup balloon background
     ctx.fillStyle = colors.color;
     ctx.strokeStyle = colors.border;
     ctx.lineWidth = 1;
 
-    // Correct x position to account for window scaling (like master)
     if (align !== "none") {
         x *= ctx.canvas.clientWidth / ctx.canvas.clientHeight;
     }
 
-    // Adjust the coordinates for balloon background (like master)
     x += (align === "right" ? -(width + DEFAULT_OFFSET) : 0) + (align === "left" ? DEFAULT_OFFSET : 0);
     y -= height / 2;
+    y = Math.max(0, Math.min(ctx.canvas.height, y));
 
-    if (y < 0) {
-        y = 0;
-    } else if (y > ctx.canvas.height) {
-        y = ctx.canvas.height;
-    }
-
-    // Check that the balloon does not already overlap (like master)
-    for (const balloon of balloonsDirty) {
-        if ((x >= balloon.left && x <= balloon.right) || (x + width >= balloon.left && x + width <= balloon.right)) {
-            // does it overlap horizontally
-            if (
-                (y >= balloon.top && y <= balloon.bottom) ||
-                (y + height >= balloon.top && y + height <= balloon.bottom)
-            ) {
-                // this overlaps another balloon
-                // snap above or snap below
-                if (y <= (balloon.bottom - balloon.top) / 2 && balloon.top - height > 0) {
-                    y = balloon.top - height;
-                } else {
-                    // snap down
-                    y = balloon.bottom;
-                }
-            }
-        }
-    }
-
-    // Record position for overlap detection (like master)
+    y = resolveBalloonOverlap(x, y, width, height, balloonsDirty);
     balloonsDirty.push({ left: x, right: x + width, top: y - DEFAULT_MARGIN, bottom: y + height + DEFAULT_MARGIN });
 
-    // Draw rounded rectangle balloon with pointer (like master)
-    const pointerLength = (height - 2 * DEFAULT_RADIUS) / 6;
+    drawBalloonPath(ctx, x, y, width, height, pointerY, align, DEFAULT_RADIUS, DEFAULT_OFFSET);
 
-    ctx.beginPath();
-    ctx.moveTo(x + DEFAULT_RADIUS, y);
-    ctx.lineTo(x + width - DEFAULT_RADIUS, y);
-    ctx.quadraticCurveTo(x + width, y, x + width, y + DEFAULT_RADIUS);
-
-    if (align === "right") {
-        // Pointer extends to the right
-        ctx.lineTo(x + width, y + DEFAULT_RADIUS + pointerLength);
-        ctx.lineTo(x + width + DEFAULT_OFFSET, pointerY); // pointer tip
-        ctx.lineTo(x + width, y + height - DEFAULT_RADIUS - pointerLength);
-    }
-    ctx.lineTo(x + width, y + height - DEFAULT_RADIUS);
-
-    ctx.quadraticCurveTo(x + width, y + height, x + width - DEFAULT_RADIUS, y + height);
-    ctx.lineTo(x + DEFAULT_RADIUS, y + height);
-    ctx.quadraticCurveTo(x, y + height, x, y + height - DEFAULT_RADIUS);
-
-    if (align === "left") {
-        // Pointer extends to the left
-        ctx.lineTo(x, y + height - DEFAULT_RADIUS - pointerLength);
-        ctx.lineTo(x - DEFAULT_OFFSET, pointerY); // pointer tip
-        ctx.lineTo(x, y + DEFAULT_RADIUS + pointerLength);
-    }
-    ctx.lineTo(x, y + DEFAULT_RADIUS);
-
-    ctx.quadraticCurveTo(x, y, x + DEFAULT_RADIUS, y);
-    ctx.closePath();
-    ctx.fill();
-    ctx.stroke();
-
-    // Draw the text label
     ctx.fillStyle = colors.text;
     ctx.textAlign = "center";
     ctx.fillText(text, x + width / 2, y + (height + fontSize) / 2 - 4);
@@ -1420,6 +1408,177 @@ function drawAxes(ctx, width, height) {
     ctx.stroke();
 }
 
+// Bezier math helpers extracted for reuse and reduced complexity
+function getQBezierValue(t, p1, p2, p3) {
+    const iT = 1 - t;
+    return iT * iT * p1 + 2 * iT * t * p2 + t * t * p3;
+}
+
+function getQuadraticCurvePoint(startX, startY, cpX, cpY, endX, endY, position) {
+    return {
+        x: getQBezierValue(position, startX, cpX, endX),
+        y: getQBezierValue(position, startY, cpY, endY),
+    };
+}
+
+function getTfromYBezier(y, startY, cpY, endY) {
+    const A = startY - 2 * cpY + endY;
+    const B = 2 * (cpY - startY);
+    const C = startY - y;
+
+    if (Math.abs(A) < 1e-6) {
+        return Math.abs(B) < 1e-6 ? 0 : -C / B;
+    }
+
+    const disc = B * B - 4 * A * C;
+    if (disc < 0) {
+        return Math.abs(y - startY) < Math.abs(y - endY) ? 0 : 1;
+    }
+
+    const t1 = (-B + Math.sqrt(disc)) / (2 * A);
+    const t2 = (-B - Math.sqrt(disc)) / (2 * A);
+
+    if (t1 >= 0 && t1 <= 1) {
+        return t1;
+    } else if (t2 >= 0 && t2 <= 1) {
+        return t2;
+    }
+    return Math.abs(y - startY) < Math.abs(y - endY) ? 0 : 1;
+}
+
+function getTfromXBezier(x, x0, cx, x1) {
+    const a = x0 + x1 - 2 * cx;
+    const b = 2 * (cx - x0);
+    const c = x0 - x;
+
+    if (Math.abs(a) < 1e-6) {
+        return Math.abs(b) < 1e-6 ? 0 : -c / b;
+    }
+
+    const disc = b * b - 4 * a * c;
+    if (disc < 0) {
+        return 0;
+    }
+
+    const t1 = (-b + Math.sqrt(disc)) / (2 * a);
+    const t2 = (-b - Math.sqrt(disc)) / (2 * a);
+    const t1Valid = !Number.isNaN(t1) && t1 >= 0 && t1 <= 1;
+    const t2Valid = !Number.isNaN(t2) && t2 >= 0 && t2 <= 1;
+
+    if (t1Valid) {
+        return t1;
+    } else if (t2Valid) {
+        return t2;
+    }
+    return Math.abs(x - x0) < Math.abs(x - x1) ? 0 : 1;
+}
+
+const THROTTLE_LIMIT_TYPES = { OFF: 0, SCALE: 1, CLIP: 2 };
+
+function drawClipModeCurve(context, curve, limitPercent, canvasWidth, canvasHeight, thrPercent, thrX, mid) {
+    const throttleClipY = canvasHeight * (1 - limitPercent);
+
+    let intersectT;
+    let intersectX;
+    if (throttleClipY >= curve.midY) {
+        intersectT = getTfromYBezier(throttleClipY, canvasHeight, curve.midYl, curve.midY);
+        intersectX = getQBezierValue(intersectT, 0, curve.midXl, curve.midX);
+    } else {
+        intersectT = getTfromYBezier(throttleClipY, curve.midY, curve.midYr, curve.topY);
+        intersectT = Math.max(0, Math.min(1, intersectT));
+        intersectX = getQBezierValue(intersectT, curve.midX, curve.midXr, canvasWidth);
+    }
+    intersectX = Math.max(0, Math.min(canvasWidth, intersectX));
+
+    context.save();
+    context.beginPath();
+    context.rect(0, throttleClipY, canvasWidth, canvasHeight - throttleClipY);
+    context.clip();
+
+    context.beginPath();
+    context.moveTo(0, canvasHeight);
+    context.quadraticCurveTo(curve.midXl, curve.midYl, curve.midX, curve.midY);
+    context.quadraticCurveTo(curve.midXr, curve.midYr, canvasWidth, curve.topY);
+    context.stroke();
+    context.restore();
+
+    context.beginPath();
+    context.moveTo(intersectX, throttleClipY);
+    context.lineTo(canvasWidth, throttleClipY);
+    context.stroke();
+
+    let originalThrpos;
+    if (thrPercent <= mid) {
+        const t = getTfromXBezier(thrX, 0, curve.midXl, curve.midX);
+        originalThrpos = getQuadraticCurvePoint(0, canvasHeight, curve.midXl, curve.midYl, curve.midX, curve.midY, t);
+    } else {
+        const t = getTfromXBezier(thrX, curve.midX, curve.midXr, canvasWidth);
+        originalThrpos = getQuadraticCurvePoint(
+            curve.midX,
+            curve.midY,
+            curve.midXr,
+            curve.midYr,
+            canvasWidth,
+            curve.topY,
+            t,
+        );
+    }
+    return { x: originalThrpos.x, y: Math.max(throttleClipY, originalThrpos.y) };
+}
+
+function drawScaleModeCurve(context, curve, canvasWidth, canvasHeight, thrPercent, thrX, mid) {
+    context.beginPath();
+    context.moveTo(0, canvasHeight);
+    context.quadraticCurveTo(curve.midXl, curve.midYl, curve.midX, curve.midY);
+    context.quadraticCurveTo(curve.midXr, curve.midYr, canvasWidth, curve.topY);
+    context.stroke();
+
+    if (thrPercent <= mid) {
+        const t = getTfromXBezier(thrX, 0, curve.midXl, curve.midX);
+        return getQuadraticCurvePoint(0, canvasHeight, curve.midXl, curve.midYl, curve.midX, curve.midY, t);
+    }
+    const t = getTfromXBezier(thrX, curve.midX, curve.midXr, canvasWidth);
+    return getQuadraticCurvePoint(curve.midX, curve.midY, curve.midXr, curve.midYr, canvasWidth, curve.topY, t);
+}
+
+function drawThrottlePositionIndicator(context, thrpos, thrPercent, canvasWidth, canvasHeight) {
+    thrpos.x = Math.max(0, Math.min(canvasWidth, thrpos.x));
+    thrpos.y = Math.max(0, Math.min(canvasHeight, thrpos.y));
+
+    context.beginPath();
+    context.arc(thrpos.x, thrpos.y, 4, 0, 2 * Math.PI);
+    context.fillStyle = context.strokeStyle;
+    context.fill();
+
+    context.save();
+    const fontSize = 10;
+    context.font = `${fontSize}pt Verdana, Arial, sans-serif`;
+    context.fillStyle = "#888888";
+
+    const realInputThr = thrPercent * 100;
+    const outputThr = Math.max(0, Math.min(100, (1 - thrpos.y / canvasHeight) * 100));
+    const thrlabel = `${Math.round(realInputThr)}% = ${Math.round(outputThr)}%`;
+
+    context.fillText(thrlabel, 5, 5 + fontSize);
+    context.restore();
+}
+
+function computeCurveParams(canvasWidth, canvasHeight, mid, hover, expo, scaleFactor) {
+    const topY = canvasHeight * (1 - scaleFactor);
+    const midX = canvasWidth * mid;
+    const midY = canvasHeight * (1 - scaleFactor * hover);
+
+    return {
+        topY,
+        midX,
+        midY,
+        midXl: midX * 0.5,
+        midYl: canvasHeight - (canvasHeight - midY) * 0.5 * (expo + 1),
+        midXr: (canvasWidth + midX) * 0.5,
+        midYr: topY + (midY - topY) * 0.5 * (expo + 1),
+    };
+}
+
 function drawThrottleCurve() {
     if (!throttleCurveCanvas.value) {
         return;
@@ -1428,7 +1587,6 @@ function drawThrottleCurve() {
     const canvas = throttleCurveCanvas.value;
     const context = canvas.getContext("2d");
 
-    // Set canvas dimensions from DOM dimensions to prevent blurry scaling
     const rect = canvas.getBoundingClientRect();
     if (!rect.height || !rect.width || rect.height === 0 || rect.width === 0) {
         return;
@@ -1443,86 +1601,12 @@ function drawThrottleCurve() {
     const canvasHeight = canvas.height;
     const canvasWidth = canvas.width;
 
-    // Helper functions from original implementation
-    function getQBezierValue(t, p1, p2, p3) {
-        const iT = 1 - t;
-        return iT * iT * p1 + 2 * iT * t * p2 + t * t * p3;
-    }
-
-    function getQuadraticCurvePoint(startX, startY, cpX, cpY, endX, endY, position) {
-        return {
-            x: getQBezierValue(position, startX, cpX, endX),
-            y: getQBezierValue(position, startY, cpY, endY),
-        };
-    }
-
-    function getTfromYBezier(y, startY, cpY, endY) {
-        const A = startY - 2 * cpY + endY;
-        const B = 2 * (cpY - startY);
-        const C = startY - y;
-
-        if (Math.abs(A) < 1e-6) {
-            return Math.abs(B) < 1e-6 ? 0 : -C / B;
-        }
-
-        const disc = B * B - 4 * A * C;
-        if (disc < 0) {
-            return Math.abs(y - startY) < Math.abs(y - endY) ? 0 : 1;
-        }
-
-        const t1 = (-B + Math.sqrt(disc)) / (2 * A);
-        const t2 = (-B - Math.sqrt(disc)) / (2 * A);
-
-        if (t1 >= 0 && t1 <= 1) {
-            return t1;
-        } else if (t2 >= 0 && t2 <= 1) {
-            return t2;
-        } else {
-            return Math.abs(y - startY) < Math.abs(y - endY) ? 0 : 1;
-        }
-    }
-
-    function getTfromXBezier(x, x0, cx, x1) {
-        const a = x0 + x1 - 2 * cx;
-        const b = 2 * (cx - x0);
-        const c = x0 - x;
-        if (Math.abs(a) < 1e-6) {
-            if (Math.abs(b) < 1e-6) {
-                return 0;
-            }
-            return -c / b;
-        }
-        const disc = b * b - 4 * a * c;
-        if (disc < 0) {
-            return 0;
-        }
-        const t1 = (-b + Math.sqrt(disc)) / (2 * a);
-        const t2 = (-b - Math.sqrt(disc)) / (2 * a);
-
-        const t1_valid = !Number.isNaN(t1) && 0 <= t1 && t1 <= 1;
-        const t2_valid = !Number.isNaN(t2) && 0 <= t2 && t2 <= 1;
-
-        if (t1_valid && t2_valid) {
-            return t1;
-        } else if (t1_valid) {
-            return t1;
-        } else if (t2_valid) {
-            return t2;
-        } else {
-            return Math.abs(x - x0) < Math.abs(x - x1) ? 0 : 1;
-        }
-    }
-
-    const THROTTLE_LIMIT_TYPES = { OFF: 0, SCALE: 1, CLIP: 2 };
-
-    // Get values from computed properties
     const mid = throttleMid.value ?? 0;
     const expo = throttleExpo.value ?? 0;
     const hover = throttleHover.value ?? 0.5;
     const limitPercent = (throttleLimitPercent.value ?? 100) / 100;
     const limitType = throttleLimitType.value ?? 0;
 
-    // Validate values
     if (
         Number.isNaN(mid) ||
         Number.isNaN(expo) ||
@@ -1537,145 +1621,35 @@ function drawThrottleCurve() {
         return;
     }
 
-    // Calculate base curve parameters
-    const originalTopY = 0;
-    const originalMidX = canvasWidth * mid;
-    const originalMidY = canvasHeight * (1 - hover);
-
-    const originalMidXl = originalMidX * 0.5;
-    const originalMidYl = canvasHeight - (canvasHeight - originalMidY) * 0.5 * (expo + 1);
-    const originalMidXr = (canvasWidth + originalMidX) * 0.5;
-    const originalMidYr = originalTopY + (originalMidY - originalTopY) * 0.5 * (expo + 1);
+    const originalCurve = computeCurveParams(canvasWidth, canvasHeight, mid, hover, expo, 1);
 
     context.clearRect(0, 0, canvasWidth, canvasHeight);
     context.lineWidth = 2;
     context.strokeStyle = "#ffbb00";
 
-    let thrpos;
     const thrPercent = FC.RC?.channels?.[3] ? Math.max(0, Math.min(1, (FC.RC.channels[3] - 1000) / 1000)) : 0.5;
     const thrX = thrPercent * canvasWidth;
 
-    // Draw curve based on limit type
+    let thrpos;
     if (limitType === THROTTLE_LIMIT_TYPES.CLIP && limitPercent < 1) {
-        const throttleClipY = canvasHeight * (1 - limitPercent);
-
-        let intersectT, intersectX;
-        if (throttleClipY >= originalMidY) {
-            intersectT = getTfromYBezier(throttleClipY, canvasHeight, originalMidYl, originalMidY);
-            intersectX = getQBezierValue(intersectT, 0, originalMidXl, originalMidX);
-        } else {
-            intersectT = getTfromYBezier(throttleClipY, originalMidY, originalMidYr, originalTopY);
-            intersectT = Math.max(0, Math.min(1, intersectT));
-            intersectX = getQBezierValue(intersectT, originalMidX, originalMidXr, canvasWidth);
-        }
-        intersectX = Math.max(0, Math.min(canvasWidth, intersectX));
-
-        context.save();
-        context.beginPath();
-        context.rect(0, throttleClipY, canvasWidth, canvasHeight - throttleClipY);
-        context.clip();
-
-        context.beginPath();
-        context.moveTo(0, canvasHeight);
-        context.quadraticCurveTo(originalMidXl, originalMidYl, originalMidX, originalMidY);
-        context.quadraticCurveTo(originalMidXr, originalMidYr, canvasWidth, originalTopY);
-        context.stroke();
-
-        context.restore();
-
-        context.beginPath();
-        context.moveTo(intersectX, throttleClipY);
-        context.lineTo(canvasWidth, throttleClipY);
-        context.stroke();
-
-        let original_thrpos;
-        if (thrPercent <= mid) {
-            const t = getTfromXBezier(thrX, 0, originalMidXl, originalMidX);
-            original_thrpos = getQuadraticCurvePoint(
-                0,
-                canvasHeight,
-                originalMidXl,
-                originalMidYl,
-                originalMidX,
-                originalMidY,
-                t,
-            );
-        } else {
-            const t = getTfromXBezier(thrX, originalMidX, originalMidXr, canvasWidth);
-            original_thrpos = getQuadraticCurvePoint(
-                originalMidX,
-                originalMidY,
-                originalMidXr,
-                originalMidYr,
-                canvasWidth,
-                originalTopY,
-                t,
-            );
-        }
-        thrpos = { x: original_thrpos.x, y: Math.max(throttleClipY, original_thrpos.y) };
+        thrpos = drawClipModeCurve(
+            context,
+            originalCurve,
+            limitPercent,
+            canvasWidth,
+            canvasHeight,
+            thrPercent,
+            thrX,
+            mid,
+        );
     } else {
-        let scaleFactor = 1;
-        if (limitType === THROTTLE_LIMIT_TYPES.SCALE) {
-            scaleFactor = limitPercent;
-        }
-
-        const currentTopY = canvasHeight * (1 - scaleFactor);
-        const currentMidX = originalMidX;
-        const currentMidY = canvasHeight * (1 - scaleFactor * hover);
-
-        const currentMidXl = currentMidX * 0.5;
-        const currentMidYl = canvasHeight - (canvasHeight - currentMidY) * 0.5 * (expo + 1);
-        const currentMidXr = (canvasWidth + currentMidX) * 0.5;
-        const currentMidYr = currentTopY + (currentMidY - currentTopY) * 0.5 * (expo + 1);
-
-        context.beginPath();
-        context.moveTo(0, canvasHeight);
-        context.quadraticCurveTo(currentMidXl, currentMidYl, currentMidX, currentMidY);
-        context.quadraticCurveTo(currentMidXr, currentMidYr, canvasWidth, currentTopY);
-        context.stroke();
-
-        if (thrPercent <= mid) {
-            const t = getTfromXBezier(thrX, 0, currentMidXl, currentMidX);
-            thrpos = getQuadraticCurvePoint(0, canvasHeight, currentMidXl, currentMidYl, currentMidX, currentMidY, t);
-        } else {
-            const t = getTfromXBezier(thrX, currentMidX, currentMidXr, canvasWidth);
-            thrpos = getQuadraticCurvePoint(
-                currentMidX,
-                currentMidY,
-                currentMidXr,
-                currentMidYr,
-                canvasWidth,
-                currentTopY,
-                t,
-            );
-        }
+        const scaleFactor = limitType === THROTTLE_LIMIT_TYPES.SCALE ? limitPercent : 1;
+        const scaledCurve = computeCurveParams(canvasWidth, canvasHeight, mid, hover, expo, scaleFactor);
+        thrpos = drawScaleModeCurve(context, scaledCurve, canvasWidth, canvasHeight, thrPercent, thrX, mid);
     }
 
-    // Draw throttle position indicator
     if (thrpos) {
-        thrpos.x = Math.max(0, Math.min(canvasWidth, thrpos.x));
-        thrpos.y = Math.max(0, Math.min(canvasHeight, thrpos.y));
-
-        context.beginPath();
-        context.arc(thrpos.x, thrpos.y, 4, 0, 2 * Math.PI);
-        context.fillStyle = context.strokeStyle;
-        context.fill();
-
-        // Draw text label
-        context.save();
-        let fontSize = 10;
-        context.font = `${fontSize}pt Verdana, Arial, sans-serif`;
-        context.fillStyle = "#888888";
-
-        let realInputThr = thrPercent * 100;
-        let outputThr = Math.max(0, Math.min(100, (1 - thrpos.y / canvasHeight) * 100));
-        let thrlabel = `${Math.round(realInputThr)}%` + ` = ${Math.round(outputThr)}%`;
-
-        let textX = 5;
-        let textY = 5 + fontSize;
-
-        context.fillText(thrlabel, textX, textY);
-        context.restore();
+        drawThrottlePositionIndicator(context, thrpos, thrPercent, canvasWidth, canvasHeight);
     }
 }
 
