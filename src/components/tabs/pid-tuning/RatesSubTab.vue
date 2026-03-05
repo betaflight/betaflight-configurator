@@ -400,6 +400,7 @@
 <script setup>
 import { ref, computed, watch, onMounted, onUnmounted, nextTick } from "vue";
 import { i18n } from "@/js/localization";
+import { useDialog } from "@/composables/useDialog";
 import $ from "jquery";
 import FC from "@/js/fc";
 import MSP from "@/js/msp";
@@ -445,10 +446,34 @@ const rateProfileNameModel = computed({
 });
 
 // Rates Type
+const dialog = useDialog();
+
 const ratesType = computed({
     get: () => FC.RC_TUNING.rates_type,
     set: (value) => {
-        FC.RC_TUNING.rates_type = value;
+        const current = FC.RC_TUNING.rates_type;
+        if (value === current) return;
+
+        // Open confirmation dialog before changing rates type
+        dialog.open(
+            "RatesTypeDialog",
+            {
+                title: i18n.getMessage("dialogRatesTypeTitle"),
+                note: i18n.getMessage("dialogRatesTypeNote"),
+                confirmText: i18n.getMessage("dialogRatesTypeConfirm"),
+                cancelText: i18n.getMessage("cancel"),
+            },
+            {
+                confirm: () => {
+                    dialog.close();
+                    FC.RC_TUNING.rates_type = value;
+                },
+                cancel: () => {
+                    dialog.close();
+                    // no-op, leave previous rates type
+                },
+            },
+        );
     },
 });
 
