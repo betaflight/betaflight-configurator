@@ -62,7 +62,7 @@
 
             <!-- Max Rate Warning -->
             <div v-if="showMaxRateWarning" class="danger rates-tab-warning maxRateWarning">
-                <p v-text="$t('pidTuningMaxRateWarning')"></p>
+                <p v-html="$t('pidTuningMaxRateWarning')"></p>
             </div>
 
             <!-- Rate Setup Table -->
