@@ -452,7 +452,9 @@ const ratesType = computed({
     get: () => FC.RC_TUNING.rates_type,
     set: (value) => {
         const current = FC.RC_TUNING.rates_type;
-        if (value === current) return;
+        if (value === current) {
+            return;
+        }
 
         // Open confirmation dialog before changing rates type
         dialog.open(
