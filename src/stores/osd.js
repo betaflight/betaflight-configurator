@@ -148,7 +148,7 @@ export const useOsdStore = defineStore("osd", () => {
     function initData() {
         videoSystem.value = null;
         unitMode.value = null;
-        alarms.value = [];
+        alarms.value = {};
         statItems.value = [];
         warnings.value = [];
         displayItems.value = [];
@@ -287,7 +287,7 @@ export const useOsdStore = defineStore("osd", () => {
         if (OSD.data) {
             videoSystem.value = OSD.data.video_system;
             unitMode.value = OSD.data.unit_mode;
-            alarms.value = OSD.data.alarms || [];
+            alarms.value = OSD.data.alarms || {};
             statItems.value = OSD.data.statItems || [];
             warnings.value = OSD.data.warnings || [];
             displayItems.value = OSD.data.displayItems || [];
@@ -328,6 +328,7 @@ export const useOsdStore = defineStore("osd", () => {
         if (OSD.data.parameters) {
             parameters.cameraFrameWidth = OSD.data.parameters.cameraFrameWidth;
             parameters.cameraFrameHeight = OSD.data.parameters.cameraFrameHeight;
+            parameters.overlayRadioMode = OSD.data.parameters.overlayRadioMode;
         }
 
         if (OSD.data.osd_profiles) {

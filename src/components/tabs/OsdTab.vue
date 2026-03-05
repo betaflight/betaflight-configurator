@@ -654,7 +654,7 @@ import { useOsdRuler } from "@/composables/useOsdRuler";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "@/components/elements/WikiButton.vue";
 import { i18n } from "@/js/localization";
-import { OSD } from "@/js/tabs/osd";
+
 import { FONT, SYM } from "@/js/utils/osdFont";
 import { OSD_CONSTANTS } from "@/js/tabs/osd_constants";
 import { positionConfigs, getPresetGridCells } from "@/js/tabs/osd_positions";
@@ -1066,17 +1066,15 @@ function onDropCell(event) {
 
     position = applyArrayDragOffset(displayItem, position, event, displaySize);
 
-    if (displayItem.ignoreSize) {
-        return;
-    }
-
-    if (Array.isArray(displayItem.preview)) {
-        position = clampArrayPreviewPosition(displayItem, position, displaySize, cursorX);
-        if (position === null) {
-            return;
+    if (!displayItem.ignoreSize) {
+        if (Array.isArray(displayItem.preview)) {
+            position = clampArrayPreviewPosition(displayItem, position, displaySize, cursorX);
+            if (position === null) {
+                return;
+            }
+        } else {
+            position = clampStringPreviewPosition(displayItem, position, displaySize);
         }
-    } else {
-        position = clampStringPreviewPosition(displayItem, position, displaySize);
     }
 
     // Update display item position
@@ -1136,8 +1134,8 @@ function applyPresetPosition(field, positionKey) {
 
     if (Array.isArray(preview)) {
         const limits = searchLimitsElement(preview);
-        elementWidth = limits.maxX - limits.minX + 1;
-        elementHeight = limits.maxY - limits.minY + 1;
+        elementWidth = limits.maxX - limits.minX;
+        elementHeight = limits.maxY - limits.minY;
         adjustOffsetX = limits.minX;
         adjustOffsetY = limits.minY;
     }
@@ -1187,8 +1185,13 @@ function applyPresetPosition(field, positionKey) {
     closePresetMenu();
 }
 
-function isCandidateWithinBounds(testX, testY, elementWidth, displaySize) {
-    return testX >= 1 && testX + elementWidth <= displaySize.x - 1 && testY >= 1 && testY <= displaySize.y - 2;
+function isCandidateWithinBounds(testX, testY, elementWidth, elementHeight, displaySize) {
+    return (
+        testX >= 1 &&
+        testX + elementWidth <= displaySize.x - 1 &&
+        testY >= 1 &&
+        testY + elementHeight <= displaySize.y - 2
+    );
 }
 
 function canPlaceAtCandidate({ testX, testY, elementWidth, elementHeight, displaySize, previewBufferData, field }) {
@@ -1224,7 +1227,7 @@ function findAvailablePosition({
         const testX = target.x + grow.x * offset;
         const testY = target.y + grow.y * offset;
 
-        if (!isCandidateWithinBounds(testX, testY, elementWidth, displaySize)) {
+        if (!isCandidateWithinBounds(testX, testY, elementWidth, elementHeight, displaySize)) {
             break;
         }
 
@@ -1447,7 +1450,10 @@ async function flashFont() {
 
     // If "User supplied font" is selected but no custom font file has been loaded yet,
     // prompt the user to pick a file before proceeding to upload.
-    if (selectedFontPreset.value === -1 && (!FONT.data.loaded_font_file || fontTypes.value.some((f) => f.file === FONT.data.loaded_font_file))) {
+    if (
+        selectedFontPreset.value === -1 &&
+        (!FONT.data.loaded_font_file || fontTypes.value.some((f) => f.file === FONT.data.loaded_font_file))
+    ) {
         try {
             await FONT.openFontFile();
             LogoManager.drawPreview();
@@ -1482,7 +1488,7 @@ async function flashFont() {
         });
     } catch (err) {
         console.error("Font upload failed:", err);
-        uploadProgressLabel.value = "Upload failed";
+        uploadProgressLabel.value = i18n.getMessage("osdSetupUploadingFontFailed");
     }
 }
 

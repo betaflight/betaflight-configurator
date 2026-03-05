@@ -2357,7 +2357,7 @@ OSD.msp = {
 
             // Known warning field
             if (i < OSD.constants.WARNINGS.length) {
-                const warning = $.extend(OSD.constants.WARNINGS[i], { enabled, index: i });
+                const warning = $.extend({}, OSD.constants.WARNINGS[i], { enabled, index: i });
                 d.warnings.push(warning);
 
                 // Push Unknown Warning field
@@ -2464,7 +2464,7 @@ OSD.msp = {
 
             // Known warning field
             if (i < warningCount) {
-                const warning = $.extend(OSD.constants.WARNINGS[i], { enabled, index: i });
+                const warning = $.extend({}, OSD.constants.WARNINGS[i], { enabled, index: i });
                 d.warnings.push(warning);
 
                 // Push Unknown Warning field

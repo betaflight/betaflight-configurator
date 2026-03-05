@@ -5622,6 +5622,9 @@
     "osdSetupUploadingFontEnd": {
         "message": "Uploaded all {{length}} characters to the OSD"
     },
+    "osdSetupUploadingFontFailed": {
+        "message": "Upload failed"
+    },
 
     "osdSetupSave": {
         "message": "Save"
