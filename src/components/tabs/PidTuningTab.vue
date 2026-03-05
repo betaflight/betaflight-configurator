@@ -533,7 +533,1014 @@ onUnmounted(() => {
 });
 </script>
 
-<style scoped>
-/* Component-specific styles if needed */
-/* Most styles should come from existing CSS */
+<style>
+/* ====================================================================
+   PID Tuning Tab — global (unscoped) styles
+   Scoped under .tab-pid_tuning to avoid leaking into other tabs.
+   Migrated from src/css/tabs/pid_tuning.less
+   ==================================================================== */
+
+/* ── Table base ───────────────────────────────────────────────────── */
+.tab-pid_tuning .cf tr {
+    background-color: var(--surface-400);
+}
+.tab-pid_tuning .cf th {
+    border-right: solid 1px var(--surface-500);
+    height: 19px;
+    font-weight: normal;
+    padding: 4px;
+    color: var(--text);
+    text-align: left;
+    background: var(--surface-300);
+}
+.tab-pid_tuning .cf th:first-child {
+    border-top-left-radius: 3px;
+}
+.tab-pid_tuning .cf th:last-child {
+    border-right: 0;
+    border-top-right-radius: 3px;
+}
+.tab-pid_tuning .cf td:first-child {
+    border-bottom-left-radius: 3px;
+}
+.tab-pid_tuning .cf td:last-child {
+    border-bottom-right-radius: 3px;
+    border-right: 0;
+    padding-bottom: 0;
+}
+.tab-pid_tuning .cf input {
+    margin: 4px;
+    width: calc(100% - 10px);
+    border: 1px solid var(--surface-500);
+    border-radius: 3px;
+}
+.tab-pid_tuning .cf select {
+    margin: 4px;
+    width: calc(100% - 10px);
+    border: 1px solid var(--surface-500);
+}
+.tab-pid_tuning .cf .throttleCurvePreview {
+    padding: 0;
+}
+.tab-pid_tuning .cf .rates_logo_bg {
+    background-color: #ebeced;
+}
+
+/* ── Curves & canvas ──────────────────────────────────────────────── */
+.tab-pid_tuning .throttle_curve {
+    float: right;
+    width: 100%;
+    background-size: 200%;
+    height: 164px;
+}
+.tab-pid_tuning .curves {
+    float: left;
+    margin-right: 10px;
+}
+.tab-pid_tuning .rate_curve {
+    height: 100%;
+    min-height: 234px;
+    min-width: 200px;
+    background-size: 200%;
+}
+
+/* ── Inputs ───────────────────────────────────────────────────────── */
+.tab-pid_tuning input[type="number"]::-webkit-inner-spin-button {
+    border: 0;
+}
+
+/* ── Generic table ────────────────────────────────────────────────── */
+.tab-pid_tuning table {
+    margin: 0;
+    border-collapse: collapse;
+    width: 100%;
+    table-layout: fixed;
+    border-bottom: 0 solid var(--surface-500);
+}
+.tab-pid_tuning table .inputBackground {
+    background: white;
+}
+.tab-pid_tuning table td {
+    border-bottom: 0 solid var(--surface-500);
+    padding: 0.5rem;
+    border-right: 1px solid var(--surface-500);
+}
+.tab-pid_tuning table th {
+    padding: 0;
+    border: 0;
+    font-weight: normal;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    color: var(--text);
+}
+.tab-pid_tuning table tr td:first-child {
+    text-align: left;
+}
+.tab-pid_tuning table tr td:last-child {
+    border-right: 0 solid var(--surface-500);
+    text-align: left;
+}
+.tab-pid_tuning table .groupSwitchValue {
+    display: inline-flex;
+}
+.tab-pid_tuning table .groupSwitchValue .inputValue {
+    width: 80px;
+}
+.tab-pid_tuning table input {
+    display: block;
+    width: calc(100% - 0px);
+    height: 20px;
+    line-height: 20px;
+    text-align: right;
+    border: 1px solid var(--surface-500);
+    border-radius: 3px;
+}
+
+/* ── gui_box ──────────────────────────────────────────────────────── */
+.tab-pid_tuning .gui_box {
+    padding: 0;
+    overflow: hidden;
+    gap: 0;
+}
+.tab-pid_tuning .gui_box span {
+    font-style: normal;
+    font-weight: normal;
+    line-height: 19px;
+    font-size: 11px;
+}
+.tab-pid_tuning .note,
+.tab-pid_tuning .danger {
+    margin-bottom: 0;
+}
+
+/* ── Filter sub-tab ───────────────────────────────────────────────── */
+.tab-pid_tuning .subtab-filter .gui_box {
+    float: none;
+}
+.tab-pid_tuning .subtab-filter table select {
+    display: inline-block;
+    margin-left: auto;
+}
+.tab-pid_tuning .subtab-filter .newFilter .helpicon {
+    margin-top: 2px;
+}
+.tab-pid_tuning .subtab-filter .sliderLabels tr td:first-child {
+    width: 10%;
+}
+
+/* ── Slider divider ───────────────────────────────────────────────── */
+.tab-pid_tuning .sliderDivider {
+    padding: 3px;
+    border-top: 1px solid var(--surface-500);
+    border-bottom: 1px solid var(--surface-500);
+}
+
+/* ── PID titlebar ─────────────────────────────────────────────────── */
+.tab-pid_tuning .pid_titlebar {
+    color: #fff;
+    background-color: var(--surface-300);
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+.tab-pid_tuning .pid_titlebar th {
+    padding: 0.5rem;
+    text-align: center;
+    border-right: 1px solid var(--surface-500);
+}
+.tab-pid_tuning .pid_titlebar th:first-child {
+    text-align: left;
+    border-top-left-radius: 3px;
+}
+.tab-pid_tuning .pid_titlebar th:last-child {
+    border-right: none;
+    border-top-right-radius: 3px;
+}
+.tab-pid_tuning .pid_titlebar td:first-child {
+    text-align: left;
+}
+.tab-pid_tuning .pid_titlebar .name-helpicon-flex {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-around;
+}
+.tab-pid_tuning .pid_titlebar .name-helpicon-flex .helpicon {
+    margin-right: 0;
+}
+
+/* ── Optional / accel PID sections ────────────────────────────────── */
+.tab-pid_tuning #pid_optional table th,
+.tab-pid_tuning .pid_optional table th,
+.tab-pid_tuning #pid_optional table td,
+.tab-pid_tuning .pid_optional table td {
+    width: 25%;
+}
+.tab-pid_tuning #pid_accel table th,
+.tab-pid_tuning #pid_accel table td {
+    width: 33%;
+}
+
+/* ── Compensation table ───────────────────────────────────────────── */
+.tab-pid_tuning table.compensation tr {
+    height: 30px;
+    border-bottom: 1px solid var(--surface-500);
+}
+.tab-pid_tuning table.compensation tr:last-child {
+    border-bottom: none;
+}
+.tab-pid_tuning table.compensation td {
+    padding: 0 0.5rem;
+}
+.tab-pid_tuning table.compensation td:first-child:not(.filterTable) {
+    width: 75px;
+    text-align: center;
+    vertical-align: top;
+    padding-top: 4px;
+}
+.tab-pid_tuning table.compensation td:last-child {
+    width: 100%;
+}
+.tab-pid_tuning table.compensation .helpicon {
+    margin-left: auto;
+    margin-right: 0;
+}
+.tab-pid_tuning table.compensation .suboption {
+    margin-left: 2%;
+    display: flex;
+    flex-flow: row wrap-reverse;
+    align-items: center;
+    padding-bottom: 2px;
+}
+.tab-pid_tuning table.compensation .suboption select {
+    width: 80px;
+    text-align-last: right;
+    font-size: 1.1em;
+    box-sizing: border-box;
+}
+.tab-pid_tuning table.compensation .suboption input {
+    width: 80px;
+    box-sizing: border-box;
+}
+.tab-pid_tuning table.compensation .suboption label {
+    margin-left: 5px;
+}
+.tab-pid_tuning table.filterTable.compensation td:first-child {
+    width: 5%;
+}
+
+/* ── TPA settings ─────────────────────────────────────────────────── */
+.tab-pid_tuning table.tpa-settings tr {
+    height: 30px;
+}
+
+/* ── PID tuning features ──────────────────────────────────────────── */
+.tab-pid_tuning .pidTuningFeatures td {
+    padding: 5px;
+    width: 20%;
+}
+.tab-pid_tuning .pidTuningFeatures td:first-child {
+    width: 20%;
+    padding-bottom: 6px;
+    padding-top: 5px;
+}
+.tab-pid_tuning .pidTuningFeatures td:last-child {
+    width: 80%;
+}
+.tab-pid_tuning .pidTuningFeatures .slider input {
+    writing-mode: horizontal-tb;
+}
+
+/* ── Rates type ───────────────────────────────────────────────────── */
+.tab-pid_tuning .rates_type table select {
+    text-align-last: left;
+}
+
+/* ── Tab container ────────────────────────────────────────────────── */
+.tab-pid_tuning .tab-container {
+    border-bottom: 3px solid var(--primary-500);
+    border-right-width: 0;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: start;
+    width: 100%;
+}
+.tab-pid_tuning .tab-container > div {
+    background-color: var(--surface-200);
+    padding: 6px 12px;
+    border-right: 1px solid var(--surface-500);
+    box-sizing: border-box;
+    text-align: center;
+}
+.tab-pid_tuning .tab-container > div:first-child {
+    border-top-left-radius: 4px;
+}
+.tab-pid_tuning .tab-container > div:last-child {
+    border-top-right-radius: 4px;
+}
+.tab-pid_tuning .tab-container > div a {
+    display: block;
+    color: var(--text);
+}
+.tab-pid_tuning .tab-container > div.active {
+    background-color: var(--primary-500);
+    color: #000;
+    transition: none;
+}
+.tab-pid_tuning .tab-container > div.active a {
+    background-color: var(--primary-500);
+    color: #000;
+    transition: none;
+}
+
+/* ── Single-field selectors ───────────────────────────────────────── */
+.tab-pid_tuning .single-field {
+    display: inline-table;
+    margin-bottom: 10px;
+    margin-right: 5px;
+}
+.tab-pid_tuning .single-field .head {
+    text-align: left;
+    border-radius: 4px;
+    color: var(--text);
+    font-weight: normal;
+    padding-bottom: 0.5rem;
+}
+
+/* ── New rates ────────────────────────────────────────────────────── */
+.tab-pid_tuning .new_rates {
+    text-align: center;
+}
+.tab-pid_tuning .new_rates td:first-child {
+    border-bottom-left-radius: 0;
+    padding-left: 10px;
+}
+.tab-pid_tuning .new_rates td:last-child span {
+    margin-right: auto;
+}
+
+/* ── Misc helpers ─────────────────────────────────────────────────── */
+.tab-pid_tuning .top-buttons {
+    float: right;
+}
+.tab-pid_tuning .fixed_band {
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+}
+.tab-pid_tuning .pid_mode .helpicon {
+    margin-top: 0;
+}
+.tab-pid_tuning .pid_titlebar.pid_titlebar_extended {
+    border-radius: 0;
+}
+.tab-pid_tuning .helpicon {
+    margin-top: 1px;
+}
+.tab-pid_tuning .number .helpicon {
+    margin-top: 3px;
+    margin-right: 0;
+}
+.tab-pid_tuning .number {
+    margin-bottom: 5px;
+    clear: left;
+    padding-bottom: 5px;
+    border-bottom: 1px solid var(--surface-500);
+    width: 100%;
+    float: left;
+}
+.tab-pid_tuning .number:last-child {
+    padding-bottom: 5px;
+    border-bottom: 0;
+}
+.tab-pid_tuning .number input {
+    width: 50px;
+    padding-left: 3px;
+    height: 20px;
+    line-height: 20px;
+    text-align: left;
+    border: 1px solid var(--surface-500);
+    border-radius: 3px;
+    margin-right: 11px;
+    font-weight: normal;
+}
+.tab-pid_tuning .gui_box_titlebar .helpicon {
+    margin-top: 5px;
+    margin-right: 5px;
+}
+.tab-pid_tuning .spacer_left {
+    padding-left: 0;
+    float: right;
+    width: calc(100% - 20px);
+}
+.tab-pid_tuning .numberspacer {
+    float: left;
+    width: 65px;
+    height: 21px;
+}
+.tab-pid_tuning .resetbt {
+    width: 200px;
+    margin-right: 10px;
+}
+.tab-pid_tuning .copyprofilebtn {
+    width: 150px;
+    margin-right: 10px;
+}
+.tab-pid_tuning .copyrateprofilebtn {
+    width: 150px;
+    margin-right: 10px;
+}
+.tab-pid_tuning .right {
+    float: right;
+}
+.tab-pid_tuning .pids {
+    float: left;
+    width: 25%;
+}
+.tab-pid_tuning .roll {
+    border-bottom-left-radius: 3px;
+}
+.tab-pid_tuning .pidTuningLevel {
+    float: left;
+}
+.tab-pid_tuning .borderleft {
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+.tab-pid_tuning .textleft {
+    width: 25%;
+    float: left;
+    text-align: left;
+}
+.tab-pid_tuning .topspacer {
+    margin-top: 5px;
+}
+
+/* ── Profile / rate profile selectors ─────────────────────────────── */
+.tab-pid_tuning .profile,
+.tab-pid_tuning .rate_profile {
+    min-width: 130px;
+}
+.tab-pid_tuning .profile select,
+.tab-pid_tuning .rate_profile select {
+    width: 100%;
+}
+.tab-pid_tuning .profile .helpicon,
+.tab-pid_tuning .rate_profile .helpicon {
+    margin: 0;
+}
+.tab-pid_tuning .controller {
+    width: 150px;
+}
+.tab-pid_tuning .controller select,
+.tab-pid_tuning .delta select {
+    border: 1px solid var(--surface-500);
+    margin-left: 5px;
+    width: calc(100% - 10px);
+}
+.tab-pid_tuning .delta {
+    width: 150px;
+}
+
+/* ── Bracket icon ─────────────────────────────────────────────────── */
+.tab-pid_tuning .bracket {
+    background-image: url(../../images/icons/icon_bracket.svg);
+    background-repeat: no-repeat;
+    height: 35px;
+    width: 14px;
+    margin-top: -23px;
+    margin-left: 8px;
+}
+
+/* ── Rates preview ────────────────────────────────────────────────── */
+.tab-pid_tuning .rates_preview_cell {
+    position: relative;
+    width: 100%;
+    height: 362px;
+}
+.tab-pid_tuning .rates_preview {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-size: 100%;
+}
+
+/* ── PID tuning table ─────────────────────────────────────────────── */
+.tab-pid_tuning .pidTuning td {
+    padding: 5px;
+    width: 40%;
+}
+.tab-pid_tuning .pidTuning td:first-child {
+    width: 10%;
+    padding-bottom: 6px;
+    padding-top: 5px;
+}
+.tab-pid_tuning .pidTuning td:last-child {
+    width: 40%;
+}
+.tab-pid_tuning .pidTuning tr {
+    width: 100%;
+    border-bottom: 1px solid var(--surface-500);
+    padding: 0;
+}
+
+/* ── RC curve ─────────────────────────────────────────────────────── */
+.tab-pid_tuning .rc_curve .cf tr td {
+    padding: 0;
+}
+.tab-pid_tuning .rc_curve_bg {
+    float: left;
+}
+.tab-pid_tuning .new_rates_last-child {
+    border-bottom: none;
+}
+.tab-pid_tuning .filter {
+    padding-left: 5px;
+}
+
+/* ── Dialog ───────────────────────────────────────────────────────── */
+.tab-pid_tuning dialog {
+    width: 40em;
+    border-radius: 5px;
+}
+.tab-pid_tuning dialog .buttons {
+    position: static;
+    margin-top: 2em;
+}
+.tab-pid_tuning dialog h3 {
+    margin-bottom: 0.5em;
+}
+.tab-pid_tuning dialog select {
+    border: 1px solid var(--surface-500);
+    margin-left: 5px;
+    width: 120px;
+}
+
+/* ── Tuning sliders ───────────────────────────────────────────────── */
+.tab-pid_tuning .tuningSlider {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 1rem;
+    border: none !important;
+    outline: none !important;
+    opacity: 0.8;
+    transition: opacity 0.2s;
+    background: var(--surface-200);
+    background-color: transparent !important;
+    padding: 0.25rem !important;
+}
+.tab-pid_tuning .tuningSlider:hover {
+    opacity: 1;
+}
+.tab-pid_tuning .tuningSlider::-webkit-slider-runnable-track {
+    -webkit-appearance: none;
+    border: solid 1px var(--surface-500);
+    border-radius: 4px;
+    background: linear-gradient(90deg, var(--surface-300) 0%, var(--surface-400) 50%, var(--error-500) 100%);
+    height: 15px;
+}
+.tab-pid_tuning .tuningSlider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 23px;
+    height: 23px;
+    border-radius: 50%;
+    background: #ffbb2a;
+    border: solid 1px var(--surface-300);
+    cursor: pointer;
+    position: relative;
+    bottom: 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+.tab-pid_tuning .nonExpertModeSliders .tuningSlider::-webkit-slider-runnable-track {
+    background: linear-gradient(90deg, var(--surface-300) 0%, var(--surface-400) 50%, var(--error-500) 100%);
+    background-size: 55%;
+    background-position: 44%;
+    background-repeat: no-repeat;
+}
+.tab-pid_tuning .disabledSliders .tuningSlider::-webkit-slider-runnable-track {
+    background: linear-gradient(90deg, var(--surface-300) -50%, var(--surface-400) 50%, var(--surface-300) 150%);
+    background-repeat: no-repeat;
+}
+.tab-pid_tuning .disabledSliders .tuningSlider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 23px;
+    height: 23px;
+    border-radius: 50%;
+    background: transparent;
+    border: solid 1px var(--surface-300);
+    cursor: pointer;
+    position: relative;
+    bottom: 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+/* ── Slider labels ────────────────────────────────────────────────── */
+.tab-pid_tuning .sliderLabels tr {
+    border-bottom: 1px solid var(--surface-500);
+}
+.tab-pid_tuning .sliderLabels tr:last-child {
+    border-bottom: none;
+}
+.tab-pid_tuning .sliderLabels tr td:first-child {
+    text-align: right;
+    width: 20%;
+}
+.tab-pid_tuning .sliderLabels tr td:nth-child(2) {
+    text-align: center;
+    width: 32px;
+}
+.tab-pid_tuning .sliderLabels tr td:last-child {
+    width: 30px;
+}
+.tab-pid_tuning .sliderLabels span {
+    color: var(--text);
+    font-size: 12px;
+}
+
+/* ── Tuning PID sliders titlebar ──────────────────────────────────── */
+.tab-pid_tuning .tuningPIDSliders .pid_titlebar th {
+    text-align: center;
+}
+.tab-pid_tuning .tuningPIDSliders .pid_titlebar th:first-child {
+    width: 20%;
+    text-align: left;
+}
+.tab-pid_tuning .tuningPIDSliders .pid_titlebar th:first-child div {
+    display: inline-block;
+}
+.tab-pid_tuning .tuningPIDSliders .pid_titlebar th:nth-child(2) {
+    width: 32px;
+}
+.tab-pid_tuning .tuningPIDSliders .pid_titlebar th:last-child {
+    width: 30px;
+}
+
+/* ── Tuning filter sliders titlebar ───────────────────────────────── */
+.tab-pid_tuning .tuningFilterSliders .pid_titlebar th {
+    text-align: center;
+}
+.tab-pid_tuning .tuningFilterSliders .pid_titlebar th:first-child {
+    width: 10%;
+    border-right: none;
+}
+.tab-pid_tuning .tuningFilterSliders .pid_titlebar th:nth-child(2) {
+    width: 30px;
+}
+.tab-pid_tuning .tuningFilterSliders .pid_titlebar th:last-child {
+    width: 30px;
+}
+
+/* ── Notes ────────────────────────────────────────────────────────── */
+.tab-pid_tuning .nonExpertModeSlidersNote,
+.tab-pid_tuning .expertSettingsDetectedNote {
+    text-align: center;
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+.tab-pid_tuning .dynamicNotchNyquistWarningNote {
+    margin: 0;
+}
+.tab-pid_tuning .note-button td:nth-child(n) {
+    padding-left: 7px;
+    padding-right: 7px;
+    text-align: center;
+}
+.tab-pid_tuning .note-button td:first-child {
+    width: 75%;
+    border-right: none;
+}
+.tab-pid_tuning .note-button .regular-button {
+    display: block;
+    overflow-wrap: break-word;
+    margin: 2px;
+}
+
+/* ── Sub-tab layouts ──────────────────────────────────────────────── */
+.tab-pid_tuning .subtab-rates {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: flex-start;
+    justify-content: center;
+}
+.tab-pid_tuning .subtab-rates .cf_column {
+    min-width: 380px;
+    flex: 1;
+}
+.tab-pid_tuning .subtab-pid {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: flex-start;
+    justify-content: center;
+}
+.tab-pid_tuning .subtab-pid .cf_column {
+    min-width: 450px;
+    flex: 1.3;
+}
+.tab-pid_tuning .subtab-pid .cf_column_right {
+    min-width: 300px;
+    margin-left: 15px;
+    flex: 1;
+}
+.tab-pid_tuning .subtab-pid .note {
+    flex: 0 0 100%;
+}
+
+/* ── Filter table ─────────────────────────────────────────────────── */
+.tab-pid_tuning table.filterTable {
+    table-layout: auto;
+}
+
+/* ── Rates logo ───────────────────────────────────────────────────── */
+.tab-pid_tuning .rates_logo_div {
+    margin-top: -10%;
+    text-align: center;
+}
+.tab-pid_tuning .rates_logo {
+    width: 80%;
+    height: 80%;
+}
+.tab-pid_tuning .float-left {
+    float: left;
+}
+
+/* ── Content header ───────────────────────────────────────────────── */
+.tab-pid_tuning .content_wrapper_header {
+    display: flex;
+}
+.tab-pid_tuning .content_wrapper_header_btns {
+    margin-left: auto;
+}
+
+/* ── Fancy header (not under .tab-pid_tuning) ─────────────────────── */
+.fancy.header {
+    background-color: #d6d6d6;
+    padding-top: 8px;
+    font-size: 12px;
+    border-bottom: 1px solid var(--surface-500);
+    color: #828282;
+    background-image: linear-gradient(
+        315deg,
+        rgba(255, 255, 255, 0.2) 10%,
+        transparent 10%,
+        transparent 20%,
+        rgba(255, 255, 255, 0.2) 20%,
+        rgba(255, 255, 255, 0.2) 30%,
+        transparent 30%,
+        transparent 40%,
+        rgba(255, 255, 255, 0.2) 40%,
+        rgba(255, 255, 255, 0.2) 50%,
+        transparent 50%,
+        transparent 60%,
+        rgba(255, 255, 255, 0.2) 60%,
+        rgba(255, 255, 255, 0.2) 70%,
+        transparent 70%,
+        transparent 80%,
+        rgba(255, 255, 255, 0.2) 80%,
+        rgba(255, 255, 255, 0.2) 90%,
+        transparent 90%,
+        transparent 100%,
+        rgba(255, 255, 255, 0.2) 100%,
+        transparent
+    );
+}
+.fancy.header th {
+    padding-bottom: 4px;
+    padding-top: 4px;
+    padding-left: 5px;
+}
+
+/* ── pid_mode (not under .tab-pid_tuning) ─────────────────────────── */
+.pid_mode {
+    background-color: var(--surface-400);
+    margin: 0;
+    text-align: left;
+    padding: 0.25rem 0.5rem;
+    font-size: 12px;
+    border-bottom: 1px solid var(--surface-500);
+    color: var(--text);
+    font-weight: normal;
+    display: grid;
+    grid-template-columns: auto auto;
+    background-image: linear-gradient(
+        315deg,
+        rgba(255, 255, 255, 0.2) 10%,
+        transparent 10%,
+        transparent 20%,
+        rgba(255, 255, 255, 0.2) 20%,
+        rgba(255, 255, 255, 0.2) 30%,
+        transparent 30%,
+        transparent 40%,
+        rgba(255, 255, 255, 0.2) 40%,
+        rgba(255, 255, 255, 0.2) 50%,
+        transparent 50%,
+        transparent 60%,
+        rgba(255, 255, 255, 0.2) 60%,
+        rgba(255, 255, 255, 0.2) 70%,
+        transparent 70%,
+        transparent 80%,
+        rgba(255, 255, 255, 0.2) 80%,
+        rgba(255, 255, 255, 0.2) 90%,
+        transparent 90%,
+        transparent 100%,
+        rgba(255, 255, 255, 0.2) 100%,
+        transparent
+    );
+}
+
+/* ── PID row colors (not under .tab-pid_tuning) ──────────────────── */
+.pid_roll {
+    background-color: #e24761;
+}
+.pid_pitch {
+    background-color: #97d800;
+}
+.pid_yaw {
+    background-color: #1fb1f0;
+}
+.pid_roll,
+.pid_pitch,
+.pid_yaw {
+    color: black;
+}
+
+/* ── Show all pids button ─────────────────────────────────────────── */
+.show {
+    width: 130px;
+    margin-right: 3px;
+}
+
+/* ── Filter two-columns ───────────────────────────────────────────── */
+.subtab-filter table tr td:first-child {
+    text-align: right;
+    padding-left: 5px;
+    width: 1%;
+}
+.subtab-filter .two_columns {
+    display: flex;
+}
+.subtab-filter .two_columns .two_columns_first {
+    margin-right: 10px;
+    height: fit-content;
+}
+.subtab-filter .two_columns .two_columns_second {
+    margin-left: 10px;
+    height: fit-content;
+}
+
+/* ── Tab area ─────────────────────────────────────────────────────── */
+.tabarea {
+    width: calc(100% - 22px);
+    position: relative;
+    padding: 10px;
+    border: 1px solid var(--surface-500);
+    border-bottom-right-radius: 8px;
+    border-bottom-left-radius: 8px;
+    border-top: 0 solid var(--surface-500);
+    background: var(--surface-200);
+}
+
+/* ── Responsive: 575px ────────────────────────────────────────────── */
+@media all and (max-width: 575px) {
+    .tab-pid_tuning dialog {
+        width: calc(100% - 2em);
+        border-radius: unset;
+    }
+    .tab-pid_tuning .content_wrapper_header {
+        flex-wrap: wrap;
+    }
+    .tab-pid_tuning .profile {
+        width: calc(50% - 5px);
+    }
+    .tab-pid_tuning .rate_profile {
+        width: calc(50% - 5px);
+        margin-left: 5px;
+        margin-right: 0;
+    }
+    .tab-pid_tuning .copyprofilebtn {
+        width: calc(50% - 5px);
+    }
+    .tab-pid_tuning .copyrateprofilebtn {
+        width: calc(50% - 5px);
+        margin-right: 0;
+    }
+    .tab-pid_tuning .resetbt {
+        width: calc(50% - 5px);
+    }
+    .tab-pid_tuning .show {
+        width: calc(50% - 5px);
+        margin-right: 0;
+    }
+    .tab-pid_tuning .controller {
+        margin-right: 0;
+        width: 100%;
+    }
+    .tab-pid_tuning .content_wrapper_header_btns {
+        display: flex;
+        flex-wrap: wrap;
+    }
+    .tab-pid_tuning .tab-container > div {
+        width: calc(100% / 3);
+    }
+    .tab-pid_tuning .subtab-pid .cf_column {
+        min-width: 100%;
+        width: 100%;
+    }
+    .tab-pid_tuning .subtab-pid .cf_column_right {
+        min-width: 100%;
+        margin-left: 0;
+    }
+    .tab-pid_tuning .subtab-rates .cf_column {
+        min-width: 100%;
+        width: 100%;
+    }
+    .tab-pid_tuning .note-button td:first-child {
+        width: 60%;
+    }
+    .tab-pid_tuning .spacer_left {
+        width: 100%;
+    }
+    .tab-pid_tuning .sliderHeaders {
+        height: 18px;
+        background-color: #d6d6d6;
+        line-height: 13px;
+        font-size: 12px;
+        border-bottom: 1px solid var(--surface-500);
+        color: #828282;
+        font-weight: normal;
+        background-image: linear-gradient(
+            315deg,
+            rgba(255, 255, 255, 0.2) 10%,
+            transparent 10%,
+            transparent 20%,
+            rgba(255, 255, 255, 0.2) 20%,
+            rgba(255, 255, 255, 0.2) 30%,
+            transparent 30%,
+            transparent 40%,
+            rgba(255, 255, 255, 0.2) 40%,
+            rgba(255, 255, 255, 0.2) 50%,
+            transparent 50%,
+            transparent 60%,
+            rgba(255, 255, 255, 0.2) 60%,
+            rgba(255, 255, 255, 0.2) 70%,
+            transparent 70%,
+            transparent 80%,
+            rgba(255, 255, 255, 0.2) 80%,
+            rgba(255, 255, 255, 0.2) 90%,
+            transparent 90%,
+            transparent 100%,
+            rgba(255, 255, 255, 0.2) 100%,
+            transparent
+        );
+    }
+    .tab-pid_tuning .sliderHeaders span {
+        color: #828282;
+    }
+    .tab-pid_tuning .sliderLabels tr.sliderHeaders td:first-child {
+        text-align: left;
+    }
+    .tab-pid_tuning .tuningPIDSliders .pid_titlebar th:last-child,
+    .tab-pid_tuning .tuningPIDSliders .pid_titlebar th:nth-child(2) {
+        width: 20%;
+    }
+    .tab-pid_tuning .tuningFilterSliders .pid_titlebar th:last-child,
+    .tab-pid_tuning .tuningFilterSliders .pid_titlebar th:nth-child(2) {
+        width: 20%;
+    }
+    .tab-pid_tuning .pid_titlebar th div .xs {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+    }
+    .subtab-filter .two_columns {
+        flex-wrap: wrap;
+    }
+    .subtab-filter .two_columns .two_columns_first {
+        margin-right: 0;
+    }
+    .subtab-filter .two_columns .two_columns_second {
+        margin-left: 0;
+    }
+}
+
+/* ── Responsive: 900px (rates column stacking) ────────────────────── */
+@media all and (max-width: 900px) {
+    .tab-pid_tuning .subtab-rates {
+        flex-direction: column;
+    }
+}
+
+/* ── Responsive: 1205px ───────────────────────────────────────────── */
+@media only screen and (max-width: 1205px) {
+    .tab-pid_tuning .subtab-pid .spacer_left {
+        width: 100%;
+    }
+}
+
+/* ── Responsive: 1405px ───────────────────────────────────────────── */
+@media only screen and (max-width: 1405px) {
+    .tab-pid_tuning .subtab-rates .ratePreview.spacer_left {
+        width: 100%;
+    }
+}
 </style>
