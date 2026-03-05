@@ -10,7 +10,7 @@
                     <div class="helpicon cf_tip" :title="$t('pidTuningProfileTip')"></div>
                     <div class="head">{{ $t("pidTuningProfile") }}</div>
                     <div>
-                        <select v-model.number="currentProfile" @change="onProfileChange">
+                        <select v-model.number="currentProfile" @change="onProfileChange" :disabled="hasChanges">
                             <option v-for="i in 3" :key="i" :value="i - 1">{{ i }}</option>
                         </select>
                     </div>
@@ -21,7 +21,11 @@
                     <div class="helpicon cf_tip" :title="$t('pidTuningRateProfileTip')"></div>
                     <div class="head">{{ $t("pidTuningRateProfile") }}</div>
                     <div>
-                        <select v-model.number="currentRateProfile" @change="onRateProfileChange">
+                        <select
+                            v-model.number="currentRateProfile"
+                            @change="onRateProfileChange"
+                            :disabled="hasChanges"
+                        >
                             <option v-for="i in 6" :key="i" :value="i - 1">{{ i }}</option>
                         </select>
                     </div>
@@ -95,12 +99,12 @@
             <!-- Save/Revert Buttons -->
             <div class="content_toolbar toolbar_fixed_bottom" style="position: fixed">
                 <div class="btn save_btn">
-                    <a href="#" @click.prevent="save" :class="{ disabled: !hasChanges }">
+                    <a href="#" @click.prevent="save">
                         <span>{{ $t("pidTuningButtonSave") }}</span>
                     </a>
                 </div>
                 <div class="btn refresh_btn">
-                    <a href="#" @click.prevent="revert" :class="{ disabled: !hasChanges }">
+                    <a href="#" @click.prevent="refresh">
                         <span>{{ $t("pidTuningButtonRefresh") }}</span>
                     </a>
                 </div>
@@ -149,10 +153,6 @@ const ratesSubTab = ref(null);
 // Profile name state lifted from child components
 const pidProfileName = ref("");
 const rateProfileName = ref("");
-
-// Guard flag: suppress onFormChanged during revert to prevent watchers from
-// immediately re-flagging hasChanges while we restore values.
-const isReverting = ref(false);
 
 // hasChanges is owned by the Pinia store
 const hasChanges = computed(() => pidTuningStore.hasChanges);
@@ -375,12 +375,8 @@ function toggleShowAllPids() {
     showAllPids.value = !showAllPids.value;
 }
 
-// Save/Revert
+// Save/Refresh
 async function save() {
-    if (!hasChanges.value) {
-        return;
-    }
-
     try {
         // Save profile names to FC.CONFIG (API 1.45+)
         if (FC.CONFIG.pidProfileNames) {
@@ -444,40 +440,20 @@ async function save() {
     }
 }
 
-function revert() {
-    if (!hasChanges.value) {
-        return;
+async function refresh() {
+    try {
+        await loadData();
+        gui_log(t("pidTuningDataRefreshed"));
+    } catch (error) {
+        console.error("[PidTuningTab] Failed to refresh data:", error);
     }
-
-    dialog.openYesNo(
-        t("pidTuningButtonRefresh"),
-        t("pidTuningRevertConfirm", { defaultValue: "Revert all changes?" }),
-        () => {
-            // Suppress watchers from re-flagging hasChanges while we restore.
-            isReverting.value = true;
-
-            const origNames = pidTuningStore.revertToOriginals();
-            pidProfileName.value = origNames.pidProfileName;
-            rateProfileName.value = origNames.rateProfileName;
-
-            // Reinitialize sliders
-            TuningSliders.initialize();
-
-            // Force PidSubTab to sync its local slider refs from TuningSliders.js
-            if (pidSubTab.value && pidSubTab.value.forceUpdateSliders) {
-                pidSubTab.value.forceUpdateSliders();
-            }
-
-            isReverting.value = false;
-        },
-    );
 }
 
 // Notify the store to re-check for changes.
 // Called by form @input/@change (covers all user-driven edits) and by child
 // @change emits (covers programmatic FC mutations such as slider calculations).
 function onFormChanged() {
-    if (!isMounted.value || isReverting.value) {
+    if (!isMounted.value) {
         return;
     }
     pidTuningStore.checkForChanges(pidProfileName.value, rateProfileName.value);
