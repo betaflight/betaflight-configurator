@@ -221,6 +221,11 @@ async function loadData() {
         // slider-validated values are captured as originals)
         TuningSliders.initialize();
 
+        // Force PidSubTab to sync its local slider refs from TuningSliders.js
+        if (pidSubTab.value && pidSubTab.value.forceUpdateSliders) {
+            pidSubTab.value.forceUpdateSliders();
+        }
+
         // Store original values for revert
         storeOriginalValues();
 
