@@ -1,20 +1,21 @@
 <template>
-    <dialog class="dialogRatesType" open>
+    <dialog ref="dialogRef" class="dialogRatesType" @cancel.prevent>
         <h3 class="dialogRatesTypeTitle">{{ title }}</h3>
         <div class="dialogRatesTypeContent" v-html="note"></div>
         <div class="buttons">
-            <button type="button" class="dialogRatesType-confirmbtn regular-button" @click="$emit('confirm')">
+            <button type="button" class="dialogRatesType-confirmbtn regular-button" @click="confirmHandler">
                 {{ confirmText }}
             </button>
-            <button type="button" class="dialogRatesType-cancelbtn regular-button" @click="$emit('cancel')">
+            <button type="button" class="dialogRatesType-cancelbtn regular-button" @click="cancelHandler">
                 {{ cancelText }}
             </button>
         </div>
     </dialog>
-    <div class="dialog-backdrop"></div>
 </template>
 
 <script setup>
+import { ref } from "vue";
+
 defineProps({
     title: { type: String, default: "" },
     note: { type: String, default: "" },
@@ -22,28 +23,37 @@ defineProps({
     cancelText: { type: String, default: "Cancel" },
 });
 
-defineEmits(["confirm", "cancel"]);
+const emit = defineEmits(["confirm", "cancel"]);
+
+const dialogRef = ref(null);
+
+const show = () => {
+    dialogRef.value?.showModal();
+};
+
+const close = () => {
+    dialogRef.value?.close();
+};
+
+const confirmHandler = () => {
+    emit("confirm");
+    close();
+};
+
+const cancelHandler = () => {
+    emit("cancel");
+    close();
+};
+
+defineExpose({
+    show,
+    close,
+    dialog: dialogRef,
+});
 </script>
 
 <style scoped>
-.dialog-backdrop {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 999;
-}
-
 .dialogRatesType {
-    display: block;
-    z-index: 1000;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    margin: 0;
     width: fit-content;
     max-width: 400px;
 }

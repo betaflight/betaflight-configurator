@@ -472,6 +472,66 @@
                     </table>
                 </template>
             </div>
+
+            <!-- Angle/Horizon Section -->
+            <div class="gui_box grey">
+                <table class="pid_titlebar">
+                    <tbody>
+                        <tr>
+                            <th class="third"></th>
+                            <th class="third" style="width: 33%">{{ $t("pidTuningStrength") }}</th>
+                            <th class="third" style="width: 33%">{{ $t("pidTuningTransition") }}</th>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="pid_tuning">
+                    <tbody>
+                        <tr>
+                            <td class="third">{{ $t("pidTuningAngle") }}</td>
+                            <td class="third">
+                                <input type="number" v-model.number="pidLevelAngle" step="1" min="0" max="255" />
+                            </td>
+                            <td class="third"></td>
+                        </tr>
+                        <tr>
+                            <td class="third">{{ $t("pidTuningHorizon") }}</td>
+                            <td class="third">
+                                <input type="number" v-model.number="pidLevelHorizon" step="1" min="0" max="255" />
+                            </td>
+                            <td class="third">
+                                <input type="number" v-model.number="pidLevelTransition" step="1" min="0" max="255" />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="pid_titlebar pid_titlebar_extended pid_sensitivity">
+                    <tbody>
+                        <tr>
+                            <th class="third"></th>
+                            <th class="third" style="width: 33%">{{ $t("pidTuningLevelAngleLimit") }}</th>
+                            <th class="third" style="width: 33%"></th>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="pid_tuning pid_sensitivity">
+                    <tbody>
+                        <tr>
+                            <td class="third"></td>
+                            <td class="third">
+                                <input
+                                    type="number"
+                                    v-model.number="advancedTuning.levelAngleLimit"
+                                    step="1"
+                                    min="10"
+                                    max="200"
+                                />
+                            </td>
+                            <td class="third"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- END Angle/Horizon Settings-->
         </div>
         <!-- END LEFT COLUMN -->
 
@@ -1032,70 +1092,6 @@
                         </tr>
                     </tbody>
                 </table>
-                <!-- Angle/Horizon Section -->
-                <div class="gui_box grey">
-                    <table class="pid_titlebar">
-                        <tbody>
-                            <tr>
-                                <th class="third"></th>
-                                <th class="third" style="width: 33%">{{ $t("pidTuningStrength") }}</th>
-                                <th class="third" style="width: 33%">{{ $t("pidTuningTransition") }}</th>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <table class="pid_tuning">
-                        <tbody>
-                            <tr>
-                                <td class="third">{{ $t("pidTuningAngle") }}</td>
-                                <td class="third">
-                                    <input type="number" v-model.number="pidLevelAngle" step="1" min="0" max="255" />
-                                </td>
-                                <td class="third"></td>
-                            </tr>
-                            <tr>
-                                <td class="third">{{ $t("pidTuningHorizon") }}</td>
-                                <td class="third">
-                                    <input type="number" v-model.number="pidLevelHorizon" step="1" min="0" max="255" />
-                                </td>
-                                <td class="third">
-                                    <input
-                                        type="number"
-                                        v-model.number="pidLevelTransition"
-                                        step="1"
-                                        min="0"
-                                        max="255"
-                                    />
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <table class="pid_titlebar pid_titlebar_extended pid_sensitivity">
-                        <tbody>
-                            <tr>
-                                <th class="third"></th>
-                                <th class="third" style="width: 33%">{{ $t("pidTuningLevelAngleLimit") }}</th>
-                                <th class="third" style="width: 33%"></th>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <table class="pid_tuning pid_sensitivity">
-                        <tbody>
-                            <tr>
-                                <td class="third"></td>
-                                <td class="third">
-                                    <input
-                                        type="number"
-                                        v-model.number="advancedTuning.levelAngleLimit"
-                                        step="1"
-                                        min="10"
-                                        max="200"
-                                    />
-                                </td>
-                                <td class="third"></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
             </div>
         </div>
         <!-- END RIGHT COLUMN -->
