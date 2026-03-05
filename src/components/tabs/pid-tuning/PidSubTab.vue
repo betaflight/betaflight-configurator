@@ -1103,7 +1103,7 @@ import { ref, computed, watch, onMounted, onUnmounted, nextTick } from "vue";
 import FC from "@/js/fc";
 import TuningSliders from "@/js/TuningSliders";
 import semver from "semver";
-import { API_VERSION_1_45 } from "@/js/data_storage";
+import { API_VERSION_1_45, API_VERSION_1_47 } from "@/js/data_storage";
 
 const props = defineProps({
     expertMode: {
@@ -1462,7 +1462,7 @@ const slidersInDangerZone = computed(() => {
     const WARNING_I_GAIN = 2.5 * FC.PIDS[0][0];
     const WARNING_D_GAIN = 42;
 
-    const enableWarning = semver.lt(FC.CONFIG.apiVersion, "1.47.0")
+    const enableWarning = semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_47)
         ? FC.PIDS[0][0] > WARNING_P_GAIN ||
           FC.PIDS[0][1] > WARNING_I_GAIN ||
           FC.PIDS[0][2] > WARNING_D_MAX_GAIN ||
