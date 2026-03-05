@@ -19,6 +19,8 @@ import RebootDialog from "./RebootDialog.vue";
 import EscDshotDirectionDialog from "./EscDshotDirectionDialog.vue";
 import MotorOutputReorderingDialog from "./MotorOutputReorderingDialog.vue";
 import ProfileSelectionDialog from "./ProfileSelectionDialog.vue";
+import RatesTypeDialog from "./RatesTypeDialog.vue";
+import CopyProfileDialog from "./CopyProfileDialog.vue";
 
 const dialogStore = useDialogStore();
 const currentDialogRef = ref(null);
@@ -31,6 +33,8 @@ const dialogComponents = {
     EscDshotDirectionDialog,
     MotorOutputReorderingDialog,
     ProfileSelectionDialog,
+    RatesTypeDialog,
+    CopyProfileDialog,
 };
 
 watch(

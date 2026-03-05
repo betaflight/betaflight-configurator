@@ -97,6 +97,39 @@ export function useDialog() {
         );
     };
 
+    const openCopyProfile = (
+        title,
+        note,
+        profileOptions,
+        rateOptions,
+        onConfirm,
+        onCancel,
+        confirmText = "OK",
+        cancelText = "Cancel",
+    ) => {
+        store.open(
+            "CopyProfileDialog",
+            {
+                title,
+                note,
+                profileOptions,
+                rateOptions,
+                confirmText,
+                cancelText,
+            },
+            {
+                confirm: (selected) => {
+                    store.close();
+                    if (onConfirm) onConfirm(selected);
+                },
+                cancel: () => {
+                    store.close();
+                    if (onCancel) onCancel();
+                },
+            },
+        );
+    };
+
     const close = () => {
         store.close();
     };
@@ -110,6 +143,7 @@ export function useDialog() {
         openInfo,
         openWait,
         openProfileSelection,
+        openCopyProfile,
         close,
         open,
     };

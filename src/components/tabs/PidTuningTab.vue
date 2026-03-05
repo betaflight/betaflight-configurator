@@ -52,7 +52,9 @@
                         <a href="#" @click.prevent="resetProfile">{{ $t("pidTuningResetPidProfile") }}</a>
                     </div>
                     <div class="default_btn show showAllPids">
-                        <a href="#" @click.prevent="toggleShowAllPids">{{ $t("pidTuningShowAllPids") }}</a>
+                        <a href="#" @click.prevent="toggleShowAllPids">{{
+                            showAllPids ? $t("pidTuningHideUnusedPids") : $t("pidTuningShowAllPids")
+                        }}</a>
                     </div>
                 </div>
             </div>
@@ -127,6 +129,7 @@ import { isExpertModeEnabled } from "@/js/utils/isExpertModeEnabled";
 import { tabState } from "@/js/tab_state";
 import { useDialog } from "@/composables/useDialog";
 import { useTranslation } from "i18next-vue";
+import { gui_log } from "@/js/gui_log";
 
 const { t } = useTranslation();
 const pidTuningStore = usePidTuningStore();
@@ -284,31 +287,32 @@ async function copyProfile() {
         return;
     }
 
-    // Show profile selection dialog
-    dialog.openProfileSelection(
-        t("pidTuningCopyProfileDialogTitle"),
-        t("pidTuningCopyProfileDialogPrompt"),
+    // Show copy profile dialog (Vue component with profile + rate selects)
+    dialog.openCopyProfile(
+        t("dialogCopyProfileTitle"),
+        t("dialogCopyProfileNote"),
         options,
-        async (selectedIndex) => {
-            // User confirmed selection
-            const targetProfile = selectedIndex;
+        [],
+        async (selected) => {
+            // selected: { profile, rateProfile }
+            if (selected && typeof selected.profile === "number") {
+                const targetProfile = selected.profile;
 
-            // Set up copy profile data
-            FC.COPY_PROFILE = FC.COPY_PROFILE || {};
-            FC.COPY_PROFILE.type = 0; // 0 = PID profile
-            FC.COPY_PROFILE.srcProfile = currentProfile.value;
-            FC.COPY_PROFILE.dstProfile = targetProfile;
+                FC.COPY_PROFILE = FC.COPY_PROFILE || {};
+                FC.COPY_PROFILE.type = 0; // 0 = PID profile
+                FC.COPY_PROFILE.srcProfile = currentProfile.value;
+                FC.COPY_PROFILE.dstProfile = targetProfile;
 
-            try {
-                await MSP.promise(MSPCodes.MSP_COPY_PROFILE, mspHelper.crunch(MSPCodes.MSP_COPY_PROFILE));
-                console.log(`[PidTuningTab] Copied profile ${currentProfile.value} to ${targetProfile}`);
-                // Optionally reload data or show success message
-            } catch (error) {
-                console.error("[PidTuningTab] Failed to copy profile:", error);
+                try {
+                    await MSP.promise(MSPCodes.MSP_COPY_PROFILE, mspHelper.crunch(MSPCodes.MSP_COPY_PROFILE));
+                    console.log(`[PidTuningTab] Copied profile ${currentProfile.value} to ${targetProfile}`);
+                } catch (error) {
+                    console.error("[PidTuningTab] Failed to copy profile:", error);
+                }
             }
         },
         () => {
-            // User cancelled - do nothing
+            // cancelled
         },
     );
 }
@@ -328,51 +332,43 @@ async function copyRateProfile() {
         return;
     }
 
-    // Show rate profile selection dialog
-    dialog.openProfileSelection(
-        t("pidTuningCopyRateProfileDialogTitle"),
-        t("pidTuningCopyRateProfileDialogPrompt"),
+    // Show copy rate profile dialog (use same Vue dialog but only rate options)
+    dialog.openCopyProfile(
+        t("dialogCopyProfileTitle"),
+        t("dialogCopyProfileNote"),
+        [],
         options,
-        async (selectedIndex) => {
-            // User confirmed selection
-            const targetProfile = selectedIndex;
+        async (selected) => {
+            if (selected && typeof selected.rateProfile === "number") {
+                const targetProfile = selected.rateProfile;
 
-            // Set up copy profile data
-            FC.COPY_PROFILE = FC.COPY_PROFILE || {};
-            FC.COPY_PROFILE.type = 1; // 1 = Rate profile
-            FC.COPY_PROFILE.srcProfile = currentRateProfile.value;
-            FC.COPY_PROFILE.dstProfile = targetProfile;
+                FC.COPY_PROFILE = FC.COPY_PROFILE || {};
+                FC.COPY_PROFILE.type = 1; // 1 = Rate profile
+                FC.COPY_PROFILE.srcProfile = currentRateProfile.value;
+                FC.COPY_PROFILE.dstProfile = targetProfile;
 
-            try {
-                await MSP.promise(MSPCodes.MSP_COPY_PROFILE, mspHelper.crunch(MSPCodes.MSP_COPY_PROFILE));
-                console.log(`[PidTuningTab] Copied rate profile ${currentRateProfile.value} to ${targetProfile}`);
-                // Optionally reload data or show success message
-            } catch (error) {
-                console.error("[PidTuningTab] Failed to copy rate profile:", error);
+                try {
+                    await MSP.promise(MSPCodes.MSP_COPY_PROFILE, mspHelper.crunch(MSPCodes.MSP_COPY_PROFILE));
+                    console.log(`[PidTuningTab] Copied rate profile ${currentRateProfile.value} to ${targetProfile}`);
+                } catch (error) {
+                    console.error("[PidTuningTab] Failed to copy rate profile:", error);
+                }
             }
         },
         () => {
-            // User cancelled - do nothing
+            // cancelled
         },
     );
 }
 
-function resetProfile() {
-    dialog.openYesNo(
-        t("pidTuningResetPidProfile"),
-        t("pidTuningResetPidProfileConfirm", { defaultValue: "Reset current PID profile to defaults?" }),
-        async () => {
-            try {
-                await MSP.promise(MSPCodes.MSP_SET_RESET_CURR_PID);
-                console.log("[PidTuningTab] PID profile reset to defaults");
-
-                // Reload data to show reset values
-                await loadData();
-            } catch (error) {
-                console.error("[PidTuningTab] Failed to reset profile:", error);
-            }
-        },
-    );
+async function resetProfile() {
+    try {
+        await MSP.promise(MSPCodes.MSP_SET_RESET_CURR_PID);
+        await loadData();
+        gui_log(t("pidTuningPidProfileReset"));
+    } catch (error) {
+        console.error("[PidTuningTab] Failed to reset profile:", error);
+    }
 }
 
 function toggleShowAllPids() {

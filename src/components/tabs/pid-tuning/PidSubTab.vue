@@ -379,6 +379,99 @@
                     <p v-html="$t('pidTuningSlidersExpertSettingsDetectedNote')"></p>
                 </div>
             </div>
+
+            <!-- BARO, MAG, GPS Optional PIDs -->
+            <div
+                v-if="showAllLocal && hasBaroMagGpsPids"
+                id="pid_baro_mag_gps"
+                class="pid_optional gui_box grey pid_tuning"
+            >
+                <table class="pid_titlebar">
+                    <tbody>
+                        <tr>
+                            <th class="name"></th>
+                            <th class="proportional" v-html="$t('pidTuningProportional')"></th>
+                            <th class="integral" v-html="$t('pidTuningIntegral')"></th>
+                            <th class="derivative" v-html="$t('pidTuningDerivative')"></th>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!-- Altitude (Baro) PIDs -->
+                <template v-if="hasPidName('ALT') || hasPidName('VEL')">
+                    <table class="pid_tuning">
+                        <tbody>
+                            <tr>
+                                <th colspan="4">
+                                    <div class="pid_mode">{{ $t("pidTuningAltitude") }}</div>
+                                </th>
+                            </tr>
+                            <tr v-if="hasPidName('ALT')" class="ALT">
+                                <td></td>
+                                <td><input type="number" v-model.number="pidAltP" step="1" min="0" max="255" /></td>
+                                <td><input type="number" v-model.number="pidAltI" step="1" min="0" max="255" /></td>
+                                <td><input type="number" v-model.number="pidAltD" step="1" min="0" max="255" /></td>
+                            </tr>
+                            <tr v-if="hasPidName('VEL')" class="VEL">
+                                <td></td>
+                                <td><input type="number" v-model.number="pidVelP" step="1" min="0" max="255" /></td>
+                                <td><input type="number" v-model.number="pidVelI" step="1" min="0" max="255" /></td>
+                                <td><input type="number" v-model.number="pidVelD" step="1" min="0" max="255" /></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </template>
+
+                <!-- Mag PIDs -->
+                <template v-if="hasPidName('MAG')">
+                    <table class="pid_tuning">
+                        <tbody>
+                            <tr>
+                                <th colspan="4">
+                                    <div class="pid_mode">{{ $t("pidTuningMag") }}</div>
+                                </th>
+                            </tr>
+                            <tr class="MAG">
+                                <td></td>
+                                <td><input type="number" v-model.number="pidMagP" step="1" min="0" max="255" /></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </template>
+
+                <!-- GPS PIDs -->
+                <template v-if="hasPidName('Pos') || hasPidName('PosR') || hasPidName('NavR')">
+                    <table class="pid_tuning">
+                        <tbody>
+                            <tr>
+                                <th colspan="4">
+                                    <div class="pid_mode">{{ $t("pidTuningGps") }}</div>
+                                </th>
+                            </tr>
+                            <tr v-if="hasPidName('Pos')" class="Pos">
+                                <td></td>
+                                <td><input type="number" v-model.number="pidPosP" step="1" min="0" max="255" /></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr v-if="hasPidName('PosR')" class="PosR">
+                                <td></td>
+                                <td><input type="number" v-model.number="pidPosRP" step="1" min="0" max="255" /></td>
+                                <td><input type="number" v-model.number="pidPosRI" step="1" min="0" max="255" /></td>
+                                <td><input type="number" v-model.number="pidPosRD" step="1" min="0" max="255" /></td>
+                            </tr>
+                            <tr v-if="hasPidName('NavR')" class="NavR">
+                                <td></td>
+                                <td><input type="number" v-model.number="pidNavRP" step="1" min="0" max="255" /></td>
+                                <td><input type="number" v-model.number="pidNavRI" step="1" min="0" max="255" /></td>
+                                <td><input type="number" v-model.number="pidNavRD" step="1" min="0" max="255" /></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </template>
+            </div>
         </div>
         <!-- END LEFT COLUMN -->
 
@@ -1042,6 +1135,17 @@ const showProfileName = computed(() => {
     return semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45);
 });
 
+// Local show-all state in sync with prop
+const showAllLocal = ref(props.showAllPids);
+
+// Keep local state in sync with prop
+watch(
+    () => props.showAllPids,
+    (v) => {
+        showAllLocal.value = v;
+    },
+);
+
 // PIDs - Individual per-cell computed properties to avoid array destruction.
 // v-model.number writes a single number, so using array-level computeds would
 // replace the sub-array reference with that number. Instead, read/write each
@@ -1121,6 +1225,65 @@ const pidLevelTransition = computed({
         FC.PIDS[3][2] = val;
     },
 });
+
+// Helper to check if a PID name exists in firmware PID_NAMES
+function hasPidName(name) {
+    return FC.PID_NAMES && FC.PID_NAMES.indexOf(name) >= 0;
+}
+
+// Helper to create a computed property for an optional PID value by name and component index
+function createPidComputed(pidName, component) {
+    return computed({
+        get: () => {
+            const idx = FC.PID_NAMES ? FC.PID_NAMES.indexOf(pidName) : -1;
+            return idx >= 0 && FC.PIDS[idx] ? FC.PIDS[idx][component] : 0;
+        },
+        set: (val) => {
+            const idx = FC.PID_NAMES ? FC.PID_NAMES.indexOf(pidName) : -1;
+            if (idx >= 0 && FC.PIDS[idx]) {
+                FC.PIDS[idx][component] = val;
+            }
+        },
+    });
+}
+
+// Check if any baro/mag/gps PID names exist
+const hasBaroMagGpsPids = computed(() => {
+    return (
+        hasPidName("ALT") ||
+        hasPidName("VEL") ||
+        hasPidName("MAG") ||
+        hasPidName("Pos") ||
+        hasPidName("PosR") ||
+        hasPidName("NavR")
+    );
+});
+
+// Optional PID computed properties (ALT = Altitude)
+const pidAltP = createPidComputed("ALT", 0);
+const pidAltI = createPidComputed("ALT", 1);
+const pidAltD = createPidComputed("ALT", 2);
+
+// VEL = Velocity
+const pidVelP = createPidComputed("VEL", 0);
+const pidVelI = createPidComputed("VEL", 1);
+const pidVelD = createPidComputed("VEL", 2);
+
+// MAG = Magnetometer
+const pidMagP = createPidComputed("MAG", 0);
+
+// Pos = GPS Position
+const pidPosP = createPidComputed("Pos", 0);
+
+// PosR = GPS Position Rate
+const pidPosRP = createPidComputed("PosR", 0);
+const pidPosRI = createPidComputed("PosR", 1);
+const pidPosRD = createPidComputed("PosR", 2);
+
+// NavR = GPS Navigation Rate
+const pidNavRP = createPidComputed("NavR", 0);
+const pidNavRI = createPidComputed("NavR", 1);
+const pidNavRD = createPidComputed("NavR", 2);
 
 // Advanced tuning - reactive reference
 const advancedTuning = computed(() => FC.ADVANCED_TUNING);
