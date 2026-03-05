@@ -68,29 +68,9 @@ export const usePidTuningStore = defineStore("pidTuning", () => {
             rateNameChanged;
     }
 
-    /**
-     * Restore FC data from the stored originals.
-     * Returns the original profile names so the caller can reset its local refs.
-     */
-    function revertToOriginals() {
-        // Use JSON-based cloning (see storeOriginals comment)
-        FC.PIDS = JSON.parse(JSON.stringify(originalPids.value));
-        Object.assign(FC.ADVANCED_TUNING, JSON.parse(JSON.stringify(originalAdvancedTuning.value)));
-        Object.assign(FC.RC_TUNING, JSON.parse(JSON.stringify(originalRcTuning.value)));
-        Object.assign(FC.FILTER_CONFIG, JSON.parse(JSON.stringify(originalFilterConfig.value)));
-        Object.assign(FC.TUNING_SLIDERS, JSON.parse(JSON.stringify(originalTuningSliders.value)));
-        hasChanges.value = false;
-
-        return {
-            pidProfileName: originalPidProfileName.value,
-            rateProfileName: originalRateProfileName.value,
-        };
-    }
-
     return {
         hasChanges,
         storeOriginals,
         checkForChanges,
-        revertToOriginals,
     };
 });
