@@ -1258,7 +1258,10 @@ function resolveBalloonOverlap(x, y, width, height, balloonsDirty) {
     return y;
 }
 
-function drawBalloonPath(ctx, x, y, width, height, pointerY, align, radius, offset) {
+function drawBalloonPath(ctx, bounds, pointer, style) {
+    const { x, y, width, height } = bounds;
+    const { pointerY } = pointer;
+    const { align, radius, offset } = style;
     const pointerLength = (height - 2 * radius) / 6;
 
     ctx.beginPath();
@@ -1315,7 +1318,12 @@ function drawBalloonLabel(ctx, text, x, y, align, colors, balloonsDirty) {
     y = resolveBalloonOverlap(x, y, width, height, balloonsDirty);
     balloonsDirty.push({ left: x, right: x + width, top: y - DEFAULT_MARGIN, bottom: y + height + DEFAULT_MARGIN });
 
-    drawBalloonPath(ctx, x, y, width, height, pointerY, align, DEFAULT_RADIUS, DEFAULT_OFFSET);
+    drawBalloonPath(
+        ctx,
+        { x, y, width, height },
+        { pointerY },
+        { align, radius: DEFAULT_RADIUS, offset: DEFAULT_OFFSET },
+    );
 
     ctx.fillStyle = colors.text;
     ctx.textAlign = "center";
@@ -1475,7 +1483,9 @@ function getTfromXBezier(x, x0, cx, x1) {
 
 const THROTTLE_LIMIT_TYPES = { OFF: 0, SCALE: 1, CLIP: 2 };
 
-function drawClipModeCurve(context, curve, limitPercent, canvasWidth, canvasHeight, thrPercent, thrX, mid) {
+function drawClipModeCurve(context, curve, canvas, throttle) {
+    const { limitPercent, width: canvasWidth, height: canvasHeight } = canvas;
+    const { thrPercent, thrX, mid } = throttle;
     const throttleClipY = canvasHeight * (1 - limitPercent);
 
     let intersectT;
@@ -1526,7 +1536,10 @@ function drawClipModeCurve(context, curve, limitPercent, canvasWidth, canvasHeig
     return { x: originalThrpos.x, y: Math.max(throttleClipY, originalThrpos.y) };
 }
 
-function drawScaleModeCurve(context, curve, canvasWidth, canvasHeight, thrPercent, thrX, mid) {
+function drawScaleModeCurve(context, curve, canvas, throttle) {
+    const { width: canvasWidth, height: canvasHeight } = canvas;
+    const { thrPercent, thrX, mid } = throttle;
+
     context.beginPath();
     context.moveTo(0, canvasHeight);
     context.quadraticCurveTo(curve.midXl, curve.midYl, curve.midX, curve.midY);
@@ -1630,22 +1643,20 @@ function drawThrottleCurve() {
     const thrPercent = FC.RC?.channels?.[3] ? Math.max(0, Math.min(1, (FC.RC.channels[3] - 1000) / 1000)) : 0.5;
     const thrX = thrPercent * canvasWidth;
 
+    const throttle = { thrPercent, thrX, mid };
+
     let thrpos;
     if (limitType === THROTTLE_LIMIT_TYPES.CLIP && limitPercent < 1) {
         thrpos = drawClipModeCurve(
             context,
             originalCurve,
-            limitPercent,
-            canvasWidth,
-            canvasHeight,
-            thrPercent,
-            thrX,
-            mid,
+            { limitPercent, width: canvasWidth, height: canvasHeight },
+            throttle,
         );
     } else {
         const scaleFactor = limitType === THROTTLE_LIMIT_TYPES.SCALE ? limitPercent : 1;
         const scaledCurve = computeCurveParams(canvasWidth, canvasHeight, mid, hover, expo, scaleFactor);
-        thrpos = drawScaleModeCurve(context, scaledCurve, canvasWidth, canvasHeight, thrPercent, thrX, mid);
+        thrpos = drawScaleModeCurve(context, scaledCurve, { width: canvasWidth, height: canvasHeight }, throttle);
     }
 
     if (thrpos) {
