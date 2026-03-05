@@ -1,5 +1,5 @@
 <template>
-    <dialog class="dialogCopyProfile" open>
+    <dialog ref="dialogRef" class="dialogCopyProfile" @cancel.prevent>
         <h3 class="dialogCopyProfileTitle">{{ title }}</h3>
         <div class="content">
             <div v-if="note" class="dialogCopyProfile-note" v-html="note"></div>
@@ -33,11 +33,10 @@
             </button>
         </div>
     </dialog>
-    <div class="dialog-backdrop"></div>
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 
 const props = defineProps({
     title: { type: String, default: "" },
@@ -52,42 +51,39 @@ const props = defineProps({
 
 const emit = defineEmits(["confirm", "cancel"]);
 
+const dialogRef = ref(null);
 const selectedProfile = ref(null);
 const selectedRateProfile = ref(null);
 
-onMounted(() => {
+const show = () => {
     selectedProfile.value = props.profileOptions?.length ? props.profileOptions[0].value : null;
     selectedRateProfile.value = props.rateOptions?.length ? props.rateOptions[0].value : null;
-});
+    dialogRef.value?.showModal();
+};
+
+const close = () => {
+    dialogRef.value?.close();
+};
 
 const confirm = () => {
     emit("confirm", { profile: selectedProfile.value, rateProfile: selectedRateProfile.value });
+    close();
 };
 
 const cancel = () => {
     emit("cancel");
+    close();
 };
+
+defineExpose({
+    show,
+    close,
+    dialog: dialogRef,
+});
 </script>
 
 <style scoped>
-.dialog-backdrop {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 999;
-}
-
 .dialogCopyProfile {
-    display: block;
-    z-index: 1000;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    margin: 0;
     width: fit-content;
     max-width: 500px;
 }
