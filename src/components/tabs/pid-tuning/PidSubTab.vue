@@ -1224,7 +1224,7 @@ const pidLevelTransition = computed({
 
 // Helper to check if a PID name exists in firmware PID_NAMES
 function hasPidName(name) {
-    return FC.PID_NAMES && FC.PID_NAMES.indexOf(name) >= 0;
+    return FC.PID_NAMES && FC.PID_NAMES.includes(name);
 }
 
 // Helper to create a computed property for an optional PID value by name and component index

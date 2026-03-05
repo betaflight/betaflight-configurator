@@ -105,16 +105,7 @@ export function useDialog() {
         );
     };
 
-    const openCopyProfile = (
-        title,
-        note,
-        profileOptions,
-        rateOptions,
-        onConfirm,
-        onCancel,
-        confirmText = "OK",
-        cancelText = "Cancel",
-    ) => {
+    const openCopyProfile = (title, note, profileOptions, rateOptions, onConfirm, onCancel, options = {}) => {
         store.open(
             "CopyProfileDialog",
             {
@@ -122,8 +113,9 @@ export function useDialog() {
                 note,
                 profileOptions,
                 rateOptions,
-                confirmText,
-                cancelText,
+                confirmText: options.confirmText || "OK",
+                cancelText: options.cancelText || "Cancel",
+                ...options,
             },
             {
                 confirm: (selected) => {
