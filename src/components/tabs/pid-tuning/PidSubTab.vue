@@ -1570,6 +1570,7 @@ watch(
             TuningSliders.setExpertMode(newValue);
         }
     },
+    { immediate: true },
 );
 
 // Watch for changes in FC.TUNING_SLIDERS to reinitialize sliders after data loads
