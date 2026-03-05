@@ -1988,4 +1988,10 @@ onUnmounted(() => {
 canvas {
     display: block;
 }
+
+@media all and (max-width: 900px) {
+    .rates-subtab {
+        flex-direction: column;
+    }
+}
 </style>
