@@ -8,7 +8,7 @@
             <div class="profile_name" v-if="showProfileName">
                 <div class="number">
                     <label>
-                        <input type="text" v-model="profileName" maxlength="8" style="width: 100px" />
+                        <input type="text" v-model="localProfileName" maxlength="8" style="width: 100px" />
                         <span>{{ $t("pidProfileName") }}</span>
                     </label>
                     <div class="helpicon cf_tip" :title="$t('pidProfileNameHelp')"></div>
@@ -1122,8 +1122,8 @@ const props = defineProps({
 
 const emit = defineEmits(["update:profileName", "change"]);
 
-// Profile name
-const profileName = computed({
+// Profile name (local writable computed to avoid duplicate key with prop)
+const localProfileName = computed({
     get: () => props.profileName,
     set: (value) => emit("update:profileName", value),
 });
