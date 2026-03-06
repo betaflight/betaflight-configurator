@@ -2783,12 +2783,12 @@ OSD.presetPosition.setupGrid = function () {
     contextMenuListObject.content = $grid;
 };
 
-function isPositionWithinGridBounds(testX, testY, elementWidth) {
+function isPositionWithinGridBounds(testX, testY, elementWidth, elementHeight) {
     return (
         testX >= 1 &&
         testX + elementWidth <= OSD.data.displaySize.x - 1 &&
         testY >= 1 &&
-        testY <= OSD.data.displaySize.y - 2
+        testY + elementHeight <= OSD.data.displaySize.y - 2
     );
 }
 
@@ -2811,11 +2811,14 @@ function hasCollisionAtPosition(testX, testY, elementWidth, elementHeight, field
 }
 
 OSD.findAvailablePosition = function (target, elementWidth, elementHeight, fieldChanged, grow) {
-    for (let offset = 0; offset < Math.max(OSD.data.displaySize.x, OSD.data.displaySize.y); offset++) {
-        const testX = target.x + grow.x * offset;
-        const testY = target.y + grow.y * offset;
+    const gx = (grow && grow.x) || 0;
+    const gy = (grow && grow.y) || 0;
 
-        if (!isPositionWithinGridBounds(testX, testY, elementWidth)) {
+    for (let offset = 0; offset < Math.max(OSD.data.displaySize.x, OSD.data.displaySize.y); offset++) {
+        const testX = target.x + gx * offset;
+        const testY = target.y + gy * offset;
+
+        if (!isPositionWithinGridBounds(testX, testY, elementWidth, elementHeight)) {
             break;
         }
 
@@ -2841,11 +2844,8 @@ OSD.presetPosition.applyPosition = function (fieldChanged, positionKey) {
     if (fieldChanged.preview.constructor == Array) {
         const limits = OSD.searchLimitsElement(fieldChanged.preview);
 
-        // Note: Using +1 for inclusive range calculation, which is mathematically
-        // correct for counting occupied positions. An element spanning coordinates
-        // -2 to 2 occupies 5 positions: [-2, -1, 0, 1, 2]
-        elementWidth = limits.maxX - limits.minX + 1;
-        elementHeight = limits.maxY - limits.minY + 1;
+        elementWidth = limits.maxX - limits.minX;
+        elementHeight = limits.maxY - limits.minY;
 
         // Offset adjustments are needed because the positioning system expects
         // these values to account for the difference between logical and visual positioning.

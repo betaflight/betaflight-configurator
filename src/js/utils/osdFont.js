@@ -149,7 +149,7 @@ FONT.parseMCMFontFile = function (dataFontFile) {
     if (data.shift().trim() !== "MAX7456") {
         const msg = "that font file doesnt have the MAX7456 header, giving up";
         console.debug(msg);
-        Promise.reject(msg);
+        throw new Error(msg);
     }
     const characterBits = [];
     const characterBytes = [];
@@ -191,10 +191,12 @@ FONT.openFontFile = function () {
         )
             .then((file) => {
                 FONT.data.loaded_font_file = file.name;
-                FileSystem.readFile(file).then((contents) => {
-                    FONT.parseMCMFontFile(contents);
-                    resolve();
-                }).catch(reject);
+                FileSystem.readFile(file)
+                    .then((contents) => {
+                        FONT.parseMCMFontFile(contents);
+                        resolve();
+                    })
+                    .catch(reject);
             })
             .catch((error) => {
                 console.error("could not load whole font file:", error);

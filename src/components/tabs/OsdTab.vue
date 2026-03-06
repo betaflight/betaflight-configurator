@@ -985,14 +985,20 @@ function isStringArrayPreview(preview) {
     return Array.isArray(preview) && typeof preview[0] === "string";
 }
 
-function applyArrayDragOffset(displayItem, position, event, displaySize) {
+function applyArrayDragOffset(displayItem, position, event, displaySize, startIdx) {
     if (!Array.isArray(displayItem.preview)) {
         return position;
     }
 
-    const x = Number.parseInt(event.dataTransfer.getData("x"));
-    const y = Number.parseInt(event.dataTransfer.getData("y"));
-    return position - x - y * displaySize.x;
+    const x = Number.parseInt(event.dataTransfer.getData("x"), 10);
+    const y = Number.parseInt(event.dataTransfer.getData("y"), 10);
+    if (Number.isNaN(x) || Number.isNaN(y)) {
+        return position;
+    }
+
+    const draggedCellIdx = x + y * displaySize.x;
+    const offsetIdx = position - draggedCellIdx;
+    return startIdx + offsetIdx;
 }
 
 function clampStringPreviewPosition(displayItem, position, displaySize) {
@@ -1064,7 +1070,11 @@ function onDropCell(event) {
     let position = Number.parseInt(event.currentTarget.dataset.position);
     const cursorX = position % displaySize.x;
 
-    position = applyArrayDragOffset(displayItem, position, event, displaySize);
+    const startIdx =
+        dragState.value.field?.index === fieldId && dragState.value.startIdx >= 0
+            ? dragState.value.startIdx
+            : displayItem.position;
+    position = applyArrayDragOffset(displayItem, position, event, displaySize, startIdx);
 
     if (!displayItem.ignoreSize) {
         if (Array.isArray(displayItem.preview)) {
