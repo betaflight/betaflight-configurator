@@ -66,13 +66,13 @@
             <!-- Sub-tab Navigation -->
             <div class="tab-container">
                 <div class="tab pid" :class="{ active: activeSubtab === 'pid' }" @click="activeSubtab = 'pid'">
-                    <a href="#">{{ $t("pidTuningSubTabPid") }}</a>
+                    <button>{{ $t("pidTuningSubTabPid") }}</button>
                 </div>
                 <div class="tab rates" :class="{ active: activeSubtab === 'rates' }" @click="activeSubtab = 'rates'">
-                    <a href="#">{{ $t("pidTuningSubTabRates") }}</a>
+                    <button>{{ $t("pidTuningSubTabRates") }}</button>
                 </div>
                 <div class="tab filter" :class="{ active: activeSubtab === 'filter' }" @click="activeSubtab = 'filter'">
-                    <a href="#">{{ $t("pidTuningSubTabFilter") }}</a>
+                    <button>{{ $t("pidTuningSubTabFilter") }}</button>
                 </div>
             </div>
 
