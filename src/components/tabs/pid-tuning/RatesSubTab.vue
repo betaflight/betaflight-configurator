@@ -422,7 +422,7 @@ const props = defineProps({
     },
 });
 
-const emit = defineEmits(["update:rateProfileName"]);
+const emit = defineEmits(["update:rateProfileName", "change"]);
 
 // Canvas refs
 const rateCurveLayer0 = ref(null);
@@ -475,6 +475,7 @@ const ratesType = computed({
                 confirm: () => {
                     dialog.close();
                     FC.RC_TUNING.rates_type = value;
+                    emit("change");
                 },
                 cancel: () => {
                     dialog.close();
