@@ -91,6 +91,7 @@
                         ref="ratesSubTab"
                         v-if="activeSubtab === 'rates'"
                         v-model:rate-profile-name="rateProfileName"
+                        @change="onFormChanged"
                     />
                     <FilterSubTab v-if="activeSubtab === 'filter'" />
                 </form>
