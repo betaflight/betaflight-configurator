@@ -23,7 +23,7 @@
                             <th class="name"></th>
                             <th class="proportional">
                                 <div class="name-helpicon-flex">
-                                    <div class="xs">Proportional</div>
+                                    <div class="xs" v-html="$t('pidTuningProportional')"></div>
                                     <div
                                         class="cf_tip sm-min"
                                         :title="$t('pidTuningProportionalHelp')"
@@ -33,7 +33,7 @@
                             </th>
                             <th class="integral">
                                 <div class="name-helpicon-flex">
-                                    <div class="xs">Integral</div>
+                                    <div class="xs" v-html="$t('pidTuningIntegral')"></div>
                                     <div
                                         class="cf_tip sm-min"
                                         :title="$t('pidTuningIntegralHelp')"
@@ -43,7 +43,7 @@
                             </th>
                             <th class="derivative">
                                 <div class="name-helpicon-flex">
-                                    <div class="xs">{{ $t(derivativeLabel) }}</div>
+                                    <div class="xs" v-html="$t(derivativeLabel)"></div>
                                     <div
                                         class="cf_tip sm-min"
                                         :title="$t(derivativeHelp)"
@@ -53,13 +53,13 @@
                             </th>
                             <th class="dmax">
                                 <div class="name-helpicon-flex">
-                                    <div class="xs">{{ $t(dMaxLabel) }}</div>
+                                    <div class="xs" v-html="$t(dMaxLabel)"></div>
                                     <div class="cf_tip sm-min" :title="$t(dMaxHelp)" v-html="$t(dMaxLabel)"></div>
                                 </div>
                             </th>
                             <th class="feedforward">
                                 <div class="name-helpicon-flex">
-                                    <div class="xs">Feedforward</div>
+                                    <div class="xs" v-html="$t('pidTuningFeedforward')"></div>
                                     <div
                                         class="cf_tip sm-min"
                                         :title="$t('pidTuningFeedforwardHelp')"
