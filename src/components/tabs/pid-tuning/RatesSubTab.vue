@@ -2,8 +2,8 @@
     <div class="tab-pid-tuning rates-subtab">
         <!-- LEFT COLUMN -->
         <div class="cf_column">
-            <!-- Rate Profile Name -->
-            <div class="gui_box grey">
+            <!-- Rate Profile Name (API 1.45+) -->
+            <div v-if="hasProfileNames" class="gui_box grey profile_name">
                 <table class="cf">
                     <thead>
                         <tr>
@@ -315,7 +315,7 @@
                     <thead>
                         <tr>
                             <th v-text="$t('receiverThrottleMid')"></th>
-                            <th v-text="$t('receiverThrottleHover')"></th>
+                            <th v-if="hasThrottleHover" v-text="$t('receiverThrottleHover')"></th>
                             <th v-text="$t('receiverThrottleExpo')"></th>
                         </tr>
                     </thead>
@@ -331,7 +331,7 @@
                                     max="1"
                                 />
                             </td>
-                            <td>
+                            <td v-if="hasThrottleHover">
                                 <input
                                     type="number"
                                     :value="(throttleHover ?? 0.5).toFixed(2)"
@@ -407,6 +407,8 @@ import MSP from "@/js/msp";
 import MSPCodes from "@/js/msp/MSPCodes";
 import RateCurve from "@/js/RateCurve";
 import Model from "@/js/model";
+import semver from "semver";
+import { API_VERSION_1_45, API_VERSION_1_47 } from "@/js/data_storage";
 import betaflightLogo from "@/images/rate_logos/betaflight.svg";
 import raceflightLogo from "@/images/rate_logos/raceflight.svg";
 import kissLogo from "@/images/rate_logos/kiss.svg";
@@ -438,6 +440,10 @@ let initTimeout = null; // For setTimeout initial draw delay
 let animationFrameId = null;
 let lastTimestamp = 0;
 let keepRendering = true;
+
+// API Version helpers
+const hasProfileNames = computed(() => semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45));
+const hasThrottleHover = computed(() => semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47));
 
 // Rate Profile Name
 const rateProfileNameModel = computed({
@@ -1618,7 +1624,8 @@ function drawThrottleCurve() {
 
     const mid = throttleMid.value ?? 0;
     const expo = throttleExpo.value ?? 0;
-    const hover = throttleHover.value ?? 0.5;
+    // Hover parameter is only available from API 1.47; use mid value for older versions
+    const hover = hasThrottleHover.value ? (throttleHover.value ?? 0.5) : mid;
     const limitPercent = (throttleLimitPercent.value ?? 100) / 100;
     const limitType = throttleLimitType.value ?? 0;
 
