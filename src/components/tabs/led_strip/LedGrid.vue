@@ -27,7 +27,7 @@
 </template>
 
 <script setup>
-import { ref, computed, defineProps, defineEmits, onMounted, onUnmounted } from "vue";
+import { ref, computed, onMounted, onUnmounted } from "vue";
 import LedGridPoint from "./LedGridPoint.vue";
 
 const props = defineProps({

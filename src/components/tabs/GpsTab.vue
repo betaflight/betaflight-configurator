@@ -808,6 +808,12 @@ export default defineComponent({
             navigationStore.cleanup(teardown);
         });
 
+        watch(() => fcStore.features?.features?._features, () => {
+            applySwitchery();
+        }, { deep: true, immediate: true });
+
+        watch([showAutoConfig, showUbloxGalileo, showAutoBaud], applySwitchery, { immediate: true });
+
         watch(showLoadMap, (visible) => {
             if (visible) {
                 nextTick(() => {
@@ -823,7 +829,6 @@ export default defineComponent({
                 });
             }
         });
-        watch([showAutoConfig, showUbloxGalileo, showAutoBaud], applySwitchery, { immediate: true });
 
         return {
             mapRef,

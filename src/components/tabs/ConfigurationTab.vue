@@ -958,6 +958,24 @@ export default defineComponent({
         const beeperDisabledMask = ref(0);
         const dshotDisabledMask = ref(0);
 
+        const syncBeeperStateFromStore = () => {
+            if (!fcStore.beepers) {
+                return;
+            }
+
+            if (fcStore.beepers.dshotBeaconTone != null) {
+                dshotBeaconTone.value = fcStore.beepers.dshotBeaconTone;
+            }
+
+            if (fcStore.beepers.beepers) {
+                beeperDisabledMask.value = fcStore.beepers.beepers._beeperDisabledMask;
+            }
+
+            if (fcStore.beepers.dshotBeaconConditions) {
+                dshotDisabledMask.value = fcStore.beepers.dshotBeaconConditions._beeperDisabledMask;
+            }
+        };
+
         const featureMask = computed(() => {
             if (!fcStore.features?.features) {
                 return 0;
@@ -1167,8 +1185,16 @@ export default defineComponent({
         };
 
         const initializeUI = async () => {
-            // Populate sensor types first (async operation)
-            sensorTypesData.value = await sensorTypes();
+            // Keep beeper state synced even if later async setup fails.
+            syncBeeperStateFromStore();
+
+            // Sensor list lookup can fail on some FC/API combinations; continue with defaults.
+            try {
+                sensorTypesData.value = await sensorTypes();
+            } catch (error) {
+                sensorTypesData.value = null;
+                console.warn("Failed to load sensor types", error);
+            }
 
             // Populate Reactive State
             pidAdvancedConfig.pid_process_denom = fcStore.pidAdvancedConfig.pid_process_denom;
@@ -1198,17 +1224,6 @@ export default defineComponent({
             updateGyroDenom(fcStore.config.sampleRateHz);
 
             updatePidDenomOptions();
-
-            // Load DShot Tone
-            if (fcStore.beepers) {
-                dshotBeaconTone.value = fcStore.beepers.dshotBeaconTone;
-                if (fcStore.beepers.beepers) {
-                    beeperDisabledMask.value = fcStore.beepers.beepers._beeperDisabledMask;
-                }
-                if (fcStore.beepers.dshotBeaconConditions) {
-                    dshotDisabledMask.value = fcStore.beepers.dshotBeaconConditions._beeperDisabledMask;
-                }
-            }
 
             // Arming Config
             armingConfig.small_angle = fcStore.armingConfig.small_angle;
