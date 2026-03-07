@@ -300,14 +300,15 @@
 </template>
 
 <script setup>
-import { computed, reactive } from "vue";
+import { reactive, toRef } from "vue";
 import FCModule from "./js/fc.js";
 import MSPModule from "./js/msp.js";
 import PortHandlerModule from "./js/port_handler.js";
 import PortUsageModule from "./js/port_usage.js";
 import CONFIGURATORModule from "./js/data_storage.js";
 
-const vm = window.vm ?? {};
+// Use reactive vm so expertMode updates when external code (e.g. main.js, updateTabList) mutates it
+const vm = window.vm ?? reactive({ expertMode: false });
 
 const CONFIGURATOR = vm.CONFIGURATOR ?? CONFIGURATORModule;
 const FC = vm.FC ?? FCModule;
@@ -316,14 +317,8 @@ const PortHandler = vm.PortHandler ?? PortHandlerModule;
 const PortUsage = vm.PortUsage ?? PortUsageModule;
 const CONNECTION = vm.CONNECTION ?? reactive({ timestamp: null });
 
-const expertMode = computed({
-    get() {
-        return Boolean(vm.expertMode);
-    },
-    set(value) {
-        vm.expertMode = value;
-    },
-});
+// toRef creates a ref that stays in sync with vm.expertMode; reactive to external mutations
+const expertMode = toRef(vm, "expertMode");
 </script>
 
 <style scoped>
