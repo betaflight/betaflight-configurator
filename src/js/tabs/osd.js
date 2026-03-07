@@ -1077,6 +1077,42 @@ OSD.loadDisplayFields = function () {
             positionable: true,
             preview: "DBG     0     0     0     0",
         },
+        PIDS_MASTER_MULTIPLIER: {
+            name: "PIDS_MASTER_MULTIPLIER",
+            text: "osdTextElementPidsMasterMultiplier",
+            desc: "osdDescElementPidsMasterMultiplier",
+            defaultPosition: -1,
+            draw_order: 161,
+            positionable: true,
+            preview: "MLT[||||| ]1.8|RD24",
+        },
+        PIDS_TUNING_SLIDERS: {
+            name: "PIDS_TUNING_SLIDERS",
+            text: "osdTextElementPidsTuningSliders",
+            desc: "osdDescElementPidsTuningSliders",
+            defaultPosition: -1,
+            draw_order: 162,
+            positionable: true,
+            preview: [
+                "DMP[||||  ]1.6|RD24",
+                "TRK[||||| ]1.8|RP48",
+                "STK[|||   ]1.1|RFF120",
+                "DMX[|||   ]1.5|RDX30",
+                "DFT[||    ]0.8|RI36",
+                "PID[||||  ]1.5|PD22",
+                "PIT[||||  ]1.2|PP44",
+                "MLT[||||| ]1.8",
+            ],
+        },
+        FILTER_SLIDERS: {
+            name: "FILTER_SLIDERS",
+            text: "osdTextElementFilterSliders",
+            desc: "osdDescElementFilterSliders",
+            defaultPosition: -1,
+            draw_order: 163,
+            positionable: true,
+            preview: ["GFTR[||||| ]1.8|L1-150", "DFTR[||||  ]1.1|L1-100"],
+        },
         PID_ROLL: {
             name: "PID_ROLL",
             text: "osdTextElementPIDRoll",
@@ -2146,6 +2182,10 @@ OSD.chooseFields = function () {
         F.GPS_SPEED,
         F.GPS_SATS,
         F.ALTITUDE,
+        // show either SLIDER OSD elements depending on the MSP version
+        ...(semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_48)
+            ? [F.PIDS_MASTER_MULTIPLIER, F.PIDS_TUNING_SLIDERS, F.FILTER_SLIDERS]
+            : []),
         F.PID_ROLL,
         F.PID_PITCH,
         F.PID_YAW,
