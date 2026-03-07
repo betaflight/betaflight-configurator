@@ -17,9 +17,9 @@ import $ from "jquery";
 import FileSystem from "../FileSystem";
 import { have_sensor } from "../sensor_helpers";
 import { initializeModalDialog } from "../utils/initializeModalDialog";
+import { OSD_CONSTANTS } from "./osd_constants";
+import { FONT, SYM } from "../utils/osdFont";
 
-const FONT = {};
-const SYM = {};
 const OSD = {};
 
 // Preset position
@@ -207,255 +207,7 @@ const positionConfigs = {
     },
 };
 
-SYM.loadSymbols = function () {
-    SYM.BLANK = 0x20;
-    SYM.VOLT = 0x06;
-    SYM.RSSI = 0x01;
-    SYM.LINK_QUALITY = 0x7b;
-    SYM.AH_RIGHT = 0x02;
-    SYM.AH_LEFT = 0x03;
-    SYM.THR = 0x04;
-    SYM.FLY_M = 0x9c;
-    SYM.ON_M = 0x9b;
-    SYM.AH_CENTER_LINE = 0x72;
-    SYM.AH_CENTER = 0x73;
-    SYM.AH_CENTER_LINE_RIGHT = 0x74;
-    SYM.AH_BAR9_0 = 0x80;
-    SYM.AH_DECORATION = 0x13;
-    SYM.LOGO = 0xa0;
-    SYM.AMP = 0x9a;
-    SYM.MAH = 0x07;
-    SYM.METRE = 0xc;
-    SYM.FEET = 0xf;
-    SYM.KPH = 0x9e;
-    SYM.MPH = 0x9d;
-    SYM.MPS = 0x9f;
-    SYM.FTPS = 0x99;
-    SYM.SPEED = 0x70;
-    SYM.TOTAL_DIST = 0x71;
-    SYM.GPS_SAT_L = 0x1e;
-    SYM.GPS_SAT_R = 0x1f;
-    SYM.GPS_LAT = 0x89;
-    SYM.GPS_LON = 0x98;
-    SYM.HOMEFLAG = 0x11;
-    SYM.PB_START = 0x8a;
-    SYM.PB_FULL = 0x8b;
-    SYM.PB_EMPTY = 0x8d;
-    SYM.PB_END = 0x8e;
-    SYM.PB_CLOSE = 0x8f;
-    SYM.BATTERY = 0x96;
-    SYM.ARROW_NORTH = 0x68;
-    SYM.ARROW_SOUTH = 0x60;
-    SYM.ARROW_EAST = 0x64;
-    SYM.ARROW_SMALL_UP = 0x75;
-    SYM.ARROW_SMALL_RIGHT = 0x77;
-    SYM.HEADING_LINE = 0x1d;
-    SYM.HEADING_DIVIDED_LINE = 0x1c;
-    SYM.HEADING_N = 0x18;
-    SYM.HEADING_S = 0x19;
-    SYM.HEADING_E = 0x1a;
-    SYM.HEADING_W = 0x1b;
-    SYM.TEMPERATURE = 0x7a;
-    SYM.TEMP_F = 0x0d;
-    SYM.TEMP_C = 0x0e;
-    SYM.STICK_OVERLAY_SPRITE_HIGH = 0x08;
-    SYM.STICK_OVERLAY_SPRITE_MID = 0x09;
-    SYM.STICK_OVERLAY_SPRITE_LOW = 0x0a;
-    SYM.STICK_OVERLAY_CENTER = 0x0b;
-    SYM.STICK_OVERLAY_VERTICAL = 0x16;
-    SYM.STICK_OVERLAY_HORIZONTAL = 0x17;
-    SYM.BBLOG = 0x10;
-    SYM.ALTITUDE = 0x7f;
-    SYM.PITCH = 0x15;
-    SYM.ROLL = 0x14;
-    SYM.KM = 0x7d;
-    SYM.MILES = 0x7e;
-};
-
-FONT.initData = function () {
-    if (FONT.data) {
-        return;
-    }
-    FONT.data = {
-        // default font file name
-        loaded_font_file: "default",
-        // array of arry of image bytes ready to upload to fc
-        characters_bytes: [],
-        // array of array of image bits by character
-        characters: [],
-        // an array of base64 encoded image strings by character
-        character_image_urls: [],
-    };
-};
-
-FONT.constants = {
-    MAX_CHAR_COUNT: 256,
-    SIZES: {
-        /** NVM ram size for one font char, actual character bytes **/
-        MAX_NVM_FONT_CHAR_SIZE: 54,
-        /** NVM ram field size for one font char, last 10 bytes dont matter **/
-        MAX_NVM_FONT_CHAR_FIELD_SIZE: 64,
-        CHAR_HEIGHT: 18,
-        CHAR_WIDTH: 12,
-    },
-};
-
-FONT.pushChar = function (fontCharacterBytes, fontCharacterBits) {
-    // Only push full characters onto the stack.
-    if (fontCharacterBytes.length !== FONT.constants.SIZES.MAX_NVM_FONT_CHAR_FIELD_SIZE) {
-        return;
-    }
-    FONT.data.characters_bytes.push(fontCharacterBytes.slice(0));
-    FONT.data.characters.push(fontCharacterBits.slice(0));
-    FONT.draw(FONT.data.characters.length - 1);
-};
-
-/**
- * Each line is composed of 8 asci 1 or 0, representing 1 bit each for a total of 1 byte per line
- */
-FONT.parseMCMFontFile = function (dataFontFile) {
-    const data = dataFontFile.trim().split("\n");
-    // clear local data
-    FONT.data.characters.length = 0;
-    FONT.data.characters_bytes.length = 0;
-    FONT.data.character_image_urls.length = 0;
-    // reset logo image info when font data is changed
-    LogoManager.resetImageInfo();
-    // make sure the font file is valid
-    if (data.shift().trim() !== "MAX7456") {
-        const msg = "that font file doesnt have the MAX7456 header, giving up";
-        console.debug(msg);
-        Promise.reject(msg);
-    }
-    const characterBits = [];
-    const characterBytes = [];
-    // hexstring is for debugging
-    FONT.data.hexstring = [];
-    for (let i = 0; i < data.length; i++) {
-        const line = data[i];
-        // hexstring is for debugging
-        FONT.data.hexstring.push(`0x${parseInt(line, 2).toString(16)}`);
-        // every 64 bytes (line) is a char, we're counting chars though, which are 2 bits
-        if (characterBits.length === FONT.constants.SIZES.MAX_NVM_FONT_CHAR_FIELD_SIZE * (8 / 2)) {
-            FONT.pushChar(characterBytes, characterBits);
-            characterBits.length = 0;
-            characterBytes.length = 0;
-        }
-        for (let y = 0; y < 8; y = y + 2) {
-            const v = parseInt(line.slice(y, y + 2), 2);
-            characterBits.push(v);
-        }
-        characterBytes.push(parseInt(line, 2));
-    }
-    // push the last char
-    FONT.pushChar(characterBytes, characterBits);
-
-    return FONT.data.characters;
-};
-
-FONT.openFontFile = function () {
-    return new Promise(function (resolve) {
-        const suffix = "mcm";
-        FileSystem.pickOpenFile(
-            i18n.getMessage("fileSystemPickerFiles", { typeof: suffix.toUpperCase() }),
-            `.${suffix}`,
-        )
-            .then((file) => {
-                FONT.data.loaded_font_file = file.name;
-                FileSystem.readFile(file).then((contents) => {
-                    FONT.parseMCMFontFile(contents);
-                    resolve();
-                });
-            })
-            .catch((error) => {
-                console.error("could not load whole font file:", error);
-            });
-    });
-};
-
-/**
- * Gets a character bitmap as a data URI.
- * (Uses only single quotes so it can be embedded within double quotes)
- * @param {number} charAddress Character index into a FONT array.
- * @returns {string} Data URI.
- */
-const characterBitmapDataUri = function (charAddress) {
-    // Validate input
-    if (!(charAddress in FONT.data.characters)) {
-        console.log("charAddress", charAddress, " is not in ", FONT.data.characters.length);
-    }
-
-    // Create data URI prefix and SVG wrapper
-    const width = FONT.constants.SIZES.CHAR_WIDTH;
-    const height = FONT.constants.SIZES.CHAR_HEIGHT;
-    const lines = [
-        "data:image/svg+xml;utf8,",
-        `<svg width='${width}' height='${height}' xmlns='http://www.w3.org/2000/svg'>`,
-    ];
-
-    // Create a rect for each visible pixel
-    for (let y = 0; y < height; y++) {
-        for (let x = 0; x < width; x++) {
-            const color = FONT.data.characters[charAddress][y * width + x];
-            const fill = color === 0 ? "black" : color === 2 ? "white" : null;
-            if (fill) {
-                lines.push(`<rect x='${x}' y='${y}' width='1' height='1' fill='${fill}'/>`);
-            }
-        }
-    }
-
-    // Close SVG wrapper and return data URI
-    lines.push("</svg>");
-    return lines.join("");
-};
-
-FONT.draw = function (charAddress) {
-    let cached = FONT.data.character_image_urls[charAddress];
-    if (!cached) {
-        cached = FONT.data.character_image_urls[charAddress] = characterBitmapDataUri(charAddress);
-    }
-    return cached;
-};
-
-FONT.msp = {
-    encode(charAddress) {
-        return [charAddress].concat(
-            FONT.data.characters_bytes[charAddress].slice(0, FONT.constants.SIZES.MAX_NVM_FONT_CHAR_SIZE),
-        );
-    },
-};
-
-FONT.upload = function ($progress) {
-    return FONT.data.characters
-        .reduce(
-            (p, x, i) =>
-                p.then(() => {
-                    $progress.val((i / FONT.data.characters.length) * 100);
-                    return MSP.promise(MSPCodes.MSP_OSD_CHAR_WRITE, FONT.msp.encode(i));
-                }),
-            Promise.resolve(),
-        )
-        .then(function () {
-            console.log(`Uploaded all ${FONT.data.characters.length} characters`);
-            gui_log(i18n.getMessage("osdSetupUploadingFontEnd", { length: FONT.data.characters.length }));
-
-            OSD.GUI.fontManager.close();
-
-            return MSP.promise(MSPCodes.MSP_SET_REBOOT);
-        });
-};
-
-FONT.preview = function ($el) {
-    $el.empty();
-    for (let i = 0; i < SYM.LOGO; i++) {
-        const url = FONT.data.character_image_urls[i];
-        $el.append(`<img src="${url}" title="0x${i.toString(16)}"></img>`);
-    }
-};
-
-FONT.symbol = function (hexVal) {
-    return hexVal === "" || hexVal === null ? "" : String.fromCharCode(hexVal);
-};
+// FONT and SYM are now imported from osdFont.js (see import above)
 
 OSD.getNumberOfProfiles = function () {
     return OSD.data.osd_profiles.number;
@@ -639,7 +391,7 @@ OSD.generateTemperaturePreview = function (osdData, temperature) {
 };
 
 OSD.generateLQPreview = function () {
-    const crsfIndex = FC.getSerialRxTypes().findIndex((name) => name === "CRSF");
+    const crsfIndex = FC.getSerialRxTypes().indexOf("CRSF");
     const isXF = crsfIndex === FC.RX_CONFIG.serialrx_provider;
     return FONT.symbol(SYM.LINK_QUALITY) + (isXF ? "2:100" : "8");
 };
@@ -730,8 +482,7 @@ OSD.drawCameraFramePreview = function () {
         const frameUp = { x, y: 0, sym };
         const frameDown = { x, y: FRAME_HEIGHT - 1, sym };
 
-        cameraFrame.push(frameUp);
-        cameraFrame.push(frameDown);
+        cameraFrame.push(frameUp, frameDown);
     }
 
     for (let y = 1; y < FRAME_HEIGHT - 1; y++) {
@@ -739,8 +490,7 @@ OSD.drawCameraFramePreview = function () {
         const frameLeft = { x: 0, y, sym };
         const frameRight = { x: FRAME_WIDTH - 1, y, sym };
 
-        cameraFrame.push(frameLeft);
-        cameraFrame.push(frameRight);
+        cameraFrame.push(frameLeft, frameRight);
     }
 
     return cameraFrame;
@@ -1784,8 +1534,10 @@ OSD.loadDisplayFields = function () {
 
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
         if (have_sensor(FC.CONFIG.activeSensors, "gps")) {
-            OSD.ALL_DISPLAY_FIELDS.ALTITUDE.variants.push("osdTextElementAltitudeVariant1DecimalASL");
-            OSD.ALL_DISPLAY_FIELDS.ALTITUDE.variants.push("osdTextElementAltitudeVariantNoDecimalASL");
+            OSD.ALL_DISPLAY_FIELDS.ALTITUDE.variants.push(
+                "osdTextElementAltitudeVariant1DecimalASL",
+                "osdTextElementAltitudeVariantNoDecimalASL",
+            );
         }
         OSD.ALL_DISPLAY_FIELDS.RTC_DATE_TIME.variants = [
             "osdTextElementRtcDateTimeVariantFullDate",
@@ -1798,300 +1550,7 @@ OSD.loadDisplayFields = function () {
     }
 };
 
-OSD.constants = {
-    VISIBLE: 0x0800,
-    VARIANTS: 0xc000,
-    VIDEO_TYPES: ["AUTO", "PAL", "NTSC", "HD"],
-    UNIT_TYPES: ["IMPERIAL", "METRIC", "BRITISH"],
-    TIMER_PRECISION: ["SECOND", "HUNDREDTH", "TENTH"],
-    AHISIDEBARWIDTHPOSITION: 7,
-    AHISIDEBARHEIGHTPOSITION: 3,
-
-    UNKNOWN_DISPLAY_FIELD: {
-        name: "UNKNOWN",
-        text: "osdTextElementUnknown",
-        desc: "osdDescElementUnknown",
-        defaultPosition: -1,
-        positionable: true,
-        preview: "UNKNOWN ",
-    },
-    ALL_STATISTIC_FIELDS: {
-        MAX_SPEED: {
-            name: "MAX_SPEED",
-            text: "osdTextStatMaxSpeed",
-            desc: "osdDescStatMaxSpeed",
-        },
-        MIN_BATTERY: {
-            name: "MIN_BATTERY",
-            text: "osdTextStatMinBattery",
-            desc: "osdDescStatMinBattery",
-        },
-        MIN_RSSI: {
-            name: "MIN_RSSI",
-            text: "osdTextStatMinRssi",
-            desc: "osdDescStatMinRssi",
-        },
-        MAX_CURRENT: {
-            name: "MAX_CURRENT",
-            text: "osdTextStatMaxCurrent",
-            desc: "osdDescStatMaxCurrent",
-        },
-        USED_MAH: {
-            name: "USED_MAH",
-            text: "osdTextStatUsedMah",
-            desc: "osdDescStatUsedMah",
-        },
-        USED_WH: {
-            name: "USED_WH",
-            text: "osdTextStatUsedWh",
-            desc: "osdDescStatUsedWh",
-        },
-        MAX_ALTITUDE: {
-            name: "MAX_ALTITUDE",
-            text: "osdTextStatMaxAltitude",
-            desc: "osdDescStatMaxAltitude",
-        },
-        BLACKBOX: {
-            name: "BLACKBOX",
-            text: "osdTextStatBlackbox",
-            desc: "osdDescStatBlackbox",
-        },
-        END_BATTERY: {
-            name: "END_BATTERY",
-            text: "osdTextStatEndBattery",
-            desc: "osdDescStatEndBattery",
-        },
-        FLYTIME: {
-            name: "FLY_TIME",
-            text: "osdTextStatFlyTime",
-            desc: "osdDescStatFlyTime",
-        },
-        ARMEDTIME: {
-            name: "ARMED_TIME",
-            text: "osdTextStatArmedTime",
-            desc: "osdDescStatArmedTime",
-        },
-        MAX_DISTANCE: {
-            name: "MAX_DISTANCE",
-            text: "osdTextStatMaxDistance",
-            desc: "osdDescStatMaxDistance",
-        },
-        BLACKBOX_LOG_NUMBER: {
-            name: "BLACKBOX_LOG_NUMBER",
-            text: "osdTextStatBlackboxLogNumber",
-            desc: "osdDescStatBlackboxLogNumber",
-        },
-        TIMER_1: {
-            name: "TIMER_1",
-            text: "osdTextStatTimer1",
-            desc: "osdDescStatTimer1",
-        },
-        TIMER_2: {
-            name: "TIMER_2",
-            text: "osdTextStatTimer2",
-            desc: "osdDescStatTimer2",
-        },
-        RTC_DATE_TIME: {
-            name: "RTC_DATE_TIME",
-            text: "osdTextStatRtcDateTime",
-            desc: "osdDescStatRtcDateTime",
-        },
-        STAT_BATTERY: {
-            name: "BATTERY_VOLTAGE",
-            text: "osdTextStatBattery",
-            desc: "osdDescStatBattery",
-        },
-        MAX_G_FORCE: {
-            name: "MAX_G_FORCE",
-            text: "osdTextStatGForce",
-            desc: "osdDescStatGForce",
-        },
-        MAX_ESC_TEMP: {
-            name: "MAX_ESC_TEMP",
-            text: "osdTextStatEscTemperature",
-            desc: "osdDescStatEscTemperature",
-        },
-        MAX_ESC_RPM: {
-            name: "MAX_ESC_RPM",
-            text: "osdTextStatEscRpm",
-            desc: "osdDescStatEscRpm",
-        },
-        MIN_LINK_QUALITY: {
-            name: "MIN_LINK_QUALITY",
-            text: "osdTextStatMinLinkQuality",
-            desc: "osdDescStatMinLinkQuality",
-        },
-        FLIGHT_DISTANCE: {
-            name: "FLIGHT_DISTANCE",
-            text: "osdTextStatFlightDistance",
-            desc: "osdDescStatFlightDistance",
-        },
-        MAX_FFT: {
-            name: "MAX_FFT",
-            text: "osdTextStatMaxFFT",
-            desc: "osdDescStatMaxFFT",
-        },
-        STAT_TOTAL_FLIGHTS: {
-            name: "STAT_TOTAL_FLIGHTS",
-            text: "osdTextStatTotalFlights",
-            desc: "osdDescStatTotalFlights",
-        },
-        STAT_TOTAL_FLIGHT_TIME: {
-            name: "STAT_TOTAL_FLIGHT_TIME",
-            text: "osdTextStatTotalFlightTime",
-            desc: "osdDescStatTotalFlightTime",
-        },
-        STAT_TOTAL_FLIGHT_DIST: {
-            name: "STAT_TOTAL_FLIGHT_DIST",
-            text: "osdTextStatTotalFlightDistance",
-            desc: "osdDescStatTotalFlightDistance",
-        },
-        MIN_RSSI_DBM: {
-            name: "MIN_RSSI_DBM",
-            text: "osdTextStatMinRssiDbm",
-            desc: "osdDescStatMinRssiDbm",
-        },
-        MIN_RSNR: {
-            name: "MIN_RSNR",
-            text: "osdTextStatMinRSNR",
-            desc: "osdDescStatMinRSNR",
-        },
-        STAT_BEST_3_CONSEC_LAPS: {
-            name: "STAT_BEST_3_CONSEC_LAPS",
-            text: "osdTextStatBest3ConsecLaps",
-            desc: "osdDescStatBest3ConsecLaps",
-        },
-        STAT_BEST_LAP: {
-            name: "STAT_BEST_LAP",
-            text: "osdTextStatBestLap",
-            desc: "osdDescStatBestLap",
-        },
-        STAT_FULL_THROTTLE_TIME: {
-            name: "STAT_FULL_THROTTLE_TIME",
-            text: "osdTextStatFullThrottleTime",
-            desc: "osdDescStatFullThrottleTime",
-        },
-        STAT_FULL_THROTTLE_COUNTER: {
-            name: "STAT_FULL_THROTTLE_COUNTER",
-            text: "osdTextStatFullThrottleCounter",
-            desc: "osdDescStatFullThrottleCounter",
-        },
-        STAT_AVG_THROTTLE: {
-            name: "STAT_AVG_THROTTLE",
-            text: "osdTextStatAvgThrottle",
-            desc: "osdDescStatAvgThrottle",
-        },
-    },
-    ALL_WARNINGS: {
-        ARMING_DISABLED: {
-            name: "ARMING_DISABLED",
-            text: "osdWarningTextArmingDisabled",
-            desc: "osdWarningArmingDisabled",
-        },
-        BATTERY_NOT_FULL: {
-            name: "BATTERY_NOT_FULL",
-            text: "osdWarningTextBatteryNotFull",
-            desc: "osdWarningBatteryNotFull",
-        },
-        BATTERY_WARNING: {
-            name: "BATTERY_WARNING",
-            text: "osdWarningTextBatteryWarning",
-            desc: "osdWarningBatteryWarning",
-        },
-        BATTERY_CRITICAL: {
-            name: "BATTERY_CRITICAL",
-            text: "osdWarningTextBatteryCritical",
-            desc: "osdWarningBatteryCritical",
-        },
-        VISUAL_BEEPER: {
-            name: "VISUAL_BEEPER",
-            text: "osdWarningTextVisualBeeper",
-            desc: "osdWarningVisualBeeper",
-        },
-        CRASH_FLIP_MODE: {
-            name: "CRASH_FLIP_MODE",
-            text: "osdWarningTextCrashFlipMode",
-            desc: "osdWarningCrashFlipMode",
-        },
-        ESC_FAIL: {
-            name: "ESC_FAIL",
-            text: "osdWarningTextEscFail",
-            desc: "osdWarningEscFail",
-        },
-        CORE_TEMPERATURE: {
-            name: "CORE_TEMPERATURE",
-            text: "osdWarningTextCoreTemperature",
-            desc: "osdWarningCoreTemperature",
-        },
-        RC_SMOOTHING_FAILURE: {
-            name: "RC_SMOOTHING_FAILURE",
-            text: "osdWarningTextRcSmoothingFailure",
-            desc: "osdWarningRcSmoothingFailure",
-        },
-        FAILSAFE: {
-            name: "FAILSAFE",
-            text: "osdWarningTextFailsafe",
-            desc: "osdWarningFailsafe",
-        },
-        LAUNCH_CONTROL: {
-            name: "LAUNCH_CONTROL",
-            text: "osdWarningTextLaunchControl",
-            desc: "osdWarningLaunchControl",
-        },
-        GPS_RESCUE_UNAVAILABLE: {
-            name: "GPS_RESCUE_UNAVAILABLE",
-            text: "osdWarningTextGpsRescueUnavailable",
-            desc: "osdWarningGpsRescueUnavailable",
-        },
-        GPS_RESCUE_DISABLED: {
-            name: "GPS_RESCUE_DISABLED",
-            text: "osdWarningTextGpsRescueDisabled",
-            desc: "osdWarningGpsRescueDisabled",
-        },
-        RSSI: {
-            name: "RSSI",
-            text: "osdWarningTextRSSI",
-            desc: "osdWarningRSSI",
-        },
-        LINK_QUALITY: {
-            name: "LINK_QUALITY",
-            text: "osdWarningTextLinkQuality",
-            desc: "osdWarningLinkQuality",
-        },
-        RSSI_DBM: {
-            name: "RSSI_DBM",
-            text: "osdWarningTextRssiDbm",
-            desc: "osdWarningRssiDbm",
-        },
-        OVER_CAP: {
-            name: "OVER_CAP",
-            text: "osdWarningTextOverCap",
-            desc: "osdWarningOverCap",
-        },
-        RSNR: {
-            name: "RSNR",
-            text: "osdWarningTextRSNR",
-            desc: "osdWarningRSNR",
-        },
-        LOAD: {
-            name: "LOAD",
-            text: "osdWarningTextLoad",
-            desc: "osdWarningLoad",
-        },
-    },
-    FONT_TYPES: [
-        { file: "default", name: "osdSetupFontTypeDefault" },
-        { file: "bold", name: "osdSetupFontTypeBold" },
-        { file: "large", name: "osdSetupFontTypeLarge" },
-        { file: "extra_large", name: "osdSetupFontTypeLargeExtra" },
-        { file: "betaflight", name: "osdSetupFontTypeBetaflight" },
-        { file: "digital", name: "osdSetupFontTypeDigital" },
-        { file: "clarity", name: "osdSetupFontTypeClarity" },
-        { file: "vision", name: "osdSetupFontTypeVision" },
-        { file: "impact", name: "osdSetupFontTypeImpact" },
-        { file: "impact_mini", name: "osdSetupFontTypeImpactMini" },
-    ],
-};
+OSD.constants = OSD_CONSTANTS;
 
 OSD.searchLimitsElement = function (arrayElements) {
     // Search minimum and maximum
@@ -2106,20 +1565,20 @@ OSD.searchLimitsElement = function (arrayElements) {
         return limits;
     }
 
-    if (arrayElements[0].constructor === String) {
+    if (typeof arrayElements[0] === "string") {
         limits.maxY = arrayElements.length;
         limits.minY = 0;
         limits.minX = 0;
-        arrayElements.forEach(function (valor) {
+        for (const valor of arrayElements) {
             limits.maxX = Math.max(valor.length, limits.maxX);
-        });
+        }
     } else {
-        arrayElements.forEach(function (valor) {
+        for (const valor of arrayElements) {
             limits.minX = Math.min(valor.x, limits.minX);
             limits.maxX = Math.max(valor.x, limits.maxX);
             limits.minY = Math.min(valor.y, limits.minY);
             limits.maxY = Math.max(valor.y, limits.maxY);
-        });
+        }
     }
 
     return limits;
@@ -2573,8 +2032,7 @@ OSD.drawByOrder = function (selectedPosition, field, charCode, x, y) {
     if (OSD.data.preview[selectedPosition] !== undefined) {
         const oldField = OSD.data.preview[selectedPosition][0];
         if (
-            oldField != null &&
-            oldField.draw_order !== undefined &&
+            oldField?.draw_order !== undefined &&
             (field.draw_order === undefined || field.draw_order < oldField.draw_order)
         ) {
             // Not overwrite old field
@@ -2750,7 +2208,8 @@ OSD.msp = {
                 $.extend(
                     {
                         name: c.name,
-                        text: suffix ? [c.text, suffix] : c.text,
+                        text: c.text,
+                        textParams: suffix ? { 1: suffix } : undefined,
                         desc: c.desc,
                         index: j,
                         draw_order: c.draw_order,
@@ -2856,7 +2315,8 @@ OSD.msp = {
                 const statisticNumber = i - OSD.constants.STATISTIC_FIELDS.length + 1;
                 d.statItems.push({
                     name: "UNKNOWN",
-                    text: ["osdTextStatUnknown", statisticNumber],
+                    text: "osdTextStatUnknown",
+                    textParams: { 1: statisticNumber },
                     desc: "osdDescStatUnknown",
                     index: i,
                     enabled: v === 1,
@@ -2896,16 +2356,19 @@ OSD.msp = {
 
             // Known warning field
             if (i < OSD.constants.WARNINGS.length) {
-                d.warnings.push($.extend(OSD.constants.WARNINGS[i], { enabled }));
+                const warning = $.extend({}, OSD.constants.WARNINGS[i], { enabled, index: i });
+                d.warnings.push(warning);
 
                 // Push Unknown Warning field
             } else {
                 const warningNumber = i - OSD.constants.WARNINGS.length + 1;
                 d.warnings.push({
                     name: "UNKNOWN",
-                    text: ["osdWarningTextUnknown", warningNumber],
+                    text: "osdWarningTextUnknown",
+                    textParams: { 1: warningNumber },
                     desc: "osdWarningUnknown",
                     enabled,
+                    index: i,
                 });
             }
         }
@@ -2969,7 +2432,8 @@ OSD.msp = {
                 const statisticNumber = i - expectedStatsCount + 1;
                 d.statItems.push({
                     name: "UNKNOWN",
-                    text: ["osdTextStatUnknown", statisticNumber],
+                    text: "osdTextStatUnknown",
+                    textParams: { 1: statisticNumber },
                     desc: "osdDescStatUnknown",
                     index: i,
                     enabled: v === 1,
@@ -2999,16 +2463,19 @@ OSD.msp = {
 
             // Known warning field
             if (i < warningCount) {
-                d.warnings.push($.extend(OSD.constants.WARNINGS[i], { enabled }));
+                const warning = $.extend({}, OSD.constants.WARNINGS[i], { enabled, index: i });
+                d.warnings.push(warning);
 
                 // Push Unknown Warning field
             } else {
                 const warningNumber = i - warningCount + 1;
                 d.warnings.push({
                     name: "UNKNOWN",
-                    text: ["osdWarningTextUnknown", warningNumber],
+                    text: "osdWarningTextUnknown",
+                    textParams: { 1: warningNumber },
                     desc: "osdWarningUnknown",
                     enabled,
+                    index: i,
                 });
             }
         }
@@ -3076,7 +2543,7 @@ OSD.GUI.preview = {
     onDrop(e) {
         const ev = e.originalEvent;
 
-        const fieldId = parseInt(ev.dataTransfer.getData("text/plain"));
+        const fieldId = Number.parseInt(ev.dataTransfer.getData("text/plain"));
         const displayItem = OSD.data.displayItems[fieldId];
         let position = $(this).removeAttr("style").data("position");
         const cursor = position;
@@ -3086,8 +2553,8 @@ OSD.GUI.preview = {
 
         if (displayItem.preview.constructor === Array) {
             console.log(`Initial Drop Position: ${position}`);
-            const x = parseInt(ev.dataTransfer.getData("x"));
-            const y = parseInt(ev.dataTransfer.getData("y"));
+            const x = Number.parseInt(ev.dataTransfer.getData("x"));
+            const y = Number.parseInt(ev.dataTransfer.getData("y"));
             console.log(`XY Co-ords: ${x}-${y}`);
             position -= x;
             position -= y * OSD.data.displaySize.x;
@@ -3209,11 +2676,7 @@ OSD.buildContextMenu = function (g_ContextMenu) {
         `);
 
         let contextMenuItemContentWrapper = contextMenuItemDisplayTemplate.find(".context-menu-item-content-wrapper");
-        if (
-            element.populateContentFn &&
-            element.populateContentFn != null &&
-            element.populateContentFn instanceof Function
-        ) {
+        if (typeof element.populateContentFn === "function") {
             element.populateContentFn();
         }
 
@@ -3315,6 +2778,52 @@ OSD.presetPosition.setupGrid = function () {
     contextMenuListObject.content = $grid;
 };
 
+function isPositionWithinGridBounds(testX, testY, elementWidth, elementHeight) {
+    return (
+        testX >= 1 &&
+        testX + elementWidth <= OSD.data.displaySize.x - 1 &&
+        testY >= 1 &&
+        testY + elementHeight <= OSD.data.displaySize.y - 2
+    );
+}
+
+function hasCollisionAtPosition(testX, testY, elementWidth, elementHeight, fieldChanged) {
+    for (let row = 0; row < elementHeight; row++) {
+        for (let col = 0; col < elementWidth; col++) {
+            const checkPos = (testY + row) * OSD.data.displaySize.x + testX + col;
+            const cell = OSD.data.preview[checkPos];
+            const occupiedByOtherField =
+                cell?.[0]?.index != null &&
+                cell[0].index !== fieldChanged.index &&
+                !(cell?.[0]?.preview.constructor === Array || fieldChanged.preview.constructor === Array);
+
+            if (occupiedByOtherField) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+OSD.findAvailablePosition = function (target, elementWidth, elementHeight, fieldChanged, grow) {
+    const gx = grow?.x ?? 0;
+    const gy = grow?.y ?? 0;
+
+    for (let offset = 0; offset < Math.max(OSD.data.displaySize.x, OSD.data.displaySize.y); offset++) {
+        const testX = target.x + gx * offset;
+        const testY = target.y + gy * offset;
+
+        if (!isPositionWithinGridBounds(testX, testY, elementWidth, elementHeight)) {
+            break;
+        }
+
+        if (!hasCollisionAtPosition(testX, testY, elementWidth, elementHeight, fieldChanged)) {
+            return testY * OSD.data.displaySize.x + testX;
+        }
+    }
+    return null;
+};
+
 OSD.presetPosition.applyPosition = function (fieldChanged, positionKey) {
     const config = positionConfigs[positionKey];
     if (!config) {
@@ -3330,9 +2839,6 @@ OSD.presetPosition.applyPosition = function (fieldChanged, positionKey) {
     if (fieldChanged.preview.constructor == Array) {
         const limits = OSD.searchLimitsElement(fieldChanged.preview);
 
-        // Note: Using +1 for inclusive range calculation, which is mathematically
-        // correct for counting occupied positions. An element spanning coordinates
-        // -2 to 2 occupies 5 positions: [-2, -1, 0, 1, 2]
         elementWidth = limits.maxX - limits.minX + 1;
         elementHeight = limits.maxY - limits.minY + 1;
 
@@ -3361,40 +2867,12 @@ OSD.presetPosition.applyPosition = function (fieldChanged, positionKey) {
         target.y = Math.max(1, OSD.data.displaySize.y - elementHeight - 1);
     }
     // Find available position with growth logic
-    for (let offset = 0; offset < Math.max(OSD.data.displaySize.x, OSD.data.displaySize.y); offset++) {
-        const testX = target.x + config.grow.x * offset;
-        const testY = target.y + config.grow.y * offset;
-        if (
-            testX < 1 ||
-            testX + elementWidth > OSD.data.displaySize.x - 1 ||
-            testY < 1 ||
-            testY > OSD.data.displaySize.y - 2
-        )
-            break;
-        let canPlace = true;
-        for (let row = 0; row < elementHeight && canPlace; row++) {
-            for (let col = 0; col < elementWidth && canPlace; col++) {
-                const checkPos = (testY + row) * OSD.data.displaySize.x + testX + col;
-                const cell = OSD.data.preview[checkPos];
+    finalPosition = OSD.findAvailablePosition(target, elementWidth, elementHeight, fieldChanged, config.grow);
 
-                if (
-                    cell?.[0]?.index != null &&
-                    cell[0].index !== fieldChanged.index &&
-                    !(cell?.[0]?.preview.constructor === Array || fieldChanged.preview.constructor === Array)
-                ) {
-                    canPlace = false;
-                }
-            }
-        }
-        if (canPlace) {
-            finalPosition = testY * OSD.data.displaySize.x + testX;
-
-            // Needed for advanced elements or else they won't be where we expect them to be.
-            finalPosition -= adjustOffsetX;
-            finalPosition -= adjustOffsetY * OSD.data.displaySize.x;
-
-            break;
-        }
+    if (finalPosition !== null) {
+        // Needed for advanced elements or else they won't be where we expect them to be.
+        finalPosition -= adjustOffsetX;
+        finalPosition -= adjustOffsetY * OSD.data.displaySize.x;
     }
     if (finalPosition !== null) {
         fieldChanged.position = finalPosition;
@@ -3510,7 +2988,9 @@ osd.initialize = function (callback) {
         function titleizeField(field) {
             let finalFieldName = null;
             if (field.text) {
-                if (Array.isArray(field.text) && i18n.existsMessage(field.text[0])) {
+                if (field.textParams && i18n.existsMessage(field.text)) {
+                    finalFieldName = i18n.getMessage(field.text, field.textParams);
+                } else if (Array.isArray(field.text) && i18n.existsMessage(field.text[0])) {
                     finalFieldName = i18n.getMessage(field.text[0], field.text.slice(1));
                 } else {
                     finalFieldName = i18n.getMessage(field.text);
@@ -3571,18 +3051,17 @@ osd.initialize = function (callback) {
 
                 // video mode
                 const $videoTypes = $(".video-types").empty();
-                for (let i = 0; i < OSD.constants.VIDEO_TYPES.length; i++) {
+                for (const [i, type] of OSD.constants.VIDEO_TYPES.entries()) {
                     // Disable SD or HD option depending on the build
                     let disabled = false;
                     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) && FC.CONFIG.buildOptions.length) {
-                        if (OSD.constants.VIDEO_TYPES[i] !== "HD" && !FC.CONFIG.buildOptions.includes("USE_OSD_SD")) {
+                        if (type !== "HD" && !FC.CONFIG.buildOptions.includes("USE_OSD_SD")) {
                             disabled = true;
                         }
-                        if (OSD.constants.VIDEO_TYPES[i] === "HD" && !FC.CONFIG.buildOptions.includes("USE_OSD_HD")) {
+                        if (type === "HD" && !FC.CONFIG.buildOptions.includes("USE_OSD_HD")) {
                             disabled = true;
                         }
                     }
-                    const type = OSD.constants.VIDEO_TYPES[i];
                     let videoFormatOptionText = i18n.getMessage(
                         `osdSetupVideoFormatOption${inflection.camelize(type.toLowerCase())}`,
                     );
@@ -3609,8 +3088,7 @@ osd.initialize = function (callback) {
                 // units
                 $(".units-container").show();
                 const $unitMode = $(".units").empty();
-                for (let i = 0; i < OSD.constants.UNIT_TYPES.length; i++) {
-                    const type = OSD.constants.UNIT_TYPES[i];
+                for (const [i, type] of OSD.constants.UNIT_TYPES.entries()) {
                     const setupUnitOptionText = i18n.getMessage(
                         `osdSetupUnitsOption${inflection.camelize(type.toLowerCase())}`,
                     );
@@ -3971,7 +3449,7 @@ osd.initialize = function (callback) {
                             .data("field", field)
                             .on("change", function () {
                                 const fieldChanged = $(this).data("field");
-                                fieldChanged.variant = parseInt($(this).val());
+                                fieldChanged.variant = Number.parseInt($(this).val());
                                 MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, OSD.msp.encodeLayout(fieldChanged)).then(
                                     function () {
                                         updateOsdView();
@@ -3999,7 +3477,7 @@ osd.initialize = function (callback) {
                                 .change(
                                     debounce(function () {
                                         const fieldChanged = $(this).data("field");
-                                        const position = parseInt($(this).val());
+                                        const position = Number.parseInt($(this).val());
                                         fieldChanged.position = position;
                                         MSP.promise(
                                             MSPCodes.MSP_SET_OSD_CONFIG,
@@ -4203,7 +3681,7 @@ osd.initialize = function (callback) {
 
         $(".osdprofile-selector").change(updateOsdView);
         $(".osdprofile-active").change(function () {
-            OSD.data.osd_profiles.selected = parseInt($(this).val());
+            OSD.data.osd_profiles.selected = Number.parseInt($(this).val());
             MSP.promise(MSPCodes.MSP_SET_OSD_CONFIG, OSD.msp.encodeOther()).then(function () {
                 updateOsdView();
             });
@@ -4358,4 +3836,5 @@ osd.cleanup = function (callback) {
 };
 
 TABS.osd = osd;
+export { FONT, SYM } from "../utils/osdFont";
 export { osd, OSD };

@@ -5642,6 +5642,9 @@
     "osdSetupUploadingFontEnd": {
         "message": "Uploaded all {{length}} characters to the OSD"
     },
+    "osdSetupUploadingFontFailed": {
+        "message": "Upload failed"
+    },
 
     "osdSetupSave": {
         "message": "Save"
@@ -8131,5 +8134,13 @@
     },
     "sectionUserPasskeys": {
         "message": "User Passkeys"
+    },
+    "osdPresetPositionAlignTitle": {
+        "message": "Align to position",
+        "description": "Label for the preset position alignment menu in the OSD elements list"
+    },
+    "osdPresetPositionChooseTitle": {
+        "message": "Choose Position",
+        "description": "Title for the preset position grid popup in the OSD elements list"
     }
 }

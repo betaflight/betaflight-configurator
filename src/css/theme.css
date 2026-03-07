@@ -160,7 +160,7 @@ body[data-theme="contrast"] {
         color: var(--surface-100);
     }
 
-    .btn a.disabled {
+    .btn a.disabled, .btn button.disabled {
         color: var(--surface-100) !important;
     }
 }
