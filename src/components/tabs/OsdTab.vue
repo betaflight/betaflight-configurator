@@ -622,10 +622,11 @@
                     type="button"
                     class="fonts"
                     :class="{ disabled: !osdStore.state.isMax7456FontDeviceDetected }"
-                    @click="openFontManager()"
-                    @keydown.enter.prevent="openFontManager()"
-                    @keydown.space.prevent="openFontManager()"
-                    v-html="i18n.getMessage('osdSetupFontManagerTitle')"
+                    :disabled="!osdStore.state.isMax7456FontDeviceDetected"
+                    @click="osdStore.state.isMax7456FontDeviceDetected && openFontManager()"
+                    @keydown.enter.prevent="osdStore.state.isMax7456FontDeviceDetected && openFontManager()"
+                    @keydown.space.prevent="osdStore.state.isMax7456FontDeviceDetected && openFontManager()"
+                    v-html="$t('osdSetupFontManagerTitle')"
                 ></button>
             </div>
             <div class="btn save">
@@ -690,7 +691,8 @@ const uploadProgress = ref(0);
 const uploadProgressLabel = ref("");
 const fontVersionInfo = ref("");
 const isSaving = ref(false);
-const saveButtonText = ref(i18n.getMessage("osdSetupSave"));
+const saveButtonTextOverride = ref(null);
+const saveButtonText = computed(() => saveButtonTextOverride.value || i18n.getMessage("osdSetupSave"));
 const hasLoadedConfig = ref(false);
 // State for popover
 const presetMenuField = ref(null);
@@ -851,6 +853,7 @@ function toggleFieldVisibility(fieldIndex, profileIndex, event) {
     trackChange("displayItem", osdStore.displayItems[fieldIndex].name);
     osdStore.saveDisplayItem(osdStore.displayItems[fieldIndex]).catch((error) => {
         console.error("Failed to update display item visibility:", error);
+        gui_log(i18n.getMessage("error", { errorMessage: "Failed to save visibility change" }));
     });
     updatePreview();
 }
@@ -860,6 +863,7 @@ function onVariantChange(field) {
     trackChange("variant", field.name);
     osdStore.saveDisplayItem(field).catch((error) => {
         console.error("Failed to update display item variant:", error);
+        gui_log(i18n.getMessage("error", { errorMessage: "Failed to save variant change" }));
     });
     updatePreview();
 }
@@ -869,6 +873,7 @@ function onVideoSystemChange() {
     osdStore.updateDisplaySize();
     osdStore.saveOtherConfig().catch((error) => {
         console.error("Failed to update OSD video system:", error);
+        gui_log(i18n.getMessage("error", { errorMessage: "Failed to save OSD video system" }));
     });
     updatePreview();
 }
@@ -876,6 +881,7 @@ function onVideoSystemChange() {
 function onUnitModeChange() {
     osdStore.saveOtherConfig().catch((error) => {
         console.error("Failed to update OSD unit mode:", error);
+        gui_log(i18n.getMessage("error", { errorMessage: "Failed to save OSD unit mode" }));
     });
     updatePreview();
 }
@@ -883,6 +889,7 @@ function onUnitModeChange() {
 function onTimerChange(timer) {
     osdStore.saveTimerConfig(timer).catch((error) => {
         console.error("Failed to update OSD timer:", error);
+        gui_log(i18n.getMessage("error", { errorMessage: "Failed to save OSD timer" }));
     });
     updatePreview();
 }
@@ -890,6 +897,7 @@ function onTimerChange(timer) {
 function onAlarmChange() {
     osdStore.saveOtherConfig().catch((error) => {
         console.error("Failed to update OSD alarms:", error);
+        gui_log(i18n.getMessage("error", { errorMessage: "Failed to save OSD alarms" }));
     });
     updatePreview();
 }
@@ -897,6 +905,7 @@ function onAlarmChange() {
 function onWarningChange() {
     osdStore.saveOtherConfig().catch((error) => {
         console.error("Failed to update OSD warnings:", error);
+        gui_log(i18n.getMessage("error", { errorMessage: "Failed to save OSD warnings" }));
     });
     updatePreview();
 }
@@ -904,6 +913,7 @@ function onWarningChange() {
 function onStatChange(stat) {
     osdStore.saveStatisticItem(stat).catch((error) => {
         console.error("Failed to update OSD statistic:", error);
+        gui_log(i18n.getMessage("error", { errorMessage: "Failed to save OSD statistic" }));
     });
     updatePreview();
 }
@@ -1092,6 +1102,7 @@ function onDropCell(event) {
     trackChange("position", displayItem.name);
     osdStore.saveDisplayItem(displayItem).catch((error) => {
         console.error("Failed to update display item position:", error);
+        gui_log(i18n.getMessage("error", { errorMessage: "Failed to save display item position" }));
     });
     updatePreview();
 
@@ -1189,6 +1200,7 @@ function applyPresetPosition(field, positionKey) {
     trackChange("position", field.name);
     osdStore.saveDisplayItem(field).catch((error) => {
         console.error("Failed to apply preset position:", error);
+        gui_log(i18n.getMessage("error", { errorMessage: "Failed to save preset position" }));
     });
     updatePreview();
 
@@ -1317,13 +1329,14 @@ async function saveConfig() {
         const changes = analyticsChanges.value;
         if (Object.keys(changes).length > 0) {
             tracking.sendSaveAndChangeEvents(tracking.EVENT_CATEGORIES.FLIGHT_CONTROLLER, changes, "osd");
+            analyticsChanges.value = {};
         }
 
         // Show success
         gui_log(i18n.getMessage("osdSettingsSaved"));
-        saveButtonText.value = i18n.getMessage("osdButtonSaved");
+        saveButtonTextOverride.value = i18n.getMessage("osdButtonSaved");
         setTimeout(() => {
-            saveButtonText.value = i18n.getMessage("osdSetupSave");
+            saveButtonTextOverride.value = null;
         }, 2000);
     } catch (error) {
         console.error("Failed to save OSD configuration:", error);
@@ -1529,6 +1542,7 @@ watch(activeProfile, (newVal) => {
     if (hasLoadedConfig.value) {
         osdStore.saveOtherConfig().catch((error) => {
             console.error("Failed to update active OSD profile:", error);
+            gui_log(i18n.getMessage("error", { errorMessage: "Failed to save active OSD profile" }));
         });
     }
 });

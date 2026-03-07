@@ -52,7 +52,7 @@ async function decodeOsdData(info) {
 }
 
 async function ensureDefaultFontLoaded() {
-    if (FONT.data?.characters.length !== 0) {
+    if (FONT.data?.characters?.length > 0) {
         return;
     }
 
@@ -320,10 +320,10 @@ export const useOsdStore = defineStore("osd", () => {
         videoSystem.value = OSD.data.video_system;
         unitMode.value = OSD.data.unit_mode;
         alarms.value = OSD.data.alarms ? structuredClone(OSD.data.alarms) : {};
-        statItems.value = [...OSD.data.statItems];
-        warnings.value = [...OSD.data.warnings];
-        timers.value = OSD.data.timers.map((t) => ({ ...t }));
-        displayItems.value = OSD.data.displayItems.map((item) => ({ ...item }));
+        statItems.value = structuredClone(OSD.data.statItems);
+        warnings.value = structuredClone(OSD.data.warnings);
+        timers.value = structuredClone(OSD.data.timers);
+        displayItems.value = structuredClone(OSD.data.displayItems);
 
         if (OSD.data.parameters) {
             parameters.cameraFrameWidth = OSD.data.parameters.cameraFrameWidth;

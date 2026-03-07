@@ -282,12 +282,23 @@ FONT.preview = function ($el) {
     $el.empty();
     for (let i = 0; i < SYM.LOGO; i++) {
         const url = FONT.data.character_image_urls[i];
-        $el.append(`<img src="${url}" title="0x${i.toString(16)}"></img>`);
+        $el.append(`<img src="${url}" title="0x${i.toString(16)}" />`);
     }
 };
 
 FONT.symbol = function (hexVal) {
-    return hexVal === "" || hexVal === null ? "" : String.fromCodePoint(hexVal);
+    if (hexVal === "" || hexVal === null || hexVal === undefined) {
+        return "";
+    }
+    try {
+        const cp = Number(hexVal);
+        if (!Number.isFinite(cp) || cp < 0 || cp > 0x10ffff || !Number.isInteger(cp)) {
+            return "";
+        }
+        return String.fromCodePoint(cp);
+    } catch (err) {
+        return "";
+    }
 };
 
 export { FONT, SYM };

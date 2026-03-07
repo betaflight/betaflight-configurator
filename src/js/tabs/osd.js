@@ -2844,8 +2844,8 @@ OSD.presetPosition.applyPosition = function (fieldChanged, positionKey) {
     if (fieldChanged.preview.constructor == Array) {
         const limits = OSD.searchLimitsElement(fieldChanged.preview);
 
-        elementWidth = limits.maxX - limits.minX;
-        elementHeight = limits.maxY - limits.minY;
+        elementWidth = limits.maxX - limits.minX + 1;
+        elementHeight = limits.maxY - limits.minY + 1;
 
         // Offset adjustments are needed because the positioning system expects
         // these values to account for the difference between logical and visual positioning.

@@ -94,18 +94,12 @@ function createEmptyPreviewBuffer(displaySize) {
 }
 
 function normalizeSelectedPosition(position, totalSize) {
-    if (position < 0) {
-        position += totalSize;
-    }
-    if (position >= totalSize) {
-        position %= totalSize;
-    }
-    return position;
+    return ((position % totalSize) + totalSize) % totalSize;
 }
 
 function drawStringPreview(buffer, field, selectedPosition) {
-    for (let i = 0; i < field.preview.length; i++) {
-        const charCode = field.preview.codePointAt(i);
+    for (const [i, char] of Array.from(field.preview).entries()) {
+        const charCode = char.codePointAt(0);
         drawByOrder(buffer, selectedPosition, field, charCode, i, 1);
         selectedPosition++;
     }
@@ -116,12 +110,12 @@ function drawStringArrayPreview(buffer, field, displaySize, selectedPosition) {
     const arrayElements = field.preview;
     for (let i = 0; i < arrayElements.length; i++) {
         const element = arrayElements[i];
-        for (let j = 0; j < element.length; j++) {
-            const charCode = element.codePointAt(j);
+        for (const [j, char] of Array.from(element).entries()) {
+            const charCode = char.codePointAt(0);
             drawByOrder(buffer, selectedPosition, field, charCode, j, i);
             selectedPosition++;
         }
-        selectedPosition = selectedPosition - element.length + displaySize.x;
+        selectedPosition = selectedPosition - Array.from(element).length + displaySize.x;
     }
 }
 

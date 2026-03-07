@@ -238,7 +238,7 @@ function drawVerticalAxis(ctx, params, axis) {
     for (let i = 0; i < params.rowsCount; i++) {
         const y = rowCenterY(i, params.containerRect, params.rows);
         const offset = i - params.cy + (params.rowsCount % 2 === 0 ? 1 : 0);
-        const isCenter = i === params.cy;
+        const isCenter = offset === 0;
         const isMajor =
             Math.abs(offset) % RulerConfig.verticalLabelStep === 0 || i === 0 || i === params.rowsCount - 1 || isCenter;
         const tick = isMajor ? RulerConfig.vertTickMajor : RulerConfig.tickMinor;
@@ -327,6 +327,9 @@ export function useOsdRuler(canvasRef, containerRef, showRulers) {
 
     onMounted(() => {
         window.addEventListener("resize", onResize);
+        if (showRulers.value) {
+            requestAnimationFrame(drawRulers);
+        }
     });
 
     onUnmounted(() => {
