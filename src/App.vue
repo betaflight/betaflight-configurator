@@ -307,8 +307,13 @@ import PortHandlerModule from "./js/port_handler.js";
 import PortUsageModule from "./js/port_usage.js";
 import CONFIGURATORModule from "./js/data_storage.js";
 
-// Use reactive vm so expertMode updates when external code (e.g. main.js, updateTabList) mutates it
-const vm = window.vm ?? reactive({ expertMode: false });
+// Use reactive vm so expertMode updates when external code (e.g. main.js, updateTabList) mutates it.
+// When window.vm is falsy, create fallback and promote it to window.vm so all consumers share the same reactive object.
+let vm = window.vm;
+if (!vm) {
+    vm = reactive({ expertMode: false });
+    window.vm = vm;
+}
 
 const CONFIGURATOR = vm.CONFIGURATOR ?? CONFIGURATORModule;
 const FC = vm.FC ?? FCModule;
