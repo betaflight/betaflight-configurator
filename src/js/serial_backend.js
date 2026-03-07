@@ -223,7 +223,7 @@ function finishClose(finishedCallback) {
         $("#content").empty();
 
         // close cliPanel if left open
-        $(".dialogInteractive")[0].close();
+        $(".dialogInteractive")[0]?.close();
     }
 
     $("#tabs .tab_landing a").click();

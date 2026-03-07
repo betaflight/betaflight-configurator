@@ -2,6 +2,7 @@ import { createApp } from "vue";
 import { BetaflightComponents } from "./vue_components.js";
 import I18NextVue from "i18next-vue";
 import i18next from "i18next";
+import ui from "@nuxt/ui/vue-plugin";
 
 const logHead = "[VUE_LOADER]";
 
@@ -44,6 +45,7 @@ export function loadContent(contentElement, htmlPath, callback) {
             // Add the components plugin
             app.use(BetaflightComponents);
             app.use(I18NextVue, { i18next });
+            app.use(ui);
 
             // Mount the app to this element and store the instance
             app.mount(el[0]);

@@ -29,6 +29,7 @@ import FailsafeTab from "../components/tabs/FailsafeTab.vue";
 import MotorsTab from "../components/tabs/MotorsTab.vue";
 import ReceiverTab from "../components/tabs/ReceiverTab.vue";
 import SetupTab from "../components/tabs/SetupTab.vue";
+import App from "../App.vue";
 
 // Registry of Vue tab components - used by main.js for dynamic mounting
 export const VueTabComponents = {
@@ -60,6 +61,7 @@ export const VueTabComponents = {
 // Create a Vue plugin that registers all components globally
 export const BetaflightComponents = {
     install(app) {
+        app.component("App", App);
         // Register all components globally
         app.component("BetaflightLogo", BetaflightLogo);
         app.component("BatteryLegend", BatteryLegend);
