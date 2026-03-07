@@ -463,7 +463,11 @@ export default defineComponent({
 
             blackbox ? featureConfig.enable("BLACKBOX") : featureConfig.disable("BLACKBOX");
             esc ? featureConfig.enable("ESC_SENSOR") : featureConfig.disable("ESC_SENSOR");
-            gps ? featureConfig.enable("GPS") : featureConfig.disable("GPS");
+
+            // GNSS: only enable when port configured, don't disable (allows Virtual GPS)
+            if (gps) {
+                featureConfig.enable("GPS");
+            }
         };
 
         const vtxTableNotConfigured = computed(() => {

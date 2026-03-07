@@ -27,7 +27,7 @@
         <dialog ref="snippetPreviewDialogRef" closedby="any" id="snippetpreviewdialog" class="html-dialog">
             <div id="snippetpreviewcontent" class="html-dialog-content">
                 <div class="note">
-                    <p>{{ $t("cliConfirmSnippetNote") }}</p>
+                    <p v-html="$t('cliConfirmSnippetNote')"></p>
                 </div>
                 <textarea id="preview" v-model="cli.state.snippetPreview" rows="20"></textarea>
                 <div class="default_btn">

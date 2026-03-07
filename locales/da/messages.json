@@ -697,8 +697,14 @@
     "defaultHardwareHead": {
         "message": "Hardware"
     },
+    "defaultHardwareText": {
+        "message": "Programmet understøtter hardware, der kan køre Betaflight. Tjek fanen Brænd firmware, for liste over kompatibel hardware.<br \/><br \/>Nyttige hardware værktøjer \/ drivere:<ul><li>For ældre hardware kan du have brug for den seneste CP210x USB driver til seriel chip <b>CP210x drivere<\/b> kan hentes fra <a href=\"https:\/\/www.silabs.com\/products\/development-tools\/software\/usb-to-uart-bridge-vcp-drivers\" target=\"_blank\" rel=\"noopener noreferrer\">her<\/a><\/li><li>Den seneste <b>Zadig<\/b> til Windows USB driverinstallation kan hentes fra <a href=\"http:\/\/zadig.akeo.ie\/\" target=\"_blank\" rel=\"noopener noreferrer\">her<\/a><\/li><li><b>ImpulseRC Driver Fixer<\/b> kan hentes <a href=\"https:\/\/github.com\/ImpulseRC\/ImpulseRC_Driver_Fixer\" target=\"_blank\" rel=\"noopener noreferrer\">her<\/a><\/li><\/ul>"
+    },
     "defaultSoftwareHead": {
         "message": "Software"
+    },
+    "defaultSoftwareText": {
+        "message": "Vores <a href=\"https:\/\/blackbox.betaflight.com\" target=\"_blank\" rel=\"noopener noreferrer\">Blackbox Log Viewer<\/a> er tilgængelig som en online app.<br \/><br \/>Vores samling af <a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">TX Lua Scripts<\/a> er tilgængelige på GitHub.<br \/><br \/>Vores <a href=\"https:\/\/github.com\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">kildekode<\/a> for firmware, denne app og blackbox-fremviseren kan downloades fra GitHub."
     },
     "defaultContributingHead": {
         "message": "Bidrag"
@@ -711,6 +717,9 @@
     },
     "defaultDiscordText": {
         "message": "Betaflight <a href=\"https:\/\/discord.betaflight.com\/invite\" target=\"_blank\" rel=\"noopener noreferrer\">Discord Server<\/a>.<br \/>Del din flyve oplevelse, skriv om Betaflight, hjælp andre eller få hjælp til dig selv fra Betaflight fællesskabet."
+    },
+    "defaultRedditText": {
+        "message": "Tilmeld dig vores <a href=\"https:\/\/www.reddit.com\/r\/Betaflight\/\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight Subreddit<\/a>.<br \/>Diskuter funktioner, stil spørgsmål og forbind dig med Betaflight fællesskabet på Reddit."
     },
     "statisticsDisclaimer": {
         "message": "Denne Betaflight App indsamler anonym brugsstatistik. Disse brugsdata kan omfatte antallet af lanceringer, geografisk region af brugerne, typer af FC, firmwareversioner, klik i app, faner osv. Vi indsamler disse data for bedre at forstå, anvendelse af app, og måske generelle tendenser. Vi gør dette for at hjælpe os med at udvikle en forbedret brugergrænseflade og samle erfaring. Brugere kan fravælge dataindsamling i fanen Valgmuligheder. For information om, hvordan vi indsamler og bruger dine data, se vores <a href=\"https:\/\/www.betaflight.com\/privacy\" rel=\"noopener noreferrer\" target=\"_blank\">privacy policy<\/a>."
@@ -1669,7 +1678,7 @@
         "message": "Afgiv ringetone, når GPS er låst og klar"
     },
     "beeperDISARM_REPEAT": {
-        "message": "Biplyd mens pind holdes i deaktiveringsposition"
+        "message": "Summen mens pind holdes i deaktiveringsposition"
     },
     "beeperARMED": {
         "message": "Advarselbip, når FC aktiveres med motorer stoppet i tomgang (gentages, indtil FC aktiveres eller gas øges)"
@@ -7163,6 +7172,9 @@
     },
     "pidTuningDeltaMeasurement": {
         "message": "Måling"
+    },
+    "pidTuningDeltaTip": {
+        "message": "<b>Afledt fra fejl<\/b> giver mere direkte svar fra pind og foretrækkes oftest til ræs.<br \/><br \/>\n<b>Afledt fra måling<\/b> giver en blødere svar fra pind, hvilket er mere velegnet til freestyle"
     },
     "pidTuningPidControllerTip": {
         "message": "<b>Legacy kontra Betaflight (flydende):<\/b> PID-skalering og -logik er nøjagtig den samme. Gentuning er ikke absolut nødvendig. Legacy er gammel betaflight-udviklet omskrivning, der er basis PID-controller baseret på heltal beregninger. Betaflight PID-controller benytter flydende decimal beregninger og har mange nye funktioner, som er specielt designet til multirotorbrug <br> <b>Flydende decimal kontra heltal:<\/b> PID-skalering og -logik er identisk. Ingen gentuning behøves. F1-boards har ingen indbygget FPU og flydende decimal proccessor og forøger derfor CPU-belastningen og heltals beregniger forbedrer derfor ydeevnen, men flydende deccimal beregninger kan give bedre præcision."

@@ -791,27 +791,30 @@ function startLiveDataRefreshTimer() {
 }
 
 export function reinitializeConnection(suppressDialog = false) {
+    // Set the reboot timestamp to the current time
+    rebootTimestamp = Date.now();
+
     if (CONFIGURATOR.virtualMode) {
         connectDisconnect();
         if (PortHandler.portPicker.autoConnect) {
-            return setTimeout(function () {
+            setTimeout(function () {
                 $("a.connection_button__link").trigger("click");
             }, 500);
+            return rebootTimestamp;
         }
+        return rebootTimestamp;
     }
 
     const currentPort = PortHandler.portPicker.selectedPort;
-
-    // Set the reboot timestamp to the current time
-    rebootTimestamp = Date.now();
 
     // Send reboot command to the flight controller
     MSP.send_message(MSPCodes.MSP_SET_REBOOT, false, false);
 
     if (currentPort.startsWith("bluetooth") || currentPort === "manual") {
-        return setTimeout(function () {
+        setTimeout(function () {
             $("a.connection_button__link").trigger("click");
         }, 1500);
+        return rebootTimestamp;
     }
 
     // Show reboot progress modal except for cli and presets tab
@@ -820,12 +823,14 @@ export function reinitializeConnection(suppressDialog = false) {
         gui_log(i18n.getMessage("deviceRebooting"));
         gui_log(i18n.getMessage("deviceReady"));
 
-        return;
+        return rebootTimestamp;
     }
     // Show reboot progress modal
     if (!suppressDialog) {
         showRebootDialog();
     }
+
+    return rebootTimestamp;
 }
 
 function showRebootDialog() {
