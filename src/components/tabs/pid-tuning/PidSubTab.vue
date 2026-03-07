@@ -1127,7 +1127,7 @@ const showProfileName = computed(() => {
     return semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45);
 });
 
-// For API < 1.47, derivative and dmax column headers are swapped
+// For API < 1.47, derivative and dmax column headers are swapped (PR #4173)
 const isPreApi147 = computed(() => semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_47));
 const derivativeLabel = computed(() => (isPreApi147.value ? "pidTuningDMax" : "pidTuningDerivative"));
 const derivativeHelp = computed(() => (isPreApi147.value ? "pidTuningDMaxHelp" : "pidTuningDerivativeHelp"));
