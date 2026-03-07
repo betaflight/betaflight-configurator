@@ -127,6 +127,9 @@ export default defineConfig({
         environment: "jsdom",
         setupFiles: ["test/setup.js"],
         root: ".",
+        alias: {
+            "/images/": `${path.resolve(__dirname, "src/images")}/`,
+        },
     },
     plugins: [
         vue(),

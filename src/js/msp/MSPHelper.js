@@ -240,6 +240,11 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
                         FC.CONFIG.numberOfRateProfiles = data.readU8();
                     }
+
+                    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_48)) {
+                        FC.CONFIG.numberOfBatteryProfiles = data.readU8();
+                        FC.CONFIG.batteryProfile = data.readU8();
+                    }
                     break;
 
                 case MSPCodes.MSP_RAW_IMU:
@@ -910,6 +915,9 @@ MspHelper.prototype.process_data = function (dataHandler) {
                         case MSPCodes.BUILD_KEY:
                             FC.CONFIG.buildKey = self.getText(data);
                             break;
+                        case MSPCodes.BATTERY_PROFILE_NAME:
+                            FC.CONFIG.batteryProfileNames[FC.CONFIG.batteryProfile] = self.getText(data);
+                            break;
                         default:
                             console.log("Unsupport text type");
                             break;
@@ -1266,6 +1274,23 @@ MspHelper.prototype.process_data = function (dataHandler) {
                             FC.GYRO_SENSOR.gyro_hardware[i] = data.readU8();
                         }
                     }
+                    break;
+
+                case MSPCodes.MSP2_BATTERY_PROFILE: {
+                    const profileIndex = data.readU8();
+                    FC.BATTERY_PROFILES[profileIndex] = {
+                        vbatmincellvoltage: data.readU16() / 100,
+                        vbatmaxcellvoltage: data.readU16() / 100,
+                        vbatwarningcellvoltage: data.readU16() / 100,
+                        vbatfullcellvoltage: data.readU16() / 100,
+                        capacity: data.readU16(),
+                        forceBatteryCellCount: data.readU8(),
+                        consumptionWarningPercentage: data.readU8(),
+                    };
+                    break;
+                }
+                case MSPCodes.MSP2_SET_BATTERY_PROFILE:
+                    console.log("Battery profile saved");
                     break;
 
                 case MSPCodes.MSP_LED_STRIP_CONFIG:
@@ -2295,6 +2320,9 @@ MspHelper.prototype.crunch = function (code, modifierCode = undefined) {
                 case MSPCodes.RATE_PROFILE_NAME:
                     self.setText(buffer, modifierCode, FC.CONFIG.rateProfileNames[FC.CONFIG.rateProfile], 8);
                     break;
+                case MSPCodes.BATTERY_PROFILE_NAME:
+                    self.setText(buffer, modifierCode, FC.CONFIG.batteryProfileNames[FC.CONFIG.batteryProfile], 8);
+                    break;
                 default:
                     console.log("Unsupported text type");
                     break;
@@ -2324,6 +2352,28 @@ MspHelper.prototype.crunch = function (code, modifierCode = undefined) {
         case MSPCodes.MSP_COPY_PROFILE:
             buffer.push8(FC.COPY_PROFILE.type).push8(FC.COPY_PROFILE.dstProfile).push8(FC.COPY_PROFILE.srcProfile);
             break;
+
+        case MSPCodes.MSP2_BATTERY_PROFILE:
+            buffer.push8(modifierCode); // profile index
+            break;
+
+        case MSPCodes.MSP2_SET_BATTERY_PROFILE: {
+            const bpIdx = modifierCode;
+            const bp = FC.BATTERY_PROFILES[bpIdx];
+            if (!bp) {
+                throw new Error(`Missing battery profile at index ${bpIdx}`);
+            }
+            buffer
+                .push8(bpIdx)
+                .push16(Math.round(bp.vbatmincellvoltage * 100))
+                .push16(Math.round(bp.vbatmaxcellvoltage * 100))
+                .push16(Math.round(bp.vbatwarningcellvoltage * 100))
+                .push16(Math.round(bp.vbatfullcellvoltage * 100))
+                .push16(bp.capacity)
+                .push8(bp.forceBatteryCellCount)
+                .push8(bp.consumptionWarningPercentage);
+            break;
+        }
         case MSPCodes.MSP_ARMING_DISABLE:
             let value;
             if (FC.CONFIG.armingDisabled) {
@@ -2638,9 +2688,7 @@ MspHelper.prototype.sendAdjustmentRanges = function (onCompleteCallback) {
             .push8(adjustmentRange.adjustmentFunction)
             .push8(adjustmentRange.auxSwitchChannelIndex);
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_48)) {
-            buffer
-                .push16(adjustmentRange.adjustmentCenter || 0)
-                .push16(adjustmentRange.adjustmentScale || 0);
+            buffer.push16(adjustmentRange.adjustmentCenter || 0).push16(adjustmentRange.adjustmentScale || 0);
         }
 
         // prepare for next iteration

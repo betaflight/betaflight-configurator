@@ -51,6 +51,9 @@ const INITIAL_CONFIG = {
     sampleRateHz: 0,
     configurationProblems: 0,
     hardwareName: "",
+    batteryProfile: 0,
+    numberOfBatteryProfiles: 0,
+    batteryProfileNames: ["", "", ""],
 };
 
 const INITIAL_ANALOG = {
@@ -140,6 +143,7 @@ const FC = {
     AUX_CONFIG: null,
     AUX_CONFIG_IDS: null,
     BATTERY_CONFIG: { ...INITIAL_BATTERY_CONFIG },
+    BATTERY_PROFILES: [],
     BATTERY_STATE: null,
     BEEPER_CONFIG: null,
     BF_CONFIG: null, // Remove when we officialy retire BF 3.1
@@ -377,6 +381,16 @@ const FC = {
             voltageMeterSource: 0,
             currentMeterSource: 0,
         };
+
+        this.BATTERY_PROFILES = Array.from({ length: 3 }, () => ({
+            vbatmincellvoltage: 0,
+            vbatmaxcellvoltage: 0,
+            vbatwarningcellvoltage: 0,
+            vbatfullcellvoltage: 0,
+            capacity: 0,
+            forceBatteryCellCount: 0,
+            consumptionWarningPercentage: 0,
+        }));
 
         this.ARMING_CONFIG = {
             auto_disarm_delay: 0,
