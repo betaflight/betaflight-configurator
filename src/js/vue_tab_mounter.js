@@ -9,7 +9,8 @@ import { pinia } from "./pinia_instance.js";
 import i18next from "i18next";
 import I18NextVue from "i18next-vue";
 import { VueTabComponents } from "./vue_components.js";
-import GUI from "./gui.js";
+import GUI, { TABS } from "./gui.js";
+import { tabState } from "./tab_state.js";
 
 // Store the current mounted Vue app instance for cleanup
 let currentTabApp = null;
@@ -70,9 +71,28 @@ export function mountVueTab(tabName, contentReadyCallback) {
     GUI.active_tab = tabName;
 
     // Mount to content
-    currentTabApp.mount(contentEl);
+    const componentInstance = currentTabApp.mount(contentEl);
 
-    console.log(`[Vue Tab] Mounted: ${tabName}`);
+    // Create a tab adapter object that mimics the legacy tab pattern
+    // This provides the cleanup and expertModeChanged methods that gui.js and main.js expect
+    const tabAdapter = {
+        cleanup: (callback) => {
+            if (componentInstance.cleanup) {
+                componentInstance.cleanup(callback);
+            } else if (callback) {
+                callback();
+            }
+        },
+        expertModeChanged: (enabled) => {
+            // Update global reactive state that Vue components watch
+            tabState.expertMode = enabled;
+        },
+        // Store reference to component instance for potential future use
+        _vueComponent: componentInstance,
+    };
+
+    // Register the adapter in TABS so callbacks work
+    TABS[tabName] = tabAdapter;
 
     // Reset tab switch flag and call content ready callback after next tick
     setTimeout(() => {
@@ -92,5 +112,10 @@ export function unmountVueTab() {
     if (currentTabApp) {
         currentTabApp.unmount();
         currentTabApp = null;
+
+        // Clean up TABS registry
+        if (GUI.active_tab && TABS[GUI.active_tab]) {
+            delete TABS[GUI.active_tab];
+        }
     }
 }
