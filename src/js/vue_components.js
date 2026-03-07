@@ -24,6 +24,7 @@ import AdjustmentsTab from "../components/tabs/AdjustmentsTab.vue";
 import CliTab from "../components/tabs/CliTab.vue";
 import PowerTab from "../components/tabs/PowerTab.vue";
 import SensorsTab from "../components/tabs/SensorsTab.vue";
+import FlightPlanTab from "../components/tabs/FlightPlanTab.vue";
 import LedStripTab from "../components/tabs/LedStripTab.vue";
 import FailsafeTab from "../components/tabs/FailsafeTab.vue";
 import MotorsTab from "../components/tabs/MotorsTab.vue";
@@ -49,6 +50,7 @@ export const VueTabComponents = {
     cli: CliTab,
     power: PowerTab,
     sensors: SensorsTab,
+    flight_plan: FlightPlanTab,
     led_strip: LedStripTab,
     failsafe: FailsafeTab,
     motors: MotorsTab,
@@ -83,6 +85,7 @@ export const BetaflightComponents = {
         app.component("AuxiliaryTab", AuxiliaryTab);
         app.component("OnboardLoggingTab", OnboardLoggingTab);
         app.component("SensorsTab", SensorsTab);
+        app.component("FlightPlanTab", FlightPlanTab);
         app.component("LedStripTab", LedStripTab);
         app.component("FailsafeTab", FailsafeTab);
         app.component("MotorsTab", MotorsTab);
