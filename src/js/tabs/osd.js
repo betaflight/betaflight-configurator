@@ -2032,8 +2032,7 @@ OSD.drawByOrder = function (selectedPosition, field, charCode, x, y) {
     if (OSD.data.preview[selectedPosition] !== undefined) {
         const oldField = OSD.data.preview[selectedPosition][0];
         if (
-            oldField != null &&
-            oldField.draw_order !== undefined &&
+            oldField?.draw_order !== undefined &&
             (field.draw_order === undefined || field.draw_order < oldField.draw_order)
         ) {
             // Not overwrite old field
@@ -2677,11 +2676,7 @@ OSD.buildContextMenu = function (g_ContextMenu) {
         `);
 
         let contextMenuItemContentWrapper = contextMenuItemDisplayTemplate.find(".context-menu-item-content-wrapper");
-        if (
-            element.populateContentFn &&
-            element.populateContentFn != null &&
-            element.populateContentFn instanceof Function
-        ) {
+        if (typeof element.populateContentFn === "function") {
             element.populateContentFn();
         }
 
@@ -2811,8 +2806,8 @@ function hasCollisionAtPosition(testX, testY, elementWidth, elementHeight, field
 }
 
 OSD.findAvailablePosition = function (target, elementWidth, elementHeight, fieldChanged, grow) {
-    const gx = (grow && grow.x) || 0;
-    const gy = (grow && grow.y) || 0;
+    const gx = grow?.x ?? 0;
+    const gy = grow?.y ?? 0;
 
     for (let offset = 0; offset < Math.max(OSD.data.displaySize.x, OSD.data.displaySize.y); offset++) {
         const testX = target.x + gx * offset;
@@ -3841,4 +3836,5 @@ osd.cleanup = function (callback) {
 };
 
 TABS.osd = osd;
-export { osd, OSD, FONT, SYM };
+export { FONT, SYM } from "../utils/osdFont";
+export { osd, OSD };

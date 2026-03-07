@@ -229,7 +229,12 @@ function characterBitmapDataUri(charAddress) {
     for (let y = 0; y < height; y++) {
         for (let x = 0; x < width; x++) {
             const color = FONT.data.characters[charAddress][y * width + x];
-            const fill = color === 0 ? "black" : color === 2 ? "white" : null;
+            let fill = null;
+            if (color === 0) {
+                fill = "black";
+            } else if (color === 2) {
+                fill = "white";
+            }
             if (fill) {
                 lines.push(`<rect x='${x}' y='${y}' width='1' height='1' fill='${fill}'/>`);
             }
@@ -290,15 +295,11 @@ FONT.symbol = function (hexVal) {
     if (hexVal === "" || hexVal === null || hexVal === undefined) {
         return "";
     }
-    try {
-        const cp = Number(hexVal);
-        if (!Number.isFinite(cp) || cp < 0 || cp > 0x10ffff || !Number.isInteger(cp)) {
-            return "";
-        }
-        return String.fromCodePoint(cp);
-    } catch (err) {
+    const cp = Number(hexVal);
+    if (!Number.isFinite(cp) || cp < 0 || cp > 0x10ffff || !Number.isInteger(cp)) {
         return "";
     }
+    return String.fromCodePoint(cp);
 };
 
 export { FONT, SYM };

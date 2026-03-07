@@ -148,6 +148,18 @@ function getHorizontalAxisGeometry(axis, params, tick) {
     return { y0, y1, labelY };
 }
 
+function getAxisColor(isCenter, isMajor) {
+    if (isCenter) {
+        return RulerConfig.colorCenter;
+    }
+
+    if (isMajor) {
+        return RulerConfig.colorMajor;
+    }
+
+    return RulerConfig.colorMinor;
+}
+
 function drawHorizontalTick(ctx, x, y0, y1, color) {
     ctx.strokeStyle = color;
     ctx.lineWidth = 1;
@@ -177,15 +189,7 @@ function drawHorizontalAxis(ctx, params, axis) {
         const isCenter = offset === 0;
         const isMajor = offset % 5 === 0 || isCenter;
         const tick = isMajor ? RulerConfig.tickMajor : RulerConfig.tickMinor;
-
-        let axisColor;
-        if (isCenter) {
-            axisColor = RulerConfig.colorCenter;
-        } else if (isMajor) {
-            axisColor = RulerConfig.colorMajor;
-        } else {
-            axisColor = RulerConfig.colorMinor;
-        }
+        const axisColor = getAxisColor(isCenter, isMajor);
 
         const { y0, y1, labelY } = getHorizontalAxisGeometry(axis, params, tick);
 
@@ -231,6 +235,16 @@ function drawVerticalTick(ctx, x0, x1, y, color) {
     ctx.stroke();
 }
 
+function drawVerticalLabel(ctx, params, axis, offset, x1, y, isDark) {
+    ctx.fillStyle = isDark ? "#fff" : "#000";
+    const text = offset.toString();
+    const textWidth = ctx.measureText(text).width;
+    const extra = text.startsWith("-") ? params.signPad : 0;
+    const labelX = getVerticalLabelX(axis, x1, true, extra, textWidth, params.cw);
+    const yLabel = Math.max(RulerConfig.minEdgePadding, Math.min(params.ch - RulerConfig.minEdgePadding, y + 0.5));
+    ctx.fillText(text, labelX, yLabel);
+}
+
 function drawVerticalAxis(ctx, params, axis) {
     ctx.textAlign = axis === "left" ? "right" : "left";
     const isDark = document.body.classList.contains("dark-theme");
@@ -242,31 +256,15 @@ function drawVerticalAxis(ctx, params, axis) {
         const isMajor =
             Math.abs(offset) % RulerConfig.verticalLabelStep === 0 || i === 0 || i === params.rowsCount - 1 || isCenter;
         const tick = isMajor ? RulerConfig.vertTickMajor : RulerConfig.tickMinor;
-
-        let axisColor;
-        if (isCenter) {
-            axisColor = RulerConfig.colorCenter;
-        } else if (isMajor) {
-            axisColor = RulerConfig.colorMajor;
-        } else {
-            axisColor = RulerConfig.colorMinor;
-        }
+        const axisColor = getAxisColor(isCenter, isMajor);
 
         const { x0, x1 } = getVerticalAxisGeometry(axis, params.left, params.right, params.cw, tick);
 
         drawVerticalTick(ctx, x0, x1, y, axisColor);
 
-        if (!isMajor) {
-            continue;
+        if (isMajor) {
+            drawVerticalLabel(ctx, params, axis, offset, x1, y, isDark);
         }
-
-        ctx.fillStyle = isDark ? "#fff" : "#000";
-        const text = offset.toString();
-        const textWidth = ctx.measureText(text).width;
-        const extra = text.startsWith("-") ? params.signPad : 0;
-        const labelX = getVerticalLabelX(axis, x1, isMajor, extra, textWidth, params.cw);
-        const yLabel = Math.max(RulerConfig.minEdgePadding, Math.min(params.ch - RulerConfig.minEdgePadding, y + 0.5));
-        ctx.fillText(text, labelX, yLabel);
     }
 }
 
