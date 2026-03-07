@@ -43,22 +43,18 @@
                             </th>
                             <th class="derivative">
                                 <div class="name-helpicon-flex">
-                                    <div class="xs">Derivative</div>
+                                    <div class="xs">{{ $t(derivativeLabel) }}</div>
                                     <div
                                         class="cf_tip sm-min"
-                                        :title="$t('pidTuningDerivativeHelp')"
-                                        v-html="$t('pidTuningDerivative')"
+                                        :title="$t(derivativeHelp)"
+                                        v-html="$t(derivativeLabel)"
                                     ></div>
                                 </div>
                             </th>
                             <th class="dmax">
                                 <div class="name-helpicon-flex">
-                                    <div class="xs">D Max</div>
-                                    <div
-                                        class="cf_tip sm-min"
-                                        :title="$t('pidTuningDMaxHelp')"
-                                        v-html="$t('pidTuningDMax')"
-                                    ></div>
+                                    <div class="xs">{{ $t(dMaxLabel) }}</div>
+                                    <div class="cf_tip sm-min" :title="$t(dMaxHelp)" v-html="$t(dMaxLabel)"></div>
                                 </div>
                             </th>
                             <th class="feedforward">
@@ -1130,6 +1126,13 @@ const localProfileName = computed({
 const showProfileName = computed(() => {
     return semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45);
 });
+
+// For API < 1.47, derivative and dmax column headers are swapped
+const isPreApi147 = computed(() => semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_47));
+const derivativeLabel = computed(() => (isPreApi147.value ? "pidTuningDMax" : "pidTuningDerivative"));
+const derivativeHelp = computed(() => (isPreApi147.value ? "pidTuningDMaxHelp" : "pidTuningDerivativeHelp"));
+const dMaxLabel = computed(() => (isPreApi147.value ? "pidTuningDerivative" : "pidTuningDMax"));
+const dMaxHelp = computed(() => (isPreApi147.value ? "pidTuningDerivativeHelp" : "pidTuningDMaxHelp"));
 
 // Local show-all state in sync with prop
 const showAllLocal = ref(props.showAllPids);
