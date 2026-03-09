@@ -14,12 +14,12 @@
                 "
                 class="noOsdChipDetect"
             >
-                <p class="note" v-html="$t('osdSetupNoOsdChipDetectWarning')"></p>
+                <p class="note">{{ $t("osdSetupNoOsdChipDetectWarning") }}</p>
             </div>
 
             <!-- Warning: Unsupported -->
             <div v-if="hasLoadedConfig && !osdStore.isSupported" class="unsupported">
-                <p class="note" v-html="$t('osdSetupUnsupportedNote1')"></p>
+                <p class="note">{{ $t("osdSetupUnsupportedNote1") }}</p>
                 <p class="note" v-html="$t('osdSetupUnsupportedNote2')"></p>
             </div>
 
@@ -78,11 +78,9 @@
                                         </div>
 
                                         <!-- Field label -->
-                                        <span
-                                            class="field-label cf_tip"
-                                            :title="$t(field.desc)"
-                                            v-html="$t(field.text, field.textParams)"
-                                        ></span>
+                                        <span class="field-label cf_tip" :title="$t(field.desc)">{{
+                                            $t(field.text, field.textParams)
+                                        }}</span>
 
                                         <!-- Variant selector -->
                                         <select
@@ -163,10 +161,9 @@
                             <div class="gui_box_titlebar image preview-controls-bar">
                                 <div class="spacer_box_title">
                                     <span class="preview-controls-wrapper" :title="$t('osdSetupPreviewForTitle')">
-                                        <label
-                                            for="osd-preview-profile"
-                                            v-html="$t('osdSetupPreviewSelectProfileTitle')"
-                                        ></label>
+                                        <label for="osd-preview-profile">{{
+                                            $t("osdSetupPreviewSelectProfileTitle")
+                                        }}</label>
                                         <select
                                             id="osd-preview-profile"
                                             v-model.number="previewProfile"
@@ -181,7 +178,7 @@
                                             </option>
                                         </select>
 
-                                        <label for="osd-preview-font" v-html="$t('osdSetupPreviewSelectFont')"></label>
+                                        <label for="osd-preview-font">{{ $t("osdSetupPreviewSelectFont") }}</label>
                                         <select
                                             id="osd-preview-font"
                                             v-model.number="selectedFont"
@@ -198,10 +195,9 @@
                                                 id="osd-preview-rulers-selector"
                                                 v-model="showRulers"
                                             />
-                                            <label
-                                                for="osd-preview-rulers-selector"
-                                                v-html="$t('osdSetupPreviewCheckRulers')"
-                                            ></label>
+                                            <label for="osd-preview-rulers-selector">{{
+                                                $t("osdSetupPreviewCheckRulers")
+                                            }}</label>
                                         </span>
                                     </span>
                                 </div>
@@ -513,7 +509,7 @@
                         "
                     >
                         <div style="flex: 1; display: flex; align-items: center">
-                            <div style="padding: 15px" v-html="$t('osdSetupFontManagerTitle')"></div>
+                            <div style="padding: 15px">{{ $t("osdSetupFontManagerTitle") }}</div>
                         </div>
                         <div
                             @click="closeFontManager"
@@ -547,23 +543,17 @@
                             <div class="fontpresets_wrapper">
                                 <label for="osd-font-preset">{{ $t("osdSetupFontPresetsSelector") }}</label>
                                 <select id="osd-font-preset" v-model.number="selectedFontPreset" class="fontpresets">
-                                    <option
-                                        v-show="selectedFontPreset === -1"
-                                        :value="-1"
-                                        disabled
-                                        v-html="$t('osdSetupFontPresetsSelectorCustomOption')"
-                                    ></option>
+                                    <option v-show="selectedFontPreset === -1" :value="-1" disabled>
+                                        {{ $t("osdSetupFontPresetsSelectorCustomOption") }}
+                                    </option>
                                     <option v-for="(font, idx) in fontTypes" :key="idx" :value="idx">
                                         {{ $t(font.name) }}
                                     </option>
                                 </select>
-                                <span v-html="$t('osdSetupFontPresetsSelectorOr')"></span>
-                                <button
-                                    type="button"
-                                    class="load_font_file"
-                                    @click="loadCustomFontFile()"
-                                    v-html="$t('osdSetupOpenFont')"
-                                ></button>
+                                <span>{{ $t("osdSetupFontPresetsSelectorOr") }}</span>
+                                <button type="button" class="load_font_file" @click="loadCustomFontFile()">
+                                    {{ $t("osdSetupOpenFont") }}
+                                </button>
                                 <span class="font-format-hint">(.mcm)</span>
                             </div>
 
@@ -574,10 +564,10 @@
                                     <div id="font-logo-preview" ref="logoPreview"></div>
                                 </div>
                                 <div id="font-logo-info">
-                                    <h3 v-html="$t('osdSetupCustomLogoInfoTitle')"></h3>
+                                    <h3>{{ $t("osdSetupCustomLogoInfoTitle") }}</h3>
                                     <ul>
-                                        <li v-html="$t('osdSetupCustomLogoInfoImageSize')"></li>
-                                        <li v-html="$t('osdSetupCustomLogoInfoColorMap')"></li>
+                                        <li>{{ $t("osdSetupCustomLogoInfoImageSize") }}</li>
+                                        <li>{{ $t("osdSetupCustomLogoInfoColorMap") }}</li>
                                     </ul>
                                     <p v-html="$t('osdSetupCustomLogoInfoUploadHint')"></p>
                                 </div>
@@ -590,8 +580,9 @@
                                     @click="replaceLogoImage()"
                                     @keydown.enter.prevent="replaceLogoImage()"
                                     @keydown.space.prevent="replaceLogoImage()"
-                                    v-html="$t('osdSetupCustomLogoOpenImageButton')"
-                                ></button>
+                                >
+                                    {{ $t("osdSetupCustomLogoOpenImageButton") }}
+                                </button>
                             </div>
 
                             <div class="info">
@@ -606,8 +597,9 @@
                                     @click="flashFont()"
                                     @keydown.enter.prevent="flashFont()"
                                     @keydown.space.prevent="flashFont()"
-                                    v-html="$t('osdSetupUploadFont')"
-                                ></button>
+                                >
+                                    {{ $t("osdSetupUploadFont") }}
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -626,8 +618,9 @@
                     @click="osdStore.state.isMax7456FontDeviceDetected && openFontManager()"
                     @keydown.enter.prevent="osdStore.state.isMax7456FontDeviceDetected && openFontManager()"
                     @keydown.space.prevent="osdStore.state.isMax7456FontDeviceDetected && openFontManager()"
-                    v-html="$t('osdSetupFontManagerTitle')"
-                ></button>
+                >
+                    {{ $t("osdSetupFontManagerTitle") }}
+                </button>
             </div>
             <div class="btn save">
                 <button
