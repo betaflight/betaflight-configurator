@@ -737,14 +737,15 @@ const previousValues = ref({
 });
 
 // Slider Modes (ON/OFF toggles for gyro and dterm sliders)
+// Uses the MSP-backed fields slider_gyro_filter / slider_dterm_filter (see fc.js, MSPHelper.js)
 const gyroSliderMode = computed({
-    get: () => FC.TUNING_SLIDERS.slider_gyro_filter_mode ?? 1,
-    set: (value) => (FC.TUNING_SLIDERS.slider_gyro_filter_mode = value),
+    get: () => FC.TUNING_SLIDERS.slider_gyro_filter ?? 1,
+    set: (value) => (FC.TUNING_SLIDERS.slider_gyro_filter = value),
 });
 
 const dtermSliderMode = computed({
-    get: () => FC.TUNING_SLIDERS.slider_dterm_filter_mode ?? 1,
-    set: (value) => (FC.TUNING_SLIDERS.slider_dterm_filter_mode = value),
+    get: () => FC.TUNING_SLIDERS.slider_dterm_filter ?? 1,
+    set: (value) => (FC.TUNING_SLIDERS.slider_dterm_filter = value),
 });
 
 // Filter Sliders
@@ -754,6 +755,10 @@ const dtermSliderMode = computed({
 // for the same purpose.
 const gyroFilterMultiplier = ref((FC.TUNING_SLIDERS.slider_gyro_filter_multiplier || 100) / 100);
 const dtermFilterMultiplier = ref((FC.TUNING_SLIDERS.slider_dterm_filter_multiplier || 100) / 100);
+
+// Guard flag — prevents watchers from firing MSP calls during programmatic updates
+// (matches isUserInteracting pattern in PidSubTab.vue)
+let isUpdatingSliders = false;
 
 // Check if filter sliders are in danger zone (too little filtering)
 const filterSlidersInDangerZone = computed(() => {
@@ -1217,6 +1222,8 @@ const yaw_lowpass_hz = computed({
 // Watchers for filter sliders to trigger MSP calculations
 // Master fires MSP directly on every input — MSP's serial queue handles sequencing
 watch(gyroFilterMultiplier, (newValue, oldValue) => {
+    if (isUpdatingSliders) return;
+
     // Clamp to safe zone in non-expert mode (matches original pid_tuning.js)
     if (!props.expertMode) {
         const min = TuningSliders.NON_EXPERT_SLIDER_MIN_GYRO / 100;
@@ -1247,6 +1254,8 @@ watch(gyroFilterMultiplier, (newValue, oldValue) => {
 });
 
 watch(dtermFilterMultiplier, (newValue, oldValue) => {
+    if (isUpdatingSliders) return;
+
     // Clamp to safe zone in non-expert mode (matches original pid_tuning.js)
     if (!props.expertMode) {
         const min = TuningSliders.NON_EXPERT_SLIDER_MIN_DTERM / 100;
@@ -1278,8 +1287,10 @@ watch(dtermFilterMultiplier, (newValue, oldValue) => {
 
 // Re-sync local slider refs from FC state (called by parent after loadData/refresh)
 function forceUpdateSliders() {
+    isUpdatingSliders = true;
     gyroFilterMultiplier.value = (FC.TUNING_SLIDERS.slider_gyro_filter_multiplier || 100) / 100;
     dtermFilterMultiplier.value = (FC.TUNING_SLIDERS.slider_dterm_filter_multiplier || 100) / 100;
+    isUpdatingSliders = false;
 }
 
 defineExpose({
