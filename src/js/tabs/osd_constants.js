@@ -3,7 +3,6 @@ export const OSD_CONSTANTS = {
     VARIANTS: 0xc000,
     VIDEO_TYPES: ["AUTO", "PAL", "NTSC", "HD"],
     UNIT_TYPES: ["IMPERIAL", "METRIC", "BRITISH"],
-    TIMER_PRECISION: ["SECOND", "HUNDREDTH", "TENTH"],
     AHISIDEBARWIDTHPOSITION: 7,
     AHISIDEBARHEIGHTPOSITION: 3,
 
@@ -60,16 +59,6 @@ export const OSD_CONSTANTS = {
             name: "END_BATTERY",
             text: "osdTextStatEndBattery",
             desc: "osdDescStatEndBattery",
-        },
-        FLYTIME: {
-            name: "FLY_TIME",
-            text: "osdTextStatFlyTime",
-            desc: "osdDescStatFlyTime",
-        },
-        ARMEDTIME: {
-            name: "ARMED_TIME",
-            text: "osdTextStatArmedTime",
-            desc: "osdDescStatArmedTime",
         },
         MAX_DISTANCE: {
             name: "MAX_DISTANCE",

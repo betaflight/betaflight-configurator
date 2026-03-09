@@ -283,14 +283,6 @@ FONT.upload = function ($progress) {
         });
 };
 
-FONT.preview = function ($el) {
-    $el.empty();
-    for (let i = 0; i < SYM.LOGO; i++) {
-        const url = FONT.data.character_image_urls[i];
-        $el.append(`<img src="${url}" title="0x${i.toString(16)}" />`);
-    }
-};
-
 FONT.symbol = function (hexVal) {
     if (hexVal === "" || hexVal === null || hexVal === undefined) {
         return "";

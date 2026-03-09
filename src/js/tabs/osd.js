@@ -1,7 +1,7 @@
 import { i18n } from "../localization";
 import { bit_check } from "../bit";
 import FC from "../fc";
-import CONFIGURATOR, { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47, API_VERSION_1_48 } from "../data_storage";
+import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47, API_VERSION_1_48 } from "../data_storage";
 import semver from "semver";
 import $ from "jquery";
 import { have_sensor } from "../sensor_helpers";
@@ -26,9 +26,6 @@ OSD.initData = function () {
         warnings: [],
         displayItems: [],
         timers: [],
-        last_positions: {},
-        preview: [],
-        tooltips: [],
         osd_profiles: {},
         VIDEO_COLS: {
             PAL: 30,
@@ -1607,103 +1604,6 @@ OSD.msp = {
                 };
             },
         },
-        pack: {
-            position(displayItem) {
-                const isVisible = displayItem.isVisible;
-                const position = displayItem.position;
-                const variant = displayItem.variant;
-
-                let packed_visible = 0;
-                for (let osd_profile = 0; osd_profile < OSD.getNumberOfProfiles(); osd_profile++) {
-                    packed_visible |= isVisible[osd_profile] ? OSD.constants.VISIBLE << osd_profile : 0;
-                }
-                const variantSelected = variant << 14;
-                const xpos = position % OSD.data.displaySize.x;
-                const ypos = (position - xpos) / OSD.data.displaySize.x;
-
-                return (
-                    packed_visible | variantSelected | ((ypos & 0x001f) << 5) | ((xpos & 0x0020) << 5) | (xpos & 0x001f)
-                );
-            },
-            timer(timer) {
-                return (timer.src & 0x0f) | ((timer.precision & 0x0f) << 4) | ((timer.alarm & 0xff) << 8);
-            },
-        },
-    },
-    encodeOther() {
-        const result = [-1, OSD.data.video_system];
-        if (OSD.data.state.haveOsdFeature) {
-            result.push8(OSD.data.unit_mode);
-            // watch out, order matters! match the firmware
-            result.push8(OSD.data.alarms.rssi.value);
-            result.push16(OSD.data.alarms.cap.value);
-            result.push16(0); // This value is unused by the firmware with configurable timers
-            result.push16(OSD.data.alarms.alt.value);
-
-            let warningFlags = 0;
-            for (let i = 0; i < OSD.data.warnings.length; i++) {
-                if (OSD.data.warnings[i].enabled) {
-                    warningFlags |= 1 << i;
-                }
-            }
-
-            if (CONFIGURATOR.virtualMode) {
-                OSD.virtualMode.warningFlags = warningFlags;
-            }
-
-            console.log(warningFlags);
-            result.push16(warningFlags);
-            result.push32(warningFlags);
-
-            result.push8(OSD.data.osd_profiles.selected + 1);
-
-            result.push8(OSD.data.parameters.overlayRadioMode);
-
-            result.push8(OSD.data.parameters.cameraFrameWidth);
-            result.push8(OSD.data.parameters.cameraFrameHeight);
-
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
-                result.push16(OSD.data.alarms.link_quality.value);
-            }
-
-            if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
-                result.push16(OSD.data.alarms.rssi_dbm.value);
-            }
-        }
-        return result;
-    },
-    encodeLayout(displayItem) {
-        if (CONFIGURATOR.virtualMode) {
-            OSD.virtualMode.itemPositions[displayItem.index] = this.helpers.pack.position(displayItem);
-        }
-
-        const buffer = [];
-        buffer.push8(displayItem.index);
-        buffer.push16(this.helpers.pack.position(displayItem));
-        return buffer;
-    },
-    encodeStatistics(statItem) {
-        if (CONFIGURATOR.virtualMode) {
-            OSD.virtualMode.statisticsState[statItem.index] = statItem.enabled;
-        }
-
-        const buffer = [];
-        buffer.push8(statItem.index);
-        buffer.push16(statItem.enabled);
-        buffer.push8(0);
-        return buffer;
-    },
-    encodeTimer(timer) {
-        if (CONFIGURATOR.virtualMode) {
-            OSD.virtualMode.timerData[timer.index] = {};
-            OSD.virtualMode.timerData[timer.index].src = timer.src;
-            OSD.virtualMode.timerData[timer.index].precision = timer.precision;
-            OSD.virtualMode.timerData[timer.index].alarm = timer.alarm;
-        }
-
-        const buffer = [-2, timer.index];
-        buffer.push16(this.helpers.pack.timer(timer));
-        return buffer;
     },
     processOsdElements(data, itemPositions) {
         // Now we have the number of profiles, process the OSD elements
@@ -2001,5 +1901,4 @@ OSD.msp = {
     },
 };
 
-export { FONT, SYM } from "../utils/osdFont";
 export { OSD };

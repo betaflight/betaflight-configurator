@@ -1312,7 +1312,7 @@ async function saveConfig() {
     isSaving.value = true;
 
     try {
-        // Sync store to legacy OSD.data (keeps legacy preview/analytics consistent)
+        // Sync store state to the shared OSD.data bridge used by legacy helpers.
         osdStore.syncToLegacy();
 
         // Legacy parity: Save button commits pending in-memory config to EEPROM.
