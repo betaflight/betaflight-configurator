@@ -278,8 +278,8 @@
                             type="range"
                             class="tuningSlider"
                             id="sliderDGain"
-                            :min="pidSliderMin"
-                            :max="pidSliderMax"
+                            min="0.0"
+                            max="2.0"
                             step="0.05"
                             v-model.number="sliderDGain"
                             @input="onSliderChange"
@@ -297,8 +297,8 @@
                             type="range"
                             class="tuningSlider"
                             id="sliderPIGain"
-                            :min="pidSliderMin"
-                            :max="pidSliderMax"
+                            min="0.0"
+                            max="2.0"
                             step="0.05"
                             v-model.number="sliderPIGain"
                             @input="onSliderChange"
@@ -316,8 +316,8 @@
                             type="range"
                             class="tuningSlider"
                             id="sliderFeedforwardGain"
-                            :min="pidSliderMin"
-                            :max="pidSliderMax"
+                            min="0.0"
+                            max="2.0"
                             step="0.05"
                             v-model.number="sliderFeedforwardGain"
                             @input="onSliderChange"
@@ -1548,10 +1548,6 @@ const sliderRPRatioDisplay = computed(() => sliderRollPitchRatio.value.toFixed(2
 const sliderPitchPIDisplay = computed(() => sliderPitchPIGain.value.toFixed(2));
 const sliderMasterDisplay = computed(() => sliderMasterMultiplier.value.toFixed(2));
 
-// Non-expert slider min/max — clamp range when not in expert mode (Task 3)
-const pidSliderMin = computed(() => (props.expertMode ? 0.0 : NON_EXPERT_MIN));
-const pidSliderMax = computed(() => (props.expertMode ? 2.0 : NON_EXPERT_MAX));
-
 // Slider disabled states — matches original updateExpertModePidSlidersDisplay()
 // Disable when mode is OFF, or when slider is outside non-expert range and not in expert mode
 const sliderDGainDisabled = computed(() => {
@@ -1662,6 +1658,23 @@ let userInteractionTimeout = null;
 // Slider change handler
 function onSliderChange() {
     isUserInteracting.value = true;
+
+    // Clamp slider values to safe zone when not in expert mode
+    // Matches original: slider.val(NON_EXPERT_SLIDER_MAX/MIN)
+    if (!props.expertMode) {
+        const clamp = (ref) => {
+            if (ref.value > NON_EXPERT_MAX) ref.value = NON_EXPERT_MAX;
+            else if (ref.value < NON_EXPERT_MIN) ref.value = NON_EXPERT_MIN;
+        };
+        clamp(sliderDGain);
+        clamp(sliderPIGain);
+        clamp(sliderFeedforwardGain);
+        clamp(sliderDMaxGain);
+        clamp(sliderIGain);
+        clamp(sliderRollPitchRatio);
+        clamp(sliderPitchPIGain);
+        clamp(sliderMasterMultiplier);
+    }
 
     // Update TuningSliders.js state
     TuningSliders.sliderDGain = sliderDGain.value;

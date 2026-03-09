@@ -35,8 +35,8 @@
                             <input
                                 type="range"
                                 v-model.number="gyroFilterMultiplier"
-                                :min="gyroFilterSliderMin"
-                                :max="gyroFilterSliderMax"
+                                min="0.1"
+                                max="2.0"
                                 step="0.05"
                                 class="tuningSlider"
                                 :disabled="gyroSliderDisabled"
@@ -60,8 +60,8 @@
                             <input
                                 type="range"
                                 v-model.number="dtermFilterMultiplier"
-                                :min="dtermFilterSliderMin"
-                                :max="dtermFilterSliderMax"
+                                min="0.1"
+                                max="2.0"
                                 step="0.05"
                                 class="tuningSlider"
                                 :disabled="dtermSliderDisabled"
@@ -809,12 +809,6 @@ const dtermSliderDisabled = computed(
     () => !dtermSliderMode.value || dtermSliderOutsideExpertRange.value || dtermLowPassAllDisabled.value,
 );
 
-// Non-expert mode slider range clamping for filter sliders
-const gyroFilterSliderMin = computed(() => (props.expertMode ? 0.1 : TuningSliders.NON_EXPERT_SLIDER_MIN_GYRO / 100));
-const gyroFilterSliderMax = computed(() => (props.expertMode ? 2.0 : TuningSliders.NON_EXPERT_SLIDER_MAX_GYRO / 100));
-const dtermFilterSliderMin = computed(() => (props.expertMode ? 0.1 : TuningSliders.NON_EXPERT_SLIDER_MIN_DTERM / 100));
-const dtermFilterSliderMax = computed(() => (props.expertMode ? 2.0 : TuningSliders.NON_EXPERT_SLIDER_MAX_DTERM / 100));
-
 // Disable filter frequency inputs when respective slider mode is ON
 // Matches original: gyroLowpassFrequency.prop("disabled", this.sliderGyroFilter)
 const gyroInputsDisabled = computed(() => gyroSliderMode.value === 1);
@@ -1223,6 +1217,20 @@ const yaw_lowpass_hz = computed({
 // Watchers for filter sliders to trigger MSP calculations
 // Master fires MSP directly on every input — MSP's serial queue handles sequencing
 watch(gyroFilterMultiplier, (newValue, oldValue) => {
+    // Clamp to safe zone in non-expert mode (matches original pid_tuning.js)
+    if (!props.expertMode) {
+        const min = TuningSliders.NON_EXPERT_SLIDER_MIN_GYRO / 100;
+        const max = TuningSliders.NON_EXPERT_SLIDER_MAX_GYRO / 100;
+        if (newValue > max) {
+            gyroFilterMultiplier.value = max;
+            return;
+        }
+        if (newValue < min) {
+            gyroFilterMultiplier.value = min;
+            return;
+        }
+    }
+
     if (Math.abs(newValue - oldValue) < 0.001) {
         return;
     }
@@ -1239,6 +1247,20 @@ watch(gyroFilterMultiplier, (newValue, oldValue) => {
 });
 
 watch(dtermFilterMultiplier, (newValue, oldValue) => {
+    // Clamp to safe zone in non-expert mode (matches original pid_tuning.js)
+    if (!props.expertMode) {
+        const min = TuningSliders.NON_EXPERT_SLIDER_MIN_DTERM / 100;
+        const max = TuningSliders.NON_EXPERT_SLIDER_MAX_DTERM / 100;
+        if (newValue > max) {
+            dtermFilterMultiplier.value = max;
+            return;
+        }
+        if (newValue < min) {
+            dtermFilterMultiplier.value = min;
+            return;
+        }
+    }
+
     if (Math.abs(newValue - oldValue) < 0.001) {
         return;
     }
