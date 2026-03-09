@@ -24,7 +24,7 @@
                             <span>{{ $t("pidTuningGyroFilterSlider") }}</span>
                         </td>
                     </tr>
-                    <tr class="sliderGyroFilter">
+                    <tr class="sliderGyroFilter" :class="{ disabledSliders: gyroSliderDisabled }">
                         <td class="sm-min">
                             <span>{{ $t("pidTuningGyroFilterSlider") }}</span>
                         </td>
@@ -35,10 +35,11 @@
                             <input
                                 type="range"
                                 v-model.number="gyroFilterMultiplier"
-                                min="0.1"
-                                max="2.0"
+                                :min="gyroFilterSliderMin"
+                                :max="gyroFilterSliderMax"
                                 step="0.05"
                                 class="tuningSlider"
+                                :disabled="gyroSliderDisabled"
                             />
                         </td>
                         <td></td>
@@ -48,7 +49,7 @@
                             <span>{{ $t("pidTuningDTermFilterSlider") }}</span>
                         </td>
                     </tr>
-                    <tr class="sliderDTermFilter">
+                    <tr class="sliderDTermFilter" :class="{ disabledSliders: dtermSliderDisabled }">
                         <td class="sm-min">
                             <span>{{ $t("pidTuningDTermFilterSlider") }}</span>
                         </td>
@@ -59,10 +60,11 @@
                             <input
                                 type="range"
                                 v-model.number="dtermFilterMultiplier"
-                                min="0.1"
-                                max="2.0"
+                                :min="dtermFilterSliderMin"
+                                :max="dtermFilterSliderMax"
                                 step="0.05"
                                 class="tuningSlider"
+                                :disabled="dtermSliderDisabled"
                             />
                         </td>
                         <td></td>
@@ -73,6 +75,22 @@
             <!-- Danger Zone Warning -->
             <div v-if="filterSlidersInDangerZone" class="danger slidersWarning">
                 <p v-html="$t('pidTuningSliderWarning')"></p>
+            </div>
+
+            <!-- Non-expert mode range restriction note -->
+            <div
+                v-if="!props.expertMode && (gyroSliderMode || dtermSliderMode)"
+                class="note expertSettingsDetectedNote nonExpertModeSlidersNote"
+            >
+                <p v-html="$t('pidTuningFilterSlidersNonExpertMode')"></p>
+            </div>
+
+            <!-- Expert settings detected warning -->
+            <div
+                v-if="showGyroExpertSettingsWarning || showDtermExpertSettingsWarning"
+                class="note expertSettingsDetectedNote"
+            >
+                <p v-html="$t('pidTuningSlidersExpertSettingsDetectedNote')"></p>
             </div>
         </div>
 
@@ -134,7 +152,14 @@
                                 </span>
 
                                 <span v-if="gyroLowpassEnabled && gyroLowpassMode === 0" class="suboption static">
-                                    <input type="number" v-model.number="gyro_lowpass_hz" step="1" min="1" max="1000" />
+                                    <input
+                                        type="number"
+                                        v-model.number="gyro_lowpass_hz"
+                                        step="1"
+                                        min="1"
+                                        max="1000"
+                                        :disabled="gyroInputsDisabled"
+                                    />
                                     <label>
                                         <span>{{ $t("pidTuningStaticCutoffFrequency") }}</span>
                                     </label>
@@ -147,6 +172,7 @@
                                         step="1"
                                         min="1"
                                         max="1000"
+                                        :disabled="gyroInputsDisabled"
                                     />
                                     <label>
                                         <span>{{ $t("pidTuningMinCutoffFrequency") }}</span>
@@ -160,6 +186,7 @@
                                         step="1"
                                         min="1"
                                         max="1000"
+                                        :disabled="gyroInputsDisabled"
                                     />
                                     <label>
                                         <span>{{ $t("pidTuningMaxCutoffFrequency") }}</span>
@@ -202,6 +229,7 @@
                                         step="1"
                                         min="1"
                                         max="1000"
+                                        :disabled="gyroInputsDisabled"
                                     />
                                     <label>
                                         <span>{{ $t("pidTuningStaticCutoffFrequency") }}</span>
@@ -488,6 +516,7 @@
                                         step="1"
                                         min="1"
                                         max="1000"
+                                        :disabled="dtermInputsDisabled"
                                     />
                                     <label>
                                         <span>{{ $t("pidTuningStaticCutoffFrequency") }}</span>
@@ -501,6 +530,7 @@
                                         step="1"
                                         min="1"
                                         max="1000"
+                                        :disabled="dtermInputsDisabled"
                                     />
                                     <label>
                                         <span>{{ $t("pidTuningMinCutoffFrequency") }}</span>
@@ -514,6 +544,7 @@
                                         step="10"
                                         min="200"
                                         max="2000"
+                                        :disabled="dtermInputsDisabled"
                                     />
                                     <label>
                                         <span>{{ $t("pidTuningMaxCutoffFrequency") }}</span>
@@ -569,6 +600,7 @@
                                         step="1"
                                         min="1"
                                         max="1000"
+                                        :disabled="dtermInputsDisabled"
                                     />
                                     <label>
                                         <span>{{ $t("pidTuningStaticCutoffFrequency") }}</span>
@@ -667,9 +699,19 @@
 <script setup>
 import { computed, ref, watch } from "vue";
 import FC from "@/js/fc";
+import TuningSliders from "@/js/TuningSliders";
 import MSP from "@/js/msp";
 import MSPCodes from "@/js/msp/MSPCodes";
 import { mspHelper } from "@/js/msp/MSPHelper";
+
+const props = defineProps({
+    expertMode: {
+        type: Boolean,
+        default: true,
+    },
+});
+
+const emit = defineEmits(["change"]);
 
 // Store previous non-zero values AND mode to restore when re-enabling filters
 const previousValues = ref({
@@ -727,6 +769,60 @@ const filterSlidersInDangerZone = computed(() => {
         dtermFilterMultiplier.value <= WARNING_FILTER_DTERM_LOW_GAIN
     );
 });
+
+// Gyro slider outside expert mode range — matches original updateExpertModeFilterSlidersDisplay()
+const gyroSliderOutsideExpertRange = computed(() => {
+    const multInt = Math.round(gyroFilterMultiplier.value * 100);
+    return (
+        (multInt < TuningSliders.NON_EXPERT_SLIDER_MIN_GYRO || multInt > TuningSliders.NON_EXPERT_SLIDER_MAX_GYRO) &&
+        !props.expertMode
+    );
+});
+
+const dtermSliderOutsideExpertRange = computed(() => {
+    const multInt = Math.round(dtermFilterMultiplier.value * 100);
+    return (
+        (multInt < TuningSliders.NON_EXPERT_SLIDER_MIN_DTERM || multInt > TuningSliders.NON_EXPERT_SLIDER_MAX_DTERM) &&
+        !props.expertMode
+    );
+});
+
+// Gyro lowpass all-disabled check
+const gyroLowPassAllDisabled = computed(
+    () =>
+        FC.FILTER_CONFIG.gyro_lowpass_dyn_min_hz === 0 &&
+        FC.FILTER_CONFIG.gyro_lowpass_hz === 0 &&
+        FC.FILTER_CONFIG.gyro_lowpass2_hz === 0,
+);
+const dtermLowPassAllDisabled = computed(
+    () =>
+        FC.FILTER_CONFIG.dterm_lowpass_dyn_min_hz === 0 &&
+        FC.FILTER_CONFIG.dterm_lowpass_hz === 0 &&
+        FC.FILTER_CONFIG.dterm_lowpass2_hz === 0,
+);
+
+// Filter slider disabled states — matches original updateGyroFilterSliderDisplay / updateDTermFilterSliderDisplay
+const gyroSliderDisabled = computed(
+    () => !gyroSliderMode.value || gyroSliderOutsideExpertRange.value || gyroLowPassAllDisabled.value,
+);
+const dtermSliderDisabled = computed(
+    () => !dtermSliderMode.value || dtermSliderOutsideExpertRange.value || dtermLowPassAllDisabled.value,
+);
+
+// Non-expert mode slider range clamping for filter sliders
+const gyroFilterSliderMin = computed(() => (props.expertMode ? 0.1 : TuningSliders.NON_EXPERT_SLIDER_MIN_GYRO / 100));
+const gyroFilterSliderMax = computed(() => (props.expertMode ? 2.0 : TuningSliders.NON_EXPERT_SLIDER_MAX_GYRO / 100));
+const dtermFilterSliderMin = computed(() => (props.expertMode ? 0.1 : TuningSliders.NON_EXPERT_SLIDER_MIN_DTERM / 100));
+const dtermFilterSliderMax = computed(() => (props.expertMode ? 2.0 : TuningSliders.NON_EXPERT_SLIDER_MAX_DTERM / 100));
+
+// Disable filter frequency inputs when respective slider mode is ON
+// Matches original: gyroLowpassFrequency.prop("disabled", this.sliderGyroFilter)
+const gyroInputsDisabled = computed(() => gyroSliderMode.value === 1);
+const dtermInputsDisabled = computed(() => dtermSliderMode.value === 1);
+
+// Show expert settings detected note
+const showGyroExpertSettingsWarning = computed(() => gyroSliderOutsideExpertRange.value);
+const showDtermExpertSettingsWarning = computed(() => dtermSliderOutsideExpertRange.value);
 
 // Gyro Lowpass Mode (0 = static, 1 = dynamic)
 const gyroLowpassMode = computed({
@@ -1135,11 +1231,11 @@ watch(gyroFilterMultiplier, (newValue, oldValue) => {
     FC.TUNING_SLIDERS.slider_gyro_filter = 1;
     FC.TUNING_SLIDERS.slider_gyro_filter_multiplier = Math.round(newValue * 100);
 
-    MSP.promise(MSPCodes.MSP_CALCULATE_SIMPLIFIED_GYRO, mspHelper.crunch(MSPCodes.MSP_CALCULATE_SIMPLIFIED_GYRO)).catch(
-        (error) => {
+    MSP.promise(MSPCodes.MSP_CALCULATE_SIMPLIFIED_GYRO, mspHelper.crunch(MSPCodes.MSP_CALCULATE_SIMPLIFIED_GYRO))
+        .then(() => emit("change"))
+        .catch((error) => {
             console.error("Failed to calculate simplified gyro filters:", error);
-        },
-    );
+        });
 });
 
 watch(dtermFilterMultiplier, (newValue, oldValue) => {
@@ -1151,12 +1247,11 @@ watch(dtermFilterMultiplier, (newValue, oldValue) => {
     FC.TUNING_SLIDERS.slider_dterm_filter = 1;
     FC.TUNING_SLIDERS.slider_dterm_filter_multiplier = Math.round(newValue * 100);
 
-    MSP.promise(
-        MSPCodes.MSP_CALCULATE_SIMPLIFIED_DTERM,
-        mspHelper.crunch(MSPCodes.MSP_CALCULATE_SIMPLIFIED_DTERM),
-    ).catch((error) => {
-        console.error("Failed to calculate simplified dterm filters:", error);
-    });
+    MSP.promise(MSPCodes.MSP_CALCULATE_SIMPLIFIED_DTERM, mspHelper.crunch(MSPCodes.MSP_CALCULATE_SIMPLIFIED_DTERM))
+        .then(() => emit("change"))
+        .catch((error) => {
+            console.error("Failed to calculate simplified dterm filters:", error);
+        });
 });
 </script>
 

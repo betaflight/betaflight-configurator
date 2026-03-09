@@ -66,13 +66,13 @@
             <!-- Sub-tab Navigation -->
             <div class="tab-container">
                 <div class="tab pid" :class="{ active: activeSubtab === 'pid' }" @click="activeSubtab = 'pid'">
-                    <button>{{ $t("pidTuningSubTabPid") }}</button>
+                    <a href="#" @click.prevent="activeSubtab = 'pid'">{{ $t("pidTuningSubTabPid") }}</a>
                 </div>
                 <div class="tab rates" :class="{ active: activeSubtab === 'rates' }" @click="activeSubtab = 'rates'">
-                    <button>{{ $t("pidTuningSubTabRates") }}</button>
+                    <a href="#" @click.prevent="activeSubtab = 'rates'">{{ $t("pidTuningSubTabRates") }}</a>
                 </div>
                 <div class="tab filter" :class="{ active: activeSubtab === 'filter' }" @click="activeSubtab = 'filter'">
-                    <button>{{ $t("pidTuningSubTabFilter") }}</button>
+                    <a href="#" @click.prevent="activeSubtab = 'filter'">{{ $t("pidTuningSubTabFilter") }}</a>
                 </div>
             </div>
 
@@ -93,7 +93,11 @@
                         v-model:rate-profile-name="rateProfileName"
                         @change="onFormChanged"
                     />
-                    <FilterSubTab v-if="activeSubtab === 'filter'" />
+                    <FilterSubTab
+                        v-if="activeSubtab === 'filter'"
+                        :expert-mode="expertModeEnabled"
+                        @change="onFormChanged"
+                    />
                 </form>
             </div>
 
