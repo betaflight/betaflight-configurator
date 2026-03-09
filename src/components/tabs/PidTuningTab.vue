@@ -104,7 +104,7 @@
             <!-- Save/Revert Buttons -->
             <div class="content_toolbar toolbar_fixed_bottom" style="position: fixed">
                 <div class="btn save_btn">
-                    <a href="#" @click.prevent="save">
+                    <a href="#" @click.prevent="save" :class="{ disabled: !hasChanges }">
                         <span>{{ $t("pidTuningButtonSave") }}</span>
                     </a>
                 </div>
@@ -387,6 +387,10 @@ function toggleShowAllPids() {
 
 // Save/Refresh
 async function save() {
+    if (!hasChanges.value) {
+        return;
+    }
+
     try {
         // Save profile names to FC.CONFIG (API 1.45+)
         if (FC.CONFIG.pidProfileNames) {
