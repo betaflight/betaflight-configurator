@@ -233,7 +233,10 @@
                         <tbody>
                             <tr>
                                 <td colspan="2">
-                                    <div class="rate_curve background_paper" style="position: relative; height: 200px">
+                                    <div
+                                        class="rate_curve background_paper"
+                                        style="position: relative; min-height: 234px"
+                                    >
                                         <canvas
                                             ref="rateCurveLayer0"
                                             style="

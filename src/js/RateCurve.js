@@ -38,7 +38,9 @@ const RateCurve = function (useLegacyCurve) {
     ) {
         const canvasHeightScale = height / (2 * maxAngularVel);
 
-        const stepWidth = context.lineWidth;
+        // Cap stepWidth to ensure smooth curves (at least 500 sample points)
+        // lineWidth can be large on small displays, but step density should stay high
+        const stepWidth = Math.min(context.lineWidth, 2);
 
         context.save();
         context.translate(width / 2, height / 2);
