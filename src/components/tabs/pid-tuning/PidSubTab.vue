@@ -80,13 +80,34 @@
                         <tr class="ROLL">
                             <td class="pid_roll" style="background-color: #e24761">ROLL</td>
                             <td class="pid_data">
-                                <input type="number" v-model.number="pidRollP" step="1" min="0" max="250" />
+                                <input
+                                    type="number"
+                                    v-model.number="pidRollP"
+                                    step="1"
+                                    min="0"
+                                    max="250"
+                                    :disabled="rollPitchDisabled"
+                                />
                             </td>
                             <td class="pid_data">
-                                <input type="number" v-model.number="pidRollI" step="1" min="0" max="250" />
+                                <input
+                                    type="number"
+                                    v-model.number="pidRollI"
+                                    step="1"
+                                    min="0"
+                                    max="250"
+                                    :disabled="rollPitchDisabled"
+                                />
                             </td>
                             <td class="pid_data">
-                                <input type="number" v-model.number="pidRollD" step="1" min="0" max="250" />
+                                <input
+                                    type="number"
+                                    v-model.number="pidRollD"
+                                    step="1"
+                                    min="0"
+                                    max="250"
+                                    :disabled="rollPitchDisabled"
+                                />
                             </td>
                             <td class="pid_data">
                                 <input
@@ -95,6 +116,7 @@
                                     step="1"
                                     min="0"
                                     max="250"
+                                    :disabled="rollPitchDisabled"
                                 />
                             </td>
                             <td class="pid_data">
@@ -104,6 +126,7 @@
                                     step="1"
                                     min="0"
                                     max="2000"
+                                    :disabled="rollPitchDisabled"
                                 />
                             </td>
                         </tr>
@@ -112,13 +135,34 @@
                         <tr class="PITCH">
                             <td class="pid_pitch" style="background-color: #49c747">PITCH</td>
                             <td class="pid_data">
-                                <input type="number" v-model.number="pidPitchP" step="1" min="0" max="250" />
+                                <input
+                                    type="number"
+                                    v-model.number="pidPitchP"
+                                    step="1"
+                                    min="0"
+                                    max="250"
+                                    :disabled="rollPitchDisabled"
+                                />
                             </td>
                             <td class="pid_data">
-                                <input type="number" v-model.number="pidPitchI" step="1" min="0" max="250" />
+                                <input
+                                    type="number"
+                                    v-model.number="pidPitchI"
+                                    step="1"
+                                    min="0"
+                                    max="250"
+                                    :disabled="rollPitchDisabled"
+                                />
                             </td>
                             <td class="pid_data">
-                                <input type="number" v-model.number="pidPitchD" step="1" min="0" max="250" />
+                                <input
+                                    type="number"
+                                    v-model.number="pidPitchD"
+                                    step="1"
+                                    min="0"
+                                    max="250"
+                                    :disabled="rollPitchDisabled"
+                                />
                             </td>
                             <td class="pid_data">
                                 <input
@@ -127,6 +171,7 @@
                                     step="1"
                                     min="0"
                                     max="250"
+                                    :disabled="rollPitchDisabled"
                                 />
                             </td>
                             <td class="pid_data">
@@ -136,6 +181,7 @@
                                     step="1"
                                     min="0"
                                     max="2000"
+                                    :disabled="rollPitchDisabled"
                                 />
                             </td>
                         </tr>
@@ -144,13 +190,34 @@
                         <tr class="YAW">
                             <td class="pid_yaw" style="background-color: #477ac7">YAW</td>
                             <td class="pid_data">
-                                <input type="number" v-model.number="pidYawP" step="1" min="0" max="250" />
+                                <input
+                                    type="number"
+                                    v-model.number="pidYawP"
+                                    step="1"
+                                    min="0"
+                                    max="250"
+                                    :disabled="yawDisabled"
+                                />
                             </td>
                             <td class="pid_data">
-                                <input type="number" v-model.number="pidYawI" step="1" min="0" max="250" />
+                                <input
+                                    type="number"
+                                    v-model.number="pidYawI"
+                                    step="1"
+                                    min="0"
+                                    max="250"
+                                    :disabled="yawDisabled"
+                                />
                             </td>
                             <td class="pid_data">
-                                <input type="number" v-model.number="pidYawD" step="1" min="0" max="250" />
+                                <input
+                                    type="number"
+                                    v-model.number="pidYawD"
+                                    step="1"
+                                    min="0"
+                                    max="250"
+                                    :disabled="yawDisabled"
+                                />
                             </td>
                             <td class="pid_data">
                                 <input
@@ -159,6 +226,7 @@
                                     step="1"
                                     min="0"
                                     max="250"
+                                    :disabled="yawDisabled"
                                 />
                             </td>
                             <td class="pid_data">
@@ -168,6 +236,7 @@
                                     step="1"
                                     min="0"
                                     max="2000"
+                                    :disabled="yawDisabled"
                                 />
                             </td>
                         </tr>
@@ -209,8 +278,8 @@
                             type="range"
                             class="tuningSlider"
                             id="sliderDGain"
-                            min="0.0"
-                            max="2.0"
+                            :min="pidSliderMin"
+                            :max="pidSliderMax"
                             step="0.05"
                             v-model.number="sliderDGain"
                             @input="onSliderChange"
@@ -228,8 +297,8 @@
                             type="range"
                             class="tuningSlider"
                             id="sliderPIGain"
-                            min="0.0"
-                            max="2.0"
+                            :min="pidSliderMin"
+                            :max="pidSliderMax"
                             step="0.05"
                             v-model.number="sliderPIGain"
                             @input="onSliderChange"
@@ -247,8 +316,8 @@
                             type="range"
                             class="tuningSlider"
                             id="sliderFeedforwardGain"
-                            min="0.0"
-                            max="2.0"
+                            :min="pidSliderMin"
+                            :max="pidSliderMax"
                             step="0.05"
                             v-model.number="sliderFeedforwardGain"
                             @input="onSliderChange"
@@ -264,7 +333,11 @@
                 </div>
 
                 <!-- Advanced Sliders -->
-                <div class="slider-row advancedSlider" v-show="showDMaxSlider">
+                <div
+                    class="slider-row advancedSlider"
+                    :class="{ disabledSliders: dMaxSliderDisabled }"
+                    v-show="showDMaxSlider"
+                >
                     <div class="slider-label" v-html="$t('pidTuningDMaxGainSlider')"></div>
                     <div class="slider-value">{{ sliderDMaxGainDisplay }}</div>
                     <div class="slider-control">
@@ -277,13 +350,17 @@
                             step="0.05"
                             v-model.number="sliderDMaxGain"
                             @input="onSliderChange"
-                            :disabled="!sliderPidsMode"
+                            :disabled="dMaxSliderDisabled"
                         />
                     </div>
                     <div class="helpicon cf_tip" :title="$t('pidTuningDMaxGainSliderHelp')"></div>
                 </div>
 
-                <div class="slider-row advancedSlider" v-show="showIGainSlider">
+                <div
+                    class="slider-row advancedSlider"
+                    :class="{ disabledSliders: iGainSliderDisabled }"
+                    v-show="showIGainSlider"
+                >
                     <div class="slider-label" v-html="$t('pidTuningIGainSlider')"></div>
                     <div class="slider-value">{{ sliderIGainDisplay }}</div>
                     <div class="slider-control">
@@ -296,13 +373,17 @@
                             step="0.05"
                             v-model.number="sliderIGain"
                             @input="onSliderChange"
-                            :disabled="!sliderPidsMode"
+                            :disabled="iGainSliderDisabled"
                         />
                     </div>
                     <div class="helpicon cf_tip" :title="$t('pidTuningIGainSliderHelp')"></div>
                 </div>
 
-                <div class="slider-row advancedSlider" v-show="showRPRatioSlider">
+                <div
+                    class="slider-row advancedSlider"
+                    :class="{ disabledSliders: rpRatioSliderDisabled }"
+                    v-show="showRPRatioSlider"
+                >
                     <div class="slider-label" v-html="$t('pidTuningRollPitchRatioSlider')"></div>
                     <div class="slider-value">{{ sliderRPRatioDisplay }}</div>
                     <div class="slider-control">
@@ -315,13 +396,17 @@
                             step="0.05"
                             v-model.number="sliderRollPitchRatio"
                             @input="onSliderChange"
-                            :disabled="!sliderPidsMode"
+                            :disabled="rpRatioSliderDisabled"
                         />
                     </div>
                     <div class="helpicon cf_tip" :title="$t('pidTuningRollPitchRatioSliderHelp')"></div>
                 </div>
 
-                <div class="slider-row advancedSlider" v-show="showPitchPISlider">
+                <div
+                    class="slider-row advancedSlider"
+                    :class="{ disabledSliders: pitchPISliderDisabled }"
+                    v-show="showPitchPISlider"
+                >
                     <div class="slider-label" v-html="$t('pidTuningPitchPIGainSlider')"></div>
                     <div class="slider-value">{{ sliderPitchPIDisplay }}</div>
                     <div class="slider-control">
@@ -334,13 +419,17 @@
                             step="0.05"
                             v-model.number="sliderPitchPIGain"
                             @input="onSliderChange"
-                            :disabled="!sliderPidsMode"
+                            :disabled="pitchPISliderDisabled"
                         />
                     </div>
                     <div class="helpicon cf_tip" :title="$t('pidTuningPitchPIGainSliderHelp')"></div>
                 </div>
 
-                <div class="slider-row advancedSlider" v-show="showMasterSlider">
+                <div
+                    class="slider-row advancedSlider"
+                    :class="{ disabledSliders: masterSliderDisabled }"
+                    v-show="showMasterSlider"
+                >
                     <div class="slider-label" v-html="$t('pidTuningMasterSlider')"></div>
                     <div class="slider-value">{{ sliderMasterDisplay }}</div>
                     <div class="slider-control">
@@ -353,7 +442,7 @@
                             step="0.05"
                             v-model.number="sliderMasterMultiplier"
                             @input="onSliderChange"
-                            :disabled="!sliderPidsMode"
+                            :disabled="masterSliderDisabled"
                         />
                     </div>
                     <div class="helpicon cf_tip" :title="$t('pidTuningMasterSliderHelp')"></div>
@@ -1396,6 +1485,12 @@ const integratedYawEnabled = computed({
     set: (val) => (FC.ADVANCED_TUNING.useIntegratedYaw = val ? 1 : 0),
 });
 
+// PID table input disabled states — matches original updatePidSlidersDisplay()
+// Roll & Pitch disabled when slider mode is RP (1) or RPY (2)
+const rollPitchDisabled = computed(() => sliderPidsMode.value > 0);
+// Yaw disabled only in RPY mode (2)
+const yawDisabled = computed(() => sliderPidsMode.value === 2);
+
 // Sliders - bridge to TuningSliders.js (values are 0.0-2.0)
 const sliderPidsMode = ref(2);
 const sliderDGain = ref(1);
@@ -1410,6 +1505,39 @@ const sliderMasterMultiplier = ref(1);
 // Flag to prevent watcher from overriding user input
 const isUserInteracting = ref(false);
 
+// Non-expert range constants (decimal form)
+const NON_EXPERT_MIN = TuningSliders.NON_EXPERT_SLIDER_MIN / 100; // 0.7
+const NON_EXPERT_MAX = TuningSliders.NON_EXPERT_SLIDER_MAX / 100; // 1.4
+
+// Per-slider out-of-range flags (matches original updateExpertModePidSlidersDisplay)
+const dGainOutsideRange = computed(() => {
+    const v = Math.round(sliderDGain.value * 100);
+    return v < TuningSliders.NON_EXPERT_SLIDER_MIN || v > TuningSliders.NON_EXPERT_SLIDER_MAX;
+});
+const piGainOutsideRange = computed(() => {
+    const v = Math.round(sliderPIGain.value * 100);
+    return v < TuningSliders.NON_EXPERT_SLIDER_MIN || v > TuningSliders.NON_EXPERT_SLIDER_MAX;
+});
+const ffGainOutsideRange = computed(() => {
+    const v = Math.round(sliderFeedforwardGain.value * 100);
+    return v < TuningSliders.NON_EXPERT_SLIDER_MIN || v > TuningSliders.NON_EXPERT_SLIDER_MAX;
+});
+
+// Advanced slider non-default flags — compare against FC.DEFAULT_TUNING_SLIDERS (matches original)
+const dMaxGainChanged = computed(
+    () => Math.round(sliderDMaxGain.value * 100) !== FC.DEFAULT_TUNING_SLIDERS.slider_dmax_gain,
+);
+const iGainChanged = computed(() => Math.round(sliderIGain.value * 100) !== FC.DEFAULT_TUNING_SLIDERS.slider_i_gain);
+const rpRatioChanged = computed(
+    () => Math.round(sliderRollPitchRatio.value * 100) !== FC.DEFAULT_TUNING_SLIDERS.slider_roll_pitch_ratio,
+);
+const pitchPIChanged = computed(
+    () => Math.round(sliderPitchPIGain.value * 100) !== FC.DEFAULT_TUNING_SLIDERS.slider_pitch_pi_gain,
+);
+const masterChanged = computed(
+    () => Math.round(sliderMasterMultiplier.value * 100) !== FC.DEFAULT_TUNING_SLIDERS.slider_master_multiplier,
+);
+
 // Computed display values to ensure reactivity
 const sliderDGainDisplay = computed(() => sliderDGain.value.toFixed(2));
 const sliderPIGainDisplay = computed(() => sliderPIGain.value.toFixed(2));
@@ -1420,43 +1548,49 @@ const sliderRPRatioDisplay = computed(() => sliderRollPitchRatio.value.toFixed(2
 const sliderPitchPIDisplay = computed(() => sliderPitchPIGain.value.toFixed(2));
 const sliderMasterDisplay = computed(() => sliderMasterMultiplier.value.toFixed(2));
 
-// Slider disabled states - only disable when mode is OFF
+// Non-expert slider min/max — clamp range when not in expert mode (Task 3)
+const pidSliderMin = computed(() => (props.expertMode ? 0.0 : NON_EXPERT_MIN));
+const pidSliderMax = computed(() => (props.expertMode ? 2.0 : NON_EXPERT_MAX));
+
+// Slider disabled states — matches original updateExpertModePidSlidersDisplay()
+// Disable when mode is OFF, or when slider is outside non-expert range and not in expert mode
 const sliderDGainDisabled = computed(() => {
-    return !sliderPidsMode.value;
+    return !sliderPidsMode.value || (dGainOutsideRange.value && !props.expertMode);
 });
 
 const sliderPIGainDisabled = computed(() => {
-    return !sliderPidsMode.value;
+    return !sliderPidsMode.value || (piGainOutsideRange.value && !props.expertMode);
 });
 
 const sliderFFGainDisabled = computed(() => {
-    return !sliderPidsMode.value;
+    return !sliderPidsMode.value || (ffGainOutsideRange.value && !props.expertMode);
 });
 
-// Advanced sliders visibility - ONLY show in expert mode
+// Advanced slider disabled states — disabled when mode is OFF, or not in expert mode
+// Matches original: disabled = !sliderPidsMode || (changed && !expertMode)
+const dMaxSliderDisabled = computed(() => !sliderPidsMode.value || (dMaxGainChanged.value && !props.expertMode));
+const iGainSliderDisabled = computed(() => !sliderPidsMode.value || (iGainChanged.value && !props.expertMode));
+const rpRatioSliderDisabled = computed(() => !sliderPidsMode.value || (rpRatioChanged.value && !props.expertMode));
+const pitchPISliderDisabled = computed(() => !sliderPidsMode.value || (pitchPIChanged.value && !props.expertMode));
+const masterSliderDisabled = computed(() => !sliderPidsMode.value || (masterChanged.value && !props.expertMode));
+
+// Advanced sliders visibility — show in expert mode OR when changed from default (matches original)
 const showAdvancedSliders = computed(() => {
-    return props.expertMode;
+    return (
+        props.expertMode ||
+        dMaxGainChanged.value ||
+        iGainChanged.value ||
+        rpRatioChanged.value ||
+        pitchPIChanged.value ||
+        masterChanged.value
+    );
 });
 
-const showDMaxSlider = computed(() => {
-    return props.expertMode;
-});
-
-const showIGainSlider = computed(() => {
-    return props.expertMode;
-});
-
-const showRPRatioSlider = computed(() => {
-    return props.expertMode;
-});
-
-const showPitchPISlider = computed(() => {
-    return props.expertMode;
-});
-
-const showMasterSlider = computed(() => {
-    return props.expertMode;
-});
+const showDMaxSlider = computed(() => props.expertMode || dMaxGainChanged.value);
+const showIGainSlider = computed(() => props.expertMode || iGainChanged.value);
+const showRPRatioSlider = computed(() => props.expertMode || rpRatioChanged.value);
+const showPitchPISlider = computed(() => props.expertMode || pitchPIChanged.value);
+const showMasterSlider = computed(() => props.expertMode || masterChanged.value);
 
 // Check if sliders are in danger zone (high PID/D values)
 const slidersInDangerZone = computed(() => {
@@ -1478,34 +1612,29 @@ const slidersInDangerZone = computed(() => {
     return enableWarning && sliderPidsMode.value > 0;
 });
 
-// Check if any sliders are outside non-expert range
+// Check if any basic sliders are outside non-expert range
 const hasBasicSlidersOutsideRange = computed(() => {
-    const NON_EXPERT_MIN = TuningSliders.NON_EXPERT_SLIDER_MIN / 100; // 0.7
-    const NON_EXPERT_MAX = TuningSliders.NON_EXPERT_SLIDER_MAX / 100; // 1.4
-
-    return (
-        sliderDGain.value < NON_EXPERT_MIN ||
-        sliderDGain.value > NON_EXPERT_MAX ||
-        sliderPIGain.value < NON_EXPERT_MIN ||
-        sliderPIGain.value > NON_EXPERT_MAX ||
-        sliderFeedforwardGain.value < NON_EXPERT_MIN ||
-        sliderFeedforwardGain.value > NON_EXPERT_MAX
-    );
+    return dGainOutsideRange.value || piGainOutsideRange.value || ffGainOutsideRange.value;
 });
 
+// Check if any advanced sliders differ from defaults
 const hasAdvancedSlidersChanged = computed(() => {
     return (
-        sliderDMaxGain.value !== 1 ||
-        sliderIGain.value !== 1 ||
-        sliderRollPitchRatio.value !== 1 ||
-        sliderPitchPIGain.value !== 1 ||
-        sliderMasterMultiplier.value !== 1
+        dMaxGainChanged.value ||
+        iGainChanged.value ||
+        rpRatioChanged.value ||
+        pitchPIChanged.value ||
+        masterChanged.value
     );
 });
 
-// Show warning when not in expert mode and sliders are outside range or changed
+// Show warning when not in expert mode and sliders are outside range or changed from defaults
+// Matches original: toggle(!sliderPidsMode || ((basic || advanced) && !expertMode))
 const showExpertSettingsWarning = computed(() => {
-    if (props.expertMode || !sliderPidsMode.value) {
+    if (props.expertMode) {
+        return false;
+    }
+    if (!sliderPidsMode.value) {
         return false;
     }
     return hasBasicSlidersOutsideRange.value || hasAdvancedSlidersChanged.value;
