@@ -94,6 +94,7 @@
                         @change="onFormChanged"
                     />
                     <FilterSubTab
+                        ref="filterSubTab"
                         v-if="activeSubtab === 'filter'"
                         :expert-mode="expertModeEnabled"
                         @change="onFormChanged"
@@ -153,6 +154,7 @@ const currentRateProfile = ref(0);
 const pidController = ref(0);
 const isMounted = ref(false);
 const pidSubTab = ref(null);
+const filterSubTab = ref(null);
 const ratesSubTab = ref(null);
 
 // Profile name state lifted from child components
@@ -226,9 +228,12 @@ async function loadData() {
         // slider-validated values are captured as originals)
         TuningSliders.initialize();
 
-        // Force PidSubTab to sync its local slider refs from TuningSliders.js
-        if (pidSubTab.value && pidSubTab.value.forceUpdateSliders) {
+        // Force sub-tabs to sync their local slider refs from TuningSliders.js / FC state
+        if (pidSubTab.value?.forceUpdateSliders) {
             pidSubTab.value.forceUpdateSliders();
+        }
+        if (filterSubTab.value?.forceUpdateSliders) {
+            filterSubTab.value.forceUpdateSliders();
         }
 
         // Store original values for revert

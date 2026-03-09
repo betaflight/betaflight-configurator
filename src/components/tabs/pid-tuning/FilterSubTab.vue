@@ -1275,6 +1275,16 @@ watch(dtermFilterMultiplier, (newValue, oldValue) => {
             console.error("Failed to calculate simplified dterm filters:", error);
         });
 });
+
+// Re-sync local slider refs from FC state (called by parent after loadData/refresh)
+function forceUpdateSliders() {
+    gyroFilterMultiplier.value = (FC.TUNING_SLIDERS.slider_gyro_filter_multiplier || 100) / 100;
+    dtermFilterMultiplier.value = (FC.TUNING_SLIDERS.slider_dterm_filter_multiplier || 100) / 100;
+}
+
+defineExpose({
+    forceUpdateSliders,
+});
 </script>
 
 <style scoped>
