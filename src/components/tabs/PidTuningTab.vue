@@ -131,6 +131,7 @@ import GUI from "@/js/gui";
 import MSP from "@/js/msp";
 import MSPCodes from "@/js/msp/MSPCodes";
 import FC from "@/js/fc";
+import { i18n } from "@/js/localization";
 import { validateTuningSliders } from "@/composables/useTuningSliders";
 import { mspHelper } from "@/js/msp/MSPHelper";
 import semver from "semver";
