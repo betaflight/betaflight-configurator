@@ -290,7 +290,7 @@ async function copyProfile() {
     const options = [];
     for (let i = 0; i < 3; i++) {
         if (i !== currentProfile.value) {
-            const name = FC.CONFIG.pidProfileNames?.[i] || `Profile ${i + 1}`;
+            const name = i18n.getMessage("pidTuningProfileOption", [i + 1]);
             options.push({ value: i, label: name });
         }
     }
@@ -335,7 +335,7 @@ async function copyRateProfile() {
     const options = [];
     for (let i = 0; i < 6; i++) {
         if (i !== currentRateProfile.value) {
-            const name = FC.CONFIG.rateProfileNames?.[i] || `Rate Profile ${i + 1}`;
+            const name = i18n.getMessage("pidTuningRateProfileOption", [i + 1]);
             options.push({ value: i, label: name });
         }
     }

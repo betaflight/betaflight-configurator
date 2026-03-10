@@ -2021,7 +2021,7 @@
         "message": "PID Profile Settings"
     },
     "pidTuningSubTabRates": {
-        "message": "Rateprofile Settings"
+        "message": "Rate Profile Settings"
     },
     "pidTuningSubTabFilter": {
         "message": "Filter Settings"
