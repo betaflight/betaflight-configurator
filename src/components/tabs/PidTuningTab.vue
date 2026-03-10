@@ -607,10 +607,8 @@ onUnmounted(() => {
     margin-right: 10px;
 }
 .tab-pid_tuning .rate_curve {
-    height: 100%;
-    min-height: 234px;
+    height: 362px;
     min-width: 200px;
-    background-size: 200%;
 }
 
 /* ── Inputs ───────────────────────────────────────────────────────── */
