@@ -1696,8 +1696,11 @@ async function onSliderChange(event) {
         };
         const active = refMap[event.target.id];
         if (active) {
-            if (active.value > NON_EXPERT_MAX) active.value = NON_EXPERT_MAX;
-            else if (active.value < NON_EXPERT_MIN) active.value = NON_EXPERT_MIN;
+            if (active.value > NON_EXPERT_MAX) {
+                active.value = NON_EXPERT_MAX;
+            } else if (active.value < NON_EXPERT_MIN) {
+                active.value = NON_EXPERT_MIN;
+            }
         }
     }
 

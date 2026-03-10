@@ -822,7 +822,7 @@ const showDtermExpertSettingsWarning = computed(() => dtermSliderOutsideExpertRa
 
 // Gyro Lowpass Mode (0 = static, 1 = dynamic)
 const gyroLowpassMode = computed({
-    get: () => (FC.FILTER_CONFIG.gyro_lowpass_dyn_min_hz !== 0 ? 1 : 0),
+    get: () => (FC.FILTER_CONFIG.gyro_lowpass_dyn_min_hz === 0 ? 0 : 1),
     set: (value) => {
         if (value === 1) {
             // Switch to dynamic - cache static value first
@@ -853,7 +853,7 @@ const gyroLowpassMode = computed({
 
 // D-term Lowpass Mode (0 = static, 1 = dynamic)
 const dtermLowpassMode = computed({
-    get: () => (FC.FILTER_CONFIG.dterm_lowpass_dyn_min_hz !== 0 ? 1 : 0),
+    get: () => (FC.FILTER_CONFIG.dterm_lowpass_dyn_min_hz === 0 ? 0 : 1),
     set: (value) => {
         if (value === 1) {
             // Switch to dynamic - cache static value first
@@ -1219,7 +1219,9 @@ const yaw_lowpass_hz = computed({
 // Watchers for filter sliders to trigger MSP calculations
 // Master fires MSP directly on every input — MSP's serial queue handles sequencing
 watch(gyroFilterMultiplier, (newValue, oldValue) => {
-    if (isUpdatingSliders) return;
+    if (isUpdatingSliders) {
+        return;
+    }
 
     // Clamp to safe zone in non-expert mode (matches original pid_tuning.js)
     if (!props.expertMode) {
@@ -1251,7 +1253,9 @@ watch(gyroFilterMultiplier, (newValue, oldValue) => {
 });
 
 watch(dtermFilterMultiplier, (newValue, oldValue) => {
-    if (isUpdatingSliders) return;
+    if (isUpdatingSliders) {
+        return;
+    }
 
     // Clamp to safe zone in non-expert mode (matches original pid_tuning.js)
     if (!props.expertMode) {

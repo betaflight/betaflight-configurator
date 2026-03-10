@@ -618,14 +618,6 @@ onUnmounted(() => {
     border: 0;
 }
 
-/* ── Generic table ────────────────────────────────────────────────── */
-.tab-pid_tuning table {
-    margin: 0;
-    border-collapse: collapse;
-    width: 100%;
-    table-layout: fixed;
-    border-bottom: 0 solid var(--surface-500);
-}
 .tab-pid_tuning table .inputBackground {
     background: white;
 }
@@ -1290,7 +1282,7 @@ onUnmounted(() => {
     padding-top: 8px;
     font-size: 12px;
     border-bottom: 1px solid var(--surface-500);
-    color: #828282;
+    color: #595959;
     background-image: linear-gradient(
         315deg,
         rgba(255, 255, 255, 0.2) 10%,
@@ -1478,7 +1470,7 @@ onUnmounted(() => {
         line-height: 13px;
         font-size: 12px;
         border-bottom: 1px solid var(--surface-500);
-        color: #828282;
+        color: #595959;
         font-weight: normal;
         background-image: linear-gradient(
             315deg,
@@ -1506,7 +1498,7 @@ onUnmounted(() => {
         );
     }
     .tab-pid_tuning .sliderHeaders span {
-        color: #828282;
+        color: #595959;
     }
     .tab-pid_tuning .sliderLabels tr.sliderHeaders td:first-child {
         text-align: left;
