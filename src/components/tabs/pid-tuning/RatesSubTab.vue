@@ -233,10 +233,7 @@
                         <tbody>
                             <tr>
                                 <td colspan="2">
-                                    <div
-                                        class="rate_curve background_paper"
-                                        style="position: relative; min-height: 234px"
-                                    >
+                                    <div class="rate_curve background_paper" style="position: relative">
                                         <canvas
                                             ref="rateCurveLayer0"
                                             style="
@@ -873,10 +870,6 @@ function drawRateCurves() {
     const canvas = rateCurveLayer0.value;
     const ctx = canvas.getContext("2d");
 
-    // Set canvas internal dimensions to 1000x1000 like master
-    canvas.width = 1000;
-    canvas.height = 1000;
-
     // Clear canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -1003,10 +996,6 @@ function updateRatesLabels() {
 
     const canvas = rateCurveLayer1.value;
     const ctx = canvas.getContext("2d");
-
-    // Set canvas internal dimensions to 1000x1000 like master
-    canvas.width = 1000;
-    canvas.height = 1000;
 
     // Clear canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -1681,9 +1670,9 @@ function handleModelResize() {
     if (model && model.resize) {
         model.resize();
     }
-    // Also redraw rate curves on resize
+    // Redraw rate curves on resize
     nextTick(() => {
-        updateRatesLabels();
+        drawRateCurves();
     });
 }
 
@@ -1840,6 +1829,16 @@ onMounted(() => {
         );
     }
 
+    // Set canvas internal dimensions to 1000x1000 like master (once, not per draw)
+    if (rateCurveLayer0.value) {
+        rateCurveLayer0.value.width = 1000;
+        rateCurveLayer0.value.height = 1000;
+    }
+    if (rateCurveLayer1.value) {
+        rateCurveLayer1.value.width = 1000;
+        rateCurveLayer1.value.height = 1000;
+    }
+
     // Delay initial draw to ensure data is loaded
     initTimeout = setTimeout(() => {
         nextTick(() => {
@@ -1993,7 +1992,9 @@ onUnmounted(() => {
 
 .rate_curve {
     position: relative;
-    width: 100%;
+    height: 100%;
+    min-height: 234px;
+    min-width: 200px;
 }
 
 .throttle_curve {
