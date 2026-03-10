@@ -446,9 +446,12 @@ async function save() {
         // Re-validate sliders after save
         await validateTuningSliders();
 
-        // Force Vue component to update slider displays
-        if (pidSubTab.value && pidSubTab.value.forceUpdateSliders) {
+        // Force Vue components to update slider displays
+        if (pidSubTab.value?.forceUpdateSliders) {
             pidSubTab.value.forceUpdateSliders();
+        }
+        if (filterSubTab.value?.forceUpdateSliders) {
+            filterSubTab.value.forceUpdateSliders();
         }
 
         // Update original values
