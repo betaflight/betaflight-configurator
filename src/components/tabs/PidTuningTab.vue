@@ -545,6 +545,15 @@ onUnmounted(() => {
    ==================================================================== */
 
 /* ── Table base ───────────────────────────────────────────────────── */
+.tab-pid_tuning table {
+    float: left;
+    margin: 0;
+    border-collapse: collapse;
+    width: 100%;
+    table-layout: fixed;
+    padding: 1px;
+    border-bottom: 0 solid var(--surface-500);
+}
 .tab-pid_tuning .cf tr {
     background-color: var(--surface-400);
 }
@@ -586,10 +595,6 @@ onUnmounted(() => {
 .tab-pid_tuning .cf .throttleCurvePreview {
     padding: 0;
 }
-.tab-pid_tuning .cf .rates_logo_bg {
-    background-color: #ebeced;
-}
-
 /* ── Curves & canvas ──────────────────────────────────────────────── */
 .tab-pid_tuning .throttle_curve {
     float: right;
@@ -1256,6 +1261,9 @@ onUnmounted(() => {
 }
 
 /* ── Rates logo ───────────────────────────────────────────────────── */
+.tab-pid_tuning .cf .rates_logo_bg {
+    background-color: #ebeced;
+}
 .tab-pid_tuning .rates_logo_div {
     margin-top: -10%;
     text-align: center;

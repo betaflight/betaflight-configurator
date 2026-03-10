@@ -1,5 +1,5 @@
 <template>
-    <div class="tab-pid-tuning rates-subtab">
+    <div class="subtab-rates">
         <!-- LEFT COLUMN -->
         <div class="cf_column">
             <!-- Rate Profile Name (API 1.45+) -->
@@ -1983,11 +1983,6 @@ onUnmounted(() => {
 
 .gui_box {
     padding: 10px;
-}
-
-.rates_logo {
-    max-width: 100px;
-    max-height: 40px;
 }
 
 .background_paper {
