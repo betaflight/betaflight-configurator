@@ -1221,6 +1221,7 @@ onUnmounted(() => {
     flex-flow: row wrap;
     align-items: flex-start;
     justify-content: center;
+    gap: 0 10px;
 }
 .tab-pid_tuning .subtab-rates .cf_column {
     min-width: 380px;
@@ -1231,6 +1232,7 @@ onUnmounted(() => {
     flex-flow: row wrap;
     align-items: flex-start;
     justify-content: center;
+    gap: 0 10px;
 }
 .tab-pid_tuning .subtab-pid .cf_column {
     min-width: 450px;
