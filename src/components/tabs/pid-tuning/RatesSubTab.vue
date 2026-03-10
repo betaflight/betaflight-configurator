@@ -97,7 +97,7 @@
                                 <input
                                     type="number"
                                     :value="rcRate.toFixed(rcRatePrecision)"
-                                    @input="rcRate = parseFloat($event.target.value)"
+                                    @change="rcRate = parseFloat($event.target.value)"
                                     :step="rcRateLimits.step"
                                     :min="rcRateLimits.min"
                                     :max="rcRateLimits.max"
@@ -107,7 +107,7 @@
                                 <input
                                     type="number"
                                     :value="rollRate.toFixed(ratePrecision)"
-                                    @input="rollRate = parseFloat($event.target.value)"
+                                    @change="rollRate = parseFloat($event.target.value)"
                                     :step="rateLimits.step"
                                     :min="rateLimits.min"
                                     :max="rateLimits.max"
@@ -117,7 +117,7 @@
                                 <input
                                     type="number"
                                     :value="rcExpo.toFixed(expoPrecision)"
-                                    @input="rcExpo = parseFloat($event.target.value)"
+                                    @change="rcExpo = parseFloat($event.target.value)"
                                     :step="expoLimits.step"
                                     :min="expoLimits.min"
                                     :max="expoLimits.max"
@@ -138,7 +138,7 @@
                                 <input
                                     type="number"
                                     :value="rcRatePitch.toFixed(rcRatePrecision)"
-                                    @input="rcRatePitch = parseFloat($event.target.value)"
+                                    @change="rcRatePitch = parseFloat($event.target.value)"
                                     :step="rcRateLimits.step"
                                     :min="rcRateLimits.min"
                                     :max="rcRateLimits.max"
@@ -148,7 +148,7 @@
                                 <input
                                     type="number"
                                     :value="pitchRate.toFixed(ratePrecision)"
-                                    @input="pitchRate = parseFloat($event.target.value)"
+                                    @change="pitchRate = parseFloat($event.target.value)"
                                     :step="rateLimits.step"
                                     :min="rateLimits.min"
                                     :max="rateLimits.max"
@@ -158,7 +158,7 @@
                                 <input
                                     type="number"
                                     :value="rcPitchExpo.toFixed(expoPrecision)"
-                                    @input="rcPitchExpo = parseFloat($event.target.value)"
+                                    @change="rcPitchExpo = parseFloat($event.target.value)"
                                     :step="expoLimits.step"
                                     :min="expoLimits.min"
                                     :max="expoLimits.max"
@@ -179,7 +179,7 @@
                                 <input
                                     type="number"
                                     :value="rcRateYaw.toFixed(rcRatePrecision)"
-                                    @input="rcRateYaw = parseFloat($event.target.value)"
+                                    @change="rcRateYaw = parseFloat($event.target.value)"
                                     :step="rcRateLimits.step"
                                     :min="rcRateLimits.min"
                                     :max="rcRateLimits.max"
@@ -189,7 +189,7 @@
                                 <input
                                     type="number"
                                     :value="yawRate.toFixed(ratePrecision)"
-                                    @input="yawRate = parseFloat($event.target.value)"
+                                    @change="yawRate = parseFloat($event.target.value)"
                                     :step="rateLimits.step"
                                     :min="rateLimits.min"
                                     :max="rateLimits.max"
@@ -199,7 +199,7 @@
                                 <input
                                     type="number"
                                     :value="rcYawExpo.toFixed(expoPrecision)"
-                                    @input="rcYawExpo = parseFloat($event.target.value)"
+                                    @change="rcYawExpo = parseFloat($event.target.value)"
                                     :step="expoLimits.step"
                                     :min="expoLimits.min"
                                     :max="expoLimits.max"
