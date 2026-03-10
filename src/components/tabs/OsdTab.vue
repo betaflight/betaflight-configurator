@@ -447,6 +447,7 @@
                                     >
                                         <input
                                             type="checkbox"
+                                            :id="warning.name"
                                             :name="warning.name"
                                             class="togglesmall"
                                             v-model="warning.enabled"
@@ -483,6 +484,7 @@
                                     >
                                         <input
                                             type="checkbox"
+                                            :id="stat.name"
                                             :name="stat.name"
                                             class="togglesmall"
                                             v-model="stat.enabled"
@@ -1454,6 +1456,8 @@ function replaceLogoImage() {
             LogoManager.replaceLogoInFont(ctx);
             LogoManager.drawPreview();
             LogoManager.showUploadHint();
+            fontVersionInfo.value = i18n.getMessage("osdDescribeFontVersionCUSTOM");
+            selectedFontPreset.value = -1;
             fontDataVersion.value++;
         })
         .catch((error) => console.error(error));
@@ -1463,6 +1467,8 @@ async function flashFont() {
     if (GUI.connect_lock) {
         return;
     }
+
+    GUI.connect_lock = true;
 
     // If "User supplied font" is selected but no custom font file has been loaded yet,
     // prompt the user to pick a file before proceeding to upload.
@@ -1478,6 +1484,7 @@ async function flashFont() {
             fontVersionInfo.value = i18n.getMessage("osdDescribeFontVersionCUSTOM");
         } catch (err) {
             console.error("User cancelled custom font selection or error occurred", err);
+            GUI.connect_lock = false;
             return; // Cancel the upload process
         }
     }
@@ -1505,6 +1512,8 @@ async function flashFont() {
     } catch (err) {
         console.error("Font upload failed:", err);
         uploadProgressLabel.value = i18n.getMessage("osdSetupUploadingFontFailed");
+    } finally {
+        GUI.connect_lock = false;
     }
 }
 
