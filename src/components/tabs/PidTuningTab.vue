@@ -150,7 +150,7 @@ const dialog = useDialog();
 const expertModeEnabled = computed(() => tabState.expertMode);
 const activeSubtab = ref("pid");
 const showAllPids = ref(false);
-const currentProfile = ref(0);
+const currentProfile = ref(FC.CONFIG.profile);
 const currentRateProfile = ref(0);
 const pidController = ref(0);
 const isMounted = ref(false);
