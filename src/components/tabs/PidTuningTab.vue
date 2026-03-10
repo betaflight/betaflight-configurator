@@ -131,7 +131,7 @@ import GUI from "@/js/gui";
 import MSP from "@/js/msp";
 import MSPCodes from "@/js/msp/MSPCodes";
 import FC from "@/js/fc";
-import TuningSliders from "@/js/TuningSliders";
+import { validateTuningSliders } from "@/composables/useTuningSliders";
 import { mspHelper } from "@/js/msp/MSPHelper";
 import semver from "semver";
 import { API_VERSION_1_41, API_VERSION_1_45, API_VERSION_1_47 } from "@/js/data_storage";
@@ -224,11 +224,12 @@ async function loadData() {
         // Initialize UI state
         initializeUI();
 
-        // Initialize TuningSliders.js (must happen before snapshot so
-        // slider-validated values are captured as originals)
-        TuningSliders.initialize();
+        // Validate slider positions against FC state (determines whether
+        // sliders are valid and should be enabled).  Must happen before
+        // snapshot so slider-validated values are captured as originals.
+        await validateTuningSliders();
 
-        // Force sub-tabs to sync their local slider refs from TuningSliders.js / FC state
+        // Force sub-tabs to sync their local slider refs from FC state
         if (pidSubTab.value?.forceUpdateSliders) {
             pidSubTab.value.forceUpdateSliders();
         }
@@ -257,9 +258,6 @@ function initializeUI() {
 
     // Get expert mode from global checkbox (in header) and sync to global state
     tabState.expertMode = isExpertModeEnabled();
-
-    // Update TuningSliders expert mode
-    TuningSliders.setExpertMode(tabState.expertMode);
 }
 
 function storeOriginalValues() {
@@ -444,8 +442,8 @@ async function save() {
         // Write to EEPROM
         await MSP.promise(MSPCodes.MSP_EEPROM_WRITE);
 
-        // Reinitialize sliders to update displayed values
-        TuningSliders.initialize();
+        // Re-validate sliders after save
+        await validateTuningSliders();
 
         // Force Vue component to update slider displays
         if (pidSubTab.value && pidSubTab.value.forceUpdateSliders) {
@@ -477,14 +475,6 @@ function onFormChanged() {
     }
     pidTuningStore.checkForChanges(pidProfileName.value, rateProfileName.value);
 }
-
-// Watch expert mode changes
-watch(
-    () => expertModeEnabled.value,
-    (newValue) => {
-        TuningSliders.setExpertMode(newValue);
-    },
-);
 
 // Watch for sub-tab changes to re-initialize Switchery for new DOM elements
 watch(

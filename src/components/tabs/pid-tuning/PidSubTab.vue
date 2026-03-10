@@ -1186,7 +1186,12 @@
 <script setup>
 import { ref, computed, watch, onMounted, onUnmounted, nextTick } from "vue";
 import FC from "@/js/fc";
-import TuningSliders from "@/js/TuningSliders";
+import {
+    NON_EXPERT_SLIDER_MIN,
+    NON_EXPERT_SLIDER_MAX,
+    calculateNewPids,
+    readPidSliderPositions,
+} from "@/composables/useTuningSliders";
 import semver from "semver";
 import { API_VERSION_1_45, API_VERSION_1_47 } from "@/js/data_storage";
 
@@ -1491,7 +1496,7 @@ const rollPitchDisabled = computed(() => sliderPidsMode.value > 0);
 // Yaw disabled only in RPY mode (2)
 const yawDisabled = computed(() => sliderPidsMode.value === 2);
 
-// Sliders - bridge to TuningSliders.js (values are 0.0-2.0)
+// Sliders (values are 0.0-2.0)
 const sliderPidsMode = ref(2);
 const sliderDGain = ref(1);
 const sliderPIGain = ref(1);
@@ -1505,26 +1510,22 @@ const sliderMasterMultiplier = ref(1);
 // Flag to prevent watcher from overriding user input
 const isUserInteracting = ref(false);
 
-// Set to true only when the user actively moves a slider into the danger zone.
-// Reset on every slider re-initialization so the warning never appears on tab-switch alone.
-const hasPushedToDangerZone = ref(false);
-
 // Non-expert range constants (decimal form)
-const NON_EXPERT_MIN = TuningSliders.NON_EXPERT_SLIDER_MIN / 100; // 0.7
-const NON_EXPERT_MAX = TuningSliders.NON_EXPERT_SLIDER_MAX / 100; // 1.4
+const NON_EXPERT_MIN = NON_EXPERT_SLIDER_MIN / 100; // 0.7
+const NON_EXPERT_MAX = NON_EXPERT_SLIDER_MAX / 100; // 1.4
 
 // Per-slider out-of-range flags (matches original updateExpertModePidSlidersDisplay)
 const dGainOutsideRange = computed(() => {
     const v = Math.round(sliderDGain.value * 100);
-    return v < TuningSliders.NON_EXPERT_SLIDER_MIN || v > TuningSliders.NON_EXPERT_SLIDER_MAX;
+    return v < NON_EXPERT_SLIDER_MIN || v > NON_EXPERT_SLIDER_MAX;
 });
 const piGainOutsideRange = computed(() => {
     const v = Math.round(sliderPIGain.value * 100);
-    return v < TuningSliders.NON_EXPERT_SLIDER_MIN || v > TuningSliders.NON_EXPERT_SLIDER_MAX;
+    return v < NON_EXPERT_SLIDER_MIN || v > NON_EXPERT_SLIDER_MAX;
 });
 const ffGainOutsideRange = computed(() => {
     const v = Math.round(sliderFeedforwardGain.value * 100);
-    return v < TuningSliders.NON_EXPERT_SLIDER_MIN || v > TuningSliders.NON_EXPERT_SLIDER_MAX;
+    return v < NON_EXPERT_SLIDER_MIN || v > NON_EXPERT_SLIDER_MAX;
 });
 
 // Advanced slider non-default flags — compare against FC.DEFAULT_TUNING_SLIDERS (matches original)
@@ -1610,12 +1611,11 @@ const isPidValuesInDangerZone = computed(() => {
               FC.ADVANCED_TUNING.dMaxRoll > WARNING_D_MAX_GAIN;
 });
 
-// Only show the danger-zone warning when the user has actively pushed a slider
-// into the danger zone during this session.  Using a two-part check prevents
-// the warning from appearing on sub-tab switches when values happen to be high
-// but the user has not interacted with the sliders.
+// Show the danger-zone warning when PID values loaded from the FC already
+// exceed safe thresholds.  The user cannot push sliders into the danger zone
+// via the UI — slider changes are reverted when they would cross the threshold.
 const slidersInDangerZone = computed(() => {
-    return isPidValuesInDangerZone.value && sliderPidsMode.value > 0 && hasPushedToDangerZone.value;
+    return isPidValuesInDangerZone.value && sliderPidsMode.value > 0;
 });
 
 // Check if any basic sliders are outside non-expert range
@@ -1646,21 +1646,18 @@ const showExpertSettingsWarning = computed(() => {
     return hasBasicSlidersOutsideRange.value || hasAdvancedSlidersChanged.value;
 });
 
-// Initialize sliders from TuningSliders.js
+// Initialize sliders from FC.TUNING_SLIDERS
 async function initializeSliders() {
-    sliderPidsMode.value = TuningSliders.sliderPidsMode;
-    sliderDGain.value = TuningSliders.sliderDGain;
-    sliderPIGain.value = TuningSliders.sliderPIGain;
-    sliderFeedforwardGain.value = TuningSliders.sliderFeedforwardGain;
-    sliderDMaxGain.value = TuningSliders.sliderDMaxGain;
-    sliderIGain.value = TuningSliders.sliderIGain;
-    sliderRollPitchRatio.value = TuningSliders.sliderRollPitchRatio;
-    sliderPitchPIGain.value = TuningSliders.sliderPitchPIGain;
-    sliderMasterMultiplier.value = TuningSliders.sliderMasterMultiplier;
-
-    // Reset the danger-zone flag so the warning doesn't linger after a
-    // profile switch, save/revert, or sub-tab switch.
-    hasPushedToDangerZone.value = false;
+    const pos = readPidSliderPositions();
+    sliderPidsMode.value = pos.pidsMode;
+    sliderDGain.value = pos.dGain;
+    sliderPIGain.value = pos.piGain;
+    sliderFeedforwardGain.value = pos.feedforwardGain;
+    sliderDMaxGain.value = pos.dMaxGain;
+    sliderIGain.value = pos.iGain;
+    sliderRollPitchRatio.value = pos.rollPitchRatio;
+    sliderPitchPIGain.value = pos.pitchPIGain;
+    sliderMasterMultiplier.value = pos.masterMultiplier;
 
     // Force Vue to update the DOM
     await nextTick();
@@ -1669,51 +1666,59 @@ async function initializeSliders() {
 // Track timeout to prevent race conditions
 let userInteractionTimeout = null;
 
+// Collect current slider ref values into an object for calculateNewPids()
+function collectSliderValues() {
+    return {
+        pidsMode: sliderPidsMode.value,
+        dGain: sliderDGain.value,
+        piGain: sliderPIGain.value,
+        feedforwardGain: sliderFeedforwardGain.value,
+        dMaxGain: sliderDMaxGain.value,
+        iGain: sliderIGain.value,
+        rollPitchRatio: sliderRollPitchRatio.value,
+        pitchPIGain: sliderPitchPIGain.value,
+        masterMultiplier: sliderMasterMultiplier.value,
+    };
+}
+
 // Slider change handler
-function onSliderChange() {
+async function onSliderChange(event) {
     isUserInteracting.value = true;
 
-    // Clamp slider values to safe zone when not in expert mode.
-    // Only clamp sliders that are currently enabled — disabled sliders are
-    // out-of-range by definition and must not be silently reset to the safe
-    // range when the user moves a *different* slider (issue: inactive sliders
-    // resetting to safe range).
-    if (!props.expertMode) {
-        const clamp = (ref, isDisabled) => {
-            if (isDisabled) return;
-            if (ref.value > NON_EXPERT_MAX) ref.value = NON_EXPERT_MAX;
-            else if (ref.value < NON_EXPERT_MIN) ref.value = NON_EXPERT_MIN;
+    // Clamp the slider the user is actually dragging to the non-expert range.
+    // We only clamp the active slider — other sliders may legitimately be
+    // outside range (loaded from FC via CLI) and must not be silently reset.
+    if (!props.expertMode && event?.target?.id) {
+        const refMap = {
+            sliderDGain,
+            sliderPIGain,
+            sliderFeedforwardGain,
         };
-        clamp(sliderDGain, sliderDGainDisabled.value);
-        clamp(sliderPIGain, sliderPIGainDisabled.value);
-        clamp(sliderFeedforwardGain, sliderFFGainDisabled.value);
-        clamp(sliderDMaxGain, dMaxSliderDisabled.value);
-        clamp(sliderIGain, iGainSliderDisabled.value);
-        clamp(sliderRollPitchRatio, rpRatioSliderDisabled.value);
-        clamp(sliderPitchPIGain, pitchPISliderDisabled.value);
-        clamp(sliderMasterMultiplier, masterSliderDisabled.value);
+        const active = refMap[event.target.id];
+        if (active) {
+            if (active.value > NON_EXPERT_MAX) active.value = NON_EXPERT_MAX;
+            else if (active.value < NON_EXPERT_MIN) active.value = NON_EXPERT_MIN;
+        }
     }
 
-    // Update TuningSliders.js state
-    TuningSliders.sliderDGain = sliderDGain.value;
-    TuningSliders.sliderPIGain = sliderPIGain.value;
-    TuningSliders.sliderFeedforwardGain = sliderFeedforwardGain.value;
-    TuningSliders.sliderDMaxGain = sliderDMaxGain.value;
-    TuningSliders.sliderIGain = sliderIGain.value;
-    TuningSliders.sliderRollPitchRatio = sliderRollPitchRatio.value;
-    TuningSliders.sliderPitchPIGain = sliderPitchPIGain.value;
-    TuningSliders.sliderMasterMultiplier = sliderMasterMultiplier.value;
+    // Save previous values of the 3 basic sliders so we can revert if the
+    // new values would push PIDs into the danger zone.
+    const prevDGain = sliderDGain.value;
+    const prevPIGain = sliderPIGain.value;
+    const prevFFGain = sliderFeedforwardGain.value;
 
-    // Calculate new PIDs
-    TuningSliders.calculateNewPids();
+    // Ask the FC to calculate PIDs from current slider positions
+    await calculateNewPids(collectSliderValues());
 
-    // Track whether the user has deliberately pushed a slider into the danger
-    // zone so we only show the warning after real user interaction.
-    // Checked AFTER calculateNewPids() so FC.PIDS reflects the updated values.
-    // Use isPidValuesInDangerZone (not slidersInDangerZone) to avoid a circular
-    // dependency through hasPushedToDangerZone.
+    // Prevent the user from pushing sliders into the danger zone.
+    // If the resulting PID values exceed safe thresholds, revert the 3 basic
+    // sliders to their previous values and recalculate.
     if (isPidValuesInDangerZone.value && sliderPidsMode.value > 0) {
-        hasPushedToDangerZone.value = true;
+        sliderDGain.value = prevDGain;
+        sliderPIGain.value = prevPIGain;
+        sliderFeedforwardGain.value = prevFFGain;
+
+        await calculateNewPids(collectSliderValues());
     }
 
     // Notify parent that FC data was mutated programmatically
@@ -1730,20 +1735,8 @@ function onSliderChange() {
 }
 
 function onSliderModeChange() {
-    TuningSliders.sliderPidsMode = sliderPidsMode.value;
     onSliderChange();
 }
-
-// Watch expert mode changes
-watch(
-    () => props.expertMode,
-    (newValue) => {
-        if (newValue !== undefined) {
-            TuningSliders.setExpertMode(newValue);
-        }
-    },
-    { immediate: true },
-);
 
 // Watch for changes in FC.TUNING_SLIDERS to reinitialize sliders after data loads
 watch(

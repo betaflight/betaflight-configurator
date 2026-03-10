@@ -699,7 +699,12 @@
 <script setup>
 import { computed, ref, watch } from "vue";
 import FC from "@/js/fc";
-import TuningSliders from "@/js/TuningSliders";
+import {
+    NON_EXPERT_SLIDER_MIN_GYRO,
+    NON_EXPERT_SLIDER_MAX_GYRO,
+    NON_EXPERT_SLIDER_MIN_DTERM,
+    NON_EXPERT_SLIDER_MAX_DTERM,
+} from "@/composables/useTuningSliders";
 import MSP from "@/js/msp";
 import MSPCodes from "@/js/msp/MSPCodes";
 import { mspHelper } from "@/js/msp/MSPHelper";
@@ -751,8 +756,6 @@ const dtermSliderMode = computed({
 // Filter Sliders
 // Local refs for slider positions — decoupled from FC state so MSP responses
 // writing back to FC.TUNING_SLIDERS don't cause the slider to bounce.
-// Master uses TuningSliders.sliderGyroFilterMultiplier / sliderDTermFilterMultiplier
-// for the same purpose.
 const gyroFilterMultiplier = ref((FC.TUNING_SLIDERS.slider_gyro_filter_multiplier || 100) / 100);
 const dtermFilterMultiplier = ref((FC.TUNING_SLIDERS.slider_dterm_filter_multiplier || 100) / 100);
 
@@ -778,18 +781,12 @@ const filterSlidersInDangerZone = computed(() => {
 // Gyro slider outside expert mode range — matches original updateExpertModeFilterSlidersDisplay()
 const gyroSliderOutsideExpertRange = computed(() => {
     const multInt = Math.round(gyroFilterMultiplier.value * 100);
-    return (
-        (multInt < TuningSliders.NON_EXPERT_SLIDER_MIN_GYRO || multInt > TuningSliders.NON_EXPERT_SLIDER_MAX_GYRO) &&
-        !props.expertMode
-    );
+    return (multInt < NON_EXPERT_SLIDER_MIN_GYRO || multInt > NON_EXPERT_SLIDER_MAX_GYRO) && !props.expertMode;
 });
 
 const dtermSliderOutsideExpertRange = computed(() => {
     const multInt = Math.round(dtermFilterMultiplier.value * 100);
-    return (
-        (multInt < TuningSliders.NON_EXPERT_SLIDER_MIN_DTERM || multInt > TuningSliders.NON_EXPERT_SLIDER_MAX_DTERM) &&
-        !props.expertMode
-    );
+    return (multInt < NON_EXPERT_SLIDER_MIN_DTERM || multInt > NON_EXPERT_SLIDER_MAX_DTERM) && !props.expertMode;
 });
 
 // Gyro lowpass all-disabled check
@@ -1226,8 +1223,8 @@ watch(gyroFilterMultiplier, (newValue, oldValue) => {
 
     // Clamp to safe zone in non-expert mode (matches original pid_tuning.js)
     if (!props.expertMode) {
-        const min = TuningSliders.NON_EXPERT_SLIDER_MIN_GYRO / 100;
-        const max = TuningSliders.NON_EXPERT_SLIDER_MAX_GYRO / 100;
+        const min = NON_EXPERT_SLIDER_MIN_GYRO / 100;
+        const max = NON_EXPERT_SLIDER_MAX_GYRO / 100;
         if (newValue > max) {
             gyroFilterMultiplier.value = max;
             return;
@@ -1258,8 +1255,8 @@ watch(dtermFilterMultiplier, (newValue, oldValue) => {
 
     // Clamp to safe zone in non-expert mode (matches original pid_tuning.js)
     if (!props.expertMode) {
-        const min = TuningSliders.NON_EXPERT_SLIDER_MIN_DTERM / 100;
-        const max = TuningSliders.NON_EXPERT_SLIDER_MAX_DTERM / 100;
+        const min = NON_EXPERT_SLIDER_MIN_DTERM / 100;
+        const max = NON_EXPERT_SLIDER_MAX_DTERM / 100;
         if (newValue > max) {
             dtermFilterMultiplier.value = max;
             return;
