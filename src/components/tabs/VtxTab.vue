@@ -593,7 +593,9 @@ export default defineComponent({
         });
 
         onUnmounted(() => {
-            localIntervals.forEach((name) => GUI.interval_remove(name));
+            localIntervals.forEach((name) => {
+                GUI.interval_remove(name);
+            });
             localIntervals.length = 0;
         });
 
