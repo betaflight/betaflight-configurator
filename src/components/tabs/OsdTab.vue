@@ -610,7 +610,7 @@
         </div>
 
         <!-- Bottom Toolbar -->
-        <div class="content_toolbar toolbar_fixed_bottom supported" style="position: fixed">
+        <div class="content_toolbar toolbar_fixed_bottom supported">
             <div class="btn">
                 <button
                     type="button"

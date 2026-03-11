@@ -580,7 +580,7 @@
         </div>
 
         <!-- Bottom Toolbar -->
-        <div class="content_toolbar toolbar_fixed_bottom" style="position: fixed">
+        <div class="content_toolbar toolbar_fixed_bottom">
             <div class="btn sticks_btn" v-if="showSticksButton">
                 <a class="sticks" href="#" @click.prevent="openSticksWindow">
                     {{ $t("receiverButtonSticks") }}

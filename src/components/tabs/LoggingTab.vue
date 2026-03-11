@@ -38,7 +38,7 @@
             </div>
         </div>
 
-        <div class="content_toolbar toolbar_fixed_bottom" style="position: fixed">
+        <div class="content_toolbar toolbar_fixed_bottom">
             <div class="btn file_btn">
                 <a
                     class="log_file"

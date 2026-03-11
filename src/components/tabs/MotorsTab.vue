@@ -639,7 +639,7 @@
         </div>
 
         <!-- Fixed Bottom Toolbar -->
-        <div class="content_toolbar toolbar_fixed_bottom" style="position: fixed">
+        <div class="content_toolbar toolbar_fixed_bottom">
             <div class="btn save_btn">
                 <button
                     class="regular-button save"

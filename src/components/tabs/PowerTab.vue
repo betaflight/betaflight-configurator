@@ -677,7 +677,6 @@ export default defineComponent({
 }
 
 .content_toolbar.toolbar_fixed_bottom {
-    position: fixed;
     bottom: 2rem;
 }
 

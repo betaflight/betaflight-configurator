@@ -486,7 +486,7 @@
                 </div>
             </div>
 
-            <div class="content_toolbar toolbar_fixed_bottom" style="position: fixed">
+            <div class="content_toolbar toolbar_fixed_bottom">
                 <div class="btn save_btn">
                     <a class="save" href="#" @click.prevent="saveConfig" v-html="$t('configurationButtonSave')"></a>
                 </div>
@@ -543,8 +543,6 @@ const loadConfig = async () => {
         console.error("Failed to load Failsafe configuration", e);
     }
 };
-
-
 
 // Computed properties for direct access to store data
 const rxConfig = computed(() => fcStore.rxConfig);
