@@ -26,7 +26,7 @@
                             @change="onRateProfileChange"
                             :disabled="hasChanges"
                         >
-                            <option v-for="i in 6" :key="i" :value="i - 1">{{ i }}</option>
+                            <option v-for="i in numberOfRateProfiles" :key="i" :value="i - 1">{{ i }}</option>
                         </select>
                     </div>
                 </div>
@@ -145,6 +145,14 @@ const pidSubTab = ref(null);
 const filterSubTab = ref(null);
 const ratesSubTab = ref(null);
 
+// Rate profile count — matches original loadRateProfilesList() logic
+const numberOfRateProfiles = computed(() => {
+    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
+        return FC.CONFIG.numberOfRateProfiles ?? 4;
+    }
+    return 4;
+});
+
 // Profile name state lifted from child components
 const pidProfileName = ref("");
 const rateProfileName = ref("");
@@ -156,7 +164,7 @@ const hasChanges = computed(() => pidTuningStore.hasChanges);
 async function loadData() {
     try {
         if (!isMounted.value) {
-            return;
+            return false;
         }
 
         // Load all PID tuning related MSP data
@@ -223,9 +231,11 @@ async function loadData() {
         GUI.switchery();
         GUI.content_ready();
         initToolTips();
+        return true;
     } catch (e) {
         console.error("[PidTuning] Failed to load data:", e);
         GUI.content_ready();
+        return false;
     }
 }
 
@@ -310,7 +320,7 @@ async function copyProfile() {
 async function copyRateProfile() {
     // Create options for rate profiles excluding current one
     const options = [];
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < numberOfRateProfiles.value; i++) {
         if (i !== currentRateProfile.value) {
             const name = i18n.getMessage("pidTuningRateProfileOption", [i + 1]);
             options.push({ value: i, label: name });
@@ -438,8 +448,9 @@ async function save() {
 
 async function refresh() {
     try {
-        await loadData();
-        gui_log(t("pidTuningDataRefreshed"));
+        if (await loadData()) {
+            gui_log(t("pidTuningDataRefreshed"));
+        }
     } catch (error) {
         console.error("[PidTuningTab] Failed to refresh data:", error);
     }
