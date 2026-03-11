@@ -657,9 +657,11 @@ function onConnect() {
         .show();
 
     if (FC.CONFIG.flightControllerVersion !== "" && !isCliOnlyMode()) {
-        FC.FEATURE_CONFIG.features = new Features(FC.CONFIG);
-        FC.BEEPER_CONFIG.beepers = new Beepers(FC.CONFIG);
-        FC.BEEPER_CONFIG.dshotBeaconConditions = new Beepers(FC.CONFIG, ["RX_LOST", "RX_SET"]);
+        if (!CONFIGURATOR.virtualMode && PortHandler.portPicker.selectedPort !== 'virtual') {
+            FC.FEATURE_CONFIG.features = new Features(FC.CONFIG);
+            FC.BEEPER_CONFIG.beepers = new Beepers(FC.CONFIG);
+            FC.BEEPER_CONFIG.dshotBeaconConditions = new Beepers(FC.CONFIG, ["RX_LOST", "RX_SET"]);
+        }
 
         $("#tabs ul.mode-connected").show();
 

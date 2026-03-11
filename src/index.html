@@ -104,11 +104,15 @@
                 </div>
                 <div id="header_buttons">
                     <div class="firmware_flasher_button">
-                        <a class="firmware_flasher_button__link disabled" href="#" aria-label="Firmware Flasher"></a>
+                        <a class="firmware_flasher_button__link disabled" href="#" aria-label="Firmware Flasher">
+                            <span class="visually-hidden">Firmware Flasher</span>
+                        </a>
                         <div class="firmware_flasher_button__label" i18n="flashTab"></div>
                     </div>
                     <div class="connection_button">
-                        <a class="connection_button__link disabled" href="#" aria-label="Connect"></a>
+                        <a class="connection_button__link disabled" href="#" aria-label="Connect">
+                            <span class="visually-hidden">Connect</span>
+                        </a>
                         <div class="connection_button__label" i18n="connect"></div>
                     </div>
                 </div>
@@ -118,7 +122,7 @@
             </div>
             <div id="log">
                 <div class="logswitch">
-                    <a href="#" id="showlog" i18n="logActionShow"></a>
+                    <a href="#" id="showlog" i18n="logActionShow">Show log</a>
                 </div>
                 <div id="scrollicon"></div>
                 <div class="wrapper"></div>
@@ -134,13 +138,17 @@
                     <div id="tabs">
                         <ul class="mode-disconnected">
                             <li class="tab_landing" id="tab_landing">
-                                <a href="#" i18n="tabLanding" class="tabicon ic_welcome" i18n_title="tabLanding"></a>
+                                <a href="#" i18n="tabLanding" class="tabicon ic_welcome" i18n_title="tabLanding"
+                                    >Welcome</a
+                                >
                             </li>
                             <li class="tab_help" id="tab_help">
-                                <a href="#" i18n="tabHelp" class="tabicon ic_help" i18n_title="tabHelp"></a>
+                                <a href="#" i18n="tabHelp" class="tabicon ic_help" i18n_title="tabHelp">Help</a>
                             </li>
                             <li class="tab_options" id="tab_options">
-                                <a href="#" i18n="tabOptions" class="tabicon ic_config" i18n_title="tabOptions"></a>
+                                <a href="#" i18n="tabOptions" class="tabicon ic_config" i18n_title="tabOptions"
+                                    >Options</a
+                                >
                             </li>
                             <li class="tab_firmware_flasher" id="tabFirmware">
                                 <a
@@ -148,18 +156,17 @@
                                     i18n="tabFirmwareFlasher"
                                     class="tabicon ic_flasher"
                                     i18n_title="tabFirmwareFlasher"
-                                ></a>
+                                    >Firmware Flasher</a
+                                >
                             </li>
                         </ul>
                         <ul class="mode-connected">
                             <li class="tab_setup">
-                                <a href="#" i18n="tabSetup" class="tabicon ic_setup" i18n_title="tabSetup"></a>
+                                <a href="#" i18n="tabSetup" class="tabicon ic_setup" i18n_title="tabSetup">Setup</a>
                             </li>
-                            <li class="tab_setup_osd">
-                                <a href="#" i18n="tabSetupOSD" class="tabicon ic_setup" i18n_title="tabSetupOSD"></a>
-                            </li>
+
                             <li class="tab_ports">
-                                <a href="#" i18n="tabPorts" class="tabicon ic_ports" i18n_title="tabPorts"></a>
+                                <a href="#" i18n="tabPorts" class="tabicon ic_ports" i18n_title="tabPorts">Ports</a>
                             </li>
                             <li class="tab_configuration">
                                 <a
@@ -167,59 +174,64 @@
                                     i18n="tabConfiguration"
                                     class="tabicon ic_config"
                                     i18n_title="tabConfiguration"
-                                ></a>
+                                    >Configuration</a
+                                >
                             </li>
                             <li class="tab_power">
-                                <a href="#" i18n="tabPower" class="tabicon ic_power" i18n_title="tabPower"></a>
+                                <a href="#" i18n="tabPower" class="tabicon ic_power" i18n_title="tabPower">Power</a>
                             </li>
                             <li class="tab_failsafe" v-show="expertMode">
-                                <a href="#" i18n="tabFailsafe" class="tabicon ic_failsafe" i18n_title="tabFailsafe"></a>
+                                <a href="#" i18n="tabFailsafe" class="tabicon ic_failsafe" i18n_title="tabFailsafe"
+                                    >Failsafe</a
+                                >
                             </li>
                             <li class="tab_presets">
-                                <a href="#" i18n="tabPresets" class="tabicon ic_wizzard" i18n_title="tabPresets"></a>
+                                <a href="#" i18n="tabPresets" class="tabicon ic_wizzard" i18n_title="tabPresets"
+                                    >Presets</a
+                                >
                             </li>
                             <li class="tab_pid_tuning">
-                                <a href="#" i18n="tabPidTuning" class="tabicon ic_pid" i18n_title="tabPidTuning"></a>
+                                <a href="#" i18n="tabPidTuning" class="tabicon ic_pid" i18n_title="tabPidTuning"
+                                    >PID Tuning</a
+                                >
                             </li>
                             <li class="tab_receiver">
-                                <a href="#" i18n="tabReceiver" class="tabicon ic_rx" i18n_title="tabReceiver"></a>
+                                <a href="#" i18n="tabReceiver" class="tabicon ic_rx" i18n_title="tabReceiver"
+                                    >Receiver</a
+                                >
                             </li>
                             <li class="tab_auxiliary">
-                                <a href="#" i18n="tabAuxiliary" class="tabicon ic_modes" i18n_title="tabAuxiliary"></a>
+                                <a href="#" i18n="tabAuxiliary" class="tabicon ic_modes" i18n_title="tabAuxiliary"
+                                    >Modes</a
+                                >
                             </li>
                             <li class="tab_adjustments" v-show="expertMode">
-                                <a
-                                    href="#"
-                                    i18n="tabAdjustments"
-                                    class="tabicon ic_adjust"
-                                    i18n_title="tabAdjustments"
-                                ></a>
+                                <a href="#" i18n="tabAdjustments" class="tabicon ic_adjust" i18n_title="tabAdjustments"
+                                    >Adjustments</a
+                                >
                             </li>
                             <li
                                 class="tab_servos"
                                 v-show="['USE_SERVOS','USE_WING'].some(opt => FC.CONFIG?.buildOptions?.includes(opt))"
                             >
-                                <a href="#" i18n="tabServos" class="tabicon ic_servo" i18n_title="tabServos"></a>
+                                <a href="#" i18n="tabServos" class="tabicon ic_servo" i18n_title="tabServos">Servos</a>
                             </li>
                             <li class="tab_gps" v-show="FC.CONFIG?.buildOptions?.includes('USE_GPS')">
-                                <a href="#" i18n="tabGPS" class="tabicon ic_gps" i18n_title="tabGPS"></a>
+                                <a href="#" i18n="tabGPS" class="tabicon ic_gps" i18n_title="tabGPS">GPS</a>
                             </li>
                             <li class="tab_motors">
-                                <a
-                                    href="#"
-                                    i18n="tabMotorTesting"
-                                    class="tabicon ic_motor"
-                                    i18n_title="tabMotorTesting"
-                                ></a>
+                                <a href="#" i18n="tabMotorTesting" class="tabicon ic_motor" i18n_title="tabMotorTesting"
+                                    >Motors</a
+                                >
                             </li>
                             <li
                                 class="tab_osd"
                                 v-show="FC.FEATURE_CONFIG?.features?.isEnabled && FC.FEATURE_CONFIG.features.isEnabled('OSD')"
                             >
-                                <a href="#" i18n="tabOsd" class="tabicon ic_osd" i18n_title="tabOsd"></a>
+                                <a href="#" i18n="tabOsd" class="tabicon ic_osd" i18n_title="tabOsd">OSD</a>
                             </li>
                             <li class="tab_vtx">
-                                <a href="#" i18n="tabVtx" class="tabicon ic_vtx" i18n_title="tabVtx"></a>
+                                <a href="#" i18n="tabVtx" class="tabicon ic_vtx" i18n_title="tabVtx">VTX</a>
                             </li>
                             <li
                                 class="tab_transponder"
@@ -230,13 +242,16 @@
                                     i18n="tabTransponder"
                                     class="tabicon ic_transponder"
                                     i18n_title="tabTransponder"
-                                ></a>
+                                    >Transponder</a
+                                >
                             </li>
                             <li
                                 class="tab_led_strip"
                                 v-show="FC.FEATURE_CONFIG?.features?.isEnabled && FC.FEATURE_CONFIG.features.isEnabled('LED_STRIP')"
                             >
-                                <a href="#" i18n="tabLedStrip" class="tabicon ic_led" i18n_title="tabLedStrip"></a>
+                                <a href="#" i18n="tabLedStrip" class="tabicon ic_led" i18n_title="tabLedStrip"
+                                    >LED Strip</a
+                                >
                             </li>
                             <li class="tab_sensors" v-show="expertMode">
                                 <a
@@ -244,10 +259,11 @@
                                     i18n="tabRawSensorData"
                                     class="tabicon ic_sensors"
                                     i18n_title="tabRawSensorData"
-                                ></a>
+                                    >Sensors</a
+                                >
                             </li>
                             <li class="tab_logging" v-show="expertMode">
-                                <a href="#" i18n="tabLogging" class="tabicon ic_log" i18n_title="tabLogging"></a>
+                                <a href="#" i18n="tabLogging" class="tabicon ic_log" i18n_title="tabLogging">Logging</a>
                             </li>
                             <li class="tab_onboard_logging">
                                 <a
@@ -255,20 +271,25 @@
                                     i18n="tabOnboardLogging"
                                     class="tabicon ic_data"
                                     i18n_title="tabOnboardLogging"
-                                ></a>
+                                    >Onboard Logging</a
+                                >
                             </li>
                         </ul>
                         <ul class="mode-connected mode-connected-cli">
                             <li class="tab_cli">
-                                <a href="#" i18n="tabCLI" class="tabicon ic_cli" i18n_title="tabCLI"></a>
+                                <a href="#" i18n="tabCLI" class="tabicon ic_cli" i18n_title="tabCLI">CLI</a>
                             </li>
                         </ul>
                         <ul class="mode-loggedin">
                             <li class="tab_backups">
-                                <a href="#" i18n="tabBackups" class="tabicon ic_data" i18n_title="tabBackups"></a>
+                                <a href="#" i18n="tabBackups" class="tabicon ic_data" i18n_title="tabBackups"
+                                    >Backups</a
+                                >
                             </li>
                             <li class="tab_user_profile">
-                                <a href="#" i18n="tabUserProfile" class="tabicon ic_user" i18n_title="tabUserProfile"></a>
+                                <a href="#" i18n="tabUserProfile" class="tabicon ic_user" i18n_title="tabUserProfile"
+                                    >User Profile</a
+                                >
                             </li>
                         </ul>
                     </div>
@@ -338,12 +359,10 @@
                 <div class="dialogConfiguratorUpdate-content" style="margin-top: 10px"></div>
             </div>
             <div class="buttons">
-                <a
-                    href="#"
-                    class="dialogConfiguratorUpdate-websitebtn regular-button"
-                    i18n="configuratorUpdateWebsite"
-                ></a>
-                <a href="#" class="dialogConfiguratorUpdate-closebtn regular-button" i18n="close"></a>
+                <a href="#" class="dialogConfiguratorUpdate-websitebtn regular-button" i18n="configuratorUpdateWebsite"
+                    >Visit Website</a
+                >
+                <a href="#" class="dialogConfiguratorUpdate-closebtn regular-button" i18n="close">Close</a>
             </div>
         </dialog>
 
@@ -353,7 +372,7 @@
                 <div class="dialogConnectWarning-content" style="margin-top: 10px"></div>
             </div>
             <div class="buttons">
-                <a href="#" class="dialogConnectWarning-closebtn regular-button" i18n="close"></a>
+                <a href="#" class="dialogConnectWarning-closebtn regular-button" i18n="close">Close</a>
             </div>
         </dialog>
 
@@ -369,10 +388,13 @@
                         id="dialogResetToCustomDefaults-acceptbtn"
                         class="regular-button"
                         i18n="resetToCustomDefaultsAccept"
-                    ></a>
+                        >Accept</a
+                    >
                 </span>
                 <span class="buttons">
-                    <a href="#" id="dialogResetToCustomDefaults-cancelbtn" class="regular-button" i18n="cancel"></a>
+                    <a href="#" id="dialogResetToCustomDefaults-cancelbtn" class="regular-button" i18n="cancel"
+                        >Cancel</a
+                    >
                 </span>
             </div>
         </dialog>
@@ -388,7 +410,7 @@
             </div>
             <div>
                 <span class="buttons">
-                    <a href="#" id="dialogReportProblems-closebtn" class="regular-button" i18n="close"></a>
+                    <a href="#" id="dialogReportProblems-closebtn" class="regular-button" i18n="close">Close</a>
                 </span>
             </div>
         </dialog>
@@ -404,7 +426,7 @@
                 <div class="dialogError-content" style="margin-top: 10px"></div>
             </div>
             <div class="buttons">
-                <a href="#" class="dialogError-closebtn regular-button" i18n="close"></a>
+                <a href="#" class="dialogError-closebtn regular-button" i18n="close">Close</a>
             </div>
         </dialog>
 
@@ -412,8 +434,8 @@
             <h3 class="dialogYesNoTitle"></h3>
             <div class="dialogYesNoContent"></div>
             <div class="buttons">
-                <a href="#" class="dialogYesNo-yesButton regular-button"></a>
-                <a href="#" class="dialogYesNo-noButton regular-button"></a>
+                <a href="#" class="dialogYesNo-yesButton regular-button">Yes</a>
+                <a href="#" class="dialogYesNo-noButton regular-button">No</a>
             </div>
         </dialog>
 
@@ -421,7 +443,7 @@
             <div class="data-loading"></div>
             <h3 class="dialogWaitTitle"></h3>
             <div class="buttons">
-                <a href="#" class="dialogWait-cancelButton regular-button" i18n="cancel"></a>
+                <a href="#" class="dialogWait-cancelButton regular-button" i18n="cancel">Cancel</a>
             </div>
         </dialog>
 
@@ -429,7 +451,7 @@
             <h3 class="dialogInformationTitle"></h3>
             <div class="dialogInformationContent"></div>
             <div class="buttons">
-                <a href="#" class="dialogInformation-confirmButton regular-button"></a>
+                <a href="#" class="dialogInformation-confirmButton regular-button">OK</a>
             </div>
         </dialog>
 
@@ -440,7 +462,7 @@
             <div class="cli-response">
                 <textarea id="cli-response" readonly rows="32" cols="96"></textarea>
                 <div class="default_btn">
-                    <a class="confirm" href="#" i18n="cliConfirmSnippetBtn"></a>
+                    <a class="confirm" href="#" i18n="cliConfirmSnippetBtn">Confirm</a>
                 </div>
             </div>
 
@@ -449,7 +471,7 @@
             </div>
 
             <div class="buttons">
-                <a href="#" class="dialogInteractive-closeButton regular-button"></a>
+                <a href="#" class="dialogInteractive-closeButton regular-button">Close</a>
             </div>
         </dialog>
         <div id="dialog-container"></div>

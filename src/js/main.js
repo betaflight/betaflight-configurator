@@ -327,7 +327,7 @@ async function startProcess() {
                     import("./tabs/transponder").then(({ transponder }) => transponder.initialize(content_ready));
                     break;
                 case "osd":
-                    import("./tabs/osd").then(({ osd }) => osd.initialize(content_ready));
+                    mountVueTab("osd", content_ready);
                     break;
                 case "vtx":
                     import("./tabs/vtx").then(({ vtx }) => vtx.initialize(content_ready));
@@ -338,9 +338,7 @@ async function startProcess() {
                 case "setup":
                     mountVueTab("setup", content_ready);
                     break;
-                case "setup_osd":
-                    import("./tabs/setup_osd").then(({ setup_osd }) => setup_osd.initialize(content_ready));
-                    break;
+
                 case "configuration":
                     mountVueTab("configuration", content_ready);
                     break;
