@@ -31,19 +31,6 @@
                     </div>
                 </div>
 
-                <!-- PID Controller (Hidden for API >= 1.41) -->
-                <div class="controller single-field" v-if="showPidController">
-                    <div class="helpicon cf_tip" :title="$t('pidTuningPidControllerTip')"></div>
-                    <div class="head">{{ $t("pidTuningControllerHead") }}</div>
-                    <div>
-                        <select v-model.number="pidController">
-                            <option v-for="controller in pidControllers" :key="controller" :value="controller">
-                                {{ controller }}
-                            </option>
-                        </select>
-                    </div>
-                </div>
-
                 <!-- Header Buttons -->
                 <div class="content_wrapper_header_btns">
                     <div class="default_btn copyprofilebtn">
@@ -135,7 +122,7 @@ import { i18n } from "@/js/localization";
 import { validateTuningSliders } from "@/composables/useTuningSliders";
 import { mspHelper } from "@/js/msp/MSPHelper";
 import semver from "semver";
-import { API_VERSION_1_41, API_VERSION_1_45, API_VERSION_1_47 } from "@/js/data_storage";
+import { API_VERSION_1_45, API_VERSION_1_47 } from "@/js/data_storage";
 import { isExpertModeEnabled } from "@/js/utils/isExpertModeEnabled";
 import tippy from "tippy.js";
 import { tabState } from "@/js/tab_state";
@@ -153,7 +140,6 @@ const activeSubtab = ref("pid");
 const showAllPids = ref(false);
 const currentProfile = ref(FC.CONFIG.profile);
 const currentRateProfile = ref(0);
-const pidController = ref(0);
 const isMounted = ref(false);
 const pidSubTab = ref(null);
 const filterSubTab = ref(null);
@@ -166,15 +152,6 @@ const rateProfileName = ref("");
 // hasChanges is owned by the Pinia store
 const hasChanges = computed(() => pidTuningStore.hasChanges);
 
-// Computed
-const showPidController = computed(() => {
-    return semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_41);
-});
-
-const pidControllers = computed(() => {
-    return FC.PID_CONTROLLER_TYPES || [];
-});
-
 // MSP Data Loading
 async function loadData() {
     try {
@@ -183,7 +160,6 @@ async function loadData() {
         }
 
         // Load all PID tuning related MSP data
-        await MSP.promise(MSPCodes.MSP_PID_CONTROLLER);
         await MSP.promise(MSPCodes.MSP_PIDNAMES);
         await MSP.promise(MSPCodes.MSP_PID);
         await MSP.promise(MSPCodes.MSP_PID_ADVANCED);
@@ -257,8 +233,6 @@ function initializeUI() {
     // Set current profiles
     currentProfile.value = FC.CONFIG.profile;
     currentRateProfile.value = FC.CONFIG.rateProfile;
-    pidController.value = FC.PID.controller;
-
     // Get expert mode from global checkbox (in header) and sync to global state
     tabState.expertMode = isExpertModeEnabled();
 }
@@ -406,11 +380,6 @@ async function save() {
             FC.CONFIG.rateProfileNames[FC.CONFIG.rateProfile] = rateProfileName.value.trim();
         }
 
-        // Save PID controller
-        if (showPidController.value) {
-            await MSP.promise(MSPCodes.MSP_SET_PID_CONTROLLER, mspHelper.crunch(MSPCodes.MSP_SET_PID_CONTROLLER));
-        }
-
         // Save PIDs
         await MSP.promise(MSPCodes.MSP_SET_PID, mspHelper.crunch(MSPCodes.MSP_SET_PID));
 
@@ -499,14 +468,6 @@ watch(
         await nextTick();
         GUI.switchery();
         initToolTips();
-    },
-);
-
-// Watch pidController changes and sync to FC.PID.controller
-watch(
-    () => pidController.value,
-    (newValue) => {
-        FC.PID.controller = newValue;
     },
 );
 
