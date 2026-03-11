@@ -113,8 +113,6 @@ export function useDialog() {
                 note,
                 profileOptions,
                 rateOptions,
-                confirmText: options.confirmText || "OK",
-                cancelText: options.cancelText || "Cancel",
                 ...options,
             },
             {

@@ -1,5 +1,5 @@
 <template>
-    <dialog ref="dialogRef" class="dialogCopyProfile" @cancel.prevent>
+    <dialog ref="dialogRef" class="dialogCopyProfile" @cancel.prevent="cancel">
         <h3 class="dialogCopyProfileTitle">{{ title }}</h3>
         <div class="content">
             <div v-if="note" class="dialogCopyProfile-note" v-html="note"></div>
@@ -37,16 +37,17 @@
 
 <script setup>
 import { ref } from "vue";
+import { i18n } from "@/js/localization";
 
 const props = defineProps({
     title: { type: String, default: "" },
     note: { type: String, default: "" },
     profileOptions: { type: Array, default: () => [] },
     rateOptions: { type: Array, default: () => [] },
-    profileText: { type: String, default: "Copy profile to:" },
-    rateProfileText: { type: String, default: "Copy rate profile to:" },
-    confirmText: { type: String, default: "OK" },
-    cancelText: { type: String, default: "Cancel" },
+    profileText: { type: String, default: () => i18n.getMessage("dialogCopyProfileText") },
+    rateProfileText: { type: String, default: () => i18n.getMessage("dialogCopyRateProfileText") },
+    confirmText: { type: String, default: () => i18n.getMessage("dialogCopyProfileConfirm") },
+    cancelText: { type: String, default: () => i18n.getMessage("dialogCopyProfileClose") },
 });
 
 const emit = defineEmits(["confirm", "cancel"]);
