@@ -48,7 +48,7 @@
                     </div>
                     <div class="spacer_box">
                         <div class="text">
-                            <span class="dataHelp" v-html="$t(`transponderDataHelp${currentProvider.id}`)"></span>
+                            <span v-if="dataHelpText" class="dataHelp" v-html="dataHelpText"></span>
                             <div class="input_block textspacer">
                                 <template v-if="currentConfig.dataType === DATA_TYPES.TEXT">
                                     <input
@@ -94,6 +94,7 @@
 import { computed, defineComponent, nextTick, onMounted, ref, watch } from "vue";
 import { useFlightControllerStore } from "@/stores/fc";
 import { useReboot } from "@/composables/useReboot";
+import CONFIGURATOR from "@/js/data_storage";
 import { gui_log } from "@/js/gui_log";
 import { i18n } from "@/js/localization";
 import MSP from "@/js/msp";
@@ -206,6 +207,14 @@ export default defineComponent({
             const message = i18n.getMessage(`transponderHelp${currentProvider.value.id}`);
             return message.length ? message : "";
         });
+        const dataHelpText = computed(() => {
+            if (!currentProvider.value) {
+                return "";
+            }
+
+            const key = `transponderDataHelp${currentProvider.value.id}`;
+            return i18n.existsMessage(key) ? i18n.getMessage(key) : "";
+        });
         const needsReboot = computed(() => selectedProviderId.value !== defaultProviderId.value);
 
         function loadData() {
@@ -265,9 +274,9 @@ export default defineComponent({
                 MSPCodes.MSP_SET_TRANSPONDER_CONFIG,
                 mspHelper.crunch(MSPCodes.MSP_SET_TRANSPONDER_CONFIG),
                 false,
-                (success) => {
-                    if (success === false) {
-                        gui_log(i18n.getMessage("transponderConfigurationSaveFailed"));
+                (response) => {
+                    if (!CONFIGURATOR.virtualMode && (!response || response.crcError)) {
+                        gui_log(i18n.getMessage("configurationSaveFailed"));
                         selectedProviderId.value = defaultProviderId.value;
                         return;
                     }
@@ -317,6 +326,7 @@ export default defineComponent({
             currentProvider,
             currentConfig,
             helpText,
+            dataHelpText,
             needsReboot,
             DATA_TYPES,
             saveConfig,
