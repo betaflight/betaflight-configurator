@@ -173,6 +173,12 @@
 
                     <div class="spacer_box VTX_info">
                         <table class="cf_table">
+                            <thead class="visually-hidden">
+                                <tr>
+                                    <th>Property</th>
+                                    <th>Value</th>
+                                </tr>
+                            </thead>
                             <tbody>
                                 <tr>
                                     <td class="description_text" v-html="$t('vtxDeviceReady')"></td>
@@ -266,23 +272,23 @@
                             <div class="field number table vtx_table_bands_table">
                                 <span>
                                     <table class="table_vtx_bands">
-                                        <tbody>
-                                            <!-- Title row -->
+                                        <thead>
                                             <tr class="vtx_table_band_values_title">
-                                                <td><span v-html="$t('vtxTableBandTitleName')"></span></td>
-                                                <td><span v-html="$t('vtxTableBandTitleLetter')"></span></td>
-                                                <td v-show="factoryBandsSupported">
+                                                <th><span v-html="$t('vtxTableBandTitleName')"></span></th>
+                                                <th><span v-html="$t('vtxTableBandTitleLetter')"></span></th>
+                                                <th v-show="factoryBandsSupported">
                                                     <span v-html="$t('vtxTableBandTitleFactory')"></span>
-                                                </td>
-                                                <td
+                                                </th>
+                                                <th
                                                     v-for="ch in MAX_BAND_CHANNELS_VALUES"
                                                     :key="'title-ch-' + ch"
                                                     v-show="ch <= vtxConfig.vtx_table_channels"
                                                 >
                                                     <span>{{ ch }}</span>
-                                                </td>
+                                                </th>
                                             </tr>
-
+                                        </thead>
+                                        <tbody>
                                             <!-- Band rows -->
                                             <tr
                                                 v-for="bandIdx in MAX_BAND_VALUES"
@@ -386,17 +392,18 @@
                             <div class="field number table vtx_table_powerlevels_table">
                                 <span>
                                     <table class="table_vtx_powerlevels">
-                                        <tbody>
-                                            <!-- Title row -->
+                                        <thead>
                                             <tr class="vtx_table_powerlevels_title">
-                                                <td
+                                                <th
                                                     v-for="i in MAX_POWERLEVEL_VALUES"
                                                     :key="'pl-title-' + i"
                                                     v-show="i <= vtxConfig.vtx_table_powerlevels"
                                                 >
                                                     <span>{{ i }}</span>
-                                                </td>
+                                                </th>
                                             </tr>
+                                        </thead>
+                                        <tbody>
                                             <!-- Values row -->
                                             <tr class="vtx_table_powerlevels_values">
                                                 <td
@@ -480,6 +487,7 @@
                     class="load_clipboard"
                     id="load_clipboard_button"
                     href="#"
+                    :aria-label="$t('vtxButtonLoadClipboard')"
                     @click.prevent="loadClipboardJson"
                     v-html="$t('vtxButtonLoadClipboard')"
                 ></a>
@@ -489,6 +497,7 @@
                     class="load_file"
                     id="load_file_button"
                     href="#"
+                    :aria-label="$t('vtxButtonLoadFile')"
                     @click.prevent="loadJsonFile"
                     v-html="$t('vtxButtonLoadFile')"
                 ></a>
@@ -498,6 +507,7 @@
                     class="save_file"
                     id="save_file_button"
                     href="#"
+                    :aria-label="$t('vtxButtonSaveFile')"
                     @click.prevent="saveJsonFile"
                     v-html="$t('vtxButtonSaveFile')"
                 ></a>
@@ -643,7 +653,7 @@ export default defineComponent({
             while (freqs.length < chIdx) {
                 freqs.push(0);
             }
-            freqs[chIdx - 1] = parseInt(value) || 0;
+            freqs[chIdx - 1] = Number.parseInt(value) || 0;
         }
 
         // --- Power level table accessors ---
@@ -665,7 +675,7 @@ export default defineComponent({
 
         function setPowerLevelValue(idx, value) {
             ensurePowerLevelExists(idx);
-            powerLevelList[idx - 1].vtxtable_powerlevel_value = parseInt(value) || 0;
+            powerLevelList[idx - 1].vtxtable_powerlevel_value = Number.parseInt(value) || 0;
         }
 
         function getPowerLevelLabel(idx) {
@@ -734,6 +744,18 @@ export default defineComponent({
 </script>
 
 <style scoped>
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
 .cf_table {
     -webkit-border-horizontal-spacing: 1px;
 }

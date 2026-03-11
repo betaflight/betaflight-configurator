@@ -9,12 +9,97 @@ import MSPCodes from "../js/msp/MSPCodes";
 import { VtxDeviceTypes } from "../js/utils/VtxDeviceStatus/VtxDeviceStatus";
 import { generateFilename } from "../js/utils/generate_filename";
 import { gui_log } from "../js/gui_log";
-import Clipboard from "../js/Clipboard";
 import FileSystem from "../js/FileSystem";
 
 const MAX_POWERLEVEL_VALUES = 8;
 const MAX_BAND_VALUES = 8;
 const MAX_BAND_CHANNELS_VALUES = 8;
+
+function getVtxTypeString() {
+    let result = i18n.getMessage(`vtxType_${FC.VTX_CONFIG.vtx_type}`);
+    const isSmartAudio = VtxDeviceTypes.VTXDEV_SMARTAUDIO === FC.VTX_CONFIG.vtx_type;
+    if (isSmartAudio && FC.VTX_DEVICE_STATUS !== null) {
+        result += ` ${FC.VTX_DEVICE_STATUS.smartAudioVersion}`;
+    }
+    return result;
+}
+
+function createLuaTables(vtxJsonConfig) {
+    let bandsString = 'bandTable = { [0]="U"';
+    let frequenciesString = "frequencyTable = {\n";
+
+    const bandsList = vtxJsonConfig.vtx_table.bands_list;
+    for (const band of bandsList) {
+        bandsString += `, "${band.letter}"`;
+        frequenciesString += "        { ";
+        for (const freq of band.frequencies) {
+            frequenciesString += `${freq}, `;
+        }
+        frequenciesString += "},\n";
+    }
+    bandsString += " },\n";
+    frequenciesString += "    },\n";
+
+    const freqBandsString = `frequenciesPerBand = ${bandsList[1].frequencies.length},\n`;
+
+    const powerList = vtxJsonConfig.vtx_table.powerlevels_list;
+    let powersString = "powerTable = { ";
+    for (let index = 0; index < powerList.length; index++) {
+        powersString += `[${index + 1}]="${powerList[index].label}", `;
+    }
+    powersString += "},\n";
+
+    return `return {\n    ${frequenciesString}    ${freqBandsString}    ${bandsString}    ${powersString}}`;
+}
+
+function getPowerValues(vtxType, vtxTableAvailable, vtxTablePowerlevels) {
+    if (vtxTableAvailable) {
+        return { min: 1, max: vtxTablePowerlevels };
+    }
+    switch (vtxType) {
+        case VtxDeviceTypes.VTXDEV_UNSUPPORTED:
+            return {};
+        case VtxDeviceTypes.VTXDEV_RTC6705:
+            return { min: 1, max: 3 };
+        case VtxDeviceTypes.VTXDEV_SMARTAUDIO:
+            return { min: 1, max: 4 };
+        case VtxDeviceTypes.VTXDEV_TRAMP:
+            return { min: 1, max: 5 };
+        case VtxDeviceTypes.VTXDEV_MSP:
+            return { min: 1, max: 5 };
+        default:
+            return { min: 0, max: 7 };
+    }
+}
+
+function buildPowerOptionsFromTable(powerLevelList, count) {
+    const options = [{ value: 0, label: i18n.getMessage("vtxPower_0") }];
+    for (let i = 0; i < count; i++) {
+        if (powerLevelList[i]) {
+            let label = powerLevelList[i].vtxtable_powerlevel_label;
+            if (label.trim() === "") {
+                label = i18n.getMessage("vtxPower_X", { powerLevel: i + 1 });
+            }
+            options.push({ value: i + 1, label });
+        }
+    }
+    return options;
+}
+
+function buildPowerOptionsFromRange(range) {
+    const options = [];
+    if (range.min === undefined) {
+        return options;
+    }
+    for (let i = range.min; i <= range.max; i++) {
+        if (i === 0) {
+            options.push({ value: 0, label: i18n.getMessage("vtxPower_0") });
+        } else {
+            options.push({ value: i, label: i18n.getMessage("vtxPower_X", { powerLevel: i }) });
+        }
+    }
+    return options;
+}
 
 export function useVtx() {
     const env = new djv();
@@ -122,31 +207,15 @@ export function useVtx() {
 
     // Power select options
     const powerOptions = computed(() => {
-        const options = [];
         if (vtxConfig.vtx_table_available) {
-            options.push({ value: 0, label: i18n.getMessage("vtxPower_0") });
-            for (let i = 0; i < vtxConfig.vtx_table_powerlevels; i++) {
-                if (powerLevelList[i]) {
-                    let label = powerLevelList[i].vtxtable_powerlevel_label;
-                    if (label.trim() === "") {
-                        label = i18n.getMessage("vtxPower_X", { powerLevel: i + 1 });
-                    }
-                    options.push({ value: i + 1, label });
-                }
-            }
-        } else {
-            const range = getPowerValues(vtxConfig.vtx_type);
-            if (range.min !== undefined) {
-                for (let i = range.min; i <= range.max; i++) {
-                    if (i === 0) {
-                        options.push({ value: 0, label: i18n.getMessage("vtxPower_0") });
-                    } else {
-                        options.push({ value: i, label: i18n.getMessage("vtxPower_X", { powerLevel: i }) });
-                    }
-                }
-            }
+            return buildPowerOptionsFromTable(powerLevelList, vtxConfig.vtx_table_powerlevels);
         }
-        return options;
+        const range = getPowerValues(
+            vtxConfig.vtx_type,
+            vtxConfig.vtx_table_available,
+            vtxConfig.vtx_table_powerlevels,
+        );
+        return buildPowerOptionsFromRange(range);
     });
 
     // Description values for the info panel
@@ -184,36 +253,7 @@ export function useVtx() {
         deviceReady.value ? i18n.getMessage("vtxReadyTrue") : i18n.getMessage("vtxReadyFalse"),
     );
 
-    // --- Helper functions ---
-
-    function getPowerValues(vtxType) {
-        if (vtxConfig.vtx_table_available) {
-            return { min: 1, max: vtxConfig.vtx_table_powerlevels };
-        }
-        switch (vtxType) {
-            case VtxDeviceTypes.VTXDEV_UNSUPPORTED:
-                return {};
-            case VtxDeviceTypes.VTXDEV_RTC6705:
-                return { min: 1, max: 3 };
-            case VtxDeviceTypes.VTXDEV_SMARTAUDIO:
-                return { min: 1, max: 4 };
-            case VtxDeviceTypes.VTXDEV_TRAMP:
-                return { min: 1, max: 5 };
-            case VtxDeviceTypes.VTXDEV_MSP:
-                return { min: 1, max: 5 };
-            default:
-                return { min: 0, max: 7 };
-        }
-    }
-
-    function getVtxTypeString() {
-        let result = i18n.getMessage(`vtxType_${FC.VTX_CONFIG.vtx_type}`);
-        const isSmartAudio = VtxDeviceTypes.VTXDEV_SMARTAUDIO === FC.VTX_CONFIG.vtx_type;
-        if (isSmartAudio && FC.VTX_DEVICE_STATUS !== null) {
-            result += ` ${FC.VTX_DEVICE_STATUS.smartAudioVersion}`;
-        }
-        return result;
-    }
+    // --- State sync helpers ---
 
     function populateStateFromFC() {
         const cfg = FC.VTX_CONFIG;
@@ -239,84 +279,59 @@ export function useVtx() {
 
     function syncStateToFC() {
         if (frequencyMode.value) {
-            FC.VTX_CONFIG.vtx_frequency = parseInt(vtxConfig.vtx_frequency);
+            FC.VTX_CONFIG.vtx_frequency = Number.parseInt(vtxConfig.vtx_frequency);
             FC.VTX_CONFIG.vtx_band = 0;
             FC.VTX_CONFIG.vtx_channel = 0;
         } else {
-            FC.VTX_CONFIG.vtx_band = parseInt(vtxConfig.vtx_band);
-            FC.VTX_CONFIG.vtx_channel = parseInt(vtxConfig.vtx_channel);
+            FC.VTX_CONFIG.vtx_band = Number.parseInt(vtxConfig.vtx_band);
+            FC.VTX_CONFIG.vtx_channel = Number.parseInt(vtxConfig.vtx_channel);
             FC.VTX_CONFIG.vtx_frequency = 0;
         }
-        FC.VTX_CONFIG.vtx_power = parseInt(vtxConfig.vtx_power);
+        FC.VTX_CONFIG.vtx_power = Number.parseInt(vtxConfig.vtx_power);
         FC.VTX_CONFIG.vtx_pit_mode = vtxConfig.vtx_pit_mode;
-        FC.VTX_CONFIG.vtx_pit_mode_frequency = parseInt(vtxConfig.vtx_pit_mode_frequency);
-        FC.VTX_CONFIG.vtx_low_power_disarm = parseInt(vtxConfig.vtx_low_power_disarm);
+        FC.VTX_CONFIG.vtx_pit_mode_frequency = Number.parseInt(vtxConfig.vtx_pit_mode_frequency);
+        FC.VTX_CONFIG.vtx_low_power_disarm = Number.parseInt(vtxConfig.vtx_low_power_disarm);
         FC.VTX_CONFIG.vtx_table_clear = true;
 
-        // Power levels
-        FC.VTX_CONFIG.vtx_table_powerlevels = parseInt(vtxConfig.vtx_table_powerlevels);
-
-        // Bands and channels
-        FC.VTX_CONFIG.vtx_table_bands = parseInt(vtxConfig.vtx_table_bands);
-        FC.VTX_CONFIG.vtx_table_channels = parseInt(vtxConfig.vtx_table_channels);
+        FC.VTX_CONFIG.vtx_table_powerlevels = Number.parseInt(vtxConfig.vtx_table_powerlevels);
+        FC.VTX_CONFIG.vtx_table_bands = Number.parseInt(vtxConfig.vtx_table_bands);
+        FC.VTX_CONFIG.vtx_table_channels = Number.parseInt(vtxConfig.vtx_table_channels);
     }
 
     // --- MSP Communication ---
 
-    function loadVtxConfig() {
+    function sendMspPromise(code, buffer = false) {
         return new Promise((resolve) => {
-            MSP.send_message(MSPCodes.MSP_VTX_CONFIG, false, false, () => {
-                loadVtxTableBands(() => {
-                    loadVtxTablePowerLevels(() => {
-                        populateStateFromFC();
-                        updating.value = false;
-                        resolve();
-                    });
-                });
-            });
+            MSP.send_message(code, buffer, false, resolve);
         });
     }
 
-    function loadVtxTableBands(callback) {
+    async function loadVtxTableBands() {
         bandList.length = 0;
-        let counter = 1;
-
-        function next() {
-            if (counter > FC.VTX_CONFIG.vtx_table_bands) {
-                callback();
-                return;
-            }
+        for (let i = 1; i <= FC.VTX_CONFIG.vtx_table_bands; i++) {
             const buffer = [];
-            buffer.push8(counter);
-            MSP.send_message(MSPCodes.MSP_VTXTABLE_BAND, buffer, false, () => {
-                bandList.push({ ...FC.VTXTABLE_BAND });
-                counter++;
-                next();
-            });
+            buffer.push8(i);
+            await sendMspPromise(MSPCodes.MSP_VTXTABLE_BAND, buffer);
+            bandList.push({ ...FC.VTXTABLE_BAND });
         }
-
-        next();
     }
 
-    function loadVtxTablePowerLevels(callback) {
+    async function loadVtxTablePowerLevels() {
         powerLevelList.length = 0;
-        let counter = 1;
-
-        function next() {
-            if (counter > FC.VTX_CONFIG.vtx_table_powerlevels) {
-                callback();
-                return;
-            }
+        for (let i = 1; i <= FC.VTX_CONFIG.vtx_table_powerlevels; i++) {
             const buffer = [];
-            buffer.push8(counter);
-            MSP.send_message(MSPCodes.MSP_VTXTABLE_POWERLEVEL, buffer, false, () => {
-                powerLevelList.push({ ...FC.VTXTABLE_POWERLEVEL });
-                counter++;
-                next();
-            });
+            buffer.push8(i);
+            await sendMspPromise(MSPCodes.MSP_VTXTABLE_POWERLEVEL, buffer);
+            powerLevelList.push({ ...FC.VTXTABLE_POWERLEVEL });
         }
+    }
 
-        next();
+    async function loadVtxConfig() {
+        await sendMspPromise(MSPCodes.MSP_VTX_CONFIG);
+        await loadVtxTableBands();
+        await loadVtxTablePowerLevels();
+        populateStateFromFC();
+        updating.value = false;
     }
 
     function updateDeviceStatus() {
@@ -330,7 +345,9 @@ export function useVtx() {
     // --- Save ---
 
     function saveVtx() {
-        if (updating.value) return;
+        if (updating.value) {
+            return;
+        }
         updating.value = true;
 
         syncStateToFC();
@@ -398,32 +415,28 @@ export function useVtx() {
 
     // --- JSON Schema Validation ---
 
-    function validateVtxJson(vtxJsonConfig) {
-        return new Promise((resolve, reject) => {
-            if (!vtxJsonConfig.version) {
-                console.error("Validation against schema failed, version missing");
-                reject();
-                return;
-            }
+    async function validateVtxJson(vtxJsonConfig) {
+        if (!vtxJsonConfig.version) {
+            console.error("Validation against schema failed, version missing");
+            throw new Error("VTX config version missing");
+        }
 
-            const vtxJsonSchemaUrl = `../../resources/jsonschema/vtxconfig_schema-${vtxJsonConfig.version}.json`;
+        const vtxJsonSchemaUrl = `../../resources/jsonschema/vtxconfig_schema-${vtxJsonConfig.version}.json`;
 
-            fetch(vtxJsonSchemaUrl)
-                .then((response) => response.json())
-                .catch((error) => {
-                    console.error("Error fetching VTX Schema:", error);
-                    reject();
-                })
-                .then((schemaJson) => {
-                    if (schemaJson === undefined) {
-                        reject();
-                        return;
-                    }
-                    const valid = env.validate(schemaJson, vtxJsonConfig) === undefined;
-                    console.log("Validation against schema result:", valid);
-                    valid ? resolve() : reject();
-                });
-        });
+        let schemaJson;
+        try {
+            const response = await fetch(vtxJsonSchemaUrl);
+            schemaJson = await response.json();
+        } catch (error) {
+            console.error("Error fetching VTX Schema:", error);
+            throw new Error("Failed to fetch VTX schema");
+        }
+
+        const valid = env.validate(schemaJson, vtxJsonConfig) === undefined;
+        console.log("Validation against schema result:", valid);
+        if (!valid) {
+            throw new Error("VTX config validation failed");
+        }
     }
 
     // --- JSON Import from config object ---
@@ -499,36 +512,6 @@ export function useVtx() {
         return vtxJsonConfig;
     }
 
-    // --- Lua Export ---
-
-    function createLuaTables(vtxJsonConfig) {
-        let bandsString = 'bandTable = { [0]="U"';
-        let frequenciesString = "frequencyTable = {\n";
-
-        const bandsList = vtxJsonConfig.vtx_table.bands_list;
-        for (let index = 0; index < bandsList.length; index++) {
-            bandsString += `, "${bandsList[index].letter}"`;
-            frequenciesString += "        { ";
-            for (let i = 0; i < bandsList[index].frequencies.length; i++) {
-                frequenciesString += `${bandsList[index].frequencies[i]}, `;
-            }
-            frequenciesString += "},\n";
-        }
-        bandsString += " },\n";
-        frequenciesString += "    },\n";
-
-        const freqBandsString = `frequenciesPerBand = ${bandsList[1].frequencies.length},\n`;
-
-        const powerList = vtxJsonConfig.vtx_table.powerlevels_list;
-        let powersString = "powerTable = { ";
-        for (let index = 0; index < powerList.length; index++) {
-            powersString += `[${index + 1}]="${powerList[index].label}", `;
-        }
-        powersString += "},\n";
-
-        return `return {\n    ${frequenciesString}    ${freqBandsString}    ${bandsString}    ${powersString}}`;
-    }
-
     // --- File I/O ---
 
     function saveJsonFile() {
@@ -579,72 +562,51 @@ export function useVtx() {
             });
     }
 
-    function loadJsonFile() {
+    async function loadJsonFile() {
         const suffix = "json";
 
-        FileSystem.pickOpenFile(
-            i18n.getMessage("fileSystemPickerFiles", { typeof: suffix.toUpperCase() }),
-            `.${suffix}`,
-        )
-            .then((file) => {
-                console.log("Reading VTX config from:", file.name);
-                FileSystem.readFile(file).then((text) => {
-                    const vtxJsonConfig = JSON.parse(text);
+        try {
+            const file = await FileSystem.pickOpenFile(
+                i18n.getMessage("fileSystemPickerFiles", { typeof: suffix.toUpperCase() }),
+                `.${suffix}`,
+            );
+            console.log("Reading VTX config from:", file.name);
+            const text = await FileSystem.readFile(file);
+            const vtxJsonConfig = JSON.parse(text);
 
-                    validateVtxJson(vtxJsonConfig)
-                        .then(() => {
-                            readVtxConfigJson(vtxJsonConfig);
-                            savePending.value = true;
+            await validateVtxJson(vtxJsonConfig);
+            readVtxConfigJson(vtxJsonConfig);
+            savePending.value = true;
 
-                            analyticsChanges["VtxTableLoadFromClipboard"] = undefined;
-                            analyticsChanges["VtxTableLoadFromFile"] = file.name;
+            analyticsChanges["VtxTableLoadFromClipboard"] = undefined;
+            analyticsChanges["VtxTableLoadFromFile"] = file.name;
 
-                            console.log("Load VTX file end");
-                            gui_log(i18n.getMessage("vtxLoadFileOk"));
-                        })
-                        .catch(() => {
-                            console.error("VTX Config from file failed validation against schema");
-                            gui_log(i18n.getMessage("vtxLoadFileKo"));
-                        });
-                });
-            })
-            .catch((error) => {
-                console.error("Failed loading VTX file config", error);
-                gui_log(i18n.getMessage("vtxLoadFileKo"));
-            });
+            console.log("Load VTX file end");
+            gui_log(i18n.getMessage("vtxLoadFileOk"));
+        } catch (error) {
+            console.error("Failed loading VTX file config", error);
+            gui_log(i18n.getMessage("vtxLoadFileKo"));
+        }
     }
 
-    function loadClipboardJson() {
+    async function loadClipboardJson() {
         try {
-            Clipboard.readText(
-                (text) => {
-                    console.log("Pasted content: ", text);
+            const text = await navigator.clipboard.readText();
+            console.log("Pasted content: ", text);
 
-                    const vtxJsonConfig = JSON.parse(text);
+            const vtxJsonConfig = JSON.parse(text);
 
-                    validateVtxJson(vtxJsonConfig)
-                        .then(() => {
-                            readVtxConfigJson(vtxJsonConfig);
-                            savePending.value = true;
+            await validateVtxJson(vtxJsonConfig);
+            readVtxConfigJson(vtxJsonConfig);
+            savePending.value = true;
 
-                            analyticsChanges["VtxTableLoadFromFile"] = undefined;
-                            analyticsChanges["VtxTableLoadFromClipboard"] = text.length;
+            analyticsChanges["VtxTableLoadFromFile"] = undefined;
+            analyticsChanges["VtxTableLoadFromClipboard"] = text.length;
 
-                            console.log("Load VTX clipboard end");
-                            gui_log(i18n.getMessage("vtxLoadClipboardOk"));
-                        })
-                        .catch(() => {
-                            gui_log(i18n.getMessage("vtxLoadClipboardKo"));
-                            console.error("VTX Config from clipboard failed validation against schema");
-                        });
-                },
-                (err) => {
-                    gui_log(i18n.getMessage("vtxLoadClipboardKo"));
-                    console.error("Failed to read clipboard contents: ", err);
-                },
-            );
+            console.log("Load VTX clipboard end");
+            gui_log(i18n.getMessage("vtxLoadClipboardOk"));
         } catch (err) {
-            console.error(`Failed loading VTX file config: ${err}`);
+            console.error("Failed loading VTX clipboard config:", err);
             gui_log(i18n.getMessage("vtxLoadClipboardKo"));
         }
     }
