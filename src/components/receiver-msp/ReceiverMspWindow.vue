@@ -150,14 +150,14 @@ function transmitChannels() {
 }
 
 onMounted(() => {
-    window.addEventListener("mousemove", onMouseMove);
-    window.addEventListener("mouseup", onMouseUp);
+    globalThis.addEventListener("mousemove", onMouseMove);
+    globalThis.addEventListener("mouseup", onMouseUp);
     transmitInterval = setInterval(transmitChannels, 50);
 });
 
 onUnmounted(() => {
-    window.removeEventListener("mousemove", onMouseMove);
-    window.removeEventListener("mouseup", onMouseUp);
+    globalThis.removeEventListener("mousemove", onMouseMove);
+    globalThis.removeEventListener("mouseup", onMouseUp);
     if (transmitInterval) {
         clearInterval(transmitInterval);
     }
