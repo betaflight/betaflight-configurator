@@ -3,18 +3,17 @@ import semver from "semver";
 import FC from "../js/fc";
 import CliAutoComplete from "../js/CliAutoComplete";
 
-function escapeRegex(str) {
-    return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-}
-
 function highlightAnywhere(value, term) {
     if (!term) return value;
-    return value.replace(new RegExp(`(${escapeRegex(term)})`, "gi"), "<b>$1</b>");
+    const idx = value.toLowerCase().indexOf(term.toLowerCase());
+    if (idx === -1) return value;
+    return `${value.slice(0, idx)}<b>${value.slice(idx, idx + term.length)}</b>${value.slice(idx + term.length)}`;
 }
 
 function highlightPrefix(value, term) {
     if (!term) return value;
-    return value.replace(new RegExp(`^(${escapeRegex(term)})`, "gi"), "<b>$1</b>");
+    if (!value.toLowerCase().startsWith(term.toLowerCase())) return value;
+    return `<b>${value.slice(0, term.length)}</b>${value.slice(term.length)}`;
 }
 
 function searchArray(term, array, minChars, matchPrefix, forceOpen, isOpen) {
