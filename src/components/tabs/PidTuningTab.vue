@@ -137,6 +137,7 @@ import { mspHelper } from "@/js/msp/MSPHelper";
 import semver from "semver";
 import { API_VERSION_1_41, API_VERSION_1_45, API_VERSION_1_47 } from "@/js/data_storage";
 import { isExpertModeEnabled } from "@/js/utils/isExpertModeEnabled";
+import tippy from "tippy.js";
 import { tabState } from "@/js/tab_state";
 import { useDialog } from "@/composables/useDialog";
 import { useTranslation } from "i18next-vue";
@@ -245,6 +246,7 @@ async function loadData() {
         await nextTick();
         GUI.switchery();
         GUI.content_ready();
+        initToolTips();
     } catch (e) {
         console.error("[PidTuning] Failed to load data:", e);
         GUI.content_ready();
@@ -481,11 +483,22 @@ function onFormChanged() {
 }
 
 // Watch for sub-tab changes to re-initialize Switchery for new DOM elements
+function initToolTips() {
+    document.querySelectorAll("#pid-tuning .cf_tip").forEach((el) => {
+        const title = el.getAttribute("title");
+        if (title && !el._tippy) {
+            tippy(el, { content: title, allowHTML: true });
+            el.removeAttribute("title");
+        }
+    });
+}
+
 watch(
     () => activeSubtab.value,
     async () => {
         await nextTick();
         GUI.switchery();
+        initToolTips();
     },
 );
 
