@@ -1,5 +1,5 @@
 <template>
-    <dialog ref="dialogRef" class="dialogProfileSelection" @cancel.prevent>
+    <dialog ref="dialogRef" class="dialogProfileSelection" @cancel.prevent="cancel">
         <h3 class="dialogProfileSelectionTitle">{{ title }}</h3>
         <div class="dialogProfileSelectionContent">
             <p>{{ message }}</p>
