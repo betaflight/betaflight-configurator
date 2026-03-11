@@ -1960,7 +1960,7 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-.rates-subtab {
+.subtab-rates {
     display: flex;
     gap: 10px;
 }
@@ -1999,7 +1999,7 @@ canvas {
 }
 
 @media all and (max-width: 900px) {
-    .rates-subtab {
+    .subtab-rates {
         flex-direction: column;
     }
 }
