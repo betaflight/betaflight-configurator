@@ -1121,22 +1121,6 @@
                             </td>
                         </tr>
 
-                        <!-- Smart Feedforward -->
-                        <tr class="smartfeedforward">
-                            <td>
-                                <input
-                                    type="checkbox"
-                                    id="smartfeedforward"
-                                    class="toggle"
-                                    v-model="smartFeedforwardEnabled"
-                                />
-                            </td>
-                            <td colspan="2">
-                                <span v-html="$t('pidTuningSmartFeedforward')"></span>
-                                <div class="helpicon cf_tip" :title="$t('pidTuningSmartFeedforwardHelp')"></div>
-                            </td>
-                        </tr>
-
                         <!-- Integrated Yaw -->
                         <tr class="integratedYaw">
                             <td>
@@ -1478,11 +1462,6 @@ const vbatSagEnabled = computed({
 const thrustLinearEnabled = computed({
     get: () => FC.ADVANCED_TUNING.thrustLinearization !== 0,
     set: (val) => (FC.ADVANCED_TUNING.thrustLinearization = val ? FC.ADVANCED_TUNING.thrustLinearization || 100 : 0),
-});
-
-const smartFeedforwardEnabled = computed({
-    get: () => FC.ADVANCED_TUNING.smartFeedforward !== 0,
-    set: (val) => (FC.ADVANCED_TUNING.smartFeedforward = val ? 1 : 0),
 });
 
 const integratedYawEnabled = computed({
