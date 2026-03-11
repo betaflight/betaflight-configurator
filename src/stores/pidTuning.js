@@ -15,6 +15,7 @@ import FC from "@/js/fc";
 export const usePidTuningStore = defineStore("pidTuning", () => {
     // ---- reactive state ----
     const hasChanges = ref(false);
+    const originalsReady = ref(false);
 
     // Original value snapshots (deep-cloned plain objects)
     const originalPids = ref([]);
@@ -41,6 +42,7 @@ export const usePidTuningStore = defineStore("pidTuning", () => {
         originalTuningSliders.value = JSON.parse(JSON.stringify(FC.TUNING_SLIDERS));
         originalPidProfileName.value = pidProfileName;
         originalRateProfileName.value = rateProfileName;
+        originalsReady.value = true;
         hasChanges.value = false;
     }
 
@@ -50,6 +52,11 @@ export const usePidTuningStore = defineStore("pidTuning", () => {
      * so the comparison covers those edits too.
      */
     function checkForChanges(currentPidProfileName = "", currentRateProfileName = "") {
+        if (!originalsReady.value) {
+            hasChanges.value = false;
+            return;
+        }
+
         const pidsChanged = JSON.stringify(FC.PIDS) !== JSON.stringify(originalPids.value);
         const advancedChanged = JSON.stringify(FC.ADVANCED_TUNING) !== JSON.stringify(originalAdvancedTuning.value);
         const rcTuningChanged = JSON.stringify(FC.RC_TUNING) !== JSON.stringify(originalRcTuning.value);
