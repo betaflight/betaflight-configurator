@@ -1131,7 +1131,7 @@ function renderModel() {
     modelInstance.rotateTo(x, y, z);
 }
 
-function cleanup() {
+function cleanup(callback) {
     if (modelInstance) {
         if (boundModelResize) {
             window.removeEventListener("resize", boundModelResize);
@@ -1162,6 +1162,8 @@ function cleanup() {
         GUI.timeout_remove(magCalibTimeoutName);
         magCalibTimeoutName = null;
     }
+
+    callback?.();
 }
 
 defineExpose({ cleanup });
