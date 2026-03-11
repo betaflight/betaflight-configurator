@@ -73,6 +73,7 @@ export function mountVueTab(tabName, contentReadyCallback) {
     // Mount to content
     const componentInstance = currentTabApp.mount(contentEl);
 
+    console.log(`[Vue Tab] Mounted: ${tabName}`);
     // Create a tab adapter object that mimics the legacy tab pattern
     // This provides the cleanup and expertModeChanged methods that gui.js and main.js expect
     const tabAdapter = {
