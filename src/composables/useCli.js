@@ -137,12 +137,25 @@ export function useCli() {
         },
     });
 
-    const writeToOutput = (text) => {
-        if (windowWrapperRef.value) {
-            windowWrapperRef.value.innerHTML += text;
+    let outputBuffer = "";
+    let outputFlushRaf = null;
+
+    const flushOutput = () => {
+        outputFlushRaf = null;
+        if (outputBuffer && windowWrapperRef.value) {
+            windowWrapperRef.value.innerHTML += outputBuffer;
+            outputBuffer = "";
             if (cliWindowRef.value) {
                 cliWindowRef.value.scrollTop = cliWindowRef.value.scrollHeight;
             }
+        }
+    };
+
+    const writeToOutput = (text) => {
+        if (!windowWrapperRef.value) return;
+        outputBuffer += text;
+        if (!outputFlushRaf) {
+            outputFlushRaf = requestAnimationFrame(flushOutput);
         }
     };
 
@@ -165,6 +178,7 @@ export function useCli() {
 
     const clearHistory = () => {
         state.outputHistory = "";
+        outputBuffer = "";
         if (windowWrapperRef.value) {
             windowWrapperRef.value.innerHTML = "";
         }
@@ -569,6 +583,13 @@ export function useCli() {
         // Remove any pending CLI timeouts
         GUI.timeout_remove("CLI_send_slowly");
         GUI.timeout_remove("enter_cli");
+
+        // Cancel any pending output flush
+        if (outputFlushRaf) {
+            cancelAnimationFrame(outputFlushRaf);
+            outputFlushRaf = null;
+        }
+        outputBuffer = "";
 
         if (CONFIGURATOR.connectionValid && CONFIGURATOR.cliValid && CONFIGURATOR.cliActive) {
             send(getCliCommand("exit\r", state.cliBuffer), function () {
