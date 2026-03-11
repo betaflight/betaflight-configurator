@@ -372,12 +372,16 @@ async function save() {
     }
 
     try {
+        // Normalize profile names before saving
+        pidProfileName.value = pidProfileName.value.trim();
+        rateProfileName.value = rateProfileName.value.trim();
+
         // Save profile names to FC.CONFIG (API 1.45+)
         if (FC.CONFIG.pidProfileNames) {
-            FC.CONFIG.pidProfileNames[FC.CONFIG.profile] = pidProfileName.value.trim();
+            FC.CONFIG.pidProfileNames[FC.CONFIG.profile] = pidProfileName.value;
         }
         if (FC.CONFIG.rateProfileNames) {
-            FC.CONFIG.rateProfileNames[FC.CONFIG.rateProfile] = rateProfileName.value.trim();
+            FC.CONFIG.rateProfileNames[FC.CONFIG.rateProfile] = rateProfileName.value;
         }
 
         // Save PIDs
