@@ -384,8 +384,9 @@ export function useCliAutocomplete() {
 
         if (openLaterRequested) {
             nextTick(() => {
-                forceOpen.value = false;
+                forceOpen.value = true;
                 update(inputGetter ? inputGetter() : newValue);
+                forceOpen.value = false;
             });
         }
     }
