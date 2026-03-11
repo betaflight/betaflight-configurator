@@ -1683,25 +1683,8 @@ async function onSliderChange(event) {
         }
     }
 
-    // Save previous values of the 3 basic sliders so we can revert if the
-    // new values would push PIDs into the danger zone.
-    const prevDGain = sliderDGain.value;
-    const prevPIGain = sliderPIGain.value;
-    const prevFFGain = sliderFeedforwardGain.value;
-
     // Ask the FC to calculate PIDs from current slider positions
     await calculateNewPids(collectSliderValues());
-
-    // Prevent the user from pushing sliders into the danger zone.
-    // If the resulting PID values exceed safe thresholds, revert the 3 basic
-    // sliders to their previous values and recalculate.
-    if (isPidValuesInDangerZone.value && sliderPidsMode.value > 0) {
-        sliderDGain.value = prevDGain;
-        sliderPIGain.value = prevPIGain;
-        sliderFeedforwardGain.value = prevFFGain;
-
-        await calculateNewPids(collectSliderValues());
-    }
 
     // Notify parent that FC data was mutated programmatically
     emit("change");
