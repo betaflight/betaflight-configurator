@@ -153,7 +153,7 @@ function hexToBytes(hex) {
     const bytes = [];
 
     for (let index = 0; index < hex.length; index += 2) {
-        const parsedByte = parseInt(hex.slice(index, index + 2), 16);
+        const parsedByte = Number.parseInt(hex.slice(index, index + 2), 16);
         if (Number.isNaN(parsedByte)) {
             return [];
         }
