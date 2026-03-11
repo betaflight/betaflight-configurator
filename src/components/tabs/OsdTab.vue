@@ -1454,11 +1454,14 @@ function replaceLogoImage() {
     LogoManager.openImage()
         .then((ctx) => {
             LogoManager.replaceLogoInFont(ctx);
+            FONT.data.loaded_font_file = "custom";
+            lastFontPresetRequestId++;
             LogoManager.drawPreview();
             LogoManager.showUploadHint();
             fontVersionInfo.value = i18n.getMessage("osdDescribeFontVersionCUSTOM");
             selectedFontPreset.value = -1;
             fontDataVersion.value++;
+            updatePreviewBuffer();
         })
         .catch((error) => console.error(error));
 }
