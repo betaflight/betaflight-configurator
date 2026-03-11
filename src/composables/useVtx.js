@@ -86,6 +86,12 @@ function buildPowerOptionsFromTable(powerLevelList, count) {
     return options;
 }
 
+function sendMspPromise(code, buffer = false) {
+    return new Promise((resolve) => {
+        MSP.send_message(code, buffer, false, resolve);
+    });
+}
+
 function buildPowerOptionsFromRange(range) {
     const options = [];
     if (range.min === undefined) {
@@ -299,12 +305,6 @@ export function useVtx() {
     }
 
     // --- MSP Communication ---
-
-    function sendMspPromise(code, buffer = false) {
-        return new Promise((resolve) => {
-            MSP.send_message(code, buffer, false, resolve);
-        });
-    }
 
     async function loadVtxTableBands() {
         bandList.length = 0;
