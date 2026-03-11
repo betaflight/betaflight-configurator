@@ -100,14 +100,18 @@ function stickPortionToChannelValue(portion) {
 }
 
 function startGimbalDrag(gimbalIndex, event) {
-    if (event.button !== 0) return;
+    if (event.button !== 0) {
+        return;
+    }
     activeGimbalIndex.value = gimbalIndex;
     updateGimbalFromEvent(gimbalIndex, event);
 }
 
 function updateGimbalFromEvent(gimbalIndex, event) {
     const gimbalEl = gimbalElements.value[gimbalIndex];
-    if (!gimbalEl) return;
+    if (!gimbalEl) {
+        return;
+    }
 
     const rect = gimbalEl.getBoundingClientRect();
     const size = rect.width;
@@ -131,7 +135,9 @@ function enableControls() {
 }
 
 function transmitChannels() {
-    if (!enableTX.value) return;
+    if (!enableTX.value) {
+        return;
+    }
 
     const channelValues = [0, 0, 0, 0, 0, 0, 0, 0];
     for (const name in stickValues) {
