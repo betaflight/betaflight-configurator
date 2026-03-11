@@ -579,15 +579,10 @@
             <div class="clear-both"></div>
         </div>
 
-        <!-- Radio Emulator Dialog -->
-        <Dialog v-model="showSticksDialog" :title="$t('receiverButtonSticks')">
-            <ReceiverMspWindow />
-        </Dialog>
-
         <!-- Bottom Toolbar -->
         <div class="content_toolbar toolbar_fixed_bottom" style="position: fixed">
             <div class="btn sticks_btn" v-if="showSticksButton">
-                <a class="sticks" href="#" @click.prevent="showSticksDialog = true">
+                <a class="sticks" href="#" @click.prevent="openSticksWindow">
                     {{ $t("receiverButtonSticks") }}
                 </a>
             </div>
@@ -622,8 +617,6 @@ import { useNavigationStore } from "@/stores/navigation";
 import { useReboot } from "@/composables/useReboot";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "@/components/elements/WikiButton.vue";
-import Dialog from "@/components/elements/Dialog.vue";
-import ReceiverMspWindow from "@/components/receiver-msp/ReceiverMspWindow.vue";
 import { i18n } from "@/js/localization";
 import MSP from "@/js/msp";
 import MSPCodes from "@/js/msp/MSPCodes";
@@ -637,7 +630,9 @@ import { bit_check, bit_set, bit_clear } from "@/js/bit";
 import { get as getConfig, set as setConfig } from "@/js/ConfigStorage";
 import { updateTabList } from "@/js/utils/updateTabList";
 import { gui_log } from "@/js/gui_log";
-import { API_VERSION_1_45, API_VERSION_1_47 } from "@/js/data_storage";
+import DarkTheme from "@/js/DarkTheme";
+import windowWatcherUtil from "@/js/utils/window_watchers";
+import CONFIGURATOR, { API_VERSION_1_45, API_VERSION_1_47 } from "@/js/data_storage";
 import CryptoES from "crypto-es";
 import semver from "semver";
 import * as THREE from "three";
@@ -655,7 +650,6 @@ const modelCanvas = ref(null);
 const rxPlot = ref(null);
 
 // Local state
-const showSticksDialog = ref(false);
 const needReboot = ref(false);
 const isSaving = ref(false);
 const refreshRate = ref(50);
@@ -980,6 +974,31 @@ function resetRefreshRate() {
 function sendBind() {
     MSP.send_message(MSPCodes.MSP2_BETAFLIGHT_BIND);
     gui_log(t("receiverButtonBindMessage"));
+}
+
+function openSticksWindow() {
+    const windowWidth = 370;
+    const windowHeight = 550;
+
+    const rxFunction = (channels) => {
+        if (CONFIGURATOR.connectionValid && GUI.active_tab !== "cli") {
+            mspHelper.setRawRx(channels);
+            return true;
+        }
+        return false;
+    };
+
+    const createdWindow = globalThis.open(
+        "/receiver_msp/receiver_msp.html",
+        "receiver_msp",
+        `location=no,width=${windowWidth},height=${windowHeight + (screen.height - screen.availHeight)}`,
+    );
+    if (createdWindow) {
+        createdWindow.setRawRx = rxFunction;
+        DarkTheme.isDarkThemeEnabled((isEnabled) => {
+            windowWatcherUtil.passValue(createdWindow, "darkTheme", isEnabled);
+        });
+    }
 }
 
 async function refreshTab() {

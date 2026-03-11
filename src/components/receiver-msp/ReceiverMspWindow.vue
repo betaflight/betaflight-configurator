@@ -8,8 +8,8 @@
                 :class="['control-gimbal', index === 0 ? 'left' : 'right']"
                 @mousedown.prevent="startGimbalDrag(index, $event)"
             >
-                <span class="gimbal-label gimbal-label-vert">{{ $t(`controlAxis${gimbal[0]}`) }}</span>
-                <span class="gimbal-label gimbal-label-horz">{{ $t(`controlAxis${gimbal[1]}`) }}</span>
+                <span class="gimbal-label gimbal-label-vert">{{ t(`controlAxis${gimbal[0]}`) }}</span>
+                <span class="gimbal-label gimbal-label-horz">{{ t(`controlAxis${gimbal[1]}`) }}</span>
                 <span class="crosshair crosshair-vert"></span>
                 <span class="crosshair crosshair-horz"></span>
                 <div
@@ -24,7 +24,7 @@
 
         <div class="control-sliders">
             <div v-for="i in 4" :key="i" class="control-slider">
-                <span class="slider-label">{{ $t(`controlAxisAux${i}`) }}</span>
+                <span class="slider-label">{{ t(`controlAxisAux${i}`) }}</span>
                 <input
                     type="range"
                     :min="CHANNEL_MIN_VALUE"
@@ -37,10 +37,10 @@
         </div>
 
         <div v-if="!enableTX" class="warning">
-            <p v-html="$t('receiverMspWarningText')"></p>
+            <p v-html="t('receiverMspWarningText')"></p>
             <div class="button-enable">
                 <a class="btn" href="#" @click.prevent="enableControls">
-                    {{ $t("receiverMspEnableButton") }}
+                    {{ t("receiverMspEnableButton") }}
                 </a>
             </div>
         </div>
@@ -49,9 +49,10 @@
 
 <script setup>
 import { ref, reactive, onMounted, onUnmounted } from "vue";
-import { mspHelper } from "@/js/msp/MSPHelper";
-import CONFIGURATOR from "@/js/data_storage";
-import GUI from "@/js/gui";
+
+// i18n from parent window
+const i18n = globalThis.opener?.i18n;
+const t = (key) => i18n?.getMessage(key) ?? key;
 
 const CHANNEL_MIN_VALUE = 1000;
 const CHANNEL_MID_VALUE = 1500;
@@ -144,12 +145,15 @@ function transmitChannels() {
         channelValues[channelMSPIndexes[name]] = stickValues[name];
     }
 
-    if (CONFIGURATOR.connectionValid && GUI.active_tab !== "cli") {
-        mspHelper.setRawRx(channelValues);
+    // Callback given to us by the window creator so we can have it send data over MSP for us
+    if (globalThis.setRawRx && !globalThis.setRawRx(channelValues)) {
+        // MSP connection has gone away
+        globalThis.close();
     }
 }
 
 onMounted(() => {
+    document.title = t("receiverButtonSticks");
     globalThis.addEventListener("mousemove", onMouseMove);
     globalThis.addEventListener("mouseup", onMouseUp);
     transmitInterval = setInterval(transmitChannels, 50);
@@ -164,10 +168,22 @@ onUnmounted(() => {
 });
 </script>
 
-<style scoped>
-.receiver-msp {
+<style>
+body {
+    font-family: "Segoe UI", Tahoma, sans-serif;
     font-size: 12px;
+    background-color: var(--surface-100);
+    color: var(--text);
+    overflow: hidden;
     user-select: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+}
+
+.receiver-msp {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -307,5 +323,14 @@ onUnmounted(() => {
     border: 1px solid var(--success-600);
     transition: all ease 0s;
     box-shadow: inset 0px 1px 5px rgba(0, 0, 0, 0.35);
+}
+
+@media all and (max-width: 575px) {
+    body {
+        height: unset !important;
+    }
+    .control-gimbals {
+        padding-top: 0;
+    }
 }
 </style>
