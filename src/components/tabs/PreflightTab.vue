@@ -107,7 +107,7 @@
                                             : $t('preflightSaveLocation')
                                     "
                                 >
-                                    <em class="fas fa-plus"></em>
+                                    <em class="fas fa-bookmark"></em>
                                 </a>
                             </div>
                         </template>
