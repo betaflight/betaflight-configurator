@@ -1,0 +1,90 @@
+import { createApp, h, nextTick, reactive } from "vue";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import PresetDetailsDialog from "../../src/components/tabs/presets/PresetDetailsDialog.vue";
+
+function mountWithProps(component, initialProps, listeners = {}) {
+    const container = document.createElement("div");
+    document.body.appendChild(container);
+    const props = reactive({ ...initialProps });
+
+    const app = createApp({
+        render() {
+            return h(component, { ...props, ...listeners });
+        },
+    });
+
+    app.config.globalProperties.$t = (key) => key;
+    app.mount(container);
+
+    return {
+        container,
+        app,
+        props,
+        async setProps(nextProps) {
+            Object.assign(props, nextProps);
+            await nextTick();
+            await nextTick();
+        },
+        unmount() {
+            app.unmount();
+            container.remove();
+        },
+    };
+}
+
+describe("PresetDetailsDialog", () => {
+    afterEach(() => {
+        document.body.innerHTML = "";
+        vi.restoreAllMocks();
+    });
+
+    it("renders markdown descriptions safely and emits option changes", async () => {
+        const onToggleOption = vi.fn();
+        const wrapper = mountWithProps(
+            PresetDetailsDialog,
+            {
+                open: true,
+                loading: false,
+                error: "",
+                showCli: false,
+                showRepositoryName: true,
+                selectedOptionNames: ["Option A"],
+                optionsExpanded: true,
+                cliStrings: ["set foo = on"],
+                repository: {
+                    getPresetOnlineLink: () => "https://example.com/preset-a.txt",
+                    official: true,
+                    name: "Betaflight Official Presets",
+                },
+                preset: {
+                    title: "Preset A",
+                    status: "OFFICIAL",
+                    category: "Frames",
+                    author: "Eric",
+                    firmware_version: ["4.5"],
+                    keywords: ["freestyle"],
+                    description: ["# Heading", "Visit [Betaflight](https://betaflight.com)"],
+                    parser: "MARKED",
+                    options: [{ name: "Option A", checked: true }],
+                },
+            },
+            {
+                onToggleOption,
+            },
+        );
+
+        await nextTick();
+
+        const htmlBlock = wrapper.container.querySelector("#presets_detailed_dialog_html_description");
+        expect(htmlBlock.innerHTML).toContain("<h1");
+        expect(htmlBlock.querySelector("a").getAttribute("target")).toBe("_blank");
+
+        const checkbox = wrapper.container.querySelector('input[type="checkbox"]');
+        checkbox.checked = false;
+        checkbox.dispatchEvent(new Event("change"));
+
+        expect(onToggleOption).toHaveBeenCalledWith({ optionName: "Option A", checked: false });
+
+        wrapper.unmount();
+    });
+});
