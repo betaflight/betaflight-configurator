@@ -18,7 +18,7 @@
                             </a>
                         </div>
                         <span class="location-or">{{ $t("preflightOr") }}</span>
-                        <span class="manual-entry-group">
+                        <div class="manual-entry-group">
                             <input
                                 type="text"
                                 inputmode="decimal"
@@ -42,7 +42,7 @@
                                     {{ $t("preflightApply") }}
                                 </a>
                             </div>
-                        </span>
+                        </div>
                         <div
                             v-if="
                                 preflight.location.latitude !== null &&
@@ -112,7 +112,7 @@
                             </div>
                         </template>
                         <template v-else>
-                            <span class="save-entry-group">
+                            <div class="save-entry-group">
                                 <input
                                     type="text"
                                     v-model="saveLocationLabel"
@@ -146,7 +146,7 @@
                                         <em class="fas fa-times"></em>
                                     </a>
                                 </div>
-                            </span>
+                            </div>
                         </template>
                     </div>
 
