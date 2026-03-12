@@ -195,6 +195,19 @@ export function usePreflight() {
         return true;
     }
 
+    function renameSavedLocation(index, newLabel) {
+        if (index < 0 || index >= savedLocations.length) {
+            return false;
+        }
+        const trimmed = String(newLabel).trim().slice(0, MAX_LABEL_LENGTH);
+        if (trimmed.length === 0) {
+            return false;
+        }
+        savedLocations[index].label = trimmed;
+        persistSavedLocations();
+        return true;
+    }
+
     function deleteSavedLocation(index) {
         if (index < 0 || index >= savedLocations.length) {
             return;
@@ -549,6 +562,7 @@ export function usePreflight() {
         useGeolocation,
         setManualLocation,
         saveCurrentLocation,
+        renameSavedLocation,
         deleteSavedLocation,
         applySavedLocation,
         refreshAll,

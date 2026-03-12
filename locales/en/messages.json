@@ -8368,6 +8368,15 @@
     "preflightDeleteLocation": {
         "message": "Delete selected location"
     },
+    "preflightRenameLocation": {
+        "message": "Rename selected location"
+    },
+    "preflightRenameLocationBtn": {
+        "message": "Rename"
+    },
+    "preflightCoordinates": {
+        "message": "Coordinates"
+    },
     "preflightSaveLocationBtn": {
         "message": "Save Location"
     },

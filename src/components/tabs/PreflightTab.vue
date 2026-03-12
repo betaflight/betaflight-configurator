@@ -47,7 +47,7 @@
                             v-if="
                                 preflight.location.latitude !== null &&
                                 preflight.savedLocations.length === 0 &&
-                                !showingSaveInput
+                                !locationEditMode
                             "
                             class="default_btn"
                         >
@@ -58,8 +58,8 @@
                         </div>
                     </div>
                     <!-- Saved Locations -->
-                    <div class="saved-locations-row" v-if="preflight.savedLocations.length > 0 || showingSaveInput">
-                        <template v-if="!showingSaveInput">
+                    <div class="saved-locations-row" v-if="preflight.savedLocations.length > 0 || locationEditMode">
+                        <template v-if="!locationEditMode">
                             <select
                                 v-model="selectedSavedIndex"
                                 class="saved-location-select"
@@ -69,9 +69,19 @@
                                     {{ $t("preflightSavedLocationsPlaceholder") }}
                                 </option>
                                 <option v-for="(loc, idx) in preflight.savedLocations" :key="idx" :value="idx">
-                                    {{ loc.label }} ({{ loc.latitude.toFixed(4) }}, {{ loc.longitude.toFixed(4) }})
+                                    {{ loc.label }}
                                 </option>
                             </select>
+                            <div class="default_btn saved-loc-btn">
+                                <a
+                                    href="#"
+                                    @click.prevent="showRenameDialog"
+                                    :class="{ disabled: selectedSavedIndex < 0 }"
+                                    :title="$t('preflightRenameLocation')"
+                                >
+                                    <em class="fas fa-pencil-alt"></em>
+                                </a>
+                            </div>
                             <div class="default_btn saved-loc-btn">
                                 <a
                                     href="#"
@@ -109,10 +119,21 @@
                                     :placeholder="$t('preflightLocationLabel')"
                                     :maxlength="preflight.MAX_LABEL_LENGTH"
                                     class="location-input save-label-input"
-                                    @keyup.enter="confirmSaveLocation"
+                                    @keyup.enter="
+                                        locationEditMode === 'rename' ? confirmRenameLocation() : confirmSaveLocation()
+                                    "
                                 />
                                 <div class="default_btn">
                                     <a
+                                        v-if="locationEditMode === 'rename'"
+                                        href="#"
+                                        @click.prevent="confirmRenameLocation"
+                                        :class="{ disabled: !saveLocationLabel.trim() }"
+                                    >
+                                        {{ $t("preflightRenameLocationBtn") }}
+                                    </a>
+                                    <a
+                                        v-else
                                         href="#"
                                         @click.prevent="confirmSaveLocation"
                                         :class="{ disabled: !saveLocationLabel.trim() }"
@@ -121,8 +142,8 @@
                                     </a>
                                 </div>
                                 <div class="default_btn saved-loc-btn">
-                                    <a href="#" @click.prevent="cancelSaveLocation">
-                                        <em class="fas fa-trash-alt"></em>
+                                    <a href="#" @click.prevent="cancelEditMode">
+                                        <em class="fas fa-times"></em>
                                     </a>
                                 </div>
                             </span>
@@ -516,6 +537,16 @@
                                 <table class="cf_table">
                                     <tbody>
                                         <tr>
+                                            <th scope="row">{{ $t("preflightCoordinates") }}</th>
+                                            <td>
+                                                <span v-if="preflight.location.latitude !== null">
+                                                    {{ preflight.location.latitude.toFixed(4) }},
+                                                    {{ preflight.location.longitude.toFixed(4) }}
+                                                </span>
+                                                <span v-else>-</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
                                             <th scope="row">{{ $t("preflightKpEffect") }}</th>
                                             <td>
                                                 <span
@@ -704,7 +735,7 @@ export default defineComponent({
         const manualLat = ref("");
         const manualLon = ref("");
         const selectedSavedIndex = ref(-1);
-        const showingSaveInput = ref(false);
+        const locationEditMode = ref(null);
         const saveLocationLabel = ref("");
 
         const isManualLocationValid = computed(() => {
@@ -793,7 +824,15 @@ export default defineComponent({
                 return;
             }
             saveLocationLabel.value = "";
-            showingSaveInput.value = true;
+            locationEditMode.value = "save";
+        }
+
+        function showRenameDialog() {
+            if (selectedSavedIndex.value < 0) {
+                return;
+            }
+            saveLocationLabel.value = preflight.savedLocations[selectedSavedIndex.value].label;
+            locationEditMode.value = "rename";
         }
 
         function confirmSaveLocation() {
@@ -802,14 +841,25 @@ export default defineComponent({
             }
             const success = preflight.saveCurrentLocation(saveLocationLabel.value);
             if (success) {
-                showingSaveInput.value = false;
+                locationEditMode.value = null;
                 saveLocationLabel.value = "";
                 selectedSavedIndex.value = preflight.savedLocations.length - 1;
             }
         }
 
-        function cancelSaveLocation() {
-            showingSaveInput.value = false;
+        function confirmRenameLocation() {
+            if (!saveLocationLabel.value.trim()) {
+                return;
+            }
+            const success = preflight.renameSavedLocation(selectedSavedIndex.value, saveLocationLabel.value);
+            if (success) {
+                locationEditMode.value = null;
+                saveLocationLabel.value = "";
+            }
+        }
+
+        function cancelEditMode() {
+            locationEditMode.value = null;
             saveLocationLabel.value = "";
         }
 
@@ -1086,15 +1136,17 @@ export default defineComponent({
             notamLink,
             notamEuLink,
             selectedSavedIndex,
-            showingSaveInput,
+            locationEditMode,
             saveLocationLabel,
             detectLocation,
             applyManualLocation,
             refreshData,
             loadSavedLocation,
             showSaveDialog,
+            showRenameDialog,
             confirmSaveLocation,
-            cancelSaveLocation,
+            confirmRenameLocation,
+            cancelEditMode,
             deleteSelectedLocation,
             setLayer,
             zoomIn,
