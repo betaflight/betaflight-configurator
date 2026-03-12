@@ -16,11 +16,15 @@ export function useDialog() {
             {
                 yes: () => {
                     store.close();
-                    if (onYes) onYes();
+                    if (onYes) {
+                        onYes();
+                    }
                 },
                 no: () => {
                     store.close();
-                    if (onNo) onNo();
+                    if (onNo) {
+                        onNo();
+                    }
                 },
             },
         );
@@ -38,7 +42,9 @@ export function useDialog() {
             {
                 confirm: () => {
                     store.close();
-                    if (onConfirm) onConfirm();
+                    if (onConfirm) {
+                        onConfirm();
+                    }
                 },
             },
         );
@@ -56,7 +62,71 @@ export function useDialog() {
             {
                 cancel: () => {
                     store.close();
-                    if (onCancel) onCancel();
+                    if (onCancel) {
+                        onCancel();
+                    }
+                },
+            },
+        );
+    };
+
+    const openProfileSelection = (
+        title,
+        message,
+        options,
+        onConfirm,
+        onCancel,
+        confirmText = "OK",
+        cancelText = "Cancel",
+    ) => {
+        store.open(
+            "ProfileSelectionDialog",
+            {
+                title,
+                message,
+                options,
+                confirmText,
+                cancelText,
+            },
+            {
+                confirm: (selectedValue) => {
+                    store.close();
+                    if (onConfirm) {
+                        onConfirm(selectedValue);
+                    }
+                },
+                cancel: () => {
+                    store.close();
+                    if (onCancel) {
+                        onCancel();
+                    }
+                },
+            },
+        );
+    };
+
+    const openCopyProfile = (title, note, profileOptions, rateOptions, onConfirm, onCancel, options = {}) => {
+        store.open(
+            "CopyProfileDialog",
+            {
+                title,
+                note,
+                profileOptions,
+                rateOptions,
+                ...options,
+            },
+            {
+                confirm: (selected) => {
+                    store.close();
+                    if (onConfirm) {
+                        onConfirm(selected);
+                    }
+                },
+                cancel: () => {
+                    store.close();
+                    if (onCancel) {
+                        onCancel();
+                    }
                 },
             },
         );
@@ -74,6 +144,8 @@ export function useDialog() {
         openYesNo,
         openInfo,
         openWait,
+        openProfileSelection,
+        openCopyProfile,
         close,
         open,
     };
