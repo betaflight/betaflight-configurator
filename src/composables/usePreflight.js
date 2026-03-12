@@ -416,7 +416,7 @@ export function usePreflight() {
         return { level: worstLevel, label: labels[worstLevel], cssClass: cssClasses[worstLevel], checks };
     });
 
-    async function useGeolocation() {
+    function browserGeolocation() {
         return new Promise((resolve, reject) => {
             if (!navigator.geolocation) {
                 reject(new Error("Geolocation not supported"));
@@ -425,16 +425,45 @@ export function usePreflight() {
             // Geolocation is required for this tab's core functionality (NOSONAR)
             navigator.geolocation.getCurrentPosition(
                 (position) => {
-                    location.latitude = position.coords.latitude;
-                    location.longitude = position.coords.longitude;
-                    location.source = "geolocation";
-                    location.name = `${position.coords.latitude.toFixed(4)}, ${position.coords.longitude.toFixed(4)}`;
-                    resolve();
+                    resolve({
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude,
+                    });
                 },
                 (err) => reject(new Error(err.message || "Geolocation failed")),
                 { enableHighAccuracy: true, timeout: 10000 },
             );
         });
+    }
+
+    async function ipGeolocation() {
+        const response = await fetch("https://ipapi.co/json/");
+        if (!response.ok) {
+            throw new Error("IP geolocation request failed");
+        }
+        const data = await response.json();
+        if (data.latitude === undefined || data.longitude === undefined) {
+            throw new Error("IP geolocation returned no coordinates");
+        }
+        return {
+            latitude: Number.parseFloat(data.latitude),
+            longitude: Number.parseFloat(data.longitude),
+        };
+    }
+
+    async function useGeolocation() {
+        let coords;
+        try {
+            coords = await browserGeolocation();
+        } catch (_e) {
+            // Browser geolocation can fail in some environments;
+            // fall back to IP-based geolocation (city-level accuracy)
+            coords = await ipGeolocation();
+        }
+        location.latitude = coords.latitude;
+        location.longitude = coords.longitude;
+        location.source = "geolocation";
+        location.name = `${coords.latitude.toFixed(4)}, ${coords.longitude.toFixed(4)}`;
     }
 
     function setManualLocation(lat, lon) {
