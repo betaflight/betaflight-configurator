@@ -839,7 +839,9 @@ export default defineComponent({
             }
             nextTick(() => {
                 initializeMap();
-                if (!mapInstance.value) return;
+                if (!mapInstance.value) {
+                    return;
+                }
                 const center = fromLonLat([preflight.location.longitude, preflight.location.latitude]);
                 mapInstance.value.mapView.setCenter(center);
                 mapInstance.value.iconGeometry.setCoordinates(center);
@@ -875,8 +877,9 @@ export default defineComponent({
 
         function toggleFullscreen() {
             const container = mapContainerRef.value;
-            if (!container) return;
-
+            if (!container) {
+                return;
+            }
             if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement) {
                 if (container.requestFullscreen) {
                     container.requestFullscreen();
