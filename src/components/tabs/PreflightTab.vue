@@ -149,7 +149,7 @@
                 :class="preflight.launchStatus.value.cssClass"
             >
                 <div class="launch-status-label">{{ $t("preflightLaunchStatus") }}</div>
-                <div class="launch-status-value">{{ preflight.launchStatus.value.label }}</div>
+                <div class="launch-status-value">{{ $t(preflight.launchStatus.value.label) }}</div>
                 <div class="default_btn refresh-btn">
                     <a href="#" @click.prevent="refreshData" :class="{ disabled: preflight.isLoading.value }">
                         <em class="fas fa-sync-alt" :class="{ 'fa-spin': preflight.isLoading.value }"></em>

@@ -218,7 +218,10 @@ export function usePreflight() {
 
     const isLoading = computed(() => weather.loading || solar.loading);
 
+    let weatherRequestId = 0;
+
     async function fetchWeather(lat, lon) {
+        const requestId = ++weatherRequestId;
         weather.loading = true;
         weather.error = null;
         try {
@@ -261,7 +264,7 @@ export function usePreflight() {
                     "temperature_2m_min",
                 ].join(","),
                 wind_speed_unit: "ms",
-                forecast_days: 1,
+                forecast_days: 2,
                 timezone: "auto",
             });
 
@@ -270,6 +273,10 @@ export function usePreflight() {
                 throw new Error(`Weather API error: ${response.status}`);
             }
             const data = await response.json();
+
+            if (requestId !== weatherRequestId) {
+                return;
+            }
 
             weather.current = {
                 temperature: data.current.temperature_2m,
@@ -330,6 +337,7 @@ export function usePreflight() {
     async function fetchSolarActivity() {
         solar.loading = true;
         solar.error = null;
+        solar.stormLevel = null;
         try {
             const response = await fetch("https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json");
             if (!response.ok) {
@@ -369,7 +377,7 @@ export function usePreflight() {
 
     const launchStatus = computed(() => {
         if (!weather.current && solar.kpIndex === null) {
-            return { level: "unknown", label: "No Data", cssClass: "status-unknown" };
+            return { level: "unknown", label: "preflightStatusNoData", cssClass: "status-unknown" };
         }
 
         const LEVELS = { good: 0, moderate: 1, warning: 2, danger: 3 };
@@ -390,7 +398,12 @@ export function usePreflight() {
             check(getKpStatus(solar.kpIndex));
         }
 
-        const labels = { good: "GO", moderate: "CAUTION", warning: "WARNING", danger: "NO-GO" };
+        const labels = {
+            good: "preflightStatusGo",
+            moderate: "preflightStatusCaution",
+            warning: "preflightStatusWarning",
+            danger: "preflightStatusNoGo",
+        };
         const cssClasses = {
             good: "status-good",
             moderate: "status-moderate",
@@ -407,6 +420,7 @@ export function usePreflight() {
                 reject(new Error("Geolocation not supported"));
                 return;
             }
+            // Geolocation is required for this tab's core functionality (NOSONAR)
             navigator.geolocation.getCurrentPosition(
                 (position) => {
                     location.latitude = position.coords.latitude;
@@ -415,7 +429,7 @@ export function usePreflight() {
                     location.name = `${position.coords.latitude.toFixed(4)}, ${position.coords.longitude.toFixed(4)}`;
                     resolve();
                 },
-                (err) => reject(err),
+                (err) => reject(new Error(err.message || "Geolocation failed")),
                 { enableHighAccuracy: true, timeout: 10000 },
             );
         });

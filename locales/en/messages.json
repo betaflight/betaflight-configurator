@@ -8167,6 +8167,21 @@
     "preflightLaunchStatus": {
         "message": "Launch Status"
     },
+    "preflightStatusGo": {
+        "message": "GO"
+    },
+    "preflightStatusCaution": {
+        "message": "CAUTION"
+    },
+    "preflightStatusWarning": {
+        "message": "WARNING"
+    },
+    "preflightStatusNoGo": {
+        "message": "NO-GO"
+    },
+    "preflightStatusNoData": {
+        "message": "No Data"
+    },
     "preflightRefresh": {
         "message": "Refresh"
     },
