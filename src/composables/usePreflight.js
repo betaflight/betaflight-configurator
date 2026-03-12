@@ -1,5 +1,10 @@
 import { reactive, computed } from "vue";
 import geomagnetism from "geomagnetism";
+import { get as getConfig, set as setConfig } from "../js/ConfigStorage";
+
+const SAVED_LOCATIONS_KEY = "preflight_saved_locations";
+const MAX_SAVED_LOCATIONS = 5;
+const MAX_LABEL_LENGTH = 20;
 
 const WMO_CODES = {
     0: "Clear sky",
@@ -150,6 +155,66 @@ export function usePreflight() {
         stormLevel: null,
         lastUpdated: null,
     });
+
+    const savedLocations = reactive([]);
+
+    function loadSavedLocations() {
+        const stored = getConfig(SAVED_LOCATIONS_KEY);
+        const locations = stored[SAVED_LOCATIONS_KEY];
+        savedLocations.length = 0;
+        if (Array.isArray(locations)) {
+            locations.slice(0, MAX_SAVED_LOCATIONS).forEach((loc) => {
+                savedLocations.push(loc);
+            });
+        }
+    }
+
+    function persistSavedLocations() {
+        const obj = {};
+        obj[SAVED_LOCATIONS_KEY] = [...savedLocations];
+        setConfig(obj);
+    }
+
+    function saveCurrentLocation(label) {
+        if (location.latitude === null || location.longitude === null) {
+            return false;
+        }
+        const trimmedLabel = String(label).trim().slice(0, MAX_LABEL_LENGTH);
+        if (trimmedLabel.length === 0) {
+            return false;
+        }
+        if (savedLocations.length >= MAX_SAVED_LOCATIONS) {
+            return false;
+        }
+        savedLocations.push({
+            label: trimmedLabel,
+            latitude: location.latitude,
+            longitude: location.longitude,
+        });
+        persistSavedLocations();
+        return true;
+    }
+
+    function deleteSavedLocation(index) {
+        if (index < 0 || index >= savedLocations.length) {
+            return;
+        }
+        savedLocations.splice(index, 1);
+        persistSavedLocations();
+    }
+
+    function applySavedLocation(index) {
+        if (index < 0 || index >= savedLocations.length) {
+            return null;
+        }
+        const loc = savedLocations[index];
+        setManualLocation(loc.latitude, loc.longitude);
+        location.name = loc.label;
+        location.source = "saved";
+        return loc;
+    }
+
+    loadSavedLocations();
 
     const isLoading = computed(() => weather.loading || solar.loading);
 
@@ -431,12 +496,16 @@ export function usePreflight() {
         weather,
         solar,
         mag,
+        savedLocations,
         isLoading,
         launchStatus,
         fetchWeather,
         fetchSolarActivity,
         useGeolocation,
         setManualLocation,
+        saveCurrentLocation,
+        deleteSavedLocation,
+        applySavedLocation,
         refreshAll,
         formatTime,
         getKpStatus,
@@ -447,5 +516,7 @@ export function usePreflight() {
         getUvStatus,
         getWindDirectionLabel,
         WMO_CODES,
+        MAX_SAVED_LOCATIONS,
+        MAX_LABEL_LENGTH,
     };
 }

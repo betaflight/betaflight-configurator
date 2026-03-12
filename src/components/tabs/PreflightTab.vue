@@ -11,29 +11,124 @@
                 </div>
                 <div class="spacer_box location-bar">
                     <div class="location-inputs">
-                        <button class="default_btn" @click="detectLocation" :disabled="detectingLocation">
-                            <em class="fas fa-crosshairs"></em>
-                            {{ detectingLocation ? $t("preflightDetecting") : $t("preflightUseMyLocation") }}
-                        </button>
+                        <div class="default_btn">
+                            <a href="#" @click.prevent="detectLocation" :class="{ disabled: detectingLocation }">
+                                <em class="fas fa-crosshairs"></em>
+                                {{ detectingLocation ? $t("preflightDetecting") : $t("preflightUseMyLocation") }}
+                            </a>
+                        </div>
                         <span class="location-or">{{ $t("preflightOr") }}</span>
-                        <input
-                            type="text"
-                            inputmode="decimal"
-                            v-model="manualLat"
-                            :placeholder="$t('preflightLatitude')"
-                            class="location-input"
-                        />
-                        <input
-                            type="text"
-                            inputmode="decimal"
-                            v-model="manualLon"
-                            :placeholder="$t('preflightLongitude')"
-                            class="location-input"
-                        />
-                        <button class="default_btn" @click="applyManualLocation" :disabled="!isManualLocationValid">
-                            {{ $t("preflightApply") }}
-                        </button>
+                        <span class="manual-entry-group">
+                            <input
+                                type="text"
+                                inputmode="decimal"
+                                v-model="manualLat"
+                                :placeholder="$t('preflightLatitude')"
+                                class="location-input"
+                            />
+                            <input
+                                type="text"
+                                inputmode="decimal"
+                                v-model="manualLon"
+                                :placeholder="$t('preflightLongitude')"
+                                class="location-input"
+                            />
+                            <div class="default_btn">
+                                <a
+                                    href="#"
+                                    @click.prevent="applyManualLocation"
+                                    :class="{ disabled: !isManualLocationValid }"
+                                >
+                                    {{ $t("preflightApply") }}
+                                </a>
+                            </div>
+                        </span>
+                        <div
+                            v-if="
+                                preflight.location.latitude !== null &&
+                                preflight.savedLocations.length === 0 &&
+                                !showingSaveInput
+                            "
+                            class="default_btn"
+                        >
+                            <a href="#" @click.prevent="showSaveDialog" :title="$t('preflightSaveLocation')">
+                                <em class="fas fa-bookmark"></em>
+                                {{ $t("preflightSaveLocation") }}
+                            </a>
+                        </div>
                     </div>
+                    <!-- Saved Locations -->
+                    <div class="saved-locations-row" v-if="preflight.savedLocations.length > 0 || showingSaveInput">
+                        <template v-if="!showingSaveInput">
+                            <select
+                                v-model="selectedSavedIndex"
+                                class="saved-location-select"
+                                @change="loadSavedLocation"
+                            >
+                                <option :value="-1" disabled>
+                                    {{ $t("preflightSavedLocationsPlaceholder") }}
+                                </option>
+                                <option v-for="(loc, idx) in preflight.savedLocations" :key="idx" :value="idx">
+                                    {{ loc.label }} ({{ loc.latitude.toFixed(4) }}, {{ loc.longitude.toFixed(4) }})
+                                </option>
+                            </select>
+                            <div class="default_btn saved-loc-btn">
+                                <a
+                                    href="#"
+                                    @click.prevent="deleteSelectedLocation"
+                                    :class="{ disabled: selectedSavedIndex < 0 }"
+                                    :title="$t('preflightDeleteLocation')"
+                                >
+                                    <em class="fas fa-trash-alt"></em>
+                                </a>
+                            </div>
+                            <div class="default_btn saved-loc-btn">
+                                <a
+                                    href="#"
+                                    @click.prevent="showSaveDialog"
+                                    :class="{
+                                        disabled:
+                                            preflight.location.latitude === null ||
+                                            preflight.savedLocations.length >= preflight.MAX_SAVED_LOCATIONS,
+                                    }"
+                                    :title="
+                                        preflight.savedLocations.length >= preflight.MAX_SAVED_LOCATIONS
+                                            ? $t('preflightSavedLocationsFull')
+                                            : $t('preflightSaveLocation')
+                                    "
+                                >
+                                    <em class="fas fa-plus"></em>
+                                </a>
+                            </div>
+                        </template>
+                        <template v-else>
+                            <span class="save-entry-group">
+                                <input
+                                    type="text"
+                                    v-model="saveLocationLabel"
+                                    :placeholder="$t('preflightLocationLabel')"
+                                    :maxlength="preflight.MAX_LABEL_LENGTH"
+                                    class="location-input save-label-input"
+                                    @keyup.enter="confirmSaveLocation"
+                                />
+                                <div class="default_btn">
+                                    <a
+                                        href="#"
+                                        @click.prevent="confirmSaveLocation"
+                                        :class="{ disabled: !saveLocationLabel.trim() }"
+                                    >
+                                        {{ $t("preflightSaveLocationBtn") }}
+                                    </a>
+                                </div>
+                                <div class="default_btn saved-loc-btn">
+                                    <a href="#" @click.prevent="cancelSaveLocation">
+                                        <em class="fas fa-trash-alt"></em>
+                                    </a>
+                                </div>
+                            </span>
+                        </template>
+                    </div>
+
                     <div class="location-status" v-if="preflight.location.latitude !== null">
                         <em class="fas fa-map-marker-alt"></em>
                         {{ preflight.location.name }}
@@ -55,10 +150,12 @@
             >
                 <div class="launch-status-label">{{ $t("preflightLaunchStatus") }}</div>
                 <div class="launch-status-value">{{ preflight.launchStatus.value.label }}</div>
-                <button class="default_btn refresh-btn" @click="refreshData" :disabled="preflight.isLoading.value">
-                    <em class="fas fa-sync-alt" :class="{ 'fa-spin': preflight.isLoading.value }"></em>
-                    {{ $t("preflightRefresh") }}
-                </button>
+                <div class="default_btn refresh-btn">
+                    <a href="#" @click.prevent="refreshData" :class="{ disabled: preflight.isLoading.value }">
+                        <em class="fas fa-sync-alt" :class="{ 'fa-spin': preflight.isLoading.value }"></em>
+                        {{ $t("preflightRefresh") }}
+                    </a>
+                </div>
             </div>
 
             <!-- Main Content Grid -->
@@ -581,6 +678,9 @@ export default defineComponent({
         const locationError = ref(null);
         const manualLat = ref("");
         const manualLon = ref("");
+        const selectedSavedIndex = ref(-1);
+        const showingSaveInput = ref(false);
+        const saveLocationLabel = ref("");
 
         const isManualLocationValid = computed(() => {
             const lat = Number.parseFloat(manualLat.value);
@@ -638,6 +738,50 @@ export default defineComponent({
 
         async function refreshData() {
             await preflight.refreshAll();
+        }
+
+        async function loadSavedLocation() {
+            if (selectedSavedIndex.value < 0) {
+                return;
+            }
+            const loc = preflight.applySavedLocation(selectedSavedIndex.value);
+            if (loc) {
+                manualLat.value = String(loc.latitude);
+                manualLon.value = String(loc.longitude);
+                locationError.value = null;
+                await preflight.refreshAll();
+                updateMapPosition();
+            }
+        }
+
+        function showSaveDialog() {
+            saveLocationLabel.value = "";
+            showingSaveInput.value = true;
+        }
+
+        function confirmSaveLocation() {
+            if (!saveLocationLabel.value.trim()) {
+                return;
+            }
+            const success = preflight.saveCurrentLocation(saveLocationLabel.value);
+            if (success) {
+                showingSaveInput.value = false;
+                saveLocationLabel.value = "";
+                selectedSavedIndex.value = preflight.savedLocations.length - 1;
+            }
+        }
+
+        function cancelSaveLocation() {
+            showingSaveInput.value = false;
+            saveLocationLabel.value = "";
+        }
+
+        function deleteSelectedLocation() {
+            if (selectedSavedIndex.value < 0) {
+                return;
+            }
+            preflight.deleteSavedLocation(selectedSavedIndex.value);
+            selectedSavedIndex.value = -1;
         }
 
         function initializeMap() {
@@ -901,9 +1045,17 @@ export default defineComponent({
             droneSafetyMapLink,
             notamLink,
             notamEuLink,
+            selectedSavedIndex,
+            showingSaveInput,
+            saveLocationLabel,
             detectLocation,
             applyManualLocation,
             refreshData,
+            loadSavedLocation,
+            showSaveDialog,
+            confirmSaveLocation,
+            cancelSaveLocation,
+            deleteSelectedLocation,
             setLayer,
             zoomIn,
             zoomOut,

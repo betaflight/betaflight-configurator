@@ -8322,5 +8322,32 @@
     },
     "preflightAttribution": {
         "message": "Weather data: Open-Meteo.com (CC BY 4.0) | Solar data: NOAA Space Weather Prediction Center"
+    },
+    "preflightSavedLocationsPlaceholder": {
+        "message": "Saved locations..."
+    },
+    "preflightLoadLocation": {
+        "message": "Load"
+    },
+    "preflightSaveLocation": {
+        "message": "Save"
+    },
+    "preflightSavedLocationsFull": {
+        "message": "Maximum of 5 saved locations reached"
+    },
+    "preflightLocationLabel": {
+        "message": "Location name (max 20 chars)"
+    },
+    "preflightDeleteLocation": {
+        "message": "Delete selected location"
+    },
+    "preflightSaveLocationBtn": {
+        "message": "Save Location"
+    },
+    "preflightConfirmSave": {
+        "message": "Save"
+    },
+    "preflightCancel": {
+        "message": "Cancel"
     }
 }

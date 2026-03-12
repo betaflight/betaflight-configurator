@@ -7,18 +7,24 @@
 
     /* Location Bar */
     .location-bar {
-        .location-inputs {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
-
-            .default_btn {
+        .default_btn {
+            width: auto;
+            float: none;
+            margin-bottom: 0;
+            a {
+                padding: 0.35rem 0.75rem;
                 white-space: nowrap;
                 em {
                     margin-right: 4px;
                 }
             }
+        }
+
+        .location-inputs {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
 
             .location-or {
                 color: var(--surface-700);
@@ -32,6 +38,47 @@
                 border-radius: 3px;
                 background: var(--surface-200);
                 color: var(--text);
+            }
+
+            .manual-entry-group {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                flex-shrink: 0;
+            }
+        }
+
+        .saved-locations-row {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 8px;
+
+            .saved-location-select {
+                min-width: 180px;
+                max-width: 300px;
+                padding: 4px 8px;
+                font-size: 12px;
+            }
+
+            .saved-loc-btn {
+                a {
+                    padding: 0.35rem 0.5rem;
+                    em {
+                        margin-right: 0;
+                    }
+                }
+            }
+
+            .save-entry-group {
+                display: flex;
+                align-items: center;
+                gap: 4px;
+                flex-shrink: 0;
+
+                .save-label-input {
+                    width: 220px;
+                }
             }
         }
 
@@ -103,15 +150,23 @@
         }
 
         .refresh-btn {
+            width: auto;
+            float: none;
             margin-left: auto;
-            background: rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            color: inherit;
-            &:hover {
-                background: rgba(255, 255, 255, 0.3);
-            }
-            em {
-                margin-right: 4px;
+            margin-bottom: 0;
+            a {
+                background: rgba(255, 255, 255, 0.2);
+                border: 1px solid rgba(255, 255, 255, 0.3);
+                color: inherit;
+                padding: 0.35rem 0.75rem;
+                white-space: nowrap;
+                &:hover {
+                    background: rgba(255, 255, 255, 0.3);
+                    color: inherit;
+                }
+                em {
+                    margin-right: 4px;
+                }
             }
         }
     }
