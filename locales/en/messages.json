@@ -7666,7 +7666,7 @@
         "message": "Please wait.",
         "description": "Second label in the progress dialog when applying presets"
     },
-    "presetsCliErrorsWaring": {
+    "presetsCliErrorsWarning": {
         "message": "<span class='message-negative'>WARNING!</span><br/>Configuration has been applied with CLI errors.",
         "description": "Text to show when there are CLI errors after applying presets or user configuration"
     },
