@@ -607,7 +607,7 @@
                                 <button
                                     type="button"
                                     :class="{ active: activeLayer === 'satellite' }"
-                                    aria-label="Satellite view"
+                                    :aria-label="$t('preflightMapSatellite')"
                                     @click="setLayer('satellite')"
                                 >
                                     S
@@ -615,7 +615,7 @@
                                 <button
                                     type="button"
                                     :class="{ active: activeLayer === 'hybrid' }"
-                                    aria-label="Hybrid satellite and street view"
+                                    :aria-label="$t('preflightMapHybrid')"
                                     @click="setLayer('hybrid')"
                                 >
                                     H
@@ -623,17 +623,19 @@
                                 <button
                                     type="button"
                                     :class="{ active: activeLayer === 'street' }"
-                                    aria-label="Street map view"
+                                    :aria-label="$t('preflightMapStreet')"
                                     @click="setLayer('street')"
                                 >
                                     R
                                 </button>
-                                <button type="button" aria-label="Zoom in" @click="zoomIn">+</button>
-                                <button type="button" aria-label="Zoom out" @click="zoomOut">&ndash;</button>
+                                <button type="button" :aria-label="$t('preflightMapZoomIn')" @click="zoomIn">+</button>
+                                <button type="button" :aria-label="$t('preflightMapZoomOut')" @click="zoomOut">
+                                    &ndash;
+                                </button>
                                 <button
                                     type="button"
                                     :class="{ active: isFullscreen }"
-                                    aria-label="Toggle fullscreen"
+                                    :aria-label="$t('preflightMapFullscreen')"
                                     @click="toggleFullscreen"
                                 >
                                     &#x26F6;
@@ -657,6 +659,7 @@ import { defineComponent, ref, computed, onMounted, onUnmounted, nextTick, watch
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "../elements/WikiButton.vue";
 import GUI from "../../js/gui";
+import { i18n } from "@/js/localization";
 import { usePreflight } from "@/composables/usePreflight";
 import { initMap } from "../../js/utils/map";
 import { fromLonLat } from "ol/proj";
@@ -711,6 +714,9 @@ export default defineComponent({
         });
 
         async function detectLocation() {
+            if (detectingLocation.value) {
+                return;
+            }
             detectingLocation.value = true;
             locationError.value = null;
             try {
@@ -720,7 +726,7 @@ export default defineComponent({
                 await preflight.refreshAll();
                 updateMapPosition();
             } catch (err) {
-                locationError.value = err.message || "Could not detect location";
+                locationError.value = err.message || i18n.getMessage("preflightGeolocationFailed");
             } finally {
                 detectingLocation.value = false;
             }
@@ -737,6 +743,9 @@ export default defineComponent({
         }
 
         async function refreshData() {
+            if (preflight.isLoading.value) {
+                return;
+            }
             await preflight.refreshAll();
         }
 
@@ -755,6 +764,12 @@ export default defineComponent({
         }
 
         function showSaveDialog() {
+            if (
+                preflight.location.latitude === null ||
+                preflight.savedLocations.length >= preflight.MAX_SAVED_LOCATIONS
+            ) {
+                return;
+            }
             saveLocationLabel.value = "";
             showingSaveInput.value = true;
         }
@@ -932,12 +947,12 @@ export default defineComponent({
 
         function getGnssKpLabel(kp) {
             if (kp <= 3) {
-                return "Minimal impact on GPS";
+                return i18n.getMessage("preflightKpMinimal");
             }
             if (kp <= 5) {
-                return "Possible GPS accuracy degradation";
+                return i18n.getMessage("preflightKpDegraded");
             }
-            return "Significant GPS interference expected";
+            return i18n.getMessage("preflightKpSevere");
         }
 
         function getGpsRescueClass() {
@@ -955,15 +970,15 @@ export default defineComponent({
 
         function getGpsRescueLabel() {
             if (preflight.solar.kpIndex === null) {
-                return "Check solar activity first";
+                return i18n.getMessage("preflightGpsRescueUnknown");
             }
             if (preflight.solar.kpIndex <= 4) {
-                return "GPS Rescue reliable";
+                return i18n.getMessage("preflightGpsRescueReliable");
             }
             if (preflight.solar.kpIndex <= 5) {
-                return "GPS Rescue may be unreliable";
+                return i18n.getMessage("preflightGpsRescueUnreliable");
             }
-            return "GPS Rescue NOT recommended";
+            return i18n.getMessage("preflightGpsRescueNotRecommended");
         }
 
         function formatVisibility(vis) {

@@ -8364,5 +8364,47 @@
     },
     "preflightCancel": {
         "message": "Cancel"
+    },
+    "preflightGeolocationFailed": {
+        "message": "Could not detect location"
+    },
+    "preflightMapSatellite": {
+        "message": "Satellite view"
+    },
+    "preflightMapHybrid": {
+        "message": "Hybrid satellite and street view"
+    },
+    "preflightMapStreet": {
+        "message": "Street map view"
+    },
+    "preflightMapZoomIn": {
+        "message": "Zoom in"
+    },
+    "preflightMapZoomOut": {
+        "message": "Zoom out"
+    },
+    "preflightMapFullscreen": {
+        "message": "Toggle fullscreen"
+    },
+    "preflightKpMinimal": {
+        "message": "Minimal impact on GPS"
+    },
+    "preflightKpDegraded": {
+        "message": "Possible GPS accuracy degradation"
+    },
+    "preflightKpSevere": {
+        "message": "Significant GPS interference expected"
+    },
+    "preflightGpsRescueUnknown": {
+        "message": "Check solar activity first"
+    },
+    "preflightGpsRescueReliable": {
+        "message": "GPS Rescue reliable"
+    },
+    "preflightGpsRescueUnreliable": {
+        "message": "GPS Rescue may be unreliable"
+    },
+    "preflightGpsRescueNotRecommended": {
+        "message": "GPS Rescue NOT recommended"
     }
 }
