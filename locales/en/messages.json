@@ -8249,7 +8249,7 @@
         "message": "Rain %"
     },
     "preflightWindUnit": {
-        "message": "Wind speeds in m/s"
+        "message": "Wind speeds in m/s. Altitudes above ground level (AGL)."
     },
     "preflightSolarActivity": {
         "message": "Solar Activity"
@@ -8276,7 +8276,7 @@
         "message": "GNSS / GPS Status"
     },
     "preflightGNSSHelp": {
-        "message": "GNSS satellite availability and signal quality are affected by solar activity. High Kp values can cause GPS toilet-bowling or GPS Rescue failures."
+        "message": "GNSS satellite signal quality is affected by solar activity. High Kp values can degrade GPS position accuracy and reduce GPS Rescue reliability."
     },
     "preflightGNSSNote": {
         "message": "GPS accuracy is affected by solar/geomagnetic conditions. Connect your quad for live satellite data on the GPS tab."

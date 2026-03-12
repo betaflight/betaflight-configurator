@@ -76,7 +76,7 @@
         }
         &.status-moderate {
             background: linear-gradient(135deg, #f39c12, #f1c40f);
-            color: #333;
+            color: #000;
         }
         &.status-warning {
             background: linear-gradient(135deg, #e67e22, #f39c12);
@@ -168,10 +168,12 @@
         }
 
         .weather-details {
+            th[scope="row"],
             td:first-child {
                 font-weight: 500;
                 width: 40%;
                 color: var(--surface-700);
+                text-align: left;
             }
         }
     }
@@ -221,7 +223,7 @@
         font-size: 12px;
         width: 100%;
 
-        thead .titles td {
+        thead .titles th {
             font-weight: bold;
             text-align: center;
             padding: 4px;
@@ -324,9 +326,11 @@
 
         .storm-scales {
             margin-bottom: 8px;
+            th[scope="row"],
             td:first-child {
                 font-weight: 500;
                 color: var(--surface-700);
+                text-align: left;
             }
         }
 
@@ -347,10 +351,12 @@
 
         .cf_table {
             margin-bottom: 8px;
+            th[scope="row"],
             td:first-child {
                 font-weight: 500;
                 color: var(--surface-700);
                 width: 50%;
+                text-align: left;
             }
         }
 

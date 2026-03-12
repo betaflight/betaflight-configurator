@@ -94,7 +94,7 @@
                                 <table class="cf_table weather-details">
                                     <tbody>
                                         <tr>
-                                            <td>{{ $t("preflightWind") }}</td>
+                                            <th scope="row">{{ $t("preflightWind") }}</th>
                                             <td>
                                                 <span
                                                     :class="
@@ -115,7 +115,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>{{ $t("preflightGusts") }}</td>
+                                            <th scope="row">{{ $t("preflightGusts") }}</th>
                                             <td>
                                                 <span
                                                     :class="
@@ -130,7 +130,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>{{ $t("preflightVisibility") }}</td>
+                                            <th scope="row">{{ $t("preflightVisibility") }}</th>
                                             <td>
                                                 <span :class="getVisStatusClass(preflight.weather.current.visibility)">
                                                     {{ formatVisibility(preflight.weather.current.visibility) }}
@@ -138,7 +138,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>{{ $t("preflightPrecipitation") }}</td>
+                                            <th scope="row">{{ $t("preflightPrecipitation") }}</th>
                                             <td>
                                                 <span
                                                     :class="
@@ -150,7 +150,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>{{ $t("preflightDewPoint") }}</td>
+                                            <th scope="row">{{ $t("preflightDewPoint") }}</th>
                                             <td>
                                                 {{ preflight.weather.current.dewPoint }}°C
                                                 <span
@@ -172,15 +172,15 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>{{ $t("preflightCloudCover") }}</td>
+                                            <th scope="row">{{ $t("preflightCloudCover") }}</th>
                                             <td>{{ preflight.weather.current.cloudCover }}%</td>
                                         </tr>
                                         <tr>
-                                            <td>{{ $t("preflightHumidity") }}</td>
+                                            <th scope="row">{{ $t("preflightHumidity") }}</th>
                                             <td>{{ preflight.weather.current.humidity }}%</td>
                                         </tr>
                                         <tr>
-                                            <td>{{ $t("preflightPressure") }}</td>
+                                            <th scope="row">{{ $t("preflightPressure") }}</th>
                                             <td>{{ preflight.weather.current.pressure }} hPa</td>
                                         </tr>
                                     </tbody>
@@ -263,12 +263,12 @@
                                 <table class="cf_table hourly-table">
                                     <thead>
                                         <tr class="titles">
-                                            <td>{{ $t("preflightTime") }}</td>
-                                            <td>{{ $t("preflightWind10m") }}</td>
-                                            <td>{{ $t("preflightWind80m") }}</td>
-                                            <td>{{ $t("preflightWind120m") }}</td>
-                                            <td>{{ $t("preflightGustsShort") }}</td>
-                                            <td>{{ $t("preflightRainProb") }}</td>
+                                            <th>{{ $t("preflightTime") }}</th>
+                                            <th>{{ $t("preflightWind10m") }}</th>
+                                            <th>{{ $t("preflightWind80m") }}</th>
+                                            <th>{{ $t("preflightWind120m") }}</th>
+                                            <th>{{ $t("preflightGustsShort") }}</th>
+                                            <th>{{ $t("preflightRainProb") }}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -352,19 +352,19 @@
                                     <table class="cf_table">
                                         <tbody>
                                             <tr>
-                                                <td>{{ $t("preflightGeoStorm") }}</td>
+                                                <th scope="row">{{ $t("preflightGeoStorm") }}</th>
                                                 <td :class="getStormClass(preflight.solar.stormLevel.geoStorm)">
                                                     G{{ preflight.solar.stormLevel.geoStorm }}
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td>{{ $t("preflightSolarRadiation") }}</td>
+                                                <th scope="row">{{ $t("preflightSolarRadiation") }}</th>
                                                 <td :class="getStormClass(preflight.solar.stormLevel.solarRadiation)">
                                                     S{{ preflight.solar.stormLevel.solarRadiation }}
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td>{{ $t("preflightRadioBlackout") }}</td>
+                                                <th scope="row">{{ $t("preflightRadioBlackout") }}</th>
                                                 <td :class="getStormClass(preflight.solar.stormLevel.radioBlackout)">
                                                     R{{ preflight.solar.stormLevel.radioBlackout }}
                                                 </td>
@@ -397,7 +397,7 @@
                                 <table class="cf_table">
                                     <tbody>
                                         <tr>
-                                            <td>{{ $t("preflightKpEffect") }}</td>
+                                            <th scope="row">{{ $t("preflightKpEffect") }}</th>
                                             <td>
                                                 <span
                                                     v-if="preflight.solar.kpIndex !== null"
@@ -409,7 +409,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>{{ $t("preflightGPSRescue") }}</td>
+                                            <th scope="row">{{ $t("preflightGPSRescue") }}</th>
                                             <td>
                                                 <span :class="getGpsRescueClass()">
                                                     {{ getGpsRescueLabel() }}
@@ -417,7 +417,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>{{ $t("preflightMagDeclination") }}</td>
+                                            <th scope="row">{{ $t("preflightMagDeclination") }}</th>
                                             <td>
                                                 <span v-if="preflight.mag.declination !== null">
                                                     {{ preflight.mag.declination.toFixed(2) }}°
@@ -426,7 +426,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>{{ $t("preflightMagInclination") }}</td>
+                                            <th scope="row">{{ $t("preflightMagInclination") }}</th>
                                             <td>
                                                 <span v-if="preflight.mag.inclination !== null">
                                                     {{ preflight.mag.inclination.toFixed(2) }}°
@@ -583,18 +583,22 @@ export default defineComponent({
         const manualLon = ref("");
 
         const isManualLocationValid = computed(() => {
-            const lat = parseFloat(manualLat.value);
-            const lon = parseFloat(manualLon.value);
-            return !isNaN(lat) && !isNaN(lon) && lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180;
+            const lat = Number.parseFloat(manualLat.value);
+            const lon = Number.parseFloat(manualLon.value);
+            return !Number.isNaN(lat) && !Number.isNaN(lon) && lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180;
         });
 
         const airspaceExplorerLink = computed(() => {
-            if (preflight.location.latitude === null) return "#";
+            if (preflight.location.latitude === null) {
+                return "#";
+            }
             return `https://skyvector.com/?ll=${preflight.location.latitude},${preflight.location.longitude}&chart=301&zoom=2`;
         });
 
         const droneSafetyMapLink = computed(() => {
-            if (preflight.location.latitude === null) return "#";
+            if (preflight.location.latitude === null) {
+                return "#";
+            }
             return `https://dronesafetymap.com/?lat=${preflight.location.latitude}&lng=${preflight.location.longitude}&zoom=13`;
         });
 
@@ -623,9 +627,11 @@ export default defineComponent({
         }
 
         async function applyManualLocation() {
-            if (!isManualLocationValid.value) return;
+            if (!isManualLocationValid.value) {
+                return;
+            }
             locationError.value = null;
-            preflight.setManualLocation(parseFloat(manualLat.value), parseFloat(manualLon.value));
+            preflight.setManualLocation(Number.parseFloat(manualLat.value), Number.parseFloat(manualLon.value));
             await preflight.refreshAll();
             updateMapPosition();
         }
@@ -635,7 +641,9 @@ export default defineComponent({
         }
 
         function initializeMap() {
-            if (mapInstance.value || !mapRef.value) return;
+            if (mapInstance.value || !mapRef.value) {
+                return;
+            }
             mapInstance.value = initMap({
                 target: mapRef.value,
                 defaultLayer: activeLayer.value,
@@ -645,7 +653,9 @@ export default defineComponent({
         }
 
         function updateMapPosition() {
-            if (preflight.location.latitude === null || preflight.location.longitude === null) return;
+            if (preflight.location.latitude === null || preflight.location.longitude === null) {
+                return;
+            }
             nextTick(() => {
                 initializeMap();
                 if (!mapInstance.value) return;
@@ -658,7 +668,9 @@ export default defineComponent({
         }
 
         function setLayer(layerKey) {
-            if (!mapInstance.value?.layers) return;
+            if (!mapInstance.value?.layers) {
+                return;
+            }
             Object.entries(mapInstance.value.layers).forEach(([key, layer]) => {
                 layer.setVisible(key === layerKey);
             });
@@ -667,12 +679,16 @@ export default defineComponent({
         }
 
         function zoomIn() {
-            if (!mapInstance.value?.mapView) return;
+            if (!mapInstance.value?.mapView) {
+                return;
+            }
             mapInstance.value.mapView.setZoom(mapInstance.value.mapView.getZoom() + 1);
         }
 
         function zoomOut() {
-            if (!mapInstance.value?.mapView) return;
+            if (!mapInstance.value?.mapView) {
+                return;
+            }
             mapInstance.value.mapView.setZoom(mapInstance.value.mapView.getZoom() - 1);
         }
 
@@ -707,14 +723,30 @@ export default defineComponent({
         }
 
         function getWeatherEmoji(code) {
-            if (code === 0) return "\u2600";
-            if (code <= 3) return "\u26C5";
-            if (code <= 48) return "\uD83C\uDF2B";
-            if (code <= 57) return "\uD83C\uDF27";
-            if (code <= 67) return "\uD83C\uDF27";
-            if (code <= 77) return "\u2744";
-            if (code <= 82) return "\uD83C\uDF26";
-            if (code <= 86) return "\u2744";
+            if (code === 0) {
+                return "\u2600";
+            }
+            if (code <= 3) {
+                return "\u26C5";
+            }
+            if (code <= 48) {
+                return "\uD83C\uDF2B";
+            }
+            if (code <= 57) {
+                return "\uD83C\uDF27";
+            }
+            if (code <= 67) {
+                return "\uD83C\uDF27";
+            }
+            if (code <= 77) {
+                return "\u2744";
+            }
+            if (code <= 82) {
+                return "\uD83C\uDF26";
+            }
+            if (code <= 86) {
+                return "\u2744";
+            }
             return "\u26A1";
         }
 
@@ -731,46 +763,76 @@ export default defineComponent({
         }
 
         function getStormClass(level) {
-            const num = parseInt(level) || 0;
-            if (num === 0) return "status-good";
-            if (num <= 2) return "status-moderate";
-            if (num <= 3) return "status-warning";
+            const num = Number.parseInt(level) || 0;
+            if (num === 0) {
+                return "status-good";
+            }
+            if (num <= 2) {
+                return "status-moderate";
+            }
+            if (num <= 3) {
+                return "status-warning";
+            }
             return "status-danger";
         }
 
         function getGnssKpClass(kp) {
-            if (kp <= 3) return "status-good";
-            if (kp <= 5) return "status-warning";
+            if (kp <= 3) {
+                return "status-good";
+            }
+            if (kp <= 5) {
+                return "status-warning";
+            }
             return "status-danger";
         }
 
         function getGnssKpLabel(kp) {
-            if (kp <= 3) return "Minimal impact on GPS";
-            if (kp <= 5) return "Possible GPS accuracy degradation";
+            if (kp <= 3) {
+                return "Minimal impact on GPS";
+            }
+            if (kp <= 5) {
+                return "Possible GPS accuracy degradation";
+            }
             return "Significant GPS interference expected";
         }
 
         function getGpsRescueClass() {
-            if (preflight.solar.kpIndex === null) return "";
-            if (preflight.solar.kpIndex <= 4) return "status-good";
-            if (preflight.solar.kpIndex <= 5) return "status-warning";
+            if (preflight.solar.kpIndex === null) {
+                return "";
+            }
+            if (preflight.solar.kpIndex <= 4) {
+                return "status-good";
+            }
+            if (preflight.solar.kpIndex <= 5) {
+                return "status-warning";
+            }
             return "status-danger";
         }
 
         function getGpsRescueLabel() {
-            if (preflight.solar.kpIndex === null) return "Check solar activity first";
-            if (preflight.solar.kpIndex <= 4) return "GPS Rescue reliable";
-            if (preflight.solar.kpIndex <= 5) return "GPS Rescue may be unreliable";
+            if (preflight.solar.kpIndex === null) {
+                return "Check solar activity first";
+            }
+            if (preflight.solar.kpIndex <= 4) {
+                return "GPS Rescue reliable";
+            }
+            if (preflight.solar.kpIndex <= 5) {
+                return "GPS Rescue may be unreliable";
+            }
             return "GPS Rescue NOT recommended";
         }
 
         function formatVisibility(vis) {
-            if (vis >= 1000) return `${(vis / 1000).toFixed(1)} km`;
+            if (vis >= 1000) {
+                return `${(vis / 1000).toFixed(1)} km`;
+            }
             return `${vis} m`;
         }
 
         function formatDuration(seconds) {
-            if (!seconds) return "-";
+            if (!seconds) {
+                return "-";
+            }
             const h = Math.floor(seconds / 3600);
             const m = Math.floor((seconds % 3600) / 60);
             return `${h}h ${m}m`;
