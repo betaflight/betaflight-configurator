@@ -158,6 +158,28 @@
                 </div>
             </div>
 
+            <!-- Launch Checks Breakdown -->
+            <div class="launch-checks" v-if="preflight.launchStatus.value.checks.length > 0">
+                <span
+                    v-for="(chk, idx) in preflight.launchStatus.value.checks"
+                    :key="idx"
+                    class="launch-check-item"
+                    :class="chk.cssClass"
+                >
+                    <em
+                        class="fas"
+                        :class="
+                            chk.level === 'good'
+                                ? 'fa-check-circle'
+                                : chk.level === 'danger'
+                                  ? 'fa-times-circle'
+                                  : 'fa-exclamation-circle'
+                        "
+                    ></em>
+                    {{ $t(chk.nameKey) }}
+                </span>
+            </div>
+
             <!-- Main Content Grid -->
             <div v-if="preflight.location.latitude !== null" class="grid-row grid-box col5">
                 <!-- Left Column: Weather -->

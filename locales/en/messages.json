@@ -8182,6 +8182,18 @@
     "preflightStatusNoData": {
         "message": "No Data"
     },
+    "preflightCheckWind": {
+        "message": "Wind"
+    },
+    "preflightCheckVisibility": {
+        "message": "Visibility"
+    },
+    "preflightCheckPrecipitation": {
+        "message": "Precipitation"
+    },
+    "preflightCheckSolar": {
+        "message": "Solar"
+    },
     "preflightRefresh": {
         "message": "Refresh"
     },

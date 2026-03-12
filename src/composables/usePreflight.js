@@ -377,25 +377,27 @@ export function usePreflight() {
 
     const launchStatus = computed(() => {
         if (!weather.current && solar.kpIndex === null) {
-            return { level: "unknown", label: "preflightStatusNoData", cssClass: "status-unknown" };
+            return { level: "unknown", label: "preflightStatusNoData", cssClass: "status-unknown", checks: [] };
         }
 
         const LEVELS = { good: 0, moderate: 1, warning: 2, danger: 3 };
         let worstLevel = "good";
+        const checks = [];
 
-        const check = (status) => {
+        const track = (nameKey, status) => {
+            checks.push({ nameKey, level: status.level, label: status.label, cssClass: status.cssClass });
             if ((LEVELS[status.level] || 0) > (LEVELS[worstLevel] || 0)) {
                 worstLevel = status.level;
             }
         };
 
         if (weather.current) {
-            check(getWindStatus(weather.current.windSpeed, weather.current.windGusts));
-            check(getVisibilityStatus(weather.current.visibility));
-            check(getPrecipitationStatus(weather.current.precipitation));
+            track("preflightCheckWind", getWindStatus(weather.current.windSpeed, weather.current.windGusts));
+            track("preflightCheckVisibility", getVisibilityStatus(weather.current.visibility));
+            track("preflightCheckPrecipitation", getPrecipitationStatus(weather.current.precipitation));
         }
         if (solar.kpIndex !== null) {
-            check(getKpStatus(solar.kpIndex));
+            track("preflightCheckSolar", getKpStatus(solar.kpIndex));
         }
 
         const labels = {
@@ -411,7 +413,7 @@ export function usePreflight() {
             danger: "status-danger",
         };
 
-        return { level: worstLevel, label: labels[worstLevel], cssClass: cssClasses[worstLevel] };
+        return { level: worstLevel, label: labels[worstLevel], cssClass: cssClasses[worstLevel], checks };
     });
 
     async function useGeolocation() {
