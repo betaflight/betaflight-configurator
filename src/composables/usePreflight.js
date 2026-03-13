@@ -451,8 +451,8 @@ export function usePreflight() {
                 reject(new Error("Geolocation not supported"));
                 return;
             }
-            navigator.geolocation.getCurrentPosition(
-                // NOSONAR
+            // prettier-ignore
+            navigator.geolocation.getCurrentPosition( // NOSONAR - user-initiated, required for preflight location
                 (position) => {
                     resolve({
                         latitude: position.coords.latitude,
