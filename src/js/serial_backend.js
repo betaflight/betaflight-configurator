@@ -28,6 +28,7 @@ import { EventBus } from "../components/eventBus";
 import { ispConnected } from "./utils/connection";
 import { unmountVueTab } from "./vue_tab_mounter";
 import { useConnectionStore } from "../stores/connection";
+import { useDialogStore } from "../stores/dialog";
 
 const logHead = "[SERIAL-BACKEND]";
 
@@ -481,23 +482,8 @@ async function checkReportProblems() {
     }
 
     if (needsProblemReportingDialog) {
-        const problemItemTemplate = $("#dialogReportProblems-listItemTemplate");
-        const problemDialogList = $("#dialogReportProblems-list");
-
-        problemDialogList.empty();
-
-        for (const problem of problems) {
-            problemItemTemplate.clone().prop("id", null).html(problem.description).appendTo(problemDialogList);
-        }
-
-        const problemDialog = $("#dialogReportProblems")[0];
-        $("#dialogReportProblems-closebtn")
-            .off("click")
-            .one("click", () => problemDialog.close());
-
-        problemDialog.showModal();
-        $("#dialogReportProblems").scrollTop(0);
-        $("#dialogReportProblems-closebtn").focus();
+        const dialogStore = useDialogStore();
+        dialogStore.open("ReportProblemsDialog", { problems }, { onClose: () => dialogStore.close() });
     }
 
     processUid();

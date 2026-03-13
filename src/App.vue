@@ -296,11 +296,13 @@
                 </div>
             </div>
         </div>
+        <GlobalDialogs />
     </UApp>
 </template>
 
 <script setup>
 import { reactive, toRef } from "vue";
+import GlobalDialogs from "./components/dialogs/GlobalDialogs.vue";
 import FCModule from "./js/fc.js";
 import MSPModule from "./js/msp.js";
 import PortHandlerModule from "./js/port_handler.js";
