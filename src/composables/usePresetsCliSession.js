@@ -7,6 +7,16 @@ import CliEngine from "../tabs/presets/CliEngine";
 const READ_DUMP_IDLE_MS = 500;
 const MAX_READ_TIMEOUT = 10000;
 
+function disconnectCliMakeSure() {
+    GUI.timeout_add(
+        "disconnect",
+        () => {
+            $("a.connection_button__link").trigger("click");
+        },
+        500,
+    );
+}
+
 export function usePresetsCliSession() {
     const cliWindowRef = ref(null);
     const windowWrapperRef = ref(null);
@@ -145,16 +155,6 @@ export function usePresetsCliSession() {
                 false,
             );
         });
-    }
-
-    function disconnectCliMakeSure() {
-        GUI.timeout_add(
-            "disconnect",
-            () => {
-                $("a.connection_button__link").trigger("click");
-            },
-            500,
-        );
     }
 
     function getErrorCount() {

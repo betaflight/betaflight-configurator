@@ -104,24 +104,27 @@
                             href="#"
                             class="tool regular-button"
                             @click.prevent="emit('toggle-cli-visible', true)"
-                            v-html="$t('presetsShowCli')"
-                        ></a>
+                            :aria-label="showCliLabel"
+                            >{{ showCliLabel }}</a
+                        >
                         <a
                             id="presets_cli_hide"
                             v-show="showCli"
                             href="#"
                             class="tool regular-button"
                             @click.prevent="emit('toggle-cli-visible', false)"
-                            v-html="$t('presetsHideCli')"
-                        ></a>
+                            :aria-label="hideCliLabel"
+                            >{{ hideCliLabel }}</a
+                        >
                         <a
                             id="presets_open_online"
                             class="tool regular-button"
                             target="_blank"
                             rel="noopener noreferrer"
                             :href="onlineLink"
-                            v-html="$t('presetsViewOnline')"
-                        ></a>
+                            :aria-label="viewOnlineLabel"
+                            >{{ viewOnlineLabel }}</a
+                        >
                         <a
                             id="presets_open_discussion"
                             class="tool regular-button"
@@ -129,8 +132,9 @@
                             rel="noopener noreferrer"
                             :href="discussionHref"
                             :class="{ disabled: !discussionLink }"
-                            v-html="$t('presetsOpenDiscussion')"
-                        ></a>
+                            :aria-label="discussionLabel"
+                            >{{ discussionLabel }}</a
+                        >
                     </div>
                     <div>
                         <a
@@ -159,6 +163,7 @@
 import { computed, nextTick, ref, watch } from "vue";
 import { marked } from "marked";
 import DOMPurify from "dompurify";
+import { i18n } from "@/js/localization";
 import PresetCard from "./PresetCard.vue";
 
 const props = defineProps({
@@ -231,6 +236,10 @@ const onlineLink = computed(() =>
 );
 const discussionLink = computed(() => sanitizeExternalHttpUrl(props.preset?.discussion));
 const discussionHref = computed(() => discussionLink.value || undefined);
+const showCliLabel = decodeHtmlEntities(i18n.getMessage("presetsShowCli"));
+const hideCliLabel = decodeHtmlEntities(i18n.getMessage("presetsHideCli"));
+const viewOnlineLabel = decodeHtmlEntities(i18n.getMessage("presetsViewOnline"));
+const discussionLabel = decodeHtmlEntities(i18n.getMessage("presetsOpenDiscussion"));
 
 const descriptionHtml = computed(() => {
     if (!isDescriptionHtml.value) {
@@ -280,6 +289,16 @@ function sanitizeExternalHttpUrl(rawUrl) {
     } catch {
         return "";
     }
+}
+
+function decodeHtmlEntities(text) {
+    if (!text) {
+        return "";
+    }
+
+    const textarea = document.createElement("textarea");
+    textarea.innerHTML = text;
+    return textarea.value;
 }
 
 function handleApply() {
