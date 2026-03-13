@@ -10,98 +10,92 @@
         @mouseleave="mouseOnPanel = false"
     >
         <div class="preset_title_panel">
-            <span
+            <img
                 v-if="repository?.official"
                 class="preset_title_panel_betaflight_official"
-                :style="{ backgroundImage: `url(${officialIcon})` }"
-            ></span>
-            <span
+                :src="officialIcon"
+                alt=""
+            />
+            <button
+                type="button"
                 class="preset_title_panel_star"
                 :style="{ backgroundImage: `url(${starImage})`, backgroundColor: starBackgroundColor }"
-                role="button"
-                tabindex="0"
                 :aria-pressed="isFavorite"
                 :aria-label="favoriteAriaLabel"
                 @click.stop="handleFavoriteToggle"
-                @keydown.enter.stop="handleFavoriteToggle"
-                @keydown.space.stop.prevent="handleFavoriteToggle"
                 @mouseenter="mouseOnStar = true"
                 @mouseleave="mouseOnStar = false"
-            ></span>
+            ></button>
             <div>
                 <span class="preset_title_panel_title">{{ preset.title }}</span>
             </div>
-            <div>
-                <table class="presets_title_panel_table" role="presentation">
-                    <tbody>
-                        <tr>
-                            <td>
-                                <span
-                                    class="preset_title_panel_official preset_title_panel_status_experimental"
-                                    :class="{ hidden: preset.status !== 'EXPERIMENTAL' }"
-                                    v-html="$t('presetsExperimental')"
-                                ></span>
-                                <span
-                                    class="preset_title_panel_official preset_title_panel_status_community"
-                                    :class="{ hidden: preset.status !== 'COMMUNITY' }"
-                                    v-html="$t('presetsCommunity')"
-                                ></span>
-                                <span
-                                    class="preset_title_panel_official preset_title_panel_status_official"
-                                    :class="{ hidden: preset.status !== 'OFFICIAL' }"
-                                    v-html="$t('presetsOfficial')"
-                                ></span>
-                            </td>
-                            <td>
-                                <span class="preset_title_panel_category">{{ preset.category }}</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span
-                                    class="preset_title_panel_label preset_title_panel_author_label"
-                                    v-html="$t('presetsAuthor')"
-                                ></span>
-                            </td>
-                            <td>
-                                <span class="preset_title_panel_author_text">{{ preset.author }}</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span
-                                    class="preset_title_panel_label preset_title_panel_versions_label"
-                                    v-html="$t('presetsVersions')"
-                                ></span>
-                            </td>
-                            <td>
-                                <span class="preset_title_panel_versions_text">{{ firmwareVersions }}</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span
-                                    class="preset_title_panel_label preset_title_panel_keywords_label"
-                                    v-html="$t('presetsKeywords')"
-                                ></span>
-                            </td>
-                            <td>
-                                <span class="preset_title_panel_keywords_text" :title="keywords">{{ keywords }}</span>
-                            </td>
-                        </tr>
-                        <tr v-if="showRepositoryName" class="preset_title_panel_repository_row">
-                            <td>
-                                <span
-                                    class="preset_title_panel_label preset_title_panel_repository_label"
-                                    v-html="$t('presetsSourceRepository')"
-                                ></span>
-                            </td>
-                            <td>
-                                <span class="preset_title_panel_repository_text">{{ repository?.name }}</span>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="presets_title_panel_meta">
+                <div class="presets_title_panel_row">
+                    <div class="presets_title_panel_key">
+                        <span
+                            class="preset_title_panel_official preset_title_panel_status_experimental"
+                            :class="{ hidden: preset.status !== 'EXPERIMENTAL' }"
+                            v-html="$t('presetsExperimental')"
+                        ></span>
+                        <span
+                            class="preset_title_panel_official preset_title_panel_status_community"
+                            :class="{ hidden: preset.status !== 'COMMUNITY' }"
+                            v-html="$t('presetsCommunity')"
+                        ></span>
+                        <span
+                            class="preset_title_panel_official preset_title_panel_status_official"
+                            :class="{ hidden: preset.status !== 'OFFICIAL' }"
+                            v-html="$t('presetsOfficial')"
+                        ></span>
+                    </div>
+                    <div class="presets_title_panel_value">
+                        <span class="preset_title_panel_category">{{ preset.category }}</span>
+                    </div>
+                </div>
+                <div class="presets_title_panel_row">
+                    <div class="presets_title_panel_key">
+                        <span
+                            class="preset_title_panel_label preset_title_panel_author_label"
+                            v-html="$t('presetsAuthor')"
+                        ></span>
+                    </div>
+                    <div class="presets_title_panel_value">
+                        <span class="preset_title_panel_author_text">{{ preset.author }}</span>
+                    </div>
+                </div>
+                <div class="presets_title_panel_row">
+                    <div class="presets_title_panel_key">
+                        <span
+                            class="preset_title_panel_label preset_title_panel_versions_label"
+                            v-html="$t('presetsVersions')"
+                        ></span>
+                    </div>
+                    <div class="presets_title_panel_value">
+                        <span class="preset_title_panel_versions_text">{{ firmwareVersions }}</span>
+                    </div>
+                </div>
+                <div class="presets_title_panel_row">
+                    <div class="presets_title_panel_key">
+                        <span
+                            class="preset_title_panel_label preset_title_panel_keywords_label"
+                            v-html="$t('presetsKeywords')"
+                        ></span>
+                    </div>
+                    <div class="presets_title_panel_value">
+                        <span class="preset_title_panel_keywords_text" :title="keywords">{{ keywords }}</span>
+                    </div>
+                </div>
+                <div v-if="showRepositoryName" class="presets_title_panel_row preset_title_panel_repository_row">
+                    <div class="presets_title_panel_key">
+                        <span
+                            class="preset_title_panel_label preset_title_panel_repository_label"
+                            v-html="$t('presetsSourceRepository')"
+                        ></span>
+                    </div>
+                    <div class="presets_title_panel_value">
+                        <span class="preset_title_panel_repository_text">{{ repository?.name }}</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -241,6 +235,7 @@ function handleCardKeydown(event) {
     cursor: pointer;
     right: -6px;
     top: -5px;
+    border: 0;
 }
 
 .preset_title_panel_betaflight_official {
@@ -292,22 +287,23 @@ function handleCardKeydown(event) {
     text-overflow: ellipsis;
 }
 
-.presets_title_panel_table {
-    table-layout: fixed;
-    width: 100%;
-    border-collapse: collapse;
+.presets_title_panel_meta {
+    display: grid;
+    gap: 0;
 }
 
-.presets_title_panel_table td {
+.presets_title_panel_row {
+    display: grid;
+    grid-template-columns: 100px minmax(0, 1fr);
+    align-items: center;
+    min-height: 24px;
+}
+
+.presets_title_panel_key,
+.presets_title_panel_value {
     overflow: hidden;
-    height: 24px;
-    width: auto;
     text-overflow: ellipsis;
     white-space: nowrap;
-}
-
-.presets_title_panel_table td:nth-child(1) {
-    width: 100px;
 }
 
 .preset_title_panel_label {
