@@ -435,8 +435,8 @@ export function usePreflight() {
                 reject(new Error("Geolocation not supported"));
                 return;
             }
-            // Geolocation is required for this tab's core functionality (NOSONAR)
             navigator.geolocation.getCurrentPosition(
+                // NOSONAR - geolocation is user-initiated and required for preflight data
                 (position) => {
                     resolve({
                         latitude: position.coords.latitude,
