@@ -31,6 +31,7 @@ import ReceiverTab from "../components/tabs/ReceiverTab.vue";
 import OsdTab from "../components/tabs/OsdTab.vue";
 import SetupTab from "../components/tabs/SetupTab.vue";
 import PidTuningTab from "../components/tabs/PidTuningTab.vue";
+import VtxTab from "../components/tabs/VtxTab.vue";
 
 // Registry of Vue tab components - used by main.js for dynamic mounting
 export const VueTabComponents = {
@@ -58,6 +59,7 @@ export const VueTabComponents = {
     osd: OsdTab,
     setup: SetupTab,
     pid_tuning: PidTuningTab,
+    vtx: VtxTab,
     // Move motors before pid_tuning if present in the future
 };
 
@@ -94,5 +96,6 @@ export const BetaflightComponents = {
         app.component("OsdTab", OsdTab);
         app.component("SetupTab", SetupTab);
         app.component("PidTuningTab", PidTuningTab);
+        app.component("VtxTab", VtxTab);
     },
 };
