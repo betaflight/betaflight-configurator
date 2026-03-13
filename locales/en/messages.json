@@ -8356,6 +8356,69 @@
     "preflightUvVeryHigh": {
         "message": "Very High"
     },
+    "preflightBatteryRisk": {
+        "message": "Battery Risk"
+    },
+    "preflightBatteryOk": {
+        "message": "Normal range"
+    },
+    "preflightBatteryCool": {
+        "message": "Reduced performance, warm batteries"
+    },
+    "preflightBatteryCold": {
+        "message": "Severely reduced capacity"
+    },
+    "preflightBatteryHot": {
+        "message": "Risk of swelling, keep shaded"
+    },
+    "preflightBatteryExtreme": {
+        "message": "Do not fly, extreme heat"
+    },
+    "preflightCheckBattery": {
+        "message": "Battery"
+    },
+    "preflightCheckDensityAlt": {
+        "message": "Density Alt"
+    },
+    "preflightFeelsLike": {
+        "message": "Feels Like"
+    },
+    "preflightFogRisk": {
+        "message": "Fog Risk"
+    },
+    "preflightFogUnlikely": {
+        "message": "Unlikely"
+    },
+    "preflightFogLow": {
+        "message": "Low risk"
+    },
+    "preflightFogModerate": {
+        "message": "Moderate risk"
+    },
+    "preflightFogHigh": {
+        "message": "High risk"
+    },
+    "preflightElevation": {
+        "message": "Elevation"
+    },
+    "preflightDensityAlt": {
+        "message": "Density Altitude"
+    },
+    "preflightDaNormal": {
+        "message": "Normal performance"
+    },
+    "preflightDaReduced": {
+        "message": "Slightly reduced lift"
+    },
+    "preflightDaLow": {
+        "message": "Noticeably reduced performance"
+    },
+    "preflightDaPoor": {
+        "message": "Significant lift reduction"
+    },
+    "preflightCivilTwilight": {
+        "message": "Legal Flight Window"
+    },
     "preflightRefresh": {
         "message": "Refresh"
     },

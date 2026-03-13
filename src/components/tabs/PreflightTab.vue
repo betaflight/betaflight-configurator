@@ -324,8 +324,64 @@
                                             <td>{{ preflight.weather.current.humidity }}%</td>
                                         </tr>
                                         <tr>
+                                            <th scope="row">{{ $t("preflightFeelsLike") }}</th>
+                                            <td>
+                                                {{ preflight.weather.current.apparentTemperature }}°C ({{
+                                                    toFahrenheit(preflight.weather.current.apparentTemperature)
+                                                }}°F)
+                                            </td>
+                                        </tr>
+                                        <tr>
                                             <th scope="row">{{ $t("preflightPressure") }}</th>
                                             <td>{{ preflight.weather.current.pressure }} hPa</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">{{ $t("preflightBatteryRisk") }}</th>
+                                            <td>
+                                                <span
+                                                    :class="
+                                                        preflight.getBatteryTempStatus(
+                                                            preflight.weather.current.temperature,
+                                                        ).cssClass
+                                                    "
+                                                    class="status-badge"
+                                                >
+                                                    {{
+                                                        $t(
+                                                            preflight.getBatteryTempStatus(
+                                                                preflight.weather.current.temperature,
+                                                            ).label,
+                                                        )
+                                                    }}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">{{ $t("preflightFogRisk") }}</th>
+                                            <td>
+                                                <span
+                                                    :class="
+                                                        preflight.getFogRisk(
+                                                            preflight.weather.current.temperature,
+                                                            preflight.weather.current.dewPoint,
+                                                            preflight.weather.current.humidity,
+                                                            preflight.weather.current.windSpeed,
+                                                        ).cssClass
+                                                    "
+                                                    class="status-badge"
+                                                >
+                                                    {{
+                                                        $t(
+                                                            preflight.getFogRisk(
+                                                                preflight.weather.current.temperature,
+                                                                preflight.weather.current.dewPoint,
+                                                                preflight.weather.current.humidity,
+                                                                preflight.weather.current.windSpeed,
+                                                            ).label,
+                                                        )
+                                                    }}
+                                                </span>
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -353,6 +409,12 @@
                                     <div class="fw-label">{{ $t("preflightSunset") }}</div>
                                     <div class="fw-value">
                                         {{ preflight.formatTime(preflight.weather.daily.sunset) }}
+                                    </div>
+                                </div>
+                                <div class="flight-window-item">
+                                    <div class="fw-label">{{ $t("preflightCivilTwilight") }}</div>
+                                    <div class="fw-value" :class="civilTwilightStatus">
+                                        {{ civilTwilightStart }} – {{ civilTwilightEnd }}
                                     </div>
                                 </div>
                                 <div class="flight-window-item">
@@ -548,6 +610,23 @@
                                                     {{ preflight.location.longitude.toFixed(4) }}
                                                 </span>
                                                 <span v-else>-</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">{{ $t("preflightElevation") }}</th>
+                                            <td>
+                                                <span v-if="preflight.location.elevation !== null">
+                                                    {{ preflight.location.elevation }} m AMSL
+                                                </span>
+                                                <span v-else>-</span>
+                                            </td>
+                                        </tr>
+                                        <tr v-if="densityAltitude !== null">
+                                            <th scope="row">{{ $t("preflightDensityAlt") }}</th>
+                                            <td>
+                                                <span :class="getDensityAltStatusClass()">
+                                                    {{ densityAltitude }} m
+                                                </span>
                                             </td>
                                         </tr>
                                         <tr>
@@ -832,6 +911,51 @@ export default defineComponent({
             const lon = Number.parseFloat(manualLon.value);
             return !Number.isNaN(lat) && !Number.isNaN(lon) && lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180;
         });
+
+        const civilTwilightStart = computed(() => {
+            if (!preflight.weather.daily?.sunrise) {
+                return "-";
+            }
+            const d = new Date(preflight.weather.daily.sunrise);
+            d.setMinutes(d.getMinutes() - 30);
+            return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+        });
+
+        const civilTwilightEnd = computed(() => {
+            if (!preflight.weather.daily?.sunset) {
+                return "-";
+            }
+            const d = new Date(preflight.weather.daily.sunset);
+            d.setMinutes(d.getMinutes() + 30);
+            return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+        });
+
+        const civilTwilightStatus = computed(() => {
+            if (!preflight.weather.daily?.sunrise || !preflight.weather.daily?.sunset) {
+                return "";
+            }
+            const now = new Date();
+            const start = new Date(preflight.weather.daily.sunrise);
+            start.setMinutes(start.getMinutes() - 30);
+            const end = new Date(preflight.weather.daily.sunset);
+            end.setMinutes(end.getMinutes() + 30);
+            return now >= start && now <= end ? "status-good" : "status-danger";
+        });
+
+        const densityAltitude = computed(() => {
+            if (!preflight.weather.current || preflight.location.elevation === null) {
+                return null;
+            }
+            return preflight.getDensityAltitude(
+                preflight.location.elevation,
+                preflight.weather.current.pressure,
+                preflight.weather.current.temperature,
+            );
+        });
+
+        function getDensityAltStatusClass() {
+            return preflight.getDensityAltitudeStatus(densityAltitude.value).cssClass;
+        }
 
         const airspaceExplorerLink = computed(() => {
             if (preflight.location.latitude === null) {
@@ -1142,6 +1266,11 @@ export default defineComponent({
             manualLat,
             manualLon,
             isManualLocationValid,
+            civilTwilightStart,
+            civilTwilightEnd,
+            civilTwilightStatus,
+            densityAltitude,
+            getDensityAltStatusClass,
             airspaceExplorerLink,
             droneSafetyMapLink,
             notamLink,

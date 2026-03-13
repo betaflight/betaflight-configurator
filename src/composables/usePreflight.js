@@ -125,6 +125,67 @@ function getPrecipitationStatus(precip) {
     return { level: "danger", label: "preflightPrecipHeavy", cssClass: "status-danger" };
 }
 
+function getBatteryTempStatus(temp) {
+    if (temp === null || temp === undefined) {
+        return { level: "unknown", label: "preflightLevelUnknown", cssClass: "status-unknown" };
+    }
+    if (temp > 50) {
+        return { level: "danger", label: "preflightBatteryExtreme", cssClass: "status-danger" };
+    }
+    if (temp > 40) {
+        return { level: "warning", label: "preflightBatteryHot", cssClass: "status-warning" };
+    }
+    if (temp < 0) {
+        return { level: "danger", label: "preflightBatteryCold", cssClass: "status-danger" };
+    }
+    if (temp < 10) {
+        return { level: "warning", label: "preflightBatteryCool", cssClass: "status-warning" };
+    }
+    return { level: "good", label: "preflightBatteryOk", cssClass: "status-good" };
+}
+
+function getDensityAltitude(elevation, pressure, temp) {
+    if (elevation === null || pressure === null || temp === null) {
+        return null;
+    }
+    const pressureAltitude = (1013.25 - pressure) * 30 + elevation;
+    const isaTemp = 15 - (2 * elevation) / 1000;
+    return Math.round(pressureAltitude + 120 * (temp - isaTemp));
+}
+
+function getDensityAltitudeStatus(da) {
+    if (da === null || da === undefined) {
+        return { level: "unknown", label: "preflightLevelUnknown", cssClass: "status-unknown" };
+    }
+    if (da < 1000) {
+        return { level: "good", label: "preflightDaNormal", cssClass: "status-good" };
+    }
+    if (da < 2000) {
+        return { level: "moderate", label: "preflightDaReduced", cssClass: "status-moderate" };
+    }
+    if (da < 3000) {
+        return { level: "warning", label: "preflightDaLow", cssClass: "status-warning" };
+    }
+    return { level: "danger", label: "preflightDaPoor", cssClass: "status-danger" };
+}
+
+function getFogRisk(temp, dewPoint, humidity, windSpeed) {
+    if (temp === null || dewPoint === null || humidity === null) {
+        return { level: "unknown", label: "preflightLevelUnknown", cssClass: "status-unknown" };
+    }
+    const spread = temp - dewPoint;
+    if (spread < 2 && humidity > 95 && (windSpeed || 0) < 3) {
+        return { level: "danger", label: "preflightFogHigh", cssClass: "status-danger" };
+    }
+    if (spread < 4 && humidity > 90) {
+        return { level: "warning", label: "preflightFogModerate", cssClass: "status-warning" };
+    }
+    if (spread < 6 && humidity > 85) {
+        return { level: "moderate", label: "preflightFogLow", cssClass: "status-moderate" };
+    }
+    return { level: "good", label: "preflightFogUnlikely", cssClass: "status-good" };
+}
+
 function browserGeolocation() {
     return new Promise((resolve, reject) => {
         if (!navigator.geolocation) {
@@ -202,6 +263,7 @@ export function usePreflight() {
     const location = reactive({
         latitude: null,
         longitude: null,
+        elevation: null,
         name: "",
         source: "",
     });
@@ -518,6 +580,11 @@ export function usePreflight() {
             track("preflightCheckWind", getWindStatus(weather.current.windSpeed, weather.current.windGusts));
             track("preflightCheckVisibility", getVisibilityStatus(weather.current.visibility));
             track("preflightCheckPrecipitation", getPrecipitationStatus(weather.current.precipitation));
+            track("preflightCheckBattery", getBatteryTempStatus(weather.current.temperature));
+            const da = getDensityAltitude(location.elevation, weather.current.pressure, weather.current.temperature);
+            if (da !== null) {
+                track("preflightCheckDensityAlt", getDensityAltitudeStatus(da));
+            }
         }
         if (solar.kpIndex !== null) {
             track("preflightCheckSolar", getKpStatus(solar.kpIndex));
@@ -578,12 +645,34 @@ export function usePreflight() {
         }
     }
 
+    async function fetchElevation() {
+        try {
+            const response = await fetch(
+                `https://api.open-meteo.com/v1/elevation?latitude=${location.latitude}&longitude=${location.longitude}`,
+            );
+            if (!response.ok) {
+                throw new Error(`Elevation API error: ${response.status}`);
+            }
+            const data = await response.json();
+            if (data.elevation && data.elevation.length > 0) {
+                location.elevation = data.elevation[0];
+            }
+        } catch (e) {
+            console.warn("Elevation fetch failed:", e.message);
+            location.elevation = null;
+        }
+    }
+
     async function refreshAll() {
         if (location.latitude === null || location.longitude === null) {
             return;
         }
         updateMagneticDeclination();
-        await Promise.allSettled([fetchWeather(location.latitude, location.longitude), fetchSolarActivity()]);
+        await Promise.allSettled([
+            fetchWeather(location.latitude, location.longitude),
+            fetchSolarActivity(),
+            fetchElevation(),
+        ]);
     }
 
     return {
@@ -610,6 +699,10 @@ export function usePreflight() {
         getPrecipitationStatus,
         getDewPointRisk,
         getUvStatus,
+        getBatteryTempStatus,
+        getDensityAltitude,
+        getDensityAltitudeStatus,
+        getFogRisk,
         getWindDirectionLabel,
         WMO_CODES,
         MAX_SAVED_LOCATIONS,
