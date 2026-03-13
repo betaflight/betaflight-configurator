@@ -8652,5 +8652,17 @@
     },
     "preflightGpsRescueNotRecommended": {
         "message": "GPS Rescue NOT recommended"
+    },
+    "preflightForecast": {
+        "message": "5-Day Forecast"
+    },
+    "preflightForecastHelp": {
+        "message": "Daily weather overview to help plan flight sessions ahead"
+    },
+    "preflightForecastDay": {
+        "message": "Day"
+    },
+    "preflightForecastWeather": {
+        "message": "Weather"
     }
 }

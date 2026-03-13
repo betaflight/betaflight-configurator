@@ -274,6 +274,7 @@ export function usePreflight() {
         current: null,
         hourly: null,
         daily: null,
+        forecast: null,
         lastUpdated: null,
     });
 
@@ -431,9 +432,14 @@ export function usePreflight() {
                     "uv_index_max",
                     "temperature_2m_max",
                     "temperature_2m_min",
+                    "weather_code",
+                    "wind_speed_10m_max",
+                    "wind_gusts_10m_max",
+                    "precipitation_probability_max",
                 ].join(","),
                 wind_speed_unit: "ms",
                 forecast_hours: 12,
+                forecast_days: 5,
                 timezone: "auto",
             });
 
@@ -488,6 +494,23 @@ export function usePreflight() {
                     cloudCover: data.hourly.cloud_cover[i],
                     temperature: data.hourly.temperature_2m[i],
                     dewPoint: data.hourly.dew_point_2m[i],
+                });
+            }
+
+            weather.forecast = [];
+            const forecastLen = data.daily.time?.length || 0;
+            for (let i = 0; i < forecastLen; i++) {
+                weather.forecast.push({
+                    date: data.daily.time[i],
+                    weatherCode: data.daily.weather_code?.[i] ?? null,
+                    weatherDescription: WMO_CODES[data.daily.weather_code?.[i]] || "preflightLevelUnknown",
+                    tempMax: data.daily.temperature_2m_max?.[i] ?? null,
+                    tempMin: data.daily.temperature_2m_min?.[i] ?? null,
+                    windMax: data.daily.wind_speed_10m_max?.[i] ?? null,
+                    gustsMax: data.daily.wind_gusts_10m_max?.[i] ?? null,
+                    precipProbability: data.daily.precipitation_probability_max?.[i] ?? null,
+                    sunrise: data.daily.sunrise?.[i] ?? null,
+                    sunset: data.daily.sunset?.[i] ?? null,
                 });
             }
 

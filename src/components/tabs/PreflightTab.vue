@@ -511,6 +511,68 @@
                             <div v-else class="no-data">{{ $t("preflightNoData") }}</div>
                         </div>
                     </div>
+
+                    <!-- 5-Day Forecast -->
+                    <div
+                        class="gui_box grey"
+                        v-if="preflight.weather.forecast && preflight.weather.forecast.length > 0"
+                    >
+                        <div class="gui_box_titlebar">
+                            <div class="spacer_box_title">
+                                <em class="fas fa-calendar-alt"></em> {{ $t("preflightForecast") }}
+                            </div>
+                            <div class="helpicon cf_tip" :title="$t('preflightForecastHelp')"></div>
+                        </div>
+                        <div class="spacer_box">
+                            <table class="cf_table forecast-table">
+                                <thead>
+                                    <tr class="titles">
+                                        <th>{{ $t("preflightForecastDay") }}</th>
+                                        <th>{{ $t("preflightForecastWeather") }}</th>
+                                        <th>{{ $t("preflightTempRange") }}</th>
+                                        <th>{{ $t("preflightWind") }}</th>
+                                        <th>{{ $t("preflightGusts") }}</th>
+                                        <th>{{ $t("preflightRainProb") }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr
+                                        v-for="(day, idx) in preflight.weather.forecast"
+                                        :key="idx"
+                                        :class="getForecastRowClass(day)"
+                                    >
+                                        <td>{{ formatForecastDay(day.date) }}</td>
+                                        <td>
+                                            {{ getWeatherEmoji(day.weatherCode) }}
+                                            {{ $t(day.weatherDescription) }}
+                                        </td>
+                                        <td>
+                                            {{ day.tempMin !== null ? day.tempMin + "°" : "-" }} /
+                                            {{ day.tempMax !== null ? day.tempMax + "°C" : "-" }}
+                                        </td>
+                                        <td :class="getWindStatusClass(day.windMax, day.gustsMax)">
+                                            {{ day.windMax !== null ? day.windMax.toFixed(1) : "-" }}
+                                        </td>
+                                        <td :class="getWindStatusClass(day.gustsMax, day.gustsMax)">
+                                            {{ day.gustsMax !== null ? day.gustsMax.toFixed(1) : "-" }}
+                                        </td>
+                                        <td
+                                            :class="
+                                                day.precipProbability > 50
+                                                    ? 'status-warning'
+                                                    : day.precipProbability > 20
+                                                      ? 'status-moderate'
+                                                      : ''
+                                            "
+                                        >
+                                            {{ day.precipProbability !== null ? day.precipProbability + "%" : "-" }}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="table-note">{{ $t("preflightWindUnit") }}</div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Right Column: Solar, GNSS, Airspace -->
@@ -883,6 +945,29 @@ function toFahrenheit(celsius) {
         return "-";
     }
     return ((celsius * 9) / 5 + 32).toFixed(1);
+}
+
+function formatForecastDay(dateStr) {
+    if (!dateStr) {
+        return "-";
+    }
+    const d = new Date(`${dateStr}T12:00:00`);
+    return d.toLocaleDateString([], { weekday: "short", month: "short", day: "numeric" });
+}
+
+function getForecastRowClass(day) {
+    const wind = Math.max(day.windMax || 0, day.gustsMax || 0);
+    const precip = day.precipProbability || 0;
+    if (wind >= 14 || precip > 80) {
+        return "forecast-row-danger";
+    }
+    if (wind >= 11 || precip > 50) {
+        return "forecast-row-warning";
+    }
+    if (wind >= 8 || precip > 30) {
+        return "forecast-row-moderate";
+    }
+    return "";
 }
 
 export default defineComponent({
@@ -1308,6 +1393,8 @@ export default defineComponent({
             toFahrenheit,
             getUvStatusClass,
             getUvStatusLabel,
+            formatForecastDay,
+            getForecastRowClass,
         };
     },
 });

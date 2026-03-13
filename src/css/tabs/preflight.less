@@ -326,6 +326,47 @@
         text-align: right;
     }
 
+    /* 5-Day Forecast table */
+    .forecast-table {
+        font-size: 12px;
+        width: 100%;
+
+        thead .titles th {
+            font-weight: bold;
+            text-align: center;
+            padding: 4px;
+            background: var(--surface-300);
+            border-bottom: 1px solid var(--surface-500);
+        }
+
+        tbody td {
+            text-align: center;
+            padding: 4px 6px;
+            &:first-child {
+                text-align: left;
+                font-weight: 500;
+                white-space: nowrap;
+            }
+            &:nth-child(2) {
+                text-align: left;
+            }
+        }
+
+        tbody tr:nth-child(even) {
+            background: var(--surface-200);
+        }
+
+        .forecast-row-danger {
+            background: rgba(231, 76, 60, 0.1) !important;
+        }
+        .forecast-row-warning {
+            background: rgba(230, 126, 34, 0.1) !important;
+        }
+        .forecast-row-moderate {
+            background: rgba(243, 156, 18, 0.08) !important;
+        }
+    }
+
     /* Solar Activity */
     .solar-info {
         .kp-display {
