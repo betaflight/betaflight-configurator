@@ -145,16 +145,20 @@ export default defineComponent({
         };
 
         const onTabMounted = async () => {
-            // Register this CLI instance directly with TABS.cli for serial communication
-            TABS.cli = {
-                read: cli.read,
-                cleanup: (callback) => {
-                    cli.cleanup();
-                    if (callback) {
-                        callback();
-                    }
-                },
-            };
+            // Set up autocomplete event handlers BEFORE initialize
+            // to avoid missing the build:stop event
+            EventBus.$on("autocomplete:build:start", onBuildStart);
+            EventBus.$on("autocomplete:build:stop", onBuildStop);
+
+            // Wait for vue_tab_mounter.js to finish creating the TABS.cli adapter
+            // (it overwrites TABS[tabName] after mount() returns), then attach
+            // our read function to it for serial communication.
+            await nextTick();
+            if (TABS.cli) {
+                TABS.cli.read = cli.read;
+            } else {
+                TABS.cli = { read: cli.read };
+            }
 
             await cli.initialize();
 
@@ -163,10 +167,6 @@ export default defineComponent({
             if (cli.commandInputRef.value) {
                 cli.commandInputRef.value.focus();
             }
-
-            // Set up autocomplete event handlers
-            EventBus.$on("autocomplete:build:start", onBuildStart);
-            EventBus.$on("autocomplete:build:stop", onBuildStop);
 
             // Adapt for mobile
             handleResize();
@@ -178,9 +178,9 @@ export default defineComponent({
             // This prevents serial_backend from trying to call TABS.cli.read()
             cli.cleanup();
 
-            // Then clean up TABS.cli reference
+            // Remove read handler from TABS.cli
             if (TABS.cli && TABS.cli.read === cli.read) {
-                TABS.cli = null;
+                delete TABS.cli.read;
             }
 
             // Remove event listeners

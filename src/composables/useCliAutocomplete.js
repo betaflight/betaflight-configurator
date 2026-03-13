@@ -340,9 +340,19 @@ export function useCliAutocomplete() {
      * Evaluate strategies against the current input and populate the dropdown.
      */
     function update(inputText, cursorPos) {
-        if (!strategies.length || !CliAutoComplete.isEnabled() || CliAutoComplete.isBuilding()) {
+        if (!CliAutoComplete.isEnabled() || CliAutoComplete.isBuilding()) {
             hide();
             return;
+        }
+
+        // Lazy init: if cache is ready but strategies haven't been built yet
+        // (e.g. build:stop event was missed), initialize them now
+        if (!strategies.length) {
+            initStrategies();
+            if (!strategies.length) {
+                hide();
+                return;
+            }
         }
 
         if (cursorPos === undefined) {

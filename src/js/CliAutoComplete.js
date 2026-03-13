@@ -101,6 +101,7 @@ CliAutoComplete.builderStart = function () {
         this.builder.state = "init";
         this.writeToOutput("<br># Building AutoComplete Cache ... ");
         this.sendLine(this.builder.sentinel);
+        this._builderWatchdogTouch();
         EventBus.$emit("autocomplete:build:start");
     }
 };
