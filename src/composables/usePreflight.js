@@ -195,6 +195,15 @@ export function usePreflight() {
         return true;
     }
 
+    function isActiveSavedLocation(entry) {
+        return (
+            location.source === "saved" &&
+            location.latitude === entry.latitude &&
+            location.longitude === entry.longitude &&
+            location.name === entry.label
+        );
+    }
+
     function renameSavedLocation(index, newLabel) {
         if (index < 0 || index >= savedLocations.length) {
             return false;
@@ -203,7 +212,12 @@ export function usePreflight() {
         if (trimmed.length === 0) {
             return false;
         }
-        savedLocations[index].label = trimmed;
+        const entry = savedLocations[index];
+        const isActive = isActiveSavedLocation(entry);
+        entry.label = trimmed;
+        if (isActive) {
+            location.name = trimmed;
+        }
         persistSavedLocations();
         return true;
     }
@@ -212,7 +226,13 @@ export function usePreflight() {
         if (index < 0 || index >= savedLocations.length) {
             return;
         }
+        const entry = savedLocations[index];
+        const isActive = isActiveSavedLocation(entry);
         savedLocations.splice(index, 1);
+        if (isActive) {
+            location.source = "manual";
+            location.name = `${entry.latitude.toFixed(4)}, ${entry.longitude.toFixed(4)}`;
+        }
         persistSavedLocations();
     }
 
