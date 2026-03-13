@@ -292,7 +292,9 @@
                                         <tr>
                                             <th scope="row">{{ $t("preflightDewPoint") }}</th>
                                             <td>
-                                                {{ preflight.weather.current.dewPoint }}°C
+                                                {{ preflight.weather.current.dewPoint }}°C ({{
+                                                    toFahrenheit(preflight.weather.current.dewPoint)
+                                                }}°F)
                                                 <span
                                                     :class="
                                                         getDewPointRiskClass(
@@ -1072,6 +1074,13 @@ export default defineComponent({
             return `${h}h ${m}m`;
         }
 
+        function toFahrenheit(celsius) {
+            if (celsius === null || celsius === undefined) {
+                return "-";
+            }
+            return ((celsius * 9) / 5 + 32).toFixed(1);
+        }
+
         function getDewPointRiskClass(temp, dewPoint) {
             return preflight.getDewPointRisk(temp, dewPoint).cssClass;
         }
@@ -1165,6 +1174,7 @@ export default defineComponent({
             formatDuration,
             getDewPointRiskClass,
             getDewPointRiskLabel,
+            toFahrenheit,
             getUvStatusClass,
             getUvStatusLabel,
         };
