@@ -90,16 +90,22 @@
             </div>
 
             <!-- Save/Revert Buttons -->
-            <div class="content_toolbar toolbar_fixed_bottom" style="position: fixed">
+            <div class="content_toolbar toolbar_fixed_bottom">
                 <div class="btn save_btn">
-                    <a href="#" @click.prevent="save" :class="{ disabled: !hasChanges }">
-                        <span>{{ $t("pidTuningButtonSave") }}</span>
-                    </a>
+                    <button
+                        type="button"
+                        class="save"
+                        :class="{ disabled: !hasChanges }"
+                        :disabled="!hasChanges"
+                        @click="save"
+                    >
+                        {{ $t("pidTuningButtonSave") }}
+                    </button>
                 </div>
                 <div class="btn refresh_btn">
-                    <a href="#" @click.prevent="refresh">
-                        <span>{{ $t("pidTuningButtonRefresh") }}</span>
-                    </a>
+                    <button type="button" class="refresh" @click="refresh">
+                        {{ $t("pidTuningButtonRefresh") }}
+                    </button>
                 </div>
             </div>
         </div>

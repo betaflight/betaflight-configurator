@@ -1069,6 +1069,7 @@ dialog {
             border: 1px solid var(--primary-600);
             color: #000;
             float: right;
+            font-family: inherit;
             font-weight: bold;
             font-size: 12px;
             display: block;
@@ -1078,6 +1079,7 @@ dialog {
             line-height: 28px;
             user-select: none;
             white-space: nowrap;
+            text-decoration: none;
             &:hover {
                 background-color: var(--primary-400);
                 transition: all ease 0.2s;
@@ -1113,7 +1115,7 @@ dialog {
     &.content_toolbar {
         display: flex;
         flex-wrap: wrap;
-        position: absolute;
+        position: fixed;
         bottom: 1.5rem;
         right: 0;
     }

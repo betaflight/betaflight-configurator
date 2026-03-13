@@ -580,31 +580,31 @@
         </div>
 
         <!-- Bottom Toolbar -->
-        <div class="content_toolbar toolbar_fixed_bottom" style="position: fixed">
+        <div class="content_toolbar toolbar_fixed_bottom">
             <div class="btn sticks_btn" v-if="showSticksButton">
-                <a class="sticks" href="#" @click.prevent="openSticksWindow">
+                <button type="button" class="sticks" @click="openSticksWindow">
                     {{ $t("receiverButtonSticks") }}
-                </a>
+                </button>
             </div>
             <div class="btn bind_btn" v-if="showBindButton">
-                <a class="bind" href="#" @click.prevent="sendBind">
+                <button type="button" class="bind" @click="sendBind">
                     {{ $t("receiverButtonBind") }}
-                </a>
+                </button>
             </div>
             <div class="btn refresh_btn">
-                <a class="refresh" href="#" @click.prevent="refreshTab">
+                <button type="button" class="refresh" @click="refreshTab">
                     {{ $t("receiverButtonRefresh") }}
-                </a>
+                </button>
             </div>
             <div class="btn update_btn" v-if="!needReboot">
-                <a class="update" href="#" @click.prevent="saveConfig(false)">
+                <button type="button" class="update" @click="saveConfig(false)">
                     {{ $t("receiverButtonSave") }}
-                </a>
+                </button>
             </div>
             <div class="btn save_btn" v-else>
-                <a class="save" href="#" @click.prevent="saveConfig(true)">
+                <button type="button" class="save" @click="saveConfig(true)">
                     {{ $t("configurationButtonSave") }}
-                </a>
+                </button>
             </div>
         </div>
     </BaseTab>
