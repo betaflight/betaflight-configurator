@@ -150,15 +150,17 @@ export default defineComponent({
             EventBus.$on("autocomplete:build:start", onBuildStart);
             EventBus.$on("autocomplete:build:stop", onBuildStop);
 
-            // Wait for vue_tab_mounter.js to finish creating the TABS.cli adapter
-            // (it overwrites TABS[tabName] after mount() returns), then attach
-            // our read function to it for serial communication.
-            await nextTick();
-            if (TABS.cli) {
-                TABS.cli.read = cli.read;
-            } else {
-                TABS.cli = { read: cli.read };
+            // Register the serial read handler and cleanup on TABS.cli.
+            // vue_tab_mounter.js merges these with the tab adapter after mount,
+            // preserving component-set properties like read and cleanup.
+            if (!TABS.cli) {
+                TABS.cli = {};
             }
+            TABS.cli.read = cli.read;
+            TABS.cli.cleanup = (callback) => {
+                cli.cleanup();
+                if (callback) callback();
+            };
 
             await cli.initialize();
 
