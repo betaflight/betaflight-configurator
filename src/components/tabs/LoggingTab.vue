@@ -38,29 +38,28 @@
             </div>
         </div>
 
-        <div class="content_toolbar toolbar_fixed_bottom" style="position: fixed">
+        <div class="content_toolbar toolbar_fixed_bottom">
             <div class="btn file_btn">
-                <a
+                <button
+                    type="button"
                     class="log_file"
                     :class="{ disabled: isLogging || isBusy }"
-                    href="#"
-                    @click.prevent="selectLogFile"
-                    :aria-label="$t('loggingButtonLogFile')"
-                    :aria-disabled="isLogging || isBusy"
+                    :disabled="isLogging || isBusy"
+                    @click="selectLogFile"
                 >
                     {{ $t("loggingButtonLogFile") }}
-                </a>
+                </button>
             </div>
             <div class="btn logging_btn">
-                <a
+                <button
+                    type="button"
                     class="logging"
                     :class="{ disabled: !canToggle }"
-                    href="#"
-                    @click.prevent="toggleLogging"
-                    :aria-disabled="!canToggle"
+                    :disabled="!canToggle"
+                    @click="toggleLogging"
                 >
                     {{ startStopLabel }}
-                </a>
+                </button>
             </div>
         </div>
     </BaseTab>

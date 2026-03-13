@@ -65,27 +65,30 @@
                 <em class="fas fa-ellipsis-h"></em>
             </div>
             <div class="btn save_btn">
-                <a class="save" href="#" @click.prevent="cli.saveFile">{{ $t("cliSaveToFileBtn") }}</a>
+                <button type="button" class="save" @click="cli.saveFile">{{ $t("cliSaveToFileBtn") }}</button>
             </div>
             <div class="btn save_btn">
-                <a class="load" href="#" @click.prevent="handleLoadFile">{{ $t("cliLoadFromFileBtn") }}</a>
+                <button type="button" class="load" @click="handleLoadFile">{{ $t("cliLoadFromFileBtn") }}</button>
             </div>
             <div class="btn save_btn">
-                <a class="clear" href="#" @click.prevent="cli.clearHistory">{{ $t("cliClearOutputHistoryBtn") }}</a>
+                <button type="button" class="clear" @click="cli.clearHistory">
+                    {{ $t("cliClearOutputHistoryBtn") }}
+                </button>
             </div>
             <div class="btn save_btn">
-                <a
+                <button
+                    type="button"
                     class="copy"
-                    href="#"
                     :style="{ width: cli.state.copyButtonWidth, textAlign: cli.state.copyButtonWidth ? 'center' : '' }"
-                    @click.prevent="cli.copyToClipboard"
-                    >{{ cli.state.copyButtonText }}</a
+                    @click="cli.copyToClipboard"
                 >
+                    {{ cli.state.copyButtonText }}
+                </button>
             </div>
             <div v-if="cli.isSupportRequestAvailable()" class="btn save_btn">
-                <a class="support" href="#" @click.prevent="cli.submitSupportRequest">{{
-                    $t("cliSupportRequestBtn")
-                }}</a>
+                <button type="button" class="support" @click="cli.submitSupportRequest">
+                    {{ $t("cliSupportRequestBtn") }}
+                </button>
             </div>
         </div>
     </BaseTab>
@@ -374,11 +377,6 @@ textarea#preview {
 /* Fixed toolbar positioning */
 :deep(.toolbar_fixed_bottom.content_toolbar) {
     width: calc(100% - 18rem) !important;
-    display: flex;
-    flex-wrap: wrap;
-    position: fixed;
-    bottom: 2rem;
-    right: 0;
 }
 
 :deep(.content_toolbar) {
