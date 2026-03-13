@@ -719,6 +719,91 @@ import { usePreflight } from "@/composables/usePreflight";
 import { initMap } from "../../js/utils/map";
 import { fromLonLat } from "ol/proj";
 
+function getWeatherEmoji(code) {
+    if (code === 0) {
+        return "\u2600";
+    }
+    if (code <= 3) {
+        return "\u26C5";
+    }
+    if (code <= 48) {
+        return "\uD83C\uDF2B";
+    }
+    if (code <= 57) {
+        return "\uD83C\uDF27";
+    }
+    if (code <= 67) {
+        return "\uD83C\uDF27";
+    }
+    if (code <= 77) {
+        return "\u2744";
+    }
+    if (code <= 82) {
+        return "\uD83C\uDF26";
+    }
+    if (code <= 86) {
+        return "\u2744";
+    }
+    return "\u26A1";
+}
+
+function getStormClass(level) {
+    const num = Number.parseInt(level) || 0;
+    if (num === 0) {
+        return "status-good";
+    }
+    if (num <= 2) {
+        return "status-moderate";
+    }
+    if (num <= 3) {
+        return "status-warning";
+    }
+    return "status-danger";
+}
+
+function getGnssKpClass(kp) {
+    if (kp <= 3) {
+        return "status-good";
+    }
+    if (kp <= 5) {
+        return "status-warning";
+    }
+    return "status-danger";
+}
+
+function getGnssKpLabel(kp) {
+    if (kp <= 3) {
+        return i18n.getMessage("preflightKpMinimal");
+    }
+    if (kp <= 5) {
+        return i18n.getMessage("preflightKpDegraded");
+    }
+    return i18n.getMessage("preflightKpSevere");
+}
+
+function formatVisibility(vis) {
+    if (vis >= 1000) {
+        return `${(vis / 1000).toFixed(1)} km`;
+    }
+    return `${vis} m`;
+}
+
+function formatDuration(seconds) {
+    if (!seconds) {
+        return "-";
+    }
+    const h = Math.floor(seconds / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    return `${h}h ${m}m`;
+}
+
+function toFahrenheit(celsius) {
+    if (celsius === null || celsius === undefined) {
+        return "-";
+    }
+    return ((celsius * 9) / 5 + 32).toFixed(1);
+}
+
 export default defineComponent({
     name: "PreflightTab",
     components: {
@@ -958,34 +1043,6 @@ export default defineComponent({
             requestAnimationFrame(() => mapInstance.value?.map?.updateSize());
         }
 
-        function getWeatherEmoji(code) {
-            if (code === 0) {
-                return "\u2600";
-            }
-            if (code <= 3) {
-                return "\u26C5";
-            }
-            if (code <= 48) {
-                return "\uD83C\uDF2B";
-            }
-            if (code <= 57) {
-                return "\uD83C\uDF27";
-            }
-            if (code <= 67) {
-                return "\uD83C\uDF27";
-            }
-            if (code <= 77) {
-                return "\u2744";
-            }
-            if (code <= 82) {
-                return "\uD83C\uDF26";
-            }
-            if (code <= 86) {
-                return "\u2744";
-            }
-            return "\u26A1";
-        }
-
         function getWindStatusClass(speed, gusts) {
             return preflight.getWindStatus(speed, gusts).cssClass;
         }
@@ -996,40 +1053,6 @@ export default defineComponent({
 
         function getPrecipStatusClass(precip) {
             return preflight.getPrecipitationStatus(precip).cssClass;
-        }
-
-        function getStormClass(level) {
-            const num = Number.parseInt(level) || 0;
-            if (num === 0) {
-                return "status-good";
-            }
-            if (num <= 2) {
-                return "status-moderate";
-            }
-            if (num <= 3) {
-                return "status-warning";
-            }
-            return "status-danger";
-        }
-
-        function getGnssKpClass(kp) {
-            if (kp <= 3) {
-                return "status-good";
-            }
-            if (kp <= 5) {
-                return "status-warning";
-            }
-            return "status-danger";
-        }
-
-        function getGnssKpLabel(kp) {
-            if (kp <= 3) {
-                return i18n.getMessage("preflightKpMinimal");
-            }
-            if (kp <= 5) {
-                return i18n.getMessage("preflightKpDegraded");
-            }
-            return i18n.getMessage("preflightKpSevere");
         }
 
         function getGpsRescueClass() {
@@ -1056,29 +1079,6 @@ export default defineComponent({
                 return i18n.getMessage("preflightGpsRescueUnreliable");
             }
             return i18n.getMessage("preflightGpsRescueNotRecommended");
-        }
-
-        function formatVisibility(vis) {
-            if (vis >= 1000) {
-                return `${(vis / 1000).toFixed(1)} km`;
-            }
-            return `${vis} m`;
-        }
-
-        function formatDuration(seconds) {
-            if (!seconds) {
-                return "-";
-            }
-            const h = Math.floor(seconds / 3600);
-            const m = Math.floor((seconds % 3600) / 60);
-            return `${h}h ${m}m`;
-        }
-
-        function toFahrenheit(celsius) {
-            if (celsius === null || celsius === undefined) {
-                return "-";
-            }
-            return ((celsius * 9) / 5 + 32).toFixed(1);
         }
 
         function getDewPointRiskClass(temp, dewPoint) {

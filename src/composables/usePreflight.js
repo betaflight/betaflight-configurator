@@ -125,6 +125,79 @@ function getPrecipitationStatus(precip) {
     return { level: "danger", label: "Heavy", cssClass: "status-danger" };
 }
 
+function browserGeolocation() {
+    return new Promise((resolve, reject) => {
+        if (!navigator.geolocation) {
+            reject(new Error("Geolocation not supported"));
+            return;
+        }
+        // prettier-ignore
+        navigator.geolocation.getCurrentPosition( // NOSONAR - user-initiated, required for preflight location
+            (position) => {
+                resolve({
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude,
+                });
+            },
+            (err) => reject(new Error(err.message || "Geolocation failed")),
+            { enableHighAccuracy: true, timeout: 10000 },
+        );
+    });
+}
+
+async function ipGeolocation() {
+    const response = await fetch("https://ipapi.co/json/");
+    if (!response.ok) {
+        throw new Error("IP geolocation request failed");
+    }
+    const data = await response.json();
+    if (data.latitude === undefined || data.longitude === undefined) {
+        throw new Error("IP geolocation returned no coordinates");
+    }
+    return {
+        latitude: Number.parseFloat(data.latitude),
+        longitude: Number.parseFloat(data.longitude),
+    };
+}
+
+function getDewPointRisk(temp, dewPoint) {
+    if (temp === null || dewPoint === null || temp === undefined || dewPoint === undefined) {
+        return { level: "unknown", label: "Unknown", cssClass: "status-unknown" };
+    }
+    const spread = temp - dewPoint;
+    if (spread > 10) {
+        return { level: "good", label: "No risk", cssClass: "status-good" };
+    }
+    if (spread > 4) {
+        return { level: "moderate", label: "Low risk", cssClass: "status-moderate" };
+    }
+    if (spread > 2) {
+        return { level: "warning", label: "Fog/condensation likely", cssClass: "status-warning" };
+    }
+    return { level: "danger", label: "Fog/lens fogging expected", cssClass: "status-danger" };
+}
+
+function getUvStatus(uv) {
+    if (uv === null || uv === undefined) {
+        return { level: "unknown", label: "Unknown", cssClass: "status-unknown" };
+    }
+    if (uv < 3) {
+        return { level: "good", label: "Low", cssClass: "status-good" };
+    }
+    if (uv < 6) {
+        return { level: "moderate", label: "Moderate", cssClass: "status-moderate" };
+    }
+    if (uv < 8) {
+        return { level: "warning", label: "High", cssClass: "status-warning" };
+    }
+    return { level: "danger", label: "Very High", cssClass: "status-danger" };
+}
+
+function formatTime(isoString) {
+    const d = new Date(isoString);
+    return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+}
+
 export function usePreflight() {
     const location = reactive({
         latitude: null,
@@ -392,8 +465,8 @@ export function usePreflight() {
                         };
                     }
                 }
-            } catch (_e) {
-                // Storm scale is optional, don't fail
+            } catch (e) {
+                console.warn("Storm scale fetch failed:", e.message);
             }
 
             solar.lastUpdated = new Date();
@@ -445,48 +518,12 @@ export function usePreflight() {
         return { level: worstLevel, label: labels[worstLevel], cssClass: cssClasses[worstLevel], checks };
     });
 
-    function browserGeolocation() {
-        return new Promise((resolve, reject) => {
-            if (!navigator.geolocation) {
-                reject(new Error("Geolocation not supported"));
-                return;
-            }
-            // prettier-ignore
-            navigator.geolocation.getCurrentPosition( // NOSONAR - user-initiated, required for preflight location
-                (position) => {
-                    resolve({
-                        latitude: position.coords.latitude,
-                        longitude: position.coords.longitude,
-                    });
-                },
-                (err) => reject(new Error(err.message || "Geolocation failed")),
-                { enableHighAccuracy: true, timeout: 10000 },
-            );
-        });
-    }
-
-    async function ipGeolocation() {
-        const response = await fetch("https://ipapi.co/json/");
-        if (!response.ok) {
-            throw new Error("IP geolocation request failed");
-        }
-        const data = await response.json();
-        if (data.latitude === undefined || data.longitude === undefined) {
-            throw new Error("IP geolocation returned no coordinates");
-        }
-        return {
-            latitude: Number.parseFloat(data.latitude),
-            longitude: Number.parseFloat(data.longitude),
-        };
-    }
-
     async function useGeolocation() {
         let coords;
         try {
             coords = await browserGeolocation();
-        } catch (_e) {
-            // Browser geolocation can fail in some environments;
-            // fall back to IP-based geolocation (city-level accuracy)
+        } catch (e) {
+            console.warn("Browser geolocation failed, using IP fallback:", e.message);
             coords = await ipGeolocation();
         }
         location.latitude = coords.latitude;
@@ -513,43 +550,11 @@ export function usePreflight() {
             const info = model.point([location.latitude, location.longitude]);
             mag.declination = info.decl;
             mag.inclination = info.incl;
-        } catch (_e) {
+        } catch (e) {
+            console.warn("Magnetic declination calculation failed:", e.message);
             mag.declination = null;
             mag.inclination = null;
         }
-    }
-
-    function getDewPointRisk(temp, dewPoint) {
-        if (temp === null || dewPoint === null || temp === undefined || dewPoint === undefined) {
-            return { level: "unknown", label: "Unknown", cssClass: "status-unknown" };
-        }
-        const spread = temp - dewPoint;
-        if (spread > 10) {
-            return { level: "good", label: "No risk", cssClass: "status-good" };
-        }
-        if (spread > 4) {
-            return { level: "moderate", label: "Low risk", cssClass: "status-moderate" };
-        }
-        if (spread > 2) {
-            return { level: "warning", label: "Fog/condensation likely", cssClass: "status-warning" };
-        }
-        return { level: "danger", label: "Fog/lens fogging expected", cssClass: "status-danger" };
-    }
-
-    function getUvStatus(uv) {
-        if (uv === null || uv === undefined) {
-            return { level: "unknown", label: "Unknown", cssClass: "status-unknown" };
-        }
-        if (uv < 3) {
-            return { level: "good", label: "Low", cssClass: "status-good" };
-        }
-        if (uv < 6) {
-            return { level: "moderate", label: "Moderate", cssClass: "status-moderate" };
-        }
-        if (uv < 8) {
-            return { level: "warning", label: "High", cssClass: "status-warning" };
-        }
-        return { level: "danger", label: "Very High", cssClass: "status-danger" };
     }
 
     async function refreshAll() {
@@ -558,11 +563,6 @@ export function usePreflight() {
         }
         updateMagneticDeclination();
         await Promise.allSettled([fetchWeather(location.latitude, location.longitude), fetchSolarActivity()]);
-    }
-
-    function formatTime(isoString) {
-        const d = new Date(isoString);
-        return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
     }
 
     return {
