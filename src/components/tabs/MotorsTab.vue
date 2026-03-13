@@ -642,7 +642,8 @@
         <div class="content_toolbar toolbar_fixed_bottom">
             <div class="btn save_btn">
                 <button
-                    class="regular-button save"
+                    type="button"
+                    class="save"
                     :class="{ disabled: buttonStates.saveDisabled }"
                     :disabled="buttonStates.saveDisabled"
                     @click="saveAndReboot(true)"
@@ -652,6 +653,7 @@
             </div>
             <div class="btn">
                 <button
+                    type="button"
                     class="stop"
                     :class="{ disabled: buttonStates.stopDisabled }"
                     :disabled="buttonStates.stopDisabled"

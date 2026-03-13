@@ -618,20 +618,12 @@
                     :class="{ disabled: !osdStore.state.isMax7456FontDeviceDetected }"
                     :disabled="!osdStore.state.isMax7456FontDeviceDetected"
                     @click="osdStore.state.isMax7456FontDeviceDetected && openFontManager()"
-                    @keydown.enter.prevent="osdStore.state.isMax7456FontDeviceDetected && openFontManager()"
-                    @keydown.space.prevent="osdStore.state.isMax7456FontDeviceDetected && openFontManager()"
                 >
                     {{ $t("osdSetupFontManagerTitle") }}
                 </button>
             </div>
-            <div class="btn save">
-                <button
-                    type="button"
-                    class="active save"
-                    @click.prevent="saveConfig()"
-                    @keydown.enter.prevent="saveConfig()"
-                    @keydown.space.prevent="saveConfig()"
-                >
+            <div class="btn save_btn">
+                <button type="button" class="save" @click="saveConfig()">
                     {{ saveButtonText }}
                 </button>
             </div>
