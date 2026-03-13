@@ -44,6 +44,7 @@
     "@capacitor/android": "8.0.2",
     "@capacitor/core": "8.0.2",
     "@fortawesome/fontawesome-free": "^6.5.2",
+    "@nuxt/ui": "^4.4.0",
     "@simplewebauthn/browser": "^13.2.2",
     "@vitejs/plugin-vue": "^6.0.1",
     "crypto-es": "^2.1.0",
@@ -68,12 +69,14 @@
     "select2": "^4.0.13",
     "short-unique-id": "^5.2.0",
     "switchery-latest": "^0.8.2",
+    "tailwindcss": "^4.1.18",
     "three": "^0.176.0",
     "tiny-emitter": "^2.1.0",
     "tippy.js": "^6.3.7",
     "vite-plugin-pwa": "^1.0.3",
     "vue": "^3.5.13",
     "vue-multiselect": "^3.0.0",
+    "vue-router": "^4",
     "vue3-slider": "^1.10.1"
   },
   "devDependencies": {

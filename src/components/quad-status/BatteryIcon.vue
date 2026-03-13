@@ -14,7 +14,7 @@ const NO_BATTERY_VOLTAGE_MAXIMUM = 1.8;
 export default defineComponent({
     props: {
         batteryState: {
-            type: String,
+            type: [String, Number],
             default: "",
         },
         voltage: {
@@ -56,11 +56,12 @@ export default defineComponent({
         });
 
         const classes = computed(() => {
-            if (props.batteryState) {
+            const state = String(props.batteryState ?? "");
+            if (state) {
                 return {
-                    "state-ok": props.batteryState === "0",
-                    "state-warning": props.batteryState === "1",
-                    "state-empty": props.batteryState === "2",
+                    "state-ok": state === "0",
+                    "state-warning": state === "1",
+                    "state-empty": state === "2",
                     // TODO: BATTERY_NOT_PRESENT
                     // TODO: BATTERY_INIT
                 };

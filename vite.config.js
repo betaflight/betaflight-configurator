@@ -8,6 +8,7 @@ import pkg from "./package.json";
 import * as child from "child_process";
 import { VitePWA } from "vite-plugin-pwa";
 import { resolve } from "path";
+import ui from "@nuxt/ui/vite";
 
 const commitHash = child.execSync("git rev-parse --short HEAD").toString().trim();
 
@@ -77,6 +78,7 @@ function serveFileFromDirectory(directory) {
             }
 
             res.end(fileContents);
+            // eslint-disable-next-line unused-imports/no-unused-vars
         } catch (e) {
             // If file not found or any other error, pass to the next middleware
             next();
@@ -130,6 +132,7 @@ export default defineConfig({
     },
     plugins: [
         vue(),
+        ui(),
         serveLocalesPlugin(),
         copy({
             targets: [

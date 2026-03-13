@@ -28,6 +28,7 @@ import { EventBus } from "../components/eventBus";
 import { ispConnected } from "./utils/connection";
 import { unmountVueTab } from "./vue_tab_mounter";
 import { useConnectionStore } from "../stores/connection";
+import { useDialogStore } from "../stores/dialog";
 
 const logHead = "[SERIAL-BACKEND]";
 
@@ -223,7 +224,7 @@ function finishClose(finishedCallback) {
         $("#content").empty();
 
         // close cliPanel if left open
-        $(".dialogInteractive")[0].close();
+        $(".dialogInteractive")[0]?.close();
     }
 
     $("#tabs .tab_landing a").click();
@@ -481,23 +482,8 @@ async function checkReportProblems() {
     }
 
     if (needsProblemReportingDialog) {
-        const problemItemTemplate = $("#dialogReportProblems-listItemTemplate");
-        const problemDialogList = $("#dialogReportProblems-list");
-
-        problemDialogList.empty();
-
-        for (const problem of problems) {
-            problemItemTemplate.clone().prop("id", null).html(problem.description).appendTo(problemDialogList);
-        }
-
-        const problemDialog = $("#dialogReportProblems")[0];
-        $("#dialogReportProblems-closebtn")
-            .off("click")
-            .one("click", () => problemDialog.close());
-
-        problemDialog.showModal();
-        $("#dialogReportProblems").scrollTop(0);
-        $("#dialogReportProblems-closebtn").focus();
+        const dialogStore = useDialogStore();
+        dialogStore.open("ReportProblemsDialog", { problems }, { onClose: () => dialogStore.close() });
     }
 
     processUid();
@@ -657,7 +643,7 @@ function onConnect() {
         .show();
 
     if (FC.CONFIG.flightControllerVersion !== "" && !isCliOnlyMode()) {
-        if (!CONFIGURATOR.virtualMode && PortHandler.portPicker.selectedPort !== 'virtual') {
+        if (!CONFIGURATOR.virtualMode && PortHandler.portPicker.selectedPort !== "virtual") {
             FC.FEATURE_CONFIG.features = new Features(FC.CONFIG);
             FC.BEEPER_CONFIG.beepers = new Beepers(FC.CONFIG);
             FC.BEEPER_CONFIG.dshotBeaconConditions = new Beepers(FC.CONFIG, ["RX_LOST", "RX_SET"]);

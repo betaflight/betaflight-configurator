@@ -216,6 +216,13 @@ export default defineComponent({
     }
 }
 
+.donate {
+    img {
+        height: 2rem;
+        display: inline-block;
+    }
+}
+
 .content_foot {
     clear: both;
     padding: 10px 0 5px;
