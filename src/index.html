@@ -235,7 +235,7 @@
                             </li>
                             <li
                                 class="tab_transponder"
-                                v-show="FC.FEATURE_CONFIG?.features?.isEnabled && FC.FEATURE_CONFIG.features.isEnabled('TRANSPONDER')"
+                                v-show="(FC.FEATURE_CONFIG?.features?.isEnabled && FC.FEATURE_CONFIG.features.isEnabled('TRANSPONDER')) || (CONFIGURATOR.virtualMode && FC.CONFIG?.buildOptions?.includes('USE_TRANSPONDER'))"
                             >
                                 <a
                                     href="#"

@@ -30,6 +30,7 @@ import MotorsTab from "../components/tabs/MotorsTab.vue";
 import ReceiverTab from "../components/tabs/ReceiverTab.vue";
 import OsdTab from "../components/tabs/OsdTab.vue";
 import SetupTab from "../components/tabs/SetupTab.vue";
+import TransponderTab from "../components/tabs/TransponderTab.vue";
 import PidTuningTab from "../components/tabs/PidTuningTab.vue";
 
 // Registry of Vue tab components - used by main.js for dynamic mounting
@@ -57,6 +58,7 @@ export const VueTabComponents = {
     receiver: ReceiverTab,
     osd: OsdTab,
     setup: SetupTab,
+    transponder: TransponderTab,
     pid_tuning: PidTuningTab,
     // Move motors before pid_tuning if present in the future
 };
@@ -93,6 +95,7 @@ export const BetaflightComponents = {
         app.component("ReceiverTab", ReceiverTab);
         app.component("OsdTab", OsdTab);
         app.component("SetupTab", SetupTab);
+        app.component("TransponderTab", TransponderTab);
         app.component("PidTuningTab", PidTuningTab);
     },
 };
