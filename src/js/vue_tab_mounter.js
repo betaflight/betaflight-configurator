@@ -95,7 +95,7 @@ export function mountVueTab(tabName, contentReadyCallback) {
     // Merge the adapter into TABS, preserving any properties that the
     // component already set during mount (e.g. TABS.cli.read, .cleanup).
     // Adapter defaults go first, component overrides win.
-    TABS[tabName] = Object.assign({}, tabAdapter, TABS[tabName]);
+    TABS[tabName] = { ...tabAdapter, ...TABS[tabName] };
 
     // Reset tab switch flag and call content ready callback after next tick
     setTimeout(() => {

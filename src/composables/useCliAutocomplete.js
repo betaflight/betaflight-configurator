@@ -4,15 +4,23 @@ import FC from "../js/fc";
 import CliAutoComplete from "../js/CliAutoComplete";
 
 function highlightAnywhere(value, term) {
-    if (!term) return value;
+    if (!term) {
+        return value;
+    }
     const idx = value.toLowerCase().indexOf(term.toLowerCase());
-    if (idx === -1) return value;
+    if (idx === -1) {
+        return value;
+    }
     return `${value.slice(0, idx)}<b>${value.slice(idx, idx + term.length)}</b>${value.slice(idx + term.length)}`;
 }
 
 function highlightPrefix(value, term) {
-    if (!term) return value;
-    if (!value.toLowerCase().startsWith(term.toLowerCase())) return value;
+    if (!term) {
+        return value;
+    }
+    if (!value.toLowerCase().startsWith(term.toLowerCase())) {
+        return value;
+    }
     return `<b>${value.slice(0, term.length)}</b>${value.slice(term.length)}`;
 }
 
@@ -35,7 +43,14 @@ function searchArray(term, array, minChars, matchPrefix, forceOpen, isOpen) {
  * Pattern tokens like $1, $2, $3 are replaced with the corresponding capture groups.
  */
 function applyReplacement(pattern, match) {
-    return pattern.replace(/\$(\d)/g, (_, n) => match[Number(n)] ?? "");
+    return pattern.replace(/\$(\d+)/g, (_, n) => match[Number(n)] ?? "");
+}
+
+/**
+ * Check if cursor is at end of text (not in middle of a word).
+ */
+function isAtWordEnd(text, cursorPos) {
+    return cursorPos >= text.length || /\s/.test(text[cursorPos]);
 }
 
 export function useCliAutocomplete() {
@@ -73,18 +88,20 @@ export function useCliAutocomplete() {
      */
     function updateCaretPosition() {
         const textarea = textareaGetter?.();
-        if (!textarea) return;
+        if (!textarea) {
+            return;
+        }
 
         const mirror = document.createElement("span");
         const style = window.getComputedStyle(textarea);
-        mirror.style.font = style.font;
-        mirror.style.letterSpacing = style.letterSpacing;
+        mirror.style.font = style.getPropertyValue("font");
+        mirror.style.letterSpacing = style.getPropertyValue("letter-spacing");
         mirror.style.whiteSpace = "pre";
         mirror.style.position = "absolute";
         mirror.style.visibility = "hidden";
         mirror.textContent = textarea.value.slice(0, textarea.selectionStart);
         document.body.appendChild(mirror);
-        caretLeft.value = mirror.offsetWidth + parseFloat(style.paddingLeft);
+        caretLeft.value = mirror.offsetWidth + Number.parseFloat(style.getPropertyValue("padding-left") || "0");
         document.body.removeChild(mirror);
     }
 
@@ -94,7 +111,9 @@ export function useCliAutocomplete() {
      */
     function initStrategies() {
         const cache = CliAutoComplete.cache;
-        if (!cache) return;
+        if (!cache) {
+            return;
+        }
 
         // diff command arguments
         const diffArgs1 = ["all", "hardware", "master", "profile", "rates"];
@@ -330,13 +349,6 @@ export function useCliAutocomplete() {
     }
 
     /**
-     * Check if cursor is at end of text (not in middle of a word).
-     */
-    function isAtWordEnd(text, cursorPos) {
-        return cursorPos >= text.length || /\s/.test(text[cursorPos]);
-    }
-
-    /**
      * Evaluate strategies against the current input and populate the dropdown.
      */
     function update(inputText, cursorPos) {
@@ -398,7 +410,9 @@ export function useCliAutocomplete() {
      * Select an item from the dropdown and apply the replacement.
      */
     function selectItem(index) {
-        if (!matchedStrategy || index < 0 || index >= items.value.length) return;
+        if (!matchedStrategy || index < 0 || index >= items.value.length) {
+            return;
+        }
 
         const value = items.value[index].text;
         openLaterRequested = false;

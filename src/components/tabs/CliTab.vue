@@ -159,7 +159,9 @@ export default defineComponent({
             TABS.cli.read = cli.read;
             TABS.cli.cleanup = (callback) => {
                 cli.cleanup();
-                if (callback) callback();
+                if (callback) {
+                    callback();
+                }
             };
 
             await cli.initialize();
