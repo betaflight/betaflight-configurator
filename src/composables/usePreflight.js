@@ -325,6 +325,7 @@ export function usePreflight() {
     const isLoading = computed(() => weather.loading || solar.loading);
 
     let weatherRequestId = 0;
+    let solarRequestId = 0;
 
     async function fetchWeather(lat, lon) {
         const requestId = ++weatherRequestId;
@@ -441,6 +442,7 @@ export function usePreflight() {
     }
 
     async function fetchSolarActivity() {
+        const requestId = ++solarRequestId;
         solar.loading = true;
         solar.error = null;
         solar.kpIndex = null;
@@ -453,15 +455,22 @@ export function usePreflight() {
             }
             const data = await response.json();
 
+            if (requestId !== solarRequestId) {
+                return;
+            }
+
             if (data.length > 1) {
                 const latest = data[data.length - 1];
-                solar.kpIndex = Number.parseFloat(latest[1]);
+                const parsedKp = Number.parseFloat(latest[1]);
+                if (Number.isFinite(parsedKp)) {
+                    solar.kpIndex = parsedKp;
+                }
                 solar.kpTimestamp = latest[0];
             }
 
             try {
                 const scaleResponse = await fetch("https://services.swpc.noaa.gov/products/noaa-scales.json");
-                if (scaleResponse.ok) {
+                if (scaleResponse.ok && requestId === solarRequestId) {
                     const scaleData = await scaleResponse.json();
                     if (scaleData["-1"]) {
                         solar.stormLevel = {
@@ -475,11 +484,17 @@ export function usePreflight() {
                 console.warn("Storm scale fetch failed:", e.message);
             }
 
-            solar.lastUpdated = new Date();
+            if (requestId === solarRequestId) {
+                solar.lastUpdated = new Date();
+            }
         } catch (err) {
-            solar.error = err.message;
+            if (requestId === solarRequestId) {
+                solar.error = err.message;
+            }
         } finally {
-            solar.loading = false;
+            if (requestId === solarRequestId) {
+                solar.loading = false;
+            }
         }
     }
 
