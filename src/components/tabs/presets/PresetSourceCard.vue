@@ -162,7 +162,7 @@ function normalizedDraft() {
     return {
         name: draft.name,
         url: draft.url,
-        gitHubBranch: draft.gitHubBranch,
+        gitHubBranch: showGithubBranch.value && draft.gitHubBranch ? draft.gitHubBranch : undefined,
         official: props.source.official,
     };
 }
@@ -171,7 +171,10 @@ function handleUrlInput() {
     if (PresetSource.containsBranchName(draft.url)) {
         draft.gitHubBranch = PresetSource.getBranchName(draft.url) ?? draft.gitHubBranch;
         draft.url = draft.url.split("/tree/")[0];
+        return;
     }
+
+    draft.gitHubBranch = "";
 }
 
 function handleSave() {
