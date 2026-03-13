@@ -439,6 +439,8 @@ export function usePreflight() {
     async function fetchSolarActivity() {
         solar.loading = true;
         solar.error = null;
+        solar.kpIndex = null;
+        solar.kpTimestamp = null;
         solar.stormLevel = null;
         try {
             const response = await fetch("https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json");
