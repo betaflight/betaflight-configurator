@@ -8194,6 +8194,168 @@
     "preflightCheckSolar": {
         "message": "Solar"
     },
+    "preflightLevelUnknown": {
+        "message": "Unknown"
+    },
+    "preflightWmoClearSky": {
+        "message": "Clear sky"
+    },
+    "preflightWmoMainlyClear": {
+        "message": "Mainly clear"
+    },
+    "preflightWmoPartlyCloudy": {
+        "message": "Partly cloudy"
+    },
+    "preflightWmoOvercast": {
+        "message": "Overcast"
+    },
+    "preflightWmoFog": {
+        "message": "Fog"
+    },
+    "preflightWmoRimeFog": {
+        "message": "Depositing rime fog"
+    },
+    "preflightWmoLightDrizzle": {
+        "message": "Light drizzle"
+    },
+    "preflightWmoModerateDrizzle": {
+        "message": "Moderate drizzle"
+    },
+    "preflightWmoDenseDrizzle": {
+        "message": "Dense drizzle"
+    },
+    "preflightWmoLightFreezingDrizzle": {
+        "message": "Light freezing drizzle"
+    },
+    "preflightWmoDenseFreezingDrizzle": {
+        "message": "Dense freezing drizzle"
+    },
+    "preflightWmoSlightRain": {
+        "message": "Slight rain"
+    },
+    "preflightWmoModerateRain": {
+        "message": "Moderate rain"
+    },
+    "preflightWmoHeavyRain": {
+        "message": "Heavy rain"
+    },
+    "preflightWmoLightFreezingRain": {
+        "message": "Light freezing rain"
+    },
+    "preflightWmoHeavyFreezingRain": {
+        "message": "Heavy freezing rain"
+    },
+    "preflightWmoSlightSnow": {
+        "message": "Slight snow"
+    },
+    "preflightWmoModerateSnow": {
+        "message": "Moderate snow"
+    },
+    "preflightWmoHeavySnow": {
+        "message": "Heavy snow"
+    },
+    "preflightWmoSnowGrains": {
+        "message": "Snow grains"
+    },
+    "preflightWmoSlightRainShowers": {
+        "message": "Slight rain showers"
+    },
+    "preflightWmoModerateRainShowers": {
+        "message": "Moderate rain showers"
+    },
+    "preflightWmoViolentRainShowers": {
+        "message": "Violent rain showers"
+    },
+    "preflightWmoSlightSnowShowers": {
+        "message": "Slight snow showers"
+    },
+    "preflightWmoHeavySnowShowers": {
+        "message": "Heavy snow showers"
+    },
+    "preflightWmoThunderstorm": {
+        "message": "Thunderstorm"
+    },
+    "preflightWmoThunderstormSlightHail": {
+        "message": "Thunderstorm with slight hail"
+    },
+    "preflightWmoThunderstormHeavyHail": {
+        "message": "Thunderstorm with heavy hail"
+    },
+    "preflightKpLow": {
+        "message": "Low"
+    },
+    "preflightKpModerate": {
+        "message": "Moderate"
+    },
+    "preflightKpElevated": {
+        "message": "Elevated"
+    },
+    "preflightKpStorm": {
+        "message": "Storm"
+    },
+    "preflightWindCalm": {
+        "message": "Calm"
+    },
+    "preflightWindLight": {
+        "message": "Light"
+    },
+    "preflightWindModerate": {
+        "message": "Moderate"
+    },
+    "preflightWindStrong": {
+        "message": "Strong"
+    },
+    "preflightWindDangerous": {
+        "message": "Dangerous"
+    },
+    "preflightVisExcellent": {
+        "message": "Excellent"
+    },
+    "preflightVisGood": {
+        "message": "Good"
+    },
+    "preflightVisReduced": {
+        "message": "Reduced"
+    },
+    "preflightVisPoor": {
+        "message": "Poor"
+    },
+    "preflightPrecipNone": {
+        "message": "None"
+    },
+    "preflightPrecipLight": {
+        "message": "Light"
+    },
+    "preflightPrecipModerate": {
+        "message": "Moderate"
+    },
+    "preflightPrecipHeavy": {
+        "message": "Heavy"
+    },
+    "preflightDewNoRisk": {
+        "message": "No risk"
+    },
+    "preflightDewLowRisk": {
+        "message": "Low risk"
+    },
+    "preflightDewFogLikely": {
+        "message": "Fog/condensation likely"
+    },
+    "preflightDewFogExpected": {
+        "message": "Fog/lens fogging expected"
+    },
+    "preflightUvLow": {
+        "message": "Low"
+    },
+    "preflightUvModerate": {
+        "message": "Moderate"
+    },
+    "preflightUvHigh": {
+        "message": "High"
+    },
+    "preflightUvVeryHigh": {
+        "message": "Very High"
+    },
     "preflightRefresh": {
         "message": "Refresh"
     },

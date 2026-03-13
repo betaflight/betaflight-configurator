@@ -7,34 +7,34 @@ const MAX_SAVED_LOCATIONS = 5;
 const MAX_LABEL_LENGTH = 20;
 
 const WMO_CODES = {
-    0: "Clear sky",
-    1: "Mainly clear",
-    2: "Partly cloudy",
-    3: "Overcast",
-    45: "Fog",
-    48: "Depositing rime fog",
-    51: "Light drizzle",
-    53: "Moderate drizzle",
-    55: "Dense drizzle",
-    56: "Light freezing drizzle",
-    57: "Dense freezing drizzle",
-    61: "Slight rain",
-    63: "Moderate rain",
-    65: "Heavy rain",
-    66: "Light freezing rain",
-    67: "Heavy freezing rain",
-    71: "Slight snow",
-    73: "Moderate snow",
-    75: "Heavy snow",
-    77: "Snow grains",
-    80: "Slight rain showers",
-    81: "Moderate rain showers",
-    82: "Violent rain showers",
-    85: "Slight snow showers",
-    86: "Heavy snow showers",
-    95: "Thunderstorm",
-    96: "Thunderstorm with slight hail",
-    99: "Thunderstorm with heavy hail",
+    0: "preflightWmoClearSky",
+    1: "preflightWmoMainlyClear",
+    2: "preflightWmoPartlyCloudy",
+    3: "preflightWmoOvercast",
+    45: "preflightWmoFog",
+    48: "preflightWmoRimeFog",
+    51: "preflightWmoLightDrizzle",
+    53: "preflightWmoModerateDrizzle",
+    55: "preflightWmoDenseDrizzle",
+    56: "preflightWmoLightFreezingDrizzle",
+    57: "preflightWmoDenseFreezingDrizzle",
+    61: "preflightWmoSlightRain",
+    63: "preflightWmoModerateRain",
+    65: "preflightWmoHeavyRain",
+    66: "preflightWmoLightFreezingRain",
+    67: "preflightWmoHeavyFreezingRain",
+    71: "preflightWmoSlightSnow",
+    73: "preflightWmoModerateSnow",
+    75: "preflightWmoHeavySnow",
+    77: "preflightWmoSnowGrains",
+    80: "preflightWmoSlightRainShowers",
+    81: "preflightWmoModerateRainShowers",
+    82: "preflightWmoViolentRainShowers",
+    85: "preflightWmoSlightSnowShowers",
+    86: "preflightWmoHeavySnowShowers",
+    95: "preflightWmoThunderstorm",
+    96: "preflightWmoThunderstormSlightHail",
+    99: "preflightWmoThunderstormHeavyHail",
 };
 
 const WIND_DIRECTION_LABELS = [
@@ -65,64 +65,64 @@ function getWindDirectionLabel(deg) {
 
 function getKpStatus(kp) {
     if (kp === null || kp === undefined) {
-        return { level: "unknown", label: "Unknown", cssClass: "status-unknown" };
+        return { level: "unknown", label: "preflightLevelUnknown", cssClass: "status-unknown" };
     }
     if (kp <= 2) {
-        return { level: "good", label: "Low", cssClass: "status-good" };
+        return { level: "good", label: "preflightKpLow", cssClass: "status-good" };
     }
     if (kp <= 4) {
-        return { level: "moderate", label: "Moderate", cssClass: "status-moderate" };
+        return { level: "moderate", label: "preflightKpModerate", cssClass: "status-moderate" };
     }
     if (kp <= 5) {
-        return { level: "warning", label: "Elevated", cssClass: "status-warning" };
+        return { level: "warning", label: "preflightKpElevated", cssClass: "status-warning" };
     }
-    return { level: "danger", label: "Storm", cssClass: "status-danger" };
+    return { level: "danger", label: "preflightKpStorm", cssClass: "status-danger" };
 }
 
 function getWindStatus(windSpeed, gusts) {
     const maxWind = Math.max(windSpeed || 0, gusts || 0);
     if (maxWind < 5) {
-        return { level: "good", label: "Calm", cssClass: "status-good" };
+        return { level: "good", label: "preflightWindCalm", cssClass: "status-good" };
     }
     if (maxWind < 8) {
-        return { level: "good", label: "Light", cssClass: "status-good" };
+        return { level: "good", label: "preflightWindLight", cssClass: "status-good" };
     }
     if (maxWind < 11) {
-        return { level: "moderate", label: "Moderate", cssClass: "status-moderate" };
+        return { level: "moderate", label: "preflightWindModerate", cssClass: "status-moderate" };
     }
     if (maxWind < 14) {
-        return { level: "warning", label: "Strong", cssClass: "status-warning" };
+        return { level: "warning", label: "preflightWindStrong", cssClass: "status-warning" };
     }
-    return { level: "danger", label: "Dangerous", cssClass: "status-danger" };
+    return { level: "danger", label: "preflightWindDangerous", cssClass: "status-danger" };
 }
 
 function getVisibilityStatus(vis) {
     if (vis === null || vis === undefined) {
-        return { level: "unknown", label: "Unknown", cssClass: "status-unknown" };
+        return { level: "unknown", label: "preflightLevelUnknown", cssClass: "status-unknown" };
     }
     if (vis >= 10000) {
-        return { level: "good", label: "Excellent", cssClass: "status-good" };
+        return { level: "good", label: "preflightVisExcellent", cssClass: "status-good" };
     }
     if (vis >= 5000) {
-        return { level: "good", label: "Good", cssClass: "status-good" };
+        return { level: "good", label: "preflightVisGood", cssClass: "status-good" };
     }
     if (vis >= 1000) {
-        return { level: "moderate", label: "Reduced", cssClass: "status-moderate" };
+        return { level: "moderate", label: "preflightVisReduced", cssClass: "status-moderate" };
     }
-    return { level: "danger", label: "Poor", cssClass: "status-danger" };
+    return { level: "danger", label: "preflightVisPoor", cssClass: "status-danger" };
 }
 
 function getPrecipitationStatus(precip) {
     if (precip === null || precip === undefined || precip === 0) {
-        return { level: "good", label: "None", cssClass: "status-good" };
+        return { level: "good", label: "preflightPrecipNone", cssClass: "status-good" };
     }
     if (precip < 1) {
-        return { level: "moderate", label: "Light", cssClass: "status-moderate" };
+        return { level: "moderate", label: "preflightPrecipLight", cssClass: "status-moderate" };
     }
     if (precip < 5) {
-        return { level: "warning", label: "Moderate", cssClass: "status-warning" };
+        return { level: "warning", label: "preflightPrecipModerate", cssClass: "status-warning" };
     }
-    return { level: "danger", label: "Heavy", cssClass: "status-danger" };
+    return { level: "danger", label: "preflightPrecipHeavy", cssClass: "status-danger" };
 }
 
 function browserGeolocation() {
@@ -162,35 +162,35 @@ async function ipGeolocation() {
 
 function getDewPointRisk(temp, dewPoint) {
     if (temp === null || dewPoint === null || temp === undefined || dewPoint === undefined) {
-        return { level: "unknown", label: "Unknown", cssClass: "status-unknown" };
+        return { level: "unknown", label: "preflightLevelUnknown", cssClass: "status-unknown" };
     }
     const spread = temp - dewPoint;
     if (spread > 10) {
-        return { level: "good", label: "No risk", cssClass: "status-good" };
+        return { level: "good", label: "preflightDewNoRisk", cssClass: "status-good" };
     }
     if (spread > 4) {
-        return { level: "moderate", label: "Low risk", cssClass: "status-moderate" };
+        return { level: "moderate", label: "preflightDewLowRisk", cssClass: "status-moderate" };
     }
     if (spread > 2) {
-        return { level: "warning", label: "Fog/condensation likely", cssClass: "status-warning" };
+        return { level: "warning", label: "preflightDewFogLikely", cssClass: "status-warning" };
     }
-    return { level: "danger", label: "Fog/lens fogging expected", cssClass: "status-danger" };
+    return { level: "danger", label: "preflightDewFogExpected", cssClass: "status-danger" };
 }
 
 function getUvStatus(uv) {
     if (uv === null || uv === undefined) {
-        return { level: "unknown", label: "Unknown", cssClass: "status-unknown" };
+        return { level: "unknown", label: "preflightLevelUnknown", cssClass: "status-unknown" };
     }
     if (uv < 3) {
-        return { level: "good", label: "Low", cssClass: "status-good" };
+        return { level: "good", label: "preflightUvLow", cssClass: "status-good" };
     }
     if (uv < 6) {
-        return { level: "moderate", label: "Moderate", cssClass: "status-moderate" };
+        return { level: "moderate", label: "preflightUvModerate", cssClass: "status-moderate" };
     }
     if (uv < 8) {
-        return { level: "warning", label: "High", cssClass: "status-warning" };
+        return { level: "warning", label: "preflightUvHigh", cssClass: "status-warning" };
     }
-    return { level: "danger", label: "Very High", cssClass: "status-danger" };
+    return { level: "danger", label: "preflightUvVeryHigh", cssClass: "status-danger" };
 }
 
 function formatTime(isoString) {
@@ -397,7 +397,7 @@ export function usePreflight() {
                 cloudCover: data.current.cloud_cover,
                 visibility: data.current.visibility,
                 weatherCode: data.current.weather_code,
-                weatherDescription: WMO_CODES[data.current.weather_code] || "Unknown",
+                weatherDescription: WMO_CODES[data.current.weather_code] || "preflightLevelUnknown",
                 pressure: data.current.pressure_msl,
                 isDay: data.current.is_day,
             };
@@ -430,9 +430,13 @@ export function usePreflight() {
 
             weather.lastUpdated = new Date();
         } catch (err) {
-            weather.error = err.message;
+            if (requestId === weatherRequestId) {
+                weather.error = err.message;
+            }
         } finally {
-            weather.loading = false;
+            if (requestId === weatherRequestId) {
+                weather.loading = false;
+            }
         }
     }
 

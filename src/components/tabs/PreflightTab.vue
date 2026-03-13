@@ -226,7 +226,7 @@
                                             getWeatherEmoji(preflight.weather.current.weatherCode)
                                         }}</span>
                                         <span class="weather-desc">{{
-                                            preflight.weather.current.weatherDescription
+                                            $t(preflight.weather.current.weatherDescription)
                                         }}</span>
                                     </div>
                                     <div class="weather-temp">{{ preflight.weather.current.temperature }}°C</div>
@@ -305,9 +305,11 @@
                                                     class="status-badge"
                                                 >
                                                     {{
-                                                        getDewPointRiskLabel(
-                                                            preflight.weather.current.temperature,
-                                                            preflight.weather.current.dewPoint,
+                                                        $t(
+                                                            getDewPointRiskLabel(
+                                                                preflight.weather.current.temperature,
+                                                                preflight.weather.current.dewPoint,
+                                                            ),
                                                         )
                                                     }}
                                                 </span>
@@ -364,7 +366,7 @@
                                     <div class="fw-value" :class="getUvStatusClass(preflight.weather.daily.uvIndexMax)">
                                         {{ preflight.weather.daily.uvIndexMax }}
                                         <span class="fw-sublabel">{{
-                                            getUvStatusLabel(preflight.weather.daily.uvIndexMax)
+                                            $t(getUvStatusLabel(preflight.weather.daily.uvIndexMax))
                                         }}</span>
                                     </div>
                                 </div>
@@ -472,7 +474,7 @@
                                         Kp {{ preflight.solar.kpIndex.toFixed(1) }}
                                     </div>
                                     <div class="kp-label">
-                                        {{ preflight.getKpStatus(preflight.solar.kpIndex).label }}
+                                        {{ $t(preflight.getKpStatus(preflight.solar.kpIndex).label) }}
                                     </div>
                                 </div>
                                 <div class="kp-scale">
