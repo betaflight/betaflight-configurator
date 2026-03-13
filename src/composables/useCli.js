@@ -564,6 +564,7 @@ export function useCli() {
             (value) => {
                 state.commandInput = value;
             },
+            () => commandInputRef.value,
         );
 
         // Enter CLI mode

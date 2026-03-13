@@ -44,6 +44,7 @@ export function useCliAutocomplete() {
     const activeIndex = ref(0);
     const forceOpen = ref(false);
     const sendOnEnter = ref(false);
+    const caretLeft = ref(0);
 
     // Internal state
     let strategies = [];
@@ -52,15 +53,39 @@ export function useCliAutocomplete() {
     let openLaterRequested = false;
     let inputSetter = null;
     let inputGetter = null;
+    let textareaGetter = null;
 
     /**
      * Wire the composable to the textarea's v-model.
-     * @param {Function} getter - returns current input value
-     * @param {Function} setter - sets the input value
+     * @param {Function} getter  - returns current input value
+     * @param {Function} setter  - sets the input value
+     * @param {Function} elGetter - returns the textarea DOM element
      */
-    function connect(getter, setter) {
+    function connect(getter, setter, elGetter) {
         inputGetter = getter;
         inputSetter = setter;
+        textareaGetter = elGetter || null;
+    }
+
+    /**
+     * Calculate the pixel x-offset of the caret in the textarea
+     * using a hidden mirror div with the same font/padding styles.
+     */
+    function updateCaretPosition() {
+        const textarea = textareaGetter?.();
+        if (!textarea) return;
+
+        const mirror = document.createElement("span");
+        const style = window.getComputedStyle(textarea);
+        mirror.style.font = style.font;
+        mirror.style.letterSpacing = style.letterSpacing;
+        mirror.style.whiteSpace = "pre";
+        mirror.style.position = "absolute";
+        mirror.style.visibility = "hidden";
+        mirror.textContent = textarea.value.slice(0, textarea.selectionStart);
+        document.body.appendChild(mirror);
+        caretLeft.value = mirror.offsetWidth + parseFloat(style.paddingLeft);
+        document.body.removeChild(mirror);
     }
 
     /**
@@ -350,6 +375,7 @@ export function useCliAutocomplete() {
                     html: strategy.template(value, term),
                 }));
                 activeIndex.value = 0;
+                updateCaretPosition();
                 visible.value = true;
                 return;
             }
@@ -433,6 +459,7 @@ export function useCliAutocomplete() {
         activeIndex,
         sendOnEnter,
         forceOpen,
+        caretLeft,
         connect,
         initStrategies,
         update,

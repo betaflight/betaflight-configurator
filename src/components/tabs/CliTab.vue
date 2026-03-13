@@ -15,6 +15,7 @@
                     :items="cli.autocomplete.items.value"
                     :visible="cli.autocomplete.visible.value"
                     :active-index="cli.autocomplete.activeIndex.value"
+                    :caret-left="cli.autocomplete.caretLeft.value"
                     @select="onAutocompleteSelect"
                     @hover="cli.autocomplete.activeIndex.value = $event"
                 />
@@ -311,12 +312,11 @@ p {
 
 .cli-input-wrapper {
     position: relative;
-    width: 100%;
     margin-top: 8px;
 }
 
 textarea[name="commands"] {
-    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
     width: 100%;
     height: 22px;
     line-height: 20px;
