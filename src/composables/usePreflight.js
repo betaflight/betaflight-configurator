@@ -297,7 +297,7 @@ export function usePreflight() {
                     "temperature_2m_min",
                 ].join(","),
                 wind_speed_unit: "ms",
-                forecast_days: 2,
+                forecast_hours: 12,
                 timezone: "auto",
             });
 
@@ -338,13 +338,9 @@ export function usePreflight() {
                 temperatureMin: data.daily.temperature_2m_min?.[0] || null,
             };
 
-            const now = new Date();
-            const currentHourIndex = data.hourly.time.findIndex((t) => new Date(t) >= now);
-            const startIdx = Math.max(0, currentHourIndex);
-            const endIdx = Math.min(startIdx + 12, data.hourly.time.length);
-
             weather.hourly = [];
-            for (let i = startIdx; i < endIdx; i++) {
+            const hourlyLen = data.hourly.time?.length || 0;
+            for (let i = 0; i < hourlyLen; i++) {
                 weather.hourly.push({
                     time: data.hourly.time[i],
                     windSpeed10m: data.hourly.wind_speed_10m[i],
