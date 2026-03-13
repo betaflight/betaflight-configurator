@@ -436,7 +436,7 @@ export function usePreflight() {
                 return;
             }
             navigator.geolocation.getCurrentPosition(
-                // NOSONAR - geolocation is user-initiated and required for preflight data
+                // NOSONAR
                 (position) => {
                     resolve({
                         latitude: position.coords.latitude,
