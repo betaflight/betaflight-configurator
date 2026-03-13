@@ -229,7 +229,7 @@ const optionsSummary = computed(() => {
 const onlineLink = computed(() =>
     props.preset && props.repository ? props.repository.getPresetOnlineLink(props.preset) : "#",
 );
-const discussionLink = computed(() => props.preset?.discussion || "");
+const discussionLink = computed(() => sanitizeExternalHttpUrl(props.preset?.discussion));
 const discussionHref = computed(() => discussionLink.value || undefined);
 
 const descriptionHtml = computed(() => {
@@ -267,6 +267,19 @@ watch(
 
 function requestClose() {
     emit("close");
+}
+
+function sanitizeExternalHttpUrl(rawUrl) {
+    if (!rawUrl) {
+        return "";
+    }
+
+    try {
+        const url = new URL(rawUrl);
+        return url.protocol === "http:" || url.protocol === "https:" ? url.href : "";
+    } catch {
+        return "";
+    }
 }
 
 function handleApply() {

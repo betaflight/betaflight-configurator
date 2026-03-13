@@ -64,6 +64,7 @@ describe("PresetDetailsDialog", () => {
                     firmware_version: ["4.5"],
                     keywords: ["freestyle"],
                     description: ["# Heading", "Visit [Betaflight](https://betaflight.com)"],
+                    discussion: "javascript:alert('xss')",
                     parser: "MARKED",
                     options: [{ name: "Option A", checked: true }],
                 },
@@ -78,6 +79,8 @@ describe("PresetDetailsDialog", () => {
         const htmlBlock = wrapper.container.querySelector("#presets_detailed_dialog_html_description");
         expect(htmlBlock.innerHTML).toContain("<h1");
         expect(htmlBlock.querySelector("a").getAttribute("target")).toBe("_blank");
+        expect(wrapper.container.querySelector("#presets_open_discussion").classList.contains("disabled")).toBe(true);
+        expect(wrapper.container.querySelector("#presets_open_discussion").getAttribute("href")).toBeNull();
 
         const checkbox = wrapper.container.querySelector('input[type="checkbox"]');
         checkbox.checked = false;

@@ -330,9 +330,9 @@ export const usePresetsStore = defineStore("presets", () => {
 
         try {
             await confirmSourceVersions();
-            repositories.value.forEach((repository) =>
-                favoritePresets.addLastPickDate(repository.index.presets, repository),
-            );
+            repositories.value.forEach((repository) => {
+                favoritePresets.addLastPickDate(repository.index.presets, repository);
+            });
             buildFilterOptions();
             resetFilters();
         } catch (error) {

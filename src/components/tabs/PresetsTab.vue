@@ -535,7 +535,6 @@ function handleCliErrorsDialogClose() {
     store.closeCliErrorsDialog(savePressed);
 
     if (!savePressed) {
-        store.applyState.cliErrorsSavePressed = true;
         cliSession.sendLine(CliEngine.s_commandExit);
         cliSession.disconnectCliMakeSure();
     }
