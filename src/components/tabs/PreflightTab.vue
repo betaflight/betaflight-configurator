@@ -685,7 +685,7 @@
                                             <th scope="row">{{ $t("preflightDensityAlt") }}</th>
                                             <td>
                                                 <span :class="getDensityAltStatusClass()">
-                                                    {{ densityAltitude }} m
+                                                    {{ densityAltitude }} ft
                                                 </span>
                                             </td>
                                         </tr>

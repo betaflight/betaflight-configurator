@@ -144,26 +144,27 @@ function getBatteryTempStatus(temp) {
     return { level: "good", label: "preflightBatteryOk", cssClass: "status-good" };
 }
 
-function getDensityAltitude(elevation, pressure, temp) {
-    if (elevation === null || pressure === null || temp === null) {
+function getDensityAltitude(elevationMeters, pressure, temp) {
+    if (elevationMeters === null || pressure === null || temp === null) {
         return null;
     }
-    const pressureAltitude = (1013.25 - pressure) * 30 + elevation;
-    const isaTemp = 15 - (2 * elevation) / 1000;
-    return Math.round(pressureAltitude + 120 * (temp - isaTemp));
+    const elevationFeet = elevationMeters * 3.28084;
+    const pressureAltitudeFeet = (1013.25 - pressure) * 30 + elevationFeet;
+    const isaTemp = 15 - (2 * elevationFeet) / 1000;
+    return Math.round(pressureAltitudeFeet + 120 * (temp - isaTemp));
 }
 
 function getDensityAltitudeStatus(da) {
     if (da === null || da === undefined) {
         return { level: "unknown", label: "preflightLevelUnknown", cssClass: "status-unknown" };
     }
-    if (da < 1000) {
+    if (da < 3281) {
         return { level: "good", label: "preflightDaNormal", cssClass: "status-good" };
     }
-    if (da < 2000) {
+    if (da < 6562) {
         return { level: "moderate", label: "preflightDaReduced", cssClass: "status-moderate" };
     }
-    if (da < 3000) {
+    if (da < 9843) {
         return { level: "warning", label: "preflightDaLow", cssClass: "status-warning" };
     }
     return { level: "danger", label: "preflightDaPoor", cssClass: "status-danger" };
@@ -389,11 +390,16 @@ export function usePreflight() {
 
     let weatherRequestId = 0;
     let solarRequestId = 0;
+    let elevationRequestId = 0;
 
     async function fetchWeather(lat, lon) {
         const requestId = ++weatherRequestId;
         weather.loading = true;
         weather.error = null;
+        weather.current = null;
+        weather.hourly = null;
+        weather.daily = null;
+        weather.forecast = null;
         try {
             const params = new URLSearchParams({
                 latitude: lat,
@@ -668,21 +674,22 @@ export function usePreflight() {
         }
     }
 
-    async function fetchElevation() {
+    async function fetchElevation(lat, lon) {
+        const requestId = ++elevationRequestId;
         try {
-            const response = await fetch(
-                `https://api.open-meteo.com/v1/elevation?latitude=${location.latitude}&longitude=${location.longitude}`,
-            );
+            const response = await fetch(`https://api.open-meteo.com/v1/elevation?latitude=${lat}&longitude=${lon}`);
             if (!response.ok) {
                 throw new Error(`Elevation API error: ${response.status}`);
             }
             const data = await response.json();
-            if (data.elevation && data.elevation.length > 0) {
+            if (requestId === elevationRequestId && data.elevation && data.elevation.length > 0) {
                 location.elevation = data.elevation[0];
             }
         } catch (e) {
-            console.warn("Elevation fetch failed:", e.message);
-            location.elevation = null;
+            if (requestId === elevationRequestId) {
+                console.warn("Elevation fetch failed:", e.message);
+                location.elevation = null;
+            }
         }
     }
 
@@ -690,12 +697,10 @@ export function usePreflight() {
         if (location.latitude === null || location.longitude === null) {
             return;
         }
+        const lat = location.latitude;
+        const lon = location.longitude;
         updateMagneticDeclination();
-        await Promise.allSettled([
-            fetchWeather(location.latitude, location.longitude),
-            fetchSolarActivity(),
-            fetchElevation(),
-        ]);
+        await Promise.allSettled([fetchWeather(lat, lon), fetchSolarActivity(), fetchElevation(lat, lon)]);
     }
 
     return {
