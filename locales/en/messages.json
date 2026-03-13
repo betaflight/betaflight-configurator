@@ -5897,6 +5897,76 @@
     "osdDescElementAltitude": {
         "message": "Current altitude (flashes when above alarm threshold)"
     },
+    "osdTextElementDmpSlider": {
+        "message": "Slider01 Damping",
+        "description": "DMP slider element of the OSD"
+    },
+    "osdDescElementDmpSlider": {
+        "message": "Shows the DMP slider position, value, and associated gain value"
+    },
+    "osdTextElementTrkSlider": {
+        "message": "Slider02 Tracking",
+        "description": "TRK slider element of the OSD"
+    },
+    "osdDescElementTrkSlider": {
+        "message": "Shows the TRK slider position, value, and associated gain value"
+    },
+    "osdTextElementStkSlider": {
+        "message": "Slider03 Stick Response",
+        "description": "STK slider element of the OSD"
+    },
+    "osdDescElementStkSlider": {
+        "message": "Shows the STK slider position, value, and associated gain value"
+    },
+    "osdTextElementDmxSlider": {
+        "message": "Slider04 D-Max",
+        "description": "DMX slider element of the OSD"
+    },
+    "osdDescElementDmxSlider": {
+        "message": "Shows the DMX slider position, value, and associated gain value"
+    },
+    "osdTextElementDftSlider": {
+        "message": "Slider05 Drift-Wobble",
+        "description": "DFT slider element of the OSD"
+    },
+    "osdDescElementDftSlider": {
+        "message": "Shows the DFT slider position, value, and associated gain value"
+    },
+    "osdTextElementPidSlider": {
+        "message": "Slider06 Pitch-Damping",
+        "description": "PID slider element of the OSD"
+    },
+    "osdDescElementPidSlider": {
+        "message": "Shows the PID slider position, value, and associated gain value"
+    },
+    "osdTextElementPitSlider": {
+        "message": "Slider07 Pitch-Tracking",
+        "description": "PIT slider element of the OSD"
+    },
+    "osdDescElementPitSlider": {
+        "message": "Shows the PIT slider position, value, and associated gain value"
+    },
+    "osdTextElementMltSlider": {
+        "message": "Slider08 Master Multiplier",
+        "description": "MLT slider element of the OSD"
+    },
+    "osdDescElementMltSlider": {
+        "message": "Shows the MLT slider position, value, and associated gain value"
+    },
+    "osdTextElementGfSlider": {
+        "message": "Slider09 Gyro Filter",
+        "description": "GF slider element of the OSD"
+    },
+    "osdDescElementGfSlider": {
+        "message": "Shows the GF slider position, value, and associated filter frequency"
+    },
+    "osdTextElementDfSlider": {
+        "message": "Slider10 D-term Filter",
+        "description": "DF slider element of the OSD"
+    },
+    "osdDescElementDfSlider": {
+        "message": "Shows the DF slider position, value, and associated filter frequency"
+    },
     "osdTextElementAltitudeVariant1DecimalAGL": {
         "message": "AGL with 1 decimal",
         "description": "One of the variants of the altitude element of the OSD"
