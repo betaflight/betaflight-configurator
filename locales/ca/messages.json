@@ -2772,6 +2772,20 @@
     "adjustmentsColumnViaChannel": {
         "message": "mitjançant el canal"
     },
+    "adjustmentsColumnAdjustmentCenter": {
+        "message": "w\/ centre (val.)"
+    },
+    "adjustmentsColumnAdjustmentScale": {
+        "message": "i rang|escala (val.|%)"
+    },
+    "adjustmentsCenterHelp": {
+        "message": "Estableix el punt mitjà o valor de referència utilitzat per la funció d'ajust.<br \/><br \/><strong>Ajustaments del control lliscant:<\/strong><br \/>Per als ajustos del control lliscant, configureu el Centre d'ajust a 0. La posició actual del control lliscant s'utilitzarà per a l'ajust amunt\/avall.<br \/><br \/><strong>Ajustaments de selecció:<\/strong><br \/>Configureu el Centre d'ajust a 0 o a un valor específic de microsegons (uS) si voleu compensar el punt de referència del commutador de 1500uS en iniciar l'ajust RC.<br \/><br \/><strong>Ajustaments esglaonats:<\/strong><br \/>Configureu el Centre d'ajust a 0 perquè s'utilitzi el valor actual de l'element que s'està ajustant.<br \/><br \/><strong>Ajustaments absoluts:<\/strong><br \/>Per utilitzar el mètode d'ajust absolut, heu de definir tant el Centre d'ajust com l'Escala per especificar el valor i l'interval desitjats. L'interval es calcula com a: Centre ± Escala. Per exemple, si configureu el Centre d'ajustament a 50 i l'Escala d'ajustament a 25, es crea un interval de 25 a 75, amb la posició central (interruptor o POT) assignada a 50.<br \/><br \/>Visiteu <a href=\"https:\/\/www.betaflight.com\/docs\/development\/Inflight-Adjustments\" target=\"_blank\" rel=\"noopener noreferrer\">aquesta pàgina<\/a> per obtenir més informació.",
+        "description": "Tooltip help text for the Adjustment Center column"
+    },
+    "adjustmentsScaleHelp": {
+        "message": "Controla l'escala o el rang de l'ajust; els valors més alts augmenten el rang d'ajust o la sensibilitat.<br \/><br \/><strong>Ajustaments del control lliscant:<\/strong><br \/>Per als ajustos del control lliscant, l'escala d'ajust controla l'escala\/sensibilitat de l'ajust. Un valor de 50 equival al 50% del rang del control lliscant. Si s'estableix a 0, s'utilitza l'escala predeterminada per als controls lliscants.<br \/><br \/><strong>Ajustaments de selecció:<\/strong><br \/>Per als ajustos de selecció, definiu l'escala d'ajust a 0 per al comportament predeterminat o especifiqueu un valor de microsegons (uS) per limitar el rang. Per exemple: definiu el centre d'ajust a 1000 (uS) i l'escala d'ajust a 500 (uS) per utilitzar un interruptor de 3 posicions com a interruptor de 2 posicions.<br \/><br \/><strong>Ajustaments esglaonats i absoluts:<\/strong><br \/>Per als ajustos esglaonats i absoluts, l'escala d'ajust defineix el rang per sobre i per sota del centre d'ajust. Per exemple, un valor de 25 crea un rang d'ajust de ±25 a partir del valor del Centre d'ajust, o a partir del valor actual si el Centre d'ajust està definit a 0.<br \/><strong>Nota:<\/strong> Per utilitzar el mètode d'ajust absolut amb un potenciòmetre, cal especificar un valor d'escala d'ajust.<br \/><br \/>Visiteu <a href=\"https:\/\/www.betaflight.com\/docs\/development\/Inflight-Adjustments\" target=\"_blank\" rel=\"noopener noreferrer\">aquesta pàgina<\/a> per obtenir més informació.",
+        "description": "Tooltip help text for the Adjustment Scale column"
+    },
     "adjustmentsSlot0": {
         "message": "Slot 1"
     },
@@ -3863,6 +3877,9 @@
     },
     "firmwareFlasherUF2SaveFailed": {
         "message": "Error en guardar (Flaix) UF2"
+    },
+    "firmwareFlasherClickToConnectDfu": {
+        "message": "Feu clic per connectar el dispositiu DFU"
     },
     "firmwareFlasherConfigCorrupted": {
         "message": "Sembla que el fitxer de configuració està malmès, s'accepta ASCII (caràcters 0-255)",

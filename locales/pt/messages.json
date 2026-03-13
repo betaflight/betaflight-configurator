@@ -2764,6 +2764,20 @@
     "adjustmentsColumnViaChannel": {
         "message": "via o canal"
     },
+    "adjustmentsColumnAdjustmentCenter": {
+        "message": "com centro (val.)"
+    },
+    "adjustmentsColumnAdjustmentScale": {
+        "message": "e alcance|escala (val.|%)"
+    },
+    "adjustmentsCenterHelp": {
+        "message": "Define o ponto médio ou valor de referência usado pela função de ajuste.<br \/><br \/><strong>Ajustamentos de controle deslizante:<\/strong><br \/>Para ajustar o controle deslizante, defina o Centro de Ajuste como 0. A posição atual do controle deslizante será utilizada para o ajuste para cima\/baixo.<br \/><br \/><strong>Ajustamentos de Seleção:<\/strong><br \/>Configurar Ajuste para 0, ou para um valor específico de microsegundo (uS) se quiser deslocar o ponto de referência para 1500uS ao iniciar o ajuste de RC.<br \/><br \/><strong>Ajustamentos por fases:<\/strong><br \/>Definir o Centro de Ajuste para 0 para o valor atual do item que está a ser ajustado para ser utilizado.<br \/><br \/><strong>Ajustamentos absolutos:<\/strong><br \/>Para usar o método de ajuste absoluto, deve definir o Centro de Ajustamento e a Escala para especificar o valor e o intervalo desejados. O intervalo é calculado como: centro ± alcance. Por exemplo, definindo o Centro de Ajuste para 50 e Escala de Ajuste para 25 cria um intervalo de 25 a 75, com a posição central (switch ou POT) mapeado a 50.<br \/><br \/>Visite <a href=\"https:\/\/www.betaflight.com\/docs\/development\/Inflight-Adjustments\" target=\"_blank\" rel=\"noopener noreferrer\">esta página<\/a> para mais informações.",
+        "description": "Tooltip help text for the Adjustment Center column"
+    },
+    "adjustmentsScaleHelp": {
+        "message": "Controla a escala ou intervalo do ajuste; valores mais elevados aumentam o intervalo de ajuste ou sensibilidade.<br \/><br \/><strong>Ajustamentos de controlo deslizante:<\/strong><br \/>Para ajustes de controlo deslizante, Ajuste de Escala controla a escala\/sensibilidade do ajuste. Um valor de 50 é igual a 50% do alcance do controle deslizante. Definir como 0 utiliza a escala padrão para controles deslizantes.<br \/><br \/><strong>Ajustes de seleção:<\/strong><br \/> Para ajustes de seleção definir Escala de Ajuste para 0 para comportamento padrão, ou especificar um valor de microsegundo (uS) para limitar o intervalo. Por exemplo: Defina o Centro de Ajuste para 1000 (uS) e Escala de Ajuste para 500 (uS) para utilizar um switch de 3 posições como um switch de 2 posições.<br \/><br \/><strong>Ajustes faseados e absolutos -<\/strong><br \/>Para ajustes faseados e absolutos, a Escala de Ajuste define o intervalo acima e abaixo do Centro de Ajuste. Por exemplo, um valor de 25 cria um intervalo de ajuste de ± 25 a partir do valor do Centro de Ajuste. ou do valor atual se o Centro de Ajuste estiver definido como 0.<br \/><strong>Nota:<\/strong> Para usar o método de ajuste absoluto com um potenciómetro, deve ser especificado um valor de Escala de Ajuste.<br \/><br \/>Visite <a href=\"https:\/\/www.betaflight.com\/docs\/development\/Inflight-Adjustments\" target=\"_blank\" rel=\"noopener noreferrer\">esta página<\/a> para mais informações.",
+        "description": "Tooltip help text for the Adjustment Scale column"
+    },
     "adjustmentsSlot0": {
         "message": "Slot 1"
     },
@@ -3855,6 +3869,9 @@
     },
     "firmwareFlasherUF2SaveFailed": {
         "message": "Falha ao salvar (flash) UF2"
+    },
+    "firmwareFlasherClickToConnectDfu": {
+        "message": "Clique para ligar ao dispositivo DFU"
     },
     "firmwareFlasherConfigCorrupted": {
         "message": "O ficheiro de configuração aparenta estar corrompido, ASCII aceite (caracteres 0-255)",

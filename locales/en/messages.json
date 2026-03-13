@@ -3957,6 +3957,9 @@
     "firmwareFlasherUF2SaveFailed": {
         "message": "Failed to save (flash) UF2"
     },
+    "firmwareFlasherClickToConnectDfu": {
+        "message": "Click to connect to DFU device"
+    },
     "firmwareFlasherConfigCorrupted": {
         "message": "Config file appears to be corrupted, ASCII accepted (chars 0-255)",
         "description": "shown in the progress bar at the bottom, be brief"
@@ -4886,12 +4889,6 @@
     "pidTuningItermRotationHelp": {
         "message": "Rotates the current I Term vector properly to other axes as the aircraft rotates when yawing continuously during rolls and when performing funnels and other tricks. Very appreciated by LOS acro pilots."
     },
-    "pidTuningSmartFeedforward": {
-        "message": "Smart Feedforward"
-    },
-    "pidTuningSmartFeedforwardHelp": {
-        "message": "Reduces the effect of the F Term in the PID. When both the P Term and the F Term are active at the same moment, it only uses the larger of the two, avoiding overshoots without the needing to raise D, but also reduces the responsiveness effect produced by the F term when added to P."
-    },
     "pidTuningItermRelax": {
         "message": "I Term Relax"
     },
@@ -5638,6 +5635,9 @@
     },
     "osdSetupUploadingFontEnd": {
         "message": "Uploaded all {{length}} characters to the OSD"
+    },
+    "osdSetupUploadingFontFailed": {
+        "message": "Upload failed"
     },
 
     "osdSetupSave": {
@@ -8128,5 +8128,13 @@
     },
     "sectionUserPasskeys": {
         "message": "User Passkeys"
+    },
+    "osdPresetPositionAlignTitle": {
+        "message": "Align to position",
+        "description": "Label for the preset position alignment menu in the OSD elements list"
+    },
+    "osdPresetPositionChooseTitle": {
+        "message": "Choose Position",
+        "description": "Title for the preset position grid popup in the OSD elements list"
     }
 }

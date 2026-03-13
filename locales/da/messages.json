@@ -727,6 +727,9 @@
     "defaultButtonFirmwareFlasher": {
         "message": "Brænd firmware"
     },
+    "defaultDonateText": {
+        "message": "<p><strong>Betaflight<\/strong> er <strong>open source<\/strong> programmel som er tilgængelig uden beregning, men også <strong>uden garanti<\/strong>.<\/p><p>Hvis du fandt Betaflight nyttig, så overvej venligst at <strong>støtte<\/strong> udviklingen med en donation.<\/p>"
+    },
     "defaultDonateBottom": {
         "message": "<p>Hvis du løbende vil støtte op om projektet, bør du overveje a blive patreon for os på $t(patreonLink.message).<\/p>"
     },
@@ -2751,6 +2754,12 @@
     },
     "adjustmentsColumnViaChannel": {
         "message": "via kanal"
+    },
+    "adjustmentsColumnAdjustmentCenter": {
+        "message": "w\/ center (værdi)"
+    },
+    "adjustmentsColumnAdjustmentScale": {
+        "message": "og rækkevidde skala (værdi|%)"
     },
     "adjustmentsSlot0": {
         "message": "Plads 1"

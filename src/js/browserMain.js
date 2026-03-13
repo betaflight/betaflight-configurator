@@ -9,8 +9,6 @@ import "../css/tabs/static_tab.less";
 import "../css/tabs/help.less";
 import "../css/tabs/ports.less";
 import "../css/tabs/configuration.less";
-import "../css/tabs/pid_tuning.less";
-// import "../css/tabs/receiver.less";
 import "../css/tabs/servos.less";
 import "../css/tabs/gps.less";
 // import "../css/tabs/motors.less";
@@ -23,7 +21,7 @@ import "../css/tabs/logging.less";
 import "../css/tabs/onboard_logging.less";
 import "../css/tabs/auxiliary.less";
 import "../css/tabs/failsafe.less";
-import "../css/tabs/osd.less";
+
 import "../css/tabs/vtx.less";
 import "../css/tabs/transponder.less";
 import "../css/tabs/options.less";
