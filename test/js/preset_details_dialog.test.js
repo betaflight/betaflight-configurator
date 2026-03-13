@@ -64,7 +64,7 @@ describe("PresetDetailsDialog", () => {
                     firmware_version: ["4.5"],
                     keywords: ["freestyle"],
                     description: ["# Heading", "Visit [Betaflight](https://betaflight.com)"],
-                    discussion: "javascript:alert('xss')",
+                    discussion: "ftp://example.com/preset-discussion",
                     parser: "MARKED",
                     options: [{ name: "Option A", checked: true }],
                 },
