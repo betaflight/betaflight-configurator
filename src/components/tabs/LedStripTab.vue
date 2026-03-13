@@ -1167,7 +1167,7 @@ button.disabled:active {
 }
 
 /* Save button specific styling */
-a.save {
+.save {
     display: inline-block;
     min-width: 64px;
     text-align: center;
