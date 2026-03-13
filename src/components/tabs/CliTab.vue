@@ -314,6 +314,19 @@ p {
     font-weight: bold;
 }
 
+/* Syntax highlighting — one-dark-pro palette, matching Betaflight Support Explorer */
+.window :deep(.cli-comment) {
+    color: #7f848e;
+}
+
+.window :deep(.cli-cmd) {
+    color: #61afef;
+}
+
+.window :deep(.cli-num) {
+    color: #d19a66;
+}
+
 .cli-input-wrapper {
     position: relative;
     margin-top: 8px;

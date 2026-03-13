@@ -12,6 +12,7 @@ import FileSystem from "../js/FileSystem";
 import { ispConnected } from "../js/utils/connection";
 import { get as getConfig } from "../js/ConfigStorage";
 import { useCliAutocomplete } from "./useCliAutocomplete";
+import { highlightCliLine } from "../js/CliSyntaxHighlight";
 
 const backspaceCode = 8;
 const lineFeedCode = 10;
@@ -168,7 +169,7 @@ export function useCli() {
         if (text.startsWith("###ERROR")) {
             writeToOutput(`<span class="error_message">${text}</span><br>`);
         } else {
-            writeToOutput(`${text}<br>`);
+            writeToOutput(`${highlightCliLine(text)}<br>`);
         }
     };
 
