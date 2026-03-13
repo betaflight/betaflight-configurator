@@ -1,5 +1,6 @@
 import { reactive, computed } from "vue";
 import geomagnetism from "geomagnetism";
+import SunCalc from "suncalc";
 import { get as getConfig, set as setConfig } from "../js/ConfigStorage";
 
 const SAVED_LOCATIONS_KEY = "preflight_saved_locations";
@@ -256,7 +257,13 @@ function getUvStatus(uv) {
 }
 
 function formatTime(isoString) {
+    if (!isoString) {
+        return "-";
+    }
     const d = new Date(isoString);
+    if (Number.isNaN(d.getTime())) {
+        return "-";
+    }
     return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 }
 
@@ -645,6 +652,7 @@ export function usePreflight() {
         }
         location.latitude = coords.latitude;
         location.longitude = coords.longitude;
+        location.elevation = null;
         location.source = "geolocation";
         location.name = `${coords.latitude.toFixed(4)}, ${coords.longitude.toFixed(4)}`;
     }
@@ -654,6 +662,7 @@ export function usePreflight() {
         const parsedLon = Number.parseFloat(lon);
         location.latitude = parsedLat;
         location.longitude = parsedLon;
+        location.elevation = null;
         location.source = "manual";
         location.name = `${parsedLat.toFixed(4)}, ${parsedLon.toFixed(4)}`;
     }
@@ -703,11 +712,23 @@ export function usePreflight() {
         await Promise.allSettled([fetchWeather(lat, lon), fetchSolarActivity(), fetchElevation(lat, lon)]);
     }
 
+    const civilTwilight = computed(() => {
+        if (location.latitude === null || location.longitude === null) {
+            return null;
+        }
+        const times = SunCalc.getTimes(new Date(), location.latitude, location.longitude);
+        if (!times.dawn || !times.dusk || Number.isNaN(times.dawn.getTime()) || Number.isNaN(times.dusk.getTime())) {
+            return null;
+        }
+        return { dawn: times.dawn, dusk: times.dusk };
+    });
+
     return {
         location,
         weather,
         solar,
         mag,
+        civilTwilight,
         savedLocations,
         isLoading,
         launchStatus,

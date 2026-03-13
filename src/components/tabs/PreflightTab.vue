@@ -685,9 +685,7 @@
                                             <th scope="row">{{ $t("preflightDensityAlt") }}</th>
                                             <td>
                                                 <span :class="getDensityAltStatusClass()">
-                                                    {{ densityAltitude }} ft ({{
-                                                        Math.round(densityAltitude * 0.3048)
-                                                    }}
+                                                    {{ densityAltitude }} ft ({{ Math.round(densityAltitude * 0.3048) }}
                                                     m)
                                                 </span>
                                             </td>
@@ -999,33 +997,27 @@ export default defineComponent({
         });
 
         const civilTwilightStart = computed(() => {
-            if (!preflight.weather.daily?.sunrise) {
+            if (!preflight.civilTwilight.value) {
                 return "-";
             }
-            const d = new Date(preflight.weather.daily.sunrise);
-            d.setMinutes(d.getMinutes() - 30);
-            return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+            return preflight.civilTwilight.value.dawn.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
         });
 
         const civilTwilightEnd = computed(() => {
-            if (!preflight.weather.daily?.sunset) {
+            if (!preflight.civilTwilight.value) {
                 return "-";
             }
-            const d = new Date(preflight.weather.daily.sunset);
-            d.setMinutes(d.getMinutes() + 30);
-            return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+            return preflight.civilTwilight.value.dusk.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
         });
 
         const civilTwilightStatus = computed(() => {
-            if (!preflight.weather.daily?.sunrise || !preflight.weather.daily?.sunset) {
+            if (!preflight.civilTwilight.value) {
                 return "";
             }
             const now = new Date();
-            const start = new Date(preflight.weather.daily.sunrise);
-            start.setMinutes(start.getMinutes() - 30);
-            const end = new Date(preflight.weather.daily.sunset);
-            end.setMinutes(end.getMinutes() + 30);
-            return now >= start && now <= end ? "status-good" : "status-danger";
+            return now >= preflight.civilTwilight.value.dawn && now <= preflight.civilTwilight.value.dusk
+                ? "status-good"
+                : "status-danger";
         });
 
         const densityAltitude = computed(() => {
