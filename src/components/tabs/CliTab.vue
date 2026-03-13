@@ -374,11 +374,6 @@ textarea#preview {
 /* Fixed toolbar positioning */
 :deep(.toolbar_fixed_bottom.content_toolbar) {
     width: calc(100% - 18rem) !important;
-    display: flex;
-    flex-wrap: wrap;
-    position: fixed;
-    bottom: 2rem;
-    right: 0;
 }
 
 :deep(.content_toolbar) {

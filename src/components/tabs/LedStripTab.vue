@@ -1579,12 +1579,6 @@ a.save {
     border: 2px solid var(--text);
 }
 
-/* Toolbar */
-.content_toolbar.toolbar_fixed_bottom {
-    position: fixed;
-    bottom: 2rem;
-}
-
 /* Utility */
 .clear-both {
     clear: both;
