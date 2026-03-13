@@ -176,7 +176,7 @@ function handleOpen() {
 }
 
 function handleCardKeydown(event) {
-    if (!props.clickable) {
+    if (!props.clickable || event.target !== event.currentTarget) {
         return;
     }
 
