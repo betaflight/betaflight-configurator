@@ -344,7 +344,6 @@
                                                             preflight.weather.current.temperature,
                                                         ).cssClass
                                                     "
-                                                    class="status-badge"
                                                 >
                                                     {{
                                                         $t(
@@ -368,7 +367,6 @@
                                                             preflight.weather.current.windSpeed,
                                                         ).cssClass
                                                     "
-                                                    class="status-badge"
                                                 >
                                                     {{
                                                         $t(
