@@ -1,0 +1,646 @@
+@import "ol/ol.css";
+
+.tab-preflight {
+    .preflight-tab {
+        padding-bottom: 10px;
+    }
+
+    /* Location Bar */
+    .location-bar {
+        .default_btn {
+            width: auto;
+            float: none;
+            margin-bottom: 0;
+            a {
+                padding: 0.35rem 0.75rem;
+                white-space: nowrap;
+                em {
+                    margin-right: 4px;
+                }
+            }
+        }
+
+        .location-inputs {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+
+            .location-or {
+                color: var(--surface-700);
+                font-size: 12px;
+            }
+
+            .location-input {
+                width: 120px;
+                padding: 4px 8px;
+                border: 1px solid var(--surface-500);
+                border-radius: 3px;
+                background: var(--surface-200);
+                color: var(--text);
+            }
+
+            .manual-entry-group {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                flex-shrink: 0;
+            }
+        }
+
+        .saved-locations-row {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 8px;
+
+            .saved-location-select {
+                min-width: 180px;
+                max-width: 300px;
+                padding: 4px 8px;
+                font-size: 12px;
+            }
+
+            .saved-loc-btn {
+                a {
+                    padding: 0.35rem 0.5rem;
+                    em {
+                        margin-right: 0;
+                    }
+                }
+            }
+
+            .save-entry-group {
+                display: flex;
+                align-items: center;
+                gap: 4px;
+                flex-shrink: 0;
+
+                .save-label-input {
+                    width: 220px;
+                }
+            }
+        }
+
+        .location-status {
+            margin-top: 8px;
+            color: var(--primary-500);
+            font-weight: bold;
+            em {
+                margin-right: 4px;
+            }
+            .location-source {
+                color: var(--surface-600);
+                font-weight: normal;
+                font-size: 11px;
+            }
+        }
+
+        .location-error {
+            margin-top: 8px;
+            color: #e74c3c;
+            em {
+                margin-right: 4px;
+            }
+        }
+    }
+
+    /* Launch Status Banner */
+    .launch-status-banner {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
+        padding: 12px 20px;
+        margin: 10px 0;
+        border-radius: 6px;
+        font-weight: bold;
+        transition: background-color 0.3s;
+
+        &.status-good {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            color: #000;
+        }
+        &.status-moderate {
+            background: linear-gradient(135deg, #f39c12, #f1c40f);
+            color: #000;
+        }
+        &.status-warning {
+            background: linear-gradient(135deg, #e67e22, #f39c12);
+            color: #000;
+        }
+        &.status-danger {
+            background: linear-gradient(135deg, #c0392b, #e74c3c);
+            color: #fff;
+        }
+        &.status-unknown {
+            background: var(--surface-400);
+            color: var(--text);
+        }
+
+        .launch-status-label {
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .launch-status-value {
+            font-size: 22px;
+            letter-spacing: 2px;
+        }
+
+        .refresh-btn {
+            width: auto;
+            float: none;
+            margin-left: auto;
+            margin-bottom: 0;
+            a {
+                background: rgba(0, 0, 0, 0.1);
+                border: 1px solid rgba(0, 0, 0, 0.2);
+                color: inherit;
+                padding: 0.35rem 0.75rem;
+                white-space: nowrap;
+                &:hover {
+                    background: rgba(0, 0, 0, 0.2);
+                    color: inherit;
+                }
+                em {
+                    margin-right: 4px;
+                }
+            }
+        }
+    }
+
+    /* Launch Checks Breakdown */
+    .launch-checks {
+        display: flex;
+        justify-content: center;
+        gap: 16px;
+        font-size: 12px;
+        padding: 6px 0;
+
+        .launch-check-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+
+            em {
+                font-size: 11px;
+            }
+        }
+    }
+
+    /* Status classes for values */
+    .status-good {
+        color: #27ae60;
+        font-weight: bold;
+    }
+    .status-moderate {
+        color: #f39c12;
+        font-weight: bold;
+    }
+    .status-warning {
+        color: #e67e22;
+        font-weight: bold;
+    }
+    .status-danger {
+        color: #e74c3c;
+        font-weight: bold;
+    }
+    .status-unknown {
+        color: var(--surface-600);
+    }
+
+    /* Weather */
+    .weather-grid {
+        .weather-main {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 0;
+            margin-bottom: 8px;
+            border-bottom: 1px solid var(--surface-400);
+
+            .weather-condition {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                .weather-icon {
+                    font-size: 28px;
+                }
+                .weather-desc {
+                    font-size: 14px;
+                    font-weight: 500;
+                }
+            }
+
+            .weather-temp {
+                font-size: 24px;
+                font-weight: bold;
+                color: var(--primary-500);
+            }
+        }
+
+        .weather-details {
+            th[scope="row"],
+            td:first-child {
+                font-weight: 500;
+                width: 40%;
+                color: var(--surface-700);
+                text-align: left;
+            }
+        }
+    }
+
+    /* Flight Window */
+    .flight-window-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+
+        .flight-window-item {
+            text-align: center;
+            padding: 8px;
+            background: var(--surface-200);
+            border-radius: 4px;
+
+            .fw-label {
+                font-size: 11px;
+                color: var(--surface-600);
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                margin-bottom: 4px;
+            }
+
+            .fw-value {
+                font-size: 16px;
+                font-weight: bold;
+
+                .fw-sublabel {
+                    display: block;
+                    font-size: 11px;
+                    font-weight: normal;
+                    margin-top: 2px;
+                }
+            }
+        }
+    }
+
+    /* Status badge (inline) */
+    .status-badge {
+        font-size: 11px;
+        margin-left: 6px;
+    }
+
+    /* Hourly forecast table */
+    .hourly-table {
+        font-size: 12px;
+        width: 100%;
+
+        thead .titles th {
+            font-weight: bold;
+            text-align: center;
+            padding: 4px;
+            background: var(--surface-300);
+            border-bottom: 1px solid var(--surface-500);
+        }
+
+        tbody td {
+            text-align: center;
+            padding: 3px 4px;
+            &:first-child {
+                text-align: left;
+                font-weight: 500;
+            }
+        }
+
+        tbody tr:nth-child(even) {
+            background: var(--surface-200);
+        }
+    }
+
+    .table-note {
+        font-size: 11px;
+        color: var(--surface-600);
+        margin-top: 4px;
+        text-align: right;
+    }
+
+    /* 5-Day Forecast table */
+    .forecast-table {
+        font-size: 12px;
+        width: 100%;
+
+        thead .titles th {
+            font-weight: bold;
+            text-align: center;
+            padding: 4px;
+            background: var(--surface-300);
+            border-bottom: 1px solid var(--surface-500);
+        }
+
+        tbody td {
+            text-align: center;
+            padding: 4px 6px;
+            &:first-child {
+                text-align: left;
+                font-weight: 500;
+                white-space: nowrap;
+            }
+            &:nth-child(2) {
+                text-align: left;
+            }
+        }
+
+        tbody tr:nth-child(even) {
+            background: var(--surface-200);
+        }
+
+        .forecast-row-danger {
+            background: rgba(231, 76, 60, 0.1) !important;
+        }
+        .forecast-row-warning {
+            background: rgba(230, 126, 34, 0.1) !important;
+        }
+        .forecast-row-moderate {
+            background: rgba(243, 156, 18, 0.08) !important;
+        }
+    }
+
+    /* Solar Activity */
+    .solar-info {
+        .kp-display {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+
+            .kp-value {
+                font-size: 28px;
+                font-weight: bold;
+                padding: 4px 12px;
+                border-radius: 6px;
+
+                &.status-good {
+                    background: rgba(39, 174, 96, 0.15);
+                }
+                &.status-moderate {
+                    background: rgba(243, 156, 18, 0.15);
+                }
+                &.status-warning {
+                    background: rgba(230, 126, 34, 0.15);
+                }
+                &.status-danger {
+                    background: rgba(231, 76, 60, 0.15);
+                }
+            }
+
+            .kp-label {
+                font-size: 14px;
+                color: var(--surface-700);
+            }
+        }
+
+        .kp-scale {
+            margin-bottom: 12px;
+
+            .kp-bar {
+                height: 8px;
+                background: var(--surface-400);
+                border-radius: 4px;
+                overflow: hidden;
+
+                .kp-fill {
+                    height: 100%;
+                    border-radius: 4px;
+                    transition: width 0.5s ease;
+
+                    &.status-good {
+                        background: #27ae60;
+                    }
+                    &.status-moderate {
+                        background: #f39c12;
+                    }
+                    &.status-warning {
+                        background: #e67e22;
+                    }
+                    &.status-danger {
+                        background: #e74c3c;
+                    }
+                }
+            }
+
+            .kp-scale-labels {
+                display: flex;
+                justify-content: space-between;
+                font-size: 10px;
+                color: var(--surface-600);
+                margin-top: 2px;
+            }
+        }
+
+        .storm-scales {
+            margin-bottom: 8px;
+            th[scope="row"],
+            td:first-child {
+                font-weight: 500;
+                color: var(--surface-700);
+                text-align: left;
+            }
+        }
+
+        .solar-timestamp {
+            font-size: 11px;
+            color: var(--surface-600);
+            margin-top: 8px;
+        }
+    }
+
+    /* GNSS */
+    .gnss-info {
+        p {
+            font-size: 12px;
+            color: var(--surface-700);
+            margin-bottom: 8px;
+        }
+
+        .cf_table {
+            margin-bottom: 8px;
+            th[scope="row"],
+            td:first-child {
+                font-weight: 500;
+                color: var(--surface-700);
+                width: 50%;
+                text-align: left;
+            }
+        }
+
+        .gnss-links {
+            margin-top: 10px;
+            a {
+                color: var(--primary-500);
+                text-decoration: none;
+                font-size: 12px;
+                &:hover {
+                    text-decoration: underline;
+                }
+                em {
+                    margin-right: 4px;
+                    font-size: 10px;
+                }
+            }
+        }
+    }
+
+    /* Airspace */
+    .airspace-info {
+        p {
+            font-size: 12px;
+            color: var(--surface-700);
+            margin-bottom: 10px;
+        }
+
+        .airspace-links {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+
+            .airspace-link {
+                display: flex;
+                align-items: center;
+                padding: 8px 12px;
+                background: var(--surface-200);
+                border: 1px solid var(--surface-400);
+                border-radius: 4px;
+                color: var(--primary-500);
+                text-decoration: none;
+                font-size: 13px;
+                transition: background 0.2s;
+
+                &:hover {
+                    background: var(--surface-300);
+                }
+
+                em {
+                    margin-right: 8px;
+                    width: 16px;
+                    text-align: center;
+                }
+            }
+        }
+    }
+
+    /* Map */
+    .preflight-map-box {
+        .preflight-map-container {
+            position: relative;
+            padding: 0 !important;
+
+            &:fullscreen {
+                .fullscreen-map-styles();
+            }
+            &:-webkit-full-screen {
+                .fullscreen-map-styles();
+            }
+            &:-ms-fullscreen {
+                .fullscreen-map-styles();
+            }
+        }
+
+        .preflight-map {
+            width: 100%;
+            height: 400px;
+        }
+
+        .controls {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            z-index: 10;
+
+            button {
+                width: 28px;
+                height: 28px;
+                border: 1px solid var(--surface-500);
+                background: var(--surface-100);
+                color: var(--text);
+                cursor: pointer;
+                font-size: 12px;
+                font-weight: bold;
+                border-radius: 3px;
+
+                &:hover {
+                    background: var(--primary-500);
+                    color: #fff;
+                }
+
+                &.active {
+                    background: var(--primary-500);
+                    color: #fff;
+                }
+            }
+        }
+
+        // Fullscreen styles (mixin)
+        .fullscreen-map-styles() {
+            width: 100vw !important;
+            height: 100vh !important;
+            background-color: var(--surface-100);
+            .preflight-map {
+                height: calc(100vh - var(--map-controls-bar-height, 33px)) !important;
+                width: 100vw !important;
+            }
+            .controls {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                width: 100vw !important;
+                z-index: 1000;
+                flex-direction: row;
+                top: auto;
+                right: auto;
+                justify-content: center;
+                gap: 4px;
+                padding: 4px;
+                background: var(--surface-200);
+            }
+        }
+    }
+
+    /* Misc */
+    .error-message {
+        color: #e74c3c;
+        padding: 8px;
+        em {
+            margin-right: 4px;
+        }
+    }
+
+    .no-data {
+        color: var(--surface-600);
+        text-align: center;
+        padding: 20px;
+        font-style: italic;
+    }
+
+    .loading-indicator {
+        color: var(--primary-500);
+    }
+
+    .loading-placeholder {
+        text-align: center;
+        padding: 20px;
+        color: var(--surface-600);
+    }
+
+    .preflight-attribution {
+        text-align: center;
+        font-size: 10px;
+        color: var(--surface-600);
+        margin-top: 12px;
+        padding: 4px;
+    }
+}

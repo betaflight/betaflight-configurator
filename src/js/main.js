@@ -308,6 +308,9 @@ async function startProcess() {
                     // Vue tab - use mountVueTab instead of jQuery load
                     mountVueTab("help", content_ready);
                     break;
+                case "preflight":
+                    mountVueTab("preflight", content_ready);
+                    break;
                 case "auxiliary":
                     mountVueTab("auxiliary", content_ready);
                     break;
