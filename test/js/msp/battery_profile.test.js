@@ -14,7 +14,7 @@ function processMessage(mspHelper, code, buffer) {
     });
 }
 
-function buildStatusExBuffer(apiVersion, { batteryProfiles, batteryProfile } = {}) {
+function buildStatusExBuffer({ batteryProfiles, batteryProfile } = {}) {
     const buffer = [];
     buffer.push16(500); // cycleTime
     buffer.push16(0); // i2cError
@@ -31,7 +31,7 @@ function buildStatusExBuffer(apiVersion, { batteryProfiles, batteryProfile } = {
     buffer.push16(42); // CPU temp (API 1.46+)
     buffer.push8(4); // numberOfRateProfiles (API 1.47+)
 
-    if (apiVersion === API_VERSION_1_48 && batteryProfiles !== undefined) {
+    if (batteryProfiles !== undefined && batteryProfile !== undefined) {
         buffer.push8(batteryProfiles);
         buffer.push8(batteryProfile);
     }
@@ -51,7 +51,7 @@ describe("Battery Profiles", () => {
             processMessage(
                 mspHelper,
                 MSPCodes.MSP_STATUS_EX,
-                buildStatusExBuffer(API_VERSION_1_48, { batteryProfiles: 3, batteryProfile: 2 }),
+                buildStatusExBuffer({ batteryProfiles: 3, batteryProfile: 2 }),
             );
 
             expect(FC.CONFIG.numberOfBatteryProfiles).toEqual(3);
@@ -60,7 +60,7 @@ describe("Battery Profiles", () => {
 
         it("does not parse battery profile fields for API < 1.48", () => {
             FC.CONFIG.apiVersion = API_VERSION_1_47;
-            processMessage(mspHelper, MSPCodes.MSP_STATUS_EX, buildStatusExBuffer(API_VERSION_1_47));
+            processMessage(mspHelper, MSPCodes.MSP_STATUS_EX, buildStatusExBuffer());
 
             expect(FC.CONFIG.numberOfBatteryProfiles).toEqual(0);
             expect(FC.CONFIG.batteryProfile).toEqual(0);

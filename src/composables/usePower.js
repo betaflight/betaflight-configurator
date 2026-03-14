@@ -135,6 +135,7 @@ export function usePower() {
     const changeBatteryProfile = async (profileIndex) => {
         const connectionStore = useConnectionStore();
         const previousProfile = activeBatteryProfile.value;
+        const previousProfileName = batteryProfileName.value;
 
         try {
             // Pause global and local polling to prevent MSP_STATUS_EX from
@@ -151,6 +152,7 @@ export function usePower() {
             updateStateFromFC();
         } catch (error) {
             activeBatteryProfile.value = previousProfile;
+            batteryProfileName.value = previousProfileName;
             throw error;
         } finally {
             connectionStore.resumeLiveData();
