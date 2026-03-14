@@ -158,10 +158,8 @@ export default class CliEngine {
 
     getCliCommand(command, cliBuffer) {
         const buffer = this.removePromptHash(cliBuffer);
-        const bufferRegex = new RegExp(`^${buffer}`, "g");
-
-        if (command.match(bufferRegex)) {
-            return command.replace(bufferRegex, "");
+        if (command.startsWith(buffer)) {
+            return command.slice(buffer.length);
         }
 
         const noOfCharsToDelete = this.cliBufferCharsToDelete(command, buffer);

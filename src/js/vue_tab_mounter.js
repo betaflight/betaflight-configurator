@@ -92,8 +92,10 @@ export function mountVueTab(tabName, contentReadyCallback) {
         _vueComponent: componentInstance,
     };
 
-    // Register the adapter in TABS so callbacks work
-    TABS[tabName] = tabAdapter;
+    // Merge the adapter into TABS, preserving any properties that the
+    // component already set during mount (e.g. TABS.cli.read, .cleanup).
+    // Adapter defaults go first, component overrides win.
+    TABS[tabName] = { ...tabAdapter, ...TABS[tabName] };
 
     // Reset tab switch flag and call content ready callback after next tick
     setTimeout(() => {
