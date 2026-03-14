@@ -107,6 +107,7 @@ import officialIcon from "@/images/icons/cf_icon_welcome_orange.svg";
 import starActive from "@/images/icons/star_orange.svg";
 import starHover from "@/images/icons/star_orange_stroke.svg";
 import starTransparent from "@/images/icons/star_transparent.svg";
+import { i18n } from "@/js/localization";
 
 const props = defineProps({
     preset: {
@@ -135,7 +136,9 @@ const mouseOnStar = ref(false);
 const firmwareVersions = computed(() => props.preset.firmware_version?.join("; ") ?? "");
 const keywords = computed(() => props.preset.keywords?.join("; ") ?? "");
 const isFavorite = computed(() => Boolean(props.preset.lastPickDate));
-const favoriteAriaLabel = computed(() => (isFavorite.value ? "Remove favorite" : "Add favorite"));
+const favoriteAriaLabel = computed(() =>
+    i18n.getMessage(isFavorite.value ? "presetsFavoriteRemoveAriaLabel" : "presetsFavoriteAddAriaLabel"),
+);
 
 const wrapperClasses = computed(() => ({
     preset_title_panel_border: true,
