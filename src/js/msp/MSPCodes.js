@@ -201,13 +201,13 @@ const MSPCodes = {
     MSP2_SENSOR_CONFIG_ACTIVE: 0x300a,
     MSP2_MCU_INFO: 0x300c,
     MSP2_GYRO_SENSOR: 0x300d,
-
     // MSP2_GET_TEXT and MSP2_SET_TEXT variable types
     PILOT_NAME: 1,
     CRAFT_NAME: 2,
     PID_PROFILE_NAME: 3,
     RATE_PROFILE_NAME: 4,
     BUILD_KEY: 5,
+    BATTERY_PROFILE_NAME: 11,
 };
 
 export default MSPCodes;

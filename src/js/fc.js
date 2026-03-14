@@ -51,6 +51,9 @@ const INITIAL_CONFIG = {
     sampleRateHz: 0,
     configurationProblems: 0,
     hardwareName: "",
+    batteryProfile: 0,
+    numberOfBatteryProfiles: 0,
+    batteryProfileNames: ["", "", ""],
 };
 
 const INITIAL_ANALOG = {
