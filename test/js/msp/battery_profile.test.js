@@ -74,7 +74,7 @@ describe("Battery Profiles", () => {
             const name = "Li-Ion";
             buffer.push8(name.length);
             for (let i = 0; i < name.length; i++) {
-                buffer.push8(name.charCodeAt(i));
+                buffer.push8(name.codePointAt(i));
             }
 
             processMessage(mspHelper, MSPCodes.MSP2_GET_TEXT, buffer);
@@ -96,7 +96,7 @@ describe("Battery Profiles", () => {
 
             let name = "";
             for (let i = 0; i < 4; i++) {
-                name += String.fromCharCode(view.readU8());
+                name += String.fromCodePoint(view.readU8());
             }
             expect(name).toEqual("LiPo");
         });

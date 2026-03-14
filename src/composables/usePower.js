@@ -118,7 +118,9 @@ export function usePower() {
 
     // Load battery profile name for the active profile from the flight controller
     const loadBatteryProfileName = async () => {
-        if (!hasBatteryProfiles.value) return;
+        if (!hasBatteryProfiles.value) {
+            return;
+        }
 
         await MSP.promise(
             MSPCodes.MSP2_GET_TEXT,
