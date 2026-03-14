@@ -7706,6 +7706,10 @@
         "message": "Load backup",
         "description": "Button to load backup from the file"
     },
+    "presetsVirtualModeCliUnsupported": {
+        "message": "Preset apply and backup actions require the CLI, which is not available in Virtual Mode.",
+        "description": "Warning shown when a presets CLI action is attempted in Virtual Mode"
+    },
     "presetsLoadingDumpAll": {
         "message": "Loading current configuration from the flight controller",
         "description": "Title for the waiting dialog when loading dump all into a file"
