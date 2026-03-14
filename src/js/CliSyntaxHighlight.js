@@ -43,8 +43,8 @@ export function highlightCliLine(line) {
         prefix = `${indent}<span class="cli-label">${firstWord}:</span>`;
         tokens = rest.slice(1);
     } else {
-        prefix = `${indent}${firstWord}`;
-        tokens = rest;
+        prefix = indent;
+        tokens = firstWord + rest;
     }
 
     return prefix + highlightTokens(tokens);
