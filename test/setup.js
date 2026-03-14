@@ -21,3 +21,16 @@ Object.defineProperty(window, "matchMedia", {
         dispatchEvent: vi.fn(),
     })),
 });
+
+if (globalThis.HTMLDialogElement && !globalThis.HTMLDialogElement.prototype.showModal) {
+    globalThis.HTMLDialogElement.prototype.showModal = function showModal() {
+        this.open = true;
+    };
+}
+
+if (globalThis.HTMLDialogElement && !globalThis.HTMLDialogElement.prototype.close) {
+    globalThis.HTMLDialogElement.prototype.close = function close() {
+        this.open = false;
+        this.dispatchEvent(new Event("close"));
+    };
+}
