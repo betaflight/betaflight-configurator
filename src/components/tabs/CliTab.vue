@@ -325,11 +325,7 @@ p {
 }
 
 .window :deep(.cli-num) {
-    color: #d19a66;
-}
-
-.window :deep(.cli-const) {
-    color: #e06c75;
+    color: #e5c07b;
 }
 
 .cli-input-wrapper {

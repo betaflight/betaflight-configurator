@@ -51,13 +51,13 @@ export function highlightCliLine(line) {
 }
 
 /**
- * Highlight labels (WORD:), hex literals, decimal numbers, and
- * uppercase constants within a text fragment.
+ * Highlight labels (WORD:), hex literals, and decimal numbers
+ * within a text fragment.
  */
 function highlightTokens(text) {
     return text.replace(
-        /(\b[A-Za-z_][\w]*:)|(\b0x[0-9A-Fa-f]+)|(\b\d+(?:\.\d+)?)|(\b[A-Z][A-Z0-9_]{2,}\b)/g,
-        (match, label, hex, num, upper) => {
+        /(\b[A-Za-z_][\w]*(?:\s+[A-Za-z_][\w]*)*:)|(\b0x[0-9A-Fa-f]+)|(\b\d+(?:\.\d+)?)/g,
+        (match, label, hex, num) => {
             if (label) {
                 return `<span class="cli-label">${label}</span>`;
             }
@@ -66,9 +66,6 @@ function highlightTokens(text) {
             }
             if (num) {
                 return `<span class="cli-num">${num}</span>`;
-            }
-            if (upper) {
-                return `<span class="cli-const">${upper}</span>`;
             }
             return match;
         },
