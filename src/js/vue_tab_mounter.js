@@ -15,6 +15,31 @@ import { tabState } from "./tab_state.js";
 // Store the current mounted Vue app instance for cleanup
 let currentTabApp = null;
 
+export function buildTabAdapter(tabName, componentInstance, existingAdapter = TABS[tabName]) {
+    const fallbackCleanup = (callback) => {
+        if (componentInstance.cleanup) {
+            componentInstance.cleanup(callback);
+        } else if (callback) {
+            callback();
+        }
+    };
+
+    const tabAdapter =
+        existingAdapter && typeof existingAdapter === "object" ? existingAdapter : { cleanup: fallbackCleanup };
+
+    if (typeof tabAdapter.cleanup !== "function") {
+        tabAdapter.cleanup = fallbackCleanup;
+    }
+
+    tabAdapter.expertModeChanged = (enabled) => {
+        // Update global reactive state that Vue components watch
+        tabState.expertMode = enabled;
+    };
+    tabAdapter._vueComponent = componentInstance;
+
+    return tabAdapter;
+}
+
 /**
  * Check if a tab has a Vue component available
  * @param {string} tabName - The tab name (e.g., "help", "landing")
@@ -74,23 +99,8 @@ export function mountVueTab(tabName, contentReadyCallback) {
     const componentInstance = currentTabApp.mount(contentEl);
 
     console.log(`[Vue Tab] Mounted: ${tabName}`);
-    // Create a tab adapter object that mimics the legacy tab pattern
-    // This provides the cleanup and expertModeChanged methods that gui.js and main.js expect
-    const tabAdapter = {
-        cleanup: (callback) => {
-            if (componentInstance.cleanup) {
-                componentInstance.cleanup(callback);
-            } else if (callback) {
-                callback();
-            }
-        },
-        expertModeChanged: (enabled) => {
-            // Update global reactive state that Vue components watch
-            tabState.expertMode = enabled;
-        },
-        // Store reference to component instance for potential future use
-        _vueComponent: componentInstance,
-    };
+    // Preserve any adapter the tab registered during mount, then add the generic hooks
+    const tabAdapter = buildTabAdapter(tabName, componentInstance);
 
     // Register the adapter in TABS so callbacks work
     TABS[tabName] = tabAdapter;
