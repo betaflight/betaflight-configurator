@@ -33,14 +33,18 @@ function mountWithProps(component, initialProps, listeners = {}) {
 }
 
 describe("PresetDetailsDialog", () => {
+    let wrapper;
+
     afterEach(() => {
+        wrapper?.unmount();
+        wrapper = null;
         document.body.innerHTML = "";
         vi.restoreAllMocks();
     });
 
     it("renders markdown descriptions safely and emits option changes", async () => {
         const onToggleOption = vi.fn();
-        const wrapper = mountWithProps(
+        wrapper = mountWithProps(
             PresetDetailsDialog,
             {
                 open: true,
@@ -87,7 +91,5 @@ describe("PresetDetailsDialog", () => {
         checkbox.dispatchEvent(new Event("change"));
 
         expect(onToggleOption).toHaveBeenCalledWith({ optionName: "Option A", checked: false });
-
-        wrapper.unmount();
     });
 });
