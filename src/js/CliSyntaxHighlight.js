@@ -1,39 +1,15 @@
 /**
  * Lightweight CLI syntax highlighter using one-dark-pro color palette.
  *
- * Highlights CLI command keywords, labels (WORD:), numbers, hex literals,
- * and uppercase constants.  The matching CSS lives in CliTab.vue.
+ * Uses simple heuristics rather than a static command list:
+ * - Lines starting with # are comments (gray)
+ * - First word that is all lowercase (a-z, underscores) is a CLI command (blue)
+ * - Words followed by colon are labels (blue)
+ * - Numbers and hex literals are highlighted (orange)
+ * - Uppercase constants are highlighted (red)
+ *
+ * The matching CSS lives in CliTab.vue.
  */
-
-const CLI_COMMANDS = new Set([
-    "adjrange",
-    "aux",
-    "batch",
-    "beacon",
-    "beeper",
-    "color",
-    "display_name",
-    "feature",
-    "led",
-    "map",
-    "mixer",
-    "mmix",
-    "mode_color",
-    "motor",
-    "name",
-    "profile",
-    "rateprofile",
-    "resource",
-    "rxfail",
-    "rxrange",
-    "save",
-    "serial",
-    "servo",
-    "set",
-    "smix",
-    "vtx_settings",
-    "vtxtable",
-]);
 
 /**
  * Highlight a single line of CLI output.
@@ -43,9 +19,9 @@ const CLI_COMMANDS = new Set([
  * @returns {string} The line with <span> wrappers for syntax classes.
  */
 export function highlightCliLine(line) {
-    // Comment lines: # ...
+    // Comment lines: # ... (base color gray, tokens override)
     if (/^\s*#/.test(line)) {
-        return `<span class="cli-comment">${line}</span>`;
+        return `<span class="cli-comment">${highlightTokens(line)}</span>`;
     }
 
     // Extract leading whitespace + first word
@@ -58,12 +34,12 @@ export function highlightCliLine(line) {
     let prefix;
     let tokens;
 
-    if (CLI_COMMANDS.has(firstWord.toLowerCase())) {
-        // Known CLI command → blue
+    if (/^[a-z][a-z_]*$/.test(firstWord)) {
+        // All-lowercase first word → CLI command (set, resource, board_name, version, …)
         prefix = `${indent}<span class="cli-cmd">${firstWord}</span>`;
         tokens = rest;
     } else if (rest.startsWith(":")) {
-        // Label (MCU:, GYRO:, STACK:, etc.) → blue
+        // Label (MCU:, GYRO:, STACK:, etc.)
         prefix = `${indent}<span class="cli-label">${firstWord}:</span>`;
         tokens = rest.slice(1);
     } else {
@@ -80,7 +56,7 @@ export function highlightCliLine(line) {
  */
 function highlightTokens(text) {
     return text.replace(
-        /(\b[A-Za-z_][\w]*:)|(\b0x[0-9A-Fa-f]+)|(\b\d+(?:\.\d+)?)|(\b[A-Z][A-Z_]{2,}\b)/g,
+        /(\b[A-Za-z_][\w]*:)|(\b0x[0-9A-Fa-f]+)|(\b\d+(?:\.\d+)?)|(\b[A-Z][A-Z0-9_]{2,}\b)/g,
         (match, label, hex, num, upper) => {
             if (label) {
                 return `<span class="cli-label">${label}</span>`;
