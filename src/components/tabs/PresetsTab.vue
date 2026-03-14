@@ -251,6 +251,7 @@ import { usePresetsStore } from "@/stores/presets";
 import { usePresetsCliSession } from "@/composables/usePresetsCliSession";
 import GUI, { TABS } from "@/js/gui";
 import FC from "@/js/fc";
+import CONFIGURATOR from "@/js/data_storage";
 import FileSystem from "@/js/FileSystem";
 import { generateFilename } from "@/js/utils/generate_filename";
 import { i18n } from "@/js/localization";
@@ -359,11 +360,29 @@ function handleDeactivateSource(index) {
     store.setSourceActive(index, false);
 }
 
+async function ensureCliPresetActionSupported() {
+    if (!CONFIGURATOR.virtualMode) {
+        return true;
+    }
+
+    await GUI.showInformationDialog({
+        title: i18n.getMessage("warningTitle"),
+        text: i18n.getMessage("presetsVirtualModeCliUnsupported"),
+        buttonConfirmText: i18n.getMessage("close"),
+    });
+
+    return false;
+}
+
 function isPickerAbortError(error) {
     return error?.name === "AbortError";
 }
 
 async function saveConfigBackup() {
+    if (!(await ensureCliPresetActionSupported())) {
+        return;
+    }
+
     const waitingDialog = GUI.showWaitDialog({
         title: i18n.getMessage("presetsLoadingDumpAll"),
         buttonCancelCallback: null,
@@ -405,6 +424,10 @@ async function saveConfigBackup() {
 }
 
 async function loadConfigBackup() {
+    if (!(await ensureCliPresetActionSupported())) {
+        return;
+    }
+
     try {
         const file = await FileSystem.pickOpenFile(i18n.getMessage("fileSystemPickerFiles", { typeof: "TXT" }), ".txt");
 
@@ -493,6 +516,10 @@ async function applyPresetSelection() {
 }
 
 async function applyPickedPresets() {
+    if (!(await ensureCliPresetActionSupported())) {
+        return;
+    }
+
     store.openProgressDialog();
     const currentCliErrorsCount = cliSession.getErrorCount();
 
