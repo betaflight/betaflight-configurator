@@ -314,17 +314,22 @@ p {
     font-weight: bold;
 }
 
-/* Syntax highlighting — one-dark-pro palette, matching Betaflight Support Explorer */
+/* Syntax highlighting — one-dark-pro palette */
 .window :deep(.cli-comment) {
     color: #7f848e;
 }
 
-.window :deep(.cli-cmd) {
+.window :deep(.cli-cmd),
+.window :deep(.cli-label) {
     color: #61afef;
 }
 
 .window :deep(.cli-num) {
     color: #d19a66;
+}
+
+.window :deep(.cli-const) {
+    color: #e06c75;
 }
 
 .cli-input-wrapper {
