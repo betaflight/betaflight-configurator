@@ -1276,23 +1276,6 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     }
                     break;
 
-                case MSPCodes.MSP2_BATTERY_PROFILE: {
-                    const profileIndex = data.readU8();
-                    FC.BATTERY_PROFILES[profileIndex] = {
-                        vbatmincellvoltage: data.readU16() / 100,
-                        vbatmaxcellvoltage: data.readU16() / 100,
-                        vbatwarningcellvoltage: data.readU16() / 100,
-                        vbatfullcellvoltage: data.readU16() / 100,
-                        capacity: data.readU16(),
-                        forceBatteryCellCount: data.readU8(),
-                        consumptionWarningPercentage: data.readU8(),
-                    };
-                    break;
-                }
-                case MSPCodes.MSP2_SET_BATTERY_PROFILE:
-                    console.log("Battery profile saved");
-                    break;
-
                 case MSPCodes.MSP_LED_STRIP_CONFIG:
                     FC.LED_STRIP = [];
 
@@ -2353,27 +2336,6 @@ MspHelper.prototype.crunch = function (code, modifierCode = undefined) {
             buffer.push8(FC.COPY_PROFILE.type).push8(FC.COPY_PROFILE.dstProfile).push8(FC.COPY_PROFILE.srcProfile);
             break;
 
-        case MSPCodes.MSP2_BATTERY_PROFILE:
-            buffer.push8(modifierCode); // profile index
-            break;
-
-        case MSPCodes.MSP2_SET_BATTERY_PROFILE: {
-            const bpIdx = modifierCode;
-            const bp = FC.BATTERY_PROFILES[bpIdx];
-            if (!bp) {
-                throw new Error(`Missing battery profile at index ${bpIdx}`);
-            }
-            buffer
-                .push8(bpIdx)
-                .push16(Math.round(bp.vbatmincellvoltage * 100))
-                .push16(Math.round(bp.vbatmaxcellvoltage * 100))
-                .push16(Math.round(bp.vbatwarningcellvoltage * 100))
-                .push16(Math.round(bp.vbatfullcellvoltage * 100))
-                .push16(bp.capacity)
-                .push8(bp.forceBatteryCellCount)
-                .push8(bp.consumptionWarningPercentage);
-            break;
-        }
         case MSPCodes.MSP_ARMING_DISABLE:
             let value;
             if (FC.CONFIG.armingDisabled) {

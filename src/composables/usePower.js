@@ -116,15 +116,10 @@ export function usePower() {
         );
     };
 
-    // Load battery profiles from flight controller
-    const loadBatteryProfiles = async () => {
+    // Load battery profile name for the active profile from the flight controller
+    const loadBatteryProfileName = async () => {
         if (!hasBatteryProfiles.value) return;
 
-        for (let i = 0; i < FC.CONFIG.numberOfBatteryProfiles; i++) {
-            await MSP.promise(MSPCodes.MSP2_BATTERY_PROFILE, mspHelper.crunch(MSPCodes.MSP2_BATTERY_PROFILE, i));
-        }
-
-        // Load battery profile name for active profile
         await MSP.promise(
             MSPCodes.MSP2_GET_TEXT,
             mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.BATTERY_PROFILE_NAME),
@@ -149,7 +144,7 @@ export function usePower() {
             await MSP.promise(MSPCodes.MSP_SELECT_SETTING, [profileIndex | BATTERYPROFILE_MASK]);
             await MSP.promise(MSPCodes.MSP_STATUS_EX);
             activeBatteryProfile.value = FC.CONFIG.batteryProfile;
-            await loadBatteryProfiles();
+            await loadBatteryProfileName();
             await MSP.promise(MSPCodes.MSP_BATTERY_CONFIG);
             updateStateFromFC();
         } catch (error) {
@@ -173,7 +168,7 @@ export function usePower() {
             await MSP.promise(MSPCodes.MSP_BATTERY_CONFIG);
 
             // Load battery profiles if supported
-            await loadBatteryProfiles();
+            await loadBatteryProfileName();
 
             // Update reactive state
             updateStateFromFC();
@@ -460,7 +455,7 @@ export function usePower() {
         isVoltageMeterVisible,
         isCurrentMeterVisible,
         loadData,
-        loadBatteryProfiles,
+        loadBatteryProfileName,
         changeBatteryProfile,
         updateLiveData,
         onVoltageMeterSourceChange,

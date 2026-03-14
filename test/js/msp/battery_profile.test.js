@@ -14,22 +14,6 @@ function processMessage(mspHelper, code, buffer) {
     });
 }
 
-function buildProfileBuffer(
-    index,
-    { minV = 330, maxV = 430, warnV = 350, fullV = 410, cap = 1300, cells = 0, warnPct = 10 } = {},
-) {
-    const buf = [];
-    buf.push8(index);
-    buf.push16(minV);
-    buf.push16(maxV);
-    buf.push16(warnV);
-    buf.push16(fullV);
-    buf.push16(cap);
-    buf.push8(cells);
-    buf.push8(warnPct);
-    return buf;
-}
-
 function buildStatusExBuffer(apiVersion, { batteryProfiles, batteryProfile } = {}) {
     const buffer = [];
     buffer.push16(500); // cycleTime
@@ -62,43 +46,6 @@ describe("Battery Profiles", () => {
     });
 
     describe("process_data", () => {
-        it("deserializes MSP2_BATTERY_PROFILE correctly", () => {
-            processMessage(mspHelper, MSPCodes.MSP2_BATTERY_PROFILE, buildProfileBuffer(0));
-
-            expect(FC.BATTERY_PROFILES[0].vbatmincellvoltage).toEqual(3.3);
-            expect(FC.BATTERY_PROFILES[0].vbatmaxcellvoltage).toEqual(4.3);
-            expect(FC.BATTERY_PROFILES[0].vbatwarningcellvoltage).toEqual(3.5);
-            expect(FC.BATTERY_PROFILES[0].vbatfullcellvoltage).toEqual(4.1);
-            expect(FC.BATTERY_PROFILES[0].capacity).toEqual(1300);
-            expect(FC.BATTERY_PROFILES[0].forceBatteryCellCount).toEqual(0);
-            expect(FC.BATTERY_PROFILES[0].consumptionWarningPercentage).toEqual(10);
-        });
-
-        it("deserializes multiple battery profiles", () => {
-            processMessage(mspHelper, MSPCodes.MSP2_BATTERY_PROFILE, buildProfileBuffer(0));
-            processMessage(
-                mspHelper,
-                MSPCodes.MSP2_BATTERY_PROFILE,
-                buildProfileBuffer(1, {
-                    minV: 280,
-                    maxV: 420,
-                    warnV: 300,
-                    fullV: 400,
-                    cap: 3000,
-                    cells: 4,
-                    warnPct: 15,
-                }),
-            );
-
-            expect(FC.BATTERY_PROFILES[0].vbatmincellvoltage).toEqual(3.3);
-            expect(FC.BATTERY_PROFILES[0].capacity).toEqual(1300);
-            expect(FC.BATTERY_PROFILES[1].vbatmincellvoltage).toEqual(2.8);
-            expect(FC.BATTERY_PROFILES[1].vbatmaxcellvoltage).toEqual(4.2);
-            expect(FC.BATTERY_PROFILES[1].capacity).toEqual(3000);
-            expect(FC.BATTERY_PROFILES[1].forceBatteryCellCount).toEqual(4);
-            expect(FC.BATTERY_PROFILES[1].consumptionWarningPercentage).toEqual(15);
-        });
-
         it("parses MSP_STATUS_EX battery profile fields for API >= 1.48", () => {
             FC.CONFIG.apiVersion = API_VERSION_1_48;
             processMessage(
@@ -136,35 +83,6 @@ describe("Battery Profiles", () => {
     });
 
     describe("crunch", () => {
-        it("serializes MSP2_SET_BATTERY_PROFILE correctly", () => {
-            FC.BATTERY_PROFILES[1] = {
-                vbatmincellvoltage: 2.8,
-                vbatmaxcellvoltage: 4.2,
-                vbatwarningcellvoltage: 3.0,
-                vbatfullcellvoltage: 4.0,
-                capacity: 3000,
-                forceBatteryCellCount: 4,
-                consumptionWarningPercentage: 15,
-            };
-
-            const result = mspHelper.crunch(MSPCodes.MSP2_SET_BATTERY_PROFILE, 1);
-            const view = new DataView(new Uint8Array(result).buffer);
-            view.offset = 0;
-            expect(view.readU8()).toEqual(1); // profile index
-            expect(view.readU16()).toEqual(280); // vbatmincellvoltage * 100
-            expect(view.readU16()).toEqual(420); // vbatmaxcellvoltage * 100
-            expect(view.readU16()).toEqual(300); // vbatwarningcellvoltage * 100
-            expect(view.readU16()).toEqual(400); // vbatfullcellvoltage * 100
-            expect(view.readU16()).toEqual(3000); // capacity
-            expect(view.readU8()).toEqual(4); // forceBatteryCellCount
-            expect(view.readU8()).toEqual(15); // consumptionWarningPercentage
-        });
-
-        it("serializes MSP2_BATTERY_PROFILE request with profile index", () => {
-            const result = mspHelper.crunch(MSPCodes.MSP2_BATTERY_PROFILE, 2);
-            expect(result).toEqual([2]);
-        });
-
         it("serializes MSP2_SET_TEXT with BATTERY_PROFILE_NAME", () => {
             FC.CONFIG.batteryProfile = 0;
             FC.CONFIG.batteryProfileNames[0] = "LiPo";
@@ -191,10 +109,6 @@ describe("Battery Profiles", () => {
             expect(FC.CONFIG.batteryProfile).toEqual(0);
             expect(FC.CONFIG.numberOfBatteryProfiles).toEqual(0);
             expect(FC.CONFIG.batteryProfileNames).toEqual(["", "", ""]);
-            expect(FC.BATTERY_PROFILES).toHaveLength(3);
-            expect(FC.BATTERY_PROFILES[0].vbatmincellvoltage).toEqual(0);
-            expect(FC.BATTERY_PROFILES[0].capacity).toEqual(0);
-            expect(FC.BATTERY_PROFILES[2].consumptionWarningPercentage).toEqual(0);
         });
     });
 });
