@@ -44,9 +44,8 @@ function commandWithBackSpaces(command, buffer, noOfCharsToDelete) {
 
 function getCliCommand(command, cliBuffer) {
     const buffer = removePromptHash(cliBuffer);
-    const bufferRegex = new RegExp(`^${buffer}`, "g");
-    if (command.match(bufferRegex)) {
-        return command.replace(bufferRegex, "");
+    if (command.startsWith(buffer)) {
+        return command.slice(buffer.length);
     }
 
     const noOfCharsToDelete = cliBufferCharsToDelete(command, buffer);
