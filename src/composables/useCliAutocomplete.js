@@ -109,7 +109,7 @@ export function useCliAutocomplete() {
         mirror.textContent = textarea.value.slice(0, textarea.selectionStart);
         document.body.appendChild(mirror);
         caretLeft.value = mirror.offsetWidth + Number.parseFloat(style.getPropertyValue("padding-left") || "0");
-        document.body.removeChild(mirror);
+        mirror.remove();
     }
 
     /**
