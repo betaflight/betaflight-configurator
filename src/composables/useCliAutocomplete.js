@@ -161,7 +161,7 @@ export function useCliAutocomplete() {
             },
             {
                 // "set <setting> " -> suggest "="
-                match: /^(\s*set\s+\w*\s*)$/i,
+                match: /^(\s*set\s+\w+\s*)$/i,
                 index: 1,
                 search() {
                     sendOnEnter.value = false;
@@ -175,7 +175,7 @@ export function useCliAutocomplete() {
             },
             {
                 // "set <setting> = <value>"
-                match: /^(\s*set\s+(\w+))\s*=\s*(.*)$/i,
+                match: /^(\s*set\s+(\w+))\s*=\s*(\S.*)?$/i,
                 index: 3,
                 isSettingValueArray: false,
                 savedValue: "",
@@ -254,7 +254,7 @@ export function useCliAutocomplete() {
             },
             {
                 // "resource <name> [<index>] <pin|none>"
-                match: /^(\s*resource\s+\w+\s+(\d*\s+)?)(\w*)$/i,
+                match: /^(\s*resource\s+\w+\s+(\d+\s+)?)(\w*)$/i,
                 index: 3,
                 context(text) {
                     const m = text.match(/^\s*resource\s+(\w+)\s+(\d+\s)?/i);
