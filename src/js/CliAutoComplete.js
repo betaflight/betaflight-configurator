@@ -170,7 +170,9 @@ CliAutoComplete.builderParseLine = function (line) {
                     cache.settings.push(matchGet[1]);
                     builder.currentSetting = matchGet[1].toLowerCase();
                 } else {
-                    const matchGetSettings = line.match(/^(.*): (.*)/);
+                    // Avoid catastrophic backtracking from two greedy `.*` groups.
+                    // Match up to the first colon for the key, then the rest.
+                    const matchGetSettings = line.match(/^([^:]+):\s*(.*)/);
                     if (matchGetSettings !== null && builder.currentSetting) {
                         if (matchGetSettings[1].match(/values/i)) {
                             // Allowed Values
