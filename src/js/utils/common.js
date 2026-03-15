@@ -52,10 +52,7 @@ export function getTextWidth(text) {
  * @returns {string}
  */
 export function escapeHtml(s) {
-    return String(s).replace(
-        /[&<>"']/g,
-        (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c],
-    );
+    return String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
 }
 
 /**
