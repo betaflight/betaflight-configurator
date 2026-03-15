@@ -31,8 +31,8 @@ export function highlightCliLine(line) {
         return `<span class="cli-comment">${highlightTokens(line)}</span>`;
     }
 
-    // Extract leading whitespace + first word
-    const m = /^(\s*)(\w+)(.*)/.exec(line);
+    // Extract leading whitespace + first word (hyphens included for labels like SD-CARD:)
+    const m = /^(\s*)([\w-]+)(.*)/.exec(line);
     if (!m) {
         return line;
     }
