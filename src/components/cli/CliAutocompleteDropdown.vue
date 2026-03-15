@@ -15,6 +15,10 @@
 <script setup>
 import { ref, watch } from "vue";
 
+// NOTE: `item.html` is rendered with `v-html`. It must remain trusted
+// (highlighters only insert <b> tags). Do NOT change the HTML source
+// generation without auditing for XSS risks.
+
 const props = defineProps({
     items: { type: Array, default: () => [] },
     visible: { type: Boolean, default: false },

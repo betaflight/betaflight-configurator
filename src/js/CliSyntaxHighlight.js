@@ -11,14 +11,21 @@
  * The matching CSS lives in CliTab.vue.
  */
 
+import { escapeHtml } from "./utils/common";
+
 /**
  * Highlight a single line of CLI output.
- * The input is already HTML-escaped (angle brackets replaced with entities).
+ * The input may contain raw CLI text (not escaped). This function
+ * HTML-escapes the line before applying highlighting to avoid XSS
+ * when firmware echoes HTML-like text.
  *
- * @param {string} line - One line of CLI text.
- * @returns {string} The line with <span> wrappers for syntax classes.
+ * @param {string} line - One line of CLI text (raw, unescaped).
+ * @returns {string} The escaped line with <span> wrappers for syntax classes.
  */
 export function highlightCliLine(line) {
+    // Escape raw input to prevent XSS (we render with innerHTML elsewhere)
+    line = escapeHtml(line);
+
     // Comment lines: # ... (base color gray, tokens override)
     if (/^\s*#/.test(line)) {
         return `<span class="cli-comment">${highlightTokens(line)}</span>`;

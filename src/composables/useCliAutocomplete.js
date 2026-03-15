@@ -43,7 +43,9 @@ function searchArray(term, array, minChars, matchPrefix, forceOpen, isOpen) {
  * Pattern tokens like $1, $2, $3 are replaced with the corresponding capture groups.
  */
 function applyReplacement(pattern, match) {
-    return pattern.replace(/\$(\d+)/g, (_, n) => match[Number(n)] ?? "");
+    // Only replace $1..$9 (capture groups). Do not treat $0 as the full match;
+    // leave any accidental "$0" sequences unchanged.
+    return pattern.replace(/\$([1-9])/g, (_, n) => match[Number(n)] ?? "");
 }
 
 /**
