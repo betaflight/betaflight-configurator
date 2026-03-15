@@ -45,7 +45,7 @@ function searchArray(term, array, minChars, matchPrefix, forceOpen, isOpen) {
 function applyReplacement(pattern, match) {
     // Only replace $1..$9 (capture groups). Do not treat $0 as the full match;
     // leave any accidental "$0" sequences unchanged.
-    return pattern.replace(/\$([1-9])/g, (_, n) => match[Number(n)] ?? "");
+    return pattern.replaceAll(/\$([1-9])/g, (_, n) => match[Number(n)] ?? "");
 }
 
 /**
@@ -95,7 +95,7 @@ export function useCliAutocomplete() {
         }
 
         const mirror = document.createElement("span");
-        const style = window.getComputedStyle(textarea);
+        const style = globalThis.getComputedStyle(textarea);
         mirror.style.font = style.getPropertyValue("font");
         mirror.style.letterSpacing = style.getPropertyValue("letter-spacing");
         mirror.style.whiteSpace = "pre";

@@ -153,7 +153,9 @@ export function useCli() {
     };
 
     const writeToOutput = (text) => {
-        if (!windowWrapperRef.value) return;
+        if (!windowWrapperRef.value) {
+            return;
+        }
         outputBuffer += text;
         if (!outputFlushRaf) {
             outputFlushRaf = requestAnimationFrame(flushOutput);
