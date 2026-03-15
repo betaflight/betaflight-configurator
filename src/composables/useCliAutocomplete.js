@@ -386,7 +386,9 @@ export function useCliAutocomplete() {
             }
 
             const match = strategy.match.exec(inputText);
-            if (!match) continue;
+            if (!match) {
+                continue;
+            }
 
             const term = match[strategy.index] || "";
             const results = strategy.search(term, match);

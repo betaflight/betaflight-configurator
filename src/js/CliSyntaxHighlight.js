@@ -32,7 +32,7 @@ export function highlightCliLine(line) {
     }
 
     // Extract leading whitespace + first word
-    const m = line.match(/^(\s*)(\w+)(.*)/);
+    const m = /^(\s*)(\w+)(.*)/.exec(line);
     if (!m) {
         return line;
     }
@@ -63,7 +63,7 @@ export function highlightCliLine(line) {
  */
 function highlightTokens(text) {
     return text.replace(
-        /(\b[A-Za-z_][\w]*(?:\s+[A-Za-z_][\w]*)*:)|(\b0x[0-9A-Fa-f]+)|(\b\d+(?:\.\d+)?)/g,
+        /(\b[A-Za-z_]\w*(?:\s+[A-Za-z_]\w*)*:)|(\b0x[0-9A-Fa-f]+)|(\b\d+(?:\.\d+)?)/g,
         (match, label, hex, num) => {
             if (label) {
                 return `<span class="cli-label">${label}</span>`;
