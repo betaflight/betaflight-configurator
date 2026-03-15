@@ -229,6 +229,7 @@ export function useCliAutocomplete() {
                     if (value in cache.resourcesCount) {
                         openLaterRequested = true;
                     } else if (value === "list" || value === "show") {
+                        openLaterRequested = true;
                         sendOnEnter.value = true;
                     }
                     return `$1${value} `;

@@ -354,14 +354,8 @@ export function useCli() {
                     state.commandInput = "";
                 }
             } else if (autocomplete.isOpen()) {
-                // Tab selects the active item in the dropdown
+                // Tab selects the active item in the dropdown (never execute)
                 autocomplete.selectItem(autocomplete.activeIndex.value);
-                if (autocomplete.sendOnEnter.value) {
-                    nextTick(() => {
-                        executeCommands(state.commandInput);
-                        state.commandInput = "";
-                    });
-                }
             } else if (!CliAutoComplete.isBuilding()) {
                 // force show autocomplete on Tab
                 autocomplete.openForced(state.commandInput);
