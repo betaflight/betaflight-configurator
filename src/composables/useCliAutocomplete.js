@@ -2,11 +2,14 @@ import { ref, nextTick } from "vue";
 import semver from "semver";
 import FC from "../js/fc";
 import CliAutoComplete from "../js/CliAutoComplete";
+import { escapeHtml } from "../js/utils/common";
 
 function highlightAnywhere(value, term) {
     if (!term) {
-        return value;
+        return escapeHtml(value);
     }
+    value = escapeHtml(value);
+    term = escapeHtml(term);
     const idx = value.toLowerCase().indexOf(term.toLowerCase());
     if (idx === -1) {
         return value;
@@ -16,8 +19,10 @@ function highlightAnywhere(value, term) {
 
 function highlightPrefix(value, term) {
     if (!term) {
-        return value;
+        return escapeHtml(value);
     }
+    value = escapeHtml(value);
+    term = escapeHtml(term);
     if (!value.toLowerCase().startsWith(term.toLowerCase())) {
         return value;
     }
