@@ -2681,12 +2681,6 @@
     "pidTuningItermRotation": {
         "message": "I 值旋轉"
     },
-    "pidTuningSmartFeedforward": {
-        "message": "智能前饋"
-    },
-    "pidTuningSmartFeedforwardHelp": {
-        "message": "減少 F 值在 PID 中的效果。當 P 和 F 同時激活時，只取兩者中的較大值來避免過頭而無需提高 D，但這也會降低 F 值提供的響應效果。"
-    },
     "pidTuningItermRelax": {
         "message": "I 值釋放"
     },

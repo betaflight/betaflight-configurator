@@ -4121,12 +4121,6 @@
     "pidTuningItermRotation": {
         "message": "Rotação do termo I"
     },
-    "pidTuningSmartFeedforward": {
-        "message": "Feedforward Inteligente"
-    },
-    "pidTuningSmartFeedforwardHelp": {
-        "message": "Reduz o efeito do termo F no PID.<br>Quando ambos os termos P e F estão ativos ao mesmo tempo, será usado somente o maior dos dois, evitando movimentos exagerados sem a necessidade de aumentar o termo D, mas isso também reduz a velocidade de resposta produzido pelo termo F quando adicionado ao termo P."
-    },
     "pidTuningItermRelax": {
         "message": "Relaxar o Termo I"
     },
