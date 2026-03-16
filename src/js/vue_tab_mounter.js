@@ -92,8 +92,18 @@ export function mountVueTab(tabName, contentReadyCallback) {
         _vueComponent: componentInstance,
     };
 
-    // Register the adapter in TABS so callbacks work
-    TABS[tabName] = tabAdapter;
+    // Merge the adapter into TABS. The adapter provides default handlers
+    // (cleanup, expertModeChanged, etc.). We intentionally spread the
+    // adapter first so that any properties the component itself sets on
+    // `TABS[tabName]` during its mount will override the adapter defaults.
+    //
+    // Note: this ordering is subtle — a component that writes `TABS[tabName].cleanup`
+    // synchronously during its mount will replace the adapter's cleanup. This
+    // is expected: adapter supplies defaults, components supply concrete
+    // implementations. If a component needs to preserve adapter behavior it
+    // should explicitly call or compose with the adapter's methods instead of
+    // relying on the merge ordering.
+    TABS[tabName] = { ...tabAdapter, ...TABS[tabName] };
 
     // Reset tab switch flag and call content ready callback after next tick
     setTimeout(() => {

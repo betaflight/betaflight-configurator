@@ -10,17 +10,28 @@
                     <div ref="windowWrapperRef" class="wrapper"></div>
                 </div>
             </div>
-            <textarea
-                ref="commandInputRef"
-                v-model="cli.state.commandInput"
-                name="commands"
-                :placeholder="$t('cliInputPlaceholder')"
-                rows="1"
-                cols="0"
-                @keydown="cli.handleCommandKeyDown"
-                @keypress="cli.handleCommandKeyPress"
-                @keyup="cli.handleCommandKeyUp"
-            ></textarea>
+            <div class="cli-input-wrapper">
+                <CliAutocompleteDropdown
+                    :items="cli.autocomplete.items.value"
+                    :visible="cli.autocomplete.visible.value"
+                    :active-index="cli.autocomplete.activeIndex.value"
+                    :caret-left="cli.autocomplete.caretLeft.value"
+                    @select="onAutocompleteSelect"
+                    @hover="cli.autocomplete.activeIndex.value = $event"
+                />
+                <textarea
+                    ref="commandInputRef"
+                    v-model="cli.state.commandInput"
+                    name="commands"
+                    :placeholder="$t('cliInputPlaceholder')"
+                    rows="1"
+                    cols="0"
+                    @keydown="cli.handleCommandKeyDown"
+                    @keypress="cli.handleCommandKeyPress"
+                    @keyup="cli.handleCommandKeyUp"
+                    @input="onInputChange"
+                ></textarea>
+            </div>
         </div>
 
         <!-- Snippet preview dialog -->
@@ -96,33 +107,61 @@
 
 <script>
 import { defineComponent, nextTick } from "vue";
-import $ from "jquery";
 import BaseTab from "./BaseTab.vue";
+import CliAutocompleteDropdown from "../cli/CliAutocompleteDropdown.vue";
 import { useCli } from "../../composables/useCli";
 import { TABS } from "../../js/gui";
 import CliAutoComplete from "../../js/CliAutoComplete";
+import { EventBus } from "../eventBus";
 import { i18n } from "../../js/localization";
 
 export default defineComponent({
     name: "CliTab",
     components: {
         BaseTab,
+        CliAutocompleteDropdown,
     },
     setup() {
         const cli = useCli();
 
         let snippetExecuteCallback = null;
 
+        const onBuildStart = () => {
+            if (cli.commandInputRef.value) {
+                cli.state.commandInput = "";
+                cli.commandInputRef.value.placeholder = i18n.getMessage("cliInputPlaceholderBuilding");
+                cli.commandInputRef.value.disabled = true;
+            }
+        };
+
+        const onBuildStop = () => {
+            if (cli.commandInputRef.value) {
+                cli.commandInputRef.value.placeholder = i18n.getMessage("cliInputPlaceholder");
+                cli.commandInputRef.value.disabled = false;
+                cli.commandInputRef.value.focus();
+            }
+            // Initialize autocomplete strategies now that cache is ready
+            cli.autocomplete.initStrategies();
+        };
+
         const onTabMounted = async () => {
-            // Register this CLI instance directly with TABS.cli for serial communication
-            TABS.cli = {
-                read: cli.read,
-                cleanup: (callback) => {
-                    cli.cleanup();
-                    if (callback) {
-                        callback();
-                    }
-                },
+            // Set up autocomplete event handlers BEFORE initialize
+            // to avoid missing the build:stop event
+            EventBus.$on("autocomplete:build:start", onBuildStart);
+            EventBus.$on("autocomplete:build:stop", onBuildStop);
+
+            // Register the serial read handler and cleanup on TABS.cli.
+            // vue_tab_mounter.js merges these with the tab adapter after mount,
+            // preserving component-set properties like read and cleanup.
+            if (!TABS.cli) {
+                TABS.cli = {};
+            }
+            TABS.cli.read = cli.read;
+            TABS.cli.cleanup = (callback) => {
+                cli.cleanup();
+                if (callback) {
+                    callback();
+                }
             };
 
             await cli.initialize();
@@ -132,23 +171,6 @@ export default defineComponent({
             if (cli.commandInputRef.value) {
                 cli.commandInputRef.value.focus();
             }
-
-            // Set up autocomplete event handlers (using jQuery event system)
-            $(CliAutoComplete).on("build:start", () => {
-                if (cli.commandInputRef.value) {
-                    cli.state.commandInput = "";
-                    cli.commandInputRef.value.placeholder = i18n.getMessage("cliInputPlaceholderBuilding");
-                    cli.commandInputRef.value.disabled = true;
-                }
-            });
-
-            $(CliAutoComplete).on("build:stop", () => {
-                if (cli.commandInputRef.value) {
-                    cli.commandInputRef.value.placeholder = i18n.getMessage("cliInputPlaceholder");
-                    cli.commandInputRef.value.disabled = false;
-                    cli.commandInputRef.value.focus();
-                }
-            });
 
             // Adapt for mobile
             handleResize();
@@ -160,14 +182,14 @@ export default defineComponent({
             // This prevents serial_backend from trying to call TABS.cli.read()
             cli.cleanup();
 
-            // Then clean up TABS.cli reference
+            // Remove read handler from TABS.cli
             if (TABS.cli && TABS.cli.read === cli.read) {
-                TABS.cli = null;
+                delete TABS.cli.read;
             }
 
-            // Remove event listeners (using jQuery)
-            $(CliAutoComplete).off("build:start");
-            $(CliAutoComplete).off("build:stop");
+            // Remove event listeners
+            EventBus.$off("autocomplete:build:start", onBuildStart);
+            EventBus.$off("autocomplete:build:stop", onBuildStop);
 
             window.removeEventListener("resize", handleResize);
         };
@@ -198,6 +220,21 @@ export default defineComponent({
             cli.handleSupportDialogCancel();
         };
 
+        const onInputChange = () => {
+            if (CliAutoComplete.isEnabled() && !CliAutoComplete.isBuilding()) {
+                cli.autocomplete.update(cli.state.commandInput);
+            }
+        };
+
+        const onAutocompleteSelect = (index) => {
+            cli.autocomplete.selectItem(index);
+            // Mouse click only applies the replacement, does not send the command.
+            // Refocus the textarea so the user can continue typing.
+            if (cli.commandInputRef.value) {
+                cli.commandInputRef.value.focus();
+            }
+        };
+
         return {
             cli,
             onTabMounted,
@@ -206,6 +243,8 @@ export default defineComponent({
             handleSnippetConfirm,
             handleSupportSubmit,
             handleSupportCancel,
+            onInputChange,
+            onAutocompleteSelect,
             // Expose refs directly so Vue can assign template refs
             windowWrapperRef: cli.windowWrapperRef,
             cliWindowRef: cli.cliWindowRef,
@@ -275,10 +314,28 @@ p {
     font-weight: bold;
 }
 
-textarea[name="commands"] {
-    -webkit-box-sizing: border-box;
-    width: 100%;
+/* Syntax highlighting — one-dark-pro palette */
+.window :deep(.cli-comment) {
+    color: #7f848e;
+}
+
+.window :deep(.cli-cmd),
+.window :deep(.cli-label) {
+    color: #61afef;
+}
+
+.window :deep(.cli-num) {
+    color: #e5c07b;
+}
+
+.cli-input-wrapper {
+    position: relative;
     margin-top: 8px;
+}
+
+textarea[name="commands"] {
+    box-sizing: border-box;
+    width: 100%;
     height: 22px;
     line-height: 20px;
     padding-left: 5px;
@@ -320,58 +377,6 @@ textarea#preview {
     box-sizing: border-box;
     padding: 5px;
     margin-bottom: 5px;
-}
-
-/* Autocomplete dropdown styles */
-:deep(.cli-textcomplete-dropdown) {
-    border: 1px solid var(--surface-500);
-    background-color: var(--surface-300) !important;
-    border-radius: 5px;
-    max-height: 50%;
-    overflow: auto;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-/* Ensure textcomplete dropdown also has background (library might add this class) */
-:deep(.textcomplete-dropdown) {
-    background-color: var(--surface-300) !important;
-}
-
-:deep(.cli-textcomplete-dropdown::-webkit-scrollbar) {
-    width: 6px;
-}
-
-:deep(.cli-textcomplete-dropdown::-webkit-scrollbar-track) {
-    background: lightgrey;
-    border-radius: 3px;
-}
-
-:deep(.cli-textcomplete-dropdown::-webkit-scrollbar-thumb) {
-    background: grey;
-    border-radius: 3px;
-}
-
-:deep(.cli-textcomplete-dropdown li) {
-    padding: 2px 5px;
-}
-
-:deep(.cli-textcomplete-dropdown .active) {
-    background-color: var(--surface-600);
-}
-
-:deep(.cli-textcomplete-dropdown a:hover) {
-    cursor: pointer;
-}
-
-:deep(.cli-textcomplete-dropdown a) {
-    font-family: monospace;
-}
-
-:deep(.cli-textcomplete-dropdown a b) {
-    font-family: monospace;
-    font-weight: bold;
 }
 
 /* Fixed toolbar positioning */

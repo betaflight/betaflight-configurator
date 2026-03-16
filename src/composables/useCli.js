@@ -1,5 +1,4 @@
 import { ref, reactive, nextTick } from "vue";
-import $ from "jquery";
 import { i18n } from "../js/localization";
 import BFClipboard from "../js/Clipboard";
 import { generateFilename } from "../js/utils/generate_filename";
@@ -12,6 +11,9 @@ import { serial } from "../js/serial";
 import FileSystem from "../js/FileSystem";
 import { ispConnected } from "../js/utils/connection";
 import { get as getConfig } from "../js/ConfigStorage";
+import { useCliAutocomplete } from "./useCliAutocomplete";
+import { highlightCliLine } from "../js/CliSyntaxHighlight";
+import { escapeHtml } from "../js/utils/common";
 
 const backspaceCode = 8;
 const lineFeedCode = 10;
@@ -43,9 +45,8 @@ function commandWithBackSpaces(command, buffer, noOfCharsToDelete) {
 
 function getCliCommand(command, cliBuffer) {
     const buffer = removePromptHash(cliBuffer);
-    const bufferRegex = new RegExp(`^${buffer}`, "g");
-    if (command.match(bufferRegex)) {
-        return command.replace(bufferRegex, "");
+    if (command.startsWith(buffer)) {
+        return command.slice(buffer.length);
     }
 
     const noOfCharsToDelete = cliBufferCharsToDelete(command, buffer);
@@ -86,6 +87,8 @@ async function submitSupportData(data, state, clearHistory, executeCommands, wri
 }
 
 export function useCli() {
+    const autocomplete = useCliAutocomplete();
+
     // Reactive state
     const state = reactive({
         outputHistory: "",
@@ -135,12 +138,27 @@ export function useCli() {
         },
     });
 
-    const writeToOutput = (text) => {
-        if (windowWrapperRef.value) {
-            windowWrapperRef.value.innerHTML += text;
+    let outputBuffer = "";
+    let outputFlushRaf = null;
+
+    const flushOutput = () => {
+        outputFlushRaf = null;
+        if (outputBuffer && windowWrapperRef.value) {
+            windowWrapperRef.value.innerHTML += outputBuffer;
+            outputBuffer = "";
             if (cliWindowRef.value) {
                 cliWindowRef.value.scrollTop = cliWindowRef.value.scrollHeight;
             }
+        }
+    };
+
+    const writeToOutput = (text) => {
+        if (!windowWrapperRef.value) {
+            return;
+        }
+        outputBuffer += text;
+        if (!outputFlushRaf) {
+            outputFlushRaf = requestAnimationFrame(flushOutput);
         }
     };
 
@@ -151,9 +169,9 @@ export function useCli() {
         }
 
         if (text.startsWith("###ERROR")) {
-            writeToOutput(`<span class="error_message">${text}</span><br>`);
+            writeToOutput(`<span class="error_message">${escapeHtml(text)}</span><br>`);
         } else {
-            writeToOutput(`${text}<br>`);
+            writeToOutput(`${highlightCliLine(text)}<br>`);
         }
     };
 
@@ -163,6 +181,7 @@ export function useCli() {
 
     const clearHistory = () => {
         state.outputHistory = "";
+        outputBuffer = "";
         if (windowWrapperRef.value) {
             windowWrapperRef.value.innerHTML = "";
         }
@@ -312,8 +331,17 @@ export function useCli() {
     };
 
     const handleCommandKeyDown = (event) => {
+        const upKeyCode = 38;
+        const downKeyCode = 40;
+        const escKeyCode = 27;
+
+        if (event.which === escKeyCode && autocomplete.isOpen()) {
+            event.preventDefault();
+            autocomplete.hide();
+            return;
+        }
+
         if (event.which === tabKeyCode) {
-            // prevent default tabbing behaviour
             event.preventDefault();
 
             if (!CliAutoComplete.isEnabled()) {
@@ -325,22 +353,47 @@ export function useCli() {
                     sendNativeAutoComplete(command);
                     state.commandInput = "";
                 }
-            } else if (!CliAutoComplete.isOpen() && !CliAutoComplete.isBuilding()) {
+            } else if (autocomplete.isOpen()) {
+                // Tab selects the active item in the dropdown (never execute)
+                autocomplete.selectItem(autocomplete.activeIndex.value);
+            } else if (!CliAutoComplete.isBuilding()) {
                 // force show autocomplete on Tab
-                CliAutoComplete.openLater(true);
+                autocomplete.openForced(state.commandInput);
             }
         }
 
         if (event.which === enterKeyCode) {
-            event.preventDefault(); // prevent the adding of new line
+            event.preventDefault();
 
             if (CliAutoComplete.isBuilding()) {
-                return; // silently ignore commands if autocomplete is still building
+                return;
             }
 
-            const outString = state.commandInput;
-            executeCommands(outString);
-            state.commandInput = "";
+            if (autocomplete.isOpen()) {
+                autocomplete.selectItem(autocomplete.activeIndex.value);
+                if (autocomplete.sendOnEnter.value) {
+                    nextTick(() => {
+                        executeCommands(state.commandInput);
+                        state.commandInput = "";
+                    });
+                }
+            } else {
+                const outString = state.commandInput;
+                executeCommands(outString);
+                state.commandInput = "";
+            }
+        }
+
+        // Arrow keys when dropdown is open
+        if (autocomplete.isOpen()) {
+            if (event.which === upKeyCode) {
+                event.preventDefault();
+                autocomplete.navigateUp();
+            }
+            if (event.which === downKeyCode) {
+                event.preventDefault();
+                autocomplete.navigateDown();
+            }
         }
     };
 
@@ -356,7 +409,7 @@ export function useCli() {
         const keyUp = { 38: true };
         const keyDown = { 40: true };
 
-        if (CliAutoComplete.isOpen()) {
+        if (autocomplete.isOpen()) {
             return; // disable history keys if autocomplete is open
         }
 
@@ -499,10 +552,17 @@ export function useCli() {
         // Wait for DOM to be ready
         await nextTick();
 
-        // Initialize CLI autocomplete with a getter function
-        // This avoids passing the jQuery element directly and allows lazy evaluation
-        const getTextarea = () => (commandInputRef.value ? $(commandInputRef.value) : $());
-        CliAutoComplete.initialize(getTextarea, sendLine, writeToOutput);
+        // Initialize CLI autocomplete cache builder
+        CliAutoComplete.initialize(sendLine, writeToOutput);
+
+        // Connect the autocomplete composable to the textarea's v-model
+        autocomplete.connect(
+            () => state.commandInput,
+            (value) => {
+                state.commandInput = value;
+            },
+            () => commandInputRef.value,
+        );
 
         // Enter CLI mode
         GUI.timeout_add(
@@ -521,6 +581,13 @@ export function useCli() {
         // Remove any pending CLI timeouts
         GUI.timeout_remove("CLI_send_slowly");
         GUI.timeout_remove("enter_cli");
+
+        // Cancel any pending output flush
+        if (outputFlushRaf) {
+            cancelAnimationFrame(outputFlushRaf);
+            outputFlushRaf = null;
+        }
+        outputBuffer = "";
 
         if (CONFIGURATOR.connectionValid && CONFIGURATOR.cliValid && CONFIGURATOR.cliActive) {
             send(getCliCommand("exit\r", state.cliBuffer), function () {
@@ -546,6 +613,7 @@ export function useCli() {
     return {
         state,
         history,
+        autocomplete,
         windowWrapperRef,
         cliWindowRef,
         commandInputRef,
