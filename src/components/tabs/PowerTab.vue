@@ -595,7 +595,11 @@ export default defineComponent({
         const numberOfBatteryProfiles = computed(() => FC.CONFIG.numberOfBatteryProfiles || 0);
 
         const onBatteryProfileChange = async (value) => {
-            await changeBatteryProfile(Number.parseInt(value, 10));
+            const profileIndex = Number.parseInt(value, 10);
+            if (!Number.isInteger(profileIndex) || profileIndex < 0 || profileIndex >= numberOfBatteryProfiles.value) {
+                return;
+            }
+            await changeBatteryProfile(profileIndex);
         };
 
         // Dialog visibility state

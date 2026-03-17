@@ -151,8 +151,19 @@ export function usePower() {
             await MSP.promise(MSPCodes.MSP_BATTERY_CONFIG);
             updateStateFromFC();
         } catch (error) {
-            activeBatteryProfile.value = previousProfile;
-            batteryProfileName.value = previousProfileName;
+            // Best-effort: resync UI with actual FC state in case the
+            // profile switch partially succeeded on the FC side
+            try {
+                await MSP.promise(MSPCodes.MSP_STATUS_EX);
+                activeBatteryProfile.value = FC.CONFIG.batteryProfile;
+                await loadBatteryProfileName();
+                await MSP.promise(MSPCodes.MSP_BATTERY_CONFIG);
+                updateStateFromFC();
+            } catch {
+                // If resync also fails, restore previous local values
+                activeBatteryProfile.value = previousProfile;
+                batteryProfileName.value = previousProfileName;
+            }
             throw error;
         } finally {
             connectionStore.resumeLiveData();
@@ -163,7 +174,7 @@ export function usePower() {
     // Load data from flight controller
     const loadData = async () => {
         try {
-            await MSP.promise(MSPCodes.MSP_STATUS);
+            await MSP.promise(MSPCodes.MSP_STATUS_EX);
             await MSP.promise(MSPCodes.MSP_VOLTAGE_METERS);
             await MSP.promise(MSPCodes.MSP_CURRENT_METERS);
             await MSP.promise(MSPCodes.MSP_CURRENT_METER_CONFIG);
