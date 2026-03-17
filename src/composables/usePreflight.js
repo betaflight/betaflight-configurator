@@ -208,21 +208,6 @@ function browserGeolocation() {
     });
 }
 
-async function ipGeolocation() {
-    const response = await fetch("https://ipapi.co/json/");
-    if (!response.ok) {
-        throw new Error("IP geolocation request failed");
-    }
-    const data = await response.json();
-    if (data.latitude === undefined || data.longitude === undefined) {
-        throw new Error("IP geolocation returned no coordinates");
-    }
-    return {
-        latitude: Number.parseFloat(data.latitude),
-        longitude: Number.parseFloat(data.longitude),
-    };
-}
-
 function getDewPointRisk(temp, dewPoint) {
     if (temp === null || dewPoint === null || temp === undefined || dewPoint === undefined) {
         return { level: "unknown", label: "preflightLevelUnknown", cssClass: "status-unknown" };
@@ -643,13 +628,7 @@ export function usePreflight() {
     });
 
     async function useGeolocation() {
-        let coords;
-        try {
-            coords = await browserGeolocation();
-        } catch (e) {
-            console.warn("Browser geolocation failed, using IP fallback:", e.message);
-            coords = await ipGeolocation();
-        }
+        const coords = await browserGeolocation();
         location.latitude = coords.latitude;
         location.longitude = coords.longitude;
         location.elevation = null;
