@@ -116,13 +116,15 @@
                     ></div>
                     <div id="presets_list">
                         <PresetCard
-                            v-for="([preset, repository], index) in store.visiblePresetEntries"
-                            :key="`${preset.hash}-${index}`"
-                            :preset="preset"
-                            :repository="repository"
+                            v-for="entry in store.visiblePresetEntries"
+                            :key="entry.key"
+                            :preset="entry.preset"
+                            :repository="entry.repository"
                             :show-repository-name="store.isThirdPartyActive"
-                            @open="store.openPresetDetails(preset, repository)"
-                            @toggle-favorite="store.toggleFavorite(preset, repository)"
+                            :is-favorite="store.isPresetFavorite(entry.preset, entry.repository)"
+                            :is-picked="store.isPresetPicked(entry.preset, entry.repository)"
+                            @open="store.openPresetDetails(entry.preset, entry.repository)"
+                            @toggle-favorite="store.toggleFavorite(entry.preset, entry.repository)"
                         />
                         <div
                             v-if="store.hasTooManyResults"
@@ -163,14 +165,17 @@
             :error="store.detailsState.error"
             :show-cli="store.detailsState.showCli"
             :show-repository-name="store.selectedPresetShowRepoName"
-            :selected-option-names="store.detailsState.selectedOptionNames"
+            :selected-option-ids="store.detailsState.selectedOptionIds"
+            :selected-option-labels="store.selectedPresetOptionLabels"
             :options-expanded="store.detailsState.optionsExpanded"
             :cli-strings="store.selectedPresetCliStrings"
+            :is-favorite="store.isSelectedPresetFavorite"
+            :is-picked="store.isSelectedPresetPicked"
             @apply="applyPresetSelection"
             @close="store.closePresetDetails()"
             @toggle-cli-visible="store.setDetailsCliVisible($event)"
-            @toggle-option="store.setOptionChecked($event.optionName, $event.checked)"
-            @select-exclusive-option="store.setExclusiveOption($event.groupOptionNames, $event.selectedOptionName)"
+            @toggle-option="store.setOptionChecked($event.optionId, $event.checked)"
+            @select-exclusive-option="store.setExclusiveOption($event.groupOptionIds, $event.selectedOptionId)"
             @toggle-favorite="store.toggleFavorite(store.selectedPreset, store.selectedPresetRepository)"
             @options-expanded-change="store.setOptionsExpanded($event)"
         />
@@ -178,7 +183,7 @@
         <PresetSourcesDialog
             :open="store.showSourcesDialog"
             :sources="store.sources"
-            :active-indexes="store.activeSourceIndexes"
+            :active-source-ids="store.activeSourceIds"
             @close="closeSourcesDialog"
             @add-source="store.addSource()"
             @save-source="handleSaveSource"
@@ -241,7 +246,7 @@
 </template>
 
 <script setup>
-import { nextTick, onBeforeUnmount, ref, watch } from "vue";
+import { inject, nextTick, ref, watch } from "vue";
 import BaseTab from "./BaseTab.vue";
 import PresetFilterSelect from "./presets/PresetFilterSelect.vue";
 import PresetCard from "./presets/PresetCard.vue";
@@ -249,29 +254,42 @@ import PresetDetailsDialog from "./presets/PresetDetailsDialog.vue";
 import PresetSourcesDialog from "./presets/PresetSourcesDialog.vue";
 import { usePresetsStore } from "@/stores/presets";
 import { usePresetsCliSession } from "@/composables/usePresetsCliSession";
-import GUI, { TABS } from "@/js/gui";
+import GUI from "@/js/gui";
 import FC from "@/js/fc";
 import CONFIGURATOR from "@/js/data_storage";
 import FileSystem from "@/js/FileSystem";
 import { generateFilename } from "@/js/utils/generate_filename";
 import { i18n } from "@/js/localization";
 import { update_sensor_status } from "@/js/serial_backend";
+import { TAB_ADAPTER_REGISTRATION_KEY } from "@/js/vue_tab_mounter";
 import CliEngine from "@/tabs/presets/CliEngine";
 
 const store = usePresetsStore();
-const cliSession = usePresetsCliSession();
+const cliSession = usePresetsCliSession({
+    onProgressChange: (value) => store.updateApplyProgress(value),
+});
 const { cliWindowRef, windowWrapperRef, commandInputRef } = cliSession;
 const progressDialogRef = ref(null);
 const cliErrorsDialogRef = ref(null);
 const searchPlaceholder = 'example: "karate race", or "5\'\' freestyle"';
+const tabAdapterRegistration = inject(TAB_ADAPTER_REGISTRATION_KEY, null);
+let isCleaningUpCliSession = false;
 
 const tabAdapter = {
     read: (info) => cliSession.readSerial(info),
     cleanup: (callback) => {
+        isCleaningUpCliSession = true;
         store.resetTransientState();
-        cliSession.cleanup(callback);
+        cliSession.cleanup(() => {
+            isCleaningUpCliSession = false;
+            callback?.();
+        });
     },
 };
+
+if (tabAdapterRegistration) {
+    tabAdapterRegistration.current = tabAdapter;
+}
 
 watch(
     () => store.applyState.progressDialogOpen,
@@ -308,7 +326,6 @@ watch(
 );
 
 async function onTabMounted() {
-    TABS.presets = tabAdapter;
     store.initialize();
     GUI.content_ready();
     void update_sensor_status();
@@ -316,16 +333,8 @@ async function onTabMounted() {
 }
 
 function onTabCleanup() {
-    if (TABS.presets === tabAdapter) {
-        TABS.presets = null;
-    }
+    store.resetTransientState();
 }
-
-onBeforeUnmount(() => {
-    if (TABS.presets === tabAdapter) {
-        TABS.presets = null;
-    }
-});
 
 async function reloadPresets() {
     await store.reloadRepositories();
@@ -352,12 +361,12 @@ function handleSaveSource(index, source) {
     store.updateSource(index, source);
 }
 
-function handleActivateSource(index) {
-    store.setSourceActive(index, true);
+function handleActivateSource(sourceId) {
+    store.setSourceActive(sourceId, true);
 }
 
-function handleDeactivateSource(index) {
-    store.setSourceActive(index, false);
+function handleDeactivateSource(sourceId) {
+    store.setSourceActive(sourceId, false);
 }
 
 async function ensureCliPresetActionSupported() {
@@ -520,6 +529,7 @@ async function applyPickedPresets() {
         return;
     }
 
+    cliSession.resetProgress();
     store.openProgressDialog();
     const currentCliErrorsCount = cliSession.getErrorCount();
 
@@ -558,6 +568,10 @@ function closeCliErrorsWithoutSaving() {
 }
 
 function handleCliErrorsDialogClose() {
+    if (isCleaningUpCliSession) {
+        return;
+    }
+
     const savePressed = store.applyState.cliErrorsSavePressed;
     store.closeCliErrorsDialog(savePressed);
 

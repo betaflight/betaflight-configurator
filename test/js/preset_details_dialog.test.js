@@ -52,9 +52,12 @@ describe("PresetDetailsDialog", () => {
                 error: "",
                 showCli: false,
                 showRepositoryName: true,
-                selectedOptionNames: ["Option A"],
+                selectedOptionIds: ["0"],
+                selectedOptionLabels: ["Option A"],
                 optionsExpanded: true,
                 cliStrings: ["set foo = on"],
+                isFavorite: false,
+                isPicked: false,
                 repository: {
                     getPresetOnlineLink: () => "https://example.com/preset-a.txt",
                     official: true,
@@ -70,7 +73,7 @@ describe("PresetDetailsDialog", () => {
                     description: ["# Heading", "Visit [Betaflight](https://betaflight.com)"],
                     discussion: "ftp://example.com/preset-discussion",
                     parser: "MARKED",
-                    options: [{ name: "Option A", checked: true }],
+                    options: [{ id: "0", name: "Option A", checked: true }],
                 },
             },
             {
@@ -90,6 +93,6 @@ describe("PresetDetailsDialog", () => {
         checkbox.checked = false;
         checkbox.dispatchEvent(new Event("change"));
 
-        expect(onToggleOption).toHaveBeenCalledWith({ optionName: "Option A", checked: false });
+        expect(onToggleOption).toHaveBeenCalledWith({ optionId: "0", checked: false });
     });
 });

@@ -95,6 +95,7 @@ describe("usePresetsStore", () => {
         favoritePresets.loadFromStorage();
         FC.CONFIG.flightControllerVersion = "4.5.1";
         vi.restoreAllMocks();
+        vi.spyOn(console, "error").mockImplementation(() => {});
         vi.stubGlobal("fetch", mockFetchImplementation());
         vi.spyOn(GUI, "showYesNoDialog").mockImplementation((settings) => settings.buttonYesCallback?.());
     });
@@ -110,15 +111,16 @@ describe("usePresetsStore", () => {
         expect(store.filters.firmwareVersions).toEqual(["4.5"]);
         expect(store.visiblePresetEntries).toHaveLength(1);
 
-        const [preset, repository] = store.visiblePresetEntries[0];
+        const { preset, repository } = store.visiblePresetEntries[0];
         await store.openPresetDetails(preset, repository);
 
         expect(store.detailsState.loading).toBe(false);
         expect(store.selectedPreset.title).toBe("Preset A");
-        expect(store.detailsState.selectedOptionNames).toEqual(["Option A"]);
+        expect(store.detailsState.selectedOptionIds).toEqual(["0"]);
+        expect(store.selectedPresetOptionLabels).toEqual(["Option A"]);
         expect(store.selectedPresetCliStrings).toEqual(["set foo = on"]);
 
-        store.setOptionChecked("Option B", true);
+        store.setOptionChecked("1", true);
         expect(store.selectedPresetCliStrings).toEqual(["set foo = on", "set bar = on"]);
     });
 
@@ -141,5 +143,75 @@ describe("usePresetsStore", () => {
 
         expect(store.sources[0].official).toBe(true);
         expect(store.activeSourceIndexes).toEqual([0]);
+    });
+
+    it("closes the sources dialog when transient state is reset", () => {
+        const store = usePresetsStore();
+
+        store.initialize();
+        store.openSourcesManager();
+        store.resetTransientState();
+
+        expect(store.showSourcesDialog).toBe(false);
+    });
+
+    it("gracefully marks a blank-branch GitHub source as failed instead of crashing reload", async () => {
+        const store = usePresetsStore();
+
+        store.initialize();
+        store.sources = [
+            {
+                id: "github-source",
+                name: "GitHub Source",
+                url: "https://github.com/betaflight/firmware-presets",
+                gitHubBranch: "",
+                official: false,
+            },
+        ];
+        store.activeSourceIds = ["github-source"];
+
+        vi.stubGlobal(
+            "fetch",
+            vi.fn().mockRejectedValue(new Error("Missing branch index fetch should fail gracefully.")),
+        );
+
+        await store.reloadRepositories();
+
+        expect(store.isLoading).toBe(false);
+        expect(store.failedRepositoryNames).toEqual(["GitHub Source"]);
+    });
+
+    it("ignores stale preset-details responses when a newer preset is opened", async () => {
+        const store = usePresetsStore();
+        const resolvers = new Map();
+        const repository = {
+            getPresetOnlineLink: (preset) => `https://example.com/${preset.hash}.txt`,
+            removeUncheckedOptions: (strings) => strings,
+            loadPreset: vi.fn(
+                (preset) =>
+                    new Promise((resolve) => {
+                        resolvers.set(preset.hash, () => {
+                            preset.originalPresetCliStrings = [`set ${preset.hash} = on`];
+                            preset.options = [{ name: `Option ${preset.hash.toUpperCase()}`, checked: true }];
+                            resolve();
+                        });
+                    }),
+            ),
+        };
+        const presetA = { hash: "a", fullPath: "preset-a.txt", title: "Preset A" };
+        const presetB = { hash: "b", fullPath: "preset-b.txt", title: "Preset B" };
+
+        const openPresetA = store.openPresetDetails(presetA, repository);
+        const openPresetB = store.openPresetDetails(presetB, repository);
+
+        resolvers.get("b")();
+        await openPresetB;
+        resolvers.get("a")();
+        await openPresetA;
+
+        expect(store.selectedPreset.title).toBe("Preset B");
+        expect(store.selectedPresetCliStrings).toEqual(["set b = on"]);
+        expect(store.detailsState.selectedOptionIds).toEqual(["0"]);
+        expect(store.selectedPresetOptionLabels).toEqual(["Option B"]);
     });
 });

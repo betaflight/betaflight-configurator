@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
 import {
+    attachOptionIds,
     collectUniqueValues,
     getCheckedOptionNames,
+    getOptionNamesByIds,
     getDefaultFirmwareSelections,
     getFitPresets,
     normalizeStoredSources,
@@ -32,7 +34,7 @@ describe("presets helpers", () => {
     });
 
     it("collects checked option names from grouped and flat options", () => {
-        const options = [
+        const options = attachOptionIds([
             { name: "Option A", checked: true },
             {
                 name: "Group",
@@ -41,9 +43,10 @@ describe("presets helpers", () => {
                     { name: "Child 2", checked: true },
                 ],
             },
-        ];
+        ]);
 
         expect(getCheckedOptionNames(options)).toEqual(["Option A", "Child 2"]);
+        expect(getOptionNamesByIds(options, ["0", "1.1"])).toEqual(["Option A", "Child 2"]);
     });
 
     it("dedupes preset hashes and keeps favorites at the top", () => {
@@ -51,7 +54,6 @@ describe("presets helpers", () => {
             hash: "abc",
             title: "Favorite",
             priority: 1,
-            lastPickDate: 20,
             status: "OFFICIAL",
             category: "Frames",
             keywords: ["freestyle"],
@@ -62,7 +64,6 @@ describe("presets helpers", () => {
         const duplicatePreset = {
             ...favoritePreset,
             title: "Duplicate copy",
-            lastPickDate: undefined,
         };
         const secondPreset = {
             hash: "xyz",
@@ -77,22 +78,35 @@ describe("presets helpers", () => {
         };
 
         const repositories = [
-            { index: { presets: [favoritePreset, secondPreset] } },
-            { index: { presets: [duplicatePreset] } },
+            {
+                index: { presets: [favoritePreset, secondPreset] },
+                getPresetOnlineLink: (preset) => `https://example.com/${preset.hash}`,
+            },
+            {
+                index: { presets: [duplicatePreset] },
+                getPresetOnlineLink: (preset) => `https://example.com/dup-${preset.hash}`,
+            },
         ];
 
-        const results = getFitPresets(repositories, {
-            categories: [],
-            keywords: [],
-            authors: [],
-            firmwareVersions: [],
-            status: [],
-            searchString: "",
-        });
+        const results = getFitPresets(
+            repositories,
+            {
+                categories: [],
+                keywords: [],
+                authors: [],
+                firmwareVersions: [],
+                status: [],
+                searchString: "",
+            },
+            (preset, repository, key) => ({
+                favoriteDate: key === "https://example.com/abc" ? 20 : undefined,
+                isPicked: false,
+            }),
+        );
 
         expect(results).toHaveLength(2);
-        expect(results[0][0].title).toBe("Favorite");
-        expect(results.map(([preset]) => preset.hash)).toEqual(["abc", "xyz"]);
+        expect(results[0].preset.title).toBe("Favorite");
+        expect(results.map((entry) => entry.preset.hash)).toEqual(["abc", "xyz"]);
     });
 
     it("collects and sorts unique values", () => {

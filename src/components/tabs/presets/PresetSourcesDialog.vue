@@ -7,16 +7,16 @@
                     <div class="note" v-html="$t('presets_sources_dialog_warning')"></div>
                     <div class="presets_sources_dialog_sources">
                         <PresetSourceCard
-                            v-for="(source, index) in sources"
-                            :key="`${source.name}-${index}`"
+                            v-for="source in sources"
+                            :key="source.id"
                             :source="source"
-                            :selected="selectedIndex === index"
-                            :active="activeIndexes.includes(index)"
-                            @select="selectedIndex = index"
-                            @save="emit('save-source', index, $event)"
-                            @delete="emit('delete-source', index)"
-                            @activate="emit('activate-source', index)"
-                            @deactivate="emit('deactivate-source', index)"
+                            :selected="selectedSourceId === source.id"
+                            :active="activeSourceIds.includes(source.id)"
+                            @select="selectedSourceId = source.id"
+                            @save="emit('save-source', source.id, $event)"
+                            @delete="emit('delete-source', source.id)"
+                            @activate="emit('activate-source', source.id)"
+                            @deactivate="emit('deactivate-source', source.id)"
                         />
                     </div>
                 </div>
@@ -57,7 +57,7 @@ const props = defineProps({
         type: Array,
         default: () => [],
     },
-    activeIndexes: {
+    activeSourceIds: {
         type: Array,
         default: () => [],
     },
@@ -73,7 +73,7 @@ const emit = defineEmits([
 ]);
 
 const dialogRef = ref(null);
-const selectedIndex = ref(0);
+const selectedSourceId = ref("");
 
 watch(
     () => props.open,
@@ -85,7 +85,7 @@ watch(
         }
 
         if (isOpen && !dialogRef.value.open) {
-            selectedIndex.value = props.activeIndexes[0] ?? 0;
+            selectedSourceId.value = props.activeSourceIds[0] ?? props.sources[0]?.id ?? "";
             dialogRef.value.showModal();
         } else if (!isOpen && dialogRef.value.open) {
             dialogRef.value.close();
@@ -95,12 +95,14 @@ watch(
 );
 
 watch(
-    () => props.sources.length,
-    (length, oldLength) => {
-        if (length > oldLength) {
-            selectedIndex.value = length - 1;
-        } else if (selectedIndex.value >= length) {
-            selectedIndex.value = Math.max(0, length - 1);
+    () => props.sources.map((source) => source.id),
+    (sourceIds, previousSourceIds = []) => {
+        const addedSourceId = sourceIds.find((sourceId) => !previousSourceIds.includes(sourceId));
+
+        if (addedSourceId) {
+            selectedSourceId.value = addedSourceId;
+        } else if (!sourceIds.includes(selectedSourceId.value)) {
+            selectedSourceId.value = sourceIds[0] ?? "";
         }
     },
 );
