@@ -8612,7 +8612,16 @@
         "message": "Cancel"
     },
     "preflightGeolocationFailed": {
-        "message": "Could not detect location"
+        "message": "Could not detect location. Please enter coordinates manually."
+    },
+    "preflightIpConsentMessage": {
+        "message": "Browser location failed. Your approximate location can be detected using your IP address via ipapi.co, a third-party service."
+    },
+    "preflightIpConsentAllow": {
+        "message": "Allow"
+    },
+    "preflightIpConsentDeny": {
+        "message": "No thanks"
     },
     "preflightMapSatellite": {
         "message": "Satellite view"

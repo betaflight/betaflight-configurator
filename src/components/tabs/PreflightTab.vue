@@ -160,6 +160,22 @@
                     <div class="location-error" v-if="locationError">
                         <em class="fas fa-exclamation-triangle"></em> {{ locationError }}
                     </div>
+                    <div class="ip-consent-prompt" v-if="showIpConsent">
+                        <em class="fas fa-shield-alt"></em>
+                        <span>{{ $t("preflightIpConsentMessage") }}</span>
+                        <div class="ip-consent-actions">
+                            <div class="default_btn">
+                                <a href="#" @click.prevent="allowIpGeolocation">
+                                    {{ $t("preflightIpConsentAllow") }}
+                                </a>
+                            </div>
+                            <div class="default_btn">
+                                <a href="#" @click.prevent="denyIpGeolocation">
+                                    {{ $t("preflightIpConsentDeny") }}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -1057,12 +1073,15 @@ export default defineComponent({
             return "https://www.ead.eurocontrol.int/cms-eadbasic/opencms/en/ead-operations/data-maintenance/notam-availability-ino/";
         });
 
+        const showIpConsent = ref(false);
+
         async function detectLocation() {
             if (detectingLocation.value) {
                 return;
             }
             detectingLocation.value = true;
             locationError.value = null;
+            showIpConsent.value = false;
             try {
                 await preflight.useGeolocation();
                 manualLat.value = String(preflight.location.latitude);
@@ -1070,10 +1089,37 @@ export default defineComponent({
                 await preflight.refreshAll();
                 updateMapPosition();
             } catch (err) {
-                locationError.value = err.message || i18n.getMessage("preflightGeolocationFailed");
+                if (err.message === preflight.IP_CONSENT_NEEDED) {
+                    showIpConsent.value = true;
+                } else {
+                    locationError.value = i18n.getMessage("preflightGeolocationFailed");
+                }
             } finally {
                 detectingLocation.value = false;
             }
+        }
+
+        async function allowIpGeolocation() {
+            preflight.setIpGeolocationConsent(true);
+            showIpConsent.value = false;
+            detectingLocation.value = true;
+            locationError.value = null;
+            try {
+                await preflight.useIpGeolocationFallback();
+                manualLat.value = String(preflight.location.latitude);
+                manualLon.value = String(preflight.location.longitude);
+                await preflight.refreshAll();
+                updateMapPosition();
+            } catch {
+                locationError.value = i18n.getMessage("preflightGeolocationFailed");
+            } finally {
+                detectingLocation.value = false;
+            }
+        }
+
+        function denyIpGeolocation() {
+            showIpConsent.value = false;
+            locationError.value = i18n.getMessage("preflightGeolocationFailed");
         }
 
         async function applyManualLocation() {
@@ -1362,7 +1408,10 @@ export default defineComponent({
             selectedSavedIndex,
             locationEditMode,
             saveLocationLabel,
+            showIpConsent,
             detectLocation,
+            allowIpGeolocation,
+            denyIpGeolocation,
             applyManualLocation,
             refreshData,
             loadSavedLocation,
@@ -1501,6 +1550,30 @@ export default defineComponent({
             color: #e74c3c;
             em {
                 margin-right: 4px;
+            }
+        }
+
+        .ip-consent-prompt {
+            margin-top: 8px;
+            padding: 8px 12px;
+            background: var(--surface-200, #fff8e1);
+            border: 1px solid var(--surface-400, #ffe082);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            font-size: 12px;
+
+            > em {
+                color: #b8860b;
+                flex-shrink: 0;
+            }
+
+            .ip-consent-actions {
+                display: flex;
+                gap: 6px;
+                margin-left: auto;
             }
         }
     }

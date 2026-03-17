@@ -2,8 +2,10 @@ import { reactive, computed, ref } from "vue";
 import geomagnetism from "geomagnetism";
 import SunCalc from "suncalc";
 import { get as getConfig, set as setConfig } from "../js/ConfigStorage";
+import { ispConnected } from "../js/utils/connection";
 
 const SAVED_LOCATIONS_KEY = "preflight_saved_locations";
+const IP_GEOLOCATION_CONSENT_KEY = "preflight_ip_geolocation_consent";
 const MAX_SAVED_LOCATIONS = 5;
 const MAX_LABEL_LENGTH = 20;
 
@@ -188,12 +190,8 @@ function getFogRisk(temp, dewPoint, humidity, windSpeed) {
     return { level: "good", label: "preflightFogUnlikely", cssClass: "status-good" };
 }
 
-function browserGeolocation() {
+function geolocateWithOptions(options) {
     return new Promise((resolve, reject) => {
-        if (!navigator.geolocation) {
-            reject(new Error("Geolocation not supported"));
-            return;
-        }
         // prettier-ignore
         navigator.geolocation.getCurrentPosition( // NOSONAR - user-initiated, required for preflight location
             (position) => {
@@ -203,9 +201,35 @@ function browserGeolocation() {
                 });
             },
             (err) => reject(new Error(err.message || "Geolocation failed")),
-            { enableHighAccuracy: true, timeout: 10000 },
+            options,
         );
     });
+}
+
+async function browserGeolocation() {
+    if (!navigator.geolocation) {
+        throw new Error("Geolocation not supported");
+    }
+    try {
+        return await geolocateWithOptions({ enableHighAccuracy: true, timeout: 3000 });
+    } catch {
+        return geolocateWithOptions({ enableHighAccuracy: false, timeout: 3000 });
+    }
+}
+
+async function ipGeolocation() {
+    const response = await fetch("https://ipapi.co/json/");
+    if (!response.ok) {
+        throw new Error("IP geolocation request failed");
+    }
+    const data = await response.json();
+    if (data.latitude === undefined || data.longitude === undefined) {
+        throw new Error("IP geolocation returned no coordinates");
+    }
+    return {
+        latitude: Number.parseFloat(data.latitude),
+        longitude: Number.parseFloat(data.longitude),
+    };
 }
 
 function getDewPointRisk(temp, dewPoint) {
@@ -626,12 +650,46 @@ const launchStatus = computed(() => {
     return { level: worstLevel, label: labels[worstLevel], cssClass: cssClasses[worstLevel], checks };
 });
 
+const IP_CONSENT_NEEDED = "IP_CONSENT_NEEDED";
+
+const ipGeolocationConsent = ref(!!getConfig(IP_GEOLOCATION_CONSENT_KEY)[IP_GEOLOCATION_CONSENT_KEY]);
+
+function setIpGeolocationConsent(value) {
+    ipGeolocationConsent.value = !!value;
+    const obj = {};
+    obj[IP_GEOLOCATION_CONSENT_KEY] = !!value;
+    setConfig(obj);
+}
+
 async function useGeolocation() {
-    const coords = await browserGeolocation();
+    let coords;
+    let source = "geolocation";
+    try {
+        coords = await browserGeolocation();
+    } catch {
+        if (!ispConnected()) {
+            throw new Error("Geolocation failed and internet access is disabled");
+        }
+        if (ipGeolocationConsent.value) {
+            coords = await ipGeolocation();
+            source = "ip";
+        } else {
+            throw new Error(IP_CONSENT_NEEDED);
+        }
+    }
     location.latitude = coords.latitude;
     location.longitude = coords.longitude;
     location.elevation = null;
-    location.source = "geolocation";
+    location.source = source;
+    location.name = `${coords.latitude.toFixed(4)}, ${coords.longitude.toFixed(4)}`;
+}
+
+async function useIpGeolocationFallback() {
+    const coords = await ipGeolocation();
+    location.latitude = coords.latitude;
+    location.longitude = coords.longitude;
+    location.elevation = null;
+    location.source = "ip";
     location.name = `${coords.latitude.toFixed(4)}, ${coords.longitude.toFixed(4)}`;
 }
 
@@ -725,6 +783,10 @@ export function usePreflight() {
         fetchWeather,
         fetchSolarActivity,
         useGeolocation,
+        useIpGeolocationFallback,
+        ipGeolocationConsent,
+        setIpGeolocationConsent,
+        IP_CONSENT_NEEDED,
         setManualLocation,
         saveCurrentLocation,
         renameSavedLocation,
