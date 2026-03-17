@@ -12,20 +12,30 @@ import PresetSource from "../tabs/presets/SourcesDialog/PresetSource";
 import {
     PRESETS_MAX_RESULTS,
     PRESETS_STORAGE_KEYS,
+    attachOptionIds,
+    clonePresetForDetails,
     collectUniqueValues,
-    getCheckedOptionNames,
+    createSourceId,
+    getCheckedOptionIds,
     getDefaultFirmwareSelections,
     getFitPresets,
+    getOptionNamesByIds,
+    getPresetEntryKey,
     normalizeStoredSources,
+    sanitizeActiveSourceIds,
     sanitizeActiveSourceIndexes,
 } from "./presets_helpers";
 
 function createRepositoryFromSource(source) {
     if (PresetSource.isUrlGithubRepo(source.url)) {
-        return new PresetsGithubRepo(source.url, source.gitHubBranch, source.official, source.name);
+        return new PresetsGithubRepo(source.url, source.gitHubBranch ?? "", source.official, source.name);
     }
 
     return new PresetsWebsiteRepo(source.url, source.official, source.name);
+}
+
+function getSourceIndexById(sourceId, availableSources) {
+    return availableSources.findIndex((source) => source.id === sourceId);
 }
 
 export const usePresetsStore = defineStore("presets", () => {
@@ -33,8 +43,9 @@ export const usePresetsStore = defineStore("presets", () => {
     const repositories = ref([]);
     const failedRepositoryNames = ref([]);
     const sources = ref([]);
-    const activeSourceIndexes = ref([0]);
+    const activeSourceIds = ref([]);
     const pickedPresetList = ref([]);
+    const favoritePresetDates = ref({});
 
     const isLoading = ref(false);
     const hasLoadError = ref(false);
@@ -65,7 +76,7 @@ export const usePresetsStore = defineStore("presets", () => {
         showCli: false,
         optionsExpanded: false,
         optionsReviewed: false,
-        selectedOptionNames: [],
+        selectedOptionIds: [],
     });
 
     const applyState = reactive({
@@ -76,9 +87,22 @@ export const usePresetsStore = defineStore("presets", () => {
     });
 
     const selectedPresetEntry = ref(null);
+    let detailsRequestToken = 0;
+
+    const activeSourceIndexes = computed(() =>
+        activeSourceIds.value
+            .map((sourceId) => getSourceIndexById(sourceId, sources.value))
+            .filter((index) => index >= 0),
+    );
 
     const activeSources = computed(() =>
-        activeSourceIndexes.value.map((index) => sources.value[index]).filter((source) => source !== undefined),
+        activeSourceIds.value
+            .map((sourceId) => sources.value.find((source) => source.id === sourceId))
+            .filter((source) => source !== undefined),
+    );
+
+    const pickedPresetKeys = computed(
+        () => new Set(pickedPresetList.value.map((pickedPreset) => pickedPreset.presetKey).filter(Boolean)),
     );
 
     const isThirdPartyActive = computed(() => activeSources.value.some((source) => !source.official));
@@ -100,7 +124,12 @@ export const usePresetsStore = defineStore("presets", () => {
         searchString: filters.searchString.trim(),
     }));
 
-    const filteredPresetEntries = computed(() => getFitPresets(repositories.value, searchParams.value));
+    const filteredPresetEntries = computed(() =>
+        getFitPresets(repositories.value, searchParams.value, (preset, repository, presetKey) => ({
+            favoriteDate: favoritePresetDates.value[presetKey],
+            isPicked: pickedPresetKeys.value.has(getPresetEntryKey(preset, repository)),
+        })),
+    );
     const visiblePresetEntries = computed(() => filteredPresetEntries.value.slice(0, PRESETS_MAX_RESULTS));
     const hasTooManyResults = computed(() => filteredPresetEntries.value.length > PRESETS_MAX_RESULTS);
     const hasNoResults = computed(
@@ -114,6 +143,9 @@ export const usePresetsStore = defineStore("presets", () => {
 
     const selectedPreset = computed(() => selectedPresetEntry.value?.preset ?? null);
     const selectedPresetRepository = computed(() => selectedPresetEntry.value?.repository ?? null);
+    const selectedPresetOptionLabels = computed(() =>
+        getOptionNamesByIds(selectedPreset.value?.options ?? [], detailsState.selectedOptionIds),
+    );
 
     const selectedPresetCliStrings = computed(() => {
         if (!selectedPreset.value || !selectedPresetRepository.value) {
@@ -122,14 +154,41 @@ export const usePresetsStore = defineStore("presets", () => {
 
         return selectedPresetRepository.value.removeUncheckedOptions(
             selectedPreset.value.originalPresetCliStrings ?? [],
-            detailsState.selectedOptionNames,
+            selectedPresetOptionLabels.value,
         );
     });
 
     const selectedPresetShowRepoName = computed(() => isThirdPartyActive.value);
+    const isSelectedPresetFavorite = computed(() => {
+        if (!selectedPresetEntry.value?.key) {
+            return false;
+        }
 
-    function touchRepositories() {
-        repositories.value = [...repositories.value];
+        return Boolean(favoritePresetDates.value[selectedPresetEntry.value.key]);
+    });
+    const isSelectedPresetPicked = computed(() => {
+        if (!selectedPresetEntry.value?.key) {
+            return false;
+        }
+
+        return pickedPresetKeys.value.has(selectedPresetEntry.value.key);
+    });
+
+    function syncFavoritePresetDates(nextRepositories = repositories.value) {
+        const nextFavoritePresetDates = {};
+
+        nextRepositories.forEach((repository) => {
+            repository.index.presets.forEach((preset) => {
+                const presetKey = getPresetEntryKey(preset, repository);
+                const lastPickDate = favoritePresets.getLastPickDate(preset, repository);
+
+                if (lastPickDate) {
+                    nextFavoritePresetDates[presetKey] = lastPickDate;
+                }
+            });
+        });
+
+        favoritePresetDates.value = nextFavoritePresetDates;
     }
 
     function loadSourceConfiguration() {
@@ -140,7 +199,12 @@ export const usePresetsStore = defineStore("presets", () => {
         ];
 
         sources.value = normalizedSources;
-        activeSourceIndexes.value = sanitizeActiveSourceIndexes(storedActiveIndexes, normalizedSources.length);
+        activeSourceIds.value = sanitizeActiveSourceIds(
+            sanitizeActiveSourceIndexes(storedActiveIndexes, normalizedSources.length).map(
+                (index) => normalizedSources[index]?.id,
+            ),
+            normalizedSources,
+        );
     }
 
     function saveSourceConfiguration() {
@@ -191,13 +255,14 @@ export const usePresetsStore = defineStore("presets", () => {
     }
 
     function resetDetailsState() {
+        detailsRequestToken += 1;
         detailsState.open = false;
         detailsState.loading = false;
         detailsState.error = "";
         detailsState.showCli = false;
         detailsState.optionsExpanded = false;
         detailsState.optionsReviewed = false;
-        detailsState.selectedOptionNames = [];
+        detailsState.selectedOptionIds = [];
         selectedPresetEntry.value = null;
     }
 
@@ -209,6 +274,7 @@ export const usePresetsStore = defineStore("presets", () => {
     }
 
     function resetTransientState() {
+        closeSourcesManager();
         resetDetailsState();
         resetApplyState();
     }
@@ -226,55 +292,66 @@ export const usePresetsStore = defineStore("presets", () => {
     }
 
     function addSource() {
-        sources.value.push({
-            name: i18n.getMessage("presetsSourcesDialogDefaultSourceName"),
-            url: "",
-            gitHubBranch: "",
-            official: false,
-        });
+        sources.value = [
+            ...sources.value,
+            {
+                id: createSourceId(),
+                name: i18n.getMessage("presetsSourcesDialogDefaultSourceName"),
+                url: "",
+                gitHubBranch: "",
+                official: false,
+            },
+        ];
         saveSourceConfiguration();
     }
 
-    function updateSource(index, source) {
-        if (sources.value[index]?.official) {
+    function updateSource(sourceId, source) {
+        const sourceIndex = getSourceIndexById(sourceId, sources.value);
+
+        if (sourceIndex < 0 || sources.value[sourceIndex]?.official) {
             return;
         }
 
-        sources.value.splice(index, 1, {
-            ...sources.value[index],
-            ...source,
-            official: false,
-        });
+        sources.value = sources.value.map((existingSource) =>
+            existingSource.id === sourceId
+                ? {
+                    ...existingSource,
+                    ...source,
+                    gitHubBranch: source.gitHubBranch ?? "",
+                    official: false,
+                }
+                : existingSource,
+        );
         saveSourceConfiguration();
     }
 
-    function deleteSource(index) {
-        if (index <= 0 || sources.value[index]?.official) {
+    function deleteSource(sourceId) {
+        const source = sources.value.find((item) => item.id === sourceId);
+
+        if (!source || source.official) {
             return;
         }
 
-        sources.value.splice(index, 1);
-
-        activeSourceIndexes.value = activeSourceIndexes.value
-            .filter((activeIndex) => activeIndex !== index)
-            .map((activeIndex) => (activeIndex > index ? activeIndex - 1 : activeIndex));
-
-        activeSourceIndexes.value = sanitizeActiveSourceIndexes(activeSourceIndexes.value, sources.value.length);
+        sources.value = sources.value.filter((item) => item.id !== sourceId);
+        activeSourceIds.value = sanitizeActiveSourceIds(
+            activeSourceIds.value.filter((activeSourceId) => activeSourceId !== sourceId),
+            sources.value,
+        );
         saveSourceConfiguration();
     }
 
-    function setSourceActive(index, isActive) {
-        const currentIndexes = new Set(activeSourceIndexes.value);
+    function setSourceActive(sourceId, isActive) {
+        const currentSourceIds = new Set(activeSourceIds.value);
 
         if (isActive) {
-            currentIndexes.add(index);
+            currentSourceIds.add(sourceId);
         } else {
-            currentIndexes.delete(index);
+            currentSourceIds.delete(sourceId);
         }
 
-        activeSourceIndexes.value = sanitizeActiveSourceIndexes(
-            [...currentIndexes].sort((a, b) => a - b),
-            sources.value.length,
+        activeSourceIds.value = sanitizeActiveSourceIds(
+            sources.value.map((source) => source.id).filter((sourceIdInOrder) => currentSourceIds.has(sourceIdInOrder)),
+            sources.value,
         );
         saveSourceConfiguration();
     }
@@ -313,26 +390,34 @@ export const usePresetsStore = defineStore("presets", () => {
         repositories.value = [];
         isLoading.value = true;
 
-        const failedSet = new Set();
-        const nextRepositories = activeSources.value.map((source) => createRepositoryFromSource(source));
-
-        await Promise.all(
-            nextRepositories.map((repository) =>
-                repository.loadIndex().catch(() => {
-                    failedSet.add(repository);
-                    return null;
-                }),
-            ),
-        );
-
-        failedRepositoryNames.value = Array.from(failedSet).map((repository) => repository.name);
-        repositories.value = nextRepositories.filter((repository) => !failedSet.has(repository));
-
         try {
-            await confirmSourceVersions();
-            repositories.value.forEach((repository) => {
-                favoritePresets.addLastPickDate(repository.index.presets, repository);
+            const failedNames = new Set();
+            const nextRepositories = [];
+
+            activeSources.value.forEach((source) => {
+                try {
+                    nextRepositories.push(createRepositoryFromSource(source));
+                } catch (error) {
+                    failedNames.add(source.name);
+                    console.error(error);
+                }
             });
+
+            await Promise.all(
+                nextRepositories.map((repository) =>
+                    repository.loadIndex().catch((error) => {
+                        failedNames.add(repository.name);
+                        console.error(error);
+                        return null;
+                    }),
+                ),
+            );
+
+            repositories.value = nextRepositories.filter((repository) => repository.index !== null);
+            failedRepositoryNames.value = [...failedNames];
+
+            await confirmSourceVersions();
+            syncFavoritePresetDates(repositories.value);
             buildFilterOptions();
             resetFilters();
         } catch (error) {
@@ -348,34 +433,57 @@ export const usePresetsStore = defineStore("presets", () => {
     }
 
     function toggleFavorite(preset, repository) {
-        if (preset.lastPickDate) {
+        const presetKey = getPresetEntryKey(preset, repository);
+
+        if (favoritePresetDates.value[presetKey]) {
             favoritePresets.delete(preset, repository);
         } else {
             favoritePresets.add(preset, repository);
         }
 
         favoritePresets.saveToStorage();
-        touchRepositories();
+        syncFavoritePresetDates();
     }
 
     async function openPresetDetails(preset, repository) {
-        selectedPresetEntry.value = { preset, repository };
+        const requestToken = detailsRequestToken + 1;
+        const presetKey = getPresetEntryKey(preset, repository);
+        const presetForDetails = clonePresetForDetails(preset);
+
+        detailsRequestToken = requestToken;
+        selectedPresetEntry.value = {
+            key: presetKey,
+            preset: presetForDetails,
+            repository,
+        };
         detailsState.open = true;
         detailsState.loading = true;
         detailsState.error = "";
         detailsState.showCli = false;
         detailsState.optionsExpanded = false;
         detailsState.optionsReviewed = false;
-        detailsState.selectedOptionNames = [];
+        detailsState.selectedOptionIds = [];
 
         try {
-            await repository.loadPreset(preset);
-            detailsState.selectedOptionNames = getCheckedOptionNames(preset.options);
+            await repository.loadPreset(presetForDetails);
+
+            if (detailsRequestToken !== requestToken || selectedPresetEntry.value?.key !== presetKey) {
+                return;
+            }
+
+            presetForDetails.options = attachOptionIds(presetForDetails.options ?? []);
+            detailsState.selectedOptionIds = getCheckedOptionIds(presetForDetails.options);
         } catch (error) {
+            if (detailsRequestToken !== requestToken || selectedPresetEntry.value?.key !== presetKey) {
+                return;
+            }
+
             console.error(error);
             detailsState.error = i18n.getMessage("presetsLoadError");
         } finally {
-            detailsState.loading = false;
+            if (detailsRequestToken === requestToken && selectedPresetEntry.value?.key === presetKey) {
+                detailsState.loading = false;
+            }
         }
     }
 
@@ -394,28 +502,28 @@ export const usePresetsStore = defineStore("presets", () => {
         }
     }
 
-    function setOptionChecked(optionName, isChecked) {
+    function setOptionChecked(optionId, isChecked) {
         if (isChecked) {
-            if (!detailsState.selectedOptionNames.includes(optionName)) {
-                detailsState.selectedOptionNames = [...detailsState.selectedOptionNames, optionName];
+            if (!detailsState.selectedOptionIds.includes(optionId)) {
+                detailsState.selectedOptionIds = [...detailsState.selectedOptionIds, optionId];
             }
         } else {
-            detailsState.selectedOptionNames = detailsState.selectedOptionNames.filter(
-                (selectedOptionName) => selectedOptionName !== optionName,
+            detailsState.selectedOptionIds = detailsState.selectedOptionIds.filter(
+                (selectedOptionId) => selectedOptionId !== optionId,
             );
         }
     }
 
-    function setExclusiveOption(groupOptions, selectedOptionName) {
-        const nextSelectedOptions = detailsState.selectedOptionNames.filter(
-            (selectedOptionName) => !groupOptions.includes(selectedOptionName),
+    function setExclusiveOption(groupOptionIds, selectedOptionId) {
+        const nextSelectedOptions = detailsState.selectedOptionIds.filter(
+            (currentOptionId) => !groupOptionIds.includes(currentOptionId),
         );
 
-        if (selectedOptionName) {
-            nextSelectedOptions.push(selectedOptionName);
+        if (selectedOptionId) {
+            nextSelectedOptions.push(selectedOptionId);
         }
 
-        detailsState.selectedOptionNames = nextSelectedOptions;
+        detailsState.selectedOptionIds = nextSelectedOptions;
     }
 
     function pickSelectedPreset() {
@@ -428,23 +536,18 @@ export const usePresetsStore = defineStore("presets", () => {
             [...selectedPresetCliStrings.value],
             selectedPresetRepository.value ?? undefined,
         );
-        selectedPreset.value.isPicked = true;
-        touchRepositories();
         closePresetDetails();
     }
 
     function appendPickedPreset(preset, cliStrings, presetRepository) {
-        const pickedPreset = new PickedPreset(preset, cliStrings, presetRepository);
+        const presetKey = presetRepository ? getPresetEntryKey(preset, presetRepository) : undefined;
+        const pickedPreset = new PickedPreset(preset, cliStrings, presetRepository, presetKey);
 
-        pickedPresetList.value.push(pickedPreset);
+        pickedPresetList.value = [...pickedPresetList.value, pickedPreset];
     }
 
     function clearPickedPresets() {
-        pickedPresetList.value.forEach((pickedPreset) => {
-            pickedPreset.preset.isPicked = false;
-        });
         pickedPresetList.value = [];
-        touchRepositories();
     }
 
     function getPickedPresetsCli() {
@@ -461,7 +564,7 @@ export const usePresetsStore = defineStore("presets", () => {
         });
 
         favoritePresets.saveToStorage();
-        touchRepositories();
+        syncFavoritePresetDates();
     }
 
     function openProgressDialog() {
@@ -483,11 +586,20 @@ export const usePresetsStore = defineStore("presets", () => {
         applyState.cliErrorsDialogOpen = false;
     }
 
+    function isPresetFavorite(preset, repository) {
+        return Boolean(favoritePresetDates.value[getPresetEntryKey(preset, repository)]);
+    }
+
+    function isPresetPicked(preset, repository) {
+        return pickedPresetKeys.value.has(getPresetEntryKey(preset, repository));
+    }
+
     return {
         repositories,
         failedRepositoryNames,
         failedRepositoriesMessage,
         sources,
+        activeSourceIds,
         activeSourceIndexes,
         activeSources,
         pickedPresetList,
@@ -502,8 +614,11 @@ export const usePresetsStore = defineStore("presets", () => {
         selectedPresetEntry,
         selectedPreset,
         selectedPresetRepository,
+        selectedPresetOptionLabels,
         selectedPresetCliStrings,
         selectedPresetShowRepoName,
+        isSelectedPresetFavorite,
+        isSelectedPresetPicked,
         isThirdPartyActive,
         visiblePresetEntries,
         filteredPresetEntries,
@@ -538,5 +653,7 @@ export const usePresetsStore = defineStore("presets", () => {
         openCliErrorsDialog,
         closeCliErrorsDialog,
         resetTransientState,
+        isPresetFavorite,
+        isPresetPicked,
     };
 });

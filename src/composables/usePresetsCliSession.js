@@ -6,10 +6,12 @@ import CliEngine from "../tabs/presets/CliEngine";
 
 const READ_DUMP_IDLE_MS = 500;
 const MAX_READ_TIMEOUT = 10000;
+const DISCONNECT_TIMEOUT_NAME = "presets_disconnect_cli";
 
 function disconnectCliMakeSure() {
+    GUI.timeout_remove(DISCONNECT_TIMEOUT_NAME);
     GUI.timeout_add(
-        "disconnect",
+        DISCONNECT_TIMEOUT_NAME,
         () => {
             $("a.connection_button__link").trigger("click");
         },
@@ -17,16 +19,15 @@ function disconnectCliMakeSure() {
     );
 }
 
-export function usePresetsCliSession() {
+export function usePresetsCliSession({ onProgressChange } = {}) {
     const cliWindowRef = ref(null);
     const windowWrapperRef = ref(null);
     const commandInputRef = ref(null);
-    const progress = ref(0);
     const cliEngine = new CliEngine(null);
     let cancelPendingDumpRead;
 
     cliEngine.setProgressCallback((value) => {
-        progress.value = value;
+        onProgressChange?.(value);
     });
 
     const isCliActive = computed(() => CONFIGURATOR.cliEngineActive && CONFIGURATOR.cliEngineValid);
@@ -70,6 +71,7 @@ export function usePresetsCliSession() {
     }
 
     function close(callback) {
+        GUI.timeout_remove(DISCONNECT_TIMEOUT_NAME);
         cancelDumpRead(new Error("Preset CLI dump read cancelled because the CLI session was closed."));
         cliEngine.close(() => {
             CONFIGURATOR.cliEngineActive = false;
@@ -79,6 +81,7 @@ export function usePresetsCliSession() {
     }
 
     function cleanup(callback) {
+        GUI.timeout_remove(DISCONNECT_TIMEOUT_NAME);
         cancelDumpRead(new Error("Preset CLI dump read cancelled during cleanup."));
 
         if (!(CONFIGURATOR.connectionValid && CONFIGURATOR.cliEngineActive && CONFIGURATOR.cliEngineValid)) {
@@ -161,11 +164,14 @@ export function usePresetsCliSession() {
         return cliEngine.errorsCount;
     }
 
+    function resetProgress() {
+        onProgressChange?.(0);
+    }
+
     return {
         cliWindowRef,
         windowWrapperRef,
         commandInputRef,
-        progress,
         isCliActive,
         activate,
         readSerial,
@@ -176,5 +182,6 @@ export function usePresetsCliSession() {
         readDumpAll,
         disconnectCliMakeSure,
         getErrorCount,
+        resetProgress,
     };
 }

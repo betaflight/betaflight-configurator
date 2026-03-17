@@ -8,6 +8,8 @@
                         :repository="repository"
                         :clickable="false"
                         :show-repository-name="showRepositoryName"
+                        :is-favorite="isFavorite"
+                        :is-picked="isPicked"
                         @toggle-favorite="emit('toggle-favorite')"
                     />
 
@@ -32,12 +34,12 @@
                                                 v-if="option.isExclusive"
                                                 type="radio"
                                                 :name="`preset-option-group-${optionIndex}`"
-                                                :checked="selectedOptionNames.includes(child.name)"
+                                                :checked="selectedOptionIds.includes(child.id)"
                                                 @change="
                                                     emit('select-exclusive-option', {
-                                                        selectedOptionName: child.name,
-                                                        groupOptionNames: option.childs.map(
-                                                            (groupOption) => groupOption.name,
+                                                        selectedOptionId: child.id,
+                                                        groupOptionIds: option.childs.map(
+                                                            (groupOption) => groupOption.id,
                                                         ),
                                                     })
                                                 "
@@ -45,10 +47,10 @@
                                             <input
                                                 v-else
                                                 type="checkbox"
-                                                :checked="selectedOptionNames.includes(child.name)"
+                                                :checked="selectedOptionIds.includes(child.id)"
                                                 @change="
                                                     emit('toggle-option', {
-                                                        optionName: child.name,
+                                                        optionId: child.id,
                                                         checked: $event.target.checked,
                                                     })
                                                 "
@@ -60,10 +62,10 @@
                                 <label v-else class="preset-option-label">
                                     <input
                                         type="checkbox"
-                                        :checked="selectedOptionNames.includes(option.name)"
+                                        :checked="selectedOptionIds.includes(option.id)"
                                         @change="
                                             emit('toggle-option', {
-                                                optionName: option.name,
+                                                optionId: option.id,
                                                 checked: $event.target.checked,
                                             })
                                         "
@@ -195,7 +197,11 @@ const props = defineProps({
         type: Boolean,
         default: false,
     },
-    selectedOptionNames: {
+    selectedOptionIds: {
+        type: Array,
+        default: () => [],
+    },
+    selectedOptionLabels: {
         type: Array,
         default: () => [],
     },
@@ -206,6 +212,14 @@ const props = defineProps({
     cliStrings: {
         type: Array,
         default: () => [],
+    },
+    isFavorite: {
+        type: Boolean,
+        default: false,
+    },
+    isPicked: {
+        type: Boolean,
+        default: false,
     },
 });
 
@@ -225,11 +239,11 @@ const descriptionText = computed(() => props.preset?.description?.join("\n") ?? 
 const isDescriptionHtml = computed(() => props.preset?.parser === "MARKED");
 const cliText = computed(() => props.cliStrings.join("\n"));
 const optionsSummary = computed(() => {
-    if (props.selectedOptionNames.length === 0) {
+    if (props.selectedOptionLabels.length === 0) {
         return "";
     }
 
-    return props.selectedOptionNames.join("; ");
+    return props.selectedOptionLabels.join("; ");
 });
 const onlineLink = computed(() =>
     props.preset && props.repository ? props.repository.getPresetOnlineLink(props.preset) : "#",

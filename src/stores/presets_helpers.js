@@ -8,11 +8,23 @@ export const PRESETS_STORAGE_KEYS = {
     showBackupWarning: "showPresetsWarningBackup",
 };
 
+const OFFICIAL_SOURCE_ID = "presets-official-source";
+const BACKUP_SOURCE_ID = "presets-backup-source";
+
+export function createSourceId() {
+    if (globalThis.crypto?.randomUUID) {
+        return `presets-source-${globalThis.crypto.randomUUID()}`;
+    }
+
+    return `presets-source-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
+}
+
 export function createOfficialSource() {
     const officialSource = new PresetSource(
         "Betaflight Official Presets",
         "https://presets.betaflight.com/firmware-presets/",
         "",
+        OFFICIAL_SOURCE_ID,
     );
     officialSource.official = true;
     return officialSource;
@@ -23,6 +35,7 @@ export function createSecondaryOfficialSource() {
         "Betaflight Presets - GitHub BACKUP",
         "https://github.com/betaflight/firmware-presets",
         "backup",
+        BACKUP_SOURCE_ID,
     );
     backupSource.official = false;
     return backupSource;
@@ -32,7 +45,10 @@ export function normalizeStoredSources(storedSources) {
     const officialSource = createOfficialSource();
     const secondaryOfficialSource = createSecondaryOfficialSource();
     let sources = Array.isArray(storedSources)
-        ? storedSources.map((source) => ({ ...source }))
+        ? storedSources.map((source) => ({
+            ...source,
+            id: source.id || createSourceId(),
+        }))
         : [officialSource, secondaryOfficialSource];
 
     if (sources.length === 0) {
@@ -53,6 +69,19 @@ export function sanitizeActiveSourceIndexes(storedIndexes, sourceCount) {
         : [];
 
     return sanitizedIndexes.length > 0 ? sanitizedIndexes : [0];
+}
+
+export function sanitizeActiveSourceIds(activeSourceIds, sources) {
+    const validSourceIds = new Set(sources.map((source) => source.id));
+    const sanitizedIds = Array.isArray(activeSourceIds)
+        ? activeSourceIds.filter((sourceId) => typeof sourceId === "string" && validSourceIds.has(sourceId))
+        : [];
+
+    return sanitizedIds.length > 0 ? sanitizedIds : [sources[0]?.id].filter(Boolean);
+}
+
+export function getPresetEntryKey(preset, repository) {
+    return repository.getPresetOnlineLink(preset);
 }
 
 export function collectUniqueValues(repositories, extractor) {
@@ -97,23 +126,94 @@ export function getCheckedOptionNames(options) {
     return selected;
 }
 
-export function presetSearchPriorityComparer(presetA, presetB) {
-    if (presetA.lastPickDate && presetB.lastPickDate) {
-        return presetB.lastPickDate - presetA.lastPickDate;
+export function attachOptionIds(options, path = []) {
+    return options.map((option, index) => {
+        const optionId = [...path, index].join(".");
+        const normalizedOption = {
+            ...option,
+            id: optionId,
+        };
+
+        if (Array.isArray(option.childs)) {
+            normalizedOption.childs = attachOptionIds(option.childs, [...path, index]);
+        }
+
+        return normalizedOption;
+    });
+}
+
+export function getCheckedOptionIds(options) {
+    const selected = [];
+
+    options.forEach((option) => {
+        if (Array.isArray(option.childs)) {
+            option.childs.forEach((child) => {
+                if (child.checked) {
+                    selected.push(child.id);
+                }
+            });
+            return;
+        }
+
+        if (option.checked) {
+            selected.push(option.id);
+        }
+    });
+
+    return selected;
+}
+
+export function getOptionNamesByIds(options, selectedOptionIds) {
+    const selectedIds = new Set(selectedOptionIds);
+    const selectedNames = [];
+
+    options.forEach((option) => {
+        if (Array.isArray(option.childs)) {
+            option.childs.forEach((child) => {
+                if (selectedIds.has(child.id)) {
+                    selectedNames.push(child.name);
+                }
+            });
+            return;
+        }
+
+        if (selectedIds.has(option.id)) {
+            selectedNames.push(option.name);
+        }
+    });
+
+    return selectedNames;
+}
+
+export function clonePresetForDetails(preset) {
+    if (typeof structuredClone === "function") {
+        try {
+            return structuredClone(preset);
+        } catch {
+            // Fall back for reactive proxies and other non-cloneable wrappers.
+        }
     }
 
-    if (presetA.lastPickDate || presetB.lastPickDate) {
-        return presetA.lastPickDate ? -1 : 1;
+    return JSON.parse(JSON.stringify(preset));
+}
+
+export function presetSearchPriorityComparer(entryA, entryB) {
+    if (entryA.favoriteDate && entryB.favoriteDate) {
+        return entryB.favoriteDate - entryA.favoriteDate;
     }
 
-    const priorityA = presetA.priority ?? 0;
-    const priorityB = presetB.priority ?? 0;
+    if (entryA.favoriteDate || entryB.favoriteDate) {
+        return entryA.favoriteDate ? -1 : 1;
+    }
+
+    const priorityA = entryA.preset.priority ?? 0;
+    const priorityB = entryB.preset.priority ?? 0;
 
     if (priorityA !== priorityB) {
         return priorityB - priorityA;
     }
 
-    return String(presetA.title ?? "").localeCompare(String(presetB.title ?? ""), undefined, {
+    return String(entryA.preset.title ?? "").localeCompare(String(entryB.preset.title ?? ""), undefined, {
         sensitivity: "base",
     });
 }
@@ -197,19 +297,25 @@ export function isPresetFitSearch(preset, searchParams) {
     );
 }
 
-export function getFitPresets(repositories, searchParams) {
+export function getFitPresets(repositories, searchParams, getPresetEntryState = () => ({})) {
     const result = [];
     const seenHashes = new Set();
 
     for (const repository of repositories) {
         for (const preset of repository.index.presets) {
             if (isPresetFitSearch(preset, searchParams) && !seenHashes.has(preset.hash)) {
-                result.push([preset, repository]);
+                const presetKey = getPresetEntryKey(preset, repository);
+                result.push({
+                    key: presetKey,
+                    preset,
+                    repository,
+                    ...getPresetEntryState(preset, repository, presetKey),
+                });
                 seenHashes.add(preset.hash);
             }
         }
     }
 
-    result.sort((presetA, presetB) => presetSearchPriorityComparer(presetA[0], presetB[0]));
+    result.sort(presetSearchPriorityComparer);
     return result;
 }

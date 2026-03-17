@@ -8,7 +8,7 @@ export default class PresetsGithubRepo extends PresetsRepoIndexed {
             correctUrlRepo += "/";
         }
 
-        let correctBranch = branch.trim();
+        let correctBranch = (branch ?? "").trim();
 
         if (correctBranch.startsWith("/")) {
             correctBranch = correctBranch.slice(1);

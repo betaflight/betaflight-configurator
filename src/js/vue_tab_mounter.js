@@ -14,6 +14,7 @@ import { tabState } from "./tab_state.js";
 
 // Store the current mounted Vue app instance for cleanup
 let currentTabApp = null;
+export const TAB_ADAPTER_REGISTRATION_KEY = "tabAdapterRegistration";
 
 export function buildTabAdapter(tabName, componentInstance, existingAdapter = TABS[tabName]) {
     const fallbackCleanup = (callback) => {
@@ -86,6 +87,8 @@ export function mountVueTab(tabName, contentReadyCallback) {
     currentTabApp.use(I18NextVue, { i18next });
     currentTabApp.use(pinia);
     currentTabApp.provide("gui", GUI);
+    const tabAdapterRegistration = { current: null };
+    currentTabApp.provide(TAB_ADAPTER_REGISTRATION_KEY, tabAdapterRegistration);
 
     // Provide the global betaflight model
     if (globalThis.vm) {
@@ -99,8 +102,8 @@ export function mountVueTab(tabName, contentReadyCallback) {
     const componentInstance = currentTabApp.mount(contentEl);
 
     console.log(`[Vue Tab] Mounted: ${tabName}`);
-    // Preserve any adapter the tab registered during mount, then add the generic hooks
-    const tabAdapter = buildTabAdapter(tabName, componentInstance);
+    // Preserve any adapter the tab explicitly registered during setup, then add the generic hooks
+    const tabAdapter = buildTabAdapter(tabName, componentInstance, tabAdapterRegistration.current);
 
     // Merge the adapter into TABS. The adapter provides default handlers
     // (cleanup, expertModeChanged, etc.). We intentionally spread the

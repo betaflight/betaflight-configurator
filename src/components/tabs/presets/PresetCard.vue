@@ -126,6 +126,14 @@ const props = defineProps({
         type: Boolean,
         default: false,
     },
+    isFavorite: {
+        type: Boolean,
+        default: false,
+    },
+    isPicked: {
+        type: Boolean,
+        default: false,
+    },
 });
 
 const emit = defineEmits(["open", "toggle-favorite"]);
@@ -135,9 +143,8 @@ const mouseOnStar = ref(false);
 
 const firmwareVersions = computed(() => props.preset.firmware_version?.join("; ") ?? "");
 const keywords = computed(() => props.preset.keywords?.join("; ") ?? "");
-const isFavorite = computed(() => Boolean(props.preset.lastPickDate));
 const favoriteAriaLabel = computed(() =>
-    i18n.getMessage(isFavorite.value ? "presetsFavoriteRemoveAriaLabel" : "presetsFavoriteAddAriaLabel"),
+    i18n.getMessage(props.isFavorite ? "presetsFavoriteRemoveAriaLabel" : "presetsFavoriteAddAriaLabel"),
 );
 
 const wrapperClasses = computed(() => ({
@@ -147,7 +154,7 @@ const wrapperClasses = computed(() => ({
 }));
 
 const wrapperStyle = computed(() => ({
-    border: props.preset.isPicked ? "2px solid green" : "1px solid var(--surface-500)",
+    border: props.isPicked ? "2px solid green" : "1px solid var(--surface-500)",
     backgroundColor:
         props.clickable && mouseOnPanel.value && !mouseOnStar.value ? "var(--surface-500)" : "var(--surface-200)",
 }));
@@ -157,7 +164,7 @@ const starBackgroundColor = computed(() =>
 );
 
 const starImage = computed(() => {
-    if (isFavorite.value) {
+    if (props.isFavorite) {
         return starActive;
     }
 
