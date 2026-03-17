@@ -664,7 +664,8 @@ function updateMagneticDeclination() {
 async function fetchElevation(lat, lon) {
     const requestId = ++elevationRequestId;
     try {
-        const response = await fetch(`https://api.open-meteo.com/v1/elevation?latitude=${lat}&longitude=${lon}`);
+        const params = new URLSearchParams({ latitude: lat, longitude: lon });
+        const response = await fetch(`https://api.open-meteo.com/v1/elevation?${params}`);
         if (!response.ok) {
             throw new Error(`Elevation API error: ${response.status}`);
         }
