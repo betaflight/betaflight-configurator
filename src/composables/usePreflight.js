@@ -226,10 +226,15 @@ async function ipGeolocation() {
     if (data.latitude === undefined || data.longitude === undefined) {
         throw new Error("IP geolocation returned no coordinates");
     }
-    return {
-        latitude: Number.parseFloat(data.latitude),
-        longitude: Number.parseFloat(data.longitude),
-    };
+    const lat = Number.parseFloat(data.latitude);
+    const lon = Number.parseFloat(data.longitude);
+    if (!Number.isFinite(lat) || !Number.isFinite(lon)) {
+        throw new Error("IP geolocation returned invalid coordinates");
+    }
+    if (lat < -90 || lat > 90 || lon < -180 || lon > 180) {
+        throw new Error("IP geolocation returned out-of-range coordinates");
+    }
+    return { latitude: lat, longitude: lon };
 }
 
 function getDewPointRisk(temp, dewPoint) {
@@ -269,11 +274,8 @@ function formatTime(isoString) {
     if (!isoString) {
         return "-";
     }
-    const d = new Date(isoString);
-    if (Number.isNaN(d.getTime())) {
-        return "-";
-    }
-    return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    const match = String(isoString).match(/T(\d{2}:\d{2})/);
+    return match ? match[1] : "-";
 }
 
 // ── Module-scoped singleton state ──────────────────────────────────────────────
