@@ -252,456 +252,461 @@ function formatTime(isoString) {
     return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 }
 
-export function usePreflight() {
-    const location = reactive({
-        latitude: null,
-        longitude: null,
-        elevation: null,
-        name: "",
-        source: "",
-    });
+// ── Module-scoped singleton state ──────────────────────────────────────────────
 
-    const weather = reactive({
-        loading: false,
-        error: null,
-        current: null,
-        hourly: null,
-        daily: null,
-        forecast: null,
-        lastUpdated: null,
-    });
+const location = reactive({
+    latitude: null,
+    longitude: null,
+    elevation: null,
+    name: "",
+    source: "",
+});
 
-    const mag = reactive({
-        declination: null,
-        inclination: null,
-    });
+const weather = reactive({
+    loading: false,
+    error: null,
+    current: null,
+    hourly: null,
+    daily: null,
+    forecast: null,
+    lastUpdated: null,
+});
 
-    const solar = reactive({
-        loading: false,
-        error: null,
-        kpIndex: null,
-        kpTimestamp: null,
-        stormLevel: null,
-        lastUpdated: null,
-    });
+const mag = reactive({
+    declination: null,
+    inclination: null,
+});
 
-    const savedLocations = reactive([]);
+const solar = reactive({
+    loading: false,
+    error: null,
+    kpIndex: null,
+    kpTimestamp: null,
+    stormLevel: null,
+    lastUpdated: null,
+});
 
-    function loadSavedLocations() {
-        const stored = getConfig(SAVED_LOCATIONS_KEY);
-        const locations = stored[SAVED_LOCATIONS_KEY];
-        savedLocations.length = 0;
-        if (Array.isArray(locations)) {
-            locations.slice(0, MAX_SAVED_LOCATIONS).forEach((loc) => {
-                savedLocations.push(loc);
-            });
-        }
-    }
+const savedLocations = reactive([]);
 
-    function persistSavedLocations() {
-        const obj = {};
-        obj[SAVED_LOCATIONS_KEY] = [...savedLocations];
-        setConfig(obj);
-    }
+let weatherRequestId = 0;
+let solarRequestId = 0;
+let elevationRequestId = 0;
 
-    function saveCurrentLocation(label) {
-        if (location.latitude === null || location.longitude === null) {
-            return false;
-        }
-        const trimmedLabel = String(label).trim().slice(0, MAX_LABEL_LENGTH);
-        if (trimmedLabel.length === 0) {
-            return false;
-        }
-        if (savedLocations.length >= MAX_SAVED_LOCATIONS) {
-            return false;
-        }
-        savedLocations.push({
-            label: trimmedLabel,
-            latitude: location.latitude,
-            longitude: location.longitude,
+function loadSavedLocations() {
+    const stored = getConfig(SAVED_LOCATIONS_KEY);
+    const locations = stored[SAVED_LOCATIONS_KEY];
+    savedLocations.length = 0;
+    if (Array.isArray(locations)) {
+        locations.slice(0, MAX_SAVED_LOCATIONS).forEach((loc) => {
+            savedLocations.push(loc);
         });
-        persistSavedLocations();
-        return true;
     }
+}
 
-    function isActiveSavedLocation(entry) {
-        return (
-            location.source === "saved" &&
-            location.latitude === entry.latitude &&
-            location.longitude === entry.longitude &&
-            location.name === entry.label
-        );
+function persistSavedLocations() {
+    const obj = {};
+    obj[SAVED_LOCATIONS_KEY] = [...savedLocations];
+    setConfig(obj);
+}
+
+function saveCurrentLocation(label) {
+    if (location.latitude === null || location.longitude === null) {
+        return false;
     }
-
-    function renameSavedLocation(index, newLabel) {
-        if (index < 0 || index >= savedLocations.length) {
-            return false;
-        }
-        const trimmed = String(newLabel).trim().slice(0, MAX_LABEL_LENGTH);
-        if (trimmed.length === 0) {
-            return false;
-        }
-        const entry = savedLocations[index];
-        const isActive = isActiveSavedLocation(entry);
-        entry.label = trimmed;
-        if (isActive) {
-            location.name = trimmed;
-        }
-        persistSavedLocations();
-        return true;
+    const trimmedLabel = String(label).trim().slice(0, MAX_LABEL_LENGTH);
+    if (trimmedLabel.length === 0) {
+        return false;
     }
-
-    function deleteSavedLocation(index) {
-        if (index < 0 || index >= savedLocations.length) {
-            return;
-        }
-        const entry = savedLocations[index];
-        const isActive = isActiveSavedLocation(entry);
-        savedLocations.splice(index, 1);
-        if (isActive) {
-            location.source = "manual";
-            location.name = `${entry.latitude.toFixed(4)}, ${entry.longitude.toFixed(4)}`;
-        }
-        persistSavedLocations();
+    if (savedLocations.length >= MAX_SAVED_LOCATIONS) {
+        return false;
     }
-
-    function applySavedLocation(index) {
-        if (index < 0 || index >= savedLocations.length) {
-            return null;
-        }
-        const loc = savedLocations[index];
-        setManualLocation(loc.latitude, loc.longitude);
-        location.name = loc.label;
-        location.source = "saved";
-        return loc;
-    }
-
-    loadSavedLocations();
-
-    const isLoading = computed(() => weather.loading || solar.loading);
-
-    let weatherRequestId = 0;
-    let solarRequestId = 0;
-    let elevationRequestId = 0;
-
-    async function fetchWeather(lat, lon) {
-        const requestId = ++weatherRequestId;
-        weather.loading = true;
-        weather.error = null;
-        weather.current = null;
-        weather.hourly = null;
-        weather.daily = null;
-        weather.forecast = null;
-        try {
-            const params = new URLSearchParams({
-                latitude: lat,
-                longitude: lon,
-                current: [
-                    "temperature_2m",
-                    "relative_humidity_2m",
-                    "dew_point_2m",
-                    "apparent_temperature",
-                    "precipitation",
-                    "rain",
-                    "wind_speed_10m",
-                    "wind_direction_10m",
-                    "wind_gusts_10m",
-                    "cloud_cover",
-                    "visibility",
-                    "weather_code",
-                    "pressure_msl",
-                    "is_day",
-                ].join(","),
-                hourly: [
-                    "wind_speed_10m",
-                    "wind_speed_80m",
-                    "wind_speed_120m",
-                    "wind_gusts_10m",
-                    "precipitation_probability",
-                    "visibility",
-                    "cloud_cover",
-                    "temperature_2m",
-                    "dew_point_2m",
-                ].join(","),
-                daily: [
-                    "sunrise",
-                    "sunset",
-                    "daylight_duration",
-                    "uv_index_max",
-                    "temperature_2m_max",
-                    "temperature_2m_min",
-                    "weather_code",
-                    "wind_speed_10m_max",
-                    "wind_gusts_10m_max",
-                    "precipitation_probability_max",
-                ].join(","),
-                wind_speed_unit: "ms",
-                forecast_hours: 12,
-                forecast_days: 5,
-                timezone: "auto",
-            });
-
-            const response = await fetch(`https://api.open-meteo.com/v1/forecast?${params}`);
-            if (!response.ok) {
-                throw new Error(`Weather API error: ${response.status}`);
-            }
-            const data = await response.json();
-
-            if (requestId !== weatherRequestId) {
-                return;
-            }
-
-            weather.current = {
-                temperature: data.current.temperature_2m,
-                humidity: data.current.relative_humidity_2m,
-                dewPoint: data.current.dew_point_2m,
-                apparentTemperature: data.current.apparent_temperature,
-                precipitation: data.current.precipitation,
-                rain: data.current.rain,
-                windSpeed: data.current.wind_speed_10m,
-                windDirection: data.current.wind_direction_10m,
-                windGusts: data.current.wind_gusts_10m,
-                cloudCover: data.current.cloud_cover,
-                visibility: data.current.visibility,
-                weatherCode: data.current.weather_code,
-                weatherDescription: WMO_CODES[data.current.weather_code] || "preflightLevelUnknown",
-                pressure: data.current.pressure_msl,
-                isDay: data.current.is_day,
-            };
-
-            weather.daily = {
-                sunrise: data.daily.sunrise?.[0] || null,
-                sunset: data.daily.sunset?.[0] || null,
-                daylightDuration: data.daily.daylight_duration?.[0] || null,
-                uvIndexMax: data.daily.uv_index_max?.[0] || null,
-                temperatureMax: data.daily.temperature_2m_max?.[0] || null,
-                temperatureMin: data.daily.temperature_2m_min?.[0] || null,
-            };
-
-            weather.hourly = [];
-            const hourlyLen = data.hourly.time?.length || 0;
-            for (let i = 0; i < hourlyLen; i++) {
-                weather.hourly.push({
-                    time: data.hourly.time[i],
-                    windSpeed10m: data.hourly.wind_speed_10m[i],
-                    windSpeed80m: data.hourly.wind_speed_80m[i],
-                    windSpeed120m: data.hourly.wind_speed_120m[i],
-                    windGusts: data.hourly.wind_gusts_10m[i],
-                    precipitationProbability: data.hourly.precipitation_probability[i],
-                    visibility: data.hourly.visibility[i],
-                    cloudCover: data.hourly.cloud_cover[i],
-                    temperature: data.hourly.temperature_2m[i],
-                    dewPoint: data.hourly.dew_point_2m[i],
-                });
-            }
-
-            weather.forecast = [];
-            const forecastLen = data.daily.time?.length || 0;
-            for (let i = 0; i < forecastLen; i++) {
-                weather.forecast.push({
-                    date: data.daily.time[i],
-                    weatherCode: data.daily.weather_code?.[i] ?? null,
-                    weatherDescription: WMO_CODES[data.daily.weather_code?.[i]] || "preflightLevelUnknown",
-                    tempMax: data.daily.temperature_2m_max?.[i] ?? null,
-                    tempMin: data.daily.temperature_2m_min?.[i] ?? null,
-                    windMax: data.daily.wind_speed_10m_max?.[i] ?? null,
-                    gustsMax: data.daily.wind_gusts_10m_max?.[i] ?? null,
-                    precipProbability: data.daily.precipitation_probability_max?.[i] ?? null,
-                    sunrise: data.daily.sunrise?.[i] ?? null,
-                    sunset: data.daily.sunset?.[i] ?? null,
-                });
-            }
-
-            weather.lastUpdated = new Date();
-        } catch (err) {
-            if (requestId === weatherRequestId) {
-                weather.error = err.message;
-            }
-        } finally {
-            if (requestId === weatherRequestId) {
-                weather.loading = false;
-            }
-        }
-    }
-
-    async function fetchSolarActivity() {
-        const requestId = ++solarRequestId;
-        solar.loading = true;
-        solar.error = null;
-        solar.kpIndex = null;
-        solar.kpTimestamp = null;
-        solar.stormLevel = null;
-        try {
-            const response = await fetch("https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json");
-            if (!response.ok) {
-                throw new Error(`Solar API error: ${response.status}`);
-            }
-            const data = await response.json();
-
-            if (requestId !== solarRequestId) {
-                return;
-            }
-
-            if (data.length > 1) {
-                const latest = data[data.length - 1];
-                const parsedKp = Number.parseFloat(latest[1]);
-                if (Number.isFinite(parsedKp)) {
-                    solar.kpIndex = parsedKp;
-                }
-                solar.kpTimestamp = latest[0];
-            }
-
-            try {
-                const scaleResponse = await fetch("https://services.swpc.noaa.gov/products/noaa-scales.json");
-                if (scaleResponse.ok && requestId === solarRequestId) {
-                    const scaleData = await scaleResponse.json();
-                    if (scaleData["-1"]) {
-                        solar.stormLevel = {
-                            geoStorm: scaleData["-1"].G?.Scale || "0",
-                            solarRadiation: scaleData["-1"].S?.Scale || "0",
-                            radioBlackout: scaleData["-1"].R?.Scale || "0",
-                        };
-                    }
-                }
-            } catch (e) {
-                console.warn("Storm scale fetch failed:", e.message);
-            }
-
-            if (requestId === solarRequestId) {
-                solar.lastUpdated = new Date();
-            }
-        } catch (err) {
-            if (requestId === solarRequestId) {
-                solar.error = err.message;
-            }
-        } finally {
-            if (requestId === solarRequestId) {
-                solar.loading = false;
-            }
-        }
-    }
-
-    const launchStatus = computed(() => {
-        if (!weather.current && solar.kpIndex === null) {
-            return { level: "unknown", label: "preflightStatusNoData", cssClass: "status-unknown", checks: [] };
-        }
-
-        const LEVELS = { good: 0, moderate: 1, warning: 2, danger: 3 };
-        let worstLevel = "good";
-        const checks = [];
-
-        const track = (nameKey, status) => {
-            checks.push({ nameKey, level: status.level, label: status.label, cssClass: status.cssClass });
-            if ((LEVELS[status.level] || 0) > (LEVELS[worstLevel] || 0)) {
-                worstLevel = status.level;
-            }
-        };
-
-        if (weather.current) {
-            track("preflightCheckWind", getWindStatus(weather.current.windSpeed, weather.current.windGusts));
-            track("preflightCheckVisibility", getVisibilityStatus(weather.current.visibility));
-            track("preflightCheckPrecipitation", getPrecipitationStatus(weather.current.precipitation));
-            track("preflightCheckBattery", getBatteryTempStatus(weather.current.temperature));
-            const da = getDensityAltitude(location.elevation, weather.current.pressure, weather.current.temperature);
-            if (da !== null) {
-                track("preflightCheckDensityAlt", getDensityAltitudeStatus(da));
-            }
-        }
-        if (solar.kpIndex !== null) {
-            track("preflightCheckSolar", getKpStatus(solar.kpIndex));
-        }
-
-        const labels = {
-            good: "preflightStatusGo",
-            moderate: "preflightStatusCaution",
-            warning: "preflightStatusWarning",
-            danger: "preflightStatusNoGo",
-        };
-        const cssClasses = {
-            good: "status-good",
-            moderate: "status-moderate",
-            warning: "status-warning",
-            danger: "status-danger",
-        };
-
-        return { level: worstLevel, label: labels[worstLevel], cssClass: cssClasses[worstLevel], checks };
+    savedLocations.push({
+        label: trimmedLabel,
+        latitude: location.latitude,
+        longitude: location.longitude,
     });
+    persistSavedLocations();
+    return true;
+}
 
-    async function useGeolocation() {
-        const coords = await browserGeolocation();
-        location.latitude = coords.latitude;
-        location.longitude = coords.longitude;
-        location.elevation = null;
-        location.source = "geolocation";
-        location.name = `${coords.latitude.toFixed(4)}, ${coords.longitude.toFixed(4)}`;
+function isActiveSavedLocation(entry) {
+    return (
+        location.source === "saved" &&
+        location.latitude === entry.latitude &&
+        location.longitude === entry.longitude &&
+        location.name === entry.label
+    );
+}
+
+function renameSavedLocation(index, newLabel) {
+    if (index < 0 || index >= savedLocations.length) {
+        return false;
     }
+    const trimmed = String(newLabel).trim().slice(0, MAX_LABEL_LENGTH);
+    if (trimmed.length === 0) {
+        return false;
+    }
+    const entry = savedLocations[index];
+    const isActive = isActiveSavedLocation(entry);
+    entry.label = trimmed;
+    if (isActive) {
+        location.name = trimmed;
+    }
+    persistSavedLocations();
+    return true;
+}
 
-    function setManualLocation(lat, lon) {
-        const parsedLat = Number.parseFloat(lat);
-        const parsedLon = Number.parseFloat(lon);
-        location.latitude = parsedLat;
-        location.longitude = parsedLon;
-        location.elevation = null;
+function deleteSavedLocation(index) {
+    if (index < 0 || index >= savedLocations.length) {
+        return;
+    }
+    const entry = savedLocations[index];
+    const isActive = isActiveSavedLocation(entry);
+    savedLocations.splice(index, 1);
+    if (isActive) {
         location.source = "manual";
-        location.name = `${parsedLat.toFixed(4)}, ${parsedLon.toFixed(4)}`;
+        location.name = `${entry.latitude.toFixed(4)}, ${entry.longitude.toFixed(4)}`;
     }
+    persistSavedLocations();
+}
 
-    function updateMagneticDeclination() {
-        if (location.latitude === null || location.longitude === null) {
+function applySavedLocation(index) {
+    if (index < 0 || index >= savedLocations.length) {
+        return null;
+    }
+    const loc = savedLocations[index];
+    setManualLocation(loc.latitude, loc.longitude);
+    location.name = loc.label;
+    location.source = "saved";
+    return loc;
+}
+
+const isLoading = computed(() => weather.loading || solar.loading);
+
+async function fetchWeather(lat, lon) {
+    const requestId = ++weatherRequestId;
+    weather.loading = true;
+    weather.error = null;
+    weather.current = null;
+    weather.hourly = null;
+    weather.daily = null;
+    weather.forecast = null;
+    try {
+        const params = new URLSearchParams({
+            latitude: lat,
+            longitude: lon,
+            current: [
+                "temperature_2m",
+                "relative_humidity_2m",
+                "dew_point_2m",
+                "apparent_temperature",
+                "precipitation",
+                "rain",
+                "wind_speed_10m",
+                "wind_direction_10m",
+                "wind_gusts_10m",
+                "cloud_cover",
+                "visibility",
+                "weather_code",
+                "pressure_msl",
+                "is_day",
+            ].join(","),
+            hourly: [
+                "wind_speed_10m",
+                "wind_speed_80m",
+                "wind_speed_120m",
+                "wind_gusts_10m",
+                "precipitation_probability",
+                "visibility",
+                "cloud_cover",
+                "temperature_2m",
+                "dew_point_2m",
+            ].join(","),
+            daily: [
+                "sunrise",
+                "sunset",
+                "daylight_duration",
+                "uv_index_max",
+                "temperature_2m_max",
+                "temperature_2m_min",
+                "weather_code",
+                "wind_speed_10m_max",
+                "wind_gusts_10m_max",
+                "precipitation_probability_max",
+            ].join(","),
+            wind_speed_unit: "ms",
+            forecast_hours: 12,
+            forecast_days: 5,
+            timezone: "auto",
+        });
+
+        const response = await fetch(`https://api.open-meteo.com/v1/forecast?${params}`);
+        if (!response.ok) {
+            throw new Error(`Weather API error: ${response.status}`);
+        }
+        const data = await response.json();
+
+        if (requestId !== weatherRequestId) {
             return;
         }
-        try {
-            const model = geomagnetism.model();
-            const info = model.point([location.latitude, location.longitude]);
-            mag.declination = info.decl;
-            mag.inclination = info.incl;
-        } catch (e) {
-            console.warn("Magnetic declination calculation failed:", e.message);
-            mag.declination = null;
-            mag.inclination = null;
+
+        weather.current = {
+            temperature: data.current.temperature_2m,
+            humidity: data.current.relative_humidity_2m,
+            dewPoint: data.current.dew_point_2m,
+            apparentTemperature: data.current.apparent_temperature,
+            precipitation: data.current.precipitation,
+            rain: data.current.rain,
+            windSpeed: data.current.wind_speed_10m,
+            windDirection: data.current.wind_direction_10m,
+            windGusts: data.current.wind_gusts_10m,
+            cloudCover: data.current.cloud_cover,
+            visibility: data.current.visibility,
+            weatherCode: data.current.weather_code,
+            weatherDescription: WMO_CODES[data.current.weather_code] || "preflightLevelUnknown",
+            pressure: data.current.pressure_msl,
+            isDay: data.current.is_day,
+        };
+
+        weather.daily = {
+            sunrise: data.daily.sunrise?.[0] || null,
+            sunset: data.daily.sunset?.[0] || null,
+            daylightDuration: data.daily.daylight_duration?.[0] || null,
+            uvIndexMax: data.daily.uv_index_max?.[0] || null,
+            temperatureMax: data.daily.temperature_2m_max?.[0] || null,
+            temperatureMin: data.daily.temperature_2m_min?.[0] || null,
+        };
+
+        weather.hourly = [];
+        const hourlyLen = data.hourly.time?.length || 0;
+        for (let i = 0; i < hourlyLen; i++) {
+            weather.hourly.push({
+                time: data.hourly.time[i],
+                windSpeed10m: data.hourly.wind_speed_10m[i],
+                windSpeed80m: data.hourly.wind_speed_80m[i],
+                windSpeed120m: data.hourly.wind_speed_120m[i],
+                windGusts: data.hourly.wind_gusts_10m[i],
+                precipitationProbability: data.hourly.precipitation_probability[i],
+                visibility: data.hourly.visibility[i],
+                cloudCover: data.hourly.cloud_cover[i],
+                temperature: data.hourly.temperature_2m[i],
+                dewPoint: data.hourly.dew_point_2m[i],
+            });
+        }
+
+        weather.forecast = [];
+        const forecastLen = data.daily.time?.length || 0;
+        for (let i = 0; i < forecastLen; i++) {
+            weather.forecast.push({
+                date: data.daily.time[i],
+                weatherCode: data.daily.weather_code?.[i] ?? null,
+                weatherDescription: WMO_CODES[data.daily.weather_code?.[i]] || "preflightLevelUnknown",
+                tempMax: data.daily.temperature_2m_max?.[i] ?? null,
+                tempMin: data.daily.temperature_2m_min?.[i] ?? null,
+                windMax: data.daily.wind_speed_10m_max?.[i] ?? null,
+                gustsMax: data.daily.wind_gusts_10m_max?.[i] ?? null,
+                precipProbability: data.daily.precipitation_probability_max?.[i] ?? null,
+                sunrise: data.daily.sunrise?.[i] ?? null,
+                sunset: data.daily.sunset?.[i] ?? null,
+            });
+        }
+
+        weather.lastUpdated = new Date();
+    } catch (err) {
+        if (requestId === weatherRequestId) {
+            weather.error = err.message;
+        }
+    } finally {
+        if (requestId === weatherRequestId) {
+            weather.loading = false;
         }
     }
+}
 
-    async function fetchElevation(lat, lon) {
-        const requestId = ++elevationRequestId;
-        try {
-            const response = await fetch(`https://api.open-meteo.com/v1/elevation?latitude=${lat}&longitude=${lon}`);
-            if (!response.ok) {
-                throw new Error(`Elevation API error: ${response.status}`);
-            }
-            const data = await response.json();
-            if (requestId === elevationRequestId && data.elevation && data.elevation.length > 0) {
-                location.elevation = data.elevation[0];
-            }
-        } catch (e) {
-            if (requestId === elevationRequestId) {
-                console.warn("Elevation fetch failed:", e.message);
-                location.elevation = null;
-            }
+async function fetchSolarActivity() {
+    const requestId = ++solarRequestId;
+    solar.loading = true;
+    solar.error = null;
+    solar.kpIndex = null;
+    solar.kpTimestamp = null;
+    solar.stormLevel = null;
+    try {
+        const response = await fetch("https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json");
+        if (!response.ok) {
+            throw new Error(`Solar API error: ${response.status}`);
         }
-    }
+        const data = await response.json();
 
-    async function refreshAll() {
-        if (location.latitude === null || location.longitude === null) {
+        if (requestId !== solarRequestId) {
             return;
         }
-        const lat = location.latitude;
-        const lon = location.longitude;
-        updateMagneticDeclination();
-        await Promise.allSettled([fetchWeather(lat, lon), fetchSolarActivity(), fetchElevation(lat, lon)]);
+
+        if (data.length > 1) {
+            const latest = data[data.length - 1];
+            const parsedKp = Number.parseFloat(latest[1]);
+            if (Number.isFinite(parsedKp)) {
+                solar.kpIndex = parsedKp;
+            }
+            solar.kpTimestamp = latest[0];
+        }
+
+        try {
+            const scaleResponse = await fetch("https://services.swpc.noaa.gov/products/noaa-scales.json");
+            if (scaleResponse.ok && requestId === solarRequestId) {
+                const scaleData = await scaleResponse.json();
+                if (scaleData["-1"]) {
+                    solar.stormLevel = {
+                        geoStorm: scaleData["-1"].G?.Scale || "0",
+                        solarRadiation: scaleData["-1"].S?.Scale || "0",
+                        radioBlackout: scaleData["-1"].R?.Scale || "0",
+                    };
+                }
+            }
+        } catch (e) {
+            console.warn("Storm scale fetch failed:", e.message);
+        }
+
+        if (requestId === solarRequestId) {
+            solar.lastUpdated = new Date();
+        }
+    } catch (err) {
+        if (requestId === solarRequestId) {
+            solar.error = err.message;
+        }
+    } finally {
+        if (requestId === solarRequestId) {
+            solar.loading = false;
+        }
+    }
+}
+
+const launchStatus = computed(() => {
+    if (!weather.current && solar.kpIndex === null) {
+        return { level: "unknown", label: "preflightStatusNoData", cssClass: "status-unknown", checks: [] };
     }
 
-    const civilTwilight = computed(() => {
-        if (location.latitude === null || location.longitude === null) {
-            return null;
-        }
-        const times = SunCalc.getTimes(new Date(), location.latitude, location.longitude);
-        if (!times.dawn || !times.dusk || Number.isNaN(times.dawn.getTime()) || Number.isNaN(times.dusk.getTime())) {
-            return null;
-        }
-        return { dawn: times.dawn, dusk: times.dusk };
-    });
+    const LEVELS = { good: 0, moderate: 1, warning: 2, danger: 3 };
+    let worstLevel = "good";
+    const checks = [];
 
+    const track = (nameKey, status) => {
+        checks.push({ nameKey, level: status.level, label: status.label, cssClass: status.cssClass });
+        if ((LEVELS[status.level] || 0) > (LEVELS[worstLevel] || 0)) {
+            worstLevel = status.level;
+        }
+    };
+
+    if (weather.current) {
+        track("preflightCheckWind", getWindStatus(weather.current.windSpeed, weather.current.windGusts));
+        track("preflightCheckVisibility", getVisibilityStatus(weather.current.visibility));
+        track("preflightCheckPrecipitation", getPrecipitationStatus(weather.current.precipitation));
+        track("preflightCheckBattery", getBatteryTempStatus(weather.current.temperature));
+        const da = getDensityAltitude(location.elevation, weather.current.pressure, weather.current.temperature);
+        if (da !== null) {
+            track("preflightCheckDensityAlt", getDensityAltitudeStatus(da));
+        }
+    }
+    if (solar.kpIndex !== null) {
+        track("preflightCheckSolar", getKpStatus(solar.kpIndex));
+    }
+
+    const labels = {
+        good: "preflightStatusGo",
+        moderate: "preflightStatusCaution",
+        warning: "preflightStatusWarning",
+        danger: "preflightStatusNoGo",
+    };
+    const cssClasses = {
+        good: "status-good",
+        moderate: "status-moderate",
+        warning: "status-warning",
+        danger: "status-danger",
+    };
+
+    return { level: worstLevel, label: labels[worstLevel], cssClass: cssClasses[worstLevel], checks };
+});
+
+async function useGeolocation() {
+    const coords = await browserGeolocation();
+    location.latitude = coords.latitude;
+    location.longitude = coords.longitude;
+    location.elevation = null;
+    location.source = "geolocation";
+    location.name = `${coords.latitude.toFixed(4)}, ${coords.longitude.toFixed(4)}`;
+}
+
+function setManualLocation(lat, lon) {
+    const parsedLat = Number.parseFloat(lat);
+    const parsedLon = Number.parseFloat(lon);
+    location.latitude = parsedLat;
+    location.longitude = parsedLon;
+    location.elevation = null;
+    location.source = "manual";
+    location.name = `${parsedLat.toFixed(4)}, ${parsedLon.toFixed(4)}`;
+}
+
+function updateMagneticDeclination() {
+    if (location.latitude === null || location.longitude === null) {
+        return;
+    }
+    try {
+        const model = geomagnetism.model();
+        const info = model.point([location.latitude, location.longitude]);
+        mag.declination = info.decl;
+        mag.inclination = info.incl;
+    } catch (e) {
+        console.warn("Magnetic declination calculation failed:", e.message);
+        mag.declination = null;
+        mag.inclination = null;
+    }
+}
+
+async function fetchElevation(lat, lon) {
+    const requestId = ++elevationRequestId;
+    try {
+        const response = await fetch(`https://api.open-meteo.com/v1/elevation?latitude=${lat}&longitude=${lon}`);
+        if (!response.ok) {
+            throw new Error(`Elevation API error: ${response.status}`);
+        }
+        const data = await response.json();
+        if (requestId === elevationRequestId && data.elevation && data.elevation.length > 0) {
+            location.elevation = data.elevation[0];
+        }
+    } catch (e) {
+        if (requestId === elevationRequestId) {
+            console.warn("Elevation fetch failed:", e.message);
+            location.elevation = null;
+        }
+    }
+}
+
+async function refreshAll() {
+    if (location.latitude === null || location.longitude === null) {
+        return;
+    }
+    const lat = location.latitude;
+    const lon = location.longitude;
+    updateMagneticDeclination();
+    await Promise.allSettled([fetchWeather(lat, lon), fetchSolarActivity(), fetchElevation(lat, lon)]);
+}
+
+const civilTwilight = computed(() => {
+    if (location.latitude === null || location.longitude === null) {
+        return null;
+    }
+    const times = SunCalc.getTimes(new Date(), location.latitude, location.longitude);
+    if (!times.dawn || !times.dusk || Number.isNaN(times.dawn.getTime()) || Number.isNaN(times.dusk.getTime())) {
+        return null;
+    }
+    return { dawn: times.dawn, dusk: times.dusk };
+});
+
+// Load saved locations once at module init
+loadSavedLocations();
+
+// ── Public API (singleton) ─────────────────────────────────────────────────────
+
+export function usePreflight() {
     return {
         location,
         weather,
