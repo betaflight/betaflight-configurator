@@ -99,9 +99,8 @@ function appReady() {
             setConfig({ firstRun: true });
             // Open the options tab after a short delay to ensure UI is ready
             setTimeout(() => {
+                // Use Vue tab mounting directly, no jQuery
                 mountVueTab("options", () => {});
-                // Optionally highlight the tab visually
-                $("#tabs .tab_options").addClass("active");
             }, 100);
         }
     });
