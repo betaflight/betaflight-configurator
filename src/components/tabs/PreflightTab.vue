@@ -167,22 +167,22 @@
             <div
                 v-if="preflight.location.latitude !== null"
                 class="launch-status-banner"
-                :class="preflight.launchStatus.value.cssClass"
+                :class="preflight.launchStatus.cssClass"
             >
                 <div class="launch-status-label">{{ $t("preflightLaunchStatus") }}</div>
-                <div class="launch-status-value">{{ $t(preflight.launchStatus.value.label) }}</div>
+                <div class="launch-status-value">{{ $t(preflight.launchStatus.label) }}</div>
                 <div class="default_btn refresh-btn">
-                    <a href="#" @click.prevent="refreshData" :class="{ disabled: preflight.isLoading.value }">
-                        <em class="fas fa-sync-alt" :class="{ 'fa-spin': preflight.isLoading.value }"></em>
+                    <a href="#" @click.prevent="refreshData" :class="{ disabled: preflight.isLoading }">
+                        <em class="fas fa-sync-alt" :class="{ 'fa-spin': preflight.isLoading }"></em>
                         {{ $t("preflightRefresh") }}
                     </a>
                 </div>
             </div>
 
             <!-- Launch Checks Breakdown -->
-            <div class="launch-checks" v-if="preflight.launchStatus.value.checks.length > 0">
+            <div class="launch-checks" v-if="preflight.launchStatus.checks.length > 0">
                 <span
-                    v-for="(chk, idx) in preflight.launchStatus.value.checks"
+                    v-for="(chk, idx) in preflight.launchStatus.checks"
                     :key="idx"
                     class="launch-check-item"
                     :class="chk.cssClass"
@@ -852,7 +852,7 @@
 </template>
 
 <script>
-import { defineComponent, ref, computed, onMounted, onUnmounted, nextTick, watch } from "vue";
+import { defineComponent, reactive, ref, computed, onMounted, onUnmounted, nextTick, watch } from "vue";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "../elements/WikiButton.vue";
 import GUI from "../../js/gui";
@@ -976,7 +976,7 @@ export default defineComponent({
         WikiButton,
     },
     setup() {
-        const preflight = usePreflight();
+        const preflight = reactive(usePreflight());
         const mapRef = ref(null);
         const mapContainerRef = ref(null);
         const mapInstance = ref(null);
@@ -997,25 +997,25 @@ export default defineComponent({
         });
 
         const civilTwilightStart = computed(() => {
-            if (!preflight.civilTwilight.value) {
+            if (!preflight.civilTwilight) {
                 return "-";
             }
-            return preflight.civilTwilight.value.dawn.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+            return preflight.civilTwilight.dawn.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
         });
 
         const civilTwilightEnd = computed(() => {
-            if (!preflight.civilTwilight.value) {
+            if (!preflight.civilTwilight) {
                 return "-";
             }
-            return preflight.civilTwilight.value.dusk.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+            return preflight.civilTwilight.dusk.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
         });
 
         const civilTwilightStatus = computed(() => {
-            if (!preflight.civilTwilight.value) {
+            if (!preflight.civilTwilight) {
                 return "";
             }
             const now = new Date();
-            return now >= preflight.civilTwilight.value.dawn && now <= preflight.civilTwilight.value.dusk
+            return now >= preflight.civilTwilight.dawn && now <= preflight.civilTwilight.dusk
                 ? "status-good"
                 : "status-danger";
         });
@@ -1087,7 +1087,7 @@ export default defineComponent({
         }
 
         async function refreshData() {
-            if (preflight.isLoading.value) {
+            if (preflight.isLoading) {
                 return;
             }
             await preflight.refreshAll();
