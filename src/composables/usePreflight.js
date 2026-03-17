@@ -1,4 +1,4 @@
-import { reactive, computed } from "vue";
+import { reactive, computed, ref } from "vue";
 import geomagnetism from "geomagnetism";
 import SunCalc from "suncalc";
 import { get as getConfig, set as setConfig } from "../js/ConfigStorage";
@@ -688,19 +688,24 @@ async function refreshAll() {
     const lat = location.latitude;
     const lon = location.longitude;
     updateMagneticDeclination();
+    updateCivilTwilight();
     await Promise.allSettled([fetchWeather(lat, lon), fetchSolarActivity(), fetchElevation(lat, lon)]);
 }
 
-const civilTwilight = computed(() => {
+const civilTwilight = ref(null);
+
+function updateCivilTwilight() {
     if (location.latitude === null || location.longitude === null) {
-        return null;
+        civilTwilight.value = null;
+        return;
     }
     const times = SunCalc.getTimes(new Date(), location.latitude, location.longitude);
     if (!times.dawn || !times.dusk || Number.isNaN(times.dawn.getTime()) || Number.isNaN(times.dusk.getTime())) {
-        return null;
+        civilTwilight.value = null;
+        return;
     }
-    return { dawn: times.dawn, dusk: times.dusk };
-});
+    civilTwilight.value = { dawn: times.dawn, dusk: times.dusk };
+}
 
 // Load saved locations once at module init
 loadSavedLocations();

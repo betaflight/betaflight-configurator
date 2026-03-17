@@ -1162,9 +1162,15 @@ export default defineComponent({
             selectedSavedIndex.value = -1;
         }
 
+        let olCssLoaded = false;
+
         function initializeMap() {
             if (mapInstance.value || !mapRef.value) {
                 return;
+            }
+            if (!olCssLoaded) {
+                import("ol/ol.css");
+                olCssLoaded = true;
             }
             mapInstance.value = initMap({
                 target: mapRef.value,
