@@ -229,7 +229,7 @@ async function ipGeolocation() {
     const lat = Number.parseFloat(data.latitude);
     const lon = Number.parseFloat(data.longitude);
     if (!Number.isFinite(lat) || !Number.isFinite(lon)) {
-        throw new Error("IP geolocation returned invalid coordinates");
+        throw new TypeError("IP geolocation returned invalid coordinates");
     }
     if (lat < -90 || lat > 90 || lon < -180 || lon > 180) {
         throw new Error("IP geolocation returned out-of-range coordinates");
@@ -274,7 +274,7 @@ function formatTime(isoString) {
     if (!isoString) {
         return "-";
     }
-    const match = String(isoString).match(/T(\d{2}:\d{2})/);
+    const match = /T(\d{2}:\d{2})/.exec(String(isoString));
     return match ? match[1] : "-";
 }
 
