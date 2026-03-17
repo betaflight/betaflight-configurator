@@ -24,7 +24,6 @@ import "../css/tabs/failsafe.less";
 import "../css/tabs/vtx.less";
 import "../css/tabs/transponder.less";
 import "../css/tabs/options.less";
-import "../css/tabs/preflight.less";
 import "../css/opensans_webfontkit/fonts.css";
 import "switchery-latest/dist/switchery.min.css";
 import "../css/switchery_custom.less";
