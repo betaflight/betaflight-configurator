@@ -92,6 +92,18 @@ function appReady() {
         $("a.firmware_flasher_button__link").removeClass("disabled");
 
         initializeSerialBackend();
+
+        // Open options tab on first run (Vue)
+        const firstRunCfg = getConfig("firstRun") ?? {};
+        if (firstRunCfg.firstRun === undefined) {
+            setConfig({ firstRun: true });
+            // Open the options tab after a short delay to ensure UI is ready
+            setTimeout(() => {
+                mountVueTab("options", () => {});
+                // Optionally highlight the tab visually
+                $("#tabs .tab_options").addClass("active");
+            }, 100);
+        }
     });
 
     const showNotifications = getConfig("showNotifications", false).showNotifications;
@@ -123,20 +135,6 @@ async function startProcess() {
 
     // log library versions in console to make version tracking easier
     console.log(`Libraries: jQuery - ${$.fn.jquery}, three.js - ${THREE.REVISION}`);
-
-    // Check if this is the first visit
-    const firstRunCfg = getConfig("firstRun") ?? {};
-    if (firstRunCfg.firstRun === undefined) {
-        setConfig({ firstRun: true });
-        import("./tabs/static_tab.js").then(({ staticTab }) => {
-            staticTab.initialize("options", () => {
-                setTimeout(() => {
-                    // Open the options tab after a delay
-                    $("#tabs .tab_options a").click();
-                }, 100);
-            });
-        });
-    }
 
     const windowHref = window.location.href;
     let subdomain = "";
