@@ -10,13 +10,11 @@ export const PRESETS_STORAGE_KEYS = {
 
 const OFFICIAL_SOURCE_ID = "presets-official-source";
 const BACKUP_SOURCE_ID = "presets-backup-source";
+let sourceIdSequence = 0;
 
 export function createSourceId() {
-    if (globalThis.crypto?.randomUUID) {
-        return `presets-source-${globalThis.crypto.randomUUID()}`;
-    }
-
-    return `presets-source-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
+    sourceIdSequence += 1;
+    return `presets-source-${Date.now().toString(36)}-${sourceIdSequence.toString(36)}`;
 }
 
 export function createOfficialSource() {
