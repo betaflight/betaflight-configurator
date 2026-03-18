@@ -700,6 +700,12 @@ async function useGeolocation() {
 }
 
 async function useIpGeolocationFallback() {
+    if (!ispConnected()) {
+        throw new Error("Internet access is disabled");
+    }
+    if (!ipGeolocationConsent.value) {
+        throw new Error(IP_CONSENT_NEEDED);
+    }
     const coords = await ipGeolocation();
     location.latitude = coords.latitude;
     location.longitude = coords.longitude;
