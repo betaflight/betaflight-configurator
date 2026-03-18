@@ -322,10 +322,23 @@ function loadSavedLocations() {
     const stored = getConfig(SAVED_LOCATIONS_KEY);
     const locations = stored[SAVED_LOCATIONS_KEY];
     savedLocations.length = 0;
-    if (Array.isArray(locations)) {
-        locations.slice(0, MAX_SAVED_LOCATIONS).forEach((loc) => {
-            savedLocations.push(loc);
-        });
+    if (!Array.isArray(locations)) {
+        return;
+    }
+    for (const loc of locations) {
+        if (savedLocations.length >= MAX_SAVED_LOCATIONS) {
+            break;
+        }
+        if (!loc || typeof loc !== "object") {
+            continue;
+        }
+        const lat = Number.parseFloat(loc.latitude);
+        const lon = Number.parseFloat(loc.longitude);
+        const label = String(loc.label || "").trim();
+        if (!Number.isFinite(lat) || !Number.isFinite(lon) || label.length === 0) {
+            continue;
+        }
+        savedLocations.push({ label, latitude: lat, longitude: lon });
     }
 }
 
