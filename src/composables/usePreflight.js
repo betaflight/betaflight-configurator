@@ -217,6 +217,10 @@ async function browserGeolocation() {
     }
 }
 
+function isValidCoordinate(lat, lon) {
+    return Number.isFinite(lat) && Number.isFinite(lon) && lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180;
+}
+
 async function ipGeolocation() {
     const response = await fetch("https://ipapi.co/json/");
     if (!response.ok) {
@@ -228,11 +232,8 @@ async function ipGeolocation() {
     }
     const lat = Number.parseFloat(data.latitude);
     const lon = Number.parseFloat(data.longitude);
-    if (!Number.isFinite(lat) || !Number.isFinite(lon)) {
-        throw new TypeError("IP geolocation returned invalid coordinates");
-    }
-    if (lat < -90 || lat > 90 || lon < -180 || lon > 180) {
-        throw new Error("IP geolocation returned out-of-range coordinates");
+    if (!isValidCoordinate(lat, lon)) {
+        throw new Error("IP geolocation returned invalid or out-of-range coordinates");
     }
     return { latitude: lat, longitude: lon };
 }
@@ -335,7 +336,7 @@ function loadSavedLocations() {
         const lat = Number.parseFloat(loc.latitude);
         const lon = Number.parseFloat(loc.longitude);
         const label = String(loc.label || "").trim();
-        if (!Number.isFinite(lat) || !Number.isFinite(lon) || label.length === 0) {
+        if (!isValidCoordinate(lat, lon) || label.length === 0) {
             continue;
         }
         savedLocations.push({ label, latitude: lat, longitude: lon });
