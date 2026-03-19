@@ -116,12 +116,12 @@ class STM32Protocol {
 
                     DFU.requestPermission()
                         .then((device) => {
-                            if (device != null) {
-                                console.log(`${this.logHead} DFU request permission granted`, device);
-                            } else {
+                            if (device == null) {
                                 console.error(`${this.logHead} DFU request permission denied`);
                                 this.handleError();
+                                return;
                             }
+                            console.log(`${this.logHead} DFU request permission granted`, device);
                         })
                         .catch((e) => {
                             console.error(`${this.logHead} DFU request permission failed`, e);
