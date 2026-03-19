@@ -1625,6 +1625,8 @@ export default defineComponent({
 
             const aborted = function (message) {
                 GUI.connect_lock = false;
+                state.flashingInProgress = false;
+                GUI.flashingInProgress = false;
                 enableFlashButton(true);
                 enableLoadRemoteFileButton(true);
                 enableLoadFileButton(true);
