@@ -116,8 +116,14 @@ class STM32Protocol {
                 .then((device) => {
                     if (device) {
                         console.log(`${this.logHead} DFU device found and authorized`, device);
+                        // Explicitly connect instead of relying on the event chain.
+                        // Clear rebootMode so detectedUsbDevice doesn't trigger a duplicate flash.
+                        this.rebootMode = 0;
+                        GUI.connect_lock = false;
+                        DFU.connect(device.path, this.hex, this.serialOptions);
                     } else {
                         console.log(`${this.logHead} No DFU device auto-authorized`);
+                        this.handleError();
                     }
                 })
                 .catch((e) => {

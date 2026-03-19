@@ -5,10 +5,18 @@
             <WikiButton docUrl="firmware_flasher" />
             <SponsorTile ref="sponsorTile" sponsor-type="flash" />
             <div v-if="state.flashingInProgress" class="data-loading flashing-wait">
-                <p>{{ state.progressLabelText }} {{ $t("firmwareFlasherPleaseWait") }}</p>
+                <template v-if="state.dfuAuthRequired">
+                    <p>{{ $t("firmwareFlasherDfuPermissionRequired") || "DFU device requires permission" }}</p>
+                    <button type="button" class="button dfu-permission" @click="requestDfuPermission">
+                        {{ $t("firmwareFlasherClickToConnectDfu") || "Click to connect DFU" }}
+                    </button>
+                </template>
+                <template v-else>
+                    <p>{{ state.progressLabelText }} {{ $t("firmwareFlasherPleaseWait") }}</p>
+                </template>
             </div>
-            <!-- Centered DFU permission button shown under the spinner -->
-            <div v-if="state.dfuAuthRequired" class="dfu-auth-request">
+            <!-- DFU permission button when not in flashing progress -->
+            <div v-if="state.dfuAuthRequired && !state.flashingInProgress" class="dfu-auth-request">
                 <button type="button" class="button dfu-permission" @click="requestDfuPermission">
                     {{ $t("firmwareFlasherClickToConnectDfu") || "Click to connect DFU" }}
                 </button>
@@ -958,7 +966,11 @@ export default defineComponent({
             sponsorTile.value?.resume();
         };
 
-        // Called by webstm32 when a DFU device requires user authorization
+        // Called by webstm32 when a DFU device requires user authorization.
+        // After permission is granted, handleNewDevice() fires the event chain:
+        // addedDevice -> PortHandler.addedUsbDevice -> selectActivePort -> detectedUsbDevice
+        // which calls startFlashing() once the port is updated. We must NOT call
+        // startFlashing() here because the port hasn't been updated yet.
         const requestDfuPermission = async () => {
             try {
                 const device = await DFU.requestPermission();
@@ -1534,11 +1546,12 @@ export default defineComponent({
 
         const setupEventBusListeners = () => {
             const { detectedUsbDevice, onDeviceRemoved } = firmwareFlashing.setupFlashingEventListeners({
-                flashOnConnect: state.flashOnConnect,
+                getFlashOnConnect: () => state.flashOnConnect,
                 onBoardChange,
                 clearBufferedFirmware,
                 updateDfuExitButtonState,
                 initiateFlashing,
+                startFlashing,
                 logHead,
             });
 
@@ -3337,19 +3350,26 @@ export default defineComponent({
     margin-top: 16px;
 }
 
-.dfu-auth-request .dfu-permission {
+.dfu-permission {
     background: var(--success-600, var(--primary-500)) !important;
     border-color: var(--success-600, var(--primary-500)) !important;
     color: var(--text-high, var(--black)) !important;
     box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2) inset;
 }
 
-.dfu-auth-request .dfu-permission:hover {
+.dfu-permission:hover {
     filter: brightness(0.95);
 }
 
 .dfu-auth-request p {
     margin-bottom: 8px !important;
+}
+
+/* DFU permission button inside flashing wait area */
+.flashing-wait .dfu-permission {
+    font-size: 16px;
+    padding: 12px 24px;
+    margin-top: 16px;
 }
 
 /* Unstable firmware dialog content styling */
