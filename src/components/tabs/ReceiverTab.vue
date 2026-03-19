@@ -988,10 +988,10 @@ function openSticksWindow() {
         return false;
     };
 
-    const createdWindow = window.open(
+    const createdWindow = globalThis.open(
         "/receiver_msp/receiver_msp.html",
         "receiver_msp",
-        `location=no,width=${windowWidth},height=${windowHeight + (window.screen.height - window.screen.availHeight)}`,
+        `location=no,width=${windowWidth},height=${windowHeight + (screen.height - screen.availHeight)}`,
     );
     if (createdWindow) {
         createdWindow.setRawRx = rxFunction;
