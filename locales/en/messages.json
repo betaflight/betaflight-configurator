@@ -8136,5 +8136,542 @@
     "osdPresetPositionChooseTitle": {
         "message": "Choose Position",
         "description": "Title for the preset position grid popup in the OSD elements list"
+    },
+    "tabPreflight": {
+        "message": "Pre-Flight"
+    },
+    "preflightTitle": {
+        "message": "Pre-Flight Environment Check"
+    },
+    "preflightLocation": {
+        "message": "Flight Location"
+    },
+    "preflightUseMyLocation": {
+        "message": "Use My Location"
+    },
+    "preflightDetecting": {
+        "message": "Detecting..."
+    },
+    "preflightOr": {
+        "message": "or enter coordinates:"
+    },
+    "preflightLatitude": {
+        "message": "Latitude"
+    },
+    "preflightLongitude": {
+        "message": "Longitude"
+    },
+    "preflightApply": {
+        "message": "Apply"
+    },
+    "preflightLaunchStatus": {
+        "message": "Launch Status"
+    },
+    "preflightStatusGo": {
+        "message": "GO"
+    },
+    "preflightStatusCaution": {
+        "message": "CAUTION"
+    },
+    "preflightStatusWarning": {
+        "message": "WARNING"
+    },
+    "preflightStatusNoGo": {
+        "message": "NO-GO"
+    },
+    "preflightStatusNoData": {
+        "message": "No Data"
+    },
+    "preflightCheckWind": {
+        "message": "Wind"
+    },
+    "preflightCheckVisibility": {
+        "message": "Visibility"
+    },
+    "preflightCheckPrecipitation": {
+        "message": "Precipitation"
+    },
+    "preflightCheckSolar": {
+        "message": "Solar"
+    },
+    "preflightLevelUnknown": {
+        "message": "Unknown"
+    },
+    "preflightWmoClearSky": {
+        "message": "Clear sky"
+    },
+    "preflightWmoMainlyClear": {
+        "message": "Mainly clear"
+    },
+    "preflightWmoPartlyCloudy": {
+        "message": "Partly cloudy"
+    },
+    "preflightWmoOvercast": {
+        "message": "Overcast"
+    },
+    "preflightWmoFog": {
+        "message": "Fog"
+    },
+    "preflightWmoRimeFog": {
+        "message": "Depositing rime fog"
+    },
+    "preflightWmoLightDrizzle": {
+        "message": "Light drizzle"
+    },
+    "preflightWmoModerateDrizzle": {
+        "message": "Moderate drizzle"
+    },
+    "preflightWmoDenseDrizzle": {
+        "message": "Dense drizzle"
+    },
+    "preflightWmoLightFreezingDrizzle": {
+        "message": "Light freezing drizzle"
+    },
+    "preflightWmoDenseFreezingDrizzle": {
+        "message": "Dense freezing drizzle"
+    },
+    "preflightWmoSlightRain": {
+        "message": "Slight rain"
+    },
+    "preflightWmoModerateRain": {
+        "message": "Moderate rain"
+    },
+    "preflightWmoHeavyRain": {
+        "message": "Heavy rain"
+    },
+    "preflightWmoLightFreezingRain": {
+        "message": "Light freezing rain"
+    },
+    "preflightWmoHeavyFreezingRain": {
+        "message": "Heavy freezing rain"
+    },
+    "preflightWmoSlightSnow": {
+        "message": "Slight snow"
+    },
+    "preflightWmoModerateSnow": {
+        "message": "Moderate snow"
+    },
+    "preflightWmoHeavySnow": {
+        "message": "Heavy snow"
+    },
+    "preflightWmoSnowGrains": {
+        "message": "Snow grains"
+    },
+    "preflightWmoSlightRainShowers": {
+        "message": "Slight rain showers"
+    },
+    "preflightWmoModerateRainShowers": {
+        "message": "Moderate rain showers"
+    },
+    "preflightWmoViolentRainShowers": {
+        "message": "Violent rain showers"
+    },
+    "preflightWmoSlightSnowShowers": {
+        "message": "Slight snow showers"
+    },
+    "preflightWmoHeavySnowShowers": {
+        "message": "Heavy snow showers"
+    },
+    "preflightWmoThunderstorm": {
+        "message": "Thunderstorm"
+    },
+    "preflightWmoThunderstormSlightHail": {
+        "message": "Thunderstorm with slight hail"
+    },
+    "preflightWmoThunderstormHeavyHail": {
+        "message": "Thunderstorm with heavy hail"
+    },
+    "preflightKpLow": {
+        "message": "Low"
+    },
+    "preflightKpModerate": {
+        "message": "Moderate"
+    },
+    "preflightKpElevated": {
+        "message": "Elevated"
+    },
+    "preflightKpStorm": {
+        "message": "Storm"
+    },
+    "preflightWindCalm": {
+        "message": "Calm"
+    },
+    "preflightWindLight": {
+        "message": "Light"
+    },
+    "preflightWindModerate": {
+        "message": "Moderate"
+    },
+    "preflightWindStrong": {
+        "message": "Strong"
+    },
+    "preflightWindDangerous": {
+        "message": "Dangerous"
+    },
+    "preflightVisExcellent": {
+        "message": "Excellent"
+    },
+    "preflightVisGood": {
+        "message": "Good"
+    },
+    "preflightVisReduced": {
+        "message": "Reduced"
+    },
+    "preflightVisPoor": {
+        "message": "Poor"
+    },
+    "preflightPrecipNone": {
+        "message": "None"
+    },
+    "preflightPrecipLight": {
+        "message": "Light"
+    },
+    "preflightPrecipModerate": {
+        "message": "Moderate"
+    },
+    "preflightPrecipHeavy": {
+        "message": "Heavy"
+    },
+    "preflightDewNoRisk": {
+        "message": "No risk"
+    },
+    "preflightDewLowRisk": {
+        "message": "Low risk"
+    },
+    "preflightDewFogLikely": {
+        "message": "Fog/condensation likely"
+    },
+    "preflightDewFogExpected": {
+        "message": "Fog/lens fogging expected"
+    },
+    "preflightUvLow": {
+        "message": "Low"
+    },
+    "preflightUvModerate": {
+        "message": "Moderate"
+    },
+    "preflightUvHigh": {
+        "message": "High"
+    },
+    "preflightUvVeryHigh": {
+        "message": "Very High"
+    },
+    "preflightBatteryRisk": {
+        "message": "Battery Risk"
+    },
+    "preflightBatteryOk": {
+        "message": "Normal range"
+    },
+    "preflightBatteryCool": {
+        "message": "Reduced performance, warm batteries"
+    },
+    "preflightBatteryCold": {
+        "message": "Severely reduced capacity"
+    },
+    "preflightBatteryHot": {
+        "message": "Risk of swelling, keep shaded"
+    },
+    "preflightBatteryExtreme": {
+        "message": "Do not fly, extreme heat"
+    },
+    "preflightCheckBattery": {
+        "message": "Battery"
+    },
+    "preflightCheckDensityAlt": {
+        "message": "Density Alt"
+    },
+    "preflightFeelsLike": {
+        "message": "Feels Like"
+    },
+    "preflightFogRisk": {
+        "message": "Fog Risk"
+    },
+    "preflightFogUnlikely": {
+        "message": "Unlikely"
+    },
+    "preflightFogLow": {
+        "message": "Low risk"
+    },
+    "preflightFogModerate": {
+        "message": "Moderate risk"
+    },
+    "preflightFogHigh": {
+        "message": "High risk"
+    },
+    "preflightElevation": {
+        "message": "Elevation"
+    },
+    "preflightDensityAlt": {
+        "message": "Density Altitude"
+    },
+    "preflightDaNormal": {
+        "message": "Normal performance"
+    },
+    "preflightDaReduced": {
+        "message": "Slightly reduced lift"
+    },
+    "preflightDaLow": {
+        "message": "Noticeably reduced performance"
+    },
+    "preflightDaPoor": {
+        "message": "Significant lift reduction"
+    },
+    "preflightCivilTwilight": {
+        "message": "Civil Twilight Window"
+    },
+    "preflightRefresh": {
+        "message": "Refresh"
+    },
+    "preflightCurrentWeather": {
+        "message": "Current Weather"
+    },
+    "preflightWind": {
+        "message": "Wind Speed"
+    },
+    "preflightGusts": {
+        "message": "Wind Gusts"
+    },
+    "preflightVisibility": {
+        "message": "Visibility"
+    },
+    "preflightPrecipitation": {
+        "message": "Precipitation"
+    },
+    "preflightCloudCover": {
+        "message": "Cloud Cover"
+    },
+    "preflightHumidity": {
+        "message": "Humidity"
+    },
+    "preflightPressure": {
+        "message": "Pressure"
+    },
+    "preflightDewPoint": {
+        "message": "Dew Point"
+    },
+    "preflightFlightWindow": {
+        "message": "Flight Window"
+    },
+    "preflightSunrise": {
+        "message": "Sunrise"
+    },
+    "preflightSunset": {
+        "message": "Sunset"
+    },
+    "preflightDaylight": {
+        "message": "Daylight"
+    },
+    "preflightUvIndex": {
+        "message": "UV Index"
+    },
+    "preflightTempRange": {
+        "message": "Temp Range"
+    },
+    "preflightCurrentlyDay": {
+        "message": "Currently"
+    },
+    "preflightDaytime": {
+        "message": "Daytime"
+    },
+    "preflightNighttime": {
+        "message": "Nighttime"
+    },
+    "preflightWindForecast": {
+        "message": "Wind at Altitude Forecast"
+    },
+    "preflightWindForecastHelp": {
+        "message": "Wind speeds at different altitudes are critical for long-range and high-altitude FPV flights. Higher altitudes typically have stronger winds."
+    },
+    "preflightTime": {
+        "message": "Time"
+    },
+    "preflightWind10m": {
+        "message": "10m"
+    },
+    "preflightWind80m": {
+        "message": "80m"
+    },
+    "preflightWind120m": {
+        "message": "120m"
+    },
+    "preflightGustsShort": {
+        "message": "Gusts"
+    },
+    "preflightRainProb": {
+        "message": "Rain %"
+    },
+    "preflightWindUnit": {
+        "message": "Wind speeds in m/s. Altitudes above ground level (AGL)."
+    },
+    "preflightSolarActivity": {
+        "message": "Solar Activity"
+    },
+    "preflightSolarHelp": {
+        "message": "High solar activity (Kp > 5) causes ionospheric interference, which can degrade GPS accuracy and affect GPS Rescue reliability."
+    },
+    "preflightGeoStorm": {
+        "message": "Geomagnetic Storm"
+    },
+    "preflightSolarRadiation": {
+        "message": "Solar Radiation"
+    },
+    "preflightRadioBlackout": {
+        "message": "Radio Blackout"
+    },
+    "preflightLastMeasurement": {
+        "message": "Last measurement"
+    },
+    "preflightLoadingSolar": {
+        "message": "Loading solar data..."
+    },
+    "preflightGNSS": {
+        "message": "GNSS / GPS Status"
+    },
+    "preflightGNSSHelp": {
+        "message": "GNSS satellite signal quality is affected by solar activity. High Kp values can degrade GPS position accuracy and reduce GPS Rescue reliability."
+    },
+    "preflightGNSSNote": {
+        "message": "GPS accuracy is affected by solar/geomagnetic conditions. Connect your quad for live satellite data on the GPS tab."
+    },
+    "preflightKpEffect": {
+        "message": "Ionospheric Impact"
+    },
+    "preflightGPSRescue": {
+        "message": "GPS Rescue Status"
+    },
+    "preflightMagDeclination": {
+        "message": "Magnetic Declination"
+    },
+    "preflightMagInclination": {
+        "message": "Magnetic Inclination"
+    },
+    "preflightGNSSPlanner": {
+        "message": "GNSS Satellite Planning Tool"
+    },
+    "preflightAirspace": {
+        "message": "Airspace & No-Fly Zones"
+    },
+    "preflightAirspaceNote": {
+        "message": "Always check local airspace restrictions and NOTAMs before flying. Rules vary by country and region."
+    },
+    "preflightDroneSafetyMap": {
+        "message": "Drone Safety Map (Altitude Angel)"
+    },
+    "preflightAirspaceExplorer": {
+        "message": "SkyVector Airspace Chart"
+    },
+    "preflightNOTAMs": {
+        "message": "FAA NOTAMs (US)"
+    },
+    "preflightNOTAMsEU": {
+        "message": "EUROCONTROL NOTAMs (EU)"
+    },
+    "preflightMap": {
+        "message": "Location Map"
+    },
+    "preflightNoData": {
+        "message": "Set a location to load environment data"
+    },
+    "preflightAttribution": {
+        "message": "Weather data: Open-Meteo.com (CC BY 4.0) | Solar data: NOAA Space Weather Prediction Center"
+    },
+    "preflightSavedLocationsPlaceholder": {
+        "message": "Saved locations..."
+    },
+    "preflightLoadLocation": {
+        "message": "Load"
+    },
+    "preflightSaveLocation": {
+        "message": "Save"
+    },
+    "preflightSavedLocationsFull": {
+        "message": "Maximum of 5 saved locations reached"
+    },
+    "preflightLocationLabel": {
+        "message": "Location name (max 20 chars)"
+    },
+    "preflightDeleteLocation": {
+        "message": "Delete selected location"
+    },
+    "preflightRenameLocation": {
+        "message": "Rename selected location"
+    },
+    "preflightRenameLocationBtn": {
+        "message": "Rename"
+    },
+    "preflightCoordinates": {
+        "message": "Coordinates"
+    },
+    "preflightSaveLocationBtn": {
+        "message": "Save Location"
+    },
+    "preflightConfirmSave": {
+        "message": "Save"
+    },
+    "preflightCancel": {
+        "message": "Cancel"
+    },
+    "preflightGeolocationFailed": {
+        "message": "Could not detect location. Please enter coordinates manually."
+    },
+    "preflightIpConsentMessage": {
+        "message": "Browser location failed. Your approximate location can be detected using your IP address via ipapi.co, a third-party service."
+    },
+    "preflightIpConsentAllow": {
+        "message": "Allow"
+    },
+    "preflightIpConsentDeny": {
+        "message": "No thanks"
+    },
+    "preflightMapSatellite": {
+        "message": "Satellite view"
+    },
+    "preflightMapHybrid": {
+        "message": "Hybrid satellite and street view"
+    },
+    "preflightMapStreet": {
+        "message": "Street map view"
+    },
+    "preflightMapZoomIn": {
+        "message": "Zoom in"
+    },
+    "preflightMapZoomOut": {
+        "message": "Zoom out"
+    },
+    "preflightMapFullscreen": {
+        "message": "Toggle fullscreen"
+    },
+    "preflightKpMinimal": {
+        "message": "Minimal impact on GPS"
+    },
+    "preflightKpDegraded": {
+        "message": "Possible GPS accuracy degradation"
+    },
+    "preflightKpSevere": {
+        "message": "Significant GPS interference expected"
+    },
+    "preflightGpsRescueUnknown": {
+        "message": "Check solar activity first"
+    },
+    "preflightGpsRescueReliable": {
+        "message": "GPS Rescue reliable"
+    },
+    "preflightGpsRescueUnreliable": {
+        "message": "GPS Rescue may be unreliable"
+    },
+    "preflightGpsRescueNotRecommended": {
+        "message": "GPS Rescue NOT recommended"
+    },
+    "preflightForecast": {
+        "message": "5-Day Forecast"
+    },
+    "preflightForecastHelp": {
+        "message": "Daily weather overview to help plan flight sessions ahead"
+    },
+    "preflightForecastDay": {
+        "message": "Day"
+    },
+    "preflightForecastWeather": {
+        "message": "Weather"
     }
 }
