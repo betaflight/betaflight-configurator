@@ -3960,9 +3960,6 @@
     "firmwareFlasherClickToConnectDfu": {
         "message": "Click to connect to DFU device"
     },
-    "firmwareFlasherDfuPermissionRequired": {
-        "message": "DFU device requires permission"
-    },
     "firmwareFlasherConfigCorrupted": {
         "message": "Config file appears to be corrupted, ASCII accepted (chars 0-255)",
         "description": "shown in the progress bar at the bottom, be brief"
