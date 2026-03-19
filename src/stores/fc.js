@@ -88,6 +88,11 @@ export const useFlightControllerStore = defineStore("flightController", () => {
         set: (val) => (FC.MOTOR_DATA = val),
     });
 
+    const transponder = computed({
+        get: () => FC.TRANSPONDER,
+        set: (val) => (FC.TRANSPONDER = val),
+    });
+
     const pidAdvancedConfig = computed({
         get: () => FC.PID_ADVANCED_CONFIG,
         set: (val) => (FC.PID_ADVANCED_CONFIG = val),
@@ -263,6 +268,7 @@ export const useFlightControllerStore = defineStore("flightController", () => {
         analogData,
         rc,
         motorData,
+        transponder,
         pidAdvancedConfig,
         sensorConfig,
         sensorConfigActive,

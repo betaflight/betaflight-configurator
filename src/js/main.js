@@ -327,13 +327,13 @@ async function startProcess() {
                     mountVueTab("failsafe", content_ready);
                     break;
                 case "transponder":
-                    import("./tabs/transponder").then(({ transponder }) => transponder.initialize(content_ready));
+                    mountVueTab("transponder", content_ready);
                     break;
                 case "osd":
                     mountVueTab("osd", content_ready);
                     break;
                 case "vtx":
-                    import("./tabs/vtx").then(({ vtx }) => vtx.initialize(content_ready));
+                    mountVueTab("vtx", content_ready);
                     break;
                 case "power":
                     mountVueTab("power", content_ready);

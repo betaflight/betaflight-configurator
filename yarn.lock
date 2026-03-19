@@ -5252,11 +5252,6 @@ jake@^10.8.5:
     filelist "^1.0.4"
     picocolors "^1.1.1"
 
-jquery-textcomplete@^1.8.5:
-  version "1.8.5"
-  resolved "https://registry.yarnpkg.com/jquery-textcomplete/-/jquery-textcomplete-1.8.5.tgz#df9724b42c3af9ece272356a7e8b55cd9cf239dd"
-  integrity sha512-WctSUxFk7GF5Tx2gHeVKrpkQ9tsV7mibBJ0AYNwEx+Zx3ZoUQgU5grkBXY3SCqpq/owMAMEvksN96DBSWT4PSg==
-
 jquery-touchswipe@^1.6.19:
   version "1.6.19"
   resolved "https://registry.yarnpkg.com/jquery-touchswipe/-/jquery-touchswipe-1.6.19.tgz#dfd5ddaec0b78212dd500d29707129b9c7fd6cd4"

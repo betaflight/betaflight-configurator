@@ -47,6 +47,15 @@ export function getTextWidth(text) {
 }
 
 /**
+ * Escape a string for safe insertion into HTML.
+ * @param {string} s
+ * @returns {string}
+ */
+export function escapeHtml(s) {
+    return String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+}
+
+/**
  * Returns jquery sorted option list with optional value staying on top of the list.
  *
  * @param {string} optional value staying on top of the list.
