@@ -4,7 +4,7 @@
  * Provides a helper function to mount Vue tab components into the #content area.
  * This bridges the existing jQuery-based tab switching with Vue components.
  */
-import { createApp, h } from "vue";
+import { createApp, effectScope, h } from "vue";
 import { pinia } from "./pinia_instance.js";
 import i18next from "i18next";
 import I18NextVue from "i18next-vue";
@@ -15,6 +15,7 @@ import ui from "@nuxt/ui/vue-plugin";
 
 // Store the current mounted Vue app instance for cleanup
 let currentTabApp = null;
+let currentTabScope = null;
 
 /**
  * Check if a tab has a Vue component available
@@ -61,7 +62,15 @@ export function mountVueTab(tabName, contentReadyCallback) {
     // Use i18n plugin
     currentTabApp.use(I18NextVue, { i18next });
     currentTabApp.use(pinia);
-    currentTabApp.use(ui);
+
+    // Install Nuxt UI inside a dedicated EffectScope so that watchers
+    // created during plugin install (useDark, useMediaQuery, etc.) are
+    // captured and can be stopped when the tab is unmounted.  Without
+    // this, each tab switch leaks orphaned watchers/event-listeners
+    // because plugin install() runs outside the app's component scope.
+    currentTabScope = effectScope();
+    currentTabScope.run(() => currentTabApp.use(ui));
+
     currentTabApp.provide("gui", GUI);
 
     // Provide the global betaflight model
@@ -125,6 +134,11 @@ export function unmountVueTab() {
     if (currentTabApp) {
         currentTabApp.unmount();
         currentTabApp = null;
+
+        if (currentTabScope) {
+            currentTabScope.stop();
+            currentTabScope = null;
+        }
 
         // Clean up TABS registry
         if (GUI.active_tab && TABS[GUI.active_tab]) {
