@@ -301,7 +301,7 @@
 </template>
 
 <script setup>
-import { reactive, toRef } from "vue";
+import { computed, reactive, shallowRef } from "vue";
 import GlobalDialogs from "./components/dialogs/GlobalDialogs.vue";
 import FCModule from "./js/fc.js";
 import MSPModule from "./js/msp.js";
@@ -309,23 +309,42 @@ import PortHandlerModule from "./js/port_handler.js";
 import PortUsageModule from "./js/port_usage.js";
 import CONFIGURATORModule from "./js/data_storage.js";
 
-// Use reactive vm so expertMode updates when external code (e.g. main.js, updateTabList) mutates it.
-// When window.vm is falsy, create fallback and promote it to window.vm so all consumers share the same reactive object.
-let vm = window.vm;
-if (!vm) {
-    vm = reactive({ expertMode: false });
-    window.vm = vm;
+// Tests or unusual entry points may run without init.js; init.js overwrites this synchronously after its model exists.
+if (!window.vm) {
+    window.vm = reactive({ expertMode: false });
 }
 
-const CONFIGURATOR = vm.CONFIGURATOR ?? CONFIGURATORModule;
-const FC = vm.FC ?? FCModule;
-const MSP = vm.MSP ?? MSPModule;
-const PortHandler = vm.PortHandler ?? PortHandlerModule;
-const PortUsage = vm.PortUsage ?? PortUsageModule;
-const CONNECTION = vm.CONNECTION ?? reactive({ timestamp: null });
+// Stable fallback so computed() does not allocate a new reactive per evaluation when window.vm.CONNECTION is missing.
+const connectionFallback = reactive({ timestamp: null });
 
-// toRef creates a ref that stays in sync with vm.expertMode; reactive to external mutations
-const expertMode = toRef(vm, "expertMode");
+// Track latest window.vm so computeds re-run when it is reassigned (import order vs. init.js).
+const syncedVm = shallowRef(window.vm);
+
+function currentVm() {
+    const v = window.vm;
+    if (v !== syncedVm.value) {
+        syncedVm.value = v;
+    }
+    return v;
+}
+
+const CONFIGURATOR = computed(() => currentVm()?.CONFIGURATOR ?? CONFIGURATORModule);
+const FC = computed(() => currentVm()?.FC ?? FCModule);
+const MSP = computed(() => currentVm()?.MSP ?? MSPModule);
+const PortHandler = computed(() => currentVm()?.PortHandler ?? PortHandlerModule);
+const PortUsage = computed(() => currentVm()?.PortUsage ?? PortUsageModule);
+const CONNECTION = computed(() => currentVm()?.CONNECTION ?? connectionFallback);
+
+// Read/write current vm via currentVm() so we track the same vm as the globals after window.vm is reassigned.
+const expertMode = computed({
+    get: () => Boolean(currentVm()?.expertMode),
+    set: (value) => {
+        const v = currentVm();
+        if (v) {
+            v.expertMode = value;
+        }
+    },
+});
 </script>
 
 <style scoped>
