@@ -2747,12 +2747,6 @@
     "pidTuningItermRotation": {
         "message": "I Term Biraketa"
     },
-    "pidTuningSmartFeedforward": {
-        "message": "Adimendun Feedforward"
-    },
-    "pidTuningSmartFeedforwardHelp": {
-        "message": "F terminoak PIDen eragina murrizten du. P terminoa eta F terminoa aldi berean aktiboak direnean, bakarrik bietako handienak erabiltzen du, gainezka egiteak D igo beharrik izan gabe, baina F terminoak sortutako erantzun efektua murrizten du ere P gehitzen denean."
-    },
     "pidTuningItermRelax": {
         "message": "I Term Erlaxatu"
     },

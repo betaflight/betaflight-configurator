@@ -4789,12 +4789,6 @@
     "pidTuningItermRotationHelp": {
         "message": "롤 도중 연속적으로 흔들리거나 퍼널(깔대기)과 다른 기술을 실행할 때 기체가 회전하면서 현재 I 텀 벡터를 다른 축으로 적절하게 회전시킵니다. LOS 아크로 파일럿에 의해 인정받았습니다."
     },
-    "pidTuningSmartFeedforward": {
-        "message": "스마트 피드포워드"
-    },
-    "pidTuningSmartFeedforwardHelp": {
-        "message": "PID에서 F 텀의 효과를 감소시킵니다. P 텀과 F 텀이 동시에 활성화되면, D를 올릴 필요 없이 오버 슈트를 방지하면서 둘 중 더 큰 것만 사용합니다. 또한 P에 추가하면 F 텀에 의해 생성되는 반응 효과도 감소합니다."
-    },
     "pidTuningItermRelax": {
         "message": "I 텀 릴렉스"
     },

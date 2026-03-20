@@ -82,11 +82,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="line">
-                                    <a href="#" class="save-settings regular-button" @click.prevent="saveSettings">{{
-                                        $t("blackboxButtonSave")
-                                    }}</a>
-                                </div>
                             </div>
                         </div>
 
@@ -317,6 +312,12 @@
                     </div>
                 </div>
                 <div class="clear-both"></div>
+            </div>
+        </div>
+
+        <div class="content_toolbar toolbar_fixed_bottom">
+            <div class="btn save_btn">
+                <button type="button" class="save" @click="saveSettings">{{ $t("blackboxButtonSave") }}</button>
             </div>
         </div>
     </BaseTab>

@@ -3787,12 +3787,6 @@
     "pidTuningItermRotation": {
         "message": "I Term Rotation"
     },
-    "pidTuningSmartFeedforward": {
-        "message": "Smart Feedforward"
-    },
-    "pidTuningSmartFeedforwardHelp": {
-        "message": "Réduits l'effet de F Term dans les PID. Lorsque P Term et F Term sont actifs en même temps, seule la plus grande valeur sera utilisée, limitant les excès de P et le besoin d'augmenter D, mais réduit la réactivité de F Term quand elle est ajoutée à P."
-    },
     "pidTuningItermRelax": {
         "message": "I Term Relax"
     },

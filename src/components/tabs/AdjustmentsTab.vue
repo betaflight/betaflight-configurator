@@ -145,7 +145,7 @@
 
         <div class="content_toolbar toolbar_fixed_bottom">
             <div class="btn save_btn">
-                <a class="save" href="#" @click.prevent="saveAdjustments">{{ $t("adjustmentsSave") }}</a>
+                <button type="button" class="save" @click="saveAdjustments">{{ $t("adjustmentsSave") }}</button>
             </div>
         </div>
     </BaseTab>

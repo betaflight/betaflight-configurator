@@ -375,23 +375,16 @@
         <!-- Bottom Toolbar -->
         <div class="content_toolbar toolbar_fixed_bottom">
             <div class="btn calibration" v-show="showCalibration">
-                <a
+                <button
+                    type="button"
                     class="calibrationmanager"
                     id="calibrationmanager"
-                    href="#"
-                    :aria-label="$t('powerCalibrationManagerButton')"
-                    @click.prevent="openCalibrationManager"
+                    @click="openCalibrationManager"
                     v-html="$t('powerCalibrationManagerButton')"
-                ></a>
+                ></button>
             </div>
             <div class="btn save_btn">
-                <a
-                    class="save"
-                    href="#"
-                    :aria-label="$t('powerButtonSave')"
-                    @click.prevent="handleSave"
-                    v-html="$t('powerButtonSave')"
-                ></a>
+                <button type="button" class="save" @click="handleSave" v-html="$t('powerButtonSave')"></button>
             </div>
         </div>
 

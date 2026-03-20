@@ -721,11 +721,20 @@
     "defaultRedditText": {
         "message": "Tilmeld dig vores <a href=\"https:\/\/www.reddit.com\/r\/Betaflight\/\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight Subreddit<\/a>.<br \/>Diskuter funktioner, stil spørgsmål og forbind dig med Betaflight fællesskabet på Reddit."
     },
+    "defaultCommunityHead": {
+        "message": "Community"
+    },
+    "statisticsDisclaimerHead": {
+        "message": "Persondata beskyttelse"
+    },
     "statisticsDisclaimer": {
         "message": "Denne Betaflight App indsamler anonym brugsstatistik. Disse brugsdata kan omfatte antallet af lanceringer, geografisk region af brugerne, typer af FC, firmwareversioner, klik i app, faner osv. Vi indsamler disse data for bedre at forstå, anvendelse af app, og måske generelle tendenser. Vi gør dette for at hjælpe os med at udvikle en forbedret brugergrænseflade og samle erfaring. Brugere kan fravælge dataindsamling i fanen Valgmuligheder. For information om, hvordan vi indsamler og bruger dine data, se vores <a href=\"https:\/\/www.betaflight.com\/privacy\" rel=\"noopener noreferrer\" target=\"_blank\">privacy policy<\/a>."
     },
     "defaultButtonFirmwareFlasher": {
         "message": "Brænd firmware"
+    },
+    "defaultDonateHead": {
+        "message": "Open Source donation"
     },
     "defaultDonateText": {
         "message": "<p><strong>Betaflight<\/strong> er <strong>open source<\/strong> programmel som er tilgængelig uden beregning, men også <strong>uden garanti<\/strong>.<\/p><p>Hvis du fandt Betaflight nyttig, så overvej venligst at <strong>støtte<\/strong> udviklingen med en donation.<\/p>"
@@ -992,7 +1001,7 @@
         "description": "Message that pops up to describe the RUNAWAY_TAKEOFF arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipCRASH_DETECTED": {
-        "message": "Nedstyrtet drone tilstand er aktiv",
+        "message": "Styrt vend tilstand er aktiv",
         "description": "Message that pops up to describe the CRASH_DETECTED arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipCALIBRATING": {
@@ -1080,7 +1089,7 @@
         "description": "Message that pops up to describe the MOTOR_PROTO arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipCRASHFLIP": {
-        "message": "Crash Flip Switch er aktiv",
+        "message": "Styrt vend kontakt er aktiv",
         "description": "Message that pops to describe the CRASHFLIP arming disable flag"
     },
     "initialSetupArmingDisableFlagsTooltipALTHOLD": {
@@ -2606,6 +2615,10 @@
         "message": "Aktiverer stabiliseringstilstand for kamera",
         "description": "Help text to CAMSTAB mode"
     },
+    "auxiliaryHelpMode_CHIRP": {
+        "message": "Aktiver Chirp tilstand",
+        "description": "Help text for CHIRP mode"
+    },
     "auxiliaryHelpMode_FAILSAFE": {
         "message": "Aktiver mauelt fejlsikring trin 2",
         "description": "Help text to FAILSAFE mode"
@@ -2761,6 +2774,14 @@
     "adjustmentsColumnAdjustmentScale": {
         "message": "og rækkevidde skala (værdi|%)"
     },
+    "adjustmentsCenterHelp": {
+        "message": "Angiver referencepunktet (midtpunktet) for justeringsfunktionen.<br \/><br \/><strong>Slider-justering<\/strong><br \/>Sæt <strong>Adjustment Center<\/strong> til 0. Den aktuelle slider-position bruges derefter til at justere værdien op eller ned.<br \/><br \/><strong>Valg-justering<\/strong><br \/>Sæt <strong>Adjustment Center<\/strong> til 0, eller angiv en specifik værdi i mikrosekunder (uS) hvis switchens referencepunkt skal forskydes fra standarden på 1500uS.<br \/><br \/><strong>Trinvis justering<\/strong><br \/>Sæt <strong>Adjustment Center<\/strong> til 0 for at bruge den aktuelle værdi som udgangspunkt for justeringen.<br \/><br \/><strong>Absolut justering<\/strong><br \/>For absolut justering skal både <strong>Adjustment Center<\/strong> og <strong>Scale<\/strong> angives.<br \/>Justeringsområdet beregnes som: <strong>Center ± Scale<\/strong>.<br \/>Eksempel: Center = 50 og Scale = 25 giver området <strong>25–75<\/strong>, hvor midterpositionen på switch\/POT svarer til 50.<br \/><br \/>Se <a href=\"https:\/\/www.betaflight.com\/docs\/development\/Inflight-Adjustments\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight In-flight Adjustments<\/a> for flere detaljer.",
+        "description": "Tooltip help text for the Adjustment Center column"
+    },
+    "adjustmentsScaleHelp": {
+        "message": "Styrer justeringens skala eller rækkevidde. Højere værdier giver større justeringsområde eller højere følsomhed.<br \/><br \/><strong>Slider-justering<\/strong><br \/><strong>Adjustment Scale<\/strong> bestemmer følsomheden af slider-justeringen. En værdi på 50 svarer til 50 % af sliderens område. Sæt værdien til 0 for at bruge standard-skalering.<br \/><br \/><strong>Valg-justering<\/strong><br \/>Sæt <strong>Adjustment Scale<\/strong> til 0 for standardadfærd, eller angiv en værdi i mikrosekunder (uS) for at begrænse området. Eksempel: Center = 1000 uS og Scale = 500 uS kan gøre en 3-positions-switch til en 2-positions-switch.<br \/><br \/><strong>Trinvis \/ Absolut justering<\/strong><br \/><strong>Adjustment Scale<\/strong> angiver området over og under <strong>Adjustment Center<\/strong>. Eksempel: En værdi på 25 giver området <strong>Center ±25<\/strong>. Hvis Center er 0, bruges den aktuelle værdi som udgangspunkt.<br \/><br \/><strong>Bemærk:<\/strong> For absolut justering med en potentiometer (POT) skal <strong>Adjustment Scale<\/strong> være angivet.<br \/><br \/>Se <a href=\"https:\/\/www.betaflight.com\/docs\/development\/Inflight-Adjustments\" target=\"_blank\" rel=\"noopener noreferrer\">Betaflight In-flight Adjustments<\/a> for flere detaljer.",
+        "description": "Tooltip help text for the Adjustment Scale column"
+    },
     "adjustmentsSlot0": {
         "message": "Plads 1"
     },
@@ -2874,6 +2895,9 @@
     },
     "adjustmentsFunction31": {
         "message": "LED lysstyrke "
+    },
+    "adjustmentsFunction32": {
+        "message": "Generel multiplikator"
     },
     "adjustmentsSave": {
         "message": "Gem"
@@ -3600,6 +3624,9 @@
     "firmwareFlasherPleaseWait": {
         "message": "Vent et øjeblik"
     },
+    "firmwareFlasherBoardSelectionHead": {
+        "message": "FC valg"
+    },
     "firmwareFlasherBranch": {
         "message": "Vælg github Pull Request (PR #) eller commit"
     },
@@ -3808,6 +3835,9 @@
     "firmwareFlasherMessage": {
         "message": "Besked:"
     },
+    "firmwareFlasherWarningText": {
+        "message": "Du bør <span class=\"message-negative\">ikke<\/span> forsøge at brænde <strong>ikke-Betaflight \/ kompatibel<\/strong> hardware med denne firmware brænder.<br \/>Du må <span class=\"message-negative\">ikke<\/span> <strong>frakoble<\/strong> FC eller <strong>slukke<\/strong> din pc under brænding.<br \/><br \/><strong>Bemærk:<\/strong><ul style=\"margin-top: 2px;\"><li>STM32 bootloader er gemt i ROM og kan derfor ikke ændres.<\/li><li><span class=\"message-negative\">Autotilslut<\/span> er altid deaktiveret, mens du brænder firmware.<\/li><li>Sørg for at du har en sikkerhedskopi af din FC konfiguration; nogle opgraderinger\/nedgraderinger vil slette hele\/ændre dele af din konfiguration.<\/li><li>Hvis du har problemer efter brænding, <strong>prøv først at frakoble alle kabler fra din FC<\/strong>, prøv genstart, prøv at genindstallere\/opgradere drivere.<\/li><li>Når du brænder FC, som er direkte tilsluttet USB (de fleste nyere FC), sørg for at have læst afsnittet USB Flashing i Betaflight manual og at du har installeret den korrekte software og drivere.<\/li><\/ul>"
+    },
     "firmwareFlasherRecoveryHead": {
         "message": "<strong>Gendannelse \/ tabt kommunikation<\/strong>"
     },
@@ -3843,6 +3873,9 @@
     },
     "firmwareFlasherUF2SaveFailed": {
         "message": "Kunne ikke gemme (brænde) firmware image (UF2)"
+    },
+    "firmwareFlasherClickToConnectDfu": {
+        "message": "Klik for at oprette forbindelse til DFU enhed"
     },
     "firmwareFlasherConfigCorrupted": {
         "message": "Konfigurationsfilen synes at være beskadiget, ASCII accepteret (tegn 0-255)",
@@ -4623,6 +4656,10 @@
     "pidTuningCutoffFrequency": {
         "message": "Afskæringsfrekvens [Hz]"
     },
+    "pidTuningNotchFilterHelp": {
+        "message": "Et hak filter er et symmetrisk, smalt, high-cut filter, med center og afskærings parmetre.<br \/><br \/>Den midterste værdi er filterets midterfrekvens. Afskærings værdien er laveste side -3dB afskærings frekvens.<br \/><br \/>For eksempel en hak afskæring på 160 med en center værdi på 260, returnerer et bredt hak med en -3dB bredde på 160-360Hz og med stærkeste dæmpning omkring 260hz.",
+        "description": "Notch filter helpicon message"
+    },
     "pidTuningDynamicNotchFilterGroup": {
         "message": "Dynamisk Notch filter"
     },
@@ -4768,12 +4805,6 @@
     },
     "pidTuningItermRotationHelp": {
         "message": "Roterer den aktuelle I term vektor korrekt til andre akser, som fartøj roterer når sideror kontinuerligt aktiveres under krænging og når der flyves igennem tragter og andre tricks. Meget værdsat af LOS acro piloter."
-    },
-    "pidTuningSmartFeedforward": {
-        "message": "Smart Feedforward"
-    },
-    "pidTuningSmartFeedforwardHelp": {
-        "message": "Reducerer virkningen af udtrykket F i PID. Når både P Term og F Term er aktive på samme øjeblik, bruger det kun den største af de to, at undgå overskridelser uden at behøve at hæve D, men også reducerer reaktionseffekten fra F-udtrykket, når det føjes til P."
     },
     "pidTuningItermRelax": {
         "message": "I Term dæmping"
@@ -5522,6 +5553,9 @@
     "osdSetupUploadingFontEnd": {
         "message": "Uploadet alle {{length}} tegn til OSD"
     },
+    "osdSetupUploadingFontFailed": {
+        "message": "Overførsel mislykkedes"
+    },
     "osdSetupSave": {
         "message": "Gem"
     },
@@ -6138,7 +6172,7 @@
         "message": "Blackbox nummer og advarsler"
     },
     "osdTextElementFlipArrow": {
-        "message": "Pil for \"vend styrtet drone\" motorretning",
+        "message": "Pil for \"vend styrtet\" motorretning",
         "description": "One of the elements of the OSD"
     },
     "osdDescElementFlipArrow": {
@@ -6633,7 +6667,7 @@
         "message": "Viser en visualisering af biperen (viser som 4 stjerner)"
     },
     "osdWarningTextCrashFlipMode": {
-        "message": "Vend styrtet drone",
+        "message": "Styrt vend tilstand",
         "description": "One of the warnings that can be selected to be shown in the OSD"
     },
     "osdWarningCrashFlipMode": {
@@ -8006,5 +8040,13 @@
     },
     "sectionUserPasskeys": {
         "message": "Bruger adgangsnøgler"
+    },
+    "osdPresetPositionAlignTitle": {
+        "message": "Juster til position",
+        "description": "Label for the preset position alignment menu in the OSD elements list"
+    },
+    "osdPresetPositionChooseTitle": {
+        "message": "Vælg position",
+        "description": "Title for the preset position grid popup in the OSD elements list"
     }
 }

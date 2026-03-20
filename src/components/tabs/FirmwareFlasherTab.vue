@@ -580,23 +580,29 @@
                 ></span>
             </div>
             <div class="btn">
-                <a
+                <button
+                    type="button"
                     ref="exitDfuButton"
-                    :class="['exit_dfu', { disabled: state.dfuExitButtonDisabled }]"
-                    href="#"
+                    class="exit_dfu"
+                    :class="{ disabled: state.dfuExitButtonDisabled }"
+                    :disabled="state.dfuExitButtonDisabled"
                     :title="$t('firmwareFlasherExitDfu')"
-                    @click.prevent="handleExitDfu"
-                    >{{ $t("firmwareFlasherExitDfu") }}</a
+                    @click="handleExitDfu"
                 >
+                    {{ $t("firmwareFlasherExitDfu") }}
+                </button>
             </div>
             <div class="btn">
-                <a
+                <button
+                    type="button"
                     ref="flashFirmwareButton"
-                    :class="['flash_firmware', { disabled: state.flashButtonDisabled }]"
-                    href="#progressbar"
-                    @click.prevent="handleFlashFirmware"
-                    >{{ $t("firmwareFlasherFlashFirmware") }}</a
+                    class="flash_firmware"
+                    :class="{ disabled: state.flashButtonDisabled }"
+                    :disabled="state.flashButtonDisabled"
+                    @click="handleFlashFirmware"
                 >
+                    {{ $t("firmwareFlasherFlashFirmware") }}
+                </button>
             </div>
             <div class="btn">
                 <a
@@ -2974,11 +2980,6 @@ export default defineComponent({
 
 :deep(.toolbar_fixed_bottom.content_toolbar) {
     width: calc(100% - 18rem) !important;
-    display: flex;
-    flex-wrap: wrap;
-    position: fixed;
-    bottom: 2rem;
-    right: 0;
 }
 
 :deep(.content_toolbar) {
