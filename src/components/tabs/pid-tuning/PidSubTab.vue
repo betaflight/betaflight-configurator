@@ -1456,7 +1456,7 @@ const itermRotationEnabled = computed({
 
 const vbatSagEnabled = computed({
     get: () => FC.ADVANCED_TUNING.vbat_sag_compensation !== 0,
-    set: (val) => (FC.ADVANCED_TUNING.vbat_sag_compensation = val ? FC.ADVANCED_TUNING.vbat_sag_compensation || 75 : 0),
+    set: (val) => (FC.ADVANCED_TUNING.vbat_sag_compensation = val ? FC.ADVANCED_TUNING.vbat_sag_compensation || 100 : 0),
 });
 
 const thrustLinearEnabled = computed({
