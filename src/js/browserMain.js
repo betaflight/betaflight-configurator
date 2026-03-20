@@ -5,7 +5,6 @@ import "../../libraries/flightindicators.css";
 
 import "../css/theme.css";
 import "../css/main.less";
-import "../css/tabs/static_tab.less";
 import "../css/tabs/help.less";
 import "../css/tabs/ports.less";
 import "../css/tabs/configuration.less";
