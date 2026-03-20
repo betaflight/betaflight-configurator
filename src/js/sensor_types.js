@@ -40,9 +40,14 @@ export async function fetchSensorNames() {
 
             const firmwareType = line.substring(0, separatorIndex).trim();
             const type = SENSOR_NAME_MAP[firmwareType] ?? firmwareType;
-            const values = line.substring(separatorIndex + 2).split(",");
+            const values = line
+                .substring(separatorIndex + 2)
+                .split(",")
+                .map((v) => v.trim());
 
-            FC.SENSOR_NAMES[type] = values;
+            if (type in FC.SENSOR_NAMES) {
+                FC.SENSOR_NAMES[type] = values;
+            }
         }
     } catch (error) {
         console.warn(`Failed to fetch sensor hardware names: ${error.message}`);
