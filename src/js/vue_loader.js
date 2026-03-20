@@ -1,11 +1,12 @@
-import { createApp } from "vue";
+import { createApp, effectScope } from "vue";
 import { BetaflightComponents } from "./vue_components.js";
 import I18NextVue from "i18next-vue";
 import i18next from "i18next";
+import ui from "@nuxt/ui/vue-plugin";
 
 const logHead = "[VUE_LOADER]";
 
-// Store Vue app instances for proper cleanup
+// Store Vue app instances and their effect scopes for proper cleanup
 const vueAppInstances = new WeakMap();
 
 // Function to load tab content while preserving Vue functionality
@@ -45,17 +46,20 @@ export function loadContent(contentElement, htmlPath, callback) {
             app.use(BetaflightComponents);
             app.use(I18NextVue, { i18next });
 
+            const scope = effectScope();
+            scope.run(() => app.use(ui));
+
             // Mount the app to this element and store the instance
             app.mount(el[0]);
             console.log(
                 `${logHead} Mounted Vue app ${index + 1}/${vueElements.length} on element with data-vue attribute`,
             );
 
-            // Store the app instance for later cleanup
+            // Store the app instance and scope for later cleanup
             if (!vueAppInstances.has(contentElement[0])) {
                 vueAppInstances.set(contentElement[0], []);
             }
-            vueAppInstances.get(contentElement[0]).push(app);
+            vueAppInstances.get(contentElement[0]).push({ app, scope });
         });
 
         // Call the original callback (success case)
@@ -67,13 +71,14 @@ export function loadContent(contentElement, htmlPath, callback) {
 
 // Helper function to unmount existing Vue apps
 function unmountVueApps(contentElement) {
-    const apps = vueAppInstances.get(contentElement[0]);
-    if (apps && apps.length > 0) {
-        console.log(`${logHead} Unmounting ${apps.length} existing Vue app(s)`);
-        apps.forEach((app, index) => {
+    const entries = vueAppInstances.get(contentElement[0]);
+    if (entries && entries.length > 0) {
+        console.log(`${logHead} Unmounting ${entries.length} existing Vue app(s)`);
+        entries.forEach(({ app, scope }, index) => {
             try {
                 app.unmount();
-                console.log(`${logHead} Successfully unmounted Vue app ${index + 1}/${apps.length}`);
+                scope.stop();
+                console.log(`${logHead} Successfully unmounted Vue app ${index + 1}/${entries.length}`);
             } catch (error) {
                 console.warn(`${logHead} Error unmounting Vue app ${index + 1}:`, error);
             }
