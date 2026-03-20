@@ -160,6 +160,7 @@ import MSP from "../../js/msp";
 import MSPCodes from "../../js/msp/MSPCodes";
 import { mspHelper } from "../../js/msp/MSPHelper";
 import { i18n } from "../../js/localization";
+import { API_VERSION_1_48 } from "../../js/data_storage";
 import { gui_log } from "../../js/gui_log";
 import { useFlightControllerStore } from "@/stores/fc";
 
@@ -184,10 +185,14 @@ export default defineComponent({
 
         const pipValues = computed(() => PIP_VALUES);
 
-        // Generate function options (0-32, 'Slider Master Multiplier' is the last)
+        // Generate function options (0-32 base, 33+ gated by API version)
+        const adjustmentFunctionCount = computed(() => {
+            return fcStore.isApiVersionSupported(API_VERSION_1_48) ? 34 : 33;
+        });
+
         const functionOptions = computed(() => {
             const options = [];
-            for (let i = 0; i < 33; i++) {
+            for (let i = 0; i < adjustmentFunctionCount.value; i++) {
                 options.push({
                     value: i,
                     label: i18n.getMessage(`adjustmentsFunction${i}`),

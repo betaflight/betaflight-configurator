@@ -7,6 +7,43 @@
                 <WikiButton docUrl="power" />
             </div>
 
+            <!-- Battery Profile Selector -->
+            <div class="gui_box grey" v-if="hasBatteryProfiles">
+                <div class="gui_box_titlebar">
+                    <div class="spacer_box_title" v-html="$t('powerBatteryProfile')"></div>
+                </div>
+                <div class="spacer_box battery-profile-selector">
+                    <div class="select">
+                        <label>
+                            <select
+                                id="batteryProfileSelect"
+                                :aria-label="$t('powerBatteryProfile')"
+                                :value="activeBatteryProfile"
+                                @change="onBatteryProfileChange($event.target.value)"
+                            >
+                                <option v-for="index in numberOfBatteryProfiles" :key="index - 1" :value="index - 1">
+                                    {{ $t("powerBatteryProfileOption", { 1: index }) }}
+                                </option>
+                            </select>
+                            <span v-html="$t('powerBatteryProfile')"></span>
+                        </label>
+                    </div>
+                    <div class="number">
+                        <label>
+                            <input
+                                id="batteryProfileName"
+                                type="text"
+                                maxlength="8"
+                                :placeholder="$t('powerBatteryProfileNamePlaceholder')"
+                                :aria-label="$t('powerBatteryProfileNamePlaceholder')"
+                                v-model="batteryProfileName"
+                            />
+                            <span v-html="$t('powerBatteryProfileNameLabel')"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
             <div class="grid-row grid-box col2">
                 <!-- Left Column -->
                 <div class="col-span-1">
@@ -501,6 +538,7 @@ import BaseTab from "./BaseTab.vue";
 import WikiButton from "../elements/WikiButton.vue";
 import Dialog from "../elements/Dialog.vue";
 import GUI from "../../js/gui";
+import FC from "../../js/fc";
 import { i18n } from "../../js/localization";
 import { usePower } from "../../composables/usePower";
 
@@ -514,6 +552,9 @@ export default defineComponent({
     setup() {
         const {
             supported,
+            hasBatteryProfiles,
+            activeBatteryProfile,
+            batteryProfileName,
             batteryState,
             voltageMeters,
             currentMeters,
@@ -530,6 +571,7 @@ export default defineComponent({
             isVoltageMeterVisible,
             isCurrentMeterVisible,
             loadData,
+            changeBatteryProfile,
             updateLiveData,
             onVoltageMeterSourceChange,
             onCurrentMeterSourceChange,
@@ -550,6 +592,19 @@ export default defineComponent({
         } = usePower();
 
         const calibrationVisibility = computed(() => getCalibrationVisibility());
+        const numberOfBatteryProfiles = computed(() => FC.CONFIG.numberOfBatteryProfiles || 0);
+
+        const onBatteryProfileChange = async (value) => {
+            const profileIndex = Number.parseInt(value, 10);
+            if (!Number.isInteger(profileIndex) || profileIndex < 0 || profileIndex >= numberOfBatteryProfiles.value) {
+                return;
+            }
+            try {
+                await changeBatteryProfile(profileIndex);
+            } catch (error) {
+                console.error("Battery profile change failed:", error);
+            }
+        };
 
         // Dialog visibility state
         const showCalibrationManagerDialog = ref(false);
@@ -617,6 +672,11 @@ export default defineComponent({
 
         return {
             supported,
+            hasBatteryProfiles,
+            activeBatteryProfile,
+            batteryProfileName,
+            numberOfBatteryProfiles,
+            onBatteryProfileChange,
             batteryState,
             voltageMeters,
             currentMeters,
