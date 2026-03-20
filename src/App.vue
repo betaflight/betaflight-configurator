@@ -134,6 +134,14 @@
                                     i18n_title="tabFirmwareFlasher"
                                 ></a>
                             </li>
+                            <li class="tab_preflight">
+                                <a
+                                    href="#"
+                                    i18n="tabPreflight"
+                                    class="tabicon ic_preflight"
+                                    i18n_title="tabPreflight"
+                                ></a>
+                            </li>
                         </ul>
                         <ul class="mode-connected">
                             <li class="tab_setup">
