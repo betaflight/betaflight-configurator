@@ -684,6 +684,7 @@ import DshotCommand from "@/js/utils/DshotCommand";
 import { mspHelper } from "@/js/msp/MSPHelper";
 import { tracking } from "@/js/Analytics";
 import GUI from "@/js/gui";
+import FC from "@/js/fc";
 
 // Import composables for proper state management
 import { useMotorsState } from "@/composables/motors/useMotorsState";
@@ -728,12 +729,7 @@ const closeDynFiltersDialog = () => {
 };
 
 const applyDynFiltersChange = () => {
-    const FILTER_DEFAULT = {
-        dyn_notch_count_rpm: 1,
-        dyn_notch_q_rpm: 500,
-        dyn_notch_count: 3,
-        dyn_notch_q: 120,
-    };
+    const FILTER_DEFAULT = FC.getFilterDefaults();
 
     if (fcStore.motorConfig.use_dshot_telemetry && !previousDshotBidir.value) {
         fcStore.filterConfig.dyn_notch_count = FILTER_DEFAULT.dyn_notch_count_rpm;
@@ -884,21 +880,14 @@ watch(
 
         const rpmFilterIsDisabled = fcStore.filterConfig.gyro_rpm_notch_harmonics === 0;
 
-        // Store previous values for potential restore
-        if (previousFilterDynQ.value === null) {
-            previousFilterDynQ.value = fcStore.filterConfig.dyn_notch_q;
-            previousFilterDynCount.value = fcStore.filterConfig.dyn_notch_count;
-        }
+        // Always restore filter values to original firmware state first
+        fcStore.filterConfig.dyn_notch_count = previousFilterDynCount.value;
+        fcStore.filterConfig.dyn_notch_q = previousFilterDynQ.value;
 
-        // Show dialog when dshotBidir changes and RPM filter is enabled
-        if (newValue !== oldValue && !rpmFilterIsDisabled) {
+        // Show dialog when dshotBidir differs from original firmware value and RPM filter is enabled
+        if (newValue !== previousDshotBidir.value && !rpmFilterIsDisabled) {
             showDynFiltersDialog();
-        } else {
-            // Restore values if dialog not shown
-            fcStore.filterConfig.dyn_notch_count = previousFilterDynCount.value;
-            fcStore.filterConfig.dyn_notch_q = previousFilterDynQ.value;
         }
-        previousDshotBidir.value = newValue;
     },
 );
 
