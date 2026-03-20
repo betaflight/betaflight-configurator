@@ -616,7 +616,6 @@ const FC = {
             gyro: [],
             baro: [],
             mag: [],
-            gps: [],
             sonar: [],
             opticalflow: [],
         };

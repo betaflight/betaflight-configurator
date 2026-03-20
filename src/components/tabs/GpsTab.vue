@@ -302,7 +302,7 @@ import { updateTabList } from "../../js/utils/updateTabList";
 import { initMap } from "../../js/utils/map";
 import { fromLonLat } from "ol/proj";
 import { ispConnected } from "../../js/utils/connection";
-import { sensorTypes } from "../../js/sensor_types";
+import { gpsProtocols as getGpsProtocols } from "../../js/sensor_types";
 import { have_sensor } from "../../js/sensor_helpers";
 import semver from "semver";
 import { API_VERSION_1_46 } from "../../js/data_storage";
@@ -361,9 +361,8 @@ export default defineComponent({
             i18n.getMessage("gpsSbasNone"),
         ];
 
-        const updateGpsProtocols = async () => {
-            const types = await sensorTypes();
-            gpsProtocols.value = types.gps.elements;
+        const updateGpsProtocols = () => {
+            gpsProtocols.value = getGpsProtocols();
         };
 
         const apiVersion = computed(() => fcStore.config.apiVersion);
