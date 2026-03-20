@@ -4205,12 +4205,6 @@
     "pidTuningItermRotation": {
         "message": "I-Term Rotation"
     },
-    "pidTuningSmartFeedforward": {
-        "message": "Intelligentes Feedforward"
-    },
-    "pidTuningSmartFeedforwardHelp": {
-        "message": "Verringert den Einfluss des F-Term in dem PIDF Controller. Wenn der P-Term und der F-Term im selben Moment aktiv sind, wird nur der größere der beiden genutzt. Dies geschieht, um Überschreitungen zu vermeiden, ohne dass man den D-Term reduzieren muss. Er reduziert aber auch die Reaktionsfähigkeit des F-Terms wenn P hinzugefügt wird."
-    },
     "pidTuningItermRelax": {
         "message": "I Term Relax"
     },

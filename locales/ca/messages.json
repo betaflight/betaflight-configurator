@@ -4810,12 +4810,6 @@
     "pidTuningItermRotationHelp": {
         "message": "Gira el vector actual del I Term correctament cap a altres eixos, ja que el quad rota al enfilar contínuament Yaws y Rolls al fer túnels i altres trucs. Molt apreciat pels pilots Acro LOS."
     },
-    "pidTuningSmartFeedforward": {
-        "message": "Feedforward intel·ligent"
-    },
-    "pidTuningSmartFeedforwardHelp": {
-        "message": "Redueix l’efecte del F Term en el PID. Quan els P Term i F Term estan actius en el mateix moment, només utilitza el més gran dels dos, evitant la saturació sense necessitat de pujar D, però també redueix l’efecte de resposta produït pel F Term al afegir-lo a P."
-    },
     "pidTuningItermRelax": {
         "message": "Relaxació I term"
     },
@@ -5562,6 +5556,9 @@
     },
     "osdSetupUploadingFontEnd": {
         "message": "Pujar tots els {{length}} caràcters al OSD"
+    },
+    "osdSetupUploadingFontFailed": {
+        "message": "Pujada fallida"
     },
     "osdSetupSave": {
         "message": "Desa"
@@ -8047,5 +8044,13 @@
     },
     "sectionUserPasskeys": {
         "message": "Claus de pas d'usuari"
+    },
+    "osdPresetPositionAlignTitle": {
+        "message": "Alinear a la posició",
+        "description": "Label for the preset position alignment menu in the OSD elements list"
+    },
+    "osdPresetPositionChooseTitle": {
+        "message": "Tria la posició",
+        "description": "Title for the preset position grid popup in the OSD elements list"
     }
 }

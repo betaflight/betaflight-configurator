@@ -2912,12 +2912,6 @@
     "pidTuningItermRotation": {
         "message": "I Term Rotatie"
     },
-    "pidTuningSmartFeedforward": {
-        "message": "Slimme Feedforward"
-    },
-    "pidTuningSmartFeedforwardHelp": {
-        "message": "Vermindert het effect van de F-term in de PID loop. Wanneer zowel de P-term als de F-term op hetzelfde moment actief zijn, wordt alleen de grootste van de twee gebruikt. Hierdoor wordt overshoot vermeden zonder dat we de D hoeven te verhogen. Maar dit vermindert ook het responsiviteitseffect dat wordt geproduceerd door de F-term wanneer toegevoegd aan P."
-    },
     "pidTuningItermRelax": {
         "message": "I Term Relax"
     },

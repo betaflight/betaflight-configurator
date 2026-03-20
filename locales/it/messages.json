@@ -3866,6 +3866,9 @@
     "firmwareFlasherUF2SaveFailed": {
         "message": "Impossibile salvare (flash) UF2"
     },
+    "firmwareFlasherClickToConnectDfu": {
+        "message": "Clicca per connetterei il dispositivo DFU"
+    },
     "firmwareFlasherConfigCorrupted": {
         "message": "Il file di configurazione sembra corrotto, ASCII accettato (caratteri 0-255)",
         "description": "shown in the progress bar at the bottom, be brief"
@@ -4795,12 +4798,6 @@
     "pidTuningItermRotationHelp": {
         "message": "Ruota il vettore dell'I Term opportunamente con gli altri assi per ruotare quando viri continuamente durante i roll e quando esegui imbucate e altri trick. Molto apprezzato dai piloti LOS acro."
     },
-    "pidTuningSmartFeedforward": {
-        "message": "Feedforward Intelligente"
-    },
-    "pidTuningSmartFeedforwardHelp": {
-        "message": "Riduce l'effetto dell'F-term nel PID. Quando il P-term e l'F-term sono attivi allo stesso momento verrà utilizzato solo il più grandi dei due, evitando gli overshoot senza la necessità di alzare D, ma riduce anche la responsività prodotta dall'F-term quando viene aggiunto al P."
-    },
     "pidTuningItermRelax": {
         "message": "I Term Relax"
     },
@@ -5547,6 +5544,9 @@
     },
     "osdSetupUploadingFontEnd": {
         "message": "Caricati tutti i {{length}} caratteri su OSD"
+    },
+    "osdSetupUploadingFontFailed": {
+        "message": "Upload fallito"
     },
     "osdSetupSave": {
         "message": "Salva"
@@ -8032,5 +8032,13 @@
     },
     "sectionUserPasskeys": {
         "message": "Password Utente"
+    },
+    "osdPresetPositionAlignTitle": {
+        "message": "Allinea alla posizione",
+        "description": "Label for the preset position alignment menu in the OSD elements list"
+    },
+    "osdPresetPositionChooseTitle": {
+        "message": "Scegli posizione",
+        "description": "Title for the preset position grid popup in the OSD elements list"
     }
 }

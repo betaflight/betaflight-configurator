@@ -179,7 +179,7 @@
         "description": "Text for the option to enable or disable the virtual FC"
     },
     "useLegacyRenderingModel": {
-        "message": "Włącz starsze renderowanie dla modelu 3D (dla urządzeń o niskiej wydajności)",
+        "message": "Włącz klasyczne renderowanie modelu 3D (dla urządzeń o niskiej wydajności)",
         "description": "Text for the option to enable or disable legacy rendering of the 3D model"
     },
     "cordovaForceComputerUI": {
@@ -359,13 +359,13 @@
         "message": "Wiersz Poleceń CLI"
     },
     "tabLogging": {
-        "message": "Logowanie powiązane"
+        "message": "Rejestrowanie przewodowe"
     },
     "tabOnboardLogging": {
         "message": "Czarna Skrzynka"
     },
     "tabAdjustments": {
-        "message": "Modyfikacje"
+        "message": "Korekty"
     },
     "tabAuxiliary": {
         "message": "Tryby Lotu"
@@ -1281,10 +1281,10 @@
         "message": "Włącz wyjście telemetryczne, aby wysyłać dane do nadajnika"
     },
     "feature3D": {
-        "message": "Tryb 3D (do użytku tylko z ESC pozwalającym na odwracanie kierunku obrotów)"
+        "message": "Tryb 3D (przeznaczony dla odwracalnych regulatorów ESC)"
     },
     "feature3DTip": {
-        "message": "Włącz tryb 3D do użytku z  ESC które pozwalają na zmianę kierunku obrotów silnika. Skonfiguruj tę opcję w zakładce Silniki"
+        "message": "Włącza tryb 3D dla regulatorów ESC z możliwością odwracania kierunku obrotu. Konfiguracja dostępna w zakładce Silniki."
     },
     "featureRX_PARALLEL_PWM": {
         "message": "PWM (jeden przewód na kanał)"
@@ -1718,16 +1718,16 @@
         "message": "Ustawienia ESC\/Silnika do lotów 3D"
     },
     "configuration3dDeadbandLow": {
-        "message": "Niska strefa nieczułości 3D"
+        "message": "Dolny próg martwej strefy 3D"
     },
     "configuration3dDeadbandHigh": {
-        "message": "Wysoka strefa nieczułości 3D"
+        "message": "Górny próg martwej strefy 3D"
     },
     "configuration3dNeutral": {
-        "message": "Neutralny 3D"
+        "message": "Punkt neutralny 3D"
     },
     "configuration3dDeadbandThrottle": {
-        "message": "3D Strefa czułości przepustnicy"
+        "message": "Martwa strefa 3D przepustnicy"
     },
     "configurationSystem": {
         "message": "Konfiguracja systemu"
@@ -2113,6 +2113,9 @@
     "pidTuningDtermSetpointTransitionHelp": {
         "message": "Za pomocą tego parametru można zmniejszyć siłę wychylenia w pobliżu środka drążków, co skutkuje gładszym zakończeniem przewrotów i beczek.<br> Wartośći reprezentujące punkt wychylenia drążka: 0 - drążek wyśrodkowany, 1 - pełne wychylenie. Gdy drążek znajduje się powyżej tego punktu, wychylenie jest utrzymywane na stałym poziomie skonfigurowanej wartości. Gdy drążek znajduje się poniżej tego punktu, sila zadana jest proporcjonalnie zmniejszana, osiągając 0 w środkowej pozycji drążka.<br>Wartość 1 zapewnia maksymalny efekt wygładzenia, a wartość 0 utrzymuje ustawioną siłę na ustawionej wartości w całym zakresie wychylenia drążka."
     },
+    "pidTuningDtermSetpointHelp": {
+        "message": "Ten parametr określa efekt przyspieszenia drążka w ramach składowej pochodnej. Wartość 0 oznacza starą metodę pomiaru, w której D śledzi tylko żyroskop. Wartość 1 oznacza starą metodę błędu, która wykorzystuje równy współczynnik śledzenia żyroskopu i drążka. Niższe wartości zapewniają wolniejszą, płynniejszą reakcję drążka, natomiast wyższe wartości zapewniają większą reakcję przyspieszenia drążka. <br>Należy pamiętać, że podczas stosowania wyższych wartości zaleca się interpolację RC, aby zapobiec hałasowi spowodowanemu przez skoki sterowania."
+    },
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class = \"message-negative\"> <strong> $t(warningTitle.message): <\/strong> Odradza się stosowania wartości zadanej D większej niż 0 i mniejszej niż 0,1. Takie postępowanie może prowadzić do niestabilności i zmniejszenia reakcji drążka, gdy drążki przekroczą punkt środkowy. <\/span>"
     },
@@ -2141,7 +2144,7 @@
         "message": "Uśrednianie Feedforward oblicza średnią z ostatnich 2 lub 3 kroków Feedforward, co wygładza jego przebieg, ale jednocześnie wprowadza pewne opóźnienie.<br><br>Najskuteczniej redukuje sekwencyjne zakłocenia w sygnale, które często występują przy szybszych połączeniach RC.<br><br>Uśrednianie 2-punktowe jest zalecane dla 500 Hz, zakłóconych połączeń 250 Hz oraz latania Cinematic\/HD. Uśrednianie 3-punktowe jest wymagane dla Crossfire (przed CRSFShot) w trybie 150 Hz."
     },
     "pidTuningOptionOff": {
-        "message": "Wył"
+        "message": "WYŁ."
     },
     "pidTuningOptionOn": {
         "message": "Wł"
@@ -2355,7 +2358,7 @@
         "description": "Pidtuning slider mode can be OFF, RP or RPY"
     },
     "pidTuningSliderModeHelp": {
-        "message": "<strong>Tryb suwaka Pid Tuning<\/strong><br><br>Tryb suwaka Pid Tuning może być:<br><br>&bull; WYŁĄCZONE - bez suwaków, wprowadź wartości ręcznie<br>&bull; RP – suwaki kontrolują tylko Roll i Pitch, wprowadź wartości Yaw ręcznie<br>&bull; RPY – suwaki kontrolują wszystkie wartości PID<br><br><span class=\"message-negative\"><b>Ostrzeżenie:<\/b><\/span>Przejście z trybu RP do trybu RPY spowoduje nadpisanie ustawień odchylenia z ustawieniami oprogramowania układowego."
+        "message": "<strong>Tryb suwaków regulacji PID<\/strong><br><br>Tryb suwaków regulacji PID może być ustawiony na:<br><br>&bull; WYŁ. - brak suwaków, ręczne wprowadzanie wartości<br>&bull; RP - suwaki sterują osiami Roll i Pitch, dla osi Yaw ręczne wprowadzanie wartości<br>&bull; RPY - suwaki sterują wszystkimi wartościami PID<br><br><span class=\"message-negative\"><b>Uwaga:<\/b><\/span>Przełączenie z trybu RP na tryb RPY spowoduje nadpisanie ustawień osi Yaw wartościami wyliczonymi przez firmware."
     },
     "receiverHelpModelId": {
         "message": "Jeśli ustawisz Model Match na wartość inną niż 255, możesz określić numer odbiornika na stronie ustawień modelu w OpenTX\/EdgeTX i włączyć Model Match w skrypcie ELRS LUA dla tego modelu. Model match mieści się w zakresie od 0 do 63 włącznie.<br \/>Zobacz dokumentację ELRS, aby uzyskać więcej informacji."
@@ -2406,10 +2409,10 @@
         "message": "Są to wartości maksymalnego odchyłu sygnału wejściowego RC podawane w mikro sekundach(us), które są akceptowane jako sygnał poprawny. W przypadku nadajników posiadających duży jitter w sygnale, wartość tą można zwiększyć (aby kontroler uznał go za poprawny). <strong>Nastawa ta dotyczy tylko ustawień dla odchylenia \"Yaw\"<\/strong>"
     },
     "recevier3dDeadbandThrottle": {
-        "message": "Strefa Nieczułości Przepustnicy (tylko tryb 3D)"
+        "message": "Martwa strefa 3D przepustnicy"
     },
     "receiverHelp3dDeadbandThrottle": {
-        "message": "Są to wartości podawane w mikro sekundach(us). Aby zwiększyć zakres martwy drążka gazu, zwiększ tą wartość.<strong>Ustawienia tylko dla Gazu w trybie 3D.<\/strong>"
+        "message": "Są to wartości w mikrosekundach (μs). Zwiększenie wartości poszerza strefę neutralną. <strong>Ustawienie dotyczy tylko przepustnicy w trybie 3D.<\/strong>"
     },
     "receiverChannelMap": {
         "message": "Kolejność Kanałów"
@@ -2517,7 +2520,7 @@
         "message": "ORAZ"
     },
     "auxiliaryHelpMode_3DDISABLE": {
-        "message": "Umożliwia odwracalny kierunek obrotu silnika, aby zapewnić ujemny ciąg i umożliwić lot do góry nogami. Przepustnica pracuje w zakresie od -100 do +100 zamiast od 0 do 100",
+        "message": "Włącza odwracalny kierunek obrotu silników, umożliwiając uzyskanie ujemnego ciągu i lot do góry nogami. Przepustnica pracuje w zakresie od -100 do +100 zamiast od 0 do 100.",
         "description": "Help text to 3D mode"
     },
     "auxiliaryHelpMode_ACROTRAINER": {
@@ -2591,6 +2594,10 @@
     "auxiliaryHelpMode_CAMSTAB": {
         "message": "Włącza tryb stabilizacji kamery",
         "description": "Help text to CAMSTAB mode"
+    },
+    "auxiliaryHelpMode_CHIRP": {
+        "message": "Włącza tryb Chirp",
+        "description": "Help text for CHIRP mode"
     },
     "auxiliaryHelpMode_FAILSAFE": {
         "message": "Wywołuje ręcznie Etap 2 procedury Fail-Safe",
@@ -2741,6 +2748,20 @@
     "adjustmentsColumnViaChannel": {
         "message": "kanałem"
     },
+    "adjustmentsColumnAdjustmentCenter": {
+        "message": "ze środkiem (wartość)"
+    },
+    "adjustmentsColumnAdjustmentScale": {
+        "message": "i zakresem|skalą (wartość|%)"
+    },
+    "adjustmentsCenterHelp": {
+        "message": "Ustawia punkt środkowy lub wartość odniesienia używaną przez funkcję regulacji. <br \/><br \/><strong>Regulacje suwaka:<\/strong><br \/>W przypadku regulacji suwaka ustaw wartość Adjustment Center na 0. Aktualna pozycja suwaka zostanie wykorzystana do regulacji w górę\/w dół. <br \/><br \/><strong>Regulacje wyboru:<\/strong><br \/>Ustaw środek regulacji na 0 lub na określoną wartość w mikrosekundach (uS), jeśli chcesz przesunąć punkt odniesienia przełącznika z 1500 uS podczas inicjowania regulacji RC. <br \/><br \/><strong>Regulacje skokowe:<\/strong><br \/>Ustaw wartość środkową regulacji na 0, aby wykorzystać bieżącą wartość regulowanego elementu. <br \/><br \/><strong>Regulacje bezwzględne:<\/strong><br \/>Aby skorzystać z metody regulacji bezwzględnej, należy ustawić zarówno wartość środkową regulacji, jak i skalę, aby określić żądaną wartość i zakres. Zakres oblicza się jako: środek ± skala. Na przykład ustawienie środka regulacji na 50 i skali regulacji na 25 tworzy zakres od 25 do 75, z pozycją środkową (przełącznik lub potencjometr) przypisaną do 50. <br \/><br \/>Więcej informacji można znaleźć na <a href=\"https:\/\/www.betaflight.com\/docs\/development\/Inflight-Adjustments\" target=\"_blank\" rel=\"noopener noreferrer\">tej stronie<\/a>.",
+        "description": "Tooltip help text for the Adjustment Center column"
+    },
+    "adjustmentsScaleHelp": {
+        "message": "Kontroluje skalowanie lub zakres regulacji; wyższe wartości zwiększają zakres regulacji lub czułość. <br \/><br \/><strong>Regulacje suwaka:<\/strong><br \/>W przypadku regulacji suwaka skala regulacji kontroluje skalowanie\/czułość regulacji. Wartość 50 odpowiada 50% zakresu suwaka. Ustawienie wartości 0 powoduje użycie domyślnej skali dla suwaków. <br \/><br \/><strong>Regulacje wyboru:<\/strong><br \/>W przypadku regulacji wyboru ustaw skalę regulacji na 0, aby uzyskać domyślne zachowanie, lub określ wartość w mikrosekundach (uS), aby ograniczyć zakres. Na przykład: ustaw środek regulacji na 1000 (uS) i skalę regulacji na 500 (uS), aby wykorzystać przełącznik 3-pozycyjny jako przełącznik 2-pozycyjny. <br \/><br \/><strong>Regulacje skokowe i absolutne:<\/strong><br \/>W przypadku regulacji skokowych i absolutnych skala regulacji określa zakres powyżej i poniżej środka regulacji. Na przykład wartość 25 tworzy zakres regulacji ±25 od wartości środka regulacji lub od bieżącej wartości, jeśli środek regulacji jest ustawiony na 0. <br \/><strong>Uwaga:<\/strong> Aby użyć metody regulacji absolutnej z potencjometrem, należy określić wartość skali regulacji. <br \/><br \/>Więcej informacji można znaleźć na <a href=\"https:\/\/www.betaflight.com\/docs\/development\/Inflight-Adjustments\" target=\"_blank\" rel=\"noopener noreferrer\">tej stronie<\/a>.",
+        "description": "Tooltip help text for the Adjustment Scale column"
+    },
     "adjustmentsSlot0": {
         "message": "Slot 1"
     },
@@ -2763,88 +2784,88 @@
         "message": "Bez zmian"
     },
     "adjustmentsFunction1": {
-        "message": "Regulacja RC Rate"
+        "message": "Korekta RC Rate"
     },
     "adjustmentsFunction2": {
-        "message": "Regulacja RC Expo"
+        "message": "Korekta RC Expo"
     },
     "adjustmentsFunction3": {
-        "message": "Regulacja Throttle Expo"
+        "message": "Korekta Expo przepustnicy"
     },
     "adjustmentsFunction4": {
-        "message": "Regulacja Pitch & Roll Rate"
+        "message": "Korekta Rate w osi Pitch i Roll"
     },
     "adjustmentsFunction5": {
-        "message": "Regulacja Yaw Rate"
+        "message": "Korekta Rate w osi Yaw"
     },
     "adjustmentsFunction6": {
-        "message": "Regulacja Pitch & Roll P"
+        "message": "Korekta P w osi Pitch i Roll"
     },
     "adjustmentsFunction7": {
-        "message": "Regulacja Pitch & Roll I"
+        "message": "Korekta I w osi Pitch i Roll"
     },
     "adjustmentsFunction8": {
-        "message": "Regulacja Pitch & Roll D"
+        "message": "Korekta D w osi Pitch i Roll"
     },
     "adjustmentsFunction9": {
-        "message": "Regulacja Yaw P"
+        "message": "Korekta P w osi Yaw"
     },
     "adjustmentsFunction10": {
-        "message": "Regulacja Yaw I"
+        "message": "Korekta I w osi Yaw"
     },
     "adjustmentsFunction11": {
-        "message": "Regulacja Yaw D"
+        "message": "Korekta D w osi Yaw"
     },
     "adjustmentsFunction12": {
-        "message": "Rate-Wybór Profilu"
+        "message": "Wybór Profilu Rate"
     },
     "adjustmentsFunction13": {
-        "message": "Pitch Rate"
+        "message": "Korekta Rate w osi Pitch"
     },
     "adjustmentsFunction14": {
-        "message": "Roll Rate"
+        "message": "Korekta Rate w osi Roll"
     },
     "adjustmentsFunction15": {
-        "message": "Regulacja P w osi Pitch"
+        "message": "Korekta P w osi Pitch"
     },
     "adjustmentsFunction16": {
-        "message": "Regulacja I w osi Pitch"
+        "message": "Korekta I w osi Pitch"
     },
     "adjustmentsFunction17": {
-        "message": "Regulacja Pitch D"
+        "message": "Korekta D w osi Pitch"
     },
     "adjustmentsFunction18": {
-        "message": "Regulacja Roll P"
+        "message": "Korekta P w osi Roll"
     },
     "adjustmentsFunction19": {
-        "message": "Regulacja Roll I"
+        "message": "Korekta I w osi Roll"
     },
     "adjustmentsFunction20": {
-        "message": "Regulacja Roll D"
+        "message": "Korekta D w osi Roll"
     },
     "adjustmentsFunction21": {
-        "message": "RC Rate Yaw"
+        "message": "Korekta RC Rate w osi Yaw"
     },
     "adjustmentsFunction22": {
-        "message": "Regulacja Pitch & Roll F"
+        "message": "Korekta F w osi Pitch i Roll"
     },
     "adjustmentsFunction23": {
         "message": "Przejście Feedforward"
     },
     "adjustmentsFunction24": {
-        "message": "Horizon-Regulacja siły"
+        "message": "Korekta Horizon Strength"
     },
     "adjustmentsFunction25": {
         "message": "Wybór PID-Audio"
     },
     "adjustmentsFunction26": {
-        "message": "Regulacja Pitch F"
+        "message": "Korekta F w osi Pitch"
     },
     "adjustmentsFunction27": {
-        "message": "Regulacja Roll F"
+        "message": "Korekta F w osi Roll"
     },
     "adjustmentsFunction28": {
-        "message": "Regulacja Yaw F"
+        "message": "Korekta F w osi Yaw"
     },
     "adjustmentsFunction29": {
         "message": "Wybór profilu OSD"
@@ -2853,7 +2874,10 @@
         "message": "Wybór profilu LED"
     },
     "adjustmentsFunction31": {
-        "message": "Regulacja jasności LED"
+        "message": "Korekta jasności LED"
+    },
+    "adjustmentsFunction32": {
+        "message": "Główny Mnożnik"
     },
     "adjustmentsSave": {
         "message": "Zapisz"
@@ -2978,10 +3002,10 @@
         "message": "Sprawdź swoje połączenie internetowe"
     },
     "gpsMapMessage2": {
-        "message": "Oczekiwanie na poprawę zasięgu GPS…"
+        "message": "Oczekiwanie na ustalenie pozycji GPS…"
     },
     "gps3dFix": {
-        "message": "Fix 3D:"
+        "message": "Ustalona pozycja GPS:"
     },
     "gpsFixTrue": {
         "message": "Ok"
@@ -3293,7 +3317,7 @@
         "message": "Silniki będą obracać się podczas ustawiania kierunku!"
     },
     "escDshotDirectionDialog-SettingsAutoSaved": {
-        "message": "Kierunek obrotu silnika jest zapisywany po dokonaniu wyboru"
+        "message": "Kierunek obrotu jest zapisywany po dokonaniu wyboru"
     },
     "escDshotDirectionDialog-WrongProtocolText": {
         "message": "Funkcja działa tylko z ESC z protokołem DSHOT.<br \/> Sprawdź, czy ESC (elektroniczny kontroler prędkości) którego używasz obsługuje protokół DSHOT i zmień go w ustawieniach $t(tabMotorTesting.message)."
@@ -3416,7 +3440,7 @@
         "message": "Tutaj wprowadź polecenie"
     },
     "loggingNote": {
-        "message": "Dane będą zbierane w tej karcie <span class=\"message-negative\">tylko<\/span>. Opuszczenie zakładki <span class=\"message-negative\">anuluj logowanie<\/span>, a aplikacja powróci do normalnego stanu.<br \/> Możesz wybrać globalny okres aktualizacji; dane będą zapisywane do pliku dziennika co <strong>1<\/strong> sekundę ze względów wydajności."
+        "message": "Dane będą rejestrowane <span class=\"message-negative\">tylko<\/span> w tej zakładce. Opuszczenie tej zakładki <span class=\"message-negative\">przerwie<\/span> rejestrowanie, a aplikacja powróci do normalnego działania.<br \/> Możesz wybrać globalny okres aktualizacji; jednak ze względów wydajnościowych dane będą zapisywane do pliku dziennika co <strong>1<\/strong> sekundę."
     },
     "loggingSamplesSaved": {
         "message": "Zapisane próbki:"
@@ -3425,19 +3449,19 @@
         "message": "Rozmiar dziennika:"
     },
     "loggingLogName": {
-        "message": "Nazwa zdarzenia:"
+        "message": "Nazwa dziennika:"
     },
     "loggingButtonLogFile": {
-        "message": "Wybierz zapis dziennika"
+        "message": "Wybierz plik dziennika"
     },
     "loggingStart": {
-        "message": "Rozpocznij zapisywane"
+        "message": "Rozpocznij rejestrowanie"
     },
     "loggingStop": {
-        "message": "Zatrzymaj zapisywanie"
+        "message": "Zatrzymaj rejestrowanie"
     },
     "loggingBack": {
-        "message": "Wyjdź z dziennika\/rozłącz"
+        "message": "Opuść rejestrowanie \/ rozłącz"
     },
     "loggingErrorNotConnected": {
         "message": "Najpierw musisz się <strong>połączyć<\/strong>"
@@ -3821,6 +3845,9 @@
     },
     "firmwareFlasherUF2SaveFailed": {
         "message": "Nie udało się zapisać (flash) UF2"
+    },
+    "firmwareFlasherClickToConnectDfu": {
+        "message": "Kliknij, aby połączyć się z urządzeniem DFU"
     },
     "firmwareFlasherConfigCorrupted": {
         "message": "Plik konfiguracyjny wydaje się być uszkodzony, ASCII akceptowane (znaki 0-255)",
@@ -4751,12 +4778,6 @@
     "pidTuningItermRotationHelp": {
         "message": "Prawidłowo obraca bieżący wektor I Term do innych osi, ponieważ model obraca się podczas ciągłych beczek, flipów oraz innych trików. Bardzo doceniane przez pilotów LOS acro."
     },
-    "pidTuningSmartFeedforward": {
-        "message": "Smart Feedforward"
-    },
-    "pidTuningSmartFeedforwardHelp": {
-        "message": "Zmniejsza działanie parametru F w PID. Gdy parametry P i F są aktywne w tym samym momencie, wykorzystuje on tylko większy z tych dwóch czynników, unikając przesterowań bez konieczności podnoszenia poziomu D, ale także ogranicza szybkość reakcji wywołany przez parametr F w przypadku dodania go do P."
-    },
     "pidTuningItermRelax": {
         "message": "I Term Relax"
     },
@@ -5503,6 +5524,9 @@
     },
     "osdSetupUploadingFontEnd": {
         "message": "Przesłano wszystkie {{length}} znaki do OSD"
+    },
+    "osdSetupUploadingFontFailed": {
+        "message": "Błąd przesyłania"
     },
     "osdSetupSave": {
         "message": "Zapisz"
@@ -7146,7 +7170,7 @@
         "message": "Profil Rate"
     },
     "pidTuningRateProfileTip": {
-        "message": "W kontrolerze lotu można przechowywać do 3 różnych Profili Rate. Zawierają one ustawienia: RC Rate, Rate, RC Expo, Przepustnica oraz TPA. Przełączanie między Profilami Rate jest możliwe podczas lotu, poprzez ustawienie 3-pozycyjnego przełącznika w zakładce „Modyfikacje”."
+        "message": "Na kontrolerze lotu można zapisać do trzech różnych Profili Rate. Obejmują one ustawienia dotyczące RC Rate, Rate, RC Expo, Przepustnicy oraz TPA. Między Profilami Rate można przełączać się w trakcie lotu, konfigurując trójpozycyjny przełącznik dla opcji „Wybór Profilu Rate” w zakładce Korekty."
     },
     "pidTuningRateSetup": {
         "message": "Podstawowy\/Acro Rates"
@@ -7988,5 +8012,13 @@
     },
     "sectionUserPasskeys": {
         "message": "Klucz użytkownika"
+    },
+    "osdPresetPositionAlignTitle": {
+        "message": "Wyrównaj do pozycji",
+        "description": "Label for the preset position alignment menu in the OSD elements list"
+    },
+    "osdPresetPositionChooseTitle": {
+        "message": "Wybierz pozycję",
+        "description": "Title for the preset position grid popup in the OSD elements list"
     }
 }

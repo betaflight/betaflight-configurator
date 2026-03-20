@@ -4802,12 +4802,6 @@
     "pidTuningItermRotationHelp": {
         "message": "Roda o vetor atual do Termo I apropriadamente para outros eixos conforme a aeronave gira durante uma rotação continua no eixo yaw durante rolls, entre outras manobras parecidas. Isto é muito apreciado por pilotos do estilo LOS acro."
     },
-    "pidTuningSmartFeedforward": {
-        "message": "Feedforward Inteligente"
-    },
-    "pidTuningSmartFeedforwardHelp": {
-        "message": "Reduz o efeito do termo F no PID.<br>Quando ambos os termos P e F estão ativos ao mesmo tempo, será usado somente o maior dos dois, evitando overshoots sem a necessidade de aumentar o termo D, mas também reduz o efeito de responsividade produzido pelo termo F quando adicionado ao termo P."
-    },
     "pidTuningItermRelax": {
         "message": "Relaxar o Termo I"
     },
@@ -5554,6 +5548,9 @@
     },
     "osdSetupUploadingFontEnd": {
         "message": "Todos os {{length}} caracteres foram enviados para o OSD"
+    },
+    "osdSetupUploadingFontFailed": {
+        "message": "Upload falhou"
     },
     "osdSetupSave": {
         "message": "Gravar"
@@ -8039,5 +8036,13 @@
     },
     "sectionUserPasskeys": {
         "message": "Chaves de acesso do Utilizador"
+    },
+    "osdPresetPositionAlignTitle": {
+        "message": "Alinhar à posição",
+        "description": "Label for the preset position alignment menu in the OSD elements list"
+    },
+    "osdPresetPositionChooseTitle": {
+        "message": "Escolha Posição",
+        "description": "Title for the preset position grid popup in the OSD elements list"
     }
 }

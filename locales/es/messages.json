@@ -4743,12 +4743,6 @@
     "pidTuningItermRotationHelp": {
         "message": "Rota adecuadamente el actual vector del término I a otros ejes cuando la aeronave gira por el uso del yaw continuamente y se realizan rolls, embudos y otros trucos. Muy útil para pilotos acro tipo LOS."
     },
-    "pidTuningSmartFeedforward": {
-        "message": "Prealimentación Inteligente"
-    },
-    "pidTuningSmartFeedforwardHelp": {
-        "message": "Reduce el efecto del término F (Prealimentación) en el PID. Cuando tanto el término P como el término F están activos en el mismo momento, sólo usa el más grande de los dos, evitando sobre rebasamientos sin la necesidad de aumentar D, pero también reduce el efecto de respuesta producido por el término F cuando se ha añade a P."
-    },
     "pidTuningItermRelax": {
         "message": "Relajar Término I"
     },
