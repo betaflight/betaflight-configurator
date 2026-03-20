@@ -5,6 +5,7 @@ export const API_VERSION_1_45 = "1.45.0";
 export const API_VERSION_1_46 = "1.46.0";
 export const API_VERSION_1_47 = "1.47.0";
 export const API_VERSION_1_48 = "1.48.0";
+
 import { reactive } from "vue";
 
 const CONFIGURATOR = reactive({

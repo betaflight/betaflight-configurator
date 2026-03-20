@@ -244,6 +244,10 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_48)) {
                         FC.CONFIG.numberOfBatteryProfiles = data.readU8();
                         FC.CONFIG.batteryProfile = data.readU8();
+                        // Grow batteryProfileNames to match actual profile count from FC
+                        while (FC.CONFIG.batteryProfileNames.length < FC.CONFIG.numberOfBatteryProfiles) {
+                            FC.CONFIG.batteryProfileNames.push("");
+                        }
                     }
                     break;
 

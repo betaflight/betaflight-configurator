@@ -599,7 +599,11 @@ export default defineComponent({
             if (!Number.isInteger(profileIndex) || profileIndex < 0 || profileIndex >= numberOfBatteryProfiles.value) {
                 return;
             }
-            await changeBatteryProfile(profileIndex);
+            try {
+                await changeBatteryProfile(profileIndex);
+            } catch (error) {
+                console.error("Battery profile change failed:", error);
+            }
         };
 
         // Dialog visibility state

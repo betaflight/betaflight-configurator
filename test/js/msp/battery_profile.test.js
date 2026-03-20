@@ -70,6 +70,19 @@ describe("Battery Profiles", () => {
             expect(FC.CONFIG.batteryProfile).toEqual(2);
         });
 
+        it("grows batteryProfileNames when FC reports more profiles than initialized", () => {
+            FC.CONFIG.apiVersion = "1.49.0";
+            processMessage(
+                mspHelper,
+                MSPCodes.MSP_STATUS_EX,
+                buildStatusExBuffer({ batteryProfiles: 5, batteryProfile: 4 }),
+            );
+
+            expect(FC.CONFIG.numberOfBatteryProfiles).toEqual(5);
+            expect(FC.CONFIG.batteryProfileNames).toHaveLength(5);
+            expect(FC.CONFIG.batteryProfileNames[4]).toEqual("");
+        });
+
         it("does not parse battery profile fields for API < 1.48", () => {
             FC.CONFIG.apiVersion = API_VERSION_1_47;
             processMessage(mspHelper, MSPCodes.MSP_STATUS_EX, buildStatusExBuffer());
