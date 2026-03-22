@@ -397,8 +397,11 @@ async function saveConfigBackup() {
         buttonCancelCallback: null,
     });
 
+    let activated = false;
+
     try {
         await cliSession.activate();
+        activated = true;
         const cliStrings = await cliSession.readDumpAll();
         const filename = generateFilename("cli_backup", "txt");
         const text = cliStrings.join("\n");
@@ -428,7 +431,9 @@ async function saveConfigBackup() {
             buttonConfirmText: i18n.getMessage("close"),
         });
     } finally {
-        cliSession.sendLine(CliEngine.s_commandExit);
+        if (activated) {
+            cliSession.sendLine(CliEngine.s_commandExit);
+        }
     }
 }
 
@@ -450,7 +455,7 @@ async function loadConfigBackup() {
             return;
         }
 
-        store.appendPickedPreset({ title: i18n.getMessage("presetsBackupLoad") }, text.split("\n"), undefined);
+        store.appendPickedPreset({ title: i18n.getMessage("presetsBackupLoad") }, text.split(/\r?\n/), undefined);
         await applyPickedPresets();
     } catch (error) {
         if (isPickerAbortError(error)) {

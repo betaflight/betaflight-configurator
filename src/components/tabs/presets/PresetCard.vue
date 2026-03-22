@@ -37,18 +37,15 @@
                         <span
                             class="preset_title_panel_official preset_title_panel_status_experimental"
                             v-show="preset.status === 'EXPERIMENTAL'"
-                            v-html="$t('presetsExperimental')"
-                        ></span>
+                        >{{ $t('presetsExperimental') }}</span>
                         <span
                             class="preset_title_panel_official preset_title_panel_status_community"
                             v-show="preset.status === 'COMMUNITY'"
-                            v-html="$t('presetsCommunity')"
-                        ></span>
+                        >{{ $t('presetsCommunity') }}</span>
                         <span
                             class="preset_title_panel_official preset_title_panel_status_official"
                             v-show="preset.status === 'OFFICIAL'"
-                            v-html="$t('presetsOfficial')"
-                        ></span>
+                        >{{ $t('presetsOfficial') }}</span>
                     </div>
                     <div class="presets_title_panel_value">
                         <span class="preset_title_panel_category">{{ preset.category }}</span>
@@ -222,6 +219,11 @@ function handleCardKeydown(event) {
 
 .preset_title_panel_clickable {
     cursor: pointer;
+
+    &:focus-visible {
+        outline: 2px solid var(--primary-500);
+        outline-offset: -2px;
+    }
 }
 
 .preset_title_panel_title {
@@ -248,6 +250,11 @@ function handleCardKeydown(event) {
     display: flex;
     align-items: center;
     justify-content: center;
+
+    &:focus-visible {
+        outline: 2px solid var(--primary-500);
+        outline-offset: 1px;
+    }
 }
 
 .preset_title_panel_star_img {
