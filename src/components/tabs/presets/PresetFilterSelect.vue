@@ -72,6 +72,7 @@ defineEmits(["update:modelValue"]);
     width: 100%;
     min-height: 38px;
     color: var(--text);
+    font-size: inherit;
 }
 
 .multiselect:deep(.multiselect__tags) {
