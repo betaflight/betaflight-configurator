@@ -420,19 +420,27 @@ function calculatePIDs(kv, voltage, prop, weight, style) {
     const pitchP = clamp(Math.round(pBase + 2), 20, 90);
     const yawP = clamp(Math.round(pBase * 0.945), 15, 70);
 
+    const FF_BY_STYLE = {
+        Cinematic: { roll_f: 90, pitch_f: 95, yaw_f: 90 },
+        LongRange: { roll_f: 90, pitch_f: 95, yaw_f: 90 },
+        Freestyle: { roll_f: 120, pitch_f: 125, yaw_f: 120 },
+        Racing: { roll_f: 135, pitch_f: 143, yaw_f: 135 },
+    };
+    const ff = FF_BY_STYLE[style] || FF_BY_STYLE.Freestyle;
+
     return {
         roll_p: rollP,
         roll_i: Math.round(rollP * 1.39),
         roll_d: Math.round(rollP * 0.649),
-        roll_f: Math.round(pBase * 1.4),
+        roll_f: ff.roll_f,
         pitch_p: pitchP,
         pitch_i: Math.round(pitchP * 1.39),
         pitch_d: Math.round(pitchP * 0.649),
-        pitch_f: Math.round(pBase * 1.45),
+        pitch_f: ff.pitch_f,
         yaw_p: yawP,
         yaw_i: Math.round(yawP * 1.39),
         yaw_d: 0,
-        yaw_f: Math.round(pBase * 1.4),
+        yaw_f: ff.yaw_f,
         d_min_roll: Math.round(rollP * 0.541),
         d_min_pitch: Math.round(pitchP * 0.541),
     };
