@@ -331,9 +331,12 @@ function handleOptionsToggle(event) {
     width: 600px;
     height: 520px;
     padding: 12px 12px 0 12px;
+    display: flex;
+    flex-direction: column;
 
     .content_toolbar {
         width: unset;
+        margin-top: auto;
         margin-left: auto;
         margin-right: -12px;
 
@@ -344,6 +347,10 @@ function handleOptionsToggle(event) {
 }
 
 #presets_detailed_dialog_content_wrapper {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
     .preset_title_panel_title {
         padding-bottom: 0.5ex;
         border-bottom: 1px solid var(--primary-500);
@@ -353,12 +360,33 @@ function handleOptionsToggle(event) {
     .left-panel {
         position: absolute;
         left: 0;
+        bottom: 0;
+        height: 52px;
         padding-left: 20px;
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        
+        .regular-button {
+            margin-top: 0;
+            margin-bottom: 0;
+        }
     }
 }
 
+#presets_detailed_dialog_content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+}
+
 #presets_detailed_dialog_properties {
-    height: 466px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
 }
 
 #presets_detailed_dialog_loading {
@@ -479,8 +507,10 @@ function handleOptionsToggle(event) {
     padding-top: 6px;
     padding-bottom: 6px;
     margin-top: 12px;
+    margin-bottom: 12px;
     overflow-y: scroll;
-    height: 260px;
+    flex: 1;
+    min-height: 0;
     font-size: 110%;
     white-space: pre-line;
     user-select: text;
