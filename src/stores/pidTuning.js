@@ -16,6 +16,10 @@ export const usePidTuningStore = defineStore("pidTuning", () => {
     // ---- reactive state ----
     const hasChanges = ref(false);
     const originalsReady = ref(false);
+    // Set by external tools (e.g. AeroTune) that write PIDs to FC before
+    // navigating here.  storeOriginals() will honour this flag and leave
+    // hasChanges = true so the Save button is enabled immediately.
+    const pendingExternalChange = ref(false);
 
     // Original value snapshots (deep-cloned plain objects)
     const originalPids = ref([]);
@@ -43,7 +47,21 @@ export const usePidTuningStore = defineStore("pidTuning", () => {
         originalPidProfileName.value = pidProfileName;
         originalRateProfileName.value = rateProfileName;
         originalsReady.value = true;
-        hasChanges.value = false;
+        if (pendingExternalChange.value) {
+            hasChanges.value = true;
+            pendingExternalChange.value = false;
+        } else {
+            hasChanges.value = false;
+        }
+    }
+
+    /**
+     * Signal that an external tool has already written values to FC hardware.
+     * The next storeOriginals() call will leave hasChanges = true so the
+     * Save button is enabled without the user having to touch anything.
+     */
+    function markExternalChange() {
+        pendingExternalChange.value = true;
     }
 
     /**
@@ -79,5 +97,6 @@ export const usePidTuningStore = defineStore("pidTuning", () => {
         hasChanges,
         storeOriginals,
         checkForChanges,
+        markExternalChange,
     };
 });
