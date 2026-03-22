@@ -16,10 +16,12 @@ export const usePidTuningStore = defineStore("pidTuning", () => {
     // ---- reactive state ----
     const hasChanges = ref(false);
     const originalsReady = ref(false);
-    // Set by external tools (e.g. AeroTune) that write PIDs to FC before
-    // navigating here.  storeOriginals() will honour this flag and leave
-    // hasChanges = true so the Save button is enabled immediately.
-    const pendingExternalChange = ref(false);
+
+    // Set by external tools (e.g. AeroTune) that write PIDs to FC hardware
+    // before navigating to this tab.  While true, storeOriginals() keeps
+    // hasChanges = true so the Save button stays enabled across Refresh calls.
+    // Only cleared when the user explicitly saves (clearExternalChange()).
+    const externalChangeFlag = ref(false);
 
     // Original value snapshots (deep-cloned plain objects)
     const originalPids = ref([]);
@@ -35,6 +37,9 @@ export const usePidTuningStore = defineStore("pidTuning", () => {
     /**
      * Snapshot the current FC data so we can detect future changes.
      * Call after every MSP load / profile switch.
+     *
+     * When externalChangeFlag is set (AeroTune applied PIDs), hasChanges is
+     * forced true so the Save button stays enabled after Refresh as well.
      */
     function storeOriginals(pidProfileName = "", rateProfileName = "") {
         // Use JSON-based cloning instead of structuredClone because FC is a Vue reactive() proxy
@@ -47,21 +52,28 @@ export const usePidTuningStore = defineStore("pidTuning", () => {
         originalPidProfileName.value = pidProfileName;
         originalRateProfileName.value = rateProfileName;
         originalsReady.value = true;
-        if (pendingExternalChange.value) {
-            hasChanges.value = true;
-            pendingExternalChange.value = false;
-        } else {
-            hasChanges.value = false;
-        }
+        // If an external tool wrote values to FC, keep hasChanges = true until
+        // the user saves (clearExternalChange is called before storeOriginals
+        // in the save path).
+        hasChanges.value = externalChangeFlag.value ? true : false;
     }
 
     /**
      * Signal that an external tool has already written values to FC hardware.
-     * The next storeOriginals() call will leave hasChanges = true so the
-     * Save button is enabled without the user having to touch anything.
+     * hasChanges will be kept true by storeOriginals() until clearExternalChange()
+     * is called (i.e. until the user saves).
      */
     function markExternalChange() {
-        pendingExternalChange.value = true;
+        externalChangeFlag.value = true;
+    }
+
+    /**
+     * Clear the external-change flag.  Call this at the start of the save
+     * path so that the post-save storeOriginals() call resets hasChanges to
+     * false as normal.
+     */
+    function clearExternalChange() {
+        externalChangeFlag.value = false;
     }
 
     /**
@@ -72,6 +84,12 @@ export const usePidTuningStore = defineStore("pidTuning", () => {
     function checkForChanges(currentPidProfileName = "", currentRateProfileName = "") {
         if (!originalsReady.value) {
             hasChanges.value = false;
+            return;
+        }
+
+        // If an external change is pending, always report dirty.
+        if (externalChangeFlag.value) {
+            hasChanges.value = true;
             return;
         }
 
@@ -98,5 +116,6 @@ export const usePidTuningStore = defineStore("pidTuning", () => {
         storeOriginals,
         checkForChanges,
         markExternalChange,
+        clearExternalChange,
     };
 });
