@@ -1065,33 +1065,34 @@ export default {
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
-    background: #1a1a2e;
-    color: #c8d0e0;
+    background: #2e2e2e;
+    color: #cccccc;
     font-family: 'Open Sans', Arial, sans-serif;
     font-size: 13px;
     line-height: 1.7;
     padding: 24px 28px 40px;
   }
-  h1 { font-size: 16px; color: #fff; margin-bottom: 4px; }
-  .subtitle { font-size: 11px; color: #7a8a9a; margin-bottom: 20px; }
+  h1 { font-size: 16px; color: #ffffff; margin-bottom: 4px; }
+  .subtitle { font-size: 11px; color: #888888; margin-bottom: 20px; }
+  .subtitle a { color: #ffbb00; }
   h3 {
-    color: #fff;
+    color: #ffbb00;
     font-size: 13px;
     margin: 20px 0 6px;
-    border-bottom: 1px solid #2e4060;
+    border-bottom: 1px solid #444444;
     padding-bottom: 4px;
   }
-  p, li { font-size: 12px; color: #8899aa; line-height: 1.7; margin: 4px 0; }
+  p, li { font-size: 12px; color: #aaaaaa; line-height: 1.7; margin: 4px 0; }
   ul { padding-left: 20px; }
   code {
-    background: #0d1117;
+    background: #1a1a1a;
     padding: 1px 5px;
     border-radius: 2px;
     font-size: 11px;
-    color: #8899aa;
+    color: #cccccc;
   }
-  a { color: #4da6ff; }
-  strong { color: #c8d0e0; }
+  a { color: #ffbb00; }
+  strong { color: #dddddd; }
   .ok   { color: #00d966; }
   .warn { color: #ffe66d; }
   .bad  { color: #ff6b6b; }
