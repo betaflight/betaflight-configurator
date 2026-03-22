@@ -1,0 +1,407 @@
+.tab-aerotune {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    height: 100%;
+    box-sizing: border-box;
+
+    .aerotune-header {
+        background: var(--boxBackground);
+        border-bottom: 2px solid #ff6b00;
+        padding: 12px 20px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        flex-shrink: 0;
+
+        .aerotune-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #ffffff;
+            letter-spacing: 1px;
+            margin: 0;
+        }
+
+        .aerotune-subtitle {
+            font-size: 11px;
+            color: var(--subtleText);
+            margin: 0;
+        }
+    }
+
+    .aerotune-tabs {
+        display: flex;
+        background: var(--alternativeBackground);
+        border-bottom: 1px solid var(--subtleAccent);
+        flex-shrink: 0;
+
+        .at-tab-btn {
+            padding: 10px 22px;
+            border: none;
+            background: transparent;
+            color: var(--subtleText);
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition:
+                color 0.15s,
+                border-color 0.15s;
+            letter-spacing: 0.5px;
+
+            &:hover {
+                color: var(--defaultText);
+            }
+
+            &.active {
+                color: #ffffff;
+                border-bottom-color: #ff6b00;
+            }
+        }
+    }
+
+    .aerotune-body {
+        flex: 1;
+        overflow-y: auto;
+        padding: 16px 20px;
+    }
+
+    /* ── SUB-PANEL SHARED ── */
+    .at-panel {
+        background: var(--boxBackground);
+        border: 1px solid var(--subtleAccent);
+        border-radius: 4px;
+        margin-bottom: 16px;
+
+        .at-panel-header {
+            background: var(--quietHeader);
+            color: #fff;
+            padding: 8px 14px;
+            font-size: 11px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            border-radius: 3px 3px 0 0;
+        }
+
+        .at-panel-body {
+            padding: 14px;
+        }
+    }
+
+    /* ── CALCULATOR ── */
+    .at-calculator {
+        display: grid;
+        grid-template-columns: 340px 1fr;
+        gap: 16px;
+
+        @media (max-width: 800px) {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .at-form-row {
+        margin-bottom: 14px;
+
+        label {
+            display: block;
+            font-size: 11px;
+            font-weight: bold;
+            color: #ffffff;
+            margin-bottom: 4px;
+        }
+
+        input[type="number"],
+        input[type="text"],
+        select {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 6px 8px;
+            background: var(--alternativeBackground);
+            border: 1px solid var(--subtleAccent);
+            border-radius: 3px;
+            color: var(--defaultText);
+            font-size: 13px;
+
+            &:focus {
+                outline: none;
+                border-color: #ff6b00;
+            }
+        }
+    }
+
+    .at-voltage-presets {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-bottom: 8px;
+
+        button {
+            padding: 4px 10px;
+            background: var(--alternativeBackground);
+            border: 1px solid var(--subtleAccent);
+            border-radius: 3px;
+            color: var(--defaultText);
+            font-size: 11px;
+            font-weight: bold;
+            cursor: pointer;
+
+            &:hover,
+            &.selected {
+                background: #ff6b00;
+                border-color: #ff6b00;
+                color: #fff;
+            }
+        }
+    }
+
+    .at-calc-btn {
+        width: 100%;
+        padding: 10px;
+        background: #ff6b35;
+        color: #fff;
+        border: none;
+        border-radius: 3px;
+        font-size: 13px;
+        font-weight: bold;
+        cursor: pointer;
+        letter-spacing: 0.5px;
+        margin-top: 6px;
+
+        &:hover {
+            background: #ff8855;
+        }
+    }
+
+    /* ── PID OUTPUT ── */
+    .at-pid-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 10px;
+        margin-bottom: 12px;
+    }
+
+    .at-pid-axis {
+        background: var(--alternativeBackground);
+        border-radius: 4px;
+        padding: 10px;
+
+        .at-axis-label {
+            font-size: 11px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #ffffff;
+        }
+
+        .at-pid-values {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4px;
+        }
+
+        .at-pid-cell {
+            text-align: center;
+
+            .at-pid-name {
+                font-size: 9px;
+                color: var(--subtleText);
+                text-transform: uppercase;
+            }
+
+            .at-pid-val {
+                font-size: 18px;
+                font-weight: bold;
+                color: #ffffff;
+                line-height: 1.2;
+            }
+        }
+    }
+
+    .at-dmin-row {
+        display: flex;
+        gap: 16px;
+        margin-bottom: 12px;
+        font-size: 12px;
+        color: var(--subtleText);
+
+        span {
+            color: #ffffff;
+            font-weight: bold;
+        }
+    }
+
+    .at-filter-rec {
+        background: var(--alternativeBackground);
+        border-radius: 4px;
+        padding: 10px 12px;
+        margin-bottom: 12px;
+        font-size: 12px;
+        color: var(--subtleText);
+
+        .at-filter-val {
+            font-size: 18px;
+            font-weight: bold;
+            color: #ffffff;
+        }
+    }
+
+    .at-apply-btn {
+        width: 100%;
+        padding: 10px;
+        background: #00d966;
+        color: #000;
+        border: none;
+        border-radius: 3px;
+        font-size: 13px;
+        font-weight: bold;
+        cursor: pointer;
+        letter-spacing: 0.5px;
+        margin-bottom: 8px;
+
+        &:hover:not(:disabled) {
+            background: #00ff77;
+        }
+
+        &:disabled {
+            background: var(--subtleAccent);
+            color: var(--mutedText);
+            cursor: default;
+        }
+    }
+
+    .at-copy-btn {
+        width: 100%;
+        padding: 8px;
+        background: transparent;
+        color: #ffffff;
+        border: 1px solid var(--subtleAccent);
+        border-radius: 3px;
+        font-size: 12px;
+        font-weight: bold;
+        cursor: pointer;
+
+        &:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+    }
+
+    .at-no-result {
+        color: var(--subtleText);
+        font-size: 12px;
+        text-align: center;
+        padding: 30px 0;
+    }
+
+    /* ── ANALYZER ── */
+    .at-analyzer {
+        max-width: 800px;
+    }
+
+    .at-file-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 14px;
+        flex-wrap: wrap;
+
+        .at-file-label {
+            padding: 8px 16px;
+            background: #ff6b00;
+            color: #fff;
+            border: none;
+            border-radius: 3px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+
+            &:hover {
+                background: #ff8822;
+            }
+        }
+
+        .at-file-name {
+            font-size: 12px;
+            color: var(--subtleText);
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        #at-analyze-btn {
+            padding: 8px 20px;
+            background: #ff6b35;
+            color: #fff;
+            border: none;
+            border-radius: 3px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+
+            &:hover:not(:disabled) {
+                background: #ff8855;
+            }
+
+            &:disabled {
+                background: var(--subtleAccent);
+                color: var(--mutedText);
+                cursor: default;
+            }
+        }
+    }
+
+    .at-results-box {
+        background: var(--alternativeBackground);
+        border: 1px solid var(--subtleAccent);
+        border-radius: 4px;
+        padding: 16px;
+        font-size: 12px;
+        white-space: pre-wrap;
+        font-family: monospace;
+        color: #ffffff;
+        min-height: 200px;
+        line-height: 1.7;
+    }
+
+    /* ── INSTRUCTIONS ── */
+    .at-instructions {
+        max-width: 700px;
+
+        h3 {
+            color: #ffffff;
+            font-size: 13px;
+            margin: 18px 0 6px;
+            border-bottom: 1px solid var(--subtleAccent);
+            padding-bottom: 4px;
+        }
+
+        p,
+        li {
+            font-size: 12px;
+            color: var(--subtleText);
+            line-height: 1.7;
+            margin: 4px 0;
+        }
+
+        ul {
+            padding-left: 20px;
+        }
+
+        code {
+            background: var(--alternativeBackground);
+            padding: 1px 5px;
+            border-radius: 2px;
+            font-size: 11px;
+            color: var(--subtleText);
+        }
+    }
+
+    .at-status-ok {
+        color: #00d966;
+    }
+    .at-status-warn {
+        color: #ffe66d;
+    }
+    .at-status-bad {
+        color: #ff6b6b;
+    }
+}
