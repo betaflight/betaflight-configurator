@@ -13,7 +13,7 @@
                         @toggle-favorite="emit('toggle-favorite')"
                     />
 
-                    <details id="presets_options_panel" :open="optionsExpanded" @toggle="handleOptionsToggle">
+                    <details v-if="preset?.options?.length" id="presets_options_panel" :open="optionsExpanded" @toggle="handleOptionsToggle">
                         <summary>
                             <span id="preset_options_label" v-html="$t('presetsOptions')"></span>
                             <span class="preset-options-summary-value" :title="optionsSummary">{{

@@ -183,6 +183,25 @@ export function getOptionNamesByIds(options, selectedOptionIds) {
     return selectedNames;
 }
 
+export function applySelectedOptionIdsToOptions(options, selectedOptionIds) {
+    const selectedIds = new Set(selectedOptionIds);
+
+    return options.map((option) => {
+        const normalizedOption = { ...option };
+
+        if (Array.isArray(option.childs)) {
+            normalizedOption.childs = option.childs.map((child) => ({
+                ...child,
+                checked: selectedIds.has(child.id),
+            }));
+        } else {
+            normalizedOption.checked = selectedIds.has(option.id);
+        }
+
+        return normalizedOption;
+    });
+}
+
 export function clonePresetForDetails(preset) {
     if (typeof structuredClone === "function") {
         try {

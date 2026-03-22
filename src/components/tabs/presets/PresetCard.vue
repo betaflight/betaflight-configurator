@@ -19,13 +19,15 @@
             <button
                 type="button"
                 class="preset_title_panel_star"
-                :style="{ backgroundImage: `url(${starImage})`, backgroundColor: starBackgroundColor }"
+                :style="{ backgroundColor: starBackgroundColor }"
                 :aria-pressed="isFavorite"
                 :aria-label="favoriteAriaLabel"
                 @click.stop="handleFavoriteToggle"
                 @mouseenter="mouseOnStar = true"
                 @mouseleave="mouseOnStar = false"
-            ></button>
+            >
+                <img :src="starImage" alt="" class="preset_title_panel_star_img" />
+            </button>
             <div>
                 <span class="preset_title_panel_title">{{ preset.title }}</span>
             </div>
@@ -34,17 +36,17 @@
                     <div class="presets_title_panel_key">
                         <span
                             class="preset_title_panel_official preset_title_panel_status_experimental"
-                            :class="{ hidden: preset.status !== 'EXPERIMENTAL' }"
+                            v-show="preset.status === 'EXPERIMENTAL'"
                             v-html="$t('presetsExperimental')"
                         ></span>
                         <span
                             class="preset_title_panel_official preset_title_panel_status_community"
-                            :class="{ hidden: preset.status !== 'COMMUNITY' }"
+                            v-show="preset.status === 'COMMUNITY'"
                             v-html="$t('presetsCommunity')"
                         ></span>
                         <span
                             class="preset_title_panel_official preset_title_panel_status_official"
-                            :class="{ hidden: preset.status !== 'OFFICIAL' }"
+                            v-show="preset.status === 'OFFICIAL'"
                             v-html="$t('presetsOfficial')"
                         ></span>
                     </div>
@@ -160,7 +162,7 @@ const wrapperStyle = computed(() => ({
 }));
 
 const starBackgroundColor = computed(() =>
-    mouseOnStar.value || (mouseOnPanel.value && props.clickable) ? "var(--surface-500)" : "var(--surface-200)",
+    mouseOnStar.value || (mouseOnPanel.value && props.clickable) ? "var(--surface-500)" : "transparent",
 );
 
 const starImage = computed(() => {
@@ -234,18 +236,24 @@ function handleCardKeydown(event) {
 }
 
 .preset_title_panel_star {
-    width: 25px;
-    height: 25px;
-    background-size: cover;
+    width: 35px;
+    height: 35px;
     border-radius: 5px;
     padding: 5px;
-    background-origin: content-box;
-    background-repeat: no-repeat;
     position: absolute;
     cursor: pointer;
     right: -6px;
     top: -5px;
     border: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.preset_title_panel_star_img {
+    width: 25px;
+    height: 25px;
+    pointer-events: none;
 }
 
 .preset_title_panel_betaflight_official {

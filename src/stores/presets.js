@@ -12,6 +12,7 @@ import PresetSource from "../tabs/presets/SourcesDialog/PresetSource";
 import {
     PRESETS_MAX_RESULTS,
     PRESETS_STORAGE_KEYS,
+    applySelectedOptionIdsToOptions,
     attachOptionIds,
     clonePresetForDetails,
     collectUniqueValues,
@@ -448,7 +449,14 @@ export const usePresetsStore = defineStore("presets", () => {
     async function openPresetDetails(preset, repository) {
         const requestToken = detailsRequestToken + 1;
         const presetKey = getPresetEntryKey(preset, repository);
-        const presetForDetails = clonePresetForDetails(preset);
+
+        const existingPickedIndex = pickedPresetList.value.findIndex(
+            (p) => p.key === presetKey,
+        );
+
+        const presetForDetails = clonePresetForDetails(
+            existingPickedIndex !== -1 ? pickedPresetList.value[existingPickedIndex].preset : preset,
+        );
 
         detailsRequestToken = requestToken;
         selectedPresetEntry.value = {
@@ -465,7 +473,9 @@ export const usePresetsStore = defineStore("presets", () => {
         detailsState.selectedOptionIds = [];
 
         try {
-            await repository.loadPreset(presetForDetails);
+            if (!presetForDetails.originalPresetCliStrings) {
+                await repository.loadPreset(presetForDetails);
+            }
 
             if (detailsRequestToken !== requestToken || selectedPresetEntry.value?.key !== presetKey) {
                 return;
@@ -531,6 +541,13 @@ export const usePresetsStore = defineStore("presets", () => {
             return;
         }
 
+        if (selectedPreset.value.options) {
+            selectedPreset.value.options = applySelectedOptionIdsToOptions(
+                selectedPreset.value.options,
+                detailsState.selectedOptionIds,
+            );
+        }
+
         appendPickedPreset(
             selectedPreset.value,
             [...selectedPresetCliStrings.value],
@@ -542,6 +559,18 @@ export const usePresetsStore = defineStore("presets", () => {
     function appendPickedPreset(preset, cliStrings, presetRepository) {
         const presetKey = presetRepository ? getPresetEntryKey(preset, presetRepository) : undefined;
         const pickedPreset = new PickedPreset(preset, cliStrings, presetRepository, presetKey);
+
+        if (presetKey) {
+            const existingIndex = pickedPresetList.value.findIndex(
+                (p) => p.presetRepo && getPresetEntryKey(p.preset, p.presetRepo) === presetKey,
+            );
+            if (existingIndex !== -1) {
+                const newList = [...pickedPresetList.value];
+                newList[existingIndex] = pickedPreset;
+                pickedPresetList.value = newList;
+                return;
+            }
+        }
 
         pickedPresetList.value = [...pickedPresetList.value, pickedPreset];
     }
