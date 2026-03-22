@@ -7,7 +7,7 @@
 
     .aerotune-header {
         background: var(--boxBackground);
-        border-bottom: 2px solid #ff6b00;
+        border-bottom: 2px solid var(--primary-500);
         padding: 12px 20px;
         display: flex;
         align-items: center;
@@ -55,7 +55,7 @@
 
             &.active {
                 color: #ffffff;
-                border-bottom-color: #ff6b00;
+                border-bottom-color: var(--primary-500);
             }
         }
     }
@@ -124,7 +124,7 @@
 
             &:focus {
                 outline: none;
-                border-color: #ff6b00;
+                border-color: var(--primary-500);
             }
         }
     }
@@ -147,9 +147,9 @@
 
             &:hover,
             &.selected {
-                background: #ff6b00;
-                border-color: #ff6b00;
-                color: #fff;
+                background: var(--primary-500);
+                border-color: var(--primary-500);
+                color: #000;
             }
         }
     }
@@ -157,8 +157,8 @@
     .at-calc-btn {
         width: 100%;
         padding: 10px;
-        background: #ff6b35;
-        color: #fff;
+        background: var(--primary-500);
+        color: #000;
         border: none;
         border-radius: 3px;
         font-size: 13px;
@@ -168,7 +168,7 @@
         margin-top: 6px;
 
         &:hover {
-            background: #ff8855;
+            background: var(--primary-400);
         }
     }
 
@@ -305,8 +305,8 @@
 
         .at-file-label {
             padding: 8px 16px;
-            background: #ff6b00;
-            color: #fff;
+            background: var(--primary-500);
+            color: #000;
             border: none;
             border-radius: 3px;
             font-size: 12px;
@@ -314,7 +314,7 @@
             cursor: pointer;
 
             &:hover {
-                background: #ff8822;
+                background: var(--primary-400);
             }
         }
 
@@ -329,8 +329,8 @@
 
         #at-analyze-btn {
             padding: 8px 20px;
-            background: #ff6b35;
-            color: #fff;
+            background: var(--primary-500);
+            color: #000;
             border: none;
             border-radius: 3px;
             font-size: 12px;
@@ -338,7 +338,7 @@
             cursor: pointer;
 
             &:hover:not(:disabled) {
-                background: #ff8855;
+                background: var(--primary-400);
             }
 
             &:disabled {
@@ -367,8 +367,8 @@
         display: inline-block;
         margin-bottom: 16px;
         padding: 7px 16px;
-        background: #ff6b35;
-        color: #fff;
+        background: var(--primary-500);
+        color: #000;
         border: none;
         border-radius: 3px;
         font-size: 12px;
@@ -377,7 +377,7 @@
         letter-spacing: 0.5px;
 
         &:hover {
-            background: #ff8855;
+            background: var(--primary-400);
         }
     }
 
