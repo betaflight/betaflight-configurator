@@ -331,19 +331,23 @@ function handleOptionsToggle(event) {
     width: 600px;
     height: 520px;
     padding: 12px 12px 0 12px;
-    display: flex;
     flex-direction: column;
 
     .content_toolbar {
-        width: unset;
+        width: auto;
         margin-top: auto;
-        margin-left: auto;
+        margin-left: -12px;
         margin-right: -12px;
+        justify-content: space-between;
 
         .btn {
             display: contents;
         }
     }
+}
+
+#presets_detailed_dialog[open] {
+    display: flex;
 }
 
 #presets_detailed_dialog_content_wrapper {
@@ -358,15 +362,11 @@ function handleOptionsToggle(event) {
     }
 
     .left-panel {
-        position: absolute;
-        left: 0;
-        bottom: 0;
-        height: 52px;
-        padding-left: 20px;
-        z-index: 10;
         display: flex;
         align-items: center;
         flex-wrap: wrap;
+        gap: 5px;
+        padding-left: 20px;
         
         .regular-button {
             margin-top: 0;
