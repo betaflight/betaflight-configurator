@@ -30,6 +30,13 @@
             >
                 INSTRUCTIONS
             </button>
+            <button
+                class="at-tab-btn at-tab-btn--popup"
+                @click="openInstructionsPopup"
+                title="Open instructions in a new window"
+            >
+                ↗ Open in New Window
+            </button>
         </div>
 
         <div class="aerotune-body">
@@ -1051,6 +1058,105 @@ export default {
                 /* storage unavailable — silently ignore */
             }
         },
+        openInstructionsPopup() {
+            const popup = window.open("", "aerotune_instructions", "width=620,height=800,resizable=yes,scrollbars=yes");
+            if (!popup) return;
+            popup.document.write(`<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>AeroTune – Instructions</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #1a1a2e;
+    color: #c8d0e0;
+    font-family: 'Open Sans', Arial, sans-serif;
+    font-size: 13px;
+    line-height: 1.7;
+    padding: 24px 28px 40px;
+  }
+  h1 { font-size: 16px; color: #fff; margin-bottom: 4px; }
+  .subtitle { font-size: 11px; color: #7a8a9a; margin-bottom: 20px; }
+  h3 {
+    color: #fff;
+    font-size: 13px;
+    margin: 20px 0 6px;
+    border-bottom: 1px solid #2e4060;
+    padding-bottom: 4px;
+  }
+  p, li { font-size: 12px; color: #8899aa; line-height: 1.7; margin: 4px 0; }
+  ul { padding-left: 20px; }
+  code {
+    background: #0d1117;
+    padding: 1px 5px;
+    border-radius: 2px;
+    font-size: 11px;
+    color: #8899aa;
+  }
+  a { color: #4da6ff; }
+  strong { color: #c8d0e0; }
+  .ok   { color: #00d966; }
+  .warn { color: #ffe66d; }
+  .bad  { color: #ff6b6b; }
+</style>
+</head>
+<body>
+<h1>AeroTune™ Instructions</h1>
+<p class="subtitle">By Simon Jardine – <a href="https://aerobot2.com" target="_blank" rel="noopener">aerobot2.com</a></p>
+
+<h3>STEP 1: CALCULATE BASELINE PIDs</h3>
+<ul>
+  <li>Enter motor KV, battery voltage, prop size, weight and flying style.</li>
+  <li>Click <strong>CALCULATE PIDs</strong> to get conservative baseline values.</li>
+  <li>Click <strong>APPLY PIDs TO FC</strong> to write them directly to the PID Tuning tab, or use <strong>COPY ALL VALUES</strong> to copy them to the clipboard.</li>
+</ul>
+
+<h3>STEP 2: FLY THE TEST PATTERN</h3>
+<p>Enable Blackbox before flying:</p>
+<ul>
+  <li>Configuration tab → Blackbox → Enable, Device = SD Card, Rate = 1/2</li>
+  <li>Set logging rate to minimum 1kHz, ideally 2kHz for best frequency resolution.</li>
+  <li>Enable: Gyro, Gyro (Unfiltered), Motor, PID, RC Commands, RPM, Setpoint, Accelerometer</li>
+  <li><strong>Betaflight 4.5+:</strong> raw gyro is always logged automatically.</li>
+  <li><strong>Betaflight 4.3/4.4:</strong> set Debug Mode to <code>GYRO_SCALED</code> to capture unfiltered gyro data.</li>
+</ul>
+<p>Before flying:</p>
+<ul>
+  <li>Use fresh propellers — damaged props introduce false noise and will give inaccurate results.</li>
+</ul>
+<p>Flight pattern:</p>
+<ul>
+  <li>Level mode: Full left stick hold 3-5 seconds, pause, full right stick hold 3-5 seconds, pause, full forward hold 3-5 seconds, pause, full back hold 3-5 seconds</li>
+</ul>
+
+<h3>STEP 3: ANALYZE THE LOG</h3>
+<ul>
+  <li>Pull the SD card, open the <code>.BBL</code> file in <a href="https://blackbox.betaflight.com/" target="_blank" rel="noopener"><strong>Betaflight Blackbox Explorer</strong></a></li>
+  <li>Export as CSV (File → Export CSV)</li>
+  <li>Come back to AeroTune Analyzer tab, load your CSV and click ANALYZE</li>
+</ul>
+
+<h3>INTERPRETING RESULTS</h3>
+<ul>
+  <li><span class="ok">EXCELLENT / CLEAN</span> – filters are well-tuned, no changes needed</li>
+  <li><span class="ok">GOOD</span> – minor adjustments may help</li>
+  <li><span class="warn">FAIR</span> – lower Gyro Lowpass 2 by ~30 Hz, re-test</li>
+  <li><span class="warn">WEAK</span> – lower by ~50 Hz, consider adding a Notch filter</li>
+  <li><span class="bad">VERY WEAK</span> – aggressive filter reduction needed; check for mechanical vibration</li>
+</ul>
+
+<h3>FILTER RECOMMENDATION NOTE</h3>
+<ul>
+  <li><strong>Gyro Lowpass 2:</strong> The value shown in the Calculator is a <em>starting point</em> based on prop size. Use the Analyzer results to fine-tune after flying.</li>
+  <li><strong>Dynamic Notch Filter:</strong> Enable and adjust count based on analyzer results to target resonant frequencies.</li>
+  <li><strong>Gyro RPM Filter:</strong> Enable if using bidirectional DSHOT — the most effective filter available for eliminating motor noise harmonics.</li>
+</ul>
+</body>
+</html>`);
+            popup.document.close();
+        },
+
         selectVoltage(v) {
             this.voltage = v;
         },
