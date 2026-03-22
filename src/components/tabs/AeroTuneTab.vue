@@ -30,13 +30,6 @@
             >
                 INSTRUCTIONS
             </button>
-            <button
-                class="at-tab-btn at-tab-btn--popup"
-                @click="openInstructionsPopup"
-                title="Open instructions in a new window"
-            >
-                ↗ Open in New Window
-            </button>
         </div>
 
         <div class="aerotune-body">
@@ -257,6 +250,9 @@
             <!-- ═══════════════ INSTRUCTIONS ═══════════════ -->
             <div v-show="activeView === 'instructions'" class="at-view">
                 <div class="at-instructions">
+                    <button class="at-instructions-popup-btn" @click="openInstructionsPopup">
+                        ↗ Open in New Window
+                    </button>
                     <h3>STEP 1: CALCULATE BASELINE PIDs</h3>
                     <ul>
                         <li>Enter motor KV, battery voltage, prop size, weight and flying style.</li>
