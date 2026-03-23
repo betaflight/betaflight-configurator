@@ -679,7 +679,15 @@ function onConnect() {
     hide("#tabs ul.mode-disconnected");
     show("#tabs ul.mode-connected-cli");
 
-    // show only appropriate tabs
+    // update tab visibility and initialize features/UI on connect
+    updateTabVisibility();
+    initFeaturesOnConnect();
+
+    hide("#portsinput");
+}
+
+// Update which tabs are visible based on `GUI.allowedTabs` and board type
+function updateTabVisibility() {
     const connectedItems = document.querySelectorAll("#tabs ul.mode-connected li");
     for (const li of connectedItems) {
         const classes = new Set(li.className.split(/\s+/));
@@ -699,7 +707,10 @@ function onConnect() {
 
         li.style.display = found ? "" : "none";
     }
+}
 
+// Initialize feature-related UI and fetch configs from the flight controller
+function initFeaturesOnConnect() {
     if (FC.CONFIG.flightControllerVersion !== "" && !isCliOnlyMode()) {
         if (!CONFIGURATOR.virtualMode && PortHandler.portPicker.selectedPort !== "virtual") {
             FC.FEATURE_CONFIG.features = new Features(FC.CONFIG);
@@ -722,8 +733,6 @@ function onConnect() {
         show("#sensor-status");
         show("#dataflash_wrapper_global");
     }
-
-    hide("#portsinput");
 }
 
 function onClosed(result) {

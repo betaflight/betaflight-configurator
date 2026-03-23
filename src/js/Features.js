@@ -142,7 +142,7 @@ Features.prototype.generateElements = function (featuresElements) {
 
     self._featureChanges = {};
 
-    const listElements = [];
+    let noneOptAppended = false;
 
     // Normalize to an array of native DOM elements
     const containers =
@@ -160,7 +160,7 @@ Features.prototype.generateElements = function (featuresElements) {
         }
 
         if (feature.mode === "select") {
-            if (listElements.length === 0) {
+            if (!noneOptAppended) {
                 const noneOpt = document.createElement("option");
                 noneOpt.className = "feature";
                 noneOpt.value = "-1";
@@ -170,6 +170,7 @@ Features.prototype.generateElements = function (featuresElements) {
                         c.appendChild(noneOpt.cloneNode(true));
                     }
                 }
+                noneOptAppended = true;
             }
             const opt = document.createElement("option");
             opt.className = "feature";
@@ -179,7 +180,8 @@ Features.prototype.generateElements = function (featuresElements) {
             opt.setAttribute("i18n", `feature${featureName}`);
 
             opt.selected = bit_check(self._featureMask, featureBit);
-            listElements.push(opt);
+            // track that we've appended at least one option so 'none' isn't added repeatedly
+            noneOptAppended = true;
 
             for (const c of containers) {
                 if (c.classList.contains(feature.group)) {
