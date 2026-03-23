@@ -2,7 +2,6 @@ import { bit_check, bit_set, bit_clear } from "./bit";
 import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "./data_storage";
 import semver from "semver";
 import { tracking } from "./Analytics";
-import $ from "jquery";
 
 const Features = function (config) {
     const self = this;
@@ -145,6 +144,12 @@ Features.prototype.generateElements = function (featuresElements) {
 
     const listElements = [];
 
+    // Normalize to an array of native DOM elements
+    const containers =
+        featuresElements instanceof NodeList || Array.isArray(featuresElements)
+            ? Array.from(featuresElements)
+            : [featuresElements];
+
     for (const feature of self._features) {
         let feature_tip_html = "";
         const featureName = feature.name;
@@ -154,56 +159,70 @@ Features.prototype.generateElements = function (featuresElements) {
             feature_tip_html = `<div class="helpicon cf_tip" i18n_title="feature${featureName}Tip"></div>`;
         }
 
-        const newElements = [];
-
         if (feature.mode === "select") {
             if (listElements.length === 0) {
-                newElements.push($('<option class="feature" value="-1" i18n="featureNone" />'));
+                const noneOpt = document.createElement("option");
+                noneOpt.className = "feature";
+                noneOpt.value = "-1";
+                noneOpt.setAttribute("i18n", "featureNone");
+                for (const c of containers) {
+                    if (c.classList.contains(feature.group)) {
+                        c.appendChild(noneOpt.cloneNode(true));
+                    }
+                }
             }
-            const newElement = $(
-                `<option class="feature" id="feature${featureBit}" name="${featureName}" value="${featureBit}" i18n="feature${featureName}" />`,
-            );
+            const opt = document.createElement("option");
+            opt.className = "feature";
+            opt.id = `feature${featureBit}`;
+            opt.setAttribute("name", featureName);
+            opt.value = `${featureBit}`;
+            opt.setAttribute("i18n", `feature${featureName}`);
 
-            newElements.push(newElement);
-            listElements.push(newElement);
+            listElements.push(opt);
+
+            for (const c of containers) {
+                if (c.classList.contains(feature.group)) {
+                    c.appendChild(opt.cloneNode(true));
+                }
+            }
         } else {
             let newFeatureName = "";
             if (!feature.hideName) {
                 newFeatureName = `<td><div>${featureName}</div></td>`;
             }
 
-            let element = `<tr><td><input class="feature toggle" id="feature${featureBit}"`;
-            element += `name="${featureName}" title="${featureName}"`;
-            element += `type="checkbox"/></td><td><div>${newFeatureName}</div>`;
-            element += `<span class="xs" i18n="feature${featureName}"></span></td>`;
-            element += `<td><span class="sm-min" i18n="feature${featureName}"></span>`;
+            let html = `<tr><td><input class="feature toggle" id="feature${featureBit}"`;
+            html += `name="${featureName}" title="${featureName}"`;
+            html += `type="checkbox"/></td><td><div>${newFeatureName}</div>`;
+            html += `<span class="xs" i18n="feature${featureName}"></span></td>`;
+            html += `<td><span class="sm-min" i18n="feature${featureName}"></span>`;
             if (feature.haveTip) {
-                element += feature_tip_html;
+                html += feature_tip_html;
             }
-            element += "</td></tr>";
+            html += "</td></tr>";
 
-            const newElement = $(element);
+            const template = document.createElement("template");
+            template.innerHTML = html;
+            const newElement = template.content.firstElementChild;
 
-            const featureElement = newElement.find("input.feature");
+            const featureInput = newElement.querySelector("input.feature");
+            if (featureInput) {
+                featureInput.checked = bit_check(self._featureMask, featureBit);
+                featureInput.dataset.bit = featureBit;
+            }
 
-            featureElement.prop("checked", bit_check(self._featureMask, featureBit));
-            featureElement.data("bit", featureBit);
-
-            newElements.push(newElement);
+            for (const c of containers) {
+                if (c.classList.contains(feature.group)) {
+                    c.appendChild(newElement.cloneNode(true));
+                }
+            }
         }
-
-        featuresElements.each(function () {
-            if ($(this).hasClass(feature.group)) {
-                $(this).append(newElements);
-            }
-        });
     }
 
     for (const element of listElements) {
-        const bit = parseInt(element.attr("value"));
+        const bit = parseInt(element.value);
         const state = bit_check(self._featureMask, bit);
-
-        element.prop("selected", state);
+        element.selected = state;
     }
 };
 
@@ -220,11 +239,16 @@ Features.prototype.findFeatureByBit = function (bit) {
 Features.prototype.updateData = function (featureElement) {
     const self = this;
 
-    if (featureElement.attr("type") === "checkbox") {
-        const bit = featureElement.data("bit");
+    // Support both native DOM elements and plain objects { name, checked }
+    const type = featureElement.type ?? featureElement.getAttribute?.("type");
+    const localName = featureElement.localName ?? featureElement.tagName?.toLowerCase();
+
+    if (type === "checkbox") {
+        const bit = featureElement.dataset?.bit ?? featureElement.getAttribute?.("data-bit");
+        const checked = featureElement.checked;
         let featureValue;
 
-        if (featureElement.is(":checked")) {
+        if (checked) {
             self._featureMask = bit_set(self._featureMask, bit);
             featureValue = "On";
         } else {
@@ -232,9 +256,9 @@ Features.prototype.updateData = function (featureElement) {
             featureValue = "Off";
         }
         self._analyticsChanges[`Feature${self.findFeatureByBit(bit).name}`] = featureValue;
-    } else if (featureElement.prop("localName") === "select") {
-        const controlElements = featureElement.children();
-        const selectedBit = featureElement.val();
+    } else if (localName === "select") {
+        const controlElements = featureElement.children;
+        const selectedBit = featureElement.value;
         if (selectedBit !== -1) {
             let selectedFeature;
             for (const controlElement of controlElements) {
@@ -249,6 +273,17 @@ Features.prototype.updateData = function (featureElement) {
             if (selectedFeature) {
                 self._analyticsChanges[`FeatureGroup-${selectedFeature.group}`] = selectedFeature.name;
             }
+        }
+    } else if (featureElement.name) {
+        // Plain object path: { name, checked } — used by Vue components
+        const feature = self._features.find((f) => f.name === featureElement.name);
+        if (feature) {
+            if (featureElement.checked) {
+                self._featureMask = bit_set(self._featureMask, feature.bit);
+            } else {
+                self._featureMask = bit_clear(self._featureMask, feature.bit);
+            }
+            self._analyticsChanges[`Feature${feature.name}`] = featureElement.checked ? "On" : "Off";
         }
     }
 };

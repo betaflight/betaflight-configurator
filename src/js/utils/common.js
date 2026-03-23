@@ -1,5 +1,4 @@
 import { mixerList } from "../model";
-import $ from "jquery";
 
 export function millitime() {
     return new Date().getTime();
@@ -54,52 +53,3 @@ export function getTextWidth(text) {
 export function escapeHtml(s) {
     return String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
 }
-
-/**
- * Returns jquery sorted option list with optional value staying on top of the list.
- *
- * @param {string} optional value staying on top of the list.
- * @return {object} sorted option list.
- */
-
-$.fn.sortSelect = function () {
-    /*
-
-    Chrome v140 does not work with sortSelect function properly.
-    Disabling it for now until a fix is found.
-
-    this.each(function () {
-        const select = this;
-        // Collect option data
-        const optionData = Array.from(select.options).map(opt => ({
-            value: opt.value,
-            text: opt.text,
-            selected: opt.selected,
-            disabled: opt.disabled,
-        }));
-
-        // Sort option data
-        optionData.sort((a, b) => {
-            if (a.text === text) { return -1; }
-            if (b.text === text) { return 1; }
-            return a.text.localeCompare(b.text, window.navigator.language, { ignorePunctuation: true });
-        });
-
-        // Remove all options
-        while (select.options.length) { select.remove(0); }
-
-        // Add sorted options
-        optionData.forEach(opt => {
-            const option = document.createElement("option");
-            option.value = opt.value;
-            option.text = opt.text;
-            option.selected = opt.selected;
-            option.disabled = opt.disabled;
-            select.add(option);
-        });
-    });
-
-    */
-
-    return this;
-};

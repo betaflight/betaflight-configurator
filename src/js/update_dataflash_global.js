@@ -1,5 +1,4 @@
 import FC from "./fc";
-import $ from "jquery";
 
 export function update_dataflash_global() {
     function formatFilesize(bytes) {
@@ -23,14 +22,14 @@ export function update_dataflash_global() {
     const supportsDataflash = FC.DATAFLASH.supported && FC.DATAFLASH.totalSize > 0 && FC.BLACKBOX.blackboxDevice === 1;
     const supportsDatacard = FC.SDCARD.supported && FC.SDCARD.totalSizeKB > 0 && FC.BLACKBOX.blackboxDevice === 2;
 
-    if (supportsDataflash || supportsDatacard) {
-        $(".noflash_global").css({
-            display: "none",
-        });
+    const noflash = document.querySelector(".noflash_global");
+    const contents = document.querySelector(".dataflash-contents_global");
+    const progress = document.querySelector(".dataflash-progress_global");
+    const contentsText = contents?.querySelector("div");
 
-        $(".dataflash-contents_global").css({
-            display: "block",
-        });
+    if (supportsDataflash || supportsDatacard) {
+        if (noflash) noflash.style.display = "none";
+        if (contents) contents.style.display = "block";
 
         let dataflashProgress;
         let dataflashProgressText;
@@ -44,15 +43,10 @@ export function update_dataflash_global() {
             dataflashProgressText = `SD Card: free ${formatFilesize(FC.SDCARD.freeSizeKB * 1024)}`;
         }
 
-        $(".dataflash-progress_global").val(dataflashProgress);
-        $(".dataflash-contents_global div").text(dataflashProgressText);
+        if (progress) progress.value = dataflashProgress;
+        if (contentsText) contentsText.textContent = dataflashProgressText;
     } else {
-        $(".noflash_global").css({
-            display: "block",
-        });
-
-        $(".dataflash-contents_global").css({
-            display: "none",
-        });
+        if (noflash) noflash.style.display = "block";
+        if (contents) contents.style.display = "none";
     }
 }
