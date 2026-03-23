@@ -179,6 +179,26 @@ function connectDisconnect() {
     }
 }
 
+// Helper to show/hide elements used across this module (extracted to avoid duplicate functions)
+function hide(sel) {
+    const el = document.querySelector(sel);
+    if (el) {
+        el.style.display = "none";
+    }
+}
+
+function show(sel) {
+    const el = document.querySelector(sel);
+    if (!el) {
+        return;
+    }
+    el.style.display = "";
+    // If CSS still hides it (e.g. .mode-connected { display: none }), override explicitly
+    if (getComputedStyle(el).display === "none") {
+        el.style.display = "block";
+    }
+}
+
 function finishClose(finishedCallback) {
     const wasConnected = CONFIGURATOR.connectionValid;
 
@@ -271,24 +291,6 @@ function resetConnection() {
         serial.removeEventListener("connect", connectHandler);
         serial.removeEventListener("disconnect", disconnectHandler);
     }
-
-    const hide = (sel) => {
-        const el = document.querySelector(sel);
-        if (el) {
-            el.style.display = "none";
-        }
-    };
-    const show = (sel) => {
-        const el = document.querySelector(sel);
-        if (!el) {
-            return;
-        }
-        el.style.display = "";
-        // If CSS still hides it (e.g. .mode-connected { display: none }), override explicitly
-        if (getComputedStyle(el).display === "none") {
-            el.style.display = "block";
-        }
-    };
 
     hide("#tabs ul.mode-connected");
     hide("#tabs ul.mode-connected-cli");
@@ -673,24 +675,6 @@ function onConnect() {
         connLabel.classList.add("active");
     }
     document.querySelector("a.connection_button__link")?.classList.add("active");
-
-    const hide = (sel) => {
-        const el = document.querySelector(sel);
-        if (el) {
-            el.style.display = "none";
-        }
-    };
-    const show = (sel) => {
-        const el = document.querySelector(sel);
-        if (!el) {
-            return;
-        }
-        el.style.display = "";
-        // If CSS still hides it (e.g. .mode-connected { display: none }), override explicitly
-        if (getComputedStyle(el).display === "none") {
-            el.style.display = "block";
-        }
-    };
 
     hide("#tabs ul.mode-disconnected");
     show("#tabs ul.mode-connected-cli");
