@@ -322,7 +322,7 @@ class STM32Protocol {
         }
 
         // routine that fetches data from buffer if statement is true
-        if (this.receive_buffer.length >= this.bytesToRead && this.bytesToRead != 0) {
+        if (this.receive_buffer.length >= this.bytesToRead && this.bytesToRead !== 0) {
             const fetched = this.receive_buffer.slice(0, this.bytesToRead); // bytes requested
             this.receive_buffer.splice(0, this.bytesToRead); // remove read bytes
 
@@ -999,7 +999,9 @@ class STM32Protocol {
 
         // unlock some UI elements TODO needs rework
         const releaseEl = document.querySelector('select[name="release"]');
-        if (releaseEl) releaseEl.disabled = false;
+        if (releaseEl) {
+            releaseEl.disabled = false;
+        }
 
         // handle timing
         const timeSpent = new Date().getTime() - this.upload_time_start;

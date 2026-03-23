@@ -698,18 +698,18 @@ function onConnect() {
     // show only appropriate tabs
     const connectedItems = document.querySelectorAll("#tabs ul.mode-connected li");
     for (const li of connectedItems) {
-        const classes = li.className.split(/\s+/);
+        const classes = new Set(li.className.split(/\s+/));
         let found = false;
 
         for (const value of GUI.allowedTabs) {
             const tabName = `tab_${value}`;
-            if (classes.includes(tabName)) {
+            if (classes.has(tabName)) {
                 found = true;
                 break;
             }
         }
 
-        if (FC.CONFIG.boardType == 0 && classes.includes("osd-required")) {
+        if (FC.CONFIG.boardType == 0 && classes.has("osd-required")) {
             found = false;
         }
 
