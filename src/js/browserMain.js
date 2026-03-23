@@ -1,4 +1,3 @@
-import "../js/jqueryPlugins";
 import "../../libraries/flightindicators.css";
 
 import "../css/theme.css";

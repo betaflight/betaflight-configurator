@@ -442,6 +442,7 @@ import { gui_log } from "../../js/gui_log";
 import { ispConnected } from "../../js/utils/connection";
 import { sensorTypes } from "../../js/sensor_types";
 import { addArrayElementsAfter, replaceArrayElement } from "../../js/utils/array";
+import { flightIndicator } from "../../../libraries/flightIndicators";
 
 const yaw_fix = ref(0);
 
@@ -1095,8 +1096,8 @@ function process_html() {
 
 function initializeInstruments() {
     const options = { size: 90, showBox: false, img_directory: "images/flightindicators/" };
-    const attitude = $.flightIndicator("#attitude", "attitude", options);
-    const heading = $.flightIndicator("#heading", "heading", options);
+    const attitude = flightIndicator("#attitude", "attitude", options);
+    const heading = flightIndicator("#heading", "heading", options);
 
     // expose update function similar to legacy behavior
     globalThis.updateInstruments = function () {

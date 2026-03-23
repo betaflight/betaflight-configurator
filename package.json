@@ -55,7 +55,7 @@
     "i18next-vue": "^5.2.0",
     "i18next-xhr-backend": "^3.2.2",
     "inflection": "^1.13.4",
-    "jquery": "^3.7.1",
+
     "jsdom": "^26.0.0",
     "lodash.debounce": "^4.0.8",
     "marked": "^15.0.7",

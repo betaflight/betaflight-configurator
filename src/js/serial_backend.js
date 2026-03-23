@@ -20,7 +20,6 @@ import { get as getConfig } from "./ConfigStorage";
 import { tracking } from "./Analytics";
 import semver from "semver";
 import CryptoES from "crypto-es";
-import $ from "jquery";
 import BuildApi from "./BuildApi";
 
 import { serial } from "./serial.js";
@@ -59,7 +58,7 @@ function disconnectHandler(event) {
 }
 
 export function initializeSerialBackend() {
-    $("a.connection_button__link").on("click", connectDisconnect);
+    document.querySelector("a.connection_button__link")?.addEventListener("click", connectDisconnect);
 
     EventBus.$on("port-handler:auto-select-serial-device", function () {
         if (
@@ -143,7 +142,8 @@ function connectDisconnect() {
 
             // lock port select & baud while we are connecting / connected
             PortHandler.portPickerDisabled = true;
-            $("div.connection_button__label").text(i18n.getMessage("connecting"));
+            const connLabel = document.querySelector("div.connection_button__label");
+            if (connLabel) connLabel.textContent = i18n.getMessage("connecting");
 
             // Set up event listeners for non-virtual connections
             if (selectedPort !== "virtual") {
@@ -182,7 +182,7 @@ function finishClose(finishedCallback) {
 
     if (semver.lt(FC.CONFIG.apiVersion, API_VERSION_1_46)) {
         // close reset to custom defaults dialog
-        $("#dialogResetToCustomDefaults")[0].close();
+        document.getElementById("dialogResetToCustomDefaults")?.close();
     }
 
     serial.disconnect();
@@ -200,14 +200,15 @@ function finishClose(finishedCallback) {
     GUI.allowedTabs = GUI.defaultAllowedTabsWhenDisconnected.slice();
 
     // close problems dialog
-    $("#dialogReportProblems-closebtn").click();
+    document.getElementById("dialogReportProblems-closebtn")?.click();
 
     // unlock port select & baud
     PortHandler.portPickerDisabled = false;
 
     // reset connect / disconnect button
-    $("a.connection_button__link").removeClass("active");
-    $("div.connection_button__label").text(i18n.getMessage("connect"));
+    document.querySelector("a.connection_button__link")?.classList.remove("active");
+    const connLabel = document.querySelector("div.connection_button__label");
+    if (connLabel) connLabel.textContent = i18n.getMessage("connect");
 
     // reset active sensor indicators
     sensor_status();
@@ -220,13 +221,14 @@ function finishClose(finishedCallback) {
             console.warn("unmountVueTab failed:", e);
         }
 
-        $("#content").empty();
+        const content = document.getElementById("content");
+        if (content) content.innerHTML = "";
 
         // close cliPanel if left open
-        $(".dialogInteractive")[0].close();
+        document.querySelector(".dialogInteractive")?.close();
     }
 
-    $("#tabs .tab_landing a").click();
+    document.querySelector("#tabs .tab_landing a")?.click();
 
     finishedCallback();
 }
@@ -248,8 +250,9 @@ function setConnectionTimeout() {
 
 function resetConnection() {
     // reset connect / disconnect button
-    $("div.connection_button__label").text(i18n.getMessage("connect"));
-    $("a.connection_button__link").removeClass("active");
+    const connLabel = document.querySelector("div.connection_button__label");
+    if (connLabel) connLabel.textContent = i18n.getMessage("connect");
+    document.querySelector("a.connection_button__link")?.classList.remove("active");
 
     clearLiveDataRefreshTimer();
 
@@ -261,15 +264,27 @@ function resetConnection() {
         serial.removeEventListener("disconnect", disconnectHandler);
     }
 
-    $("#tabs ul.mode-connected").hide();
-    $("#tabs ul.mode-connected-cli").hide();
-    $("#tabs ul.mode-disconnected").show();
+    const hide = (sel) => {
+        const el = document.querySelector(sel);
+        if (el) el.style.display = "none";
+    };
+    const show = (sel) => {
+        const el = document.querySelector(sel);
+        if (!el) return;
+        el.style.display = "";
+        // If CSS still hides it (e.g. .mode-connected { display: none }), override explicitly
+        if (getComputedStyle(el).display === "none") el.style.display = "block";
+    };
+
+    hide("#tabs ul.mode-connected");
+    hide("#tabs ul.mode-connected-cli");
+    show("#tabs ul.mode-disconnected");
 
     // header bar
-    $("#sensor-status").hide();
-    $("#portsinput").show();
-    $("#dataflash_wrapper_global").hide();
-    $("#quad-status_wrapper").hide();
+    hide("#sensor-status");
+    show("#portsinput");
+    hide("#dataflash_wrapper_global");
+    hide("#quad-status_wrapper");
 
     CONFIGURATOR.connectionValid = false;
     CONFIGURATOR.cliValid = false;
@@ -294,10 +309,12 @@ function abortConnection() {
 
 // Centralized helper: show version mismatch warning and switch to CLI
 function showVersionMismatchAndCli(message) {
-    const dialog = $(".dialogConnectWarning")[0];
+    const dialog = document.querySelector(".dialogConnectWarning");
 
-    $(".dialogConnectWarning-content").html(message);
-    $(".dialogConnectWarning-closebtn").one("click", () => dialog.close());
+    const content = dialog.querySelector(".dialogConnectWarning-content");
+    if (content) content.innerHTML = message;
+    const closeBtn = dialog.querySelector(".dialogConnectWarning-closebtn");
+    if (closeBtn) closeBtn.onclick = () => dialog.close();
 
     dialog.showModal();
 
@@ -326,7 +343,11 @@ function onOpen(openInfo) {
 
         // reset expert mode
         const result = getConfig("expertMode")?.expertMode ?? false;
-        $('input[name="expertModeCheckbox"]').prop("checked", result).trigger("change");
+        const expertCheckbox = document.querySelector('input[name="expertModeCheckbox"]');
+        if (expertCheckbox) {
+            expertCheckbox.checked = result;
+            expertCheckbox.dispatchEvent(new Event("change"));
+        }
 
         // serial adds event listener for selected connection type
         serial.removeEventListener("receive", read_serial_adapter);
@@ -414,9 +435,9 @@ function processCustomDefaults() {
         bit_check(FC.CONFIG.targetCapabilities, FC.TARGET_CAPABILITIES_FLAGS.HAS_CUSTOM_DEFAULTS) &&
         FC.CONFIG.configurationState === FC.CONFIGURATION_STATES.DEFAULTS_BARE
     ) {
-        const dialog = $("#dialogResetToCustomDefaults")[0];
+        const dialog = document.getElementById("dialogResetToCustomDefaults");
 
-        $("#dialogResetToCustomDefaults-acceptbtn").click(function () {
+        document.getElementById("dialogResetToCustomDefaults-acceptbtn").onclick = function () {
             const buffer = [];
             buffer.push(mspHelper.RESET_TYPES.CUSTOM_DEFAULTS);
             MSP.send_message(MSPCodes.MSP_RESET_CONF, buffer, false);
@@ -430,14 +451,14 @@ function processCustomDefaults() {
                 },
                 0,
             );
-        });
+        };
 
-        $("#dialogResetToCustomDefaults-cancelbtn").click(function () {
+        document.getElementById("dialogResetToCustomDefaults-cancelbtn").onclick = function () {
             dialog.close();
 
             setConnectionTimeout();
             checkReportProblems();
-        });
+        };
 
         dialog.showModal();
 
@@ -481,23 +502,25 @@ async function checkReportProblems() {
     }
 
     if (needsProblemReportingDialog) {
-        const problemItemTemplate = $("#dialogReportProblems-listItemTemplate");
-        const problemDialogList = $("#dialogReportProblems-list");
+        const problemItemTemplate = document.getElementById("dialogReportProblems-listItemTemplate");
+        const problemDialogList = document.getElementById("dialogReportProblems-list");
 
-        problemDialogList.empty();
+        problemDialogList.innerHTML = "";
 
         for (const problem of problems) {
-            problemItemTemplate.clone().prop("id", null).html(problem.description).appendTo(problemDialogList);
+            const item = problemItemTemplate.cloneNode(true);
+            item.removeAttribute("id");
+            item.innerHTML = problem.description;
+            problemDialogList.appendChild(item);
         }
 
-        const problemDialog = $("#dialogReportProblems")[0];
-        $("#dialogReportProblems-closebtn")
-            .off("click")
-            .one("click", () => problemDialog.close());
+        const problemDialog = document.getElementById("dialogReportProblems");
+        const closeBtn = document.getElementById("dialogReportProblems-closebtn");
+        closeBtn.onclick = () => problemDialog.close();
 
         problemDialog.showModal();
-        $("#dialogReportProblems").scrollTop(0);
-        $("#dialogReportProblems-closebtn").focus();
+        problemDialog.scrollTop = 0;
+        closeBtn.focus();
     }
 
     processUid();
@@ -612,58 +635,71 @@ function connectCli() {
     MSP.disconnect_cleanup();
 
     onConnect();
-    $("#tabs .tab_cli a").click();
+    document.querySelector("#tabs .tab_cli a")?.click();
 }
 
 function onConnect() {
-    if (
-        $("a.firmware_flasher_button__label").hasClass("active") ||
-        $("a.firmware_flasher_button__link").hasClass("active")
-    ) {
-        $("a.firmware_flasher_button__label").removeClass("active");
-        $("a.firmware_flasher_button__link").removeClass("active");
+    const fwLabel = document.querySelector("a.firmware_flasher_button__label");
+    const fwLink = document.querySelector("a.firmware_flasher_button__link");
+
+    if (fwLabel?.classList.contains("active") || fwLink?.classList.contains("active")) {
+        fwLabel?.classList.remove("active");
+        fwLink?.classList.remove("active");
     }
 
     GUI.timeout_remove("connecting"); // kill connecting timer
 
-    $("div.connection_button__label").text(i18n.getMessage("disconnect")).addClass("active");
-    $("a.connection_button__link").addClass("active");
+    const connLabel = document.querySelector("div.connection_button__label");
+    if (connLabel) {
+        connLabel.textContent = i18n.getMessage("disconnect");
+        connLabel.classList.add("active");
+    }
+    document.querySelector("a.connection_button__link")?.classList.add("active");
 
-    $("#tabs ul.mode-disconnected").hide();
-    $("#tabs ul.mode-connected-cli").show();
+    const hide = (sel) => {
+        const el = document.querySelector(sel);
+        if (el) el.style.display = "none";
+    };
+    const show = (sel) => {
+        const el = document.querySelector(sel);
+        if (!el) return;
+        el.style.display = "";
+        // If CSS still hides it (e.g. .mode-connected { display: none }), override explicitly
+        if (getComputedStyle(el).display === "none") el.style.display = "block";
+    };
+
+    hide("#tabs ul.mode-disconnected");
+    show("#tabs ul.mode-connected-cli");
 
     // show only appropriate tabs
-    $("#tabs ul.mode-connected li").hide();
-    $("#tabs ul.mode-connected li")
-        .filter(function () {
-            const classes = $(this).attr("class").split(/\s+/);
-            let found = false;
+    const connectedItems = document.querySelectorAll("#tabs ul.mode-connected li");
+    for (const li of connectedItems) {
+        const classes = li.className.split(/\s+/);
+        let found = false;
 
-            $.each(GUI.allowedTabs, (_index, value) => {
-                const tabName = `tab_${value}`;
-                if ($.inArray(tabName, classes) >= 0) {
-                    found = true;
-                }
-            });
-
-            if (FC.CONFIG.boardType == 0) {
-                if (classes.includes("osd-required")) {
-                    found = false;
-                }
+        for (const value of GUI.allowedTabs) {
+            const tabName = `tab_${value}`;
+            if (classes.includes(tabName)) {
+                found = true;
+                break;
             }
+        }
 
-            return found;
-        })
-        .show();
+        if (FC.CONFIG.boardType == 0 && classes.includes("osd-required")) {
+            found = false;
+        }
+
+        li.style.display = found ? "" : "none";
+    }
 
     if (FC.CONFIG.flightControllerVersion !== "" && !isCliOnlyMode()) {
-        if (!CONFIGURATOR.virtualMode && PortHandler.portPicker.selectedPort !== 'virtual') {
+        if (!CONFIGURATOR.virtualMode && PortHandler.portPicker.selectedPort !== "virtual") {
             FC.FEATURE_CONFIG.features = new Features(FC.CONFIG);
             FC.BEEPER_CONFIG.beepers = new Beepers(FC.CONFIG);
             FC.BEEPER_CONFIG.dshotBeaconConditions = new Beepers(FC.CONFIG, ["RX_LOST", "RX_SET"]);
         }
 
-        $("#tabs ul.mode-connected").show();
+        show("#tabs ul.mode-connected");
 
         MSP.send_message(MSPCodes.MSP_FEATURE_CONFIG, false, false);
         MSP.send_message(MSPCodes.MSP_BATTERY_CONFIG, false, false);
@@ -675,11 +711,11 @@ function onConnect() {
             startLiveDataRefreshTimer();
         }
 
-        $("#sensor-status").show();
-        $("#dataflash_wrapper_global").show();
+        show("#sensor-status");
+        show("#dataflash_wrapper_global");
     }
 
-    $("#portsinput").hide();
+    hide("#portsinput");
 }
 
 function onClosed(result) {
@@ -711,7 +747,7 @@ export function read_serial(info) {
 }
 
 export async function update_sensor_status() {
-    const statuswrapper = $("#quad-status_wrapper");
+    const statuswrapper = document.getElementById("quad-status_wrapper");
 
     await MSP.promise(MSPCodes.MSP_ANALOG);
     await MSP.promise(MSPCodes.MSP_BATTERY_STATE);
@@ -728,16 +764,22 @@ export async function update_sensor_status() {
         const warn = FC.BATTERY_CONFIG.vbatwarningcellvoltage * nbCells;
         const NO_BATTERY_VOLTAGE_MAXIMUM = 1.8; // Maybe is better to add a call to MSP_BATTERY_STATE but is not available for all versions
 
-        if (FC.ANALOG.voltage < min && FC.ANALOG.voltage > NO_BATTERY_VOLTAGE_MAXIMUM) {
-            $(".battery-status").addClass("state-empty").removeClass("state-ok").removeClass("state-warning");
-            $(".battery-status").css({ width: "100%" });
-        } else {
-            $(".battery-status").css({ width: `${((FC.ANALOG.voltage - min) / (max - min)) * 100}%` });
-
-            if (FC.ANALOG.voltage < warn) {
-                $(".battery-status").addClass("state-warning").removeClass("state-empty").removeClass("state-ok");
+        const batteryStatus = document.querySelector(".battery-status");
+        if (batteryStatus) {
+            if (FC.ANALOG.voltage < min && FC.ANALOG.voltage > NO_BATTERY_VOLTAGE_MAXIMUM) {
+                batteryStatus.classList.add("state-empty");
+                batteryStatus.classList.remove("state-ok", "state-warning");
+                batteryStatus.style.width = "100%";
             } else {
-                $(".battery-status").addClass("state-ok").removeClass("state-warning").removeClass("state-empty");
+                batteryStatus.style.width = `${((FC.ANALOG.voltage - min) / (max - min)) * 100}%`;
+
+                if (FC.ANALOG.voltage < warn) {
+                    batteryStatus.classList.add("state-warning");
+                    batteryStatus.classList.remove("state-empty", "state-ok");
+                } else {
+                    batteryStatus.classList.add("state-ok");
+                    batteryStatus.classList.remove("state-warning", "state-empty");
+                }
             }
         }
     }
@@ -746,14 +788,14 @@ export async function update_sensor_status() {
     await MSP.promise(MSPCodes.MSP_STATUS_EX);
 
     const active = performance.now() - FC.ANALOG.last_received_timestamp < 300;
-    $(".linkicon").toggleClass("active", active);
+    document.querySelector(".linkicon")?.classList.toggle("active", active);
 
     for (let i = 0; i < FC.AUX_CONFIG.length; i++) {
         if (FC.AUX_CONFIG[i] === "ARM") {
-            $(".armedicon").toggleClass("active", bit_check(FC.CONFIG.mode, i));
+            document.querySelector(".armedicon")?.classList.toggle("active", bit_check(FC.CONFIG.mode, i));
         }
         if (FC.AUX_CONFIG[i] === "FAILSAFE") {
-            $(".failsafeicon").toggleClass("active", bit_check(FC.CONFIG.mode, i));
+            document.querySelector(".failsafeicon")?.classList.toggle("active", bit_check(FC.CONFIG.mode, i));
         }
     }
 
@@ -763,7 +805,10 @@ export async function update_sensor_status() {
 
     sensor_status(FC.CONFIG.activeSensors, FC.GPS_DATA.fix);
 
-    statuswrapper.show();
+    if (statuswrapper) {
+        statuswrapper.style.display = "";
+        if (getComputedStyle(statuswrapper).display === "none") statuswrapper.style.display = "block";
+    }
 }
 
 async function update_live_status() {
@@ -800,7 +845,7 @@ export function reinitializeConnection(suppressDialog = false) {
         connectDisconnect();
         if (PortHandler.portPicker.autoConnect) {
             setTimeout(function () {
-                $("a.connection_button__link").trigger("click");
+                document.querySelector("a.connection_button__link")?.click();
             }, 500);
             return rebootTimestamp;
         }
@@ -814,7 +859,7 @@ export function reinitializeConnection(suppressDialog = false) {
 
     if (currentPort.startsWith("bluetooth") || currentPort === "manual") {
         setTimeout(function () {
-            $("a.connection_button__link").trigger("click");
+            document.querySelector("a.connection_button__link")?.click();
         }, 1500);
         return rebootTimestamp;
     }
