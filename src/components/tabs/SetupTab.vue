@@ -1114,9 +1114,7 @@ function initModel() {
         console.warn("Model canvas or wrapper not found; skipping model initialization.");
         return;
     }
-    const wrapper = $(wrapperDom);
-    const canvas = $(canvasDom);
-    modelInstance = new Model(wrapper, canvas);
+    modelInstance = new Model(wrapperDom, canvasDom);
     boundModelResize = modelInstance.resize.bind(modelInstance);
     window.addEventListener("resize", boundModelResize);
 }

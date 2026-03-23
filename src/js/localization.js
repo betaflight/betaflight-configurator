@@ -2,7 +2,6 @@ import i18next from "i18next";
 import i18nextXHRBackend from "i18next-xhr-backend";
 import { gui_log } from "./gui_log.js";
 import { get as getConfig, set as setConfig } from "./ConfigStorage.js";
-import $ from "jquery";
 
 const i18n = {};
 /*
@@ -154,46 +153,35 @@ i18n.localizePage = function (forceReTranslate) {
     };
 
     if (forceReTranslate) {
-        $("[i18n]").each(function () {
-            const element = $(this);
-            element.html(translate(element.attr("i18n")));
-        });
-        $("[i18n_title]").each(function () {
-            const element = $(this);
-            element.attr("title", translate(element.attr("i18n_title")));
-        });
-        $("[i18n_value]").each(function () {
-            const element = $(this);
-            element.val(translate(element.attr("i18n_value")));
-        });
-        $("[i18n_placeholder]").each(function () {
-            const element = $(this);
-            element.attr("placeholder", translate(element.attr("i18n_placeholder")));
-        });
+        for (const el of document.querySelectorAll("[i18n]")) {
+            el.innerHTML = translate(el.getAttribute("i18n"));
+        }
+        for (const el of document.querySelectorAll("[i18n_title]")) {
+            el.title = translate(el.getAttribute("i18n_title"));
+        }
+        for (const el of document.querySelectorAll("[i18n_value]")) {
+            el.value = translate(el.getAttribute("i18n_value"));
+        }
+        for (const el of document.querySelectorAll("[i18n_placeholder]")) {
+            el.placeholder = translate(el.getAttribute("i18n_placeholder"));
+        }
     } else {
-        $("[i18n]:not(.i18n-replaced)").each(function () {
-            const element = $(this);
-            element.html(translate(element.attr("i18n")));
-            element.addClass("i18n-replaced");
-        });
-
-        $("[i18n_title]:not(.i18n_title-replaced)").each(function () {
-            const element = $(this);
-            element.attr("title", translate(element.attr("i18n_title")));
-            element.addClass("i18n_title-replaced");
-        });
-
-        $("[i18n_value]:not(.i18n_value-replaced)").each(function () {
-            const element = $(this);
-            element.val(translate(element.attr("i18n_value")));
-            element.addClass("i18n_value-replaced");
-        });
-
-        $("[i18n_placeholder]:not(.i18n_placeholder-replaced)").each(function () {
-            const element = $(this);
-            element.attr("placeholder", translate(element.attr("i18n_placeholder")));
-            element.addClass("i18n_placeholder-replaced");
-        });
+        for (const el of document.querySelectorAll("[i18n]:not(.i18n-replaced)")) {
+            el.innerHTML = translate(el.getAttribute("i18n"));
+            el.classList.add("i18n-replaced");
+        }
+        for (const el of document.querySelectorAll("[i18n_title]:not(.i18n_title-replaced)")) {
+            el.title = translate(el.getAttribute("i18n_title"));
+            el.classList.add("i18n_title-replaced");
+        }
+        for (const el of document.querySelectorAll("[i18n_value]:not(.i18n_value-replaced)")) {
+            el.value = translate(el.getAttribute("i18n_value"));
+            el.classList.add("i18n_value-replaced");
+        }
+        for (const el of document.querySelectorAll("[i18n_placeholder]:not(.i18n_placeholder-replaced)")) {
+            el.placeholder = translate(el.getAttribute("i18n_placeholder"));
+            el.classList.add("i18n_placeholder-replaced");
+        }
     }
     return localized;
 };
