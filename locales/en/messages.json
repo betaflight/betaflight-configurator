@@ -7922,6 +7922,13 @@
         "message": "$t(osdTextElementLidar.message)",
         "description": "Don't translate!!!"
     },
+    "osdTextElementCustomSerialText": {
+        "message": "Custom serial text",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementCustomSerialText": {
+        "message": "Displays custom text received from a serial port"
+    },
     "osdTextElementBatteryProfileName": {
         "message": "Profile: Battery profile name",
         "description": "One of the elements of the OSD"

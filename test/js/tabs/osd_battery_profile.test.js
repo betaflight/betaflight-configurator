@@ -102,6 +102,7 @@ function buildAllDisplayFields() {
         "CUSTOM_MSG3",
         "OSD_LIDAR_DIST",
         // API 1.48
+        "OSD_CUSTOM_SERIAL_TEXT",
         "BATTERY_PROFILE_NAME",
     ];
 
@@ -130,6 +131,17 @@ describe("OSD Battery Profile Fields", () => {
 
         const fieldNames = OSD.constants.DISPLAY_FIELDS.map((f) => f.name);
         expect(fieldNames).toContain("BATTERY_PROFILE_NAME");
+    });
+
+    it("OSD_CUSTOM_SERIAL_TEXT appears before BATTERY_PROFILE_NAME in DISPLAY_FIELDS", () => {
+        FC.CONFIG.apiVersion = API_VERSION_1_48;
+        OSD.chooseFields();
+
+        const fieldNames = OSD.constants.DISPLAY_FIELDS.map((f) => f.name);
+        const customTextIndex = fieldNames.indexOf("OSD_CUSTOM_SERIAL_TEXT");
+        const batteryProfileIndex = fieldNames.indexOf("BATTERY_PROFILE_NAME");
+        expect(customTextIndex).toBeGreaterThanOrEqual(0);
+        expect(batteryProfileIndex).toBeGreaterThan(customTextIndex);
     });
 
     it("does not include BATTERY_PROFILE_NAME in DISPLAY_FIELDS for API < 1.48", () => {

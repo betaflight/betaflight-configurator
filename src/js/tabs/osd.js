@@ -1321,6 +1321,15 @@ OSD.loadDisplayFields = function () {
             positionable: true,
             preview: "RF:---",
         },
+        OSD_CUSTOM_SERIAL_TEXT: {
+            name: "OSD_CUSTOM_SERIAL_TEXT",
+            text: "osdTextElementCustomSerialText",
+            desc: "osdDescElementCustomSerialText",
+            defaultPosition: -1,
+            draw_order: 615,
+            positionable: true,
+            preview: "---",
+        },
         BATTERY_PROFILE_NAME: {
             name: "BATTERY_PROFILE_NAME",
             text: "osdTextElementBatteryProfileName",
@@ -1462,7 +1471,10 @@ OSD.chooseFields = function () {
     }
 
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_48)) {
-        OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([F.BATTERY_PROFILE_NAME]);
+        OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
+            F.OSD_CUSTOM_SERIAL_TEXT,
+            F.BATTERY_PROFILE_NAME,
+        ]);
     }
     // Choose statistic fields
     // Nothing much to do here, I'm preempting there being new statistics
