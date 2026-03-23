@@ -7666,7 +7666,7 @@
         "message": "Please wait.",
         "description": "Second label in the progress dialog when applying presets"
     },
-    "presetsCliErrorsWaring": {
+    "presetsCliErrorsWarning": {
         "message": "<span class='message-negative'>WARNING!</span><br/>Configuration has been applied with CLI errors.",
         "description": "Text to show when there are CLI errors after applying presets or user configuration"
     },
@@ -7686,6 +7686,14 @@
         "message": "Cancel",
         "description": "Cancel button in the presets warning dialog"
     },
+    "presetsFavoriteAddAriaLabel": {
+        "message": "Add favorite preset",
+        "description": "Accessible label for the button that favorites a preset"
+    },
+    "presetsFavoriteRemoveAriaLabel": {
+        "message": "Remove favorite preset",
+        "description": "Accessible label for the button that removes a preset from favorites"
+    },
     "presetsWiki": {
         "message": "Presets Wiki",
         "description": "Button to open Presets Wiki link"
@@ -7697,6 +7705,10 @@
     "presetsBackupLoad": {
         "message": "Load backup",
         "description": "Button to load backup from the file"
+    },
+    "presetsVirtualModeCliUnsupported": {
+        "message": "Preset apply and backup actions require the CLI, which is not available in Virtual Mode.",
+        "description": "Warning shown when a presets CLI action is attempted in Virtual Mode"
     },
     "presetsLoadingDumpAll": {
         "message": "Loading current configuration from the flight controller",

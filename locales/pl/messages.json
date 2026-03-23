@@ -7550,7 +7550,7 @@
         "message": "Proszę czekać.",
         "description": "Second label in the progress dialog when applying presets"
     },
-    "presetsCliErrorsWaring": {
+    "presetsCliErrorsWarning": {
         "message": "<span class='message-negative'>OSTRZEŻENIE!<\/span><br\/>W tej konfiguracji znajdują się niepoprawne komendy Wiersza Poleceń CLI.",
         "description": "Text to show when there are CLI errors after applying presets or user configuration"
     },

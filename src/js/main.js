@@ -371,7 +371,7 @@ async function startProcess() {
                     mountVueTab("cli", content_ready);
                     break;
                 case "presets":
-                    import("../tabs/presets/presets").then(({ presets }) => presets.initialize(content_ready));
+                    mountVueTab("presets", content_ready);
                     break;
                 case "user_profile":
                     // Vue tab - use mountVueTab instead of jQuery load
