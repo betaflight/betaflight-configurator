@@ -603,9 +603,13 @@ class GuiControl {
                 output += `${line}${eol}`;
             }
             const cliCommand = document.getElementById("cli-command");
-            if (cliCommand) cliCommand.value = "";
+            if (cliCommand) {
+                cliCommand.value = "";
+            }
             const cliResponse = document.getElementById("cli-response");
-            if (cliResponse) cliResponse.textContent = output;
+            if (cliResponse) {
+                cliResponse.textContent = output;
+            }
         }
 
         // cli-command button hook
@@ -629,7 +633,9 @@ class GuiControl {
 
         // clear response from previous session
         const cliResponse = document.getElementById("cli-response");
-        if (cliResponse) cliResponse.textContent = "";
+        if (cliResponse) {
+            cliResponse.textContent = "";
+        }
 
         this.showInteractiveDialog(cliPanelDialog);
 

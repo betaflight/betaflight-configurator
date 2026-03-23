@@ -282,7 +282,9 @@ async function startProcess() {
 
                 // display loading screen
                 const loadingTemplate = document.querySelector("#cache .data-loading");
-                if (loadingTemplate) content.appendChild(loadingTemplate.cloneNode(true));
+                if (loadingTemplate) {
+                    content.appendChild(loadingTemplate.cloneNode(true));
+                }
 
                 function content_ready() {
                     GUI.tab_switch_in_progress = false;
@@ -397,9 +399,10 @@ async function startProcess() {
     document.getElementById("menu_btn")?.addEventListener("click", function () {
         document.querySelector(".tab_container")?.classList.toggle("reveal");
         const bg = document.getElementById("background");
-        if (bg)
+        if (bg) {
             bg.style.display =
                 bg.style.display === "none" || getComputedStyle(bg).display === "none" ? "block" : "none";
+        }
     });
 
     document.getElementById("background")?.addEventListener("click", function () {
@@ -416,7 +419,9 @@ async function startProcess() {
         if (window.innerWidth > 575) {
             document.querySelector(".tab_container")?.classList.remove("reveal");
             const bg = document.getElementById("background");
-            if (bg) bg.style.display = "none";
+            if (bg) {
+                bg.style.display = "none";
+            }
         }
     });
 
@@ -438,7 +443,9 @@ async function startProcess() {
     );
 
     contentEl?.addEventListener("change", function (e) {
-        if (!e.target.matches('input[type="number"]')) return;
+        if (!e.target.matches('input[type="number"]')) {
+            return;
+        }
 
         const element = e.target;
         const min = parseFloat(element.min);
@@ -488,7 +495,9 @@ async function startProcess() {
             setTimeout(function () {
                 const commandLog = document.getElementById("log");
                 const wrapper = commandLog?.querySelector("div.wrapper");
-                if (commandLog && wrapper) commandLog.scrollTop = wrapper.offsetHeight;
+                if (commandLog && wrapper) {
+                    commandLog.scrollTop = wrapper.offsetHeight;
+                }
             }, 200);
             document.getElementById("log")?.classList.remove("active");
             document.getElementById("tab-content-container")?.classList.remove("logopen");

@@ -143,7 +143,9 @@ function connectDisconnect() {
             // lock port select & baud while we are connecting / connected
             PortHandler.portPickerDisabled = true;
             const connLabel = document.querySelector("div.connection_button__label");
-            if (connLabel) connLabel.textContent = i18n.getMessage("connecting");
+            if (connLabel) {
+                connLabel.textContent = i18n.getMessage("connecting");
+            }
 
             // Set up event listeners for non-virtual connections
             if (selectedPort !== "virtual") {
@@ -208,7 +210,9 @@ function finishClose(finishedCallback) {
     // reset connect / disconnect button
     document.querySelector("a.connection_button__link")?.classList.remove("active");
     const connLabel = document.querySelector("div.connection_button__label");
-    if (connLabel) connLabel.textContent = i18n.getMessage("connect");
+    if (connLabel) {
+        connLabel.textContent = i18n.getMessage("connect");
+    }
 
     // reset active sensor indicators
     sensor_status();
@@ -222,7 +226,9 @@ function finishClose(finishedCallback) {
         }
 
         const content = document.getElementById("content");
-        if (content) content.innerHTML = "";
+        if (content) {
+            content.innerHTML = "";
+        }
 
         // close cliPanel if left open
         document.querySelector(".dialogInteractive")?.close();
@@ -251,7 +257,9 @@ function setConnectionTimeout() {
 function resetConnection() {
     // reset connect / disconnect button
     const connLabel = document.querySelector("div.connection_button__label");
-    if (connLabel) connLabel.textContent = i18n.getMessage("connect");
+    if (connLabel) {
+        connLabel.textContent = i18n.getMessage("connect");
+    }
     document.querySelector("a.connection_button__link")?.classList.remove("active");
 
     clearLiveDataRefreshTimer();
@@ -266,14 +274,20 @@ function resetConnection() {
 
     const hide = (sel) => {
         const el = document.querySelector(sel);
-        if (el) el.style.display = "none";
+        if (el) {
+            el.style.display = "none";
+        }
     };
     const show = (sel) => {
         const el = document.querySelector(sel);
-        if (!el) return;
+        if (!el) {
+            return;
+        }
         el.style.display = "";
         // If CSS still hides it (e.g. .mode-connected { display: none }), override explicitly
-        if (getComputedStyle(el).display === "none") el.style.display = "block";
+        if (getComputedStyle(el).display === "none") {
+            el.style.display = "block";
+        }
     };
 
     hide("#tabs ul.mode-connected");
@@ -312,9 +326,13 @@ function showVersionMismatchAndCli(message) {
     const dialog = document.querySelector(".dialogConnectWarning");
 
     const content = dialog.querySelector(".dialogConnectWarning-content");
-    if (content) content.innerHTML = message;
+    if (content) {
+        content.innerHTML = message;
+    }
     const closeBtn = dialog.querySelector(".dialogConnectWarning-closebtn");
-    if (closeBtn) closeBtn.onclick = () => dialog.close();
+    if (closeBtn) {
+        closeBtn.onclick = () => dialog.close();
+    }
 
     dialog.showModal();
 
@@ -658,14 +676,20 @@ function onConnect() {
 
     const hide = (sel) => {
         const el = document.querySelector(sel);
-        if (el) el.style.display = "none";
+        if (el) {
+            el.style.display = "none";
+        }
     };
     const show = (sel) => {
         const el = document.querySelector(sel);
-        if (!el) return;
+        if (!el) {
+            return;
+        }
         el.style.display = "";
         // If CSS still hides it (e.g. .mode-connected { display: none }), override explicitly
-        if (getComputedStyle(el).display === "none") el.style.display = "block";
+        if (getComputedStyle(el).display === "none") {
+            el.style.display = "block";
+        }
     };
 
     hide("#tabs ul.mode-disconnected");
@@ -807,7 +831,9 @@ export async function update_sensor_status() {
 
     if (statuswrapper) {
         statuswrapper.style.display = "";
-        if (getComputedStyle(statuswrapper).display === "none") statuswrapper.style.display = "block";
+        if (getComputedStyle(statuswrapper).display === "none") {
+            statuswrapper.style.display = "block";
+        }
     }
 }
 

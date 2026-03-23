@@ -106,55 +106,82 @@ class FlightIndicator {
 
     setRoll(roll) {
         const el = this._q("div.instrument.attitude div.roll");
-        if (el) el.style.transform = `rotate(${-roll}deg)`;
+        if (el) {
+            el.style.transform = `rotate(${-roll}deg)`;
+        }
     }
 
     setPitch(pitch) {
-        if (pitch > CONSTANTS.pitch_bound) pitch = CONSTANTS.pitch_bound;
-        else if (pitch < -CONSTANTS.pitch_bound) pitch = -CONSTANTS.pitch_bound;
+        if (pitch > CONSTANTS.pitch_bound) {
+            pitch = CONSTANTS.pitch_bound;
+        } else if (pitch < -CONSTANTS.pitch_bound) {
+            pitch = -CONSTANTS.pitch_bound;
+        }
         const el = this._q("div.instrument.attitude div.roll div.pitch");
-        if (el) el.style.top = `${-pitch * 0.7}%`;
+        if (el) {
+            el.style.top = `${-pitch * 0.7}%`;
+        }
     }
 
     setHeading(heading) {
         const el = this._q("div.instrument.heading div.heading");
-        if (el) el.style.transform = `rotate(${-heading}deg)`;
+        if (el) {
+            el.style.transform = `rotate(${-heading}deg)`;
+        }
     }
 
     setTurn(turn) {
         const el = this._q("div.instrument.turn_coordinator div.turn");
-        if (el) el.style.transform = `rotate(${turn}deg)`;
+        if (el) {
+            el.style.transform = `rotate(${turn}deg)`;
+        }
     }
 
     setVario(vario) {
-        if (vario > CONSTANTS.vario_bound) vario = CONSTANTS.vario_bound;
-        else if (vario < -CONSTANTS.vario_bound) vario = -CONSTANTS.vario_bound;
+        if (vario > CONSTANTS.vario_bound) {
+            vario = CONSTANTS.vario_bound;
+        } else if (vario < -CONSTANTS.vario_bound) {
+            vario = -CONSTANTS.vario_bound;
+        }
         vario = vario * 90;
         const el = this._q("div.instrument.vario div.vario");
-        if (el) el.style.transform = `rotate(${vario}deg)`;
+        if (el) {
+            el.style.transform = `rotate(${vario}deg)`;
+        }
     }
 
     setAirSpeed(speed) {
-        if (speed > CONSTANTS.airspeed_bound_h) speed = CONSTANTS.airspeed_bound_h;
-        else if (speed < CONSTANTS.airspeed_bound_l) speed = CONSTANTS.airspeed_bound_l;
+        if (speed > CONSTANTS.airspeed_bound_h) {
+            speed = CONSTANTS.airspeed_bound_h;
+        } else if (speed < CONSTANTS.airspeed_bound_l) {
+            speed = CONSTANTS.airspeed_bound_l;
+        }
         speed = 90 + speed * 2;
         const el = this._q("div.instrument.airspeed div.speed");
-        if (el) el.style.transform = `rotate(${speed}deg)`;
+        if (el) {
+            el.style.transform = `rotate(${speed}deg)`;
+        }
     }
 
     setAltitude(altitude) {
         const needle = 90 + ((altitude % 1000) * 360) / 1000;
         const needleSmall = (altitude / 10000) * 360;
         const el1 = this._q("div.instrument.altimeter div.needle");
-        if (el1) el1.style.transform = `rotate(${needle}deg)`;
+        if (el1) {
+            el1.style.transform = `rotate(${needle}deg)`;
+        }
         const el2 = this._q("div.instrument.altimeter div.needleSmall");
-        if (el2) el2.style.transform = `rotate(${needleSmall}deg)`;
+        if (el2) {
+            el2.style.transform = `rotate(${needleSmall}deg)`;
+        }
     }
 
     setPressure(pressure) {
         pressure = 2 * pressure - 1980;
         const el = this._q("div.instrument.altimeter div.pressure");
-        if (el) el.style.transform = `rotate(${pressure}deg)`;
+        if (el) {
+            el.style.transform = `rotate(${pressure}deg)`;
+        }
     }
 
     resize(size) {
@@ -167,12 +194,16 @@ class FlightIndicator {
 
     showBox() {
         const el = this._q("img.box.background");
-        if (el) el.style.display = "";
+        if (el) {
+            el.style.display = "";
+        }
     }
 
     hideBox() {
         const el = this._q("img.box.background");
-        if (el) el.style.display = "none";
+        if (el) {
+            el.style.display = "none";
+        }
     }
 }
 
