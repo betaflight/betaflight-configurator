@@ -482,11 +482,17 @@ export function useFirmwareFlashing(params = {}) {
      * Setup EventBus listeners for device events
      */
     const setupFlashingEventListeners = (options = {}) => {
-        const { flashOnConnect, onBoardChange, clearBufferedFirmware, updateDfuExitButtonState, initiateFlashing } =
-            options;
+        const {
+            getFlashOnConnect,
+            onBoardChange,
+            clearBufferedFirmware,
+            updateDfuExitButtonState,
+            initiateFlashing,
+            startFlashing,
+        } = options;
 
         const detectedUsbDevice = (device) => {
-            const isFlashOnConnect = flashOnConnect;
+        const isFlashOnConnect = getFlashOnConnect();
 
             console.log(`${logHead} Detected USB device:`, device);
 
@@ -502,11 +508,16 @@ export function useFirmwareFlashing(params = {}) {
                 STM32.rebootMode = 0;
                 if (wasReboot) {
                     GUI.connect_lock = false;
-                    // After device reboots to DFU, initiate flashing
-                    if (initiateFlashing) {
-                        console.log(`${logHead} Device rebooted to DFU, initiating flash`);
-                        initiateFlashing();
-                    }
+                }
+                // After DFU reboot: call startFlashing directly — the unstable firmware
+                // dialog was already shown on the initial flash trigger.
+                // For flash-on-connect: use initiateFlashing which includes the dialog check.
+                if (wasReboot && startFlashing) {
+                    console.log(`${logHead} Device rebooted to DFU, starting flash`);
+                    startFlashing();
+                } else if (isFlashOnConnect && initiateFlashing) {
+                    console.log(`${logHead} Flash on connect triggered`);
+                    initiateFlashing();
                 }
             }
         };
