@@ -1,5 +1,4 @@
 import { computed, ref } from "vue";
-import $ from "jquery";
 import GUI from "../js/gui";
 import CONFIGURATOR from "../js/data_storage";
 import CliEngine from "../tabs/presets/CliEngine";
@@ -13,7 +12,7 @@ function disconnectCliMakeSure() {
     GUI.timeout_add(
         DISCONNECT_TIMEOUT_NAME,
         () => {
-            $("a.connection_button__link").trigger("click");
+            document.querySelector("a.connection_button__link")?.click();
         },
         500,
     );
@@ -37,7 +36,7 @@ export function usePresetsCliSession({ onProgressChange } = {}) {
             return false;
         }
 
-        cliEngine.setUi($(cliWindowRef.value), $(windowWrapperRef.value), $(commandInputRef.value));
+        cliEngine.setUi(cliWindowRef.value, windowWrapperRef.value, commandInputRef.value);
         return true;
     }
 

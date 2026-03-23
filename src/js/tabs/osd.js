@@ -3,7 +3,6 @@ import { bit_check } from "../bit";
 import FC from "../fc";
 import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47, API_VERSION_1_48 } from "../data_storage";
 import semver from "semver";
-import $ from "jquery";
 import { have_sensor } from "../sensor_helpers";
 import { OSD_CONSTANTS } from "./osd_constants";
 import { FONT, SYM } from "../utils/osdFont";
@@ -1620,7 +1619,7 @@ OSD.msp = {
                 ignoreSize = true;
             }
             data.displayItems.push(
-                $.extend(
+                Object.assign(
                     {
                         name: c.name,
                         text: c.text,
@@ -1745,7 +1744,7 @@ OSD.msp = {
             const v = view.readU16();
             const j = d.timers.length;
             d.timers.push(
-                $.extend(
+                Object.assign(
                     {
                         index: j,
                     },
@@ -1771,7 +1770,7 @@ OSD.msp = {
 
             // Known warning field
             if (i < OSD.constants.WARNINGS.length) {
-                const warning = $.extend({}, OSD.constants.WARNINGS[i], { enabled, index: i });
+                const warning = Object.assign({}, OSD.constants.WARNINGS[i], { enabled, index: i });
                 d.warnings.push(warning);
 
                 // Push Unknown Warning field
@@ -1860,7 +1859,7 @@ OSD.msp = {
         const expectedTimersCount = 3;
         for (let i = 0; i < expectedTimersCount; i++) {
             d.timers.push(
-                $.extend(
+                Object.assign(
                     {
                         index: i,
                     },
@@ -1878,7 +1877,7 @@ OSD.msp = {
 
             // Known warning field
             if (i < warningCount) {
-                const warning = $.extend({}, OSD.constants.WARNINGS[i], { enabled, index: i });
+                const warning = Object.assign({}, OSD.constants.WARNINGS[i], { enabled, index: i });
                 d.warnings.push(warning);
 
                 // Push Unknown Warning field

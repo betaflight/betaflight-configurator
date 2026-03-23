@@ -51,19 +51,19 @@ export default class CliEngine {
     _setTextareaListen(textarea) {
         // Tab key detection must be on keydown,
         // `keypress`/`keyup` happens too late, as `textarea` will have already lost focus.
-        textarea.keydown((event) => {
+        textarea.addEventListener("keydown", (event) => {
             if (event.which === CliEngine.s_tabCode) {
                 // prevent default tabbing behaviour
                 event.preventDefault();
             }
         });
 
-        textarea.keypress((event) => {
+        textarea.addEventListener("keypress", (event) => {
             if (event.which === CliEngine.s_enterKeyCode) {
                 event.preventDefault(); // prevent the adding of new line
-                const outString = textarea.val();
+                const outString = textarea.value;
                 this.executeCommands(outString);
-                textarea.val("");
+                textarea.value = "";
             }
         });
 
@@ -167,8 +167,8 @@ export default class CliEngine {
     }
 
     writeToOutput(text) {
-        this._windowWrapper.append(text);
-        this._window.scrollTop(this._windowWrapper.height());
+        this._windowWrapper.insertAdjacentHTML("beforeend", text);
+        this._window.scrollTop = this._windowWrapper.scrollHeight;
     }
 
     writeLineToOutput(text) {
