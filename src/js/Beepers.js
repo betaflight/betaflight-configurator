@@ -104,7 +104,7 @@ class Beepers {
         const type = beeperElement.type ?? beeperElement.getAttribute?.("type");
 
         if (type === "checkbox") {
-            const bit = parseInt(beeperElement.dataset?.bit ?? beeperElement.getAttribute?.("data-bit"), 10);
+            const bit = Number.parseInt(beeperElement.dataset?.bit ?? beeperElement.getAttribute?.("data-bit"), 10);
 
             if (beeperElement.checked) {
                 self._beeperDisabledMask = bit_clear(self._beeperDisabledMask, bit);

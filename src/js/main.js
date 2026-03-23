@@ -435,7 +435,7 @@ async function startProcess() {
             if (e.target.matches('input[type="number"]')) {
                 const val = e.target.value;
                 if (!isNaN(val)) {
-                    e.target.dataset.previousValue = parseFloat(val);
+                    e.target.dataset.previousValue = Number.parseFloat(val);
                 }
             }
         },
@@ -448,11 +448,11 @@ async function startProcess() {
         }
 
         const element = e.target;
-        const min = parseFloat(element.min);
-        const max = parseFloat(element.max);
-        const step = parseFloat(element.step);
+        const min = Number.parseFloat(element.min);
+        const max = Number.parseFloat(element.max);
+        const step = Number.parseFloat(element.step);
 
-        let val = parseFloat(element.value);
+        let val = Number.parseFloat(element.value);
 
         // only adjust minimal end if bound is set
         if (element.min && val < min) {
@@ -469,13 +469,13 @@ async function startProcess() {
         // if entered value is illegal use previous value instead
         if (isNaN(val)) {
             element.value = element.dataset.previousValue;
-            val = parseFloat(element.dataset.previousValue);
+            val = Number.parseFloat(element.dataset.previousValue);
         }
 
         // if step is not set or step is int and value is float use previous value instead
         if ((isNaN(step) || step % 1 === 0) && val % 1 !== 0) {
             element.value = element.dataset.previousValue;
-            val = parseFloat(element.dataset.previousValue);
+            val = Number.parseFloat(element.dataset.previousValue);
         }
 
         // if step is set and is float and value is int, convert to float, keep decimal places in float according to step *experimental*

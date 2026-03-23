@@ -239,7 +239,7 @@ Features.prototype.updateData = function (featureElement) {
     const localName = featureElement.localName ?? featureElement.tagName?.toLowerCase();
 
     if (type === "checkbox") {
-        const bit = parseInt(featureElement.dataset?.bit ?? featureElement.getAttribute?.("data-bit"), 10);
+        const bit = Number.parseInt(featureElement.dataset?.bit ?? featureElement.getAttribute?.("data-bit"), 10);
         const checked = featureElement.checked;
         let featureValue;
 
