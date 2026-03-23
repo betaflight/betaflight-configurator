@@ -276,7 +276,9 @@ class STM32Protocol {
 
         // lock some UI elements TODO needs rework
         const releaseSelect = document.querySelector('select[name="release"]');
-        if (releaseSelect) releaseSelect.disabled = true;
+        if (releaseSelect) {
+            releaseSelect.disabled = true;
+        }
 
         serial.removeEventListener("receive", readSerialAdapter);
         serial.addEventListener("receive", readSerialAdapter);

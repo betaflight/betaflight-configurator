@@ -4,9 +4,13 @@
  */
 export function gui_log(message) {
     const commandLog = document.querySelector("div#log");
-    if (!commandLog) return;
+    if (!commandLog) {
+        return;
+    }
     const wrapper = commandLog.querySelector("div.wrapper");
-    if (!wrapper) return;
+    if (!wrapper) {
+        return;
+    }
 
     const d = new Date();
     const year = d.getFullYear();

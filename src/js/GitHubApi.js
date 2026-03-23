@@ -9,7 +9,12 @@ GitHubApi.prototype.getFileLastCommitInfo = function (project, branch, filename,
     )}&path=${encodeURIComponent(filename)}`;
 
     fetch(url)
-        .then((response) => response.json())
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
+            }
+            return response.json();
+        })
         .then((commits) => {
             const result = {};
             try {

@@ -178,6 +178,7 @@ Features.prototype.generateElements = function (featuresElements) {
             opt.value = `${featureBit}`;
             opt.setAttribute("i18n", `feature${featureName}`);
 
+            opt.selected = bit_check(self._featureMask, featureBit);
             listElements.push(opt);
 
             for (const c of containers) {
@@ -218,12 +219,6 @@ Features.prototype.generateElements = function (featuresElements) {
             }
         }
     }
-
-    for (const element of listElements) {
-        const bit = parseInt(element.value);
-        const state = bit_check(self._featureMask, bit);
-        element.selected = state;
-    }
 };
 
 Features.prototype.findFeatureByBit = function (bit) {
@@ -244,7 +239,7 @@ Features.prototype.updateData = function (featureElement) {
     const localName = featureElement.localName ?? featureElement.tagName?.toLowerCase();
 
     if (type === "checkbox") {
-        const bit = featureElement.dataset?.bit ?? featureElement.getAttribute?.("data-bit");
+        const bit = parseInt(featureElement.dataset?.bit ?? featureElement.getAttribute?.("data-bit"), 10);
         const checked = featureElement.checked;
         let featureValue;
 

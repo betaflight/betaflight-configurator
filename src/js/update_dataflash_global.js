@@ -28,8 +28,12 @@ export function update_dataflash_global() {
     const contentsText = contents?.querySelector("div");
 
     if (supportsDataflash || supportsDatacard) {
-        if (noflash) noflash.style.display = "none";
-        if (contents) contents.style.display = "block";
+        if (noflash) {
+            noflash.style.display = "none";
+        }
+        if (contents) {
+            contents.style.display = "block";
+        }
 
         let dataflashProgress;
         let dataflashProgressText;
@@ -43,10 +47,18 @@ export function update_dataflash_global() {
             dataflashProgressText = `SD Card: free ${formatFilesize(FC.SDCARD.freeSizeKB * 1024)}`;
         }
 
-        if (progress) progress.value = dataflashProgress;
-        if (contentsText) contentsText.textContent = dataflashProgressText;
+        if (progress) {
+            progress.value = dataflashProgress;
+        }
+        if (contentsText) {
+            contentsText.textContent = dataflashProgressText;
+        }
     } else {
-        if (noflash) noflash.style.display = "block";
-        if (contents) contents.style.display = "none";
+        if (noflash) {
+            noflash.style.display = "block";
+        }
+        if (contents) {
+            contents.style.display = "none";
+        }
     }
 }

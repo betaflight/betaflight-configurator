@@ -215,11 +215,15 @@ LogoManager.showConstraintSatisfied = (constraint) => {
 };
 
 LogoManager.showUploadHint = function () {
-    if (this.elements._uploadHint) this.elements._uploadHint.style.display = "";
+    if (this.elements._uploadHint) {
+        this.elements._uploadHint.style.display = "";
+    }
 };
 
 LogoManager.hideUploadHint = function () {
-    if (this.elements._uploadHint) this.elements._uploadHint.style.display = "none";
+    if (this.elements._uploadHint) {
+        this.elements._uploadHint.style.display = "none";
+    }
 };
 
 /**
@@ -291,7 +295,9 @@ LogoManager.replaceLogoInFont = function (img) {
  */
 LogoManager.drawPreview = function () {
     const el = this.elements._preview;
-    if (!el) return;
+    if (!el) {
+        return;
+    }
     el.innerHTML = "";
     for (let i = this.logoStartIndex, I = this.font.constants.MAX_CHAR_COUNT; i < I; i++) {
         const url = this.font.data.character_image_urls[i];

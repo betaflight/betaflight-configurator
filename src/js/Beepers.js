@@ -87,8 +87,12 @@ class Beepers {
                     inputElement.dataset.bit = self._beepers[i].bit;
                 }
 
-                if (labelElement) labelElement.textContent = self._beepers[i].name;
-                if (spanElement) spanElement.setAttribute("i18n", `beeper${self._beepers[i].name}`);
+                if (labelElement) {
+                    labelElement.textContent = self._beepers[i].name;
+                }
+                if (spanElement) {
+                    spanElement.setAttribute("i18n", `beeper${self._beepers[i].name}`);
+                }
 
                 element.style.display = "";
             }
@@ -100,7 +104,7 @@ class Beepers {
         const type = beeperElement.type ?? beeperElement.getAttribute?.("type");
 
         if (type === "checkbox") {
-            const bit = beeperElement.dataset?.bit ?? beeperElement.getAttribute?.("data-bit");
+            const bit = parseInt(beeperElement.dataset?.bit ?? beeperElement.getAttribute?.("data-bit"), 10);
 
             if (beeperElement.checked) {
                 self._beeperDisabledMask = bit_clear(self._beeperDisabledMask, bit);

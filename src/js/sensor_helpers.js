@@ -42,7 +42,9 @@ export function sensor_status(sensors_detected = 0, gps_fix_state = 0) {
     sensor_status.previous_gps_fix_state = gps_fix_state;
 
     const el = document.getElementById("sensor-status");
-    if (!el) return;
+    if (!el) {
+        return;
+    }
 
     function toggle(sensorClass, iconClass, on) {
         el.querySelector(`.${sensorClass}`)?.classList.toggle("on", on);
