@@ -189,7 +189,7 @@ Features.prototype.generateElements = function (featuresElements) {
         } else {
             let newFeatureName = "";
             if (!feature.hideName) {
-                newFeatureName = `<td><div>${featureName}</div></td>`;
+                newFeatureName = featureName;
             }
 
             let html = `<tr><td><input class="feature toggle" id="feature${featureBit}"`;
@@ -257,8 +257,8 @@ Features.prototype.updateData = function (featureElement) {
         if (selectedBit !== -1) {
             let selectedFeature;
             for (const controlElement of controlElements) {
-                const bit = controlElement.value;
-                if (selectedBit === bit) {
+                const bit = Number.parseInt(controlElement.value, 10);
+                if (selectedBit === controlElement.value) {
                     self._featureMask = bit_set(self._featureMask, bit);
                     selectedFeature = self.findFeatureByBit(bit);
                 } else {
