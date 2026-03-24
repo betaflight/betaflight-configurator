@@ -294,15 +294,70 @@ function renderChart(state) {
             .text(`Nyquist ${Math.round(nyquist)}Hz`);
     }
 
+    const curves = computeCurves(state);
+    const clipAttr = `url(#${clipId})`;
+
+    // ── Sweep bands (rendered behind curves) ──
+
+    // Dynamic notch sweep band: vertical stripe showing the Hz range the notch travels
+    if (state.dynNotchCount > 0) {
+        const minHz = state.dynNotchMinHz || 150;
+        const maxHz = state.dynNotchMaxHz || 600;
+        if (minHz < maxHz) {
+            g.append("rect")
+                .attr("x", xScale(minHz))
+                .attr("y", 0)
+                .attr("width", xScale(maxHz) - xScale(minHz))
+                .attr("height", height)
+                .attr("clip-path", clipAttr)
+                .attr("fill", "rgba(255,68,68,0.08)")
+                .attr("stroke", "none");
+
+            // Subtle border lines at the edges of the sweep range
+            [minHz, maxHz].forEach((hz) => {
+                g.append("line")
+                    .attr("x1", xScale(hz))
+                    .attr("x2", xScale(hz))
+                    .attr("y1", 0)
+                    .attr("y2", height)
+                    .attr("clip-path", clipAttr)
+                    .style("stroke", "rgba(255,68,68,0.35)")
+                    .style("stroke-width", 1)
+                    .style("stroke-dasharray", "3,3");
+            });
+        }
+    }
+
+    // D-Term LPF1 dynamic sweep band: area between the min-Hz and max-Hz response curves
+    if (state.dtermLpf1DynMin > 0) {
+        const freqs = buildFreqArray();
+        const areaData = freqs.map((f) => ({
+            f,
+            yLow: toDb(lpfMag(f, state.dtermLpf1DynMin, state.dtermLpf1Type)),
+            yHigh: toDb(lpfMag(f, state.dtermLpf1DynMax, state.dtermLpf1Type)),
+        }));
+
+        const areaGen = d3
+            .area()
+            .x((d) => xScale(d.f))
+            .y0((d) => yScale(d.yLow))
+            .y1((d) => yScale(d.yHigh))
+            .defined((d) => isFinite(d.yLow) && isFinite(d.yHigh) && d.yLow >= DB_MIN);
+
+        g.append("path")
+            .datum(areaData)
+            .attr("d", areaGen)
+            .attr("clip-path", clipAttr)
+            .attr("fill", "rgba(255,153,34,0.13)")
+            .attr("stroke", "none");
+    }
+
     // ── Filter curves ──
     const lineGen = d3
         .line()
         .x((d) => xScale(d[0]))
         .y((d) => yScale(d[1]))
         .defined((d) => isFinite(d[1]) && d[1] >= DB_MIN);
-
-    const curves = computeCurves(state);
-    const clipAttr = `url(#${clipId})`;
 
     curves.forEach((curve) => {
         const path = g
