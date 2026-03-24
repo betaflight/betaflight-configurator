@@ -152,37 +152,23 @@ i18n.localizePage = function (forceReTranslate) {
         return i18n.getMessage(messageID);
     };
 
-    if (forceReTranslate) {
-        for (const el of document.querySelectorAll("[i18n]")) {
-            el.innerHTML = translate(el.getAttribute("i18n"));
-        }
-        for (const el of document.querySelectorAll("[i18n_title]")) {
-            el.title = translate(el.getAttribute("i18n_title"));
-        }
-        for (const el of document.querySelectorAll("[i18n_value]")) {
-            el.value = translate(el.getAttribute("i18n_value"));
-        }
-        for (const el of document.querySelectorAll("[i18n_placeholder]")) {
-            el.placeholder = translate(el.getAttribute("i18n_placeholder"));
-        }
-    } else {
-        for (const el of document.querySelectorAll("[i18n]:not(.i18n-replaced)")) {
-            el.innerHTML = translate(el.getAttribute("i18n"));
-            el.classList.add("i18n-replaced");
-        }
-        for (const el of document.querySelectorAll("[i18n_title]:not(.i18n_title-replaced)")) {
-            el.title = translate(el.getAttribute("i18n_title"));
-            el.classList.add("i18n_title-replaced");
-        }
-        for (const el of document.querySelectorAll("[i18n_value]:not(.i18n_value-replaced)")) {
-            el.value = translate(el.getAttribute("i18n_value"));
-            el.classList.add("i18n_value-replaced");
-        }
-        for (const el of document.querySelectorAll("[i18n_placeholder]:not(.i18n_placeholder-replaced)")) {
-            el.placeholder = translate(el.getAttribute("i18n_placeholder"));
-            el.classList.add("i18n_placeholder-replaced");
+    const attrs = [
+        { attr: "i18n", prop: "innerHTML" },
+        { attr: "i18n_title", prop: "title" },
+        { attr: "i18n_value", prop: "value" },
+        { attr: "i18n_placeholder", prop: "placeholder" },
+    ];
+
+    for (const { attr, prop } of attrs) {
+        const suffix = forceReTranslate ? "" : `:not(.${attr}-replaced)`;
+        for (const el of document.querySelectorAll(`[${attr}]${suffix}`)) {
+            el[prop] = translate(el.getAttribute(attr));
+            if (!forceReTranslate) {
+                el.classList.add(`${attr}-replaced`);
+            }
         }
     }
+
     return localized;
 };
 

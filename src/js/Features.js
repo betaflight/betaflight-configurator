@@ -180,8 +180,6 @@ Features.prototype.generateElements = function (featuresElements) {
             opt.setAttribute("i18n", `feature${featureName}`);
 
             opt.selected = bit_check(self._featureMask, featureBit);
-            // track that we've appended at least one option so 'none' isn't added repeatedly
-            noneOptAppended = true;
 
             for (const c of containers) {
                 if (c.classList.contains(feature.group)) {

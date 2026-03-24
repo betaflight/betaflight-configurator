@@ -37,7 +37,7 @@ export const mixerList = [
 ];
 
 function getContentBoxSize(element) {
-    const style = window.getComputedStyle(element);
+    const style = globalThis.getComputedStyle(element);
     const paddingX = Number.parseFloat(style.paddingLeft) + Number.parseFloat(style.paddingRight);
     const paddingY = Number.parseFloat(style.paddingTop) + Number.parseFloat(style.paddingBottom);
     return {
