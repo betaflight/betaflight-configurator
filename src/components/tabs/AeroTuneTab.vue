@@ -282,6 +282,15 @@
                                 </button>
                             </div>
 
+                            <div v-if="bblSessions.length > 1" class="at-form-row" style="margin-top: 8px">
+                                <label style="font-size: 12px; color: var(--subtleText)">Select flight session:</label>
+                                <select v-model.number="bblSelectedSession" @change="runBBLSession(bblSelectedSession)">
+                                    <option v-for="(_, idx) in bblSessions" :key="idx" :value="idx">
+                                        Session {{ idx + 1 }}
+                                    </option>
+                                </select>
+                            </div>
+
                             <div class="at-results-box">{{ analysisResult }}</div>
                         </div>
                     </div>
@@ -1297,16 +1306,43 @@ function formatAnalysisResult(r) {
 
 // ─────────────────────────────────────────────────────────────────────────────
 // BBL Binary Start Finder
-// Scans byte-by-byte to find the offset where binary frame data begins,
-// i.e. right after the last ASCII 'H ...' header line.
+// Returns the byte offset where binary frame data begins for a given session,
+// i.e. the position immediately after the last 'H ...' header line of that
+// session.  sessionIndex 0 = first session, 1 = second, etc.
 // ─────────────────────────────────────────────────────────────────────────────
-function findBBLBinaryStart(buf) {
+function findBBLBinaryStart(buf, sessionIndex = 0) {
     const MARKER = "H Product:Blackbox flight data recorder by Nicholas Sherlock";
     const markerBytes = Array.from(MARKER).map((c) => c.charCodeAt(0));
-
-    let pos = 0;
     const len = buf.length;
-    let inHeader = false;
+
+    // Phase 1: locate the start of the target session's header by finding
+    // the Nth occurrence of the product marker.
+    let pos = 0;
+    let sessionsFound = -1;
+    let sessionHeaderStart = -1;
+
+    while (pos < len) {
+        if (buf[pos] === markerBytes[0]) {
+            let isMarker = markerBytes.length + pos <= len;
+            for (let j = 1; isMarker && j < markerBytes.length; j++) {
+                if (buf[pos + j] !== markerBytes[j]) isMarker = false;
+            }
+            if (isMarker) {
+                sessionsFound++;
+                if (sessionsFound === sessionIndex) {
+                    sessionHeaderStart = pos;
+                    break;
+                }
+            }
+        }
+        pos++;
+    }
+
+    if (sessionHeaderStart === -1) return 0; // session not found
+
+    // Phase 2: scan forward from the session marker, collecting 'H ' lines.
+    // The first non-'H ' line marks the start of binary data.
+    pos = sessionHeaderStart;
     let lastHeaderEnd = 0;
 
     while (pos < len) {
@@ -1314,34 +1350,14 @@ function findBBLBinaryStart(buf) {
         while (pos < len && buf[pos] !== 0x0a) pos++; // find \n
         if (pos < len) pos++; // skip \n
 
-        const lineLen = pos - lineStart;
-        if (lineLen < 2) continue;
+        if (pos - lineStart < 2) continue;
 
-        const startsWithH = buf[lineStart] === 0x48 && buf[lineStart + 1] === 0x20;
-
-        if (!inHeader) {
-            if (startsWithH) {
-                let isMarker = true;
-                for (let j = 0; j < markerBytes.length && lineStart + j < len; j++) {
-                    if (buf[lineStart + j] !== markerBytes[j]) {
-                        isMarker = false;
-                        break;
-                    }
-                }
-                if (isMarker) {
-                    inHeader = true;
-                    lastHeaderEnd = pos;
-                }
-            }
+        if (buf[lineStart] === 0x48 && buf[lineStart + 1] === 0x20) {
+            // 'H ' line — still in header
+            lastHeaderEnd = pos;
         } else {
-            if (startsWithH) {
-                lastHeaderEnd = pos;
-            } else {
-                break; // binary data starts at lastHeaderEnd
-            }
+            break; // binary data starts here
         }
-
-        if (pos > 65536 && !inHeader) break; // safety: give up if no header found in 64 KB
     }
 
     return lastHeaderEnd;
@@ -1398,6 +1414,10 @@ export default {
             csvFile: null,
             fileName: "No file selected",
             analysisResult: "Select a Betaflight blackbox file (.bfl, .bbl, or .csv) and click ANALYZE.",
+            // Multi-session BBL support
+            bblSessions: [],
+            bblSelectedSession: 0,
+            bblBuffer: null,
             tooltip: { visible: false, text: "", x: 0, y: 0 },
             // Auto Tune (chirp sweep)
             chirpPitch: 230,
@@ -1467,9 +1487,9 @@ export default {
             }
         },
         openInstructionsPopup() {
-            const popup = window.open("", "aerotune_instructions", "width=620,height=800,resizable=yes,scrollbars=yes");
-            if (!popup) return;
-            popup.document.write(`<!DOCTYPE html>
+            // Build the HTML as a Blob and open via object URL to avoid
+            // document.write() (flagged as a security hotspot by static analysis).
+            const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -1562,8 +1582,10 @@ export default {
   <li><strong>Gyro RPM Filter:</strong> Enable if using bidirectional DSHOT — the most effective filter available for eliminating motor noise harmonics.</li>
 </ul>
 </body>
-</html>`);
-            popup.document.close();
+</html>`;
+            const blob = new Blob([html], { type: "text/html" });
+            const url = URL.createObjectURL(blob);
+            window.open(url, "aerotune_instructions", "width=620,height=800,resizable=yes,scrollbars=yes");
         },
 
         selectVoltage(v) {
@@ -1676,6 +1698,37 @@ export default {
             });
         },
 
+        /** Decode and analyze a specific BBL session from the already-loaded buffer. */
+        _decodeBBLSession(sessionIdx, buffer, sessions) {
+            const config = sessions[sessionIdx];
+            const headerEnd = findBBLBinaryStart(buffer, sessionIdx);
+            if (headerEnd === 0) {
+                this.analysisResult = "ERROR: Could not locate frame data in blackbox file.";
+                return;
+            }
+
+            const decoder = new FrameDecoder(config);
+            const { frames } = decoder.decodeFrames(buffer, headerEnd, 0);
+            if (!frames || frames.length === 0) {
+                this.analysisResult =
+                    "ERROR: No frames decoded from blackbox file. The file may be corrupt or use an unsupported format.";
+                return;
+            }
+
+            const prefix = sessions.length > 1 ? `Session ${sessionIdx + 1}: ` : "";
+            this.analysisResult = prefix + formatAnalysisResult(analyzeLog(frames, this.motorTemp));
+        },
+
+        /** Called by the session dropdown — re-analyzes the selected session. */
+        runBBLSession(sessionIdx) {
+            if (!this.bblBuffer || !this.bblSessions.length) return;
+            try {
+                this._decodeBBLSession(sessionIdx, this.bblBuffer, this.bblSessions);
+            } catch (err) {
+                this.analysisResult = `ERROR: Failed to decode session ${sessionIdx + 1}: ${err.message}`;
+            }
+        },
+
         onFileChange(e) {
             const file = e.target.files[0];
             if (!file) return;
@@ -1696,7 +1749,7 @@ export default {
                     try {
                         const buffer = new Uint8Array(e.target.result);
 
-                        // Parse ASCII header section
+                        // Parse ASCII header section — may contain multiple sessions
                         const headerParser = new BBLHeaderParser();
                         const sessions = headerParser.parseFile(buffer);
                         if (!sessions || sessions.length === 0) {
@@ -1704,26 +1757,17 @@ export default {
                                 "ERROR: Could not parse blackbox header. Make sure this is a valid Betaflight blackbox file.";
                             return;
                         }
-                        const config = sessions[0];
 
-                        // Locate start of binary frame data
-                        const headerEnd = findBBLBinaryStart(buffer);
-                        if (headerEnd === 0) {
-                            this.analysisResult = "ERROR: Could not locate frame data in blackbox file.";
-                            return;
+                        // Store for re-use when the user switches sessions
+                        this.bblBuffer = buffer;
+                        this.bblSessions = sessions;
+                        this.bblSelectedSession = 0;
+
+                        if (sessions.length > 1) {
+                            this.analysisResult = `Found ${sessions.length} flight sessions. Showing Session 1 — use the dropdown above to select another.`;
                         }
 
-                        // Decode binary frames
-                        const decoder = new FrameDecoder(config);
-                        const { frames } = decoder.decodeFrames(buffer, headerEnd, 0);
-                        if (!frames || frames.length === 0) {
-                            this.analysisResult =
-                                "ERROR: No frames decoded from blackbox file. The file may be corrupt or use an unsupported format.";
-                            return;
-                        }
-
-                        // Decoded frame objects use the same field keys as CSV rows
-                        this.analysisResult = formatAnalysisResult(analyzeLog(frames, motorTemp));
+                        this._decodeBBLSession(0, buffer, sessions);
                     } catch (err) {
                         this.analysisResult = `ERROR: Failed to parse blackbox file: ${err.message}`;
                     }

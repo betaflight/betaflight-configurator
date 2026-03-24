@@ -281,7 +281,7 @@
                     </div>
                     <div class="gui_box grey" v-if="hasGpsSensor">
                         <div class="gui_box_titlebar">
-                            <div class="spacer_box_title">GPS Accuracy (Stationary)</div>
+                            <div class="spacer_box_title" v-html="$t('gpsPanelAccuracyTitle')"></div>
                         </div>
                         <div class="spacer_box gps-accuracy-box">
                             <GpsAccuracyPlot :fixes="accuracyFixes" />

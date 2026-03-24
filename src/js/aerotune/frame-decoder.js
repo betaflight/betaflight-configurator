@@ -475,28 +475,71 @@ class FrameDecoder {
         }
     }
 
-    /** Skip an event frame (variable length) */
-    _skipEventFrame(stream) {
-        let eventType = stream.readByte();
-        if (eventType === 0xff) return; // LOG_END
-        this._resync(stream);
-    }
-
-    /** Skip a slow frame */
-    _skipSlowFrame(stream) {
-        if (!this.frameFields.S) {
+    /**
+     * Skip a frame whose field layout is described in fieldDefs.
+     * Reads and discards every field using its declared encoding so
+     * the stream remains byte-aligned after the call.
+     */
+    _skipFrameFields(stream, fieldDefs) {
+        if (!fieldDefs) {
             this._resync(stream);
             return;
         }
-        let fieldCount = this.frameFields.S.names.length;
-        for (let i = 0; i < fieldCount; i++) {
-            stream.readSignedVB();
+        let i = 0;
+        try {
+            while (i < fieldDefs.names.length) {
+                const read = this._readFieldGroup(stream, fieldDefs.encoding[i], fieldDefs, i);
+                if (read === null) {
+                    this._resync(stream);
+                    return;
+                }
+                i += read.length;
+            }
+        } catch (e) {
+            this._resync(stream);
         }
     }
 
-    /** Skip a GPS frame */
+    /**
+     * Skip an event frame.
+     * Reads the event-type byte then skips the known payload size for each
+     * event type.  Falls back to resync for unrecognised event types.
+     */
+    _skipEventFrame(stream) {
+        const eventType = stream.readByte();
+        if (eventType === 0xff) return; // LOG_END — no payload
+
+        // Payload byte-count for each known Betaflight event type
+        const EVENT_SIZES = {
+            0: 4, // SYNC_BEEP          uint32 beepTimeUs
+            10: 5, // AUTOTUNE_CYCLE_START
+            11: 4, // AUTOTUNE_CYCLE_RESULT
+            12: 9, // AUTOTUNE_TARGETS
+            13: 6, // INFLIGHT_ADJUSTMENT
+            14: 8, // LOGGING_RESUME     uint32 + uint32
+            15: 4, // DISARM
+            20: 4, // GTUNE_CYCLE_RESULT
+            30: 8, // FLIGHT_MODE        uint32 flags + uint32 lastFlags
+            40: 1, // TWIST_KEY
+            41: 4, // TWIST_VALUE
+        };
+
+        const size = EVENT_SIZES[eventType];
+        if (size !== undefined) {
+            stream.skip(size);
+        } else {
+            this._resync(stream);
+        }
+    }
+
+    /** Skip a slow (S) frame using its declared field encodings. */
+    _skipSlowFrame(stream) {
+        this._skipFrameFields(stream, this.frameFields.S);
+    }
+
+    /** Skip a GPS (G) or GPS-home (H) frame using its declared field encodings. */
     _skipGPSFrame(stream, type) {
-        this._resync(stream);
+        this._skipFrameFields(stream, type === FRAME_TYPE_G ? this.frameFields.G : this.frameFields.H);
     }
 
     /**

@@ -334,12 +334,85 @@ class DataStream {
 
     /**
      * Tag2_3SVARIABLE (encoding 10)
-     * Same top-2-bit selector as Tag2_3S32 for cases 0 and 3.
-     * Cases 1 and 2 use slightly different bit widths (5,5,4 and 8,7,7).
-     * For this firmware version, treat same as Tag2_3S32.
+     * Same top-2-bit selector as Tag2_3S32 but cases 1 and 2 use different bit widths:
+     *   Selector 0: 2, 2, 2 bits  — identical to Tag2_3S32 selector 0
+     *   Selector 1: 5, 5, 4 bits
+     *     byte0: ss AAAAAB  (A = v0[4:0], B = v1[4])
+     *     byte1: BBBB CCCC  (B = v1[3:0], C = v2[3:0])
+     *   Selector 2: 8, 7, 7 bits
+     *     byte0: ss AAAAAA  (A = v0[7:2])
+     *     byte1: AA BBBBBB  (A = v0[1:0], B = v1[6:1])
+     *     byte2:  B CCCCCCC (B = v1[0],   C = v2[6:0])
+     *   Selector 3: variable width — identical to Tag2_3S32 selector 3
      */
     readTag2_3SVariable() {
-        return this.readTag2_3S32();
+        let leadByte = this.readByte();
+        if (leadByte === -1) return [0, 0, 0];
+
+        const selector = leadByte >> 6;
+        const values = [0, 0, 0];
+
+        switch (selector) {
+            case 0:
+                // 2-bit fields — same layout as Tag2_3S32 selector 0
+                values[0] = this._signExtend((leadByte >> 4) & 0x03, 2);
+                values[1] = this._signExtend((leadByte >> 2) & 0x03, 2);
+                values[2] = this._signExtend(leadByte & 0x03, 2);
+                break;
+
+            case 1: {
+                // 5, 5, 4 bits packed into two bytes
+                const b1 = this.readByte();
+                values[0] = this._signExtend((leadByte & 0x3e) >> 1, 5);
+                values[1] = this._signExtend(((leadByte & 0x01) << 4) | (b1 >> 4), 5);
+                values[2] = this._signExtend(b1 & 0x0f, 4);
+                break;
+            }
+
+            case 2: {
+                // 8, 7, 7 bits packed into three bytes
+                const b1 = this.readByte();
+                const b2 = this.readByte();
+                values[0] = this._signExtend(((leadByte & 0x3f) << 2) | (b1 >> 6), 8);
+                values[1] = this._signExtend(((b1 & 0x3f) << 1) | (b2 >> 7), 7);
+                values[2] = this._signExtend(b2 & 0x7f, 7);
+                break;
+            }
+
+            case 3:
+                // Variable width — identical to Tag2_3S32 selector 3
+                for (let i = 0; i < 3; i++) {
+                    const fieldTag = leadByte & 0x03;
+                    leadByte >>= 2;
+                    let b1, b2, b3, b4;
+                    switch (fieldTag) {
+                        case 0:
+                            values[i] = this._signExtend(this.readByte(), 8);
+                            break;
+                        case 1:
+                            b1 = this.readByte();
+                            b2 = this.readByte();
+                            values[i] = this._signExtend(b1 | (b2 << 8), 16);
+                            break;
+                        case 2:
+                            b1 = this.readByte();
+                            b2 = this.readByte();
+                            b3 = this.readByte();
+                            values[i] = this._signExtend(b1 | (b2 << 8) | (b3 << 16), 24);
+                            break;
+                        case 3:
+                            b1 = this.readByte();
+                            b2 = this.readByte();
+                            b3 = this.readByte();
+                            b4 = this.readByte();
+                            values[i] = b1 | (b2 << 8) | (b3 << 16) | (b4 << 24) | 0;
+                            break;
+                    }
+                }
+                break;
+        }
+
+        return values;
     }
 
     // ── Helpers ─────────────────────────────────────────────────

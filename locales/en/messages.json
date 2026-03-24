@@ -8673,5 +8673,8 @@
     },
     "preflightForecastWeather": {
         "message": "Weather"
+    },
+    "gpsPanelAccuracyTitle": {
+        "message": "GPS Accuracy (Stationary)"
     }
 }
