@@ -32,6 +32,9 @@ class FlightIndicator {
         this._settings = { ...DEFAULTS, ...options };
         this._type = type;
 
+        if (!this._el) {
+            return;
+        }
         this._build();
     }
 
@@ -101,7 +104,7 @@ class FlightIndicator {
     }
 
     _q(selector) {
-        return this._el.querySelector(selector);
+        return this._el?.querySelector(selector);
     }
 
     setRoll(roll) {
