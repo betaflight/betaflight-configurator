@@ -80,7 +80,7 @@
                             <div class="at-form-row">
                                 <label>Flying Style</label>
                                 <select v-model="style">
-                                    <option value="Freestyle">Freestyle</option>
+                                    <option value="Bando">Bando</option>
                                     <option value="Racing">Racing</option>
                                     <option value="Long Range">Long Range</option>
                                     <option value="Cinematic">Cinematic</option>
@@ -98,71 +98,109 @@
                             <div class="at-no-result" v-if="!showResults">Enter specs and click CALCULATE PIDs</div>
 
                             <div v-else>
-                                <div class="at-pid-grid">
-                                    <div class="at-pid-axis">
-                                        <div class="at-axis-label roll">ROLL</div>
-                                        <div class="at-pid-values">
-                                            <div class="at-pid-cell">
-                                                <div class="at-pid-name">P</div>
-                                                <div class="at-pid-val">{{ pids.roll_p }}</div>
-                                            </div>
-                                            <div class="at-pid-cell">
-                                                <div class="at-pid-name">I</div>
-                                                <div class="at-pid-val">{{ pids.roll_i }}</div>
-                                            </div>
-                                            <div class="at-pid-cell">
-                                                <div class="at-pid-name">D</div>
-                                                <div class="at-pid-val">{{ pids.roll_d }}</div>
-                                            </div>
-                                            <div class="at-pid-cell">
-                                                <div class="at-pid-name">F</div>
-                                                <div class="at-pid-val">{{ pids.roll_f }}</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="at-pid-axis">
-                                        <div class="at-axis-label pitch">PITCH</div>
-                                        <div class="at-pid-values">
-                                            <div class="at-pid-cell">
-                                                <div class="at-pid-name">P</div>
-                                                <div class="at-pid-val">{{ pids.pitch_p }}</div>
-                                            </div>
-                                            <div class="at-pid-cell">
-                                                <div class="at-pid-name">I</div>
-                                                <div class="at-pid-val">{{ pids.pitch_i }}</div>
-                                            </div>
-                                            <div class="at-pid-cell">
-                                                <div class="at-pid-name">D</div>
-                                                <div class="at-pid-val">{{ pids.pitch_d }}</div>
-                                            </div>
-                                            <div class="at-pid-cell">
-                                                <div class="at-pid-name">F</div>
-                                                <div class="at-pid-val">{{ pids.pitch_f }}</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="at-pid-axis">
-                                        <div class="at-axis-label yaw">YAW</div>
-                                        <div class="at-pid-values">
-                                            <div class="at-pid-cell">
-                                                <div class="at-pid-name">P</div>
-                                                <div class="at-pid-val">{{ pids.yaw_p }}</div>
-                                            </div>
-                                            <div class="at-pid-cell">
-                                                <div class="at-pid-name">I</div>
-                                                <div class="at-pid-val">{{ pids.yaw_i }}</div>
-                                            </div>
-                                            <div class="at-pid-cell">
-                                                <div class="at-pid-name">D</div>
-                                                <div class="at-pid-val">{{ pids.yaw_d }}</div>
-                                            </div>
-                                            <div class="at-pid-cell">
-                                                <div class="at-pid-name">F</div>
-                                                <div class="at-pid-val">{{ pids.yaw_f }}</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                <table class="at-pid-table">
+                                    <thead>
+                                        <tr>
+                                            <th class="at-pid-th-axis"></th>
+                                            <th>
+                                                Proportional
+                                                <span
+                                                    class="at-tip"
+                                                    @mouseenter="
+                                                        showTip(
+                                                            $event,
+                                                            'How far the drone reacts to an input — like how far a seesaw swings. Too low and it feels sluggish, too high and it overshoots.',
+                                                        )
+                                                    "
+                                                    @mouseleave="hideTip"
+                                                    >ⓘ</span
+                                                >
+                                            </th>
+                                            <th>
+                                                Integral
+                                                <span
+                                                    class="at-tip"
+                                                    @mouseenter="
+                                                        showTip(
+                                                            $event,
+                                                            'How quickly it returns to centre after a disturbance — like the seesaw finding balance. Too low and it drifts, too high and it hunts.',
+                                                        )
+                                                    "
+                                                    @mouseleave="hideTip"
+                                                    >ⓘ</span
+                                                >
+                                            </th>
+                                            <th>
+                                                D Max
+                                                <span
+                                                    class="at-tip"
+                                                    @mouseenter="
+                                                        showTip(
+                                                            $event,
+                                                            'The maximum dampening allowed at high throttle — D rises up to this ceiling during fast manoeuvres.',
+                                                        )
+                                                    "
+                                                    @mouseleave="hideTip"
+                                                    >ⓘ</span
+                                                >
+                                            </th>
+                                            <th>
+                                                Derivative
+                                                <span
+                                                    class="at-tip"
+                                                    @mouseenter="
+                                                        showTip(
+                                                            $event,
+                                                            'The dampening that cushions the movement — like a rubber tyre under the seesaw. Stops it bouncing back and forth after each input.',
+                                                        )
+                                                    "
+                                                    @mouseleave="hideTip"
+                                                    >ⓘ</span
+                                                >
+                                            </th>
+                                            <th>
+                                                Feedforward
+                                                <span
+                                                    class="at-tip"
+                                                    @mouseenter="
+                                                        showTip(
+                                                            $event,
+                                                            'How eagerly it anticipates your stick input — jumps ahead of the move rather than reacting to it.',
+                                                        )
+                                                    "
+                                                    @mouseleave="hideTip"
+                                                    >ⓘ</span
+                                                >
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="at-pid-row at-pid-row--roll">
+                                            <td class="at-pid-axis-label">ROLL</td>
+                                            <td class="at-pid-num">{{ pids.roll_p }}</td>
+                                            <td class="at-pid-num">{{ pids.roll_i }}</td>
+                                            <td class="at-pid-num">{{ pids.roll_d }}</td>
+                                            <td class="at-pid-num">{{ pids.d_min_roll }}</td>
+                                            <td class="at-pid-num">{{ pids.roll_f }}</td>
+                                        </tr>
+                                        <tr class="at-pid-row at-pid-row--pitch">
+                                            <td class="at-pid-axis-label">PITCH</td>
+                                            <td class="at-pid-num">{{ pids.pitch_p }}</td>
+                                            <td class="at-pid-num">{{ pids.pitch_i }}</td>
+                                            <td class="at-pid-num">{{ pids.pitch_d }}</td>
+                                            <td class="at-pid-num">{{ pids.d_min_pitch }}</td>
+                                            <td class="at-pid-num">{{ pids.pitch_f }}</td>
+                                        </tr>
+                                        <tr class="at-pid-row at-pid-row--yaw">
+                                            <td class="at-pid-axis-label">YAW</td>
+                                            <td class="at-pid-num">{{ pids.yaw_p }}</td>
+                                            <td class="at-pid-num">{{ pids.yaw_i }}</td>
+                                            <td class="at-pid-num">{{ pids.yaw_d }}</td>
+                                            <td class="at-pid-num at-pid-num--muted">–</td>
+                                            <td class="at-pid-num">{{ pids.yaw_f }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
 
                                 <div class="at-dmin-row">
                                     D_Min: &nbsp; Roll <span>{{ pids.d_min_roll }}</span> &nbsp;&nbsp; Pitch
@@ -339,6 +377,16 @@
         </div>
         <!-- /.aerotune-body --> </BaseTab
     ><!-- /.tab-aerotune -->
+
+    <Teleport to="body">
+        <div
+            v-if="tooltip.visible"
+            class="at-tooltip-bubble"
+            :style="{ left: tooltip.x + 'px', top: tooltip.y + 'px' }"
+        >
+            {{ tooltip.text }}
+        </div>
+    </Teleport>
 </template>
 
 <script>
@@ -373,11 +421,23 @@ const KV_BASELINE = {
     11500: 90,
 };
 
+// Normalises KV_BASELINE so that 5"/4S 2000KV Racing at 500g → rollP ≈ 51
+// (matches Betaflight 4.x defaults)
+const BASE_NORM = 0.576;
+
 const FLYING_STYLES = {
     Racing: 1.08,
-    Freestyle: 1.0,
+    Bando: 1.0,
     "Long Range": 0.65,
     Cinematic: 0.75,
+};
+
+// FF baselines at 5"/4S (both scalars = 1.0); half-correction is applied on top
+const FF_BY_STYLE = {
+    Cinematic: { roll_f: 75, pitch_f: 80, yaw_f: 75 },
+    "Long Range": { roll_f: 75, pitch_f: 80, yaw_f: 75 },
+    Bando: { roll_f: 100, pitch_f: 105, yaw_f: 100 },
+    Racing: { roll_f: 125, pitch_f: 131, yaw_f: 125 },
 };
 
 function interpolateKV(kv) {
@@ -403,6 +463,64 @@ function interpolateKV(kv) {
     ];
 }
 
+// Linear interpolation through a sorted [x, y] point table.
+function interpolatePoints(x, points) {
+    if (x <= points[0][0]) return points[0][1];
+    if (x >= points[points.length - 1][0]) return points[points.length - 1][1];
+    for (let i = 0; i < points.length - 1; i++) {
+        if (x >= points[i][0] && x <= points[i + 1][0]) {
+            const t = (x - points[i][0]) / (points[i + 1][0] - points[i][0]);
+            return points[i][1] + t * (points[i + 1][1] - points[i][1]);
+        }
+    }
+    return 1.0;
+}
+
+// Voltage scalar — 4S (14.8 V) is the baseline (1.00).
+// Applied FULLY to P and D; HALF correction applied to I and FF.
+function voltageScalar(voltage) {
+    return interpolatePoints(parseFloat(voltage), [
+        [3.7, 1.1], // 1S
+        [7.4, 1.1], // 2S
+        [11.1, 1.1], // 3S
+        [14.8, 1.0], // 4S  ← baseline
+        [18.5, 0.95], // 5S
+        [22.2, 0.87], // 6S
+        [29.6, 0.77], // 8S
+    ]);
+}
+
+// Prop size scalar — 5" is the baseline (1.00).
+// Applied FULLY to P; HALF correction applied to I.
+function propScalar(prop) {
+    return interpolatePoints(parseFloat(prop), [
+        [2, 0.65],
+        [3, 0.88],
+        [3.5, 0.89],
+        [4, 0.9],
+        [5, 1.0], // ← baseline
+        [6, 1.1],
+        [7, 1.18],
+        [8, 1.25],
+    ]);
+}
+
+// D-term ratio — prop-size-aware. Smaller props need relatively higher D
+// to damp faster oscillation modes. Calibrated: 3"/4S/Bando → D=35,
+// 5" baseline → 0.61. d_min uses 0.887× this ratio.
+function dRatio(prop) {
+    return interpolatePoints(parseFloat(prop), [
+        [2, 0.95],
+        [3, 0.84], // → D=35 at 3"/4S/Bando/2000KV anchor
+        [3.5, 0.8],
+        [4, 0.76], // → D=35 at 4"/4S/Racing/2000KV anchor
+        [5, 0.61], // ← baseline
+        [6, 0.55],
+        [7, 0.5],
+        [8, 0.46],
+    ]);
+}
+
 function clamp(v, lo, hi) {
     return Math.max(lo, Math.min(hi, v));
 }
@@ -414,39 +532,41 @@ function calculatePIDs(kv, voltage, prop, weight, style) {
     weight = parseFloat(weight);
     if (isNaN(kv) || isNaN(voltage) || isNaN(prop) || isNaN(weight)) return null;
 
-    let pBase = interpolateKV(kv);
-    pBase *= FLYING_STYLES[style] || 1.0;
-    pBase *= 1.0 - ((voltage - 22.2) / 22.2) * 0.2; // voltage adj (6S baseline)
-    pBase *= 1.0 + ((weight - 500) / 2000) * 0.15; // weight adj
-    pBase *= 1.0 + ((prop - 5) / 6) * 0.12; // prop adj
+    // Base P at 5"/4S scale — only KV, style, and weight contribute here.
+    const rawBase = interpolateKV(kv) * (FLYING_STYLES[style] || 1.0) * (1.0 + ((weight - 500) / 2000) * 0.15);
+    const base = rawBase * BASE_NORM; // normalised roll base
 
-    const rollP = clamp(Math.round(pBase), 20, 90);
-    const pitchP = clamp(Math.round(pBase + 2), 20, 90);
-    const yawP = clamp(Math.round(pBase * 0.945), 15, 70);
+    // Voltage × prop correction
+    const vScal = voltageScalar(voltage);
+    const pScal = propScalar(prop);
+    const dr = dRatio(prop);
 
-    const FF_BY_STYLE = {
-        Cinematic: { roll_f: 90, pitch_f: 95, yaw_f: 90 },
-        LongRange: { roll_f: 90, pitch_f: 95, yaw_f: 90 },
-        Freestyle: { roll_f: 120, pitch_f: 125, yaw_f: 120 },
-        Racing: { roll_f: 135, pitch_f: 143, yaw_f: 135 },
-    };
-    const ff = FF_BY_STYLE[style] || FF_BY_STYLE.Freestyle;
+    const fullMult = vScal * pScal; // P — full voltage+prop correction
+    const halfMult = 1 + (fullMult - 1) * 0.5; // I — half voltage+prop correction
+    const dMult = vScal * pScal; // D uses same scalars but prop-aware ratio
+    const ffMult = 1 + (vScal - 1) * 0.5; // FF — voltage-only half correction (prop size doesn't shift FF)
+
+    const rollBase = base;
+    const pitchBase = base + 3;
+    const yawBase = base * 0.945;
+
+    const ff = FF_BY_STYLE[style] || FF_BY_STYLE.Bando;
 
     return {
-        roll_p: rollP,
-        roll_i: Math.round(rollP * 1.39),
-        roll_d: Math.round(rollP * 0.649),
-        roll_f: ff.roll_f,
-        pitch_p: pitchP,
-        pitch_i: Math.round(pitchP * 1.39),
-        pitch_d: Math.round(pitchP * 0.649),
-        pitch_f: ff.pitch_f,
-        yaw_p: yawP,
-        yaw_i: Math.round(yawP * 1.39),
+        roll_p: clamp(Math.round(rollBase * fullMult), 20, 90),
+        roll_i: Math.round(rollBase * 1.902 * halfMult),
+        roll_d: Math.round(rollBase * dr * dMult),
+        roll_f: Math.round(ff.roll_f * ffMult),
+        pitch_p: clamp(Math.round(pitchBase * fullMult), 20, 90),
+        pitch_i: Math.round(pitchBase * 1.902 * halfMult),
+        pitch_d: Math.round(pitchBase * dr * dMult),
+        pitch_f: Math.round(ff.pitch_f * ffMult),
+        yaw_p: clamp(Math.round(yawBase * fullMult), 15, 70),
+        yaw_i: Math.round(yawBase * 1.902 * halfMult),
         yaw_d: 0,
-        yaw_f: ff.yaw_f,
-        d_min_roll: Math.round(rollP * 0.541),
-        d_min_pitch: Math.round(pitchP * 0.541),
+        yaw_f: Math.round(ff.yaw_f * ffMult),
+        d_min_roll: Math.round(rollBase * dr * 0.887 * dMult),
+        d_min_pitch: Math.round(pitchBase * dr * 0.887 * dMult),
     };
 }
 
@@ -990,7 +1110,7 @@ export default {
             voltage: stored?.voltage ?? 22.2,
             prop: stored?.prop ?? 5.0,
             weight: stored?.weight ?? 500,
-            style: stored?.style ?? "Freestyle",
+            style: stored?.style ?? "Bando",
             voltagePresets: [
                 { label: "1S", v: 3.7 },
                 { label: "2S", v: 7.4 },
@@ -1010,6 +1130,7 @@ export default {
             csvFile: null,
             fileName: "No file selected",
             analysisResult: "Select a Betaflight blackbox CSV file and click ANALYZE.",
+            tooltip: { visible: false, text: "", x: 0, y: 0 },
         };
     },
 
@@ -1038,6 +1159,16 @@ export default {
     },
 
     methods: {
+        showTip(event, text) {
+            const rect = event.currentTarget.getBoundingClientRect();
+            this.tooltip.text = text;
+            this.tooltip.x = rect.left + rect.width / 2;
+            this.tooltip.y = rect.top - 8;
+            this.tooltip.visible = true;
+        },
+        hideTip() {
+            this.tooltip.visible = false;
+        },
         _persistInputs() {
             try {
                 localStorage.setItem(

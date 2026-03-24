@@ -693,11 +693,15 @@
                 </table>
             </div>
         </div>
+
+        <!-- Frequency Response Visualiser -->
+        <FilterResponseChart />
     </div>
 </template>
 
 <script setup>
 import { computed, ref, watch } from "vue";
+import FilterResponseChart from "./FilterResponseChart.vue";
 import FC from "@/js/fc";
 import {
     NON_EXPERT_SLIDER_MIN_GYRO,

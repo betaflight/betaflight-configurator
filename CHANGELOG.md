@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.2.0] - 2026-03-24
+
+### Added
+- Filter frequency response visualiser at the bottom of the Filter Settings tab — full-width D3 chart showing signal attenuation (0 dB to −40 dB) across 0–1000 Hz for all active filters: Gyro LPF1 (blue, static or dynamic min/max pair), Gyro LPF2 (cyan), D-Term LPF1 (orange, dynamic-aware), D-Term LPF2 (yellow), dynamic notch filters (red, Q-scaled notches evenly spaced across min/max range), and RPM filter harmonics (green, shown only when DShot telemetry is enabled). A dashed Nyquist marker is drawn at half the computed PID loop rate. All curves update live as filter values are changed on the tab. Filter math uses standard biquad transfer functions: PT1 (1st-order RC), BIQUAD (Butterworth 2nd order), PT2 (cascaded PT1²), PT3 (cascaded PT1³), and notch via |fn²−f²|/√((fn²−f²)²+(fn·f/Q)²).
+
 ## [1.1.0] - 2026-03-24
 
 ### Added

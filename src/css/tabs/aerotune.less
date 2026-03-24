@@ -172,46 +172,74 @@
         }
     }
 
-    /* ── PID OUTPUT ── */
-    .at-pid-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
-        gap: 10px;
+    /* ── PID OUTPUT TABLE ── */
+    .at-pid-table {
+        width: 100%;
+        border-collapse: collapse;
         margin-bottom: 12px;
-    }
-
-    .at-pid-axis {
         background: var(--alternativeBackground);
         border-radius: 4px;
-        padding: 10px;
+        overflow: hidden;
 
-        .at-axis-label {
-            font-size: 11px;
-            font-weight: bold;
-            margin-bottom: 8px;
-            color: #ffffff;
-        }
-
-        .at-pid-values {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4px;
-        }
-
-        .at-pid-cell {
+        th {
+            padding: 6px 8px;
             text-align: center;
+            color: var(--subtleText);
+            font-size: 10px;
+            font-weight: bold;
+            letter-spacing: 0.4px;
+            text-transform: uppercase;
+            background: var(--quietHeader);
+            border-bottom: 1px solid var(--subtleAccent);
 
-            .at-pid-name {
-                font-size: 9px;
-                color: var(--subtleText);
-                text-transform: uppercase;
+            &.at-pid-th-axis {
+                text-align: left;
+                width: 54px;
+            }
+        }
+
+        .at-pid-row {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+
+            &:last-child {
+                border-bottom: none;
             }
 
-            .at-pid-val {
-                font-size: 18px;
-                font-weight: bold;
-                color: #ffffff;
-                line-height: 1.2;
+            td {
+                padding: 7px 8px;
+            }
+
+            &.at-pid-row--roll .at-pid-axis-label {
+                color: #f94040;
+                border-left: 3px solid #f94040;
+            }
+            &.at-pid-row--pitch .at-pid-axis-label {
+                color: #4bdf64;
+                border-left: 3px solid #4bdf64;
+            }
+            &.at-pid-row--yaw .at-pid-axis-label {
+                color: #4b9fff;
+                border-left: 3px solid #4b9fff;
+            }
+        }
+
+        .at-pid-axis-label {
+            font-size: 11px;
+            font-weight: bold;
+            text-align: left;
+            padding-left: 8px !important;
+        }
+
+        .at-pid-num {
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: #ffffff;
+            font-variant-numeric: tabular-nums;
+
+            &.at-pid-num--muted {
+                color: var(--subtleText);
+                font-size: 16px;
             }
         }
     }
@@ -245,9 +273,11 @@
     }
 
     .at-apply-btn {
-        width: 100%;
+        display: block;
+        width: 50%;
+        margin: 0 auto 8px;
         padding: 10px;
-        background: #00d966;
+        background: #e8a900;
         color: #000;
         border: none;
         border-radius: 3px;
@@ -255,10 +285,9 @@
         font-weight: bold;
         cursor: pointer;
         letter-spacing: 0.5px;
-        margin-bottom: 8px;
 
         &:hover:not(:disabled) {
-            background: #00ff77;
+            background: #ffbb00;
         }
 
         &:disabled {
@@ -413,6 +442,21 @@
         }
     }
 
+    /* ── COLUMN HEADER TOOLTIP ICONS ── */
+    .at-tip {
+        display: inline-block;
+        font-size: 10px;
+        color: var(--subtleText);
+        cursor: default;
+        user-select: none;
+        margin-left: 3px;
+        vertical-align: middle;
+
+        &:hover {
+            color: var(--defaultText);
+        }
+    }
+
     .at-status-ok {
         color: #00d966;
     }
@@ -421,5 +465,35 @@
     }
     .at-status-bad {
         color: #ff6b6b;
+    }
+}
+
+/* Teleported outside .tab-aerotune — must be top-level */
+.at-tooltip-bubble {
+    position: fixed;
+    transform: translateX(-50%) translateY(-100%);
+    width: 220px;
+    background: #1a2535;
+    border: 1px solid #2e4058;
+    border-radius: 4px;
+    padding: 8px 10px;
+    font-size: 11px;
+    font-weight: normal;
+    color: #c8d3e0;
+    line-height: 1.55;
+    text-align: left;
+    white-space: normal;
+    pointer-events: none;
+    z-index: 9999;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
+
+    &::after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        border: 5px solid transparent;
+        border-top-color: #2e4058;
     }
 }

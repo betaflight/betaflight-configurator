@@ -279,6 +279,14 @@
                             </div>
                         </div>
                     </div>
+                    <div class="gui_box grey" v-if="hasGpsSensor">
+                        <div class="gui_box_titlebar">
+                            <div class="spacer_box_title">GPS Accuracy (Stationary)</div>
+                        </div>
+                        <div class="spacer_box gps-accuracy-box">
+                            <GpsAccuracyPlot :fixes="accuracyFixes" />
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -313,12 +321,14 @@ import { useConnectionStore } from "@/stores/connection";
 import { useNavigationStore } from "@/stores/navigation";
 import { useDialogStore } from "@/stores/dialog";
 import WikiButton from "../elements/WikiButton.vue";
+import GpsAccuracyPlot from "../elements/GpsAccuracyPlot.vue";
 
 export default defineComponent({
     name: "GpsTab",
     components: {
         BaseTab,
         WikiButton,
+        GpsAccuracyPlot,
     },
     setup() {
         const fcStore = useFlightControllerStore();
@@ -350,6 +360,7 @@ export default defineComponent({
         });
 
         const signalRows = ref([]);
+        const accuracyFixes = ref([]); // { lat, lon, t } — accumulated since tab opened
 
         const gpsProtocols = ref([]);
         const gpsSbas = [
@@ -636,6 +647,16 @@ export default defineComponent({
 
             updateSignalStrengths();
 
+            // Accumulate fixes for the accuracy scatter plot.
+            // Only record when we have a valid 3D fix and a non-zero position.
+            if (gpsInfo.fix && latitude !== 0 && longitude !== 0) {
+                accuracyFixes.value.push({ lat: latitude, lon: longitude, t: Date.now() });
+                // Rolling cap: keep the most recent 500 fixes
+                if (accuracyFixes.value.length > 500) {
+                    accuracyFixes.value.splice(0, 1);
+                }
+            }
+
             let gpsFoundPosition = false;
 
             if (ispConnected()) {
@@ -843,6 +864,7 @@ export default defineComponent({
             gpsConfig,
             gpsInfo,
             signalRows,
+            accuracyFixes,
             hasGpsSensor,
             hasMag,
             autoBaudChecked,
