@@ -147,6 +147,9 @@ export default defineConfig({
                 globPatterns: ["**/*.{js,css,html,ico,png,svg,json,mcm,gltf}"],
                 // 5MB
                 maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
+                // Never auto-activate a waiting SW — the client decides when to reload.
+                skipWaiting: false,
+                clientsClaim: false,
             },
             includeAssets: ["favicon.ico", "apple-touch-icon.png"],
             manifest: {
