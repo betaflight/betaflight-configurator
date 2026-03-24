@@ -129,7 +129,7 @@ class LoginManager {
     async updateTabVisibility() {
         const el = document.querySelector("#tabs ul.mode-loggedin");
         if (el) {
-            el.style.display = (await this.isUserLoggedIn()) ? "" : "none";
+            el.style.display = (await this.isUserLoggedIn()) ? "block" : "none";
         }
     }
 
