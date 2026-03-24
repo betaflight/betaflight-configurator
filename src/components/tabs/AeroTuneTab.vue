@@ -183,7 +183,7 @@
                                             <td class="at-pid-num">{{ pids.roll_p }}</td>
                                             <td class="at-pid-num">{{ pids.roll_i }}</td>
                                             <td class="at-pid-num">{{ pids.d_min_roll }}</td>
-                                            <td class="at-pid-num">{{ pids.roll_d }}</td>
+                                            <td class="at-pid-num">{{ pids.dMax_roll }}</td>
                                             <td class="at-pid-num">{{ pids.roll_f }}</td>
                                         </tr>
                                         <tr class="at-pid-row at-pid-row--pitch">
@@ -191,7 +191,7 @@
                                             <td class="at-pid-num">{{ pids.pitch_p }}</td>
                                             <td class="at-pid-num">{{ pids.pitch_i }}</td>
                                             <td class="at-pid-num">{{ pids.d_min_pitch }}</td>
-                                            <td class="at-pid-num">{{ pids.pitch_d }}</td>
+                                            <td class="at-pid-num">{{ pids.dMax_pitch }}</td>
                                             <td class="at-pid-num">{{ pids.pitch_f }}</td>
                                         </tr>
                                         <tr class="at-pid-row at-pid-row--yaw">
@@ -780,11 +780,11 @@ function calculatePIDs(kv, voltage, prop, weight, style) {
     return {
         roll_p: clamp(Math.round(rollBase * fullMult), 20, 90),
         roll_i: Math.round(rollBase * 1.902 * halfMult),
-        roll_d: Math.round(rollBase * dr * dMult),
+        dMax_roll: Math.round(rollBase * dr * dMult),
         roll_f: Math.round(ff.roll_f * ffMult),
         pitch_p: clamp(Math.round(pitchBase * fullMult), 20, 90),
         pitch_i: Math.round(pitchBase * 1.902 * halfMult),
-        pitch_d: Math.round(pitchBase * dr * dMult),
+        dMax_pitch: Math.round(pitchBase * dr * dMult),
         pitch_f: Math.round(ff.pitch_f * ffMult),
         yaw_p: clamp(Math.round(yawBase * fullMult), 15, 70),
         yaw_i: Math.round(yawBase * 1.902 * halfMult),
@@ -1652,8 +1652,8 @@ export default {
                 FC.ADVANCED_TUNING.feedforwardRoll = p.roll_f;
                 FC.ADVANCED_TUNING.feedforwardPitch = p.pitch_f;
                 FC.ADVANCED_TUNING.feedforwardYaw = p.yaw_f;
-                FC.ADVANCED_TUNING.dMaxRoll = p.roll_d;
-                FC.ADVANCED_TUNING.dMaxPitch = p.pitch_d;
+                FC.ADVANCED_TUNING.dMaxRoll = p.dMax_roll;
+                FC.ADVANCED_TUNING.dMaxPitch = p.dMax_pitch;
             }
 
             // Push to FC hardware RAM so PID tab reads back the new values on mount
@@ -1685,8 +1685,8 @@ export default {
                 fr = this.filterRec;
             const text = [
                 `# AeroTune V5.6 PID Values`,
-                `Roll   P=${p.roll_p}  I=${p.roll_i}  D=${p.roll_d}  F=${p.roll_f}  D_min=${p.d_min_roll}`,
-                `Pitch  P=${p.pitch_p}  I=${p.pitch_i}  D=${p.pitch_d}  F=${p.pitch_f}  D_min=${p.d_min_pitch}`,
+                `Roll   P=${p.roll_p}  I=${p.roll_i}  D_Max=${p.dMax_roll}  F=${p.roll_f}  D_min=${p.d_min_roll}`,
+                `Pitch  P=${p.pitch_p}  I=${p.pitch_i}  D_Max=${p.dMax_pitch}  F=${p.pitch_f}  D_min=${p.d_min_pitch}`,
                 `Yaw    P=${p.yaw_p}  I=${p.yaw_i}  D=${p.yaw_d}  F=${p.yaw_f}`,
                 `Gyro Lowpass 2 recommendation: ${fr.hz} Hz (${fr.low}–${fr.high} Hz) – ${fr.note}`,
             ].join("\n");
