@@ -1,5 +1,36 @@
 # Changelog
 
+## [1.4.0] - 2026-03-24
+
+### The big one — AUTO TUNE is here
+
+After years of watching ArduCopter pilots have all the fun with one-click AutoTune,
+Betaflight now has its own. Flip one switch in the air and the chirp system sweeps
+through every frequency your drone can produce — Pitch, Roll then Yaw — automatically.
+Land, drop the log in Step 2, done.
+
+The AUTO TUNE tab keeps it simple. Pick your shake intensity — Easy, Medium or Hard —
+hit Configure, assign your Chirp switch in Modes, and fly. Advanced pilots can dig into
+sweep frequency and duration under the Advanced Settings panel.
+
+Confirmed working on Betaflight 25.12.
+
+### Also shipped today
+
+- **Native BFL file support** — drop your raw Betaflight blackbox file straight into
+  Step 2. No more exporting CSV from Blackbox Explorer first. Just fly, land, analyse.
+
+- **Filter frequency visualiser** — now shows the crossfade sweep zone between your
+  dynamic filter min and max frequencies as a shaded region. See exactly where your
+  filters are working.
+
+- **Rock solid update notifications** — the "new version available" prompt now fires
+  reliably on every deploy, even when GitHub Pages caches the service worker.
+
+- **GPS sky plot and accuracy scatter** — see your satellites by position and lock
+  status, plus live 1σ and 2σ accuracy calculated as fixes come in. Know your GPS is
+  solid before you fly.
+
 ## [1.2.0] - 2026-03-24
 
 ### Added

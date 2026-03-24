@@ -23,6 +23,9 @@
             <button class="at-tab-btn" :class="{ active: activeView === 'analyzer' }" @click="activeView = 'analyzer'">
                 STEP 2: LOG ANALYZER
             </button>
+            <button class="at-tab-btn" :class="{ active: activeView === 'autotune' }" @click="activeView = 'autotune'">
+                AUTO TUNE
+            </button>
             <button
                 class="at-tab-btn"
                 :class="{ active: activeView === 'instructions' }"
@@ -265,11 +268,11 @@
                             </div>
 
                             <div class="at-file-row">
-                                <label class="at-file-label" @click="$refs.fileInput.click()">Select CSV File</label>
+                                <label class="at-file-label" @click="$refs.fileInput.click()">Select BFL or CSV</label>
                                 <input
                                     type="file"
                                     ref="fileInput"
-                                    accept=".csv"
+                                    accept=".bfl,.bbl,.csv"
                                     style="display: none"
                                     @change="onFileChange"
                                 />
@@ -374,6 +377,216 @@
                     </ul>
                 </div>
             </div>
+
+            <!-- ═══════════════ AUTO TUNE ═══════════════ -->
+            <div v-show="activeView === 'autotune'" class="at-view">
+                <!-- Axis amplitude cards -->
+                <div class="at-chirp-cards">
+                    <div class="at-panel at-chirp-card">
+                        <div class="at-panel-header at-chirp-card-header--pitch">PITCH</div>
+                        <div class="at-panel-body">
+                            <div class="at-intensity-label">
+                                SHAKE INTENSITY
+                                <span
+                                    class="at-tip"
+                                    @mouseenter="
+                                        showTip(
+                                            $event,
+                                            'How hard we shake the drone to measure its response. Like a firm handshake — harder means more data but more movement. Start with MEDIUM.',
+                                        )
+                                    "
+                                    @mouseleave="hideTip"
+                                    >ⓘ</span
+                                >
+                            </div>
+                            <div class="at-intensity-btns">
+                                <button
+                                    :class="['at-intensity-btn', { active: chirpPitchLevel === 'EASY' }]"
+                                    @click="setChirpLevel('pitch', 'EASY')"
+                                >
+                                    EASY
+                                </button>
+                                <button
+                                    :class="['at-intensity-btn', { active: chirpPitchLevel === 'MEDIUM' }]"
+                                    @click="setChirpLevel('pitch', 'MEDIUM')"
+                                >
+                                    MEDIUM
+                                </button>
+                                <button
+                                    :class="['at-intensity-btn', { active: chirpPitchLevel === 'HARD' }]"
+                                    @click="setChirpLevel('pitch', 'HARD')"
+                                >
+                                    HARD
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="at-panel at-chirp-card">
+                        <div class="at-panel-header at-chirp-card-header--roll">ROLL</div>
+                        <div class="at-panel-body">
+                            <div class="at-intensity-label">
+                                SHAKE INTENSITY
+                                <span
+                                    class="at-tip"
+                                    @mouseenter="
+                                        showTip(
+                                            $event,
+                                            'How hard we shake the drone to measure its response. Like a firm handshake — harder means more data but more movement. Start with MEDIUM.',
+                                        )
+                                    "
+                                    @mouseleave="hideTip"
+                                    >ⓘ</span
+                                >
+                            </div>
+                            <div class="at-intensity-btns">
+                                <button
+                                    :class="['at-intensity-btn', { active: chirpRollLevel === 'EASY' }]"
+                                    @click="setChirpLevel('roll', 'EASY')"
+                                >
+                                    EASY
+                                </button>
+                                <button
+                                    :class="['at-intensity-btn', { active: chirpRollLevel === 'MEDIUM' }]"
+                                    @click="setChirpLevel('roll', 'MEDIUM')"
+                                >
+                                    MEDIUM
+                                </button>
+                                <button
+                                    :class="['at-intensity-btn', { active: chirpRollLevel === 'HARD' }]"
+                                    @click="setChirpLevel('roll', 'HARD')"
+                                >
+                                    HARD
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="at-panel at-chirp-card">
+                        <div class="at-panel-header at-chirp-card-header--yaw">YAW</div>
+                        <div class="at-panel-body">
+                            <div class="at-intensity-label">
+                                SHAKE INTENSITY
+                                <span
+                                    class="at-tip"
+                                    @mouseenter="
+                                        showTip(
+                                            $event,
+                                            'How hard we shake the drone to measure its response. Like a firm handshake — harder means more data but more movement. Start with MEDIUM.',
+                                        )
+                                    "
+                                    @mouseleave="hideTip"
+                                    >ⓘ</span
+                                >
+                            </div>
+                            <div class="at-intensity-btns">
+                                <button
+                                    :class="['at-intensity-btn', { active: chirpYawLevel === 'EASY' }]"
+                                    @click="setChirpLevel('yaw', 'EASY')"
+                                >
+                                    EASY
+                                </button>
+                                <button
+                                    :class="['at-intensity-btn', { active: chirpYawLevel === 'MEDIUM' }]"
+                                    @click="setChirpLevel('yaw', 'MEDIUM')"
+                                >
+                                    MEDIUM
+                                </button>
+                                <button
+                                    :class="['at-intensity-btn', { active: chirpYawLevel === 'HARD' }]"
+                                    @click="setChirpLevel('yaw', 'HARD')"
+                                >
+                                    HARD
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Configure button -->
+                <button class="at-chirp-configure-btn" @click="configureFc">⚙ CONFIGURE ALL AXES ON FC</button>
+
+                <!-- Confirmation box -->
+                <div v-if="chirpConfigured" class="at-chirp-confirm">
+                    <div class="at-chirp-confirm-title">✓ Commands sent to FC:</div>
+                    <pre>{{ chirpConfirmText }}</pre>
+                </div>
+
+                <!-- Advanced settings (collapsed by default) -->
+                <div class="at-advanced-section">
+                    <div class="at-advanced-toggle" @click="advancedOpen = !advancedOpen">
+                        ⚙ ADVANCED SETTINGS
+                        <span class="at-advanced-chevron" :class="{ open: advancedOpen }">▶</span>
+                    </div>
+                    <div v-if="advancedOpen" class="at-advanced-body">
+                        <div class="at-form-row">
+                            <label
+                                >Sweep Start Hz
+                                <span
+                                    class="at-tip"
+                                    @mouseenter="
+                                        showTip(
+                                            $event,
+                                            'The lowest frequency in the sweep. Leave at default unless you know your problem frequency.',
+                                        )
+                                    "
+                                    @mouseleave="hideTip"
+                                    >ⓘ</span
+                                ></label
+                            >
+                            <input type="number" v-model.number="chirpStartHz" min="0.1" max="100" step="0.1" />
+                        </div>
+                        <div class="at-form-row">
+                            <label
+                                >Sweep End Hz
+                                <span
+                                    class="at-tip"
+                                    @mouseenter="
+                                        showTip(
+                                            $event,
+                                            'The highest frequency in the sweep. 600Hz covers all relevant drone frequencies.',
+                                        )
+                                    "
+                                    @mouseleave="hideTip"
+                                    >ⓘ</span
+                                ></label
+                            >
+                            <input type="number" v-model.number="chirpEndHz" min="1" max="1000" step="1" />
+                        </div>
+                        <div class="at-form-row">
+                            <label
+                                >Duration seconds (1 – 60)
+                                <span
+                                    class="at-tip"
+                                    @mouseenter="
+                                        showTip(
+                                            $event,
+                                            'How long the chirp runs per axis. Longer means more accurate data. 20 seconds is ideal.',
+                                        )
+                                    "
+                                    @mouseleave="hideTip"
+                                    >ⓘ</span
+                                ></label
+                            >
+                            <input type="number" v-model.number="chirpDuration" min="1" max="60" step="1" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Flight procedure instructions -->
+                <div class="at-panel at-chirp-instructions">
+                    <div class="at-panel-header">📋 FLIGHT PROCEDURE</div>
+                    <div class="at-panel-body">
+                        <ol>
+                            <li>Props <strong>OFF</strong> — configure above and hit button</li>
+                            <li>Props <strong>ON</strong> — assign <code>CHIRP</code> switch in Modes tab</li>
+                            <li>
+                                Hover 10m+, flip switch <strong>once</strong> → firmware runs Pitch, Roll, then Yaw
+                                automatically
+                            </li>
+                            <li>Land, plug in USB → drop your BFL file into <strong>STEP 2: LOG ANALYZER</strong></li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
         </div>
         <!-- /.aerotune-body --> </BaseTab
     ><!-- /.tab-aerotune -->
@@ -397,6 +610,9 @@ import MSP from "@/js/msp";
 import MSPCodes from "@/js/msp/MSPCodes";
 import { mspHelper } from "@/js/msp/MSPHelper";
 import { usePidTuningStore } from "@/stores/pidTuning";
+import { serial } from "@/js/serial";
+import { BBLHeaderParser } from "@/js/aerotune/bbl-header-parser.js";
+import { FrameDecoder } from "@/js/aerotune/frame-decoder.js";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // AeroTune V5.6 Calculator
@@ -1080,6 +1296,58 @@ function formatAnalysisResult(r) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// BBL Binary Start Finder
+// Scans byte-by-byte to find the offset where binary frame data begins,
+// i.e. right after the last ASCII 'H ...' header line.
+// ─────────────────────────────────────────────────────────────────────────────
+function findBBLBinaryStart(buf) {
+    const MARKER = "H Product:Blackbox flight data recorder by Nicholas Sherlock";
+    const markerBytes = Array.from(MARKER).map((c) => c.charCodeAt(0));
+
+    let pos = 0;
+    const len = buf.length;
+    let inHeader = false;
+    let lastHeaderEnd = 0;
+
+    while (pos < len) {
+        const lineStart = pos;
+        while (pos < len && buf[pos] !== 0x0a) pos++; // find \n
+        if (pos < len) pos++; // skip \n
+
+        const lineLen = pos - lineStart;
+        if (lineLen < 2) continue;
+
+        const startsWithH = buf[lineStart] === 0x48 && buf[lineStart + 1] === 0x20;
+
+        if (!inHeader) {
+            if (startsWithH) {
+                let isMarker = true;
+                for (let j = 0; j < markerBytes.length && lineStart + j < len; j++) {
+                    if (buf[lineStart + j] !== markerBytes[j]) {
+                        isMarker = false;
+                        break;
+                    }
+                }
+                if (isMarker) {
+                    inHeader = true;
+                    lastHeaderEnd = pos;
+                }
+            }
+        } else {
+            if (startsWithH) {
+                lastHeaderEnd = pos;
+            } else {
+                break; // binary data starts at lastHeaderEnd
+            }
+        }
+
+        if (pos > 65536 && !inHeader) break; // safety: give up if no header found in 64 KB
+    }
+
+    return lastHeaderEnd;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // Vue Component
 // ─────────────────────────────────────────────────────────────────────────────
 const STORAGE_KEY = "aerotune_inputs";
@@ -1129,8 +1397,21 @@ export default {
             motorTemp: "WARM",
             csvFile: null,
             fileName: "No file selected",
-            analysisResult: "Select a Betaflight blackbox CSV file and click ANALYZE.",
+            analysisResult: "Select a Betaflight blackbox file (.bfl, .bbl, or .csv) and click ANALYZE.",
             tooltip: { visible: false, text: "", x: 0, y: 0 },
+            // Auto Tune (chirp sweep)
+            chirpPitch: 230,
+            chirpRoll: 230,
+            chirpYaw: 230,
+            chirpPitchLevel: "MEDIUM",
+            chirpRollLevel: "MEDIUM",
+            chirpYawLevel: "MEDIUM",
+            chirpStartHz: 0.2,
+            chirpEndHz: 600,
+            chirpDuration: 20,
+            chirpConfigured: false,
+            chirpConfirmText: "",
+            advancedOpen: false,
         };
     },
 
@@ -1396,20 +1677,131 @@ export default {
             if (!this.csvFile) return;
             this.analysisResult = "Parsing file…";
             const motorTemp = this.motorTemp;
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const rows = parseBlackboxCSV(e.target.result);
-                if (!rows) {
-                    this.analysisResult =
-                        "ERROR: Could not find a valid Betaflight blackbox header.\nMake sure you exported a CSV from Blackbox Explorer (not the raw .BBL file).";
-                    return;
-                }
-                this.analysisResult = formatAnalysisResult(analyzeLog(rows, motorTemp));
+            const file = this.csvFile;
+            const ext = file.name.split(".").pop().toLowerCase();
+
+            if (ext === "bfl" || ext === "bbl") {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    try {
+                        const buffer = new Uint8Array(e.target.result);
+
+                        // Parse ASCII header section
+                        const headerParser = new BBLHeaderParser();
+                        const sessions = headerParser.parseFile(buffer);
+                        if (!sessions || sessions.length === 0) {
+                            this.analysisResult =
+                                "ERROR: Could not parse blackbox header. Make sure this is a valid Betaflight blackbox file.";
+                            return;
+                        }
+                        const config = sessions[0];
+
+                        // Locate start of binary frame data
+                        const headerEnd = findBBLBinaryStart(buffer);
+                        if (headerEnd === 0) {
+                            this.analysisResult = "ERROR: Could not locate frame data in blackbox file.";
+                            return;
+                        }
+
+                        // Decode binary frames
+                        const decoder = new FrameDecoder(config);
+                        const { frames } = decoder.decodeFrames(buffer, headerEnd, 0);
+                        if (!frames || frames.length === 0) {
+                            this.analysisResult =
+                                "ERROR: No frames decoded from blackbox file. The file may be corrupt or use an unsupported format.";
+                            return;
+                        }
+
+                        // Decoded frame objects use the same field keys as CSV rows
+                        this.analysisResult = formatAnalysisResult(analyzeLog(frames, motorTemp));
+                    } catch (err) {
+                        this.analysisResult = `ERROR: Failed to parse blackbox file: ${  err.message}`;
+                    }
+                };
+                reader.onerror = () => {
+                    this.analysisResult = "ERROR: Could not read file.";
+                };
+                reader.readAsArrayBuffer(file);
+            } else {
+                // CSV pipeline — unchanged
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const rows = parseBlackboxCSV(e.target.result);
+                    if (!rows) {
+                        this.analysisResult =
+                            "ERROR: Could not find a valid Betaflight blackbox header.\nMake sure you exported a CSV from Blackbox Explorer (not the raw .BFL/.BBL file).";
+                        return;
+                    }
+                    this.analysisResult = formatAnalysisResult(analyzeLog(rows, motorTemp));
+                };
+                reader.onerror = () => {
+                    this.analysisResult = "ERROR: Could not read file.";
+                };
+                reader.readAsText(file);
+            }
+        },
+
+        setChirpLevel(axis, level) {
+            const AMPLITUDES = { EASY: 150, MEDIUM: 230, HARD: 350 };
+            const amp = AMPLITUDES[level];
+            if (axis === "pitch") {
+                this.chirpPitchLevel = level;
+                this.chirpPitch = amp;
+            } else if (axis === "roll") {
+                this.chirpRollLevel = level;
+                this.chirpRoll = amp;
+            } else if (axis === "yaw") {
+                this.chirpYawLevel = level;
+                this.chirpYaw = amp;
+            }
+        },
+
+        configureFc() {
+            if (!CONFIGURATOR.connectionValid) {
+                this.chirpConfirmText = "ERROR: Not connected to flight controller.";
+                this.chirpConfigured = true;
+                return;
+            }
+
+            this.chirpConfigured = false;
+
+            const startDeciHz = Math.round(this.chirpStartHz * 10);
+            const endDeciHz = Math.round(this.chirpEndHz * 10);
+
+            const commands = [
+                `set chirp_amplitude_pitch = ${this.chirpPitch}`,
+                `set chirp_amplitude_roll = ${this.chirpRoll}`,
+                `set chirp_amplitude_yaw = ${this.chirpYaw}`,
+                `set chirp_frequency_start_deci_hz = ${startDeciHz}`,
+                `set chirp_frequency_end_deci_hz = ${endDeciHz}`,
+                `set chirp_time_seconds = ${this.chirpDuration}`,
+                `save`,
+            ];
+
+            const sendRaw = (str) => {
+                const buf = new ArrayBuffer(str.length);
+                const view = new Uint8Array(buf);
+                for (let i = 0; i < str.length; i++) view[i] = str.codePointAt(i);
+                serial.send(buf);
             };
-            reader.onerror = () => {
-                this.analysisResult = "ERROR: Could not read file.";
-            };
-            reader.readAsText(this.csvFile);
+
+            // Enter CLI mode
+            const enterBuf = new ArrayBuffer(1);
+            new Uint8Array(enterBuf)[0] = 0x23; // '#'
+            serial.send(enterBuf);
+
+            // Send each command with staggered delays
+            let delay = 300;
+            for (const cmd of commands) {
+                setTimeout(() => sendRaw(`${cmd  }\n`), delay);
+                delay += 60;
+            }
+
+            // Show confirmation after all commands dispatched
+            setTimeout(() => {
+                this.chirpConfirmText = commands.join("\n");
+                this.chirpConfigured = true;
+            }, delay + 100);
         },
     },
 };
