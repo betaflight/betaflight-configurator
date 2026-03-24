@@ -539,10 +539,6 @@ async function startProcess() {
     result = getConfig("expertMode").expertMode ?? false;
 
     const expertModeCheckbox = document.querySelector('input[name="expertModeCheckbox"]');
-    if (expertModeCheckbox) {
-        expertModeCheckbox.checked = result;
-        expertModeCheckbox.dispatchEvent(new Event("change"));
-    }
 
     expertModeCheckbox?.addEventListener("change", () => {
         const checked = expertModeCheckbox.checked;
@@ -565,6 +561,11 @@ async function startProcess() {
 
         setConfig({ expertMode: checked });
     });
+
+    if (expertModeCheckbox) {
+        expertModeCheckbox.checked = result;
+        expertModeCheckbox.dispatchEvent(new Event("change"));
+    }
 
     result = getConfig("cliAutoComplete");
     CliAutoComplete.setEnabled(typeof result.cliAutoComplete === "undefined" || result.cliAutoComplete); // On by default

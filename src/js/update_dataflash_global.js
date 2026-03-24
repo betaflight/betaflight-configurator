@@ -42,7 +42,7 @@ export function update_dataflash_global() {
 
     if (info) {
         noflash?.style.setProperty("display", "none");
-        contents?.style.setProperty("display", "block");
+        contents?.style.removeProperty("display");
 
         const progress = document.querySelector(".dataflash-progress_global");
         if (progress) {
