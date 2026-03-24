@@ -1900,6 +1900,9 @@
     "configurationButtonSave": {
         "message": "Save and Reboot"
     },
+    "dialogClose": {
+        "message": "Close"
+    },
     "dialogDynFiltersChangeTitle": {
         "message": "Dynamic Notch values change"
     },
@@ -2981,6 +2984,10 @@
     },
     "adjustmentsFunction32": {
         "message": "Slider Master Multiplier"
+    },
+    "adjustmentsFunction33": {
+        "message": "Battery Profile Selection",
+        "description": "Allows switching battery profiles via RC channel"
     },
     "adjustmentsSave": {
         "message": "Save"
@@ -5409,6 +5416,18 @@
     },
     "powerAmperageCalibratedScale": {
         "message": "Calibrated Amperage Scale:"
+    },
+    "powerBatteryProfile": {
+        "message": "Battery Profile"
+    },
+    "powerBatteryProfileOption": {
+        "message": "Battery Profile $1"
+    },
+    "powerBatteryProfileNamePlaceholder": {
+        "message": "e.g. LiPo, Li-Ion"
+    },
+    "powerBatteryProfileNameLabel": {
+        "message": "Profile Name"
     },
     "powerBatteryHead": {
         "message": "Battery"
@@ -7914,6 +7933,20 @@
     "osdDescElementLidar": {
         "message": "$t(osdTextElementLidar.message)",
         "description": "Don't translate!!!"
+    },
+    "osdTextElementCustomSerialText": {
+        "message": "Custom serial text",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementCustomSerialText": {
+        "message": "Displays custom text received from a serial port"
+    },
+    "osdTextElementBatteryProfileName": {
+        "message": "Profile: Battery profile name",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementBatteryProfileName": {
+        "message": "Shows the active battery profile name or index"
     },
     "osdSetupPreviewCheckRulers": {
         "message": "Rulers",

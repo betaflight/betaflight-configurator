@@ -240,6 +240,15 @@ MspHelper.prototype.process_data = function (dataHandler) {
                     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
                         FC.CONFIG.numberOfRateProfiles = data.readU8();
                     }
+
+                    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_48)) {
+                        FC.CONFIG.numberOfBatteryProfiles = data.readU8();
+                        FC.CONFIG.batteryProfile = data.readU8();
+                        // Grow batteryProfileNames to match actual profile count from FC
+                        while (FC.CONFIG.batteryProfileNames.length < FC.CONFIG.numberOfBatteryProfiles) {
+                            FC.CONFIG.batteryProfileNames.push("");
+                        }
+                    }
                     break;
 
                 case MSPCodes.MSP_RAW_IMU:
@@ -909,6 +918,9 @@ MspHelper.prototype.process_data = function (dataHandler) {
                             break;
                         case MSPCodes.BUILD_KEY:
                             FC.CONFIG.buildKey = self.getText(data);
+                            break;
+                        case MSPCodes.BATTERY_PROFILE_NAME:
+                            FC.CONFIG.batteryProfileNames[FC.CONFIG.batteryProfile] = self.getText(data);
                             break;
                         default:
                             console.log("Unsupport text type");
@@ -2295,6 +2307,9 @@ MspHelper.prototype.crunch = function (code, modifierCode = undefined) {
                 case MSPCodes.RATE_PROFILE_NAME:
                     self.setText(buffer, modifierCode, FC.CONFIG.rateProfileNames[FC.CONFIG.rateProfile], 8);
                     break;
+                case MSPCodes.BATTERY_PROFILE_NAME:
+                    self.setText(buffer, modifierCode, FC.CONFIG.batteryProfileNames[FC.CONFIG.batteryProfile], 8);
+                    break;
                 default:
                     console.log("Unsupported text type");
                     break;
@@ -2324,6 +2339,7 @@ MspHelper.prototype.crunch = function (code, modifierCode = undefined) {
         case MSPCodes.MSP_COPY_PROFILE:
             buffer.push8(FC.COPY_PROFILE.type).push8(FC.COPY_PROFILE.dstProfile).push8(FC.COPY_PROFILE.srcProfile);
             break;
+
         case MSPCodes.MSP_ARMING_DISABLE:
             let value;
             if (FC.CONFIG.armingDisabled) {
@@ -2638,9 +2654,7 @@ MspHelper.prototype.sendAdjustmentRanges = function (onCompleteCallback) {
             .push8(adjustmentRange.adjustmentFunction)
             .push8(adjustmentRange.auxSwitchChannelIndex);
         if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_48)) {
-            buffer
-                .push16(adjustmentRange.adjustmentCenter || 0)
-                .push16(adjustmentRange.adjustmentScale || 0);
+            buffer.push16(adjustmentRange.adjustmentCenter || 0).push16(adjustmentRange.adjustmentScale || 0);
         }
 
         // prepare for next iteration

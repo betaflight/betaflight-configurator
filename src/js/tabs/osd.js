@@ -1321,6 +1321,24 @@ OSD.loadDisplayFields = function () {
             positionable: true,
             preview: "RF:---",
         },
+        OSD_CUSTOM_SERIAL_TEXT: {
+            name: "OSD_CUSTOM_SERIAL_TEXT",
+            text: "osdTextElementCustomSerialText",
+            desc: "osdDescElementCustomSerialText",
+            defaultPosition: -1,
+            draw_order: 615,
+            positionable: true,
+            preview: "---",
+        },
+        BATTERY_PROFILE_NAME: {
+            name: "BATTERY_PROFILE_NAME",
+            text: "osdTextElementBatteryProfileName",
+            desc: "osdDescElementBatteryProfileName",
+            defaultPosition: -1,
+            draw_order: 620,
+            positionable: true,
+            preview: "BAT1",
+        },
     };
 
     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
@@ -1449,6 +1467,13 @@ OSD.chooseFields = function () {
             F.CUSTOM_MSG2,
             F.CUSTOM_MSG3,
             F.OSD_LIDAR_DIST,
+        ]);
+    }
+
+    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_48)) {
+        OSD.constants.DISPLAY_FIELDS = OSD.constants.DISPLAY_FIELDS.concat([
+            F.OSD_CUSTOM_SERIAL_TEXT,
+            F.BATTERY_PROFILE_NAME,
         ]);
     }
     // Choose statistic fields
