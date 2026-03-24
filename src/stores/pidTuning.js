@@ -77,6 +77,18 @@ export const usePidTuningStore = defineStore("pidTuning", () => {
     }
 
     /**
+     * Reset state on FC disconnect or new connection.
+     * Clears the external-change flag so that a stale "AeroTune applied"
+     * signal from a previous session does not keep the Save button
+     * enabled when connecting to a different (or the same) FC.
+     */
+    function resetForConnection() {
+        externalChangeFlag.value = false;
+        hasChanges.value = false;
+        originalsReady.value = false;
+    }
+
+    /**
      * Compare current FC data against the stored originals and update
      * `hasChanges`.  Accepts the current (lifted) profile-name strings
      * so the comparison covers those edits too.
@@ -117,5 +129,6 @@ export const usePidTuningStore = defineStore("pidTuning", () => {
         checkForChanges,
         markExternalChange,
         clearExternalChange,
+        resetForConnection,
     };
 });

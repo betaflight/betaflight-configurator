@@ -35,6 +35,7 @@ import "../css/dark-theme.less";
 import "./main";
 
 import GUI from "./gui";
+import { i18n } from "./localization";
 import { Workbox } from "workbox-window";
 import { isAndroid } from "./utils/checkCompatibility.js";
 import { createApp } from "vue";

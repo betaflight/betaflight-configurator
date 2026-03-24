@@ -7,7 +7,7 @@
  * Written from scratch by aerobot2.com
  * Reference: BBL format specification (public documentation)
  *
- * © 2026 aerobot2.com — All Rights Reserved
+ * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 import { DataStream } from "./data-stream.js";

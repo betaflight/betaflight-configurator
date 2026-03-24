@@ -134,20 +134,6 @@
                                                 >
                                             </th>
                                             <th>
-                                                D Max
-                                                <span
-                                                    class="at-tip"
-                                                    @mouseenter="
-                                                        showTip(
-                                                            $event,
-                                                            'The maximum dampening allowed at high throttle — D rises up to this ceiling during fast manoeuvres.',
-                                                        )
-                                                    "
-                                                    @mouseleave="hideTip"
-                                                    >ⓘ</span
-                                                >
-                                            </th>
-                                            <th>
                                                 Derivative
                                                 <span
                                                     class="at-tip"
@@ -155,6 +141,20 @@
                                                         showTip(
                                                             $event,
                                                             'The dampening that cushions the movement — like a rubber tyre under the seesaw. Stops it bouncing back and forth after each input.',
+                                                        )
+                                                    "
+                                                    @mouseleave="hideTip"
+                                                    >ⓘ</span
+                                                >
+                                            </th>
+                                            <th>
+                                                D Max
+                                                <span
+                                                    class="at-tip"
+                                                    @mouseenter="
+                                                        showTip(
+                                                            $event,
+                                                            'The maximum dampening allowed at high throttle — D rises up to this ceiling during fast manoeuvres.',
                                                         )
                                                     "
                                                     @mouseleave="hideTip"
@@ -182,24 +182,24 @@
                                             <td class="at-pid-axis-label">ROLL</td>
                                             <td class="at-pid-num">{{ pids.roll_p }}</td>
                                             <td class="at-pid-num">{{ pids.roll_i }}</td>
-                                            <td class="at-pid-num">{{ pids.roll_d }}</td>
                                             <td class="at-pid-num">{{ pids.d_min_roll }}</td>
+                                            <td class="at-pid-num">{{ pids.roll_d }}</td>
                                             <td class="at-pid-num">{{ pids.roll_f }}</td>
                                         </tr>
                                         <tr class="at-pid-row at-pid-row--pitch">
                                             <td class="at-pid-axis-label">PITCH</td>
                                             <td class="at-pid-num">{{ pids.pitch_p }}</td>
                                             <td class="at-pid-num">{{ pids.pitch_i }}</td>
-                                            <td class="at-pid-num">{{ pids.pitch_d }}</td>
                                             <td class="at-pid-num">{{ pids.d_min_pitch }}</td>
+                                            <td class="at-pid-num">{{ pids.pitch_d }}</td>
                                             <td class="at-pid-num">{{ pids.pitch_f }}</td>
                                         </tr>
                                         <tr class="at-pid-row at-pid-row--yaw">
                                             <td class="at-pid-axis-label">YAW</td>
                                             <td class="at-pid-num">{{ pids.yaw_p }}</td>
                                             <td class="at-pid-num">{{ pids.yaw_i }}</td>
-                                            <td class="at-pid-num">{{ pids.yaw_d }}</td>
                                             <td class="at-pid-num at-pid-num--muted">–</td>
+                                            <td class="at-pid-num">{{ pids.yaw_d }}</td>
                                             <td class="at-pid-num">{{ pids.yaw_f }}</td>
                                         </tr>
                                     </tbody>
@@ -1589,14 +1589,24 @@ export default {
 
             const p = this.pids;
 
+            // Read current PID values from FC before patching so we write
+            // against the live FC state, not stale defaults.
+            try {
+                await MSP.promise(MSPCodes.MSP_PID);
+            } catch (e) {
+                console.error("[AeroTune] Failed to read MSP_PID before applying:", e);
+                alert("Failed to read PID values from FC. Check connection and try again.");
+                return;
+            }
+
             // Write into FC reactive state
             if (FC.PIDS && FC.PIDS.length >= 3) {
                 FC.PIDS[0][0] = p.roll_p;
                 FC.PIDS[0][1] = p.roll_i;
-                FC.PIDS[0][2] = p.roll_d;
+                FC.PIDS[0][2] = p.d_min_roll;
                 FC.PIDS[1][0] = p.pitch_p;
                 FC.PIDS[1][1] = p.pitch_i;
-                FC.PIDS[1][2] = p.pitch_d;
+                FC.PIDS[1][2] = p.d_min_pitch;
                 FC.PIDS[2][0] = p.yaw_p;
                 FC.PIDS[2][1] = p.yaw_i;
                 FC.PIDS[2][2] = p.yaw_d;
@@ -1615,13 +1625,13 @@ export default {
                 return;
             }
 
-            // Now patch only the feedforward and D_min fields.
+            // Now patch only the feedforward and D Max fields.
             if (FC.ADVANCED_TUNING) {
                 FC.ADVANCED_TUNING.feedforwardRoll = p.roll_f;
                 FC.ADVANCED_TUNING.feedforwardPitch = p.pitch_f;
                 FC.ADVANCED_TUNING.feedforwardYaw = p.yaw_f;
-                FC.ADVANCED_TUNING.dMaxRoll = p.d_min_roll;
-                FC.ADVANCED_TUNING.dMaxPitch = p.d_min_pitch;
+                FC.ADVANCED_TUNING.dMaxRoll = p.roll_d;
+                FC.ADVANCED_TUNING.dMaxPitch = p.pitch_d;
             }
 
             // Push to FC hardware RAM so PID tab reads back the new values on mount
@@ -1715,7 +1725,7 @@ export default {
                         // Decoded frame objects use the same field keys as CSV rows
                         this.analysisResult = formatAnalysisResult(analyzeLog(frames, motorTemp));
                     } catch (err) {
-                        this.analysisResult = `ERROR: Failed to parse blackbox file: ${  err.message}`;
+                        this.analysisResult = `ERROR: Failed to parse blackbox file: ${err.message}`;
                     }
                 };
                 reader.onerror = () => {
@@ -1793,7 +1803,7 @@ export default {
             // Send each command with staggered delays
             let delay = 300;
             for (const cmd of commands) {
-                setTimeout(() => sendRaw(`${cmd  }\n`), delay);
+                setTimeout(() => sendRaw(`${cmd}\n`), delay);
                 delay += 60;
             }
 
