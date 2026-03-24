@@ -281,7 +281,8 @@ function renderChart(state) {
     // ── Nyquist / loop-rate marker ──
     const gyroSyncDenom = Math.max(state.gyroSyncDenom, 1);
     const pidDenom = Math.max(state.pidProcessDenom, 1);
-    const gyroRate = 8000 / gyroSyncDenom;
+    const gyroBaseClock = state.gyroUse32kHz ? 32000 : 8000;
+    const gyroRate = gyroBaseClock / gyroSyncDenom;
     const nyquist = gyroRate / (pidDenom * 2);
 
     if (nyquist > 0 && nyquist <= FREQ_MAX) {
@@ -480,6 +481,7 @@ watchPostEffect(() => {
         dshotTelemetry: motor?.use_dshot_telemetry ?? false,
         gyroSyncDenom: adv.gyro_sync_denom || 1,
         pidProcessDenom: adv.pid_process_denom || 1,
+        gyroUse32kHz: adv.gyroUse32kHz ?? false,
     };
 
     if (chartSvg.value && chartContainer.value) {
@@ -519,6 +521,7 @@ const startResizeObserver = () => {
                     dshotTelemetry: motor?.use_dshot_telemetry ?? false,
                     gyroSyncDenom: adv.gyro_sync_denom || 1,
                     pidProcessDenom: adv.pid_process_denom || 1,
+                    gyroUse32kHz: adv.gyroUse32kHz ?? false,
                 });
             }
         });
