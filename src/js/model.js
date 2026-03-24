@@ -36,6 +36,16 @@ export const mixerList = [
     //{ name: "Car", pos: 27, model: "car", image: "car", motors: 1, servos: true }, //  reserved for upcoming feature work
 ];
 
+function getContentBoxSize(element) {
+    const style = window.getComputedStyle(element);
+    const paddingX = Number.parseFloat(style.paddingLeft) + Number.parseFloat(style.paddingRight);
+    const paddingY = Number.parseFloat(style.paddingTop) + Number.parseFloat(style.paddingBottom);
+    return {
+        width: element.clientWidth - paddingX,
+        height: element.clientHeight - paddingY,
+    };
+}
+
 // 3D model
 const Model = function (wrapper, canvas) {
     // Configure model detail level (1-10, where 1 is lowest detail and 10 is highest)
@@ -60,7 +70,8 @@ const Model = function (wrapper, canvas) {
         });
     }
 
-    this.renderer.setSize(this.wrapper.clientWidth, this.wrapper.clientHeight);
+    const { width, height } = getContentBoxSize(this.wrapper);
+    this.renderer.setSize(width, height);
 
     // load the model including materials
     let model_file = mixerList[FC.MIXER_CONFIG.mixer - 1]?.model;
@@ -75,7 +86,7 @@ const Model = function (wrapper, canvas) {
     this.modelWrapper = new THREE.Object3D();
 
     // Stationary camera
-    this.camera = new THREE.PerspectiveCamera(60, this.wrapper.clientWidth / this.wrapper.clientHeight, 1, 10000);
+    this.camera = new THREE.PerspectiveCamera(60, width / height, 1, 10000);
     // move camera away from the model
     this.camera.position.z = 125;
 
@@ -290,9 +301,9 @@ Model.prototype.performRender = function () {
 
 // handle canvas resize
 Model.prototype.resize = function () {
-    this.renderer.setSize(this.wrapper.clientWidth, this.wrapper.clientHeight);
-
-    this.camera.aspect = this.wrapper.clientWidth / this.wrapper.clientHeight;
+    const { width, height } = getContentBoxSize(this.wrapper);
+    this.renderer.setSize(width, height);
+    this.camera.aspect = width / height;
     this.camera.updateProjectionMatrix();
 
     this.render();

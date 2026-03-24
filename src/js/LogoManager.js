@@ -180,8 +180,11 @@ LogoManager.init = function (font, logoStartIndex) {
         logoWidthPx: `${this.constraints.imageSize.expectedWidth}`, // NOSONAR
         logoHeightPx: `${this.constraints.imageSize.expectedHeight}`, // NOSONAR
     });
-    // find/cache DOM elements
+    // find/cache DOM elements (skip _-prefixed keys from previous init calls)
     Object.keys(this.elements).forEach((key) => {
+        if (key.startsWith("_")) {
+            return;
+        }
         this.elements[`_${key}`] = document.querySelector(this.elements[key]);
     });
     Object.keys(this.constraints).forEach((key) => {
