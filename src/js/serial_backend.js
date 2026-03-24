@@ -232,6 +232,7 @@ function finishClose(finishedCallback) {
     const connLabel = document.querySelector("div.connection_button__label");
     if (connLabel) {
         connLabel.textContent = i18n.getMessage("connect");
+        connLabel.classList.remove("active");
     }
 
     // reset active sensor indicators
@@ -279,6 +280,7 @@ function resetConnection() {
     const connLabel = document.querySelector("div.connection_button__label");
     if (connLabel) {
         connLabel.textContent = i18n.getMessage("connect");
+        connLabel.classList.remove("active");
     }
     document.querySelector("a.connection_button__link")?.classList.remove("active");
 
