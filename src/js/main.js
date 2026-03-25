@@ -227,20 +227,15 @@ async function startProcess() {
     const handleDisallowedTab = (tab, tabName) => {
         if (tab !== "firmware_flasher") {
             gui_log(i18n.getMessage("tabSwitchUpgradeRequired", [tabName]));
-            return false;
+            return;
         }
 
-        // Prevent re-entry: set the flag before dispatching synchronous clicks
-        GUI.tab_switch_in_progress = true;
-
-        // Special handling for firmware flasher tab
+        // Special handling for firmware flasher tab: disconnect then open flasher.
+        // The fwButtonInProgress guard on the button handler prevents re-entry.
         if (GUI.connected_to || GUI.connecting_to) {
             document.querySelector("a.connection_button__link")?.click();
         }
         document.querySelector("a.firmware_flasher_button__link")?.click();
-
-        GUI.tab_switch_in_progress = false;
-        return true;
     };
 
     const uiTabs = document.querySelectorAll("#tabs > ul");
