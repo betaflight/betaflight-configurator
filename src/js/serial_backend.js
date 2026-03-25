@@ -267,7 +267,16 @@ function finishClose(finishedCallback) {
         document.querySelector(".dialogInteractive")?.close();
     }
 
-    document.querySelector("#tabs .tab_landing a")?.click();
+    const pendingTab = GUI.pendingTab;
+    GUI.pendingTab = null;
+    if (pendingTab === "firmware_flasher") {
+        // Clear premature active state set before disconnect started
+        document.querySelector("a.firmware_flasher_button__label")?.classList.remove("active");
+        document.querySelector("a.firmware_flasher_button__link")?.classList.remove("active");
+        document.querySelector("a.firmware_flasher_button__link")?.click();
+    } else {
+        document.querySelector("#tabs .tab_landing a")?.click();
+    }
 
     finishedCallback();
 }

@@ -218,25 +218,20 @@ async function startProcess() {
         return true;
     };
 
-    let handlingDisallowedTab = false;
     const handleDisallowedTab = (tab, tabName) => {
         if (tab !== "firmware_flasher") {
             gui_log(i18n.getMessage("tabSwitchUpgradeRequired", [tabName]));
             return false;
         }
 
-        if (handlingDisallowedTab) {
-            return true;
-        }
-        handlingDisallowedTab = true;
-
         // Special handling for firmware flasher tab
         if (GUI.connected_to || GUI.connecting_to) {
+            // Disconnect is async; defer firmware flasher navigation until finishClose
+            GUI.pendingTab = "firmware_flasher";
             document.querySelector("a.connection_button__link")?.click();
+        } else {
+            document.querySelector("a.firmware_flasher_button__link")?.click();
         }
-        document.querySelector("a.firmware_flasher_button__link")?.click();
-
-        handlingDisallowedTab = false;
         return true;
     };
 
