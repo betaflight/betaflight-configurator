@@ -218,17 +218,25 @@ async function startProcess() {
         return true;
     };
 
+    let handlingDisallowedTab = false;
     const handleDisallowedTab = (tab, tabName) => {
         if (tab !== "firmware_flasher") {
             gui_log(i18n.getMessage("tabSwitchUpgradeRequired", [tabName]));
             return false;
         }
 
+        if (handlingDisallowedTab) {
+            return true;
+        }
+        handlingDisallowedTab = true;
+
         // Special handling for firmware flasher tab
         if (GUI.connected_to || GUI.connecting_to) {
             document.querySelector("a.connection_button__link")?.click();
         }
         document.querySelector("a.firmware_flasher_button__link")?.click();
+
+        handlingDisallowedTab = false;
         return true;
     };
 
@@ -254,7 +262,8 @@ async function startProcess() {
             const isLoginSectionTab = self.closest("ul").classList.contains("mode-loggedin");
             const isTabAllowed = GUI.allowedTabs.includes(tab) || isLoginSectionTab;
 
-            if (!isTabAllowed && !handleDisallowedTab(tab, tabName)) {
+            if (!isTabAllowed) {
+                handleDisallowedTab(tab, tabName);
                 return;
             }
 
