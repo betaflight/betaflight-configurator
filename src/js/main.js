@@ -182,26 +182,20 @@ async function startProcess() {
         });
     }
 
-    let fwButtonInProgress = false;
     document.querySelector("a.firmware_flasher_button__link")?.addEventListener("click", function () {
-        if (fwButtonInProgress || GUI.tab_switch_in_progress) {
+        if (GUI.tab_switch_in_progress) {
             return;
         }
-        fwButtonInProgress = true;
-        try {
-            const fwLabel = document.querySelector("a.firmware_flasher_button__label");
-            const fwLink = document.querySelector("a.firmware_flasher_button__link");
-            if (fwLabel?.classList.contains("active") && fwLink?.classList.contains("active")) {
-                fwLabel.classList.remove("active");
-                fwLink.classList.remove("active");
-                document.querySelector("#tabs ul.mode-disconnected .tab_landing a")?.click();
-            } else {
-                document.querySelector("#tabs ul.mode-disconnected .tab_firmware_flasher a")?.click();
-                fwLabel?.classList.add("active");
-                fwLink?.classList.add("active");
-            }
-        } finally {
-            fwButtonInProgress = false;
+        const fwLabel = document.querySelector("a.firmware_flasher_button__label");
+        const fwLink = document.querySelector("a.firmware_flasher_button__link");
+        if (fwLabel?.classList.contains("active") && fwLink?.classList.contains("active")) {
+            fwLabel.classList.remove("active");
+            fwLink.classList.remove("active");
+            document.querySelector("#tabs ul.mode-disconnected .tab_landing a")?.click();
+        } else {
+            document.querySelector("#tabs ul.mode-disconnected .tab_firmware_flasher a")?.click();
+            fwLabel?.classList.add("active");
+            fwLink?.classList.add("active");
         }
     });
 
@@ -227,15 +221,15 @@ async function startProcess() {
     const handleDisallowedTab = (tab, tabName) => {
         if (tab !== "firmware_flasher") {
             gui_log(i18n.getMessage("tabSwitchUpgradeRequired", [tabName]));
-            return;
+            return false;
         }
 
-        // Special handling for firmware flasher tab: disconnect then open flasher.
-        // The fwButtonInProgress guard on the button handler prevents re-entry.
+        // Special handling for firmware flasher tab
         if (GUI.connected_to || GUI.connecting_to) {
             document.querySelector("a.connection_button__link")?.click();
         }
         document.querySelector("a.firmware_flasher_button__link")?.click();
+        return true;
     };
 
     const uiTabs = document.querySelectorAll("#tabs > ul");
@@ -247,7 +241,7 @@ async function startProcess() {
 
             // only initialize when the tab isn't already active
             const self = this;
-            const tabClass = self.parentElement.className;
+            const tabClass = self.parentElement.className.split(/\s+/)[0];
             const tabRequiresConnection = self.closest("ul").classList.contains("mode-connected");
             const tab = tabClass.substring(4);
             const tabName = self.textContent;
@@ -260,8 +254,7 @@ async function startProcess() {
             const isLoginSectionTab = self.closest("ul").classList.contains("mode-loggedin");
             const isTabAllowed = GUI.allowedTabs.includes(tab) || isLoginSectionTab;
 
-            if (!isTabAllowed) {
-                handleDisallowedTab(tab, tabName);
+            if (!isTabAllowed && !handleDisallowedTab(tab, tabName)) {
                 return;
             }
 

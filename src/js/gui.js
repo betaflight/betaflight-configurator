@@ -410,9 +410,9 @@ class GuiControl {
             const content = dialog.querySelector(".dialogInteractiveContent");
             const buttonClose = dialog.querySelector(".dialogInteractive-closeButton");
 
-            title.innerHTML = interactiveDialogSettings.title;
-            content.innerHTML = interactiveDialogSettings.text;
-            buttonClose.innerHTML = interactiveDialogSettings.buttonCloseText;
+            title.innerHTML = interactiveDialogSettings.title ?? "";
+            content.innerHTML = interactiveDialogSettings.text ?? "";
+            buttonClose.innerHTML = interactiveDialogSettings.buttonCloseText ?? "";
 
             buttonClose.onclick = () => {
                 dialog.close();

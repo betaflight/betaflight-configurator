@@ -254,20 +254,21 @@ Features.prototype.updateData = function (featureElement) {
     } else if (localName === "select") {
         const controlElements = featureElement.children;
         const selectedBit = Number.parseInt(featureElement.value, 10);
-        if (selectedBit !== -1) {
-            let selectedFeature;
-            for (const controlElement of controlElements) {
-                const bit = Number.parseInt(controlElement.value, 10);
-                if (selectedBit === bit) {
-                    self._featureMask = bit_set(self._featureMask, bit);
-                    selectedFeature = self.findFeatureByBit(bit);
-                } else {
-                    self._featureMask = bit_clear(self._featureMask, bit);
-                }
+        let selectedFeature;
+        for (const controlElement of controlElements) {
+            const bit = Number.parseInt(controlElement.value, 10);
+            if (bit === -1) {
+                continue;
             }
-            if (selectedFeature) {
-                self._analyticsChanges[`FeatureGroup-${selectedFeature.group}`] = selectedFeature.name;
+            if (selectedBit === bit) {
+                self._featureMask = bit_set(self._featureMask, bit);
+                selectedFeature = self.findFeatureByBit(bit);
+            } else {
+                self._featureMask = bit_clear(self._featureMask, bit);
             }
+        }
+        if (selectedFeature) {
+            self._analyticsChanges[`FeatureGroup-${selectedFeature.group}`] = selectedFeature.name;
         }
     } else if (featureElement.name) {
         // Plain object path: { name, checked } — used by Vue components
