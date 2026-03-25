@@ -253,12 +253,12 @@ Features.prototype.updateData = function (featureElement) {
         self._analyticsChanges[`Feature${self.findFeatureByBit(bit).name}`] = featureValue;
     } else if (localName === "select") {
         const controlElements = featureElement.children;
-        const selectedBit = featureElement.value;
+        const selectedBit = Number.parseInt(featureElement.value, 10);
         if (selectedBit !== -1) {
             let selectedFeature;
             for (const controlElement of controlElements) {
                 const bit = Number.parseInt(controlElement.value, 10);
-                if (selectedBit === controlElement.value) {
+                if (selectedBit === bit) {
                     self._featureMask = bit_set(self._featureMask, bit);
                     selectedFeature = self.findFeatureByBit(bit);
                 } else {

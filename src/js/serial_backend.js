@@ -192,11 +192,23 @@ function show(sel) {
     if (!el) {
         return;
     }
-    el.style.display = "";
-    // If CSS still hides it (e.g. .mode-connected { display: none }), override explicitly
-    if (getComputedStyle(el).display === "none") {
-        el.style.display = "block";
+    // Remove inline override; if CSS still hides it, restore the tag's default display
+    el.style.removeProperty("display");
+    if (globalThis.getComputedStyle(el).display === "none") {
+        el.style.display = defaultDisplayForTag(el.tagName);
     }
+}
+
+const tagDisplayCache = {};
+function defaultDisplayForTag(tag) {
+    if (tagDisplayCache[tag]) {
+        return tagDisplayCache[tag];
+    }
+    const tmp = document.createElement(tag);
+    document.body.appendChild(tmp);
+    tagDisplayCache[tag] = globalThis.getComputedStyle(tmp).display || "block";
+    tmp.remove();
+    return tagDisplayCache[tag];
 }
 
 function finishClose(finishedCallback) {
