@@ -1,13 +1,23 @@
 /**
+ * This file is part of Betaflight Configurator.
+ *
+ * Betaflight Configurator is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 3 of
+ * the License, or (at your option) any later version.
+ *
+ * Betaflight Configurator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this software. If not, see <http://www.gnu.org/licenses/>.
+ *
  * AeroTune 7 — BBL Frame Decoder
- *
  * Decodes binary I-frames and P-frames from Betaflight Blackbox logs.
- * Extracts gyro, setpoint, PID terms, and motor output data.
- *
- * Written from scratch by aerobot2.com
  * Reference: BBL format specification (public documentation)
- *
- * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 import { DataStream } from "./data-stream.js";
@@ -94,10 +104,11 @@ class FrameDecoder {
      * @param {Buffer|Uint8Array} buffer - Full BBL file buffer
      * @param {number} headerEnd - Byte offset where the header section ends
      * @param {number} maxFrames - Maximum frames to decode (0 = all)
+     * @param {number} [sessionEnd] - Byte offset where this session's data ends (defaults to buffer.length)
      * @returns {Object} { frames, stats }
      */
-    decodeFrames(buffer, headerEnd, maxFrames) {
-        let stream = new DataStream(buffer, headerEnd, buffer.length);
+    decodeFrames(buffer, headerEnd, maxFrames, sessionEnd) {
+        let stream = new DataStream(buffer, headerEnd, sessionEnd !== undefined ? sessionEnd : buffer.length);
         this.frames = [];
         this.history = [null, null, null];
         this.historyIndex = 0;
@@ -133,8 +144,11 @@ class FrameDecoder {
                     if (this.history[0] && this._decodePFrame(stream)) {
                         stats.pFrames++;
                     } else {
-                        if (!this.history[0]) stats.skipped++;
-                        else stats.errors++;
+                        if (!this.history[0]) {
+                            stats.skipped++;
+                        } else {
+                            stats.errors++;
+                        }
                         this._resync(stream);
                     }
                     break;
@@ -283,10 +297,11 @@ class FrameDecoder {
             case ENC_NULL:
                 return [0];
 
-            case ENC_TAG8_8SVB:
+            case ENC_TAG8_8SVB: {
                 // Count consecutive fields with this encoding
                 const count = this._countConsecutiveEncoding(fieldDefs, fieldIndex, ENC_TAG8_8SVB);
                 return stream.readTag8_8SVB(count);
+            }
 
             case ENC_TAG2_3S32:
                 return stream.readTag2_3S32();
@@ -298,8 +313,7 @@ class FrameDecoder {
                 return stream.readTag2_3SVariable();
 
             default:
-                // Unknown encoding — read as signed VB as fallback
-                return [stream.readSignedVB()];
+                throw new Error(`Unknown field encoding: ${encoding}`);
         }
     }
 
@@ -341,10 +355,11 @@ class FrameDecoder {
                     case PRED_MINMOTOR:
                         result[i] = raw + (this.config.motor.motorOutput[0] || 48);
                         break;
-                    case PRED_MOTOR_0:
+                    case PRED_MOTOR_0: {
                         const m0idx = this._findMotor0Index(fieldDefs);
                         result[i] = raw + (m0idx >= 0 ? result[m0idx] : 0);
                         break;
+                    }
                     case PRED_1500:
                         result[i] = raw + 1500;
                         break;
@@ -507,7 +522,9 @@ class FrameDecoder {
      */
     _skipEventFrame(stream) {
         const eventType = stream.readByte();
-        if (eventType === 0xff) return; // LOG_END — no payload
+        if (eventType === 0xff) {
+            return;
+        } // LOG_END — no payload
 
         // Payload byte-count for each known Betaflight event type
         const EVENT_SIZES = {

@@ -1,14 +1,23 @@
 /**
+ * This file is part of Betaflight Configurator.
+ *
+ * Betaflight Configurator is free software. You can redistribute this software
+ * and/or modify this software under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 3 of
+ * the License, or (at your option) any later version.
+ *
+ * Betaflight Configurator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this software. If not, see <http://www.gnu.org/licenses/>.
+ *
  * AeroTune 7 — Binary Data Stream Reader
- *
  * Reads bytes and bits from a BBL binary buffer.
- * Tracks position and provides the primitive read operations
- * that the encoding decoders need.
- *
- * Written from scratch by aerobot2.com
  * Reference: BBL format specification (public documentation)
- *
- * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 class DataStream {

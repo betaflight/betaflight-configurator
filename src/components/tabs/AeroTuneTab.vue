@@ -1363,6 +1363,36 @@ function findBBLBinaryStart(buf, sessionIndex = 0) {
     return lastHeaderEnd;
 }
 
+// Returns the byte offset of the Nth session's product-marker line,
+// i.e. the very first byte of that session's header block.
+// Used to compute where session N's binary data must end.
+function findBBLSessionHeaderStart(buf, sessionIndex) {
+    const MARKER = "H Product:Blackbox flight data recorder by Nicholas Sherlock";
+    const markerBytes = Array.from(MARKER).map((c) => c.charCodeAt(0));
+    const len = buf.length;
+    let pos = 0;
+    let sessionsFound = -1;
+
+    while (pos < len) {
+        if (buf[pos] === markerBytes[0]) {
+            let isMarker = markerBytes.length + pos <= len;
+            for (let j = 1; isMarker && j < markerBytes.length; j++) {
+                if (buf[pos + j] !== markerBytes[j]) {
+                    isMarker = false;
+                }
+            }
+            if (isMarker) {
+                sessionsFound++;
+                if (sessionsFound === sessionIndex) {
+                    return pos;
+                }
+            }
+        }
+        pos++;
+    }
+    return -1;
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // Vue Component
 // ─────────────────────────────────────────────────────────────────────────────
@@ -1690,12 +1720,17 @@ export default {
                 `Yaw    P=${p.yaw_p}  I=${p.yaw_i}  D=${p.yaw_d}  F=${p.yaw_f}`,
                 `Gyro Lowpass 2 recommendation: ${fr.hz} Hz (${fr.low}–${fr.high} Hz) – ${fr.note}`,
             ].join("\n");
-            navigator.clipboard.writeText(text).then(() => {
-                this.copyBtnText = "✔ Copied!";
-                setTimeout(() => {
-                    this.copyBtnText = "📋 COPY ALL VALUES";
-                }, 2000);
-            });
+            navigator.clipboard
+                .writeText(text)
+                .then(() => {
+                    this.copyBtnText = "✔ Copied!";
+                    setTimeout(() => {
+                        this.copyBtnText = "📋 COPY ALL VALUES";
+                    }, 2000);
+                })
+                .catch((err) => {
+                    console.error("[AeroTune] Failed to copy to clipboard:", err);
+                });
         },
 
         /** Decode and analyze a specific BBL session from the already-loaded buffer. */
@@ -1707,8 +1742,14 @@ export default {
                 return;
             }
 
+            // Bound the decode to this session's byte range so multi-session
+            // logs don't bleed into the next session's header bytes.
+            const nextHeaderStart =
+                sessionIdx + 1 < sessions.length ? findBBLSessionHeaderStart(buffer, sessionIdx + 1) : -1;
+            const sessionEnd = nextHeaderStart >= 0 ? nextHeaderStart : buffer.length;
+
             const decoder = new FrameDecoder(config);
-            const { frames } = decoder.decodeFrames(buffer, headerEnd, 0);
+            const { frames } = decoder.decodeFrames(buffer, headerEnd, 0, sessionEnd);
             if (!frames || frames.length === 0) {
                 this.analysisResult =
                     "ERROR: No frames decoded from blackbox file. The file may be corrupt or use an unsupported format.";
