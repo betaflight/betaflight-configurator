@@ -35,7 +35,6 @@ import PreflightTab from "../components/tabs/PreflightTab.vue";
 import TransponderTab from "../components/tabs/TransponderTab.vue";
 import VtxTab from "../components/tabs/VtxTab.vue";
 import AeroTuneTab from "../components/tabs/AeroTuneTab.vue";
-import PresetsTab from "../components/tabs/PresetsTab.vue";
 
 // Registry of Vue tab components - used by main.js for dynamic mounting
 export const VueTabComponents = {
@@ -67,7 +66,6 @@ export const VueTabComponents = {
     transponder: TransponderTab,
     vtx: VtxTab,
     aerotune: AeroTuneTab,
-    presets: PresetsTab,
     // Move motors before pid_tuning if present in the future
 };
 
@@ -108,6 +106,5 @@ export const BetaflightComponents = {
         app.component("TransponderTab", TransponderTab);
         app.component("VtxTab", VtxTab);
         app.component("AeroTuneTab", AeroTuneTab);
-        app.component("PresetsTab", PresetsTab);
     },
 };
