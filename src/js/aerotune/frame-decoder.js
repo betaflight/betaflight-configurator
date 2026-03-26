@@ -128,7 +128,9 @@ class FrameDecoder {
         while (!stream.eof() && this.frames.length < limit) {
             let frameType = stream.readByte();
 
-            if (frameType === -1) break;
+            if (frameType === -1) {
+                break;
+            }
 
             switch (frameType) {
                 case FRAME_TYPE_I:
@@ -208,7 +210,7 @@ class FrameDecoder {
                 }
                 i += read.length;
             }
-        } catch (e) {
+        } catch {
             return false;
         }
 

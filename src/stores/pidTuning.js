@@ -55,7 +55,7 @@ export const usePidTuningStore = defineStore("pidTuning", () => {
         // If an external tool wrote values to FC, keep hasChanges = true until
         // the user saves (clearExternalChange is called before storeOriginals
         // in the save path).
-        hasChanges.value = externalChangeFlag.value ? true : false;
+        hasChanges.value = externalChangeFlag.value;
     }
 
     /**

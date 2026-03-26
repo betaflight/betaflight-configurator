@@ -41,7 +41,9 @@ class DataStream {
 
     /** Read one unsigned byte */
     readByte() {
-        if (this.pos >= this.end) return -1; // EOF
+        if (this.pos >= this.end) {
+            return -1;
+        } // EOF
         return this.buffer[this.pos++];
     }
 
@@ -262,7 +264,7 @@ class DataStream {
                             b2 = this.readByte();
                             b3 = this.readByte();
                             b4 = this.readByte();
-                            values[i] = b1 | (b2 << 8) | (b3 << 16) | (b4 << 24) | 0;
+                            values[i] = Math.trunc(b1 | (b2 << 8) | (b3 << 16) | (b4 << 24));
                             break;
                     }
                 }
@@ -414,7 +416,7 @@ class DataStream {
                             b2 = this.readByte();
                             b3 = this.readByte();
                             b4 = this.readByte();
-                            values[i] = b1 | (b2 << 8) | (b3 << 16) | (b4 << 24) | 0;
+                            values[i] = Math.trunc(b1 | (b2 << 8) | (b3 << 16) | (b4 << 24));
                             break;
                     }
                 }

@@ -751,10 +751,10 @@ function clamp(v, lo, hi) {
 }
 
 function calculatePIDs(kv, voltage, prop, weight, style) {
-    kv = parseFloat(kv);
-    voltage = parseFloat(voltage);
-    prop = parseFloat(prop);
-    weight = parseFloat(weight);
+    kv = Number.parseFloat(kv);
+    voltage = Number.parseFloat(voltage);
+    prop = Number.parseFloat(prop);
+    weight = Number.parseFloat(weight);
     if (isNaN(kv) || isNaN(voltage) || isNaN(prop) || isNaN(weight)) return null;
 
     // Base P at 5"/4S scale — only KV, style, and weight contribute here.
@@ -918,10 +918,18 @@ function analyzeLog(rows, motorTemp = "WARM") {
 
     // Display labels for tracking (not used in scoring)
     function trackingLabel(ratio) {
-        if (ratio === null) return "NO DATA";
-        if (ratio >= 0.98 && ratio <= 1.02) return "EXCELLENT";
-        if (ratio >= 0.92 && ratio <= 1.08) return "GOOD";
-        if (ratio >= 0.8 && ratio <= 1.2) return "FAIR";
+        if (ratio === null) {
+            return "NO DATA";
+        }
+        if (ratio >= 0.98 && ratio <= 1.02) {
+            return "EXCELLENT";
+        }
+        if (ratio >= 0.92 && ratio <= 1.08) {
+            return "GOOD";
+        }
+        if (ratio >= 0.8 && ratio <= 1.2) {
+            return "FAIR";
+        }
         return "POOR";
     }
     const rollTracking = { label: trackingLabel(rollTrackingRatio) };
@@ -952,7 +960,9 @@ function analyzeLog(rows, motorTemp = "WARM") {
                 const g2 = Number(rows[i + j]["gyroADC[0]"] ?? 0);
                 if (g1 * g2 < 0) osc++;
             }
-            if (osc >= 3) propwashDetected = true;
+            if (osc >= 3) {
+                propwashDetected = true;
+            }
         }
     }
 
@@ -1011,7 +1021,9 @@ function analyzeLog(rows, motorTemp = "WARM") {
             const spCurr = Number(rows[i][spKey] ?? 0);
             if (Math.abs(spCurr - spPrev) <= 20) continue;
             const absSP = Math.abs(spCurr);
-            if (absSP < 5) continue;
+            if (absSP < 5) {
+                continue;
+            }
 
             let peakGyro = Math.abs(Number(rows[i][gyroKey] ?? 0)),
                 peakFrame = i;
@@ -1249,7 +1261,9 @@ function analyzeLog(rows, motorTemp = "WARM") {
 }
 
 function formatAnalysisResult(r) {
-    if (r.error) return `ERROR: ${r.error}`;
+    if (r.error) {
+        return `ERROR: ${r.error}`;
+    }
     const SEP = "════════════════════════════════════════════════════";
     const lines = [];
 
@@ -1271,7 +1285,7 @@ function formatAnalysisResult(r) {
     );
 
     const rRatio = r.rollTrackingRatio !== null ? r.rollTrackingRatio.toFixed(3) : "N/A";
-    const pRatio = r.pitchTrackingRatio !== null ? r.pitchTrackingRatio.toFixed(3) : "N/A";
+    const pRatio = r.pitchTrackingRatio === null ? "N/A" : r.pitchTrackingRatio.toFixed(3);
     lines.push(
         SEP,
         `  SETPOINT TRACKING`,
@@ -1312,7 +1326,7 @@ function formatAnalysisResult(r) {
 // ─────────────────────────────────────────────────────────────────────────────
 function findBBLBinaryStart(buf, sessionIndex = 0) {
     const MARKER = "H Product:Blackbox flight data recorder by Nicholas Sherlock";
-    const markerBytes = Array.from(MARKER).map((c) => c.charCodeAt(0));
+    const markerBytes = Array.from(MARKER).map((c) => c.codePointAt(0));
     const len = buf.length;
 
     // Phase 1: locate the start of the target session's header by finding
@@ -1338,7 +1352,9 @@ function findBBLBinaryStart(buf, sessionIndex = 0) {
         pos++;
     }
 
-    if (sessionHeaderStart === -1) return 0; // session not found
+    if (sessionHeaderStart === -1) {
+        return 0;
+    } // session not found
 
     // Phase 2: scan forward from the session marker, collecting 'H ' lines.
     // The first non-'H ' line marks the start of binary data.
@@ -1348,7 +1364,9 @@ function findBBLBinaryStart(buf, sessionIndex = 0) {
     while (pos < len) {
         const lineStart = pos;
         while (pos < len && buf[pos] !== 0x0a) pos++; // find \n
-        if (pos < len) pos++; // skip \n
+        if (pos < len) {
+            pos++;
+        } // skip \n
 
         if (pos - lineStart < 2) continue;
 
@@ -1368,7 +1386,7 @@ function findBBLBinaryStart(buf, sessionIndex = 0) {
 // Used to compute where session N's binary data must end.
 function findBBLSessionHeaderStart(buf, sessionIndex) {
     const MARKER = "H Product:Blackbox flight data recorder by Nicholas Sherlock";
-    const markerBytes = Array.from(MARKER).map((c) => c.charCodeAt(0));
+    const markerBytes = Array.from(MARKER).map((c) => c.codePointAt(0));
     const len = buf.length;
     let pos = 0;
     let sessionsFound = -1;
@@ -1422,7 +1440,7 @@ export default {
             // Calculator inputs — restored from localStorage if available
             kv: stored?.kv ?? 2400,
             voltage: stored?.voltage ?? 22.2,
-            prop: stored?.prop ?? 5.0,
+            prop: stored?.prop ?? 5,
             weight: stored?.weight ?? 500,
             style: stored?.style ?? "Bando",
             voltagePresets: [

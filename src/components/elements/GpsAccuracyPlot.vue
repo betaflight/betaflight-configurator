@@ -25,7 +25,9 @@ export default defineComponent({
         // Empirical percentile from a pre-sorted array (ascending).
         // p in [0, 1]. Returns the value at the p-th fractile.
         function percentile(sorted, p) {
-            if (sorted.length === 0) return 0;
+            if (sorted.length === 0) {
+                return 0;
+            }
             const idx = Math.max(0, Math.ceil(sorted.length * p) - 1);
             return sorted[Math.min(idx, sorted.length - 1)];
         }
@@ -260,7 +262,9 @@ export default defineComponent({
         });
         onUnmounted(() => {
             ro?.disconnect();
-            if (rafId !== null) cancelAnimationFrame(rafId);
+            if (rafId !== null) {
+                cancelAnimationFrame(rafId);
+            }
         });
 
         // Fires on every push/splice — watches the array length, not deep content.

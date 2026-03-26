@@ -221,7 +221,7 @@ function computeCurves(state) {
             if (center <= FREQ_MAX) {
                 curves.push({
                     id: `rpm-${h}`,
-                    label: !labeled ? `RPM Filter ×${state.rpmHarmonics} (min ${minHz}Hz)` : null,
+                    label: labeled ? null : `RPM Filter ×${state.rpmHarmonics} (min ${minHz}Hz)`,
                     color: "#44ee88",
                     dash: null,
                     points: pts((f) => notchMagQ(f, center, RPM_Q)),
@@ -240,7 +240,9 @@ function renderChart(state) {
     if (!chartSvg.value || !chartContainer.value) return;
 
     const containerWidth = chartContainer.value.clientWidth || 800;
-    if (containerWidth < 10) return;
+    if (containerWidth < 10) {
+        return;
+    }
 
     const margin = { top: 28, right: 24, bottom: 52, left: 62 };
     const width = containerWidth - margin.left - margin.right;
@@ -415,7 +417,9 @@ function renderChart(state) {
 
     // ── Legend ──
     const legendItems = curves.filter((c) => c.label);
-    if (legendItems.length === 0) return;
+    if (legendItems.length === 0) {
+        return;
+    }
 
     const LEGEND_ITEM_H = 17;
     const LEGEND_W = 210;
@@ -491,7 +495,7 @@ watchPostEffect(() => {
 
 // Redraw on container resize
 const startResizeObserver = () => {
-    if (!chartContainer.value || !window.ResizeObserver) return;
+    if (!chartContainer.value || !globalThis.ResizeObserver) return;
     resizeObserver = new ResizeObserver(() => {
         nextTick(() => {
             if (chartSvg.value && chartContainer.value) {
