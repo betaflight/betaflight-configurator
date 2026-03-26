@@ -542,10 +542,15 @@
 
                 <!-- Advanced settings (collapsed by default) -->
                 <div class="at-advanced-section">
-                    <div class="at-advanced-toggle" @click="advancedOpen = !advancedOpen">
+                    <button
+                        type="button"
+                        class="at-advanced-toggle"
+                        @click="advancedOpen = !advancedOpen"
+                        :aria-expanded="advancedOpen"
+                    >
                         ⚙ ADVANCED SETTINGS
                         <span class="at-advanced-chevron" :class="{ open: advancedOpen }">▶</span>
-                    </div>
+                    </button>
                     <div v-if="advancedOpen" class="at-advanced-body">
                         <div class="at-form-row">
                             <label
@@ -847,10 +852,12 @@ function calculatePIDs(kv, voltage, prop, weight, style) {
     return {
         roll_p: clamp(Math.round(rollBase * fullMult), 20, 90),
         roll_i: Math.round(rollBase * 1.902 * halfMult),
+        roll_d: Math.round(rollBase * dr * dMult),
         dMax_roll: Math.round(rollBase * dr * dMult),
         roll_f: Math.round(ff.roll_f * ffMult),
         pitch_p: clamp(Math.round(pitchBase * fullMult), 20, 90),
         pitch_i: Math.round(pitchBase * 1.902 * halfMult),
+        pitch_d: Math.round(pitchBase * dr * dMult),
         dMax_pitch: Math.round(pitchBase * dr * dMult),
         pitch_f: Math.round(ff.pitch_f * ffMult),
         yaw_p: clamp(Math.round(yawBase * fullMult), 15, 70),
@@ -1887,10 +1894,10 @@ export default {
             if (FC.PIDS && FC.PIDS.length >= 3) {
                 FC.PIDS[0][0] = p.roll_p;
                 FC.PIDS[0][1] = p.roll_i;
-                FC.PIDS[0][2] = p.d_min_roll;
+                FC.PIDS[0][2] = p.roll_d;
                 FC.PIDS[1][0] = p.pitch_p;
                 FC.PIDS[1][1] = p.pitch_i;
-                FC.PIDS[1][2] = p.d_min_pitch;
+                FC.PIDS[1][2] = p.pitch_d;
                 FC.PIDS[2][0] = p.yaw_p;
                 FC.PIDS[2][1] = p.yaw_i;
                 FC.PIDS[2][2] = p.yaw_d;
@@ -2100,10 +2107,24 @@ export default {
                 return;
             }
 
+            const { chirpStartHz, chirpEndHz, chirpDuration } = this;
+            if (
+                !Number.isFinite(chirpStartHz) ||
+                !Number.isFinite(chirpEndHz) ||
+                chirpStartHz >= chirpEndHz ||
+                !Number.isFinite(chirpDuration) ||
+                chirpDuration < 1 ||
+                chirpDuration > 60
+            ) {
+                this.chirpConfirmText = "ERROR: Invalid chirp sweep settings.";
+                this.chirpConfigured = true;
+                return;
+            }
+
             this.chirpConfigured = false;
 
-            const startDeciHz = Math.round(this.chirpStartHz * 10);
-            const endDeciHz = Math.round(this.chirpEndHz * 10);
+            const startDeciHz = Math.round(chirpStartHz * 10);
+            const endDeciHz = Math.round(chirpEndHz * 10);
 
             const commands = [
                 `set chirp_amplitude_pitch = ${this.chirpPitch}`,
@@ -2111,7 +2132,7 @@ export default {
                 `set chirp_amplitude_yaw = ${this.chirpYaw}`,
                 `set chirp_frequency_start_deci_hz = ${startDeciHz}`,
                 `set chirp_frequency_end_deci_hz = ${endDeciHz}`,
-                `set chirp_time_seconds = ${this.chirpDuration}`,
+                `set chirp_time_seconds = ${chirpDuration}`,
                 `save`,
             ];
 
@@ -2127,18 +2148,28 @@ export default {
             new Uint8Array(enterBuf)[0] = 0x23; // '#'
             serial.send(enterBuf);
 
-            // Send each command with staggered delays
-            let delay = 300;
-            for (const cmd of commands) {
-                setTimeout(() => sendRaw(`${cmd}\n`), delay);
-                delay += 60;
-            }
-
-            // Show confirmation after all commands dispatched
-            setTimeout(() => {
-                this.chirpConfirmText = commands.join("\n");
-                this.chirpConfigured = true;
-            }, delay + 100);
+            // Wait for CLI to become active before dispatching commands
+            const MAX_WAIT_MS = 3000;
+            const POLL_INTERVAL_MS = 50;
+            let elapsed = 0;
+            const poll = setInterval(() => {
+                elapsed += POLL_INTERVAL_MS;
+                if (CONFIGURATOR.cliActive || CONFIGURATOR.cliValid) {
+                    clearInterval(poll);
+                    let delay = 0;
+                    for (const cmd of commands) {
+                        setTimeout(() => sendRaw(`${cmd}\n`), delay);
+                        delay += 60;
+                    }
+                    setTimeout(() => {
+                        this.chirpConfirmText = commands.join("\n");
+                        this.chirpConfigured = true;
+                    }, delay + 100);
+                } else if (elapsed >= MAX_WAIT_MS) {
+                    clearInterval(poll);
+                    this.chirpConfirmText = "ERROR: CLI did not become active. Check connection and try again.";
+                }
+            }, POLL_INTERVAL_MS);
         },
     },
 };
