@@ -389,6 +389,36 @@
 
             <!-- ═══════════════ AUTO TUNE ═══════════════ -->
             <div v-show="activeView === 'autotune'" class="at-view">
+                <!-- Prop size selector -->
+                <div class="at-panel at-prop-selector">
+                    <div class="at-panel-header">
+                        PROP SIZE
+                        <span
+                            class="at-tip"
+                            @mouseenter="
+                                showTip(
+                                    $event,
+                                    'Select your prop diameter. This sets smart defaults for sweep frequency range and shake amplitude. You can still override them in Advanced Settings.',
+                                )
+                            "
+                            @mouseleave="hideTip"
+                            >ⓘ</span
+                        >
+                    </div>
+                    <div class="at-panel-body">
+                        <div class="at-prop-btns">
+                            <button
+                                v-for="size in [3, 4, 5, 6, 7, 8, 9, 10]"
+                                :key="size"
+                                :class="['at-prop-btn', { active: chirpPropInch === size }]"
+                                @click="chirpPropInch = size"
+                            >
+                                {{ size }}"
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Axis amplitude cards -->
                 <div class="at-chirp-cards">
                     <div class="at-panel at-chirp-card">
@@ -707,6 +737,40 @@ function interpolatePoints(x, points) {
     return 1;
 }
 
+// Prop-size defaults for chirp sweep parameters.
+// Each entry: [propInches, { startHz, endHz, easy, medium, hard }]
+const CHIRP_PROP_DEFAULTS = [
+    [3, { startHz: 100, endHz: 800, easy: 150, medium: 250, hard: 400 }],
+    [5, { startHz: 80, endHz: 600, easy: 120, medium: 230, hard: 350 }],
+    [7, { startHz: 50, endHz: 400, easy: 80, medium: 150, hard: 250 }],
+    [10, { startHz: 30, endHz: 300, easy: 50, medium: 100, hard: 180 }],
+];
+
+function chirpDefaultsForProp(propInch) {
+    const pts = CHIRP_PROP_DEFAULTS;
+    if (propInch <= pts[0][0]) {
+        return { ...pts[0][1] };
+    }
+    if (propInch >= pts[pts.length - 1][0]) {
+        return { ...pts[pts.length - 1][1] };
+    }
+    for (let i = 0; i < pts.length - 1; i++) {
+        const [x0, d0] = pts[i];
+        const [x1, d1] = pts[i + 1];
+        if (propInch >= x0 && propInch <= x1) {
+            const t = (propInch - x0) / (x1 - x0);
+            return {
+                startHz: Math.round(d0.startHz + t * (d1.startHz - d0.startHz)),
+                endHz: Math.round(d0.endHz + t * (d1.endHz - d0.endHz)),
+                easy: Math.round(d0.easy + t * (d1.easy - d0.easy)),
+                medium: Math.round(d0.medium + t * (d1.medium - d0.medium)),
+                hard: Math.round(d0.hard + t * (d1.hard - d0.hard)),
+            };
+        }
+    }
+    return { ...pts[pts.length - 1][1] };
+}
+
 // Voltage scalar — 4S (14.8 V) is the baseline (1.00).
 // Applied FULLY to P and D; HALF correction applied to I and FF.
 function voltageScalar(voltage) {
@@ -1000,7 +1064,7 @@ function analyzeDGain(rows, axis) {
     };
 }
 
-function analyzeLog(rows, motorTemp = "WARM") {
+function analyzeLog(rows, motorTemp = "WARM", config = null) {
     if (!rows || rows.length === 0) {
         return { error: "No valid data found in log." };
     }
@@ -1297,6 +1361,31 @@ function analyzeLog(rows, motorTemp = "WARM") {
         }
     }
 
+    // ── D_MAX FLIGHT 2 REFINEMENT ─────────────────────────────────────────────
+    // Detect when D_Max is at Betaflight defaults and overshoot is moderate —
+    // the D-term ceiling may be too permissive, causing unnecessary D amplification.
+    const avgOvershootAll =
+        allOvershoots.length > 0 ? allOvershoots.reduce((a, b) => a + b, 0) / allOvershoots.length : null;
+
+    let dMaxRefinement = null;
+    if (config && avgOvershootAll !== null && avgOvershootAll >= 25 && avgOvershootAll <= 35) {
+        const dMaxRoll = config.pids?.roll?.[3] ?? null;
+        const dMaxPitch = config.pids?.pitch?.[3] ?? null;
+        const dMaxAdvance = config.pids?.dMaxAdvance ?? null;
+        // BF 4.x defaults: d_max roll=40, pitch=46, d_max_advance=20
+        if (dMaxRoll !== null && dMaxPitch !== null && Math.abs(dMaxRoll - 40) <= 3 && Math.abs(dMaxPitch - 46) <= 3) {
+            dMaxRefinement = {
+                dMaxRoll,
+                dMaxPitch,
+                dMaxAdvance: dMaxAdvance ?? 20,
+                suggestRoll: 35,
+                suggestPitch: 38,
+                suggestAdvance: 10,
+                avgOvershoot: avgOvershootAll,
+            };
+        }
+    }
+
     return {
         totalFrames,
         highThrottleCount,
@@ -1325,6 +1414,8 @@ function analyzeLog(rows, motorTemp = "WARM") {
         dVerdict,
         dAction,
         motorTemp,
+        config,
+        dMaxRefinement,
     };
 }
 
@@ -1379,6 +1470,72 @@ function formatAnalysisResult(r) {
     }
 
     lines.push(SEP, `  ROLL/PITCH D : ${r.dVerdict}`, SEP, r.dAction);
+
+    // ── Flight 2 refinement — D_Max headroom ──────────────────────────────────
+    if (r.dMaxRefinement) {
+        const ref = r.dMaxRefinement;
+        lines.push(
+            ``,
+            SEP,
+            `  FLIGHT 2 REFINEMENT — D_MAX HEADROOM`,
+            SEP,
+            `D_Max is at Betaflight defaults (Roll: ${ref.dMaxRoll}, Pitch: ${ref.dMaxPitch}).`,
+            `With ${ref.avgOvershoot.toFixed(1)}% average overshoot the D-term ceiling may be too permissive during fast moves.`,
+            ``,
+            `Suggested CLI changes:`,
+            `  set d_max = ${ref.suggestRoll},${ref.suggestPitch},0  # was ${ref.dMaxRoll},${ref.dMaxPitch},0`,
+            `  set d_max_advance = ${ref.suggestAdvance}  # was ${ref.dMaxAdvance}`,
+            ``,
+            `Re-fly the test pattern and re-analyze. If overshoot drops below 15% these values are correct.`,
+        );
+    }
+
+    // ── Suggested CLI commands (populated from BBL header values) ─────────────
+    if (r.config) {
+        const cfg = r.config;
+        const cliLines = [];
+        const needsFilterWork = r.vibLevel === "WEAK ⚠" || r.vibLevel === "FAIR" || r.vibLevel === "VERY WEAK 🔴";
+
+        if (needsFilterWork) {
+            // Gyro LPF2 — only suggest when it is active (0 = disabled, ≥500 = effectively off)
+            const lpf2Hz = cfg.gyroFilters?.lowpass2Hz;
+            if (lpf2Hz !== null && lpf2Hz !== undefined && lpf2Hz > 0 && lpf2Hz < 500) {
+                let reduction = 0;
+                if (r.vibLevel === "VERY WEAK 🔴") {
+                    reduction = 100;
+                } else if (r.vibLevel === "WEAK ⚠") {
+                    reduction = 50;
+                } else if (r.vibLevel === "FAIR") {
+                    reduction = 30;
+                }
+                if (reduction > 0) {
+                    const suggested = Math.max(80, lpf2Hz - reduction);
+                    cliLines.push(`  set gyro_lpf2_static_hz = ${suggested}  # was ${lpf2Hz}`);
+                }
+            }
+
+            // Dynamic notch max Hz — only when notch is active (count > 0)
+            const dynCount = cfg.dynamicNotch?.count;
+            const dynMaxHz = cfg.dynamicNotch?.maxHz;
+            const dynMinHz = cfg.dynamicNotch?.minHz;
+            if (
+                dynCount !== null &&
+                dynCount !== undefined &&
+                dynCount > 0 &&
+                dynMaxHz !== null &&
+                dynMaxHz !== undefined &&
+                dynMaxHz > 0
+            ) {
+                const suggestedMax = Math.max((dynMinHz ?? 100) + 100, dynMaxHz - 100);
+                cliLines.push(`  set dyn_notch_max_hz = ${suggestedMax}  # was ${dynMaxHz}`);
+            }
+        }
+
+        if (cliLines.length > 0) {
+            lines.push(``, SEP, `  SUGGESTED CLI COMMANDS`, SEP, ...cliLines, ``);
+        }
+    }
+
     return lines.join("\n");
 }
 
@@ -1517,13 +1674,14 @@ export default {
             bblBuffer: null,
             tooltip: { visible: false, text: "", x: 0, y: 0 },
             // Auto Tune (chirp sweep)
+            chirpPropInch: 5,
             chirpPitch: 230,
             chirpRoll: 230,
             chirpYaw: 230,
             chirpPitchLevel: "MEDIUM",
             chirpRollLevel: "MEDIUM",
             chirpYawLevel: "MEDIUM",
-            chirpStartHz: 0.2,
+            chirpStartHz: 80,
             chirpEndHz: 600,
             chirpDuration: 20,
             chirpConfigured: false,
@@ -1553,6 +1711,9 @@ export default {
         },
         style(v) {
             this._persistInputs();
+        },
+        chirpPropInch(v) {
+            this.applyChirpPropDefaults(v);
         },
     },
 
@@ -1826,7 +1987,7 @@ export default {
             }
 
             const prefix = sessions.length > 1 ? `Session ${sessionIdx + 1}: ` : "";
-            this.analysisResult = prefix + formatAnalysisResult(analyzeLog(frames, this.motorTemp));
+            this.analysisResult = prefix + formatAnalysisResult(analyzeLog(frames, this.motorTemp, config));
         },
 
         /** Called by the session dropdown — re-analyzes the selected session. */
@@ -1899,8 +2060,19 @@ export default {
             }
         },
 
+        applyChirpPropDefaults(propInch) {
+            const d = chirpDefaultsForProp(propInch);
+            this.chirpStartHz = d.startHz;
+            this.chirpEndHz = d.endHz;
+            // Re-apply current intensity level with prop-appropriate amplitudes
+            this.setChirpLevel("pitch", this.chirpPitchLevel);
+            this.setChirpLevel("roll", this.chirpRollLevel);
+            this.setChirpLevel("yaw", this.chirpYawLevel);
+        },
+
         setChirpLevel(axis, level) {
-            const AMPLITUDES = { EASY: 150, MEDIUM: 230, HARD: 350 };
+            const d = chirpDefaultsForProp(this.chirpPropInch);
+            const AMPLITUDES = { EASY: d.easy, MEDIUM: d.medium, HARD: d.hard };
             const amp = AMPLITUDES[level];
             if (axis === "pitch") {
                 this.chirpPitchLevel = level;
