@@ -35,6 +35,7 @@ import "../css/dark-theme.less";
 import "./main";
 
 import GUI from "./gui";
+import { i18n } from "./localization";
 import { Workbox } from "workbox-window";
 import { isAndroid } from "./utils/checkCompatibility.js";
 import { createApp } from "vue";
@@ -95,10 +96,9 @@ if (!isAndroid() && "serviceWorker" in navigator) {
         }
     });
 
-    wb.register().then(() => {
-        // GitHub Pages cannot set Cache-Control: no-cache on sw.js, so the browser
-        // may serve a stale copy.  Calling wb.update() forces an unconditional network
-        // fetch and byte-for-byte diff — the most reliable client-side workaround.
-        setInterval(() => wb.update(), 60 * 60 * 1000);
-    });
+    await wb.register();
+    // GitHub Pages cannot set Cache-Control: no-cache on sw.js, so the browser
+    // may serve a stale copy.  Calling wb.update() forces an unconditional network
+    // fetch and byte-for-byte diff — the most reliable client-side workaround.
+    setInterval(() => wb.update(), 60 * 60 * 1000);
 }

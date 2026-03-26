@@ -8,6 +8,16 @@
 import { defineComponent, ref, watch, onMounted, onUnmounted } from "vue";
 import * as d3 from "d3";
 
+// Empirical percentile from a pre-sorted array (ascending).
+// p in [0, 1]. Returns the value at the p-th fractile.
+function percentile(sorted, p) {
+    if (sorted.length === 0) {
+        return 0;
+    }
+    const idx = Math.max(0, Math.ceil(sorted.length * p) - 1);
+    return sorted[Math.min(idx, sorted.length - 1)];
+}
+
 export default defineComponent({
     name: "GpsAccuracyPlot",
     props: {
@@ -22,16 +32,10 @@ export default defineComponent({
         const containerRef = ref(null);
         let rafId = null;
 
-        // Empirical percentile from a pre-sorted array (ascending).
-        // p in [0, 1]. Returns the value at the p-th fractile.
-        function percentile(sorted, p) {
-            if (sorted.length === 0) return 0;
-            const idx = Math.max(0, Math.ceil(sorted.length * p) - 1);
-            return sorted[Math.min(idx, sorted.length - 1)];
-        }
-
         const scheduleDraw = () => {
-            if (rafId !== null) return;
+            if (rafId !== null) {
+                return;
+            }
             rafId = requestAnimationFrame(() => {
                 rafId = null;
                 draw();
@@ -39,7 +43,9 @@ export default defineComponent({
         };
 
         const draw = () => {
-            if (!svgRef.value || !containerRef.value) return;
+            if (!svgRef.value || !containerRef.value) {
+                return;
+            }
 
             const svg = d3.select(svgRef.value);
             svg.selectAll("*").remove();
@@ -84,7 +90,7 @@ export default defineComponent({
             }));
 
             // ── Accuracy statistics (empirical percentiles) ────────────────
-            const radii = pts.map((p) => Math.sqrt(p.x * p.x + p.y * p.y)).sort((a, b) => a - b);
+            const radii = pts.map((p) => Math.hypot(p.x, p.y)).sort((a, b) => a - b);
 
             const cep50 = percentile(radii, 0.5); // 50th %ile — CEP 50%
             const cep95 = percentile(radii, 0.95); // 95th %ile — CEP 95%  (= 2σ display)
@@ -155,7 +161,9 @@ export default defineComponent({
 
                 ringDefs.forEach(({ r, color, dash, labelAngle }) => {
                     const rPx = r * scale;
-                    if (rPx < 1) return;
+                    if (rPx < 1) {
+                        return;
+                    }
 
                     svg.append("circle")
                         .attr("cx", cx)
@@ -256,11 +264,15 @@ export default defineComponent({
         onMounted(() => {
             scheduleDraw();
             ro = new ResizeObserver(scheduleDraw);
-            if (containerRef.value) ro.observe(containerRef.value);
+            if (containerRef.value) {
+                ro.observe(containerRef.value);
+            }
         });
         onUnmounted(() => {
             ro?.disconnect();
-            if (rafId !== null) cancelAnimationFrame(rafId);
+            if (rafId !== null) {
+                cancelAnimationFrame(rafId);
+            }
         });
 
         // Fires on every push/splice — watches the array length, not deep content.

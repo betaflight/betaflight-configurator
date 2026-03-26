@@ -143,6 +143,7 @@ export default defineConfig({
         }),
         VitePWA({
             registerType: "prompt",
+            injectRegister: false,
             workbox: {
                 globPatterns: ["**/*.{js,css,html,ico,png,svg,json,mcm,gltf}"],
                 // 5MB

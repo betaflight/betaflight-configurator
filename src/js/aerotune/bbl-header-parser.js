@@ -9,7 +9,7 @@
  * Written from scratch by aerobot2.com
  * Reference: BBL format specification (public documentation)
  *
- * © 2026 aerobot2.com — All Rights Reserved
+ * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 class BBLHeaderParser {
@@ -367,9 +367,9 @@ class BBLHeaderParser {
 
         for (let i = 0; i < frameTypes.length; i++) {
             let ft = frameTypes[i];
-            let nameKey = `Field ${  ft  } name`;
-            let hasPred = raw[`Field ${  ft  } predictor`] !== undefined;
-            let hasEnc = raw[`Field ${  ft  } encoding`] !== undefined;
+            let nameKey = `Field ${ft} name`;
+            let hasPred = raw[`Field ${ft} predictor`] !== undefined;
+            let hasEnc = raw[`Field ${ft} encoding`] !== undefined;
 
             if (raw[nameKey]) {
                 // Has its own field names
@@ -377,9 +377,9 @@ class BBLHeaderParser {
                     names: raw[nameKey].split(",").map(function (s) {
                         return s.trim();
                     }),
-                    signed: this._csv(raw[`Field ${  ft  } signed`]),
-                    predictor: this._csv(raw[`Field ${  ft  } predictor`]),
-                    encoding: this._csv(raw[`Field ${  ft  } encoding`]),
+                    signed: this._csv(raw[`Field ${ft} signed`]),
+                    predictor: this._csv(raw[`Field ${ft} predictor`]),
+                    encoding: this._csv(raw[`Field ${ft} encoding`]),
                 };
             } else if ((hasPred || hasEnc) && fields.I) {
                 // BF 4.5+: P-frames have predictor/encoding but no name header.
@@ -387,8 +387,8 @@ class BBLHeaderParser {
                 fields[ft] = {
                     names: fields.I.names,
                     signed: fields.I.signed,
-                    predictor: this._csv(raw[`Field ${  ft  } predictor`]),
-                    encoding: this._csv(raw[`Field ${  ft  } encoding`]),
+                    predictor: this._csv(raw[`Field ${ft} predictor`]),
+                    encoding: this._csv(raw[`Field ${ft} encoding`]),
                 };
             }
         }
