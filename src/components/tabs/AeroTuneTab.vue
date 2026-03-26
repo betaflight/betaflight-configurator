@@ -244,9 +244,7 @@
                     <div class="at-panel" style="margin-bottom: 12px">
                         <div class="at-panel-header">WORKFLOW</div>
                         <div class="at-panel-body" style="font-size: 12px; color: var(--subtleText); line-height: 1.8">
-                            1. Fly your quad with the calculated PIDs &nbsp;·&nbsp; 2. Export Blackbox CSV from
-                            Betaflight Blackbox Explorer &nbsp;·&nbsp; 3. Load it below &nbsp;·&nbsp; 4. Analyze filter
-                            effectiveness at high throttle
+                            {{ workflowInstructions }}
                         </div>
                     </div>
 
@@ -268,7 +266,9 @@
                             </div>
 
                             <div class="at-file-row">
-                                <label class="at-file-label" @click="$refs.fileInput.click()">Select BFL or CSV</label>
+                                <button type="button" class="at-file-label" @click="$refs.fileInput.click()">
+                                    Select BBL / BFL / CSV
+                                </button>
                                 <input
                                     type="file"
                                     ref="fileInput"
@@ -340,16 +340,7 @@
                     </ul>
 
                     <h3>STEP 3: ANALYZE THE LOG</h3>
-                    <ul>
-                        <li>
-                            Pull the SD card, open the <code>.BBL</code> file in
-                            <a href="https://blackbox.betaflight.com/" target="_blank"
-                                ><strong>Betaflight Blackbox Explorer</strong></a
-                            >
-                        </li>
-                        <li>Export as CSV (File → Export CSV)</li>
-                        <li>Come back to AeroTune Analyzer tab, load your CSV and click ANALYZE</li>
-                    </ul>
+                    <p style="font-size: 12px; color: var(--subtleText)">{{ workflowInstructions }}</p>
 
                     <h3>INTERPRETING RESULTS</h3>
                     <ul>
@@ -697,6 +688,10 @@ const FF_BY_STYLE = {
 
 function interpolateKV(kv) {
     kv = Number.parseFloat(kv);
+    const kvKeys = Object.keys(KV_BASELINE).map(Number);
+    const minKey = Math.min(...kvKeys);
+    const maxKey = Math.max(...kvKeys);
+    kv = Math.max(minKey, Math.min(maxKey, kv));
     if (KV_BASELINE[kv] !== undefined) {
         return KV_BASELINE[kv];
     }
@@ -1694,23 +1689,36 @@ export default {
         canApply() {
             return this.showResults && CONFIGURATOR.connectionValid;
         },
+        workflowInstructions() {
+            return "1. Fly your quad with the calculated PIDs · 2. Export Blackbox .bbl/.bfl from Betaflight Blackbox Explorer · 3. Load it below · 4. Analyze filter effectiveness at high throttle";
+        },
     },
 
     watch: {
         kv(v) {
             this._persistInputs();
+            this.showResults = false;
+            this.pids = {};
         },
         voltage(v) {
             this._persistInputs();
+            this.showResults = false;
+            this.pids = {};
         },
         prop(v) {
             this._persistInputs();
+            this.showResults = false;
+            this.pids = {};
         },
         weight(v) {
             this._persistInputs();
+            this.showResults = false;
+            this.pids = {};
         },
         style(v) {
             this._persistInputs();
+            this.showResults = false;
+            this.pids = {};
         },
         chirpPropInch(v) {
             this.applyChirpPropDefaults(v);
@@ -1818,11 +1826,7 @@ export default {
 </ul>
 
 <h3>STEP 3: ANALYZE THE LOG</h3>
-<ul>
-  <li>Pull the SD card, open the <code>.BBL</code> file in <a href="https://blackbox.betaflight.com/" target="_blank" rel="noopener"><strong>Betaflight Blackbox Explorer</strong></a></li>
-  <li>Export as CSV (File → Export CSV)</li>
-  <li>Come back to AeroTune Analyzer tab, load your CSV and click ANALYZE</li>
-</ul>
+<p>${this.workflowInstructions}</p>
 
 <h3>INTERPRETING RESULTS</h3>
 <ul>
@@ -2007,6 +2011,9 @@ export default {
             if (!file) {
                 return;
             }
+            this.bblBuffer = null;
+            this.bblSessions = [];
+            this.bblSelectedSession = 0;
             this.csvFile = file;
             this.fileName = file.name;
         },

@@ -13,8 +13,6 @@
 - GPS Accuracy Plot: CEP50/CEP95 rings, freshness-coloured scatter, 1σ/2σ stats
 - SonarCloud quality fixes across AeroTuneTab, FilterResponseChart, GpsAccuracyPlot
 
-# Betaflight App
-
 [![Latest version](https://img.shields.io/github/v/release/betaflight/betaflight-configurator)](https://github.com/betaflight/betaflight-configurator/releases)
 [![Build](https://img.shields.io/github/actions/workflow/status/betaflight/betaflight-configurator/deploy.yml?branch=master)](https://github.com/betaflight/betaflight-configurator/actions/workflows/deploy.yml)
 [![Crowdin](https://d322cqt584bo4o.cloudfront.net/betaflight-configurator/localized.svg)](https://crowdin.com/project/betaflight-configurator)
