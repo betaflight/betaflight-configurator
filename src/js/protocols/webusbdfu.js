@@ -20,6 +20,16 @@ import { usbDevices } from "./devices";
 import NotificationManager from "../utils/notifications";
 import { get as getConfig } from "../ConfigStorage";
 
+// Error constant used when an already-authorized DFU device isn't found
+export const DFU_AUTH_REQUIRED = "DFU_AUTH_REQUIRED";
+
+export class DFUAuthRequiredError extends Error {
+    constructor() {
+        super(DFU_AUTH_REQUIRED);
+        this.name = "DFUAuthRequiredError";
+        this.code = DFU_AUTH_REQUIRED;
+    }
+}
 class WEBUSBDFU_protocol extends EventTarget {
     constructor() {
         super();
@@ -126,6 +136,38 @@ class WEBUSBDFU_protocol extends EventTarget {
             console.error("User didn't select any USB device when requesting permission:", error);
         }
         return newPermissionPort;
+    }
+
+    /**
+     * Wait for a DFU device to appear among already-authorized USB devices.
+     * If none appear within `timeout`, rejects with an Error(DFU_AUTH_REQUIRED).
+     * This allows the caller to present a user gesture to call `requestDevice`.
+     */
+    async waitForDfu(timeout = 10000, interval = 500) {
+        const start = Date.now();
+
+        while (Date.now() - start < timeout) {
+            try {
+                const ports = await navigator.usb.getDevices();
+                // Use usbDevices.filters to decide which DFU devices we consider.
+                // Simplify: require both vendorId and productId to be present and match.
+                const filters = usbDevices?.filters || [];
+                const dfuPort = ports.find((p) => {
+                    return filters.some((f) => p.vendorId === f.vendorId && p.productId === f.productId);
+                });
+
+                if (dfuPort) {
+                    return this.handleNewDevice(dfuPort);
+                }
+            } catch (e) {
+                console.warn(`${this.logHead} waitForDfu getDevices failed:`, e);
+            }
+
+            await new Promise((r) => setTimeout(r, interval));
+        }
+
+        // No already-authorized DFU device found within timeout: caller must ask user
+        throw new DFUAuthRequiredError();
     }
     getConnectedPort() {
         return this.usbDevice ? `usb_${this.usbDevice.serialNumber}` : null;

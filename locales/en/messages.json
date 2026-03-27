@@ -1918,6 +1918,9 @@
     "configurationButtonSave": {
         "message": "Save and Reboot"
     },
+    "dialogClose": {
+        "message": "Close"
+    },
     "dialogDynFiltersChangeTitle": {
         "message": "Dynamic Notch values change"
     },
@@ -2873,6 +2876,20 @@
     "adjustmentsColumnViaChannel": {
         "message": "via channel"
     },
+    "adjustmentsColumnAdjustmentCenter": {
+        "message": "w/ center (val.)"
+    },
+    "adjustmentsColumnAdjustmentScale": {
+        "message": "and range|scale (val.|%)"
+    },
+    "adjustmentsCenterHelp": {
+        "message": "Sets the mid-point or reference value used by the adjustment function.<br /><br /><strong>Slider Adjustments:</strong><br />For slider adjustments, set Adjustment Center to 0. The current slider position will be utilized for the adjustment up/down.<br /><br /><strong>Selection Adjustments:</strong><br />Set Adjustment Center to 0, or to a specific microsecond (uS) value if you want to offset the switch reference point from 1500uS when initiating the RC adjustment.<br /><br /><strong>Stepped Adjustments:</strong><br />Set Adjustment Center to 0 for the current value of the item being adjusted to be utilized.<br /><br /><strong>Absolute Adjustments:</strong><br />To use the Absolute adjustment method, you must set both Adjustment Center and Scale to specify the desired value and range. The range is calculated as: Center ± Scale. For example, setting Adjustment Center to 50 and Adjustment Scale to 25 creates a range from 25 to 75, with the center position (switch or POT) mapped to 50.<br /><br />Visit <a href=\"https://www.betaflight.com/docs/development/Inflight-Adjustments\" target=\"_blank\" rel=\"noopener noreferrer\">this page</a> for more info.",
+        "description": "Tooltip help text for the Adjustment Center column"
+    },
+    "adjustmentsScaleHelp": {
+        "message": "Controls the scaling or range of the adjustment; higher values increase the adjustment range or sensitivity.<br /><br /><strong>Slider Adjustments:</strong><br />For Slider adjustments, Adjustment Scale controls the scaling/sensitivity of the adjustment. A value of 50 equals 50% of the slider range. Setting to 0 utilizes the default scale for sliders.<br /><br /><strong>Selection Adjustments:</strong><br />For Selection adjustments, set Adjustment Scale to 0 for default behavior, or specify a microsecond (uS) value to limit the range. For example: Set Adjustment Center to 1000 (uS) and Adjustment Scale to 500 (uS) to utilize a 3-position switch as a 2-position switch.<br /><br /><strong>Stepped and Absolute Adjustments:</strong><br />For Stepped and Absolute adjustments, Adjustment Scale defines the range above and below the Adjustment Center. For example, a value of 25 creates an adjustment range of ±25 from the Adjustment Center value, or from the current value if Adjustment Center is set to 0.<br /><strong>Note:</strong> To use the Absolute adjustment method with a potentiometer, an Adjustment Scale value must be specified.<br /><br />Visit <a href=\"https://www.betaflight.com/docs/development/Inflight-Adjustments\" target=\"_blank\" rel=\"noopener noreferrer\">this page</a> for more info.",
+        "description": "Tooltip help text for the Adjustment Scale column"
+    },
     "adjustmentsSlot0": {
         "message": "Slot 1"
     },
@@ -2989,6 +3006,10 @@
     },
     "adjustmentsFunction32": {
         "message": "Slider Master Multiplier"
+    },
+    "adjustmentsFunction33": {
+        "message": "Battery Profile Selection",
+        "description": "Allows switching battery profiles via RC channel"
     },
     "adjustmentsSave": {
         "message": "Save"
@@ -4124,6 +4145,9 @@
     "firmwareFlasherUF2SaveFailed": {
         "message": "Failed to save (flash) UF2"
     },
+    "firmwareFlasherClickToConnectDfu": {
+        "message": "Click to connect to DFU device"
+    },
     "firmwareFlasherConfigCorrupted": {
         "message": "Config file appears to be corrupted, ASCII accepted (chars 0-255)",
         "description": "shown in the progress bar at the bottom, be brief"
@@ -5053,12 +5077,6 @@
     "pidTuningItermRotationHelp": {
         "message": "Rotates the current I Term vector properly to other axes as the aircraft rotates when yawing continuously during rolls and when performing funnels and other tricks. Very appreciated by LOS acro pilots."
     },
-    "pidTuningSmartFeedforward": {
-        "message": "Smart Feedforward"
-    },
-    "pidTuningSmartFeedforwardHelp": {
-        "message": "Reduces the effect of the F Term in the PID. When both the P Term and the F Term are active at the same moment, it only uses the larger of the two, avoiding overshoots without the needing to raise D, but also reduces the responsiveness effect produced by the F term when added to P."
-    },
     "pidTuningItermRelax": {
         "message": "I Term Relax"
     },
@@ -5580,6 +5598,18 @@
     "powerAmperageCalibratedScale": {
         "message": "Calibrated Amperage Scale:"
     },
+    "powerBatteryProfile": {
+        "message": "Battery Profile"
+    },
+    "powerBatteryProfileOption": {
+        "message": "Battery Profile $1"
+    },
+    "powerBatteryProfileNamePlaceholder": {
+        "message": "e.g. LiPo, Li-Ion"
+    },
+    "powerBatteryProfileNameLabel": {
+        "message": "Profile Name"
+    },
     "powerBatteryHead": {
         "message": "Battery"
     },
@@ -5805,6 +5835,9 @@
     },
     "osdSetupUploadingFontEnd": {
         "message": "Uploaded all {{length}} characters to the OSD"
+    },
+    "osdSetupUploadingFontFailed": {
+        "message": "Upload failed"
     },
 
     "osdSetupSave": {
@@ -7833,7 +7866,7 @@
         "message": "Please wait.",
         "description": "Second label in the progress dialog when applying presets"
     },
-    "presetsCliErrorsWaring": {
+    "presetsCliErrorsWarning": {
         "message": "<span class='message-negative'>WARNING!</span><br/>Configuration has been applied with CLI errors.",
         "description": "Text to show when there are CLI errors after applying presets or user configuration"
     },
@@ -7853,6 +7886,14 @@
         "message": "Cancel",
         "description": "Cancel button in the presets warning dialog"
     },
+    "presetsFavoriteAddAriaLabel": {
+        "message": "Add favorite preset",
+        "description": "Accessible label for the button that favorites a preset"
+    },
+    "presetsFavoriteRemoveAriaLabel": {
+        "message": "Remove favorite preset",
+        "description": "Accessible label for the button that removes a preset from favorites"
+    },
     "presetsWiki": {
         "message": "Presets Wiki",
         "description": "Button to open Presets Wiki link"
@@ -7864,6 +7905,10 @@
     "presetsBackupLoad": {
         "message": "Load backup",
         "description": "Button to load backup from the file"
+    },
+    "presetsVirtualModeCliUnsupported": {
+        "message": "Preset apply and backup actions require the CLI, which is not available in Virtual Mode.",
+        "description": "Warning shown when a presets CLI action is attempted in Virtual Mode"
     },
     "presetsLoadingDumpAll": {
         "message": "Loading current configuration from the flight controller",
@@ -8069,6 +8114,20 @@
     "osdDescElementLidar": {
         "message": "$t(osdTextElementLidar.message)",
         "description": "Don't translate!!!"
+    },
+    "osdTextElementCustomSerialText": {
+        "message": "Custom serial text",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementCustomSerialText": {
+        "message": "Displays custom text received from a serial port"
+    },
+    "osdTextElementBatteryProfileName": {
+        "message": "Profile: Battery profile name",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementBatteryProfileName": {
+        "message": "Shows the active battery profile name or index"
     },
     "osdSetupPreviewCheckRulers": {
         "message": "Rulers",
@@ -8295,5 +8354,550 @@
     },
     "sectionUserPasskeys": {
         "message": "User Passkeys"
+    },
+    "osdPresetPositionAlignTitle": {
+        "message": "Align to position",
+        "description": "Label for the preset position alignment menu in the OSD elements list"
+    },
+    "osdPresetPositionChooseTitle": {
+        "message": "Choose Position",
+        "description": "Title for the preset position grid popup in the OSD elements list"
+    },
+    "tabPreflight": {
+        "message": "Pre-Flight"
+    },
+    "preflightTitle": {
+        "message": "Pre-Flight Environment Check"
+    },
+    "preflightLocation": {
+        "message": "Flight Location"
+    },
+    "preflightUseMyLocation": {
+        "message": "Use My Location"
+    },
+    "preflightDetecting": {
+        "message": "Detecting..."
+    },
+    "preflightOr": {
+        "message": "or enter coordinates:"
+    },
+    "preflightLatitude": {
+        "message": "Latitude"
+    },
+    "preflightLongitude": {
+        "message": "Longitude"
+    },
+    "preflightApply": {
+        "message": "Apply"
+    },
+    "preflightLaunchStatus": {
+        "message": "Launch Status"
+    },
+    "preflightStatusGo": {
+        "message": "GO"
+    },
+    "preflightStatusCaution": {
+        "message": "CAUTION"
+    },
+    "preflightStatusWarning": {
+        "message": "WARNING"
+    },
+    "preflightStatusNoGo": {
+        "message": "NO-GO"
+    },
+    "preflightStatusNoData": {
+        "message": "No Data"
+    },
+    "preflightCheckWind": {
+        "message": "Wind"
+    },
+    "preflightCheckVisibility": {
+        "message": "Visibility"
+    },
+    "preflightCheckPrecipitation": {
+        "message": "Precipitation"
+    },
+    "preflightCheckSolar": {
+        "message": "Solar"
+    },
+    "preflightLevelUnknown": {
+        "message": "Unknown"
+    },
+    "preflightWmoClearSky": {
+        "message": "Clear sky"
+    },
+    "preflightWmoMainlyClear": {
+        "message": "Mainly clear"
+    },
+    "preflightWmoPartlyCloudy": {
+        "message": "Partly cloudy"
+    },
+    "preflightWmoOvercast": {
+        "message": "Overcast"
+    },
+    "preflightWmoFog": {
+        "message": "Fog"
+    },
+    "preflightWmoRimeFog": {
+        "message": "Depositing rime fog"
+    },
+    "preflightWmoLightDrizzle": {
+        "message": "Light drizzle"
+    },
+    "preflightWmoModerateDrizzle": {
+        "message": "Moderate drizzle"
+    },
+    "preflightWmoDenseDrizzle": {
+        "message": "Dense drizzle"
+    },
+    "preflightWmoLightFreezingDrizzle": {
+        "message": "Light freezing drizzle"
+    },
+    "preflightWmoDenseFreezingDrizzle": {
+        "message": "Dense freezing drizzle"
+    },
+    "preflightWmoSlightRain": {
+        "message": "Slight rain"
+    },
+    "preflightWmoModerateRain": {
+        "message": "Moderate rain"
+    },
+    "preflightWmoHeavyRain": {
+        "message": "Heavy rain"
+    },
+    "preflightWmoLightFreezingRain": {
+        "message": "Light freezing rain"
+    },
+    "preflightWmoHeavyFreezingRain": {
+        "message": "Heavy freezing rain"
+    },
+    "preflightWmoSlightSnow": {
+        "message": "Slight snow"
+    },
+    "preflightWmoModerateSnow": {
+        "message": "Moderate snow"
+    },
+    "preflightWmoHeavySnow": {
+        "message": "Heavy snow"
+    },
+    "preflightWmoSnowGrains": {
+        "message": "Snow grains"
+    },
+    "preflightWmoSlightRainShowers": {
+        "message": "Slight rain showers"
+    },
+    "preflightWmoModerateRainShowers": {
+        "message": "Moderate rain showers"
+    },
+    "preflightWmoViolentRainShowers": {
+        "message": "Violent rain showers"
+    },
+    "preflightWmoSlightSnowShowers": {
+        "message": "Slight snow showers"
+    },
+    "preflightWmoHeavySnowShowers": {
+        "message": "Heavy snow showers"
+    },
+    "preflightWmoThunderstorm": {
+        "message": "Thunderstorm"
+    },
+    "preflightWmoThunderstormSlightHail": {
+        "message": "Thunderstorm with slight hail"
+    },
+    "preflightWmoThunderstormHeavyHail": {
+        "message": "Thunderstorm with heavy hail"
+    },
+    "preflightKpLow": {
+        "message": "Low"
+    },
+    "preflightKpModerate": {
+        "message": "Moderate"
+    },
+    "preflightKpElevated": {
+        "message": "Elevated"
+    },
+    "preflightKpStorm": {
+        "message": "Storm"
+    },
+    "preflightWindCalm": {
+        "message": "Calm"
+    },
+    "preflightWindLight": {
+        "message": "Light"
+    },
+    "preflightWindModerate": {
+        "message": "Moderate"
+    },
+    "preflightWindStrong": {
+        "message": "Strong"
+    },
+    "preflightWindDangerous": {
+        "message": "Dangerous"
+    },
+    "preflightVisExcellent": {
+        "message": "Excellent"
+    },
+    "preflightVisGood": {
+        "message": "Good"
+    },
+    "preflightVisReduced": {
+        "message": "Reduced"
+    },
+    "preflightVisPoor": {
+        "message": "Poor"
+    },
+    "preflightPrecipNone": {
+        "message": "None"
+    },
+    "preflightPrecipLight": {
+        "message": "Light"
+    },
+    "preflightPrecipModerate": {
+        "message": "Moderate"
+    },
+    "preflightPrecipHeavy": {
+        "message": "Heavy"
+    },
+    "preflightDewNoRisk": {
+        "message": "No risk"
+    },
+    "preflightDewLowRisk": {
+        "message": "Low risk"
+    },
+    "preflightDewFogLikely": {
+        "message": "Fog/condensation likely"
+    },
+    "preflightDewFogExpected": {
+        "message": "Fog/lens fogging expected"
+    },
+    "preflightUvLow": {
+        "message": "Low"
+    },
+    "preflightUvModerate": {
+        "message": "Moderate"
+    },
+    "preflightUvHigh": {
+        "message": "High"
+    },
+    "preflightUvVeryHigh": {
+        "message": "Very High"
+    },
+    "preflightBatteryRisk": {
+        "message": "Battery Risk"
+    },
+    "preflightBatteryOk": {
+        "message": "Normal range"
+    },
+    "preflightBatteryCool": {
+        "message": "Reduced performance, warm batteries"
+    },
+    "preflightBatteryCold": {
+        "message": "Severely reduced capacity"
+    },
+    "preflightBatteryHot": {
+        "message": "Risk of swelling, keep shaded"
+    },
+    "preflightBatteryExtreme": {
+        "message": "Do not fly, extreme heat"
+    },
+    "preflightCheckBattery": {
+        "message": "Battery"
+    },
+    "preflightCheckDensityAlt": {
+        "message": "Density Alt"
+    },
+    "preflightFeelsLike": {
+        "message": "Feels Like"
+    },
+    "preflightFogRisk": {
+        "message": "Fog Risk"
+    },
+    "preflightFogUnlikely": {
+        "message": "Unlikely"
+    },
+    "preflightFogLow": {
+        "message": "Low risk"
+    },
+    "preflightFogModerate": {
+        "message": "Moderate risk"
+    },
+    "preflightFogHigh": {
+        "message": "High risk"
+    },
+    "preflightElevation": {
+        "message": "Elevation"
+    },
+    "preflightDensityAlt": {
+        "message": "Density Altitude"
+    },
+    "preflightDaNormal": {
+        "message": "Normal performance"
+    },
+    "preflightDaReduced": {
+        "message": "Slightly reduced lift"
+    },
+    "preflightDaLow": {
+        "message": "Noticeably reduced performance"
+    },
+    "preflightDaPoor": {
+        "message": "Significant lift reduction"
+    },
+    "preflightCivilTwilight": {
+        "message": "Civil Twilight Window"
+    },
+    "preflightRefresh": {
+        "message": "Refresh"
+    },
+    "preflightCurrentWeather": {
+        "message": "Current Weather"
+    },
+    "preflightWind": {
+        "message": "Wind Speed"
+    },
+    "preflightGusts": {
+        "message": "Wind Gusts"
+    },
+    "preflightVisibility": {
+        "message": "Visibility"
+    },
+    "preflightPrecipitation": {
+        "message": "Precipitation"
+    },
+    "preflightCloudCover": {
+        "message": "Cloud Cover"
+    },
+    "preflightHumidity": {
+        "message": "Humidity"
+    },
+    "preflightPressure": {
+        "message": "Pressure"
+    },
+    "preflightDewPoint": {
+        "message": "Dew Point"
+    },
+    "preflightFlightWindow": {
+        "message": "Flight Window"
+    },
+    "preflightSunrise": {
+        "message": "Sunrise"
+    },
+    "preflightSunset": {
+        "message": "Sunset"
+    },
+    "preflightDaylight": {
+        "message": "Daylight"
+    },
+    "preflightUvIndex": {
+        "message": "UV Index"
+    },
+    "preflightTempRange": {
+        "message": "Temp Range"
+    },
+    "preflightCurrentlyDay": {
+        "message": "Currently"
+    },
+    "preflightDaytime": {
+        "message": "Daytime"
+    },
+    "preflightNighttime": {
+        "message": "Nighttime"
+    },
+    "preflightWindForecast": {
+        "message": "Wind at Altitude Forecast"
+    },
+    "preflightWindForecastHelp": {
+        "message": "Wind speeds at different altitudes are critical for long-range and high-altitude FPV flights. Higher altitudes typically have stronger winds."
+    },
+    "preflightTime": {
+        "message": "Time"
+    },
+    "preflightWind10m": {
+        "message": "10m"
+    },
+    "preflightWind80m": {
+        "message": "80m"
+    },
+    "preflightWind120m": {
+        "message": "120m"
+    },
+    "preflightGustsShort": {
+        "message": "Gusts"
+    },
+    "preflightRainProb": {
+        "message": "Rain %"
+    },
+    "preflightWindUnit": {
+        "message": "Wind speeds in m/s. Altitudes above ground level (AGL)."
+    },
+    "preflightSolarActivity": {
+        "message": "Solar Activity"
+    },
+    "preflightSolarHelp": {
+        "message": "High solar activity (Kp > 5) causes ionospheric interference, which can degrade GPS accuracy and affect GPS Rescue reliability."
+    },
+    "preflightGeoStorm": {
+        "message": "Geomagnetic Storm"
+    },
+    "preflightSolarRadiation": {
+        "message": "Solar Radiation"
+    },
+    "preflightRadioBlackout": {
+        "message": "Radio Blackout"
+    },
+    "preflightLastMeasurement": {
+        "message": "Last measurement"
+    },
+    "preflightLoadingSolar": {
+        "message": "Loading solar data..."
+    },
+    "preflightGNSS": {
+        "message": "GNSS / GPS Status"
+    },
+    "preflightGNSSHelp": {
+        "message": "GNSS satellite signal quality is affected by solar activity. High Kp values can degrade GPS position accuracy and reduce GPS Rescue reliability."
+    },
+    "preflightGNSSNote": {
+        "message": "GPS accuracy is affected by solar/geomagnetic conditions. Connect your quad for live satellite data on the GPS tab."
+    },
+    "preflightKpEffect": {
+        "message": "Ionospheric Impact"
+    },
+    "preflightGPSRescue": {
+        "message": "GPS Rescue Status"
+    },
+    "preflightMagDeclination": {
+        "message": "Magnetic Declination"
+    },
+    "preflightMagInclination": {
+        "message": "Magnetic Inclination"
+    },
+    "preflightGNSSPlanner": {
+        "message": "GNSS Satellite Planning Tool"
+    },
+    "preflightAirspace": {
+        "message": "Airspace & No-Fly Zones"
+    },
+    "preflightAirspaceNote": {
+        "message": "Always check local airspace restrictions and NOTAMs before flying. Rules vary by country and region."
+    },
+    "preflightDroneSafetyMap": {
+        "message": "Drone Safety Map (Altitude Angel)"
+    },
+    "preflightAirspaceExplorer": {
+        "message": "SkyVector Airspace Chart"
+    },
+    "preflightNOTAMs": {
+        "message": "FAA NOTAMs (US)"
+    },
+    "preflightNOTAMsEU": {
+        "message": "EUROCONTROL NOTAMs (EU)"
+    },
+    "preflightMap": {
+        "message": "Location Map"
+    },
+    "preflightNoData": {
+        "message": "Set a location to load environment data"
+    },
+    "preflightAttribution": {
+        "message": "Weather data: Open-Meteo.com (CC BY 4.0) | Solar data: NOAA Space Weather Prediction Center"
+    },
+    "preflightSavedLocationsPlaceholder": {
+        "message": "Saved locations..."
+    },
+    "preflightLoadLocation": {
+        "message": "Load"
+    },
+    "preflightSaveLocation": {
+        "message": "Save"
+    },
+    "preflightSavedLocationsFull": {
+        "message": "Maximum of 5 saved locations reached"
+    },
+    "preflightLocationLabel": {
+        "message": "Location name (max 20 chars)"
+    },
+    "preflightDeleteLocation": {
+        "message": "Delete selected location"
+    },
+    "preflightRenameLocation": {
+        "message": "Rename selected location"
+    },
+    "preflightRenameLocationBtn": {
+        "message": "Rename"
+    },
+    "preflightCoordinates": {
+        "message": "Coordinates"
+    },
+    "preflightSaveLocationBtn": {
+        "message": "Save Location"
+    },
+    "preflightConfirmSave": {
+        "message": "Save"
+    },
+    "preflightCancel": {
+        "message": "Cancel"
+    },
+    "preflightGeolocationFailed": {
+        "message": "Could not detect location. Please enter coordinates manually."
+    },
+    "preflightIpConsentMessage": {
+        "message": "Browser location failed. Your approximate location can be detected using your IP address via ipapi.co, a third-party service."
+    },
+    "preflightIpConsentAllow": {
+        "message": "Allow"
+    },
+    "preflightIpConsentDeny": {
+        "message": "No thanks"
+    },
+    "preflightMapSatellite": {
+        "message": "Satellite view"
+    },
+    "preflightMapHybrid": {
+        "message": "Hybrid satellite and street view"
+    },
+    "preflightMapStreet": {
+        "message": "Street map view"
+    },
+    "preflightMapZoomIn": {
+        "message": "Zoom in"
+    },
+    "preflightMapZoomOut": {
+        "message": "Zoom out"
+    },
+    "preflightMapFullscreen": {
+        "message": "Toggle fullscreen"
+    },
+    "preflightKpMinimal": {
+        "message": "Minimal impact on GPS"
+    },
+    "preflightKpDegraded": {
+        "message": "Possible GPS accuracy degradation"
+    },
+    "preflightKpSevere": {
+        "message": "Significant GPS interference expected"
+    },
+    "preflightGpsRescueUnknown": {
+        "message": "Check solar activity first"
+    },
+    "preflightGpsRescueReliable": {
+        "message": "GPS Rescue reliable"
+    },
+    "preflightGpsRescueUnreliable": {
+        "message": "GPS Rescue may be unreliable"
+    },
+    "preflightGpsRescueNotRecommended": {
+        "message": "GPS Rescue NOT recommended"
+    },
+    "preflightForecast": {
+        "message": "5-Day Forecast"
+    },
+    "preflightForecastHelp": {
+        "message": "Daily weather overview to help plan flight sessions ahead"
+    },
+    "preflightForecastDay": {
+        "message": "Day"
+    },
+    "preflightForecastWeather": {
+        "message": "Weather"
     }
 }

@@ -11,6 +11,14 @@
                     <div class="header-range">{{ $t("adjustmentsColumnIsInRange") }}</div>
                     <div class="header-function">{{ $t("adjustmentsColumnThenApplyFunction") }}</div>
                     <div class="header-via">{{ $t("adjustmentsColumnViaChannel") }}</div>
+                    <div class="header-center">
+                        {{ $t("adjustmentsColumnAdjustmentCenter") }}
+                        <div class="helpicon cf_tip" i18n_title="adjustmentsCenterHelp"></div>
+                    </div>
+                    <div class="header-scale">
+                        {{ $t("adjustmentsColumnAdjustmentScale") }}
+                        <div class="helpicon cf_tip" i18n_title="adjustmentsScaleHelp"></div>
+                    </div>
                 </div>
 
                 <div class="adjustments-list">
@@ -108,6 +116,28 @@
                                 <option v-for="ch in auxChannelCount" :key="ch" :value="ch - 1">AUX {{ ch }}</option>
                             </select>
                         </div>
+
+                        <div class="adjustment-center" :data-label="$t('adjustmentsColumnAdjustmentCenter')">
+                            <input
+                                type="number"
+                                v-model.number="adjustment.adjustmentCenter"
+                                class="center-input"
+                                :disabled="!adjustment.enabled"
+                                min="0"
+                                max="2000"
+                            />
+                        </div>
+
+                        <div class="adjustment-scale" :data-label="$t('adjustmentsColumnAdjustmentScale')">
+                            <input
+                                type="number"
+                                v-model.number="adjustment.adjustmentScale"
+                                class="scale-input"
+                                :disabled="!adjustment.enabled"
+                                min="0"
+                                max="2000"
+                            />
+                        </div>
                     </div>
                 </div>
             </div>
@@ -115,7 +145,7 @@
 
         <div class="content_toolbar toolbar_fixed_bottom">
             <div class="btn save_btn">
-                <a class="save" href="#" @click.prevent="saveAdjustments">{{ $t("adjustmentsSave") }}</a>
+                <button type="button" class="save" @click="saveAdjustments">{{ $t("adjustmentsSave") }}</button>
             </div>
         </div>
     </BaseTab>
@@ -130,6 +160,7 @@ import MSP from "../../js/msp";
 import MSPCodes from "../../js/msp/MSPCodes";
 import { mspHelper } from "../../js/msp/MSPHelper";
 import { i18n } from "../../js/localization";
+import { API_VERSION_1_48 } from "../../js/data_storage";
 import { gui_log } from "../../js/gui_log";
 import { useFlightControllerStore } from "@/stores/fc";
 
@@ -154,10 +185,14 @@ export default defineComponent({
 
         const pipValues = computed(() => PIP_VALUES);
 
-        // Generate function options (0-32, 'Slider Master Multiplier' is the last)
+        // Generate function options (0-32 base, 33+ gated by API version)
+        const adjustmentFunctionCount = computed(() => {
+            return fcStore.isApiVersionSupported(API_VERSION_1_48) ? 34 : 33;
+        });
+
         const functionOptions = computed(() => {
             const options = [];
-            for (let i = 0; i < 33; i++) {
+            for (let i = 0; i < adjustmentFunctionCount.value; i++) {
                 options.push({
                     value: i,
                     label: i18n.getMessage(`adjustmentsFunction${i}`),
@@ -388,6 +423,8 @@ export default defineComponent({
                         },
                         adjustmentFunction: range.adjustmentFunction || 0,
                         auxSwitchChannelIndex: range.auxSwitchChannelIndex || 0,
+                        adjustmentCenter: range.adjustmentCenter || 0,
+                        adjustmentScale: range.adjustmentScale || 0,
                         enabled: isEnabled,
                     }),
                 );
@@ -438,6 +475,8 @@ export default defineComponent({
                         },
                         adjustmentFunction: adjustment.adjustmentFunction,
                         auxSwitchChannelIndex: adjustment.auxSwitchChannelIndex,
+                        adjustmentCenter: adjustment.adjustmentCenter || 0,
+                        adjustmentScale: adjustment.adjustmentScale || 0,
                     });
                 } else {
                     fcStore.adjustmentRanges.push({
@@ -449,6 +488,8 @@ export default defineComponent({
                         },
                         adjustmentFunction: 0,
                         auxSwitchChannelIndex: 0,
+                        adjustmentCenter: 0,
+                        adjustmentScale: 0,
                     });
                 }
             });
@@ -464,6 +505,8 @@ export default defineComponent({
                     },
                     adjustmentFunction: 0,
                     auxSwitchChannelIndex: 0,
+                    adjustmentCenter: 0,
+                    adjustmentScale: 0,
                 });
             }
 
@@ -478,6 +521,8 @@ export default defineComponent({
             await loadMSPData();
             initializeAdjustments();
             await nextTick();
+            // Ensure i18n attributes are applied to DOM (i18n_title -> title)
+            i18n.localizePage();
             GUI.switchery();
             startRcDataPolling();
             GUI.content_ready();
@@ -517,7 +562,7 @@ export default defineComponent({
 
 .adjustments-header {
     display: grid;
-    grid-template-columns: 80px 200px 1fr 250px 120px;
+    grid-template-columns: 80px 80px 1fr 200px 80px 60px 60px;
     gap: 16px;
     padding: 12px 16px;
     background: var(--surface-700);
@@ -539,7 +584,7 @@ export default defineComponent({
 
 .adjustment {
     display: grid;
-    grid-template-columns: 80px 200px 1fr 250px 120px;
+    grid-template-columns: 80px 80px 1fr 200px 80px 60px 60px;
     gap: 16px;
     padding: 16px;
     background: var(--surface-200);
@@ -584,6 +629,29 @@ export default defineComponent({
 .adjustment-function select,
 .adjustment-via select {
     width: 100%;
+}
+
+.adjustment-center,
+.adjustment-scale {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.adjustment-center input,
+.adjustment-scale input {
+    width: 100%;
+    background: var(--surface-700);
+    border: 1px solid var(--surface-600);
+    color: var(--text-primary);
+    padding: 6px 8px;
+    border-radius: 4px;
+}
+
+.adjustment-center input:disabled,
+.adjustment-scale input:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
 select {

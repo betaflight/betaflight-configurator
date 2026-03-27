@@ -2760,6 +2760,20 @@
     "adjustmentsColumnViaChannel": {
         "message": "via canale"
     },
+    "adjustmentsColumnAdjustmentCenter": {
+        "message": "con\/ centro (val.)"
+    },
+    "adjustmentsColumnAdjustmentScale": {
+        "message": "e scala del range (val.|%)"
+    },
+    "adjustmentsCenterHelp": {
+        "message": "Imposta il valore medio o di riferimento utilizzato dalla funzione di regolazione.<br \/><br \/><strong>Regolazioni Slider:<\/strong><br \/>Per le regolazioni dello slider, impostare il centro di regolazione a 0. La posizione corrente del cursore verrà utilizzata per la regolazione su\/giù.<br \/><br \/><strong>Selezione Regolazioni:<\/strong><br \/>Impostare il centro di regolazione a 0, o a un valore specifico di microsecondo (uS) se si desidera spostare il punto di riferimento dell'interruttore da 1500uS quando si avvia la regolazione RC.<br \/><br \/><strong>Regolazioni Fasi:<\/strong><br \/>Impostare il centro di regolazione a 0 per il valore corrente dell'elemento da aggiustare per essere utilizzato.<br \/><br \/><strong>Regolazioni Assolute:<\/strong><br \/>Per utilizzare il metodo di regolazione Assoluta, è necessario impostare sia il centro di regolazione che la scala per specificare il valore e l'intervallo desiderati. L’intervallo è calcolato come: centro ± scala. Ad esempio, imopostando il centro di regolazione a 50 e la scala di regolazione a 25 si crea un intervallo da 25 a 75, con la posizione centrale (interruttore o POT) mappata a 50.<br \/><br \/>Visita <a href=\"https:\/\/www.betaflight.com\/docs\/development\/Inflight-Adjustments\" target=\"_blank\" rel=\"noopener noreferrer\">questa pagina<\/a> per ulteriori informazioni.",
+        "description": "Tooltip help text for the Adjustment Center column"
+    },
+    "adjustmentsScaleHelp": {
+        "message": "Controlla il ridimensionamento o l'intervallo di regolazione; valori superiori aumentano l'intervallo di regolazione o la sensibilità.<br \/><br \/><strong>Regolazioni Slider:<\/strong><br \/>Per le regolazioni Slider, la scala di regolazione controlla la scala\/sensibilità della regolazione. Un valore di 50 è pari al 50% dell'intervallo di scorrimento. Impostando a 0 si utilizza la scala predefinita per i cursori.<br \/><br \/><strong>Regolazioni di selezione:<\/strong><br \/>Per le regolazioni della selezione, imposta scala di regolazione a 0 per il predefinito o specifica un valore di microsecondo (uS) per limitare l'intervallo. Per esempio: Impostare il centro di regolazione a 1000 (uS) e la scala di regolazione a 500 (uS) per utilizzare un interruttore a 3 posizioni come interruttore a 2 posizioni.<br \/><br \/><strong>Regolazioni graduali e assolute:<\/strong><br \/>Per aggiustamenti graduali e assoluti, La scala di regolazione definisce l'intervallo sopra e sotto il centro di regolazione. Ad esempio, un valore di 25 crea un intervallo di regolazione di ±25 dal valore del centro di regolazione, o dal valore corrente se il centro di regolazione è impostato a 0.<br \/><strong>Nota:<\/strong> Per utilizzare il metodo di regolazione assoluta con un potenziometro, è necessario specificare un valore della scala di regolazione.<br \/><br \/>Visita <a href=\"https:\/\/www.betaflight.com\/docs\/development\/Inflight-Adjustments\" target=\"_blank\" rel=\"noopener noreferrer\">questa pagina<\/a> per maggiori informazioni.",
+        "description": "Tooltip help text for the Adjustment Scale column"
+    },
     "adjustmentsSlot0": {
         "message": "Slot 1"
     },
@@ -2873,6 +2887,9 @@
     },
     "adjustmentsFunction31": {
         "message": "Regola Luminosità Led"
+    },
+    "adjustmentsFunction32": {
+        "message": "Moltiplicatore Master"
     },
     "adjustmentsSave": {
         "message": "Salva"
@@ -3849,6 +3866,9 @@
     "firmwareFlasherUF2SaveFailed": {
         "message": "Impossibile salvare (flash) UF2"
     },
+    "firmwareFlasherClickToConnectDfu": {
+        "message": "Clicca per connetterei il dispositivo DFU"
+    },
     "firmwareFlasherConfigCorrupted": {
         "message": "Il file di configurazione sembra corrotto, ASCII accettato (caratteri 0-255)",
         "description": "shown in the progress bar at the bottom, be brief"
@@ -4778,12 +4798,6 @@
     "pidTuningItermRotationHelp": {
         "message": "Ruota il vettore dell'I Term opportunamente con gli altri assi per ruotare quando viri continuamente durante i roll e quando esegui imbucate e altri trick. Molto apprezzato dai piloti LOS acro."
     },
-    "pidTuningSmartFeedforward": {
-        "message": "Feedforward Intelligente"
-    },
-    "pidTuningSmartFeedforwardHelp": {
-        "message": "Riduce l'effetto dell'F-term nel PID. Quando il P-term e l'F-term sono attivi allo stesso momento verrà utilizzato solo il più grandi dei due, evitando gli overshoot senza la necessità di alzare D, ma riduce anche la responsività prodotta dall'F-term quando viene aggiunto al P."
-    },
     "pidTuningItermRelax": {
         "message": "I Term Relax"
     },
@@ -5530,6 +5544,9 @@
     },
     "osdSetupUploadingFontEnd": {
         "message": "Caricati tutti i {{length}} caratteri su OSD"
+    },
+    "osdSetupUploadingFontFailed": {
+        "message": "Upload fallito"
     },
     "osdSetupSave": {
         "message": "Salva"
@@ -7553,7 +7570,7 @@
         "message": "Attendere prego.",
         "description": "Second label in the progress dialog when applying presets"
     },
-    "presetsCliErrorsWaring": {
+    "presetsCliErrorsWarning": {
         "message": "<span class='message-negative'>ATTENZIONE!<\/span><br\/>La configurazione è stata applicata con errori nel CLI.",
         "description": "Text to show when there are CLI errors after applying presets or user configuration"
     },
@@ -8015,5 +8032,13 @@
     },
     "sectionUserPasskeys": {
         "message": "Password Utente"
+    },
+    "osdPresetPositionAlignTitle": {
+        "message": "Allinea alla posizione",
+        "description": "Label for the preset position alignment menu in the OSD elements list"
+    },
+    "osdPresetPositionChooseTitle": {
+        "message": "Scegli posizione",
+        "description": "Title for the preset position grid popup in the OSD elements list"
     }
 }

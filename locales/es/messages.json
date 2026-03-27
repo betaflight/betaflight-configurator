@@ -2716,6 +2716,20 @@
     "adjustmentsColumnViaChannel": {
         "message": "vía canal"
     },
+    "adjustmentsColumnAdjustmentCenter": {
+        "message": "con centro (val.)"
+    },
+    "adjustmentsColumnAdjustmentScale": {
+        "message": "y rango|escala (val.|%)"
+    },
+    "adjustmentsCenterHelp": {
+        "message": "Establece el valor de punto medio o de referencia utilizado por la función de corrección.<br \/><br \/><strong>Corrección de deslizador:<\/strong><br \/>Para correcciones de deslizador, establece el centro de ajuste a 0. La posición actual del deslizador se utilizará para el ajuste hacia arriba\/abajo.<br \/><br \/><strong>Ajuste de selección:<\/strong><br \/>Establecer centro de ajuste a 0, o a un valor específico en microsegundos (uS) si deseas contrarrestar el punto de referencia de 1500 uS al iniciar el ajuste RC.<br \/><br \/><strong>Ajustes paso a paso:<\/strong><br \/>Establece el Centro de Ajuste a 0 para el valor actual del elemento que se está ajustando para ser utilizado.<br \/><br \/><strong>Ajustes Absolutos:<\/strong><br \/>Para utilizar el método de ajuste Absoluto, debe establecer tanto el Centro de Ajuste como la Escala para especificar el valor y rango deseados. El rango se calcula como: Centro ± Escala. Por ejemplo, configurar el centro de ajuste a 50 y la escala de ajuste a 25 crea un rango de 25 a 75, con la posición central (interruptor o POT) asignada a 50.<br \/><br \/>Visita <a href=\"https:\/\/www.betaflight.com\/docs\/development\/Inflight-Adjustments\" target=\"_blank\" rel=\"noopener noreferrer\">esta página<\/a> para más información.",
+        "description": "Tooltip help text for the Adjustment Center column"
+    },
+    "adjustmentsScaleHelp": {
+        "message": "Controla la escala o el rango del ajuste; valores más altos aumentan el rango de ajuste o la sensibilidad.<br \/><br \/><strong>Ajuste de deslizador:<\/strong><br \/>Para los ajustes de deslizador, la escala de ajuste controla la escala\/sensibilidad del ajuste. Un valor de 50 es igual al 50% del rango del deslizador. Establecer a 0 utiliza la escala por defecto para los deslizadores.<br \/><br \/><strong>Ajuste de selección:<\/strong><br \/>Para ajustes de selección, establece la escala de ajuste a 0 para el comportamiento predeterminado, o especifica un valor de microsegundos (uS) para limitar el rango. Por ejemplo: Establece el Centro de Ajuste a 1000 (uS) y la Escala de Ajuste a 500 (uS) para utilizar un interruptor de 3 posiciones como un interruptor de 2 posiciones.<br \/><br \/><strong>Ajustes Absolutos y Paso a paso:<\/strong><br \/>Para ajustes Paso a paso y Absolutos, la Escala de Ajuste define el rango superior e inferior del centro de ajuste. Por ejemplo, un valor de 25 crea un rango de ajuste de ±25 a partir del valor Centro de Ajuste. o desde el valor actual si el Centro de Ajuste está en 0.<br \/><strong>Nota:<\/strong> Para utilizar el método de ajuste absoluto con un potenciómetro, debe especificarse un valor de escala de ajuste.<br \/><br \/>Visita <a href=\"https:\/\/www.betaflight.com\/docs\/development\/Inflight-Adjustments\" target=\"_blank\" rel=\"noopener noreferrer\">esta página<\/a> para más información.",
+        "description": "Tooltip help text for the Adjustment Scale column"
+    },
     "adjustmentsSlot0": {
         "message": "Ranura 1"
     },
@@ -2829,6 +2843,9 @@
     },
     "adjustmentsFunction31": {
         "message": "Ajustar brillo de LED"
+    },
+    "adjustmentsFunction32": {
+        "message": "Multiplicador Maestro deslizante"
     },
     "adjustmentsSave": {
         "message": "Guardar"
@@ -4725,12 +4742,6 @@
     },
     "pidTuningItermRotationHelp": {
         "message": "Rota adecuadamente el actual vector del término I a otros ejes cuando la aeronave gira por el uso del yaw continuamente y se realizan rolls, embudos y otros trucos. Muy útil para pilotos acro tipo LOS."
-    },
-    "pidTuningSmartFeedforward": {
-        "message": "Prealimentación Inteligente"
-    },
-    "pidTuningSmartFeedforwardHelp": {
-        "message": "Reduce el efecto del término F (Prealimentación) en el PID. Cuando tanto el término P como el término F están activos en el mismo momento, sólo usa el más grande de los dos, evitando sobre rebasamientos sin la necesidad de aumentar D, pero también reduce el efecto de respuesta producido por el término F cuando se ha añade a P."
     },
     "pidTuningItermRelax": {
         "message": "Relajar Término I"
@@ -7501,7 +7512,7 @@
         "message": "Espere, por favor",
         "description": "Second label in the progress dialog when applying presets"
     },
-    "presetsCliErrorsWaring": {
+    "presetsCliErrorsWarning": {
         "message": "<span class='message-negative'>¡ATENCIÓN!<\/span><br\/>La configuración ha sido aplicada con errores de CLI.",
         "description": "Text to show when there are CLI errors after applying presets or user configuration"
     },

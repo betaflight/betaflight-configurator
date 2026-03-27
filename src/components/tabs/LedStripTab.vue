@@ -379,9 +379,9 @@
         <!-- Bottom Toolbar -->
         <div class="content_toolbar toolbar_fixed_bottom">
             <div class="btn save_btn">
-                <a class="save" href="#" @click.prevent="save">
+                <button type="button" class="save" @click="save">
                     <span v-html="saveButtonText"></span>
-                </a>
+                </button>
             </div>
         </div>
     </BaseTab>
@@ -1167,7 +1167,7 @@ button.disabled:active {
 }
 
 /* Save button specific styling */
-a.save {
+.save {
     display: inline-block;
     min-width: 64px;
     text-align: center;
@@ -1577,12 +1577,6 @@ a.save {
 /* Special Colors */
 .special_colors button.btnOn {
     border: 2px solid var(--text);
-}
-
-/* Toolbar */
-.content_toolbar.toolbar_fixed_bottom {
-    position: fixed;
-    bottom: 2rem;
 }
 
 /* Utility */

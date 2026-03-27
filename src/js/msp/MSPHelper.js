@@ -8,7 +8,7 @@ import semver from "semver";
 import vtxDeviceStatusFactory from "../utils/VtxDeviceStatus/VtxDeviceStatusFactory";
 import MSP from "../msp";
 import MSPCodes from "./MSPCodes";
-import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "../data_storage";
+import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47, API_VERSION_1_48 } from "../data_storage";
 import EscProtocols from "../utils/EscProtocols";
 import huffmanDecodeBuf from "../huffman";
 import { defaultHuffmanTree, defaultHuffmanLenIndex } from "../default_huffman_tree";
@@ -239,6 +239,15 @@ MspHelper.prototype.process_data = function (dataHandler) {
 
                     if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_47)) {
                         FC.CONFIG.numberOfRateProfiles = data.readU8();
+                    }
+
+                    if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_48)) {
+                        FC.CONFIG.numberOfBatteryProfiles = data.readU8();
+                        FC.CONFIG.batteryProfile = data.readU8();
+                        // Grow batteryProfileNames to match actual profile count from FC
+                        while (FC.CONFIG.batteryProfileNames.length < FC.CONFIG.numberOfBatteryProfiles) {
+                            FC.CONFIG.batteryProfileNames.push("");
+                        }
                     }
                     break;
 
@@ -910,6 +919,9 @@ MspHelper.prototype.process_data = function (dataHandler) {
                         case MSPCodes.BUILD_KEY:
                             FC.CONFIG.buildKey = self.getText(data);
                             break;
+                        case MSPCodes.BATTERY_PROFILE_NAME:
+                            FC.CONFIG.batteryProfileNames[FC.CONFIG.batteryProfile] = self.getText(data);
+                            break;
                         default:
                             console.log("Unsupport text type");
                             break;
@@ -1011,7 +1023,8 @@ MspHelper.prototype.process_data = function (dataHandler) {
                 case MSPCodes.MSP_ADJUSTMENT_RANGES:
                     FC.ADJUSTMENT_RANGES = []; // empty the array as new data is coming in
 
-                    const adjustmentRangeCount = data.byteLength / 6; // 6 bytes per item.
+                    const bytesPerItem = semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_48) ? 10 : 6; // 10 bytes per item if >= V1.48 (adjustmentCenter and adjustmentScale were added), otherwise 6 bytes per item
+                    const adjustmentRangeCount = data.byteLength / bytesPerItem;
 
                     for (let i = 0; i < adjustmentRangeCount; i++) {
                         const adjustmentRange = {
@@ -1023,6 +1036,8 @@ MspHelper.prototype.process_data = function (dataHandler) {
                             },
                             adjustmentFunction: data.readU8(),
                             auxSwitchChannelIndex: data.readU8(),
+                            adjustmentCenter: semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_48) ? data.readU16() : 0,
+                            adjustmentScale: semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_48) ? data.readU16() : 0,
                         };
                         FC.ADJUSTMENT_RANGES.push(adjustmentRange);
                     }
@@ -2292,6 +2307,9 @@ MspHelper.prototype.crunch = function (code, modifierCode = undefined) {
                 case MSPCodes.RATE_PROFILE_NAME:
                     self.setText(buffer, modifierCode, FC.CONFIG.rateProfileNames[FC.CONFIG.rateProfile], 8);
                     break;
+                case MSPCodes.BATTERY_PROFILE_NAME:
+                    self.setText(buffer, modifierCode, FC.CONFIG.batteryProfileNames[FC.CONFIG.batteryProfile], 8);
+                    break;
                 default:
                     console.log("Unsupported text type");
                     break;
@@ -2321,6 +2339,7 @@ MspHelper.prototype.crunch = function (code, modifierCode = undefined) {
         case MSPCodes.MSP_COPY_PROFILE:
             buffer.push8(FC.COPY_PROFILE.type).push8(FC.COPY_PROFILE.dstProfile).push8(FC.COPY_PROFILE.srcProfile);
             break;
+
         case MSPCodes.MSP_ARMING_DISABLE:
             let value;
             if (FC.CONFIG.armingDisabled) {
@@ -2634,6 +2653,9 @@ MspHelper.prototype.sendAdjustmentRanges = function (onCompleteCallback) {
             .push8((adjustmentRange.range.end - 900) / 25)
             .push8(adjustmentRange.adjustmentFunction)
             .push8(adjustmentRange.auxSwitchChannelIndex);
+        if (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_48)) {
+            buffer.push16(adjustmentRange.adjustmentCenter || 0).push16(adjustmentRange.adjustmentScale || 0);
+        }
 
         // prepare for next iteration
         adjustmentRangeIndex++;

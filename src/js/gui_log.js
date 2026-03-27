@@ -1,11 +1,17 @@
-import $ from "jquery";
-
 /**
  * log to GUI
  * @param {string} message message to log to GUI
  */
 export function gui_log(message) {
-    const commandLog = $("div#log");
+    const commandLog = document.querySelector("div#log");
+    if (!commandLog) {
+        return;
+    }
+    const wrapper = commandLog.querySelector("div.wrapper");
+    if (!wrapper) {
+        return;
+    }
+
     const d = new Date();
     const year = d.getFullYear();
     const month = d.getMonth() < 9 ? `0${d.getMonth() + 1}` : d.getMonth() + 1;
@@ -16,6 +22,6 @@ export function gui_log(message) {
     const time = `${hours}:${minutes}:${seconds}`;
 
     const formattedDate = `${year}-${month}-${date} @${time}`;
-    $("div.wrapper", commandLog).append(`<p>${formattedDate} -- ${message}</p>`);
-    commandLog.scrollTop($("div.wrapper", commandLog).height());
+    wrapper.insertAdjacentHTML("beforeend", `<p>${formattedDate} -- ${message}</p>`);
+    commandLog.scrollTop = wrapper.scrollHeight;
 }

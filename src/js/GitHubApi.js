@@ -1,18 +1,21 @@
 // NOTE: this files seems to be unused anywhere
 const GitHubApi = function () {
-    const self = this;
-
-    self.GITHUB_API_URL = "https://api.github.com/";
+    this.GITHUB_API_URL = "https://api.github.com/";
 };
 
 GitHubApi.prototype.getFileLastCommitInfo = function (project, branch, filename, callback) {
-    const self = this;
+    const url = `${this.GITHUB_API_URL}repos/${encodeURI(project)}/commits?sha=${encodeURIComponent(
+        branch,
+    )}&path=${encodeURIComponent(filename)}`;
 
-    $.getJSON(
-        `${self.GITHUB_API_URL}repos/${encodeURI(project)}/commits?sha=${encodeURIComponent(
-            branch,
-        )}&path=${encodeURIComponent(filename)}`,
-        function (commits) {
+    fetch(url)
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
+            }
+            return response.json();
+        })
+        .then((commits) => {
             const result = {};
             try {
                 result.commitHash = commits[0].sha.substring(0, 8);
@@ -24,8 +27,8 @@ GitHubApi.prototype.getFileLastCommitInfo = function (project, branch, filename,
             console.log(`Found commit info for file ${filename}:`, result);
 
             callback(result);
-        },
-    );
+        })
+        .catch((error) => console.log(`Error fetching commit info: ${error}`));
 };
 
 export default GitHubApi;

@@ -74,13 +74,11 @@ class FavoritePresetsClass {
     }
 
     add(preset, repo) {
-        const favoritePreset = this._favoritePresetsData.add(repo.getPresetOnlineLink(preset));
-        preset.lastPickDate = favoritePreset.lastPickDate;
+        return this._favoritePresetsData.add(repo.getPresetOnlineLink(preset)).lastPickDate;
     }
 
     delete(preset, repo) {
         this._favoritePresetsData.delete(repo.getPresetOnlineLink(preset));
-        preset.lastPickDate = undefined;
     }
 
     addLastPickDate(presets, repo) {
@@ -91,6 +89,10 @@ class FavoritePresetsClass {
                 preset.lastPickDate = favoritePreset.lastPickDate;
             }
         }
+    }
+
+    getLastPickDate(preset, repo) {
+        return this._favoritePresetsData.findPreset(repo.getPresetOnlineLink(preset))?.lastPickDate;
     }
 
     saveToStorage() {

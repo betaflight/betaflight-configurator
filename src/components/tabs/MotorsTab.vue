@@ -506,13 +506,13 @@
                             </div>
 
                             <div class="motors">
-                                <ul class="grid-box col9 titles">
+                                <ul :class="`grid-box col${numberOfValidOutputs + 1} titles`">
                                     <li v-for="i in numberOfValidOutputs" :key="i" :title="$t('motorNumber' + i)">
                                         {{ i }}
                                     </li>
                                     <li></li>
                                 </ul>
-                                <div class="bar-wrapper grid-box col9">
+                                <div :class="`bar-wrapper grid-box col${numberOfValidOutputs + 1}`">
                                     <div v-for="i in numberOfValidOutputs" :key="i" :class="'m-block motor-' + (i - 1)">
                                         <div class="meter-bar">
                                             <div class="label">{{ motorValues[i - 1] }}</div>
@@ -533,7 +533,7 @@
                             </div>
 
                             <div class="motor_testing">
-                                <ul class="grid-box col9 telemetry">
+                                <ul :class="`grid-box col${numberOfValidOutputs + 1} telemetry`">
                                     <li v-for="i in numberOfValidOutputs" :key="i">
                                         <span
                                             :class="`motor-${i - 1} cf_tip`"
@@ -549,7 +549,7 @@
                                 </ul>
 
                                 <div class="sliders">
-                                    <ul class="grid-box col9">
+                                    <ul :class="`grid-box col${numberOfValidOutputs + 1}`">
                                         <li v-for="i in numberOfValidOutputs" :key="i">
                                             <input
                                                 type="range"
@@ -578,7 +578,7 @@
                                 </div>
 
                                 <div class="values">
-                                    <ul class="grid-box col9">
+                                    <ul :class="`grid-box col${numberOfValidOutputs + 1}`">
                                         <li v-for="i in numberOfValidOutputs" :key="i">{{ motorValues[i - 1] }}</li>
                                         <li style="font-weight: bold" v-html="$t('motorsMaster')"></li>
                                     </ul>
@@ -639,10 +639,11 @@
         </div>
 
         <!-- Fixed Bottom Toolbar -->
-        <div class="content_toolbar toolbar_fixed_bottom" style="position: fixed">
+        <div class="content_toolbar toolbar_fixed_bottom">
             <div class="btn save_btn">
                 <button
-                    class="regular-button save"
+                    type="button"
+                    class="save"
                     :class="{ disabled: buttonStates.saveDisabled }"
                     :disabled="buttonStates.saveDisabled"
                     @click="saveAndReboot(true)"
@@ -652,6 +653,7 @@
             </div>
             <div class="btn">
                 <button
+                    type="button"
                     class="stop"
                     :class="{ disabled: buttonStates.stopDisabled }"
                     :disabled="buttonStates.stopDisabled"
@@ -682,6 +684,7 @@ import DshotCommand from "@/js/utils/DshotCommand";
 import { mspHelper } from "@/js/msp/MSPHelper";
 import { tracking } from "@/js/Analytics";
 import GUI from "@/js/gui";
+import FC from "@/js/fc";
 
 // Import composables for proper state management
 import { useMotorsState } from "@/composables/motors/useMotorsState";
@@ -726,12 +729,7 @@ const closeDynFiltersDialog = () => {
 };
 
 const applyDynFiltersChange = () => {
-    const FILTER_DEFAULT = {
-        dyn_notch_count_rpm: 1,
-        dyn_notch_q_rpm: 500,
-        dyn_notch_count: 3,
-        dyn_notch_q: 120,
-    };
+    const FILTER_DEFAULT = FC.getFilterDefaults();
 
     if (fcStore.motorConfig.use_dshot_telemetry && !previousDshotBidir.value) {
         fcStore.filterConfig.dyn_notch_count = FILTER_DEFAULT.dyn_notch_count_rpm;
@@ -882,21 +880,14 @@ watch(
 
         const rpmFilterIsDisabled = fcStore.filterConfig.gyro_rpm_notch_harmonics === 0;
 
-        // Store previous values for potential restore
-        if (previousFilterDynQ.value === null) {
-            previousFilterDynQ.value = fcStore.filterConfig.dyn_notch_q;
-            previousFilterDynCount.value = fcStore.filterConfig.dyn_notch_count;
-        }
+        // Always restore filter values to original firmware state first
+        fcStore.filterConfig.dyn_notch_count = previousFilterDynCount.value;
+        fcStore.filterConfig.dyn_notch_q = previousFilterDynQ.value;
 
-        // Show dialog when dshotBidir changes and RPM filter is enabled
-        if (newValue !== oldValue && !rpmFilterIsDisabled) {
+        // Show dialog when dshotBidir differs from original firmware value and RPM filter is enabled
+        if (newValue !== previousDshotBidir.value && !rpmFilterIsDisabled) {
             showDynFiltersDialog();
-        } else {
-            // Restore values if dialog not shown
-            fcStore.filterConfig.dyn_notch_count = previousFilterDynCount.value;
-            fcStore.filterConfig.dyn_notch_q = previousFilterDynQ.value;
         }
-        previousDshotBidir.value = newValue;
     },
 );
 
@@ -2234,6 +2225,8 @@ onUnmounted(() => {
             li {
                 text-align: center;
                 font-size: 10px;
+                white-space: nowrap;
+                overflow: hidden;
             }
         }
     }

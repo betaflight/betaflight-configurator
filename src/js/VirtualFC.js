@@ -95,6 +95,8 @@ const VirtualFC = {
                 },
                 adjustmentFunction: 0,
                 auxSwitchChannelIndex: 0,
+                adjustmentCenter: 0,
+                adjustmentScale: 0,
             };
         }
 
@@ -176,6 +178,17 @@ const VirtualFC = {
             state: 1,
             freeSizeKB: 1024,
             totalSizeKB: 2048,
+        };
+
+        virtualFC.TRANSPONDER = {
+            supported: true,
+            provider: 1, // iLap
+            providers: [
+                { id: 1, dataLength: 2 },
+                { id: 2, dataLength: 9 },
+                { id: 3, dataLength: 1 },
+            ],
+            data: [0, 0],
         };
 
         virtualFC.SENSOR_ALIGNMENT = { ...FC.SENSOR_ALIGNMENT };
@@ -308,6 +321,7 @@ const VirtualFC = {
 
         virtualOSD.data.state = {
             haveMax7456Configured: true,
+            haveMax7456Video: true,
             haveOsdFeature: true,
             haveMax7456FontDeviceConfigured: true,
             isMax7456FontDeviceDetected: true,

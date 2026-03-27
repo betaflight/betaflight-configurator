@@ -580,31 +580,31 @@
         </div>
 
         <!-- Bottom Toolbar -->
-        <div class="content_toolbar toolbar_fixed_bottom" style="position: fixed">
+        <div class="content_toolbar toolbar_fixed_bottom">
             <div class="btn sticks_btn" v-if="showSticksButton">
-                <a class="sticks" href="#" @click.prevent="openSticksWindow">
+                <button type="button" class="sticks" @click="openSticksWindow">
                     {{ $t("receiverButtonSticks") }}
-                </a>
+                </button>
             </div>
             <div class="btn bind_btn" v-if="showBindButton">
-                <a class="bind" href="#" @click.prevent="sendBind">
+                <button type="button" class="bind" @click="sendBind">
                     {{ $t("receiverButtonBind") }}
-                </a>
+                </button>
             </div>
             <div class="btn refresh_btn">
-                <a class="refresh" href="#" @click.prevent="refreshTab">
+                <button type="button" class="refresh" @click="refreshTab">
                     {{ $t("receiverButtonRefresh") }}
-                </a>
+                </button>
             </div>
             <div class="btn update_btn" v-if="!needReboot">
-                <a class="update" href="#" @click.prevent="saveConfig(false)">
+                <button type="button" class="update" @click="saveConfig(false)">
                     {{ $t("receiverButtonSave") }}
-                </a>
+                </button>
             </div>
             <div class="btn save_btn" v-else>
-                <a class="save" href="#" @click.prevent="saveConfig(true)">
+                <button type="button" class="save" @click="saveConfig(true)">
                     {{ $t("configurationButtonSave") }}
-                </a>
+                </button>
             </div>
         </div>
     </BaseTab>
@@ -637,7 +637,6 @@ import CryptoES from "crypto-es";
 import semver from "semver";
 import * as THREE from "three";
 import * as d3 from "d3";
-import $ from "jquery";
 
 const t = (key) => i18n.getMessage(key);
 const fcStore = useFlightControllerStore();
@@ -988,10 +987,10 @@ function openSticksWindow() {
         return false;
     };
 
-    const createdWindow = window.open(
+    const createdWindow = globalThis.open(
         "/receiver_msp/receiver_msp.html",
         "receiver_msp",
-        `location=no,width=${windowWidth},height=${windowHeight + (window.screen.height - window.screen.availHeight)}`,
+        `location=no,width=${windowWidth},height=${windowHeight + (screen.height - screen.availHeight)}`,
     );
     if (createdWindow) {
         createdWindow.setRawRx = rxFunction;
@@ -1128,8 +1127,7 @@ async function saveConfig(withReboot = false) {
 // Model preview
 function initModelPreview() {
     if (!modelPreviewContainer.value || !modelCanvas.value) return;
-    // Model constructor expects jQuery-wrapped elements
-    model = new Model($(modelPreviewContainer.value), $(modelCanvas.value));
+    model = new Model(modelPreviewContainer.value, modelCanvas.value);
     rateCurve = new RateCurve(false);
     currentRates = rateCurve.getCurrentRates();
     window.addEventListener("resize", handleModelResize);
