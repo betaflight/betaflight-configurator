@@ -6495,7 +6495,7 @@
         "message": "Agarde por favor.",
         "description": "Second label in the progress dialog when applying presets"
     },
-    "presetsCliErrorsWaring": {
+    "presetsCliErrorsWarning": {
         "message": "<span class='message-negative'>AVISO!<\/span><br\/>A configuración foi aplicada con erros do CLI.",
         "description": "Text to show when there are CLI errors after applying presets or user configuration"
     },

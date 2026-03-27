@@ -1,5 +1,5 @@
 <template>
-    <div class="web-port-picker">
+    <div class="web-port-picker" :class="{ 'virtual-layout': modelValue.selectedPort === 'virtual' && !isConnected }">
         <PortOverrideOption
             v-if="modelValue.selectedPort === 'manual'"
             :model-value="modelValue.portOverride"

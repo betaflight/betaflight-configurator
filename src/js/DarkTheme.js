@@ -1,5 +1,3 @@
-import $ from "jquery";
-
 const DarkTheme = {
     configSetting: undefined,
     enabled: false,
@@ -41,12 +39,12 @@ DarkTheme.setConfig = function (result) {
 };
 
 DarkTheme.applyDark = function () {
-    $("body").addClass("dark-theme");
+    document.body.classList.add("dark-theme");
     this.enabled = true;
 };
 
 DarkTheme.applyNormal = function () {
-    $("body").removeClass("dark-theme");
+    document.body.classList.remove("dark-theme");
     this.enabled = false;
 };
 

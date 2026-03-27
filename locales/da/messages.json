@@ -7578,7 +7578,7 @@
         "message": "Vent venligst...",
         "description": "Second label in the progress dialog when applying presets"
     },
-    "presetsCliErrorsWaring": {
+    "presetsCliErrorsWarning": {
         "message": "<span class='message-negative'>ADVARSEL!<\/span><br\/>Opsætning har CLI syntaks fejl.",
         "description": "Text to show when there are CLI errors after applying presets or user configuration"
     },

@@ -12,7 +12,6 @@ export default defineConfig([
             sourceType: "module",
             globals: {
                 ol: "readonly",
-                wNumb: "readonly",
                 ConfigStorage: "readonly",
                 // globals for vite
                 __APP_PRODUCTNAME__: "readonly",

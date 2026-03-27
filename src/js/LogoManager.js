@@ -1,6 +1,5 @@
 import { gui_log } from "./gui_log";
 import { i18n } from "./localization";
-import $ from "jquery";
 import FileSystem from "./FileSystem";
 
 /**
@@ -181,43 +180,53 @@ LogoManager.init = function (font, logoStartIndex) {
         logoWidthPx: `${this.constraints.imageSize.expectedWidth}`, // NOSONAR
         logoHeightPx: `${this.constraints.imageSize.expectedHeight}`, // NOSONAR
     });
-    // find/cache DOM elements
+    // find/cache DOM elements (skip _-prefixed keys from previous init calls)
     Object.keys(this.elements).forEach((key) => {
-        this.elements[`$${key}`] = $(this.elements[key]);
+        if (key.startsWith("_")) {
+            return;
+        }
+        this.elements[`_${key}`] = document.querySelector(this.elements[key]);
     });
     Object.keys(this.constraints).forEach((key) => {
-        this.constraints[key].$el = $(this.constraints[key].el);
+        this.constraints[key]._el = document.querySelector(this.constraints[key].el);
     });
     // resize logo preview area to match tile size
-    this.elements.$preview
-        .width(this.constraints.imageSize.expectedWidth)
-        .height(this.constraints.imageSize.expectedHeight);
+    const preview = this.elements._preview;
+    if (preview) {
+        preview.style.width = `${this.constraints.imageSize.expectedWidth}px`;
+        preview.style.height = `${this.constraints.imageSize.expectedHeight}px`;
+    }
     this.resetImageInfo();
 };
 
 LogoManager.resetImageInfo = function () {
     this.hideUploadHint();
     Object.values(this.constraints).forEach((constraint) => {
-        const $el = constraint.$el;
-        $el.toggleClass("invalid", false);
-        $el.toggleClass("valid", false);
+        const el = constraint._el;
+        if (el) {
+            el.classList.remove("invalid", "valid");
+        }
     });
 };
 
 LogoManager.showConstraintNotSatisfied = (constraint) => {
-    constraint.$el.toggleClass("invalid", true);
+    constraint._el?.classList.add("invalid");
 };
 
 LogoManager.showConstraintSatisfied = (constraint) => {
-    constraint.$el.toggleClass("valid", true);
+    constraint._el?.classList.add("valid");
 };
 
 LogoManager.showUploadHint = function () {
-    this.elements.$uploadHint.show();
+    if (this.elements._uploadHint) {
+        this.elements._uploadHint.style.display = "";
+    }
 };
 
 LogoManager.hideUploadHint = function () {
-    this.elements.$uploadHint.hide();
+    if (this.elements._uploadHint) {
+        this.elements._uploadHint.style.display = "none";
+    }
 };
 
 /**
@@ -288,10 +297,14 @@ LogoManager.replaceLogoInFont = function (img) {
  * Draw the logo using the loaded font data.
  */
 LogoManager.drawPreview = function () {
-    const $el = this.elements.$preview.empty();
+    const el = this.elements._preview;
+    if (!el) {
+        return;
+    }
+    el.innerHTML = "";
     for (let i = this.logoStartIndex, I = this.font.constants.MAX_CHAR_COUNT; i < I; i++) {
         const url = this.font.data.character_image_urls[i];
-        $el.append(`<img src="${url}" title="0x${i.toString(16)}"></img>`);
+        el.insertAdjacentHTML("beforeend", `<img src="${url}" title="0x${i.toString(16)}">`);
     }
 };
 
