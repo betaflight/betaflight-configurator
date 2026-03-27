@@ -391,6 +391,163 @@
         line-height: 1.7;
     }
 
+    /* ── SYSID / CHIRP FREQUENCY RESPONSE ── */
+    .at-sysid-section {
+        margin-top: 16px;
+        border: 1px solid #3a5a8a;
+        border-radius: 4px;
+        background: #0f1a26;
+        padding: 12px 14px;
+    }
+
+    .at-sysid-banner {
+        font-size: 13px;
+        font-weight: bold;
+        color: #64b4ff;
+        letter-spacing: 0.5px;
+        margin-bottom: 14px;
+        padding: 8px 12px;
+        background: #152535;
+        border-left: 3px solid #64b4ff;
+        border-radius: 2px;
+    }
+
+    .at-sysid-axis-block {
+        margin-bottom: 14px;
+    }
+
+    .at-sysid-axis-label {
+        font-size: 11px;
+        font-weight: bold;
+        color: #ffbb00;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 6px;
+    }
+
+    .at-sysid-axis-err {
+        font-size: 11px;
+        color: #ff6b6b;
+        margin-bottom: 8px;
+        font-family: monospace;
+    }
+
+    .at-bode-canvas {
+        display: block;
+        width: 100%;
+        max-width: 580px;
+        height: auto;
+        border: 1px solid #2a3a4a;
+        border-radius: 3px;
+    }
+
+    .at-sysid-table-wrap {
+        margin-top: 12px;
+        margin-bottom: 12px;
+    }
+
+    .at-sysid-table-title {
+        font-size: 11px;
+        font-weight: bold;
+        color: #aaaaaa;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 6px;
+    }
+
+    .at-sysid-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 12px;
+        font-family: monospace;
+
+        th {
+            background: #1a2a3a;
+            color: #888888;
+            font-size: 11px;
+            text-align: left;
+            padding: 5px 10px;
+            border-bottom: 1px solid #2a3a4a;
+        }
+
+        td {
+            padding: 5px 10px;
+            border-bottom: 1px solid #1a2530;
+            color: #cccccc;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .at-sysid-ok {
+            color: #00d966;
+        }
+        .at-sysid-warn {
+            color: #ffe66d;
+        }
+        .at-sysid-bad {
+            color: #ff6b6b;
+            font-weight: bold;
+        }
+    }
+
+    .at-sysid-pid-section {
+        margin-top: 10px;
+        padding: 10px 12px;
+        background: #111e2a;
+        border-radius: 3px;
+        border: 1px solid #2a3a4a;
+    }
+
+    .at-sysid-pid-header {
+        font-size: 11px;
+        font-weight: bold;
+        color: #888888;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 8px;
+    }
+
+    .at-sysid-pid-row {
+        font-size: 12px;
+        font-family: monospace;
+        color: #cccccc;
+        margin-bottom: 4px;
+        line-height: 1.6;
+    }
+
+    .at-sysid-pid-axis {
+        color: #ffbb00;
+        font-weight: bold;
+        margin-right: 6px;
+    }
+
+    .at-sysid-pid-reason {
+        color: #888888;
+        font-size: 11px;
+    }
+
+    .at-sysid-warnings {
+        margin-top: 10px;
+        padding: 8px 12px;
+        border-radius: 3px;
+        border: 1px solid #5a3a1a;
+        background: #1a1008;
+    }
+
+    .at-sysid-warning-item {
+        font-size: 12px;
+        color: #ffaa44;
+        font-family: monospace;
+        margin-bottom: 3px;
+        line-height: 1.6;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+
     /* ── INSTRUCTIONS ── */
     .at-instructions-popup-btn {
         display: inline-block;

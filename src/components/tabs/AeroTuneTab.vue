@@ -292,6 +292,162 @@
                             </div>
 
                             <div class="at-results-box">{{ analysisResult }}</div>
+
+                            <!-- ═══ SysID / Chirp frequency-response results ═══ -->
+                            <div v-if="sysidResult" class="at-sysid-section">
+                                <div class="at-sysid-banner">
+                                    ⚡ CHIRP / SYSID LOG DETECTED — running frequency response analysis
+                                </div>
+
+                                <!-- Roll Bode plot -->
+                                <div
+                                    v-if="sysidResult.axes.roll && !sysidResult.axes.roll.error"
+                                    class="at-sysid-axis-block"
+                                >
+                                    <div class="at-sysid-axis-label">ROLL — Frequency Response (Bode Plot)</div>
+                                    <canvas ref="bodePlotRoll" class="at-bode-canvas" width="580" height="300"></canvas>
+                                </div>
+                                <div v-else-if="sysidResult.axes.roll?.error" class="at-sysid-axis-err">
+                                    ROLL: {{ sysidResult.axes.roll.error }}
+                                </div>
+
+                                <!-- Pitch Bode plot -->
+                                <div
+                                    v-if="sysidResult.axes.pitch && !sysidResult.axes.pitch.error"
+                                    class="at-sysid-axis-block"
+                                >
+                                    <div class="at-sysid-axis-label">PITCH — Frequency Response (Bode Plot)</div>
+                                    <canvas
+                                        ref="bodePlotPitch"
+                                        class="at-bode-canvas"
+                                        width="580"
+                                        height="300"
+                                    ></canvas>
+                                </div>
+                                <div v-else-if="sysidResult.axes.pitch?.error" class="at-sysid-axis-err">
+                                    PITCH: {{ sysidResult.axes.pitch.error }}
+                                </div>
+
+                                <!-- Yaw Bode plot -->
+                                <div
+                                    v-if="sysidResult.axes.yaw && !sysidResult.axes.yaw.error"
+                                    class="at-sysid-axis-block"
+                                >
+                                    <div class="at-sysid-axis-label">YAW — Frequency Response (Bode Plot)</div>
+                                    <canvas ref="bodePlotYaw" class="at-bode-canvas" width="580" height="300"></canvas>
+                                </div>
+                                <div v-else-if="sysidResult.axes.yaw?.error" class="at-sysid-axis-err">
+                                    YAW: {{ sysidResult.axes.yaw.error }}
+                                </div>
+
+                                <!-- Stability margins table -->
+                                <div class="at-sysid-table-wrap">
+                                    <div class="at-sysid-table-title">STABILITY MARGINS</div>
+                                    <table class="at-sysid-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Axis</th>
+                                                <th>Phase Margin</th>
+                                                <th>Gain Margin</th>
+                                                <th>GC Freq (Hz)</th>
+                                                <th>PC Freq (Hz)</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="axisName in ['roll', 'pitch', 'yaw']" :key="axisName">
+                                                <td>{{ axisName.toUpperCase() }}</td>
+                                                <template
+                                                    v-if="
+                                                        sysidResult.axes[axisName] && !sysidResult.axes[axisName].error
+                                                    "
+                                                >
+                                                    <td
+                                                        :class="
+                                                            stabilityClass(sysidResult.axes[axisName].phaseMargin, 'pm')
+                                                        "
+                                                    >
+                                                        {{
+                                                            sysidResult.axes[axisName].phaseMargin !== null
+                                                                ? sysidResult.axes[axisName].phaseMargin.toFixed(1) +
+                                                                  "°"
+                                                                : "N/A"
+                                                        }}
+                                                    </td>
+                                                    <td
+                                                        :class="
+                                                            stabilityClass(sysidResult.axes[axisName].gainMargin, 'gm')
+                                                        "
+                                                    >
+                                                        {{
+                                                            sysidResult.axes[axisName].gainMargin !== null
+                                                                ? sysidResult.axes[axisName].gainMargin.toFixed(1) +
+                                                                  " dB"
+                                                                : "N/A"
+                                                        }}
+                                                    </td>
+                                                    <td>
+                                                        {{
+                                                            sysidResult.axes[axisName].gcFreq !== null
+                                                                ? sysidResult.axes[axisName].gcFreq.toFixed(1)
+                                                                : "N/A"
+                                                        }}
+                                                    </td>
+                                                    <td>
+                                                        {{
+                                                            sysidResult.axes[axisName].pcFreq !== null
+                                                                ? sysidResult.axes[axisName].pcFreq.toFixed(1)
+                                                                : "N/A"
+                                                        }}
+                                                    </td>
+                                                </template>
+                                                <template v-else>
+                                                    <td colspan="4">
+                                                        {{ sysidResult.axes[axisName]?.error || "N/A" }}
+                                                    </td>
+                                                </template>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <!-- PID suggestions -->
+                                <div class="at-sysid-pid-section">
+                                    <div class="at-sysid-pid-header">SUGGESTED PID ADJUSTMENTS</div>
+                                    <div
+                                        v-for="axisName in ['roll', 'pitch', 'yaw']"
+                                        :key="axisName"
+                                        class="at-sysid-pid-row"
+                                    >
+                                        <template v-if="sysidResult.axes[axisName]?.pidSuggest">
+                                            <span class="at-sysid-pid-axis">{{ axisName.toUpperCase() }}:</span>
+                                            <span>
+                                                P {{ sysidResult.axes[axisName].currentP }} →
+                                                {{ sysidResult.axes[axisName].pidSuggest.suggestP }}
+                                            </span>
+                                            <span v-if="sysidResult.axes[axisName].currentD !== null">
+                                                &nbsp; D {{ sysidResult.axes[axisName].currentD }} →
+                                                {{ sysidResult.axes[axisName].pidSuggest.suggestD }}
+                                            </span>
+                                            <span class="at-sysid-pid-reason">
+                                                &nbsp; ({{ sysidResult.axes[axisName].pidSuggest.reason }})
+                                            </span>
+                                        </template>
+                                        <template
+                                            v-else-if="sysidResult.axes[axisName] && !sysidResult.axes[axisName].error"
+                                        >
+                                            <span class="at-sysid-pid-axis">{{ axisName.toUpperCase() }}:</span>
+                                            <span>No current PID values found in log header.</span>
+                                        </template>
+                                    </div>
+                                </div>
+
+                                <!-- Warnings -->
+                                <div v-if="sysidResult.warnings.length > 0" class="at-sysid-warnings">
+                                    <div v-for="(w, i) in sysidResult.warnings" :key="i" class="at-sysid-warning-item">
+                                        ⚠ {{ w }}
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1569,6 +1725,420 @@ function formatAnalysisResult(r) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// SysID: chirp detection, FFT, frequency response, Bode data, PID synthesis
+// ─────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Radix-2 Cooley-Tukey FFT, in-place.
+ * re[] and im[] must both have length equal to a power of 2.
+ * On return, re[k]/im[k] contain real/imaginary parts of bin k.
+ */
+function fftInPlace(re, im) {
+    const N = re.length;
+    // Bit-reversal permutation
+    let j = 0;
+    for (let i = 1; i < N; i++) {
+        let bit = N >> 1;
+        for (; j & bit; bit >>= 1) j ^= bit;
+        j ^= bit;
+        if (i < j) {
+            let t = re[i];
+            re[i] = re[j];
+            re[j] = t;
+            t = im[i];
+            im[i] = im[j];
+            im[j] = t;
+        }
+    }
+    // Butterfly stages
+    for (let len = 2; len <= N; len <<= 1) {
+        const half = len >> 1;
+        const ang = (-2 * Math.PI) / len;
+        const wBaseRe = Math.cos(ang);
+        const wBaseIm = Math.sin(ang);
+        for (let i = 0; i < N; i += len) {
+            let wRe = 1,
+                wIm = 0;
+            for (let k = 0; k < half; k++) {
+                const uRe = re[i + k];
+                const uIm = im[i + k];
+                const vRe = re[i + k + half] * wRe - im[i + k + half] * wIm;
+                const vIm = re[i + k + half] * wIm + im[i + k + half] * wRe;
+                re[i + k] = uRe + vRe;
+                im[i + k] = uIm + vIm;
+                re[i + k + half] = uRe - vRe;
+                im[i + k + half] = uIm - vIm;
+                const nextWRe = wRe * wBaseRe - wIm * wBaseIm;
+                wIm = wRe * wBaseIm + wIm * wBaseRe;
+                wRe = nextWRe;
+            }
+        }
+    }
+}
+
+function _nextPow2(n) {
+    let p = 1;
+    while (p < n) p <<= 1;
+    return p;
+}
+
+function _hannWindow(N) {
+    const w = new Float64Array(N);
+    for (let i = 0; i < N; i++) w[i] = 0.5 * (1 - Math.cos((2 * Math.PI * i) / (N - 1)));
+    return w;
+}
+
+/**
+ * Unwrap a phase array (radians) in-place.
+ */
+function _unwrapPhase(phase) {
+    for (let i = 1; i < phase.length; i++) {
+        let d = phase[i] - phase[i - 1];
+        while (d > Math.PI) d -= 2 * Math.PI;
+        while (d < -Math.PI) d += 2 * Math.PI;
+        phase[i] = phase[i - 1] + d;
+    }
+}
+
+/**
+ * Detect chirp data in a BBL session.
+ * Criteria: chirp_amplitude_* header present with value > 0
+ *           AND setpoint std dev > 30 in any 5-second window on any axis.
+ */
+function detectChirp(frames, config) {
+    const raw = config._raw || {};
+    const hasChirpHeader = ["chirp_amplitude_roll", "chirp_amplitude_pitch", "chirp_amplitude_yaw"].some(
+        (k) => raw[k] !== undefined && parseInt(raw[k], 10) > 0,
+    );
+    if (!hasChirpHeader) return false;
+
+    const looptime = config.misc?.looptime;
+    if (!looptime || looptime <= 0) return false;
+    const sampleRate = 1e6 / looptime;
+    const winSize = Math.max(100, Math.round(5 * sampleRate));
+
+    for (const spKey of ["setpoint[0]", "setpoint[1]", "setpoint[2]"]) {
+        for (let start = 0; start + winSize <= frames.length; start += winSize) {
+            let sum = 0,
+                sum2 = 0;
+            for (let i = start; i < start + winSize; i++) {
+                const v = Number(frames[i][spKey] ?? 0);
+                sum += v;
+                sum2 += v * v;
+            }
+            const mean = sum / winSize;
+            const std = Math.sqrt(Math.max(0, sum2 / winSize - mean * mean));
+            if (std > 30) return true;
+        }
+    }
+    return false;
+}
+
+/**
+ * Find the longest continuous segment where the std dev of a signal over a
+ * rolling windowSize-sample window exceeds `threshold`.
+ * Returns { start, end } byte indices.
+ */
+function _findLongestActiveSegment(signal, windowSize, threshold) {
+    const N = signal.length;
+    if (N < windowSize) return { start: 0, end: N };
+
+    // Initialise rolling sum / sum-of-squares for first window
+    let sum = 0,
+        sum2 = 0;
+    for (let i = 0; i < windowSize; i++) {
+        sum += signal[i];
+        sum2 += signal[i] * signal[i];
+    }
+
+    let bestStart = 0,
+        bestLen = 0;
+    let curStart = -1;
+
+    for (let i = windowSize; i <= N; i++) {
+        const mean = sum / windowSize;
+        const std = Math.sqrt(Math.max(0, sum2 / windowSize - mean * mean));
+        const winStart = i - windowSize;
+
+        if (std > threshold) {
+            if (curStart < 0) curStart = winStart;
+            const curLen = i - curStart;
+            if (curLen > bestLen) {
+                bestLen = curLen;
+                bestStart = curStart;
+            }
+        } else {
+            curStart = -1;
+        }
+
+        if (i < N) {
+            sum += signal[i];
+            sum2 += signal[i] * signal[i];
+            sum -= signal[winStart];
+            sum2 -= signal[winStart] * signal[winStart];
+        }
+    }
+
+    if (bestLen < windowSize) return { start: 0, end: Math.min(N, windowSize * 4) };
+    return { start: bestStart, end: bestStart + bestLen };
+}
+
+/**
+ * Welch's method coherence estimate.
+ * Returns Float64Array of length segLen/2 + 1 with coherence values in [0, 1].
+ * Bin k corresponds to frequency k * sampleRate / segLen.
+ */
+function _welchCoherence(x, y, segLen) {
+    const half = segLen >> 1;
+    const win = _hannWindow(segLen);
+    const Sxx = new Float64Array(half + 1);
+    const Syy = new Float64Array(half + 1);
+    const SxyRe = new Float64Array(half + 1);
+    const SxyIm = new Float64Array(half + 1);
+
+    for (let start = 0; start + segLen <= x.length; start += half) {
+        // 50 % overlap
+        const xRe = new Float64Array(segLen),
+            xIm = new Float64Array(segLen);
+        const yRe = new Float64Array(segLen),
+            yIm = new Float64Array(segLen);
+        for (let k = 0; k < segLen; k++) {
+            xRe[k] = x[start + k] * win[k];
+            yRe[k] = y[start + k] * win[k];
+        }
+        fftInPlace(xRe, xIm);
+        fftInPlace(yRe, yIm);
+        for (let k = 0; k <= half; k++) {
+            Sxx[k] += xRe[k] * xRe[k] + xIm[k] * xIm[k];
+            Syy[k] += yRe[k] * yRe[k] + yIm[k] * yIm[k];
+            // Sxy = X * conj(Y)
+            SxyRe[k] += xRe[k] * yRe[k] + xIm[k] * yIm[k];
+            SxyIm[k] += xIm[k] * yRe[k] - xRe[k] * yIm[k];
+        }
+    }
+
+    const coh = new Float64Array(half + 1);
+    for (let k = 0; k <= half; k++) {
+        const denom = Sxx[k] * Syy[k];
+        if (denom > 0) coh[k] = (SxyRe[k] * SxyRe[k] + SxyIm[k] * SxyIm[k]) / denom;
+    }
+    return coh;
+}
+
+/**
+ * Compute stability margins from arrays of frequencies, magnitudes and phases.
+ * freqAxis: Hz,  magDB: dB,  phaseDeg: degrees (unwrapped).
+ * Returns { phaseMargin, gainMargin, gcFreq, pcFreq } — any may be null.
+ */
+function _computeStabilityMargins(freqAxis, magDB, phaseDeg) {
+    let gcFreq = null,
+        phaseMargin = null;
+    let pcFreq = null,
+        gainMargin = null;
+
+    // Gain crossover: first downward 0 dB crossing
+    for (let i = 1; i < magDB.length; i++) {
+        if (magDB[i - 1] >= 0 && magDB[i] < 0) {
+            const t = magDB[i - 1] / (magDB[i - 1] - magDB[i]);
+            gcFreq = freqAxis[i - 1] + t * (freqAxis[i] - freqAxis[i - 1]);
+            phaseMargin = phaseDeg[i - 1] + t * (phaseDeg[i] - phaseDeg[i - 1]) + 180;
+            break;
+        }
+    }
+
+    // Phase crossover: first downward -180° crossing
+    for (let i = 1; i < phaseDeg.length; i++) {
+        if (phaseDeg[i - 1] >= -180 && phaseDeg[i] < -180) {
+            const t = (phaseDeg[i - 1] + 180) / (phaseDeg[i - 1] - phaseDeg[i]);
+            pcFreq = freqAxis[i - 1] + t * (freqAxis[i] - freqAxis[i - 1]);
+            gainMargin = -(magDB[i - 1] + t * (magDB[i] - magDB[i - 1]));
+            break;
+        }
+    }
+
+    return { phaseMargin, gainMargin, gcFreq, pcFreq };
+}
+
+/**
+ * Synthesise PID adjustments from stability margins and current gains.
+ * Returns { suggestP, suggestD, reason }.
+ */
+function _synthesizePID(currentP, currentD, margins) {
+    const TARGET_PM = 45;
+    let suggestP = currentP;
+    let suggestD = currentD;
+    const parts = [];
+
+    if (margins.phaseMargin !== null && margins.phaseMargin > 0) {
+        const factor = clamp(TARGET_PM / margins.phaseMargin, 0.7, 1.3);
+        suggestP = Math.round(currentP * factor);
+        parts.push(`PM ${margins.phaseMargin.toFixed(1)}°→45° (×${factor.toFixed(2)})`);
+    }
+
+    if (margins.gcFreq !== null && currentD !== null && currentD > 0) {
+        const gcHz = margins.gcFreq;
+        if (gcHz < 80) {
+            const dFactor = clamp(1 + (80 - gcHz) / 160, 1.0, 1.3);
+            suggestD = Math.round(currentD * dFactor);
+            parts.push(`low GC ${gcHz.toFixed(0)}Hz → increase D ×${dFactor.toFixed(2)}`);
+        } else if (gcHz > 200) {
+            const dFactor = clamp(1 - (gcHz - 200) / 400, 0.7, 1.0);
+            suggestD = Math.round(currentD * dFactor);
+            parts.push(`high GC ${gcHz.toFixed(0)}Hz → decrease D ×${dFactor.toFixed(2)}`);
+        }
+    }
+
+    return { suggestP, suggestD, reason: parts.join("; ") || "within target margins" };
+}
+
+/**
+ * Run the full SysID pipeline on decoded frames for one BBL session.
+ * Returns a sysidResult object or null on fatal error.
+ */
+function runSysID(frames, config) {
+    const looptime = config.misc?.looptime;
+    if (!looptime || looptime <= 0) return null;
+    const sampleRate = 1e6 / looptime;
+
+    const AXES = [
+        { name: "roll", spKey: "setpoint[0]", gyroKey: "gyroADC[0]", pidKey: "roll" },
+        { name: "pitch", spKey: "setpoint[1]", gyroKey: "gyroADC[1]", pidKey: "pitch" },
+        { name: "yaw", spKey: "setpoint[2]", gyroKey: "gyroADC[2]", pidKey: "yaw" },
+    ];
+
+    const result = { axes: {}, warnings: [] };
+
+    for (const ax of AXES) {
+        // Extract raw signal arrays
+        const sp = new Float64Array(frames.length);
+        const gy = new Float64Array(frames.length);
+        for (let i = 0; i < frames.length; i++) {
+            sp[i] = Number(frames[i][ax.spKey] ?? 0);
+            gy[i] = Number(frames[i][ax.gyroKey] ?? 0);
+        }
+
+        // Find the longest active chirp segment (rolling 500-sample window, std > 30)
+        const { start, end } = _findLongestActiveSegment(sp, 500, 30);
+        const N = end - start;
+
+        if (N < 512) {
+            result.axes[ax.name] = { error: "Insufficient chirp data on this axis (< 512 samples active)" };
+            continue;
+        }
+
+        const spSeg = sp.slice(start, end);
+        const gySeg = gy.slice(start, end);
+
+        // Pad to next power of 2 and apply Hann window
+        const Np = _nextPow2(N);
+        const spRe = new Float64Array(Np),
+            spIm = new Float64Array(Np);
+        const gyRe = new Float64Array(Np),
+            gyIm = new Float64Array(Np);
+        const win = _hannWindow(N);
+        for (let i = 0; i < N; i++) {
+            spRe[i] = spSeg[i] * win[i];
+            gyRe[i] = gySeg[i] * win[i];
+        }
+
+        fftInPlace(spRe, spIm);
+        fftInPlace(gyRe, gyIm);
+
+        // Frequency axis: bin k → k * sampleRate / Np Hz
+        const nBins = Np / 2 + 1;
+        const binHz = sampleRate / Np;
+
+        // H(f) = FFT(gyro) / FFT(setpoint)
+        const magDB = new Float64Array(nBins);
+        const phaseRad = new Float64Array(nBins);
+        for (let k = 0; k < nBins; k++) {
+            const spMag2 = spRe[k] * spRe[k] + spIm[k] * spIm[k];
+            if (spMag2 < 1e-10) {
+                magDB[k] = -60;
+                continue;
+            }
+            const hRe = (gyRe[k] * spRe[k] + gyIm[k] * spIm[k]) / spMag2;
+            const hIm = (gyIm[k] * spRe[k] - gyRe[k] * spIm[k]) / spMag2;
+            const hMag = Math.sqrt(hRe * hRe + hIm * hIm);
+            magDB[k] = hMag > 0 ? 20 * Math.log10(hMag) : -60;
+            phaseRad[k] = Math.atan2(hIm, hRe);
+        }
+
+        _unwrapPhase(phaseRad);
+
+        // Coherence via Welch (512-sample segments, 50% overlap)
+        const SEG = 512;
+        const cohRaw = _welchCoherence(Array.from(spSeg), Array.from(gySeg), SEG);
+        const cohBinHz = sampleRate / SEG;
+
+        // Build filtered arrays: 1–500 Hz range only
+        const FREQ_MIN = 1,
+            FREQ_MAX = 500;
+        const freqAxis = [],
+            filtMag = [],
+            filtPhase = [],
+            filtCoh = [];
+        for (let k = 0; k < nBins; k++) {
+            const f = k * binHz;
+            if (f < FREQ_MIN || f > FREQ_MAX) continue;
+            freqAxis.push(f);
+            filtMag.push(magDB[k]);
+            filtPhase.push((phaseRad[k] * 180) / Math.PI);
+            // Map coherence bin: interpolate from Welch resolution
+            const ck = f / cohBinHz;
+            const ci = Math.floor(ck);
+            const cf = ck - ci;
+            const c =
+                ci + 1 < cohRaw.length
+                    ? cohRaw[ci] * (1 - cf) + cohRaw[ci + 1] * cf
+                    : ci < cohRaw.length
+                        ? cohRaw[ci]
+                        : 0;
+            filtCoh.push(Math.min(1, Math.max(0, c)));
+        }
+
+        // Stability margins (computed on all bins, coherence shown visually)
+        const { phaseMargin, gainMargin, gcFreq, pcFreq } = _computeStabilityMargins(freqAxis, filtMag, filtPhase);
+
+        // Current PID values from BBL header
+        const currentP = config.pids?.[ax.pidKey]?.[0] ?? null;
+        const currentD = config.pids?.[ax.pidKey]?.[2] ?? null;
+
+        const pidSuggest =
+            currentP !== null ? _synthesizePID(currentP, currentD, { phaseMargin, gainMargin, gcFreq, pcFreq }) : null;
+
+        result.axes[ax.name] = {
+            freqAxis,
+            magDB: filtMag,
+            phaseDeg: filtPhase,
+            coherence: filtCoh,
+            phaseMargin,
+            gainMargin,
+            gcFreq,
+            pcFreq,
+            currentP,
+            currentD,
+            pidSuggest,
+        };
+
+        // Safety warnings
+        if (phaseMargin !== null) {
+            if (phaseMargin < 30) {
+                result.warnings.push(
+                    `${ax.name.toUpperCase()}: Phase margin ${phaseMargin.toFixed(1)}° is dangerously close to instability (<30°) — reduce P gain immediately.`,
+                );
+            } else if (phaseMargin > 70) {
+                result.warnings.push(
+                    `${ax.name.toUpperCase()}: Phase margin ${phaseMargin.toFixed(1)}° is high (>70°) — tune may be over-filtered or sluggish.`,
+                );
+            }
+        }
+    }
+
+    return result;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // BBL helpers
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -1701,6 +2271,7 @@ export default {
             bblSessions: [],
             bblSelectedSession: 0,
             bblBuffer: null,
+            sysidResult: null,
             tooltip: { visible: false, text: "", x: 0, y: 0 },
             // Auto Tune (chirp sweep)
             chirpPropInch: 5,
@@ -1756,6 +2327,9 @@ export default {
         },
         chirpPropInch(v) {
             this.applyChirpPropDefaults(v);
+        },
+        sysidResult(val) {
+            if (val) this.$nextTick(() => this.renderBodePlots());
         },
     },
 
@@ -2029,6 +2603,20 @@ export default {
                 return;
             }
 
+            // Detect chirp / SysID log — if found, run frequency response analysis
+            // and skip the normal filter effectiveness scoring.
+            this.sysidResult = null;
+            if (detectChirp(frames, config)) {
+                const prefix = sessions.length > 1 ? `Session ${sessionIdx + 1} — ` : "";
+                this.analysisResult = `${prefix}CHIRP / SYSID log detected — see frequency response analysis below.`;
+                try {
+                    this.sysidResult = runSysID(frames, config);
+                } catch (sysidErr) {
+                    this.analysisResult += `\nSysID analysis error: ${sysidErr.message}`;
+                }
+                return;
+            }
+
             const prefix = sessions.length > 1 ? `Session ${sessionIdx + 1}: ` : "";
             this.analysisResult = prefix + formatAnalysisResult(analyzeLog(frames, this.motorTemp, config));
         },
@@ -2053,6 +2641,7 @@ export default {
             this.bblBuffer = null;
             this.bblSessions = [];
             this.bblSelectedSession = 0;
+            this.sysidResult = null;
             this.csvFile = file;
             this.fileName = file.name;
         },
@@ -2202,6 +2791,293 @@ export default {
                     this.chirpConfirmText = "ERROR: CLI did not become active. Check connection and try again.";
                 }
             }, POLL_INTERVAL_MS);
+        },
+
+        /**
+         * Return a CSS class name for stability margin table cells.
+         * type: 'pm' (phase margin) or 'gm' (gain margin)
+         */
+        stabilityClass(value, type) {
+            if (value === null || value === undefined) return "";
+            if (type === "pm") {
+                if (value < 30) return "at-sysid-bad";
+                if (value > 70) return "at-sysid-warn";
+                return "at-sysid-ok";
+            }
+            if (type === "gm") {
+                if (value < 3) return "at-sysid-bad";
+                if (value < 6) return "at-sysid-warn";
+                return "at-sysid-ok";
+            }
+            return "";
+        },
+
+        /** Draw all three Bode-plot canvases from this.sysidResult. */
+        renderBodePlots() {
+            const refMap = { roll: "bodePlotRoll", pitch: "bodePlotPitch", yaw: "bodePlotYaw" };
+            for (const [axName, refName] of Object.entries(refMap)) {
+                const canvas = this.$refs[refName];
+                const axData = this.sysidResult?.axes?.[axName];
+                if (!canvas || !axData || axData.error) continue;
+                this._drawBode(canvas, axData, axName);
+            }
+        },
+
+        /**
+         * Draw a Bode plot (magnitude top, phase bottom) onto a canvas element.
+         * Frequency x-axis is log scale 1–500 Hz.
+         * Low-coherence regions (< 0.6) are rendered at reduced opacity.
+         */
+        _drawBode(canvas, axData, axName) {
+            const W = canvas.width;
+            const H = canvas.height;
+            const ctx = canvas.getContext("2d");
+            ctx.clearRect(0, 0, W, H);
+
+            const PAD_L = 52,
+                PAD_R = 16,
+                PAD_T = 18,
+                PAD_B = 22;
+            const plotW = W - PAD_L - PAD_R;
+            const halfH = (H - PAD_T - PAD_B) / 2;
+
+            const MAG_TOP = PAD_T;
+            const MAG_BOT = PAD_T + halfH;
+            const PH_TOP = MAG_BOT + 4;
+            const PH_BOT = H - PAD_B;
+
+            const FREQ_LO = 1,
+                FREQ_HI = 500;
+            const MAG_MIN = -40,
+                MAG_MAX = 40;
+            const PH_MIN = -360,
+                PH_MAX = 180;
+
+            const logLo = Math.log10(FREQ_LO);
+            const logHi = Math.log10(FREQ_HI);
+
+            const xForFreq = (f) => PAD_L + ((Math.log10(Math.max(f, FREQ_LO)) - logLo) / (logHi - logLo)) * plotW;
+            const yForMag = (m) => MAG_BOT - ((clamp(m, MAG_MIN, MAG_MAX) - MAG_MIN) / (MAG_MAX - MAG_MIN)) * halfH;
+            const yForPh = (p) =>
+                PH_BOT - ((clamp(p, PH_MIN, PH_MAX) - PH_MIN) / (PH_MAX - PH_MIN)) * (PH_BOT - PH_TOP);
+
+            // ── Background ───────────────────────────────────────────────────
+            ctx.fillStyle = "#1a1a1a";
+            ctx.fillRect(0, 0, W, H);
+
+            // ── Grid lines ───────────────────────────────────────────────────
+            ctx.strokeStyle = "#333333";
+            ctx.lineWidth = 1;
+
+            // Magnitude: 0 dB reference line
+            const y0dB = yForMag(0);
+            ctx.setLineDash([4, 4]);
+            ctx.beginPath();
+            ctx.moveTo(PAD_L, y0dB);
+            ctx.lineTo(W - PAD_R, y0dB);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // Horizontal grid for magnitude panel (±20, ±40 dB)
+            for (const m of [-40, -20, 20, 40]) {
+                const y = yForMag(m);
+                ctx.beginPath();
+                ctx.moveTo(PAD_L, y);
+                ctx.lineTo(W - PAD_R, y);
+                ctx.stroke();
+            }
+
+            // Phase: -180° reference line
+            const yNeg180 = yForPh(-180);
+            ctx.setLineDash([4, 4]);
+            ctx.beginPath();
+            ctx.moveTo(PAD_L, yNeg180);
+            ctx.lineTo(W - PAD_R, yNeg180);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // Horizontal grid for phase panel (0, -90, -270)
+            for (const p of [0, -90, -270]) {
+                if (p < PH_MIN || p > PH_MAX) continue;
+                const y = yForPh(p);
+                ctx.beginPath();
+                ctx.moveTo(PAD_L, y);
+                ctx.lineTo(W - PAD_R, y);
+                ctx.stroke();
+            }
+
+            // Vertical grid lines at each decade and notable sub-decades
+            const freqGridLines = [1, 2, 5, 10, 20, 50, 100, 200, 500];
+            ctx.strokeStyle = "#2a2a2a";
+            for (const f of freqGridLines) {
+                const x = xForFreq(f);
+                ctx.beginPath();
+                ctx.moveTo(x, MAG_TOP);
+                ctx.lineTo(x, PH_BOT);
+                ctx.stroke();
+            }
+
+            // ── Data curves ──────────────────────────────────────────────────
+            const { freqAxis, magDB, phaseDeg, coherence, gcFreq, pcFreq } = axData;
+            const n = freqAxis.length;
+            const COH_THRESH = 0.6;
+
+            // Draw filled coherence shading under magnitude curve
+            // (grey fill for low-coherence regions)
+            for (let i = 0; i < n; i++) {
+                const coh = coherence[i] ?? 0;
+                if (coh >= COH_THRESH) continue;
+                const x = xForFreq(freqAxis[i]);
+                const alpha = (1 - coh / COH_THRESH) * 0.35;
+                ctx.fillStyle = `rgba(80,80,80,${alpha.toFixed(2)})`;
+                ctx.fillRect(x, MAG_TOP, Math.max(1, xForFreq(freqAxis[i + 1] ?? freqAxis[i] * 1.01) - x), halfH);
+                ctx.fillRect(
+                    x,
+                    PH_TOP,
+                    Math.max(1, xForFreq(freqAxis[i + 1] ?? freqAxis[i] * 1.01) - x),
+                    PH_BOT - PH_TOP,
+                );
+            }
+
+            // Magnitude curve
+            ctx.lineWidth = 1.5;
+            let drawing = false;
+            for (let i = 0; i < n; i++) {
+                const coh = coherence[i] ?? 0;
+                const alpha = coh < COH_THRESH ? 0.35 : 1.0;
+                const color = `rgba(255,187,0,${alpha})`;
+                const x = xForFreq(freqAxis[i]);
+                const y = yForMag(magDB[i]);
+                if (!drawing) {
+                    ctx.beginPath();
+                    ctx.moveTo(x, y);
+                    ctx.strokeStyle = color;
+                    drawing = true;
+                } else {
+                    // If opacity changes, flush segment
+                    const prevCoh = coherence[i - 1] ?? 0;
+                    const prevAlpha = prevCoh < COH_THRESH ? 0.35 : 1.0;
+                    if (Math.abs(alpha - prevAlpha) > 0.01) {
+                        ctx.stroke();
+                        ctx.beginPath();
+                        ctx.moveTo(x, y);
+                        ctx.strokeStyle = color;
+                    } else {
+                        ctx.lineTo(x, y);
+                    }
+                }
+            }
+            if (drawing) ctx.stroke();
+
+            // Phase curve
+            drawing = false;
+            for (let i = 0; i < n; i++) {
+                const coh = coherence[i] ?? 0;
+                const alpha = coh < COH_THRESH ? 0.35 : 1.0;
+                const color = `rgba(100,180,255,${alpha})`;
+                const x = xForFreq(freqAxis[i]);
+                const y = yForPh(phaseDeg[i]);
+                if (!drawing) {
+                    ctx.beginPath();
+                    ctx.moveTo(x, y);
+                    ctx.strokeStyle = color;
+                    drawing = true;
+                } else {
+                    const prevCoh = coherence[i - 1] ?? 0;
+                    const prevAlpha = prevCoh < COH_THRESH ? 0.35 : 1.0;
+                    if (Math.abs(alpha - prevAlpha) > 0.01) {
+                        ctx.stroke();
+                        ctx.beginPath();
+                        ctx.moveTo(x, y);
+                        ctx.strokeStyle = color;
+                    } else {
+                        ctx.lineTo(x, y);
+                    }
+                }
+            }
+            if (drawing) ctx.stroke();
+
+            // Gain-crossover frequency marker
+            if (gcFreq !== null && gcFreq >= FREQ_LO && gcFreq <= FREQ_HI) {
+                const xgc = xForFreq(gcFreq);
+                ctx.strokeStyle = "rgba(255,100,100,0.8)";
+                ctx.lineWidth = 1;
+                ctx.setLineDash([3, 3]);
+                ctx.beginPath();
+                ctx.moveTo(xgc, MAG_TOP);
+                ctx.lineTo(xgc, MAG_BOT);
+                ctx.stroke();
+                ctx.setLineDash([]);
+            }
+
+            // Phase-crossover frequency marker
+            if (pcFreq !== null && pcFreq >= FREQ_LO && pcFreq <= FREQ_HI) {
+                const xpc = xForFreq(pcFreq);
+                ctx.strokeStyle = "rgba(180,100,255,0.8)";
+                ctx.lineWidth = 1;
+                ctx.setLineDash([3, 3]);
+                ctx.beginPath();
+                ctx.moveTo(xpc, PH_TOP);
+                ctx.lineTo(xpc, PH_BOT);
+                ctx.stroke();
+                ctx.setLineDash([]);
+            }
+
+            // ── Axis labels ──────────────────────────────────────────────────
+            ctx.fillStyle = "#888888";
+            ctx.font = "10px monospace";
+            ctx.textAlign = "right";
+
+            // Magnitude y-axis labels
+            for (const m of [-40, -20, 0, 20, 40]) {
+                const y = yForMag(m);
+                if (y < MAG_TOP || y > MAG_BOT + 2) continue;
+                ctx.fillText(`${m}`, PAD_L - 3, y + 3);
+            }
+            ctx.fillStyle = "#aaaaaa";
+            ctx.font = "9px monospace";
+            ctx.textAlign = "left";
+            ctx.fillText("dB", 2, MAG_TOP + 8);
+
+            // Phase y-axis labels
+            ctx.fillStyle = "#888888";
+            ctx.font = "10px monospace";
+            ctx.textAlign = "right";
+            for (const p of [-270, -180, -90, 0, 90, 180]) {
+                if (p < PH_MIN || p > PH_MAX) continue;
+                const y = yForPh(p);
+                if (y < PH_TOP || y > PH_BOT + 2) continue;
+                ctx.fillText(`${p}°`, PAD_L - 3, y + 3);
+            }
+            ctx.fillStyle = "#aaaaaa";
+            ctx.font = "9px monospace";
+            ctx.textAlign = "left";
+            ctx.fillText("deg", 2, PH_TOP + 8);
+
+            // Frequency axis labels
+            ctx.fillStyle = "#888888";
+            ctx.font = "10px monospace";
+            ctx.textAlign = "center";
+            for (const f of [1, 5, 10, 20, 50, 100, 200, 500]) {
+                const x = xForFreq(f);
+                ctx.fillText(f >= 1000 ? `${f / 1000}k` : `${f}`, x, H - 4);
+            }
+            ctx.fillStyle = "#aaaaaa";
+            ctx.font = "9px monospace";
+            ctx.textAlign = "right";
+            ctx.fillText("Hz", W - PAD_R, H - 4);
+
+            // Panel divider
+            ctx.strokeStyle = "#444444";
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(PAD_L, MAG_BOT + 2);
+            ctx.lineTo(W - PAD_R, MAG_BOT + 2);
+            ctx.stroke();
+
+            // Border
+            ctx.strokeStyle = "#444444";
+            ctx.strokeRect(PAD_L, MAG_TOP, plotW, PH_BOT - MAG_TOP);
         },
     },
 };
