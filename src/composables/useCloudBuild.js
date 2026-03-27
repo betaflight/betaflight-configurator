@@ -193,7 +193,7 @@ export function useCloudBuild(params) {
 
             // Parse custom defines from input
             if (customDefinesInput?.value) {
-                const customDefinesText = customDefinesInput.value.value || "";
+                const customDefinesText = customDefinesInput.value || "";
                 customDefinesText
                     .split(" ")
                     .map((element) => element.trim())

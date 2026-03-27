@@ -14,9 +14,8 @@ import { bit_check } from "../bit";
 import { gui_log } from "../gui_log";
 import MSPCodes from "../msp/MSPCodes";
 import PortUsage from "../port_usage";
-import $ from "jquery";
 import { serial } from "../serial";
-import DFU, { DFU_AUTH_REQUIRED, DFUAuthRequiredError } from "../protocols/webusbdfu";
+import DFU from "../protocols/webusbdfu";
 import { read_serial } from "../serial_backend";
 import NotificationManager from "../utils/notifications";
 import { get as getConfig } from "../ConfigStorage";
@@ -109,41 +108,26 @@ class STM32Protocol {
         serial.removeEventListener("disconnect", (event) => this.handleDisconnect(event.detail));
 
         if (disconnectionResult && this.rebootMode) {
-            // Try to detect an already-authorized DFU device first. If none found within
-            // timeout, notify the UI so the user can click to grant permission (required
-            // by browsers for navigator.usb.requestDevice).
-            DFU.waitForDfu(5000)
-                .then((device) => {
-                    if (device) {
-                        console.log(`${this.logHead} DFU device found and authorized`, device);
-                    } else {
-                        console.log(`${this.logHead} No DFU device auto-authorized`);
-                    }
-                })
-                .catch((e) => {
-                    if (e?.code === DFU_AUTH_REQUIRED || e instanceof DFUAuthRequiredError) {
-                        console.warn(`${this.logHead} DFU requires user authorization`);
-                        // If UI exposes a helper to show a permission button, call it.
-                        try {
-                            if (
-                                TABS?.firmware_flasher &&
-                                typeof TABS.firmware_flasher.showDfuPermission === "function"
-                            ) {
-                                TABS.firmware_flasher.showDfuPermission();
-                            } else {
-                                // No UI available to request DFU permission; avoid non-gesture fallback.
-                                console.warn(`${this.logHead} No UI available to request DFU permission`);
+            // If the firmware_flasher does not start flashing, we need to ask for permission to flash
+            setTimeout(() => {
+                if (this.rebootMode) {
+                    console.log(`${this.logHead} STM32 Requesting permission for device`);
+
+                    DFU.requestPermission()
+                        .then((device) => {
+                            if (device == null) {
+                                console.error(`${this.logHead} DFU request permission denied`);
                                 this.handleError();
+                                return;
                             }
-                        } catch (err) {
-                            console.error(`${this.logHead} Error notifying UI about DFU auth`, err);
+                            console.log(`${this.logHead} DFU request permission granted`, device);
+                        })
+                        .catch((e) => {
+                            console.error(`${this.logHead} DFU request permission failed`, e);
                             this.handleError();
-                        }
-                    } else {
-                        console.error(`${this.logHead} DFU wait failed`, e);
-                        this.handleError();
-                    }
-                });
+                        });
+                }
+            }, 3000);
         } else {
             this.handleError(false);
         }
@@ -291,7 +275,10 @@ class STM32Protocol {
         TABS.firmware_flasher.flashingMessage(null, TABS.firmware_flasher.FLASH_MESSAGE_TYPES.NEUTRAL).flashProgress(0);
 
         // lock some UI elements TODO needs rework
-        $('select[name="release"]').prop("disabled", true);
+        const releaseSelect = document.querySelector('select[name="release"]');
+        if (releaseSelect) {
+            releaseSelect.disabled = true;
+        }
 
         serial.removeEventListener("receive", readSerialAdapter);
         serial.addEventListener("receive", readSerialAdapter);
@@ -335,7 +322,7 @@ class STM32Protocol {
         }
 
         // routine that fetches data from buffer if statement is true
-        if (this.receive_buffer.length >= this.bytesToRead && this.bytesToRead != 0) {
+        if (this.receive_buffer.length >= this.bytesToRead && this.bytesToRead !== 0) {
             const fetched = this.receive_buffer.slice(0, this.bytesToRead); // bytes requested
             this.receive_buffer.splice(0, this.bytesToRead); // remove read bytes
 
@@ -1011,7 +998,10 @@ class STM32Protocol {
         GUI.connect_lock = false;
 
         // unlock some UI elements TODO needs rework
-        $('select[name="release"]').prop("disabled", false);
+        const releaseEl = document.querySelector('select[name="release"]');
+        if (releaseEl) {
+            releaseEl.disabled = false;
+        }
 
         // handle timing
         const timeSpent = new Date().getTime() - this.upload_time_start;

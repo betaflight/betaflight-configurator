@@ -251,9 +251,8 @@ const startUserInteraction = () => {
         motorOutputReorderCanvas.startOver();
     } else {
         // Initialize canvas
-        const $canvas = globalThis.$(canvasRef.value);
         motorOutputReorderCanvas = new MotorOutputReorderCanvas(
-            $canvas,
+            canvasRef.value,
             props.droneConfiguration,
             onMotorClick,
             spinMotorCallback,

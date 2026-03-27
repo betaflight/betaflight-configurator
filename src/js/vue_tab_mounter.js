@@ -14,6 +14,32 @@ import { tabState } from "./tab_state.js";
 
 // Store the current mounted Vue app instance for cleanup
 let currentTabApp = null;
+export const TAB_ADAPTER_REGISTRATION_KEY = "tabAdapterRegistration";
+
+export function buildTabAdapter(tabName, componentInstance, existingAdapter = TABS[tabName]) {
+    const fallbackCleanup = (callback) => {
+        if (componentInstance.cleanup) {
+            componentInstance.cleanup(callback);
+        } else if (callback) {
+            callback();
+        }
+    };
+
+    const tabAdapter =
+        existingAdapter && typeof existingAdapter === "object" ? existingAdapter : { cleanup: fallbackCleanup };
+
+    if (typeof tabAdapter.cleanup !== "function") {
+        tabAdapter.cleanup = fallbackCleanup;
+    }
+
+    tabAdapter.expertModeChanged = (enabled) => {
+        // Update global reactive state that Vue components watch
+        tabState.expertMode = enabled;
+    };
+    tabAdapter._vueComponent = componentInstance;
+
+    return tabAdapter;
+}
 
 /**
  * Check if a tab has a Vue component available
@@ -61,6 +87,8 @@ export function mountVueTab(tabName, contentReadyCallback) {
     currentTabApp.use(I18NextVue, { i18next });
     currentTabApp.use(pinia);
     currentTabApp.provide("gui", GUI);
+    const tabAdapterRegistration = { current: null };
+    currentTabApp.provide(TAB_ADAPTER_REGISTRATION_KEY, tabAdapterRegistration);
 
     // Provide the global betaflight model
     if (globalThis.vm) {
@@ -74,23 +102,8 @@ export function mountVueTab(tabName, contentReadyCallback) {
     const componentInstance = currentTabApp.mount(contentEl);
 
     console.log(`[Vue Tab] Mounted: ${tabName}`);
-    // Create a tab adapter object that mimics the legacy tab pattern
-    // This provides the cleanup and expertModeChanged methods that gui.js and main.js expect
-    const tabAdapter = {
-        cleanup: (callback) => {
-            if (componentInstance.cleanup) {
-                componentInstance.cleanup(callback);
-            } else if (callback) {
-                callback();
-            }
-        },
-        expertModeChanged: (enabled) => {
-            // Update global reactive state that Vue components watch
-            tabState.expertMode = enabled;
-        },
-        // Store reference to component instance for potential future use
-        _vueComponent: componentInstance,
-    };
+    // Preserve any adapter the tab explicitly registered during setup, then add the generic hooks
+    const tabAdapter = buildTabAdapter(tabName, componentInstance, tabAdapterRegistration.current);
 
     // Merge the adapter into TABS. The adapter provides default handlers
     // (cleanup, expertModeChanged, etc.). We intentionally spread the

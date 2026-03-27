@@ -401,7 +401,6 @@
 import { ref, computed, watch, onMounted, onUnmounted, nextTick } from "vue";
 import { i18n } from "@/js/localization";
 import { useDialog } from "@/composables/useDialog";
-import $ from "jquery";
 import FC from "@/js/fc";
 import MSP from "@/js/msp";
 import MSPCodes from "@/js/msp/MSPCodes";
@@ -1802,7 +1801,7 @@ onMounted(() => {
                     initModelTimeoutId = null;
                 }
 
-                model = new Model($(ratesPreviewContainer.value), $(ratesPreviewCanvas.value));
+                model = new Model(ratesPreviewContainer.value, ratesPreviewCanvas.value);
 
                 // Model automatically loads based on FC.MIXER_CONFIG.mixer
                 // Give the model a moment to initialize its renderer
