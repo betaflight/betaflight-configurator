@@ -82,7 +82,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 .tab-help {
     .gui_box {
         min-height: 500px;

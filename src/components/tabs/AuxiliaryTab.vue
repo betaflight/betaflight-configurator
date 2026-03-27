@@ -727,7 +727,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 /* Slider UI component styles */
 .slider-wrapper {
     position: relative;
@@ -951,7 +951,7 @@ export default defineComponent({
             position: absolute;
             top: 0;
             right: 0;
-            .a {
+            a {
                 padding: 2px;
             }
         }

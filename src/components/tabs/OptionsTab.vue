@@ -448,7 +448,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 .tab-options {
     .freelabel {
         margin-left: 10px;

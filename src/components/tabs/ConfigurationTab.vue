@@ -1555,7 +1555,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 .tab-configuration {
     .alignicon {
         width: 15px;
@@ -1598,13 +1598,6 @@ export default defineComponent({
         td {
             height: 1.75rem;
         }
-        tbody.features {
-            tr {
-                td:nth-child(3) {
-                    font-weight: bold;
-                }
-            }
-        }
         tbody.beeper-configuration {
             tr {
                 td:nth-child(2) {
@@ -1614,27 +1607,6 @@ export default defineComponent({
                 }
             }
         }
-    }
-
-    .gyro_item {
-        margin-bottom: 10px;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    }
-    .gyro_item:hover {
-        border-color: #bbb;
-        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
-    }
-    .gyro_row {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 10px;
-    }
-    .enable-checkbox {
-        flex: 1;
-        text-align: left;
-        margin-right: 15px;
-        padding-right: 0;
     }
 
     .visually-hidden {

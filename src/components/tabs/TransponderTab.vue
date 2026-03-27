@@ -335,7 +335,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 .tab-transponder {
     .spacer_box {
         padding-bottom: 10px;

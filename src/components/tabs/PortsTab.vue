@@ -530,7 +530,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 .visually-hidden {
     position: absolute;
     width: 1px;

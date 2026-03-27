@@ -873,7 +873,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 /* Height of the map controls bar (used in fullscreen calculations) */
 :root {
     --map-controls-bar-height: 33px;
@@ -1150,7 +1150,7 @@ meter[value] {
             height: 403px;
         }
     }
-    .tabs-gps {
+    .tab-gps {
         #loadmap {
             .map {
                 height: 343px;
@@ -1174,7 +1174,7 @@ meter[value] {
             width: 100%;
         }
     }
-    .tabs-gps {
+    .tab-gps {
         #loadmap {
             .map {
                 height: 343px;

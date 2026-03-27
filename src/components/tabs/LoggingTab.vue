@@ -481,7 +481,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 .tab-logging {
     .properties {
         margin-top: 10px;

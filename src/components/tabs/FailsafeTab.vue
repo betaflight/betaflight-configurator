@@ -722,7 +722,7 @@ onMounted(async () => {
 });
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 .content_wrapper {
     padding-bottom: 60px; /* Space for fixed toolbar */
 }
