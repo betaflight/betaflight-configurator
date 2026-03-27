@@ -39,6 +39,28 @@ jobs:
       debug_build: ${{ github.event_name == 'pull_request_target' || github.event_name == 'pull_request' }}
       commit_ref: ${{ needs.commit_reference.outputs.COMMIT_REF }}
 
+  # Deploy to GitHub Pages
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download dist artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: dist-files
+          path: ./dist-files
+
+      - name: Deploy to gh-pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist-files
+          publish_branch: gh-pages
+
   # Add PR comment
   pr_comment:
     name: Add PR Comment
