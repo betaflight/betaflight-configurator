@@ -728,188 +728,188 @@ export default defineComponent({
 </script>
 
 <style lang="less">
-/* Slider UI component styles */
-.slider-wrapper {
-    position: relative;
-    height: 40px;
-    margin: 10px 0;
-}
-
-.track-background {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    left: 0;
-    right: 0;
-    height: 8px;
-    background: var(--surface-700);
-    border-radius: 4px;
-    z-index: 0;
-    pointer-events: none;
-}
-
-.track-fill {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    height: 8px;
-    background: var(--primary-500);
-    border-radius: 4px;
-    z-index: 1;
-    cursor: grab;
-}
-
-.track-fill:active {
-    cursor: grabbing;
-}
-
-.slider-input {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    background: transparent;
-    pointer-events: auto;
-    touch-action: none;
-    -webkit-appearance: none;
-    appearance: none;
-    z-index: 3;
-}
-
-.slider-input-min {
-    z-index: 4;
-}
-
-.slider-input-max {
-    z-index: 3;
-}
-
-.slider-input::-webkit-slider-thumb {
-    pointer-events: auto;
-    -webkit-appearance: none;
-    appearance: none;
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    background: var(--surface-200);
-    border: 3px solid var(--primary-500);
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
-    cursor: grab;
-}
-
-.slider-input::-webkit-slider-thumb:active {
-    cursor: grabbing;
-}
-
-.slider-input::-moz-range-thumb {
-    pointer-events: auto;
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    background: var(--surface-200);
-    border: 3px solid var(--primary-500);
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
-    cursor: grab;
-}
-
-.slider-input::-moz-range-thumb:active {
-    cursor: grabbing;
-}
-
-.slider-input::-webkit-slider-runnable-track {
-    background: transparent;
-    border: none;
-}
-
-.slider-input::-moz-range-track {
-    background: transparent;
-    border: none;
-}
-
-.slider-inputs {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    margin-top: 8px;
-}
-
-.range-value {
-    width: 80px;
-    padding: 4px 8px;
-    background: var(--surface-700);
-    border: 1px solid var(--surface-600);
-    border-radius: 4px;
-    color: var(--text-primary);
-    font-size: 12px;
-}
-
-.range-handle {
-    position: absolute;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    background: var(--surface-200);
-    border: 3px solid var(--primary-500);
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
-    cursor: grab;
-    z-index: 10;
-}
-
-.range-handle:hover {
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.5);
-    transform: translate(-50%, -50%) scale(1.1);
-}
-
-.range-handle:active {
-    cursor: grabbing;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
-}
-
-.pips-channel-range {
-    position: relative;
-    height: 24px;
-    margin-top: 8px;
-}
-
-.pip {
-    position: absolute;
-    top: 0;
-    transform: translateX(-50%);
-    font-size: 11px;
-    color: var(--text-muted);
-    white-space: nowrap;
-}
-
-.pip::before {
-    content: "";
-    position: absolute;
-    bottom: 12px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 2px;
-    height: 8px;
-    background: var(--surface-600);
-}
-
-.pip-marker {
-    position: absolute;
-    bottom: 12px;
-    transform: translateX(-50%);
-    width: 3px;
-    height: 8px;
-    background: var(--primary-500);
-    box-shadow: 0 0 6px rgba(255, 187, 0, 0.9);
-    pointer-events: none;
-    z-index: 10;
-}
-
-/* Tab layout and mode styles (from auxiliary.less) */
 .tab-auxiliary {
+    /* Slider UI component styles */
+    .slider-wrapper {
+        position: relative;
+        height: 40px;
+        margin: 10px 0;
+    }
+
+    .track-background {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        left: 0;
+        right: 0;
+        height: 8px;
+        background: var(--surface-700);
+        border-radius: 4px;
+        z-index: 0;
+        pointer-events: none;
+    }
+
+    .track-fill {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        height: 8px;
+        background: var(--primary-500);
+        border-radius: 4px;
+        z-index: 1;
+        cursor: grab;
+    }
+
+    .track-fill:active {
+        cursor: grabbing;
+    }
+
+    .slider-input {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        background: transparent;
+        pointer-events: auto;
+        touch-action: none;
+        -webkit-appearance: none;
+        appearance: none;
+        z-index: 3;
+    }
+
+    .slider-input-min {
+        z-index: 4;
+    }
+
+    .slider-input-max {
+        z-index: 3;
+    }
+
+    .slider-input::-webkit-slider-thumb {
+        pointer-events: auto;
+        -webkit-appearance: none;
+        appearance: none;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: var(--surface-200);
+        border: 3px solid var(--primary-500);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+        cursor: grab;
+    }
+
+    .slider-input::-webkit-slider-thumb:active {
+        cursor: grabbing;
+    }
+
+    .slider-input::-moz-range-thumb {
+        pointer-events: auto;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: var(--surface-200);
+        border: 3px solid var(--primary-500);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+        cursor: grab;
+    }
+
+    .slider-input::-moz-range-thumb:active {
+        cursor: grabbing;
+    }
+
+    .slider-input::-webkit-slider-runnable-track {
+        background: transparent;
+        border: none;
+    }
+
+    .slider-input::-moz-range-track {
+        background: transparent;
+        border: none;
+    }
+
+    .slider-inputs {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        margin-top: 8px;
+    }
+
+    .range-value {
+        width: 80px;
+        padding: 4px 8px;
+        background: var(--surface-700);
+        border: 1px solid var(--surface-600);
+        border-radius: 4px;
+        color: var(--text-primary);
+        font-size: 12px;
+    }
+
+    .range-handle {
+        position: absolute;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: var(--surface-200);
+        border: 3px solid var(--primary-500);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+        cursor: grab;
+        z-index: 10;
+    }
+
+    .range-handle:hover {
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.5);
+        transform: translate(-50%, -50%) scale(1.1);
+    }
+
+    .range-handle:active {
+        cursor: grabbing;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .pips-channel-range {
+        position: relative;
+        height: 24px;
+        margin-top: 8px;
+    }
+
+    .pip {
+        position: absolute;
+        top: 0;
+        transform: translateX(-50%);
+        font-size: 11px;
+        color: var(--text-muted);
+        white-space: nowrap;
+    }
+
+    .pip::before {
+        content: "";
+        position: absolute;
+        bottom: 12px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 2px;
+        height: 8px;
+        background: var(--surface-600);
+    }
+
+    .pip-marker {
+        position: absolute;
+        bottom: 12px;
+        transform: translateX(-50%);
+        width: 3px;
+        height: 8px;
+        background: var(--primary-500);
+        box-shadow: 0 0 6px rgba(255, 187, 0, 0.9);
+        pointer-events: none;
+        z-index: 10;
+    }
+
+    /* Tab layout and mode styles */
     min-height: 100%;
     .help {
         padding: 10px;

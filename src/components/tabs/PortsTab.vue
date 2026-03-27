@@ -575,10 +575,10 @@ export default defineComponent({
                 }
             }
         }
-        select[name="function-peripherals"] {
+        td.functionsCell-peripherals > select:first-of-type {
             max-width: 12rem;
         }
-        select[name="function-telemetry"] {
+        td.functionsCell-telemetry > select:first-of-type {
             max-width: 10rem;
         }
         thead {
@@ -672,17 +672,17 @@ export default defineComponent({
                 height: 25px;
                 border-radius: unset;
             }
-            select[name="function-peripherals"] {
+            td.functionsCell-peripherals > select:first-of-type {
                 border-bottom: 1px solid var(--surface-500);
             }
-            select[name="function-telemetry"] {
+            td.functionsCell-telemetry > select:first-of-type {
                 border-bottom: 1px solid var(--surface-500);
             }
-            select[name="function-sensors"] {
+            td.functionsCell-sensors > select:first-of-type {
                 border-bottom: 1px solid var(--surface-500);
             }
             thead {
-                td {
+                th {
                     font-size: 10px;
                     width: fit-content;
                     padding: 0.5rem;
