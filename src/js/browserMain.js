@@ -2,17 +2,6 @@ import "../../libraries/flightindicators.css";
 
 import "../css/theme.css";
 import "../css/main.less";
-import "../css/tabs/help.less";
-import "../css/tabs/ports.less";
-import "../css/tabs/configuration.less";
-import "../css/tabs/servos.less";
-import "../css/tabs/gps.less";
-import "../css/tabs/logging.less";
-import "../css/tabs/onboard_logging.less";
-import "../css/tabs/auxiliary.less";
-import "../css/tabs/failsafe.less";
-import "../css/tabs/transponder.less";
-import "../css/tabs/options.less";
 import "../css/opensans_webfontkit/fonts.css";
 import "switchery-latest/dist/switchery.min.css";
 import "../css/switchery_custom.less";
