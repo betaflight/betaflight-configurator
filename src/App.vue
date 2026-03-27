@@ -328,12 +328,21 @@ const connectionFallback = reactive({ timestamp: null });
 // Track latest window.vm so computeds re-run when it is reassigned (import order vs. init.js).
 const syncedVm = shallowRef(window.vm);
 
-function currentVm() {
-    const v = window.vm;
-    if (v !== syncedVm.value) {
+// Intercept future assignments to window.vm so syncedVm stays in sync
+// without needing side effects inside computed getters.
+let _windowVm = window.vm;
+Object.defineProperty(window, "vm", {
+    get: () => _windowVm,
+    set: (v) => {
+        _windowVm = v;
         syncedVm.value = v;
-    }
-    return v;
+    },
+    configurable: true,
+    enumerable: true,
+});
+
+function currentVm() {
+    return syncedVm.value;
 }
 
 const CONFIGURATOR = computed(() => currentVm()?.CONFIGURATOR ?? CONFIGURATORModule);
