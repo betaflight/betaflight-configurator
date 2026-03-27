@@ -755,9 +755,9 @@ onMounted(async () => {
 .tab-failsafe {
     position: relative;
     .modename {
-        background-color: #828885;
+        background-color: #636766;
         border-radius: 3px;
-        border: 1px solid #686c6a;
+        border: 1px solid #535756;
         color: #fff !important;
         font-weight: 600 !important;
         padding-left: 3px;

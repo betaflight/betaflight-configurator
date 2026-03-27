@@ -1149,8 +1149,6 @@ meter[value] {
         .gps_map {
             height: 403px;
         }
-    }
-    .tab-gps {
         #loadmap {
             .map {
                 height: 343px;
@@ -1173,8 +1171,6 @@ meter[value] {
             flex-direction: column;
             width: 100%;
         }
-    }
-    .tab-gps {
         #loadmap {
             .map {
                 height: 343px;
