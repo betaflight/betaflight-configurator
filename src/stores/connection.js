@@ -24,19 +24,25 @@ export const useConnectionStore = defineStore("connection", () => {
         set: (val) => (GUI.connect_lock = val),
     });
 
-    // CONFIGURATOR object is NOT reactive by default unless we made it so,
-    // but typically it's updated alongside GUI.
-    // Ideally we should make CONFIGURATOR reactive too or just rely on GUI being the signal
-    // to re-read CONFIGURATOR.
-    // For now, let's assume reading it is efficient and we rely on Vue's reactivity
-    // tracking on other properties or events to trigger re-renders.
-    // A better approach for CONFIGURATOR is to wrap it or access it via getters
-    // that depend on a tick or reactive source.
-    // However, connectionValid is often set alongside connected_to.
-
+    // CONFIGURATOR is already reactive (wrapped in reactive() in data_storage.js)
     const connectionValid = computed({
         get: () => CONFIGURATOR.connectionValid,
         set: (val) => (CONFIGURATOR.connectionValid = val),
+    });
+
+    const virtualMode = computed({
+        get: () => CONFIGURATOR.virtualMode,
+        set: (val) => (CONFIGURATOR.virtualMode = val),
+    });
+
+    const cliActive = computed({
+        get: () => CONFIGURATOR.cliActive,
+        set: (val) => (CONFIGURATOR.cliActive = val),
+    });
+
+    const cliValid = computed({
+        get: () => CONFIGURATOR.cliValid,
+        set: (val) => (CONFIGURATOR.cliValid = val),
     });
 
     const selectedPort = computed(() => PortHandler.portPicker.selectedPort);
@@ -65,6 +71,9 @@ export const useConnectionStore = defineStore("connection", () => {
         connectedTo,
         connectLock,
         connectionValid,
+        virtualMode,
+        cliActive,
+        cliValid,
         clearMspQueue,
         selectedPort,
         liveDataPaused,
