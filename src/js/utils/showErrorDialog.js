@@ -1,13 +1,18 @@
-import $ from "jquery";
-
 export function showErrorDialog(message) {
-    const dialog = $(".dialogError")[0];
+    const dialog = document.querySelector(".dialogError");
+    if (!dialog) {
+        return;
+    }
 
-    $(".dialogError-content").html(message);
+    const content = document.querySelector(".dialogError-content");
+    if (content) {
+        content.innerHTML = message;
+    }
 
-    $(".dialogError-closebtn").click(function () {
-        dialog.close();
-    });
+    const closeBtn = document.querySelector(".dialogError-closebtn");
+    if (closeBtn) {
+        closeBtn.onclick = () => dialog.close();
+    }
 
     dialog.showModal();
 }

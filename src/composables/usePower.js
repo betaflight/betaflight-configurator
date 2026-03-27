@@ -3,15 +3,22 @@ import semver from "semver";
 import { i18n } from "../js/localization";
 import { tracking } from "../js/Analytics";
 import { mspHelper } from "../js/msp/MSPHelper";
-import { API_VERSION_1_44 } from "../js/data_storage";
+import { API_VERSION_1_44, API_VERSION_1_48 } from "../js/data_storage";
 import FC from "../js/fc";
 import MSP from "../js/msp";
 import MSPCodes from "../js/msp/MSPCodes";
+import { useConnectionStore } from "../stores/connection";
+import GUI from "../js/gui";
 
 export function usePower() {
     const supported = computed(() => {
         return FC.CONFIG?.apiVersion && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_44);
     });
+    const hasBatteryProfiles = computed(() => {
+        return FC.CONFIG?.apiVersion && semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_48);
+    });
+    const activeBatteryProfile = ref(0);
+    const batteryProfileName = ref("");
     const analyticsChanges = reactive({});
     const batteryState = reactive({
         cellCount: 0,
@@ -109,16 +116,74 @@ export function usePower() {
         );
     };
 
+    // Load battery profile name for the active profile from the flight controller
+    const loadBatteryProfileName = async () => {
+        if (!hasBatteryProfiles.value) {
+            return;
+        }
+
+        await MSP.promise(
+            MSPCodes.MSP2_GET_TEXT,
+            mspHelper.crunch(MSPCodes.MSP2_GET_TEXT, MSPCodes.BATTERY_PROFILE_NAME),
+        );
+
+        activeBatteryProfile.value = FC.CONFIG.batteryProfile;
+        batteryProfileName.value = FC.CONFIG.batteryProfileNames[FC.CONFIG.batteryProfile] || "";
+    };
+
+    // Change active battery profile
+    const changeBatteryProfile = async (profileIndex) => {
+        const connectionStore = useConnectionStore();
+        const previousProfile = activeBatteryProfile.value;
+        const previousProfileName = batteryProfileName.value;
+
+        try {
+            // Pause global and local polling to prevent MSP_STATUS_EX from
+            // overwriting FC.CONFIG.batteryProfile with stale data during the switch
+            connectionStore.pauseLiveData();
+            GUI.interval_pause("power_data_pull_slow");
+
+            const BATTERYPROFILE_MASK = 0x40;
+            await MSP.promise(MSPCodes.MSP_SELECT_SETTING, [profileIndex | BATTERYPROFILE_MASK]);
+            await MSP.promise(MSPCodes.MSP_STATUS_EX);
+            activeBatteryProfile.value = FC.CONFIG.batteryProfile;
+            await loadBatteryProfileName();
+            await MSP.promise(MSPCodes.MSP_BATTERY_CONFIG);
+            updateStateFromFC();
+        } catch (error) {
+            // Best-effort: resync UI with actual FC state in case the
+            // profile switch partially succeeded on the FC side
+            try {
+                await MSP.promise(MSPCodes.MSP_STATUS_EX);
+                activeBatteryProfile.value = FC.CONFIG.batteryProfile;
+                await loadBatteryProfileName();
+                await MSP.promise(MSPCodes.MSP_BATTERY_CONFIG);
+                updateStateFromFC();
+            } catch {
+                // If resync also fails, restore previous local values
+                activeBatteryProfile.value = previousProfile;
+                batteryProfileName.value = previousProfileName;
+            }
+            throw error;
+        } finally {
+            connectionStore.resumeLiveData();
+            GUI.interval_resume("power_data_pull_slow");
+        }
+    };
+
     // Load data from flight controller
     const loadData = async () => {
         try {
-            await MSP.promise(MSPCodes.MSP_STATUS);
+            await MSP.promise(MSPCodes.MSP_STATUS_EX);
             await MSP.promise(MSPCodes.MSP_VOLTAGE_METERS);
             await MSP.promise(MSPCodes.MSP_CURRENT_METERS);
             await MSP.promise(MSPCodes.MSP_CURRENT_METER_CONFIG);
             await MSP.promise(MSPCodes.MSP_VOLTAGE_METER_CONFIG);
             await MSP.promise(MSPCodes.MSP_BATTERY_STATE);
             await MSP.promise(MSPCodes.MSP_BATTERY_CONFIG);
+
+            // Load battery profiles if supported
+            await loadBatteryProfileName();
 
             // Update reactive state
             updateStateFromFC();
@@ -362,6 +427,16 @@ export function usePower() {
 
         try {
             await MSP.promise(MSPCodes.MSP_SET_BATTERY_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_BATTERY_CONFIG));
+
+            // Save battery profile name if supported
+            if (hasBatteryProfiles.value) {
+                FC.CONFIG.batteryProfileNames[FC.CONFIG.batteryProfile] = batteryProfileName.value;
+                await MSP.promise(
+                    MSPCodes.MSP2_SET_TEXT,
+                    mspHelper.crunch(MSPCodes.MSP2_SET_TEXT, MSPCodes.BATTERY_PROFILE_NAME),
+                );
+            }
+
             await mspHelper.sendVoltageConfig();
             await mspHelper.sendCurrentConfig();
             await mspHelper.writeConfiguration(false);
@@ -376,6 +451,9 @@ export function usePower() {
 
     return {
         supported,
+        hasBatteryProfiles,
+        activeBatteryProfile,
+        batteryProfileName,
         batteryState,
         voltageMeters,
         currentMeters,
@@ -392,6 +470,8 @@ export function usePower() {
         isVoltageMeterVisible,
         isCurrentMeterVisible,
         loadData,
+        loadBatteryProfileName,
+        changeBatteryProfile,
         updateLiveData,
         onVoltageMeterSourceChange,
         onCurrentMeterSourceChange,

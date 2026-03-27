@@ -3,6 +3,8 @@ import { reactive } from "vue";
 import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "./data_storage";
 import semver from "semver";
 
+const MAX_BATTERY_PROFILES = 3;
+
 const INITIAL_CONFIG = {
     apiVersion: "0.0.0",
     flightControllerIdentifier: "",
@@ -51,6 +53,9 @@ const INITIAL_CONFIG = {
     sampleRateHz: 0,
     configurationProblems: 0,
     hardwareName: "",
+    batteryProfile: 0,
+    numberOfBatteryProfiles: 0,
+    batteryProfileNames: Array(MAX_BATTERY_PROFILES).fill(""),
 };
 
 const INITIAL_ANALOG = {

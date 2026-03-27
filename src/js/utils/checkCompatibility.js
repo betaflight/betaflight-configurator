@@ -99,29 +99,29 @@ export function checkCompatibility() {
         errorMessage += "<br/>- USB API support is disabled.";
     }
 
+    const body = document.body;
+    body.innerHTML = "";
+    Object.assign(body.style, {
+        height: "100%",
+        display: "grid",
+        backgroundImage: "url(/images/pattern_dark.png)",
+        backgroundSize: "300px",
+        backgroundRepeat: "repeat",
+        backgroundColor: "var(--surface-500)",
+    });
+
     const newDiv = document.createElement("div");
-
-    $("body")
-        .empty()
-        .css({
-            height: "100%",
-            display: "grid",
-            "background-image": "url(/images/pattern_dark.png)",
-            "background-size": "300px",
-            "background-repeat": "repeat",
-            "background-color": "var(--surface-500)",
-        })
-        .append(newDiv);
-
-    $(newDiv).append(errorMessage).css({
-        "font-size": "16px",
-        "background-color": "var(--surface-200)",
+    newDiv.innerHTML = errorMessage;
+    Object.assign(newDiv.style, {
+        fontSize: "16px",
+        backgroundColor: "var(--surface-200)",
         color: "var(--text)",
         padding: "1rem",
         margin: "auto",
-        "border-radius": "0.75rem",
+        borderRadius: "0.75rem",
         border: "2px solid var(--surface-500)",
     });
+    body.appendChild(newDiv);
 
     throw new Error("No compatible browser found.");
 }

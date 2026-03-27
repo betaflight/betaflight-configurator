@@ -7427,7 +7427,7 @@
         "message": "Пожалуйста, подождите.",
         "description": "Second label in the progress dialog when applying presets"
     },
-    "presetsCliErrorsWaring": {
+    "presetsCliErrorsWarning": {
         "message": "<span class='message-negative'>ВНИМАНИЕ!<\/span><br\/>Конфигурация применена с ошибками в CLI.",
         "description": "Text to show when there are CLI errors after applying presets or user configuration"
     },

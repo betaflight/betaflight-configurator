@@ -1900,6 +1900,9 @@
     "configurationButtonSave": {
         "message": "Save and Reboot"
     },
+    "dialogClose": {
+        "message": "Close"
+    },
     "dialogDynFiltersChangeTitle": {
         "message": "Dynamic Notch values change"
     },
@@ -2981,6 +2984,10 @@
     },
     "adjustmentsFunction32": {
         "message": "Slider Master Multiplier"
+    },
+    "adjustmentsFunction33": {
+        "message": "Battery Profile Selection",
+        "description": "Allows switching battery profiles via RC channel"
     },
     "adjustmentsSave": {
         "message": "Save"
@@ -5410,6 +5417,18 @@
     "powerAmperageCalibratedScale": {
         "message": "Calibrated Amperage Scale:"
     },
+    "powerBatteryProfile": {
+        "message": "Battery Profile"
+    },
+    "powerBatteryProfileOption": {
+        "message": "Battery Profile $1"
+    },
+    "powerBatteryProfileNamePlaceholder": {
+        "message": "e.g. LiPo, Li-Ion"
+    },
+    "powerBatteryProfileNameLabel": {
+        "message": "Profile Name"
+    },
     "powerBatteryHead": {
         "message": "Battery"
     },
@@ -7666,7 +7685,7 @@
         "message": "Please wait.",
         "description": "Second label in the progress dialog when applying presets"
     },
-    "presetsCliErrorsWaring": {
+    "presetsCliErrorsWarning": {
         "message": "<span class='message-negative'>WARNING!</span><br/>Configuration has been applied with CLI errors.",
         "description": "Text to show when there are CLI errors after applying presets or user configuration"
     },
@@ -7686,6 +7705,14 @@
         "message": "Cancel",
         "description": "Cancel button in the presets warning dialog"
     },
+    "presetsFavoriteAddAriaLabel": {
+        "message": "Add favorite preset",
+        "description": "Accessible label for the button that favorites a preset"
+    },
+    "presetsFavoriteRemoveAriaLabel": {
+        "message": "Remove favorite preset",
+        "description": "Accessible label for the button that removes a preset from favorites"
+    },
     "presetsWiki": {
         "message": "Presets Wiki",
         "description": "Button to open Presets Wiki link"
@@ -7697,6 +7724,10 @@
     "presetsBackupLoad": {
         "message": "Load backup",
         "description": "Button to load backup from the file"
+    },
+    "presetsVirtualModeCliUnsupported": {
+        "message": "Preset apply and backup actions require the CLI, which is not available in Virtual Mode.",
+        "description": "Warning shown when a presets CLI action is attempted in Virtual Mode"
     },
     "presetsLoadingDumpAll": {
         "message": "Loading current configuration from the flight controller",
@@ -7902,6 +7933,20 @@
     "osdDescElementLidar": {
         "message": "$t(osdTextElementLidar.message)",
         "description": "Don't translate!!!"
+    },
+    "osdTextElementCustomSerialText": {
+        "message": "Custom serial text",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementCustomSerialText": {
+        "message": "Displays custom text received from a serial port"
+    },
+    "osdTextElementBatteryProfileName": {
+        "message": "Profile: Battery profile name",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementBatteryProfileName": {
+        "message": "Shows the active battery profile name or index"
     },
     "osdSetupPreviewCheckRulers": {
         "message": "Rulers",
