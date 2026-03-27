@@ -684,8 +684,6 @@ import DshotCommand from "@/js/utils/DshotCommand";
 import { mspHelper } from "@/js/msp/MSPHelper";
 import { tracking } from "@/js/Analytics";
 import GUI from "@/js/gui";
-import FC from "@/js/fc";
-
 // Import composables for proper state management
 import { useMotorsState } from "@/composables/motors/useMotorsState";
 import { useMotorTesting } from "@/composables/motors/useMotorTesting";
@@ -729,7 +727,7 @@ const closeDynFiltersDialog = () => {
 };
 
 const applyDynFiltersChange = () => {
-    const FILTER_DEFAULT = FC.getFilterDefaults();
+    const FILTER_DEFAULT = fcStore.getFilterDefaults();
 
     if (fcStore.motorConfig.use_dshot_telemetry && !previousDshotBidir.value) {
         fcStore.filterConfig.dyn_notch_count = FILTER_DEFAULT.dyn_notch_count_rpm;

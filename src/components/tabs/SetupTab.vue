@@ -433,7 +433,6 @@ import { EventBus } from "@/components/eventBus";
 import GUI from "../../js/gui";
 import { have_sensor } from "../../js/sensor_helpers";
 import { mspHelper } from "../../js/msp/MSPHelper";
-import FC from "../../js/fc";
 import MSP from "../../js/msp";
 import Model from "../../js/model";
 import MSPCodes from "../../js/msp/MSPCodes";
@@ -616,7 +615,7 @@ function resetZaxis() {
 function onRebootBootloader() {
     const buffer = [];
     buffer.push(
-        FC.boardHasFlashBootloader() ? mspHelper.REBOOT_TYPES.BOOTLOADER_FLASH : mspHelper.REBOOT_TYPES.BOOTLOADER,
+        fcStore.boardHasFlashBootloader() ? mspHelper.REBOOT_TYPES.BOOTLOADER_FLASH : mspHelper.REBOOT_TYPES.BOOTLOADER,
     );
     MSP.send_message(MSPCodes.MSP_SET_REBOOT, buffer, false);
 }
@@ -1026,10 +1025,10 @@ function process_html() {
     function get_slow_data() {
         fcStore.updateArmingFlags(fcStore.config.armingDisableFlags);
 
-        state.batVoltage = i18n.getMessage("initialSetupBatteryValue", [FC.ANALOG.voltage]);
-        state.batMahDrawn = i18n.getMessage("initialSetupBatteryMahValue", [FC.ANALOG.mAhdrawn]);
-        state.batMahDrawing = i18n.getMessage("initialSetupBatteryAValue", [FC.ANALOG.amperage.toFixed(2)]);
-        state.rssi = i18n.getMessage("initialSetupRSSIValue", [((FC.ANALOG.rssi / 1023) * 100).toFixed(0)]);
+        state.batVoltage = i18n.getMessage("initialSetupBatteryValue", [fcStore.analogData.voltage]);
+        state.batMahDrawn = i18n.getMessage("initialSetupBatteryMahValue", [fcStore.analogData.mAhdrawn]);
+        state.batMahDrawing = i18n.getMessage("initialSetupBatteryAValue", [fcStore.analogData.amperage.toFixed(2)]);
+        state.rssi = i18n.getMessage("initialSetupRSSIValue", [((fcStore.analogData.rssi / 1023) * 100).toFixed(0)]);
 
         if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_46) && fcStore.config.cpuTemp) {
             state.cpuTemp = `${fcStore.config.cpuTemp.toFixed(0)} \u2103`;

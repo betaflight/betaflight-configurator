@@ -245,6 +245,9 @@ export const useFlightControllerStore = defineStore("flightController", () => {
         return armingFlags.value.filter((f) => f.visible).map((f) => f.name);
     });
 
+    // Constants (delegated from FC)
+    const TARGET_CAPABILITIES_FLAGS = FC.TARGET_CAPABILITIES_FLAGS;
+
     // Helpers
     function isApiVersionSupported(version) {
         return semver.gte(config.value.apiVersion, version);
@@ -252,6 +255,22 @@ export const useFlightControllerStore = defineStore("flightController", () => {
 
     function isApiVersionLessThan(version) {
         return semver.lt(config.value.apiVersion, version);
+    }
+
+    function boardHasFlashBootloader() {
+        return FC.boardHasFlashBootloader();
+    }
+
+    function getFilterDefaults() {
+        return FC.getFilterDefaults();
+    }
+
+    function getSerialRxTypes() {
+        return FC.getSerialRxTypes();
+    }
+
+    function getSupportedSerialRxTypes() {
+        return FC.getSupportedSerialRxTypes();
     }
 
     return {
@@ -306,5 +325,10 @@ export const useFlightControllerStore = defineStore("flightController", () => {
         activeFlagNames,
         isApiVersionSupported,
         isApiVersionLessThan,
+        TARGET_CAPABILITIES_FLAGS,
+        boardHasFlashBootloader,
+        getFilterDefaults,
+        getSerialRxTypes,
+        getSupportedSerialRxTypes,
     };
 });

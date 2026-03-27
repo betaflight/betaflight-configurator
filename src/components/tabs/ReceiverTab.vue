@@ -622,7 +622,6 @@ import MSP from "@/js/msp";
 import MSPCodes from "@/js/msp/MSPCodes";
 import { mspHelper } from "@/js/msp/MSPHelper";
 import GUI from "@/js/gui";
-import FC from "@/js/fc";
 import Model from "@/js/model";
 import RateCurve from "@/js/RateCurve";
 import { degToRad } from "@/js/utils/common";
@@ -707,8 +706,7 @@ const rxConfig = computed(() => fcStore.rxConfig);
 const rssiConfig = computed(() => fcStore.rssiConfig);
 const features = computed(() => fcStore.features);
 
-// Need to access FC directly for some missing store properties
-const rcDeadbandConfig = computed(() => FC.RC_DEADBAND_CONFIG);
+const rcDeadbandConfig = computed(() => fcStore.rcDeadbandConfig);
 
 // Decode HTML entities in translations (some use &lt; etc)
 function decodeHtmlEntities(text) {
@@ -737,8 +735,8 @@ const rxModeOptions = computed(() => {
 
 // Serial RX types with enabled status
 const serialRxTypes = computed(() => {
-    const types = FC.getSerialRxTypes ? FC.getSerialRxTypes() : [];
-    const supported = FC.getSupportedSerialRxTypes ? FC.getSupportedSerialRxTypes() : types;
+    const types = fcStore.getSerialRxTypes();
+    const supported = fcStore.getSupportedSerialRxTypes();
     return types.map((name) => ({
         name,
         enabled: supported.includes(name),
@@ -794,7 +792,7 @@ const showAutoFactor = computed(
 const showThrottleAutoFactor = computed(() => throttleManualMode.value === "0");
 
 const showBindButton = computed(() => {
-    return bit_check(fcStore.config?.targetCapabilities, FC.TARGET_CAPABILITIES_FLAGS?.SUPPORTS_RX_BIND);
+    return bit_check(fcStore.config?.targetCapabilities, fcStore.TARGET_CAPABILITIES_FLAGS?.SUPPORTS_RX_BIND);
 });
 
 // ELRS UID display
@@ -909,15 +907,15 @@ function validateChannelMap() {
         seen.add(char);
     }
     // Valid - update RC_MAP
-    for (let i = 0; i < FC.RC_MAP.length; i++) {
-        FC.RC_MAP[i] = chars.indexOf(rcMapLetters[i]);
+    for (let i = 0; i < fcStore.rcMap.length; i++) {
+        fcStore.rcMap[i] = chars.indexOf(rcMapLetters[i]);
     }
 }
 
 function updateChannelMapFromRcMap() {
     const strBuffer = [];
-    for (let i = 0; i < FC.RC_MAP.length; i++) {
-        strBuffer[FC.RC_MAP[i]] = rcMapLetters[i];
+    for (let i = 0; i < fcStore.rcMap.length; i++) {
+        strBuffer[fcStore.rcMap[i]] = rcMapLetters[i];
     }
     channelMapString.value = strBuffer.join("");
 }
@@ -1075,22 +1073,22 @@ async function saveConfig(withReboot = false) {
         if (elrsBindingPhraseEnabled.value) {
             const elrsUidChars = elrsBindingPhraseToBytes(elrsBindingPhrase.value);
             if (elrsUidChars.length === 6) {
-                FC.RX_CONFIG.elrsUid = elrsUidChars;
+                fcStore.rxConfig.elrsUid = elrsUidChars;
                 saveElrsBindingPhrase(elrsUidChars.join(","), elrsBindingPhrase.value);
             } else {
-                FC.RX_CONFIG.elrsUid = [0, 0, 0, 0, 0, 0];
+                fcStore.rxConfig.elrsUid = [0, 0, 0, 0, 0, 0];
             }
         }
 
         // Set cutoffs to 0 for auto mode
         if (setpointManualMode.value === "0") {
-            FC.RX_CONFIG.rcSmoothingSetpointCutoff = 0;
+            fcStore.rxConfig.rcSmoothingSetpointCutoff = 0;
         }
         if (showThrottleSmoothingOptions.value && throttleManualMode.value === "0") {
-            FC.RX_CONFIG.rcSmoothingThrottleCutoff = 0;
+            fcStore.rxConfig.rcSmoothingThrottleCutoff = 0;
         }
         if (!showThrottleSmoothingOptions.value && feedforwardManualMode.value === "0") {
-            FC.RX_CONFIG.rcSmoothingFeedforwardCutoff = 0;
+            fcStore.rxConfig.rcSmoothingFeedforwardCutoff = 0;
         }
 
         // Save sequence
