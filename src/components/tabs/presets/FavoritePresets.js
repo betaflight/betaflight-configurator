@@ -1,4 +1,4 @@
-import { get as getConfig, set as setConfig } from "../../js/ConfigStorage";
+import { get as getConfig, set as setConfig } from "../../../js/ConfigStorage";
 
 const s_maxFavoritePresetsCount = 50;
 const s_favoritePresetsListConfigStorageName = "FavoritePresetsList";

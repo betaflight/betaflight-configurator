@@ -1,8 +1,8 @@
-import GUI from "../../js/gui";
-import { i18n } from "../../js/localization";
-import CONFIGURATOR from "../../js/data_storage";
-import { gui_log } from "../../js/gui_log";
-import { serial } from "../../js/serial";
+import GUI from "../../../js/gui";
+import { i18n } from "../../../js/localization";
+import CONFIGURATOR from "../../../js/data_storage";
+import { gui_log } from "../../../js/gui_log";
+import { serial } from "../../../js/serial";
 
 export default class CliEngine {
     constructor(currentTab) {

@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import GUI from "../../src/js/gui";
 import CONFIGURATOR from "../../src/js/data_storage";
-import CliEngine from "../../src/tabs/presets/CliEngine";
+import CliEngine from "../../src/components/tabs/presets/CliEngine";
 import { usePresetsCliSession } from "../../src/composables/usePresetsCliSession";
 
 const READ_DUMP_INTERVAL = "PRESETS_READING_DUMP_INTERVAL";
