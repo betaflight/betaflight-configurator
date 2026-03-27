@@ -38,11 +38,6 @@ jobs:
     with:
       debug_build: ${{ github.event_name == 'pull_request_target' || github.event_name == 'pull_request' }}
       commit_ref: ${{ needs.commit_reference.outputs.COMMIT_REF }}
-    secrets:
-      RELEASE_KEYSTORE: ${{ secrets.RELEASE_KEYSTORE }}
-      RELEASE_KEYSTORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
-      RELEASE_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
-      RELEASE_KEY_ALIAS_PASSWORD: ${{ secrets.RELEASE_KEY_ALIAS_PASSWORD }}
 
   # Prepare branch name for deployment
   prepare_branch:
