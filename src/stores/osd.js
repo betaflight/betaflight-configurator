@@ -1,10 +1,10 @@
 import { defineStore } from "pinia";
 import { ref, computed, reactive } from "vue";
-import { OSD } from "../js/tabs/osd";
+import { OSD } from "../components/tabs/osd/osd";
 import { FONT, SYM } from "../js/utils/osdFont";
 import MSP from "../js/msp";
 import MSPCodes from "../js/msp/MSPCodes";
-import { OSD_CONSTANTS } from "../js/tabs/osd_constants";
+import { OSD_CONSTANTS } from "../components/tabs/osd/osd_constants";
 import semver from "semver";
 import { useFlightControllerStore } from "./fc";
 import CONFIGURATOR, { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47 } from "../js/data_storage";

@@ -644,8 +644,8 @@ import WikiButton from "@/components/elements/WikiButton.vue";
 import { i18n } from "@/js/localization";
 
 import { FONT, SYM } from "@/js/utils/osdFont";
-import { OSD_CONSTANTS } from "@/js/tabs/osd_constants";
-import { positionConfigs, getPresetGridCells } from "@/js/tabs/osd_positions";
+import { OSD_CONSTANTS } from "./osd/osd_constants";
+import { positionConfigs, getPresetGridCells } from "./osd/osd_positions";
 import LogoManager from "@/js/LogoManager";
 import GUI from "@/js/gui";
 import { gui_log } from "@/js/gui_log";

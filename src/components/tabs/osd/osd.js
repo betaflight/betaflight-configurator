@@ -1,11 +1,11 @@
-import { i18n } from "../localization";
-import { bit_check } from "../bit";
-import FC from "../fc";
-import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47, API_VERSION_1_48 } from "../data_storage";
+import { i18n } from "../../../js/localization";
+import { bit_check } from "../../../js/bit";
+import FC from "../../../js/fc";
+import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47, API_VERSION_1_48 } from "../../../js/data_storage";
 import semver from "semver";
-import { have_sensor } from "../sensor_helpers";
+import { have_sensor } from "../../../js/sensor_helpers";
 import { OSD_CONSTANTS } from "./osd_constants";
-import { FONT, SYM } from "../utils/osdFont";
+import { FONT, SYM } from "../../../js/utils/osdFont";
 
 const OSD = {};
 
