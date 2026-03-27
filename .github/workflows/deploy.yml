@@ -94,7 +94,6 @@ jobs:
             🎉 Do you want to test this code? 🎉
 
             - 🌐 **[Progressive Web Application (PWA)](${{ needs.deploy.outputs.deployment_alias_url }})**
-            - 🤖 **[Android APK](${{ needs.build.outputs.apk_url }})**
 
             ⚠️ **CAUTION**: The build may be unstable and result in corrupted configurations or data loss. Use only for testing! ⚠️
           comment-tag: 'deployment-comment'
