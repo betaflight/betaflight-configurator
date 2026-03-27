@@ -1,4 +1,4 @@
-import PresetSource from "../tabs/presets/SourcesDialog/PresetSource";
+import PresetSource from "../components/tabs/presets/SourcesDialog/PresetSource";
 
 export const PRESETS_MAX_RESULTS = 60;
 export const PRESETS_STORAGE_KEYS = {

@@ -15,7 +15,7 @@ import { defaultHuffmanTree, defaultHuffmanLenIndex } from "../default_huffman_t
 import { updateTabList } from "../utils/updateTabList";
 import { showErrorDialog } from "../utils/showErrorDialog";
 import GUI, { TABS } from "../gui";
-import { OSD } from "../tabs/osd";
+import { OSD } from "../../components/tabs/osd/osd";
 import { reinitializeConnection } from "../serial_backend";
 
 // Used for LED_STRIP

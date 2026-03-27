@@ -988,7 +988,7 @@ function openSticksWindow() {
     };
 
     const createdWindow = globalThis.open(
-        "/receiver_msp/receiver_msp.html",
+        "/components/tabs/receiver-msp/receiver_msp.html",
         "receiver_msp",
         `location=no,width=${windowWidth},height=${windowHeight + (screen.height - screen.availHeight)}`,
     );
