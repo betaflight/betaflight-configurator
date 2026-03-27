@@ -4,10 +4,7 @@
         <div class="aerotune-header">
             <div>
                 <p class="aerotune-title">AeroTune™</p>
-                <p class="aerotune-subtitle">
-                    Intelligent PID Calculator &amp; Blackbox Analyzer &nbsp;·&nbsp; By Simon Jardine –
-                    <a href="https://aerobot2.com" target="_blank" rel="noopener noreferrer">aerobot2.com</a>
-                </p>
+                <p class="aerotune-subtitle">Intelligent PID Calculator &amp; Blackbox Analyzer</p>
             </div>
         </div>
 
@@ -859,7 +856,6 @@ import { FrameDecoder } from "@/js/aerotune/frame-decoder.js";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // AeroTune V5.6 Calculator
-// Ported from AeroTune_V5_6_FIXED.py by Simon Jardine – aerobot2.com
 // ─────────────────────────────────────────────────────────────────────────────
 
 const KV_BASELINE = {
@@ -2474,8 +2470,6 @@ export default {
 </head>
 <body>
 <h1>AeroTune™ Instructions</h1>
-<p class="subtitle">By Simon Jardine – <a href="https://aerobot2.com" target="_blank" rel="noopener">aerobot2.com</a></p>
-
 <h3>STEP 1: CALCULATE BASELINE PIDs</h3>
 <ul>
   <li>Enter motor KV, battery voltage, prop size, weight and flying style.</li>
