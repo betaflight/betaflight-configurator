@@ -2,7 +2,6 @@ import ShortUniqueId from "short-unique-id";
 import { set as setConfig, get as getConfig } from "./ConfigStorage";
 import GUI from "./gui";
 import CONFIGURATOR from "./data_storage";
-import $ from "jquery";
 
 let tracking = null;
 export { tracking };
@@ -82,17 +81,15 @@ class Analytics {
         }
 
         const url = `${this._url}/analytics/${name}`;
-        $.ajax({
-            url: url,
-            type: "POST",
-            data: JSON.stringify({
+        fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
                 sessionId: this._settings.sessionId,
                 userId: this._settings.userId,
                 [name]: properties,
             }),
-            contentType: "application/json",
-            dataType: "json",
-        });
+        }).catch(() => {});
     }
 
     sendSettings() {

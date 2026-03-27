@@ -1,5 +1,3 @@
-import "./jqueryPlugins";
-import $ from "jquery";
 import "../components/init.js";
 import { gui_log } from "./gui_log.js";
 import { i18n } from "./localization.js";
@@ -36,7 +34,7 @@ import("./msp/debug/msp_debug_tools.js")
         console.warn("Failed to load MSP debug tools:", err);
     });
 
-$(document).ready(function () {
+document.addEventListener("DOMContentLoaded", function () {
     appReady();
 });
 
@@ -88,8 +86,8 @@ function appReady() {
             });
         });
 
-        $("a.connection_button__link").removeClass("disabled");
-        $("a.firmware_flasher_button__link").removeClass("disabled");
+        document.querySelector("a.connection_button__link")?.classList.remove("disabled");
+        document.querySelector("a.firmware_flasher_button__link")?.classList.remove("disabled");
 
         initializeSerialBackend();
 
@@ -122,7 +120,7 @@ async function startProcess() {
     gui_log(i18n.getMessage("infoVersionOs", { operatingSystem: GUI.operating_system }));
     gui_log(i18n.getMessage("infoVersionConfigurator", { configuratorVersion: CONFIGURATOR.getDisplayVersion() }));
 
-    $("a.connection_button__link").removeClass("disabled");
+    document.querySelector("a.connection_button__link")?.classList.remove("disabled");
     // with Vue reactive system we don't need to call these,
     // our view is reactive to model changes
     // updateTopBarVersion();
@@ -133,7 +131,7 @@ async function startProcess() {
     document.createElement("canvas");
 
     // log library versions in console to make version tracking easier
-    console.log(`Libraries: jQuery - ${$.fn.jquery}, three.js - ${THREE.REVISION}`);
+    console.log(`Libraries: three.js - ${THREE.REVISION}`);
 
     const windowHref = window.location.href;
     let subdomain = "";
@@ -171,29 +169,33 @@ async function startProcess() {
     }
 
     // Tabs
-    $("#tabs ul.mode-connected li").click(function () {
-        // store the first class of the current tab (omit things like ".active")
-        const tabName = $(this).attr("class").split(" ")[0];
+    for (const li of document.querySelectorAll("#tabs ul.mode-connected li")) {
+        li.addEventListener("click", function () {
+            // store the first class of the current tab (omit things like ".active")
+            const tabName = this.className.split(" ")[0];
 
-        const tabNameWithoutPrefix = tabName.substring(4);
-        if (tabNameWithoutPrefix !== "cli") {
-            // Don't store 'cli' otherwise you can never connect to another tab.
-            setConfig({ lastTab: tabName });
+            const tabNameWithoutPrefix = tabName.substring(4);
+            if (tabNameWithoutPrefix !== "cli") {
+                // Don't store 'cli' otherwise you can never connect to another tab.
+                setConfig({ lastTab: tabName });
+            }
+        });
+    }
+
+    document.querySelector("a.firmware_flasher_button__link")?.addEventListener("click", function () {
+        if (GUI.tab_switch_in_progress) {
+            return;
         }
-    });
-
-    $("a.firmware_flasher_button__link").on("click", function () {
-        if (
-            $("a.firmware_flasher_button__label").hasClass("active") &&
-            $("a.firmware_flasher_button__link").hasClass("active")
-        ) {
-            $("a.firmware_flasher_button__label").removeClass("active");
-            $("a.firmware_flasher_button__link").removeClass("active");
-            $("#tabs ul.mode-disconnected .tab_landing a").click();
+        const fwLabel = document.querySelector("a.firmware_flasher_button__label");
+        const fwLink = document.querySelector("a.firmware_flasher_button__link");
+        if (fwLabel?.classList.contains("active") && fwLink?.classList.contains("active")) {
+            fwLabel.classList.remove("active");
+            fwLink.classList.remove("active");
+            document.querySelector("#tabs ul.mode-disconnected .tab_landing a")?.click();
         } else {
-            $("#tabs ul.mode-disconnected .tab_firmware_flasher a").click();
-            $("a.firmware_flasher_button__label").addClass("active");
-            $("a.firmware_flasher_button__link").addClass("active");
+            document.querySelector("#tabs ul.mode-disconnected .tab_firmware_flasher a")?.click();
+            fwLabel?.classList.add("active");
+            fwLink?.classList.add("active");
         }
     });
 
@@ -224,233 +226,263 @@ async function startProcess() {
 
         // Special handling for firmware flasher tab
         if (GUI.connected_to || GUI.connecting_to) {
-            $("a.connection_button__link").trigger("click");
+            // Disconnect is async; defer firmware flasher navigation until finishClose
+            GUI.pendingTab = "firmware_flasher";
+            document.querySelector("a.connection_button__link")?.click();
+        } else {
+            document.querySelector("a.firmware_flasher_button__link")?.click();
         }
-        $("a.firmware_flasher_button__link").trigger("click");
         return true;
     };
 
-    const ui_tabs = $("#tabs > ul");
-    $("a", "#tabs > ul").click(function () {
-        if ($(this).parent().hasClass("active") || GUI.tab_switch_in_progress) {
-            return;
-        }
-
-        // only initialize when the tab isn't already active
-        const self = this;
-        const tabClass = $(self).parent().prop("class");
-        const tabRequiresConnection = $(self).closest("ul").hasClass("mode-connected");
-        const tab = tabClass.substring(4);
-        const tabName = $(self).text();
-
-        if (!canSwitchTab(tabRequiresConnection)) {
-            return;
-        }
-
-        // Check if tab is allowed
-        const isLoginSectionTab = $(self).closest("ul").hasClass("mode-loggedin");
-        const isTabAllowed = GUI.allowedTabs.includes(tab) || isLoginSectionTab;
-
-        if (!isTabAllowed && !handleDisallowedTab(tab, tabName)) {
-            return;
-        }
-
-        GUI.tab_switch_in_progress = true;
-
-        GUI.tab_switch_cleanup(function () {
-            // disable active firmware flasher if it was active
-            if (
-                $("a.firmware_flasher_button__label").hasClass("active") &&
-                $("a.firmware_flasher_button__link").hasClass("active")
-            ) {
-                $("a.firmware_flasher_button__label").removeClass("active");
-                $("a.firmware_flasher_button__link").removeClass("active");
-            }
-            // disable previously active tab highlight
-            $("li", ui_tabs).removeClass("active");
-
-            // Highlight selected tab
-            $(self).parent().addClass("active");
-
-            // detach listeners and remove element data
-            const content = $("#content");
-            unmountVueTab();
-            content.empty();
-
-            // display loading screen
-            $("#cache .data-loading").clone().appendTo(content);
-
-            function content_ready() {
-                GUI.tab_switch_in_progress = false;
+    const uiTabs = document.querySelectorAll("#tabs > ul");
+    for (const a of document.querySelectorAll("#tabs > ul a")) {
+        a.addEventListener("click", function () {
+            if (this.parentElement.classList.contains("active") || GUI.tab_switch_in_progress) {
+                return;
             }
 
-            checkSetupAnalytics(function (analyticsService) {
-                analyticsService.sendAppView(tab);
+            // only initialize when the tab isn't already active
+            const self = this;
+            const tabClass = self.parentElement.className.split(/\s+/)[0];
+            const tabRequiresConnection = self.closest("ul").classList.contains("mode-connected");
+            const tab = tabClass.substring(4);
+            const tabName = self.textContent;
+
+            if (!canSwitchTab(tabRequiresConnection)) {
+                return;
+            }
+
+            // Check if tab is allowed
+            const isLoginSectionTab = self.closest("ul").classList.contains("mode-loggedin");
+            const isTabAllowed = GUI.allowedTabs.includes(tab) || isLoginSectionTab;
+
+            if (!isTabAllowed) {
+                handleDisallowedTab(tab, tabName);
+                return;
+            }
+
+            GUI.tab_switch_in_progress = true;
+
+            GUI.tab_switch_cleanup(function () {
+                // disable active firmware flasher if it was active
+                const fwLabel = document.querySelector("a.firmware_flasher_button__label");
+                const fwLink = document.querySelector("a.firmware_flasher_button__link");
+                if (fwLabel?.classList.contains("active") && fwLink?.classList.contains("active")) {
+                    fwLabel.classList.remove("active");
+                    fwLink.classList.remove("active");
+                }
+                // disable previously active tab highlight
+                for (const ul of uiTabs) {
+                    for (const li of ul.querySelectorAll("li")) {
+                        li.classList.remove("active");
+                    }
+                }
+
+                // Highlight selected tab
+                self.parentElement.classList.add("active");
+
+                // detach listeners and remove element data
+                const content = document.getElementById("content");
+                unmountVueTab();
+                content.innerHTML = "";
+
+                // display loading screen
+                const loadingTemplate = document.querySelector("#cache .data-loading");
+                if (loadingTemplate) {
+                    content.appendChild(loadingTemplate.cloneNode(true));
+                }
+
+                function content_ready() {
+                    GUI.tab_switch_in_progress = false;
+                }
+
+                checkSetupAnalytics(function (analyticsService) {
+                    analyticsService.sendAppView(tab);
+                });
+
+                switch (tab) {
+                    case "landing":
+                        // Vue tab - use mountVueTab instead of jQuery load
+                        mountVueTab("landing", content_ready);
+                        break;
+                    case "options":
+                        // Vue tab - use mountVueTab instead of jQuery load
+                        mountVueTab("options", content_ready);
+                        break;
+                    case "firmware_flasher":
+                        // Vue tab - use mountVueTab instead of jQuery load
+                        mountVueTab("firmware_flasher", content_ready);
+                        break;
+                    case "help":
+                        // Vue tab - use mountVueTab instead of jQuery load
+                        mountVueTab("help", content_ready);
+                        break;
+                    case "preflight":
+                        mountVueTab("preflight", content_ready);
+                        break;
+                    case "auxiliary":
+                        mountVueTab("auxiliary", content_ready);
+                        break;
+                    case "adjustments":
+                        mountVueTab("adjustments", content_ready);
+                        break;
+                    case "ports":
+                        mountVueTab("ports", content_ready);
+                        break;
+                    case "led_strip":
+                        mountVueTab("led_strip", content_ready);
+                        break;
+                    case "failsafe":
+                        mountVueTab("failsafe", content_ready);
+                        break;
+                    case "transponder":
+                        mountVueTab("transponder", content_ready);
+                        break;
+                    case "osd":
+                        mountVueTab("osd", content_ready);
+                        break;
+                    case "vtx":
+                        mountVueTab("vtx", content_ready);
+                        break;
+                    case "power":
+                        mountVueTab("power", content_ready);
+                        break;
+                    case "setup":
+                        mountVueTab("setup", content_ready);
+                        break;
+
+                    case "configuration":
+                        mountVueTab("configuration", content_ready);
+                        break;
+                    case "pid_tuning":
+                        mountVueTab("pid_tuning", content_ready);
+                        break;
+                    case "receiver":
+                        mountVueTab("receiver", content_ready);
+                        break;
+                    case "servos":
+                        // Vue tab - use mountVueTab instead of jQuery load
+                        mountVueTab("servos", content_ready);
+                        break;
+                    case "gps":
+                        mountVueTab("gps", content_ready);
+                        break;
+                    case "motors":
+                        mountVueTab("motors", content_ready);
+                        break;
+                    case "sensors":
+                        mountVueTab("sensors", content_ready);
+                        break;
+                    case "logging":
+                        mountVueTab("logging", content_ready);
+                        break;
+                    case "onboard_logging":
+                        mountVueTab("onboard_logging", content_ready);
+                        break;
+                    case "cli":
+                        mountVueTab("cli", content_ready);
+                        break;
+                    case "presets":
+                        mountVueTab("presets", content_ready);
+                        break;
+                    case "user_profile":
+                        // Vue tab - use mountVueTab instead of jQuery load
+                        mountVueTab("user_profile", content_ready);
+                        break;
+                    case "backups":
+                        // Vue tab - use mountVueTab instead of jQuery load
+                        mountVueTab("backups", content_ready);
+                        break;
+                    default:
+                        console.log(`Tab not found: ${tab}`);
+                }
             });
-
-            switch (tab) {
-                case "landing":
-                    // Vue tab - use mountVueTab instead of jQuery load
-                    mountVueTab("landing", content_ready);
-                    break;
-                case "options":
-                    // Vue tab - use mountVueTab instead of jQuery load
-                    mountVueTab("options", content_ready);
-                    break;
-                case "firmware_flasher":
-                    // Vue tab - use mountVueTab instead of jQuery load
-                    mountVueTab("firmware_flasher", content_ready);
-                    break;
-                case "help":
-                    // Vue tab - use mountVueTab instead of jQuery load
-                    mountVueTab("help", content_ready);
-                    break;
-                case "preflight":
-                    mountVueTab("preflight", content_ready);
-                    break;
-                case "auxiliary":
-                    mountVueTab("auxiliary", content_ready);
-                    break;
-                case "adjustments":
-                    mountVueTab("adjustments", content_ready);
-                    break;
-                case "ports":
-                    mountVueTab("ports", content_ready);
-                    break;
-                case "led_strip":
-                    mountVueTab("led_strip", content_ready);
-                    break;
-                case "failsafe":
-                    mountVueTab("failsafe", content_ready);
-                    break;
-                case "transponder":
-                    mountVueTab("transponder", content_ready);
-                    break;
-                case "osd":
-                    mountVueTab("osd", content_ready);
-                    break;
-                case "vtx":
-                    mountVueTab("vtx", content_ready);
-                    break;
-                case "power":
-                    mountVueTab("power", content_ready);
-                    break;
-                case "setup":
-                    mountVueTab("setup", content_ready);
-                    break;
-
-                case "configuration":
-                    mountVueTab("configuration", content_ready);
-                    break;
-                case "pid_tuning":
-                    mountVueTab("pid_tuning", content_ready);
-                    break;
-                case "receiver":
-                    mountVueTab("receiver", content_ready);
-                    break;
-                case "servos":
-                    // Vue tab - use mountVueTab instead of jQuery load
-                    mountVueTab("servos", content_ready);
-                    break;
-                case "gps":
-                    mountVueTab("gps", content_ready);
-                    break;
-                case "motors":
-                    mountVueTab("motors", content_ready);
-                    break;
-                case "sensors":
-                    mountVueTab("sensors", content_ready);
-                    break;
-                case "logging":
-                    mountVueTab("logging", content_ready);
-                    break;
-                case "onboard_logging":
-                    mountVueTab("onboard_logging", content_ready);
-                    break;
-                case "cli":
-                    mountVueTab("cli", content_ready);
-                    break;
-                case "presets":
-                    mountVueTab("presets", content_ready);
-                    break;
-                case "user_profile":
-                    // Vue tab - use mountVueTab instead of jQuery load
-                    mountVueTab("user_profile", content_ready);
-                    break;
-                case "backups":
-                    // Vue tab - use mountVueTab instead of jQuery load
-                    mountVueTab("backups", content_ready);
-                    break;
-                default:
-                    console.log(`Tab not found: ${tab}`);
-            }
         });
+    }
+
+    document.querySelector("#tabs ul.mode-disconnected li a")?.click();
+
+    document.getElementById("menu_btn")?.addEventListener("click", function () {
+        document.querySelector(".tab_container")?.classList.toggle("reveal");
+        const bg = document.getElementById("background");
+        if (bg) {
+            bg.style.display =
+                bg.style.display === "none" || getComputedStyle(bg).display === "none" ? "block" : "none";
+        }
     });
 
-    $("#tabs ul.mode-disconnected li a:first").click();
-
-    $("#menu_btn").on("click", function () {
-        $(".tab_container").toggleClass("reveal");
-        $("#background").toggle();
+    document.getElementById("background")?.addEventListener("click", function () {
+        document.querySelector(".tab_container")?.classList.remove("reveal");
+        this.style.display = "none";
     });
 
-    $("#background").on("click", function () {
-        $(".tab_container").removeClass("reveal");
-        $("#background").hide();
+    document.getElementById("reveal_btn")?.addEventListener("click", function () {
+        document.querySelector(".headerbar")?.classList.toggle("expand");
     });
 
-    $("#reveal_btn").on("click", function () {
-        $(".headerbar").toggleClass("expand");
-    });
-
-    $(window).on("resize", function () {
+    window.addEventListener("resize", function () {
         // 575px is the mobile breakpoint defined in CSS
         if (window.innerWidth > 575) {
-            $(".tab_container").removeClass("reveal");
-            $("#background").hide();
+            document.querySelector(".tab_container")?.classList.remove("reveal");
+            const bg = document.getElementById("background");
+            if (bg) {
+                bg.style.display = "none";
+            }
         }
     });
 
     // listen to all input change events and adjust the value within limits if necessary
-    $("#content").on("focus", 'input[type="number"]', function () {
-        const element = $(this);
-        const val = element.val();
+    // Using event delegation on #content for dynamically added number inputs
+    const contentEl = document.getElementById("content");
 
-        if (!isNaN(val)) {
-            element.data("previousValue", parseFloat(val));
+    contentEl?.addEventListener(
+        "focus",
+        function (e) {
+            if (e.target.matches('input[type="number"]')) {
+                const val = e.target.value;
+                if (!isNaN(val)) {
+                    e.target.dataset.previousValue = Number.parseFloat(val);
+                }
+            }
+        },
+        true,
+    );
+
+    contentEl?.addEventListener("change", function (e) {
+        if (!e.target.matches('input[type="number"]')) {
+            return;
         }
-    });
 
-    $("#content").on("change", 'input[type="number"]', function () {
-        const element = $(this);
-        const min = parseFloat(element.prop("min"));
-        const max = parseFloat(element.prop("max"));
-        const step = parseFloat(element.prop("step"));
+        const element = e.target;
+        const min = Number.parseFloat(element.min);
+        const max = Number.parseFloat(element.max);
+        const step = Number.parseFloat(element.step);
 
-        let val = parseFloat(element.val());
+        let val = Number.parseFloat(element.value);
 
         // only adjust minimal end if bound is set
-        if (element.prop("min") && val < min) {
-            element.val(min);
+        if (element.min && val < min) {
+            element.value = min;
             val = min;
         }
 
         // only adjust maximal end if bound is set
-        if (element.prop("max") && val > max) {
-            element.val(max);
+        if (element.max && val > max) {
+            element.value = max;
             val = max;
         }
 
         // if entered value is illegal use previous value instead
         if (isNaN(val)) {
-            element.val(element.data("previousValue"));
-            val = element.data("previousValue");
+            element.value = element.dataset.previousValue;
+            val = Number.parseFloat(element.dataset.previousValue);
         }
 
         // if step is not set or step is int and value is float use previous value instead
         if ((isNaN(step) || step % 1 === 0) && val % 1 !== 0) {
-            element.val(element.data("previousValue"));
-            val = element.data("previousValue");
+            element.value = element.dataset.previousValue;
+            val = Number.parseFloat(element.dataset.previousValue);
         }
 
         // if step is set and is float and value is int, convert to float, keep decimal places in float according to step *experimental*
@@ -458,48 +490,50 @@ async function startProcess() {
             const decimal_places = String(step).split(".")[1].length;
 
             if (val % 1 === 0 || String(val).split(".")[1].length !== decimal_places) {
-                element.val(val.toFixed(decimal_places));
+                element.value = val.toFixed(decimal_places);
             }
         }
     });
 
-    $("#showlog").on("click", function () {
-        let state = $(this).data("state");
-        if (state) {
+    const showlogBtn = document.getElementById("showlog");
+    let logState = false;
+    showlogBtn?.addEventListener("click", function () {
+        if (logState) {
             setTimeout(function () {
-                const command_log = $("div#log");
-                command_log.scrollTop($("div.wrapper", command_log).height());
+                const commandLog = document.getElementById("log");
+                const wrapper = commandLog?.querySelector("div.wrapper");
+                if (commandLog && wrapper) {
+                    commandLog.scrollTop = wrapper.offsetHeight;
+                }
             }, 200);
-            $("#log").removeClass("active");
-            $("#tab-content-container").removeClass("logopen");
-            $("#scrollicon").removeClass("active");
+            document.getElementById("log")?.classList.remove("active");
+            document.getElementById("tab-content-container")?.classList.remove("logopen");
+            document.getElementById("scrollicon")?.classList.remove("active");
             setConfig({ logopen: false });
 
-            state = false;
+            logState = false;
         } else {
-            $("#log").addClass("active");
-            $("#tab-content-container").addClass("logopen");
-            $("#scrollicon").addClass("active");
+            document.getElementById("log")?.classList.add("active");
+            document.getElementById("tab-content-container")?.classList.add("logopen");
+            document.getElementById("scrollicon")?.classList.add("active");
             setConfig({ logopen: true });
 
-            state = true;
+            logState = true;
         }
-        $(this).text(state ? i18n.getMessage("logActionHide") : i18n.getMessage("logActionShow"));
-        $(this).data("state", state);
+        this.textContent = logState ? i18n.getMessage("logActionHide") : i18n.getMessage("logActionShow");
     });
 
     let result = getConfig("logopen");
     if (result.logopen) {
-        $("#showlog").trigger("click");
+        showlogBtn?.click();
     }
 
     result = getConfig("expertMode").expertMode ?? false;
 
-    const expertModeCheckbox = $('input[name="expertModeCheckbox"]');
-    expertModeCheckbox.prop("checked", result).trigger("change");
+    const expertModeCheckbox = document.querySelector('input[name="expertModeCheckbox"]');
 
-    expertModeCheckbox.on("change", () => {
-        const checked = expertModeCheckbox.is(":checked");
+    expertModeCheckbox?.addEventListener("change", () => {
+        const checked = expertModeCheckbox.checked;
 
         checkSetupAnalytics(function (analyticsService) {
             analyticsService.sendEvent(analyticsService.EVENT_CATEGORIES.APPLICATION, "ExpertMode", {
@@ -519,6 +553,11 @@ async function startProcess() {
 
         setConfig({ expertMode: checked });
     });
+
+    if (expertModeCheckbox) {
+        expertModeCheckbox.checked = result;
+        expertModeCheckbox.dispatchEvent(new Event("change"));
+    }
 
     result = getConfig("cliAutoComplete");
     CliAutoComplete.setEnabled(typeof result.cliAutoComplete === "undefined" || result.cliAutoComplete); // On by default

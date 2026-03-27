@@ -3,7 +3,6 @@ import { bit_check } from "../bit";
 import FC from "../fc";
 import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47, API_VERSION_1_48 } from "../data_storage";
 import semver from "semver";
-import $ from "jquery";
 import { have_sensor } from "../sensor_helpers";
 import { OSD_CONSTANTS } from "./osd_constants";
 import { FONT, SYM } from "../utils/osdFont";
@@ -1644,22 +1643,18 @@ OSD.msp = {
                 suffix = (1 + data.displayItems.length - OSD.constants.DISPLAY_FIELDS.length).toString();
                 ignoreSize = true;
             }
-            data.displayItems.push(
-                $.extend(
-                    {
-                        name: c.name,
-                        text: c.text,
-                        textParams: suffix ? { 1: suffix } : undefined,
-                        desc: c.desc,
-                        index: j,
-                        draw_order: c.draw_order,
-                        preview: suffix ? c.preview + suffix : c.preview,
-                        variants: c.variants,
-                        ignoreSize,
-                    },
-                    this.helpers.unpack.position(item, c),
-                ),
-            );
+            data.displayItems.push({
+                name: c.name,
+                text: c.text,
+                textParams: suffix ? { 1: suffix } : undefined,
+                desc: c.desc,
+                index: j,
+                draw_order: c.draw_order,
+                preview: suffix ? c.preview + suffix : c.preview,
+                variants: c.variants,
+                ignoreSize,
+                ...this.helpers.unpack.position(item, c),
+            });
         }
 
         // Generate OSD element previews and positionable that are defined by a function
@@ -1769,14 +1764,7 @@ OSD.msp = {
         while (view.offset < view.byteLength && expectedTimersCount > 0) {
             const v = view.readU16();
             const j = d.timers.length;
-            d.timers.push(
-                $.extend(
-                    {
-                        index: j,
-                    },
-                    this.helpers.unpack.timer(v),
-                ),
-            );
+            d.timers.push({ index: j, ...this.helpers.unpack.timer(v) });
             expectedTimersCount--;
         }
         // Read all the data for any timers we don't know about
@@ -1796,7 +1784,7 @@ OSD.msp = {
 
             // Known warning field
             if (i < OSD.constants.WARNINGS.length) {
-                const warning = $.extend({}, OSD.constants.WARNINGS[i], { enabled, index: i });
+                const warning = { ...OSD.constants.WARNINGS[i], enabled, index: i };
                 d.warnings.push(warning);
 
                 // Push Unknown Warning field
@@ -1884,14 +1872,7 @@ OSD.msp = {
         // Parse configurable timers
         const expectedTimersCount = 3;
         for (let i = 0; i < expectedTimersCount; i++) {
-            d.timers.push(
-                $.extend(
-                    {
-                        index: i,
-                    },
-                    OSD.virtualMode.timerData[i],
-                ),
-            );
+            d.timers.push({ index: i, ...OSD.virtualMode.timerData[i] });
         }
 
         // Parse enabled warnings
@@ -1903,7 +1884,7 @@ OSD.msp = {
 
             // Known warning field
             if (i < warningCount) {
-                const warning = $.extend({}, OSD.constants.WARNINGS[i], { enabled, index: i });
+                const warning = { ...OSD.constants.WARNINGS[i], enabled, index: i };
                 d.warnings.push(warning);
 
                 // Push Unknown Warning field

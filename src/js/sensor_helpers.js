@@ -1,5 +1,4 @@
 import { bit_check } from "./bit";
-import $ from "jquery";
 
 export function have_sensor(sensors_detected, sensor_code) {
     switch (sensor_code) {
@@ -42,58 +41,33 @@ export function sensor_status(sensors_detected = 0, gps_fix_state = 0) {
     sensor_status.previous_sensors_detected = sensors_detected;
     sensor_status.previous_gps_fix_state = gps_fix_state;
 
-    const eSensorStatus = $("div#sensor-status");
-
-    if (have_sensor(sensors_detected, "acc")) {
-        $(".accel", eSensorStatus).addClass("on");
-        $(".accicon", eSensorStatus).addClass("active");
-    } else {
-        $(".accel", eSensorStatus).removeClass("on");
-        $(".accicon", eSensorStatus).removeClass("active");
+    const el = document.getElementById("sensor-status");
+    if (!el) {
+        return;
     }
 
-    if (have_sensor(sensors_detected, "gyro")) {
-        $(".gyro", eSensorStatus).addClass("on");
-        $(".gyroicon", eSensorStatus).addClass("active");
-    } else {
-        $(".gyro", eSensorStatus).removeClass("on");
-        $(".gyroicon", eSensorStatus).removeClass("active");
+    function toggle(sensorClass, iconClass, on) {
+        el.querySelector(`.${sensorClass}`)?.classList.toggle("on", on);
+        el.querySelector(`.${iconClass}`)?.classList.toggle("active", on);
     }
 
-    if (have_sensor(sensors_detected, "baro")) {
-        $(".baro", eSensorStatus).addClass("on");
-        $(".baroicon", eSensorStatus).addClass("active");
-    } else {
-        $(".baro", eSensorStatus).removeClass("on");
-        $(".baroicon", eSensorStatus).removeClass("active");
-    }
-
-    if (have_sensor(sensors_detected, "mag")) {
-        $(".mag", eSensorStatus).addClass("on");
-        $(".magicon", eSensorStatus).addClass("active");
-    } else {
-        $(".mag", eSensorStatus).removeClass("on");
-        $(".magicon", eSensorStatus).removeClass("active");
-    }
+    toggle("accel", "accicon", have_sensor(sensors_detected, "acc"));
+    toggle("gyro", "gyroicon", have_sensor(sensors_detected, "gyro"));
+    toggle("baro", "baroicon", have_sensor(sensors_detected, "baro"));
+    toggle("mag", "magicon", have_sensor(sensors_detected, "mag"));
+    toggle("sonar", "sonaricon", have_sensor(sensors_detected, "sonar"));
 
     const gnssSensorDetected = have_sensor(sensors_detected, "gps");
     const hasGnssFix = gps_fix_state > 0;
+    const gpsOn = gnssSensorDetected || hasGnssFix;
 
-    if (gnssSensorDetected || hasGnssFix) {
-        $(".gps", eSensorStatus).addClass("on");
-        $(".gpsicon", eSensorStatus)
-            .toggleClass("active", gnssSensorDetected && !hasGnssFix)
-            .toggleClass("active_fix", gnssSensorDetected && hasGnssFix);
-    } else {
-        $(".gps", eSensorStatus).removeClass("on");
-        $(".gpsicon", eSensorStatus).removeClass("active active_fix");
-    }
-
-    if (have_sensor(sensors_detected, "sonar")) {
-        $(".sonar", eSensorStatus).addClass("on");
-        $(".sonaricon", eSensorStatus).addClass("active");
-    } else {
-        $(".sonar", eSensorStatus).removeClass("on");
-        $(".sonaricon", eSensorStatus).removeClass("active");
+    el.querySelector(".gps")?.classList.toggle("on", gpsOn);
+    const gpsIcon = el.querySelector(".gpsicon");
+    if (gpsIcon) {
+        gpsIcon.classList.toggle("active", gpsOn && gnssSensorDetected && !hasGnssFix);
+        gpsIcon.classList.toggle("active_fix", gpsOn && gnssSensorDetected && hasGnssFix);
+        if (!gpsOn) {
+            gpsIcon.classList.remove("active", "active_fix");
+        }
     }
 }

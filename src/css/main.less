@@ -135,8 +135,7 @@ a.disabled {
     }
 }
 input,
-select,
-.select2-selection--single {
+select {
     font-family: "Open Sans", "Segoe UI", Tahoma, sans-serif !important;
     font-size: unset !important;
     background-color: var(--surface-300) !important;
@@ -171,17 +170,6 @@ select,
         accent-color: var(--primary-400);
     }
 }
-.ms-choice {
-    background-color: var(--surface-300) !important;
-    border: 1px solid var(--surface-500) !important;
-    color: var(--text) !important;
-    padding: 0.25rem !important;
-    padding-right: 0.5rem !important;
-    border-radius: 0.5rem !important;
-    min-width: 4rem !important;
-    font-weight: normal !important;
-}
-
 select,
 input[type="checkbox"] {
     cursor: pointer;
@@ -192,10 +180,6 @@ input[type="number"] {
         margin-left: 5px;
     }
 }
-.select2-selection--single {
-    padding-left: 0.5rem !important;
-}
-
 .noarrows {
     input::-webkit-outer-spin-button,
     input::-webkit-inner-spin-button {
@@ -270,15 +254,6 @@ input[type="number"] {
     bottom: 0;
     display: none;
     backdrop-filter: blur(0.25rem);
-}
-#side_menu_swipe {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 15px;
-    height: 100%;
-    z-index: 1999;
 }
 .headerbar {
     height: 5rem;
@@ -1725,39 +1700,6 @@ button.active {
 #dialogReportProblems-footer {
     margin-bottom: 10px;
 }
-.noUi-target {
-    background: var(--surface-300);
-    border-color: var(--surface-400);
-    box-shadow: none;
-    border-radius: 0.5rem !important;
-    height: 1.5rem;
-}
-.noUi-handle {
-    background: var(--surface-400);
-    border-color: var(--surface-400);
-    box-shadow: none;
-    &:before {
-        background-color: var(--surface-600);
-        top: 0.55rem;
-    }
-    &:after {
-        background-color: var(--surface-600);
-        top: 0.55rem;
-    }
-    height: 2.2rem !important;
-    cursor: pointer;
-}
-.noUi-background {
-    background: var(--surface-300);
-    box-shadow: none;
-}
-.noUi-connect {
-    box-shadow: none;
-}
-.noUi-pips-horizontal {
-    padding: 1rem 0 !important;
-    height: 4rem;
-}
 .grid-row {
     width: 100%;
     display: flex;
@@ -2062,9 +2004,6 @@ each(range(12), {
         font-size: 13px;
         padding-top: 0.2rem;
         padding-bottom: 0.25rem;
-    }
-    #side_menu_swipe {
-        display: block;
     }
     .visible-on-desktop-only {
         display: none !important;

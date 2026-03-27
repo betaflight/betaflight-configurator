@@ -1,4 +1,3 @@
-import $ from "jquery";
 import { i18n } from "./localization";
 import { gui_log } from "./gui_log";
 import LoginApi from "./LoginApi";
@@ -128,10 +127,9 @@ class LoginManager {
      * Update tab visibility based on login state
      */
     async updateTabVisibility() {
-        if (await this.isUserLoggedIn()) {
-            $("#tabs ul.mode-loggedin").show();
-        } else {
-            $("#tabs ul.mode-loggedin").hide();
+        const el = document.querySelector("#tabs ul.mode-loggedin");
+        if (el) {
+            el.style.display = (await this.isUserLoggedIn()) ? "block" : "none";
         }
     }
 
@@ -190,7 +188,7 @@ class LoginManager {
             this.notifyLogoutCallbacks();
 
             // Always switch to landing/welcome tab on logout
-            $(".tab_landing a").click();
+            document.querySelector(".tab_landing a")?.click();
 
             gui_log(i18n.getMessage("userSignedOut"));
         } catch (error) {

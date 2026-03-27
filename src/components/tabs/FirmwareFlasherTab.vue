@@ -2306,9 +2306,6 @@ export default defineComponent({
         height: 1rem;
     }
     .build-options-wrapper {
-        .select2-container {
-            width: calc(100% - 2rem) !important;
-        }
         .helpicon {
             margin-top: 8px;
         }

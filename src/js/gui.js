@@ -3,7 +3,7 @@ import { reactive } from "vue";
 import MSP from "./msp";
 import Switchery from "switchery-latest";
 import tippy from "tippy.js";
-import $ from "jquery";
+
 import { getOS } from "./utils/checkCompatibility";
 import PortHandler from "./port_handler";
 import CONFIGURATOR from "./data_storage";
@@ -264,19 +264,19 @@ class GuiControl {
         const COLOR_ACCENT = "var(--primary-500)";
         const COLOR_SWITCHERY_SECOND = "var(--switcherysecond)";
 
-        $("[data-switchery]").each(function (index, elem) {
+        for (const elem of document.querySelectorAll("[data-switchery]")) {
             elem.switchery?.setPosition();
-        });
+        }
 
         const setupSwitchery = (selector, className, extraOptions = {}) => {
-            $(selector).each(function (index, elem) {
+            for (const elem of document.querySelectorAll(selector)) {
                 const existingSwitcherySelector = extraOptions.className
                     ? `.switchery, .${extraOptions.className}`
                     : ".switchery";
 
-                if ($(elem).next(existingSwitcherySelector).length) {
+                if (elem.nextElementSibling?.matches(existingSwitcherySelector)) {
                     elem.switchery?.setPosition();
-                    return;
+                    continue;
                 }
 
                 const switchery = new Switchery(elem, {
@@ -285,11 +285,11 @@ class GuiControl {
                     secondaryColor: COLOR_SWITCHERY_SECOND,
                 });
                 elem.switchery = switchery;
-                $(elem).on("change", function () {
+                elem.addEventListener("change", function () {
                     switchery.setPosition();
                 });
-                $(elem).removeClass(className);
-            });
+                elem.classList.remove(className);
+            }
         };
 
         setupSwitchery(".togglesmall", "togglesmall", {
@@ -305,24 +305,23 @@ class GuiControl {
 
         const tRex = GUI.active_tab.replaceAll("_", "-").toLowerCase();
 
-        $("div#content #button-documentation")
-            .html(i18n.getMessage("betaflightSupportButton"))
-            .attr("href", `https://betaflight.com/docs/wiki/app/${tRex}-tab`);
+        const docButton = document.querySelector("div#content #button-documentation");
+        if (docButton) {
+            docButton.innerHTML = i18n.getMessage("betaflightSupportButton");
+            docButton.setAttribute("href", `https://betaflight.com/docs/wiki/app/${tRex}-tab`);
+        }
 
         // loading tooltip
-        $(function () {
-            $(".cf_tip, .cf_tip_wide").each((_, element) => {
-                const jQueryElement = $(element);
-                const attrTitle = jQueryElement.attr("title");
-                if (attrTitle && !element._tippy) {
-                    tippy(element, {
-                        content: attrTitle,
-                        allowHTML: true,
-                    });
-                    jQueryElement.removeAttr("title");
-                }
-            });
-        });
+        for (const element of document.querySelectorAll(".cf_tip, .cf_tip_wide")) {
+            const attrTitle = element.getAttribute("title");
+            if (attrTitle && !element._tippy) {
+                tippy(element, {
+                    content: attrTitle,
+                    allowHTML: true,
+                });
+                element.removeAttribute("title");
+            }
+        }
 
         if (callback) {
             callback();
@@ -335,53 +334,48 @@ class GuiControl {
                 ? result.lastTab
                 : "tab_setup";
 
-        $(`#tabs ul.mode-connected .${tab} a`).trigger("click");
+        document.querySelector(`#tabs ul.mode-connected .${tab} a`)?.click();
     }
     showYesNoDialog(yesNoDialogSettings) {
         // yesNoDialogSettings:
         // title, text, buttonYesText, buttonNoText, buttonYesCallback, buttonNoCallback
-        const dialog = $(".dialogYesNo");
-        const title = dialog.find(".dialogYesNoTitle");
-        const content = dialog.find(".dialogYesNoContent");
-        const buttonYes = dialog.find(".dialogYesNo-yesButton");
-        const buttonNo = dialog.find(".dialogYesNo-noButton");
+        const dialog = document.querySelector(".dialogYesNo");
+        const title = dialog.querySelector(".dialogYesNoTitle");
+        const content = dialog.querySelector(".dialogYesNoContent");
+        const buttonYes = dialog.querySelector(".dialogYesNo-yesButton");
+        const buttonNo = dialog.querySelector(".dialogYesNo-noButton");
 
-        title.html(yesNoDialogSettings.title);
-        content.html(yesNoDialogSettings.text);
-        buttonYes.html(yesNoDialogSettings.buttonYesText);
-        buttonNo.html(yesNoDialogSettings.buttonNoText);
+        title.innerHTML = yesNoDialogSettings.title;
+        content.innerHTML = yesNoDialogSettings.text;
+        buttonYes.innerHTML = yesNoDialogSettings.buttonYesText;
+        buttonNo.innerHTML = yesNoDialogSettings.buttonNoText;
 
-        buttonYes.off("click");
-        buttonNo.off("click");
-
-        buttonYes.on("click", () => {
-            dialog[0].close();
+        buttonYes.onclick = () => {
+            dialog.close();
             yesNoDialogSettings.buttonYesCallback?.();
-        });
+        };
 
-        buttonNo.on("click", () => {
-            dialog[0].close();
+        buttonNo.onclick = () => {
+            dialog.close();
             yesNoDialogSettings.buttonNoCallback?.();
-        });
+        };
 
-        dialog[0].showModal();
+        dialog.showModal();
     }
     showWaitDialog(waitDialogSettings) {
         // waitDialogSettings:
         // title, buttonCancelCallback
-        const dialog = $(".dialogWait")[0];
-        const title = $(".dialogWaitTitle");
-        const buttonCancel = $(".dialogWait-cancelButton");
+        const dialog = document.querySelector(".dialogWait");
+        const title = dialog.querySelector(".dialogWaitTitle");
+        const buttonCancel = dialog.querySelector(".dialogWait-cancelButton");
 
-        title.html(waitDialogSettings.title);
-        buttonCancel.toggle(!!waitDialogSettings.buttonCancelCallback);
+        title.innerHTML = waitDialogSettings.title;
+        buttonCancel.style.display = waitDialogSettings.buttonCancelCallback ? "" : "none";
 
-        buttonCancel.off("click");
-
-        buttonCancel.on("click", () => {
+        buttonCancel.onclick = () => {
             dialog.close();
             waitDialogSettings.buttonCancelCallback?.();
-        });
+        };
 
         dialog.showModal();
         return dialog;
@@ -390,46 +384,42 @@ class GuiControl {
         // informationDialogSettings:
         // title, text, buttonConfirmText
         return new Promise((resolve) => {
-            const dialog = $(".dialogInformation");
-            const title = dialog.find(".dialogInformationTitle");
-            const content = dialog.find(".dialogInformationContent");
-            const buttonConfirm = dialog.find(".dialogInformation-confirmButton");
+            const dialog = document.querySelector(".dialogInformation");
+            const title = dialog.querySelector(".dialogInformationTitle");
+            const content = dialog.querySelector(".dialogInformationContent");
+            const buttonConfirm = dialog.querySelector(".dialogInformation-confirmButton");
 
-            title.html(informationDialogSettings.title);
-            content.html(informationDialogSettings.text);
-            buttonConfirm.html(informationDialogSettings.buttonConfirmText);
+            title.innerHTML = informationDialogSettings.title;
+            content.innerHTML = informationDialogSettings.text;
+            buttonConfirm.innerHTML = informationDialogSettings.buttonConfirmText;
 
-            buttonConfirm.off("click");
-
-            buttonConfirm.on("click", () => {
-                dialog[0].close();
+            buttonConfirm.onclick = () => {
+                dialog.close();
                 resolve();
-            });
+            };
 
-            dialog[0].showModal();
+            dialog.showModal();
         });
     }
     showInteractiveDialog(interactiveDialogSettings) {
         // interactiveDialogSettings:
         // title, text, buttonCloseText
         return new Promise((resolve) => {
-            const dialog = $(".dialogInteractive");
-            const title = dialog.find(".dialogInteractiveTitle");
-            const content = dialog.find(".dialogInteractiveContent");
-            const buttonClose = dialog.find(".dialogInteractive-closeButton");
+            const dialog = document.querySelector(".dialogInteractive");
+            const title = dialog.querySelector(".dialogInteractiveTitle");
+            const content = dialog.querySelector(".dialogInteractiveContent");
+            const buttonClose = dialog.querySelector(".dialogInteractive-closeButton");
 
-            title.html(interactiveDialogSettings.title);
-            content.html(interactiveDialogSettings.text);
-            buttonClose.html(interactiveDialogSettings.buttonCloseText);
+            title.innerHTML = interactiveDialogSettings.title ?? "";
+            content.innerHTML = interactiveDialogSettings.text ?? "";
+            buttonClose.innerHTML = interactiveDialogSettings.buttonCloseText ?? "";
 
-            buttonClose.off("click");
-
-            buttonClose.on("click", () => {
-                dialog[0].close();
+            buttonClose.onclick = () => {
+                dialog.close();
                 resolve();
-            });
+            };
 
-            dialog[0].showModal();
+            dialog.showModal();
         });
     }
     escapeHtml(unsafe) {
@@ -441,17 +431,17 @@ class GuiControl {
             .replace(/'/g, "&#039;");
     }
     addLinksTargetBlank(element) {
-        element.find("a").each(function () {
-            $(this).attr("target", "_blank");
-        });
+        for (const a of element.querySelectorAll("a")) {
+            a.setAttribute("target", "_blank");
+        }
     }
     reinitializeConnection() {
         if (CONFIGURATOR.virtualMode) {
             this.reboot_timestamp = Date.now();
-            $("a.connection_button__link").trigger("click");
+            document.querySelector("a.connection_button__link")?.click();
             if (PortHandler.portPicker.autoConnect) {
                 return setTimeout(function () {
-                    $("a.connection_button__link").trigger("click");
+                    document.querySelector("a.connection_button__link")?.click();
                 }, 500);
             }
             return;
@@ -470,7 +460,7 @@ class GuiControl {
 
         if (currentPort.startsWith("bluetooth") || currentPort === "manual") {
             return setTimeout(function () {
-                $("a.connection_button__link").trigger("click");
+                document.querySelector("a.connection_button__link")?.click();
             }, 1500);
         }
 
@@ -612,22 +602,29 @@ class GuiControl {
             for (const line of response) {
                 output += `${line}${eol}`;
             }
-            // gui_log(output.split(eol).join('<br>'));
-            $("#cli-command").val("");
-            $("#cli-response").text(output);
+            const cliCommand = document.getElementById("cli-command");
+            if (cliCommand) {
+                cliCommand.value = "";
+            }
+            const cliResponse = document.getElementById("cli-response");
+            if (cliResponse) {
+                cliResponse.textContent = output;
+            }
         }
 
         // cli-command button hook
-        $("input#cli-command").change(function () {
-            const _self = $(this);
-            const command = _self.val();
-            if (!command) {
-                return;
-            }
-            MSP.send_cli_command(command, function (response) {
-                set_cli_response(response);
-            });
-        });
+        const cliCommandInput = document.querySelector("input#cli-command");
+        if (cliCommandInput) {
+            cliCommandInput.onchange = function () {
+                const command = this.value;
+                if (!command) {
+                    return;
+                }
+                MSP.send_cli_command(command, function (response) {
+                    set_cli_response(response);
+                });
+            };
+        }
 
         const cliPanelDialog = {
             title: i18n.getMessage("cliPanelTitle"),
@@ -635,15 +632,18 @@ class GuiControl {
         };
 
         // clear response from previous session
-        $("#cli-response").text("");
+        const cliResponse = document.getElementById("cli-response");
+        if (cliResponse) {
+            cliResponse.textContent = "";
+        }
 
         this.showInteractiveDialog(cliPanelDialog);
 
         // Set focus on the CLI command input when dialog opens
         // Use timeout to ensure dialog is fully rendered
         setTimeout(() => {
-            const cliInput = $("#cli-command");
-            if (cliInput.length > 0 && cliInput.is(":visible")) {
+            const cliInput = document.getElementById("cli-command");
+            if (cliInput && cliInput.offsetParent !== null) {
                 cliInput.focus();
             }
         }, 100);

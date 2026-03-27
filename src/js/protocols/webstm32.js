@@ -14,7 +14,6 @@ import { bit_check } from "../bit";
 import { gui_log } from "../gui_log";
 import MSPCodes from "../msp/MSPCodes";
 import PortUsage from "../port_usage";
-import $ from "jquery";
 import { serial } from "../serial";
 import DFU from "../protocols/webusbdfu";
 import { read_serial } from "../serial_backend";
@@ -276,7 +275,10 @@ class STM32Protocol {
         TABS.firmware_flasher.flashingMessage(null, TABS.firmware_flasher.FLASH_MESSAGE_TYPES.NEUTRAL).flashProgress(0);
 
         // lock some UI elements TODO needs rework
-        $('select[name="release"]').prop("disabled", true);
+        const releaseSelect = document.querySelector('select[name="release"]');
+        if (releaseSelect) {
+            releaseSelect.disabled = true;
+        }
 
         serial.removeEventListener("receive", readSerialAdapter);
         serial.addEventListener("receive", readSerialAdapter);
@@ -320,7 +322,7 @@ class STM32Protocol {
         }
 
         // routine that fetches data from buffer if statement is true
-        if (this.receive_buffer.length >= this.bytesToRead && this.bytesToRead != 0) {
+        if (this.receive_buffer.length >= this.bytesToRead && this.bytesToRead !== 0) {
             const fetched = this.receive_buffer.slice(0, this.bytesToRead); // bytes requested
             this.receive_buffer.splice(0, this.bytesToRead); // remove read bytes
 
@@ -996,7 +998,10 @@ class STM32Protocol {
         GUI.connect_lock = false;
 
         // unlock some UI elements TODO needs rework
-        $('select[name="release"]').prop("disabled", false);
+        const releaseEl = document.querySelector('select[name="release"]');
+        if (releaseEl) {
+            releaseEl.disabled = false;
+        }
 
         // handle timing
         const timeSpent = new Date().getTime() - this.upload_time_start;

@@ -2,7 +2,6 @@ import i18next from "i18next";
 import i18nextXHRBackend from "i18next-xhr-backend";
 import { gui_log } from "./gui_log.js";
 import { get as getConfig, set as setConfig } from "./ConfigStorage.js";
-import $ from "jquery";
 
 const i18n = {};
 /*
@@ -153,48 +152,23 @@ i18n.localizePage = function (forceReTranslate) {
         return i18n.getMessage(messageID);
     };
 
-    if (forceReTranslate) {
-        $("[i18n]").each(function () {
-            const element = $(this);
-            element.html(translate(element.attr("i18n")));
-        });
-        $("[i18n_title]").each(function () {
-            const element = $(this);
-            element.attr("title", translate(element.attr("i18n_title")));
-        });
-        $("[i18n_value]").each(function () {
-            const element = $(this);
-            element.val(translate(element.attr("i18n_value")));
-        });
-        $("[i18n_placeholder]").each(function () {
-            const element = $(this);
-            element.attr("placeholder", translate(element.attr("i18n_placeholder")));
-        });
-    } else {
-        $("[i18n]:not(.i18n-replaced)").each(function () {
-            const element = $(this);
-            element.html(translate(element.attr("i18n")));
-            element.addClass("i18n-replaced");
-        });
+    const attrs = [
+        { attr: "i18n", prop: "innerHTML" },
+        { attr: "i18n_title", prop: "title" },
+        { attr: "i18n_value", prop: "value" },
+        { attr: "i18n_placeholder", prop: "placeholder" },
+    ];
 
-        $("[i18n_title]:not(.i18n_title-replaced)").each(function () {
-            const element = $(this);
-            element.attr("title", translate(element.attr("i18n_title")));
-            element.addClass("i18n_title-replaced");
-        });
-
-        $("[i18n_value]:not(.i18n_value-replaced)").each(function () {
-            const element = $(this);
-            element.val(translate(element.attr("i18n_value")));
-            element.addClass("i18n_value-replaced");
-        });
-
-        $("[i18n_placeholder]:not(.i18n_placeholder-replaced)").each(function () {
-            const element = $(this);
-            element.attr("placeholder", translate(element.attr("i18n_placeholder")));
-            element.addClass("i18n_placeholder-replaced");
-        });
+    for (const { attr, prop } of attrs) {
+        const suffix = forceReTranslate ? "" : `:not(.${attr}-replaced)`;
+        for (const el of document.querySelectorAll(`[${attr}]${suffix}`)) {
+            el[prop] = translate(el.getAttribute(attr));
+            if (!forceReTranslate) {
+                el.classList.add(`${attr}-replaced`);
+            }
+        }
     }
+
     return localized;
 };
 

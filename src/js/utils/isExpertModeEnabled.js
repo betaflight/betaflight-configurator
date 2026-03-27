@@ -1,5 +1,3 @@
-import $ from "jquery";
-
 export function isExpertModeEnabled() {
-    return $('input[name="expertModeCheckbox"]').is(":checked");
+    return document.querySelector('input[name="expertModeCheckbox"]')?.checked ?? false;
 }

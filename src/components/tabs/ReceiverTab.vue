@@ -637,7 +637,6 @@ import CryptoES from "crypto-es";
 import semver from "semver";
 import * as THREE from "three";
 import * as d3 from "d3";
-import $ from "jquery";
 
 const t = (key) => i18n.getMessage(key);
 const fcStore = useFlightControllerStore();
@@ -1128,8 +1127,7 @@ async function saveConfig(withReboot = false) {
 // Model preview
 function initModelPreview() {
     if (!modelPreviewContainer.value || !modelCanvas.value) return;
-    // Model constructor expects jQuery-wrapped elements
-    model = new Model($(modelPreviewContainer.value), $(modelCanvas.value));
+    model = new Model(modelPreviewContainer.value, modelCanvas.value);
     rateCurve = new RateCurve(false);
     currentRates = rateCurve.getCurrentRates();
     window.addEventListener("resize", handleModelResize);
