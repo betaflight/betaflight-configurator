@@ -313,34 +313,45 @@
                         </li>
                     </ul>
 
-                    <h3>STEP 2: FLY THE TEST PATTERN</h3>
-                    <p>Enable Blackbox before flying:</p>
+                    <h3>STEP 2: CONFIGURE BLACKBOX</h3>
                     <ul>
-                        <li>Configuration tab → Blackbox → Enable, Device = SD Card, Rate = 1/2</li>
-                        <li>Set logging rate to minimum 1kHz, ideally 2kHz for best frequency resolution.</li>
-                        <li>Enable: Gyro, Gyro (Unfiltered), Motor, PID, RC Commands, RPM, Setpoint, Accelerometer</li>
+                        <li>In Betaflight, go to Configuration → Blackbox → Enable, Device = SD Card.</li>
+                        <li>
+                            Set Blackbox logging rate to 1/2 or better — higher rates give better frequency resolution
+                            for the analyzer.
+                        </li>
+                        <li>Enable: Gyro, Gyro (Unfiltered), Motor, PID, RC Commands, RPM, Setpoint, Accelerometer.</li>
                         <li><strong>Betaflight 4.5+:</strong> raw gyro is always logged automatically.</li>
                         <li>
                             <strong>Betaflight 4.3/4.4:</strong> set Debug Mode to <code>GYRO_SCALED</code> to capture
                             unfiltered gyro data.
                         </li>
-                    </ul>
-                    <p>Before flying:</p>
-                    <ul>
                         <li>
                             Use fresh propellers — damaged props introduce false noise and will give inaccurate results.
                         </li>
                     </ul>
-                    <p>Flight pattern:</p>
+
+                    <h3>STEP 3: FLY THE TEST PATTERN</h3>
                     <ul>
+                        <li>Level mode or Acro mode both work — LOS or FPV.</li>
                         <li>
-                            Level mode: Full left stick hold 3-5 seconds, pause, full right stick hold 3-5 seconds,
-                            pause, full forward hold 3-5 seconds, pause, full back hold 3-5 seconds
+                            Level mode: full left stick hold 1–1.5 seconds, pause, full right, pause, full forward,
+                            pause, full back.
+                        </li>
+                        <li>Acro mode: sharp direct inputs at 20° and 45°, with brief pauses between each.</li>
+                        <li>
+                            Aim for a 2 minute flight. Fly through the full throttle range — the Analyzer needs data
+                            across all throttle levels to give an accurate result.
                         </li>
                     </ul>
 
-                    <h3>STEP 3: ANALYZE THE LOG</h3>
-                    <p style="font-size: 12px; color: var(--subtleText)">{{ workflowInstructions }}</p>
+                    <h3>STEP 4: ANALYZE THE LOG</h3>
+                    <ul>
+                        <li>In Betaflight, go to the Blackbox tab and click USB Storage Mode.</li>
+                        <li>Drag your .bfl file from the FC storage to your desktop.</li>
+                        <li>Unplug the FC, then plug it back in and open Betaflight.</li>
+                        <li>In the AeroTune tab, click Select BBL / BFL, choose your .bfl file and click ANALYZE.</li>
+                    </ul>
 
                     <h3>INTERPRETING RESULTS</h3>
                     <ul>
@@ -610,14 +621,30 @@
                 <div class="at-panel at-chirp-instructions">
                     <div class="at-panel-header">📋 FLIGHT PROCEDURE</div>
                     <div class="at-panel-body">
+                        <p style="color: #ffe66d; font-weight: bold; margin-bottom: 8px">
+                            ⚠️ CAUTION: CHIRP IS EXPERIMENTAL
+                        </p>
+                        <p style="font-size: 12px; margin-bottom: 10px">
+                            The chirp sweep feature is currently untested in real-world conditions. Fly in a large open
+                            area, maintain visual line of sight or fly FPV, be prepared to disarm immediately, and fly
+                            at your own risk.
+                        </p>
                         <ol>
-                            <li>Props <strong>OFF</strong> — configure above and hit button</li>
-                            <li>Props <strong>ON</strong> — assign <code>CHIRP</code> switch in Modes tab</li>
                             <li>
-                                Hover 10m+, flip switch <strong>once</strong> → firmware runs Pitch, Roll, then Yaw
-                                automatically
+                                Connected via USB — configure chirp settings above, hit button, then assign a dedicated
+                                <code>CHIRP</code> switch in the Modes tab.
                             </li>
-                            <li>Land, plug in USB → drop your BFL file into <strong>STEP 2: LOG ANALYZER</strong></li>
+                            <li>Unplug USB and fly.</li>
+                            <li>Hover to 5m or more — switch to Level mode if desired, or fly FPV.</li>
+                            <li>
+                                Flip the <code>CHIRP</code> switch once — firmware runs Pitch, Roll, then Yaw
+                                automatically (~20 seconds per axis).
+                            </li>
+                            <li>To abort: disarm immediately.</li>
+                            <li>
+                                Land, plug in USB → drop your .bfl file into
+                                <strong>STEP 4: LOG ANALYZER</strong>
+                            </li>
                         </ol>
                     </div>
                 </div>
@@ -1697,7 +1724,7 @@ export default {
             return this.showResults && CONFIGURATOR.connectionValid;
         },
         workflowInstructions() {
-            return "1. Fly your quad with the calculated PIDs · 2. Export Blackbox .bbl/.bfl from Betaflight Blackbox Explorer · 3. Load it below · 4. Analyze filter effectiveness at high throttle";
+            return "1. Calculate baseline PIDs · 2. Configure Blackbox · 3. Fly the test pattern · 4. Load your .bfl file and Analyze";
         },
     },
 
@@ -1814,26 +1841,31 @@ export default {
   <li>Click <strong>APPLY PIDs TO FC</strong> to write them directly to the PID Tuning tab, or use <strong>COPY ALL VALUES</strong> to copy them to the clipboard.</li>
 </ul>
 
-<h3>STEP 2: FLY THE TEST PATTERN</h3>
-<p>Enable Blackbox before flying:</p>
+<h3>STEP 2: CONFIGURE BLACKBOX</h3>
 <ul>
-  <li>Configuration tab → Blackbox → Enable, Device = SD Card, Rate = 1/2</li>
-  <li>Set logging rate to minimum 1kHz, ideally 2kHz for best frequency resolution.</li>
-  <li>Enable: Gyro, Gyro (Unfiltered), Motor, PID, RC Commands, RPM, Setpoint, Accelerometer</li>
+  <li>In Betaflight, go to Configuration → Blackbox → Enable, Device = SD Card.</li>
+  <li>Set Blackbox logging rate to 1/2 or better — higher rates give better frequency resolution for the analyzer.</li>
+  <li>Enable: Gyro, Gyro (Unfiltered), Motor, PID, RC Commands, RPM, Setpoint, Accelerometer.</li>
   <li><strong>Betaflight 4.5+:</strong> raw gyro is always logged automatically.</li>
   <li><strong>Betaflight 4.3/4.4:</strong> set Debug Mode to <code>GYRO_SCALED</code> to capture unfiltered gyro data.</li>
-</ul>
-<p>Before flying:</p>
-<ul>
   <li>Use fresh propellers — damaged props introduce false noise and will give inaccurate results.</li>
 </ul>
-<p>Flight pattern:</p>
+
+<h3>STEP 3: FLY THE TEST PATTERN</h3>
 <ul>
-  <li>Level mode: Full left stick hold 3-5 seconds, pause, full right stick hold 3-5 seconds, pause, full forward hold 3-5 seconds, pause, full back hold 3-5 seconds</li>
+  <li>Level mode or Acro mode both work — LOS or FPV.</li>
+  <li>Level mode: full left stick hold 1–1.5 seconds, pause, full right, pause, full forward, pause, full back.</li>
+  <li>Acro mode: sharp direct inputs at 20° and 45°, with brief pauses between each.</li>
+  <li>Aim for a 2 minute flight. Fly through the full throttle range — the Analyzer needs data across all throttle levels to give an accurate result.</li>
 </ul>
 
-<h3>STEP 3: ANALYZE THE LOG</h3>
-<p>${this.workflowInstructions}</p>
+<h3>STEP 4: ANALYZE THE LOG</h3>
+<ul>
+  <li>In Betaflight, go to the Blackbox tab and click USB Storage Mode.</li>
+  <li>Drag your .bfl file from the FC storage to your desktop.</li>
+  <li>Unplug the FC, then plug it back in and open Betaflight.</li>
+  <li>In the AeroTune tab, click Select BBL / BFL, choose your .bfl file and click ANALYZE.</li>
+</ul>
 
 <h3>INTERPRETING RESULTS</h3>
 <ul>
