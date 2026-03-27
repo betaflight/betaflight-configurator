@@ -118,7 +118,7 @@ export default defineConfig({
         rollupOptions: {
             input: {
                 main: resolve(__dirname, "src/index.html"),
-                receiver_msp: resolve(__dirname, "src/receiver_msp/receiver_msp.html"),
+                receiver_msp: resolve(__dirname, "src/components/tabs/receiver-msp/receiver_msp.html"),
             },
         },
     },
@@ -138,7 +138,6 @@ export default defineConfig({
             targets: [
                 { src: "locales/**/*", dest: "src/dist/locales" },
                 { src: "resources/**/*", dest: "src/dist/resources" },
-                { src: "src/tabs/**/*", dest: "src/dist/tabs" },
                 { src: "src/images/**/*", dest: "src/dist/images" },
                 { src: "src/components/**/*", dest: "src/dist/components" },
             ],
