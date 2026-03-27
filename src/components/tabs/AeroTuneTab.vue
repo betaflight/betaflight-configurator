@@ -299,6 +299,17 @@
                                     ⚡ CHIRP / SYSID LOG DETECTED — running frequency response analysis
                                 </div>
 
+                                <!-- Explanation panel -->
+                                <div class="at-sysid-explainer">
+                                    <span class="at-sysid-explainer-title">READING YOUR RESULTS</span>
+                                    Bode plot shows how your quad actually responds to stick inputs across all
+                                    frequencies. Magnitude above 0&nbsp;dB&nbsp;=&nbsp;overshooting, below
+                                    0&nbsp;dB&nbsp;=&nbsp;sluggish. Phase Margin is your stability budget — below 30°
+                                    and you're close to oscillation, above 70° and you're over-filtered. Gain Margin is
+                                    how much headroom you have before motors sing. The P and D suggestions below are
+                                    calculated from your actual flight data — not a generic table.
+                                </div>
+
                                 <!-- Roll Bode plot -->
                                 <div
                                     v-if="sysidResult.axes.roll && !sysidResult.axes.roll.error"
@@ -781,9 +792,8 @@
                             ⚠️ CAUTION: CHIRP IS EXPERIMENTAL
                         </p>
                         <p style="font-size: 12px; margin-bottom: 10px">
-                            The chirp sweep feature is currently untested in real-world conditions. Fly in a large open
-                            area, maintain visual line of sight or fly FPV, be prepared to disarm immediately, and fly
-                            at your own risk.
+                            Fly in a large open area, maintain visual line of sight or fly FPV, be prepared to disarm
+                            immediately, and fly at your own risk.
                         </p>
                         <ol>
                             <li>
@@ -794,12 +804,13 @@
                             <li>Hover to 5m or more — switch to Level mode if desired, or fly FPV.</li>
                             <li>
                                 Flip the <code>CHIRP</code> switch once — firmware runs Pitch, Roll, then Yaw
-                                automatically (~20 seconds per axis).
+                                automatically (~10 seconds per axis, ~30 seconds total).
                             </li>
-                            <li>To abort: disarm immediately.</li>
+                            <li>To abort: move sticks or toggle the <code>CHIRP</code> switch off.</li>
                             <li>
-                                Land, plug in USB → drop your .bfl file into
-                                <strong>STEP 4: LOG ANALYZER</strong>
+                                Land, plug in USB → load your .bfl file into
+                                <strong>STEP 4: LOG ANALYZER</strong> — the analyzer will automatically detect the chirp
+                                and run SysID analysis.
                             </li>
                         </ol>
                     </div>
@@ -2283,7 +2294,7 @@ export default {
             chirpYawLevel: "MEDIUM",
             chirpStartHz: 80,
             chirpEndHz: 600,
-            chirpDuration: 20,
+            chirpDuration: 10,
             chirpConfigured: false,
             chirpConfirmText: "",
             advancedOpen: false,
