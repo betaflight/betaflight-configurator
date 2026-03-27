@@ -354,6 +354,12 @@
                                 <!-- Stability margins table -->
                                 <div class="at-sysid-table-wrap">
                                     <div class="at-sysid-table-title">STABILITY MARGINS</div>
+                                    <div v-if="sysidResult.searchWindow" class="at-sysid-search-window-note">
+                                        Search window: {{ sysidResult.searchWindow.min }}–{{
+                                            sysidResult.searchWindow.max
+                                        }}
+                                        Hz (based on {{ sysidResult.propInches ?? "?" }}" prop)
+                                    </div>
                                     <table class="at-sysid-table">
                                         <thead>
                                             <tr>
@@ -377,12 +383,20 @@
                                                             stabilityClass(sysidResult.axes[axisName].phaseMargin, 'pm')
                                                         "
                                                     >
-                                                        {{
-                                                            sysidResult.axes[axisName].phaseMargin !== null
-                                                                ? sysidResult.axes[axisName].phaseMargin.toFixed(1) +
-                                                                  "°"
-                                                                : "N/A"
-                                                        }}
+                                                        <template
+                                                            v-if="sysidResult.axes[axisName].phaseMargin !== null"
+                                                        >
+                                                            {{
+                                                                sysidResult.axes[axisName].phaseMargin.toFixed(1) + "°"
+                                                            }}
+                                                        </template>
+                                                        <template v-else>
+                                                            <span class="at-sysid-no-crossover">
+                                                                No crossover found in expected range for
+                                                                {{ sysidResult.propInches ?? "?" }}" prop — try a longer
+                                                                sweep or check prop size selection on the AUTO TUNE tab.
+                                                            </span>
+                                                        </template>
                                                     </td>
                                                     <td
                                                         :class="
@@ -1937,32 +1951,63 @@ function _welchCoherence(x, y, segLen) {
 }
 
 /**
+ * Return the expected gain-crossover search window (Hz) for the given prop size.
+ */
+function _getCrossoverSearchWindow(propInches) {
+    const MAP = {
+        3: { min: 30, max: 100 },
+        4: { min: 25, max: 80 },
+        5: { min: 20, max: 70 },
+        6: { min: 15, max: 55 },
+        7: { min: 10, max: 50 },
+        8: { min: 8, max: 40 },
+        9: { min: 6, max: 32 },
+        10: { min: 5, max: 30 },
+    };
+    return MAP[propInches] ?? { min: 5, max: 100 };
+}
+
+/**
  * Compute stability margins from arrays of frequencies, magnitudes and phases.
  * freqAxis: Hz,  magDB: dB,  phaseDeg: degrees (unwrapped).
+ * searchWindow: { min, max } Hz — only search within this band.
  * Returns { phaseMargin, gainMargin, gcFreq, pcFreq } — any may be null.
  */
-function _computeStabilityMargins(freqAxis, magDB, phaseDeg) {
+function _computeStabilityMargins(freqAxis, magDB, phaseDeg, searchWindow) {
+    const winMin = searchWindow?.min ?? 5;
+    const winMax = searchWindow?.max ?? 100;
+
     let gcFreq = null,
         phaseMargin = null;
     let pcFreq = null,
         gainMargin = null;
 
-    // Gain crossover: first downward 0 dB crossing
-    for (let i = 1; i < magDB.length; i++) {
-        if (magDB[i - 1] >= 0 && magDB[i] < 0) {
-            const t = magDB[i - 1] / (magDB[i - 1] - magDB[i]);
-            gcFreq = freqAxis[i - 1] + t * (freqAxis[i] - freqAxis[i - 1]);
-            phaseMargin = phaseDeg[i - 1] + t * (phaseDeg[i] - phaseDeg[i - 1]) + 180;
+    // Gain crossover: descending 0 dB crossing within window, searched HIGH→LOW
+    // Collect indices inside the window first, then iterate in reverse.
+    const winIndices = [];
+    for (let i = 0; i < freqAxis.length; i++) {
+        if (freqAxis[i] >= winMin && freqAxis[i] <= winMax) winIndices.push(i);
+    }
+    for (let k = winIndices.length - 1; k >= 1; k--) {
+        const i = winIndices[k];
+        const j = winIndices[k - 1];
+        // Descending crossing: previous bin >= 0, current bin < 0
+        if (magDB[j] >= 0 && magDB[i] < 0) {
+            const t = magDB[j] / (magDB[j] - magDB[i]);
+            gcFreq = freqAxis[j] + t * (freqAxis[i] - freqAxis[j]);
+            phaseMargin = phaseDeg[j] + t * (phaseDeg[i] - phaseDeg[j]) + 180;
             break;
         }
     }
 
-    // Phase crossover: first downward -180° crossing
-    for (let i = 1; i < phaseDeg.length; i++) {
-        if (phaseDeg[i - 1] >= -180 && phaseDeg[i] < -180) {
-            const t = (phaseDeg[i - 1] + 180) / (phaseDeg[i - 1] - phaseDeg[i]);
-            pcFreq = freqAxis[i - 1] + t * (freqAxis[i] - freqAxis[i - 1]);
-            gainMargin = -(magDB[i - 1] + t * (magDB[i] - magDB[i - 1]));
+    // Phase crossover: first downward -180° crossing within window
+    for (let k = 1; k < winIndices.length; k++) {
+        const i = winIndices[k];
+        const j = winIndices[k - 1];
+        if (phaseDeg[j] >= -180 && phaseDeg[i] < -180) {
+            const t = (phaseDeg[j] + 180) / (phaseDeg[j] - phaseDeg[i]);
+            pcFreq = freqAxis[j] + t * (freqAxis[i] - freqAxis[j]);
+            gainMargin = -(magDB[j] + t * (magDB[i] - magDB[j]));
             break;
         }
     }
@@ -1972,10 +2017,12 @@ function _computeStabilityMargins(freqAxis, magDB, phaseDeg) {
 
 /**
  * Synthesise PID adjustments from stability margins and current gains.
+ * baselineHz: prop-size midpoint of the crossover search window (replaces hardcoded 80 Hz).
  * Returns { suggestP, suggestD, reason }.
  */
-function _synthesizePID(currentP, currentD, margins) {
+function _synthesizePID(currentP, currentD, margins, baselineHz) {
     const TARGET_PM = 45;
+    const baseline = baselineHz ?? 80;
     let suggestP = currentP;
     let suggestD = currentD;
     const parts = [];
@@ -1988,12 +2035,12 @@ function _synthesizePID(currentP, currentD, margins) {
 
     if (margins.gcFreq !== null && currentD !== null && currentD > 0) {
         const gcHz = margins.gcFreq;
-        if (gcHz < 80) {
-            const dFactor = clamp(1 + (80 - gcHz) / 160, 1.0, 1.3);
+        if (gcHz < baseline) {
+            const dFactor = clamp(1 + (baseline - gcHz) / (baseline * 2), 1.0, 1.3);
             suggestD = Math.round(currentD * dFactor);
             parts.push(`low GC ${gcHz.toFixed(0)}Hz → increase D ×${dFactor.toFixed(2)}`);
-        } else if (gcHz > 200) {
-            const dFactor = clamp(1 - (gcHz - 200) / 400, 0.7, 1.0);
+        } else if (gcHz > baseline * 2.5) {
+            const dFactor = clamp(1 - (gcHz - baseline * 2.5) / (baseline * 5), 0.7, 1.0);
             suggestD = Math.round(currentD * dFactor);
             parts.push(`high GC ${gcHz.toFixed(0)}Hz → decrease D ×${dFactor.toFixed(2)}`);
         }
@@ -2004,9 +2051,10 @@ function _synthesizePID(currentP, currentD, margins) {
 
 /**
  * Run the full SysID pipeline on decoded frames for one BBL session.
+ * propInches: prop size in inches (from chirpPropInch selector) — used for crossover search window.
  * Returns a sysidResult object or null on fatal error.
  */
-function runSysID(frames, config) {
+function runSysID(frames, config, propInches) {
     const looptime = config.misc?.looptime;
     if (!looptime || looptime <= 0) return null;
     const sampleRate = 1e6 / looptime;
@@ -2017,7 +2065,9 @@ function runSysID(frames, config) {
         { name: "yaw", spKey: "setpoint[2]", gyroKey: "gyroADC[2]", pidKey: "yaw" },
     ];
 
-    const result = { axes: {}, warnings: [] };
+    const searchWindow = _getCrossoverSearchWindow(propInches);
+    const baselineHz = (searchWindow.min + searchWindow.max) / 2;
+    const result = { axes: {}, warnings: [], searchWindow, propInches: propInches ?? null };
 
     for (const ax of AXES) {
         // Extract raw signal arrays
@@ -2108,15 +2158,22 @@ function runSysID(frames, config) {
             filtCoh.push(Math.min(1, Math.max(0, c)));
         }
 
-        // Stability margins (computed on all bins, coherence shown visually)
-        const { phaseMargin, gainMargin, gcFreq, pcFreq } = _computeStabilityMargins(freqAxis, filtMag, filtPhase);
+        // Stability margins — only search within the prop-size-specific window
+        const { phaseMargin, gainMargin, gcFreq, pcFreq } = _computeStabilityMargins(
+            freqAxis,
+            filtMag,
+            filtPhase,
+            searchWindow,
+        );
 
         // Current PID values from BBL header
         const currentP = config.pids?.[ax.pidKey]?.[0] ?? null;
         const currentD = config.pids?.[ax.pidKey]?.[2] ?? null;
 
         const pidSuggest =
-            currentP !== null ? _synthesizePID(currentP, currentD, { phaseMargin, gainMargin, gcFreq, pcFreq }) : null;
+            currentP !== null
+                ? _synthesizePID(currentP, currentD, { phaseMargin, gainMargin, gcFreq, pcFreq }, baselineHz)
+                : null;
 
         result.axes[ax.name] = {
             freqAxis,
@@ -2621,7 +2678,7 @@ export default {
                 const prefix = sessions.length > 1 ? `Session ${sessionIdx + 1} — ` : "";
                 this.analysisResult = `${prefix}CHIRP / SYSID log detected — see frequency response analysis below.`;
                 try {
-                    this.sysidResult = runSysID(frames, config);
+                    this.sysidResult = runSysID(frames, config, this.chirpPropInch);
                 } catch (sysidErr) {
                     this.analysisResult += `\nSysID analysis error: ${sysidErr.message}`;
                 }
