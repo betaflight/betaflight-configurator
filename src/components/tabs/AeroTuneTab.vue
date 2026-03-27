@@ -1965,11 +1965,12 @@ function _getCrossoverSearchWindow(propInches) {
 
 /**
  * Compute stability margins from arrays of frequencies, magnitudes and phases.
- * freqAxis: Hz,  magDB: dB,  phaseDeg: degrees (unwrapped).
+ * freqAxis: Hz,  magDB: dB,  phaseDeg: degrees (unwrapped, for Bode plot only).
+ * rawPhaseDeg: raw atan2 phase in degrees (-180°, +180°] — used for margin numbers.
  * searchWindow: { min, max } Hz — only search within this band.
  * Returns { phaseMargin, gainMargin, gcFreq, pcFreq } — any may be null.
  */
-function _computeStabilityMargins(freqAxis, magDB, phaseDeg, searchWindow) {
+function _computeStabilityMargins(freqAxis, magDB, phaseDeg, rawPhaseDeg, searchWindow) {
     const winMin = searchWindow?.min ?? 5;
     const winMax = searchWindow?.max ?? 100;
 
@@ -1991,17 +1992,44 @@ function _computeStabilityMargins(freqAxis, magDB, phaseDeg, searchWindow) {
         if (magDB[j] >= 0 && magDB[i] < 0) {
             const t = magDB[j] / (magDB[j] - magDB[i]);
             gcFreq = freqAxis[j] + t * (freqAxis[i] - freqAxis[j]);
-            phaseMargin = phaseDeg[j] + t * (phaseDeg[i] - phaseDeg[j]) + 180;
+            // Phase margin: use raw atan2 phase, NOT the unwrapped accumulation.
+            // If the raw phase wraps between these two bins, pick the bin closer to 0 dB.
+            const rawJ = rawPhaseDeg[j];
+            const rawI = rawPhaseDeg[i];
+            const rawPhaseAtGC =
+                Math.abs(rawI - rawJ) > 180
+                    ? Math.abs(magDB[j]) < Math.abs(magDB[i])
+                        ? rawJ
+                        : rawI
+                    : rawJ + t * (rawI - rawJ);
+            phaseMargin = 180 + rawPhaseAtGC;
+            if (phaseMargin < -180 || phaseMargin > 360) {
+                console.warn(
+                    `[AeroTune] Phase margin ${phaseMargin.toFixed(1)}° out of plausible range [-180°, +360°] — reporting null`,
+                );
+                phaseMargin = null;
+            }
             break;
         }
     }
 
-    // Phase crossover: first downward -180° crossing within window
+    // Phase crossover: first downward raw -180° crossing within window.
+    // Handles both a direct descent through -180° and a wrap-around discontinuity
+    // (raw phase jumps from near -180° to near +180° as the unwrapped phase crosses -180°).
     for (let k = 1; k < winIndices.length; k++) {
         const i = winIndices[k];
         const j = winIndices[k - 1];
-        if (phaseDeg[j] >= -180 && phaseDeg[i] < -180) {
-            const t = (phaseDeg[j] + 180) / (phaseDeg[j] - phaseDeg[i]);
+        // Direct crossing: raw phase descends through -180°
+        if (rawPhaseDeg[j] >= -180 && rawPhaseDeg[i] < -180) {
+            const t = (rawPhaseDeg[j] + 180) / (rawPhaseDeg[j] - rawPhaseDeg[i]);
+            pcFreq = freqAxis[j] + t * (freqAxis[i] - freqAxis[j]);
+            gainMargin = -(magDB[j] + t * (magDB[i] - magDB[j]));
+            break;
+        }
+        // Wrap-around crossing: raw phase jumps from near -180° to near +180°.
+        // Interpolate using the effective unwrapped value at bin i (rawPhaseDeg[i] - 360).
+        if (rawPhaseDeg[j] < -90 && rawPhaseDeg[i] > 90) {
+            const t = (-180 - rawPhaseDeg[j]) / (rawPhaseDeg[i] - 360 - rawPhaseDeg[j]);
             pcFreq = freqAxis[j] + t * (freqAxis[i] - freqAxis[j]);
             gainMargin = -(magDB[j] + t * (magDB[i] - magDB[j]));
             break;
@@ -2121,6 +2149,9 @@ function runSysID(frames, config, propInches) {
             phaseRad[k] = Math.atan2(hIm, hRe);
         }
 
+        // Snapshot raw atan2 phase BEFORE unwrapping — used for margin numbers
+        const phaseRadRaw = phaseRad.slice();
+
         _unwrapPhase(phaseRad);
 
         // Coherence via Welch (512-sample segments, 50% overlap)
@@ -2134,13 +2165,15 @@ function runSysID(frames, config, propInches) {
         const freqAxis = [],
             filtMag = [],
             filtPhase = [],
+            rawPhaseDeg = [],
             filtCoh = [];
         for (let k = 0; k < nBins; k++) {
             const f = k * binHz;
             if (f < FREQ_MIN || f > FREQ_MAX) continue;
             freqAxis.push(f);
             filtMag.push(magDB[k]);
-            filtPhase.push((phaseRad[k] * 180) / Math.PI);
+            filtPhase.push((phaseRad[k] * 180) / Math.PI); // unwrapped — for Bode plot drawing
+            rawPhaseDeg.push((phaseRadRaw[k] * 180) / Math.PI); // raw atan2 — for margin numbers
             // Map coherence bin: interpolate from Welch resolution
             const ck = f / cohBinHz;
             const ci = Math.floor(ck);
@@ -2159,6 +2192,7 @@ function runSysID(frames, config, propInches) {
             freqAxis,
             filtMag,
             filtPhase,
+            rawPhaseDeg,
             searchWindow,
         );
 
