@@ -292,6 +292,7 @@ async function startProcess() {
 
                 if (!mountVueTab(tab, content_ready)) {
                     console.log(`Tab not found: ${tab}`);
+                    GUI.tab_switch_in_progress = false;
                 }
             });
         });
