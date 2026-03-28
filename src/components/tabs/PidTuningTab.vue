@@ -445,6 +445,10 @@ async function save() {
             filterSubTab.value.forceUpdateSliders();
         }
 
+        // Clear external-change flag before snapshotting so hasChanges
+        // correctly returns to false after a successful save.
+        pidTuningStore.clearExternalChange();
+
         // Update original values
         storeOriginalValues();
     } catch (e) {

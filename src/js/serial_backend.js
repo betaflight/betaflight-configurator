@@ -27,6 +27,7 @@ import { EventBus } from "../components/eventBus";
 import { ispConnected } from "./utils/connection";
 import { unmountVueTab } from "./vue_tab_mounter";
 import { useConnectionStore } from "../stores/connection";
+import { usePidTuningStore } from "../stores/pidTuning";
 
 const logHead = "[SERIAL-BACKEND]";
 
@@ -375,6 +376,9 @@ function read_serial_adapter(event) {
 function onOpen(openInfo) {
     if (openInfo) {
         CONFIGURATOR.virtualMode = false;
+
+        // Reset PID tuning store for the fresh connection.
+        usePidTuningStore().resetForConnection();
 
         // update connected_to
         GUI.connected_to = GUI.connecting_to;
@@ -760,6 +764,10 @@ function initFeaturesOnConnect() {
 
 function onClosed(result) {
     gui_log(i18n.getMessage(result ? "serialPortClosedOk" : "serialPortClosedFail"));
+
+    // Reset PID tuning store so stale AeroTune external-change flags
+    // from a previous session do not persist across disconnects.
+    usePidTuningStore().resetForConnection();
 
     // Clear connection timestamp
     connectionTimestamp = null;

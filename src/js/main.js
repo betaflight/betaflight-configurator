@@ -394,6 +394,9 @@ async function startProcess() {
                         // Vue tab - use mountVueTab instead of jQuery load
                         mountVueTab("backups", content_ready);
                         break;
+                    case "aerotune":
+                        mountVueTab("aerotune", content_ready);
+                        break;
                     default:
                         console.log(`Tab not found: ${tab}`);
                 }
