@@ -16,6 +16,7 @@ import { isAndroid } from "./utils/checkCompatibility.js";
 import { createApp } from "vue";
 import { pinia } from "./pinia_instance";
 import { useDialogStore } from "../stores/dialog";
+import { i18n } from "./localization";
 import GlobalDialogs from "@/components/dialogs/GlobalDialogs.vue";
 
 // Mount Global Dialogs App

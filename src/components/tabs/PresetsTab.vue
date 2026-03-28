@@ -461,7 +461,7 @@ async function loadConfigBackup() {
         console.error("Failed loading presets config:", error);
         await dialog.showInfo(
             i18n.getMessage("warningTitle"),
-            `${i18n.getMessage("userBackupsLoadFailed")}<br>${error.message}`,
+            `${i18n.getMessage("userBackupsLoadFailed")}<br>${GUI.escapeHtml(String(error.message ?? ""))}`,
             { confirmText: i18n.getMessage("close") },
         );
     }
