@@ -685,6 +685,9 @@ const hasLoadedConfig = ref(false);
 const presetMenuField = ref(null);
 const showPresetSubmenu = ref(false); // Track click state for submenu
 const presetGridCells = getPresetGridCells();
+const OSD_CHAR_WIDTH_FALLBACK = 12;
+const OSD_CHAR_HEIGHT_FALLBACK = 18;
+let dragPreviewElement = null;
 
 // Preview composable
 const { previewRows, previewBuffer, updatePreviewBuffer, searchLimitsElement } = useOsdPreview();
@@ -710,6 +713,7 @@ const onPreviewMouseDown = () => {
 
 const onPreviewMouseUp = () => {
     isDraggingGrid.value = false;
+    cleanupDragPreviewElement();
 };
 
 // Current drag state
@@ -928,6 +932,132 @@ function getPreviewCellClass(cell) {
     return classes;
 }
 
+function cleanupDragPreviewElement() {
+    if (!dragPreviewElement) {
+        return;
+    }
+    dragPreviewElement.remove();
+    dragPreviewElement = null;
+}
+
+function getPreviewCells(preview) {
+    if (typeof preview === "string") {
+        return Array.from(preview).map((char, index) => ({
+            x: index,
+            y: 0,
+            charCode: char.codePointAt(0),
+        }));
+    }
+
+    if (!Array.isArray(preview)) {
+        return [];
+    }
+
+    if (preview.length > 0 && typeof preview[0] === "string") {
+        const cells = [];
+        preview.forEach((line, y) => {
+            Array.from(line).forEach((char, x) => {
+                cells.push({ x, y, charCode: char.codePointAt(0) });
+            });
+        });
+        return cells;
+    }
+
+    return preview
+        .filter((entry) => typeof entry?.x === "number" && typeof entry?.y === "number")
+        .map((entry) => ({ x: entry.x, y: entry.y, charCode: entry.sym }));
+}
+
+function getRenderedCharSize(dragCellElement) {
+    const imageRect = dragCellElement?.querySelector("img")?.getBoundingClientRect?.();
+    if (imageRect?.width > 0 && imageRect?.height > 0) {
+        return {
+            width: Math.max(1, Math.round(imageRect.width)),
+            height: Math.max(1, Math.round(imageRect.height)),
+        };
+    }
+
+    const cellRect = dragCellElement?.getBoundingClientRect?.();
+    if (cellRect?.width > 0 && cellRect?.height > 0) {
+        return {
+            width: Math.max(1, Math.round(cellRect.width)),
+            height: Math.max(1, Math.round(cellRect.height)),
+        };
+    }
+
+    return { width: OSD_CHAR_WIDTH_FALLBACK, height: OSD_CHAR_HEIGHT_FALLBACK };
+}
+
+function createFieldDragPreviewElement(displayItem, charWidth, charHeight) {
+    const cells = getPreviewCells(displayItem.preview).filter((cell) => Number.isFinite(cell.charCode));
+    if (cells.length === 0) {
+        return null;
+    }
+
+    let minX = cells[0].x;
+    let maxX = cells[0].x;
+    let minY = cells[0].y;
+    let maxY = cells[0].y;
+
+    for (const cell of cells) {
+        minX = Math.min(minX, cell.x);
+        maxX = Math.max(maxX, cell.x);
+        minY = Math.min(minY, cell.y);
+        maxY = Math.max(maxY, cell.y);
+    }
+
+    const widthCells = maxX - minX + 1;
+    const heightCells = maxY - minY + 1;
+    const container = document.createElement("div");
+    container.style.position = "fixed";
+    container.style.left = "-9999px";
+    container.style.top = "-9999px";
+    container.style.pointerEvents = "none";
+    container.style.width = `${widthCells * charWidth}px`;
+    container.style.height = `${heightCells * charHeight}px`;
+    container.style.zIndex = "2147483647";
+    container.style.imageRendering = "pixelated";
+
+    for (const cell of cells) {
+        const img = document.createElement("img");
+        img.src = FONT.draw(cell.charCode);
+        img.alt = "";
+        img.draggable = false;
+        img.style.position = "absolute";
+        img.style.left = `${(cell.x - minX) * charWidth}px`;
+        img.style.top = `${(cell.y - minY) * charHeight}px`;
+        img.style.width = `${charWidth}px`;
+        img.style.height = `${charHeight}px`;
+        img.style.imageRendering = "pixelated";
+        img.style.opacity = "1";
+        container.appendChild(img);
+    }
+
+    return {
+        element: container,
+        minX,
+        minY,
+        widthPx: widthCells * charWidth,
+        heightPx: heightCells * charHeight,
+    };
+}
+
+function getDragPreviewAnchor(displayItem, dragX, dragY, displaySize, dragPreviewMeta, charWidth, charHeight) {
+    const normalizedPosition = ((displayItem.position % displaySize.total) + displaySize.total) % displaySize.total;
+    const originX = normalizedPosition % displaySize.x;
+    const originY = Math.trunc(normalizedPosition / displaySize.x);
+    const localX = dragX - originX;
+    const localY = dragY - originY;
+
+    const anchorX = (localX - dragPreviewMeta.minX) * charWidth + charWidth / 2;
+    const anchorY = (localY - dragPreviewMeta.minY) * charHeight + charHeight / 2;
+
+    return {
+        x: Math.min(Math.max(anchorX, 0), dragPreviewMeta.widthPx),
+        y: Math.min(Math.max(anchorY, 0), dragPreviewMeta.heightPx),
+    };
+}
+
 // Drag and drop handlers
 function onDragStart(event, cell) {
     const field = cell.field;
@@ -942,16 +1072,17 @@ function onDragStart(event, cell) {
 
     let xPos = Number.parseInt(event.currentTarget.dataset.x);
     let yPos = Number.parseInt(event.currentTarget.dataset.y);
-    let offsetX = 6;
-    let offsetY = 9;
+    const charSize = getRenderedCharSize(event.currentTarget);
+    let offsetX = charSize.width / 2;
+    let offsetY = charSize.height / 2;
 
     // For array-type previews, adjust offset to account for element bounds
     if (Array.isArray(displayItem.preview)) {
         const limits = searchLimitsElement(displayItem.preview);
         xPos -= limits.minX;
         yPos -= limits.minY;
-        offsetX += xPos * 12;
-        offsetY += yPos * 18;
+        offsetX += xPos * charSize.width;
+        offsetY += yPos * charSize.height;
     }
 
     event.dataTransfer.effectAllowed = "move";
@@ -960,8 +1091,26 @@ function onDragStart(event, cell) {
     event.dataTransfer.setData("y", String(event.currentTarget.dataset.y));
 
     // Set drag image if available and not on Linux
-    if (field.preview_img && !navigator.platform.includes("Linux")) {
-        event.dataTransfer.setDragImage(field.preview_img, offsetX, offsetY);
+    if (!navigator.platform.includes("Linux")) {
+        cleanupDragPreviewElement();
+        const dragPreviewMeta = createFieldDragPreviewElement(displayItem, charSize.width, charSize.height);
+        if (dragPreviewMeta) {
+            dragPreviewElement = dragPreviewMeta.element;
+            document.body.appendChild(dragPreviewElement);
+
+            const anchor = getDragPreviewAnchor(
+                displayItem,
+                xPos,
+                yPos,
+                osdStore.displaySize,
+                dragPreviewMeta,
+                charSize.width,
+                charSize.height,
+            );
+            event.dataTransfer.setDragImage(dragPreviewElement, anchor.x, anchor.y);
+        } else if (field.preview_img) {
+            event.dataTransfer.setDragImage(field.preview_img, offsetX, offsetY);
+        }
     }
 
     dragState.value.field = field;
@@ -982,11 +1131,7 @@ function isStringArrayPreview(preview) {
     return Array.isArray(preview) && typeof preview[0] === "string";
 }
 
-function applyArrayDragOffset(displayItem, position, event, displaySize, startIdx) {
-    if (!Array.isArray(displayItem.preview)) {
-        return position;
-    }
-
+function applyDragOffsetFromStartCell(position, event, displaySize, startIdx) {
     const x = Number.parseInt(event.dataTransfer.getData("x"), 10);
     const y = Number.parseInt(event.dataTransfer.getData("y"), 10);
     if (Number.isNaN(x) || Number.isNaN(y)) {
@@ -998,12 +1143,16 @@ function applyArrayDragOffset(displayItem, position, event, displaySize, startId
     return startIdx + offsetIdx;
 }
 
-function clampStringPreviewPosition(displayItem, position, displaySize) {
-    const overflowsLine = displaySize.x - ((position % displaySize.x) + displayItem.preview.length);
-    if (overflowsLine < 0) {
-        return position + overflowsLine;
-    }
-    return position;
+function clampStringPreviewPosition(displayItem, position, displaySize, cursorY) {
+    const elementWidth = Array.from(displayItem.preview || "").length;
+    const maxX = Math.max(0, displaySize.x - elementWidth);
+    const maxY = Math.max(0, displaySize.y - 1);
+    const row = Math.min(Math.max(cursorY, 0), maxY);
+
+    const rawX = position - row * displaySize.x;
+    const x = Math.min(Math.max(rawX, 0), maxX);
+
+    return row * displaySize.x + x;
 }
 
 function clampStringArrayPreviewPosition(position, displaySize, cursorX, limits) {
@@ -1066,12 +1215,13 @@ function onDropCell(event) {
     const displaySize = osdStore.displaySize;
     let position = Number.parseInt(event.currentTarget.dataset.position);
     const cursorX = position % displaySize.x;
+    const cursorY = Math.trunc(position / displaySize.x);
 
     const startIdx =
         dragState.value.field?.index === fieldId && dragState.value.startIdx >= 0
             ? dragState.value.startIdx
             : displayItem.position;
-    position = applyArrayDragOffset(displayItem, position, event, displaySize, startIdx);
+    position = applyDragOffsetFromStartCell(position, event, displaySize, startIdx);
 
     if (!displayItem.ignoreSize) {
         if (Array.isArray(displayItem.preview)) {
@@ -1080,7 +1230,7 @@ function onDropCell(event) {
                 return;
             }
         } else {
-            position = clampStringPreviewPosition(displayItem, position, displaySize);
+            position = clampStringPreviewPosition(displayItem, position, displaySize, cursorY);
         }
     }
 
@@ -1561,6 +1711,7 @@ onMounted(async () => {
 onUnmounted(() => {
     document.removeEventListener("click", handleClickOutside);
     analyticsChanges.value = {};
+    cleanupDragPreviewElement();
 });
 </script>
 
