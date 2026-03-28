@@ -616,6 +616,7 @@ import { useFlightControllerStore } from "@/stores/fc";
 import { useConnectionStore } from "@/stores/connection";
 import { useNavigationStore } from "@/stores/navigation";
 import { useReboot } from "@/composables/useReboot";
+import { useInterval } from "../../composables/useInterval";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "@/components/elements/WikiButton.vue";
 import { i18n } from "@/js/localization";
@@ -643,6 +644,7 @@ const fcStore = useFlightControllerStore();
 const connectionStore = useConnectionStore();
 const navigationStore = useNavigationStore();
 const { reboot } = useReboot();
+const { addInterval, removeInterval } = useInterval();
 
 // Template refs
 const modelPreviewContainer = ref(null);
@@ -1264,8 +1266,8 @@ function getRcData() {
 // Watch refresh rate changes
 watch(refreshRate, (newRate) => {
     setConfig({ rx_refresh_rate: newRate });
-    GUI.interval_remove("receiver_pull");
-    GUI.interval_add("receiver_pull", getRcData, newRate, true);
+    removeInterval("receiver_pull");
+    addInterval("receiver_pull", getRcData, newRate, true);
 });
 
 // Lifecycle
@@ -1281,7 +1283,7 @@ onMounted(async () => {
     renderModel();
 
     // Start model preview polling
-    GUI.interval_add(
+    addInterval(
         "receiver_pull_for_model_preview",
         () => {
             MSP.send_message(MSPCodes.MSP_RC, false, false);
@@ -1292,7 +1294,7 @@ onMounted(async () => {
 
     // Setup and start RC plot
     setupRxPlot();
-    GUI.interval_add("receiver_pull", getRcData, refreshRate.value, true);
+    addInterval("receiver_pull", getRcData, refreshRate.value, true);
 
     GUI.content_ready();
 });
@@ -1306,8 +1308,6 @@ onUnmounted(() => {
     if (model?.dispose) {
         model.dispose();
     }
-    GUI.interval_remove("receiver_pull");
-    GUI.interval_remove("receiver_pull_for_model_preview");
 });
 </script>
 

@@ -95,18 +95,18 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, onMounted, onBeforeUnmount, nextTick } from "vue";
+import { ref, reactive, computed, onMounted, nextTick } from "vue";
 import { storeToRefs } from "pinia";
 import { useFlightControllerStore } from "@/stores/fc";
 import { useDebugStore } from "@/stores/debug";
 import { useSensorsStore } from "@/stores/sensors";
 import { useSensorGraph } from "@/composables/useSensorGraph";
+import { useInterval } from "../../composables/useInterval";
 import { have_sensor } from "../../js/sensor_helpers";
 import { GYRO_SCALE_OPTIONS, ACCEL_SCALE_OPTIONS, MAG_SCALE_OPTIONS } from "./sensors/constants";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "@/components/elements/WikiButton.vue";
 import SensorGraph from "./sensors/SensorGraph.vue";
-import GUI from "../../js/gui";
 import MSP from "../../js/msp";
 import MSPCodes from "../../js/msp/MSPCodes";
 import semver from "semver";
@@ -115,6 +115,7 @@ import { API_VERSION_1_46 } from "../../js/data_storage";
 const fcStore = useFlightControllerStore();
 const debugStore = useDebugStore();
 const sensorsStore = useSensorsStore();
+const { addInterval, removeInterval } = useInterval();
 
 // Get reactive refs from store
 const { checkboxes, rates, scales, debugColumns } = storeToRefs(sensorsStore);
@@ -263,13 +264,17 @@ function initSensorData() {
 }
 
 function initializeTimers() {
-    GUI.interval_kill_all(["status_pull"]);
+    // Remove sensor-specific intervals before re-adding with updated rates
+    removeInterval("IMU_pull");
+    removeInterval("altitude_pull");
+    removeInterval("sonar_pull");
+    removeInterval("debug_pull");
 
     const fastest = Math.max(rates.value.gyro, rates.value.accel, rates.value.mag);
 
     // IMU data (gyro, accel, mag)
     if (checkboxes.value[0] || checkboxes.value[1] || checkboxes.value[2]) {
-        GUI.interval_add(
+        addInterval(
             "IMU_pull",
             () => {
                 MSP.send_message(MSPCodes.MSP_RAW_IMU, false, false, update_imu_graphs);
@@ -281,7 +286,7 @@ function initializeTimers() {
 
     // Altitude
     if (checkboxes.value[3]) {
-        GUI.interval_add(
+        addInterval(
             "altitude_pull",
             () => {
                 MSP.send_message(MSPCodes.MSP_ALTITUDE, false, false, update_altitude_graph);
@@ -293,7 +298,7 @@ function initializeTimers() {
 
     // Sonar
     if (checkboxes.value[4]) {
-        GUI.interval_add(
+        addInterval(
             "sonar_pull",
             () => {
                 MSP.send_message(MSPCodes.MSP_SONAR, false, false, update_sonar_graphs);
@@ -305,7 +310,7 @@ function initializeTimers() {
 
     // Debug
     if (checkboxes.value[5]) {
-        GUI.interval_add(
+        addInterval(
             "debug_pull",
             () => {
                 MSP.send_message(MSPCodes.MSP_DEBUG, false, false, update_debug_graphs);
@@ -443,7 +448,7 @@ onMounted(async () => {
     initializeTimers();
 
     // Status polling
-    GUI.interval_add(
+    addInterval(
         "status_pull",
         () => {
             MSP.send_message(MSPCodes.MSP_STATUS);
@@ -453,9 +458,7 @@ onMounted(async () => {
     );
 });
 
-onBeforeUnmount(() => {
-    GUI.interval_kill_all();
-});
+// Interval cleanup is handled automatically by the useInterval composable on unmount
 </script>
 
 <style scoped>

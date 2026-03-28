@@ -431,6 +431,8 @@ import { useFlightControllerStore } from "../../stores/fc";
 import { isExpertModeEnabled } from "../../js/utils/isExpertModeEnabled";
 import { EventBus } from "@/components/eventBus";
 import GUI from "../../js/gui";
+import { useInterval } from "../../composables/useInterval";
+import { useTimeout } from "../../composables/useTimeout";
 import { have_sensor } from "../../js/sensor_helpers";
 import { mspHelper } from "../../js/msp/MSPHelper";
 import MSP from "../../js/msp";
@@ -592,11 +594,8 @@ if (fcStore.config.armingDisableCount > 0) {
     prepareDisarmFlags();
 }
 
-const localIntervals = [];
-function addLocalInterval(name, fn, period, first = false) {
-    GUI.interval_add(name, fn, period, first);
-    localIntervals.push(name);
-}
+const { addInterval, removeAllIntervals } = useInterval();
+const { addTimeout, removeTimeout } = useTimeout();
 
 const updateExpertMode = (enabled) => {
     isExpert.value = enabled;
@@ -636,7 +635,7 @@ function onCalibrateAccel() {
         }
     });
 
-    GUI.timeout_add(
+    addTimeout(
         "button_reset",
         function () {
             if (mountedFlag) {
@@ -672,7 +671,7 @@ function onCalibrateMag() {
             magCalibInterval = null;
         }
         if (magCalibTimeoutName) {
-            GUI.timeout_remove(magCalibTimeoutName);
+            removeTimeout(magCalibTimeoutName);
             magCalibTimeoutName = null;
         }
 
@@ -697,7 +696,7 @@ function onCalibrateMag() {
     } else {
         // use a dedicated name so we can remove it safely on unmount
         magCalibTimeoutName = "mag_button_reset";
-        GUI.timeout_add(magCalibTimeoutName, magCalibResetButton, 30000);
+        addTimeout(magCalibTimeoutName, magCalibResetButton, 30000);
     }
 }
 
@@ -1086,8 +1085,8 @@ function process_html() {
         }
     }
 
-    addLocalInterval("setup_data_pull_fast", get_fast_data, 33, true);
-    addLocalInterval("setup_data_pull_slow", get_slow_data, 250, true);
+    addInterval("setup_data_pull_fast", get_fast_data, 33, true);
+    addInterval("setup_data_pull_slow", get_slow_data, 250, true);
 
     // notify GUI that content is ready
     GUI.content_ready(() => {});
@@ -1142,14 +1141,7 @@ function cleanup(callback) {
     }
 
     // clear intervals used by this tab
-    try {
-        while (localIntervals.length > 0) {
-            GUI.interval_remove(localIntervals.pop());
-        }
-    } catch (e) {
-        // preserve behavior but at least log unexpected errors
-        console.warn("Error clearing local intervals:", e);
-    }
+    removeAllIntervals();
 
     // ensure mag calibration timers are cleared to avoid callbacks after unmount
     if (magCalibInterval) {
@@ -1157,7 +1149,7 @@ function cleanup(callback) {
         magCalibInterval = null;
     }
     if (magCalibTimeoutName) {
-        GUI.timeout_remove(magCalibTimeoutName);
+        removeTimeout(magCalibTimeoutName);
         magCalibTimeoutName = null;
     }
 

@@ -124,7 +124,7 @@
 </template>
 
 <script>
-import { defineComponent, ref, reactive, computed, onMounted, onUnmounted } from "vue";
+import { defineComponent, ref, reactive, computed, onMounted } from "vue";
 import BaseTab from "./BaseTab.vue";
 import GUI from "../../js/gui";
 import FC from "../../js/fc";
@@ -134,6 +134,8 @@ import { mspHelper } from "../../js/msp/MSPHelper";
 import { gui_log } from "../../js/gui_log";
 import { i18n } from "../../js/localization";
 import WikiButton from "../elements/WikiButton.vue";
+import { useInterval } from "../../composables/useInterval";
+import { useTimeout } from "../../composables/useTimeout";
 
 // Calculate bar style for servo visualization
 function getBarStyle(value) {
@@ -167,14 +169,8 @@ export default defineComponent({
         const servoConfigs = reactive([]);
         const servoData = reactive([]);
 
-        // Track local intervals for cleanup
-        const localIntervals = [];
-
-        // Helper to add interval and track it
-        const addLocalInterval = (name, code, period, first = false) => {
-            GUI.interval_add(name, code, period, first);
-            localIntervals.push(name);
-        };
+        const { addInterval } = useInterval();
+        const { addTimeout } = useTimeout();
 
         // Calculate aux channels from RC active channels
         const totalChannels = computed(() => FC.RC?.active_channels || 8);
@@ -200,7 +196,7 @@ export default defineComponent({
         function onServoChange() {
             if (liveMode.value) {
                 // Apply changes to FC in live mode
-                GUI.timeout_add("servos_update", () => updateServos(false), 10);
+                addTimeout("servos_update", () => updateServos(false), 10);
             }
         }
 
@@ -302,10 +298,10 @@ export default defineComponent({
             }
 
             // Start servo data polling for visualization
-            addLocalInterval("servo_data_pull", getServoData, 50);
+            addInterval("servo_data_pull", getServoData, 50);
 
             // Status polling
-            addLocalInterval("status_pull", () => MSP.send_message(MSPCodes.MSP_STATUS), 250, true);
+            addInterval("status_pull", () => MSP.send_message(MSPCodes.MSP_STATUS), 250, true);
 
             GUI.content_ready();
         }
@@ -314,11 +310,7 @@ export default defineComponent({
             loadServoData();
         });
 
-        onUnmounted(() => {
-            // Clean up only our own intervals
-            localIntervals.forEach((name) => GUI.interval_remove(name));
-            localIntervals.length = 0;
-        });
+        // Interval/timeout cleanup handled automatically by composables on unmount
 
         return {
             isSupported,

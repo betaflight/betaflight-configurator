@@ -78,6 +78,7 @@ import MSPCodes from "../../js/msp/MSPCodes.js";
 import { useFlightControllerStore } from "@/stores/fc";
 import { useConnectionStore } from "@/stores/connection";
 import { useDialog } from "@/composables/useDialog";
+import { useInterval } from "../../composables/useInterval";
 import WikiButton from "../elements/WikiButton.vue";
 
 const PROPERTY_ORDER = [
@@ -119,6 +120,7 @@ export default defineComponent({
         const fcStore = useFlightControllerStore();
         const connectionStore = useConnectionStore();
         const dialog = useDialog();
+        const { addInterval, removeInterval } = useInterval();
 
         const selectedProperties = ref([]);
         const samplingInterval = ref(100);
@@ -346,8 +348,8 @@ export default defineComponent({
 
             isBusy.value = true;
 
-            GUI.interval_remove(LOG_POLL_INTERVAL);
-            GUI.interval_remove(LOG_WRITE_INTERVAL);
+            removeInterval(LOG_POLL_INTERVAL);
+            removeInterval(LOG_WRITE_INTERVAL);
 
             await writePendingData();
 
@@ -401,7 +403,7 @@ export default defineComponent({
                     return;
                 }
 
-                GUI.interval_add(
+                addInterval(
                     LOG_POLL_INTERVAL,
                     () => {
                         if (hasPreviousRequest) {
@@ -415,7 +417,7 @@ export default defineComponent({
                     true,
                 );
 
-                GUI.interval_add(
+                addInterval(
                     LOG_WRITE_INTERVAL,
                     () => {
                         writePendingData();

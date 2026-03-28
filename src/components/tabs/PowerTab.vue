@@ -533,7 +533,7 @@
 </template>
 
 <script>
-import { defineComponent, onMounted, onUnmounted, computed, nextTick, ref } from "vue";
+import { defineComponent, onMounted, computed, nextTick, ref } from "vue";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "../elements/WikiButton.vue";
 import Dialog from "../elements/Dialog.vue";
@@ -541,6 +541,7 @@ import GUI from "../../js/gui";
 import FC from "../../js/fc";
 import { i18n } from "../../js/localization";
 import { usePower } from "../../composables/usePower";
+import { useInterval } from "../../composables/useInterval";
 
 export default defineComponent({
     name: "PowerTab",
@@ -610,12 +611,7 @@ export default defineComponent({
         const showCalibrationManagerDialog = ref(false);
         const showCalibrationConfirmDialog = ref(false);
 
-        // Track local intervals
-        const localIntervals = [];
-        const addLocalInterval = (name, code, period, first = false) => {
-            GUI.interval_add(name, code, period, first);
-            localIntervals.push(name);
-        };
+        const { addInterval } = useInterval();
 
         onMounted(async () => {
             await loadData();
@@ -626,13 +622,10 @@ export default defineComponent({
             });
 
             // Start polling
-            addLocalInterval("power_data_pull_slow", updateLiveData, 200, true);
+            addInterval("power_data_pull_slow", updateLiveData, 200, true);
         });
 
-        onUnmounted(() => {
-            localIntervals.forEach((name) => GUI.interval_remove(name));
-            localIntervals.length = 0;
-        });
+        // Interval cleanup handled automatically by useInterval on unmount
 
         const handleSave = () => {
             saveConfig(() => loadData());
