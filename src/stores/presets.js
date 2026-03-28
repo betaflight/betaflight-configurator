@@ -3,6 +3,7 @@ import { computed, reactive, ref } from "vue";
 import { get as getConfig, set as setConfig } from "../js/ConfigStorage";
 import { i18n } from "../js/localization";
 import FC from "../js/fc";
+import { escapeHtml } from "../js/utils/common";
 import { useDialogStore } from "./dialog";
 import { favoritePresets } from "../components/tabs/presets/FavoritePresets";
 import PickedPreset from "../components/tabs/presets/PickedPreset";
@@ -367,7 +368,9 @@ export const usePresetsStore = defineStore("presets", () => {
         }
 
         const versionRequired = `${majorVersion}.X`;
-        const versionSource = `${differentMajorVersionRepositories[0].index.majorVersion}.${differentMajorVersionRepositories[0].index.minorVersion}`;
+        const versionSource = escapeHtml(
+            `${differentMajorVersionRepositories[0].index.majorVersion}.${differentMajorVersionRepositories[0].index.minorVersion}`,
+        );
 
         const dialogStore = useDialogStore();
         await new Promise((resolve, reject) => {

@@ -257,6 +257,7 @@ import { usePresetsCliSession } from "@/composables/usePresetsCliSession";
 import { useDialog } from "@/composables/useDialog";
 import GUI from "@/js/gui";
 import FC from "@/js/fc";
+import { escapeHtml } from "@/js/utils/common";
 import { useConnectionStore } from "@/stores/connection";
 import FileSystem from "@/js/FileSystem";
 import { generateFilename } from "@/js/utils/generate_filename";
@@ -461,7 +462,7 @@ async function loadConfigBackup() {
         console.error("Failed loading presets config:", error);
         await dialog.showInfo(
             i18n.getMessage("warningTitle"),
-            `${i18n.getMessage("userBackupsLoadFailed")}<br>${GUI.escapeHtml(String(error.message ?? ""))}`,
+            `${i18n.getMessage("userBackupsLoadFailed")}<br>${escapeHtml(String(error.message ?? ""))}`,
             { confirmText: i18n.getMessage("close") },
         );
     }
@@ -517,7 +518,7 @@ async function applyPresetSelection() {
 
     dialog.openYesNo(
         i18n.getMessage("presetsWarningDialogTitle"),
-        GUI.escapeHtml(store.selectedPreset.completeWarning),
+        escapeHtml(store.selectedPreset.completeWarning),
         pickPresetAfterVersionCheck,
         null,
         {
