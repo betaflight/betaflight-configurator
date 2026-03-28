@@ -254,6 +254,7 @@ import PresetDetailsDialog from "./presets/PresetDetailsDialog.vue";
 import PresetSourcesDialog from "./presets/PresetSourcesDialog.vue";
 import { usePresetsStore } from "@/stores/presets";
 import { usePresetsCliSession } from "@/composables/usePresetsCliSession";
+import { useDialog } from "@/composables/useDialog";
 import GUI from "@/js/gui";
 import FC from "@/js/fc";
 import CONFIGURATOR from "@/js/data_storage";
@@ -265,6 +266,7 @@ import { TAB_ADAPTER_REGISTRATION_KEY } from "@/js/vue_tab_mounter";
 import CliEngine from "./presets/CliEngine";
 
 const store = usePresetsStore();
+const dialog = useDialog();
 const cliSession = usePresetsCliSession({
     onProgressChange: (value) => store.updateApplyProgress(value),
 });
@@ -374,10 +376,8 @@ async function ensureCliPresetActionSupported() {
         return true;
     }
 
-    await GUI.showInformationDialog({
-        title: i18n.getMessage("warningTitle"),
-        text: i18n.getMessage("presetsVirtualModeCliUnsupported"),
-        buttonConfirmText: i18n.getMessage("close"),
+    await dialog.showInfo(i18n.getMessage("warningTitle"), i18n.getMessage("presetsVirtualModeCliUnsupported"), {
+        confirmText: i18n.getMessage("close"),
     });
 
     return false;
@@ -392,10 +392,7 @@ async function saveConfigBackup() {
         return;
     }
 
-    const waitingDialog = GUI.showWaitDialog({
-        title: i18n.getMessage("presetsLoadingDumpAll"),
-        buttonCancelCallback: null,
-    });
+    const waitingDialog = dialog.showWait(i18n.getMessage("presetsLoadingDumpAll"), null);
 
     let activated = false;
 
@@ -425,10 +422,8 @@ async function saveConfigBackup() {
             return;
         }
 
-        await GUI.showInformationDialog({
-            title: i18n.getMessage("warningTitle"),
-            text: i18n.getMessage("dumpAllNotSavedWarning"),
-            buttonConfirmText: i18n.getMessage("close"),
+        await dialog.showInfo(i18n.getMessage("warningTitle"), i18n.getMessage("dumpAllNotSavedWarning"), {
+            confirmText: i18n.getMessage("close"),
         });
     } finally {
         if (activated) {
@@ -463,11 +458,11 @@ async function loadConfigBackup() {
         }
 
         console.error("Failed loading presets config:", error);
-        await GUI.showInformationDialog({
-            title: i18n.getMessage("warningTitle"),
-            text: `${i18n.getMessage("userBackupsLoadFailed")}<br>${error.message}`,
-            buttonConfirmText: i18n.getMessage("close"),
-        });
+        await dialog.showInfo(
+            i18n.getMessage("warningTitle"),
+            `${i18n.getMessage("userBackupsLoadFailed")}<br>${error.message}`,
+            { confirmText: i18n.getMessage("close") },
+        );
     }
 }
 
@@ -487,17 +482,19 @@ function pickPresetAfterVersionCheck() {
         return;
     }
 
-    GUI.showYesNoDialog({
-        title: i18n.getMessage("presetsWarningDialogTitle"),
-        text: i18n.getMessage("presetsWarningWrongVersionConfirmation", [
+    dialog.openYesNo(
+        i18n.getMessage("presetsWarningDialogTitle"),
+        i18n.getMessage("presetsWarningWrongVersionConfirmation", [
             store.selectedPreset.firmware_version,
             FC.CONFIG.flightControllerVersion,
         ]),
-        buttonYesText: i18n.getMessage("presetsWarningDialogYesButton"),
-        buttonNoText: i18n.getMessage("presetsWarningDialogNoButton"),
-        buttonYesCallback: () => store.pickSelectedPreset(),
-        buttonNoCallback: null,
-    });
+        () => store.pickSelectedPreset(),
+        null,
+        {
+            yesText: i18n.getMessage("presetsWarningDialogYesButton"),
+            noText: i18n.getMessage("presetsWarningDialogNoButton"),
+        },
+    );
 }
 
 async function applyPresetSelection() {
@@ -506,10 +503,8 @@ async function applyPresetSelection() {
     }
 
     if (store.selectedPreset.force_options_review && !store.detailsState.optionsReviewed) {
-        await GUI.showInformationDialog({
-            title: i18n.getMessage("warningTitle"),
-            text: i18n.getMessage("presetsReviewOptionsWarning"),
-            buttonConfirmText: i18n.getMessage("close"),
+        await dialog.showInfo(i18n.getMessage("warningTitle"), i18n.getMessage("presetsReviewOptionsWarning"), {
+            confirmText: i18n.getMessage("close"),
         });
         return;
     }
@@ -519,14 +514,16 @@ async function applyPresetSelection() {
         return;
     }
 
-    GUI.showYesNoDialog({
-        title: i18n.getMessage("presetsWarningDialogTitle"),
-        text: GUI.escapeHtml(store.selectedPreset.completeWarning),
-        buttonYesText: i18n.getMessage("presetsWarningDialogYesButton"),
-        buttonNoText: i18n.getMessage("presetsWarningDialogNoButton"),
-        buttonYesCallback: pickPresetAfterVersionCheck,
-        buttonNoCallback: null,
-    });
+    dialog.openYesNo(
+        i18n.getMessage("presetsWarningDialogTitle"),
+        GUI.escapeHtml(store.selectedPreset.completeWarning),
+        pickPresetAfterVersionCheck,
+        null,
+        {
+            yesText: i18n.getMessage("presetsWarningDialogYesButton"),
+            noText: i18n.getMessage("presetsWarningDialogNoButton"),
+        },
+    );
 }
 
 async function applyPickedPresets() {

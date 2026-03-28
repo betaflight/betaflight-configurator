@@ -1,5 +1,6 @@
 import { reactive } from "vue";
 import { get as getConfig } from "../js/ConfigStorage";
+import { useDialog } from "./useDialog";
 import GUI from "../js/gui";
 import ConfigInserter from "../js/ConfigInserter";
 import { tracking } from "../js/Analytics";
@@ -21,6 +22,7 @@ import PortHandler from "../js/port_handler";
  */
 export function useFirmwareFlashing(params = {}) {
     const { flashingMessage, flashProgress, FLASH_MESSAGE_TYPES, $t, logHead = "[FIRMWARE_FLASHER]" } = params;
+    const dialog = useDialog();
 
     // Reactive firmware state
     const firmwareState = reactive({
@@ -433,16 +435,16 @@ export function useFirmwareFlashing(params = {}) {
                 startBackup?.(initiateFlashing);
                 break;
             case 2:
-                GUI.showYesNoDialog({
-                    title: $t?.("firmwareFlasherRemindBackupTitle"),
-                    text: $t?.("firmwareFlasherRemindBackup"),
-                    buttonYesText: $t?.("firmwareFlasherBackup"),
-                    buttonNoText: $t?.("firmwareFlasherBackupIgnore"),
-                    buttonYesCallback: () => {
-                        startBackup?.(initiateFlashing);
+                dialog.openYesNo(
+                    $t?.("firmwareFlasherRemindBackupTitle"),
+                    $t?.("firmwareFlasherRemindBackup"),
+                    () => startBackup?.(initiateFlashing),
+                    initiateFlashing,
+                    {
+                        yesText: $t?.("firmwareFlasherBackup"),
+                        noText: $t?.("firmwareFlasherBackupIgnore"),
                     },
-                    buttonNoCallback: initiateFlashing,
-                });
+                );
                 break;
             default:
                 await initiateFlashing?.();
@@ -492,7 +494,7 @@ export function useFirmwareFlashing(params = {}) {
         } = options;
 
         const detectedUsbDevice = (device) => {
-        const isFlashOnConnect = getFlashOnConnect();
+            const isFlashOnConnect = getFlashOnConnect();
 
             console.log(`${logHead} Detected USB device:`, device);
 

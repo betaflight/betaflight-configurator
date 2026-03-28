@@ -3,7 +3,7 @@ import { computed, reactive, ref } from "vue";
 import { get as getConfig, set as setConfig } from "../js/ConfigStorage";
 import { i18n } from "../js/localization";
 import FC from "../js/fc";
-import GUI from "../js/gui";
+import { useDialogStore } from "./dialog";
 import { favoritePresets } from "../components/tabs/presets/FavoritePresets";
 import PickedPreset from "../components/tabs/presets/PickedPreset";
 import PresetsGithubRepo from "../components/tabs/presets/PresetsRepoIndexed/PresetsGithubRepo";
@@ -369,18 +369,30 @@ export const usePresetsStore = defineStore("presets", () => {
         const versionRequired = `${majorVersion}.X`;
         const versionSource = `${differentMajorVersionRepositories[0].index.majorVersion}.${differentMajorVersionRepositories[0].index.minorVersion}`;
 
+        const dialogStore = useDialogStore();
         await new Promise((resolve, reject) => {
-            GUI.showYesNoDialog({
-                title: i18n.getMessage("presetsWarningDialogTitle"),
-                text: i18n.getMessage("presetsVersionMismatch", {
-                    versionRequired,
-                    versionSource,
-                }),
-                buttonYesText: i18n.getMessage("yes"),
-                buttonNoText: i18n.getMessage("no"),
-                buttonYesCallback: resolve,
-                buttonNoCallback: () => reject(new Error("Preset source version mismatch")),
-            });
+            dialogStore.open(
+                "YesNoDialog",
+                {
+                    title: i18n.getMessage("presetsWarningDialogTitle"),
+                    text: i18n.getMessage("presetsVersionMismatch", {
+                        versionRequired,
+                        versionSource,
+                    }),
+                    yesText: i18n.getMessage("yes"),
+                    noText: i18n.getMessage("no"),
+                },
+                {
+                    yes: () => {
+                        dialogStore.close();
+                        resolve();
+                    },
+                    no: () => {
+                        dialogStore.close();
+                        reject(new Error("Preset source version mismatch"));
+                    },
+                },
+            );
         });
     }
 
@@ -450,9 +462,7 @@ export const usePresetsStore = defineStore("presets", () => {
         const requestToken = detailsRequestToken + 1;
         const presetKey = getPresetEntryKey(preset, repository);
 
-        const existingPickedIndex = pickedPresetList.value.findIndex(
-            (p) => p.key === presetKey,
-        );
+        const existingPickedIndex = pickedPresetList.value.findIndex((p) => p.key === presetKey);
 
         const presetForDetails = clonePresetForDetails(
             existingPickedIndex !== -1 ? pickedPresetList.value[existingPickedIndex].preset : preset,

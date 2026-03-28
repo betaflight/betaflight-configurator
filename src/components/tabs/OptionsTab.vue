@@ -203,6 +203,7 @@
 <script>
 import { defineComponent, reactive, watch, onMounted, nextTick } from "vue";
 import BaseTab from "./BaseTab.vue";
+import { useDialog } from "@/composables/useDialog";
 import GUI from "../../js/gui";
 import { get as getConfig, set as setConfig } from "../../js/ConfigStorage";
 import { i18n } from "../../js/localization";
@@ -220,6 +221,8 @@ export default defineComponent({
         BaseTab,
     },
     setup() {
+        const dialog = useDialog();
+
         // Load initial settings from config storage
         const settings = reactive({
             rememberLastTab: !!getConfig("rememberLastTab").rememberLastTab,
@@ -415,7 +418,9 @@ export default defineComponent({
                         setConfig({ showNotifications: enabled });
                         break;
                     case "denied":
-                        GUI.showInformationDialog(informationDialog);
+                        dialog.openInfo(informationDialog.title, informationDialog.text, {
+                            confirmText: informationDialog.buttonConfirmText,
+                        });
                         settings.showNotifications = false;
                         break;
                     case "default":
@@ -425,7 +430,9 @@ export default defineComponent({
                                 setConfig({ showNotifications: true });
                                 settings.showNotifications = true;
                             } else {
-                                GUI.showInformationDialog(informationDialog);
+                                dialog.openInfo(informationDialog.title, informationDialog.text, {
+                                    confirmText: informationDialog.buttonConfirmText,
+                                });
                             }
                         });
                         break;
