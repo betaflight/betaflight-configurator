@@ -257,7 +257,7 @@ import { usePresetsCliSession } from "@/composables/usePresetsCliSession";
 import { useDialog } from "@/composables/useDialog";
 import GUI from "@/js/gui";
 import FC from "@/js/fc";
-import CONFIGURATOR from "@/js/data_storage";
+import { useConnectionStore } from "@/stores/connection";
 import FileSystem from "@/js/FileSystem";
 import { generateFilename } from "@/js/utils/generate_filename";
 import { i18n } from "@/js/localization";
@@ -266,6 +266,7 @@ import { TAB_ADAPTER_REGISTRATION_KEY } from "@/js/vue_tab_mounter";
 import CliEngine from "./presets/CliEngine";
 
 const store = usePresetsStore();
+const connectionStore = useConnectionStore();
 const dialog = useDialog();
 const cliSession = usePresetsCliSession({
     onProgressChange: (value) => store.updateApplyProgress(value),
@@ -372,7 +373,7 @@ function handleDeactivateSource(sourceId) {
 }
 
 async function ensureCliPresetActionSupported() {
-    if (!CONFIGURATOR.virtualMode) {
+    if (!connectionStore.virtualMode) {
         return true;
     }
 

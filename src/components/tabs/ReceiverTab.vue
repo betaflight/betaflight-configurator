@@ -613,6 +613,7 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted, nextTick, watch } from "vue";
 import { useFlightControllerStore } from "@/stores/fc";
+import { useConnectionStore } from "@/stores/connection";
 import { useNavigationStore } from "@/stores/navigation";
 import { useReboot } from "@/composables/useReboot";
 import BaseTab from "./BaseTab.vue";
@@ -631,7 +632,7 @@ import { updateTabList } from "@/js/utils/updateTabList";
 import { gui_log } from "@/js/gui_log";
 import DarkTheme from "@/js/DarkTheme";
 import windowWatcherUtil from "@/js/utils/window_watchers";
-import CONFIGURATOR, { API_VERSION_1_45, API_VERSION_1_47 } from "@/js/data_storage";
+import { API_VERSION_1_45, API_VERSION_1_47 } from "@/js/data_storage";
 import CryptoES from "crypto-es";
 import semver from "semver";
 import * as THREE from "three";
@@ -639,6 +640,7 @@ import * as d3 from "d3";
 
 const t = (key) => i18n.getMessage(key);
 const fcStore = useFlightControllerStore();
+const connectionStore = useConnectionStore();
 const navigationStore = useNavigationStore();
 const { reboot } = useReboot();
 
@@ -978,7 +980,7 @@ function openSticksWindow() {
     const windowHeight = 550;
 
     const rxFunction = (channels) => {
-        if (CONFIGURATOR.connectionValid && GUI.active_tab !== "cli") {
+        if (connectionStore.connectionValid && GUI.active_tab !== "cli") {
             mspHelper.setRawRx(channels);
             return true;
         }
