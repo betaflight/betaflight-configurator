@@ -434,7 +434,14 @@
 
                                 <!-- PID suggestions -->
                                 <div class="at-sysid-pid-section">
-                                    <div class="at-sysid-pid-header">SUGGESTED PID ADJUSTMENTS</div>
+                                    <div class="at-sysid-pid-header">
+                                        SUGGESTED PID ADJUSTMENTS (hover-condition baseline)
+                                    </div>
+                                    <div class="at-sysid-pid-note">
+                                        These values are derived from hover-throttle chirp data. They represent a
+                                        mathematically safe starting point. Use the Log Analyzer with aggressive flight
+                                        data to fine-tune further.
+                                    </div>
                                     <div
                                         v-for="axisName in ['roll', 'pitch', 'yaw']"
                                         :key="axisName"
@@ -1970,7 +1977,7 @@ function _getCrossoverSearchWindow(propInches) {
  * searchWindow: { min, max } Hz — only search within this band.
  * Returns { phaseMargin, gainMargin, gcFreq, pcFreq } — any may be null.
  */
-function _computeStabilityMargins(freqAxis, magDB, phaseDeg, rawPhaseDeg, searchWindow) {
+function _computeStabilityMargins(freqAxis, magDB, phaseDeg, rawPhaseDeg, searchWindow, coherence) {
     const winMin = searchWindow?.min ?? 5;
     const winMax = searchWindow?.max ?? 100;
 
@@ -1978,6 +1985,7 @@ function _computeStabilityMargins(freqAxis, magDB, phaseDeg, rawPhaseDeg, search
         phaseMargin = null;
     let pcFreq = null,
         gainMargin = null;
+    let gcCoherenceLow = false;
 
     // Gain crossover: descending 0 dB crossing within window, searched HIGH→LOW
     // Collect indices inside the window first, then iterate in reverse.
@@ -2003,12 +2011,32 @@ function _computeStabilityMargins(freqAxis, magDB, phaseDeg, rawPhaseDeg, search
                         : rawI
                     : rawJ + t * (rawI - rawJ);
             phaseMargin = 180 + rawPhaseAtGC;
-            if (phaseMargin < -180 || phaseMargin > 360) {
+
+            // Debug logging at crossover bin — reconstruct H(f) re/im from mag+phase
+            const rawPhaseRad = (rawJ * Math.PI) / 180;
+            const hMag = magDB[j] > -60 ? Math.pow(10, magDB[j] / 20) : 0;
+            const dbgRe = hMag * Math.cos(rawPhaseRad);
+            const dbgIm = hMag * Math.sin(rawPhaseRad);
+            console.log(
+                `[AeroTune] Gain crossover bin: index=${j}, freq=${freqAxis[j].toFixed(2)}Hz` +
+                    ` | H(f) re=${dbgRe.toFixed(6)}, im=${dbgIm.toFixed(6)}` +
+                    ` | atan2=${rawJ.toFixed(2)}°` +
+                    ` | phaseMargin=${phaseMargin.toFixed(2)}°`,
+            );
+
+            // Phase margin must be in [0°, 180°] — clamp and warn if outside
+            if (phaseMargin < 0 || phaseMargin > 180) {
                 console.warn(
-                    `[AeroTune] Phase margin ${phaseMargin.toFixed(1)}° out of plausible range [-180°, +360°] — reporting null`,
+                    `[AeroTune] Phase margin ${phaseMargin.toFixed(1)}° outside valid range [0°, 180°] — clamping.`,
                 );
-                phaseMargin = null;
+                phaseMargin = Math.min(180, Math.max(0, phaseMargin));
             }
+
+            // Coherence check at crossover bin
+            if (coherence && coherence[j] < 0.5) {
+                gcCoherenceLow = true;
+            }
+
             break;
         }
     }
@@ -2036,7 +2064,7 @@ function _computeStabilityMargins(freqAxis, magDB, phaseDeg, rawPhaseDeg, search
         }
     }
 
-    return { phaseMargin, gainMargin, gcFreq, pcFreq };
+    return { phaseMargin, gainMargin, gcFreq, pcFreq, gcCoherenceLow };
 }
 
 /**
@@ -2188,12 +2216,13 @@ function runSysID(frames, config, propInches) {
         }
 
         // Stability margins — only search within the prop-size-specific window
-        const { phaseMargin, gainMargin, gcFreq, pcFreq } = _computeStabilityMargins(
+        const { phaseMargin, gainMargin, gcFreq, pcFreq, gcCoherenceLow } = _computeStabilityMargins(
             freqAxis,
             filtMag,
             filtPhase,
             rawPhaseDeg,
             searchWindow,
+            filtCoh,
         );
 
         // Current PID values from BBL header
@@ -2220,6 +2249,9 @@ function runSysID(frames, config, propInches) {
         };
 
         // Safety warnings
+        if (gcCoherenceLow) {
+            result.warnings.push(`${ax.name.toUpperCase()}: Low coherence at crossover — margin may be unreliable.`);
+        }
         if (phaseMargin !== null) {
             if (phaseMargin < 30) {
                 result.warnings.push(
@@ -2227,7 +2259,7 @@ function runSysID(frames, config, propInches) {
                 );
             } else if (phaseMargin > 70) {
                 result.warnings.push(
-                    `${ax.name.toUpperCase()}: Phase margin ${phaseMargin.toFixed(1)}° is high (>70°) — tune may be over-filtered or sluggish.`,
+                    `${ax.name.toUpperCase()}: Phase margin ${phaseMargin.toFixed(1)}° is high (>70°) — good stability margin at hover — safe to increase P slightly and re-test with aggressive flight data.`,
                 );
             }
         }
