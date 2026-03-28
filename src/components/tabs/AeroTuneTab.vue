@@ -296,107 +296,72 @@
                                     ⚡ CHIRP / SYSID LOG DETECTED — running frequency response analysis
                                 </div>
 
-                                <!-- Explanation panel -->
-                                <div class="at-sysid-explainer">
-                                    <span class="at-sysid-explainer-title">READING YOUR RESULTS</span>
-                                    Bode plot shows how your quad actually responds to stick inputs across all
-                                    frequencies. Magnitude above 0&nbsp;dB&nbsp;=&nbsp;overshooting, below
-                                    0&nbsp;dB&nbsp;=&nbsp;sluggish. Phase Margin is your stability budget — below 30°
-                                    and you're close to oscillation, above 70° and you're over-filtered. Gain Margin is
-                                    how much headroom you have before motors sing. The P and D suggestions below are
-                                    calculated from your actual flight data — not a generic table.
-                                </div>
-
-                                <!-- Roll time-domain + Bode plot -->
+                                <!-- Roll tracking ratio + Bode plot -->
                                 <div
                                     v-if="sysidResult.axes.roll && !sysidResult.axes.roll.error"
                                     class="at-sysid-axis-block"
                                 >
-                                    <div class="at-chirp-td-legend">
-                                        <span class="at-chirp-td-dot at-chirp-td-dot--sp"></span>Setpoint
-                                        <span
-                                            class="at-chirp-td-dot at-chirp-td-dot--gy"
-                                            style="margin-left: 12px"
-                                        ></span
-                                        >Gyro
-                                    </div>
                                     <canvas
-                                        ref="chirpTdRoll"
-                                        class="at-chirp-td-canvas"
+                                        ref="trackRatioRoll"
+                                        class="at-track-ratio-canvas"
                                         width="580"
-                                        height="160"
+                                        height="140"
                                     ></canvas>
                                     <div class="at-chirp-td-caption">
-                                        Setpoint (blue) vs gyro response (red) — tracking degrades as frequency
-                                        increases toward the right.
+                                        100% = perfect tracking. Drops as frequency increases and quad can no longer
+                                        follow.
                                     </div>
-                                    <div class="at-sysid-axis-label">ROLL — Frequency Response (Bode Plot)</div>
-                                    <canvas ref="bodePlotRoll" class="at-bode-canvas" width="580" height="300"></canvas>
+                                    <div class="at-sysid-axis-label">ROLL — Frequency Response (Bode)</div>
+                                    <canvas ref="bodePlotRoll" class="at-bode-canvas" width="580" height="180"></canvas>
                                 </div>
                                 <div v-else-if="sysidResult.axes.roll?.error" class="at-sysid-axis-err">
                                     ROLL: {{ sysidResult.axes.roll.error }}
                                 </div>
 
-                                <!-- Pitch time-domain + Bode plot -->
+                                <!-- Pitch tracking ratio + Bode plot -->
                                 <div
                                     v-if="sysidResult.axes.pitch && !sysidResult.axes.pitch.error"
                                     class="at-sysid-axis-block"
                                 >
-                                    <div class="at-chirp-td-legend">
-                                        <span class="at-chirp-td-dot at-chirp-td-dot--sp"></span>Setpoint
-                                        <span
-                                            class="at-chirp-td-dot at-chirp-td-dot--gy"
-                                            style="margin-left: 12px"
-                                        ></span
-                                        >Gyro
-                                    </div>
                                     <canvas
-                                        ref="chirpTdPitch"
-                                        class="at-chirp-td-canvas"
+                                        ref="trackRatioPitch"
+                                        class="at-track-ratio-canvas"
                                         width="580"
-                                        height="160"
+                                        height="140"
                                     ></canvas>
                                     <div class="at-chirp-td-caption">
-                                        Setpoint (blue) vs gyro response (red) — tracking degrades as frequency
-                                        increases toward the right.
+                                        100% = perfect tracking. Drops as frequency increases and quad can no longer
+                                        follow.
                                     </div>
-                                    <div class="at-sysid-axis-label">PITCH — Frequency Response (Bode Plot)</div>
+                                    <div class="at-sysid-axis-label">PITCH — Frequency Response (Bode)</div>
                                     <canvas
                                         ref="bodePlotPitch"
                                         class="at-bode-canvas"
                                         width="580"
-                                        height="300"
+                                        height="180"
                                     ></canvas>
                                 </div>
                                 <div v-else-if="sysidResult.axes.pitch?.error" class="at-sysid-axis-err">
                                     PITCH: {{ sysidResult.axes.pitch.error }}
                                 </div>
 
-                                <!-- Yaw time-domain + Bode plot -->
+                                <!-- Yaw tracking ratio + Bode plot -->
                                 <div
                                     v-if="sysidResult.axes.yaw && !sysidResult.axes.yaw.error"
                                     class="at-sysid-axis-block"
                                 >
-                                    <div class="at-chirp-td-legend">
-                                        <span class="at-chirp-td-dot at-chirp-td-dot--sp"></span>Setpoint
-                                        <span
-                                            class="at-chirp-td-dot at-chirp-td-dot--gy"
-                                            style="margin-left: 12px"
-                                        ></span
-                                        >Gyro
-                                    </div>
                                     <canvas
-                                        ref="chirpTdYaw"
-                                        class="at-chirp-td-canvas"
+                                        ref="trackRatioYaw"
+                                        class="at-track-ratio-canvas"
                                         width="580"
-                                        height="160"
+                                        height="140"
                                     ></canvas>
                                     <div class="at-chirp-td-caption">
-                                        Setpoint (blue) vs gyro response (red) — tracking degrades as frequency
-                                        increases toward the right.
+                                        100% = perfect tracking. Drops as frequency increases and quad can no longer
+                                        follow.
                                     </div>
-                                    <div class="at-sysid-axis-label">YAW — Frequency Response (Bode Plot)</div>
-                                    <canvas ref="bodePlotYaw" class="at-bode-canvas" width="580" height="300"></canvas>
+                                    <div class="at-sysid-axis-label">YAW — Frequency Response (Bode)</div>
+                                    <canvas ref="bodePlotYaw" class="at-bode-canvas" width="580" height="180"></canvas>
                                 </div>
                                 <div v-else-if="sysidResult.axes.yaw?.error" class="at-sysid-axis-err">
                                     YAW: {{ sysidResult.axes.yaw.error }}
@@ -486,47 +451,57 @@
                                     </table>
                                 </div>
 
-                                <!-- PID suggestions -->
-                                <div class="at-sysid-pid-section">
-                                    <div class="at-sysid-pid-header">
-                                        SUGGESTED PID ADJUSTMENTS (hover-condition baseline)
+                                <!-- Frequency Response PID Output Table -->
+                                <div v-if="sysidPids" class="at-sysid-pid-section at-sysid-pid-output">
+                                    <div class="at-sysid-pid-header at-sysid-pid-complete-header">
+                                        ✓ FREQUENCY RESPONSE ANALYSIS COMPLETE
                                     </div>
-                                    <div class="at-sysid-pid-note">
-                                        These values are derived from hover-throttle chirp data. They represent a
-                                        mathematically safe starting point. Use the Log Analyzer with aggressive flight
-                                        data to fine-tune further.
+                                    <table class="at-pid-table at-sysid-pid-table">
+                                        <thead>
+                                            <tr>
+                                                <th class="at-pid-th-axis"></th>
+                                                <th>PROPORTIONAL</th>
+                                                <th>INTEGRAL</th>
+                                                <th>DERIVATIVE</th>
+                                                <th>D MAX</th>
+                                                <th>FEEDFORWARD</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr class="at-pid-row at-pid-row--roll">
+                                                <td class="at-pid-axis-label">ROLL</td>
+                                                <td class="at-pid-num">{{ sysidPids.roll.P }}</td>
+                                                <td class="at-pid-num">{{ sysidPids.roll.I }}</td>
+                                                <td class="at-pid-num">{{ sysidPids.roll.D }}</td>
+                                                <td class="at-pid-num">{{ sysidPids.roll.DMax }}</td>
+                                                <td class="at-pid-num">{{ sysidPids.roll.FF }}</td>
+                                            </tr>
+                                            <tr class="at-pid-row at-pid-row--pitch">
+                                                <td class="at-pid-axis-label">PITCH</td>
+                                                <td class="at-pid-num">{{ sysidPids.pitch.P }}</td>
+                                                <td class="at-pid-num">{{ sysidPids.pitch.I }}</td>
+                                                <td class="at-pid-num">{{ sysidPids.pitch.D }}</td>
+                                                <td class="at-pid-num">{{ sysidPids.pitch.DMax }}</td>
+                                                <td class="at-pid-num">{{ sysidPids.pitch.FF }}</td>
+                                            </tr>
+                                            <tr class="at-pid-row at-pid-row--yaw">
+                                                <td class="at-pid-axis-label">YAW</td>
+                                                <td class="at-pid-num">{{ sysidPids.yaw.P }}</td>
+                                                <td class="at-pid-num">{{ sysidPids.yaw.I }}</td>
+                                                <td class="at-pid-num at-pid-num--muted">–</td>
+                                                <td class="at-pid-num">{{ sysidPids.yaw.DMax }}</td>
+                                                <td class="at-pid-num">{{ sysidPids.yaw.FF }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <div class="at-sysid-pid-note" style="margin-top: 8px">
+                                        Hover-condition baseline — I and FF unchanged. Re-fly with aggressive data to
+                                        fine-tune further.
                                     </div>
-                                    <div
-                                        v-for="axisName in ['roll', 'pitch', 'yaw']"
-                                        :key="axisName"
-                                        class="at-sysid-pid-row"
-                                    >
-                                        <template v-if="sysidResult.axes[axisName]?.pidSuggest">
-                                            <span class="at-sysid-pid-axis">{{ axisName.toUpperCase() }}:</span>
-                                            <span>
-                                                P {{ sysidResult.axes[axisName].currentP }} →
-                                                {{ sysidResult.axes[axisName].pidSuggest.suggestP }}
-                                                {{ sysidResult.axes[axisName].pidSuggest.direction }}
-                                            </span>
-                                            <span v-if="sysidResult.axes[axisName].currentD !== null">
-                                                &nbsp; D {{ sysidResult.axes[axisName].currentD }} →
-                                                {{ sysidResult.axes[axisName].pidSuggest.suggestD }}
-                                            </span>
-                                            <span class="at-sysid-pid-reason">
-                                                &nbsp; ({{ sysidResult.axes[axisName].pidSuggest.reason }})
-                                            </span>
-                                        </template>
-                                        <template v-else-if="sysidResult.axes[axisName]?.phaseMarginInvalid">
-                                            <span class="at-sysid-pid-axis">{{ axisName.toUpperCase() }}:</span>
-                                            <span>— re-fly needed</span>
-                                        </template>
-                                        <template
-                                            v-else-if="sysidResult.axes[axisName] && !sysidResult.axes[axisName].error"
-                                        >
-                                            <span class="at-sysid-pid-axis">{{ axisName.toUpperCase() }}:</span>
-                                            <span>No current PID values found in log header.</span>
-                                        </template>
-                                    </div>
+                                    <button class="at-apply-btn" :disabled="!canApplySysID" @click="applySysIDToFC">
+                                        ✓ APPLY PIDs TO FC (PID TUNING TAB)
+                                    </button>
+                                    <button class="at-copy-btn" @click="copySysIDValues">{{ sysidCopyBtnText }}</button>
                                 </div>
 
                                 <!-- Warnings -->
@@ -2307,6 +2282,8 @@ function runSysID(frames, config, propInches) {
                 ? _synthesizePID(currentP, currentD, { phaseMargin, gainMargin, gcFreq, pcFreq }, baselineHz)
                 : null;
 
+        const currentI = config.pids?.[ax.pidKey]?.[1] ?? null;
+
         result.axes[ax.name] = {
             freqAxis,
             magDB: filtMag,
@@ -2318,6 +2295,7 @@ function runSysID(frames, config, propInches) {
             gcFreq,
             pcFreq,
             currentP,
+            currentI,
             currentD,
             pidSuggest,
             spSeg,
@@ -2469,6 +2447,7 @@ export default {
             pids: {},
             filterRec: { hz: "--", low: "--", high: "--", note: "" },
             copyBtnText: "📋 COPY ALL VALUES",
+            sysidCopyBtnText: "📋 COPY ALL VALUES",
             // Analyzer
             motorTemp: "WARM",
             csvFile: null,
@@ -2503,6 +2482,39 @@ export default {
         },
         workflowInstructions() {
             return "1. Calculate baseline PIDs · 2. Configure Blackbox · 3. Fly the test pattern · 4. Load your .bfl file and Analyze";
+        },
+        sysidPids() {
+            if (!this.sysidResult) return null;
+            const axIdxMap = { roll: 0, pitch: 1, yaw: 2 };
+            const ffKeys = { roll: "feedforwardRoll", pitch: "feedforwardPitch", yaw: "feedforwardYaw" };
+            const dMaxKeys = { roll: "dMaxRoll", pitch: "dMaxPitch", yaw: null };
+            const result = {};
+            for (const ax of ["roll", "pitch", "yaw"]) {
+                const axData = this.sysidResult.axes[ax];
+                const axIdx = axIdxMap[ax];
+                const hasSuggest = axData && !axData.error && !axData.phaseMarginInvalid && axData.pidSuggest;
+                const suggestP = hasSuggest ? axData.pidSuggest.suggestP : null;
+                const suggestD = hasSuggest ? axData.pidSuggest.suggestD : null;
+                // I: from BBL header if available, else from live FC state
+                const currentI = axData?.currentI ?? FC.PIDS?.[axIdx]?.[1] ?? "?";
+                // FF: from live FC advanced tuning if connected
+                const ffKey = ffKeys[ax];
+                const currentFF = FC.ADVANCED_TUNING?.[ffKey] ?? "?";
+                const dMaxKey = dMaxKeys[ax];
+                const existingDMax =
+                    dMaxKey && FC.ADVANCED_TUNING?.[dMaxKey] != null ? FC.ADVANCED_TUNING[dMaxKey] : null;
+                result[ax] = {
+                    P: suggestP ?? axData?.currentP ?? "—",
+                    I: currentI,
+                    D: suggestD ?? (ax !== "yaw" ? (axData?.currentD ?? "—") : "—"),
+                    DMax: suggestD != null ? suggestD + 3 : (existingDMax ?? "—"),
+                    FF: currentFF,
+                };
+            }
+            return result;
+        },
+        canApplySysID() {
+            return !!this.sysidResult && CONFIGURATOR.connectionValid;
         },
     },
 
@@ -2539,7 +2551,7 @@ export default {
             if (val)
                 this.$nextTick(() => {
                     this.renderBodePlots();
-                    this.renderChirpTimeDomain();
+                    this.renderTrackingRatio();
                 });
         },
     },
@@ -3021,19 +3033,19 @@ export default {
             return "";
         },
 
-        /** Draw all three chirp time-domain canvases from this.sysidResult. */
-        renderChirpTimeDomain() {
-            const refMap = { roll: "chirpTdRoll", pitch: "chirpTdPitch", yaw: "chirpTdYaw" };
+        /** Draw all three tracking-ratio canvases from this.sysidResult. */
+        renderTrackingRatio() {
+            const refMap = { roll: "trackRatioRoll", pitch: "trackRatioPitch", yaw: "trackRatioYaw" };
             for (const [axName, refName] of Object.entries(refMap)) {
                 const canvas = this.$refs[refName];
                 const axData = this.sysidResult?.axes?.[axName];
                 if (!canvas || !axData || axData.error) continue;
-                this._drawChirpTimeDomain(canvas, axData, axName);
+                this._drawTrackingRatio(canvas, axData, axName);
             }
         },
 
-        /** Draw setpoint vs gyro time-domain chart for a chirp axis. */
-        _drawChirpTimeDomain(canvas, axData, axName) {
+        /** Draw gyro/setpoint tracking ratio (%) over time for one axis. */
+        _drawTrackingRatio(canvas, axData, axName) {
             const { spSeg, gySeg, sampleRate } = axData;
             if (!spSeg || !gySeg || !sampleRate) return;
 
@@ -3044,42 +3056,70 @@ export default {
 
             const PAD_L = 52,
                 PAD_R = 16,
-                PAD_T = 12,
+                PAD_T = 18,
                 PAD_B = 22;
             const plotW = W - PAD_L - PAD_R;
             const plotH = H - PAD_T - PAD_B;
 
             const N = spSeg.length;
             const duration = N / sampleRate;
-            const AMP_MIN = -250,
-                AMP_MAX = 250;
+            const RATIO_MIN = 0,
+                RATIO_MAX = 120;
 
-            const xForT = (i) => PAD_L + (i / (N - 1)) * plotW;
-            const yForA = (a) => PAD_T + plotH - ((clamp(a, AMP_MIN, AMP_MAX) - AMP_MIN) / (AMP_MAX - AMP_MIN)) * plotH;
+            const xForI = (i) => PAD_L + (i / (N - 1)) * plotW;
+            const yForR = (r) =>
+                PAD_T + plotH - ((clamp(r, RATIO_MIN, RATIO_MAX) - RATIO_MIN) / (RATIO_MAX - RATIO_MIN)) * plotH;
 
-            // Downsample to max 800 points for performance
-            const MAX_PTS = 800;
-            const step = N > MAX_PTS ? Math.ceil(N / MAX_PTS) : 1;
+            // Compute rolling-average tracking ratio (20-sample window)
+            const WIN = 20;
+            const ratios = new Float32Array(N).fill(NaN);
+            for (let i = 0; i < N; i++) {
+                let sum = 0,
+                    cnt = 0;
+                for (let j = Math.max(0, i - WIN + 1); j <= i; j++) {
+                    const sp = Math.abs(spSeg[j]);
+                    if (sp > 10) {
+                        sum += (Math.abs(gySeg[j]) / sp) * 100;
+                        cnt++;
+                    }
+                }
+                if (cnt > 0) ratios[i] = sum / cnt;
+            }
 
             // Background
             ctx.fillStyle = "#1a1a1a";
             ctx.fillRect(0, 0, W, H);
 
-            // Grid lines
-            ctx.strokeStyle = "#333333";
+            // Grid: 100% (green dashed) and 70% (amber dashed)
             ctx.lineWidth = 1;
-            // Zero line
             ctx.setLineDash([4, 4]);
+            ctx.strokeStyle = "rgba(0,210,80,0.5)";
             ctx.beginPath();
-            ctx.moveTo(PAD_L, yForA(0));
-            ctx.lineTo(W - PAD_R, yForA(0));
+            ctx.moveTo(PAD_L, yForR(100));
+            ctx.lineTo(W - PAD_R, yForR(100));
+            ctx.stroke();
+            ctx.strokeStyle = "rgba(255,187,0,0.5)";
+            ctx.beginPath();
+            ctx.moveTo(PAD_L, yForR(70));
+            ctx.lineTo(W - PAD_R, yForR(70));
             ctx.stroke();
             ctx.setLineDash([]);
-            // ±125 lines
-            for (const a of [-125, 125]) {
+
+            // Faint 50% line
+            ctx.strokeStyle = "#333333";
+            ctx.beginPath();
+            ctx.moveTo(PAD_L, yForR(50));
+            ctx.lineTo(W - PAD_R, yForR(50));
+            ctx.stroke();
+
+            // Vertical time grid
+            const xTicks = 5;
+            ctx.strokeStyle = "#2a2a2a";
+            for (let t = 0; t <= xTicks; t++) {
+                const xi = PAD_L + (t / xTicks) * plotW;
                 ctx.beginPath();
-                ctx.moveTo(PAD_L, yForA(a));
-                ctx.lineTo(W - PAD_R, yForA(a));
+                ctx.moveTo(xi, PAD_T);
+                ctx.lineTo(xi, H - PAD_B);
                 ctx.stroke();
             }
 
@@ -3087,68 +3127,64 @@ export default {
             ctx.fillStyle = "#888888";
             ctx.font = "10px monospace";
             ctx.textAlign = "right";
-            for (const a of [-250, -125, 0, 125, 250]) {
-                ctx.fillText(String(a), PAD_L - 4, yForA(a) + 3);
+            for (const r of [0, 50, 70, 100, 120]) {
+                ctx.fillText(`${r}%`, PAD_L - 4, yForR(r) + 3);
             }
 
-            // X-axis labels (time)
+            // X-axis labels
             ctx.textAlign = "center";
-            const xTicks = 5;
             for (let t = 0; t <= xTicks; t++) {
                 const tSec = (t / xTicks) * duration;
                 const xi = PAD_L + (t / xTicks) * plotW;
-                ctx.fillText(`${tSec.toFixed(1)  }s`, xi, H - PAD_B + 14);
-                ctx.beginPath();
-                ctx.strokeStyle = "#2a2a2a";
-                ctx.moveTo(xi, PAD_T);
-                ctx.lineTo(xi, H - PAD_B);
-                ctx.stroke();
+                ctx.fillText(`${tSec.toFixed(1)}s`, xi, H - PAD_B + 14);
             }
 
-            // Axes border
-            ctx.strokeStyle = "#555555";
-            ctx.lineWidth = 1;
-            ctx.strokeRect(PAD_L, PAD_T, plotW, plotH);
-
-            // Draw setpoint (blue)
-            ctx.strokeStyle = "#4488ff";
-            ctx.lineWidth = 1.2;
-            ctx.beginPath();
-            let started = false;
-            for (let i = 0; i < N; i += step) {
-                const x = xForT(i);
-                const y = yForA(spSeg[i]);
-                if (!started) {
-                    ctx.moveTo(x, y);
-                    started = true;
-                } else {
-                    ctx.lineTo(x, y);
-                }
-            }
-            ctx.stroke();
-
-            // Draw gyro (red)
-            ctx.strokeStyle = "#ff4444";
-            ctx.lineWidth = 1.2;
-            ctx.beginPath();
-            started = false;
-            for (let i = 0; i < N; i += step) {
-                const x = xForT(i);
-                const y = yForA(gySeg[i]);
-                if (!started) {
-                    ctx.moveTo(x, y);
-                    started = true;
-                } else {
-                    ctx.lineTo(x, y);
-                }
-            }
-            ctx.stroke();
-
-            // Axis title
+            // Chart title (inside canvas top-left)
             ctx.fillStyle = "#aaaaaa";
             ctx.font = "10px monospace";
             ctx.textAlign = "left";
-            ctx.fillText(`${axName.toUpperCase()} — CHIRP TIME DOMAIN (setpoint vs gyro)`, PAD_L, PAD_T - 2);
+            ctx.fillText(`${axName.toUpperCase()} — TRACKING RATIO (gyro following setpoint)`, PAD_L, PAD_T - 4);
+
+            // Reference labels on right edge
+            ctx.textAlign = "right";
+            ctx.fillStyle = "rgba(0,210,80,0.8)";
+            ctx.fillText("100%", W - PAD_R - 2, yForR(100) - 3);
+            ctx.fillStyle = "rgba(255,187,0,0.8)";
+            ctx.fillText("70%", W - PAD_R - 2, yForR(70) - 3);
+
+            // Draw ratio line with color segments
+            ctx.lineWidth = 1.5;
+            let prevX = null,
+                prevY = null,
+                prevValid = false;
+            for (let i = 0; i < N; i++) {
+                if (isNaN(ratios[i])) {
+                    prevValid = false;
+                    continue;
+                }
+                const x = xForI(i);
+                const y = yForR(ratios[i]);
+                const r = ratios[i];
+                const color = r > 80 ? "#00d252" : r > 50 ? "#ffbb00" : "#ff4444";
+                if (!prevValid) {
+                    prevX = x;
+                    prevY = y;
+                    prevValid = true;
+                    continue;
+                }
+                ctx.beginPath();
+                ctx.strokeStyle = color;
+                ctx.moveTo(prevX, prevY);
+                ctx.lineTo(x, y);
+                ctx.stroke();
+                prevX = x;
+                prevY = y;
+            }
+
+            // Border
+            ctx.strokeStyle = "#444444";
+            ctx.lineWidth = 1;
+            ctx.strokeRect(PAD_L, PAD_T, plotW, plotH);
         },
 
         /** Draw all three Bode-plot canvases from this.sysidResult. */
@@ -3163,11 +3199,10 @@ export default {
         },
 
         /**
-         * Draw a Bode plot (magnitude top, phase bottom) onto a canvas element.
-         * Frequency x-axis is log scale 1–500 Hz.
+         * Draw Bode magnitude plot (dB vs frequency, log scale).
          * Low-coherence regions (< 0.6) are rendered at reduced opacity.
          */
-        _drawBode(canvas, axData, axName) {
+        _drawBode(canvas, axData, _axName) {
             const W = canvas.width;
             const H = canvas.height;
             const ctx = canvas.getContext("2d");
@@ -3178,104 +3213,66 @@ export default {
                 PAD_T = 18,
                 PAD_B = 22;
             const plotW = W - PAD_L - PAD_R;
-            const halfH = (H - PAD_T - PAD_B) / 2;
+            const plotH = H - PAD_T - PAD_B;
 
             const MAG_TOP = PAD_T;
-            const MAG_BOT = PAD_T + halfH;
-            const PH_TOP = MAG_BOT + 4;
-            const PH_BOT = H - PAD_B;
+            const MAG_BOT = H - PAD_B;
 
             const FREQ_LO = 1,
                 FREQ_HI = 500;
             const MAG_MIN = -40,
                 MAG_MAX = 40;
-            const PH_MIN = -360,
-                PH_MAX = 180;
 
             const logLo = Math.log10(FREQ_LO);
             const logHi = Math.log10(FREQ_HI);
 
             const xForFreq = (f) => PAD_L + ((Math.log10(Math.max(f, FREQ_LO)) - logLo) / (logHi - logLo)) * plotW;
-            const yForMag = (m) => MAG_BOT - ((clamp(m, MAG_MIN, MAG_MAX) - MAG_MIN) / (MAG_MAX - MAG_MIN)) * halfH;
-            const yForPh = (p) =>
-                PH_BOT - ((clamp(p, PH_MIN, PH_MAX) - PH_MIN) / (PH_MAX - PH_MIN)) * (PH_BOT - PH_TOP);
+            const yForMag = (m) => MAG_BOT - ((clamp(m, MAG_MIN, MAG_MAX) - MAG_MIN) / (MAG_MAX - MAG_MIN)) * plotH;
 
-            // ── Background ───────────────────────────────────────────────────
+            // Background
             ctx.fillStyle = "#1a1a1a";
             ctx.fillRect(0, 0, W, H);
 
-            // ── Grid lines ───────────────────────────────────────────────────
+            // 0 dB reference line (dashed)
             ctx.strokeStyle = "#333333";
             ctx.lineWidth = 1;
-
-            // Magnitude: 0 dB reference line
-            const y0dB = yForMag(0);
             ctx.setLineDash([4, 4]);
             ctx.beginPath();
-            ctx.moveTo(PAD_L, y0dB);
-            ctx.lineTo(W - PAD_R, y0dB);
+            ctx.moveTo(PAD_L, yForMag(0));
+            ctx.lineTo(W - PAD_R, yForMag(0));
             ctx.stroke();
             ctx.setLineDash([]);
 
-            // Horizontal grid for magnitude panel (±20, ±40 dB)
+            // Horizontal grid (±20, ±40 dB)
             for (const m of [-40, -20, 20, 40]) {
-                const y = yForMag(m);
                 ctx.beginPath();
-                ctx.moveTo(PAD_L, y);
-                ctx.lineTo(W - PAD_R, y);
+                ctx.moveTo(PAD_L, yForMag(m));
+                ctx.lineTo(W - PAD_R, yForMag(m));
                 ctx.stroke();
             }
 
-            // Phase: -180° reference line
-            const yNeg180 = yForPh(-180);
-            ctx.setLineDash([4, 4]);
-            ctx.beginPath();
-            ctx.moveTo(PAD_L, yNeg180);
-            ctx.lineTo(W - PAD_R, yNeg180);
-            ctx.stroke();
-            ctx.setLineDash([]);
-
-            // Horizontal grid for phase panel (0, -90, -270)
-            for (const p of [0, -90, -270]) {
-                if (p < PH_MIN || p > PH_MAX) continue;
-                const y = yForPh(p);
-                ctx.beginPath();
-                ctx.moveTo(PAD_L, y);
-                ctx.lineTo(W - PAD_R, y);
-                ctx.stroke();
-            }
-
-            // Vertical grid lines at each decade and notable sub-decades
+            // Vertical grid lines (log scale)
             const freqGridLines = [1, 2, 5, 10, 20, 50, 100, 200, 500];
             ctx.strokeStyle = "#2a2a2a";
             for (const f of freqGridLines) {
                 const x = xForFreq(f);
                 ctx.beginPath();
                 ctx.moveTo(x, MAG_TOP);
-                ctx.lineTo(x, PH_BOT);
+                ctx.lineTo(x, MAG_BOT);
                 ctx.stroke();
             }
 
-            // ── Data curves ──────────────────────────────────────────────────
-            const { freqAxis, magDB, phaseDeg, coherence, gcFreq, pcFreq } = axData;
+            // Coherence shading
+            const { freqAxis, magDB, coherence, gcFreq } = axData;
             const n = freqAxis.length;
             const COH_THRESH = 0.6;
-
-            // Draw filled coherence shading under magnitude curve
-            // (grey fill for low-coherence regions)
             for (let i = 0; i < n; i++) {
                 const coh = coherence[i] ?? 0;
                 if (coh >= COH_THRESH) continue;
                 const x = xForFreq(freqAxis[i]);
                 const alpha = (1 - coh / COH_THRESH) * 0.35;
                 ctx.fillStyle = `rgba(80,80,80,${alpha.toFixed(2)})`;
-                ctx.fillRect(x, MAG_TOP, Math.max(1, xForFreq(freqAxis[i + 1] ?? freqAxis[i] * 1.01) - x), halfH);
-                ctx.fillRect(
-                    x,
-                    PH_TOP,
-                    Math.max(1, xForFreq(freqAxis[i + 1] ?? freqAxis[i] * 1.01) - x),
-                    PH_BOT - PH_TOP,
-                );
+                ctx.fillRect(x, MAG_TOP, Math.max(1, xForFreq(freqAxis[i + 1] ?? freqAxis[i] * 1.01) - x), plotH);
             }
 
             // Magnitude curve
@@ -3293,9 +3290,7 @@ export default {
                     ctx.strokeStyle = color;
                     drawing = true;
                 } else {
-                    // If opacity changes, flush segment
-                    const prevCoh = coherence[i - 1] ?? 0;
-                    const prevAlpha = prevCoh < COH_THRESH ? 0.35 : 1.0;
+                    const prevAlpha = (coherence[i - 1] ?? 0) < COH_THRESH ? 0.35 : 1.0;
                     if (Math.abs(alpha - prevAlpha) > 0.01) {
                         ctx.stroke();
                         ctx.beginPath();
@@ -3308,35 +3303,7 @@ export default {
             }
             if (drawing) ctx.stroke();
 
-            // Phase curve
-            drawing = false;
-            for (let i = 0; i < n; i++) {
-                const coh = coherence[i] ?? 0;
-                const alpha = coh < COH_THRESH ? 0.35 : 1.0;
-                const color = `rgba(100,180,255,${alpha})`;
-                const x = xForFreq(freqAxis[i]);
-                const y = yForPh(phaseDeg[i]);
-                if (!drawing) {
-                    ctx.beginPath();
-                    ctx.moveTo(x, y);
-                    ctx.strokeStyle = color;
-                    drawing = true;
-                } else {
-                    const prevCoh = coherence[i - 1] ?? 0;
-                    const prevAlpha = prevCoh < COH_THRESH ? 0.35 : 1.0;
-                    if (Math.abs(alpha - prevAlpha) > 0.01) {
-                        ctx.stroke();
-                        ctx.beginPath();
-                        ctx.moveTo(x, y);
-                        ctx.strokeStyle = color;
-                    } else {
-                        ctx.lineTo(x, y);
-                    }
-                }
-            }
-            if (drawing) ctx.stroke();
-
-            // Gain-crossover frequency marker
+            // Gain-crossover frequency marker (dashed red)
             if (gcFreq !== null && gcFreq >= FREQ_LO && gcFreq <= FREQ_HI) {
                 const xgc = xForFreq(gcFreq);
                 ctx.strokeStyle = "rgba(255,100,100,0.8)";
@@ -3349,25 +3316,10 @@ export default {
                 ctx.setLineDash([]);
             }
 
-            // Phase-crossover frequency marker
-            if (pcFreq !== null && pcFreq >= FREQ_LO && pcFreq <= FREQ_HI) {
-                const xpc = xForFreq(pcFreq);
-                ctx.strokeStyle = "rgba(180,100,255,0.8)";
-                ctx.lineWidth = 1;
-                ctx.setLineDash([3, 3]);
-                ctx.beginPath();
-                ctx.moveTo(xpc, PH_TOP);
-                ctx.lineTo(xpc, PH_BOT);
-                ctx.stroke();
-                ctx.setLineDash([]);
-            }
-
-            // ── Axis labels ──────────────────────────────────────────────────
+            // Y-axis labels (dB)
             ctx.fillStyle = "#888888";
             ctx.font = "10px monospace";
             ctx.textAlign = "right";
-
-            // Magnitude y-axis labels
             for (const m of [-40, -20, 0, 20, 40]) {
                 const y = yForMag(m);
                 if (y < MAG_TOP || y > MAG_BOT + 2) continue;
@@ -3378,22 +3330,7 @@ export default {
             ctx.textAlign = "left";
             ctx.fillText("dB", 2, MAG_TOP + 8);
 
-            // Phase y-axis labels
-            ctx.fillStyle = "#888888";
-            ctx.font = "10px monospace";
-            ctx.textAlign = "right";
-            for (const p of [-270, -180, -90, 0, 90, 180]) {
-                if (p < PH_MIN || p > PH_MAX) continue;
-                const y = yForPh(p);
-                if (y < PH_TOP || y > PH_BOT + 2) continue;
-                ctx.fillText(`${p}°`, PAD_L - 3, y + 3);
-            }
-            ctx.fillStyle = "#aaaaaa";
-            ctx.font = "9px monospace";
-            ctx.textAlign = "left";
-            ctx.fillText("deg", 2, PH_TOP + 8);
-
-            // Frequency axis labels
+            // X-axis (frequency) labels
             ctx.fillStyle = "#888888";
             ctx.font = "10px monospace";
             ctx.textAlign = "center";
@@ -3406,24 +3343,91 @@ export default {
             ctx.textAlign = "right";
             ctx.fillText("Hz", W - PAD_R, H - 4);
 
-            // Panel divider
-            ctx.strokeStyle = "#444444";
-            ctx.lineWidth = 1;
-            ctx.beginPath();
-            ctx.moveTo(PAD_L, MAG_BOT + 2);
-            ctx.lineTo(W - PAD_R, MAG_BOT + 2);
-            ctx.stroke();
-
             // Border
             ctx.strokeStyle = "#444444";
-            ctx.strokeRect(PAD_L, MAG_TOP, plotW, PH_BOT - MAG_TOP);
+            ctx.lineWidth = 1;
+            ctx.strokeRect(PAD_L, MAG_TOP, plotW, plotH);
+        },
+
+        async applySysIDToFC() {
+            if (!this.sysidPids || !CONFIGURATOR.connectionValid) {
+                alert("No flight controller connected. Connect to FC before applying PIDs.");
+                return;
+            }
+            const sp = this.sysidPids;
+            try {
+                await MSP.promise(MSPCodes.MSP_PID);
+            } catch (e) {
+                console.error("[AeroTune] Failed to read MSP_PID:", e);
+                alert("Failed to read PID values from FC. Check connection and try again.");
+                return;
+            }
+            if (FC.PIDS && FC.PIDS.length >= 3) {
+                if (sp.roll.P !== "—") FC.PIDS[0][0] = sp.roll.P;
+                if (sp.roll.I !== "?") FC.PIDS[0][1] = sp.roll.I;
+                if (sp.roll.D !== "—") FC.PIDS[0][2] = sp.roll.D;
+                if (sp.pitch.P !== "—") FC.PIDS[1][0] = sp.pitch.P;
+                if (sp.pitch.I !== "?") FC.PIDS[1][1] = sp.pitch.I;
+                if (sp.pitch.D !== "—") FC.PIDS[1][2] = sp.pitch.D;
+                if (sp.yaw.P !== "—") FC.PIDS[2][0] = sp.yaw.P;
+                if (sp.yaw.I !== "?") FC.PIDS[2][1] = sp.yaw.I;
+            }
+            try {
+                await MSP.promise(MSPCodes.MSP_PID_ADVANCED);
+            } catch (e) {
+                console.error("[AeroTune] Failed to read MSP_PID_ADVANCED:", e);
+                alert("Failed to read advanced tuning from FC. Check connection and try again.");
+                return;
+            }
+            if (FC.ADVANCED_TUNING) {
+                if (sp.roll.DMax !== "—") FC.ADVANCED_TUNING.dMaxRoll = sp.roll.DMax;
+                if (sp.pitch.DMax !== "—") FC.ADVANCED_TUNING.dMaxPitch = sp.pitch.DMax;
+                if (sp.roll.FF !== "?") FC.ADVANCED_TUNING.feedforwardRoll = sp.roll.FF;
+                if (sp.pitch.FF !== "?") FC.ADVANCED_TUNING.feedforwardPitch = sp.pitch.FF;
+                if (sp.yaw.FF !== "?") FC.ADVANCED_TUNING.feedforwardYaw = sp.yaw.FF;
+            }
+            try {
+                await MSP.promise(MSPCodes.MSP_SET_PID, mspHelper.crunch(MSPCodes.MSP_SET_PID));
+                await MSP.promise(MSPCodes.MSP_SET_PID_ADVANCED, mspHelper.crunch(MSPCodes.MSP_SET_PID_ADVANCED));
+            } catch (e) {
+                console.error("[AeroTune] Failed to send PID values to FC:", e);
+                alert("Failed to send PID values to FC. Check connection and try again.");
+                return;
+            }
+            this.pidTuningStore.markExternalChange();
+            const pidTabLink = document.querySelector("li.tab_pid_tuning a");
+            if (pidTabLink) {
+                pidTabLink.click();
+            } else {
+                alert("PID Tuning tab not available. Make sure a flight controller is connected.");
+            }
+        },
+
+        copySysIDValues() {
+            if (!this.sysidPids) return;
+            const sp = this.sysidPids;
+            const text = [
+                "# AeroTune SysID PID Values (hover-condition baseline)",
+                `Roll   P=${sp.roll.P}  I=${sp.roll.I}  D=${sp.roll.D}  DMax=${sp.roll.DMax}  FF=${sp.roll.FF}`,
+                `Pitch  P=${sp.pitch.P}  I=${sp.pitch.I}  D=${sp.pitch.D}  DMax=${sp.pitch.DMax}  FF=${sp.pitch.FF}`,
+                `Yaw    P=${sp.yaw.P}  I=${sp.yaw.I}  FF=${sp.yaw.FF}`,
+            ].join("\n");
+            navigator.clipboard
+                .writeText(text)
+                .then(() => {
+                    this.sysidCopyBtnText = "✔ Copied!";
+                    setTimeout(() => {
+                        this.sysidCopyBtnText = "📋 COPY ALL VALUES";
+                    }, 2000);
+                })
+                .catch((err) => console.error("[AeroTune] Failed to copy:", err));
         },
     },
 };
 </script>
 
 <style scoped>
-.at-chirp-td-canvas {
+.at-track-ratio-canvas {
     display: block;
     width: 100%;
     max-width: 580px;
@@ -3432,32 +3436,27 @@ export default {
     border-radius: 3px;
     margin-bottom: 4px;
 }
-.at-chirp-td-legend {
-    display: flex;
-    align-items: center;
-    font-size: 11px;
-    color: #aaaaaa;
-    font-family: monospace;
-    margin-bottom: 4px;
-    gap: 4px;
-}
-.at-chirp-td-dot {
-    display: inline-block;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-}
-.at-chirp-td-dot--sp {
-    background: #4488ff;
-}
-.at-chirp-td-dot--gy {
-    background: #ff4444;
-}
 .at-chirp-td-caption {
     font-size: 11px;
     color: #777777;
     font-style: italic;
     margin-bottom: 10px;
     font-family: monospace;
+}
+.at-sysid-pid-output {
+    margin-top: 14px;
+}
+.at-sysid-pid-complete-header {
+    color: #00d966;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+    margin-bottom: 10px;
+    padding: 8px 12px;
+    background: #0d1f0d;
+    border-left: 3px solid #00d966;
+    border-radius: 2px;
+}
+.at-sysid-pid-table {
+    margin-bottom: 10px;
 }
 </style>
