@@ -492,7 +492,7 @@ export function useFirmwareFlashing(params = {}) {
         } = options;
 
         const detectedUsbDevice = (device) => {
-        const isFlashOnConnect = getFlashOnConnect();
+            const isFlashOnConnect = getFlashOnConnect();
 
             console.log(`${logHead} Detected USB device:`, device);
 

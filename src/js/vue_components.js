@@ -30,6 +30,7 @@ import MotorsTab from "../components/tabs/MotorsTab.vue";
 import ReceiverTab from "../components/tabs/ReceiverTab.vue";
 import OsdTab from "../components/tabs/OsdTab.vue";
 import SetupTab from "../components/tabs/SetupTab.vue";
+import App from "../App.vue";
 import PidTuningTab from "../components/tabs/PidTuningTab.vue";
 import PreflightTab from "../components/tabs/PreflightTab.vue";
 import TransponderTab from "../components/tabs/TransponderTab.vue";
@@ -72,6 +73,7 @@ export const VueTabComponents = {
 // Create a Vue plugin that registers all components globally
 export const BetaflightComponents = {
     install(app) {
+        app.component("App", App);
         // Register all components globally
         app.component("BetaflightLogo", BetaflightLogo);
         app.component("BatteryLegend", BatteryLegend);

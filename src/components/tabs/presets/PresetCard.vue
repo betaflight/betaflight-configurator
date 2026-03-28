@@ -37,15 +37,18 @@
                         <span
                             class="preset_title_panel_official preset_title_panel_status_experimental"
                             v-show="preset.status === 'EXPERIMENTAL'"
-                        >{{ $t('presetsExperimental') }}</span>
+                            >{{ $t("presetsExperimental") }}</span
+                        >
                         <span
                             class="preset_title_panel_official preset_title_panel_status_community"
                             v-show="preset.status === 'COMMUNITY'"
-                        >{{ $t('presetsCommunity') }}</span>
+                            >{{ $t("presetsCommunity") }}</span
+                        >
                         <span
                             class="preset_title_panel_official preset_title_panel_status_official"
                             v-show="preset.status === 'OFFICIAL'"
-                        >{{ $t('presetsOfficial') }}</span>
+                            >{{ $t("presetsOfficial") }}</span
+                        >
                     </div>
                     <div class="presets_title_panel_value">
                         <span class="preset_title_panel_category">{{ preset.category }}</span>

@@ -13,7 +13,12 @@
                         @toggle-favorite="emit('toggle-favorite')"
                     />
 
-                    <details v-if="preset?.options?.length" id="presets_options_panel" :open="optionsExpanded" @toggle="handleOptionsToggle">
+                    <details
+                        v-if="preset?.options?.length"
+                        id="presets_options_panel"
+                        :open="optionsExpanded"
+                        @toggle="handleOptionsToggle"
+                    >
                         <summary>
                             <span id="preset_options_label" v-html="$t('presetsOptions')"></span>
                             <span class="preset-options-summary-value" :title="optionsSummary">{{
@@ -367,7 +372,7 @@ function handleOptionsToggle(event) {
         flex-wrap: wrap;
         gap: 5px;
         padding-left: 20px;
-        
+
         .regular-button {
             margin-top: 0;
             margin-bottom: 0;
