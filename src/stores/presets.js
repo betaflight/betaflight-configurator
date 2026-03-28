@@ -450,9 +450,7 @@ export const usePresetsStore = defineStore("presets", () => {
         const requestToken = detailsRequestToken + 1;
         const presetKey = getPresetEntryKey(preset, repository);
 
-        const existingPickedIndex = pickedPresetList.value.findIndex(
-            (p) => p.key === presetKey,
-        );
+        const existingPickedIndex = pickedPresetList.value.findIndex((p) => p.key === presetKey);
 
         const presetForDetails = clonePresetForDetails(
             existingPickedIndex !== -1 ? pickedPresetList.value[existingPickedIndex].preset : preset,
