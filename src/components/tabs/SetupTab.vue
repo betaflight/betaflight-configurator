@@ -1143,6 +1143,9 @@ function cleanup(callback) {
     // clear intervals used by this tab
     removeAllIntervals();
 
+    // clear accel calibration timeout to prevent it firing after unmount
+    removeTimeout("button_reset");
+
     // ensure mag calibration timers are cleared to avoid callbacks after unmount
     if (magCalibInterval) {
         clearInterval(magCalibInterval);
