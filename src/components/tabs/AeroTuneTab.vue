@@ -461,6 +461,10 @@
                                                 &nbsp; ({{ sysidResult.axes[axisName].pidSuggest.reason }})
                                             </span>
                                         </template>
+                                        <template v-else-if="sysidResult.axes[axisName]?.phaseMarginInvalid">
+                                            <span class="at-sysid-pid-axis">{{ axisName.toUpperCase() }}:</span>
+                                            <span>— re-fly needed</span>
+                                        </template>
                                         <template
                                             v-else-if="sysidResult.axes[axisName] && !sysidResult.axes[axisName].error"
                                         >
@@ -1977,7 +1981,7 @@ function _getCrossoverSearchWindow(propInches) {
  * searchWindow: { min, max } Hz — only search within this band.
  * Returns { phaseMargin, gainMargin, gcFreq, pcFreq } — any may be null.
  */
-function _computeStabilityMargins(freqAxis, magDB, phaseDeg, rawPhaseDeg, searchWindow, coherence) {
+function _computeStabilityMargins(freqAxis, magDB, phaseDeg, rawPhaseDeg, searchWindow, coherence, axisName) {
     const winMin = searchWindow?.min ?? 5;
     const winMax = searchWindow?.max ?? 100;
 
@@ -1986,6 +1990,7 @@ function _computeStabilityMargins(freqAxis, magDB, phaseDeg, rawPhaseDeg, search
     let pcFreq = null,
         gainMargin = null;
     let gcCoherenceLow = false;
+    let phaseMarginInvalid = false;
 
     // Gain crossover: descending 0 dB crossing within window, searched HIGH→LOW
     // Collect indices inside the window first, then iterate in reverse.
@@ -2000,36 +2005,33 @@ function _computeStabilityMargins(freqAxis, magDB, phaseDeg, rawPhaseDeg, search
         if (magDB[j] >= 0 && magDB[i] < 0) {
             const t = magDB[j] / (magDB[j] - magDB[i]);
             gcFreq = freqAxis[j] + t * (freqAxis[i] - freqAxis[j]);
-            // Phase margin: use raw atan2 phase, NOT the unwrapped accumulation.
-            // If the raw phase wraps between these two bins, pick the bin closer to 0 dB.
+            // Phase margin: use raw atan2 at bin j directly — NOT interpolated.
+            // atan2Result = Math.atan2(hIm, hRe) * 180 / Math.PI at the crossover bin.
             const rawJ = rawPhaseDeg[j];
-            const rawI = rawPhaseDeg[i];
-            const rawPhaseAtGC =
-                Math.abs(rawI - rawJ) > 180
-                    ? Math.abs(magDB[j]) < Math.abs(magDB[i])
-                        ? rawJ
-                        : rawI
-                    : rawJ + t * (rawI - rawJ);
-            phaseMargin = 180 + rawPhaseAtGC;
+            const atan2Result = rawJ;
+            phaseMargin = 180 + atan2Result;
 
-            // Debug logging at crossover bin — reconstruct H(f) re/im from mag+phase
+            // Debug logging — verify: atan2, formula, displayed value
             const rawPhaseRad = (rawJ * Math.PI) / 180;
             const hMag = magDB[j] > -60 ? Math.pow(10, magDB[j] / 20) : 0;
             const dbgRe = hMag * Math.cos(rawPhaseRad);
             const dbgIm = hMag * Math.sin(rawPhaseRad);
+            const axis = axisName ?? "unknown";
             console.log(
-                `[AeroTune] Gain crossover bin: index=${j}, freq=${freqAxis[j].toFixed(2)}Hz` +
-                    ` | H(f) re=${dbgRe.toFixed(6)}, im=${dbgIm.toFixed(6)}` +
-                    ` | atan2=${rawJ.toFixed(2)}°` +
-                    ` | phaseMargin=${phaseMargin.toFixed(2)}°`,
+                `[AeroTune] axis=${axis} atan2=${atan2Result.toFixed(2)}°` +
+                    ` formula=180+(${atan2Result.toFixed(2)})=${phaseMargin.toFixed(2)}°` +
+                    ` displayed=${phaseMargin >= 0 && phaseMargin <= 180 ? `${phaseMargin.toFixed(2)  }°` : "null (unreliable)"}` +
+                    ` | crossover bin: index=${j}, freq=${freqAxis[j].toFixed(2)}Hz` +
+                    ` | H(f) re=${dbgRe.toFixed(6)}, im=${dbgIm.toFixed(6)}`,
             );
 
-            // Phase margin must be in [0°, 180°] — clamp and warn if outside
+            // Phase margin must be in [0°, 180°] — null (not clamp) if outside
             if (phaseMargin < 0 || phaseMargin > 180) {
                 console.warn(
-                    `[AeroTune] Phase margin ${phaseMargin.toFixed(1)}° outside valid range [0°, 180°] — clamping.`,
+                    `[AeroTune] ${axis}: phase margin ${phaseMargin.toFixed(1)}° outside valid range [0°, 180°] — marking unreliable.`,
                 );
-                phaseMargin = Math.min(180, Math.max(0, phaseMargin));
+                phaseMarginInvalid = true;
+                phaseMargin = null;
             }
 
             // Coherence check at crossover bin
@@ -2064,7 +2066,7 @@ function _computeStabilityMargins(freqAxis, magDB, phaseDeg, rawPhaseDeg, search
         }
     }
 
-    return { phaseMargin, gainMargin, gcFreq, pcFreq, gcCoherenceLow };
+    return { phaseMargin, gainMargin, gcFreq, pcFreq, gcCoherenceLow, phaseMarginInvalid };
 }
 
 /**
@@ -2216,21 +2218,23 @@ function runSysID(frames, config, propInches) {
         }
 
         // Stability margins — only search within the prop-size-specific window
-        const { phaseMargin, gainMargin, gcFreq, pcFreq, gcCoherenceLow } = _computeStabilityMargins(
-            freqAxis,
-            filtMag,
-            filtPhase,
-            rawPhaseDeg,
-            searchWindow,
-            filtCoh,
-        );
+        const { phaseMargin, gainMargin, gcFreq, pcFreq, gcCoherenceLow, phaseMarginInvalid } =
+            _computeStabilityMargins(
+                freqAxis,
+                filtMag,
+                filtPhase,
+                rawPhaseDeg,
+                searchWindow,
+                filtCoh,
+                ax.name.toUpperCase(),
+            );
 
         // Current PID values from BBL header
         const currentP = config.pids?.[ax.pidKey]?.[0] ?? null;
         const currentD = config.pids?.[ax.pidKey]?.[2] ?? null;
 
         const pidSuggest =
-            currentP !== null
+            currentP !== null && !phaseMarginInvalid
                 ? _synthesizePID(currentP, currentD, { phaseMargin, gainMargin, gcFreq, pcFreq }, baselineHz)
                 : null;
 
@@ -2240,6 +2244,7 @@ function runSysID(frames, config, propInches) {
             phaseDeg: filtPhase,
             coherence: filtCoh,
             phaseMargin,
+            phaseMarginInvalid,
             gainMargin,
             gcFreq,
             pcFreq,
