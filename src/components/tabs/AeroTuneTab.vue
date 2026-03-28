@@ -307,11 +307,29 @@
                                     calculated from your actual flight data — not a generic table.
                                 </div>
 
-                                <!-- Roll Bode plot -->
+                                <!-- Roll time-domain + Bode plot -->
                                 <div
                                     v-if="sysidResult.axes.roll && !sysidResult.axes.roll.error"
                                     class="at-sysid-axis-block"
                                 >
+                                    <div class="at-chirp-td-legend">
+                                        <span class="at-chirp-td-dot at-chirp-td-dot--sp"></span>Setpoint
+                                        <span
+                                            class="at-chirp-td-dot at-chirp-td-dot--gy"
+                                            style="margin-left: 12px"
+                                        ></span
+                                        >Gyro
+                                    </div>
+                                    <canvas
+                                        ref="chirpTdRoll"
+                                        class="at-chirp-td-canvas"
+                                        width="580"
+                                        height="160"
+                                    ></canvas>
+                                    <div class="at-chirp-td-caption">
+                                        Setpoint (blue) vs gyro response (red) — tracking degrades as frequency
+                                        increases toward the right.
+                                    </div>
                                     <div class="at-sysid-axis-label">ROLL — Frequency Response (Bode Plot)</div>
                                     <canvas ref="bodePlotRoll" class="at-bode-canvas" width="580" height="300"></canvas>
                                 </div>
@@ -319,11 +337,29 @@
                                     ROLL: {{ sysidResult.axes.roll.error }}
                                 </div>
 
-                                <!-- Pitch Bode plot -->
+                                <!-- Pitch time-domain + Bode plot -->
                                 <div
                                     v-if="sysidResult.axes.pitch && !sysidResult.axes.pitch.error"
                                     class="at-sysid-axis-block"
                                 >
+                                    <div class="at-chirp-td-legend">
+                                        <span class="at-chirp-td-dot at-chirp-td-dot--sp"></span>Setpoint
+                                        <span
+                                            class="at-chirp-td-dot at-chirp-td-dot--gy"
+                                            style="margin-left: 12px"
+                                        ></span
+                                        >Gyro
+                                    </div>
+                                    <canvas
+                                        ref="chirpTdPitch"
+                                        class="at-chirp-td-canvas"
+                                        width="580"
+                                        height="160"
+                                    ></canvas>
+                                    <div class="at-chirp-td-caption">
+                                        Setpoint (blue) vs gyro response (red) — tracking degrades as frequency
+                                        increases toward the right.
+                                    </div>
                                     <div class="at-sysid-axis-label">PITCH — Frequency Response (Bode Plot)</div>
                                     <canvas
                                         ref="bodePlotPitch"
@@ -336,11 +372,29 @@
                                     PITCH: {{ sysidResult.axes.pitch.error }}
                                 </div>
 
-                                <!-- Yaw Bode plot -->
+                                <!-- Yaw time-domain + Bode plot -->
                                 <div
                                     v-if="sysidResult.axes.yaw && !sysidResult.axes.yaw.error"
                                     class="at-sysid-axis-block"
                                 >
+                                    <div class="at-chirp-td-legend">
+                                        <span class="at-chirp-td-dot at-chirp-td-dot--sp"></span>Setpoint
+                                        <span
+                                            class="at-chirp-td-dot at-chirp-td-dot--gy"
+                                            style="margin-left: 12px"
+                                        ></span
+                                        >Gyro
+                                    </div>
+                                    <canvas
+                                        ref="chirpTdYaw"
+                                        class="at-chirp-td-canvas"
+                                        width="580"
+                                        height="160"
+                                    ></canvas>
+                                    <div class="at-chirp-td-caption">
+                                        Setpoint (blue) vs gyro response (red) — tracking degrades as frequency
+                                        increases toward the right.
+                                    </div>
                                     <div class="at-sysid-axis-label">YAW — Frequency Response (Bode Plot)</div>
                                     <canvas ref="bodePlotYaw" class="at-bode-canvas" width="580" height="300"></canvas>
                                 </div>
@@ -2266,6 +2320,9 @@ function runSysID(frames, config, propInches) {
             currentP,
             currentD,
             pidSuggest,
+            spSeg,
+            gySeg,
+            sampleRate,
         };
 
         // Safety warnings
@@ -2479,7 +2536,11 @@ export default {
             this.applyChirpPropDefaults(v);
         },
         sysidResult(val) {
-            if (val) this.$nextTick(() => this.renderBodePlots());
+            if (val)
+                this.$nextTick(() => {
+                    this.renderBodePlots();
+                    this.renderChirpTimeDomain();
+                });
         },
     },
 
@@ -2960,6 +3021,136 @@ export default {
             return "";
         },
 
+        /** Draw all three chirp time-domain canvases from this.sysidResult. */
+        renderChirpTimeDomain() {
+            const refMap = { roll: "chirpTdRoll", pitch: "chirpTdPitch", yaw: "chirpTdYaw" };
+            for (const [axName, refName] of Object.entries(refMap)) {
+                const canvas = this.$refs[refName];
+                const axData = this.sysidResult?.axes?.[axName];
+                if (!canvas || !axData || axData.error) continue;
+                this._drawChirpTimeDomain(canvas, axData, axName);
+            }
+        },
+
+        /** Draw setpoint vs gyro time-domain chart for a chirp axis. */
+        _drawChirpTimeDomain(canvas, axData, axName) {
+            const { spSeg, gySeg, sampleRate } = axData;
+            if (!spSeg || !gySeg || !sampleRate) return;
+
+            const W = canvas.width;
+            const H = canvas.height;
+            const ctx = canvas.getContext("2d");
+            ctx.clearRect(0, 0, W, H);
+
+            const PAD_L = 52,
+                PAD_R = 16,
+                PAD_T = 12,
+                PAD_B = 22;
+            const plotW = W - PAD_L - PAD_R;
+            const plotH = H - PAD_T - PAD_B;
+
+            const N = spSeg.length;
+            const duration = N / sampleRate;
+            const AMP_MIN = -250,
+                AMP_MAX = 250;
+
+            const xForT = (i) => PAD_L + (i / (N - 1)) * plotW;
+            const yForA = (a) => PAD_T + plotH - ((clamp(a, AMP_MIN, AMP_MAX) - AMP_MIN) / (AMP_MAX - AMP_MIN)) * plotH;
+
+            // Downsample to max 800 points for performance
+            const MAX_PTS = 800;
+            const step = N > MAX_PTS ? Math.ceil(N / MAX_PTS) : 1;
+
+            // Background
+            ctx.fillStyle = "#1a1a1a";
+            ctx.fillRect(0, 0, W, H);
+
+            // Grid lines
+            ctx.strokeStyle = "#333333";
+            ctx.lineWidth = 1;
+            // Zero line
+            ctx.setLineDash([4, 4]);
+            ctx.beginPath();
+            ctx.moveTo(PAD_L, yForA(0));
+            ctx.lineTo(W - PAD_R, yForA(0));
+            ctx.stroke();
+            ctx.setLineDash([]);
+            // ±125 lines
+            for (const a of [-125, 125]) {
+                ctx.beginPath();
+                ctx.moveTo(PAD_L, yForA(a));
+                ctx.lineTo(W - PAD_R, yForA(a));
+                ctx.stroke();
+            }
+
+            // Y-axis labels
+            ctx.fillStyle = "#888888";
+            ctx.font = "10px monospace";
+            ctx.textAlign = "right";
+            for (const a of [-250, -125, 0, 125, 250]) {
+                ctx.fillText(String(a), PAD_L - 4, yForA(a) + 3);
+            }
+
+            // X-axis labels (time)
+            ctx.textAlign = "center";
+            const xTicks = 5;
+            for (let t = 0; t <= xTicks; t++) {
+                const tSec = (t / xTicks) * duration;
+                const xi = PAD_L + (t / xTicks) * plotW;
+                ctx.fillText(`${tSec.toFixed(1)  }s`, xi, H - PAD_B + 14);
+                ctx.beginPath();
+                ctx.strokeStyle = "#2a2a2a";
+                ctx.moveTo(xi, PAD_T);
+                ctx.lineTo(xi, H - PAD_B);
+                ctx.stroke();
+            }
+
+            // Axes border
+            ctx.strokeStyle = "#555555";
+            ctx.lineWidth = 1;
+            ctx.strokeRect(PAD_L, PAD_T, plotW, plotH);
+
+            // Draw setpoint (blue)
+            ctx.strokeStyle = "#4488ff";
+            ctx.lineWidth = 1.2;
+            ctx.beginPath();
+            let started = false;
+            for (let i = 0; i < N; i += step) {
+                const x = xForT(i);
+                const y = yForA(spSeg[i]);
+                if (!started) {
+                    ctx.moveTo(x, y);
+                    started = true;
+                } else {
+                    ctx.lineTo(x, y);
+                }
+            }
+            ctx.stroke();
+
+            // Draw gyro (red)
+            ctx.strokeStyle = "#ff4444";
+            ctx.lineWidth = 1.2;
+            ctx.beginPath();
+            started = false;
+            for (let i = 0; i < N; i += step) {
+                const x = xForT(i);
+                const y = yForA(gySeg[i]);
+                if (!started) {
+                    ctx.moveTo(x, y);
+                    started = true;
+                } else {
+                    ctx.lineTo(x, y);
+                }
+            }
+            ctx.stroke();
+
+            // Axis title
+            ctx.fillStyle = "#aaaaaa";
+            ctx.font = "10px monospace";
+            ctx.textAlign = "left";
+            ctx.fillText(`${axName.toUpperCase()} — CHIRP TIME DOMAIN (setpoint vs gyro)`, PAD_L, PAD_T - 2);
+        },
+
         /** Draw all three Bode-plot canvases from this.sysidResult. */
         renderBodePlots() {
             const refMap = { roll: "bodePlotRoll", pitch: "bodePlotPitch", yaw: "bodePlotYaw" };
@@ -3230,3 +3421,43 @@ export default {
     },
 };
 </script>
+
+<style scoped>
+.at-chirp-td-canvas {
+    display: block;
+    width: 100%;
+    max-width: 580px;
+    height: auto;
+    border: 1px solid #2a3a4a;
+    border-radius: 3px;
+    margin-bottom: 4px;
+}
+.at-chirp-td-legend {
+    display: flex;
+    align-items: center;
+    font-size: 11px;
+    color: #aaaaaa;
+    font-family: monospace;
+    margin-bottom: 4px;
+    gap: 4px;
+}
+.at-chirp-td-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+.at-chirp-td-dot--sp {
+    background: #4488ff;
+}
+.at-chirp-td-dot--gy {
+    background: #ff4444;
+}
+.at-chirp-td-caption {
+    font-size: 11px;
+    color: #777777;
+    font-style: italic;
+    margin-bottom: 10px;
+    font-family: monospace;
+}
+</style>
