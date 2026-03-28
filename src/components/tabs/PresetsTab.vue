@@ -262,7 +262,7 @@ import { generateFilename } from "@/js/utils/generate_filename";
 import { i18n } from "@/js/localization";
 import { update_sensor_status } from "@/js/serial_backend";
 import { TAB_ADAPTER_REGISTRATION_KEY } from "@/js/vue_tab_mounter";
-import CliEngine from "@/tabs/presets/CliEngine";
+import CliEngine from "./presets/CliEngine";
 
 const store = usePresetsStore();
 const cliSession = usePresetsCliSession({

@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { OSD } from "../../../src/js/tabs/osd";
+import { OSD } from "../../../src/components/tabs/osd/osd";
 import FC from "../../../src/js/fc";
 import { API_VERSION_1_47, API_VERSION_1_48 } from "../../../src/js/data_storage";
 

@@ -4,11 +4,11 @@ import { get as getConfig, set as setConfig } from "../js/ConfigStorage";
 import { i18n } from "../js/localization";
 import FC from "../js/fc";
 import GUI from "../js/gui";
-import { favoritePresets } from "../tabs/presets/FavoritePresets";
-import PickedPreset from "../tabs/presets/PickedPreset";
-import PresetsGithubRepo from "../tabs/presets/PresetsRepoIndexed/PresetsGithubRepo";
-import PresetsWebsiteRepo from "../tabs/presets/PresetsRepoIndexed/PresetsWebsiteRepo";
-import PresetSource from "../tabs/presets/SourcesDialog/PresetSource";
+import { favoritePresets } from "../components/tabs/presets/FavoritePresets";
+import PickedPreset from "../components/tabs/presets/PickedPreset";
+import PresetsGithubRepo from "../components/tabs/presets/PresetsRepoIndexed/PresetsGithubRepo";
+import PresetsWebsiteRepo from "../components/tabs/presets/PresetsRepoIndexed/PresetsWebsiteRepo";
+import PresetSource from "../components/tabs/presets/SourcesDialog/PresetSource";
 import {
     PRESETS_MAX_RESULTS,
     PRESETS_STORAGE_KEYS,

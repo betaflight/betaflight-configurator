@@ -100,7 +100,7 @@
 
 <script setup>
 import { computed, reactive, watch } from "vue";
-import PresetSource from "@/tabs/presets/SourcesDialog/PresetSource";
+import PresetSource from "./SourcesDialog/PresetSource";
 
 const props = defineProps({
     source: {

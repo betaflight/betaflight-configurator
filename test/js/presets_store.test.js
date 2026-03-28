@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { createPinia, setActivePinia } from "pinia";
 import GUI from "../../src/js/gui";
 import FC from "../../src/js/fc";
-import { favoritePresets } from "../../src/tabs/presets/FavoritePresets";
+import { favoritePresets } from "../../src/components/tabs/presets/FavoritePresets";
 import { usePresetsStore } from "../../src/stores/presets";
 
 const settings = {

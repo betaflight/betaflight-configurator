@@ -3,7 +3,7 @@ import { i18n } from "./localization";
 import Beepers from "./Beepers";
 import FC from "./fc";
 import CONFIGURATOR, { API_VERSION_1_47 } from "./data_storage";
-import { OSD } from "./tabs/osd";
+import { OSD } from "../components/tabs/osd/osd";
 import semver from "semver";
 import { addArrayElement, addArrayElementAfter } from "./utils/array";
 
