@@ -722,12 +722,11 @@ onMounted(async () => {
 });
 </script>
 
-<style scoped>
+<style lang="less">
 .content_wrapper {
     padding-bottom: 60px; /* Space for fixed toolbar */
 }
 
-/* Add any specific styles here, or rely on global layout */
 .numberspacer {
     margin-right: 10px;
 }
@@ -745,19 +744,107 @@ onMounted(async () => {
     font-weight: bold;
     margin-right: 5px;
 }
-.modename {
-    background: #333;
-    color: #fff;
-    padding: 2px 5px;
-    border-radius: 3px;
-    font-size: 0.8em;
-    margin-left: 5px;
-}
 .aux_set {
     width: 100px;
 }
 .proceduresettings.disabled {
     opacity: 0.5;
     pointer-events: none;
+}
+
+.tab-failsafe {
+    position: relative;
+    .modename {
+        background-color: #636766;
+        border-radius: 3px;
+        border: 1px solid #535756;
+        color: #fff !important;
+        font-weight: 600 !important;
+        padding-left: 3px;
+        padding-right: 3px;
+        margin-right: 3px;
+    }
+    .number {
+        label {
+            display: flex;
+            width: 100%;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        span {
+            margin-left: 0;
+        }
+    }
+    .subline {
+        width: 100%;
+    }
+    .radioarea {
+        border-radius: 0.5rem;
+        background-color: var(--surface-300);
+        margin-bottom: 0;
+        margin-top: 0.5rem;
+        min-height: 5rem;
+        padding: 0.5rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    .radiobuttons {
+        width: fit-content;
+        display: flex;
+        align-items: center;
+        margin-left: 1rem;
+        height: 5rem;
+        label {
+            width: 8rem;
+            margin-top: -2px;
+        }
+    }
+    .proceduresettings {
+        padding: 0.5rem;
+    }
+    .pro1 {
+        background-image: url(../../images/icons/cf_failsafe_procedure1.svg);
+        background-position: top right 10px;
+        background-size: 200px;
+        background-repeat: no-repeat;
+    }
+    .pro2 {
+        background-image: url(../../images/icons/cf_failsafe_procedure2.svg);
+        background-position: top right 10px;
+        background-size: 200px;
+        background-repeat: no-repeat;
+    }
+    .pro3 {
+        background-image: url(../../images/icons/cf_failsafe_procedure3.svg);
+        background-position: top right 10px;
+        background-size: 200px;
+        background-repeat: no-repeat;
+    }
+    .pro4 {
+        background-image: url(../../images/icons/cf_failsafe_procedure4.svg);
+        background-position: top right 10px;
+        background-size: 200px;
+        background-repeat: no-repeat;
+    }
+    .channelprimary {
+        width: 60%;
+    }
+    .channelauxiliary {
+        width: 60%;
+    }
+    .cf_tooltiptext {
+        display: none;
+    }
+    table {
+        width: 100%;
+    }
+    @media all and (max-width: 575px) {
+        .grid-box {
+            &.col2 {
+                grid-template-columns: 1fr !important;
+            }
+        }
+    }
 }
 </style>

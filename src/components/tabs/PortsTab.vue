@@ -530,7 +530,7 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
+<style lang="less">
 .visually-hidden {
     position: absolute;
     width: 1px;
@@ -540,5 +540,192 @@ export default defineComponent({
     overflow: hidden;
     clip: rect(0, 0, 0, 0);
     border: 0;
+}
+
+.tab-ports {
+    table {
+        border-collapse: collapse;
+        border-left: 0;
+        border-right: 0;
+        border-top: 0;
+        td {
+            padding: 0.25rem;
+            text-align: center;
+            &.functionsCell-configuration,
+            &.functionsCell-telemetry,
+            &.functionsCell-peripherals,
+            &.functionsCell-sensors {
+                select {
+                    margin-left: 0.5rem;
+                }
+            }
+        }
+        tr {
+            td {
+                padding: 0.5rem 0;
+                background-color: var(--surface-200);
+                &:first-child {
+                    text-align: left;
+                    padding-left: 1rem;
+                }
+            }
+            &:nth-child(even) {
+                select {
+                    background-color: var(--surface-300);
+                }
+            }
+        }
+        td.functionsCell-peripherals > select:first-of-type {
+            max-width: 12rem;
+        }
+        td.functionsCell-telemetry > select:first-of-type {
+            max-width: 10rem;
+        }
+        thead {
+            th {
+                padding: 0.5rem;
+                background-color: var(--surface-300);
+                color: var(--text);
+                &:first-child {
+                    border-top-left-radius: 0.75rem;
+                }
+                &:last-child {
+                    border-top-right-radius: 0.75rem;
+                }
+            }
+            .helpicon {
+                margin-top: 2px;
+            }
+        }
+        tbody {
+            // first and last td of last tr
+            tr:last-child td:first-child {
+                border-bottom-left-radius: 0.75rem;
+            }
+            tr:last-child td:last-child {
+                border-bottom-right-radius: 0.75rem;
+            }
+            td {
+                *:first-child {
+                    margin-bottom: 0.25rem;
+                }
+            }
+        }
+    }
+}
+#tab-ports-templates {
+    display: none;
+}
+.tab-ports.supported {
+    .require-support {
+        display: block;
+    }
+    .require-upgrade {
+        display: none;
+    }
+}
+@media only screen and (max-width: 1055px) {
+    .tab-ports {
+        table {
+            thead {
+                tr {
+                    &:first-child {
+                        font-size: 12px;
+                        height: 22px;
+                    }
+                }
+            }
+        }
+    }
+}
+@media only screen and (max-device-width: 1055px) {
+    .tab-ports {
+        table {
+            thead {
+                tr {
+                    &:first-child {
+                        font-size: 12px;
+                        height: 22px;
+                    }
+                }
+            }
+        }
+    }
+}
+@media all and (max-width: 575px) {
+    .tab-ports {
+        .config {
+            text-align: left;
+            border-top-left-radius: 5px;
+            border-left: 0;
+        }
+        table {
+            td {
+                padding: 0;
+            }
+        }
+        .ports {
+            select {
+                margin: 0;
+                width: 100%;
+                border: none;
+                height: 25px;
+                border-radius: unset;
+            }
+            td.functionsCell-peripherals > select:first-of-type {
+                border-bottom: 1px solid var(--surface-500);
+            }
+            td.functionsCell-telemetry > select:first-of-type {
+                border-bottom: 1px solid var(--surface-500);
+            }
+            td.functionsCell-sensors > select:first-of-type {
+                border-bottom: 1px solid var(--surface-500);
+            }
+            thead {
+                th {
+                    font-size: 10px;
+                    width: fit-content;
+                    padding: 0.5rem;
+                    word-break: break-word;
+                    white-space: unset;
+                }
+            }
+            tbody {
+                td {
+                    padding: 0.25rem 0.5rem;
+                    .switchery-default {
+                        margin-bottom: 0.5rem;
+                    }
+                    &.functionsCell-configuration,
+                    &.functionsCell-telemetry,
+                    &.functionsCell-peripherals,
+                    &.functionsCell-sensors {
+                        select {
+                            margin-left: 0rem;
+                        }
+                    }
+                }
+                // alternate row and its identifier background color
+                tr:nth-child(4n) {
+                    td {
+                        background-color: var(--surface-300);
+                    }
+                }
+                tr:nth-child(4n + 1) {
+                    td {
+                        background-color: var(--surface-200);
+                    }
+                }
+            }
+        }
+        .portIdentifier {
+            td {
+                font-size: 12px;
+                color: var(--text);
+                font-weight: normal;
+                background-color: var(--surface-300);
+            }
+        }
+    }
 }
 </style>

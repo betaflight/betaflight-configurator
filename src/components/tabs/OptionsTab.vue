@@ -448,6 +448,25 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
-/* Inherit styles from existing options.html via global CSS */
+<style lang="less">
+.tab-options {
+    .freelabel {
+        margin-left: 10px;
+        position: relative;
+    }
+    .switchery {
+        float: left;
+    }
+    .margin-bottom {
+        margin-bottom: 10px;
+        grid-template-columns: fit-content(300px) 1fr;
+    }
+    select {
+        background: var(--surface-200);
+        color: var(--text);
+        border: 1px solid var(--surface-500);
+        border-radius: 3px;
+        width: fit-content;
+    }
+}
 </style>
