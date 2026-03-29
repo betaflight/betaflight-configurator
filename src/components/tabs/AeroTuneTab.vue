@@ -498,6 +498,15 @@
                                         Hover-condition baseline — I and FF unchanged. Re-fly with aggressive data to
                                         fine-tune further.
                                     </div>
+                                    <div
+                                        v-if="sysidPids.roll.reason || sysidPids.pitch.reason"
+                                        class="at-sysid-pid-note"
+                                        style="margin-top: 4px; font-size: 11px; color: var(--subtleText)"
+                                    >
+                                        <span v-if="sysidPids.roll.reason">Roll: ({{ sysidPids.roll.reason }})</span>
+                                        <span v-if="sysidPids.roll.reason && sysidPids.pitch.reason"> · </span>
+                                        <span v-if="sysidPids.pitch.reason">Pitch: ({{ sysidPids.pitch.reason }})</span>
+                                    </div>
                                     <button class="at-apply-btn" :disabled="!canApplySysID" @click="applySysIDToFC">
                                         ✓ APPLY PIDs TO FC (PID TUNING TAB)
                                     </button>
@@ -1864,36 +1873,11 @@ function _unwrapPhase(phase) {
 
 /**
  * Detect chirp data in a BBL session.
- * Criteria: chirp_amplitude_* header present with value > 0
- *           AND setpoint std dev > 30 in any 5-second window on any axis.
+ * Criteria: any parsed row has bit 10 set in flightModeFlags (value 1024).
  */
-function detectChirp(frames, config) {
-    const raw = config._raw || {};
-    const hasChirpHeader = ["chirp_amplitude_roll", "chirp_amplitude_pitch", "chirp_amplitude_yaw"].some(
-        (k) => raw[k] !== undefined && parseInt(raw[k], 10) > 0,
-    );
-    if (!hasChirpHeader) return false;
-
-    const looptime = config.misc?.looptime;
-    if (!looptime || looptime <= 0) return false;
-    const sampleRate = 1e6 / looptime;
-    const winSize = Math.max(100, Math.round(5 * sampleRate));
-
-    for (const spKey of ["setpoint[0]", "setpoint[1]", "setpoint[2]"]) {
-        for (let start = 0; start + winSize <= frames.length; start += winSize) {
-            let sum = 0,
-                sum2 = 0;
-            for (let i = start; i < start + winSize; i++) {
-                const v = Number(frames[i][spKey] ?? 0);
-                sum += v;
-                sum2 += v * v;
-            }
-            const mean = sum / winSize;
-            const std = Math.sqrt(Math.max(0, sum2 / winSize - mean * mean));
-            if (std > 30) return true;
-        }
-    }
-    return false;
+function detectChirp(parsedRows, config) {
+    const hasChirp = parsedRows.some((row) => (parseInt(row.flightModeFlags) & 1024) !== 0);
+    return hasChirp;
 }
 
 /**
@@ -2093,52 +2077,55 @@ function _computeStabilityMargins(freqAxis, magDB, phaseDeg, rawPhaseDeg, search
 }
 
 /**
- * Synthesise PID adjustments from stability margins and current gains.
+ * Synthesise PID adjustments from stability margins using fixed prop-size baselines.
  * baselineHz: prop-size midpoint of the crossover search window.
+ * propInches: prop size in inches — selects the fixed P/D baseline, not current FC PIDs.
  *
- * P direction: scale = PM / 45 (clamped 0.7–1.5).
- *   PM > 45° → over-damped/sluggish → increase P (scale > 1).
- *   PM < 45° → under-damped/oscillating → decrease P (scale < 1).
+ * P: scaleFactor = PM / 45 (clamped 0.7–1.5) applied to fixed prop-size baseP.
+ *   Result is independent of current FC PIDs — same flight data always yields same answer.
  *
- * D direction:
- *   PM < 40° → increase D aggressively (+25%) to add damping.
- *   PM 40–50° → D unchanged (in target band).
- *   PM > 50° AND gcFreq > baseline → increase D slightly (+15%).
+ * D: fixed prop-size baseD, then:
+ *   PM < 40° → +25% (add damping).
+ *   PM 40–50° → unchanged.
+ *   PM > 50° AND gcFreq > baseline → +15%.
  *
  * Returns { suggestP, suggestD, direction, reason }.
  */
-function _synthesizePID(currentP, currentD, margins, baselineHz) {
+function _synthesizePID(currentP, currentD, margins, baselineHz, propInches) {
     const TARGET_PM = 45;
     const baseline = baselineHz ?? 80;
-    let suggestP = currentP;
-    let suggestD = currentD;
+    const prop = propInches ?? 5;
+
+    // Fixed prop-size baseline tables — independent of current FC PIDs
+    const P_BASELINE = { 3: 50, 4: 47, 5: 45, 6: 42, 7: 38, 8: 35, 9: 32, 10: 28 };
+    const D_BASELINE = { 3: 28, 4: 25, 5: 23, 6: 21, 7: 18, 8: 16, 9: 14, 10: 12 };
+    const propKey = Math.round(prop);
+    const baseP = P_BASELINE[propKey] ?? 45;
+    const baseD = D_BASELINE[propKey] ?? 23;
+
+    let suggestP = baseP;
+    let suggestD = baseD;
     let direction = "=";
     const parts = [];
 
     if (margins.phaseMargin !== null) {
         const pm = margins.phaseMargin;
-        // High PM → quad is sluggish → scale > 1 → increase P
-        const factor = clamp(pm / TARGET_PM, 0.7, 1.5);
-        suggestP = Math.round(currentP * factor);
-        direction = factor > 1.01 ? "↑" : factor < 0.99 ? "↓" : "=";
-        if (pm > TARGET_PM) {
-            parts.push(`PM ${pm.toFixed(1)}° — under-tuned at hover, increase P`);
-        } else if (pm < TARGET_PM) {
-            parts.push(`PM ${pm.toFixed(1)}° — close to instability, reduce P`);
-        } else {
-            parts.push(`PM ${pm.toFixed(1)}° — at target`);
-        }
+        // scaleFactor applied to fixed baseline — not current FC P
+        const scaleFactor = clamp(pm / TARGET_PM, 0.7, 1.5);
+        suggestP = Math.round(baseP * scaleFactor);
+        direction = scaleFactor > 1.01 ? "↑" : scaleFactor < 0.99 ? "↓" : "=";
+        parts.push(`baseline ${prop}" P=${baseP}, scale ×${scaleFactor.toFixed(2)} from PM ${pm.toFixed(1)}°`);
     }
 
-    if (currentD !== null && currentD > 0 && margins.phaseMargin !== null) {
+    if (margins.phaseMargin !== null) {
         const pm = margins.phaseMargin;
         if (pm < 40) {
             // Under-damped — add damping aggressively
-            suggestD = Math.round(currentD * 1.25);
+            suggestD = Math.round(baseD * 1.25);
             parts.push(`D +25% (low PM — add damping)`);
         } else if (pm > 50 && margins.gcFreq !== null && margins.gcFreq > baseline) {
             // Stable with high GC frequency — small D increase is safe
-            suggestD = Math.round(currentD * 1.15);
+            suggestD = Math.round(baseD * 1.15);
             parts.push(`D +15% (GC ${margins.gcFreq.toFixed(0)}Hz > baseline)`);
         }
         // PM 40–50°: D unchanged
@@ -2277,10 +2264,9 @@ function runSysID(frames, config, propInches) {
         const currentP = config.pids?.[ax.pidKey]?.[0] ?? null;
         const currentD = config.pids?.[ax.pidKey]?.[2] ?? null;
 
-        const pidSuggest =
-            currentP !== null && !phaseMarginInvalid
-                ? _synthesizePID(currentP, currentD, { phaseMargin, gainMargin, gcFreq, pcFreq }, baselineHz)
-                : null;
+        const pidSuggest = !phaseMarginInvalid
+            ? _synthesizePID(currentP, currentD, { phaseMargin, gainMargin, gcFreq, pcFreq }, baselineHz, propInches)
+            : null;
 
         const currentI = config.pids?.[ax.pidKey]?.[1] ?? null;
 
@@ -2509,6 +2495,7 @@ export default {
                     D: suggestD ?? (ax !== "yaw" ? (axData?.currentD ?? "—") : "—"),
                     DMax: suggestD != null ? suggestD + 3 : (existingDMax ?? "—"),
                     FF: currentFF,
+                    reason: hasSuggest ? axData.pidSuggest.reason : null,
                 };
             }
             return result;
