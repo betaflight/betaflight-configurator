@@ -7,10 +7,11 @@
 </template>
 
 <script>
-import { defineComponent, ref, onMounted, onBeforeUnmount } from "vue";
+import { defineComponent, ref, onMounted } from "vue";
 import BuildApi from "../../js/BuildApi";
 import DarkTheme from "../../js/DarkTheme";
 import GUI from "../../js/gui";
+import { useInterval } from "../../composables/useInterval";
 import { ispConnected } from "../../js/utils/connection";
 
 export default defineComponent({
@@ -27,6 +28,7 @@ export default defineComponent({
         const content = ref("");
         const isVisible = ref(false);
         const intervalName = `sponsor_${props.sponsorType}`;
+        const { addInterval } = useInterval();
 
         const refresh = async () => {
             if (!ispConnected()) {
@@ -69,7 +71,7 @@ export default defineComponent({
 
         onMounted(() => {
             // Set up periodic refresh using GUI interval manager
-            GUI.interval_add(
+            addInterval(
                 intervalName,
                 async () => {
                     await refresh();
@@ -79,10 +81,7 @@ export default defineComponent({
             );
         });
 
-        onBeforeUnmount(() => {
-            // Clean up the interval when component is destroyed
-            GUI.interval_remove(intervalName);
-        });
+        // Interval cleanup is handled automatically by the useInterval composable on unmount
 
         return {
             content,

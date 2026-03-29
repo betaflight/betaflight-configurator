@@ -141,7 +141,7 @@
 </template>
 
 <script>
-import { defineComponent, reactive, onMounted, onUnmounted, computed, toRaw, nextTick } from "vue";
+import { defineComponent, reactive, onMounted, computed, toRaw, nextTick } from "vue";
 import BaseTab from "./BaseTab.vue";
 import GUI from "../../js/gui";
 import FC from "../../js/fc";
@@ -154,6 +154,7 @@ import { tracking } from "../../js/Analytics";
 import semver from "semver";
 import { API_VERSION_1_45, API_VERSION_1_47 } from "../../js/data_storage";
 import WikiButton from "../elements/WikiButton.vue";
+import { useInterval } from "../../composables/useInterval";
 
 export default defineComponent({
     name: "PortsTab",
@@ -337,22 +338,14 @@ export default defineComponent({
             });
         };
 
-        // Track local intervals
-        const localIntervals = [];
-        const addLocalInterval = (name, code, period, first = false) => {
-            GUI.interval_add(name, code, period, first);
-            localIntervals.push(name);
-        };
+        const { addInterval } = useInterval();
 
         onMounted(() => {
             loadConfig();
-            addLocalInterval("status_pull", () => MSP.send_message(MSPCodes.MSP_STATUS), 250, true);
+            addInterval("status_pull", () => MSP.send_message(MSPCodes.MSP_STATUS), 250, true);
         });
 
-        onUnmounted(() => {
-            localIntervals.forEach((name) => GUI.interval_remove(name));
-            localIntervals.length = 0;
-        });
+        // Interval cleanup handled automatically by useInterval on unmount
 
         const saveConfig = () => {
             tracking.sendSaveAndChangeEvents(

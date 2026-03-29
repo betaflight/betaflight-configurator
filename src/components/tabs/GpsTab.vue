@@ -312,6 +312,7 @@ import { useFlightControllerStore } from "@/stores/fc";
 import { useConnectionStore } from "@/stores/connection";
 import { useNavigationStore } from "@/stores/navigation";
 import { useDialogStore } from "@/stores/dialog";
+import { useInterval } from "../../composables/useInterval";
 import WikiButton from "../elements/WikiButton.vue";
 
 export default defineComponent({
@@ -710,11 +711,7 @@ export default defineComponent({
             MSP.send_message(MSPCodes.MSP_RAW_GPS, false, false, getCompGpsData);
         };
 
-        const localIntervals = [];
-        const addLocalInterval = (name, code, period, first = false) => {
-            GUI.interval_add(name, code, period, first);
-            localIntervals.push(name);
-        };
+        const { addInterval, removeAllIntervals } = useInterval();
 
         const checkConnectivity = () => {
             isOnline.value = ispConnected();
@@ -744,7 +741,7 @@ export default defineComponent({
                 isWaiting.value = true;
                 showMap.value = false;
 
-                addLocalInterval("gps_pull", getRawGpsData, 100, true);
+                addInterval("gps_pull", getRawGpsData, 100, true);
 
                 applySwitchery();
             } catch (error) {
@@ -792,8 +789,7 @@ export default defineComponent({
         });
 
         const teardown = () => {
-            localIntervals.forEach((name) => GUI.interval_remove(name));
-            localIntervals.length = 0;
+            removeAllIntervals();
             document.removeEventListener("fullscreenchange", handleFullscreenChange);
             document.removeEventListener("webkitfullscreenchange", handleFullscreenChange);
             document.removeEventListener("MSFullscreenChange", handleFullscreenChange);

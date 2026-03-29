@@ -196,6 +196,7 @@ import { useFlightControllerStore } from "@/stores/fc";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "../elements/WikiButton.vue";
 import GUI from "../../js/gui";
+import { useInterval } from "../../composables/useInterval";
 import MSP from "../../js/msp";
 import MSPCodes from "../../js/msp/MSPCodes";
 import { mspHelper } from "../../js/msp/MSPHelper";
@@ -667,19 +668,15 @@ export default defineComponent({
             }
         };
 
-        const localIntervals = [];
-        const addLocalInterval = (name, code, period, first = false) => {
-            GUI.interval_add(name, code, period, first);
-            localIntervals.push(name);
-        };
+        const { addInterval } = useInterval();
 
         onMounted(() => {
             const stored = getConfig("hideUnusedModes") || {};
             hideUnused.value = !!stored.hideUnusedModes;
 
             loadData();
-            addLocalInterval("aux_data_pull", () => MSP.send_message(MSPCodes.MSP_RC, false, false, updateMarkers), 50);
-            addLocalInterval("status_pull", () => MSP.send_message(MSPCodes.MSP_STATUS), 250, true);
+            addInterval("aux_data_pull", () => MSP.send_message(MSPCodes.MSP_RC, false, false, updateMarkers), 50);
+            addInterval("status_pull", () => MSP.send_message(MSPCodes.MSP_STATUS), 250, true);
         });
 
         onUnmounted(() => {
@@ -689,10 +686,7 @@ export default defineComponent({
                 document.removeEventListener("mouseup", stopDrag);
                 dragState = null;
             }
-
-            // Clean up polling intervals
-            localIntervals.forEach((name) => GUI.interval_remove(name));
-            localIntervals.length = 0;
+            // Interval cleanup handled automatically by useInterval on unmount
         });
 
         watch(hideUnused, (value) => setConfig({ hideUnusedModes: value }));

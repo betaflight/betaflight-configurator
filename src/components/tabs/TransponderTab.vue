@@ -93,8 +93,8 @@
 <script>
 import { computed, defineComponent, nextTick, onMounted, ref, watch } from "vue";
 import { useFlightControllerStore } from "@/stores/fc";
+import { useConnectionStore } from "@/stores/connection";
 import { useReboot } from "@/composables/useReboot";
-import CONFIGURATOR from "@/js/data_storage";
 import { gui_log } from "@/js/gui_log";
 import { i18n } from "@/js/localization";
 import MSP from "@/js/msp";
@@ -182,6 +182,7 @@ export default defineComponent({
     },
     setup() {
         const fcStore = useFlightControllerStore();
+        const connectionStore = useConnectionStore();
         const { reboot } = useReboot();
 
         const dataInput = ref("");
@@ -275,7 +276,7 @@ export default defineComponent({
                 mspHelper.crunch(MSPCodes.MSP_SET_TRANSPONDER_CONFIG),
                 false,
                 (response) => {
-                    if (!CONFIGURATOR.virtualMode && (!response || response.crcError)) {
+                    if (!connectionStore.virtualMode && (!response || response.crcError)) {
                         gui_log(i18n.getMessage("configurationSaveFailed"));
                         selectedProviderId.value = defaultProviderId.value;
                         return;

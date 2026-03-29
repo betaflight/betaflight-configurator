@@ -132,6 +132,38 @@ export function useDialog() {
         );
     };
 
+    /**
+     * Promise-based yes/no dialog — resolves true (yes) or false (no).
+     */
+    const showYesNo = (title, text, options = {}) => {
+        return new Promise((resolve) => {
+            openYesNo(
+                title,
+                text,
+                () => resolve(true),
+                () => resolve(false),
+                options,
+            );
+        });
+    };
+
+    /**
+     * Promise-based information dialog — resolves when confirmed.
+     */
+    const showInfo = (title, text, options = {}) => {
+        return new Promise((resolve) => {
+            openInfo(title, text, () => resolve(), options);
+        });
+    };
+
+    /**
+     * Opens a wait dialog and returns a close function.
+     */
+    const showWait = (title, onCancel, options = {}) => {
+        openWait(title, onCancel, options);
+        return { close: () => store.close() };
+    };
+
     const close = () => {
         store.close();
     };
@@ -146,6 +178,9 @@ export function useDialog() {
         openWait,
         openProfileSelection,
         openCopyProfile,
+        showYesNo,
+        showInfo,
+        showWait,
         close,
         open,
     };

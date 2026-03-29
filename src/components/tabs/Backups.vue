@@ -111,7 +111,7 @@ import { defineComponent } from "vue";
 import loginManager from "../../js/LoginManager";
 import { gui_log } from "../../js/gui_log";
 import MSP from "../../js/msp";
-import CONFIGURATOR from "../../js/data_storage";
+import { useConnectionStore } from "../../stores/connection";
 
 export default defineComponent({
     name: "Backups",
@@ -145,7 +145,7 @@ export default defineComponent({
             return grouped;
         },
         isConnected() {
-            return CONFIGURATOR.connectionValid;
+            return useConnectionStore().connectionValid;
         },
     },
     methods: {

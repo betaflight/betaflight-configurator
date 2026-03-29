@@ -333,7 +333,7 @@ import GUI from "../../js/gui";
 import MSP from "../../js/msp";
 import MSPCodes from "../../js/msp/MSPCodes";
 import { mspHelper } from "../../js/msp/MSPHelper";
-import CONFIGURATOR, { API_VERSION_1_45, API_VERSION_1_47 } from "../../js/data_storage";
+import { API_VERSION_1_45, API_VERSION_1_47 } from "../../js/data_storage";
 import { i18n } from "../../js/localization";
 import semver from "semver";
 import { gui_log } from "../../js/gui_log";
@@ -609,7 +609,7 @@ export default defineComponent({
 
         function pollForEraseCompletion() {
             flashUpdateSummary(() => {
-                if (CONFIGURATOR.connectionValid && !eraseCancelled.value) {
+                if (connectionStore.connectionValid && !eraseCancelled.value) {
                     if (fcStore.dataflash?.ready) {
                         isErasing.value = false;
                         eraseDialog.value?.close();
@@ -805,7 +805,7 @@ export default defineComponent({
             if (sdcardSupported.value && !sdcardTimer) {
                 sdcardTimer = setTimeout(() => {
                     sdcardTimer = null;
-                    if (CONFIGURATOR.connectionValid) {
+                    if (connectionStore.connectionValid) {
                         MSP.send_message(MSPCodes.MSP_SDCARD_SUMMARY, false, false, updateHtml);
                     }
                 }, 2000);
