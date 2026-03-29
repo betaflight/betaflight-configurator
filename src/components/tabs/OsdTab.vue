@@ -1070,17 +1070,14 @@ function onDragStart(event, cell) {
         return;
     }
 
-    let xPos = Number.parseInt(event.currentTarget.dataset.x);
-    let yPos = Number.parseInt(event.currentTarget.dataset.y);
+    const xPos = Number.parseInt(event.currentTarget.dataset.x);
+    const yPos = Number.parseInt(event.currentTarget.dataset.y);
     const charSize = getRenderedCharSize(event.currentTarget);
     let offsetX = charSize.width / 2;
     let offsetY = charSize.height / 2;
 
-    // For array-type previews, adjust offset to account for element bounds
-    if (Array.isArray(displayItem.preview)) {
-        const limits = searchLimitsElement(displayItem.preview);
-        xPos -= limits.minX;
-        yPos -= limits.minY;
+    // For non-array previews, adjust offset to center on character
+    if (!Array.isArray(displayItem.preview)) {
         offsetX += xPos * charSize.width;
         offsetY += yPos * charSize.height;
     }
