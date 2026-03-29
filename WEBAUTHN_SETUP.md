@@ -4,11 +4,13 @@ This guide will help you set up your development environment to test WebAuthn (p
 
 ## Prerequisites
 
-WebAuthn requires a secure context (HTTPS) to function. For local development, we use `local.betaflight.com` with a trusted self-signed certificate.
+WebAuthn requires a secure context (HTTPS) to function. For local development, the dev server defaults to `local.betaflight.com`, but can also use a LAN-friendly hostname such as `sslip.io` when testing on other devices.
 
 **Note:** The development server automatically detects whether certificates are present and configures itself accordingly:
 - **With certificates:** Runs on `https://local.betaflight.com:8443`
 - **Without certificates:** Runs on `http://localhost:8080` (WebAuthn features disabled)
+
+You can override the HTTPS hostname by setting the `BF_DEV_HOSTNAME` environment variable before starting the dev server.
 
 ## Setup Steps
 
@@ -54,9 +56,18 @@ mkcert -install
 
 This will create and install a local CA in your system trust store. You may need to restart your browser after this step.
 
-### 3. Add local.betaflight.com to Hosts File
+### 3. Choose a Development Hostname
 
-You need to map `local.betaflight.com` to localhost in your system's hosts file.
+Pick one of the following approaches:
+
+- `local.betaflight.com` for desktop-only local development
+- `<your-lan-ip>.sslip.io` for testing from Android or other devices on the same network
+
+`sslip.io` is a public wildcard DNS service that maps hostnames containing an IP address back to that IP. For example, if your PC's LAN IP is `192.168.1.23`, you can use `192-168-1-23.sslip.io`.
+
+#### Option A: Desktop-only with hosts file
+
+Map `local.betaflight.com` to localhost in your system hosts file.
 
 #### Windows
 
@@ -81,12 +92,31 @@ Add the following line:
 
 Save and exit (Ctrl+X, then Y, then Enter in nano).
 
+#### Option B: LAN testing with sslip.io
+
+Find your PC's LAN IP address and convert dots to dashes for the hostname:
+
+- LAN IP: `192.168.1.23`
+- Hostname: `192-168-1-23.sslip.io`
+
+No hosts file changes are needed for this option.
+
 ### 4. Generate SSL Certificates
 
-In the root directory of betaflight-configurator, generate certificates for local.betaflight.com:
+In the root directory of betaflight-configurator, generate certificates and write them to the filenames the dev server expects.
+
+#### Default local hostname
 
 ```bash
-mkcert local.betaflight.com localhost
+mkcert -cert-file local.betaflight.com.pem -key-file local.betaflight.com-key.pem local.betaflight.com localhost
+```
+
+#### sslip.io hostname for Android/LAN testing
+
+Replace `192-168-1-23.sslip.io` with your actual LAN hostname:
+
+```bash
+mkcert -cert-file local.betaflight.com.pem -key-file local.betaflight.com-key.pem 192-168-1-23.sslip.io localhost 127.0.0.1 ::1
 ```
 
 This will create two files:
@@ -97,22 +127,57 @@ This will create two files:
 
 ### 5. Start Development Server
 
-Start your development server as usual:
+Start your development server as usual.
+
+#### Default local hostname
 
 ```bash
 yarn dev
+```
+
+#### sslip.io hostname
+
+##### PowerShell
+
+```powershell
+$env:BF_DEV_HOSTNAME="192-168-1-23.sslip.io"
+yarn dev
+```
+
+##### bash
+
+```bash
+BF_DEV_HOSTNAME=192-168-1-23.sslip.io yarn dev
 ```
 
 The development server will automatically detect the certificates and configure itself:
 - If certificates are found: `https://local.betaflight.com:8443` (WebAuthn enabled)
 - If certificates are missing: `http://localhost:8080` (WebAuthn disabled)
 
+When `BF_DEV_HOSTNAME` is set, the HTTPS URL uses that hostname instead.
+
 ## Verification
 
-1. Open your browser and navigate to `https://local.betaflight.com:8443`
+1. Open your browser and navigate to your configured HTTPS URL:
+   - `https://local.betaflight.com:8443`, or
+   - `https://192-168-1-23.sslip.io:8443`
 2. You should NOT see any certificate warnings
 3. The browser's address bar should show a secure lock icon
 4. WebAuthn features (passkey creation/authentication) should now work
+
+### Android Verification
+
+For Android devices:
+
+1. Install the `mkcert` root CA on the phone:
+   - Run `mkcert -CAROOT` on your PC
+   - Copy `rootCA.pem` to the phone
+   - Rename it to `rootCA.crt` if Android does not recognize `.pem`
+   - Install it via `Settings > Security > Encryption & credentials > Install a certificate > CA certificate`
+2. Connect the phone to the same Wi-Fi network as your PC
+3. Open the `sslip.io` HTTPS URL in Chrome on Android
+4. Confirm there are no certificate warnings
+5. In Chrome, verify `window.isSecureContext` is `true`
 
 ## Troubleshooting
 
@@ -140,6 +205,19 @@ If the server starts on `http://localhost:8080` instead of HTTPS:
 - Verify the certificate files exist in the project root
 - Ensure filenames match exactly: `local.betaflight.com.pem` and `local.betaflight.com-key.pem`
 - Check the console output when starting the server - it will indicate which mode it's using
+
+### sslip.io Not Resolving
+
+- Make sure the phone and PC are on the same network
+- Verify you used your PC's current LAN IP in the hostname
+- If your LAN IP changes, regenerate the certificate and update `BF_DEV_HOSTNAME`
+
+### Android Still Says Features Are Unsupported
+
+- Open the app via `https://...sslip.io:8443`, not `http://...` or the raw IP address
+- Confirm the certificate is trusted on the phone
+- Verify `window.isSecureContext` is `true`
+- Note that Android browser support for `WebSerial` and `WebUSB` can still differ from desktop, even in a secure context
 
 ### Browser Privacy/Incognito Mode
 
