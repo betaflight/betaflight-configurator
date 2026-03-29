@@ -106,209 +106,187 @@
     </div>
 </template>
 
-<script>
-import { defineComponent } from "vue";
+<script setup>
+import { ref, computed, onMounted, onUnmounted } from "vue";
+import { useTranslation } from "i18next-vue";
 import loginManager from "../../js/LoginManager";
 import { gui_log } from "../../js/gui_log";
 import MSP from "../../js/msp";
 import { useConnectionStore } from "../../stores/connection";
 
-export default defineComponent({
-    name: "Backups",
-    data() {
-        return {
-            isLoading: true,
-            backups: [],
-            isEditing: false,
-            unsubscribeLogin: null,
-            unsubscribeLogout: null,
-            editForm: {
-                id: null,
-                name: "",
-                description: "",
-                created: null,
-            },
-            userApi: null,
-            currentCraft: null,
-        };
-    },
-    computed: {
-        groupedBackups() {
-            const grouped = {};
-            this.backups.forEach((backup) => {
-                const key = backup.key || "Unknown";
-                if (!grouped[key]) {
-                    grouped[key] = [];
+const { t } = useTranslation();
+const connectionStore = useConnectionStore();
+
+const isLoading = ref(true);
+const backups = ref([]);
+const isEditing = ref(false);
+const editForm = ref({ id: null, name: "", description: "", created: null });
+let userApi = null;
+let unsubscribeLogin = null;
+let unsubscribeLogout = null;
+
+const groupedBackups = computed(() => {
+    const grouped = {};
+    backups.value.forEach((backup) => {
+        const key = backup.key || "Unknown";
+        if (!grouped[key]) {
+            grouped[key] = [];
+        }
+        grouped[key].push(backup);
+    });
+    return grouped;
+});
+
+const isConnected = computed(() => connectionStore.connectionValid);
+
+async function loadBackups() {
+    isLoading.value = true;
+
+    try {
+        const loggedIn = await loginManager.isUserLoggedIn();
+        if (!loggedIn) {
+            backups.value = [];
+            isLoading.value = false;
+            return;
+        }
+
+        userApi = loginManager.getUserApi();
+        backups.value = await userApi.getBackups();
+    } catch (error) {
+        gui_log(`${t("userBackupsLoadFailed")}: ${error}`);
+    }
+
+    isLoading.value = false;
+}
+
+async function createBackup() {
+    try {
+        if (!userApi) {
+            throw new Error(t("notLoggedIn"));
+        }
+
+        const output = await new Promise((resolve, reject) => {
+            MSP.send_cli_command("diff all", (data) => {
+                if (data && Array.isArray(data) && data.length > 0) {
+                    resolve([...data]);
+                } else {
+                    reject(new Error(t("profileBackupEmptyResult") || "Empty backup result"));
                 }
-                grouped[key].push(backup);
             });
-            return grouped;
-        },
-        isConnected() {
-            return useConnectionStore().connectionValid;
-        },
-    },
-    methods: {
-        async loadBackups() {
-            this.isLoading = true;
-
-            try {
-                const isLoggedIn = await loginManager.isUserLoggedIn();
-                if (!isLoggedIn) {
-                    this.backups = [];
-                    this.isLoading = false;
-                    return;
-                }
-
-                this.userApi = loginManager.getUserApi();
-
-                const backups = await this.userApi.getBackups();
-                this.backups = backups;
-            } catch (error) {
-                gui_log(`${this.$t("userBackupsLoadFailed")}: ${error}`);
-            }
-
-            this.isLoading = false;
-        },
-        async createBackup() {
-            try {
-                if (!this.userApi) {
-                    throw new Error(this.$t("notLoggedIn"));
-                }
-
-                const output = await new Promise((resolve, reject) => {
-                    MSP.send_cli_command("diff all", (data) => {
-                        if (data && Array.isArray(data) && data.length > 0) {
-                            // Create a copy of the data since the original array gets cleared after callback
-                            resolve([...data]);
-                        } else {
-                            reject(new Error(this.$t("profileBackupEmptyResult") || "Empty backup result"));
-                        }
-                    });
-                });
-
-                gui_log(this.$t("profileBackupSuccess"));
-                const text = output.join("\n");
-
-                // Upload to API
-                await this.userApi.uploadBackup(text);
-
-                gui_log(this.$t("profileBackupApiSuccess"));
-                await this.loadBackups();
-            } catch (error) {
-                gui_log(`${this.$t("profileBackupApiFail")}: ${error.message || error}`);
-            }
-        },
-        async downloadBackup(backup) {
-            try {
-                if (!this.userApi) {
-                    throw new Error(this.$t("notLoggedIn"));
-                }
-
-                const response = await this.userApi.downloadBackupFile(backup.id);
-                // response is an object { name, file } where file is JSON string
-
-                // Parse the JSON and extract fileContents
-                let fileContent = response.file;
-                if (!fileContent || fileContent.length === 0) {
-                    throw new Error("Backup file is empty");
-                }
-
-                const filename = response.name || backup.name || "backup.txt";
-                // Create a blob from the decoded text for download
-                const blob = new Blob([fileContent], { type: "text/plain" });
-                const url = globalThis.URL.createObjectURL(blob);
-                const link = document.createElement("a");
-                link.href = url;
-                link.setAttribute("download", filename);
-                document.body.appendChild(link);
-                link.click();
-                link.remove();
-                // Clean up the object URL to avoid memory leaks
-                globalThis.URL.revokeObjectURL(url);
-            } catch (error) {
-                gui_log(`${this.$t("userBackupDownloadFailed")}: ${error}`);
-            }
-        },
-        startEdit(backup) {
-            this.editForm.id = backup.id;
-            this.editForm.name = backup.name;
-            this.editForm.description = backup.description || "";
-            this.editForm.created = backup.created;
-            this.isEditing = true;
-        },
-        cancelEdit() {
-            this.isEditing = false;
-        },
-        async saveBackupChanges() {
-            if (!this.userApi) {
-                return;
-            }
-
-            try {
-                await this.userApi.updateBackup({
-                    Id: this.editForm.id,
-                    name: this.editForm.name,
-                    description: this.editForm.description,
-                });
-                gui_log(this.$t("userBackupUpdateSuccess"));
-                await this.loadBackups();
-                this.isEditing = false;
-            } catch (error) {
-                gui_log(`${this.$t("userBackupUpdateFailed")}: ${error}`);
-            }
-        },
-        async deleteBackup(backupId) {
-            const confirmed = globalThis.confirm(this.$t("confirmDelete", { item: this.$t("itemBackup") }));
-            if (!confirmed) {
-                return;
-            }
-
-            if (!this.userApi) {
-                return;
-            }
-
-            try {
-                await this.userApi.deleteBackup(backupId);
-                gui_log(this.$t("userBackupDeleteSuccess"));
-                await this.loadBackups();
-            } catch (error) {
-                gui_log(`${this.$t("userBackupDeleteFailed")}: ${error}`);
-            }
-        },
-        formatDate(dateString) {
-            if (!dateString) {
-                return "";
-            }
-            return new Date(dateString).toLocaleString();
-        },
-        getSerialForCraft(craft) {
-            const backup = this.backups.find((b) => b.key === craft);
-            return backup ? backup.serial || this.$t("backupMcuUnknown") : "";
-        },
-    },
-    async mounted() {
-        // Load backups on mount
-        await this.loadBackups();
-
-        // Register callbacks for login/logout and store unsubscribe functions
-        this.unsubscribeLogin = loginManager.onLogin(async () => {
-            await this.loadBackups();
         });
 
-        this.unsubscribeLogout = loginManager.onLogout(async () => {
-            await this.loadBackups();
+        gui_log(t("profileBackupSuccess"));
+        const text = output.join("\n");
+
+        await userApi.uploadBackup(text);
+
+        gui_log(t("profileBackupApiSuccess"));
+        await loadBackups();
+    } catch (error) {
+        gui_log(`${t("profileBackupApiFail")}: ${error.message || error}`);
+    }
+}
+
+async function downloadBackup(backup) {
+    try {
+        if (!userApi) {
+            throw new Error(t("notLoggedIn"));
+        }
+
+        const response = await userApi.downloadBackupFile(backup.id);
+
+        let fileContent = response.file;
+        if (!fileContent || fileContent.length === 0) {
+            throw new Error("Backup file is empty");
+        }
+
+        const filename = response.name || backup.name || "backup.txt";
+        const blob = new Blob([fileContent], { type: "text/plain" });
+        const url = globalThis.URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", filename);
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        globalThis.URL.revokeObjectURL(url);
+    } catch (error) {
+        gui_log(`${t("userBackupDownloadFailed")}: ${error}`);
+    }
+}
+
+function startEdit(backup) {
+    editForm.value.id = backup.id;
+    editForm.value.name = backup.name;
+    editForm.value.description = backup.description || "";
+    editForm.value.created = backup.created;
+    isEditing.value = true;
+}
+
+function cancelEdit() {
+    isEditing.value = false;
+}
+
+async function saveBackupChanges() {
+    if (!userApi) {
+        return;
+    }
+
+    try {
+        await userApi.updateBackup({
+            Id: editForm.value.id,
+            name: editForm.value.name,
+            description: editForm.value.description,
         });
-    },
-    unmounted() {
-        // Clean up callbacks on unmount
-        if (this.unsubscribeLogin) {
-            this.unsubscribeLogin();
-        }
-        if (this.unsubscribeLogout) {
-            this.unsubscribeLogout();
-        }
-    },
+        gui_log(t("userBackupUpdateSuccess"));
+        await loadBackups();
+        isEditing.value = false;
+    } catch (error) {
+        gui_log(`${t("userBackupUpdateFailed")}: ${error}`);
+    }
+}
+
+async function deleteBackup(backupId) {
+    const confirmed = globalThis.confirm(t("confirmDelete", { item: t("itemBackup") }));
+    if (!confirmed || !userApi) {
+        return;
+    }
+
+    try {
+        await userApi.deleteBackup(backupId);
+        gui_log(t("userBackupDeleteSuccess"));
+        await loadBackups();
+    } catch (error) {
+        gui_log(`${t("userBackupDeleteFailed")}: ${error}`);
+    }
+}
+
+function formatDate(dateString) {
+    if (!dateString) {
+        return "";
+    }
+    return new Date(dateString).toLocaleString();
+}
+
+onMounted(async () => {
+    await loadBackups();
+
+    unsubscribeLogin = loginManager.onLogin(async () => {
+        await loadBackups();
+    });
+
+    unsubscribeLogout = loginManager.onLogout(async () => {
+        await loadBackups();
+    });
+});
+
+onUnmounted(() => {
+    if (unsubscribeLogin) {
+        unsubscribeLogin();
+    }
+    if (unsubscribeLogout) {
+        unsubscribeLogout();
+    }
 });
 </script>
 

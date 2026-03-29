@@ -6,36 +6,31 @@
     </div>
 </template>
 
-<script>
-import { defineComponent } from "vue";
+<script setup>
+import { computed } from "vue";
 import { bit_check } from "../../js/bit";
 
-export default defineComponent({
-    props: {
-        lastReceivedTimestamp: { type: Number, default: 0 },
-        mode: { type: Number, default: 0 },
-        auxConfig: { type: Array, default: null },
-    },
-    computed: {
-        setActiveArmed() {
-            return (
-                this.auxConfig?.length &&
-                this.auxConfig?.includes("ARM") &&
-                bit_check(this.mode, this.auxConfig?.indexOf("ARM"))
-            );
-        },
-        setFailsafeActive() {
-            return (
-                this.auxConfig?.length &&
-                this.auxConfig?.includes("FAILSAFE") &&
-                bit_check(this.mode, this.auxConfig?.indexOf("FAILSAFE"))
-            );
-        },
-        setActiveLink() {
-            return performance.now() - this.lastReceivedTimestamp < 300;
-        },
-    },
+const props = defineProps({
+    lastReceivedTimestamp: { type: Number, default: 0 },
+    mode: { type: Number, default: 0 },
+    auxConfig: { type: Array, default: null },
 });
+
+const setActiveArmed = computed(
+    () =>
+        props.auxConfig?.length &&
+        props.auxConfig?.includes("ARM") &&
+        bit_check(props.mode, props.auxConfig?.indexOf("ARM")),
+);
+
+const setFailsafeActive = computed(
+    () =>
+        props.auxConfig?.length &&
+        props.auxConfig?.includes("FAILSAFE") &&
+        bit_check(props.mode, props.auxConfig?.indexOf("FAILSAFE")),
+);
+
+const setActiveLink = computed(() => performance.now() - props.lastReceivedTimestamp < 300);
 </script>
 
 <style scoped>
