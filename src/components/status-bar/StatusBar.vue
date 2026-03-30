@@ -129,6 +129,12 @@ export default defineComponent({
     .message {
         margin-right: 0.25rem;
     }
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    &::-webkit-scrollbar {
+        display: none;
+    }
 }
 
 #status-bar > * ~ * {
