@@ -63,7 +63,7 @@ export default {
     display: none;
 }
 
-@media all and (max-width: 575px) {
+@media all and (max-width: 575px), all and (max-width: 950px) and (max-height: 500px) and (orientation: landscape) {
     .logo {
         height: 24px;
         width: 150px;
@@ -80,25 +80,70 @@ export default {
     }
     .tab_container .logo {
         display: flex;
-        background-image: url(../../images/dark-wide-2.svg);
-        background-repeat: no-repeat;
-        background-position: center 20px;
-        background-position-x: 12px;
-        background-size: 80%;
-        height: 120px;
+        align-items: flex-start;
+        background-image: none;
+        height: auto;
         width: 100%;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.3);
-        flex: 0 0 120px;
-        margin-bottom: 20px;
+        flex: 0 0 auto;
+        margin-bottom: 1rem;
+        padding: 0.75rem 0.5rem 1rem;
+        box-sizing: border-box;
     }
     .dark-theme .tab_container .logo {
-        background-image: url(../../images/light-wide-2.svg);
+        background-image: none;
     }
     .tab_container .logo .logo_text {
         display: flex !important;
-        left: 82px;
-        top: 62px;
+        position: relative;
+        left: auto;
+        top: auto;
+        width: 100%;
+        font-size: 10px;
+        line-height: 1.35;
     }
+}
+
+body.compact-header-layout .logo {
+    height: 24px;
+    width: 150px;
+    background-image: url(../../images/dark-wide-2-compact.svg);
+    background-position: left center;
+    order: 2;
+    margin-top: 0;
+}
+
+body.compact-header-layout.dark-theme .logo {
+    background-image: url(../../images/light-wide-2-compact.svg);
+}
+
+body.compact-header-layout .logo_text {
+    display: none !important;
+}
+
+body.compact-header-layout .tab_container .logo {
+    display: flex;
+    align-items: flex-start;
+    background-image: none;
+    height: auto;
+    width: 100%;
+    flex: 0 0 auto;
+    margin-bottom: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body.compact-header-layout.dark-theme .tab_container .logo {
+    background-image: none;
+}
+
+body.compact-header-layout .tab_container .logo .logo_text {
+    display: flex !important;
+    position: relative;
+    left: auto;
+    top: auto;
+    width: 100%;
+    font-size: 10px;
+    line-height: 1.35;
 }
 
 @media all and (min-width: 1125px) {
