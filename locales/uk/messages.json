@@ -213,14 +213,14 @@
         "message": "Щонайменше один гіроскоп повинен бути увімкнений"
     },
     "sensorStatusGyroShort": {
-        "message": "Гіроскоп",
+        "message": "Гіро",
         "description": "Text of the image in the top sensors icons. Please keep it short."
     },
     "sensorStatusAccel": {
         "message": "Акселерометр"
     },
     "sensorStatusAccelShort": {
-        "message": "акселерометр",
+        "message": "Аксель",
         "description": "Text of the image in the top sensors icons. Please keep it short."
     },
     "sensorStatusMag": {
@@ -234,7 +234,7 @@
         "message": "Барометр"
     },
     "sensorStatusBaroShort": {
-        "message": "Барометер",
+        "message": "Баро",
         "description": "Text of the image in the top sensors icons. Please keep it short."
     },
     "sensorStatusGPS": {
