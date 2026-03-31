@@ -691,6 +691,9 @@
     "defaultSoftwareHead": {
         "message": "Программное обеспечение"
     },
+    "defaultSoftwareText": {
+        "message": "Наш <a href=\"https:\/\/blackbox.betaflight.com\" target=\"_blank\" rel=\"noopener noreferrer\">Просмотрщик логов чёрного ящика<\/a> доступен в виде онлайн-приложения.<br \/><br \/>Коллекция <a href=\"https:\/\/github.com\/betaflight\/betaflight-tx-lua-scripts\/releases\" target=\"_blank\" rel=\"noopener noreferrer\">TX Lua скриптов<\/a> доступна на GitHub.<br \/><br \/>Наш<a href=\"https:\/\/github.com\/betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">исходный код<\/a> для прошивки этого приложения, и просмотрщика логов чёрного ящика может быть загружен с GitHub."
+    },
     "defaultContributingHead": {
         "message": "Содействие"
     },
@@ -2022,9 +2025,25 @@
     "receiverRcSmoothingManual": {
         "message": "Ручной"
     },
+    "receiverRcSmoothingAutoFactor": {
+        "message": "Автоматический коэффициент заданного значения",
+        "description": "Setpoint Auto Factor parameter for RC smoothing"
+    },
+    "receiverRcSmoothingAutoFactorHelp": {
+        "message": "Регулирует параметр «Автоматический коэффициент заданного значения». Значение по умолчанию — 10. При увеличении значения RC-сигнал сильнее сглаживается, но возрастает задержка. Полезно при нестабильной связи с передатчиком или для плавных полётов.<br>Осторожно: при значениях около 50 задержка управления становится заметной.<br>Команда CLI rc_smoothing_info (при включённых передатчике и приёмнике) показывает автоматически рассчитанные частоты среза сглаживания RC-сигнала.",
+        "description": "Setpoint Auto Factor parameter help message"
+    },
+    "receiverRcSmoothingAutoFactorHelp2": {
+        "message": "Регулирует сглаживание RC-сигнала заданного значения (по умолчанию 30). Более высокие значения усиливают сглаживание — например, 60 для HD-фристайла или 90–120 для плавных (cinematic) полётов.<br>Важно: при значениях выше 50 появляется заметная задержка стиков.<br>Меньшие значения (20–25) немного увеличивают нагрев моторов, но уменьшают задержку RC-сигнала — полезно для гонок.",
+        "description": "Setpoint Auto Factor parameter help message"
+    },
     "receiverRcSmoothingAutoFactorThrottle": {
-        "message": "Автоматический коэффициент сглаживания тяги",
+        "message": "Автоматический коэффициент сглаживания газа",
         "description": "Throttle Auto Factor parameter for RC smoothing"
+    },
+    "receiverRcSmoothingAutoFactorThrottleHelp": {
+        "message": "Настраивает расчёт параметра «Автоматический коэффициент газа». Значение по умолчанию — 10 (баланс между сглаживанием и задержкой). Увеличение значения делает сигнал газа более сглаженным, но также увеличивает задержку. Это может быть полезно при нестабильном соединении с передатчиком или для плавных (кинематографических) полётов.<br>Будьте осторожны при значениях, приближающихся к 50 — задержка управления станет заметной.<br>Используйте команду CLI rc_smoothing_info при включённых передатчике и приёмнике, чтобы увидеть автоматически рассчитанные частоты среза сглаживания RC-сигнала.",
+        "description": "Throttle Auto Factor parameter help message"
     },
     "receiverRcFeedforwardTypeSelect": {
         "message": "Тип отсечки Feedforward"
@@ -2059,6 +2078,9 @@
     "receiverRcSmoothingThrottleManual": {
         "message": "Выбирает, будет ли автоматически сглаживаться частота входящего сигнала (рекомендуется) или выбрана вручную пользователем. Установка «Вручную» не рекомендуется для протоколов приемников, таких как Crossfire, которые могут меняться в полете."
     },
+    "rcSmoothingThrottleCutoffHelp": {
+        "message": "Частота среза в Гц, используемая фильтром сглаживания сигнала газа. Более низкие значения обеспечивают более сильное сглаживание и лучше подходят для медленных протоколов приёмника. Большинству пользователей следует оставить значение 0, что соответствует режиму «Авто»."
+    },
     "receiverRcSmoothingSetpointHz": {
         "message": "Частота среза заданного значения"
     },
@@ -2082,6 +2104,9 @@
     },
     "pidTuningDtermSetpointTransitionHelp": {
         "message": "При помощи этого параметра можно уменьшить вес значения D у центра стиков, что приводит к более плавному окончанию маневра при выполнении таких фигур, как flip и roll.<br> Значение представляет собой точку отклонения стиков, где: 0 - стик находится в центре, 1 - полное отклонение стика. Когда стик находится выше этой точки, вес заданного значения D остается постоянным, и равен установленному значению. Когда стик находится ниже этой точки, вес значения D пропорционально уменьшается, достигая нуля в тот момент, когда стик находится ровно по центру.<br>Значение 1 дает максимальный эффект сглаживания, тогда как значение 0 удерживает вес заданного значения D фиксированным, то есть равным установленному значению, по всем диапазонам отклонений стика."
+    },
+    "pidTuningDtermSetpointHelp": {
+        "message": "Задаёт вклад ускорения стиков в дифференциальную (D) составляющую регулятора.<br>При значении 0 используется метод Measurement — D-компонента реагирует только на данные гироскопа. При значении 1 используется метод Error — с равным вкладом гироскопа и входа стиков.<br>Снижение значения делает отклик более плавным, увеличение — усиливает реакцию на ускорение стиков.<br>При высоких значениях рекомендуется включать интерполяцию RC-сигнала для предотвращения управляющих рывков и связанного с ними шума."
     },
     "pidTuningDtermSetpointTransitionWarning": {
         "message": "<span class=\"message-negative\"><strong>$t(warningTitle.message):<\/strong> использование D Setpoint больше 0 и меньше, чем 0.1 не рекомендуется. Это может привести к нестабильности и снижению чувствительности стиков когда стик пересекает центральную точку.<\/span>"
@@ -2176,7 +2201,7 @@
         "description": "Feedforward Term helpicon message on PID table titlebar"
     },
     "pidTuningMaxRateWarning": {
-        "message": "<span class=\"message-negative\"><b>Предупреждение:<\/b><\/span> очень высокие коэфициенты могут привести к рассинхронизации двигателей при быстрых замедлениях."
+        "message": "<span class=\"message-negative\"><b>Предупреждение:<\/b><\/span> очень высокие коэффициенты могут привести к рассинхронизации двигателей при быстрых замедлениях."
     },
     "pidTuningRcRate": {
         "message": "RC Rate"
@@ -2194,7 +2219,7 @@
         "message": "Просмотр Rate-ов в действии"
     },
     "pidTuningRatesTuningHelp": {
-        "message": "<b>Rates and Expo<\/b>: Эти параметры определяют ваши ощущения управления стиками. Используйте графическое отображение и интерактивную 3D-модель, чтобы найти предпочитаемый вами коэффициент (rate)."
+        "message": "<b>Rates и Expo<\/b>: Эти параметры определяют отклик стиков. Используйте график и интерактивную 3D-модель, чтобы подобрать подходящие значения Rates."
     },
     "pidTuningRcExpo": {
         "message": "RC Expo"
@@ -2209,7 +2234,7 @@
         "message": "Коэффициент TPA (%)"
     },
     "pidTuningTPABreakPoint": {
-        "message": "TPA-порог (μs)"
+        "message": "Порог TPA (μs)"
     },
     "pidTuningTPAPD": {
         "message": "PD"
@@ -2221,22 +2246,22 @@
         "message": "Предпросмотр кривой газа"
     },
     "pidTuningThrottleLimitType": {
-        "message": "Предел газа"
+        "message": "Ограничение газа"
     },
     "pidTuningThrottleLimitPercent": {
-        "message": "Предел газа %"
+        "message": "Ограничение газа (%)"
     },
     "pidTuningThrottleLimitTypeOff": {
         "message": "Выкл"
     },
     "pidTuningThrottleLimitTypeScale": {
-        "message": "Масштаб"
+        "message": "Масштабирование"
     },
     "pidTuningThrottleLimitTypeClip": {
-        "message": "ОБРЕЗ"
+        "message": "Ограничение"
     },
     "pidTuningThrottleLimitTypeTip": {
-        "message": "Выбор типа ограничения газа. <b> ВЫКЛ. <\/b> отключает опцию, <b> МАСШТАБ <\/b> преобразует диапазон дросселя от 0 до выбранного процента, используя полный ход стика, <b> ОБРЕЗ <\/b> будет устанавливать максимальный газ и удерживать его, движение стика выше этого значения не будет иметь никакого дополнительного эффекта"
+        "message": "Выбор типа ограничения газа. <b> Выкл. <\/b> отключает опцию, <b> Масштабирование <\/b> преобразует диапазон дросселя от 0 до выбранного процента, используя полный ход стика, <b> Ограничение <\/b> будет устанавливать максимальный газ и удерживать его, движение стика выше этого значения не будет иметь никакого дополнительного эффекта"
     },
     "pidTuningThrottleLimitPercentTip": {
         "message": "Установите желаемый процент ограничения газа. Установка на 100% отключает эту функцию."
@@ -2562,6 +2587,10 @@
         "message": "Включает режим стабилизации камеры",
         "description": "Help text to CAMSTAB mode"
     },
+    "auxiliaryHelpMode_CHIRP": {
+        "message": "Включает режим Chirp",
+        "description": "Help text for CHIRP mode"
+    },
     "auxiliaryHelpMode_FAILSAFE": {
         "message": "Ввести вручную Этап 2 FailSafe",
         "description": "Help text to FAILSAFE mode"
@@ -2575,7 +2604,7 @@
         "description": "Help text to FPV ANGLE MIX mode"
     },
     "auxiliaryHelpMode_GPSBEEPSATELLITECOUNT": {
-        "message": "Используйте, чтобы указать количество найденых спутников GPS,  путем подачи звукового сигнала равному количеству найденых спутников",
+        "message": "Позволяет определить количество найденных GPS-спутников по числу звуковых сигналов.",
         "description": "Help text to GPS BEEP SATELLITE COUNT mode"
     },
     "auxiliaryHelpMode_GPSRESCUE": {
@@ -2678,6 +2707,10 @@
         "message": "Отключить управление настройками VTX через OSD",
         "description": "Help text to VTX CONTROL DISABLE mode"
     },
+    "auxiliaryHelpMode_VTXPOWER": {
+        "message": "Проход по уровням мощности VTX (если поддерживается VTX)",
+        "description": "Help text to VTX POWER mode"
+    },
     "auxiliaryHelpMode_VTXPITMODE": {
         "message": "Переключить VTX в режим PitMode (низкая выходная мощность, если поддерживается)",
         "description": "Help text to VTX PIT MODE mode"
@@ -2706,6 +2739,20 @@
     },
     "adjustmentsColumnViaChannel": {
         "message": "через канал"
+    },
+    "adjustmentsColumnAdjustmentCenter": {
+        "message": "с центром (знач.)"
+    },
+    "adjustmentsColumnAdjustmentScale": {
+        "message": "диапазон\/масштаб (знач.|%)"
+    },
+    "adjustmentsCenterHelp": {
+        "message": "Задаёт среднюю точку или опорное значение, используемое функцией настройки.<br \/><br \/><strong>Настройки ползунком:<\/strong><br \/>Для настроек ползунком установите «Центр настройки» в 0. Для увеличения\/уменьшения настройки будет использоваться текущее положение ползунка.<br \/><br \/><strong>Настройки выбором:<\/strong><br \/>Установите «Центр настройки» в 0 либо в конкретное значение в микросекундах (uS), если хотите сместить опорную точку переключателя относительно 1500uS при запуске RC-настройки.<br \/><br \/><strong>Пошаговые настройки:<\/strong><br \/>Установите «Центр настройки» в 0, чтобы использовалось текущее значение настраиваемого параметра.<br \/><br \/><strong>Абсолютные настройки:<\/strong><br \/>Для использования метода абсолютной настройки необходимо задать и «Центр настройки», и «Масштаб», чтобы указать требуемое значение и диапазон. Диапазон вычисляется по формуле: Центр ± Масштаб. Например, если установить «Центр настройки» на 50, а «Масштаб настройки» на 25, получится диапазон от 25 до 75, при этом центральное положение (переключателя или POT) будет соответствовать значению 50.<br \/><br \/>Подробнее см. <a href=\"https:\/\/www.betaflight.com\/docs\/development\/Inflight-Adjustments\" target=\"_blank\" rel=\"noopener noreferrer\">на этой странице<\/a>.",
+        "description": "Tooltip help text for the Adjustment Center column"
+    },
+    "adjustmentsScaleHelp": {
+        "message": "Контролирует масштабирование или диапазон регулировки; чем больше значение увеличивает диапазон регулировки или чувствительности.<br \/><br \/><strong>Регулировка слайдер:<\/strong><br \/>Для регулировки слайдера регулировка масштабирования\/чувствительности регулировки. Значение 50 равно 50% диапазона ползунков. Установка значения в 0 использует шкалу по умолчанию для ползунков.<br \/><br \/><strong>Корректировка:<\/strong><br \/>для выборочных корректировок, задать значение Шкала Регулирования в 0 для поведения по умолчанию, или указать значение микросекунды (uS) для ограничения диапазона. Например: Установите центр регулировки на 1000 (uS) и шкалу регулировки на 500 (uS) для использования 3-позиционного переключателя как 2-позиционный переключатель.<br \/><br \/><strong>Степень и Абсолютная корректировка:<\/strong><br \/>для Степенных и Абсолютных корректировок, Регулировка масштаба определяет диапазон выше и ниже центра регулировки. Например, значение 25 создает диапазон регулировки ±25 из значения центра регулировки, или из текущего значения, если Центр корректировки установлен в 0.<br \/><strong>Замечание:<\/strong> Для использования метода абсолютной корректировки с потенциалом, необходимо указать значение шкалы корректировки.<br \/><br \/>Посетите <a href=\"https:\/\/www.betaflight.com\/docs\/development\/Inflight-Adjustments\" target=\"_blank\" rel=\"noopener noreferrer\">эту страницу<\/a> для получения дополнительной информации.",
+        "description": "Tooltip help text for the Adjustment Scale column"
     },
     "adjustmentsSlot0": {
         "message": "Слот 1"
@@ -2821,6 +2868,9 @@
     "adjustmentsFunction31": {
         "message": "Настройка яркости LED"
     },
+    "adjustmentsFunction32": {
+        "message": "Мастер-множитель"
+    },
     "adjustmentsSave": {
         "message": "Сохранить"
     },
@@ -2932,6 +2982,10 @@
     },
     "gpsHead": {
         "message": "Основные"
+    },
+    "gpsHeadHelp": {
+        "message": "Отображает различную GPS-информацию. Направления показываются только при использовании магнитометра.",
+        "description": "Help text for gpsHead"
     },
     "gpsMapHead": {
         "message": "Местоположение"
@@ -3751,6 +3805,9 @@
     "firmwareFlasherRecoveryHead": {
         "message": "<strong>Потеря связи \/ Восстановление связи<\/strong>"
     },
+    "firmwareFlasherRecoveryText": {
+        "message": "Если вы потеряли связь с вашей платой, выполните следующие шаги для её восстановления:<ul><li>Отключите питание.<\/li><li>Включите «Без перезагрузки» и «Полное стирание чипа».<\/li><li>Замкните BOOT-пины или удерживайте кнопку BOOT.<\/li><li>Включите питание (светодиод активности НЕ будет мигать, если всё сделано правильно).<\/li><li>Установите все драйверы STM32 и Zadig при необходимости (см. раздел <a href=\"https:\/\/betaflight.com\/docs\/wiki\/guides\/current\/Installing-Betaflight\" target=\"_blank\" rel=\"noopener noreferrer\">Прошивка USB<\/a> в руководстве Betaflight).<\/li><li>Закройте приложение, затем перезапустите его.<\/li><li>Отпустите кнопку BOOT, если она есть на вашем FC.<\/li><li>Прошейте правильную прошивку (используя ручную скорость передачи данных, если указано в руководстве к вашему FC).<\/li><li>Выключите питание.<\/li><li>Снимите перемычку BOOT.<\/li><li>Включите питание (светодиод активности должен мигать).<\/li><li>Подключитесь в обычном режиме.<\/li><\/ul>"
+    },
     "firmwareFlasherButtonLeave": {
         "message": "Покинуть программатор"
     },
@@ -3769,11 +3826,20 @@
     "firmwareFlasherInvalidFileFormat": {
         "message": "Недопустимый формат файла"
     },
+    "firmwareFlasherUf2Corrupted": {
+        "message": "UF2 файл повреждён"
+    },
     "firmwareFlasherHexCorrupted": {
         "message": "HEX-файл поврежден"
     },
+    "firmwareFlasherUF2SaveSuccess": {
+        "message": "Сохранено (прошито) UF2 успешно"
+    },
     "firmwareFlasherUF2SaveFailed": {
         "message": "Не удалось сохранить (flash) UF2"
+    },
+    "firmwareFlasherClickToConnectDfu": {
+        "message": "Нажмите, чтобы подключиться к DFU устройству"
     },
     "firmwareFlasherConfigCorrupted": {
         "message": "Конфиг файл повреждён. Допустимы только ASCII символы (коды 0-255)",
@@ -3826,6 +3892,10 @@
         "message": "Приложение подключилось к полетному контроллеру: <strong>{{boardName}}<\/strong> но официальной прошивки Betaflight не нашел.",
         "description": "Board verification has succeeded, but the target is not available as official Betaflight target."
     },
+    "firmwareFlasherBoardVerificationFail": {
+        "message": "Приложению <span class=\"message-negative\">не удалось<\/span> проверить плату. Если это повторяется, попробуйте переключиться на другую вкладку и повторить попытку, переподключить USB или сначала подключиться, если вы, возможно, забыли применить пользовательские настройки по умолчанию.",
+        "description": "Sometimes MSP values cannot be read from firmware correctly"
+    },
     "firmwareFlasherButtonAbort": {
         "message": "Отмена"
     },
@@ -3843,6 +3913,9 @@
     },
     "unstableFirmwareAcknowledgementDialog": {
         "message": "Вы собираетесь загрузить <strong> сборку прошивки для разработчиков<\/strong>. Такие сборки находятся в процессе разработки, и могут иметь любые из следующих особенностей: <strong><ul><li>прошивка не работает вообще;<\/li><li>прошивка не пригодна для полётов;<\/li><li>Есть проблемы с безопасностью прошивки, например flyaways<\/li><li> прошивка может привести к \"зависанию\" контроллера, либо вовсе его испортить<\/li><\/ul><\/strong>Если вы всё таки решили использовать данную прошивку, вы согласны с тем, что <strong>вы берете на себя полную ответственность за любй из вышеперечисленных рисков<\/strong>. Кроме того, Вы понимаете, что перед любыми попытками взлететь с этой прошивкой необходимо выполнить <strong>тщательные стендовые проверки с установленными пропеллерами<\/strong>."
+    },
+    "unstableFirmwareAcknowledgement": {
+        "message": "Я прочитал вышеуказанное и <strong>я беру на себя полную ответственность<\/strong> за установку нестабильной версии прошивки"
     },
     "unstableFirmwareAcknowledgementFlash": {
         "message": "Прошить"
@@ -4360,6 +4433,10 @@
         "message": "Использовать слайдер для настройки D-Term",
         "description": "Disable or enable D Term Filter Tuning Slider"
     },
+    "pidTuningPidSlidersHelp": {
+        "message": "Ползунки для настройки характеристик полёта (коэффициенты PID)<br \/><br \/>Демпфирование (D gain): Подавляет быстрые движения, снижает осцилляции P.<br \/><br \/>Трекинг (P и I gain): Повышает отзывчивость летательного аппарата; при слишком высоких значениях может вызывать треллинг или осцилляции.<br \/><br \/>Отзывчивость стиков (Feedforward): Увеличивает отклик на быстрые движения стиков.<br \/><br \/>Дрейф - Колебания (I gain, эксперт): Тонкая настройка I-компоненты.<br \/><br \/>Динамическое демпфирование (D Max, эксперт): Задаёт максимальное усиление D-компоненты при быстрых движениях.<br \/><br \/>Демпфирование по тангажу (Pitch:Roll D ratio, эксперт): Увеличивает демпфирование по тангажу относительно крена.<br \/><br \/>Трекинг по тангажу (Pitch:Roll P, I и F ratio, эксперт): Увеличивает стабилизирующее воздействие по тангажу относительно крена.<br \/><br \/>Мастер-множитель (все коэффициенты, эксперт): Увеличивает или уменьшает все коэффициенты PID, сохраняя их пропорции.",
+        "description": "Overall helpicon message for PID tuning sliders"
+    },
     "pidTuningSliderWarning": {
         "message": "<span class=\"message-negative\">ВНИМАНИЕ<\/span>: Текущие позиции слайдеров могут быть причиной \nнеконтролируемого поведения (flyaway), повреждения моторов и другого небезопасного поведения борта. Пожалуйста, продолжайте с осторожностью.",
         "description": "Warning shown when tuning slider are above safe limits"
@@ -4432,12 +4509,16 @@
         "message": "Трекинг:<br \/><i><small>P & I Gains<\/small><\/i>",
         "description": "P and I Gain (Stability) tuning slider label"
     },
+    "pidTuningPIGainSliderHelp": {
+        "message": "Увеличение параметра Tracking повышает резкость отклика летательного аппарата на команды и внешние воздействия, помогая удерживать курс носа в любых условиях.<br \/><br \/>Низкие значения Tracking приводят к колебаниям и уходу с курса при движениях стиков и в условиях prop wash. Высокие значения Tracking могут вызывать осцилляции и быстрый обратный отскок (сложно заметить визуально, но слышно). Чрезмерное значение Tracking может привести к выраженным осцилляциям и перегреву моторов.",
+        "description": "P and I gain tuning slider helpicon message"
+    },
     "pidTuningResponseSlider": {
         "message": "Отзывчивость стиков: <br \/><i><small>FF Gains<\/small><\/i>",
         "description": "Response tuning slider label"
     },
     "pidTuningResponseSliderHelp": {
-        "message": "Уменьшение Отзывчевости стиков увеличит задержку реакции аппарата на команды и может привести к медленному возврату в исходное положение после флипа или ролла.<br><br>\n\nУвеличение Отзывчевости стиков обеспечит более резкую реакцию на быстрые движения стиков. Слишком высокое значение может вызвать перелёт в конце флипа или бочки.<br \/><br \/>\n\n<strong>Примечание:<\/strong><br \/>\n«Ослабление I» может уменьшить отскок для аппаратов с низкой управляемостью или при использовании низких значений Stick Response.",
+        "message": "Пониженная отзывчивость стиков увеличивает задержку реакции аппарата на команды и может вызывать медленный отскок в конце флипа или ролла.<br><br>Повышенная отзывчивость стиков делает реакцию аппарата на резкие движения стиков более быстрой. Слишком высокая отзывчивость стиков может вызывать перелёт в конце флипа или ролла.<br \/><br \/><strong>Примечание:<\/strong><br \/>«Ослабление I» может уменьшить отскок у аппаратов с низкой управляющей эффективностью или при использовании низких значений отзывчивости стиков.",
         "description": "Stick response gain tuning slider helpicon message"
     },
     "pidTuningIGainSlider": {
@@ -4538,6 +4619,10 @@
     },
     "pidTuningCutoffFrequency": {
         "message": "Частота среза [Гц]"
+    },
+    "pidTuningNotchFilterHelp": {
+        "message": "Полосовой режекторный фильтр (notch) — это симметричный узкий фильтр подавления с параметрами центральной частоты и частоты среза.<br \/><br \/>Значение Center — это центральная частота фильтра. Значение Cutoff — это нижняя частота среза на уровне -3 dB.<br \/><br \/>Например, при Cutoff = 160 и Center = 260 получается широкий notch-фильтр с диапазоном -3 dB от 160 до 360 Гц и максимальным подавлением около 260 Гц.",
+        "description": "Notch filter helpicon message"
     },
     "pidTuningDynamicNotchFilterGroup": {
         "message": "Динамический Режекторный Фильтр"
@@ -4689,7 +4774,7 @@
         "message": "Ослабление I"
     },
     "pidTuningItermRelaxHelp": {
-        "message": "Подавляет накопление I при быстрых движениях, уменьшая отскок в конце роллов, флипов и других резких манёвров.<br><br>\n\n<b>Режим Setpoint<\/b> реагирует на сглаженные движения стиков и лучше всего подходит для отзывчивых аппаратов.<br><br>\n\n<b>Режим Gyro<\/b> может быть полезен для аппаратов с выраженным запаздыванием реакции.<br><br>\n\nОбычно <b>iTerm Relax<\/b> не следует применять для оси рысканья (yaw)."
+        "message": "Подавляет накопление I при быстрых движениях, уменьшая отскок в конце роллов, флипов и других резких манёвров.<br><br>\n\n<b>Режим Setpoint<\/b> реагирует на сглаженные движения стиков и лучше всего подходит для отзывчивых аппаратов.<br><br>\n\n<b>Режим Gyro<\/b> может быть полезен для аппаратов с выраженным запаздыванием реакции.<br><br>\n\nОбычно <b>Ослабление I<\/b> не следует применять для оси рысканья (yaw)."
     },
     "pidTuningItermRelaxAxes": {
         "message": "Oси",
@@ -5431,6 +5516,9 @@
     },
     "osdSetupUploadingFontEnd": {
         "message": "Загрудить все {{length}} символы в OSD"
+    },
+    "osdSetupUploadingFontFailed": {
+        "message": "Загрузка не удалась"
     },
     "osdSetupSave": {
         "message": "Сохранить"
@@ -6662,6 +6750,9 @@
     "osdSectionHelpAlarms": {
         "message": "Установка пороговых значений для OSD-элементов, имеющих режим тревоги."
     },
+    "osdSectionHelpStats": {
+        "message": "Установить значения показывающиеся на экране постполетной статистики."
+    },
     "osdSectionHelpWarnings": {
         "message": "Включение и отключение предупреждений, которые будут отображаться в элементе \"Warnings\"."
     },
@@ -7022,6 +7113,9 @@
     "configurationSmallAngle": {
         "message": "Максимальный наклон коптера (в градусах) при котором разрешён arming"
     },
+    "configurationSmallAngleHelp": {
+        "message": "Борт не заармится, если он наклонён сильнее, чем указанное значение. Это условие применяется, если включён акселерометр. Значение 180 фактически отключает эту проверку."
+    },
     "configurationBatteryVoltage": {
         "message": "Напряжение батареи"
     },
@@ -7085,6 +7179,9 @@
     },
     "pidTuningDeltaMeasurement": {
         "message": "Measurement"
+    },
+    "pidTuningDeltaTip": {
+        "message": "<b>Derivative from Error<\/b> обеспечивает более прямой отклик стиков и чаще используется в гонках.<br \/><br \/><b>Derivative from Measurement<\/b> обеспечивает более плавный отклик стиков, что лучше подходит для фристайла"
     },
     "pidTuningPidControllerTip": {
         "message": "<b>Legacy vs Betaflight (float):<\/b> PID коэффициенты и PID логика абсолютно те же. Нет необходимости их перенастраивать. Legacy - это старый betaflight, чей PID-контроллер был основан на целочисленных вычислениях. PID-контроллер Betaflight использует вычисления с дробными числами и имеет множество новых возможностей, специально разработанных для мультироторных приложений. <br> <b>Float vs Integer:<\/b> PID коэффициенты и PID логика абсолютно те же. Перенастройка не нужна. Полётные контроллеры F1 не имели встроенного FPU и вычисления с дробными числами увеличивают нагрузку на CPU, а вычисления с целыми числами повышают повышают производительность, но вычисления с дробными числами немного увеличивают точность."
@@ -7188,6 +7285,18 @@
     "darkTheme": {
         "message": "Включить тёмную тему"
     },
+    "colorTheme": {
+        "message": "Цветная тема",
+        "description": "Color theme settings"
+    },
+    "colorThemeYellow": {
+        "message": "Жёлтый (по умолчанию)",
+        "description": "Default yellow color theme"
+    },
+    "colorThemeAmber": {
+        "message": "Янтарный",
+        "description": "Amber color theme"
+    },
     "colorThemeContrast": {
         "message": "Высокий контраст",
         "description": "Contrast color theme"
@@ -7223,7 +7332,7 @@
         "message": "Изменение типа коэффициентов"
     },
     "dialogRatesTypeNote": {
-        "message": "<span class=\"message-negative\"><b>ПРЕДУПРЕЖДЕНИЕ: Вы меняете тип коэффициентов.<\/b><\/span> Если вы измените тип, то кривая ваших коэффициетов будет сброшена к значениям по умолчанию."
+        "message": "<span class=\"message-negative\"><b>ПРЕДУПРЕЖДЕНИЕ: Вы меняете тип коэффициентов.<\/b><\/span> Если вы измените тип, то кривая ваших коэффициентов будет сброшена к значениям по умолчанию."
     },
     "dialogRatesTypeConfirm": {
         "message": "Изменить"
@@ -7254,6 +7363,9 @@
     },
     "dialogFileNameTitle": {
         "message": "Имя файла"
+    },
+    "dialogFileNameDescription": {
+        "message": "Файл будет сохранён в папке 'Android\/data\/betaflight-app\/{{folder}}' в вашем внутреннем хранилище."
     },
     "dialogFileAlreadyExistsTitle": {
         "message": "Этот файл уже существует!"
@@ -7296,6 +7408,9 @@
     },
     "cordovaWebviewUpdateBtn": {
         "message": "Обновить из Google Play Store"
+    },
+    "cordovaWebviewEnable": {
+        "message": "«Перейдите в раздел информации об устройстве в настройках и нажмите на номер сборки 10 раз, чтобы включить “Параметры разработчика”. Затем откройте “Параметры разработчика” и выберите <b>{{app}}<\/b> в качестве поставщика WebView."
     },
     "cordovaWebviewEnableBtn": {
         "message": "Открыть настройки"
@@ -7426,10 +7541,6 @@
     "presetsPleaseWait": {
         "message": "Пожалуйста, подождите.",
         "description": "Second label in the progress dialog when applying presets"
-    },
-    "presetsCliErrorsWarning": {
-        "message": "<span class='message-negative'>ВНИМАНИЕ!<\/span><br\/>Конфигурация применена с ошибками в CLI.",
-        "description": "Text to show when there are CLI errors after applying presets or user configuration"
     },
     "presetsSaveAnyway": {
         "message": "Сохранить всё равно",
@@ -7609,6 +7720,12 @@
     "firmwareFlasherOptionLabelVendorCommunity": {
         "message": "⚠️ Поставщик \/ Сообщество"
     },
+    "firmwareFlasherOptionLabelLegacy": {
+        "message": "Устаревшие (Legacy)"
+    },
+    "firmwareFlasherOptionLabelNotQualified": {
+        "message": "⚠️ Устройство разрабатываемое Сообществом \/ Производителем — не имеет официальной поддержки⚠️"
+    },
     "coreBuild": {
         "message": "Только ядро"
     },
@@ -7672,13 +7789,28 @@
         "message": "Введите адрес электронной почты"
     },
     "userEmailRequired": {
-        "message": "Адрес электронной почти необходим"
+        "message": "Адрес электронной почты необходим"
+    },
+    "profileLoginMessage": {
+        "message": "Войдите для просмотра профиля."
     },
     "tabBackups": {
         "message": "Резервные копии"
     },
+    "userPasskeyDeleteSuccess": {
+        "message": "Ключ доступа успешно удален"
+    },
+    "userPasskeyDeleteFailed": {
+        "message": "Не удалось удалить ключ доступа"
+    },
+    "userTokenDeleteSuccess": {
+        "message": "Токен удалён успешно"
+    },
     "userTokenDeleteFailed": {
         "message": "Ошибка удаления токена"
+    },
+    "userProfileLoadFailed": {
+        "message": "Не удалось загрузить профиль пользователя"
     },
     "userTokenLoadFailed": {
         "message": "Неудачная загрузка токенов"
@@ -7688,6 +7820,9 @@
     },
     "userProfileUpdateSuccess": {
         "message": "Профиль успешно обновлён"
+    },
+    "userProfileUpdateFailed": {
+        "message": "Не удалось обновить профиль"
     },
     "userBackupsLoadFailed": {
         "message": "Не удалось загрузить резервную копию"
@@ -7865,5 +8000,550 @@
     },
     "sectionUserPasskeys": {
         "message": "Ключи доступа пользователя"
+    },
+    "osdPresetPositionAlignTitle": {
+        "message": "Выравнивание положения",
+        "description": "Label for the preset position alignment menu in the OSD elements list"
+    },
+    "osdPresetPositionChooseTitle": {
+        "message": "Выбор позиции",
+        "description": "Title for the preset position grid popup in the OSD elements list"
+    },
+    "tabPreflight": {
+        "message": "Предполетная проверка"
+    },
+    "preflightTitle": {
+        "message": "Предполётная проверка внешних условий"
+    },
+    "preflightLocation": {
+        "message": "Место полёта"
+    },
+    "preflightUseMyLocation": {
+        "message": "Использовать моё местоположение"
+    },
+    "preflightDetecting": {
+        "message": "Определение..."
+    },
+    "preflightOr": {
+        "message": "или введите координаты:"
+    },
+    "preflightLatitude": {
+        "message": "Широта"
+    },
+    "preflightLongitude": {
+        "message": "Долгота"
+    },
+    "preflightApply": {
+        "message": "Применить"
+    },
+    "preflightLaunchStatus": {
+        "message": "Статус запуска"
+    },
+    "preflightStatusGo": {
+        "message": "Поехали!"
+    },
+    "preflightStatusCaution": {
+        "message": "ВНИМАНИЕ"
+    },
+    "preflightStatusWarning": {
+        "message": "ПРЕДУПРЕЖДЕНИЕ"
+    },
+    "preflightStatusNoGo": {
+        "message": "Не разрешено"
+    },
+    "preflightStatusNoData": {
+        "message": "Нет данных"
+    },
+    "preflightCheckWind": {
+        "message": "Ветер"
+    },
+    "preflightCheckVisibility": {
+        "message": "Видимость"
+    },
+    "preflightCheckPrecipitation": {
+        "message": "Атмосферные осадки"
+    },
+    "preflightCheckSolar": {
+        "message": "Солнечная активность"
+    },
+    "preflightLevelUnknown": {
+        "message": "Неизвестен"
+    },
+    "preflightWmoClearSky": {
+        "message": "Чистое небо"
+    },
+    "preflightWmoMainlyClear": {
+        "message": "Преимущественно ясно"
+    },
+    "preflightWmoPartlyCloudy": {
+        "message": "Переменная облачность"
+    },
+    "preflightWmoOvercast": {
+        "message": "Пасмурно"
+    },
+    "preflightWmoFog": {
+        "message": "Туман"
+    },
+    "preflightWmoRimeFog": {
+        "message": "Туман с образованием изморози"
+    },
+    "preflightWmoLightDrizzle": {
+        "message": "Слабая морось"
+    },
+    "preflightWmoModerateDrizzle": {
+        "message": "Умеренная морось"
+    },
+    "preflightWmoDenseDrizzle": {
+        "message": "Сильная морось"
+    },
+    "preflightWmoLightFreezingDrizzle": {
+        "message": "Слабая ледяная морось"
+    },
+    "preflightWmoDenseFreezingDrizzle": {
+        "message": "Сильная ледяная морось"
+    },
+    "preflightWmoSlightRain": {
+        "message": "Слабый дождь"
+    },
+    "preflightWmoModerateRain": {
+        "message": "Умеренный дождь"
+    },
+    "preflightWmoHeavyRain": {
+        "message": "Сильный дождь"
+    },
+    "preflightWmoLightFreezingRain": {
+        "message": "Слабый ледяной дождь"
+    },
+    "preflightWmoHeavyFreezingRain": {
+        "message": "Сильный ледяной дождь"
+    },
+    "preflightWmoSlightSnow": {
+        "message": "Небольшой снег"
+    },
+    "preflightWmoModerateSnow": {
+        "message": "Умеренный снег"
+    },
+    "preflightWmoHeavySnow": {
+        "message": "Сильный снег"
+    },
+    "preflightWmoSnowGrains": {
+        "message": "Зернистый снег"
+    },
+    "preflightWmoSlightRainShowers": {
+        "message": "Слабые ливневые дожди"
+    },
+    "preflightWmoModerateRainShowers": {
+        "message": "Умеренный ливень"
+    },
+    "preflightWmoViolentRainShowers": {
+        "message": "Очень сильные ливни"
+    },
+    "preflightWmoSlightSnowShowers": {
+        "message": "Слабые снежные ливни"
+    },
+    "preflightWmoHeavySnowShowers": {
+        "message": "Сильные снежные ливни"
+    },
+    "preflightWmoThunderstorm": {
+        "message": "Гроза"
+    },
+    "preflightWmoThunderstormSlightHail": {
+        "message": "Гроза со слабым градом"
+    },
+    "preflightWmoThunderstormHeavyHail": {
+        "message": "Гроза с сильным градом"
+    },
+    "preflightKpLow": {
+        "message": "Низкий"
+    },
+    "preflightKpModerate": {
+        "message": "Умеренный"
+    },
+    "preflightKpElevated": {
+        "message": "Повышенный"
+    },
+    "preflightKpStorm": {
+        "message": "Геомагнитная буря"
+    },
+    "preflightWindCalm": {
+        "message": "Штиль"
+    },
+    "preflightWindLight": {
+        "message": "Слабый"
+    },
+    "preflightWindModerate": {
+        "message": "Умеренный"
+    },
+    "preflightWindStrong": {
+        "message": "Сильный"
+    },
+    "preflightWindDangerous": {
+        "message": "Опасный"
+    },
+    "preflightVisExcellent": {
+        "message": "Отличная"
+    },
+    "preflightVisGood": {
+        "message": "Хорошая"
+    },
+    "preflightVisReduced": {
+        "message": "Пониженная"
+    },
+    "preflightVisPoor": {
+        "message": "Плохая"
+    },
+    "preflightPrecipNone": {
+        "message": "Нет"
+    },
+    "preflightPrecipLight": {
+        "message": "Слабые"
+    },
+    "preflightPrecipModerate": {
+        "message": "Умеренные"
+    },
+    "preflightPrecipHeavy": {
+        "message": "Сильные"
+    },
+    "preflightDewNoRisk": {
+        "message": "Риск отсутствует"
+    },
+    "preflightDewLowRisk": {
+        "message": "Небольшой риск"
+    },
+    "preflightDewFogLikely": {
+        "message": "Вероятен туман \/ конденсация"
+    },
+    "preflightDewFogExpected": {
+        "message": "Вероятен туман \/ запотевание (линзы)"
+    },
+    "preflightUvLow": {
+        "message": "Низкий"
+    },
+    "preflightUvModerate": {
+        "message": "Умеренный"
+    },
+    "preflightUvHigh": {
+        "message": "Высокий"
+    },
+    "preflightUvVeryHigh": {
+        "message": "Очень высокий"
+    },
+    "preflightBatteryRisk": {
+        "message": "Риск для батареи"
+    },
+    "preflightBatteryOk": {
+        "message": "Нормальный диапазон"
+    },
+    "preflightBatteryCool": {
+        "message": "Сниженная производительность, прогрейте батареи"
+    },
+    "preflightBatteryCold": {
+        "message": "Значительное снижение ёмкости"
+    },
+    "preflightBatteryHot": {
+        "message": "Риск вздутия, держите в тени"
+    },
+    "preflightBatteryExtreme": {
+        "message": "Полёты запрещены, экстремальная жара"
+    },
+    "preflightCheckBattery": {
+        "message": "Аккумулятор"
+    },
+    "preflightCheckDensityAlt": {
+        "message": "Высота по плотности"
+    },
+    "preflightFeelsLike": {
+        "message": "Ощущается как"
+    },
+    "preflightFogRisk": {
+        "message": "Риск тумана"
+    },
+    "preflightFogUnlikely": {
+        "message": "Маловероятно"
+    },
+    "preflightFogLow": {
+        "message": "Низкий риск"
+    },
+    "preflightFogModerate": {
+        "message": "Умеренный риск"
+    },
+    "preflightFogHigh": {
+        "message": "Высокий риск"
+    },
+    "preflightElevation": {
+        "message": "Высота"
+    },
+    "preflightDensityAlt": {
+        "message": "Плотностная высота"
+    },
+    "preflightDaNormal": {
+        "message": "Нормальная производительность"
+    },
+    "preflightDaReduced": {
+        "message": "Незначительное снижение подъёмной силы"
+    },
+    "preflightDaLow": {
+        "message": "Заметное снижение производительности"
+    },
+    "preflightDaPoor": {
+        "message": "Значительное снижение подъёмной силы"
+    },
+    "preflightCivilTwilight": {
+        "message": "Светлое время суток, включая сумерки"
+    },
+    "preflightRefresh": {
+        "message": "Обновить"
+    },
+    "preflightCurrentWeather": {
+        "message": "Текущая погода"
+    },
+    "preflightWind": {
+        "message": "Скорость ветра"
+    },
+    "preflightGusts": {
+        "message": "Порывы ветра"
+    },
+    "preflightVisibility": {
+        "message": "Видимость"
+    },
+    "preflightPrecipitation": {
+        "message": "Осадки"
+    },
+    "preflightCloudCover": {
+        "message": "Облачность"
+    },
+    "preflightHumidity": {
+        "message": "Влажность"
+    },
+    "preflightPressure": {
+        "message": "Давление"
+    },
+    "preflightDewPoint": {
+        "message": "Точка росы"
+    },
+    "preflightFlightWindow": {
+        "message": "Окно полёта"
+    },
+    "preflightSunrise": {
+        "message": "Восход"
+    },
+    "preflightSunset": {
+        "message": "Закат"
+    },
+    "preflightDaylight": {
+        "message": "Продолжительность светового дня"
+    },
+    "preflightUvIndex": {
+        "message": "УФ-индекс"
+    },
+    "preflightTempRange": {
+        "message": "Диапазон температуры"
+    },
+    "preflightCurrentlyDay": {
+        "message": "Сейчас"
+    },
+    "preflightDaytime": {
+        "message": "День"
+    },
+    "preflightNighttime": {
+        "message": "Ночь"
+    },
+    "preflightWindForecast": {
+        "message": "Прогноз ветра на высоте"
+    },
+    "preflightWindForecastHelp": {
+        "message": "Скорость ветра на разных высотах критична для полётов на дальние дистанции и большие высоты. На больших высотах ветер, как правило, сильнее."
+    },
+    "preflightTime": {
+        "message": "Время"
+    },
+    "preflightWind10m": {
+        "message": "10м"
+    },
+    "preflightWind80m": {
+        "message": "80м"
+    },
+    "preflightWind120m": {
+        "message": "120м"
+    },
+    "preflightGustsShort": {
+        "message": "Порывы ветра"
+    },
+    "preflightRainProb": {
+        "message": "Дождь %"
+    },
+    "preflightWindUnit": {
+        "message": "Скорость ветра в м\/с. Высоты указаны относительно уровня земли (AGL)."
+    },
+    "preflightSolarActivity": {
+        "message": "Солнечная активность"
+    },
+    "preflightSolarHelp": {
+        "message": "Высокая солнечная активность (Kp > 5) вызывает ионосферное вмешательство, которое может ухудшить точность GPS и повлиять на надежность восстановления GPS."
+    },
+    "preflightGeoStorm": {
+        "message": "Геомагнитный шторм"
+    },
+    "preflightSolarRadiation": {
+        "message": "Солнечное излучение"
+    },
+    "preflightRadioBlackout": {
+        "message": "Радиозатмение"
+    },
+    "preflightLastMeasurement": {
+        "message": "Последнее измерение"
+    },
+    "preflightLoadingSolar": {
+        "message": "Загрузка данных солнечной активности..."
+    },
+    "preflightGNSS": {
+        "message": "Статус GNSS \/ GPS"
+    },
+    "preflightGNSSHelp": {
+        "message": "На качество сигнала ГНСС влияет солнечная активность."
+    },
+    "preflightGNSSNote": {
+        "message": "Точность GPS зависит от солнечной и геомагнитной активности. Подключите квадрокоптер, чтобы получить актуальные данные со спутников на вкладке GPS."
+    },
+    "preflightKpEffect": {
+        "message": "Ионосферное влияние"
+    },
+    "preflightGPSRescue": {
+        "message": "Статус режима возврата по GPS"
+    },
+    "preflightMagDeclination": {
+        "message": "Магнитное склонение"
+    },
+    "preflightMagInclination": {
+        "message": "Магнитное наклонение"
+    },
+    "preflightGNSSPlanner": {
+        "message": "Инструмент планирования спутников GNSS"
+    },
+    "preflightAirspace": {
+        "message": "Воздушное пространство и зоны, запрещённые для полётов"
+    },
+    "preflightAirspaceNote": {
+        "message": "Всегда проверяйте ограничения воздушного пространства и NOTAM перед полётом. Правила различаются в зависимости от страны и региона."
+    },
+    "preflightDroneSafetyMap": {
+        "message": "Карта безопасности дронов (Altitude Angel)"
+    },
+    "preflightAirspaceExplorer": {
+        "message": "SkyVector Airspace Chart"
+    },
+    "preflightNOTAMs": {
+        "message": "FAA NOTAMs (US)"
+    },
+    "preflightNOTAMsEU": {
+        "message": "EUROCONTROL NOTAMs (EU)"
+    },
+    "preflightMap": {
+        "message": "Обзорная карта"
+    },
+    "preflightNoData": {
+        "message": "Укажите местоположение для загрузки данных об окружающей среде"
+    },
+    "preflightAttribution": {
+        "message": "Данные о погоде: Open-Meteo.com (CC BY 4.0) | Солнечные данные: NOAA Space Weather Center"
+    },
+    "preflightSavedLocationsPlaceholder": {
+        "message": "Сохранённые местоположения..."
+    },
+    "preflightLoadLocation": {
+        "message": "Загрузить"
+    },
+    "preflightSaveLocation": {
+        "message": "Сохранить"
+    },
+    "preflightSavedLocationsFull": {
+        "message": "Достигнут лимит сохранённых местоположений: 5"
+    },
+    "preflightLocationLabel": {
+        "message": "Название места (макс. 20 символов)"
+    },
+    "preflightDeleteLocation": {
+        "message": "Удалить выбранную локацию"
+    },
+    "preflightRenameLocation": {
+        "message": "Переименовать выбранную локацию"
+    },
+    "preflightRenameLocationBtn": {
+        "message": "Переименовать"
+    },
+    "preflightCoordinates": {
+        "message": "Координаты"
+    },
+    "preflightSaveLocationBtn": {
+        "message": "Сохранить местоположение"
+    },
+    "preflightConfirmSave": {
+        "message": "Сохранить"
+    },
+    "preflightCancel": {
+        "message": "Отмена"
+    },
+    "preflightGeolocationFailed": {
+        "message": "Не удалось определить местоположение. Пожалуйста, введите координаты вручную."
+    },
+    "preflightIpConsentMessage": {
+        "message": "Не удалось определить местоположение. Используется приблизительное по IP (ipapi.co)."
+    },
+    "preflightIpConsentAllow": {
+        "message": "Разрешить"
+    },
+    "preflightIpConsentDeny": {
+        "message": "Отказаться"
+    },
+    "preflightMapSatellite": {
+        "message": "Спутниковый вид"
+    },
+    "preflightMapHybrid": {
+        "message": "Гибрид: спутник + карта"
+    },
+    "preflightMapStreet": {
+        "message": "Карта (схема)"
+    },
+    "preflightMapZoomIn": {
+        "message": "Приблизить"
+    },
+    "preflightMapZoomOut": {
+        "message": "Отдалить"
+    },
+    "preflightMapFullscreen": {
+        "message": "Включить полноэкранный режим"
+    },
+    "preflightKpMinimal": {
+        "message": "Минимальное влияние на GPS"
+    },
+    "preflightKpDegraded": {
+        "message": "Возможно снижение точности GPS"
+    },
+    "preflightKpSevere": {
+        "message": "Ожидаются значительные помехи GPS"
+    },
+    "preflightGpsRescueUnknown": {
+        "message": "Сначала проверить солнечную активность"
+    },
+    "preflightGpsRescueReliable": {
+        "message": "GPS-возврат ненадежный"
+    },
+    "preflightGpsRescueUnreliable": {
+        "message": "Спасение GPS может быть ненадежным"
+    },
+    "preflightGpsRescueNotRecommended": {
+        "message": "Спасение GPS НЕ рекомендуется"
+    },
+    "preflightForecast": {
+        "message": "Прогноз на 5 дней"
+    },
+    "preflightForecastHelp": {
+        "message": "Ежедневный обзор погоды, чтобы помочь планировать сеансы полетов впереди"
+    },
+    "preflightForecastDay": {
+        "message": "День"
+    },
+    "preflightForecastWeather": {
+        "message": "Погода"
     }
 }

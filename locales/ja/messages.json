@@ -7519,10 +7519,6 @@
         "message": "しばらくお待ちください。",
         "description": "Second label in the progress dialog when applying presets"
     },
-    "presetsCliErrorsWarning": {
-        "message": "<span class='message-negative'>警告！<\/span><br\/>設定が適用されましたが、CLIエラーが発生しました。",
-        "description": "Text to show when there are CLI errors after applying presets or user configuration"
-    },
     "presetsSaveAnyway": {
         "message": "強制保存",
         "description": "Save anyway button on the CLI errors presets dialog"

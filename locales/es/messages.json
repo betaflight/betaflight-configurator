@@ -3814,6 +3814,9 @@
     "firmwareFlasherUF2SaveFailed": {
         "message": "Error al guardar (instalar) UF2"
     },
+    "firmwareFlasherClickToConnectDfu": {
+        "message": "Pulsa para conectar al dispositivo DFU"
+    },
     "firmwareFlasherConfigCorrupted": {
         "message": "Archivo de configuración corrupto, aceptado ASCII (caracteres 0-255)",
         "description": "shown in the progress bar at the bottom, be brief"
@@ -5489,6 +5492,9 @@
     },
     "osdSetupUploadingFontEnd": {
         "message": "Cargados todos los {{length}} caracteres en el OSD"
+    },
+    "osdSetupUploadingFontFailed": {
+        "message": "Error al cargar"
     },
     "osdSetupSave": {
         "message": "Guardar"
@@ -7512,10 +7518,6 @@
         "message": "Espere, por favor",
         "description": "Second label in the progress dialog when applying presets"
     },
-    "presetsCliErrorsWarning": {
-        "message": "<span class='message-negative'>¡ATENCIÓN!<\/span><br\/>La configuración ha sido aplicada con errores de CLI.",
-        "description": "Text to show when there are CLI errors after applying presets or user configuration"
-    },
     "presetsSaveAnyway": {
         "message": "Guardar de todos modos",
         "description": "Save anyway button on the CLI errors presets dialog"
@@ -7974,5 +7976,13 @@
     },
     "sectionUserPasskeys": {
         "message": "Llaves de acceso del usuario"
+    },
+    "osdPresetPositionAlignTitle": {
+        "message": "Alinear a la posición",
+        "description": "Label for the preset position alignment menu in the OSD elements list"
+    },
+    "osdPresetPositionChooseTitle": {
+        "message": "Elegir posición",
+        "description": "Title for the preset position grid popup in the OSD elements list"
     }
 }
