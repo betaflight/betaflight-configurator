@@ -383,4 +383,9 @@ const expertMode = computed({
     height: 100vh;
     min-height: 0; /* Allow flex children to shrink below content size */
 }
+
+/* Legacy cache node is required by some code paths but should never be visible in Vue UI */
+#cache {
+    display: none;
+}
 </style>
