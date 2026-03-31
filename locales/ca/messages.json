@@ -1822,6 +1822,9 @@
     "configurationButtonSave": {
         "message": "Desa i Reinicia"
     },
+    "dialogClose": {
+        "message": "Tanca"
+    },
     "dialogDynFiltersChangeTitle": {
         "message": "Valors del filtre dinàmic de banda eliminada (Notch) han canviat"
     },
@@ -2902,6 +2905,10 @@
     },
     "adjustmentsFunction32": {
         "message": "Multiplicador mestre lliscant"
+    },
+    "adjustmentsFunction33": {
+        "message": "Selecció del perfil de bateria",
+        "description": "Allows switching battery profiles via RC channel"
     },
     "adjustmentsSave": {
         "message": "Desa"
@@ -5331,6 +5338,18 @@
     "powerAmperageCalibratedScale": {
         "message": "Escala calibrada de amperatge:"
     },
+    "powerBatteryProfile": {
+        "message": "Perfil de bateria"
+    },
+    "powerBatteryProfileOption": {
+        "message": "Perfil de bateria $1"
+    },
+    "powerBatteryProfileNamePlaceholder": {
+        "message": "example. LiPo, Li-Ion"
+    },
+    "powerBatteryProfileNameLabel": {
+        "message": "Nom del perfil"
+    },
     "powerBatteryHead": {
         "message": "Bateria"
     },
@@ -7602,6 +7621,14 @@
         "message": "Canceŀlar",
         "description": "Cancel button in the presets warning dialog"
     },
+    "presetsFavoriteAddAriaLabel": {
+        "message": "Afegir pre-ajust favorit",
+        "description": "Accessible label for the button that favorites a preset"
+    },
+    "presetsFavoriteRemoveAriaLabel": {
+        "message": "Remoure pre-ajust favorit",
+        "description": "Accessible label for the button that removes a preset from favorites"
+    },
     "presetsWiki": {
         "message": "Preajustos Wiki",
         "description": "Button to open Presets Wiki link"
@@ -7613,6 +7640,10 @@
     "presetsBackupLoad": {
         "message": "Carrega la còpia de seguretat",
         "description": "Button to load backup from the file"
+    },
+    "presetsVirtualModeCliUnsupported": {
+        "message": "Les accions d'aplicació de pre-ajustos i de còpia de seguretat requereixen la CLI, que no està disponible en mode virtual.",
+        "description": "Warning shown when a presets CLI action is attempted in Virtual Mode"
     },
     "presetsLoadingDumpAll": {
         "message": "S'està carregant la configuració actual des de la controladora de vol",
@@ -7818,6 +7849,20 @@
     "osdDescElementLidar": {
         "message": "$t(osdTextElementLidar.message)",
         "description": "Don't translate!!!"
+    },
+    "osdTextElementCustomSerialText": {
+        "message": "Text serie personalitzat",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementCustomSerialText": {
+        "message": "Mostra el texte rebut des de el port serie"
+    },
+    "osdTextElementBatteryProfileName": {
+        "message": "Perfil: nom de perfil de bateria",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementBatteryProfileName": {
+        "message": "Mostra el perfil actiu de la bataria o index"
     },
     "osdSetupPreviewCheckRulers": {
         "message": "Regles",
@@ -8052,5 +8097,542 @@
     "osdPresetPositionChooseTitle": {
         "message": "Tria la posició",
         "description": "Title for the preset position grid popup in the OSD elements list"
+    },
+    "tabPreflight": {
+        "message": "Prevol"
+    },
+    "preflightTitle": {
+        "message": "Comprovació de l'entorn previ al vol"
+    },
+    "preflightLocation": {
+        "message": "Ubicació del vol"
+    },
+    "preflightUseMyLocation": {
+        "message": "Utilitza la meva ubicació"
+    },
+    "preflightDetecting": {
+        "message": "Detectant..."
+    },
+    "preflightOr": {
+        "message": "o entra ubicació:"
+    },
+    "preflightLatitude": {
+        "message": "Latitud"
+    },
+    "preflightLongitude": {
+        "message": "Longitud"
+    },
+    "preflightApply": {
+        "message": "Aplica"
+    },
+    "preflightLaunchStatus": {
+        "message": "Estat del llançament"
+    },
+    "preflightStatusGo": {
+        "message": "ANAR"
+    },
+    "preflightStatusCaution": {
+        "message": "PRECAUCIÓ"
+    },
+    "preflightStatusWarning": {
+        "message": "ADVERTÈNCIA"
+    },
+    "preflightStatusNoGo": {
+        "message": "STOP"
+    },
+    "preflightStatusNoData": {
+        "message": "No hi ha dades"
+    },
+    "preflightCheckWind": {
+        "message": "Vent"
+    },
+    "preflightCheckVisibility": {
+        "message": "Visibilitat"
+    },
+    "preflightCheckPrecipitation": {
+        "message": "Precipitació"
+    },
+    "preflightCheckSolar": {
+        "message": "Solar"
+    },
+    "preflightLevelUnknown": {
+        "message": "Desconegut"
+    },
+    "preflightWmoClearSky": {
+        "message": "Cel clar"
+    },
+    "preflightWmoMainlyClear": {
+        "message": "Majoritàriament clar"
+    },
+    "preflightWmoPartlyCloudy": {
+        "message": "Parcialment ennuvolat"
+    },
+    "preflightWmoOvercast": {
+        "message": "Cobert"
+    },
+    "preflightWmoFog": {
+        "message": "Boira"
+    },
+    "preflightWmoRimeFog": {
+        "message": "Deixant boira tintada"
+    },
+    "preflightWmoLightDrizzle": {
+        "message": "Plugim lleuger"
+    },
+    "preflightWmoModerateDrizzle": {
+        "message": "Plugim moderat"
+    },
+    "preflightWmoDenseDrizzle": {
+        "message": "Plugim dens"
+    },
+    "preflightWmoLightFreezingDrizzle": {
+        "message": "Plugim gelat lleuger"
+    },
+    "preflightWmoDenseFreezingDrizzle": {
+        "message": "Plugim gelat dens"
+    },
+    "preflightWmoSlightRain": {
+        "message": "Pluja lleugera"
+    },
+    "preflightWmoModerateRain": {
+        "message": "Pluja moderada"
+    },
+    "preflightWmoHeavyRain": {
+        "message": "Pluja forta"
+    },
+    "preflightWmoLightFreezingRain": {
+        "message": "Pluja gebradora suau"
+    },
+    "preflightWmoHeavyFreezingRain": {
+        "message": "Pluja gebradora forta"
+    },
+    "preflightWmoSlightSnow": {
+        "message": "Nevada lleu"
+    },
+    "preflightWmoModerateSnow": {
+        "message": "Nevada moderada"
+    },
+    "preflightWmoHeavySnow": {
+        "message": "Nevada intensa"
+    },
+    "preflightWmoSnowGrains": {
+        "message": "Flocs de neu"
+    },
+    "preflightWmoSlightRainShowers": {
+        "message": "Ruixats de pluja lleugera"
+    },
+    "preflightWmoModerateRainShowers": {
+        "message": "Xàfecs moderats"
+    },
+    "preflightWmoViolentRainShowers": {
+        "message": "Xàfecs violents"
+    },
+    "preflightWmoSlightSnowShowers": {
+        "message": "Ruixats de neu lleugers"
+    },
+    "preflightWmoHeavySnowShowers": {
+        "message": "Ruixats de neu intensos"
+    },
+    "preflightWmoThunderstorm": {
+        "message": "Trons"
+    },
+    "preflightWmoThunderstormSlightHail": {
+        "message": "Tempesta amb calamarsa lleugera"
+    },
+    "preflightWmoThunderstormHeavyHail": {
+        "message": "Tempesta amb forta calamarsa"
+    },
+    "preflightKpLow": {
+        "message": "Baix"
+    },
+    "preflightKpModerate": {
+        "message": "Moderat"
+    },
+    "preflightKpElevated": {
+        "message": "Elevat"
+    },
+    "preflightKpStorm": {
+        "message": "Tempesta"
+    },
+    "preflightWindCalm": {
+        "message": "Tranquil"
+    },
+    "preflightWindLight": {
+        "message": "Clar"
+    },
+    "preflightWindModerate": {
+        "message": "Moderat"
+    },
+    "preflightWindStrong": {
+        "message": "Fort"
+    },
+    "preflightWindDangerous": {
+        "message": "Perillós"
+    },
+    "preflightVisExcellent": {
+        "message": "Excel·lent"
+    },
+    "preflightVisGood": {
+        "message": "Bo"
+    },
+    "preflightVisReduced": {
+        "message": "Reduït"
+    },
+    "preflightVisPoor": {
+        "message": "Pobre"
+    },
+    "preflightPrecipNone": {
+        "message": "Cap"
+    },
+    "preflightPrecipLight": {
+        "message": "Clar"
+    },
+    "preflightPrecipModerate": {
+        "message": "Moderat"
+    },
+    "preflightPrecipHeavy": {
+        "message": "Intensa"
+    },
+    "preflightDewNoRisk": {
+        "message": "Sense risc"
+    },
+    "preflightDewLowRisk": {
+        "message": "Risc baix"
+    },
+    "preflightDewFogLikely": {
+        "message": "Probable boira\/condensació"
+    },
+    "preflightDewFogExpected": {
+        "message": "S'espera entelament de la lent\/boira"
+    },
+    "preflightUvLow": {
+        "message": "Baix"
+    },
+    "preflightUvModerate": {
+        "message": "Moderat"
+    },
+    "preflightUvHigh": {
+        "message": "Alt"
+    },
+    "preflightUvVeryHigh": {
+        "message": "Molt alt"
+    },
+    "preflightBatteryRisk": {
+        "message": "Risc per la bateria"
+    },
+    "preflightBatteryOk": {
+        "message": "Rang normal"
+    },
+    "preflightBatteryCool": {
+        "message": "Rendiment reduït, bateries calentes"
+    },
+    "preflightBatteryCold": {
+        "message": "Capacitat molt reduïda"
+    },
+    "preflightBatteryHot": {
+        "message": "Risc d'inflor, mantenir a l'ombra"
+    },
+    "preflightBatteryExtreme": {
+        "message": "No volar, calor extrema"
+    },
+    "preflightCheckBattery": {
+        "message": "Bateria"
+    },
+    "preflightCheckDensityAlt": {
+        "message": "Densitat alta"
+    },
+    "preflightFeelsLike": {
+        "message": "Sensació"
+    },
+    "preflightFogRisk": {
+        "message": "Risc de boira"
+    },
+    "preflightFogUnlikely": {
+        "message": "Poc probable"
+    },
+    "preflightFogLow": {
+        "message": "Biax risc"
+    },
+    "preflightFogModerate": {
+        "message": "Risc Moderat"
+    },
+    "preflightFogHigh": {
+        "message": "Alt risc"
+    },
+    "preflightElevation": {
+        "message": "Elevació"
+    },
+    "preflightDensityAlt": {
+        "message": "Altitud de densitat"
+    },
+    "preflightDaNormal": {
+        "message": "Rendiment normal"
+    },
+    "preflightDaReduced": {
+        "message": "Elevació lleugerament reduïda"
+    },
+    "preflightDaLow": {
+        "message": "Rendiment notablement reduït"
+    },
+    "preflightDaPoor": {
+        "message": "Reducció significativa de l'elevació"
+    },
+    "preflightCivilTwilight": {
+        "message": "Finestra civil crepuscular"
+    },
+    "preflightRefresh": {
+        "message": "Actualitza"
+    },
+    "preflightCurrentWeather": {
+        "message": "Temps actual"
+    },
+    "preflightWind": {
+        "message": "Velocitat del vent"
+    },
+    "preflightGusts": {
+        "message": "Ràfegues de vent"
+    },
+    "preflightVisibility": {
+        "message": "Visibilitat"
+    },
+    "preflightPrecipitation": {
+        "message": "Precipitació"
+    },
+    "preflightCloudCover": {
+        "message": "Nuvolositat"
+    },
+    "preflightHumidity": {
+        "message": "Humitat"
+    },
+    "preflightPressure": {
+        "message": "Pressió"
+    },
+    "preflightDewPoint": {
+        "message": "Punt de rosada"
+    },
+    "preflightFlightWindow": {
+        "message": "Finestra de vol"
+    },
+    "preflightSunrise": {
+        "message": "Sortida del sol"
+    },
+    "preflightSunset": {
+        "message": "Posta de sol"
+    },
+    "preflightDaylight": {
+        "message": "Llum del dia"
+    },
+    "preflightUvIndex": {
+        "message": "Índex UV"
+    },
+    "preflightTempRange": {
+        "message": "Rang de temperatura"
+    },
+    "preflightCurrentlyDay": {
+        "message": "Actual"
+    },
+    "preflightDaytime": {
+        "message": "Diürn"
+    },
+    "preflightNighttime": {
+        "message": "Nocturn"
+    },
+    "preflightWindForecast": {
+        "message": "Previsió de vent en altitud"
+    },
+    "preflightWindForecastHelp": {
+        "message": "La velocitat del vent a diferents altituds és crítica per als vols FPV de llarg abast i gran altitud. Les altituds més elevades solen tenir vents més forts."
+    },
+    "preflightTime": {
+        "message": "Hora"
+    },
+    "preflightWind10m": {
+        "message": "10m"
+    },
+    "preflightWind80m": {
+        "message": "80m"
+    },
+    "preflightWind120m": {
+        "message": "120m"
+    },
+    "preflightGustsShort": {
+        "message": "Ràfegues"
+    },
+    "preflightRainProb": {
+        "message": "Pluja %"
+    },
+    "preflightWindUnit": {
+        "message": "Velocitats del vent en m\/s. Altituds sobre el nivell del terra (AGL)."
+    },
+    "preflightSolarActivity": {
+        "message": "Activitat solar"
+    },
+    "preflightSolarHelp": {
+        "message": "Una activitat solar elevada (Kp > 5) provoca interferències ionosfèriques, que poden degradar la precisió del GPS i afectar la fiabilitat del rescat per GPS."
+    },
+    "preflightGeoStorm": {
+        "message": "Tempesta geomagnètica"
+    },
+    "preflightSolarRadiation": {
+        "message": "Radiació solar"
+    },
+    "preflightRadioBlackout": {
+        "message": "Apagada de ràdio"
+    },
+    "preflightLastMeasurement": {
+        "message": "Darrera mesura"
+    },
+    "preflightLoadingSolar": {
+        "message": "Carregant dades solars..."
+    },
+    "preflightGNSS": {
+        "message": "Estat del GNSS \/ GPS"
+    },
+    "preflightGNSSHelp": {
+        "message": "La qualitat del senyal dels satèl·lits GNSS es veu afectada per l'activitat solar. Els valors alts de Kp poden degradar la precisió de la posició GPS i reduir la fiabilitat del rescat per GPS."
+    },
+    "preflightGNSSNote": {
+        "message": "La precisió del GPS es veu afectada per les condicions solars\/geomagnètiques. Connecta el teu quad per obtenir dades de satèl·lit en directe a la pestanya GPS."
+    },
+    "preflightKpEffect": {
+        "message": "Impacte ionosfèric"
+    },
+    "preflightGPSRescue": {
+        "message": "Estat del rescat per GPS"
+    },
+    "preflightMagDeclination": {
+        "message": "Declinació Magnètica"
+    },
+    "preflightMagInclination": {
+        "message": "Inclinació Magnètica"
+    },
+    "preflightGNSSPlanner": {
+        "message": "Eina de planificació de satèl·lits GNSS"
+    },
+    "preflightAirspace": {
+        "message": "Espai aeri i zones d'exclusió aèria"
+    },
+    "preflightAirspaceNote": {
+        "message": "Consulteu sempre les restriccions de l'espai aeri local i els NOTAM abans de volar. Les normes varien segons el país i la regió."
+    },
+    "preflightDroneSafetyMap": {
+        "message": "Mapa de seguretat de drons (Altitud Àngel)"
+    },
+    "preflightAirspaceExplorer": {
+        "message": "Carta de l'espai aeri SkyVector"
+    },
+    "preflightNOTAMs": {
+        "message": "FAA NOTAMs (US)"
+    },
+    "preflightNOTAMsEU": {
+        "message": "EUROCONTROL NOTAMs (EU)"
+    },
+    "preflightMap": {
+        "message": "Mapa d'ubicació"
+    },
+    "preflightNoData": {
+        "message": "Defineix una ubicació per carregar les dades de l'entorn"
+    },
+    "preflightAttribution": {
+        "message": "Dades meteorològiques: Open-Meteo.com (CC BY 4.0) | Dades solars: Centre de Predicció Meteorològica Espacial de la NOAA"
+    },
+    "preflightSavedLocationsPlaceholder": {
+        "message": "Ubicacions desades..."
+    },
+    "preflightLoadLocation": {
+        "message": "Carrega"
+    },
+    "preflightSaveLocation": {
+        "message": "Desa"
+    },
+    "preflightSavedLocationsFull": {
+        "message": "S'ha arribat al màxim de 5 ubicacions desades"
+    },
+    "preflightLocationLabel": {
+        "message": "Nom del lloc (20 caràcters màxim)"
+    },
+    "preflightDeleteLocation": {
+        "message": "Suprimeix la ubicació seleccionada"
+    },
+    "preflightRenameLocation": {
+        "message": "Canvia el nom de la ubicació seleccionada"
+    },
+    "preflightRenameLocationBtn": {
+        "message": "Reanomenar"
+    },
+    "preflightCoordinates": {
+        "message": "Coordenades"
+    },
+    "preflightSaveLocationBtn": {
+        "message": "Desa la ubicació"
+    },
+    "preflightConfirmSave": {
+        "message": "Desa"
+    },
+    "preflightCancel": {
+        "message": "Canceŀlar"
+    },
+    "preflightGeolocationFailed": {
+        "message": "No s'ha pogut detectar la ubicació. Si us plau, introduïu les coordenades manualment."
+    },
+    "preflightIpConsentMessage": {
+        "message": "La ubicació del navegador ha fallat. La vostra ubicació aproximada es pot detectar mitjançant la vostra adreça IP a través d'ipapi.co, un servei de tercers."
+    },
+    "preflightIpConsentAllow": {
+        "message": "Permet"
+    },
+    "preflightIpConsentDeny": {
+        "message": "No gràcies"
+    },
+    "preflightMapSatellite": {
+        "message": "Vista de satèl·lit"
+    },
+    "preflightMapHybrid": {
+        "message": "Vista híbrida de satèl·lit i de carrer"
+    },
+    "preflightMapStreet": {
+        "message": "Vista del mapa de carrers"
+    },
+    "preflightMapZoomIn": {
+        "message": "Apropa"
+    },
+    "preflightMapZoomOut": {
+        "message": "Allunya"
+    },
+    "preflightMapFullscreen": {
+        "message": "Commuta pantalla completa"
+    },
+    "preflightKpMinimal": {
+        "message": "Impacte mínim en el GPS"
+    },
+    "preflightKpDegraded": {
+        "message": "Possible degradació de la precisió del GPS"
+    },
+    "preflightKpSevere": {
+        "message": "S'espera una interferència significativa del GPS"
+    },
+    "preflightGpsRescueUnknown": {
+        "message": "Comproveu primer l'activitat solar"
+    },
+    "preflightGpsRescueReliable": {
+        "message": "Rescat GPS fiable"
+    },
+    "preflightGpsRescueUnreliable": {
+        "message": "Rescat GPS no fiable"
+    },
+    "preflightGpsRescueNotRecommended": {
+        "message": "Rescat GPS no recomanat"
+    },
+    "preflightForecast": {
+        "message": "Previsió a cinc dies"
+    },
+    "preflightForecastHelp": {
+        "message": "Resum meteorològic diari per ajudar a planificar les sessions de vol amb antelació"
+    },
+    "preflightForecastDay": {
+        "message": "Dia"
+    },
+    "preflightForecastWeather": {
+        "message": "Temps"
     }
 }

@@ -10,7 +10,7 @@ import i18next from "i18next";
 import I18NextVue from "i18next-vue";
 import { VueTabComponents } from "./vue_components.js";
 import GUI, { TABS } from "./gui.js";
-import { tabState } from "./tab_state.js";
+import { useNavigationStore } from "../stores/navigation";
 import ui from "@nuxt/ui/vue-plugin";
 
 // Store the current mounted Vue app instance for cleanup
@@ -35,8 +35,9 @@ export function buildTabAdapter(tabName, componentInstance, existingAdapter = TA
     }
 
     tabAdapter.expertModeChanged = (enabled) => {
-        // Update global reactive state that Vue components watch
-        tabState.expertMode = enabled;
+        // Update navigation store state that Vue components watch
+        const navigationStore = useNavigationStore();
+        navigationStore.expertMode = enabled;
     };
     tabAdapter._vueComponent = componentInstance;
 

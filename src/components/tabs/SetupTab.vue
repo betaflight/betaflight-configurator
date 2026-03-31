@@ -431,9 +431,10 @@ import { useFlightControllerStore } from "../../stores/fc";
 import { isExpertModeEnabled } from "../../js/utils/isExpertModeEnabled";
 import { EventBus } from "@/components/eventBus";
 import GUI from "../../js/gui";
+import { useInterval } from "../../composables/useInterval";
+import { useTimeout } from "../../composables/useTimeout";
 import { have_sensor } from "../../js/sensor_helpers";
 import { mspHelper } from "../../js/msp/MSPHelper";
-import FC from "../../js/fc";
 import MSP from "../../js/msp";
 import Model from "../../js/model";
 import MSPCodes from "../../js/msp/MSPCodes";
@@ -593,11 +594,8 @@ if (fcStore.config.armingDisableCount > 0) {
     prepareDisarmFlags();
 }
 
-const localIntervals = [];
-function addLocalInterval(name, fn, period, first = false) {
-    GUI.interval_add(name, fn, period, first);
-    localIntervals.push(name);
-}
+const { addInterval, removeAllIntervals } = useInterval();
+const { addTimeout, removeTimeout } = useTimeout();
 
 const updateExpertMode = (enabled) => {
     isExpert.value = enabled;
@@ -616,7 +614,7 @@ function resetZaxis() {
 function onRebootBootloader() {
     const buffer = [];
     buffer.push(
-        FC.boardHasFlashBootloader() ? mspHelper.REBOOT_TYPES.BOOTLOADER_FLASH : mspHelper.REBOOT_TYPES.BOOTLOADER,
+        fcStore.boardHasFlashBootloader() ? mspHelper.REBOOT_TYPES.BOOTLOADER_FLASH : mspHelper.REBOOT_TYPES.BOOTLOADER,
     );
     MSP.send_message(MSPCodes.MSP_SET_REBOOT, buffer, false);
 }
@@ -637,7 +635,7 @@ function onCalibrateAccel() {
         }
     });
 
-    GUI.timeout_add(
+    addTimeout(
         "button_reset",
         function () {
             if (mountedFlag) {
@@ -673,7 +671,7 @@ function onCalibrateMag() {
             magCalibInterval = null;
         }
         if (magCalibTimeoutName) {
-            GUI.timeout_remove(magCalibTimeoutName);
+            removeTimeout(magCalibTimeoutName);
             magCalibTimeoutName = null;
         }
 
@@ -698,7 +696,7 @@ function onCalibrateMag() {
     } else {
         // use a dedicated name so we can remove it safely on unmount
         magCalibTimeoutName = "mag_button_reset";
-        GUI.timeout_add(magCalibTimeoutName, magCalibResetButton, 30000);
+        addTimeout(magCalibTimeoutName, magCalibResetButton, 30000);
     }
 }
 
@@ -1026,10 +1024,10 @@ function process_html() {
     function get_slow_data() {
         fcStore.updateArmingFlags(fcStore.config.armingDisableFlags);
 
-        state.batVoltage = i18n.getMessage("initialSetupBatteryValue", [FC.ANALOG.voltage]);
-        state.batMahDrawn = i18n.getMessage("initialSetupBatteryMahValue", [FC.ANALOG.mAhdrawn]);
-        state.batMahDrawing = i18n.getMessage("initialSetupBatteryAValue", [FC.ANALOG.amperage.toFixed(2)]);
-        state.rssi = i18n.getMessage("initialSetupRSSIValue", [((FC.ANALOG.rssi / 1023) * 100).toFixed(0)]);
+        state.batVoltage = i18n.getMessage("initialSetupBatteryValue", [fcStore.analogData.voltage]);
+        state.batMahDrawn = i18n.getMessage("initialSetupBatteryMahValue", [fcStore.analogData.mAhdrawn]);
+        state.batMahDrawing = i18n.getMessage("initialSetupBatteryAValue", [fcStore.analogData.amperage.toFixed(2)]);
+        state.rssi = i18n.getMessage("initialSetupRSSIValue", [((fcStore.analogData.rssi / 1023) * 100).toFixed(0)]);
 
         if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_46) && fcStore.config.cpuTemp) {
             state.cpuTemp = `${fcStore.config.cpuTemp.toFixed(0)} \u2103`;
@@ -1087,8 +1085,8 @@ function process_html() {
         }
     }
 
-    addLocalInterval("setup_data_pull_fast", get_fast_data, 33, true);
-    addLocalInterval("setup_data_pull_slow", get_slow_data, 250, true);
+    addInterval("setup_data_pull_fast", get_fast_data, 33, true);
+    addInterval("setup_data_pull_slow", get_slow_data, 250, true);
 
     // notify GUI that content is ready
     GUI.content_ready(() => {});
@@ -1143,14 +1141,10 @@ function cleanup(callback) {
     }
 
     // clear intervals used by this tab
-    try {
-        while (localIntervals.length > 0) {
-            GUI.interval_remove(localIntervals.pop());
-        }
-    } catch (e) {
-        // preserve behavior but at least log unexpected errors
-        console.warn("Error clearing local intervals:", e);
-    }
+    removeAllIntervals();
+
+    // clear accel calibration timeout to prevent it firing after unmount
+    removeTimeout("button_reset");
 
     // ensure mag calibration timers are cleared to avoid callbacks after unmount
     if (magCalibInterval) {
@@ -1158,7 +1152,7 @@ function cleanup(callback) {
         magCalibInterval = null;
     }
     if (magCalibTimeoutName) {
-        GUI.timeout_remove(magCalibTimeoutName);
+        removeTimeout(magCalibTimeoutName);
         magCalibTimeoutName = null;
     }
 

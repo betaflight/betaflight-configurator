@@ -228,6 +228,53 @@ export const useFlightControllerStore = defineStore("flightController", () => {
         set: (val) => (FC.RC_TUNING = val),
     });
 
+    const pids = computed({
+        get: () => FC.PIDS,
+        set: (val) => (FC.PIDS = val),
+    });
+
+    const pidNames = computed({
+        get: () => FC.PID_NAMES,
+        set: (val) => (FC.PID_NAMES = val),
+    });
+
+    const tuningSliders = computed({
+        get: () => FC.TUNING_SLIDERS,
+        set: (val) => (FC.TUNING_SLIDERS = val),
+    });
+
+    const defaultTuningSliders = computed(() => FC.DEFAULT_TUNING_SLIDERS);
+
+    const copyProfile = computed({
+        get: () => FC.COPY_PROFILE,
+        set: (val) => (FC.COPY_PROFILE = val),
+    });
+
+    const serialConfig = computed({
+        get: () => FC.SERIAL_CONFIG,
+        set: (val) => (FC.SERIAL_CONFIG = val),
+    });
+
+    const servoConfig = computed({
+        get: () => FC.SERVO_CONFIG,
+        set: (val) => (FC.SERVO_CONFIG = val),
+    });
+
+    const servoData = computed({
+        get: () => FC.SERVO_DATA,
+        set: (val) => (FC.SERVO_DATA = val),
+    });
+
+    const ledStrip = computed({
+        get: () => FC.LED_STRIP,
+        set: (val) => (FC.LED_STRIP = val),
+    });
+
+    const vtxConfig = computed({
+        get: () => FC.VTX_CONFIG,
+        set: (val) => (FC.VTX_CONFIG = val),
+    });
+
     // Computed getters
     const apiVersion = computed(() => config.value.apiVersion);
 
@@ -245,6 +292,9 @@ export const useFlightControllerStore = defineStore("flightController", () => {
         return armingFlags.value.filter((f) => f.visible).map((f) => f.name);
     });
 
+    // Constants (delegated from FC)
+    const TARGET_CAPABILITIES_FLAGS = FC.TARGET_CAPABILITIES_FLAGS;
+
     // Helpers
     function isApiVersionSupported(version) {
         return semver.gte(config.value.apiVersion, version);
@@ -252,6 +302,22 @@ export const useFlightControllerStore = defineStore("flightController", () => {
 
     function isApiVersionLessThan(version) {
         return semver.lt(config.value.apiVersion, version);
+    }
+
+    function boardHasFlashBootloader() {
+        return FC.boardHasFlashBootloader();
+    }
+
+    function getFilterDefaults() {
+        return FC.getFilterDefaults();
+    }
+
+    function getSerialRxTypes() {
+        return FC.getSerialRxTypes();
+    }
+
+    function getSupportedSerialRxTypes() {
+        return FC.getSupportedSerialRxTypes();
     }
 
     return {
@@ -296,6 +362,16 @@ export const useFlightControllerStore = defineStore("flightController", () => {
         rcDeadbandConfig,
         rcMap,
         rcTuning,
+        pids,
+        pidNames,
+        tuningSliders,
+        defaultTuningSliders,
+        copyProfile,
+        serialConfig,
+        servoConfig,
+        servoData,
+        ledStrip,
+        vtxConfig,
         apiVersion,
         sensorNames,
         mcuInfo,
@@ -306,5 +382,10 @@ export const useFlightControllerStore = defineStore("flightController", () => {
         activeFlagNames,
         isApiVersionSupported,
         isApiVersionLessThan,
+        TARGET_CAPABILITIES_FLAGS,
+        boardHasFlashBootloader,
+        getFilterDefaults,
+        getSerialRxTypes,
+        getSupportedSerialRxTypes,
     };
 });

@@ -1,5 +1,5 @@
 <template>
-    <dialog class="dialogWait" open>
+    <dialog ref="dialogRef" class="dialogWait" @cancel.prevent>
         <div class="data-loading"></div>
         <h3 class="dialogWaitTitle">{{ title }}</h3>
         <div class="buttons" v-if="showCancel">
@@ -8,10 +8,11 @@
             </button>
         </div>
     </dialog>
-    <div class="dialog-backdrop"></div>
 </template>
 
 <script setup>
+import { ref } from "vue";
+
 defineProps({
     title: String,
     showCancel: {
@@ -25,17 +26,27 @@ defineProps({
 });
 
 defineEmits(["cancel"]);
+
+const dialogRef = ref(null);
+
+const show = () => {
+    dialogRef.value?.showModal();
+};
+
+const close = () => {
+    dialogRef.value?.close();
+};
+
+defineExpose({
+    show,
+    close,
+    dialog: dialogRef,
+});
 </script>
 
 <style scoped>
-.dialog-backdrop {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 999;
+.dialogWait:not([open]) {
+    display: none;
 }
 
 .dialogWait {
@@ -46,5 +57,9 @@ defineEmits(["cancel"]);
     left: 50%;
     transform: translate(-50%, -50%);
     margin: 0;
+}
+
+.dialogWait::backdrop {
+    background: rgba(0, 0, 0, 0.5);
 }
 </style>

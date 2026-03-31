@@ -78,6 +78,7 @@ import MSPCodes from "../../js/msp/MSPCodes.js";
 import { useFlightControllerStore } from "@/stores/fc";
 import { useConnectionStore } from "@/stores/connection";
 import { useDialog } from "@/composables/useDialog";
+import { useInterval } from "../../composables/useInterval";
 import WikiButton from "../elements/WikiButton.vue";
 
 const PROPERTY_ORDER = [
@@ -119,6 +120,7 @@ export default defineComponent({
         const fcStore = useFlightControllerStore();
         const connectionStore = useConnectionStore();
         const dialog = useDialog();
+        const { addInterval, removeInterval } = useInterval();
 
         const selectedProperties = ref([]);
         const samplingInterval = ref(100);
@@ -346,8 +348,8 @@ export default defineComponent({
 
             isBusy.value = true;
 
-            GUI.interval_remove(LOG_POLL_INTERVAL);
-            GUI.interval_remove(LOG_WRITE_INTERVAL);
+            removeInterval(LOG_POLL_INTERVAL);
+            removeInterval(LOG_WRITE_INTERVAL);
 
             await writePendingData();
 
@@ -401,7 +403,7 @@ export default defineComponent({
                     return;
                 }
 
-                GUI.interval_add(
+                addInterval(
                     LOG_POLL_INTERVAL,
                     () => {
                         if (hasPreviousRequest) {
@@ -415,7 +417,7 @@ export default defineComponent({
                     true,
                 );
 
-                GUI.interval_add(
+                addInterval(
                     LOG_WRITE_INTERVAL,
                     () => {
                         writePendingData();
@@ -481,8 +483,100 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
+<style lang="less">
 .tab-logging {
-    /* Reuse existing global styles from logging.less */
+    .properties {
+        margin-top: 10px;
+        dt {
+            float: left;
+            width: 120px;
+            height: 20px;
+            line-height: 20px;
+            font-weight: bold;
+            input {
+                vertical-align: middle;
+            }
+        }
+        dd {
+            display: block;
+            margin-left: 130px;
+            height: 20px;
+            line-height: 20px;
+            color: var(--subtleText);
+        }
+    }
+    .speed {
+        margin-top: 5px;
+        width: 80px;
+        border: 1px solid var(--surface-500);
+        border-radius: 3px;
+    }
+    .info {
+        margin-top: 10px;
+        dt {
+            float: left;
+            width: fit-content;
+            height: 20px;
+            line-height: 20px;
+            font-weight: bold;
+        }
+        dd {
+            display: block;
+            margin-left: 130px;
+            height: 20px;
+            line-height: 20px;
+        }
+    }
+    .fixed_band {
+        width: 100%;
+        bottom: 0;
+    }
+    .save_btn {
+        .back {
+            display: none;
+        }
+    }
+    .back_btn {
+        display: none;
+    }
+}
+@media only screen and (max-width: 1055px) {
+    .tab-logging {
+        table {
+            thead {
+                tr {
+                    &:first-child {
+                        font-size: 12px;
+                        height: 22px;
+                    }
+                }
+            }
+        }
+    }
+}
+@media only screen and (max-device-width: 1055px) {
+    .tab-logging {
+        table {
+            thead {
+                tr {
+                    &:first-child {
+                        font-size: 12px;
+                        height: 22px;
+                    }
+                }
+            }
+        }
+    }
+}
+@media all and (max-width: 575px) {
+    .tab-logging {
+        .properties {
+            dd {
+                width: 100%;
+                height: auto;
+            }
+            width: auto;
+        }
+    }
 }
 </style>

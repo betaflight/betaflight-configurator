@@ -131,17 +131,18 @@ import semver from "semver";
 import { API_VERSION_1_45, API_VERSION_1_47 } from "@/js/data_storage";
 import { isExpertModeEnabled } from "@/js/utils/isExpertModeEnabled";
 import tippy from "tippy.js";
-import { tabState } from "@/js/tab_state";
+import { useNavigationStore } from "@/stores/navigation";
 import { useDialog } from "@/composables/useDialog";
 import { useTranslation } from "i18next-vue";
 import { gui_log } from "@/js/gui_log";
 
 const { t } = useTranslation();
 const pidTuningStore = usePidTuningStore();
+const navigationStore = useNavigationStore();
 const dialog = useDialog();
 
-// State - use global reactive state for expert mode
-const expertModeEnabled = computed(() => tabState.expertMode);
+// State - use navigation store for expert mode
+const expertModeEnabled = computed(() => navigationStore.expertMode);
 const activeSubtab = ref("pid");
 const showAllPids = ref(false);
 const currentProfile = ref(FC.CONFIG.profile);
@@ -250,7 +251,7 @@ function initializeUI() {
     currentProfile.value = FC.CONFIG.profile;
     currentRateProfile.value = FC.CONFIG.rateProfile;
     // Get expert mode from global checkbox (in header) and sync to global state
-    tabState.expertMode = isExpertModeEnabled();
+    navigationStore.expertMode = isExpertModeEnabled();
 }
 
 function storeOriginalValues() {

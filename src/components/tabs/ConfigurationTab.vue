@@ -1555,7 +1555,114 @@ export default defineComponent({
 });
 </script>
 
-<style lang="less" scoped>
-@import "../../css/tabs/configuration.less";
+<style lang="less">
+.tab-configuration {
+    .alignicon {
+        width: 15px;
+        height: 15px;
+        margin: 3px;
+    }
+    .pitch {
+        background-image: url(../../images/icons/cf_icon_pitch.svg);
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+    .yaw {
+        background-image: url(../../images/icons/cf_icon_yaw.svg);
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+    .roll {
+        background-image: url(../../images/icons/cf_icon_roll.svg);
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+    .sensor_align_content {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        .sensor_align_inputs {
+            display: flex;
+            align-items: center;
+            label {
+                white-space: nowrap;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+        }
+    }
+    table {
+        td {
+            height: 1.75rem;
+        }
+        tbody.beeper-configuration {
+            tr {
+                td:nth-child(2) {
+                    font-weight: bold;
+                    padding-left: 1.5rem;
+                    padding-right: 1.5rem;
+                }
+            }
+        }
+    }
+
+    .visually-hidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+    }
+
+    .beeper-controls {
+        margin-bottom: 0.5rem;
+        display: flex;
+        gap: 0.25rem;
+        .btn {
+            text-align: center;
+            background-color: var(--primary-500);
+            border-radius: 0.5rem;
+            border: 1px solid var(--primary-600);
+            color: #000;
+            font-weight: 600;
+            font-size: 10px;
+            cursor: pointer;
+            white-space: nowrap;
+            height: 1.4rem;
+            display: flex;
+            align-items: center;
+            transition:
+                color 200ms,
+                background-color 200ms;
+
+            &:hover {
+                background-color: var(--primary-400);
+                color: #000;
+                transition: all ease 0.2s;
+                text-decoration: none;
+            }
+            &:active {
+                background-color: var(--primary-400);
+                transition: all ease 0s;
+                box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.35);
+            }
+        }
+    }
+
+    @media all and (max-width: 575px) {
+        .grid-box {
+            &.col2 {
+                grid-template-columns: 1fr !important;
+            }
+        }
+    }
+}
 </style>
 ```

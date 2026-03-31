@@ -6794,10 +6794,6 @@
         "message": "请稍候",
         "description": "Second label in the progress dialog when applying presets"
     },
-    "presetsCliErrorsWarning": {
-        "message": "<span class='message-negative'>警告!<\/span><br\/> 已在存在 CLI 错误情况下应用配置",
-        "description": "Text to show when there are CLI errors after applying presets or user configuration"
-    },
     "presetsSaveAnyway": {
         "message": "仍要保存",
         "description": "Save anyway button on the CLI errors presets dialog"

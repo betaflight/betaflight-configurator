@@ -6690,10 +6690,6 @@
         "message": "Por favor, aguarde.",
         "description": "Second label in the progress dialog when applying presets"
     },
-    "presetsCliErrorsWarning": {
-        "message": "<span class='message-negative'>AVISO!<\/span><br\/>A configuração foi aplicada com erros de CLI.",
-        "description": "Text to show when there are CLI errors after applying presets or user configuration"
-    },
     "presetsSaveAnyway": {
         "message": "Salvar mesmo assim",
         "description": "Save anyway button on the CLI errors presets dialog"
