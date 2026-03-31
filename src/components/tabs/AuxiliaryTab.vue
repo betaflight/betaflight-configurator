@@ -191,7 +191,7 @@
 </template>
 
 <script>
-import { defineComponent, reactive, ref, computed, onMounted, onUnmounted, watch } from "vue";
+import { defineComponent, reactive, ref, computed, onMounted, onUnmounted, watch, nextTick } from "vue";
 import { useFlightControllerStore } from "@/stores/fc";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "../elements/WikiButton.vue";
@@ -664,6 +664,7 @@ export default defineComponent({
             } catch (error) {
                 console.error("Failed to load auxiliary data", error);
             } finally {
+                await nextTick();
                 GUI.content_ready();
             }
         };
