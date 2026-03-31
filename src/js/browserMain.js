@@ -9,24 +9,18 @@ import "@fortawesome/fontawesome-free/css/all.css";
 import "../components/MotorOutputReordering/Styles.css";
 import "../components/EscDshotDirection/Styles.css";
 import "../css/dark-theme.less";
+import "../css/nuxt-ui.css";
 import "./main";
 
-import { registerSW } from "virtual:pwa-register";
-import { isAndroid } from "./utils/checkCompatibility.js";
-import { createApp } from "vue";
+import { i18n } from "./localization";
 import { pinia } from "./pinia_instance";
 import { useDialogStore } from "../stores/dialog";
-import { i18n } from "./localization";
-import GlobalDialogs from "@/components/dialogs/GlobalDialogs.vue";
-
-// Mount Global Dialogs App
-const dialogApp = createApp(GlobalDialogs);
-dialogApp.use(pinia);
-dialogApp.mount("#dialog-container");
+import { registerSW } from "virtual:pwa-register";
+import { isAndroid } from "./utils/checkCompatibility.js";
 
 // Skip PWA update/offline prompts on Android native builds where they are unnecessary
 if (!isAndroid()) {
-    const dialogStore = useDialogStore();
+    const dialogStore = useDialogStore(pinia);
     const updateSW = registerSW({
         onNeedRefresh() {
             console.log("Detected onNeedRefresh");

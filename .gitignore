@@ -51,6 +51,9 @@ build
 # Ignore Capacitor Android build output directories for local plugins
 capacitor-plugins/*/android/bin/
 
+# Auto-generated type declarations for Nuxt UI
+auto-imports.d.ts
+components.d.ts
 
 /*.pem
 /CLAUDE.md

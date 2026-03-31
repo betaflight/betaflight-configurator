@@ -1,8 +1,4 @@
 * {
-    margin: 0;
-    padding: 0;
-    border: 0;
-    list-style: none;
     outline: none;
     user-select: none;
     -webkit-user-drag: none;
@@ -256,7 +252,7 @@ input[type="number"] {
     backdrop-filter: blur(0.25rem);
 }
 .headerbar {
-    height: 5rem;
+    min-height: 7rem;
     display: flex;
     align-items: start;
     padding: 1rem;
@@ -665,7 +661,7 @@ input[type="number"] {
 }
 .tab_container {
     transition: all 0.2s;
-    width: 17rem;
+    min-width: fit-content;
     overflow: auto;
     padding: 1rem;
     background-color: var(--surface-100);
@@ -709,7 +705,7 @@ input[type="number"] {
         }
         a {
             font-weight: normal;
-            padding: 0.25rem 1rem;
+            padding: 1rem 1rem;
             background-color: transparent;
             color: var(--text);
             border-radius: 999px;
@@ -957,6 +953,7 @@ dialog {
 }
 .img_sponsor {
     object-fit: contain;
+    display: inline-block;
     margin: 5px 15px;
     max-height: 45px;
     width: 150px;
@@ -1090,7 +1087,7 @@ dialog {
         display: flex;
         flex-wrap: wrap;
         position: fixed;
-        bottom: 1.5rem;
+        bottom: 34px;
         right: 0;
     }
 }
@@ -1639,21 +1636,6 @@ table {
     margin-top: 2px;
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;
-}
-button {
-    padding: 0.5em 0.75em;
-    border-radius: 4px;
-    background-color: #ccc;
-    color: #666;
-    border: 1px solid var(--surface-400);
-    font-weight: 600;
-    font-size: 10pt;
-    cursor: pointer;
-}
-button.active {
-    background-color: var(--primary-500);
-    border: 1px solid var(--primary-600);
-    color: #000;
 }
 .tippy-box[data-theme~="custom"] {
     background: var(--surface-300);

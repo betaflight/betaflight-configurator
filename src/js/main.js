@@ -437,9 +437,8 @@ async function startProcess() {
             });
         });
 
-        if (FC.FEATURE_CONFIG && FC.FEATURE_CONFIG.features !== 0) {
-            updateTabList(FC.FEATURE_CONFIG.features);
-        }
+        // Always sync vm.expertMode so Vue reactivity stays in sync (updateTabList syncs checkbox -> vm)
+        updateTabList(FC.FEATURE_CONFIG?.features);
 
         if (GUI.active_tab) {
             TABS[GUI.active_tab]?.expertModeChanged?.(checked);
