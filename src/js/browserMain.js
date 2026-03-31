@@ -12,32 +12,46 @@ import "../css/dark-theme.less";
 import "../css/nuxt-ui.css";
 import "./main";
 
-import GUI from "./gui";
 import { i18n } from "./localization";
+import { pinia } from "./pinia_instance";
+import { useDialogStore } from "../stores/dialog";
 import { registerSW } from "virtual:pwa-register";
 import { isAndroid } from "./utils/checkCompatibility.js";
 
 // Skip PWA update/offline prompts on Android native builds where they are unnecessary
 if (!isAndroid()) {
+    const dialogStore = useDialogStore(pinia);
     const updateSW = registerSW({
         onNeedRefresh() {
             console.log("Detected onNeedRefresh");
-            GUI.showYesNoDialog({
-                title: i18n.getMessage("pwaOnNeedRefreshTitle"),
-                text: i18n.getMessage("pwaOnNeedRefreshText"),
-                buttonYesText: i18n.getMessage("yes"),
-                buttonNoText: i18n.getMessage("no"),
-                buttonYesCallback: () => updateSW(),
-                buttonNoCallback: null,
-            });
+            dialogStore.open(
+                "YesNoDialog",
+                {
+                    title: i18n.getMessage("pwaOnNeedRefreshTitle"),
+                    text: i18n.getMessage("pwaOnNeedRefreshText"),
+                    yesText: i18n.getMessage("yes"),
+                    noText: i18n.getMessage("no"),
+                },
+                {
+                    yes: () => {
+                        dialogStore.close();
+                        updateSW();
+                    },
+                    no: () => dialogStore.close(),
+                },
+            );
         },
         onOfflineReady() {
             console.log("Detected onOfflineReady");
-            GUI.showInformationDialog({
-                title: i18n.getMessage("pwaOnOffilenReadyTitle"),
-                text: i18n.getMessage("pwaOnOffilenReadyText"),
-                buttonConfirmText: i18n.getMessage("OK"),
-            });
+            dialogStore.open(
+                "InformationDialog",
+                {
+                    title: i18n.getMessage("pwaOnOffilenReadyTitle"),
+                    text: i18n.getMessage("pwaOnOffilenReadyText"),
+                    confirmText: i18n.getMessage("OK"),
+                },
+                { confirm: () => dialogStore.close() },
+            );
         },
     });
 }
