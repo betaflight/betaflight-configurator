@@ -1,5 +1,5 @@
 <template>
-    <dialog class="dialogReboot" open>
+    <dialog ref="dialogRef" class="dialogReboot" @cancel.prevent>
         <div class="content">
             <div class="reboot-status">{{ status }}</div>
             <div class="reboot-progress-container">
@@ -7,10 +7,11 @@
             </div>
         </div>
     </dialog>
-    <div class="dialog-backdrop"></div>
 </template>
 
 <script setup>
+import { ref } from "vue";
+
 defineProps({
     status: {
         type: String,
@@ -21,17 +22,27 @@ defineProps({
         default: 0,
     },
 });
+
+const dialogRef = ref(null);
+
+const show = () => {
+    dialogRef.value?.showModal();
+};
+
+const close = () => {
+    dialogRef.value?.close();
+};
+
+defineExpose({
+    show,
+    close,
+    dialog: dialogRef,
+});
 </script>
 
 <style scoped>
-.dialog-backdrop {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 999;
+.dialogReboot:not([open]) {
+    display: none;
 }
 
 .dialogReboot {
@@ -50,6 +61,10 @@ defineProps({
     padding: 20px;
     max-width: 400px;
     width: 100%;
+}
+
+.dialogReboot::backdrop {
+    background: rgba(0, 0, 0, 0.5);
 }
 
 .reboot-progress-container {
