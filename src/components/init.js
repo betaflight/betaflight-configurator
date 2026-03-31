@@ -1,7 +1,5 @@
-// This modules is imported and has side effect of attaching the
-// `i18n` helper to window and setting up `i18next`
-// in the future it should be pure. This means it should
-// explicitly export things used by other parts of the app.
+// This module is imported for its side effects: setting up i18next
+// and initializing the Vue app with plugins and global model.
 import "../js/localization.js";
 import "../js/injected_methods";
 import i18next from "i18next";
@@ -72,7 +70,4 @@ i18next.on("initialized", function () {
     }
 });
 
-// Not strictly necessary here, but if needed
-// it's always possible to modify this model in
-// jquery land to trigger updates in vue
-window.vm = betaflightModel;
+export { betaflightModel };

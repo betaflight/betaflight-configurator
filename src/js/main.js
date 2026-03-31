@@ -9,7 +9,6 @@ import FC from "./fc.js";
 import CONFIGURATOR from "./data_storage.js";
 import CliAutoComplete from "./CliAutoComplete.js";
 import DarkTheme, { setDarkTheme } from "./DarkTheme.js";
-import { isExpertModeEnabled } from "./utils/isExpertModeEnabled.js";
 import { updateTabList } from "./utils/updateTabList.js";
 import { mountVueTab } from "./vue_tab_mounter.js";
 import * as THREE from "three";
@@ -482,6 +481,3 @@ async function startProcess() {
         DarkTheme.autoSet();
     });
 }
-
-window.isExpertModeEnabled = isExpertModeEnabled;
-window.appReady = appReady;

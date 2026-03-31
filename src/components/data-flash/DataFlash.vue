@@ -19,44 +19,42 @@
     </div>
 </template>
 
-<script>
-import { defineComponent } from "vue";
-export default defineComponent({
-    props: {
-        fcTotalSize: { type: Number, default: 100000 },
-        fcUsedSize: { type: Number, default: 82000 },
-    },
-    computed: {
-        supportDataflash() {
-            return this.fcTotalSize > 0;
-        },
-        freeSpace() {
-            if (!this.supportDataflash) {
-                return;
-            }
-            const bytes = this.fcTotalSize - this.fcUsedSize;
-            if (this.fcUsedSize >= this.fcTotalSize) {
-                return "0B";
-            }
-            if (bytes < 1024) {
-                return `${bytes}B`;
-            }
-            const kilobytes = bytes / 1024;
-            if (kilobytes < 1024) {
-                return `${Math.round(kilobytes)}KB`;
-            }
-            const megabytes = kilobytes / 1024;
-            if (megabytes < 1024) {
-                return `${megabytes.toFixed(1)}MB`;
-            }
-            const gigabytes = megabytes / 1024;
-            return `${gigabytes.toFixed(1)}GB`;
-        },
-        indicatorWidth() {
-            return this.supportDataflash ? `${Math.min((this.fcUsedSize / this.fcTotalSize) * 100, 100)}%` : "0%";
-        },
-    },
+<script setup>
+import { computed } from "vue";
+
+const props = defineProps({
+    fcTotalSize: { type: Number, default: 100000 },
+    fcUsedSize: { type: Number, default: 82000 },
 });
+
+const supportDataflash = computed(() => props.fcTotalSize > 0);
+
+const freeSpace = computed(() => {
+    if (!supportDataflash.value) {
+        return;
+    }
+    const bytes = props.fcTotalSize - props.fcUsedSize;
+    if (props.fcUsedSize >= props.fcTotalSize) {
+        return "0B";
+    }
+    if (bytes < 1024) {
+        return `${bytes}B`;
+    }
+    const kilobytes = bytes / 1024;
+    if (kilobytes < 1024) {
+        return `${Math.round(kilobytes)}KB`;
+    }
+    const megabytes = kilobytes / 1024;
+    if (megabytes < 1024) {
+        return `${megabytes.toFixed(1)}MB`;
+    }
+    const gigabytes = megabytes / 1024;
+    return `${gigabytes.toFixed(1)}GB`;
+});
+
+const indicatorWidth = computed(() =>
+    supportDataflash.value ? `${Math.min((props.fcUsedSize / props.fcTotalSize) * 100, 100)}%` : "0%",
+);
 </script>
 
 <style scoped>
