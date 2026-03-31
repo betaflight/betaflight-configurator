@@ -1,5 +1,5 @@
 <template>
-    <dialog class="dialogYesNo" open>
+    <dialog ref="dialogRef" class="dialogYesNo" @cancel.prevent>
         <h3 class="dialogYesNoTitle">{{ title }}</h3>
         <div class="dialogYesNoContent" v-html="text"></div>
         <div class="buttons">
@@ -9,10 +9,11 @@
             <button type="button" class="dialogYesNo-noButton regular-button" @click="$emit('no')">{{ noText }}</button>
         </div>
     </dialog>
-    <div class="dialog-backdrop"></div>
 </template>
 
 <script setup>
+import { ref } from "vue";
+
 defineProps({
     title: String,
     // Note: 'text' is rendered using v-html to support bolding/links in i18n messages.
@@ -23,28 +24,40 @@ defineProps({
 });
 
 defineEmits(["yes", "no"]);
+
+const dialogRef = ref(null);
+
+const show = () => {
+    dialogRef.value?.showModal();
+};
+
+const close = () => {
+    dialogRef.value?.close();
+};
+
+defineExpose({
+    show,
+    close,
+    dialog: dialogRef,
+});
 </script>
 
 <style scoped>
-/* Scoped styles mainly for the backdrop, reusing existing global dialog styles for the dialog itself */
-.dialog-backdrop {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 999; /* Below dialog, above content */
+.dialogYesNo:not([open]) {
+    display: none;
 }
 
-/* Ensure our Vue dialog sits above everything */
 .dialogYesNo {
-    display: block; /* Override default hidden dialog behavior since we control it with v-if in parent */
+    display: block;
     z-index: 1000;
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     margin: 0;
+}
+
+.dialogYesNo::backdrop {
+    background: rgba(0, 0, 0, 0.5);
 }
 </style>
