@@ -137,7 +137,14 @@ export default defineConfig({
     },
     plugins: [
         vue(),
-        ui(),
+        ui({
+            ui: {
+                colors: {
+                    primary: "primary",
+                    neutral: "neutral",
+                },
+            },
+        }),
         serveLocalesPlugin(),
         copy({
             targets: [
