@@ -138,6 +138,7 @@ export default defineConfig({
     plugins: [
         vue(),
         ui({
+            colorMode: false, // light/dark mode is handled elsewhere in the app itself, Nuxt UI would otherwise override it
             ui: {
                 colors: {
                     primary: "primary",

@@ -39,12 +39,12 @@ DarkTheme.setConfig = function (result) {
 };
 
 DarkTheme.applyDark = function () {
-    document.body.classList.add("dark-theme");
+    document.documentElement.classList.add("dark");
     this.enabled = true;
 };
 
 DarkTheme.applyNormal = function () {
-    document.body.classList.remove("dark-theme");
+    document.documentElement.classList.remove("dark");
     this.enabled = false;
 };
 

@@ -23,7 +23,7 @@
     --color-primary-950: #482100;
 }
 
-body {
+html {
     /* Existing primary colors used across the app */
     /* Referencing Nuxt UI colors to avoid renaming hundreds of variables */
     --primary-50: var(--color-primary-50);
@@ -86,7 +86,7 @@ body {
     --primary-action-hover: var(--success-400);
 }
 
-body.dark-theme {
+.dark {
     --surface-50: hsl(0, 0%, 4%);
     --surface-100: hsl(0, 0%, 8%);
     --surface-200: hsl(0, 0%, 12%);
