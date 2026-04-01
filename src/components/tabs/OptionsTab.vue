@@ -211,6 +211,7 @@
 <script>
 import { defineComponent, reactive, watch, onMounted, nextTick } from "vue";
 import BaseTab from "./BaseTab.vue";
+import { useDialog } from "@/composables/useDialog";
 import GUI from "../../js/gui";
 import { get as getConfig, set as setConfig } from "../../js/ConfigStorage";
 import { i18n } from "../../js/localization";
@@ -228,6 +229,8 @@ export default defineComponent({
         BaseTab,
     },
     setup() {
+        const dialog = useDialog();
+
         // Load initial settings from config storage
         const settings = reactive({
             rememberLastTab: !!getConfig("rememberLastTab").rememberLastTab,
@@ -435,7 +438,9 @@ export default defineComponent({
                         setConfig({ showNotifications: enabled });
                         break;
                     case "denied":
-                        GUI.showInformationDialog(informationDialog);
+                        dialog.openInfo(informationDialog.title, informationDialog.text, {
+                            confirmText: informationDialog.buttonConfirmText,
+                        });
                         settings.showNotifications = false;
                         break;
                     case "default":
@@ -445,7 +450,9 @@ export default defineComponent({
                                 setConfig({ showNotifications: true });
                                 settings.showNotifications = true;
                             } else {
-                                GUI.showInformationDialog(informationDialog);
+                                dialog.openInfo(informationDialog.title, informationDialog.text, {
+                                    confirmText: informationDialog.buttonConfirmText,
+                                });
                             }
                         });
                         break;
@@ -472,6 +479,25 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
-/* Inherit styles from existing options.html via global CSS */
+<style lang="less">
+.tab-options {
+    .freelabel {
+        margin-left: 10px;
+        position: relative;
+    }
+    .switchery {
+        float: left;
+    }
+    .margin-bottom {
+        margin-bottom: 10px;
+        grid-template-columns: fit-content(300px) 1fr;
+    }
+    select {
+        background: var(--surface-200);
+        color: var(--text);
+        border: 1px solid var(--surface-500);
+        border-radius: 3px;
+        width: fit-content;
+    }
+}
 </style>

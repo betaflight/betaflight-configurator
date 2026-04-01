@@ -613,8 +613,10 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted, nextTick, watch } from "vue";
 import { useFlightControllerStore } from "@/stores/fc";
+import { useConnectionStore } from "@/stores/connection";
 import { useNavigationStore } from "@/stores/navigation";
 import { useReboot } from "@/composables/useReboot";
+import { useInterval } from "../../composables/useInterval";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "@/components/elements/WikiButton.vue";
 import { i18n } from "@/js/localization";
@@ -622,7 +624,6 @@ import MSP from "@/js/msp";
 import MSPCodes from "@/js/msp/MSPCodes";
 import { mspHelper } from "@/js/msp/MSPHelper";
 import GUI from "@/js/gui";
-import FC from "@/js/fc";
 import Model from "@/js/model";
 import RateCurve from "@/js/RateCurve";
 import { degToRad } from "@/js/utils/common";
@@ -632,7 +633,7 @@ import { updateTabList } from "@/js/utils/updateTabList";
 import { gui_log } from "@/js/gui_log";
 import DarkTheme from "@/js/DarkTheme";
 import windowWatcherUtil from "@/js/utils/window_watchers";
-import CONFIGURATOR, { API_VERSION_1_45, API_VERSION_1_47 } from "@/js/data_storage";
+import { API_VERSION_1_45, API_VERSION_1_47 } from "@/js/data_storage";
 import CryptoES from "crypto-es";
 import semver from "semver";
 import * as THREE from "three";
@@ -640,8 +641,10 @@ import * as d3 from "d3";
 
 const t = (key) => i18n.getMessage(key);
 const fcStore = useFlightControllerStore();
+const connectionStore = useConnectionStore();
 const navigationStore = useNavigationStore();
 const { reboot } = useReboot();
+const { addInterval, removeInterval } = useInterval();
 
 // Template refs
 const modelPreviewContainer = ref(null);
@@ -707,8 +710,7 @@ const rxConfig = computed(() => fcStore.rxConfig);
 const rssiConfig = computed(() => fcStore.rssiConfig);
 const features = computed(() => fcStore.features);
 
-// Need to access FC directly for some missing store properties
-const rcDeadbandConfig = computed(() => FC.RC_DEADBAND_CONFIG);
+const rcDeadbandConfig = computed(() => fcStore.rcDeadbandConfig);
 
 // Decode HTML entities in translations (some use &lt; etc)
 function decodeHtmlEntities(text) {
@@ -737,8 +739,8 @@ const rxModeOptions = computed(() => {
 
 // Serial RX types with enabled status
 const serialRxTypes = computed(() => {
-    const types = FC.getSerialRxTypes ? FC.getSerialRxTypes() : [];
-    const supported = FC.getSupportedSerialRxTypes ? FC.getSupportedSerialRxTypes() : types;
+    const types = fcStore.getSerialRxTypes();
+    const supported = fcStore.getSupportedSerialRxTypes();
     return types.map((name) => ({
         name,
         enabled: supported.includes(name),
@@ -794,7 +796,7 @@ const showAutoFactor = computed(
 const showThrottleAutoFactor = computed(() => throttleManualMode.value === "0");
 
 const showBindButton = computed(() => {
-    return bit_check(fcStore.config?.targetCapabilities, FC.TARGET_CAPABILITIES_FLAGS?.SUPPORTS_RX_BIND);
+    return bit_check(fcStore.config?.targetCapabilities, fcStore.TARGET_CAPABILITIES_FLAGS?.SUPPORTS_RX_BIND);
 });
 
 // ELRS UID display
@@ -909,15 +911,15 @@ function validateChannelMap() {
         seen.add(char);
     }
     // Valid - update RC_MAP
-    for (let i = 0; i < FC.RC_MAP.length; i++) {
-        FC.RC_MAP[i] = chars.indexOf(rcMapLetters[i]);
+    for (let i = 0; i < fcStore.rcMap.length; i++) {
+        fcStore.rcMap[i] = chars.indexOf(rcMapLetters[i]);
     }
 }
 
 function updateChannelMapFromRcMap() {
     const strBuffer = [];
-    for (let i = 0; i < FC.RC_MAP.length; i++) {
-        strBuffer[FC.RC_MAP[i]] = rcMapLetters[i];
+    for (let i = 0; i < fcStore.rcMap.length; i++) {
+        strBuffer[fcStore.rcMap[i]] = rcMapLetters[i];
     }
     channelMapString.value = strBuffer.join("");
 }
@@ -980,7 +982,7 @@ function openSticksWindow() {
     const windowHeight = 550;
 
     const rxFunction = (channels) => {
-        if (CONFIGURATOR.connectionValid && GUI.active_tab !== "cli") {
+        if (connectionStore.connectionValid && GUI.active_tab !== "cli") {
             mspHelper.setRawRx(channels);
             return true;
         }
@@ -1075,22 +1077,22 @@ async function saveConfig(withReboot = false) {
         if (elrsBindingPhraseEnabled.value) {
             const elrsUidChars = elrsBindingPhraseToBytes(elrsBindingPhrase.value);
             if (elrsUidChars.length === 6) {
-                FC.RX_CONFIG.elrsUid = elrsUidChars;
+                fcStore.rxConfig.elrsUid = elrsUidChars;
                 saveElrsBindingPhrase(elrsUidChars.join(","), elrsBindingPhrase.value);
             } else {
-                FC.RX_CONFIG.elrsUid = [0, 0, 0, 0, 0, 0];
+                fcStore.rxConfig.elrsUid = [0, 0, 0, 0, 0, 0];
             }
         }
 
         // Set cutoffs to 0 for auto mode
         if (setpointManualMode.value === "0") {
-            FC.RX_CONFIG.rcSmoothingSetpointCutoff = 0;
+            fcStore.rxConfig.rcSmoothingSetpointCutoff = 0;
         }
         if (showThrottleSmoothingOptions.value && throttleManualMode.value === "0") {
-            FC.RX_CONFIG.rcSmoothingThrottleCutoff = 0;
+            fcStore.rxConfig.rcSmoothingThrottleCutoff = 0;
         }
         if (!showThrottleSmoothingOptions.value && feedforwardManualMode.value === "0") {
-            FC.RX_CONFIG.rcSmoothingFeedforwardCutoff = 0;
+            fcStore.rxConfig.rcSmoothingFeedforwardCutoff = 0;
         }
 
         // Save sequence
@@ -1264,8 +1266,8 @@ function getRcData() {
 // Watch refresh rate changes
 watch(refreshRate, (newRate) => {
     setConfig({ rx_refresh_rate: newRate });
-    GUI.interval_remove("receiver_pull");
-    GUI.interval_add("receiver_pull", getRcData, newRate, true);
+    removeInterval("receiver_pull");
+    addInterval("receiver_pull", getRcData, newRate, true);
 });
 
 // Lifecycle
@@ -1281,7 +1283,7 @@ onMounted(async () => {
     renderModel();
 
     // Start model preview polling
-    GUI.interval_add(
+    addInterval(
         "receiver_pull_for_model_preview",
         () => {
             MSP.send_message(MSPCodes.MSP_RC, false, false);
@@ -1292,7 +1294,7 @@ onMounted(async () => {
 
     // Setup and start RC plot
     setupRxPlot();
-    GUI.interval_add("receiver_pull", getRcData, refreshRate.value, true);
+    addInterval("receiver_pull", getRcData, refreshRate.value, true);
 
     GUI.content_ready();
 });
@@ -1306,8 +1308,6 @@ onUnmounted(() => {
     if (model?.dispose) {
         model.dispose();
     }
-    GUI.interval_remove("receiver_pull");
-    GUI.interval_remove("receiver_pull_for_model_preview");
 });
 </script>
 

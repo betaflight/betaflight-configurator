@@ -9,9 +9,8 @@ import FC from "./fc.js";
 import CONFIGURATOR from "./data_storage.js";
 import CliAutoComplete from "./CliAutoComplete.js";
 import DarkTheme, { setDarkTheme } from "./DarkTheme.js";
-import { isExpertModeEnabled } from "./utils/isExpertModeEnabled.js";
 import { updateTabList } from "./utils/updateTabList.js";
-import { mountVueTab, unmountVueTab } from "./vue_tab_mounter.js";
+import { mountVueTab } from "./vue_tab_mounter.js";
 import * as THREE from "three";
 import NotificationManager from "./utils/notifications.js";
 import { Capacitor } from "@capacitor/core";
@@ -282,17 +281,6 @@ async function startProcess() {
                 // Highlight selected tab
                 self.parentElement.classList.add("active");
 
-                // detach listeners and remove element data
-                const content = document.getElementById("content");
-                unmountVueTab();
-                content.innerHTML = "";
-
-                // display loading screen
-                const loadingTemplate = document.querySelector("#cache .data-loading");
-                if (loadingTemplate) {
-                    content.appendChild(loadingTemplate.cloneNode(true));
-                }
-
                 function content_ready() {
                     GUI.tab_switch_in_progress = false;
                 }
@@ -301,104 +289,9 @@ async function startProcess() {
                     analyticsService.sendAppView(tab);
                 });
 
-                switch (tab) {
-                    case "landing":
-                        // Vue tab - use mountVueTab instead of jQuery load
-                        mountVueTab("landing", content_ready);
-                        break;
-                    case "options":
-                        // Vue tab - use mountVueTab instead of jQuery load
-                        mountVueTab("options", content_ready);
-                        break;
-                    case "firmware_flasher":
-                        // Vue tab - use mountVueTab instead of jQuery load
-                        mountVueTab("firmware_flasher", content_ready);
-                        break;
-                    case "help":
-                        // Vue tab - use mountVueTab instead of jQuery load
-                        mountVueTab("help", content_ready);
-                        break;
-                    case "preflight":
-                        mountVueTab("preflight", content_ready);
-                        break;
-                    case "auxiliary":
-                        mountVueTab("auxiliary", content_ready);
-                        break;
-                    case "adjustments":
-                        mountVueTab("adjustments", content_ready);
-                        break;
-                    case "ports":
-                        mountVueTab("ports", content_ready);
-                        break;
-                    case "led_strip":
-                        mountVueTab("led_strip", content_ready);
-                        break;
-                    case "failsafe":
-                        mountVueTab("failsafe", content_ready);
-                        break;
-                    case "transponder":
-                        mountVueTab("transponder", content_ready);
-                        break;
-                    case "osd":
-                        mountVueTab("osd", content_ready);
-                        break;
-                    case "vtx":
-                        mountVueTab("vtx", content_ready);
-                        break;
-                    case "power":
-                        mountVueTab("power", content_ready);
-                        break;
-                    case "setup":
-                        mountVueTab("setup", content_ready);
-                        break;
-
-                    case "configuration":
-                        mountVueTab("configuration", content_ready);
-                        break;
-                    case "pid_tuning":
-                        mountVueTab("pid_tuning", content_ready);
-                        break;
-                    case "receiver":
-                        mountVueTab("receiver", content_ready);
-                        break;
-                    case "servos":
-                        // Vue tab - use mountVueTab instead of jQuery load
-                        mountVueTab("servos", content_ready);
-                        break;
-                    case "gps":
-                        mountVueTab("gps", content_ready);
-                        break;
-                    case "flight_plan":
-                        mountVueTab("flight_plan", content_ready);
-                        break;
-                    case "motors":
-                        mountVueTab("motors", content_ready);
-                        break;
-                    case "sensors":
-                        mountVueTab("sensors", content_ready);
-                        break;
-                    case "logging":
-                        mountVueTab("logging", content_ready);
-                        break;
-                    case "onboard_logging":
-                        mountVueTab("onboard_logging", content_ready);
-                        break;
-                    case "cli":
-                        mountVueTab("cli", content_ready);
-                        break;
-                    case "presets":
-                        mountVueTab("presets", content_ready);
-                        break;
-                    case "user_profile":
-                        // Vue tab - use mountVueTab instead of jQuery load
-                        mountVueTab("user_profile", content_ready);
-                        break;
-                    case "backups":
-                        // Vue tab - use mountVueTab instead of jQuery load
-                        mountVueTab("backups", content_ready);
-                        break;
-                    default:
-                        console.log(`Tab not found: ${tab}`);
+                if (!mountVueTab(tab, content_ready)) {
+                    console.log(`Tab not found: ${tab}`);
+                    GUI.tab_switch_in_progress = false;
                 }
             });
         });
@@ -544,9 +437,8 @@ async function startProcess() {
             });
         });
 
-        if (FC.FEATURE_CONFIG && FC.FEATURE_CONFIG.features !== 0) {
-            updateTabList(FC.FEATURE_CONFIG.features);
-        }
+        // Always sync vm.expertMode so Vue reactivity stays in sync (updateTabList syncs checkbox -> vm)
+        updateTabList(FC.FEATURE_CONFIG?.features);
 
         if (GUI.active_tab) {
             TABS[GUI.active_tab]?.expertModeChanged?.(checked);
@@ -588,6 +480,3 @@ async function startProcess() {
         DarkTheme.autoSet();
     });
 }
-
-window.isExpertModeEnabled = isExpertModeEnabled;
-window.appReady = appReady;

@@ -958,6 +958,30 @@
                             </td>
                         </tr>
 
+                        <!-- Dynamic Idle Min RPM -->
+                        <tr class="idleMinRpm">
+                            <td>
+                                <input
+                                    type="number"
+                                    name="idleMinRpm-number"
+                                    v-model.number="advancedTuning.idleMinRpm"
+                                    step="1"
+                                    min="0"
+                                    :max="idleMinRpmMax"
+                                    :disabled="!dshotTelemetryEnabled"
+                                />
+                            </td>
+                            <td colspan="2">
+                                <div>
+                                    <label>
+                                        <span v-if="dshotTelemetryEnabled" v-html="$t('pidTuningIdleMinRpm')"></span>
+                                        <span v-else v-html="$t('pidTuningIdleMinRpmDisabled')"></span>
+                                    </label>
+                                    <div class="helpicon cf_tip" :title="$t('pidTuningIdleMinRpmHelp')"></div>
+                                </div>
+                            </td>
+                        </tr>
+
                         <!-- VBat Sag Compensation -->
                         <tr class="vbatSagCompensation">
                             <td>
@@ -1364,6 +1388,10 @@ const pidNavRD = createPidComputed("NavR", 2);
 
 // Advanced tuning - reactive reference
 const advancedTuning = computed(() => FC.ADVANCED_TUNING);
+
+// Dynamic Idle visibility and state
+const dshotTelemetryEnabled = computed(() => FC.MOTOR_CONFIG.use_dshot_telemetry ?? false);
+const idleMinRpmMax = computed(() => (semver.gte(FC.CONFIG.apiVersion, API_VERSION_1_45) ? 200 : 100));
 
 // TPA settings with API version gating
 // API >= 1.45: Use ADVANCED_TUNING (tpaMode, tpaRate, tpaBreakpoint)

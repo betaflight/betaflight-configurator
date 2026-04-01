@@ -93,8 +93,8 @@
 <script>
 import { computed, defineComponent, nextTick, onMounted, ref, watch } from "vue";
 import { useFlightControllerStore } from "@/stores/fc";
+import { useConnectionStore } from "@/stores/connection";
 import { useReboot } from "@/composables/useReboot";
-import CONFIGURATOR from "@/js/data_storage";
 import { gui_log } from "@/js/gui_log";
 import { i18n } from "@/js/localization";
 import MSP from "@/js/msp";
@@ -182,6 +182,7 @@ export default defineComponent({
     },
     setup() {
         const fcStore = useFlightControllerStore();
+        const connectionStore = useConnectionStore();
         const { reboot } = useReboot();
 
         const dataInput = ref("");
@@ -275,7 +276,7 @@ export default defineComponent({
                 mspHelper.crunch(MSPCodes.MSP_SET_TRANSPONDER_CONFIG),
                 false,
                 (response) => {
-                    if (!CONFIGURATOR.virtualMode && (!response || response.crcError)) {
+                    if (!connectionStore.virtualMode && (!response || response.crcError)) {
                         gui_log(i18n.getMessage("configurationSaveFailed"));
                         selectedProviderId.value = defaultProviderId.value;
                         return;
@@ -334,3 +335,83 @@ export default defineComponent({
     },
 });
 </script>
+
+<style lang="less">
+.tab-transponder {
+    .spacer_box {
+        padding-bottom: 10px;
+        float: left;
+        width: calc(100% - 20px);
+    }
+    .text {
+        input {
+            width: 100px;
+            padding-left: 3px;
+            height: 20px;
+            line-height: 20px;
+            text-align: left;
+            border: 1px solid var(--surface-500);
+            border-radius: 3px;
+            margin-right: 11px;
+            font-size: 12px;
+            font-weight: normal;
+            background: var(--surface-200);
+            color: var(--text);
+        }
+        span {
+            margin-left: 0px;
+        }
+        margin-bottom: 5px;
+        clear: left;
+        padding-bottom: 5px;
+        border-bottom: 1px solid var(--surface-500);
+        width: 100%;
+        float: left;
+        &:last-child {
+            border-bottom: none;
+            padding-bottom: 0px;
+            margin-bottom: 0px;
+        }
+    }
+    input {
+        float: left;
+    }
+    span {
+        margin: 0px;
+    }
+    .textspacer {
+        float: left;
+        width: 115px;
+        height: 21px;
+    }
+    .gui_box {
+        span {
+            font-style: normal;
+            line-height: 19px;
+            color: var(--text);
+            font-size: 11px;
+        }
+    }
+    select {
+        min-width: 100px;
+        border: 1px solid var(--surface-500);
+        border-radius: 3px;
+        background: var(--surface-200);
+        color: var(--text);
+    }
+}
+.require-transponder-supported {
+    display: none;
+}
+.tab-transponder.transponder-supported {
+    .require-transponder-unsupported {
+        display: none;
+    }
+    .require-transponder-supported {
+        display: block;
+    }
+}
+.textspacer-small {
+    margin-bottom: 15px;
+}
+</style>

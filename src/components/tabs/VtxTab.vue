@@ -523,12 +523,13 @@
 </template>
 
 <script>
-import { defineComponent, onMounted, onUnmounted, computed } from "vue";
+import { defineComponent, onMounted, computed } from "vue";
 import BaseTab from "./BaseTab.vue";
 import WikiButton from "../elements/WikiButton.vue";
 import GUI from "../../js/gui";
 import { i18n } from "../../js/localization";
 import { useVtx } from "../../composables/useVtx";
+import { useInterval } from "../../composables/useInterval";
 
 export default defineComponent({
     name: "VtxTab",
@@ -573,11 +574,7 @@ export default defineComponent({
             onVtxTableChange,
         } = useVtx();
 
-        const localIntervals = [];
-        const addLocalInterval = (name, fn, period) => {
-            GUI.interval_add(name, fn, period);
-            localIntervals.push(name);
-        };
+        const { addInterval } = useInterval();
 
         // Override text for the save button (shows saving/saved states)
         const saveButtonOverride = computed(() => saveButtonText.value || "");
@@ -586,18 +583,13 @@ export default defineComponent({
             await loadVtxConfig();
 
             // Start device status polling
-            addLocalInterval("vtx_device_status_pull", updateDeviceStatus, 1000);
+            addInterval("vtx_device_status_pull", updateDeviceStatus, 1000);
 
             i18n.localizePage();
             GUI.content_ready();
         });
 
-        onUnmounted(() => {
-            localIntervals.forEach((name) => {
-                GUI.interval_remove(name);
-            });
-            localIntervals.length = 0;
-        });
+        // Interval cleanup handled automatically by useInterval on unmount
 
         const handleSave = () => {
             saveVtx();

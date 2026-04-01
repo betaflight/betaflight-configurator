@@ -1,11 +1,10 @@
-// This modules is imported and has side effect of attaching the
-// `i18n` helper to window and setting up `i18next`
-// in the future it should be pure. This means it should
-// explicitly export things used by other parts of the app.
+// This module is imported for its side effects: setting up i18next
+// and initializing the Vue app with plugins and global model.
 import "../js/localization.js";
 import "../js/injected_methods";
 import i18next from "i18next";
 import { createApp, reactive } from "vue";
+import ui from "@nuxt/ui/vue-plugin";
 import tippy from "tippy.js";
 import "tippy.js/dist/tippy.css";
 import I18NextVue from "i18next-vue";
@@ -16,6 +15,7 @@ import PortUsage from "../js/port_usage.js";
 import CONFIGURATOR from "../js/data_storage.js";
 import { BetaflightComponents } from "../js/vue_components.js";
 import { get as getConfig } from "../js/ConfigStorage.js";
+import { pinia } from "../js/pinia_instance.js";
 
 // Connection tracking object
 const CONNECTION = reactive({
@@ -65,7 +65,7 @@ i18next.on("initialized", function () {
         },
     });
 
-    app.use(I18NextVue, { i18next }).use(BetaflightComponents).mount("#main-wrapper");
+    app.use(pinia).use(I18NextVue, { i18next }).use(BetaflightComponents).use(ui).mount("#main-wrapper");
 
     if (process.env.NODE_ENV === "development") {
         console.log("Development mode enabled, installing Vue tools");
@@ -74,7 +74,4 @@ i18next.on("initialized", function () {
     }
 });
 
-// Not strictly necessary here, but if needed
-// it's always possible to modify this model in
-// jquery land to trigger updates in vue
-window.vm = betaflightModel;
+export { betaflightModel };

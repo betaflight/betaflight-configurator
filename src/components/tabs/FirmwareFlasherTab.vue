@@ -681,6 +681,7 @@ import WikiButton from "../elements/WikiButton.vue";
 import Multiselect from "vue-multiselect";
 import "vue-multiselect/dist/vue-multiselect.css";
 import { i18n } from "../../js/localization";
+import { useDialog } from "@/composables/useDialog";
 import GUI, { TABS } from "../../js/gui";
 import { useCloudBuild } from "../../composables/useCloudBuild.js";
 import { useBoardSelection } from "../../composables/useBoardSelection.js";
@@ -710,6 +711,7 @@ export default defineComponent({
     setup() {
         // Get $t from Vue i18n if available, otherwise use fallback
         const $t = inject("$t", (key, params) => i18n.getMessage(key, params));
+        const dialog = useDialog();
 
         // Reactive state
         const state = reactive({
@@ -1724,16 +1726,14 @@ export default defineComponent({
             }
 
             if (state.selectedOsdProtocol === "" || state.selectedOsdProtocol === undefined) {
-                return new Promise((resolve) => {
-                    GUI.showYesNoDialog({
-                        title: $t("firmwareFlasherOSDProtocolNotSelected"),
-                        text: $t("firmwareFlasherOSDProtocolNotSelectedDescription"),
-                        buttonYesText: $t("firmwareFlasherOSDProtocolNotSelectedContinue"),
-                        buttonNoText: $t("firmwareFlasherOSDProtocolSelect"),
-                        buttonYesCallback: () => resolve(true),
-                        buttonNoCallback: () => resolve(false),
-                    });
-                });
+                return dialog.showYesNo(
+                    $t("firmwareFlasherOSDProtocolNotSelected"),
+                    $t("firmwareFlasherOSDProtocolNotSelectedDescription"),
+                    {
+                        yesText: $t("firmwareFlasherOSDProtocolNotSelectedContinue"),
+                        noText: $t("firmwareFlasherOSDProtocolSelect"),
+                    },
+                );
             } else {
                 return true;
             }

@@ -189,198 +189,184 @@
     </div>
 </template>
 
-<script>
-import { defineComponent } from "vue";
+<script setup>
+import { ref, computed, onMounted, onUnmounted } from "vue";
+import { useTranslation } from "i18next-vue";
 import loginManager from "../../js/LoginManager";
 import { gui_log } from "../../js/gui_log";
 
-export default defineComponent({
-    name: "UserProfile",
-    data() {
-        return {
-            isLoading: true,
-            isLoggedIn: false,
-            isEditing: false,
-            editError: null,
-            profile: null,
-            unsubscribeLogin: null,
-            unsubscribeLogout: null,
-            editForm: {
-                name: "",
-                address: "",
-                country: "",
-                avatar: "",
-            },
-            tokens: [],
-            passkeys: [],
-            userApi: null,
-        };
-    },
-    computed: {
-        profilePhoto() {
-            if (this.profile?.avatar) {
-                return this.profile.avatar;
-            }
-            return "/images/default-user-avatar-loggedin.png";
-        },
-    },
-    methods: {
-        async loadProfile() {
-            this.isLoading = true;
+const { t } = useTranslation();
 
-            try {
-                const isLoggedIn = await loginManager.isUserLoggedIn();
-                if (!isLoggedIn) {
-                    this.isLoggedIn = false;
-                    this.tokens = [];
-                    this.passkeys = [];
-                    this.isLoading = false;
-                    return;
-                }
+const isLoading = ref(true);
+const isLoggedIn = ref(false);
+const isEditing = ref(false);
+const editError = ref(null);
+const profile = ref(null);
+const editForm = ref({ name: "", address: "", country: "", avatar: "" });
+const tokens = ref([]);
+const passkeys = ref([]);
+let userApi = null;
+let unsubscribeLogin = null;
+let unsubscribeLogout = null;
 
-                this.isLoggedIn = true;
-                this.userApi = loginManager.getUserApi();
+const profilePhoto = computed(() => {
+    if (profile.value?.avatar) {
+        return profile.value.avatar;
+    }
+    return "/images/default-user-avatar-loggedin.png";
+});
 
-                try {
-                    const data = await this.userApi.profile();
-                    this.profile = data;
-                } catch (error) {
-                    gui_log(`${this.$t("userProfileLoadFailed")}: ${error}`);
-                }
+async function loadProfile() {
+    isLoading.value = true;
 
-                try {
-                    this.tokens = await this.userApi.getTokens();
-                } catch (error) {
-                    gui_log(`${this.$t("userTokenLoadFailed")}: ${error}`);
-                }
-            } catch (error) {
-                console.error("Error checking login state:", error);
-                this.isLoggedIn = false;
-                this.tokens = [];
-                this.passkeys = [];
-                this.isLoading = false;
-                return;
-            }
+    try {
+        const loggedIn = await loginManager.isUserLoggedIn();
+        if (!loggedIn) {
+            isLoggedIn.value = false;
+            tokens.value = [];
+            passkeys.value = [];
+            isLoading.value = false;
+            return;
+        }
 
-            try {
-                this.passkeys = await this.userApi.getPasskeys();
-            } catch (error) {
-                gui_log(`${this.$t("userPasskeyLoadFailed")}: ${error}`);
-            }
+        isLoggedIn.value = true;
+        userApi = loginManager.getUserApi();
 
-            this.isLoading = false;
-        },
-        startEdit() {
-            if (!this.profile) {
-                return;
-            }
-            this.editForm.name = this.profile.name || "";
-            this.editForm.address = this.profile.address || "";
-            this.editForm.country = this.profile.country || "";
-            this.editForm.avatar = this.profile.avatar || "";
-            this.editError = null;
-            this.isEditing = true;
-        },
-        cancelEdit() {
-            this.isEditing = false;
-            this.editError = null;
-        },
-        async saveProfileChanges() {
-            if (!this.userApi) {
-                return;
-            }
+        try {
+            profile.value = await userApi.profile();
+        } catch (error) {
+            gui_log(`${t("userProfileLoadFailed")}: ${error}`);
+        }
 
-            try {
-                this.editError = null;
-                await this.userApi.updateProfile({
-                    name: this.editForm.name,
-                    address: this.editForm.address,
-                    country: this.editForm.country,
-                    avatar: this.editForm.avatar,
-                });
+        try {
+            tokens.value = await userApi.getTokens();
+        } catch (error) {
+            gui_log(`${t("userTokenLoadFailed")}: ${error}`);
+        }
+    } catch (error) {
+        console.error("Error checking login state:", error);
+        isLoggedIn.value = false;
+        tokens.value = [];
+        passkeys.value = [];
+        isLoading.value = false;
+        return;
+    }
 
-                if (!this.profile) {
-                    this.profile = {};
-                }
-                this.profile.name = this.editForm.name;
-                this.profile.address = this.editForm.address;
-                this.profile.country = this.editForm.country;
-                this.profile.avatar = this.editForm.avatar;
-                gui_log(this.$t("userProfileUpdateSuccess"));
-                this.isEditing = false;
-            } catch (error) {
-                this.editError = `${this.$t("userProfileUpdateFailed")}: ${error.message || error}`;
-                gui_log(this.editError);
-            }
-        },
-        async deleteToken(tokenId) {
-            const confirmed = globalThis.confirm(this.$t("confirmDelete", { item: this.$t("itemToken") }));
-            if (!confirmed) {
-                return;
-            }
+    try {
+        passkeys.value = await userApi.getPasskeys();
+    } catch (error) {
+        gui_log(`${t("userPasskeyLoadFailed")}: ${error}`);
+    }
 
-            if (!this.userApi) {
-                return;
-            }
+    isLoading.value = false;
+}
 
-            try {
-                await this.userApi.deleteToken(tokenId);
-                this.tokens = this.tokens.filter((tk) => tk.id !== tokenId);
-                gui_log(this.$t("userTokenDeleteSuccess"));
-            } catch (error) {
-                gui_log(`${this.$t("userTokenDeleteFailed")}: ${error}`);
-            }
-        },
-        async deletePasskey(passkeyId) {
-            const confirmed = globalThis.confirm(this.$t("confirmDelete", { item: this.$t("itemPasskey") }));
-            if (!confirmed) {
-                return;
-            }
+function startEdit() {
+    if (!profile.value) {
+        return;
+    }
+    editForm.value.name = profile.value.name || "";
+    editForm.value.address = profile.value.address || "";
+    editForm.value.country = profile.value.country || "";
+    editForm.value.avatar = profile.value.avatar || "";
+    editError.value = null;
+    isEditing.value = true;
+}
 
-            if (!this.userApi) {
-                return;
-            }
+function cancelEdit() {
+    isEditing.value = false;
+    editError.value = null;
+}
 
-            try {
-                await this.userApi.deletePasskey(passkeyId);
-                this.passkeys = this.passkeys.filter((pk) => pk.id !== passkeyId);
-                gui_log(this.$t("userPasskeyDeleteSuccess"));
-            } catch (error) {
-                gui_log(`${this.$t("userPasskeyDeleteFailed")}: ${error}`);
-            }
-        },
-        formatDate(dateString) {
-            if (!dateString) {
-                return "";
-            }
-            return new Date(dateString).toLocaleString();
-        },
-        showLoginDialog() {
-            loginManager.showLoginDialog();
-        },
-    },
-    async mounted() {
-        // Load profile on mount
-        await this.loadProfile();
+async function saveProfileChanges() {
+    if (!userApi) {
+        return;
+    }
 
-        // Register callbacks for login/logout and store unsubscribe functions
-        this.unsubscribeLogin = loginManager.onLogin(async () => {
-            await this.loadProfile();
+    try {
+        editError.value = null;
+        await userApi.updateProfile({
+            name: editForm.value.name,
+            address: editForm.value.address,
+            country: editForm.value.country,
+            avatar: editForm.value.avatar,
         });
 
-        this.unsubscribeLogout = loginManager.onLogout(async () => {
-            await this.loadProfile();
-        });
-    },
-    unmounted() {
-        // Clean up callbacks on unmount
-        if (this.unsubscribeLogin) {
-            this.unsubscribeLogin();
+        if (!profile.value) {
+            profile.value = {};
         }
-        if (this.unsubscribeLogout) {
-            this.unsubscribeLogout();
-        }
-    },
+        profile.value.name = editForm.value.name;
+        profile.value.address = editForm.value.address;
+        profile.value.country = editForm.value.country;
+        profile.value.avatar = editForm.value.avatar;
+        gui_log(t("userProfileUpdateSuccess"));
+        isEditing.value = false;
+    } catch (error) {
+        editError.value = `${t("userProfileUpdateFailed")}: ${error.message || error}`;
+        gui_log(editError.value);
+    }
+}
+
+async function deleteToken(tokenId) {
+    const confirmed = globalThis.confirm(t("confirmDelete", { item: t("itemToken") }));
+    if (!confirmed || !userApi) {
+        return;
+    }
+
+    try {
+        await userApi.deleteToken(tokenId);
+        tokens.value = tokens.value.filter((tk) => tk.id !== tokenId);
+        gui_log(t("userTokenDeleteSuccess"));
+    } catch (error) {
+        gui_log(`${t("userTokenDeleteFailed")}: ${error}`);
+    }
+}
+
+async function deletePasskey(passkeyId) {
+    const confirmed = globalThis.confirm(t("confirmDelete", { item: t("itemPasskey") }));
+    if (!confirmed || !userApi) {
+        return;
+    }
+
+    try {
+        await userApi.deletePasskey(passkeyId);
+        passkeys.value = passkeys.value.filter((pk) => pk.id !== passkeyId);
+        gui_log(t("userPasskeyDeleteSuccess"));
+    } catch (error) {
+        gui_log(`${t("userPasskeyDeleteFailed")}: ${error}`);
+    }
+}
+
+function formatDate(dateString) {
+    if (!dateString) {
+        return "";
+    }
+    return new Date(dateString).toLocaleString();
+}
+
+function showLoginDialog() {
+    loginManager.showLoginDialog();
+}
+
+onMounted(async () => {
+    await loadProfile();
+
+    unsubscribeLogin = loginManager.onLogin(async () => {
+        await loadProfile();
+    });
+
+    unsubscribeLogout = loginManager.onLogout(async () => {
+        await loadProfile();
+    });
+});
+
+onUnmounted(() => {
+    if (unsubscribeLogin) {
+        unsubscribeLogin();
+    }
+    if (unsubscribeLogout) {
+        unsubscribeLogout();
+    }
 });
 </script>
 

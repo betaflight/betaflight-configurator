@@ -1818,6 +1818,9 @@
     "configurationButtonSave": {
         "message": "Gem og genstart"
     },
+    "dialogClose": {
+        "message": "Luk"
+    },
     "dialogDynFiltersChangeTitle": {
         "message": "Ændring af Dynamiske Notch værdier"
     },
@@ -2620,7 +2623,7 @@
         "description": "Help text for CHIRP mode"
     },
     "auxiliaryHelpMode_FAILSAFE": {
-        "message": "Aktiver mauelt fejlsikring trin 2",
+        "message": "Aktiver mauelt fejlsikring Trin 2",
         "description": "Help text to FAILSAFE mode"
     },
     "auxiliaryHelpMode_FLIPOVERAFTERCRASH": {
@@ -2898,6 +2901,10 @@
     },
     "adjustmentsFunction32": {
         "message": "Generel multiplikator"
+    },
+    "adjustmentsFunction33": {
+        "message": "Vælg batteri profil",
+        "description": "Allows switching battery profiles via RC channel"
     },
     "adjustmentsSave": {
         "message": "Gem"
@@ -4888,9 +4895,6 @@
     "failsafePaneTitleOld": {
         "message": "Modtager fejlsikring"
     },
-    "failsafeFeaturesHelpNew": {
-        "message": "Fejlsikring har to trin.<br>\n<strong>Trin 1<\/strong> begynder, når en flykanal har en ugyldig pulslængde, modtageren aktiverer fejlsikret tilstand eller der mangler signal fra modtageren, hvorefter \"Trin 1 - Fejlsikring for kanaler\" for tages ibrug for <span class=\"message-negative\">alle kanaler<\/span>, der ventes et kort øjeblik - styret af \"Periode i trin1 fejlsikring\" for at muliggøre en gendannelse.<br>\n<strong>Trin 2<\/strong> begynder, når fejltilstanden og fartøjet er <span class=\"message-negative\">aktiveret<\/span>, tager længere tid end den indstillede til gendannelse. Kanalerne bliver på indstillingerne i \"Trin 1 - Fejlsikring for kanaler\", medmindre de tilsidesættes af den valgte procedure for Trin 2.<br \/><strong>Bemærk:<\/strong> Inden Trin1 begynder, anvendes indstillingerne i \"Trin 1 - Fejlsikring for kanaler\" også på AUX-kanaler, der har ugyldige impulslængder."
-    },
     "failsafePulsrangeTitle": {
         "message": "Indstilling af gyldigt signal interval"
     },
@@ -4904,7 +4908,7 @@
         "message": "Største signal"
     },
     "failsafeChannelFallbackSettingsTitle": {
-        "message": "Trin 1 - Fejlsikring for kanaler"
+        "message": "Trin 1 - fejlsikring via kanal"
     },
     "failsafeChannelFallbackSettingsHelp": {
         "message": "Disse indstillinger anvendes ved fejlsikring for individuelle kanaler eller på alle kanaler, når disse overgår til fejlsikring Trin 1. <strong>Bemærk:<\/strong> Værdierne gemmes i trin på 25 mikrosek, så små ændringer udjævnes"
@@ -4928,13 +4932,13 @@
         "description": "Text for Set option"
     },
     "failsafeStageTwoSettingsTitle": {
-        "message": "Trin 2 - Indstillinger"
+        "message": "Trin 2 - fejlsikring via automatik - Indstillinger"
     },
     "failsafeDelayItem": {
         "message": "Ventetid på Trin 1, før Trin 2 aktiveres"
     },
     "failsafeDelayHelp": {
-        "message": "Fortryd pause efter tabt signal, før Trin 2 aktiveres [sekunder]"
+        "message": "Afventen i Trin1, efter tabt signal, før Trin 2 aktiveres [sekunder]"
     },
     "failsafeThrottleLowItem": {
         "message": "Periode før afkobling ved lav gas [sekunder]"
@@ -5064,7 +5068,7 @@
         "message": "Trin som startes ved, når aktivering sker fra AUX knap"
     },
     "failsafeSwitchModeHelp": {
-        "message": "Denne indstilling afgør, hvad der sker, når fejlsikring via AUX-knappen:<br\/><strong>Trin 1<\/strong> aktiverer Trin 1 fejlsikring, der er nyttig til at simulere den nøjagtige fejlsikringsadfærd ved signaltab.<br\/><strong>Trin 2<\/strong> overspringer Trin 1 og aktiverer omgående Trin 2-proceduren <br\/><strong>SLUK<\/strong>, der straks afkobler (dronen styrter ned)"
+        "message": "Denne indstilling afgør, hvad der sker, når fejlsikring startes af en AUX kanal:<br\/><strong>Trin 1 - fejlsikring via kanal<\/strong> aktiverer Trin 1, der er nyttig til at simulere den nøjagtige fejlsikringsadfærd ved signaltab.<br\/><strong>Trin 2 - fejlsikring via automatik<\/strong> overspringer Trin 1 og aktiverer Trin 2  procedure <br\/><strong>SLUK<\/strong>, der straks afkobler motorene (dronen styrter ned)"
     },
     "failsafeSwitchOptionStage1": {
         "message": "Trin 1"
@@ -5326,6 +5330,18 @@
     },
     "powerAmperageCalibratedScale": {
         "message": "Kalibreret skala for strøm"
+    },
+    "powerBatteryProfile": {
+        "message": "Batteri profil"
+    },
+    "powerBatteryProfileOption": {
+        "message": "Batteri profil $1"
+    },
+    "powerBatteryProfileNamePlaceholder": {
+        "message": "f.eks. LiPo, Li-Ion"
+    },
+    "powerBatteryProfileNameLabel": {
+        "message": "Profilnavn"
     },
     "powerBatteryHead": {
         "message": "Batteri"
@@ -7578,10 +7594,6 @@
         "message": "Vent venligst...",
         "description": "Second label in the progress dialog when applying presets"
     },
-    "presetsCliErrorsWarning": {
-        "message": "<span class='message-negative'>ADVARSEL!<\/span><br\/>Opsætning har CLI syntaks fejl.",
-        "description": "Text to show when there are CLI errors after applying presets or user configuration"
-    },
     "presetsSaveAnyway": {
         "message": "Gem alligevel",
         "description": "Save anyway button on the CLI errors presets dialog"
@@ -8048,5 +8060,419 @@
     "osdPresetPositionChooseTitle": {
         "message": "Vælg position",
         "description": "Title for the preset position grid popup in the OSD elements list"
+    },
+    "preflightLocation": {
+        "message": "Fartøj position"
+    },
+    "preflightUseMyLocation": {
+        "message": "Brug min position"
+    },
+    "preflightApply": {
+        "message": "Anvend"
+    },
+    "preflightStatusGo": {
+        "message": "KØR"
+    },
+    "preflightStatusCaution": {
+        "message": "FORSIGTIG"
+    },
+    "preflightStatusWarning": {
+        "message": "ADVARSEL"
+    },
+    "preflightStatusNoGo": {
+        "message": "KØR IKKE"
+    },
+    "preflightStatusNoData": {
+        "message": "Ingen data"
+    },
+    "preflightCheckWind": {
+        "message": "Vind"
+    },
+    "preflightCheckVisibility": {
+        "message": "Sigtbarhed"
+    },
+    "preflightLevelUnknown": {
+        "message": "Ukendt"
+    },
+    "preflightWmoClearSky": {
+        "message": "Skyfri himmel"
+    },
+    "preflightWmoMainlyClear": {
+        "message": "Hovedsageligt skyfrit"
+    },
+    "preflightWmoPartlyCloudy": {
+        "message": "Delvist overskyet"
+    },
+    "preflightWmoFog": {
+        "message": "Tåge"
+    },
+    "preflightWmoLightDrizzle": {
+        "message": "Let støvregn"
+    },
+    "preflightWmoModerateDrizzle": {
+        "message": "Moderat støvregn"
+    },
+    "preflightWmoLightFreezingDrizzle": {
+        "message": "Let isslag"
+    },
+    "preflightWmoSlightRain": {
+        "message": "Let regn"
+    },
+    "preflightWmoModerateRain": {
+        "message": "Moderat regn"
+    },
+    "preflightWmoHeavyRain": {
+        "message": "Kraftig regn"
+    },
+    "preflightWmoLightFreezingRain": {
+        "message": "Let isslag"
+    },
+    "preflightWmoHeavyFreezingRain": {
+        "message": "Kraftig isslag"
+    },
+    "preflightWmoSlightSnow": {
+        "message": "Let sne"
+    },
+    "preflightWmoModerateSnow": {
+        "message": "Moderat sne"
+    },
+    "preflightWmoHeavySnow": {
+        "message": "Kraftig sne"
+    },
+    "preflightWmoSnowGrains": {
+        "message": "Snefnug"
+    },
+    "preflightWmoSlightRainShowers": {
+        "message": "Lette regnbyger"
+    },
+    "preflightWmoModerateRainShowers": {
+        "message": "Moderate regnbyger"
+    },
+    "preflightWmoViolentRainShowers": {
+        "message": "Alvorligt kraftige regnbyger"
+    },
+    "preflightWmoSlightSnowShowers": {
+        "message": "Lette snebyger"
+    },
+    "preflightWmoHeavySnowShowers": {
+        "message": "Kraftige snebyger"
+    },
+    "preflightWmoThunderstorm": {
+        "message": "Tordenvejr"
+    },
+    "preflightWmoThunderstormSlightHail": {
+        "message": "Tordenvejr med små hagl"
+    },
+    "preflightWmoThunderstormHeavyHail": {
+        "message": "Tordenvejr med store hagl"
+    },
+    "preflightKpLow": {
+        "message": "Lav"
+    },
+    "preflightKpModerate": {
+        "message": "Moderat"
+    },
+    "preflightKpStorm": {
+        "message": "Storm"
+    },
+    "preflightWindModerate": {
+        "message": "Moderat"
+    },
+    "preflightWindStrong": {
+        "message": "Stærk"
+    },
+    "preflightWindDangerous": {
+        "message": "Farlig"
+    },
+    "preflightVisGood": {
+        "message": "God"
+    },
+    "preflightVisReduced": {
+        "message": "Reduceret"
+    },
+    "preflightVisPoor": {
+        "message": "Dårlig"
+    },
+    "preflightPrecipNone": {
+        "message": "Ingen"
+    },
+    "preflightPrecipModerate": {
+        "message": "Moderat"
+    },
+    "preflightDewNoRisk": {
+        "message": "Ingen risiko"
+    },
+    "preflightDewLowRisk": {
+        "message": "Lav risiko"
+    },
+    "preflightUvLow": {
+        "message": "Lav"
+    },
+    "preflightUvModerate": {
+        "message": "Moderat"
+    },
+    "preflightUvHigh": {
+        "message": "Høj"
+    },
+    "preflightUvVeryHigh": {
+        "message": "Meget høj"
+    },
+    "preflightBatteryOk": {
+        "message": "Normalt område"
+    },
+    "preflightBatteryCool": {
+        "message": "Reduceret ydeevne, pga varme batterier"
+    },
+    "preflightBatteryCold": {
+        "message": "Stærkt reduceret kapacitet"
+    },
+    "preflightBatteryHot": {
+        "message": "Risiko for at svede, bliv i skyggen"
+    },
+    "preflightBatteryExtreme": {
+        "message": "Fly ikke, ekstrem varme"
+    },
+    "preflightCheckBattery": {
+        "message": "Batteri"
+    },
+    "preflightFeelsLike": {
+        "message": "Føles som"
+    },
+    "preflightFogRisk": {
+        "message": "Risiko for tåge"
+    },
+    "preflightFogUnlikely": {
+        "message": "Usandsynligt"
+    },
+    "preflightFogLow": {
+        "message": "Lav risiko"
+    },
+    "preflightFogModerate": {
+        "message": "Moderat risiko"
+    },
+    "preflightFogHigh": {
+        "message": "Høj risiko"
+    },
+    "preflightElevation": {
+        "message": "Højde"
+    },
+    "preflightDaNormal": {
+        "message": "Normal ydelse"
+    },
+    "preflightDaReduced": {
+        "message": "Let reduceret løft"
+    },
+    "preflightDaLow": {
+        "message": "Betydelig reduceret ydeevne"
+    },
+    "preflightCurrentWeather": {
+        "message": "Nuværende vejr"
+    },
+    "preflightWind": {
+        "message": "Vindhastighed"
+    },
+    "preflightGusts": {
+        "message": "Vindstød"
+    },
+    "preflightVisibility": {
+        "message": "Sigtbarhed"
+    },
+    "preflightPrecipitation": {
+        "message": "Regn"
+    },
+    "preflightCloudCover": {
+        "message": "Skydække"
+    },
+    "preflightHumidity": {
+        "message": "Luftfugtighed"
+    },
+    "preflightPressure": {
+        "message": "Lufttryk"
+    },
+    "preflightDewPoint": {
+        "message": "Dugpunkt"
+    },
+    "preflightFlightWindow": {
+        "message": "Flyve vindue"
+    },
+    "preflightSunrise": {
+        "message": "Solopgang"
+    },
+    "preflightSunset": {
+        "message": "Solnedgang"
+    },
+    "preflightDaylight": {
+        "message": "Dagslys"
+    },
+    "preflightUvIndex": {
+        "message": "UV indeks"
+    },
+    "preflightCurrentlyDay": {
+        "message": "Nuværende"
+    },
+    "preflightDaytime": {
+        "message": "Dagtimer"
+    },
+    "preflightNighttime": {
+        "message": "Nattetimer"
+    },
+    "preflightWind10m": {
+        "message": "10m"
+    },
+    "preflightWind80m": {
+        "message": "80m"
+    },
+    "preflightWind120m": {
+        "message": "120m"
+    },
+    "preflightGustsShort": {
+        "message": "Vindstød"
+    },
+    "preflightRainProb": {
+        "message": "Nedbør %"
+    },
+    "preflightSolarActivity": {
+        "message": "Sol aktivitet"
+    },
+    "preflightGeoStorm": {
+        "message": "Geomagnetisk storm"
+    },
+    "preflightSolarRadiation": {
+        "message": "Solstråling"
+    },
+    "preflightLastMeasurement": {
+        "message": "Sidste måling"
+    },
+    "preflightLoadingSolar": {
+        "message": "Indlæser soldata..."
+    },
+    "preflightGNSS": {
+        "message": "GNSS \/ GPS status"
+    },
+    "preflightGNSSHelp": {
+        "message": "GNSS satellitsignalkvalitet påvirkes af solaktivitet. Høje KP værdier kan forringe GPS positionsnøjagtighed og reducere pålidelighed ved GPS fejlsikring."
+    },
+    "preflightGNSSNote": {
+        "message": "GPS nøjagtighed påvirkes af sol-\/geomagnetiske forhold. Forbind din drone til live-satellitdata på GPS fane."
+    },
+    "preflightKpEffect": {
+        "message": "Ionosfærisk påvirkning"
+    },
+    "preflightGPSRescue": {
+        "message": "GPS fejlsikring status"
+    },
+    "preflightGNSSPlanner": {
+        "message": "GNSS satellit planlægningsværktøj"
+    },
+    "preflightNOTAMs": {
+        "message": "FAA NOTAMs (US)"
+    },
+    "preflightNOTAMsEU": {
+        "message": "EUROCONTROL NOTAMs (EU)"
+    },
+    "preflightNoData": {
+        "message": "Indstil en lokation hvor miljødata hentes"
+    },
+    "preflightAttribution": {
+        "message": "Vejrdata: Se Meteo.com (CC BY 4.0) eller Soldata: NOAA Space Weather Prediction Center"
+    },
+    "preflightSavedLocationsPlaceholder": {
+        "message": "Gemte lokationer ..."
+    },
+    "preflightLoadLocation": {
+        "message": "Indlæs"
+    },
+    "preflightSaveLocation": {
+        "message": "Gem"
+    },
+    "preflightSavedLocationsFull": {
+        "message": "Maksimalt 5 gemte lokationer er nået"
+    },
+    "preflightLocationLabel": {
+        "message": "Navn for lokation (max 20 tegn)"
+    },
+    "preflightDeleteLocation": {
+        "message": "Slet valgte lokation"
+    },
+    "preflightRenameLocation": {
+        "message": "Omdøb valgte lokation"
+    },
+    "preflightRenameLocationBtn": {
+        "message": "Omdøb"
+    },
+    "preflightCoordinates": {
+        "message": "Koordinater"
+    },
+    "preflightSaveLocationBtn": {
+        "message": "Gem placering"
+    },
+    "preflightConfirmSave": {
+        "message": "Gem"
+    },
+    "preflightCancel": {
+        "message": "Annuller"
+    },
+    "preflightGeolocationFailed": {
+        "message": "Kan ikke bestemme placering. Angiv koordinater manuelt."
+    },
+    "preflightIpConsentMessage": {
+        "message": "Browser kan ikke bestemme lokation. Din omtrentlige lokation kan findes ved hjælp af din IP-adresse via tredjepartstjeneste ipapi.co."
+    },
+    "preflightIpConsentAllow": {
+        "message": "Tillad"
+    },
+    "preflightIpConsentDeny": {
+        "message": "Nej tak"
+    },
+    "preflightMapSatellite": {
+        "message": "Satellit visning"
+    },
+    "preflightMapHybrid": {
+        "message": "Satellit- og gade visning"
+    },
+    "preflightMapStreet": {
+        "message": "Gade visning"
+    },
+    "preflightMapZoomIn": {
+        "message": "Zoom ind"
+    },
+    "preflightMapZoomOut": {
+        "message": "Zoom ud"
+    },
+    "preflightMapFullscreen": {
+        "message": "Slå fuldskærm til\/fra"
+    },
+    "preflightKpMinimal": {
+        "message": "Minimal påvirkning af GPS"
+    },
+    "preflightKpDegraded": {
+        "message": "Mulig forringelse af GPS nøjagtighed"
+    },
+    "preflightKpSevere": {
+        "message": "Betydelig GPS interferens kan forventes"
+    },
+    "preflightGpsRescueUnknown": {
+        "message": "Kontroller først solaktivitet"
+    },
+    "preflightGpsRescueReliable": {
+        "message": "Fejlsikring med GPS er pålidelig"
+    },
+    "preflightGpsRescueUnreliable": {
+        "message": "Fejlsikring med GPS kan være upålidelig"
+    },
+    "preflightGpsRescueNotRecommended": {
+        "message": "Fejlsikring med GPS anbefales IKKE"
+    },
+    "preflightForecast": {
+        "message": "5-døgn prognose"
+    },
+    "preflightForecastHelp": {
+        "message": "Dagligt vejroverblik til hjælp med planlæggning af kommende flyvesessioner"
+    },
+    "preflightForecastDay": {
+        "message": "Dag"
+    },
+    "preflightForecastWeather": {
+        "message": "Vejr"
     }
 }

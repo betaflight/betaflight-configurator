@@ -1806,6 +1806,9 @@
     "configurationButtonSave": {
         "message": "Zapisz i uruchom ponownie"
     },
+    "dialogClose": {
+        "message": "Zamknij"
+    },
     "dialogDynFiltersChangeTitle": {
         "message": "Zakres filtra dynamicznego"
     },
@@ -2878,6 +2881,10 @@
     },
     "adjustmentsFunction32": {
         "message": "Główny Mnożnik"
+    },
+    "adjustmentsFunction33": {
+        "message": "Wybór profilu baterii",
+        "description": "Allows switching battery profiles via RC channel"
     },
     "adjustmentsSave": {
         "message": "Zapisz"
@@ -5299,6 +5306,18 @@
     "powerAmperageCalibratedScale": {
         "message": "Skalibrowana skala natężenia prądu:"
     },
+    "powerBatteryProfile": {
+        "message": "Profil baterii"
+    },
+    "powerBatteryProfileOption": {
+        "message": "Profil baterii $1"
+    },
+    "powerBatteryProfileNamePlaceholder": {
+        "message": "np. LiPo, Li-Ion"
+    },
+    "powerBatteryProfileNameLabel": {
+        "message": "Nazwa profilu"
+    },
     "powerBatteryHead": {
         "message": "Akumulator"
     },
@@ -7570,6 +7589,14 @@
         "message": "Anuluj",
         "description": "Cancel button in the presets warning dialog"
     },
+    "presetsFavoriteAddAriaLabel": {
+        "message": "Dodaj ulubione czcionki",
+        "description": "Accessible label for the button that favorites a preset"
+    },
+    "presetsFavoriteRemoveAriaLabel": {
+        "message": "Usuń ulubione czcionki",
+        "description": "Accessible label for the button that removes a preset from favorites"
+    },
     "presetsWiki": {
         "message": "Szablony Wiki",
         "description": "Button to open Presets Wiki link"
@@ -7581,6 +7608,10 @@
     "presetsBackupLoad": {
         "message": "Załaduj kopię zapasową",
         "description": "Button to load backup from the file"
+    },
+    "presetsVirtualModeCliUnsupported": {
+        "message": "Ustawienie wstępne i akcje tworzenia kopii zapasowej wymagają CLI, które nie są dostępne w trybie wirtualnym.",
+        "description": "Warning shown when a presets CLI action is attempted in Virtual Mode"
     },
     "presetsLoadingDumpAll": {
         "message": "Wczytywanie bieżącej konfiguracji z kontrolera lotu",
@@ -7786,6 +7817,20 @@
     "osdDescElementLidar": {
         "message": "$t(osdTextElementLidar.message)",
         "description": "Don't translate!!!"
+    },
+    "osdTextElementCustomSerialText": {
+        "message": "Własny tekst seryjny",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementCustomSerialText": {
+        "message": "Wyświetla niestandardowy tekst otrzymany z portu szeregowego"
+    },
+    "osdTextElementBatteryProfileName": {
+        "message": "Profil: Nazwa profilu baterii",
+        "description": "One of the elements of the OSD"
+    },
+    "osdDescElementBatteryProfileName": {
+        "message": "Pokazuje aktywną nazwę profilu baterii lub indeks"
     },
     "osdSetupPreviewCheckRulers": {
         "message": "Linijki",
@@ -8020,5 +8065,542 @@
     "osdPresetPositionChooseTitle": {
         "message": "Wybierz pozycję",
         "description": "Title for the preset position grid popup in the OSD elements list"
+    },
+    "tabPreflight": {
+        "message": "Przed lotem"
+    },
+    "preflightTitle": {
+        "message": "Sprawdzanie środowiska przed lotem"
+    },
+    "preflightLocation": {
+        "message": "Lokalizacja lotu"
+    },
+    "preflightUseMyLocation": {
+        "message": "Użyj mojej lokalizacji"
+    },
+    "preflightDetecting": {
+        "message": "Wykrywanie..."
+    },
+    "preflightOr": {
+        "message": "lub wprowadź współrzędne:"
+    },
+    "preflightLatitude": {
+        "message": "Szerokość geograficzna"
+    },
+    "preflightLongitude": {
+        "message": "Długość geograficzna"
+    },
+    "preflightApply": {
+        "message": "Zastosuj"
+    },
+    "preflightLaunchStatus": {
+        "message": "Status uruchamiania"
+    },
+    "preflightStatusGo": {
+        "message": "Idź"
+    },
+    "preflightStatusCaution": {
+        "message": "UWAGA"
+    },
+    "preflightStatusWarning": {
+        "message": "OSTRZEŻENIE"
+    },
+    "preflightStatusNoGo": {
+        "message": "Nie-idź"
+    },
+    "preflightStatusNoData": {
+        "message": "Brak danych"
+    },
+    "preflightCheckWind": {
+        "message": "Wiatr"
+    },
+    "preflightCheckVisibility": {
+        "message": "Widoczność"
+    },
+    "preflightCheckPrecipitation": {
+        "message": "Opady"
+    },
+    "preflightCheckSolar": {
+        "message": "Nasłonecznianie"
+    },
+    "preflightLevelUnknown": {
+        "message": "Nieznane"
+    },
+    "preflightWmoClearSky": {
+        "message": "Czyste niebo"
+    },
+    "preflightWmoMainlyClear": {
+        "message": "Częściowe zachmurzenie"
+    },
+    "preflightWmoPartlyCloudy": {
+        "message": "Częściowo chmurny"
+    },
+    "preflightWmoOvercast": {
+        "message": "Pochmurnie"
+    },
+    "preflightWmoFog": {
+        "message": "Mgła"
+    },
+    "preflightWmoRimeFog": {
+        "message": "Mgła osadzająca szron"
+    },
+    "preflightWmoLightDrizzle": {
+        "message": "Przelotnie mżawka"
+    },
+    "preflightWmoModerateDrizzle": {
+        "message": "Umiarkowana mgła"
+    },
+    "preflightWmoDenseDrizzle": {
+        "message": "Gęsta mżawka"
+    },
+    "preflightWmoLightFreezingDrizzle": {
+        "message": "Lekka marznąca mżawka"
+    },
+    "preflightWmoDenseFreezingDrizzle": {
+        "message": "Gęsta mrożąca mżawka"
+    },
+    "preflightWmoSlightRain": {
+        "message": "Lekki deszcz"
+    },
+    "preflightWmoModerateRain": {
+        "message": "Umiarkowany deszcz"
+    },
+    "preflightWmoHeavyRain": {
+        "message": "Silny deszcz"
+    },
+    "preflightWmoLightFreezingRain": {
+        "message": "Przelotnie marznący deszcz"
+    },
+    "preflightWmoHeavyFreezingRain": {
+        "message": "Przelotnie marznący deszcz"
+    },
+    "preflightWmoSlightSnow": {
+        "message": "Niewielkie opady śniegu"
+    },
+    "preflightWmoModerateSnow": {
+        "message": "Umiarkowany śnieg"
+    },
+    "preflightWmoHeavySnow": {
+        "message": "Silny śnieg"
+    },
+    "preflightWmoSnowGrains": {
+        "message": "Ziarna śniegu"
+    },
+    "preflightWmoSlightRainShowers": {
+        "message": "Lekkie opady deszczu"
+    },
+    "preflightWmoModerateRainShowers": {
+        "message": "Umiarkowane opady deszczu"
+    },
+    "preflightWmoViolentRainShowers": {
+        "message": "Gwałtowne opady deszczu"
+    },
+    "preflightWmoSlightSnowShowers": {
+        "message": "Lekkie opady śniegu"
+    },
+    "preflightWmoHeavySnowShowers": {
+        "message": "Ciężkie opady śniegu"
+    },
+    "preflightWmoThunderstorm": {
+        "message": "Burza z piorunami"
+    },
+    "preflightWmoThunderstormSlightHail": {
+        "message": "Burza z lekkim gradem"
+    },
+    "preflightWmoThunderstormHeavyHail": {
+        "message": "Burza z silnym gradem"
+    },
+    "preflightKpLow": {
+        "message": "Niski"
+    },
+    "preflightKpModerate": {
+        "message": "Umiarkowane"
+    },
+    "preflightKpElevated": {
+        "message": "Podwyższone"
+    },
+    "preflightKpStorm": {
+        "message": "Burza"
+    },
+    "preflightWindCalm": {
+        "message": "Spokój"
+    },
+    "preflightWindLight": {
+        "message": "Jasny"
+    },
+    "preflightWindModerate": {
+        "message": "Umiarkowane"
+    },
+    "preflightWindStrong": {
+        "message": "Silne"
+    },
+    "preflightWindDangerous": {
+        "message": "Niebezpieczny"
+    },
+    "preflightVisExcellent": {
+        "message": "Usuń"
+    },
+    "preflightVisGood": {
+        "message": "Dobrze"
+    },
+    "preflightVisReduced": {
+        "message": "Zredukowana"
+    },
+    "preflightVisPoor": {
+        "message": "Ubogie"
+    },
+    "preflightPrecipNone": {
+        "message": "Brak"
+    },
+    "preflightPrecipLight": {
+        "message": "Jasny"
+    },
+    "preflightPrecipModerate": {
+        "message": "Umiarkowane"
+    },
+    "preflightPrecipHeavy": {
+        "message": "Szańca"
+    },
+    "preflightDewNoRisk": {
+        "message": "Bez ryzyka"
+    },
+    "preflightDewLowRisk": {
+        "message": "Niskie ryzyko"
+    },
+    "preflightDewFogLikely": {
+        "message": "Prawdopodobne zmętnienie\/kondensacja"
+    },
+    "preflightDewFogExpected": {
+        "message": "Oczekiwane zmywanie ognio\/soczewki"
+    },
+    "preflightUvLow": {
+        "message": "Niski"
+    },
+    "preflightUvModerate": {
+        "message": "Umiarkowane"
+    },
+    "preflightUvHigh": {
+        "message": "Silny"
+    },
+    "preflightUvVeryHigh": {
+        "message": "Bardzo wysoka"
+    },
+    "preflightBatteryRisk": {
+        "message": "Ryzyko baterii"
+    },
+    "preflightBatteryOk": {
+        "message": "Zakres normalny"
+    },
+    "preflightBatteryCool": {
+        "message": "Zmniejszona wydajność, ciepłe baterie"
+    },
+    "preflightBatteryCold": {
+        "message": "Znacznie ograniczona zdolność produkcyjna"
+    },
+    "preflightBatteryHot": {
+        "message": "Ryzyko obrzęku, zachować zacienione"
+    },
+    "preflightBatteryExtreme": {
+        "message": "Nie lataj, ekstremalne ciepło"
+    },
+    "preflightCheckBattery": {
+        "message": "Bateria"
+    },
+    "preflightCheckDensityAlt": {
+        "message": "Gęstość Alt"
+    },
+    "preflightFeelsLike": {
+        "message": "Polubione"
+    },
+    "preflightFogRisk": {
+        "message": "Ryzyko mgły"
+    },
+    "preflightFogUnlikely": {
+        "message": "Nieprawdopodobne"
+    },
+    "preflightFogLow": {
+        "message": "Niskie ryzyko"
+    },
+    "preflightFogModerate": {
+        "message": "Umiarkowane ryzyko"
+    },
+    "preflightFogHigh": {
+        "message": "Wysokie ryzyko"
+    },
+    "preflightElevation": {
+        "message": "Wysokość"
+    },
+    "preflightDensityAlt": {
+        "message": "Wysokość Gęstość"
+    },
+    "preflightDaNormal": {
+        "message": "Normalna wydajność"
+    },
+    "preflightDaReduced": {
+        "message": "Nieznacznie zmniejszony podnośnik"
+    },
+    "preflightDaLow": {
+        "message": "Znacznie zmniejszona wydajność"
+    },
+    "preflightDaPoor": {
+        "message": "Znacząca redukcja podnośnika"
+    },
+    "preflightCivilTwilight": {
+        "message": "Cywilne okno podświetlenia"
+    },
+    "preflightRefresh": {
+        "message": "Odśwież"
+    },
+    "preflightCurrentWeather": {
+        "message": "Bieżąca pogoda"
+    },
+    "preflightWind": {
+        "message": "Prędkość wiatru"
+    },
+    "preflightGusts": {
+        "message": "Porywy wiatru"
+    },
+    "preflightVisibility": {
+        "message": "Widoczność"
+    },
+    "preflightPrecipitation": {
+        "message": "Opady"
+    },
+    "preflightCloudCover": {
+        "message": "Zachmurzenie"
+    },
+    "preflightHumidity": {
+        "message": "Wilgotność"
+    },
+    "preflightPressure": {
+        "message": "Ciśnienie"
+    },
+    "preflightDewPoint": {
+        "message": "Punkt rosy"
+    },
+    "preflightFlightWindow": {
+        "message": "Okno lotu"
+    },
+    "preflightSunrise": {
+        "message": "Wschód słońca"
+    },
+    "preflightSunset": {
+        "message": "Słońce"
+    },
+    "preflightDaylight": {
+        "message": "Światło dzienne"
+    },
+    "preflightUvIndex": {
+        "message": "Indeks UV"
+    },
+    "preflightTempRange": {
+        "message": "Dodaj Zakres"
+    },
+    "preflightCurrentlyDay": {
+        "message": "Obecnie"
+    },
+    "preflightDaytime": {
+        "message": "Zależny od pory dnia"
+    },
+    "preflightNighttime": {
+        "message": "Noc"
+    },
+    "preflightWindForecast": {
+        "message": "Prognoza wiatru na wysokości"
+    },
+    "preflightWindForecastHelp": {
+        "message": "Prędkość wiatru na różnych wysokościach ma kluczowe znaczenie dla lotów FPV dalekiego zasięgu i wysokiej wysokości. Wyższe wysokości mają zazwyczaj silniejsze wiatry."
+    },
+    "preflightTime": {
+        "message": "Czas"
+    },
+    "preflightWind10m": {
+        "message": "10m"
+    },
+    "preflightWind80m": {
+        "message": "80m"
+    },
+    "preflightWind120m": {
+        "message": "120m"
+    },
+    "preflightGustsShort": {
+        "message": "Porywy wiatru"
+    },
+    "preflightRainProb": {
+        "message": "Deszcz %"
+    },
+    "preflightWindUnit": {
+        "message": "Prędkości wiatru w m\/s. Wysokość nad poziomem ziemi (AGL)."
+    },
+    "preflightSolarActivity": {
+        "message": "Aktywność słoneczna"
+    },
+    "preflightSolarHelp": {
+        "message": "Wysoka aktywność słoneczna (Kp > 5) powoduje zakłócenia jonosferyczne, które mogą obniżyć dokładność GPS i wpłynąć na niezawodność ratownictwa GPS."
+    },
+    "preflightGeoStorm": {
+        "message": "Burza Geomagnetyczna"
+    },
+    "preflightSolarRadiation": {
+        "message": "Promieniowanie słoneczne"
+    },
+    "preflightRadioBlackout": {
+        "message": "Awaria radia"
+    },
+    "preflightLastMeasurement": {
+        "message": "Ostatni pomiar"
+    },
+    "preflightLoadingSolar": {
+        "message": "Ładowanie danych słonecznych..."
+    },
+    "preflightGNSS": {
+        "message": "GNSS \/ GPS Status"
+    },
+    "preflightGNSSHelp": {
+        "message": "Jakość sygnału satelitarnego GNSS jest zależna od aktywności słonecznej. Wysokie wartości Kp mogą obniżyć dokładność wyznaczania pozycji GPS i zmniejszyć niezawodność systemu GPS Rescue."
+    },
+    "preflightGNSSNote": {
+        "message": "Na dokładność GPS mają wpływ warunki słoneczne\/geomagnetyczne. Połącz swój quad z danymi satelitarnymi na karcie GPS."
+    },
+    "preflightKpEffect": {
+        "message": "Uderzenie jonosferyczne"
+    },
+    "preflightGPSRescue": {
+        "message": "GPS Rescue Status"
+    },
+    "preflightMagDeclination": {
+        "message": "Deklinacja magnetyczna"
+    },
+    "preflightMagInclination": {
+        "message": "Inklinacja magnetyczna"
+    },
+    "preflightGNSSPlanner": {
+        "message": "Narzędzie do planowania satelitarnego GNSS"
+    },
+    "preflightAirspace": {
+        "message": "Przestrzeń powietrzna i strefy bezzałogowe"
+    },
+    "preflightAirspaceNote": {
+        "message": "Zawsze sprawdzaj ograniczenia dotyczące lokalnej przestrzeni powietrznej i NOTAM. Zasady różnią się w zależności od kraju i regionu."
+    },
+    "preflightDroneSafetyMap": {
+        "message": "Mapa bezpieczeństwa drona (wysokościowy kąt)"
+    },
+    "preflightAirspaceExplorer": {
+        "message": "Wykres przestrzeni powietrznej SkyVector"
+    },
+    "preflightNOTAMs": {
+        "message": "FAA NOTAMs (US)"
+    },
+    "preflightNOTAMsEU": {
+        "message": "EUROCONTROL NOTAMs (EU)"
+    },
+    "preflightMap": {
+        "message": "Mapa lokalizacji"
+    },
+    "preflightNoData": {
+        "message": "Ustaw lokalizację, aby załadować dane środowiska"
+    },
+    "preflightAttribution": {
+        "message": "Dane pogodowe: Open-Meteo.com (CC BY 4.0) | Dane słoneczne: NOAA Space Weather Prediction Center"
+    },
+    "preflightSavedLocationsPlaceholder": {
+        "message": "Zapisane lokalizacje..."
+    },
+    "preflightLoadLocation": {
+        "message": "Załaduj"
+    },
+    "preflightSaveLocation": {
+        "message": "Zapisz"
+    },
+    "preflightSavedLocationsFull": {
+        "message": "Osiągnięto maksymalnie 5 zapisanych lokalizacji"
+    },
+    "preflightLocationLabel": {
+        "message": "Nazwa lokalizacji (maksymalnie 20 znaków)"
+    },
+    "preflightDeleteLocation": {
+        "message": "Usuń wybraną lokalizację"
+    },
+    "preflightRenameLocation": {
+        "message": "Zmień nazwę wybranej lokalizacji"
+    },
+    "preflightRenameLocationBtn": {
+        "message": "Zmień nazwę"
+    },
+    "preflightCoordinates": {
+        "message": "Współrzędne"
+    },
+    "preflightSaveLocationBtn": {
+        "message": "Zapisz lokalizację"
+    },
+    "preflightConfirmSave": {
+        "message": "Zapisz"
+    },
+    "preflightCancel": {
+        "message": "Anuluj"
+    },
+    "preflightGeolocationFailed": {
+        "message": "Nie można wykryć lokalizacji. Wprowadź współrzędne ręcznie."
+    },
+    "preflightIpConsentMessage": {
+        "message": "Lokalizacja przeglądarki nie powiodła się. Twoja przybliżona lokalizacja może zostać wykryta za pomocą adresu IP za pośrednictwem usługi ipapi.co, innej firmy."
+    },
+    "preflightIpConsentAllow": {
+        "message": "Pozwól"
+    },
+    "preflightIpConsentDeny": {
+        "message": "Nie, dziękuję"
+    },
+    "preflightMapSatellite": {
+        "message": "Widok satelitarny"
+    },
+    "preflightMapHybrid": {
+        "message": "Hybrydowy widok satelitarny i uliczny"
+    },
+    "preflightMapStreet": {
+        "message": "Widok mapy ulicznej"
+    },
+    "preflightMapZoomIn": {
+        "message": "Powiększ"
+    },
+    "preflightMapZoomOut": {
+        "message": "Pomniejsz"
+    },
+    "preflightMapFullscreen": {
+        "message": "Przełącz na pełny ekran"
+    },
+    "preflightKpMinimal": {
+        "message": "Minimalny wpływ na GPS"
+    },
+    "preflightKpDegraded": {
+        "message": "Możliwa degradacja dokładności GPS"
+    },
+    "preflightKpSevere": {
+        "message": "Oczekiwana znacząca interwencja GPS"
+    },
+    "preflightGpsRescueUnknown": {
+        "message": "Sprawdź najpierw aktywność słoneczną"
+    },
+    "preflightGpsRescueReliable": {
+        "message": "Wiarygodne wsparcie GPS"
+    },
+    "preflightGpsRescueUnreliable": {
+        "message": "Ratowanie GPS może być niewiarygodne"
+    },
+    "preflightGpsRescueNotRecommended": {
+        "message": "GPS Ratowanie NIE zalecane"
+    },
+    "preflightForecast": {
+        "message": "Prognoza 5-dniowa"
+    },
+    "preflightForecastHelp": {
+        "message": "Dzienny przegląd pogody, aby pomóc planować sesje lotu z wyprzedzeniem"
+    },
+    "preflightForecastDay": {
+        "message": "Dzień"
+    },
+    "preflightForecastWeather": {
+        "message": "Pogoda"
     }
 }
