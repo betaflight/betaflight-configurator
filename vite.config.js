@@ -12,6 +12,8 @@ import ui from "@nuxt/ui/vite";
 
 const commitHash = child.execSync("git rev-parse --short HEAD").toString().trim();
 
+const devHostname = process.env.BF_DEV_HOSTNAME || "local.betaflight.com";
+
 // Check if SSL certificates exist
 const certPath = "./local.betaflight.com.pem";
 const keyPath = "./local.betaflight.com-key.pem";
@@ -20,7 +22,7 @@ const serverPort = certsExist ? 8443 : 8080;
 
 if (certsExist) {
     console.log("✓ SSL certificates found - HTTPS enabled");
-    console.log("  Server will be available at: https://local.betaflight.com:8443");
+    console.log(`  Server will be available at: https://${devHostname}:8443`);
 } else {
     console.log("⚠ SSL certificates not found - Running in HTTP mode");
     console.log("  WebAuthn features will not be available without HTTPS");
@@ -192,7 +194,7 @@ export default defineConfig({
             },
         }),
         host: "0.0.0.0", // Listen on all network interfaces for Android device access
-        allowedHosts: certsExist ? ["local.betaflight.com"] : ["localhost"],
+        allowedHosts: certsExist ? [devHostname] : ["localhost"],
     },
     preview: {
         port: serverPort,
