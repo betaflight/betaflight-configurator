@@ -14,7 +14,7 @@ import PortHandler from "../js/port_handler.js";
 import PortUsage from "../js/port_usage.js";
 import CONFIGURATOR from "../js/data_storage.js";
 import { BetaflightComponents } from "../js/vue_components.js";
-import { get as getConfig } from "../js/ConfigStorage.js";
+import { getNuxtUiRouter } from "../js/nuxt_ui_router.js";
 import { pinia } from "../js/pinia_instance.js";
 
 // Connection tracking object
@@ -65,7 +65,12 @@ i18next.on("initialized", function () {
         },
     });
 
-    app.use(pinia).use(I18NextVue, { i18next }).use(BetaflightComponents).use(ui).mount("#main-wrapper");
+    app.use(pinia)
+        .use(I18NextVue, { i18next })
+        .use(BetaflightComponents)
+        .use(getNuxtUiRouter())
+        .use(ui)
+        .mount("#main-wrapper");
 
     if (process.env.NODE_ENV === "development") {
         console.log("Development mode enabled, installing Vue tools");
