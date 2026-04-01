@@ -7612,6 +7612,14 @@
     "darkTheme": {
         "message": "Enable dark theme"
     },
+    "uiScale": {
+        "message": "UI Scale",
+        "description": "User interface scale setting"
+    },
+    "uiScaleHelp": {
+        "message": "Adjust the whole interface size for better readability on high-resolution monitors.",
+        "description": "Help text for the UI scale setting"
+    },
     "colorTheme": {
         "message": "Color Theme",
         "description": "Color theme settings"
@@ -7624,9 +7632,73 @@
         "message": "Amber",
         "description": "Amber color theme"
     },
+    "colorThemeNeon": {
+        "message": "Neon",
+        "description": "Neon color theme"
+    },
+    "colorThemeCustom": {
+        "message": "Custom",
+        "description": "Custom color theme"
+    },
     "colorThemeContrast": {
         "message": "High Contrast",
         "description": "Contrast color theme"
+    },
+    "customThemeEditorTitle": {
+        "message": "Custom Theme Colors",
+        "description": "Custom theme editor section title"
+    },
+    "customThemeLivePreviewHint": {
+        "message": "Changes are previewed instantly. Use Save to keep them for next launch.",
+        "description": "Hint shown in custom theme editor"
+    },
+    "customThemePrimary": {
+        "message": "Primary",
+        "description": "Custom theme primary color label"
+    },
+    "customThemePrimaryDark": {
+        "message": "Primary (dark)",
+        "description": "Custom theme primary dark color label"
+    },
+    "customThemeSurface": {
+        "message": "Surface",
+        "description": "Custom theme surface color label"
+    },
+    "customThemeSurfaceDark": {
+        "message": "Surface (dark)",
+        "description": "Custom theme dark surface color label"
+    },
+    "customThemeText": {
+        "message": "Text",
+        "description": "Custom theme text color label"
+    },
+    "customThemeSuccess": {
+        "message": "Success",
+        "description": "Custom theme success color label"
+    },
+    "customThemeWarning": {
+        "message": "Warning",
+        "description": "Custom theme warning color label"
+    },
+    "customThemeError": {
+        "message": "Error",
+        "description": "Custom theme error color label"
+    },
+    "customThemeSave": {
+        "message": "Save Custom Theme",
+        "description": "Save custom theme button label"
+    },
+    "customThemeReset": {
+        "message": "Reset to Defaults",
+        "description": "Reset custom theme button label"
+    },
+    "customThemeUnsavedWarning": {
+        "message": "Unsaved color changes. Click Save to keep them for next launch.",
+        "description": "Warning shown when custom theme changes are not saved"
+    },
+    "customThemeUnsavedBrowserWarning": {
+        "message": "You have unsaved custom theme color changes.",
+        "description": "Browser unload warning when custom theme changes are unsaved"
     },
     "pidTuningRatesType": {
         "message": "Rates Type"

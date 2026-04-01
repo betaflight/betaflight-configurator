@@ -7278,6 +7278,78 @@
         "message": "ハイコントラスト",
         "description": "Contrast color theme"
     },
+    "uiScale": {
+        "message": "UI スケール",
+        "description": "User interface scale setting"
+    },
+    "uiScaleHelp": {
+        "message": "高解像度モニターでの可読性向上のため、インターフェース全体のサイズを調整します。",
+        "description": "Help text for the UI scale setting"
+    },
+    "colorThemeNeon": {
+        "message": "ネオン",
+        "description": "Neon color theme"
+    },
+    "colorThemeCustom": {
+        "message": "カスタム",
+        "description": "Custom color theme"
+    },
+    "customThemeEditorTitle": {
+        "message": "カスタムテーマの色",
+        "description": "Custom theme editor section title"
+    },
+    "customThemeLivePreviewHint": {
+        "message": "変更はすぐにプレビューされます。次回起動時にも保持するには［保存］をクリックしてください。",
+        "description": "Hint shown in custom theme editor"
+    },
+    "customThemePrimary": {
+        "message": "プライマリ",
+        "description": "Custom theme primary color label"
+    },
+    "customThemePrimaryDark": {
+        "message": "プライマリ（濃）",
+        "description": "Custom theme primary dark color label"
+    },
+    "customThemeSurface": {
+        "message": "サーフェス",
+        "description": "Custom theme surface color label"
+    },
+    "customThemeSurfaceDark": {
+        "message": "サーフェス（濃）",
+        "description": "Custom theme dark surface color label"
+    },
+    "customThemeText": {
+        "message": "テキスト",
+        "description": "Custom theme text color label"
+    },
+    "customThemeSuccess": {
+        "message": "成功",
+        "description": "Custom theme success color label"
+    },
+    "customThemeWarning": {
+        "message": "警告",
+        "description": "Custom theme warning color label"
+    },
+    "customThemeError": {
+        "message": "エラー",
+        "description": "Custom theme error color label"
+    },
+    "customThemeSave": {
+        "message": "カスタムテーマを保存",
+        "description": "Save custom theme button label"
+    },
+    "customThemeReset": {
+        "message": "デフォルトにリセット",
+        "description": "Reset custom theme button label"
+    },
+    "customThemeUnsavedWarning": {
+        "message": "未保存の色変更があります。次回起動時にも保持するには［保存］をクリックしてください。",
+        "description": "Warning shown when custom theme changes are not saved"
+    },
+    "customThemeUnsavedBrowserWarning": {
+        "message": "カスタムテーマの色変更が保存されていません。",
+        "description": "Browser unload warning when custom theme changes are unsaved"
+    },
     "pidTuningRatesType": {
         "message": "レートタイプ"
     },

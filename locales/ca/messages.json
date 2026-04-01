@@ -7363,6 +7363,78 @@
         "message": "Alt contrast",
         "description": "Contrast color theme"
     },
+    "uiScale": {
+        "message": "Escala de la interfície",
+        "description": "User interface scale setting"
+    },
+    "uiScaleHelp": {
+        "message": "Ajusta la mida de tota la interfície per millorar la llegibilitat en monitors d'alta resolució.",
+        "description": "Help text for the UI scale setting"
+    },
+    "colorThemeNeon": {
+        "message": "Neó",
+        "description": "Neon color theme"
+    },
+    "colorThemeCustom": {
+        "message": "Personalitzat",
+        "description": "Custom color theme"
+    },
+    "customThemeEditorTitle": {
+        "message": "Colors del tema personalitzat",
+        "description": "Custom theme editor section title"
+    },
+    "customThemeLivePreviewHint": {
+        "message": "Els canvis es mostren a l'instant. Fes clic a Desa per conservar-los al proper inici.",
+        "description": "Hint shown in custom theme editor"
+    },
+    "customThemePrimary": {
+        "message": "Primari",
+        "description": "Custom theme primary color label"
+    },
+    "customThemePrimaryDark": {
+        "message": "Primari (fosc)",
+        "description": "Custom theme primary dark color label"
+    },
+    "customThemeSurface": {
+        "message": "Superfície",
+        "description": "Custom theme surface color label"
+    },
+    "customThemeSurfaceDark": {
+        "message": "Superfície (fosca)",
+        "description": "Custom theme dark surface color label"
+    },
+    "customThemeText": {
+        "message": "Text",
+        "description": "Custom theme text color label"
+    },
+    "customThemeSuccess": {
+        "message": "Èxit",
+        "description": "Custom theme success color label"
+    },
+    "customThemeWarning": {
+        "message": "Avís",
+        "description": "Custom theme warning color label"
+    },
+    "customThemeError": {
+        "message": "Error",
+        "description": "Custom theme error color label"
+    },
+    "customThemeSave": {
+        "message": "Desa el tema personalitzat",
+        "description": "Save custom theme button label"
+    },
+    "customThemeReset": {
+        "message": "Restableix els valors predeterminats",
+        "description": "Reset custom theme button label"
+    },
+    "customThemeUnsavedWarning": {
+        "message": "Canvis de color sense desar. Fes clic a «Desa» per conservar-los per al proper inici.",
+        "description": "Warning shown when custom theme changes are not saved"
+    },
+    "customThemeUnsavedBrowserWarning": {
+        "message": "Tens canvis de color del tema personalitzat sense desar.",
+        "description": "Browser unload warning when custom theme changes are unsaved"
+    },
     "pidTuningRatesType": {
         "message": "Tipus de Rates"
     },

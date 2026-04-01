@@ -6269,6 +6269,78 @@
     "darkTheme": {
         "message": "Activa o tema escuro"
     },
+    "uiScale": {
+        "message": "Escala da interface",
+        "description": "User interface scale setting"
+    },
+    "uiScaleHelp": {
+        "message": "Axusta o tamaño de toda a interface para mellorar a lexibilidade en monitores de alta resolución.",
+        "description": "Help text for the UI scale setting"
+    },
+    "colorThemeNeon": {
+        "message": "Neon",
+        "description": "Neon color theme"
+    },
+    "colorThemeCustom": {
+        "message": "Personalizado",
+        "description": "Custom color theme"
+    },
+    "customThemeEditorTitle": {
+        "message": "Cores do tema personalizado",
+        "description": "Custom theme editor section title"
+    },
+    "customThemeLivePreviewHint": {
+        "message": "Os cambios amósanse ao instante. Fai clic en Gardar para conservalos no próximo inicio.",
+        "description": "Hint shown in custom theme editor"
+    },
+    "customThemePrimary": {
+        "message": "Primario",
+        "description": "Custom theme primary color label"
+    },
+    "customThemePrimaryDark": {
+        "message": "Primario (escuro)",
+        "description": "Custom theme primary dark color label"
+    },
+    "customThemeSurface": {
+        "message": "Superficie",
+        "description": "Custom theme surface color label"
+    },
+    "customThemeSurfaceDark": {
+        "message": "Superficie (escura)",
+        "description": "Custom theme dark surface color label"
+    },
+    "customThemeText": {
+        "message": "Texto",
+        "description": "Custom theme text color label"
+    },
+    "customThemeSuccess": {
+        "message": "Éxito",
+        "description": "Custom theme success color label"
+    },
+    "customThemeWarning": {
+        "message": "Aviso",
+        "description": "Custom theme warning color label"
+    },
+    "customThemeError": {
+        "message": "Erro",
+        "description": "Custom theme error color label"
+    },
+    "customThemeSave": {
+        "message": "Gardar tema personalizado",
+        "description": "Save custom theme button label"
+    },
+    "customThemeReset": {
+        "message": "Restablecer por defecto",
+        "description": "Reset custom theme button label"
+    },
+    "customThemeUnsavedWarning": {
+        "message": "Cambios de cor sen gardar. Fai clic en Gardar para conservalos no próximo inicio.",
+        "description": "Warning shown when custom theme changes are not saved"
+    },
+    "customThemeUnsavedBrowserWarning": {
+        "message": "Tes cambios de cor sen gardar no tema personalizado.",
+        "description": "Browser unload warning when custom theme changes are unsaved"
+    },
     "pidTuningRatesType": {
         "message": "Tipo de Rates"
     },

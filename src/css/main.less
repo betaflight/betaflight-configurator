@@ -19,6 +19,7 @@ body {
     margin: 0;
     padding: 0;
     overflow: hidden;
+    --ui-scale: 1;
 
     ::-webkit-scrollbar {
         width: 0.3rem;
@@ -235,14 +236,17 @@ input[type="number"] {
     font-style: italic;
 }
 #main-wrapper {
-    height: 100vh;
-    height: 100dvh;
-    max-height: 100dvh;
+    width: calc(100vw / var(--ui-scale));
+    height: calc(100vh / var(--ui-scale));
+    height: calc(100dvh / var(--ui-scale));
+    max-height: calc(100dvh / var(--ui-scale));
     min-height: 0;
     overflow: hidden;
     background-color: var(--surface-100);
     display: flex;
     flex-direction: column;
+    transform: scale(var(--ui-scale));
+    transform-origin: top left;
 }
 /* StatusBar.vue root; avoid shrinking as a flex item under #main-wrapper */
 #status-bar {
