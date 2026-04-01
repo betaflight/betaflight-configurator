@@ -99,6 +99,25 @@ body[data-theme="amber"] {
     --primary-transparent-4: rgba(255, 167, 36, 0.4);
 }
 
+body[data-theme="neon"] {
+    --primary-50: #f2f3ff;
+    --primary-100: #e8e9ff;
+    --primary-200: #d4d7ff;
+    --primary-300: #b7bbff;
+    --primary-400: #9397ff;
+    --primary-500: #6f6dff;
+    --primary-600: #6056f5;
+    --primary-700: #4f43dc;
+    --primary-800: #4035b4;
+    --primary-900: #332c8c;
+    --primary-950: #1f1b5c;
+
+    --primary-transparent-1: rgba(111, 109, 255, 0.1);
+    --primary-transparent-2: rgba(111, 109, 255, 0.2);
+    --primary-transparent-3: rgba(111, 109, 255, 0.3);
+    --primary-transparent-4: rgba(111, 109, 255, 0.4);
+}
+
 body[data-theme="contrast"] {
     --surface-50: #000000;
     --surface-100: #000000;

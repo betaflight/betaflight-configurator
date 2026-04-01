@@ -4818,6 +4818,78 @@
     "darkTheme": {
         "message": "Donker thema gebruiken"
     },
+    "uiScale": {
+        "message": "UI-schaal",
+        "description": "User interface scale setting"
+    },
+    "uiScaleHelp": {
+        "message": "Pas de grootte van de hele interface aan voor betere leesbaarheid op monitoren met hoge resolutie.",
+        "description": "Help text for the UI scale setting"
+    },
+    "colorThemeNeon": {
+        "message": "Neon",
+        "description": "Neon color theme"
+    },
+    "colorThemeCustom": {
+        "message": "Aangepast",
+        "description": "Custom color theme"
+    },
+    "customThemeEditorTitle": {
+        "message": "Kleuren van aangepast thema",
+        "description": "Custom theme editor section title"
+    },
+    "customThemeLivePreviewHint": {
+        "message": "Wijzigingen worden direct weergegeven. Klik op Opslaan om ze voor de volgende start te bewaren.",
+        "description": "Hint shown in custom theme editor"
+    },
+    "customThemePrimary": {
+        "message": "Primair",
+        "description": "Custom theme primary color label"
+    },
+    "customThemePrimaryDark": {
+        "message": "Primair (donker)",
+        "description": "Custom theme primary dark color label"
+    },
+    "customThemeSurface": {
+        "message": "Oppervlak",
+        "description": "Custom theme surface color label"
+    },
+    "customThemeSurfaceDark": {
+        "message": "Oppervlak (donker)",
+        "description": "Custom theme dark surface color label"
+    },
+    "customThemeText": {
+        "message": "Tekst",
+        "description": "Custom theme text color label"
+    },
+    "customThemeSuccess": {
+        "message": "Succes",
+        "description": "Custom theme success color label"
+    },
+    "customThemeWarning": {
+        "message": "Waarschuwing",
+        "description": "Custom theme warning color label"
+    },
+    "customThemeError": {
+        "message": "Fout",
+        "description": "Custom theme error color label"
+    },
+    "customThemeSave": {
+        "message": "Aangepast thema opslaan",
+        "description": "Save custom theme button label"
+    },
+    "customThemeReset": {
+        "message": "Standaardwaarden herstellen",
+        "description": "Reset custom theme button label"
+    },
+    "customThemeUnsavedWarning": {
+        "message": "Niet-opgeslagen kleurwijzigingen. Klik op Opslaan om ze voor de volgende start te bewaren.",
+        "description": "Warning shown when custom theme changes are not saved"
+    },
+    "customThemeUnsavedBrowserWarning": {
+        "message": "Je hebt niet-opgeslagen kleurwijzigingen in het aangepaste thema.",
+        "description": "Browser unload warning when custom theme changes are unsaved"
+    },
     "pidTuningRatesType": {
         "message": "Rates Type"
     },

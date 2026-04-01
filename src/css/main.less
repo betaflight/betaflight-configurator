@@ -19,6 +19,7 @@ body {
     margin: 0;
     padding: 0;
     overflow: hidden;
+    --ui-scale: 1;
 
     ::-webkit-scrollbar {
         width: 0.3rem;
@@ -235,10 +236,13 @@ input[type="number"] {
     font-style: italic;
 }
 #main-wrapper {
-    height: 100vh;
+    width: calc(100vw / var(--ui-scale));
+    height: calc(100vh / var(--ui-scale));
     background-color: var(--surface-100);
     display: flex;
     flex-direction: column;
+    transform: scale(var(--ui-scale));
+    transform-origin: top left;
 }
 #background {
     background: rgba(0, 0, 0, 0.5);

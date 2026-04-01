@@ -9,6 +9,8 @@ import FC from "./fc.js";
 import CONFIGURATOR from "./data_storage.js";
 import CliAutoComplete from "./CliAutoComplete.js";
 import DarkTheme, { setDarkTheme } from "./DarkTheme.js";
+import { applyCustomTheme, clearCustomTheme, isDefaultCustomTheme, sanitizeCustomTheme } from "./ColorTheme.js";
+import { applyUiScale, DEFAULT_UI_SCALE, sanitizeUiScale } from "./UiScale.js";
 import { updateTabList } from "./utils/updateTabList.js";
 import { mountVueTab } from "./vue_tab_mounter.js";
 import * as THREE from "three";
@@ -112,6 +114,8 @@ function appReady() {
 async function startProcess() {
     // translate to user-selected language
     i18n.localizePage();
+
+    applyUiScale(sanitizeUiScale(getConfig("uiScale", DEFAULT_UI_SCALE).uiScale));
 
     // Initialize login manager
     await loginManager.initialize();
@@ -469,6 +473,17 @@ async function startProcess() {
     result = getConfig("colorTheme");
     const colorTheme = result.colorTheme ?? "yellow";
     document.body.dataset.theme = colorTheme;
+
+    if (colorTheme === "custom") {
+        const customTheme = sanitizeCustomTheme(getConfig("customTheme", {}).customTheme);
+        if (isDefaultCustomTheme(customTheme)) {
+            clearCustomTheme();
+        } else {
+            applyCustomTheme(customTheme);
+        }
+    } else {
+        clearCustomTheme();
+    }
 
     // Contrast theme requires dark mode
     if (colorTheme === "contrast") {
