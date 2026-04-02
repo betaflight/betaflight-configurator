@@ -372,13 +372,7 @@ import { i18n } from "../../js/localization";
 import PortHandler from "../../js/port_handler";
 import CliAutoComplete from "../../js/CliAutoComplete";
 import DarkTheme, { setDarkTheme } from "../../js/DarkTheme";
-import {
-    DEFAULT_CUSTOM_THEME,
-    applyCustomTheme,
-    clearCustomTheme,
-    isDefaultCustomTheme,
-    sanitizeCustomTheme,
-} from "../../js/ColorTheme";
+import { DEFAULT_CUSTOM_THEME, applyCustomTheme, clearCustomTheme, sanitizeCustomTheme } from "../../js/ColorTheme";
 import { DEFAULT_UI_SCALE, MIN_UI_SCALE, MAX_UI_SCALE, applyUiScale, sanitizeUiScale } from "../../js/UiScale";
 import { checkSetupAnalytics } from "../../js/Analytics";
 import NotificationManager from "../../js/utils/notifications";
@@ -491,12 +485,20 @@ export default defineComponent({
             ),
         );
 
+        function cloneCustomTheme(theme) {
+            if (typeof structuredClone === "function") {
+                return structuredClone(theme);
+            }
+
+            return JSON.parse(JSON.stringify(theme));
+        }
+
         function applyOrClearCustomTheme(themeInput = settings.customTheme) {
             const customTheme = sanitizeCustomTheme(themeInput);
-            if (isDefaultCustomTheme(customTheme)) {
-                clearCustomTheme();
-            } else {
+            if (settings.colorTheme === "custom") {
                 applyCustomTheme(customTheme);
+            } else {
+                clearCustomTheme();
             }
 
             return customTheme;
@@ -648,19 +650,16 @@ export default defineComponent({
 
         function saveCustomTheme() {
             const customTheme = applyOrClearCustomTheme(settings.customTheme);
-            settings.customTheme = customTheme;
-            savedCustomTheme.value = customTheme;
-            setConfig({ customTheme });
+            const snapshot = cloneCustomTheme(customTheme);
+            settings.customTheme = snapshot;
+            savedCustomTheme.value = cloneCustomTheme(snapshot);
+            setConfig({ customTheme: cloneCustomTheme(snapshot) });
         }
 
         function resetCustomTheme() {
-            settings.customTheme = { ...DEFAULT_CUSTOM_THEME };
-            savedCustomTheme.value = sanitizeCustomTheme(settings.customTheme);
-            setConfig({ customTheme: settings.customTheme });
-
-            if (settings.colorTheme === "custom") {
-                clearCustomTheme();
-            }
+            settings.customTheme = cloneCustomTheme(DEFAULT_CUSTOM_THEME);
+            savedCustomTheme.value = cloneCustomTheme(settings.customTheme);
+            setConfig({ customTheme: cloneCustomTheme(settings.customTheme) });
         }
 
         function applyCustomThemePreset(presetName) {
@@ -972,7 +971,7 @@ export default defineComponent({
         border-radius: 999px;
         background-color: var(--primary-100);
         border-color: var(--primary-600);
-        color: #000;
+        color: var(--primary-contrast, #000);
         opacity: 0.92;
     }
 
@@ -984,7 +983,7 @@ export default defineComponent({
     .uiScalePresetButton.regular-button.active {
         background-color: var(--primary-500);
         border-color: var(--primary-600);
-        color: #000;
+        color: var(--primary-contrast, #000);
         opacity: 1;
     }
 

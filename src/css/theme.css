@@ -79,6 +79,7 @@ body.dark-theme {
     --surface-950: hsl(0, 0%, 80%);
 
     --text: hsl(0, 0%, 95%);
+    --primary-contrast: #fff;
 }
 
 body[data-theme="amber"] {
