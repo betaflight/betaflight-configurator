@@ -1,6 +1,6 @@
 const DEFAULT_UI_SCALE = 1;
-const MIN_UI_SCALE = 0.85;
-const MAX_UI_SCALE = 1.5;
+const MIN_UI_SCALE = 0.9;
+const MAX_UI_SCALE = 1.4;
 const UI_SCALE_PRECISION = 2;
 
 export function sanitizeUiScale(value) {
@@ -19,4 +19,4 @@ export function applyUiScale(value) {
     return scale;
 }
 
-export { DEFAULT_UI_SCALE };
+export { DEFAULT_UI_SCALE, MIN_UI_SCALE, MAX_UI_SCALE };

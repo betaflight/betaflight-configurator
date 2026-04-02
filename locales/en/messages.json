@@ -7652,6 +7652,18 @@
         "message": "Changes are previewed instantly. Use Save to keep them for next launch.",
         "description": "Hint shown in custom theme editor"
     },
+    "customThemePresetGraphite": {
+        "message": "Graphite",
+        "description": "Custom theme preset graphite label"
+    },
+    "customThemePresetOcean": {
+        "message": "Ocean",
+        "description": "Custom theme preset ocean label"
+    },
+    "customThemePresetEmerald": {
+        "message": "Emerald",
+        "description": "Custom theme preset emerald label"
+    },
     "customThemePrimary": {
         "message": "Primary",
         "description": "Custom theme primary color label"

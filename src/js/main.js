@@ -68,6 +68,40 @@ function cleanupLocalStorage() {
     setConfig({ erase_chip: true }); // force erase chip on first run
 }
 
+function getHostnameFromHref(windowHref) {
+    try {
+        const url = new URL(windowHref);
+        return url.hostname;
+    } catch {
+        return "";
+    }
+}
+
+function isDevelopmentHostname(hostname) {
+    if (!hostname) {
+        return false;
+    }
+
+    const hostnameParts = hostname.split(".");
+    const subdomain = hostnameParts[0] || "";
+
+    return (
+        hostname.includes("localhost") ||
+        hostname.includes("127.0.0.1") ||
+        /^pr\d+/i.test(subdomain) ||
+        subdomain.includes("master")
+    );
+}
+
+function isDevelopmentHref(windowHref) {
+    const hostname = getHostnameFromHref(windowHref);
+    if (hostname) {
+        return isDevelopmentHostname(hostname);
+    }
+
+    return windowHref.includes("localhost") || windowHref.includes("127.0.0.1");
+}
+
 function appReady() {
     readConfiguratorVersionMetadata();
 
@@ -137,29 +171,7 @@ async function startProcess() {
     console.log(`Libraries: three.js - ${THREE.REVISION}`);
 
     const windowHref = window.location.href;
-    let subdomain = "";
-    let isDevelopmentUrl = false;
-
-    try {
-        const url = new URL(windowHref);
-        const hostname = url.hostname;
-
-        // Derive the left-most label as subdomain
-        if (hostname) {
-            const hostnameParts = hostname.split(".");
-            subdomain = hostnameParts[0] || "";
-        }
-
-        // Set isDevelopmentUrl to true only if hostname includes "localhost" OR subdomain matches /^pr\d+/i
-        isDevelopmentUrl =
-            hostname.includes("localhost") ||
-            hostname.includes("127.0.0.1") ||
-            /^pr\d+/i.test(subdomain) ||
-            subdomain.includes("master");
-    } catch {
-        // Handle file:// or malformed URLs - fallback to checking href string
-        isDevelopmentUrl = windowHref.includes("localhost") || windowHref.includes("127.0.0.1");
-    }
+    const isDevelopmentUrl = isDevelopmentHref(windowHref);
 
     if (isDevelopmentUrl) {
         console.log("Detected development URL");

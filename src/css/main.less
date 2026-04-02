@@ -245,8 +245,7 @@ input[type="number"] {
     background-color: var(--surface-100);
     display: flex;
     flex-direction: column;
-    transform: scale(var(--ui-scale));
-    transform-origin: top left;
+    zoom: var(--ui-scale);
 }
 /* StatusBar.vue root; avoid shrinking as a flex item under #main-wrapper */
 #status-bar {
