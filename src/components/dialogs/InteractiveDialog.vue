@@ -5,9 +5,6 @@
 
         <div class="cli-response">
             <textarea id="cli-response" readonly rows="32" cols="96"></textarea>
-            <div class="default_btn">
-                <a class="confirm" href="#">{{ confirmText }}</a>
-            </div>
         </div>
 
         <div class="cli-command">
@@ -33,10 +30,6 @@ defineProps({
     buttonCloseText: {
         type: String,
         default: "Close",
-    },
-    confirmText: {
-        type: String,
-        default: "Execute",
     },
     commandPlaceholder: {
         type: String,

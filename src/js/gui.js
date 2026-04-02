@@ -413,7 +413,6 @@ class GuiControl {
                 {
                     title: interactiveDialogSettings.title ?? "",
                     buttonCloseText: interactiveDialogSettings.buttonCloseText ?? "",
-                    confirmText: i18n.getMessage("cliConfirmSnippetBtn"),
                     commandPlaceholder: i18n.getMessage("cliCommand"),
                 },
                 {
