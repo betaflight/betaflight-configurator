@@ -241,7 +241,10 @@ input[type="number"] {
     background-color: var(--surface-100);
     display: flex;
     flex-direction: column;
-    zoom: var(--ui-scale);
+    transform: scale(var(--ui-scale));
+    transform-origin: top left;
+    container-type: inline-size;
+    container-name: main-wrapper;
 }
 #background {
     background: rgba(0, 0, 0, 0.5);
@@ -1794,7 +1797,7 @@ each(range(12), {
     gap: 8px;
 }
 
-@media not all and (max-width: 575px) {
+@container main-wrapper (min-width: 576px) {
     .visible-on-phone-only {
         display: none !important;
     }
@@ -1811,7 +1814,7 @@ each(range(12), {
         overflow-y: auto;
     }
 }
-@media (max-width: 1055px) {
+@container main-wrapper (max-width: 1055px) {
     #tabs {
         li {
             a {
@@ -1979,7 +1982,7 @@ each(range(12), {
         }
     }
 }
-@media all and (max-width: 575px) {
+@container main-wrapper (max-width: 575px) {
     @mobile-port-control-width: 76%;
 
     #tabs li a {
@@ -2328,12 +2331,12 @@ each(range(12), {
         display: none !important;
     }
 }
-@media all and (max-width: 991px) {
+@container main-wrapper (max-width: 991px) {
     .md-min {
         display: none !important;
     }
 }
-@media all and (max-width: 575px) {
+@container main-wrapper (max-width: 575px) {
     .sm-min {
         display: none !important;
     }
