@@ -62,6 +62,7 @@ body {
     --primary-action: var(--success-500);
     --primary-action-border: var(--success-600);
     --primary-action-hover: var(--success-400);
+    --primary-contrast: #000;
 }
 
 body.dark-theme {

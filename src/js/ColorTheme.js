@@ -80,10 +80,19 @@ function blendHex(baseHex, targetHex, ratio) {
     return rgbToHex(blend);
 }
 
+function rgbaFromHex(hex, alpha) {
+    const { r, g, b } = hexToRgb(hex);
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
 export function applyCustomTheme(themeInput) {
     const theme = sanitizeCustomTheme(themeInput);
     const surface200 = blendHex(theme.surface100, theme.surface300, 0.5);
     const primary600 = blendHex(theme.primary500, theme.primary700, 0.5);
+    const primaryTransparent1 = rgbaFromHex(theme.primary500, 0.08);
+    const primaryTransparent2 = rgbaFromHex(theme.primary500, 0.12);
+    const primaryTransparent3 = rgbaFromHex(theme.primary500, 0.16);
+    const primaryTransparent4 = rgbaFromHex(theme.primary500, 0.2);
 
     Object.entries(COLOR_THEME_VARIABLES).forEach(([cssVariable, themeKey]) => {
         document.body.style.setProperty(cssVariable, theme[themeKey]);
@@ -91,10 +100,20 @@ export function applyCustomTheme(themeInput) {
 
     document.body.style.setProperty("--primary-600", primary600);
     document.body.style.setProperty("--surface-200", surface200);
+    document.body.style.setProperty("--primary-transparent-1", primaryTransparent1);
+    document.body.style.setProperty("--primary-transparent-2", primaryTransparent2);
+    document.body.style.setProperty("--primary-transparent-3", primaryTransparent3);
+    document.body.style.setProperty("--primary-transparent-4", primaryTransparent4);
+
+    document.documentElement.style.setProperty("--primary-transparent-1", primaryTransparent1);
+    document.documentElement.style.setProperty("--primary-transparent-2", primaryTransparent2);
+    document.documentElement.style.setProperty("--primary-transparent-3", primaryTransparent3);
+    document.documentElement.style.setProperty("--primary-transparent-4", primaryTransparent4);
 }
 
 export function clearCustomTheme() {
     CLEARABLE_CUSTOM_VARIABLES.forEach((cssVariable) => {
         document.body.style.removeProperty(cssVariable);
+        document.documentElement.style.removeProperty(cssVariable);
     });
 }

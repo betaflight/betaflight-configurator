@@ -174,16 +174,16 @@
                                 id="uiScaleRange"
                                 type="range"
                                 v-model.number="settings.uiScale"
-                                min="0.85"
-                                max="1.5"
+                                :min="minUiScale"
+                                :max="maxUiScale"
                                 step="0.01"
                             />
                             <input
                                 id="uiScaleNumber"
                                 type="number"
                                 v-model.number="settings.uiScale"
-                                min="0.85"
-                                max="1.5"
+                                :min="minUiScale"
+                                :max="maxUiScale"
                                 step="0.01"
                             />
                             <span class="uiScaleValue">{{ Math.round(settings.uiScale * 100) }}%</span>
@@ -213,21 +213,21 @@
                                 class="regular-button customThemePresetButton"
                                 @click="applyCustomThemePreset('graphite')"
                             >
-                                Graphite
+                                {{ $t("customThemePresetGraphite") }}
                             </button>
                             <button
                                 type="button"
                                 class="regular-button customThemePresetButton"
                                 @click="applyCustomThemePreset('ocean')"
                             >
-                                Ocean
+                                {{ $t("customThemePresetOcean") }}
                             </button>
                             <button
                                 type="button"
                                 class="regular-button customThemePresetButton"
                                 @click="applyCustomThemePreset('emerald')"
                             >
-                                Emerald
+                                {{ $t("customThemePresetEmerald") }}
                             </button>
                         </div>
 
@@ -371,7 +371,7 @@ import {
     isDefaultCustomTheme,
     sanitizeCustomTheme,
 } from "../../js/ColorTheme";
-import { DEFAULT_UI_SCALE, applyUiScale, sanitizeUiScale } from "../../js/UiScale";
+import { DEFAULT_UI_SCALE, MIN_UI_SCALE, MAX_UI_SCALE, applyUiScale, sanitizeUiScale } from "../../js/UiScale";
 import { checkSetupAnalytics } from "../../js/Analytics";
 import NotificationManager from "../../js/utils/notifications";
 import { ispConnected } from "../../js/utils/connection";
@@ -441,9 +441,9 @@ export default defineComponent({
             automaticDevOptions: !!getConfig("automaticDevOptions", true).automaticDevOptions,
         });
 
-        settings.customTheme = sanitizeCustomTheme(settings.customTheme);
-
         const savedCustomTheme = ref(sanitizeCustomTheme(settings.customTheme));
+        const minUiScale = MIN_UI_SCALE;
+        const maxUiScale = MAX_UI_SCALE;
 
         function serializeCustomTheme(theme) {
             const normalizedTheme = sanitizeCustomTheme(theme);
@@ -777,6 +777,8 @@ export default defineComponent({
             resetCustomTheme,
             applyCustomThemePreset,
             applyUiScalePreset,
+            minUiScale,
+            maxUiScale,
             isCustomThemeDirty,
             customThemeUnsavedWarningText,
         };
@@ -881,7 +883,7 @@ export default defineComponent({
     .customThemeActions .regular-button.customThemeResetButton {
         background-color: var(--primary-200);
         border: 1px solid var(--primary-600);
-        color: #000;
+        color: var(--primary-contrast, #000);
     }
 
     .customThemeActions .regular-button.customThemeResetButton:hover {
@@ -902,7 +904,7 @@ export default defineComponent({
         border-radius: 999px;
         background-color: var(--primary-100);
         border-color: var(--primary-600);
-        color: #000;
+        color: var(--primary-contrast, #000);
     }
 
     .customThemePresets .customThemePresetButton.regular-button:hover {
