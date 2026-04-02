@@ -500,7 +500,6 @@ async function startProcess() {
     // Contrast theme requires dark mode
     if (colorTheme === "contrast") {
         setDarkTheme(0);
-        setConfig({ darkTheme: 0 });
     }
 
     window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function () {

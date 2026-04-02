@@ -47,15 +47,29 @@ const CLEARABLE_CUSTOM_VARIABLES = [
 ];
 
 export const DEFAULT_CUSTOM_THEME = {
-    primary500: "#4f46e5",
-    primary700: "#3730a3",
-    surface100: "#f8fafc",
-    surface300: "#e2e8f0",
-    text: "#0f172a",
-    success500: "#22c55e",
-    warning500: "#f59e0b",
-    error500: "#ef4444",
+    primary500: "#ffbb00",
+    primary700: "#d29600",
+    surface100: "#fafafa",
+    surface300: "#ebebeb",
+    text: "#000000",
+    success500: "#96e212",
+    warning500: "#ff6600",
+    error500: "#e2123f",
 };
+
+export function getDefaultCustomTheme() {
+    const isDark = document.body && document.body.classList.contains("dark-theme");
+    return {
+        primary500: "#ffbb00",
+        primary700: "#d29600",
+        surface100: isDark ? "#141414" : "#fafafa",
+        surface300: isDark ? "#242424" : "#ebebeb",
+        text: isDark ? "#f2f2f2" : "#000000",
+        success500: "#96e212",
+        warning500: "#ff6600",
+        error500: "#e2123f",
+    };
+}
 
 export function sanitizeCustomTheme(themeInput) {
     const input = themeInput && typeof themeInput === "object" ? themeInput : {};
@@ -113,8 +127,42 @@ function getReadableContrastColor(hex) {
     return luminance >= 160 ? BLACK : WHITE;
 }
 
+function getRelativeLuminance(hex) {
+    const { r, g, b } = hexToRgb(hex);
+    const toLinear = (channel) => {
+        const normalized = channel / 255;
+        return normalized <= 0.03928 ? normalized / 12.92 : ((normalized + 0.055) / 1.055) ** 2.4;
+    };
+
+    const red = toLinear(r);
+    const green = toLinear(g);
+    const blue = toLinear(b);
+    return 0.2126 * red + 0.7152 * green + 0.0722 * blue;
+}
+
+function getContrastRatio(firstHex, secondHex) {
+    const first = getRelativeLuminance(firstHex);
+    const second = getRelativeLuminance(secondHex);
+    const lighter = Math.max(first, second);
+    const darker = Math.min(first, second);
+    return (lighter + 0.05) / (darker + 0.05);
+}
+
+function getReadableTextColor(textHex, backgroundHex, minimumContrast = 4.5) {
+    if (getContrastRatio(textHex, backgroundHex) >= minimumContrast) {
+        return textHex;
+    }
+
+    return getReadableContrastColor(backgroundHex);
+}
+
 export function applyCustomTheme(themeInput) {
     const theme = sanitizeCustomTheme(themeInput);
+    const resolvedText = getReadableTextColor(theme.text, theme.surface100);
+    const resolvedTheme = {
+        ...theme,
+        text: resolvedText,
+    };
     const primaryTransparent1 = rgbaFromHex(theme.primary500, 0.08);
     const primaryTransparent2 = rgbaFromHex(theme.primary500, 0.12);
     const primaryTransparent3 = rgbaFromHex(theme.primary500, 0.16);
@@ -122,7 +170,7 @@ export function applyCustomTheme(themeInput) {
     const primaryContrast = getReadableContrastColor(theme.primary500);
 
     Object.entries(COLOR_THEME_VARIABLES).forEach(([cssVariable, resolver]) => {
-        const value = resolver(theme);
+        const value = resolver(resolvedTheme);
         document.body.style.setProperty(cssVariable, value);
     });
 
