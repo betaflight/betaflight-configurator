@@ -1583,9 +1583,12 @@ export default defineComponent({
         });
 
         const cleanup = (callback) => {
-            // Unsubscribe from EventBus
-            EventBus.$off("port-handler:auto-select-usb-device");
-            EventBus.$off("port-handler:device-removed");
+            // Unsubscribe using stored references (not bare $off which removes all handlers)
+            if (eventListenerRefs) {
+                EventBus.$off("port-handler:auto-select-usb-device", eventListenerRefs.detectedUsbDevice);
+                EventBus.$off("port-handler:device-removed", eventListenerRefs.onDeviceRemoved);
+                eventListenerRefs = null;
+            }
 
             if (callback) {
                 callback();
