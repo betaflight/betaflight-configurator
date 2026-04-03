@@ -1496,6 +1496,8 @@ export default defineComponent({
             }
         };
 
+        let eventListenerRefs = null;
+
         const setupEventBusListeners = () => {
             const { detectedUsbDevice, onDeviceRemoved } = firmwareFlashing.setupFlashingEventListeners({
                 getFlashOnConnect: () => state.flashOnConnect,
@@ -1510,7 +1512,8 @@ export default defineComponent({
             EventBus.$on("port-handler:auto-select-usb-device", detectedUsbDevice);
             EventBus.$on("port-handler:device-removed", onDeviceRemoved);
 
-            return { detectedUsbDevice, onDeviceRemoved };
+            // Store references for proper cleanup in onBeforeUnmount
+            eventListenerRefs = { detectedUsbDevice, onDeviceRemoved };
         };
 
         onMounted(async () => {
@@ -1560,11 +1563,11 @@ export default defineComponent({
         });
 
         onBeforeUnmount(() => {
-            // Unsubscribe from EventBus
-            const eventListeners = setupEventBusListeners();
-            if (eventListeners) {
-                EventBus.$off("port-handler:auto-select-usb-device", eventListeners.detectedUsbDevice);
-                EventBus.$off("port-handler:device-removed", eventListeners.onDeviceRemoved);
+            // Unsubscribe using stored references (not new ones)
+            if (eventListenerRefs) {
+                EventBus.$off("port-handler:auto-select-usb-device", eventListenerRefs.detectedUsbDevice);
+                EventBus.$off("port-handler:device-removed", eventListenerRefs.onDeviceRemoved);
+                eventListenerRefs = null;
             }
 
             if (dfuMonitorInterval) {
