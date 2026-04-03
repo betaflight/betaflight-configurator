@@ -246,26 +246,49 @@ Log `rebootMode`, `connect_lock`, and `flashOnConnect` state on USB device detec
 **File:** `src/js/protocols/webstm32.js`
 **Bug:** #2
 
-When `waitForDfu()` throws `DFU_AUTH_REQUIRED` (device never previously authorized via WebUSB):
+When `waitForDfu()` throws `DFU_AUTH_REQUIRED`, keep `rebootMode` set and release `connect_lock` so the permission dialog (commit 7) can trigger flashing.
+
+### Commit 7: Show USB permission dialog (`59d171ed`)
+
+**Files:** `src/js/protocols/webstm32.js`, `src/components/tabs/FirmwareFlasherTab.vue`, `locales/en/messages.json`
+**Bug:** #2
+
+When `waitForDfu()` times out, present a dialog explaining that USB permission is needed. The dialog button click provides the user gesture required by `navigator.usb.requestDevice()`:
 
 ```javascript
-if (e.code === DFU_AUTH_REQUIRED) {
-    console.warn(`${this.logHead} No authorized DFU device found, user must grant USB permission`);
-    gui_log(i18n.getMessage("stm32UsbDfuNotFound"));
-    TABS.firmware_flasher.flashingMessage(
-        i18n.getMessage("stm32UsbDfuNotFound"),
-        TABS.firmware_flasher.FLASH_MESSAGE_TYPES.NEUTRAL,
+// webstm32.js — triggers the dialog
+TABS.firmware_flasher.requestDfuPermission?.();
+
+// FirmwareFlasherTab.vue — shows the dialog
+const requestDfuPermission = () => {
+    dialog.openInfo(
+        $t("stm32UsbDfuNotFound"),
+        $t("stm32DfuPermissionRequired"),
+        async () => {
+            try {
+                const device = await DFU.requestPermission();
+                if (!device) {
+                    STM32.rebootMode = 0;
+                    resetFlashingState();
+                }
+                // handleNewDevice → addedDevice → detectedUsbDevice → startFlashing
+            } catch (e) {
+                STM32.rebootMode = 0;
+                resetFlashingState();
+            }
+        },
+        { confirmText: $t("firmwareFlasherOptionLabelFlash") },
     );
-    GUI.connect_lock = false;
-    // rebootMode stays set — granting USB permission will resume flashing
-    return;
-}
+};
 ```
 
 **Key behavior:**
 - `rebootMode` stays set (1 or 4) so the event chain can resume
-- `connect_lock` is released so the user can interact with the UI
-- When the user grants USB permission (via port picker USB button or clicking Flash again), `detectedUsbDevice` sees `rebootMode` is set and triggers `startFlashing()` automatically
+- `connect_lock` is released so the dialog is interactive
+- Dialog appears immediately after `waitForDfu` timeout — no dead "please wait" state
+- User clicks dialog button → browser USB picker opens → user selects DFU device
+- `handleNewDevice` → `addedDevice` → `detectedUsbDevice` sees `rebootMode` → `startFlashing()`
+- If user dismisses dialog or picker, `rebootMode` is cleared and state is reset
 
 ---
 
@@ -279,8 +302,8 @@ if (e.code === DFU_AUTH_REQUIRED) {
 ### Test 2: Serial → DFU reboot (first-time / never authorized)
 1. Clear USB permissions in browser (chrome://settings/content/usbDevices)
 2. Connect FC via serial, load firmware, click Flash
-3. **Expected:** `waitForDfu()` times out (10s), "USB DFU not found" message shown
-4. Click the USB permission button in port picker → grant access in browser dialog
+3. **Expected:** `waitForDfu()` times out (10s), permission dialog appears automatically
+4. Click dialog button → browser USB picker opens → select DFU device
 5. **Expected:** Flashing starts automatically (rebootMode was preserved)
 
 ### Test 3: Direct DFU flashing (should still work)
@@ -310,10 +333,11 @@ if (e.code === DFU_AUTH_REQUIRED) {
 
 | File | Changes | Commits |
 |------|---------|---------|
-| `src/js/protocols/webstm32.js` | Bound event listeners, `waitForDfu()` integration, auth-required fallback | 1, 4, 6 |
+| `src/js/protocols/webstm32.js` | Bound event listeners, `waitForDfu()` integration, auth-required fallback, permission dialog trigger | 1, 4, 6, 7 |
 | `src/js/protocols/webusbdfu.js` | `_connecting` guard on `connect()`/`cleanup()` | 3 |
-| `src/components/tabs/FirmwareFlasherTab.vue` | `onBeforeUnmount` listener cleanup | 2 |
+| `src/components/tabs/FirmwareFlasherTab.vue` | `onBeforeUnmount` listener cleanup, `requestDfuPermission` dialog | 2, 7 |
 | `src/composables/useFirmwareFlashing.js` | Diagnostic logging in `detectedUsbDevice` | 5 |
+| `locales/en/messages.json` | `stm32DfuPermissionRequired` i18n key | 7 |
 
 ---
 
@@ -352,12 +376,12 @@ User clicks Flash
   → await DFU.waitForDfu(10000, 500)  — polls getDevices()
   → 10 seconds pass, device never appears (not authorized)
   → DFUAuthRequiredError thrown
-  → "USB DFU not found" message shown
   → connect_lock released, rebootMode PRESERVED
-  → User clicks USB permission button in port picker
-  → PortHandler.requestDevicePermission("usb")
-  → WEBUSBDFU.requestPermission() (has user gesture ✓)
-  → User selects DFU device in browser dialog
+  → TABS.firmware_flasher.requestDfuPermission() called
+  → Dialog: "USB permission is required to continue flashing"
+  → User clicks dialog button (user gesture ✓)
+  → DFU.requestPermission() → browser USB picker opens
+  → User selects DFU device
   → handleNewDevice() fires addedDevice event
   → PortHandler.addedUsbDevice() → selectActivePort()
   → EventBus "port-handler:auto-select-usb-device"
