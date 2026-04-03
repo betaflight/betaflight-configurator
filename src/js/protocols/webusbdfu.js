@@ -271,21 +271,31 @@ class WEBUSBDFU_protocol extends EventTarget {
             });
         this.usbDevice = null;
     }
-    claimInterface(interfaceNumber) {
-        this.usbDevice
-            .claimInterface(interfaceNumber)
-            .then(() => {
+    async claimInterface(interfaceNumber, retries = 6, delay = 1000) {
+        for (let attempt = 1; attempt <= retries; attempt++) {
+            try {
+                await this.usbDevice.claimInterface(interfaceNumber);
                 console.log(`${this.logHead} Claimed interface: ${interfaceNumber}`);
                 if (this.options.exitDfu) {
                     this.leave();
                 } else {
                     this.upload_procedure(0);
                 }
-            })
-            .catch((error) => {
-                console.log(`${this.logHead} Failed to claim USB device`, error);
-                this.cleanup();
-            });
+                return;
+            } catch (error) {
+                const isBusy = error.message?.includes("Unable to claim interface") || error.message?.includes("busy");
+                if (isBusy && attempt < retries) {
+                    console.warn(
+                        `${this.logHead} Interface ${interfaceNumber} busy, retrying (${attempt}/${retries})...`,
+                    );
+                    await new Promise((resolve) => setTimeout(resolve, delay));
+                } else {
+                    console.log(`${this.logHead} Failed to claim USB device`, error);
+                    this.cleanup();
+                    return;
+                }
+            }
+        }
     }
     releaseInterface(interfaceNumber) {
         this.usbDevice

@@ -361,6 +361,14 @@ The 10-second `waitForDfu` timeout meant the Flash button's transient user activ
 
 Reduced to 4 seconds: authorized devices typically appear in 1-3s (reboot time), so they're still caught. For unauthorized devices, the fallback fires at ~4s with the gesture still valid (~5s Chrome limit), so `requestPermission()` opens the browser picker directly — matching pre-migration behavior. The dialog fallback is now a safety net that rarely triggers.
 
+### Commit 15: Retry claimInterface on transient "busy" errors
+
+**File:** `src/js/protocols/webusbdfu.js`
+
+On Linux, ModemManager auto-probes new USB DFU devices, temporarily claiming the interface. With the old 10s `waitForDfu` timeout, ModemManager usually finished before the configurator attempted to claim. With the shorter 4s timeout, the claim can hit a still-busy interface.
+
+Fix: `claimInterface()` now retries up to 6 times with 1-second delays when the error indicates "busy" or "Unable to claim interface". This handles transient contention from ModemManager or other USB managers without requiring udev rules (though udev rules remain recommended).
+
 ---
 
 ## Testing Plan
@@ -411,7 +419,7 @@ Reduced to 4 seconds: authorized devices typically appear in 1-3s (reboot time),
 | File | Changes | Commits |
 |------|---------|---------|
 | `src/js/protocols/webstm32.js` | Bound event listeners, `waitForDfu()` integration, direct `requestPermission` + dialog fallback, null-return handling, `handleConnect` parameter fix | 1, 4, 6, 8, 9, 12 |
-| `src/js/protocols/webusbdfu.js` | `_connecting` guard on `connect()`/`cleanup()`, hardened early-failure reset | 3, 11 |
+| `src/js/protocols/webusbdfu.js` | `_connecting` guard on `connect()`/`cleanup()`, hardened early-failure reset, `claimInterface` retry on busy | 3, 11, 15 |
 | `src/components/tabs/FirmwareFlasherTab.vue` | `onBeforeUnmount` listener cleanup, `teardownEventBusListeners` helper, `requestDfuPermission` dialog, Exit DFU enable on cancel, `onCancel` uses `handleError()` | 2, 8, 10, 13 |
 | `src/composables/useFirmwareFlashing.js` | Diagnostic logging in `detectedUsbDevice` | 5 |
 | `locales/en/messages.json` | `stm32DfuPermissionRequired` i18n key | 7 |
