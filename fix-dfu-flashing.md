@@ -56,7 +56,7 @@ The intended flow should be:
 When a device reboots to DFU (and was previously authorized), two independent paths race to handle it:
 
 **Path A — Port Handler auto-detection (event-driven):**
-```
+```text
 navigator.usb "connect" event
   → WEBUSBDFU.handleNewDevice()
   → PortHandler.addedUsbDevice()
@@ -66,7 +66,7 @@ navigator.usb "connect" event
 ```
 
 **Path B — STM32 handleDisconnect timeout (3 seconds):**
-```
+```text
 setTimeout(3000)
   → DFU.requestPermission()
   → handleNewDevice() (again!)
@@ -382,7 +382,7 @@ if (TABS.firmware_flasher.requestDfuPermission) {
 
 ### Event Flow After Fix — Previously Authorized Device (Happy Path)
 
-```
+```text
 User clicks Flash
   → STM32.connect(serialPort, ...)
   → MSP connect → get board info → reboot(mode=1|4)
@@ -404,7 +404,7 @@ User clicks Flash
 
 ### Event Flow After Fix — First-Time Device (Auth Required)
 
-```
+```text
 User clicks Flash
   → STM32.connect(serialPort, ...)
   → MSP connect → get board info → reboot(mode=1|4)
