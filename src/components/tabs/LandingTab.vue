@@ -229,6 +229,9 @@ export default defineComponent({
 }
 
 .logowrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     margin-left: auto;
     margin-right: auto;
     margin-top: 5px;
