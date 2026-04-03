@@ -696,6 +696,8 @@ import semver from "semver";
 import FileSystem from "../../js/FileSystem";
 import AutoBackup from "../../js/utils/AutoBackup.js";
 import { EventBus } from "../eventBus";
+import DFU from "../../js/protocols/webusbdfu";
+import STM32 from "../../js/protocols/webstm32";
 import { ispConnected } from "../../js/utils/connection.js";
 import FC from "../../js/fc";
 import SponsorTile from "../sponsor/SponsorTile.vue";
@@ -1545,6 +1547,7 @@ export default defineComponent({
                 flashProgress,
                 cleanup,
                 FLASH_MESSAGE_TYPES,
+                requestDfuPermission,
                 get parsed_hex() {
                     return firmwareFlashing.getParsedHex();
                 },
@@ -1587,6 +1590,34 @@ export default defineComponent({
             if (callback) {
                 callback();
             }
+        };
+
+        /**
+         * Show a dialog prompting the user to grant USB permission for DFU.
+         * Called by STM32 protocol when waitForDfu finds no authorized device.
+         * The dialog click provides the user gesture needed for requestDevice().
+         */
+        const requestDfuPermission = () => {
+            dialog.openInfo(
+                $t("stm32UsbDfuNotFound"),
+                $t("stm32DfuPermissionRequired"),
+                async () => {
+                    try {
+                        const device = await DFU.requestPermission();
+                        if (!device) {
+                            STM32.rebootMode = 0;
+                            resetFlashingState();
+                        }
+                        // If device granted, handleNewDevice fires addedDevice event
+                        // → detectedUsbDevice sees rebootMode set → startFlashing()
+                    } catch (e) {
+                        console.error(`${logHead} DFU permission request failed:`, e);
+                        STM32.rebootMode = 0;
+                        resetFlashingState();
+                    }
+                },
+                { confirmText: $t("firmwareFlasherOptionLabelFlash") },
+            );
         };
 
         // Flashing methods

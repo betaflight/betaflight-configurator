@@ -507,6 +507,9 @@
     "stm32UsbDfuNotFound": {
         "message": "USB DFU not found"
     },
+    "stm32DfuPermissionRequired": {
+        "message": "The device has rebooted to DFU mode. USB permission is required to continue flashing."
+    },
     "stm32RebootingToBootloader": {
         "message": "Initiating reboot to bootloader ..."
     },
