@@ -329,11 +329,16 @@ async function startProcess() {
     window.addEventListener("resize", function () {
         syncCompactHeaderLayout();
 
-        // Keep JS toggle cleanup aligned with the compact header CSS breakpoint.
+        syncCompactHeaderLayout();
+
         // Keep JS toggle cleanup aligned with the compact header CSS breakpoint.
         if (!compactHeaderLayoutMediaQuery.matches) {
             document.querySelector(".tab_container")?.classList.remove("reveal");
-            document.querySelector(".tab_container")?.classList.remove("reveal");
+            const bg = document.getElementById("background");
+            if (bg) {
+                bg.style.display = "none";
+            }
+        }
             const bg = document.getElementById("background");
             if (bg) {
                 bg.style.display = "none";
