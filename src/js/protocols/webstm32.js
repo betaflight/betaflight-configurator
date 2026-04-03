@@ -75,6 +75,10 @@ class STM32Protocol {
         this.useExtendedErase = false;
         this.rebootMode = 0;
         this.handleMSPConnect = this.handleMSPConnect.bind(this);
+
+        // Bind event handlers once so they can be properly added/removed
+        this._boundHandleConnect = (event) => this.handleConnect(event.detail);
+        this._boundHandleDisconnect = (event) => this.handleDisconnect(event.detail);
     }
 
     /**
@@ -104,8 +108,8 @@ class STM32Protocol {
     handleDisconnect(disconnectionResult) {
         console.log(`${this.logHead} Waiting for DFU connection`);
 
-        serial.removeEventListener("connect", (event) => this.handleConnect(event.detail));
-        serial.removeEventListener("disconnect", (event) => this.handleDisconnect(event.detail));
+        serial.removeEventListener("connect", this._boundHandleConnect);
+        serial.removeEventListener("disconnect", this._boundHandleDisconnect);
 
         if (disconnectionResult && this.rebootMode) {
             // If the firmware_flasher does not start flashing, we need to ask for permission to flash
@@ -134,11 +138,11 @@ class STM32Protocol {
     }
 
     prepareSerialPort() {
-        serial.removeEventListener("connect", (event) => this.handleConnect(event.detail));
-        serial.addEventListener("connect", (event) => this.handleConnect(event.detail), { once: true });
+        serial.removeEventListener("connect", this._boundHandleConnect);
+        serial.addEventListener("connect", this._boundHandleConnect, { once: true });
 
-        serial.removeEventListener("disconnect", (event) => this.handleDisconnect(event.detail));
-        serial.addEventListener("disconnect", (event) => this.handleDisconnect(event.detail), { once: true });
+        serial.removeEventListener("disconnect", this._boundHandleDisconnect);
+        serial.addEventListener("disconnect", this._boundHandleDisconnect, { once: true });
     }
 
     reboot() {
@@ -250,7 +254,7 @@ class STM32Protocol {
                 TABS.firmware_flasher.FLASH_MESSAGE_TYPES.NEUTRAL,
             );
 
-            serial.addEventListener("disconnect", (event) => this.handleDisconnect(event.detail), { once: true });
+            serial.addEventListener("disconnect", this._boundHandleDisconnect, { once: true });
 
             this.mspConnector.connect(
                 this.port,
