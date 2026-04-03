@@ -262,19 +262,22 @@ After `waitForDfu()` times out, the permission flow is now two-stage:
 **Stage 1 — Try `requestPermission()` directly in `handleDisconnect`:**
 The browser may still honour the original Flash button click as a valid user gesture. If so, the USB device picker opens immediately with no intermediate dialog.
 
-**Stage 2 — Dialog fallback (only if browser blocks Stage 1):**
-If the browser throws SecurityError (user gesture expired), show a Yes/No dialog:
+**Stage 2 — Dialog fallback (only if Stage 1 returns null):**
+`DFU.requestPermission()` catches all errors internally (including SecurityError) and returns `null`. So we check the return value — if `null`, either the browser blocked it (no user gesture) or the user cancelled the picker. Either way, show a Yes/No dialog:
 - **Yes** ("I can't find my DFU device") → calls `requestPermission()` with fresh user gesture
 - **No** ("Close") → resets state, enables Exit DFU button
 
 ```javascript
 // webstm32.js — try direct first, dialog as fallback
-try {
-    const device = await DFU.requestPermission();
-    if (!device) { this.handleError(); }
-} catch {
-    // Browser blocked — show dialog
-    TABS.firmware_flasher.requestDfuPermission?.() ?? this.handleError();
+const device = await DFU.requestPermission();
+if (device) {
+    return; // handleNewDevice → event chain → flashing
+}
+// null return — browser blocked or user cancelled
+if (TABS.firmware_flasher.requestDfuPermission) {
+    TABS.firmware_flasher.requestDfuPermission();
+} else {
+    this.handleError();
 }
 ```
 
