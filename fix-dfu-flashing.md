@@ -162,7 +162,7 @@ All call sites (`handleDisconnect`, `prepareSerialPort`, `connect`) updated to u
 **File:** `src/components/tabs/FirmwareFlasherTab.vue`
 **Bug:** #5
 
-Store listener references in a closure variable, reuse for `$off` in both `onBeforeUnmount` and `cleanup()`:
+Store listener references in a closure variable, with a shared `teardownEventBusListeners()` helper for `$off` in both `onBeforeUnmount` and `cleanup()`:
 
 ```javascript
 let eventListenerRefs = null;
@@ -172,17 +172,18 @@ const setupEventBusListeners = () => {
     eventListenerRefs = { detectedUsbDevice, onDeviceRemoved };
 };
 
-onBeforeUnmount(() => {
-    if (eventListenerRefs) {
-        EventBus.$off("port-handler:auto-select-usb-device", eventListenerRefs.detectedUsbDevice);
-        EventBus.$off("port-handler:device-removed", eventListenerRefs.onDeviceRemoved);
-        eventListenerRefs = null;
-    }
-    // ...
-});
+const teardownEventBusListeners = () => {
+    if (!eventListenerRefs) { return; }
+    EventBus.$off("port-handler:auto-select-usb-device", eventListenerRefs.detectedUsbDevice);
+    EventBus.$off("port-handler:device-removed", eventListenerRefs.onDeviceRemoved);
+    eventListenerRefs = null;
+};
+
+onBeforeUnmount(() => { teardownEventBusListeners(); /* ... */ });
+const cleanup = (callback) => { teardownEventBusListeners(); /* ... */ };
 ```
 
-**Note:** The `cleanup()` function (called during tab switching via `gui.js`) also used bare `EventBus.$off(event)` which removed ALL handlers — not just ours. Updated to use the same stored-reference pattern (commit 10).
+**Note:** The `cleanup()` function (called during tab switching via `gui.js`) originally used bare `EventBus.$off(event)` which removed ALL handlers — not just ours. Fixed in commit 10, then consolidated into the shared helper in commit 13.
 
 ### Commit 3: Add DFU connection guard (`3ec14745`)
 
@@ -342,6 +343,15 @@ Both early-return paths reset `_connecting = false`. Once `openDevice()` is reac
 
 The bound handler `_boundHandleConnect` unwraps `event.detail` before passing to `handleConnect()`, but `handleConnect(event)` still accessed `event.detail` in its log statement — logging `undefined`. Renamed the parameter to `connectionResult` and fixed the log.
 
+### Commit 13: Extract EventBus teardown helper, reuse `handleError` (`2aee7047`)
+
+**File:** `src/components/tabs/FirmwareFlasherTab.vue`
+**Bug:** #5 (DRY refactor)
+
+The duplicated `$off` block in `onBeforeUnmount` and `cleanup()` could drift apart again. Extracted into a single `teardownEventBusListeners()` helper called from both sites.
+
+Also replaced the manual reset sequence in `requestDfuPermission`'s `onCancel` (`rebootMode = 0`, `resetFlashingState()`) with `STM32.handleError()` — the canonical protocol-side error handler — followed by `enableDfuExitButton(true)`. This keeps the dialog cancel path aligned with protocol error handling.
+
 ---
 
 ## Testing Plan
@@ -393,7 +403,7 @@ The bound handler `_boundHandleConnect` unwraps `event.detail` before passing to
 |------|---------|---------|
 | `src/js/protocols/webstm32.js` | Bound event listeners, `waitForDfu()` integration, direct `requestPermission` + dialog fallback, null-return handling, `handleConnect` parameter fix | 1, 4, 6, 8, 9, 12 |
 | `src/js/protocols/webusbdfu.js` | `_connecting` guard on `connect()`/`cleanup()`, hardened early-failure reset | 3, 11 |
-| `src/components/tabs/FirmwareFlasherTab.vue` | `onBeforeUnmount` listener cleanup, `requestDfuPermission` dialog, Exit DFU enable on cancel, reference-based `$off` in `cleanup()` | 2, 8, 10 |
+| `src/components/tabs/FirmwareFlasherTab.vue` | `onBeforeUnmount` listener cleanup, `teardownEventBusListeners` helper, `requestDfuPermission` dialog, Exit DFU enable on cancel, `onCancel` uses `handleError()` | 2, 8, 10, 13 |
 | `src/composables/useFirmwareFlashing.js` | Diagnostic logging in `detectedUsbDevice` | 5 |
 | `locales/en/messages.json` | `stm32DfuPermissionRequired` i18n key | 7 |
 
