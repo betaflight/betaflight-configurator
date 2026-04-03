@@ -39,6 +39,7 @@ class WEBUSBDFU_protocol extends EventTarget {
         this.callback = null;
         this.hex = null;
         this.verify_hex = [];
+        this._connecting = false;
 
         this.request = {
             DETACH: 0x00, // OUT, Requests the device to leave DFU mode and enter the application.
@@ -173,6 +174,12 @@ class WEBUSBDFU_protocol extends EventTarget {
         return this.usbDevice ? `usb_${this.usbDevice.serialNumber}` : null;
     }
     async connect(devicePath, hex, options, callback) {
+        if (this._connecting) {
+            console.warn(`${this.logHead} Connect already in progress, ignoring duplicate call`);
+            return;
+        }
+        this._connecting = true;
+
         this.hex = hex;
         this.bareBoard = options?.bareBoard;
         this.callback = callback;
@@ -1315,6 +1322,7 @@ class WEBUSBDFU_protocol extends EventTarget {
         });
     }
     cleanup() {
+        this._connecting = false;
         this.releaseInterface(0);
 
         GUI.connect_lock = false;
