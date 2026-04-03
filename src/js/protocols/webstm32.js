@@ -15,7 +15,7 @@ import { gui_log } from "../gui_log";
 import MSPCodes from "../msp/MSPCodes";
 import PortUsage from "../port_usage";
 import { serial } from "../serial";
-import DFU from "../protocols/webusbdfu";
+import DFU, { DFU_AUTH_REQUIRED } from "../protocols/webusbdfu";
 import { read_serial } from "../serial_backend";
 import NotificationManager from "../utils/notifications";
 import { get as getConfig } from "../ConfigStorage";
@@ -105,33 +105,28 @@ class STM32Protocol {
         }
     }
 
-    handleDisconnect(disconnectionResult) {
+    async handleDisconnect(disconnectionResult) {
         console.log(`${this.logHead} Waiting for DFU connection`);
 
         serial.removeEventListener("connect", this._boundHandleConnect);
         serial.removeEventListener("disconnect", this._boundHandleDisconnect);
 
         if (disconnectionResult && this.rebootMode) {
-            // If the firmware_flasher does not start flashing, we need to ask for permission to flash
-            setTimeout(() => {
-                if (this.rebootMode) {
-                    console.log(`${this.logHead} STM32 Requesting permission for device`);
-
-                    DFU.requestPermission()
-                        .then((device) => {
-                            if (device == null) {
-                                console.error(`${this.logHead} DFU request permission denied`);
-                                this.handleError();
-                                return;
-                            }
-                            console.log(`${this.logHead} DFU request permission granted`, device);
-                        })
-                        .catch((e) => {
-                            console.error(`${this.logHead} DFU request permission failed`, e);
-                            this.handleError();
-                        });
+            try {
+                // Poll for an already-authorized DFU device (no user gesture needed).
+                // waitForDfu calls handleNewDevice internally which emits addedDevice,
+                // triggering the port handler and detectedUsbDevice event chain.
+                const device = await DFU.waitForDfu(10000, 500);
+                console.log(`${this.logHead} DFU device found via waitForDfu:`, device);
+            } catch (e) {
+                if (e.code === DFU_AUTH_REQUIRED) {
+                    console.warn(`${this.logHead} No authorized DFU device found, user must grant USB permission`);
+                    gui_log(i18n.getMessage("stm32RebootingToBootloaderFailed"));
+                } else {
+                    console.error(`${this.logHead} waitForDfu error:`, e);
                 }
-            }, 3000);
+                this.handleError();
+            }
         } else {
             this.handleError(false);
         }
