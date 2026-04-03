@@ -246,49 +246,43 @@ Log `rebootMode`, `connect_lock`, and `flashOnConnect` state on USB device detec
 **File:** `src/js/protocols/webstm32.js`
 **Bug:** #2
 
-When `waitForDfu()` throws `DFU_AUTH_REQUIRED`, keep `rebootMode` set and release `connect_lock` so the permission dialog (commit 7) can trigger flashing.
+When `waitForDfu()` throws `DFU_AUTH_REQUIRED`, keep `rebootMode` set and release `connect_lock` so the permission request can trigger flashing.
 
 ### Commit 7: Show USB permission dialog (`59d171ed`)
+
+Initial dialog implementation (superseded by commit 8).
+
+### Commit 8: Try requestPermission directly, dialog as fallback (`7f2bfb7c`)
 
 **Files:** `src/js/protocols/webstm32.js`, `src/components/tabs/FirmwareFlasherTab.vue`, `locales/en/messages.json`
 **Bug:** #2
 
-When `waitForDfu()` times out, present a dialog explaining that USB permission is needed. The dialog button click provides the user gesture required by `navigator.usb.requestDevice()`:
+After `waitForDfu()` times out, the permission flow is now two-stage:
+
+**Stage 1 — Try `requestPermission()` directly in `handleDisconnect`:**
+The browser may still honour the original Flash button click as a valid user gesture. If so, the USB device picker opens immediately with no intermediate dialog.
+
+**Stage 2 — Dialog fallback (only if browser blocks Stage 1):**
+If the browser throws SecurityError (user gesture expired), show a Yes/No dialog:
+- **Yes** ("I can't find my DFU device") → calls `requestPermission()` with fresh user gesture
+- **No** ("Close") → resets state, enables Exit DFU button
 
 ```javascript
-// webstm32.js — triggers the dialog
-TABS.firmware_flasher.requestDfuPermission?.();
-
-// FirmwareFlasherTab.vue — shows the dialog
-const requestDfuPermission = () => {
-    dialog.openInfo(
-        $t("stm32UsbDfuNotFound"),
-        $t("stm32DfuPermissionRequired"),
-        async () => {
-            try {
-                const device = await DFU.requestPermission();
-                if (!device) {
-                    STM32.rebootMode = 0;
-                    resetFlashingState();
-                }
-                // handleNewDevice → addedDevice → detectedUsbDevice → startFlashing
-            } catch (e) {
-                STM32.rebootMode = 0;
-                resetFlashingState();
-            }
-        },
-        { confirmText: $t("firmwareFlasherOptionLabelFlash") },
-    );
-};
+// webstm32.js — try direct first, dialog as fallback
+try {
+    const device = await DFU.requestPermission();
+    if (!device) { this.handleError(); }
+} catch {
+    // Browser blocked — show dialog
+    TABS.firmware_flasher.requestDfuPermission?.() ?? this.handleError();
+}
 ```
 
 **Key behavior:**
-- `rebootMode` stays set (1 or 4) so the event chain can resume
-- `connect_lock` is released so the dialog is interactive
-- Dialog appears immediately after `waitForDfu` timeout — no dead "please wait" state
-- User clicks dialog button → browser USB picker opens → user selects DFU device
+- `rebootMode` stays set so the event chain can resume flashing on permission grant
+- `connect_lock` is released so the UI is interactive
+- If user cancels: Exit DFU button is force-enabled so user can leave DFU mode
 - `handleNewDevice` → `addedDevice` → `detectedUsbDevice` sees `rebootMode` → `startFlashing()`
-- If user dismisses dialog or picker, `rebootMode` is cleared and state is reset
 
 ---
 
@@ -302,9 +296,15 @@ const requestDfuPermission = () => {
 ### Test 2: Serial → DFU reboot (first-time / never authorized)
 1. Clear USB permissions in browser (chrome://settings/content/usbDevices)
 2. Connect FC via serial, load firmware, click Flash
-3. **Expected:** `waitForDfu()` times out (10s), permission dialog appears automatically
-4. Click dialog button → browser USB picker opens → select DFU device
+3. **Expected:** `waitForDfu()` times out (10s), browser USB picker opens directly (or dialog appears if browser blocks it)
+4. Select DFU device in picker
 5. **Expected:** Flashing starts automatically (rebootMode was preserved)
+
+### Test 2b: Cancel permission flow, then Exit DFU
+1. Same as Test 2 steps 1-3
+2. Cancel/dismiss the USB picker (or dialog)
+3. **Expected:** State resets, Exit DFU button becomes enabled
+4. Click Exit DFU → grant USB permission → device exits DFU mode
 
 ### Test 3: Direct DFU flashing (should still work)
 1. Put device in DFU mode manually (boot button)
@@ -333,9 +333,9 @@ const requestDfuPermission = () => {
 
 | File | Changes | Commits |
 |------|---------|---------|
-| `src/js/protocols/webstm32.js` | Bound event listeners, `waitForDfu()` integration, auth-required fallback, permission dialog trigger | 1, 4, 6, 7 |
+| `src/js/protocols/webstm32.js` | Bound event listeners, `waitForDfu()` integration, direct `requestPermission` + dialog fallback | 1, 4, 6, 8 |
 | `src/js/protocols/webusbdfu.js` | `_connecting` guard on `connect()`/`cleanup()` | 3 |
-| `src/components/tabs/FirmwareFlasherTab.vue` | `onBeforeUnmount` listener cleanup, `requestDfuPermission` dialog | 2, 7 |
+| `src/components/tabs/FirmwareFlasherTab.vue` | `onBeforeUnmount` listener cleanup, `requestDfuPermission` dialog, Exit DFU enable on cancel | 2, 8 |
 | `src/composables/useFirmwareFlashing.js` | Diagnostic logging in `detectedUsbDevice` | 5 |
 | `locales/en/messages.json` | `stm32DfuPermissionRequired` i18n key | 7 |
 
@@ -377,17 +377,26 @@ User clicks Flash
   → 10 seconds pass, device never appears (not authorized)
   → DFUAuthRequiredError thrown
   → connect_lock released, rebootMode PRESERVED
-  → TABS.firmware_flasher.requestDfuPermission() called
-  → Dialog: "USB permission is required to continue flashing"
-  → User clicks dialog button (user gesture ✓)
-  → DFU.requestPermission() → browser USB picker opens
-  → User selects DFU device
+  → DFU.requestPermission() called directly
+  ┌─ If browser accepts (user gesture still valid):
+  │  → Browser USB picker opens immediately
+  └─ If browser blocks (SecurityError):
+     → requestDfuPermission() shows Yes/No dialog
+     → User clicks "I can't find my DFU device" (user gesture ✓)
+     → DFU.requestPermission() called → browser USB picker opens
+  → User selects DFU device in picker
   → handleNewDevice() fires addedDevice event
   → PortHandler.addedUsbDevice() → selectActivePort()
   → EventBus "port-handler:auto-select-usb-device"
   → detectedUsbDevice() checks STM32.rebootMode (still truthy!)
   → STM32.rebootMode cleared, startFlashing() called
   → flashHexFirmware() → DFU.connect() → flash proceeds
+
+If user cancels at any point:
+  → STM32.rebootMode cleared, state reset
+  → Exit DFU button enabled (device still in DFU mode)
+  → User can click Exit DFU → requestPermission (has click gesture)
+  → Device exits DFU mode
 ```
 
 ### Why `requestPermission()` from setTimeout doesn't work
