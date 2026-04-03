@@ -119,21 +119,34 @@ class STM32Protocol {
                 const device = await DFU.waitForDfu(10000, 500);
                 console.log(`${this.logHead} DFU device found via waitForDfu:`, device);
             } catch (e) {
-                if (e.code === DFU_AUTH_REQUIRED) {
-                    // Device not previously authorized via WebUSB. Keep rebootMode set
-                    // so that when the user grants USB permission, the detectedUsbDevice
-                    // handler will see rebootMode and trigger flashing automatically.
-                    console.warn(`${this.logHead} No authorized DFU device found, user must grant USB permission`);
-                    gui_log(i18n.getMessage("stm32UsbDfuNotFound"));
-                    GUI.connect_lock = false;
-                    // Show permission dialog — the dialog button click provides the
-                    // user gesture required by navigator.usb.requestDevice().
-                    TABS.firmware_flasher.requestDfuPermission?.();
-                    // rebootMode stays set — granting USB permission will resume flashing
+                if (e.code !== DFU_AUTH_REQUIRED) {
+                    console.error(`${this.logHead} waitForDfu error:`, e);
+                    this.handleError();
                     return;
                 }
-                console.error(`${this.logHead} waitForDfu error:`, e);
-                this.handleError();
+
+                // Device not previously authorized via WebUSB.
+                // Try requestPermission directly — browser may still honour the
+                // original user gesture from the Flash button click.
+                console.warn(`${this.logHead} No authorized DFU device found, requesting permission`);
+                gui_log(i18n.getMessage("stm32UsbDfuNotFound"));
+                GUI.connect_lock = false;
+
+                try {
+                    const device = await DFU.requestPermission();
+                    if (!device) {
+                        this.handleError();
+                    }
+                    // handleNewDevice → addedDevice → detectedUsbDevice → startFlashing
+                } catch {
+                    // Browser blocked requestDevice (no user gesture) — show dialog as fallback
+                    console.warn(`${this.logHead} requestPermission blocked, showing dialog`);
+                    if (TABS.firmware_flasher.requestDfuPermission) {
+                        TABS.firmware_flasher.requestDfuPermission();
+                    } else {
+                        this.handleError();
+                    }
+                }
             }
         } else {
             this.handleError(false);

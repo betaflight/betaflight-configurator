@@ -1594,29 +1594,37 @@ export default defineComponent({
 
         /**
          * Show a dialog prompting the user to grant USB permission for DFU.
-         * Called by STM32 protocol when waitForDfu finds no authorized device.
-         * The dialog click provides the user gesture needed for requestDevice().
+         * Called by STM32 protocol when the browser blocks requestDevice()
+         * due to missing user gesture. The dialog button provides that gesture.
          */
         const requestDfuPermission = () => {
-            dialog.openInfo(
+            const onCancel = () => {
+                STM32.rebootMode = 0;
+                resetFlashingState();
+                // Enable Exit DFU so user can leave DFU mode via permission request
+                enableDfuExitButton(true);
+            };
+
+            dialog.openYesNo(
                 $t("stm32UsbDfuNotFound"),
                 $t("stm32DfuPermissionRequired"),
                 async () => {
                     try {
                         const device = await DFU.requestPermission();
                         if (!device) {
-                            STM32.rebootMode = 0;
-                            resetFlashingState();
+                            onCancel();
                         }
-                        // If device granted, handleNewDevice fires addedDevice event
-                        // → detectedUsbDevice sees rebootMode set → startFlashing()
+                        // handleNewDevice → addedDevice → detectedUsbDevice → startFlashing
                     } catch (e) {
                         console.error(`${logHead} DFU permission request failed:`, e);
-                        STM32.rebootMode = 0;
-                        resetFlashingState();
+                        onCancel();
                     }
                 },
-                { confirmText: $t("firmwareFlasherOptionLabelFlash") },
+                onCancel,
+                {
+                    yesText: $t("portsSelectPermissionDFU"),
+                    noText: $t("dialogClose"),
+                },
             );
         };
 
