@@ -1565,13 +1565,18 @@ export default defineComponent({
             i18n.localizePage();
         });
 
-        onBeforeUnmount(() => {
-            // Unsubscribe using stored references (not new ones)
-            if (eventListenerRefs) {
-                EventBus.$off("port-handler:auto-select-usb-device", eventListenerRefs.detectedUsbDevice);
-                EventBus.$off("port-handler:device-removed", eventListenerRefs.onDeviceRemoved);
-                eventListenerRefs = null;
+        const teardownEventBusListeners = () => {
+            if (!eventListenerRefs) {
+                return;
             }
+
+            EventBus.$off("port-handler:auto-select-usb-device", eventListenerRefs.detectedUsbDevice);
+            EventBus.$off("port-handler:device-removed", eventListenerRefs.onDeviceRemoved);
+            eventListenerRefs = null;
+        };
+
+        onBeforeUnmount(() => {
+            teardownEventBusListeners();
 
             if (dfuMonitorInterval) {
                 clearInterval(dfuMonitorInterval);
@@ -1583,12 +1588,7 @@ export default defineComponent({
         });
 
         const cleanup = (callback) => {
-            // Unsubscribe using stored references (not bare $off which removes all handlers)
-            if (eventListenerRefs) {
-                EventBus.$off("port-handler:auto-select-usb-device", eventListenerRefs.detectedUsbDevice);
-                EventBus.$off("port-handler:device-removed", eventListenerRefs.onDeviceRemoved);
-                eventListenerRefs = null;
-            }
+            teardownEventBusListeners();
 
             if (callback) {
                 callback();
@@ -1602,9 +1602,7 @@ export default defineComponent({
          */
         const requestDfuPermission = () => {
             const onCancel = () => {
-                STM32.rebootMode = 0;
-                resetFlashingState();
-                // Enable Exit DFU so user can leave DFU mode via permission request
+                STM32.handleError();
                 enableDfuExitButton(true);
             };
 
