@@ -330,7 +330,9 @@ async function startProcess() {
         syncCompactHeaderLayout();
 
         // Keep JS toggle cleanup aligned with the compact header CSS breakpoint.
-        if (!isCompactHeaderLayout()) {
+        // Keep JS toggle cleanup aligned with the compact header CSS breakpoint.
+        if (!compactHeaderLayoutMediaQuery.matches) {
+            document.querySelector(".tab_container")?.classList.remove("reveal");
             document.querySelector(".tab_container")?.classList.remove("reveal");
             const bg = document.getElementById("background");
             if (bg) {
