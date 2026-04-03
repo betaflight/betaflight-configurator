@@ -162,7 +162,7 @@ All call sites (`handleDisconnect`, `prepareSerialPort`, `connect`) updated to u
 **File:** `src/components/tabs/FirmwareFlasherTab.vue`
 **Bug:** #5
 
-Store listener references in a closure variable, reuse for `$off`:
+Store listener references in a closure variable, reuse for `$off` in both `onBeforeUnmount` and `cleanup()`:
 
 ```javascript
 let eventListenerRefs = null;
@@ -181,6 +181,8 @@ onBeforeUnmount(() => {
     // ...
 });
 ```
+
+**Note:** The `cleanup()` function (called during tab switching via `gui.js`) also used bare `EventBus.$off(event)` which removed ALL handlers — not just ours. Updated to use the same stored-reference pattern (commit 10).
 
 ### Commit 3: Add DFU connection guard (`3ec14745`)
 
