@@ -227,7 +227,7 @@ async handleDisconnect(disconnectionResult) {
     // ... cleanup listeners ...
     if (disconnectionResult && this.rebootMode) {
         try {
-            const device = await DFU.waitForDfu(10000, 500);
+            const device = await DFU.waitForDfu(4000, 500);
             console.log(`${this.logHead} DFU device found via waitForDfu:`, device);
         } catch (e) {
             // ... error handling (see commit 6) ...
@@ -352,6 +352,15 @@ The duplicated `$off` block in `onBeforeUnmount` and `cleanup()` could drift apa
 
 Also replaced the manual reset sequence in `requestDfuPermission`'s `onCancel` (`rebootMode = 0`, `resetFlashingState()`) with `STM32.handleError()` — the canonical protocol-side error handler — followed by `enableDfuExitButton(true)`. This keeps the dialog cancel path aligned with protocol error handling.
 
+### Commit 14: Reduce waitForDfu timeout to preserve user gesture
+
+**File:** `src/js/protocols/webstm32.js`
+**Bug:** #2 (improvement)
+
+The 10-second `waitForDfu` timeout meant the Flash button's transient user activation always expired before the `requestPermission()` fallback ran. This forced the dialog workaround for first-time devices.
+
+Reduced to 4 seconds: authorized devices typically appear in 1-3s (reboot time), so they're still caught. For unauthorized devices, the fallback fires at ~4s with the gesture still valid (~5s Chrome limit), so `requestPermission()` opens the browser picker directly — matching pre-migration behavior. The dialog fallback is now a safety net that rarely triggers.
+
 ---
 
 ## Testing Plan
@@ -359,12 +368,12 @@ Also replaced the manual reset sequence in `requestDfuPermission`'s `onCancel` (
 ### Test 1: Serial → DFU reboot (previously authorized device)
 1. Ensure DFU device was previously authorized in browser USB settings
 2. Connect FC via serial, load firmware, click Flash
-3. **Expected:** Device reboots, `waitForDfu()` finds it within ~5s, flashing proceeds automatically
+3. **Expected:** Device reboots, `waitForDfu()` finds it within ~3s, flashing proceeds automatically
 
 ### Test 2: Serial → DFU reboot (first-time / never authorized)
 1. Clear USB permissions in browser (chrome://settings/content/usbDevices)
 2. Connect FC via serial, load firmware, click Flash
-3. **Expected:** `waitForDfu()` times out (10s), browser USB picker opens directly (or dialog appears if browser blocks it)
+3. **Expected:** `waitForDfu()` times out (4s), browser USB picker opens directly (or dialog appears if browser blocks it)
 4. Select DFU device in picker
 5. **Expected:** Flashing starts automatically (rebootMode was preserved)
 
@@ -419,7 +428,7 @@ User clicks Flash
   → MSP connect → get board info → reboot(mode=1|4)
   → MSP disconnect → serial "disconnect" event
   → handleDisconnect()
-  → await DFU.waitForDfu(10000, 500)  — polls getDevices()
+  → await DFU.waitForDfu(4000, 500)  — polls getDevices()
   → Device appears in DFU (~2-5 seconds)
   → waitForDfu returns device port object
   → handleNewDevice() fires addedDevice event
@@ -441,17 +450,14 @@ User clicks Flash
   → MSP connect → get board info → reboot(mode=1|4)
   → MSP disconnect → serial "disconnect" event
   → handleDisconnect()
-  → await DFU.waitForDfu(10000, 500)  — polls getDevices()
-  → 10 seconds pass, device never appears (not authorized)
+  → await DFU.waitForDfu(4000, 500)  — polls getDevices()
+  → 4 seconds pass, device never appears (not authorized)
   → DFUAuthRequiredError thrown
   → connect_lock released, rebootMode PRESERVED
-  → DFU.requestPermission() called directly
-  ┌─ If browser accepts (user gesture still valid):
-  │  → Browser USB picker opens immediately
-  └─ If browser blocks (SecurityError):
-     → requestDfuPermission() shows Yes/No dialog
-     → User clicks "I can't find my DFU device" (user gesture ✓)
-     → DFU.requestPermission() called → browser USB picker opens
+  → DFU.requestPermission() called directly (~4s after click, gesture still valid)
+  → Browser USB picker opens immediately
+  ┌─ If browser blocks (rare, gesture expired):
+  └─ → requestDfuPermission() dialog as safety net
   → User selects DFU device in picker
   → handleNewDevice() fires addedDevice event
   → PortHandler.addedUsbDevice() → selectActivePort()
@@ -467,11 +473,11 @@ If user cancels at any point:
   → Device exits DFU mode
 ```
 
-### Why `requestPermission()` from setTimeout doesn't work
+### Why the timeout matters for user gesture preservation
 
-WebUSB's `navigator.usb.requestDevice()` is classified as a "powerful feature" that requires [transient user activation](https://developer.mozilla.org/en-US/docs/Web/Security/User_activation). A `setTimeout` callback does NOT carry user activation from the original click event. Browsers silently reject the call or show an empty picker, causing the process to hang.
+WebUSB's `navigator.usb.requestDevice()` requires [transient user activation](https://developer.mozilla.org/en-US/docs/Web/Security/User_activation) — a recent click event. Chrome's activation window is ~5 seconds. The original code used `setTimeout(3000)` which kept the Flash button's gesture alive. The initial fix used a 10-second `waitForDfu` timeout, which always expired the gesture. Reducing to 4 seconds keeps the gesture valid for the `requestPermission()` fallback, matching pre-migration behavior.
 
-`waitForDfu()` uses `navigator.usb.getDevices()` instead, which returns already-authorized devices without requiring a user gesture. This is the correct approach for the reboot-to-DFU flow where the device has been authorized in a prior session.
+`waitForDfu()` uses `navigator.usb.getDevices()` which does NOT require a user gesture — only the `requestPermission()` fallback needs it.
 
 ### Why Web Serial authorization doesn't carry over to WebUSB
 

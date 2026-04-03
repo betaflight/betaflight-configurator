@@ -114,9 +114,9 @@ class STM32Protocol {
         if (disconnectionResult && this.rebootMode) {
             try {
                 // Poll for an already-authorized DFU device (no user gesture needed).
-                // waitForDfu calls handleNewDevice internally which emits addedDevice,
-                // triggering the port handler and detectedUsbDevice event chain.
-                const device = await DFU.waitForDfu(10000, 500);
+                // Keep timeout short (~4s) so the Flash button's transient user
+                // activation is still valid if we need to fall back to requestPermission.
+                const device = await DFU.waitForDfu(4000, 500);
                 console.log(`${this.logHead} DFU device found via waitForDfu:`, device);
             } catch (e) {
                 if (e.code !== DFU_AUTH_REQUIRED) {
