@@ -184,38 +184,6 @@ onBeforeUnmount(() => {
 
 **Note:** The `cleanup()` function (called during tab switching via `gui.js`) also used bare `EventBus.$off(event)` which removed ALL handlers — not just ours. Updated to use the same stored-reference pattern (commit 10).
 
-### Commit 11: Harden `_connecting` flag reset on early failures
-
-**File:** `src/js/protocols/webusbdfu.js`
-**Bug:** #3 (hardening)
-
-The `_connecting` guard added in commit 3 had a gap: if `getDevices()` threw or `devices.find()` returned `undefined`, the code would crash before reaching `openDevice()` (whose error handler calls `cleanup()` which resets the flag). The flag would stay `true` forever, blocking all future connections.
-
-Fix: wrap the device lookup in try-catch and add an explicit `undefined` check:
-
-```javascript
-let deviceFound;
-try {
-    const devices = await this.getDevices();
-    deviceFound = devices.find((device) => device.path === devicePath);
-} catch (error) {
-    console.error(`${this.logHead} Failed to enumerate USB devices:`, error);
-    this._connecting = false;
-    return;
-}
-
-if (!deviceFound) {
-    console.error(`${this.logHead} Device not found: ${devicePath}`);
-    this._connecting = false;
-    return;
-}
-
-this.usbDevice = deviceFound.port;
-return this.openDevice();
-```
-
-Both early-return paths reset `_connecting = false`. Once `openDevice()` is reached, its existing `.catch()` handler calls `cleanup()` which also resets the flag.
-
 ### Commit 3: Add DFU connection guard (`3ec14745`)
 
 **File:** `src/js/protocols/webusbdfu.js`
@@ -321,6 +289,59 @@ if (TABS.firmware_flasher.requestDfuPermission) {
 - If user cancels: Exit DFU button is force-enabled so user can leave DFU mode
 - `handleNewDevice` → `addedDevice` → `detectedUsbDevice` sees `rebootMode` → `startFlashing()`
 
+### Commit 9: Handle requestPermission returning null (`4e62c6c3`)
+
+**File:** `src/js/protocols/webstm32.js`
+**Bug:** #4 (fix for commit 8)
+
+`DFU.requestPermission()` catches all errors internally (including `SecurityError` from missing user gesture) and returns `null` — it does NOT re-throw. The `catch` block in `handleDisconnect` never ran. Changed to check the return value: if `null`, show the dialog fallback.
+
+### Commit 10: Use reference-based `$off` in `cleanup()` (`b2d2de8a`)
+
+**File:** `src/components/tabs/FirmwareFlasherTab.vue`
+**Bug:** #5 (hardening)
+
+`cleanup()` (called during tab switching via `gui.js`) used bare `EventBus.$off(event)` which removes ALL handlers for those events — not just ours. This could strip listeners registered by other components. Updated to use the same stored-reference pattern as `onBeforeUnmount`.
+
+### Commit 11: Harden `_connecting` flag reset on early failures (`4df612a1`)
+
+**File:** `src/js/protocols/webusbdfu.js`
+**Bug:** #3 (hardening)
+
+The `_connecting` guard added in commit 3 had a gap: if `getDevices()` threw or `devices.find()` returned `undefined`, the code would crash before reaching `openDevice()` (whose error handler calls `cleanup()` which resets the flag). The flag would stay `true` forever, blocking all future connections.
+
+Fix: wrap the device lookup in try-catch and add an explicit `undefined` check:
+
+```javascript
+let deviceFound;
+try {
+    const devices = await this.getDevices();
+    deviceFound = devices.find((device) => device.path === devicePath);
+} catch (error) {
+    console.error(`${this.logHead} Failed to enumerate USB devices:`, error);
+    this._connecting = false;
+    return;
+}
+
+if (!deviceFound) {
+    console.error(`${this.logHead} Device not found: ${devicePath}`);
+    this._connecting = false;
+    return;
+}
+
+this.usbDevice = deviceFound.port;
+return this.openDevice();
+```
+
+Both early-return paths reset `_connecting = false`. Once `openDevice()` is reached, its existing `.catch()` handler calls `cleanup()` which also resets the flag.
+
+### Commit 12: Fix `handleConnect` parameter double-unwrap
+
+**File:** `src/js/protocols/webstm32.js`
+**Bug:** #6 (regression from commit 1)
+
+The bound handler `_boundHandleConnect` unwraps `event.detail` before passing to `handleConnect()`, but `handleConnect(event)` still accessed `event.detail` in its log statement — logging `undefined`. Renamed the parameter to `connectionResult` and fixed the log.
+
 ---
 
 ## Testing Plan
@@ -370,9 +391,9 @@ if (TABS.firmware_flasher.requestDfuPermission) {
 
 | File | Changes | Commits |
 |------|---------|---------|
-| `src/js/protocols/webstm32.js` | Bound event listeners, `waitForDfu()` integration, direct `requestPermission` + dialog fallback | 1, 4, 6, 8 |
+| `src/js/protocols/webstm32.js` | Bound event listeners, `waitForDfu()` integration, direct `requestPermission` + dialog fallback, null-return handling, `handleConnect` parameter fix | 1, 4, 6, 8, 9, 12 |
 | `src/js/protocols/webusbdfu.js` | `_connecting` guard on `connect()`/`cleanup()`, hardened early-failure reset | 3, 11 |
-| `src/components/tabs/FirmwareFlasherTab.vue` | `onBeforeUnmount` listener cleanup, `requestDfuPermission` dialog, Exit DFU enable on cancel | 2, 8 |
+| `src/components/tabs/FirmwareFlasherTab.vue` | `onBeforeUnmount` listener cleanup, `requestDfuPermission` dialog, Exit DFU enable on cancel, reference-based `$off` in `cleanup()` | 2, 8, 10 |
 | `src/composables/useFirmwareFlashing.js` | Diagnostic logging in `detectedUsbDevice` | 5 |
 | `locales/en/messages.json` | `stm32DfuPermissionRequired` i18n key | 7 |
 

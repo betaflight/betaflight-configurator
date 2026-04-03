@@ -93,9 +93,9 @@ class STM32Protocol {
         TABS.firmware_flasher.resetFlashingState();
     }
 
-    handleConnect(event) {
-        console.log(`${this.logHead} Connected to serial port`, event.detail, event);
-        if (event) {
+    handleConnect(connectionResult) {
+        console.log(`${this.logHead} Connected to serial port`, connectionResult);
+        if (connectionResult) {
             // we are connected, disabling connect button in the UI
             GUI.connect_lock = true;
 
