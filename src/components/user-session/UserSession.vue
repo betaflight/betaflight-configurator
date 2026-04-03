@@ -204,7 +204,7 @@ export default defineComponent({
     @media (max-width: 575px), (max-width: 950px) and (max-height: 500px) and (orientation: landscape) {
         margin-bottom: 0.25rem;
         padding: 0.5rem 0;
-        .tab_container.reveal & .username {
+        :global(.tab_container.reveal) & .username {
             display: block;
         }
         .user-avatar-icon {
@@ -213,7 +213,7 @@ export default defineComponent({
         }
     }
 
-    body.compact-header-layout .tab_container.reveal & .username {
+    :global(body.compact-header-layout .tab_container.reveal) & .username {
         display: block;
     }
 }
