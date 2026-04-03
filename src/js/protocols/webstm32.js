@@ -120,11 +120,21 @@ class STM32Protocol {
                 console.log(`${this.logHead} DFU device found via waitForDfu:`, device);
             } catch (e) {
                 if (e.code === DFU_AUTH_REQUIRED) {
+                    // Device not previously authorized via WebUSB. Keep rebootMode set
+                    // so that when the user grants USB permission (via the port picker
+                    // or Flash button), the detectedUsbDevice handler will see
+                    // rebootMode and trigger flashing automatically.
                     console.warn(`${this.logHead} No authorized DFU device found, user must grant USB permission`);
-                    gui_log(i18n.getMessage("stm32RebootingToBootloaderFailed"));
-                } else {
-                    console.error(`${this.logHead} waitForDfu error:`, e);
+                    gui_log(i18n.getMessage("stm32UsbDfuNotFound"));
+                    TABS.firmware_flasher.flashingMessage(
+                        i18n.getMessage("stm32UsbDfuNotFound"),
+                        TABS.firmware_flasher.FLASH_MESSAGE_TYPES.NEUTRAL,
+                    );
+                    GUI.connect_lock = false;
+                    // rebootMode stays set — granting USB permission will resume flashing
+                    return;
                 }
+                console.error(`${this.logHead} waitForDfu error:`, e);
                 this.handleError();
             }
         } else {
