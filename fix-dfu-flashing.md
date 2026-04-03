@@ -184,6 +184,38 @@ onBeforeUnmount(() => {
 
 **Note:** The `cleanup()` function (called during tab switching via `gui.js`) also used bare `EventBus.$off(event)` which removed ALL handlers — not just ours. Updated to use the same stored-reference pattern (commit 10).
 
+### Commit 11: Harden `_connecting` flag reset on early failures
+
+**File:** `src/js/protocols/webusbdfu.js`
+**Bug:** #3 (hardening)
+
+The `_connecting` guard added in commit 3 had a gap: if `getDevices()` threw or `devices.find()` returned `undefined`, the code would crash before reaching `openDevice()` (whose error handler calls `cleanup()` which resets the flag). The flag would stay `true` forever, blocking all future connections.
+
+Fix: wrap the device lookup in try-catch and add an explicit `undefined` check:
+
+```javascript
+let deviceFound;
+try {
+    const devices = await this.getDevices();
+    deviceFound = devices.find((device) => device.path === devicePath);
+} catch (error) {
+    console.error(`${this.logHead} Failed to enumerate USB devices:`, error);
+    this._connecting = false;
+    return;
+}
+
+if (!deviceFound) {
+    console.error(`${this.logHead} Device not found: ${devicePath}`);
+    this._connecting = false;
+    return;
+}
+
+this.usbDevice = deviceFound.port;
+return this.openDevice();
+```
+
+Both early-return paths reset `_connecting = false`. Once `openDevice()` is reached, its existing `.catch()` handler calls `cleanup()` which also resets the flag.
+
 ### Commit 3: Add DFU connection guard (`3ec14745`)
 
 **File:** `src/js/protocols/webusbdfu.js`
@@ -339,7 +371,7 @@ if (TABS.firmware_flasher.requestDfuPermission) {
 | File | Changes | Commits |
 |------|---------|---------|
 | `src/js/protocols/webstm32.js` | Bound event listeners, `waitForDfu()` integration, direct `requestPermission` + dialog fallback | 1, 4, 6, 8 |
-| `src/js/protocols/webusbdfu.js` | `_connecting` guard on `connect()`/`cleanup()` | 3 |
+| `src/js/protocols/webusbdfu.js` | `_connecting` guard on `connect()`/`cleanup()`, hardened early-failure reset | 3, 11 |
 | `src/components/tabs/FirmwareFlasherTab.vue` | `onBeforeUnmount` listener cleanup, `requestDfuPermission` dialog, Exit DFU enable on cancel | 2, 8 |
 | `src/composables/useFirmwareFlashing.js` | Diagnostic logging in `detectedUsbDevice` | 5 |
 | `locales/en/messages.json` | `stm32DfuPermissionRequired` i18n key | 7 |
