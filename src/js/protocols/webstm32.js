@@ -132,20 +132,19 @@ class STM32Protocol {
                 gui_log(i18n.getMessage("stm32UsbDfuNotFound"));
                 GUI.connect_lock = false;
 
-                try {
-                    const device = await DFU.requestPermission();
-                    if (!device) {
-                        this.handleError();
-                    }
+                const device = await DFU.requestPermission();
+                if (device) {
                     // handleNewDevice → addedDevice → detectedUsbDevice → startFlashing
-                } catch {
-                    // Browser blocked requestDevice (no user gesture) — show dialog as fallback
-                    console.warn(`${this.logHead} requestPermission blocked, showing dialog`);
-                    if (TABS.firmware_flasher.requestDfuPermission) {
-                        TABS.firmware_flasher.requestDfuPermission();
-                    } else {
-                        this.handleError();
-                    }
+                    return;
+                }
+
+                // requestPermission returned null — either the browser blocked it
+                // (no user gesture) or user cancelled. Show dialog as fallback.
+                console.warn(`${this.logHead} requestPermission failed, showing dialog`);
+                if (TABS.firmware_flasher.requestDfuPermission) {
+                    TABS.firmware_flasher.requestDfuPermission();
+                } else {
+                    this.handleError();
                 }
             }
         } else {
