@@ -299,15 +299,14 @@ async function startProcess() {
 
     document.querySelector("#tabs ul.mode-disconnected li a")?.click();
 
-    const isCompactHeaderLayout = () =>
-        window.innerWidth <= 575 ||
-        (window.innerWidth <= 950 && window.innerHeight <= 500 && window.innerWidth > window.innerHeight);
-
+    const compactHeaderLayoutMediaQuery = window.matchMedia(
+        "(max-width: 575px), (max-width: 950px) and (max-height: 500px) and (orientation: landscape)",
+    );
     const syncCompactHeaderLayout = () => {
-        document.body.classList.toggle("compact-header-layout", isCompactHeaderLayout());
+        document.body.classList.toggle("compact-header-layout", compactHeaderLayoutMediaQuery.matches);
     };
-
     syncCompactHeaderLayout();
+    compactHeaderLayoutMediaQuery.addEventListener("change", syncCompactHeaderLayout);
 
     document.getElementById("menu_btn")?.addEventListener("click", function () {
         document.querySelector(".tab_container")?.classList.toggle("reveal");
