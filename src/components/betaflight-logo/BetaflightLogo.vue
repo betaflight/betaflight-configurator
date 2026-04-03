@@ -85,8 +85,8 @@ export default {
         height: auto;
         width: 100%;
         flex: 0 0 auto;
-        margin-bottom: 1rem;
-        padding: 0.75rem 0.5rem 1rem;
+        margin-bottom: 0;
+        padding: 0;
         box-sizing: border-box;
     }
     .dark-theme .tab_container .logo {
@@ -101,49 +101,6 @@ export default {
         font-size: 10px;
         line-height: 1.35;
     }
-}
-
-body.compact-header-layout .logo {
-    height: 24px;
-    width: 150px;
-    background-image: url(../../images/dark-wide-2-compact.svg);
-    background-position: left center;
-    order: 2;
-    margin-top: 0;
-}
-
-body.compact-header-layout.dark-theme .logo {
-    background-image: url(../../images/light-wide-2-compact.svg);
-}
-
-body.compact-header-layout .logo_text {
-    display: none !important;
-}
-
-body.compact-header-layout .tab_container .logo {
-    display: flex;
-    align-items: flex-start;
-    background-image: none;
-    height: auto;
-    width: 100%;
-    flex: 0 0 auto;
-    margin-bottom: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body.compact-header-layout.dark-theme .tab_container .logo {
-    background-image: none;
-}
-
-body.compact-header-layout .tab_container .logo .logo_text {
-    display: flex !important;
-    position: relative;
-    left: auto;
-    top: auto;
-    width: 100%;
-    font-size: 10px;
-    line-height: 1.35;
 }
 
 @media all and (min-width: 1125px) {

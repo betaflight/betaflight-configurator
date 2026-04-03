@@ -193,13 +193,6 @@ export default defineComponent({
         flex: 1;
     }
 
-    /* Hide username on smaller screens */
-    @media (max-width: 1055px) {
-        .username {
-            display: none;
-        }
-    }
-
     /* Show username when the compact navigation drawer is revealed */
     @media (max-width: 575px), (max-width: 950px) and (max-height: 500px) and (orientation: landscape) {
         margin-bottom: 0.25rem;

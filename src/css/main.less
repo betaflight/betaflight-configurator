@@ -244,8 +244,8 @@ input[type="number"] {
     display: flex;
     flex-direction: column;
 }
-/* Vue mounts tab bar as custom element; it is the flex item above #content */
-status-bar {
+/* StatusBar.vue root; avoid shrinking as a flex item under #main-wrapper */
+#status-bar {
     flex-shrink: 0;
 }
 #background {
