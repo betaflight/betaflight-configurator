@@ -1,6 +1,6 @@
 <template>
     <Teleport to="body">
-        <dialog ref="dialogRef" class="dialog-modal" @close="handleClose">
+        <dialog v-if="modelValue" ref="dialogRef" class="dialog-modal" @close="handleClose">
             <div class="dialog-title-bar">
                 <div class="dialog-title">
                     {{ title }}
@@ -20,6 +20,9 @@
             </div>
             <div class="dialog-content">
                 <slot></slot>
+            </div>
+            <div v-if="$slots.footer" class="dialog-footer">
+                <slot name="footer"></slot>
             </div>
         </dialog>
     </Teleport>
@@ -48,24 +51,29 @@ const emit = defineEmits(["update:modelValue", "close"]);
 const dialogRef = ref(null);
 
 const close = () => {
-    if (dialogRef.value?.open) {
-        dialogRef.value.close();
+    if (props.closeable) {
+        emit("update:modelValue", false);
+        emit("close");
     }
 };
 
 const handleClose = () => {
+    // Handle native dialog close events (ESC key, backdrop click)
     emit("update:modelValue", false);
     emit("close");
 };
 
 watch(
     () => props.modelValue,
-    (newValue) => {
-        if (!dialogRef.value) {
-            return;
-        }
-
+    async (newValue) => {
         if (newValue) {
+            // Wait for next tick to ensure DOM is updated with v-if
+            await new Promise((resolve) => setTimeout(resolve, 0));
+
+            if (!dialogRef.value) {
+                return;
+            }
+
             // Only call showModal if dialog is not already open
             if (!dialogRef.value.open) {
                 dialogRef.value.showModal();
@@ -75,16 +83,21 @@ watch(
             if (content) {
                 content.scrollTop = 0;
             }
-        } else if (dialogRef.value.open) {
-            // Only call close if dialog is currently open
+        } else if (dialogRef.value?.open) {
+            // When closing, forcibly call close() if dialog exists and is open
             dialogRef.value.close();
         }
     },
 );
 
-onMounted(() => {
-    if (props.modelValue && dialogRef.value && !dialogRef.value.open) {
-        dialogRef.value.showModal();
+onMounted(async () => {
+    if (props.modelValue) {
+        // Wait for next tick to ensure DOM is ready
+        await new Promise((resolve) => setTimeout(resolve, 0));
+
+        if (dialogRef.value && !dialogRef.value.open) {
+            dialogRef.value.showModal();
+        }
     }
 });
 
@@ -101,6 +114,8 @@ defineExpose({
     padding: 0;
     max-width: 90vw;
     max-height: 90vh;
+    display: flex;
+    flex-direction: column;
 }
 
 .dialog-modal::backdrop {
@@ -111,7 +126,7 @@ defineExpose({
     display: flex;
     height: 47px;
     background: var(--surface-300);
-    border-bottom: 1px solid var(--surface-950);
+    border-bottom: 2px solid var(--primary-500);
 }
 
 .dialog-title {
@@ -139,6 +154,14 @@ defineExpose({
 .dialog-content {
     padding: 20px;
     overflow-y: auto;
-    max-height: calc(90vh - 47px);
+    flex: 1;
+    min-height: 0;
+}
+
+.dialog-footer {
+    padding: 15px 20px;
+    background: var(--surface-100);
+    border-top: 1px solid var(--surface-500);
+    flex-shrink: 0;
 }
 </style>
