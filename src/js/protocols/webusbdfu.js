@@ -295,6 +295,10 @@ class WEBUSBDFU_protocol extends EventTarget {
                     return;
                 }
             }
+            if (!this.usbDevice) {
+                console.warn(`${this.logHead} Device lost during claimInterface retry, aborting`);
+                return;
+            }
         }
     }
     releaseInterface(interfaceNumber) {
