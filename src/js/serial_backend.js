@@ -265,7 +265,10 @@ function finishClose(finishedCallback) {
         }
 
         // close cliPanel if left open
-        document.querySelector(".dialogInteractive")?.close();
+        const dialogStore = useDialogStore();
+        if (dialogStore.activeDialog?.type === "InteractiveDialog") {
+            dialogStore.close();
+        }
     }
 
     const pendingTab = GUI.pendingTab;
