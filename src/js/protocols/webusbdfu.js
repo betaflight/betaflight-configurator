@@ -39,6 +39,7 @@ class WEBUSBDFU_protocol extends EventTarget {
         this.callback = null;
         this.hex = null;
         this.verify_hex = [];
+        this._connecting = false;
 
         this.request = {
             DETACH: 0x00, // OUT, Requests the device to leave DFU mode and enter the application.
@@ -173,6 +174,12 @@ class WEBUSBDFU_protocol extends EventTarget {
         return this.usbDevice ? `usb_${this.usbDevice.serialNumber}` : null;
     }
     async connect(devicePath, hex, options, callback) {
+        if (this._connecting) {
+            console.warn(`${this.logHead} Connect already in progress, ignoring duplicate call`);
+            return;
+        }
+        this._connecting = true;
+
         this.hex = hex;
         this.bareBoard = options?.bareBoard;
         this.callback = callback;
@@ -206,8 +213,28 @@ class WEBUSBDFU_protocol extends EventTarget {
         this.options?.flashingMessage?.(null, this.options?.flashMessageTypes?.NEUTRAL);
         this.options?.flashProgress?.(0);
 
-        const devices = await this.getDevices();
-        const deviceFound = devices.find((device) => device.path === devicePath);
+        let deviceFound;
+        try {
+            const devices = await this.getDevices();
+            deviceFound = devices.find((device) => device.path === devicePath);
+        } catch (error) {
+            console.error(`${this.logHead} Failed to enumerate USB devices:`, error);
+            gui_log(i18n.getMessage("usbDeviceOpenFail"));
+            this._connecting = false;
+            GUI.connect_lock = false;
+            this.callback?.();
+            return;
+        }
+
+        if (!deviceFound) {
+            console.error(`${this.logHead} Device not found: ${devicePath}`);
+            gui_log(i18n.getMessage("usbDeviceOpenFail"));
+            this._connecting = false;
+            GUI.connect_lock = false;
+            this.callback?.();
+            return;
+        }
+
         this.usbDevice = deviceFound.port;
         return this.openDevice();
     }
@@ -250,21 +277,35 @@ class WEBUSBDFU_protocol extends EventTarget {
             });
         this.usbDevice = null;
     }
-    claimInterface(interfaceNumber) {
-        this.usbDevice
-            .claimInterface(interfaceNumber)
-            .then(() => {
+    async claimInterface(interfaceNumber, retries = 6, delay = 1000) {
+        for (let attempt = 1; attempt <= retries; attempt++) {
+            try {
+                await this.usbDevice.claimInterface(interfaceNumber);
                 console.log(`${this.logHead} Claimed interface: ${interfaceNumber}`);
                 if (this.options.exitDfu) {
                     this.leave();
                 } else {
                     this.upload_procedure(0);
                 }
-            })
-            .catch((error) => {
-                console.log(`${this.logHead} Failed to claim USB device`, error);
-                this.cleanup();
-            });
+                return;
+            } catch (error) {
+                const isBusy = error.message?.includes("Unable to claim interface") || error.message?.includes("busy");
+                if (isBusy && attempt < retries) {
+                    console.warn(
+                        `${this.logHead} Interface ${interfaceNumber} busy, retrying (${attempt}/${retries})...`,
+                    );
+                    await new Promise((resolve) => setTimeout(resolve, delay));
+                } else {
+                    console.log(`${this.logHead} Failed to claim USB device`, error);
+                    this.cleanup();
+                    return;
+                }
+            }
+            if (!this.usbDevice) {
+                console.warn(`${this.logHead} Device lost during claimInterface retry, aborting`);
+                return;
+            }
+        }
     }
     releaseInterface(interfaceNumber) {
         this.usbDevice
@@ -1315,6 +1356,7 @@ class WEBUSBDFU_protocol extends EventTarget {
         });
     }
     cleanup() {
+        this._connecting = false;
         this.releaseInterface(0);
 
         GUI.connect_lock = false;

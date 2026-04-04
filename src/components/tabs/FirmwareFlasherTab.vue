@@ -696,6 +696,8 @@ import semver from "semver";
 import FileSystem from "../../js/FileSystem";
 import AutoBackup from "../../js/utils/AutoBackup.js";
 import { EventBus } from "../eventBus";
+import DFU from "../../js/protocols/webusbdfu";
+import STM32 from "../../js/protocols/webstm32";
 import { ispConnected } from "../../js/utils/connection.js";
 import FC from "../../js/fc";
 import SponsorTile from "../sponsor/SponsorTile.vue";
@@ -1496,6 +1498,8 @@ export default defineComponent({
             }
         };
 
+        let eventListenerRefs = null;
+
         const setupEventBusListeners = () => {
             const { detectedUsbDevice, onDeviceRemoved } = firmwareFlashing.setupFlashingEventListeners({
                 getFlashOnConnect: () => state.flashOnConnect,
@@ -1510,7 +1514,8 @@ export default defineComponent({
             EventBus.$on("port-handler:auto-select-usb-device", detectedUsbDevice);
             EventBus.$on("port-handler:device-removed", onDeviceRemoved);
 
-            return { detectedUsbDevice, onDeviceRemoved };
+            // Store references for proper cleanup in onBeforeUnmount
+            eventListenerRefs = { detectedUsbDevice, onDeviceRemoved };
         };
 
         onMounted(async () => {
@@ -1542,6 +1547,7 @@ export default defineComponent({
                 flashProgress,
                 cleanup,
                 FLASH_MESSAGE_TYPES,
+                requestDfuPermission,
                 get parsed_hex() {
                     return firmwareFlashing.getParsedHex();
                 },
@@ -1559,13 +1565,18 @@ export default defineComponent({
             i18n.localizePage();
         });
 
-        onBeforeUnmount(() => {
-            // Unsubscribe from EventBus
-            const eventListeners = setupEventBusListeners();
-            if (eventListeners) {
-                EventBus.$off("port-handler:auto-select-usb-device", eventListeners.detectedUsbDevice);
-                EventBus.$off("port-handler:device-removed", eventListeners.onDeviceRemoved);
+        const teardownEventBusListeners = () => {
+            if (!eventListenerRefs) {
+                return;
             }
+
+            EventBus.$off("port-handler:auto-select-usb-device", eventListenerRefs.detectedUsbDevice);
+            EventBus.$off("port-handler:device-removed", eventListenerRefs.onDeviceRemoved);
+            eventListenerRefs = null;
+        };
+
+        onBeforeUnmount(() => {
+            teardownEventBusListeners();
 
             if (dfuMonitorInterval) {
                 clearInterval(dfuMonitorInterval);
@@ -1577,13 +1588,45 @@ export default defineComponent({
         });
 
         const cleanup = (callback) => {
-            // Unsubscribe from EventBus
-            EventBus.$off("port-handler:auto-select-usb-device");
-            EventBus.$off("port-handler:device-removed");
+            teardownEventBusListeners();
 
             if (callback) {
                 callback();
             }
+        };
+
+        /**
+         * Show a dialog prompting the user to grant USB permission for DFU.
+         * Called by STM32 protocol when the browser blocks requestDevice()
+         * due to missing user gesture. The dialog button provides that gesture.
+         */
+        const requestDfuPermission = () => {
+            const onCancel = () => {
+                STM32.handleError();
+                enableDfuExitButton(true);
+            };
+
+            dialog.openYesNo(
+                $t("stm32UsbDfuNotFound"),
+                $t("stm32DfuPermissionRequired"),
+                async () => {
+                    try {
+                        const device = await DFU.requestPermission();
+                        if (!device) {
+                            onCancel();
+                        }
+                        // handleNewDevice → addedDevice → detectedUsbDevice → startFlashing
+                    } catch (e) {
+                        console.error(`${logHead} DFU permission request failed:`, e);
+                        onCancel();
+                    }
+                },
+                onCancel,
+                {
+                    yesText: $t("portsSelectPermissionDFU"),
+                    noText: $t("dialogClose"),
+                },
+            );
         };
 
         // Flashing methods

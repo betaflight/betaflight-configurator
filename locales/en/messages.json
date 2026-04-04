@@ -507,6 +507,9 @@
     "stm32UsbDfuNotFound": {
         "message": "USB DFU not found"
     },
+    "stm32DfuPermissionRequired": {
+        "message": "The device has rebooted to DFU mode.<br><br>Your browser requires USB permission to access the DFU device. Click the button below to select it from the device picker."
+    },
     "stm32RebootingToBootloader": {
         "message": "Initiating reboot to bootloader ..."
     },
