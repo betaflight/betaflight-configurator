@@ -236,9 +236,17 @@ input[type="number"] {
 }
 #main-wrapper {
     height: 100vh;
+    height: 100dvh;
+    max-height: 100dvh;
+    min-height: 0;
+    overflow: hidden;
     background-color: var(--surface-100);
     display: flex;
     flex-direction: column;
+}
+/* StatusBar.vue root; avoid shrinking as a flex item under #main-wrapper */
+#status-bar {
+    flex-shrink: 0;
 }
 #background {
     background: rgba(0, 0, 0, 0.5);
@@ -252,7 +260,8 @@ input[type="number"] {
     backdrop-filter: blur(0.25rem);
 }
 .headerbar {
-    min-height: 7rem;
+    flex-shrink: 0;
+    height: 7rem;
     display: flex;
     align-items: start;
     padding: 1rem;
@@ -581,6 +590,7 @@ input[type="number"] {
     background-image: url(../images/icons/cf_icon_link_active.svg);
 }
 #log {
+    flex-shrink: 0;
     background-color: var(--surface-200);
     color: var(--text);
     line-height: 21px;
@@ -651,17 +661,18 @@ input[type="number"] {
 }
 #tab-content-container {
     display: flex;
-    flex: 1;
-    height: 100%;
+    flex: 1 1 0;
+    min-height: 0;
     overflow-y: hidden;
     transition: all 0.2s;
 }
 #tab-content-container.logopen {
-    height: 100%;
+    min-height: 0;
 }
 .tab_container {
     transition: all 0.2s;
-    min-width: fit-content;
+    width: 16rem;
+    min-height: 0;
     overflow: auto;
     padding: 1rem;
     background-color: var(--surface-100);
@@ -670,6 +681,9 @@ input[type="number"] {
 }
 
 #content {
+    flex: 1 1 0;
+    min-width: 0;
+    min-height: 0;
     transition: all 0.2s;
     overflow-x: hidden;
     overflow-y: auto;
@@ -1818,7 +1832,7 @@ each(range(12), {
         }
     }
     .tab_container {
-        width: 3.5rem;
+        width: 5rem;
     }
     #content {
         width: calc(100% - 3.5rem);
@@ -1976,7 +1990,7 @@ each(range(12), {
         }
     }
 }
-@media all and (max-width: 575px) {
+.compact-header-layout() {
     @mobile-port-control-width: 76%;
 
     #tabs li a {
@@ -2230,7 +2244,7 @@ each(range(12), {
         top: 0;
         left: -100%;
         bottom: 0;
-        width: 50% !important;
+        min-width: fit-content;
         transition: all 0.3s;
         padding: 1rem;
     }
@@ -2272,6 +2286,12 @@ each(range(12), {
             margin-right: 0 !important;
         }
     });
+}
+@media all and (max-width: 575px), all and (max-width: 950px) and (max-height: 500px) and (orientation: landscape) {
+    .compact-header-layout();
+}
+body.compact-header-layout {
+    .compact-header-layout();
 }
 @media all and (min-width: 576px) and (max-width: 767px) {
     .xs,
