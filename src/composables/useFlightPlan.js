@@ -65,11 +65,6 @@ const editingWaypoint = computed(() => {
 });
 
 export function useFlightPlan() {
-    // Generate unique ID (timestamp + random for stability)
-    const generateUid = () => {
-        return Date.now() + Math.random();
-    };
-
     // Validate waypoint data
     const validateWaypoint = (waypointData) => {
         if (waypointData.latitude < -90 || waypointData.latitude > 90) {
@@ -138,7 +133,7 @@ export function useFlightPlan() {
         }
 
         const waypoint = {
-            uid: generateUid(),
+            uid: crypto.randomUUID(),
             latitude: waypointData.latitude ?? 0,
             longitude: waypointData.longitude ?? 0,
             altitude: waypointData.altitude ?? DEFAULT_ALTITUDE,
@@ -319,7 +314,7 @@ export function useFlightPlan() {
         const patternName = parts[9].toUpperCase();
 
         return {
-            uid: generateUid(),
+            uid: crypto.randomUUID(),
             latitude: parseFloat(parts[3]),
             longitude: parseFloat(parts[4]),
             altitude: Math.round(altCm / FEET_TO_CM),
