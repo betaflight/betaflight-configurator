@@ -219,13 +219,19 @@ class WEBUSBDFU_protocol extends EventTarget {
             deviceFound = devices.find((device) => device.path === devicePath);
         } catch (error) {
             console.error(`${this.logHead} Failed to enumerate USB devices:`, error);
+            gui_log(i18n.getMessage("usbDeviceOpenFail"));
             this._connecting = false;
+            GUI.connect_lock = false;
+            this.callback?.();
             return;
         }
 
         if (!deviceFound) {
             console.error(`${this.logHead} Device not found: ${devicePath}`);
+            gui_log(i18n.getMessage("usbDeviceOpenFail"));
             this._connecting = false;
+            GUI.connect_lock = false;
+            this.callback?.();
             return;
         }
 
