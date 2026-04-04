@@ -83,12 +83,9 @@ watch(
             if (content) {
                 content.scrollTop = 0;
             }
-        } else {
+        } else if (dialogRef.value?.open) {
             // When closing, forcibly call close() if dialog exists and is open
-            if (dialogRef.value?.open) {
-                dialogRef.value.close();
-            }
-            // v-if will handle removing the dialog from DOM
+            dialogRef.value.close();
         }
     },
 );

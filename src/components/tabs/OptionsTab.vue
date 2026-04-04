@@ -325,8 +325,8 @@ export default defineComponent({
             (value) => {
                 setConfig({ expertMode: value });
                 // Update global Vue expertMode state
-                if (window.vm) {
-                    window.vm.expertMode = value;
+                if (globalThis.vm) {
+                    globalThis.vm.expertMode = value;
                 }
             },
         );
@@ -464,8 +464,8 @@ export default defineComponent({
 
         onMounted(() => {
             // Sync expert mode with global Vue state
-            if (window.vm) {
-                window.vm.expertMode = settings.expertMode;
+            if (globalThis.vm) {
+                globalThis.vm.expertMode = settings.expertMode;
             }
             GUI.content_ready();
         });

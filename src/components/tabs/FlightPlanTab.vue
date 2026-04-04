@@ -44,13 +44,13 @@
         <!-- Bottom toolbar -->
         <div class="content_toolbar toolbar_fixed_bottom">
             <div class="btn clear-button">
-                <a href="#" @click.prevent="handleClear" v-html="$t('flightPlanClear')"></a>
+                <button @click="handleClear" v-html="$t('flightPlanClear')"></button>
             </div>
             <div class="btn load-button">
-                <a href="#" @click.prevent="handleLoad" v-html="$t('flightPlanLoadFromFC')"></a>
+                <button @click="handleLoad" v-html="$t('flightPlanLoadFromFC')"></button>
             </div>
             <div class="btn save-button">
-                <a href="#" @click.prevent="handleSave" v-html="$t('save')"></a>
+                <button @click="handleSave" v-html="$t('save')"></button>
             </div>
         </div>
     </BaseTab>

@@ -171,9 +171,9 @@ export function useFlightPlan() {
         // Validate if coordinates are being updated
         if (updates.latitude !== undefined || updates.longitude !== undefined || updates.altitude !== undefined) {
             const testData = {
-                latitude: updates.latitude !== undefined ? updates.latitude : waypoint.latitude,
-                longitude: updates.longitude !== undefined ? updates.longitude : waypoint.longitude,
-                altitude: updates.altitude !== undefined ? updates.altitude : waypoint.altitude,
+                latitude: updates.latitude ?? waypoint.latitude,
+                longitude: updates.longitude ?? waypoint.longitude,
+                altitude: updates.altitude ?? waypoint.altitude,
             };
             if (!validateWaypoint(testData)) {
                 return false;
@@ -307,22 +307,22 @@ export function useFlightPlan() {
             return null;
         }
 
-        const altCm = parseInt(parts[5], 10);
-        const speedCms = parseInt(parts[6], 10);
-        const durationDs = parseInt(parts[8], 10);
+        const altCm = Number.parseInt(parts[5], 10);
+        const speedCms = Number.parseInt(parts[6], 10);
+        const durationDs = Number.parseInt(parts[8], 10);
         const typeName = parts[7].toUpperCase();
         const patternName = parts[9].toUpperCase();
 
         return {
             uid: crypto.randomUUID(),
-            latitude: parseFloat(parts[3]),
-            longitude: parseFloat(parts[4]),
+            latitude: Number.parseFloat(parts[3]),
+            longitude: Number.parseFloat(parts[4]),
             altitude: Math.round(altCm / FEET_TO_CM),
             speed: Math.round((speedCms / KNOTS_TO_CMS) * 10) / 10,
             type: CLI_TO_TYPE[typeName] ?? DEFAULT_TYPE,
             duration: Math.round((durationDs / MINUTES_TO_DECISECONDS) * 10) / 10,
             pattern: CLI_TO_PATTERN[patternName] ?? "orbit",
-            order: parseInt(parts[2], 10),
+            order: Number.parseInt(parts[2], 10),
         };
     };
 
