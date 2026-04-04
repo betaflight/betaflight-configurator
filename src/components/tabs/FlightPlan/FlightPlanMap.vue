@@ -92,8 +92,8 @@ onMounted(async () => {
 
     // Try to get user's geolocation via browser API
     if (navigator.geolocation) {
+        // NOSONAR - user-initiated, required for map centering
         navigator.geolocation.getCurrentPosition(
-            // NOSONAR - user-initiated, required for map centering
             (position) => {
                 const { latitude, longitude } = position.coords;
                 console.log("Browser geolocation obtained:", latitude, longitude);
