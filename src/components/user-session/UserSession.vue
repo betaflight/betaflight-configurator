@@ -136,7 +136,6 @@ export default defineComponent({
     #open-login,
     #user-menu-trigger {
         position: relative;
-        height: 64px;
         width: 100%;
     }
 
@@ -194,18 +193,21 @@ export default defineComponent({
         flex: 1;
     }
 
-    /* Hide username on smaller screens */
-    @media (max-width: 1055px) {
-        .username {
-            display: none;
+    /* Show username when the compact navigation drawer is revealed */
+    @media (max-width: 575px), (max-width: 950px) and (max-height: 500px) and (orientation: landscape) {
+        margin-bottom: 0.25rem;
+        padding: 0.5rem 0;
+        :global(.tab_container.reveal) & .username {
+            display: block;
+        }
+        .user-avatar-icon {
+            width: 32px;
+            height: 32px;
         }
     }
 
-    /* Show username when menu is revealed on mobile */
-    @media (max-width: 575px) {
-        .tab_container.reveal & .username {
-            display: block;
-        }
+    :global(body.compact-header-layout .tab_container.reveal) & .username {
+        display: block;
     }
 }
 </style>

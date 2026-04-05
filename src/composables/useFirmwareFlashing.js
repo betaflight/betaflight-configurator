@@ -496,12 +496,18 @@ export function useFirmwareFlashing(params = {}) {
         const detectedUsbDevice = (device) => {
             const isFlashOnConnect = getFlashOnConnect();
 
-            console.log(`${logHead} Detected USB device:`, device);
+            console.log(
+                `${logHead} Detected USB device:`,
+                device,
+                `rebootMode=${STM32.rebootMode}`,
+                `connectLock=${GUI.connect_lock}`,
+                `flashOnConnect=${isFlashOnConnect}`,
+            );
 
             updateDfuExitButtonState?.();
 
             if (GUI.connect_lock && !STM32.rebootMode) {
-                console.log(`${logHead} Port event ignored due to active operation (connect_lock)`);
+                console.log(`${logHead} Port event ignored: connect_lock active, no reboot pending`);
                 return;
             }
 
@@ -521,6 +527,8 @@ export function useFirmwareFlashing(params = {}) {
                     console.log(`${logHead} Flash on connect triggered`);
                     initiateFlashing();
                 }
+            } else {
+                console.log(`${logHead} USB device detected but no reboot pending and flash-on-connect disabled`);
             }
         };
 

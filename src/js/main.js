@@ -299,6 +299,15 @@ async function startProcess() {
 
     document.querySelector("#tabs ul.mode-disconnected li a")?.click();
 
+    const compactHeaderLayoutMediaQuery = window.matchMedia(
+        "(max-width: 575px), (max-width: 950px) and (max-height: 500px) and (orientation: landscape)",
+    );
+    const syncCompactHeaderLayout = () => {
+        document.body.classList.toggle("compact-header-layout", compactHeaderLayoutMediaQuery.matches);
+    };
+    syncCompactHeaderLayout();
+    compactHeaderLayoutMediaQuery.addEventListener("change", syncCompactHeaderLayout);
+
     document.getElementById("menu_btn")?.addEventListener("click", function () {
         document.querySelector(".tab_container")?.classList.toggle("reveal");
         const bg = document.getElementById("background");
@@ -318,8 +327,10 @@ async function startProcess() {
     });
 
     window.addEventListener("resize", function () {
-        // 575px is the mobile breakpoint defined in CSS
-        if (window.innerWidth > 575) {
+        syncCompactHeaderLayout();
+
+        // Keep JS toggle cleanup aligned with the compact header CSS breakpoint.
+        if (!compactHeaderLayoutMediaQuery.matches) {
             document.querySelector(".tab_container")?.classList.remove("reveal");
             const bg = document.getElementById("background");
             if (bg) {

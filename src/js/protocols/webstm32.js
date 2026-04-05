@@ -15,7 +15,7 @@ import { gui_log } from "../gui_log";
 import MSPCodes from "../msp/MSPCodes";
 import PortUsage from "../port_usage";
 import { serial } from "../serial";
-import DFU from "../protocols/webusbdfu";
+import DFU, { DFU_AUTH_REQUIRED } from "../protocols/webusbdfu";
 import { read_serial } from "../serial_backend";
 import NotificationManager from "../utils/notifications";
 import { get as getConfig } from "../ConfigStorage";
@@ -75,6 +75,10 @@ class STM32Protocol {
         this.useExtendedErase = false;
         this.rebootMode = 0;
         this.handleMSPConnect = this.handleMSPConnect.bind(this);
+
+        // Bind event handlers once so they can be properly added/removed
+        this._boundHandleConnect = (event) => this.handleConnect(event.detail);
+        this._boundHandleDisconnect = (event) => this.handleDisconnect(event.detail);
     }
 
     /**
@@ -89,9 +93,9 @@ class STM32Protocol {
         TABS.firmware_flasher.resetFlashingState();
     }
 
-    handleConnect(event) {
-        console.log(`${this.logHead} Connected to serial port`, event.detail, event);
-        if (event) {
+    handleConnect(connectionResult) {
+        console.log(`${this.logHead} Connected to serial port`, connectionResult);
+        if (connectionResult) {
             // we are connected, disabling connect button in the UI
             GUI.connect_lock = true;
 
@@ -101,44 +105,59 @@ class STM32Protocol {
         }
     }
 
-    handleDisconnect(disconnectionResult) {
+    async handleDisconnect(disconnectionResult) {
         console.log(`${this.logHead} Waiting for DFU connection`);
 
-        serial.removeEventListener("connect", (event) => this.handleConnect(event.detail));
-        serial.removeEventListener("disconnect", (event) => this.handleDisconnect(event.detail));
+        serial.removeEventListener("connect", this._boundHandleConnect);
+        serial.removeEventListener("disconnect", this._boundHandleDisconnect);
 
         if (disconnectionResult && this.rebootMode) {
-            // If the firmware_flasher does not start flashing, we need to ask for permission to flash
-            setTimeout(() => {
-                if (this.rebootMode) {
-                    console.log(`${this.logHead} STM32 Requesting permission for device`);
-
-                    DFU.requestPermission()
-                        .then((device) => {
-                            if (device == null) {
-                                console.error(`${this.logHead} DFU request permission denied`);
-                                this.handleError();
-                                return;
-                            }
-                            console.log(`${this.logHead} DFU request permission granted`, device);
-                        })
-                        .catch((e) => {
-                            console.error(`${this.logHead} DFU request permission failed`, e);
-                            this.handleError();
-                        });
+            try {
+                // Poll for an already-authorized DFU device (no user gesture needed).
+                // Keep timeout short (~4s) so the Flash button's transient user
+                // activation is still valid if we need to fall back to requestPermission.
+                const device = await DFU.waitForDfu(4000, 500);
+                console.log(`${this.logHead} DFU device found via waitForDfu:`, device);
+            } catch (e) {
+                if (e.code !== DFU_AUTH_REQUIRED) {
+                    console.error(`${this.logHead} waitForDfu error:`, e);
+                    this.handleError();
+                    return;
                 }
-            }, 3000);
+
+                // Device not previously authorized via WebUSB.
+                // Try requestPermission directly — browser may still honour the
+                // original user gesture from the Flash button click.
+                console.warn(`${this.logHead} No authorized DFU device found, requesting permission`);
+                gui_log(i18n.getMessage("stm32UsbDfuNotFound"));
+                GUI.connect_lock = false;
+
+                const device = await DFU.requestPermission();
+                if (device) {
+                    // handleNewDevice → addedDevice → detectedUsbDevice → startFlashing
+                    return;
+                }
+
+                // requestPermission returned null — either the browser blocked it
+                // (no user gesture) or user cancelled. Show dialog as fallback.
+                console.warn(`${this.logHead} requestPermission failed, showing dialog`);
+                if (TABS.firmware_flasher.requestDfuPermission) {
+                    TABS.firmware_flasher.requestDfuPermission();
+                } else {
+                    this.handleError();
+                }
+            }
         } else {
             this.handleError(false);
         }
     }
 
     prepareSerialPort() {
-        serial.removeEventListener("connect", (event) => this.handleConnect(event.detail));
-        serial.addEventListener("connect", (event) => this.handleConnect(event.detail), { once: true });
+        serial.removeEventListener("connect", this._boundHandleConnect);
+        serial.addEventListener("connect", this._boundHandleConnect, { once: true });
 
-        serial.removeEventListener("disconnect", (event) => this.handleDisconnect(event.detail));
-        serial.addEventListener("disconnect", (event) => this.handleDisconnect(event.detail), { once: true });
+        serial.removeEventListener("disconnect", this._boundHandleDisconnect);
+        serial.addEventListener("disconnect", this._boundHandleDisconnect, { once: true });
     }
 
     reboot() {
@@ -250,7 +269,7 @@ class STM32Protocol {
                 TABS.firmware_flasher.FLASH_MESSAGE_TYPES.NEUTRAL,
             );
 
-            serial.addEventListener("disconnect", (event) => this.handleDisconnect(event.detail), { once: true });
+            serial.addEventListener("disconnect", this._boundHandleDisconnect, { once: true });
 
             this.mspConnector.connect(
                 this.port,
