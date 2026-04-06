@@ -923,7 +923,7 @@ export default defineComponent({
         border-radius: 999px;
         background-color: var(--primary-100);
         border-color: var(--primary-600);
-        color: var(--primary-contrast, #000);
+        color: var(--primary-900);
     }
 
     .customThemePresets .customThemePresetButton.regular-button:hover {
@@ -964,7 +964,7 @@ export default defineComponent({
         border-radius: 999px;
         background-color: var(--primary-100);
         border-color: var(--primary-600);
-        color: var(--primary-contrast, #000);
+        color: var(--primary-900);
         opacity: 0.92;
     }
 
