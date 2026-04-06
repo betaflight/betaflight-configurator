@@ -429,6 +429,9 @@
     "stm32UsbDfuNotFound": {
         "message": "USB DFU ikke fundet"
     },
+    "stm32DfuPermissionRequired": {
+        "message": "Enheden er genstartet i DFU-tilstand.<br><br>Din browser kræver tilladelse til USB for at få adgang til DFU-enheden. Klik på knappen nedenfor for at vælge enheden."
+    },
     "stm32RebootingToBootloader": {
         "message": "Begynder genstart til bootloader..."
     },
@@ -8067,6 +8070,12 @@
     "preflightUseMyLocation": {
         "message": "Brug min position"
     },
+    "preflightDetecting": {
+        "message": "Scanner..."
+    },
+    "preflightOr": {
+        "message": "eller indtast koordinater:"
+    },
     "preflightApply": {
         "message": "Anvend"
     },
@@ -8265,6 +8274,9 @@
     "preflightDaLow": {
         "message": "Betydelig reduceret ydeevne"
     },
+    "preflightRefresh": {
+        "message": "Opdater"
+    },
     "preflightCurrentWeather": {
         "message": "Nuværende vejr"
     },
@@ -8306,6 +8318,9 @@
     },
     "preflightUvIndex": {
         "message": "UV indeks"
+    },
+    "preflightTempRange": {
+        "message": "Temp. område"
     },
     "preflightCurrentlyDay": {
         "message": "Nuværende"
@@ -8363,6 +8378,9 @@
     },
     "preflightGNSSPlanner": {
         "message": "GNSS satellit planlægningsværktøj"
+    },
+    "preflightAirspace": {
+        "message": "Luftrum og flyvefri zoner"
     },
     "preflightNOTAMs": {
         "message": "FAA NOTAMs (US)"
