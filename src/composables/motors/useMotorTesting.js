@@ -4,14 +4,16 @@
  * Based on original motors.js motorsEnableTestMode handler
  */
 
-import { ref, watch, onUnmounted } from "vue";
+import { ref, computed, watch, onUnmounted } from "vue";
 import MSP from "@/js/msp";
 import MSPCodes from "@/js/msp/MSPCodes";
 import { mspHelper } from "@/js/msp/MSPHelper";
 import DshotCommand from "@/js/utils/DshotCommand";
 import { i18n } from "@/js/localization";
+import FC from "@/js/fc";
+import { bit_check } from "@/js/bit";
 
-export function useMotorTesting(configHasChanged, showWarningDialog, digitalProtocolConfigured) {
+export function useMotorTesting(configHasChanged, showWarningDialog, digitalProtocolConfigured, zeroThrottleValue) {
     const motorsTestingEnabled = ref(false);
     const motorValues = ref(new Array(8).fill(1000));
     const masterValue = ref(1000);
@@ -150,10 +152,32 @@ export function useMotorTesting(configHasChanged, showWarningDialog, digitalProt
         masterValue.value = stopValue;
     };
 
+    // Arm state detection: FC.CONFIG.mode bit 0 indicates armed (matches original update_arm_status)
+    const isArmed = computed(() => bit_check(FC.CONFIG.mode, 0));
+
+    // Sliders disabled when not testing or when armed via RC (matches original setSlidersEnabled)
+    const slidersDisabled = computed(() => !motorsTestingEnabled.value || isArmed.value);
+
+    // Watch arm state changes during motor testing (matches original update_ui arm detection)
+    watch(isArmed, (armed) => {
+        if (!motorsTestingEnabled.value) {
+            return;
+        }
+
+        if (armed) {
+            // FC armed via RC: reset sliders to zero throttle to prevent MSP_SET_MOTOR interference
+            const stopValue = zeroThrottleValue?.value ?? zeroThrottleValue ?? 1000;
+            motorValues.value.fill(stopValue);
+            masterValue.value = stopValue;
+        }
+    });
+
     return {
         motorsTestingEnabled,
         motorValues,
         masterValue,
+        isArmed,
+        slidersDisabled,
         sendMotorCommand,
         stopAllMotors,
     };

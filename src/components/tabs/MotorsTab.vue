@@ -515,7 +515,7 @@
                                 <div :class="`bar-wrapper grid-box col${numberOfValidOutputs + 1}`">
                                     <div v-for="i in numberOfValidOutputs" :key="i" :class="'m-block motor-' + (i - 1)">
                                         <div class="meter-bar">
-                                            <div class="label">{{ motorValues[i - 1] }}</div>
+                                            <div class="label">{{ getMotorValue(i - 1) }}</div>
                                             <div
                                                 class="indicator"
                                                 :style="{
@@ -557,7 +557,7 @@
                                                 :min="minSliderValue"
                                                 :max="maxSliderValue"
                                                 v-model.number="motorValues[i - 1]"
-                                                :disabled="!motorsTestingEnabled"
+                                                :disabled="slidersDisabled"
                                                 @input="onMotorSliderChange(i - 1)"
                                                 @wheel.prevent="onSliderWheel(i - 1, $event)"
                                             />
@@ -569,7 +569,7 @@
                                                 :min="minSliderValue"
                                                 :max="maxSliderValue"
                                                 v-model.number="masterValue"
-                                                :disabled="!motorsTestingEnabled"
+                                                :disabled="slidersDisabled"
                                                 @input="onMasterSliderChange"
                                                 @wheel.prevent="onSliderWheel(-1, $event)"
                                             />
@@ -846,12 +846,31 @@ const useUnsyncedPwm = computed({
     },
 });
 
+// Feature helper (needed by zeroThrottleValue below)
+const isFeatureEnabled = (featureName) => {
+    return fcStore.features.features.isEnabled(featureName);
+};
+
+// Slider range values (needed by zeroThrottleValue below)
+const minSliderValue = computed(() => {
+    if (digitalProtocolConfigured.value) {
+        return 1000; // DShot Disarmed
+    }
+    return fcStore.motorConfig.mincommand;
+});
+
+const zeroThrottleValue = computed(() => {
+    if (isFeatureEnabled("3D")) {
+        let neutral = fcStore.motor3dConfig.neutral;
+        // Sanity check from legacy
+        return neutral > 1575 || neutral < 1425 ? 1500 : neutral;
+    }
+    return minSliderValue.value;
+});
+
 // Initialize motor testing with safety features
-const { motorsTestingEnabled, motorValues, masterValue, sendMotorCommand, stopAllMotors } = useMotorTesting(
-    configHasChanged,
-    showWarningDialog,
-    digitalProtocolConfigured,
-);
+const { motorsTestingEnabled, motorValues, masterValue, slidersDisabled, sendMotorCommand, stopAllMotors } =
+    useMotorTesting(configHasChanged, showWarningDialog, digitalProtocolConfigured, zeroThrottleValue);
 
 // Initialize configuration tracking
 const { setupConfigWatchers } = useMotorConfiguration(motorsState, motorsTestingEnabled, () => {
@@ -1500,9 +1519,6 @@ const stopMotors = () => {
 };
 
 // Feature Logic
-const isFeatureEnabled = (featureName) => {
-    return fcStore.features.features.isEnabled(featureName);
-};
 
 const toggleFeature = (featureName, checked) => {
     // We need to update the bitmask in fcStore.features.featureMask
@@ -1564,27 +1580,11 @@ const getActualMotorCount = (expectedMotorCount) => {
     return firstZeroIndex > 0 ? firstZeroIndex : expectedMotorCount;
 };
 
-const minSliderValue = computed(() => {
-    if (digitalProtocolConfigured.value) {
-        return 1000; // DShot Disarmed
-    }
-    return fcStore.motorConfig.mincommand;
-});
-
 const maxSliderValue = computed(() => {
     if (digitalProtocolConfigured.value) {
         return 2000;
     }
     return fcStore.motorConfig.maxthrottle;
-});
-
-const zeroThrottleValue = computed(() => {
-    if (isFeatureEnabled("3D")) {
-        let neutral = fcStore.motor3dConfig.neutral;
-        // Sanity check from legacy
-        return neutral > 1575 || neutral < 1425 ? 1500 : neutral;
-    }
-    return minSliderValue.value;
 });
 
 const idleThrottleValue = computed(() => {
@@ -1723,11 +1723,13 @@ watch(motorsTestingEnabled, async (enabled) => {
 
 // Telemetry Logic
 const getMotorValue = (index) => {
+    // Match original getMotorOutputs: show FC-reported motor data during testing,
+    // zero throttle otherwise. This ensures bars reflect actual motor output whether
+    // controlled via sliders (MSP_SET_MOTOR) or via RC input.
     if (motorsTestingEnabled.value) {
-        return motorValues.value[index];
+        return fcStore.motorData[index] || zeroThrottleValue.value;
     }
-    // If telemetry running, show telemetry data
-    return fcStore.motorData[index] || minSliderValue.value;
+    return zeroThrottleValue.value;
 };
 
 const getMotorBarHeight = (index) => {
