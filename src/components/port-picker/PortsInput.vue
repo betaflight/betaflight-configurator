@@ -35,7 +35,7 @@
             ]"
             v-model="modelValue.selectedPort"
             size="sm"
-            class="min-w-64"
+            class="sm:min-w-64 min-w-full"
             @change="onChangePort"
             :ui="{
                 content: 'max-h-96',

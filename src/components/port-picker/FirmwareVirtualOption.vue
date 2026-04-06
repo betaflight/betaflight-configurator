@@ -4,7 +4,7 @@
             :items="firmwareVersions"
             v-model="selectedVersion"
             size="sm"
-            class="min-w-64"
+            class="sm:min-w-64 min-w-full"
             @update:modelValue="updateValue"
             :ui="{
                 content: 'max-h-96',
