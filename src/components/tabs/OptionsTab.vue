@@ -412,6 +412,10 @@ const CUSTOM_THEME_PRESETS = {
     },
 };
 
+function cloneCustomTheme(theme) {
+    return structuredClone(theme);
+}
+
 export default defineComponent({
     name: "OptionsTab",
     components: {
@@ -484,14 +488,6 @@ export default defineComponent({
                 "You have unsaved custom theme color changes.",
             ),
         );
-
-        function cloneCustomTheme(theme) {
-            if (typeof structuredClone === "function") {
-                return structuredClone(theme);
-            }
-
-            return JSON.parse(JSON.stringify(theme));
-        }
 
         function applyOrClearCustomTheme(themeInput = settings.customTheme) {
             const customTheme = sanitizeCustomTheme(themeInput);
