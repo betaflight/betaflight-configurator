@@ -354,16 +354,20 @@ function abortConnection() {
 function showVersionMismatchAndCli(message) {
     const dialog = document.querySelector(".dialogConnectWarning");
 
-    const content = dialog.querySelector(".dialogConnectWarning-content");
-    if (content) {
-        content.innerHTML = message;
-    }
-    const closeBtn = dialog.querySelector(".dialogConnectWarning-closebtn");
-    if (closeBtn) {
-        closeBtn.onclick = () => dialog.close();
-    }
+    if (dialog) {
+        const content = dialog.querySelector(".dialogConnectWarning-content");
+        if (content) {
+            content.innerHTML = message;
+        }
+        const closeBtn = dialog.querySelector(".dialogConnectWarning-closebtn");
+        if (closeBtn) {
+            closeBtn.onclick = () => dialog.close();
+        }
 
-    dialog.showModal();
+        dialog.showModal();
+    } else {
+        gui_log(message);
+    }
 
     connectCli();
 }
