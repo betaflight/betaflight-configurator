@@ -77,19 +77,21 @@ export function getDefaultCustomTheme() {
 
 export function sanitizeCustomTheme(themeInput) {
     const input = themeInput && typeof themeInput === "object" ? themeInput : {};
+    const defaultTheme = getDefaultCustomTheme();
 
-    return Object.keys(DEFAULT_CUSTOM_THEME).reduce((acc, key) => {
+    return Object.keys(defaultTheme).reduce((acc, key) => {
         const candidateValue = input[key];
         const normalizedCandidate =
             typeof candidateValue === "string" ? candidateValue.trim().toLowerCase() : candidateValue;
-        acc[key] = HEX_COLOR_REGEX.test(normalizedCandidate) ? normalizedCandidate : DEFAULT_CUSTOM_THEME[key];
+        acc[key] = HEX_COLOR_REGEX.test(normalizedCandidate) ? normalizedCandidate : defaultTheme[key];
         return acc;
     }, {});
 }
 
 export function isDefaultCustomTheme(themeInput) {
     const theme = sanitizeCustomTheme(themeInput);
-    return Object.keys(DEFAULT_CUSTOM_THEME).every((key) => theme[key] === DEFAULT_CUSTOM_THEME[key]);
+    const defaultTheme = getDefaultCustomTheme();
+    return Object.keys(defaultTheme).every((key) => theme[key] === defaultTheme[key]);
 }
 
 function hexToRgb(hex) {
@@ -126,9 +128,9 @@ function rgbaFromHex(hex, alpha) {
 }
 
 function getReadableContrastColor(hex) {
-    const { r, g, b } = hexToRgb(hex);
-    const luminance = (r * 299 + g * 587 + b * 114) / 1000;
-    return luminance >= 160 ? BLACK : WHITE;
+    const ratioBlack = getContrastRatio(hex, BLACK);
+    const ratioWhite = getContrastRatio(hex, WHITE);
+    return ratioBlack > ratioWhite ? BLACK : WHITE;
 }
 
 function getRelativeLuminance(hex) {

@@ -996,8 +996,7 @@ export default defineComponent({
                 background-color: var(--surface-400);
                 color: var(--surface-950);
                 &:hover {
-                    background-color: var(--text);
-                    opacity: 0.8;
+                    background-color: var(--surface-500);
                     color: var(--surface-950);
                 }
             }
@@ -1102,9 +1101,8 @@ export default defineComponent({
             color: var(--text);
             transition: all ease 0.3s;
             &:hover {
-                background-color: var(--text);
-                opacity: 0.8;
-                opacity: 1;
+                background-color: var(--surface-500);
+
                 transition: all ease 0.3s;
             }
         }

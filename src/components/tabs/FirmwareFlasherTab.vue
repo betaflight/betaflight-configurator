@@ -2656,9 +2656,8 @@ export default defineComponent({
             pointer-events: none;
             cursor: default;
             span {
-                background-color: var(--text);
-                opacity: 0.8;
-                color: var(--text);
+                background-color: var(--surface-500);
+                color: var(--surface-900);
                 cursor: default;
             }
         }
@@ -2936,9 +2935,8 @@ export default defineComponent({
         &.disabled {
             pointer-events: none;
             cursor: default;
-            background-color: var(--text);
-            opacity: 0.8;
-            color: var(--text);
+            background-color: var(--surface-500);
+            color: var(--surface-900);
         }
     }
 
@@ -3068,8 +3066,8 @@ export default defineComponent({
         }
         a.disabled {
             cursor: default;
-            color: var(--text);
-            background-color: var(--text);
+            color: var(--surface-900);
+            background-color: var(--surface-500);
             border: 1px solid var(--surface-500);
             pointer-events: none;
             opacity: 0.8;
@@ -3105,9 +3103,9 @@ export default defineComponent({
             box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.35);
         }
         &.disabled {
-            background-color: var(--text);
+            background-color: var(--surface-500);
             border: 1px solid var(--surface-400);
-            color: var(--text);
+            color: var(--surface-900);
             opacity: 0.8;
             cursor: default;
         }

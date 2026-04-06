@@ -372,7 +372,7 @@ import { i18n } from "../../js/localization";
 import PortHandler from "../../js/port_handler";
 import CliAutoComplete from "../../js/CliAutoComplete";
 import DarkTheme, { setDarkTheme } from "../../js/DarkTheme";
-import { DEFAULT_CUSTOM_THEME, applyCustomTheme, clearCustomTheme, sanitizeCustomTheme } from "../../js/ColorTheme";
+import { getDefaultCustomTheme, applyCustomTheme, clearCustomTheme, sanitizeCustomTheme } from "../../js/ColorTheme";
 import { DEFAULT_UI_SCALE, MIN_UI_SCALE, MAX_UI_SCALE, applyUiScale, sanitizeUiScale } from "../../js/UiScale";
 import { checkSetupAnalytics } from "../../js/Analytics";
 import NotificationManager from "../../js/utils/notifications";
@@ -437,7 +437,7 @@ export default defineComponent({
             darkTheme: DarkTheme.configSetting,
             uiScale: sanitizeUiScale(getConfig("uiScale", DEFAULT_UI_SCALE).uiScale),
             colorTheme: getConfig("colorTheme", "yellow").colorTheme ?? "yellow",
-            customTheme: sanitizeCustomTheme(getConfig("customTheme", DEFAULT_CUSTOM_THEME).customTheme),
+            customTheme: sanitizeCustomTheme(getConfig("customTheme", getDefaultCustomTheme()).customTheme),
             showDevToolsOnStartup: !!getConfig("showDevToolsOnStartup").showDevToolsOnStartup,
             showNotifications: !!getConfig("showNotifications").showNotifications,
             backupOnFlash: getConfig("backupOnFlash", 1).backupOnFlash ?? 1,
@@ -653,7 +653,7 @@ export default defineComponent({
         }
 
         function resetCustomTheme() {
-            settings.customTheme = cloneCustomTheme(DEFAULT_CUSTOM_THEME);
+            settings.customTheme = cloneCustomTheme(getDefaultCustomTheme());
             savedCustomTheme.value = cloneCustomTheme(settings.customTheme);
             setConfig({ customTheme: cloneCustomTheme(settings.customTheme) });
         }
@@ -777,6 +777,9 @@ export default defineComponent({
 
         onBeforeUnmount(() => {
             window.removeEventListener("beforeunload", handleBeforeUnload);
+            if (isCustomThemeDirty.value) {
+                applyOrClearCustomTheme(null);
+            }
         });
 
         function handleBeforeUnload(event) {
