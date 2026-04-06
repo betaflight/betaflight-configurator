@@ -98,6 +98,7 @@ html {
     --surface-800: hsl(0, 0%, 60%);
     --surface-900: hsl(0, 0%, 70%);
     --surface-950: hsl(0, 0%, 80%);
+    --ui-error: var(--ui-color-error-500);
 
     --text: hsl(0, 0%, 95%);
 }

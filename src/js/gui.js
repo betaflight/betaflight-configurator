@@ -440,10 +440,10 @@ class GuiControl {
     reinitializeConnection() {
         if (CONFIGURATOR.virtualMode) {
             this.reboot_timestamp = Date.now();
-            document.querySelector("a.connection_button__link")?.click();
+            document.querySelector("#connection_button")?.click();
             if (PortHandler.portPicker.autoConnect) {
                 return setTimeout(function () {
-                    document.querySelector("a.connection_button__link")?.click();
+                    document.querySelector("#connection_button")?.click();
                 }, 500);
             }
             return;
@@ -462,7 +462,7 @@ class GuiControl {
 
         if (currentPort.startsWith("bluetooth") || currentPort === "manual") {
             return setTimeout(function () {
-                document.querySelector("a.connection_button__link")?.click();
+                document.querySelector("#connection_button")?.click();
             }, 1500);
         }
 

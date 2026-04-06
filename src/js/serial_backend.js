@@ -31,6 +31,17 @@ import { useDialogStore } from "../stores/dialog";
 
 const logHead = "[SERIAL-BACKEND]";
 
+function setFirmwareFlasherButtonActiveState(isActive) {
+    const fwLabel = document.querySelector(".firmware_flasher_button__label");
+    const fwButton = document.querySelector("#firmware_flasher_button");
+    fwLabel?.classList.toggle("active", isActive);
+    fwButton?.classList.toggle("active", isActive);
+
+    if (globalThis.vm) {
+        globalThis.vm.firmwareFlasherActive = isActive;
+    }
+}
+
 let mspHelper;
 let connectionTimestamp = null;
 let liveDataRefreshTimerId = false;
@@ -59,7 +70,7 @@ function disconnectHandler(event) {
 }
 
 export function initializeSerialBackend() {
-    document.querySelector("a.connection_button__link")?.addEventListener("click", connectDisconnect);
+    document.querySelector("#connection_button")?.addEventListener("click", connectDisconnect);
 
     EventBus.$on("port-handler:auto-select-serial-device", function () {
         if (
@@ -241,7 +252,7 @@ function finishClose(finishedCallback) {
     PortHandler.portPickerDisabled = false;
 
     // reset connect / disconnect button
-    document.querySelector("a.connection_button__link")?.classList.remove("active");
+    document.querySelector("#connection_button")?.classList.remove("active");
     const connLabel = document.querySelector("div.connection_button__label");
     if (connLabel) {
         connLabel.textContent = i18n.getMessage("connect");
@@ -275,9 +286,10 @@ function finishClose(finishedCallback) {
     GUI.pendingTab = null;
     if (pendingTab === "firmware_flasher") {
         // Clear premature active state set before disconnect started
-        document.querySelector("a.firmware_flasher_button__label")?.classList.remove("active");
-        document.querySelector("a.firmware_flasher_button__link")?.classList.remove("active");
-        document.querySelector("a.firmware_flasher_button__link")?.click();
+        document.querySelector(".firmware_flasher_button__label")?.classList.remove("active");
+        document.querySelector("#firmware_flasher_button")?.classList.remove("active");
+        setFirmwareFlasherButtonActiveState(false);
+        document.querySelector("#firmware_flasher_button")?.click();
     } else {
         document.querySelector("#tabs .tab_landing a")?.click();
     }
@@ -307,7 +319,7 @@ function resetConnection() {
         connLabel.textContent = i18n.getMessage("connect");
         connLabel.classList.remove("active");
     }
-    document.querySelector("a.connection_button__link")?.classList.remove("active");
+    document.querySelector("#connection_button")?.classList.remove("active");
 
     clearLiveDataRefreshTimer();
 
@@ -673,12 +685,12 @@ function connectCli() {
 }
 
 function onConnect() {
-    const fwLabel = document.querySelector("a.firmware_flasher_button__label");
-    const fwLink = document.querySelector("a.firmware_flasher_button__link");
-
-    if (fwLabel?.classList.contains("active") || fwLink?.classList.contains("active")) {
-        fwLabel?.classList.remove("active");
-        fwLink?.classList.remove("active");
+    if (
+        Boolean(globalThis.vm?.firmwareFlasherActive) ||
+        document.querySelector(".firmware_flasher_button__label")?.classList.contains("active") ||
+        document.querySelector("#firmware_flasher_button")?.classList.contains("active")
+    ) {
+        setFirmwareFlasherButtonActiveState(false);
     }
 
     GUI.timeout_remove("connecting"); // kill connecting timer
@@ -688,7 +700,7 @@ function onConnect() {
         connLabel.textContent = i18n.getMessage("disconnect");
         connLabel.classList.add("active");
     }
-    document.querySelector("a.connection_button__link")?.classList.add("active");
+    document.querySelector("#connection_button")?.classList.add("active");
 
     hide("#tabs ul.mode-disconnected");
     show("#tabs ul.mode-connected-cli");
@@ -878,7 +890,7 @@ export function reinitializeConnection(suppressDialog = false) {
         connectDisconnect();
         if (PortHandler.portPicker.autoConnect) {
             setTimeout(function () {
-                document.querySelector("a.connection_button__link")?.click();
+                document.querySelector("#connection_button")?.click();
             }, 500);
             return rebootTimestamp;
         }
@@ -892,7 +904,7 @@ export function reinitializeConnection(suppressDialog = false) {
 
     if (currentPort.startsWith("bluetooth") || currentPort === "manual") {
         setTimeout(function () {
-            document.querySelector("a.connection_button__link")?.click();
+            document.querySelector("#connection_button")?.click();
         }, 1500);
         return rebootTimestamp;
     }
