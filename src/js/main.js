@@ -197,13 +197,28 @@ async function startProcess() {
             return;
         }
         const isActive = Boolean(globalThis.vm?.firmwareFlasherActive);
+        const needsDisconnect = GUI.connected_to || GUI.connecting_to;
+
         if (isActive) {
             setFirmwareFlasherButtonActiveState(false);
+            if (needsDisconnect) {
+                document.querySelector("#connection_button")?.click();
+                return;
+            }
             document.querySelector("#tabs ul.mode-disconnected .tab_landing a")?.click();
-        } else {
-            document.querySelector("#tabs ul.mode-disconnected .tab_firmware_flasher a")?.click();
-            setFirmwareFlasherButtonActiveState(true);
+            return;
         }
+
+        // Flasher lives in the disconnected tab strip; when connected that strip is hidden, so
+        // we must disconnect first and let finishClose() open the flasher (see serial_backend).
+        if (needsDisconnect) {
+            GUI.pendingTab = "firmware_flasher";
+            document.querySelector("#connection_button")?.click();
+            return;
+        }
+
+        document.querySelector("#tabs ul.mode-disconnected .tab_firmware_flasher a")?.click();
+        setFirmwareFlasherButtonActiveState(true);
     });
 
     const canSwitchTab = (tabRequiresConnection) => {

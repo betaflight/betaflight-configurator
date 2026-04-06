@@ -2,7 +2,7 @@
     <div v-if="isManual" id="port-override-option">
         <label for="port-override">
             <span>{{ $t("portOverrideText") }}</span>
-            <input id="port-override" type="text" :value="modelValue" @input="inputValueChanged($event.target.value)" />
+            <UInput v-model="modelValue" @change="inputValueChanged(modelValue)" size="sm" />
         </label>
     </div>
 </template>

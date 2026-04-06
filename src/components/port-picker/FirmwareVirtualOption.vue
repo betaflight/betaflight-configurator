@@ -1,18 +1,15 @@
 <template>
     <div id="firmware-virtual-option" :style="{ display: isVirtual ? 'block' : 'none' }">
-        <div class="dropdown dropdown-dark">
-            <select
-                id="firmware-version-dropdown"
-                :value="modelValue"
-                class="dropdown-select"
-                :title="$t('virtualMSPVersion')"
-                @input="updateValue($event.target.value)"
-            >
-                <option v-for="(version, index) in firmwareVersions" :key="index" :value="version.value">
-                    {{ version.label }}
-                </option>
-            </select>
-        </div>
+        <USelect
+            :items="firmwareVersions"
+            v-model="selectedVersion"
+            size="sm"
+            class="min-w-64"
+            @update:modelValue="updateValue"
+            :ui="{
+                content: 'max-h-96',
+            }"
+        />
     </div>
 </template>
 
@@ -32,8 +29,11 @@ export default defineComponent({
     },
     emits: ["update:modelValue"],
     setup(props, { emit }) {
+        const selectedVersion = ref(props.modelValue);
+
         const updateValue = (value) => {
-            emit("update:modelValue", value);
+            selectedVersion.value = value;
+            emit("update:modelValue", selectedVersion.value);
         };
 
         const firmwareVersions = ref([
@@ -47,6 +47,7 @@ export default defineComponent({
         return {
             firmwareVersions,
             updateValue,
+            selectedVersion,
         };
     },
 });

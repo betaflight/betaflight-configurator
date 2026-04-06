@@ -98,7 +98,12 @@ html {
     --surface-800: hsl(0, 0%, 60%);
     --surface-900: hsl(0, 0%, 70%);
     --surface-950: hsl(0, 0%, 80%);
+
+    /* The default ui bg is neutral-900, it will stand out for the duration of the conversion to Nuxt UI */
+    /* When the conversion is complete, the color will be matched to the existing theme colors */
+    /* --ui-bg: var(--ui-color-neutral-800); */
     --ui-error: var(--ui-color-error-500);
+    --ui-radius: 0.35rem;
 
     --text: hsl(0, 0%, 95%);
 }
