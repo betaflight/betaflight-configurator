@@ -14,9 +14,11 @@ import FC from "@/js/fc";
 import { bit_check } from "@/js/bit";
 
 export function useMotorTesting(configHasChanged, showWarningDialog, digitalProtocolConfigured, zeroThrottleValue) {
+    const getZeroThrottleValue = () => zeroThrottleValue?.value ?? zeroThrottleValue ?? 1000;
+
     const motorsTestingEnabled = ref(false);
-    const motorValues = ref(new Array(8).fill(1000));
-    const masterValue = ref(1000);
+    const motorValues = ref(new Array(8).fill(getZeroThrottleValue()));
+    const masterValue = ref(getZeroThrottleValue());
 
     // Safety: Keys that don't trigger motor stop
     const ignoreKeys = new Set([
@@ -143,7 +145,7 @@ export function useMotorTesting(configHasChanged, showWarningDialog, digitalProt
     /**
      * Stop all motors immediately
      */
-    const stopAllMotors = (stopValue = 1000) => {
+    const stopAllMotors = (stopValue = getZeroThrottleValue()) => {
         const values = new Array(8).fill(stopValue);
         sendMotorCommand(values);
         motorValues.value = values;
@@ -164,7 +166,7 @@ export function useMotorTesting(configHasChanged, showWarningDialog, digitalProt
 
         if (armed) {
             // FC armed via RC: reset sliders to zero throttle to prevent MSP_SET_MOTOR interference
-            const stopValue = zeroThrottleValue?.value ?? zeroThrottleValue ?? 1000;
+            const stopValue = getZeroThrottleValue();
             motorValues.value.fill(stopValue);
             masterValue.value = stopValue;
         }

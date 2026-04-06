@@ -1695,7 +1695,7 @@ const getMotorValue = (index) => {
     // zero throttle otherwise. This ensures bars reflect actual motor output whether
     // controlled via sliders (MSP_SET_MOTOR) or via RC input.
     if (motorsTestingEnabled.value) {
-        return fcStore.motorData[index] || zeroThrottleValue.value;
+        return fcStore.motorData[index] ?? zeroThrottleValue.value;
     }
     return zeroThrottleValue.value;
 };
