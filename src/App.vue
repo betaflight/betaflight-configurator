@@ -249,6 +249,14 @@
                                     i18n_title="tabRawSensorData"
                                 ></a>
                             </li>
+                            <li class="tab_flight_plan" v-show="FC.CONFIG?.buildOptions?.includes('USE_FLIGHT_PLAN')">
+                                <a
+                                    href="#"
+                                    i18n="tabFlightPlan"
+                                    class="tabicon ic_route"
+                                    i18n_title="tabFlightPlan"
+                                ></a>
+                            </li>
                             <li class="tab_logging" v-show="expertMode">
                                 <a href="#" i18n="tabLogging" class="tabicon ic_log" i18n_title="tabLogging"></a>
                             </li>
