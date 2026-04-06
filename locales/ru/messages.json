@@ -1798,6 +1798,9 @@
     "configurationButtonSave": {
         "message": "Сохранить и Перезагрузить"
     },
+    "dialogClose": {
+        "message": "Закрыть"
+    },
     "dialogDynFiltersChangeTitle": {
         "message": "Изменение динамических значений Notch"
     },
@@ -8046,10 +8049,10 @@
         "message": "ВНИМАНИЕ"
     },
     "preflightStatusWarning": {
-        "message": "ПРЕДУПРЕЖДЕНИЕ"
+        "message": "С ОГРАНИЧЕНИЯМИ"
     },
     "preflightStatusNoGo": {
-        "message": "Не разрешено"
+        "message": "ЗАПРЕЩЕНО"
     },
     "preflightStatusNoData": {
         "message": "Нет данных"
@@ -8235,7 +8238,7 @@
         "message": "Нормальный диапазон"
     },
     "preflightBatteryCool": {
-        "message": "Сниженная производительность, прогрейте батареи"
+        "message": "Снижение производительности из-за низкой температуры аккумулятора"
     },
     "preflightBatteryCold": {
         "message": "Значительное снижение ёмкости"
