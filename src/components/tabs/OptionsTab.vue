@@ -1,4 +1,4 @@
-<template>
+﻿<template>
     <BaseTab tab-name="options">
         <div class="content_wrapper grid-box col1">
             <!-- Main Options Box -->
@@ -771,14 +771,11 @@ export default defineComponent({
         }
 
         onMounted(() => {
-<<<<<<< HEAD
             // Sync expert mode with global Vue state
             if (globalThis.vm) {
                 globalThis.vm.expertMode = settings.expertMode;
             }
-=======
             window.addEventListener("beforeunload", handleBeforeUnload);
->>>>>>> a7bf9cfc (feat(options): add custom theme editor, neon theme, ui scaling)
             GUI.content_ready();
         });
 
