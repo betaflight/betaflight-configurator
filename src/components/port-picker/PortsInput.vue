@@ -33,7 +33,7 @@
                     : []),
                 ...(showUsbOption ? [{ label: $t('portsSelectPermissionDFU'), value: 'requestpermissionusb' }] : []),
             ]"
-            v-model="modelValue.selectedPort"
+            v-model="selectedPort"
             size="sm"
             class="sm:min-w-64 min-w-full"
             @change="onChangePort"
@@ -45,10 +45,7 @@
             <div :title="modelValue.autoConnect ? $t('autoConnectEnabled') : $t('autoConnectDisabled')">
                 <USwitch :label="$t('autoConnect')" v-model="autoConnect" size="xs" />
             </div>
-            <div
-                v-if="modelValue.selectedPort !== 'virtual' && modelValue.selectedPort !== 'noselection'"
-                id="baudselect"
-            >
+            <div v-if="selectedPort !== 'virtual' && selectedPort !== 'noselection'" id="baudselect">
                 <USelect
                     :items="baudRates"
                     v-model="selectedBauds"
@@ -150,14 +147,14 @@ export default defineComponent({
         });
 
         const onChangePort = () => {
-            const value = props.modelValue.selectedPort;
+            const value = selectedPort.value;
 
             if (value.startsWith("requestpermission")) {
                 // Extract "serial", "bluetooth", etc., and format the event name
                 const type = value.replace("requestpermission", "");
                 EventBus.$emit(`ports-input:request-permission-${type}`);
-                // Reset selection to "No Selection"
-                emit("update:modelValue", { ...props.modelValue, selectedPort: "noselection" });
+                // Reset selection to "No Selection" (watch(selectedPort) emits update:modelValue)
+                selectedPort.value = "noselection";
             } else {
                 EventBus.$emit("ports-input:change", value);
             }
