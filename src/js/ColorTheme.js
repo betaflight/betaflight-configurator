@@ -4,6 +4,7 @@ const WHITE = "#ffffff";
 const BLACK = "#000000";
 
 const COLOR_THEME_VARIABLES = {
+    "--primary-50": (theme) => blendHex(theme.primary500, WHITE, 0.9),
     "--primary-100": (theme) => blendHex(theme.primary500, WHITE, 0.82),
     "--primary-200": (theme) => blendHex(theme.primary500, WHITE, 0.65),
     "--primary-300": (theme) => blendHex(theme.primary500, WHITE, 0.5),
@@ -12,9 +13,12 @@ const COLOR_THEME_VARIABLES = {
     "--primary-600": (theme) => blendHex(theme.primary500, theme.primary700, 0.5),
     "--primary-700": (theme) => theme.primary700,
     "--primary-800": (theme) => blendHex(theme.primary700, BLACK, 0.35),
+    "--primary-900": (theme) => blendHex(theme.primary700, BLACK, 0.55),
+    "--primary-950": (theme) => blendHex(theme.primary700, BLACK, 0.68),
     "--primary-action": (theme) => theme.primary500,
     "--primary-action-border": (theme) => blendHex(theme.primary500, theme.primary700, 0.5),
     "--primary-action-hover": (theme) => blendHex(theme.primary500, WHITE, 0.25),
+    "--surface-50": (theme) => blendHex(theme.surface100, WHITE, 0.5),
     "--surface-100": (theme) => theme.surface100,
     "--surface-200": (theme) => blendHex(theme.surface100, theme.surface300, 0.5),
     "--surface-300": (theme) => theme.surface300,
@@ -58,7 +62,7 @@ export const DEFAULT_CUSTOM_THEME = {
 };
 
 export function getDefaultCustomTheme() {
-    const isDark = document.body && document.body.classList.contains("dark-theme");
+    const isDark = document.body?.classList.contains("dark-theme");
     return {
         primary500: "#ffbb00",
         primary700: "#d29600",
