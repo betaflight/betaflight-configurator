@@ -10,6 +10,8 @@ import CONFIGURATOR from "./data_storage";
 import { i18n } from "./localization";
 import MSPCodes from "./msp/MSPCodes";
 import { gui_log } from "./gui_log";
+import { useDialogStore } from "../stores/dialog";
+import { pinia } from "./pinia_instance";
 
 const TABS = {};
 
@@ -404,22 +406,22 @@ class GuiControl {
     showInteractiveDialog(interactiveDialogSettings) {
         // interactiveDialogSettings:
         // title, text, buttonCloseText
+        const dialogStore = useDialogStore(pinia);
         return new Promise((resolve) => {
-            const dialog = document.querySelector(".dialogInteractive");
-            const title = dialog.querySelector(".dialogInteractiveTitle");
-            const content = dialog.querySelector(".dialogInteractiveContent");
-            const buttonClose = dialog.querySelector(".dialogInteractive-closeButton");
-
-            title.innerHTML = interactiveDialogSettings.title ?? "";
-            content.innerHTML = interactiveDialogSettings.text ?? "";
-            buttonClose.innerHTML = interactiveDialogSettings.buttonCloseText ?? "";
-
-            buttonClose.onclick = () => {
-                dialog.close();
-                resolve();
-            };
-
-            dialog.showModal();
+            dialogStore.open(
+                "InteractiveDialog",
+                {
+                    title: interactiveDialogSettings.title ?? "",
+                    buttonCloseText: interactiveDialogSettings.buttonCloseText ?? "",
+                    commandPlaceholder: i18n.getMessage("cliCommand"),
+                },
+                {
+                    close: () => {
+                        dialogStore.close();
+                        resolve();
+                    },
+                },
+            );
         });
     }
     escapeHtml(unsafe) {
@@ -612,39 +614,34 @@ class GuiControl {
             }
         }
 
-        // cli-command button hook
-        const cliCommandInput = document.querySelector("input#cli-command");
-        if (cliCommandInput) {
-            cliCommandInput.onchange = function () {
-                const command = this.value;
-                if (!command) {
-                    return;
-                }
-                MSP.send_cli_command(command, function (response) {
-                    set_cli_response(response);
-                });
-            };
-        }
-
         const cliPanelDialog = {
             title: i18n.getMessage("cliPanelTitle"),
             buttonCloseText: i18n.getMessage("close"),
         };
 
-        // clear response from previous session
-        const cliResponse = document.getElementById("cli-response");
-        if (cliResponse) {
-            cliResponse.textContent = "";
-        }
-
         this.showInteractiveDialog(cliPanelDialog);
 
-        // Set focus on the CLI command input when dialog opens
-        // Use timeout to ensure dialog is fully rendered
+        // Wait for dialog to render before hooking up DOM elements
         setTimeout(() => {
-            const cliInput = document.getElementById("cli-command");
-            if (cliInput && cliInput.offsetParent !== null) {
-                cliInput.focus();
+            // clear response from previous session
+            const cliResponse = document.getElementById("cli-response");
+            if (cliResponse) {
+                cliResponse.textContent = "";
+            }
+
+            // cli-command input hook
+            const cliCommandInput = document.querySelector("input#cli-command");
+            if (cliCommandInput) {
+                cliCommandInput.onchange = function () {
+                    const command = this.value;
+                    if (!command) {
+                        return;
+                    }
+                    MSP.send_cli_command(command, function (response) {
+                        set_cli_response(response);
+                    });
+                };
+                cliCommandInput.focus();
             }
         }, 100);
     }
