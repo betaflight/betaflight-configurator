@@ -254,7 +254,7 @@
                                 <div class="spacer_box">
                                     <div class="sdcard">
                                         <div class="sdcard-icon"></div>
-                                        <div class="sdcard-status">{{ sdcardStatusText }}</div>
+                                        <div class="sdcard-status" v-html="sdcardStatusText"></div>
                                     </div>
                                     <p>{{ $t("sdcardNote") }}</p>
 
