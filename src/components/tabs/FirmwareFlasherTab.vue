@@ -3069,12 +3069,10 @@ export default defineComponent({
         a.disabled {
             cursor: default;
             color: var(--text);
-            opacity: 0.8;
             background-color: var(--text);
-            opacity: 0.8;
             border: 1px solid var(--surface-500);
             pointer-events: none;
-            opacity: 1;
+            opacity: 0.8;
         }
     }
 }
@@ -3108,7 +3106,6 @@ export default defineComponent({
         }
         &.disabled {
             background-color: var(--text);
-            opacity: 0.8;
             border: 1px solid var(--surface-400);
             color: var(--text);
             opacity: 0.8;

@@ -386,7 +386,6 @@ onUnmounted(() => {
     padding: 8px;
     text-align: left;
     background-color: var(--text);
-    opacity: 0.8;
     font-weight: bold;
     border-color: var(--text);
     opacity: 0.8;

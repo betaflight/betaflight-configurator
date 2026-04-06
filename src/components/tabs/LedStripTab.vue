@@ -1148,7 +1148,6 @@ button:active:not(:disabled) {
 /* Disabled button styles */
 button:disabled,
 button.disabled {
-    opacity: 0.5;
     cursor: not-allowed;
     background-color: var(--surface-300);
     border-color: var(--text);
