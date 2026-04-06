@@ -280,12 +280,14 @@ input[type="number"] {
     width: 24px;
     height: 24px;
     font-size: 20px;
-    color: var(--surface-700);
+    color: var(--text);
+    opacity: 0.8;
     line-height: 24px;
     text-align: center;
     cursor: pointer;
     &:hover {
-        color: var(--surface-800);
+        color: var(--text);
+        opacity: 0.8;
     }
 }
 #port-picker {
@@ -308,7 +310,8 @@ input[type="number"] {
     gap: 0.5rem;
 }
 .gray {
-    color: var(--surface-500);
+    color: var(--text);
+    opacity: 0.8;
 }
 #firmware-virtual-option {
     width: fit-content;
@@ -344,7 +347,8 @@ input[type="number"] {
         }
     }
     a.firmware_flasher_button__link.disabled {
-        background-color: var(--surface-500);
+        background-color: var(--text);
+        opacity: 0.8;
         pointer-events: none;
         cursor: default;
     }
@@ -375,7 +379,8 @@ input[type="number"] {
         }
     }
     a.connection_button__link.disabled {
-        background-color: var(--surface-500);
+        background-color: var(--text);
+        opacity: 0.8;
         pointer-events: none;
         cursor: default;
     }
@@ -472,7 +477,8 @@ input[type="number"] {
     // margin-top: 3px;
     width: 100%;
     padding-top: 3rem;
-    color: var(--surface-700);
+    color: var(--text);
+    opacity: 0.8;
     text-align: center;
     background-size: 41px;
     background-position-x: center;
@@ -504,7 +510,8 @@ input[type="number"] {
         -webkit-appearance: none;
         overflow: hidden;
         &::-webkit-progress-bar {
-            background-color: var(--surface-500);
+            background-color: var(--text);
+            opacity: 0.8;
         }
         &::-webkit-progress-value {
             background-color: var(--primary-500);
@@ -530,7 +537,8 @@ input[type="number"] {
     margin-top: 2px;
 }
 #expertMode {
-    color: var(--surface-800);
+    color: var(--text);
+    opacity: 0.8;
     width: 100%;
     margin-top: 1rem;
     label {
@@ -805,7 +813,7 @@ each(@tabIcons, {
             min-height: 1rem;
             mask: @value no-repeat center center;
             -webkit-mask: @value no-repeat center center;
-            background-color: var(--surface-700);
+            background-color: var(--text); opacity: 0.8;
             margin-right: 4px;
         }
         &:hover::before {
@@ -851,7 +859,7 @@ dialog {
                 background-color: var(--primary-500);
                 border-radius: 3px;
                 border: 1px solid var(--primary-600);
-                color: #000;
+                color: var(--primary-contrast, #000);
                 float: left;
                 font-weight: bold;
                 font-size: 12px;
@@ -873,8 +881,10 @@ dialog {
             a.disabled,
             button.disabled {
                 cursor: default;
-                color: var(--surface-900);
-                background-color: var(--surface-500);
+                color: var(--text);
+                opacity: 0.8;
+                background-color: var(--text);
+                opacity: 0.8;
                 border: 1px solid var(--surface-500);
                 pointer-events: none;
                 opacity: 1;
@@ -942,7 +952,7 @@ dialog {
 }
 
 #button-documentation {
-    color: #000;
+    color: var(--primary-contrast, #000);
 }
 
 .tab_sponsor {
@@ -1035,7 +1045,7 @@ dialog {
             background-color: var(--primary-500);
             border-radius: 3px;
             border: 1px solid var(--primary-600);
-            color: #000;
+            color: var(--primary-contrast, #000);
             float: right;
             font-family: inherit;
             font-weight: bold;
@@ -1064,8 +1074,10 @@ dialog {
         a.disabled,
         button.disabled {
             cursor: default;
-            color: var(--surface-900);
-            background-color: var(--surface-500);
+            color: var(--text);
+            opacity: 0.8;
+            background-color: var(--text);
+            opacity: 0.8;
             border: 1px solid var(--surface-500);
             pointer-events: none;
             opacity: 1;
@@ -1169,7 +1181,7 @@ dialog {
     gap: 0.5rem;
 }
 .gui_box_titlebar {
-    color: #000;
+    color: var(--primary-contrast, #000);
     background-color: var(--primary-500);
     position: absolute;
     font-size: 13px;
@@ -1262,7 +1274,7 @@ dialog {
             rgba(255, 255, 255, 0.4) 100%,
             transparent
         );
-        color: black;
+        color: var(--primary-contrast, #000);
     }
 }
 .grey {
@@ -1297,7 +1309,7 @@ dialog {
             background-color: var(--primary-500);
             border-radius: 3px;
             border: 1px solid var(--primary-600);
-            color: #000;
+            color: var(--primary-contrast, #000);
             float: right;
             font-weight: bold;
             font-size: 12px;
@@ -1326,7 +1338,7 @@ dialog {
         background-color: var(--primary-500);
         border-radius: 0.5rem;
         border: 1px solid var(--primary-600);
-        color: #000;
+        color: var(--primary-contrast, #000);
         font-weight: 600;
         font-size: 12px;
         line-height: 13px;
@@ -1336,7 +1348,7 @@ dialog {
         cursor: pointer;
         &:hover {
             background-color: var(--primary-400);
-            color: #000;
+            color: var(--primary-contrast, #000);
             transition: all ease 0.2s;
             text-decoration: none;
         }
@@ -1348,9 +1360,11 @@ dialog {
     }
     a.disabled,
     button.disabled {
-        background-color: var(--surface-500);
+        background-color: var(--text);
+        opacity: 0.8;
         border: 1px solid var(--surface-400);
-        color: var(--surface-900);
+        color: var(--text);
+        opacity: 0.8;
     }
 }
 .margin-top5 {
@@ -1364,7 +1378,7 @@ dialog {
     background-color: var(--primary-500);
     border-radius: 3px;
     border: 1px solid var(--primary-600);
-    color: #000;
+    color: var(--primary-contrast, #000);
     font-weight: bold;
     font-size: 12px;
     display: inline-block;
@@ -1377,9 +1391,11 @@ dialog {
         background-color: var(--primary-400);
     }
     &.disabled {
-        background-color: var(--surface-500);
+        background-color: var(--text);
+        opacity: 0.8;
         border: 1px solid var(--surface-400);
-        color: var(--surface-900);
+        color: var(--text);
+        opacity: 0.8;
         cursor: default;
     }
 }
@@ -1410,9 +1426,11 @@ dialog {
         background-color: var(--error-400);
     }
     &.disabled {
-        background-color: var(--surface-500);
+        background-color: var(--text);
+        opacity: 0.8;
         border: 1px solid var(--surface-400);
-        color: var(--surface-900);
+        color: var(--text);
+        opacity: 0.8;
         cursor: default;
     }
 }
@@ -1427,9 +1445,11 @@ dialog {
     a {
         padding: 3px 4px 4px 4px;
         text-align: center;
-        background-color: var(--surface-500);
+        background-color: var(--text);
+        opacity: 0.8;
         border-radius: 3px;
-        color: var(--surface-900);
+        color: var(--text);
+        opacity: 0.8;
         color: #fff;
         font-weight: 600;
         font-size: 11px;
@@ -1438,7 +1458,7 @@ dialog {
         transition: all ease 0.2s;
         &:hover {
             background-color: var(--primary-600);
-            color: #000;
+            color: var(--primary-contrast, #000);
             border: 1px solid var(--primary-500);
             transition: all ease 0.2s;
         }
@@ -1452,13 +1472,13 @@ dialog {
 .green {
     a {
         background-color: var(--primary-500);
-        color: #000;
+        color: var(--primary-contrast, #000);
         border: 1px solid var(--primary-600);
         transition: all ease 0.2s;
         &:hover {
             background-color: var(--primary-400);
             border: 1px solid var(--primary-600);
-            color: #000;
+            color: var(--primary-contrast, #000);
             transition: all ease 0.2s;
         }
     }
@@ -1539,7 +1559,8 @@ table {
         text-align: center;
     }
     &.low {
-        background-color: var(--surface-500);
+        background-color: var(--text);
+        opacity: 0.8;
     }
     &.notReady {
         background-color: var(--primary-400);
@@ -1565,7 +1586,7 @@ table {
     &.moderate {
         // should be yellow
         background-color: var(--primary-500);
-        color: black;
+        color: var(--primary-contrast, #000);
     }
     &.fair {
         // should be red
@@ -1573,7 +1594,8 @@ table {
     }
     &.poor {
         // should be gray
-        background-color: var(--surface-500);
+        background-color: var(--text);
+        opacity: 0.8;
     }
 }
 .buildInfoBtn {
@@ -1586,7 +1608,7 @@ table {
         background-color: var(--primary-500);
         border-radius: 4px;
         border: 1px solid var(--primary-600);
-        color: #000;
+        color: var(--primary-contrast, #000);
         font-weight: 600;
         font-size: 10px;
         line-height: 11px;
@@ -1596,7 +1618,7 @@ table {
         cursor: pointer;
         &:hover {
             background-color: var(--primary-400);
-            color: #000;
+            color: var(--primary-contrast, #000);
             transition: all ease 0.2s;
             text-decoration: none;
         }
@@ -1607,9 +1629,11 @@ table {
         }
     }
     a.disabled {
-        background-color: var(--surface-500);
+        background-color: var(--text);
+        opacity: 0.8;
         border: 1px solid var(--surface-400);
-        color: var(--surface-900);
+        color: var(--text);
+        opacity: 0.8;
     }
 }
 .buildInfoClassOptions {
@@ -1653,7 +1677,8 @@ table {
     display: none;
 }
 .darkgrey_box {
-    background-color: var(--surface-500);
+    background-color: var(--text);
+    opacity: 0.8;
     color: white;
 }
 .topBorderLine {
@@ -1744,7 +1769,7 @@ each(range(12), {
     .x,
     .y,
     .z {
-        color: black;
+        color: var(--primary-contrast, #000);
     }
 }
 .line {

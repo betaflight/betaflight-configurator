@@ -207,7 +207,8 @@ function handleDeactivate() {
 }
 
 .presets_source_panel_not_selected:hover {
-    background-color: var(--surface-500);
+    background-color: var(--text);
+    opacity: 0.8;
     box-shadow: 2px 2px 5px rgba(92, 92, 92, 0.5);
 }
 

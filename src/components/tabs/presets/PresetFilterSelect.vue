@@ -80,7 +80,8 @@ defineEmits(["update:modelValue"]);
     display: flex;
     align-items: center;
     padding: 0 40px 0 10px;
-    border-color: var(--surface-500);
+    border-color: var(--text);
+    opacity: 0.8;
     background: var(--surface-50);
 }
 
@@ -151,7 +152,8 @@ defineEmits(["update:modelValue"]);
 }
 
 .multiselect:deep(.multiselect__content-wrapper) {
-    border-color: var(--surface-500);
+    border-color: var(--text);
+    opacity: 0.8;
 }
 
 .multiselect:deep(.multiselect__option--selected) {

@@ -342,7 +342,8 @@ textarea[name="commands"] {
     border: 1px solid var(--surface-500);
     resize: none;
     background-color: var(--surface-200);
-    color: var(--surface-900);
+    color: var(--text);
+    opacity: 0.8;
 }
 
 textarea[name="supportWarningDialogInput"] {

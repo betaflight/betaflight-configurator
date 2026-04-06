@@ -212,7 +212,8 @@ body {
 .crosshair {
     display: block;
     position: absolute;
-    background-color: var(--surface-500);
+    background-color: var(--text);
+    opacity: 0.8;
 }
 
 .crosshair-vert {

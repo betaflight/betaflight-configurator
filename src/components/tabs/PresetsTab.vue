@@ -679,7 +679,8 @@ function handleCliErrorsDialogClose() {
         overflow: hidden;
 
         &::-webkit-progress-bar {
-            background-color: var(--surface-500);
+            background-color: var(--text);
+            opacity: 0.8;
         }
 
         &::-webkit-progress-value {

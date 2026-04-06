@@ -77,7 +77,8 @@ watch(
 }
 
 .cli-autocomplete-dropdown li.active {
-    background-color: var(--surface-600);
+    background-color: var(--text);
+    opacity: 0.8;
 }
 
 .cli-autocomplete-dropdown a {

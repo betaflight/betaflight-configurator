@@ -335,7 +335,8 @@ onUnmounted(() => {
 }
 
 .backup-table th {
-    background-color: var(--surface-500);
+    background-color: var(--text);
+    opacity: 0.8;
     font-weight: bold;
 }
 
@@ -349,7 +350,8 @@ onUnmounted(() => {
     text-decoration: underline;
 }
 .backup-table .backup-row:hover {
-    background-color: var(--surface-600);
+    background-color: var(--text);
+    opacity: 0.8;
 }
 
 .backup-table .title {

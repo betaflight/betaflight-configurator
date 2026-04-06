@@ -335,6 +335,7 @@ function handleCardKeydown(event) {
 }
 
 .preset_title_panel_label {
-    color: var(--surface-800);
+    color: var(--text);
+    opacity: 0.8;
 }
 </style>

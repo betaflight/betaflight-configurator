@@ -1043,7 +1043,8 @@ export default defineComponent({
             justify-content: end;
             gap: 0.5rem;
             button {
-                background-color: var(--surface-700);
+                background-color: var(--text);
+                opacity: 0.8;
                 border-radius: 4px;
                 border: 1px var(--surface-500) solid;
                 color: var(--surface-100);
@@ -1056,7 +1057,8 @@ export default defineComponent({
                 cursor: pointer;
                 transition: background-color 0.3s ease;
                 &:hover {
-                    background-color: var(--surface-600);
+                    background-color: var(--text);
+                    opacity: 0.8;
                 }
                 &:active,
                 &.active {

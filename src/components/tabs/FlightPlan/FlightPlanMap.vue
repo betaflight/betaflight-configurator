@@ -534,7 +534,8 @@ onUnmounted(() => {
     background: var(--surface-100);
     border-radius: 4px;
     font-size: 0.75rem;
-    color: var(--surface-700);
+    color: var(--text);
+    opacity: 0.8;
     text-align: center;
 }
 

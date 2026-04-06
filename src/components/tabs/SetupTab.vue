@@ -1217,7 +1217,8 @@ function openBuildOptionsDialog() {
             background-color: var(--surface-400);
             z-index: 100;
             &:hover {
-                background-color: var(--surface-500);
+                background-color: var(--text);
+                opacity: 0.8;
             }
         }
     }

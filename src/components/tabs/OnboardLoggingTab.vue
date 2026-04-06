@@ -1113,7 +1113,8 @@ export default defineComponent({
     }
     progress {
         &::-webkit-progress-bar {
-            background-color: var(--surface-500);
+            background-color: var(--text);
+            opacity: 0.8;
         }
         &::-webkit-progress-value {
             background-color: var(--primary-500);

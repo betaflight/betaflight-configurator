@@ -33,7 +33,8 @@ const reading = computed(() => {
     right: 0;
     width: 40px;
     text-align: left;
-    color: var(--surface-800);
+    color: var(--text);
+    opacity: 0.8;
     margin-left: -8px;
     padding-right: 4px;
 }

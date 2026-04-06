@@ -919,7 +919,8 @@ watch(
 .no-waypoints {
     padding: 2rem;
     text-align: center;
-    color: var(--surface-700);
+    color: var(--text);
+    opacity: 0.8;
 }
 
 .no-waypoints p {

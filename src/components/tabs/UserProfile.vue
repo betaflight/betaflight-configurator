@@ -385,9 +385,11 @@ onUnmounted(() => {
 .profile-table th {
     padding: 8px;
     text-align: left;
-    background-color: var(--surface-500);
+    background-color: var(--text);
+    opacity: 0.8;
     font-weight: bold;
-    border-color: var(--surface-500);
+    border-color: var(--text);
+    opacity: 0.8;
 }
 .profile-table th:first-child {
     border-top-left-radius: 5px;
@@ -400,7 +402,8 @@ onUnmounted(() => {
     text-align: left;
 }
 .profile-table tr:hover {
-    background-color: var(--surface-600);
+    background-color: var(--text);
+    opacity: 0.8;
 }
 
 .profile-table a {
@@ -437,7 +440,8 @@ onUnmounted(() => {
 .signup-form h3,
 .login-form h3 {
     padding-bottom: 5px;
-    border-bottom-color: var(--surface-500);
+    border-bottom-color: var(--text);
+    opacity: 0.8;
     border-bottom-style: solid;
     border-width: 1px;
 }

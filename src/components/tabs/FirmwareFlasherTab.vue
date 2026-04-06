@@ -2484,7 +2484,8 @@ export default defineComponent({
         -webkit-appearance: none;
         overflow: hidden;
         &::-webkit-progress-bar {
-            background-color: var(--surface-500);
+            background-color: var(--text);
+            opacity: 0.8;
         }
         &::-webkit-progress-value {
             background-color: var(--primary-500);
@@ -2655,7 +2656,8 @@ export default defineComponent({
             pointer-events: none;
             cursor: default;
             span {
-                background-color: var(--surface-500);
+                background-color: var(--text);
+                opacity: 0.8;
                 color: var(--text);
                 cursor: default;
             }
@@ -2934,7 +2936,8 @@ export default defineComponent({
         &.disabled {
             pointer-events: none;
             cursor: default;
-            background-color: var(--surface-500);
+            background-color: var(--text);
+            opacity: 0.8;
             color: var(--text);
         }
     }
@@ -3065,8 +3068,10 @@ export default defineComponent({
         }
         a.disabled {
             cursor: default;
-            color: var(--surface-900);
-            background-color: var(--surface-500);
+            color: var(--text);
+            opacity: 0.8;
+            background-color: var(--text);
+            opacity: 0.8;
             border: 1px solid var(--surface-500);
             pointer-events: none;
             opacity: 1;
@@ -3102,9 +3107,11 @@ export default defineComponent({
             box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.35);
         }
         &.disabled {
-            background-color: var(--surface-500);
+            background-color: var(--text);
+            opacity: 0.8;
             border: 1px solid var(--surface-400);
-            color: var(--surface-900);
+            color: var(--text);
+            opacity: 0.8;
             cursor: default;
         }
     }

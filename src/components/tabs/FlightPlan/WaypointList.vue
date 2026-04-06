@@ -235,7 +235,8 @@ const handleDragEnd = (event) => {
 .note {
     padding: 1rem;
     text-align: center;
-    color: var(--surface-700);
+    color: var(--text);
+    opacity: 0.8;
     font-style: italic;
 }
 
@@ -341,7 +342,8 @@ const handleDragEnd = (event) => {
 
 .waypoint-details {
     font-size: 0.75rem;
-    color: var(--surface-700);
+    color: var(--text);
+    opacity: 0.8;
     margin-top: 0.2rem;
 }
 

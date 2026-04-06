@@ -1151,14 +1151,16 @@ button.disabled {
     opacity: 0.5;
     cursor: not-allowed;
     background-color: var(--surface-300);
-    border-color: var(--surface-500);
+    border-color: var(--text);
+    opacity: 0.8;
     color: white;
 }
 
 button:disabled:hover,
 button.disabled:hover {
     background-color: var(--surface-300);
-    border-color: var(--surface-500);
+    border-color: var(--text);
+    opacity: 0.8;
 }
 
 button:disabled:active,
@@ -1278,7 +1280,8 @@ button.disabled:active {
 
 /* Headers */
 .header {
-    color: var(--surface-600);
+    color: var(--text);
+    opacity: 0.8;
     font-size: 13px;
     font-weight: 600;
     display: block;

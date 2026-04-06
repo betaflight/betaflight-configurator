@@ -1476,7 +1476,8 @@ export default defineComponent({
             flex-wrap: wrap;
 
             .location-or {
-                color: var(--surface-700);
+                color: var(--text);
+                opacity: 0.8;
                 font-size: 12px;
             }
 
@@ -1539,7 +1540,8 @@ export default defineComponent({
                 margin-right: 4px;
             }
             .location-source {
-                color: var(--surface-600);
+                color: var(--text);
+                opacity: 0.8;
                 font-weight: normal;
                 font-size: 11px;
             }
@@ -1681,7 +1683,8 @@ export default defineComponent({
         font-weight: bold;
     }
     .status-unknown {
-        color: var(--surface-600);
+        color: var(--text);
+        opacity: 0.8;
     }
 
     /* Weather */
@@ -1719,7 +1722,8 @@ export default defineComponent({
             td:first-child {
                 font-weight: 500;
                 width: 40%;
-                color: var(--surface-700);
+                color: var(--text);
+                opacity: 0.8;
                 text-align: left;
             }
         }
@@ -1739,7 +1743,8 @@ export default defineComponent({
 
             .fw-label {
                 font-size: 11px;
-                color: var(--surface-600);
+                color: var(--text);
+                opacity: 0.8;
                 text-transform: uppercase;
                 letter-spacing: 0.5px;
                 margin-bottom: 4px;
@@ -1794,7 +1799,8 @@ export default defineComponent({
 
     .table-note {
         font-size: 11px;
-        color: var(--surface-600);
+        color: var(--text);
+        opacity: 0.8;
         margin-top: 4px;
         text-align: right;
     }
@@ -1870,7 +1876,8 @@ export default defineComponent({
 
             .kp-label {
                 font-size: 14px;
-                color: var(--surface-700);
+                color: var(--text);
+                opacity: 0.8;
             }
         }
 
@@ -1907,7 +1914,8 @@ export default defineComponent({
                 display: flex;
                 justify-content: space-between;
                 font-size: 10px;
-                color: var(--surface-600);
+                color: var(--text);
+                opacity: 0.8;
                 margin-top: 2px;
             }
         }
@@ -1917,14 +1925,16 @@ export default defineComponent({
             th[scope="row"],
             td:first-child {
                 font-weight: 500;
-                color: var(--surface-700);
+                color: var(--text);
+                opacity: 0.8;
                 text-align: left;
             }
         }
 
         .solar-timestamp {
             font-size: 11px;
-            color: var(--surface-600);
+            color: var(--text);
+            opacity: 0.8;
             margin-top: 8px;
         }
     }
@@ -1933,7 +1943,8 @@ export default defineComponent({
     .gnss-info {
         p {
             font-size: 12px;
-            color: var(--surface-700);
+            color: var(--text);
+            opacity: 0.8;
             margin-bottom: 8px;
         }
 
@@ -1942,7 +1953,8 @@ export default defineComponent({
             th[scope="row"],
             td:first-child {
                 font-weight: 500;
-                color: var(--surface-700);
+                color: var(--text);
+                opacity: 0.8;
                 width: 50%;
                 text-align: left;
             }
@@ -1969,7 +1981,8 @@ export default defineComponent({
     .airspace-info {
         p {
             font-size: 12px;
-            color: var(--surface-700);
+            color: var(--text);
+            opacity: 0.8;
             margin-bottom: 10px;
         }
 
@@ -2089,7 +2102,8 @@ export default defineComponent({
     }
 
     .no-data {
-        color: var(--surface-600);
+        color: var(--text);
+        opacity: 0.8;
         text-align: center;
         padding: 20px;
         font-style: italic;
@@ -2102,13 +2116,15 @@ export default defineComponent({
     .loading-placeholder {
         text-align: center;
         padding: 20px;
-        color: var(--surface-600);
+        color: var(--text);
+        opacity: 0.8;
     }
 
     .preflight-attribution {
         text-align: center;
         font-size: 10px;
-        color: var(--surface-600);
+        color: var(--text);
+        opacity: 0.8;
         margin-top: 12px;
         padding: 4px;
     }

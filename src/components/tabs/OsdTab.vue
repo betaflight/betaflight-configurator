@@ -2054,7 +2054,8 @@ onUnmounted(() => {
 }
 
 .context-menu-item-display:hover {
-    background-color: var(--surface-700);
+    background-color: var(--text);
+    opacity: 0.8;
     color: #fff;
 }
 
