@@ -680,7 +680,6 @@ import MSP from "@/js/msp";
 import MSPCodes from "@/js/msp/MSPCodes";
 import * as d3 from "d3";
 import { get as getConfig, set as setConfig } from "@/js/ConfigStorage";
-import DshotCommand from "@/js/utils/DshotCommand";
 import { mspHelper } from "@/js/msp/MSPHelper";
 import { tracking } from "@/js/Analytics";
 import GUI from "@/js/gui";
@@ -1319,7 +1318,6 @@ onUnmounted(() => {
     if (motorsTestingEnabled.value) {
         stopAllMotors();
     }
-    document.removeEventListener("keydown", disableMotorTestOnKey);
 });
 
 const reverseMotorDir = computed({
@@ -1664,30 +1662,10 @@ const onSliderWheel = (index, event) => {
     }
 };
 
-const ignoreKeys = new Set(["PageUp", "PageDown", "End", "Home", "ArrowUp", "ArrowDown", "AltLeft", "AltRight", "Tab"]);
-
-const disableMotorTestOnKey = (e) => {
-    if (motorsTestingEnabled.value) {
-        // Check if key is ignored
-        if (!ignoreKeys.has(e.code) && !ignoreKeys.has(e.key)) {
-            motorsTestingEnabled.value = false;
-        }
-    }
-};
-
+// UI-only concerns when motor testing is toggled
+// (DShot commands, keyboard listener, arming, motor stop are handled by useMotorTesting composable)
 watch(motorsTestingEnabled, async (enabled) => {
-    if (enabled) {
-        if (digitalProtocolConfigured.value) {
-            const buffer = [];
-            buffer.push(DshotCommand.dshotCommandType_e.DSHOT_CMD_TYPE_BLOCKING, 255, 1, 13);
-            MSP.send_message(MSPCodes.MSP2_SEND_DSHOT_COMMAND, buffer);
-        }
-
-        document.addEventListener("keydown", disableMotorTestOnKey);
-    } else {
-        motorValues.value.fill(zeroThrottleValue.value);
-        masterValue.value = zeroThrottleValue.value;
-
+    if (!enabled) {
         // Clear any pending buffered commands
         if (bufferDelay) {
             clearTimeout(bufferDelay);
@@ -1695,30 +1673,20 @@ watch(motorsTestingEnabled, async (enabled) => {
             bufferingSetMotor = [];
         }
 
-        // Stop all motors
-        sendMotorCommand(new Array(8).fill(minSliderValue.value));
-
         // Sync Switchery visual state with programmatic change
         await nextTick();
         const checkbox = document.getElementById("motorsEnableTestMode");
         if (checkbox) {
-            // Remove existing Switchery element
             const switcheryElement = checkbox.nextElementSibling;
             if (switcheryElement && switcheryElement.classList.contains("switchery")) {
                 switcheryElement.remove();
             }
-            // Add the toggle class back so GUI.switchery() will reinitialize
             if (!checkbox.classList.contains("toggle")) {
                 checkbox.classList.add("toggle");
             }
-            // Reinitialize Switchery with correct state
             GUI.switchery();
         }
-
-        document.removeEventListener("keydown", disableMotorTestOnKey);
     }
-
-    // Arming state is handled by useMotorTesting composable
 });
 
 // Telemetry Logic
