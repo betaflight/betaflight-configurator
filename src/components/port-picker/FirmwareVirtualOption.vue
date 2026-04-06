@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref, watch } from "vue";
 
 export default defineComponent({
     props: {
@@ -31,9 +31,15 @@ export default defineComponent({
     setup(props, { emit }) {
         const selectedVersion = ref(props.modelValue);
 
+        watch(
+            () => props.modelValue,
+            (v) => {
+                selectedVersion.value = v;
+            },
+        );
+
         const updateValue = (value) => {
-            selectedVersion.value = value;
-            emit("update:modelValue", selectedVersion.value);
+            emit("update:modelValue", value);
         };
 
         const firmwareVersions = ref([
