@@ -58,8 +58,8 @@ export function useMotorTesting(configHasChanged, showWarningDialog, digitalProt
         // Add keyboard safety listener
         document.addEventListener("keydown", disableMotorTest);
 
-        // Disable arming during motor testing
-        mspHelper.setArmingEnabled(false, false);
+        // Enable arming during motor testing
+        mspHelper.setArmingEnabled(true, true);
     };
 
     /**
@@ -73,8 +73,8 @@ export function useMotorTesting(configHasChanged, showWarningDialog, digitalProt
         // Remove keyboard listener
         document.removeEventListener("keydown", disableMotorTest);
 
-        // Re-enable arming
-        mspHelper.setArmingEnabled(true, true);
+        // Disable arming
+        mspHelper.setArmingEnabled(false, false);
 
         // For digital protocols, send motor stop command to prevent spinning after reboot
         if (digitalProtocolConfigured?.value ?? digitalProtocolConfigured) {
