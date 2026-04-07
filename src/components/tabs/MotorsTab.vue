@@ -515,7 +515,7 @@
                                 <div :class="`bar-wrapper grid-box col${numberOfValidOutputs + 1}`">
                                     <div v-for="i in numberOfValidOutputs" :key="i" :class="'m-block motor-' + (i - 1)">
                                         <div class="meter-bar">
-                                            <div class="label">{{ motorValues[i - 1] }}</div>
+                                            <div class="label">{{ getMotorValue(i - 1) }}</div>
                                             <div
                                                 class="indicator"
                                                 :style="{
@@ -557,7 +557,7 @@
                                                 :min="minSliderValue"
                                                 :max="maxSliderValue"
                                                 v-model.number="motorValues[i - 1]"
-                                                :disabled="!motorsTestingEnabled"
+                                                :disabled="slidersDisabled"
                                                 @input="onMotorSliderChange(i - 1)"
                                                 @wheel.prevent="onSliderWheel(i - 1, $event)"
                                             />
@@ -569,7 +569,7 @@
                                                 :min="minSliderValue"
                                                 :max="maxSliderValue"
                                                 v-model.number="masterValue"
-                                                :disabled="!motorsTestingEnabled"
+                                                :disabled="slidersDisabled"
                                                 @input="onMasterSliderChange"
                                                 @wheel.prevent="onSliderWheel(-1, $event)"
                                             />
@@ -680,7 +680,6 @@ import MSP from "@/js/msp";
 import MSPCodes from "@/js/msp/MSPCodes";
 import * as d3 from "d3";
 import { get as getConfig, set as setConfig } from "@/js/ConfigStorage";
-import DshotCommand from "@/js/utils/DshotCommand";
 import { mspHelper } from "@/js/msp/MSPHelper";
 import { tracking } from "@/js/Analytics";
 import GUI from "@/js/gui";
@@ -846,12 +845,31 @@ const useUnsyncedPwm = computed({
     },
 });
 
+// Feature helper (needed by zeroThrottleValue below)
+const isFeatureEnabled = (featureName) => {
+    return fcStore.features.features.isEnabled(featureName);
+};
+
+// Slider range values (needed by zeroThrottleValue below)
+const minSliderValue = computed(() => {
+    if (digitalProtocolConfigured.value) {
+        return 1000; // DShot Disarmed
+    }
+    return fcStore.motorConfig.mincommand;
+});
+
+const zeroThrottleValue = computed(() => {
+    if (isFeatureEnabled("3D")) {
+        let neutral = fcStore.motor3dConfig.neutral;
+        // Sanity check from legacy
+        return neutral > 1575 || neutral < 1425 ? 1500 : neutral;
+    }
+    return minSliderValue.value;
+});
+
 // Initialize motor testing with safety features
-const { motorsTestingEnabled, motorValues, masterValue, sendMotorCommand, stopAllMotors } = useMotorTesting(
-    configHasChanged,
-    showWarningDialog,
-    digitalProtocolConfigured,
-);
+const { motorsTestingEnabled, motorValues, masterValue, slidersDisabled, sendMotorCommand, stopAllMotors } =
+    useMotorTesting(configHasChanged, showWarningDialog, digitalProtocolConfigured, zeroThrottleValue);
 
 // Initialize configuration tracking
 const { setupConfigWatchers } = useMotorConfiguration(motorsState, motorsTestingEnabled, () => {
@@ -1300,7 +1318,6 @@ onUnmounted(() => {
     if (motorsTestingEnabled.value) {
         stopAllMotors();
     }
-    document.removeEventListener("keydown", disableMotorTestOnKey);
 });
 
 const reverseMotorDir = computed({
@@ -1500,9 +1517,6 @@ const stopMotors = () => {
 };
 
 // Feature Logic
-const isFeatureEnabled = (featureName) => {
-    return fcStore.features.features.isEnabled(featureName);
-};
 
 const toggleFeature = (featureName, checked) => {
     // We need to update the bitmask in fcStore.features.featureMask
@@ -1564,27 +1578,11 @@ const getActualMotorCount = (expectedMotorCount) => {
     return firstZeroIndex > 0 ? firstZeroIndex : expectedMotorCount;
 };
 
-const minSliderValue = computed(() => {
-    if (digitalProtocolConfigured.value) {
-        return 1000; // DShot Disarmed
-    }
-    return fcStore.motorConfig.mincommand;
-});
-
 const maxSliderValue = computed(() => {
     if (digitalProtocolConfigured.value) {
         return 2000;
     }
     return fcStore.motorConfig.maxthrottle;
-});
-
-const zeroThrottleValue = computed(() => {
-    if (isFeatureEnabled("3D")) {
-        let neutral = fcStore.motor3dConfig.neutral;
-        // Sanity check from legacy
-        return neutral > 1575 || neutral < 1425 ? 1500 : neutral;
-    }
-    return minSliderValue.value;
 });
 
 const idleThrottleValue = computed(() => {
@@ -1664,30 +1662,10 @@ const onSliderWheel = (index, event) => {
     }
 };
 
-const ignoreKeys = new Set(["PageUp", "PageDown", "End", "Home", "ArrowUp", "ArrowDown", "AltLeft", "AltRight", "Tab"]);
-
-const disableMotorTestOnKey = (e) => {
-    if (motorsTestingEnabled.value) {
-        // Check if key is ignored
-        if (!ignoreKeys.has(e.code) && !ignoreKeys.has(e.key)) {
-            motorsTestingEnabled.value = false;
-        }
-    }
-};
-
+// UI-only concerns when motor testing is toggled
+// (DShot commands, keyboard listener, arming, motor stop are handled by useMotorTesting composable)
 watch(motorsTestingEnabled, async (enabled) => {
-    if (enabled) {
-        if (digitalProtocolConfigured.value) {
-            const buffer = [];
-            buffer.push(DshotCommand.dshotCommandType_e.DSHOT_CMD_TYPE_BLOCKING, 255, 1, 13);
-            MSP.send_message(MSPCodes.MSP2_SEND_DSHOT_COMMAND, buffer);
-        }
-
-        document.addEventListener("keydown", disableMotorTestOnKey);
-    } else {
-        motorValues.value.fill(zeroThrottleValue.value);
-        masterValue.value = zeroThrottleValue.value;
-
+    if (!enabled) {
         // Clear any pending buffered commands
         if (bufferDelay) {
             clearTimeout(bufferDelay);
@@ -1695,39 +1673,31 @@ watch(motorsTestingEnabled, async (enabled) => {
             bufferingSetMotor = [];
         }
 
-        // Stop all motors
-        sendMotorCommand(new Array(8).fill(minSliderValue.value));
-
         // Sync Switchery visual state with programmatic change
         await nextTick();
         const checkbox = document.getElementById("motorsEnableTestMode");
         if (checkbox) {
-            // Remove existing Switchery element
             const switcheryElement = checkbox.nextElementSibling;
             if (switcheryElement && switcheryElement.classList.contains("switchery")) {
                 switcheryElement.remove();
             }
-            // Add the toggle class back so GUI.switchery() will reinitialize
             if (!checkbox.classList.contains("toggle")) {
                 checkbox.classList.add("toggle");
             }
-            // Reinitialize Switchery with correct state
             GUI.switchery();
         }
-
-        document.removeEventListener("keydown", disableMotorTestOnKey);
     }
-
-    // Arming state is handled by useMotorTesting composable
 });
 
 // Telemetry Logic
 const getMotorValue = (index) => {
+    // Match original getMotorOutputs: show FC-reported motor data during testing,
+    // zero throttle otherwise. This ensures bars reflect actual motor output whether
+    // controlled via sliders (MSP_SET_MOTOR) or via RC input.
     if (motorsTestingEnabled.value) {
-        return motorValues.value[index];
+        return fcStore.motorData[index] ?? zeroThrottleValue.value;
     }
-    // If telemetry running, show telemetry data
-    return fcStore.motorData[index] || minSliderValue.value;
+    return zeroThrottleValue.value;
 };
 
 const getMotorBarHeight = (index) => {
