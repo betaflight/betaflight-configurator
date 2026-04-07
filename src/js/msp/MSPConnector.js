@@ -34,10 +34,14 @@ class MSPConnectorImpl {
 
             MSP.clearListeners();
 
-            this.onTimeoutCallback?.();
+            Promise.resolve(this.onTimeoutCallback?.())
+                .catch((err) => {
+                    console.error(err);
+                })
+                .finally(() => {
+                    MSP.disconnect_cleanup();
+                });
         });
-
-        MSP.disconnect_cleanup();
     }
 
     handleConnect(openInfo) {
@@ -116,10 +120,14 @@ class MSPConnectorImpl {
             MSP.clearListeners();
             console.log("Disconnected", result);
 
-            this.onDisconnectCallback(result);
+            Promise.resolve(this.onDisconnectCallback?.(result))
+                .catch((err) => {
+                    console.error(err);
+                })
+                .finally(() => {
+                    MSP.disconnect_cleanup();
+                });
         });
-
-        MSP.disconnect_cleanup();
     }
 }
 
