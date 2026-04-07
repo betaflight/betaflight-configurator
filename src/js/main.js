@@ -287,14 +287,9 @@ async function startProcess() {
             GUI.tab_switch_in_progress = true;
 
             GUI.tab_switch_cleanup(function () {
-                // disable active firmware flasher if it was active
-                const isFwButtonActive =
-                    Boolean(globalThis.vm?.firmwareFlasherActive) ||
-                    document.querySelector(".firmware_flasher_button__label")?.classList.contains("active") ||
-                    document.querySelector("#firmware_flasher_button")?.classList.contains("active");
-                if (isFwButtonActive) {
-                    setFirmwareFlasherButtonActiveState(false);
-                }
+                // Keep header firmware button synchronized with selected sidebar tab.
+                const shouldActivateFwButton = tab === "firmware_flasher";
+                setFirmwareFlasherButtonActiveState(shouldActivateFwButton);
                 // disable previously active tab highlight
                 for (const ul of uiTabs) {
                     for (const li of ul.querySelectorAll("li")) {
