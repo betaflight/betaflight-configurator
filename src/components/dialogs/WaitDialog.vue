@@ -12,6 +12,7 @@
 
 <script setup>
 import { ref } from "vue";
+import { i18n } from "@/js/localization";
 
 defineProps({
     title: String,
@@ -21,7 +22,7 @@ defineProps({
     },
     cancelText: {
         type: String,
-        default: () => globalThis.i18n?.getMessage("cancel"),
+        default: () => i18n.getMessage("cancel"),
     },
 });
 
