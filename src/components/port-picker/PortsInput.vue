@@ -34,6 +34,7 @@
                 ...(showUsbOption ? [{ label: $t('portsSelectPermissionDFU'), value: 'requestpermissionusb' }] : []),
             ]"
             v-model="selectedPort"
+            :disabled="disabled"
             size="sm"
             class="sm:min-w-64 min-w-full"
             @change="onChangePort"
@@ -43,12 +44,13 @@
         />
         <div id="auto-connect-and-baud">
             <div :title="modelValue.autoConnect ? $t('autoConnectEnabled') : $t('autoConnectDisabled')">
-                <USwitch :label="$t('autoConnect')" v-model="autoConnect" size="xs" />
+                <USwitch :label="$t('autoConnect')" v-model="autoConnect" :disabled="disabled" size="xs" />
             </div>
             <div v-if="selectedPort !== 'virtual' && selectedPort !== 'noselection'" id="baudselect">
                 <USelect
                     :items="baudRates"
                     v-model="selectedBauds"
+                    :disabled="disabled"
                     size="xs"
                     class="min-w-24"
                     :ui="{
