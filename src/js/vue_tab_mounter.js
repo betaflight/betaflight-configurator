@@ -11,6 +11,7 @@ import I18NextVue from "i18next-vue";
 import { VueTabComponents } from "./vue_components.js";
 import GUI, { TABS } from "./gui.js";
 import { useNavigationStore } from "../stores/navigation";
+import { getNuxtUiRouter } from "./nuxt_ui_router.js";
 import ui from "@nuxt/ui/vue-plugin";
 
 // Store the current mounted Vue app instance for cleanup
@@ -89,6 +90,7 @@ export function mountVueTab(tabName, contentReadyCallback) {
     // Use i18n plugin
     currentTabApp.use(I18NextVue, { i18next });
     currentTabApp.use(pinia);
+    currentTabApp.use(getNuxtUiRouter());
 
     // Install Nuxt UI inside a dedicated EffectScope so that watchers
     // created during plugin install (useDark, useMediaQuery, etc.) are

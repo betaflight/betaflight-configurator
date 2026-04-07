@@ -85,8 +85,8 @@ function appReady() {
             });
         });
 
-        document.querySelector("a.connection_button__link")?.classList.remove("disabled");
-        document.querySelector("a.firmware_flasher_button__link")?.classList.remove("disabled");
+        document.querySelector("#connection_button")?.removeAttribute("disabled");
+        document.querySelector("#firmware_flasher_button")?.removeAttribute("disabled");
 
         initializeSerialBackend();
 
@@ -108,6 +108,17 @@ function appReady() {
     }
 }
 
+function setFirmwareFlasherButtonActiveState(isActive) {
+    const fwLabel = document.querySelector(".firmware_flasher_button__label");
+    const fwButton = document.querySelector("#firmware_flasher_button");
+    fwLabel?.classList.toggle("active", isActive);
+    fwButton?.classList.toggle("active", isActive);
+
+    if (globalThis.vm) {
+        globalThis.vm.firmwareFlasherActive = isActive;
+    }
+}
+
 //Process to execute to real start the app
 async function startProcess() {
     // translate to user-selected language
@@ -119,7 +130,7 @@ async function startProcess() {
     gui_log(i18n.getMessage("infoVersionOs", { operatingSystem: GUI.operating_system }));
     gui_log(i18n.getMessage("infoVersionConfigurator", { configuratorVersion: CONFIGURATOR.getDisplayVersion() }));
 
-    document.querySelector("a.connection_button__link")?.classList.remove("disabled");
+    document.querySelector("#connection_button")?.removeAttribute("disabled");
     // with Vue reactive system we don't need to call these,
     // our view is reactive to model changes
     // updateTopBarVersion();
@@ -181,21 +192,33 @@ async function startProcess() {
         });
     }
 
-    document.querySelector("a.firmware_flasher_button__link")?.addEventListener("click", function () {
+    document.querySelector("#firmware_flasher_button")?.addEventListener("click", function () {
         if (GUI.tab_switch_in_progress) {
             return;
         }
-        const fwLabel = document.querySelector("a.firmware_flasher_button__label");
-        const fwLink = document.querySelector("a.firmware_flasher_button__link");
-        if (fwLabel?.classList.contains("active") && fwLink?.classList.contains("active")) {
-            fwLabel.classList.remove("active");
-            fwLink.classList.remove("active");
+        const isActive = Boolean(globalThis.vm?.firmwareFlasherActive);
+        const needsDisconnect = GUI.connected_to || GUI.connecting_to;
+
+        if (isActive) {
+            setFirmwareFlasherButtonActiveState(false);
+            if (needsDisconnect) {
+                document.querySelector("#connection_button")?.click();
+                return;
+            }
             document.querySelector("#tabs ul.mode-disconnected .tab_landing a")?.click();
-        } else {
-            document.querySelector("#tabs ul.mode-disconnected .tab_firmware_flasher a")?.click();
-            fwLabel?.classList.add("active");
-            fwLink?.classList.add("active");
+            return;
         }
+
+        // Flasher lives in the disconnected tab strip; when connected that strip is hidden, so
+        // we must disconnect first and let finishClose() open the flasher (see serial_backend).
+        if (needsDisconnect) {
+            GUI.pendingTab = "firmware_flasher";
+            document.querySelector("#connection_button")?.click();
+            return;
+        }
+
+        document.querySelector("#tabs ul.mode-disconnected .tab_firmware_flasher a")?.click();
+        setFirmwareFlasherButtonActiveState(true);
     });
 
     const canSwitchTab = (tabRequiresConnection) => {
@@ -227,9 +250,9 @@ async function startProcess() {
         if (GUI.connected_to || GUI.connecting_to) {
             // Disconnect is async; defer firmware flasher navigation until finishClose
             GUI.pendingTab = "firmware_flasher";
-            document.querySelector("a.connection_button__link")?.click();
+            document.querySelector("#connection_button")?.click();
         } else {
-            document.querySelector("a.firmware_flasher_button__link")?.click();
+            document.querySelector("#firmware_flasher_button")?.click();
         }
         return true;
     };
@@ -264,13 +287,9 @@ async function startProcess() {
             GUI.tab_switch_in_progress = true;
 
             GUI.tab_switch_cleanup(function () {
-                // disable active firmware flasher if it was active
-                const fwLabel = document.querySelector("a.firmware_flasher_button__label");
-                const fwLink = document.querySelector("a.firmware_flasher_button__link");
-                if (fwLabel?.classList.contains("active") && fwLink?.classList.contains("active")) {
-                    fwLabel.classList.remove("active");
-                    fwLink.classList.remove("active");
-                }
+                // Keep header firmware button synchronized with selected sidebar tab.
+                const shouldActivateFwButton = tab === "firmware_flasher";
+                setFirmwareFlasherButtonActiveState(shouldActivateFwButton);
                 // disable previously active tab highlight
                 for (const ul of uiTabs) {
                     for (const li of ul.querySelectorAll("li")) {

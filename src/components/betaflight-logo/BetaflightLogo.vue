@@ -45,7 +45,7 @@ export default {
     position: relative;
 }
 
-.dark-theme .logo {
+.dark .logo {
     background-image: url(../../images/light-wide-2.svg);
 }
 
@@ -72,7 +72,7 @@ export default {
         order: 2;
         margin-top: 0;
     }
-    .dark-theme .logo {
+    .dark .logo {
         background-image: url(../../images/light-wide-2-compact.svg);
     }
     .logo_text {
@@ -89,8 +89,8 @@ export default {
         padding: 0;
         box-sizing: border-box;
     }
-    .dark-theme .tab_container .logo {
-        background-image: none;
+    .dark .tab_container .logo {
+        background-image: url(../../images/light-wide-2.svg);
     }
     .tab_container .logo .logo_text {
         display: flex !important;

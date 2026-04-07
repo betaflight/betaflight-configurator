@@ -10,7 +10,7 @@ import "../../../css/dark-theme.less";
 // Set up dark theme watcher to receive theme changes from the parent window
 windowWatcherUtil.bindWatchers(globalThis, {
     darkTheme: (val) => {
-        document.body.classList.toggle("dark-theme", val);
+        document.documentElement.classList.toggle("dark", val);
     },
 });
 

@@ -137,7 +137,31 @@ export default defineConfig({
     },
     plugins: [
         vue(),
-        ui(),
+        ui({
+            colorMode: false, // light/dark mode is handled elsewhere in the app itself, Nuxt UI would otherwise override it
+            ui: {
+                button: {
+                    slots: {
+                        base: "font-semibold cursor-pointer",
+                    },
+                    variants: {
+                        size: {
+                            "2xl": {
+                                base: "p-2 text-lg gap-2.5",
+                                leadingIcon: "size-8",
+                                leadingAvatarSize: "md",
+                                trailingIcon: "size-8",
+                            },
+                        },
+                    },
+                },
+                colors: {
+                    primary: "primary",
+                    neutral: "neutral",
+                    success: "lime",
+                },
+            },
+        }),
         serveLocalesPlugin(),
         copy({
             targets: [

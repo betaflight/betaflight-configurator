@@ -9,7 +9,6 @@ import "@fortawesome/fontawesome-free/css/all.css";
 import "../components/MotorOutputReordering/Styles.css";
 import "../components/EscDshotDirection/Styles.css";
 import "../css/dark-theme.less";
-import "../css/nuxt-ui.css";
 import "./main";
 
 import { i18n } from "./localization";

@@ -88,12 +88,28 @@
                 </div>
                 <div id="header_buttons">
                     <div class="firmware_flasher_button">
-                        <a class="firmware_flasher_button__link disabled" href="#" aria-label="Firmware Flasher"></a>
-                        <div class="firmware_flasher_button__label" i18n="flashTab"></div>
+                        <UButton
+                            aria-label="Firmware Flasher"
+                            icon="i-lucide-cpu"
+                            size="2xl"
+                            class="rounded-full"
+                            id="firmware_flasher_button"
+                            :color="firmwareFlasherActive ? 'error' : 'primary'"
+                        />
+                        <span class="firmware_flasher_button__label" i18n="flashTab"></span>
                     </div>
                     <div class="connection_button">
-                        <a class="connection_button__link disabled" href="#" aria-label="Connect"></a>
-                        <div class="connection_button__label" i18n="connect"></div>
+                        <UButton
+                            aria-label="Connect"
+                            icon="i-lucide-plug"
+                            size="2xl"
+                            class="rounded-full"
+                            id="connection_button"
+                            :color="connectionStore.connectionValid ? 'error' : 'success'"
+                        />
+                        <span class="connection_button__label">
+                            {{ connectionStore.connectionValid ? $t("disconnect") : $t("connect") }}
+                        </span>
                     </div>
                 </div>
                 <div id="reveal_btn">
@@ -318,6 +334,7 @@
 
 <script setup>
 import { computed, reactive, shallowRef } from "vue";
+import { useConnectionStore } from "./stores/connection";
 import GlobalDialogs from "./components/dialogs/GlobalDialogs.vue";
 import FCModule from "./js/fc.js";
 import MSPModule from "./js/msp.js";
@@ -360,6 +377,8 @@ const PortHandler = computed(() => currentVm()?.PortHandler ?? PortHandlerModule
 const PortUsage = computed(() => currentVm()?.PortUsage ?? PortUsageModule);
 const CONNECTION = computed(() => currentVm()?.CONNECTION ?? connectionFallback);
 
+const connectionStore = useConnectionStore();
+
 // Read/write current vm via currentVm() so we track the same vm as the globals after window.vm is reassigned.
 const expertMode = computed({
     get: () => Boolean(currentVm()?.expertMode),
@@ -370,6 +389,8 @@ const expertMode = computed({
         }
     },
 });
+
+const firmwareFlasherActive = computed(() => Boolean(currentVm()?.firmwareFlasherActive));
 </script>
 
 <style scoped>

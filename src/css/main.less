@@ -130,8 +130,8 @@ a.disabled {
         }
     }
 }
-input,
-select {
+input:not(.appearance-none),
+select:not(.appearance-none) {
     font-family: "Open Sans", "Segoe UI", Tahoma, sans-serif !important;
     font-size: unset !important;
     background-color: var(--surface-300) !important;
@@ -314,11 +314,14 @@ input[type="number"] {
     flex-direction: column;
     align-items: center;
 }
+.connection_button {
+    min-width: 4rem;
+}
 
 #header_buttons {
     display: flex;
     align-items: center;
-    gap: 2rem;
+    gap: 1.5rem;
 
     a.firmware_flasher_button__link {
         display: block;

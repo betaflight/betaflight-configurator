@@ -4,18 +4,40 @@
 * the need to compile the less files and still can be use in storybook
 */
 
-body {
-    --primary-50: #fff8f3;
-    --primary-100: #fff1e5;
-    --primary-200: #ffe4c8;
-    --primary-300: #ffd6a5;
-    --primary-400: #ffc877;
-    --primary-500: #ffbb00;
-    --primary-600: #e8a803;
-    --primary-700: #d29600;
-    --primary-800: #bb8401;
-    --primary-900: #a57200;
-    --primary-950: #9c6b00;
+@import "tailwindcss";
+@import "@nuxt/ui";
+
+@theme static {
+    /* Extending Tailwind colors with Betaflight primary colors */
+    /* Used for Nuxt UI and referenced further in theme.css */
+    --color-primary-50: #fffeea;
+    --color-primary-100: #fffac5;
+    --color-primary-200: #fff685;
+    --color-primary-300: #ffea46;
+    --color-primary-400: #ffc526;
+    --color-primary-500: #ffbb00;
+    --color-primary-600: #e29000;
+    --color-primary-700: #bb6502;
+    --color-primary-800: #984e08;
+    --color-primary-900: #7c400b;
+    --color-primary-950: #482100;
+}
+
+html {
+    /* Existing primary colors used across the app */
+    /* Referencing Nuxt UI colors to avoid renaming hundreds of variables */
+    --primary-50: var(--color-primary-50);
+    --primary-100: var(--color-primary-100);
+    --primary-200: var(--color-primary-200);
+    --primary-300: var(--color-primary-300);
+    --primary-400: var(--color-primary-400);
+    --primary-500: var(--color-primary-500);
+    /* same as 500, previously used for increased contrast, not needed with improved palette */
+    --primary-600: var(--color-primary-500);
+    --primary-700: var(--color-primary-700);
+    --primary-800: var(--color-primary-800);
+    --primary-900: var(--color-primary-900);
+    --primary-950: var(--color-primary-950);
 
     --primary-transparent-1: rgba(255, 187, 0, 0.1);
     --primary-transparent-2: rgba(255, 187, 0, 0.2);
@@ -64,7 +86,7 @@ body {
     --primary-action-hover: var(--success-400);
 }
 
-body.dark-theme {
+.dark {
     --surface-50: hsl(0, 0%, 4%);
     --surface-100: hsl(0, 0%, 8%);
     --surface-200: hsl(0, 0%, 12%);
@@ -76,6 +98,12 @@ body.dark-theme {
     --surface-800: hsl(0, 0%, 60%);
     --surface-900: hsl(0, 0%, 70%);
     --surface-950: hsl(0, 0%, 80%);
+
+    /* The default ui bg is neutral-900, it will stand out for the duration of the conversion to Nuxt UI */
+    /* When the conversion is complete, the color will be matched to the existing theme colors */
+    /* --ui-bg: var(--ui-color-neutral-800); */
+    --ui-error: var(--ui-color-error-500);
+    --ui-radius: 0.35rem;
 
     --text: hsl(0, 0%, 95%);
 }
@@ -92,6 +120,9 @@ body[data-theme="amber"] {
     --primary-800: #a86700;
     --primary-900: #7a4600;
     --primary-950: #5c2f00;
+
+    /* Directly replacing Nuxt UI primary colors with Betaflight Amber primary colors */
+    --ui-primary: var(--primary-500);
 
     --primary-transparent-1: rgba(255, 167, 36, 0.1);
     --primary-transparent-2: rgba(255, 167, 36, 0.2);
