@@ -107,7 +107,9 @@
                             id="connection_button"
                             :color="connectionStore.connectionValid ? 'error' : 'success'"
                         />
-                        <span class="connection_button__label" i18n="connect"></span>
+                        <span class="connection_button__label">
+                            {{ connectionStore.connectionValid ? $t("disconnect") : $t("connect") }}
+                        </span>
                     </div>
                 </div>
                 <div id="reveal_btn">

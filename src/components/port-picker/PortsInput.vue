@@ -133,6 +133,14 @@ export default defineComponent({
             { value: "1200", label: "1200" },
         ]);
 
+        // Keep UI in sync when PortHandler (or parent) updates selectedPort, e.g. after WebUSB permission dialog
+        watch(
+            () => props.modelValue.selectedPort,
+            (v) => {
+                selectedPort.value = v;
+            },
+        );
+
         watch(selectedPort, (newValue) => {
             emit("update:modelValue", { ...props.modelValue, selectedPort: newValue });
         });
