@@ -6,71 +6,8 @@ import PortPicker from "../components/port-picker/PortPicker.vue";
 import UserSession from "../components/user-session/UserSession.vue";
 import WikiButton from "../components/elements/WikiButton.vue";
 import Dialog from "../components/elements/Dialog.vue";
-// Tab components
-import HelpTab from "../components/tabs/HelpTab.vue";
-import LandingTab from "../components/tabs/LandingTab.vue";
-import OptionsTab from "../components/tabs/OptionsTab.vue";
-import PortsTab from "../components/tabs/PortsTab.vue";
-import ServosTab from "../components/tabs/ServosTab.vue";
-import ConfigurationTab from "../components/tabs/ConfigurationTab.vue";
-import UserProfileTab from "../components/tabs/UserProfile.vue";
-import BackupsTab from "../components/tabs/Backups.vue";
-import LoggingTab from "../components/tabs/LoggingTab.vue";
-import GpsTab from "../components/tabs/GpsTab.vue";
-import AuxiliaryTab from "../components/tabs/AuxiliaryTab.vue";
-import OnboardLoggingTab from "../components/tabs/OnboardLoggingTab.vue";
-import FirmwareFlasherTab from "../components/tabs/FirmwareFlasherTab.vue";
-import AdjustmentsTab from "../components/tabs/AdjustmentsTab.vue";
-import CliTab from "../components/tabs/CliTab.vue";
-import PowerTab from "../components/tabs/PowerTab.vue";
-import SensorsTab from "../components/tabs/SensorsTab.vue";
-import FlightPlanTab from "../components/tabs/FlightPlanTab.vue";
-import LedStripTab from "../components/tabs/LedStripTab.vue";
-import FailsafeTab from "../components/tabs/FailsafeTab.vue";
-import MotorsTab from "../components/tabs/MotorsTab.vue";
-import ReceiverTab from "../components/tabs/ReceiverTab.vue";
-import OsdTab from "../components/tabs/OsdTab.vue";
-import SetupTab from "../components/tabs/SetupTab.vue";
 import App from "../App.vue";
-import PidTuningTab from "../components/tabs/PidTuningTab.vue";
-import PreflightTab from "../components/tabs/PreflightTab.vue";
-import TransponderTab from "../components/tabs/TransponderTab.vue";
-import VtxTab from "../components/tabs/VtxTab.vue";
-import PresetsTab from "../components/tabs/PresetsTab.vue";
-
-// Registry of Vue tab components - used by main.js for dynamic mounting
-export const VueTabComponents = {
-    help: HelpTab,
-    landing: LandingTab,
-    options: OptionsTab,
-    ports: PortsTab,
-    servos: ServosTab,
-    configuration: ConfigurationTab,
-    user_profile: UserProfileTab,
-    backups: BackupsTab,
-    logging: LoggingTab,
-    gps: GpsTab,
-    auxiliary: AuxiliaryTab,
-    onboard_logging: OnboardLoggingTab,
-    firmware_flasher: FirmwareFlasherTab,
-    adjustments: AdjustmentsTab,
-    cli: CliTab,
-    power: PowerTab,
-    sensors: SensorsTab,
-    flight_plan: FlightPlanTab,
-    led_strip: LedStripTab,
-    failsafe: FailsafeTab,
-    motors: MotorsTab,
-    receiver: ReceiverTab,
-    osd: OsdTab,
-    setup: SetupTab,
-    pid_tuning: PidTuningTab,
-    preflight: PreflightTab,
-    transponder: TransponderTab,
-    vtx: VtxTab,
-    presets: PresetsTab,
-    // Move motors before pid_tuning if present in the future
-};
+import { VueTabComponents } from "./vue_tab_registry.js";
 
 // Create a Vue plugin that registers all components globally
 export const BetaflightComponents = {
@@ -86,30 +23,34 @@ export const BetaflightComponents = {
         app.component("WikiButton", WikiButton);
         app.component("Dialog", Dialog);
         // Register tab components
-        app.component("HelpTab", HelpTab);
-        app.component("LandingTab", LandingTab);
-        app.component("OptionsTab", OptionsTab);
-        app.component("PortsTab", PortsTab);
-        app.component("ServosTab", ServosTab);
-        app.component("ConfigurationTab", ConfigurationTab);
-        app.component("UserProfileTab", UserProfileTab);
-        app.component("BackupsTab", BackupsTab);
-        app.component("LoggingTab", LoggingTab);
-        app.component("GpsTab", GpsTab);
-        app.component("AuxiliaryTab", AuxiliaryTab);
-        app.component("OnboardLoggingTab", OnboardLoggingTab);
-        app.component("SensorsTab", SensorsTab);
-        app.component("FlightPlanTab", FlightPlanTab);
-        app.component("LedStripTab", LedStripTab);
-        app.component("FailsafeTab", FailsafeTab);
-        app.component("MotorsTab", MotorsTab);
-        app.component("ReceiverTab", ReceiverTab);
-        app.component("OsdTab", OsdTab);
-        app.component("SetupTab", SetupTab);
-        app.component("PidTuningTab", PidTuningTab);
-        app.component("PreflightTab", PreflightTab);
-        app.component("TransponderTab", TransponderTab);
-        app.component("VtxTab", VtxTab);
-        app.component("PresetsTab", PresetsTab);
+        app.component("HelpTab", VueTabComponents.help);
+        app.component("LandingTab", VueTabComponents.landing);
+        app.component("OptionsTab", VueTabComponents.options);
+        app.component("PortsTab", VueTabComponents.ports);
+        app.component("ServosTab", VueTabComponents.servos);
+        app.component("ConfigurationTab", VueTabComponents.configuration);
+        app.component("UserProfileTab", VueTabComponents.user_profile);
+        app.component("BackupsTab", VueTabComponents.backups);
+        app.component("LoggingTab", VueTabComponents.logging);
+        app.component("GpsTab", VueTabComponents.gps);
+        app.component("AuxiliaryTab", VueTabComponents.auxiliary);
+        app.component("OnboardLoggingTab", VueTabComponents.onboard_logging);
+        app.component("FirmwareFlasherTab", VueTabComponents.firmware_flasher);
+        app.component("AdjustmentsTab", VueTabComponents.adjustments);
+        app.component("CliTab", VueTabComponents.cli);
+        app.component("PowerTab", VueTabComponents.power);
+        app.component("SensorsTab", VueTabComponents.sensors);
+        app.component("FlightPlanTab", VueTabComponents.flight_plan);
+        app.component("LedStripTab", VueTabComponents.led_strip);
+        app.component("FailsafeTab", VueTabComponents.failsafe);
+        app.component("MotorsTab", VueTabComponents.motors);
+        app.component("ReceiverTab", VueTabComponents.receiver);
+        app.component("OsdTab", VueTabComponents.osd);
+        app.component("SetupTab", VueTabComponents.setup);
+        app.component("PidTuningTab", VueTabComponents.pid_tuning);
+        app.component("PreflightTab", VueTabComponents.preflight);
+        app.component("TransponderTab", VueTabComponents.transponder);
+        app.component("VtxTab", VueTabComponents.vtx);
+        app.component("PresetsTab", VueTabComponents.presets);
     },
 };
