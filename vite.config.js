@@ -200,7 +200,9 @@ export default defineConfig({
             },
         }),
     ],
-    root: "./src",
+    // Absolute root so @nuxt/ui's template aliases (#build/ui.css, etc.) resolve to
+    // absolute paths; a relative root yields relative aliases and Vite warns about duplicated modules.
+    root: path.resolve(__dirname, "src"),
     resolve: {
         alias: {
             "@": path.resolve(__dirname, "src"),
