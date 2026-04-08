@@ -334,7 +334,7 @@ const onMotorButtonUp = (index) => {
 
 // Direction button handlers
 const onDirectionButtonDown = (direction) => {
-    if (!motorIsSpinning.value) {
+    if (selectedMotor.value === -1) {
         return;
     }
 
