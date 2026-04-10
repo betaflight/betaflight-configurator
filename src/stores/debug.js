@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import { computed } from "vue";
 import { useFlightControllerStore } from "./fc";
 import semver from "semver";
-import { API_VERSION_1_46, API_VERSION_1_47 } from "../js/data_storage";
+import { API_VERSION_1_46, API_VERSION_1_47, API_VERSION_1_48 } from "../js/data_storage";
 import { removeArrayElement, addArrayElement, replaceArrayElement, addArrayElementAfter } from "../js/utils/array";
 
 export const useDebugStore = defineStore("debug", () => {
@@ -922,6 +922,17 @@ export const useDebugStore = defineStore("debug", () => {
                 "debug[1]": "Last known TX buffer free space",
                 "debug[2]": "Estimated TX buffer free space",
                 "debug[3]": "Ticks",
+            };
+        }
+
+        if (semver.gte(apiVersion, API_VERSION_1_48)) {
+            result.GYRO_SAMPLE = {
+                "debug[all]": "Gyro Sample",
+                "debug[0]": "Gyro before downsampling [dbg-axis]",
+                "debug[1]": "Gyro after downsampling [dbg-axis]",
+                "debug[2]": "Gyro after RPM [dbg-axis]",
+                "debug[3]": "Gyro after all filtering [dbg-axis]",
+                "debug[4]": "CPU Load at Sample",
             };
         }
 
