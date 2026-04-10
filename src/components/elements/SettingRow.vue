@@ -3,7 +3,7 @@
         <slot name="default"></slot>
         <div class="flex" :class="{ 'flex-1': fullWidth }">
             <slot name="label"></slot>
-            <span v-if="label">{{ label }}</span>
+            <span v-if="label" v-html="label"></span>
         </div>
         <HelpIcon v-if="help" :text="help" class="text-dimmed" />
     </div>
@@ -12,7 +12,7 @@
 <script setup>
 import HelpIcon from "./HelpIcon.vue";
 
-const props = defineProps({
+defineProps({
     label: {
         type: String,
         default: "",
