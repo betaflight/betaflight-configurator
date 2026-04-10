@@ -417,7 +417,7 @@ export default defineComponent({
             border: 1px solid var(--surface-500);
             border-radius: 3px;
         }
-        :deep(input) {
+        :deep(input:not([type="checkbox"])) {
             display: block;
             width: 100%;
             height: 20px;
