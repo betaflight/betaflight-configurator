@@ -678,7 +678,6 @@ onUnmounted(() => {
 }
 .tab-pid_tuning .subtab-filter table select {
     display: inline-block;
-    margin-left: auto;
 }
 .tab-pid_tuning .subtab-filter .newFilter .helpicon {
     margin-top: 2px;
