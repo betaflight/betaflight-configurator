@@ -796,11 +796,11 @@ export default defineComponent({
     align-items: center;
 }
 
-input.one_digit_input {
+.one_digit_input {
     width: 28px;
 }
 
-input.frequency_input {
+.frequency_input {
     width: 64px;
 }
 
@@ -825,7 +825,7 @@ input.frequency_input {
     text-align: center;
 }
 
-.table_vtx_bands input {
+.table_vtx_bands :deep(input) {
     min-width: 0;
     padding-right: 0.25rem;
 }
@@ -839,7 +839,7 @@ input.frequency_input {
     text-align: center;
 }
 
-.table_vtx_powerlevels input {
+.table_vtx_powerlevels :deep(input) {
     display: block;
     min-width: 5rem;
 }

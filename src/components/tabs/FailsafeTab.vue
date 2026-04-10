@@ -627,34 +627,34 @@ const isGpsSettingsDisabled = computed(() => {
 
 // Computed properties for conversions (values stored as x10 or x100 in config)
 const failsafeDelay = computed({
-    get: () => (failsafeConfig.value.failsafe_delay / 10.0).toFixed(1),
-    set: (val) => (failsafeConfig.value.failsafe_delay = Math.round(parseFloat(val) * 10.0)),
+    get: () => failsafeConfig.value.failsafe_delay / 10,
+    set: (val) => (failsafeConfig.value.failsafe_delay = Math.round(Number(val) * 10)),
 });
 
 const failsafeThrottleLowDelay = computed({
-    get: () => (failsafeConfig.value.failsafe_throttle_low_delay / 10.0).toFixed(1),
-    set: (val) => (failsafeConfig.value.failsafe_throttle_low_delay = Math.round(parseFloat(val) * 10.0)),
+    get: () => failsafeConfig.value.failsafe_throttle_low_delay / 10,
+    set: (val) => (failsafeConfig.value.failsafe_throttle_low_delay = Math.round(Number(val) * 10)),
 });
 
 const failsafeOffDelay = computed({
-    get: () => (failsafeConfig.value.failsafe_off_delay / 10.0).toFixed(1),
-    set: (val) => (failsafeConfig.value.failsafe_off_delay = Math.round(parseFloat(val) * 10.0)),
+    get: () => failsafeConfig.value.failsafe_off_delay / 10,
+    set: (val) => (failsafeConfig.value.failsafe_off_delay = Math.round(Number(val) * 10)),
 });
 
 // GPS Rescue Conversions
 const gpsRescueGroundSpeed = computed({
-    get: () => (gpsRescue.value.groundSpeed / 100).toFixed(1),
-    set: (val) => (gpsRescue.value.groundSpeed = Math.round(parseFloat(val) * 100)),
+    get: () => gpsRescue.value.groundSpeed / 100,
+    set: (val) => (gpsRescue.value.groundSpeed = Math.round(Number(val) * 100)),
 });
 
 const gpsRescueAscendRate = computed({
-    get: () => (gpsRescue.value.ascendRate / 100).toFixed(1),
-    set: (val) => (gpsRescue.value.ascendRate = Math.round(parseFloat(val) * 100)),
+    get: () => gpsRescue.value.ascendRate / 100,
+    set: (val) => (gpsRescue.value.ascendRate = Math.round(Number(val) * 100)),
 });
 
 const gpsRescueDescendRate = computed({
-    get: () => (gpsRescue.value.descendRate / 100).toFixed(1),
-    set: (val) => (gpsRescue.value.descendRate = Math.round(parseFloat(val) * 100)),
+    get: () => gpsRescue.value.descendRate / 100,
+    set: (val) => (gpsRescue.value.descendRate = Math.round(Number(val) * 100)),
 });
 
 const gpsRescueAllowArmingWithoutFix = computed({

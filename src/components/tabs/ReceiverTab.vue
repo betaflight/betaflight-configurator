@@ -1470,7 +1470,7 @@ onUnmounted(() => {
         select {
             width: 90%;
         }
-        input {
+        :deep(input) {
             width: 90%;
         }
         .helpicon {

@@ -611,11 +611,6 @@ onUnmounted(() => {
     min-width: 200px;
 }
 
-/* ── Inputs ───────────────────────────────────────────────────────── */
-.tab-pid_tuning input[type="number"]::-webkit-inner-spin-button {
-    border: 0;
-}
-
 .tab-pid_tuning table .inputBackground {
     background: white;
 }

@@ -638,8 +638,8 @@ export default defineComponent({
     gap: 8px;
 }
 
-.adjustment-center input,
-.adjustment-scale input {
+.adjustment-center :deep(input),
+.adjustment-scale :deep(input) {
     width: 100%;
     background: var(--surface-700);
     border: 1px solid var(--surface-600);
@@ -648,8 +648,8 @@ export default defineComponent({
     border-radius: 4px;
 }
 
-.adjustment-center input:disabled,
-.adjustment-scale input:disabled {
+.adjustment-center :deep(input:disabled),
+.adjustment-scale :deep(input:disabled) {
     opacity: 0.5;
     cursor: not-allowed;
 }

@@ -2184,7 +2184,7 @@ onUnmounted(() => {
 }
 
 .timer-row select,
-.timer-row input {
+.timer-row :deep(input) {
     width: 140px;
 }
 
@@ -2204,7 +2204,7 @@ onUnmounted(() => {
     padding-bottom: 0;
 }
 
-.alarms input {
+.alarms :deep(input) {
     width: 55px;
     padding-left: 3px;
     height: 18px;

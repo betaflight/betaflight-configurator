@@ -1315,7 +1315,7 @@ defineExpose({
     margin-top: 8px;
 }
 
-.suboption input[type="number"],
+.suboption :deep(input),
 .suboption select {
     padding: 6px 10px;
     border: 1px solid var(--surface-300);
