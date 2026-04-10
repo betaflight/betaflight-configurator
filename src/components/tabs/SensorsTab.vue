@@ -420,36 +420,15 @@ onMounted(async () => {
         sensorsStore.debugColumns = 4;
     }
 
-    // Force-disable checkboxes for unavailable sensors
-    if (!hasGyro.value) {
-        checkboxes.value[0] = false;
-    }
-    if (!hasAccel.value) {
-        checkboxes.value[1] = false;
-    }
-    if (!hasMag.value) {
-        checkboxes.value[2] = false;
-    }
-    if (!hasAltitude.value) {
-        checkboxes.value[3] = false;
-    }
-    if (!hasSonar.value) {
-        checkboxes.value[4] = false;
+    // Disable checkboxes for unavailable sensors; if none remain, enable all available as defaults
+    const sensorAvailability = [hasGyro.value, hasAccel.value, hasMag.value, hasAltitude.value, hasSonar.value];
+    for (let i = 0; i < sensorAvailability.length; i++) {
+        checkboxes.value[i] = checkboxes.value[i] && sensorAvailability[i];
     }
 
-    // If no saved checkbox states, set defaults based on available sensors
     if (!checkboxes.value.some(Boolean)) {
-        if (hasGyro.value) {
-            checkboxes.value[0] = true;
-        }
-        if (hasAccel.value) {
-            checkboxes.value[1] = true;
-        }
-        if (hasMag.value) {
-            checkboxes.value[2] = true;
-        }
-        if (hasAltitude.value) {
-            checkboxes.value[3] = true;
+        for (let i = 0; i < sensorAvailability.length; i++) {
+            checkboxes.value[i] = sensorAvailability[i];
         }
     }
 
