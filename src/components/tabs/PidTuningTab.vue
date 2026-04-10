@@ -645,7 +645,6 @@ onUnmounted(() => {
     width: calc(100% - 0px);
     height: 20px;
     line-height: 20px;
-    text-align: right;
     border: 1px solid var(--surface-500);
     border-radius: 3px;
 }
@@ -744,7 +743,7 @@ onUnmounted(() => {
     padding: 0 0.5rem;
 }
 .tab-pid_tuning table.compensation td:first-child:not(.filterTable) {
-    width: 75px;
+    width: 110px;
     text-align: center;
     vertical-align: top;
     padding-top: 4px;
@@ -906,14 +905,10 @@ onUnmounted(() => {
     border-bottom: 0;
 }
 .tab-pid_tuning .number input {
-    width: 50px;
-    padding-left: 3px;
     height: 20px;
     line-height: 20px;
-    text-align: left;
     border: 1px solid var(--surface-500);
     border-radius: 3px;
-    margin-right: 11px;
     font-weight: normal;
 }
 .tab-pid_tuning .gui_box_titlebar .helpicon {

@@ -797,11 +797,11 @@ export default defineComponent({
 }
 
 .one_digit_input {
-    width: 28px;
+    width: 80px;
 }
 
 .frequency_input {
-    width: 64px;
+    width: 120px;
 }
 
 .vtx_table_box {

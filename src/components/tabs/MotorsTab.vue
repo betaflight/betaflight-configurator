@@ -1823,13 +1823,9 @@ onUnmounted(() => {
     }
     .number {
         input {
-            width: 55px;
-            padding-left: 3px;
             height: 20px;
             line-height: 20px;
-            text-align: left;
             border-radius: 3px;
-            margin-right: 11px;
             font-size: 12px;
             font-weight: normal;
         }
