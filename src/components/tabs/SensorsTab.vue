@@ -439,7 +439,7 @@ onMounted(async () => {
         hasDebug.value,
     ];
     for (let i = 0; i < sensorAvailability.length; i++) {
-        checkboxes.value[i] = checkboxes.value[i] && sensorAvailability[i];
+        checkboxes.value[i] = Boolean(checkboxes.value[i]) && sensorAvailability[i];
     }
 
     if (!checkboxes.value.some(Boolean)) {
