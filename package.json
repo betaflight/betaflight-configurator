@@ -53,10 +53,9 @@
     "dompurify": "^3.3.2",
     "geomagnetism": "^0.2.0",
     "i18next": "^24.2.2",
-    "i18next-vue": "^5.2.0",
     "i18next-http-backend": "^3.0.1",
+    "i18next-vue": "^5.2.0",
     "inflection": "^1.13.4",
-
     "jsdom": "^26.0.0",
     "lodash.debounce": "^4.0.8",
     "marked": "^15.0.7",
