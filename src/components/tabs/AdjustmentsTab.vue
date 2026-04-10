@@ -562,7 +562,7 @@ export default defineComponent({
 
 .adjustments-header {
     display: grid;
-    grid-template-columns: 80px 80px 1fr 200px 80px 60px 60px;
+    grid-template-columns: 80px 80px 1fr 200px 80px 120px 120px;
     gap: 16px;
     padding: 12px 16px;
     background: var(--surface-700);
@@ -584,7 +584,7 @@ export default defineComponent({
 
 .adjustment {
     display: grid;
-    grid-template-columns: 80px 80px 1fr 200px 80px 60px 60px;
+    grid-template-columns: 80px 80px 1fr 200px 80px 120px 120px;
     gap: 16px;
     padding: 16px;
     background: var(--surface-200);
